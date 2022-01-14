@@ -13,7 +13,6 @@ const Header = ({
   RightComponent = null,
   withBorder = true
 }) => {
-  console.log("hasBackComponent",hasBackComponent)
   return (
     <>
       <StatusBar
