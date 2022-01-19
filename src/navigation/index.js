@@ -9,6 +9,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 Ionicons.loadFont();
 MaterialCommunityIcons.loadFont();
 
+import 'i18n';
+
 import {ROUTES, SCREENS, KEYS} from './constants';
 
 const Stack = createNativeStackNavigator();
