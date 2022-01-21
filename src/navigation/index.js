@@ -3,6 +3,12 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+Ionicons.loadFont();
+MaterialCommunityIcons.loadFont();
+
 import {ROUTES, SCREENS, KEYS} from './constants';
 
 const Stack = createNativeStackNavigator();
