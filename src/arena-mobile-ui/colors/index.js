@@ -1,0 +1,20 @@
+export const red = '#ed5b46';
+export const pink = '#f7dfe3';
+export const green = '#84ac67';
+export const greenLight = '#f0f2e7';
+export const yellow = '#fee997';
+
+export const grey = '#e7e9ee';
+export const greyAppBg = '#e8eaee';
+export const greyBackground = greyAppBg;
+export const greyBorder = '#d1d1dd';
+export const blue = '#3885ca';
+export const blueLight = '#7dafdc';
+export const blueLightFocus = '#91bbe1';
+export const blueLightActive = '#69a3d7';
+export const blueDark = '#2b6aa2';
+export const orange = '#eba444';
+export const orangeLight = '#f9ccb2';
+export const black = '#2f3138';
+export const yellowHighlight = '#f8f6cc';
+export const white = '#ffffff';
