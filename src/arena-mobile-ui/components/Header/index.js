@@ -1,17 +1,17 @@
-import React from 'react';
+import React from 'react'
 
-import {View, StatusBar} from 'react-native';
-import * as colors from 'arena-mobile-ui/colors';
-import {Back} from 'arena-mobile-ui/components/TouchableIcons';
+import {View, StatusBar} from 'react-native'
+import * as colors from 'arena-mobile-ui/colors'
+import {Back} from 'arena-mobile-ui/components/TouchableIcons'
 
-import styles from './styles';
+import styles from './styles'
 
 const Header = ({
   hasBackComponent = false,
   LeftComponent = null,
   children,
   RightComponent = null,
-  withBorder = true
+  withBorder = true,
 }) => {
   return (
     <>
@@ -30,7 +30,7 @@ const Header = ({
         <View style={[styles.right]}>{RightComponent}</View>
       </View>
     </>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header
