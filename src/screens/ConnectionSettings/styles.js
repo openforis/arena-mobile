@@ -1,11 +1,15 @@
-import * as React from 'react';
-import {StyleSheet} from 'react-native';
+import * as React from 'react'
+import {StyleSheet} from 'react-native'
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
   header: {
     fontSize: 18,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
-});
+})
 
-export default styles;
+export default styles
