@@ -12,6 +12,9 @@ const {app} = createActions({
     username,
     password,
   }),
+  [types.SET_SERVER_URL]: ({serverUrl}) => ({
+    serverUrl,
+  }),
   /*ui*/
   [types.SET_LOADING]: ({isLoading = false}) => ({
     isLoading,

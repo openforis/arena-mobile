@@ -1,3 +1,13 @@
 {
-  "common": "common-aaa"
+  "language": "language",
+  "cycle": "cycle",
+  "name": "name",
+  "last_update": "last update",
+  "username": "username (email)",
+  "password": "password",
+  "access_info": "sccess info",
+  "server_config": "server config",
+  "server_address": "server address",
+  "connect": "connect",
+  "connection_settings": "Connection_settings"
 }
