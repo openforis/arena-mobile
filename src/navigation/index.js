@@ -1,5 +1,5 @@
-import React, {useRef, useEffect} from 'react';
 
+import React, {useRef, useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
@@ -19,6 +19,7 @@ import {ROUTES, SCREENS, KEYS} from './constants';
 
 const Stack = createNativeStackNavigator();
 const {store} = getStore();
+
 
 function Arena() {
   const navigationRef = useRef(null);
