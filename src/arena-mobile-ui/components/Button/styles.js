@@ -4,9 +4,6 @@ import * as colors from 'arena-mobile-ui/colors'
 
 const styles = StyleSheet.create({
   base: {
-    /*borderColor: colors.greyBorder,
-    borderWidth: 1,*/
-
     padding: 8,
     paddingVertical: 12,
     justifyContent: 'center',
@@ -14,7 +11,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   primary: {
-    backgroundColor: colors.blue,
+    backgroundColor: colors.secondary,
   },
   secondary: {
     backgroundColor: colors.white,
@@ -43,7 +40,7 @@ const styles = StyleSheet.create({
       color: colors.white,
     },
     ghost: {
-      backgroundColor: colors.blue,
+      backgroundColor: colors.secondary,
     },
     ghostBlack: {
       backgroundColor: colors.black,
