@@ -14,16 +14,16 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary,
   },
   secondary: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.background,
   },
   delete: {
-    backgroundColor: colors.red,
+    backgroundColor: colors.error,
   },
   ghost: {
-    backgroundColor: 'transparent',
+    backgroundColor: colors.transparent,
   },
   ghostBlack: {
-    backgroundColor: 'transparent',
+    backgroundColor: colors.transparent,
   },
   text: {
     base: {
