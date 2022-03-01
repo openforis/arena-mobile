@@ -38,6 +38,7 @@ const ConnectionSettings = () => {
 
   const {username, password} = useSelector(appSelectors.getAccessData)
 
+  const serverUrl = useSelector(appSelectors.getServerUrl)
   const isLoading = useSelector(appSelectors.getIsLoading)
 
   useEffect(() => {
@@ -45,8 +46,9 @@ const ConnectionSettings = () => {
       ...prevData,
       username: username || prevData.username,
       password: password || prevData.password,
+      serverUrl: serverUrl || prevData.serverUrl,
     }))
-  }, [username, password])
+  }, [username, password, serverUrl])
 
   return (
     <Layout>
@@ -60,6 +62,14 @@ const ConnectionSettings = () => {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <ScrollView>
             <View style={{flex: 1, padding: 16}}>
+              <Text style={[styles.header]}>Server config</Text>
+
+              <Input
+                title="Server address"
+                onChangeText={onChangeText('serverUrl')}
+                value={formData?.serverUrl || serverUrl}
+              />
+
               <Text style={[styles.header]}>Access info</Text>
 
               <Input

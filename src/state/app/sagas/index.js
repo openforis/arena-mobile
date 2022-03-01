@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import {takeLatest, put, select, call, all} from 'redux-saga/effects'
 
 import {actions as userActions} from 'state/user'
@@ -17,10 +18,12 @@ export function* handleAuthenticateUser() {
       }),
     )
     const {username, password} = yield select(appSelectors.getAccessData)
+    const serverUrl = yield select(appSelectors.getServerUrl)
 
     const data = yield call(appApi.auth, {
       email: username,
       password,
+      serverUrl,
     })
 
     if (data?.user) {
@@ -42,7 +45,10 @@ export function* handleAuthenticateUser() {
 }
 
 function* handleInitConnection({payload}) {
-  yield put(appActions.setAccessData(payload))
+  yield all([
+    put(appActions.setAccessData(payload)),
+    put(appActions.setServerUrl(payload)),
+  ])
   yield call(handleAuthenticateUser)
 }
 
