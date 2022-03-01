@@ -7,7 +7,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@react-navigation/native": "^6.0.6",
@@ -23,6 +24,7 @@
     "react-native-get-random-values": "^1.7.2",
     "react-native-mmkv": "^1.6.0",
     "react-native-permissions": "^3.2.0",
+    "react-native-qrcode-scanner": "^1.5.4",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.10.1",
     "react-native-vector-icons": "^9.0.0",
@@ -36,16 +38,37 @@
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",
+    "@babel/eslint-parser": "^7.17.0",
     "@babel/runtime": "^7.16.7",
     "@react-native-community/eslint-config": "^3.0.1",
+    "babel-eslint": "^10.1.0",
     "babel-jest": "^27.4.5",
     "babel-plugin-module-resolver": "^4.1.0",
-    "eslint": "^8.6.0",
+    "eslint": "^8.10.0",
+    "eslint-plugin-flowtype": "^8.0.3",
+    "husky": "^7.0.4",
     "jest": "^27.4.5",
+    "lint-staged": "^12.3.4",
     "metro-react-native-babel-preset": "^0.66.2",
+    "prettier": "^2.5.1",
     "react-test-renderer": "17.0.2"
   },
   "jest": {
     "preset": "react-native"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,json,md}": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
   }
 }

@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 14,
     borderWidth: 1,
-    borderColor: colors.greyBorder,
+    borderColor: colors.neutralLight,
     marginVertical: 4,
   },
 })

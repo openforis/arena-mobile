@@ -1,6 +1,6 @@
-import * as React from 'react';
-import {StyleSheet} from 'react-native';
-import * as colors from 'arena-mobile-ui/colors';
+import * as React from 'react'
+import {StyleSheet} from 'react-native'
+import * as colors from 'arena-mobile-ui/colors'
 
 const styles = StyleSheet.create({
   container: {
@@ -9,12 +9,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingBottom: 8,
-    backgroundColor: colors.green,
-    
+    backgroundColor: colors.primary,
   },
   withBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: colors.greenLight,
+    borderBottomColor: colors.primaryLight,
   },
   left: {
     justifyContent: 'center',
@@ -31,6 +30,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     width: 50,
   },
-});
+})
 
-export default styles;
+export default styles

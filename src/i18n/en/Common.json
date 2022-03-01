@@ -5,9 +5,9 @@
   "last_update": "last update",
   "username": "username (email)",
   "password": "password",
-  "access_info": "sccess info",
+  "access_info": "Access info",
   "server_config": "server config",
   "server_address": "server address",
   "connect": "connect",
-  "connection_settings": "Connection_settings"
+  "connection_settings": "Connection Settings"
 }
