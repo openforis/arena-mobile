@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {
   Text,
@@ -6,40 +6,42 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-} from 'react-native'
+} from 'react-native';
 
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux';
 
-import {selectors as appSelectors, actions as appActions} from 'state/app'
+import {selectors as appSelectors, actions as appActions} from 'state/app';
+import {selectors as userSelectors} from 'state/user';
 
-import Layout from 'arena-mobile-ui/components/Layout'
-import Header from 'arena-mobile-ui/components/Header'
-import Input from 'arena-mobile-ui/components/Input'
-import Button from 'arena-mobile-ui/components/Button'
+import Layout from 'arena-mobile-ui/components/Layout';
+import Header from 'arena-mobile-ui/components/Header';
+import Input from 'arena-mobile-ui/components/Input';
+import Button from 'arena-mobile-ui/components/Button';
 
-import baseStyles from 'arena-mobile-ui/styles'
+import baseStyles from 'arena-mobile-ui/styles';
 
-import styles from './styles'
+import styles from './styles';
 
 const ConnectionSettings = () => {
-  const [formData, setFormData] = useState({})
-  const dispatch = useDispatch()
+  const [formData, setFormData] = useState({});
+  const dispatch = useDispatch();
 
   const onChangeText = useCallback(
     key => value => {
-      setFormData(prevValue => ({...prevValue, [key]: value}))
+      setFormData(prevValue => ({...prevValue, [key]: value}));
     },
     [],
-  )
+  );
 
+  const user = useSelector(userSelectors.getUser);
   const handleSubmitForm = useCallback(() => {
-    dispatch(appActions.initConnection(formData))
-  }, [formData])
+    dispatch(appActions.initConnection(formData));
+  }, [dispatch, formData]);
 
-  const {username, password} = useSelector(appSelectors.getAccessData)
+  const {username, password} = useSelector(appSelectors.getAccessData);
 
-  const serverUrl = useSelector(appSelectors.getServerUrl)
-  const isLoading = useSelector(appSelectors.getIsLoading)
+  const serverUrl = useSelector(appSelectors.getServerUrl);
+  const isLoading = useSelector(appSelectors.getIsLoading);
 
   useEffect(() => {
     setFormData(prevData => ({
@@ -47,8 +49,8 @@ const ConnectionSettings = () => {
       username: username || prevData.username,
       password: password || prevData.password,
       serverUrl: serverUrl || prevData.serverUrl,
-    }))
-  }, [username, password, serverUrl])
+    }));
+  }, [username, password, serverUrl]);
 
   return (
     <Layout>
@@ -56,7 +58,6 @@ const ConnectionSettings = () => {
         <Header hasBackComponent>
           <Text style={[baseStyles.textStyle.title]}>Connection settings</Text>
         </Header>
-
         <KeyboardAvoidingView
           style={styles.container}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -89,13 +90,14 @@ const ConnectionSettings = () => {
                 label="connect"
                 disabled={isLoading}
               />
-              <View style={{height: 100}}></View>
+              {user?.name && <Text>Connected as {user?.name}</Text>}
+              <View style={{height: 100}} />
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
       </>
     </Layout>
-  )
-}
+  );
+};
 
-export default ConnectionSettings
+export default ConnectionSettings;
