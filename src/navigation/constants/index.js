@@ -14,5 +14,3 @@ export const ROUTES = {
   [Home.key]: Home.route,
   [ConnectionSettings.key]: ConnectionSettings.route
 };
-
-
