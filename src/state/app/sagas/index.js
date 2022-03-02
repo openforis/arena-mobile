@@ -1,14 +1,13 @@
-/* eslint-disable camelcase */
-import {takeLatest, put, select, call, all} from 'redux-saga/effects'
+import {takeLatest, put, select, call, all} from 'redux-saga/effects';
 
-import {actions as userActions} from 'state/user'
+import {actions as userActions} from 'state/user';
 
-import appActionTypes from '../actionTypes'
-import appActions from '../actionCreators'
-import appSelectors from '../selectors'
-import appApi from '../api'
-import * as navigator from 'state/navigatorService'
-import {ROUTES} from 'navigation/constants'
+import appActionTypes from '../actionTypes';
+import appActions from '../actionCreators';
+import appSelectors from '../selectors';
+import appApi from '../api';
+import * as navigator from 'state/navigatorService';
+import {ROUTES} from 'navigation/constants';
 
 export function* handleAuthenticateUser() {
   try {
@@ -16,31 +15,31 @@ export function* handleAuthenticateUser() {
       appActions.setLoading({
         isLoading: true,
       }),
-    )
-    const {username, password} = yield select(appSelectors.getAccessData)
-    const serverUrl = yield select(appSelectors.getServerUrl)
+    );
+    const {username, password} = yield select(appSelectors.getAccessData);
+    const serverUrl = yield select(appSelectors.getServerUrl);
 
     const data = yield call(appApi.auth, {
       email: username,
       password,
       serverUrl,
-    })
+    });
 
     if (data?.user) {
-      const {user} = data
-      yield put(userActions.setUser({user}))
+      const {user} = data;
+      yield put(userActions.setUser({user}));
     } else {
-      throw Error(data?.message || 'No user')
+      throw Error(data?.message || 'No user');
     }
   } catch (e) {
-    console.log('e', e)
+    console.log('e', e);
   } finally {
     yield put(
       appActions.setLoading({
         isLoading: false,
       }),
-    )
-    yield call(navigator.reset, ROUTES.HOME)
+    );
+    yield call(navigator.reset, ROUTES.HOME);
   }
 }
 
@@ -48,10 +47,10 @@ function* handleInitConnection({payload}) {
   yield all([
     put(appActions.setAccessData(payload)),
     put(appActions.setServerUrl(payload)),
-  ])
-  yield call(handleAuthenticateUser)
+  ]);
+  yield call(handleAuthenticateUser);
 }
 
 export default function* () {
-  yield takeLatest(appActionTypes.initConnection$, handleInitConnection)
+  yield takeLatest(appActionTypes.initConnection$, handleInitConnection);
 }

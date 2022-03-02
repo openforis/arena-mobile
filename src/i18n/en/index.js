@@ -3,7 +3,7 @@ import Home from './Home';
 
 const lang = {
   Common,
-  Home
+  Home,
 };
 
 export default lang;

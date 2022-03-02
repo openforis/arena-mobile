@@ -1,7 +1,7 @@
-import React from 'react'
-import {TouchableOpacity, Text} from 'react-native'
+import React from 'react';
+import {TouchableOpacity, Text} from 'react-native';
 
-import styles from './styles'
+import styles from './styles';
 
 const Button = ({onPress = null, label, type = 'primary', ...props}) => {
   return (
@@ -11,7 +11,7 @@ const Button = ({onPress = null, label, type = 'primary', ...props}) => {
       {...props}>
       <Text style={[styles.text.base, styles.text[type]]}>{label}</Text>
     </TouchableOpacity>
-  )
-}
+  );
+};
 
-export default Button
+export default Button;
