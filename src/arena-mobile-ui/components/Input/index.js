@@ -1,8 +1,8 @@
-import React from 'react'
+import React from 'react';
 
-import {Text, View, TextInput} from 'react-native'
+import {Text, View, TextInput} from 'react-native';
 
-import styles from './styles'
+import styles from './styles';
 
 const Input = ({
   onChange,
@@ -23,7 +23,7 @@ const Input = ({
         {...props}
       />
     </View>
-  )
-}
+  );
+};
 
-export default Input
+export default Input;

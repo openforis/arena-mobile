@@ -2,114 +2,114 @@
 
 // Primary - chelsea-cucumber
 //www.tailwindshades.com/#color=94.78260869565217%2C29.361702127659576%2C53.92156862745099&step-up=8&step-down=11&hue-shift=0&name=chelsea-cucumber&overrides=e30%3D
-const primary50 = '#E4EDDE'
-const primary100 = '#D9E6D1'
-const primary200 = '#C4D7B6'
-const primary300 = '#AFC99C'
-const primary400 = '#99BA81'
-const primary500 = '#84AC67'
-const primary600 = '#688E4D'
-const primary700 = '#4E6939'
-const primary800 = '#334526'
-const primary900 = '#182112'
+const primary50 = '#E4EDDE';
+const primary100 = '#D9E6D1';
+const primary200 = '#C4D7B6';
+const primary300 = '#AFC99C';
+const primary400 = '#99BA81';
+const primary500 = '#84AC67';
+const primary600 = '#688E4D';
+const primary700 = '#4E6939';
+const primary800 = '#334526';
+const primary900 = '#182112';
 
 // Secondary - boston-blue
 //www.tailwindshades.com/#color=208.35616438356163%2C57.93650793650792%2C50.588235294117645&step-up=8&step-down=11&hue-shift=0&name=boston-blue&overrides=e30%3D
-const secondary50 = '#C9DEF1'
-const secondary100 = '#B9D4EC'
-const secondary200 = '#99C0E4'
-const secondary300 = '#78ADDB'
-const secondary400 = '#5899D3'
-const secondary500 = '#3885CA'
-const secondary600 = '#2A689F'
-const secondary700 = '#1F4B73'
-const secondary800 = '#132E47'
-const secondary900 = '#07111B'
+const secondary50 = '#C9DEF1';
+const secondary100 = '#B9D4EC';
+const secondary200 = '#99C0E4';
+const secondary300 = '#78ADDB';
+const secondary400 = '#5899D3';
+const secondary500 = '#3885CA';
+const secondary600 = '#2A689F';
+const secondary700 = '#1F4B73';
+const secondary800 = '#132E47';
+const secondary900 = '#07111B';
 
 // grey
 //tailwind.simeongriggs.dev/blue/404040
-const grey50 = '#EDEDED'
-const grey100 = '#D9D9D9'
-const grey200 = '#B3B3B3'
-const grey300 = '#8C8C8C'
-const grey400 = '#666666'
-const grey500 = '#404040'
-const grey600 = '#333333'
-const grey700 = '#262626'
-const grey800 = '#1A1A1A'
-const grey900 = '#0D0D0D'
+const grey50 = '#EDEDED';
+const grey100 = '#D9D9D9';
+const grey200 = '#B3B3B3';
+const grey300 = '#8C8C8C';
+const grey400 = '#666666';
+const grey500 = '#404040';
+const grey600 = '#333333';
+const grey700 = '#262626';
+const grey800 = '#1A1A1A';
+const grey900 = '#0D0D0D';
 
 // warn - golden-glow
-const yellow50 = '#FEECA5'
-const yellow100 = '#FEE891'
-const yellow200 = '#FEE069'
-const yellow300 = '#FDD740'
-const yellow400 = '#FDCF18'
-const yellow500 = '#EABB02'
-const yellow600 = '#B28F02'
-const yellow700 = '#7B6201'
-const yellow800 = '#433601'
-const yellow900 = '#0C0900'
+const yellow50 = '#FEECA5';
+const yellow100 = '#FEE891';
+const yellow200 = '#FEE069';
+const yellow300 = '#FDD740';
+const yellow400 = '#FDCF18';
+const yellow500 = '#EABB02';
+const yellow600 = '#B28F02';
+const yellow700 = '#7B6201';
+const yellow800 = '#433601';
+const yellow900 = '#0C0900';
 
 // red - burnt-sienna
 // https://www.tailwindshades.com/#color=7.544910179640716%2C82.26600985221675%2C60.196078431372555&step-up=8&step-down=11&hue-shift=0&name=burnt-sienna&overrides=e30%3D
-const red50 = '#FDEFED'
-const red100 = '#FBDFDB'
-const red200 = '#F8BEB6'
-const red300 = '#F49D90'
-const red400 = '#F17C6B'
-const red500 = '#ED5B46'
-const red600 = '#E53016'
-const red700 = '#B22511'
-const red800 = '#7E1B0C'
-const red900 = '#4B1007'
+const red50 = '#FDEFED';
+const red100 = '#FBDFDB';
+const red200 = '#F8BEB6';
+const red300 = '#F49D90';
+const red400 = '#F17C6B';
+const red500 = '#ED5B46';
+const red600 = '#E53016';
+const red700 = '#B22511';
+const red800 = '#7E1B0C';
+const red900 = '#4B1007';
 
-export const primaryLightest = primary50
-export const primaryLighter = primary100
-export const primaryLight = primary300
-export const primary = primary500
-export const primaryDark = primary700
-export const primaryDarker = primary800
-export const primaryDarkest = primary900
+export const primaryLightest = primary50;
+export const primaryLighter = primary100;
+export const primaryLight = primary300;
+export const primary = primary500;
+export const primaryDark = primary700;
+export const primaryDarker = primary800;
+export const primaryDarkest = primary900;
 
-export const secondaryLightest = secondary50
-export const secondaryLighter = secondary100
-export const secondaryLight = secondary300
-export const secondary = secondary500
-export const secondaryDark = secondary700
-export const secondaryDarker = secondary800
-export const secondaryDarkest = secondary900
+export const secondaryLightest = secondary50;
+export const secondaryLighter = secondary100;
+export const secondaryLight = secondary300;
+export const secondary = secondary500;
+export const secondaryDark = secondary700;
+export const secondaryDarker = secondary800;
+export const secondaryDarkest = secondary900;
 
-export const neutralLightest = grey50
-export const neutralLighter = grey100
-export const neutralLight = grey300
-export const neutral = grey500
-export const neutralDark = grey700
-export const neutralDarker = grey800
-export const neutralDarkest = grey900
+export const neutralLightest = grey50;
+export const neutralLighter = grey100;
+export const neutralLight = grey300;
+export const neutral = grey500;
+export const neutralDark = grey700;
+export const neutralDarker = grey800;
+export const neutralDarkest = grey900;
 
-export const alertLightest = yellow50
-export const alertLighter = yellow100
-export const alertLight = yellow300
-export const alert = yellow500
-export const alertDark = yellow700
-export const alertDarker = yellow800
-export const alertDarkest = yellow900
+export const alertLightest = yellow50;
+export const alertLighter = yellow100;
+export const alertLight = yellow300;
+export const alert = yellow500;
+export const alertDark = yellow700;
+export const alertDarker = yellow800;
+export const alertDarkest = yellow900;
 
-export const errorLightest = red50
-export const errorLighter = red100
-export const errorLight = red300
-export const error = red500
-export const errorDark = red700
-export const errorDarker = red800
-export const errorDarkest = red900
+export const errorLightest = red50;
+export const errorLighter = red100;
+export const errorLight = red300;
+export const error = red500;
+export const errorDark = red700;
+export const errorDarker = red800;
+export const errorDarkest = red900;
 
-export const primaryText = primary900
-export const primaryTextLight = primary800
-export const secondayText = secondary900
-export const secondayTextLight = secondary800
+export const primaryText = primary900;
+export const primaryTextLight = primary800;
+export const secondayText = secondary900;
+export const secondayTextLight = secondary800;
 
-export const background = neutralLightest
-export const white = grey50
-export const black = grey900
-export const transparent = 'transparent'
+export const background = neutralLightest;
+export const white = grey50;
+export const black = grey900;
+export const transparent = 'transparent';

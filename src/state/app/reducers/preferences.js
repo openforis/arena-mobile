@@ -1,7 +1,7 @@
-import {handleActions} from 'redux-actions'
+import {handleActions} from 'redux-actions';
 
-import actions from '../actionCreators'
-import initialState from '../initial.state'
+import actions from '../actionCreators';
+import initialState from '../initial.state';
 
 const appPreferences = handleActions(
   {
@@ -11,6 +11,6 @@ const appPreferences = handleActions(
     }),
   },
   initialState.preferences || {},
-)
+);
 
-export default appPreferences
+export default appPreferences;

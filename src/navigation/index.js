@@ -1,31 +1,31 @@
-import React, {useRef, useEffect} from 'react'
+import React, {useRef, useEffect} from 'react';
 
-import {NavigationContainer} from '@react-navigation/native'
-import {createNativeStackNavigator} from '@react-navigation/native-stack'
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import {Provider} from 'react-redux'
+import {Provider} from 'react-redux';
 
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-Ionicons.loadFont()
-MaterialCommunityIcons.loadFont()
+Ionicons.loadFont();
+MaterialCommunityIcons.loadFont();
 
-import 'i18n'
+import 'i18n';
 
-import {setNavigator} from 'state/navigatorService'
-import getStore from 'state/store'
-import {ROUTES, SCREENS, KEYS} from './constants'
+import {setNavigator} from 'state/navigatorService';
+import getStore from 'state/store';
+import {ROUTES, SCREENS, KEYS} from './constants';
 
-const Stack = createNativeStackNavigator()
-const {store} = getStore()
+const Stack = createNativeStackNavigator();
+const {store} = getStore();
 
 function Arena() {
-  const navigationRef = useRef(null)
+  const navigationRef = useRef(null);
 
   useEffect(() => {
-    setNavigator(navigationRef)
-  }, [])
+    setNavigator(navigationRef);
+  }, []);
 
   return (
     <NavigationContainer ref={navigationRef}>
@@ -46,7 +46,7 @@ function Arena() {
         </Stack.Navigator>
       </Provider>
     </NavigationContainer>
-  )
+  );
 }
 
-export default Arena
+export default Arena;

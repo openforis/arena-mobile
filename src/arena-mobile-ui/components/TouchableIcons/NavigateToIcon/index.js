@@ -6,7 +6,10 @@ import TouchableIcon from '../TouchableIcon';
 
 const NavigateToIcon = ({route, icon}) => {
   const navigation = useNavigation();
-  const navigate = useCallback(() => navigation.navigate(route), [route]);
+  const navigate = useCallback(
+    () => navigation.navigate(route),
+    [route, navigation],
+  );
   return <TouchableIcon onPress={navigate} iconName={icon} />;
 };
 
