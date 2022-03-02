@@ -1,6 +1,6 @@
-import * as React from 'react'
-import {StyleSheet} from 'react-native'
-import * as colors from 'arena-mobile-ui/colors'
+import * as React from 'react';
+import {StyleSheet} from 'react-native';
+import * as colors from 'arena-mobile-ui/colors';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,6 +30,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     width: 50,
   },
-})
+});
 
-export default styles
+export default styles;

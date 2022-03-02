@@ -1,6 +1,6 @@
-import * as React from 'react'
-import {StyleSheet} from 'react-native'
-import * as colors from 'arena-mobile-ui/colors'
+import * as React from 'react';
+import {StyleSheet} from 'react-native';
+import * as colors from 'arena-mobile-ui/colors';
 
 const styles = StyleSheet.create({
   text: {
@@ -15,6 +15,6 @@ const styles = StyleSheet.create({
     borderColor: colors.neutralLight,
     marginVertical: 4,
   },
-})
+});
 
-export default styles
+export default styles;
