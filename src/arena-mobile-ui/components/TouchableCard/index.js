@@ -1,8 +1,8 @@
-import React from 'react'
+import React from 'react';
 
-import {TouchableOpacity} from 'react-native'
+import {TouchableOpacity} from 'react-native';
 
-import styles from './styles'
+import styles from './styles';
 
 const TouchableCard = ({onPress, children, customStyles = {}, ...props}) => {
   return (
@@ -12,7 +12,7 @@ const TouchableCard = ({onPress, children, customStyles = {}, ...props}) => {
       {...props}>
       {children}
     </TouchableOpacity>
-  )
-}
+  );
+};
 
-export default TouchableCard
+export default TouchableCard;

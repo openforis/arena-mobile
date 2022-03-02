@@ -1,4 +1,4 @@
-import {dataKeys} from './constants'
+import {dataKeys} from './constants';
 
 const initialState = {
   accessData: {
@@ -9,6 +9,6 @@ const initialState = {
     error: undefined,
     loading: false,
   },
-}
+};
 
-export default initialState
+export default initialState;
