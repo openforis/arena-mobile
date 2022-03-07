@@ -1,9 +1,15 @@
+const plugins = ['import'];
+
 module.exports = {
   root: true,
   extends: ['@react-native-community', 'plugin:import/recommended'],
   parser: '@babel/eslint-parser',
-  plugins: ['import'],
+  plugins,
   rules: {
+    'import/no-unresolved': [
+      2,
+      {commonjs: true, amd: true, caseSensitive: false},
+    ],
     'import/named': 2,
     'import/namespace': 2,
     'import/default': 2,
@@ -28,8 +34,11 @@ module.exports = {
     ],
   },
   settings: {
+    'import/ignore': ['react-native'],
     'import/resolver': {
-      src: {},
+      node: {
+        paths: ['src'],
+      },
     },
   },
 };

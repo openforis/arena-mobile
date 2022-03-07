@@ -1,24 +1,19 @@
 import * as React from 'react';
-
 import {Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
-import {useTranslation} from 'react-i18next';
 
-import Layout from 'arena-mobile-ui/components/Layout';
-import Header from 'arena-mobile-ui/components/Header';
 import Button from 'arena-mobile-ui/components/Button';
+import Header from 'arena-mobile-ui/components/Header';
+import Layout from 'arena-mobile-ui/components/Layout';
 import baseStyles from 'arena-mobile-ui/styles';
-
-import {selectors as userSelectors} from 'state/user';
-
 import NavigateToSettings from 'navigation/components/NavigateToSettings';
+import {selectors as userSelectors} from 'state/user';
 
 import LoggedInAs from './components/LoggedInAs';
 import NotLoggedIn from './components/NotLoggedIn';
 import styles from './styles';
 
 const Home = () => {
-  const {t} = useTranslation();
   const user = useSelector(userSelectors.getUser);
 
   return (

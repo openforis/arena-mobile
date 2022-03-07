@@ -1,8 +1,7 @@
 import {createStore, applyMiddleware} from 'redux';
-import createSagaMiddleware from 'redux-saga';
 import {persistStore, persistReducer} from 'redux-persist';
-
 import hardSet from 'redux-persist/lib/stateReconciler/hardSet';
+import createSagaMiddleware from 'redux-saga';
 
 import {storage} from 'infra/storage';
 
