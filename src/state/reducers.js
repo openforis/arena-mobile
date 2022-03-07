@@ -1,21 +1,19 @@
-import {combineReducers} from 'redux'
+import {combineReducers} from 'redux';
 
-import {createActions} from 'redux-actions'
+import {reducer as app} from './app';
+import {reducer as user} from './user';
 
-import {reducer as app} from './app'
-import {reducer as user} from './user'
-
-export const RESET_STATE = 'root/RESET_STATE'
+export const RESET_STATE = 'root/RESET_STATE';
 
 const appReducers = combineReducers({
   app,
   user,
-})
+});
 
 export default (state, action) => {
   if (action.type === RESET_STATE) {
-    state = undefined
+    state = undefined;
   }
 
-  return appReducers(state, action)
-}
+  return appReducers(state, action);
+};
