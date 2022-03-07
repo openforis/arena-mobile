@@ -1,4 +1,5 @@
 import {createSelector} from 'reselect';
+
 import initialState from './initial.state';
 
 const getState = state => state?.app;
