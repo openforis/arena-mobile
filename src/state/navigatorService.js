@@ -18,8 +18,8 @@ export function reset(routeName, ...args) {
   if (getNavigator() && routeName) {
     getNavigator().reset({
       index: 0,
-      routes: [{ name: routeName}]
-    })
+      routes: [{name: routeName}],
+    });
   }
 }
 

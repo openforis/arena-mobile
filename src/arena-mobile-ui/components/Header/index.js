@@ -1,6 +1,6 @@
 import React from 'react';
-
 import {View, StatusBar} from 'react-native';
+
 import * as colors from 'arena-mobile-ui/colors';
 import {Back} from 'arena-mobile-ui/components/TouchableIcons';
 
