@@ -1,10 +1,8 @@
 import * as React from 'react';
-
+import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native';
 
 import Card from 'arena-mobile-ui/components/Card';
-
-import {useTranslation} from 'react-i18next';
 
 const NotLoggedIn = () => {
   const {t} = useTranslation();

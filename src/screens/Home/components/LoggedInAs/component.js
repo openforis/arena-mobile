@@ -1,13 +1,11 @@
 import * as React from 'react';
-
+import {useTranslation} from 'react-i18next';
 import {Text} from 'react-native';
-
-import baseStyles from 'arena-mobile-ui/styles';
+import {useSelector} from 'react-redux';
 
 import Card from 'arena-mobile-ui/components/Card';
-import {useSelector} from 'react-redux';
+import baseStyles from 'arena-mobile-ui/styles';
 import {selectors as userSelectors} from 'state/user';
-import {useTranslation} from 'react-i18next';
 
 const LoggedInAs = () => {
   const {t} = useTranslation();

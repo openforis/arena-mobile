@@ -1,6 +1,5 @@
-import React, {useCallback} from 'react';
-
 import {useNavigation} from '@react-navigation/native';
+import React, {useCallback} from 'react';
 
 import TouchableIcon from '../TouchableIcon';
 

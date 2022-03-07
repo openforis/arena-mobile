@@ -1,13 +1,13 @@
 import {takeLatest, put, select, call, all} from 'redux-saga/effects';
 
+import {ROUTES} from 'navigation/constants';
+import * as navigator from 'state/navigatorService';
 import {actions as userActions} from 'state/user';
 
-import appActionTypes from '../actionTypes';
 import appActions from '../actionCreators';
-import appSelectors from '../selectors';
+import appActionTypes from '../actionTypes';
 import appApi from '../api';
-import * as navigator from 'state/navigatorService';
-import {ROUTES} from 'navigation/constants';
+import appSelectors from '../selectors';
 
 export function* handleAuthenticateUser() {
   try {

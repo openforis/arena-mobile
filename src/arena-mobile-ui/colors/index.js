@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* this palette was created following this https://www.refactoringui.com/previews/building-your-color-palette */
 
 // Primary - chelsea-cucumber
