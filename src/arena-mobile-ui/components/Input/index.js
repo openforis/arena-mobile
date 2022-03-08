@@ -1,6 +1,8 @@
 import React from 'react';
 import {Text, View, TextInput} from 'react-native';
 
+import baseStyles from 'arena-mobile-ui/styles';
+
 import styles from './styles';
 
 const Input = ({
@@ -12,7 +14,7 @@ const Input = ({
 }) => {
   return (
     <View>
-      <Text style={[styles.text]}>{title}</Text>
+      <Text style={[baseStyles.textStyle.text]}>{title}</Text>
       <TextInput
         style={styles.input}
         onChange={onChange}
