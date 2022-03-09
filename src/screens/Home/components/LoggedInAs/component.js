@@ -9,6 +9,7 @@ import {selectors as userSelectors} from 'state/user';
 
 const LoggedInAs = () => {
   const {t} = useTranslation();
+
   const name = useSelector(userSelectors.getName);
   const email = useSelector(userSelectors.getEmail);
 
@@ -16,7 +17,7 @@ const LoggedInAs = () => {
     <Card>
       <Text>{t('Home:logged_in_as')}</Text>
       <Text style={[baseStyles.textStyle.header]}>
-        {name} - {email}
+        {name} - <Text style={[baseStyles.textStyle.lower]}>{email}</Text>
       </Text>
     </Card>
   );
