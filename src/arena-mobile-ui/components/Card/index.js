@@ -3,8 +3,12 @@ import {View} from 'react-native';
 
 import styles from './styles';
 
-const Card = ({children, customStyles = {}}) => {
-  return <View style={[styles.container, customStyles]}>{children}</View>;
+const Card = ({children, type = 'primary', customStyles = {}}) => {
+  return (
+    <View style={[styles.container, styles[type], customStyles]}>
+      {children}
+    </View>
+  );
 };
 
 export default Card;
