@@ -15,6 +15,8 @@ const styles = StyleSheet.create({
   },
   secondary: {
     backgroundColor: colors.background,
+    borderColor: colors.neutralDarkest,
+    borderWidth: 1,
   },
   delete: {
     backgroundColor: colors.error,
@@ -26,10 +28,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.transparent,
   },
   text: {
-    base: {
-      fontSize: 14,
-      fontWeight: 'bold',
-    },
     primary: {
       color: colors.white,
     },
@@ -40,10 +38,10 @@ const styles = StyleSheet.create({
       color: colors.white,
     },
     ghost: {
-      backgroundColor: colors.secondary,
+      color: colors.secondary,
     },
     ghostBlack: {
-      backgroundColor: colors.black,
+      color: colors.black,
     },
   },
 });

@@ -7,9 +7,15 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 1,
     padding: 8,
-    borderColor: colors.neutralLight,
-    backgroundColor: colors.white,
     marginBottom: 16,
+  },
+  primary: {
+    backgroundColor: colors.white,
+    borderColor: colors.neutralLight,
+  },
+  error: {
+    backgroundColor: colors.errorLighter,
+    borderColor: colors.errorDark,
   },
 });
 
