@@ -12,3 +12,6 @@ fastlane/test_output
 
 # Fastlane builds
 builds/*
+
+*.keystore
+4428354186-c469bd85b036.json
