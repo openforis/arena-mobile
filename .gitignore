@@ -29,6 +29,13 @@ build/
 local.properties
 *.iml
 *.hprof
+android/.gradle/
+android/build/
+android/local.properties
+android/java_pid58812.hprof
+
+android/*.keystore
+
 
 # node.js
 #
@@ -58,3 +65,21 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+src/infra/api/_index.js
+src/screens/survey/*
+src/screens/surveys/*
+src/state/survey/*
+src/state/surveys/*
+src/navigation/*
+src/navigation/constants
+.src/*
+__src/*
+_._src/*
+
+
+4841375997753105052
+arena-mobile@pc-api-4841375997753105052-264.iam.gserviceaccount.com
+
+
+ CN=Arena Mobile, OU=OpenForis, O=FAO, L=Rome, ST=IT, C=IT - OpenForis4Ever
