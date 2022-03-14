@@ -29,6 +29,13 @@ build/
 local.properties
 *.iml
 *.hprof
+android/.gradle/
+android/build/
+android/local.properties
+android/*.hprof
+
+android/*.keystore
+
 
 # node.js
 #
