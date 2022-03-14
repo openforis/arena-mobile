@@ -32,7 +32,7 @@ local.properties
 android/.gradle/
 android/build/
 android/local.properties
-android/java_pid58812.hprof
+android/*.hprof
 
 android/*.keystore
 
