@@ -1,13 +1,13 @@
 {
-  "language": "language",
-  "cycle": "cycle",
-  "name": "name",
-  "last_update": "last update",
-  "username": "username (email)",
-  "password": "password",
+  "language": "Language",
+  "cycle": "Cycle",
+  "name": "Name",
+  "last_update": "Last update",
+  "username": "Username (email)",
+  "password": "Password",
   "access_info": "Access info",
-  "server_config": "server config",
-  "server_address": "server address",
-  "connect": "connect",
+  "server_config": "Server config",
+  "server_address": "Server address",
+  "connect": "Connect",
   "connection_settings": "Connection Settings"
 }

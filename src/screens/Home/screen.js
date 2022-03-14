@@ -31,10 +31,15 @@ const Home = () => {
             </View>
           </View>
           <View style={{flex: 2, justifyContent: 'flex-end'}}>
-            <Button />
-            <Button />
-            <Button />
-            <Button />
+            <Text style={baseStyles.textStyle.title}>title</Text>
+            <Text style={baseStyles.textStyle.header}>header</Text>
+            <Text style={baseStyles.textStyle.text}>text</Text>
+            <Text style={baseStyles.textStyle.bold}>bold</Text>
+            <Button label="aa" />
+            <Button type="secondary" label="secondary" />
+            <Button type="ghost" label="ghost" />
+            <Button type="ghostBlack" label="ghostBlack" />
+            <Button type="delete" label="delete" />
           </View>
         </View>
       </>
