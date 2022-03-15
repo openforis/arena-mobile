@@ -19,9 +19,13 @@ const getServerUrl = createSelector(
 
 const getUi = createSelector(getState, app => app?.ui || initialState.ui);
 const getIsLoading = createSelector(getUi, ui => ui?.isLoading);
+const getError = createSelector(getUi, ui => ui?.error);
 
 export default {
   getAccessData,
   getServerUrl,
+
+  getUi,
   getIsLoading,
+  getError,
 };

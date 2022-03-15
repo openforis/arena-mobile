@@ -1,3 +1,4 @@
+import {StackActions} from '@react-navigation/core';
 import {takeLatest, put, select, call, all} from 'redux-saga/effects';
 
 import {ROUTES} from 'navigation/constants';
@@ -10,12 +11,20 @@ import appApi from '../api';
 import appSelectors from '../selectors';
 
 export function* handleAuthenticateUser() {
+  let hasToNavigate = false;
   try {
-    yield put(
-      appActions.setLoading({
-        isLoading: true,
-      }),
-    );
+    yield all([
+      put(
+        appActions.setLoading({
+          isLoading: true,
+        }),
+      ),
+      put(
+        appActions.setError({
+          error: false,
+        }),
+      ),
+    ]);
     const {username, password} = yield select(appSelectors.getAccessData);
     const serverUrl = yield select(appSelectors.getServerUrl);
 
@@ -31,15 +40,26 @@ export function* handleAuthenticateUser() {
     } else {
       throw Error(data?.message || 'No user');
     }
+    hasToNavigate = true;
   } catch (e) {
-    console.log('e', e);
+    yield put(
+      appActions.setError({
+        error: true,
+      }),
+    );
   } finally {
+    if (hasToNavigate) {
+      yield call(
+        navigator.navigatorDispatch,
+        StackActions.replace(ROUTES.HOME),
+      );
+    }
+
     yield put(
       appActions.setLoading({
         isLoading: false,
       }),
     );
-    yield call(navigator.reset, ROUTES.HOME);
   }
 }
 
