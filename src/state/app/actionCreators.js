@@ -16,6 +16,9 @@ const {app} = createActions({
   [types.SET_LOADING]: ({isLoading = false}) => ({
     isLoading,
   }),
+  [types.SET_ERROR]: ({error = false}) => ({
+    error,
+  }),
 });
 
 export default app;

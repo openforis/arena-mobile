@@ -23,6 +23,12 @@ export function reset(routeName, ...args) {
   }
 }
 
+export function navigatorDispatch(args) {
+  if (getNavigator() && args) {
+    getNavigator().dispatch(args);
+  }
+}
+
 export function goBack() {
   if (getNavigator()) {
     getNavigator().goBack();

@@ -1,0 +1,20 @@
+{
+  "title": "Connection settings",
+
+  "server_config_title": "Server config",
+  "server_config_fields": {
+    "address": "Server address"
+  },
+
+  "access_info_title": "Access info",
+  "access_info_fields": {
+    "username": "Username (email)",
+    "password": "Password"
+  },
+  "submit": "Connect",
+  "error": {
+    "title": "There was an error",
+    "info": "Please check the information and your connection"
+  },
+  "connected_as": "Connected as {{username}}"
+}

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-
+import {useTranslation} from 'react-i18next';
 import {
   Text,
   View,
@@ -7,24 +7,28 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-
 import {useDispatch, useSelector} from 'react-redux';
 
-import {selectors as appSelectors, actions as appActions} from 'state/app';
-import {selectors as userSelectors} from 'state/user';
-
-import Layout from 'arena-mobile-ui/components/Layout';
+import Button from 'arena-mobile-ui/components/Button';
+import Card from 'arena-mobile-ui/components/Card';
 import Header from 'arena-mobile-ui/components/Header';
 import Input from 'arena-mobile-ui/components/Input';
-import Button from 'arena-mobile-ui/components/Button';
-
+import Layout from 'arena-mobile-ui/components/Layout';
+import QRScanner, {
+  useQRScanner,
+  QRScannerButton,
+} from 'arena-mobile-ui/components/QRScanner';
 import baseStyles from 'arena-mobile-ui/styles';
+import {selectors as appSelectors, actions as appActions} from 'state/app';
+import {selectors as userSelectors} from 'state/user';
 
 import styles from './styles';
 
 const ConnectionSettings = () => {
-  const [formData, setFormData] = useState({});
   const dispatch = useDispatch();
+  const {t} = useTranslation();
+
+  const [formData, setFormData] = useState({});
 
   const onChangeText = useCallback(
     key => value => {
@@ -42,6 +46,7 @@ const ConnectionSettings = () => {
 
   const serverUrl = useSelector(appSelectors.getServerUrl);
   const isLoading = useSelector(appSelectors.getIsLoading);
+  const error = useSelector(appSelectors.getError);
 
   useEffect(() => {
     setFormData(prevData => ({
@@ -52,34 +57,73 @@ const ConnectionSettings = () => {
     }));
   }, [username, password, serverUrl]);
 
+  const {
+    data: qrData,
+    visible,
+    readData: readQrData,
+    cleanData,
+    handleShow,
+    handleClose,
+  } = useQRScanner();
+
+  useEffect(() => {
+    if (qrData) {
+      const qrDataParsed = JSON.parse(qrData);
+
+      setFormData(prevData => ({
+        ...prevData,
+        username: qrDataParsed?.username || prevData.username,
+        serverUrl: qrDataParsed?.serverUrl || prevData.serverUrl,
+        password: qrDataParsed?.password || prevData.password,
+      }));
+    }
+  }, [qrData]);
+
   return (
     <Layout>
       <>
-        <Header hasBackComponent>
-          <Text style={[baseStyles.textStyle.title]}>Connection settings</Text>
-        </Header>
+        {!visible && (
+          <Header
+            hasBackComponent
+            RightComponent={<QRScannerButton handleShow={handleShow} />}>
+            <Text style={[baseStyles.textStyle.title]}>
+              {t('ConnectionSettings:title')}
+            </Text>
+          </Header>
+        )}
+        <QRScanner
+          visible={visible}
+          onRead={readQrData}
+          qrData={qrData}
+          cleanData={cleanData}
+          handleClose={handleClose}
+        />
         <KeyboardAvoidingView
-          style={styles.container}
+          style={[styles.container, {zIndex: visible ? -1 : 2}]}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <ScrollView>
             <View style={{flex: 1, padding: 16}}>
-              <Text style={[styles.header]}>Server config</Text>
+              <Text style={[baseStyles.textStyle.header]}>
+                {t('ConnectionSettings:server_config_title')}
+              </Text>
 
               <Input
-                title="Server address"
+                title={t('ConnectionSettings:server_config_fields.address')}
                 onChangeText={onChangeText('serverUrl')}
                 value={formData?.serverUrl || serverUrl}
               />
 
-              <Text style={[styles.header]}>Access info</Text>
+              <Text style={[baseStyles.textStyle.header]}>
+                {t('ConnectionSettings:access_info_title')}
+              </Text>
 
               <Input
-                title="Username (email)"
+                title={t('ConnectionSettings:access_info_fields.username')}
                 onChangeText={onChangeText('username')}
                 value={formData?.username || username}
               />
               <Input
-                title="Password"
+                title={t('ConnectionSettings:access_info_fields.password')}
                 onChangeText={onChangeText('password')}
                 value={formData?.password || password}
                 secureTextEntry={true}
@@ -87,12 +131,26 @@ const ConnectionSettings = () => {
 
               <Button
                 onPress={handleSubmitForm}
-                label="connect"
+                label={t('ConnectionSettings:submit')}
                 disabled={isLoading}
               />
-              {user?.name && <Text>Connected as {user?.name}</Text>}
-              <View style={{height: 100}} />
+              {error && (
+                <Card type="error">
+                  <Text style={[baseStyles.textStyle.bold]}>
+                    {t('ConnectionSettings:error.title')}
+                  </Text>
+                  <Text style={[baseStyles.textStyle.text]}>
+                    {t('ConnectionSettings:error.info')}
+                  </Text>
+                </Card>
+              )}
+              {user?.name && (
+                <Text style={baseStyles.textStyle.text}>
+                  {t('ConnectionSettings:connected_as', {username: user?.name})}
+                </Text>
+              )}
             </View>
+            <View style={{height: 100}} />
           </ScrollView>
         </KeyboardAvoidingView>
       </>
