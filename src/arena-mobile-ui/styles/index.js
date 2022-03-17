@@ -2,20 +2,41 @@ import {StyleSheet} from 'react-native';
 
 import * as colors from '../colors';
 
+const textSize = StyleSheet.create({
+  xxl: {
+    fontSize: 24,
+  },
+  xl: {
+    fontSize: 18,
+  },
+  l: {
+    fontSize: 16,
+  },
+  m: {
+    fontSize: 14,
+  },
+  s: {
+    fontSize: 12,
+  },
+  xs: {
+    fontSize: 8,
+  },
+});
+
 const textStyle = StyleSheet.create({
   title: {
-    fontSize: 24,
+    ...textSize.xxl,
     fontWeight: 'bold',
   },
   header: {
-    fontSize: 18,
+    ...textSize.xl,
     fontWeight: 'bold',
   },
   text: {
-    fontSize: 14,
+    ...textSize.m,
   },
   bold: {
-    fontSize: 14,
+    ...textSize.m,
     fontWeight: 'bold',
   },
   lower: {
@@ -35,5 +56,6 @@ const card = StyleSheet.create({
 
 export default {
   textStyle,
+  textSize,
   card,
 };
