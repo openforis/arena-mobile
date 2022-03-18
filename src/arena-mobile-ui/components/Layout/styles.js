@@ -8,7 +8,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   bottom: {
-    backgroundColor: colors.white,
+    white: {
+      backgroundColor: colors.white,
+    },
+    primary: {
+      backgroundColor: colors.primary,
+    },
   },
 });
 

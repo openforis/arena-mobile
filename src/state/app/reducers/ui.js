@@ -5,9 +5,18 @@ import initialState from '../initial.state';
 
 const appUi = handleActions(
   {
-    [actions.setLoading]: (state, {payload: isLoading}) => ({
+    [actions.setLoading]: (state, {payload: {isLoading}}) => ({
       ...state,
       loading: isLoading,
+    }),
+    [actions.setError]: (state, {payload: {error}}) => ({
+      ...state,
+      error: error,
+    }),
+    [actions.initConnection$]: state => ({
+      ...state,
+      error: false,
+      isLoading: true,
     }),
   },
   initialState.ui || {},
