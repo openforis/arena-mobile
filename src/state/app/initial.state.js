@@ -7,7 +7,7 @@ const initialState = {
   },
   ui: {
     error: undefined,
-    loading: false,
+    isLoading: false,
   },
 };
 

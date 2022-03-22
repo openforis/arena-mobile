@@ -1,3 +1,8 @@
 {
-  "logged_in_as": "Logged in as"
+  "logged_in_as": "Logged in as",
+  "not_logged_in": {
+    "title": "Not authenticated",
+    "info": "Please log in into the system",
+    "cta": "Go to connection settings"
+  }
 }
