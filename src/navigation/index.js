@@ -13,7 +13,8 @@ import 'i18n';
 import {setNavigator} from 'state/navigatorService';
 import getStore from 'state/store';
 
-import {ROUTES, SCREENS, KEYS} from './constants';
+import {ROUTES, KEYS} from './constants';
+import {SCREENS} from './screens';
 
 const Stack = createNativeStackNavigator();
 const {store} = getStore();
