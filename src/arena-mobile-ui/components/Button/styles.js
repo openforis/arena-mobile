@@ -44,6 +44,16 @@ const styles = StyleSheet.create({
       color: colors.black,
     },
   },
+  disabled: {
+    primary: {
+      backgroundColor: colors.secondaryLightest,
+    },
+    text: {
+      primary: {
+        color: colors.neutralLight,
+      },
+    },
+  },
 });
 
 export default styles;
