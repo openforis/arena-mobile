@@ -35,6 +35,10 @@ const textStyle = StyleSheet.create({
   text: {
     ...textSize.m,
   },
+  secondaryText: {
+    ...textSize.m,
+    color: colors.neutralLight,
+  },
   bold: {
     ...textSize.m,
     fontWeight: 'bold',
