@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Text, View} from 'react-native';
+import {Text, ScrollView} from 'react-native';
 
 import Header from 'arena-mobile-ui/components/Header';
 import Layout from 'arena-mobile-ui/components/Layout';
@@ -17,10 +17,10 @@ const Home = () => {
         <Header LeftComponent={NavigateToSettings}>
           <Text style={[baseStyles.textStyle.title]}>Home</Text>
         </Header>
-        <View style={[styles.container]}>
+        <ScrollView style={[styles.container]}>
           <User />
           <Survey />
-        </View>
+        </ScrollView>
       </>
     </Layout>
   );
