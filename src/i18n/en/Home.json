@@ -4,5 +4,24 @@
     "title": "Not authenticated",
     "info": "Please log in into the system",
     "cta": "Go to connection settings"
+  },
+  "survey": {
+    "no_survey": {
+      "title": "No survey selected",
+      "info": "Choose a valid survey or load a new one",
+      "cta": "Select survey"
+    },
+
+    "no_surveys": {
+      "title": "No surveys",
+      "info": "Please load a valid survey",
+      "cta": "Load survey"
+    },
+    "card": {
+      "current_survey": "Current survey.",
+      "id": "Id",
+      "language": "Selected language",
+      "go_to_survey_details": "Go to survey details"
+    }
   }
 }
