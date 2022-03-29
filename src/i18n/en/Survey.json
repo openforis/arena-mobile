@@ -1,0 +1,7 @@
+{
+  "empty": {
+    "title": "No survey selected.",
+    "info": "Please select one survey or fetch a new one.",
+    "cta_label": "Open the list of surveys"
+  }
+}

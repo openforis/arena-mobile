@@ -1,0 +1,46 @@
+{
+  "local": {
+    "error": {
+      "title": "It looks like you don't have any surveys on your device.",
+      "info": "Connect your device and load a valid survey.",
+      "cta_label": "Load from remote server"
+    },
+    "empty": {
+      "title": "It looks like you don't have any surveys on your device.",
+      "info": "Connect your device and load a valid survey.",
+      "cta_label": "Load from remote server"
+    }
+  },
+  "remote": {
+    "error": {
+      "title": "It looks like there is some error connecting with the server.",
+      "info": "Please review your connection and try again.",
+      "cta_label": "Go to connection settings"
+    },
+    "empty": {
+      "title": "It looks like there is not surveys in the server.",
+      "info": "Please ask the server admin.",
+      "cta_label": "Go to local surveys again"
+    }
+  },
+  "selected_survey_panel": {
+    "delete": {
+      "alert": {
+        "title": "Are you sure?",
+        "message": "You are going to remove the survey {{ name }} and all of the info related from the device.",
+        "accept": "Yes, delete",
+        "dismiss": "No"
+      }
+    },
+    "local": {
+      "cta_delete": "Delete",
+      "cta_select": "Select"
+    },
+    "remote": {
+      "cta_download": "Download",
+      "cta_update": "Update",
+      "cta_up_to_date": "Up to date",
+      "cta_select": "Select"
+    }
+  }
+}
