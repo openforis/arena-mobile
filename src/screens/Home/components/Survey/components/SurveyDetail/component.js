@@ -39,13 +39,6 @@ const SurveyDetail = () => {
           onPress={navigateTo({route: routes.SURVEY})}
         />
       </View>
-      <View style={[styles.buttonContainer]}>
-        <Button
-          type="ghost"
-          label={t('Home:survey.card.go_to_survey_details')}
-          onPress={navigateTo({route: routes.RECORDS})}
-        />
-      </View>
     </Card>
   );
 };
