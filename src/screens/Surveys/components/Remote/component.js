@@ -1,9 +1,9 @@
 import React from 'react';
 
+import Loading from 'arena-mobile-ui/components/List/Loading';
 import {hooks as surveysHooks} from 'state/surveys';
 
 import List from '../common/List';
-import Loading from '../common/Loading';
 
 import EmptyRemote from './Empty';
 import ErrorRemote from './Error';

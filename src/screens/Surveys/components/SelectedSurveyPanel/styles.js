@@ -6,15 +6,14 @@ const {width} = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    position: 'absolute',
+    width,
+    backgroundColor: colors.primary,
+    bottom: 0,
+    borderTopRightRadius: 16,
+    borderTopLeftRadius: 16,
     padding: 16,
-  },
-  item: {
-    backgroundColor: colors.neutralLighter,
-    height: 96,
-    width: width - 32,
-    marginTop: 8,
-    borderRadius: 8,
+    paddingBottom: 32,
   },
 });
 

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -9,6 +9,7 @@ import {selectors as surveySelectors} from 'state/survey';
 
 import Local from './components/Local';
 import Remote from './components/Remote';
+import SelectedSurveyPanel from './components/SelectedSurveyPanel';
 import SurveyOriginSelector from './components/SurveyOriginSelector';
 import styles from './styles';
 
@@ -16,6 +17,10 @@ const Surveys = () => {
   const localSurvey = useSelector(surveySelectors.getSurvey);
   const [surveysOrigin, setSurveysOrigin] = useState('local');
   const [selectedSurvey, setSelectedSurvey] = useState(null);
+
+  const resetSelectedSurvey = useCallback(() => {
+    setSelectedSurvey(null);
+  }, []);
 
   useEffect(() => {
     if (localSurvey?.info?.id) {
@@ -54,6 +59,13 @@ const Surveys = () => {
             />
           )}
         </View>
+        {selectedSurvey && (
+          <SelectedSurveyPanel
+            survey={selectedSurvey}
+            unSelect={resetSelectedSurvey}
+            surveysOrigin={surveysOrigin}
+          />
+        )}
       </>
     </Layout>
   );

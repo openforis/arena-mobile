@@ -1,10 +1,8 @@
 import React, {useCallback} from 'react';
-import {View, FlatList} from 'react-native';
+
+import CommonList from 'arena-mobile-ui/components/List';
 
 import SurveyCard from '../SurveyCard';
-
-import styles from './styles';
-
 const List = ({
   data,
   ListEmptyComponent,
@@ -25,17 +23,13 @@ const List = ({
   );
 
   return (
-    <View style={[styles.container]}>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        initialNumToRender={12}
-        data={data}
-        renderItem={renderItem}
-        ListEmptyComponent={ListEmptyComponent}
-        keyExtractor={keyExtractor}
-        ListFooterComponent={<View style={[styles.block]} />}
-      />
-    </View>
+    <CommonList
+      data={data}
+      ListEmptyComponent={ListEmptyComponent}
+      keyExtractor={keyExtractor}
+      renderItem={renderItem}
+    />
   );
 };
+
 export default List;

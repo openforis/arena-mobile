@@ -1,19 +1,25 @@
 import * as React from 'react';
 import {Text, View} from 'react-native';
+import {useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import baseStyles from 'arena-mobile-ui/styles';
+import {selectors as surveySelectors} from 'state/survey';
+import {selectors as surveysSelectors} from 'state/surveys';
 
 import NoLocalSurveys from './components/NoLocalSurveys';
 import NoSurveySelected from './components/NoSurveySelected';
+import SurveyDetail from './components/SurveyDetail';
 
 const Survey = () => {
-  const survey = {};
-  const numSurveys = 0;
+  const survey = useSelector(surveySelectors.getSurvey);
+  const numSurveys = useSelector(surveysSelectors.getNumberOfLocalSurveys);
 
   if (survey?.info?.id) {
     return (
       <>
+        <SurveyDetail />
+
         <View style={{flex: 2, justifyContent: 'flex-end'}}>
           <Text style={baseStyles.textStyle.title}>title</Text>
           <Text style={baseStyles.textStyle.header}>header</Text>

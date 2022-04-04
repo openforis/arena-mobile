@@ -6,8 +6,13 @@ import Layout from 'arena-mobile-ui/components/Layout';
 import baseStyles from 'arena-mobile-ui/styles';
 import NavigateToSurveys from 'navigation/components/NavigateToSurveys';
 
+import SurveyDetail from './components/SurveyDetail';
 import styles from './styles';
 
+/*
+  TODO
+  - change language
+*/
 const Survey = () => {
   return (
     <Layout>
@@ -17,7 +22,7 @@ const Survey = () => {
         </Header>
       </>
       <ScrollView style={[styles.container]}>
-        <Text>sss</Text>
+        <SurveyDetail />
       </ScrollView>
     </Layout>
   );
