@@ -26,6 +26,12 @@ function* handleSelectSurvey({payload: {surveyId}} = {}) {
   }
 }
 
+function* handleUnselectSurvey() {
+  yield put(surveyActions.cleanSurvey());
+  yield call(navigator.navigatorDispatch, StackActions.replace(ROUTES.HOME));
+}
+
 export default function* () {
   yield takeLatest(surveyActionTypes.selectSurvey$, handleSelectSurvey);
+  yield takeLatest(surveyActionTypes.unSelect$, handleUnselectSurvey);
 }

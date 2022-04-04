@@ -7,6 +7,7 @@ const {survey} = createActions({
   [types.unSelect$]: () => ({}),
 
   [types.SET_SURVEY]: ({survey: _survey}) => ({survey: _survey}),
+  [types.CLEAN_SURVEY]: () => ({}),
   [types.SELECT_SURVEY_LANGUAGE]: ({selectedSurveyLanguage}) => ({
     selectedSurveyLanguage,
   }),

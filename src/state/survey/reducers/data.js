@@ -6,6 +6,7 @@ import initialState from '../initial.state';
 const data = handleActions(
   {
     [actions.setSurvey]: (_, {payload: {survey = {}}}) => survey,
+    [actions.cleanSurvey]: () => {},
   },
   initialState.accessData || {},
 );
