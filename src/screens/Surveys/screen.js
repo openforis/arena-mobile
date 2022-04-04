@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text} from 'react-native';
+import {Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import Header from 'arena-mobile-ui/components/Header';
@@ -7,7 +7,10 @@ import Layout from 'arena-mobile-ui/components/Layout';
 import baseStyles from 'arena-mobile-ui/styles';
 import {selectors as surveySelectors} from 'state/survey';
 
+import Local from './components/Local';
+import Remote from './components/Remote';
 import SurveyOriginSelector from './components/SurveyOriginSelector';
+import styles from './styles';
 
 const Surveys = () => {
   const localSurvey = useSelector(surveySelectors.getSurvey);
@@ -35,6 +38,22 @@ const Surveys = () => {
           }>
           <Text style={[baseStyles.textStyle.title]}>Surveys</Text>
         </Header>
+
+        <View style={[styles.listContainer]}>
+          {surveysOrigin === 'local' ? (
+            <Local
+              setSurveysOrigin={setSurveysOrigin}
+              selectedSurvey={selectedSurvey}
+              setSelectedSurvey={setSelectedSurvey}
+            />
+          ) : (
+            <Remote
+              setSurveysOrigin={setSurveysOrigin}
+              selectedSurvey={selectedSurvey}
+              setSelectedSurvey={setSelectedSurvey}
+            />
+          )}
+        </View>
       </>
     </Layout>
   );
