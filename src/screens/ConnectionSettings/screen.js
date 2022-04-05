@@ -14,6 +14,7 @@ import Card from 'arena-mobile-ui/components/Card';
 import Header from 'arena-mobile-ui/components/Header';
 import Input from 'arena-mobile-ui/components/Input';
 import Layout from 'arena-mobile-ui/components/Layout';
+import PasswordInput from 'arena-mobile-ui/components/PasswordInput';
 import QRScanner, {
   useQRScanner,
   QRScannerButton,
@@ -122,11 +123,10 @@ const ConnectionSettings = () => {
                 onChangeText={onChangeText('username')}
                 value={formData?.username || username}
               />
-              <Input
+              <PasswordInput
                 title={t('ConnectionSettings:access_info_fields.password')}
                 onChangeText={onChangeText('password')}
                 value={formData?.password || password}
-                secureTextEntry={true}
               />
 
               <Button
