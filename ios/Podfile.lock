@@ -287,7 +287,7 @@ PODS:
     - React-Core
   - react-native-get-random-values (1.7.2):
     - React-Core
-  - react-native-mmkv (2.1.1):
+  - react-native-mmkv (2.1.2):
     - MMKV
     - React-Core
   - react-native-safe-area-context (3.3.2):
@@ -565,7 +565,7 @@ SPEC CHECKSUMS:
   React-logger: 1e10789cb84f99288479ba5f20822ce43ced6ffe
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-get-random-values: 30b3f74ca34e30e2e480de48e4add2706a40ac8f
-  react-native-mmkv: 7d83cd953862ce121b1242bc9e56f48b0c81e9e8
+  react-native-mmkv: 5f6f070d2dbd0e4785aabfd94fb7fccc29b70462
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   React-perflogger: 93d3f142d6d9a46e635f09ba0518027215a41098
   React-RCTActionSheet: 87327c3722203cc79cf79d02fb83e7332aeedd18

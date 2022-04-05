@@ -15,7 +15,9 @@ const LoggedInAs = () => {
 
   return (
     <Card>
-      <Text>{t('Home:logged_in_as')}</Text>
+      <Text style={[baseStyles.textStyle.secondaryText]}>
+        {t('Home:logged_in_as')}
+      </Text>
       <Text style={[baseStyles.textStyle.header]}>
         {name} - <Text style={[baseStyles.textStyle.lower]}>{email}</Text>
       </Text>

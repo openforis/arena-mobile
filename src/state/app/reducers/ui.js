@@ -7,7 +7,7 @@ const appUi = handleActions(
   {
     [actions.setLoading]: (state, {payload: {isLoading}}) => ({
       ...state,
-      loading: isLoading,
+      isLoading: isLoading,
     }),
     [actions.setError]: (state, {payload: {error}}) => ({
       ...state,
