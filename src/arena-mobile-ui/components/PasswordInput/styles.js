@@ -8,14 +8,14 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     ...inputStyles.input,
-    width: '100%',
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 0,
+    padding: 4,
     paddingVertical: 2,
   },
   input: {
-    width: '95%',
+    flex: 1,
   },
 });
 
