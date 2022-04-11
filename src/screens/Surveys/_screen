@@ -1,0 +1,164 @@
+import React, {useCallback, useState, useEffect} from 'react';
+import {Text, View, FlatList} from 'react-native';
+import {useSelector} from 'react-redux';
+
+import * as colors from 'arena-mobile-ui/colors';
+import Button from 'arena-mobile-ui/components/Button';
+import Header from 'arena-mobile-ui/components/Header';
+import Input from 'arena-mobile-ui/components/Input';
+import Layout from 'arena-mobile-ui/components/Layout';
+import TouchableCard from 'arena-mobile-ui/components/TouchableCard';
+import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
+import baseStyles from 'arena-mobile-ui/styles';
+import {selectors as surveySelectors} from 'state/survey';
+import {
+  hooks as surveysHooks,
+  selectors as surveysSelectors,
+} from 'state/surveys';
+
+import Local from './components/Local';
+import Remote from './components/Remote';
+import SelectedSurveyPanel from './components/SelectedSurveyPanel';
+import SurveyOriginSelector from './components/SurveyOriginSelector';
+
+const SurveyCard = ({survey, onSelect, isSelected}) => {
+  const handlePress = useCallback(() => {
+    console.log(onSelect, survey);
+    onSelect?.(survey);
+  }, [survey, onSelect]);
+  return (
+    <TouchableCard
+      onPress={handlePress}
+      customStyles={{
+        borderRadius: 0,
+        margin: 0,
+        marginBottom: 0,
+        paddingHorizontal: 12,
+        backgroundColor: isSelected ? colors.primaryLight : colors.background,
+      }}>
+      <View>
+        <Text>
+          {survey.info.id} - {survey.info.props.name}
+        </Text>
+        <Text style={[baseStyles.textStyle.bold]}>
+          {survey.info.props.labels.en}
+        </Text>
+        <Text>{survey.info.status}</Text>
+      </View>
+    </TouchableCard>
+  );
+};
+
+const Surveys = () => {
+  const [surveysOrigin, setSurveysOrigin] = useState('local');
+  const [selectedSurvey, setSelectedSurvey] = useState(null);
+  const {loading, error, surveys = []} = surveysHooks.useRemoteSurveys();
+  const localSurveys = useSelector(surveysSelectors.getSurveysAsList);
+  const localSurveysIds = useSelector(surveysSelectors.getSurveysIds);
+  const selectedSurveyId = useSelector(surveySelectors.getSelectedSurveyId);
+
+  const resetSelectedSurvey = useCallback(() => {
+    setSelectedSurvey(null);
+  }, []);
+
+  useEffect(() => {
+    setSelectedSurvey(null);
+  }, [surveysOrigin]);
+  return (
+    <Layout>
+      <>
+        <Header
+          hasBackComponent={true}
+          RightComponent={
+            <SurveyOriginSelector
+              setSurveysOrigin={setSurveysOrigin}
+              surveysOrigin={surveysOrigin}
+            />
+          }>
+          <Text style={[baseStyles.textStyle.title]}>Surveys</Text>
+        </Header>
+
+        <View style={{flex: 1, backgroundColor: colors.background}}>
+          {surveysOrigin === 'local' ? (
+            <Local setSurveysOrigin={setSurveysOrigin} />
+          ) : (
+            <Remote setSurveysOrigin={setSurveysOrigin} />
+          )}
+
+          {false && (
+            <View style={{height: 100, paddingHorizontal: 8}}>
+              <Input />
+            </View>
+          )}
+          {false && (
+            <>
+              {surveysOrigin === 'local' ? (
+                <View style={{flex: 1, backgroundColor: 'red '}}>
+                  <FlatList
+                    showsVerticalScrollIndicator={false}
+                    initialNumToRender={12}
+                    data={localSurveys}
+                    renderItem={({item}) => (
+                      <SurveyCard
+                        survey={item}
+                        onSelect={setSelectedSurvey}
+                        isSelected={
+                          selectedSurvey?.info?.uuid === item?.info?.uuid
+                        }
+                      />
+                    )}
+                    keyExtractor={item => `${item.info.id}`}
+                    ListFooterComponent={<View style={{height: 300}} />}
+                    ListEmptyComponent={
+                      <View style={{height: 100, backgroundColor: 'red'}} />
+                    }
+                  />
+                </View>
+              ) : (
+                <View style={{flex: 1}}>
+                  <FlatList
+                    showsVerticalScrollIndicator={false}
+                    initialNumToRender={12}
+                    data={surveys}
+                    renderItem={({item}) => (
+                      <SurveyCard
+                        survey={item}
+                        onSelect={setSelectedSurvey}
+                        isSelected={
+                          selectedSurvey?.info?.uuid === item?.info?.uuid
+                        }
+                      />
+                    )}
+                    ListEmptyComponent={
+                      <View
+                        style={{
+                          height: 100,
+                          backgroundColor: loading
+                            ? 'green'
+                            : error
+                            ? 'blue'
+                            : 'red',
+                        }}
+                      />
+                    }
+                    keyExtractor={item => `${item.info.id}`}
+                    ListFooterComponent={<View style={{height: 300}} />}
+                  />
+                </View>
+              )}
+            </>
+          )}
+        </View>
+        {selectedSurvey && (
+          <SelectedSurveyPanel
+            survey={selectedSurvey}
+            unSelect={resetSelectedSurvey}
+            surveysOrigin={surveysOrigin}
+          />
+        )}
+      </>
+    </Layout>
+  );
+};
+
+export default Surveys;
