@@ -51,7 +51,7 @@ const getCategoriesWithItems = async ({serverUrl, surveyId}) => {
 
 const getSurveyPopulatedById = async ({serverUrl, surveyId}) => {
   const {survey} = await getSurveyById({serverUrl, surveyId});
-  const nodeDefs = await getNodeDefs({serverUrl, surveyId});
+  const {nodeDefs} = await getNodeDefs({serverUrl, surveyId});
 
   //const categories = await getCategoriesWithItems({serverUrl, surveyId});
 

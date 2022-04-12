@@ -17,7 +17,6 @@ function* handleFetchSurvey({payload: {surveyId}} = {}) {
       serverUrl,
       surveyId,
     });
-    console.log('surveyWithNodeDefs', surveyWithNodeDefs);
     yield put(surveysActions.setSurvey({survey: surveyWithNodeDefs}));
   } catch (e) {
     console.log(e);

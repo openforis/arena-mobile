@@ -15,10 +15,7 @@ function* handleSelectSurvey({payload: {surveyId}} = {}) {
     );
 
     yield put(surveyActions.setSurvey({survey}));
-    yield call(
-      navigator.navigatorDispatch,
-      StackActions.replace(ROUTES.SURVEY),
-    );
+    yield call(navigator.navigatorDispatch, StackActions.replace(ROUTES.HOME));
   } catch (error) {
     console.log('Error', error);
   } finally {
