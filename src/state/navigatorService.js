@@ -14,7 +14,7 @@ export function navigate(routeName, ...args) {
     getNavigator().navigate(routeName, args || {});
   }
 }
-export function reset(routeName, ...args) {
+export function reset(routeName) {
   if (getNavigator() && routeName) {
     getNavigator().reset({
       index: 0,

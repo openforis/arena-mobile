@@ -9,7 +9,6 @@ const CONTENT_TYPES = {
 
 export default ({serverUrl = SERVER_URL}) => {
   const BASE_URL = serverUrl;
-  console.log('API::serverUrl::', serverUrl);
 
   const fetchGeneric = async ({
     method,

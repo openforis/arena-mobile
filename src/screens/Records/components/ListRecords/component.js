@@ -1,20 +1,24 @@
 import React, {useCallback} from 'react';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import List from 'arena-mobile-ui/components/List';
-import {selectors as recordsSelectors} from 'state/records';
+import {selectors as surveySelectors} from 'state/survey';
 
 const ListEmptyComponent = () => <View />;
 const ListRecords = ({selectedRecord, setSelectedRecord}) => {
-  const keyExtractor = useCallback(item => `${item.info.id}`, []);
+  const keyExtractor = useCallback(item => `${item.uuid}`, []);
 
   const renderItem = useCallback(
-    ({item}) => <View />,
+    ({item}) => (
+      <View>
+        <Text>{JSON.stringify(item, null, 2)}</Text>
+      </View>
+    ),
     [selectedRecord, setSelectedRecord],
   );
 
-  const records = useSelector(recordsSelectors.getRecordsInSurvey);
+  const records = useSelector(surveySelectors.getRecords);
 
   return (
     <List

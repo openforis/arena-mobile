@@ -1,5 +1,4 @@
 import {MMKV} from 'react-native-mmkv';
-// import {Storage} from 'redux-persist';
 
 const mmkvstorage = new MMKV();
 
