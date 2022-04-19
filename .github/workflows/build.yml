@@ -19,6 +19,8 @@ jobs:
         run: yarn
       - name: Run Tests
         run: yarn test
+      - name: Import test results
+        run: sonar-scaner
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
