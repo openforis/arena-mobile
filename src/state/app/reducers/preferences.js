@@ -10,7 +10,7 @@ const appPreferences = handleActions(
       serverUrl,
     }),
   },
-  initialState.preferences || {},
+  initialState.preferences,
 );
 
 export default appPreferences;

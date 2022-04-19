@@ -10,7 +10,7 @@ import appActionTypes from '../actionTypes';
 import appApi from '../api';
 import appSelectors from '../selectors';
 
-export function* handleAuthenticateUser() {
+function* handleAuthenticateUser() {
   let hasToNavigate = false;
   try {
     yield all([
@@ -38,7 +38,7 @@ export function* handleAuthenticateUser() {
       const {user} = data;
       yield put(userActions.setUser({user}));
     } else {
-      throw Error(data?.message || 'No user');
+      throw Error(data?.message);
     }
     hasToNavigate = true;
   } catch (e) {

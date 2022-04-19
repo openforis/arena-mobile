@@ -103,7 +103,7 @@ const ConnectionSettings = () => {
           style={[styles.container, {zIndex: visible ? -1 : 2}]}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <ScrollView>
-            <View style={{flex: 1, padding: 16}}>
+            <View style={[styles.formContainer]}>
               <Text style={[baseStyles.textStyle.header]}>
                 {t('ConnectionSettings:server_config_title')}
               </Text>

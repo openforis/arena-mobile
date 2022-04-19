@@ -13,13 +13,13 @@ const appUi = handleActions(
       ...state,
       error: error,
     }),
-    [actions.initConnection$]: state => ({
+    [actions.initConnection]: state => ({
       ...state,
       error: false,
       isLoading: true,
     }),
   },
-  initialState.ui || {},
+  initialState.ui,
 );
 
 export default appUi;
