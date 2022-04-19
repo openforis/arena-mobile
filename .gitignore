@@ -66,6 +66,9 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
+# Test
+coverage/*
+
 src/infra/api/_index.js
 .src/*
 __src/*
