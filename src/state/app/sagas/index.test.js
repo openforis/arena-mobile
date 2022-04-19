@@ -10,7 +10,7 @@ import * as navigator from 'state/navigatorService';
 import appReducers from 'state/reducers';
 
 const payload = {
-  username: 'user@arena-test.com',
+  username: 'test@openforis-arena.com',
   password: process.env.TEST_PASSWORD,
   serverUrl: 'mock-url',
 };
