@@ -7,6 +7,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
+  formContainer: {
+    flex: 1,
+    padding: 16,
+  },
   header: {
     fontSize: 18,
     fontWeight: 'bold',

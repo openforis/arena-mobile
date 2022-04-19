@@ -5,8 +5,9 @@ const initialState = {
     [dataKeys.username]: '',
     [dataKeys.password]: '',
   },
+  preferences: {},
   ui: {
-    error: undefined,
+    error: false,
     isLoading: false,
   },
 };

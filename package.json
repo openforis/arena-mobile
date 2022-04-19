@@ -7,6 +7,7 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
+    "test-coverage": "jest --coverage",
     "lint": "eslint .",
     "prepare": "husky install"
   },
@@ -46,23 +47,32 @@
     "@babel/runtime": "^7.16.7",
     "@react-native-community/eslint-config": "^3.0.1",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^27.4.5",
+    "babel-jest": "^27.5.1",
     "babel-plugin-module-resolver": "^4.1.0",
     "eslint": "^8.10.0",
     "eslint-plugin-flowtype": "^8.0.3",
     "eslint-plugin-import": "^2.25.4",
     "husky": "^7.0.4",
     "jest": "^27.4.5",
+    "jest-sonar-reporter": "^2.0.0",
     "lint-staged": "^12.3.4",
     "metro-react-native-babel-preset": "^0.66.2",
     "prettier": "^2.5.1",
     "react-devtools": "^4.24.1",
     "react-native-flipper": "^0.140.0",
     "react-scripts": "^5.0.0",
-    "react-test-renderer": "17.0.2"
+    "react-test-renderer": "17.0.2",
+    "redux-saga-test-plan": "^4.0.4"
   },
   "jest": {
-    "preset": "react-native"
+    "testEnvironment": "node",
+    "preset": "react-native",
+    "collectCoverage": true,
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "testResultsProcessor": "jest-sonar-reporter"
   },
   "husky": {
     "hooks": {

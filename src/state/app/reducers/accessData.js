@@ -11,7 +11,7 @@ const appAccessData = handleActions(
       password,
     }),
   },
-  initialState.accessData || {},
+  initialState.accessData,
 );
 
 export default appAccessData;
