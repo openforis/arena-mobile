@@ -9,11 +9,9 @@ import globalInitialState from 'state/initial.state';
 import * as navigator from 'state/navigatorService';
 import appReducers from 'state/reducers';
 
-const passwordTest = 'passwordTest';
-
 const payload = {
   username: 'user@arena-test.com',
-  password: passwordTest,
+  password: process.env.TEST_PASSWORD,
   serverUrl: 'mock-url',
 };
 
