@@ -65,7 +65,8 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+src/infra/api/_index.js
 .src/*
 __src/*
-src/infra/api/_index.js
-
+_._src/*
