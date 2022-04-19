@@ -54,6 +54,28 @@ describe('app saga', () => {
       });
     });
 
+    it('user malformed ', async () => {
+      const {storeState} = await expectSaga(appSagas)
+        .withReducer(appReducers)
+        .dispatch(appActions.initConnection({...payload}))
+        .provide([
+          [matchers.call.fn(appApi.auth), {malformed: mockUser}],
+          [matchers.call.fn(navigator.navigatorDispatch)],
+        ])
+        .silentRun();
+
+      expect(storeState).toEqual({
+        ...globalInitialState,
+        app: {
+          ...expectedAppState,
+          ui: {
+            ...expectedAppState.ui,
+            error: true,
+          },
+        },
+      });
+    });
+
     it('right user ', async () => {
       const {storeState} = await expectSaga(appSagas)
         .withReducer(appReducers)
