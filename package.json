@@ -64,7 +64,14 @@
     "redux-saga-test-plan": "^4.0.4"
   },
   "jest": {
-    "preset": "react-native"
+    "testEnvironment": "node",
+    "preset": "react-native",
+    "collectCoverage": true,
+    "testResultsProcessor": "jest-sonar-reporter",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ]
   },
   "husky": {
     "hooks": {
