@@ -7,6 +7,7 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "TEST_PASSWORD='passwordTest' jest",
+    "test-coverage": "TEST_PASSWORD='passwordTest' jest --coverage",
     "lint": "eslint .",
     "prepare": "husky install"
   },
