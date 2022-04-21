@@ -3,7 +3,6 @@ import {takeLatest, put, select, call} from 'redux-saga/effects';
 
 import {ROUTES} from 'navigation/constants';
 import {selectors as appSelectors} from 'state/app';
-import {actions as formActions} from 'state/form';
 import * as navigator from 'state/navigatorService';
 import {
   selectors as surveySelectors,
@@ -35,7 +34,6 @@ function* handleDeleteSurvey({payload}) {
   const selectedSurvey = yield select(surveySelectors.getSurvey);
   if (selectedSurvey?.info?.uuid === surveyUuid) {
     yield put(surveyActions.cleanSurvey());
-    yield put(formActions.clean());
   }
   if (callBack) {
     yield call(callBack);

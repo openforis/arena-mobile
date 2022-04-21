@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux';
 
 import {reducer as app} from './app';
+import {reducer as nodes} from './nodes';
 import {reducer as records} from './records';
 import {reducer as survey} from './survey';
 import {reducer as surveys} from './surveys';
@@ -11,6 +12,7 @@ export const RESET_STATE = 'root/RESET_STATE';
 const appReducers = combineReducers({
   app,
   records,
+  nodes,
   survey,
   surveys,
   user,

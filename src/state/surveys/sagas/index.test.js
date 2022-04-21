@@ -4,7 +4,7 @@ import {throwError} from 'redux-saga-test-plan/providers';
 
 import globalInitialState from 'state/initial.state';
 import * as navigator from 'state/navigatorService';
-import {appReducers} from 'state/reducers';
+import appReducers from 'state/reducers';
 import surveysActions from 'state/surveys/actionCreators';
 import surveysApi from 'state/surveys/api';
 import surveysSagas from 'state/surveys/sagas';
@@ -34,41 +34,6 @@ const initialState = {
     ...globalInitialState.surveys,
     data: {
       [mockSurvey.info.uuid]: {...mockSurvey},
-    },
-  },
-};
-
-const initialStateWithNodesAndRecords = {
-  ...initialState,
-  records: {
-    ...globalInitialState.records,
-    data: {
-      ...globalInitialState.records.data,
-      RECORD_ONE_UUID: {
-        uuid: 'RECORD_ONE_UUID',
-        surveyUuid: mockSurvey.info.uuid,
-      },
-    },
-  },
-  nodes: {
-    ...globalInitialState.nodes,
-    data: {
-      ...globalInitialState.nodes.data,
-      NODE_ONE_UUID: {uuid: 'NODE_ONE_UUID', surveyUuid: mockSurvey.info.uuid},
-    },
-  },
-  survey: {
-    ...globalInitialState.survey,
-    data: {
-      ...globalInitialState.survey.data,
-      ...mockSurvey,
-    },
-  },
-  form: {
-    ...globalInitialState.form,
-    data: {
-      ...globalInitialState.form.data,
-      record: 'RECORD',
     },
   },
 };
@@ -150,9 +115,9 @@ describe('surveys sagas', () => {
     it('survey exists, is not the current survey and have records and nodes', async () => {
       const {storeState} = await expectSaga(surveysSagas)
         .withReducer(appReducers, {
-          ...initialStateWithNodesAndRecords,
+          ...initialState,
           survey: {
-            ...initialStateWithNodesAndRecords.survey,
+            ...initialState.survey,
             data: {uuid: 'OTHER_SURVEY'},
           },
         })
@@ -166,9 +131,9 @@ describe('surveys sagas', () => {
         .silentRun();
 
       expect(storeState).toEqual({
-        ...initialStateWithNodesAndRecords,
+        ...initialState,
         survey: {
-          ...initialStateWithNodesAndRecords.survey,
+          ...initialState.survey,
           data: {uuid: 'OTHER_SURVEY'},
         },
         surveys: {
@@ -185,7 +150,7 @@ describe('surveys sagas', () => {
 
     it('survey exists, is the current survey and have records and nodes', async () => {
       const {storeState} = await expectSaga(surveysSagas)
-        .withReducer(appReducers, initialStateWithNodesAndRecords)
+        .withReducer(appReducers, initialState)
         .dispatch(
           surveysActions.deleteSurvey({
             ...payload,
@@ -196,7 +161,7 @@ describe('surveys sagas', () => {
         .silentRun();
 
       expect(storeState).toEqual({
-        ...initialStateWithNodesAndRecords,
+        ...initialState,
         survey: {
           ...globalInitialState.survey,
         },
@@ -209,16 +174,13 @@ describe('surveys sagas', () => {
         nodes: {
           ...globalInitialState.nodes,
         },
-        form: {
-          ...globalInitialState.form,
-        },
       });
     });
 
     it('survey doesnt exists and have records and nodes ', async () => {
       const _fakeCallBack = () => null;
       const {storeState} = await expectSaga(surveysSagas)
-        .withReducer(appReducers, initialStateWithNodesAndRecords)
+        .withReducer(appReducers, initialState)
         .dispatch(
           surveysActions.deleteSurvey({
             ...payload,
@@ -229,7 +191,7 @@ describe('surveys sagas', () => {
         .provide([[matchers.call.fn(_fakeCallBack), true]])
         .silentRun();
 
-      expect(storeState).toEqual(initialStateWithNodesAndRecords);
+      expect(storeState).toEqual(initialState);
     });
   });
 });
