@@ -1,7 +1,7 @@
+import {createCachedSelector} from 're-reselect';
 import {createSelector} from 'reselect';
 
-const getState = state => state?.surveys || {};
-const getSurveys = createSelector(getState, state => state?.data || {});
+const getSurveys = state => state?.surveys?.data || {};
 
 const getSurveysAsList = createSelector(
   getSurveys,
@@ -13,20 +13,15 @@ const getNumberOfLocalSurveys = createSelector(
   surveys => surveys.length,
 );
 
-const getSurveysIds = createSelector(getSurveys, surveys =>
-  Object.keys(surveys),
-);
-
-const getSurveyById = createSelector(
+const getSurveyByUuid = createCachedSelector(
   getSurveys,
-  (_, {surveyId = false} = {}) => ({surveyId}),
-  (surveys, {surveyId}) => (surveyId ? surveys[surveyId] : {}),
-);
+  (_, {surveyUuid}) => ({surveyUuid}),
+  (surveys, {surveyUuid}) => surveys[surveyUuid] || {},
+)((_state_, {surveyUuid}) => surveyUuid);
 
 export default {
   getSurveys,
   getSurveysAsList,
   getNumberOfLocalSurveys,
-  getSurveysIds,
-  getSurveyById,
+  getSurveyByUuid,
 };
