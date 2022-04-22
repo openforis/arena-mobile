@@ -38,6 +38,23 @@ const initialState = {
   },
 };
 
+const initialStateWithNodesAndRecords = {
+  ...initialState,
+  records: {
+    ...globalInitialState.records,
+    data: {
+      ...globalInitialState.records.data,
+    },
+  },
+  survey: {
+    ...globalInitialState.survey,
+    data: {
+      ...globalInitialState.survey.data,
+      ...mockSurvey,
+    },
+  },
+};
+
 describe('surveys sagas', () => {
   describe('fetch survey', () => {
     it('Survey doesnt exist ', async () => {
@@ -141,9 +158,6 @@ describe('surveys sagas', () => {
         },
         records: {
           ...globalInitialState.records,
-        },
-        nodes: {
-          ...globalInitialState.nodes,
         },
       });
     });

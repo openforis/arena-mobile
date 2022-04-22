@@ -5,6 +5,7 @@ import {useDispatch} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import {alert} from 'arena-mobile-ui/utils';
+import {actions as surveyActions} from 'state/survey';
 import {actions as surveysActions} from 'state/surveys';
 
 const LocalPanel = ({survey, unSelect}) => {
@@ -32,7 +33,7 @@ const LocalPanel = ({survey, unSelect}) => {
   }, [dispatch, survey, unSelect, t]);
 
   const handleSelect = useCallback(() => {
-    dispatch(surveysActions.selectSurvey({surveyId: survey.info.id}));
+    dispatch(surveyActions.selectSurvey({surveyUuid: survey.info.uuid}));
   }, [dispatch, survey]);
 
   return (

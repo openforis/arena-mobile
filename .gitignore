@@ -76,3 +76,6 @@ src/infra/api/_index.js
 .src/*
 __src/*
 _._src/*
+
+# TEST
+coverage/*

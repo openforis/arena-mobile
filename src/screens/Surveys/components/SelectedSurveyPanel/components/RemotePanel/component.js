@@ -4,6 +4,7 @@ import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
+import {actions as surveyActions} from 'state/survey';
 import {
   selectors as surveysSelectors,
   actions as surveysActions,
@@ -15,7 +16,7 @@ const RemotePanel = ({survey}) => {
   const [actionType, setActionType] = useState(null);
 
   const localSurvey = useSelector(state =>
-    surveysSelectors.getSurveyById(state, {surveyId: survey.info.id}),
+    surveysSelectors.getSurveyByUuid(state, {surveyId: survey.info.uuid}),
   );
 
   useEffect(() => {
@@ -41,7 +42,7 @@ const RemotePanel = ({survey}) => {
   }, [dispatch, survey]);
 
   const handleSelect = useCallback(() => {
-    dispatch(surveysActions.selectSurvey({surveyId: survey.info.id}));
+    dispatch(surveyActions.selectSurvey({surveyUuid: survey.info.uuid}));
   }, [dispatch, survey]);
 
   if (actionType === 'DOWNLOAD') {
