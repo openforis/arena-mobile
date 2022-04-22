@@ -68,7 +68,7 @@ buck-out/
 
 # Test
 coverage/*
-test_report.xml
+test-report.xml
 
 .env 
 
