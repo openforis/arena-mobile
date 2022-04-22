@@ -12,5 +12,6 @@ const _getAllRecordsList = createSelector(getRecordStateData, records =>
 );
 
 export default {
+  getRecordsByUuid: getRecordStateData,
   getRecords: _getAllRecordsList,
 };
