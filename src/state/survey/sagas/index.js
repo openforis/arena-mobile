@@ -9,8 +9,9 @@ import surveysSelectors from 'state/surveys/selectors';
 import surveyActions from '../actionCreators';
 import surveyActionTypes from '../actionTypes';
 
-function* handleSelectSurvey({payload: {surveyUuid}} = {}) {
+function* handleSelectSurvey({payload}) {
   try {
+    const {surveyUuid} = payload;
     const survey = yield select(state =>
       surveysSelectors.getSurveyByUuid(state, {surveyUuid}),
     );

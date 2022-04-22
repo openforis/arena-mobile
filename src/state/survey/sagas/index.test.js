@@ -3,7 +3,7 @@ import * as matchers from 'redux-saga-test-plan/matchers';
 
 import globalInitialState from 'state/initial.state';
 import * as navigator from 'state/navigatorService';
-import {appReducers} from 'state/reducers';
+import appReducers from 'state/reducers';
 import surveyActions from 'state/survey/actionCreators';
 import surveySagas from 'state/survey/sagas';
 
