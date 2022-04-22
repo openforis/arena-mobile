@@ -10,11 +10,11 @@ import initialState from '../initial.state';
 
 const data = handleActions(
   {
-    [actions.addNode]: (state, {payload: {node}}) => ({
+    [actions.setNode]: (state, {payload: {node}}) => ({
       ...state,
       [node.uuid]: node,
     }),
-    [actions.addNodes]: (state, {payload: {nodes}}) => {
+    [actions.setNodes]: (state, {payload: {nodes}}) => {
       let nodesToInsertByUuid = {};
       nodes.forEach(node => {
         nodesToInsertByUuid[node.uuid] = node;
@@ -24,10 +24,6 @@ const data = handleActions(
         ...nodesToInsertByUuid,
       };
     },
-    [actions.setNode]: (state, {payload: {node}}) => ({
-      ...state,
-      [node.uuid]: node,
-    }),
     [actions.deleteNode]: (state, {payload: {node}}) => {
       let newState = {...state};
       delete newState[node.uuid];
