@@ -1,4 +1,5 @@
 import ConnectionSettings from 'screens/ConnectionSettings';
+import Form from 'screens/Form';
 import Home from 'screens/Home';
 import Records from 'screens/Records';
 import Survey from 'screens/Survey';
@@ -17,5 +18,8 @@ export const SCREENS = {
   },
   [KEYS.RECORDS]: {
     component: Records,
+  },
+  [KEYS.FORM]: {
+    component: Form,
   },
 };

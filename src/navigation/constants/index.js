@@ -1,4 +1,5 @@
 import * as ConnectionSettings from 'screens/ConnectionSettings/constants';
+import * as Form from 'screens/Form/constants';
 import * as Home from 'screens/Home/constants';
 import * as Records from 'screens/Records/constants';
 import * as Survey from 'screens/Survey/constants';
@@ -10,6 +11,7 @@ export const KEYS = {
   [Survey.key]: [Survey.key],
   [Surveys.key]: [Surveys.key],
   [Records.key]: [Records.key],
+  [Form.key]: [Form.key],
 };
 
 export const ROUTES = {
@@ -18,4 +20,5 @@ export const ROUTES = {
   [Survey.key]: Survey.route,
   [Surveys.key]: Surveys.route,
   [Records.key]: Records.route,
+  [Form.key]: Form.route,
 };
