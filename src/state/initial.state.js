@@ -7,7 +7,6 @@ import userState from './user/initial.state';
 
 const globalInitialState = {
   app: appState,
-
   records: recordsState,
   nodes: nodesState,
   survey: surveyState,
