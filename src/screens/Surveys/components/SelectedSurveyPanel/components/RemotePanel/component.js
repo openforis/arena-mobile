@@ -16,11 +16,11 @@ const RemotePanel = ({survey}) => {
   const [actionType, setActionType] = useState(null);
 
   const localSurvey = useSelector(state =>
-    surveysSelectors.getSurveyByUuid(state, {surveyId: survey.info.uuid}),
+    surveysSelectors.getSurveyByUuid(state, {surveyUuid: survey?.info?.uuid}),
   );
 
   useEffect(() => {
-    if (!localSurvey?.info?.id) {
+    if (!localSurvey?.info?.uuid) {
       setActionType('DOWNLOAD');
       return;
     }
@@ -42,7 +42,7 @@ const RemotePanel = ({survey}) => {
   }, [dispatch, survey]);
 
   const handleSelect = useCallback(() => {
-    dispatch(surveyActions.selectSurvey({surveyUuid: survey.info.uuid}));
+    dispatch(surveyActions.selectSurvey({surveyUuid: survey?.info?.uuid}));
   }, [dispatch, survey]);
 
   if (actionType === 'DOWNLOAD') {

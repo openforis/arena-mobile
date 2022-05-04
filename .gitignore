@@ -73,6 +73,8 @@ test-report.xml
 .env 
 
 src/infra/api/_index.js
+src/navigation/Debug
+
 .src/*
 __src/*
 _._src/*

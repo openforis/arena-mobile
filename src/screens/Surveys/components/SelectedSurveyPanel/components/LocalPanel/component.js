@@ -23,7 +23,7 @@ const LocalPanel = ({survey, unSelect}) => {
       onAccept: () => {
         dispatch(
           surveysActions.deleteSurvey({
-            surveyId: survey.info.id,
+            surveyUuid: survey?.info?.uuid,
             callBack: () => unSelect(),
           }),
         );
@@ -33,7 +33,7 @@ const LocalPanel = ({survey, unSelect}) => {
   }, [dispatch, survey, unSelect, t]);
 
   const handleSelect = useCallback(() => {
-    dispatch(surveyActions.selectSurvey({surveyUuid: survey.info.uuid}));
+    dispatch(surveyActions.selectSurvey({surveyUuid: survey?.info?.uuid}));
   }, [dispatch, survey]);
 
   return (

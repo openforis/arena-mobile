@@ -1,7 +1,11 @@
+const createRecord$ = 'records/createRecord$';
+const deleteRecord$ = 'records/deleteRecord$';
 const SET_RECORD = 'records/SET_RECORD';
-const DELETE_RECORD = 'records/DELETE_RECORD';
+const CLEAN_RECORD = 'records/CLEAN_RECORD';
 
 export default {
+  createRecord$,
+  deleteRecord$,
   SET_RECORD,
-  DELETE_RECORD,
+  CLEAN_RECORD,
 };
