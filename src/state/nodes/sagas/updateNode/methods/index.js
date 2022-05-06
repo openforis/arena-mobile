@@ -1,4 +1,8 @@
+import survey from 'state/survey/actionCreators';
+
 const evalExpression = ({expression, node, record, nodes, nodeDefs}) => {
+  // dode from arena -> const _getApplicableExpressions = (survey, record, nodeCtx, expressions, stopAtFirstFound = false) => {
+
   return; //  error/warning(validationObject)
 };
 const validateNode = ({node, record, nodes, nodeDefs}) => {

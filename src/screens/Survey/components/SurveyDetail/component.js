@@ -10,7 +10,11 @@ import {selectors as surveySelectors} from 'state/survey';
 
 const SurveyDetail = () => {
   const survey = useSelector(surveySelectors.getSurvey);
-  const surveyLanguage = useSelector(surveySelectors.getSelectedSurveyLanguage);
+  const {
+    name: surveyName,
+    label: surveyLabel,
+    language: surveyLanguage,
+  } = useSelector(surveySelectors.getSurveyData);
   const {t} = useTranslation();
 
   useEffect(() => {
@@ -26,7 +30,7 @@ const SurveyDetail = () => {
           {t('Home:survey.card.current_survey')}
         </Text>
         <Text style={baseStyles.textStyle.title}>
-          {survey.info.props.labels[surveyLanguage]} ·{survey.info.props.name}{' '}
+          {surveyLabel} ·{surveyName}
         </Text>
         <Text>
           {t('Home:survey.card.id')}: {survey.info.id}

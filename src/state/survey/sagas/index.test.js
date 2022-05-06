@@ -29,6 +29,13 @@ const initialState = {
       SURVEY_1: {...mockSurvey},
     },
   },
+  form: {
+    ...globalInitialState.form,
+    data: {
+      ...globalInitialState.form.data,
+      record: 'RECORD',
+    },
+  },
 };
 
 describe('survey saga', () => {
@@ -68,6 +75,9 @@ describe('survey saga', () => {
             ...initialState.survey.ui,
             selectedSurveyLanguage: mockSurvey.info.props.languages[0],
           },
+        },
+        form: {
+          ...globalInitialState.form,
         },
       });
     });

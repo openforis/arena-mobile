@@ -1,10 +1,11 @@
 export const deleteValueByKey =
-  ({key = 'uuid', conditionToDelete = () => false}) =>
+  ({conditionToDelete = () => false}) =>
   obj => {
     let newObject = {...obj};
-    (Object.values(obj) || []).forEach(item => {
+    (Object.keys(obj) || []).forEach(key => {
+      const item = obj[key];
       if (conditionToDelete(item)) {
-        delete newObject[item[key]];
+        delete newObject[key];
       }
     });
     return newObject;

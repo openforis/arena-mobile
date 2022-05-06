@@ -2,7 +2,7 @@ import {StackActions} from '@react-navigation/core';
 import {takeLatest, put, select, call} from 'redux-saga/effects';
 
 import {ROUTES} from 'navigation/constants';
-//import {actions as formActions} from 'state/form';
+import {actions as formActions} from 'state/form';
 import * as navigator from 'state/navigatorService';
 import surveysSelectors from 'state/surveys/selectors';
 
@@ -20,7 +20,7 @@ function* handleSelectSurvey({payload}) {
       throw Error('Missing survey');
     }
     yield put(surveyActions.setSurvey({survey}));
-    //yield put(formActions.clean());
+    yield put(formActions.clean());
     yield call(navigator.navigatorDispatch, StackActions.replace(ROUTES.HOME));
   } catch (error) {
     console.log('Error', error.message);
