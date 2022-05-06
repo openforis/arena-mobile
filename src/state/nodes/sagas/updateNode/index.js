@@ -21,16 +21,22 @@ function* handleUpdateNode({payload}) {
     select(surveySelectors.getNodeDefsByUuid),
   ]);
 
+  if (!node.uuid) {
+    return;
+  }
+
   //yield call(validateIfRootWithOtherRecords);
 
-  const {updateNodes} = yield call(updateNodeAndDependats, {
+  const {updatedNodes, validatedNodes} = yield call(updateNodeAndDependats, {
     node,
     updatedNode,
     record,
     recordNodes,
     nodeDefsByUuid,
   });
-  yield put(nodesActions.setNodes({nodes: updateNodes}));
+
+  yield put(nodesActions.setNodes({nodes: updatedNodes}));
+  yield put(nodesActions.setErrors({errors: validatedNodes}));
 }
 
 export default handleUpdateNode;
