@@ -52,7 +52,12 @@ describe('survey saga', () => {
         .provide([[matchers.call.fn(navigator.navigatorDispatch), true]])
         .silentRun();
 
-      expect(storeState).toEqual(initialState);
+      expect(storeState).toEqual({
+        ...initialState,
+        form: {
+          ...globalInitialState.form,
+        },
+      });
     });
 
     it('Survey is into the device ', async () => {

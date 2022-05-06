@@ -9,6 +9,7 @@ const {nodes} = createActions({
   [types.SET_NODES]: ({nodes: _nodes = []}) => ({nodes: _nodes}),
   [types.DELETE_NODE]: ({node}) => ({node}),
   [types.CLEAN]: () => ({}),
+  [types.SET_ERRORS]: ({errors}) => ({errors}),
 });
 
 export default nodes;

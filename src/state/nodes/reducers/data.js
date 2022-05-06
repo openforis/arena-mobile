@@ -17,7 +17,7 @@ const data = handleActions(
     [actions.setNodes]: (state, {payload: {nodes}}) => {
       let nodesToInsertByUuid = {};
       nodes.forEach(node => {
-        nodesToInsertByUuid[node.uuid] = node;
+        nodesToInsertByUuid[node.uuid] = {...node};
       });
       return {
         ...state,
