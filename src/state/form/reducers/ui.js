@@ -13,16 +13,13 @@ const ui = handleActions(
       ...state,
       error: error,
     }),
-    [actions.selectSurveyLanguage]: (
-      state,
-      {payload: {selectedSurveyLanguage}},
-    ) => ({
+    [actions.toggleEntitySelector]: state => ({
       ...state,
-      selectedSurveyLanguage,
+      isEntitySelectorOpened: !state.isEntitySelectorOpened,
     }),
-    [actions.setSurvey]: (state, {payload: {survey = {}}}) => ({
+    [actions.closeEntitySelector]: state => ({
       ...state,
-      selectedSurveyLanguage: survey?.info?.props?.languages?.[0],
+      isEntitySelectorOpened: false,
     }),
   },
   initialState.ui || {},

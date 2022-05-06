@@ -8,7 +8,9 @@ const getSurveys = async ({serverUrl}) => {
 
 const getSurveyById = async ({serverUrl, surveyId}) => {
   const {data: survey} = await API({serverUrl}).get({
-    path: `api/survey/${surveyId}`,
+    path: `api/survey/${surveyId}?${new URLSearchParams({
+      draft: true,
+    })}`,
   });
   return survey;
 };

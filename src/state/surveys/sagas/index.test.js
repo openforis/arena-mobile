@@ -41,16 +41,34 @@ const initialState = {
 const initialStateWithNodesAndRecords = {
   ...initialState,
   records: {
-    ...initialState.records,
+    ...globalInitialState.records,
+    data: {
+      ...globalInitialState.records.data,
+      RECORD_ONE_UUID: {
+        uuid: 'RECORD_ONE_UUID',
+        surveyUuid: mockSurvey.info.uuid,
+      },
+    },
   },
   nodes: {
-    ...initialState.nodes,
+    ...globalInitialState.nodes,
+    data: {
+      ...globalInitialState.nodes.data,
+      NODE_ONE_UUID: {uuid: 'NODE_ONE_UUID', surveyUuid: mockSurvey.info.uuid},
+    },
   },
   survey: {
-    ...initialState.survey,
+    ...globalInitialState.survey,
     data: {
-      ...initialState.survey.data,
+      ...globalInitialState.survey.data,
       ...mockSurvey,
+    },
+  },
+  form: {
+    ...globalInitialState.form,
+    data: {
+      ...globalInitialState.form.data,
+      record: 'RECORD',
     },
   },
 };
@@ -190,6 +208,9 @@ describe('surveys sagas', () => {
         },
         nodes: {
           ...globalInitialState.nodes,
+        },
+        form: {
+          ...globalInitialState.form,
         },
       });
     });

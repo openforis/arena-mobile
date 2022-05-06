@@ -69,14 +69,18 @@ const ConnectionSettings = () => {
 
   useEffect(() => {
     if (qrData) {
-      const qrDataParsed = JSON.parse(qrData);
+      try {
+        const qrDataParsed = JSON.parse(qrData);
 
-      setFormData(prevData => ({
-        ...prevData,
-        username: qrDataParsed?.username || prevData.username,
-        serverUrl: qrDataParsed?.serverUrl || prevData.serverUrl,
-        password: qrDataParsed?.password || prevData.password,
-      }));
+        setFormData(prevData => ({
+          ...prevData,
+          username: qrDataParsed?.username || prevData.username,
+          serverUrl: qrDataParsed?.serverUrl || prevData.serverUrl,
+          password: qrDataParsed?.password || prevData.password,
+        }));
+      } catch (e) {
+        console.log('qrData is not a valid json');
+      }
     }
   }, [qrData]);
 
