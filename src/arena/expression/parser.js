@@ -70,7 +70,7 @@ const _parseArenaExpression = ({expression, node, survey, record}) => {
     }
   });
 
-  return jsExpression; // Object.keys(nodeDefsUuidsByName);
+  return jsExpression;
 };
 
 export const prepareArenaExpressions = ({
