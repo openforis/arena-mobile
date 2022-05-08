@@ -135,7 +135,7 @@ describe('Node updater', () => {
           [getCurrentUuid(2)]: {...baseMockNode, value: -1},
         },
         errors: {
-          [getCurrentUuid(2)]: {error: 'ERROR'},
+          [getCurrentUuid(2)]: [{error: 'ERROR'}],
         },
       },
     });
@@ -159,7 +159,7 @@ describe('Node updater', () => {
             [getCurrentUuid(2)]: {...baseMockNode, value: -1},
           },
           errors: {
-            [getCurrentUuid(2)]: {error: 'ERROR'},
+            [getCurrentUuid(2)]: [{error: 'ERROR'}],
           },
         },
       })
@@ -197,7 +197,7 @@ describe('Node updater', () => {
             [getCurrentUuid(2)]: {...baseMockNode, value: -1},
           },
           errors: {
-            [getCurrentUuid(2)]: {error: 'ERROR'},
+            [getCurrentUuid(2)]: [{error: 'ERROR'}],
           },
         },
       })
@@ -213,7 +213,7 @@ describe('Node updater', () => {
           [getCurrentUuid(2)]: {...baseMockNode, value: -3},
         },
         errors: {
-          [getCurrentUuid(2)]: {error: 'ERROR'},
+          [getCurrentUuid(2)]: [{error: 'ERROR'}],
         },
       },
     });

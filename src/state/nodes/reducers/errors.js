@@ -1,5 +1,6 @@
 import {handleActions} from 'redux-actions';
 
+import {isEmpty} from 'arena/utils';
 import {deleteValueByKey} from 'infra/objectUtils';
 
 import actions from '../actionCreators';
@@ -9,7 +10,7 @@ const errors = handleActions(
   {
     [actions.setErrors]: (state, {payload: {errors: _errors}}) =>
       deleteValueByKey({
-        conditionToDelete: item => !item,
+        conditionToDelete: item => !item || isEmpty(item),
       })({
         ...state,
         ..._errors,

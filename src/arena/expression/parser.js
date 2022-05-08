@@ -91,23 +91,26 @@ const _getNodeExpressions = ({node, survey, type = 'ALL'}) => {
 
   if (type === 'VALIDATIONS') {
     expression =
-      nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.validations?.expressions;
+      nodeDefsByUuid[node.nodeDefUuid]?.propsAdvanced?.validations
+        ?.expressions || [];
   }
 
   if (type === 'APPLICABLE') {
-    expression = nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.applicable;
+    expression =
+      nodeDefsByUuid[node.nodeDefUuid]?.propsAdvanced?.applicable || [];
   }
   if (type === 'DEFAULT_VALUES' && node.updatedBy !== 'USER') {
-    expression = nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.defaultValues;
+    expression =
+      nodeDefsByUuid[node.nodeDefUuid]?.propsAdvanced?.defaultValues || [];
   }
 
   if (type === 'ALL') {
     expression = [
-      ...(nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.validations
+      ...(nodeDefsByUuid[node.nodeDefUuid]?.propsAdvanced?.validations
         ?.expressions || []),
-      ...(nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.applicable || []),
+      ...(nodeDefsByUuid[node.nodeDefUuid]?.propsAdvanced?.applicable || []),
       ...(node.updatedBy !== 'USER'
-        ? nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.defaultValues || []
+        ? nodeDefsByUuid[node.nodeDefUuid]?.propsAdvanced?.defaultValues || []
         : []),
     ];
   }

@@ -22,7 +22,30 @@ export const mockSurvey = {
     },
   },
   nodeDefs: {
-    NODE_DEF_UUID: {id: 'NODE_DEF_ID', uuid: 'NODE_DEF_UUID'},
+    NODE_DEF_UUID: {
+      id: 'NODE_DEF_ID',
+      uuid: 'NODE_DEF_UUID',
+      propsAdvanced: {
+        validations: {
+          expressions: [
+            {
+              uuid: '1285f356-c0e2-4219-9c88-97c68f63fac7',
+              applyIf: '',
+              messages: {},
+              severity: 'error',
+              expression: 'this_number > 0',
+            },
+          ],
+        },
+      },
+      props: {
+        name: 'this_number',
+        cycles: ['0'],
+        labels: {
+          en: 'This Number',
+        },
+      },
+    },
   },
 };
 

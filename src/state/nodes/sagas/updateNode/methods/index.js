@@ -1,21 +1,37 @@
+const {evalExpr} = require('jse-eval');
+
 const {
+  prepareArenaExpressions,
   checkIfNodeExpressionsDependsOnReferenceNode,
 } = require('arena/expression/parser');
 
-const evalExpression = ({expression, node, record, survey}) => {
+const evalArenaExpression = ({expression}) => {
   // dode from arena -> const _getApplicableExpressions = (survey, record, nodeCtx, expressions, stopAtFirstFound = false) => {
 
-  return node.value >= 0; //  error/warning(validationObject)
+  return (
+    (expression.jsApplyIf === '' || evalExpr(expression.jsApplyIf)) &&
+    evalExpr(expression.jsExpression)
+  );
 };
+
 const validateNode = ({node, record, survey}) => {
   // vget Validation rules
+  const expressions = prepareArenaExpressions({node, survey, record});
+  let errors = [];
+  let warning = [];
   // get applicable validation rules
   // iterate over applicable rules
   // evaluate expression -> evalExpression
-  return evalExpression({node}); //validationObject
-};
+  expressions.forEach(expression => {
+    if (!evalArenaExpression({expression})) {
+      errors.push({error: 'ERROR'});
+    }
+  });
+  // maybe wrap this evalExpr
+  // evalExpression({node}); //validationObject
 
-const validateIfRootWithOtherRecords = () => true;
+  return {errors: errors.length > 0 ? [errors[0]] : [], warning};
+};
 
 const getListOfDependants = ({node, record, survey}) => {
   /*(node, record[nodes], survey[nodeDefs] ) -> [] -> [nodes]
@@ -31,29 +47,31 @@ const getListOfDependants = ({node, record, survey}) => {
             if node.nodeDef() in _node.nodeDef.rules.dependantNodeDefs()*/
 
   let dependantNodes = [];
-  dependantNodes = Object.values(record.nodes).filter(_node =>
-    checkIfNodeExpressionsDependsOnReferenceNode({
-      node: _node,
-      survey,
-      record,
-      referenceNode: node,
-    }),
+  dependantNodes = Object.values(record.nodes).filter(
+    _node =>
+      _node.uuid !== node.uuid &&
+      checkIfNodeExpressionsDependsOnReferenceNode({
+        node: _node,
+        survey,
+        record,
+        referenceNode: node,
+      }),
   );
-
-  // we need to filter and check if the applyIf is true and into the applicability and default we should return as node to Update
+  // we need to filter and check if the applyIf (or not because dependant nodes shpuld be cleaned) is true and into the applicability and default we should return as node to Update
 
   return dependantNodes;
 };
 
 const updateDependantNodes = ({node, record: _record, survey}) => {
   let updatedNodes = [];
-  let validatedNodes = {};
+  let errors = {};
+  let warnings = {};
   let record = {..._record};
 
   // getListOfDependants ( it is going to be updated because you are going to go through the tree) -> it is queue
   const depentands = getListOfDependants({node, record, survey});
 
-  for (let dependantNode in depentands) {
+  depentands.forEach(dependantNode => {
     // iterate over the nodes
     // 2.1 checkRules [ 1. Applicability, 2. default values if needed, 3 validation ]
 
@@ -64,28 +82,26 @@ const updateDependantNodes = ({node, record: _record, survey}) => {
     //  dont iterate over the children
     //	return
     // if relevant and was not relevant
-    // __if value in t-1 was null
+    // __if value in t-1 was null -> or not edited by user
     // ____apply defualt
 
-    const isValid = validateNode({
+    const {errors: _errors = [], warnings: _warnings = []} = validateNode({
       node: dependantNode,
       record,
       survey,
     });
 
-    const {
-      updatedNodes: updatedDependants,
-      validatedNodes: validatedDependantNodes,
-    } = updateDependantNodes({
-      node: dependantNode,
-      record,
-      survey,
-    });
+    const {updatedNodes: updatedDependants, depentantErrors} =
+      updateDependantNodes({
+        node: dependantNode,
+        record,
+        survey,
+      });
 
-    validatedNodes = {
-      ...validatedNodes,
-      [dependantNode.uuid]: isValid ? false : {error: 'ERROR'},
-      ...validatedDependantNodes,
+    errors = {
+      ...errors,
+      [dependantNode.uuid]: _errors,
+      ...depentantErrors,
     };
     updatedNodes.push(dependantNode, ...(updatedDependants || []));
 
@@ -94,19 +110,19 @@ const updateDependantNodes = ({node, record: _record, survey}) => {
       ...record,
       nodes: {
         ...record.nodes,
-        ...(updatedNodes || []).reduce(
-          (acc, _node) => ({...acc, [_node.uuid]: {..._node}}),
-          {},
-        ),
+        ...(updatedNodes || []).reduce((acc, _node) => {
+          return {...acc, [_node.uuid]: {..._node}};
+        }, {}),
       },
     };
-  }
+  });
 
-  return {updatedNodes, validatedNodes};
+  return {updatedNodes, depentantErrors: errors, dependantWarnings: warnings};
 };
 
 export const updateNodeAndDependats = ({node, record: _record, survey}) => {
-  let validatedNodes = {};
+  let warnings = {};
+  let errors = {};
 
   //recordWithUpdatedNode
   const record = {
@@ -114,24 +130,32 @@ export const updateNodeAndDependats = ({node, record: _record, survey}) => {
     nodes: {..._record.nodes, [node.uuid]: {...node}},
   };
 
-  const isValid = validateNode({
+  const {errors: _errors, warnings: _warnings} = validateNode({
     node,
     record,
     survey,
   });
 
-  const {updatedNodes, validatedNodes: validatedDependantNodes} =
+  const {updatedNodes, depentantErrors, dependantWarnings} =
     updateDependantNodes({
       node,
       record,
       survey,
     });
 
-  validatedNodes = {
-    ...validatedNodes,
-    [node.uuid]: isValid ? false : {error: 'ERROR'},
-    ...validatedDependantNodes,
+  // rename to errors
+  errors = {
+    ...errors,
+    [node.uuid]: _errors,
+    ...depentantErrors,
   };
 
-  return {updatedNodes: [node, ...(updatedNodes || [])], validatedNodes};
+  //
+  warnings = {
+    ...warnings,
+    [node.uuid]: _warnings,
+    ...dependantWarnings,
+  };
+
+  return {updatedNodes: [node, ...(updatedNodes || [])], errors, warnings};
 };
