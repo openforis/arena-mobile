@@ -87,21 +87,22 @@ const _parseArenaExpression = ({expression, node, survey, record}) => {
 
 const _getNodeExpressions = ({node, survey, type = 'ALL'}) => {
   const nodeDefsByUuid = survey.nodeDefs;
+  let expression = [];
 
   if (type === 'VALIDATIONS') {
-    return nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.validations
-      ?.expressions;
+    expression =
+      nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.validations?.expressions;
   }
 
   if (type === 'APPLICABLE') {
-    return nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.applicable;
+    expression = nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.applicable;
   }
   if (type === 'DEFAULT_VALUES' && node.updatedBy !== 'USER') {
-    return nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.defaultValues;
+    expression = nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.defaultValues;
   }
 
   if (type === 'ALL') {
-    return [
+    expression = [
       ...(nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.validations
         ?.expressions || []),
       ...(nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.applicable || []),
@@ -110,6 +111,7 @@ const _getNodeExpressions = ({node, survey, type = 'ALL'}) => {
         : []),
     ];
   }
+  return expression;
 };
 
 export const prepareArenaExpressions = ({
