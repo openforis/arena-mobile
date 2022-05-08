@@ -10,7 +10,8 @@ import {updateNodeAndDependats} from './methods';
 function* handleUpdateNode({payload}) {
   const {updatedNode} = payload;
 
-  const [node, record, recordNodes, nodeDefsByUuid] = yield all([
+  const [survey, node, record, recordNodes] = yield all([
+    select(surveySelectors.getSurvey),
     select(state => nodesSelectors.getNodeByUuid(state, updatedNode.uuid)),
     select(state =>
       recordsSelectors.getRecordByUuid(state, updatedNode.recordUuid),
@@ -18,7 +19,6 @@ function* handleUpdateNode({payload}) {
     select(state =>
       nodesSelectors.getNodesByRecordUuid(state, updatedNode.recordUuid),
     ),
-    select(surveySelectors.getNodeDefsByUuid),
   ]);
 
   if (!node.uuid) {
@@ -27,12 +27,12 @@ function* handleUpdateNode({payload}) {
 
   //yield call(validateIfRootWithOtherRecords);
 
+  const recordWithNodes = {...record, nodes: {...recordNodes}};
+
   const {updatedNodes, validatedNodes} = yield call(updateNodeAndDependats, {
-    node,
-    updatedNode,
-    record,
-    recordNodes,
-    nodeDefsByUuid,
+    node: updatedNode,
+    record: recordWithNodes,
+    survey,
   });
 
   yield put(nodesActions.setNodes({nodes: updatedNodes}));

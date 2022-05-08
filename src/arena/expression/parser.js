@@ -21,15 +21,27 @@ const getNodeParents = ({node, record}) => {
   return parentsUuids;
 };
 
+const getNodeSibilings = ({node, record}) => {
+  return Object.values(record.nodes)
+    .filter(
+      _node => _node.parentUuid === node.parentUuid && node.uuid !== _node.uuid,
+    )
+    .map(_node => _node.uuid);
+};
+
 const getRelativeNodeByNodeDefUuid = ({node, record, nodeDefUuid}) => {
   const nodesByNodeDefUuid = Object.values(record.nodes).filter(
     _node => _node.nodeDefUuid === nodeDefUuid,
   );
+
+  // Maybe more efficient if we pass only the nodesFilteredByNodeDef
   const ancestorsNodeUuids = getNodeParents({node, record});
+  const sibilingsNodeUuids = getNodeSibilings({node, record});
 
   return nodesByNodeDefUuid.find(
     _node =>
       ancestorsNodeUuids.includes(_node.parentUuid) ||
+      sibilingsNodeUuids.includes(_node.parentUuid) ||
       _node.parentUuid === null,
   );
 };
@@ -46,7 +58,7 @@ const _parseArenaExpression = ({expression, node, survey, record}) => {
   const nodeDefsUuidsByName = getNodeDefUuidsByName({survey});
   const nodeDefsByUuid = survey.nodeDefs;
 
-  let jsExpression = expression.replace();
+  let jsExpression = expression;
   /* HERE is where we should replace the MemberExpression and Identifiers with the 'raw' value  */
   Object.keys(nodeDefsUuidsByName).forEach(nodeDefName => {
     const hasNodeDef = jsExpression.includes(nodeDefName);
@@ -73,29 +85,40 @@ const _parseArenaExpression = ({expression, node, survey, record}) => {
   return jsExpression;
 };
 
+const _getNodeExpressions = ({node, survey, type = 'ALL'}) => {
+  const nodeDefsByUuid = survey.nodeDefs;
+
+  if (type === 'VALIDATIONS') {
+    return nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.validations
+      ?.expressions;
+  }
+
+  if (type === 'APPLICABLE') {
+    return nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.applicable;
+  }
+  if (type === 'DEFAULT_VALUES' && node.updatedBy !== 'USER') {
+    return nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.defaultValues;
+  }
+
+  if (type === 'ALL') {
+    return [
+      ...(nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.validations
+        ?.expressions || []),
+      ...(nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.applicable || []),
+      ...(node.updatedBy !== 'USER'
+        ? nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.defaultValues || []
+        : []),
+    ];
+  }
+};
+
 export const prepareArenaExpressions = ({
   node,
   survey,
   record,
   type = 'VALIDATIONS',
 }) => {
-  const nodeDefsByUuid = survey.nodeDefs;
-  let _expressions = [];
-
-  if (type === 'VALIDATIONS') {
-    _expressions =
-      nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.validations?.expressions;
-  }
-
-  if (type === 'APPLICABLE') {
-    _expressions = nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.applicable;
-  }
-  if (type === 'DEFAULT_VALUES') {
-    _expressions =
-      nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.defaultValues;
-  }
-
-  const expressions = _expressions?.map(expression => {
+  return _getNodeExpressions({node, survey, type})?.map(expression => {
     return {
       ...expression,
       jsExpression: _parseArenaExpression({
@@ -112,6 +135,62 @@ export const prepareArenaExpressions = ({
       }),
     };
   });
+};
 
-  return expressions || [];
+// ---------------
+
+const checkIfNodeExpressionDependsOnReferenceNode = ({
+  node,
+  expression: _expression,
+  survey,
+  record,
+  referenceNode,
+}) => {
+  const nodeDefsUuidsByName = getNodeDefUuidsByName({survey});
+  const nodeDefsByUuid = survey.nodeDefs;
+  const {expression, applyIf} = _expression;
+
+  let found = false;
+
+  Object.keys(nodeDefsUuidsByName).forEach(nodeDefName => {
+    const hasNodeDef =
+      expression.includes(nodeDefName) || applyIf.includes(nodeDefName);
+    // not entity nodeDefs
+    if (
+      hasNodeDef &&
+      nodeDefsByUuid[nodeDefsUuidsByName[nodeDefName]].type !== 'entity'
+    ) {
+      const nodeDefUuid = nodeDefsUuidsByName[nodeDefName];
+      const relativeNode = getRelativeNodeByNodeDefUuid({
+        node,
+        survey,
+        record,
+        nodeDefUuid,
+      });
+
+      if (relativeNode.uuid === referenceNode.uuid) {
+        found = true;
+      }
+    }
+  });
+
+  return found;
+};
+
+export const checkIfNodeExpressionsDependsOnReferenceNode = ({
+  node,
+  survey,
+  record,
+  type = 'ALL',
+  referenceNode,
+}) => {
+  return _getNodeExpressions({node, survey, type})?.some(expression =>
+    checkIfNodeExpressionDependsOnReferenceNode({
+      node,
+      expression,
+      survey,
+      record,
+      referenceNode,
+    }),
+  );
 };
