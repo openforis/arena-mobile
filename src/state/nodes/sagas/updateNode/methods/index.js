@@ -1,22 +1,23 @@
-import survey from 'state/survey/actionCreators';
+const {
+  checkIfNodeExpressionsDependsOnReferenceNode,
+} = require('arena/expression/parser');
 
-const evalExpression = ({expression, node, record, nodes, nodeDefs}) => {
+const evalExpression = ({expression, node, record, survey}) => {
   // dode from arena -> const _getApplicableExpressions = (survey, record, nodeCtx, expressions, stopAtFirstFound = false) => {
 
-  return; //  error/warning(validationObject)
+  return node.value >= 0; //  error/warning(validationObject)
 };
-const validateNode = ({node, record, nodes, nodeDefs}) => {
+const validateNode = ({node, record, survey}) => {
   // vget Validation rules
   // get applicable validation rules
   // iterate over applicable rules
   // evaluate expression -> evalExpression
-  evalExpression({node});
-  return node; //validationObject
+  return evalExpression({node}); //validationObject
 };
 
 const validateIfRootWithOtherRecords = () => true;
 
-const getListOfDependants = ({node, record, recordNodes, nodeDefs}) => {
+const getListOfDependants = ({node, record, survey}) => {
   /*(node, record[nodes], survey[nodeDefs] ) -> [] -> [nodes]
     seeing if the node is into the rules[validation, default, applicability] of the children/siblings nodes
 
@@ -25,19 +26,32 @@ const getListOfDependants = ({node, record, recordNodes, nodeDefs}) => {
          if node in _node.nodeDef.rules()
             _nodes.push(node)
 
-
-
     _node = SET([])
         _node in record.nodes:
             if node.nodeDef() in _node.nodeDef.rules.dependantNodeDefs()*/
 
-  return [];
+  let dependantNodes = [];
+  dependantNodes = Object.values(record.nodes).filter(_node =>
+    checkIfNodeExpressionsDependsOnReferenceNode({
+      node: _node,
+      survey,
+      record,
+      referenceNode: node,
+    }),
+  );
+
+  // we need to filter and check if the applyIf is true and into the applicability and default we should return as node to Update
+
+  return dependantNodes;
 };
 
-const updateDependantNodes = ({nodeDefs, node, record, nodes}) => {
+const updateDependantNodes = ({node, record: _record, survey}) => {
   let updatedNodes = [];
+  let validatedNodes = {};
+  let record = {..._record};
+
   // getListOfDependants ( it is going to be updated because you are going to go through the tree) -> it is queue
-  const depentands = getListOfDependants({node, record, nodes, nodeDefs});
+  const depentands = getListOfDependants({node, record, survey});
 
   for (let dependantNode in depentands) {
     // iterate over the nodes
@@ -53,44 +67,71 @@ const updateDependantNodes = ({nodeDefs, node, record, nodes}) => {
     // __if value in t-1 was null
     // ____apply defualt
 
-    const validatedNode = validateNode({
+    const isValid = validateNode({
       node: dependantNode,
       record,
-      nodes,
-      nodeDefs,
+      survey,
     });
 
-    const updatedDependants = updateDependantNodes({
-      node: validatedNode,
+    const {
+      updatedNodes: updatedDependants,
+      validatedNodes: validatedDependantNodes,
+    } = updateDependantNodes({
+      node: dependantNode,
       record,
-      nodes,
-      nodeDefs,
+      survey,
     });
 
-    updatedNodes.push(validatedNode, ...(updatedDependants || []));
+    validatedNodes = {
+      ...validatedNodes,
+      [dependantNode.uuid]: isValid ? false : {error: 'ERROR'},
+      ...validatedDependantNodes,
+    };
+    updatedNodes.push(dependantNode, ...(updatedDependants || []));
+
+    // Update record with new nodes -> if we use RecordNodes instead of nodes It could be simpler
+    record = {
+      ...record,
+      nodes: {
+        ...record.nodes,
+        ...(updatedNodes || []).reduce(
+          (acc, _node) => ({...acc, [_node.uuid]: {..._node}}),
+          {},
+        ),
+      },
+    };
   }
 
-  return updatedNodes;
+  return {updatedNodes, validatedNodes};
 };
 
-export const updateNodeAndDependats = ({
-  updatedNode,
-  recordNodes: nodes,
-  record,
-  nodeDefs,
-}) => {
-  const validatedNode = validateNode({
-    node: updatedNode,
+export const updateNodeAndDependats = ({node, record: _record, survey}) => {
+  let validatedNodes = {};
+
+  //recordWithUpdatedNode
+  const record = {
+    ..._record,
+    nodes: {..._record.nodes, [node.uuid]: {...node}},
+  };
+
+  const isValid = validateNode({
+    node,
     record,
-    nodes,
-    nodeDefs,
-  });
-  const updatedDependants = updateDependantNodes({
-    node: validatedNode,
-    record,
-    nodes,
-    nodeDefs,
+    survey,
   });
 
-  return {updateNodes: [validatedNode, ...(updatedDependants || [])]};
+  const {updatedNodes, validatedNodes: validatedDependantNodes} =
+    updateDependantNodes({
+      node,
+      record,
+      survey,
+    });
+
+  validatedNodes = {
+    ...validatedNodes,
+    [node.uuid]: isValid ? false : {error: 'ERROR'},
+    ...validatedDependantNodes,
+  };
+
+  return {updatedNodes: [node, ...(updatedNodes || [])], validatedNodes};
 };
