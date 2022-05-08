@@ -120,23 +120,25 @@ export const prepareArenaExpressions = ({
   record,
   type = 'VALIDATIONS',
 }) => {
-  return _getNodeExpressions({node, survey, type})?.map(expression => {
-    return {
-      ...expression,
-      jsExpression: _parseArenaExpression({
-        expression: expression.expression,
-        node,
-        survey,
-        record,
-      }),
-      jsApplyIf: _parseArenaExpression({
-        expression: expression.applyIf,
-        node,
-        survey,
-        record,
-      }),
-    };
-  });
+  return (
+    _getNodeExpressions({node, survey, type})?.map(expression => {
+      return {
+        ...expression,
+        jsExpression: _parseArenaExpression({
+          expression: expression.expression,
+          node,
+          survey,
+          record,
+        }),
+        jsApplyIf: _parseArenaExpression({
+          expression: expression.applyIf,
+          node,
+          survey,
+          record,
+        }),
+      };
+    }) || []
+  );
 };
 
 // ---------------
