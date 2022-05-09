@@ -62,16 +62,30 @@ const getListOfDependants = ({node, record, survey}) => {
   return dependantNodes;
 };
 
+const _mergeObjects = objsArray => Object.assign(...objsArray);
+
+const _mergeValidations = validationObjects => ({
+  errors: _mergeObjects(
+    ...validationObjects.map(validationObject => validationObject.errors),
+  ),
+  warnings: _mergeObjects(
+    ...validationObjects.map(validationObject => validationObject.warnings),
+  ),
+});
+
 const updateDependantNodes = ({node, record: _record, survey}) => {
-  let updatedNodes = [];
-  let errors = {};
-  let warnings = {};
+  let updatedNodes = {};
+  let validation = {
+    errors: {},
+    warnings: {},
+  };
+
   let record = {..._record};
 
   // getListOfDependants ( it is going to be updated because you are going to go through the tree) -> it is queue
-  const depentands = getListOfDependants({node, record, survey});
+  const dependants = getListOfDependants({node, record, survey});
 
-  depentands.forEach(dependantNode => {
+  dependants.forEach(dependantNode => {
     // iterate over the nodes
     // 2.1 checkRules [ 1. Applicability, 2. default values if needed, 3 validation ]
 
@@ -85,77 +99,78 @@ const updateDependantNodes = ({node, record: _record, survey}) => {
     // __if value in t-1 was null -> or not edited by user
     // ____apply defualt
 
-    const {errors: _errors = [], warnings: _warnings = []} = validateNode({
+    const nodeValidation = validateNode({
       node: dependantNode,
       record,
       survey,
     });
 
-    const {updatedNodes: updatedDependants, depentantErrors} =
+    const {updatedNodes: updatedDependants, validation: dependantsValidation} =
       updateDependantNodes({
         node: dependantNode,
         record,
         survey,
       });
 
-    errors = {
-      ...errors,
-      [dependantNode.uuid]: _errors,
-      ...depentantErrors,
-    };
-    updatedNodes.push(dependantNode, ...(updatedDependants || []));
+    validation = _mergeValidations([
+      validation,
+      nodeValidation,
+      dependantsValidation,
+    ]);
+
+    updatedNodes = _mergeObjects([
+      updatedNodes,
+      {[dependantNode.uuid]: {...dependantNode}},
+      updatedDependants || {},
+    ]);
 
     // Update record with new nodes -> if we use RecordNodes instead of nodes It could be simpler
     record = {
       ...record,
       nodes: {
         ...record.nodes,
-        ...(updatedNodes || []).reduce((acc, _node) => {
-          return {...acc, [_node.uuid]: {..._node}};
-        }, {}),
+        ...updatedNodes,
       },
     };
   });
 
-  return {updatedNodes, depentantErrors: errors, dependantWarnings: warnings};
+  return {updatedNodes, validation};
 };
 
 export const updateNodeAndDependats = ({node, record: _record, survey}) => {
-  let warnings = {};
-  let errors = {};
-
   //recordWithUpdatedNode
   const record = {
     ..._record,
     nodes: {..._record.nodes, [node.uuid]: {...node}},
   };
 
-  const {errors: _errors, warnings: _warnings} = validateNode({
+  let validation = {
+    warnings: {},
+    errors: {},
+  };
+
+  const nodeValidation = validateNode({
     node,
     record,
     survey,
   });
 
-  const {updatedNodes, depentantErrors, dependantWarnings} =
-    updateDependantNodes({
+  const {updatedNodes, validation: dependantsValidation} = updateDependantNodes(
+    {
       node,
       record,
       survey,
-    });
+    },
+  );
 
-  // rename to errors
-  errors = {
-    ...errors,
-    [node.uuid]: _errors,
-    ...depentantErrors,
+  validation = _mergeValidations([
+    validation,
+    nodeValidation,
+    dependantsValidation,
+  ]);
+
+  return {
+    updatedNodes: _mergeObjects({[node.uuid]: {...node}}, updatedNodes || {}),
+    validation,
   };
-
-  //
-  warnings = {
-    ...warnings,
-    [node.uuid]: _warnings,
-    ...dependantWarnings,
-  };
-
-  return {updatedNodes: [node, ...(updatedNodes || [])], errors, warnings};
 };
