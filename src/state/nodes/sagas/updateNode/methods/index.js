@@ -66,10 +66,10 @@ const _mergeObjects = objsArray => Object.assign(...objsArray);
 
 const _mergeValidations = validationObjects => ({
   errors: _mergeObjects(
-    ...validationObjects.map(validationObject => validationObject.errors),
+    validationObjects.map(validationObject => validationObject.errors),
   ),
   warnings: _mergeObjects(
-    ...validationObjects.map(validationObject => validationObject.warnings),
+    validationObjects.map(validationObject => validationObject.warnings),
   ),
 });
 
