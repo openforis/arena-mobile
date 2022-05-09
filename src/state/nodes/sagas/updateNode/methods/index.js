@@ -18,7 +18,7 @@ const validateNode = ({node, record, survey}) => {
   // vget Validation rules
   const expressions = prepareArenaExpressions({node, survey, record});
   let errors = [];
-  let warning = [];
+  let warnings = [];
   // get applicable validation rules
   // iterate over applicable rules
   // evaluate expression -> evalExpression
@@ -30,7 +30,10 @@ const validateNode = ({node, record, survey}) => {
   // maybe wrap this evalExpr
   // evalExpression({node}); //validationObject
 
-  return {errors: errors.length > 0 ? [errors[0]] : [], warning};
+  return {
+    errors: {[node.uuid]: errors.length > 0 ? [errors[0]] : []},
+    warning: {[node.uuid]: warnings},
+  };
 };
 
 const getListOfDependants = ({node, record, survey}) => {
@@ -62,14 +65,14 @@ const getListOfDependants = ({node, record, survey}) => {
   return dependantNodes;
 };
 
-const _mergeObjects = objsArray => Object.assign(...objsArray);
+const _mergeObjects = (objsArray = []) => Object.assign(...objsArray);
 
 const _mergeValidations = validationObjects => ({
   errors: _mergeObjects(
-    validationObjects.map(validationObject => validationObject.errors),
+    validationObjects.map(validationObject => validationObject.errors || {}),
   ),
   warnings: _mergeObjects(
-    validationObjects.map(validationObject => validationObject.warnings),
+    validationObjects.map(validationObject => validationObject.warnings || {}),
   ),
 });
 
@@ -170,7 +173,7 @@ export const updateNodeAndDependats = ({node, record: _record, survey}) => {
   ]);
 
   return {
-    updatedNodes: _mergeObjects({[node.uuid]: {...node}}, updatedNodes || {}),
+    updatedNodes: _mergeObjects([{[node.uuid]: {...node}}, updatedNodes || {}]),
     validation,
   };
 };
