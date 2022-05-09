@@ -1,21 +1,40 @@
+const {evalExpr} = require('jse-eval');
+
 const {
+  prepareArenaExpressions,
   checkIfNodeExpressionsDependsOnReferenceNode,
 } = require('arena/expression/parser');
 
-const evalExpression = ({expression, node, record, survey}) => {
+const evalArenaExpression = ({expression}) => {
   // dode from arena -> const _getApplicableExpressions = (survey, record, nodeCtx, expressions, stopAtFirstFound = false) => {
 
-  return node.value >= 0; //  error/warning(validationObject)
+  return (
+    (expression.jsApplyIf === '' || evalExpr(expression.jsApplyIf)) &&
+    evalExpr(expression.jsExpression)
+  );
 };
+
 const validateNode = ({node, record, survey}) => {
   // vget Validation rules
+  const expressions = prepareArenaExpressions({node, survey, record});
+  let errors = [];
+  let warnings = [];
   // get applicable validation rules
   // iterate over applicable rules
   // evaluate expression -> evalExpression
-  return evalExpression({node}); //validationObject
-};
+  expressions.forEach(expression => {
+    if (!evalArenaExpression({expression})) {
+      errors.push({error: 'ERROR'});
+    }
+  });
+  // maybe wrap this evalExpr
+  // evalExpression({node}); //validationObject
 
-const validateIfRootWithOtherRecords = () => true;
+  return {
+    errors: {[node.uuid]: errors.length > 0 ? [errors[0]] : []},
+    warning: {[node.uuid]: warnings},
+  };
+};
 
 const getListOfDependants = ({node, record, survey}) => {
   /*(node, record[nodes], survey[nodeDefs] ) -> [] -> [nodes]
@@ -31,29 +50,45 @@ const getListOfDependants = ({node, record, survey}) => {
             if node.nodeDef() in _node.nodeDef.rules.dependantNodeDefs()*/
 
   let dependantNodes = [];
-  dependantNodes = Object.values(record.nodes).filter(_node =>
-    checkIfNodeExpressionsDependsOnReferenceNode({
-      node: _node,
-      survey,
-      record,
-      referenceNode: node,
-    }),
+  dependantNodes = Object.values(record.nodes).filter(
+    _node =>
+      _node.uuid !== node.uuid &&
+      checkIfNodeExpressionsDependsOnReferenceNode({
+        node: _node,
+        survey,
+        record,
+        referenceNode: node,
+      }),
   );
-
-  // we need to filter and check if the applyIf is true and into the applicability and default we should return as node to Update
+  // we need to filter and check if the applyIf (or not because dependant nodes shpuld be cleaned) is true and into the applicability and default we should return as node to Update
 
   return dependantNodes;
 };
 
+const _mergeObjects = (objsArray = []) => Object.assign(...objsArray);
+
+const _mergeValidations = validationObjects => ({
+  errors: _mergeObjects(
+    validationObjects.map(validationObject => validationObject.errors || {}),
+  ),
+  warnings: _mergeObjects(
+    validationObjects.map(validationObject => validationObject.warnings || {}),
+  ),
+});
+
 const updateDependantNodes = ({node, record: _record, survey}) => {
-  let updatedNodes = [];
-  let validatedNodes = {};
+  let updatedNodes = {};
+  let validation = {
+    errors: {},
+    warnings: {},
+  };
+
   let record = {..._record};
 
   // getListOfDependants ( it is going to be updated because you are going to go through the tree) -> it is queue
-  const depentands = getListOfDependants({node, record, survey});
+  const dependants = getListOfDependants({node, record, survey});
 
-  for (let dependantNode in depentands) {
+  dependants.forEach(dependantNode => {
     // iterate over the nodes
     // 2.1 checkRules [ 1. Applicability, 2. default values if needed, 3 validation ]
 
@@ -64,74 +99,81 @@ const updateDependantNodes = ({node, record: _record, survey}) => {
     //  dont iterate over the children
     //	return
     // if relevant and was not relevant
-    // __if value in t-1 was null
+    // __if value in t-1 was null -> or not edited by user
     // ____apply defualt
 
-    const isValid = validateNode({
+    const nodeValidation = validateNode({
       node: dependantNode,
       record,
       survey,
     });
 
-    const {
-      updatedNodes: updatedDependants,
-      validatedNodes: validatedDependantNodes,
-    } = updateDependantNodes({
-      node: dependantNode,
-      record,
-      survey,
-    });
+    const {updatedNodes: updatedDependants, validation: dependantsValidation} =
+      updateDependantNodes({
+        node: dependantNode,
+        record,
+        survey,
+      });
 
-    validatedNodes = {
-      ...validatedNodes,
-      [dependantNode.uuid]: isValid ? false : {error: 'ERROR'},
-      ...validatedDependantNodes,
-    };
-    updatedNodes.push(dependantNode, ...(updatedDependants || []));
+    validation = _mergeValidations([
+      validation,
+      nodeValidation,
+      dependantsValidation,
+    ]);
+
+    updatedNodes = _mergeObjects([
+      updatedNodes,
+      {[dependantNode.uuid]: {...dependantNode}},
+      updatedDependants || {},
+    ]);
 
     // Update record with new nodes -> if we use RecordNodes instead of nodes It could be simpler
     record = {
       ...record,
       nodes: {
         ...record.nodes,
-        ...(updatedNodes || []).reduce(
-          (acc, _node) => ({...acc, [_node.uuid]: {..._node}}),
-          {},
-        ),
+        ...updatedNodes,
       },
     };
-  }
+  });
 
-  return {updatedNodes, validatedNodes};
+  return {updatedNodes, validation};
 };
 
 export const updateNodeAndDependats = ({node, record: _record, survey}) => {
-  let validatedNodes = {};
-
   //recordWithUpdatedNode
   const record = {
     ..._record,
     nodes: {..._record.nodes, [node.uuid]: {...node}},
   };
 
-  const isValid = validateNode({
+  let validation = {
+    warnings: {},
+    errors: {},
+  };
+
+  const nodeValidation = validateNode({
     node,
     record,
     survey,
   });
 
-  const {updatedNodes, validatedNodes: validatedDependantNodes} =
-    updateDependantNodes({
+  const {updatedNodes, validation: dependantsValidation} = updateDependantNodes(
+    {
       node,
       record,
       survey,
-    });
+    },
+  );
 
-  validatedNodes = {
-    ...validatedNodes,
-    [node.uuid]: isValid ? false : {error: 'ERROR'},
-    ...validatedDependantNodes,
+  validation = _mergeValidations([
+    validation,
+    nodeValidation,
+    dependantsValidation,
+  ]);
+
+  return {
+    updatedNodes: _mergeObjects([{[node.uuid]: {...node}}, updatedNodes || {}]),
+    validation,
   };
-
-  return {updatedNodes: [node, ...(updatedNodes || [])], validatedNodes};
 };

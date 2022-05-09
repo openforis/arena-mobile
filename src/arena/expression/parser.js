@@ -87,31 +87,30 @@ const _parseArenaExpression = ({expression, node, survey, record}) => {
 
 const _getNodeExpressions = ({node, survey, type = 'ALL'}) => {
   const nodeDefsByUuid = survey.nodeDefs;
-  let expression = [];
+  let expressions = [];
+  const nodeDefAdvancedProps = nodeDefsByUuid[node.nodeDefUuid]?.propsAdvanced;
 
   if (type === 'VALIDATIONS') {
-    expression =
-      nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.validations?.expressions;
+    expressions = nodeDefAdvancedProps?.validations?.expressions || [];
   }
 
   if (type === 'APPLICABLE') {
-    expression = nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.applicable;
+    expressions = nodeDefAdvancedProps?.applicable || [];
   }
   if (type === 'DEFAULT_VALUES' && node.updatedBy !== 'USER') {
-    expression = nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.defaultValues;
+    expressions = nodeDefAdvancedProps?.defaultValues || [];
   }
 
   if (type === 'ALL') {
-    expression = [
-      ...(nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.validations
-        ?.expressions || []),
-      ...(nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.applicable || []),
+    expressions = [
+      ...(nodeDefAdvancedProps?.validations?.expressions || []),
+      ...(nodeDefAdvancedProps?.applicable || []),
       ...(node.updatedBy !== 'USER'
-        ? nodeDefsByUuid[node.nodeDefUuid].propsAdvanced?.defaultValues || []
+        ? nodeDefAdvancedProps?.defaultValues || []
         : []),
     ];
   }
-  return expression;
+  return expressions;
 };
 
 export const prepareArenaExpressions = ({

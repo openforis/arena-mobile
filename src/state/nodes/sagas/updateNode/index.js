@@ -17,7 +17,7 @@ function* handleUpdateNode({payload}) {
       recordsSelectors.getRecordByUuid(state, updatedNode.recordUuid),
     ),
     select(state =>
-      nodesSelectors.getNodesByRecordUuid(state, updatedNode.recordUuid),
+      nodesSelectors.getNodesByUuidRecordUuid(state, updatedNode.recordUuid),
     ),
   ]);
 
@@ -29,14 +29,15 @@ function* handleUpdateNode({payload}) {
 
   const recordWithNodes = {...record, nodes: {...recordNodes}};
 
-  const {updatedNodes, validatedNodes} = yield call(updateNodeAndDependats, {
+  const {updatedNodes, validation} = yield call(updateNodeAndDependats, {
     node: updatedNode,
     record: recordWithNodes,
     survey,
   });
 
   yield put(nodesActions.setNodes({nodes: updatedNodes}));
-  yield put(nodesActions.setErrors({errors: validatedNodes}));
+  yield put(nodesActions.setErrors({errors: validation.errors}));
+  //yield put(nodesActions.setWarnings({warnings}));
 }
 
 export default handleUpdateNode;
