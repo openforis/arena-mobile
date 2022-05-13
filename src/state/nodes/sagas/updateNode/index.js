@@ -29,14 +29,15 @@ function* handleUpdateNode({payload}) {
 
   const recordWithNodes = {...record, nodes: {...recordNodes}};
 
-  const {updatedNodes, validation} = yield call(updateNodeAndDependats, {
+  //const {updatedNodes, validation} = yield call(updateNodeAndDependats, {
+  const {updatedNodes} = yield call(updateNodeAndDependats, {
     node: updatedNode,
     record: recordWithNodes,
     survey,
   });
 
   yield put(nodesActions.setNodes({nodes: updatedNodes}));
-  yield put(nodesActions.setErrors({errors: validation.errors}));
+  //yield put(nodesActions.setErrors({errors: validation.errors}));
   //yield put(nodesActions.setWarnings({warnings}));
 }
 

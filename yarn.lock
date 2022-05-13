@@ -1414,6 +1414,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@esri/proj-codes@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@esri/proj-codes/-/proj-codes-2.9.0.tgz#7e393bbc9a243fdeacf601733d3568368e4046a2"
+  integrity sha512-7wSuiLDERoGHQeAyqdcBtntnCw/UmpAwizZRl3YXIUepoS1m56BMbCwOspKTe4RbJLGzfJJojimoVyy/z4DOfw==
+
 "@hapi/hoek@^9.0.0":
   version "9.2.1"
   resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.2.1.tgz#9551142a1980503752536b5050fd99f4a7f13b17"
@@ -1850,6 +1855,21 @@
   dependencies:
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
+
+"@openforis/arena-core@^0.0.87":
+  version "0.0.87"
+  resolved "https://npm.pkg.github.com/download/@openforis/arena-core/0.0.87/3c7b80d8be4bdc897bd7657b5a0a5157658145d0dab4afb070c756bdcb2b50cd#c0fc9c27b6b940a9429b478e47195f20fb2df62b"
+  integrity sha512-B7MCTUKS0aULzgp+xDxwEhQTZ3xkzLCWOYqHIX1U8YS/qnm+8O0nN8oUme3F0AcYKS7Yfhld0YYUbQCpodf8nw==
+  dependencies:
+    "@esri/proj-codes" "^2.9.0"
+    date-fns "^2.28.0"
+    jsep "^1.3.4"
+    lodash.differencewith "^4.5.0"
+    lodash.frompairs "^4.0.1"
+    lodash.isequal "^4.5.0"
+    lodash.topairs "^4.3.0"
+    proj4 "^2.8.0"
+    uuid "^8.3.2"
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.3":
   version "0.5.4"
@@ -4716,6 +4736,11 @@ data-urls@^2.0.0:
     abab "^2.0.3"
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
+
+date-fns@^2.28.0:
+  version "2.28.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.28.0.tgz#9570d656f5fc13143e50c975a3b6bbeb46cd08b2"
+  integrity sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==
 
 dayjs@^1.8.15:
   version "1.10.7"
@@ -8251,7 +8276,7 @@ jse-eval@^1.5.0:
   dependencies:
     jsep "^1.2.0"
 
-jsep@^1.2.0, jsep@^1.3.6:
+jsep@^1.2.0, jsep@^1.3.4, jsep@^1.3.6:
   version "1.3.6"
   resolved "https://registry.yarnpkg.com/jsep/-/jsep-1.3.6.tgz#23fbf8c9479891611a237362e9e25d7746fac9d5"
   integrity sha512-o7fP1eZVROIChADx7HKiwGRVI0tUqgUUGhaok6DP7cMxpDeparuooREDBDeNk2G5KIB49MBSkRYsCOu4PmZ+1w==
@@ -8575,6 +8600,11 @@ lodash.debounce@^4.0.8:
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
   integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
 
+lodash.differencewith@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.differencewith/-/lodash.differencewith-4.5.0.tgz#bafafbc918b55154e179176a00bb0aefaac854b7"
+  integrity sha1-uvr7yRi1UVTheRdqALsK76rIVLc=
+
 lodash.frompairs@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/lodash.frompairs/-/lodash.frompairs-4.0.1.tgz#bc4e5207fa2757c136e573614e9664506b2b1bd2"
@@ -8639,6 +8669,11 @@ lodash.throttle@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
   integrity sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=
+
+lodash.topairs@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/lodash.topairs/-/lodash.topairs-4.3.0.tgz#3b6deaa37d60fb116713c46c5f17ea190ec48d64"
+  integrity sha1-O23qo31g+xFnE8RsXxfqGQ7EjWQ=
 
 lodash.uniq@^4.5.0:
   version "4.5.0"
@@ -9084,6 +9119,11 @@ metro@0.66.2, metro@^0.66.1:
     throat "^5.0.0"
     ws "^1.1.5"
     yargs "^15.3.1"
+
+mgrs@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/mgrs/-/mgrs-1.0.0.tgz#fb91588e78c90025672395cb40b25f7cd6ad1829"
+  integrity sha1-+5FYjnjJACVnI5XLQLJffNatGCk=
 
 micromatch@^3.1.10, micromatch@^3.1.4:
   version "3.1.10"
@@ -10521,6 +10561,14 @@ progress@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
+
+proj4@^2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/proj4/-/proj4-2.8.0.tgz#b2cb8f3ccd56d4dcc7c3e46155cd02caa804b170"
+  integrity sha512-baC+YcD4xsSqJ+CpCZljj2gcQDhlKb+J+Zjv/2KSBwWNjk4M0pafgQsE+mWurd84tflMIsP+7j7mtIpFDHzQfQ==
+  dependencies:
+    mgrs "1.0.0"
+    wkt-parser "^1.3.1"
 
 promise@^8.0.3, promise@^8.1.0:
   version "8.1.0"
@@ -13221,6 +13269,11 @@ widest-line@^2.0.0:
   integrity sha512-Ba5m9/Fa4Xt9eb2ELXt77JxVDV8w7qQrH0zS/TWSJdLyAwQjWoOzpzj5lwVftDz6n/EOu3tNACS84v509qwnJA==
   dependencies:
     string-width "^2.1.1"
+
+wkt-parser@^1.3.1:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/wkt-parser/-/wkt-parser-1.3.2.tgz#deeff04a21edc5b170a60da418e9ed1d1ab0e219"
+  integrity sha512-A26BOOo7sHAagyxG7iuRhnKMO7Q3mEOiOT4oGUmohtN/Li5wameeU4S6f8vWw6NADTVKljBs8bzA8JPQgSEMVQ==
 
 word-wrap@^1.2.3, word-wrap@~1.2.3:
   version "1.2.3"

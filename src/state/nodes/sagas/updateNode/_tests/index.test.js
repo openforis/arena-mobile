@@ -16,6 +16,7 @@ import {
   getCurrentUuid,
 } from './mocks';
 
+const RESULT_ERRORS = {}; // { [getCurrentUuid(2)]: [{error: 'ERROR'}]}
 const initialState = {
   ...globalInitialState,
   surveys: {
@@ -134,9 +135,7 @@ describe('Node updater', () => {
           ...initialState.nodes.data,
           [getCurrentUuid(2)]: {...baseMockNode, value: -1},
         },
-        errors: {
-          [getCurrentUuid(2)]: [{error: 'ERROR'}],
-        },
+        errors: {...RESULT_ERRORS},
       },
     });
   });
@@ -159,7 +158,7 @@ describe('Node updater', () => {
             [getCurrentUuid(2)]: {...baseMockNode, value: -1},
           },
           errors: {
-            [getCurrentUuid(2)]: [{error: 'ERROR'}],
+            ...RESULT_ERRORS,
           },
         },
       })
@@ -197,7 +196,7 @@ describe('Node updater', () => {
             [getCurrentUuid(2)]: {...baseMockNode, value: -1},
           },
           errors: {
-            [getCurrentUuid(2)]: [{error: 'ERROR'}],
+            ...RESULT_ERRORS,
           },
         },
       })
@@ -213,7 +212,7 @@ describe('Node updater', () => {
           [getCurrentUuid(2)]: {...baseMockNode, value: -3},
         },
         errors: {
-          [getCurrentUuid(2)]: [{error: 'ERROR'}],
+          ...RESULT_ERRORS,
         },
       },
     });
