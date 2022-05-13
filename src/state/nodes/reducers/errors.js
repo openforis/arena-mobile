@@ -1,3 +1,4 @@
+import {Objects} from '@openforis/arena-core';
 import {handleActions} from 'redux-actions';
 
 import {deleteValueByKey} from 'infra/objectUtils';
@@ -9,7 +10,7 @@ const errors = handleActions(
   {
     [actions.setErrors]: (state, {payload: {errors: _errors}}) =>
       deleteValueByKey({
-        conditionToDelete: item => !item,
+        conditionToDelete: item => !item || Objects.isEmpty(item),
       })({
         ...state,
         ..._errors,

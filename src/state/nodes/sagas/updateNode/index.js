@@ -10,15 +10,15 @@ import {updateNodeAndDependats} from './methods';
 function* handleUpdateNode({payload}) {
   const {updatedNode} = payload;
 
-  const [node, record, recordNodes, nodeDefsByUuid] = yield all([
+  const [survey, node, record, recordNodes] = yield all([
+    select(surveySelectors.getSurvey),
     select(state => nodesSelectors.getNodeByUuid(state, updatedNode.uuid)),
     select(state =>
       recordsSelectors.getRecordByUuid(state, updatedNode.recordUuid),
     ),
     select(state =>
-      nodesSelectors.getNodesByRecordUuid(state, updatedNode.recordUuid),
+      nodesSelectors.getNodesByUuidRecordUuid(state, updatedNode.recordUuid),
     ),
-    select(surveySelectors.getNodeDefsByUuid),
   ]);
 
   if (!node.uuid) {
@@ -27,16 +27,18 @@ function* handleUpdateNode({payload}) {
 
   //yield call(validateIfRootWithOtherRecords);
 
-  const {updatedNodes, validatedNodes} = yield call(updateNodeAndDependats, {
-    node,
-    updatedNode,
-    record,
-    recordNodes,
-    nodeDefsByUuid,
+  const recordWithNodes = {...record, nodes: {...recordNodes}};
+
+  //const {updatedNodes, validation} = yield call(updateNodeAndDependats, {
+  const {updatedNodes} = yield call(updateNodeAndDependats, {
+    node: updatedNode,
+    record: recordWithNodes,
+    survey,
   });
 
   yield put(nodesActions.setNodes({nodes: updatedNodes}));
-  yield put(nodesActions.setErrors({errors: validatedNodes}));
+  //yield put(nodesActions.setErrors({errors: validation.errors}));
+  //yield put(nodesActions.setWarnings({warnings}));
 }
 
 export default handleUpdateNode;

@@ -38,10 +38,8 @@ export function* handleCreateRecord() {
     yield put(recordsActions.setRecord({record}));
   } catch (error) {
     console.log('Error', error);
-  } finally {
-    console.log('Finally');
-    return record;
   }
+  return record;
 }
 
 export function* handleDeleteRecord({payload}) {
