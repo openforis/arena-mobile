@@ -20,8 +20,10 @@ jobs:
           auth-token: ${{secrets.ACCESS_TOKEN}}
           registry-url: 'https://npm.pkg.github.com'
           scope: '@openforis'
-      - name: Install
+      - name: Yarn
         run: yarn
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.ACCESS_TOKEN}}
       - name: Run Tests
         run: yarn test
         env:
