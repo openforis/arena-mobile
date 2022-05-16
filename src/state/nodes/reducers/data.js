@@ -15,13 +15,9 @@ const data = handleActions(
       [node.uuid]: node,
     }),
     [actions.setNodes]: (state, {payload: {nodes}}) => {
-      let nodesToInsertByUuid = {};
-      nodes.forEach(node => {
-        nodesToInsertByUuid[node.uuid] = {...node};
-      });
       return {
         ...state,
-        ...nodesToInsertByUuid,
+        ...nodes,
       };
     },
     [actions.deleteNode]: (state, {payload: {node}}) => {

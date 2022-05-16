@@ -22,8 +22,14 @@ const getNodesByRecordUuid = createCachedSelector(
   (nodes, recordUuid) => nodes.filter(node => node.recordUuid === recordUuid),
 )((_state, recordUuid) => recordUuid);
 
+const getNodesByUuidRecordUuid = createCachedSelector(
+  getNodesByRecordUuid,
+  nodes => nodes.reduce((acc, node) => ({...acc, [node.uuid]: {...node}}), {}),
+)((_state, recordUuid) => recordUuid);
+
 export default {
   getNodes,
   getNodeByUuid,
   getNodesByRecordUuid,
+  getNodesByUuidRecordUuid,
 };
