@@ -1,3 +1,4 @@
+import {NodeDefType} from '@openforis/arena-core';
 import moment from 'moment';
 
 import globalInitialState from 'state/initial.state';
@@ -21,10 +22,34 @@ export const mockSurvey = {
       languages: ['LANG'],
     },
   },
+
+  uuid: 'SURVEY_UUID',
+  props: {
+    languages: ['LANG'],
+  },
   nodeDefs: {
+    NODE_DEF_PARENT_UUID: {
+      id: 'NODE_DEF_PARENT_UUID',
+      uuid: 'NODE_DEF_PARENT_UUID',
+      parentUuid: null,
+      propsAdvanced: {},
+      type: NodeDefType.entity,
+      props: {
+        name: 'cluster',
+        cycles: ['0'],
+        labels: {
+          en: 'Cluster',
+        },
+      },
+      meta: {
+        h: [],
+      },
+    },
     NODE_DEF_UUID: {
       id: 'NODE_DEF_ID',
       uuid: 'NODE_DEF_UUID',
+      parentUuid: 'NODE_DEF_PARENT_UUID',
+      type: NodeDefType.integer,
       propsAdvanced: {
         validations: {
           expressions: [
@@ -45,6 +70,9 @@ export const mockSurvey = {
           en: 'This Number',
         },
       },
+      meta: {
+        h: ['NODE_DEF_PARENT_UUID'],
+      },
     },
   },
 };
@@ -54,9 +82,21 @@ export const mockRecord = {
   ownerUuid: mockUser.uuid,
   dateCreated: moment().toISOString(),
   surveyUuid: mockSurvey.info.uuid,
-  surveyId: mockSurvey.info.id,
   step: '1', // get from survey
   cycle: '0', // get from survey
+};
+
+export const baseClusterMockNode = {
+  uuid: 'CLUSTER_UUID',
+  dateCreated: moment().toISOString(),
+  dateModified: moment().toISOString(),
+  surveyUuid: mockSurvey.info.uuid,
+  recordUuid: mockRecord?.uuid,
+  nodeDefUuid: mockSurvey?.nodeDefs?.NODE_DEF_PARENT_UUID?.uuid,
+  parentUuid: null,
+  value: null,
+  meta: {},
+  refData: null,
 };
 
 export const baseMockNode = {
@@ -64,10 +104,9 @@ export const baseMockNode = {
   dateCreated: moment().toISOString(),
   dateModified: moment().toISOString(),
   surveyUuid: mockSurvey.info.uuid,
-  surveyId: mockSurvey.info.id,
   recordUuid: mockRecord?.uuid,
   nodeDefUuid: mockSurvey?.nodeDefs?.NODE_DEF_UUID?.uuid,
-  parentUuid: null,
+  parentUuid: 'CLUSTER_UUID',
   value: null,
   meta: {},
   refData: null,
