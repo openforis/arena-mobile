@@ -13,11 +13,9 @@ const payload = {
 
 const mockSurvey = {
   id: 'ID',
-  info: {
-    uuid: 'SURVEY_UUID',
-    props: {
-      languages: ['LANG'],
-    },
+  uuid: 'SURVEY_UUID',
+  props: {
+    languages: ['LANG'],
   },
 };
 
@@ -78,7 +76,7 @@ describe('survey saga', () => {
           },
           ui: {
             ...initialState.survey.ui,
-            selectedSurveyLanguage: mockSurvey.info.props.languages[0],
+            selectedSurveyLanguage: mockSurvey.props.languages[0],
           },
         },
         form: {

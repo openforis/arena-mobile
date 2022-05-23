@@ -9,14 +9,14 @@ const List = ({
   selectedSurvey,
   setSelectedSurvey,
 }) => {
-  const keyExtractor = useCallback(item => `${item.info.id}`, []);
+  const keyExtractor = useCallback(item => `${item.id}`, []);
 
   const renderItem = useCallback(
     ({item}) => (
       <SurveyCard
         survey={item}
         onSelect={setSelectedSurvey}
-        isSelected={selectedSurvey?.info?.uuid === item?.info?.uuid}
+        isSelected={selectedSurvey?.uuid === item?.uuid}
       />
     ),
     [selectedSurvey, setSelectedSurvey],

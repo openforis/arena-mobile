@@ -23,7 +23,7 @@ const Surveys = () => {
   }, []);
 
   useEffect(() => {
-    if (localSurvey?.info?.id) {
+    if (localSurvey?.id) {
       setSelectedSurvey(localSurvey);
       return;
     }

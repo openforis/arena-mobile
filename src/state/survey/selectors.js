@@ -17,12 +17,12 @@ const getUiState = createSelector(getSurveyState, state => state?.ui || {});
 
 const getSelectedSurveyId = createSelector(
   getSurveyStateData,
-  survey => survey?.info?.id,
+  survey => survey?.id,
 );
 
 const getSelectedSurveyUuid = createSelector(
   getSurveyStateData,
-  survey => survey?.info?.uuid,
+  survey => survey?.uuid,
 );
 
 const getSurvey = getSurveyStateData;
@@ -36,9 +36,9 @@ const getSelectedSurveyLanguage = createSelector(
 SURVEY DATA
 */
 
-const getName = createSelector(getSurvey, survey => survey.info.props.name);
+const getName = createSelector(getSurvey, survey => survey.props.name);
 
-const getLabels = createSelector(getSurvey, survey => survey.info.props.labels);
+const getLabels = createSelector(getSurvey, survey => survey.props.labels);
 
 const getLabel = createSelector(
   getLabels,
@@ -106,8 +106,8 @@ const getRecords = createCachedSelector(
   getSurvey,
   recordsSelectors.getRecords,
   (survey, records) =>
-    records.filter(record => record.surveyUuid === survey?.info?.uuid),
-)(state => state?.survey?.data?.info?.id || '__');
+    records.filter(record => record.surveyUuid === survey?.uuid),
+)(state => state?.survey?.data?.id || '__');
 
 const getNumberRecords = createSelector(
   getRecords,
@@ -120,7 +120,7 @@ const getNodes = createSelector(
   getSurvey,
   nodesSelectors.getNodes,
   (survey, nodes) =>
-    (nodes || []).filter(node => node.surveyUuid === survey?.info?.uuid),
+    (nodes || []).filter(node => node.surveyUuid === survey?.uuid),
 );
 
 const getEntityNodeKeys = createCachedSelector(

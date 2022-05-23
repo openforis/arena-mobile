@@ -4,7 +4,7 @@ import {
   Objects,
 } from '@openforis/arena-core';
 
-export const updateNodeAndDependats = async ({
+export const updateNodeAndDependants = async ({
   node,
   record: _record,
   survey,

@@ -18,12 +18,12 @@ const SurveyDetail = () => {
   const {t} = useTranslation();
 
   useEffect(() => {
-    if (!survey.info) {
+    if (!survey) {
       navigator.reset(ROUTES.HOME);
     }
   }, [survey]);
 
-  if (survey.info) {
+  if (survey) {
     return (
       <View>
         <Text style={baseStyles.textStyle.secondaryText}>
@@ -33,7 +33,7 @@ const SurveyDetail = () => {
           {surveyLabel} ·{surveyName}
         </Text>
         <Text>
-          {t('Home:survey.card.id')}: {survey.info.id}
+          {t('Home:survey.card.id')}: {survey.id}
         </Text>
         <Text>
           {t('Home:survey.card.language')}: {surveyLanguage}

@@ -22,7 +22,7 @@ const ui = handleActions(
     }),
     [actions.setSurvey]: (state, {payload: {survey = {}}}) => ({
       ...state,
-      selectedSurveyLanguage: survey?.info?.props?.languages?.[0],
+      selectedSurveyLanguage: survey?.props?.languages?.[0],
     }),
   },
   initialState.ui || {},

@@ -16,14 +16,14 @@ const LocalPanel = ({survey, unSelect}) => {
     alert({
       title: t('Surveys:selected_survey_panel.delete.alert.title'),
       message: t('Surveys:selected_survey_panel.delete.alert.message', {
-        name: survey.info.props.name,
+        name: survey.props.name,
       }),
       acceptText: t('Surveys:selected_survey_panel.delete.alert.accept'),
       dismissText: t('Surveys:selected_survey_panel.delete.alert.dismiss'),
       onAccept: () => {
         dispatch(
           surveysActions.deleteSurvey({
-            surveyUuid: survey?.info?.uuid,
+            surveyUuid: survey?.uuid,
             callBack: () => unSelect(),
           }),
         );
@@ -33,7 +33,7 @@ const LocalPanel = ({survey, unSelect}) => {
   }, [dispatch, survey, unSelect, t]);
 
   const handleSelect = useCallback(() => {
-    dispatch(surveyActions.selectSurvey({surveyUuid: survey?.info?.uuid}));
+    dispatch(surveyActions.selectSurvey({surveyUuid: survey?.uuid}));
   }, [dispatch, survey]);
 
   return (

@@ -12,7 +12,7 @@ const Survey = () => {
   const survey = useSelector(surveySelectors.getSurvey);
   const numSurveys = useSelector(surveysSelectors.getNumberOfLocalSurveys);
 
-  if (survey?.info?.id) {
+  if (survey?.id) {
     return (
       <>
         <SurveyDetail />

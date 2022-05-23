@@ -20,7 +20,7 @@ const initialState = {
   surveys: {
     ...globalInitialState.surveys,
     data: {
-      [mockSurvey.info.uuid]: {...mockSurvey},
+      [mockSurvey.uuid]: {...mockSurvey},
     },
   },
   survey: {
@@ -36,7 +36,7 @@ const initialState = {
       ...globalInitialState.nodes.data,
       [baseClusterMockNode.uuid]: {...baseClusterMockNode},
       [getCurrentUuid(2)]: {...baseMockNode},
-      NODE_ONE_UUID: {uuid: 'NODE_ONE_UUID', surveyUuid: mockSurvey.info.uuid},
+      NODE_ONE_UUID: {uuid: 'NODE_ONE_UUID', surveyUuid: mockSurvey.uuid},
     },
   },
   records: {
@@ -45,7 +45,7 @@ const initialState = {
       ...globalInitialState.records.data,
       RECORD_ONE_UUID: {
         uuid: 'RECORD_ONE_UUID',
-        surveyUuid: mockSurvey.info.uuid,
+        surveyUuid: mockSurvey.uuid,
       },
     },
   },
