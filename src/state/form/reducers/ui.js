@@ -1,5 +1,7 @@
 import {handleActions} from 'redux-actions';
 
+import globalActions from 'state/globalActions';
+
 import actions from '../actionCreators';
 import initialState from '../initial.state';
 
@@ -21,6 +23,7 @@ const ui = handleActions(
       ...state,
       isEntitySelectorOpened: false,
     }),
+    [globalActions.reset]: () => initialState.ui || {},
   },
   initialState.ui || {},
 );

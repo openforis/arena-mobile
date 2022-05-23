@@ -78,7 +78,7 @@ describe('survey saga', () => {
           },
           ui: {
             ...initialState.survey.ui,
-            selectedSurveyLanguage: mockSurvey.info.props.languages[0],
+            selectedSurveyLanguage: mockSurvey.props.languages[0],
           },
         },
         form: {

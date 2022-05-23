@@ -1,6 +1,7 @@
 import {handleActions} from 'redux-actions';
 
 import {deleteValueByKey} from 'infra/objectUtils';
+import globalActions from 'state/globalActions';
 import surveyActions from 'state/survey/actionCreators';
 import surveysActions from 'state/surveys/actionCreators';
 
@@ -27,6 +28,7 @@ const data = handleActions(
       deleteValueByKey({
         conditionToDelete: item => item.surveyUuid === surveyUuid,
       })(state),
+    [globalActions.reset]: () => initialState.data || {},
   },
   initialState.data || {},
 );
