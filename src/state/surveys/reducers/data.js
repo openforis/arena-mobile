@@ -7,7 +7,7 @@ const data = handleActions(
   {
     [actions.setSurvey]: (state, {payload: {survey}}) => ({
       ...state,
-      [survey?.info?.uuid]: {...survey},
+      [survey?.uuid]: {...survey},
     }),
     [actions.deleteSurvey]: (state, {payload: {surveyUuid}}) => {
       let newState = {...state};
