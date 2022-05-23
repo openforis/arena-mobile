@@ -7,10 +7,8 @@ import appReducers from 'state/reducers';
 import rootSagas from 'state/sagas';
 
 import {
-  error,
-  mockUser,
   mockSurvey,
-  mockRecord,
+  baseClusterMockNode,
   baseMockNode,
   mockDate,
   getCurrentUuid,
@@ -36,6 +34,7 @@ const initialState = {
     ...globalInitialState.nodes,
     data: {
       ...globalInitialState.nodes.data,
+      [baseClusterMockNode.uuid]: {...baseClusterMockNode},
       [getCurrentUuid(2)]: {...baseMockNode},
       NODE_ONE_UUID: {uuid: 'NODE_ONE_UUID', surveyUuid: mockSurvey.info.uuid},
     },

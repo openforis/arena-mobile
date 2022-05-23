@@ -1,59 +1,39 @@
-import {RecordNodesUpdater, Objects} from '@openforis/arena-core';
+import {
+  RecordNodesUpdater,
+  RecordValidator,
+  Objects,
+} from '@openforis/arena-core';
 
-export const updateNodeAndDependats = ({node, record: _record, survey}) => {
+export const updateNodeAndDependats = async ({
+  node,
+  record: _record,
+  survey,
+}) => {
+  const nodesUpdated = {[node.uuid]: {...node}};
+
   const record = {
     ..._record,
-    nodes: {..._record.nodes, [node.uuid]: {...node}},
+    nodes: Objects.deepMerge({}, _record.nodes || {}, nodesUpdated),
   };
 
-  const {record: recordUpdatedDependents, nodes: updatedNodes} =
-    RecordNodesUpdater.updateNodesDependents({
-      survey,
-      record,
-      nodes: [],
-    });
-
-  console.log(
-    'recordUpdatedDependents',
-    JSON.stringify(recordUpdatedDependents),
-  );
-  /*
-
-  //recordWithUpdatedNode
-
-  let validation = {
-    warnings: {},
-    errors: {},
-  };
-
-  const nodeValidation = validateNode({
-    node,
-    record,
+  const updateRecord = RecordNodesUpdater.updateNodesDependents({
     survey,
+    record,
+    nodes: nodesUpdated,
   });
 
-  const {updatedNodes, validation: dependantsValidation} = updateDependantNodes(
-    {
-      node,
-      record,
-      survey,
-    },
-  );
+  const recordToValidate = Objects.deepMerge(record, updateRecord);
 
-  validation = _mergeValidations([
-    validation,
-    nodeValidation,
-    dependantsValidation,
-  ]);*/
+  const nodesValidation = await RecordValidator.validateNodes({
+    survey,
+    record: recordToValidate.record,
+    nodes: recordToValidate.nodes,
+  });
 
-  const validation = {};
-  // validation shoudl happens after the update
+  const {nodes: updatedNodes} = recordToValidate;
 
   return {
-    updatedNodes: Objects.deepMerge(
-      {[node.uuid]: {...node}},
-      updatedNodes || {},
-    ),
-    validation,
+    updatedNodes,
+    validation: nodesValidation,
   };
 };
