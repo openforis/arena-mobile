@@ -17,11 +17,9 @@ const error = new Error('error');
 
 const mockSurvey = {
   id: 'ID',
-  info: {
-    uuid: 'SURVEY_UUID',
-    props: {
-      languages: ['LANG'],
-    },
+  uuid: 'SURVEY_UUID',
+  props: {
+    languages: ['LANG'],
   },
   nodeDefs: {
     NODE_DEF_UUID: {id: 'NODE_DEF_ID', uuid: 'NODE_DEF_UUID'},
