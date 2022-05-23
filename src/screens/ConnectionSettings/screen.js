@@ -21,6 +21,7 @@ import QRScanner, {
 } from 'arena-mobile-ui/components/QRScanner';
 import baseStyles from 'arena-mobile-ui/styles';
 import {selectors as appSelectors, actions as appActions} from 'state/app';
+import globalActions from 'state/globalActions';
 import {selectors as userSelectors} from 'state/user';
 
 import styles from './styles';
@@ -42,6 +43,10 @@ const ConnectionSettings = () => {
   const handleSubmitForm = useCallback(() => {
     dispatch(appActions.initConnection(formData));
   }, [dispatch, formData]);
+
+  const handleResetData = useCallback(() => {
+    dispatch(globalActions.reset());
+  }, [dispatch]);
 
   const {username, password} = useSelector(appSelectors.getAccessData);
 
@@ -155,6 +160,13 @@ const ConnectionSettings = () => {
               )}
             </View>
             <View style={{height: 100}} />
+            <View style={[styles.formContainer]}>
+              <Button
+                onPress={handleResetData}
+                label={t('ConnectionSettings:reset')}
+                disabled={isLoading}
+              />
+            </View>
           </ScrollView>
         </KeyboardAvoidingView>
       </>

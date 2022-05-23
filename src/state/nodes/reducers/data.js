@@ -1,6 +1,7 @@
 import {handleActions} from 'redux-actions';
 
 import {deleteValueByKey} from 'infra/objectUtils';
+import globalActions from 'state/globalActions';
 import recordsActions from 'state/records/actionCreators';
 import surveyActions from 'state/survey/actionCreators';
 import surveysActions from 'state/surveys/actionCreators';
@@ -39,6 +40,7 @@ const data = handleActions(
       deleteValueByKey({
         conditionToDelete: item => item.recordUuid === recordUuid,
       })(state),
+    [globalActions.reset]: () => initialState.data || {},
   },
   initialState.data || {},
 );
