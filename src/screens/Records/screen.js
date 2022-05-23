@@ -19,7 +19,7 @@ const Records = () => {
   }, []);
 
   useEffect(() => {
-    if (currentRecord?.info?.id) {
+    if (currentRecord?.id) {
       setSelectedRecord(currentRecord);
       return;
     }

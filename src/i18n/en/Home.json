@@ -11,7 +11,6 @@
       "info": "Choose a valid survey or load a new one",
       "cta": "Select survey"
     },
-
     "no_surveys": {
       "title": "No surveys",
       "info": "Please load a valid survey",

@@ -23,10 +23,10 @@ const SurveyDetail = () => {
         {t('Home:survey.card.current_survey')}
       </Text>
       <Text style={baseStyles.textStyle.title}>
-        {survey.info.props.labels[surveyLanguage]} ·{survey.info.props.name}{' '}
+        {survey.props.labels[surveyLanguage]} ·{survey.props.name}{' '}
       </Text>
       <Text>
-        {t('Home:survey.card.id')}: {survey.info.id}
+        {t('Home:survey.card.id')}: {survey.id}
       </Text>
       <Text>
         {t('Home:survey.card.language')}: {surveyLanguage}

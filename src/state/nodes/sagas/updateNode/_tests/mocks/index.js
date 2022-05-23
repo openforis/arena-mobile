@@ -81,7 +81,7 @@ export const mockRecord = {
   uuid: getCurrentUuid(),
   ownerUuid: mockUser.uuid,
   dateCreated: moment().toISOString(),
-  surveyUuid: mockSurvey.info.uuid,
+  surveyUuid: mockSurvey.uuid,
   step: '1', // get from survey
   cycle: '0', // get from survey
 };
@@ -90,7 +90,7 @@ export const baseClusterMockNode = {
   uuid: 'CLUSTER_UUID',
   dateCreated: moment().toISOString(),
   dateModified: moment().toISOString(),
-  surveyUuid: mockSurvey.info.uuid,
+  surveyUuid: mockSurvey.uuid,
   recordUuid: mockRecord?.uuid,
   nodeDefUuid: mockSurvey?.nodeDefs?.NODE_DEF_PARENT_UUID?.uuid,
   parentUuid: null,
@@ -103,7 +103,7 @@ export const baseMockNode = {
   uuid: getCurrentUuid(),
   dateCreated: moment().toISOString(),
   dateModified: moment().toISOString(),
-  surveyUuid: mockSurvey.info.uuid,
+  surveyUuid: mockSurvey.uuid,
   recordUuid: mockRecord?.uuid,
   nodeDefUuid: mockSurvey?.nodeDefs?.NODE_DEF_UUID?.uuid,
   parentUuid: 'CLUSTER_UUID',
@@ -116,7 +116,7 @@ export const initialState = {
   surveys: {
     ...globalInitialState.surveys,
     data: {
-      [mockSurvey.info.uuid]: {...mockSurvey},
+      [mockSurvey.uuid]: {...mockSurvey},
     },
   },
 };
@@ -129,7 +129,7 @@ export const initialStateWithNodesAndRecords = {
       ...globalInitialState.records.data,
       RECORD_ONE_UUID: {
         uuid: 'RECORD_ONE_UUID',
-        surveyUuid: mockSurvey.info.uuid,
+        surveyUuid: mockSurvey.uuid,
       },
     },
   },
@@ -137,7 +137,7 @@ export const initialStateWithNodesAndRecords = {
     ...globalInitialState.nodes,
     data: {
       ...globalInitialState.nodes.data,
-      NODE_ONE_UUID: {uuid: 'NODE_ONE_UUID', surveyUuid: mockSurvey.info.uuid},
+      NODE_ONE_UUID: {uuid: 'NODE_ONE_UUID', surveyUuid: mockSurvey.uuid},
     },
   },
   survey: {

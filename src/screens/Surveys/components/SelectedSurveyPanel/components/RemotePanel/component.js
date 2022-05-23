@@ -16,16 +16,16 @@ const RemotePanel = ({survey}) => {
   const [actionType, setActionType] = useState(null);
 
   const localSurvey = useSelector(state =>
-    surveysSelectors.getSurveyByUuid(state, {surveyUuid: survey?.info?.uuid}),
+    surveysSelectors.getSurveyByUuid(state, {surveyUuid: survey?.uuid}),
   );
 
   useEffect(() => {
-    if (!localSurvey?.info?.uuid) {
+    if (!localSurvey?.uuid) {
       setActionType('DOWNLOAD');
       return;
     }
 
-    if (localSurvey?.info?.dateModified < survey?.info?.dateModified) {
+    if (localSurvey?.dateModified < survey?.dateModified) {
       setActionType('UPDATE');
       return;
     }
@@ -34,15 +34,15 @@ const RemotePanel = ({survey}) => {
   }, [localSurvey, survey]);
 
   const handleDownload = useCallback(() => {
-    dispatch(surveysActions.fetchSurvey({surveyId: survey.info.id}));
+    dispatch(surveysActions.fetchSurvey({surveyId: survey.id}));
   }, [dispatch, survey]);
 
   const handleUpdate = useCallback(() => {
-    dispatch(surveysActions.updateSurvey({surveyId: survey.info.id}));
+    dispatch(surveysActions.updateSurvey({surveyId: survey.id}));
   }, [dispatch, survey]);
 
   const handleSelect = useCallback(() => {
-    dispatch(surveyActions.selectSurvey({surveyUuid: survey?.info?.uuid}));
+    dispatch(surveyActions.selectSurvey({surveyUuid: survey?.uuid}));
   }, [dispatch, survey]);
 
   if (actionType === 'DOWNLOAD') {

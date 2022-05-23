@@ -33,7 +33,7 @@ function* handleFetchSurvey({payload}) {
 function* handleDeleteSurvey({payload}) {
   const {surveyUuid, callBack} = payload;
   const selectedSurvey = yield select(surveySelectors.getSurvey);
-  if (selectedSurvey?.info?.uuid === surveyUuid) {
+  if (selectedSurvey?.uuid === surveyUuid) {
     yield put(surveyActions.cleanSurvey());
     yield put(formActions.clean());
   }

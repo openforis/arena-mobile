@@ -10,18 +10,19 @@ const SurveyCard = ({survey, onSelect, isSelected}) => {
   const handlePress = useCallback(() => {
     onSelect?.(survey);
   }, [survey, onSelect]);
+
   return (
     <TouchableCard
       onPress={handlePress}
       customStyles={[styles.container, isSelected ? styles.selected : {}]}>
       <View>
         <Text>
-          {survey.info.id} - {survey.info.props.name}
+          {survey.id} - {survey?.name}
         </Text>
         <Text style={[baseStyles.textStyle.bold]}>
-          {survey.info.props.labels[survey.info.props.languages[0]]}
+          {survey.props.labels[survey.props.languages[0]]}
         </Text>
-        <Text>{survey.info.status}</Text>
+        <Text>{survey.status}</Text>
       </View>
     </TouchableCard>
   );

@@ -11,10 +11,10 @@ const SurveyInfo = ({survey, unSelect}) => {
     <View style={[styles.container]}>
       <View>
         <Text style={[baseStyles.textStyle.bold]}>
-          {survey.info.props.labels[survey?.info?.props?.languages?.[0]]}
+          {survey.props.labels[survey?.props?.languages?.[0]]}
         </Text>
         <Text style={[baseStyles.textStyle.text]}>
-          {survey.info.id} · {survey.info.props.name} · {survey.info.status}
+          {survey.id} · {survey.props.name} · {survey.status}
         </Text>
       </View>
       <TouchableIcon iconName="close" onPress={unSelect} />

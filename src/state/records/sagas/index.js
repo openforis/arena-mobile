@@ -14,8 +14,8 @@ const _createRecord = ({survey, user}) => {
     uuid: uuidv4(),
     ownerUuid: user.uuid,
     dateCreated: moment().toISOString(),
-    surveyUuid: survey.info.uuid,
-    surveyId: survey.info.id,
+    surveyUuid: survey.uuid,
+    surveyId: survey.id,
     step: '1', // get from survey
     cycle: '0', // get from survey
     // validation

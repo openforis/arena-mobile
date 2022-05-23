@@ -33,7 +33,7 @@ const initialState = {
   surveys: {
     ...globalInitialState.surveys,
     data: {
-      [mockSurvey.info.uuid]: {...mockSurvey},
+      [mockSurvey.uuid]: {...mockSurvey},
     },
   },
 };
@@ -46,7 +46,7 @@ const initialStateWithNodesAndRecords = {
       ...globalInitialState.records.data,
       RECORD_ONE_UUID: {
         uuid: 'RECORD_ONE_UUID',
-        surveyUuid: mockSurvey.info.uuid,
+        surveyUuid: mockSurvey.uuid,
       },
     },
   },
@@ -54,7 +54,7 @@ const initialStateWithNodesAndRecords = {
     ...globalInitialState.nodes,
     data: {
       ...globalInitialState.nodes.data,
-      NODE_ONE_UUID: {uuid: 'NODE_ONE_UUID', surveyUuid: mockSurvey.info.uuid},
+      NODE_ONE_UUID: {uuid: 'NODE_ONE_UUID', surveyUuid: mockSurvey.uuid},
     },
   },
   survey: {
@@ -136,8 +136,8 @@ describe('surveys sagas', () => {
           ...initialState.surveys,
           data: {
             ...initialState.surveys.data,
-            [mockSurvey.info.uuid]: {
-              ...initialState.surveys.data[mockSurvey.info.uuid],
+            [mockSurvey.uuid]: {
+              ...initialState.surveys.data[mockSurvey.uuid],
               updated_value: 'VALUE',
             },
           },
@@ -159,7 +159,7 @@ describe('surveys sagas', () => {
         .dispatch(
           surveysActions.deleteSurvey({
             ...payload,
-            surveyUuid: mockSurvey.info.uuid,
+            surveyUuid: mockSurvey.uuid,
           }),
         )
         .provide([[matchers.call.fn(navigator.navigatorDispatch), true]])
@@ -189,7 +189,7 @@ describe('surveys sagas', () => {
         .dispatch(
           surveysActions.deleteSurvey({
             ...payload,
-            surveyUuid: mockSurvey.info.uuid,
+            surveyUuid: mockSurvey.uuid,
           }),
         )
         .provide([[matchers.call.fn(navigator.navigatorDispatch), true]])
