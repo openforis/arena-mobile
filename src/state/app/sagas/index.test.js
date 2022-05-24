@@ -30,6 +30,7 @@ const expectedAppState = {
   ui: {
     error: false,
     isLoading: false,
+    showNames: false,
   },
 };
 
