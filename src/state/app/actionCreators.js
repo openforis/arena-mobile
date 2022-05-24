@@ -22,6 +22,9 @@ const {app} = createActions({
   [types.SET_ERROR]: ({error = false}) => ({
     error,
   }),
+  [types.SET_SHOW_NAMES]: ({showNames = false}) => ({
+    showNames,
+  }),
 });
 
 export default app;
