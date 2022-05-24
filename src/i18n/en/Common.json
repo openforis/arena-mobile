@@ -9,5 +9,7 @@
   "server_config": "Server config",
   "server_address": "Server address",
   "connect": "Connect",
-  "connection_settings": "Connection Settings"
+  "connection_settings": "Connection Settings",
+  "show-labels": "Show labels",
+  "show-names": "Show names"
 }
