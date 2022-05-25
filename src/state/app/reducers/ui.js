@@ -13,6 +13,10 @@ const appUi = handleActions(
       ...state,
       error: error,
     }),
+    [actions.setShowNames]: (state, {payload: {showNames}}) => ({
+      ...state,
+      showNames,
+    }),
     [actions.initConnection]: state => ({
       ...state,
       error: false,

@@ -1,6 +1,7 @@
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import Icon from '../../Icon';
 
 const TouchableIcon = ({
   onPress,
@@ -10,8 +11,11 @@ const TouchableIcon = ({
   iconColor = null,
 }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={[customStyle]}>
-      <Ionicons name={iconName} size={size} color={iconColor} />
+    <TouchableOpacity
+      onPress={onPress}
+      style={[customStyle]}
+      hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}>
+      <Icon name={iconName} size={size} color={iconColor} />
     </TouchableOpacity>
   );
 };

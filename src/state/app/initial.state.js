@@ -9,6 +9,7 @@ const initialState = {
   ui: {
     error: false,
     isLoading: false,
+    showNames: false,
   },
 };
 

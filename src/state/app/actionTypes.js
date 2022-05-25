@@ -5,6 +5,7 @@ const SET_SERVER_URL = 'app/SET_SERVER_URL';
 /*ui*/
 const SET_LOADING = 'app/SET_LOADING';
 const SET_ERROR = 'app/SET_ERROR';
+const SET_SHOW_NAMES = 'app/SET_SHOW_NAMES';
 
 export default {
   initConnection$,
@@ -14,4 +15,5 @@ export default {
   /*ui*/
   SET_LOADING,
   SET_ERROR,
+  SET_SHOW_NAMES,
 };

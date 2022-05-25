@@ -21,6 +21,8 @@ const getUi = createSelector(getState, app => app?.ui || initialState.ui);
 const getIsLoading = createSelector(getUi, ui => ui?.isLoading);
 const getError = createSelector(getUi, ui => ui?.error);
 
+const getShowNames = createSelector(getUi, ui => ui?.showNames);
+
 export default {
   getAccessData,
   getServerUrl,
@@ -28,4 +30,6 @@ export default {
   getUi,
   getIsLoading,
   getError,
+
+  getShowNames,
 };
