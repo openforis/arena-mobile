@@ -26,20 +26,20 @@ const Actions = () => {
       {numberOfRecords > 0 && (
         <Button
           type="secondary"
-          label={t('Actions.records', {count: 100})}
+          label={t('Actions:records', {count: numberOfRecords})}
           onPress={navigateTo({route: routes.RECORDS})}
         />
       )}
       {numberOfErrors > 0 && (
         <Button
           type="secondary"
-          label={t('Actions.validation_report', {count: 100})}
+          label={t('Actions:validation_report', {count: numberOfErrors})}
         />
       )}
       {currentRecordUuid && (
         <Button
           type="secondary"
-          label={t('Actions.new_record')}
+          label={t('Actions:new_record')}
           onPress={handleInitializeRecord}
         />
       )}
@@ -47,13 +47,13 @@ const Actions = () => {
       {currentRecordUuid ? (
         <Button
           type="primary"
-          label={t('Actions.continue_record')}
+          label={t('Actions:continue_record')}
           onPress={navigateTo({route: routes.FORM})}
         />
       ) : (
         <Button
           type="primary"
-          label={t('Actions.new_record')}
+          label={t('Actions:new_record')}
           onPress={handleInitializeRecord}
         />
       )}
