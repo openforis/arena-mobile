@@ -11,8 +11,10 @@ import recordsActionTypes from '../actionTypes';
 // extract this creators to arena
 const _createRecord = ({survey, user}) => {
   return {
+    preview: false, // no idea
     uuid: uuidv4(),
     ownerUuid: user.uuid,
+    ownerName: user.name,
     dateCreated: moment().toISOString(),
     surveyUuid: survey.uuid,
     surveyId: survey.id,

@@ -1,0 +1,14 @@
+{
+  "selected_record_panel": {
+    "delete": {
+      "alert": {
+        "title": "Are you sure?",
+        "message": "You are going to remove the record {{ name }} and all of the info related from the device.",
+        "accept": "Yes, delete",
+        "dismiss": "No"
+      }
+    },
+    "cta_delete": "Delete",
+    "cta_continue": "Continue"
+  }
+}

@@ -1,11 +1,10 @@
 const initialState = {
   data: {
     record: null,
+    parentEntityNode: null,
+    parentEntityNodeDef: null,
     node: null,
-    parentNode: null,
     nodeDef: null,
-    edit: false,
-    nodeDefsWithNodes: {},
   },
   ui: {
     isEntitySelectorOpened: false,
