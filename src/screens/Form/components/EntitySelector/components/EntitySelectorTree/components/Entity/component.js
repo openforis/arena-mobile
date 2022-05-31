@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useCallback} from 'react';
 import {Text, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -8,14 +8,14 @@ import {selectors as formSelectors, actions as formActions} from 'state/form';
 import styles from './styles';
 
 const Entity = ({nodeDef}) => {
-  const hierarchyNodeDefUuuids = useSelector(
-    formSelectors.getHierarchyNodeDefUuids,
-  );
   const nodeDefName = useNodeDefNameOrLabel({nodeDef});
-
   const dispatch = useDispatch();
 
-  const handleSelect = React.useCallback(() => {
+  const hierarchyNodeDefUuids = useSelector(
+    formSelectors.getHierarchyNodeDefUuids,
+  );
+
+  const handleSelect = useCallback(() => {
     dispatch(
       formActions.selectEntity({
         nodeDef,
@@ -25,9 +25,8 @@ const Entity = ({nodeDef}) => {
 
   const isDisabled = useMemo(
     () =>
-      nodeDef.parentUuid &&
-      !hierarchyNodeDefUuuids.includes(nodeDef.parentUuid),
-    [nodeDef, hierarchyNodeDefUuuids],
+      nodeDef.parentUuid && !hierarchyNodeDefUuids.includes(nodeDef.parentUuid),
+    [nodeDef, hierarchyNodeDefUuids],
   );
   return (
     <TouchableOpacity
