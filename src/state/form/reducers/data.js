@@ -7,26 +7,21 @@ import initialState from '../initial.state';
 
 const data = handleActions(
   {
-    [actions.setNode]: (state, {payload: {node = false}}) => ({
-      ...state,
-      node: node.uuid || false,
-      parentNode: node.parentUuid || state.parentNode,
-    }),
-    [actions.setNodeDef]: (state, {payload: {nodeDef = nodeDef}}) => ({
-      ...state,
-      nodeDef: nodeDef.uuid,
-    }),
     [actions.setRecord]: (state, {payload: {record}}) => ({
       ...state,
       record: record.uuid,
     }),
-
-    [actions.setNodeDefWithNode]: (state, {payload: {nodeDef, node}}) => ({
+    [actions.setNode]: (state, {payload: {node = false}}) => ({
       ...state,
-      node: node.uuid,
-      nodeDef: nodeDef.uuid,
+      node: node.uuid || null,
+      parentEntityNode: node.parentUuid || state.parentEntityNode,
+      nodeDef: node.nodeDefUuid || null,
     }),
-    [actions.setEdit]: (state, {payload: {edit}}) => ({...state, edit}),
+    [actions.setParentEntityNode]: (state, {payload: {node = false}}) => ({
+      ...state,
+      parentEntityNode: node.uuid || state.parentEntityNode,
+      parentEntityNodeDef: node.nodeDefUuid || state.parentEntityNodeDef,
+    }),
     [actions.clean]: () => initialState.data,
     [globalActions.reset]: () => initialState.data || {},
   },
