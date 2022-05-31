@@ -1,7 +1,8 @@
-import * as React from 'react';
+import React, {useMemo} from 'react';
 import {Text, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
+import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import {actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
@@ -12,19 +13,25 @@ const BreadCrumb = ({breadCrumb: node}) => {
     surveySelectors.getEntityNodeKeys(state, node),
   );
 
+  const nodeDefName = useNodeDefNameOrLabel({
+    nodeDef: nodeDefsByUuid[node.nodeDefUuid],
+  });
+  const keys = useMemo(
+    () => entityNodeKeys.map(nodeKey => nodeKey.value).join(','),
+    [entityNodeKeys],
+  );
+
   const handleSelect = React.useCallback(() => {
     dispatch(
-      formActions.setNodeDefWithNode({
-        nodeDef: nodeDefsByUuid[node.nodeDefUuid],
-        node: node,
+      formActions.setParentEntityNode({
+        node,
       }),
     );
-  }, [node, nodeDefsByUuid, dispatch]);
+  }, [node, dispatch]);
   return (
     <TouchableOpacity onPress={handleSelect}>
       <Text key={node.key}>
-        {nodeDefsByUuid[node.nodeDefUuid].props.name} ({node.uuid.split('-')[0]}
-        ) [{entityNodeKeys.map(nodeKey => nodeKey.value).join(',')}]
+        {nodeDefName}[{keys}]
       </Text>
     </TouchableOpacity>
   );
