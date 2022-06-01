@@ -8,6 +8,7 @@ import NavigateToSettings from 'navigation/components/NavigateToSettings';
 import {useNavigateTo} from 'navigation/hooks';
 
 import BreadCrumbs from './components/BreadCrumbs';
+import EntityPage from './components/EntityPage';
 import EntitySelector from './components/EntitySelector';
 import styles from './styles';
 
@@ -28,6 +29,7 @@ const Form = () => {
 
         <View style={[styles.container]}>
           <EntitySelector />
+          <EntityPage />
         </View>
       </Layout>
     </>
