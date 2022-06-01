@@ -10,6 +10,8 @@ const styles = StyleSheet.create({
   breadCrumbsList: {
     flexGrow: 1,
     justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingLeft: 8,
     backgroundColor: colors.primaryLight,
   },
 });
