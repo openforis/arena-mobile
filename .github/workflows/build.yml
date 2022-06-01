@@ -24,6 +24,8 @@ jobs:
           ACCESS_TOKEN: $${{secrets.ACCESS_TOKEN}}
       - name: Install
         run: yarn
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.ACCESS_TOKEN}}
       - name: Run Tests
         run: yarn test
         env:
