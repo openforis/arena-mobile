@@ -9,23 +9,15 @@ const getSurveyState = createSelector(
   getState,
   state => state?.survey || false,
 );
-const getSurveyStateData = createSelector(getSurveyState, state =>
-  state?.data && Object.values(state?.data).length > 0 ? state?.data : false,
+const getSurvey = createSelector(getSurveyState, state =>
+  state?.data && state?.data.uuid ? state?.data : false,
 );
 
 const getUiState = createSelector(getSurveyState, state => state?.ui || {});
 
-const getSelectedSurveyId = createSelector(
-  getSurveyStateData,
-  survey => survey?.id,
-);
+const getSelectedSurveyId = createSelector(getSurvey, survey => survey?.id);
 
-const getSelectedSurveyUuid = createSelector(
-  getSurveyStateData,
-  survey => survey?.uuid,
-);
-
-const getSurvey = getSurveyStateData;
+const getSelectedSurveyUuid = createSelector(getSurvey, survey => survey?.uuid);
 
 const getSelectedSurveyLanguage = createSelector(
   getUiState,
@@ -92,6 +84,16 @@ const getNodeDefChildrenEntities = createCachedSelector(
   nodeDefs => nodeDefs.filter(({type}) => type === 'entity'),
 )((_state_, parentNodeDef) => parentNodeDef?.uuid);
 
+const getNodeDefEntityChildrenAttributes = createCachedSelector(
+  getNodeDefChildren,
+  nodeDefs => nodeDefs.filter(({type}) => type !== 'entity'),
+)((_state_, parentNodeDef) => parentNodeDef?.uuid);
+
+const getNodeDefEntityChildrenAttributesUuids = createCachedSelector(
+  getNodeDefEntityChildrenAttributes,
+  nodeDefs => nodeDefs.map(({uuid}) => uuid),
+)((_state_, parentNodeDef) => parentNodeDef?.uuid);
+
 const getNodeDefChildrenSingleEntities = createCachedSelector(
   getNodeDefChildren,
   nodeDefs =>
@@ -151,6 +153,8 @@ export default {
   getNodeDefEntityChildrenKeys,
   getNodeDefChildrenEntities,
   getNodeDefChildrenSingleEntities,
+  getNodeDefEntityChildrenAttributes,
+  getNodeDefEntityChildrenAttributesUuids,
 
   // --- Records
   getRecords,
