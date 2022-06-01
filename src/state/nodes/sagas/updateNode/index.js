@@ -5,7 +5,7 @@ import nodesSelectors from 'state/nodes/selectors';
 import recordsSelectors from 'state/records/selectors';
 import surveySelectors from 'state/survey/selectors';
 
-import {updateNodeAndDependats} from './methods';
+import {updateNodeAndDependants} from './methods';
 
 function* handleUpdateNode({payload}) {
   const {updatedNode} = payload;
@@ -29,8 +29,8 @@ function* handleUpdateNode({payload}) {
 
   const recordWithNodes = {...record, nodes: {...recordNodes}};
 
-  //const {updatedNodes, validation} = yield call(updateNodeAndDependats, {
-  const {updatedNodes} = yield call(updateNodeAndDependats, {
+  //const {updatedNodes, validation} = yield call(updateNodeAndDependants, {
+  const {updatedNodes} = yield call(updateNodeAndDependants, {
     node: updatedNode,
     record: recordWithNodes,
     survey,

@@ -13,11 +13,9 @@ const payload = {
 
 const mockSurvey = {
   id: 'ID',
-  info: {
-    uuid: 'SURVEY_UUID',
-    props: {
-      languages: ['LANG'],
-    },
+  uuid: 'SURVEY_UUID',
+  props: {
+    languages: ['LANG'],
   },
 };
 
