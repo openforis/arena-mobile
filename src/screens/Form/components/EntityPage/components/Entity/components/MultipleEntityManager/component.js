@@ -11,7 +11,8 @@ const MultipleEntityManager = () => {
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
 
-  const sibilingNodes = useSelector(state =>
+  const siblingNodes = useSelector(state =>
+
     formSelectors.getNodeDefNodes(state, parentEntityNodeDef),
   );
   const hierarchyNodesUuids = useSelector(formSelectors.getBreadCrumbs).map(
@@ -59,16 +60,17 @@ const MultipleEntityManager = () => {
         <TouchableIcon iconName="trash-outline" onPress={handleDeleteNode} />
       </View>
       <ScrollView>
-        {sibilingNodes
+
+        {siblingNodes
           .filter(node => hierarchyNodesUuids.includes(node.parentUuid))
-          .map(sibilingNode => (
+          .map(siblingNode => (
             <TouchableOpacity
               style={styles.option}
-              key={sibilingNode.uuid}
-              onPress={() => handleSelectEntityNode(sibilingNode)}>
+              key={siblingNode.uuid}
+              onPress={() => handleSelectEntityNode(siblingNode)}>
               <Text>
-                {sibilingNode.value} - {sibilingNode.uuid.split('-')[0]} -
-                {sibilingNode.parentUuid.split('-')[0]}
+                {siblingNode.value} - {siblingNode.uuid.split('-')[0]} -
+                {siblingNode.parentUuid.split('-')[0]}
               </Text>
             </TouchableOpacity>
           ))}
