@@ -16,7 +16,7 @@ export const alert = ({
   acceptText,
   onAccept,
   dismissText,
-  onDismiss,
+  onDismiss = () => null,
 }) => {
   const buttons = [
     dismissText && {

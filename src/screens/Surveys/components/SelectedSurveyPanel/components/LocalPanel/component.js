@@ -28,7 +28,6 @@ const LocalPanel = ({survey, unSelect}) => {
           }),
         );
       },
-      onDismiss: () => null,
     });
   }, [dispatch, survey, unSelect, t]);
 
