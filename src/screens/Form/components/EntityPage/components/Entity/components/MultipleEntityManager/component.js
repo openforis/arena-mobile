@@ -3,6 +3,7 @@ import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
+import Label from 'form/common/Label';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 
 import styles from './styles';
@@ -54,7 +55,7 @@ const MultipleEntityManager = () => {
           iconName="add-outline"
           onPress={handleCreateNewNodeEntity}
         />
-        <Text>{parentEntityNodeDef.props.name}</Text>
+        <Label nodeDef={parentEntityNodeDef} />
 
         <TouchableIcon iconName="trash-outline" onPress={handleDeleteNode} />
       </View>
