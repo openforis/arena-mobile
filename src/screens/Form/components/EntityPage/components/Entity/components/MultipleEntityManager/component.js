@@ -12,6 +12,7 @@ const MultipleEntityManager = () => {
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
 
   const siblingNodes = useSelector(state =>
+
     formSelectors.getNodeDefNodes(state, parentEntityNodeDef),
   );
   const hierarchyNodesUuids = useSelector(formSelectors.getBreadCrumbs).map(
@@ -59,6 +60,7 @@ const MultipleEntityManager = () => {
         <TouchableIcon iconName="trash-outline" onPress={handleDeleteNode} />
       </View>
       <ScrollView>
+
         {siblingNodes
           .filter(node => hierarchyNodesUuids.includes(node.parentUuid))
           .map(siblingNode => (
