@@ -142,8 +142,8 @@ const getNodeDescendants = createCachedSelector(
   (recordNodes, node) => _getDescendants({nodes: recordNodes, node}),
 )((_state_, node) => node.uuid);
 
-// TO FIX nodeDef is not a condition to be a sibiling // also extraxt to Record and others functions using memoization
-const getNodeSibilings = createCachedSelector(
+// TO FIX nodeDef is not a condition to be a sibling // also extract to Record and others functions using memoization
+const getNodesiblings = createCachedSelector(
   getRecordNodes,
   (_, node) => node,
   (recordNodes, node) =>
@@ -177,7 +177,7 @@ export default {
   getNodeDefNodes,
 
   getNodeDescendants,
-  getNodeSibilings,
+  getNodesiblings,
 
   // ---- UI
   isEntitySelectorOpened,
