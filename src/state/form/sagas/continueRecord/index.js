@@ -1,0 +1,34 @@
+import {StackActions} from '@react-navigation/core';
+import {call, select, put} from 'redux-saga/effects';
+
+import {ROUTES} from 'navigation/constants';
+import formActions from 'state/form/actionCreators';
+import formSelectors from 'state/form/selectors';
+import * as navigator from 'state/navigatorService';
+import surveySelectors from 'state/survey/selectors';
+
+function* handleContinueRecord({payload}) {
+  const {record} = payload;
+  try {
+    const currentRecordUuid = yield select(formSelectors.getRecordUuid);
+    if (currentRecordUuid !== record.uuid) {
+      yield put(formActions.clean());
+      yield put(formActions.setRecord({record}));
+
+      const rootNodeDef = yield select(surveySelectors.getNodeDefRoot);
+
+      const rootNode = yield select(state =>
+        formSelectors.getNodeDefNodes(state, rootNodeDef),
+      );
+      yield put(formActions.setParentEntityNode({node: rootNode[0]}));
+    }
+
+    yield call(navigator.navigatorDispatch, StackActions.push(ROUTES.FORM));
+  } catch (error) {
+    console.log('Error', error);
+  } finally {
+    console.log('Finally');
+  }
+}
+
+export default handleContinueRecord;
