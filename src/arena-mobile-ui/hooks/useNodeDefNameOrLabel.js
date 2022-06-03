@@ -9,7 +9,10 @@ const useNodeDefNameOrLabel = ({nodeDef}) => {
   const showNames = useSelector(appSelectors.getShowNames);
 
   const nodeDefName = useMemo(
-    () => (showNames ? nodeDef.props.name : nodeDef.props.labels[language]),
+    () =>
+      showNames
+        ? nodeDef.props.name
+        : nodeDef.props.labels?.[language] || nodeDef.props.name,
     [showNames, nodeDef, language],
   );
 
