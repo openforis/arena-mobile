@@ -1,5 +1,6 @@
 import {call, select, put, all} from 'redux-saga/effects';
 
+import formActions from 'state/form/actionCreators';
 import nodesActions from 'state/nodes/actionCreators';
 import nodesSelectors from 'state/nodes/selectors';
 import recordsSelectors from 'state/records/selectors';
@@ -8,7 +9,7 @@ import surveySelectors from 'state/survey/selectors';
 import {updateNodeAndDependants} from './methods';
 
 function* handleUpdateNode({payload}) {
-  const {updatedNode} = payload;
+  const {updatedNode, shouldClose} = payload;
 
   const [survey, node, record, recordNodes] = yield all([
     select(surveySelectors.getSurvey),
@@ -39,6 +40,10 @@ function* handleUpdateNode({payload}) {
   yield put(nodesActions.setNodes({nodes: updatedNodes}));
   //yield put(nodesActions.setErrors({errors: validation.errors}));
   //yield put(nodesActions.setWarnings({warnings}));
+
+  if (shouldClose) {
+    yield put(formActions.setNode({node: false}));
+  }
 }
 
 export default handleUpdateNode;
