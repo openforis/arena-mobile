@@ -63,7 +63,7 @@ const getNodeDefUuidAndNodeUuid = createSelector(
   form => `${form.node}.${form.nodeDef}`,
 );
 
-const getNodeDefUuidAndNodeUuidAndEntityNodeUuid = createSelector(
+const getNodeDefNodeAndEntityUuids = createSelector(
   getFormStateData,
   form => `${form.nodeDef}.${form.node}.${form.entitNode}`,
 );
@@ -149,7 +149,7 @@ const getEntityNode = createCachedSelector(
   getRecordNodesByUuid,
   getEntityNodeUuid,
   (nodesByUuid, nodeUuid) => nodesByUuid[nodeUuid] || false,
-)(getNodeDefUuidAndNodeUuidAndEntityNodeUuid);
+)(getNodeDefNodeAndEntityUuids);
 
 const getBreadCrumbs = createCachedSelector(
   getHierarchy,
