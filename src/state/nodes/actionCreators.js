@@ -4,9 +4,9 @@ import types from './actionTypes';
 
 const {nodes} = createActions({
   [types.createNode$]: ({nodeDef}) => ({nodeDef}),
-  [types.updateNode$]: ({updatedNode, shouldClose}) => ({
+  [types.updateNode$]: ({updatedNode, callback}) => ({
     updatedNode,
-    shouldClose,
+    callback,
   }),
   [types.SET_NODE]: ({node}) => ({node}),
   [types.SET_NODES]: ({nodes: _nodes = []}) => ({nodes: _nodes}),
