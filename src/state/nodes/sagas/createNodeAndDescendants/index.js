@@ -1,5 +1,4 @@
 import {RecordNodesUpdater} from '@openforis/arena-core';
-import moment from 'moment';
 import {select, all, put} from 'redux-saga/effects';
 
 import formSelectors from 'state/form/selectors';
@@ -21,21 +20,8 @@ function* handleCreateNodeAndDescendants({nodeDef, parentNode}) {
     nodeDef,
   });
 
-  // TODO Add surveyUuid into CORE and fix dates
-  const updatedNodes = {};
-  Object.keys(updateRecord.nodes).forEach(
-    nodeUuid =>
-      (updatedNodes[nodeUuid] = {
-        refData: null,
-        ...updateRecord.nodes[nodeUuid],
-        surveyUuid: survey.uuid,
-        dateCreated: moment().toISOString(),
-        dateModified: moment().toISOString(),
-      }),
-  );
-
-  yield put(nodesActions.setNodes({nodes: updatedNodes}));
-  return updatedNodes;
+  yield put(nodesActions.setNodes({nodes: updateRecord.nodes}));
+  return updateRecord.nodes;
 }
 
 export default handleCreateNodeAndDescendants;
