@@ -1,5 +1,5 @@
 import {RecordNodesUpdater} from '@openforis/arena-core';
-import {select, all, put} from 'redux-saga/effects';
+import {select, all, put, call} from 'redux-saga/effects';
 
 import formSelectors from 'state/form/selectors';
 import {actions as nodesActions} from 'state/nodes';
@@ -13,7 +13,7 @@ function* handleCreateNodeAndDescendants({nodeDef, parentNode}) {
   ]);
   const recordWithNodes = {...record, nodes: {...(recordNodes || {})}};
 
-  const updateRecord = RecordNodesUpdater.addNodeAndDescendants({
+  const updateRecord = yield call(RecordNodesUpdater.addNodeAndDescendants, {
     survey,
     record: recordWithNodes,
     parentNode,
