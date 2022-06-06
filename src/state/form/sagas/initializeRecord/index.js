@@ -4,14 +4,14 @@ import {call, select, put} from 'redux-saga/effects';
 import {ROUTES} from 'navigation/constants';
 import formActions from 'state/form/actionCreators';
 import * as navigator from 'state/navigatorService';
-import handleCreateNode from 'state/nodes/sagas/createNode';
+import handleCreateNodeAndDescendants from 'state/nodes/sagas/createNodeAndDescendants';
 import {handleCreateRecord} from 'state/records/sagas';
 import surveySelectors from 'state/survey/selectors';
 
 function* handleInitializeRootEntity() {
   const rootNodeDef = yield select(surveySelectors.getNodeDefRoot);
 
-  const node = yield call(handleCreateNode, {
+  const node = yield call(handleCreateNodeAndDescendants, {
     nodeDef: rootNodeDef,
     parentNode: null,
   });
