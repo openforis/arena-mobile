@@ -2,7 +2,7 @@ import React from 'react';
 import {Text, ScrollView, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import AttributeLabel from 'form/common/Label';
+import Label from 'form/common/Label';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
@@ -18,7 +18,7 @@ const Attributes = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <AttributeLabel nodeDef={nodeDef} />
+      <Label nodeDef={nodeDef} />
       <Text>{node.uuid}</Text>
       {nodeDefChildrenUuids?.map(childrenUuid => (
         <Attribute key={childrenUuid} nodeDefUuid={childrenUuid} />

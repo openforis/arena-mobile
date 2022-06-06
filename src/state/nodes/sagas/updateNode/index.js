@@ -8,7 +8,7 @@ import surveySelectors from 'state/survey/selectors';
 import {updateNodeAndDependants} from './methods';
 
 function* handleUpdateNode({payload}) {
-  const {updatedNode} = payload;
+  const {updatedNode, callback} = payload;
 
   const [survey, node, record, recordNodes] = yield all([
     select(surveySelectors.getSurvey),
@@ -39,6 +39,10 @@ function* handleUpdateNode({payload}) {
   yield put(nodesActions.setNodes({nodes: updatedNodes}));
   //yield put(nodesActions.setErrors({errors: validation.errors}));
   //yield put(nodesActions.setWarnings({warnings}));
+
+  if (callback) {
+    yield call(callback);
+  }
 }
 
 export default handleUpdateNode;

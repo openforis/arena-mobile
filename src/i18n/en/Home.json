@@ -17,7 +17,7 @@
       "cta": "Load survey"
     },
     "card": {
-      "current_survey": "Current survey.",
+      "current_survey": "Current survey",
       "id": "Id",
       "language": "Selected language",
       "go_to_survey_details": "Go to survey details"
