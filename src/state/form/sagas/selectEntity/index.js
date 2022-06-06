@@ -44,7 +44,7 @@ function* handleSelectEntity({payload}) {
     } else {
       // the children doesnt exist we need to create
       yield call(handleCreateEntity, {
-        payload: {nodeDef, forceCreationIfSibilingExists: false},
+        payload: {nodeDef, forceCreationIfSiblingExists: false},
       });
     }
   }
