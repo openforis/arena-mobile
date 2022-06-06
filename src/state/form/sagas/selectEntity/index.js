@@ -34,13 +34,13 @@ function* handleSelectEntity({payload}) {
       formSelectors.getNodeDescendants(state, currentEntityNode),
     );
 
-    const childrenEntityNode = (currentEntityNodeDescendants || []).find(
+    const childEntityNode = (currentEntityNodeDescendants || []).find(
       nodeDescendant => nodeDescendant.nodeDefUuid === nodeDef.uuid,
     );
 
     // the children exists
-    if (childrenEntityNode) {
-      yield put(formActions.setParentEntityNode({node: childrenEntityNode}));
+    if (childEntityNode) {
+      yield put(formActions.setParentEntityNode({node: childEntityNode}));
     } else {
       // the children doesnt exist we need to create
       yield call(handleCreateEntity, {
