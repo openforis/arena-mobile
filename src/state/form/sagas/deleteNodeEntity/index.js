@@ -1,4 +1,4 @@
-import {select, all, put} from 'redux-saga/effects';
+import {select, put} from 'redux-saga/effects';
 
 import {actions as nodesActions} from 'state/nodes';
 import nodesSelectors from 'state/nodes/selectors';
