@@ -12,23 +12,14 @@ function* handleDeleteNodeEntity({payload} = {}) {
     formSelectors.getNodeDescendants(state, node),
   );
 
-  const siblings = yield select(state =>
-    formSelectors.getNodeSiblings(state, node),
-  );
-
   const nodesToRemove = [node, ...(descendants || [])];
-  yield all(
-    nodesToRemove.map(_node => put(nodesActions.deleteNode({node: _node}))),
-  );
 
-  if (siblings?.length <= 0) {
-    const parentNode = yield select(state =>
-      nodesSelectors.getNodeByUuid(state, node.parentUuid),
-    );
-    yield put(formActions.setParentEntityNode({node: parentNode}));
-  } else {
-    yield put(formActions.setParentEntityNode({node: siblings[0]}));
-  }
+  yield put(nodesActions.deleteNodes({nodes: nodesToRemove}));
+
+  const parentNode = yield select(state =>
+    nodesSelectors.getNodeByUuid(state, node.parentUuid),
+  );
+  yield put(formActions.setParentEntityNode({node: parentNode}));
 }
 
 export default handleDeleteNodeEntity;
