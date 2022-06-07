@@ -27,7 +27,7 @@ const data = handleActions(
       return newState;
     },
     [actions.deleteNodes]: (state, {payload: {nodes}}) => {
-      let newNodes = Object.assign({}, state);
+      const newNodes = Object.assign({}, state);
 
       Object.keys(nodes).forEach(nodeUuid => {
         delete newNodes[nodeUuid];
