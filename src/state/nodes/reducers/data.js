@@ -26,6 +26,15 @@ const data = handleActions(
       delete newState[node.uuid];
       return newState;
     },
+    [actions.deleteNodes]: (state, {payload: {nodes}}) => {
+      const newNodes = Object.assign({}, state);
+
+      Object.keys(nodes).forEach(nodeUuid => {
+        delete newNodes[nodeUuid];
+      });
+
+      return newNodes;
+    },
     [actions.clean]: () => initialState.data,
     [surveysActions.deleteSurvey]: (state, {payload: {surveyUuid}}) =>
       deleteValueByKey({

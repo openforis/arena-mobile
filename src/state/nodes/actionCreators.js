@@ -11,6 +11,7 @@ const {nodes} = createActions({
   [types.SET_NODE]: ({node}) => ({node}),
   [types.SET_NODES]: ({nodes: _nodes = []}) => ({nodes: _nodes}),
   [types.DELETE_NODE]: ({node}) => ({node}),
+  [types.DELETE_NODES]: ({nodes}) => ({nodes}),
   [types.CLEAN]: () => ({}),
   [types.SET_ERRORS]: ({errors}) => ({errors}),
 });

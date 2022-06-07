@@ -34,7 +34,7 @@
 
 ## Aplicability rules
 
-    ## btwn sibilings
+    ## btwn siblings
 
     Cluster > [ A_1, A_2 ]
     A_2 applicable if A_1 === 1
