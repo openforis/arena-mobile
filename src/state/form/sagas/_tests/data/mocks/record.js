@@ -2,6 +2,7 @@ import moment from 'moment';
 
 import getCurrentUuid from '../utils/getCurrentUuid';
 
+import mockDate from './date';
 import mockSurvey from './survey';
 import mockUser from './user';
 
@@ -10,7 +11,7 @@ let record = {
   ownerUuid: mockUser.uuid,
   surveyUuid: mockSurvey.uuid,
   surveyId: mockSurvey.id,
-  dateCreated: moment().toISOString(),
+  dateCreated: moment(mockDate).toISOString(),
   step: '1',
   cycle: '0',
   ownerName: undefined,

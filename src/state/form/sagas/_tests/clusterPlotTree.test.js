@@ -1,5 +1,4 @@
 import MockDate from 'mockdate';
-import moment from 'moment';
 import {expectSaga} from 'redux-saga-test-plan';
 import * as matchers from 'redux-saga-test-plan/matchers';
 
@@ -26,15 +25,19 @@ jest.mock('uuid', () => ({
   v4: () => _getCurrentUuid(),
 }));
 
-process.env.TZ = 'UTC';
-
-jest.doMock('moment', () => {
-  const moment = require.requireActual('moment-timezone');
-  moment.tz.setDefault('UTC');
-  return moment;
-});
-
 describe('Survey > Cluster, Plot, Tree', () => {
+  jest.doMock('moment', () => {
+    const moment = require.requireActual('moment-timezone');
+    moment.tz.setDefault('UTC');
+    return moment;
+  });
+
+  jest.doMock('moment', () => {
+    const _moment = require.requireActual('moment');
+    _moment.tz.setDefault('UTC');
+    return _moment;
+  });
+
   beforeAll(() => {
     MockDate.set(mockDate);
   });
@@ -44,7 +47,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
   });
 
   it('should always be UTC', () => {
-    expect(moment.tz.guess()).toBe(0);
+    expect(new Date().getTimezoneOffset()).toBe(0);
   });
 
   /*
@@ -90,7 +93,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
                 |
                 +---------- **PLOT_UUID[5]** -> (PLOT_KEY_UUID[6])
     */
-  it.skip('Select Plot               ( 1[1*] )', async () => {
+  it('Select Plot               ( 1[1*] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
@@ -121,7 +124,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
                             |
                             +----- **TREE_UUID[7]** -> (TREE_KEY_UUID[8])
     */
-  it.skip('Select Tree               ( 1[1[1*]] )', async () => {
+  it('Select Tree               ( 1[1[1*]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
@@ -156,7 +159,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
                             |
                             +----- **TREE_UUID[9]** -> (TREE_KEY_UUID[10])
     */
-  it.skip('Add Tree                  ( 1[1[1,2*]] )', async () => {
+  it('Add Tree                  ( 1[1[1,2*]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = addEntity(
@@ -193,7 +196,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
                             |
                             +----- TREE_UUID[9] -> (TREE_KEY_UUID[10])
     */
-  it.skip('Back to plot              ( 1[1*[1,2]] )', async () => {
+  it('Back to plot              ( 1[1*[1,2]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
@@ -234,7 +237,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               |
             |               +----- TREE_UUID[13] -> (TREE_KEY_UUID[14])
     */
-  it.skip('Add new plot              ( 1[1[1,2],2*] )', async () => {
+  it('Add new plot              ( 1[1[1,2],2*] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
@@ -282,7 +285,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               |
             |               +----- **TREE_UUID[13]** -> (TREE_KEY_UUID[14])
     */
-  it.skip('Select Tree               ( 1[1[1,2],2[1*]] )', async () => {
+  it('Select Tree               ( 1[1[1,2],2[1*]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode({type: 'tree', nodeIndex: 13}, prevState);
@@ -326,7 +329,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               |
             |               +----- **TREE_UUID[15]** -> (TREE_KEY_UUID[16])
     */
-  it.skip('Add Tree                  ( 1[1[1,2],2[1,2*]] )', async () => {
+  it('Add Tree                  ( 1[1[1,2],2[1,2*]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = addEntity(
@@ -375,7 +378,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               |
             |               +----- TREE_UUID[15] -> (TREE_KEY_UUID[16])
     */
-  it.skip('Select Tree 1.2.1         ( 1[1[1,2],2[1*,2]] )', async () => {
+  it('Select Tree 1.2.1         ( 1[1[1,2],2[1*,2]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
@@ -429,7 +432,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               |
             |               +----- TREE_UUID[15] -> (TREE_KEY_UUID[16])
     */
-  it.skip('Back to Plot 1.2          ( 1[1[1,2],2*[1,2]] )', async () => {
+  it('Back to Plot 1.2          ( 1[1[1,2],2*[1,2]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
@@ -480,7 +483,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               |
             |               +----- TREE_UUID[15] -> (TREE_KEY_UUID[16])
     */
-  it.skip('Move to Plot 1.1          ( 1[1*[1,2],2[1,2]] )', async () => {
+  it('Move to Plot 1.1          ( 1[1*[1,2],2[1,2]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
@@ -534,7 +537,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               |
             |               +----- TREE_UUID[15] -> (TREE_KEY_UUID[16])
     */
-  it.skip('Move to Tree              ( 1[1[1*,2],2[1,2]] )', async () => {
+  it('Move to Tree              ( 1[1[1*,2],2[1,2]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
@@ -585,11 +588,11 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               |
             |               +----- TREE_UUID[15] -> (TREE_KEY_UUID[16])
     */
-  it.skip('Delete Tree 1.1.1         ( 1[1[-,2*],2[1,2]] )', async () => {
+  it('Delete Tree 1.1.1         ( 1[1[-,2*],2[1,2]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
-      {type: 'tree', nodeIndex: 9, parentIndex: 5},
+      {type: 'plot', nodeIndex: 5, parentIndex: 2},
       deleteNodes(
         {nodeIndexesToDelete: [getCurrentUuid(7), getCurrentUuid(8)]},
         prevState,
@@ -639,7 +642,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               |
             |               +----- TREE_UUID[15] -> (TREE_KEY_UUID[16])
     */
-  it.skip('Back to Plot 1.1          ( 1[1*[-,2],2[1,2]] )', async () => {
+  it('Back to Plot 1.1          ( 1[1*[-,2],2[1,2]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
@@ -686,11 +689,11 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               |
             |               +----- TREE_UUID[15] -> (TREE_KEY_UUID[16])
     */
-  it.skip('Delete Plot 1.1           ( 1[-,2*[1,2]] )', async () => {
+  it('Delete Plot 1.1           ( 1[-,2*[1,2]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
-      {type: 'plot', nodeIndex: 11, parentIndex: 2},
+      {type: 'cluster', nodeIndex: 2, parentIndex: null},
       deleteNodes(
         {
           nodeIndexesToDelete: [
@@ -739,7 +742,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               |
             |               +----- TREE_UUID[15] -> (TREE_KEY_UUID[16])
     */
-  it.skip('Delete Plot 1.2           ( 1[-] )', async () => {
+  it('Delete Plot 1.2           ( 1[-] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
@@ -786,7 +789,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
                             |
                             +---------TREE_UUID[19] -> (TREE_KEY_UUID[20])
     */
-  it.skip('Add Plot 1.3              ( 1[3*] )', async () => {
+  it('Add Plot 1.3              ( 1[3*] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
@@ -822,7 +825,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
                             |
                             +---------**TREE_UUID[19]** -> (TREE_KEY_UUID[20])
     */
-  it.skip('Select tree 1.3.1         ( 1[3[1*]] )', async () => {
+  it('Select tree 1.3.1         ( 1[3[1*]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
@@ -855,11 +858,11 @@ describe('Survey > Cluster, Plot, Tree', () => {
                             |
                             +---/XXX/--TREE_UUID[19] -> (TREE_KEY_UUID[20])
     */
-  it.skip('Delete tree 1.3.1         ( 1[3[-]] )', async () => {
+  it('Delete tree 1.3.1         ( 1[3[-]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
-      {type: 'plot', nodeIndex: 17},
+      {type: 'plot', nodeIndex: 17, parentIndex: 2},
       deleteNodes(
         {nodeIndexesToDelete: [getCurrentUuid(19), getCurrentUuid(20)]},
         prevState,
@@ -895,7 +898,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
                             |
                             +---------**TREE_UUID[21]** -> (TREE_KEY_UUID[22])
     */
-  it.skip('Add tree 1.3.2            ( 1[3[2*]] )', async () => {
+  it('Add tree 1.3.2            ( 1[3[2*]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
