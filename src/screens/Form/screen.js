@@ -7,6 +7,7 @@ import baseStyles from 'arena-mobile-ui/styles';
 import NavigateToSettings from 'navigation/components/NavigateToSettings';
 import {useNavigateTo} from 'navigation/hooks';
 
+import AttributeForm from './components/AttributeForm';
 import BreadCrumbs from './components/BreadCrumbs';
 import EntityPage from './components/EntityPage';
 import EntitySelector from './components/EntitySelector';
@@ -32,6 +33,8 @@ const Form = () => {
           <EntityPage />
         </View>
       </Layout>
+
+      <AttributeForm />
     </>
   );
 };
