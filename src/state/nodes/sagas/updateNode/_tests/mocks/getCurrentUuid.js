@@ -6,8 +6,7 @@ const getCurrentUuid = (id = false) => {
     return `${BASE_UUID}${baseCurrent + id}`;
   }
   current++;
-  const uuid = `${BASE_UUID}${current}`;
-  return uuid;
+  return `${BASE_UUID}${current}`;
 };
 
 export default getCurrentUuid;

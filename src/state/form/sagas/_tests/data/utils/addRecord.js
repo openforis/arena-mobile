@@ -4,7 +4,7 @@ import mockRecord from '../mocks/record';
 
 import getCurrentUuid from './getCurrentUuid';
 
-const addRecord = ({}, _prevState = {}) => {
+const addRecord = (_, _prevState = {}) => {
   return {
     ..._prevState,
     form: {
