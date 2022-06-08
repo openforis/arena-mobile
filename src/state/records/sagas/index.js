@@ -2,6 +2,8 @@ import moment from 'moment';
 import {takeLatest, put, select, call, all} from 'redux-saga/effects';
 
 import {uuidv4} from 'infra/uuid';
+import formActions from 'state/form/actionCreators';
+import formSelectors from 'state/form/selectors';
 import surveySelectors from 'state/survey/selectors';
 import {selectors as userSelector} from 'state/user';
 
@@ -45,8 +47,15 @@ export function* handleCreateRecord() {
 }
 
 export function* handleDeleteRecord({payload}) {
-  const {recordUuid} = payload;
+  const {recordUuid, callBack} = payload;
   yield put(recordsActions.cleanRecord({recordUuid: recordUuid}));
+  const currentRecordUuid = yield select(formSelectors.getRecordUuid);
+  if (currentRecordUuid === recordUuid) {
+    yield put(formActions.clean());
+  }
+  if (callBack) {
+    yield call(callBack);
+  }
 }
 
 export default function* () {
