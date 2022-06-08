@@ -2,11 +2,10 @@ import React from 'react';
 import {Text, ScrollView, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
+import Attribute from 'form/common/Attribute';
 import Label from 'form/common/Label';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
-
-const Attribute = ({nodeDefUuid}) => <Text>{nodeDefUuid}</Text>;
 
 import styles from './styles';
 const Attributes = () => {
