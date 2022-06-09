@@ -20,7 +20,7 @@ const SurveyCard = ({survey, onSelect, isSelected}) => {
           {survey.id} - {survey?.name}
         </Text>
         <Text style={[baseStyles.textStyle.bold]}>
-          {survey.props.labels[survey.props.languages[0]]}
+          {survey.props.labels[survey?.props?.languages?.[0]]}
         </Text>
         <Text>{survey.status}</Text>
       </View>
