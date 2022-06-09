@@ -17,7 +17,7 @@ const treeNodeDefs = {
     props: {
       key: true,
       name: 'tree_key',
-      multile: false,
+      multiple: false,
     },
   },
 };
