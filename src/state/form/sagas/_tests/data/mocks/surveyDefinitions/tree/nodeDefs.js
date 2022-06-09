@@ -6,7 +6,7 @@ const treeNodeDefs = {
     type: 'entity',
     props: {
       name: 'tree',
-      multile: true,
+      multiple: true,
     },
   },
   TREE_KEY_UUID: {
