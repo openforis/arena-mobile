@@ -2,5 +2,7 @@
   "new_record": "New record",
   "continue_record": "Continue current record",
   "validation_report": "Validation report ({{count}})",
-  "records": "Records ({{count}})"
+  "records": "Records ({{count}})",
+  "remove_records": "Remove records",
+  "remove_survey": "Remove survey"
 }
