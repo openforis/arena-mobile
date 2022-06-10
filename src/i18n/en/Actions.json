@@ -4,5 +4,6 @@
   "validation_report": "Validation report ({{count}})",
   "records": "Records ({{count}})",
   "remove_records": "Remove records",
-  "remove_survey": "Remove survey"
+  "remove_survey": "Remove survey",
+  "upload_data": "Upload data"
 }
