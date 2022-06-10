@@ -25,6 +25,7 @@
     "react-native": "0.67.3",
     "react-native-camera": "^4.2.1",
     "react-native-elements": "^3.4.2",
+    "react-native-fs": "^2.20.0",
     "react-native-get-random-values": "^1.7.2",
     "react-native-mmkv": "^2.1.2",
     "react-native-mmkv-flipper-plugin": "^1.0.0",

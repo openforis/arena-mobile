@@ -37,8 +37,8 @@ const Actions = () => {
   }, [dispatch, survey, t]);
 
   const handleUploadData = useCallback(() => {
-    console.log('UPLOAD DATA', survey, dispatch);
-  }, [dispatch, survey]);
+    dispatch(surveyActions.uploadSurveyData());
+  }, [dispatch]);
 
   const handleDeleteSurvey = useCallback(() => {
     if (survey) {
@@ -75,7 +75,11 @@ const Actions = () => {
       <View style={[styles.separator]} />
 
       {numberOfRecords > 0 && (
-        <Button type="primary" label="Upload data" onPress={handleUploadData} />
+        <Button
+          type="primary"
+          label={t('Actions:upload_data')}
+          onPress={handleUploadData}
+        />
       )}
     </View>
   );
