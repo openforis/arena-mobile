@@ -1,3 +1,4 @@
+import {Objects} from '@openforis/arena-core';
 import {StackActions} from '@react-navigation/core';
 import {call, select, put} from 'redux-saga/effects';
 
@@ -11,12 +12,16 @@ import surveySelectors from 'state/survey/selectors';
 function* handleInitializeRootEntity() {
   const rootNodeDef = yield select(surveySelectors.getNodeDefRoot);
 
-  const node = yield call(handleCreateNodeAndDescendants, {
+  const nodes = yield call(handleCreateNodeAndDescendants, {
     nodeDef: rootNodeDef,
     parentNode: null,
   });
 
-  yield put(formActions.setParentEntityNode({node: node}));
+  const rootNode = Object.values(nodes).find(node =>
+    Objects.isEmpty(node.parentUuid),
+  );
+
+  yield put(formActions.setParentEntityNode({node: rootNode}));
 }
 
 function* handleInitializeRecord() {

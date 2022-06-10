@@ -2,47 +2,47 @@ import {call, select, put} from 'redux-saga/effects';
 
 import formActions from 'state/form/actionCreators';
 import formSelectors from 'state/form/selectors';
-import handleCreateNode from 'state/nodes/sagas/createNode';
+import handleCreateNodeAndDescendants from 'state/nodes/sagas/createNodeAndDescendants';
 
 function* handleCreateEntity({payload} = {}) {
   const {nodeDef: _nodeDef = false, forceCreationIfSibilingExists = true} =
     payload;
 
   const hierarchy = yield select(formSelectors.getHierarchy);
-  const nodeDef = _nodeDef
-    ? _nodeDef
-    : yield select(formSelectors.getParentEntityNodeDef);
 
-  const parentNodeInHierarchy = hierarchy.find(
-    _node => _node.nodeDefUuid === nodeDef.parentUuid,
+  const parentEntityNode = hierarchy.find(
+    _node => _node.nodeDefUuid === _nodeDef.parentUuid,
   );
 
   const nodeDefNodes = yield select(state =>
-    formSelectors.getNodeDefNodes(state, nodeDef),
+    formSelectors.getNodeDefNodes(state, _nodeDef),
   );
-  const existingNodeOfThisNodeDefBelowThisParent =
-    parentNodeInHierarchy?.uuid &&
+  const nodeOfThisNodeDefBelowTheCurrentEntity =
+    parentEntityNode?.uuid &&
     (nodeDefNodes || []).find(
-      _node => _node.parentUuid === parentNodeInHierarchy.uuid,
+      _node => _node.parentUuid === parentEntityNode.uuid,
     );
 
   if (
-    existingNodeOfThisNodeDefBelowThisParent &&
+    nodeOfThisNodeDefBelowTheCurrentEntity &&
     forceCreationIfSibilingExists === false
   ) {
     yield put(
       formActions.setParentEntityNode({
-        node: existingNodeOfThisNodeDefBelowThisParent,
+        node: nodeOfThisNodeDefBelowTheCurrentEntity,
       }),
     );
   } else {
-    const parentNode = yield select(formSelectors.getEntityNode);
-    const node = yield call(handleCreateNode, {
-      nodeDef,
-      parentNode: parentNodeInHierarchy || parentNode,
+    const nodesCreated = yield call(handleCreateNodeAndDescendants, {
+      nodeDef: _nodeDef,
+      parentNode: parentEntityNode,
     });
 
-    yield put(formActions.setParentEntityNode({node: node}));
+    const newNodeEntity = Object.values(nodesCreated).find(
+      node => node.nodeDefUuid === _nodeDef.uuid,
+    );
+
+    yield put(formActions.setParentEntityNode({node: newNodeEntity}));
   }
 }
 
