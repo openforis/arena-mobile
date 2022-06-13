@@ -10970,6 +10970,11 @@ react-native-vector-icons@^9.0.0:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
+react-native-zip-archive@^6.0.8:
+  version "6.0.8"
+  resolved "https://registry.yarnpkg.com/react-native-zip-archive/-/react-native-zip-archive-6.0.8.tgz#913952ebc31635fa5931b6c608a8562bf182765b"
+  integrity sha512-Rpy9VlvR7cOQWipMA/UXD8LDV0Q7V80DCKF2ItU5jd2IRishFWrgwHGx7M7OVhbdAwquRMEh9I+UCXdl3QKPxw==
+
 react-native@0.67.3:
   version "0.67.3"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.67.3.tgz#ee8bafb644afbe511a4a2c8e9c144a9720d06dd8"
