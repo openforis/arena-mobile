@@ -40,6 +40,7 @@ const Actions = () => {
     dispatch(surveyActions.uploadSurveyData());
   }, [dispatch]);
 
+
   const handleDeleteSurvey = useCallback(() => {
     if (survey) {
       alert({
