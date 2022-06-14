@@ -1,5 +1,6 @@
 import RNFS from 'react-native-fs';
-const BASE_PATH = RNFS.DocumentDirectoryPath;
+
+export const BASE_PATH = RNFS.DocumentDirectoryPath;
 
 const DEFAULT_ENCODING = 'utf8';
 
@@ -21,4 +22,6 @@ export const readfile = async (
   },
 ) => RNFS.readFile(`${BASE_PATH}/${filePath}`, encoding);
 
+export const readDir = async ({dirPath}) =>
+  RNFS.readDir(`${BASE_PATH}/${dirPath}`);
 export const deleteDir = async path => RNFS.unlink(`${BASE_PATH}/${path}`);

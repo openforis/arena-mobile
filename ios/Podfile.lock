@@ -368,6 +368,14 @@ PODS:
     - React-RCTImage
   - RNVectorIcons (9.0.0):
     - React-Core
+  - RNZipArchive (6.0.8):
+    - React-Core
+    - RNZipArchive/Core (= 6.0.8)
+    - SSZipArchive (= 2.2.3)
+  - RNZipArchive/Core (6.0.8):
+    - React-Core
+    - SSZipArchive (= 2.2.3)
+  - SSZipArchive (2.2.3)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -436,6 +444,7 @@ DEPENDENCIES:
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - RNZipArchive (from `../node_modules/react-native-zip-archive`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -455,6 +464,7 @@ SPEC REPOS:
     - MMKV
     - MMKVCore
     - OpenSSL-Universal
+    - SSZipArchive
     - YogaKit
 
 EXTERNAL SOURCES:
@@ -536,6 +546,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  RNZipArchive:
+    :path: "../node_modules/react-native-zip-archive"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -594,6 +606,8 @@ SPEC CHECKSUMS:
   RNPermissions: f7ebe52db07c00901127966ca080b4ec6a6ceb0a
   RNScreens: 522705f2e5c9d27efb17f24aceb2bf8335bc7b8e
   RNVectorIcons: 4143ba35feebab8fdbe6bc43d1e776b393d47ac8
+  RNZipArchive: 3f89b114cfeb89dac027fc5c7afd7e58d3dc4ebf
+  SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
   Yoga: 90dcd029e45d8a7c1ff059e8b3c6612ff409061a
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
