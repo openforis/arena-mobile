@@ -1,6 +1,9 @@
 const initialState = {
   data: {},
-  ui: {},
+  ui: {
+    isUploading: false,
+    uploadProgress: 0,
+  },
 };
 
 export default initialState;

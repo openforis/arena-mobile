@@ -135,6 +135,12 @@ const getEntityNodeKeys = createCachedSelector(
     ),
 )((_state_, node) => node.uuid);
 
+//// UI
+
+const getIsUploading = createSelector(getUiState, ui => ui.isUploading);
+
+const getUploadProgress = createSelector(getUiState, ui => ui.uploadProgress);
+
 export default {
   getSurvey,
   getSelectedSurveyId,
@@ -163,4 +169,9 @@ export default {
   // --- Nodes
   getNodes,
   getEntityNodeKeys,
+
+  // --- UI
+  getUiState,
+  getIsUploading,
+  getUploadProgress,
 };
