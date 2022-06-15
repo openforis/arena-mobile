@@ -1,10 +1,18 @@
 import {StackActions} from '@react-navigation/core';
-import {takeLatest, put, select, call, delay} from 'redux-saga/effects';
+import {channel} from 'redux-saga';
+import {
+  takeLatest,
+  put,
+  select,
+  call,
+  delay,
+  take,
+  fork,
+} from 'redux-saga/effects';
 
 import * as fs from 'infra/fs';
 import {zip} from 'infra/zip';
 import {ROUTES} from 'navigation/constants';
-import {_store} from 'navigation/index';
 import appSelectors from 'state/app/selectors';
 import {actions as formActions} from 'state/form';
 import * as navigator from 'state/navigatorService';
@@ -97,18 +105,26 @@ function* cleanTmpFolder() {
   }
 }
 
-const handleUploadBegin = response => {
-  _store.dispatch(surveyActions.setUploading({isUploading: true}));
+const uploadFileChannel = channel();
+
+function* watchFileUploadChannel() {
+  while (true) {
+    const action = yield take(uploadFileChannel);
+    yield put(action);
+  }
+}
+
+const handleUploadBegin = chan => response => {
+  chan.put(surveyActions.setUploading({isUploading: true}));
 };
-const handleOnProgress = response => {
+const handleOnProgress = chan => response => {
   const {totalBytesSent, totalBytesExpectedToSend} = response;
 
   const percentage = Math.floor(
     (100 * totalBytesSent) / totalBytesExpectedToSend,
   );
-  _store.dispatch(
-    surveyActions.setUploadProgress({uploadProgress: percentage}),
-  );
+
+  chan.put(surveyActions.setUploadProgress({uploadProgress: percentage}));
 };
 
 function* handleUploadData() {
@@ -122,8 +138,8 @@ function* handleUploadData() {
     yield call(surveysApi.uploadSurveyZipRecords, {
       serverUrl,
       surveyId,
-      onStart: handleUploadBegin,
-      onProgress: handleOnProgress,
+      onStart: handleUploadBegin(uploadFileChannel),
+      onProgress: handleOnProgress(uploadFileChannel),
     });
   } catch (e) {
     console.log(e);
@@ -138,4 +154,5 @@ function* handleUploadData() {
 export default function* () {
   yield takeLatest(surveyActionTypes.selectSurvey$, handleSelectSurvey);
   yield takeLatest(surveyActionTypes.uploadSurveyData$, handleUploadData);
+  yield fork(watchFileUploadChannel);
 }

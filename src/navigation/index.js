@@ -19,8 +19,6 @@ import {SCREENS} from './screens';
 const Stack = createNativeStackNavigator();
 const {store} = getStore();
 
-export const _store = store;
-
 function Arena() {
   const navigationRef = useRef(null);
 
