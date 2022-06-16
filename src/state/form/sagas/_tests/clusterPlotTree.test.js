@@ -67,8 +67,14 @@ describe('Survey > Cluster, Plot, Tree', () => {
     expectedState = selectNode(
       {type: 'cluster', nodeIndex: 2},
       addEntity(
-        {type: 'plot', parentIndex: 2, currentIndex: 5},
-        addEntity({type: 'cluster', currentIndex: 2}, addRecord({}, prevState)),
+        {type: 'tree', parentIndex: 5, currentIndex: 7},
+        addEntity(
+          {type: 'plot', parentIndex: 2, currentIndex: 5},
+          addEntity(
+            {type: 'cluster', currentIndex: 2},
+            addRecord({}, prevState),
+          ),
+        ),
       ),
     );
 
@@ -127,7 +133,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expectedState = selectNode(
       {type: 'tree', nodeIndex: 7, parentIndex: 5},
-      addEntity({type: 'tree', parentIndex: 5, currentIndex: 7}, prevState),
+      prevState,
     );
 
     const {storeState} = await expectSaga(formSagas)
@@ -240,7 +246,10 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expectedState = selectNode(
       {type: 'plot', nodeIndex: 11},
-      addEntity({type: 'plot', parentIndex: 2, currentIndex: 11}, prevState),
+      addEntity(
+        {type: 'tree', parentIndex: 11, currentIndex: 13},
+        addEntity({type: 'plot', parentIndex: 2, currentIndex: 11}, prevState),
+      ),
     );
 
     const {storeState} = await expectSaga(formSagas)
@@ -283,10 +292,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
   it('Select Tree               ( 1[1[1,2],2[1*]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
-    expectedState = selectNode(
-      {type: 'tree', nodeIndex: 13},
-      addEntity({type: 'tree', parentIndex: 11, currentIndex: 13}, prevState),
-    );
+    expectedState = selectNode({type: 'tree', nodeIndex: 13}, prevState);
 
     const {storeState} = await expectSaga(formSagas)
       .withReducer(appReducers, prevState)
@@ -745,8 +751,10 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expectedState = selectNode(
       {type: 'plot', nodeIndex: 17, parentIndex: 2},
-
-      addEntity({type: 'plot', parentIndex: 2, currentIndex: 17}, prevState),
+      addEntity(
+        {type: 'tree', parentIndex: 17, currentIndex: 19},
+        addEntity({type: 'plot', parentIndex: 2, currentIndex: 17}, prevState),
+      ),
     );
 
     const {storeState} = await expectSaga(formSagas)
@@ -779,7 +787,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expectedState = selectNode(
       {type: 'tree', nodeIndex: 19, parentIndex: 17},
-      addEntity({type: 'tree', parentIndex: 17, currentIndex: 19}, prevState),
+      prevState,
     );
 
     const {storeState} = await expectSaga(formSagas)
