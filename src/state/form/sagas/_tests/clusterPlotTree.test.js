@@ -232,6 +232,8 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               +----- TREE_UUID[9] -> (TREE_KEY_UUID[10])
             |
             +---------- **PLOT_UUID[11]** -> (PLOT_KEY_UUID[12])
+            |               |
+            |               +----- TREE_UUID[13] -> (TREE_KEY_UUID[14])
     */
   it('Add new plot              ( 1[1[1,2],2*] )', async () => {
     prevState = Object.assign({}, expectedState);
@@ -262,6 +264,8 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |              +----- TREE_UUID[9] -> (TREE_KEY_UUID[10])
             |
             +---------- **PLOT_UUID[11]** -> (PLOT_KEY_UUID[12])
+            |               |
+            |               +----- TREE_UUID[13] -> (TREE_KEY_UUID[14])
 
     TO:
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
@@ -733,6 +737,8 @@ describe('Survey > Cluster, Plot, Tree', () => {
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
             +---------**PLOT_UUID[17]** -> (PLOT_KEY_UUID[18])
+                            |
+                            +---------TREE_UUID[19] -> (TREE_KEY_UUID[20])
     */
   it('Add Plot 1.3              ( 1[3*] )', async () => {
     prevState = Object.assign({}, expectedState);
@@ -758,6 +764,8 @@ describe('Survey > Cluster, Plot, Tree', () => {
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
             +---------**PLOT_UUID[17]** -> (PLOT_KEY_UUID[18])
+                            |
+                            +---------TREE_UUID[19] -> (TREE_KEY_UUID[20])
 
     TO:
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
@@ -771,7 +779,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expectedState = selectNode(
       {type: 'tree', nodeIndex: 19, parentIndex: 17},
-      addEntity({type: 'tree', parentIndex: 17, currentIndex: 19}, prevState),
+      prevState,
     );
 
     const {storeState} = await expectSaga(formSagas)
