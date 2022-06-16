@@ -37,13 +37,8 @@ const Actions = () => {
   }, [dispatch, survey, t]);
 
   const handleUploadData = useCallback(() => {
-<<<<<<< HEAD
     dispatch(surveyActions.uploadSurveyData());
   }, [dispatch]);
-=======
-    console.log('UPLOAD DATA', survey, dispatch);
-  }, [dispatch, survey]);
->>>>>>> bc3032f (actions)
 
   const handleDeleteSurvey = useCallback(() => {
     if (survey) {
@@ -80,15 +75,11 @@ const Actions = () => {
       <View style={[styles.separator]} />
 
       {numberOfRecords > 0 && (
-<<<<<<< HEAD
         <Button
           type="primary"
           label={t('Actions:upload_data')}
           onPress={handleUploadData}
         />
-=======
-        <Button type="primary" label="Upload data" onPress={handleUploadData} />
->>>>>>> bc3032f (actions)
       )}
     </View>
   );

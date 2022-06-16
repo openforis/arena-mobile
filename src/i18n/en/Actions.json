@@ -4,10 +4,6 @@
   "validation_report": "Validation report ({{count}})",
   "records": "Records ({{count}})",
   "remove_records": "Remove records",
-<<<<<<< HEAD
   "remove_survey": "Remove survey",
   "upload_data": "Upload data"
-=======
-  "remove_survey": "Remove survey"
->>>>>>> bc3032f (actions)
 }
