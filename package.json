@@ -79,7 +79,7 @@
       "/test/"
     ],
     "testResultsProcessor": "jest-sonar-reporter",
-    "resolver": "<rootDir>/__tests__/common/resolver.js"
+    "resolver": "<rootDir>/testResolver.js"
   },
   "husky": {
     "hooks": {

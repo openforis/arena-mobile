@@ -76,7 +76,3 @@ test-report.xml
 
 src/infra/api/_index.js
 src/navigation/Debug
-
-.src/*
-__src/*
-_._src/*

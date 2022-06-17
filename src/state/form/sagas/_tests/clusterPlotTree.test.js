@@ -779,7 +779,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expectedState = selectNode(
       {type: 'tree', nodeIndex: 19, parentIndex: 17},
-      prevState,
+      addEntity({type: 'tree', parentIndex: 17, currentIndex: 19}, prevState),
     );
 
     const {storeState} = await expectSaga(formSagas)
