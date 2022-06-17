@@ -1,4 +1,5 @@
 import API from 'infra/api';
+import * as fs from 'infra/fs';
 
 const getSurveys = async ({serverUrl}) => {
   const {data} = await API({serverUrl}).get({path: 'api/surveys'});
@@ -63,10 +64,35 @@ const getSurveyPopulatedById = async ({serverUrl, surveyId}) => {
   };
 };
 
+const uploadSurveyZipRecords = async ({
+  serverUrl,
+  surveyId,
+  onStart,
+  onProgress,
+}) => {
+  const uploadUrl = `${serverUrl}/api/mobile/survey/${surveyId}`;
+  const files = [
+    {
+      name: 'records.zip',
+      filename: 'records.zip',
+      filepath: fs.BASE_PATH + '/tmp/records.zip',
+      filetype: 'application/zip',
+    },
+  ];
+
+  return fs.uploadFiles({
+    uploadUrl,
+    files,
+    onStart,
+    onProgress,
+  });
+};
+
 const surveysApi = {
   getSurveys,
   getSurveyById,
   getSurveyPopulatedById,
+  uploadSurveyZipRecords,
 };
 
 export default surveysApi;

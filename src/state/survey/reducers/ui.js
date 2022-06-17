@@ -26,6 +26,15 @@ const ui = handleActions(
       ...state,
       selectedSurveyLanguage: survey?.props?.languages?.[0],
     }),
+    [actions.setUploading]: (state, {payload: {isUploading = false}}) => ({
+      ...state,
+      isUploading,
+      uploadProgress: 0,
+    }),
+    [actions.setUploadProgress]: (state, {payload: {uploadProgress = 0}}) => ({
+      ...state,
+      uploadProgress,
+    }),
     [globalActions.reset]: () => initialState.ui || {},
   },
   initialState.ui || {},

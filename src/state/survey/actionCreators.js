@@ -11,6 +11,8 @@ const {survey} = createActions({
   [types.SELECT_SURVEY_LANGUAGE]: ({selectedSurveyLanguage}) => ({
     selectedSurveyLanguage,
   }),
+  [types.SET_UPLOADING]: ({isUploading = false}) => ({isUploading}),
+  [types.SET_UPLOAD_PROGRESS]: ({uploadProgress}) => ({uploadProgress}),
 });
 
 export default survey;

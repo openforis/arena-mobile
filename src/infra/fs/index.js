@@ -25,3 +25,15 @@ export const readfile = async (
 export const readDir = async ({dirPath}) =>
   RNFS.readDir(`${BASE_PATH}/${dirPath}`);
 export const deleteDir = async path => RNFS.unlink(`${BASE_PATH}/${path}`);
+
+export const uploadFiles = async ({uploadUrl, files, onStart, onProgress}) =>
+  RNFS.uploadFiles({
+    toUrl: uploadUrl,
+    files,
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+    },
+    begin: onStart,
+    progress: onProgress,
+  }).promise;

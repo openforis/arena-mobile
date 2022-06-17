@@ -7,6 +7,9 @@ const deleteSurveyData$ = 'survey/deleteSurveyData';
 
 const SELECT_SURVEY_LANGUAGE = 'survey/SELECT_SURVEY_LANGUAGE';
 
+const SET_UPLOADING = 'survey/SET_UPLOADING';
+const SET_UPLOAD_PROGRESS = 'survey/SET_UPLOAD_PROGRESS';
+
 export default {
   selectSurvey$,
 
@@ -16,4 +19,7 @@ export default {
   SET_SURVEY,
   CLEAN_SURVEY,
   SELECT_SURVEY_LANGUAGE,
+
+  SET_UPLOADING,
+  SET_UPLOAD_PROGRESS,
 };
