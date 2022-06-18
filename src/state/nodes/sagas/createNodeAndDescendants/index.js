@@ -13,7 +13,7 @@ function* handleCreateNodeAndDescendants({nodeDef, parentNode}) {
   ]);
   const recordWithNodes = {...record, nodes: {...(recordNodes || {})}};
 
-  const updateRecord = yield call(RecordNodesUpdater.addNodeAndDescendants, {
+  const updateRecord = yield call(RecordNodesUpdater.createNodeAndDescendants, {
     survey,
     record: recordWithNodes,
     parentNode,

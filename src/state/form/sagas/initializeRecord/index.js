@@ -16,7 +16,6 @@ function* handleInitializeRootEntity() {
     nodeDef: rootNodeDef,
     parentNode: null,
   });
-
   const rootNode = Object.values(nodes).find(node =>
     Objects.isEmpty(node.parentUuid),
   );

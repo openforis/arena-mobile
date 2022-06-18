@@ -73,11 +73,11 @@ PODS:
   - fmt (6.2.1)
   - glog (0.3.5)
   - libevent (2.1.12)
-  - MMKV (1.2.12):
-    - MMKVCore (~> 1.2.12)
-  - MMKVCore (1.2.12)
+  - MMKV (1.2.13):
+    - MMKVCore (~> 1.2.13)
+  - MMKVCore (1.2.13)
   - OpenSSL-Universal (1.1.180)
-  - Permission-Camera (3.2.0):
+  - Permission-Camera (3.3.1):
     - RNPermissions
   - RCT-Folly (2021.06.28.00-v2):
     - boost
@@ -285,15 +285,19 @@ PODS:
     - React-Core
   - react-native-camera/RN (4.2.1):
     - React-Core
-  - react-native-flipper (0.140.0):
+  - react-native-flipper (0.146.1):
     - React-Core
-  - react-native-get-random-values (1.7.2):
+  - react-native-get-random-values (1.8.0):
     - React-Core
-  - react-native-mmkv (2.1.2):
-    - MMKV
+  - react-native-mmkv (2.4.1):
+    - MMKV (>= 1.2.13)
     - React-Core
-  - react-native-safe-area-context (3.3.2):
-    - React-Core
+  - react-native-safe-area-context (4.3.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React
+    - ReactCommon/turbomodule/core
   - React-perflogger (0.67.3)
   - React-RCTActionSheet (0.67.3):
     - React-Core/RCTActionSheetHeaders (= 0.67.3)
@@ -361,12 +365,12 @@ PODS:
     - React-perflogger (= 0.67.3)
   - RNFS (2.20.0):
     - React-Core
-  - RNPermissions (3.2.0):
+  - RNPermissions (3.3.1):
     - React-Core
-  - RNScreens (3.10.1):
+  - RNScreens (3.13.1):
     - React-Core
     - React-RCTImage
-  - RNVectorIcons (9.0.0):
+  - RNVectorIcons (9.1.0):
     - React-Core
   - RNZipArchive (6.0.8):
     - React-Core
@@ -569,10 +573,10 @@ SPEC CHECKSUMS:
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 85ecdd10ee8d8ec362ef519a6a45ff9aa27b2e85
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
-  MMKV: f281020c9d9be5eb7a03ae746dc4deb570e46c23
-  MMKVCore: df0565f6b58463604731a68ba6cd89bc0b2d1d55
+  MMKV: aac95d817a100479445633f2b3ed8961b4ac5043
+  MMKVCore: 3388952ded307e41b3ed8a05892736a236ed1b8e
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
-  Permission-Camera: 53efcbb755b0e8bdf253dbb27cc7559ccfce8480
+  Permission-Camera: bae27a8503530770c35aadfecbb97ec71823382a
   RCT-Folly: 803a9cfd78114b2ec0f140cfa6fa2a6bafb2d685
   RCTRequired: 3c77b683474faf23920fbefc71c4e13af21470c0
   RCTTypeSafety: 720b1841260dac692444c2822b27403178da8b28
@@ -586,10 +590,10 @@ SPEC CHECKSUMS:
   React-jsinspector: 1e1e03345cf6d47779e2061d679d0a87d9ae73d8
   React-logger: 1e10789cb84f99288479ba5f20822ce43ced6ffe
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
-  react-native-flipper: cfc4ad1de608a27b9dd9f544b820cb1e1897aceb
-  react-native-get-random-values: 30b3f74ca34e30e2e480de48e4add2706a40ac8f
-  react-native-mmkv: 5f6f070d2dbd0e4785aabfd94fb7fccc29b70462
-  react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
+  react-native-flipper: 4bfe0a324e663f1ae2f76ad0da75673de6895efe
+  react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
+  react-native-mmkv: b5c7f9bc369eef2b8a2aa36e8a15949989fa823f
+  react-native-safe-area-context: 6c12e3859b6f27b25de4fee8201cfb858432d8de
   React-perflogger: 93d3f142d6d9a46e635f09ba0518027215a41098
   React-RCTActionSheet: 87327c3722203cc79cf79d02fb83e7332aeedd18
   React-RCTAnimation: 009c87c018d50e0b38692699405ebe631ff4872d
@@ -603,9 +607,9 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: af1946623656f9c5fd64ca6f36f3863516193446
   ReactCommon: 650e33cde4fb7d36781cd3143f5276da0abb2f96
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
-  RNPermissions: f7ebe52db07c00901127966ca080b4ec6a6ceb0a
-  RNScreens: 522705f2e5c9d27efb17f24aceb2bf8335bc7b8e
-  RNVectorIcons: 4143ba35feebab8fdbe6bc43d1e776b393d47ac8
+  RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
+  RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
+  RNVectorIcons: 7923e585eaeb139b9f4531d25a125a1500162a0b
   RNZipArchive: 3f89b114cfeb89dac027fc5c7afd7e58d3dc4ebf
   SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
   Yoga: 90dcd029e45d8a7c1ff059e8b3c6612ff409061a
