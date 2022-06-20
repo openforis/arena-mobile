@@ -4,7 +4,8 @@ import {useSelector} from 'react-redux';
 
 import {selectors as surveySelectors} from 'state/survey';
 
-const IntegerPreview = () => <Text>Integer</Text>;
+import IntegerPreview from '../../Attributes/Integer/Preview';
+import TextPreview from '../../Attributes/Text/Preview';
 
 const Base = ({nodeDef, type}) => (
   <View>
@@ -16,6 +17,7 @@ const Base = ({nodeDef, type}) => (
 
 const AttributesComponentByType = {
   integer: IntegerPreview,
+  text: TextPreview,
 };
 
 const Attribute = ({nodeDefUuid}) => {
