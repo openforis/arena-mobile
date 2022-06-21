@@ -51,9 +51,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
   });
 
   /*
-
     New record created and new root nodeDef - Cluster - added
-
     FROM:
             ()
     TO:
@@ -114,7 +112,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
             +---------- **PLOT_UUID[5]** -> (PLOT_KEY_UUID[6])
-
     TO:
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
@@ -147,7 +144,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
             +---------- PLOT_UUID[5] -> (PLOT_KEY_UUID[6])
                             |
                             +----- **TREE_UUID[7]** -> (TREE_KEY_UUID[8])
-
     TO:
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
@@ -184,7 +180,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
                             +----- TREE_UUID[7] -> (TREE_KEY_UUID[8])
                             |
                             +----- **TREE_UUID[9]** -> (TREE_KEY_UUID[10])
-
     TO:
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
@@ -221,7 +216,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
                             +----- TREE_UUID[7] -> (TREE_KEY_UUID[8])
                             |
                             +----- TREE_UUID[9] -> (TREE_KEY_UUID[10])
-
     TO:
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
@@ -266,7 +260,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
             +---------- **PLOT_UUID[11]** -> (PLOT_KEY_UUID[12])
             |               |
             |               +----- TREE_UUID[13] -> (TREE_KEY_UUID[14])
-
     TO:
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
@@ -311,7 +304,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
             +---------- PLOT_UUID[11] -> (PLOT_KEY_UUID[12])
             |               |
             |               +----- **TREE_UUID[13]** -> (TREE_KEY_UUID[14])
-
     TO:
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
@@ -360,7 +352,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               +----- TREE_UUID[13]-> (TREE_KEY_UUID[14])
             |               |
             |               +----- **TREE_UUID[15]** -> (TREE_KEY_UUID[16])
-
     TO:
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
@@ -414,7 +405,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               +----- **TREE_UUID[13]**-> (TREE_KEY_UUID[14])
             |               |
             |               +----- TREE_UUID[15] -> (TREE_KEY_UUID[16])
-
     TO:
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
@@ -465,7 +455,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               +----- TREE_UUID[13] -> (TREE_KEY_UUID[14])
             |               |
             |               +----- TREE_UUID[15] -> (TREE_KEY_UUID[16])
-
     TO:
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
@@ -519,7 +508,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               +----- TREE_UUID[13] -> (TREE_KEY_UUID[14])
             |               |
             |               +----- TREE_UUID[15] -> (TREE_KEY_UUID[16])
-
     TO:
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
@@ -570,7 +558,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               +----- TREE_UUID[13] -> (TREE_KEY_UUID[14])
             |               |
             |               +----- TREE_UUID[15] -> (TREE_KEY_UUID[16])
-
     TO:
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
@@ -626,7 +613,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               +----- TREE_UUID[13] -> (TREE_KEY_UUID[14])
             |               |
             |               +----- TREE_UUID[15] -> (TREE_KEY_UUID[16])
-
     TO:
         **CLUSTER_UUID[2]**-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
@@ -683,7 +669,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               +----- TREE_UUID[13] -> (TREE_KEY_UUID[14])
             |               |
             |               +----- TREE_UUID[15] -> (TREE_KEY_UUID[16])
-
     TO:
         **CLUSTER_UUID[2]**-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
@@ -732,7 +717,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
   /*
     FROM:
         **CLUSTER_UUID[2]**-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
-
     TO:
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
@@ -766,7 +750,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
             +---------**PLOT_UUID[17]** -> (PLOT_KEY_UUID[18])
                             |
                             +---------TREE_UUID[19] -> (TREE_KEY_UUID[20])
-
     TO:
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
@@ -799,7 +782,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
             +---------PLOT_UUID[17] -> (PLOT_KEY_UUID[18])
                             |
                             +---------**TREE_UUID[19]** -> (TREE_KEY_UUID[20])
-
     TO:
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
@@ -839,7 +821,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |
             +---------**PLOT_UUID[17]** -> (PLOT_KEY_UUID[18])
-
     TO:
         CLUSTER_UUID[2]-> (CLUSTER_KEY_UUID[3], CLUSTER_NAME_UUID[4])
             |

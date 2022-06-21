@@ -12,6 +12,8 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import * as colors from 'arena-mobile-ui/colors';
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
+import IntegerForm from 'form/Attributes/Integer/Form';
+import TextForm from 'form/Attributes/Text/Form';
 import {actions as formActions} from 'state/form';
 import formSelectors from 'state/form/selectors';
 
@@ -43,7 +45,10 @@ const BaseForm = () => {
   );
 };
 
-const FormsByType = {};
+const FormsByType = {
+  integer: IntegerForm,
+  text: TextForm,
+};
 
 const AttributeForm = () => {
   const panelHeight = useRef(new Animated.Value(0)).current;
