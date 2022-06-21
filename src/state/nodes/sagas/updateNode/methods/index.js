@@ -24,7 +24,7 @@ export const updateNodeAndDependants = async ({
 
   const recordToValidate = Objects.deepMerge(record, updateRecord);
 
-  const nodesValidation = await RecordValidator.validateNodes({
+  const validation = await RecordValidator.validateNodes({
     survey,
     record: recordToValidate.record,
     nodes: recordToValidate.nodes,
@@ -34,6 +34,6 @@ export const updateNodeAndDependants = async ({
 
   return {
     updatedNodes,
-    validation: nodesValidation,
+    validation,
   };
 };

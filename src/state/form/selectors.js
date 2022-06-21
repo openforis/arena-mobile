@@ -1,3 +1,4 @@
+import {Objects} from '@openforis/arena-core';
 import {createCachedSelector} from 're-reselect';
 import {createSelector} from 'reselect';
 
@@ -201,6 +202,50 @@ const isEntitySelectorOpened = createSelector(
   ui => ui?.isEntitySelectorOpened || false,
 );
 
+// --- Validation
+const getValidation = createSelector(
+  getFormState,
+  formState => formState.validation || {},
+);
+
+const getValidationByKey = ({key, validation}) => {
+  let _validation = false;
+
+  Object.keys(validation?.fields || {}).find(fieldKey => {
+    if (fieldKey === key) {
+      _validation = Object.assign({}, validation?.fields[fieldKey]);
+      return true;
+    }
+    if (!Objects.isEmpty(validation.fields[fieldKey])) {
+      _validation = getValidationByKey({
+        key,
+        validation: validation?.fields[fieldKey].value,
+      });
+      if (!Objects.isEmpty(_validation)) {
+        return true;
+      }
+    }
+    return false;
+  });
+
+  return _validation;
+};
+
+const getValidationByKeys = () => {};
+
+const getValidationByNodeUuid = createCachedSelector(
+  getValidation,
+  (_, node) => node,
+  (validation, node) => getValidationByKey({key: node.uuid, validation}),
+)((_state_, node) => node.uuid);
+
+const getValidationByNodes = createCachedSelector(
+  getValidation,
+  (_, nodes) => nodes.map(node => node.uuid),
+  (validation, nodesUuids) =>
+    getValidationByKeys({keys: nodesUuids, validation}),
+)((_state_, nodes) => nodes.map(node => node.uuid).join('_'));
+
 export default {
   getFormStateData,
   getRecordUuid,
@@ -230,4 +275,9 @@ export default {
 
   // ---- UI
   isEntitySelectorOpened,
+
+  // ---- Validation
+  getValidation,
+  getValidationByNodeUuid,
+  getValidationByNodes,
 };
