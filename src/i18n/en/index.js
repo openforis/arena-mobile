@@ -6,6 +6,7 @@ import QRScanner from './QRScanner';
 import Records from './Records';
 import Survey from './Survey';
 import Surveys from './Surveys';
+import Validation from './Validation';
 
 const lang = {
   Actions,
@@ -16,6 +17,7 @@ const lang = {
   Survey,
   Surveys,
   Records,
+  Validation,
 };
 
 export default lang;

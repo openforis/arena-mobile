@@ -30,10 +30,10 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
     dispatch(
       nodesActions.updateNode({
         updatedNode: {...node, value: newValue},
-        shouldClose: true,
+        callback: handleClose,
       }),
     );
-  }, [node, newValue, dispatch]);
+  }, [node, newValue, dispatch, handleClose]);
 
   const handleClose = useCallback(() => {
     dispatch(formActions.setNode({node: false}));

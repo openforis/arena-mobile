@@ -1,35 +1,76 @@
-import React, {useCallback, useState, useRef, useEffect} from 'react';
-import {
-  Dimensions,
-  Animated,
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import {Objects} from '@openforis/arena-core';
+import React, {useMemo} from 'react';
+import {useTranslation} from 'react-i18next';
+import {View, Text} from 'react-native';
 import {Tooltip} from 'react-native-elements';
-import {useDispatch, useSelector} from 'react-redux';
-import {select} from 'redux-saga/effects';
+import {useSelector} from 'react-redux';
 
 import * as colors from 'arena-mobile-ui/colors';
 import Icon from 'arena-mobile-ui/components/Icon';
-import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
-import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
-import {selectors as formSelectors, actions as formActions} from 'state/form';
-import {selectors as surveySelectors} from 'state/survey';
+import {selectors as formSelectors} from 'state/form';
 
-const {height: HEIGHT} = Dimensions.get('screen');
+const flatValidationObject = validation => {
+  let errors = validation?.errors || [];
+  let warnings = validation?.warnings || [];
 
-import styles from './styles';
+  Object.keys(validation?.fields || {}).forEach(fieldKey => {
+    const {warnings: _warnings, errors: _errors} = flatValidationObject(
+      validation?.fields[fieldKey],
+    );
+    errors = errors.concat(_errors || []);
+    warnings = warnings.concat(_warnings || []);
+  });
 
-const Validation = ({nodeDef}) => {
+  return {
+    valid: validation?.valid,
+    warnings,
+    errors,
+  };
+};
+
+const Validation = ({nodes, showValidation = true}) => {
+  const {t} = useTranslation();
+  const validation = useSelector(state =>
+    formSelectors.getValidationByNodes(state, nodes),
+  );
+
+  const flatValidation = useMemo(
+    () => flatValidationObject(validation),
+    [validation],
+  );
+
+  const configBySeverity = useMemo(() => {
+    if (flatValidation.errors.length > 0) {
+      return {color: colors.error};
+    }
+    if (flatValidation.warnings.length > 0) {
+      return {color: colors.alert};
+    }
+    return {color: colors.transparent};
+  }, [flatValidation]);
+
+  if (Objects.isEmpty(validation) || validation.valid || !showValidation) {
+    return <></>;
+  }
+
   return (
     <View>
       <Tooltip
-        backgroundColor={colors.error}
+        height={50}
+        width={200}
+        backgroundColor={configBySeverity.color}
         overlayColor={colors.transparent}
-        popover={<Text>Info here</Text>}>
-        <Icon name="warning-outline" color={colors.error} />
+        popover={
+          <>
+            {flatValidation.errors.map(error => (
+              <Text key={error.key}> {t(`Validation:${error.key}`)}</Text>
+            ))}
+            {flatValidation.warnings.map(warning => (
+              <Text key={warning.key}> {t(`Validation:${warning.key}`)}</Text>
+            ))}
+          </>
+        }>
+        <Icon name="warning-outline" color={configBySeverity.color} />
       </Tooltip>
     </View>
   );
