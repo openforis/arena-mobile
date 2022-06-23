@@ -31,7 +31,7 @@ const PreviewNode = ({node, nodeDef, showValidation}) => {
 
 const Preview = ({nodeDef}) => {
   const nodes = useSelector(state =>
-    formSelectors.getNodeDefNodes(state, nodeDef),
+    formSelectors.getNodeDefNodesInHierarchy(state, nodeDef),
   );
 
   return (
