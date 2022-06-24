@@ -6,12 +6,16 @@ import Validation from '../Validation';
 
 import styles from './styles';
 
-export const Header = ({nodeDef, showValidation = true}) => {
+export const Header = ({nodeDef, nodes, showValidation = true}) => {
   return (
     <>
       <View style={styles.container}>
         <Label nodeDef={nodeDef} />
-        {showValidation && <Validation nodeDef={nodeDef} />}
+        <Validation
+          nodeDef={nodeDef}
+          nodes={nodes}
+          showValidation={showValidation}
+        />
       </View>
     </>
   );

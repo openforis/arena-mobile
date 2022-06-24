@@ -208,18 +208,18 @@ const getValidation = createSelector(
   formState => formState.validation || {},
 );
 
-const getValidationByKey = ({key, validation}) => {
-  let _validation = false;
+const getValidationByKeys = ({keys, validation}) => {
+  let _validation = {};
 
-  Object.keys(validation?.fields || {}).find(fieldKey => {
-    if (fieldKey === key) {
-      _validation = Object.assign({}, validation?.fields[fieldKey]);
+  Object.entries(validation?.fields || {}).find(([fieldKey, fieldValue]) => {
+    if (keys.includes(fieldKey)) {
+      _validation = Object.assign({}, fieldValue);
       return true;
     }
-    if (!Objects.isEmpty(validation.fields[fieldKey])) {
-      _validation = getValidationByKey({
-        key,
-        validation: validation?.fields[fieldKey].value,
+    if (!Objects.isEmpty(fieldValue)) {
+      _validation = getValidationByKeys({
+        keys,
+        validation: fieldValue.value,
       });
       if (!Objects.isEmpty(_validation)) {
         return true;
@@ -231,20 +231,12 @@ const getValidationByKey = ({key, validation}) => {
   return _validation;
 };
 
-const getValidationByKeys = () => {};
-
-const getValidationByNodeUuid = createCachedSelector(
-  getValidation,
-  (_, node) => node,
-  (validation, node) => getValidationByKey({key: node.uuid, validation}),
-)((_state_, node) => node.uuid);
-
 const getValidationByNodes = createCachedSelector(
   getValidation,
-  (_, nodes) => nodes.map(node => node.uuid),
+  (_, nodes) => nodes?.map(node => node.uuid) || [],
   (validation, nodesUuids) =>
     getValidationByKeys({keys: nodesUuids, validation}),
-)((_state_, nodes) => nodes.map(node => node.uuid).join('_'));
+)((_state_, nodes) => nodes?.map(node => node.uuid).join('_') || '_');
 
 export default {
   getFormStateData,
@@ -278,6 +270,5 @@ export default {
 
   // ---- Validation
   getValidation,
-  getValidationByNodeUuid,
   getValidationByNodes,
 };
