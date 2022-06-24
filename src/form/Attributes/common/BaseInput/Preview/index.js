@@ -17,7 +17,7 @@ const PreviewNode = ({node, nodeDef, showValidation}) => {
 
   return (
     <TouchableOpacity
-      style={styles.nodeContainer}
+      style={styles.nodeContainer({nodeDef})}
       onPress={handleSelectNodeAndNodeDef}>
       <Text>{node.value || ''}</Text>
       <Validation
