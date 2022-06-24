@@ -1,3 +1,4 @@
+import {NodeDefType} from '@openforis/arena-core';
 import React from 'react';
 import {useSelector} from 'react-redux';
 
@@ -9,9 +10,9 @@ import IntegerPreview from '../../Attributes/Integer/Preview';
 import TextPreview from '../../Attributes/Text/Preview';
 
 const AttributesComponentByType = {
-  integer: IntegerPreview,
-  decimal: DecimalPreview,
-  text: TextPreview,
+  [NodeDefType.integer]: IntegerPreview,
+  [NodeDefType.decimal]: DecimalPreview,
+  [NodeDefType.text]: TextPreview,
 };
 
 const Attribute = ({nodeDefUuid}) => {

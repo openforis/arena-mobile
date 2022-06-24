@@ -6,6 +6,7 @@ import Layout from 'arena-mobile-ui/components/Layout';
 import baseStyles from 'arena-mobile-ui/styles';
 import NavigateToSurveys from 'navigation/components/NavigateToSurveys';
 
+import Actions from './components/Actions';
 import SurveyDetail from './components/SurveyDetail';
 import styles from './styles';
 
@@ -24,6 +25,7 @@ const Survey = () => {
       <ScrollView style={[styles.container]}>
         <SurveyDetail />
       </ScrollView>
+      <Actions />
     </Layout>
   );
 };
