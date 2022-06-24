@@ -5,7 +5,7 @@ import * as colors from 'arena-mobile-ui/colors';
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignContent: 'center',
   },
   container: {

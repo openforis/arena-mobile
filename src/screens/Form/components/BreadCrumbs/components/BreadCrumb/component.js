@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 import {Text, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -9,17 +9,13 @@ import {selectors as surveySelectors} from 'state/survey';
 const BreadCrumb = ({breadCrumb: node}) => {
   const dispatch = useDispatch();
   const nodeDefsByUuid = useSelector(surveySelectors.getNodeDefsByUuid);
-  const entityNodeKeys = useSelector(state =>
-    surveySelectors.getEntityNodeKeys(state, node),
+  const keys = useSelector(state =>
+    surveySelectors.getEntityNodeKeysAsString(state, node),
   );
 
   const nodeDefName = useNodeDefNameOrLabel({
     nodeDef: nodeDefsByUuid[node.nodeDefUuid],
   });
-  const keys = useMemo(
-    () => entityNodeKeys.map(nodeKey => nodeKey.value).join(','),
-    [entityNodeKeys],
-  );
 
   const handleSelect = React.useCallback(() => {
     dispatch(
