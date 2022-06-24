@@ -5,8 +5,22 @@ import {useDispatch, useSelector} from 'react-redux';
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
 import Label from 'form/common/Label';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
+import {selectors as surveySelectors} from 'state/survey';
 
 import styles from './styles';
+
+const Sibiling = ({node}) => {
+  const nodeKeys = useSelector(state =>
+    surveySelectors.getEntityNodeKeysAsString(state, node),
+  );
+
+  return (
+    <Text>
+      {node.value} - {node.uuid.split('-')[0]} -{node.parentUuid.split('-')[0]}-{' '}
+      {nodeKeys}
+    </Text>
+  );
+};
 
 const MultipleEntityManager = () => {
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
@@ -60,13 +74,10 @@ const MultipleEntityManager = () => {
       <ScrollView>
         {siblingNodesInhierarchy.map(siblingNode => (
           <TouchableOpacity
-            style={styles.option}
             key={siblingNode.uuid}
+            style={styles.option}
             onPress={() => handleSelectEntityNode(siblingNode)}>
-            <Text>
-              {siblingNode.value} - {siblingNode.uuid.split('-')[0]} -
-              {siblingNode.parentUuid.split('-')[0]}
-            </Text>
+            <Sibiling node={siblingNode} />
           </TouchableOpacity>
         ))}
       </ScrollView>
