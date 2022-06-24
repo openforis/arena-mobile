@@ -1,3 +1,4 @@
+import {NodeDefType} from '@openforis/arena-core';
 import React, {useRef, useEffect} from 'react';
 import {
   KeyboardAvoidingView,
@@ -20,9 +21,9 @@ import styles from './styles';
 const {height: HEIGHT} = Dimensions.get('screen');
 
 const FormsByType = {
-  integer: IntegerForm,
-  decimal: DecimalForm,
-  text: TextForm,
+  [NodeDefType.integer]: IntegerForm,
+  [NodeDefType.decimal]: DecimalForm,
+  [NodeDefType.text]: TextForm,
 };
 
 const AttributeForm = () => {

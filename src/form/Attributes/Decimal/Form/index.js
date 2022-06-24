@@ -6,7 +6,7 @@ import {Form} from '../../common/BaseInput';
 const IntegerForm = ({nodeDef}) => (
   <Form
     nodeDef={nodeDef}
-    keyboardType={(Platform.OS = 'ios' ? 'decimal-pad' : 'numeric')}
+    keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'numeric'}
   />
 );
 
