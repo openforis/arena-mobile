@@ -103,6 +103,28 @@ describe('Node updater', () => {
 
     expect(storeState).toEqual({
       ...initialState,
+      form: {
+        ...initialState.form,
+        validation: {
+          errors: [],
+          fields: {
+            [getCurrentUuid(2)]: {
+              errors: [],
+              fields: {},
+              valid: true,
+              warnings: [],
+            },
+            childrenCount_CLUSTER_UUID_NODE_DEF_UUID: {
+              errors: [],
+              fields: {},
+              valid: true,
+              warnings: [],
+            },
+          },
+          valid: true,
+          warnings: [],
+        },
+      },
       nodes: {
         ...initialState.nodes,
         data: {
@@ -128,13 +150,51 @@ describe('Node updater', () => {
 
     expect(storeState).toEqual({
       ...initialState,
+      form: {
+        ...initialState.form,
+        validation: {
+          errors: [],
+          fields: {
+            [getCurrentUuid(2)]: {
+              errors: [],
+              fields: {
+                value: {
+                  errors: [
+                    {
+                      key: 'record.attribute.customValidation',
+                      messages: {
+                        LANG: 'this_number > 0',
+                      },
+                      params: undefined,
+                      severity: 'error',
+                      valid: false,
+                    },
+                  ],
+                  fields: {},
+                  valid: false,
+                  warnings: [],
+                },
+              },
+              valid: false,
+              warnings: [],
+            },
+            childrenCount_CLUSTER_UUID_NODE_DEF_UUID: {
+              errors: [],
+              fields: {},
+              valid: true,
+              warnings: [],
+            },
+          },
+          valid: false,
+          warnings: [],
+        },
+      },
       nodes: {
         ...initialState.nodes,
         data: {
           ...initialState.nodes.data,
           [getCurrentUuid(2)]: {...baseMockNode, value: -1},
         },
-        errors: {...RESULT_ERRORS},
       },
     });
   });
@@ -150,14 +210,12 @@ describe('Node updater', () => {
     const {storeState} = await expectSaga(rootSagas)
       .withReducer(appReducers, {
         ...initialState,
+
         nodes: {
           ...initialState.nodes,
           data: {
             ...initialState.nodes.data,
             [getCurrentUuid(2)]: {...baseMockNode, value: -1},
-          },
-          errors: {
-            ...RESULT_ERRORS,
           },
         },
       })
@@ -166,13 +224,34 @@ describe('Node updater', () => {
 
     expect(storeState).toEqual({
       ...initialState,
+      form: {
+        ...initialState.form,
+        validation: {
+          errors: [],
+          fields: {
+            [getCurrentUuid(2)]: {
+              errors: [],
+              fields: {},
+              valid: true,
+              warnings: [],
+            },
+            childrenCount_CLUSTER_UUID_NODE_DEF_UUID: {
+              errors: [],
+              fields: {},
+              valid: true,
+              warnings: [],
+            },
+          },
+          valid: true,
+          warnings: [],
+        },
+      },
       nodes: {
         ...initialState.nodes,
         data: {
           ...initialState.nodes.data,
           [getCurrentUuid(2)]: {...baseMockNode, value: 5},
         },
-        errors: {},
       },
     });
   });
@@ -194,9 +273,6 @@ describe('Node updater', () => {
             ...initialState.nodes.data,
             [getCurrentUuid(2)]: {...baseMockNode, value: -1},
           },
-          errors: {
-            ...RESULT_ERRORS,
-          },
         },
       })
       .dispatch(nodesActions.updateNode(payload))
@@ -204,14 +280,50 @@ describe('Node updater', () => {
 
     expect(storeState).toEqual({
       ...initialState,
+      form: {
+        ...initialState.form,
+        validation: {
+          errors: [],
+          fields: {
+            [getCurrentUuid(2)]: {
+              errors: [],
+              fields: {
+                value: {
+                  errors: [
+                    {
+                      key: 'record.attribute.customValidation',
+                      messages: {
+                        LANG: 'this_number > 0',
+                      },
+                      params: undefined,
+                      severity: 'error',
+                      valid: false,
+                    },
+                  ],
+                  fields: {},
+                  valid: false,
+                  warnings: [],
+                },
+              },
+              valid: false,
+              warnings: [],
+            },
+            childrenCount_CLUSTER_UUID_NODE_DEF_UUID: {
+              errors: [],
+              fields: {},
+              valid: true,
+              warnings: [],
+            },
+          },
+          valid: false,
+          warnings: [],
+        },
+      },
       nodes: {
         ...initialState.nodes,
         data: {
           ...initialState.nodes.data,
           [getCurrentUuid(2)]: {...baseMockNode, value: -3},
-        },
-        errors: {
-          ...RESULT_ERRORS,
         },
       },
     });
