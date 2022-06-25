@@ -135,6 +135,11 @@ const getEntityNodeKeys = createCachedSelector(
     ),
 )((_state_, node) => node.uuid);
 
+const getEntityNodeKeysAsString = createCachedSelector(
+  getEntityNodeKeys,
+  nodeKeys => nodeKeys.map(nodeKey => nodeKey.value).join(','),
+)((_state_, node) => node?.uuid || '_');
+
 //// UI
 
 const getIsUploading = createSelector(getUiState, ui => ui.isUploading);
@@ -169,6 +174,7 @@ export default {
   // --- Nodes
   getNodes,
   getEntityNodeKeys,
+  getEntityNodeKeysAsString,
 
   // --- UI
   getUiState,
