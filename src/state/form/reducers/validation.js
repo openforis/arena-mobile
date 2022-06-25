@@ -7,7 +7,7 @@ import initialState from '../initial.state';
 
 const validation = handleActions(
   {
-    [actions.setValidation]: (state, {payload: {validation: _validation}}) =>
+    [actions.setValidation]: (_state, {payload: {validation: _validation}}) =>
       _validation,
     [globalActions.reset]: () => initialState.validation || {},
   },

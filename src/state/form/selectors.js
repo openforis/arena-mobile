@@ -211,7 +211,7 @@ const getValidation = createSelector(
 const getValidationByKeys = ({keys, validation}) => {
   let _validation = {};
 
-  Object.entries(validation?.fields || {}).find(([fieldKey, fieldValue]) => {
+  Object.entries(validation?.fields || {}).some(([fieldKey, fieldValue]) => {
     if (keys.includes(fieldKey)) {
       _validation = Object.assign({}, fieldValue);
       return true;
