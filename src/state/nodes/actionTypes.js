@@ -7,9 +7,6 @@ const DELETE_NODE = 'nodes/DELETE_NODE';
 const DELETE_NODES = 'nodes/DELETE_NODES';
 const CLEAN = 'nodes/CLEAN';
 
-// errors
-const SET_ERRORS = 'nodes/SET_ERRORS';
-
 export default {
   createNode$,
   updateNode$,
@@ -20,5 +17,4 @@ export default {
   DELETE_NODES,
 
   CLEAN,
-  SET_ERRORS,
 };

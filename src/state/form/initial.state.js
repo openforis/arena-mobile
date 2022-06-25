@@ -9,6 +9,7 @@ const initialState = {
   ui: {
     isEntitySelectorOpened: false,
   },
+  validation: {},
 };
 
 export default initialState;

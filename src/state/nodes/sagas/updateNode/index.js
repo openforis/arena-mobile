@@ -1,5 +1,6 @@
 import {call, select, put, all} from 'redux-saga/effects';
 
+import formActions from 'state/form/actionCreators';
 import nodesActions from 'state/nodes/actionCreators';
 import nodesSelectors from 'state/nodes/selectors';
 import recordsSelectors from 'state/records/selectors';
@@ -25,20 +26,16 @@ function* handleUpdateNode({payload}) {
     return;
   }
 
-  //yield call(validateIfRootWithOtherRecords);
-
   const recordWithNodes = {...record, nodes: {...recordNodes}};
 
-  //const {updatedNodes, validation} = yield call(updateNodeAndDependants, {
-  const {updatedNodes} = yield call(updateNodeAndDependants, {
+  const {updatedNodes, validation} = yield call(updateNodeAndDependants, {
     node: updatedNode,
     record: recordWithNodes,
     survey,
   });
 
   yield put(nodesActions.setNodes({nodes: updatedNodes}));
-  //yield put(nodesActions.setErrors({errors: validation.errors}));
-  //yield put(nodesActions.setWarnings({warnings}));
+  yield put(formActions.setValidation({validation}));
 
   if (callback) {
     yield call(callback);

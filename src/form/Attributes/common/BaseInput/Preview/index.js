@@ -3,11 +3,12 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import AttributeHeader from 'form/common/Header';
+import Validation from 'form/common/Validation';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 
 import styles from './styles';
 
-const PreviewNode = ({node}) => {
+const PreviewNode = ({node, nodeDef, showValidation}) => {
   const dispatch = useDispatch();
 
   const handleSelectNodeAndNodeDef = useCallback(() => {
@@ -19,6 +20,11 @@ const PreviewNode = ({node}) => {
       style={styles.nodeContainer}
       onPress={handleSelectNodeAndNodeDef}>
       <Text>{node.value || ''}</Text>
+      <Validation
+        nodeDef={nodeDef}
+        nodes={[node]}
+        showValidation={showValidation}
+      />
     </TouchableOpacity>
   );
 };
@@ -30,10 +36,15 @@ const Preview = ({nodeDef}) => {
 
   return (
     <View style={styles.container}>
-      <AttributeHeader nodeDef={nodeDef} />
+      <AttributeHeader nodeDef={nodeDef} nodes={nodes} />
 
-      {nodes.map(node => (
-        <PreviewNode key={node.uuid} node={node} />
+      {nodes?.map(node => (
+        <PreviewNode
+          key={node.uuid}
+          node={node}
+          nodeDef={nodeDef}
+          showValidation={nodes.length > 1}
+        />
       ))}
     </View>
   );
