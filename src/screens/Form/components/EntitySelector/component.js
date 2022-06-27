@@ -1,17 +1,18 @@
 import React, {useRef, useEffect} from 'react';
-import {Dimensions, Animated, ScrollView, View} from 'react-native';
+import {Dimensions, Animated, ScrollView, View, Button} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import ToggleShowNames from 'arena-mobile-ui/components/ToggleShowNames';
+import {useNavigateTo} from 'navigation/hooks';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
 import EntitySelectorTree from './components/EntitySelectorTree';
 import styles from './styles';
-
 const {width: WIDTH} = Dimensions.get('screen');
 
 const EntitySelector = () => {
+  const {navigateTo, routes} = useNavigateTo();
   const isEntitySelectorOpened = useSelector(
     formSelectors.isEntitySelectorOpened,
   );
@@ -45,6 +46,7 @@ const EntitySelector = () => {
         <EntitySelectorTree nodeDef={nodeDefRoot} />
       </ScrollView>
       <View style={styles.buttonsContainer}>
+        <Button title="home" onPress={navigateTo({route: routes.HOME})} />
         <ToggleShowNames />
       </View>
     </Animated.View>

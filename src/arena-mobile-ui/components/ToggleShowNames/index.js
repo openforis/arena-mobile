@@ -17,7 +17,7 @@ const ToggleShowNames = () => {
 
   return (
     <Button
-      label={t(`Common:show-${showNames ? 'labels' : 'names'}`)}
+      label={t(`Common:show_${showNames ? 'labels' : 'names'}`)}
       type="ghostBlack"
       onPress={handlePress}
     />
