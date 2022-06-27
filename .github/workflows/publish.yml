@@ -1,0 +1,48 @@
+name: Deploy to Android
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  release-android:
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    name: Build and release Android app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.17.0'
+          always-auth: true
+          auth-token: ${{secrets.ACCESS_TOKEN}}
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@openforis'
+        env:
+          ACCESS_TOKEN: $${{secrets.ACCESS_TOKEN}}
+      - name: Install
+        run: yarn
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.ACCESS_TOKEN}}
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '2.x'
+      - name: Decode Keystore
+        id: decode_keystore
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: './android/arena-release-key.keystore'
+          encodedString: ${{ secrets.KEYSTORE }}
+      - name: Install Fastlane
+        run: cd android && bundle install && cd ..
+      - name: Execute Fastlane command
+        run: cd android && fastlane android beta
+        env:
+          KEYSTORE: ${{secrets.KEYSTORE}}
+          ANDROID_KEYSTORE_PASSWORD: ${{secrets.ANDROID_KEYSTORE_PASSWORD}}
+          PACKAGE_NAME: 'org.openforis.collect.arena'

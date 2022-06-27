@@ -3,7 +3,7 @@ import {select, all, put, call} from 'redux-saga/effects';
 
 import formActions from 'state/form/actionCreators';
 import formSelectors from 'state/form/selectors';
-import {actions as nodesActions} from 'state/nodes';
+import nodesActions from 'state/nodes/actionCreators';
 import surveySelectors from 'state/survey/selectors';
 
 function* handleCreateNodeAndDescendants({nodeDef, parentNode}) {

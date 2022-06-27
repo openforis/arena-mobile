@@ -20,6 +20,7 @@ import QRScanner, {
   QRScannerButton,
 } from 'arena-mobile-ui/components/QRScanner';
 import baseStyles from 'arena-mobile-ui/styles';
+import {alert} from 'arena-mobile-ui/utils';
 import {selectors as appSelectors, actions as appActions} from 'state/app';
 import globalActions from 'state/globalActions';
 import {selectors as userSelectors} from 'state/user';
@@ -45,8 +46,16 @@ const ConnectionSettings = () => {
   }, [dispatch, formData]);
 
   const handleResetData = useCallback(() => {
-    dispatch(globalActions.reset());
-  }, [dispatch]);
+    alert({
+      title: t('ConnectionSettings:reset..title'),
+      message: t('ConnectionSettings:reset..message'),
+      acceptText: t('ConnectionSettings:reset.accept'),
+      dismissText: t('ConnectionSettings:reset.dismiss'),
+      onAccept: () => {
+        dispatch(globalActions.reset());
+      },
+    });
+  }, [dispatch, t]);
 
   const {username, password} = useSelector(appSelectors.getAccessData);
 
@@ -159,16 +168,17 @@ const ConnectionSettings = () => {
                 </Text>
               )}
             </View>
-            <View style={{height: 100}} />
-            <View style={[styles.formContainer]}>
-              <Button
-                onPress={handleResetData}
-                label={t('ConnectionSettings:reset')}
-                disabled={isLoading}
-              />
-            </View>
+            <View style={{height: 200}} />
           </ScrollView>
         </KeyboardAvoidingView>
+        <View>
+          <Button
+            type="ghost"
+            onPress={handleResetData}
+            label={t('ConnectionSettings:reset.cta')}
+            disabled={isLoading}
+          />
+        </View>
       </>
     </Layout>
   );

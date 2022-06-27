@@ -30,7 +30,7 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
             value:
               nodeDef.type === NodeDefType.text
                 ? newValue
-                : Number(newValue.replace(',', '.')),
+                : Number((newValue || '').replace(',', '.')),
           },
           callback,
         }),
@@ -59,7 +59,7 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
       <AttributeHeader nodeDef={nodeDef} showValidation={false} />
       <Input
         onChangeText={setValue}
-        defaultValue={node?.value}
+        defaultValue={String(node?.value || '')}
         autoFocus={true}
         keyboardType={keyboardType}
         textAlign={nodeDef.type === NodeDefType.text ? 'left' : 'right'}

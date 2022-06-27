@@ -1,0 +1,18 @@
+Arena Mobile is a fast, intuitive and flexible data collection tool for field-based surveys.
+
+This app allows the completion of complex data structures, such as biophysical, socio-economic or biodiversity surveys. Its many features include:
+
+
+On-the-fly validation to improve data quality
+
+Handling of large lists of species or other attributes
+
+Geo-location through embedded GPS
+
+Integration with Collect for data management, analysis and export to commonly used formats
+
+Processes inputs and calculates attributes for quality control in the field
+
+
+
+Arena  Mobile is part of the Open Foris tools suite for designing and managing field-based inventories. To setup a survey use Arena, create your survey, and export it for Arena. Once the data has been collected, import it into Collect for data cleansing and analysis. Go to http://www.openforis.org to find out more.

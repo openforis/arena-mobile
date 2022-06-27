@@ -23,6 +23,7 @@ const ui = handleActions(
       ...state,
       isEntitySelectorOpened: false,
     }),
+    [actions.clean]: () => initialState.data,
     [globalActions.reset]: () => initialState.ui || {},
   },
   initialState.ui || {},

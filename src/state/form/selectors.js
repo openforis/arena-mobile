@@ -21,7 +21,7 @@ const getRecord = createCachedSelector(
   recordsSelectors.getRecordsByUuid,
   getRecordUuid,
   (records, recordUuid) => records[recordUuid] || false,
-)(getRecordUuid);
+)(state => getRecordUuid(state) || '_');
 
 const getNodeUuid = createSelector(
   getFormStateData,
@@ -51,7 +51,7 @@ const getNode = createCachedSelector(
   getRecordNodesByUuid,
   getNodeUuid,
   (nodes, nodeUuid) => nodes[nodeUuid] || false,
-)(getNodeUuid);
+)(state => getNodeUuid(state) || '_');
 
 const getParentEntityNode = createCachedSelector(
   getRecordNodesByUuid,

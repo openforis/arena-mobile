@@ -31,6 +31,31 @@ Runs all the tests
 
 Submit a new Beta Build to Play Store
 
+### android build
+
+```sh
+[bundle exec] fastlane android build
+```
+
+Build the .aab file
+
+### android upload_beta_to_play_store
+
+```sh
+[bundle exec] fastlane android upload_beta_to_play_store
+```
+
+Upload to beta
+
+### android increment_version_code_in_project_gradle
+
+```sh
+[bundle exec] fastlane android increment_version_code_in_project_gradle
+```
+
+Responsible for fetching version code from play console and incrementing version
+code.
+
 ---
 
 This README.md is auto-generated and will be re-generated every time

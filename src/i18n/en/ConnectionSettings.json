@@ -16,5 +16,13 @@
     "title": "There was an error",
     "info": "Please check the information and your connection"
   },
-  "connected_as": "Connected as {{username}}"
+  "connected_as": "Connected as {{username}}",
+
+  "reset": {
+    "cta": "Reset",
+    "title": "Are you sure about the reset?",
+    "message": "record and surveys are going to be removed from the device",
+    "accept": "Yes, clean all data",
+    "dismiss": "No"
+  }
 }

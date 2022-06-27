@@ -11,6 +11,7 @@ function* handleContinueRecord({payload}) {
   const {record} = payload;
   try {
     const currentRecordUuid = yield select(formSelectors.getRecordUuid);
+    yield put(formActions.closeEntitySelector());
     if (currentRecordUuid !== record.uuid) {
       yield put(formActions.clean());
       yield put(formActions.setRecord({record}));

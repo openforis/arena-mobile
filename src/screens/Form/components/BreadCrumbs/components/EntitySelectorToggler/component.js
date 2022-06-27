@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
@@ -8,13 +8,13 @@ import styles from './styles';
 
 const EntitySelectorToggler = () => {
   const dispatch = useDispatch();
-  const handletoggleEntitySelector = React.useCallback(() => {
+  const handleToggleEntitySelector = useCallback(() => {
     dispatch(formActions.toggleEntitySelector());
   }, [dispatch]);
   return (
     <TouchableIcon
       iconName="git-network-outline"
-      onPress={handletoggleEntitySelector}
+      onPress={handleToggleEntitySelector}
       customStyle={styles.entitySelectorButton}
     />
   );
