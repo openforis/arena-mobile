@@ -35,13 +35,15 @@ jobs:
         id: decode_keystore
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: './../arena-release-key.keystore'
+          fileName: 'arena-release-key.keystore'
+          fileDir: './../'
           encodedString: ${{ secrets.KEYSTORE }}
       - name: Decode Play json
         id: decode_play_json
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: './../4428354186-c469bd85b036.json'
+          fileName: '4428354186-c469bd85b036.json'
+          fileDir: './../'
           encodedString: ${{ secrets.GOOGLE_PLAY_JSON }}
       - name: Install Fastlane
         run: cd android && bundle install && cd ..
