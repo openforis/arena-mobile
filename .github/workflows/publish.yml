@@ -38,8 +38,8 @@ jobs:
         with:
           fileName: './android/arena-release-key.keystore'
           encodedString: ${{ secrets.KEYSTORE }}
-      - name: Decode Keystore
-        id: decode_keystore
+      - name: Decode Play json
+        id: decode_play_json
         uses: timheuer/base64-to-file@v1
         with:
           fileName: './android/4428354186-c469bd85b036.json'
