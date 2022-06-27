@@ -35,13 +35,13 @@ jobs:
         id: decode_keystore
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: '/home/runner/work/arena-mobile/arena-mobile/android/android/arena-release-key.keystore'
+          fileName: '/home/runner/work/arena-mobile/arena-mobile/android/arena-release-key.keystore'
           encodedString: ${{ secrets.KEYSTORE }}
       - name: Decode Play json
         id: decode_play_json
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: '/home/runner/work/arena-mobile/arena-mobile/android/android/4428354186-c469bd85b036.json'
+          fileName: '/home/runner/work/arena-mobile/arena-mobile/android/4428354186-c469bd85b036.json'
           encodedString: ${{ secrets.GOOGLE_PLAY_JSON }}
       - name: Install Fastlane
         run: cd android && bundle install && cd ..
