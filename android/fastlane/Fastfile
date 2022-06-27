@@ -83,10 +83,17 @@ platform :android do
   desc "Responsible for fetching version code from play console and incrementing version code."
   lane :increment_version_code_in_project_gradle do
     puts "PACKAGE_NAME: #{ENV['PACKAGE_NAME']}"   
+    file = File.open(PLAYSTORE_KEY_PATH)
+    file_data = file.read
+    puts file_data
+
+
     version_code_from_play_store_strings = google_play_track_version_codes(
       track: "beta",          # this can be alpha, beta etc.
       json_key: PLAYSTORE_KEY_PATH,
     )
+    
+    
     version_code_from_play_store = version_code_from_play_store_strings[0].to_i
     UPDATED_VERSION_CODE = version_code_from_play_store + 1
     puts "UPDATED_VERSION_CODE #{UPDATED_VERSION_CODE}"
