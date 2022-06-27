@@ -83,6 +83,8 @@ platform :android do
   desc "Responsible for fetching version code from play console and incrementing version code."
   lane :increment_version_code_in_project_gradle do
 
+    _entries = Dir.entries(File.join(Dir.pwd, "."))
+    puts _entries
     entries = Dir.entries(File.join(Dir.pwd, ".."))
     puts entries
     puts "PACKAGE_NAME: #{ENV['PACKAGE_NAME']}"   
