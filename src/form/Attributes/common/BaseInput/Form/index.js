@@ -1,3 +1,4 @@
+import {NodeDefType} from '@openforis/arena-core';
 import React, {useState, useCallback} from 'react';
 import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -20,20 +21,27 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
   const node = useSelector(formSelectors.getNode);
   const dispatch = useDispatch();
 
-  const handleSubmit = useCallback(() => {
-    dispatch(
-      nodesActions.updateNode({updatedNode: {...node, value: newValue}}),
-    );
-  }, [node, newValue, dispatch]);
+  const handleSubmit = useCallback(
+    ({callback = null} = {}) => {
+      dispatch(
+        nodesActions.updateNode({
+          updatedNode: {
+            ...node,
+            value:
+              nodeDef.type === NodeDefType.text
+                ? newValue
+                : Number((newValue || '').replace(',', '.')),
+          },
+          callback,
+        }),
+      );
+    },
+    [nodeDef, node, newValue, dispatch],
+  );
 
   const handleSubmitAndClose = useCallback(() => {
-    dispatch(
-      nodesActions.updateNode({
-        updatedNode: {...node, value: newValue},
-        callback: handleClose,
-      }),
-    );
-  }, [node, newValue, dispatch, handleClose]);
+    handleSubmit({callback: handleClose});
+  }, [handleSubmit, handleClose]);
 
   const handleClose = useCallback(() => {
     dispatch(formActions.setNode({node: false}));
@@ -51,9 +59,10 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
       <AttributeHeader nodeDef={nodeDef} showValidation={false} />
       <Input
         onChangeText={setValue}
-        defaultValue={node?.value}
+        defaultValue={String(node?.value || '')}
         autoFocus={true}
         keyboardType={keyboardType}
+        textAlign={nodeDef.type === NodeDefType.text ? 'left' : 'right'}
       />
 
       <View style={styles.divider} />

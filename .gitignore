@@ -33,6 +33,7 @@ android/.gradle/
 android/build/
 android/local.properties
 android/*.hprof
+android/.env
 
 android/*.keystore
 

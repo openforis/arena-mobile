@@ -3,23 +3,33 @@ import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
-
 import Label from 'form/common/Label';
-
 import {selectors as formSelectors, actions as formActions} from 'state/form';
+import {selectors as surveySelectors} from 'state/survey';
 
 import styles from './styles';
+
+const Sibiling = ({node}) => {
+  const nodeKeys = useSelector(state =>
+    surveySelectors.getEntityNodeKeysAsString(state, node),
+  );
+
+  return (
+    <Text>
+      {node.value} - {node.uuid.split('-')[0]} -{node.parentUuid.split('-')[0]}-{' '}
+      {nodeKeys}
+    </Text>
+  );
+};
 
 const MultipleEntityManager = () => {
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
 
-  const siblingNodes = useSelector(state =>
-    formSelectors.getNodeDefNodes(state, parentEntityNodeDef),
+  const siblingNodesInhierarchy = useSelector(state =>
+    formSelectors.getNodeDefNodesInHierarchy(state, parentEntityNodeDef),
   );
-  const hierarchyNodesUuids = useSelector(formSelectors.getBreadCrumbs).map(
-    h => h.uuid,
-  );
+
   const dispatch = useDispatch();
 
   const handleCreateNewNodeEntity = useCallback(() => {
@@ -59,25 +69,17 @@ const MultipleEntityManager = () => {
         />
         <Label nodeDef={parentEntityNodeDef} />
 
-
         <TouchableIcon iconName="trash-outline" onPress={handleDeleteNode} />
       </View>
       <ScrollView>
-
-        {siblingNodes
-          .filter(node => hierarchyNodesUuids.includes(node.parentUuid))
-          .map(siblingNode => (
-            <TouchableOpacity
-              style={styles.option}
-              key={siblingNode.uuid}
-              onPress={() => handleSelectEntityNode(siblingNode)}>
-              <Text>
-                {siblingNode.value} - {siblingNode.uuid.split('-')[0]} -
-                {siblingNode.parentUuid.split('-')[0]}
-
-              </Text>
-            </TouchableOpacity>
-          ))}
+        {siblingNodesInhierarchy.map(siblingNode => (
+          <TouchableOpacity
+            key={siblingNode.uuid}
+            style={styles.option}
+            onPress={() => handleSelectEntityNode(siblingNode)}>
+            <Sibiling node={siblingNode} />
+          </TouchableOpacity>
+        ))}
       </ScrollView>
     </>
   );

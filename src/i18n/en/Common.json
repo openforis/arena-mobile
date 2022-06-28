@@ -10,6 +10,6 @@
   "server_address": "Server address",
   "connect": "Connect",
   "connection_settings": "Connection Settings",
-  "show-labels": "Show labels",
-  "show-names": "Show names"
+  "show_labels": "Show labels",
+  "show_names": "Show names"
 }

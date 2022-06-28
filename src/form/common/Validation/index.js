@@ -60,6 +60,7 @@ const Validation = ({nodes, showValidation = true}) => {
         width={200}
         backgroundColor={configBySeverity.color}
         overlayColor={colors.transparent}
+        animationType="none"
         popover={
           <>
             {flatValidation.errors.map(error => (
@@ -70,7 +71,9 @@ const Validation = ({nodes, showValidation = true}) => {
             ))}
           </>
         }>
-        <Icon name="warning-outline" color={configBySeverity.color} />
+        <View hitSlop={{left: 30, top: 10, right: 30, bottom: 10}}>
+          <Icon name="warning-outline" color={configBySeverity.color} />
+        </View>
       </Tooltip>
     </View>
   );

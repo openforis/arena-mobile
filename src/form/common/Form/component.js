@@ -1,6 +1,6 @@
-import React, {useRef, useEffect, useCallback} from 'react';
+import {NodeDefType} from '@openforis/arena-core';
+import React, {useRef, useEffect} from 'react';
 import {
-  View,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
@@ -8,46 +8,22 @@ import {
   Animated,
   TouchableOpacity,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
-import * as colors from 'arena-mobile-ui/colors';
-import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
+import BaseForm from 'form/Attributes/common/Base/Form';
+import DecimalForm from 'form/Attributes/Decimal/Form';
 import IntegerForm from 'form/Attributes/Integer/Form';
 import TextForm from 'form/Attributes/Text/Form';
-import {actions as formActions} from 'state/form';
 import formSelectors from 'state/form/selectors';
 
 import styles from './styles';
 
 const {height: HEIGHT} = Dimensions.get('screen');
 
-const BaseForm = () => {
-  const dispatch = useDispatch();
-
-  const handleClose = useCallback(() => {
-    dispatch(formActions.setNode({node: false}));
-  }, [dispatch]);
-
-  return (
-    <View>
-      <View style={{justifyContent: 'flex-end', flexDirection: 'row'}}>
-        <TouchableIcon
-          iconName="close"
-          customStyle={{
-            backgroundColor: colors.neutralLighter,
-            borderRadius: 4,
-            padding: 4,
-          }}
-          onPress={handleClose}
-        />
-      </View>
-    </View>
-  );
-};
-
 const FormsByType = {
-  integer: IntegerForm,
-  text: TextForm,
+  [NodeDefType.integer]: IntegerForm,
+  [NodeDefType.decimal]: DecimalForm,
+  [NodeDefType.text]: TextForm,
 };
 
 const AttributeForm = () => {

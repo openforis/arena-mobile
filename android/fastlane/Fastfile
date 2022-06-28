@@ -13,6 +13,20 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+fastlane_require "dotenv"
+BUILD_GRADLEW_PATH = nil
+PLAYSTORE_KEY_PATH = nil
+KEYSTORE_PATH = nil
+UPDATED_VERSION_CODE= nil
+
+before_all do
+  Dotenv.overload '.env.secret'
+  BUILD_GRADLEW_PATH = File.join(Dir.pwd, "..", "app/build.gradle")
+  PLAYSTORE_KEY_PATH = File.join(Dir.pwd, "..", "4428354186-c469bd85b036.json") 
+  KEYSTORE_PATH = File.join(Dir.pwd, "..", "arena-release-key.keystore")
+  UPDATED_VERSION_CODE= nil
+end
+
 default_platform(:android)
 
 platform :android do
@@ -23,30 +37,66 @@ platform :android do
 
   desc "Submit a new Beta Build to Play Store"
   lane :beta do
-    store_password = prompt(text: "Signing Store Password: ", secure_text: true)
-    key_password = prompt(text: "Alias Key Password: ", secure_text: true)
-    releaseFilePath = File.join(Dir.pwd, "..", "arena-release-key.keystore")
+  
     gradle(task: 'clean')
-    gradle(
-      task: 'bundle',
-      build_type: 'Release',
-      print_command: false,
-      properties: {
-        "android.injected.signing.store.file" => releaseFilePath,
-        "android.injected.signing.store.password" => store_password,
-        "android.injected.signing.key.alias" => "arena",
-        "android.injected.signing.key.password" => key_password,
-      }
-    )
-    #upload_to_play_store(track: 'beta')
-    upload_to_play_store(
-      track: 'internal',
-      release_status: 'draft'
-    )
+    increment_version_code_in_project_gradle()
+    build()
+    upload_beta_to_play_store()
 
   # desc "Deploy a new version to the Google Play"
   # lane :deploy do
   #   gradle(task: "clean assembleRelease")
   #   upload_to_play_store
   end
+
+
+  desc "Build the .aab file"
+  lane :build do
+    store_password = ENV['ANDROID_KEYSTORE_PASSWORD'] 
+    key_password = ENV['ANDROID_KEYSTORE_PASSWORD'] 
+    puts "KEYSTORE_PATH: #{KEYSTORE_PATH}"   
+    gradle(
+      task: "bundle",
+      build_type: "Release",
+      print_command: false,
+      properties: {
+        "android.injected.signing.store.file" => KEYSTORE_PATH,
+        "android.injected.signing.store.password" => store_password,
+        "android.injected.signing.key.alias" => "arena",
+        "android.injected.signing.key.password" => key_password,
+      }
+    )
+  end
+
+  desc "Upload to beta"
+  lane :upload_beta_to_play_store do
+    upload_to_play_store(track: 'beta', 
+    skip_upload_metadata: true,
+    skip_upload_changelogs: true,
+    skip_upload_screenshots: true,
+    skip_upload_images: true,
+    skip_upload_apk: true
+    )
+  end
+  
+  
+  desc "Responsible for fetching version code from play console and incrementing version code."
+  lane :increment_version_code_in_project_gradle do
+
+    version_code_from_play_store_strings = google_play_track_version_codes(
+      track: "beta",          # this can be alpha, beta etc.
+      json_key: PLAYSTORE_KEY_PATH,
+    )
+    
+    
+    version_code_from_play_store = version_code_from_play_store_strings[0].to_i
+    UPDATED_VERSION_CODE = version_code_from_play_store + 1
+    puts "UPDATED_VERSION_CODE #{UPDATED_VERSION_CODE}"
+    increment_version_code(
+      gradle_file_path: BUILD_GRADLEW_PATH,
+      version_code: UPDATED_VERSION_CODE.to_i
+    )
+  end
 end
+
+

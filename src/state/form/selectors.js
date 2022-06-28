@@ -21,7 +21,7 @@ const getRecord = createCachedSelector(
   recordsSelectors.getRecordsByUuid,
   getRecordUuid,
   (records, recordUuid) => records[recordUuid] || false,
-)(getRecordUuid);
+)(state => getRecordUuid(state) || '_');
 
 const getNodeUuid = createSelector(
   getFormStateData,
@@ -51,7 +51,7 @@ const getNode = createCachedSelector(
   getRecordNodesByUuid,
   getNodeUuid,
   (nodes, nodeUuid) => nodes[nodeUuid] || false,
-)(getNodeUuid);
+)(state => getNodeUuid(state) || '_');
 
 const getParentEntityNode = createCachedSelector(
   getRecordNodesByUuid,
@@ -142,6 +142,10 @@ const getHierarchy = createCachedSelector(
   },
 )(getFormKeysEntities);
 
+const getHierarchyUuid = createCachedSelector(getHierarchy, hierarchy =>
+  hierarchy.map(h => h.uuid),
+)(getFormKeysEntities);
+
 const getHierarchyNodeDefUuids = createCachedSelector(getHierarchy, hierarchy =>
   hierarchy.map(h => h.nodeDefUuid),
 )(getFormKeysEntities);
@@ -165,6 +169,18 @@ const getNodeDefNodes = createCachedSelector(
   getRecordNodes,
   (_, nodeDef) => nodeDef,
   (nodes, nodeDef) => nodes.filter(node => node.nodeDefUuid === nodeDef.uuid),
+)((_state_, nodeDef) => nodeDef.uuid);
+
+const getNodeDefNodesInHierarchy = createCachedSelector(
+  getRecordNodes,
+  getHierarchyUuid,
+  (_, nodeDef) => nodeDef,
+  (nodes, hierarchyUuids, nodeDef) =>
+    nodes.filter(
+      node =>
+        node.nodeDefUuid === nodeDef.uuid &&
+        hierarchyUuids.includes(node.parentUuid),
+    ),
 )((_state_, nodeDef) => nodeDef.uuid);
 
 const _getDescendants = ({nodes, node}) => {
@@ -261,6 +277,7 @@ export default {
   getHierarchyNodeDefUuids,
   getBreadCrumbs,
   getNodeDefNodes,
+  getNodeDefNodesInHierarchy,
 
   getNodeDescendants,
   getNodesiblings,

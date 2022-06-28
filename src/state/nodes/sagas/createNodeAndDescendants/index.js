@@ -1,8 +1,9 @@
-import {RecordNodesUpdater} from '@openforis/arena-core';
+import {RecordNodesUpdater, RecordValidator} from '@openforis/arena-core';
 import {select, all, put, call} from 'redux-saga/effects';
 
+import formActions from 'state/form/actionCreators';
 import formSelectors from 'state/form/selectors';
-import {actions as nodesActions} from 'state/nodes';
+import nodesActions from 'state/nodes/actionCreators';
 import surveySelectors from 'state/survey/selectors';
 
 function* handleCreateNodeAndDescendants({nodeDef, parentNode}) {
@@ -20,8 +21,20 @@ function* handleCreateNodeAndDescendants({nodeDef, parentNode}) {
     nodeDef,
   });
 
-  yield put(nodesActions.setNodes({nodes: updateRecord.nodes}));
-  return updateRecord.nodes;
+  const {nodes: updatedNodes} = updateRecord;
+
+  const validation = yield call(RecordValidator.validateNodes, {
+    survey,
+    record: updateRecord.record,
+    nodes: updatedNodes,
+  });
+
+  yield all([
+    put(nodesActions.setNodes({nodes: updatedNodes})),
+    put(formActions.setValidation({validation})),
+  ]);
+
+  return updatedNodes;
 }
 
 export default handleCreateNodeAndDescendants;

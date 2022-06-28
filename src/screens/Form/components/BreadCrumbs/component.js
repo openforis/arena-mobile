@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import {selectors as formSelectors} from 'state/form';
@@ -10,12 +10,11 @@ import styles from './styles';
 
 const BreadCrumbs = () => {
   const breadCrumbs = useSelector(formSelectors.getBreadCrumbs);
-  const nodesInRecord = useSelector(formSelectors.getRecordNodes);
 
   return (
     <View style={[styles.container]}>
       <EntitySelectorToggler />
-      <Text>{nodesInRecord.length}</Text>
+
       <ScrollView
         horizontal={true}
         contentContainerStyle={styles.breadCrumbsList}>

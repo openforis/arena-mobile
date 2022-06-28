@@ -16,8 +16,9 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     backgroundColor: colors.neutralLight,
     paddingBottom: 50,
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     flexDirection: 'row',
+    paddingHorizontal: 12,
   },
 });
 
