@@ -126,7 +126,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
   it('Select Tree               ( 1[1[1*]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
-    console.log(JSON.stringify(prevState.form.validation, null, 2));
     expectedState = selectNode(
       {type: 'tree', nodeIndex: 7, parentIndex: 5},
       addEntity({type: 'tree', parentIndex: 5, currentIndex: 7}, prevState),
@@ -138,9 +137,6 @@ describe('Survey > Cluster, Plot, Tree', () => {
         formActions.selectEntity({nodeDef: mockSurvey.nodeDefs.TREE_UUID}),
       )
       .silentRun();
-
-    console.log(JSON.stringify(storeState.form.validation, null, 2));
-    console.log(JSON.stringify(expectedState.form.validation, null, 2));
 
     expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
       {...expectedState, form: {...expectedState.form, validation: {}}},

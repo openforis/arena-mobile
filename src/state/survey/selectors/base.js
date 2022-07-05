@@ -28,3 +28,5 @@ export const getSelectedSurveyLanguage = createSelector(
   getUiState,
   ui => ui.selectedSurveyLanguage,
 );
+
+export const getRefData = createSelector(getSurvey, survey => survey?.refData);

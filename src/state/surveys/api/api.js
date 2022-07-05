@@ -7,75 +7,24 @@ const getSurveys = async ({serverUrl}) => {
   return list;
 };
 
-const getSurveyById = async ({serverUrl, surveyId}) => {
-  const {data: survey} = await API({serverUrl}).get({
-    path: `api/survey/${surveyId}?${new URLSearchParams({
-      draft: true,
+const getSurveyPopulatedById = async ({serverUrl, surveyId}) => {
+  const {data} = await API({serverUrl}).get({
+    path: `api/mobile/survey/${surveyId}?${new URLSearchParams({
+      draft: false,
     })}`,
   });
+  const {survey} = data;
+
   return survey;
 };
 
-const getNodeDefs = async ({serverUrl, surveyId}) => {
-  const {data: nodeDefs} = await API({serverUrl}).get({
-    path: `api/survey/${surveyId}/nodeDefs`,
-  });
-  return nodeDefs;
-};
-
-/*const getCategories = async ({serverUrl, surveyId}) => {
-  const {data: categories} = await API({serverUrl}).get({
-    path: `api/survey/${surveyId}/categories`,
-  });
-  return categories;
-};
-
-const getCategoryItems = async ({serverUrl, surveyId, categoryUuid}) => {
-  const {data: categoryItems} = await API({serverUrl}).get({
-    path: `api/survey/${surveyId}/categories/${categoryUuid}/items`,
-  });
-  return categoryItems;
-};
-
-const getCategoriesWithItems = async ({serverUrl, surveyId}) => {
-  const categories = await getCategories({serverUrl, surveyId});
-  const categoriesUuid = (categories?.list || []).map(({uuid}) => uuid);
-  const categoriesItems = await Promise.all(
-    categoriesUuid.map(async categoryUuid =>
-      getCategoryItems({serverUrl, surveyId, categoryUuid}),
-    ),
-  );
-
-  const {data: nodeDefsData} = await API({serverUrl}).get({
-    path: `api/survey/${surveyId}/categories`,
-  });
-  return nodeDefsData;
-};*/
-
-const getSurveyPopulatedById = async ({serverUrl, surveyId}) => {
-  const {survey} = await getSurveyById({serverUrl, surveyId});
-  const {nodeDefs} = await getNodeDefs({serverUrl, surveyId});
-
-  //const categories = await getCategoriesWithItems({serverUrl, surveyId});
-
-  return {
-    ...survey,
-    nodeDefs,
-  };
-};
-
-const uploadSurveyZipRecords = async ({
-  serverUrl,
-  surveyId,
-  onStart,
-  onProgress,
-}) => {
+const uploadSurveyZip = async ({serverUrl, surveyId, onStart, onProgress}) => {
   const uploadUrl = `${serverUrl}/api/mobile/survey/${surveyId}`;
   const files = [
     {
-      name: 'records.zip',
-      filename: 'records.zip',
-      filepath: fs.BASE_PATH + '/tmp/records.zip',
+      name: 'survey.zip',
+      filename: 'survey.zip',
+      filepath: fs.BASE_PATH + '/tmp/survey.zip',
       filetype: 'application/zip',
     },
   ];
@@ -90,9 +39,8 @@ const uploadSurveyZipRecords = async ({
 
 const surveysApi = {
   getSurveys,
-  getSurveyById,
   getSurveyPopulatedById,
-  uploadSurveyZipRecords,
+  uploadSurveyZip,
 };
 
 export default surveysApi;
