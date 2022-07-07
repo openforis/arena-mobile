@@ -13,8 +13,10 @@ function* handleInitializeRootEntity() {
   const rootNodeDef = yield select(surveySelectors.getNodeDefRoot);
 
   const nodes = yield call(handleCreateNodeAndDescendants, {
-    nodeDef: rootNodeDef,
-    parentNode: null,
+    payload: {
+      nodeDef: rootNodeDef,
+      parentNode: null,
+    },
   });
   const rootNode = Object.values(nodes).find(node =>
     Objects.isEmpty(node.parentUuid),

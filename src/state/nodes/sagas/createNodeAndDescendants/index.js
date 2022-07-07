@@ -6,7 +6,8 @@ import formSelectors from 'state/form/selectors';
 import nodesActions from 'state/nodes/actionCreators';
 import surveySelectors from 'state/survey/selectors';
 
-function* handleCreateNodeAndDescendants({nodeDef, parentNode}) {
+function* handleCreateNodeAndDescendants({payload} = {}) {
+  const {nodeDef, parentNode} = payload;
   const [record, recordNodes, survey] = yield all([
     select(formSelectors.getRecord),
     select(formSelectors.getRecordNodes),

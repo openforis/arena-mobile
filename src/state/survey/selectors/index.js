@@ -6,6 +6,12 @@ import {
   getUiState,
 } from './base';
 import {
+  getCategoryItems,
+  getCategoryItemByUuid,
+  getNodeCategoryItems,
+  getParentCodeNode,
+} from './categories';
+import {
   getNodeDefs,
   getNodeDefsByUuid,
   getNodeDefByUuid,
@@ -42,6 +48,12 @@ export default {
   getNodeDefChildrenSingleEntities,
   getNodeDefEntityChildrenAttributes,
   getNodeDefEntityChildrenAttributesUuids,
+
+  // ---- category
+  getCategoryItems,
+  getCategoryItemByUuid,
+  getNodeCategoryItems,
+  getParentCodeNode,
 
   // --- Records
   getRecords,

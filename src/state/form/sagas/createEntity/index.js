@@ -34,8 +34,10 @@ function* handleCreateEntity({payload} = {}) {
     );
   } else {
     const nodesCreated = yield call(handleCreateNodeAndDescendants, {
-      nodeDef: _nodeDef,
-      parentNode: parentEntityNode,
+      payload: {
+        nodeDef: _nodeDef,
+        parentNode: parentEntityNode,
+      },
     });
 
     const newNodeEntity = Object.values(nodesCreated).find(

@@ -3,9 +3,7 @@ name: Deploy to Android
 on:
   push:
     branches:
-      - master
-  pull_request:
-    types: [opened, synchronize, reopened]
+      - 'master'
 
 jobs:
   release-android:

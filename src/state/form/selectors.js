@@ -260,6 +260,7 @@ export default {
 
   getRecord,
   getRecordNodes,
+  getRecordNodesByUuid,
 
   getParentEntityNodeDef,
   getParentEntityNode,

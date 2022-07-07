@@ -3,7 +3,7 @@ import {createActions} from 'redux-actions';
 import types from './actionTypes';
 
 const {nodes} = createActions({
-  [types.createNode$]: ({nodeDef}) => ({nodeDef}),
+  [types.createNode$]: ({nodeDef, parentNode}) => ({nodeDef, parentNode}),
   [types.updateNode$]: ({updatedNode, callback}) => ({
     updatedNode,
     callback,
