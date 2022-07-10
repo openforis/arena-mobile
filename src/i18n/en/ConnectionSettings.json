@@ -1,7 +1,7 @@
 {
-  "title": "Connection settings",
+  "title": "",
 
-  "server_config_title": "Server config",
+  "server_config_title": "Server info",
   "server_config_fields": {
     "address": "Server address"
   },

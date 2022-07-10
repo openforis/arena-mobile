@@ -13,9 +13,10 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
+    overflow: 'hidden',
   },
   buttonsContainer: {
-    backgroundColor: colors.neutralLight,
+    backgroundColor: colors.background,
     paddingBottom: 50,
     justifyContent: 'space-between',
     flexDirection: 'row',

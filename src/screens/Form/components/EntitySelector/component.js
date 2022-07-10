@@ -13,6 +13,7 @@ const {width: WIDTH} = Dimensions.get('screen');
 
 const EntitySelector = () => {
   const {navigateTo, routes} = useNavigateTo();
+
   const isEntitySelectorOpened = useSelector(
     formSelectors.isEntitySelectorOpened,
   );
@@ -23,18 +24,16 @@ const EntitySelector = () => {
   useEffect(() => {
     if (isEntitySelectorOpened) {
       const finalPanerWidth = WIDTH * 0.9;
-      Animated.sequence([
-        Animated.delay(50),
-        Animated.timing(panelWidth, {
-          toValue: finalPanerWidth,
-          duration: 250,
-          useNativeDriver: false,
-        }),
-      ]).start();
+
+      Animated.timing(panelWidth, {
+        toValue: finalPanerWidth,
+        duration: 150,
+        useNativeDriver: false,
+      }).start();
     } else {
       Animated.timing(panelWidth, {
         toValue: 0,
-        duration: 300,
+        duration: 100,
         useNativeDriver: false,
       }).start();
     }
