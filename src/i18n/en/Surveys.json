@@ -1,21 +1,24 @@
 {
+  "actual_survey": "Actual survey",
   "local": {
+    "title": "Device",
     "error": {
       "title": "It looks like you don't have any surveys on your device.",
       "info": "Connect your device and load a valid survey.",
-      "cta_label": "Load from remote server"
+      "cta_label": "Download from the server"
     },
     "empty": {
       "title": "It looks like you don't have any surveys on your device.",
       "info": "Connect your device and load a valid survey.",
-      "cta_label": "Load from remote server"
+      "cta_label": "Download from the server"
     }
   },
   "remote": {
+    "title": "Server",
     "error": {
       "title": "It looks like there is some error connecting with the server.",
       "info": "Please review your connection and try again.",
-      "cta_label": "Go to connection settings"
+      "cta_label": "Connect to the server"
     },
     "empty": {
       "title": "It looks like there is not surveys in the server.",
@@ -33,14 +36,15 @@
       }
     },
     "local": {
-      "cta_delete": "Delete",
-      "cta_select": "Select"
+      "cta_delete": "Delete this survey",
+      "cta_select": "Use this survey",
+      "cta_continue": "Continue with this survey"
     },
     "remote": {
-      "cta_download": "Download",
-      "cta_update": "Update",
-      "cta_up_to_date": "Up to date",
-      "cta_select": "Select"
+      "cta_download": "Download this survey",
+      "cta_update": "Update this survey",
+      "cta_select": "Use this survey",
+      "cta_continue": "Continue with this survey"
     }
   }
 }

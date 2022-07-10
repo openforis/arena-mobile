@@ -19,7 +19,7 @@ const Header = ({
       <StatusBar
         animated={true}
         barStyle="dark-content"
-        backgroundColor={colors.primary}
+        backgroundColor={colors.translucidLight}
         hidden={false}
       />
       <View style={[styles.container, withBorder ? styles.withBorder : {}]}>

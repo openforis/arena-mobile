@@ -1,8 +1,8 @@
 import {StyleSheet, Dimensions} from 'react-native';
 
 const {width} = Dimensions.get('screen');
-
 import * as colors from 'arena-mobile-ui/colors';
+import baseStyles from 'arena-mobile-ui/styles';
 
 const styles = StyleSheet.create({
   barContainer: {
@@ -15,12 +15,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.neutralLighter,
     width,
     justifyContent: 'center',
-    paddingRight: 12,
+    paddingRight: baseStyles.bases.BASE_3,
   },
   backgroundProgress: {
     position: 'absolute',
     height: 30,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.success,
   },
   progress: {
     marginRight: 8,

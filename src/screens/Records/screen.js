@@ -28,7 +28,7 @@ const Records = () => {
   }, [currentRecord]);
 
   return (
-    <Layout bottomStyle={selectedRecord ? 'primary' : 'white'}>
+    <Layout bottomStyle={selectedRecord ? 'primary' : 'background'}>
       <>
         <Header hasBackComponent={true}>
           <Text style={[baseStyles.textStyle.title]}>Records</Text>

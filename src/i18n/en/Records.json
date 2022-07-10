@@ -8,7 +8,8 @@
         "dismiss": "No"
       }
     },
-    "cta_delete": "Delete",
-    "cta_continue": "Continue"
-  }
+    "cta_delete": "Delete this record",
+    "cta_continue": "Continue this record"
+  },
+  "actual_record": "Actual record"
 }

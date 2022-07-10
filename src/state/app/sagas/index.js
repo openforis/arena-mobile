@@ -3,6 +3,7 @@ import {takeLatest, put, select, call, all} from 'redux-saga/effects';
 
 import {ROUTES} from 'navigation/constants';
 import * as navigator from 'state/navigatorService';
+import surveysSelectors from 'state/surveys/selectors';
 import {actions as userActions} from 'state/user';
 
 import appActions from '../actionCreators';
@@ -48,10 +49,15 @@ function* handleAuthenticateUser() {
       }),
     );
   } finally {
+    const numberOfSurveys = yield select(
+      surveysSelectors.getNumberOfLocalSurveys,
+    );
     if (hasToNavigate) {
       yield call(
         navigator.navigatorDispatch,
-        StackActions.replace(ROUTES.HOME),
+        StackActions.replace(
+          numberOfSurveys < 0 ? ROUTES.HOME : ROUTES.SURVEYS,
+        ),
       );
     }
 

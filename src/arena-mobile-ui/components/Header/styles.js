@@ -1,14 +1,15 @@
 import {StyleSheet} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
+import baseStyles from 'arena-mobile-ui/styles';
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingBottom: 8,
+    paddingHorizontal: baseStyles.bases.BASE,
+    paddingBottom: baseStyles.bases.BASE_2,
     backgroundColor: colors.primary,
   },
   withBorder: {

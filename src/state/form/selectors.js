@@ -31,6 +31,10 @@ const getParentEntityNodeUuid = createSelector(
   getFormStateData,
   form => form.parentEntityNode || false,
 );
+const getParentEntityNodeUuidKey = createSelector(
+  getParentEntityNodeUuid,
+  parentEntityNode => parentEntityNode || '_',
+);
 
 const getEntityNodeUuid = createSelector(
   getFormStateData,
@@ -57,7 +61,7 @@ const getParentEntityNode = createCachedSelector(
   getRecordNodesByUuid,
   getParentEntityNodeUuid,
   (nodes, parentEntityNodeUuid) => nodes[parentEntityNodeUuid] || false,
-)(getParentEntityNodeUuid);
+)(getParentEntityNodeUuidKey);
 
 const getNodeDefUuidAndNodeUuid = createSelector(
   getFormStateData,
@@ -78,9 +82,17 @@ const getNodeDefUuid = createSelector(
   getFormStateData,
   form => form.nodeDef || false,
 );
+const getNodeDefUuidKey = createSelector(
+  getNodeDefUuid,
+  nodeDef => nodeDef || '_',
+);
 const getParentEntityNodeDefUuid = createSelector(
   getFormStateData,
   form => form.parentEntityNodeDef || false,
+);
+const getParentEntityNodeDefUuidKey = createSelector(
+  getParentEntityNodeDefUuid,
+  parentEntityNodeDef => parentEntityNodeDef || '_',
 );
 
 const getNodeDef = createCachedSelector(
@@ -94,7 +106,7 @@ const getParentEntityNodeDef = createCachedSelector(
   getParentEntityNodeDefUuid,
   (nodeDefsByUuid, parentEntityNodeDefUuid) =>
     nodeDefsByUuid[parentEntityNodeDefUuid],
-)(getParentEntityNodeDefUuid);
+)(getParentEntityNodeDefUuidKey);
 
 const getNodeDefChildren = createCachedSelector(
   surveySelectors.getNodeDefs,
@@ -103,22 +115,22 @@ const getNodeDefChildren = createCachedSelector(
     nodeDefs.filter(
       ({parentUuid}) => !!parentUuid && parentUuid === nodeDefUuid,
     ),
-)(getNodeDefUuid);
+)(getNodeDefUuidKey);
 
 const getNodeDefChildrenAttributes = createCachedSelector(
   getNodeDefChildren,
   nodeDefs => nodeDefs.filter(({type}) => type !== 'entity'),
-)(getNodeDefUuid);
+)(getNodeDefUuidKey);
 
 const getNodeDefChildrenUuids = createCachedSelector(
   getNodeDefChildren,
   nodeDefs => nodeDefs.map(({uuid}) => uuid),
-)(getNodeDefUuid);
+)(getNodeDefUuidKey);
 
 const getNodeDefChildrenAttributesUuids = createCachedSelector(
   getNodeDefChildrenAttributes,
   nodeDefs => nodeDefs.map(({uuid}) => uuid),
-)(getNodeDefUuid);
+)(getNodeDefUuidKey);
 
 const getAncestors = ({node, nodesByUuid}) => {
   return [

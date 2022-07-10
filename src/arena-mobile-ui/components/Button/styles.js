@@ -1,20 +1,21 @@
 import {StyleSheet} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
+import baseStyles from 'arena-mobile-ui/styles';
 
 const styles = StyleSheet.create({
   base: {
-    padding: 8,
-    paddingVertical: 12,
+    padding: baseStyles.bases.BASE_2,
+    paddingVertical: baseStyles.bases.BASE_3,
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 8,
+    marginVertical: baseStyles.bases.BASE_2,
   },
   primary: {
     backgroundColor: colors.secondary,
   },
   secondary: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.white,
     borderColor: colors.neutralDarkest,
     borderWidth: 1,
   },

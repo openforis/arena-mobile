@@ -1,6 +1,7 @@
 import {StyleSheet, Dimensions} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
+import baseStyles from 'arena-mobile-ui/styles';
 
 const {width} = Dimensions.get('screen');
 
@@ -8,12 +9,16 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     width,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.white,
     bottom: 0,
-    borderTopRightRadius: 16,
-    borderTopLeftRadius: 16,
-    padding: 16,
-    paddingBottom: 32,
+    borderTopRightRadius: baseStyles.bases.BASE_4,
+    borderTopLeftRadius: baseStyles.bases.BASE_4,
+    padding: baseStyles.bases.BASE_4,
+    paddingBottom: baseStyles.bases.BASE_8,
+    borderColor: colors.neutralLighter,
+    borderTopWidth: 1,
+    borderRightWidth: 1,
+    borderLeftWidth: 1,
   },
 });
 

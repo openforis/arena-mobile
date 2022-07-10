@@ -30,10 +30,12 @@ function Arena() {
     <NavigationContainer ref={navigationRef}>
       <Provider store={store}>
         <Stack.Navigator
+          headerMode="none"
           initialRouteName={ROUTES[KEYS.HOME]}
           screenOptions={{
             headerShown: false,
-          }}>
+          }}
+          options={{gestureEnabled: false}}>
           {Object.keys(KEYS).map(navigationKey => (
             <Stack.Screen
               key={navigationKey}

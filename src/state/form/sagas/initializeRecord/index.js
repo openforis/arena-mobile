@@ -34,7 +34,7 @@ function* handleInitializeRecord() {
     yield put(formActions.setRecord({record: record}));
     yield call(handleInitializeRootEntity);
 
-    yield call(navigator.navigatorDispatch, StackActions.push(ROUTES.FORM));
+    yield call(navigator.navigatorDispatch, StackActions.replace(ROUTES.FORM));
   } catch (error) {
     console.log('Error', error);
   } finally {

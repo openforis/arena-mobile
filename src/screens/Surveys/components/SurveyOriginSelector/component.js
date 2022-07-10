@@ -1,8 +1,9 @@
 import React from 'react';
-import {View} from 'react-native';
+import {useTranslation} from 'react-i18next';
+import {TouchableOpacity, View, Text} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
-import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
+import Icon from 'arena-mobile-ui/components/Icon';
 
 import styles from './styles';
 
@@ -11,31 +12,42 @@ const Touchable = ({
   isSelected,
   icon = 'globe-outline',
   onPress,
+  label,
 }) => {
   return (
-    <TouchableIcon
+    <TouchableOpacity
       onPress={onPress}
-      iconName={icon}
-      customStyle={[styles.touchable.base, styles.touchable[position]]}
-      iconColor={isSelected ? colors.primaryDarkest : colors.secondaryLightest}
-    />
+      style={[styles.touchable.base({isSelected}), styles.touchable[position]]}
+      hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}>
+      <Icon
+        name={icon}
+        size={24}
+        color={isSelected ? colors.secondary : colors.neutral}
+      />
+      <View style={[styles.labelContainer({isSelected})]}>
+        <Text style={[styles.label({isSelected})]}>{label}</Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
 const SurveyOriginSelector = ({surveysOrigin, setSurveysOrigin}) => {
+  const {t} = useTranslation();
   return (
     <View style={[styles.container]}>
       <Touchable
         position="left"
         onPress={() => setSurveysOrigin('remote')}
-        icon="globe-outline"
+        icon="cloudy-outline"
         isSelected={surveysOrigin === 'remote'}
+        label={t('Surveys:remote.title')}
       />
       <Touchable
         position="right"
         onPress={() => setSurveysOrigin('local')}
-        icon="home-outline"
+        icon="bookmark-outline"
         isSelected={surveysOrigin === 'local'}
+        label={t('Surveys:local.title')}
       />
     </View>
   );

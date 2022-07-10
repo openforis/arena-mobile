@@ -1,15 +1,16 @@
 import {StyleSheet} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
+import baseStyles from 'arena-mobile-ui/styles';
 
 const styles = StyleSheet.create({
   container: {
     borderRadius: 4,
-    borderWidth: 1,
-    padding: 8,
-    borderColor: colors.neutralLight,
+    borderBottomWidth: 1,
+    padding: baseStyles.bases.BASE_2,
+    borderBottomColor: colors.neutralLighter,
     backgroundColor: colors.white,
-    marginBottom: 16,
+    marginBottom: baseStyles.bases.BASE_4,
   },
 });
 

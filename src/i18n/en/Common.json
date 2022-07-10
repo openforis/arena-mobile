@@ -8,8 +8,10 @@
   "access_info": "Access info",
   "server_config": "Server config",
   "server_address": "Server address",
-  "connect": "Connect",
+  "connect": "Log In",
   "connection_settings": "Connection Settings",
   "show_labels": "Show labels",
-  "show_names": "Show names"
+  "show_names": "Show names",
+  "created": "Created",
+  "modified": "Modified"
 }

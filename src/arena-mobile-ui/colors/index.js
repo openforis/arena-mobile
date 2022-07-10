@@ -3,34 +3,35 @@
 
 // Primary - chelsea-cucumber
 //www.tailwindshades.com/#color=94.78260869565217%2C29.361702127659576%2C53.92156862745099&step-up=8&step-down=11&hue-shift=0&name=chelsea-cucumber&overrides=e30%3D
-const primary50 = '#E4EDDE';
-const primary100 = '#D9E6D1';
-const primary200 = '#C4D7B6';
-const primary300 = '#AFC99C';
-const primary400 = '#99BA81';
-const primary500 = '#84AC67';
-const primary600 = '#688E4D';
-const primary700 = '#4E6939';
-const primary800 = '#334526';
-const primary900 = '#182112';
+const green50 = '#E4EDDE';
+const green100 = '#D9E6D1';
+const green200 = '#C4D7B6';
+const green300 = '#AFC99C';
+const green400 = '#99BA81';
+const green500 = '#84AC67';
+const green600 = '#688E4D';
+const green700 = '#4E6939';
+const green800 = '#334526';
+const green900 = '#182112';
 
 // Secondary - boston-blue
 //www.tailwindshades.com/#color=208.35616438356163%2C57.93650793650792%2C50.588235294117645&step-up=8&step-down=11&hue-shift=0&name=boston-blue&overrides=e30%3D
-const secondary50 = '#C9DEF1';
-const secondary100 = '#B9D4EC';
-const secondary200 = '#99C0E4';
-const secondary300 = '#78ADDB';
-const secondary400 = '#5899D3';
-const secondary500 = '#3885CA';
-const secondary600 = '#2A689F';
-const secondary700 = '#1F4B73';
-const secondary800 = '#132E47';
-const secondary900 = '#07111B';
+const blue50 = '#C9DEF1';
+const blue100 = '#B9D4EC';
+const blue200 = '#99C0E4';
+const blue300 = '#78ADDB';
+const blue400 = '#5899D3';
+const blue500 = '#3885CA';
+const blue600 = '#2A689F';
+const blue700 = '#1F4B73';
+const blue800 = '#132E47';
+const blue900 = '#07111B';
 
 // grey
 //tailwind.simeongriggs.dev/blue/404040
+const grey0 = '#FFFFFF';
 const grey50 = '#EDEDED';
-const grey100 = '#D9D9D9';
+const grey100 = '#D1D1D1';
 const grey200 = '#B3B3B3';
 const grey300 = '#8C8C8C';
 const grey400 = '#666666';
@@ -65,21 +66,22 @@ const red700 = '#B22511';
 const red800 = '#7E1B0C';
 const red900 = '#4B1007';
 
-export const primaryLightest = primary50;
-export const primaryLighter = primary100;
-export const primaryLight = primary300;
-export const primary = primary500;
-export const primaryDark = primary700;
-export const primaryDarker = primary800;
-export const primaryDarkest = primary900;
+export const primaryLightest = green50;
+export const primaryLighter = green100;
+export const primaryLight = green300;
+export const primary = green500;
+export const primaryDark = green700;
+export const primaryDarker = green800;
+export const primaryDarkest = green900;
 
-export const secondaryLightest = secondary50;
-export const secondaryLighter = secondary100;
-export const secondaryLight = secondary300;
-export const secondary = secondary500;
-export const secondaryDark = secondary700;
-export const secondaryDarker = secondary800;
-export const secondaryDarkest = secondary900;
+export const secondaryLightest = blue50;
+
+export const secondaryLighter = blue100;
+export const secondaryLight = blue300;
+export const secondary = blue500;
+export const secondaryDark = blue700;
+export const secondaryDarker = blue800;
+export const secondaryDarkest = blue900;
 
 export const neutralLightest = grey50;
 export const neutralLighter = grey100;
@@ -105,12 +107,22 @@ export const errorDark = red700;
 export const errorDarker = red800;
 export const errorDarkest = red900;
 
-export const primaryText = primary900;
-export const primaryTextLight = primary800;
-export const secondayText = secondary900;
-export const secondayTextLight = secondary800;
+export const successLightest = green50;
+export const successLighter = green100;
+export const successLight = green300;
+export const success = green500;
+export const successDark = green700;
+export const successDarker = green800;
+export const successDarkest = green900;
+
+export const primaryText = green900;
+export const primaryTextLight = green800;
+export const secondaryText = blue900;
+export const secondaryTextLight = blue800;
 
 export const background = neutralLightest;
-export const white = grey50;
+export const white = grey0;
 export const black = grey900;
 export const transparent = 'transparent';
+export const translucidLight = '#ffffff50';
+export const translucidDark = '#00000050';
