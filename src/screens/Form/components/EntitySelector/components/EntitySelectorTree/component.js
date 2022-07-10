@@ -38,12 +38,7 @@ const EntitySelectorTree = ({nodeDef, level = 0}) => {
               />
             )}
           </View>
-          <Entity
-            key={`entity-${nodeDef.uuid}`}
-            nodeDef={nodeDef}
-            level={level}
-            hasChildren={children.length > 0}
-          />
+          <Entity key={`entity-${nodeDef.uuid}`} nodeDef={nodeDef} />
         </View>
       </View>
       {showChildren && children.length > 0 && (

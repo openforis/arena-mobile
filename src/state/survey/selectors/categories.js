@@ -47,10 +47,9 @@ export const getCategoryItems = createCachedSelector(
     const category = categories[categoryUuid];
     const level = category?.levels[index];
 
-    const categoryItems = Object.values(categoryItemIndex).filter(
+    return Object.values(categoryItemIndex).filter(
       item => item.levelUuid === level?.uuid,
     );
-    return categoryItems;
   },
 )((_state_, nodeDefUuid) => nodeDefUuid || '__');
 

@@ -19,7 +19,6 @@ const baseMockNode = {
   recordUuid: 'RECORD_ONE_UUID',
 };
 
-const RESULT_ERRORS = {}; // { [getCurrentUuid(2)]: [{error: 'ERROR'}]}
 const initialState = {
   ...globalInitialState,
   surveys: {

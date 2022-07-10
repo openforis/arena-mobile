@@ -23,13 +23,13 @@ const styles = StyleSheet.create({
     left: {},
     right: {},
   },
-  labelContainer: ({isSelected}) => ({
+  labelContainer: {
     justifyContent: 'center',
     alignContent: 'center',
     flex: 1,
     flexDirection: 'column',
     paddingLeft: baseStyles.bases.BASE,
-  }),
+  },
   label: ({isSelected}) => ({
     ...(isSelected ? baseStyles.textStyle.bold : {}),
     color: isSelected ? colors.secondary : colors.neutral,

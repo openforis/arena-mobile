@@ -43,7 +43,7 @@ const BasePreviewNode = ({
   );
 };
 
-const BaseNodeValueRenderer = ({node}) => {
+const BaseNodeValueRenderer = () => {
   return (
     <View>
       <Text>Not supported</Text>

@@ -24,7 +24,7 @@ const Touchable = ({
         size={24}
         color={isSelected ? colors.secondary : colors.neutral}
       />
-      <View style={[styles.labelContainer({isSelected})]}>
+      <View style={[styles.labelContainer]}>
         <Text style={[styles.label({isSelected})]}>{label}</Text>
       </View>
     </TouchableOpacity>

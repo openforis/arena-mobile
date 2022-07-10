@@ -1,5 +1,5 @@
 import React, {useMemo, useCallback} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Text, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
@@ -7,7 +7,7 @@ import {selectors as formSelectors, actions as formActions} from 'state/form';
 
 import styles from './styles';
 
-const Entity = ({nodeDef, level, hasChildren}) => {
+const Entity = ({nodeDef}) => {
   const nodeDefName = useNodeDefNameOrLabel({nodeDef});
   const dispatch = useDispatch();
 
