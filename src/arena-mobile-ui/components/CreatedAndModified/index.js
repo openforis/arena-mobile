@@ -7,37 +7,34 @@ import baseStyles from '../../styles';
 
 import styles from './styles';
 
+const Label = ({label}) => (
+  <Text
+    style={[
+      baseStyles.textStyle.secondaryText,
+      baseStyles.textStyle.bold,
+      baseStyles.textSize.s,
+    ]}>
+    {label}
+  </Text>
+);
+
+const Date = ({label}) => (
+  <Text style={[baseStyles.textStyle.secondaryText, baseStyles.textSize.s]}>
+    {label}
+  </Text>
+);
+
 const CreatedAndModified = ({dateCreated, dateModified}) => {
   const {t} = useTranslation();
   return (
     <View style={[styles.container]}>
       <View style={[styles.titles]}>
-        <Text
-          style={[
-            baseStyles.textStyle.secondaryText,
-            baseStyles.textStyle.bold,
-            baseStyles.textSize.s,
-          ]}>
-          {t('Common:created')}:
-        </Text>
-        <Text
-          style={[
-            baseStyles.textStyle.secondaryText,
-            baseStyles.textStyle.bold,
-            baseStyles.textSize.s,
-          ]}>
-          {t('Common:modified')}:
-        </Text>
+        <Label label={t('Common:created')} />
+        <Label label={t('Common:modified')} />
       </View>
       <View>
-        <Text
-          style={[baseStyles.textStyle.secondaryText, baseStyles.textSize.s]}>
-          {moment(dateCreated).fromNow()}
-        </Text>
-        <Text
-          style={[baseStyles.textStyle.secondaryText, baseStyles.textSize.s]}>
-          {moment(dateModified).fromNow()}
-        </Text>
+        <Date label={moment(dateCreated).fromNow()} />
+        <Date label={moment(dateModified).fromNow()} />
       </View>
     </View>
   );

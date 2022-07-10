@@ -1,12 +1,13 @@
 import {StyleSheet} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
+import baseStyles from 'arena-mobile-ui/styles';
 
 const styles = StyleSheet.create({
   container: {
     color: colors.neutralDarkest,
     flex: 1,
-    borderRadius: 16,
+    borderRadius: baseStyles.bases.BASE_4,
   },
   closeHeader: {
     justifyContent: 'flex-end',
@@ -14,8 +15,8 @@ const styles = StyleSheet.create({
   },
   closeIcon: {
     backgroundColor: colors.neutralLighter,
-    borderRadius: 4,
-    padding: 4,
+    borderRadius: baseStyles.bases.BASE,
+    padding: baseStyles.bases.BASE,
   },
   divider: {
     height: 100,

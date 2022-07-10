@@ -5,7 +5,7 @@ import baseStyles from 'arena-mobile-ui/styles';
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 4,
+    borderRadius: baseStyles.bases.BASE,
     borderBottomWidth: 1,
     padding: baseStyles.bases.BASE_2,
     borderBottomColor: colors.neutralLighter,
