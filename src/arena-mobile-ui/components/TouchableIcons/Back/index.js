@@ -9,6 +9,7 @@ const Back = () => {
     <TouchableIcon
       onPress={navigation.goBack}
       iconName={'chevron-back-outline'}
+      hitSlop={36}
     />
   );
 };

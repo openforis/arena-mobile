@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingHorizontal: baseStyles.bases.BASE,
+    paddingHorizontal: baseStyles.bases.BASE_4,
     paddingBottom: baseStyles.bases.BASE_2,
     backgroundColor: colors.primary,
   },
