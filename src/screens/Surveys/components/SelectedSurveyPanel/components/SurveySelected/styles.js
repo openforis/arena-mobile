@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: baseStyles.bases.BASE_2,
+    marginBottom: baseStyles.bases.BASE_8,
   },
 });
 

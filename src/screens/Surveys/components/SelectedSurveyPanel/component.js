@@ -8,14 +8,17 @@ import styles from './styles';
 
 const SelectedSurveyPanel = ({survey, unSelect, surveysOrigin}) => {
   return (
-    <View style={[styles.container]}>
-      <SurveySelected survey={survey} unSelect={unSelect} />
-      {surveysOrigin === 'local' ? (
-        <LocalPanel survey={survey} unSelect={unSelect} />
-      ) : (
-        <RemotePanel survey={survey} unSelect={unSelect} />
-      )}
-    </View>
+    <>
+      <View style={[styles.overlay]} pointerEvents="none" />
+      <View style={[styles.container]}>
+        <SurveySelected survey={survey} unSelect={unSelect} />
+        {surveysOrigin === 'local' ? (
+          <LocalPanel survey={survey} unSelect={unSelect} />
+        ) : (
+          <RemotePanel survey={survey} unSelect={unSelect} />
+        )}
+      </View>
+    </>
   );
 };
 
