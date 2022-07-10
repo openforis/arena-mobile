@@ -2,7 +2,7 @@ import React, {useCallback, useRef} from 'react';
 import {RNCamera} from 'react-native-camera';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
-import {BottomContent, TopContent} from './components';
+import {CustomMarker, TopContent} from './components';
 import styles from './styles';
 
 const QRScanner = ({
@@ -30,20 +30,20 @@ const QRScanner = ({
       cameraStyle={[styles.camera]}
       topViewStyle={[styles.topView]}
       bottomViewStyle={[styles.bottomView]}
-      markerStyle={[styles.marker]}
       showMarker={true}
       onRead={onRead}
       reactivate={false}
       fadeIn={false}
-      flashMode={RNCamera.Constants.FlashMode.off}
-      topContent={<TopContent handleClose={handleClose} qrData={qrData} />}
-      bottomContent={
-        <BottomContent
-          visible={visible && !!qrData}
+      customMarker={
+        <CustomMarker
+          qrData={qrData}
+          visible={visible}
           handleClose={handleClose}
           handleReactivate={handleReactivate}
         />
       }
+      flashMode={RNCamera.Constants.FlashMode.off}
+      topContent={<TopContent handleClose={handleClose} />}
     />
   );
 };

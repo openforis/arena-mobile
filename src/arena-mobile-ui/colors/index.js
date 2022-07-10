@@ -115,10 +115,12 @@ export const successDark = green700;
 export const successDarker = green800;
 export const successDarkest = green900;
 
-export const primaryText = green900;
-export const primaryTextLight = green800;
-export const secondaryText = blue900;
-export const secondaryTextLight = blue800;
+export const primaryText = primaryDarkest;
+export const primaryTextLight = primaryDarker;
+export const secondaryText = secondaryDarkest;
+export const secondaryTextLight = secondaryDarker;
+export const primaryContrastText = grey0;
+export const primaryContrastTextLight = grey50;
 
 export const background = neutralLightest;
 export const white = grey0;
@@ -126,3 +128,19 @@ export const black = grey900;
 export const transparent = 'transparent';
 export const translucidLight = '#ffffff50';
 export const translucidDark = '#00000050';
+
+const LightTheme = {};
+
+const DarkTheme = {
+  primaryText: primaryLightest,
+  primaryTextLight: primaryLighter,
+  secondaryText: secondaryLightest,
+  secondaryTextLight: secondaryLighter,
+  // -- backgrounds
+  background: neutralDarkest,
+};
+
+export const themes = {
+  light: LightTheme,
+  dark: LightTheme, //DarkTheme,
+};

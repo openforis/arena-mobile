@@ -99,7 +99,7 @@ const ConnectionSettings = () => {
   }, [qrData]);
 
   return (
-    <Layout>
+    <Layout bottomStyle="background" topStyle="primary">
       <>
         {!visible && (
           <Header
@@ -122,36 +122,40 @@ const ConnectionSettings = () => {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <ScrollView>
             <View style={[styles.formContainer]}>
-              <Text style={[baseStyles.textStyle.header]}>
-                {t('ConnectionSettings:server_config_title')}
-              </Text>
+              <View style={[styles.formItem]}>
+                <Text style={[baseStyles.textStyle.header]}>
+                  {t('ConnectionSettings:server_config_title')}
+                </Text>
 
-              <Input
-                title={t('ConnectionSettings:server_config_fields.address')}
-                onChangeText={onChangeText('serverUrl')}
-                value={formData?.serverUrl || serverUrl}
-              />
+                <Input
+                  title={t('ConnectionSettings:server_config_fields.address')}
+                  onChangeText={onChangeText('serverUrl')}
+                  value={formData?.serverUrl || serverUrl}
+                />
+              </View>
 
-              <Text style={[baseStyles.textStyle.header]}>
-                {t('ConnectionSettings:access_info_title')}
-              </Text>
-
-              <Input
-                title={t('ConnectionSettings:access_info_fields.username')}
-                onChangeText={onChangeText('username')}
-                value={formData?.username || username}
-              />
-              <PasswordInput
-                title={t('ConnectionSettings:access_info_fields.password')}
-                onChangeText={onChangeText('password')}
-                value={formData?.password || password}
-              />
-
-              <Button
-                onPress={handleSubmitForm}
-                label={t('ConnectionSettings:submit')}
-                disabled={isLoading}
-              />
+              <View style={[styles.formItem]}>
+                <Text style={[baseStyles.textStyle.header]}>
+                  {t('ConnectionSettings:access_info_title')}
+                </Text>
+                <Input
+                  title={t('ConnectionSettings:access_info_fields.username')}
+                  onChangeText={onChangeText('username')}
+                  value={formData?.username || username}
+                />
+                <PasswordInput
+                  title={t('ConnectionSettings:access_info_fields.password')}
+                  onChangeText={onChangeText('password')}
+                  value={formData?.password || password}
+                />
+              </View>
+              <View style={styles.buttonContainer}>
+                <Button
+                  onPress={handleSubmitForm}
+                  label={t('ConnectionSettings:submit')}
+                  disabled={isLoading}
+                />
+              </View>
               {error && (
                 <Card type="error">
                   <Text style={[baseStyles.textStyle.bold]}>
@@ -163,9 +167,12 @@ const ConnectionSettings = () => {
                 </Card>
               )}
               {user?.name && (
-                <Text style={baseStyles.textStyle.text}>
-                  {t('ConnectionSettings:connected_as', {username: user?.name})}
-                </Text>
+                <View style={styles.loggedInAs}>
+                  <Text style={baseStyles.textStyle.secondaryText}>
+                    {t('ConnectionSettings:connected_as')}
+                  </Text>
+                  <Text style={baseStyles.textStyle.text}>{user?.email}</Text>
+                </View>
               )}
             </View>
             <View style={{height: 200}} />

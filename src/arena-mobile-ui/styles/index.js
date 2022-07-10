@@ -75,6 +75,22 @@ const card = StyleSheet.create({
     borderColor: colors.neutralLight,
     backgroundColor: colors.white,
   },
+  container: {
+    borderRadius: 0,
+    margin: 0,
+    marginBottom: 0,
+    paddingLeft: bases.BASE_2 + bases.BASE_3,
+    paddingRight: bases.BASE_3,
+    backgroundColor: colors.white,
+    borderLeftColor: colors.transparent,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  selected: {
+    borderLeftWidth: bases.BASE_2,
+    paddingLeft: bases.BASE_3,
+    borderLeftColor: colors.secondary,
+  },
 });
 
 export default {

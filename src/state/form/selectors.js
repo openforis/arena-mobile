@@ -3,7 +3,8 @@ import {createCachedSelector} from 're-reselect';
 import {createSelector} from 'reselect';
 
 import recordsSelectors from 'state/records/selectors';
-import surveySelectors from 'state/survey/selectors';
+import * as surveySelectorsNodeDefs from 'state/survey/selectors/nodeDefs';
+import * as surveySelectorsNodes from 'state/survey/selectors/nodes';
 
 const getState = state => state;
 const getFormState = createSelector(getState, state => state?.form || {});
@@ -42,7 +43,7 @@ const getEntityNodeUuid = createSelector(
 );
 
 const getRecordNodes = createSelector(
-  surveySelectors.getNodes,
+  surveySelectorsNodes.getNodes,
   getRecordUuid,
   (nodes, recordUuid) => nodes.filter(node => node.recordUuid === recordUuid),
 );
@@ -96,20 +97,20 @@ const getParentEntityNodeDefUuidKey = createSelector(
 );
 
 const getNodeDef = createCachedSelector(
-  surveySelectors.getNodeDefsByUuid,
+  surveySelectorsNodeDefs.getNodeDefsByUuid,
   getNodeDefUuid,
   (nodeDefsByUuid, nodeDefUuid) => nodeDefsByUuid[nodeDefUuid],
 )(getNodeDefUuidAndNodeUuid);
 
 const getParentEntityNodeDef = createCachedSelector(
-  surveySelectors.getNodeDefsByUuid,
+  surveySelectorsNodeDefs.getNodeDefsByUuid,
   getParentEntityNodeDefUuid,
   (nodeDefsByUuid, parentEntityNodeDefUuid) =>
     nodeDefsByUuid[parentEntityNodeDefUuid],
 )(getParentEntityNodeDefUuidKey);
 
 const getNodeDefChildren = createCachedSelector(
-  surveySelectors.getNodeDefs,
+  surveySelectorsNodeDefs.getNodeDefs,
   getNodeDefUuid,
   (nodeDefs, nodeDefUuid) =>
     nodeDefs.filter(
@@ -170,7 +171,7 @@ const getEntityNode = createCachedSelector(
 
 const getBreadCrumbs = createCachedSelector(
   getHierarchy,
-  surveySelectors.getNodeDefsByUuid,
+  surveySelectorsNodeDefs.getNodeDefsByUuid,
   (hierarchy, nodeDefsByUuid) =>
     hierarchy.filter(
       breadCrumb => nodeDefsByUuid[breadCrumb.nodeDefUuid].type === 'entity',
