@@ -21,6 +21,9 @@ const Button = ({
   label,
   type = 'primary',
   disabled = false,
+  icon = null,
+  customContainerStyle = {},
+  customTextStyle = {},
   ...props
 }) => {
   const styles = useThemedStyles({styles: _styles});
@@ -30,15 +33,18 @@ const Button = ({
         styles.base,
         styles[type],
         (disabled && styles.disabled[type]) || {},
+        customContainerStyle,
       ]}
       onPress={onPress}
       disabled={disabled}
       {...props}>
+      {icon}
       <Text
         style={[
           baseStyles.textStyle.bold,
           styles.text[type],
           (disabled && styles.disabled.text[type]) || {},
+          customTextStyle,
         ]}>
         {label}
       </Text>

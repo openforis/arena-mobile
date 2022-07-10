@@ -196,6 +196,33 @@ const getNodeDefNodesInHierarchy = createCachedSelector(
     ),
 )((_state_, nodeDef) => nodeDef.uuid);
 
+const getNodeDefNodesWithKeysAsStringInHierarchy = createCachedSelector(
+  getRecordNodes,
+  getHierarchyUuid,
+  (_, nodeDef) => nodeDef,
+  surveySelectorsNodeDefs.getNodeDefsByUuid,
+  (nodes, hierarchyUuids, nodeDef, nodeDefsByUuid) =>
+    nodes
+      .filter(
+        node =>
+          node.nodeDefUuid === nodeDef.uuid &&
+          hierarchyUuids.includes(node.parentUuid),
+      )
+      .map(node => {
+        const keyString =
+          nodes
+            .filter(
+              _node =>
+                nodeDefsByUuid[_node.nodeDefUuid].props.key &&
+                _node.parentUuid === node.uuid,
+            )
+            .map(nodeKey => nodeKey.value)
+            .join(',') || '';
+
+        return Object.assign({}, node, {keyString});
+      }),
+)((_state_, nodeDef) => nodeDef.uuid);
+
 const _getDescendants = ({nodes, node}) => {
   let descendants = [];
   for (let _node of nodes) {
@@ -292,6 +319,7 @@ export default {
   getBreadCrumbs,
   getNodeDefNodes,
   getNodeDefNodesInHierarchy,
+  getNodeDefNodesWithKeysAsStringInHierarchy,
 
   getNodeDescendants,
   getNodesiblings,

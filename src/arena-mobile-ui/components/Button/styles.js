@@ -10,6 +10,7 @@ const styles = ({colors}) =>
       justifyContent: 'center',
       alignItems: 'center',
       marginVertical: baseStyles.bases.BASE_2,
+      flexDirection: 'row',
     },
     primary: {
       backgroundColor: colors.secondary,

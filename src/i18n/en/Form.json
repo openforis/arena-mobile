@@ -1,0 +1,4 @@
+{
+  "add_new": "New {{ label }}",
+  "delete": "Delete {{ label }}"
+}

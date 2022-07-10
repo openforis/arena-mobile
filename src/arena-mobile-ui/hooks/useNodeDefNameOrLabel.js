@@ -10,9 +10,11 @@ const useNodeDefNameOrLabel = ({nodeDef}) => {
 
   const nodeDefName = useMemo(
     () =>
-      showNames
-        ? nodeDef.props.name
-        : nodeDef.props?.labels?.[language] || nodeDef.props.name,
+      nodeDef
+        ? showNames
+          ? nodeDef.props.name
+          : nodeDef.props?.labels?.[language] || nodeDef.props.name
+        : '',
     [showNames, nodeDef, language],
   );
 

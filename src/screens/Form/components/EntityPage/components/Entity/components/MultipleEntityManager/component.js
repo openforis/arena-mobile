@@ -1,34 +1,49 @@
-import React, {useCallback} from 'react';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import React, {useCallback, useMemo, useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {View} from 'react-native';
+import RNPickerSelect from 'react-native-picker-select';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
-import Label from 'form/common/Label';
+import Button from 'arena-mobile-ui/components/Button';
+import Icon from 'arena-mobile-ui/components/Icon';
+import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
+import {uuidv4} from 'infra/uuid';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
-import {selectors as surveySelectors} from 'state/survey';
 
-import styles from './styles';
+import styles, {pickerSelectStyles} from './styles';
 
-const Sibiling = ({node}) => {
-  const nodeKeys = useSelector(state =>
-    surveySelectors.getEntityNodeKeysAsString(state, node),
-  );
+const ChevRonIcon = () => <Icon name="chevron-down-outline" />;
+const Header = () => {
+  const {t} = useTranslation();
+  const [key, setKey] = useState(uuidv4());
 
-  return (
-    <Text>
-      {node.value} - {node.uuid.split('-')[0]} -{node.parentUuid.split('-')[0]}-{' '}
-      {nodeKeys}
-    </Text>
-  );
-};
-
-const MultipleEntityManager = () => {
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
 
   const siblingNodesInhierarchy = useSelector(state =>
-    formSelectors.getNodeDefNodesInHierarchy(state, parentEntityNodeDef),
+    formSelectors.getNodeDefNodesWithKeysAsStringInHierarchy(
+      state,
+      parentEntityNodeDef,
+    ),
   );
+  const parentLabel = useNodeDefNameOrLabel({nodeDef: parentEntityNodeDef});
+
+  const items = useMemo(
+    () =>
+      siblingNodesInhierarchy.map(node => ({
+        ...node,
+        key: node.uuid,
+        label: `${parentLabel}: ${node.keyString}`,
+        name: node.keyString,
+        value: node,
+      })),
+
+    [siblingNodesInhierarchy, parentLabel],
+  );
+
+  useEffect(() => {
+    setKey(uuidv4());
+  }, [items]);
 
   const dispatch = useDispatch();
 
@@ -47,11 +62,15 @@ const MultipleEntityManager = () => {
 
   const handleSelectEntityNode = useCallback(
     node => {
-      dispatch(
-        formActions.selectEntityNode({
-          node,
-        }),
-      );
+      if (node) {
+        dispatch(
+          formActions.selectEntityNode({
+            node,
+          }),
+        );
+      } else {
+        setKey(uuidv4());
+      }
     },
     [dispatch],
   );
@@ -63,26 +82,46 @@ const MultipleEntityManager = () => {
   return (
     <>
       <View style={styles.header}>
-        <TouchableIcon
-          iconName="add-outline"
+        <Button
+          type="secondary"
+          icon={<Icon name="add-outline" />}
+          label={t('Form:add_new', {label: parentLabel})}
+          customContainerStyle={styles.buttonContainer}
+          customTextStyle={{fontWeight: 'normal'}}
           onPress={handleCreateNewNodeEntity}
         />
-        <Label nodeDef={parentEntityNodeDef} />
+        <View style={{flex: 1}}>
+          <RNPickerSelect
+            key={key}
+            style={{
+              ...pickerSelectStyles,
+            }}
+            onValueChange={handleSelectEntityNode}
+            items={items}
+            itemKey={parentEntityNode.uuid}
+            Icon={ChevRonIcon}
+          />
+        </View>
 
-        <TouchableIcon iconName="trash-outline" onPress={handleDeleteNode} />
+        <Button
+          type="secondary"
+          icon={<Icon name="trash-outline" />}
+          customContainerStyle={styles.buttonContainer}
+          onPress={handleDeleteNode}
+        />
       </View>
-      <ScrollView>
-        {siblingNodesInhierarchy.map(siblingNode => (
-          <TouchableOpacity
-            key={siblingNode.uuid}
-            style={styles.option}
-            onPress={() => handleSelectEntityNode(siblingNode)}>
-            <Sibiling node={siblingNode} />
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
     </>
   );
+};
+
+const MultipleEntityManager = () => {
+  const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
+
+  if (!parentEntityNodeDef.props.multiple) {
+    return <></>;
+  }
+
+  return <Header />;
 };
 
 export default MultipleEntityManager;

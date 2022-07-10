@@ -5,17 +5,50 @@ import * as colors from 'arena-mobile-ui/colors';
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignContent: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
   },
   container: {
-    backgroundColor: 'white',
     color: colors.neutralDarkest,
     padding: 12,
     flex: 1,
   },
   option: {
     padding: 8,
+  },
+  buttonContainer: {
+    paddingVertical: 4,
+    marginVertical: 0,
+    borderColor: colors.neutral,
+    borderWidth: 1,
+  },
+});
+
+const baseInputStyle = {
+  fontSize: 15,
+  paddingVertical: 8,
+  paddingHorizontal: 10,
+  borderWidth: 1,
+  borderColor: colors.neutral,
+  margin: 4,
+
+  color: colors.black,
+  paddingRight: 30,
+  backgroundColor: colors.white,
+};
+
+export const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    ...baseInputStyle,
+  },
+  inputAndroid: {
+    ...baseInputStyle,
+  },
+  iconContainer: {
+    top: 8,
+    right: 8,
   },
 });
 
