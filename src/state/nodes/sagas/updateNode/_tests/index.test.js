@@ -9,10 +9,15 @@ import rootSagas from 'state/sagas';
 import {
   mockSurvey,
   baseClusterMockNode,
-  baseMockNode,
+  baseMockNode as _baseMockNode,
   mockDate,
   getCurrentUuid,
 } from './mocks';
+
+const baseMockNode = {
+  ..._baseMockNode,
+  recordUuid: 'RECORD_ONE_UUID',
+};
 
 const RESULT_ERRORS = {}; // { [getCurrentUuid(2)]: [{error: 'ERROR'}]}
 const initialState = {
@@ -34,9 +39,16 @@ const initialState = {
     ...globalInitialState.nodes,
     data: {
       ...globalInitialState.nodes.data,
-      [baseClusterMockNode.uuid]: {...baseClusterMockNode},
+      [baseClusterMockNode.uuid]: {
+        ...baseClusterMockNode,
+        recordUuid: 'RECORD_ONE_UUID',
+      },
       [getCurrentUuid(2)]: {...baseMockNode},
-      NODE_ONE_UUID: {uuid: 'NODE_ONE_UUID', surveyUuid: mockSurvey.uuid},
+      NODE_ONE_UUID: {
+        uuid: 'NODE_ONE_UUID',
+        surveyUuid: mockSurvey.uuid,
+        recordUuid: 'RECORD_TWO_UUID',
+      },
     },
   },
   records: {
@@ -44,8 +56,26 @@ const initialState = {
     data: {
       ...globalInitialState.records.data,
       RECORD_ONE_UUID: {
+        preview: false,
         uuid: 'RECORD_ONE_UUID',
         surveyUuid: mockSurvey.uuid,
+
+        _nodesIndex: {
+          // this index is one of the problems of our data model, I have to recreate here to pass the tests and have compatibility with arena-core, of sure the best way to do that is recreate there if needed. Or even better never trust on Caches.
+          nodeRootUuid: baseClusterMockNode.uuid,
+          nodesByDef: {
+            [baseClusterMockNode.nodeDefUuid]: {
+              [baseClusterMockNode.uuid]: true,
+            },
+          },
+          nodesByParentAndChildDef: {
+            [baseClusterMockNode.uuid]: {
+              [baseMockNode.nodeDefUuid]: {
+                [getCurrentUuid(2)]: true,
+              },
+            },
+          },
+        },
       },
     },
   },
@@ -75,6 +105,7 @@ describe('Node updater', () => {
     const payload = {
       updatedNode: {
         ...baseMockNode,
+
         uuid: 'NOT_DEFINED_UUID',
         value: 5,
       },
@@ -101,7 +132,19 @@ describe('Node updater', () => {
       .dispatch(nodesActions.updateNode(payload))
       .silentRun();
 
-    expect(storeState).toEqual({
+    expect({
+      ...storeState,
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          RECORD_ONE_UUID: {
+            ...storeState.records.data.RECORD_ONE_UUID,
+            nodes: [],
+          },
+        },
+      },
+    }).toEqual({
       ...initialState,
       form: {
         ...initialState.form,
@@ -132,6 +175,16 @@ describe('Node updater', () => {
           [getCurrentUuid(2)]: {...baseMockNode, value: 5},
         },
       },
+      records: {
+        ...initialState.records,
+        data: {
+          ...initialState.records.data,
+          RECORD_ONE_UUID: {
+            ...initialState.records.data.RECORD_ONE_UUID,
+            nodes: [],
+          },
+        },
+      },
     });
   });
 
@@ -139,6 +192,7 @@ describe('Node updater', () => {
     const payload = {
       updatedNode: {
         ...baseMockNode,
+
         value: -1,
       },
     };
@@ -148,7 +202,19 @@ describe('Node updater', () => {
       .dispatch(nodesActions.updateNode(payload))
       .silentRun();
 
-    expect(storeState).toEqual({
+    expect({
+      ...storeState,
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          RECORD_ONE_UUID: {
+            ...storeState.records.data.RECORD_ONE_UUID,
+            nodes: [],
+          },
+        },
+      },
+    }).toEqual({
       ...initialState,
       form: {
         ...initialState.form,
@@ -189,6 +255,16 @@ describe('Node updater', () => {
           warnings: [],
         },
       },
+      records: {
+        ...initialState.records,
+        data: {
+          ...initialState.records.data,
+          RECORD_ONE_UUID: {
+            ...initialState.records.data.RECORD_ONE_UUID,
+            nodes: [],
+          },
+        },
+      },
       nodes: {
         ...initialState.nodes,
         data: {
@@ -203,6 +279,7 @@ describe('Node updater', () => {
     const payload = {
       updatedNode: {
         ...baseMockNode,
+
         value: 5,
       },
     };
@@ -222,7 +299,19 @@ describe('Node updater', () => {
       .dispatch(nodesActions.updateNode(payload))
       .silentRun();
 
-    expect(storeState).toEqual({
+    expect({
+      ...storeState,
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          RECORD_ONE_UUID: {
+            ...storeState.records.data.RECORD_ONE_UUID,
+            nodes: [],
+          },
+        },
+      },
+    }).toEqual({
       ...initialState,
       form: {
         ...initialState.form,
@@ -244,6 +333,16 @@ describe('Node updater', () => {
           },
           valid: true,
           warnings: [],
+        },
+      },
+      records: {
+        ...initialState.records,
+        data: {
+          ...initialState.records.data,
+          RECORD_ONE_UUID: {
+            ...initialState.records.data.RECORD_ONE_UUID,
+            nodes: [],
+          },
         },
       },
       nodes: {
@@ -278,7 +377,19 @@ describe('Node updater', () => {
       .dispatch(nodesActions.updateNode(payload))
       .silentRun();
 
-    expect(storeState).toEqual({
+    expect({
+      ...storeState,
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          RECORD_ONE_UUID: {
+            ...storeState.records.data.RECORD_ONE_UUID,
+            nodes: [],
+          },
+        },
+      },
+    }).toEqual({
       ...initialState,
       form: {
         ...initialState.form,
@@ -317,6 +428,16 @@ describe('Node updater', () => {
           },
           valid: false,
           warnings: [],
+        },
+      },
+      records: {
+        ...initialState.records,
+        data: {
+          ...initialState.records.data,
+          RECORD_ONE_UUID: {
+            ...initialState.records.data.RECORD_ONE_UUID,
+            nodes: [],
+          },
         },
       },
       nodes: {

@@ -76,9 +76,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       .provide([[matchers.call.fn(navigator.navigatorDispatch), true]])
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -106,9 +132,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -138,9 +190,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -174,9 +252,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -212,9 +316,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -254,9 +384,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -300,9 +456,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -348,9 +530,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -403,9 +611,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -455,9 +689,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -510,9 +770,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -562,9 +848,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -621,9 +933,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -683,9 +1021,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -739,9 +1103,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -770,9 +1160,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -804,9 +1220,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -847,9 +1289,35 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 
   /*
@@ -879,8 +1347,34 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: {
+        ...storeState.records,
+        data: {
+          ...storeState.records.data,
+          'BASE_UUID-1001': {
+            ...storeState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: {
+        ...expectedState.records,
+        data: {
+          ...expectedState.records.data,
+          'BASE_UUID-1001': {
+            ...expectedState.records.data['BASE_UUID-1001'],
+            _nodesIndex: {},
+            nodes: {},
+          },
+        },
+      },
+    });
   });
 });
