@@ -60,6 +60,7 @@ const initialState = {
         uuid: 'RECORD_ONE_UUID',
         surveyUuid: mockSurvey.uuid,
 
+        nodes: [],
         _nodesIndex: {
           // this index is one of the problems of our data model, I have to recreate here to pass the tests and have compatibility with arena-core, of sure the best way to do that is recreate there if needed. Or even better never trust on Caches.
           nodeRootUuid: baseClusterMockNode.uuid,
@@ -175,16 +176,6 @@ describe('Node updater', () => {
           [getCurrentUuid(2)]: {...baseMockNode, value: 5},
         },
       },
-      records: {
-        ...initialState.records,
-        data: {
-          ...initialState.records.data,
-          RECORD_ONE_UUID: {
-            ...initialState.records.data.RECORD_ONE_UUID,
-            nodes: [],
-          },
-        },
-      },
     });
   });
 
@@ -255,16 +246,7 @@ describe('Node updater', () => {
           warnings: [],
         },
       },
-      records: {
-        ...initialState.records,
-        data: {
-          ...initialState.records.data,
-          RECORD_ONE_UUID: {
-            ...initialState.records.data.RECORD_ONE_UUID,
-            nodes: [],
-          },
-        },
-      },
+
       nodes: {
         ...initialState.nodes,
         data: {
@@ -335,16 +317,7 @@ describe('Node updater', () => {
           warnings: [],
         },
       },
-      records: {
-        ...initialState.records,
-        data: {
-          ...initialState.records.data,
-          RECORD_ONE_UUID: {
-            ...initialState.records.data.RECORD_ONE_UUID,
-            nodes: [],
-          },
-        },
-      },
+
       nodes: {
         ...initialState.nodes,
         data: {
@@ -430,16 +403,7 @@ describe('Node updater', () => {
           warnings: [],
         },
       },
-      records: {
-        ...initialState.records,
-        data: {
-          ...initialState.records.data,
-          RECORD_ONE_UUID: {
-            ...initialState.records.data.RECORD_ONE_UUID,
-            nodes: [],
-          },
-        },
-      },
+
       nodes: {
         ...initialState.nodes,
         data: {
