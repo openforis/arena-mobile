@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     flex: 1,
     flexDirection: 'column',
-    color: isSelected ? 'red' : 'blue',
     paddingLeft: baseStyles.bases.BASE,
   }),
   label: ({isSelected}) => ({

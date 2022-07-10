@@ -35,5 +35,6 @@ export const updateNodeAndDependants = async ({
   return {
     updatedNodes,
     validation,
+    record: recordToValidate,
   };
 };
