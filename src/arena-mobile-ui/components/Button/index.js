@@ -8,12 +8,11 @@ import _styles from './styles';
 
 const useThemedStyles = ({styles}) => {
   const colorScheme = useColorScheme();
-  const themedStyles = useMemo(() => {
+  return useMemo(() => {
     const themedColors = colors.themes[colorScheme] || {};
     const _colors = Object.assign({}, colors, themedColors);
     return styles({colors: _colors});
   }, [colorScheme, styles]);
-  return themedStyles;
 };
 
 const Button = ({

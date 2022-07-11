@@ -19,6 +19,7 @@
     "card": {
       "actual_survey": "Actual survey",
       "id": "Id",
+      "name": "Name",
       "language": "Selected language",
       "go_to_survey_details": "Go to survey details"
     }

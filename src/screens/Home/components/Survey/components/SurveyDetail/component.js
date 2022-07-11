@@ -1,3 +1,4 @@
+import moment from 'moment-timezone';
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Text, View} from 'react-native';
@@ -5,6 +6,7 @@ import {useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Card from 'arena-mobile-ui/components/Card';
+import LabelsAndValues from 'arena-mobile-ui/components/LabelsAndValues';
 import baseStyles from 'arena-mobile-ui/styles';
 import {useNavigateTo} from 'navigation/hooks';
 import {selectors as surveySelectors} from 'state/survey';
@@ -12,10 +14,13 @@ import {selectors as surveySelectors} from 'state/survey';
 import styles from './styles';
 
 const SurveyDetail = () => {
-  const survey = useSelector(surveySelectors.getSurvey);
-  const surveyLanguage = useSelector(surveySelectors.getSelectedSurveyLanguage);
   const {t} = useTranslation();
   const {navigateTo, routes} = useNavigateTo();
+  const survey = useSelector(surveySelectors.getSurvey);
+  const surveyLanguage = useSelector(surveySelectors.getSelectedSurveyLanguage);
+  const {name: surveyName, label: surveyLabel} = useSelector(
+    surveySelectors.getSurveyData,
+  );
 
   return (
     <Card customStyles={[styles.container]}>
@@ -23,14 +28,28 @@ const SurveyDetail = () => {
         {t('Home:survey.card.actual_survey')}
       </Text>
       <Text style={baseStyles.textStyle.title}>
-        {survey.props.labels[surveyLanguage]} ·{survey.props.name}{' '}
+        {surveyLabel} ·{surveyLabel}{' '}
       </Text>
-      <Text>
-        {t('Home:survey.card.id')}: {survey.id}
-      </Text>
-      <Text>
-        {t('Home:survey.card.language')}: {surveyLanguage}
-      </Text>
+
+      <LabelsAndValues
+        size="s"
+        items={[
+          {label: t('Home:survey.card.name'), value: surveyName},
+          {label: t('Home:survey.card.id'), value: survey.id},
+          {
+            label: t('Common:created'),
+            value: moment(survey.dateCreated).fromNow(),
+          },
+          {
+            label: t('Common:modified'),
+            value: moment(survey.dateModified).fromNow(),
+          },
+          {
+            label: t('Home:survey.card.language'),
+            value: surveyLanguage,
+          },
+        ]}
+      />
 
       <View style={[styles.buttonContainer]}>
         <Button

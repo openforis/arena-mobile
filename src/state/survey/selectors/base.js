@@ -29,4 +29,8 @@ export const getSelectedSurveyLanguage = createSelector(
   ui => ui.selectedSurveyLanguage,
 );
 
+export const getSelectedSurveyLanguages = createSelector(
+  getSurvey,
+  survey => survey?.props?.languages,
+);
 export const getRefData = createSelector(getSurvey, survey => survey?.refData);
