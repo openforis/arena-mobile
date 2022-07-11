@@ -12,9 +12,11 @@ import {useSelector} from 'react-redux';
 
 import CodeForm from 'form/Attributes/Code/Form';
 import BaseForm from 'form/Attributes/common/Base/Form';
+import DateForm from 'form/Attributes/Date/Form';
 import DecimalForm from 'form/Attributes/Decimal/Form';
 import IntegerForm from 'form/Attributes/Integer/Form';
 import TextForm from 'form/Attributes/Text/Form';
+import TimeForm from 'form/Attributes/Time/Form';
 import formSelectors from 'state/form/selectors';
 
 import styles from './styles';
@@ -26,9 +28,11 @@ const FormsByType = {
   [NodeDefType.decimal]: DecimalForm,
   [NodeDefType.text]: TextForm,
   [NodeDefType.code]: CodeForm,
+  [NodeDefType.date]: DateForm,
+  [NodeDefType.time]: TimeForm,
 };
 
-const AttributeForm = () => {
+const AttributeFormWithModal = () => {
   const panelHeight = useRef(new Animated.Value(0)).current;
   const backgroundOpacity = useRef(new Animated.Value(0)).current;
   const nodeDef = useSelector(formSelectors.getNodeDef);
@@ -93,11 +97,7 @@ const AttributeForm = () => {
           <TouchableOpacity style={{height: 80}} />
           <ScrollView
             keyboardShouldPersistTaps="always"
-            style={{
-              borderRadius: 16,
-              padding: 16,
-              backgroundColor: 'white',
-            }}>
+            style={[styles.scroll]}>
             {nodeDef &&
               React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
                 nodeDef,
@@ -107,6 +107,23 @@ const AttributeForm = () => {
       </Animated.View>
     </>
   );
+};
+
+const AttributeForm = () => {
+  const nodeDef = useSelector(formSelectors.getNodeDef);
+
+  if ([NodeDefType.date, NodeDefType.time].includes(nodeDef?.type)) {
+    return (
+      <>
+        {nodeDef &&
+          React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
+            nodeDef,
+          })}
+      </>
+    );
+  }
+
+  return <AttributeFormWithModal />;
 };
 
 export default AttributeForm;

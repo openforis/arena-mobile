@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useRef, useEffect} from 'react';
 import RNPickerSelect from 'react-native-picker-select';
 
 import Icon from '../Icon';
@@ -28,14 +28,24 @@ const Select = ({
   labelStractor = _labelStractor,
   prepareItemFn = _prepareItemFn,
   doneText = null,
+  autoFocus = false,
 }) => {
+  const selectRef = useRef(null);
+
   const _items = useMemo(
     () => items.map(prepareItemFn({keyStractor, labelStractor})),
     [items, keyStractor, labelStractor, prepareItemFn],
   );
 
+  useEffect(() => {
+    if (autoFocus) {
+      selectRef.current.togglePicker();
+    }
+  }, [autoFocus, selectRef]);
+
   return (
     <RNPickerSelect
+      ref={selectRef}
       style={{
         ...styles({customStyles}),
       }}

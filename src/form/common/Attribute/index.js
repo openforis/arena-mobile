@@ -6,15 +6,19 @@ import {selectors as surveySelectors} from 'state/survey';
 
 import CodePreview from '../../Attributes/Code/Preview';
 import BasePreview from '../../Attributes/common/Base/Preview';
+import DatePreview from '../../Attributes/Date/Preview';
 import DecimalPreview from '../../Attributes/Decimal/Preview';
 import IntegerPreview from '../../Attributes/Integer/Preview';
 import TextPreview from '../../Attributes/Text/Preview';
+import TimePreview from '../../Attributes/Time/Preview';
 
 const AttributesComponentByType = {
   [NodeDefType.integer]: IntegerPreview,
   [NodeDefType.decimal]: DecimalPreview,
   [NodeDefType.text]: TextPreview,
   [NodeDefType.code]: CodePreview,
+  [NodeDefType.date]: DatePreview,
+  [NodeDefType.time]: TimePreview,
 };
 
 const Attribute = ({nodeDefUuid}) => {

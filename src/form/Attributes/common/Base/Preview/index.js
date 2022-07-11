@@ -33,7 +33,7 @@ const BasePreviewNode = ({
       style={styles.nodeContainer({nodeDef, isActive})}
       onPress={handleSelectNodeAndNodeDef}
       disabled={!isActive}>
-      <NodeValueRender node={node} />
+      <NodeValueRender node={node} nodeDef={nodeDef} />
       <Validation
         nodeDef={nodeDef}
         nodes={[node]}
