@@ -4,8 +4,15 @@ import types from './actionTypes';
 
 const {nodes} = createActions({
   [types.createNode$]: ({nodeDef, parentNode}) => ({nodeDef, parentNode}),
+  [types.removeNode$]: ({node}) => ({node}),
   [types.updateNode$]: ({updatedNode, callback}) => ({
     updatedNode,
+    callback,
+  }),
+  [types.createNodeWithValue$]: ({nodeDef, parentNode, value, callback}) => ({
+    nodeDef,
+    parentNode,
+    value,
     callback,
   }),
   [types.SET_NODE]: ({node}) => ({node}),

@@ -115,9 +115,12 @@ const AttributeForm = () => {
   const nodeDef = useSelector(formSelectors.getNodeDef);
 
   if (
-    [NodeDefType.date, NodeDefType.time, NodeDefType.boolean].includes(
-      nodeDef?.type,
-    )
+    [
+      NodeDefType.date,
+      NodeDefType.time,
+      NodeDefType.boolean,
+      NodeDefType.code,
+    ].includes(nodeDef?.type)
   ) {
     return (
       <>
