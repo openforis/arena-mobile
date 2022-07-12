@@ -3,7 +3,7 @@
   "not_logged_in": {
     "title": "Not authenticated",
     "info": "Please log in into the system",
-    "cta": "Go to connection settings"
+    "cta": "Log in"
   },
   "survey": {
     "no_survey": {
@@ -17,7 +17,7 @@
       "cta": "Load survey"
     },
     "card": {
-      "current_survey": "Current survey",
+      "actual_survey": "Actual survey",
       "id": "Id",
       "language": "Selected language",
       "go_to_survey_details": "Go to survey details"

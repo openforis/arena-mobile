@@ -1,5 +1,7 @@
 import {StyleSheet} from 'react-native';
 
+import baseStyles from 'arena-mobile-ui/styles';
+
 import inputStyles from '../Input/styles';
 
 const styles = StyleSheet.create({
@@ -11,8 +13,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 4,
-    paddingVertical: 2,
+    padding: baseStyles.bases.BASE,
+    paddingVertical: baseStyles.bases.BASE_2,
   },
   input: {
     flex: 1,

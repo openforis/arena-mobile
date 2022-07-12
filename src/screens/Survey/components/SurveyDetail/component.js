@@ -27,7 +27,7 @@ const SurveyDetail = () => {
     return (
       <View>
         <Text style={baseStyles.textStyle.secondaryText}>
-          {t('Home:survey.card.current_survey')}
+          {t('Home:survey.card.actual_survey')}
         </Text>
         <Text style={baseStyles.textStyle.title}>
           {surveyLabel} ·{surveyName}

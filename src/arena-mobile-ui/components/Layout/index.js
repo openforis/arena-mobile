@@ -5,16 +5,12 @@ import styles from './styles';
 
 const Layout = ({
   children,
-  headerColor = null,
-  bottomStyle = 'white',
+  bottomStyle = 'background',
   bottomSafeArea = true,
+  topStyle = 'primary',
 }) => {
   return (
-    <View
-      style={[
-        styles.container,
-        headerColor ? {backgroundColor: headerColor} : {},
-      ]}>
+    <View style={[styles.container, styles.top[topStyle]]}>
       <SafeAreaView />
       {bottomSafeArea ? (
         <SafeAreaView style={[styles.container, styles.bottom[bottomStyle]]}>

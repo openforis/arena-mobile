@@ -1,6 +1,8 @@
 import React, {useCallback} from 'react';
+import {useSelector} from 'react-redux';
 
 import CommonList from 'arena-mobile-ui/components/List';
+import {selectors as surveySelectors} from 'state/survey';
 
 import SurveyCard from '../SurveyCard';
 const List = ({
@@ -8,7 +10,9 @@ const List = ({
   ListEmptyComponent,
   selectedSurvey,
   setSelectedSurvey,
+  showIcons = false,
 }) => {
+  const localSurvey = useSelector(surveySelectors.getSurvey);
   const keyExtractor = useCallback(item => `${item.id}`, []);
 
   const renderItem = useCallback(
@@ -17,9 +21,11 @@ const List = ({
         survey={item}
         onSelect={setSelectedSurvey}
         isSelected={selectedSurvey?.uuid === item?.uuid}
+        isLocalSurvey={localSurvey.uuid === item?.uuid}
+        showIcons={showIcons}
       />
     ),
-    [selectedSurvey, setSelectedSurvey],
+    [showIcons, selectedSurvey, setSelectedSurvey, localSurvey],
   );
 
   return (

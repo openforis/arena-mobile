@@ -4,7 +4,10 @@ import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
-import {actions as surveyActions} from 'state/survey';
+import {
+  actions as surveyActions,
+  selectors as surveySelectors,
+} from 'state/survey';
 import {
   selectors as surveysSelectors,
   actions as surveysActions,
@@ -18,6 +21,7 @@ const RemotePanel = ({survey}) => {
   const localSurvey = useSelector(state =>
     surveysSelectors.getSurveyByUuid(state, {surveyUuid: survey?.uuid}),
   );
+  const currentSurveyUuid = useSelector(surveySelectors.getSelectedSurveyUuid);
 
   useEffect(() => {
     if (!localSurvey?.uuid) {
@@ -71,7 +75,11 @@ const RemotePanel = ({survey}) => {
     <View>
       <Button
         type="primary"
-        label={t('Surveys:selected_survey_panel.remote.cta_select')}
+        label={
+          currentSurveyUuid === survey.uuid
+            ? t('Surveys:selected_survey_panel.remote.cta_continue')
+            : t('Surveys:selected_survey_panel.remote.cta_select')
+        }
         onPress={handleSelect}
       />
     </View>

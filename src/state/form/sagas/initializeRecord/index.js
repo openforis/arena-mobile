@@ -13,8 +13,10 @@ function* handleInitializeRootEntity() {
   const rootNodeDef = yield select(surveySelectors.getNodeDefRoot);
 
   const nodes = yield call(handleCreateNodeAndDescendants, {
-    nodeDef: rootNodeDef,
-    parentNode: null,
+    payload: {
+      nodeDef: rootNodeDef,
+      parentNode: null,
+    },
   });
   const rootNode = Object.values(nodes).find(node =>
     Objects.isEmpty(node.parentUuid),
@@ -32,7 +34,7 @@ function* handleInitializeRecord() {
     yield put(formActions.setRecord({record: record}));
     yield call(handleInitializeRootEntity);
 
-    yield call(navigator.navigatorDispatch, StackActions.push(ROUTES.FORM));
+    yield call(navigator.navigatorDispatch, StackActions.replace(ROUTES.FORM));
   } catch (error) {
     console.log('Error', error);
   } finally {

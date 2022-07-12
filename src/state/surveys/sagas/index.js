@@ -17,6 +17,8 @@ import surveysApi from '../api';
 function* handleFetchSurvey({payload}) {
   try {
     const {surveyId} = payload;
+    yield put(surveysActions.setLoading({isLoading: surveyId}));
+
     const serverUrl = yield select(appSelectors.getServerUrl);
     const surveyWithNodeDefs = yield call(surveysApi.getSurveyPopulatedById, {
       serverUrl,
@@ -27,6 +29,8 @@ function* handleFetchSurvey({payload}) {
     console.log(e);
   } finally {
     console.log('Finally');
+
+    yield put(surveysActions.setLoading({isLoading: false}));
   }
 }
 

@@ -28,6 +28,7 @@ const Remote = ({
       surveysOrigin={surveysOrigin}
       selectedSurvey={selectedSurvey}
       setSelectedSurvey={setSelectedSurvey}
+      showIcons={true}
       ListEmptyComponent={
         loading ? (
           <Loading />

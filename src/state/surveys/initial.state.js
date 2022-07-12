@@ -1,6 +1,8 @@
 const initialState = {
   data: {},
-  ui: {},
+  ui: {
+    isLoading: false,
+  },
 };
 
 export default initialState;

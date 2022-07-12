@@ -1,6 +1,7 @@
 import {StyleSheet} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
+import baseStyles from 'arena-mobile-ui/styles';
 
 const styles = StyleSheet.create({
   container: {
@@ -8,13 +9,16 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     color: colors.neutralDarkest,
     flexGrow: 1,
-    padding: 4,
+    flexDirection: 'row',
+    backgroundColor: colors.white,
   },
   containerDisabled: {
     color: colors.neutralLighter,
   },
   text: {
     color: colors.neutralDarkest,
+    flex: 1,
+    padding: baseStyles.bases.BASE_2,
   },
   textDisabled: {
     color: colors.neutralLight,

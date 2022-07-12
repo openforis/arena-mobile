@@ -1,7 +1,7 @@
 {
-  "title": "Connection settings",
+  "title": "",
 
-  "server_config_title": "Server config",
+  "server_config_title": "Server info",
   "server_config_fields": {
     "address": "Server address"
   },
@@ -11,12 +11,12 @@
     "username": "Username (email)",
     "password": "Password"
   },
-  "submit": "Connect",
+  "submit": "Log In",
   "error": {
     "title": "There was an error",
     "info": "Please check the information and your connection"
   },
-  "connected_as": "Connected as {{username}}",
+  "connected_as": "Logged in as:",
 
   "reset": {
     "cta": "Reset",

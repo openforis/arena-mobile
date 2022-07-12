@@ -3,7 +3,8 @@ import {createCachedSelector} from 're-reselect';
 import {createSelector} from 'reselect';
 
 import recordsSelectors from 'state/records/selectors';
-import surveySelectors from 'state/survey/selectors';
+import * as surveySelectorsNodeDefs from 'state/survey/selectors/nodeDefs';
+import * as surveySelectorsNodes from 'state/survey/selectors/nodes';
 
 const getState = state => state;
 const getFormState = createSelector(getState, state => state?.form || {});
@@ -31,6 +32,10 @@ const getParentEntityNodeUuid = createSelector(
   getFormStateData,
   form => form.parentEntityNode || false,
 );
+const getParentEntityNodeUuidKey = createSelector(
+  getParentEntityNodeUuid,
+  parentEntityNode => parentEntityNode || '_',
+);
 
 const getEntityNodeUuid = createSelector(
   getFormStateData,
@@ -38,7 +43,7 @@ const getEntityNodeUuid = createSelector(
 );
 
 const getRecordNodes = createSelector(
-  surveySelectors.getNodes,
+  surveySelectorsNodes.getNodes,
   getRecordUuid,
   (nodes, recordUuid) => nodes.filter(node => node.recordUuid === recordUuid),
 );
@@ -57,7 +62,7 @@ const getParentEntityNode = createCachedSelector(
   getRecordNodesByUuid,
   getParentEntityNodeUuid,
   (nodes, parentEntityNodeUuid) => nodes[parentEntityNodeUuid] || false,
-)(getParentEntityNodeUuid);
+)(getParentEntityNodeUuidKey);
 
 const getNodeDefUuidAndNodeUuid = createSelector(
   getFormStateData,
@@ -78,47 +83,55 @@ const getNodeDefUuid = createSelector(
   getFormStateData,
   form => form.nodeDef || false,
 );
+const getNodeDefUuidKey = createSelector(
+  getNodeDefUuid,
+  nodeDef => nodeDef || '_',
+);
 const getParentEntityNodeDefUuid = createSelector(
   getFormStateData,
   form => form.parentEntityNodeDef || false,
 );
+const getParentEntityNodeDefUuidKey = createSelector(
+  getParentEntityNodeDefUuid,
+  parentEntityNodeDef => parentEntityNodeDef || '_',
+);
 
 const getNodeDef = createCachedSelector(
-  surveySelectors.getNodeDefsByUuid,
+  surveySelectorsNodeDefs.getNodeDefsByUuid,
   getNodeDefUuid,
   (nodeDefsByUuid, nodeDefUuid) => nodeDefsByUuid[nodeDefUuid],
 )(getNodeDefUuidAndNodeUuid);
 
 const getParentEntityNodeDef = createCachedSelector(
-  surveySelectors.getNodeDefsByUuid,
+  surveySelectorsNodeDefs.getNodeDefsByUuid,
   getParentEntityNodeDefUuid,
   (nodeDefsByUuid, parentEntityNodeDefUuid) =>
     nodeDefsByUuid[parentEntityNodeDefUuid],
-)(getParentEntityNodeDefUuid);
+)(getParentEntityNodeDefUuidKey);
 
 const getNodeDefChildren = createCachedSelector(
-  surveySelectors.getNodeDefs,
+  surveySelectorsNodeDefs.getNodeDefs,
   getNodeDefUuid,
   (nodeDefs, nodeDefUuid) =>
     nodeDefs.filter(
       ({parentUuid}) => !!parentUuid && parentUuid === nodeDefUuid,
     ),
-)(getNodeDefUuid);
+)(getNodeDefUuidKey);
 
 const getNodeDefChildrenAttributes = createCachedSelector(
   getNodeDefChildren,
   nodeDefs => nodeDefs.filter(({type}) => type !== 'entity'),
-)(getNodeDefUuid);
+)(getNodeDefUuidKey);
 
 const getNodeDefChildrenUuids = createCachedSelector(
   getNodeDefChildren,
   nodeDefs => nodeDefs.map(({uuid}) => uuid),
-)(getNodeDefUuid);
+)(getNodeDefUuidKey);
 
 const getNodeDefChildrenAttributesUuids = createCachedSelector(
   getNodeDefChildrenAttributes,
   nodeDefs => nodeDefs.map(({uuid}) => uuid),
-)(getNodeDefUuid);
+)(getNodeDefUuidKey);
 
 const getAncestors = ({node, nodesByUuid}) => {
   return [
@@ -158,7 +171,7 @@ const getEntityNode = createCachedSelector(
 
 const getBreadCrumbs = createCachedSelector(
   getHierarchy,
-  surveySelectors.getNodeDefsByUuid,
+  surveySelectorsNodeDefs.getNodeDefsByUuid,
   (hierarchy, nodeDefsByUuid) =>
     hierarchy.filter(
       breadCrumb => nodeDefsByUuid[breadCrumb.nodeDefUuid].type === 'entity',
@@ -181,6 +194,33 @@ const getNodeDefNodesInHierarchy = createCachedSelector(
         node.nodeDefUuid === nodeDef.uuid &&
         hierarchyUuids.includes(node.parentUuid),
     ),
+)((_state_, nodeDef) => nodeDef.uuid);
+
+const getNodeDefNodesWithKeysAsStringInHierarchy = createCachedSelector(
+  getRecordNodes,
+  getHierarchyUuid,
+  (_, nodeDef) => nodeDef,
+  surveySelectorsNodeDefs.getNodeDefsByUuid,
+  (nodes, hierarchyUuids, nodeDef, nodeDefsByUuid) =>
+    nodes
+      .filter(
+        node =>
+          node.nodeDefUuid === nodeDef.uuid &&
+          hierarchyUuids.includes(node.parentUuid),
+      )
+      .map(node => {
+        const keyString =
+          nodes
+            .filter(
+              _node =>
+                nodeDefsByUuid[_node.nodeDefUuid].props.key &&
+                _node.parentUuid === node.uuid,
+            )
+            .map(nodeKey => nodeKey.value)
+            .join(',') || '';
+
+        return Object.assign({}, node, {keyString});
+      }),
 )((_state_, nodeDef) => nodeDef.uuid);
 
 const _getDescendants = ({nodes, node}) => {
@@ -260,6 +300,7 @@ export default {
 
   getRecord,
   getRecordNodes,
+  getRecordNodesByUuid,
 
   getParentEntityNodeDef,
   getParentEntityNode,
@@ -278,6 +319,7 @@ export default {
   getBreadCrumbs,
   getNodeDefNodes,
   getNodeDefNodesInHierarchy,
+  getNodeDefNodesWithKeysAsStringInHierarchy,
 
   getNodeDescendants,
   getNodesiblings,

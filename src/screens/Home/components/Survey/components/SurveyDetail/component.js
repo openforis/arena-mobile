@@ -20,7 +20,7 @@ const SurveyDetail = () => {
   return (
     <Card customStyles={[styles.container]}>
       <Text style={baseStyles.textStyle.secondaryText}>
-        {t('Home:survey.card.current_survey')}
+        {t('Home:survey.card.actual_survey')}
       </Text>
       <Text style={baseStyles.textStyle.title}>
         {survey.props.labels[surveyLanguage]} ·{survey.props.name}{' '}

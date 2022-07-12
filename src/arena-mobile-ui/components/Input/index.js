@@ -13,7 +13,7 @@ const Input = ({
   ...props
 }) => {
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={[baseStyles.textStyle.text]}>{title}</Text>
       <TextInput
         style={styles.input}

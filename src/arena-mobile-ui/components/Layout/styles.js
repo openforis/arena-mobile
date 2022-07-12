@@ -7,9 +7,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.primary,
   },
+  top: {
+    background: {
+      backgroundColor: colors.background,
+    },
+    primary: {
+      backgroundColor: colors.primary,
+    },
+  },
   bottom: {
-    white: {
-      backgroundColor: colors.white,
+    background: {
+      backgroundColor: colors.background,
     },
     primary: {
       backgroundColor: colors.primary,

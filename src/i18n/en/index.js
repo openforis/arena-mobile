@@ -1,6 +1,7 @@
 import Actions from './Actions';
 import Common from './Common';
 import ConnectionSettings from './ConnectionSettings';
+import Form from './Form';
 import Home from './Home';
 import QRScanner from './QRScanner';
 import Records from './Records';
@@ -12,11 +13,12 @@ const lang = {
   Actions,
   Common,
   ConnectionSettings,
+  Form,
   Home,
   QRScanner,
+  Records,
   Survey,
   Surveys,
-  Records,
   Validation,
 };
 

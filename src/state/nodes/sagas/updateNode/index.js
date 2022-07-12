@@ -3,6 +3,7 @@ import {call, select, put, all} from 'redux-saga/effects';
 import formActions from 'state/form/actionCreators';
 import nodesActions from 'state/nodes/actionCreators';
 import nodesSelectors from 'state/nodes/selectors';
+import recordsActions from 'state/records/actionCreators';
 import recordsSelectors from 'state/records/selectors';
 import surveySelectors from 'state/survey/selectors';
 
@@ -28,14 +29,21 @@ function* handleUpdateNode({payload}) {
 
   const recordWithNodes = {...record, nodes: {...recordNodes}};
 
-  const {updatedNodes, validation} = yield call(updateNodeAndDependants, {
+  const {
+    updatedNodes,
+    validation,
+    record: updatedRecord,
+  } = yield call(updateNodeAndDependants, {
     node: updatedNode,
     record: recordWithNodes,
     survey,
   });
 
-  yield put(nodesActions.setNodes({nodes: updatedNodes}));
-  yield put(formActions.setValidation({validation}));
+  yield all([
+    put(recordsActions.setRecord({record: updatedRecord})),
+    put(nodesActions.setNodes({nodes: updatedNodes})),
+    put(formActions.setValidation({validation})),
+  ]);
 
   if (callback) {
     yield call(callback);

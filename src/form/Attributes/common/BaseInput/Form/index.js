@@ -1,17 +1,12 @@
 import {NodeDefType} from '@openforis/arena-core';
 import React, {useState, useCallback} from 'react';
-import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
-import Button from 'arena-mobile-ui/components/Button';
 import Input from 'arena-mobile-ui/components/Input';
-import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
-import AttributeHeader from 'form/common/Header';
-import {actions as formActions} from 'state/form';
 import formSelectors from 'state/form/selectors';
 import {actions as nodesActions} from 'state/nodes';
 
-import styles from './styles';
+import {Form as BaseForm} from '../../Base';
 
 // text default
 // float numeric  ios: decimal-pad
@@ -39,24 +34,8 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
     [nodeDef, node, newValue, dispatch],
   );
 
-  const handleSubmitAndClose = useCallback(() => {
-    handleSubmit({callback: handleClose});
-  }, [handleSubmit, handleClose]);
-
-  const handleClose = useCallback(() => {
-    dispatch(formActions.setNode({node: false}));
-  }, [dispatch]);
-
   return (
-    <View>
-      <View style={styles.closeHeader}>
-        <TouchableIcon
-          iconName="close"
-          customStyle={styles.closeIcon}
-          onPress={handleClose}
-        />
-      </View>
-      <AttributeHeader nodeDef={nodeDef} showValidation={false} />
+    <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit}>
       <Input
         onChangeText={setValue}
         defaultValue={String(node?.value || '')}
@@ -64,13 +43,7 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
         keyboardType={keyboardType}
         textAlign={nodeDef.type === NodeDefType.text ? 'left' : 'right'}
       />
-
-      <View style={styles.divider} />
-      <View>
-        <Button label="save" onPress={handleSubmit} />
-        <Button label="save and close" onPress={handleSubmitAndClose} />
-      </View>
-    </View>
+    </BaseForm>
   );
 };
 

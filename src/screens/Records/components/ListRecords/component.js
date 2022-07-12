@@ -1,11 +1,14 @@
-import moment from 'moment-timezone';
 import React, {useCallback} from 'react';
+import {useTranslation} from 'react-i18next';
 import {View, Text} from 'react-native';
 import {useSelector} from 'react-redux';
 
+import ActualItem from 'arena-mobile-ui/components/ActualItem';
+import CreatedAndModified from 'arena-mobile-ui/components/CreatedAndModified';
 import List from 'arena-mobile-ui/components/List';
 import TouchableCard from 'arena-mobile-ui/components/TouchableCard';
 import baseStyles from 'arena-mobile-ui/styles';
+import formSelectors from 'state/form/selectors';
 import recordsSelectors from 'state/records/selectors';
 import {selectors as surveySelectors} from 'state/survey';
 
@@ -17,22 +20,27 @@ const RecordCard = ({record, isSelected, onSelect}) => {
   const handlePress = useCallback(() => {
     onSelect?.(record);
   }, [record, onSelect]);
-
+  const currentRecordUuid = useSelector(formSelectors.getRecordUuid);
   const recordKey = useSelector(state =>
     recordsSelectors.gerRecordKey(state, record.uuid),
   );
 
+  const {t} = useTranslation();
+
   return (
     <TouchableCard
       onPress={handlePress}
-      customStyles={[styles.cardContainer, isSelected ? styles.selected : {}]}>
+      customStyles={[styles.container, isSelected ? styles.selected : {}]}>
       <View>
         <Text style={[baseStyles.textStyle.bold]}>{recordKey}</Text>
-        <Text style={[baseStyles.textStyle.secondaryText]}>
-          {moment(record.dateCreated).fromNow()} -{' '}
-          {moment(record.dateModified).fromNow()}
-        </Text>
+        <CreatedAndModified
+          dateCreated={record?.dateCreated}
+          dateModified={record?.dateModified}
+        />
       </View>
+      {currentRecordUuid === record.uuid && (
+        <ActualItem label={t('Records:actual_record')} />
+      )}
     </TouchableCard>
   );
 };

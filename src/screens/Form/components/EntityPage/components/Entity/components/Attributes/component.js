@@ -1,5 +1,5 @@
-import React from 'react';
-import {ScrollView, View} from 'react-native';
+import React, {useCallback} from 'react';
+import {FlatList, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import Attribute from 'form/common/Attribute';
@@ -13,13 +13,23 @@ const Attributes = () => {
     surveySelectors.getNodeDefEntityChildrenAttributesUuids(state, nodeDef),
   );
 
+  const renderItem = useCallback(
+    ({item: nodeDefUuid}) => <Attribute nodeDefUuid={nodeDefUuid} />,
+    [],
+  );
+
+  const keyExtractor = useCallback(key => key, []);
+
   return (
-    <ScrollView style={styles.container}>
-      {nodeDefChildrenUuids?.map(childrenUuid => (
-        <Attribute key={childrenUuid} nodeDefUuid={childrenUuid} />
-      ))}
-      <View style={{height: 100}} />
-    </ScrollView>
+    <View style={styles.container}>
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        data={nodeDefChildrenUuids}
+        ListFooterComponent={<View style={[styles.block]} />}
+      />
+    </View>
   );
 };
 

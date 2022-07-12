@@ -1,17 +1,13 @@
 import {StyleSheet} from 'react-native';
 
-import * as colors from 'arena-mobile-ui/colors';
+import baseStyles from 'arena-mobile-ui/styles';
 
 const styles = StyleSheet.create({
-  container: {
-    borderRadius: 0,
-    margin: 0,
-    marginBottom: 0,
-    paddingHorizontal: 12,
-    backgroundColor: colors.background,
-  },
-  selected: {
-    backgroundColor: colors.primaryLight,
+  ...baseStyles.card,
+  moreInfo: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignContent: 'flex-end',
   },
 });
 

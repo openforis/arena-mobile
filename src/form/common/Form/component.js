@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {useSelector} from 'react-redux';
 
+import CodeForm from 'form/Attributes/Code/Form';
 import BaseForm from 'form/Attributes/common/Base/Form';
 import DecimalForm from 'form/Attributes/Decimal/Form';
 import IntegerForm from 'form/Attributes/Integer/Form';
@@ -24,6 +25,7 @@ const FormsByType = {
   [NodeDefType.integer]: IntegerForm,
   [NodeDefType.decimal]: DecimalForm,
   [NodeDefType.text]: TextForm,
+  [NodeDefType.code]: CodeForm,
 };
 
 const AttributeForm = () => {

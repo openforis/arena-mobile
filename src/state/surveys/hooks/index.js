@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {useState, useCallback, useEffect} from 'react';
 import {useSelector} from 'react-redux';
 
@@ -16,9 +17,12 @@ export const useRemoteSurveys = () => {
       setError(false);
       setLoading(true);
       const _surveys = await apiSurveys.getSurveys({serverUrl});
-      setSurveys(_surveys);
+      setSurveys(
+        _surveys.sort(
+          (sa, sb) => -moment(sa.dateModified).diff(moment(sb.dateModified)),
+        ),
+      );
     } catch (e) {
-      console.log('error', e);
       setSurveys([]);
       setError(true);
     } finally {

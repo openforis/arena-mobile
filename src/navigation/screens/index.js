@@ -8,18 +8,22 @@ import Surveys from 'screens/Surveys';
 import {KEYS} from '../constants';
 
 export const SCREENS = {
-  [KEYS.HOME]: {component: Home},
+  [KEYS.HOME]: {component: Home, options: {gestureEnabled: false}},
   [KEYS.CONNECTION_SETTINGS]: {
     component: ConnectionSettings,
+    options: {gestureEnabled: false},
   },
-  [KEYS.SURVEY]: {component: Survey},
+  [KEYS.SURVEY]: {component: Survey, options: {gestureEnabled: false}},
   [KEYS.SURVEYS]: {
     component: Surveys,
+    options: {gestureEnabled: false},
   },
   [KEYS.RECORDS]: {
     component: Records,
+    options: {gestureEnabled: false},
   },
   [KEYS.FORM]: {
     component: Form,
+    options: {gestureEnabled: false},
   },
 };

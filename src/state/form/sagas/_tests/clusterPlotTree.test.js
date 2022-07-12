@@ -25,6 +25,20 @@ jest.mock('uuid', () => ({
   v4: () => _getCurrentUuid(),
 }));
 
+const expectedRecords = state => {
+  return {
+    ...state.records,
+    data: {
+      ...state.records.data,
+      'BASE_UUID-1001': {
+        ...state.records.data['BASE_UUID-1001'],
+        _nodesIndex: {},
+        nodes: {},
+      },
+    },
+  };
+};
+
 describe('Survey > Cluster, Plot, Tree', () => {
   jest.doMock('moment', () => {
     const moment = require.requireActual('moment-timezone');
@@ -76,9 +90,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       .provide([[matchers.call.fn(navigator.navigatorDispatch), true]])
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -106,9 +126,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -138,9 +164,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -174,9 +206,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -212,9 +250,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -254,9 +298,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -300,9 +350,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -348,9 +404,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -403,9 +465,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -455,9 +523,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -510,9 +584,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -562,9 +642,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -621,9 +707,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -683,9 +775,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -739,9 +837,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -770,9 +874,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -804,9 +914,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -847,9 +963,15 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 
   /*
@@ -879,8 +1001,14 @@ describe('Survey > Cluster, Plot, Tree', () => {
       )
       .silentRun();
 
-    expect({...storeState, form: {...storeState.form, validation: {}}}).toEqual(
-      {...expectedState, form: {...expectedState.form, validation: {}}},
-    );
+    expect({
+      ...storeState,
+      form: {...storeState.form, validation: {}},
+      records: expectedRecords(storeState),
+    }).toEqual({
+      ...expectedState,
+      form: {...expectedState.form, validation: {}},
+      records: expectedRecords(expectedState),
+    });
   });
 });

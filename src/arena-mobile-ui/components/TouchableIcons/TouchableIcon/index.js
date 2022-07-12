@@ -9,12 +9,13 @@ const TouchableIcon = ({
   size = 24,
   customStyle = {},
   iconColor = null,
+  hitSlop = 20,
 }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[customStyle]}
-      hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}>
+      hitSlop={{top: hitSlop, bottom: hitSlop, left: hitSlop, right: hitSlop}}>
       <Icon name={iconName} size={size} color={iconColor} />
     </TouchableOpacity>
   );

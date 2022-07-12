@@ -8,13 +8,14 @@ const useNodeDefNameOrLabel = ({nodeDef}) => {
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
   const showNames = useSelector(appSelectors.getShowNames);
 
-  const nodeDefName = useMemo(
-    () =>
-      showNames
+  const nodeDefName = useMemo(() => {
+    if (nodeDef.uuid) {
+      return showNames
         ? nodeDef.props.name
-        : nodeDef.props?.labels?.[language] || nodeDef.props.name,
-    [showNames, nodeDef, language],
-  );
+        : nodeDef.props?.labels?.[language] || nodeDef.props.name;
+    }
+    return '';
+  }, [showNames, nodeDef, language]);
 
   return nodeDefName;
 };

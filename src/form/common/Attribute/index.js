@@ -4,6 +4,7 @@ import {useSelector} from 'react-redux';
 
 import {selectors as surveySelectors} from 'state/survey';
 
+import CodePreview from '../../Attributes/Code/Preview';
 import BasePreview from '../../Attributes/common/Base/Preview';
 import DecimalPreview from '../../Attributes/Decimal/Preview';
 import IntegerPreview from '../../Attributes/Integer/Preview';
@@ -13,6 +14,7 @@ const AttributesComponentByType = {
   [NodeDefType.integer]: IntegerPreview,
   [NodeDefType.decimal]: DecimalPreview,
   [NodeDefType.text]: TextPreview,
+  [NodeDefType.code]: CodePreview,
 };
 
 const Attribute = ({nodeDefUuid}) => {
