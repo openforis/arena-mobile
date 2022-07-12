@@ -8,7 +8,12 @@ const aligmentByType = {
   [NodeDefType.code]: 'flex-start',
   [NodeDefType.date]: 'center',
   [NodeDefType.time]: 'center',
+  [NodeDefType.boolean]: 'flex-start',
 };
+const paddingByType = {
+  [NodeDefType.boolean]: 0,
+};
+
 const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
@@ -26,7 +31,10 @@ const styles = StyleSheet.create({
       ? 1
       : 0,
     justifyContent: 'center',
-    padding: 8,
+    padding:
+      paddingByType[nodeDef.type] !== undefined
+        ? paddingByType[nodeDef.type]
+        : 8,
     alignItems: aligmentByType[nodeDef.type] || 'flex-end',
     opacity: isActive ? 1 : 0.5,
   }),
