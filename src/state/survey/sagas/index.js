@@ -47,7 +47,7 @@ function* handleSelectSurvey({payload}) {
   }
 }
 
-function* handlePrepareData() {
+function* handlePrepareRecordsData() {
   try {
     yield call(fs.mkdir, {dirPath: RECORDS_BASE_PATH});
     const records = yield select(surveySelectors.getRecords);
@@ -83,10 +83,10 @@ function* handlePrepareData() {
 
 function* handlePrepareZipData() {
   try {
-    yield call(handlePrepareData);
+    yield call(handlePrepareRecordsData);
     yield call(zip, {
-      source: RECORDS_BASE_PATH,
-      destination: `${TMP_BASE_PATH}/records.zip`,
+      source: TMP_BASE_PATH,
+      destination: `${TMP_BASE_PATH}/survey.zip`,
     });
   } catch (e) {
     console.log(e);
@@ -135,7 +135,7 @@ function* handleUploadData() {
     const serverUrl = yield select(appSelectors.getServerUrl);
     const surveyId = yield select(surveySelectors.getSelectedSurveyId);
 
-    yield call(surveysApi.uploadSurveyZipRecords, {
+    yield call(surveysApi.uploadSurveyZip, {
       serverUrl,
       surveyId,
       onStart: handleUploadBegin(uploadFileChannel),

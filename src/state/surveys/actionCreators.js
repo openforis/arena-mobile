@@ -7,7 +7,6 @@ const {surveys} = createActions({
   [types.updateSurvey$]: ({surveyId}) => ({surveyId}),
   [types.deleteSurvey$]: ({surveyUuid, callBack}) => ({surveyUuid, callBack}),
   [types.SET_SURVEY]: ({survey}) => ({survey}),
-  [types.REMOVE_SURVEY]: ({surveyUuid}) => ({surveyUuid}),
   /*ui*/
   [types.SET_LOADING]: ({isLoading = false}) => ({
     isLoading,
