@@ -75,10 +75,12 @@ const CodeCheckbox = ({nodeDef}) => {
         event.preventDefault();
 
         let _node = node;
+
         if (NodeDefs.isMultiple(nodeDef) && Objects.isEmpty(_node)) {
           _node = nodes.find(({value}) => Objects.isEmpty(value));
-        } else {
-          _node = nodes[0];
+        }
+        if (!NodeDefs.isMultiple(nodeDef) && Objects.isEmpty(_node)) {
+          _node = node || nodes[0];
         }
         let newValue = {itemUuid: categoryItem.uuid};
 
@@ -91,7 +93,13 @@ const CodeCheckbox = ({nodeDef}) => {
             if (NodeDefs.isMultiple(nodeDef)) {
               handleDelete({node: _node});
             } else {
-              handleUpdate({node: _node, value: null});
+              handleUpdate({
+                node: _node,
+                value:
+                  categoryItem.uuid !== _node?.value?.itemUuid
+                    ? newValue
+                    : null,
+              });
             }
           }
         }
@@ -124,7 +132,6 @@ const CodeCheckbox = ({nodeDef}) => {
   return (
     <View style={styles.container}>
       <AttributeHeader nodeDef={nodeDef} nodes={nodes} />
-      <Text>{nodes.length}</Text>
 
       <ChipContainer>
         {options.map(({key, onPress, isActive, label}) => (
