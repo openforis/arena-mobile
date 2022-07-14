@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: baseStyles.bases.BASE_4,
     borderTopLeftRadius: baseStyles.bases.BASE_4,
     padding: baseStyles.bases.BASE_4,
-    paddingBottom: baseStyles.bases.BASE_32,
+    paddingBottom: baseStyles.bases.BASE_24,
     borderColor: colors.neutralLighter,
     borderTopWidth: 1,
     borderRightWidth: 1,
