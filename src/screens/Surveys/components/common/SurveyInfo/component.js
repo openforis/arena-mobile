@@ -11,7 +11,7 @@ const SurveyInfo = ({survey}) => {
         {survey.props.labels?.[survey?.props?.languages?.[0]]}
       </Text>
       <Text style={[baseStyles.textStyle.secondaryText, baseStyles.textSize.s]}>
-        {survey.id} - {survey?.props?.name}
+        {survey?.props?.name}
       </Text>
 
       <CreatedAndModified

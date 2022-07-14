@@ -13,10 +13,11 @@ import {Preview as BasePreview} from '../../common/Base';
 
 import styles from './styles';
 
-const BooleanOption = ({label, active = false, onPress}) => {
+const BooleanOption = ({value, active = false, onPress, nodeDef}) => {
+  const {t} = useTranslation();
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={onPress(value)}
       hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
       style={[styles.touchableContainer({active})]}>
       <Icon
@@ -24,7 +25,13 @@ const BooleanOption = ({label, active = false, onPress}) => {
         size={baseStyles.bases.BASE_4}
         color={active ? colors.primaryContrastText : colors.secondary}
       />
-      <Text style={[styles.touchableLabel({active})]}>{label}</Text>
+      <Text style={[styles.touchableLabel({active})]}>
+        {t(
+          `Form:nodeDefBoolean.labelValue.${
+            nodeDef.props.labelValue || 'trueFalse'
+          }.${value}`,
+        )}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -58,22 +65,16 @@ const Boolean = ({node, nodeDef}) => {
   return (
     <View style={[styles.container]}>
       <BooleanOption
-        label={t(
-          `Form:nodeDefBoolean.labelValue.${
-            nodeDef.props.labelValue || 'trueFalse'
-          }.true`,
-        )}
         active={node.value === String(true)}
-        onPress={handlePress(true)}
+        onPress={handlePress}
+        nodeDef={nodeDef}
+        value={true}
       />
       <BooleanOption
-        label={t(
-          `Form:nodeDefBoolean.labelValue.${
-            nodeDef.props.labelValue || 'trueFalse'
-          }.false`,
-        )}
         active={node.value === String(false)}
-        onPress={handlePress(false)}
+        onPress={handlePress}
+        nodeDef={nodeDef}
+        value={false}
       />
     </View>
   );
