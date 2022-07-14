@@ -3,6 +3,7 @@ import {
   getSelectedSurveyId,
   getSelectedSurveyUuid,
   getSelectedSurveyLanguage,
+  getSelectedSurveyLanguages,
   getUiState,
 } from './base';
 import {
@@ -33,6 +34,7 @@ export default {
   getSelectedSurveyId,
   getSelectedSurveyUuid,
   getSelectedSurveyLanguage,
+  getSelectedSurveyLanguages,
 
   // --- survey
   getSurveyData,

@@ -1,18 +1,17 @@
-import React, {useCallback, useMemo, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
+import Select from 'arena-mobile-ui/components/Select';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import {uuidv4} from 'infra/uuid';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 
 import styles, {pickerSelectStyles} from './styles';
 
-const ChevRonIcon = () => <Icon name="chevron-down-outline" />;
 const Header = () => {
   const {t} = useTranslation();
   const [key, setKey] = useState(uuidv4());
@@ -28,22 +27,9 @@ const Header = () => {
   );
   const parentLabel = useNodeDefNameOrLabel({nodeDef: parentEntityNodeDef});
 
-  const items = useMemo(
-    () =>
-      siblingNodesInhierarchy.map(node => ({
-        ...node,
-        key: node.uuid,
-        label: `${parentLabel}: ${node.keyString}`,
-        name: node.keyString,
-        value: node,
-      })),
-
-    [siblingNodesInhierarchy, parentLabel],
-  );
-
   useEffect(() => {
     setKey(uuidv4());
-  }, [items]);
+  }, [siblingNodesInhierarchy]);
 
   const dispatch = useDispatch();
 
@@ -91,15 +77,13 @@ const Header = () => {
           onPress={handleCreateNewNodeEntity}
         />
         <View style={{flex: 1}}>
-          <RNPickerSelect
+          <Select
             key={key}
-            style={{
-              ...pickerSelectStyles,
-            }}
+            items={siblingNodesInhierarchy}
+            customStyle={pickerSelectStyles}
             onValueChange={handleSelectEntityNode}
-            items={items}
-            itemKey={parentEntityNode.uuid}
-            Icon={ChevRonIcon}
+            selectedItemKey={parentEntityNode.uuid}
+            labelStractor={item => `${parentLabel}: ${item.keyString}`}
           />
         </View>
 
