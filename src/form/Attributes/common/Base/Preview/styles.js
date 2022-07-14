@@ -3,6 +3,12 @@ import {StyleSheet} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
 
+const aligmentByType = {
+  [NodeDefType.text]: 'flex-start',
+  [NodeDefType.code]: 'flex-start',
+  [NodeDefType.date]: 'center',
+  [NodeDefType.time]: 'center',
+};
 const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
@@ -14,14 +20,14 @@ const styles = StyleSheet.create({
       NodeDefType.integer,
       NodeDefType.decimal,
       NodeDefType.code,
+      NodeDefType.time,
+      NodeDefType.date,
     ].includes(nodeDef.type)
       ? 1
       : 0,
     justifyContent: 'center',
     padding: 8,
-    alignItems: [NodeDefType.text, NodeDefType.code].includes(nodeDef.type)
-      ? 'flex-start'
-      : 'flex-end',
+    alignItems: aligmentByType[nodeDef.type] || 'flex-end',
     opacity: isActive ? 1 : 0.5,
   }),
 });

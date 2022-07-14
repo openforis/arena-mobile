@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@openforis/arena-core": "^0.0.105",
+    "@react-native-community/datetimepicker": "^6.2.0",
     "@react-native-community/picker": "^1.8.1",
     "@react-navigation/native": "^6.0.11",
     "@react-navigation/native-stack": "^6.7.0",
@@ -25,6 +26,7 @@
     "react-i18next": "^11.17.4",
     "react-native": "0.67.3",
     "react-native-camera": "^4.2.1",
+    "react-native-date-picker": "^4.2.2",
     "react-native-elements": "^3.4.2",
     "react-native-fs": "^2.20.0",
     "react-native-get-random-values": "^1.8.0",
