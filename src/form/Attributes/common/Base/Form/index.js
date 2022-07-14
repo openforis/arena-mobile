@@ -41,7 +41,6 @@ const BaseForm = ({nodeDef, handleSubmit, children}) => {
 
       <View style={styles.divider} />
       <View>
-        <Button label="save" onPress={_handleSubmit} />
         <Button label="save and close" onPress={_handleSubmitAndClose} />
       </View>
     </View>

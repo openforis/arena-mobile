@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {useSelector} from 'react-redux';
 
+import BooleanForm from 'form/Attributes/Boolean/Form';
 import CodeForm from 'form/Attributes/Code/Form';
 import BaseForm from 'form/Attributes/common/Base/Form';
 import DateForm from 'form/Attributes/Date/Form';
@@ -28,6 +29,7 @@ const FormsByType = {
   [NodeDefType.decimal]: DecimalForm,
   [NodeDefType.text]: TextForm,
   [NodeDefType.code]: CodeForm,
+  [NodeDefType.boolean]: BooleanForm,
   [NodeDefType.date]: DateForm,
   [NodeDefType.time]: TimeForm,
 };
@@ -112,7 +114,11 @@ const AttributeFormWithModal = () => {
 const AttributeForm = () => {
   const nodeDef = useSelector(formSelectors.getNodeDef);
 
-  if ([NodeDefType.date, NodeDefType.time].includes(nodeDef?.type)) {
+  if (
+    [NodeDefType.date, NodeDefType.time, NodeDefType.boolean].includes(
+      nodeDef?.type,
+    )
+  ) {
     return (
       <>
         {nodeDef &&

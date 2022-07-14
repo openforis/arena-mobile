@@ -1,4 +1,16 @@
 {
   "add_new": "New {{ label }}",
-  "delete": "Delete {{ label }}"
+  "delete": "Delete {{ label }}",
+  "nodeDefBoolean": {
+    "labelValue": {
+      "trueFalse": {
+        "true": "$t(Common:true)",
+        "false": "$t(Common:false)"
+      },
+      "yesNo": {
+        "true": "$t(Common:yes)",
+        "false": "$t(Common:no)"
+      }
+    }
+  }
 }

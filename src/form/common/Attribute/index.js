@@ -4,6 +4,7 @@ import {useSelector} from 'react-redux';
 
 import {selectors as surveySelectors} from 'state/survey';
 
+import BooleanPreview from '../../Attributes/Boolean/Preview';
 import CodePreview from '../../Attributes/Code/Preview';
 import BasePreview from '../../Attributes/common/Base/Preview';
 import DatePreview from '../../Attributes/Date/Preview';
@@ -17,6 +18,7 @@ const AttributesComponentByType = {
   [NodeDefType.decimal]: DecimalPreview,
   [NodeDefType.text]: TextPreview,
   [NodeDefType.code]: CodePreview,
+  [NodeDefType.boolean]: BooleanPreview,
   [NodeDefType.date]: DatePreview,
   [NodeDefType.time]: TimePreview,
 };
