@@ -4,7 +4,7 @@ import * as colors from 'arena-mobile-ui/colors';
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     color: colors.neutralDarkest,
     flex: 1,
   },

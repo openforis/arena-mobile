@@ -4,6 +4,7 @@ import {
   getSelectedSurveyUuid,
   getSelectedSurveyLanguage,
   getSelectedSurveyLanguages,
+  getSurveyCycle,
   getUiState,
 } from './base';
 import {
@@ -35,6 +36,7 @@ export default {
   getSelectedSurveyUuid,
   getSelectedSurveyLanguage,
   getSelectedSurveyLanguages,
+  getSurveyCycle,
 
   // --- survey
   getSurveyData,
