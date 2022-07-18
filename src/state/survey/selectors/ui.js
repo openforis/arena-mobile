@@ -8,3 +8,5 @@ export const getUploadProgress = createSelector(
   getUiState,
   ui => ui.uploadProgress,
 );
+
+export const getJob = createSelector(getUiState, ui => ui.job);

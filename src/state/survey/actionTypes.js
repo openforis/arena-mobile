@@ -8,6 +8,7 @@ const deleteSurveyData$ = 'survey/deleteSurveyData';
 const SELECT_SURVEY_LANGUAGE = 'survey/SELECT_SURVEY_LANGUAGE';
 
 const SET_UPLOADING = 'survey/SET_UPLOADING';
+const UPDATE_JOB = 'survey/UPDATE_JOB';
 const SET_UPLOAD_PROGRESS = 'survey/SET_UPLOAD_PROGRESS';
 
 export default {
@@ -21,5 +22,6 @@ export default {
   SELECT_SURVEY_LANGUAGE,
 
   SET_UPLOADING,
+  UPDATE_JOB,
   SET_UPLOAD_PROGRESS,
 };

@@ -35,6 +35,10 @@ const ui = handleActions(
       ...state,
       uploadProgress,
     }),
+    [actions.updateJob]: (state, {payload: {job}}) => ({
+      ...state,
+      job,
+    }),
     [globalActions.reset]: () => initialState.ui || {},
   },
   initialState.ui || {},

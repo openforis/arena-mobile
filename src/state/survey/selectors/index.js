@@ -28,7 +28,7 @@ import {
 import {getNodes, getEntityNodeKeys, getEntityNodeKeysAsString} from './nodes';
 import {getRecords, getNumberRecords} from './records';
 import {getSurveyData} from './surveyData';
-import {getIsUploading, getUploadProgress} from './ui';
+import {getIsUploading, getUploadProgress, getJob} from './ui';
 
 export default {
   getSurvey,
@@ -72,4 +72,5 @@ export default {
   getUiState,
   getIsUploading,
   getUploadProgress,
+  getJob,
 };
