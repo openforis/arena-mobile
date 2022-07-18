@@ -22,7 +22,12 @@ function* handleRemoveNode({payload}) {
       nodesToDelete.push(recordNodesByUuid[nodeUuid]);
     }
   });
+// this code is needed if you dont have the index as arena-core search descendants by index
+const currentDescentands = yield select(state =>
+    formSelectors.getNodeDescendants(state, node),
+  );
 
+  nodesToDelete = nodesToDelete.concat(currentDescentands);
   yield all([
     put(recordsActions.setRecord({record: recordUpdated})),
     put(nodesActions.deleteNodes({nodes: nodesToDelete})),
