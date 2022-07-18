@@ -72,7 +72,7 @@ const Validation = ({nodes, showValidation = true}) => {
           </>
         }>
         <View hitSlop={{left: 30, top: 10, right: 30, bottom: 10}}>
-          <Icon name="warning-outline" color={configBySeverity.color} />
+          <Icon name="alert-outline" color={configBySeverity.color} />
         </View>
       </Tooltip>
     </View>

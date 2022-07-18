@@ -39,6 +39,7 @@ const Button = ({
       {...props}>
       {icon}
       <Text
+        numberOfLines={1}
         style={[
           baseStyles.textStyle.bold,
           styles.text[type],

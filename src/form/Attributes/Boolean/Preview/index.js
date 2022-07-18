@@ -21,7 +21,7 @@ const BooleanOption = ({value, active = false, onPress, nodeDef}) => {
       hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
       style={[styles.touchableContainer({active})]}>
       <Icon
-        name={active ? 'radio-button-on-outline' : 'radio-button-off-outline'}
+        name={active ? 'radiobox-marked' : 'radiobox-blank'}
         size={baseStyles.bases.BASE_4}
         color={active ? colors.primaryContrastText : colors.secondary}
       />

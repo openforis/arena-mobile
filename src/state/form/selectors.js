@@ -239,6 +239,13 @@ const getNodeDescendants = createCachedSelector(
   (recordNodes, node) => _getDescendants({nodes: recordNodes, node}),
 )((_state_, node) => node.uuid);
 
+const getNodeDescendantsByNodeDefUuid = createCachedSelector(
+  getNodeDescendants,
+  (_, __, nodeDefUuid) => nodeDefUuid,
+  (descendants, nodeDefUuid) =>
+    descendants.filter(node => node.nodeDefUuid === nodeDefUuid),
+)((_state_, node, nodeDefUuid) => `${node.uuid}_${nodeDefUuid}`);
+
 // TO FIX nodeDef is not a condition to be a sibling // also extract to Record and others functions using memoization
 const getNodesiblings = createCachedSelector(
   getRecordNodes,
@@ -322,6 +329,7 @@ export default {
   getNodeDefNodesWithKeysAsStringInHierarchy,
 
   getNodeDescendants,
+  getNodeDescendantsByNodeDefUuid,
   getNodesiblings,
 
   // ---- UI

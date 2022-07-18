@@ -5,7 +5,7 @@ import Icon from '../Icon';
 
 import styles from './styles';
 
-const ChevronIcon = () => <Icon name="chevron-down-outline" />;
+const ChevronIcon = () => <Icon name="chevron-down" />;
 
 const _keyStractor = item => item?.uuid || item?.id || item;
 const _labelStractor = item => item.name || item;

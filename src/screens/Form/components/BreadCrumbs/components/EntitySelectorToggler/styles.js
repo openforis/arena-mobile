@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
     padding: baseStyles.bases.BASE,
     borderRadius: baseStyles.bases.BASE,
     backgroundColor: colors.neutralLightest,
-    transform: [{rotateZ: '180deg'}],
   },
 });
 

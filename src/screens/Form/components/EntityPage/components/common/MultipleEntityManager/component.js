@@ -70,9 +70,9 @@ const Header = () => {
       <View style={styles.header}>
         <Button
           type="secondary"
-          icon={<Icon name="add-outline" />}
+          icon={<Icon name="plus" />}
           label={t('Form:add_new', {label: parentLabel})}
-          customContainerStyle={styles.buttonContainer}
+          customContainerStyle={[styles.buttonContainer, styles.addItem]}
           customTextStyle={{fontWeight: 'normal'}}
           onPress={handleCreateNewNodeEntity}
         />
@@ -89,7 +89,7 @@ const Header = () => {
 
         <Button
           type="secondary"
-          icon={<Icon name="trash-outline" />}
+          icon={<Icon name="trash-can-outline" />}
           customContainerStyle={styles.buttonContainer}
           onPress={handleDeleteNode}
         />
