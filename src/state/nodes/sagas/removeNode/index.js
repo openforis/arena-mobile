@@ -16,9 +16,9 @@ function* handleRemoveNode({payload}) {
   const recordUpdated = Records.removeNode(node)(recordWithNodes);
 
   let nodesToDelete = [];
-  const newRecordsUuids = Object.keys(recordUpdated.nodes);
+  const recordUpdatedNodes = Object.keys(recordUpdated.nodes);
   Object.keys(recordNodesByUuid).map(nodeUuid => {
-    if (!newRecordsUuids.includes(nodeUuid)) {
+    if (!recordUpdatedNodes.includes(nodeUuid)) {
       nodesToDelete.push(recordNodesByUuid[nodeUuid]);
     }
   });

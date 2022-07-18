@@ -11,6 +11,9 @@ const styles = StyleSheet.create({
     borderColor: colors.neutralLighter,
     paddingHorizontal: baseStyles.bases.BASE_4,
     margin: baseStyles.bases.BASE / 2,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   }),
   label: ({isActive}) => ({
     textAlign: 'center',
@@ -19,6 +22,7 @@ const styles = StyleSheet.create({
   icon: ({isActive}) => ({
     textAlign: 'center',
     color: isActive ? colors.primaryContrastText : colors.black,
+    paddingLeft: baseStyles.bases.BASE_3,
   }),
 });
 export default styles;
