@@ -13,15 +13,15 @@ import styles from './styles';
 
 const statusConfig = {
   toDownload: {
-    icon: 'cloud-download-outline',
+    icon: 'cloud-download',
     color: colors.alert,
   },
   toUpdate: {
-    icon: 'refresh-outline',
+    icon: 'refresh',
     color: colors.alert,
   },
   ready: {
-    icon: 'cloud-done-outline',
+    icon: 'cloud-check-outline',
     color: colors.success,
   },
 };

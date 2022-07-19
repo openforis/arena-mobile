@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StatusBar} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
-import ProgressBar from 'arena-mobile-ui/components/ProgressBar';
+import JobContainer from 'arena-mobile-ui/components/JobContainer';
 import {Back} from 'arena-mobile-ui/components/TouchableIcons';
 
 import styles from './styles';
@@ -30,7 +30,7 @@ const Header = ({
         <View style={[styles.main]}>{children}</View>
         <View style={[styles.right]}>{RightComponent}</View>
       </View>
-      <ProgressBar />
+      <JobContainer />
     </>
   );
 };

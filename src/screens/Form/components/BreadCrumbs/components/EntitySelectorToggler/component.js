@@ -13,7 +13,7 @@ const EntitySelectorToggler = () => {
   }, [dispatch]);
   return (
     <TouchableIcon
-      iconName="git-network-outline"
+      iconName="file-tree"
       onPress={handleToggleEntitySelector}
       customStyle={styles.entitySelectorButton}
     />

@@ -1,11 +1,9 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useRef, useEffect} from 'react';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Provider} from 'react-redux';
 
-Ionicons.loadFont();
 MaterialCommunityIcons.loadFont();
 
 import 'i18n';

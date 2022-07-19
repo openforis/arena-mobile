@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     color: colors.neutralDarkest,
-    flexGrow: 1,
+
     flexDirection: 'row',
     backgroundColor: colors.white,
   },

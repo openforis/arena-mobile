@@ -6,7 +6,7 @@ import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import {actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
-const BreadCrumb = ({breadCrumb: node}) => {
+const BreadCrumb = ({breadCrumb: node, isLatests}) => {
   const dispatch = useDispatch();
   const nodeDefsByUuid = useSelector(surveySelectors.getNodeDefsByUuid);
   const keys = useSelector(state =>
@@ -27,7 +27,7 @@ const BreadCrumb = ({breadCrumb: node}) => {
   return (
     <TouchableOpacity onPress={handleSelect}>
       <Text key={node.key}>
-        {nodeDefName}[{keys}]
+        {nodeDefName}[{keys}] {isLatests ? '' : ' > '}
       </Text>
     </TouchableOpacity>
   );

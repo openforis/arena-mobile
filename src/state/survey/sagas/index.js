@@ -5,12 +5,13 @@ import {
   put,
   select,
   call,
-  delay,
   take,
   fork,
+  delay,
 } from 'redux-saga/effects';
 
 import * as fs from 'infra/fs';
+import WS, {WebSocketEvents} from 'infra/ws';
 import {zip} from 'infra/zip';
 import {ROUTES} from 'navigation/constants';
 import appSelectors from 'state/app/selectors';
@@ -106,6 +107,7 @@ function* cleanTmpFolder() {
 }
 
 const uploadFileChannel = channel();
+const upadteJobChannel = channel();
 
 function* watchFileUploadChannel() {
   while (true) {
@@ -114,17 +116,27 @@ function* watchFileUploadChannel() {
   }
 }
 
-const handleUploadBegin = chan => response => {
-  chan.put(surveyActions.setUploading({isUploading: true}));
+function* watchUpdateJobChannel() {
+  while (true) {
+    const action = yield take(upadteJobChannel);
+    yield put(action);
+  }
+}
+
+const handleUploadBegin = _channel => response => {
+  _channel.put(surveyActions.setUploading({isUploading: true}));
 };
-const handleOnProgress = chan => response => {
+const handleOnProgress = _channel => response => {
   const {totalBytesSent, totalBytesExpectedToSend} = response;
 
   const percentage = Math.floor(
     (100 * totalBytesSent) / totalBytesExpectedToSend,
   );
 
-  chan.put(surveyActions.setUploadProgress({uploadProgress: percentage}));
+  _channel.put(surveyActions.setUploadProgress({uploadProgress: percentage}));
+};
+const handleJobProgress = _channel => job => {
+  _channel.put(surveyActions.updateJob({job}));
 };
 
 function* handleUploadData() {
@@ -134,6 +146,12 @@ function* handleUploadData() {
     // UPLOAD DATA and track progress
     const serverUrl = yield select(appSelectors.getServerUrl);
     const surveyId = yield select(surveySelectors.getSelectedSurveyId);
+
+    yield call(WS({serverUrl}).create);
+    yield call(WS({serverUrl}).on, {
+      eventName: WebSocketEvents.jobUpdate,
+      handler: handleJobProgress(upadteJobChannel),
+    });
 
     yield call(surveysApi.uploadSurveyZip, {
       serverUrl,
@@ -155,4 +173,5 @@ export default function* () {
   yield takeLatest(surveyActionTypes.selectSurvey$, handleSelectSurvey);
   yield takeLatest(surveyActionTypes.uploadSurveyData$, handleUploadData);
   yield fork(watchFileUploadChannel);
+  yield fork(watchUpdateJobChannel);
 }

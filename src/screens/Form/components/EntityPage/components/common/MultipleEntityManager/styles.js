@@ -24,6 +24,10 @@ const styles = StyleSheet.create({
     borderColor: colors.neutral,
     borderWidth: 1,
   },
+  addItem: {
+    width: 90,
+    paddingHorizontal: 12,
+  },
 });
 
 const baseInputStyle = {

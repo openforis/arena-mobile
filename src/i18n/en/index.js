@@ -1,6 +1,7 @@
 import Actions from './Actions';
 import Common from './Common';
 import ConnectionSettings from './ConnectionSettings';
+import Errors from './Errors';
 import Form from './Form';
 import Home from './Home';
 import QRScanner from './QRScanner';
@@ -20,6 +21,7 @@ const lang = {
   Survey,
   Surveys,
   Validation,
+  Errors,
 };
 
 export default lang;

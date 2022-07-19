@@ -28,11 +28,7 @@ const EntitySelectorTree = ({nodeDef, level = 0}) => {
           <View style={styles.expandContainer}>
             {children.length > 0 && (
               <TouchableIcon
-                iconName={
-                  showChildren
-                    ? 'chevron-down-outline'
-                    : 'chevron-forward-outline'
-                }
+                iconName={showChildren ? 'chevron-down' : 'chevron-right'}
                 onPress={handleToggleVisibility}
                 customStyle={[styles.expandIcon]}
               />

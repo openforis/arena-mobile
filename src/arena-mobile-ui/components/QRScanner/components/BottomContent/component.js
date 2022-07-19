@@ -39,13 +39,13 @@ const BottomContent = ({
 
       <View style={[styles.buttonsContainer]}>
         <TouchableOpacity style={[styles.button]} onPress={handleReactivate}>
-          <Icon name="refresh-outline" />
-          <Text>{t('QRScanner:retry')}:</Text>
+          <Icon name="refresh" />
+          <Text>{t('QRScanner:retry')}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={[styles.button]} onPress={handleClose}>
-          <Icon name="ios-checkmark" />
-          <Text>{t('QRScanner:save')}:</Text>
+          <Icon name="check" />
+          <Text>{t('QRScanner:save')}</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -18,8 +18,12 @@ const BreadCrumbs = () => {
       <ScrollView
         horizontal={true}
         contentContainerStyle={styles.breadCrumbsList}>
-        {breadCrumbs.map(breadCrumb => (
-          <BreadCrumb key={breadCrumb.uuid} breadCrumb={breadCrumb} />
+        {breadCrumbs.map((breadCrumb, index) => (
+          <BreadCrumb
+            key={breadCrumb.uuid}
+            breadCrumb={breadCrumb}
+            isLatests={breadCrumbs.length - 1 === index}
+          />
         ))}
       </ScrollView>
     </View>

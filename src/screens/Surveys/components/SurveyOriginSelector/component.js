@@ -38,7 +38,7 @@ const SurveyOriginSelector = ({surveysOrigin, setSurveysOrigin}) => {
       <Touchable
         position="left"
         onPress={() => setSurveysOrigin('remote')}
-        icon="cloudy-outline"
+        icon="cloud-outline"
         isSelected={surveysOrigin === 'remote'}
         label={t('Surveys:remote.title')}
       />
