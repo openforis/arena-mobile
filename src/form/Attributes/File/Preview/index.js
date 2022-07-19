@@ -1,12 +1,13 @@
-import React from 'react';
+import {NodeDefs, Objects} from '@openforis/arena-core';
+import React, {useCallback} from 'react';
 import {View} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import baseStyles from 'arena-mobile-ui/styles';
 import {BasePreviewContainer} from 'form/Attributes/common/Base/Preview';
-import {selectors as formSelectors} from 'state/form';
+import {selectors as formSelectors, actions as formActions} from 'state/form';
 
 import {useFile} from '../hooks';
 
@@ -39,28 +40,43 @@ const Container = ({children}) => (
 );
 
 const FileLabel = ({node, onPress}) => {
+  const dispatch = useDispatch();
+  /*const handleSelectNodeAndNodeDef = useCallback(
+    event => {
+      console.log('LONG');
+      event.stopPropagation();
+      //dispatch(formActions.setNode({node: node}));
+    },
+    [dispatch, node],
+  );*/
+
   return (
     <Button
       onPress={onPress}
       type="secondary"
       customContainerStyle={styles.bottonContainer}
       label={node?.value?.fileName}
+      /*onLongPress={handleSelectNodeAndNodeDef}*/
     />
   );
 };
 
 const NodeValueRender = ({node = false, nodeDef}) => {
-  const {updateFile, createFile, deleteFile} = useFile({node, nodeDef});
+  const {updateFile, createFile, deleteFile} = useFile({
+    node,
+    nodeDef,
+    isImage: ['image', 'video'].includes(nodeDef?.props?.fileType),
+  });
 
   return (
     <Container>
       <LoadFileButton
         node={node}
-        onPress={node?.value ? updateFile : createFile}
+        onPress={node?.uuid ? updateFile : createFile}
       />
       {node?.value && (
         <>
-          <FileLabel node={node} onPress={updateFile} />
+          <FileLabel node={node} nodeDef={nodeDef} onPress={updateFile} />
           <DeleteFileButton node={node} onPress={deleteFile} />
         </>
       )}
@@ -78,7 +94,9 @@ const Preview = ({nodeDef}) => {
       {nodes.map(node => (
         <NodeValueRender key={node.uuid} node={node} nodeDef={nodeDef} />
       ))}
-      <NodeValueRender key="empty" nodeDef={nodeDef} />
+      {(NodeDefs.isMultiple(nodeDef) || nodes.length === 0) && (
+        <NodeValueRender key="empty" nodeDef={nodeDef} />
+      )}
     </BasePreviewContainer>
   );
 };

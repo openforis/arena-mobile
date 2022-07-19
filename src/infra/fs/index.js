@@ -4,27 +4,70 @@ export const BASE_PATH = RNFS.DocumentDirectoryPath;
 
 const DEFAULT_ENCODING = 'utf8';
 
+const cleanPathWithBase = (path = '') => {
+  if (path.startsWith('file')) {
+    return path;
+  }
+
+  // BASE_PATH '/var/...' starts with /
+  const cleanPath = `${BASE_PATH}/${path
+    .replace(`/private${BASE_PATH}/`, '')
+    .replace(`private${BASE_PATH}/`, '')
+    .replace(`${BASE_PATH}/`, '')
+    .replace(`${BASE_PATH}`, '')}`;
+  return cleanPath;
+};
+
 export const mkdir = async (
   {dirPath, options} = {
     options: {NSURLIsExcludedFromBackupKey: true},
   },
-) => RNFS.mkdir(`${BASE_PATH}/${dirPath}`, options);
+) => RNFS.mkdir(cleanPathWithBase(dirPath), options);
 
 export const writeFile = async (
   {filePath, content, encoding} = {
     encoding: DEFAULT_ENCODING,
   },
-) => RNFS.writeFile(`${BASE_PATH}/${filePath}`, content, encoding);
+) => RNFS.writeFile(cleanPathWithBase(filePath), content, encoding);
+
+const getPathOfFile = filePath =>
+  filePath.substring(0, filePath.lastIndexOf('/'));
+
+export const copyFile = async ({sourcePath, destinationPath}) => {
+  const exits = await RNFS.exists(
+    getPathOfFile(cleanPathWithBase(destinationPath)),
+  );
+  if (exits) {
+    await deleteDir(getPathOfFile(destinationPath));
+  }
+  await mkdir({dirPath: getPathOfFile(destinationPath)});
+  return RNFS.copyFile(sourcePath, cleanPathWithBase(destinationPath));
+};
 
 export const readfile = async (
   {filePath, encoding} = {
     encoding: DEFAULT_ENCODING,
   },
-) => RNFS.readFile(`${BASE_PATH}/${filePath}`, encoding);
+) => {
+  return RNFS.readFile(
+    cleanPathWithBase(filePath),
+    encoding || DEFAULT_ENCODING,
+  );
+};
 
-export const readDir = async ({dirPath}) =>
-  RNFS.readDir(`${BASE_PATH}/${dirPath}`);
-export const deleteDir = async path => RNFS.unlink(`${BASE_PATH}/${path}`);
+export const readDir = async ({dirPath}) => {
+  const _path = cleanPathWithBase(dirPath);
+  return RNFS.readDir(_path);
+};
+
+export const deleteDir = async path => {
+  const _path = cleanPathWithBase(path);
+  const exits = await RNFS.exists(_path);
+  if (!exits) {
+    return;
+  }
+  return RNFS.unlink(_path);
+};
 
 export const uploadFiles = async ({uploadUrl, files, onStart, onProgress}) =>
   RNFS.uploadFiles({

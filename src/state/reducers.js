@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux';
 
 import {reducer as app} from './app';
+import {reducer as files} from './files';
 import {reducer as form} from './form';
 import {reducer as nodes} from './nodes';
 import {reducer as records} from './records';
@@ -16,6 +17,7 @@ const appReducers = combineReducers({
   surveys,
   user,
   form,
+  files,
 });
 
 export default appReducers;

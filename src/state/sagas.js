@@ -1,6 +1,7 @@
 import {all, fork} from 'redux-saga/effects';
 
 import {sagas as app} from './app';
+import {sagas as files} from './files';
 import {sagas as form} from './form';
 import {sagas as nodes} from './nodes';
 import {sagas as records} from './records';
@@ -14,4 +15,5 @@ export default function* rootSaga() {
   yield all([fork(records)]);
   yield all([fork(nodes)]);
   yield all([fork(form)]);
+  yield all([fork(files)]);
 }

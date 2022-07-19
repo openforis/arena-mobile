@@ -1,5 +1,7 @@
 import {useCallback, useMemo} from 'react';
 
+import {uuidv4} from 'infra/uuid';
+
 import useGetFile from './useGetFile';
 import useImage from './useImage';
 import useNodeFormActions from './useNodeFormActions';
@@ -19,18 +21,12 @@ const useFile = ({nodeDef, node, isImage = false}) => {
   const getFileActionCallback = useCallback(
     action => documents => {
       const [document] = documents;
-      // copy file in filesystem or delete the old one if needed also when remove a survey or nodes with files
-      if (node.value) {
-        // remove File from System
-      } else {
-        // create File on System
-      }
-      console.log('document', document);
 
       const value = {
+        ...document,
         fileName: document.name,
         fileSize: document.size,
-        fileUuid: 'aa',
+        fileUuid: node?.value?.fileUuid || uuidv4(),
       };
       action({node, value});
     },
