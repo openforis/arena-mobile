@@ -1,6 +1,7 @@
 import {handleActions} from 'redux-actions';
 
 import globalActions from 'state/globalActions';
+import surveyActions from 'state/survey/actionCreators';
 
 import actions from '../actionCreators';
 import initialState from '../initial.state';
@@ -23,6 +24,7 @@ const data = handleActions(
       parentEntityNodeDef: node.nodeDefUuid || state.parentEntityNodeDef,
     }),
     [actions.clean]: () => initialState.data,
+    [surveyActions.deleteSurveyData]: () => initialState.data,
     [globalActions.reset]: () => initialState.data || {},
   },
   initialState.data || {},

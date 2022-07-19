@@ -19,6 +19,7 @@ const bases = {
   BASE_2: BASE * 2, // 8
   BASE_3: BASE * 3, // 12
   BASE_4: BASE * 4, // 16
+  BASE_6: BASE * 6, // 24
   BASE_8: BASE * 8, // 32
   BASE_16: BASE * 16, // 64
   BASE_24: BASE * 24, // 96

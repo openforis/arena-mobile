@@ -12,11 +12,7 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     borderRadius: baseStyles.bases.BASE,
   },
-  buttonTouchable: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -31,6 +27,12 @@ const styles = StyleSheet.create({
     padding: baseStyles.bases.BASE_2,
     borderRadius: baseStyles.bases.BASE_4,
     backgroundColor: colors.neutralLightest,
+  },
+  button: {
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

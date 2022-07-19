@@ -31,7 +31,7 @@ const SurveyCard = ({
         </Text>
         <Text
           style={[baseStyles.textStyle.secondaryText, baseStyles.textSize.s]}>
-          {survey.id} - {survey?.props?.name}
+          {survey?.props?.name}
         </Text>
 
         <CreatedAndModified

@@ -1,8 +1,8 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, Text} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 
-import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
+import Icon from 'arena-mobile-ui/components/Icon';
 import baseStyles from 'arena-mobile-ui/styles';
 
 import styles from './styles';
@@ -38,17 +38,15 @@ const BottomContent = ({
       </View>
 
       <View style={[styles.buttonsContainer]}>
-        <TouchableIcon
-          onPress={handleReactivate}
-          customStyle={styles.buttonTouchable}
-          iconName="refresh-outline"
-        />
+        <TouchableOpacity style={[styles.button]} onPress={handleReactivate}>
+          <Icon name="refresh-outline" />
+          <Text>{t('QRScanner:retry')}:</Text>
+        </TouchableOpacity>
 
-        <TouchableIcon
-          onPress={handleClose}
-          customStyle={styles.buttonTouchable}
-          iconName="ios-checkmark"
-        />
+        <TouchableOpacity style={[styles.button]} onPress={handleClose}>
+          <Icon name="ios-checkmark" />
+          <Text>{t('QRScanner:save')}:</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

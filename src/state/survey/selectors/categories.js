@@ -22,18 +22,18 @@ export const getCategoryItemIndex = createSelector(
   refData => refData?.categoryItemIndex,
 );
 
-const getNodeDefCategoryIndex = createCachedSelector(
+const getNodeDefCategoryLevelIndex = createCachedSelector(
   getNodeDefByUuid,
   getNodeDefsByUuid,
   (nodeDef, nodeDefsByUuid) => {
-    let index = 0;
-    let parentCodeDef = nodeDef.props.parentCodeDefUuid;
-    while (parentCodeDef !== null) {
-      index = index + 1;
-      parentCodeDef =
-        nodeDefsByUuid[parentCodeDef]?.props?.parentCodeDefUuid || null;
+    let levelIndex = 0;
+    let parentCodeDefUuid = nodeDef.props.parentCodeDefUuid;
+    while (parentCodeDefUuid !== null) {
+      levelIndex = levelIndex + 1;
+      parentCodeDefUuid =
+        nodeDefsByUuid[parentCodeDefUuid]?.props?.parentCodeDefUuid || null;
     }
-    return index;
+    return levelIndex;
   },
 )((_state_, nodeDefUuid) => nodeDefUuid);
 
@@ -41,11 +41,11 @@ export const getCategoryItems = createCachedSelector(
   getCategories,
   getCategoryItemIndex,
   getNodeDefByUuid,
-  getNodeDefCategoryIndex,
-  (categories, categoryItemIndex, nodeDef, index) => {
+  getNodeDefCategoryLevelIndex,
+  (categories, categoryItemIndex, nodeDef, levelIndex) => {
     const categoryUuid = nodeDef.props.categoryUuid;
     const category = categories[categoryUuid];
-    const level = category?.levels[index];
+    const level = category?.levels[levelIndex];
 
     return Object.values(categoryItemIndex).filter(
       item => item.levelUuid === level?.uuid,

@@ -1,42 +1,19 @@
+import {NodeDefs} from '@openforis/arena-core';
 import React from 'react';
-import {Text, View} from 'react-native';
-import {useSelector} from 'react-redux';
 
-import surveySelectors from 'state/survey/selectors';
+import CodeCheckbox from './CodeCheckbox';
+import CodeDropdown from './CodeDropdown';
 
-import {Preview as BasePreview} from '../../common/Base';
-
-const PreviewCode = ({node}) => {
-  const categoryItem = useSelector(state =>
-    surveySelectors.getCategoryItemByUuid(state, node?.value?.itemUuid),
-  );
-
-  return <Text>{categoryItem?.props?.code || ''}</Text>;
-};
-
-const useIsActive = ({node, nodeDef}) => {
-  const parentCodeNode = useSelector(state =>
-    surveySelectors.getParentCodeNode(state, nodeDef, node),
-  );
-
-  return parentCodeNode === false || parentCodeNode?.value?.itemUuid;
-};
+// TODO move to arena-core, maybe other name
+NodeDefs.getLayoutRenderTypePerCycle = ({nodeDef, cycle = 0}) =>
+  nodeDef.props.layout[cycle].renderType;
 
 const Preview = ({nodeDef}) => {
-  if (!nodeDef.props.multiple) {
-    return (
-      <BasePreview
-        nodeDef={nodeDef}
-        NodeValueRender={PreviewCode}
-        useIsActive={useIsActive}
-      />
-    );
+  if (NodeDefs.getLayoutRenderTypePerCycle({nodeDef}) === 'checkbox') {
+    return <CodeCheckbox nodeDef={nodeDef} />;
   }
-  return (
-    <View>
-      <Text>Multi</Text>
-    </View>
-  );
+
+  return <CodeDropdown nodeDef={nodeDef} />;
 };
 
 export default Preview;

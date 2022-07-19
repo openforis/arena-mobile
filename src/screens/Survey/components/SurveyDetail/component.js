@@ -37,7 +37,6 @@ const SurveyDetail = () => {
           size="m"
           items={[
             {label: t('Home:survey.card.name'), value: surveyName},
-            {label: t('Home:survey.card.id'), value: survey.id},
             {
               label: t('Common:created'),
               value: moment(survey.dateCreated).fromNow(),

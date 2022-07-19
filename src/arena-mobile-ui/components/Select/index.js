@@ -18,6 +18,7 @@ const _prepareItemFn =
       label: labelStractor(item),
     });
   };
+const _filterFn = () => true;
 
 const Select = ({
   items = [],
@@ -27,14 +28,16 @@ const Select = ({
   keyStractor = _keyStractor,
   labelStractor = _labelStractor,
   prepareItemFn = _prepareItemFn,
+  filterFn = _filterFn,
   doneText = null,
   autoFocus = false,
 }) => {
   const selectRef = useRef(null);
 
   const _items = useMemo(
-    () => items.map(prepareItemFn({keyStractor, labelStractor})),
-    [items, keyStractor, labelStractor, prepareItemFn],
+    () =>
+      items.filter(filterFn).map(prepareItemFn({keyStractor, labelStractor})),
+    [items, keyStractor, labelStractor, prepareItemFn, filterFn],
   );
 
   useEffect(() => {
