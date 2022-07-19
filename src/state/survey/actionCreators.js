@@ -7,6 +7,8 @@ const {survey} = createActions({
   [types.deleteSurveyData$]: ({surveyUuid = false} = {}) => ({surveyUuid}),
   [types.uploadSurveyData$]: () => ({}),
   [types.SET_SURVEY]: ({survey: _survey}) => ({survey: _survey}),
+  [types.UPDATE_JOB]: ({job}) => ({job}),
+
   [types.CLEAN_SURVEY]: () => ({}),
   [types.SELECT_SURVEY_LANGUAGE]: ({selectedSurveyLanguage}) => ({
     selectedSurveyLanguage,

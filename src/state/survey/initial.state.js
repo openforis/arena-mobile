@@ -3,6 +3,7 @@ const initialState = {
   ui: {
     isUploading: false,
     uploadProgress: 0,
+    job: false,
   },
 };
 

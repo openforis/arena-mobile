@@ -10,21 +10,19 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   background: {
-    position: 'absolute',
-    height: 30,
+    borderRadius: 8,
+
     backgroundColor: colors.neutralLighter,
-    width,
+    width: width - 24,
     justifyContent: 'center',
     paddingRight: baseStyles.bases.BASE_3,
   },
   backgroundProgress: {
     position: 'absolute',
-    height: 30,
+
+    borderRadius: 8,
+
     backgroundColor: colors.success,
-  },
-  progress: {
-    marginRight: 8,
-    textAlign: 'right',
   },
 });
 
