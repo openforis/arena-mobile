@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
 import baseStyles from 'arena-mobile-ui/styles';
@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: baseStyles.bases.BASE_4,
     paddingBottom: baseStyles.bases.BASE_2,
+    paddingTop: Platform.OS === 'android' ? baseStyles.bases.BASE_2 : 0,
     backgroundColor: colors.primary,
   },
   withBorder: {

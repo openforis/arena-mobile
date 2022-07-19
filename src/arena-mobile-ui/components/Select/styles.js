@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
 import baseStyles from 'arena-mobile-ui/styles';
@@ -24,9 +24,15 @@ const styles = ({customStyles}) =>
     },
     inputAndroid: {
       ...baseInputStyle({pickerStyles: customStyles}),
+      paddingHorizontal: baseStyles.bases.BASE_3,
+      paddingVertical: baseStyles.bases.BASE_2,
+      justifyContent: 'center',
     },
     iconContainer: {
-      top: baseStyles.bases.BASE_2,
+      top:
+        Platform.OS === 'android'
+          ? baseStyles.bases.BASE_4
+          : baseStyles.bases.BASE_2,
       right: baseStyles.bases.BASE_2,
     },
   });

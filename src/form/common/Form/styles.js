@@ -12,17 +12,23 @@ const styles = StyleSheet.create({
     backgroundColor: colors.translucidDark,
     position: 'absolute',
     bottom: 0,
+    flexDirection: 'column',
   },
   formContainer: {
     position: 'absolute',
     width: WIDTH,
     bottom: 0,
     zIndex: 99,
+    flex: 1,
   },
   scroll: {
     borderRadius: baseStyles.bases.BASE_4,
     padding: baseStyles.bases.BASE_4,
     backgroundColor: colors.white,
+    flex: 1,
+  },
+  container: {
+    flex: 1,
   },
 });
 

@@ -61,6 +61,7 @@ const Validation = ({nodes, showValidation = true}) => {
         backgroundColor={configBySeverity.color}
         overlayColor={colors.transparent}
         animationType="none"
+        skipAndroidStatusBar={true}
         popover={
           <>
             {flatValidation.errors.map(error => (

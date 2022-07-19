@@ -59,6 +59,7 @@ const Select = ({
       Icon={ChevronIcon}
       doneText={doneText}
       disabled={disabled}
+      useNativeAndroidPickerStyle={false}
     />
   );
 };

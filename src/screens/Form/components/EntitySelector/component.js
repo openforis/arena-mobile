@@ -4,11 +4,11 @@ import {
   Animated,
   ScrollView,
   View,
-  Button,
   TouchableOpacity,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
+import Button from 'arena-mobile-ui/components/Button';
 import ToggleShowNames from 'arena-mobile-ui/components/ToggleShowNames';
 import {useNavigateTo} from 'navigation/hooks';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
@@ -65,7 +65,7 @@ const EntitySelector = () => {
           <EntitySelectorTree nodeDef={nodeDefRoot} />
         </ScrollView>
         <View style={styles.buttonsContainer}>
-          <Button title="home" onPress={handleNavigateToHome} />
+          <Button label="home" type="ghost" onPress={handleNavigateToHome} />
           <ToggleShowNames />
         </View>
       </Animated.View>
