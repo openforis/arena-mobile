@@ -287,6 +287,8 @@ PODS:
     - React-Core
   - react-native-date-picker (4.2.2):
     - React-Core
+  - react-native-document-picker (8.1.1):
+    - React-Core
   - react-native-flipper (0.153.0):
     - React-Core
   - react-native-geolocation-service (5.3.0):
@@ -437,6 +439,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
+  - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-flipper (from `../node_modules/react-native-flipper`)
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
@@ -524,6 +527,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-camera"
   react-native-date-picker:
     :path: "../node_modules/react-native-date-picker"
+  react-native-document-picker:
+    :path: "../node_modules/react-native-document-picker"
   react-native-flipper:
     :path: "../node_modules/react-native-flipper"
   react-native-geolocation-service:
@@ -611,6 +616,7 @@ SPEC CHECKSUMS:
   React-logger: 1e10789cb84f99288479ba5f20822ce43ced6ffe
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-date-picker: 9088350e06918f7d842a34c171acadc66583cb94
+  react-native-document-picker: f68191637788994baed5f57d12994aa32cf8bf88
   react-native-flipper: 88dd2735e76e6fb79f8714124bf9315f1e05a7e6
   react-native-geolocation-service: f32ef48fa665bd710207a3ac39bc127cac9cb993
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
