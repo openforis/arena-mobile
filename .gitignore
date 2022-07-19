@@ -77,3 +77,6 @@ test-report.xml
 
 src/infra/api/_index.js
 src/navigation/Debug
+
+# VSCode
+.vscode
