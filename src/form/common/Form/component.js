@@ -102,7 +102,7 @@ const AttributeFormWithModal = () => {
           enabled>
           <TouchableOpacity style={{height: 80}} />
           <ScrollView
-            keyboardShouldPersistTaps="always"
+            keyboardShouldPersistTaps="handled"
             style={[styles.scroll]}>
             {nodeDef &&
               React.createElement(FormsByType[nodeDef?.type] || BaseForm, {

@@ -1,19 +1,11 @@
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {Text} from 'react-native';
 
 import BaseCell from 'form/Attributes/common/Base/Cell';
 
+import {NodeValueRender} from '../Preview';
 const BaseValuesRenderer = ({nodes}) => {
   const node = nodes[0];
-  const {t} = useTranslation();
-  return (
-    <Text numberOfLines={1}>
-      {t('Form:nodeDefCoordinate.x')}: {node?.value?.x},{' '}
-      {t('Form:nodeDefCoordinate.y')}: {node?.value?.y},{' '}
-      {t('Form:nodeDefCoordinate.srs')}: {node?.value?.srs}
-    </Text>
-  );
+  return <NodeValueRender node={node} />;
 };
 
 const Cell = ({nodeDef, nodes}) => {

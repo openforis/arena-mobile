@@ -12,6 +12,8 @@ const styles = StyleSheet.create({
   bottonContainer: {
     paddingHorizontal: baseStyles.bases.BASE_2,
     marginVertical: 0,
+    flex: 1,
+    marginHorizontal: baseStyles.bases.BASE,
   },
 });
 
