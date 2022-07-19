@@ -137,6 +137,7 @@ android {
         versionCode 9
         versionName "1.2"
 
+        vectorDrawables.useSupportLibrary = true
         missingDimensionStrategy 'react-native-camera', 'general'
 
     }

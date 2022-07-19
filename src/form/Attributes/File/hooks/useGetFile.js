@@ -6,12 +6,12 @@ const useGetFile = ({multiple = false, type = [types.allFiles]} = {}) => {
     ({multiple: _multiple = multiple, callback, type: _type = type}) =>
       async () => {
         try {
-          const response = await DocumentPicker.pick({
+          const documents = await DocumentPicker.pick({
             presentationStyle: 'fullScreen',
             type,
           });
 
-          callback?.(response);
+          callback?.(documents);
         } catch (err) {
           console.warn(err);
         }
