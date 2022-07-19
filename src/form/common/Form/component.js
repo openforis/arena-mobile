@@ -16,6 +16,7 @@ import BaseForm from 'form/Attributes/common/Base/Form';
 import CoordinateForm from 'form/Attributes/Coordinate/Form';
 import DateForm from 'form/Attributes/Date/Form';
 import DecimalForm from 'form/Attributes/Decimal/Form';
+import FileForm from 'form/Attributes/File/Form';
 import IntegerForm from 'form/Attributes/Integer/Form';
 import TextForm from 'form/Attributes/Text/Form';
 import TimeForm from 'form/Attributes/Time/Form';
@@ -34,6 +35,7 @@ const FormsByType = {
   [NodeDefType.boolean]: BooleanForm,
   [NodeDefType.date]: DateForm,
   [NodeDefType.time]: TimeForm,
+  [NodeDefType.file]: FileForm,
 };
 
 const AttributeFormWithModal = () => {
@@ -43,11 +45,11 @@ const AttributeFormWithModal = () => {
 
   useEffect(() => {
     if (nodeDef) {
-      const finalPanerWidth = HEIGHT;
+      const finalPanelHeight = HEIGHT;
       Animated.sequence([
         Animated.delay(50),
         Animated.timing(panelHeight, {
-          toValue: finalPanerWidth,
+          toValue: finalPanelHeight,
           duration: 250,
           useNativeDriver: false,
         }),

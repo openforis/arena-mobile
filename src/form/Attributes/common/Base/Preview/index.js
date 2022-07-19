@@ -51,6 +51,15 @@ const BaseNodeValueRenderer = ({nodeDef}) => {
   );
 };
 
+export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
+  return (
+    <View style={styles.container}>
+      <AttributeHeader nodeDef={nodeDef} nodes={nodes} />
+      {children}
+    </View>
+  );
+};
+
 const BasePreview = ({
   nodeDef,
   NodeValueRender = BaseNodeValueRenderer,
@@ -72,9 +81,7 @@ const BasePreview = ({
   }, [dispatch, parentEntityNode, nodeDef, nodes, _createNode]);
 
   return (
-    <View style={styles.container}>
-      <AttributeHeader nodeDef={nodeDef} nodes={nodes} />
-
+    <BasePreviewContainer nodeDef={nodeDef} nodes={nodes}>
       {nodes?.map(node => (
         <BasePreviewNode
           key={node.uuid}
@@ -86,7 +93,7 @@ const BasePreview = ({
         />
       ))}
       {nodeDef.props.multiple && <Button onPress={_createNode}>asas</Button>}
-    </View>
+    </BasePreviewContainer>
   );
 };
 

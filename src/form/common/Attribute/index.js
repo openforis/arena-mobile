@@ -10,6 +10,7 @@ import BasePreview from '../../Attributes/common/Base/Preview';
 import CoordinatePreview from '../../Attributes/Coordinate/Preview';
 import DatePreview from '../../Attributes/Date/Preview';
 import DecimalPreview from '../../Attributes/Decimal/Preview';
+import FilePreview from '../../Attributes/File/Preview';
 import IntegerPreview from '../../Attributes/Integer/Preview';
 import TextPreview from '../../Attributes/Text/Preview';
 import TimePreview from '../../Attributes/Time/Preview';
@@ -23,6 +24,7 @@ const AttributesComponentByType = {
   [NodeDefType.boolean]: BooleanPreview,
   [NodeDefType.date]: DatePreview,
   [NodeDefType.time]: TimePreview,
+  [NodeDefType.file]: FilePreview,
 };
 
 const Attribute = ({nodeDefUuid}) => {

@@ -1,17 +1,14 @@
 import {NodeDefs, Objects} from '@openforis/arena-core';
 import React, {useCallback, useMemo} from 'react';
-import {Text, View} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 
-import AttributeHeader from 'form/common/Header';
+import {BasePreviewContainer} from 'form/Attributes/common/Base/Preview';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {actions as nodesActions} from 'state/nodes';
 import surveySelectors from 'state/survey/selectors';
 
 import ChipContainer from '../components/ChipsContainer';
 import OptionChip from '../components/OptionChip';
-
-import styles from './styles';
 
 const getCategoryItemLabel = ({categoryItem, nodeDef, language}) =>
   `(${categoryItem.props.code}) ${categoryItem.props.labels[language]}`;
@@ -130,9 +127,7 @@ const CodeCheckbox = ({nodeDef}) => {
   }, [categoryItems, nodes, nodeDef, language, handlePress]);
 
   return (
-    <View style={styles.container}>
-      <AttributeHeader nodeDef={nodeDef} nodes={nodes} />
-
+    <BasePreviewContainer nodeDef={nodeDef} nodes={nodes}>
       <ChipContainer>
         {options.map(({key, onPress, isActive, label}) => (
           <OptionChip
@@ -143,7 +138,7 @@ const CodeCheckbox = ({nodeDef}) => {
           />
         ))}
       </ChipContainer>
-    </View>
+    </BasePreviewContainer>
   );
 };
 
