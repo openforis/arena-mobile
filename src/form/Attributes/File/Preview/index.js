@@ -41,14 +41,14 @@ const Container = ({children}) => (
 
 const FileLabel = ({node, onPress}) => {
   const dispatch = useDispatch();
-  /*const handleSelectNodeAndNodeDef = useCallback(
+  const handleSelectNodeAndNodeDef = useCallback(
     event => {
       console.log('LONG');
       event.stopPropagation();
       //dispatch(formActions.setNode({node: node}));
     },
     [dispatch, node],
-  );*/
+  );
 
   return (
     <Button
@@ -56,7 +56,7 @@ const FileLabel = ({node, onPress}) => {
       type="secondary"
       customContainerStyle={styles.bottonContainer}
       label={node?.value?.fileName}
-      /*onLongPress={handleSelectNodeAndNodeDef}*/
+      onLongPress={handleSelectNodeAndNodeDef}
     />
   );
 };

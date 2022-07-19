@@ -46,8 +46,8 @@ const DateForm = ({nodeDef}) => {
   );
 
   useEffect(() => {
-    return () => dispatch(formActions.setNode({node: false}));
-  }, []);
+    return () => handleClose();
+  }, [handleClose]);
 
   useEffect(() => {
     if (node.value) {

@@ -1,69 +1,31 @@
 import {NodeDefs, Objects} from '@openforis/arena-core';
 import React, {useCallback, useMemo} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import {BasePreviewContainer} from 'form/Attributes/common/Base/Preview';
-import {selectors as formSelectors, actions as formActions} from 'state/form';
-import {actions as nodesActions} from 'state/nodes';
+import {selectors as formSelectors} from 'state/form';
+import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import surveySelectors from 'state/survey/selectors';
 
 import ChipContainer from '../components/ChipsContainer';
 import OptionChip from '../components/OptionChip';
 
-const getCategoryItemLabel = ({categoryItem, nodeDef, language}) =>
+const getCategoryItemLabel = ({categoryItem, language}) =>
   `(${categoryItem.props.code}) ${categoryItem.props.labels[language]}`;
 
 const CodeCheckbox = ({nodeDef}) => {
-  const dispatch = useDispatch();
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
   const nodes = useSelector(state =>
     formSelectors.getNodeDefNodesInHierarchy(state, nodeDef),
   );
 
-  const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
   const categoryItems = useSelector(state =>
     surveySelectors.getCategoryItems(state, nodeDef.uuid),
   );
 
-  const handleUpdate = useCallback(
-    ({node, value = null, callback = handleClose}) => {
-      dispatch(
-        nodesActions.updateNode({
-          updatedNode: {
-            ...node,
-            value,
-          },
-          callback,
-        }),
-      );
-    },
-    [dispatch, handleClose],
-  );
-
-  const handleCreate = useCallback(
-    ({value = null}) => {
-      dispatch(
-        nodesActions.createNodeWithValue({
-          nodeDef,
-          parentNode: parentEntityNode,
-          value,
-        }),
-      );
-    },
-    [dispatch, nodeDef, parentEntityNode],
-  );
-
-  const handleDelete = useCallback(
-    ({node, callback = handleClose}) => {
-      dispatch(
-        nodesActions.removeNode({
-          node,
-          callback,
-        }),
-      );
-    },
-    [dispatch, handleClose],
-  );
+  const {handleDelete, handleCreate, handleUpdate} = useNodeFormActions({
+    nodeDef,
+  });
 
   const handlePress = useCallback(
     ({categoryItem, node}) =>
@@ -103,10 +65,6 @@ const CodeCheckbox = ({nodeDef}) => {
       },
     [handleUpdate, handleCreate, handleDelete, nodeDef, nodes],
   );
-
-  const handleClose = useCallback(() => {
-    dispatch(formActions.setNode({node: false}));
-  }, [dispatch]);
 
   const options = useMemo(() => {
     return categoryItems.map(categoryItem => {

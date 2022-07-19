@@ -1,8 +1,9 @@
 import {useCallback} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 
-import {selectors as formSelectors, actions as formActions} from 'state/form';
-import {actions as nodesActions} from 'state/nodes';
+import nodesActions from '../../nodes/actionCreators';
+import formActions from '../actionCreators';
+import formSelectors from '../selectors';
 
 const useNodeFormActions = ({nodeDef}) => {
   const dispatch = useDispatch();

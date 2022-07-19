@@ -1,10 +1,10 @@
 import {useCallback, useMemo} from 'react';
 
 import {uuidv4} from 'infra/uuid';
+import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 
 import useGetFile from './useGetFile';
 import useImage from './useImage';
-import useNodeFormActions from './useNodeFormActions';
 
 const useFile = ({nodeDef, node, isImage = false}) => {
   // TODO type based on nodeDef
