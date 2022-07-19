@@ -34,4 +34,9 @@ export const getSelectedSurveyLanguages = createSelector(
   survey => survey?.props?.languages,
 );
 export const getSurveyCycle = createSelector(getSurvey, survey => 0);
+
+export const getSurveySRS = createSelector(
+  getSurvey,
+  survey => survey?.props?.srs || [],
+);
 export const getRefData = createSelector(getSurvey, survey => survey?.refData);

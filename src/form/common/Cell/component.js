@@ -12,6 +12,7 @@ const FormsByType = {
   [NodeDefType.date]: BaseCell,
   [NodeDefType.time]: BaseCell,
   [NodeDefType.code]: CodeCell,
+  [NodeDefType.coordinate]: BaseCell,
 };
 
 const Cell = ({nodeDef, nodes}) => {

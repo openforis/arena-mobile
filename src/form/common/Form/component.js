@@ -13,6 +13,7 @@ import {useSelector} from 'react-redux';
 import BooleanForm from 'form/Attributes/Boolean/Form';
 import CodeForm from 'form/Attributes/Code/Form';
 import BaseForm from 'form/Attributes/common/Base/Form';
+import CoordinateForm from 'form/Attributes/Coordinate/Form';
 import DateForm from 'form/Attributes/Date/Form';
 import DecimalForm from 'form/Attributes/Decimal/Form';
 import IntegerForm from 'form/Attributes/Integer/Form';
@@ -29,6 +30,7 @@ const FormsByType = {
   [NodeDefType.decimal]: DecimalForm,
   [NodeDefType.text]: TextForm,
   [NodeDefType.code]: CodeForm,
+  [NodeDefType.coordinate]: CoordinateForm,
   [NodeDefType.boolean]: BooleanForm,
   [NodeDefType.date]: DateForm,
   [NodeDefType.time]: TimeForm,

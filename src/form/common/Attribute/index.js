@@ -7,6 +7,7 @@ import {selectors as surveySelectors} from 'state/survey';
 import BooleanPreview from '../../Attributes/Boolean/Preview';
 import CodePreview from '../../Attributes/Code/Preview';
 import BasePreview from '../../Attributes/common/Base/Preview';
+import CoordinatePreview from '../../Attributes/Coordinate/Preview';
 import DatePreview from '../../Attributes/Date/Preview';
 import DecimalPreview from '../../Attributes/Decimal/Preview';
 import IntegerPreview from '../../Attributes/Integer/Preview';
@@ -18,6 +19,7 @@ const AttributesComponentByType = {
   [NodeDefType.decimal]: DecimalPreview,
   [NodeDefType.text]: TextPreview,
   [NodeDefType.code]: CodePreview,
+  [NodeDefType.coordinate]: CoordinatePreview,
   [NodeDefType.boolean]: BooleanPreview,
   [NodeDefType.date]: DatePreview,
   [NodeDefType.time]: TimePreview,

@@ -12,5 +12,10 @@
         "false": "$t(Common:no)"
       }
     }
+  },
+  "nodeDefCoordinate": {
+    "x": "X",
+    "y": "Y",
+    "srs": "SRS"
   }
 }
