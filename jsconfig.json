@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "arena-mobile-ui/*": ["arena-mobile-ui/*"],
+      "form/*": ["form/*"],
+      "i18n/*": ["i18n/*"],
+      "infra/*": ["infra/*"],
+      "navigation/*": ["navigation/*"],
+      "screens/*": ["screens/*"],
+      "state/*": ["state/*"]
+    }
+  },
+  "include": ["src"]
+}
