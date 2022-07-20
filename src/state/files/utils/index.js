@@ -24,7 +24,7 @@ const createFile = async node => {
 
 const deleteFile = async fileUuid => {
   if (fileUuid) {
-    return fs.deleteDir(`${BASE_ARENA_FILES_PATH}/${fileUuid}`);
+    await fs.deleteDir(`${BASE_ARENA_FILES_PATH}/${fileUuid}`);
   }
   return;
 };
@@ -34,16 +34,15 @@ const deleteFiles = async filesUuids =>
 
 const readArenaFilesDir = async () => {
   let fileNames = [];
-  const fileUuids = await fs.readDir({
+  const files = await fs.readDir({
     dirPath: BASE_ARENA_FILES_PATH,
   });
 
-  fileUuids.forEach(async _dir => {
-    const dir = await fs.readDir({
-      dirPath: _dir.path,
-    });
-    fileNames.push(dir.name);
-  });
+  for await (const file of files) {
+    const fileDir = await fs.readDir({dirPath: file.path});
+    fileNames.push(fileDir.name);
+  }
+  console.log('fileNames', fileNames);
 };
 
 const deleteArenaFilesDir = async () => fs.deleteDir(BASE_ARENA_FILES_PATH);

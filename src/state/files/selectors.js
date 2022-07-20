@@ -19,7 +19,7 @@ const getFiles = createSelector(getFilesByUuid, files => Object.values(files));
 const getFileByUuid = createCachedSelector(
   getFilesByUuid,
   (_, nodeUuid) => nodeUuid,
-  (filessByUuid, nodeUuid) => filessByUuid[nodeUuid] || false,
+  (filesByUuid, nodeUuid) => filesByUuid[nodeUuid] || false,
 )((_state, nodeUuid) => nodeUuid);
 
 const getFilesBySurveyUuid = createCachedSelector(

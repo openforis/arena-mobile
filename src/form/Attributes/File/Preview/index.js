@@ -1,4 +1,4 @@
-import {NodeDefs, Objects} from '@openforis/arena-core';
+import {NodeDefs} from '@openforis/arena-core';
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -7,7 +7,7 @@ import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import baseStyles from 'arena-mobile-ui/styles';
 import {BasePreviewContainer} from 'form/Attributes/common/Base/Preview';
-import {selectors as formSelectors, actions as formActions} from 'state/form';
+import {selectors as formSelectors} from 'state/form';
 
 import {useFile} from '../hooks';
 

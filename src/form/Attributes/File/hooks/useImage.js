@@ -1,7 +1,7 @@
 import {useCallback} from 'react';
 import ImagePicker, {ImageOrVideo} from 'react-native-image-crop-picker';
 
-const getDocumentsFromImage = image => {
+const getFilesFromImage = image => {
   console.log(image);
   return [
     {
@@ -28,8 +28,8 @@ const useGetImage = ({cropping = false} = {}) => {
           //setUri(image.path);
           //props.onChange?.(image);
 
-          const documents = getDocumentsFromImage(image);
-          callback?.(documents);
+          const files = getFilesFromImage(image);
+          callback?.(files);
         } catch (err) {
           console.warn(err);
         }

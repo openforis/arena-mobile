@@ -40,7 +40,7 @@ const useGetLocation = () => {
         '',
         [
           {text: 'Go to Settings', onPress: openSetting},
-          {text: "Don't Use Location", onPress: () => {}},
+          {text: "Don't Use Location", onPress: null},
         ],
       );
     }
@@ -50,19 +50,18 @@ const useGetLocation = () => {
 
   const hasLocationPermission = useCallback(async () => {
     if (Platform.OS === 'ios') {
-      const hasPermission = await hasPermissionIOS();
-      return hasPermission;
+      return hasPermissionIOS();
     }
 
     if (Platform.OS === 'android' && Platform.Version < 23) {
       return true;
     }
 
-    const hasPermission = await PermissionsAndroid.check(
+    const hasAndroidPermission = await PermissionsAndroid.check(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
     );
 
-    if (hasPermission) {
+    if (hasAndroidPermission) {
       return true;
     }
 

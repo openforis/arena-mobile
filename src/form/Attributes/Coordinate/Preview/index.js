@@ -12,7 +12,7 @@ export const NodeValueRender = ({node}) => {
   const {t} = useTranslation();
   const surveySrs = useSelector(surveySelectors.getSurveySRS);
   const selectedSrs =
-    node?.value?.srs && surveySrs.find(srs => srs.code === node?.value?.srs);
+    node?.value?.srs && surveySrs.find(srs => srs.code === node.value.srs);
   return (
     <Text numberOfLines={1}>
       {t('Form:nodeDefCoordinate.x')}: {coordinateText(node?.value?.x)},{' '}
