@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
   container: {
     marginTop: baseStyles.bases.BASE,
     flexDirection: 'row',
+    flex: 1,
   },
   labels: ({expanded}) => ({
     paddingRight: baseStyles.bases.BASE,
@@ -13,7 +14,10 @@ const styles = StyleSheet.create({
   }),
   values: ({expanded}) => ({
     paddingRight: baseStyles.bases.BASE,
-    ...(expanded ? {justifyContent: 'flex-end', alignItems: 'flex-end'} : {}),
+
+    ...(expanded
+      ? {justifyContent: 'flex-end', alignItems: 'flex-end'}
+      : {flex: 1}),
   }),
 });
 

@@ -21,6 +21,13 @@ const styles = StyleSheet.create({
     zIndex: 99,
     flex: 1,
   },
+  formContainerWithModal: {
+    backgroundColor: 'white',
+    borderRadius: baseStyles.bases.BASE_4,
+    padding: baseStyles.bases.BASE_4,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+  },
   scroll: {
     borderRadius: baseStyles.bases.BASE_4,
     padding: baseStyles.bases.BASE_4,

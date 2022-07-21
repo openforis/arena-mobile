@@ -7,9 +7,9 @@ import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import baseStyles from 'arena-mobile-ui/styles';
 import {BasePreviewContainer} from 'form/Attributes/common/Base/Preview';
-import {selectors as formSelectors} from 'state/form';
+import {selectors as formSelectors, actions as formActions} from 'state/form';
 
-import {useFile} from '../hooks';
+import {useFile, useFilePickerModal} from '../hooks';
 
 import styles from './styles';
 
@@ -43,9 +43,8 @@ const FileLabel = ({node, onPress}) => {
   const dispatch = useDispatch();
   const handleSelectNodeAndNodeDef = useCallback(
     event => {
-      console.log('LONG');
       event.stopPropagation();
-      //dispatch(formActions.setNode({node: node}));
+      dispatch(formActions.setNode({node: node}));
     },
     [dispatch, node],
   );
@@ -62,25 +61,29 @@ const FileLabel = ({node, onPress}) => {
 };
 
 const NodeValueRender = ({node = false, nodeDef}) => {
-  const {updateFile, createFile, deleteFile} = useFile({
+  const {deleteFile, handleByPickerType} = useFile({
     node,
     nodeDef,
-    isImage: ['image', 'video'].includes(nodeDef?.props?.fileType),
+  });
+  const {toggleModal, modal} = useFilePickerModal({
+    node,
+    nodeDef,
+    handleByPickerType,
   });
 
   return (
-    <Container>
-      <LoadFileButton
-        node={node}
-        onPress={node?.uuid ? updateFile : createFile}
-      />
-      {node?.value && (
-        <>
-          <FileLabel node={node} nodeDef={nodeDef} onPress={updateFile} />
-          <DeleteFileButton node={node} onPress={deleteFile} />
-        </>
-      )}
-    </Container>
+    <>
+      <Container>
+        <LoadFileButton node={node} onPress={toggleModal} />
+        {node?.value && (
+          <>
+            <FileLabel node={node} nodeDef={nodeDef} onPress={toggleModal} />
+            <DeleteFileButton node={node} onPress={deleteFile} />
+          </>
+        )}
+      </Container>
+      {modal}
+    </>
   );
 };
 
@@ -95,7 +98,7 @@ const Preview = ({nodeDef}) => {
         <NodeValueRender key={node.uuid} node={node} nodeDef={nodeDef} />
       ))}
       {(NodeDefs.isMultiple(nodeDef) || nodes.length === 0) && (
-        <NodeValueRender key="empty" nodeDef={nodeDef} />
+        <NodeValueRender key={`empty_${nodes.length}`} nodeDef={nodeDef} />
       )}
     </BasePreviewContainer>
   );

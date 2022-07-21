@@ -8,7 +8,7 @@ import surveyActions from 'state/survey/actionCreators';
 import surveySelectors from 'state/survey/selectors';
 import surveysActions from 'state/surveys/actionCreators';
 
-import filesActionTypes from '../actionTypes';
+import filesActionTypes from '../actionCreators';
 import filesSelectors from '../selectors';
 import arenaFileUtils from '../utils';
 

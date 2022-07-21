@@ -1,4 +1,5 @@
 import {useState, useCallback} from 'react';
+import {useTranslation} from 'react-i18next';
 import {
   Platform,
   Linking,
@@ -12,6 +13,7 @@ import {alert} from 'arena-mobile-ui/utils';
 import appConfig from '../../../../../app.json';
 
 const useGetLocation = () => {
+  const {t} = useTranslation();
   const [location, setLocation] = useState(null);
   const [forceLocation, setForceLocation] = useState(true);
   const [highAccuracy, setHighAccuracy] = useState(true);
@@ -21,7 +23,7 @@ const useGetLocation = () => {
   const hasPermissionIOS = useCallback(async () => {
     const openSetting = () => {
       Linking.openSettings().catch(() => {
-        alert('Unable to open settings');
+        alert(t('Form:nodeDefCoordinate.permissions.unable_settings'));
       });
     };
     const status = await Geolocation.requestAuthorization('whenInUse');
@@ -31,22 +33,30 @@ const useGetLocation = () => {
     }
 
     if (status === 'denied') {
-      alert('Location permission denied');
+      alert(t('Form:nodeDefCoordinate.permissions.denied'));
     }
 
     if (status === 'disabled') {
       alert(
-        `Turn on Location Services to allow "${appConfig.displayName}" to determine your location.`,
+        t('Form:nodeDefCoordinate.permissions.turn_on.message', {
+          appName: appConfig.displayName,
+        }),
         '',
         [
-          {text: 'Go to Settings', onPress: openSetting},
-          {text: "Don't Use Location", onPress: null},
+          {
+            text: t('Form:nodeDefCoordinate.permissions.turn_on.accept'),
+            onPress: openSetting,
+          },
+          {
+            text: t('Form:nodeDefCoordinate.permissions.turn_on.reject'),
+            onPress: null,
+          },
         ],
       );
     }
 
     return false;
-  }, []);
+  }, [t]);
 
   const hasLocationPermission = useCallback(async () => {
     if (Platform.OS === 'ios') {
@@ -75,18 +85,18 @@ const useGetLocation = () => {
 
     if (status === PermissionsAndroid.RESULTS.DENIED) {
       ToastAndroid.show(
-        'Location permission denied by user.',
+        t('Form:nodeDefCoordinate.permissions.toast.denied'),
         ToastAndroid.LONG,
       );
     } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
       ToastAndroid.show(
-        'Location permission revoked by user.',
+        t('Form:nodeDefCoordinate.permissions.toast.revoked'),
         ToastAndroid.LONG,
       );
     }
 
     return false;
-  }, [hasPermissionIOS]);
+  }, [hasPermissionIOS, t]);
 
   const getLocation = useCallback(async () => {
     const hasPermission = await hasLocationPermission();

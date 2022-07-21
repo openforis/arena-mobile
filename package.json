@@ -35,6 +35,7 @@
     "react-native-image-crop-picker": "^0.38.0",
     "react-native-mmkv": "^2.4.3",
     "react-native-mmkv-flipper-plugin": "^1.0.0",
+    "react-native-modal": "^13.0.1",
     "react-native-multiple-select": "^0.5.9",
     "react-native-permissions": "^3.4.0",
     "react-native-picker-select": "^8.0.4",

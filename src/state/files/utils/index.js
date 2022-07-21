@@ -4,22 +4,27 @@ import {uuidv4} from 'infra/uuid';
 const BASE_ARENA_FILES_PATH = `${fs.BASE_PATH}/arena-files`;
 
 const createFile = async node => {
-  const fileUuid = node?.value?.fileUuid || uuidv4();
-  const destinationPath = `${BASE_ARENA_FILES_PATH}/${fileUuid}/${node?.value?.fileName}`;
+  try {
+    const fileUuid = node?.value?.fileUuid || uuidv4();
+    const destinationPath = `${BASE_ARENA_FILES_PATH}/${fileUuid}/${node?.value?.fileName}`;
 
-  await fs.copyFile({
-    sourcePath: node.value.uri.replace('%20', ' '),
-    destinationPath,
-  });
+    await fs.copyFile({
+      sourcePath: node.value.uri.replace('%20', ' '),
+      destinationPath,
+    });
 
-  return {
-    uuid: fileUuid,
-    uri: destinationPath,
-    recordUuid: node.recordUuid,
-    surveyUuid: node.surveyUuid,
-    nodeUuid: node.uuid,
-    meta: Object.assign({}, node.value, {fileUuid}),
-  };
+    return {
+      uuid: fileUuid,
+      uri: destinationPath,
+      recordUuid: node.recordUuid,
+      surveyUuid: node.surveyUuid,
+      nodeUuid: node.uuid,
+      meta: Object.assign({}, node.value, {fileUuid}),
+    };
+  } catch (e) {
+    console.log('error creating', e);
+    return false;
+  }
 };
 
 const deleteFile = async fileUuid => {

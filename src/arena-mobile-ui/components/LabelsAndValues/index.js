@@ -11,13 +11,16 @@ export const Label = ({label, size = 's'}) => (
       baseStyles.textStyle.secondaryText,
       baseStyles.textStyle.bold,
       baseStyles.textSize[size],
-    ]}>
+    ]}
+    numberOfLines={1}>
     {label}:
   </Text>
 );
 
 export const Value = ({label, size = 's'}) => (
-  <Text style={[baseStyles.textStyle.secondaryText, baseStyles.textSize[size]]}>
+  <Text
+    style={[baseStyles.textStyle.secondaryText, baseStyles.textSize[size]]}
+    numberOfLines={1}>
     {label}
   </Text>
 );

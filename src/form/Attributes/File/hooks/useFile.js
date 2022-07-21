@@ -3,13 +3,13 @@ import {useCallback, useMemo} from 'react';
 import {uuidv4} from 'infra/uuid';
 import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 
+import {pickerTypes} from './useFilePickerModal';
 import useGetFile from './useGetFile';
 import useImage from './useImage';
-
 const useFile = ({nodeDef, node, isImage = false}) => {
   // TODO type based on nodeDef
-  const {getFile, types} = useGetFile();
-  const {getImage} = useImage();
+  const {getFile} = useGetFile();
+  const {getImage, takePhoto} = useImage();
   const {handleCreate, handleUpdate, handleDelete} = useNodeFormActions({
     nodeDef,
   });
@@ -34,15 +34,18 @@ const useFile = ({nodeDef, node, isImage = false}) => {
   );
 
   const updateFile = useCallback(
-    () =>
-      baseGetterFn({
+    action =>
+      (action || baseGetterFn)({
         callback: getFileActionCallback(handleUpdate),
       })(),
     [baseGetterFn, handleUpdate, getFileActionCallback],
   );
 
   const createFile = useCallback(
-    () => baseGetterFn({callback: getFileActionCallback(handleCreate)})(),
+    action =>
+      (action || baseGetterFn)({
+        callback: getFileActionCallback(handleCreate),
+      })(),
     [baseGetterFn, handleCreate, getFileActionCallback],
   );
   const deleteFile = useCallback(() => {
@@ -50,7 +53,33 @@ const useFile = ({nodeDef, node, isImage = false}) => {
     //getFile({callback: getFileActionCallback(handleDelete)})()
   }, [node, handleDelete]);
 
-  return {updateFile, createFile, deleteFile, getFileActionCallback};
+  const handleByPickerType = useCallback(
+    pickerType => () => {
+      const createOrUpdate = node.uuid ? updateFile : createFile;
+
+      if (pickerType === pickerTypes.document) {
+        return createOrUpdate(getFile);
+      }
+      if (pickerType === pickerTypes.camera) {
+        return createOrUpdate(takePhoto);
+      }
+      if (pickerType === pickerTypes.galery) {
+        return createOrUpdate(getImage);
+      }
+      if (pickerType === pickerTypes.audio) {
+        return createOrUpdate(getFile);
+      }
+      return createOrUpdate();
+    },
+    [node, updateFile, createFile, getFile, getImage, takePhoto],
+  );
+  return {
+    updateFile,
+    createFile,
+    deleteFile,
+    getFileActionCallback,
+    handleByPickerType,
+  };
 };
 
 export default useFile;
