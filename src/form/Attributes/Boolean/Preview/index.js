@@ -38,7 +38,6 @@ const BooleanOption = ({value, active = false, onPress, nodeDef}) => {
 
 const Boolean = ({node, nodeDef}) => {
   const dispatch = useDispatch();
-  const {t} = useTranslation();
 
   const handleClose = useCallback(() => {
     dispatch(formActions.setNode({node: false}));

@@ -1,14 +1,12 @@
 import {NodeDefs} from '@openforis/arena-core';
 import React from 'react';
-import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import AttributeHeader from 'form/common/Header';
+import {BasePreviewContainer} from 'form/Attributes/common/Base/Preview';
 import {selectors as formSelectors} from 'state/form';
 
 import CodeDropdownMultiple from './CodeDropdownMultiple';
 import CodeDropdownSingle from './CodeDropdownSingle';
-import styles from './styles';
 
 const CodeDropdown = ({nodeDef}) => {
   const nodes = useSelector(state =>
@@ -16,14 +14,13 @@ const CodeDropdown = ({nodeDef}) => {
   );
 
   return (
-    <View style={styles.container}>
-      <AttributeHeader nodeDef={nodeDef} nodes={nodes} />
+    <BasePreviewContainer nodeDef={nodeDef} nodes={nodes}>
       {NodeDefs.isMultiple(nodeDef) ? (
         <CodeDropdownMultiple nodeDef={nodeDef} />
       ) : (
         <CodeDropdownSingle nodeDef={nodeDef} />
       )}
-    </View>
+    </BasePreviewContainer>
   );
 };
 

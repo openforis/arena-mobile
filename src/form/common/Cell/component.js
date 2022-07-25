@@ -3,6 +3,7 @@ import React from 'react';
 
 import CodeCell from 'form/Attributes/Code/Cell';
 import BaseCell from 'form/Attributes/common/Base/Cell';
+import FileCell from 'form/Attributes/File/Cell';
 
 const FormsByType = {
   [NodeDefType.integer]: BaseCell,
@@ -12,6 +13,8 @@ const FormsByType = {
   [NodeDefType.date]: BaseCell,
   [NodeDefType.time]: BaseCell,
   [NodeDefType.code]: CodeCell,
+  [NodeDefType.file]: FileCell,
+  [NodeDefType.coordinate]: BaseCell,
 };
 
 const Cell = ({nodeDef, nodes}) => {

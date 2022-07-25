@@ -12,5 +12,36 @@
         "false": "$t(Common:no)"
       }
     }
+  },
+  "nodeDefCoordinate": {
+    "x": "X",
+    "y": "Y",
+    "srs": "SRS",
+    "permissions": {
+      "denied": "Location permission denied",
+      "unable_settings": "Unable to open settings",
+      "turn_on": {
+        "message": "Turn on Location Services to allow \"{{ appName }}\" to determine your location.",
+        "accept": "Go to Settings",
+        "reject": "Don't Use Location"
+      },
+      "toasts": {
+        "denied": "Location permission denied by user.",
+        "revoked": "Location permission revoked by user."
+      }
+    }
+  },
+  "nodeDefFile": {
+    "name": "name",
+    "more_info": {
+      "show_detail": "Show detail",
+      "hide_detail": "Hide detail"
+    },
+    "pickers": {
+      "camera": "Camera",
+      "gallery": "Gallery",
+      "document": "Document",
+      "audio": "Audio"
+    }
   }
 }

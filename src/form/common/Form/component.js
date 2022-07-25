@@ -13,8 +13,10 @@ import {useSelector} from 'react-redux';
 import BooleanForm from 'form/Attributes/Boolean/Form';
 import CodeForm from 'form/Attributes/Code/Form';
 import BaseForm from 'form/Attributes/common/Base/Form';
+import CoordinateForm from 'form/Attributes/Coordinate/Form';
 import DateForm from 'form/Attributes/Date/Form';
 import DecimalForm from 'form/Attributes/Decimal/Form';
+import FileForm from 'form/Attributes/File/Form';
 import IntegerForm from 'form/Attributes/Integer/Form';
 import TextForm from 'form/Attributes/Text/Form';
 import TimeForm from 'form/Attributes/Time/Form';
@@ -29,9 +31,11 @@ const FormsByType = {
   [NodeDefType.decimal]: DecimalForm,
   [NodeDefType.text]: TextForm,
   [NodeDefType.code]: CodeForm,
+  [NodeDefType.coordinate]: CoordinateForm,
   [NodeDefType.boolean]: BooleanForm,
   [NodeDefType.date]: DateForm,
   [NodeDefType.time]: TimeForm,
+  [NodeDefType.file]: FileForm,
 };
 
 const AttributeFormWithModal = () => {
@@ -41,11 +45,11 @@ const AttributeFormWithModal = () => {
 
   useEffect(() => {
     if (nodeDef) {
-      const finalPanerWidth = HEIGHT;
+      const finalPanelHeight = HEIGHT;
       Animated.sequence([
         Animated.delay(50),
         Animated.timing(panelHeight, {
-          toValue: finalPanerWidth,
+          toValue: finalPanelHeight,
           duration: 250,
           useNativeDriver: false,
         }),
@@ -94,11 +98,11 @@ const AttributeFormWithModal = () => {
       <Animated.View style={[styles.formContainer, {height: panelHeight}]}>
         <KeyboardAvoidingView
           style={[styles.container]}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === 'ios' ? 'padding' : ''}
           enabled>
           <TouchableOpacity style={{height: 80}} />
           <ScrollView
-            keyboardShouldPersistTaps="always"
+            keyboardShouldPersistTaps="handled"
             style={[styles.scroll]}>
             {nodeDef &&
               React.createElement(FormsByType[nodeDef?.type] || BaseForm, {

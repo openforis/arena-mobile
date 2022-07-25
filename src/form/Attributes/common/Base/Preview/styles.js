@@ -9,6 +9,7 @@ const aligmentByType = {
   [NodeDefType.date]: 'center',
   [NodeDefType.time]: 'center',
   [NodeDefType.boolean]: 'flex-start',
+  [NodeDefType.coordinate]: 'flex-start',
 };
 const paddingByType = {
   [NodeDefType.boolean]: 0,
@@ -27,6 +28,7 @@ const styles = StyleSheet.create({
       NodeDefType.code,
       NodeDefType.time,
       NodeDefType.date,
+      NodeDefType.coordinate,
     ].includes(nodeDef.type)
       ? 1
       : 0,

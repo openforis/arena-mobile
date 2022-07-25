@@ -3,11 +3,11 @@ import {Platform} from 'react-native';
 
 import {Form} from '../../common/BaseInput';
 
-const IntegerForm = ({nodeDef}) => (
+const DecimalForm = ({nodeDef}) => (
   <Form
     nodeDef={nodeDef}
     keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'numeric'}
   />
 );
 
-export default IntegerForm;
+export default DecimalForm;

@@ -19,13 +19,13 @@ const BaseForm = ({nodeDef, handleSubmit, children}) => {
     [handleSubmit],
   );
 
-  const _handleSubmitAndClose = useCallback(() => {
-    _handleSubmit({callback: _handleClose});
-  }, [_handleSubmit, _handleClose]);
-
-  const _handleClose = useCallback(() => {
+  const handleClose = useCallback(() => {
     dispatch(formActions.setNode({node: false}));
   }, [dispatch]);
+
+  const _handleSubmitAndClose = useCallback(() => {
+    _handleSubmit({callback: handleClose});
+  }, [_handleSubmit, handleClose]);
 
   return (
     <View>
@@ -33,7 +33,7 @@ const BaseForm = ({nodeDef, handleSubmit, children}) => {
         <TouchableIcon
           iconName="close"
           customStyle={styles.closeIcon}
-          onPress={_handleClose}
+          onPress={handleClose}
         />
       </View>
       <AttributeHeader nodeDef={nodeDef} showValidation={false} />

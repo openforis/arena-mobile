@@ -47,8 +47,8 @@ const ConnectionSettings = () => {
 
   const handleResetData = useCallback(() => {
     alert({
-      title: t('ConnectionSettings:reset..title'),
-      message: t('ConnectionSettings:reset..message'),
+      title: t('ConnectionSettings:reset.title'),
+      message: t('ConnectionSettings:reset.message'),
       acceptText: t('ConnectionSettings:reset.accept'),
       dismissText: t('ConnectionSettings:reset.dismiss'),
       onAccept: () => {
@@ -131,6 +131,7 @@ const ConnectionSettings = () => {
                   title={t('ConnectionSettings:server_config_fields.address')}
                   onChangeText={onChangeText('serverUrl')}
                   value={formData?.serverUrl || serverUrl}
+                  autoCapitalize="none"
                 />
               </View>
 
@@ -142,6 +143,7 @@ const ConnectionSettings = () => {
                   title={t('ConnectionSettings:access_info_fields.username')}
                   onChangeText={onChangeText('username')}
                   value={formData?.username || username}
+                  autoCapitalize="none"
                 />
                 <PasswordInput
                   title={t('ConnectionSettings:access_info_fields.password')}

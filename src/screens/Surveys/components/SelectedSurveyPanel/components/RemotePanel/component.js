@@ -17,7 +17,7 @@ const RemotePanel = ({survey}) => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
   const [actionType, setActionType] = useState(null);
-
+  const isLoading = useSelector(surveysSelectors.getIsLoading);
   const localSurvey = useSelector(state =>
     surveysSelectors.getSurveyByUuid(state, {surveyUuid: survey?.uuid}),
   );
@@ -56,6 +56,7 @@ const RemotePanel = ({survey}) => {
           type="primary"
           label={t('Surveys:selected_survey_panel.remote.cta_download')}
           onPress={handleDownload}
+          disabled={isLoading}
         />
       </View>
     );
@@ -67,6 +68,7 @@ const RemotePanel = ({survey}) => {
           type="primary"
           label={t('Surveys:selected_survey_panel.remote.cta_update')}
           onPress={handleUpdate}
+          disabled={isLoading}
         />
       </View>
     );
@@ -81,6 +83,7 @@ const RemotePanel = ({survey}) => {
             : t('Surveys:selected_survey_panel.remote.cta_select')
         }
         onPress={handleSelect}
+        disabled={isLoading}
       />
     </View>
   );

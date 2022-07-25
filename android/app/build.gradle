@@ -134,9 +134,10 @@ android {
         applicationId "org.openforis.collect.arena"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 9
-        versionName "1.2"
+        versionCode 20
+        versionName "1.3.0"
 
+        vectorDrawables.useSupportLibrary = true
         missingDimensionStrategy 'react-native-camera', 'general'
 
     }

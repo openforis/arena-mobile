@@ -29,8 +29,9 @@ const Select = ({
   labelStractor = _labelStractor,
   prepareItemFn = _prepareItemFn,
   filterFn = _filterFn,
-  doneText = null,
+  doneText = 'ok',
   autoFocus = false,
+  disabled = false,
 }) => {
   const selectRef = useRef(null);
 
@@ -57,6 +58,8 @@ const Select = ({
       itemKey={selectedItemKey}
       Icon={ChevronIcon}
       doneText={doneText}
+      disabled={disabled}
+      useNativeAndroidPickerStyle={false}
     />
   );
 };

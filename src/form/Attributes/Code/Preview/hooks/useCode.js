@@ -1,64 +1,14 @@
-import {useCallback} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import {useSelector} from 'react-redux';
 
-import {selectors as formSelectors, actions as formActions} from 'state/form';
-import {actions as nodesActions} from 'state/nodes';
+import {selectors as formSelectors} from 'state/form';
+import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import surveySelectors from 'state/survey/selectors';
 
-const useCodeActions = ({nodeDef}) => {
-  const dispatch = useDispatch();
-  const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
-  const handleCreate = useCallback(
-    ({value = null}) => {
-      dispatch(
-        nodesActions.createNodeWithValue({
-          nodeDef,
-          parentNode: parentEntityNode,
-          value,
-        }),
-      );
-    },
-    [dispatch, nodeDef, parentEntityNode],
-  );
-
-  const handleClose = useCallback(() => {
-    dispatch(formActions.setNode({node: false}));
-  }, [dispatch]);
-
-  const handleUpdate = useCallback(
-    ({node, value = null, callback = handleClose}) => {
-      dispatch(
-        nodesActions.updateNode({
-          updatedNode: {
-            ...node,
-            value,
-          },
-          callback,
-        }),
-      );
-    },
-    [dispatch, handleClose],
-  );
-
-  const handleDelete = useCallback(
-    ({node, callback = handleClose}) => {
-      dispatch(
-        nodesActions.removeNode({
-          node,
-          callback,
-        }),
-      );
-    },
-    [dispatch, handleClose],
-  );
-
-  return {handleCreate, handleClose, handleUpdate, handleDelete};
-};
 const getCategoryItemLabel = ({categoryItem, language}) =>
   `(${categoryItem.props.code}) ${categoryItem.props.labels[language]}`;
 
 const useCode = ({nodeDef}) => {
-  const codeActions = useCodeActions({nodeDef});
+  const codeActions = useNodeFormActions({nodeDef});
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
 
   const categoryItems = useSelector(state =>

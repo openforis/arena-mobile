@@ -43,10 +43,19 @@ const BasePreviewNode = ({
   );
 };
 
-const BaseNodeValueRenderer = () => {
+const BaseNodeValueRenderer = ({nodeDef}) => {
   return (
     <View>
-      <Text>Not supported</Text>
+      <Text>Not supported: {nodeDef.type} </Text>
+    </View>
+  );
+};
+
+export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
+  return (
+    <View style={styles.container}>
+      <AttributeHeader nodeDef={nodeDef} nodes={nodes} />
+      {children}
     </View>
   );
 };
@@ -72,9 +81,7 @@ const BasePreview = ({
   }, [dispatch, parentEntityNode, nodeDef, nodes, _createNode]);
 
   return (
-    <View style={styles.container}>
-      <AttributeHeader nodeDef={nodeDef} nodes={nodes} />
-
+    <BasePreviewContainer nodeDef={nodeDef} nodes={nodes}>
       {nodes?.map(node => (
         <BasePreviewNode
           key={node.uuid}
@@ -86,7 +93,7 @@ const BasePreview = ({
         />
       ))}
       {nodeDef.props.multiple && <Button onPress={_createNode}>asas</Button>}
-    </View>
+    </BasePreviewContainer>
   );
 };
 

@@ -1,4 +1,5 @@
 import appState from './app/initial.state';
+import filesState from './files/initial.state';
 import formState from './form/initial.state';
 import nodesState from './nodes/initial.state';
 import recordsState from './records/initial.state';
@@ -13,6 +14,7 @@ const globalInitialState = {
   survey: surveyState,
   surveys: surveysState,
   user: userState,
+  files: filesState,
   form: formState,
 };
 
