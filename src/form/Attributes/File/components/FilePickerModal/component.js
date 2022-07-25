@@ -8,7 +8,7 @@ import styles from './styles';
 
 export const pickerTypes = {
   camera: 'camera',
-  galery: 'galery',
+  gallery: 'gallery',
   document: 'document',
   audio: 'audio',
 };
@@ -18,10 +18,10 @@ const pickersWithIcon = {
     icon: 'camera',
     label: 'camera',
   },
-  [pickerTypes.galery]: {
-    key: pickerTypes.galery,
+  [pickerTypes.gallery]: {
+    key: pickerTypes.gallery,
     icon: 'folder-multiple-image',
-    label: 'galery',
+    label: 'gallery',
   },
   [pickerTypes.document]: {
     key: pickerTypes.document,

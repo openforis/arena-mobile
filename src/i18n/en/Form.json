@@ -39,7 +39,7 @@
     },
     "pickers": {
       "camera": "Camera",
-      "galery": "Galery",
+      "gallery": "Gallery",
       "document": "Document",
       "audio": "Audio"
     }

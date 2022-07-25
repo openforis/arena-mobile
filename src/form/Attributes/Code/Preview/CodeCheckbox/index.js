@@ -41,7 +41,7 @@ const CodeCheckbox = ({nodeDef}) => {
         if (!NodeDefs.isMultiple(nodeDef) && Objects.isEmpty(_node)) {
           _node = node || nodes[0];
         }
-        let newValue = {itemUuid: categoryItem.uuid};
+        let newValue = {itemUuid: categoryItem?.uuid};
 
         if (Objects.isEmpty(_node)) {
           handleCreate({value: newValue});

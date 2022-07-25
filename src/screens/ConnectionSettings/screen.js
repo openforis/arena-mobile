@@ -47,8 +47,8 @@ const ConnectionSettings = () => {
 
   const handleResetData = useCallback(() => {
     alert({
-      title: t('ConnectionSettings:reset..title'),
-      message: t('ConnectionSettings:reset..message'),
+      title: t('ConnectionSettings:reset.title'),
+      message: t('ConnectionSettings:reset.message'),
       acceptText: t('ConnectionSettings:reset.accept'),
       dismissText: t('ConnectionSettings:reset.dismiss'),
       onAccept: () => {

@@ -63,7 +63,7 @@ const useFile = ({nodeDef, node, isImage = false}) => {
       if (pickerType === pickerTypes.camera) {
         return createOrUpdate(takePhoto);
       }
-      if (pickerType === pickerTypes.galery) {
+      if (pickerType === pickerTypes.gallery) {
         return createOrUpdate(getImage);
       }
       if (pickerType === pickerTypes.audio) {
