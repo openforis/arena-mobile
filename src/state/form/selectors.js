@@ -194,7 +194,7 @@ const getNodeDefNodesInHierarchy = createCachedSelector(
         node.nodeDefUuid === nodeDef.uuid &&
         hierarchyUuids.includes(node.parentUuid),
     ),
-)((_state_, nodeDef) => nodeDef.uuid);
+)((_state_, nodeDef) => nodeDef?.uuid || '__');
 
 const getNodeDefNodesWithKeysAsStringInHierarchy = createCachedSelector(
   getRecordNodes,
@@ -221,7 +221,7 @@ const getNodeDefNodesWithKeysAsStringInHierarchy = createCachedSelector(
 
         return Object.assign({}, node, {keyString});
       }),
-)((_state_, nodeDef) => nodeDef.uuid);
+)((_state_, nodeDef) => nodeDef?.uuid || '_');
 
 const _getDescendants = ({nodes, node}) => {
   let descendants = [];
@@ -237,7 +237,7 @@ const getNodeDescendants = createCachedSelector(
   getRecordNodes,
   (_, node) => node,
   (recordNodes, node) => _getDescendants({nodes: recordNodes, node}),
-)((_state_, node) => node.uuid);
+)((_state_, node) => node?.uuid || '_');
 
 const getNodeDescendantsByNodeDefUuid = createCachedSelector(
   getNodeDescendants,

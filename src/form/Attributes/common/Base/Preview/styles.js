@@ -2,6 +2,7 @@ import {NodeDefType} from '@openforis/arena-core';
 import {StyleSheet} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
+import baseStyles from 'arena-mobile-ui/styles';
 
 const aligmentByType = {
   [NodeDefType.text]: 'flex-start',
@@ -17,7 +18,7 @@ const paddingByType = {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    marginBottom: baseStyles.bases.BASE_4,
   },
   nodeContainer: ({nodeDef, isActive}) => ({
     borderColor: colors.neutralLighter,
@@ -32,14 +33,20 @@ const styles = StyleSheet.create({
     ].includes(nodeDef.type)
       ? 1
       : 0,
-    justifyContent: 'center',
     padding:
       paddingByType[nodeDef.type] !== undefined
         ? paddingByType[nodeDef.type]
-        : 8,
+        : baseStyles.bases.BASE_2,
     alignItems: aligmentByType[nodeDef.type] || 'flex-end',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     opacity: isActive ? 1 : 0.5,
   }),
+  buttonContainer: {
+    justifyContent: 'flex-end',
+    margin: 0,
+    paddingTop: baseStyles.bases.BASE,
+  },
 });
 
 export default styles;

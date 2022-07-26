@@ -3,9 +3,11 @@ import {TouchableOpacity} from 'react-native';
 
 import Cell from '../Cell';
 
+import styles from './styles';
+
 const Row = ({item: parentNode, headers, getWidth, onPress}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={{flexDirection: 'row'}}>
+    <TouchableOpacity onPress={onPress} style={[styles.container]}>
       {headers.map(nodeDef => (
         <Cell
           key={`${parentNode.uuid}_${nodeDef.uuid}`}

@@ -23,7 +23,7 @@ function* handleUpdateNode({payload}) {
     ),
   ]);
 
-  if (!node.uuid) {
+  if (!node?.uuid) {
     return;
   }
 

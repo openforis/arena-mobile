@@ -14,18 +14,18 @@ const getNodeByUuid = createCachedSelector(
   getNodesByUuid,
   (_, nodeUuid) => nodeUuid,
   (nodessByUuid, nodeUuid) => nodessByUuid[nodeUuid] || false,
-)((_state, nodeUuid) => nodeUuid);
+)((_state, nodeUuid) => nodeUuid || '_');
 
 const getNodesByRecordUuid = createCachedSelector(
   getNodes,
   (_, recordUuid) => recordUuid,
   (nodes, recordUuid) => nodes.filter(node => node.recordUuid === recordUuid),
-)((_state, recordUuid) => recordUuid);
+)((_state, recordUuid) => recordUuid || '_');
 
 const getNodesByUuidRecordUuid = createCachedSelector(
   getNodesByRecordUuid,
   nodes => nodes.reduce((acc, node) => ({...acc, [node.uuid]: {...node}}), {}),
-)((_state, recordUuid) => recordUuid);
+)((_state, recordUuid) => recordUuid || '_');
 
 export default {
   getNodes,

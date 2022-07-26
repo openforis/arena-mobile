@@ -12,7 +12,11 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
   const handleSelect = useCallback(
     categoryItem => {
       let newValue = {itemUuid: categoryItem?.uuid};
-      codeActions.handleUpdate({node, value: newValue});
+      if (node?.uuid) {
+        codeActions.handleUpdate({node, value: newValue});
+      } else {
+        codeActions.handleCreate({value: newValue});
+      }
     },
     [codeActions, node],
   );

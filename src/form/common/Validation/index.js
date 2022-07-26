@@ -9,6 +9,8 @@ import * as colors from 'arena-mobile-ui/colors';
 import Icon from 'arena-mobile-ui/components/Icon';
 import {selectors as formSelectors} from 'state/form';
 
+import styles from './styles';
+
 const flatValidationObject = validation => {
   let errors = validation?.errors || [];
   let warnings = validation?.warnings || [];
@@ -28,7 +30,7 @@ const flatValidationObject = validation => {
   };
 };
 
-const Validation = ({nodes, showValidation = true}) => {
+const Validation = ({nodes, showValidation = true, absolute = false}) => {
   const {t} = useTranslation();
   const validation = useSelector(state =>
     formSelectors.getValidationByNodes(state, nodes),
@@ -54,7 +56,7 @@ const Validation = ({nodes, showValidation = true}) => {
   }
 
   return (
-    <View>
+    <View style={[absolute ? styles.absolute : {}]}>
       <Tooltip
         height={50}
         width={200}

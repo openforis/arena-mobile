@@ -1,9 +1,9 @@
-import {StyleSheet, Dimensions} from 'react-native';
+import {StyleSheet} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
 import baseStyles from 'arena-mobile-ui/styles';
 
-const {width: WIDTH} = Dimensions.get('screen');
+const MIN_WIDTH = 150;
 
 const styles = StyleSheet.create({
   container: {
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   headerRow: {
     flexDirection: 'row',
     flex: 1,
-    minWidth: WIDTH,
+    minWidth: MIN_WIDTH,
     alignItems: 'center',
     backgroundColor: colors.neutralDarker,
     borderWidth: 1,
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flex: 1,
-    minWidth: WIDTH,
+    minWidth: MIN_WIDTH,
     backgroundColor: colors.neutralLightest,
   },
   oddRow: {

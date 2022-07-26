@@ -8,6 +8,7 @@ import surveySelectors from 'state/survey/selectors';
 
 const coordinateText = coordinate =>
   !isNaN(coordinate) && Number(coordinate).toFixed(4);
+
 export const NodeValueRender = ({node}) => {
   const {t} = useTranslation();
   const surveySrs = useSelector(surveySelectors.getSurveySRS);

@@ -33,7 +33,9 @@ export const getSelectedSurveyLanguages = createSelector(
   getSurvey,
   survey => survey?.props?.languages,
 );
-export const getSurveyCycle = createSelector(getSurvey, survey => 0);
+
+// TODO change when cycle
+export const getSurveyCycle = createSelector(getSurvey, survey => '0');
 
 export const getSurveySRS = createSelector(
   getSurvey,

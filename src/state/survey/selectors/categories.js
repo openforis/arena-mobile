@@ -35,7 +35,7 @@ const getNodeDefCategoryLevelIndex = createCachedSelector(
     }
     return levelIndex;
   },
-)((_state_, nodeDefUuid) => nodeDefUuid);
+)((_state_, nodeDefUuid) => nodeDefUuid || '__');
 
 export const getCategoryItems = createCachedSelector(
   getCategories,
@@ -94,7 +94,7 @@ export const getNodeCategoryItems = createCachedSelector(
     }
     return categoryItems;
   },
-)((_state_, nodeDefUuid, node) => `${nodeDefUuid}.${node.uuid}`);
+)((_state_, nodeDefUuid, node) => `${nodeDefUuid}.${node?.uuid}`);
 
 export const getCategoryItemByUuid = createCachedSelector(
   getCategoryItemIndex,

@@ -3,6 +3,8 @@ import {createSelector} from 'reselect';
 
 import {getSurvey} from './base';
 
+const _getCachedKeyObjectUuid = (_, object) => object?.uuid || '_';
+
 // --- NodeDefs
 export const getNodeDefsByUuid = createSelector(
   getSurvey,
@@ -13,7 +15,7 @@ export const getNodeDefByUuid = createCachedSelector(
   getNodeDefsByUuid,
   (_, nodeDefUuid) => nodeDefUuid,
   (nodeDefsByUuid, nodeDefUuid) => nodeDefsByUuid[nodeDefUuid] || false,
-)((_state_, nodeDefUuid) => nodeDefUuid);
+)((_state_, nodeDefUuid) => nodeDefUuid || '_');
 
 export const getNodeDefs = createSelector(getNodeDefsByUuid, nodeDefs =>
   Object.values(nodeDefs),
@@ -29,27 +31,27 @@ export const getNodeDefChildren = createCachedSelector(
     nodeDefs.filter(
       ({parentUuid}) => !!parentUuid && parentUuid === parentNodeDef?.uuid,
     ),
-)((_state_, parentNodeDef) => parentNodeDef?.uuid);
+)(_getCachedKeyObjectUuid);
 
-export const getNodeDefEntityChildrenKeys = createSelector(
+export const getNodeDefEntityChildrenKeys = createCachedSelector(
   getNodeDefChildren,
   childrenNodeDefs => childrenNodeDefs.filter(_nodeDef => _nodeDef.props.key),
-);
+)(_getCachedKeyObjectUuid);
 
 export const getNodeDefChildrenEntities = createCachedSelector(
   getNodeDefChildren,
   nodeDefs => nodeDefs.filter(({type}) => type === 'entity'),
-)((_state_, parentNodeDef) => parentNodeDef?.uuid);
+)(_getCachedKeyObjectUuid);
 
 export const getNodeDefEntityChildrenAttributes = createCachedSelector(
   getNodeDefChildren,
   nodeDefs => nodeDefs.filter(({type}) => type !== 'entity'),
-)((_state_, parentNodeDef) => parentNodeDef?.uuid);
+)(_getCachedKeyObjectUuid);
 
 export const getNodeDefEntityChildrenAttributesUuids = createCachedSelector(
   getNodeDefEntityChildrenAttributes,
   nodeDefs => nodeDefs.map(({uuid}) => uuid),
-)((_state_, parentNodeDef) => parentNodeDef?.uuid);
+)(_getCachedKeyObjectUuid);
 
 export const getNodeDefChildrenSingleEntities = createCachedSelector(
   getNodeDefChildren,
@@ -57,4 +59,4 @@ export const getNodeDefChildrenSingleEntities = createCachedSelector(
     nodeDefs.filter(
       ({type, props}) => type === 'entity' && props?.multiple !== true,
     ),
-)((_state_, parentNodeDef) => parentNodeDef?.uuid);
+)(_getCachedKeyObjectUuid);

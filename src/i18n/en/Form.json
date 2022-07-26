@@ -1,6 +1,11 @@
 {
   "add_new": "New {{ label }}",
   "delete": "Delete {{ label }}",
+  "nodeDefEntity": {
+    "layout": {
+      "table": "(table)"
+    }
+  },
   "nodeDefBoolean": {
     "labelValue": {
       "trueFalse": {
