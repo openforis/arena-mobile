@@ -9,6 +9,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignContent: 'flex-end',
   },
+  payload: {
+    flex: 1,
+  },
 });
 
 export default styles;

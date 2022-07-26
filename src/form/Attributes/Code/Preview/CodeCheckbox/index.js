@@ -1,31 +1,15 @@
 import {NodeDefs, Objects} from '@openforis/arena-core';
 import React, {useCallback, useMemo} from 'react';
-import {useSelector} from 'react-redux';
 
 import {BasePreviewContainer} from 'form/Attributes/common/Base/Preview';
-import {selectors as formSelectors} from 'state/form';
-import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
-import surveySelectors from 'state/survey/selectors';
 
 import ChipContainer from '../components/ChipsContainer';
 import OptionChip from '../components/OptionChip';
-
-const getCategoryItemLabel = ({categoryItem, language}) =>
-  `(${categoryItem.props.code}) ${categoryItem.props.labels[language]}`;
+import {useCode} from '../hooks';
 
 const CodeCheckbox = ({nodeDef}) => {
-  const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
-  const nodes = useSelector(state =>
-    formSelectors.getNodeDefNodesInHierarchy(state, nodeDef),
-  );
-
-  const categoryItems = useSelector(state =>
-    surveySelectors.getCategoryItems(state, nodeDef.uuid),
-  );
-
-  const {handleDelete, handleCreate, handleUpdate} = useNodeFormActions({
-    nodeDef,
-  });
+  const {language, nodes, categoryItems, codeActions, getCategoryItemLabel} =
+    useCode({nodeDef});
 
   const handlePress = useCallback(
     ({categoryItem, node}) =>
@@ -44,15 +28,15 @@ const CodeCheckbox = ({nodeDef}) => {
         let newValue = {itemUuid: categoryItem?.uuid};
 
         if (Objects.isEmpty(_node)) {
-          handleCreate({value: newValue});
+          codeActions.handleCreate({value: newValue});
         } else {
           if (Objects.isEmpty(_node.value)) {
-            handleUpdate({node: _node, value: newValue});
+            codeActions.handleUpdate({node: _node, value: newValue});
           } else {
             if (NodeDefs.isMultiple(nodeDef)) {
-              handleDelete({node: _node});
+              codeActions.handleDelete({node: _node});
             } else {
-              handleUpdate({
+              codeActions.handleUpdate({
                 node: _node,
                 value:
                   categoryItem.uuid !== _node?.value?.itemUuid
@@ -63,7 +47,7 @@ const CodeCheckbox = ({nodeDef}) => {
           }
         }
       },
-    [handleUpdate, handleCreate, handleDelete, nodeDef, nodes],
+    [codeActions, nodeDef, nodes],
   );
 
   const options = useMemo(() => {
@@ -82,7 +66,14 @@ const CodeCheckbox = ({nodeDef}) => {
         }),
       };
     });
-  }, [categoryItems, nodes, nodeDef, language, handlePress]);
+  }, [
+    getCategoryItemLabel,
+    categoryItems,
+    nodes,
+    nodeDef,
+    language,
+    handlePress,
+  ]);
 
   return (
     <BasePreviewContainer nodeDef={nodeDef} nodes={nodes}>

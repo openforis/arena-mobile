@@ -28,7 +28,7 @@ const BooleanOption = ({value, active = false, onPress, nodeDef}) => {
       <Text style={[styles.touchableLabel({active})]}>
         {t(
           `Form:nodeDefBoolean.labelValue.${
-            nodeDef.props.labelValue || 'trueFalse'
+            nodeDef?.props.labelValue || 'trueFalse'
           }.${value}`,
         )}
       </Text>

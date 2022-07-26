@@ -5,8 +5,12 @@ const getSurveyState = createSelector(
   getState,
   state => state?.survey || false,
 );
-export const getSurvey = createSelector(getSurveyState, state =>
-  state?.data && state?.data.uuid ? state?.data : false,
+export const getSurvey = createSelector(
+  getSurveyState,
+  state => (state?.data && state?.data.uuid ? state?.data : false),
+  {
+    memoizeOptions: {maxSize: 10},
+  },
 );
 
 export const getUiState = createSelector(

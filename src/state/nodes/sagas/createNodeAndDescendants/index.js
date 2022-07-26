@@ -28,11 +28,16 @@ function* handleCreateNodeAndDescendants({payload} = {}) {
 
   const {nodes: updatedNodes, record: updatedRecord} = updatedRecordAndNodes;
 
-  const validation = yield call(RecordValidator.validateNodes, {
-    survey,
-    record: updatedRecord,
-    nodes: updatedNodes,
-  });
+  let validation = {};
+  try {
+    validation = yield call(RecordValidator.validateNodes, {
+      survey,
+      record: updatedRecord,
+      nodes: updatedNodes,
+    });
+  } catch (e) {
+    console.log('validation error', e);
+  }
 
   yield all([
     put(recordsActions.setRecord({record: updatedRecord})),

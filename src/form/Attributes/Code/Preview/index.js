@@ -9,7 +9,7 @@ import CodeDropdown from './CodeDropdown';
 
 // TODO move to arena-core, maybe other name
 NodeDefs.getLayoutRenderTypePerCycle = ({nodeDef, cycle = 0}) =>
-  nodeDef.props.layout[cycle].renderType;
+  nodeDef?.props.layout[cycle].renderType;
 
 const Preview = ({nodeDef}) => {
   const cycle = useSelector(surveySelectors.getSurveyCycle);

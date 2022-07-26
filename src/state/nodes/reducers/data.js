@@ -1,6 +1,6 @@
 import {handleActions} from 'redux-actions';
 
-import {deleteValueByKey} from 'infra/objectUtils';
+import {deleteValueByKey, mergeNoSpread} from 'infra/objectUtils';
 import globalActions from 'state/globalActions';
 import recordsActions from 'state/records/actionCreators';
 import surveyActions from 'state/survey/actionCreators';
@@ -15,12 +15,8 @@ const data = handleActions(
       ...state,
       [node.uuid]: node,
     }),
-    [actions.setNodes]: (state, {payload: {nodes}}) => {
-      return {
-        ...state,
-        ...nodes,
-      };
-    },
+    [actions.setNodes]: (state, {payload: {nodes}}) =>
+      mergeNoSpread(state, nodes),
     [actions.deleteNode]: (state, {payload: {node}}) => {
       let newState = {...state};
       delete newState[node.uuid];

@@ -6,7 +6,7 @@ import baseStyles from 'arena-mobile-ui/styles';
 
 const SurveyInfo = ({survey}) => {
   return (
-    <View>
+    <View style={{flex: 1}}>
       <Text style={[baseStyles.textStyle.bold, baseStyles.textSize.l]}>
         {survey.props.labels?.[survey?.props?.languages?.[0]]}
       </Text>

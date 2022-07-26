@@ -1,7 +1,8 @@
 import {Objects} from '@openforis/arena-core';
-import {createCachedSelector} from 're-reselect';
+import {createCachedSelector, FifoObjectCache} from 're-reselect';
 import {createSelector} from 'reselect';
 
+import {normalizeByUuid} from 'infra/stateUtils';
 import recordsSelectors from 'state/records/selectors';
 import * as surveySelectorsNodeDefs from 'state/survey/selectors/nodeDefs';
 import * as surveySelectorsNodes from 'state/survey/selectors/nodes';
@@ -48,9 +49,7 @@ const getRecordNodes = createSelector(
   (nodes, recordUuid) => nodes.filter(node => node.recordUuid === recordUuid),
 );
 
-const getRecordNodesByUuid = createSelector(getRecordNodes, nodes =>
-  nodes.reduce((acc, node) => ({...acc, [node.uuid]: {...node}}), {}),
-);
+const getRecordNodesByUuid = createSelector(getRecordNodes, normalizeByUuid);
 
 const getNode = createCachedSelector(
   getRecordNodesByUuid,
@@ -299,7 +298,11 @@ const getValidationByNodes = createCachedSelector(
   (_, nodes) => nodes?.map(node => node.uuid) || [],
   (validation, nodesUuids) =>
     getValidationByKeys({keys: nodesUuids, validation}),
-)((_state_, nodes) => nodes?.map(node => node.uuid).join('_') || '_');
+)({
+  keySelector: (_state_, nodes) =>
+    nodes?.map(node => node.uuid).join('_') || '_',
+  cacheObject: new FifoObjectCache({cacheSize: 1000}),
+});
 
 export default {
   getFormStateData,

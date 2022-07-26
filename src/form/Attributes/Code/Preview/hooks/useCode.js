@@ -7,12 +7,14 @@ import surveySelectors from 'state/survey/selectors';
 const getCategoryItemLabel = ({categoryItem, language}) =>
   `(${categoryItem.props.code}) ${categoryItem.props.labels[language]}`;
 
-const useCode = ({nodeDef}) => {
+const useCode = ({nodeDef, node}) => {
   const codeActions = useNodeFormActions({nodeDef});
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
 
   const categoryItems = useSelector(state =>
-    surveySelectors.getCategoryItems(state, nodeDef.uuid),
+    node?.uuid
+      ? surveySelectors.getNodeCategoryItems(state, nodeDef.uuid, node)
+      : surveySelectors.getCategoryItems(state, nodeDef.uuid),
   );
 
   const nodes = useSelector(state =>

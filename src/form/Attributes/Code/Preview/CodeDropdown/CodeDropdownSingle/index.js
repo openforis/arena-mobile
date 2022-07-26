@@ -11,7 +11,7 @@ const CodeDropdownSingle = ({nodeDef}) => {
   );
 
   const node = useMemo(() => {
-    return nodes[0];
+    return nodes?.[0];
   }, [nodes]);
 
   return <CodeNodeDropdown nodeDef={nodeDef} node={node} />;

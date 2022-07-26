@@ -10,7 +10,7 @@ import Entity from './components/Entity';
 import TableEntity from './components/TableEntity';
 
 NodeDefs.getLayoutRenderTypePerCycle = ({nodeDef, cycle = 0}) =>
-  nodeDef.props.layout[cycle].renderType;
+  nodeDef?.props.layout[cycle].renderType;
 
 const EntityPage = () => {
   const nodeDef = useSelector(formSelectors.getParentEntityNodeDef);
@@ -20,7 +20,7 @@ const EntityPage = () => {
     [nodeDef, cycle],
   );
 
-  if (NodeDefs.isEntity(nodeDef)) {
+  if (nodeDef?.uuid && NodeDefs.isEntity(nodeDef)) {
     return isTable ? <TableEntity /> : <Entity />;
   }
   return <View />;

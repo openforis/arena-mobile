@@ -24,5 +24,8 @@
     "message": "record and surveys are going to be removed from the device",
     "accept": "Yes, clean all data",
     "dismiss": "No"
+  },
+  "telemetry": {
+    "cta": "telemetry"
   }
 }

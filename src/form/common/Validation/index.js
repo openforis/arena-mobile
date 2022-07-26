@@ -8,6 +8,7 @@ import {useSelector} from 'react-redux';
 import * as colors from 'arena-mobile-ui/colors';
 import Icon from 'arena-mobile-ui/components/Icon';
 import {selectors as formSelectors} from 'state/form';
+import {selectors as surveySelector} from 'state/survey';
 
 import styles from './styles';
 
@@ -41,6 +42,8 @@ const Validation = ({nodes, showValidation = true, absolute = false}) => {
     [validation],
   );
 
+  const language = useSelector(surveySelector.getSelectedSurveyLanguage);
+
   const configBySeverity = useMemo(() => {
     if (flatValidation.errors.length > 0) {
       return {color: colors.error};
@@ -67,10 +70,15 @@ const Validation = ({nodes, showValidation = true, absolute = false}) => {
         popover={
           <>
             {flatValidation.errors.map(error => (
-              <Text key={error.key}> {t(`Validation:${error.key}`)}</Text>
+              <Text key={error.key}>
+                {error?.messages?.[language] || t(`Validation:${error.key}`)}
+              </Text>
             ))}
             {flatValidation.warnings.map(warning => (
-              <Text key={warning.key}> {t(`Validation:${warning.key}`)}</Text>
+              <Text key={warning.key}>
+                {warning?.messages?.[language] ||
+                  t(`Validation:${warning.key}`)}
+              </Text>
             ))}
           </>
         }>

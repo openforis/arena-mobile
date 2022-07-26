@@ -7,6 +7,7 @@ import {useCode} from '../../hooks';
 const CodeNodeDropdown = ({nodeDef, node}) => {
   const {codeActions, language, categoryItems, getCategoryItemLabel} = useCode({
     nodeDef,
+    node,
   });
 
   const handleSelect = useCallback(
@@ -23,6 +24,7 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
 
   return (
     <Select
+      key={node?.value?.itemUuid}
       items={categoryItems}
       labelStractor={item =>
         getCategoryItemLabel({categoryItem: item, language})
