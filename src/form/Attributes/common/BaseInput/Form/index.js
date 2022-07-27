@@ -1,12 +1,23 @@
-import {NodeDefType} from '@openforis/arena-core';
+import {NodeDefs, NodeDefType} from '@openforis/arena-core';
 import React, {useState, useCallback} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Input from 'arena-mobile-ui/components/Input';
+import {transform, textTransformValues} from 'arena/utils/textUtils';
 import formSelectors from 'state/form/selectors';
 import {actions as nodesActions} from 'state/nodes';
 
 import {Form as BaseForm} from '../../Base';
+
+// TODO move to arena-core, maybe other name
+NodeDefs.getTextTransform = nodeDef => nodeDef?.props?.textTransform;
+
+const autoCapitalizeByTransformFunction = {
+  [textTransformValues.none]: undefined,
+  [textTransformValues.capitalize]: 'sentences',
+  [textTransformValues.lowercase]: 'none',
+  [textTransformValues.uppercase]: 'characters',
+};
 
 // text default
 // float numeric  ios: decimal-pad
@@ -24,7 +35,9 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
             ...node,
             value:
               nodeDef.type === NodeDefType.text
-                ? newValue
+                ? transform({
+                    transformFunction: NodeDefs.getTextTransform(nodeDef),
+                  })(newValue)
                 : Number((newValue || '').replace(',', '.')),
           },
           callback,
@@ -37,6 +50,11 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
   return (
     <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit}>
       <Input
+        autoCapitalize={
+          autoCapitalizeByTransformFunction[
+            NodeDefs.getTextTransform(nodeDef)
+          ] || undefined
+        }
         onChangeText={setValue}
         defaultValue={String(node?.value || '')}
         autoFocus={true}

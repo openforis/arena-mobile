@@ -43,7 +43,7 @@ const EntitySelectorTree = ({nodeDef, level = 0}) => {
 
           <View style={styles.children}>
             {showChildren &&
-              children.map(childEntity => (
+              children?.map(childEntity => (
                 <EntitySelectorTree
                   key={childEntity.uuid}
                   nodeDef={childEntity}

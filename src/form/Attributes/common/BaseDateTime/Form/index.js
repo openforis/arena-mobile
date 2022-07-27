@@ -62,7 +62,7 @@ const DateForm = ({nodeDef}) => {
       {date && (
         <DatePicker
           modal
-          open
+          open={true}
           mode={modes[nodeDef.type]}
           onConfirm={handleSelectTime}
           onCancel={handleClose}

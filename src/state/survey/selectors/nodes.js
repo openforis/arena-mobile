@@ -13,6 +13,9 @@ export const getNodes = createSelector(
   nodesSelectors.getNodes,
   (survey, nodes) =>
     (nodes || []).filter(node => node.surveyUuid === survey?.uuid),
+  {
+    memoizeOptions: {maxSize: 10},
+  },
 );
 
 export const getEntityNodeKeys = createCachedSelector(

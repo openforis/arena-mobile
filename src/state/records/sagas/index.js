@@ -10,6 +10,7 @@ import {selectors as userSelector} from 'state/user';
 import recordsActions from '../actionCreators';
 import recordsActionTypes from '../actionTypes';
 
+// TODO change when cycle
 // extract this creators to arena
 const _createRecord = ({survey, user}) => {
   return {

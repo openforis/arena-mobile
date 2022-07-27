@@ -25,7 +25,7 @@ const SurveyCard = ({
     <TouchableCard
       onPress={handlePress}
       customStyles={[styles.container, isSelected ? styles.selected : {}]}>
-      <View>
+      <View style={[styles.payload]}>
         <Text style={[baseStyles.textStyle.bold, baseStyles.textSize.l]}>
           {survey.props.labels?.[survey?.props?.languages?.[0]]}
         </Text>

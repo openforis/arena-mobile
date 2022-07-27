@@ -1,6 +1,7 @@
 import {NodeDefType} from '@openforis/arena-core';
 import {takeLatest, select, call, all, put} from 'redux-saga/effects';
 
+import {normalizeByUuid} from 'infra/stateUtils';
 import globalActions from 'state/globalActions';
 import nodesActions from 'state/nodes/actionCreators';
 import recordsActions from 'state/records/actionCreators';
@@ -51,10 +52,8 @@ function* handleSetNodes({payload}) {
       fileNodesToCreate.map(node => call(arenaFileUtils.createFile, node)),
     );
 
-    const filesByUuid = files.reduce(
-      (acc, file) => Object.assign(acc, {[file.uuid]: Object.assign({}, file)}),
-      {},
-    );
+    const filesByUuid = normalizeByUuid(files);
+
     yield put(filesActionTypes.setFiles({filesByUuid}));
   }
 }

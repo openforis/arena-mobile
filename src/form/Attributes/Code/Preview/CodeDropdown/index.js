@@ -25,11 +25,3 @@ const CodeDropdown = ({nodeDef}) => {
 };
 
 export default CodeDropdown;
-
-/*const useIsActive = ({node, nodeDef}) => {
-  const parentCodeNode = useSelector(state =>
-    surveySelectors.getParentCodeNode(state, nodeDef, node),
-  );
-
-  return parentCodeNode === false || parentCodeNode?.value?.itemUuid;
-};*/

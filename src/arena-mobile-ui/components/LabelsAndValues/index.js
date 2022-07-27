@@ -25,18 +25,23 @@ export const Value = ({label, size = 's'}) => (
   </Text>
 );
 
-const LabelsAndValues = ({items, size, expanded = false}) => (
+const LabelsAndValues = ({items, size, expanded = false, column = false}) => (
   <View style={[styles.container]}>
     <View style={[styles.labels({expanded})]}>
-      {items.map(({label}) => (
-        <Label key={label} label={label} size={size} />
-      ))}
-    </View>
-    <View style={[styles.values({expanded})]}>
       {items.map(({label, value}) => (
-        <Value key={label} label={value} size={size} />
+        <View key={label}>
+          <Label label={label} size={size} />
+          {column && <Value label={value} size={size} />}
+        </View>
       ))}
     </View>
+    {!column && (
+      <View style={[styles.values({expanded})]}>
+        {items.map(({label, value}) => (
+          <Value key={label} label={value} size={size} />
+        ))}
+      </View>
+    )}
   </View>
 );
 

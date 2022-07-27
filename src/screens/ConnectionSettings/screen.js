@@ -26,7 +26,9 @@ import globalActions from 'state/globalActions';
 import {selectors as userSelectors} from 'state/user';
 
 import styles from './styles';
+import Telemetry from './Telemetry';
 
+const SHOW_TELEMETRY = false;
 const ConnectionSettings = () => {
   const dispatch = useDispatch();
   const {t} = useTranslation();
@@ -177,6 +179,7 @@ const ConnectionSettings = () => {
                 </View>
               )}
             </View>
+            {__DEV__ && SHOW_TELEMETRY && <Telemetry />}
             <View style={{height: 200}} />
           </ScrollView>
         </KeyboardAvoidingView>

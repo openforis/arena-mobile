@@ -8,6 +8,9 @@ import {useSelector} from 'react-redux';
 import * as colors from 'arena-mobile-ui/colors';
 import Icon from 'arena-mobile-ui/components/Icon';
 import {selectors as formSelectors} from 'state/form';
+import {selectors as surveySelector} from 'state/survey';
+
+import styles from './styles';
 
 const flatValidationObject = validation => {
   let errors = validation?.errors || [];
@@ -28,7 +31,7 @@ const flatValidationObject = validation => {
   };
 };
 
-const Validation = ({nodes, showValidation = true}) => {
+const Validation = ({nodes, showValidation = true, absolute = false}) => {
   const {t} = useTranslation();
   const validation = useSelector(state =>
     formSelectors.getValidationByNodes(state, nodes),
@@ -38,6 +41,8 @@ const Validation = ({nodes, showValidation = true}) => {
     () => flatValidationObject(validation),
     [validation],
   );
+
+  const language = useSelector(surveySelector.getSelectedSurveyLanguage);
 
   const configBySeverity = useMemo(() => {
     if (flatValidation.errors.length > 0) {
@@ -54,7 +59,7 @@ const Validation = ({nodes, showValidation = true}) => {
   }
 
   return (
-    <View>
+    <View style={[absolute ? styles.absolute : {}]}>
       <Tooltip
         height={50}
         width={200}
@@ -65,10 +70,15 @@ const Validation = ({nodes, showValidation = true}) => {
         popover={
           <>
             {flatValidation.errors.map(error => (
-              <Text key={error.key}> {t(`Validation:${error.key}`)}</Text>
+              <Text key={error.key}>
+                {error?.messages?.[language] || t(`Validation:${error.key}`)}
+              </Text>
             ))}
             {flatValidation.warnings.map(warning => (
-              <Text key={warning.key}> {t(`Validation:${warning.key}`)}</Text>
+              <Text key={warning.key}>
+                {warning?.messages?.[language] ||
+                  t(`Validation:${warning.key}`)}
+              </Text>
             ))}
           </>
         }>

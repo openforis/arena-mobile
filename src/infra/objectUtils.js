@@ -1,7 +1,7 @@
 export const deleteValueByKey =
   ({conditionToDelete = () => false}) =>
   obj => {
-    let newObject = {...obj};
+    let newObject = Object.assign({}, obj);
     (Object.keys(obj) || []).forEach(key => {
       const item = obj[key];
       if (conditionToDelete(item)) {
@@ -10,3 +10,13 @@ export const deleteValueByKey =
     });
     return newObject;
   };
+
+export const mergeSpread = (obj, newObj) => ({...obj, ...newObj});
+export const mergeShallow = (obj, newObj) => Object.assign({}, obj, newObj);
+export const mergeNoSpread = (obj, newObj) => {
+  const result = Object.assign({}, obj);
+  Object.keys(newObj).forEach(key => {
+    result[key] = newObj[key];
+  });
+  return result;
+};

@@ -1,4 +1,4 @@
-import {Records} from '@openforis/arena-core';
+import {RecordNodesUpdater} from '@openforis/arena-core';
 import {select, all, put} from 'redux-saga/effects';
 
 import formSelectors from 'state/form/selectors';
@@ -13,7 +13,7 @@ function* handleRemoveNode({payload}) {
   ]);
   const recordWithNodes = {...record, nodes: {...(recordNodesByUuid || {})}};
 
-  const recordUpdated = Records.removeNode(node)(recordWithNodes);
+  const recordUpdated = RecordNodesUpdater.removeNode(node)(recordWithNodes);
 
   let nodesToDelete = [];
   const recordUpdatedNodes = Object.keys(recordUpdated.nodes);
@@ -22,8 +22,8 @@ function* handleRemoveNode({payload}) {
       nodesToDelete.push(recordNodesByUuid[nodeUuid]);
     }
   });
-// this code is needed if you dont have the index as arena-core search descendants by index
-const currentDescentands = yield select(state =>
+  // this code is needed if you dont have the index as arena-core search descendants by index
+  const currentDescentands = yield select(state =>
     formSelectors.getNodeDescendants(state, node),
   );
 

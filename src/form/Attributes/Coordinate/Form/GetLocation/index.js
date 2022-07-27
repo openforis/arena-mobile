@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {View} from 'react-native';
 
 import Button from 'arena-mobile-ui/components/Button';
@@ -10,11 +10,17 @@ import useGetLocation from '../useGetLocation';
 import styles from './styles';
 
 const GetLocation = ({handleSaveLocation}) => {
+  const [loading, setLoading] = useState(false);
   const {location, getLocation} = useGetLocation();
 
   const _handleSaveLocation = useCallback(() => {
+    setLoading(true);
     handleSaveLocation(location);
   }, [location, handleSaveLocation]);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [location]);
 
   return (
     <View style={styles.container}>
@@ -24,6 +30,7 @@ const GetLocation = ({handleSaveLocation}) => {
         onPress={getLocation}
         label="get location"
         customTextStyle={{paddingLeft: 8}}
+        disabled={loading}
       />
       <LabelsAndValues
         items={Object.entries(location?.coords || {}).map(([label, value]) => ({

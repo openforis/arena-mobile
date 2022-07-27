@@ -1,7 +1,8 @@
-import {Objects} from '@openforis/arena-core';
-import {createCachedSelector} from 're-reselect';
+import {Objects, NodeDefs} from '@openforis/arena-core';
+import {createCachedSelector, FifoObjectCache} from 're-reselect';
 import {createSelector} from 'reselect';
 
+import {keySelectors, normalizeByUuid} from 'infra/stateUtils';
 import recordsSelectors from 'state/records/selectors';
 import * as surveySelectorsNodeDefs from 'state/survey/selectors/nodeDefs';
 import * as surveySelectorsNodes from 'state/survey/selectors/nodes';
@@ -48,9 +49,7 @@ const getRecordNodes = createSelector(
   (nodes, recordUuid) => nodes.filter(node => node.recordUuid === recordUuid),
 );
 
-const getRecordNodesByUuid = createSelector(getRecordNodes, nodes =>
-  nodes.reduce((acc, node) => ({...acc, [node.uuid]: {...node}}), {}),
-);
+const getRecordNodesByUuid = createSelector(getRecordNodes, normalizeByUuid);
 
 const getNode = createCachedSelector(
   getRecordNodesByUuid,
@@ -87,6 +86,16 @@ const getNodeDefUuidKey = createSelector(
   getNodeDefUuid,
   nodeDef => nodeDef || '_',
 );
+
+const isNodeDefApplicable = createCachedSelector(
+  getParentEntityNode,
+  (_, nodeDefUuid) => nodeDefUuid,
+  (parentEntityNode, nodeDefUuid) =>
+    !Object.keys(parentEntityNode?.meta?.childApplicability || {}).includes(
+      nodeDefUuid,
+    ),
+)(keySelectors.stringKey);
+
 const getParentEntityNodeDefUuid = createSelector(
   getFormStateData,
   form => form.parentEntityNodeDef || false,
@@ -194,7 +203,7 @@ const getNodeDefNodesInHierarchy = createCachedSelector(
         node.nodeDefUuid === nodeDef.uuid &&
         hierarchyUuids.includes(node.parentUuid),
     ),
-)((_state_, nodeDef) => nodeDef.uuid);
+)((_state_, nodeDef) => nodeDef?.uuid || '__');
 
 const getNodeDefNodesWithKeysAsStringInHierarchy = createCachedSelector(
   getRecordNodes,
@@ -221,7 +230,7 @@ const getNodeDefNodesWithKeysAsStringInHierarchy = createCachedSelector(
 
         return Object.assign({}, node, {keyString});
       }),
-)((_state_, nodeDef) => nodeDef.uuid);
+)((_state_, nodeDef) => nodeDef?.uuid || '_');
 
 const _getDescendants = ({nodes, node}) => {
   let descendants = [];
@@ -237,7 +246,7 @@ const getNodeDescendants = createCachedSelector(
   getRecordNodes,
   (_, node) => node,
   (recordNodes, node) => _getDescendants({nodes: recordNodes, node}),
-)((_state_, node) => node.uuid);
+)((_state_, node) => node?.uuid || '_');
 
 const getNodeDescendantsByNodeDefUuid = createCachedSelector(
   getNodeDescendants,
@@ -299,7 +308,24 @@ const getValidationByNodes = createCachedSelector(
   (_, nodes) => nodes?.map(node => node.uuid) || [],
   (validation, nodesUuids) =>
     getValidationByKeys({keys: nodesUuids, validation}),
-)((_state_, nodes) => nodes?.map(node => node.uuid).join('_') || '_');
+)({
+  keySelector: (_state_, nodes) =>
+    nodes?.map(node => node.uuid).join('_') || '_',
+  cacheObject: new FifoObjectCache({cacheSize: 1000}),
+});
+
+const canAddNode = createCachedSelector(
+  (_, nodeDef) => nodeDef,
+  getNodeDefNodesInHierarchy,
+  (nodeDef, nodeDefNodesInHierarchy = []) => {
+    const maxCount = NodeDefs.getMaxCount(nodeDef);
+    return (
+      NodeDefs.isMultiple(nodeDef) &&
+      (Objects.isEmpty(maxCount) ||
+        nodeDefNodesInHierarchy.length < Number(maxCount))
+    );
+  },
+)(keySelectors.getUuidFromItem);
 
 export default {
   getFormStateData,
@@ -315,6 +341,8 @@ export default {
   getNode,
   getNodeDef,
 
+  isNodeDefApplicable,
+  canAddNode,
   getNodeDefChildren,
   getNodeDefChildrenAttributes,
   getNodeDefChildrenUuids,

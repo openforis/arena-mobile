@@ -1,11 +1,7 @@
 import {createCachedSelector} from 're-reselect';
 import {createSelector} from 'reselect';
 
-const _normalize = items =>
-  items.reduce(
-    (acc, item) => Object.assign(acc, {[item.uuid]: Object.assign({}, item)}),
-    {},
-  );
+import {keySelectors, normalizeByUuid} from 'infra/stateUtils';
 
 const getState = state => state;
 const getFilesState = createSelector(getState, state => state?.files || {});
@@ -20,40 +16,40 @@ const getFileByUuid = createCachedSelector(
   getFilesByUuid,
   (_, nodeUuid) => nodeUuid,
   (filesByUuid, nodeUuid) => filesByUuid[nodeUuid] || false,
-)((_state, nodeUuid) => nodeUuid || '_');
+)(keySelectors.nodeUuid);
 
 const getFilesBySurveyUuid = createCachedSelector(
   getFiles,
   (_, surveyUuid) => surveyUuid,
   (files, surveyUuid) => files.filter(file => file.surveyUuid === surveyUuid),
-)((_state, surveyUuid) => surveyUuid);
+)(keySelectors.surveyUuid);
 
 const getFilesByUuidSurveyUuid = createCachedSelector(
   getFilesBySurveyUuid,
-  _normalize,
-)((_state, recordUuid) => recordUuid);
+  normalizeByUuid,
+)(keySelectors.recordUuid);
 
 const getFilesByRecordUuid = createCachedSelector(
   getFiles,
   (_, recordUuid) => recordUuid,
   (files, recordUuid) => files.filter(file => file.recordUuid === recordUuid),
-)((_state, recordUuid) => recordUuid);
+)(keySelectors.recordUuid);
 
 const getFilesByUuidRecordUuid = createCachedSelector(
   getFilesByRecordUuid,
-  _normalize,
-)((_state, recordUuid) => recordUuid);
+  normalizeByUuid,
+)(keySelectors.recordUuid);
 
 const getFilesByNodeUuid = createCachedSelector(
   getFiles,
   (_, nodeUuid) => nodeUuid,
   (files, nodeUuid) => files.filter(file => file.nodeUuid === nodeUuid),
-)((_state, nodeUuid) => nodeUuid);
+)(keySelectors.nodeUuid);
 
 const getFilesByUuidNodeUuid = createCachedSelector(
   getFilesByRecordUuid,
-  _normalize,
-)((_state, nodeUuid) => nodeUuid);
+  normalizeByUuid,
+)(keySelectors.nodeUuid);
 
 export default {
   getFiles,

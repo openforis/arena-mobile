@@ -31,7 +31,7 @@ const RecordCard = ({record, isSelected, onSelect}) => {
     <TouchableCard
       onPress={handlePress}
       customStyles={[styles.container, isSelected ? styles.selected : {}]}>
-      <View>
+      <View style={[styles.payload]}>
         <Text style={[baseStyles.textStyle.bold]}>{recordKey}</Text>
         <CreatedAndModified
           dateCreated={record?.dateCreated}

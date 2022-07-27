@@ -13,6 +13,7 @@ export default ({serverUrl = SERVER_URL}) => {
   const fetchGeneric = async ({
     method,
     body,
+    params,
     path,
     uri = false,
     contentType = '',
@@ -20,19 +21,21 @@ export default ({serverUrl = SERVER_URL}) => {
     axios(uri ? uri : `${BASE_URL}/${path}`, {
       method,
       ...(body ? {body: JSON.stringify(body)} : {}),
-      ...(body ? {data: JSON.stringify(body)} : {}), // body in axios is params
+      ...(body ? {data: JSON.stringify(body)} : {}),
+      ...(params ? {params: JSON.stringify(params)} : {}),
       headers: {
         'Content-Type': contentType || CONTENT_TYPES.json,
       },
     });
 
-  const get = async ({body, path, uri, contentType}) =>
+  const get = async ({body, path, uri, contentType, params}) =>
     fetchGeneric({
       method: 'GET',
       body,
       path,
       uri,
       contentType,
+      params,
     });
 
   const patch = async ({body, path, uri, contentType}) =>

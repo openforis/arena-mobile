@@ -1,79 +1,117 @@
+import {NodeDefs} from '@openforis/arena-core';
 import React, {useCallback, useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
+import Icon from 'arena-mobile-ui/components/Icon';
+import baseStyles from 'arena-mobile-ui/styles';
 import AttributeHeader from 'form/common/Header';
 import Validation from 'form/common/Validation';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {actions as nodesActions} from 'state/nodes';
+import {selectors as surveySelectors} from 'state/survey';
 
 import styles from './styles';
 
-const _useIsActive = () => {
-  return true;
+// TODO move to arena-core
+NodeDefs.isHiddenWhenNotRelevant = ({nodeDef, cycle = '0'}) => {
+  return nodeDef?.props?.layout?.[cycle]?.hiddenWhenNotRelevant;
 };
 
-const BasePreviewNode = ({
-  node,
-  nodeDef,
-  showValidation,
-  NodeValueRender,
-  useIsActive = _useIsActive,
-}) => {
+const BasePreviewNode = ({node, nodeDef, showValidation, NodeValueRender}) => {
   const dispatch = useDispatch();
 
-  const isActive = useIsActive({node, nodeDef});
+  const applicable = useSelector(state =>
+    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  );
   const handleSelectNodeAndNodeDef = useCallback(() => {
     dispatch(formActions.setNode({node: node}));
   }, [dispatch, node]);
 
   return (
     <TouchableOpacity
-      style={styles.nodeContainer({nodeDef, isActive})}
+      style={styles.nodeContainer({nodeDef})}
       onPress={handleSelectNodeAndNodeDef}
-      disabled={!isActive}>
-      <NodeValueRender node={node} nodeDef={nodeDef} />
+      disabled={!applicable}>
+      <View style={{flex: 1}}>
+        <NodeValueRender node={node} nodeDef={nodeDef} />
+      </View>
+
       <Validation
         nodeDef={nodeDef}
         nodes={[node]}
         showValidation={showValidation}
+        absolute={true}
       />
     </TouchableOpacity>
   );
 };
 
 const BaseNodeValueRenderer = ({nodeDef}) => {
+  const {t} = useTranslation();
   return (
     <View>
-      <Text>Not supported: {nodeDef.type} </Text>
+      <Text>
+        {t('Common:not_supported')}: {nodeDef.type}{' '}
+      </Text>
     </View>
   );
 };
 
 export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
+  const applicable = useSelector(state =>
+    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  );
+  const cycle = useSelector(surveySelectors.getSurveyCycle);
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        applicable
+          ? {}
+          : styles.notApplicable({
+              hidden: NodeDefs.isHiddenWhenNotRelevant({nodeDef, cycle}),
+            }),
+      ]}>
       <AttributeHeader nodeDef={nodeDef} nodes={nodes} />
       {children}
     </View>
   );
 };
 
-const BasePreview = ({
-  nodeDef,
-  NodeValueRender = BaseNodeValueRenderer,
-  useIsActive,
-}) => {
+const CreateNode = ({onPress, nodeDef}) => {
+  const {t} = useTranslation();
+  const applicable = useSelector(state =>
+    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  );
+  return (
+    <Button
+      type="ghostBlack"
+      icon={<Icon name="plus" size={baseStyles.bases.BASE_4} />}
+      label={t('Form:add_new', {label: ''})}
+      customContainerStyle={styles.buttonContainer}
+      onPress={onPress}
+      disabled={!applicable}
+    />
+  );
+};
+
+const BasePreview = ({nodeDef, NodeValueRender = BaseNodeValueRenderer}) => {
   const dispatch = useDispatch();
   const nodes = useSelector(state =>
     formSelectors.getNodeDefNodesInHierarchy(state, nodeDef),
   );
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
+  const canAddNode = useSelector(state =>
+    formSelectors.canAddNode(state, nodeDef),
+  );
 
   const _createNode = useCallback(() => {
     dispatch(nodesActions.createNode({nodeDef, parentNode: parentEntityNode}));
   }, [dispatch, nodeDef, parentEntityNode]);
+
   useEffect(() => {
     if (nodeDef && parentEntityNode && nodes.length === 0) {
       _createNode();
@@ -89,10 +127,11 @@ const BasePreview = ({
           nodeDef={nodeDef}
           showValidation={nodes.length > 1}
           NodeValueRender={NodeValueRender}
-          useIsActive={useIsActive}
         />
       ))}
-      {nodeDef.props.multiple && <Button onPress={_createNode}>asas</Button>}
+      {nodeDef.props.multiple && canAddNode && (
+        <CreateNode nodeDef={nodeDef} onPress={_createNode} />
+      )}
     </BasePreviewContainer>
   );
 };

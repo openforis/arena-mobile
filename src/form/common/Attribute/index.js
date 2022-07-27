@@ -31,11 +31,11 @@ const Attribute = ({nodeDefUuid}) => {
   const nodeDef = useSelector(state =>
     surveySelectors.getNodeDefByUuid(state, nodeDefUuid),
   );
+
   return React.createElement(
     AttributesComponentByType[nodeDef.type] || BasePreview,
     {
       nodeDef,
-      type: nodeDef.type,
     },
   );
 };

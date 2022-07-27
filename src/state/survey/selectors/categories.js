@@ -1,3 +1,4 @@
+import {Objects} from '@openforis/arena-core';
 import {createCachedSelector} from 're-reselect';
 import {createSelector} from 'reselect';
 
@@ -28,14 +29,16 @@ const getNodeDefCategoryLevelIndex = createCachedSelector(
   (nodeDef, nodeDefsByUuid) => {
     let levelIndex = 0;
     let parentCodeDefUuid = nodeDef.props.parentCodeDefUuid;
-    while (parentCodeDefUuid !== null) {
+
+    while (!Objects.isEmpty(parentCodeDefUuid)) {
       levelIndex = levelIndex + 1;
       parentCodeDefUuid =
         nodeDefsByUuid[parentCodeDefUuid]?.props?.parentCodeDefUuid || null;
     }
+
     return levelIndex;
   },
-)((_state_, nodeDefUuid) => nodeDefUuid);
+)((_state_, nodeDefUuid) => nodeDefUuid || '__');
 
 export const getCategoryItems = createCachedSelector(
   getCategories,
@@ -94,7 +97,7 @@ export const getNodeCategoryItems = createCachedSelector(
     }
     return categoryItems;
   },
-)((_state_, nodeDefUuid, node) => `${nodeDefUuid}.${node.uuid}`);
+)((_state_, nodeDefUuid, node) => `${nodeDefUuid}.${node?.uuid}`);
 
 export const getCategoryItemByUuid = createCachedSelector(
   getCategoryItemIndex,
