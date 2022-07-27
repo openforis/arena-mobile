@@ -1,3 +1,4 @@
+import {NodeDefs} from '@openforis/arena-core';
 import {t} from 'i18next';
 import React, {useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -11,32 +12,30 @@ import AttributeHeader from 'form/common/Header';
 import Validation from 'form/common/Validation';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {actions as nodesActions} from 'state/nodes';
+import {selectors as surveySelectors} from 'state/survey';
 
 import styles from './styles';
 
-const _useIsActive = () => {
-  return true;
+// TODO move to arena-core
+NodeDefs.isHiddenWhenNotRelevant = ({nodeDef, cycle = '0'}) => {
+  return nodeDef?.props?.layout?.[cycle]?.hiddenWhenNotRelevant;
 };
 
-const BasePreviewNode = ({
-  node,
-  nodeDef,
-  showValidation,
-  NodeValueRender,
-  useIsActive = _useIsActive,
-}) => {
+const BasePreviewNode = ({node, nodeDef, showValidation, NodeValueRender}) => {
   const dispatch = useDispatch();
 
-  const isActive = useIsActive({node, nodeDef});
+  const applicable = useSelector(state =>
+    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  );
   const handleSelectNodeAndNodeDef = useCallback(() => {
     dispatch(formActions.setNode({node: node}));
   }, [dispatch, node]);
 
   return (
     <TouchableOpacity
-      style={styles.nodeContainer({nodeDef, isActive})}
+      style={styles.nodeContainer({nodeDef})}
       onPress={handleSelectNodeAndNodeDef}
-      disabled={!isActive}>
+      disabled={!applicable}>
       <View style={{flex: 1}}>
         <NodeValueRender node={node} nodeDef={nodeDef} />
       </View>
@@ -63,16 +62,31 @@ const BaseNodeValueRenderer = ({nodeDef}) => {
 };
 
 export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
+  const applicable = useSelector(state =>
+    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  );
+  const cycle = useSelector(surveySelectors.getSurveyCycle);
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        applicable
+          ? {}
+          : styles.notApplicable({
+              hidden: NodeDefs.isHiddenWhenNotRelevant({nodeDef, cycle}),
+            }),
+      ]}>
       <AttributeHeader nodeDef={nodeDef} nodes={nodes} />
       {children}
     </View>
   );
 };
 
-const CreateNode = ({onPress}) => {
+const CreateNode = ({onPress, nodeDef}) => {
   const {t} = useTranslation();
+  const applicable = useSelector(state =>
+    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  );
   return (
     <Button
       type="ghostBlack"
@@ -80,20 +94,20 @@ const CreateNode = ({onPress}) => {
       label={t('Form:add_new', {label: ''})}
       customContainerStyle={styles.buttonContainer}
       onPress={onPress}
+      disabled={!applicable}
     />
   );
 };
 
-const BasePreview = ({
-  nodeDef,
-  NodeValueRender = BaseNodeValueRenderer,
-  useIsActive,
-}) => {
+const BasePreview = ({nodeDef, NodeValueRender = BaseNodeValueRenderer}) => {
   const dispatch = useDispatch();
   const nodes = useSelector(state =>
     formSelectors.getNodeDefNodesInHierarchy(state, nodeDef),
   );
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
+  const canAddNode = useSelector(state =>
+    formSelectors.canAddNode(state, nodeDef),
+  );
 
   const _createNode = useCallback(() => {
     dispatch(nodesActions.createNode({nodeDef, parentNode: parentEntityNode}));
@@ -114,10 +128,11 @@ const BasePreview = ({
           nodeDef={nodeDef}
           showValidation={nodes.length > 1}
           NodeValueRender={NodeValueRender}
-          useIsActive={useIsActive}
         />
       ))}
-      {nodeDef.props.multiple && <CreateNode onPress={_createNode} />}
+      {nodeDef.props.multiple && canAddNode && (
+        <CreateNode nodeDef={nodeDef} onPress={_createNode} />
+      )}
     </BasePreviewContainer>
   );
 };

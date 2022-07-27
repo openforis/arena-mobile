@@ -157,12 +157,6 @@ describe('Node updater', () => {
               valid: true,
               warnings: [],
             },
-            childrenCount_CLUSTER_UUID_NODE_DEF_UUID: {
-              errors: [],
-              fields: {},
-              valid: true,
-              warnings: [],
-            },
           },
           valid: true,
           warnings: [],
@@ -234,12 +228,6 @@ describe('Node updater', () => {
               valid: false,
               warnings: [],
             },
-            childrenCount_CLUSTER_UUID_NODE_DEF_UUID: {
-              errors: [],
-              fields: {},
-              valid: true,
-              warnings: [],
-            },
           },
           valid: false,
           warnings: [],
@@ -300,12 +288,6 @@ describe('Node updater', () => {
           errors: [],
           fields: {
             [getCurrentUuid(2)]: {
-              errors: [],
-              fields: {},
-              valid: true,
-              warnings: [],
-            },
-            childrenCount_CLUSTER_UUID_NODE_DEF_UUID: {
               errors: [],
               fields: {},
               valid: true,
@@ -389,12 +371,6 @@ describe('Node updater', () => {
                 },
               },
               valid: false,
-              warnings: [],
-            },
-            childrenCount_CLUSTER_UUID_NODE_DEF_UUID: {
-              errors: [],
-              fields: {},
-              valid: true,
               warnings: [],
             },
           },

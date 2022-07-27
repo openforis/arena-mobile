@@ -8,11 +8,11 @@ export const normalizeByUuid = arr => {
 
 // cached keys
 const stringKey = (_, uuid) => uuid || '_';
-const itemUuidKey = (_, item) => item?.uuid || '_';
+const getUuidFromItem = (_, item) => item?.uuid || '_';
 
 export const keySelectors = {
   stringKey,
-  itemUuidKey,
+  getUuidFromItem,
   nodeUuid: stringKey,
   recordUuid: stringKey,
   surveyUuid: stringKey,

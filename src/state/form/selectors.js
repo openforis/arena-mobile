@@ -1,8 +1,8 @@
-import {Objects} from '@openforis/arena-core';
+import {Objects, NodeDefs} from '@openforis/arena-core';
 import {createCachedSelector, FifoObjectCache} from 're-reselect';
 import {createSelector} from 'reselect';
 
-import {normalizeByUuid} from 'infra/stateUtils';
+import {keySelectors, normalizeByUuid} from 'infra/stateUtils';
 import recordsSelectors from 'state/records/selectors';
 import * as surveySelectorsNodeDefs from 'state/survey/selectors/nodeDefs';
 import * as surveySelectorsNodes from 'state/survey/selectors/nodes';
@@ -86,6 +86,16 @@ const getNodeDefUuidKey = createSelector(
   getNodeDefUuid,
   nodeDef => nodeDef || '_',
 );
+
+const isNodeDefApplicable = createCachedSelector(
+  getParentEntityNode,
+  (_, nodeDefUuid) => nodeDefUuid,
+  (parentEntityNode, nodeDefUuid) =>
+    !Object.keys(parentEntityNode?.meta?.childApplicability || {}).includes(
+      nodeDefUuid,
+    ),
+)(keySelectors.stringKey);
+
 const getParentEntityNodeDefUuid = createSelector(
   getFormStateData,
   form => form.parentEntityNodeDef || false,
@@ -304,6 +314,19 @@ const getValidationByNodes = createCachedSelector(
   cacheObject: new FifoObjectCache({cacheSize: 1000}),
 });
 
+const canAddNode = createCachedSelector(
+  getNodeDefNodesInHierarchy,
+  (_, nodeDef) => nodeDef,
+  (nodeDefNodesInHierarchy = [], nodeDef) => {
+    const maxCount = NodeDefs.getMaxCount(nodeDef);
+    return (
+      NodeDefs.isMultiple(nodeDef) &&
+      (Objects.isEmpty(maxCount) ||
+        nodeDefNodesInHierarchy.length < Number(maxCount))
+    );
+  },
+)(keySelectors.getUuidFromItem);
+
 export default {
   getFormStateData,
   getRecordUuid,
@@ -318,6 +341,8 @@ export default {
   getNode,
   getNodeDef,
 
+  isNodeDefApplicable,
+  canAddNode,
   getNodeDefChildren,
   getNodeDefChildrenAttributes,
   getNodeDefChildrenUuids,

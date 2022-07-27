@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
     minWidth: MIN_WIDTH,
+    minHeight: baseStyles.bases.BASE_8,
     backgroundColor: colors.neutralLightest,
   },
   oddRow: {

@@ -20,7 +20,12 @@ const styles = StyleSheet.create({
   container: {
     marginBottom: baseStyles.bases.BASE_4,
   },
-  nodeContainer: ({nodeDef, isActive}) => ({
+  notApplicable: ({hidden = false} = {}) => ({
+    opacity: 0.5,
+    backgroundColor: colors.neutralLighter,
+    display: hidden ? 'none' : 'flex',
+  }),
+  nodeContainer: ({nodeDef}) => ({
     borderColor: colors.neutralLighter,
     borderWidth: [
       NodeDefType.text,
@@ -40,7 +45,6 @@ const styles = StyleSheet.create({
     alignItems: aligmentByType[nodeDef.type] || 'flex-end',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    opacity: isActive ? 1 : 0.5,
   }),
   buttonContainer: {
     justifyContent: 'flex-end',
