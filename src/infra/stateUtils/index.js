@@ -33,7 +33,6 @@ const perfEnd = (label = '*') => {
   }
   console.log(label, ':', new Date() - timmers[label], 'ms');
   delete timmers[label];
-  return;
 };
 
 export const perfState = {

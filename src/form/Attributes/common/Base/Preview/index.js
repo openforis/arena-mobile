@@ -1,5 +1,4 @@
 import {NodeDefs} from '@openforis/arena-core';
-import {t} from 'i18next';
 import React, {useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View, Text, TouchableOpacity} from 'react-native';

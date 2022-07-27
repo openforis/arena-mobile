@@ -315,9 +315,9 @@ const getValidationByNodes = createCachedSelector(
 });
 
 const canAddNode = createCachedSelector(
-  getNodeDefNodesInHierarchy,
   (_, nodeDef) => nodeDef,
-  (nodeDefNodesInHierarchy = [], nodeDef) => {
+  getNodeDefNodesInHierarchy,
+  (nodeDef, nodeDefNodesInHierarchy = []) => {
     const maxCount = NodeDefs.getMaxCount(nodeDef);
     return (
       NodeDefs.isMultiple(nodeDef) &&
