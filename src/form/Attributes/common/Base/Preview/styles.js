@@ -14,7 +14,6 @@ const aligmentByType = {
 };
 const paddingByType = {
   [NodeDefType.boolean]: 0,
-  [NodeDefType.taxon]: 0,
 };
 
 const styles = StyleSheet.create({
