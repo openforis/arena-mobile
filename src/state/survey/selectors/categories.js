@@ -13,11 +13,6 @@ export const getCategories = createSelector(
   survey => survey.categories,
 );
 
-export const getCategoryItemUuidIndex = createSelector(
-  getRefData,
-  refData => refData?.categoryItemUuidIndex,
-);
-
 export const getCategoryItemIndex = createSelector(
   getRefData,
   refData => refData?.categoryItemIndex,

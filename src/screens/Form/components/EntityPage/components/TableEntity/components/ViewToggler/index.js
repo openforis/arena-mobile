@@ -15,7 +15,7 @@ const Viewtoggler = ({entityAsTable, setEntityAsTable}) => {
     <View style={styles.container}>
       <View />
       <TouchableIcon
-        iconName={entityAsTable ? 'table-large' : 'format-list-checks'}
+        iconName={entityAsTable ? 'format-list-checks' : 'table-large'}
         customStyle={styles.icon}
         hitSlop={baseStyles.bases.BASE_6}
         size={baseStyles.bases.BASE_8}

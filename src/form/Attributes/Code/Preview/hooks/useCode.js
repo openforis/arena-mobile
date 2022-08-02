@@ -5,7 +5,9 @@ import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import surveySelectors from 'state/survey/selectors';
 
 const getCategoryItemLabel = ({categoryItem, language}) =>
-  `(${categoryItem.props.code}) ${categoryItem.props.labels[language]}`;
+  categoryItem?.props?.code
+    ? `(${categoryItem?.props?.code}) ${categoryItem?.props?.labels?.[language]}`
+    : '-';
 
 const useCode = ({nodeDef, node}) => {
   const codeActions = useNodeFormActions({nodeDef});
