@@ -17,7 +17,7 @@ import styles from './styles';
 const TableEntity = () => {
   const {rows, headers, getWidth} = useEntityTableData();
 
-  const [entityAsTable, setEntityAsTable] = useState(true);
+  const [entityAsTable, setEntityAsTable] = useState(false);
   const dispatch = useDispatch();
 
   const handlePressRow = useCallback(
@@ -38,6 +38,7 @@ const TableEntity = () => {
         nodeDef={nodeDef}
         iconColor={colors.neutralLightest}
         customStyles={{textStyle: {color: colors.neutralLightest}}}
+        numberOfLines={1}
       />
     ),
     [],
@@ -58,6 +59,7 @@ const TableEntity = () => {
   return (
     <View style={[styles.container]}>
       <Viewtoggler
+        key={String(entityAsTable)}
         setEntityAsTable={setEntityAsTable}
         entityAsTable={entityAsTable}
       />

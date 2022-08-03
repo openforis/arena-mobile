@@ -1,12 +1,12 @@
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Text, TouchableOpacity, View} from 'react-native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import * as colors from 'arena-mobile-ui/colors';
 import Icon from 'arena-mobile-ui/components/Icon';
 import baseStyles from 'arena-mobile-ui/styles';
-import {actions as formActions} from 'state/form';
+import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {actions as nodesActions} from 'state/nodes';
 
 import {Preview as BasePreview} from '../../common/Base';
@@ -14,11 +14,15 @@ import {Preview as BasePreview} from '../../common/Base';
 import styles from './styles';
 
 const BooleanOption = ({value, active = false, onPress, nodeDef}) => {
+  const applicable = useSelector(state =>
+    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  );
   const {t} = useTranslation();
   return (
     <TouchableOpacity
       onPress={onPress(value)}
       hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
+      disabled={!applicable}
       style={[styles.touchableContainer({active})]}>
       <Icon
         name={active ? 'radiobox-marked' : 'radiobox-blank'}

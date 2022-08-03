@@ -8,7 +8,12 @@ import baseStyles from 'arena-mobile-ui/styles';
 import DetailModal from './DetailModal';
 import styles from './styles';
 
-const Label = ({nodeDef, customStyles = {}, iconColor = null}) => {
+const Label = ({
+  nodeDef,
+  customStyles = {},
+  iconColor = null,
+  numberOfLines = 0,
+}) => {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const label = useNodeDefNameOrLabel({nodeDef});
 
@@ -31,7 +36,9 @@ const Label = ({nodeDef, customStyles = {}, iconColor = null}) => {
             <View style={styles.separator} />
           </>
         )}
-        <Text style={[styles.textStyle, customStyles.textStyle || {}]}>
+        <Text
+          style={[styles.textStyle, customStyles.textStyle || {}]}
+          numberOfLines={numberOfLines}>
           {label}
         </Text>
       </TouchableOpacity>

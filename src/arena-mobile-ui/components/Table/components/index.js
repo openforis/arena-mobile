@@ -35,5 +35,5 @@ export const TableCell = ({
 };
 
 export const _renderCell = ({item}) => {
-  return <Text>{item.label || '-'}</Text>;
+  return <Text numberOfLines={1}>{item.label || '-'}</Text>;
 };

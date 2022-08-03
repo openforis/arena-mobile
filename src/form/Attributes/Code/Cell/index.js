@@ -5,8 +5,8 @@ import BaseCell from 'form/Attributes/common/Base/Cell';
 
 import {useCode} from '../Preview/hooks';
 
-const BaseValuesRenderer = ({nodeDef}) => {
-  const {language, nodes, categoryItems, getCategoryItemLabel} = useCode({
+const BaseValuesRenderer = ({nodeDef, nodes}) => {
+  const {language, categoryItems, getCategoryItemLabel} = useCode({
     nodeDef,
   });
 
