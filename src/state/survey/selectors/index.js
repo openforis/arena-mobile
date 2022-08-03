@@ -29,6 +29,11 @@ import {
 import {getNodes, getEntityNodeKeys, getEntityNodeKeysAsString} from './nodes';
 import {getRecords, getNumberRecords} from './records';
 import {getSurveyData} from './surveyData';
+import {
+  getTaxonomyItemsUuidsByTaxonomyUuid,
+  getTaxonomyItemsByTaxonomyUuid,
+  getTaxonomyItemByUuid,
+} from './taxonomies';
 import {getIsUploading, getUploadProgress, getJob} from './ui';
 
 export default {
@@ -60,6 +65,11 @@ export default {
   getCategoryItemByUuid,
   getNodeCategoryItems,
   getParentCodeNode,
+
+  // ---- Taxonomies
+  getTaxonomyItemsUuidsByTaxonomyUuid,
+  getTaxonomyItemsByTaxonomyUuid,
+  getTaxonomyItemByUuid,
 
   // --- Records
   getRecords,
