@@ -7,7 +7,7 @@ import {selectors as surveySelectors} from 'state/survey';
 
 import {Preview as BasePreview} from '../../common/Base';
 
-const getCategoryItemLabel = ({item}) =>
+const getTaxonItemLabel = ({item}) =>
   `(${item.props.code}) ${item.props.genus}`;
 
 const Taxonomy = ({node, nodeDef}) => {
@@ -37,7 +37,7 @@ const Taxonomy = ({node, nodeDef}) => {
     <Select
       key={node?.value?.taxonUuid}
       items={Object.values(items)}
-      labelStractor={item => getCategoryItemLabel({item, language})}
+      labelStractor={item => getTaxonItemLabel({item, language})}
       onValueChange={handleSelect}
       selectedItemKey={node?.value?.taxonUuid}
       customStyles={{marginHorizontal: 0}}

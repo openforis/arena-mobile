@@ -1,5 +1,5 @@
 import {NodeDefType} from '@openforis/arena-core';
-import React, {useRef, useEffect} from 'react';
+import React from 'react';
 import {ScrollView, SafeAreaView} from 'react-native';
 import Modal from 'react-native-modal';
 import {useSelector} from 'react-redux';
@@ -12,7 +12,7 @@ import DateForm from 'form/Attributes/Date/Form';
 import DecimalForm from 'form/Attributes/Decimal/Form';
 import FileForm from 'form/Attributes/File/Form';
 import IntegerForm from 'form/Attributes/Integer/Form';
-import TaxonomyForm from 'form/Attributes/Taxonomy/Form';
+import TaxonForm from 'form/Attributes/Taxonomy/Form';
 import TextForm from 'form/Attributes/Text/Form';
 import TimeForm from 'form/Attributes/Time/Form';
 import formSelectors from 'state/form/selectors';
@@ -29,7 +29,7 @@ const FormsByType = {
   [NodeDefType.date]: DateForm,
   [NodeDefType.time]: TimeForm,
   [NodeDefType.file]: FileForm,
-  [NodeDefType.taxon]: TaxonomyForm,
+  [NodeDefType.taxon]: TaxonForm,
 };
 
 const AttributeFormWithModal = () => {
