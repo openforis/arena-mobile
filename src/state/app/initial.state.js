@@ -10,6 +10,7 @@ const initialState = {
     error: false,
     isLoading: false,
     showNames: false,
+    devMode: false,
   },
 };
 

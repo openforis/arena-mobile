@@ -20,6 +20,7 @@ const getServerUrl = createSelector(
 const getUi = createSelector(getState, app => app?.ui || initialState.ui);
 const getIsLoading = createSelector(getUi, ui => ui?.isLoading);
 const getError = createSelector(getUi, ui => ui?.error);
+const isDevModeEnabled = createSelector(getUi, ui => ui?.devMode);
 
 const getShowNames = createSelector(getUi, ui => ui?.showNames);
 
@@ -30,6 +31,7 @@ export default {
   getUi,
   getIsLoading,
   getError,
+  isDevModeEnabled,
 
   getShowNames,
 };

@@ -22,6 +22,7 @@ const {form} = createActions({
   [types.TOGGLE_ENTITY_SELECTOR]: () => ({}),
   [types.CLOSE_ENTITY_SELECTOR]: () => ({}),
   [types.SET_VALIDATION]: ({validation}) => ({validation}),
+  [types.importRecords$]: () => ({}),
 });
 
 export default form;

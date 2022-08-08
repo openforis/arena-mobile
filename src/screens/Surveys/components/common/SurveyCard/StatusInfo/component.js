@@ -29,7 +29,7 @@ const statusConfig = {
 const StatusInfo = ({survey}) => {
   const isLoading = useSelector(surveysSelectors.getIsLoading);
   const localSurvey = useSelector(state =>
-    surveysSelectors.getSurveyByUuid(state, {surveyUuid: survey.uuid}),
+    surveysSelectors.getSurveyByUuid(state, survey.uuid),
   );
   const size = useRef(new Animated.Value(5)).current;
   const [status, setStatus] = useState(null);

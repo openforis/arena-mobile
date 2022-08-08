@@ -34,7 +34,7 @@ function* handleRemoveNode({payload}) {
     //  -_0_- DONT remove the comment of the line bellow:  It re-renders all the nodes
     //    |  ( It is suppused to be needed by arena-core, There "h", a cache inside of the one with its hierarchy is stored inside of each node. -_0_-)
     //   / \
-    //put(nodesActions.setNodes({nodes: Object.values(recordUpdated.nodes)}))
+    //put(nodesActions.setNodes({nodes: recordUpdated.nodes}))
   ]);
 }
 

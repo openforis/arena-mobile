@@ -26,6 +26,10 @@ const styles = StyleSheet.create({
   loggedInAs: {
     paddingVertical: baseStyles.bases.BASE_4,
   },
+  serverUrlButton: {
+    marginVertical: 0,
+    justifyContent: 'flex-start',
+  },
 });
 
 export default styles;

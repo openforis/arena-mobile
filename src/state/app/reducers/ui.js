@@ -22,6 +22,10 @@ const appUi = handleActions(
       error: false,
       isLoading: true,
     }),
+    [actions.setDevMode]: state => ({
+      ...state,
+      devMode: true,
+    }),
   },
   initialState.ui,
 );

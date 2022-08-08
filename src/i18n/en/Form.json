@@ -1,5 +1,7 @@
 {
   "add_new": "New {{ label }}",
+  "save_and_return":  "Save and return",
+  "save":  "Save",
   "delete": "Delete {{ label }}",
   "nodeDefEntity": {
     "layout": {
@@ -22,6 +24,7 @@
     "x": "X",
     "y": "Y",
     "srs": "SRS",
+    "get_location": "Get location",
     "permissions": {
       "denied": "Location permission denied",
       "unable_settings": "Unable to open settings",
@@ -31,8 +34,8 @@
         "reject": "Don't Use Location"
       },
       "toasts": {
-        "denied": "Location permission denied by user.",
-        "revoked": "Location permission revoked by user."
+        "denied": "Location permission denied by the user.",
+        "revoked": "Location permission revoked by the user."
       }
     }
   },

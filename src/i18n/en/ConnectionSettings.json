@@ -3,7 +3,9 @@
 
   "server_config_title": "Server info",
   "server_config_fields": {
-    "address": "Server address"
+    "address": "Server address",
+    "test": "Use: {{ url }}",
+    "prod": "Use: {{ url }}"
   },
 
   "access_info_title": "Access info",

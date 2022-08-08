@@ -1,5 +1,5 @@
 {
-  "actual_survey": "Actual survey",
+  "active_survey": "Active survey",
   "local": {
     "title": "Device",
     "error": {
@@ -21,7 +21,7 @@
       "cta_label": "Connect to the server"
     },
     "empty": {
-      "title": "It looks like there is not surveys in the server.",
+      "title": "It looks like there are not surveys in the server.",
       "info": "Please ask the server admin.",
       "cta_label": "Go to local surveys again"
     }
@@ -30,7 +30,7 @@
     "delete": {
       "alert": {
         "title": "Are you sure?",
-        "message": "You are going to remove the survey {{ name }} and all of the info related from the device.",
+        "message": "You are going to remove the survey {{ name }} and all its data from the device.",
         "accept": "Yes, delete",
         "dismiss": "No"
       }

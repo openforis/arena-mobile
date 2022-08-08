@@ -1,4 +1,5 @@
 import React, {useCallback, useState, useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 
 import Button from 'arena-mobile-ui/components/Button';
@@ -10,6 +11,7 @@ import useGetLocation from '../useGetLocation';
 import styles from './styles';
 
 const GetLocation = ({handleSaveLocation}) => {
+  const {t} = useTranslation();
   const [loading, setLoading] = useState(false);
   const {location, getLocation} = useGetLocation();
 
@@ -28,7 +30,7 @@ const GetLocation = ({handleSaveLocation}) => {
         type="ghostBlack"
         icon={<Icon name="compass-outline" />}
         onPress={getLocation}
-        label="get location"
+        label={t('Form:get_location')}
         customTextStyle={{paddingLeft: 8}}
         disabled={loading}
       />
@@ -42,7 +44,7 @@ const GetLocation = ({handleSaveLocation}) => {
       {location?.coords && (
         <Button
           type="ghost"
-          label="save"
+          label={t('Form:save')}
           customContainerStyle={{justifyContent: 'flex-end'}}
           onPress={_handleSaveLocation}
         />

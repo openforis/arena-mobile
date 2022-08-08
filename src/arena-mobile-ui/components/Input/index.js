@@ -1,6 +1,7 @@
 import React from 'react';
 import {Text, View, TextInput} from 'react-native';
 
+import * as colors from 'arena-mobile-ui/colors';
 import baseStyles from 'arena-mobile-ui/styles';
 
 import styles from './styles';
@@ -42,6 +43,7 @@ const Input = ({
         onChangeText={onChangeText}
         autoFocus={autoFocus}
         selectTextOnFocus={true}
+        placeholderTextColor={colors.secondaryLighter}
         {...props}
       />
     </InputContainer>

@@ -19,7 +19,7 @@ const RemotePanel = ({survey}) => {
   const [actionType, setActionType] = useState(null);
   const isLoading = useSelector(surveysSelectors.getIsLoading);
   const localSurvey = useSelector(state =>
-    surveysSelectors.getSurveyByUuid(state, {surveyUuid: survey?.uuid}),
+    surveysSelectors.getSurveyByUuid(state, survey?.uuid),
   );
   const currentSurveyUuid = useSelector(surveySelectors.getSelectedSurveyUuid);
 

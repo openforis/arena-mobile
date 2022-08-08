@@ -41,7 +41,7 @@ const SurveyCard = ({
       </View>
       <View style={[styles.moreInfo]}>
         {isLocalSurvey ? (
-          <ActualItem label={t('Surveys:actual_survey')} />
+          <ActualItem label={t('Surveys:active_survey')} />
         ) : (
           <View />
         )}
