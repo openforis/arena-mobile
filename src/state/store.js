@@ -17,6 +17,7 @@ const persistConfig = {
   key: 'root-store',
   storage,
   stateReconciler: hardSet,
+  throttle: 6000,
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

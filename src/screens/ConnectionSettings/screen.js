@@ -27,8 +27,8 @@ import {selectors as userSelectors} from 'state/user';
 
 import styles from './styles';
 import Telemetry from './Telemetry';
+import Version from './Version';
 
-const SHOW_TELEMETRY = false;
 const ConnectionSettings = () => {
   const dispatch = useDispatch();
   const {t} = useTranslation();
@@ -64,6 +64,7 @@ const ConnectionSettings = () => {
   const serverUrl = useSelector(appSelectors.getServerUrl);
   const isLoading = useSelector(appSelectors.getIsLoading);
   const error = useSelector(appSelectors.getError);
+  const isDevModeEnabled = useSelector(appSelectors.isDevModeEnabled);
 
   useEffect(() => {
     setFormData(prevData => ({
@@ -74,6 +75,15 @@ const ConnectionSettings = () => {
     }));
   }, [username, password, serverUrl]);
 
+  const handleSetServerUrl = useCallback(
+    _serverUrl => () => {
+      setFormData(prevData => ({
+        ...prevData,
+        serverUrl: _serverUrl || prevData.serverUrl,
+      }));
+    },
+    [setFormData],
+  );
   const {
     data: qrData,
     visible,
@@ -133,8 +143,31 @@ const ConnectionSettings = () => {
                   title={t('ConnectionSettings:server_config_fields.address')}
                   onChangeText={onChangeText('serverUrl')}
                   value={formData?.serverUrl || serverUrl}
+                  placeholder="https://test.openforis-arena.org"
                   autoCapitalize="none"
                 />
+                <Button
+                  type="ghostBlack"
+                  onPress={handleSetServerUrl(
+                    'https://www.openforis-arena.org',
+                  )}
+                  label={t('ConnectionSettings:server_config_fields.prod', {
+                    url: 'https://www.openforis-arena.org',
+                  })}
+                  customContainerStyle={[styles.serverUrlButton]}
+                />
+                {isDevModeEnabled && (
+                  <Button
+                    type="ghostBlack"
+                    onPress={handleSetServerUrl(
+                      'https://test.openforis-arena.org',
+                    )}
+                    label={t('ConnectionSettings:server_config_fields.prod', {
+                      url: 'https://test.openforis-arena.org',
+                    })}
+                    customContainerStyle={[styles.serverUrlButton]}
+                  />
+                )}
               </View>
 
               <View style={[styles.formItem]}>
@@ -179,7 +212,8 @@ const ConnectionSettings = () => {
                 </View>
               )}
             </View>
-            {__DEV__ && SHOW_TELEMETRY && <Telemetry />}
+            <Version />
+            {isDevModeEnabled && <Telemetry />}
             <View style={{height: 200}} />
           </ScrollView>
         </KeyboardAvoidingView>

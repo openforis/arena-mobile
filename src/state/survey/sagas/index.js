@@ -32,7 +32,7 @@ function* handleSelectSurvey({payload}) {
   try {
     const {surveyUuid} = payload;
     const survey = yield select(state =>
-      surveysSelectors.getSurveyByUuid(state, {surveyUuid}),
+      surveysSelectors.getSurveyByUuid(state, surveyUuid),
     );
 
     if (!survey) {

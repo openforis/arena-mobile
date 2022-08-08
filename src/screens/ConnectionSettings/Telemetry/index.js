@@ -13,6 +13,7 @@ import {selectors as surveySelectors} from 'state/survey';
 import {selectors as surveysSelectors} from 'state/surveys';
 import {selectors as userSelectors} from 'state/user';
 
+import {useDeviceUse} from '../hooks';
 const telemetryKeys = {
   appSelectors,
   filesSelectors,
@@ -35,6 +36,7 @@ const TelemetryObject = ({telemetryKey}) => {
 const Telemetry = () => {
   const {t} = useTranslation();
   const numNodes = useSelector(nodesSelectors.getNumNodes);
+  const data = useDeviceUse();
 
   return (
     <View key={new Date()}>
@@ -43,6 +45,15 @@ const Telemetry = () => {
         onPress={() => console.log()}
         label={t('ConnectionSettings:telemetry.cta')}
       />
+      <Text>Disk Storage:</Text>
+      <Text>Used:{data?.disk?.used}</Text>
+      <Text>Free:{data?.disk?.free}</Text>
+      <Text>Total:{data?.disk?.total}</Text>
+
+      <Text>Memory:</Text>
+      <Text>Max:{data?.memory?.max}</Text>
+      <Text>Used:{data?.memory?.used}</Text>
+      <Text>Total:{data?.memory?.total}</Text>
       <ScrollView>
         <Text>numNodes: {numNodes}</Text>
         <Text>-----------</Text>

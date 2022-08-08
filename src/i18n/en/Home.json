@@ -2,7 +2,7 @@
   "logged_in_as": "Logged in as",
   "not_logged_in": {
     "title": "Not authenticated",
-    "info": "Please log in into the system",
+    "info": "Please log in to the system",
     "cta": "Log in"
   },
   "survey": {
@@ -17,7 +17,7 @@
       "cta": "Load survey"
     },
     "card": {
-      "actual_survey": "Actual survey",
+      "active_survey": "$t(Surveys:active_survey)",
       "id": "Id",
       "name": "Name",
       "language": "Selected language",

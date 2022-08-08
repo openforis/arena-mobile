@@ -1,4 +1,5 @@
 import React, {useCallback} from 'react';
+import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {useDispatch} from 'react-redux';
 
@@ -10,6 +11,7 @@ import {actions as formActions} from 'state/form';
 import styles from './styles';
 
 const BaseForm = ({nodeDef, handleSubmit, children}) => {
+  const {t} = useTranslation();
   const dispatch = useDispatch();
 
   const _handleSubmit = useCallback(
@@ -41,7 +43,10 @@ const BaseForm = ({nodeDef, handleSubmit, children}) => {
 
       <View style={styles.divider} />
       <View>
-        <Button label="save and close" onPress={_handleSubmitAndClose} />
+        <Button
+          label={t('Form:save_and_return')}
+          onPress={_handleSubmitAndClose}
+        />
       </View>
     </View>
   );

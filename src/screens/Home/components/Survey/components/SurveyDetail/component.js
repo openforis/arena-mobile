@@ -25,7 +25,7 @@ const SurveyDetail = () => {
   return (
     <Card customStyles={[styles.container]}>
       <Text style={baseStyles.textStyle.secondaryText}>
-        {t('Home:survey.card.actual_survey')}
+        {t('Home:survey.card.active_survey')}
       </Text>
       <Text style={baseStyles.textStyle.title}>
         {surveyLabel} ·{surveyLabel}{' '}

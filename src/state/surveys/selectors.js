@@ -16,9 +16,9 @@ const getNumberOfLocalSurveys = createSelector(
 
 const getSurveyByUuid = createCachedSelector(
   getSurveys,
-  (_, {surveyUuid}) => ({surveyUuid}),
-  (surveys, {surveyUuid}) => surveys[surveyUuid] || {},
-)((_state_, {surveyUuid}) => surveyUuid || '_');
+  (_, surveyUuid) => surveyUuid,
+  (surveys, surveyUuid) => surveys[surveyUuid] || {},
+)((_state_, surveyUuid) => surveyUuid || '_');
 
 const getIsLoading = createSelector(getUi, ui => ui?.isLoading || false);
 

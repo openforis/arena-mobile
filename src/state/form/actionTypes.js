@@ -9,6 +9,8 @@ const selectEntity$ = 'form/selectEntity$';
 const selectEntityNode$ = 'form/selectEntityNode$';
 const deleteNodeEntity$ = 'form/deleteNodeEntity$';
 
+const importRecords$ = 'form/importRecords$';
+
 const CLEAN = 'form/CLEAN';
 
 // UI
@@ -37,4 +39,6 @@ export default {
   CLOSE_ENTITY_SELECTOR,
 
   SET_VALIDATION,
+
+  importRecords$,
 };

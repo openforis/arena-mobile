@@ -56,7 +56,7 @@ const EntitySelector = () => {
   const handleNavigateToHome = useCallback(() => {
     handleClose();
     navigateTo({route: routes.HOME})();
-  }, [navigateTo, dispatch]);
+  }, [handleClose, navigateTo]);
 
   return (
     <>

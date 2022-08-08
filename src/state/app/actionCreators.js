@@ -25,6 +25,7 @@ const {app} = createActions({
   [types.SET_SHOW_NAMES]: ({showNames = false}) => ({
     showNames,
   }),
+  [types.SET_DEV_MODE]: () => ({}),
 });
 
 export default app;
