@@ -5,7 +5,6 @@ import formActionTypes from '../actionTypes';
 import handleContinueRecord from './continueRecord';
 import handleCreateEntity from './createEntity';
 import handleDeleteNodeEntity from './deleteNodeEntity';
-import handleImportRecords from './importRecords';
 import handleInitializeRecord from './initializeRecord';
 import handleSelectEntity from './selectEntity';
 import handleSelectEntityNode from './selectEntityNode';
@@ -19,5 +18,4 @@ export default function* () {
   yield takeLatest(formActionTypes.selectEntityNode$, handleSelectEntityNode);
 
   yield takeLatest(formActionTypes.deleteNodeEntity$, handleDeleteNodeEntity);
-  yield takeLatest(formActionTypes.importRecords$, handleImportRecords);
 }
