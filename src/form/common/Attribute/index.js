@@ -12,6 +12,7 @@ import DatePreview from '../../Attributes/Date/Preview';
 import DecimalPreview from '../../Attributes/Decimal/Preview';
 import FilePreview from '../../Attributes/File/Preview';
 import IntegerPreview from '../../Attributes/Integer/Preview';
+import TaxonomyPreview from '../../Attributes/Taxonomy/Preview';
 import TextPreview from '../../Attributes/Text/Preview';
 import TimePreview from '../../Attributes/Time/Preview';
 
@@ -25,6 +26,7 @@ const AttributesComponentByType = {
   [NodeDefType.date]: DatePreview,
   [NodeDefType.time]: TimePreview,
   [NodeDefType.file]: FilePreview,
+  [NodeDefType.taxon]: TaxonomyPreview,
 };
 
 const Attribute = ({nodeDefUuid}) => {
