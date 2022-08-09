@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@openforis/arena-core": "^0.0.107",
+    "@react-native-async-storage/async-storage": "^1.17.8",
     "@react-native-community/datetimepicker": "^6.2.2",
     "@react-native-community/picker": "^1.8.1",
     "@react-navigation/native": "^6.0.11",

@@ -80,3 +80,17 @@ export const uploadFiles = async ({uploadUrl, files, onStart, onProgress}) =>
     begin: onStart,
     progress: onProgress,
   }).promise;
+
+export const downloadFile = async ({
+  downloadUrl,
+  toFile,
+  onProgress,
+  onStart,
+}) => {
+  return RNFS.downloadFile({
+    fromUrl: downloadUrl,
+    toFile: cleanPathWithBase(toFile),
+    progress: onProgress,
+    begin: onStart,
+  });
+};
