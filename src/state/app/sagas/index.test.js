@@ -31,6 +31,7 @@ const expectedAppState = {
     error: false,
     isLoading: false,
     showNames: false,
+    devMode: false,
   },
 };
 
