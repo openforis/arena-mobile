@@ -123,7 +123,7 @@ function* watchUpdateJobChannel() {
   }
 }
 
-const handleUploadBegin = _channel => response => {
+const handleUploadStart = _channel => response => {
   _channel.put(surveyActions.setUploading({isUploading: true}));
 };
 const handleOnProgress = _channel => response => {
@@ -156,7 +156,7 @@ function* handleUploadData() {
     yield call(surveysApi.uploadSurveyZip, {
       serverUrl,
       surveyId,
-      onStart: handleUploadBegin(uploadFileChannel),
+      onStart: handleUploadStart(uploadFileChannel),
       onProgress: handleOnProgress(uploadFileChannel),
     });
   } catch (e) {

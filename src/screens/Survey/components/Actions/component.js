@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import {alert} from 'arena-mobile-ui/utils';
+import {selectors as appSelectors} from 'state/app';
 import {actions as formActions} from 'state/form';
 import {
   selectors as surveySelectors,
@@ -18,7 +19,7 @@ const Actions = () => {
   const dispatch = useDispatch();
 
   const numberOfRecords = useSelector(surveySelectors.getNumberRecords);
-
+  const isDevModeEnabled = useSelector(appSelectors.isDevModeEnabled);
   const survey = useSelector(surveySelectors.getSurvey);
 
   const handleDeleteSurveyData = useCallback(() => {
@@ -63,11 +64,13 @@ const Actions = () => {
 
   return (
     <View style={[styles.container]}>
-      <Button
-        type="primary"
-        label={t('Actions:import_records')}
-        onPress={handleImportRecords}
-      />
+      {isDevModeEnabled && (
+        <Button
+          type="primary"
+          label={t('Actions:import_records')}
+          onPress={handleImportRecords}
+        />
+      )}
 
       {numberOfRecords > 0 && (
         <Button
