@@ -19,12 +19,12 @@ const CodeCheckbox = ({nodeDef}) => {
 
         let _node = node;
 
-        if (NodeDefs.isMultiple(nodeDef) && Objects.isEmpty(_node)) {
-          _node = nodes.find(({value}) => Objects.isEmpty(value));
+        if (Objects.isEmpty(_node)) {
+          _node = NodeDefs.isMultiple(nodeDef)
+            ? nodes.find(({value}) => Objects.isEmpty(value))
+            : node || nodes[0];
         }
-        if (!NodeDefs.isMultiple(nodeDef) && Objects.isEmpty(_node)) {
-          _node = node || nodes[0];
-        }
+
         let newValue = {itemUuid: categoryItem?.uuid};
 
         if (Objects.isEmpty(_node)) {

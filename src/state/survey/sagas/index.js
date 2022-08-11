@@ -25,8 +25,7 @@ import surveyActions from '../actionCreators';
 import surveyActionTypes from '../actionTypes';
 import surveySelectors from '../selectors';
 
-const TMP_BASE_PATH = 'tmp';
-const RECORDS_BASE_PATH = `${TMP_BASE_PATH}/records`;
+const RECORDS_BASE_PATH = `${fs.TMP_BASE_PATH}/records`;
 
 function* handleSelectSurvey({payload}) {
   try {
@@ -86,8 +85,8 @@ function* handlePrepareZipData() {
   try {
     yield call(handlePrepareRecordsData);
     yield call(zip, {
-      source: TMP_BASE_PATH,
-      destination: `${TMP_BASE_PATH}/survey.zip`,
+      source: fs.TMP_BASE_PATH,
+      destination: `${fs.TMP_BASE_PATH}/survey.zip`,
     });
   } catch (e) {
     console.log(e);
@@ -98,7 +97,7 @@ function* handlePrepareZipData() {
 
 function* cleanTmpFolder() {
   try {
-    yield call(fs.deleteDir, TMP_BASE_PATH);
+    yield call(fs.deleteDir, fs.TMP_BASE_PATH);
   } catch (e) {
     console.log(e);
   } finally {
