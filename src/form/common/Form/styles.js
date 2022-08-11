@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     padding: baseStyles.bases.BASE_4,
     backgroundColor: colors.white,
     flex: 1,
+    paddingBottom: 100,
   },
   container: {
     flex: 1,

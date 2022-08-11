@@ -214,17 +214,18 @@ const ConnectionSettings = () => {
             </View>
             <Version />
             {isDevModeEnabled && <Telemetry />}
-            <View style={{height: 200}} />
+            <View style={{height: 100}} />
+            <View>
+              <Button
+                type="ghost"
+                onPress={handleResetData}
+                label={t('ConnectionSettings:reset.cta')}
+                disabled={isLoading}
+              />
+            </View>
+            <View style={{height: 100}} />
           </ScrollView>
         </KeyboardAvoidingView>
-        <View>
-          <Button
-            type="ghost"
-            onPress={handleResetData}
-            label={t('ConnectionSettings:reset.cta')}
-            disabled={isLoading}
-          />
-        </View>
       </>
     </Layout>
   );

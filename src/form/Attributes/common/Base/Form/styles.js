@@ -5,9 +5,7 @@ import baseStyles from 'arena-mobile-ui/styles';
 
 const styles = StyleSheet.create({
   container: {
-    color: colors.neutralDarkest,
-    flex: 1,
-    borderRadius: baseStyles.bases.BASE_4,
+    paddingBottom: 100,
   },
   closeHeader: {
     justifyContent: 'flex-end',
@@ -19,7 +17,7 @@ const styles = StyleSheet.create({
     padding: baseStyles.bases.BASE,
   },
   divider: {
-    height: 100,
+    height: 30,
   },
 });
 
