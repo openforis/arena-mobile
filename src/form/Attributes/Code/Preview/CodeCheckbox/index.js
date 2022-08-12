@@ -29,23 +29,20 @@ const CodeCheckbox = ({nodeDef}) => {
 
         if (Objects.isEmpty(_node)) {
           codeActions.handleCreate({value: newValue});
-        } else {
-          if (Objects.isEmpty(_node.value)) {
-            codeActions.handleUpdate({node: _node, value: newValue});
-          } else {
-            if (NodeDefs.isMultiple(nodeDef)) {
-              codeActions.handleDelete({node: _node});
-            } else {
-              codeActions.handleUpdate({
-                node: _node,
-                value:
-                  categoryItem.uuid !== _node?.value?.itemUuid
-                    ? newValue
-                    : null,
-              });
-            }
-          }
+          return;
         }
+        if (Objects.isEmpty(_node.value)) {
+          codeActions.handleUpdate({node: _node, value: newValue});
+          return;
+        }
+        if (NodeDefs.isMultiple(nodeDef)) {
+          codeActions.handleDelete({node: _node});
+          return;
+        }
+        codeActions.handleUpdate({
+          node: _node,
+          value: categoryItem.uuid !== _node?.value?.itemUuid ? newValue : null,
+        });
       },
     [codeActions, nodeDef, nodes],
   );
