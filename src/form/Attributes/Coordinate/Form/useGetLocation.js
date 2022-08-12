@@ -15,11 +15,6 @@ import appConfig from '../../../../../app.json';
 const useGetLocation = () => {
   const {t} = useTranslation();
   const [location, setLocation] = useState(null);
-  const [forceLocation, setForceLocation] = useState(true);
-  const [highAccuracy, setHighAccuracy] = useState(true);
-  const [locationDialog, setLocationDialog] = useState(true);
-  const [useLocationManager, setUseLocationManager] = useState(false);
-
   const hasPermissionIOS = useCallback(async () => {
     const openSetting = () => {
       Linking.openSettings().catch(() => {
@@ -118,22 +113,16 @@ const useGetLocation = () => {
           android: 'high',
           ios: 'best',
         },
-        enableHighAccuracy: highAccuracy,
+        enableHighAccuracy: true,
         timeout: 15000,
         maximumAge: 10000,
         distanceFilter: 0,
-        forceRequestLocation: forceLocation,
-        forceLocationManager: useLocationManager,
-        showLocationDialog: locationDialog,
+        forceRequestLocation: true,
+        forceLocationManager: false,
+        showLocationDialog: true,
       },
     );
-  }, [
-    forceLocation,
-    hasLocationPermission,
-    highAccuracy,
-    useLocationManager,
-    locationDialog,
-  ]);
+  }, [hasLocationPermission]);
 
   return {getLocation, location};
 };
