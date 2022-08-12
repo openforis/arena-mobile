@@ -8,7 +8,7 @@ const SurveyInfo = ({survey}) => {
   return (
     <View style={{flex: 1}}>
       <Text style={[baseStyles.textStyle.bold, baseStyles.textSize.l]}>
-        {survey.props.labels?.[survey?.props?.languages?.[0]]}
+        {survey.props?.labels?.[survey?.props?.languages?.[0]]}
       </Text>
       <Text style={[baseStyles.textStyle.secondaryText, baseStyles.textSize.s]}>
         {survey?.props?.name}

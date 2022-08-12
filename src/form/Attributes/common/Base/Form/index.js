@@ -30,7 +30,7 @@ const BaseForm = ({nodeDef, handleSubmit, children}) => {
   }, [_handleSubmit, handleClose]);
 
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.closeHeader}>
         <TouchableIcon
           iconName="close"

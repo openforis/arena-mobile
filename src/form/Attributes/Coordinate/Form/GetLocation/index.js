@@ -44,7 +44,7 @@ const GetLocation = ({handleSaveLocation}) => {
       {location?.coords && (
         <Button
           type="ghost"
-          label={t('Form:save')}
+          label={t('Form:nodeDefCoordinate.use')}
           customContainerStyle={{justifyContent: 'flex-end'}}
           onPress={_handleSaveLocation}
         />

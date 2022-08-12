@@ -25,10 +25,10 @@ const JobContainer = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (job.ended) {
+    if (job?.ended) {
       setCollapsed(false);
     }
-  }, [job.ended]);
+  }, [job]);
 
   const handleClose = useCallback(() => {
     dispatch(surveyActions.updateJob({job: false}));

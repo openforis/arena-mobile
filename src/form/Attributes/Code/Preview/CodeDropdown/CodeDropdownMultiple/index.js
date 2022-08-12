@@ -30,7 +30,7 @@ const CodeDropdownMultiple = ({nodeDef}) => {
     [codeActions],
   );
 
-  if (!(categoryItems.length > 0)) {
+  if (categoryItems.length <= 0) {
     return null;
   }
 

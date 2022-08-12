@@ -27,7 +27,7 @@ const uploadSurveyZip = async ({serverUrl, surveyId, onStart, onProgress}) => {
     {
       name: 'survey.zip',
       filename: 'survey.zip',
-      filepath: fs.BASE_PATH + '/tmp/survey.zip',
+      filepath: fs.TMP_BASE_PATH + '/survey.zip',
       filetype: 'application/zip',
     },
   ];

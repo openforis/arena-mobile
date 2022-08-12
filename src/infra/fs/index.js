@@ -1,6 +1,7 @@
 import RNFS from 'react-native-fs';
 
 export const BASE_PATH = RNFS.DocumentDirectoryPath;
+export const TMP_BASE_PATH = RNFS.TemporaryDirectoryPath;
 
 const DEFAULT_ENCODING = 'utf8';
 

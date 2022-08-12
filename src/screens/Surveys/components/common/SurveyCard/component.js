@@ -27,7 +27,7 @@ const SurveyCard = ({
       customStyles={[styles.container, isSelected ? styles.selected : {}]}>
       <View style={[styles.payload]}>
         <Text style={[baseStyles.textStyle.bold, baseStyles.textSize.l]}>
-          {survey.props.labels?.[survey?.props?.languages?.[0]]}
+          {survey.props?.labels?.[survey?.props?.languages?.[0]]}
         </Text>
         <Text
           style={[baseStyles.textStyle.secondaryText, baseStyles.textSize.s]}>
