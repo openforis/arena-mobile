@@ -1,10 +1,9 @@
 import RNFS from 'react-native-fs';
 
 export const BASE_PATH = RNFS.DocumentDirectoryPath;
-export const TMP_BASE_PATH = RNFS.TemporaryDirectoryPath.replace(
-  /\/$/,
-  '',
-).replace(/^\/private\//, '');
+export const TMP_BASE_PATH = (RNFS.TemporaryDirectoryPath || '')
+  .replace(/\/$/, '')
+  .replace(/^\/private\//, '');
 
 const DEFAULT_ENCODING = 'utf8';
 
