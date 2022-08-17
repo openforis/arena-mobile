@@ -1,12 +1,14 @@
+import moment from 'moment-timezone';
 import {createCachedSelector} from 're-reselect';
 import {createSelector} from 'reselect';
 
 const getSurveys = state => state?.surveys?.data || {};
 const getUi = state => state?.surveys?.ui || {};
 
-const getSurveysAsList = createSelector(
-  getSurveys,
-  surveys => Object.values(surveys) || [],
+const getSurveysAsList = createSelector(getSurveys, surveys =>
+  (Object.values(surveys) || []).sort((surveyA, surveyB) =>
+    moment(surveyA.dateModified) > moment(surveyB.dateModified) ? -1 : 1,
+  ),
 );
 
 const getNumberOfLocalSurveys = createSelector(

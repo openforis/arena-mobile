@@ -67,7 +67,7 @@ function* handleImportFileNodes(params) {
 
 function* handleImportRecord(params) {
   const {record, surveyId, serverUrl} = params;
-
+  yield delay(1000);
   const recordData = yield call(recordsApi.getRecord, {
     serverUrl,
     surveyId,
@@ -83,6 +83,7 @@ function* handleImportRecord(params) {
     let importFiles = [];
     yield put(recordsActions.setRecord({record: recordData}));
     const nodeObj = Object.assign({}, nodes);
+
     Object.entries(nodes).forEach(([key, node]) => {
       if (node?.value?.fileUuid) {
         importFiles.push(
