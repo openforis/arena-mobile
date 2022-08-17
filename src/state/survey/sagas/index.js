@@ -94,7 +94,6 @@ function* handlePrepareZipData() {
     console.log(e);
   } finally {
     console.log('Finally');
-    return;
   }
 }
 
