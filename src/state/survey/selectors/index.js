@@ -23,7 +23,6 @@ import {
   getNodeDefEntityChildrenKeys,
   getNodeDefChildrenEntities,
   getNodeDefChildrenSingleEntities,
-  getNodeDefEntityChildrenAttributes,
   getNodeDefEntityChildrenAttributesUuids,
 } from './nodeDefs';
 import {getNodes, getEntityNodeKeys, getEntityNodeKeysAsString} from './nodes';
@@ -57,7 +56,6 @@ export default {
   getNodeDefEntityChildrenKeys,
   getNodeDefChildrenEntities,
   getNodeDefChildrenSingleEntities,
-  getNodeDefEntityChildrenAttributes,
   getNodeDefEntityChildrenAttributesUuids,
 
   // ---- category
