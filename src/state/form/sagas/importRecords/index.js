@@ -33,7 +33,6 @@ const handleDownloadProgress = _channel => node => async response => {
 
   const finished = contentLength === bytesWritten;
 
-  console.log('finished', finished);
   if (finished) {
     _channel.put(
       nodesActions.setNodes({
