@@ -11,7 +11,9 @@ import surveyActions from 'state/survey/actionCreators';
 import surveySelectors from 'state/survey/selectors';
 
 const BASE_PATH = fs.BASE_PATH;
+const TMP_BASE_PATH = fs.TMP_BASE_PATH;
 const RECORDS_IMPORT_BASE_PATH = `${BASE_PATH}/records-import`;
+const NODE_FILES_IMPORT_BASE_PATH = `${TMP_BASE_PATH}/files`;
 
 const downloadFileChannel = channel();
 
@@ -31,6 +33,7 @@ const handleDownloadProgress = _channel => node => async response => {
 
   const finished = contentLength === bytesWritten;
 
+  console.log('finished', finished);
   if (finished) {
     _channel.put(
       nodesActions.setNodes({
@@ -45,8 +48,7 @@ const handleDownloadProgress = _channel => node => async response => {
 function* handleImportFileNodes(params) {
   try {
     const {surveyId, recordUuid, serverUrl, node} = params;
-
-    const fileUri = `${RECORDS_IMPORT_BASE_PATH}/${node?.value?.fileName}`;
+    const fileUri = `${NODE_FILES_IMPORT_BASE_PATH}/${node?.value?.fileName}`;
 
     const nodeUpdated = Object.assign({}, node, {
       value: Object.assign({}, node.value, {uri: fileUri}),
@@ -61,7 +63,7 @@ function* handleImportFileNodes(params) {
       onStart: handleDownloadStart(downloadFileChannel),
     });
   } catch (e) {
-    console.log('E', e);
+    console.log('Error:handleImportFileNodes', e);
   }
 }
 
@@ -111,7 +113,9 @@ function* handleImportRecords() {
   yield put(surveyActions.setUploading({isUploading: true}));
   try {
     yield call(fs.deleteDir, RECORDS_IMPORT_BASE_PATH);
+    yield call(fs.deleteDir, NODE_FILES_IMPORT_BASE_PATH);
     yield call(fs.mkdir, {dirPath: RECORDS_IMPORT_BASE_PATH});
+    yield call(fs.mkdir, {dirPath: NODE_FILES_IMPORT_BASE_PATH});
     const surveyUuid = yield select(surveySelectors.getSelectedSurveyUuid);
     const surveyId = yield select(surveySelectors.getSelectedSurveyId);
 
@@ -130,7 +134,7 @@ function* handleImportRecords() {
       yield importRecord;
     }
   } catch (error) {
-    console.log('Error', error);
+    console.log('Error:handleImportRecords', error);
   } finally {
     console.log('Finally');
     yield put(surveyActions.setUploading({isUploading: false}));
