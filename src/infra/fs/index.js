@@ -15,7 +15,7 @@ const clean = (path, sourcePath) => {
     .replace(`${sourcePath}`, '')}`;
 };
 
-const cleanPathWithBase = (path = '') => {
+export const cleanPathWithBase = (path = '') => {
   if (path.startsWith('file')) {
     return path;
   }
@@ -28,7 +28,32 @@ const cleanPathWithBase = (path = '') => {
     cleanPath = clean(path, BASE_PATH);
   }
 
+  cleanPath = cleanPath
+    .substring(cleanPath.indexOf('/Documents'))
+    .replace('/Documents', BASE_PATH);
+
   return cleanPath;
+};
+
+export const scanDir = async (
+  pathOfDirToScan,
+  data = {directory: [], files: []},
+) => {
+  const readedFilesAndDir = await readDir({dirPath: pathOfDirToScan});
+
+  await Promise.all(
+    readedFilesAndDir.map(async eachItem => {
+      if (eachItem.isDirectory()) {
+        const directoryPath = pathOfDirToScan + '/' + eachItem.name;
+        data.directory.push(directoryPath);
+        data = await scanDir(directoryPath, data);
+      } else {
+        data.files.push(pathOfDirToScan + '/' + eachItem.name);
+      }
+    }),
+  );
+
+  return data;
 };
 
 export const mkdir = async (

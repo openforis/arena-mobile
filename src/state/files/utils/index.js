@@ -36,19 +36,6 @@ const deleteFile = async fileUuid => {
 const deleteFiles = async filesUuids =>
   Promise.all(filesUuids.map(async fileUuid => deleteFile(fileUuid)));
 
-const readArenaFilesDir = async () => {
-  let fileNames = [];
-  const files = await fs.readDir({
-    dirPath: BASE_ARENA_FILES_PATH,
-  });
-
-  for await (const file of files) {
-    const fileDir = await fs.readDir({dirPath: file.path});
-    fileNames.push(fileDir.name);
-  }
-  console.log('fileNames', fileNames);
-};
-
 const deleteArenaFilesDir = async () => fs.deleteDir(BASE_ARENA_FILES_PATH);
 
 const getFileContent = async file => {
@@ -56,7 +43,6 @@ const getFileContent = async file => {
     filePath: file.uri.replace('%20', ' '),
     encoding: 'base64',
   });
-  console.log('fileContent', fileContent.substring(0, 30));
   return fileContent;
 };
 
@@ -70,5 +56,4 @@ export default {
   deleteArenaFilesDir,
   getFileContent,
   getFilesContent,
-  readArenaFilesDir,
 };

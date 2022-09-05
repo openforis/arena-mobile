@@ -1,13 +1,17 @@
 import React from 'react';
 import {Platform, View, Image} from 'react-native';
 
+import * as fs from 'infra/fs';
+
 import styles from './styles';
 
 const getFileUri = file => {
+  const relativePath = fs.cleanPathWithBase(file.uri);
+
   if (Platform.OS === 'ios') {
-    return '~' + file.uri.substring(file.uri.indexOf('/Documents'));
+    return '~' + relativePath.substring(relativePath.indexOf('/Documents'));
   }
-  return file.uri;
+  return relativePath;
 };
 
 const Preview = ({file}) => {
