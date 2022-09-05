@@ -1,7 +1,7 @@
 import {createCachedSelector} from 're-reselect';
 import {createSelector} from 'reselect';
 
-import {getSurvey} from './base';
+import {getSurvey, getSurveyCycle} from './base';
 
 const _getCachedKeyObjectUuid = (_, object) => object?.uuid || '_';
 
@@ -26,11 +26,19 @@ export const getNodeDefRoot = createSelector(getNodeDefs, nodeDefs =>
 
 export const getNodeDefChildren = createCachedSelector(
   getNodeDefs,
+  getSurveyCycle,
   (_, parentNodeDef) => parentNodeDef,
-  (nodeDefs, parentNodeDef) =>
-    nodeDefs.filter(
-      ({parentUuid}) => !!parentUuid && parentUuid === parentNodeDef?.uuid,
-    ),
+  (nodeDefs, cycle, parentNodeDef) =>
+    nodeDefs.filter(nodeDef => {
+      const {parentUuid, props, analysis} = nodeDef;
+      const {cycles} = props;
+      return (
+        !!parentUuid &&
+        parentUuid === parentNodeDef?.uuid &&
+        cycles.includes(cycle) &&
+        !analysis
+      );
+    }),
 )(_getCachedKeyObjectUuid);
 
 export const getNodeDefEntityChildrenKeys = createCachedSelector(
@@ -40,17 +48,22 @@ export const getNodeDefEntityChildrenKeys = createCachedSelector(
 
 export const getNodeDefChildrenEntities = createCachedSelector(
   getNodeDefChildren,
-  nodeDefs => nodeDefs.filter(({type}) => type === 'entity'),
-)(_getCachedKeyObjectUuid);
-
-export const getNodeDefEntityChildrenAttributes = createCachedSelector(
-  getNodeDefChildren,
-  nodeDefs => nodeDefs.filter(({type}) => type !== 'entity'),
+  nodeDefs => nodeDefs.filter(({type}) => type === 'entity') || [],
 )(_getCachedKeyObjectUuid);
 
 export const getNodeDefEntityChildrenAttributesUuids = createCachedSelector(
-  getNodeDefEntityChildrenAttributes,
-  nodeDefs => nodeDefs.map(({uuid}) => uuid),
+  getNodeDefChildren,
+  nodeDefs => {
+    const attributes = [];
+    nodeDefs.forEach(nodeDef => {
+      // touch here if we like to show tables on the form
+      if (nodeDef.type !== 'entity') {
+        attributes.push(nodeDef.uuid);
+      }
+      return;
+    });
+    return attributes;
+  },
 )(_getCachedKeyObjectUuid);
 
 export const getNodeDefChildrenSingleEntities = createCachedSelector(

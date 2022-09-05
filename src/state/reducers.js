@@ -1,4 +1,8 @@
 import {combineReducers} from 'redux';
+import {persistReducer} from 'redux-persist';
+import hardSet from 'redux-persist/lib/stateReconciler/hardSet';
+
+import {storage} from 'infra/storage';
 
 import {reducer as app} from './app';
 import {reducer as files} from './files';
@@ -9,15 +13,22 @@ import {reducer as survey} from './survey';
 import {reducer as surveys} from './surveys';
 import {reducer as user} from './user';
 
+const getConfig = key => ({
+  key: `${key}-store`,
+  storage: storage(key),
+  stateReconciler: hardSet,
+  throttle: 500,
+});
+
 const appReducers = combineReducers({
-  app,
-  records,
-  nodes,
-  survey,
-  surveys,
-  user,
-  form,
-  files,
+  app: persistReducer(getConfig('app'), app),
+  records: persistReducer(getConfig('records'), records),
+  nodes: persistReducer(getConfig('nodes'), nodes),
+  survey: persistReducer(getConfig('survey'), survey),
+  surveys: persistReducer(getConfig('surveys'), surveys),
+  user: persistReducer(getConfig('user'), user),
+  form: persistReducer(getConfig('form'), form),
+  files: persistReducer(getConfig('files'), files),
 });
 
 export default appReducers;

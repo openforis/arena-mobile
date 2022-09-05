@@ -84,9 +84,11 @@ function* handlePrepareRecordsData() {
 function* handlePrepareZipData() {
   try {
     yield call(handlePrepareRecordsData);
+
     yield call(zip, {
-      source: fs.TMP_BASE_PATH,
-      destination: `${fs.TMP_BASE_PATH}/survey.zip`,
+      source: '',
+      destination: 'survey.zip',
+      base: fs.TMP_BASE_PATH,
     });
   } catch (e) {
     console.log(e);

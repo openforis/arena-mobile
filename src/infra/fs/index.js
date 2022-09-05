@@ -1,21 +1,33 @@
 import RNFS from 'react-native-fs';
 
 export const BASE_PATH = RNFS.DocumentDirectoryPath;
-export const TMP_BASE_PATH = RNFS.TemporaryDirectoryPath;
+export const TMP_BASE_PATH = (RNFS.TemporaryDirectoryPath || '')
+  .replace(/\/$/, '')
+  .replace(/^\/private\//, '');
 
 const DEFAULT_ENCODING = 'utf8';
+
+const clean = (path, sourcePath) => {
+  return `${sourcePath}/${path
+    .replace(`/private${sourcePath}/`, '')
+    .replace(`private${sourcePath}/`, '')
+    .replace(`${sourcePath}/`, '')
+    .replace(`${sourcePath}`, '')}`;
+};
 
 const cleanPathWithBase = (path = '') => {
   if (path.startsWith('file')) {
     return path;
   }
-
   // BASE_PATH '/var/...' starts with /
-  const cleanPath = `${BASE_PATH}/${path
-    .replace(`/private${BASE_PATH}/`, '')
-    .replace(`private${BASE_PATH}/`, '')
-    .replace(`${BASE_PATH}/`, '')
-    .replace(`${BASE_PATH}`, '')}`;
+  let cleanPath = path;
+  if (path.includes(TMP_BASE_PATH)) {
+    cleanPath = clean(path, TMP_BASE_PATH);
+  }
+  if (path.includes(BASE_PATH)) {
+    cleanPath = clean(path, BASE_PATH);
+  }
+
   return cleanPath;
 };
 

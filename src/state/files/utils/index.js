@@ -31,7 +31,6 @@ const deleteFile = async fileUuid => {
   if (fileUuid) {
     await fs.deleteDir(`${BASE_ARENA_FILES_PATH}/${fileUuid}`);
   }
-  return;
 };
 
 const deleteFiles = async filesUuids =>

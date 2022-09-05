@@ -6,7 +6,7 @@ const getRecords = async ({serverUrl, surveyId}) => {
     const res = await API({serverUrl}).get({
       path: `api/survey/${surveyId}/records`,
     });
-    return res?.data?.list;
+    return res?.data;
   } catch (error) {
     console.log('Error::recordApi:getRecords', {error});
     return false;
