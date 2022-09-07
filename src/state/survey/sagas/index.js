@@ -1,4 +1,5 @@
 import {StackActions} from '@react-navigation/core';
+import Toast from 'react-native-tiny-toast';
 import {channel} from 'redux-saga';
 import {
   takeLatest,
@@ -10,6 +11,7 @@ import {
   delay,
 } from 'redux-saga/effects';
 
+import i18n from 'i18n';
 import * as fs from 'infra/fs';
 import WS, {WebSocketEvents} from 'infra/ws';
 import {zip} from 'infra/zip';
@@ -193,12 +195,29 @@ const handleJobProgress = _channel => job => {
 function* handleUploadData() {
   yield put(surveyActions.setUploading({isUploading: true}));
   try {
+    const serverUrl = yield select(appSelectors.getServerUrl);
+    const survey = yield select(surveySelectors.getSurvey);
+
+    const surveyId = survey?.id;
+
+    if (survey?.serverUrl && survey?.serverUrl !== serverUrl) {
+      yield call(
+        Toast.show,
+        i18n.t('Surveys:toasts.server', {
+          surveyServer: survey?.serverUrl,
+          serverUrl,
+        }),
+        {
+          duration: 10000,
+        },
+      );
+      return;
+    }
+
     yield call(cleanTmpFolder);
     yield call(fs.mkdir, {dirPath: TMP_SURVEYS_BASE_PATH});
     yield call(handlePrepareZipData);
     // UPLOAD DATA and track progress
-    const serverUrl = yield select(appSelectors.getServerUrl);
-    const surveyId = yield select(surveySelectors.getSelectedSurveyId);
 
     yield call(WS({serverUrl}).create);
     yield call(WS({serverUrl}).on, {

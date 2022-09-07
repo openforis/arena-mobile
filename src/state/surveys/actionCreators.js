@@ -4,7 +4,7 @@ import types from './actionTypes';
 
 const {surveys} = createActions({
   [types.fetchSurvey$]: ({surveyId}) => ({surveyId}),
-  [types.updateSurvey$]: ({surveyId}) => ({surveyId}),
+  [types.updateSurvey$]: ({surveyId}) => ({surveyId, isUpdate: true}),
   [types.deleteSurvey$]: ({surveyUuid, callBack}) => ({surveyUuid, callBack}),
   [types.SET_SURVEY]: ({survey}) => ({survey}),
   /*ui*/

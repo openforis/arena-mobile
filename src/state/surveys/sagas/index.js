@@ -1,6 +1,8 @@
 import {StackActions} from '@react-navigation/core';
+import Toast from 'react-native-tiny-toast';
 import {takeLatest, put, select, call} from 'redux-saga/effects';
 
+import i18n from 'i18n';
 import {ROUTES} from 'navigation/constants';
 import {selectors as appSelectors} from 'state/app';
 import {actions as formActions} from 'state/form';
@@ -9,6 +11,7 @@ import {
   selectors as surveySelectors,
   actions as surveyActions,
 } from 'state/survey';
+import {selectors as surveysSelectors} from 'state/surveys';
 
 import surveysActions from '../actionCreators';
 import surveysActionTypes from '../actionTypes';
@@ -16,15 +19,40 @@ import surveysApi from '../api';
 
 function* handleFetchSurvey({payload}) {
   try {
-    const {surveyId} = payload;
+    const {surveyId, isUpdate = false} = payload;
     yield put(surveysActions.setLoading({isLoading: surveyId}));
 
     const serverUrl = yield select(appSelectors.getServerUrl);
+    if (isUpdate) {
+      const currentSurvey = yield select(state =>
+        surveysSelectors.getSurveyById(state, surveyId),
+      );
+
+      if (currentSurvey?.serverUrl && currentSurvey?.serverUrl !== serverUrl) {
+        yield call(
+          Toast.show,
+          i18n.t('Surveys:toasts.server', {
+            surveyServer: currentSurvey?.serverUrl,
+            serverUrl,
+          }),
+          {
+            duration: 10000,
+          },
+        );
+        return;
+      }
+    }
+
     const surveyWithNodeDefs = yield call(surveysApi.getSurveyPopulatedById, {
       serverUrl,
       surveyId,
     });
-    yield put(surveysActions.setSurvey({survey: surveyWithNodeDefs}));
+
+    yield put(
+      surveysActions.setSurvey({
+        survey: Object.assign({}, surveyWithNodeDefs, {serverUrl}),
+      }),
+    );
   } catch (e) {
     console.log(e);
   } finally {

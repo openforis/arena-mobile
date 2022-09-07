@@ -1,7 +1,9 @@
 import {Objects} from '@openforis/arena-core';
+import Toast from 'react-native-tiny-toast';
 import {channel} from 'redux-saga';
 import {call, select, put, delay, take} from 'redux-saga/effects';
 
+import i18n from 'i18n';
 import * as fs from 'infra/fs';
 import {selectors as appSelectors} from 'state/app';
 import nodesActions from 'state/nodes/actionCreators';
@@ -9,7 +11,6 @@ import recordsActions from 'state/records/actionCreators';
 import recordsApi from 'state/records/api';
 import surveyActions from 'state/survey/actionCreators';
 import surveySelectors from 'state/survey/selectors';
-
 const BASE_PATH = fs.BASE_PATH;
 const TMP_BASE_PATH = fs.TMP_BASE_PATH;
 const RECORDS_IMPORT_BASE_PATH = `${BASE_PATH}/records-import`;
@@ -30,9 +31,7 @@ const handleDownloadStart = _channel => _response => {
 
 const handleDownloadProgress = _channel => node => async response => {
   const {bytesWritten, contentLength} = response;
-
   const finished = contentLength === bytesWritten;
-
   if (finished) {
     _channel.put(
       nodesActions.setNodes({
@@ -110,15 +109,31 @@ function* handleImportRecord(params) {
 
 function* handleImportRecords() {
   yield put(surveyActions.setUploading({isUploading: true}));
+
   try {
+    const survey = yield select(surveySelectors.getSurvey);
+    const serverUrl = yield select(appSelectors.getServerUrl);
+    const surveyUuid = survey?.uuid;
+    const surveyId = survey?.id;
+
+    if (survey?.serverUrl && survey?.serverUrl !== serverUrl) {
+      yield call(
+        Toast.show,
+        i18n.t('Surveys:toasts.server', {
+          surveyServer: survey?.serverUrl,
+          serverUrl,
+        }),
+        {
+          duration: 10000,
+        },
+      );
+      return;
+    }
+
     yield call(fs.deleteDir, RECORDS_IMPORT_BASE_PATH);
     yield call(fs.deleteDir, NODE_FILES_IMPORT_BASE_PATH);
     yield call(fs.mkdir, {dirPath: RECORDS_IMPORT_BASE_PATH});
     yield call(fs.mkdir, {dirPath: NODE_FILES_IMPORT_BASE_PATH});
-    const surveyUuid = yield select(surveySelectors.getSelectedSurveyUuid);
-    const surveyId = yield select(surveySelectors.getSelectedSurveyId);
-
-    const serverUrl = yield select(appSelectors.getServerUrl);
 
     const recordsInSurvey = yield call(recordsApi.getRecords, {
       serverUrl,

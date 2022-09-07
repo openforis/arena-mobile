@@ -22,6 +22,12 @@ const getSurveyByUuid = createCachedSelector(
   (surveys, surveyUuid) => surveys[surveyUuid] || {},
 )((_state_, surveyUuid) => surveyUuid || '_');
 
+const getSurveyById = createCachedSelector(
+  getSurveysAsList,
+  (_, surveyId) => surveyId,
+  (surveys, surveyId) => surveys.find(survey => survey.id === surveyId) || [],
+)((_state_, surveyId) => surveyId || '_');
+
 const getIsLoading = createSelector(getUi, ui => ui?.isLoading || false);
 
 export default {
@@ -29,5 +35,6 @@ export default {
   getSurveysAsList,
   getNumberOfLocalSurveys,
   getSurveyByUuid,
+  getSurveyById,
   getIsLoading,
 };
