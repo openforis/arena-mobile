@@ -2,7 +2,9 @@ import {Objects} from '@openforis/arena-core';
 import {channel} from 'redux-saga';
 import {call, select, put, delay, take} from 'redux-saga/effects';
 
+import {checkIfCurrentServerIsTheSurveysServer} from 'arena/survey';
 import * as fs from 'infra/fs';
+import {handleShowToast} from 'infra/toast';
 import {selectors as appSelectors} from 'state/app';
 import nodesActions from 'state/nodes/actionCreators';
 import recordsActions from 'state/records/actionCreators';
@@ -30,9 +32,7 @@ const handleDownloadStart = _channel => _response => {
 
 const handleDownloadProgress = _channel => node => async response => {
   const {bytesWritten, contentLength} = response;
-
   const finished = contentLength === bytesWritten;
-
   if (finished) {
     _channel.put(
       nodesActions.setNodes({
@@ -81,7 +81,7 @@ function* handleImportRecord(params) {
   }
 
   if (!Objects.isEmpty(recordData)) {
-    let importFiles = [];
+    const importFiles = [];
     yield put(recordsActions.setRecord({record: recordData}));
     const nodeObj = Object.assign({}, nodes);
 
@@ -110,15 +110,19 @@ function* handleImportRecord(params) {
 
 function* handleImportRecords() {
   yield put(surveyActions.setUploading({isUploading: true}));
+
   try {
+    const survey = yield select(surveySelectors.getSurvey);
+    const serverUrl = yield select(appSelectors.getServerUrl);
+    const surveyUuid = survey?.uuid;
+    const surveyId = survey?.id;
+
+    yield call(checkIfCurrentServerIsTheSurveysServer, {survey, serverUrl});
+
     yield call(fs.deleteDir, RECORDS_IMPORT_BASE_PATH);
     yield call(fs.deleteDir, NODE_FILES_IMPORT_BASE_PATH);
     yield call(fs.mkdir, {dirPath: RECORDS_IMPORT_BASE_PATH});
     yield call(fs.mkdir, {dirPath: NODE_FILES_IMPORT_BASE_PATH});
-    const surveyUuid = yield select(surveySelectors.getSelectedSurveyUuid);
-    const surveyId = yield select(surveySelectors.getSelectedSurveyId);
-
-    const serverUrl = yield select(appSelectors.getServerUrl);
 
     const recordsInSurvey = yield call(recordsApi.getRecords, {
       serverUrl,
@@ -134,6 +138,7 @@ function* handleImportRecords() {
     }
   } catch (error) {
     console.log('Error:handleImportRecords', error);
+    yield call(handleShowToast, {message: error?.message});
   } finally {
     console.log('Finally');
     yield put(surveyActions.setUploading({isUploading: false}));

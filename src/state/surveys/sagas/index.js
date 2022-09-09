@@ -1,6 +1,8 @@
 import {StackActions} from '@react-navigation/core';
 import {takeLatest, put, select, call} from 'redux-saga/effects';
 
+import {checkIfCurrentServerIsTheSurveysServer} from 'arena/survey';
+import {handleShowToast} from 'infra/toast';
 import {ROUTES} from 'navigation/constants';
 import {selectors as appSelectors} from 'state/app';
 import {actions as formActions} from 'state/form';
@@ -9,6 +11,7 @@ import {
   selectors as surveySelectors,
   actions as surveyActions,
 } from 'state/survey';
+import {selectors as surveysSelectors} from 'state/surveys';
 
 import surveysActions from '../actionCreators';
 import surveysActionTypes from '../actionTypes';
@@ -16,17 +19,34 @@ import surveysApi from '../api';
 
 function* handleFetchSurvey({payload}) {
   try {
-    const {surveyId} = payload;
+    const {surveyId, isUpdate = false} = payload;
     yield put(surveysActions.setLoading({isLoading: surveyId}));
 
     const serverUrl = yield select(appSelectors.getServerUrl);
+    if (isUpdate) {
+      const currentSurvey = yield select(state =>
+        surveysSelectors.getSurveyById(state, surveyId),
+      );
+
+      yield call(checkIfCurrentServerIsTheSurveysServer, {
+        survey: currentSurvey,
+        serverUrl,
+      });
+    }
+
     const surveyWithNodeDefs = yield call(surveysApi.getSurveyPopulatedById, {
       serverUrl,
       surveyId,
     });
-    yield put(surveysActions.setSurvey({survey: surveyWithNodeDefs}));
+
+    yield put(
+      surveysActions.setSurvey({
+        survey: Object.assign({}, surveyWithNodeDefs, {serverUrl}),
+      }),
+    );
   } catch (e) {
     console.log(e);
+    yield call(handleShowToast, {message: e?.message});
   } finally {
     console.log('Finally');
 

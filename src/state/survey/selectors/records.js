@@ -1,4 +1,4 @@
-import {createCachedSelector} from 're-reselect';
+import {createCachedSelector, FifoObjectCache} from 're-reselect';
 import {createSelector} from 'reselect';
 
 import recordsSelectors from 'state/records/selectors';
@@ -10,7 +10,10 @@ export const getRecords = createCachedSelector(
   recordsSelectors.getRecords,
   (survey, records) =>
     records.filter(record => record.surveyUuid === survey?.uuid),
-)(state => state?.survey?.data?.id || '_');
+)({
+  keySelector: state => state?.survey?.data?.id || '_',
+  cacheObject: new FifoObjectCache({cacheSize: 10}),
+});
 
 export const getNumberRecords = createSelector(
   getRecords,

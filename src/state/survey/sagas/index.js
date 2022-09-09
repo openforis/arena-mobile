@@ -10,7 +10,9 @@ import {
   delay,
 } from 'redux-saga/effects';
 
+import {checkIfCurrentServerIsTheSurveysServer} from 'arena/survey';
 import * as fs from 'infra/fs';
+import {handleShowToast} from 'infra/toast';
 import WS, {WebSocketEvents} from 'infra/ws';
 import {zip} from 'infra/zip';
 import {ROUTES} from 'navigation/constants';
@@ -193,12 +195,17 @@ const handleJobProgress = _channel => job => {
 function* handleUploadData() {
   yield put(surveyActions.setUploading({isUploading: true}));
   try {
+    const serverUrl = yield select(appSelectors.getServerUrl);
+    const survey = yield select(surveySelectors.getSurvey);
+
+    const surveyId = survey?.id;
+
+    yield call(checkIfCurrentServerIsTheSurveysServer, {survey, serverUrl});
+
     yield call(cleanTmpFolder);
     yield call(fs.mkdir, {dirPath: TMP_SURVEYS_BASE_PATH});
     yield call(handlePrepareZipData);
     // UPLOAD DATA and track progress
-    const serverUrl = yield select(appSelectors.getServerUrl);
-    const surveyId = yield select(surveySelectors.getSelectedSurveyId);
 
     yield call(WS({serverUrl}).create);
     yield call(WS({serverUrl}).on, {
@@ -214,6 +221,7 @@ function* handleUploadData() {
     });
   } catch (e) {
     console.log(e);
+    yield call(handleShowToast, {message: e?.message});
   } finally {
     console.log('Finally:upload');
     yield delay(2000);

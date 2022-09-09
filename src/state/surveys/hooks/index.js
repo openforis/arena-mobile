@@ -18,9 +18,11 @@ export const useRemoteSurveys = () => {
       setLoading(true);
       const _surveys = await apiSurveys.getSurveys({serverUrl});
       setSurveys(
-        _surveys.sort(
-          (sa, sb) => -moment(sa.dateModified).diff(moment(sb.dateModified)),
-        ),
+        _surveys
+          .filter(survey => survey.status === 'PUBLISHED')
+          .sort(
+            (sa, sb) => -moment(sa.dateModified).diff(moment(sb.dateModified)),
+          ),
       );
     } catch (e) {
       setSurveys([]);
