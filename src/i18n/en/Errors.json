@@ -14,7 +14,7 @@
     "unableToFindNode": "Unable to find node with name {{name}}",
     "unableToFindSibling": "Unable to find sibling with name {{name}}",
     "undefinedFunction": "Undefined function \"{{fnName}}\" or wrong parameter types",
-    "invalidSyntax": "Expression syntax is invalid", 
+    "invalidSyntax": "Expression syntax is invalid",
     "unsupportedFunctionType": "Unsupported function type: {{exprType}}",
     "functionHasTooFewArguments": "Function {{fnName}} requires at least {{minArgs}} (got {{numArgs}})",
     "functionHasTooManyArguments": "Function {{fnName}} only accepts at most {{maxArgs}} (got {{numArgs}})",
@@ -26,6 +26,6 @@
     "userNotAuthorized": "User {{userName}} is not authorized"
   },
   "systemErrors": {
-    "somethingWentWrong": "Oooops! Something went wrong. Try to refresh the page.",
+    "somethingWentWrong": "Oooops! Something went wrong. Try to refresh the page."
   }
 }
