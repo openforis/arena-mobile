@@ -12,7 +12,7 @@ const clean = (path, sourcePath) => {
     .replace(`/private${sourcePath}/`, '')
     .replace(`private${sourcePath}/`, '')
     .replace(`${sourcePath}/`, '')
-    .replace(`${sourcePath}`, '')}`;
+    .replace(sourcePath, '')}`;
 };
 
 export const cleanPathWithBase = (path = '') => {
