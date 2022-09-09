@@ -1,8 +1,8 @@
 import {StackActions} from '@react-navigation/core';
-import Toast from 'react-native-tiny-toast';
 import {takeLatest, put, select, call} from 'redux-saga/effects';
 
-import i18n from 'i18n';
+import {checkIfCurrentServerIsTheSurveysServer} from 'arena/survey';
+import {handleShowToast} from 'infra/toast';
 import {ROUTES} from 'navigation/constants';
 import {selectors as appSelectors} from 'state/app';
 import {actions as formActions} from 'state/form';
@@ -28,19 +28,10 @@ function* handleFetchSurvey({payload}) {
         surveysSelectors.getSurveyById(state, surveyId),
       );
 
-      if (currentSurvey?.serverUrl && currentSurvey?.serverUrl !== serverUrl) {
-        yield call(
-          Toast.show,
-          i18n.t('Surveys:toasts.server', {
-            surveyServer: currentSurvey?.serverUrl,
-            serverUrl,
-          }),
-          {
-            duration: 10000,
-          },
-        );
-        return;
-      }
+      yield call(checkIfCurrentServerIsTheSurveysServer, {
+        survey: currentSurvey,
+        serverUrl,
+      });
     }
 
     const surveyWithNodeDefs = yield call(surveysApi.getSurveyPopulatedById, {
@@ -55,6 +46,7 @@ function* handleFetchSurvey({payload}) {
     );
   } catch (e) {
     console.log(e);
+    yield call(handleShowToast, {message: e?.message});
   } finally {
     console.log('Finally');
 

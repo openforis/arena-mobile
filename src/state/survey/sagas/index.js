@@ -1,5 +1,4 @@
 import {StackActions} from '@react-navigation/core';
-import Toast from 'react-native-tiny-toast';
 import {channel} from 'redux-saga';
 import {
   takeLatest,
@@ -11,8 +10,9 @@ import {
   delay,
 } from 'redux-saga/effects';
 
-import i18n from 'i18n';
+import {checkIfCurrentServerIsTheSurveysServer} from 'arena/survey';
 import * as fs from 'infra/fs';
+import {handleShowToast} from 'infra/toast';
 import WS, {WebSocketEvents} from 'infra/ws';
 import {zip} from 'infra/zip';
 import {ROUTES} from 'navigation/constants';
@@ -200,19 +200,7 @@ function* handleUploadData() {
 
     const surveyId = survey?.id;
 
-    if (survey?.serverUrl && survey?.serverUrl !== serverUrl) {
-      yield call(
-        Toast.show,
-        i18n.t('Surveys:toasts.server', {
-          surveyServer: survey?.serverUrl,
-          serverUrl,
-        }),
-        {
-          duration: 10000,
-        },
-      );
-      return;
-    }
+    yield call(checkIfCurrentServerIsTheSurveysServer, {survey, serverUrl});
 
     yield call(cleanTmpFolder);
     yield call(fs.mkdir, {dirPath: TMP_SURVEYS_BASE_PATH});
@@ -233,6 +221,7 @@ function* handleUploadData() {
     });
   } catch (e) {
     console.log(e);
+    yield call(handleShowToast, {message: e?.message});
   } finally {
     console.log('Finally:upload');
     yield delay(2000);

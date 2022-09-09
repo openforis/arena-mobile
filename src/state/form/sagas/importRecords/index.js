@@ -1,16 +1,17 @@
 import {Objects} from '@openforis/arena-core';
-import Toast from 'react-native-tiny-toast';
 import {channel} from 'redux-saga';
 import {call, select, put, delay, take} from 'redux-saga/effects';
 
-import i18n from 'i18n';
+import {checkIfCurrentServerIsTheSurveysServer} from 'arena/survey';
 import * as fs from 'infra/fs';
+import {handleShowToast} from 'infra/toast';
 import {selectors as appSelectors} from 'state/app';
 import nodesActions from 'state/nodes/actionCreators';
 import recordsActions from 'state/records/actionCreators';
 import recordsApi from 'state/records/api';
 import surveyActions from 'state/survey/actionCreators';
 import surveySelectors from 'state/survey/selectors';
+
 const BASE_PATH = fs.BASE_PATH;
 const TMP_BASE_PATH = fs.TMP_BASE_PATH;
 const RECORDS_IMPORT_BASE_PATH = `${BASE_PATH}/records-import`;
@@ -80,7 +81,7 @@ function* handleImportRecord(params) {
   }
 
   if (!Objects.isEmpty(recordData)) {
-    let importFiles = [];
+    const importFiles = [];
     yield put(recordsActions.setRecord({record: recordData}));
     const nodeObj = Object.assign({}, nodes);
 
@@ -116,19 +117,7 @@ function* handleImportRecords() {
     const surveyUuid = survey?.uuid;
     const surveyId = survey?.id;
 
-    if (survey?.serverUrl && survey?.serverUrl !== serverUrl) {
-      yield call(
-        Toast.show,
-        i18n.t('Surveys:toasts.server', {
-          surveyServer: survey?.serverUrl,
-          serverUrl,
-        }),
-        {
-          duration: 10000,
-        },
-      );
-      return;
-    }
+    yield call(checkIfCurrentServerIsTheSurveysServer, {survey, serverUrl});
 
     yield call(fs.deleteDir, RECORDS_IMPORT_BASE_PATH);
     yield call(fs.deleteDir, NODE_FILES_IMPORT_BASE_PATH);
@@ -149,6 +138,7 @@ function* handleImportRecords() {
     }
   } catch (error) {
     console.log('Error:handleImportRecords', error);
+    yield call(handleShowToast, {message: error?.message});
   } finally {
     console.log('Finally');
     yield put(surveyActions.setUploading({isUploading: false}));
