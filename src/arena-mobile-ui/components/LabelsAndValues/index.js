@@ -30,7 +30,7 @@ const LabelsAndValues = ({items, size, expanded = false, column = false}) => (
     <View style={[styles.labels({expanded})]}>
       {items.map(({label, value}) => (
         <View key={label}>
-          <Label label={label} size={size} />
+          {value && <Label label={label} size={size} />}
           {column && <Value label={value} size={size} />}
         </View>
       ))}

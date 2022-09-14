@@ -19,6 +19,13 @@ const data = handleActions(
       delete newState[recordUuid];
       return newState;
     },
+    [actions.cleanRecords]: (state, {payload: {recordUuids}}) => {
+      let newState = {...state};
+      recordUuids.forEach(recordUuid => {
+        delete newState[recordUuid];
+      });
+      return newState;
+    },
     [surveysActions.deleteSurvey]: (state, {payload: {surveyUuid}}) =>
       deleteValueByKey({
         conditionToDelete: item => item.surveyUuid === surveyUuid,

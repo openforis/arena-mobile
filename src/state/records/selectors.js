@@ -15,20 +15,24 @@ const _getAllRecordsList = createSelector(getRecordStateData, records =>
   Object.values(records || {}),
 );
 
+const getNumRecords = createSelector(
+  _getAllRecordsList,
+  records => records.length,
+);
+
 const getRecordByUuid = createCachedSelector(
   getRecordStateData,
   (_, recordUuid) => recordUuid,
   (recordsByUuid, recordUuid) => recordsByUuid[recordUuid] || false,
 )((_state, recordUuid) => recordUuid);
 
-const gerRecordKey = createCachedSelector(
+const getRecordKey = createCachedSelector(
   nodesSelectors.getNodesByRecordUuid,
   surveyNodeDefsSelectors.getNodeDefRoot,
   surveyNodeDefsSelectors.getNodeDefsByUuid,
   (_, recordUuid) => recordUuid,
   (nodes, nodeDefRoot, nodeDefsByUuid, recordUuid) => {
     const rootNode = nodes.find(node => node.nodeDefUuid === nodeDefRoot.uuid);
-
     const keyRootNodes = nodes.filter(
       node =>
         node.parentUuid === rootNode.uuid &&
@@ -42,6 +46,7 @@ const gerRecordKey = createCachedSelector(
 export default {
   getRecordsByUuid: getRecordStateData,
   getRecords: _getAllRecordsList,
+  getNumRecords,
   getRecordByUuid,
-  gerRecordKey,
+  getRecordKey,
 };

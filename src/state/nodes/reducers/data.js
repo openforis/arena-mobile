@@ -31,7 +31,7 @@ const data = handleActions(
 
       return newNodes;
     },
-    [actions.clean]: () => initialState.data,
+    [actions.clean]: () => initialState.data || {},
     [surveysActions.deleteSurvey]: (state, {payload: {surveyUuid}}) =>
       deleteValueByKey({
         conditionToDelete: item => item.surveyUuid === surveyUuid,
@@ -44,6 +44,10 @@ const data = handleActions(
     [recordsActions.cleanRecord]: (state, {payload: {recordUuid}}) =>
       deleteValueByKey({
         conditionToDelete: item => item.recordUuid === recordUuid,
+      })(state),
+    [recordsActions.cleanRecords]: (state, {payload: {recordUuids}}) =>
+      deleteValueByKey({
+        conditionToDelete: item => recordUuids.includes(item.recordUuid),
       })(state),
     [globalActions.reset]: () => initialState.data || {},
   },

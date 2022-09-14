@@ -15,7 +15,9 @@ import {ROUTES, KEYS} from './constants';
 import {SCREENS} from './screens';
 
 const Stack = createNativeStackNavigator();
-const {store} = getStore();
+const {store, persistor: _persistor} = getStore();
+
+export const persistor = _persistor;
 
 function Arena() {
   const navigationRef = useRef(null);

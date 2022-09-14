@@ -2,7 +2,6 @@ import {NodeDefType} from '@openforis/arena-core';
 import {takeLatest, select, call, all, put} from 'redux-saga/effects';
 
 import {normalizeByUuid} from 'infra/stateUtils';
-import globalActions from 'state/globalActions';
 import nodesActions from 'state/nodes/actionCreators';
 import recordsActions from 'state/records/actionCreators';
 import surveyActions from 'state/survey/actionCreators';
@@ -22,9 +21,11 @@ function* filterFileNodes(nodes) {
   );
 }
 
-function* handleDeleteFiles(filesUuids) {
-  yield call(arenaFileUtils.deleteFiles, filesUuids);
-  yield put(filesActionTypes.deleteFiles({filesUuids}));
+function* handleDeleteFiles(filesByFileUuid) {
+  yield call(arenaFileUtils.deleteFiles, Object.values(filesByFileUuid));
+  yield put(
+    filesActionTypes.deleteFiles({filesUuids: Object.keys(filesByFileUuid)}),
+  );
 }
 
 function* handleDeleteNodesFiles({payload}) {
@@ -32,10 +33,17 @@ function* handleDeleteNodesFiles({payload}) {
   const fileNodes = yield call(filterFileNodes, nodes);
 
   if (Object.keys(fileNodes).length > 0) {
-    const filesUuids = Object.values(fileNodes).map(
-      node => node?.value?.fileUuid,
-    );
-    yield call(handleDeleteFiles, filesUuids);
+    const filesByFileUuid = {};
+    Object.values(fileNodes).forEach(node => {
+      filesByFileUuid[node?.value?.fileUuid] = {
+        surveyUuid: node.surveyUuid,
+        cycle: '0', // TODO when cycle
+        recordUuid: node.recordUuid,
+        nodeUuid: node.uuid,
+        fileUuid: node?.value?.fileUuid,
+      };
+    });
+    yield call(handleDeleteFiles, filesByFileUuid);
   }
 }
 
@@ -76,14 +84,9 @@ function* handleDeleteRecordFiles({payload}) {
   yield call(handleDeleteFiles, Object.keys(filesBySurvey));
 }
 
-function* handleDeleteAllFiles() {
-  yield call(arenaFileUtils.deleteArenaFilesDir);
-  yield put(filesActionTypes.reset());
-}
-
 export default function* () {
   yield takeLatest(nodesActions.setNodes, handleSetNodes);
-  yield takeLatest(globalActions.reset, handleDeleteAllFiles);
+  // TODO!!
   yield takeLatest(surveysActions.deleteSurvey, handleDeleteSurveyFiles);
   yield takeLatest(surveyActions.deleteSurveyData, handleDeleteSurveyFiles);
   yield takeLatest(recordsActions.deleteRecord, handleDeleteRecordFiles);

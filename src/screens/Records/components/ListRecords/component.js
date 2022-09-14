@@ -9,8 +9,8 @@ import List from 'arena-mobile-ui/components/List';
 import TouchableCard from 'arena-mobile-ui/components/TouchableCard';
 import baseStyles from 'arena-mobile-ui/styles';
 import formSelectors from 'state/form/selectors';
+import {useRecords} from 'state/records/hooks';
 import recordsSelectors from 'state/records/selectors';
-import {selectors as surveySelectors} from 'state/survey';
 
 import styles from './styles';
 
@@ -22,7 +22,7 @@ const RecordCard = ({record, isSelected, onSelect}) => {
   }, [record, onSelect]);
   const currentRecordUuid = useSelector(formSelectors.getRecordUuid);
   const recordKey = useSelector(state =>
-    recordsSelectors.gerRecordKey(state, record.uuid),
+    recordsSelectors.getRecordKey(state, record.uuid),
   );
 
   const {t} = useTranslation();
@@ -32,7 +32,9 @@ const RecordCard = ({record, isSelected, onSelect}) => {
       onPress={handlePress}
       customStyles={[styles.container, isSelected ? styles.selected : {}]}>
       <View style={[styles.payload]}>
-        <Text style={[baseStyles.textStyle.bold]}>{recordKey}</Text>
+        <Text style={[baseStyles.textStyle.bold]}>
+          {record.recordKey || recordKey}
+        </Text>
         <CreatedAndModified
           dateCreated={record?.dateCreated}
           dateModified={record?.dateModified}
@@ -44,6 +46,7 @@ const RecordCard = ({record, isSelected, onSelect}) => {
     </TouchableCard>
   );
 };
+
 const ListRecords = ({selectedRecord, setSelectedRecord}) => {
   const keyExtractor = useCallback(item => `${item.uuid}`, []);
 
@@ -58,7 +61,7 @@ const ListRecords = ({selectedRecord, setSelectedRecord}) => {
     [selectedRecord, setSelectedRecord],
   );
 
-  const records = useSelector(surveySelectors.getRecords);
+  const records = useRecords();
 
   return (
     <List

@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Button from 'arena-mobile-ui/components/Button';
 import {useNavigateTo} from 'navigation/hooks';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
-import {selectors as surveySelectors} from 'state/survey';
+import {useNumberRecords} from 'state/records/hooks';
 
 import styles from './styles';
 const Actions = () => {
@@ -14,7 +14,7 @@ const Actions = () => {
   const dispatch = useDispatch();
   const {navigateTo, routes} = useNavigateTo();
   const currentRecordUuid = useSelector(formSelectors.getRecordUuid);
-  const numberOfRecords = useSelector(surveySelectors.getNumberRecords);
+  const numberOfRecords = useNumberRecords();
   const numberOfErrors = 0;
 
   const handleInitializeRecord = React.useCallback(() => {

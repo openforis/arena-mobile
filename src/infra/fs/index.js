@@ -1,6 +1,7 @@
 import RNFS from 'react-native-fs';
 
 export const BASE_PATH = RNFS.DocumentDirectoryPath;
+export const BASE_PATH_DATA = `${BASE_PATH}/arena-data`;
 export const TMP_BASE_PATH = (RNFS.TemporaryDirectoryPath || '')
   .replace(/\/$/, '')
   .replace(/^\/private\//, '');
@@ -60,21 +61,33 @@ export const mkdir = async (
   {dirPath, options} = {
     options: {NSURLIsExcludedFromBackupKey: true},
   },
-) => RNFS.mkdir(cleanPathWithBase(dirPath), options);
+) => {
+  const exists = await dirExists(dirPath);
+  if (exists) {
+    return true;
+  }
+  return RNFS.mkdir(cleanPathWithBase(dirPath), options);
+};
 
 export const writeFile = async (
   {filePath, content, encoding} = {
     encoding: DEFAULT_ENCODING,
   },
-) => RNFS.writeFile(cleanPathWithBase(filePath), content, encoding);
+) =>
+  RNFS.writeFile(
+    cleanPathWithBase(filePath),
+    content,
+    encoding || DEFAULT_ENCODING,
+  );
 
 const getPathOfFile = filePath =>
   filePath.substring(0, filePath.lastIndexOf('/'));
 
+export const dirExists = async path =>
+  await RNFS.exists(cleanPathWithBase(path));
+
 export const copyFile = async ({sourcePath, destinationPath}) => {
-  const exits = await RNFS.exists(
-    getPathOfFile(cleanPathWithBase(destinationPath)),
-  );
+  const exits = await dirExists(destinationPath);
   if (exits) {
     await deleteDir(getPathOfFile(destinationPath));
   }
@@ -87,20 +100,27 @@ export const readfile = async (
     encoding: DEFAULT_ENCODING,
   },
 ) => {
-  return RNFS.readFile(
-    cleanPathWithBase(filePath),
-    encoding || DEFAULT_ENCODING,
-  );
+  const path = cleanPathWithBase(filePath);
+  const exits = await dirExists(path);
+
+  if (!exits) {
+    return;
+  }
+  return RNFS.readFile(path, encoding || DEFAULT_ENCODING);
 };
 
 export const readDir = async ({dirPath}) => {
   const _path = cleanPathWithBase(dirPath);
+  const exits = await dirExists(_path);
+  if (!exits) {
+    return;
+  }
   return RNFS.readDir(_path);
 };
 
 export const deleteDir = async path => {
   const _path = cleanPathWithBase(path);
-  const exits = await RNFS.exists(_path);
+  const exits = await dirExists(path);
   if (!exits) {
     return;
   }
