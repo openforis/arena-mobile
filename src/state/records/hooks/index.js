@@ -4,7 +4,7 @@ import {useCallback, useState, useEffect, useMemo} from 'react';
 import {useSelector} from 'react-redux';
 
 import * as fs from 'infra/fs';
-import {getRecordsFolderPath} from 'state/__persistence';
+import {getRecordsFiles} from 'state/__persistence';
 import {selectors as surveySelectors} from 'state/survey';
 
 const getRecordSummary = record => {
@@ -33,15 +33,15 @@ const useRecordsByUuid = () => {
 
   const getRecordsFromFs = useCallback(async () => {
     if (surveyUuid && cycle) {
-      const dirPath = getRecordsFolderPath({
+      const recordsFiles = await getRecordsFiles({
         surveyUuid,
         cycle,
       });
-      const recordsFiles = await fs.readDir({dirPath});
+
       let _recordsByUuid = {};
 
       await Promise.all(
-        recordsFiles.map(async recordFile => {
+        (recordsFiles || []).map(async recordFile => {
           const recordFileContent = await fs.readfile({
             filePath: recordFile.path,
           });

@@ -56,6 +56,14 @@ export function* persistRecordsAndNodes() {
   }
 }
 
+export const getRecordsFiles = async ({surveyUuid, cycle}) => {
+  const dirPath = getRecordsFolderPath({
+    surveyUuid,
+    cycle,
+  });
+  return fs.readDir({dirPath});
+};
+
 export function* getRecordWithNodes({record}) {
   const currentRecord = yield select(state =>
     recordsSelectors.getRecordByUuid(state, record.uuid),

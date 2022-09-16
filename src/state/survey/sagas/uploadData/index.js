@@ -6,9 +6,10 @@ import * as fs from 'infra/fs';
 import {handleShowToast} from 'infra/toast';
 import WS, {WebSocketEvents} from 'infra/ws';
 import {zip} from 'infra/zip';
+import {persistRecordsAndNodes, getRecordsFiles} from 'state/__persistence';
 import appSelectors from 'state/app/selectors';
 import {selectors as filesSelectors, utils as fileUtils} from 'state/files';
-import nodesSelectors from 'state/nodes/selectors';
+import formActions from 'state/form/actionCreators';
 import surveysApi from 'state/surveys/api';
 
 import surveyActions from '../../actionCreators';
@@ -21,23 +22,19 @@ const FILES_BASE_PATH = `${TMP_SURVEYS_BASE_PATH}/files`;
 function* handlePrepareRecordsData() {
   try {
     yield call(fs.mkdir, {dirPath: RECORDS_BASE_PATH});
-    const records = yield select(surveySelectors.getRecords);
+    const surveyUuid = yield select(surveySelectors.getSelectedSurveyUuid);
+    const cycle = yield select(surveySelectors.getSurveyCycle);
+
+    let recordFiles = yield call(getRecordsFiles, {surveyUuid, cycle});
+    recordFiles = recordFiles.filter(file => file.isFile());
     const recordsJson = [];
 
-    for (const record of records) {
-      const nodesInRecord = yield select(state =>
-        nodesSelectors.getNodesByUuidRecordUuid(state, record.uuid),
-      );
-
-      recordsJson.push({uuid: record.uuid, cycle: record.cycle});
-
-      yield call(fs.writeFile, {
-        filePath: `${RECORDS_BASE_PATH}/${record.uuid}.json`,
-        content: JSON.stringify(
-          Object.assign({}, record, {nodes: nodesInRecord}),
-          null,
-          2,
-        ),
+    for (const recordFile of recordFiles) {
+      const recordUuid = recordFile.name.split('.json')[0];
+      recordsJson.push({uuid: recordUuid, cycle});
+      yield call(fs.copyFile, {
+        sourcePath: recordFile.path,
+        destinationPath: `${RECORDS_BASE_PATH}/${recordUuid}.json`,
       });
     }
 
@@ -55,32 +52,47 @@ function* handlePrepareRecordsData() {
 function* handlePrepareFilesData() {
   try {
     yield call(fs.mkdir, {dirPath: FILES_BASE_PATH});
+
+    // get files paths getFilesFolderPath
+    //copy file and prepare filesArr -> for that getFile
     const surveyUuid = yield select(surveySelectors.getSelectedSurveyUuid);
-    const files = yield select(state =>
-      filesSelectors.getFilesBySurveyUuid(state, surveyUuid),
-    );
+    const cycle = yield select(surveySelectors.getSurveyCycle);
+    const {files: surveyFiles} = yield call(fileUtils.getSurveyFiles, {
+      surveyUuid,
+      cycle,
+    });
 
     const filesArr = [];
-    for (const file of files) {
-      const fileContent = yield call(fileUtils.getFileContent, file);
 
+    for (const file of surveyFiles) {
+      const [_recordUuid, _nodeUuid, fileUuid, _fileName] = file
+        .split('files/')[1]
+        .split('/');
+
+      // maybe this dhould be done used the internal storage, store the file summary into the same folder? maybe faster
+      const _file = yield select(state =>
+        filesSelectors.getFileByUuid(state, fileUuid),
+      );
+
+      const fileContent = yield call(fileUtils.getFileContent, _file);
+      fileUtils.getFilesFolderPath;
       filesArr.push(
         Object.assign(
           {},
           {
-            uuid: file.uuid,
+            uuid: _file.uuid,
             props: {
-              ...file.meta,
-              name: file.meta.fileName,
-              nodeUuid: file.nodeUuid,
-              recordUuid: file.recordUuid,
+              ..._file.meta,
+              name: _file.meta.fileName,
+              nodeUuid: _file.nodeUuid,
+              recordUuid: _file.recordUuid,
             },
           },
         ),
       );
 
       yield call(fs.writeFile, {
-        filePath: `${FILES_BASE_PATH}/${file.uuid}.bin`,
+        filePath: `${FILES_BASE_PATH}/${_file.uuid}.bin`,
         content: fileContent,
         encoding: 'base64',
       });
@@ -167,6 +179,9 @@ function* handleUploadData() {
     const surveyId = survey?.id;
 
     yield call(checkIfCurrentServerIsTheSurveysServer, {survey, serverUrl});
+
+    yield put(formActions.clean());
+    yield call(persistRecordsAndNodes);
 
     yield call(cleanTmpFolder);
     yield call(fs.mkdir, {dirPath: TMP_SURVEYS_BASE_PATH});

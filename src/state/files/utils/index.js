@@ -70,6 +70,10 @@ const deleteFile = async ({
 const deleteFiles = async files =>
   Promise.all(files.map(async file => deleteFile(file)));
 
+const getSurveyFiles = async ({surveyUuid, cycle}) => {
+  const dir = getFilesFolderPath({surveyUuid, cycle});
+  return fs.scanDir(dir);
+};
 const getFileContent = async file => {
   const fileContent = await fs.readfile({
     filePath: file.uri.replace('%20', ' '),
@@ -85,6 +89,7 @@ export default {
   createFile,
   deleteFile,
   deleteFiles,
+  getSurveyFiles,
   getFileContent,
   getFilesContent,
 };
