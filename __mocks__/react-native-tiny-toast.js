@@ -1,1 +1,3 @@
-export default {};
+export default {
+  show: jest.fn(),
+};

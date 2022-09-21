@@ -5,9 +5,9 @@ import {call, select, put, delay, take} from 'redux-saga/effects';
 import {checkIfCurrentServerIsTheSurveysServer} from 'arena/survey';
 import * as fs from 'infra/fs';
 import {handleShowToast} from 'infra/toast';
+import {persistRecordWithKeyAndMergeCurrentNodes} from 'state/__persistence';
 import {selectors as appSelectors} from 'state/app';
-import nodesActions from 'state/nodes/actionCreators';
-import recordsActions from 'state/records/actionCreators';
+import filesActions from 'state/files/actionCreators';
 import recordsApi from 'state/records/api';
 import surveyActions from 'state/survey/actionCreators';
 import surveySelectors from 'state/survey/selectors';
@@ -34,19 +34,13 @@ const handleDownloadProgress = _channel => node => async response => {
   const {bytesWritten, contentLength} = response;
   const finished = contentLength === bytesWritten;
   if (finished) {
-    _channel.put(
-      nodesActions.setNodes({
-        nodes: {
-          [node.uuid]: node,
-        },
-      }),
-    );
+    _channel.put(filesActions.persitFileNode({node}));
   }
 };
 
 function* handleImportFileNodes(params) {
   try {
-    const {surveyId, recordUuid, serverUrl, node} = params;
+    const {serverUrl, surveyId, recordUuid, node} = params;
     const fileUri = `${NODE_FILES_IMPORT_BASE_PATH}/${node?.value?.fileName}`;
 
     const nodeUpdated = Object.assign({}, node, {
@@ -67,46 +61,46 @@ function* handleImportFileNodes(params) {
 }
 
 function* handleImportRecord(params) {
-  const {record, surveyId, serverUrl} = params;
-  yield delay(1000);
+  const {record, surveyId, serverUrl, surveyUuid} = params;
+  yield delay(500);
   const recordData = yield call(recordsApi.getRecord, {
     serverUrl,
     surveyId,
     recordUuid: record.uuid,
   });
 
-  const {nodes} = recordData;
-  if (Object.keys(recordData).includes('nodes')) {
-    delete recordData.nodes;
-  }
-
   if (!Objects.isEmpty(recordData)) {
     const importFiles = [];
-    yield put(recordsActions.setRecord({record: recordData}));
-    const nodeObj = Object.assign({}, nodes);
+    yield call(persistRecordWithKeyAndMergeCurrentNodes, {record: recordData});
 
-    Object.entries(nodes).forEach(([key, node]) => {
+    Object.entries(recordData.nodes).forEach(([_key, node]) => {
       if (node?.value?.fileUuid) {
         importFiles.push(
           call(handleImportFileNodes, {
             surveyId,
+            surveyUuid,
             recordUuid: record.uuid,
             serverUrl,
             node,
           }),
         );
-        delete nodeObj[key];
       }
     });
-    yield delay(100);
 
-    yield put(nodesActions.setNodes({nodes: nodeObj}));
+    yield call(console.log, 'number of files', importFiles.length);
     for (let importFile of importFiles) {
       yield importFile;
     }
-    yield delay(200);
   }
 }
+
+const prepareDirectories = async () => {
+  await fs.deleteDir(RECORDS_IMPORT_BASE_PATH);
+  await fs.deleteDir(NODE_FILES_IMPORT_BASE_PATH);
+  await fs.mkdir({dirPath: RECORDS_IMPORT_BASE_PATH});
+  await fs.mkdir({dirPath: NODE_FILES_IMPORT_BASE_PATH});
+  return;
+};
 
 function* handleImportRecords() {
   yield put(surveyActions.setUploading({isUploading: true}));
@@ -119,10 +113,7 @@ function* handleImportRecords() {
 
     yield call(checkIfCurrentServerIsTheSurveysServer, {survey, serverUrl});
 
-    yield call(fs.deleteDir, RECORDS_IMPORT_BASE_PATH);
-    yield call(fs.deleteDir, NODE_FILES_IMPORT_BASE_PATH);
-    yield call(fs.mkdir, {dirPath: RECORDS_IMPORT_BASE_PATH});
-    yield call(fs.mkdir, {dirPath: NODE_FILES_IMPORT_BASE_PATH});
+    yield call(prepareDirectories);
 
     const recordsInSurvey = yield call(recordsApi.getRecords, {
       serverUrl,

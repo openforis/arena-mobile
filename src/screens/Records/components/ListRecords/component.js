@@ -9,21 +9,18 @@ import List from 'arena-mobile-ui/components/List';
 import TouchableCard from 'arena-mobile-ui/components/TouchableCard';
 import baseStyles from 'arena-mobile-ui/styles';
 import formSelectors from 'state/form/selectors';
-import {useRecords} from 'state/records/hooks';
-import recordsSelectors from 'state/records/selectors';
+import {useRecordsUuids, useRecordByUuid} from 'state/records/hooks';
 
 import styles from './styles';
 
 const ListEmptyComponent = () => <View />;
 
-const RecordCard = ({record, isSelected, onSelect}) => {
+const RecordCard = ({recordUuid, isSelected, onSelect}) => {
+  const currentRecordUuid = useSelector(formSelectors.getRecordUuid);
+  const record = useRecordByUuid(recordUuid);
   const handlePress = useCallback(() => {
     onSelect?.(record);
   }, [record, onSelect]);
-  const currentRecordUuid = useSelector(formSelectors.getRecordUuid);
-  const recordKey = useSelector(state =>
-    recordsSelectors.getRecordKey(state, record.uuid),
-  );
 
   const {t} = useTranslation();
 
@@ -33,39 +30,39 @@ const RecordCard = ({record, isSelected, onSelect}) => {
       customStyles={[styles.container, isSelected ? styles.selected : {}]}>
       <View style={[styles.payload]}>
         <Text style={[baseStyles.textStyle.bold]}>
-          {record.recordKey || recordKey}
+          {record.recordKey || '-'}
         </Text>
         <CreatedAndModified
           dateCreated={record?.dateCreated}
           dateModified={record?.dateModified}
         />
       </View>
-      {currentRecordUuid === record.uuid && (
+      {currentRecordUuid === recordUuid && (
         <ActualItem label={t('Records:actual_record')} />
       )}
     </TouchableCard>
   );
 };
 
-const ListRecords = ({selectedRecord, setSelectedRecord}) => {
-  const keyExtractor = useCallback(item => `${item.uuid}`, []);
+const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
+  const keyExtractor = useCallback(item => item, []);
 
   const renderItem = useCallback(
     ({item}) => (
       <RecordCard
-        isSelected={selectedRecord?.uuid === item?.uuid}
-        record={item}
+        isSelected={selectedRecordUuid === item}
+        recordUuid={item}
         onSelect={setSelectedRecord}
       />
     ),
-    [selectedRecord, setSelectedRecord],
+    [selectedRecordUuid, setSelectedRecord],
   );
 
-  const records = useRecords();
+  const recordUuids = useRecordsUuids();
 
   return (
     <List
-      data={records}
+      data={recordUuids}
       ListEmptyComponent={ListEmptyComponent}
       keyExtractor={keyExtractor}
       renderItem={renderItem}

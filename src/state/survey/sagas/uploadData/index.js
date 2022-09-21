@@ -25,8 +25,7 @@ function* handlePrepareRecordsData() {
     const surveyUuid = yield select(surveySelectors.getSelectedSurveyUuid);
     const cycle = yield select(surveySelectors.getSurveyCycle);
 
-    let recordFiles = yield call(getRecordsFiles, {surveyUuid, cycle});
-    recordFiles = recordFiles.filter(file => file.isFile());
+    const recordFiles = yield call(getRecordsFiles, {surveyUuid, cycle});
     const recordsJson = [];
 
     for (const recordFile of recordFiles) {

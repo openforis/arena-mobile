@@ -1,10 +1,10 @@
 import {Objects} from '@openforis/arena-core';
-import moment from 'moment-timezone';
-import {useCallback, useState, useEffect, useMemo} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import {useCallback, useState, useEffect} from 'react';
 import {useSelector} from 'react-redux';
 
-import * as fs from 'infra/fs';
-import {getRecordsFiles} from 'state/__persistence';
+import {getRecordsFiles, getRecord} from 'state/__persistence';
+import {selectors as recordsSelectors} from 'state/records';
 import {selectors as surveySelectors} from 'state/survey';
 
 const getRecordSummary = record => {
@@ -17,7 +17,7 @@ const getRecordSummary = record => {
     'cycle',
   ];
 
-  let recordSummary = {};
+  const recordSummary = {};
   keysWhitelist.forEach(key => {
     recordSummary[key] = record[key];
   });
@@ -25,66 +25,82 @@ const getRecordSummary = record => {
   return recordSummary;
 };
 
-const useRecordsByUuid = () => {
-  const [recordsByUuid, setRecordsByUuid] = useState({});
+export const useRecordByUuid = recordUuid => {
+  const [recordSummary, setRecordSummary] = useState({});
+  const surveyUuid = useSelector(surveySelectors.getSelectedSurveyUuid);
+  const cycle = useSelector(surveySelectors.getSurveyCycle);
+  const record = useSelector(state =>
+    recordsSelectors.getRecordByUuid(state, recordUuid),
+  );
+
+  const getRecordByUuidFromFs = useCallback(async () => {
+    if (surveyUuid && cycle) {
+      let _recordSummary = {};
+
+      if (record === false || Objects.isEmpty(record)) {
+        const _record = await getRecord({
+          surveyUuid,
+          cycle,
+          uuid: recordUuid,
+        });
+
+        _recordSummary = getRecordSummary(_record);
+      } else {
+        _recordSummary = getRecordSummary(record);
+      }
+
+      setRecordSummary(_recordSummary);
+    }
+  }, [record, surveyUuid, cycle, setRecordSummary, recordUuid]);
+
+  useEffect(() => {
+    getRecordByUuidFromFs();
+  }, [getRecordByUuidFromFs]);
+
+  return recordSummary;
+};
+
+export const useNumberRecords = () => {
+  const recordsUuids = useRecordsUuids();
+  return recordsUuids.length;
+};
+
+export const useRecordsUuids = () => {
+  const [recordsUuids, setRecordsUuids] = useState([]);
   const surveyUuid = useSelector(surveySelectors.getSelectedSurveyUuid);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const records = useSelector(surveySelectors.getRecords);
 
-  const getRecordsFromFs = useCallback(async () => {
+  const getRecordsUuids = useCallback(async () => {
     if (surveyUuid && cycle) {
       const recordsFiles = await getRecordsFiles({
         surveyUuid,
         cycle,
       });
 
-      let _recordsByUuid = {};
-
-      await Promise.all(
-        (recordsFiles || []).map(async recordFile => {
-          const recordFileContent = await fs.readfile({
-            filePath: recordFile.path,
-          });
-          if (Objects.isEmpty(recordFileContent)) {
-            return;
-          }
-          const recordParsed = JSON.parse(recordFileContent);
-          const recordSummary = getRecordSummary(recordParsed);
-          _recordsByUuid[recordSummary.uuid] = recordSummary;
-        }),
+      const _recordsUuids = (recordsFiles || []).map(
+        recordFile => recordFile.name.split('.json')[0],
       );
 
       records.forEach(_record => {
-        const recordSummary = getRecordSummary(_record);
-        _recordsByUuid[_record.uuid] = recordSummary;
+        if (_recordsUuids.indexOf(_record.uuid) < 0) {
+          _recordsUuids.push(_record.uuid);
+        }
       });
 
-      setRecordsByUuid(_recordsByUuid);
+      setRecordsUuids(_recordsUuids);
     }
-  }, [setRecordsByUuid, surveyUuid, cycle, records]);
+  }, [setRecordsUuids, surveyUuid, cycle, records]);
 
   useEffect(() => {
-    getRecordsFromFs();
-  }, [getRecordsFromFs]);
+    getRecordsUuids();
+  }, [getRecordsUuids]);
 
-  return recordsByUuid;
-};
+  useFocusEffect(
+    useCallback(() => {
+      getRecordsUuids?.();
+    }, [getRecordsUuids]),
+  );
 
-export const useNumberRecords = () => {
-  const [numberRecords, setNumberRecords] = useState(0);
-  const recordsByUuid = useRecordsByUuid();
-  useEffect(() => {
-    setNumberRecords(Object.keys(recordsByUuid).length);
-  }, [recordsByUuid]);
-  return numberRecords;
-};
-
-export const useRecords = () => {
-  const recordsByUuid = useRecordsByUuid();
-  const records = useMemo(() => {
-    return Object.values(recordsByUuid).sort((recordA, recordB) =>
-      moment(recordA.dateCreated) > moment(recordB.dateCreated) ? -1 : 1,
-    );
-  }, [recordsByUuid]);
-  return records;
+  return recordsUuids;
 };

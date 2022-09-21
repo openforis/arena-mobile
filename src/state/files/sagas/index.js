@@ -35,16 +35,24 @@ function* handleDeleteNodesFiles({payload}) {
   if (Object.keys(fileNodes).length > 0) {
     const filesByFileUuid = {};
     Object.values(fileNodes).forEach(node => {
-      filesByFileUuid[node?.value?.fileUuid] = {
-        surveyUuid: node.surveyUuid,
-        cycle: '0', // TODO when cycle
-        recordUuid: node.recordUuid,
-        nodeUuid: node.uuid,
-        fileUuid: node?.value?.fileUuid,
-      };
+      if (node?.value?.fileUuid) {
+        filesByFileUuid[node?.value?.fileUuid] = {
+          surveyUuid: node.surveyUuid,
+          cycle: '0', // TODO when cycle
+          recordUuid: node.recordUuid,
+          nodeUuid: node.uuid,
+          fileUuid: node?.value?.fileUuid,
+        };
+      }
     });
     yield call(handleDeleteFiles, filesByFileUuid);
   }
+}
+
+function* handlePersistFileNode({payload}) {
+  const {node} = payload;
+  const file = yield call(arenaFileUtils.createFile, node);
+  yield put(filesActionTypes.setFiles({filesByUuid: {[file.uuid]: file}}));
 }
 
 function* handleSetNodes({payload}) {
@@ -86,6 +94,8 @@ function* handleDeleteRecordFiles({payload}) {
 
 export default function* () {
   yield takeLatest(nodesActions.setNodes, handleSetNodes);
+  yield takeLatest(filesActionTypes.persitFileNode, handlePersistFileNode);
+
   // TODO!!
   yield takeLatest(surveysActions.deleteSurvey, handleDeleteSurveyFiles);
   yield takeLatest(surveyActions.deleteSurveyData, handleDeleteSurveyFiles);

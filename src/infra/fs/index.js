@@ -83,8 +83,7 @@ export const writeFile = async (
 const getPathOfFile = filePath =>
   filePath.substring(0, filePath.lastIndexOf('/'));
 
-export const dirExists = async path =>
-  await RNFS.exists(cleanPathWithBase(path));
+export const dirExists = async path => RNFS.exists(cleanPathWithBase(path));
 
 export const copyFile = async ({sourcePath, destinationPath}) => {
   const exits = await dirExists(destinationPath);
