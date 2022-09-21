@@ -2,6 +2,8 @@ import {StackActions} from '@react-navigation/core';
 import {takeLatest, put, select, call, all} from 'redux-saga/effects';
 
 import {ROUTES} from 'navigation/constants';
+import {cleanAllData} from 'state/__persistence';
+import globalActions from 'state/globalActions';
 import * as navigator from 'state/navigatorService';
 import surveysSelectors from 'state/surveys/selectors';
 import {actions as userActions} from 'state/user';
@@ -77,6 +79,11 @@ function* handleInitConnection({payload}) {
   yield call(handleAuthenticateUser);
 }
 
+function* handleReset() {
+  yield call(cleanAllData);
+}
+
 export default function* () {
   yield takeLatest(appActionTypes.initConnection$, handleInitConnection);
+  yield takeLatest(globalActions.reset, handleReset);
 }

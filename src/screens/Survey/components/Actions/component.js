@@ -7,6 +7,7 @@ import Button from 'arena-mobile-ui/components/Button';
 import {alert} from 'arena-mobile-ui/utils';
 import {selectors as appSelectors} from 'state/app';
 import {actions as formActions} from 'state/form';
+import {useNumberRecords} from 'state/records/hooks';
 import {
   selectors as surveySelectors,
   actions as surveyActions,
@@ -18,7 +19,7 @@ const Actions = () => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
 
-  const numberOfRecords = useSelector(surveySelectors.getNumberRecords);
+  const numberOfRecords = useNumberRecords();
   const isDevModeEnabled = useSelector(appSelectors.isDevModeEnabled);
   const survey = useSelector(surveySelectors.getSurvey);
 

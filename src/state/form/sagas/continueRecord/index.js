@@ -1,10 +1,13 @@
 import {StackActions} from '@react-navigation/core';
-import {call, select, put} from 'redux-saga/effects';
+import {call, select, put, all} from 'redux-saga/effects';
 
 import {ROUTES} from 'navigation/constants';
+import {persistRecordsAndNodes, getRecordWithNodes} from 'state/__persistence';
 import formActions from 'state/form/actionCreators';
 import formSelectors from 'state/form/selectors';
 import * as navigator from 'state/navigatorService';
+import nodesActions from 'state/nodes/actionCreators';
+import recordsActions from 'state/records/actionCreators';
 import surveySelectors from 'state/survey/selectors';
 
 function* handleContinueRecord({payload}) {
@@ -14,7 +17,16 @@ function* handleContinueRecord({payload}) {
     yield put(formActions.closeEntitySelector());
     if (currentRecordUuid !== record.uuid) {
       yield put(formActions.clean());
-      yield put(formActions.setRecord({record}));
+      yield call(persistRecordsAndNodes);
+      const _record = yield call(getRecordWithNodes, {record});
+      const nodes = Object.assign({}, _record.nodes);
+      delete _record.nodes;
+      yield all([
+        put(recordsActions.setRecord({record: _record})),
+        put(nodesActions.setNodes({nodes})),
+      ]);
+
+      yield put(formActions.setRecord({record: _record}));
 
       const rootNodeDef = yield select(surveySelectors.getNodeDefRoot);
 
