@@ -52,8 +52,6 @@ function* handlePrepareFilesData() {
   try {
     yield call(fs.mkdir, {dirPath: FILES_BASE_PATH});
 
-    // get files paths getFilesFolderPath
-    //copy file and prepare filesArr -> for that getFile
     const surveyUuid = yield select(surveySelectors.getSelectedSurveyUuid);
     const cycle = yield select(surveySelectors.getSurveyCycle);
     const {files: surveyFiles} = yield call(fileUtils.getSurveyFiles, {
@@ -74,7 +72,7 @@ function* handlePrepareFilesData() {
       );
 
       const fileContent = yield call(fileUtils.getFileContent, _file);
-      fileUtils.getFilesFolderPath;
+
       filesArr.push(
         Object.assign(
           {},

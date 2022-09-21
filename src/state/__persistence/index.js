@@ -76,7 +76,6 @@ export function* persistRecordsAndNodes() {
     yield put(recordsActions.cleanRecords({recordUuids}));
   } catch (e) {
     yield call(console.log, e);
-  } finally {
   }
 }
 
