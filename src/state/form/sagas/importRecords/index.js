@@ -87,7 +87,6 @@ function* handleImportRecord(params) {
       }
     });
 
-    yield call(console.log, 'number of files', importFiles.length);
     for (let importFile of importFiles) {
       yield importFile;
     }

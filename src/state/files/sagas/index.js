@@ -96,7 +96,6 @@ export default function* () {
   yield takeLatest(nodesActions.setNodes, handleSetNodes);
   yield takeLatest(filesActionTypes.persitFileNode, handlePersistFileNode);
 
-  // TODO!!
   yield takeLatest(surveysActions.deleteSurvey, handleDeleteSurveyFiles);
   yield takeLatest(surveyActions.deleteSurveyData, handleDeleteSurveyFiles);
   yield takeLatest(recordsActions.deleteRecord, handleDeleteRecordFiles);
