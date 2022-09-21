@@ -1,12 +1,32 @@
 import * as fs from 'infra/fs';
 import {uuidv4} from 'infra/uuid';
+import {getSurveyFolder} from 'state/__persistence';
 
-const BASE_ARENA_FILES_PATH = `${fs.BASE_PATH}/arena-files`;
+const getFilesFolderPath = ({surveyUuid, cycle}) =>
+  `${getSurveyFolder(surveyUuid)}/${cycle}/files`;
+
+const getNodePath = ({surveyUuid, cycle, recordUuid, nodeUuid}) =>
+  `${getFilesFolderPath({surveyUuid, cycle})}/${recordUuid}/${nodeUuid}`;
+
+const getfilePath = ({surveyUuid, cycle, recordUuid, nodeUuid, fileUuid}) =>
+  `${getNodePath({
+    surveyUuid,
+    cycle,
+    recordUuid,
+    nodeUuid,
+  })}/${fileUuid}`;
 
 const createFile = async node => {
   try {
     const fileUuid = node?.value?.fileUuid || uuidv4();
-    const destinationPath = `${BASE_ARENA_FILES_PATH}/${fileUuid}/${node?.value?.fileName}`;
+
+    const destinationPath = `${getfilePath({
+      surveyUuid: node.surveyUuid,
+      cycle: '0', // TODO when cycle
+      recordUuid: node.recordUuid,
+      nodeUuid: node.uuid,
+      fileUuid,
+    })}/${node?.value?.fileName}`;
 
     await fs.copyFile({
       sourcePath: node.value.uri.replace('%20', ' '),
@@ -16,8 +36,8 @@ const createFile = async node => {
     return {
       uuid: fileUuid,
       uri: destinationPath,
-      recordUuid: node.recordUuid,
       surveyUuid: node.surveyUuid,
+      recordUuid: node.recordUuid,
       nodeUuid: node.uuid,
       meta: Object.assign({}, node.value, {fileUuid}),
     };
@@ -27,36 +47,38 @@ const createFile = async node => {
   }
 };
 
-const deleteFile = async fileUuid => {
+// TODO pass node and check surveyUuid and cycle
+const deleteFile = async ({
+  surveyUuid,
+  cycle,
+  recordUuid,
+  nodeUuid,
+  fileUuid,
+}) => {
   if (fileUuid) {
-    await fs.deleteDir(`${BASE_ARENA_FILES_PATH}/${fileUuid}`);
+    const dir = `${getNodePath({
+      surveyUuid,
+      cycle,
+      recordUuid,
+      nodeUuid,
+    })}`;
+
+    await fs.deleteDir(dir);
   }
 };
 
-const deleteFiles = async filesUuids =>
-  Promise.all(filesUuids.map(async fileUuid => deleteFile(fileUuid)));
+const deleteFiles = async files =>
+  Promise.all(files.map(async file => deleteFile(file)));
 
-const readArenaFilesDir = async () => {
-  let fileNames = [];
-  const files = await fs.readDir({
-    dirPath: BASE_ARENA_FILES_PATH,
-  });
-
-  for await (const file of files) {
-    const fileDir = await fs.readDir({dirPath: file.path});
-    fileNames.push(fileDir.name);
-  }
-  console.log('fileNames', fileNames);
+const getSurveyFiles = async ({surveyUuid, cycle}) => {
+  const dir = getFilesFolderPath({surveyUuid, cycle});
+  return fs.scanDir(dir);
 };
-
-const deleteArenaFilesDir = async () => fs.deleteDir(BASE_ARENA_FILES_PATH);
-
 const getFileContent = async file => {
   const fileContent = await fs.readfile({
     filePath: file.uri.replace('%20', ' '),
     encoding: 'base64',
   });
-  console.log('fileContent', fileContent.substring(0, 30));
   return fileContent;
 };
 
@@ -67,8 +89,7 @@ export default {
   createFile,
   deleteFile,
   deleteFiles,
-  deleteArenaFilesDir,
+  getSurveyFiles,
   getFileContent,
   getFilesContent,
-  readArenaFilesDir,
 };

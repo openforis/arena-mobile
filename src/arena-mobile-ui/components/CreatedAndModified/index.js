@@ -9,8 +9,17 @@ const CreatedAndModified = ({dateCreated, dateModified}) => {
   return (
     <LabelsAndValues
       items={[
-        {label: t('Common:created'), value: moment(dateCreated).fromNow()},
-        {label: t('Common:modified'), value: moment(dateModified).fromNow()},
+        ...(dateCreated
+          ? [{label: t('Common:created'), value: moment(dateCreated).fromNow()}]
+          : []),
+        ...(dateModified
+          ? [
+              {
+                label: t('Common:modified'),
+                value: moment(dateModified).fromNow(),
+              },
+            ]
+          : []),
       ]}
     />
   );

@@ -9,6 +9,7 @@ import {selectors as filesSelectors} from 'state/files';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as nodesSelectors} from 'state/nodes';
 import {selectors as recordsSelectors} from 'state/records';
+import {useNumberRecords} from 'state/records/hooks';
 import {selectors as surveySelectors} from 'state/survey';
 import {selectors as surveysSelectors} from 'state/surveys';
 import {selectors as userSelectors} from 'state/user';
@@ -35,6 +36,10 @@ const TelemetryObject = ({telemetryKey}) => {
 
 const Telemetry = () => {
   const {t} = useTranslation();
+
+  const numSurveys = useSelector(surveysSelectors.getNumberOfLocalSurveys);
+  const numRecords = useSelector(recordsSelectors.getNumRecords);
+  const numRecordsFs = useNumberRecords();
   const numNodes = useSelector(nodesSelectors.getNumNodes);
   const data = useDeviceUse();
 
@@ -55,6 +60,9 @@ const Telemetry = () => {
       <Text>Used:{data?.memory?.used}</Text>
       <Text>Total:{data?.memory?.total}</Text>
       <ScrollView>
+        <Text>numSurveys: {numSurveys}</Text>
+        <Text>numRecords: {numRecords}</Text>
+        <Text>numRecordsFs: {numRecordsFs}</Text>
         <Text>numNodes: {numNodes}</Text>
         <Text>-----------</Text>
         {Object.keys(telemetryKeys).map(telemetryKey => (

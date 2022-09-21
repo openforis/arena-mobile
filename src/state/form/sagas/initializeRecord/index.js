@@ -3,10 +3,11 @@ import {StackActions} from '@react-navigation/core';
 import {call, select, put} from 'redux-saga/effects';
 
 import {ROUTES} from 'navigation/constants';
+import {persistRecordsAndNodes} from 'state/__persistence';
 import formActions from 'state/form/actionCreators';
 import * as navigator from 'state/navigatorService';
 import handleCreateNodeAndDescendants from 'state/nodes/sagas/createNodeAndDescendants';
-import {handleCreateRecord} from 'state/records/sagas';
+import handleCreateRecord from 'state/records/sagas/createRecord';
 import surveySelectors from 'state/survey/selectors';
 
 function* handleInitializeRootEntity() {
@@ -28,6 +29,7 @@ function* handleInitializeRootEntity() {
 function* handleInitializeRecord() {
   try {
     yield put(formActions.clean());
+    yield call(persistRecordsAndNodes);
 
     const record = yield call(handleCreateRecord);
 

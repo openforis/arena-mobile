@@ -1,5 +1,8 @@
 {
   "active_survey": "Active survey",
+  "toasts": {
+    "server": "You already have this survey pointing to other server, connect to {{ surveyServer}} instead of {{ serverUrl }}"
+  },
   "local": {
     "title": "Device",
     "error": {

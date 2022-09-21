@@ -1,8 +1,7 @@
 import {combineReducers} from 'redux';
 import {persistReducer} from 'redux-persist';
+import FilesystemStorage from 'redux-persist-filesystem-storage';
 import hardSet from 'redux-persist/lib/stateReconciler/hardSet';
-
-import {storage} from 'infra/storage';
 
 import {reducer as app} from './app';
 import {reducer as files} from './files';
@@ -15,7 +14,7 @@ import {reducer as user} from './user';
 
 const getConfig = key => ({
   key: `${key}-store`,
-  storage: storage(key),
+  storage: FilesystemStorage,
   stateReconciler: hardSet,
   throttle: 500,
 });

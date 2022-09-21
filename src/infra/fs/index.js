@@ -1,6 +1,7 @@
 import RNFS from 'react-native-fs';
 
 export const BASE_PATH = RNFS.DocumentDirectoryPath;
+export const BASE_PATH_DATA = `${BASE_PATH}/arena-data`;
 export const TMP_BASE_PATH = (RNFS.TemporaryDirectoryPath || '')
   .replace(/\/$/, '')
   .replace(/^\/private\//, '');
@@ -12,10 +13,10 @@ const clean = (path, sourcePath) => {
     .replace(`/private${sourcePath}/`, '')
     .replace(`private${sourcePath}/`, '')
     .replace(`${sourcePath}/`, '')
-    .replace(`${sourcePath}`, '')}`;
+    .replace(sourcePath, '')}`;
 };
 
-const cleanPathWithBase = (path = '') => {
+export const cleanPathWithBase = (path = '') => {
   if (path.startsWith('file')) {
     return path;
   }
@@ -28,28 +29,64 @@ const cleanPathWithBase = (path = '') => {
     cleanPath = clean(path, BASE_PATH);
   }
 
+  cleanPath = cleanPath
+    .substring(cleanPath.indexOf('/Documents'))
+    .replace('/Documents', BASE_PATH);
+
   return cleanPath;
+};
+
+export const scanDir = async (
+  pathOfDirToScan,
+  data = {directory: [], files: []},
+) => {
+  const readedFilesAndDir = await readDir({dirPath: pathOfDirToScan});
+
+  await Promise.all(
+    readedFilesAndDir.map(async eachItem => {
+      if (eachItem.isDirectory()) {
+        const directoryPath = pathOfDirToScan + '/' + eachItem.name;
+        data.directory.push(directoryPath);
+        data = await scanDir(directoryPath, data);
+      } else {
+        data.files.push(pathOfDirToScan + '/' + eachItem.name);
+      }
+    }),
+  );
+
+  return data;
 };
 
 export const mkdir = async (
   {dirPath, options} = {
     options: {NSURLIsExcludedFromBackupKey: true},
   },
-) => RNFS.mkdir(cleanPathWithBase(dirPath), options);
+) => {
+  const exists = await dirExists(dirPath);
+  if (exists) {
+    return true;
+  }
+  return RNFS.mkdir(cleanPathWithBase(dirPath), options);
+};
 
 export const writeFile = async (
   {filePath, content, encoding} = {
     encoding: DEFAULT_ENCODING,
   },
-) => RNFS.writeFile(cleanPathWithBase(filePath), content, encoding);
+) =>
+  RNFS.writeFile(
+    cleanPathWithBase(filePath),
+    content,
+    encoding || DEFAULT_ENCODING,
+  );
 
 const getPathOfFile = filePath =>
   filePath.substring(0, filePath.lastIndexOf('/'));
 
+export const dirExists = async path => RNFS.exists(cleanPathWithBase(path));
+
 export const copyFile = async ({sourcePath, destinationPath}) => {
-  const exits = await RNFS.exists(
-    getPathOfFile(cleanPathWithBase(destinationPath)),
-  );
+  const exits = await dirExists(destinationPath);
   if (exits) {
     await deleteDir(getPathOfFile(destinationPath));
   }
@@ -62,20 +99,27 @@ export const readfile = async (
     encoding: DEFAULT_ENCODING,
   },
 ) => {
-  return RNFS.readFile(
-    cleanPathWithBase(filePath),
-    encoding || DEFAULT_ENCODING,
-  );
+  const path = cleanPathWithBase(filePath);
+  const exits = await dirExists(path);
+
+  if (!exits) {
+    return;
+  }
+  return RNFS.readFile(path, encoding || DEFAULT_ENCODING);
 };
 
 export const readDir = async ({dirPath}) => {
   const _path = cleanPathWithBase(dirPath);
+  const exits = await dirExists(_path);
+  if (!exits) {
+    return;
+  }
   return RNFS.readDir(_path);
 };
 
 export const deleteDir = async path => {
   const _path = cleanPathWithBase(path);
-  const exits = await RNFS.exists(_path);
+  const exits = await dirExists(path);
   if (!exits) {
     return;
   }

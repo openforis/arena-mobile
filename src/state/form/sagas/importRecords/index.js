@@ -2,16 +2,20 @@ import {Objects} from '@openforis/arena-core';
 import {channel} from 'redux-saga';
 import {call, select, put, delay, take} from 'redux-saga/effects';
 
+import {checkIfCurrentServerIsTheSurveysServer} from 'arena/survey';
 import * as fs from 'infra/fs';
+import {handleShowToast} from 'infra/toast';
+import {persistRecordWithKeyAndMergeCurrentNodes} from 'state/__persistence';
 import {selectors as appSelectors} from 'state/app';
-import nodesActions from 'state/nodes/actionCreators';
-import recordsActions from 'state/records/actionCreators';
+import filesActions from 'state/files/actionCreators';
 import recordsApi from 'state/records/api';
 import surveyActions from 'state/survey/actionCreators';
 import surveySelectors from 'state/survey/selectors';
 
 const BASE_PATH = fs.BASE_PATH;
+const TMP_BASE_PATH = fs.TMP_BASE_PATH;
 const RECORDS_IMPORT_BASE_PATH = `${BASE_PATH}/records-import`;
+const NODE_FILES_IMPORT_BASE_PATH = `${TMP_BASE_PATH}/files`;
 
 const downloadFileChannel = channel();
 
@@ -28,25 +32,16 @@ const handleDownloadStart = _channel => _response => {
 
 const handleDownloadProgress = _channel => node => async response => {
   const {bytesWritten, contentLength} = response;
-
   const finished = contentLength === bytesWritten;
-
   if (finished) {
-    _channel.put(
-      nodesActions.setNodes({
-        nodes: {
-          [node.uuid]: node,
-        },
-      }),
-    );
+    _channel.put(filesActions.persitFileNode({node}));
   }
 };
 
 function* handleImportFileNodes(params) {
   try {
-    const {surveyId, recordUuid, serverUrl, node} = params;
-
-    const fileUri = `${RECORDS_IMPORT_BASE_PATH}/${node?.value?.fileName}`;
+    const {serverUrl, surveyId, recordUuid, node} = params;
+    const fileUri = `${NODE_FILES_IMPORT_BASE_PATH}/${node?.value?.fileName}`;
 
     const nodeUpdated = Object.assign({}, node, {
       value: Object.assign({}, node.value, {uri: fileUri}),
@@ -61,61 +56,63 @@ function* handleImportFileNodes(params) {
       onStart: handleDownloadStart(downloadFileChannel),
     });
   } catch (e) {
-    console.log('E', e);
+    console.log('Error:handleImportFileNodes', e);
   }
 }
 
 function* handleImportRecord(params) {
-  const {record, surveyId, serverUrl} = params;
-  yield delay(1000);
+  const {record, surveyId, serverUrl, surveyUuid} = params;
+  yield delay(500);
   const recordData = yield call(recordsApi.getRecord, {
     serverUrl,
     surveyId,
     recordUuid: record.uuid,
   });
 
-  const {nodes} = recordData;
-  if (Object.keys(recordData).includes('nodes')) {
-    delete recordData.nodes;
-  }
-
   if (!Objects.isEmpty(recordData)) {
-    let importFiles = [];
-    yield put(recordsActions.setRecord({record: recordData}));
-    const nodeObj = Object.assign({}, nodes);
+    const importFiles = [];
+    yield call(persistRecordWithKeyAndMergeCurrentNodes, {record: recordData});
 
-    Object.entries(nodes).forEach(([key, node]) => {
+    Object.entries(recordData.nodes).forEach(([_key, node]) => {
       if (node?.value?.fileUuid) {
         importFiles.push(
           call(handleImportFileNodes, {
             surveyId,
+            surveyUuid,
             recordUuid: record.uuid,
             serverUrl,
             node,
           }),
         );
-        delete nodeObj[key];
       }
     });
-    yield delay(100);
 
-    yield put(nodesActions.setNodes({nodes: nodeObj}));
     for (let importFile of importFiles) {
       yield importFile;
     }
-    yield delay(200);
   }
 }
 
+const prepareDirectories = async () => {
+  await fs.deleteDir(RECORDS_IMPORT_BASE_PATH);
+  await fs.deleteDir(NODE_FILES_IMPORT_BASE_PATH);
+  await fs.mkdir({dirPath: RECORDS_IMPORT_BASE_PATH});
+  await fs.mkdir({dirPath: NODE_FILES_IMPORT_BASE_PATH});
+  return;
+};
+
 function* handleImportRecords() {
   yield put(surveyActions.setUploading({isUploading: true}));
-  try {
-    yield call(fs.deleteDir, RECORDS_IMPORT_BASE_PATH);
-    yield call(fs.mkdir, {dirPath: RECORDS_IMPORT_BASE_PATH});
-    const surveyUuid = yield select(surveySelectors.getSelectedSurveyUuid);
-    const surveyId = yield select(surveySelectors.getSelectedSurveyId);
 
+  try {
+    const survey = yield select(surveySelectors.getSurvey);
     const serverUrl = yield select(appSelectors.getServerUrl);
+    const surveyUuid = survey?.uuid;
+    const surveyId = survey?.id;
+
+    yield call(checkIfCurrentServerIsTheSurveysServer, {survey, serverUrl});
+
+    yield call(prepareDirectories);
 
     const recordsInSurvey = yield call(recordsApi.getRecords, {
       serverUrl,
@@ -130,7 +127,8 @@ function* handleImportRecords() {
       yield importRecord;
     }
   } catch (error) {
-    console.log('Error', error);
+    console.log('Error:handleImportRecords', error);
+    yield call(handleShowToast, {message: error?.message});
   } finally {
     console.log('Finally');
     yield put(surveyActions.setUploading({isUploading: false}));
