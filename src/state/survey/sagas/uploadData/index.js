@@ -73,20 +73,15 @@ function* handlePrepareFilesData() {
 
       const fileContent = yield call(fileUtils.getFileContent, _file);
 
-      filesArr.push(
-        Object.assign(
-          {},
-          {
-            uuid: _file.uuid,
-            props: {
-              ..._file.meta,
-              name: _file.meta.fileName,
-              nodeUuid: _file.nodeUuid,
-              recordUuid: _file.recordUuid,
-            },
-          },
-        ),
-      );
+      filesArr.push({
+        uuid: _file.uuid,
+        props: {
+          ..._file.meta,
+          name: _file.meta.fileName,
+          nodeUuid: _file.nodeUuid,
+          recordUuid: _file.recordUuid,
+        },
+      });
 
       yield call(fs.writeFile, {
         filePath: `${FILES_BASE_PATH}/${_file.uuid}.bin`,
