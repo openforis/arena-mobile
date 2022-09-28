@@ -13,7 +13,7 @@ import styles from './styles';
 NodeDefs.getLayoutRenderTypePerCycle = ({nodeDef, cycle = 0}) =>
   nodeDef?.props?.layout?.[cycle]?.renderType;
 
-const Entity = ({nodeDef}) => {
+const Entity = ({nodeDef, isCurrentEntity = false}) => {
   const {t} = useTranslation();
   const nodeDefName = useNodeDefNameOrLabel({nodeDef});
   const cycle = useSelector(surveySelectors.getSurveyCycle);
@@ -38,11 +38,16 @@ const Entity = ({nodeDef}) => {
   );
   return (
     <TouchableOpacity
-      style={[styles.container]}
+      style={[styles.container, isCurrentEntity ? styles.activeContainer : {}]}
       disabled={isDisabled}
       onPress={handleSelect}
       hitSlop={{top: 10, bottom: 10}}>
-      <Text style={[styles.text, isDisabled ? styles.textDisabled : {}]}>
+      <Text
+        style={[
+          styles.text,
+          isDisabled ? styles.textDisabled : {},
+          isCurrentEntity ? styles.active : {},
+        ]}>
         {nodeDefName}
         {NodeDefs.getLayoutRenderTypePerCycle({nodeDef, cycle}) === 'table'
           ? t('Form:nodeDefEntity.layout.table')

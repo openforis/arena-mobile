@@ -10,6 +10,7 @@ import BasePreview from '../../Attributes/common/Base/Preview';
 import CoordinatePreview from '../../Attributes/Coordinate/Preview';
 import DatePreview from '../../Attributes/Date/Preview';
 import DecimalPreview from '../../Attributes/Decimal/Preview';
+import EntityPreview from '../../Attributes/Entity/Preview';
 import FilePreview from '../../Attributes/File/Preview';
 import IntegerPreview from '../../Attributes/Integer/Preview';
 import TaxonomyPreview from '../../Attributes/Taxonomy/Preview';
@@ -27,6 +28,7 @@ const AttributesComponentByType = {
   [NodeDefType.time]: TimePreview,
   [NodeDefType.file]: FilePreview,
   [NodeDefType.taxon]: TaxonomyPreview,
+  [NodeDefType.entity]: EntityPreview,
 };
 
 const Attribute = ({nodeDefUuid}) => {

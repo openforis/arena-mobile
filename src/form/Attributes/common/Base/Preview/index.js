@@ -10,7 +10,10 @@ import baseStyles from 'arena-mobile-ui/styles';
 import AttributeHeader from 'form/common/Header';
 import Validation from 'form/common/Validation';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
-import {actions as nodesActions} from 'state/nodes';
+import {
+  selectors as nodesSelectors,
+  actions as nodesActions,
+} from 'state/nodes';
 import {selectors as surveySelectors} from 'state/survey';
 
 import styles from './styles';
@@ -65,6 +68,7 @@ export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );
   const cycle = useSelector(surveySelectors.getSurveyCycle);
+  const lastNodeDefUuid = useSelector(nodesSelectors.getLastNodeDefUuid);
   return (
     <View
       style={[
@@ -74,6 +78,8 @@ export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
           : styles.notApplicable({
               hidden: NodeDefs.isHiddenWhenNotRelevant({nodeDef, cycle}),
             }),
+
+        lastNodeDefUuid === nodeDef.uuid ? styles.lastNodeDef : {},
       ]}>
       <AttributeHeader nodeDef={nodeDef} nodes={nodes} />
       {children}
@@ -129,7 +135,7 @@ const BasePreview = ({nodeDef, NodeValueRender = BaseNodeValueRenderer}) => {
           NodeValueRender={NodeValueRender}
         />
       ))}
-      {nodeDef.props.multiple && canAddNode && (
+      {nodeDef?.props?.multiple && canAddNode && (
         <CreateNode nodeDef={nodeDef} onPress={_createNode} />
       )}
     </BasePreviewContainer>

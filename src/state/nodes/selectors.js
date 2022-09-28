@@ -5,6 +5,9 @@ import {keySelectors, normalizeByUuid} from 'infra/stateUtils';
 
 const getState = state => state;
 const getNodesState = createSelector(getState, state => state?.nodes || {});
+
+const getUiState = createSelector(getNodesState, state => state?.ui || {});
+
 const getNodesByUuid = createSelector(
   getNodesState,
   state => state?.data || {},
@@ -35,10 +38,14 @@ const getNodesByUuidRecordUuid = createCachedSelector(
   cacheObject: new FifoObjectCache({cacheSize: 5}),
 });
 
+const getLastNodeDefUuid = createSelector(getUiState, ui => ui.lastNodeDefUuid);
+
 export default {
   getNodes,
   getNumNodes,
   getNodeByUuid,
   getNodesByRecordUuid,
   getNodesByUuidRecordUuid,
+
+  getLastNodeDefUuid,
 };

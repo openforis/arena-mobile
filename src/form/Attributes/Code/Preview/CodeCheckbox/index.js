@@ -35,6 +35,7 @@ const CodeCheckbox = ({nodeDef}) => {
           codeActions.handleUpdate({node: _node, value: newValue});
           return;
         }
+
         if (NodeDefs.isMultiple(nodeDef)) {
           codeActions.handleDelete({node: _node});
           return;

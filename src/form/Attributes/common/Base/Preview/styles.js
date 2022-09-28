@@ -52,6 +52,9 @@ const styles = StyleSheet.create({
     margin: 0,
     paddingTop: baseStyles.bases.BASE,
   },
+  lastNodeDef: {
+    backgroundColor: colors.secondaryLightest,
+  },
 });
 
 export default styles;

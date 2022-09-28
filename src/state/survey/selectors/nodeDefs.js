@@ -24,6 +24,14 @@ export const getNodeDefRoot = createSelector(getNodeDefs, nodeDefs =>
   nodeDefs.find(({parentUuid}) => !parentUuid),
 );
 
+export const getEntitiesNodeDefs = createSelector(getNodeDefs, nodeDefs =>
+  nodeDefs.filter(nodeDef => nodeDef.type === 'entity'),
+);
+export const getEntitiesNodeDefsUuids = createSelector(
+  getEntitiesNodeDefs,
+  (nodeDefEntities = []) => nodeDefEntities.map(entity => entity.uuid),
+);
+
 export const getNodeDefChildren = createCachedSelector(
   getNodeDefs,
   getSurveyCycle,
@@ -46,11 +54,6 @@ export const getNodeDefEntityChildrenKeys = createCachedSelector(
   childrenNodeDefs => childrenNodeDefs.filter(_nodeDef => _nodeDef.props.key),
 )(_getCachedKeyObjectUuid);
 
-export const getNodeDefChildrenEntities = createCachedSelector(
-  getNodeDefChildren,
-  nodeDefs => nodeDefs.filter(({type}) => type === 'entity') || [],
-)(_getCachedKeyObjectUuid);
-
 export const getNodeDefEntityChildrenAttributesUuids = createCachedSelector(
   getNodeDefChildren,
   nodeDefs => {
@@ -66,10 +69,17 @@ export const getNodeDefEntityChildrenAttributesUuids = createCachedSelector(
   },
 )(_getCachedKeyObjectUuid);
 
-export const getNodeDefChildrenSingleEntities = createCachedSelector(
+export const getNodeDefTableChildren = createCachedSelector(
   getNodeDefChildren,
-  nodeDefs =>
+  getSurveyCycle,
+  (nodeDefs, cycle) =>
     nodeDefs.filter(
-      ({type, props}) => type === 'entity' && props?.multiple !== true,
+      ({type, props}) =>
+        type === 'entity' && props?.layout?.[cycle]?.renderType === 'table',
     ),
+)(_getCachedKeyObjectUuid);
+
+export const getNodeDefTableChildrenUuid = createCachedSelector(
+  getNodeDefTableChildren,
+  (children = []) => children.map(({uuid}) => uuid),
 )(_getCachedKeyObjectUuid);

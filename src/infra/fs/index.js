@@ -69,11 +69,7 @@ export const mkdir = async (
   return RNFS.mkdir(cleanPathWithBase(dirPath), options);
 };
 
-export const writeFile = async (
-  {filePath, content, encoding} = {
-    encoding: DEFAULT_ENCODING,
-  },
-) =>
+export const writeFile = async ({filePath, content, encoding}) =>
   RNFS.writeFile(
     cleanPathWithBase(filePath),
     content,
@@ -94,11 +90,7 @@ export const copyFile = async ({sourcePath, destinationPath}) => {
   return RNFS.copyFile(sourcePath, cleanPathWithBase(destinationPath));
 };
 
-export const readfile = async (
-  {filePath, encoding} = {
-    encoding: DEFAULT_ENCODING,
-  },
-) => {
+export const readfile = async ({filePath, encoding}) => {
   const path = cleanPathWithBase(filePath);
   const exits = await dirExists(path);
 
