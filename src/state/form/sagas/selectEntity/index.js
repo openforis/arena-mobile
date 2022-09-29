@@ -1,5 +1,5 @@
 import {Objects} from '@openforis/arena-core';
-import {call, select, put} from 'redux-saga/effects';
+import {call, select, put, all} from 'redux-saga/effects';
 
 import formActions from 'state/form/actionCreators';
 import formSelectors from 'state/form/selectors';
@@ -59,8 +59,15 @@ function* handleSelectEntity({payload}) {
   }
 
   if (hierarchy.length > 0) {
-    const ancestorsDescendants = yield select(state =>
-      formSelectors.getNodeEntityDescendants(state, hierarchy[0]),
+    const hierarchyOfAncestors = hierarchy.slice(0, -1);
+    let ancestorsDescendants = yield all(
+      hierarchyOfAncestors.map(hnode =>
+        select(state => formSelectors.getNodeChildren(state, hnode)),
+      ),
+    );
+
+    ancestorsDescendants = ancestorsDescendants.flatMap(
+      descentants => descentants,
     );
 
     const ancestorDescentantNode = ancestorsDescendants.find(

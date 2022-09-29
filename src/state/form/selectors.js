@@ -242,19 +242,24 @@ const _getDescendants = ({nodes, node}) => {
   return descendants;
 };
 
+const getNodeChildren = createCachedSelector(
+  getRecordNodes,
+  (_, node) => node,
+  (recordNodes, node) => {
+    const descendants = [];
+    for (let _node of recordNodes) {
+      if (_node.parentUuid === node.uuid) {
+        descendants.push(_node);
+      }
+    }
+    return descendants;
+  },
+)((_state_, node) => node?.uuid || '_');
+
 const getNodeDescendants = createCachedSelector(
   getRecordNodes,
   (_, node) => node,
   (recordNodes, node) => _getDescendants({nodes: recordNodes, node}),
-)((_state_, node) => node?.uuid || '_');
-
-const getNodeEntityDescendants = createCachedSelector(
-  getNodeDescendants,
-  surveySelectorsNodeDefs.getEntitiesNodeDefsUuids,
-  (descendants, entitiesUuids) =>
-    descendants.filter(descendant =>
-      entitiesUuids.includes(descendant.nodeDefUuid),
-    ),
 )((_state_, node) => node?.uuid || '_');
 
 const getNodeDescendantsByNodeDefUuid = createCachedSelector(
@@ -339,6 +344,7 @@ export default {
 
   isNodeDefApplicable,
   canAddNode,
+  getNodeChildren,
   getNodeDefChildren,
   getNodeDefChildrenAttributes,
   getNodeDefChildrenUuids,
@@ -353,7 +359,6 @@ export default {
   getNodeDefNodesWithKeysAsStringInHierarchy,
 
   getNodeDescendants,
-  getNodeEntityDescendants,
 
   getNodeDescendantsByNodeDefUuid,
 

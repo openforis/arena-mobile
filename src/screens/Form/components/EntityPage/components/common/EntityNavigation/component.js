@@ -10,7 +10,10 @@ import {selectors as surveySelectors} from 'state/survey';
 import styles from './styles';
 
 const getNodeDefIndex = ({survey, nodeDef, cycle = '0'}) => {
-  return survey.nodeDefs[nodeDef.uuid].props.layout[cycle].indexChildren;
+  return (
+    nodeDef?.uuid &&
+    survey.nodeDefs[nodeDef?.uuid].props.layout[cycle].indexChildren
+  );
 };
 
 const Button = ({nodeDef}) => {
@@ -96,10 +99,10 @@ const Next = ({parent}) => {
       cycle,
     });
 
-    const parentIndex = parentSiblings.indexOf(parent.uuid);
-    if (parentIndex >= 0 && parentIndex + 1 < parentSiblings.length) {
+    const parentIndex = parentSiblings?.indexOf(parent.uuid);
+    if (parentIndex >= 0 && parentIndex + 1 < parentSiblings?.length) {
       return (
-        <Button nodeDef={survey.nodeDefs[parentSiblings[parentIndex + 1]]} />
+        <Button nodeDef={survey.nodeDefs[parentSiblings?.[parentIndex + 1]]} />
       );
     }
 
