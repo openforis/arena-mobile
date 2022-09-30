@@ -116,7 +116,16 @@ describe('Node updater', () => {
       .dispatch(nodesActions.updateNode(payload))
       .silentRun();
 
-    expect(storeState).toEqual(initialState);
+    expect(storeState).toEqual({
+      ...initialState,
+      nodes: {
+        ...initialState.nodes,
+        ui: {
+          ...initialState.nodes.ui,
+          lastNodeDefUuid: 'NODE_DEF_UUID',
+        },
+      },
+    });
   });
 
   it('valid node', async () => {
@@ -167,6 +176,10 @@ describe('Node updater', () => {
         data: {
           ...initialState.nodes.data,
           [getCurrentUuid(2)]: {...baseMockNode, value: 5},
+        },
+        ui: {
+          ...initialState.nodes.ui,
+          lastNodeDefUuid: 'NODE_DEF_UUID',
         },
       },
     });
@@ -240,6 +253,10 @@ describe('Node updater', () => {
           ...initialState.nodes.data,
           [getCurrentUuid(2)]: {...baseMockNode, value: -1},
         },
+        ui: {
+          ...initialState.nodes.ui,
+          lastNodeDefUuid: baseMockNode.nodeDefUuid,
+        },
       },
     });
   });
@@ -304,6 +321,10 @@ describe('Node updater', () => {
         data: {
           ...initialState.nodes.data,
           [getCurrentUuid(2)]: {...baseMockNode, value: 5},
+        },
+        ui: {
+          ...initialState.nodes.ui,
+          lastNodeDefUuid: 'NODE_DEF_UUID',
         },
       },
     });
@@ -384,6 +405,10 @@ describe('Node updater', () => {
         data: {
           ...initialState.nodes.data,
           [getCurrentUuid(2)]: {...baseMockNode, value: -3},
+        },
+        ui: {
+          ...initialState.nodes.ui,
+          lastNodeDefUuid: 'NODE_DEF_UUID',
         },
       },
     });

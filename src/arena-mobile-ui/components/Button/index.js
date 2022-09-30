@@ -23,6 +23,7 @@ const Button = ({
   icon = null,
   customContainerStyle = {},
   customTextStyle = {},
+  iconPosition = 'left',
   ...props
 }) => {
   const styles = useThemedStyles({styles: _styles});
@@ -37,7 +38,7 @@ const Button = ({
       onPress={onPress}
       disabled={disabled}
       {...props}>
-      {icon}
+      {iconPosition === 'left' && icon}
       <Text
         numberOfLines={1}
         style={[
@@ -48,6 +49,7 @@ const Button = ({
         ]}>
         {label}
       </Text>
+      {iconPosition === 'right' && icon}
     </TouchableOpacity>
   );
 };

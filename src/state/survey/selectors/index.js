@@ -19,10 +19,10 @@ import {
   getNodeDefsByUuid,
   getNodeDefByUuid,
   getNodeDefRoot,
+  getEntitiesNodeDefsUuids,
   getNodeDefChildren,
   getNodeDefEntityChildrenKeys,
-  getNodeDefChildrenEntities,
-  getNodeDefChildrenSingleEntities,
+  getNodeDefTableChildrenUuid,
   getNodeDefEntityChildrenAttributesUuids,
 } from './nodeDefs';
 import {getNodes, getEntityNodeKeys, getEntityNodeKeysAsString} from './nodes';
@@ -51,11 +51,12 @@ export default {
   getNodeDefs,
   getNodeDefsByUuid,
   getNodeDefByUuid,
+  getEntitiesNodeDefsUuids,
   getNodeDefRoot,
   getNodeDefChildren,
   getNodeDefEntityChildrenKeys,
-  getNodeDefChildrenEntities,
-  getNodeDefChildrenSingleEntities,
+
+  getNodeDefTableChildrenUuid,
   getNodeDefEntityChildrenAttributesUuids,
 
   // ---- category

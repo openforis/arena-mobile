@@ -242,6 +242,20 @@ const _getDescendants = ({nodes, node}) => {
   return descendants;
 };
 
+const getNodeChildren = createCachedSelector(
+  getRecordNodes,
+  (_, node) => node,
+  (recordNodes, node) => {
+    const children = [];
+    for (let _node of recordNodes) {
+      if (_node.parentUuid === node.uuid) {
+        children.push(_node);
+      }
+    }
+    return children;
+  },
+)((_state_, node) => node?.uuid || '_');
+
 const getNodeDescendants = createCachedSelector(
   getRecordNodes,
   (_, node) => node,
@@ -254,19 +268,6 @@ const getNodeDescendantsByNodeDefUuid = createCachedSelector(
   (descendants, nodeDefUuid) =>
     descendants.filter(node => node.nodeDefUuid === nodeDefUuid),
 )((_state_, node, nodeDefUuid) => `${node.uuid}_${nodeDefUuid}`);
-
-// TO FIX nodeDef is not a condition to be a sibling // also extract to Record and others functions using memoization
-const getNodesiblings = createCachedSelector(
-  getRecordNodes,
-  (_, node) => node,
-  (recordNodes, node) =>
-    recordNodes.filter(
-      _node =>
-        _node.nodeDefUuid === node.nodeDefUuid &&
-        _node.parentUuid === node.parentUuid &&
-        _node.uuid !== node.uuid,
-    ),
-)((_state_, node) => node.uuid);
 
 // --- UI
 const isEntitySelectorOpened = createSelector(
@@ -343,6 +344,7 @@ export default {
 
   isNodeDefApplicable,
   canAddNode,
+  getNodeChildren,
   getNodeDefChildren,
   getNodeDefChildrenAttributes,
   getNodeDefChildrenUuids,
@@ -357,8 +359,8 @@ export default {
   getNodeDefNodesWithKeysAsStringInHierarchy,
 
   getNodeDescendants,
+
   getNodeDescendantsByNodeDefUuid,
-  getNodesiblings,
 
   // ---- UI
   isEntitySelectorOpened,

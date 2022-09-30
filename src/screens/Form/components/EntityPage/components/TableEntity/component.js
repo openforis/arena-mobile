@@ -8,6 +8,7 @@ import Label from 'form/common/Label';
 import {actions as formActions} from 'state/form';
 
 import Attributes from '../common/Attributes';
+import EntityNavigation from '../common/EntityNavigation';
 import MultipleEntityManager from '../common/MultipleEntityManager';
 
 import {Viewtoggler, Row} from './components';
@@ -78,6 +79,7 @@ const TableEntity = () => {
           <Attributes />
         </>
       )}
+      <EntityNavigation />
     </View>
   );
 };

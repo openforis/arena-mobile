@@ -62,7 +62,7 @@ const EntitySelector = () => {
     <>
       <Animated.View style={[styles.container, {width: panelWidth}]}>
         <ScrollView style={[styles.scrollContainer]}>
-          <EntitySelectorTree nodeDef={nodeDefRoot} />
+          <EntitySelectorTree nodeDefUuid={nodeDefRoot?.uuid} />
         </ScrollView>
         <View style={styles.buttonsContainer}>
           <Button label="home" type="ghost" onPress={handleNavigateToHome} />

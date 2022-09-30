@@ -1,6 +1,8 @@
 const initialState = {
   data: {},
-  ui: {},
+  ui: {
+    lastNodeDefUuid: false,
+  },
 };
 
 export default initialState;

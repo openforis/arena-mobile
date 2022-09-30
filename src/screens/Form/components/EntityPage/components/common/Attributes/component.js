@@ -6,13 +6,26 @@ import Attribute from 'form/common/Attribute';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
+import MultipleEntityFooter from '../MultipleEntityFooter';
+
 import styles from './styles';
 const Attributes = () => {
   const nodeDef = useSelector(formSelectors.getParentEntityNodeDef);
-  const nodeDefChildrenUuids = useSelector(state =>
+  const cycle = useSelector(surveySelectors.getSurveyCycle);
+
+  const layoutNodeDefChildrenUuids = (
+    nodeDef.props.layout[cycle]?.layoutChildren || []
+  ).map(children => (typeof children === 'string' ? children : children.i));
+
+  const computedNodeDefChildrenUuids = useSelector(state =>
     surveySelectors.getNodeDefEntityChildrenAttributesUuids(state, nodeDef),
   );
 
+  const nodeDefChildrenUuids = Array.from(
+    new Set(
+      (layoutNodeDefChildrenUuids || []).concat(computedNodeDefChildrenUuids),
+    ),
+  );
   const renderItem = useCallback(
     ({item: nodeDefUuid}) => <Attribute nodeDefUuid={nodeDefUuid} />,
     [],
@@ -27,7 +40,11 @@ const Attributes = () => {
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         data={nodeDefChildrenUuids}
-        ListFooterComponent={<View style={[styles.block]} />}
+        ListFooterComponent={
+          <View style={[styles.block]}>
+            <MultipleEntityFooter />
+          </View>
+        }
       />
     </View>
   );

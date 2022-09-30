@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.neutralLighter,
     flexDirection: 'row',
-    backgroundColor: active ? colors.secondary : colors.transparent,
+    backgroundColor: active ? colors.secondary : colors.white,
   }),
   touchableLabel: ({active}) => ({
     paddingLeft: baseStyles.bases.BASE,

@@ -12,8 +12,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: colors.white,
   },
-  containerDisabled: {
-    color: colors.neutralLighter,
+  activeContainer: {
+    backgroundColor: colors.secondaryLighter,
   },
   text: {
     color: colors.neutralDarkest,
@@ -22,6 +22,10 @@ const styles = StyleSheet.create({
   },
   textDisabled: {
     color: colors.neutralLight,
+  },
+  active: {
+    color: colors.neutralDarkest,
+    fontWeight: 'bold',
   },
 });
 
