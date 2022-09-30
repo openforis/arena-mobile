@@ -66,9 +66,7 @@ function* handleSelectEntity({payload}) {
       ),
     );
 
-    ancestorsDescendants = ancestorsDescendants.flatMap(
-      descentants => descentants,
-    );
+    ancestorsDescendants = ancestorsDescendants.flat();
 
     const ancestorDescentantNode = ancestorsDescendants.find(
       _node => _node.nodeDefUuid === nodeDef.uuid,

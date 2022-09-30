@@ -246,13 +246,13 @@ const getNodeChildren = createCachedSelector(
   getRecordNodes,
   (_, node) => node,
   (recordNodes, node) => {
-    const descendants = [];
+    const children = [];
     for (let _node of recordNodes) {
       if (_node.parentUuid === node.uuid) {
-        descendants.push(_node);
+        children.push(_node);
       }
     }
-    return descendants;
+    return children;
   },
 )((_state_, node) => node?.uuid || '_');
 
