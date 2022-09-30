@@ -1,49 +1,6 @@
 import {jest} from '@jest/globals';
 import React from 'react';
 
-jest.mock('react-native-mmkv', () => ({
-  MMKV: function () {
-    const storage = new Map();
-
-    return {
-      set: (key, value) => {
-        storage.set(key, value);
-      },
-      getString: key => {},
-      getNumber: key => {
-        const result = storage.get(key);
-        if (typeof result === 'number') {
-          return result;
-        } else {
-          return undefined;
-        }
-      },
-      getBoolean: key => {
-        const result = storage.get(key);
-        if (typeof result === 'boolean') {
-          return result;
-        } else {
-          return undefined;
-        }
-      },
-      contains: key => storage.has(key),
-      delete: key => {
-        storage.delete(key);
-      },
-      getAllKeys: () => storage.keys(),
-      clearAll: () => storage.clear(),
-      recrypt: () => {
-        console.warn('Encryption is not supported in mocked MMKV instances!');
-      },
-      addOnValueChangedListener: () => {
-        console.warn(
-          'Value-changed listeners are not supported in mocked MMKV instances!',
-        );
-      },
-    };
-  },
-}));
-
 jest.mock('react-native-permissions', () =>
   require('react-native-permissions/mock'),
 );
