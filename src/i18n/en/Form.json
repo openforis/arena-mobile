@@ -8,6 +8,15 @@
       "table": " (table)"
     }
   },
+  "deleteNode": {
+    "alert": {
+      "title": "Are you sure?",
+      "message": "You are going to remove {{ name }} and all of the data related.",
+      "accept": "Yes, delete",
+      "dismiss": "No"
+    },
+    "cta_delete": "Delete this node"
+  },
   "nodeDefBoolean": {
     "labelValue": {
       "trueFalse": {

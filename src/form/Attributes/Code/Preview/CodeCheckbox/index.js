@@ -12,7 +12,7 @@ const CodeCheckbox = ({nodeDef}) => {
     useCode({nodeDef});
 
   const handlePress = useCallback(
-    ({categoryItem, node}) =>
+    ({categoryItem, node, label}) =>
       event => {
         event.stopPropagation();
         event.preventDefault();
@@ -37,7 +37,7 @@ const CodeCheckbox = ({nodeDef}) => {
         }
 
         if (NodeDefs.isMultiple(nodeDef)) {
-          codeActions.handleDelete({node: _node});
+          codeActions.handleDelete({node: _node, label});
           return;
         }
         codeActions.handleUpdate({
@@ -53,15 +53,16 @@ const CodeCheckbox = ({nodeDef}) => {
       const node = NodeDefs.isMultiple(nodeDef)
         ? nodes.find(_node => _node?.value?.itemUuid === categoryItem.uuid)
         : nodes?.[0];
+      const label = getCategoryItemLabel({
+        categoryItem,
+        language,
+      });
 
       return {
         key: categoryItem.uuid,
-        onPress: handlePress({categoryItem, node}),
+        onPress: handlePress({categoryItem, node, label}),
         isActive: node?.value?.itemUuid === categoryItem.uuid,
-        label: getCategoryItemLabel({
-          categoryItem,
-          language,
-        }),
+        label,
       };
     });
   }, [

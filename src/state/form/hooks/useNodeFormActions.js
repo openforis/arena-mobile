@@ -1,11 +1,15 @@
 import {useCallback} from 'react';
+import {useTranslation} from 'react-i18next';
 import {useSelector, useDispatch} from 'react-redux';
+
+import {alert} from 'arena-mobile-ui/utils';
 
 import nodesActions from '../../nodes/actionCreators';
 import formActions from '../actionCreators';
 import formSelectors from '../selectors';
 
 const useNodeFormActions = ({nodeDef}) => {
+  const {t} = useTranslation();
   const dispatch = useDispatch();
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
 
@@ -42,15 +46,26 @@ const useNodeFormActions = ({nodeDef}) => {
   );
 
   const handleDelete = useCallback(
-    ({node, callback = handleClose}) => {
-      dispatch(
-        nodesActions.removeNode({
-          node,
-          callback,
+    ({node, label, callback = handleClose}) => {
+      alert({
+        title: t('Form:deleteNode.alert.title'),
+        message: t('Form:deleteNode.alert.message', {
+          name: label ? label : node.uuid,
         }),
-      );
+        acceptText: t('Form:deleteNode.alert.accept'),
+        dismissText: t('Form:deleteNode.alert.dismiss'),
+        onAccept: () => {
+          dispatch(
+            nodesActions.removeNode({
+              node,
+              callback,
+            }),
+          );
+        },
+        onDismiss: () => null,
+      });
     },
-    [dispatch, handleClose],
+    [t, dispatch, handleClose],
   );
 
   return {handleCreate, handleClose, handleUpdate, handleDelete};

@@ -23,9 +23,9 @@ const CodeDropdownMultiple = ({nodeDef}) => {
   );
 
   const handleDelete = useCallback(
-    ({node}) =>
+    ({node, label}) =>
       () => {
-        codeActions.handleDelete({node});
+        codeActions.handleDelete({node, label});
       },
     [codeActions],
   );
@@ -39,19 +39,22 @@ const CodeDropdownMultiple = ({nodeDef}) => {
       <ChipContainer>
         {nodes
           .filter(node => node?.value?.itemUuid)
-          .map(node => (
-            <OptionChip
-              key={node.uuid}
-              label={getCategoryItemLabel({
-                categoryItem: categoryItems.find(
-                  _categoryItem => _categoryItem.uuid === node?.value?.itemUuid,
-                ),
-                language,
-              })}
-              iconName="close"
-              onPressIcon={handleDelete({node})}
-            />
-          ))}
+          .map(node => {
+            const label = getCategoryItemLabel({
+              categoryItem: categoryItems.find(
+                _categoryItem => _categoryItem.uuid === node?.value?.itemUuid,
+              ),
+              language,
+            });
+            return (
+              <OptionChip
+                key={node.uuid}
+                label={label}
+                iconName="close"
+                onPressIcon={handleDelete({node, label})}
+              />
+            );
+          })}
       </ChipContainer>
 
       {nodes.length !== categoryItems.length && (
