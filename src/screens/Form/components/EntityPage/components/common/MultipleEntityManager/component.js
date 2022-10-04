@@ -7,6 +7,7 @@ import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import Select from 'arena-mobile-ui/components/Select';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
+import {alert} from 'arena-mobile-ui/utils';
 import {uuidv4} from 'infra/uuid';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 
@@ -18,6 +19,9 @@ const Header = () => {
 
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
+  const parentEntityKeyString = useSelector(state =>
+    formSelectors.getEntityKey(state, parentEntityNode),
+  );
 
   const siblingNodesInhierarchy = useSelector(state =>
     formSelectors.getNodeDefNodesWithKeysAsStringInHierarchy(
@@ -25,6 +29,7 @@ const Header = () => {
       parentEntityNodeDef,
     ),
   );
+
   const parentLabel = useNodeDefNameOrLabel({nodeDef: parentEntityNodeDef});
 
   useEffect(() => {
@@ -42,9 +47,20 @@ const Header = () => {
     );
   }, [dispatch, parentEntityNodeDef, parentEntityNode]);
 
-  const handleDeleteNode = useCallback(() => {
-    dispatch(formActions.deleteNodeEntity({node: parentEntityNode}));
-  }, [dispatch, parentEntityNode]);
+  const handleDeleteEntityNode = useCallback(() => {
+    alert({
+      title: t('Form:deleteNode.alert.title'),
+      message: t('Form:deleteNode.alert.message', {
+        name: `${parentLabel} [${parentEntityKeyString}]`,
+      }),
+      acceptText: t('Form:deleteNode.alert.accept'),
+      dismissText: t('Form:deleteNode.alert.dismiss'),
+      onAccept: () => {
+        dispatch(formActions.deleteNodeEntity({node: parentEntityNode}));
+      },
+      onDismiss: () => null,
+    });
+  }, [dispatch, parentEntityKeyString, parentLabel, parentEntityNode, t]);
 
   const handleSelectEntityNode = useCallback(
     node => {
@@ -91,7 +107,7 @@ const Header = () => {
           type="secondary"
           icon={<Icon name="trash-can-outline" />}
           customContainerStyle={styles.buttonContainer}
-          onPress={handleDeleteNode}
+          onPress={handleDeleteEntityNode}
         />
       </View>
     </>
