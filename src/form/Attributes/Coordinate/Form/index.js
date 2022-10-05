@@ -2,13 +2,13 @@ import {SRSs, PointFactory} from '@openforis/arena-core';
 import React, {useState, useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Platform, View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import Input, {InputContainer} from 'arena-mobile-ui/components/Input';
 import Select from 'arena-mobile-ui/components/Select';
 import BaseForm from 'form/Attributes/common/Base/Form';
+import {useUpdateNode} from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
-import {actions as nodesActions} from 'state/nodes';
 import surveySelectors from 'state/survey/selectors';
 
 import GetLocation from './GetLocation';
@@ -20,26 +20,19 @@ const Form = ({nodeDef}) => {
 
   const [newValue, setValue] = useState(BASE_VALUE);
   const node = useSelector(formSelectors.getNode);
-  const dispatch = useDispatch();
+
+  const handleUpdateNode = useUpdateNode();
   const surveySrs = useSelector(surveySelectors.getSurveySRS);
 
   const selectedSrs =
     surveySrs.find(srs => srs.code === node?.value?.srs) || surveySrs[0];
 
   const handleSubmit = useCallback(
-    ({callback = null} = {}) => {
+    ({callback = () => null} = {}) => {
       const pointAsArenaCoreWants = PointFactory.createInstance(newValue);
-      dispatch(
-        nodesActions.updateNode({
-          updatedNode: {
-            ...node,
-            value: pointAsArenaCoreWants,
-          },
-          callback,
-        }),
-      );
+      handleUpdateNode({node, value: pointAsArenaCoreWants, callback});
     },
-    [node, newValue, dispatch],
+    [node, newValue, handleUpdateNode],
   );
 
   const handleUpdateValue = useCallback(

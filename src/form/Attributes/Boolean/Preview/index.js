@@ -1,13 +1,13 @@
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Text, TouchableOpacity, View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import * as colors from 'arena-mobile-ui/colors';
 import Icon from 'arena-mobile-ui/components/Icon';
 import baseStyles from 'arena-mobile-ui/styles';
-import {selectors as formSelectors, actions as formActions} from 'state/form';
-import {actions as nodesActions} from 'state/nodes';
+import {selectors as formSelectors} from 'state/form';
+import {useUpdateNode} from 'state/form/hooks/useNodeFormActions';
 
 import {Preview as BasePreview} from '../../common/Base';
 
@@ -41,28 +41,16 @@ const BooleanOption = ({value, active = false, onPress, nodeDef}) => {
 };
 
 const Boolean = ({node, nodeDef}) => {
-  const dispatch = useDispatch();
-
-  const handleClose = useCallback(() => {
-    dispatch(formActions.setNode({node: false}));
-  }, [dispatch]);
+  const updateNode = useUpdateNode();
 
   const handlePress = useCallback(
     value => event => {
       event.stopPropagation();
       event.preventDefault();
 
-      dispatch(
-        nodesActions.updateNode({
-          updatedNode: {
-            ...node,
-            value: String(value),
-          },
-          callback: handleClose,
-        }),
-      );
+      updateNode({node, value: String(value)});
     },
-    [dispatch, node, handleClose],
+    [updateNode, node],
   );
 
   return (

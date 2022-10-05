@@ -26,6 +26,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.neutralLighter,
     display: hidden ? 'none' : 'flex',
   }),
+  basePreviewContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
   nodeContainer: ({nodeDef}) => ({
     borderColor: colors.neutralLighter,
     borderWidth: [
@@ -46,6 +51,7 @@ const styles = StyleSheet.create({
     alignItems: aligmentByType[nodeDef.type] || 'flex-end',
     flexDirection: 'row',
     justifyContent: 'space-around',
+    flex: 1,
   }),
   buttonContainer: {
     justifyContent: 'flex-end',
