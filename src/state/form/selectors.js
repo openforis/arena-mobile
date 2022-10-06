@@ -205,6 +205,34 @@ const getNodeDefNodesInHierarchy = createCachedSelector(
     ),
 )((_state_, nodeDef) => nodeDef?.uuid || '__');
 
+const getEntityKeyString = ({nodes, entity, nodeDefsByUuid}) => {
+  const keyString =
+    nodes
+      .filter(
+        _node =>
+          nodeDefsByUuid[_node.nodeDefUuid].props.key &&
+          _node.parentUuid === entity.uuid,
+      )
+      .map(nodeKey => nodeKey.value)
+      .join(',') || '';
+
+  return keyString;
+};
+
+const getEntityKey = createCachedSelector(
+  getRecordNodes,
+  surveySelectorsNodeDefs.getNodeDefsByUuid,
+  (_, entity) => entity,
+  (nodes, nodeDefsByUuid, entity) => {
+    const keyString = getEntityKeyString({
+      nodes,
+      entity,
+      nodeDefsByUuid,
+    });
+    return keyString;
+  },
+)((_state_, entity) => entity?.uuid || '_');
+
 const getNodeDefNodesWithKeysAsStringInHierarchy = createCachedSelector(
   getRecordNodes,
   getHierarchyUuid,
@@ -218,15 +246,11 @@ const getNodeDefNodesWithKeysAsStringInHierarchy = createCachedSelector(
           hierarchyUuids.includes(node.parentUuid),
       )
       .map(node => {
-        const keyString =
-          nodes
-            .filter(
-              _node =>
-                nodeDefsByUuid[_node.nodeDefUuid].props.key &&
-                _node.parentUuid === node.uuid,
-            )
-            .map(nodeKey => nodeKey.value)
-            .join(',') || '';
+        const keyString = getEntityKeyString({
+          nodes,
+          entity: node,
+          nodeDefsByUuid,
+        });
 
         return Object.assign({}, node, {keyString});
       }),
@@ -356,6 +380,7 @@ export default {
   getBreadCrumbs,
   getNodeDefNodes,
   getNodeDefNodesInHierarchy,
+  getEntityKey,
   getNodeDefNodesWithKeysAsStringInHierarchy,
 
   getNodeDescendants,
