@@ -6,13 +6,16 @@ import formSelectors from 'state/form/selectors';
 
 import handleCreateEntity from '../createEntity';
 
-function* navigateToNode(payload) {
+function* navigateToNode(payload = {}) {
   const {node = false} = payload;
-  yield put(
-    formActions.setParentEntityNode({
-      node,
-    }),
-  );
+  if (!Objects.isEmpty(node)) {
+    yield put(
+      formActions.setParentEntityNode({
+        node,
+      }),
+    );
+  }
+
   yield put(formActions.closeEntitySelector());
 }
 const navigateToTheSame = navigateToNode;
