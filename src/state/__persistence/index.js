@@ -1,7 +1,7 @@
 import {Objects} from '@openforis/arena-core';
 import {call, select, put} from 'redux-saga/effects';
 
-import {getRecordKey} from 'arena/record';
+import {getRecordKey, getRecordSummary} from 'arena/record';
 import * as fs from 'infra/fs';
 import nodesSelectors from 'state/nodes/selectors';
 import recordsActions from 'state/records/actionCreators';
@@ -17,8 +17,25 @@ export const getRecordsFolderPath = ({surveyUuid, cycle}) =>
 export const getRecordPath = record =>
   `${getRecordsFolderPath(record)}/${record.uuid}.json`;
 
+export const getRecordsSummaryPath = record =>
+  `${getRecordsFolderPath(record)}/records-summary.json`;
+
 export const createSurveyFolder = async ({surveyUuid, cycle}) =>
   fs.mkdir({dirPath: getRecordsFolderPath({surveyUuid, cycle})});
+
+export const persistRecordsSummary = async ({summary, surveyUuid, cycle}) =>
+  fs.writeFile({
+    filePath: getRecordsSummaryPath({surveyUuid, cycle}),
+    content: `${Object.values(summary)
+      .map(s => JSON.stringify(s))
+      .join('\n')}\n`,
+  });
+
+export const persistRecordSummary = async ({summary}) =>
+  fs.appendFile({
+    filePath: getRecordsSummaryPath(summary),
+    content: `${JSON.stringify(summary)}\n`,
+  });
 
 export function* persistRecordWithNodes({record}) {
   yield call(createSurveyFolder, record);
@@ -26,6 +43,10 @@ export function* persistRecordWithNodes({record}) {
     filePath: getRecordPath(record),
     content: JSON.stringify(record),
   });
+
+  const summary = getRecordSummary(record);
+
+  yield call(persistRecordSummary, {summary});
 }
 
 export function* persistRecordWithKeyAndMergeCurrentNodes({record}) {
@@ -56,12 +77,7 @@ export function* persistRecordWithKeyAndMergeCurrentNodes({record}) {
     },
   );
 
-  yield call(createSurveyFolder, _record);
-
-  yield call(fs.writeFile, {
-    filePath: getRecordPath(_record),
-    content: JSON.stringify(_record),
-  });
+  yield call(persistRecordWithNodes, {record: _record});
 }
 
 export function* persistRecordsAndNodes() {
@@ -84,7 +100,31 @@ export const getRecordsFiles = async ({surveyUuid, cycle}) => {
     surveyUuid,
     cycle,
   });
-  return fs.readDir({dirPath});
+  const files = await fs.readDir({dirPath});
+  return files.filter(
+    recordFile => !recordFile.name.includes('records-summary'),
+  );
+};
+
+export const getRecordsSummary = async ({surveyUuid, cycle}) => {
+  const filePath = getRecordsSummaryPath({
+    surveyUuid,
+    cycle,
+  });
+
+  const recordsSummaryRaw = await fs.readfile({filePath});
+
+  if (recordsSummaryRaw) {
+    const rows = recordsSummaryRaw.match(/[^\r\n]+/g);
+
+    const recordsByUuid = rows
+      .filter(row => row !== '')
+      .map(row => JSON.parse(row))
+      .reduce((acc, record) => Object.assign(acc, {[record.uuid]: record}), {});
+
+    return recordsByUuid;
+  }
+  return {};
 };
 
 export const getRecord = async record => {

@@ -8,3 +8,21 @@ export const getRecordKey = (nodes, nodeDefRoot, nodeDefsByUuid) => {
 
   return keyRootNodes.map(node => node.value || '-').join('/');
 };
+
+export const getRecordSummary = record => {
+  const keysWhitelist = [
+    'uuid',
+    'recordKey',
+    'dateCreated',
+    'dateModified',
+    'surveyUuid',
+    'cycle',
+  ];
+
+  const recordSummary = {};
+  keysWhitelist.forEach(key => {
+    recordSummary[key] = record[key];
+  });
+
+  return recordSummary;
+};
