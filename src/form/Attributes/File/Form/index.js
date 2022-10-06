@@ -1,12 +1,12 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import Input from 'arena-mobile-ui/components/Input';
 import BaseForm from 'form/Attributes/common/Base/Form';
 import {selectors as filesSelectors} from 'state/files';
+import {useUpdateNode} from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
-import {actions as nodesActions} from 'state/nodes';
 
 import MoreInfo from '../components/MoreInfo';
 import Preview from '../components/Preview';
@@ -19,21 +19,14 @@ const Form = ({nodeDef}) => {
   const file = useSelector(state =>
     filesSelectors.getFileByUuid(state, newValue?.fileUuid),
   );
-  const dispatch = useDispatch();
+
+  const handleUpdateNode = useUpdateNode();
 
   const handleSubmit = useCallback(
-    ({callback = null} = {}) => {
-      dispatch(
-        nodesActions.updateNode({
-          updatedNode: {
-            ...node,
-            value: Object.assign({}, newValue),
-          },
-          callback,
-        }),
-      );
+    ({callback = () => null} = {}) => {
+      handleUpdateNode({node, value: Object.assign({}, newValue), callback});
     },
-    [node, newValue, dispatch],
+    [node, newValue, handleUpdateNode],
   );
 
   const handleUpdateValue = useCallback(

@@ -75,9 +75,8 @@ const Next = ({parent}) => {
   });
 
   if (
-    Objects.isEmpty(parent) ||
-    parent === false ||
-    childrenIndex?.length > 0
+    !Objects.isEmpty(childrenIndex) &&
+    (Objects.isEmpty(parent) || parent === false || childrenIndex?.length > 0)
   ) {
     return <Button nodeDef={survey.nodeDefs[childrenIndex[0]]} />;
   }

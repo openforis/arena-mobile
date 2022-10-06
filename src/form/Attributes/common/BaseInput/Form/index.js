@@ -1,11 +1,11 @@
 import {NodeDefs, NodeDefType} from '@openforis/arena-core';
 import React, {useState, useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import Input from 'arena-mobile-ui/components/Input';
 import {transform, textTransformValues} from 'arena/utils/textUtils';
+import {useUpdateNode} from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
-import {actions as nodesActions} from 'state/nodes';
 
 import {Form as BaseForm} from '../../Base';
 
@@ -25,26 +25,20 @@ const autoCapitalizeByTransformFunction = {
 const Form = ({nodeDef, keyboardType = 'default'}) => {
   const [newValue, setValue] = useState(null);
   const node = useSelector(formSelectors.getNode);
-  const dispatch = useDispatch();
+
+  const handleUpdateNode = useUpdateNode();
 
   const handleSubmit = useCallback(
-    ({callback = null} = {}) => {
-      dispatch(
-        nodesActions.updateNode({
-          updatedNode: {
-            ...node,
-            value:
-              nodeDef.type === NodeDefType.text
-                ? transform({
-                    transformFunction: NodeDefs.getTextTransform(nodeDef),
-                  })(newValue)
-                : Number((newValue || '').replace(',', '.')),
-          },
-          callback,
-        }),
-      );
+    ({callback = () => null} = {}) => {
+      const _value =
+        nodeDef.type === NodeDefType.text
+          ? transform({
+              transformFunction: NodeDefs.getTextTransform(nodeDef),
+            })(newValue)
+          : Number((newValue || '').replace(',', '.'));
+      handleUpdateNode({node, value: _value, callback});
     },
-    [nodeDef, node, newValue, dispatch],
+    [nodeDef, node, newValue, handleUpdateNode],
   );
 
   return (

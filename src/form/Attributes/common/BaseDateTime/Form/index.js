@@ -3,12 +3,11 @@ import moment from 'moment-timezone';
 import React, {useCallback, useEffect, useState} from 'react';
 import {View, Appearance} from 'react-native';
 import DatePicker from 'react-native-date-picker';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import * as colors from 'arena-mobile-ui/colors';
-import {actions as formActions} from 'state/form';
+import {useCloseNode, useUpdateNode} from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
-import {actions as nodesActions} from 'state/nodes';
 
 const formats = {
   [NodeDefType.date]: 'YYYY-MM-DD',
@@ -21,28 +20,21 @@ const modes = {
 };
 
 const DateForm = ({nodeDef}) => {
-  const dispatch = useDispatch();
   const [date, setDate] = useState();
 
   const node = useSelector(formSelectors.getNode);
 
-  const handleClose = useCallback(() => {
-    dispatch(formActions.setNode({node: false}));
-  }, [dispatch]);
+  const handleClose = useCloseNode();
+  const handleUpdate = useUpdateNode();
 
   const handleSelectTime = useCallback(
     dateTime => {
-      dispatch(
-        nodesActions.updateNode({
-          updatedNode: {
-            ...node,
-            value: moment(dateTime).format(formats[nodeDef.type]),
-          },
-          callback: handleClose,
-        }),
-      );
+      handleUpdate({
+        node,
+        value: moment(dateTime).format(formats[nodeDef.type]),
+      });
     },
-    [dispatch, node, nodeDef, handleClose],
+    [node, nodeDef, handleUpdate],
   );
 
   useEffect(() => {

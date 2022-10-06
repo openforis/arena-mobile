@@ -10,6 +10,7 @@ import baseStyles from 'arena-mobile-ui/styles';
 import AttributeHeader from 'form/common/Header';
 import Validation from 'form/common/Validation';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
+import {useDeleteNode} from 'state/form/hooks/useNodeFormActions';
 import {
   selectors as nodesSelectors,
   actions as nodesActions,
@@ -23,7 +24,33 @@ NodeDefs.isHiddenWhenNotRelevant = ({nodeDef, cycle = '0'}) => {
   return nodeDef?.props?.layout?.[cycle]?.hiddenWhenNotRelevant;
 };
 
-const BasePreviewNode = ({node, nodeDef, showValidation, NodeValueRender}) => {
+const BaseDeletePreviewNode = ({node}) => {
+  const handleDelete = useDeleteNode();
+
+  const _handleDelete = useCallback(() => {
+    handleDelete({
+      node,
+      label: typeof node.value === 'string' ? node.value : false,
+    });
+  }, [handleDelete, node]);
+
+  return (
+    <Button
+      onPress={_handleDelete}
+      type="ghostBlack"
+      icon={<Icon name="trash-can-outline" size={baseStyles.bases.BASE_4} />}
+      customContainerStyle={styles.buttonContainer}
+    />
+  );
+};
+
+const BasePreviewNode = ({
+  node,
+  nodeDef,
+  showValidation,
+  NodeValueRender,
+  canDelete,
+}) => {
   const dispatch = useDispatch();
 
   const applicable = useSelector(state =>
@@ -34,21 +61,24 @@ const BasePreviewNode = ({node, nodeDef, showValidation, NodeValueRender}) => {
   }, [dispatch, node]);
 
   return (
-    <TouchableOpacity
-      style={styles.nodeContainer({nodeDef})}
-      onPress={handleSelectNodeAndNodeDef}
-      disabled={!applicable}>
-      <View style={{flex: 1}}>
-        <NodeValueRender node={node} nodeDef={nodeDef} />
-      </View>
+    <View style={[styles.basePreviewContainer]}>
+      <TouchableOpacity
+        style={styles.nodeContainer({nodeDef})}
+        onPress={handleSelectNodeAndNodeDef}
+        disabled={!applicable}>
+        <View style={{flex: 1}}>
+          <NodeValueRender node={node} nodeDef={nodeDef} />
+        </View>
 
-      <Validation
-        nodeDef={nodeDef}
-        nodes={[node]}
-        showValidation={showValidation}
-        absolute={true}
-      />
-    </TouchableOpacity>
+        <Validation
+          nodeDef={nodeDef}
+          nodes={[node]}
+          showValidation={showValidation}
+          absolute={true}
+        />
+      </TouchableOpacity>
+      {canDelete && <BaseDeletePreviewNode node={node} />}
+    </View>
   );
 };
 
@@ -133,6 +163,7 @@ const BasePreview = ({nodeDef, NodeValueRender = BaseNodeValueRenderer}) => {
           nodeDef={nodeDef}
           showValidation={nodes.length > 1}
           NodeValueRender={NodeValueRender}
+          canDelete={nodeDef?.props?.multiple}
         />
       ))}
       {nodeDef?.props?.multiple && canAddNode && (
