@@ -114,16 +114,20 @@ export const getRecordsSummary = async ({surveyUuid, cycle}) => {
 
   const recordsSummaryRaw = await fs.readfile({filePath});
 
-  if (recordsSummaryRaw) {
-    const rows = recordsSummaryRaw.match(/[^\r\n]+/g);
+  const rows = (recordsSummaryRaw || '').match(/[^\r\n]+/g);
 
-    const recordsByUuid = rows
-      .filter(row => row !== '')
+  if (rows?.length > 0) {
+    const recordsByUuid = (rows || [])
       .map(row => JSON.parse(row))
-      .reduce((acc, record) => Object.assign(acc, {[record.uuid]: record}), {});
+      .reduce(
+        (acc, record) =>
+          record.uuid ? Object.assign(acc, {[record.uuid]: record}) : acc,
+        {},
+      );
 
     return recordsByUuid;
   }
+
   return {};
 };
 

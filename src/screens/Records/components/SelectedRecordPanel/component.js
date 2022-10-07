@@ -19,7 +19,7 @@ const SelectedRecordPanel = ({record, unSelect}) => {
     alert({
       title: t('Records:selected_record_panel.delete.alert.title'),
       message: t('Records:selected_record_panel.delete.alert.message', {
-        name: record?.uuid,
+        name: record.recordKey || record?.uuid,
       }),
       acceptText: t('Records:selected_record_panel.delete.alert.accept'),
       dismissText: t('Records:selected_record_panel.delete.alert.dismiss'),
@@ -27,7 +27,7 @@ const SelectedRecordPanel = ({record, unSelect}) => {
         dispatch(
           recordActions.deleteRecord({
             recordUuid: record?.uuid,
-            callBack: () => unSelect(),
+            callBack: unSelect,
           }),
         );
       },

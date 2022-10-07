@@ -46,8 +46,9 @@ const RecordCard = ({record, recordUuid, isSelected, onSelect}) => {
 
 const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
   const keyExtractor = useCallback(item => item, []);
-  const recordUuids = useRecordsUuidsSorted();
+
   const recordsSummary = useRecordsSummary();
+  const recordUuids = useRecordsUuidsSorted(recordsSummary);
 
   const renderItem = useCallback(
     ({item: recordUuid}) => (
@@ -60,6 +61,10 @@ const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
     ),
     [recordsSummary, selectedRecordUuid, setSelectedRecord],
   );
+
+  if (recordUuids.length <= 0) {
+    return <></>;
+  }
 
   return (
     <List
