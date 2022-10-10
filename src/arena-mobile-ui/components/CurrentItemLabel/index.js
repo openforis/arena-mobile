@@ -3,7 +3,7 @@ import {View, Text} from 'react-native';
 
 import styles from './styles';
 
-const ActualItem = ({label}) => {
+const CurrentItemLabel = ({label}) => {
   return (
     <View style={[styles.container]}>
       <Text style={[styles.text]}>{label}</Text>
@@ -11,4 +11,4 @@ const ActualItem = ({label}) => {
   );
 };
 
-export default ActualItem;
+export default CurrentItemLabel;
