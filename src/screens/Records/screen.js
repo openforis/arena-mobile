@@ -16,7 +16,7 @@ const Records = () => {
   const [selectedRecord, setSelectedRecord] = useState(null);
 
   const resetSelectedRecord = useCallback(() => {
-    setSelectedRecord(null);
+    setSelectedRecord(false);
   }, []);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const Records = () => {
 
         <View style={[styles.listContainer]}>
           <ListRecords
-            selectedRecord={selectedRecord}
+            selectedRecordUuid={selectedRecord?.uuid}
             setSelectedRecord={setSelectedRecord}
           />
         </View>

@@ -9,15 +9,15 @@ import List from 'arena-mobile-ui/components/List';
 import TouchableCard from 'arena-mobile-ui/components/TouchableCard';
 import baseStyles from 'arena-mobile-ui/styles';
 import formSelectors from 'state/form/selectors';
-import {useRecordsUuids, useRecordByUuid} from 'state/records/hooks';
+import {useRecordsUuidsSorted, useRecordsSummary} from 'state/records/hooks';
 
 import styles from './styles';
 
 const ListEmptyComponent = () => <View />;
 
-const RecordCard = ({recordUuid, isSelected, onSelect}) => {
+const RecordCard = ({record, recordUuid, isSelected, onSelect}) => {
   const currentRecordUuid = useSelector(formSelectors.getRecordUuid);
-  const record = useRecordByUuid(recordUuid);
+
   const handlePress = useCallback(() => {
     onSelect?.(record);
   }, [record, onSelect]);
@@ -47,18 +47,24 @@ const RecordCard = ({recordUuid, isSelected, onSelect}) => {
 const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
   const keyExtractor = useCallback(item => item, []);
 
+  const recordsSummary = useRecordsSummary();
+  const recordUuids = useRecordsUuidsSorted(recordsSummary);
+
   const renderItem = useCallback(
-    ({item}) => (
+    ({item: recordUuid}) => (
       <RecordCard
-        isSelected={selectedRecordUuid === item}
-        recordUuid={item}
+        isSelected={selectedRecordUuid === recordUuid}
+        recordUuid={recordUuid}
         onSelect={setSelectedRecord}
+        record={recordsSummary?.[recordUuid] || {}}
       />
     ),
-    [selectedRecordUuid, setSelectedRecord],
+    [recordsSummary, selectedRecordUuid, setSelectedRecord],
   );
 
-  const recordUuids = useRecordsUuids();
+  if (recordUuids.length <= 0) {
+    return <></>;
+  }
 
   return (
     <List

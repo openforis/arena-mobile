@@ -76,6 +76,13 @@ export const writeFile = async ({filePath, content, encoding}) =>
     encoding || DEFAULT_ENCODING,
   );
 
+export const appendFile = async ({filePath, content, encoding}) =>
+  RNFS.appendFile(
+    cleanPathWithBase(filePath),
+    content,
+    encoding || DEFAULT_ENCODING,
+  );
+
 const getPathOfFile = filePath =>
   filePath.substring(0, filePath.lastIndexOf('/'));
 
