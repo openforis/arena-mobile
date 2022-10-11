@@ -39,7 +39,14 @@ export const getSelectedSurveyLanguages = createSelector(
 );
 
 // TODO change when cycle
-export const getSurveyCycle = createSelector(getSurvey, _survey => '0');
+export const getSurveyCycle = createSelector(
+  getUiState,
+  ui => ui.selectedSurveyCycle || '0',
+);
+
+export const getSelectedSurveyCycles = createSelector(getSurvey, survey =>
+  Object.keys(survey.props.cycles),
+);
 
 export const getSurveySRS = createSelector(
   getSurvey,

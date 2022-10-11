@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect';
 
-import {getSurvey, getSelectedSurveyLanguage} from './base';
+import {getSurvey, getSelectedSurveyLanguage, getSurveyCycle} from './base';
 
 const getName = createSelector(getSurvey, survey => survey?.props?.name);
 
@@ -16,9 +16,11 @@ export const getSurveyData = createSelector(
   getName,
   getLabel,
   getSelectedSurveyLanguage,
-  (name, label, language) => ({
+  getSurveyCycle,
+  (name, label, language, cycle) => ({
     name,
     label,
     language,
+    cycle,
   }),
 );

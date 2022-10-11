@@ -13,6 +13,9 @@ const {survey} = createActions({
   [types.SELECT_SURVEY_LANGUAGE]: ({selectedSurveyLanguage}) => ({
     selectedSurveyLanguage,
   }),
+  [types.SELECT_SURVEY_CYCLE]: ({selectedSurveyCycle}) => ({
+    selectedSurveyCycle,
+  }),
   [types.SET_UPLOADING]: ({isUploading = false}) => ({isUploading}),
   [types.SET_UPLOAD_PROGRESS]: ({uploadProgress}) => ({uploadProgress}),
 });

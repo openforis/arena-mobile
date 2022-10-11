@@ -10,6 +10,7 @@ import {ROUTES} from 'navigation/constants';
 import * as navigator from 'state/navigatorService';
 import {selectors as surveySelectors} from 'state/survey';
 
+import SurveyCycleSelector from '../SurveyCycleSelector';
 import SurveyLanguageSelector from '../SurveyLanguageSelector';
 
 const SurveyDetail = () => {
@@ -49,6 +50,7 @@ const SurveyDetail = () => {
         />
 
         <SurveyLanguageSelector />
+        <SurveyCycleSelector />
       </View>
     );
   }
