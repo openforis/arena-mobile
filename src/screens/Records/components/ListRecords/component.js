@@ -3,8 +3,8 @@ import {useTranslation} from 'react-i18next';
 import {View, Text} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import ActualItem from 'arena-mobile-ui/components/ActualItem';
 import CreatedAndModified from 'arena-mobile-ui/components/CreatedAndModified';
+import CurrentItemLabel from 'arena-mobile-ui/components/CurrentItemLabel';
 import List from 'arena-mobile-ui/components/List';
 import TouchableCard from 'arena-mobile-ui/components/TouchableCard';
 import baseStyles from 'arena-mobile-ui/styles';
@@ -38,7 +38,7 @@ const RecordCard = ({recordUuid, isSelected, onSelect}) => {
         />
       </View>
       {currentRecordUuid === recordUuid && (
-        <ActualItem label={t('Records:actual_record')} />
+        <CurrentItemLabel label={t('Records:current_record')} />
       )}
     </TouchableCard>
   );

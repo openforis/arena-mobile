@@ -2,8 +2,8 @@ import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View, Text} from 'react-native';
 
-import ActualItem from 'arena-mobile-ui/components/ActualItem';
 import CreatedAndModified from 'arena-mobile-ui/components/CreatedAndModified';
+import CurrentItemLabel from 'arena-mobile-ui/components/CurrentItemLabel';
 import TouchableCard from 'arena-mobile-ui/components/TouchableCard';
 import baseStyles from 'arena-mobile-ui/styles';
 
@@ -41,7 +41,7 @@ const SurveyCard = ({
       </View>
       <View style={[styles.moreInfo]}>
         {isLocalSurvey ? (
-          <ActualItem label={t('Surveys:active_survey')} />
+          <CurrentItemLabel label={t('Surveys:active_survey')} />
         ) : (
           <View />
         )}
