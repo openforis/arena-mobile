@@ -1,3 +1,4 @@
+import {Objects} from '@openforis/arena-core';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
@@ -36,9 +37,10 @@ const ConnectionSettings = () => {
   const [formData, setFormData] = useState({});
 
   const onChangeText = useCallback(
-    key => value => {
-      setFormData(prevValue => ({...prevValue, [key]: value}));
-    },
+    key =>
+      (value = '') => {
+        setFormData(prevValue => ({...prevValue, [key]: value}));
+      },
     [],
   );
 
@@ -177,13 +179,23 @@ const ConnectionSettings = () => {
                 <Input
                   title={t('ConnectionSettings:access_info_fields.username')}
                   onChangeText={onChangeText('username')}
-                  value={formData?.username || username}
+                  value={
+                    Objects.isEmpty(formData?.username) &&
+                    formData?.password !== ''
+                      ? username
+                      : formData?.username
+                  }
                   autoCapitalize="none"
                 />
                 <PasswordInput
                   title={t('ConnectionSettings:access_info_fields.password')}
                   onChangeText={onChangeText('password')}
-                  value={formData?.password || password}
+                  value={
+                    Objects.isEmpty(formData?.password) &&
+                    formData?.password !== ''
+                      ? password
+                      : formData?.password
+                  }
                 />
               </View>
               <View style={styles.buttonContainer}>
