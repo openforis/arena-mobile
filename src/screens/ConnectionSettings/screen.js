@@ -181,7 +181,7 @@ const ConnectionSettings = () => {
                   onChangeText={onChangeText('username')}
                   value={
                     Objects.isEmpty(formData?.username) &&
-                    formData?.password !== ''
+                    formData?.username !== ''
                       ? username
                       : formData?.username
                   }
