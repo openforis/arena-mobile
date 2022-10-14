@@ -28,7 +28,8 @@ const SurveyCycleSelector = () => {
   return (
     <SelectWithLabel
       items={surveyCycles}
-      onValueChange={handleChange}
+      labelStractor={item => String(Number(item) + 1)}
+      handleChange={handleChange}
       selectedItemKey={surveyCycle}
       label={t('Home:survey.card.cycle')}
     />

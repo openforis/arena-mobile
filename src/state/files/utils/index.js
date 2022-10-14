@@ -16,13 +16,13 @@ const getfilePath = ({surveyUuid, cycle, recordUuid, nodeUuid, fileUuid}) =>
     nodeUuid,
   })}/${fileUuid}`;
 
-const createFile = async node => {
+const createFile = async ({node, cycle}) => {
   try {
     const fileUuid = node?.value?.fileUuid || uuidv4();
 
     const destinationPath = `${getfilePath({
       surveyUuid: node.surveyUuid,
-      cycle: '0', // TODO when cycle
+      cycle,
       recordUuid: node.recordUuid,
       nodeUuid: node.uuid,
       fileUuid,
@@ -76,7 +76,7 @@ const getSurveyFiles = async ({surveyUuid, cycle}) => {
 };
 const getFileContent = async file => {
   const fileContent = await fs.readfile({
-    filePath: file.uri.replace('%20', ' '),
+    filePath: file?.uri?.replace('%20', ' '),
     encoding: 'base64',
   });
   return fileContent;

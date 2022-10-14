@@ -101,7 +101,7 @@ export const getRecordsFiles = async ({surveyUuid, cycle}) => {
     cycle,
   });
   const files = await fs.readDir({dirPath});
-  return files.filter(
+  return files?.filter(
     recordFile => !recordFile.name.includes('records-summary'),
   );
 };

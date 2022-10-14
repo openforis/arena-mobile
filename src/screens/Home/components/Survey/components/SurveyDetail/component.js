@@ -17,10 +17,13 @@ const SurveyDetail = () => {
   const {t} = useTranslation();
   const {navigateTo, routes} = useNavigateTo();
   const survey = useSelector(surveySelectors.getSurvey);
-  const surveyLanguage = useSelector(surveySelectors.getSelectedSurveyLanguage);
-  const {name: surveyName, label: surveyLabel} = useSelector(
-    surveySelectors.getSurveyData,
-  );
+
+  const {
+    name: surveyName,
+    label: surveyLabel,
+    cycle: surveyCycle,
+    language: surveyLanguage,
+  } = useSelector(surveySelectors.getSurveyData);
 
   return (
     <Card customStyles={[styles.container]}>
@@ -46,6 +49,10 @@ const SurveyDetail = () => {
           {
             label: t('Home:survey.card.language'),
             value: surveyLanguage,
+          },
+          {
+            label: t('Home:survey.card.cycle'),
+            value: String(Number(surveyCycle) + 1),
           },
         ]}
       />

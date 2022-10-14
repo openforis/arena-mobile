@@ -63,6 +63,7 @@ function* handlePrepareFilesData() {
 
     for (const file of surveyFiles) {
       const [_recordUuid, _nodeUuid, fileUuid, _fileName] = file
+        .split('arena-data/')[1]
         .split('files/')[1]
         .split('/');
 
@@ -167,6 +168,7 @@ function* handleUploadData() {
   try {
     const serverUrl = yield select(appSelectors.getServerUrl);
     const survey = yield select(surveySelectors.getSurvey);
+    const surveyCycle = yield select(surveySelectors.getSurveyCycle);
 
     const surveyId = survey?.id;
 
@@ -189,6 +191,7 @@ function* handleUploadData() {
     yield call(surveysApi.uploadSurveyZip, {
       serverUrl,
       surveyId,
+      surveyCycle,
       onStart: handleUploadStart(uploadFileChannel),
       onProgress: handleOnProgress(uploadFileChannel),
     });

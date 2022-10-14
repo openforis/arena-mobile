@@ -21,7 +21,13 @@ const getSurveyPopulatedById = async ({serverUrl, surveyId}) => {
   return survey;
 };
 
-const uploadSurveyZip = async ({serverUrl, surveyId, onStart, onProgress}) => {
+const uploadSurveyZip = async ({
+  serverUrl,
+  surveyId,
+  surveyCycle,
+  onStart,
+  onProgress,
+}) => {
   const uploadUrl = `${serverUrl}/api/mobile/survey/${surveyId}`;
   const files = [
     {

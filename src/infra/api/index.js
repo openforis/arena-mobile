@@ -26,6 +26,7 @@ export default ({serverUrl = SERVER_URL}) => {
       headers: {
         'Content-Type': contentType || CONTENT_TYPES.json,
       },
+      withCredentials: true,
     });
 
   const get = async ({body, path, uri, contentType, params}) =>

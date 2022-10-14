@@ -13,6 +13,8 @@ import {selectors as surveySelectors} from 'state/survey';
 import SurveyCycleSelector from '../SurveyCycleSelector';
 import SurveyLanguageSelector from '../SurveyLanguageSelector';
 
+const SHOW_CYCLE_SELECTOR = false;
+
 const SurveyDetail = () => {
   const survey = useSelector(surveySelectors.getSurvey);
   const {name: surveyName, label: surveyLabel} = useSelector(
@@ -50,7 +52,7 @@ const SurveyDetail = () => {
         />
 
         <SurveyLanguageSelector />
-        <SurveyCycleSelector />
+        {SHOW_CYCLE_SELECTOR && <SurveyCycleSelector />}
       </View>
     );
   }
