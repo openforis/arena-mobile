@@ -180,10 +180,7 @@ const ConnectionSettings = () => {
                   title={t('ConnectionSettings:access_info_fields.username')}
                   onChangeText={onChangeText('username')}
                   value={
-                    Objects.isEmpty(formData?.username) &&
-                    formData?.username !== ''
-                      ? username
-                      : formData?.username
+                    formData?.username !== '' ? username : formData?.username
                   }
                   autoCapitalize="none"
                 />
@@ -191,10 +188,7 @@ const ConnectionSettings = () => {
                   title={t('ConnectionSettings:access_info_fields.password')}
                   onChangeText={onChangeText('password')}
                   value={
-                    Objects.isEmpty(formData?.password) &&
-                    formData?.password !== ''
-                      ? password
-                      : formData?.password
+                    formData?.password !== '' ? password : formData?.password
                   }
                 />
               </View>
