@@ -60,6 +60,7 @@ const Select = ({
       doneText={doneText}
       disabled={disabled}
       useNativeAndroidPickerStyle={false}
+      fixAndroidTouchableBug={true}
     />
   );
 };
