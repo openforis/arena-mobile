@@ -66,10 +66,19 @@ export default ({serverUrl = SERVER_URL}) => {
       contentType,
     });
 
+  const postFile = async (uri, file, onProgress) => {
+    let formData = new FormData();
+    formData.append('file', file);
+    return axios.post(uri, formData, {
+      headers: {'Content-Type': 'multipart/form-data'},
+      onUploadProgress: onProgress,
+    });
+  };
   return {
     get,
     patch,
     put,
     post,
+    postFile,
   };
 };

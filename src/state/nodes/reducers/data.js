@@ -1,6 +1,7 @@
 import {handleActions} from 'redux-actions';
 
 import {deleteValueByKey, mergeNoSpread} from 'infra/objectUtils';
+import filesActions from 'state/files/actionCreators';
 import globalActions from 'state/globalActions';
 import recordsActions from 'state/records/actionCreators';
 import surveyActions from 'state/survey/actionCreators';
@@ -15,6 +16,24 @@ const data = handleActions(
       ...state,
       [node.uuid]: node,
     }),
+    [filesActions.setFiles]: (state, {payload: {filesByUuid = {}}}) => {
+      const newNodes = {};
+      Object.values(filesByUuid).forEach(file => {
+        const currentNode = Object.assign({}, state[file.nodeUuid]);
+        newNodes[file.nodeUuid] = Object.assign({}, currentNode, {
+          value: Object.assign({}, currentNode.value, {
+            uri: file.uri,
+            path: file.uri,
+          }),
+        });
+      });
+
+      return {
+        ...state,
+        ...newNodes,
+      };
+    },
+
     [actions.setNodes]: (state, {payload: {nodes}}) =>
       mergeNoSpread(state, nodes),
     [actions.deleteNode]: (state, {payload: {node}}) => {

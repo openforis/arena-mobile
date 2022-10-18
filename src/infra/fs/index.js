@@ -1,4 +1,9 @@
+import axios from 'axios';
+import {Platform} from 'react-native';
+import RNFetchBlob from 'react-native-blob-util';
 import RNFS from 'react-native-fs';
+
+import API from 'infra/api';
 
 export const BASE_PATH = RNFS.DocumentDirectoryPath;
 export const BASE_PATH_DATA = `${BASE_PATH}/arena-data`;
@@ -125,8 +130,30 @@ export const deleteDir = async path => {
   return RNFS.unlink(_path);
 };
 
-export const uploadFiles = async ({uploadUrl, files, onStart, onProgress}) =>
-  RNFS.uploadFiles({
+export const uploadFiles = async ({uploadUrl, files, onStart, onProgress}) => {
+  if (Platform.OS === 'android') {
+    const _files = files.map(file =>
+      Object.assign({}, file, {
+        type: file.filetype,
+        uri: 'file:///' + file.filepath,
+      }),
+    );
+
+    const file = {
+      uri: _files[0].uri,
+      name: _files[0].name,
+      type: _files[0].type,
+    };
+
+    return API({}).postFile(uploadUrl, file, progress => {
+      console.log('progress', progress);
+      onProgress({
+        totalBytesSent: progress.loaded,
+        totalBytesExpectedToSend: progress.total,
+      });
+    });
+  }
+  return RNFS.uploadFiles({
     toUrl: uploadUrl,
     files,
     method: 'POST',
@@ -136,13 +163,36 @@ export const uploadFiles = async ({uploadUrl, files, onStart, onProgress}) =>
     begin: onStart,
     progress: onProgress,
   }).promise;
+};
 
+const blobToBase64 = data => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(data);
+    reader.onloadend = async () => {
+      const base64data = reader.result;
+
+      resolve(base64data);
+    };
+  });
+};
 export const downloadFile = async ({
   downloadUrl,
   toFile,
   onProgress,
   onStart,
 }) => {
+  if (Platform.OS === 'android') {
+    const res = await axios.get(downloadUrl, {
+      responseType: 'blob',
+      withCredentials: true,
+    });
+
+    const base64data = await blobToBase64(res.data);
+
+    return RNFetchBlob.fs.writeFile(toFile, base64data);
+  }
+
   return RNFS.downloadFile({
     fromUrl: downloadUrl,
     toFile: cleanPathWithBase(toFile),
