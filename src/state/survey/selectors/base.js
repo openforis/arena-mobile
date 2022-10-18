@@ -1,5 +1,7 @@
 import {createSelector} from 'reselect';
 
+import {defaultCycle} from 'arena/config';
+
 const getState = state => state;
 const getSurveyState = createSelector(
   getState,
@@ -38,8 +40,23 @@ export const getSelectedSurveyLanguages = createSelector(
   survey => survey?.props?.languages,
 );
 
-// TODO change when cycle
-export const getSurveyCycle = createSelector(getSurvey, _survey => '0');
+export const getSelectedSurveyCycles = createSelector(
+  getSurvey,
+  survey => Object.keys(survey?.props?.cycles || {}) || [defaultCycle],
+);
+
+export const getSurveyCycle = createSelector(
+  getUiState,
+  getSurvey,
+  getSelectedSurveyCycles,
+  (ui, survey, surveyCycles) => {
+    if (ui?.selectedSurveyCycle) {
+      return ui?.selectedSurveyCycle;
+    }
+    const lastCycle = surveyCycles.pop();
+    return survey.props?.defaultCycle || lastCycle || defaultCycle;
+  },
+);
 
 export const getSurveySRS = createSelector(
   getSurvey,

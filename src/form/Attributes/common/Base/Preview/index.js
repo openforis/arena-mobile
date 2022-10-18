@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import baseStyles from 'arena-mobile-ui/styles';
+import {defaultCycle} from 'arena/config';
 import AttributeHeader from 'form/common/Header';
 import Validation from 'form/common/Validation';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
@@ -20,7 +21,7 @@ import {selectors as surveySelectors} from 'state/survey';
 import styles from './styles';
 
 // TODO move to arena-core
-NodeDefs.isHiddenWhenNotRelevant = ({nodeDef, cycle = '0'}) => {
+NodeDefs.isHiddenWhenNotRelevant = ({nodeDef, cycle = defaultCycle}) => {
   return nodeDef?.props?.layout?.[cycle]?.hiddenWhenNotRelevant;
 };
 

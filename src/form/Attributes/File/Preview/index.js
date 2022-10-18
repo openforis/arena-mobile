@@ -97,7 +97,7 @@ const Preview = ({nodeDef}) => {
       {nodes.map(node => (
         <NodeValueRender key={node.uuid} node={node} nodeDef={nodeDef} />
       ))}
-      {(NodeDefs.isMultiple(nodeDef) || nodes.length === 0) && (
+      {nodeDef && (NodeDefs.isMultiple(nodeDef) || nodes.length === 0) && (
         <NodeValueRender key={`empty_${nodes.length}`} nodeDef={nodeDef} />
       )}
     </BasePreviewContainer>

@@ -22,6 +22,10 @@ const ui = handleActions(
       ...state,
       selectedSurveyLanguage,
     }),
+    [actions.selectSurveyCycle]: (state, {payload: {selectedSurveyCycle}}) => ({
+      ...state,
+      selectedSurveyCycle,
+    }),
     [actions.setSurvey]: (state, {payload: {survey = {}}}) => ({
       ...state,
       selectedSurveyLanguage: survey?.props?.languages?.[0],

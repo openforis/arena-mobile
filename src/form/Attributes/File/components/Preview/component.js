@@ -11,7 +11,7 @@ const getFileUri = file => {
   if (Platform.OS === 'ios') {
     return '~' + relativePath.substring(relativePath.indexOf('/Documents'));
   }
-  return relativePath;
+  return 'file:///' + relativePath;
 };
 
 const Preview = ({file}) => {

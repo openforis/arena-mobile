@@ -345,6 +345,7 @@ const canAddNode = createCachedSelector(
   (nodeDef, nodeDefNodesInHierarchy = []) => {
     const maxCount = NodeDefs.getMaxCount(nodeDef);
     return (
+      nodeDef &&
       NodeDefs.isMultiple(nodeDef) &&
       (Objects.isEmpty(maxCount) ||
         nodeDefNodesInHierarchy.length < Number(maxCount))

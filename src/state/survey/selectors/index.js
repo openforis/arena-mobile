@@ -5,6 +5,7 @@ import {
   getSelectedSurveyLanguage,
   getSelectedSurveyLanguages,
   getSurveyCycle,
+  getSelectedSurveyCycles,
   getSurveySRS,
   getUiState,
 } from './base';
@@ -42,6 +43,7 @@ export default {
   getSelectedSurveyLanguage,
   getSelectedSurveyLanguages,
   getSurveyCycle,
+  getSelectedSurveyCycles,
   getSurveySRS,
 
   // --- survey

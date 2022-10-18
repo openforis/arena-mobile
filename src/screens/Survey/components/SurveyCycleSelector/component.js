@@ -8,33 +8,32 @@ import {
   actions as surveyActions,
 } from 'state/survey';
 
-const SurveyLanguageSelector = () => {
-  const surveyLanguage = useSelector(surveySelectors.getSelectedSurveyLanguage);
-  const surveyLanguages = useSelector(
-    surveySelectors.getSelectedSurveyLanguages,
-  );
+const SurveyCycleSelector = () => {
+  const surveyCycle = useSelector(surveySelectors.getSurveyCycle);
+  const surveyCycles = useSelector(surveySelectors.getSelectedSurveyCycles);
   const dispatch = useDispatch();
   const {t} = useTranslation();
 
   const handleChange = useCallback(
-    language => {
+    cycle => {
       dispatch(
-        surveyActions.selectSurveyLanguage({
-          selectedSurveyLanguage: language || surveyLanguage,
+        surveyActions.selectSurveyCycle({
+          selectedSurveyCycle: cycle || surveyCycle,
         }),
       );
     },
-    [surveyLanguage, dispatch],
+    [surveyCycle, dispatch],
   );
 
   return (
     <SelectWithLabel
-      label={t('Home:survey.card.language')}
-      items={surveyLanguages}
+      items={surveyCycles}
+      labelStractor={item => String(Number(item) + 1)}
       handleChange={handleChange}
-      selectedItemKey={surveyLanguage}
+      selectedItemKey={surveyCycle}
+      label={t('Home:survey.card.cycle')}
     />
   );
 };
 
-export default SurveyLanguageSelector;
+export default SurveyCycleSelector;

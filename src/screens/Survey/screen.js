@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ScrollView, Text} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
 
 import Header from 'arena-mobile-ui/components/Header';
 import Layout from 'arena-mobile-ui/components/Layout';
@@ -24,6 +24,7 @@ const Survey = () => {
       </>
       <ScrollView style={[styles.container]}>
         <SurveyDetail />
+        <View style={{height: 200}} />
       </ScrollView>
       <Actions />
     </Layout>
