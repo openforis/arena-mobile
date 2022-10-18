@@ -20,7 +20,7 @@ export const updateNodeAndDependants = async ({
     RecordNodesUpdater.updateNodesDependents({
       survey,
       record,
-      nodes: nodesUpdated,
+      nodes: record.nodes,
     });
 
   const validation = await RecordValidator.validateNodes({
