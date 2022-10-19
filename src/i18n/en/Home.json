@@ -1,5 +1,8 @@
 {
   "logged_in_as": "Logged in as",
+  "role": "Role",
+  "username": "Username",
+  "email": "Email",
   "not_logged_in": {
     "title": "Not authenticated",
     "info": "Please log in to the system",
