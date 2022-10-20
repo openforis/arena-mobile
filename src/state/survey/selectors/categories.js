@@ -4,18 +4,13 @@ import {createSelector} from 'reselect';
 
 import formSelectors from 'state/form/selectors';
 
-import {getSurvey, getRefData} from './base';
+import {getSurvey, getCategoryItemIndex} from './base';
 import {getNodeDefByUuid, getNodeDefsByUuid} from './nodeDefs';
 
 // --- NodeDefs
 export const getCategories = createSelector(
   getSurvey,
   survey => survey.categories,
-);
-
-export const getCategoryItemIndex = createSelector(
-  getRefData,
-  refData => refData?.categoryItemIndex,
 );
 
 const getNodeDefCategoryLevelIndex = createCachedSelector(

@@ -60,11 +60,15 @@ export function* persistRecordWithKeyAndMergeCurrentNodes({record}) {
   if (Objects.isEmpty(recordKey)) {
     const nodeDefRoot = yield select(surveySelectors.getNodeDefRoot);
     const nodeDefsByUuid = yield select(surveySelectors.getNodeDefsByUuid);
+    const categoryItemIndex = yield select(
+      surveySelectors.getCategoryItemIndex,
+    );
     recordKey = yield call(
       getRecordKey,
       Object.values(Objects.isEmpty(nodes) ? record.nodes : nodes),
       nodeDefRoot,
       nodeDefsByUuid,
+      categoryItemIndex,
     );
   }
 

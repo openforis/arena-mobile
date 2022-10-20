@@ -2,8 +2,10 @@ import {Objects, NodeDefs} from '@openforis/arena-core';
 import {createCachedSelector, FifoObjectCache} from 're-reselect';
 import {createSelector} from 'reselect';
 
+import {getKeyNodesForEntityAsString} from 'arena/record';
 import {keySelectors, normalizeByUuid} from 'infra/stateUtils';
 import recordsSelectors from 'state/records/selectors';
+import {getCategoryItemIndex} from 'state/survey/selectors/base';
 import * as surveySelectorsNodeDefs from 'state/survey/selectors/nodeDefs';
 import * as surveySelectorsNodes from 'state/survey/selectors/nodes';
 
@@ -205,32 +207,18 @@ const getNodeDefNodesInHierarchy = createCachedSelector(
     ),
 )((_state_, nodeDef) => nodeDef?.uuid || '__');
 
-const getEntityKeyString = ({nodes, entity, nodeDefsByUuid}) => {
-  const keyString =
-    nodes
-      .filter(
-        _node =>
-          nodeDefsByUuid[_node.nodeDefUuid].props.key &&
-          _node.parentUuid === entity.uuid,
-      )
-      .map(nodeKey => nodeKey.value)
-      .join(',') || '';
-
-  return keyString;
-};
-
 const getEntityKey = createCachedSelector(
   getRecordNodes,
   surveySelectorsNodeDefs.getNodeDefsByUuid,
   (_, entity) => entity,
-  (nodes, nodeDefsByUuid, entity) => {
-    const keyString = getEntityKeyString({
+  getCategoryItemIndex,
+  (nodes, nodeDefsByUuid, entity, categoryItemIndex) =>
+    getKeyNodesForEntityAsString({
       nodes,
       entity,
       nodeDefsByUuid,
-    });
-    return keyString;
-  },
+      categoryItemIndex,
+    }),
 )((_state_, entity) => entity?.uuid || '_');
 
 const getNodeDefNodesWithKeysAsStringInHierarchy = createCachedSelector(
@@ -238,7 +226,8 @@ const getNodeDefNodesWithKeysAsStringInHierarchy = createCachedSelector(
   getHierarchyUuid,
   (_, nodeDef) => nodeDef,
   surveySelectorsNodeDefs.getNodeDefsByUuid,
-  (nodes, hierarchyUuids, nodeDef, nodeDefsByUuid) =>
+  getCategoryItemIndex,
+  (nodes, hierarchyUuids, nodeDef, nodeDefsByUuid, categoryItemIndex) =>
     nodes
       .filter(
         node =>
@@ -246,10 +235,11 @@ const getNodeDefNodesWithKeysAsStringInHierarchy = createCachedSelector(
           hierarchyUuids.includes(node.parentUuid),
       )
       .map(node => {
-        const keyString = getEntityKeyString({
+        const keyString = getKeyNodesForEntityAsString({
           nodes,
           entity: node,
           nodeDefsByUuid,
+          categoryItemIndex,
         });
 
         return Object.assign({}, node, {keyString});

@@ -1,15 +1,8 @@
 import {createCachedSelector} from 're-reselect';
-import {createSelector} from 'reselect';
 
-import {getRefData} from './base';
+import {getTaxonIndex, getTaxonUuidIndex} from './base';
 
 // --- Taxonomies
-
-const getTaxonIndex = createSelector(getRefData, refData => refData.taxonIndex);
-const getTaxonUuidIndex = createSelector(
-  getRefData,
-  refData => refData.taxonUuidIndex,
-);
 
 export const getTaxonomyItemsUuidsByTaxonomyUuid = createCachedSelector(
   getTaxonUuidIndex,
