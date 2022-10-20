@@ -1,14 +1,23 @@
 import React, {useCallback} from 'react';
+import {useSelector} from 'react-redux';
 
 import Select from 'arena-mobile-ui/components/Select';
+import {selectors as formSelectors} from 'state/form';
+import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 
 import {useCode} from '../../hooks';
 
 const CodeNodeDropdown = ({nodeDef, node}) => {
-  const {codeActions, language, categoryItems, getCategoryItemLabel} = useCode({
+  const {language, categoryItems, getCategoryItemLabel} = useCode({
     nodeDef,
     node,
   });
+
+  const codeActions = useNodeFormActions({nodeDef});
+
+  const applicable = useSelector(state =>
+    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  );
 
   const handleSelect = useCallback(
     categoryItem => {
@@ -31,6 +40,7 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
       }
       onValueChange={handleSelect}
       selectedItemKey={node?.value?.itemUuid}
+      disabled={!applicable}
     />
   );
 };

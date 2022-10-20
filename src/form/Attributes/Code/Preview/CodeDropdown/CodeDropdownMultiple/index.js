@@ -1,16 +1,24 @@
 import React, {useCallback} from 'react';
+import {useSelector} from 'react-redux';
 
 import Select from 'arena-mobile-ui/components/Select';
+import {selectors as formSelectors} from 'state/form';
+import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 
 import ChipContainer from '../../components/ChipsContainer';
 import OptionChip from '../../components/OptionChip';
 import {useCode} from '../../hooks';
 
 const CodeDropdownMultiple = ({nodeDef}) => {
-  const {language, nodes, categoryItems, getCategoryItemLabel, codeActions} =
-    useCode({
-      nodeDef,
-    });
+  const {language, nodes, categoryItems, getCategoryItemLabel} = useCode({
+    nodeDef,
+  });
+
+  const applicable = useSelector(state =>
+    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  );
+
+  const codeActions = useNodeFormActions({nodeDef});
 
   const handleSelect = useCallback(
     categoryItem => {
@@ -25,9 +33,11 @@ const CodeDropdownMultiple = ({nodeDef}) => {
   const handleDelete = useCallback(
     ({node, label}) =>
       () => {
-        codeActions.handleDelete({node, label});
+        if (applicable) {
+          codeActions.handleDelete({node, label});
+        }
       },
-    [codeActions],
+    [codeActions, applicable],
   );
 
   if (categoryItems.length <= 0) {
@@ -70,6 +80,7 @@ const CodeDropdownMultiple = ({nodeDef}) => {
           }
           onValueChange={handleSelect}
           value={null}
+          disabled={!applicable}
         />
       )}
     </>

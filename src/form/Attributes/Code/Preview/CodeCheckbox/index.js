@@ -2,14 +2,18 @@ import {NodeDefs, Objects} from '@openforis/arena-core';
 import React, {useCallback, useMemo} from 'react';
 
 import {BasePreviewContainer} from 'form/Attributes/common/Base/Preview';
+import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 
 import ChipContainer from '../components/ChipsContainer';
 import OptionChip from '../components/OptionChip';
 import {useCode} from '../hooks';
 
 const CodeCheckbox = ({nodeDef}) => {
-  const {language, nodes, categoryItems, codeActions, getCategoryItemLabel} =
-    useCode({nodeDef});
+  const {language, nodes, categoryItems, getCategoryItemLabel} = useCode({
+    nodeDef,
+  });
+
+  const codeActions = useNodeFormActions({nodeDef});
 
   const handlePress = useCallback(
     ({categoryItem, node, label}) =>
