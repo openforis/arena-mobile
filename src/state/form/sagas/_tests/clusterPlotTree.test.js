@@ -22,7 +22,9 @@ let expectedState = Object.assign({}, initialState);
 const _getCurrentUuid = () => getCurrentUuid();
 
 jest.mock('uuid', () => ({
-  v4: () => _getCurrentUuid(),
+  v4: () => {
+    return _getCurrentUuid();
+  },
 }));
 
 const expectedRecords = state => {
