@@ -16,6 +16,7 @@ const mockSurvey = {
   uuid: 'SURVEY_UUID',
   props: {
     languages: ['LANG'],
+    cycles: ['0'],
   },
 };
 
@@ -53,7 +54,7 @@ describe('survey saga', () => {
       expect(storeState).toEqual({
         ...initialState,
         form: {
-          ...globalInitialState.form,
+          ...initialState.form,
         },
       });
     });
@@ -77,6 +78,7 @@ describe('survey saga', () => {
           ui: {
             ...initialState.survey.ui,
             selectedSurveyLanguage: mockSurvey.props.languages[0],
+            selectedSurveyCycle: '0',
           },
         },
         form: {
