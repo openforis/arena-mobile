@@ -1,3 +1,4 @@
+import {Objects} from '@openforis/arena-core';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
@@ -29,6 +30,9 @@ import styles from './styles';
 import Telemetry from './Telemetry';
 import Version from './Version';
 
+const _valueOrDefault = (value, defaultValue) =>
+  Objects.isEmpty(value) && value !== '' ? defaultValue : value;
+
 const ConnectionSettings = () => {
   const dispatch = useDispatch();
   const {t} = useTranslation();
@@ -36,9 +40,10 @@ const ConnectionSettings = () => {
   const [formData, setFormData] = useState({});
 
   const onChangeText = useCallback(
-    key => value => {
-      setFormData(prevValue => ({...prevValue, [key]: value}));
-    },
+    key =>
+      (value = '') => {
+        setFormData(prevValue => ({...prevValue, [key]: value}));
+      },
     [],
   );
 
@@ -142,7 +147,7 @@ const ConnectionSettings = () => {
                 <Input
                   title={t('ConnectionSettings:server_config_fields.address')}
                   onChangeText={onChangeText('serverUrl')}
-                  value={formData?.serverUrl || serverUrl}
+                  value={_valueOrDefault(formData?.serverUrl, serverUrl)}
                   placeholder="https://test.openforis-arena.org"
                   autoCapitalize="none"
                 />
@@ -177,13 +182,13 @@ const ConnectionSettings = () => {
                 <Input
                   title={t('ConnectionSettings:access_info_fields.username')}
                   onChangeText={onChangeText('username')}
-                  value={formData?.username || username}
+                  value={_valueOrDefault(formData?.username, username)}
                   autoCapitalize="none"
                 />
                 <PasswordInput
                   title={t('ConnectionSettings:access_info_fields.password')}
                   onChangeText={onChangeText('password')}
-                  value={formData?.password || password}
+                  value={_valueOrDefault(formData?.password, password)}
                 />
               </View>
               <View style={styles.buttonContainer}>

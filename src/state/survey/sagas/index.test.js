@@ -16,7 +16,7 @@ const mockSurvey = {
   uuid: 'SURVEY_UUID',
   props: {
     languages: ['LANG'],
-    cycles: ['0'],
+    cycles: {['0']: ['0']},
   },
 };
 
@@ -55,6 +55,10 @@ describe('survey saga', () => {
         ...initialState,
         form: {
           ...initialState.form,
+          data: {
+            ...initialState.form.data,
+            record: 'RECORD',
+          },
         },
       });
     });
@@ -82,7 +86,11 @@ describe('survey saga', () => {
           },
         },
         form: {
-          ...globalInitialState.form,
+          ...initialState.form,
+          data: {
+            ...initialState.form.data,
+            record: null,
+          },
         },
       });
     });
