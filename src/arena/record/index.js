@@ -1,7 +1,10 @@
+const DEFAULT_JOIN_STRING = ',';
+const DEFAULT_STRING = '';
+
 export const getKeyNodeAsString = ({
   node,
   categoryItemIndex,
-  defaultString = '',
+  defaultString = DEFAULT_STRING,
 }) => {
   if (node?.value?.itemUuid) {
     const code = categoryItemIndex?.[node?.value?.itemUuid]?.props?.code;
@@ -13,8 +16,8 @@ export const getKeyNodeAsString = ({
 export const getKeyNodesAsString = ({
   nodes = [],
   categoryItemIndex,
-  joinString = ',',
-  defaultString = '',
+  joinString = DEFAULT_JOIN_STRING,
+  defaultString = DEFAULT_STRING,
 }) =>
   nodes
     .map(nodeKey =>
@@ -22,30 +25,28 @@ export const getKeyNodesAsString = ({
     )
     .join(joinString) || '';
 
-export const getKeyNodesForEntity = ({entity, nodes, nodeDefsByUuid}) => {
-  const keyNodes = nodes.filter(
+export const getKeyNodesForEntity = ({entity, nodes = [], nodeDefsByUuid}) =>
+  nodes.filter(
     node =>
       node.parentUuid === entity.uuid &&
       nodeDefsByUuid[node.nodeDefUuid].props.key,
   );
-  return keyNodes;
-};
 
 export const getKeyNodesForEntityAsString = ({
   entity,
   nodes,
   nodeDefsByUuid,
   categoryItemIndex,
+  joinString = DEFAULT_JOIN_STRING,
+  defaultString = DEFAULT_STRING,
 }) => {
-  const keyNodes = nodes.filter(
-    node =>
-      node.parentUuid === entity.uuid &&
-      nodeDefsByUuid[node.nodeDefUuid].props.key,
-  );
+  const keyNodes = getKeyNodesForEntity({entity, nodes, nodeDefsByUuid});
 
   return getKeyNodesAsString({
     nodes: keyNodes,
     categoryItemIndex,
+    defaultString,
+    joinString,
   });
 };
 
@@ -57,17 +58,13 @@ export const getRecordKey = (
 ) => {
   const rootNode = nodes.find(node => node.nodeDefUuid === nodeDefRoot.uuid);
 
-  const keyRootNodes = getKeyNodesForEntity({
+  return getKeyNodesForEntityAsString({
     entity: rootNode,
     nodes,
     nodeDefsByUuid,
-  });
-
-  return getKeyNodesAsString({
-    nodes: keyRootNodes,
+    categoryItemIndex,
     defaultString: '-',
     joinString: '/',
-    categoryItemIndex,
   });
 };
 
