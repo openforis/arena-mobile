@@ -10,9 +10,10 @@ const getCategoryItemLabel =
     const {codeShown: hasToShowCode} = NodeDefs.getLayoutProps(cycle)(nodeDef);
     const {labels = {}, code} = categoryItem?.props;
 
-    return categoryItem?.props?.code
-      ? `${hasToShowCode ? `(${code})` : ''} ${labels?.[language] || ''}`
-      : '-';
+    const codeString = hasToShowCode ? `(${code})` : '';
+    const labelString = labels?.[language] || '';
+
+    return categoryItem?.props?.code ? `${codeString} ${labelString}` : '-';
   };
 
 const useCode = ({nodeDef, node}) => {
