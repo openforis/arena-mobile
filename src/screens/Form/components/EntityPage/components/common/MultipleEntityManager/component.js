@@ -1,3 +1,4 @@
+import debounce from 'lodash.debounce';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
@@ -47,6 +48,10 @@ const Header = () => {
     );
   }, [dispatch, parentEntityNodeDef, parentEntityNode]);
 
+  const debouncedHandleCreateNewNodeEntity = useCallback(() => {
+    debounce(handleCreateNewNodeEntity, 500);
+  }, [handleCreateNewNodeEntity]);
+
   const handleDeleteEntityNode = useCallback(() => {
     alert({
       title: t('Form:deleteNode.alert.title'),
@@ -90,7 +95,7 @@ const Header = () => {
           label={t('Form:add_new', {label: parentLabel})}
           customContainerStyle={[styles.buttonContainer, styles.addItem]}
           customTextStyle={{fontWeight: 'normal'}}
-          onPress={handleCreateNewNodeEntity}
+          onPress={debouncedHandleCreateNewNodeEntity}
         />
         <View style={{flex: 1}}>
           <Select
