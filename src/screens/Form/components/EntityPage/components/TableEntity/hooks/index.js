@@ -5,6 +5,11 @@ import {useSelector} from 'react-redux';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
+NodeDefs.getLayoutProps =
+  (cycle = 0) =>
+  nodeDef =>
+    nodeDef.props?.layout?.[cycle];
+
 export const useEntityTableData = () => {
   const nodeDef = useSelector(formSelectors.getParentEntityNodeDef);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
@@ -25,10 +30,10 @@ export const useEntityTableData = () => {
   const getWidth = useCallback(
     item =>
       Number(
-        (NodeDefs.getLayoutProps(cycle)(item)?.columnWidth || '150').replace(
-          /\D+/g,
-          '',
-        ),
+        (item.layout
+          ? NodeDefs.getLayoutProps(cycle)(item)?.columnWidth
+          : '150'
+        ).replace(/\D+/g, ''),
       ),
     [cycle],
   );
