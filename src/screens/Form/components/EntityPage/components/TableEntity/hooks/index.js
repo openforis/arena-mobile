@@ -12,6 +12,7 @@ NodeDefs.getLayoutProps =
 
 export const useEntityTableData = () => {
   const nodeDef = useSelector(formSelectors.getParentEntityNodeDef);
+
   const cycle = useSelector(surveySelectors.getSurveyCycle);
 
   const nodes = useSelector(state =>
