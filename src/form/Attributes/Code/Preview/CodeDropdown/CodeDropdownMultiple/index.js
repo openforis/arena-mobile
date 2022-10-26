@@ -10,7 +10,7 @@ import OptionChip from '../../components/OptionChip';
 import {useCode} from '../../hooks';
 
 const CodeDropdownMultiple = ({nodeDef}) => {
-  const {language, nodes, categoryItems, getCategoryItemLabel} = useCode({
+  const {nodes, categoryItems, getCategoryItemLabel} = useCode({
     nodeDef,
   });
 
@@ -41,8 +41,8 @@ const CodeDropdownMultiple = ({nodeDef}) => {
   );
 
   const _labelStractor = useCallback(
-    item => getCategoryItemLabel({categoryItem: item, language}),
-    [getCategoryItemLabel, language],
+    item => getCategoryItemLabel({categoryItem: item}),
+    [getCategoryItemLabel],
   );
   const _filterFn = useCallback(
     item =>

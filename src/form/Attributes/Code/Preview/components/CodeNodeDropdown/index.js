@@ -8,7 +8,7 @@ import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import {useCode} from '../../hooks';
 
 const CodeNodeDropdown = ({nodeDef, node}) => {
-  const {language, categoryItems, getCategoryItemLabel} = useCode({
+  const {categoryItems, getCategoryItemLabel} = useCode({
     nodeDef,
     node,
   });
@@ -18,7 +18,6 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );
-
   const handleSelect = useCallback(
     categoryItem => {
       let newValue = {itemUuid: categoryItem?.uuid};
@@ -32,8 +31,8 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
   );
 
   const _labelStractor = useCallback(
-    item => getCategoryItemLabel({categoryItem: item, language}),
-    [getCategoryItemLabel, language],
+    item => getCategoryItemLabel({categoryItem: item}),
+    [getCategoryItemLabel],
   );
 
   return (

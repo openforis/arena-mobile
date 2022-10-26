@@ -6,7 +6,7 @@ import BaseCell from 'form/Attributes/common/Base/Cell';
 import {useCode} from '../Preview/hooks';
 
 const BaseValuesRenderer = ({nodeDef, nodes}) => {
-  const {language, categoryItems, getCategoryItemLabel} = useCode({
+  const {categoryItems, getCategoryItemLabel} = useCode({
     nodeDef,
   });
 
@@ -18,7 +18,6 @@ const BaseValuesRenderer = ({nodeDef, nodes}) => {
             categoryItem: categoryItems.find(
               _categoryItem => _categoryItem.uuid === node?.value?.itemUuid,
             ),
-            language,
           }),
         )
         .join(',')}

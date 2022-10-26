@@ -6,8 +6,8 @@ import {selectors as formSelectors} from 'state/form';
 import surveySelectors from 'state/survey/selectors';
 
 const getCategoryItemLabel =
-  (nodeDef, cycle) =>
-  ({categoryItem, language}) => {
+  (nodeDef, cycle, language) =>
+  ({categoryItem}) => {
     const {codeShown: hasToShowCode} = NodeDefs.getLayoutProps(cycle)(nodeDef);
     const {labels = {}, code} = categoryItem?.props;
 
@@ -38,11 +38,10 @@ const useCode = ({nodeDef, node}) => {
   );
 
   return {
-    language,
     nodes,
     categoryItems: _categoryItems,
 
-    getCategoryItemLabel: getCategoryItemLabel(nodeDef, cycle),
+    getCategoryItemLabel: getCategoryItemLabel(nodeDef, cycle, language),
   };
 };
 export default useCode;
