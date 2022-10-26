@@ -1,3 +1,4 @@
+import {Objects} from '@openforis/arena-core';
 import React, {useMemo, useRef, useEffect} from 'react';
 import RNPickerSelect from 'react-native-picker-select';
 
@@ -21,8 +22,8 @@ const _prepareItemFn =
 const _filterFn = () => true;
 
 const Select = ({
-  items = [],
-  customStyles = {},
+  items,
+  customStyles,
   selectedItemKey,
   onValueChange,
   keyStractor = _keyStractor,
@@ -37,7 +38,11 @@ const Select = ({
 
   const _items = useMemo(
     () =>
-      items.filter(filterFn).map(prepareItemFn({keyStractor, labelStractor})),
+      Objects.isEmpty(items)
+        ? []
+        : items
+            .filter(filterFn)
+            .map(prepareItemFn({keyStractor, labelStractor})),
     [items, keyStractor, labelStractor, prepareItemFn, filterFn],
   );
 
@@ -47,12 +52,21 @@ const Select = ({
     }
   }, [autoFocus, selectRef]);
 
+  const _styles = useMemo(
+    () =>
+      Objects.isEmpty(customStyles)
+        ? styles
+        : Object.assign({}, styles, {
+            inputIOS: Object.assign({}, styles.inputIOS, customStyles),
+            inputAndroid: Object.assign({}, styles.inputAndroid, customStyles),
+          }),
+    [customStyles],
+  );
+
   return (
     <RNPickerSelect
       ref={selectRef}
-      style={{
-        ...styles({customStyles}),
-      }}
+      style={_styles}
       onValueChange={onValueChange}
       items={_items}
       itemKey={selectedItemKey}

@@ -14,7 +14,6 @@ import {
   getCategoryItems,
   getCategoryItemByUuid,
   getNodeCategoryItems,
-  getParentCodeNode,
 } from './categories';
 import {
   getNodeDefs,
@@ -66,7 +65,6 @@ export default {
   getCategoryItems,
   getCategoryItemByUuid,
   getNodeCategoryItems,
-  getParentCodeNode,
   getCategoryItemIndex,
 
   // ---- Taxonomies

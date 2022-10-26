@@ -46,12 +46,12 @@ export const getCategoryItems = createCachedSelector(
   },
 )((_state_, nodeDefUuid) => nodeDefUuid || '__');
 
-export const getParentCodeNodeDef = createSelector(
+const getParentCodeNodeDef = createSelector(
   getNodeDefsByUuid,
   (_, __, node) => node,
   (nodeDefsByUuid, node) => {
     let parentCodeDefUuid =
-      nodeDefsByUuid[node.nodeDefUuid]?.props?.parentCodeDefUuid;
+      nodeDefsByUuid[node?.nodeDefUuid]?.props?.parentCodeDefUuid;
     if (parentCodeDefUuid) {
       return nodeDefsByUuid[parentCodeDefUuid];
     }
@@ -59,7 +59,7 @@ export const getParentCodeNodeDef = createSelector(
   },
 );
 
-export const getParentCodeNode = createSelector(
+const getParentCodeNode = createSelector(
   state => state,
   getParentCodeNodeDef,
   (state, parentCodeNodeDef) => {

@@ -7,10 +7,10 @@ import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 
 import ChipContainer from '../../components/ChipsContainer';
 import OptionChip from '../../components/OptionChip';
-import {useCode} from '../../hooks';
+import {useCode, getCategoryItemLabel} from '../../hooks';
 
 const CodeDropdownMultiple = ({nodeDef}) => {
-  const {language, nodes, categoryItems, getCategoryItemLabel} = useCode({
+  const {language, nodes, categoryItems} = useCode({
     nodeDef,
   });
 
@@ -40,6 +40,18 @@ const CodeDropdownMultiple = ({nodeDef}) => {
     [codeActions, applicable],
   );
 
+  const _labelStractor = useCallback(
+    item => getCategoryItemLabel(nodeDef)({categoryItem: item, language}),
+    [nodeDef, language],
+  );
+  const _filterFn = useCallback(
+    item =>
+      nodes.length > 0
+        ? !nodes.some(node => node?.value?.itemUuid === item.uuid)
+        : true,
+    [nodes],
+  );
+
   if (categoryItems.length <= 0) {
     return null;
   }
@@ -50,12 +62,12 @@ const CodeDropdownMultiple = ({nodeDef}) => {
         {nodes
           .filter(node => node?.value?.itemUuid)
           .map(node => {
-            const label = getCategoryItemLabel({
-              categoryItem: categoryItems.find(
-                _categoryItem => _categoryItem.uuid === node?.value?.itemUuid,
-              ),
-              language,
-            });
+            const categoryItem = categoryItems.find(
+              _categoryItem => _categoryItem.uuid === node?.value?.itemUuid,
+            );
+
+            const label = _labelStractor(categoryItem);
+
             return (
               <OptionChip
                 key={node.uuid}
@@ -70,14 +82,8 @@ const CodeDropdownMultiple = ({nodeDef}) => {
       {nodes.length !== categoryItems.length && (
         <Select
           items={categoryItems}
-          labelStractor={item =>
-            getCategoryItemLabel({categoryItem: item, language})
-          }
-          filterFn={item =>
-            nodes.length > 0
-              ? !nodes.some(node => node?.value?.itemUuid === item.uuid)
-              : true
-          }
+          labelStractor={_labelStractor}
+          filterFn={_filterFn}
           onValueChange={handleSelect}
           value={null}
           disabled={!applicable}

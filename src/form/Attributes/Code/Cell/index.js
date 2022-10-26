@@ -3,10 +3,10 @@ import {Text} from 'react-native';
 
 import BaseCell from 'form/Attributes/common/Base/Cell';
 
-import {useCode} from '../Preview/hooks';
+import {useCode, getCategoryItemLabel} from '../Preview/hooks';
 
 const BaseValuesRenderer = ({nodeDef, nodes}) => {
-  const {language, categoryItems, getCategoryItemLabel} = useCode({
+  const {language, categoryItems} = useCode({
     nodeDef,
   });
 
@@ -14,7 +14,7 @@ const BaseValuesRenderer = ({nodeDef, nodes}) => {
     <Text numberOfLines={1}>
       {nodes
         .map(node =>
-          getCategoryItemLabel({
+          getCategoryItemLabel(nodeDef)({
             categoryItem: categoryItems.find(
               _categoryItem => _categoryItem.uuid === node?.value?.itemUuid,
             ),

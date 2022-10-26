@@ -28,6 +28,12 @@ const styles = StyleSheet.create({
     width: 90,
     paddingHorizontal: 12,
   },
+  button: {
+    fontWeight: 'normal',
+  },
+  selectContainer: {
+    flex: 1,
+  },
 });
 
 const baseInputStyle = {

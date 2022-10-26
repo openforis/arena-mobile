@@ -1,1 +1,1 @@
-export {default as useCode} from './useCode';
+export {default as useCode, getCategoryItemLabel} from './useCode';

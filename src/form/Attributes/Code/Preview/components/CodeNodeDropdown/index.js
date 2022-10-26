@@ -5,15 +5,15 @@ import Select from 'arena-mobile-ui/components/Select';
 import {selectors as formSelectors} from 'state/form';
 import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 
-import {useCode} from '../../hooks';
+import {useCode, getCategoryItemLabel} from '../../hooks';
 
 const CodeNodeDropdown = ({nodeDef, node}) => {
-  const {language, categoryItems, getCategoryItemLabel} = useCode({
+  const {language, categoryItems} = useCode({
     nodeDef,
     node,
   });
 
-  const codeActions = useNodeFormActions({nodeDef});
+  const {handleUpdate, handleCreate} = useNodeFormActions({nodeDef});
 
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
@@ -23,21 +23,24 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
     categoryItem => {
       let newValue = {itemUuid: categoryItem?.uuid};
       if (node?.uuid) {
-        codeActions.handleUpdate({node, value: newValue});
+        handleUpdate({node, value: newValue});
       } else {
-        codeActions.handleCreate({value: newValue});
+        handleCreate({value: newValue});
       }
     },
-    [codeActions, node],
+    [handleUpdate, handleCreate, node],
+  );
+
+  const _labelStractor = useCallback(
+    item => getCategoryItemLabel(nodeDef)({categoryItem: item, language}),
+    [nodeDef, language],
   );
 
   return (
     <Select
       key={node?.value?.itemUuid}
       items={categoryItems}
-      labelStractor={item =>
-        getCategoryItemLabel({categoryItem: item, language})
-      }
+      labelStractor={_labelStractor}
       onValueChange={handleSelect}
       selectedItemKey={node?.value?.itemUuid}
       disabled={!applicable}
