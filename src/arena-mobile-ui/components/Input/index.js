@@ -43,7 +43,7 @@ const Input = ({
         onChangeText={onChangeText}
         autoFocus={autoFocus}
         selectTextOnFocus={true}
-        placeholderTextColor={colors.secondaryLighter}
+        placeholderTextColor={colors.neutralLightest}
         {...props}
       />
     </InputContainer>
