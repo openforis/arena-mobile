@@ -6,10 +6,10 @@ import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 
 import ChipContainer from '../components/ChipsContainer';
 import OptionChip from '../components/OptionChip';
-import {useCode, getCategoryItemLabel} from '../hooks';
+import {useCode} from '../hooks';
 
 const CodeCheckbox = ({nodeDef}) => {
-  const {language, nodes, categoryItems} = useCode({
+  const {language, nodes, categoryItems, getCategoryItemLabel} = useCode({
     nodeDef,
   });
 
@@ -57,7 +57,7 @@ const CodeCheckbox = ({nodeDef}) => {
       const node = NodeDefs.isMultiple(nodeDef)
         ? nodes.find(_node => _node?.value?.itemUuid === categoryItem.uuid)
         : nodes?.[0];
-      const label = getCategoryItemLabel(nodeDef)({
+      const label = getCategoryItemLabel({
         categoryItem,
         language,
       });
@@ -69,7 +69,14 @@ const CodeCheckbox = ({nodeDef}) => {
         label,
       };
     });
-  }, [categoryItems, nodes, nodeDef, language, handlePress]);
+  }, [
+    getCategoryItemLabel,
+    categoryItems,
+    nodes,
+    nodeDef,
+    language,
+    handlePress,
+  ]);
 
   return (
     <BasePreviewContainer nodeDef={nodeDef} nodes={nodes}>

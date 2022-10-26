@@ -7,10 +7,10 @@ import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 
 import ChipContainer from '../../components/ChipsContainer';
 import OptionChip from '../../components/OptionChip';
-import {useCode, getCategoryItemLabel} from '../../hooks';
+import {useCode} from '../../hooks';
 
 const CodeDropdownMultiple = ({nodeDef}) => {
-  const {language, nodes, categoryItems} = useCode({
+  const {language, nodes, categoryItems, getCategoryItemLabel} = useCode({
     nodeDef,
   });
 
@@ -41,8 +41,8 @@ const CodeDropdownMultiple = ({nodeDef}) => {
   );
 
   const _labelStractor = useCallback(
-    item => getCategoryItemLabel(nodeDef)({categoryItem: item, language}),
-    [nodeDef, language],
+    item => getCategoryItemLabel({categoryItem: item, language}),
+    [getCategoryItemLabel, language],
   );
   const _filterFn = useCallback(
     item =>

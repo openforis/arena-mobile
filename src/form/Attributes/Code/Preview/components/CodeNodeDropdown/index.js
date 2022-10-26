@@ -5,10 +5,10 @@ import Select from 'arena-mobile-ui/components/Select';
 import {selectors as formSelectors} from 'state/form';
 import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 
-import {useCode, getCategoryItemLabel} from '../../hooks';
+import {useCode} from '../../hooks';
 
 const CodeNodeDropdown = ({nodeDef, node}) => {
-  const {language, categoryItems} = useCode({
+  const {language, categoryItems, getCategoryItemLabel} = useCode({
     nodeDef,
     node,
   });
@@ -32,8 +32,8 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
   );
 
   const _labelStractor = useCallback(
-    item => getCategoryItemLabel(nodeDef)({categoryItem: item, language}),
-    [nodeDef, language],
+    item => getCategoryItemLabel({categoryItem: item, language}),
+    [getCategoryItemLabel, language],
   );
 
   return (
