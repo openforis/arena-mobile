@@ -1,19 +1,24 @@
+import {NodeDefs} from '@openforis/arena-core';
 import {useSelector} from 'react-redux';
 
 import {selectors as formSelectors} from 'state/form';
 import surveySelectors from 'state/survey/selectors';
 
 const getCategoryItemLabel =
-  nodeDef =>
-  ({categoryItem, language}) =>
-    categoryItem?.props?.code
-      ? `(${categoryItem?.props?.code}) ${
-          categoryItem?.props?.labels?.[language] || ''
-        }`
-      : '-';
+  (nodeDef, cycle) =>
+  ({categoryItem, language}) => {
+    const {codeShown: hasToShowCode} = NodeDefs.getLayoutProps(cycle)(nodeDef);
+    const {labels = {}, code} = categoryItem?.props;
+
+    const codeString = hasToShowCode ? `(${code})` : '';
+    const labelString = labels?.[language] || code || '';
+
+    return categoryItem?.props?.code ? `${codeString} ${labelString}` : '-';
+  };
 
 const useCode = ({nodeDef, node}) => {
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
+  const cycle = useSelector(surveySelectors.getSurveyCycle);
 
   const categoryItems = useSelector(state =>
     node?.uuid
@@ -30,7 +35,7 @@ const useCode = ({nodeDef, node}) => {
     nodes,
     categoryItems,
 
-    getCategoryItemLabel: getCategoryItemLabel(nodeDef),
+    getCategoryItemLabel: getCategoryItemLabel(nodeDef, cycle),
   };
 };
 export default useCode;
