@@ -1,12 +1,71 @@
-export const getRecordKey = (nodes, nodeDefRoot, nodeDefsByUuid) => {
-  const rootNode = nodes.find(node => node.nodeDefUuid === nodeDefRoot.uuid);
-  const keyRootNodes = nodes.filter(
+const DEFAULT_JOIN_STRING = ',';
+const DEFAULT_STRING = '';
+
+export const getKeyNodeAsString = ({
+  node,
+  categoryItemIndex,
+  defaultString = DEFAULT_STRING,
+}) => {
+  if (node?.value?.itemUuid) {
+    const code = categoryItemIndex?.[node?.value?.itemUuid]?.props?.code;
+    return code || defaultString;
+  }
+  return node.value || defaultString;
+};
+
+export const getKeyNodesAsString = ({
+  nodes = [],
+  categoryItemIndex,
+  joinString = DEFAULT_JOIN_STRING,
+  defaultString = DEFAULT_STRING,
+}) =>
+  nodes
+    .map(nodeKey =>
+      getKeyNodeAsString({node: nodeKey, categoryItemIndex, defaultString}),
+    )
+    .join(joinString) || '';
+
+export const getKeyNodesForEntity = ({entity, nodes = [], nodeDefsByUuid}) =>
+  nodes.filter(
     node =>
-      node.parentUuid === rootNode.uuid &&
+      node.parentUuid === entity.uuid &&
       nodeDefsByUuid[node.nodeDefUuid].props.key,
   );
 
-  return keyRootNodes.map(node => node.value || '-').join('/');
+export const getKeyNodesForEntityAsString = ({
+  entity,
+  nodes,
+  nodeDefsByUuid,
+  categoryItemIndex,
+  joinString = DEFAULT_JOIN_STRING,
+  defaultString = DEFAULT_STRING,
+}) => {
+  const keyNodes = getKeyNodesForEntity({entity, nodes, nodeDefsByUuid});
+
+  return getKeyNodesAsString({
+    nodes: keyNodes,
+    categoryItemIndex,
+    defaultString,
+    joinString,
+  });
+};
+
+export const getRecordKey = (
+  nodes,
+  nodeDefRoot,
+  nodeDefsByUuid,
+  categoryItemIndex,
+) => {
+  const rootNode = nodes.find(node => node.nodeDefUuid === nodeDefRoot.uuid);
+
+  return getKeyNodesForEntityAsString({
+    entity: rootNode,
+    nodes,
+    nodeDefsByUuid,
+    categoryItemIndex,
+    defaultString: '-',
+    joinString: '/',
+  });
 };
 
 export const getRecordSummary = record => {

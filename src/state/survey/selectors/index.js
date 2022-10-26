@@ -8,6 +8,7 @@ import {
   getSelectedSurveyCycles,
   getSurveySRS,
   getUiState,
+  getCategoryItemIndex,
 } from './base';
 import {
   getCategoryItems,
@@ -66,6 +67,7 @@ export default {
   getCategoryItemByUuid,
   getNodeCategoryItems,
   getParentCodeNode,
+  getCategoryItemIndex,
 
   // ---- Taxonomies
   getTaxonomyItemsUuidsByTaxonomyUuid,

@@ -1,16 +1,18 @@
 import {useSelector} from 'react-redux';
 
 import {selectors as formSelectors} from 'state/form';
-import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import surveySelectors from 'state/survey/selectors';
 
-const getCategoryItemLabel = ({categoryItem, language}) =>
-  categoryItem?.props?.code
-    ? `(${categoryItem?.props?.code}) ${categoryItem?.props?.labels?.[language]}`
-    : '-';
+const getCategoryItemLabel =
+  nodeDef =>
+  ({categoryItem, language}) =>
+    categoryItem?.props?.code
+      ? `(${categoryItem?.props?.code}) ${
+          categoryItem?.props?.labels?.[language] || ''
+        }`
+      : '-';
 
 const useCode = ({nodeDef, node}) => {
-  const codeActions = useNodeFormActions({nodeDef});
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
 
   const categoryItems = useSelector(state =>
@@ -23,6 +25,12 @@ const useCode = ({nodeDef, node}) => {
     formSelectors.getNodeDefNodesInHierarchy(state, nodeDef),
   );
 
-  return {language, nodes, categoryItems, codeActions, getCategoryItemLabel};
+  return {
+    language,
+    nodes,
+    categoryItems,
+
+    getCategoryItemLabel: getCategoryItemLabel(nodeDef),
+  };
 };
 export default useCode;

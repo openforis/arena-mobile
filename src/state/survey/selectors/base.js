@@ -63,3 +63,17 @@ export const getSurveySRS = createSelector(
   survey => survey?.props?.srs || [],
 );
 export const getRefData = createSelector(getSurvey, survey => survey?.refData);
+
+export const getCategoryItemIndex = createSelector(
+  getRefData,
+  refData => refData?.categoryItemIndex,
+);
+
+export const getTaxonIndex = createSelector(
+  getRefData,
+  refData => refData.taxonIndex,
+);
+export const getTaxonUuidIndex = createSelector(
+  getRefData,
+  refData => refData.taxonUuidIndex,
+);
