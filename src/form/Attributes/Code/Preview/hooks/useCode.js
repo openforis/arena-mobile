@@ -11,7 +11,7 @@ const getCategoryItemLabel =
     const {labels = {}, code} = categoryItem?.props;
 
     const codeString = hasToShowCode ? `(${code})` : '';
-    const labelString = labels?.[language] || '';
+    const labelString = labels?.[language] || code || '';
 
     return categoryItem?.props?.code ? `${codeString} ${labelString}` : '-';
   };
