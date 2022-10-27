@@ -13,7 +13,7 @@ export const Label = ({label, size = 's'}) => (
       baseStyles.textSize[size],
     ]}
     numberOfLines={1}>
-    {label}:
+    {label}
   </Text>
 );
 
