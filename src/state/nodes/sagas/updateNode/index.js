@@ -1,6 +1,8 @@
+import {Records} from '@openforis/arena-core';
 import {call, select, put, all} from 'redux-saga/effects';
 
 import formActions from 'state/form/actionCreators';
+import formSelectors from 'state/form/selectors';
 import nodesActions from 'state/nodes/actionCreators';
 import nodesSelectors from 'state/nodes/selectors';
 import recordsActions from 'state/records/actionCreators';
@@ -13,7 +15,7 @@ function* handleUpdateNode({payload}) {
   try {
     const {updatedNode, callback} = payload;
 
-    const [survey, node, record, recordNodes] = yield all([
+    const [survey, node, record, recordNodes, validation] = yield all([
       select(surveySelectors.getSurvey),
       select(state => nodesSelectors.getNodeByUuid(state, updatedNode.uuid)),
       select(state =>
@@ -22,28 +24,33 @@ function* handleUpdateNode({payload}) {
       select(state =>
         nodesSelectors.getNodesByUuidRecordUuid(state, updatedNode.recordUuid),
       ),
+      select(formSelectors.getValidation),
     ]);
 
     if (!node?.uuid) {
       return;
     }
 
-    const recordWithNodes = {...record, nodes: {...recordNodes}};
+    // the record needs to be populated with the validation and records to make it works
+    const recordWithNodesAndValidation = Records.addNodes(recordNodes)(record);
+    const fullRecord = Object.assign({}, recordWithNodesAndValidation, {
+      validation,
+    });
 
     const {
-      updatedNodes,
-      validation,
+      nodes: updatedNodes,
+      validation: updatedValidation,
       record: updatedRecord,
     } = yield call(updateNodeAndDependants, {
       node: updatedNode,
-      record: recordWithNodes,
+      record: fullRecord,
       survey,
     });
 
     yield all([
       put(recordsActions.setRecord({record: updatedRecord})),
       put(nodesActions.setNodes({nodes: updatedNodes})),
-      put(formActions.setValidation({validation})),
+      put(formActions.setValidation({validation: updatedValidation})),
     ]);
 
     if (callback) {

@@ -8,7 +8,7 @@ import {selectors as surveySelectors} from 'state/survey';
 NodeDefs.getLayoutProps =
   (cycle = 0) =>
   nodeDef =>
-    nodeDef.props?.layout?.[cycle];
+    nodeDef.props?.layout?.[cycle] || {};
 
 export const useEntityTableData = () => {
   const nodeDef = useSelector(formSelectors.getParentEntityNodeDef);
