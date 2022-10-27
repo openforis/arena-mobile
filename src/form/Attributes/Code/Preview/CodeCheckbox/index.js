@@ -9,7 +9,7 @@ import OptionChip from '../components/OptionChip';
 import {useCode} from '../hooks';
 
 const CodeCheckbox = ({nodeDef}) => {
-  const {language, nodes, categoryItems, getCategoryItemLabel} = useCode({
+  const {nodes, categoryItems, getCategoryItemLabel} = useCode({
     nodeDef,
   });
 
@@ -57,10 +57,7 @@ const CodeCheckbox = ({nodeDef}) => {
       const node = NodeDefs.isMultiple(nodeDef)
         ? nodes.find(_node => _node?.value?.itemUuid === categoryItem.uuid)
         : nodes?.[0];
-      const label = getCategoryItemLabel({
-        categoryItem,
-        language,
-      });
+      const label = getCategoryItemLabel({categoryItem});
 
       return {
         key: categoryItem.uuid,
@@ -69,14 +66,7 @@ const CodeCheckbox = ({nodeDef}) => {
         label,
       };
     });
-  }, [
-    getCategoryItemLabel,
-    categoryItems,
-    nodes,
-    nodeDef,
-    language,
-    handlePress,
-  ]);
+  }, [getCategoryItemLabel, categoryItems, nodes, nodeDef, handlePress]);
 
   return (
     <BasePreviewContainer nodeDef={nodeDef} nodes={nodes}>

@@ -9,7 +9,7 @@ import styles from './styles';
 
 const EmptyBlock = ({title, info, ctaLabel, onPress}) => {
   return (
-    <Card customStyles={[styles.container]}>
+    <Card customStyles={styles.container}>
       <Text style={[baseStyles.textStyle.title]}>{title}</Text>
 
       <Text

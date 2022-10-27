@@ -13,6 +13,9 @@ NodeDefs.getLayoutRenderTypePerCycle = ({nodeDef, cycle = 0}) =>
 
 const Preview = ({nodeDef}) => {
   const cycle = useSelector(surveySelectors.getSurveyCycle);
+  if (nodeDef.analysis) {
+    return <></>;
+  }
   if (NodeDefs.getLayoutRenderTypePerCycle({nodeDef, cycle}) === 'checkbox') {
     return <CodeCheckbox nodeDef={nodeDef} />;
   }

@@ -3,7 +3,7 @@ import {StyleSheet, Platform} from 'react-native';
 import * as colors from 'arena-mobile-ui/colors';
 import baseStyles from 'arena-mobile-ui/styles';
 
-const baseInputStyle = ({pickerStyles = {}}) => ({
+const baseInputStyle = {
   fontSize: baseStyles.bases.BASE_4,
   paddingVertical: baseStyles.bases.BASE_2,
   paddingHorizontal: baseStyles.bases.BASE_3,
@@ -14,27 +14,18 @@ const baseInputStyle = ({pickerStyles = {}}) => ({
   color: colors.black,
   paddingRight: baseStyles.bases.BASE_8,
   backgroundColor: colors.white,
-  ...pickerStyles,
-});
+};
 
-const styles = ({customStyles}) =>
-  StyleSheet.create({
-    inputIOS: {
-      ...baseInputStyle({pickerStyles: customStyles}),
-    },
-    inputAndroid: {
-      ...baseInputStyle({pickerStyles: customStyles}),
-      paddingHorizontal: baseStyles.bases.BASE_3,
-      paddingVertical: baseStyles.bases.BASE_2,
-      justifyContent: 'center',
-    },
-    iconContainer: {
-      top:
-        Platform.OS === 'android'
-          ? baseStyles.bases.BASE_4
-          : baseStyles.bases.BASE_2,
-      right: baseStyles.bases.BASE_2,
-    },
-  });
+const styles = StyleSheet.create({
+  inputIOS: Object.assign({}, baseInputStyle),
+  inputAndroid: Object.assign({}, baseInputStyle),
+  iconContainer: {
+    top:
+      Platform.OS === 'android'
+        ? baseStyles.bases.BASE_4
+        : baseStyles.bases.BASE_2,
+    right: baseStyles.bases.BASE_2,
+  },
+});
 
 export default styles;
