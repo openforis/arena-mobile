@@ -67,6 +67,9 @@ const initialState = {
             [baseClusterMockNode.nodeDefUuid]: {
               [baseClusterMockNode.uuid]: true,
             },
+            [baseMockNode.nodeDefUuid]: {
+              [getCurrentUuid(2)]: true,
+            },
           },
           nodesByParentAndChildDef: {
             [baseClusterMockNode.uuid]: {
@@ -159,14 +162,7 @@ describe('Node updater', () => {
         ...initialState.form,
         validation: {
           errors: [],
-          fields: {
-            [getCurrentUuid(2)]: {
-              errors: [],
-              fields: {},
-              valid: true,
-              warnings: [],
-            },
-          },
+          fields: {},
           valid: true,
           warnings: [],
         },
@@ -303,14 +299,7 @@ describe('Node updater', () => {
         ...initialState.form,
         validation: {
           errors: [],
-          fields: {
-            [getCurrentUuid(2)]: {
-              errors: [],
-              fields: {},
-              valid: true,
-              warnings: [],
-            },
-          },
+          fields: {},
           valid: true,
           warnings: [],
         },

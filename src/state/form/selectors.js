@@ -202,7 +202,7 @@ const getNodeDefNodesInHierarchy = createCachedSelector(
   (nodes, hierarchyUuids, nodeDef) =>
     nodes.filter(
       node =>
-        node.nodeDefUuid === nodeDef.uuid &&
+        node.nodeDefUuid === nodeDef?.uuid &&
         hierarchyUuids.includes(node.parentUuid),
     ),
 )((_state_, nodeDef) => nodeDef?.uuid || '__');
