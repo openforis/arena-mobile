@@ -82,6 +82,11 @@ const Header = () => {
     [dispatch],
   );
 
+  const _labelStractor = useCallback(
+    item => `${parentLabel}: ${item.keyString}`,
+    [parentLabel],
+  );
+
   if (!parentEntityNodeDef.props.multiple) {
     return <></>;
   }
@@ -94,17 +99,17 @@ const Header = () => {
           icon={<Icon name="plus" />}
           label={t('Form:add_new', {label: parentLabel})}
           customContainerStyle={[styles.buttonContainer, styles.addItem]}
-          customTextStyle={{fontWeight: 'normal'}}
+          customTextStyle={styles.button}
           onPress={debouncedHandleCreateNewNodeEntity}
         />
-        <View style={{flex: 1}}>
+        <View style={styles.selectContainer}>
           <Select
             key={key}
             items={siblingNodesInhierarchy}
             customStyle={pickerSelectStyles}
             onValueChange={handleSelectEntityNode}
             selectedItemKey={parentEntityNode.uuid}
-            labelStractor={item => `${parentLabel}: ${item.keyString}`}
+            labelStractor={_labelStractor}
           />
         </View>
 

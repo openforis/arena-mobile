@@ -1,14 +1,20 @@
 import {NodeDefs} from '@openforis/arena-core';
+import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
 
 import {selectors as formSelectors} from 'state/form';
 import surveySelectors from 'state/survey/selectors';
 
+NodeDefs.getLayoutProps =
+  (cycle = 0) =>
+  nodeDef =>
+    nodeDef.props?.layout?.[cycle] || {};
+
 const getCategoryItemLabel =
-  (nodeDef, cycle) =>
-  ({categoryItem, language}) => {
+  (nodeDef, cycle, language) =>
+  ({categoryItem}) => {
     const {codeShown: hasToShowCode} = NodeDefs.getLayoutProps(cycle)(nodeDef);
-    const {labels = {}, code} = categoryItem?.props;
+    const {labels = {}, code} = categoryItem?.props || {};
 
     const codeString = hasToShowCode ? `(${code})` : '';
     const labelString = labels?.[language] || code || '';
@@ -20,22 +26,27 @@ const useCode = ({nodeDef, node}) => {
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
 
-  const categoryItems = useSelector(state =>
-    node?.uuid
-      ? surveySelectors.getNodeCategoryItems(state, nodeDef.uuid, node)
-      : surveySelectors.getCategoryItems(state, nodeDef.uuid),
+  const nodeCategoryItems = useSelector(state =>
+    surveySelectors.getNodeCategoryItems(state, nodeDef.uuid, node),
+  );
+  const nodeDefCategoryItems = useSelector(state =>
+    surveySelectors.getCategoryItems(state, nodeDef.uuid),
   );
 
   const nodes = useSelector(state =>
     formSelectors.getNodeDefNodesInHierarchy(state, nodeDef),
   );
 
-  return {
-    language,
-    nodes,
-    categoryItems,
+  const _categoryItems = useMemo(
+    () => (node?.uuid ? nodeCategoryItems : nodeDefCategoryItems),
+    [node, nodeCategoryItems, nodeDefCategoryItems],
+  );
 
-    getCategoryItemLabel: getCategoryItemLabel(nodeDef, cycle),
+  return {
+    nodes,
+    categoryItems: _categoryItems,
+
+    getCategoryItemLabel: getCategoryItemLabel(nodeDef, cycle, language),
   };
 };
 export default useCode;

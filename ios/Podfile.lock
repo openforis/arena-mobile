@@ -274,7 +274,7 @@ PODS:
   - React-jsinspector (0.67.3)
   - React-logger (0.67.3):
     - glog
-  - react-native-blob-util (0.16.2):
+  - react-native-blob-util (0.16.3):
     - React-Core
   - react-native-camera (4.2.1):
     - React-Core
@@ -630,7 +630,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 15ea57ead631a11fad57634ff69f78e797113a39
   React-jsinspector: 1e1e03345cf6d47779e2061d679d0a87d9ae73d8
   React-logger: 1e10789cb84f99288479ba5f20822ce43ced6ffe
-  react-native-blob-util: c3b0faecd2919db568e9d552084396f3e50b57c7
+  react-native-blob-util: 4ec16cc21bfc8de8f0ddfd2c81ada00f8c34b646
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-date-picker: 55193347d8d0f40948f441ffd4e5db6f0a8fbe13
   react-native-document-picker: f68191637788994baed5f57d12994aa32cf8bf88

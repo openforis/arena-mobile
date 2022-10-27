@@ -5,12 +5,14 @@ import {useSelector} from 'react-redux';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
-// TODO move to arena-core, maybe other name
-NodeDefs.getLayoutProps = ({nodeDef, cycle = 0}) =>
-  nodeDef.props?.layout?.[cycle];
+NodeDefs.getLayoutProps =
+  (cycle = 0) =>
+  nodeDef =>
+    nodeDef.props?.layout?.[cycle] || {};
 
 export const useEntityTableData = () => {
   const nodeDef = useSelector(formSelectors.getParentEntityNodeDef);
+
   const cycle = useSelector(surveySelectors.getSurveyCycle);
 
   const nodes = useSelector(state =>
@@ -29,8 +31,9 @@ export const useEntityTableData = () => {
   const getWidth = useCallback(
     item =>
       Number(
-        (
-          NodeDefs.getLayoutProps({nodeDef: item, cycle})?.columnWidth || '150'
+        (item.layout
+          ? NodeDefs.getLayoutProps(cycle)(item)?.columnWidth
+          : '150'
         ).replace(/\D+/g, ''),
       ),
     [cycle],

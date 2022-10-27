@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {useSelector} from 'react-redux';
 
 import Select from 'arena-mobile-ui/components/Select';
@@ -6,6 +6,8 @@ import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import {selectors as surveySelectors} from 'state/survey';
 
 import {Preview as BasePreview} from '../../common/Base';
+
+import styles from './styles';
 
 const getTaxonItemLabel = ({item}) =>
   `(${item.props.code}) ${item.props.genus}`;
@@ -33,14 +35,20 @@ const Taxonomy = ({node, nodeDef}) => {
     [actions, node],
   );
 
+  const _labelStractor = useCallback(
+    item => getTaxonItemLabel({item, language}),
+    [language],
+  );
+  const itemsArray = useMemo(() => Object.values(items), [items]);
+
   return (
     <Select
       key={node?.value?.taxonUuid}
-      items={Object.values(items)}
-      labelStractor={item => getTaxonItemLabel({item, language})}
+      items={itemsArray}
+      labelStractor={_labelStractor}
       onValueChange={handleSelect}
       selectedItemKey={node?.value?.taxonUuid}
-      customStyles={{marginHorizontal: 0}}
+      customStyles={styles.selectStyles}
     />
   );
 };

@@ -1,37 +1,10 @@
-import {
-  RecordNodesUpdater,
-  RecordValidator,
-  Objects,
-} from '@openforis/arena-core';
+import {RecordUpdater} from '@openforis/arena-core';
 
-export const updateNodeAndDependants = async ({
-  node,
-  record: _record,
-  survey,
-}) => {
-  const nodesUpdated = {[node.uuid]: {...node}};
-
-  const record = {
-    ..._record,
-    nodes: Objects.deepMerge({}, _record.nodes || {}, nodesUpdated),
-  };
-
-  const {nodes: updatedNodes, record: updatedRecord} =
-    RecordNodesUpdater.updateNodesDependents({
-      survey,
-      record,
-      nodes: record.nodes,
-    });
-
-  const validation = await RecordValidator.validateNodes({
+export const updateNodeAndDependants = async ({survey, record, node}) => {
+  const updateResult = await RecordUpdater.updateNode({
     survey,
-    record: updatedRecord,
-    nodes: updatedNodes,
+    record,
+    node,
   });
-
-  return {
-    updatedNodes,
-    validation,
-    record: updatedRecord,
-  };
+  return updateResult;
 };
