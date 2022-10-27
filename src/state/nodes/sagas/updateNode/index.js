@@ -47,6 +47,7 @@ function* handleUpdateNode({payload}) {
       survey,
     });
 
+    delete updatedRecord.validation;
     yield all([
       put(recordsActions.setRecord({record: updatedRecord})),
       put(nodesActions.setNodes({nodes: updatedNodes})),
