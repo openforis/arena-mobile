@@ -1,36 +1,48 @@
 import React, {useCallback} from 'react';
+import {useSelector} from 'react-redux';
 
 import Select from 'arena-mobile-ui/components/Select';
+import {selectors as formSelectors} from 'state/form';
+import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 
 import {useCode} from '../../hooks';
 
 const CodeNodeDropdown = ({nodeDef, node}) => {
-  const {codeActions, language, categoryItems, getCategoryItemLabel} = useCode({
+  const {categoryItems, getCategoryItemLabel} = useCode({
     nodeDef,
     node,
   });
 
+  const {handleUpdate, handleCreate} = useNodeFormActions({nodeDef});
+
+  const applicable = useSelector(state =>
+    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  );
   const handleSelect = useCallback(
     categoryItem => {
       let newValue = {itemUuid: categoryItem?.uuid};
       if (node?.uuid) {
-        codeActions.handleUpdate({node, value: newValue});
+        handleUpdate({node, value: newValue});
       } else {
-        codeActions.handleCreate({value: newValue});
+        handleCreate({value: newValue});
       }
     },
-    [codeActions, node],
+    [handleUpdate, handleCreate, node],
+  );
+
+  const _labelStractor = useCallback(
+    item => getCategoryItemLabel({categoryItem: item}),
+    [getCategoryItemLabel],
   );
 
   return (
     <Select
       key={node?.value?.itemUuid}
       items={categoryItems}
-      labelStractor={item =>
-        getCategoryItemLabel({categoryItem: item, language})
-      }
+      labelStractor={_labelStractor}
       onValueChange={handleSelect}
       selectedItemKey={node?.value?.itemUuid}
+      disabled={!applicable}
     />
   );
 };

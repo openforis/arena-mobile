@@ -1,16 +1,24 @@
 import React, {useCallback} from 'react';
+import {useSelector} from 'react-redux';
 
 import Select from 'arena-mobile-ui/components/Select';
+import {selectors as formSelectors} from 'state/form';
+import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 
 import ChipContainer from '../../components/ChipsContainer';
 import OptionChip from '../../components/OptionChip';
 import {useCode} from '../../hooks';
 
 const CodeDropdownMultiple = ({nodeDef}) => {
-  const {language, nodes, categoryItems, getCategoryItemLabel, codeActions} =
-    useCode({
-      nodeDef,
-    });
+  const {nodes, categoryItems, getCategoryItemLabel} = useCode({
+    nodeDef,
+  });
+
+  const applicable = useSelector(state =>
+    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  );
+
+  const codeActions = useNodeFormActions({nodeDef});
 
   const handleSelect = useCallback(
     categoryItem => {
@@ -25,9 +33,23 @@ const CodeDropdownMultiple = ({nodeDef}) => {
   const handleDelete = useCallback(
     ({node, label}) =>
       () => {
-        codeActions.handleDelete({node, label});
+        if (applicable) {
+          codeActions.handleDelete({node, label});
+        }
       },
-    [codeActions],
+    [codeActions, applicable],
+  );
+
+  const _labelStractor = useCallback(
+    item => getCategoryItemLabel({categoryItem: item}),
+    [getCategoryItemLabel],
+  );
+  const _filterFn = useCallback(
+    item =>
+      nodes.length > 0
+        ? !nodes.some(node => node?.value?.itemUuid === item.uuid)
+        : true,
+    [nodes],
   );
 
   if (categoryItems.length <= 0) {
@@ -40,12 +62,12 @@ const CodeDropdownMultiple = ({nodeDef}) => {
         {nodes
           .filter(node => node?.value?.itemUuid)
           .map(node => {
-            const label = getCategoryItemLabel({
-              categoryItem: categoryItems.find(
-                _categoryItem => _categoryItem.uuid === node?.value?.itemUuid,
-              ),
-              language,
-            });
+            const categoryItem = categoryItems.find(
+              _categoryItem => _categoryItem.uuid === node?.value?.itemUuid,
+            );
+
+            const label = _labelStractor(categoryItem);
+
             return (
               <OptionChip
                 key={node.uuid}
@@ -60,16 +82,11 @@ const CodeDropdownMultiple = ({nodeDef}) => {
       {nodes.length !== categoryItems.length && (
         <Select
           items={categoryItems}
-          labelStractor={item =>
-            getCategoryItemLabel({categoryItem: item, language})
-          }
-          filterFn={item =>
-            nodes.length > 0
-              ? !nodes.some(node => node?.value?.itemUuid === item.uuid)
-              : true
-          }
+          labelStractor={_labelStractor}
+          filterFn={_filterFn}
           onValueChange={handleSelect}
           value={null}
+          disabled={!applicable}
         />
       )}
     </>

@@ -1,3 +1,4 @@
+import debounce from 'lodash.debounce';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
@@ -47,6 +48,10 @@ const Header = () => {
     );
   }, [dispatch, parentEntityNodeDef, parentEntityNode]);
 
+  const debouncedHandleCreateNewNodeEntity = useCallback(() => {
+    debounce(handleCreateNewNodeEntity, 500);
+  }, [handleCreateNewNodeEntity]);
+
   const handleDeleteEntityNode = useCallback(() => {
     alert({
       title: t('Form:deleteNode.alert.title'),
@@ -77,6 +82,11 @@ const Header = () => {
     [dispatch],
   );
 
+  const _labelStractor = useCallback(
+    item => `${parentLabel}: ${item.keyString}`,
+    [parentLabel],
+  );
+
   if (!parentEntityNodeDef.props.multiple) {
     return <></>;
   }
@@ -89,17 +99,17 @@ const Header = () => {
           icon={<Icon name="plus" />}
           label={t('Form:add_new', {label: parentLabel})}
           customContainerStyle={[styles.buttonContainer, styles.addItem]}
-          customTextStyle={{fontWeight: 'normal'}}
-          onPress={handleCreateNewNodeEntity}
+          customTextStyle={styles.button}
+          onPress={debouncedHandleCreateNewNodeEntity}
         />
-        <View style={{flex: 1}}>
+        <View style={styles.selectContainer}>
           <Select
             key={key}
             items={siblingNodesInhierarchy}
             customStyle={pickerSelectStyles}
             onValueChange={handleSelectEntityNode}
             selectedItemKey={parentEntityNode.uuid}
-            labelStractor={item => `${parentLabel}: ${item.keyString}`}
+            labelStractor={_labelStractor}
           />
         </View>
 

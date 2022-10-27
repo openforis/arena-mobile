@@ -26,7 +26,7 @@ const Label = ({
   return (
     <>
       <TouchableOpacity style={styles.container} onLongPress={toggleModal}>
-        {nodeDef.props.key && (
+        {nodeDef?.props?.key && (
           <>
             <Icon
               name="key-variant"

@@ -1,10 +1,12 @@
 import API from 'infra/api';
 import * as fs from 'infra/fs';
 
-const getRecords = async ({serverUrl, surveyId}) => {
+const getRecords = async ({serverUrl, surveyId, cycle}) => {
   try {
     const res = await API({serverUrl}).get({
-      path: `api/survey/${surveyId}/records`,
+      path: `api/survey/${surveyId}/records?${new URLSearchParams({
+        cycle,
+      })}`,
     });
     return res?.data;
   } catch (error) {

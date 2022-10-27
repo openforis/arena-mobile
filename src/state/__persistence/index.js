@@ -60,11 +60,15 @@ export function* persistRecordWithKeyAndMergeCurrentNodes({record}) {
   if (Objects.isEmpty(recordKey)) {
     const nodeDefRoot = yield select(surveySelectors.getNodeDefRoot);
     const nodeDefsByUuid = yield select(surveySelectors.getNodeDefsByUuid);
+    const categoryItemIndex = yield select(
+      surveySelectors.getCategoryItemIndex,
+    );
     recordKey = yield call(
       getRecordKey,
       Object.values(Objects.isEmpty(nodes) ? record.nodes : nodes),
       nodeDefRoot,
       nodeDefsByUuid,
+      categoryItemIndex,
     );
   }
 
@@ -101,7 +105,7 @@ export const getRecordsFiles = async ({surveyUuid, cycle}) => {
     cycle,
   });
   const files = await fs.readDir({dirPath});
-  return files.filter(
+  return files?.filter(
     recordFile => !recordFile.name.includes('records-summary'),
   );
 };

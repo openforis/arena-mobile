@@ -4,7 +4,7 @@ import {createSelector} from 'reselect';
 
 import formSelectors from 'state/form/selectors';
 
-import {getSurvey, getRefData} from './base';
+import {getSurvey, getCategoryItemIndex} from './base';
 import {getNodeDefByUuid, getNodeDefsByUuid} from './nodeDefs';
 
 // --- NodeDefs
@@ -13,17 +13,12 @@ export const getCategories = createSelector(
   survey => survey.categories,
 );
 
-export const getCategoryItemIndex = createSelector(
-  getRefData,
-  refData => refData?.categoryItemIndex,
-);
-
 const getNodeDefCategoryLevelIndex = createCachedSelector(
   getNodeDefByUuid,
   getNodeDefsByUuid,
   (nodeDef, nodeDefsByUuid) => {
     let levelIndex = 0;
-    let parentCodeDefUuid = nodeDef.props.parentCodeDefUuid;
+    let parentCodeDefUuid = nodeDef?.props.parentCodeDefUuid;
 
     while (!Objects.isEmpty(parentCodeDefUuid)) {
       levelIndex = levelIndex + 1;
@@ -41,7 +36,7 @@ export const getCategoryItems = createCachedSelector(
   getNodeDefByUuid,
   getNodeDefCategoryLevelIndex,
   (categories, categoryItemIndex, nodeDef, levelIndex) => {
-    const categoryUuid = nodeDef.props.categoryUuid;
+    const categoryUuid = nodeDef?.props.categoryUuid;
     const category = categories[categoryUuid];
     const level = category?.levels[levelIndex];
 
@@ -51,12 +46,12 @@ export const getCategoryItems = createCachedSelector(
   },
 )((_state_, nodeDefUuid) => nodeDefUuid || '__');
 
-export const getParentCodeNodeDef = createSelector(
+const getParentCodeNodeDef = createSelector(
   getNodeDefsByUuid,
   (_, __, node) => node,
   (nodeDefsByUuid, node) => {
     let parentCodeDefUuid =
-      nodeDefsByUuid[node.nodeDefUuid]?.props?.parentCodeDefUuid;
+      nodeDefsByUuid[node?.nodeDefUuid]?.props?.parentCodeDefUuid;
     if (parentCodeDefUuid) {
       return nodeDefsByUuid[parentCodeDefUuid];
     }
@@ -64,7 +59,7 @@ export const getParentCodeNodeDef = createSelector(
   },
 );
 
-export const getParentCodeNode = createSelector(
+const getParentCodeNode = createSelector(
   state => state,
   getParentCodeNodeDef,
   (state, parentCodeNodeDef) => {

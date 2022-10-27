@@ -24,6 +24,7 @@
       "id": "Id",
       "name": "Name",
       "language": "Selected language",
+      "cycle": "Selected cycle",
       "go_to_survey_details": "Go to survey details"
     }
   }

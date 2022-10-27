@@ -6,6 +6,7 @@ const uploadSurveyData$ = 'survey/uploadSurveyData';
 const deleteSurveyData$ = 'survey/deleteSurveyData';
 
 const SELECT_SURVEY_LANGUAGE = 'survey/SELECT_SURVEY_LANGUAGE';
+const SELECT_SURVEY_CYCLE = 'survey/SELECT_SURVEY_CYCLE';
 
 const SET_UPLOADING = 'survey/SET_UPLOADING';
 const UPDATE_JOB = 'survey/UPDATE_JOB';
@@ -20,6 +21,7 @@ export default {
   SET_SURVEY,
   CLEAN_SURVEY,
   SELECT_SURVEY_LANGUAGE,
+  SELECT_SURVEY_CYCLE,
 
   SET_UPLOADING,
   UPDATE_JOB,

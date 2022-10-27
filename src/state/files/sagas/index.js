@@ -31,6 +31,7 @@ function* handleDeleteFiles(filesByFileUuid) {
 function* handleDeleteNodesFiles({payload}) {
   const {nodes} = payload;
   const fileNodes = yield call(filterFileNodes, nodes);
+  const cycle = yield select(surveySelectors.getSurveyCycle);
 
   if (Object.keys(fileNodes).length > 0) {
     const filesByFileUuid = {};
@@ -38,7 +39,7 @@ function* handleDeleteNodesFiles({payload}) {
       if (node?.value?.fileUuid) {
         filesByFileUuid[node?.value?.fileUuid] = {
           surveyUuid: node.surveyUuid,
-          cycle: '0', // TODO when cycle
+          cycle: cycle,
           recordUuid: node.recordUuid,
           nodeUuid: node.uuid,
           fileUuid: node?.value?.fileUuid,
@@ -51,7 +52,8 @@ function* handleDeleteNodesFiles({payload}) {
 
 function* handlePersistFileNode({payload}) {
   const {node} = payload;
-  const file = yield call(arenaFileUtils.createFile, node);
+  const cycle = yield select(surveySelectors.getSurveyCycle);
+  const file = yield call(arenaFileUtils.createFile, {node, cycle});
   yield put(filesActionTypes.setFiles({filesByUuid: {[file.uuid]: file}}));
 }
 
@@ -64,8 +66,11 @@ function* handleSetNodes({payload}) {
       node => node?.value?.uri,
     );
 
+    const cycle = yield select(surveySelectors.getSurveyCycle);
     const files = yield all(
-      fileNodesToCreate.map(node => call(arenaFileUtils.createFile, node)),
+      fileNodesToCreate.map(node =>
+        call(arenaFileUtils.createFile, {node, cycle}),
+      ),
     );
 
     const filesByUuid = normalizeByUuid(files);

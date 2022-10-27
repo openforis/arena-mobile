@@ -31,9 +31,9 @@ const Remote = ({
       showIcons={true}
       ListEmptyComponent={
         loading ? (
-          <Loading />
+          Loading
         ) : error ? (
-          <ErrorRemote />
+          ErrorRemote
         ) : (
           <EmptyRemote setSurveysOrigin={setSurveysOrigin} />
         )

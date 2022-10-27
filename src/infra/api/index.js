@@ -26,6 +26,7 @@ export default ({serverUrl = SERVER_URL}) => {
       headers: {
         'Content-Type': contentType || CONTENT_TYPES.json,
       },
+      withCredentials: true,
     });
 
   const get = async ({body, path, uri, contentType, params}) =>
@@ -65,10 +66,19 @@ export default ({serverUrl = SERVER_URL}) => {
       contentType,
     });
 
+  const postFile = async (uri, file, onProgress) => {
+    let formData = new FormData();
+    formData.append('file', file);
+    return axios.post(uri, formData, {
+      headers: {'Content-Type': 'multipart/form-data'},
+      onUploadProgress: onProgress,
+    });
+  };
   return {
     get,
     patch,
     put,
     post,
+    postFile,
   };
 };

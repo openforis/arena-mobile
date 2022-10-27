@@ -5,14 +5,15 @@ import {
   getSelectedSurveyLanguage,
   getSelectedSurveyLanguages,
   getSurveyCycle,
+  getSelectedSurveyCycles,
   getSurveySRS,
   getUiState,
+  getCategoryItemIndex,
 } from './base';
 import {
   getCategoryItems,
   getCategoryItemByUuid,
   getNodeCategoryItems,
-  getParentCodeNode,
 } from './categories';
 import {
   getNodeDefs,
@@ -42,6 +43,7 @@ export default {
   getSelectedSurveyLanguage,
   getSelectedSurveyLanguages,
   getSurveyCycle,
+  getSelectedSurveyCycles,
   getSurveySRS,
 
   // --- survey
@@ -63,7 +65,7 @@ export default {
   getCategoryItems,
   getCategoryItemByUuid,
   getNodeCategoryItems,
-  getParentCodeNode,
+  getCategoryItemIndex,
 
   // ---- Taxonomies
   getTaxonomyItemsUuidsByTaxonomyUuid,

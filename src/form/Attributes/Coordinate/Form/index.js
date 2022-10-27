@@ -12,6 +12,7 @@ import formSelectors from 'state/form/selectors';
 import surveySelectors from 'state/survey/selectors';
 
 import GetLocation from './GetLocation';
+import styles from './styles';
 
 const BASE_VALUE = {x: null, y: null, srs: null};
 
@@ -87,6 +88,9 @@ const Form = ({nodeDef}) => {
     [setValue],
   );
 
+  const _keyStractor = useCallback(item => item.code, []);
+  const _labelStractor = useCallback(item => item.name, []);
+
   return (
     <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit}>
       <GetLocation handleSaveLocation={handleSaveLocation} />
@@ -114,12 +118,12 @@ const Form = ({nodeDef}) => {
         horizontal={true}
         stacked={true}
         title={t('Form:nodeDefCoordinate.srs')}>
-        <View style={{flex: 1}}>
+        <View style={styles.selectContainer}>
           {surveySrs.length > 0 && (
             <Select
               items={surveySrs}
-              keyStractor={item => item.code}
-              labelStractor={item => item.name}
+              keyStractor={_keyStractor}
+              labelStractor={_labelStractor}
               onValueChange={handleSelect}
               selectedItemKey={
                 newValue.srs || node?.value?.srs || selectedSrs.code

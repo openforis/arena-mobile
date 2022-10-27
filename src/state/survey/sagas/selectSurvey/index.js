@@ -1,6 +1,7 @@
 import {StackActions} from '@react-navigation/core';
 import {put, select, call} from 'redux-saga/effects';
 
+import {defaultCycle} from 'arena/config';
 import {ROUTES} from 'navigation/constants';
 import {createSurveyFolder, persistRecordsAndNodes} from 'state/__persistence';
 import {actions as formActions} from 'state/form';
@@ -21,9 +22,22 @@ function* handleSelectSurvey({payload}) {
       throw Error('Missing survey');
     }
     // TODO get the default or the latests cycle and set that as default
-    yield call(createSurveyFolder, {surveyUuid, cycle: '0'});
+
+    const cycles = Object.keys(survey.props.cycles);
+    const lastCycle = cycles.pop();
+    const cycle = survey.props?.defaultCycle || lastCycle || defaultCycle;
+    yield call(createSurveyFolder, {
+      surveyUuid,
+      cycle,
+    });
 
     yield put(surveyActions.setSurvey({survey}));
+    yield put(
+      surveyActions.selectSurveyCycle({
+        selectedSurveyCycle: cycle,
+      }),
+    );
+
     yield put(formActions.clean());
 
     yield call(navigator.navigatorDispatch, StackActions.replace(ROUTES.HOME));

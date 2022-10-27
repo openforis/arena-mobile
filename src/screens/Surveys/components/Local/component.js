@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {useSelector} from 'react-redux';
 
 import {selectors as surveysSelectors} from 'state/surveys';
@@ -14,6 +14,10 @@ const Local = ({
   setSelectedSurvey,
 }) => {
   const localSurveys = useSelector(surveysSelectors.getSurveysAsList);
+  const handlePress = useCallback(
+    () => setSurveysOrigin('remote'),
+    [setSurveysOrigin],
+  );
 
   return (
     <List
@@ -21,9 +25,7 @@ const Local = ({
       surveysOrigin={surveysOrigin}
       selectedSurvey={selectedSurvey}
       setSelectedSurvey={setSelectedSurvey}
-      ListEmptyComponent={
-        <EmptyLocal onPress={() => setSurveysOrigin('remote')} />
-      }
+      ListEmptyComponent={<EmptyLocal onPress={handlePress} />}
     />
   );
 };

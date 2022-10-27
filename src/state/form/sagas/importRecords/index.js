@@ -107,6 +107,7 @@ function* handleImportRecords() {
   try {
     const survey = yield select(surveySelectors.getSurvey);
     const serverUrl = yield select(appSelectors.getServerUrl);
+    const cycle = yield select(surveySelectors.getSurveyCycle);
     const surveyUuid = survey?.uuid;
     const surveyId = survey?.id;
 
@@ -117,6 +118,7 @@ function* handleImportRecords() {
     const recordsInSurvey = yield call(recordsApi.getRecords, {
       serverUrl,
       surveyId,
+      cycle,
     });
 
     const importRecords = recordsInSurvey.map((record, idx) =>
