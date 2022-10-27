@@ -21,9 +21,11 @@ import {selectors as surveySelectors} from 'state/survey';
 import styles from './styles';
 
 // TODO move to arena-core
-NodeDefs.isHiddenWhenNotRelevant = ({nodeDef, cycle = defaultCycle}) => {
-  return nodeDef?.props?.layout?.[cycle]?.hiddenWhenNotRelevant;
-};
+NodeDefs.isHiddenWhenNotRelevant =
+  (cycle = defaultCycle) =>
+  nodeDef => {
+    return nodeDef?.props?.layout?.[cycle]?.hiddenWhenNotRelevant;
+  };
 
 const BaseDeletePreviewNode = ({node}) => {
   const handleDelete = useDeleteNode();
@@ -67,7 +69,7 @@ const BasePreviewNode = ({
         style={styles.nodeContainer({nodeDef})}
         onPress={handleSelectNodeAndNodeDef}
         disabled={!applicable}>
-        <View style={{flex: 1}}>
+        <View style={styles.block}>
           <NodeValueRender node={node} nodeDef={nodeDef} />
         </View>
 
@@ -107,7 +109,7 @@ export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
         applicable
           ? {}
           : styles.notApplicable({
-              hidden: NodeDefs.isHiddenWhenNotRelevant({nodeDef, cycle}),
+              hidden: NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef),
             }),
 
         lastNodeDefUuid === nodeDef.uuid ? styles.lastNodeDef : {},

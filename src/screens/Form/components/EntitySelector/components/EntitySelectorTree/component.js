@@ -1,8 +1,10 @@
+import {NodeDefs} from '@openforis/arena-core';
 import React, {useCallback, useMemo, useState} from 'react';
 import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
+import {defaultCycle} from 'arena/config';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
@@ -10,6 +12,12 @@ import Entity from './components/Entity';
 import HorizonalHelper from './components/HorizontalHelper';
 import VerticalHelper from './components/VerticalHelper';
 import styles from './styles';
+
+NodeDefs.isHiddenWhenNotRelevant =
+  (cycle = defaultCycle) =>
+  nodeDef => {
+    return nodeDef?.props?.layout?.[cycle]?.hiddenWhenNotRelevant;
+  };
 
 const useChildrenIndex = nodeDefUuid => {
   const cycle = useSelector(surveySelectors.getSurveyCycle);
@@ -31,7 +39,17 @@ const EntitySelectorTree = ({nodeDefUuid, level = 0}) => {
   const nodeDef = useSelector(state =>
     surveySelectors.getNodeDefByUuid(state, nodeDefUuid),
   );
+  const cycle = useSelector(surveySelectors.getSurveyCycle);
   const childrenIndex = useChildrenIndex(nodeDefUuid);
+
+  const hierarchy = useSelector(formSelectors.getBreadCrumbs);
+  const parentNodeInHierarchy = hierarchy.find(
+    _node => _node.nodeDefUuid === nodeDef.parentUuid,
+  );
+
+  const applicable = useSelector(state =>
+    formSelectors.isNodeDefApplicable(state, nodeDefUuid),
+  );
 
   const [showChildren, setShowChildren] = useState(true);
   const handleToggleVisibility = useCallback(
@@ -43,6 +61,16 @@ const EntitySelectorTree = ({nodeDefUuid, level = 0}) => {
   const currentEntityNodeDef = useSelector(
     formSelectors.getParentEntityNodeDef,
   );
+
+  if (
+    (!applicable ||
+      Object.keys(
+        parentNodeInHierarchy?.meta?.childApplicability || {},
+      ).includes(nodeDef.uuid)) &&
+    NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef)
+  ) {
+    return <></>;
+  }
 
   if (nodeDef) {
     return (
