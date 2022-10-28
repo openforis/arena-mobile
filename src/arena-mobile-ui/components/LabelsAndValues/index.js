@@ -1,3 +1,4 @@
+import {Objects} from '@openforis/arena-core';
 import React from 'react';
 import {View, Text} from 'react-native';
 
@@ -30,14 +31,14 @@ const LabelsAndValues = ({items, size, expanded = false, column = false}) => (
     <View style={[styles.labels({expanded})]}>
       {items.map(({label, value}) => (
         <View key={label}>
-          {value && <Label label={label} size={size} />}
+          {!Objects.isEmpty(value) && <Label label={label} size={size} />}
           {column && <Value label={value} size={size} />}
         </View>
       ))}
     </View>
     {!column && (
       <View style={[styles.values({expanded})]}>
-        {items.map(({label, value}) => (
+        {items.map(({label, value = '-'}) => (
           <Value key={label} label={value} size={size} />
         ))}
       </View>
