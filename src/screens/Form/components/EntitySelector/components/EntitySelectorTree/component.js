@@ -27,7 +27,7 @@ const useChildrenIndex = nodeDefUuid => {
   );
   const childrenIndex = nodeDef?.props?.layout?.[cycle]?.indexChildren || [];
 
-  // enable this if we like to show tables in-form pinto the index
+  // enable this if we like to show tables in-form into the index
   const tableChildrenIndex = []; /*useSelector(state =>
     surveySelectors.getNodeDefTableChildrenUuid(state, nodeDef),
   );*/
