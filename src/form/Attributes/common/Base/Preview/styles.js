@@ -61,6 +61,9 @@ const styles = StyleSheet.create({
   lastNodeDef: {
     backgroundColor: colors.secondaryLightest,
   },
+  block: {
+    flex: 1,
+  },
 });
 
 export default styles;

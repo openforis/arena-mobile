@@ -1,5 +1,13 @@
 import {StyleSheet} from 'react-native';
 
-const styles = StyleSheet.create({});
+import * as colors from 'arena-mobile-ui/colors';
+
+const styles = StyleSheet.create({
+  notApplicable: {
+    opacity: 0.5,
+    backgroundColor: colors.neutralLighter,
+    borderColor: colors.neutralLighter,
+  },
+});
 
 export default styles;
