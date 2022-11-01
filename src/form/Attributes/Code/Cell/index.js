@@ -14,11 +14,11 @@ const BaseValuesRenderer = ({nodeDef, nodes}) => {
     <Text numberOfLines={1}>
       {nodes
         .map(node =>
-          getCategoryItemLabel({
-            categoryItem: categoryItems.find(
+          getCategoryItemLabel(
+            categoryItems.find(
               _categoryItem => _categoryItem.uuid === node?.value?.itemUuid,
             ),
-          }),
+          ),
         )
         .join(',')}
     </Text>

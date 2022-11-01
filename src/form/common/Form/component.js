@@ -7,6 +7,7 @@ import {
   Dimensions,
   Animated,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -103,14 +104,24 @@ const AttributeFormWithModal = () => {
           behavior={Platform.OS === 'ios' ? 'padding' : ''}
           enabled>
           <TouchableOpacity style={{height: 80}} />
-          <ScrollView
-            keyboardShouldPersistTaps="handled"
-            style={[styles.scroll]}>
-            {nodeDef &&
-              React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
-                nodeDef,
-              })}
-          </ScrollView>
+
+          {![NodeDefType.code].includes(nodeDef?.type) ? (
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              style={[styles.scroll]}>
+              {nodeDef &&
+                React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
+                  nodeDef,
+                })}
+            </ScrollView>
+          ) : (
+            <View style={[styles.scroll]}>
+              {nodeDef &&
+                React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
+                  nodeDef,
+                })}
+            </View>
+          )}
         </KeyboardAvoidingView>
       </Animated.View>
     </>
@@ -121,12 +132,9 @@ const AttributeForm = () => {
   const nodeDef = useSelector(formSelectors.getNodeDef);
 
   if (
-    [
-      NodeDefType.date,
-      NodeDefType.time,
-      NodeDefType.boolean,
-      NodeDefType.code,
-    ].includes(nodeDef?.type)
+    [NodeDefType.date, NodeDefType.time, NodeDefType.boolean].includes(
+      nodeDef?.type,
+    )
   ) {
     return (
       <>

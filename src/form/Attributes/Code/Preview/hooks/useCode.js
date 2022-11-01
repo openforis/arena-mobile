@@ -1,5 +1,5 @@
 import {NodeDefs} from '@openforis/arena-core';
-import {useMemo} from 'react';
+import {useCallback, useMemo} from 'react';
 import {useSelector} from 'react-redux';
 
 import {selectors as formSelectors} from 'state/form';
@@ -10,17 +10,17 @@ NodeDefs.getLayoutProps =
   nodeDef =>
     nodeDef.props?.layout?.[cycle] || {};
 
-const getCategoryItemLabel =
-  (nodeDef, cycle, language) =>
-  ({categoryItem}) => {
-    const {codeShown: hasToShowCode} = NodeDefs.getLayoutProps(cycle)(nodeDef);
-    const {labels = {}, code} = categoryItem?.props || {};
+const getCategoryItemLabel = (nodeDef, cycle, language) => categoryItem => {
+  const {codeShown: hasToShowCode = true} =
+    NodeDefs.getLayoutProps(cycle)(nodeDef);
 
-    const codeString = hasToShowCode ? `(${code})` : '';
-    const labelString = labels?.[language] || code || '';
+  const {labels = {}, code} = categoryItem?.props || {};
 
-    return categoryItem?.props?.code ? `${codeString} ${labelString}` : '-';
-  };
+  const codeString = hasToShowCode ? `(${code})` : '';
+  const labelString = labels?.[language] || code || '';
+
+  return categoryItem?.props?.code ? `${codeString} ${labelString}` : '-';
+};
 
 const useCode = ({nodeDef, node}) => {
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
@@ -42,11 +42,14 @@ const useCode = ({nodeDef, node}) => {
     [node, nodeCategoryItems, nodeDefCategoryItems],
   );
 
+  const _getCategoryItemLabel = useCallback(
+    item => getCategoryItemLabel(nodeDef, cycle, language)(item),
+    [nodeDef, cycle, language],
+  );
   return {
     nodes,
     categoryItems: _categoryItems,
-
-    getCategoryItemLabel: getCategoryItemLabel(nodeDef, cycle, language),
+    getCategoryItemLabel: _getCategoryItemLabel,
   };
 };
 export default useCode;
