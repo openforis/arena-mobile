@@ -41,7 +41,7 @@ const CodeDropdownMultiple = ({nodeDef}) => {
   );
 
   const _labelStractor = useCallback(
-    item => getCategoryItemLabel({categoryItem: item}),
+    item => getCategoryItemLabel(item),
     [getCategoryItemLabel],
   );
   const _filterFn = useCallback(
