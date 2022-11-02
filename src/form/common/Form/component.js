@@ -6,7 +6,6 @@ import {
   Platform,
   Dimensions,
   Animated,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import {useSelector} from 'react-redux';
@@ -40,6 +39,8 @@ const FormsByType = {
   [NodeDefType.file]: FileForm,
   [NodeDefType.taxon]: TaxonForm,
 };
+
+const Spacer = () => <View style={{height: 80}} />;
 
 const AttributeFormWithModal = () => {
   const panelHeight = useRef(new Animated.Value(0)).current;
@@ -99,13 +100,12 @@ const AttributeFormWithModal = () => {
         />
       )}
       <Animated.View style={[styles.formContainer, {height: panelHeight}]}>
-        <KeyboardAvoidingView
-          style={[styles.container]}
-          behavior={Platform.OS === 'ios' ? 'padding' : ''}
-          enabled>
-          <TouchableOpacity style={{height: 80}} />
-
-          {![NodeDefType.code].includes(nodeDef?.type) ? (
+        {![NodeDefType.code].includes(nodeDef?.type) ? (
+          <KeyboardAvoidingView
+            style={[styles.container]}
+            behavior={Platform.OS === 'ios' ? 'padding' : ''}
+            enabled>
+            <Spacer />
             <ScrollView
               keyboardShouldPersistTaps="handled"
               style={[styles.scroll]}>
@@ -114,15 +114,19 @@ const AttributeFormWithModal = () => {
                   nodeDef,
                 })}
             </ScrollView>
-          ) : (
-            <View style={[styles.scroll]}>
+          </KeyboardAvoidingView>
+        ) : (
+          <>
+            <Spacer />
+
+            <View style={[styles.viewcontainer]}>
               {nodeDef &&
                 React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
                   nodeDef,
                 })}
             </View>
-          )}
-        </KeyboardAvoidingView>
+          </>
+        )}
       </Animated.View>
     </>
   );

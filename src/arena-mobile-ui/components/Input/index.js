@@ -6,7 +6,13 @@ import baseStyles from 'arena-mobile-ui/styles';
 
 import styles from './styles';
 
-export const InputContainer = ({title, horizontal, stacked, children}) => {
+export const InputContainer = ({
+  title,
+  horizontal,
+  stacked,
+  children,
+  hasTitle,
+}) => {
   return (
     <View
       style={[
@@ -14,17 +20,21 @@ export const InputContainer = ({title, horizontal, stacked, children}) => {
         horizontal ? styles.horizontalContainer : {},
         stacked ? styles.stacked : {},
       ]}>
-      <Text
-        style={[
-          baseStyles.textStyle.text,
-          horizontal ? styles.horizontalTitle : {},
-        ]}>
-        {title}
-      </Text>
+      {hasTitle && (
+        <Text
+          style={[
+            baseStyles.textStyle.text,
+            horizontal ? styles.horizontalTitle : {},
+          ]}>
+          {title}
+        </Text>
+      )}
       {children}
     </View>
   );
 };
+
+const CUSTOM_STYLE = {};
 
 const Input = ({
   onChange,
@@ -33,12 +43,14 @@ const Input = ({
   autoFocus = false,
   horizontal = false,
   stacked = false,
+  customStyle = CUSTOM_STYLE,
+
   ...props
 }) => {
   return (
     <InputContainer title={title} stacked={stacked} horizontal={horizontal}>
       <TextInput
-        style={styles.input}
+        style={[styles.input, customStyle]}
         onChange={onChange}
         onChangeText={onChangeText}
         autoFocus={autoFocus}
