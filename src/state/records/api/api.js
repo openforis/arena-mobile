@@ -4,9 +4,8 @@ import * as fs from 'infra/fs';
 const getRecords = async ({serverUrl, surveyId, cycle}) => {
   try {
     const res = await API({serverUrl}).get({
-      path: `api/survey/${surveyId}/records?${new URLSearchParams({
-        cycle,
-      })}`,
+      path: `api/survey/${surveyId}/records`,
+      params: {cycle},
     });
     return res?.data;
   } catch (error) {
@@ -18,9 +17,8 @@ const getRecords = async ({serverUrl, surveyId, cycle}) => {
 const getRecord = async ({serverUrl, surveyId, recordUuid}) => {
   try {
     const res = await API({serverUrl}).get({
-      path: `api/survey/${surveyId}/record/?${new URLSearchParams({
-        recordUuid,
-      })}`,
+      path: `api/survey/${surveyId}/record`,
+      params: {recordUuid},
     });
 
     return res?.data;
