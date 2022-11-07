@@ -15,8 +15,8 @@ const DEFAULT_ENCODING = 'utf8';
 
 const clean = (path, sourcePath) => {
   return `${sourcePath}/${path
-    .replace(`/private${sourcePath}/`, '')
-    .replace(`private${sourcePath}/`, '')
+    .replace(`/private/${sourcePath}/`, '')
+    .replace(`private/${sourcePath}/`, '')
     .replace(`${sourcePath}/`, '')
     .replace(sourcePath, '')}`;
 };
@@ -131,38 +131,26 @@ export const deleteDir = async path => {
 };
 
 export const uploadFiles = async ({uploadUrl, files, onStart, onProgress}) => {
-  if (Platform.OS === 'android') {
-    const _files = files.map(file =>
-      Object.assign({}, file, {
-        type: file.filetype,
-        uri: 'file:///' + file.filepath,
-      }),
-    );
+  const _files = files.map(file =>
+    Object.assign({}, file, {
+      type: file.filetype,
+      uri: 'file:///' + file.filepath,
+    }),
+  );
 
-    const file = {
-      uri: _files[0].uri,
-      name: _files[0].name,
-      type: _files[0].type,
-    };
+  const file = {
+    uri: _files[0].uri,
+    name: _files[0].name,
+    type: _files[0].type,
+  };
 
-    return API({}).postFile(uploadUrl, file, progress => {
-      console.log('progress', progress);
-      onProgress({
-        totalBytesSent: progress.loaded,
-        totalBytesExpectedToSend: progress.total,
-      });
+  return API({}).postFile(uploadUrl, file, progress => {
+    console.log('progress', progress);
+    onProgress({
+      totalBytesSent: progress.loaded,
+      totalBytesExpectedToSend: progress.total,
     });
-  }
-  return RNFS.uploadFiles({
-    toUrl: uploadUrl,
-    files,
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-    },
-    begin: onStart,
-    progress: onProgress,
-  }).promise;
+  });
 };
 
 const blobToBase64 = data => {
