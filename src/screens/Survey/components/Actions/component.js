@@ -14,6 +14,7 @@ import {
 } from 'state/survey';
 import {actions as surveysActions} from 'state/surveys';
 
+const IMPORT_RECORDS_ENABLED = false;
 import styles from './styles';
 const Actions = () => {
   const {t} = useTranslation();
@@ -65,7 +66,7 @@ const Actions = () => {
 
   return (
     <View style={[styles.container]}>
-      {isDevModeEnabled && (
+      {isDevModeEnabled && IMPORT_RECORDS_ENABLED && (
         <Button
           type="primary"
           label={t('Actions:import_records')}
