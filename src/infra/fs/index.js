@@ -145,7 +145,6 @@ export const uploadFiles = async ({uploadUrl, files, onStart, onProgress}) => {
   };
 
   return API({}).postFile(uploadUrl, file, progress => {
-    console.log('progress', progress);
     onProgress({
       totalBytesSent: progress.loaded,
       totalBytesExpectedToSend: progress.total,
