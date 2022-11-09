@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
+import {isTablet} from 'react-native-device-info';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
@@ -18,6 +19,8 @@ import EntitySelectorTree from './components/EntitySelectorTree';
 import styles from './styles';
 
 const {width: WIDTH} = Dimensions.get('screen');
+
+export const ENTITY_SELECTOR_TABLET_WIDTH = Math.min(400, WIDTH * 0.33);
 
 const EntitySelector = () => {
   const {navigateTo, routes} = useNavigateTo();
@@ -33,10 +36,12 @@ const EntitySelector = () => {
 
   useEffect(() => {
     if (isEntitySelectorOpened) {
-      const finalPanerWidth = WIDTH * 0.9;
+      const finalPanelWidth = isTablet()
+        ? ENTITY_SELECTOR_TABLET_WIDTH
+        : WIDTH * 0.9;
 
       Animated.timing(panelWidth, {
-        toValue: finalPanerWidth,
+        toValue: finalPanelWidth,
         duration: 150,
         useNativeDriver: false,
       }).start();
@@ -69,7 +74,7 @@ const EntitySelector = () => {
           <ToggleShowNames />
         </View>
       </Animated.View>
-      {isEntitySelectorOpened && (
+      {isEntitySelectorOpened && !isTablet() && (
         <TouchableOpacity onPress={handleClose} style={styles.closer} />
       )}
     </>

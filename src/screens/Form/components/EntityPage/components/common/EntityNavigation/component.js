@@ -1,6 +1,7 @@
 import {Objects} from '@openforis/arena-core';
 import React, {useCallback} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
+import {isTablet} from 'react-native-device-info';
 import {useDispatch, useSelector} from 'react-redux';
 
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
@@ -9,7 +10,6 @@ import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
 import styles from './styles';
-
 const getNodeDefIndex = ({survey, nodeDef, cycle = defaultCycle}) => {
   return (
     nodeDef?.uuid &&
@@ -119,6 +119,9 @@ const Next = ({parent}) => {
 // next -> first children, next entity if single
 // prev -> prev entity if single or parent
 const EntityNavigation = () => {
+  const isEntitySelectorOpened = useSelector(
+    formSelectors.isEntitySelectorOpened,
+  );
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const currentEntityNodeDef = useSelector(
     formSelectors.getParentEntityNodeDef,
@@ -127,22 +130,24 @@ const EntityNavigation = () => {
     surveySelectors.getNodeDefByUuid(state, currentEntityNodeDef?.parentUuid),
   );
 
-  if (!currentEntityNodeDef.props?.layout?.[cycle]?.pageUuid) {
-    return (
-      <View style={styles.container}>
+  return (
+    <View
+      style={[
+        styles.container,
+        isTablet() && isEntitySelectorOpened
+          ? styles.containerTabletMenuOpen
+          : {},
+      ]}>
+      {!currentEntityNodeDef.props?.layout?.[cycle]?.pageUuid ? (
         <View style={styles.buttonsContainerCenter}>
           <Parent parent={parentNodeDef} />
         </View>
-      </View>
-    );
-  }
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.buttonsContainer}>
-        <Prev parent={parentNodeDef} />
-        <Next parent={parentNodeDef} />
-      </View>
+      ) : (
+        <View style={styles.buttonsContainer}>
+          <Prev parent={parentNodeDef} />
+          <Next parent={parentNodeDef} />
+        </View>
+      )}
     </View>
   );
 };
