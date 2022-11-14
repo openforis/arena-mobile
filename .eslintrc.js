@@ -1,4 +1,4 @@
-const plugins = ['import'];
+const plugins = ['import', 'jest'];
 
 module.exports = {
   root: true,
