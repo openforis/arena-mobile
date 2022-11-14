@@ -1,7 +1,7 @@
 import {Objects} from '@openforis/arena-core';
-import {isTablet} from 'react-native-device-info';
 import {call, select, put, all} from 'redux-saga/effects';
 
+import appSelectors from 'state/app/selectors';
 import formActions from 'state/form/actionCreators';
 import formSelectors from 'state/form/selectors';
 
@@ -16,8 +16,9 @@ function* navigateToNode(payload = {}) {
       }),
     );
   }
+  const isTablet = yield select(appSelectors.getIsTablet);
 
-  if (!isTablet()) {
+  if (!isTablet) {
     yield put(formActions.closeEntitySelector());
   }
 }
@@ -88,7 +89,8 @@ function* handleSelectEntity({payload}) {
     }
   }
 
-  if (!isTablet()) {
+  const isTablet = yield select(appSelectors.getIsTablet);
+  if (!isTablet) {
     yield put(formActions.closeEntitySelector());
   }
 }
