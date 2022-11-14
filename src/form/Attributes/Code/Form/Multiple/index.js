@@ -1,32 +1,19 @@
-import React, {useState, useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
-import Icon from 'arena-mobile-ui/components/Icon';
-import Input from 'arena-mobile-ui/components/Input';
-import List from 'arena-mobile-ui/components/List';
-import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
 import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
 
 import {useCode} from '../../Preview/hooks';
+import ChevronDown from '../common/components/ChevronDown';
+import List from '../common/components/List';
+import SearchBar from '../common/components/SearchBar';
+import {useSearch} from '../common/hooks/useSearch';
 
 import styles from './styles';
-
-const ChevronDown = <Icon name="chevron-down" />;
-
-const getTextForSearch = item => {
-  const labels = Object.entries(item?.props?.labels || {}).map(
-    ([_, label]) => label,
-  );
-  return [item?.props?.code]
-    .concat(labels)
-    .join('.')
-    .toLowerCase()
-    .normalize('NFD');
-};
 
 const FormCodeMultiple = ({nodeDef}) => {
   const {t} = useTranslation();
@@ -35,34 +22,18 @@ const FormCodeMultiple = ({nodeDef}) => {
     nodeDef,
   });
 
-  const categoryItemsWithIndexToSearch = useMemo(() => {
-    return categoryItems.map(item =>
-      Object.assign({}, item, {textForSearch: getTextForSearch(item)}),
-    );
-  }, [categoryItems]);
-
+  const {
+    searchText,
+    searching,
+    setSearchText,
+    handleStartToSearch,
+    handleStopToSearch,
+  } = useSearch(false);
   const {handleCreate, handleClose} = useNodeFormActions({nodeDef});
 
-  const [searching, setSearching] = useState(false);
-  const [searchText, setSearchText] = useState('');
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );
-
-  const categoryItemsFiltered = useMemo(() => {
-    if (searchText) {
-      const searchTextNormalized = searchText.toLowerCase().normalize('NFD');
-      return categoryItemsWithIndexToSearch.filter(
-        categoryItem =>
-          categoryItem?.textForSearch.includes(searchTextNormalized) &&
-          !nodes.some(node => node?.value?.itemUuid === categoryItem.uuid),
-      );
-    }
-    return categoryItemsWithIndexToSearch.filter(
-      categoryItem =>
-        !nodes.some(node => node?.value?.itemUuid === categoryItem.uuid),
-    );
-  }, [categoryItemsWithIndexToSearch, searchText, nodes]);
 
   const handleSelect = useCallback(
     categoryItem => e => {
@@ -83,12 +54,9 @@ const FormCodeMultiple = ({nodeDef}) => {
         </TouchableOpacity>
       );
     },
-    [handleSelect],
+    [handleSelect, getCategoryItemLabel],
   );
 
-  const keyExtractor = useCallback(item => item.uuid, []);
-  const handleStartToSearch = useCallback(() => setSearching(true), []);
-  const handleStopToSearch = useCallback(() => setSearching(false), []);
   return (
     <View style={styles.container}>
       {!searching ? (
@@ -103,32 +71,17 @@ const FormCodeMultiple = ({nodeDef}) => {
           disabled={!applicable}
         />
       ) : (
-        <View style={styles.selectBarContainer}>
-          <View style={styles.selectContainer}>
-            <Input
-              onChangeText={setSearchText}
-              defaultValue={String('')}
-              autoFocus={true}
-              horizontal={true}
-              stacked={false}
-              customStyle={styles.searchBox}
-              hasTitle={false}
-              onBlur={handleStopToSearch}
-              returnKeyType="done"
-            />
-          </View>
-          <TouchableIcon
-            iconName={'close'}
-            onPress={handleStopToSearch}
-            customStyle={styles.close}
-          />
-        </View>
+        <SearchBar
+          handleStopToSearch={handleStopToSearch}
+          setSearchText={setSearchText}
+        />
       )}
 
       <List
-        data={categoryItemsFiltered}
+        categoryItems={categoryItems}
         renderItem={renderItem}
-        keyExtractor={keyExtractor}
+        searchText={searchText}
+        nodes={nodes}
       />
     </View>
   );

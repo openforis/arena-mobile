@@ -5,29 +5,11 @@ import baseStyles from 'arena-mobile-ui/styles';
 
 const styles = StyleSheet.create({
   container: {flex: 1},
-  containerStyle: {justifyContent: 'space-around'},
-  selectBarContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  selectContainer: {
-    flex: 1,
-  },
+
   select: {
     marginBottom: baseStyles.bases.BASE,
   },
-  selectText: {
-    marginBottom: baseStyles.bases.BASE,
-  },
-  searchBox: {
-    marginLeft: 0,
-    marginBottom: baseStyles.bases.BASE,
-    flex: 1,
-  },
-  close: {
-    padding: baseStyles.bases.BASE_4,
-  },
+
   text: {
     textAlign: 'left',
     flex: 1,
