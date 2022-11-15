@@ -16,9 +16,7 @@ const styles = StyleSheet.create({
     paddingLeft: baseStyles.bases.BASE_2,
     fontWeight: '100',
   },
-  selected: {
-    fontWeight: '400',
-  },
+
   card: {
     borderColor: colors.neutralLight,
     borderWidth: 1,

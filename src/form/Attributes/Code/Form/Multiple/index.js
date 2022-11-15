@@ -1,4 +1,5 @@
-import React, {useCallback, useMemo} from 'react';
+import {Objects} from '@openforis/arena-core';
+import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -15,64 +16,70 @@ import {useSearch} from '../common/hooks/useSearch';
 
 import styles from './styles';
 
-const FormCodeSingle = ({nodeDef, node}) => {
+const FormCodeMultiple = ({nodeDef}) => {
   const {t} = useTranslation();
 
-  const {categoryItems, getCategoryItemLabel} = useCode({
+  const {nodes, categoryItems, getCategoryItemLabel} = useCode({
     nodeDef,
-    node,
   });
+
   const {
     searchText,
     searching,
     setSearchText,
     handleStartToSearch,
     handleStopToSearch,
-  } = useSearch();
-
-  const {handleUpdate, handleCreate} = useNodeFormActions({nodeDef});
+  } = useSearch(false);
+  const {handleCreate, handleDelete} = useNodeFormActions({
+    nodeDef,
+  });
 
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );
 
-  const selectedItem = useMemo(
-    () => categoryItems.find(item => item.uuid === node?.value?.itemUuid),
-    [categoryItems, node],
-  );
-
   const handleSelect = useCallback(
     categoryItem => e => {
       e.stopPropagation();
-      const newValue = {itemUuid: categoryItem?.uuid};
-      if (node?.uuid) {
-        handleUpdate({node, value: newValue});
-      } else {
+      if (categoryItem) {
+        let newValue = {itemUuid: categoryItem.uuid};
         handleCreate({value: newValue});
       }
     },
-    [handleUpdate, handleCreate, node],
+    [handleCreate],
   );
 
-  const _labelStractor = useCallback(
-    item => getCategoryItemLabel(item),
-    [getCategoryItemLabel],
+  const _handleDelete = useCallback(
+    ({node, label}) =>
+      () => {
+        if (applicable) {
+          handleDelete({node, label});
+        }
+      },
+    [handleDelete, applicable],
   );
 
   const renderItem = useCallback(
     ({item}) => {
-      const selected = selectedItem?.uuid === item.uuid;
+      const selectedNode = nodes.find(
+        node => node?.value?.itemUuid === item.uuid,
+      );
+      const selected = !Objects.isEmpty(selectedNode);
+      const label = getCategoryItemLabel(item);
+
       return (
         <TouchableOpacity
-          onPress={handleSelect(item)}
+          onPress={
+            selected
+              ? _handleDelete({node: selectedNode, label})
+              : handleSelect(item)
+          }
           style={[styles.card, selected ? styles.selectedItem : {}]}>
-          <Text style={selected ? styles.selectedItem : {}}>
-            {getCategoryItemLabel(item)}
-          </Text>
+          <Text style={selected ? styles.selectedItem : {}}>{label}</Text>
         </TouchableOpacity>
       );
     },
-    [handleSelect, selectedItem, getCategoryItemLabel],
+    [handleSelect, getCategoryItemLabel, nodes, _handleDelete],
   );
 
   return (
@@ -82,12 +89,10 @@ const FormCodeSingle = ({nodeDef, node}) => {
           onPress={handleStartToSearch}
           type="secondary"
           iconPosition="right"
-          label={
-            selectedItem ? _labelStractor(selectedItem) : t('Form:select_empty')
-          }
+          label={t('Form:select_empty')}
           icon={ChevronDown}
-          customContainerStyle={[styles.select]}
-          customTextStyle={[styles.text, selectedItem ? styles.selected : {}]}
+          customContainerStyle={styles.select}
+          customTextStyle={styles.text}
           disabled={!applicable}
         />
       ) : (
@@ -106,4 +111,4 @@ const FormCodeSingle = ({nodeDef, node}) => {
   );
 };
 
-export default FormCodeSingle;
+export default FormCodeMultiple;
