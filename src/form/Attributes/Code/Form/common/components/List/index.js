@@ -1,15 +1,20 @@
 import React, {useCallback, useMemo} from 'react';
+import {useSelector} from 'react-redux';
 
 import ArenaList from 'arena-mobile-ui/components/List';
+import surveySelectors from 'state/survey/selectors';
 
 import {getTextForSearch} from '../../hooks/useSearch';
 
 const List = ({categoryItems, renderItem, searchText, nodes}) => {
+  const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
   const categoryItemsWithIndexToSearch = useMemo(() => {
     return categoryItems.map(item =>
-      Object.assign({}, item, {textForSearch: getTextForSearch(item)}),
+      Object.assign({}, item, {
+        textForSearch: getTextForSearch(item, language),
+      }),
     );
-  }, [categoryItems]);
+  }, [categoryItems, language]);
 
   const categoryItemsFiltered = useMemo(() => {
     let searchTextNormalized = false;

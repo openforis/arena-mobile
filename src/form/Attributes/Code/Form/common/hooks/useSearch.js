@@ -1,11 +1,7 @@
 import {useState, useCallback} from 'react';
 
-export const getTextForSearch = item => {
-  const labels = Object.entries(item?.props?.labels || {}).map(
-    ([_, label]) => label,
-  );
-  return [item?.props?.code]
-    .concat(labels)
+export const getTextForSearch = (item, language) => {
+  return [item?.props?.code, item?.props?.labels?.[language] || '']
     .join('.')
     .toLowerCase()
     .normalize('NFD');
