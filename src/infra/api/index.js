@@ -22,7 +22,7 @@ export default ({serverUrl = SERVER_URL}) => {
       method,
       ...(body ? {body: JSON.stringify(body)} : {}),
       ...(body ? {data: JSON.stringify(body)} : {}),
-      ...(params ? {params: JSON.stringify(params)} : {}),
+      ...(params ? {params} : {}),
       headers: {
         'Content-Type': contentType || CONTENT_TYPES.json,
       },
