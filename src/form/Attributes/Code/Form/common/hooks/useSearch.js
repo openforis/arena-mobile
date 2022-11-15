@@ -16,7 +16,10 @@ export const useSearch = () => {
   const [searchText, setSearchText] = useState('');
 
   const handleStartToSearch = useCallback(() => setSearching(true), []);
-  const handleStopToSearch = useCallback(() => setSearching(false), []);
+  const handleStopToSearch = useCallback(() => {
+    setSearching(false);
+    setSearchText('');
+  }, []);
 
   return {
     searchText,

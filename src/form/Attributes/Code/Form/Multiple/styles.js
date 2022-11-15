@@ -22,5 +22,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: baseStyles.bases.BASE_4,
   },
+  selectedItem: {
+    backgroundColor: colors.secondary,
+    color: 'white',
+  },
 });
 export default styles;

@@ -1,3 +1,4 @@
+import {Objects} from '@openforis/arena-core';
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Text, TouchableOpacity, View} from 'react-native';
@@ -29,7 +30,9 @@ const FormCodeMultiple = ({nodeDef}) => {
     handleStartToSearch,
     handleStopToSearch,
   } = useSearch(false);
-  const {handleCreate, handleClose} = useNodeFormActions({nodeDef});
+  const {handleCreate, handleDelete} = useNodeFormActions({
+    nodeDef,
+  });
 
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
@@ -40,21 +43,43 @@ const FormCodeMultiple = ({nodeDef}) => {
       e.stopPropagation();
       if (categoryItem) {
         let newValue = {itemUuid: categoryItem.uuid};
-        handleCreate({value: newValue, callback: handleClose});
+        handleCreate({value: newValue});
       }
     },
-    [handleCreate, handleClose],
+    [handleCreate],
+  );
+
+  const _handleDelete = useCallback(
+    ({node, label}) =>
+      () => {
+        if (applicable) {
+          handleDelete({node, label});
+        }
+      },
+    [handleDelete, applicable],
   );
 
   const renderItem = useCallback(
     ({item}) => {
+      const selectedNode = nodes.find(
+        node => node?.value?.itemUuid === item.uuid,
+      );
+      const selected = !Objects.isEmpty(selectedNode);
+      const label = getCategoryItemLabel(item);
+
       return (
-        <TouchableOpacity onPress={handleSelect(item)} style={styles.card}>
-          <Text>{getCategoryItemLabel(item)}</Text>
+        <TouchableOpacity
+          onPress={
+            selected
+              ? _handleDelete({node: selectedNode, label})
+              : handleSelect(item)
+          }
+          style={[styles.card, selected ? styles.selectedItem : {}]}>
+          <Text style={selected ? styles.selectedItem : {}}>{label}</Text>
         </TouchableOpacity>
       );
     },
-    [handleSelect, getCategoryItemLabel],
+    [handleSelect, getCategoryItemLabel, nodes, _handleDelete],
   );
 
   return (
@@ -81,7 +106,6 @@ const FormCodeMultiple = ({nodeDef}) => {
         categoryItems={categoryItems}
         renderItem={renderItem}
         searchText={searchText}
-        nodes={nodes}
       />
     </View>
   );
