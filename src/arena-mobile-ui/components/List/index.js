@@ -18,6 +18,9 @@ const List = ({data, ListEmptyComponent, keyExtractor, renderItem}) => {
         ListEmptyComponent={ListEmptyComponent}
         keyExtractor={keyExtractor}
         ListFooterComponent={Footer}
+        keyboardDismissMode="none"
+        nestedScrollEnabled={true}
+        keyboardShouldPersistTaps={'handled'}
       />
     </View>
   );

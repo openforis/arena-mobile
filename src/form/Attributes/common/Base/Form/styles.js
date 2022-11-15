@@ -6,6 +6,7 @@ import baseStyles from 'arena-mobile-ui/styles';
 const styles = StyleSheet.create({
   container: {
     paddingBottom: 100,
+    flex: 1,
   },
   closeHeader: {
     justifyContent: 'flex-end',

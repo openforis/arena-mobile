@@ -35,6 +35,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: 100,
   },
+  viewcontainer: {
+    borderRadius: baseStyles.bases.BASE_4,
+    padding: baseStyles.bases.BASE_4,
+    backgroundColor: colors.white,
+    flex: 1,
+  },
   container: {
     flex: 1,
   },

@@ -102,16 +102,16 @@ export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
   );
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const lastNodeDefUuid = useSelector(nodesSelectors.getLastNodeDefUuid);
+  const hidden =
+    !applicable && NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef);
+  if (hidden) {
+    return <></>;
+  }
   return (
     <View
       style={[
         styles.container,
-        applicable
-          ? {}
-          : styles.notApplicable({
-              hidden: NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef),
-            }),
-
+        applicable ? {} : styles.notApplicable,
         lastNodeDefUuid === nodeDef.uuid ? styles.lastNodeDef : {},
       ]}>
       <AttributeHeader nodeDef={nodeDef} nodes={nodes} />

@@ -1,3 +1,5 @@
+import {Objects} from '@openforis/arena-core';
+
 const DEFAULT_JOIN_STRING = ',';
 const DEFAULT_STRING = '';
 
@@ -10,7 +12,7 @@ export const getKeyNodeAsString = ({
     const code = categoryItemIndex?.[node?.value?.itemUuid]?.props?.code;
     return code || defaultString;
   }
-  return node.value || defaultString;
+  return Objects.isEmpty(node.value) ? defaultString : node.value;
 };
 
 export const getKeyNodesAsString = ({

@@ -6,7 +6,7 @@ import {
   Platform,
   Dimensions,
   Animated,
-  TouchableOpacity,
+  View,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -39,6 +39,8 @@ const FormsByType = {
   [NodeDefType.file]: FileForm,
   [NodeDefType.taxon]: TaxonForm,
 };
+
+const Spacer = () => <View style={{height: 80}} />;
 
 const AttributeFormWithModal = () => {
   const panelHeight = useRef(new Animated.Value(0)).current;
@@ -98,20 +100,33 @@ const AttributeFormWithModal = () => {
         />
       )}
       <Animated.View style={[styles.formContainer, {height: panelHeight}]}>
-        <KeyboardAvoidingView
-          style={[styles.container]}
-          behavior={Platform.OS === 'ios' ? 'padding' : ''}
-          enabled>
-          <TouchableOpacity style={{height: 80}} />
-          <ScrollView
-            keyboardShouldPersistTaps="handled"
-            style={[styles.scroll]}>
-            {nodeDef &&
-              React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
-                nodeDef,
-              })}
-          </ScrollView>
-        </KeyboardAvoidingView>
+        {![NodeDefType.code].includes(nodeDef?.type) ? (
+          <KeyboardAvoidingView
+            style={[styles.container]}
+            behavior={Platform.OS === 'ios' ? 'padding' : ''}
+            enabled>
+            <Spacer />
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              style={[styles.scroll]}>
+              {nodeDef &&
+                React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
+                  nodeDef,
+                })}
+            </ScrollView>
+          </KeyboardAvoidingView>
+        ) : (
+          <>
+            <Spacer />
+
+            <View style={[styles.viewcontainer]}>
+              {nodeDef &&
+                React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
+                  nodeDef,
+                })}
+            </View>
+          </>
+        )}
       </Animated.View>
     </>
   );
@@ -121,12 +136,9 @@ const AttributeForm = () => {
   const nodeDef = useSelector(formSelectors.getNodeDef);
 
   if (
-    [
-      NodeDefType.date,
-      NodeDefType.time,
-      NodeDefType.boolean,
-      NodeDefType.code,
-    ].includes(nodeDef?.type)
+    [NodeDefType.date, NodeDefType.time, NodeDefType.boolean].includes(
+      nodeDef?.type,
+    )
   ) {
     return (
       <>
