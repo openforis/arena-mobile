@@ -1,15 +1,23 @@
 import React, {useCallback} from 'react';
-import {useSelector} from 'react-redux';
+import {useTranslation} from 'react-i18next';
+import {useDispatch, useSelector} from 'react-redux';
 
-import Select from 'arena-mobile-ui/components/Select';
-import {selectors as formSelectors} from 'state/form';
+import Button from 'arena-mobile-ui/components/Button';
+import Icon from 'arena-mobile-ui/components/Icon';
+import {selectors as formSelectors, actions as formActions} from 'state/form';
 import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 
 import ChipContainer from '../../components/ChipsContainer';
 import OptionChip from '../../components/OptionChip';
 import {useCode} from '../../hooks';
 
+const ChevronDown = <Icon name="chevron-down" />;
+import styles from './styles';
+
 const CodeDropdownMultiple = ({nodeDef}) => {
+  const {t} = useTranslation();
+  const dispatch = useDispatch();
+
   const {nodes, categoryItems, getCategoryItemLabel} = useCode({
     nodeDef,
   });
@@ -20,15 +28,9 @@ const CodeDropdownMultiple = ({nodeDef}) => {
 
   const codeActions = useNodeFormActions({nodeDef});
 
-  const handleSelect = useCallback(
-    categoryItem => {
-      if (categoryItem) {
-        let newValue = {itemUuid: categoryItem.uuid};
-        codeActions.handleCreate({value: newValue});
-      }
-    },
-    [codeActions],
-  );
+  const handleSelectNodeAndNodeDef = useCallback(() => {
+    dispatch(formActions.setNode({node: nodes[0]}));
+  }, [dispatch, nodes]);
 
   const handleDelete = useCallback(
     ({node, label}) =>
@@ -43,13 +45,6 @@ const CodeDropdownMultiple = ({nodeDef}) => {
   const _labelStractor = useCallback(
     item => getCategoryItemLabel(item),
     [getCategoryItemLabel],
-  );
-  const _filterFn = useCallback(
-    item =>
-      nodes.length > 0
-        ? !nodes.some(node => node?.value?.itemUuid === item.uuid)
-        : true,
-    [nodes],
   );
 
   if (categoryItems.length <= 0) {
@@ -80,12 +75,14 @@ const CodeDropdownMultiple = ({nodeDef}) => {
       </ChipContainer>
 
       {nodes.length !== categoryItems.length && (
-        <Select
-          items={categoryItems}
-          labelStractor={_labelStractor}
-          filterFn={_filterFn}
-          onValueChange={handleSelect}
-          value={null}
+        <Button
+          onPress={handleSelectNodeAndNodeDef}
+          type="secondary"
+          iconPosition="right"
+          label={t('Form:select_empty')}
+          icon={ChevronDown}
+          customContainerStyle={styles.container}
+          customTextStyle={styles.text}
           disabled={!applicable}
         />
       )}

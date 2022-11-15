@@ -81,12 +81,13 @@ const useNodeFormActions = ({nodeDef}) => {
   const handleUpdate = useUpdateNode();
 
   const handleCreate = useCallback(
-    ({value = null}) => {
+    ({value = null, callback = null}) => {
       dispatch(
         nodesActions.createNodeWithValue({
           nodeDef,
           parentNode: parentEntityNode,
           value,
+          callback,
         }),
       );
     },
