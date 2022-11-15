@@ -11,6 +11,7 @@ import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
 import BaseForm from 'form/Attributes/common/Base/Form';
 import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
+import surveySelectors from 'state/survey/selectors';
 
 import {useCode} from '../Preview/hooks';
 
@@ -18,12 +19,8 @@ import styles from './styles';
 
 const ChevronDown = <Icon name="chevron-down" />;
 
-const getTextForSearch = item => {
-  const labels = Object.entries(item?.props?.labels || {}).map(
-    ([_, label]) => label,
-  );
-  return [item?.props?.code]
-    .concat(labels)
+const getTextForSearch = (item, language) => {
+  return [item?.props?.labels?.[language], item?.props?.code]
     .join('.')
     .toLowerCase()
     .normalize('NFD');
@@ -36,11 +33,14 @@ const FormCodeSingle = ({nodeDef, node}) => {
     nodeDef,
     node,
   });
+  const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
   const categoryItemsWithIndexToSearch = useMemo(() => {
     return categoryItems.map(item =>
-      Object.assign({}, item, {textForSearch: getTextForSearch(item)}),
+      Object.assign({}, item, {
+        textForSearch: getTextForSearch(item, language),
+      }),
     );
-  }, [categoryItems]);
+  }, [categoryItems, language]);
   const {handleUpdate, handleCreate} = useNodeFormActions({nodeDef});
 
   const selectedItem = useMemo(
