@@ -1,8 +1,10 @@
 import React, {useCallback, useMemo} from 'react';
-import {useSelector} from 'react-redux';
+import {useTranslation} from 'react-i18next';
+import {useDispatch, useSelector} from 'react-redux';
 
-import Select from 'arena-mobile-ui/components/Select';
-import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
+import Button from 'arena-mobile-ui/components/Button';
+import ChevronDown from 'form/Attributes/Code/Form/common/components/ChevronDown';
+import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
 import {Preview as BasePreview} from '../../common/Base';
@@ -13,8 +15,6 @@ const getTaxonItemLabel = ({item}) =>
   `(${item.props.code}) ${item.props.genus}`;
 
 const Taxonomy = ({node, nodeDef}) => {
-  const actions = useNodeFormActions({nodeDef});
-
   const items = useSelector(state =>
     surveySelectors.getTaxonomyItemsByTaxonomyUuid(
       state,
@@ -22,33 +22,39 @@ const Taxonomy = ({node, nodeDef}) => {
     ),
   );
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
-
-  const handleSelect = useCallback(
-    item => {
-      let newValue = {taxonUuid: item?.uuid};
-      if (node?.uuid) {
-        actions.handleUpdate({node, value: newValue});
-      } else {
-        actions.handleCreate({value: newValue});
-      }
-    },
-    [actions, node],
+  const applicable = useSelector(state =>
+    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );
 
+  const {t} = useTranslation();
+  const dispatch = useDispatch();
   const _labelStractor = useCallback(
     item => getTaxonItemLabel({item, language}),
     [language],
   );
   const itemsArray = useMemo(() => Object.values(items), [items]);
 
+  const handleSelectNodeAndNodeDef = useCallback(() => {
+    dispatch(formActions.setNode({node: node}));
+  }, [dispatch, node]);
+
+  const selectedItem = useMemo(
+    () => itemsArray.find(item => item.uuid === node?.value?.taxonUuid),
+    [itemsArray, node],
+  );
+
   return (
-    <Select
-      key={node?.value?.taxonUuid}
-      items={itemsArray}
-      labelStractor={_labelStractor}
-      onValueChange={handleSelect}
-      selectedItemKey={node?.value?.taxonUuid}
-      customStyles={styles.selectStyles}
+    <Button
+      onPress={handleSelectNodeAndNodeDef}
+      type="secondary"
+      iconPosition="right"
+      label={
+        selectedItem ? _labelStractor(selectedItem) : t('Form:select_empty')
+      }
+      icon={ChevronDown}
+      customContainerStyle={[styles.container]}
+      customTextStyle={[styles.text, selectedItem ? styles.selected : {}]}
+      disabled={!applicable}
     />
   );
 };

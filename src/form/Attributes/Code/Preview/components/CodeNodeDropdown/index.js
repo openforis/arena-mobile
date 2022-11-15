@@ -3,14 +3,12 @@ import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
-import Icon from 'arena-mobile-ui/components/Icon';
+import ChevronDown from 'form/Attributes/Code/Form/common/components/ChevronDown';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 
 import {useCode} from '../../hooks';
 
 import styles from './styles';
-
-const ChevronDown = <Icon name="chevron-down" />;
 
 const CodeNodeDropdown = ({nodeDef, node}) => {
   const {t} = useTranslation();
@@ -47,7 +45,6 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
         selectedItem ? _labelStractor(selectedItem) : t('Form:select_empty')
       }
       icon={ChevronDown}
-      customContainerStyle={[styles.container]}
       customTextStyle={[styles.text, selectedItem ? styles.selected : {}]}
       disabled={!applicable}
     />
