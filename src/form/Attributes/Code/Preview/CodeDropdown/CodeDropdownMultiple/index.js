@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useEffect, useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -31,6 +31,12 @@ const CodeDropdownMultiple = ({nodeDef}) => {
   const handleSelectNodeAndNodeDef = useCallback(() => {
     dispatch(formActions.setNode({node: nodes[0]}));
   }, [dispatch, nodes]);
+
+  useEffect(() => {
+    if (nodes.length <= 0) {
+      codeActions.handleCreate({value: null});
+    }
+  }, [nodes, codeActions]);
 
   const handleDelete = useCallback(
     ({node, label}) =>
