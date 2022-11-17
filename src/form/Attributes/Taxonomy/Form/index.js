@@ -19,7 +19,6 @@ const getTaxonItemLabel = ({item}) =>
 const getTextForSearch = (item, language) => {
   return [
     item?.props?.code,
-    item?.props?.labels?.[language] || '',
     item.props.genus,
   ]
     .join('.')
