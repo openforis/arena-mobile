@@ -1,3 +1,4 @@
+import {isTablet} from 'react-native-device-info';
 import {createSelector} from 'reselect';
 
 import initialState from './initial.state';
@@ -23,6 +24,7 @@ const getError = createSelector(getUi, ui => ui?.error);
 const isDevModeEnabled = createSelector(getUi, ui => ui?.devMode);
 
 const getShowNames = createSelector(getUi, ui => ui?.showNames);
+const getIsTablet = createSelector(getUi, () => isTablet?.() || false);
 
 export default {
   getAccessData,
@@ -30,6 +32,7 @@ export default {
 
   getUi,
   getIsLoading,
+  getIsTablet,
   getError,
   isDevModeEnabled,
 

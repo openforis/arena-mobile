@@ -1,6 +1,7 @@
 import {Objects} from '@openforis/arena-core';
 import {call, select, put, all} from 'redux-saga/effects';
 
+import appSelectors from 'state/app/selectors';
 import formActions from 'state/form/actionCreators';
 import formSelectors from 'state/form/selectors';
 
@@ -15,8 +16,11 @@ function* navigateToNode(payload = {}) {
       }),
     );
   }
+  const isTablet = yield select(appSelectors.getIsTablet);
 
-  yield put(formActions.closeEntitySelector());
+  if (!isTablet) {
+    yield put(formActions.closeEntitySelector());
+  }
 }
 const navigateToTheSame = navigateToNode;
 const navigateToAncestor = navigateToNode;
@@ -85,7 +89,10 @@ function* handleSelectEntity({payload}) {
     }
   }
 
-  yield put(formActions.closeEntitySelector());
+  const isTablet = yield select(appSelectors.getIsTablet);
+  if (!isTablet) {
+    yield put(formActions.closeEntitySelector());
+  }
 }
 
 export default handleSelectEntity;

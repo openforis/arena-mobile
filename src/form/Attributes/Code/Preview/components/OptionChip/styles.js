@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     backgroundColor: isActive ? colors.secondary : colors.transparent,
     borderWidth: 1,
     borderColor: colors.neutralLighter,
-    paddingHorizontal: baseStyles.bases.BASE_4,
+    paddingHorizontal: baseStyles.bases.BASE,
     margin: baseStyles.bases.BASE / 2,
     flexDirection: 'row',
     justifyContent: 'center',
