@@ -2,9 +2,8 @@ import React, {useCallback, useMemo} from 'react';
 import {useSelector} from 'react-redux';
 
 import ArenaList from 'arena-mobile-ui/components/List';
+import {getTextForSearch} from 'form/Attributes/Code/Form/common/hooks/useSearch';
 import surveySelectors from 'state/survey/selectors';
-
-import {getTextForSearch} from '../../hooks/useSearch';
 
 const List = ({categoryItems, renderItem, searchText, nodes}) => {
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);

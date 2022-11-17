@@ -1,14 +1,12 @@
 import React, {useCallback, useMemo} from 'react';
-import {useTranslation} from 'react-i18next';
-import {TouchableOpacity, View, Text} from 'react-native';
+import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import Button from 'arena-mobile-ui/components/Button';
 import List from 'arena-mobile-ui/components/List';
-import ChevronDown from 'form/Attributes/Code/Form/common/components/ChevronDown';
-import SearchBar from 'form/Attributes/Code/Form/common/components/SearchBar';
 import {useSearch} from 'form/Attributes/Code/Form/common/hooks/useSearch';
 import BaseForm from 'form/Attributes/common/Base/Form';
+import Header from 'form/Attributes/common/SearchableForm/List/Header';
+import ListItem from 'form/Attributes/common/SearchableForm/List/Item';
 import {selectors as formSelectors} from 'state/form';
 import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import {selectors as surveySelectors} from 'state/survey';
@@ -18,13 +16,12 @@ import styles from './styles';
 const getTaxonItemLabel = ({item}) =>
   `(${item.props.code}) ${item.props.genus}`;
 
-export const getTextForSearch = item => {
-  const labels = Object.entries(item?.props?.labels || {}).map(
-    ([_, label]) => label,
-  );
-
-  return [item?.props?.code, item.props.genus]
-    .concat(labels)
+const getTextForSearch = (item, language) => {
+  return [
+    item?.props?.code,
+    item?.props?.labels?.[language] || '',
+    item.props.genus,
+  ]
     .join('.')
     .toLowerCase()
     .normalize('NFD');
@@ -55,7 +52,6 @@ const Form = ({node, nodeDef}) => {
     },
     [actions, node],
   );
-  const {t} = useTranslation();
 
   const _labelStractor = useCallback(
     item => getTaxonItemLabel({item, language}),
@@ -83,13 +79,11 @@ const Form = ({node, nodeDef}) => {
       const selected = selectedItem?.uuid === item.uuid;
 
       return (
-        <TouchableOpacity
-          onPress={handleSelect(item)}
-          style={[styles.card, selected ? styles.selectedItem : {}]}>
-          <Text style={selected ? styles.selectedItem : {}}>
-            {getTaxonItemLabel({item})}
-          </Text>
-        </TouchableOpacity>
+        <ListItem
+          label={getTaxonItemLabel({item})}
+          handlePress={handleSelect(item)}
+          selected={selected}
+        />
       );
     },
     [selectedItem, handleSelect],
@@ -97,9 +91,11 @@ const Form = ({node, nodeDef}) => {
 
   const taxonomiesWithIndexToSearch = useMemo(() => {
     return itemsArray.map(item =>
-      Object.assign({}, item, {textForSearch: getTextForSearch(item)}),
+      Object.assign({}, item, {
+        textForSearch: getTextForSearch(item, language),
+      }),
     );
-  }, [itemsArray]);
+  }, [itemsArray, language]);
 
   const itemsFiltered = useMemo(() => {
     let searchTextNormalized = false;
@@ -114,30 +110,20 @@ const Form = ({node, nodeDef}) => {
 
   return (
     <View style={styles.container}>
-      {!searching ? (
-        <Button
-          onPress={handleStartToSearch}
-          type="secondary"
-          iconPosition="right"
-          label={
-            selectedItem ? _labelStractor(selectedItem) : t('Form:select_empty')
-          }
-          icon={ChevronDown}
-          customContainerStyle={[styles.select]}
-          customTextStyle={[styles.text, selectedItem ? styles.selected : {}]}
-          disabled={!applicable}
-        />
-      ) : (
-        <SearchBar
-          handleStopToSearch={handleStopToSearch}
-          setSearchText={setSearchText}
-        />
-      )}
+      <Header
+        searching={searching}
+        onPress={handleStartToSearch}
+        selectedItem={selectedItem}
+        _labelStractor={_labelStractor}
+        applicable={applicable}
+        handleStopToSearch={handleStopToSearch}
+        setSearchText={setSearchText}
+      />
 
       <List
         data={itemsFiltered}
-        keyExtractor={keyExtractor}
         renderItem={renderItem}
+        keyExtractor={keyExtractor}
       />
     </View>
   );
