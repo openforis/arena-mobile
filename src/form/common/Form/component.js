@@ -100,7 +100,7 @@ const AttributeFormWithModal = () => {
       <Animated.View style={[styles.formContainer, {height: panelHeight}]}>
         <KeyboardAvoidingView
           style={[styles.container]}
-          behavior={Platform.OS === 'ios' ? 'padding' : ''}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           enabled>
           <TouchableOpacity style={{height: 80}} />
           <ScrollView
