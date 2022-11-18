@@ -17,10 +17,18 @@ const getTaxonItemLabel = ({item}) =>
   `(${item.props.code}) ${item.props.genus}`;
 
 const getTextForSearch = (item, language) => {
+  const vernacularNamesObj = item?.vernacularNames || {};
+  const vernacularNames = Object.values(vernacularNamesObj).flatMap(
+    vernacularName => vernacularName?.props?.name,
+  );
+
   return [
     item?.props?.code,
     item.props.genus,
+    item.props.family,
+    item.props.scientificName,
   ]
+    .concat(vernacularNames || [])
     .join('.')
     .toLowerCase()
     .normalize('NFD');

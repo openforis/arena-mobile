@@ -3,7 +3,7 @@ import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
-import ChevronDown from 'form/Attributes/Code/Form/common/components/ChevronDown';
+import ChevronDown from 'form/Attributes/common/SearchableForm/ChevronDown';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
