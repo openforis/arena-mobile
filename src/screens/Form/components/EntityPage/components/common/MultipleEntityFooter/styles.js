@@ -20,6 +20,9 @@ const styles = StyleSheet.create({
   addItem: {
     paddingHorizontal: 12,
   },
+  textStyle: {
+    fontWeight: 'normal',
+  },
 });
 
 export default styles;
