@@ -21,11 +21,10 @@ const styles = StyleSheet.create({
   container: {
     marginBottom: baseStyles.bases.BASE_4,
   },
-  notApplicable: ({hidden = false} = {}) => ({
+  notApplicable: {
     opacity: 0.5,
     backgroundColor: colors.neutralLighter,
-    display: hidden ? 'none' : 'flex',
-  }),
+  },
   basePreviewContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',

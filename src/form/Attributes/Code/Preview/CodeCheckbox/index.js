@@ -57,7 +57,7 @@ const CodeCheckbox = ({nodeDef}) => {
       const node = NodeDefs.isMultiple(nodeDef)
         ? nodes.find(_node => _node?.value?.itemUuid === categoryItem.uuid)
         : nodes?.[0];
-      const label = getCategoryItemLabel({categoryItem});
+      const label = getCategoryItemLabel(categoryItem);
 
       return {
         key: categoryItem.uuid,

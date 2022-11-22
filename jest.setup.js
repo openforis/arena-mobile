@@ -1,6 +1,11 @@
 import {jest} from '@jest/globals';
 import React from 'react';
 
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
+
+jest.mock('react-native-safari-view', () => ({
+  show: () => {},
+}));
 jest.mock('react-native-permissions', () =>
   require('react-native-permissions/mock'),
 );
