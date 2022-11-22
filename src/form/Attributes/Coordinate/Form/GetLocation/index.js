@@ -13,7 +13,7 @@ import styles from './styles';
 
 const DEFAULT_SRS_CODE = '4326';
 
-const prepareItems = location => {
+const prepareItems = (location, {selectedSrs}) => {
   console.log(location);
   if (location?.coords) {
     const srs = DEFAULT_SRS_CODE;
@@ -26,7 +26,7 @@ const prepareItems = location => {
       x,
       y,
     });
-
+    const transformedPoint = Points.transform(point, selectedSrs.code);
     const pareparedFields = ['longitude', 'latitude', 'accuracy'];
 
     return [
@@ -35,12 +35,16 @@ const prepareItems = location => {
         value: String(accuracy.toFixed(3)),
       },
       {
+        label: 'srs',
+        value: selectedSrs.code,
+      },
+      {
         label: 'X',
-        value: String(point.x.toFixed(6)),
+        value: String(transformedPoint.x.toFixed(6)),
       },
       {
         label: 'Y',
-        value: String(point.y.toFixed(6)),
+        value: String(transformedPoint.y.toFixed(6)),
       },
     ].concat(
       Object.keys(location?.coords || {})
@@ -54,7 +58,7 @@ const prepareItems = location => {
   return [];
 };
 
-const GetLocation = ({handleSaveLocation}) => {
+const GetLocation = ({handleSaveLocation, selectedSrs}) => {
   const {t} = useTranslation();
   const [loading, setLoading] = useState(false);
   const {location, getLocation} = useGetLocation();
@@ -78,7 +82,7 @@ const GetLocation = ({handleSaveLocation}) => {
         customTextStyle={styles.customTextStyle}
         disabled={loading}
       />
-      <LabelsAndValues items={prepareItems(location)} expanded />
+      <LabelsAndValues items={prepareItems(location, {selectedSrs})} expanded />
       {location?.coords && (
         <Button
           type="ghost"
