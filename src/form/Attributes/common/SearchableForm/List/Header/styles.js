@@ -3,10 +3,9 @@ import {StyleSheet} from 'react-native';
 import baseStyles from 'arena-mobile-ui/styles';
 
 const styles = StyleSheet.create({
-  selectStyles: {
-    marginHorizontal: 0,
+  select: {
+    marginBottom: baseStyles.bases.BASE,
   },
-  containerStyle: {justifyContent: 'space-around'},
   text: {
     textAlign: 'left',
     flex: 1,
@@ -17,5 +16,4 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
 });
-
 export default styles;

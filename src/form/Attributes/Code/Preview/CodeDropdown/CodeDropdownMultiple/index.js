@@ -1,9 +1,9 @@
-import React, {useCallback} from 'react';
+import React, {useEffect, useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
-import Icon from 'arena-mobile-ui/components/Icon';
+import ChevronDown from 'form/Attributes/common/SearchableForm/ChevronDown';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 
@@ -11,7 +11,6 @@ import ChipContainer from '../../components/ChipsContainer';
 import OptionChip from '../../components/OptionChip';
 import {useCode} from '../../hooks';
 
-const ChevronDown = <Icon name="chevron-down" />;
 import styles from './styles';
 
 const CodeDropdownMultiple = ({nodeDef}) => {
@@ -31,6 +30,12 @@ const CodeDropdownMultiple = ({nodeDef}) => {
   const handleSelectNodeAndNodeDef = useCallback(() => {
     dispatch(formActions.setNode({node: nodes[0]}));
   }, [dispatch, nodes]);
+
+  useEffect(() => {
+    if (nodes.length <= 0) {
+      codeActions.handleCreate({value: null});
+    }
+  }, [nodes, codeActions]);
 
   const handleDelete = useCallback(
     ({node, label}) =>

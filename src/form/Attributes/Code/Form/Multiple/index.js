@@ -1,24 +1,20 @@
 import {Objects} from '@openforis/arena-core';
 import React, {useCallback} from 'react';
-import {useTranslation} from 'react-i18next';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import Button from 'arena-mobile-ui/components/Button';
+import List from 'form/Attributes/common/SearchableForm/List';
+import Header from 'form/Attributes/common/SearchableForm/List/Header';
+import ListItem from 'form/Attributes/common/SearchableForm/List/Item';
 import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
 
 import {useCode} from '../../Preview/hooks';
-import ChevronDown from '../common/components/ChevronDown';
-import List from '../common/components/List';
-import SearchBar from '../common/components/SearchBar';
 import {useSearch} from '../common/hooks/useSearch';
 
 import styles from './styles';
 
 const FormCodeMultiple = ({nodeDef}) => {
-  const {t} = useTranslation();
-
   const {nodes, categoryItems, getCategoryItemLabel} = useCode({
     nodeDef,
   });
@@ -68,15 +64,15 @@ const FormCodeMultiple = ({nodeDef}) => {
       const label = getCategoryItemLabel(item);
 
       return (
-        <TouchableOpacity
-          onPress={
+        <ListItem
+          label={label}
+          handlePress={
             selected
               ? _handleDelete({node: selectedNode, label})
               : handleSelect(item)
           }
-          style={[styles.card, selected ? styles.selectedItem : {}]}>
-          <Text style={selected ? styles.selectedItem : {}}>{label}</Text>
-        </TouchableOpacity>
+          selected={selected}
+        />
       );
     },
     [handleSelect, getCategoryItemLabel, nodes, _handleDelete],
@@ -84,23 +80,15 @@ const FormCodeMultiple = ({nodeDef}) => {
 
   return (
     <View style={styles.container}>
-      {!searching ? (
-        <Button
-          onPress={handleStartToSearch}
-          type="secondary"
-          iconPosition="right"
-          label={t('Form:select_empty')}
-          icon={ChevronDown}
-          customContainerStyle={styles.select}
-          customTextStyle={styles.text}
-          disabled={!applicable}
-        />
-      ) : (
-        <SearchBar
-          handleStopToSearch={handleStopToSearch}
-          setSearchText={setSearchText}
-        />
-      )}
+      <Header
+        searching={searching}
+        onPress={handleStartToSearch}
+        selectedItem={null}
+        _labelStractor={null}
+        applicable={applicable}
+        handleStopToSearch={handleStopToSearch}
+        setSearchText={setSearchText}
+      />
 
       <List
         categoryItems={categoryItems}

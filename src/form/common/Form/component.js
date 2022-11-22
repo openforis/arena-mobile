@@ -100,7 +100,7 @@ const AttributeFormWithModal = () => {
         />
       )}
       <Animated.View style={[styles.formContainer, {height: panelHeight}]}>
-        {![NodeDefType.code].includes(nodeDef?.type) ? (
+        {![NodeDefType.code, NodeDefType.taxon].includes(nodeDef?.type) ? (
           <KeyboardAvoidingView
             style={[styles.container]}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
