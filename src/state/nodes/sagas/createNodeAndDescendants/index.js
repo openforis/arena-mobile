@@ -1,4 +1,10 @@
-import {RecordNodesUpdater, RecordValidator} from '@openforis/arena-core';
+import {
+  Objects,
+  RecordNodesUpdater,
+  Records,
+  RecordUpdater,
+  RecordValidator,
+} from '@openforis/arena-core';
 import {select, all, put, call} from 'redux-saga/effects';
 
 import formActions from 'state/form/actionCreators';
@@ -9,40 +15,48 @@ import surveySelectors from 'state/survey/selectors';
 
 function* handleCreateNodeAndDescendants({payload} = {}) {
   const {nodeDef, parentNode} = payload;
-  const [record, recordNodes, survey] = yield all([
+  const [record, recordNodes, survey, validation] = yield all([
     select(formSelectors.getRecord),
     select(formSelectors.getRecordNodesByUuid),
     select(surveySelectors.getSurvey),
+    select(formSelectors.getValidation),
   ]);
-  const recordWithNodes = {...record, nodes: {...(recordNodes || {})}};
 
-  const updatedRecordAndNodes = yield call(
-    RecordNodesUpdater.createNodeAndDescendants,
-    {
-      survey,
-      record: recordWithNodes,
-      parentNode,
-      nodeDef,
-    },
+  const recordWithNodesAndValidation = Records.addNodes(recordNodes || {})(
+    record,
   );
+  const fullRecord = Object.assign({}, recordWithNodesAndValidation, {
+    validation,
+  });
 
-  const {nodes: updatedNodes, record: updatedRecord} = updatedRecordAndNodes;
+  let updateResult = false;
 
-  let validation = {};
-  try {
-    validation = yield call(RecordValidator.validateNodes, {
+  if (Objects.isEmpty(parentNode)) {
+    updateResult = yield call(RecordUpdater.createRootEntity, {
       survey,
-      record: updatedRecord,
-      nodes: updatedNodes,
+      record: fullRecord,
     });
-  } catch (e) {
-    console.log('validation error', e);
+  } else {
+    updateResult = yield call(
+      RecordUpdater.createNodeAndDescendants,
+
+      {
+        survey,
+        record: fullRecord,
+        parentNode,
+        nodeDef,
+      },
+    );
   }
+  const {nodes: updatedNodes, record: updatedRecord} = updateResult;
+
+  const _validation = updatedRecord.validation;
+  delete updatedRecord.validation;
 
   yield all([
     put(recordsActions.setRecord({record: updatedRecord})),
     put(nodesActions.setNodes({nodes: updatedNodes})),
-    put(formActions.setValidation({validation})),
+    put(formActions.setValidation({validation: _validation})),
   ]);
 
   return updatedNodes;

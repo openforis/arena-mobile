@@ -10,6 +10,7 @@ const validation = handleActions(
     [actions.setValidation]: (_state, {payload: {validation: _validation}}) =>
       _validation,
     [globalActions.reset]: () => initialState.validation || {},
+    [actions.clean]: () => initialState.validation || {},
   },
   initialState.validation || {},
 );
