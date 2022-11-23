@@ -3,7 +3,7 @@
   "continue_record": "Continue current record",
   "validation_report": "Validation report ({{count}})",
   "records": "Records ({{count}})",
-  "remove_records": "Remove records",
+  "remove_records": "Remove all records",
   "remove_survey": "Remove survey",
   "upload_data": "Upload data"
 }
