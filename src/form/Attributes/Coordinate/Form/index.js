@@ -1,5 +1,5 @@
-import {SRSs, PointFactory} from '@openforis/arena-core';
-import React, {useState, useCallback, useEffect} from 'react';
+import {SRSs, PointFactory, Points} from '@openforis/arena-core';
+import React, {useState, useCallback, useEffect, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Platform, View} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -16,6 +16,8 @@ import styles from './styles';
 
 const BASE_VALUE = {x: null, y: null, srs: null};
 
+const DEFAULT_SRS_CODE = '4326';
+
 const Form = ({nodeDef}) => {
   const {t} = useTranslation();
 
@@ -25,8 +27,14 @@ const Form = ({nodeDef}) => {
   const handleUpdateNode = useUpdateNode();
   const surveySrs = useSelector(surveySelectors.getSurveySRS);
 
-  const selectedSrs =
-    surveySrs.find(srs => srs.code === node?.value?.srs) || surveySrs[0];
+  const selectedSrs = useMemo(() => {
+    const srsCode = newValue.srs || node?.value?.srs;
+
+    return (
+      surveySrs.find(srs => String(srs.code) === String(srsCode)) ||
+      surveySrs[0]
+    );
+  }, [surveySrs, node, newValue]);
 
   const handleSubmit = useCallback(
     ({callback = () => null} = {}) => {
@@ -53,10 +61,12 @@ const Form = ({nodeDef}) => {
   const handleSelect = useCallback(
     srs => {
       if (srs?.code) {
-        handleUpdateValue('srs')(srs.code);
+        setValue(prevValue =>
+          Points.transform(PointFactory.createInstance(prevValue), srs?.code),
+        );
       }
     },
-    [handleUpdateValue],
+    [setValue],
   );
 
   useEffect(() => {
@@ -81,14 +91,17 @@ const Form = ({nodeDef}) => {
 
   const handleSaveLocation = useCallback(
     location => {
-      setValue(prevValue =>
-        Object.assign({}, prevValue, {
-          x: Number(location.coords.longitude),
-          y: Number(location.coords.latitude),
-        }),
-      );
+      const point = PointFactory.createInstance({
+        srs: DEFAULT_SRS_CODE,
+        x: Number(location.coords.longitude),
+        y: Number(location.coords.latitude),
+      });
+
+      const transformedPoint = Points.transform(point, selectedSrs.code);
+
+      setValue(transformedPoint);
     },
-    [setValue],
+    [setValue, selectedSrs],
   );
 
   const _keyStractor = useCallback(item => item.code, []);
