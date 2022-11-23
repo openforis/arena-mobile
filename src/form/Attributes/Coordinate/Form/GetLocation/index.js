@@ -33,10 +33,7 @@ const prepareItems = (location, {selectedSrs}) => {
       {
         label: 'Accuracy',
         value: String(accuracy.toFixed(3)),
-      },
-      {
-        label: 'srs',
-        value: selectedSrs.code,
+        bolder: true,
       },
       {
         label: 'X',
@@ -46,9 +43,14 @@ const prepareItems = (location, {selectedSrs}) => {
         label: 'Y',
         value: String(transformedPoint.y.toFixed(6)),
       },
+      {
+        label: 'srs',
+        value: selectedSrs.code,
+      },
     ].concat(
       Object.keys(location?.coords || {})
         .filter(key => !pareparedFields.includes(key))
+        .sort()
         .map(key => ({
           label: key,
           value: String(location?.coords[key].toFixed(2)),

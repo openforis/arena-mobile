@@ -65,6 +65,10 @@ const textStyle = StyleSheet.create({
     ...textSize.m,
     fontWeight: 'bold',
   },
+  bolder: {
+    ...textSize.m,
+    fontWeight: '900',
+  },
   lower: {
     textTransform: 'lowercase',
   },
