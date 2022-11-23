@@ -5,6 +5,7 @@ import getCurrentUuid from '../utils/getCurrentUuid';
 import mockSurvey from './survey';
 
 const node = ({index, parentNode, nodeDefUuid, value}) => ({
+  created: true,
   uuid: getCurrentUuid(index) || getCurrentUuid(1),
   dateCreated: moment().toISOString(),
   dateModified: moment().toISOString(),

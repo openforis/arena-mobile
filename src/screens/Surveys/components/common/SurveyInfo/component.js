@@ -4,9 +4,11 @@ import {Text, View} from 'react-native';
 import CreatedAndModified from 'arena-mobile-ui/components/CreatedAndModified';
 import baseStyles from 'arena-mobile-ui/styles';
 
+import styles from './styles';
+
 const SurveyInfo = ({survey}) => {
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.container}>
       <Text style={[baseStyles.textStyle.bold, baseStyles.textSize.l]}>
         {survey.props?.labels?.[survey?.props?.languages?.[0]]}
       </Text>

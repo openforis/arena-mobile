@@ -87,6 +87,7 @@ export const mockRecord = {
 };
 
 export const baseClusterMockNode = {
+  created: true,
   uuid: 'CLUSTER_UUID',
   dateCreated: moment().toISOString(),
   dateModified: moment().toISOString(),
@@ -100,6 +101,7 @@ export const baseClusterMockNode = {
 };
 
 export const baseMockNode = {
+  created: true,
   uuid: getCurrentUuid(),
   dateCreated: moment().toISOString(),
   dateModified: moment().toISOString(),
