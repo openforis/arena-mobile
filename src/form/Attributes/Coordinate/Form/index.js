@@ -30,10 +30,13 @@ const Form = ({nodeDef}) => {
 
   const handleSubmit = useCallback(
     ({callback = () => null} = {}) => {
-      const pointAsArenaCoreWants = PointFactory.createInstance(newValue);
+      const _value = Object.assign({}, newValue, {
+        srs: newValue.srs || selectedSrs,
+      });
+      const pointAsArenaCoreWants = PointFactory.createInstance(_value);
       handleUpdateNode({node, value: pointAsArenaCoreWants, callback});
     },
-    [node, newValue, handleUpdateNode],
+    [node, newValue, handleUpdateNode, selectedSrs],
   );
 
   const handleUpdateValue = useCallback(
