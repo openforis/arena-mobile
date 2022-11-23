@@ -17,9 +17,11 @@ const SHOW_CYCLE_SELECTOR = false;
 
 const SurveyDetail = () => {
   const survey = useSelector(surveySelectors.getSurvey);
-  const {name: surveyName, label: surveyLabel} = useSelector(
-    surveySelectors.getSurveyData,
-  );
+  const {
+    name: surveyName,
+    label: surveyLabel,
+    description: surveyDescription,
+  } = useSelector(surveySelectors.getSurveyData);
   const {t} = useTranslation();
 
   useEffect(() => {
@@ -31,10 +33,15 @@ const SurveyDetail = () => {
   if (survey) {
     return (
       <View>
-        <Text style={baseStyles.textStyle.secondaryText}>
+        <Text
+          style={[baseStyles.textStyle.secondaryText, baseStyles.textSize.s]}>
           {t('Home:survey.card.active_survey')}
         </Text>
         <Text style={baseStyles.textStyle.title}>{surveyLabel}</Text>
+
+        <Text style={baseStyles.textStyle.secondaryText}>
+          {surveyDescription}
+        </Text>
 
         <LabelsAndValues
           size="m"
