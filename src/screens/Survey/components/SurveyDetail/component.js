@@ -17,10 +17,12 @@ const SHOW_CYCLE_SELECTOR = false;
 
 const SurveyDetail = () => {
   const survey = useSelector(surveySelectors.getSurvey);
+  const surveyCycles = useSelector(surveySelectors.getSurveyCycles);
   const {
     name: surveyName,
     label: surveyLabel,
     description: surveyDescription,
+    cycle,
   } = useSelector(surveySelectors.getSurveyData);
   const {t} = useTranslation();
 
@@ -54,6 +56,14 @@ const SurveyDetail = () => {
             {
               label: t('Common:modified'),
               value: moment(survey.dateModified).fromNow(),
+            },
+            {
+              label: t('Home:survey.card.cycle'),
+              value: `${Number(cycle) + 1} (${surveyCycles[cycle].dateStart}${
+                surveyCycles[cycle].dateEnd
+                  ? ` - ${surveyCycles[cycle].dateEnd}`
+                  : ''
+              })`,
             },
           ]}
         />

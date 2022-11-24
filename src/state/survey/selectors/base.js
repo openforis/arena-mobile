@@ -40,9 +40,14 @@ export const getSelectedSurveyLanguages = createSelector(
   survey => survey?.props?.languages,
 );
 
-export const getSelectedSurveyCycles = createSelector(
+export const getSurveyCycles = createSelector(
   getSurvey,
-  survey => Object.keys(survey?.props?.cycles || {}) || [defaultCycle],
+  survey => survey?.props?.cycles || {},
+);
+
+export const getSelectedSurveyCycles = createSelector(
+  getSurveyCycles,
+  cycles => Object.keys(cycles) || [defaultCycle],
 );
 
 export const getSurveyCycle = createSelector(
