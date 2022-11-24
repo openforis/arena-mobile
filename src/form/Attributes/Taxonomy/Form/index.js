@@ -119,7 +119,7 @@ const Form = ({node, nodeDef}) => {
     <View style={styles.container}>
       <Header
         searching={searching}
-        onPress={handleStartToSearch}
+        handleStartToSearch={handleStartToSearch}
         selectedItem={selectedItem}
         _labelStractor={_labelStractor}
         applicable={applicable}

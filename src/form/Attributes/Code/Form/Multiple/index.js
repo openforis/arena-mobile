@@ -82,7 +82,7 @@ const FormCodeMultiple = ({nodeDef}) => {
     <View style={styles.container}>
       <Header
         searching={searching}
-        onPress={handleStartToSearch}
+        handleStartToSearch={handleStartToSearch}
         selectedItem={null}
         _labelStractor={null}
         applicable={applicable}
