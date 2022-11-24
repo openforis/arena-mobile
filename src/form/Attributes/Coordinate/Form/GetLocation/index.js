@@ -1,3 +1,4 @@
+import {PointFactory, Points} from '@openforis/arena-core';
 import React, {useCallback, useState, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
@@ -10,7 +11,54 @@ import useGetLocation from '../useGetLocation';
 
 import styles from './styles';
 
-const GetLocation = ({handleSaveLocation}) => {
+const DEFAULT_SRS_CODE = '4326';
+
+const prepareItems = (location, {selectedSrs}) => {
+  console.log(location);
+  if (location?.coords) {
+    const srs = DEFAULT_SRS_CODE;
+    const accuracy = location.coords.accuracy;
+    const x = Number(location.coords.longitude);
+    const y = Number(location.coords.latitude);
+
+    const point = PointFactory.createInstance({
+      srs,
+      x,
+      y,
+    });
+    const transformedPoint = Points.transform(point, selectedSrs.code);
+    const pareparedFields = ['longitude', 'latitude', 'accuracy'];
+
+    return [
+      {
+        label: 'Accuracy',
+        value: String(accuracy.toFixed(3)),
+      },
+      {
+        label: 'srs',
+        value: selectedSrs.code,
+      },
+      {
+        label: 'X',
+        value: String(transformedPoint.x.toFixed(6)),
+      },
+      {
+        label: 'Y',
+        value: String(transformedPoint.y.toFixed(6)),
+      },
+    ].concat(
+      Object.keys(location?.coords || {})
+        .filter(key => !pareparedFields.includes(key))
+        .map(key => ({
+          label: key,
+          value: String(location?.coords[key].toFixed(2)),
+        })),
+    );
+  }
+  return [];
+};
+
+const GetLocation = ({handleSaveLocation, selectedSrs}) => {
   const {t} = useTranslation();
   const [loading, setLoading] = useState(false);
   const {location, getLocation} = useGetLocation();
@@ -31,21 +79,15 @@ const GetLocation = ({handleSaveLocation}) => {
         icon={<Icon name="compass-outline" />}
         onPress={getLocation}
         label={t('Form:get_location')}
-        customTextStyle={{paddingLeft: 8}}
+        customTextStyle={styles.customTextStyle}
         disabled={loading}
       />
-      <LabelsAndValues
-        items={Object.entries(location?.coords || {}).map(([label, value]) => ({
-          label,
-          value,
-        }))}
-        expanded
-      />
+      <LabelsAndValues items={prepareItems(location, {selectedSrs})} expanded />
       {location?.coords && (
         <Button
           type="ghost"
           label={t('Form:nodeDefCoordinate.use')}
-          customContainerStyle={{justifyContent: 'flex-end'}}
+          customContainerStyle={styles.customContainerStyle}
           onPress={_handleSaveLocation}
         />
       )}

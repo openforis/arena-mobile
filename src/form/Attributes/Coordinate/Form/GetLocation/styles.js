@@ -10,6 +10,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: baseStyles.bases.BASE_2,
     paddingBottom: 0,
   },
+  customTextStyle: {paddingLeft: 8},
+  customContainerStyle: {justifyContent: 'flex-end'},
 });
 
 export default styles;

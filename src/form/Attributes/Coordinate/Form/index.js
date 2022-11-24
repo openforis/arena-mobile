@@ -109,7 +109,10 @@ const Form = ({nodeDef}) => {
 
   return (
     <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit}>
-      <GetLocation handleSaveLocation={handleSaveLocation} />
+      <GetLocation
+        handleSaveLocation={handleSaveLocation}
+        selectedSrs={selectedSrs}
+      />
 
       <Input
         horizontal={true}
