@@ -1,47 +1,51 @@
-import React, {useCallback} from 'react';
-import {useSelector} from 'react-redux';
+import React, {useCallback, useMemo} from 'react';
+import {useTranslation} from 'react-i18next';
+import {useDispatch, useSelector} from 'react-redux';
 
-import Select from 'arena-mobile-ui/components/Select';
-import {selectors as formSelectors} from 'state/form';
-import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
+import Button from 'arena-mobile-ui/components/Button';
+import ChevronDown from 'form/Attributes/common/SearchableForm/ChevronDown';
+import {selectors as formSelectors, actions as formActions} from 'state/form';
 
 import {useCode} from '../../hooks';
 
+import styles from './styles';
+
 const CodeNodeDropdown = ({nodeDef, node}) => {
+  const {t} = useTranslation();
   const {categoryItems, getCategoryItemLabel} = useCode({
     nodeDef,
     node,
   });
-
-  const {handleUpdate, handleCreate} = useNodeFormActions({nodeDef});
-
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );
-  const handleSelect = useCallback(
-    categoryItem => {
-      let newValue = {itemUuid: categoryItem?.uuid};
-      if (node?.uuid) {
-        handleUpdate({node, value: newValue});
-      } else {
-        handleCreate({value: newValue});
-      }
-    },
-    [handleUpdate, handleCreate, node],
+
+  const selectedItem = useMemo(
+    () => categoryItems.find(item => item.uuid === node?.value?.itemUuid),
+    [categoryItems, node],
   );
 
   const _labelStractor = useCallback(
-    item => getCategoryItemLabel({categoryItem: item}),
+    item => getCategoryItemLabel(item),
     [getCategoryItemLabel],
   );
 
+  const dispatch = useDispatch();
+
+  const handleSelectNodeAndNodeDef = useCallback(() => {
+    dispatch(formActions.setNode({node: node}));
+  }, [dispatch, node]);
+
   return (
-    <Select
-      key={node?.value?.itemUuid}
-      items={categoryItems}
-      labelStractor={_labelStractor}
-      onValueChange={handleSelect}
-      selectedItemKey={node?.value?.itemUuid}
+    <Button
+      onPress={handleSelectNodeAndNodeDef}
+      type="secondary"
+      iconPosition="right"
+      label={
+        selectedItem ? _labelStractor(selectedItem) : t('Form:select_empty')
+      }
+      icon={ChevronDown}
+      customTextStyle={[styles.text, selectedItem ? styles.selected : {}]}
       disabled={!applicable}
     />
   );

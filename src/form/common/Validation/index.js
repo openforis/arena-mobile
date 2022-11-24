@@ -61,7 +61,7 @@ const Validation = ({nodes, showValidation = true, absolute = false}) => {
   return (
     <View style={[absolute ? styles.absolute : {}]}>
       <Tooltip
-        height={50}
+        height={null}
         width={200}
         backgroundColor={configBySeverity.color}
         overlayColor={colors.transparent}

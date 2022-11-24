@@ -21,6 +21,7 @@ const SurveyDetail = () => {
   const {
     name: surveyName,
     label: surveyLabel,
+    description: surveyDescription,
     cycle,
   } = useSelector(surveySelectors.getSurveyData);
   const {t} = useTranslation();
@@ -34,10 +35,15 @@ const SurveyDetail = () => {
   if (survey) {
     return (
       <View>
-        <Text style={baseStyles.textStyle.secondaryText}>
+        <Text
+          style={[baseStyles.textStyle.secondaryText, baseStyles.textSize.s]}>
           {t('Home:survey.card.active_survey')}
         </Text>
         <Text style={baseStyles.textStyle.title}>{surveyLabel}</Text>
+
+        <Text style={baseStyles.textStyle.secondaryText}>
+          {surveyDescription}
+        </Text>
 
         <LabelsAndValues
           size="m"

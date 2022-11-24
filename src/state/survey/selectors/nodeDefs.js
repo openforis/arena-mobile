@@ -1,6 +1,8 @@
 import {createCachedSelector} from 're-reselect';
 import {createSelector} from 'reselect';
 
+import {defaultCycle} from 'arena/config';
+
 import {getSurvey, getSurveyCycle} from './base';
 
 const _getCachedKeyObjectUuid = (_, object) => object?.uuid || '_';
@@ -18,7 +20,7 @@ export const getNodeDefByUuid = createCachedSelector(
 )((_state_, nodeDefUuid) => nodeDefUuid || '_');
 
 export const getNodeDefs = createSelector(getNodeDefsByUuid, nodeDefs =>
-  Object.values(nodeDefs),
+  Object.values(nodeDefs).filter(nodeDef => nodeDef.draft !== true),
 );
 export const getNodeDefRoot = createSelector(getNodeDefs, nodeDefs =>
   nodeDefs.find(({parentUuid}) => !parentUuid),
@@ -39,7 +41,8 @@ export const getNodeDefChildren = createCachedSelector(
   (nodeDefs, cycle, parentNodeDef) =>
     nodeDefs.filter(nodeDef => {
       const {parentUuid, props, analysis} = nodeDef;
-      const {cycles} = props;
+      const {cycles = [defaultCycle]} = props;
+
       return (
         !!parentUuid &&
         parentUuid === parentNodeDef?.uuid &&

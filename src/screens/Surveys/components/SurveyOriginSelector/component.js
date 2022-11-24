@@ -37,17 +37,17 @@ const SurveyOriginSelector = ({surveysOrigin, setSurveysOrigin}) => {
     <View style={[styles.container]}>
       <Touchable
         position="left"
-        onPress={() => setSurveysOrigin('remote')}
-        icon="cloud-outline"
-        isSelected={surveysOrigin === 'remote'}
-        label={t('Surveys:remote.title')}
-      />
-      <Touchable
-        position="right"
         onPress={() => setSurveysOrigin('local')}
         icon="bookmark-outline"
         isSelected={surveysOrigin === 'local'}
         label={t('Surveys:local.title')}
+      />
+      <Touchable
+        position="right"
+        onPress={() => setSurveysOrigin('remote')}
+        icon="cloud-outline"
+        isSelected={surveysOrigin === 'remote'}
+        label={t('Surveys:remote.title')}
       />
     </View>
   );

@@ -30,12 +30,14 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
 
   const handleSubmit = useCallback(
     ({callback = () => null} = {}) => {
+      const _newValue = newValue || String(node.value || '');
+
       const _value =
         nodeDef.type === NodeDefType.text
           ? transform({
               transformFunction: NodeDefs.getTextTransform(nodeDef),
-            })(newValue)
-          : Number((newValue || '').replace(',', '.'));
+            })(_newValue)
+          : Number(_newValue.replace(',', '.'));
       handleUpdateNode({node, value: _value, callback});
     },
     [nodeDef, node, newValue, handleUpdateNode],

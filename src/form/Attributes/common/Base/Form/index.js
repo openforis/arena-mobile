@@ -9,7 +9,12 @@ import {useCloseNode} from 'state/form/hooks/useNodeFormActions';
 
 import styles from './styles';
 
-const BaseForm = ({nodeDef, handleSubmit, children}) => {
+const BaseForm = ({
+  nodeDef,
+  handleSubmit,
+  children,
+  hasSubmitButton = true,
+}) => {
   const {t} = useTranslation();
 
   const _handleSubmit = useCallback(
@@ -38,12 +43,14 @@ const BaseForm = ({nodeDef, handleSubmit, children}) => {
       {children}
 
       <View style={styles.divider} />
-      <View>
-        <Button
-          label={t('Form:save_and_return')}
-          onPress={_handleSubmitAndClose}
-        />
-      </View>
+      {hasSubmitButton && (
+        <View>
+          <Button
+            label={t('Form:save_and_return')}
+            onPress={_handleSubmitAndClose}
+          />
+        </View>
+      )}
     </View>
   );
 };
