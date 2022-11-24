@@ -14,7 +14,6 @@ import styles from './styles';
 const DEFAULT_SRS_CODE = '4326';
 
 const prepareItems = (location, {selectedSrs}) => {
-  console.log(location);
   if (location?.coords) {
     const srs = DEFAULT_SRS_CODE;
     const accuracy = location.coords.accuracy;
