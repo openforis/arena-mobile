@@ -5,6 +5,7 @@ import {
   getSelectedSurveyLanguage,
   getSelectedSurveyLanguages,
   getSurveyCycle,
+  getSurveyCycles,
   getSelectedSurveyCycles,
   getSurveySRS,
   getUiState,
@@ -43,6 +44,7 @@ export default {
   getSelectedSurveyLanguage,
   getSelectedSurveyLanguages,
   getSurveyCycle,
+  getSurveyCycles,
   getSelectedSurveyCycles,
   getSurveySRS,
 
