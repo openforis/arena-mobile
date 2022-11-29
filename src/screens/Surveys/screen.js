@@ -9,6 +9,8 @@ import surveysSector from 'state/surveys/selectors';
 import Local from './components/Local';
 import Remote from './components/Remote';
 import SelectedSurveyPanel from './components/SelectedSurveyPanel';
+import Sorter from './components/Sorter';
+import {SORTERS} from './components/Sorter/config';
 import SurveyOriginSelector from './components/SurveyOriginSelector';
 import styles from './styles';
 
@@ -17,6 +19,7 @@ const Surveys = () => {
 
   const [surveysOrigin, setSurveysOrigin] = useState('local');
   const [selectedSurvey, setSelectedSurvey] = useState(null);
+  const [sortCriteriaIndex, setSortCriteriaIndex] = useState(0);
 
   const resetSelectedSurvey = useCallback(() => {
     setSelectedSurvey(null);
@@ -35,7 +38,15 @@ const Surveys = () => {
   return (
     <Layout bottomStyle={selectedSurvey ? 'primary' : 'background'}>
       <>
-        <Header hasBackComponent={true} />
+        <Header
+          hasBackComponent={true}
+          RightComponent={
+            <Sorter
+              setSortCriteriaIndex={setSortCriteriaIndex}
+              sortCriteriaIndex={sortCriteriaIndex}
+            />
+          }
+        />
         <SurveyOriginSelector
           setSurveysOrigin={setSurveysOrigin}
           surveysOrigin={surveysOrigin}
@@ -43,12 +54,14 @@ const Surveys = () => {
         <View style={[styles.listContainer]}>
           {surveysOrigin === 'local' ? (
             <Local
+              sortCriteria={SORTERS[sortCriteriaIndex]}
               setSurveysOrigin={setSurveysOrigin}
               selectedSurvey={selectedSurvey}
               setSelectedSurvey={setSelectedSurvey}
             />
           ) : (
             <Remote
+              sortCriteria={SORTERS[sortCriteriaIndex]}
               setSurveysOrigin={setSurveysOrigin}
               selectedSurvey={selectedSurvey}
               setSelectedSurvey={setSelectedSurvey}

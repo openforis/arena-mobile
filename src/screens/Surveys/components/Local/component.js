@@ -12,6 +12,7 @@ const Local = ({
   setSurveysOrigin,
   selectedSurvey,
   setSelectedSurvey,
+  sortCriteria,
 }) => {
   const localSurveys = useSelector(surveysSelectors.getSurveysAsList);
   const handlePress = useCallback(
@@ -22,6 +23,7 @@ const Local = ({
   return (
     <List
       data={localSurveys}
+      sortCriteria={sortCriteria}
       surveysOrigin={surveysOrigin}
       selectedSurvey={selectedSurvey}
       setSelectedSurvey={setSelectedSurvey}

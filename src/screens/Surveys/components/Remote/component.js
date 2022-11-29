@@ -13,6 +13,7 @@ const Remote = ({
   setSurveysOrigin,
   selectedSurvey,
   setSelectedSurvey,
+  sortCriteria,
 }) => {
   const {loading, error, surveys = []} = surveysHooks.useRemoteSurveys();
 
@@ -25,6 +26,7 @@ const Remote = ({
   return (
     <List
       data={surveys}
+      sortCriteria={sortCriteria}
       surveysOrigin={surveysOrigin}
       selectedSurvey={selectedSurvey}
       setSelectedSurvey={setSelectedSurvey}
