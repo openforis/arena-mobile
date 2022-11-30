@@ -36,6 +36,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
   },
+  text: {
+    width: WIDTH * 0.34,
+    textAlign: 'right',
+  },
+  textLeft: {
+    textAlign: 'left',
+  },
 });
 
 export default styles;
