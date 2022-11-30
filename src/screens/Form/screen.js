@@ -1,71 +1,100 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect} from 'react';
-import {Alert, View, BackHandler} from 'react-native';
+import React, {useEffect, useCallback} from 'react';
+import {View, BackHandler} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 
 import Layout from 'arena-mobile-ui/components/Layout';
+import {alert} from 'arena-mobile-ui/utils';
 import AttributeForm from 'form/common/Form';
+import {selectors as formSelectors, actions as formActions} from 'state/form';
+import {selectors as surveySelectors} from 'state/survey';
 
 import BreadCrumbs from './components/BreadCrumbs';
 import EntityPage from './components/EntityPage';
+import {getPrevNodeDef} from './components/EntityPage/components/common/EntityNavigation/component';
 import EntitySelector from './components/EntitySelector';
 import styles from './styles';
 
-/*
-// root:
- - back -> ask
- - leave -> ask
-// child
-- back -> Navigate to prev
-- leave -> ask
-*/
 const useAskBeforeLeave = () => {
+  const survey = useSelector(surveySelectors.getSurvey);
+  const cycle = useSelector(surveySelectors.getSurveyCycle);
+  const currentEntityNodeDef = useSelector(
+    formSelectors.getParentEntityNodeDef,
+  );
+  const nodeDefRoot = useSelector(surveySelectors.getNodeDefRoot);
+
+  const parentNodeDef = useSelector(state =>
+    surveySelectors.getNodeDefByUuid(state, currentEntityNodeDef?.parentUuid),
+  );
+
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    const beforeRemoveAction = e => {
-      e.preventDefault();
+  const beforeRemoveAction = useCallback(
+    e => {
+      e?.preventDefault();
 
-      // Prompt the user before leaving the screen
-      Alert.alert(
-        'Discard changes?',
-        'You have unsaved changes. Are you sure to discard them and leave the screen?',
-        [
-          {text: "Don't leave", style: 'cancel', onPress: () => {}},
-          {
-            text: 'Discard',
-            style: 'destructive',
-
-            onPress: () => navigation.dispatch(e.data.action),
-          },
-        ],
+      alert({
+        title: 'Are you sure to leave the form?',
+        message: '',
+        acceptText: 'Stay',
+        dismissText: 'Leave',
+        onAccept: () => {},
+        onDismiss: () =>
+          e?.data?.action
+            ? navigation.dispatch(e.data.action)
+            : navigation.goBack(),
+      });
+    },
+    [navigation],
+  );
+  const onPressBack = useCallback(() => {
+    if (currentEntityNodeDef.uuid === nodeDefRoot.uuid) {
+      navigation.goBack();
+      return;
+    }
+    let prevNodeDef = false;
+    if (!currentEntityNodeDef.props?.layout?.[cycle]?.pageUuid) {
+      prevNodeDef = parentNodeDef;
+    } else {
+      prevNodeDef = getPrevNodeDef({
+        survey,
+        parent: parentNodeDef,
+        cycle,
+        currentEntityNodeDef,
+      });
+    }
+    if (prevNodeDef) {
+      dispatch(
+        formActions.selectEntity({
+          nodeDef: prevNodeDef,
+        }),
       );
-    };
-
-    navigation.addListener('beforeRemove', beforeRemoveAction);
-
-    return () => navigation.removeListener('beforeRemove', beforeRemoveAction);
-  }, [navigation]);
+    }
+    return true;
+  }, [
+    currentEntityNodeDef,
+    nodeDefRoot,
+    cycle,
+    survey,
+    parentNodeDef,
+    dispatch,
+    navigation,
+  ]);
 
   useEffect(() => {
-    const backAction = () => {
-      Alert.alert('Hold on!', 'Are you sure you want to go back?', [
-        {
-          text: 'Cancel',
-          onPress: () => null,
-          style: 'cancel',
-        },
-        {text: 'YES', onPress: () => navigation.goBack()},
-      ]);
-      return true;
-    };
+    navigation.addListener('beforeRemove', beforeRemoveAction);
+    return () => navigation.removeListener('beforeRemove', beforeRemoveAction);
+  }, [navigation, beforeRemoveAction]);
 
+  useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
-      backAction,
+      onPressBack,
     );
 
     return () => backHandler?.remove();
-  }, [navigation]);
+  }, [onPressBack]);
 };
 
 const Form = () => {

@@ -17,6 +17,8 @@ export const alert = ({
   onAccept,
   dismissText,
   onDismiss = () => null,
+  dismissStyle = 'cancel',
+  acceptStyle = 'default',
 }) => {
   const buttons = [
     dismissText && {
@@ -24,13 +26,14 @@ export const alert = ({
       onPress: () => {
         onDismiss?.();
       },
-      style: 'cancel',
+      style: dismissStyle,
     },
     acceptText && {
       text: acceptText,
       onPress: () => {
         onAccept?.();
       },
+      style: acceptStyle,
     },
   ];
 
