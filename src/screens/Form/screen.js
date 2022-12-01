@@ -1,12 +1,16 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useCallback} from 'react';
+import {useTranslation} from 'react-i18next';
 import {View, BackHandler} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Layout from 'arena-mobile-ui/components/Layout';
 import {alert} from 'arena-mobile-ui/utils';
 import AttributeForm from 'form/common/Form';
+import {ROUTES} from 'navigation/constants';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
+import {useCloseNode} from 'state/form/hooks/useNodeFormActions';
+import * as navigator from 'state/navigatorService';
 import {selectors as surveySelectors} from 'state/survey';
 
 import BreadCrumbs from './components/BreadCrumbs';
@@ -23,36 +27,50 @@ const useAskBeforeLeave = () => {
   );
   const nodeDefRoot = useSelector(surveySelectors.getNodeDefRoot);
 
+  const nodeDefForm = useSelector(formSelectors.getNodeDef);
+
   const parentNodeDef = useSelector(state =>
     surveySelectors.getNodeDefByUuid(state, currentEntityNodeDef?.parentUuid),
   );
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const {t} = useTranslation();
+  const handleClose = useCloseNode();
 
   const beforeRemoveAction = useCallback(
     e => {
       e?.preventDefault();
 
       alert({
-        title: 'Are you sure to leave the form?',
+        title: t('Form:beforeLeave.title'),
         message: '',
-        acceptText: 'Stay',
-        dismissText: 'Leave',
+        acceptText: t('Form:beforeLeave.acceptText'),
+        dismissText: t('Form:beforeLeave.dismissText'),
         onAccept: () => {},
         onDismiss: () =>
           e?.data?.action
             ? navigation.dispatch(e.data.action)
-            : navigation.goBack(),
+            : navigation.canGoBack()
+            ? navigation.goBack()
+            : navigator.reset(ROUTES.HOME),
       });
     },
-    [navigation],
+    [navigation, t],
   );
   const onPressBack = useCallback(() => {
-    if (currentEntityNodeDef.uuid === nodeDefRoot.uuid) {
-      navigation.goBack();
-      return;
+    if (currentEntityNodeDef.uuid === nodeDefRoot?.uuid) {
+      navigation.canGoBack()
+        ? navigation.goBack()
+        : navigator.reset(ROUTES.HOME);
+      return true;
     }
+
+    if (nodeDefForm) {
+      handleClose();
+      return true;
+    }
+
     let prevNodeDef = false;
     if (!currentEntityNodeDef.props?.layout?.[cycle]?.pageUuid) {
       prevNodeDef = parentNodeDef;
@@ -79,6 +97,8 @@ const useAskBeforeLeave = () => {
     survey,
     parentNodeDef,
     dispatch,
+    nodeDefForm,
+    handleClose,
     navigation,
   ]);
 

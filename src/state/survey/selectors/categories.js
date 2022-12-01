@@ -49,7 +49,7 @@ export const getCategoryItems = createCachedSelector(
 const getParentCodeNodeDef = createSelector(
   getNodeDefsByUuid,
   (_, __, node) => node,
-  (nodeDefsByUuid, node) => {
+  (nodeDefsByUuid = {}, node) => {
     let parentCodeDefUuid =
       nodeDefsByUuid[node?.nodeDefUuid]?.props?.parentCodeDefUuid;
     if (parentCodeDefUuid) {

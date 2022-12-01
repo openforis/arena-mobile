@@ -58,7 +58,7 @@ export const getRecordKey = (
   nodeDefsByUuid,
   categoryItemIndex,
 ) => {
-  const rootNode = nodes.find(node => node.nodeDefUuid === nodeDefRoot.uuid);
+  const rootNode = nodes.find(node => node.nodeDefUuid === nodeDefRoot?.uuid);
 
   return getKeyNodesForEntityAsString({
     entity: rootNode,

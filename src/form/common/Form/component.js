@@ -103,7 +103,7 @@ const AttributeFormWithModal = () => {
         {![NodeDefType.code, NodeDefType.taxon].includes(nodeDef?.type) ? (
           <KeyboardAvoidingView
             style={[styles.container]}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             enabled>
             <Spacer />
             <ScrollView
@@ -127,7 +127,6 @@ const AttributeFormWithModal = () => {
             </View>
           </>
         )}
-
       </Animated.View>
     </>
   );
