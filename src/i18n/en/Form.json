@@ -3,7 +3,7 @@
   "save_and_return": "Save and return",
   "save": "Save",
   "delete": "Delete {{ label }}",
-  "select_empty": "Select...",
+  "select_empty": " ",
   "nodeDefEntity": {
     "layout": {
       "table": " (table)"

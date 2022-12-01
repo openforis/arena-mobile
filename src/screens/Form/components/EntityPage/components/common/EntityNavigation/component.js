@@ -17,7 +17,7 @@ const getNodeDefIndex = ({survey, nodeDef, cycle = defaultCycle}) => {
   );
 };
 
-const Button = ({nodeDef}) => {
+const Button = ({nodeDef, align = 'right'}) => {
   const dispatch = useDispatch();
   const nodeDefName = useNodeDefNameOrLabel({nodeDef});
   const handleSelect = useCallback(() => {
@@ -29,7 +29,12 @@ const Button = ({nodeDef}) => {
   }, [nodeDef, dispatch]);
   return (
     <TouchableOpacity onPress={handleSelect} hitSlop={{top: 10, bottom: 10}}>
-      <Text style={[styles.text]}>{nodeDefName}</Text>
+      <Text
+        style={[styles.text, align === 'left' ? styles.textLeft : {}]}
+        ellipsizeMode="middle"
+        numberOfLines={1}>
+        {nodeDefName}
+      </Text>
     </TouchableOpacity>
   );
 };
