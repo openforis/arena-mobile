@@ -63,6 +63,12 @@
       "gallery": "Gallery",
       "document": "Document",
       "audio": "Audio"
-    }
+    }  
+  },
+  "beforeLeave":{
+    "title": "Are you sure to leave the form?",
+    "message": "",
+    "acceptText": "Stay",
+    "dismissText": "Leave"
   }
 }

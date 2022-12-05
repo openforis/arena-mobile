@@ -1,15 +1,124 @@
-import * as React from 'react';
-import {View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useCallback} from 'react';
+import {useTranslation} from 'react-i18next';
+import {View, BackHandler} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 
 import Layout from 'arena-mobile-ui/components/Layout';
+import {alert} from 'arena-mobile-ui/utils';
 import AttributeForm from 'form/common/Form';
+import {ROUTES} from 'navigation/constants';
+import {selectors as formSelectors, actions as formActions} from 'state/form';
+import {useCloseNode} from 'state/form/hooks/useNodeFormActions';
+import * as navigator from 'state/navigatorService';
+import {selectors as surveySelectors} from 'state/survey';
 
 import BreadCrumbs from './components/BreadCrumbs';
 import EntityPage from './components/EntityPage';
+import {getPrevNodeDef} from './components/EntityPage/components/common/EntityNavigation/component';
 import EntitySelector from './components/EntitySelector';
 import styles from './styles';
 
+const useAskBeforeLeave = () => {
+  const survey = useSelector(surveySelectors.getSurvey);
+  const cycle = useSelector(surveySelectors.getSurveyCycle);
+  const currentEntityNodeDef = useSelector(
+    formSelectors.getParentEntityNodeDef,
+  );
+  const nodeDefRoot = useSelector(surveySelectors.getNodeDefRoot);
+
+  const nodeDefForm = useSelector(formSelectors.getNodeDef);
+
+  const parentNodeDef = useSelector(state =>
+    surveySelectors.getNodeDefByUuid(state, currentEntityNodeDef?.parentUuid),
+  );
+
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const {t} = useTranslation();
+  const handleClose = useCloseNode();
+
+  const beforeRemoveAction = useCallback(
+    e => {
+      e?.preventDefault();
+
+      alert({
+        title: t('Form:beforeLeave.title'),
+        message: '',
+        acceptText: t('Form:beforeLeave.acceptText'),
+        dismissText: t('Form:beforeLeave.dismissText'),
+        onAccept: () => {},
+        onDismiss: () =>
+          e?.data?.action
+            ? navigation.dispatch(e.data.action)
+            : navigation.canGoBack()
+            ? navigation.goBack()
+            : navigator.reset(ROUTES.HOME),
+      });
+    },
+    [navigation, t],
+  );
+  const onPressBack = useCallback(() => {
+    if (currentEntityNodeDef.uuid === nodeDefRoot?.uuid) {
+      navigation.canGoBack()
+        ? navigation.goBack()
+        : navigator.reset(ROUTES.HOME);
+      return true;
+    }
+
+    if (nodeDefForm) {
+      handleClose();
+      return true;
+    }
+
+    let prevNodeDef = false;
+    if (!currentEntityNodeDef.props?.layout?.[cycle]?.pageUuid) {
+      prevNodeDef = parentNodeDef;
+    } else {
+      prevNodeDef = getPrevNodeDef({
+        survey,
+        parent: parentNodeDef,
+        cycle,
+        currentEntityNodeDef,
+      });
+    }
+    if (prevNodeDef) {
+      dispatch(
+        formActions.selectEntity({
+          nodeDef: prevNodeDef,
+        }),
+      );
+    }
+    return true;
+  }, [
+    currentEntityNodeDef,
+    nodeDefRoot,
+    cycle,
+    survey,
+    parentNodeDef,
+    dispatch,
+    nodeDefForm,
+    handleClose,
+    navigation,
+  ]);
+
+  useEffect(() => {
+    navigation.addListener('beforeRemove', beforeRemoveAction);
+    return () => navigation.removeListener('beforeRemove', beforeRemoveAction);
+  }, [navigation, beforeRemoveAction]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      onPressBack,
+    );
+
+    return () => backHandler?.remove();
+  }, [onPressBack]);
+};
+
 const Form = () => {
+  useAskBeforeLeave();
   return (
     <>
       <Layout bottomSafeArea={false}>

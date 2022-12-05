@@ -39,6 +39,24 @@ const Button = ({nodeDef, align = 'right'}) => {
   );
 };
 
+export const getPrevNodeDef = ({
+  survey,
+  parent,
+  cycle,
+  currentEntityNodeDef,
+}) => {
+  const sibilings = getNodeDefIndex({survey, nodeDef: parent, cycle});
+  const currentIndex = sibilings?.indexOf(currentEntityNodeDef.uuid);
+
+  if (currentIndex === 0) {
+    return survey.nodeDefs[parent.uuid];
+  }
+  if (currentIndex + 1 <= sibilings.length) {
+    return survey.nodeDefs[sibilings[currentIndex - 1]];
+  }
+  return false;
+};
+
 const Prev = ({parent}) => {
   const survey = useSelector(surveySelectors.getSurvey);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
@@ -50,20 +68,15 @@ const Prev = ({parent}) => {
     return <View />;
   }
 
-  const sibilings = getNodeDefIndex({survey, nodeDef: parent, cycle});
-  const currentIndex = sibilings.indexOf(currentEntityNodeDef.uuid);
+  const prevNodeDef = getPrevNodeDef({
+    survey,
+    parent,
+    cycle,
+    currentEntityNodeDef,
+  });
 
-  if (currentIndex === 0) {
-    return <Button nodeDef={survey.nodeDefs[parent.uuid]} align="left" />;
-  }
-
-  if (currentIndex + 1 <= sibilings.length) {
-    return (
-      <Button
-        nodeDef={survey.nodeDefs[sibilings[currentIndex - 1]]}
-        align="left"
-      />
-    );
+  if (prevNodeDef?.uuid) {
+    return <Button nodeDef={prevNodeDef} />;
   }
 
   return <View />;
