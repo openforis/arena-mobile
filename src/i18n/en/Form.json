@@ -1,5 +1,7 @@
 {
   "add_new": "New {{ label }}",
+  "add_new_row": "New row",
+  "add_new_item": "New item",
   "save_and_return": "Save and return",
   "save": "Save",
   "delete": "Delete {{ label }}",

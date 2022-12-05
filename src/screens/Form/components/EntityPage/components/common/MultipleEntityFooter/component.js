@@ -6,7 +6,6 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
-import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
@@ -19,8 +18,6 @@ const Footer = () => {
 
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
-
-  const parentLabel = useNodeDefNameOrLabel({nodeDef: parentEntityNodeDef});
 
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const isTable = useMemo(
@@ -57,7 +54,7 @@ const Footer = () => {
         <Button
           type="secondary"
           icon={AddIcon}
-          label={t('Form:add_new', {label: parentLabel})}
+          label={t('Form:add_new_row')}
           customContainerStyle={[styles.buttonContainer, styles.addItem]}
           customTextStyle={styles.textStyle}
           onPress={handleCreateNewNodeEntity}

@@ -1,5 +1,6 @@
+import {NodeDefs} from '@openforis/arena-core';
 import debounce from 'lodash.debounce';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -11,6 +12,7 @@ import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import {alert} from 'arena-mobile-ui/utils';
 import {uuidv4} from 'infra/uuid';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
+import {selectors as surveySelectors} from 'state/survey';
 
 import styles, {pickerSelectStyles} from './styles';
 
@@ -32,6 +34,16 @@ const Header = () => {
   );
 
   const parentLabel = useNodeDefNameOrLabel({nodeDef: parentEntityNodeDef});
+
+  const cycle = useSelector(surveySelectors.getSurveyCycle);
+  const isTable = useMemo(
+    () =>
+      NodeDefs.getLayoutRenderTypePerCycle({
+        nodeDef: parentEntityNodeDef,
+        cycle,
+      }) === 'table',
+    [parentEntityNodeDef, cycle],
+  );
 
   useEffect(() => {
     setKey(uuidv4());
@@ -97,7 +109,7 @@ const Header = () => {
         <Button
           type="secondary"
           icon={<Icon name="plus" />}
-          label={t('Form:add_new', {label: parentLabel})}
+          label={t(isTable ? 'Form:add_new_row' : 'Form:add_new_item')}
           customContainerStyle={[styles.buttonContainer, styles.addItem]}
           customTextStyle={styles.button}
           onPress={debouncedHandleCreateNewNodeEntity}
