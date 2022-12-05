@@ -61,7 +61,7 @@ const Header = () => {
   }, [dispatch, parentEntityNodeDef, parentEntityNode]);
 
   const debouncedHandleCreateNewNodeEntity = useCallback(() => {
-    debounce(handleCreateNewNodeEntity, 500);
+    debounce(handleCreateNewNodeEntity, 800)();
   }, [handleCreateNewNodeEntity]);
 
   const handleDeleteEntityNode = useCallback(() => {
