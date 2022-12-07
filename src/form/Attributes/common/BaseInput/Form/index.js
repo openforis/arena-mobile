@@ -52,7 +52,11 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
           ] || undefined
         }
         onChangeText={setValue}
-        defaultValue={String(node?.value || '')}
+        defaultValue={
+          nodeDef.type === NodeDefType.text
+            ? String(node?.value || '')
+            : String(isNaN(node?.value) ? '' : node?.value)
+        }
         autoFocus={true}
         keyboardType={keyboardType}
         textAlign={nodeDef.type === NodeDefType.text ? 'left' : 'right'}
