@@ -94,10 +94,7 @@ const Header = () => {
     [dispatch],
   );
 
-  const _labelStractor = useCallback(
-    item => `${parentLabel}: ${item.keyString}`,
-    [parentLabel],
-  );
+  const _labelStractor = useCallback(item => item.keyString, []);
 
   if (!parentEntityNodeDef.props.multiple) {
     return <></>;
