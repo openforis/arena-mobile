@@ -3,15 +3,11 @@ import React from 'react';
 import {Text} from 'react-native';
 
 import {Preview as BasePreview} from '../../Base';
+import {getValueAsString} from '../Form';
 
 import styles from './styles';
 
 const NodeValueRender = ({node, nodeDef}) => {
-  const stringValue =
-    nodeDef.type === NodeDefType.text
-      ? String(node?.value || '')
-      : String(isNaN(node?.value) ? '' : node?.value);
-
   return (
     <Text
       style={[
@@ -19,7 +15,7 @@ const NodeValueRender = ({node, nodeDef}) => {
           ? styles.textAlignLeft
           : styles.textAlignRight,
       ]}>
-      {stringValue}
+      {getValueAsString(nodeDef, node)}
     </Text>
   );
 };

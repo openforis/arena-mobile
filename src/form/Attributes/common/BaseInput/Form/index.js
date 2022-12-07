@@ -19,6 +19,11 @@ const autoCapitalizeByTransformFunction = {
   [textTransformValues.uppercase]: 'characters',
 };
 
+export const getValueAsString = (nodeDef, node, defaultValue = '') => {
+  return nodeDef.type === NodeDefType.text
+    ? String(node?.value || defaultValue)
+    : String(isNaN(node?.value) ? defaultValue : node?.value);
+};
 // text default
 // float numeric  ios: decimal-pad
 // integer numeric, ios: number-pad
@@ -52,11 +57,7 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
           ] || undefined
         }
         onChangeText={setValue}
-        defaultValue={
-          nodeDef.type === NodeDefType.text
-            ? String(node?.value || '')
-            : String(isNaN(node?.value) ? '' : node?.value)
-        }
+        defaultValue={getValueAsString(nodeDef, node)}
         autoFocus={true}
         keyboardType={keyboardType}
         textAlign={nodeDef.type === NodeDefType.text ? 'left' : 'right'}
