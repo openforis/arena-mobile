@@ -136,7 +136,8 @@ const Form = ({nodeDef}) => {
       <InputContainer
         horizontal={true}
         stacked={true}
-        title={t('Form:nodeDefCoordinate.srs')}>
+        title={t('Form:nodeDefCoordinate.srs')}
+        hasTitle={true}>
         <View style={styles.selectContainer}>
           {surveySrs.length > 0 && (
             <Select

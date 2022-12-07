@@ -1,3 +1,4 @@
+import {Objects} from '@openforis/arena-core';
 import React from 'react';
 import {Text, View, TextInput} from 'react-native';
 
@@ -48,7 +49,11 @@ const Input = ({
   ...props
 }) => {
   return (
-    <InputContainer title={title} stacked={stacked} horizontal={horizontal}>
+    <InputContainer
+      title={title}
+      hasTitle={!Objects.isEmpty(title)}
+      stacked={stacked}
+      horizontal={horizontal}>
       <TextInput
         style={[styles.input, customStyle]}
         onChange={onChange}
