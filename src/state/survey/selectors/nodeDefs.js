@@ -19,8 +19,10 @@ export const getNodeDefByUuid = createCachedSelector(
   (nodeDefsByUuid, nodeDefUuid) => nodeDefsByUuid[nodeDefUuid] || false,
 )((_state_, nodeDefUuid) => nodeDefUuid || '_');
 
-export const getNodeDefs = createSelector(getNodeDefsByUuid, nodeDefs =>
-  Object.values(nodeDefs).filter(nodeDef => nodeDef.draft !== true),
+export const getNodeDefs = createSelector(getNodeDefsByUuid, (nodeDefs = {}) =>
+  Object.values(nodeDefs).filter(
+    nodeDef => !nodeDef.parentUuid || nodeDef.draft !== true,
+  ),
 );
 export const getNodeDefRoot = createSelector(getNodeDefs, nodeDefs =>
   nodeDefs.find(({parentUuid}) => !parentUuid),
