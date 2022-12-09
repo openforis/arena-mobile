@@ -33,9 +33,9 @@ const List = ({
   );
 
   const dataSorted = useMemo(() => {
-    const sortFunction = SORT_FUNCTIONS_BY_TYPE[sortCriteria?.type];
+    const sortFunction = SORT_FUNCTIONS_BY_TYPE[sortCriteria?.type] || false;
 
-    if (Objects.isEmpty(sortCriteria) || Objects.isEmpty(sortFunction)) {
+    if (Objects.isEmpty(sortCriteria) || sortFunction === false) {
       return data;
     }
 

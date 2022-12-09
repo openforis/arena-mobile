@@ -33,7 +33,7 @@ const SurveyCycleSelector = () => {
       labelStractor={_labelStractor}
       handleChange={handleChange}
       selectedItemKey={surveyCycle}
-      label={t('Home:survey.card.cycle')}
+      label={t('Home:survey.card.selected_cycle')}
     />
   );
 };

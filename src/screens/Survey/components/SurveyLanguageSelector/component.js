@@ -38,7 +38,7 @@ const SurveyLanguageSelector = () => {
   }
   return (
     <SelectWithLabel
-      label={t('Home:survey.card.language')}
+      label={t('Home:survey.card.selected_language')}
       items={surveyLanguages}
       handleChange={handleChange}
       selectedItemKey={surveyLanguage}

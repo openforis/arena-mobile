@@ -23,8 +23,10 @@
       "active_survey": "$t(Surveys:active_survey)",
       "id": "Id",
       "name": "Name",
-      "language": "Selected language",
-      "cycle": "Selected cycle",
+      "language": "Language",
+      "seleted_language": "Selected language",
+      "cycle": "Cycle",
+      "seleted_cycle": "Selected cycle",
       "go_to_survey_details": "Go to survey details"
     }
   }
