@@ -29,7 +29,6 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.0'
-        run: bundle exec rake
       - name: Decode Keystore
         id: decode_keystore
         uses: timheuer/base64-to-file@v1.1
