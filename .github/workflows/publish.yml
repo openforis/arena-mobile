@@ -28,8 +28,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.ACCESS_TOKEN}}
       - uses: actions/setup-ruby@v1
         with:
-          ruby-version: '3.0' # Not needed with a .ruby-version file
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+          ruby-version: '3.0'
       - name: Decode Keystore
         id: decode_keystore
         uses: timheuer/base64-to-file@v1.1
