@@ -65,6 +65,7 @@ const Header = () => {
   }, [handleCreateNewNodeEntity]);
 
   const handleDeleteEntityNode = useCallback(() => {
+    const requiredText = t('Form:deleteNode.alert.required');
     alert({
       title: t('Form:deleteNode.alert.title'),
       message: t('Form:deleteNode.alert.message', {
@@ -76,6 +77,8 @@ const Header = () => {
         dispatch(formActions.deleteNodeEntity({node: parentEntityNode}));
       },
       onDismiss: () => null,
+      requiredText,
+      requiredTextMessage: t('Common:required_text', {requiredText}),
     });
   }, [dispatch, parentEntityKeyString, parentLabel, parentEntityNode, t]);
 

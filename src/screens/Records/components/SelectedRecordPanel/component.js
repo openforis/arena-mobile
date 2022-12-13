@@ -16,6 +16,10 @@ const SelectedRecordPanel = ({record, unSelect}) => {
   const dispatch = useDispatch();
 
   const handleDelete = useCallback(() => {
+    const requiredText = t(
+      'Records:selected_record_panel.delete.alert.required',
+    );
+
     alert({
       title: t('Records:selected_record_panel.delete.alert.title'),
       message: t('Records:selected_record_panel.delete.alert.message', {
@@ -32,6 +36,9 @@ const SelectedRecordPanel = ({record, unSelect}) => {
         );
       },
       onDismiss: () => null,
+
+      requiredText,
+      requiredTextMessage: t('Common:required_text', {requiredText}),
     });
   }, [dispatch, record, unSelect, t]);
 

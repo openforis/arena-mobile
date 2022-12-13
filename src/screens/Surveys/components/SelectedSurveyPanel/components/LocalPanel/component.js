@@ -18,6 +18,10 @@ const LocalPanel = ({survey, unSelect}) => {
   const currentSurveyUuid = useSelector(surveySelectors.getSelectedSurveyUuid);
 
   const handleDelete = useCallback(() => {
+    const requiredText = t(
+      'Surveys:selected_survey_panel.delete.alert.required',
+    );
+
     alert({
       title: t('Surveys:selected_survey_panel.delete.alert.title'),
       message: t('Surveys:selected_survey_panel.delete.alert.message', {
@@ -33,6 +37,8 @@ const LocalPanel = ({survey, unSelect}) => {
           }),
         );
       },
+      requiredText,
+      requiredTextMessage: t('Common:required_text', {requiredText}),
     });
   }, [dispatch, survey, unSelect, t]);
 

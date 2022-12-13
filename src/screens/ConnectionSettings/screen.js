@@ -53,6 +53,8 @@ const ConnectionSettings = () => {
   }, [dispatch, formData]);
 
   const handleResetData = useCallback(() => {
+    const requiredText = t('ConnectionSettings:reset.required');
+
     alert({
       title: t('ConnectionSettings:reset.title'),
       message: t('ConnectionSettings:reset.message'),
@@ -61,6 +63,8 @@ const ConnectionSettings = () => {
       onAccept: () => {
         dispatch(globalActions.reset());
       },
+      requiredText,
+      requiredTextMessage: t('Common:required_text', {requiredText}),
     });
   }, [dispatch, t]);
 

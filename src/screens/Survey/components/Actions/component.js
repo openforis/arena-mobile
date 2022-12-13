@@ -26,6 +26,10 @@ const Actions = () => {
 
   const handleDeleteSurveyData = useCallback(() => {
     if (survey) {
+      const requiredText = t(
+        'Surveys:selected_survey_panel.delete.alert.required',
+      );
+
       alert({
         title: t('Surveys:selected_survey_panel.delete.alert.title'),
         message: t('Surveys:selected_survey_panel.delete.alert.message', {
@@ -36,6 +40,9 @@ const Actions = () => {
         onAccept: () => {
           dispatch(surveyActions.deleteSurveyData({surveyUuid: survey?.uuid}));
         },
+
+        requiredText,
+        requiredTextMessage: t('Common:required_text', {requiredText}),
       });
     }
   }, [dispatch, survey, t]);
@@ -50,6 +57,10 @@ const Actions = () => {
 
   const handleDeleteSurvey = useCallback(() => {
     if (survey) {
+      const requiredText = t(
+        'Surveys:selected_survey_panel.delete.alert.required',
+      );
+
       alert({
         title: t('Surveys:selected_survey_panel.delete.alert.title'),
         message: t('Surveys:selected_survey_panel.delete.alert.message', {
@@ -60,6 +71,8 @@ const Actions = () => {
         onAccept: () => {
           dispatch(surveysActions.deleteSurvey({surveyUuid: survey?.uuid}));
         },
+        requiredText,
+        requiredTextMessage: t('Common:required_text', {requiredText}),
       });
     }
   }, [dispatch, survey, t]);
