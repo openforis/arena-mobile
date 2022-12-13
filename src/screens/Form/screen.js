@@ -38,7 +38,7 @@ const useAskBeforeLeave = () => {
   const {t} = useTranslation();
   const handleClose = useCloseNode();
 
-  const beforeRemoveAction = useCallback(
+  const beforeRemoveScreenAction = useCallback(
     e => {
       e?.preventDefault();
 
@@ -103,9 +103,10 @@ const useAskBeforeLeave = () => {
   ]);
 
   useEffect(() => {
-    navigation.addListener('beforeRemove', beforeRemoveAction);
-    return () => navigation.removeListener('beforeRemove', beforeRemoveAction);
-  }, [navigation, beforeRemoveAction]);
+    navigation.addListener('beforeRemove', beforeRemoveScreenAction);
+    return () =>
+      navigation.removeListener('beforeRemove', beforeRemoveScreenAction);
+  }, [navigation, beforeRemoveScreenAction]);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
