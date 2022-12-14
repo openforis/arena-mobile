@@ -1,3 +1,4 @@
+import {Languages} from '@openforis/arena-core';
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';
@@ -8,6 +9,8 @@ import {
   selectors as surveySelectors,
   actions as surveyActions,
 } from 'state/survey';
+
+const getLanguageLabel = language => Languages[language].en || language;
 
 const SurveyLanguageSelector = () => {
   const surveyLanguage = useSelector(surveySelectors.getSelectedSurveyLanguage);
@@ -32,7 +35,12 @@ const SurveyLanguageSelector = () => {
     return (
       <LabelsAndValues
         size="m"
-        items={[{label: t('Home:survey.card.language'), value: surveyLanguage}]}
+        items={[
+          {
+            label: t('Home:survey.card.language'),
+            value: getLanguageLabel(surveyLanguage),
+          },
+        ]}
       />
     );
   }
@@ -42,6 +50,7 @@ const SurveyLanguageSelector = () => {
       items={surveyLanguages}
       handleChange={handleChange}
       selectedItemKey={surveyLanguage}
+      labelStractor={getLanguageLabel}
     />
   );
 };

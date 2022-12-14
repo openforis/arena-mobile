@@ -24,9 +24,9 @@
       "id": "Id",
       "name": "Name",
       "language": "Language",
-      "seleted_language": "Selected language",
+      "selected_language": "Selected language",
       "cycle": "Cycle",
-      "seleted_cycle": "Selected cycle",
+      "selected_cycle": "Selected cycle",
       "go_to_survey_details": "Go to survey details"
     }
   }
