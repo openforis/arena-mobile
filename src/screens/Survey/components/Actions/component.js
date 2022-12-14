@@ -14,8 +14,10 @@ import {
 } from 'state/survey';
 import {actions as surveysActions} from 'state/surveys';
 
-const IMPORT_RECORDS_ENABLED = false;
 import styles from './styles';
+
+const IMPORT_RECORDS_ENABLED = false;
+
 const Actions = () => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
@@ -26,6 +28,10 @@ const Actions = () => {
 
   const handleDeleteSurveyData = useCallback(() => {
     if (survey) {
+      const requiredText = t(
+        'Surveys:selected_survey_panel.delete.alert.delete_data',
+      );
+
       alert({
         title: t('Surveys:selected_survey_panel.delete.alert.title'),
         message: t('Surveys:selected_survey_panel.delete.alert.message', {
@@ -36,6 +42,9 @@ const Actions = () => {
         onAccept: () => {
           dispatch(surveyActions.deleteSurveyData({surveyUuid: survey?.uuid}));
         },
+
+        requiredText,
+        requiredTextMessage: t('Common:required_text', {requiredText}),
       });
     }
   }, [dispatch, survey, t]);
@@ -50,6 +59,10 @@ const Actions = () => {
 
   const handleDeleteSurvey = useCallback(() => {
     if (survey) {
+      const requiredText = t(
+        'Surveys:selected_survey_panel.delete.alert.delete_survey',
+      );
+
       alert({
         title: t('Surveys:selected_survey_panel.delete.alert.title'),
         message: t('Surveys:selected_survey_panel.delete.alert.message', {
@@ -60,6 +73,8 @@ const Actions = () => {
         onAccept: () => {
           dispatch(surveysActions.deleteSurvey({surveyUuid: survey?.uuid}));
         },
+        requiredText,
+        requiredTextMessage: t('Common:required_text', {requiredText}),
       });
     }
   }, [dispatch, survey, t]);

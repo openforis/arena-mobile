@@ -5,7 +5,8 @@
         "title": "Are you sure?",
         "message": "You are going to remove the record {{ name }} and all of the info related from the device.",
         "accept": "Yes, delete",
-        "dismiss": "No"
+        "dismiss": "No",
+        "required": "delete"
       }
     },
     "cta_delete": "Delete this record",

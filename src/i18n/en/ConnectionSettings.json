@@ -25,7 +25,9 @@
     "title": "Are you sure about the reset?",
     "message": "record and surveys are going to be removed from the device",
     "accept": "Yes, clean all data",
-    "dismiss": "No"
+    "dismiss": "No",
+    "required": "reset"
+    
   },
   "telemetry": {
     "cta": "telemetry"

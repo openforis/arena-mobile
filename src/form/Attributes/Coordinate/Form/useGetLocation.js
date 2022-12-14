@@ -18,7 +18,9 @@ const useGetLocation = () => {
   const hasPermissionIOS = useCallback(async () => {
     const openSetting = () => {
       Linking.openSettings().catch(() => {
-        alert(t('Form:nodeDefCoordinate.permissions.unable_settings'));
+        alert({
+          title: t('Form:nodeDefCoordinate.permissions.unable_settings'),
+        });
       });
     };
     const status = await Geolocation.requestAuthorization('whenInUse');
@@ -28,26 +30,20 @@ const useGetLocation = () => {
     }
 
     if (status === 'denied') {
-      alert(t('Form:nodeDefCoordinate.permissions.denied'));
+      alert({title: t('Form:nodeDefCoordinate.permissions.denied')});
     }
 
     if (status === 'disabled') {
-      alert(
-        t('Form:nodeDefCoordinate.permissions.turn_on.message', {
+      alert({
+        title: t('Form:nodeDefCoordinate.permissions.turn_on.message', {
           appName: appConfig.displayName,
         }),
-        '',
-        [
-          {
-            text: t('Form:nodeDefCoordinate.permissions.turn_on.accept'),
-            onPress: openSetting,
-          },
-          {
-            text: t('Form:nodeDefCoordinate.permissions.turn_on.reject'),
-            onPress: null,
-          },
-        ],
-      );
+        message: '',
+        acceptText: t('Form:nodeDefCoordinate.permissions.turn_on.accept'),
+        onAccept: openSetting,
+        dismissText: t('Form:nodeDefCoordinate.permissions.turn_on.reject'),
+        onDismiss: () => null,
+      });
     }
 
     return false;
@@ -105,7 +101,7 @@ const useGetLocation = () => {
         setLocation(position);
       },
       error => {
-        alert(`Code ${error.code}`, error.message);
+        alert({title: `Code ${error.code}`, message: error.message});
         setLocation(null);
       },
       {
