@@ -36,7 +36,8 @@
         "message": "You are going to remove the survey {{ name }} and all its data from the device.",
         "accept": "Yes, delete",
         "dismiss": "No",
-        "required": "delete data"
+        "delete_data": "delete data",
+        "delete_survey": "delete survey"
       }
     },
     "local": {
