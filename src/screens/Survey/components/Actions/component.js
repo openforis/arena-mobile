@@ -14,8 +14,10 @@ import {
 } from 'state/survey';
 import {actions as surveysActions} from 'state/surveys';
 
-const IMPORT_RECORDS_ENABLED = false;
 import styles from './styles';
+
+const IMPORT_RECORDS_ENABLED = false;
+
 const Actions = () => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
@@ -27,7 +29,7 @@ const Actions = () => {
   const handleDeleteSurveyData = useCallback(() => {
     if (survey) {
       const requiredText = t(
-        'Surveys:selected_survey_panel.delete.alert.required',
+        'Surveys:selected_survey_panel.delete.alert.delete_data',
       );
 
       alert({
@@ -58,7 +60,7 @@ const Actions = () => {
   const handleDeleteSurvey = useCallback(() => {
     if (survey) {
       const requiredText = t(
-        'Surveys:selected_survey_panel.delete.alert.required',
+        'Surveys:selected_survey_panel.delete.alert.delete_survey',
       );
 
       alert({

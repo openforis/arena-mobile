@@ -53,7 +53,7 @@ export const alert = ({
     );
   }
   if (requiredText) {
-    prompt(title, _message, buttons, {
+    return prompt(title, _message, buttons, {
       type: 'text',
       cancelable: false,
       defaultValue: '',

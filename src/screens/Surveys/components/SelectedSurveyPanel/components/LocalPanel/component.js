@@ -19,7 +19,7 @@ const LocalPanel = ({survey, unSelect}) => {
 
   const handleDelete = useCallback(() => {
     const requiredText = t(
-      'Surveys:selected_survey_panel.delete.alert.required',
+      'Surveys:selected_survey_panel.delete.alert.delete_survey',
     );
 
     alert({
