@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 import {FlatList, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -42,9 +42,20 @@ const Attributes = () => {
 
   const keyExtractor = useCallback(key => key, []);
 
+  const flatListRef = useRef();
+
+  const toTop = useCallback(() => {
+    flatListRef.current.scrollToOffset({animated: false, offset: 0});
+  }, [flatListRef]);
+
+  useEffect(() => {
+    toTop();
+  }, [toTop, nodeDefChildrenUuids]);
+
   return (
     <View style={styles.container}>
       <FlatList
+        ref={flatListRef}
         showsVerticalScrollIndicator={false}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
