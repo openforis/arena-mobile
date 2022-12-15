@@ -20,8 +20,13 @@ export const useDeviceUse = () => {
   const [deviceUse, setDeviceUse] = useState({});
 
   const load = async () => {
-    const dirItems = await fs.readDir({dirPath: '.'});
-    const used = dirItems.reduce((acc, dirItem) => acc + dirItem.size, 0);
+    let used = 0;
+    try {
+      const dirItems = await fs.readDir({dirPath: '.'});
+      used = dirItems.reduce((acc, dirItem) => acc + dirItem.size, 0);
+    } catch (e) {
+      console.log('error', e);
+    }
 
     const data = {
       version: DeviceInfo.getReadableVersion(),
