@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux';
 
 import Input from 'arena-mobile-ui/components/Input';
 import {transform, textTransformValues} from 'arena/utils/textUtils';
-import {useUpdateNode} from 'state/form/hooks/useNodeFormActions';
+import {useCloseNode, useUpdateNode} from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
 
 import {Form as BaseForm} from '../../Base';
@@ -32,9 +32,9 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
   const node = useSelector(formSelectors.getNode);
 
   const handleUpdateNode = useUpdateNode();
-
+  const handleClose = useCloseNode();
   const handleSubmit = useCallback(
-    ({callback = () => null} = {}) => {
+    ({callback = handleClose} = {}) => {
       const _newValue = newValue || String(node.value || '');
 
       const _value =
@@ -45,7 +45,7 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
           : Number(_newValue.replace(',', '.'));
       handleUpdateNode({node, value: _value, callback});
     },
-    [nodeDef, node, newValue, handleUpdateNode],
+    [nodeDef, node, newValue, handleUpdateNode, handleClose],
   );
 
   return (
@@ -61,6 +61,7 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
         autoFocus={true}
         keyboardType={keyboardType}
         textAlign={nodeDef.type === NodeDefType.text ? 'left' : 'right'}
+        onSubmitEditing={handleSubmit}
       />
     </BaseForm>
   );

@@ -1,6 +1,14 @@
 import {NodeDefType} from '@openforis/arena-core';
 import React from 'react';
-import {ScrollView, SafeAreaView} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
+  Dimensions,
+  Animated,
+  View,
+  SafeAreaView,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import {useSelector} from 'react-redux';
 
@@ -16,6 +24,7 @@ import TaxonForm from 'form/Attributes/Taxonomy/Form';
 import TextForm from 'form/Attributes/Text/Form';
 import TimeForm from 'form/Attributes/Time/Form';
 import formSelectors from 'state/form/selectors';
+const Spacer = () => <View style={{height: 80}} />;
 
 import styles from './styles';
 
@@ -35,6 +44,29 @@ const FormsByType = {
 const AttributeFormWithModal = () => {
   const nodeDef = useSelector(formSelectors.getNodeDef);
 
+  if (![NodeDefType.code, NodeDefType.taxon].includes(nodeDef?.type)) {
+    return (
+      <Modal
+        isVisible={!!nodeDef}
+        style={{justifyContent: 'flex-end', margin: 0}}
+        avoidKeyboard={true}>
+        <SafeAreaView
+          style={{
+            flexDirection: 'column',
+            flex: 1,
+          }}>
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            style={[styles.scroll, {marginTop: 30, backgroundColor: 'white'}]}>
+            {nodeDef &&
+              React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
+                nodeDef,
+              })}
+          </ScrollView>
+        </SafeAreaView>
+      </Modal>
+    );
+  }
   return (
     <Modal
       isVisible={!!nodeDef}
@@ -45,14 +77,14 @@ const AttributeFormWithModal = () => {
           flexDirection: 'column',
           flex: 1,
         }}>
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
-          style={[styles.formContainerV2, {marginTop: 30}]}>
+        <Spacer />
+
+        <View style={[styles.viewcontainer]}>
           {nodeDef &&
             React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
               nodeDef,
             })}
-        </ScrollView>
+        </View>
       </SafeAreaView>
     </Modal>
   );
@@ -62,12 +94,9 @@ const AttributeForm = () => {
   const nodeDef = useSelector(formSelectors.getNodeDef);
 
   if (
-    [
-      NodeDefType.date,
-      NodeDefType.time,
-      NodeDefType.boolean,
-      NodeDefType.code,
-    ].includes(nodeDef?.type)
+    [NodeDefType.date, NodeDefType.time, NodeDefType.boolean].includes(
+      nodeDef?.type,
+    )
   ) {
     return (
       <>
