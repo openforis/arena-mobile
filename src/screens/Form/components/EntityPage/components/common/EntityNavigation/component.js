@@ -76,7 +76,7 @@ const Prev = ({parent}) => {
   });
 
   if (prevNodeDef?.uuid) {
-    return <Button nodeDef={prevNodeDef} />;
+    return <Button nodeDef={prevNodeDef} align="left" />;
   }
 
   return <View />;

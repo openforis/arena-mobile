@@ -20,13 +20,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     zIndex: 99,
     flex: 1,
-  },
-  formContainerWithModal: {
-    backgroundColor: 'white',
-    borderRadius: baseStyles.bases.BASE_4,
-    padding: baseStyles.bases.BASE_4,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
+
+    display: 'flex',
+    flexDirection: 'column',
   },
   scroll: {
     borderRadius: baseStyles.bases.BASE_4,
@@ -34,6 +30,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     flex: 1,
     paddingBottom: 100,
+    margin: 0,
+    minHeight: HEIGHT,
   },
   viewcontainer: {
     borderRadius: baseStyles.bases.BASE_4,
@@ -43,6 +41,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+
+    flexDirection: 'column',
   },
 });
 
