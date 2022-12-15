@@ -1,5 +1,5 @@
 import {Objects} from '@openforis/arena-core';
-import React from 'react';
+import React, {useRef, useEffect} from 'react';
 import {Text, View, TextInput} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
@@ -45,9 +45,18 @@ const Input = ({
   horizontal = false,
   stacked = false,
   customStyle = CUSTOM_STYLE,
+  lateFocus = false,
 
   ...props
 }) => {
+  const inputRef = useRef();
+  useEffect(() => {
+    if (lateFocus) {
+      setTimeout(() => {
+        inputRef.current.focus();
+      }, 300);
+    }
+  }, [lateFocus]);
   return (
     <InputContainer
       title={title}
@@ -55,6 +64,7 @@ const Input = ({
       stacked={stacked}
       horizontal={horizontal}>
       <TextInput
+        ref={inputRef}
         style={[styles.input, customStyle]}
         onChange={onChange}
         onChangeText={onChangeText}

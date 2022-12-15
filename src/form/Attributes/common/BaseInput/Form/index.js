@@ -1,5 +1,6 @@
 import {NodeDefs, NodeDefType} from '@openforis/arena-core';
 import React, {useState, useCallback} from 'react';
+import {Platform} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import Input from 'arena-mobile-ui/components/Input';
@@ -58,7 +59,8 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
         }
         onChangeText={setValue}
         defaultValue={getValueAsString(nodeDef, node)}
-        autoFocus={true}
+        autoFocus={Platform.OS === 'ios' ? true : false}
+        lateFocus={Platform.OS === 'ios' ? false : true}
         keyboardType={keyboardType}
         textAlign={nodeDef.type === NodeDefType.text ? 'left' : 'right'}
         onSubmitEditing={handleSubmit}
