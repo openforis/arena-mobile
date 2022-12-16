@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 
+import * as colors from 'arena-mobile-ui/colors';
 import baseStyles from 'arena-mobile-ui/styles';
 
 const styles = StyleSheet.create({
@@ -12,6 +13,10 @@ const styles = StyleSheet.create({
   },
   selected: {
     fontWeight: '400',
+  },
+  disabled: {
+    opacity: 0.5,
+    backgroundColor: colors.neutralLighter,
   },
 });
 export default styles;
