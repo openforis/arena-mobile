@@ -36,6 +36,7 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
     dispatch(formActions.setNode({node: node}));
   }, [dispatch, node]);
 
+  const disabled = !applicable || categoryItems.length === 0;
   return (
     <Button
       onPress={handleSelectNodeAndNodeDef}
@@ -46,7 +47,8 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
       }
       icon={ChevronDown}
       customTextStyle={[styles.text, selectedItem ? styles.selected : {}]}
-      disabled={!applicable}
+      disabled={disabled}
+      customContainerStyle={disabled ? styles.disabled : {}}
     />
   );
 };
