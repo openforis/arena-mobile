@@ -26,7 +26,7 @@ export const useDeleteNode = () => {
 
   const handleDelete = useCallback(
     ({node, label, callback = handleClose}) => {
-      const requiredText = t('Form:deleteNode.alert.requiredText');
+      const requiredText = t('Form:deleteNode.alert.required');
       alert({
         title: t('Form:deleteNode.alert.title'),
         message: t('Form:deleteNode.alert.message', {
