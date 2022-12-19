@@ -49,7 +49,7 @@ const useFile = ({nodeDef, node, isImage = false}) => {
     [baseGetterFn, handleCreate, getFileActionCallback],
   );
   const deleteFile = useCallback(() => {
-    handleDelete({node, label: node?.value?.fileName});
+    handleDelete({node, label: node?.value?.fileName, requestConfirm: false});
     //getFile({callback: getFileActionCallback(handleDelete)})()
   }, [node, handleDelete]);
 

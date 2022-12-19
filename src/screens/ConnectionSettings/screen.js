@@ -30,6 +30,7 @@ import styles from './styles';
 import Telemetry from './Telemetry';
 import Version from './Version';
 
+const SHOW_SERVER_OPTIONS = false;
 const _valueOrDefault = (value, defaultValue) =>
   Objects.isEmpty(value) && value !== '' ? defaultValue : value;
 
@@ -42,7 +43,7 @@ const ConnectionSettings = () => {
   const onChangeText = useCallback(
     key =>
       (value = '') => {
-        setFormData(prevValue => ({...prevValue, [key]: value}));
+        setFormData(prevValue => ({...prevValue, [key]: value.trim()}));
       },
     [],
   );
@@ -155,17 +156,19 @@ const ConnectionSettings = () => {
                   placeholder="https://test.openforis-arena.org"
                   autoCapitalize="none"
                 />
-                <Button
-                  type="ghostBlack"
-                  onPress={handleSetServerUrl(
-                    'https://www.openforis-arena.org',
-                  )}
-                  label={t('ConnectionSettings:server_config_fields.prod', {
-                    url: 'https://www.openforis-arena.org',
-                  })}
-                  customContainerStyle={[styles.serverUrlButton]}
-                />
-                {isDevModeEnabled && (
+                {SHOW_SERVER_OPTIONS && (
+                  <Button
+                    type="ghostBlack"
+                    onPress={handleSetServerUrl(
+                      'https://www.openforis-arena.org',
+                    )}
+                    label={t('ConnectionSettings:server_config_fields.prod', {
+                      url: 'https://www.openforis-arena.org',
+                    })}
+                    customContainerStyle={[styles.serverUrlButton]}
+                  />
+                )}
+                {isDevModeEnabled && SHOW_SERVER_OPTIONS && (
                   <Button
                     type="ghostBlack"
                     onPress={handleSetServerUrl(
@@ -222,16 +225,20 @@ const ConnectionSettings = () => {
               )}
             </View>
             <Version />
-            {isDevModeEnabled && <Telemetry />}
-            <View style={{height: 100}} />
-            <View>
-              <Button
-                type="ghost"
-                onPress={handleResetData}
-                label={t('ConnectionSettings:reset.cta')}
-                disabled={isLoading}
-              />
-            </View>
+            {isDevModeEnabled && (
+              <>
+                <Telemetry />
+                <View style={{height: 100}} />
+                <View>
+                  <Button
+                    type="ghost"
+                    onPress={handleResetData}
+                    label={t('ConnectionSettings:reset.cta')}
+                    disabled={isLoading}
+                  />
+                </View>
+              </>
+            )}
             <View style={{height: 100}} />
           </ScrollView>
         </KeyboardAvoidingView>

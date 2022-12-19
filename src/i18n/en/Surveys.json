@@ -1,7 +1,8 @@
 {
   "active_survey": "Active survey",
   "toasts": {
-    "server": "You already have this survey pointing to other server, connect to {{ surveyServer}} instead of {{ serverUrl }}"
+    "server": "You already have this survey pointing to other server, connect to {{ surveyServer}} instead of {{ serverUrl }}",
+    "data_deleted": "All records successfully deleted"
   },
   "local": {
     "title": "Device",

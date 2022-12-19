@@ -49,7 +49,7 @@ const FormCodeMultiple = ({nodeDef}) => {
     ({node, label}) =>
       () => {
         if (applicable) {
-          handleDelete({node, label});
+          handleDelete({node, label, requestConfirm: false});
         }
       },
     [handleDelete, applicable],

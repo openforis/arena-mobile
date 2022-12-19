@@ -24,7 +24,7 @@ export const alert = ({
     acceptText && {
       text: acceptText,
       onPress: (inputText = null) => {
-        if (requiredText && inputText !== requiredText) {
+        if (requiredText && inputText.trim() !== requiredText.trim()) {
           return;
         }
         onAccept?.();

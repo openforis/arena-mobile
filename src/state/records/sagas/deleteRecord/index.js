@@ -1,6 +1,8 @@
 import {Objects} from '@openforis/arena-core';
+import {t} from 'i18next';
 import {put, select, call} from 'redux-saga/effects';
 
+import {handleShowToast} from 'infra/toast';
 import {cleanRecord} from 'state/__persistence';
 import formActions from 'state/form/actionCreators';
 import formSelectors from 'state/form/selectors';
@@ -31,6 +33,8 @@ function* handleDeleteRecord({payload}) {
   if (callBack) {
     yield call(callBack);
   }
+
+  yield call(handleShowToast, {message: t('Form:deleteNode.alert.title')});
 }
 
 export default handleDeleteRecord;

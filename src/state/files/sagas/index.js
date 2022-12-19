@@ -1,7 +1,9 @@
 import {NodeDefType} from '@openforis/arena-core';
+import {t} from 'i18next';
 import {takeLatest, select, call, all, put} from 'redux-saga/effects';
 
 import {normalizeByUuid} from 'infra/stateUtils';
+import {handleShowToast} from 'infra/toast';
 import nodesActions from 'state/nodes/actionCreators';
 import recordsActions from 'state/records/actionCreators';
 import surveyActions from 'state/survey/actionCreators';
@@ -26,6 +28,10 @@ function* handleDeleteFiles(filesByFileUuid) {
   yield put(
     filesActionTypes.deleteFiles({filesUuids: Object.keys(filesByFileUuid)}),
   );
+  yield call(handleShowToast, {
+    message: t('Surveys:toasts.data_deleted'),
+    duration: 5000,
+  });
 }
 
 function* handleDeleteNodesFiles({payload}) {

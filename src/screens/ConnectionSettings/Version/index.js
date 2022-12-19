@@ -1,4 +1,5 @@
 import React, {useCallback, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {useDispatch} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
@@ -9,6 +10,7 @@ import {useDeviceUse} from '../hooks';
 const Version = () => {
   const dispatch = useDispatch();
   const [numTaps, setNumTaps] = useState(0);
+  const {t} = useTranslation();
 
   const handleTap = useCallback(() => {
     if (numTaps === 4) {
@@ -22,7 +24,7 @@ const Version = () => {
     <Button
       type="ghostBlack"
       onPress={handleTap}
-      label={`${data.version} (${data.buildNumber})`}
+      label={`${t('Common:version')} ${data.version} (${data.buildNumber})`}
     />
   );
 };
