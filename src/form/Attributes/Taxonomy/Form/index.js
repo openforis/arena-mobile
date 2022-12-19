@@ -13,8 +13,17 @@ import {selectors as surveySelectors} from 'state/survey';
 
 import styles from './styles';
 
-const getTaxonItemLabel = ({item}) =>
-  `(${item.props.code}) ${item.props.genus}`;
+const getTaxonItemLabel = ({item}) => {
+  const vernacularNamesObj = item?.vernacularNames || {};
+  const vernacularNames = Object.values(vernacularNamesObj)
+    .flatMap(vernacularName => vernacularName?.props?.name)
+    .filter(value => !!value);
+
+  return `(${item.props.code}), ${item.props.family}, ${item?.props?.genus}, ${
+    item?.props?.scientificName
+  }${vernacularNames.length > 0 ? ',' : ''}
+  ${vernacularNames.join(',')}`;
+};
 
 const getTextForSearch = (item, language) => {
   const vernacularNamesObj = item?.vernacularNames || {};
