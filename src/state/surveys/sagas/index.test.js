@@ -21,6 +21,7 @@ const mockSurvey = {
   props: {
     languages: ['LANG'],
   },
+  serverUrl: 'https://www.openforis-arena.org',
   nodeDefs: {
     NODE_DEF_UUID: {id: 'NODE_DEF_ID', uuid: 'NODE_DEF_UUID'},
   },
