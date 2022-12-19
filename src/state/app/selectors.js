@@ -15,7 +15,7 @@ const getPreferences = createSelector(
 );
 const getServerUrl = createSelector(
   getPreferences,
-  preferences => preferences?.serverUrl,
+  preferences => preferences?.serverUrl || 'https://www.openforis-arena.org',
 );
 
 const getUi = createSelector(getState, app => app?.ui || initialState.ui);

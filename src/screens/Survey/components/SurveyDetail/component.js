@@ -8,6 +8,7 @@ import LabelsAndValues from 'arena-mobile-ui/components/LabelsAndValues';
 import baseStyles from 'arena-mobile-ui/styles';
 import {ROUTES} from 'navigation/constants';
 import * as navigator from 'state/navigatorService';
+import {useNumberRecords} from 'state/records/hooks';
 import {selectors as surveySelectors} from 'state/survey';
 
 import SurveyCycleSelector from '../SurveyCycleSelector';
@@ -25,6 +26,8 @@ const SurveyDetail = () => {
     cycle,
   } = useSelector(surveySelectors.getSurveyData);
   const {t} = useTranslation();
+
+  const numberOfRecords = useNumberRecords();
 
   useEffect(() => {
     if (!survey) {
@@ -69,6 +72,15 @@ const SurveyDetail = () => {
         />
 
         <SurveyLanguageSelector />
+        <LabelsAndValues
+          size="m"
+          items={[
+            {
+              label: t('Home:survey.card.number_of_records'),
+              value: numberOfRecords,
+            },
+          ]}
+        />
         {SHOW_CYCLE_SELECTOR && <SurveyCycleSelector />}
       </View>
     );

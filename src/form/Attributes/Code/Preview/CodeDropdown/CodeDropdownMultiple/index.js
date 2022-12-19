@@ -41,7 +41,7 @@ const CodeDropdownMultiple = ({nodeDef}) => {
     ({node, label}) =>
       () => {
         if (applicable) {
-          codeActions.handleDelete({node, label});
+          codeActions.handleDelete({node, label, requestConfirm: false});
         }
       },
     [codeActions, applicable],

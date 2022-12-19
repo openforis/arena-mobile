@@ -19,5 +19,6 @@
   "true": "True",
   "false": "False",
   "not_supported": "Not supported",
-  "required_text": "Please type '{{requiredText}}' to confirm"
+  "required_text": "Please type '{{requiredText}}' to confirm",
+  "version": "Version"
 }

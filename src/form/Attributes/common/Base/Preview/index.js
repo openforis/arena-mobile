@@ -34,6 +34,7 @@ const BaseDeletePreviewNode = ({node}) => {
     handleDelete({
       node,
       label: typeof node.value === 'string' ? node.value : false,
+      requestConfirm: false,
     });
   }, [handleDelete, node]);
 
