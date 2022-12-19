@@ -25,28 +25,29 @@ export const useDeleteNode = () => {
   const handleClose = useCloseNode();
 
   const handleDelete = useCallback(
+
     ({node, label, requestConfirm = true, callback = handleClose}) => {
       if (requestConfirm) {
         const requiredText = t('Form:deleteNode.alert.required');
-        alert({
-          title: t('Form:deleteNode.alert.title'),
-          message: t('Form:deleteNode.alert.message', {
-            name: label ? label : node.uuid,
-          }),
-          acceptText: t('Form:deleteNode.alert.accept'),
-          dismissText: t('Form:deleteNode.alert.dismiss'),
-          onAccept: () => {
-            dispatch(
-              nodesActions.removeNode({
-                node,
-                callback,
-              }),
-            );
-          },
-          onDismiss: () => null,
-          requiredText,
-          requiredTextMessage: t('Common:required_text', {requiredText}),
-        });
+      alert({
+        title: t('Form:deleteNode.alert.title'),
+        message: t('Form:deleteNode.alert.message', {
+          name: label ? label : node.uuid,
+        }),
+        acceptText: t('Form:deleteNode.alert.accept'),
+        dismissText: t('Form:deleteNode.alert.dismiss'),
+        onAccept: () => {
+          dispatch(
+            nodesActions.removeNode({
+              node,
+              callback,
+            }),
+          );
+        },
+        onDismiss: () => null,
+        requiredText,
+        requiredTextMessage: t('Common:required_text', {requiredText}),
+      });
       } else {
         dispatch(
           nodesActions.removeNode({
@@ -55,6 +56,7 @@ export const useDeleteNode = () => {
           }),
         );
       }
+
     },
     [t, dispatch, handleClose],
   );
