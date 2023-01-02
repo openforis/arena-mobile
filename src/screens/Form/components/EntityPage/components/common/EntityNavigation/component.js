@@ -32,7 +32,7 @@ const Button = ({nodeDef, align = 'right'}) => {
       <Text
         style={[styles.text, align === 'left' ? styles.textLeft : {}]}
         ellipsizeMode="middle"
-        numberOfLines={1}>
+        numberOfLines={2}>
         {nodeDefName}
       </Text>
     </TouchableOpacity>

@@ -49,13 +49,16 @@ const Form = ({nodeDef}) => {
 
   const handleUpdateValue = useCallback(
     field => valueUpdated => {
-      setValue(prevValue =>
-        Object.assign({}, prevValue, {
-          [field]: Number((valueUpdated || '').replace(',', '.')),
-        }),
-      );
+      setValue(prevValue => {
+        const _value = Number((valueUpdated || '').replace(',', '.'));
+
+        return Object.assign({}, prevValue, {
+          [field]:
+            DEFAULT_SRS_CODE === selectedSrs.code ? _value.toFixed(6) : _value,
+        });
+      });
     },
-    [],
+    [selectedSrs],
   );
 
   const handleSelect = useCallback(
