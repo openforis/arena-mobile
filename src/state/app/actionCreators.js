@@ -26,6 +26,7 @@ const {app} = createActions({
     showNames,
   }),
   [types.SET_DEV_MODE]: () => ({}),
+  [types.DISABLE_DEV_MODE]: () => ({}),
 });
 
 export default app;
