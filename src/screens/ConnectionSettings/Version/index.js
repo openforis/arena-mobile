@@ -24,7 +24,7 @@ const Version = () => {
     <Button
       type="ghostBlack"
       onPress={handleTap}
-      label={`${t('Common:version')} ${data.version} (${data.buildNumber})`}
+      label={`${t('Common:version')}: ${data.version} (${data.buildNumber})`}
     />
   );
 };
