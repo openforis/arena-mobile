@@ -26,6 +26,10 @@ const appUi = handleActions(
       ...state,
       devMode: true,
     }),
+    [actions.disableDevMode]: state => ({
+      ...state,
+      devMode: false,
+    }),
   },
   initialState.ui,
 );

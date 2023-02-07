@@ -27,7 +27,9 @@
     "accept": "Yes, clean all data",
     "dismiss": "No",
     "required": "reset"
-    
+  },
+  "devMode": {
+    "disable": "Disable dev mode"
   },
   "telemetry": {
     "cta": "telemetry"

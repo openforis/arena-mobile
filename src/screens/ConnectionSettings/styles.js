@@ -30,6 +30,9 @@ const styles = StyleSheet.create({
     marginVertical: 0,
     justifyContent: 'flex-start',
   },
+  dividers: {
+    height: 100,
+  },
 });
 
 export default styles;

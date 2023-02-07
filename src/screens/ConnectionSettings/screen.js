@@ -69,6 +69,10 @@ const ConnectionSettings = () => {
     });
   }, [dispatch, t]);
 
+  const handleDisableDevMode = useCallback(() => {
+    dispatch(appActions.disableDevMode());
+  }, [dispatch]);
+
   const {username, password} = useSelector(appSelectors.getAccessData);
 
   const serverUrl = useSelector(appSelectors.getServerUrl);
@@ -228,7 +232,7 @@ const ConnectionSettings = () => {
             {isDevModeEnabled && (
               <>
                 <Telemetry />
-                <View style={{height: 100}} />
+                <View style={styles.dividers} />
                 <View>
                   <Button
                     type="ghost"
@@ -237,9 +241,18 @@ const ConnectionSettings = () => {
                     disabled={isLoading}
                   />
                 </View>
+                <View style={styles.dividers} />
+                <View>
+                  <Button
+                    type="ghost"
+                    onPress={handleDisableDevMode}
+                    label={t('ConnectionSettings:devMode.disable')}
+                    disabled={isLoading}
+                  />
+                </View>
               </>
             )}
-            <View style={{height: 100}} />
+            <View style={styles.dividers} />
           </ScrollView>
         </KeyboardAvoidingView>
       </>
