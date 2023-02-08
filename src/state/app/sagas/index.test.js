@@ -28,7 +28,8 @@ const expectedAppState = {
     serverUrl: payload.serverUrl,
   },
   ui: {
-    error: false,
+    credentialsError: false,
+    serverError: false,
     isLoading: false,
     showNames: false,
     devMode: false,
@@ -37,11 +38,43 @@ const expectedAppState = {
 
 describe('app saga', () => {
   describe('init connection', () => {
-    it('errored user ', async () => {
+    it('Server is a empty string', async () => {
+      const {storeState} = await expectSaga(appSagas)
+        .withReducer(appReducers)
+        .dispatch(appActions.initConnection({...payload, serverUrl: ' '}))
+
+        .provide([
+          [matchers.call.fn(appApi.pingServer), true],
+          [matchers.call.fn(appApi.auth), throwError(error)],
+        ])
+        .silentRun();
+
+      expect(storeState).toEqual({
+        ...globalInitialState,
+        app: {
+          ...expectedAppState,
+          preferences: {
+            ...expectedAppState.preferences,
+            serverUrl: ' ',
+          },
+          ui: {
+            ...expectedAppState.ui,
+            credentialsError: false,
+            serverError: true,
+          },
+        },
+      });
+    });
+
+    it('bad url ', async () => {
       const {storeState} = await expectSaga(appSagas)
         .withReducer(appReducers)
         .dispatch(appActions.initConnection({...payload}))
-        .provide([[matchers.call.fn(appApi.auth), throwError(error)]])
+
+        .provide([
+          [matchers.call.fn(appApi.pingServer), false],
+          [matchers.call.fn(appApi.auth), throwError(error)],
+        ])
         .silentRun();
 
       expect(storeState).toEqual({
@@ -50,7 +83,31 @@ describe('app saga', () => {
           ...expectedAppState,
           ui: {
             ...expectedAppState.ui,
-            error: true,
+            credentialsError: false,
+            serverError: true,
+          },
+        },
+      });
+    });
+
+    it('errored user ', async () => {
+      const {storeState} = await expectSaga(appSagas)
+        .withReducer(appReducers)
+        .dispatch(appActions.initConnection({...payload}))
+
+        .provide([
+          [matchers.call.fn(appApi.pingServer), true],
+          [matchers.call.fn(appApi.auth), throwError(error)],
+        ])
+        .silentRun();
+
+      expect(storeState).toEqual({
+        ...globalInitialState,
+        app: {
+          ...expectedAppState,
+          ui: {
+            ...expectedAppState.ui,
+            credentialsError: true,
           },
         },
       });
@@ -61,6 +118,7 @@ describe('app saga', () => {
         .withReducer(appReducers)
         .dispatch(appActions.initConnection({...payload}))
         .provide([
+          [matchers.call.fn(appApi.pingServer), true],
           [matchers.call.fn(appApi.auth), {malformed: mockUser}],
           [matchers.call.fn(navigator.navigatorDispatch)],
         ])
@@ -72,7 +130,7 @@ describe('app saga', () => {
           ...expectedAppState,
           ui: {
             ...expectedAppState.ui,
-            error: true,
+            credentialsError: true,
           },
         },
       });
@@ -83,6 +141,7 @@ describe('app saga', () => {
         .withReducer(appReducers)
         .dispatch(appActions.initConnection({...payload}))
         .provide([
+          [matchers.call.fn(appApi.pingServer), true],
           [matchers.call.fn(appApi.auth), {user: mockUser}],
           [matchers.call.fn(navigator.navigatorDispatch)],
         ])

@@ -1,3 +1,4 @@
+import {Objects} from '@openforis/arena-core';
 import {StackActions} from '@react-navigation/core';
 import {takeLatest, put, select, call, all} from 'redux-saga/effects';
 
@@ -22,14 +23,20 @@ function* handleAuthenticateUser() {
           isLoading: true,
         }),
       ),
-      put(
-        appActions.setError({
-          error: false,
-        }),
-      ),
+      put(appActions.cleanErrors()),
     ]);
     const {username, password} = yield select(appSelectors.getAccessData);
     const serverUrl = yield select(appSelectors.getServerUrl);
+
+    if (Objects.isEmpty(serverUrl?.trim())) {
+      throw Error('Server not valid');
+    }
+
+    const isServerValid = yield call(appApi.pingServer, {serverUrl});
+
+    if (!isServerValid) {
+      throw Error('Server not valid');
+    }
 
     const data = yield call(appApi.auth, {
       email: username,
@@ -45,11 +52,19 @@ function* handleAuthenticateUser() {
     }
     hasToNavigate = true;
   } catch (e) {
-    yield put(
-      appActions.setError({
-        error: true,
-      }),
-    );
+    if (e.message === 'Server not valid') {
+      yield put(
+        appActions.setServerError({
+          serverError: true,
+        }),
+      );
+    } else {
+      yield put(
+        appActions.setCredentialsError({
+          credentialsError: true,
+        }),
+      );
+    }
   } finally {
     const numberOfSurveys = yield select(
       surveysSelectors.getNumberOfLocalSurveys,

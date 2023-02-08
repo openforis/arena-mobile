@@ -79,7 +79,9 @@ const ConnectionSettings = () => {
 
   const serverUrl = useSelector(appSelectors.getServerUrl);
   const isLoading = useSelector(appSelectors.getIsLoading);
-  const error = useSelector(appSelectors.getError);
+
+  const credentialsError = useSelector(appSelectors.getCredentialsError);
+  const serverError = useSelector(appSelectors.getServerError);
   const isDevModeEnabled = useSelector(appSelectors.isDevModeEnabled);
 
   useEffect(() => {
@@ -188,6 +190,16 @@ const ConnectionSettings = () => {
                     customContainerStyle={[styles.serverUrlButton]}
                   />
                 )}
+                {serverError && (
+                  <Card type="error">
+                    <Text style={[baseStyles.textStyle.bold]}>
+                      {t('ConnectionSettings:server_error.title')}
+                    </Text>
+                    <Text style={[baseStyles.textStyle.text]}>
+                      {t('ConnectionSettings:server_error.info')}
+                    </Text>
+                  </Card>
+                )}
               </View>
 
               <View style={[styles.formItem]}>
@@ -206,6 +218,16 @@ const ConnectionSettings = () => {
                   value={_valueOrDefault(formData?.password, password)}
                 />
               </View>
+              {credentialsError && (
+                <Card type="error">
+                  <Text style={[baseStyles.textStyle.bold]}>
+                    {t('ConnectionSettings:credentials_error.title')}
+                  </Text>
+                  <Text style={[baseStyles.textStyle.text]}>
+                    {t('ConnectionSettings:credentials_error.info')}
+                  </Text>
+                </Card>
+              )}
               <View style={styles.buttonContainer}>
                 <Button
                   onPress={handleSubmitForm}
@@ -213,16 +235,7 @@ const ConnectionSettings = () => {
                   disabled={isLoading}
                 />
               </View>
-              {error && (
-                <Card type="error">
-                  <Text style={[baseStyles.textStyle.bold]}>
-                    {t('ConnectionSettings:error.title')}
-                  </Text>
-                  <Text style={[baseStyles.textStyle.text]}>
-                    {t('ConnectionSettings:error.info')}
-                  </Text>
-                </Card>
-              )}
+
               {user?.name && (
                 <View style={styles.loggedInAs}>
                   <Text style={baseStyles.textStyle.secondaryText}>
