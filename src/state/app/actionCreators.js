@@ -8,18 +8,23 @@ const {app} = createActions({
     password,
     serverUrl,
   }),
-  [types.SET_ACCESS_DATA]: ({username, password = ''}) => ({
+  [types.SET_ACCESS_DATA]: ({username = '', password = ''}) => ({
     username,
     password,
   }),
-  [types.SET_SERVER_URL]: ({serverUrl}) => ({
+  [types.SET_SERVER_URL]: ({serverUrl = ''}) => ({
     serverUrl,
   }),
   /*ui*/
   [types.SET_LOADING]: ({isLoading = false}) => ({
     isLoading,
   }),
-  [types.SET_ERROR]: ({error = false}) => ({
+  [types.CLEAN_ERRORS]: () => ({}),
+
+  [types.SET_SERVER_ERROR]: ({error = false}) => ({
+    error,
+  }),
+  [types.SET_CREDENTIALS_ERROR]: ({error = false}) => ({
     error,
   }),
   [types.SET_SHOW_NAMES]: ({showNames = false}) => ({

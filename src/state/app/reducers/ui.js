@@ -9,10 +9,21 @@ const appUi = handleActions(
       ...state,
       isLoading: isLoading,
     }),
-    [actions.setError]: (state, {payload: {error}}) => ({
+    [actions.cleanErrors]: state => ({
       ...state,
-      error: error,
+      serverError: false,
+      credentialsError: false,
     }),
+    [actions.setServerError]: state => ({
+      ...state,
+      serverError: true,
+    }),
+
+    [actions.setCredentialsError]: state => ({
+      ...state,
+      credentialsError: true,
+    }),
+
     [actions.setShowNames]: (state, {payload: {showNames}}) => ({
       ...state,
       showNames,

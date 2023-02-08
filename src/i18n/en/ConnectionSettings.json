@@ -18,6 +18,14 @@
     "title": "There was an error",
     "info": "Please check the information and your connection"
   },
+  "server_error": {
+    "title": "There was an error",
+    "info": "Please check the server address"
+  },
+  "credentials_error": {
+    "title": "There was an error",
+    "info": "Please check the credentials provided or recover your password"
+  },
   "connected_as": "Logged in as:",
 
   "reset": {

@@ -5,7 +5,7 @@ import initialState from '../initial.state';
 
 const appPreferences = handleActions(
   {
-    [actions.setServerUrl]: (state, {payload: {serverUrl}}) => ({
+    [actions.setServerUrl]: (state, {payload: {serverUrl = ''}}) => ({
       ...state,
       serverUrl,
     }),

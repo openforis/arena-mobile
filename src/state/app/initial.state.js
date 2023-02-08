@@ -7,7 +7,8 @@ const initialState = {
   },
   preferences: {},
   ui: {
-    error: false,
+    serverError: false,
+    credentialsError: false,
     isLoading: false,
     showNames: false,
     devMode: false,
