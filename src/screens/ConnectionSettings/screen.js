@@ -31,6 +31,8 @@ import Telemetry from './Telemetry';
 import Version from './Version';
 
 const SHOW_SERVER_OPTIONS = false;
+const SHOW_QR_HELPER = false;
+
 const _valueOrDefault = (value, defaultValue) =>
   Objects.isEmpty(value) && value !== '' ? defaultValue : value;
 
@@ -130,7 +132,9 @@ const ConnectionSettings = () => {
         {!visible && (
           <Header
             hasBackComponent
-            RightComponent={<QRScannerButton handleShow={handleShow} />}>
+            RightComponent={
+              SHOW_QR_HELPER && <QRScannerButton handleShow={handleShow} />
+            }>
             <Text style={[baseStyles.textStyle.title]}>
               {t('ConnectionSettings:title')}
             </Text>
