@@ -30,7 +30,8 @@ const appUi = handleActions(
     }),
     [actions.initConnection]: state => ({
       ...state,
-      error: false,
+      serverError: false,
+      credentialsError: false,
       isLoading: true,
     }),
     [actions.setDevMode]: state => ({
