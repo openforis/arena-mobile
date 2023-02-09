@@ -1,5 +1,4 @@
 import React, {useCallback, useRef} from 'react';
-import {RNCamera} from 'react-native-camera';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
 import {CustomMarker, TopContent} from './components';
@@ -42,7 +41,7 @@ const QRScanner = ({
           handleReactivate={handleReactivate}
         />
       }
-      flashMode={RNCamera.Constants.FlashMode.off}
+      flashMode={'off'}
       topContent={<TopContent handleClose={handleClose} />}
     />
   );
