@@ -6,6 +6,7 @@ import {
   View,
   KeyboardAvoidingView,
   Platform,
+  Linking,
   ScrollView,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -128,6 +129,11 @@ const ConnectionSettings = () => {
     }
   }, [qrData]);
 
+  const handleOpenForgotPassword = useCallback(() => {
+    const url = `${serverUrl}/guest/forgotPassword/`;
+    Linking.openURL(url);
+  }, [serverUrl]);
+
   return (
     <Layout bottomStyle="background" topStyle="primary">
       <>
@@ -228,6 +234,18 @@ const ConnectionSettings = () => {
                   </Text>
                 </Card>
               )}
+
+              {credentialsError && (
+                <Button
+                  type="ghostBlack"
+                  onPress={handleOpenForgotPassword}
+                  label={t(
+                    'ConnectionSettings:credentials_error.forgot_password',
+                  )}
+                  customContainerStyle={[styles.serverUrlButton]}
+                />
+              )}
+
               <View style={styles.buttonContainer}>
                 <Button
                   onPress={handleSubmitForm}

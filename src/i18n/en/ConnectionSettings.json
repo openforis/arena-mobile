@@ -24,7 +24,8 @@
   },
   "credentials_error": {
     "title": "There was an error",
-    "info": "Please check the credentials provided or recover your password"
+    "info": "Please check the credentials provided or recover your password",
+    "forgot_password": "Forgot password"
   },
   "connected_as": "Logged in as:",
 
