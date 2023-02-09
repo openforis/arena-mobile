@@ -62,10 +62,13 @@ function* handlePrepareFilesData() {
     const filesArr = [];
 
     for (const file of surveyFiles) {
-      const [_recordUuid, _nodeUuid, fileUuid, _fileName] = file
+      const fileObject = file
         .split('arena-data/')[1]
         .split('files/')[1]
         .split('/');
+
+      // fileObject = [_recordUuid, _nodeUuid, fileUuid, _fileName]
+      const fileUuid = fileObject[2];
 
       // maybe this dhould be done used the internal storage, store the file summary into the same folder? maybe faster
       const _file = yield select(state =>

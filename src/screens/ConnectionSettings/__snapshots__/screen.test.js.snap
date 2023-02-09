@@ -1,0 +1,499 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<NavigationContainer /> should match snapshot 1`] = `
+<View
+  style={
+    [
+      {
+        "backgroundColor": "#84AC67",
+        "flex": 1,
+      },
+      {
+        "backgroundColor": "#84AC67",
+      },
+    ]
+  }
+>
+  <RCTSafeAreaView
+    emulateUnlessSupported={true}
+  />
+  <RCTSafeAreaView
+    emulateUnlessSupported={true}
+    style={
+      [
+        {
+          "backgroundColor": "#84AC67",
+          "flex": 1,
+        },
+        {
+          "backgroundColor": "#EDEDED",
+        },
+      ]
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "alignItems": "center",
+            "backgroundColor": "#84AC67",
+            "flexDirection": "row",
+            "justifyContent": "space-around",
+            "paddingBottom": 8,
+            "paddingHorizontal": 16,
+            "paddingTop": 0,
+          },
+          {
+            "borderBottomColor": "#AFC99C",
+            "borderBottomWidth": 1,
+          },
+        ]
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "alignItems": "flex-start",
+              "justifyContent": "center",
+              "width": 50,
+            },
+          ]
+        }
+      >
+        <View
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          hitSlop={
+            {
+              "bottom": 64,
+              "left": 64,
+              "right": 64,
+              "top": 64,
+            }
+          }
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "opacity": 1,
+            }
+          }
+        >
+          <MockedMaterialCommunityIcons
+            color={null}
+            name="chevron-left"
+            size={24}
+          />
+        </View>
+      </View>
+      <View
+        style={
+          [
+            {
+              "alignItems": "center",
+              "flex": 1,
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontSize": 24,
+                "fontWeight": "bold",
+              },
+            ]
+          }
+        >
+          Settings
+        </Text>
+      </View>
+      <View
+        style={
+          [
+            {
+              "alignItems": "flex-end",
+              "justifyContent": "center",
+              "width": 50,
+            },
+          ]
+        }
+      />
+    </View>
+    <View
+      onLayout={[Function]}
+      style={
+        [
+          [
+            {
+              "backgroundColor": "#EDEDED",
+              "flex": 1,
+              "paddingTop": 8,
+            },
+            {
+              "zIndex": 2,
+            },
+          ],
+          {
+            "paddingBottom": 0,
+          },
+        ]
+      }
+    >
+      <RCTScrollView>
+        <View>
+          <View
+            style={
+              [
+                {
+                  "flex": 1,
+                  "padding": 16,
+                },
+              ]
+            }
+          >
+            <View
+              style={
+                [
+                  {
+                    "paddingVertical": 16,
+                  },
+                ]
+              }
+            >
+              <Text
+                style={
+                  [
+                    {
+                      "fontSize": 20,
+                      "fontWeight": "bold",
+                    },
+                  ]
+                }
+              >
+                Server info
+              </Text>
+              <View
+                style={
+                  [
+                    {
+                      "marginTop": 4,
+                    },
+                    {},
+                    {},
+                  ]
+                }
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "fontSize": 14,
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  Server address
+                </Text>
+                <TextInput
+                  autoCapitalize="none"
+                  autoFocus={false}
+                  onChangeText={[Function]}
+                  placeholder="https://test.openforis-arena.org"
+                  placeholderTextColor="#EDEDED"
+                  selectTextOnFocus={true}
+                  style={
+                    [
+                      {
+                        "backgroundColor": "#FFFFFF",
+                        "borderColor": "#8C8C8C",
+                        "borderWidth": 1,
+                        "flex": 1,
+                        "fontSize": 14,
+                        "marginVertical": 4,
+                        "padding": 8,
+                        "paddingVertical": 12,
+                      },
+                      {},
+                    ]
+                  }
+                  value="https://www.openforis-arena.org"
+                />
+              </View>
+            </View>
+            <View
+              style={
+                [
+                  {
+                    "paddingVertical": 16,
+                  },
+                ]
+              }
+            >
+              <Text
+                style={
+                  [
+                    {
+                      "fontSize": 20,
+                      "fontWeight": "bold",
+                    },
+                  ]
+                }
+              >
+                Access info
+              </Text>
+              <View
+                style={
+                  [
+                    {
+                      "marginTop": 4,
+                    },
+                    {},
+                    {},
+                  ]
+                }
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "fontSize": 14,
+                      },
+                      {},
+                    ]
+                  }
+                >
+                  Username (email)
+                </Text>
+                <TextInput
+                  autoCapitalize="none"
+                  autoFocus={false}
+                  onChangeText={[Function]}
+                  placeholderTextColor="#EDEDED"
+                  selectTextOnFocus={true}
+                  style={
+                    [
+                      {
+                        "backgroundColor": "#FFFFFF",
+                        "borderColor": "#8C8C8C",
+                        "borderWidth": 1,
+                        "flex": 1,
+                        "fontSize": 14,
+                        "marginVertical": 4,
+                        "padding": 8,
+                        "paddingVertical": 12,
+                      },
+                      {},
+                    ]
+                  }
+                  value=""
+                />
+              </View>
+              <View
+                style={
+                  {
+                    "flex": 1,
+                  }
+                }
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "fontSize": 14,
+                      },
+                    ]
+                  }
+                >
+                  Password
+                </Text>
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "backgroundColor": "#FFFFFF",
+                      "borderColor": "#8C8C8C",
+                      "borderWidth": 1,
+                      "flex": 1,
+                      "flexDirection": "row",
+                      "fontSize": 14,
+                      "marginVertical": 4,
+                      "padding": 4,
+                      "paddingVertical": 8,
+                    }
+                  }
+                >
+                  <TextInput
+                    autoFocus={false}
+                    onChangeText={[Function]}
+                    secureTextEntry={true}
+                    selectTextOnFocus={true}
+                    style={
+                      {
+                        "flex": 1,
+                      }
+                    }
+                    value=""
+                  />
+                  <View
+                    accessible={true}
+                    collapsable={false}
+                    focusable={true}
+                    hitSlop={
+                      {
+                        "bottom": 20,
+                        "left": 20,
+                        "right": 20,
+                        "top": 20,
+                      }
+                    }
+                    onClick={[Function]}
+                    onResponderGrant={[Function]}
+                    onResponderMove={[Function]}
+                    onResponderRelease={[Function]}
+                    onResponderTerminate={[Function]}
+                    onResponderTerminationRequest={[Function]}
+                    onStartShouldSetResponder={[Function]}
+                    style={
+                      {
+                        "opacity": 1,
+                      }
+                    }
+                  >
+                    <MockedMaterialCommunityIcons
+                      color={null}
+                      name="eye-off-outline"
+                      size={24}
+                    />
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "paddingTop": 32,
+                }
+              }
+            >
+              <View
+                accessibilityState={
+                  {
+                    "disabled": false,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#3885CA",
+                    "flexDirection": "row",
+                    "justifyContent": "center",
+                    "marginVertical": 8,
+                    "opacity": 1,
+                    "padding": 8,
+                    "paddingVertical": 12,
+                  }
+                }
+              >
+                <Text
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "fontSize": 14,
+                        "fontWeight": "bold",
+                      },
+                      {
+                        "color": "#FFFFFF",
+                      },
+                      {},
+                      {},
+                    ]
+                  }
+                >
+                  Log In
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View
+            accessibilityState={
+              {
+                "disabled": false,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "transparent",
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "marginVertical": 8,
+                "opacity": 1,
+                "padding": 8,
+                "paddingVertical": 12,
+              }
+            }
+          >
+            <Text
+              numberOfLines={1}
+              style={
+                [
+                  {
+                    "fontSize": 14,
+                    "fontWeight": "bold",
+                  },
+                  {
+                    "color": "#182112",
+                  },
+                  {},
+                  {},
+                ]
+              }
+            >
+              Version: undefined (undefined)
+            </Text>
+          </View>
+          <View
+            style={
+              {
+                "height": 100,
+              }
+            }
+          />
+        </View>
+      </RCTScrollView>
+    </View>
+  </RCTSafeAreaView>
+</View>
+`;

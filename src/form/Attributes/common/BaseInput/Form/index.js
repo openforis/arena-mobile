@@ -3,8 +3,8 @@ import React, {useState, useCallback} from 'react';
 import {Platform} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import Input from 'arena-mobile-ui/components/Input';
 import {transform, textTransformValues} from 'arena/utils/textUtils';
+import Input from 'arena-mobile-ui/components/Input';
 import {useCloseNode, useUpdateNode} from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
 
@@ -21,10 +21,15 @@ const autoCapitalizeByTransformFunction = {
 };
 
 export const getValueAsString = (nodeDef, node, defaultValue = '') => {
-  return nodeDef.type === NodeDefType.text
-    ? String(node?.value || defaultValue)
-    : String(isNaN(node?.value) ? defaultValue : node?.value);
+  if (nodeDef.type === NodeDefType.text) {
+    return String(node?.value || defaultValue);
+  }
+  if (isNaN(node?.value)) {
+    return String(defaultValue);
+  }
+  return String(node?.value);
 };
+
 // text default
 // float numeric  ios: decimal-pad
 // integer numeric, ios: number-pad
