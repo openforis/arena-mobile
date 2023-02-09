@@ -48,12 +48,15 @@ const useAskBeforeLeave = () => {
         acceptText: t('Form:beforeLeave.acceptText'),
         dismissText: t('Form:beforeLeave.dismissText'),
         onAccept: () => {},
-        onDismiss: () =>
-          e?.data?.action
-            ? navigation.dispatch(e.data.action)
-            : navigation.canGoBack()
-            ? navigation.goBack()
-            : navigator.reset(ROUTES.HOME),
+        onDismiss: () => {
+          if (e?.data?.action) {
+            navigation.dispatch(e.data.action);
+          } else if (navigation.canGoBack()) {
+            navigation.goBack();
+          } else {
+            navigator.reset(ROUTES.HOME);
+          }
+        },
       });
     },
     [navigation, t],
@@ -68,7 +71,7 @@ const useAskBeforeLeave = () => {
 
     if (nodeDefForm) {
       handleClose();
-      return true;
+      return;
     }
 
     let prevNodeDef = false;
@@ -89,7 +92,7 @@ const useAskBeforeLeave = () => {
         }),
       );
     }
-    return true;
+    return;
   }, [
     currentEntityNodeDef,
     nodeDefRoot,

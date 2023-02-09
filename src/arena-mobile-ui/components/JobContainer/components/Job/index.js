@@ -32,7 +32,7 @@ const Job = ({job, level = 0, index = 0}) => {
       {Object.values(job.errors).map(({error}) => (
         <>
           {error.errors.map(_error => (
-            <View style={styles.errorContainer}>
+            <View style={styles.errorContainer} key={_error.key}>
               <Text>{t(`Errors:${_error.key}`, _error.params)}</Text>
             </View>
           ))}

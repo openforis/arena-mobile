@@ -1,14 +1,6 @@
 import {NodeDefType} from '@openforis/arena-core';
 import React from 'react';
-import {
-  KeyboardAvoidingView,
-  ScrollView,
-  Platform,
-  Dimensions,
-  Animated,
-  View,
-  SafeAreaView,
-} from 'react-native';
+import {ScrollView, View, SafeAreaView} from 'react-native';
 import Modal from 'react-native-modal';
 import {useSelector} from 'react-redux';
 

@@ -19,6 +19,7 @@ function* handleDeleteRecord({payload}) {
 
   const currentRecordUuid = yield select(formSelectors.getRecordUuid);
   yield put(recordsActions.cleanRecord({recordUuid: recordUuid}));
+
   if (record !== false && !Objects.isEmpty(record)) {
   } else {
     const cycle = yield select(surveySelectors.getSurveyCycle);

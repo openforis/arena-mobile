@@ -1,10 +1,4 @@
-import {
-  Objects,
-  RecordNodesUpdater,
-  Records,
-  RecordUpdater,
-  RecordValidator,
-} from '@openforis/arena-core';
+import {Objects, Records, RecordUpdater} from '@openforis/arena-core';
 import {select, all, put, call} from 'redux-saga/effects';
 
 import formActions from 'state/form/actionCreators';
