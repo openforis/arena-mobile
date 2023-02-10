@@ -129,13 +129,15 @@ android {
     ndkVersion rootProject.ext.ndkVersion
 
     compileSdkVersion rootProject.ext.compileSdkVersion
+    namespace 'org.openforis.collect.arena'
 
     defaultConfig {
         applicationId "org.openforis.collect.arena"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 21
+        versionCode 58
         versionName "1.4.8"
+        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString() 
 
         vectorDrawables.useSupportLibrary = true
         missingDimensionStrategy 'react-native-camera', 'general'
@@ -230,3 +232,11 @@ task copyDownloadableDepsToLibs(type: Copy) {
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+
+def isNewArchitectureEnabled() {
+    // To opt-in for the New Architecture, you can either:
+    // - Set `newArchEnabled` to true inside the `gradle.properties` file
+    // - Invoke gradle with `-newArchEnabled=true`
+    // - Set an environment variable `ORG_GRADLE_PROJECT_newArchEnabled=true`
+    return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+}
