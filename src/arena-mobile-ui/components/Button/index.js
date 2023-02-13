@@ -24,6 +24,7 @@ const Button = ({
   customContainerStyle = {},
   customTextStyle = {},
   iconPosition = 'left',
+  allowMultipleLines = false,
   ...props
 }) => {
   const styles = useThemedStyles({styles: _styles});
@@ -40,7 +41,7 @@ const Button = ({
       {...props}>
       {iconPosition === 'left' && icon}
       <Text
-        numberOfLines={1}
+        numberOfLines={allowMultipleLines ? null : 1}
         style={[
           baseStyles.textStyle.bold,
           styles.text[type],

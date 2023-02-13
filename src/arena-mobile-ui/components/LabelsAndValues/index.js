@@ -18,12 +18,13 @@ export const Label = ({label, size = 's', bolder = false}) => (
   </Text>
 );
 
-export const Value = ({label, size = 's', bolder = false}) => (
+export const Value = ({label, size = 's', bolder = false, color = null}) => (
   <Text
     style={[
       baseStyles.textStyle.secondaryText,
       baseStyles.textSize[size],
       bolder ? baseStyles.textStyle.bold : {},
+      color ? styles.color[color] : {},
     ]}
     numberOfLines={1}>
     {label}
@@ -44,8 +45,14 @@ const LabelsAndValues = ({items, size, expanded = false, column = false}) => (
     </View>
     {!column && (
       <View style={[styles.values({expanded})]}>
-        {items.map(({label, value = '-', bolder}) => (
-          <Value key={label} label={value} size={size} bolder={bolder} />
+        {items.map(({label, value = '-', bolder, color}) => (
+          <Value
+            key={label}
+            label={value}
+            size={size}
+            bolder={bolder}
+            color={color}
+          />
         ))}
       </View>
     )}
