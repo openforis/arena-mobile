@@ -11,7 +11,7 @@ import {useUpdateNode} from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
 import surveySelectors from 'state/survey/selectors';
 
-import GetLocation from './GetLocation';
+import GetLocation, {toFixedIfLongerAndNumber} from './GetLocation';
 import styles from './styles';
 
 const BASE_VALUE = {x: null, y: null, srs: null};
@@ -54,7 +54,9 @@ const Form = ({nodeDef}) => {
 
         return Object.assign({}, prevValue, {
           [field]:
-            DEFAULT_SRS_CODE === selectedSrs.code ? _value.toFixed(6) : _value,
+            DEFAULT_SRS_CODE === selectedSrs.code
+              ? toFixedIfLongerAndNumber(_value, 6)
+              : _value,
         });
       });
     },

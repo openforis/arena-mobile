@@ -13,6 +13,16 @@ import styles from './styles';
 
 const DEFAULT_SRS_CODE = '4326';
 
+export const toFixedIfLongerAndNumber = (value, decimals = 3) => {
+  if (typeof value === 'number') {
+    if (value.toString().length > decimals) {
+      return String(value.toFixed(decimals));
+    }
+    return value;
+  }
+  return value;
+};
+
 const prepareItems = (location, {selectedSrs}) => {
   if (location?.coords) {
     const srs = DEFAULT_SRS_CODE;
@@ -31,16 +41,16 @@ const prepareItems = (location, {selectedSrs}) => {
     return [
       {
         label: 'Accuracy',
-        value: String(accuracy.toFixed(3)),
+        value: toFixedIfLongerAndNumber(accuracy),
         bolder: true,
       },
       {
         label: 'X',
-        value: String(transformedPoint.x.toFixed(6)),
+        value: toFixedIfLongerAndNumber(transformedPoint.x, 6),
       },
       {
         label: 'Y',
-        value: String(transformedPoint.y.toFixed(6)),
+        value: toFixedIfLongerAndNumber(transformedPoint.y, 6),
       },
       {
         label: 'srs',
@@ -52,7 +62,7 @@ const prepareItems = (location, {selectedSrs}) => {
         .sort()
         .map(key => ({
           label: key,
-          value: String(location?.coords[key].toFixed(2)),
+          value: toFixedIfLongerAndNumber(location?.coords[key], 2),
         })),
     );
   }
