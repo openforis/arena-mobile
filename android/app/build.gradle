@@ -135,8 +135,8 @@ android {
         applicationId "org.openforis.collect.arena"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 62
-        versionName "1.4.8"
+        versionCode 63
+        versionName "1.4.9"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString() 
 
         vectorDrawables.useSupportLibrary = true
