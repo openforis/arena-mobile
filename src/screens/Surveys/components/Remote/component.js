@@ -15,7 +15,11 @@ const Remote = ({
   setSelectedSurvey,
   sortCriteria,
 }) => {
-  const {loading, error, surveys = []} = surveysHooks.useRemoteSurveys();
+  const {
+    loading,
+    error,
+    surveys = [],
+  } = surveysHooks.useRemoteSurveys({prefetch: false});
 
   useEffect(() => {
     if (!loading && surveys.length <= 0) {
