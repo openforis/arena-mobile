@@ -4,6 +4,10 @@ import baseStyles from 'arena-mobile-ui/styles';
 
 const styles = StyleSheet.create({
   ...baseStyles.card,
+  container: {
+    ...baseStyles.card.container,
+    flexDirection: 'column',
+  },
   moreInfo: {
     flexDirection: 'column',
     justifyContent: 'space-between',

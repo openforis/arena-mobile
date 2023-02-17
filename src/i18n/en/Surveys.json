@@ -1,5 +1,20 @@
 {
   "active_survey": "Active survey",
+  "status": "Status",
+  "status_labels": {
+    "not_in_device": "Not in device.",
+    "ready": "Up-to-date.",
+    "update": "Outdated. Newer available.",
+    "not_this_server": "Not available in this server"
+  },
+  "origin": {
+    "local": "Local",
+    "remote": "Remote"
+  },
+  "title": {
+    "local": "Local surveys",
+    "remote": "All surveys"
+  },
   "toasts": {
     "server": "You already have this survey pointing to other server, connect to {{ surveyServer}} instead of {{ serverUrl }}",
     "data_deleted": "All records successfully deleted"
@@ -31,6 +46,7 @@
     }
   },
   "selected_survey_panel": {
+    "more_actions": "More options",
     "delete": {
       "alert": {
         "title": "Are you sure?",
@@ -42,15 +58,15 @@
       }
     },
     "local": {
-      "cta_delete": "Delete this survey",
-      "cta_select": "Use this survey",
-      "cta_continue": "Continue with this survey"
+      "cta_delete": "Delete",
+      "cta_select": "Use",
+      "cta_continue": "Continue"
     },
     "remote": {
-      "cta_download": "Download this survey",
-      "cta_update": "Update this survey",
-      "cta_select": "Use this survey",
-      "cta_continue": "Continue with this survey"
+      "cta_download": "Download",
+      "cta_update": "Update",
+      "cta_select": "Use",
+      "cta_continue": "Continue"
     }
   }
 }

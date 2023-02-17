@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
 
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
 import baseStyles from 'arena-mobile-ui/styles';
@@ -10,9 +10,11 @@ import styles from './styles';
 const Sorter = ({sortCriteriaIndex, setSortCriteriaIndex}) => {
   return (
     <View style={styles.container}>
+      <Text style={{marginRight: 8}}>Sort by</Text>
       <TouchableIcon
         iconName={SORTERS[sortCriteriaIndex].icon}
-        hitSlop={baseStyles.bases.BASE_16}
+        hitSlop={baseStyles.bases.BASE_8}
+        customStyle={{paddingRight: 8}}
         onPress={() =>
           setSortCriteriaIndex((sortCriteriaIndex + 1) % SORTERS.length)
         }
