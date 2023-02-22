@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next';
 
 import Empty from 'arena-mobile-ui/components/Empty';
 import {useNavigateTo} from 'navigation/hooks';
+
 const ErrorSurveysList = () => {
   const {t} = useTranslation();
   const {navigateTo, routes} = useNavigateTo();

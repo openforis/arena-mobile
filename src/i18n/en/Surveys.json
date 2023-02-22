@@ -1,12 +1,6 @@
 {
   "active_survey": "Active survey",
   "status": "Status",
-  "status_labels": {
-    "not_in_device": "Not in device.",
-    "ready": "Up-to-date.",
-    "update": "Outdated. Newer available.",
-    "not_this_server": "Not available in this server"
-  },
   "origin": {
     "local": "Local",
     "remote": "Remote"
@@ -15,6 +9,33 @@
     "local": "Local surveys",
     "remote": "All surveys"
   },
+  "subpanel": {
+    "server_connection_bar": {
+      "error": {
+        "info": "Error connecting to the server",
+        "cta_label": "Check settings"
+      },
+      "success": {
+        "info": "Connected to: {{ serverUrl }}"
+      }
+    },
+    "surveys_origin_selector": {
+      "local": {
+        "label": "Connect with the server"
+      },
+      "remote": {
+        "label": "Show only surveys on this device"
+      }
+    }
+  },
+
+  "status_labels": {
+    "not_in_device": "Not in device.",
+    "ready": "Up-to-date.",
+    "update": "Outdated. Newer available.",
+    "not_this_server": "Not available in this server"
+  },
+
   "toasts": {
     "server": "You already have this survey pointing to other server, connect to {{ surveyServer}} instead of {{ serverUrl }}",
     "data_deleted": "All records successfully deleted"
