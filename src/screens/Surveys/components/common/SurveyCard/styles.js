@@ -8,6 +8,14 @@ const styles = StyleSheet.create({
     ...baseStyles.card.container,
     flexDirection: 'column',
   },
+  infoContainer: {
+    flexDirection: 'row',
+  },
+  labelCotainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   moreInfo: {
     flexDirection: 'column',
     justifyContent: 'space-between',

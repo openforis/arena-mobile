@@ -16,7 +16,6 @@ import {prepareSurveys} from './utils';
 const SurveysList = ({
   surveysOrigin = 'local',
   setSurveysOrigin,
-  selectedSurvey,
   setSelectedSurvey,
 }) => {
   const localSurveys = useSelector(surveysSelectors.getSurveysAsList);
@@ -61,9 +60,7 @@ const SurveysList = ({
       <List
         data={_surveys}
         surveysOrigin={surveysOrigin}
-        selectedSurvey={selectedSurvey}
         setSelectedSurvey={setSelectedSurvey}
-        showIcons={true}
         ListEmptyComponent={<Empty setSurveysOrigin={setSurveysOrigin} />}
       />
       {_surveys.length > 0 && (

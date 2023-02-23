@@ -28,6 +28,13 @@
       }
     }
   },
+  "actions": {
+    "delete": "Delete",
+    "select": "Use",
+    "continue": "Continue",
+    "download": "Download",
+    "update": "Update"
+  },
 
   "status_labels": {
     "not_in_device": "Not in device.",
@@ -35,7 +42,6 @@
     "update": "Outdated. Newer available.",
     "not_this_server": "Not available in this server"
   },
-
   "toasts": {
     "server": "You already have this survey pointing to other server, connect to {{ surveyServer}} instead of {{ serverUrl }}",
     "data_deleted": "All records successfully deleted"
@@ -77,17 +83,6 @@
         "delete_data": "delete data",
         "delete_survey": "delete survey"
       }
-    },
-    "local": {
-      "cta_delete": "Delete",
-      "cta_select": "Use",
-      "cta_continue": "Continue"
-    },
-    "remote": {
-      "cta_download": "Download",
-      "cta_update": "Update",
-      "cta_select": "Use",
-      "cta_continue": "Continue"
     }
   }
 }

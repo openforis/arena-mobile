@@ -9,9 +9,8 @@ import SurveyCard from '../SurveyCard';
 const List = ({
   data,
   ListEmptyComponent,
-  selectedSurvey,
+
   setSelectedSurvey,
-  showIcons = false,
 
   surveysOrigin,
 }) => {
@@ -23,13 +22,11 @@ const List = ({
       <SurveyCard
         survey={item}
         onSelect={setSelectedSurvey}
-        isSelected={selectedSurvey?.uuid === item?.uuid}
         isLocalSurvey={localSurvey.uuid === item?.uuid}
-        showIcons={showIcons}
         surveysOrigin={surveysOrigin}
       />
     ),
-    [showIcons, selectedSurvey, setSelectedSurvey, localSurvey, surveysOrigin],
+    [setSelectedSurvey, localSurvey, surveysOrigin],
   );
 
   return (
