@@ -52,15 +52,15 @@ const LocalPanel = ({survey, unSelect}) => {
         type="primary"
         label={
           currentSurveyUuid === survey.uuid
-            ? t('Surveys:selected_survey_panel.local.cta_continue')
-            : t('Surveys:selected_survey_panel.local.cta_select')
+            ? t('Surveys:actions.continue')
+            : t('Surveys:actions.select')
         }
         onPress={handleSelect}
       />
 
       <Button
         type="delete"
-        label={t('Surveys:selected_survey_panel.local.cta_delete')}
+        label={t('Surveys:actions.delete')}
         onPress={handleDelete}
       />
     </View>
