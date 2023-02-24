@@ -44,7 +44,7 @@
   },
   "toasts": {
     "server": "You already have this survey pointing to other server, connect to {{ surveyServer}} instead of {{ serverUrl }}",
-    "data_deleted": "All records successfully deleted"
+    "data_deleted": "All records in this survey were successfully deleted"
   },
   "local": {
     "title": "Device",
@@ -56,8 +56,13 @@
     "empty": {
       "title": "It looks like you don't have any surveys on your device.",
       "info": "Connect your device and load a valid survey.",
-      "cta_label": "Download from the server"
+      "cta_label": "Connect to the server"
     }
+  },
+  "error": {
+    "title": "It looks like there is some error connecting with the server.",
+    "info": "Please review your connection and try again.",
+    "cta_label": "Check connection settings"
   },
   "remote": {
     "title": "Server",

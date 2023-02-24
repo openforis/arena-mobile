@@ -13,6 +13,7 @@ const List = ({
   setSelectedSurvey,
 
   surveysOrigin,
+  errorRemoteServer,
 }) => {
   const localSurvey = useSelector(surveySelectors.getSurvey);
   const keyExtractor = useCallback(item => `${item.id}`, []);
@@ -24,9 +25,10 @@ const List = ({
         onSelect={setSelectedSurvey}
         isLocalSurvey={localSurvey.uuid === item?.uuid}
         surveysOrigin={surveysOrigin}
+        errorRemoteServer={errorRemoteServer}
       />
     ),
-    [setSelectedSurvey, localSurvey, surveysOrigin],
+    [setSelectedSurvey, localSurvey, surveysOrigin, errorRemoteServer],
   );
 
   return (

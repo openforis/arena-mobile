@@ -19,7 +19,13 @@ import SurveyStatus from './SurveyStatus';
     onSelect?.(survey);
   }, [survey, onSelect]);
   */
-const SurveyCard = ({survey, onSelect, isLocalSurvey, surveysOrigin}) => {
+const SurveyCard = ({
+  survey,
+  onSelect,
+  isLocalSurvey,
+  surveysOrigin,
+  errorRemoteServer,
+}) => {
   const {t} = useTranslation();
   const currentServerUrl = useSelector(appSelectors.getServerUrl);
 
@@ -47,7 +53,9 @@ const SurveyCard = ({survey, onSelect, isLocalSurvey, surveysOrigin}) => {
             dateCreated={survey?.dateCreated}
             dateModified={survey?.dateModified}
           />
-          {surveysOrigin === 'remote' && <SurveyStatus survey={survey} />}
+          {surveysOrigin === 'remote' && !errorRemoteServer && (
+            <SurveyStatus survey={survey} />
+          )}
         </View>
         <View style={[styles.moreInfo]}>
           <View style={{alignItems: 'flex-end'}}>

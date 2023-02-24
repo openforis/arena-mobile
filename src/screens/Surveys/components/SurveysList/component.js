@@ -1,6 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {useSelector} from 'react-redux';
 
+import Loading from 'arena-mobile-ui/components/List/Loading';
 import {
   hooks as surveysHooks,
   selectors as surveysSelectors,
@@ -10,8 +11,31 @@ import {SORTERS} from '../../components/Sorter/config';
 import List from '../common/List';
 
 import Empty from './Empty';
+import Error from './Error';
 import SubPanel from './SubPanel';
 import {prepareSurveys} from './utils';
+
+const ListEmptyComponent = ({
+  errorRemoteServer,
+  loading,
+  surveysOrigin,
+  setSurveysOrigin,
+}) => {
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (errorRemoteServer || surveysOrigin === 'remote') {
+    return <Error />;
+  }
+
+  return (
+    <Empty
+      surveysOrigin={surveysOrigin}
+      onPress={() => setSurveysOrigin('remote')}
+    />
+  );
+};
 
 const SurveysList = ({
   surveysOrigin = 'local',
@@ -61,7 +85,15 @@ const SurveysList = ({
         data={_surveys}
         surveysOrigin={surveysOrigin}
         setSelectedSurvey={setSelectedSurvey}
-        ListEmptyComponent={<Empty setSurveysOrigin={setSurveysOrigin} />}
+        ListEmptyComponent={
+          <ListEmptyComponent
+            surveysOrigin={surveysOrigin}
+            setSurveysOrigin={setSurveysOrigin}
+            loading={loading}
+            errorRemoteServer={errorRemoteServer}
+          />
+        }
+        errorRemoteServer={errorRemoteServer}
       />
       {_surveys.length > 0 && (
         <SubPanel

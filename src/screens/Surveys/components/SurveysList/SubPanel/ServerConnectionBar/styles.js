@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     padding: 8,
     paddingHorizontal: 23,
     alignItems: 'center',
+    backgroundColor: colors.successLighter,
   },
   containerWithError: {
     backgroundColor: colors.errorLighter,

@@ -22,15 +22,18 @@ const SubPanel = ({errorRemoteServer}) => {
       ]}>
       <Text style={styles.text}>
         {errorRemoteServer
-          ? t('Surveys:subpanel.server_connection_bar.error.info', {
+          ? t('Surveys:subpanel.server_connection_bar.error.info')
+          : t('Surveys:subpanel.server_connection_bar.success.info', {
               serverUrl: currentServerUrl,
-            })
-          : t('Surveys:subpanel.server_connection_bar.success.info')}
+            })}
       </Text>
       {errorRemoteServer && (
         <Button
           label={t('Surveys:subpanel.server_connection_bar.error.cta_label')}
-          onPress={navigateTo({route: routes.CONNECTION_SETTINGS})}
+          onPress={navigateTo({
+            route: routes.CONNECTION_SETTINGS,
+            replace: true,
+          })}
           type="ghostBlack"
           customContainerStyle={styles.button}
           allowMultipleLines={true}
