@@ -1,9 +1,12 @@
 import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
-  container: {
+  buttonsContainer: {
+    display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    padding: 8,
+    paddingHorizontal: 16,
     alignItems: 'center',
   },
 });

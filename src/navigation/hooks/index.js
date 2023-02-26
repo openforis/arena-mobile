@@ -7,9 +7,10 @@ export const useNavigateTo = () => {
   const navigation = useNavigation();
 
   const navigateTo = useCallback(
-    ({route}) =>
+    ({route, replace = false}) =>
       () =>
-        navigation.navigate(route),
+        replace ? navigation.replace(route) : navigation.navigate(route),
+
     [navigation],
   );
 

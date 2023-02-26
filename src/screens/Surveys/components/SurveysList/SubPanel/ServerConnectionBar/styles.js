@@ -5,16 +5,26 @@ import baseStyles from 'arena-mobile-ui/styles';
 
 const styles = StyleSheet.create({
   container: {
+    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'baseline',
-    marginBottom: baseStyles.bases.BASE_2,
+    padding: 8,
+    paddingHorizontal: 23,
+    alignItems: 'center',
+    backgroundColor: colors.successLighter,
+  },
+  containerWithError: {
+    backgroundColor: colors.errorLighter,
+    padding: 0,
   },
   text: {
-    ...baseStyles.textStyle.secondaryText,
     ...baseStyles.textSize.s,
-    textAlign: 'right',
-    color: colors.secondary,
+    color: colors.neutral,
+  },
+  button: {
+    paddingVertical: 8,
+    margin: 0,
+    maxWidth: 180,
   },
 });
 

@@ -6,7 +6,7 @@ import {selectors as appSelectors} from 'state/app';
 
 import apiSurveys from '../api';
 
-export const useRemoteSurveys = () => {
+export const useRemoteSurveys = ({prefetch = true} = {}) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [surveys, setSurveys] = useState([]);
@@ -31,8 +31,10 @@ export const useRemoteSurveys = () => {
   }, [serverUrl]);
 
   useEffect(() => {
-    fetchSurveys();
-  }, [fetchSurveys]);
+    if (prefetch) {
+      fetchSurveys();
+    }
+  }, [fetchSurveys, prefetch]);
 
   return {loading, error, surveys, fetchSurveys};
 };

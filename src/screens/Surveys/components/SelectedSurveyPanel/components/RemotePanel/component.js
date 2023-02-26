@@ -54,7 +54,7 @@ const RemotePanel = ({survey}) => {
       <View>
         <Button
           type="primary"
-          label={t('Surveys:selected_survey_panel.remote.cta_download')}
+          label={t('Surveys:actions.download')}
           onPress={handleDownload}
           disabled={isLoading}
         />
@@ -66,7 +66,7 @@ const RemotePanel = ({survey}) => {
       <View>
         <Button
           type="primary"
-          label={t('Surveys:selected_survey_panel.remote.cta_update')}
+          label={t('Surveys:actions.update')}
           onPress={handleUpdate}
           disabled={isLoading}
         />
@@ -79,8 +79,8 @@ const RemotePanel = ({survey}) => {
         type="primary"
         label={
           currentSurveyUuid === survey.uuid
-            ? t('Surveys:selected_survey_panel.remote.cta_continue')
-            : t('Surveys:selected_survey_panel.remote.cta_select')
+            ? t('Surveys:actions.continue')
+            : t('Surveys:actions.select')
         }
         onPress={handleSelect}
         disabled={isLoading}

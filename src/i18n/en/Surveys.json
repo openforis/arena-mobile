@@ -1,8 +1,50 @@
 {
   "active_survey": "Active survey",
+  "status": "Status",
+  "origin": {
+    "local": "Local",
+    "remote": "Remote"
+  },
+  "title": {
+    "local": "Local surveys",
+    "remote": "All surveys"
+  },
+  "subpanel": {
+    "server_connection_bar": {
+      "error": {
+        "info": "Error connecting to the server",
+        "cta_label": "Check settings"
+      },
+      "success": {
+        "info": "Connected to: {{ serverUrl }}"
+      }
+    },
+    "surveys_origin_selector": {
+      "local": {
+        "label": "Connect with the server"
+      },
+      "remote": {
+        "label": "Show only surveys on this device"
+      }
+    }
+  },
+  "actions": {
+    "delete": "Delete",
+    "select": "Use",
+    "continue": "Continue",
+    "download": "Download",
+    "update": "Update"
+  },
+
+  "status_labels": {
+    "not_in_device": "Not in device.",
+    "ready": "Up-to-date.",
+    "update": "Outdated. Newer available.",
+    "not_this_server": "Not available in this server"
+  },
   "toasts": {
     "server": "You already have this survey pointing to other server, connect to {{ surveyServer}} instead of {{ serverUrl }}",
-    "data_deleted": "All records successfully deleted"
+    "data_deleted": "All records in this survey were successfully deleted"
   },
   "local": {
     "title": "Device",
@@ -14,8 +56,13 @@
     "empty": {
       "title": "It looks like you don't have any surveys on your device.",
       "info": "Connect your device and load a valid survey.",
-      "cta_label": "Download from the server"
+      "cta_label": "Connect to the server"
     }
+  },
+  "error": {
+    "title": "It looks like there is some error connecting with the server.",
+    "info": "Please review your connection and try again.",
+    "cta_label": "Check connection settings"
   },
   "remote": {
     "title": "Server",
@@ -31,6 +78,7 @@
     }
   },
   "selected_survey_panel": {
+    "more_actions": "More options",
     "delete": {
       "alert": {
         "title": "Are you sure?",
@@ -40,17 +88,6 @@
         "delete_data": "delete data",
         "delete_survey": "delete survey"
       }
-    },
-    "local": {
-      "cta_delete": "Delete this survey",
-      "cta_select": "Use this survey",
-      "cta_continue": "Continue with this survey"
-    },
-    "remote": {
-      "cta_download": "Download this survey",
-      "cta_update": "Update this survey",
-      "cta_select": "Use this survey",
-      "cta_continue": "Continue with this survey"
     }
   }
 }
