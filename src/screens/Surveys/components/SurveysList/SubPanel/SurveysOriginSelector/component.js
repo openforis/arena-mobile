@@ -9,17 +9,13 @@ const SurveysOriginSelector = ({surveysOrigin, setSurveysOrigin}) => {
   const {t} = useTranslation();
 
   const buttonConfig = useMemo(() => {
-    if (surveysOrigin === 'local') {
-      return {
-        label: t('Surveys:subpanel.surveys_origin_selector.local.label'),
-        onPress: () => setSurveysOrigin('remote'),
-      };
-    } else {
-      return {
-        label: t('Surveys:subpanel.surveys_origin_selector.remote.label'),
-        onPress: () => setSurveysOrigin('local'),
-      };
-    }
+    return {
+      label: t(
+        `Surveys:subpanel.surveys_origin_selector.${surveysOrigin}.label`,
+      ),
+      onPress: () =>
+        setSurveysOrigin(surveysOrigin === 'local' ? 'remote' : 'local'),
+    };
   }, [surveysOrigin, setSurveysOrigin, t]);
 
   return (
