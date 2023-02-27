@@ -60,7 +60,7 @@ const SurveyDetail = () => {
       <View style={[styles.buttonContainer]}>
         <Button
           type="ghost"
-          label={t('Home:survey.card.go_to_survey_details')}
+          label={t('Home:survey.card.go_to_survey_options')}
           onPress={navigateTo({route: routes.SURVEY})}
         />
       </View>
