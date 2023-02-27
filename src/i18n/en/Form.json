@@ -64,12 +64,12 @@
       "gallery": "Gallery",
       "document": "Document",
       "audio": "Audio"
-    }  
+    }
   },
-  "beforeLeave":{
+  "beforeLeave": {
     "title": "Are you sure to leave the form?",
     "message": "",
-    "acceptText": "Stay",
-    "dismissText": "Leave"
+    "acceptText": "Leave",
+    "dismissText": "Stay"
   }
 }
