@@ -26,6 +26,10 @@ jobs:
         run: yarn
         env:
           NODE_AUTH_TOKEN: ${{secrets.ACCESS_TOKEN}}
+      - name: Patch-package
+        run: yarn patch-package
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.ACCESS_TOKEN}}
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.0'
