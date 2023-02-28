@@ -28,10 +28,6 @@ function* handleDeleteFiles(filesByFileUuid) {
   yield put(
     filesActionTypes.deleteFiles({filesUuids: Object.keys(filesByFileUuid)}),
   );
-  yield call(handleShowToast, {
-    message: t('Surveys:toasts.data_deleted'),
-    duration: 5000,
-  });
 }
 
 function* handleDeleteNodesFiles({payload}) {
@@ -92,6 +88,10 @@ function* handleDeleteSurveyFiles({payload}) {
   );
 
   yield call(handleDeleteFiles, Object.keys(filesBySurvey));
+  yield call(handleShowToast, {
+    message: t('Surveys:toasts.data_deleted'),
+    duration: 5000,
+  });
 }
 
 function* handleDeleteRecordFiles({payload}) {
@@ -101,6 +101,10 @@ function* handleDeleteRecordFiles({payload}) {
   );
 
   yield call(handleDeleteFiles, Object.keys(filesBySurvey));
+  yield call(handleShowToast, {
+    message: t('Surveys:toasts.data_deleted'),
+    duration: 5000,
+  });
 }
 
 export default function* () {
