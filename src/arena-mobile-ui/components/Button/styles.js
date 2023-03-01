@@ -15,6 +15,9 @@ const styles = ({colors}) =>
     primary: {
       backgroundColor: colors.secondary,
     },
+    neutral: {
+      backgroundColor: colors.neutralLightest,
+    },
     secondary: {
       backgroundColor: colors.white,
       borderColor: colors.neutralDarkest,
@@ -34,6 +37,9 @@ const styles = ({colors}) =>
         color: colors.primaryContrastText,
       },
       secondary: {
+        color: colors.secondaryText,
+      },
+      neutral: {
         color: colors.secondaryText,
       },
       delete: {
