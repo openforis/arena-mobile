@@ -47,8 +47,8 @@ const useAskBeforeLeave = () => {
         message: '',
         acceptText: t('Form:beforeLeave.acceptText'),
         dismissText: t('Form:beforeLeave.dismissText'),
-        onAccept: () => {},
-        onDismiss: () => {
+        onDismiss: () => {},
+        onAccept: () => {
           if (e?.data?.action) {
             navigation.dispatch(e.data.action);
           } else if (navigation.canGoBack()) {
