@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {defaultCycle} from 'arena/config';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
+import EntitySelectorToggler from 'screens/Form/components/BreadCrumbs/components/EntitySelectorToggler';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
@@ -17,7 +18,7 @@ const getNodeDefIndex = ({survey, nodeDef, cycle = defaultCycle}) => {
   );
 };
 
-const Button = ({nodeDef, align = 'right'}) => {
+const NavigationButton = ({nodeDef, align = 'right'}) => {
   const dispatch = useDispatch();
   const nodeDefName = useNodeDefNameOrLabel({nodeDef});
   const handleSelect = useCallback(() => {
@@ -76,14 +77,14 @@ const Prev = ({parent}) => {
   });
 
   if (prevNodeDef?.uuid) {
-    return <Button nodeDef={prevNodeDef} align="left" />;
+    return <NavigationButton nodeDef={prevNodeDef} align="left" />;
   }
 
   return <View />;
 };
 
 const Parent = ({parent}) => {
-  return <Button nodeDef={parent} />;
+  return <NavigationButton nodeDef={parent} align="left" />;
 };
 
 const Next = ({parent}) => {
@@ -102,7 +103,7 @@ const Next = ({parent}) => {
     !Objects.isEmpty(childrenIndex) &&
     (Objects.isEmpty(parent) || parent === false || childrenIndex?.length > 0)
   ) {
-    return <Button nodeDef={survey.nodeDefs[childrenIndex[0]]} />;
+    return <NavigationButton nodeDef={survey.nodeDefs[childrenIndex[0]]} />;
   }
 
   const sibilings = getNodeDefIndex({survey, nodeDef: parent, cycle});
@@ -125,7 +126,9 @@ const Next = ({parent}) => {
     const parentIndex = parentSiblings?.indexOf(parent.uuid);
     if (parentIndex >= 0 && parentIndex + 1 < parentSiblings?.length) {
       return (
-        <Button nodeDef={survey.nodeDefs[parentSiblings?.[parentIndex + 1]]} />
+        <NavigationButton
+          nodeDef={survey.nodeDefs[parentSiblings?.[parentIndex + 1]]}
+        />
       );
     }
 
@@ -133,7 +136,11 @@ const Next = ({parent}) => {
   }
 
   if (currentIndex < sibilings.length) {
-    return <Button nodeDef={survey.nodeDefs[sibilings[currentIndex + 1]]} />;
+    return (
+      <NavigationButton
+        nodeDef={survey.nodeDefs[sibilings[currentIndex + 1]]}
+      />
+    );
   }
 
   return <View />;
@@ -153,6 +160,13 @@ const EntityNavigation = () => {
     surveySelectors.getNodeDefByUuid(state, currentEntityNodeDef?.parentUuid),
   );
 
+  const label = useNodeDefNameOrLabel({nodeDef: currentEntityNodeDef});
+
+  const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
+  const keys = useSelector(state =>
+    surveySelectors.getEntityNodeKeysAsString(state, parentEntityNode),
+  );
+
   return (
     <View
       style={[
@@ -161,16 +175,27 @@ const EntityNavigation = () => {
           ? styles.containerTabletMenuOpen
           : {},
       ]}>
-      {!currentEntityNodeDef.props?.layout?.[cycle]?.pageUuid ? (
-        <View style={styles.buttonsContainerCenter}>
-          <Parent parent={parentNodeDef} />
+      <View style={styles.header}>
+        <EntitySelectorToggler customStyle={[styles.navigationBottom]} />
+        <View>
+          <Text style={[styles.headerTextInfo]}>Current page:</Text>
+          <Text style={[styles.headerText]}>
+            {label} [{keys}]
+          </Text>
         </View>
-      ) : (
-        <View style={styles.buttonsContainer}>
-          <Prev parent={parentNodeDef} />
-          <Next parent={parentNodeDef} />
-        </View>
-      )}
+      </View>
+      <View style={styles.optionsContainer}>
+        {!currentEntityNodeDef.props?.layout?.[cycle]?.pageUuid ? (
+          <View style={styles.buttonsContainerCenter}>
+            <Parent parent={parentNodeDef} />
+          </View>
+        ) : (
+          <View style={styles.buttonsContainer}>
+            <Prev parent={parentNodeDef} />
+            <Next parent={parentNodeDef} />
+          </View>
+        )}
+      </View>
     </View>
   );
 };
