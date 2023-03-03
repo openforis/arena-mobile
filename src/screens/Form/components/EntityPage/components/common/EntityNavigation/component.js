@@ -1,10 +1,12 @@
 import {Objects} from '@openforis/arena-core';
 import React, {useCallback} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text} from 'react-native';
 import {isTablet} from 'react-native-device-info';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {defaultCycle} from 'arena/config';
+import Button from 'arena-mobile-ui/components/Button';
+import Icon from 'arena-mobile-ui/components/Icon';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import EntitySelectorToggler from 'screens/Form/components/BreadCrumbs/components/EntitySelectorToggler';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
@@ -18,6 +20,9 @@ const getNodeDefIndex = ({survey, nodeDef, cycle = defaultCycle}) => {
   );
 };
 
+const ChevronLeft = <Icon name="chevron-left" />;
+const ChevronRight = <Icon name="chevron-right" />;
+
 const NavigationButton = ({nodeDef, align = 'right'}) => {
   const dispatch = useDispatch();
   const nodeDefName = useNodeDefNameOrLabel({nodeDef});
@@ -29,14 +34,17 @@ const NavigationButton = ({nodeDef, align = 'right'}) => {
     );
   }, [nodeDef, dispatch]);
   return (
-    <TouchableOpacity onPress={handleSelect} hitSlop={{top: 10, bottom: 10}}>
-      <Text
-        style={[styles.text, align === 'left' ? styles.textLeft : {}]}
-        ellipsizeMode="middle"
-        numberOfLines={2}>
-        {nodeDefName}
-      </Text>
-    </TouchableOpacity>
+    <Button
+      onPress={handleSelect}
+      style={styles.button}
+      hitSlop={{top: 10, bottom: 10}}
+      allowMultipleLines={true}
+      label={nodeDefName}
+      type="neutral"
+      customTextStyle={[styles.text, align === 'left' ? styles.textLeft : {}]}
+      icon={align === 'left' ? ChevronLeft : ChevronRight}
+      iconPosition={align === 'left' ? 'left' : 'right'}
+    />
   );
 };
 
