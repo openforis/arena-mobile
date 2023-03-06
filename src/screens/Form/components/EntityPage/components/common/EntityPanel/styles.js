@@ -57,32 +57,6 @@ const styles = StyleSheet.create({
   containerTabletMenuOpen: {
     width: WIDTH - ENTITY_SELECTOR_TABLET_WIDTH,
   },
-  buttonsContainer: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    flex: 1,
-  },
-  buttonsContainerCenter: {
-    justifyContent: 'center',
-    flexDirection: 'row',
-    flex: 1,
-  },
-  text: {
-    width: WIDTH * 0.34,
-    textAlign: 'right',
-  },
-  textLeft: {
-    textAlign: 'left',
-  },
-  button: {
-    borderRadius: baseStyles.bases.BASE,
-    backgroundColor: colors.neutralLightest,
-    padding: baseStyles.bases.BASE_2,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
 });
 
 export default styles;

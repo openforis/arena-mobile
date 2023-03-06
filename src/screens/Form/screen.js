@@ -15,7 +15,7 @@ import {selectors as surveySelectors} from 'state/survey';
 
 import BreadCrumbs from './components/BreadCrumbs';
 import EntityPage from './components/EntityPage';
-import {getPrevNodeDef} from './components/EntityPage/components/common/EntityNavigation/component';
+import {getPrevNodeDef} from './components/EntityPage/components/common/EntityPanel/Navigation/component';
 import EntitySelector from './components/EntitySelector';
 import styles from './styles';
 

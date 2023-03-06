@@ -1,18 +1,17 @@
 import {Objects} from '@openforis/arena-core';
 import React, {useCallback} from 'react';
-import {View, Text} from 'react-native';
-import {isTablet} from 'react-native-device-info';
+import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {defaultCycle} from 'arena/config';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
-import EntitySelectorToggler from 'screens/Form/components/BreadCrumbs/components/EntitySelectorToggler';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
 import styles from './styles';
+
 const getNodeDefIndex = ({survey, nodeDef, cycle = defaultCycle}) => {
   return (
     nodeDef?.uuid &&
@@ -156,10 +155,7 @@ const Next = ({parent}) => {
 
 // next -> first children, next entity if single
 // prev -> prev entity if single or parent
-const EntityNavigation = () => {
-  const isEntitySelectorOpened = useSelector(
-    formSelectors.isEntitySelectorOpened,
-  );
+const Navigation = () => {
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const currentEntityNodeDef = useSelector(
     formSelectors.getParentEntityNodeDef,
@@ -168,44 +164,20 @@ const EntityNavigation = () => {
     surveySelectors.getNodeDefByUuid(state, currentEntityNodeDef?.parentUuid),
   );
 
-  const label = useNodeDefNameOrLabel({nodeDef: currentEntityNodeDef});
-
-  const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
-  const keys = useSelector(state =>
-    surveySelectors.getEntityNodeKeysAsString(state, parentEntityNode),
-  );
-
   return (
-    <View
-      style={[
-        styles.container,
-        isTablet() && isEntitySelectorOpened
-          ? styles.containerTabletMenuOpen
-          : {},
-      ]}>
-      <View style={styles.header}>
-        <EntitySelectorToggler customStyle={[styles.navigationBottom]} />
-        <View>
-          <Text style={[styles.headerTextInfo]}>Current page:</Text>
-          <Text style={[styles.headerText]}>
-            {label} [{keys}]
-          </Text>
+    <View style={styles.optionsContainer}>
+      {!currentEntityNodeDef.props?.layout?.[cycle]?.pageUuid ? (
+        <View style={styles.buttonsContainerCenter}>
+          <Parent parent={parentNodeDef} />
         </View>
-      </View>
-      <View style={styles.optionsContainer}>
-        {!currentEntityNodeDef.props?.layout?.[cycle]?.pageUuid ? (
-          <View style={styles.buttonsContainerCenter}>
-            <Parent parent={parentNodeDef} />
-          </View>
-        ) : (
-          <View style={styles.buttonsContainer}>
-            <Prev parent={parentNodeDef} />
-            <Next parent={parentNodeDef} />
-          </View>
-        )}
-      </View>
+      ) : (
+        <View style={styles.buttonsContainer}>
+          <Prev parent={parentNodeDef} />
+          <Next parent={parentNodeDef} />
+        </View>
+      )}
     </View>
   );
 };
 
-export default EntityNavigation;
+export default Navigation;

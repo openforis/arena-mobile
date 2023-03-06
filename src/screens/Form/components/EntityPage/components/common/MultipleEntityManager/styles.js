@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   buttonContainer: {
-    paddingVertical: 4,
+    paddingVertical: 6,
     marginVertical: 0,
     borderColor: colors.neutral,
     borderWidth: 1,
