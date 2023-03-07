@@ -43,6 +43,7 @@ const NavigationButton = ({nodeDef, align = 'right'}) => {
       customTextStyle={[styles.text, align === 'left' ? styles.textLeft : {}]}
       icon={align === 'left' ? ChevronLeft : ChevronRight}
       iconPosition={align === 'left' ? 'left' : 'right'}
+      bold={false}
     />
   );
 };

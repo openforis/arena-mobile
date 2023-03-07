@@ -1,23 +1,17 @@
 import {NodeDefs} from '@openforis/arena-core';
-import React, {useCallback, useMemo} from 'react';
-import {useTranslation} from 'react-i18next';
+import React, {useMemo} from 'react';
 import {View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
-import Button from 'arena-mobile-ui/components/Button';
-import Icon from 'arena-mobile-ui/components/Icon';
-import {selectors as formSelectors, actions as formActions} from 'state/form';
+import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
+
+import NewItemButton from '../MultipleEntityManager/NewItemButton';
 
 import styles from './styles';
 
-const AddIcon = <Icon name="plus" />;
-
 const Footer = () => {
-  const {t} = useTranslation();
-
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
-  const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
 
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const isTable = useMemo(
@@ -29,17 +23,6 @@ const Footer = () => {
     [parentEntityNodeDef, cycle],
   );
 
-  const dispatch = useDispatch();
-
-  const handleCreateNewNodeEntity = useCallback(() => {
-    dispatch(
-      formActions.createEntity({
-        nodeDef: parentEntityNodeDef,
-        node: parentEntityNode,
-      }),
-    );
-  }, [dispatch, parentEntityNodeDef, parentEntityNode]);
-
   if (!parentEntityNodeDef.props.multiple) {
     return <></>;
   }
@@ -49,18 +32,9 @@ const Footer = () => {
   }
 
   return (
-    <>
-      <View style={styles.footer}>
-        <Button
-          type="secondary"
-          icon={AddIcon}
-          label={t('Form:add_new_row')}
-          customContainerStyle={[styles.buttonContainer, styles.addItem]}
-          customTextStyle={styles.textStyle}
-          onPress={handleCreateNewNodeEntity}
-        />
-      </View>
-    </>
+    <View style={styles.footer}>
+      <NewItemButton visible={true} />
+    </View>
   );
 };
 

@@ -18,19 +18,6 @@ const styles = StyleSheet.create({
   option: {
     padding: 8,
   },
-  buttonContainer: {
-    paddingVertical: 6,
-    marginVertical: 0,
-    borderColor: colors.neutral,
-    borderWidth: 1,
-  },
-  addItem: {
-    width: 90,
-    paddingHorizontal: 12,
-  },
-  button: {
-    fontWeight: 'normal',
-  },
   selectContainer: {
     flex: 1,
   },

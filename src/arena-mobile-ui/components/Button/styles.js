@@ -26,6 +26,9 @@ const styles = ({colors}) =>
     delete: {
       backgroundColor: colors.error,
     },
+    deleteGhost: {
+      backgroundColor: colors.transparent,
+    },
     ghost: {
       backgroundColor: colors.transparent,
     },
@@ -44,6 +47,9 @@ const styles = ({colors}) =>
       },
       delete: {
         color: colors.primaryContrastText,
+      },
+      deleteGhost: {
+        color: colors.error,
       },
       ghost: {
         color: colors.secondary,

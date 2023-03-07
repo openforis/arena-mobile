@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     padding: baseStyles.bases.BASE_4,
     paddingTop: 0,
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignItems: 'flex-start',
     flex: 1,
     textAlign: 'left',
@@ -37,6 +37,11 @@ const styles = StyleSheet.create({
     marginLeft: 0,
     marginBottom: 0,
     marginTop: baseStyles.bases.BASE,
+  },
+  textContainer: {
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   },
   headerTextInfo: {
     ...baseStyles.textSize.s,
@@ -56,6 +61,16 @@ const styles = StyleSheet.create({
   },
   containerTabletMenuOpen: {
     width: WIDTH - ENTITY_SELECTOR_TABLET_WIDTH,
+  },
+  button: {
+    borderRadius: baseStyles.bases.BASE,
+    backgroundColor: colors.neutralLightest,
+    padding: baseStyles.bases.BASE_2,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 0,
   },
 });
 

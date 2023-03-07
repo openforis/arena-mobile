@@ -1,5 +1,4 @@
 import {NodeDefs} from '@openforis/arena-core';
-import debounce from 'lodash.debounce';
 import React, {useCallback, useEffect, useState, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
@@ -14,7 +13,10 @@ import {uuidv4} from 'infra/uuid';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
+import NewItemButton from './NewItemButton';
 import styles, {pickerSelectStyles} from './styles';
+
+const TrashIcon = <Icon name="trash-can-outline" />;
 
 const Header = () => {
   const {t} = useTranslation();
@@ -50,19 +52,6 @@ const Header = () => {
   }, [siblingNodesInhierarchy]);
 
   const dispatch = useDispatch();
-
-  const handleCreateNewNodeEntity = useCallback(() => {
-    dispatch(
-      formActions.createEntity({
-        nodeDef: parentEntityNodeDef,
-        node: parentEntityNode,
-      }),
-    );
-  }, [dispatch, parentEntityNodeDef, parentEntityNode]);
-
-  const debouncedHandleCreateNewNodeEntity = useCallback(() => {
-    debounce(handleCreateNewNodeEntity, 800)();
-  }, [handleCreateNewNodeEntity]);
 
   const handleDeleteEntityNode = useCallback(() => {
     alert({
@@ -103,14 +92,8 @@ const Header = () => {
   return (
     <>
       <View style={styles.header}>
-        <Button
-          type="secondary"
-          icon={<Icon name="plus" />}
-          label={t(isTable ? 'Form:add_new_row' : 'Form:add_new_item')}
-          customContainerStyle={[styles.buttonContainer, styles.addItem]}
-          customTextStyle={styles.button}
-          onPress={debouncedHandleCreateNewNodeEntity}
-        />
+        <NewItemButton visible={!isTable} />
+
         <View style={styles.selectContainer}>
           <Select
             key={key}
@@ -124,7 +107,7 @@ const Header = () => {
 
         <Button
           type="secondary"
-          icon={<Icon name="trash-can-outline" />}
+          icon={TrashIcon}
           customContainerStyle={styles.buttonContainer}
           onPress={handleDeleteEntityNode}
         />
