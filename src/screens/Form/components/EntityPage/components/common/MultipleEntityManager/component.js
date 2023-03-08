@@ -13,26 +13,73 @@ import {uuidv4} from 'infra/uuid';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
-import NewItemButton from './NewItemButton';
-import styles, {pickerSelectStyles} from './styles';
+import styles, {pickerSelectStyles, pickerSelectStylesNeutral} from './styles';
 
 const TrashIcon = <Icon name="trash-can-outline" />;
 
-const Header = () => {
-  const {t} = useTranslation();
+export const EntityNodeSelector = ({theme = null} = {}) => {
   const [key, setKey] = useState(uuidv4());
 
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
-  const parentEntityKeyString = useSelector(state =>
-    formSelectors.getEntityKey(state, parentEntityNode),
-  );
 
   const siblingNodesInhierarchy = useSelector(state =>
     formSelectors.getNodeDefNodesWithKeysAsStringInHierarchy(
       state,
       parentEntityNodeDef,
     ),
+  );
+
+  useEffect(() => {
+    setKey(uuidv4());
+  }, [siblingNodesInhierarchy]);
+
+  const dispatch = useDispatch();
+
+  const handleSelectEntityNode = useCallback(
+    node => {
+      if (node) {
+        dispatch(
+          formActions.selectEntityNode({
+            node,
+          }),
+        );
+      } else {
+        setKey(uuidv4());
+      }
+    },
+    [dispatch],
+  );
+
+  const _labelStractor = useCallback(item => item?.keyString || '-', []);
+
+  if (!parentEntityNodeDef.props.multiple) {
+    return <></>;
+  }
+
+  return (
+    <View style={styles.selectContainer}>
+      <Select
+        key={key}
+        items={siblingNodesInhierarchy}
+        customStyles={
+          theme === 'neutral' ? pickerSelectStylesNeutral : pickerSelectStyles
+        }
+        onValueChange={handleSelectEntityNode}
+        selectedItemKey={parentEntityNode.uuid}
+        labelStractor={_labelStractor}
+      />
+    </View>
+  );
+};
+
+const Header = () => {
+  const {t} = useTranslation();
+
+  const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
+  const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
+  const parentEntityKeyString = useSelector(state =>
+    formSelectors.getEntityKey(state, parentEntityNode),
   );
 
   const parentLabel = useNodeDefNameOrLabel({nodeDef: parentEntityNodeDef});
@@ -46,10 +93,6 @@ const Header = () => {
       }) === 'table',
     [parentEntityNodeDef, cycle],
   );
-
-  useEffect(() => {
-    setKey(uuidv4());
-  }, [siblingNodesInhierarchy]);
 
   const dispatch = useDispatch();
 
@@ -68,23 +111,6 @@ const Header = () => {
     });
   }, [dispatch, parentEntityKeyString, parentLabel, parentEntityNode, t]);
 
-  const handleSelectEntityNode = useCallback(
-    node => {
-      if (node) {
-        dispatch(
-          formActions.selectEntityNode({
-            node,
-          }),
-        );
-      } else {
-        setKey(uuidv4());
-      }
-    },
-    [dispatch],
-  );
-
-  const _labelStractor = useCallback(item => item.keyString, []);
-
   if (!parentEntityNodeDef.props.multiple) {
     return <></>;
   }
@@ -92,19 +118,6 @@ const Header = () => {
   return (
     <>
       <View style={styles.header}>
-        <NewItemButton visible={!isTable} />
-
-        <View style={styles.selectContainer}>
-          <Select
-            key={key}
-            items={siblingNodesInhierarchy}
-            customStyle={pickerSelectStyles}
-            onValueChange={handleSelectEntityNode}
-            selectedItemKey={parentEntityNode.uuid}
-            labelStractor={_labelStractor}
-          />
-        </View>
-
         <Button
           type="secondary"
           icon={TrashIcon}

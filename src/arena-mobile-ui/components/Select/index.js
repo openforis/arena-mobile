@@ -52,16 +52,18 @@ const Select = ({
     }
   }, [autoFocus, selectRef]);
 
-  const _styles = useMemo(
-    () =>
-      Objects.isEmpty(customStyles)
-        ? styles
-        : Object.assign({}, styles, {
-            inputIOS: Object.assign({}, styles.inputIOS, customStyles),
-            inputAndroid: Object.assign({}, styles.inputAndroid, customStyles),
-          }),
-    [customStyles],
-  );
+  const _styles = useMemo(() => {
+    return Objects.isEmpty(customStyles)
+      ? styles
+      : Object.assign({}, styles, {
+          inputIOS: Object.assign({}, styles.inputIOS, customStyles.inputIOS),
+          inputAndroid: Object.assign(
+            {},
+            styles.inputAndroid,
+            customStyles.inputAndroid,
+          ),
+        });
+  }, [customStyles]);
 
   return (
     <RNPickerSelect

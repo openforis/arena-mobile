@@ -11,8 +11,8 @@ import baseStyles from 'arena-mobile-ui/styles';
 import EntitySelectorToggler from 'screens/Form/components/BreadCrumbs/components/EntitySelectorToggler';
 import {useIsTable} from 'screens/Form/components/EntityPage/components/common/MultipleEntityManager/NewItemButton/component';
 import {selectors as formSelectors} from 'state/form';
-import {selectors as surveySelectors} from 'state/survey';
 
+import {EntityNodeSelector} from '../MultipleEntityManager/component';
 import NewItemButton from '../MultipleEntityManager/NewItemButton';
 
 import Navigation from './Navigation';
@@ -34,9 +34,6 @@ const EntityPanel = () => {
   const label = useNodeDefNameOrLabel({nodeDef: currentEntityNodeDef});
 
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
-  const keys = useSelector(state =>
-    surveySelectors.getEntityNodeKeysAsString(state, parentEntityNode),
-  );
 
   return (
     <View
@@ -52,9 +49,21 @@ const EntityPanel = () => {
         )}
         <View style={styles.textContainer}>
           <Text style={[styles.headerTextInfo]}>Current page:</Text>
-          <Text style={[styles.headerText]}>
-            {label} [{keys}]
-          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: '',
+              alignItems: 'center',
+            }}>
+            <Text style={[styles.headerText]}>{label}</Text>
+            <View
+              style={{
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}>
+              <EntityNodeSelector theme="neutral" />
+            </View>
+          </View>
           {isTable && (
             <>
               <Button
