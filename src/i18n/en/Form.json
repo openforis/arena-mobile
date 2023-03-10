@@ -6,6 +6,17 @@
   "save": "Save",
   "delete": "Delete {{ label }}",
   "select_empty": " ",
+  "navigation_panel": {
+    "current_page": "Current page",
+    "table": {
+      "show_as_table": "Show as table",
+      "show_as_form": "Show as form"
+    },
+    "multiple": {
+      "delete_this_item": "Delete this item"
+    },
+    "automatically_stored_info": "All the data entered is stored locally and automatically"
+  },
   "nodeDefEntity": {
     "layout": {
       "table": " (table)"
@@ -67,7 +78,7 @@
     }
   },
   "beforeLeave": {
-    "title": "Are you sure to leave the form?",
+    "title": "Data is automatically saved, Are you sure to leave the form?",
     "message": "",
     "acceptText": "Leave",
     "dismissText": "Stay"

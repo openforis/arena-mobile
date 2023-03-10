@@ -6,17 +6,7 @@ import Attribute from 'form/common/Attribute';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
-import MultipleEntityFooter from '../MultipleEntityFooter';
-
 import styles from './styles';
-
-const Footer = () => {
-  return (
-    <View style={[styles.block]}>
-      <MultipleEntityFooter />
-    </View>
-  );
-};
 
 const Attributes = () => {
   const nodeDef = useSelector(formSelectors.getParentEntityNodeDef);
@@ -60,7 +50,6 @@ const Attributes = () => {
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         data={nodeDefChildrenUuids}
-        ListFooterComponent={Footer}
       />
     </View>
   );

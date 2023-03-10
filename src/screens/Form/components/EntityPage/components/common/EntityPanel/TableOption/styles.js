@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    paddingRight: 0,
+    paddingLeft: 0,
   },
 });
 

@@ -17,6 +17,7 @@ const TrashIconRed = (
     color={colors.error}
   />
 );
+import styles from './styles';
 
 const DeleteNodeEntity = () => {
   const {t} = useTranslation();
@@ -49,7 +50,8 @@ const DeleteNodeEntity = () => {
     <Button
       type="deleteGhost"
       icon={TrashIconRed}
-      label={'Delete row'}
+      label={t('Form:navigation_panel.multiple.delete_this_item')}
+      customContainerStyle={styles.buttonContainer}
       onPress={handleDeleteEntityNode}
     />
   );
