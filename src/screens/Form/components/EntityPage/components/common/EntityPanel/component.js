@@ -5,20 +5,42 @@ import {useSelector} from 'react-redux';
 
 import * as colors from 'arena-mobile-ui/colors';
 import Button from 'arena-mobile-ui/components/Button';
-import Icon from 'arena-mobile-ui/components/Icon';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import baseStyles from 'arena-mobile-ui/styles';
 import EntitySelectorToggler from 'screens/Form/components/BreadCrumbs/components/EntitySelectorToggler';
-import {useIsTable} from 'screens/Form/components/EntityPage/components/common/MultipleEntityManager/NewItemButton/component';
+import {useIsTable} from 'screens/Form/components/EntityPage/components/common/EntityPanel/NewItemButton/component';
 import {selectors as formSelectors} from 'state/form';
 
-import {EntityNodeSelector} from '../MultipleEntityManager/component';
-import NewItemButton from '../MultipleEntityManager/NewItemButton';
-
+import DeleteNodeEntity from './DeleteNodeEntity';
+import EntityNodeSelector from './EntityNodeSelector';
 import Navigation from './Navigation';
+import NewItemButton from './NewItemButton';
 import styles from './styles';
 
 const SHOW_TREE_BUTTON = false;
+
+const MultipleEntityOptions = () => {
+  const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
+
+  if (!parentEntityNodeDef.props.multiple) {
+    return <></>;
+  }
+
+  return (
+    <View
+      style={{
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
+      }}>
+      <DeleteNodeEntity />
+      <NewItemButton
+        visible={true}
+        customContainerStyle={styles.button}
+        styleTheme="neutral"
+      />
+    </View>
+  );
+};
 
 const EntityPanel = () => {
   const isEntitySelectorOpened = useSelector(
@@ -32,8 +54,6 @@ const EntityPanel = () => {
   const isTable = useIsTable();
 
   const label = useNodeDefNameOrLabel({nodeDef: currentEntityNodeDef});
-
-  const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
 
   return (
     <View
@@ -54,8 +74,9 @@ const EntityPanel = () => {
               flexDirection: 'row',
               justifyContent: '',
               alignItems: 'center',
+              maxWidth: 300,
             }}>
-            <Text style={[styles.headerText]}>{label}</Text>
+            <Text style={[styles.headerText, {maxWidth: 160}]}>{label}</Text>
             <View
               style={{
                 flexDirection: 'column',
@@ -75,31 +96,17 @@ const EntityPanel = () => {
             </>
           )}
         </View>
-        <View
-          style={{
-            justifyContent: 'flex-end',
-            alignItems: 'flex-end',
-          }}>
-          <Button
-            type="deleteGhost"
-            icon={
-              <Icon
-                name="trash-can-outline"
-                size={baseStyles.fontSizes.l}
-                color={colors.error}
-              />
-            }
-            label={'Delete row'}
-            customContainerStyle={[styles.buttonContainer, styles.addItem]}
-          />
-          <NewItemButton
-            visible={true}
-            customContainerStyle={styles.button}
-            styleTheme="neutral"
-          />
-        </View>
+        <MultipleEntityOptions />
       </View>
       <Navigation />
+      <Text
+        style={{
+          textAlign: 'center',
+          fontSize: baseStyles.fontSizes.s,
+          color: colors.neutralLight,
+        }}>
+        All the data entered is stored locally and automatically
+      </Text>
     </View>
   );
 };

@@ -9,7 +9,6 @@ import {actions as formActions} from 'state/form';
 
 import Attributes from '../common/Attributes';
 import EntityPanel from '../common/EntityPanel';
-import MultipleEntityManager from '../common/MultipleEntityManager';
 
 import {Viewtoggler, Row} from './components';
 import {useEntityTableData} from './hooks';
@@ -74,10 +73,7 @@ const TableEntity = () => {
           getWidth={getWidth}
         />
       ) : (
-        <>
-          <MultipleEntityManager />
-          <Attributes />
-        </>
+        <Attributes />
       )}
       <EntityPanel />
     </View>

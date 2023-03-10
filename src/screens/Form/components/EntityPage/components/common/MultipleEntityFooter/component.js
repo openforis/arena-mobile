@@ -6,7 +6,7 @@ import {useSelector} from 'react-redux';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
-import NewItemButton from '../MultipleEntityManager/NewItemButton';
+import NewItemButton from '../EntityPanel/NewItemButton';
 
 import styles from './styles';
 
