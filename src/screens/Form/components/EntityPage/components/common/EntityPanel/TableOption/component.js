@@ -8,7 +8,6 @@ import formSelectors from 'state/form/selectors';
 
 import styles from './styles';
 
-/* TODO navi join to the reducer when unmount change to default */
 const TableOption = () => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
