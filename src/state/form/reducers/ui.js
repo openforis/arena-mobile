@@ -23,6 +23,15 @@ const ui = handleActions(
       ...state,
       isEntitySelectorOpened: false,
     }),
+    [actions.toggleEntityShowAsTable]: state => ({
+      ...state,
+      isEntityShowAsTable: !state.isEntityShowAsTable,
+    }),
+
+    [actions.selectEntityNode]: state => ({
+      ...state,
+      isEntityShowAsTable: false,
+    }),
     [actions.clean]: () => initialState.ui,
     [globalActions.reset]: () => initialState.ui || {},
   },

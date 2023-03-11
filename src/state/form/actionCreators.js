@@ -21,6 +21,7 @@ const {form} = createActions({
   [types.CLEAN]: () => ({}),
   [types.TOGGLE_ENTITY_SELECTOR]: () => ({}),
   [types.CLOSE_ENTITY_SELECTOR]: () => ({}),
+  [types.TOGGLE_ENTITY_SHOW_AS_TABLE]: () => ({}),
   [types.SET_VALIDATION]: ({validation}) => ({validation}),
   [types.importRecords$]: () => ({}),
 });

@@ -8,6 +8,7 @@ const initialState = {
   },
   ui: {
     isEntitySelectorOpened: false,
+    isEntityShowAsTable: false,
   },
   validation: {},
 };
