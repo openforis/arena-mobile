@@ -15,6 +15,9 @@ const styles = ({colors}) =>
     primary: {
       backgroundColor: colors.secondary,
     },
+    neutral: {
+      backgroundColor: colors.neutralLightest,
+    },
     secondary: {
       backgroundColor: colors.white,
       borderColor: colors.neutralDarkest,
@@ -22,6 +25,9 @@ const styles = ({colors}) =>
     },
     delete: {
       backgroundColor: colors.error,
+    },
+    deleteGhost: {
+      backgroundColor: colors.transparent,
     },
     ghost: {
       backgroundColor: colors.transparent,
@@ -36,8 +42,14 @@ const styles = ({colors}) =>
       secondary: {
         color: colors.secondaryText,
       },
+      neutral: {
+        color: colors.secondaryText,
+      },
       delete: {
         color: colors.primaryContrastText,
+      },
+      deleteGhost: {
+        color: colors.error,
       },
       ghost: {
         color: colors.secondary,

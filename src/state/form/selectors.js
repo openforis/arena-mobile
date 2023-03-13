@@ -289,6 +289,11 @@ const isEntitySelectorOpened = createSelector(
   ui => ui?.isEntitySelectorOpened || false,
 );
 
+const isEntityShowAsTable = createSelector(
+  getFormStateUi,
+  ui => ui?.isEntityShowAsTable || false,
+);
+
 // --- Validation
 const getValidation = createSelector(
   getFormState,
@@ -380,6 +385,7 @@ export default {
 
   // ---- UI
   isEntitySelectorOpened,
+  isEntityShowAsTable,
 
   // ---- Validation
   getValidation,

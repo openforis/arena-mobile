@@ -25,6 +25,7 @@ const Button = ({
   customTextStyle = {},
   iconPosition = 'left',
   allowMultipleLines = false,
+  bold = true,
   ...props
 }) => {
   const styles = useThemedStyles({styles: _styles});
@@ -43,7 +44,7 @@ const Button = ({
       <Text
         numberOfLines={allowMultipleLines ? null : 1}
         style={[
-          baseStyles.textStyle.bold,
+          bold && baseStyles.textStyle.bold,
           styles.text[type],
           (disabled && styles.disabled.text[type]) || {},
           customTextStyle,

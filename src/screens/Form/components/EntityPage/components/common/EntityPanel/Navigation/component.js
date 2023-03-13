@@ -1,15 +1,17 @@
 import {Objects} from '@openforis/arena-core';
 import React, {useCallback} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
-import {isTablet} from 'react-native-device-info';
+import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {defaultCycle} from 'arena/config';
+import Button from 'arena-mobile-ui/components/Button';
+import Icon from 'arena-mobile-ui/components/Icon';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
 import styles from './styles';
+
 const getNodeDefIndex = ({survey, nodeDef, cycle = defaultCycle}) => {
   return (
     nodeDef?.uuid &&
@@ -17,7 +19,10 @@ const getNodeDefIndex = ({survey, nodeDef, cycle = defaultCycle}) => {
   );
 };
 
-const Button = ({nodeDef, align = 'right'}) => {
+const ChevronLeft = <Icon name="chevron-left" />;
+const ChevronRight = <Icon name="chevron-right" />;
+
+const NavigationButton = ({nodeDef, align = 'right'}) => {
   const dispatch = useDispatch();
   const nodeDefName = useNodeDefNameOrLabel({nodeDef});
   const handleSelect = useCallback(() => {
@@ -28,14 +33,18 @@ const Button = ({nodeDef, align = 'right'}) => {
     );
   }, [nodeDef, dispatch]);
   return (
-    <TouchableOpacity onPress={handleSelect} hitSlop={{top: 10, bottom: 10}}>
-      <Text
-        style={[styles.text, align === 'left' ? styles.textLeft : {}]}
-        ellipsizeMode="middle"
-        numberOfLines={2}>
-        {nodeDefName}
-      </Text>
-    </TouchableOpacity>
+    <Button
+      onPress={handleSelect}
+      style={styles.button}
+      hitSlop={{top: 10, bottom: 10}}
+      allowMultipleLines={true}
+      label={nodeDefName}
+      type="neutral"
+      customTextStyle={[styles.text, align === 'left' ? styles.textLeft : {}]}
+      icon={align === 'left' ? ChevronLeft : ChevronRight}
+      iconPosition={align === 'left' ? 'left' : 'right'}
+      bold={false}
+    />
   );
 };
 
@@ -76,14 +85,14 @@ const Prev = ({parent}) => {
   });
 
   if (prevNodeDef?.uuid) {
-    return <Button nodeDef={prevNodeDef} align="left" />;
+    return <NavigationButton nodeDef={prevNodeDef} align="left" />;
   }
 
   return <View />;
 };
 
 const Parent = ({parent}) => {
-  return <Button nodeDef={parent} />;
+  return <NavigationButton nodeDef={parent} align="left" />;
 };
 
 const Next = ({parent}) => {
@@ -102,7 +111,7 @@ const Next = ({parent}) => {
     !Objects.isEmpty(childrenIndex) &&
     (Objects.isEmpty(parent) || parent === false || childrenIndex?.length > 0)
   ) {
-    return <Button nodeDef={survey.nodeDefs[childrenIndex[0]]} />;
+    return <NavigationButton nodeDef={survey.nodeDefs[childrenIndex[0]]} />;
   }
 
   const sibilings = getNodeDefIndex({survey, nodeDef: parent, cycle});
@@ -125,7 +134,9 @@ const Next = ({parent}) => {
     const parentIndex = parentSiblings?.indexOf(parent.uuid);
     if (parentIndex >= 0 && parentIndex + 1 < parentSiblings?.length) {
       return (
-        <Button nodeDef={survey.nodeDefs[parentSiblings?.[parentIndex + 1]]} />
+        <NavigationButton
+          nodeDef={survey.nodeDefs[parentSiblings?.[parentIndex + 1]]}
+        />
       );
     }
 
@@ -133,7 +144,11 @@ const Next = ({parent}) => {
   }
 
   if (currentIndex < sibilings.length) {
-    return <Button nodeDef={survey.nodeDefs[sibilings[currentIndex + 1]]} />;
+    return (
+      <NavigationButton
+        nodeDef={survey.nodeDefs[sibilings[currentIndex + 1]]}
+      />
+    );
   }
 
   return <View />;
@@ -141,10 +156,7 @@ const Next = ({parent}) => {
 
 // next -> first children, next entity if single
 // prev -> prev entity if single or parent
-const EntityNavigation = () => {
-  const isEntitySelectorOpened = useSelector(
-    formSelectors.isEntitySelectorOpened,
-  );
+const Navigation = () => {
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const currentEntityNodeDef = useSelector(
     formSelectors.getParentEntityNodeDef,
@@ -154,13 +166,7 @@ const EntityNavigation = () => {
   );
 
   return (
-    <View
-      style={[
-        styles.container,
-        isTablet() && isEntitySelectorOpened
-          ? styles.containerTabletMenuOpen
-          : {},
-      ]}>
+    <View style={styles.optionsContainer}>
       {!currentEntityNodeDef.props?.layout?.[cycle]?.pageUuid ? (
         <View style={styles.buttonsContainerCenter}>
           <Parent parent={parentNodeDef} />
@@ -175,4 +181,4 @@ const EntityNavigation = () => {
   );
 };
 
-export default EntityNavigation;
+export default Navigation;

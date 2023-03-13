@@ -1,15 +1,14 @@
-import React, {useState, useCallback} from 'react';
+import React, {useCallback} from 'react';
 import {View} from 'react-native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import * as colors from 'arena-mobile-ui/colors';
 import Table from 'arena-mobile-ui/components/Table';
 import Label from 'form/common/Label';
-import {actions as formActions} from 'state/form';
+import {actions as formActions, selectors as formSelectors} from 'state/form';
 
 import Attributes from '../common/Attributes';
-import EntityNavigation from '../common/EntityNavigation';
-import MultipleEntityManager from '../common/MultipleEntityManager';
+import EntityPanel from '../common/EntityPanel';
 
 import {Viewtoggler, Row} from './components';
 import {useEntityTableData} from './hooks';
@@ -17,8 +16,8 @@ import styles from './styles';
 
 const TableEntity = () => {
   const {rows, headers, getWidth} = useEntityTableData();
+  const isEntityShowAsTable = useSelector(formSelectors.isEntityShowAsTable);
 
-  const [entityAsTable, setEntityAsTable] = useState(false);
   const dispatch = useDispatch();
 
   const handlePressRow = useCallback(
@@ -28,9 +27,8 @@ const TableEntity = () => {
           node: item,
         }),
       );
-      setEntityAsTable(false);
     },
-    [setEntityAsTable, dispatch],
+    [dispatch],
   );
 
   const renderHeaderCell = useCallback(
@@ -59,13 +57,9 @@ const TableEntity = () => {
 
   return (
     <View style={[styles.container]}>
-      <Viewtoggler
-        key={String(entityAsTable)}
-        setEntityAsTable={setEntityAsTable}
-        entityAsTable={entityAsTable}
-      />
+      <Viewtoggler key={String(isEntityShowAsTable)} />
 
-      {entityAsTable ? (
+      {isEntityShowAsTable ? (
         <Table
           rows={rows}
           headers={headers}
@@ -74,12 +68,9 @@ const TableEntity = () => {
           getWidth={getWidth}
         />
       ) : (
-        <>
-          <MultipleEntityManager />
-          <Attributes />
-        </>
+        <Attributes />
       )}
-      <EntityNavigation />
+      <EntityPanel />
     </View>
   );
 };
