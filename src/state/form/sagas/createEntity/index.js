@@ -1,10 +1,12 @@
 import {call, select, put} from 'redux-saga/effects';
 
+import {perfState} from 'infra/stateUtils';
 import formActions from 'state/form/actionCreators';
 import formSelectors from 'state/form/selectors';
 import handleCreateNodeAndDescendants from 'state/nodes/sagas/createNodeAndDescendants';
 
 function* handleCreateEntity({payload} = {}) {
+  yield call(perfState.start, 'handleCreateEntity');
   const {nodeDef: _nodeDef = false, forceCreationIfSibilingExists = true} =
     payload;
 
@@ -17,6 +19,7 @@ function* handleCreateEntity({payload} = {}) {
   const nodeDefNodes = yield select(state =>
     formSelectors.getNodeDefNodes(state, _nodeDef),
   );
+
   const nodeOfThisNodeDefBelowTheCurrentEntity =
     parentEntityNode?.uuid &&
     (nodeDefNodes || []).find(
@@ -44,8 +47,11 @@ function* handleCreateEntity({payload} = {}) {
       node => node.nodeDefUuid === _nodeDef.uuid,
     );
 
+    yield call(perfState.start, 'setParentEntityNode');
     yield put(formActions.setParentEntityNode({node: newNodeEntity}));
+    yield call(perfState.end, 'setParentEntityNode');
   }
+  yield call(perfState.end, 'handleCreateEntity');
 }
 
 export default handleCreateEntity;

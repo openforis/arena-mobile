@@ -1,3 +1,4 @@
+import {perfState} from 'infra/stateUtils';
 export const deleteValueByKey =
   ({conditionToDelete = () => false}) =>
   obj => {
@@ -14,9 +15,11 @@ export const deleteValueByKey =
 export const mergeSpread = (obj, newObj) => ({...obj, ...newObj});
 export const mergeShallow = (obj, newObj) => Object.assign({}, obj, newObj);
 export const mergeNoSpread = (obj, newObj) => {
+  perfState.start('mergeNoSpread');
   const result = Object.assign({}, obj);
   Object.keys(newObj).forEach(key => {
     result[key] = newObj[key];
   });
+  perfState.end('mergeNoSpread');
   return result;
 };
