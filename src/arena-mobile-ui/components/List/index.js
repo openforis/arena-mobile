@@ -12,7 +12,7 @@ const List = ({data, ListEmptyComponent, keyExtractor, renderItem}) => {
     <View style={[styles.container]}>
       <FlatList
         showsVerticalScrollIndicator={false}
-        initialNumToRender={12}
+        initialNumToRender={6}
         data={data}
         renderItem={renderItem}
         ListEmptyComponent={ListEmptyComponent}

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, {useCallback, useEffect, useRef, useMemo} from 'react';
 import {FlatList, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -12,19 +12,22 @@ const Attributes = () => {
   const nodeDef = useSelector(formSelectors.getParentEntityNodeDef);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
 
-  const layoutNodeDefChildrenUuids = (
-    nodeDef.props.layout[cycle]?.layoutChildren || []
-  ).map(children => (typeof children === 'string' ? children : children.i));
-
   const computedNodeDefChildrenUuids = useSelector(state =>
     surveySelectors.getNodeDefEntityChildrenAttributesUuids(state, nodeDef),
   );
 
-  const nodeDefChildrenUuids = Array.from(
-    new Set(
-      (layoutNodeDefChildrenUuids || []).concat(computedNodeDefChildrenUuids),
-    ),
-  );
+  const nodeDefChildrenUuids = useMemo(() => {
+    const layoutNodeDefChildrenUuids = (
+      nodeDef.props.layout[cycle]?.layoutChildren || []
+    ).map(children => (typeof children === 'string' ? children : children.i));
+
+    return Array.from(
+      new Set(
+        (layoutNodeDefChildrenUuids || []).concat(computedNodeDefChildrenUuids),
+      ),
+    );
+  }, [nodeDef, cycle, computedNodeDefChildrenUuids]);
+
   const renderItem = useCallback(
     ({item: nodeDefUuid}) => <Attribute nodeDefUuid={nodeDefUuid} />,
     [],
