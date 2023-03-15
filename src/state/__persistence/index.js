@@ -1,13 +1,13 @@
 import {Objects} from '@openforis/arena-core';
-import {call, select, put} from 'redux-saga/effects';
+import {call, select, put, fork} from 'redux-saga/effects';
 
 import {getRecordKey, getRecordSummary} from 'arena/record';
 import * as fs from 'infra/fs';
+import {perfState} from 'infra/stateUtils';
 import nodesSelectors from 'state/nodes/selectors';
 import recordsActions from 'state/records/actionCreators';
 import recordsSelectors from 'state/records/selectors';
 import surveySelectors from 'state/survey/selectors';
-
 const DATA_PATH = fs.BASE_PATH_DATA;
 
 export const getSurveyFolder = surveyUuid => `${DATA_PATH}/${surveyUuid}`;
@@ -37,12 +37,17 @@ export const persistRecordSummary = async ({summary}) =>
     content: `${JSON.stringify(summary)}\n`,
   });
 
+export function* _writeFile(content) {
+  yield fork(fs.writeFile, content);
+}
+
 export function* persistRecordWithNodes({record}) {
-  yield call(createSurveyFolder, record);
-  yield call(fs.writeFile, {
+  const content = {
     filePath: getRecordPath(record),
     content: JSON.stringify(record),
-  });
+  };
+
+  yield fork(_writeFile, content);
 
   const summary = getRecordSummary(record);
 
@@ -65,7 +70,7 @@ export function* persistRecordWithKeyAndMergeCurrentNodes({record}) {
     );
     recordKey = yield call(
       getRecordKey,
-      Object.values(Objects.isEmpty(nodes) ? record.nodes : nodes),
+      Object.values(Objects.isEmpty(nodes) ? record.nodes || [] : nodes),
       nodeDefRoot,
       nodeDefsByUuid,
       categoryItemIndex,
@@ -85,6 +90,7 @@ export function* persistRecordWithKeyAndMergeCurrentNodes({record}) {
 }
 
 export function* persistRecordsAndNodes() {
+  yield call(perfState.start, 'persistRecordsAndNodes');
   // maybe add a loader
   try {
     const records = yield select(surveySelectors.getRecords);

@@ -67,22 +67,24 @@ export const mkdir = async (
     options: {NSURLIsExcludedFromBackupKey: true},
   },
 ) => {
-  const exists = await dirExists(dirPath);
-  if (exists) {
+  try {
+    await RNFetchBlob.fs.mkdir(cleanPathWithBase(dirPath), options);
+  } catch (e) {
+    console.log(e);
+  } finally {
     return true;
   }
-  return RNFS.mkdir(cleanPathWithBase(dirPath), options);
 };
 
 export const writeFile = async ({filePath, content, encoding}) =>
-  RNFS.writeFile(
+  RNFetchBlob.fs.writeFile(
     cleanPathWithBase(filePath),
     content,
     encoding || DEFAULT_ENCODING,
   );
 
 export const appendFile = async ({filePath, content, encoding}) =>
-  RNFS.appendFile(
+  RNFetchBlob.fs.appendFile(
     cleanPathWithBase(filePath),
     content,
     encoding || DEFAULT_ENCODING,
@@ -91,30 +93,35 @@ export const appendFile = async ({filePath, content, encoding}) =>
 const getPathOfFile = filePath =>
   filePath.substring(0, filePath.lastIndexOf('/'));
 
-export const dirExists = async path => RNFS.exists(cleanPathWithBase(path));
+export const dirExists = async (path, where) => {
+  return RNFetchBlob.fs.exists(cleanPathWithBase(path));
+};
 
 export const copyFile = async ({sourcePath, destinationPath}) => {
-  const exits = await dirExists(destinationPath);
+  const exits = await dirExists(destinationPath, 'COPY');
   if (exits) {
     await deleteDir(getPathOfFile(destinationPath));
   }
   await mkdir({dirPath: getPathOfFile(destinationPath)});
-  return RNFS.copyFile(sourcePath, cleanPathWithBase(destinationPath));
+  return RNFetchBlob.fs.copyFile(
+    sourcePath,
+    cleanPathWithBase(destinationPath),
+  );
 };
 
 export const readfile = async ({filePath, encoding}) => {
   const path = cleanPathWithBase(filePath);
-  const exits = await dirExists(path);
+  const exits = await dirExists(path, 'READ_FILE');
 
   if (!exits) {
     return;
   }
-  return RNFS.readFile(path, encoding || DEFAULT_ENCODING);
+  return RNFetchBlob.fs.readFile(path, encoding || DEFAULT_ENCODING);
 };
 
 export const readDir = async ({dirPath}) => {
   const _path = cleanPathWithBase(dirPath);
-  const exits = await dirExists(_path);
+  const exits = await dirExists(_path, 'READ_DIR');
   if (!exits) {
     return;
   }
@@ -123,11 +130,11 @@ export const readDir = async ({dirPath}) => {
 
 export const deleteDir = async path => {
   const _path = cleanPathWithBase(path);
-  const exits = await dirExists(path);
+  const exits = await dirExists(path, 'DELETE_DIR');
   if (!exits) {
     return;
   }
-  return RNFS.unlink(_path);
+  return RNFetchBlob.fs.unlink(_path);
 };
 
 export const uploadFiles = async ({uploadUrl, files, onStart, onProgress}) => {

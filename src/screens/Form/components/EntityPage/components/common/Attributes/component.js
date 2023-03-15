@@ -8,6 +8,10 @@ import {selectors as surveySelectors} from 'state/survey';
 
 import styles from './styles';
 
+const Footer = () => {
+  return <View style={[styles.block]} />;
+};
+
 const Attributes = () => {
   const nodeDef = useSelector(formSelectors.getParentEntityNodeDef);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
@@ -53,6 +57,7 @@ const Attributes = () => {
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         data={nodeDefChildrenUuids}
+        ListFooterComponent={Footer}
       />
     </View>
   );

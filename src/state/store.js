@@ -13,7 +13,10 @@ const getStore = () => {
 
   sagaMiddleWare.run(sagas);
 
-  const persistor = persistStore(store);
+  const persistor = persistStore(store, {
+    throttle: 5000,
+    debug: true,
+  });
 
   return {store, persistor};
 };

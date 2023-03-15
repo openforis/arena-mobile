@@ -43,6 +43,16 @@ const Telemetry = () => {
   const numNodes = useSelector(nodesSelectors.getNumNodes);
   const data = useDeviceUse();
 
+  const cleanReselectCache = () => {
+    Object.values(telemetryKeys).forEach(telemetryKey => {
+      Object.values(telemetryKey).forEach(fn => {
+        console.log(Object.keys(fn?.cache || {}).length);
+        fn?.clearCache?.();
+        fn?.cache?.clearCache?.();
+      });
+    });
+  };
+
   return (
     <View key={new Date()}>
       <Button
@@ -65,6 +75,10 @@ const Telemetry = () => {
         <Text>numRecordsFs: {numRecordsFs}</Text>
         <Text>numNodes: {numNodes}</Text>
         <Text>-----------</Text>
+        <Button
+          type="ghostBlack"
+          onPress={cleanReselectCache}
+          label={t('ConnectionSettings:telemetry.cta')}></Button>
         {Object.keys(telemetryKeys).map(telemetryKey => (
           <TelemetryObject key={telemetryKey} telemetryKey={telemetryKey} />
         ))}

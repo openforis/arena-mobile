@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: baseStyles.bases.BASE_3,
   },
   block: {
-    minHeight: 400,
+    minHeight: 500,
   },
 });
 
