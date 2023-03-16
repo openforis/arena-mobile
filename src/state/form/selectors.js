@@ -99,7 +99,7 @@ const isNodeDefApplicable = createCachedSelector(
     ),
 )({
   keySelector: keySelectors.stringKey,
-  cacheObject: new FifoObjectCache({cacheSize: 10}),
+  cacheObject: new FifoObjectCache({cacheSize: 4000}),
 });
 
 const getParentEntityNodeDefUuid = createSelector(
@@ -335,7 +335,7 @@ const getValidationByNodes = createCachedSelector(
 )({
   keySelector: (_state_, nodes) =>
     nodes?.map(node => node.uuid).join('_') || '_',
-  cacheObject: new FifoObjectCache({cacheSize: 10}),
+  cacheObject: new FifoObjectCache({cacheSize: 100}),
 });
 
 const canAddNode = createCachedSelector(
