@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import * as colors from 'arena-mobile-ui/colors';
-import Table from 'arena-mobile-ui/components/Table';
+import TableComponent from 'arena-mobile-ui/components/Table';
 import Label from 'form/common/Label';
 import {actions as formActions, selectors as formSelectors} from 'state/form';
 
@@ -14,9 +14,8 @@ import {Viewtoggler, Row} from './components';
 import {useEntityTableData} from './hooks';
 import styles from './styles';
 
-const TableEntity = () => {
+const Table = () => {
   const {rows, headers, getWidth} = useEntityTableData();
-  const isEntityShowAsTable = useSelector(formSelectors.isEntityShowAsTable);
 
   const dispatch = useDispatch();
 
@@ -56,20 +55,24 @@ const TableEntity = () => {
   );
 
   return (
+    <TableComponent
+      rows={rows}
+      headers={headers}
+      renderHeaderCell={renderHeaderCell}
+      renderRow={renderRow}
+      getWidth={getWidth}
+    />
+  );
+};
+
+const TableEntity = () => {
+  const isEntityShowAsTable = useSelector(formSelectors.isEntityShowAsTable);
+
+  return (
     <View style={[styles.container]}>
       <Viewtoggler key={String(isEntityShowAsTable)} />
 
-      {isEntityShowAsTable ? (
-        <Table
-          rows={rows}
-          headers={headers}
-          renderHeaderCell={renderHeaderCell}
-          renderRow={renderRow}
-          getWidth={getWidth}
-        />
-      ) : (
-        <Attributes />
-      )}
+      {isEntityShowAsTable ? <Table /> : <Attributes />}
       <EntityPanel />
     </View>
   );
