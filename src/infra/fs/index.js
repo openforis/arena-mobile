@@ -71,9 +71,8 @@ export const mkdir = async (
     await RNFetchBlob.fs.mkdir(cleanPathWithBase(dirPath), options);
   } catch (e) {
     console.log(e);
-  } finally {
-    return true;
   }
+  return true;
 };
 
 export const writeFile = async ({filePath, content, encoding}) =>
