@@ -98,7 +98,7 @@ export const dirExists = async (path, where) => {
 };
 
 export const copyFile = async ({sourcePath, destinationPath}) => {
-  const exits = await dirExists(destinationPath, 'COPY');
+  const exits = await dirExists(destinationPath);
   if (exits) {
     await deleteDir(getPathOfFile(destinationPath));
   }
@@ -111,7 +111,7 @@ export const copyFile = async ({sourcePath, destinationPath}) => {
 
 export const readfile = async ({filePath, encoding}) => {
   const path = cleanPathWithBase(filePath);
-  const exits = await dirExists(path, 'READ_FILE');
+  const exits = await dirExists(path);
 
   if (!exits) {
     return;
@@ -121,7 +121,7 @@ export const readfile = async ({filePath, encoding}) => {
 
 export const readDir = async ({dirPath}) => {
   const _path = cleanPathWithBase(dirPath);
-  const exits = await dirExists(_path, 'READ_DIR');
+  const exits = await dirExists(_path);
   if (!exits) {
     return;
   }
@@ -130,7 +130,7 @@ export const readDir = async ({dirPath}) => {
 
 export const deleteDir = async path => {
   const _path = cleanPathWithBase(path);
-  const exits = await dirExists(path, 'DELETE_DIR');
+  const exits = await dirExists(path);
   if (!exits) {
     return;
   }

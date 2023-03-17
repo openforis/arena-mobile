@@ -3,7 +3,7 @@ import {call, select, put, fork} from 'redux-saga/effects';
 
 import {getRecordKey, getRecordSummary} from 'arena/record';
 import * as fs from 'infra/fs';
-import {perfState} from 'infra/stateUtils';
+
 import nodesSelectors from 'state/nodes/selectors';
 import recordsActions from 'state/records/actionCreators';
 import recordsSelectors from 'state/records/selectors';
@@ -37,17 +37,13 @@ export const persistRecordSummary = async ({summary}) =>
     content: `${JSON.stringify(summary)}\n`,
   });
 
-export function* _writeFile(content) {
-  yield fork(fs.writeFile, content);
-}
-
 export function* persistRecordWithNodes({record}) {
   const content = {
     filePath: getRecordPath(record),
     content: JSON.stringify(record),
   };
 
-  yield fork(_writeFile, content);
+  yield fork(fs.writeFile, content);
 
   const summary = getRecordSummary(record);
 
@@ -90,7 +86,6 @@ export function* persistRecordWithKeyAndMergeCurrentNodes({record}) {
 }
 
 export function* persistRecordsAndNodes() {
-  yield call(perfState.start, 'persistRecordsAndNodes');
   // maybe add a loader
   try {
     const records = yield select(surveySelectors.getRecords);

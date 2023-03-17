@@ -10,6 +10,8 @@ import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
+import {isTablet} from 'react-native-device-info';
+
 import styles from './styles';
 
 const getNodeDefIndex = ({survey, nodeDef, cycle = defaultCycle}) => {
@@ -32,6 +34,7 @@ const NavigationButton = ({nodeDef, align = 'right'}) => {
       }),
     );
   }, [nodeDef, dispatch]);
+
   return (
     <Button
       onPress={handleSelect}
@@ -40,7 +43,11 @@ const NavigationButton = ({nodeDef, align = 'right'}) => {
       allowMultipleLines={true}
       label={nodeDefName}
       type="neutral"
-      customTextStyle={[styles.text, align === 'left' ? styles.textLeft : {}]}
+      customTextStyle={[
+        styles.text,
+        align === 'left' ? styles.textLeft : {},
+        isTablet() ? styles.textTablet : {},
+      ]}
       icon={align === 'left' ? ChevronLeft : ChevronRight}
       iconPosition={align === 'left' ? 'left' : 'right'}
       bold={false}

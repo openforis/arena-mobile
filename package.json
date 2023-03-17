@@ -43,7 +43,6 @@
     "react-native-gesture-handler": "^2.9.0",
     "react-native-get-random-values": "^1.8.0",
     "react-native-image-crop-picker": "0.38.1",
-    "react-native-mmkv": "^2.6.3",
     "react-native-modal": "^13.0.1",
     "react-native-multiple-select": "^0.5.12",
     "react-native-permissions": "3.6.1",
