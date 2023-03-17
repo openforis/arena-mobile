@@ -98,8 +98,8 @@ export const dirExists = async (path, where) => {
 };
 
 export const copyFile = async ({sourcePath, destinationPath}) => {
-  const exits = await dirExists(destinationPath);
-  if (exits) {
+  const exists = await dirExists(destinationPath);
+  if (exists) {
     await deleteDir(getPathOfFile(destinationPath));
   }
   await mkdir({dirPath: getPathOfFile(destinationPath)});
@@ -111,9 +111,9 @@ export const copyFile = async ({sourcePath, destinationPath}) => {
 
 export const readfile = async ({filePath, encoding}) => {
   const path = cleanPathWithBase(filePath);
-  const exits = await dirExists(path);
+  const exists = await dirExists(path);
 
-  if (!exits) {
+  if (!exists) {
     return;
   }
   return RNFetchBlob.fs.readFile(path, encoding || DEFAULT_ENCODING);
@@ -121,8 +121,8 @@ export const readfile = async ({filePath, encoding}) => {
 
 export const readDir = async ({dirPath}) => {
   const _path = cleanPathWithBase(dirPath);
-  const exits = await dirExists(_path);
-  if (!exits) {
+  const exists = await dirExists(_path);
+  if (!exists) {
     return;
   }
   return RNFS.readDir(_path);
@@ -130,8 +130,8 @@ export const readDir = async ({dirPath}) => {
 
 export const deleteDir = async path => {
   const _path = cleanPathWithBase(path);
-  const exits = await dirExists(path);
-  if (!exits) {
+  const exists = await dirExists(path);
+  if (!exists) {
     return;
   }
   return RNFetchBlob.fs.unlink(_path);
