@@ -66,7 +66,7 @@ export function* persistRecordWithKeyAndMergeCurrentNodes({record}) {
     );
     recordKey = yield call(
       getRecordKey,
-      Object.values(Objects.isEmpty(nodes) ? record.nodes || [] : nodes),
+      Object.values(Objects.isEmpty(nodes) ? record.nodes || {} : nodes),
       nodeDefRoot,
       nodeDefsByUuid,
       categoryItemIndex,
