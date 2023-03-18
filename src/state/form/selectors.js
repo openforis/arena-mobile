@@ -89,14 +89,18 @@ const getNodeDefUuidKey = createSelector(
   nodeDef => nodeDef || '_',
 );
 
+const _getNodeDefUuid = (_, nodeDefUuid) => nodeDefUuid;
 const isNodeDefApplicable = createCachedSelector(
   getParentEntityNode,
-  (_, nodeDefUuid) => nodeDefUuid,
+  _getNodeDefUuid,
   (parentEntityNode, nodeDefUuid) =>
     !Object.keys(parentEntityNode?.meta?.childApplicability || {}).includes(
       nodeDefUuid,
     ),
-)(keySelectors.stringKey);
+)({
+  keySelector: keySelectors.stringKey,
+  cacheObject: new FifoObjectCache({cacheSize: 4000}),
+});
 
 const getParentEntityNodeDefUuid = createSelector(
   getFormStateData,
@@ -331,7 +335,7 @@ const getValidationByNodes = createCachedSelector(
 )({
   keySelector: (_state_, nodes) =>
     nodes?.map(node => node.uuid).join('_') || '_',
-  cacheObject: new FifoObjectCache({cacheSize: 1000}),
+  cacheObject: new FifoObjectCache({cacheSize: 100}),
 });
 
 const canAddNode = createCachedSelector(

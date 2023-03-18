@@ -4,7 +4,8 @@ import * as React from 'react';
 import Toast from 'react-native-toast-message';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Provider} from 'react-redux';
-
+import {enableScreens} from 'react-native-screens';
+enableScreens();
 MaterialCommunityIcons.loadFont();
 
 import 'i18n';

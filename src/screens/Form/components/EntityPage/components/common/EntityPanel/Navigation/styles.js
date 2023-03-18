@@ -38,6 +38,9 @@ const styles = StyleSheet.create({
     width: WIDTH * 0.34,
     textAlign: 'right',
   },
+  textTablet: {
+    width: null,
+  },
   textLeft: {
     textAlign: 'left',
   },

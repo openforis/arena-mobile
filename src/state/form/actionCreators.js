@@ -5,7 +5,12 @@ import types from './actionTypes';
 const {form} = createActions({
   [types.SET_RECORD]: ({record}) => ({record}),
 
-  [types.SET_PARENT_ENTITY_NODE]: ({node}) => ({node}),
+  [types.SET_PARENT_ENTITY_NODE]: ({node}) => ({
+    node: {
+      uuid: node?.uuid,
+      nodeDefUuid: node?.nodeDefUuid,
+    },
+  }),
   [types.SET_NODE]: ({node}) => ({node}),
 
   [types.initializeRecord$]: () => ({}),

@@ -19,6 +19,7 @@ function* handleInitializeRootEntity() {
       parentNode: null,
     },
   });
+
   const rootNode = Object.values(nodes).find(node =>
     Objects.isEmpty(node.parentUuid),
   );
@@ -29,11 +30,13 @@ function* handleInitializeRootEntity() {
 function* handleInitializeRecord() {
   try {
     yield put(formActions.clean());
+
     yield call(persistRecordsAndNodes);
 
     const record = yield call(handleCreateRecord);
 
     yield put(formActions.setRecord({record: record}));
+
     yield call(handleInitializeRootEntity);
 
     yield call(navigator.navigatorDispatch, StackActions.replace(ROUTES.FORM));

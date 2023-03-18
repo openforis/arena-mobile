@@ -13,7 +13,7 @@ const ToggleShowNames = () => {
 
   const handlePress = useCallback(() => {
     dispatch(appActions.setShowNames({showNames: !showNames}));
-  }, [showNames, dispatch]);
+  }, [showNames]);
 
   return (
     <Button

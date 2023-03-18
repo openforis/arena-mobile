@@ -1,5 +1,5 @@
 import {NodeDefs} from '@openforis/arena-core';
-import React from 'react';
+import React, {memo} from 'react';
 import {useSelector} from 'react-redux';
 
 import surveySelectors from 'state/survey/selectors';
@@ -31,4 +31,8 @@ const Preview = ({nodeDef}) => {
   return <CodeDropdown nodeDef={nodeDef} />;
 };
 
-export default Preview;
+const arePropsEqual = (prevProps, nextProps) => {
+  return prevProps.nodeDef.uuid === nextProps.nodeDef.uuid;
+};
+
+export default memo(Preview, arePropsEqual);

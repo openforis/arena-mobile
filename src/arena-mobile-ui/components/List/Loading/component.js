@@ -6,7 +6,7 @@ import styles from './styles';
 const useSkeletonAnimation = () => {
   const opacityAnim = useRef(new Animated.Value(0.8)).current;
 
-  useEffect(() => {
+  const anim = useRef(
     Animated.loop(
       Animated.sequence([
         Animated.timing(opacityAnim, {
@@ -24,8 +24,13 @@ const useSkeletonAnimation = () => {
       ]),
 
       {iterations: 1000},
-    ).start();
-  }, [opacityAnim]);
+    ),
+  ).current;
+
+  useEffect(() => {
+    anim.start();
+    return () => anim.stop();
+  }, [anim]);
 
   return opacityAnim;
 };
