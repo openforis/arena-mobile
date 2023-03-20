@@ -7,9 +7,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
-  icon: {
-    padding: baseStyles.bases.BASE_2,
-  },
 });
 
 export default styles;
