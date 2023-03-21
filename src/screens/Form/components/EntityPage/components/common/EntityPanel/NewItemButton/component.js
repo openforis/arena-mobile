@@ -63,6 +63,7 @@ const NewItemButton = ({visible, styleTheme, customContainerStyle}) => {
         ]}
         customTextStyle={styles.button}
         onPress={debouncedHandleCreateNewNodeEntity}
+        allowMultipleLines={true}
       />
     );
   }
