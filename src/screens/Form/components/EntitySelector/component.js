@@ -14,6 +14,7 @@ import ToggleShowNames from 'arena-mobile-ui/components/ToggleShowNames';
 import {useNavigateTo} from 'navigation/hooks';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
+import {useTranslation} from 'react-i18next';
 
 import EntitySelectorTree from './components/EntitySelectorTree';
 import styles from './styles';
@@ -24,6 +25,7 @@ export const ENTITY_SELECTOR_TABLET_WIDTH = Math.min(400, WIDTH * 0.33);
 
 const EntitySelector = () => {
   const {navigateTo, routes} = useNavigateTo();
+  const {t} = useTranslation();
 
   const dispatch = useDispatch();
 
@@ -58,9 +60,9 @@ const EntitySelector = () => {
     dispatch(formActions.closeEntitySelector());
   }, [dispatch]);
 
-  const handleNavigateToHome = useCallback(() => {
+  const handleNavigateToRecordList = useCallback(() => {
     handleClose();
-    navigateTo({route: routes.HOME, replace: true})();
+    navigateTo({route: routes.RECORDS, replace: true})();
   }, [handleClose, navigateTo]);
 
   return (
@@ -70,7 +72,11 @@ const EntitySelector = () => {
           <EntitySelectorTree nodeDefUuid={nodeDefRoot?.uuid} />
         </ScrollView>
         <View style={styles.buttonsContainer}>
-          <Button label="home" type="ghost" onPress={handleNavigateToHome} />
+          <Button
+            label={t('Form:leave_form_to_record_list_cta')}
+            type="ghost"
+            onPress={handleNavigateToRecordList}
+          />
           <ToggleShowNames />
         </View>
       </Animated.View>
