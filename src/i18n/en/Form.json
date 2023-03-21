@@ -77,6 +77,7 @@
       "audio": "Audio"
     }
   },
+  "leave_form_to_record_list_cta": "Go to records list", 
   "beforeLeave": {
     "title": "Data is automatically saved, Are you sure to leave the form?",
     "message": "",
