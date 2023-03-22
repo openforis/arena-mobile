@@ -1,8 +1,8 @@
 {
-  "new_record": "New record",
+  "new_record": "Create new record",
   "continue_record": "Continue current record",
   "validation_report": "Validation report ({{count}})",
-  "records": "Records ({{count}})",
+  "records": "Go to records list ({{count}})",
   "remove_records": "Remove all records",
   "remove_survey": "Remove survey",
   "upload_data": "Upload data"

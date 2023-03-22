@@ -1,8 +1,10 @@
 import {StyleSheet} from 'react-native';
 
+import baseStyles from 'arena-mobile-ui/styles';
+
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: 0,
+    paddingBottom: baseStyles.bases.BASE_4,
   },
   buttonContainer: {
     flexDirection: 'row',
