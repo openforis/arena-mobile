@@ -27,6 +27,13 @@ const SurveyDetail = () => {
 
   return (
     <Card customStyles={[styles.container]}>
+      <View style={[styles.buttonContainer]}>
+        <Button
+          type="ghost"
+          label={t('Home:survey.card.go_to_survey_options')}
+          onPress={navigateTo({route: routes.SURVEY})}
+        />
+      </View>
       <Text style={baseStyles.textStyle.secondaryText}>
         {t('Home:survey.card.active_survey')}
       </Text>
@@ -56,14 +63,6 @@ const SurveyDetail = () => {
           },
         ]}
       />
-
-      <View style={[styles.buttonContainer]}>
-        <Button
-          type="ghost"
-          label={t('Home:survey.card.go_to_survey_options')}
-          onPress={navigateTo({route: routes.SURVEY})}
-        />
-      </View>
     </Card>
   );
 };
