@@ -103,10 +103,7 @@ export const copyFile = async ({sourcePath, destinationPath}) => {
     await deleteDir(getPathOfFile(destinationPath));
   }
   await mkdir({dirPath: getPathOfFile(destinationPath)});
-  return RNFetchBlob.fs.copyFile(
-    sourcePath,
-    cleanPathWithBase(destinationPath),
-  );
+  return RNFS.copyFile(sourcePath, cleanPathWithBase(destinationPath));
 };
 
 export const readfile = async ({filePath, encoding}) => {

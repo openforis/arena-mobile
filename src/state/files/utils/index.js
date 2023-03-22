@@ -1,4 +1,5 @@
 import * as fs from 'infra/fs';
+import {Platform} from 'react-native';
 import {uuidv4} from 'infra/uuid';
 import {getSurveyFolder} from 'state/__persistence';
 
@@ -28,16 +29,19 @@ const createFile = async ({node, cycle}) => {
       fileUuid,
     })}/${node?.value?.fileName}`;
 
-    const sourcePath = node.value.uri.replace('%20', ' ');
+    let sourcePath = decodeURI(node.value.uri.replace('%20', ' '));
+    sourcePath =
+      Platform.OS === 'ios' ? sourcePath.replace('file:', '') : sourcePath;
 
     const exists = await fs.dirExists(destinationPath);
     const sourceExists = await fs.dirExists(sourcePath);
 
+    if (!sourceExists) {
+      throw new Error('File not found', sourcePath);
+    }
+
     if (!exists && sourceExists) {
-      await fs.copyFile({
-        sourcePath: node.value.uri.replace('%20', ' '),
-        destinationPath,
-      });
+      await fs.copyFile({sourcePath, destinationPath});
     }
 
     return {
