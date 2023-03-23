@@ -1,8 +1,7 @@
 import {Objects} from '@openforis/arena-core';
-import {t} from 'i18next';
+
 import {put, select, call} from 'redux-saga/effects';
 
-import {handleShowToast} from 'infra/toast';
 import {cleanRecord} from 'state/__persistence';
 import formActions from 'state/form/actionCreators';
 import formSelectors from 'state/form/selectors';
