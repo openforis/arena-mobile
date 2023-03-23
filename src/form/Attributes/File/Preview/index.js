@@ -8,10 +8,11 @@ import Icon from 'arena-mobile-ui/components/Icon';
 import baseStyles from 'arena-mobile-ui/styles';
 import {BasePreviewContainer} from 'form/Attributes/common/Base/Preview';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
-
+import {selectors as filesSelectors} from 'state/files';
 import {useFile, useFilePickerModal} from '../hooks';
 
 import styles from './styles';
+import {FileImage} from '../components/Preview/component';
 
 const LoadFileButton = ({onPress}) => {
   return (
@@ -39,7 +40,7 @@ const Container = ({children}) => (
   <View style={styles.container}>{children}</View>
 );
 
-const FileLabel = ({node, onPress}) => {
+const FileLabel = ({node}) => {
   const dispatch = useDispatch();
   const handleSelectNodeAndNodeDef = useCallback(
     event => {
@@ -48,14 +49,24 @@ const FileLabel = ({node, onPress}) => {
     },
     [dispatch, node],
   );
+  const file = useSelector(state =>
+    filesSelectors.getFileByUuid(state, node?.value?.fileUuid),
+  );
 
   return (
     <Button
-      onPress={onPress}
+      icon={
+        <View style={styles.previewThumbnail}>
+          <FileImage file={file} />
+        </View>
+      }
+      iconPosition="left"
+      onPress={handleSelectNodeAndNodeDef}
       type="secondary"
       customContainerStyle={styles.bottonContainer}
+      customTextStyle={styles.fileLabel}
       label={node?.value?.fileName}
-      onLongPress={handleSelectNodeAndNodeDef}
+      allowMultipleLines={true}
     />
   );
 };
@@ -77,7 +88,7 @@ const NodeValueRender = ({node = false, nodeDef}) => {
         <LoadFileButton node={node} onPress={toggleModal} />
         {node?.value && (
           <>
-            <FileLabel node={node} nodeDef={nodeDef} onPress={toggleModal} />
+            <FileLabel node={node} nodeDef={nodeDef} />
             <DeleteFileButton node={node} onPress={deleteFile} />
           </>
         )}

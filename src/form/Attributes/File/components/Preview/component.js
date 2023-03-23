@@ -14,20 +14,24 @@ const getFileUri = file => {
   return 'file:///' + relativePath;
 };
 
+export const FileImage = ({file}) => {
+  return (
+    <Image
+      resizeMode="cover"
+      style={styles.image}
+      resizeMethod="scale"
+      source={{
+        uri: getFileUri(file),
+      }}
+    />
+  );
+};
+
 const Preview = ({file}) => {
   return (
     <View style={styles.container}>
       <View style={styles.imgContainer}>
-        {file?.uri && (
-          <Image
-            resizeMode="cover"
-            style={styles.image}
-            resizeMethod="scale"
-            source={{
-              uri: getFileUri(file),
-            }}
-          />
-        )}
+        {file?.uri && <FileImage file={file} />}
       </View>
     </View>
   );
