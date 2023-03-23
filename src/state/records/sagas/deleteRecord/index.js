@@ -34,8 +34,6 @@ function* handleDeleteRecord({payload}) {
   if (callBack) {
     yield call(callBack);
   }
-
-  yield call(handleShowToast, {message: t('Form:deleteNode.alert.title')});
 }
 
 export default handleDeleteRecord;
