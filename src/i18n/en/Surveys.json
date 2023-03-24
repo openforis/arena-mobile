@@ -44,7 +44,8 @@
   },
   "toasts": {
     "server": "You already have this survey pointing to other server, connect to {{ surveyServer}} instead of {{ serverUrl }}",
-    "data_deleted": "All records in this survey were successfully deleted"
+    "data_deleted": "All records in this survey were successfully deleted",
+    "data_in_record_deleted": "All data in this record were successfully deleted"
   },
   "local": {
     "title": "Device",

@@ -102,7 +102,7 @@ function* handleDeleteRecordFiles({payload}) {
 
   yield call(handleDeleteFiles, Object.keys(filesBySurvey));
   yield call(handleShowToast, {
-    message: t('Surveys:toasts.data_deleted'),
+    message: t('Surveys:toasts.data_in_record_deleted'),
     duration: 5000,
   });
 }
