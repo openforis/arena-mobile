@@ -19,7 +19,7 @@ const SelectedRecordPanel = ({record, unSelect}) => {
     alert({
       title: t('Records:selected_record_panel.delete.alert.title'),
       message: t('Records:selected_record_panel.delete.alert.message', {
-        name: record.recordKey || record?.uuid,
+        name: record.recordKey || '-',
       }),
       acceptText: t('Records:selected_record_panel.delete.alert.accept'),
       dismissText: t('Records:selected_record_panel.delete.alert.dismiss'),
