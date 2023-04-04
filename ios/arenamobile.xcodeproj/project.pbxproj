@@ -489,17 +489,19 @@
 				DEVELOPMENT_TEAM = TJ3W9WF9BV;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = arenamobile/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Open Foris Arena Mobile";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.12;
+				MARKETING_VERSION = 0.0.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.openforis.collect.arena;
+				PRODUCT_BUNDLE_IDENTIFIER = org.openforis.arena;
 				PRODUCT_NAME = arenamobile;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -517,17 +519,19 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = TJ3W9WF9BV;
 				INFOPLIST_FILE = arenamobile/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Open Foris Arena Mobile";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.12;
+				MARKETING_VERSION = 0.0.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.openforis.collect.arena;
+				PRODUCT_BUNDLE_IDENTIFIER = org.openforis.arena;
 				PRODUCT_NAME = arenamobile;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

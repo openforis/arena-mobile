@@ -1,4 +1,4 @@
-package org.openforis.collect.arena.newarchitecture;
+package org.openforis.arena.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import org.openforis.collect.arena.BuildConfig;
-import org.openforis.collect.arena.newarchitecture.components.MainComponentsRegistry;
-import org.openforis.collect.arena.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import org.openforis.arena.BuildConfig;
+import org.openforis.arena.newarchitecture.components.MainComponentsRegistry;
+import org.openforis.arena.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 
