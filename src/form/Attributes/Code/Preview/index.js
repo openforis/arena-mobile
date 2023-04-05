@@ -18,9 +18,6 @@ const Preview = ({nodeDef}) => {
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const {categoryItems} = useCode({nodeDef});
 
-  if (nodeDef.analysis) {
-    return <></>;
-  }
   if (
     NodeDefs.getLayoutRenderTypePerCycle({nodeDef, cycle}) === 'checkbox' &&
     categoryItems.length < MAX_NUMBER_ITEMS_FOR_CHECKBOX
