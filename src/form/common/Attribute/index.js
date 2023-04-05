@@ -1,4 +1,4 @@
-import {NodeDefType} from '@openforis/arena-core';
+import {NodeDefs, NodeDefType} from '@openforis/arena-core';
 import React from 'react';
 import {useSelector} from 'react-redux';
 
@@ -35,6 +35,13 @@ const Attribute = ({nodeDefUuid}) => {
   const nodeDef = useSelector(state =>
     surveySelectors.getNodeDefByUuid(state, nodeDefUuid),
   );
+
+  if (!Object.keys(AttributesComponentByType).includes(nodeDef.type)) {
+    return null;
+  }
+  if (nodeDef?.analysis) {
+    return null;
+  }
 
   return React.createElement(
     AttributesComponentByType[nodeDef.type] || BasePreview,
