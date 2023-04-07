@@ -39,9 +39,9 @@ platform :android do
   lane :beta do
   
     gradle(task: 'clean')
-    # increment_version_code_in_project_gradle()
+    increment_version_code_in_project_gradle()
     build()
-    # upload_beta_to_play_store()
+    upload_beta_to_play_store()
 
   # desc "Deploy a new version to the Google Play"
   # lane :deploy do
