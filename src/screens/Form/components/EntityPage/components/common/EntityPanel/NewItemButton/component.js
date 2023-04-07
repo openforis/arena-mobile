@@ -1,5 +1,5 @@
 import {NodeDefs} from '@openforis/arena-core';
-import debounce from 'lodash.debounce';
+
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';
@@ -40,10 +40,6 @@ const NewItemButton = ({visible, styleTheme, customContainerStyle}) => {
     );
   }, [dispatch, parentEntityNodeDef, parentEntityNode]);
 
-  const debouncedHandleCreateNewNodeEntity = useCallback(() => {
-    debounce(handleCreateNewNodeEntity, 500)();
-  }, [handleCreateNewNodeEntity]);
-
   const keys = useSelector(state =>
     surveySelectors.getEntityNodeKeysAsString(state, parentEntityNode),
   );
@@ -62,7 +58,7 @@ const NewItemButton = ({visible, styleTheme, customContainerStyle}) => {
           customContainerStyle,
         ]}
         customTextStyle={styles.button}
-        onPress={debouncedHandleCreateNewNodeEntity}
+        onPress={handleCreateNewNodeEntity}
         allowMultipleLines={true}
       />
     );
