@@ -16,6 +16,10 @@ const MultipleEntityOptions = () => {
     return <></>;
   }
 
+  if (parentEntityNodeDef.props.enumerate) {
+    return <></>;
+  }
+
   return (
     <View style={styles.container}>
       <DeleteNodeEntity />
