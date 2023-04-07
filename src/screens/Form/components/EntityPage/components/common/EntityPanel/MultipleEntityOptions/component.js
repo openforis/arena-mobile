@@ -1,3 +1,4 @@
+import {NodeDefs} from '@openforis/arena-core';
 import React from 'react';
 import {View} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -12,11 +13,10 @@ import styles from './styles';
 const MultipleEntityOptions = () => {
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
 
-  if (!parentEntityNodeDef.props.multiple) {
-    return <></>;
-  }
-
-  if (parentEntityNodeDef.props.enumerate) {
+  if (
+    !NodeDefs.isMultiple(parentEntityNodeDef) ||
+    NodeDefs.isEnumerate(parentEntityNodeDef)
+  ) {
     return <></>;
   }
 
