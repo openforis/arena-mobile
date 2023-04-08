@@ -10,6 +10,7 @@ import formSelectors from 'state/form/selectors';
 import ListRecords from './components/ListRecords';
 import SelectedRecordPanel from './components/SelectedRecordPanel';
 import styles from './styles';
+import NavigateToHome from 'navigation/components/NavigateToHome';
 
 const Records = () => {
   const currentRecord = useSelector(formSelectors.getRecord);
@@ -30,7 +31,7 @@ const Records = () => {
   return (
     <Layout bottomStyle={selectedRecord ? 'primary' : 'background'}>
       <>
-        <Header hasBackComponent={true}>
+        <Header LeftComponent={NavigateToHome}>
           <Text style={[baseStyles.textStyle.title]}>Records</Text>
         </Header>
 
