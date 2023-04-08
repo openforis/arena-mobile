@@ -29,11 +29,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
   },
-  buttonsContainerCenter: {
-    justifyContent: 'center',
-    flexDirection: 'row',
-    flex: 1,
-  },
   text: {
     width: WIDTH * 0.34,
     textAlign: 'right',

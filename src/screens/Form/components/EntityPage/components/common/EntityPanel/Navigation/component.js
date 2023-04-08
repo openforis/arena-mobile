@@ -175,7 +175,7 @@ const Navigation = () => {
   return (
     <View style={styles.optionsContainer}>
       {!currentEntityNodeDef.props?.layout?.[cycle]?.pageUuid ? (
-        <View style={styles.buttonsContainerCenter}>
+        <View style={styles.buttonsContainer}>
           <Parent parent={parentNodeDef} />
         </View>
       ) : (
