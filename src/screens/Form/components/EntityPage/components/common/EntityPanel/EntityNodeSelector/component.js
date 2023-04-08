@@ -1,3 +1,4 @@
+import {NodeDefs} from '@openforis/arena-core';
 import React, {useCallback, useEffect, useState} from 'react';
 import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -44,7 +45,7 @@ export const EntityNodeSelector = ({theme = null} = {}) => {
 
   const _labelStractor = useCallback(item => item?.keyString || '-', []);
 
-  if (!parentEntityNodeDef.props.multiple) {
+  if (!NodeDefs.isMultiple(parentEntityNodeDef)) {
     return <></>;
   }
 
