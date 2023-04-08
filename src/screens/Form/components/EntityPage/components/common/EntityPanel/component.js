@@ -22,12 +22,13 @@ const EntityPanel = () => {
   );
 
   const isTable = useIsTable();
+  const _isTablet = isTablet();
 
   return (
     <View
       style={[
         styles.container,
-        isTablet() && isEntitySelectorOpened
+        _isTablet && isEntitySelectorOpened
           ? styles.containerTabletMenuOpen
           : {},
       ]}>

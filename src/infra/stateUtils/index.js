@@ -27,6 +27,13 @@ const perfStart = (label = '*') => {
   timmers[label] = new Date();
 };
 
+const exists = (label = '*') => {
+  if (!__DEV__) {
+    return;
+  }
+  return timmers[label] !== undefined;
+};
+
 const perfEnd = (label = '*') => {
   if (!__DEV__) {
     return;
@@ -38,4 +45,5 @@ const perfEnd = (label = '*') => {
 export const perfState = {
   start: perfStart,
   end: perfEnd,
+  exists,
 };
