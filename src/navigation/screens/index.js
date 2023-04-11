@@ -1,4 +1,5 @@
 import ConnectionSettings from 'screens/ConnectionSettings';
+import Settings from 'screens/Settings';
 import Form from 'screens/Form';
 import Home from 'screens/Home';
 import Records from 'screens/Records';
@@ -11,6 +12,10 @@ export const SCREENS = {
   [KEYS.HOME]: {component: Home, options: {gestureEnabled: false}},
   [KEYS.CONNECTION_SETTINGS]: {
     component: ConnectionSettings,
+    options: {gestureEnabled: false},
+  },
+  [KEYS.SETTINGS]: {
+    component: Settings,
     options: {gestureEnabled: false},
   },
   [KEYS.SURVEY]: {component: Survey, options: {gestureEnabled: false}},
