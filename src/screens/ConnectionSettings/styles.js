@@ -16,10 +16,7 @@ const styles = StyleSheet.create({
   formItem: {
     paddingVertical: baseStyles.bases.BASE_4,
   },
-  header: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
+
   buttonContainer: {
     paddingTop: baseStyles.bases.BASE_8,
   },

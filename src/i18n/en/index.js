@@ -1,6 +1,7 @@
 import Actions from './Actions';
 import Common from './Common';
 import ConnectionSettings from './ConnectionSettings';
+import Settings from './Settings';
 import Errors from './Errors';
 import Form from './Form';
 import Home from './Home';
@@ -14,6 +15,7 @@ const lang = {
   Actions,
   Common,
   ConnectionSettings,
+  Settings,
   Form,
   Home,
   QRScanner,
