@@ -2,24 +2,19 @@ import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
-import {useNavigateTo} from 'navigation/hooks';
 
-import Header from 'arena-mobile-ui/components/Header';
-
-import Layout from 'arena-mobile-ui/components/Layout';
-
-import baseStyles from 'arena-mobile-ui/styles';
 import * as colors from 'arena-mobile-ui/colors';
-
+import Header from 'arena-mobile-ui/components/Header';
+import Icon from 'arena-mobile-ui/components/Icon';
+import Layout from 'arena-mobile-ui/components/Layout';
+import baseStyles from 'arena-mobile-ui/styles';
+import {useNavigateTo} from 'navigation/hooks';
 import {selectors as appSelectors} from 'state/app';
-
 import {selectors as userSelectors} from 'state/user';
 
-import styles from './styles';
-
 import DevMode from './DevMode';
+import styles from './styles';
 import Version from './Version';
-import Icon from 'arena-mobile-ui/components/Icon';
 
 const extractFirstCharacters = (str, numberOfCharacters) => {
   if (str.length <= numberOfCharacters) {
@@ -30,8 +25,12 @@ const extractFirstCharacters = (str, numberOfCharacters) => {
 
 const _extractInitials = (value = '') => {
   let _initials = value.split('.');
-  if (_initials.length === 0) return '-';
-  if (_initials.length === 1) return extractFirstCharacters(_initials[0], 2);
+  if (_initials.length === 0) {
+    return '-';
+  }
+  if (_initials.length === 1) {
+    return extractFirstCharacters(_initials[0], 2);
+  }
   return (
     extractFirstCharacters(_initials[0], 1) +
     extractFirstCharacters(_initials[1], 1)
@@ -57,7 +56,7 @@ const Settings = () => {
       <>
         <Header hasBackComponent>
           <Text style={[baseStyles.textStyle.title]}>
-            {t('Settings:title')} New
+            {t('Settings:title')}
           </Text>
         </Header>
 
