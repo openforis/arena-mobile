@@ -8,10 +8,15 @@ const {app} = createActions({
     password,
     serverUrl,
   }),
+  [types.logout$]: () => ({}),
   [types.SET_ACCESS_DATA]: ({username = '', password = ''}) => ({
     username,
     password,
   }),
+  [types.SET_SERVER_URL]: ({serverUrl = ''}) => ({
+    serverUrl,
+  }),
+  [types.CLEAN]: () => ({}),
   [types.SET_SERVER_URL]: ({serverUrl = ''}) => ({
     serverUrl,
   }),

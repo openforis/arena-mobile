@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {alert} from 'arena-mobile-ui/utils';
 import Button from 'arena-mobile-ui/components/Button';
 import Card from 'arena-mobile-ui/components/Card';
 import Header from 'arena-mobile-ui/components/Header';
@@ -47,6 +48,22 @@ const ConnectionSettings = () => {
       },
     [],
   );
+
+  const handleLogout = useCallback(() => {
+    const requiredText = t('ConnectionSettings:logout.required');
+
+    alert({
+      title: t('ConnectionSettings:logout.title'),
+      message: t('ConnectionSettings:logout.message'),
+      acceptText: t('ConnectionSettings:logout.accept'),
+      dismissText: t('ConnectionSettings:logout.dismiss'),
+      onAccept: () => {
+        dispatch(appActions.logout());
+      },
+      requiredText,
+      requiredTextMessage: t('Common:required_text', {requiredText}),
+    });
+  }, [dispatch, t]);
 
   const user = useSelector(userSelectors.getUser);
   const handleSubmitForm = useCallback(() => {
@@ -204,6 +221,12 @@ const ConnectionSettings = () => {
                     {t('ConnectionSettings:connected_as')}
                   </Text>
                   <Text style={baseStyles.textStyle.text}>{user?.email}</Text>
+                  <Button
+                    type="deleteGhost"
+                    customContainerStyle={[styles.logoutButton]}
+                    onPress={handleLogout}
+                    label={t('ConnectionSettings:logout.cta')}
+                  />
                 </View>
               )}
             </View>
