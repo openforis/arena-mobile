@@ -13,6 +13,9 @@
   },
   "telemetry": {
     "cta": "telemetry"
+  },
+  "connect":{
+    "cta": "Connect with the server"
   }
 }
 

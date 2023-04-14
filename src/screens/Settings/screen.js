@@ -15,6 +15,8 @@ import {selectors as userSelectors} from 'state/user';
 import DevMode from './DevMode';
 import styles from './styles';
 import Version from './Version';
+import Icon from 'arena-mobile-ui/components/Icon';
+import Button from 'arena-mobile-ui/components/Button';
 
 const extractFirstCharacters = (str, numberOfCharacters) => {
   if (str.length <= numberOfCharacters) {
@@ -67,61 +69,74 @@ const Settings = () => {
                 {t('ConnectionSettings:title')}
               </Text>
             </View>
-            <TouchableOpacity onPress={handleNavigateToConnectionSettings}>
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  ...baseStyles.card.basicCard,
-                  borderWidth: 0,
-                  flexDirection: 'row',
-                  padding: baseStyles.bases.BASE_4,
-                  justifyContent: 'space-between',
-                  paddingRight: 0,
-                }}>
+            {user?.name ? (
+              <TouchableOpacity onPress={handleNavigateToConnectionSettings}>
                 <View
                   style={{
-                    height: baseStyles.bases.BASE_16,
-                    width: baseStyles.bases.BASE_16,
-                    borderRadius: baseStyles.bases.BASE_16,
-                    backgroundColor: colors.alertLightest,
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    backgroundColor: 'white',
+                    ...baseStyles.card.basicCard,
+                    borderWidth: 0,
+                    flexDirection: 'row',
+                    padding: baseStyles.bases.BASE_4,
+                    justifyContent: 'space-between',
+                    paddingRight: 0,
                   }}>
-                  <Text
+                  <View
                     style={{
-                      fontSize: baseStyles.bases.BASE_6,
-                      fontWeight: 'bold',
+                      height: baseStyles.bases.BASE_16,
+                      width: baseStyles.bases.BASE_16,
+                      borderRadius: baseStyles.bases.BASE_16,
+                      backgroundColor: colors.alertLightest,
+                      justifyContent: 'center',
+                      alignItems: 'center',
                     }}>
-                    {_extractInitials(user?.email)}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    paddingHorizontal: baseStyles.bases.BASE_4,
-                    flexDirection: 'column',
-                    justifyContent: 'center',
+                    <Text
+                      style={{
+                        fontSize: baseStyles.bases.BASE_6,
+                        fontWeight: 'bold',
+                      }}>
+                      {_extractInitials(user?.email)}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      paddingHorizontal: baseStyles.bases.BASE_4,
+                      flexDirection: 'column',
+                      justifyContent: 'center',
 
-                    alignItems: 'flex-start',
-                    flex: 1,
-                  }}>
-                  <Text style={[baseStyles.textStyle.text]}>{user?.email}</Text>
-                  <Text style={[baseStyles.textStyle.secondaryText]}>
-                    {serverUrl}
-                  </Text>
+                      alignItems: 'flex-start',
+                      flex: 1,
+                    }}>
+                    <Text style={[baseStyles.textStyle.text]}>
+                      {user?.email}
+                    </Text>
+                    <Text style={[baseStyles.textStyle.secondaryText]}>
+                      {serverUrl}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Icon name="chevron-right" size={baseStyles.bases.BASE_8} />
+                  </View>
                 </View>
-                <View
-                  style={{
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Icon name="chevron-right" size={baseStyles.bases.BASE_8} />
-                </View>
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
+            ) : (
+              <Button
+                customContainerStyle={{
+                  borderRadius: baseStyles.bases.BASE,
+                }}
+                onPress={handleNavigateToConnectionSettings}
+                type="primary"
+                label={t('Settings:connect.cta')}
+              />
+            )}
           </View>
           <Version />
-          {isDevModeEnabled && <DevMode />}
+          {isDevModeEnabled && user?.name && <DevMode />}
 
           <View style={styles.dividers} />
         </ScrollView>
