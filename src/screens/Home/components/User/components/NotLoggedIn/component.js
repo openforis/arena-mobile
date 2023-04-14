@@ -14,6 +14,8 @@ const NotLoggedIn = () => {
       info={t('Home:not_logged_in.info')}
       ctaLabel={t('Home:not_logged_in.cta')}
       onPress={navigateTo({route: routes.CONNECTION_SETTINGS})}
+      buttonType="primary"
+      buttonWidth="full"
     />
   );
 };
