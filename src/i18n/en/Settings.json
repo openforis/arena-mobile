@@ -14,8 +14,13 @@
   "telemetry": {
     "cta": "telemetry"
   },
-  "connect":{
+  "connect": {
     "cta": "Connect with the server"
+  },
+  "survey": {
+    "title": "Survey",
+    "taxonomies": {
+      "title": "Taxonomies"
+    }
   }
 }
-
