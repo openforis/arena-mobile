@@ -10,6 +10,7 @@ const appAccessData = handleActions(
       username,
       password,
     }),
+    [actions.clean]: () => initialState.accessData,
   },
   initialState.accessData,
 );

@@ -1,6 +1,8 @@
 const initConnection$ = 'app/initConnection$';
+const logout$ = 'app/logout$';
 const SET_ACCESS_DATA = 'app/SET_ACCESS_DATA';
 const SET_SERVER_URL = 'app/SET_SERVER_URL';
+const CLEAN = 'app/CLEAN';
 
 /*ui*/
 const SET_LOADING = 'app/SET_LOADING';
@@ -13,8 +15,10 @@ const DISABLE_DEV_MODE = 'app/DISABLE_DEV_MODE';
 
 export default {
   initConnection$,
+  logout$,
   SET_ACCESS_DATA,
   SET_SERVER_URL,
+  CLEAN,
 
   /*ui*/
   SET_LOADING,

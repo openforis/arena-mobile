@@ -27,5 +27,13 @@
     "info": "Please check the credentials provided or recover your password",
     "forgot_password": "Forgot your password?"
   },
-  "connected_as": "Logged in as:"
+  "connected_as": "Logged in as:",
+  "logout": {
+    "cta": "Log out",
+    "title": "Are you sure about the Logout?",
+    "message": "All records and surveys are going to be removed from the device",
+    "accept": "Yes, clean all data and logout",
+    "dismiss": "No",
+    "required": "reset data and logout"
+  }
 }

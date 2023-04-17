@@ -8,6 +8,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
+  fullWidth: {
+    flex: 1,
+  },
 });
 
 export default styles;
