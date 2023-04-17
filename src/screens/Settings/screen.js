@@ -4,6 +4,7 @@ import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import * as colors from 'arena-mobile-ui/colors';
+import Button from 'arena-mobile-ui/components/Button';
 import Header from 'arena-mobile-ui/components/Header';
 import Icon from 'arena-mobile-ui/components/Icon';
 import Layout from 'arena-mobile-ui/components/Layout';
@@ -15,8 +16,6 @@ import {selectors as userSelectors} from 'state/user';
 import DevMode from './DevMode';
 import styles from './styles';
 import Version from './Version';
-import Icon from 'arena-mobile-ui/components/Icon';
-import Button from 'arena-mobile-ui/components/Button';
 
 const extractFirstCharacters = (str, numberOfCharacters) => {
   if (str.length <= numberOfCharacters) {
@@ -39,6 +38,71 @@ const _extractInitials = (value = '') => {
   );
 };
 
+const SectionWithTitle = ({title, children, subSection = false}) => {
+  return (
+    <View style={[styles.container, (subSection && {marginTop: 0}: {})]}>
+      <View style={{paddingVertical: baseStyles.bases.BASE_2}}>
+        <Text style={[baseStyles.textStyle.secondaryText]}>{title}</Text>
+      </View>
+      {children}
+    </View>
+  );
+};
+
+const SectionCard = ({position = 'middle', onPress, title, iconName}) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <View
+        style={{
+          backgroundColor: 'white',
+          ...baseStyles.card.basicCard,
+          borderWidth: 0,
+          flexDirection: 'row',
+          padding: baseStyles.bases.BASE_4,
+          justifyContent: 'space-between',
+          paddingRight: 0,
+          ...(position === 'first' && {
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+          }),
+          ...(position === 'last' && {
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0,
+          }),
+          ...(position === 'only' && {borderRadius: 0}),
+        }}>
+        <View
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Icon name={iconName} size={baseStyles.bases.BASE_4} />
+        </View>
+        <View
+          style={{
+            paddingHorizontal: baseStyles.bases.BASE_2,
+            flexDirection: 'column',
+            justifyContent: 'center',
+
+            alignItems: 'flex-start',
+            flex: 1,
+          }}>
+          <Text style={[baseStyles.textStyle.text]}>{title}</Text>
+        </View>
+        <View
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Icon name="chevron-right" size={baseStyles.bases.BASE_8} />
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
 const Settings = () => {
   const {navigateTo, routes} = useNavigateTo();
   const {t} = useTranslation();
@@ -47,7 +111,7 @@ const Settings = () => {
 
   const handleNavigateToConnectionSettings = useCallback(() => {
     navigateTo({route: routes.CONNECTION_SETTINGS})();
-  }, [navigateTo]);
+  }, [navigateTo, routes]);
 
   const serverUrl = useSelector(appSelectors.getServerUrl);
 
@@ -63,12 +127,7 @@ const Settings = () => {
         </Header>
 
         <ScrollView>
-          <View style={[styles.container]}>
-            <View style={{paddingVertical: baseStyles.bases.BASE_2}}>
-              <Text style={[baseStyles.textStyle.secondaryText]}>
-                {t('ConnectionSettings:title')}
-              </Text>
-            </View>
+          <SectionWithTitle title={t('ConnectionSettings:title')}>
             {user?.name ? (
               <TouchableOpacity onPress={handleNavigateToConnectionSettings}>
                 <View
@@ -134,7 +193,26 @@ const Settings = () => {
                 label={t('Settings:connect.cta')}
               />
             )}
-          </View>
+          </SectionWithTitle>
+
+          {user?.name ? (
+            <>
+              <Text style={{paddingLeft: 16}}>
+                {t('Settings:survey.title')}
+              </Text>
+              <SectionWithTitle
+                title={t('Settings:survey.taxonomies.title')}
+                subSection>
+                <SectionCard
+                  onPress={navigateTo({
+                    route: routes.SETTINGS_SURVEY_TAXONOMIES,
+                  })}
+                  title={t('Settings:survey.taxonomies.title')}
+                  iconName="leaf"
+                />
+              </SectionWithTitle>
+            </>
+          ) : null}
           <Version />
           {isDevModeEnabled && user?.name && <DevMode />}
 
