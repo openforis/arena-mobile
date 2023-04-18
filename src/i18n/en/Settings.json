@@ -20,7 +20,11 @@
   "survey": {
     "title": "Survey",
     "taxonomies": {
-      "title": "Taxonomies"
+      "title": "Taxonomies",
+      "screen": {
+        "header": "Taxonomies",
+        "info": "Select how do you wnat to see the taxonomies by default"
+      }
     }
   }
 }
