@@ -71,6 +71,14 @@ const SettingsSurveyTaxonomies = () => {
                   }),
                 }}
                 onPress={() => setTaxonomyVisibleFields(option.key)}>
+                <Icon
+                  name={
+                    taxonomyVisibleFields === option.key
+                      ? 'checkbox-marked'
+                      : 'checkbox-blank-outline'
+                  }
+                  size={16}
+                />
                 <Text
                   style={{
                     ...(taxonomyVisibleFields === option.key && {
