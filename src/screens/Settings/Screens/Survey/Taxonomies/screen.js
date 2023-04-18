@@ -41,35 +41,23 @@ const SettingsSurveyTaxonomies = () => {
         </Header>
         <ScrollView>
           <View style={styles.container}>
-            <Text style={baseStyles.textStyle.header}>Taxonomy</Text>
+            <Text style={baseStyles.textStyle.header}>
+              {t('Settings:survey.taxonomies.screen.header')}
+            </Text>
             <Text style={baseStyles.textStyle.info}>
-              How do you want to see the taxonomy?
+              {t('Settings:survey.taxonomies.screen.info')}}
             </Text>
 
             {options?.map((option, index) => (
               <TouchableOpacity
                 key={option.key}
-                style={{
-                  backgroundColor: colors.white,
-                  padding: 16,
-                  borderBottomColor: colors.neutralLighter,
-                  borderBottomWidth: 0.5,
-                  flexDirection: 'row',
-
-                  ...(index === 0 && {
-                    marginTop: 20,
-                    borderTopLeftRadius: 8,
-                    borderTopRightRadius: 8,
-                  }),
-                  ...(index === options.length - 1 && {
-                    borderBottomLeftRadius: 8,
-                    borderBottomRightRadius: 8,
-                    borderBottomWidth: 0,
-                  }),
-                  ...(taxonomyVisibleFields === option.key && {
-                    backgroundColor: colors.secondaryLighter,
-                  }),
-                }}
+                style={[
+                  styles.optionContainer,
+                  index === 0 && styles.optionContainerFirst,
+                  index === options.length - 1 && styles.optionContainerLast,
+                  taxonomyVisibleFields === option.key &&
+                    styles.optionContainerSelected,
+                ]}
                 onPress={() => setTaxonomyVisibleFields(option.key)}>
                 <Icon
                   name={
@@ -77,15 +65,14 @@ const SettingsSurveyTaxonomies = () => {
                       ? 'checkbox-marked'
                       : 'checkbox-blank-outline'
                   }
-                  size={16}
+                  size={baseStyles.bases.BASE_4}
                 />
                 <Text
-                  style={{
-                    ...(taxonomyVisibleFields === option.key && {
-                      fontWeight: 'bold',
-                    }),
-                    marginLeft: baseStyles.bases.BASE_2,
-                  }}>
+                  style={[
+                    styles.optionText,
+                    taxonomyVisibleFields === option.key &&
+                      styles.optionTextSelected,
+                  ]}>
                   {option.label}
                 </Text>
               </TouchableOpacity>
