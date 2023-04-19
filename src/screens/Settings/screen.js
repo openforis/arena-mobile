@@ -3,7 +3,6 @@ import {useTranslation} from 'react-i18next';
 import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import * as colors from 'arena-mobile-ui/colors';
 import Button from 'arena-mobile-ui/components/Button';
 import Header from 'arena-mobile-ui/components/Header';
 import Icon from 'arena-mobile-ui/components/Icon';
@@ -73,17 +72,57 @@ const SectionCard = ({position = 'middle', onPress, title, iconName}) => {
   );
 };
 
-const Settings = () => {
+const ConnectionSettingsSection = () => {
   const {navigateTo, routes} = useNavigateTo();
   const {t} = useTranslation();
 
   const user = useSelector(userSelectors.getUser);
-
   const handleNavigateToConnectionSettings = useCallback(() => {
     navigateTo({route: routes.CONNECTION_SETTINGS})();
   }, [navigateTo, routes]);
 
   const serverUrl = useSelector(appSelectors.getServerUrl);
+
+  return (
+    <SectionWithTitle title={t('ConnectionSettings:title')}>
+      {user?.name ? (
+        <TouchableOpacity onPress={handleNavigateToConnectionSettings}>
+          <View style={styles.connectionSettingsContainer}>
+            <View style={styles.connectionSettingsContainerIcon}>
+              <Text style={styles.connectionSettingsContainerIconText}>
+                {_extractInitials(user?.email)}
+              </Text>
+            </View>
+            <View style={styles.connectionSettingsContainerText}>
+              <Text style={[baseStyles.textStyle.text]}>{user?.email}</Text>
+              <Text style={[baseStyles.textStyle.secondaryText]}>
+                {serverUrl}
+              </Text>
+            </View>
+            <View style={styles.iconContainer}>
+              <Icon name="chevron-right" size={baseStyles.bases.BASE_8} />
+            </View>
+          </View>
+        </TouchableOpacity>
+      ) : (
+        <Button
+          customContainerStyle={{
+            borderRadius: baseStyles.bases.BASE,
+          }}
+          onPress={handleNavigateToConnectionSettings}
+          type="primary"
+          label={t('Settings:connect.cta')}
+        />
+      )}
+    </SectionWithTitle>
+  );
+};
+
+const Settings = () => {
+  const {navigateTo, routes} = useNavigateTo();
+  const {t} = useTranslation();
+
+  const user = useSelector(userSelectors.getUser);
 
   const isDevModeEnabled = useSelector(appSelectors.isDevModeEnabled);
 
@@ -97,69 +136,7 @@ const Settings = () => {
         </Header>
 
         <ScrollView>
-          <SectionWithTitle title={t('ConnectionSettings:title')}>
-            {user?.name ? (
-              <TouchableOpacity onPress={handleNavigateToConnectionSettings}>
-                <View
-                  style={{
-                    backgroundColor: 'white',
-                    ...baseStyles.card.basicCard,
-                    borderWidth: 0,
-                    flexDirection: 'row',
-                    padding: baseStyles.bases.BASE_4,
-                    justifyContent: 'space-between',
-                    paddingRight: 0,
-                  }}>
-                  <View
-                    style={{
-                      height: baseStyles.bases.BASE_16,
-                      width: baseStyles.bases.BASE_16,
-                      borderRadius: baseStyles.bases.BASE_16,
-                      backgroundColor: colors.alertLightest,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text
-                      style={{
-                        fontSize: baseStyles.bases.BASE_6,
-                        fontWeight: 'bold',
-                      }}>
-                      {_extractInitials(user?.email)}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      paddingHorizontal: baseStyles.bases.BASE_4,
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-
-                      alignItems: 'flex-start',
-                      flex: 1,
-                    }}>
-                    <Text style={[baseStyles.textStyle.text]}>
-                      {user?.email}
-                    </Text>
-                    <Text style={[baseStyles.textStyle.secondaryText]}>
-                      {serverUrl}
-                    </Text>
-                  </View>
-                  <View style={styles.iconContainer}>
-                    <Icon name="chevron-right" size={baseStyles.bases.BASE_8} />
-                  </View>
-                </View>
-              </TouchableOpacity>
-            ) : (
-              <Button
-                customContainerStyle={{
-                  borderRadius: baseStyles.bases.BASE,
-                }}
-                onPress={handleNavigateToConnectionSettings}
-                type="primary"
-                label={t('Settings:connect.cta')}
-              />
-            )}
-          </SectionWithTitle>
-
+          <ConnectionSettingsSection />
           {user?.name ? (
             <>
               <Text style={{paddingLeft: 16}}>
