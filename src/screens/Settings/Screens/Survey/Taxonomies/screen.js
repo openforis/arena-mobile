@@ -45,7 +45,7 @@ const SettingsSurveyTaxonomies = () => {
               {t('Settings:survey.taxonomies.screen.header')}
             </Text>
             <Text style={baseStyles.textStyle.info}>
-              {t('Settings:survey.taxonomies.screen.info')}}
+              {t('Settings:survey.taxonomies.screen.info')}
             </Text>
 
             {options?.map((option, index) => (
