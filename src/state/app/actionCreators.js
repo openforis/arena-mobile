@@ -37,6 +37,12 @@ const {app} = createActions({
   }),
   [types.SET_DEV_MODE]: () => ({}),
   [types.DISABLE_DEV_MODE]: () => ({}),
+  /* Preferences settings */
+  [types.SET_SETTINGS_PREFERENCES_SURVEY_TAXONOMIES_DEFAULT_VISIBLE_FIELDS]: ({
+    defaultVisibleFields = null,
+  }) => ({
+    defaultVisibleFields,
+  }),
 });
 
 export default app;
