@@ -53,49 +53,19 @@ const SectionCard = ({position = 'middle', onPress, title, iconName}) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View
-        style={{
-          backgroundColor: 'white',
-          ...baseStyles.card.basicCard,
-          borderWidth: 0,
-          flexDirection: 'row',
-          padding: baseStyles.bases.BASE_4,
-          justifyContent: 'space-between',
-          paddingRight: 0,
-          ...(position === 'first' && {
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-          }),
-          ...(position === 'last' && {
-            borderTopLeftRadius: 0,
-            borderTopRightRadius: 0,
-          }),
-          ...(position === 'only' && {borderRadius: 0}),
-        }}>
-        <View
-          style={{
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+        style={[
+          styles.sectionCardContainer,
+          position === 'first' && styles.sectionCardContainerFirst,
+          position === 'last' && styles.sectionCardContainerLast,
+          position === 'only' && styles.sectionCardContainerOnly,
+        ]}>
+        <View style={styles.iconContainer}>
           <Icon name={iconName} size={baseStyles.bases.BASE_4} />
         </View>
-        <View
-          style={{
-            paddingHorizontal: baseStyles.bases.BASE_2,
-            flexDirection: 'column',
-            justifyContent: 'center',
-
-            alignItems: 'flex-start',
-            flex: 1,
-          }}>
+        <View style={styles.sectionCardTextContainer}>
           <Text style={[baseStyles.textStyle.text]}>{title}</Text>
         </View>
-        <View
-          style={{
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+        <View style={styles.iconContainer}>
           <Icon name="chevron-right" size={baseStyles.bases.BASE_8} />
         </View>
       </View>
@@ -173,12 +143,7 @@ const Settings = () => {
                       {serverUrl}
                     </Text>
                   </View>
-                  <View
-                    style={{
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
+                  <View style={styles.iconContainer}>
                     <Icon name="chevron-right" size={baseStyles.bases.BASE_8} />
                   </View>
                 </View>
