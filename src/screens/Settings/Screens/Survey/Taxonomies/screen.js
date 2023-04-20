@@ -1,21 +1,20 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {
   getTaxonItemLabel,
   taxonomyVisibleFieldsOptions as options,
   exampleTaxonomy,
 } from 'arena/taxonomy';
-import * as colors from 'arena-mobile-ui/colors';
 import Button from 'arena-mobile-ui/components/Button';
 import Header from 'arena-mobile-ui/components/Header';
 import Icon from 'arena-mobile-ui/components/Icon';
 import Layout from 'arena-mobile-ui/components/Layout';
 import baseStyles from 'arena-mobile-ui/styles';
-import {selectors as appSelectors} from 'state/app';
+import {selectors as appSelectors, actions as appActions} from 'state/app';
 
 import styles from './styles';
 
@@ -23,13 +22,31 @@ const SettingsSurveyTaxonomies = () => {
   const [taxonomyVisibleFields, setTaxonomyVisibleFields] = useState(
     options[0].key,
   );
+
+  const defaultVisibleFields = useSelector(
+    appSelectors.getSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields,
+  );
+
+  useEffect(() => {
+    if (defaultVisibleFields) {
+      setTaxonomyVisibleFields(
+        defaultVisibleFields.join('.') || options[0].key,
+      );
+    }
+  }, [defaultVisibleFields]);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const {t} = useTranslation();
 
   const handleSave = useCallback(() => {
+    dispatch(
+      appActions.setSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields({
+        defaultVisibleFields: taxonomyVisibleFields.split('.'),
+      }),
+    );
     navigation.goBack();
-  }, [navigation]);
+  }, [dispatch, navigation, taxonomyVisibleFields]);
 
   return (
     <Layout bottomStyle="background" topStyle="primary">
