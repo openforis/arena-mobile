@@ -14,14 +14,11 @@ export const useTaxonItemLabelExtractor = nodeDef => {
 
   const _labelStractor = useCallback(
     item => {
-      console.log(
-        NodeDefs?.getVisibleFields?.(nodeDef) || defaultVisibleFields,
-      );
       return getTaxonItemLabel({
         item,
         language,
         taxonomyVisibleFields:
-          NodeDefs?.getVisibleFields?.(nodeDef) || defaultVisibleFields,
+          NodeDefs.getVisibleFields?.(nodeDef) || defaultVisibleFields,
       });
     },
     [language, defaultVisibleFields, nodeDef],
