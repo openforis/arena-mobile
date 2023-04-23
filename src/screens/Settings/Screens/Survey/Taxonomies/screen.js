@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   getTaxonItemLabel,
   taxonomyVisibleFieldsOptions as options,
-  exampleTaxonomy,
+  exampleTaxon,
 } from 'arena/taxonomy';
 import Button from 'arena-mobile-ui/components/Button';
 import Header from 'arena-mobile-ui/components/Header';
@@ -98,7 +98,7 @@ const SettingsSurveyTaxonomies = () => {
           <View style={styles.exampleContainer}>
             <Text style={styles.example}>
               {getTaxonItemLabel({
-                item: exampleTaxonomy,
+                item: exampleTaxon,
                 taxonomyVisibleFields: options.find(
                   option => option.key === taxonomyVisibleFields,
                 ).value,
