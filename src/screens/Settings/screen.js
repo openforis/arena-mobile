@@ -4,6 +4,7 @@ import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import * as colors from 'arena-mobile-ui/colors';
+import Button from 'arena-mobile-ui/components/Button';
 import Header from 'arena-mobile-ui/components/Header';
 import Icon from 'arena-mobile-ui/components/Icon';
 import Layout from 'arena-mobile-ui/components/Layout';
@@ -15,8 +16,6 @@ import {selectors as userSelectors} from 'state/user';
 import DevMode from './DevMode';
 import styles from './styles';
 import Version from './Version';
-import Icon from 'arena-mobile-ui/components/Icon';
-import Button from 'arena-mobile-ui/components/Button';
 
 const extractFirstCharacters = (str, numberOfCharacters) => {
   if (str.length <= numberOfCharacters) {
