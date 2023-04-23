@@ -51,7 +51,7 @@ export const taxonomyVisibleFieldsOptions = [
   },
 ];
 
-export const exampleTaxonomy = {
+export const exampleTaxon = {
   id: '239',
   uuid: '7c0e4ed6-af1d-44d7-bf84-1ce1e484df59',
   taxonomyUuid: '98e57a17-4550-4528-8292-3cb829ca0520',
