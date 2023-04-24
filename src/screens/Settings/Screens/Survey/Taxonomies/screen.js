@@ -6,8 +6,9 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {
   getTaxonItemLabel,
-  taxonomyVisibleFieldsOptions as options,
+  taxonomyVisibleFieldsOptions,
   exampleTaxon,
+  DEFAULT_TAXONOMY_FIELDS,
 } from 'arena/taxonomy';
 import Button from 'arena-mobile-ui/components/Button';
 import Header from 'arena-mobile-ui/components/Header';
@@ -19,8 +20,8 @@ import {selectors as appSelectors, actions as appActions} from 'state/app';
 import styles from './styles';
 
 const SettingsSurveyTaxonomies = () => {
-  const [taxonomyVisibleFields, setTaxonomyVisibleFields] = useState(
-    options[0].key,
+  const [taxonomyVisibleFieldsKey, setTaxonomyVisibleFieldsKey] = useState(
+    DEFAULT_TAXONOMY_FIELDS,
   );
 
   const defaultVisibleFields = useSelector(
@@ -29,8 +30,8 @@ const SettingsSurveyTaxonomies = () => {
 
   useEffect(() => {
     if (defaultVisibleFields) {
-      setTaxonomyVisibleFields(
-        defaultVisibleFields.join('.') || options[0].key,
+      setTaxonomyVisibleFieldsKey(
+        defaultVisibleFields.join('.') || DEFAULT_TAXONOMY_FIELDS,
       );
     }
   }, [defaultVisibleFields]);
@@ -42,11 +43,11 @@ const SettingsSurveyTaxonomies = () => {
   const handleSave = useCallback(() => {
     dispatch(
       appActions.setSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields({
-        defaultVisibleFields: taxonomyVisibleFields.split('.'),
+        defaultVisibleFields: taxonomyVisibleFieldsKey.split('.'),
       }),
     );
     navigation.goBack();
-  }, [dispatch, navigation, taxonomyVisibleFields]);
+  }, [dispatch, navigation, taxonomyVisibleFieldsKey]);
 
   return (
     <Layout bottomStyle="background" topStyle="primary">
@@ -62,46 +63,61 @@ const SettingsSurveyTaxonomies = () => {
               {t('Settings:survey.taxonomies.screen.header')}
             </Text>
             <Text style={baseStyles.textStyle.info}>
+              {t('Settings:survey.taxonomies.screen.description')}
+            </Text>
+            <Text style={baseStyles.textStyle.info}>
               {t('Settings:survey.taxonomies.screen.info')}
             </Text>
 
-            {options?.map((option, index) => (
-              <TouchableOpacity
-                key={option.key}
-                style={[
-                  styles.optionContainer,
-                  index === 0 && styles.optionContainerFirst,
-                  index === options.length - 1 && styles.optionContainerLast,
-                  taxonomyVisibleFields === option.key &&
-                    styles.optionContainerSelected,
-                ]}
-                onPress={() => setTaxonomyVisibleFields(option.key)}>
-                <Icon
-                  name={
-                    taxonomyVisibleFields === option.key
-                      ? 'checkbox-marked'
-                      : 'checkbox-blank-outline'
-                  }
-                  size={baseStyles.bases.BASE_4}
-                />
-                <Text
-                  style={[
-                    styles.optionText,
-                    taxonomyVisibleFields === option.key &&
-                      styles.optionTextSelected,
-                  ]}>
-                  {option.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
+            {Object.entries(taxonomyVisibleFieldsOptions)?.map(
+              (option, index) => {
+                console.log(option);
+                const [optionKey, optionValue] = option;
+                const isSelected = taxonomyVisibleFieldsKey === optionKey;
+                return (
+                  <TouchableOpacity
+                    key={optionKey}
+                    style={[
+                      styles.optionContainer,
+                      index === 0 && styles.optionContainerFirst,
+                      index === taxonomyVisibleFieldsOptions.length - 1 &&
+                        styles.optionContainerLast,
+                      taxonomyVisibleFieldsKey === optionKey &&
+                        styles.optionContainerSelected,
+                    ]}
+                    onPress={() => setTaxonomyVisibleFieldsKey(optionKey)}>
+                    <Icon
+                      name={
+                        isSelected
+                          ? 'checkbox-marked'
+                          : 'checkbox-blank-outline'
+                      }
+                      size={baseStyles.bases.BASE_4}
+                    />
+                    <Text
+                      style={[
+                        styles.optionText,
+                        isSelected && styles.optionTextSelected,
+                      ]}>
+                      {optionValue
+                        .map(field => {
+                          return t(
+                            `Settings:survey.taxonomies.screen.fields.${field}`,
+                          );
+                        })
+                        .join(', ')}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              },
+            )}
           </View>
           <View style={styles.exampleContainer}>
             <Text style={styles.example}>
               {getTaxonItemLabel({
                 item: exampleTaxon,
-                taxonomyVisibleFields: options.find(
-                  option => option.key === taxonomyVisibleFields,
-                ).value,
+                taxonomyVisibleFields:
+                  taxonomyVisibleFieldsOptions[taxonomyVisibleFieldsKey],
               })}
             </Text>
           </View>

@@ -7,49 +7,35 @@ const props = {
   family: 'family',
 };
 
-export const taxonomyVisibleFieldsOptions = [
-  {
-    key: `${props.code}.${props.genus}.${props.family}.${props.scientificName}`,
-    value: [props.code, props.genus, props.family, props.scientificName],
-    label: '(Code), Genus, Family, ScientificName',
-  },
-  {
-    key: `${props.code}.${props.genus}.${props.family}.${props.scientificName}.${props.vernacularNames}`,
-    value: [
-      props.code,
-      props.genus,
-      props.family,
-      props.scientificName,
-      props.vernacularNames,
-    ],
-    label: '(Code), Genus, Family, ScientificNames, VernacularNames',
-  },
-  {
-    key: `${props.genus}.${props.scientificName}`,
-    value: [props.genus, props.scientificName],
-    label: 'Genus, ScientificName',
-  },
-  {
-    key: `${props.code}.${props.scientificName}`,
-    value: [props.code, props.scientificName],
-    label: '(Code), scientificName',
-  },
-  {
-    key: `${props.scientificName}`,
-    value: [props.scientificName],
-    label: 'ScientificName',
-  },
-  {
-    key: `${props.code}.${props.scientificName}.${props.vernacularNames}`,
-    value: [props.code, props.scientificName, props.vernacularNames],
-    label: '(Code), ScientificName, vernacularNames',
-  },
-  {
-    key: `${props.scientificName}.${props.vernacularNames}`,
-    value: [props.scientificName, props.vernacularNames],
-    label: 'ScientificName, vernacularNames',
-  },
-];
+export const DEFAULT_TAXONOMY_FIELDS = 'code.genus.family.scientificName';
+
+export const taxonomyVisibleFieldsOptions = {
+  ['code.genus.family.scientificName']: [
+    props.code,
+    props.genus,
+    props.family,
+    props.scientificName,
+  ],
+  ['code.genus.family.scientificName.vernacularNames']: [
+    props.code,
+    props.genus,
+    props.family,
+    props.scientificName,
+    props.vernacularNames,
+  ],
+  ['genus.scientificName']: [props.genus, props.scientificName],
+  ['code.scientificName']: [props.code, props.scientificName],
+  ['scientificName']: [props.scientificName],
+  ['code.scientificName.vernacularNames']: [
+    props.code,
+    props.scientificName,
+    props.vernacularNames,
+  ],
+  ['scientificName.vernacularNames']: [
+    props.scientificName,
+    props.vernacularNames,
+  ],
+};
 
 export const exampleTaxon = {
   id: '239',
@@ -98,7 +84,7 @@ export const exampleTaxon = {
 
 export const getTaxonItemLabel = ({
   item,
-  taxonomyVisibleFields = taxonomyVisibleFieldsOptions[0].value,
+  taxonomyVisibleFields = taxonomyVisibleFieldsOptions[DEFAULT_TAXONOMY_FIELDS],
 }) => {
   const vernacularNamesObj = item?.vernacularNames || {};
 

@@ -23,7 +23,15 @@
       "title": "Taxonomies",
       "screen": {
         "header": "Taxonomies",
-        "info": "Select how do you wnat to see the taxonomies by default"
+        "description": "Select how do you wnat to see the taxonomies by default",
+        "info": "This value is going to be overwritten by the attribute configuration",
+        "fields": {
+          "code": "(Code)",
+          "genus": "Genus",
+          "family": "Family",
+          "scientificName": "ScientificName",
+          "vernacularNames": "VernacularNames"
+        }
       }
     }
   }
