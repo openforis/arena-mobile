@@ -69,7 +69,7 @@ const SettingsSurveyTaxonomies = () => {
               {t('Settings:survey.taxonomies.screen.info')}
             </Text>
 
-            {Object.entries(taxonomyVisibleFieldsOptions)?.map(
+            {Object.entries(taxonomyVisibleFieldsOptions).map(
               (option, index) => {
                 const [optionKey, optionValue] = option;
                 const isSelected = taxonomyVisibleFieldsKey === optionKey;
