@@ -44,6 +44,9 @@ const styles = StyleSheet.create({
 
     flexDirection: 'column',
   },
+  spacer: {
+    height: 80,
+  },
 });
 
 export default styles;

@@ -2,12 +2,12 @@ import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';
 
-import Icon from 'arena-mobile-ui/components/Icon';
+import * as colors from 'arena-mobile-ui/colors';
 import Button from 'arena-mobile-ui/components/Button';
+import Icon from 'arena-mobile-ui/components/Icon';
 import formActions from 'state/form/actionCreators';
 import formSelectors from 'state/form/selectors';
 
-import * as colors from 'arena-mobile-ui/colors';
 import styles from './styles';
 
 const TableOption = ({withIcon = false}) => {

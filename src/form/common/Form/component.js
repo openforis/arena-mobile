@@ -40,7 +40,15 @@ const FormsByType = {
   [NodeDefType.taxon]: TaxonForm,
 };
 
-const Spacer = () => <View style={{height: 80}} />;
+const Spacer = () => <View style={styles.spacer} />;
+
+const RenderForm = ({nodeDef}) => {
+  if (!nodeDef) {
+    return null;
+  }
+  const Form = FormsByType[nodeDef?.type] || BaseForm;
+  return <Form nodeDef={nodeDef} />;
+};
 
 const AttributeFormWithModal = () => {
   const panelHeight = useRef(new Animated.Value(0)).current;
@@ -109,10 +117,7 @@ const AttributeFormWithModal = () => {
             <ScrollView
               keyboardShouldPersistTaps="handled"
               style={[styles.scroll]}>
-              {nodeDef &&
-                React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
-                  nodeDef,
-                })}
+              <RenderForm nodeDef={nodeDef} />
             </ScrollView>
           </KeyboardAvoidingView>
         ) : (
@@ -120,10 +125,7 @@ const AttributeFormWithModal = () => {
             <Spacer />
 
             <View style={[styles.viewcontainer]}>
-              {nodeDef &&
-                React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
-                  nodeDef,
-                })}
+              <RenderForm nodeDef={nodeDef} />
             </View>
           </>
         )}
@@ -140,14 +142,7 @@ const AttributeForm = () => {
       nodeDef?.type,
     )
   ) {
-    return (
-      <>
-        {nodeDef &&
-          React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
-            nodeDef,
-          })}
-      </>
-    );
+    return <RenderForm nodeDef={nodeDef} />;
   }
 
   return <AttributeFormWithModal />;
