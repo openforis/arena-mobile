@@ -71,7 +71,6 @@ const SettingsSurveyTaxonomies = () => {
 
             {Object.entries(taxonomyVisibleFieldsOptions)?.map(
               (option, index) => {
-                console.log(option);
                 const [optionKey, optionValue] = option;
                 const isSelected = taxonomyVisibleFieldsKey === optionKey;
                 return (
