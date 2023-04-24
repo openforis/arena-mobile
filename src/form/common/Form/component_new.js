@@ -16,9 +16,10 @@ import TaxonForm from 'form/Attributes/Taxonomy/Form';
 import TextForm from 'form/Attributes/Text/Form';
 import TimeForm from 'form/Attributes/Time/Form';
 import formSelectors from 'state/form/selectors';
-const Spacer = () => <View style={{height: 80}} />;
 
 import styles from './styles';
+
+const Spacer = () => <View style={{height: 80}} />;
 
 const FormsByType = {
   [NodeDefType.integer]: IntegerForm,
@@ -49,7 +50,7 @@ const AttributeFormWithModal = () => {
           }}>
           <ScrollView
             keyboardShouldPersistTaps="handled"
-            style={[styles.scroll, {marginTop: 30, backgroundColor: 'white'}]}>
+            style={[styles.scroll, styles.scrollContainer]}>
             {nodeDef &&
               React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
                 nodeDef,

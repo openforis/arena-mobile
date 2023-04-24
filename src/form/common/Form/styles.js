@@ -33,6 +33,11 @@ const styles = StyleSheet.create({
     margin: 0,
     minHeight: HEIGHT,
   },
+  scrollContainer: {
+    marginTop: baseStyles.bases.BASE_8,
+    backgroundColor: colors.white,
+  },
+
   viewcontainer: {
     borderRadius: baseStyles.bases.BASE_4,
     padding: baseStyles.bases.BASE_4,

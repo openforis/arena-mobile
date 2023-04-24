@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     paddingVertical: baseStyles.bases.BASE_4,
   },
   header: {
-    fontSize: 18,
+    fontSize: baseStyles.fontSizes.xl,
     fontWeight: 'bold',
   },
   buttonContainer: {

@@ -1,6 +1,7 @@
 import {StyleSheet} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
+import baseStyles from 'arena-mobile-ui/styles';
 
 const styles = StyleSheet.create({
   container: {
@@ -9,28 +10,28 @@ const styles = StyleSheet.create({
 });
 
 const baseInputStyle = {
-  fontSize: 15,
-  paddingVertical: 8,
-  paddingHorizontal: 10,
+  fontSize: baseStyles.bases.BASE_4,
+  paddingVertical: baseStyles.bases.BASE_2,
+  paddingHorizontal: baseStyles.bases.BASE_3,
   borderWidth: 1,
   borderColor: colors.neutral,
-  margin: 4,
+  margin: baseStyles.bases.BASE,
   color: colors.black,
-  paddingRight: 30,
+  paddingRight: baseStyles.bases.BASE_8,
   backgroundColor: colors.white,
 };
 
 const baseInputStyleNeutral = {
-  fontSize: 15,
-  paddingVertical: 8,
-  paddingHorizontal: 10,
+  fontSize: baseStyles.bases.BASE_4,
+  paddingVertical: baseStyles.bases.BASE_2,
+  paddingHorizontal: baseStyles.bases.BASE_3,
   borderWidth: 1,
   borderColor: colors.neutral,
-  margin: 4,
+  margin: baseStyles.bases.BASE,
   color: colors.black,
-  paddingRight: 30,
+  paddingRight: baseStyles.bases.BASE_8,
   backgroundColor: colors.white,
-  borderRadius: 8,
+  borderRadius: baseStyles.bases.BASE_2,
 };
 
 export const pickerSelectStyles = StyleSheet.create({
@@ -41,8 +42,8 @@ export const pickerSelectStyles = StyleSheet.create({
     ...baseInputStyle,
   },
   iconContainer: {
-    top: 8,
-    right: 8,
+    top: baseStyles.bases.BASE_2,
+    right: baseStyles.bases.BASE_2,
   },
 });
 
@@ -70,8 +71,8 @@ export const pickerSelectStylesNeutral = StyleSheet.create({
     borderColor: colors.neutralLight,
   },
   iconContainer: {
-    top: 8,
-    right: 8,
+    top: baseStyles.bases.BASE_2,
+    right: baseStyles.bases.BASE_2,
   },
 });
 

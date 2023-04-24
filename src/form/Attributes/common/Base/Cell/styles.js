@@ -1,6 +1,7 @@
 import {NodeDefType} from '@openforis/arena-core';
 import {StyleSheet} from 'react-native';
 
+import baseStyles from 'arena-mobile-ui/styles';
 import * as colors from 'arena-mobile-ui/colors';
 
 const aligmentByType = {
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     justifyContent: 'center',
-    padding: 8,
+    padding: baseStyles.bases.BASE_2,
     alignItems: aligmentByType[nodeDef.type] || 'flex-end',
     flexDirection: 'row',
     opacity: applicable ? 1 : 0.5,
