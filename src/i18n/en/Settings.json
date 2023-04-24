@@ -29,8 +29,8 @@
           "code": "(Code)",
           "genus": "Genus",
           "family": "Family",
-          "scientificName": "ScientificName",
-          "vernacularNames": "VernacularNames"
+          "scientificName": "Scientific Name",
+          "vernacularNames": "Vernacular Names"
         }
       }
     }
