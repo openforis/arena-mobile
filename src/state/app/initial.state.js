@@ -12,6 +12,10 @@ const initialState = {
     isLoading: false,
     showNames: false,
     devMode: false,
+    style: {
+      baseModifier: 1,
+      fontBaseModifier: 1,
+    },
   },
 };
 

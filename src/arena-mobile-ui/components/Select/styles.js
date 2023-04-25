@@ -4,7 +4,7 @@ import * as colors from 'arena-mobile-ui/colors';
 import baseStyles from 'arena-mobile-ui/styles';
 
 const baseInputStyle = {
-  fontSize: baseStyles.bases.BASE_4,
+  fontSize: baseStyles.fontSizes.l,
   paddingVertical: baseStyles.bases.BASE_2,
   paddingHorizontal: baseStyles.bases.BASE_3,
   borderWidth: 1,
