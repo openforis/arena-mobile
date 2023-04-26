@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {alert} from 'arena-mobile-ui/utils';
 import Button from 'arena-mobile-ui/components/Button';
 import Card from 'arena-mobile-ui/components/Card';
 import Header from 'arena-mobile-ui/components/Header';
@@ -23,9 +22,8 @@ import QRScanner, {
   QRScannerButton,
 } from 'arena-mobile-ui/components/QRScanner';
 import baseStyles from 'arena-mobile-ui/styles';
-
+import {alert} from 'arena-mobile-ui/utils';
 import {selectors as appSelectors, actions as appActions} from 'state/app';
-
 import {selectors as userSelectors} from 'state/user';
 
 import styles from './styles';
@@ -223,7 +221,6 @@ const ConnectionSettings = () => {
                   <Text style={baseStyles.textStyle.text}>{user?.email}</Text>
                   <Button
                     type="deleteGhost"
-                    customContainerStyle={[styles.logoutButton]}
                     onPress={handleLogout}
                     label={t('ConnectionSettings:logout.cta')}
                   />

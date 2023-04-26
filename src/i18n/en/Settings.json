@@ -14,8 +14,24 @@
   "telemetry": {
     "cta": "telemetry"
   },
-  "connect":{
+  "connect": {
     "cta": "Connect with the server"
+  },
+  "survey": {
+    "title": "Survey",
+    "taxonomies": {
+      "title": "Taxonomies",
+      "screen": {
+        "header": "Taxonomies",
+        "description": "Select how do you want to see the taxonomies in the entry form",
+        "fields": {
+          "code": "(Code)",
+          "genus": "Genus",
+          "family": "Family",
+          "scientificName": "Scientific Name",
+          "vernacularNames": "Vernacular Names"
+        }
+      }
+    }
   }
 }
-

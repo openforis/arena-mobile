@@ -27,9 +27,6 @@ const styles = StyleSheet.create({
     marginVertical: 0,
     justifyContent: 'flex-start',
   },
-  logoutButton: {
-    paddingLeft: 0,
-  },
   dividers: {
     height: 100,
   },

@@ -28,6 +28,15 @@ const isDevModeEnabled = createSelector(getUi, ui => ui?.devMode);
 const getShowNames = createSelector(getUi, ui => ui?.showNames);
 const getIsTablet = createSelector(getUi, () => isTablet?.() || false);
 
+/* Preferences settings */
+
+const getSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields =
+  createSelector(
+    getPreferences,
+    preferences =>
+      preferences?.settings?.survey?.taxonomies?.defaultVisibleFields || null,
+  );
+
 export default {
   getAccessData,
   getServerUrl,
@@ -41,4 +50,7 @@ export default {
   isDevModeEnabled,
 
   getShowNames,
+
+  /* Preferences settings */
+  getSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields,
 };
