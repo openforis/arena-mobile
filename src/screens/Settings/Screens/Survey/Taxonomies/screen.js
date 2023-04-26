@@ -65,9 +65,6 @@ const SettingsSurveyTaxonomies = () => {
             <Text style={baseStyles.textStyle.info}>
               {t('Settings:survey.taxonomies.screen.description')}
             </Text>
-            <Text style={baseStyles.textStyle.info}>
-              {t('Settings:survey.taxonomies.screen.info')}
-            </Text>
 
             {Object.entries(taxonomyVisibleFieldsOptions).map(
               (option, index) => {

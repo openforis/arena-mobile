@@ -23,8 +23,7 @@
       "title": "Taxonomies",
       "screen": {
         "header": "Taxonomies",
-        "description": "Select how do you wnat to see the taxonomies by default",
-        "info": "This value is going to be overwritten by the attribute configuration",
+        "description": "Select how do you want to see the taxonomies in the entry form",
         "fields": {
           "code": "(Code)",
           "genus": "Genus",

@@ -7,31 +7,17 @@ const props = {
   family: 'family',
 };
 
-export const DEFAULT_TAXONOMY_FIELDS = 'code.genus.family.scientificName';
+export const DEFAULT_TAXONOMY_FIELDS = 'code.scientificName';
 
 export const taxonomyVisibleFieldsOptions = {
-  ['code.genus.family.scientificName']: [
-    props.code,
-    props.genus,
-    props.family,
-    props.scientificName,
-  ],
-  ['code.genus.family.scientificName.vernacularNames']: [
-    props.code,
-    props.genus,
-    props.family,
+  ['scientificName']: [props.scientificName],
+  ['code.scientificName']: [props.code, props.scientificName],
+  ['scientificName.vernacularNames']: [
     props.scientificName,
     props.vernacularNames,
   ],
-  ['genus.scientificName']: [props.genus, props.scientificName],
-  ['code.scientificName']: [props.code, props.scientificName],
-  ['scientificName']: [props.scientificName],
   ['code.scientificName.vernacularNames']: [
     props.code,
-    props.scientificName,
-    props.vernacularNames,
-  ],
-  ['scientificName.vernacularNames']: [
     props.scientificName,
     props.vernacularNames,
   ],
