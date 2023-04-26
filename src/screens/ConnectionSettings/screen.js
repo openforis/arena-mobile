@@ -24,14 +24,10 @@ import QRScanner, {
 import baseStyles from 'arena-mobile-ui/styles';
 import {alert} from 'arena-mobile-ui/utils';
 import {selectors as appSelectors, actions as appActions} from 'state/app';
-import globalActions from 'state/globalActions';
 import {selectors as userSelectors} from 'state/user';
 
 import styles from './styles';
-import Telemetry from './Telemetry';
-import Version from './Version';
 
-const SHOW_SERVER_OPTIONS = false;
 const SHOW_QR_HELPER = false;
 
 const _valueOrDefault = (value, defaultValue) =>
@@ -51,30 +47,26 @@ const ConnectionSettings = () => {
     [],
   );
 
-  const user = useSelector(userSelectors.getUser);
-  const handleSubmitForm = useCallback(() => {
-    dispatch(appActions.initConnection(formData));
-  }, [dispatch, formData]);
-
-  const handleResetData = useCallback(() => {
-    const requiredText = t('ConnectionSettings:reset.required');
+  const handleLogout = useCallback(() => {
+    const requiredText = t('ConnectionSettings:logout.required');
 
     alert({
-      title: t('ConnectionSettings:reset.title'),
-      message: t('ConnectionSettings:reset.message'),
-      acceptText: t('ConnectionSettings:reset.accept'),
-      dismissText: t('ConnectionSettings:reset.dismiss'),
+      title: t('ConnectionSettings:logout.title'),
+      message: t('ConnectionSettings:logout.message'),
+      acceptText: t('ConnectionSettings:logout.accept'),
+      dismissText: t('ConnectionSettings:logout.dismiss'),
       onAccept: () => {
-        dispatch(globalActions.reset());
+        dispatch(appActions.logout());
       },
       requiredText,
       requiredTextMessage: t('Common:required_text', {requiredText}),
     });
   }, [dispatch, t]);
 
-  const handleDisableDevMode = useCallback(() => {
-    dispatch(appActions.disableDevMode());
-  }, [dispatch]);
+  const user = useSelector(userSelectors.getUser);
+  const handleSubmitForm = useCallback(() => {
+    dispatch(appActions.initConnection(formData));
+  }, [dispatch, formData]);
 
   const {username, password} = useSelector(appSelectors.getAccessData);
 
@@ -83,7 +75,6 @@ const ConnectionSettings = () => {
 
   const credentialsError = useSelector(appSelectors.getCredentialsError);
   const serverError = useSelector(appSelectors.getServerError);
-  const isDevModeEnabled = useSelector(appSelectors.isDevModeEnabled);
 
   useEffect(() => {
     setFormData(prevData => ({
@@ -94,15 +85,6 @@ const ConnectionSettings = () => {
     }));
   }, [username, password, serverUrl]);
 
-  const handleSetServerUrl = useCallback(
-    _serverUrl => () => {
-      setFormData(prevData => ({
-        ...prevData,
-        serverUrl: _serverUrl || prevData.serverUrl,
-      }));
-    },
-    [setFormData],
-  );
   const {
     data: qrData,
     visible,
@@ -172,30 +154,7 @@ const ConnectionSettings = () => {
                   placeholder="https://test.openforis-arena.org"
                   autoCapitalize="none"
                 />
-                {SHOW_SERVER_OPTIONS && (
-                  <Button
-                    type="ghostBlack"
-                    onPress={handleSetServerUrl(
-                      'https://www.openforis-arena.org',
-                    )}
-                    label={t('ConnectionSettings:server_config_fields.prod', {
-                      url: 'https://www.openforis-arena.org',
-                    })}
-                    customContainerStyle={[styles.serverUrlButton]}
-                  />
-                )}
-                {isDevModeEnabled && SHOW_SERVER_OPTIONS && (
-                  <Button
-                    type="ghostBlack"
-                    onPress={handleSetServerUrl(
-                      'https://test.openforis-arena.org',
-                    )}
-                    label={t('ConnectionSettings:server_config_fields.prod', {
-                      url: 'https://test.openforis-arena.org',
-                    })}
-                    customContainerStyle={[styles.serverUrlButton]}
-                  />
-                )}
+
                 {serverError && (
                   <Card type="error">
                     <Text style={[baseStyles.textStyle.bold]}>
@@ -260,33 +219,15 @@ const ConnectionSettings = () => {
                     {t('ConnectionSettings:connected_as')}
                   </Text>
                   <Text style={baseStyles.textStyle.text}>{user?.email}</Text>
+                  <Button
+                    type="deleteGhost"
+                    onPress={handleLogout}
+                    label={t('ConnectionSettings:logout.cta')}
+                  />
                 </View>
               )}
             </View>
-            <Version />
-            {isDevModeEnabled && (
-              <>
-                <Telemetry />
-                <View style={styles.dividers} />
-                <View>
-                  <Button
-                    type="ghost"
-                    onPress={handleResetData}
-                    label={t('ConnectionSettings:reset.cta')}
-                    disabled={isLoading}
-                  />
-                </View>
-                <View style={styles.dividers} />
-                <View>
-                  <Button
-                    type="ghost"
-                    onPress={handleDisableDevMode}
-                    label={t('ConnectionSettings:devMode.disable')}
-                    disabled={isLoading}
-                  />
-                </View>
-              </>
-            )}
+
             <View style={styles.dividers} />
           </ScrollView>
         </KeyboardAvoidingView>

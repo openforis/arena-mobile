@@ -9,6 +9,22 @@ const appPreferences = handleActions(
       ...state,
       serverUrl,
     }),
+    [actions.setSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields]: (
+      state,
+      {payload: {defaultVisibleFields = null}},
+    ) => ({
+      ...state,
+      settings: {
+        ...state.settings,
+        survey: {
+          ...state?.settings?.survey,
+          taxonomies: {
+            ...state?.settings?.survey.taxonomies,
+            defaultVisibleFields,
+          },
+        },
+      },
+    }),
   },
   initialState.preferences,
 );

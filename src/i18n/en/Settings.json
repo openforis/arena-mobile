@@ -1,0 +1,37 @@
+{
+  "title": "Settings",
+  "reset": {
+    "cta": "Reset",
+    "title": "Are you sure about the reset?",
+    "message": "records and surveys are going to be removed from the device",
+    "accept": "Yes, clean all data",
+    "dismiss": "No",
+    "required": "reset"
+  },
+  "devMode": {
+    "disable": "Disable dev mode"
+  },
+  "telemetry": {
+    "cta": "telemetry"
+  },
+  "connect": {
+    "cta": "Connect with the server"
+  },
+  "survey": {
+    "title": "Survey",
+    "taxonomies": {
+      "title": "Taxonomies",
+      "screen": {
+        "header": "Taxonomies",
+        "description": "Select how do you want to see the taxonomies in the entry form",
+        "fields": {
+          "code": "(Code)",
+          "genus": "Genus",
+          "family": "Family",
+          "scientificName": "Scientific Name",
+          "vernacularNames": "Vernacular Names"
+        }
+      }
+    }
+  }
+}

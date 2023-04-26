@@ -8,11 +8,9 @@ import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
 import {Preview as BasePreview} from '../../common/Base';
+import {useTaxonItemLabelExtractor} from '../hooks';
 
 import styles from './styles';
-
-const getTaxonItemLabel = ({item}) =>
-  `(${item.props.code}) ${item.props.genus}`;
 
 const Taxonomy = ({node, nodeDef}) => {
   const items = useSelector(state =>
@@ -21,17 +19,13 @@ const Taxonomy = ({node, nodeDef}) => {
       nodeDef?.props?.taxonomyUuid,
     ),
   );
-  const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );
 
   const {t} = useTranslation();
   const dispatch = useDispatch();
-  const _labelStractor = useCallback(
-    item => getTaxonItemLabel({item, language}),
-    [language],
-  );
+  const _labelStractor = useTaxonItemLabelExtractor(nodeDef);
   const itemsArray = useMemo(() => Object.values(items), [items]);
 
   const handleSelectNodeAndNodeDef = useCallback(() => {

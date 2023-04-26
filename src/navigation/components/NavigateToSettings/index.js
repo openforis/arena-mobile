@@ -5,7 +5,7 @@ import {NavigateToIcon} from 'arena-mobile-ui/components/TouchableIcons';
 import {ROUTES} from '../../constants';
 
 const NavigateToSettings = () => (
-  <NavigateToIcon route={ROUTES.CONNECTION_SETTINGS} icon={'cog'} />
+  <NavigateToIcon route={ROUTES.SETTINGS} icon={'cog'} />
 );
 
 export default NavigateToSettings;
