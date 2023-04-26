@@ -2146,13 +2146,14 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@openforis/arena-core@^0.0.129":
-  version "0.0.129"
-  resolved "https://npm.pkg.github.com/download/@openforis/arena-core/0.0.129/6379c23c754339afab270e511e518996cfe10f39#6379c23c754339afab270e511e518996cfe10f39"
-  integrity sha512-JoZe8RRhxVDVwNzynPYb9NLACi970zinJMDx9WGwxBjmz06LXz7MgoLO7o50oqUg7tEqXn7WowpkyQB1RpO6dw==
+"@openforis/arena-core@^0.0.132":
+  version "0.0.132"
+  resolved "https://npm.pkg.github.com/download/@openforis/arena-core/0.0.132/d26e1cdd408316118e663133c5da9c96c449de11#d26e1cdd408316118e663133c5da9c96c449de11"
+  integrity sha512-dznF0mp4BNt5tTFW1k6isPdljGnXEHsb0mrQY5PmxtC2liv4drCXrb7fqhpkvC6ILOwf2MyF0YONtgWtx6pkVg==
   dependencies:
     "@esri/proj-codes" "^3.0.0"
     "@jsep-plugin/regex" "^1.0.3"
+    bignumber.js "^9.1.1"
     date-fns "^2.29.3"
     jsep "^1.3.7"
     lodash.differencewith "^4.5.0"
@@ -2177,10 +2178,17 @@
     schema-utils "^3.0.0"
     source-map "^0.7.3"
 
-"@react-native-async-storage/async-storage@^1.13.4", "@react-native-async-storage/async-storage@^1.17.11":
+"@react-native-async-storage/async-storage@^1.13.4":
   version "1.17.11"
   resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.17.11.tgz#7ec329c1b9f610e344602e806b04d7c928a2341d"
   integrity sha512-bzs45n5HNcDq6mxXnSsOHysZWn1SbbebNxldBXCQs8dSvF8Aor9KCdpm+TpnnGweK3R6diqsT8lFhX77VX0NFw==
+  dependencies:
+    merge-options "^3.0.4"
+
+"@react-native-async-storage/async-storage@^1.18.1":
+  version "1.18.1"
+  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.18.1.tgz#b1aea4f07fb1dba3325b857b770671517ddab221"
+  integrity sha512-70aFW8fVCKl+oA1AKPFDpE6s4t9pulj2QeLX+MabEmzfT3urd/3cckv45WJvtocdoIH/oXA3Y+YcCRJCcNa8mA==
   dependencies:
     merge-options "^3.0.4"
 
@@ -4153,6 +4161,11 @@ big.js@^5.2.2:
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-5.2.2.tgz#65f0af382f578bcdc742bd9c281e9cb2d7768328"
   integrity sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==
 
+bignumber.js@^9.1.1:
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.1.1.tgz#c4df7dc496bd849d4c9464344c1aa74228b4dac6"
+  integrity sha512-pHm4LsMJ6lzgNGVfZHjMoO8sdoRhOzOH4MLmY65Jg70bpxCKu5iOHNJyfF6OyvYw7t8Fpf35RuzUyqnQsj8Vig==
+
 binary-extensions@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
@@ -5941,7 +5954,7 @@ eslint-plugin-flowtype@^8.0.3:
     lodash "^4.17.21"
     string-natural-compare "^3.0.1"
 
-eslint-plugin-ft-flow@^2.0.1:
+eslint-plugin-ft-flow@^2.0.1, eslint-plugin-ft-flow@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/eslint-plugin-ft-flow/-/eslint-plugin-ft-flow-2.0.3.tgz#3b3c113c41902bcbacf0e22b536debcfc3c819e8"
   integrity sha512-Vbsd/b+LYA99jUbsL6viEUWShFaYQt2YQs3QN3f+aeszOhh2sgdcU0mjzDyD4yyBvMc8qy2uwvBBWfMzEX06tg==
@@ -11888,10 +11901,10 @@ react-native-zip-archive@^6.0.9:
   resolved "https://registry.yarnpkg.com/react-native-zip-archive/-/react-native-zip-archive-6.0.9.tgz#9a1456f1dc6a9d7bb13135a00775e07cda247997"
   integrity sha512-IYf3yHJ7sHzj9ucO3Amx/TtsZcTgHdfj+Dar8p1e32E+wBsn7mv0PDp2X/oCLGci0nG9i2DBstrnCW74/7NLYQ==
 
-react-native@^0.69.3:
-  version "0.69.8"
-  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.69.8.tgz#3d9b47c42c100455850b47859ff12b66c5ffb689"
-  integrity sha512-sHaIypVD9avdHQpvmVXz4vPy6IECKNfWCz2E5DmiC6NWKxGd+tkNMBMIOl7dATdpAiD19FUiu3EyBVdO1vqTUw==
+react-native@0.69.9:
+  version "0.69.9"
+  resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.69.9.tgz#c988dfc2e21b3b586d35a8cc57b102537e760edc"
+  integrity sha512-I1xqIn47RWxBToO4E6yqyIPSaK9mZnMiscMfrFpWjQr3Gdkicr9y+twmtrRszxaLdQLjHzh/M3y4qOqc3hZnpg==
   dependencies:
     "@jest/create-cache-key-function" "^27.0.1"
     "@react-native-community/cli" "^8.0.4"
@@ -12021,10 +12034,10 @@ react-test-renderer@18.2.0:
     react-shallow-renderer "^16.15.0"
     scheduler "^0.23.0"
 
-react@18.2.0:
-  version "18.2.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
-  integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
+react@18.0.0:
+  version "18.0.0"
+  resolved "https://registry.yarnpkg.com/react/-/react-18.0.0.tgz#b468736d1f4a5891f38585ba8e8fb29f91c3cb96"
+  integrity sha512-x+VL6wbT4JRVPm7EGxXhZ8w8LTROaxPXOqhlGyVSrv0sB1jkyFGgXxJ8LVoPRLvPR6/CIZGFmfzqUa2NYeMr2A==
   dependencies:
     loose-envify "^1.1.0"
 

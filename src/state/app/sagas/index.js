@@ -98,7 +98,18 @@ function* handleReset() {
   yield call(cleanAllData);
 }
 
+function* handleLogout() {
+  yield all([
+    put(appActions.clean()),
+    put(userActions.cleanUser()),
+    put(globalActions.reset()),
+  ]);
+
+  yield call(navigator.navigatorDispatch, StackActions.replace(ROUTES.HOME));
+}
+
 export default function* () {
   yield takeLatest(appActionTypes.initConnection$, handleInitConnection);
+  yield takeLatest(appActionTypes.logout$, handleLogout);
   yield takeLatest(globalActions.reset, handleReset);
 }

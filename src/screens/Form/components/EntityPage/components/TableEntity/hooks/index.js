@@ -32,7 +32,7 @@ export const useEntityTableData = () => {
     item =>
       Number(
         (item.layout
-          ? NodeDefs.getLayoutProps(cycle)(item)?.columnWidth
+          ? NodeDefs.getLayoutProps(cycle)(item)?.columnWidth || '150'
           : '150'
         ).replace(/\D+/g, ''),
       ),

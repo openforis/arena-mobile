@@ -38,6 +38,15 @@ const getFontBaseModifier = createSelector(
   style => style?.fontBaseModifier || 1,
 );
 
+/* Preferences settings */
+
+const getSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields =
+  createSelector(
+    getPreferences,
+    preferences =>
+      preferences?.settings?.survey?.taxonomies?.defaultVisibleFields || null,
+  );
+
 export default {
   getAccessData,
   getServerUrl,
@@ -55,4 +64,8 @@ export default {
   // theme
   getBaseModifier,
   getFontBaseModifier,
+  
+  /* Preferences settings */
+  getSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields,
+
 };

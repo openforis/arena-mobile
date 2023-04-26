@@ -1,5 +1,5 @@
 {
-  "title": "Settings",
+  "title": "Connection Settings",
 
   "server_config_title": "Server info",
   "server_config_fields": {
@@ -28,19 +28,12 @@
     "forgot_password": "Forgot your password?"
   },
   "connected_as": "Logged in as:",
-
-  "reset": {
-    "cta": "Reset",
-    "title": "Are you sure about the reset?",
-    "message": "records and surveys are going to be removed from the device",
-    "accept": "Yes, clean all data",
+  "logout": {
+    "cta": "Log out",
+    "title": "Are you sure about the Logout?",
+    "message": "All records and surveys are going to be removed from the device",
+    "accept": "Yes, clean all data and logout",
     "dismiss": "No",
-    "required": "reset"
-  },
-  "devMode": {
-    "disable": "Disable dev mode"
-  },
-  "telemetry": {
-    "cta": "telemetry"
+    "required": "reset data and logout"
   }
 }

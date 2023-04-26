@@ -16,6 +16,7 @@ const Header = ({
   applicable,
   handleStopToSearch,
   setSearchText,
+  placeholderButton,
 }) => {
   const {t} = useTranslation();
 
@@ -27,7 +28,9 @@ const Header = ({
           type="secondary"
           iconPosition="right"
           label={
-            selectedItem ? _labelStractor(selectedItem) : t('Form:select_empty')
+            selectedItem
+              ? _labelStractor(selectedItem)
+              : placeholderButton || t('Form:select_empty')
           }
           icon={ChevronDown}
           customContainerStyle={styles.select}

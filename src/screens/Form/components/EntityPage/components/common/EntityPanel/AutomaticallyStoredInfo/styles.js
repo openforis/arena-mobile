@@ -8,6 +8,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: baseStyles.fontSizes.s,
     color: colors.neutralLight,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
 });
 

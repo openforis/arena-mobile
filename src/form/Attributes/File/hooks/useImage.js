@@ -2,15 +2,16 @@ import {useCallback} from 'react';
 import ImagePicker from 'react-native-image-crop-picker';
 
 const getFilesFromImage = image => {
-  const name = image.filename || (image?.path).split('/').pop() || '---.png';
+  const name =
+    image?.filename || (image?.path || '').split('/').pop() || '---.png';
 
   return [
     {
       ...image,
       name,
-      size: image.size,
-      type: image.mime,
-      uri: image.path, // image.sourceURL - /private/var/mobile || file:///var/mobile/Media
+      size: image?.size,
+      type: image?.mime,
+      uri: image?.path, // image.sourceURL - /private/var/mobile || file:///var/mobile/Media
     },
   ];
 };
