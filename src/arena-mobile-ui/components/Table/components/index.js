@@ -1,5 +1,6 @@
 import React from 'react';
-import {View, ScrollView, Text} from 'react-native';
+import {View, ScrollView} from 'react-native';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 
 import styles from '../styles';
 
@@ -35,5 +36,5 @@ export const TableCell = ({
 };
 
 export const _renderCell = ({item}) => {
-  return <Text numberOfLines={1}>{item.label || '-'}</Text>;
+  return <TextBase numberOfLines={1}>{item.label || '-'}</TextBase>;
 };

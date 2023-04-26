@@ -1,11 +1,12 @@
 import React, {useCallback, useState, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import Header from 'arena-mobile-ui/components/Header';
 import Layout from 'arena-mobile-ui/components/Layout';
-import baseStyles from 'arena-mobile-ui/styles';
+import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
+
 import surveysSector from 'state/surveys/selectors';
 
 import SelectedSurveyPanel from './components/SelectedSurveyPanel';
@@ -37,9 +38,7 @@ const Surveys = () => {
     <Layout bottomStyle={selectedSurvey ? 'primary' : 'background'}>
       <>
         <Header hasBackComponent={true}>
-          <Text style={[baseStyles.textStyle.title]}>
-            {t(`Surveys:title.${surveysOrigin}`)}
-          </Text>
+          <TextTitle>{t(`Surveys:title.${surveysOrigin}`)}</TextTitle>
         </Header>
 
         <View style={[styles.listContainer]}>

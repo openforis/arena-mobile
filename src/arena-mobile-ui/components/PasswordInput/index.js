@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
-import {Text, View, TextInput} from 'react-native';
-
-import baseStyles from 'arena-mobile-ui/styles';
+import {View, TextInput} from 'react-native';
 
 import {TouchableIcon} from '../TouchableIcons';
 
 import styles from './styles';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 
 const icons = {
   passwordVisible: 'eye-outline',
@@ -25,7 +24,8 @@ const PasswordInput = ({title, autoFocus = false, ...otherProps}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={[baseStyles.textStyle.text]}>{title}</Text>
+      <TextBase>{title}</TextBase>
+
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
