@@ -133,14 +133,15 @@ android {
     ndkVersion rootProject.ext.ndkVersion
 
     compileSdkVersion rootProject.ext.compileSdkVersion
-    namespace 'org.openforis.collect.arena'
+    namespace 'org.openforis.arena'
 
     defaultConfig {
-        applicationId "org.openforis.collect.arena"
+        applicationId "org.openforis.arena"
         minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion 
         versionCode 85
-        versionName "1.4.12"
+        versionName "1.5.1"
+
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString() 
 
         vectorDrawables.useSupportLibrary = true

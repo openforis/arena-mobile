@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "org.openforis.collect.arena",
+    package = "org.openforis.arena",
 )
 
 android_resource(
     name = "res",
-    package = "org.openforis.collect.arena",
+    package = "org.openforis.arena",
     res = "src/main/res",
 )
 
