@@ -58,7 +58,7 @@ const Telemetry = () => {
       <Button
         type="ghost"
         onPress={() => console.log()}
-        label={t('ConnectionSettings:telemetry.cta')}
+        label={t('Settings:telemetry.cta')}
       />
       <Text>Disk Storage:</Text>
       <Text>Used:{data?.disk?.used}</Text>
@@ -78,7 +78,7 @@ const Telemetry = () => {
         <Button
           type="ghostBlack"
           onPress={cleanReselectCache}
-          label={t('ConnectionSettings:telemetry.cta')}></Button>
+          label={t('Settings:telemetry.cta')}></Button>
         {Object.keys(telemetryKeys).map(telemetryKey => (
           <TelemetryObject key={telemetryKey} telemetryKey={telemetryKey} />
         ))}

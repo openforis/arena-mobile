@@ -40,7 +40,7 @@ const BooleanOption = ({value, active = false, onPress, nodeDef}) => {
   );
 };
 
-const Boolean = ({node, nodeDef}) => {
+const BooleanAttribute = ({node, nodeDef}) => {
   const updateNode = useUpdateNode();
 
   const handlePress = useCallback(
@@ -72,7 +72,7 @@ const Boolean = ({node, nodeDef}) => {
 };
 
 const Preview = ({nodeDef}) => {
-  return <BasePreview nodeDef={nodeDef} NodeValueRender={Boolean} />;
+  return <BasePreview nodeDef={nodeDef} NodeValueRender={BooleanAttribute} />;
 };
 
 export default Preview;

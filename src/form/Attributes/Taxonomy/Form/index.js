@@ -1,4 +1,5 @@
 import React, {useCallback, useMemo} from 'react';
+import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -11,19 +12,9 @@ import {selectors as formSelectors} from 'state/form';
 import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import {selectors as surveySelectors} from 'state/survey';
 
+import {useTaxonItemLabelExtractor} from '../hooks';
+
 import styles from './styles';
-
-const getTaxonItemLabel = ({item}) => {
-  const vernacularNamesObj = item?.vernacularNames || {};
-  const vernacularNames = Object.values(vernacularNamesObj)
-    .flatMap(vernacularName => vernacularName?.props?.name)
-    .filter(value => !!value);
-
-  return `(${item.props.code}), ${item.props.family}, ${item?.props?.genus}, ${
-    item?.props?.scientificName
-  }${vernacularNames.length > 0 ? ',' : ''}
-  ${vernacularNames.join(',')}`;
-};
 
 const getTextForSearch = (item, language) => {
   const vernacularNamesObj = item?.vernacularNames || {};
@@ -44,6 +35,7 @@ const getTextForSearch = (item, language) => {
 };
 
 const Form = ({node, nodeDef}) => {
+  const {t} = useTranslation();
   const actions = useNodeFormActions({nodeDef});
 
   const items = useSelector(state =>
@@ -69,10 +61,8 @@ const Form = ({node, nodeDef}) => {
     [actions, node],
   );
 
-  const _labelStractor = useCallback(
-    item => getTaxonItemLabel({item, language}),
-    [language],
-  );
+  const _labelStractor = useTaxonItemLabelExtractor(nodeDef);
+
   const itemsArray = useMemo(() => Object.values(items), [items]);
 
   const selectedItem = useMemo(
@@ -96,13 +86,13 @@ const Form = ({node, nodeDef}) => {
 
       return (
         <ListItem
-          label={getTaxonItemLabel({item})}
+          label={_labelStractor(item)}
           handlePress={handleSelect(item)}
           selected={selected}
         />
       );
     },
-    [selectedItem, handleSelect],
+    [selectedItem, _labelStractor, handleSelect],
   );
 
   const taxonomiesWithIndexToSearch = useMemo(() => {
@@ -134,6 +124,7 @@ const Form = ({node, nodeDef}) => {
         applicable={applicable}
         handleStopToSearch={handleStopToSearch}
         setSearchText={setSearchText}
+        placeholderButton={t('Form:select_empty_type_to_search')}
       />
 
       <List
