@@ -1,2 +1,2 @@
 json_key_file("4428354186-c469bd85b036.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
-package_name("org.openforis.collect.arena") # e.g. com.krausefx.app
+package_name("org.openforis.arena") # e.g. com.krausefx.app
