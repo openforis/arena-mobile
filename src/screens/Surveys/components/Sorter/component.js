@@ -1,8 +1,9 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 
 import {useTranslation} from 'react-i18next';
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import baseStyles from 'arena-mobile-ui/styles';
 
 import {SORTERS} from './config';
@@ -12,7 +13,7 @@ const Sorter = ({sortCriteriaIndex, setSortCriteriaIndex}) => {
   const {t} = useTranslation();
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{t('Common:sort_by')}</Text>
+      <TextBase style={styles.text}>{t('Common:sort_by')}</TextBase>
 
       <TouchableIcon
         iconName={SORTERS[sortCriteriaIndex].icon}

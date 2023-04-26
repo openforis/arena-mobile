@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import Validation from 'form/common/Validation';
 import {selectors as formSelectors} from 'state/form';
 
@@ -9,7 +10,9 @@ import styles from './styles';
 
 const BaseValuesRenderer = ({nodes}) => {
   return (
-    <Text numberOfLines={1}>{nodes.map(node => node.value).join(',')}</Text>
+    <TextBase numberOfLines={1}>
+      {nodes.map(node => node.value).join(',')}
+    </TextBase>
   );
 };
 

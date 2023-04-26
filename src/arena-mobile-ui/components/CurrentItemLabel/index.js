@@ -1,12 +1,17 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 
-import styles from './styles';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
+import _styles from './styles';
 
 const CurrentItemLabel = ({label}) => {
+  const styles = useThemedStyles({styles: _styles});
   return (
     <View style={[styles.container]}>
-      <Text style={[styles.text]}>{label}</Text>
+      <TextBase type="secondaryText" size="s" customStyle={styles.text}>
+        {label}
+      </TextBase>
     </View>
   );
 };

@@ -6,6 +6,7 @@
   "username": "Username (email)",
   "password": "Password",
   "access_info": "Access info",
+  "server": "Server",
   "server_config": "Server config",
   "server_address": "Server address",
   "connect": "Log In",
