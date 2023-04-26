@@ -6,9 +6,11 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {
   getTaxonItemLabel,
+
   taxonomyVisibleFieldsOptions,
   exampleTaxon,
   DEFAULT_TAXONOMY_FIELDS,
+
 } from 'arena/taxonomy';
 import Button from 'arena-mobile-ui/components/Button';
 import Header from 'arena-mobile-ui/components/Header';
@@ -20,8 +22,10 @@ import {selectors as appSelectors, actions as appActions} from 'state/app';
 import styles from './styles';
 
 const SettingsSurveyTaxonomies = () => {
+
   const [taxonomyVisibleFieldsKey, setTaxonomyVisibleFieldsKey] = useState(
     DEFAULT_TAXONOMY_FIELDS,
+
   );
 
   const defaultVisibleFields = useSelector(
@@ -30,8 +34,10 @@ const SettingsSurveyTaxonomies = () => {
 
   useEffect(() => {
     if (defaultVisibleFields) {
+
       setTaxonomyVisibleFieldsKey(
         defaultVisibleFields.join('.') || DEFAULT_TAXONOMY_FIELDS,
+
       );
     }
   }, [defaultVisibleFields]);
@@ -43,11 +49,13 @@ const SettingsSurveyTaxonomies = () => {
   const handleSave = useCallback(() => {
     dispatch(
       appActions.setSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields({
+
         defaultVisibleFields: taxonomyVisibleFieldsKey.split('.'),
       }),
     );
     navigation.goBack();
   }, [dispatch, navigation, taxonomyVisibleFieldsKey]);
+
 
   return (
     <Layout bottomStyle="background" topStyle="primary">
@@ -63,6 +71,7 @@ const SettingsSurveyTaxonomies = () => {
               {t('Settings:survey.taxonomies.screen.header')}
             </Text>
             <Text style={baseStyles.textStyle.info}>
+
               {t('Settings:survey.taxonomies.screen.description')}
             </Text>
 
@@ -107,6 +116,7 @@ const SettingsSurveyTaxonomies = () => {
                 );
               },
             )}
+
           </View>
           <View style={styles.exampleContainer}>
             <Text style={styles.example}>
