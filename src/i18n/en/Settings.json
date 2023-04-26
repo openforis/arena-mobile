@@ -24,7 +24,7 @@
       "screen": {
         "header": "Taxonomies",
 
-        "info": "Select how do you wnat to see the taxonomies by default"
+        "info": "Select how do you wnat to see the taxonomies by default",
 
         "description": "Select how do you want to see the taxonomies in the entry form",
         "fields": {
@@ -34,7 +34,6 @@
           "scientificName": "Scientific Name",
           "vernacularNames": "Vernacular Names"
         }
-
       }
     }
   }
