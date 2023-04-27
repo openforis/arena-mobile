@@ -6,6 +6,9 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: baseStyles.bases.BASE_2,
   },
+  spacer: {
+    height: 200,
+  },
 });
 
 export default styles;

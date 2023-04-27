@@ -1,11 +1,13 @@
 import moment from 'moment-timezone';
 import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
+import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import LabelsAndValues from 'arena-mobile-ui/components/LabelsAndValues';
-import baseStyles from 'arena-mobile-ui/styles';
+
 import {ROUTES} from 'navigation/constants';
 import * as navigator from 'state/navigatorService';
 import {useNumberRecords} from 'state/records/hooks';
@@ -38,15 +40,12 @@ const SurveyDetail = () => {
   if (survey) {
     return (
       <View>
-        <Text
-          style={[baseStyles.textStyle.secondaryText, baseStyles.textSize.s]}>
+        <TextBase type="secondaryText" size="s">
           {t('Home:survey.card.active_survey')}
-        </Text>
-        <Text style={baseStyles.textStyle.title}>{surveyLabel}</Text>
+        </TextBase>
+        <TextTitle>{surveyLabel}</TextTitle>
 
-        <Text style={baseStyles.textStyle.secondaryText}>
-          {surveyDescription}
-        </Text>
+        <TextBase type="secondaryText">{surveyDescription}</TextBase>
 
         <LabelsAndValues
           size="m"
