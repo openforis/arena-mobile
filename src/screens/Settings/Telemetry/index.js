@@ -1,8 +1,9 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text, View, ScrollView} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import {useSelector} from 'react-redux';
 
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import Button from 'arena-mobile-ui/components/Button';
 import {selectors as appSelectors} from 'state/app';
 import {selectors as filesSelectors} from 'state/files';
@@ -27,10 +28,10 @@ const telemetryKeys = {
 };
 const TelemetryObject = ({telemetryKey}) => {
   return Object.entries(telemetryKeys[telemetryKey]).map(([key, fn]) => (
-    <Text key={key}>
+    <TextBase key={key}>
       {telemetryKey}:{key}:{fn?.recomputations?.() || '_'},
       {Object.keys(fn?.cache || {}).length || '_'}
-    </Text>
+    </TextBase>
   ));
 };
 
@@ -60,21 +61,21 @@ const Telemetry = () => {
         onPress={() => console.log()}
         label={t('Settings:telemetry.cta')}
       />
-      <Text>Disk Storage:</Text>
-      <Text>Used:{data?.disk?.used}</Text>
-      <Text>Free:{data?.disk?.free}</Text>
-      <Text>Total:{data?.disk?.total}</Text>
+      <TextBase>Disk Storage:</TextBase>
+      <TextBase>Used:{data?.disk?.used}</TextBase>
+      <TextBase>Free:{data?.disk?.free}</TextBase>
+      <TextBase>Total:{data?.disk?.total}</TextBase>
 
-      <Text>Memory:</Text>
-      <Text>Max:{data?.memory?.max}</Text>
-      <Text>Used:{data?.memory?.used}</Text>
-      <Text>Total:{data?.memory?.total}</Text>
+      <TextBase>Memory:</TextBase>
+      <TextBase>Max:{data?.memory?.max}</TextBase>
+      <TextBase>Used:{data?.memory?.used}</TextBase>
+      <TextBase>Total:{data?.memory?.total}</TextBase>
       <ScrollView>
-        <Text>numSurveys: {numSurveys}</Text>
-        <Text>numRecords: {numRecords}</Text>
-        <Text>numRecordsFs: {numRecordsFs}</Text>
-        <Text>numNodes: {numNodes}</Text>
-        <Text>-----------</Text>
+        <TextBase>numSurveys: {numSurveys}</TextBase>
+        <TextBase>numRecords: {numRecords}</TextBase>
+        <TextBase>numRecordsFs: {numRecordsFs}</TextBase>
+        <TextBase>numNodes: {numNodes}</TextBase>
+        <TextBase>-----------</TextBase>
         <Button
           type="ghostBlack"
           onPress={cleanReselectCache}
