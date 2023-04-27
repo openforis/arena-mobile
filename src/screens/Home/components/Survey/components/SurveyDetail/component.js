@@ -1,13 +1,15 @@
 import moment from 'moment-timezone';
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Card from 'arena-mobile-ui/components/Card';
 import LabelsAndValues from 'arena-mobile-ui/components/LabelsAndValues';
-import baseStyles from 'arena-mobile-ui/styles';
+import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+
 import {useNavigateTo} from 'navigation/hooks';
 import {selectors as surveySelectors} from 'state/survey';
 
@@ -34,12 +36,12 @@ const SurveyDetail = () => {
           onPress={navigateTo({route: routes.SURVEY})}
         />
       </View>
-      <Text style={baseStyles.textStyle.secondaryText}>
+      <TextBase type="secondaryText">
         {t('Home:survey.card.active_survey')}
-      </Text>
-      <Text style={baseStyles.textStyle.title}>
+      </TextBase>
+      <TextTitle>
         {surveyLabel} ·{surveyLabel}{' '}
-      </Text>
+      </TextTitle>
 
       <LabelsAndValues
         size="s"

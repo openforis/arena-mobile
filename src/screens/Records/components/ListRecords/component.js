@@ -1,13 +1,14 @@
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import CreatedAndModified from 'arena-mobile-ui/components/CreatedAndModified';
 import CurrentItemLabel from 'arena-mobile-ui/components/CurrentItemLabel';
 import List from 'arena-mobile-ui/components/List';
 import TouchableCard from 'arena-mobile-ui/components/TouchableCard';
-import baseStyles from 'arena-mobile-ui/styles';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+
 import formSelectors from 'state/form/selectors';
 import {useRecordsUuidsSorted, useRecordsSummary} from 'state/records/hooks';
 
@@ -29,9 +30,7 @@ const RecordCard = ({record, recordUuid, isSelected, onSelect}) => {
       onPress={handlePress}
       customStyles={[styles.container, isSelected ? styles.selected : {}]}>
       <View style={[styles.payload]}>
-        <Text style={[baseStyles.textStyle.bold]}>
-          {record.recordKey || '-'}
-        </Text>
+        <TextBase type="bold">{record.recordKey || '-'}</TextBase>
         <CreatedAndModified
           dateCreated={record?.dateCreated}
           dateModified={record?.dateModified}

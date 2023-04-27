@@ -1,6 +1,6 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text} from 'react-native';
+import {TextBase} from 'react-native';
 
 import styles from './styles';
 
@@ -8,9 +8,9 @@ const AutomaticallyStoredInfo = () => {
   const {t} = useTranslation();
 
   return (
-    <Text style={styles.container}>
+    <TextBase type="secondaryText" size="s" customStyle={styles.text}>
       {t('Form:navigation_panel.automatically_stored_info')}
-    </Text>
+    </TextBase>
   );
 };
 
