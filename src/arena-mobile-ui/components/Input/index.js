@@ -46,7 +46,6 @@ const Input = ({
   stacked = false,
   customStyle = CUSTOM_STYLE,
   lateFocus = false,
-
   ...props
 }) => {
   const inputRef = useRef();

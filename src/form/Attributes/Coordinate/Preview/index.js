@@ -1,6 +1,7 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text} from 'react-native';
+
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import {useSelector} from 'react-redux';
 
 import BasePreview from 'form/Attributes/common/Base/Preview';
@@ -16,15 +17,15 @@ export const NodeValueRender = ({node}) => {
     node?.value?.srs && surveySrs.find(srs => srs.code === node.value.srs);
   return (
     <>
-      <Text numberOfLines={1}>
+      <TextBase numberOfLines={1}>
         {t('Form:nodeDefCoordinate.x')}: {coordinateText(node?.value?.x)}
-      </Text>
-      <Text numberOfLines={1}>
+      </TextBase>
+      <TextBase numberOfLines={1}>
         {t('Form:nodeDefCoordinate.y')}: {coordinateText(node?.value?.y)}
-      </Text>
-      <Text numberOfLines={1}>
+      </TextBase>
+      <TextBase numberOfLines={1}>
         {t('Form:nodeDefCoordinate.srs')}: {selectedSrs?.name}
-      </Text>
+      </TextBase>
     </>
   );
 };

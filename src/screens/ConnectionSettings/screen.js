@@ -12,6 +12,9 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
+import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
+import TextHeader from 'arena-mobile-ui/components/Texts/TextHeader';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import Card from 'arena-mobile-ui/components/Card';
 import Header from 'arena-mobile-ui/components/Header';
 import Input from 'arena-mobile-ui/components/Input';
@@ -143,9 +146,7 @@ const ConnectionSettings = () => {
             RightComponent={
               SHOW_QR_HELPER && <QRScannerButton handleShow={handleShow} />
             }>
-            <Text style={[baseStyles.textStyle.title]}>
-              {t('ConnectionSettings:title')}
-            </Text>
+            <TextTitle>{t('ConnectionSettings:title')}</TextTitle>
           </Header>
         )}
         <QRScanner
@@ -161,9 +162,9 @@ const ConnectionSettings = () => {
           <ScrollView>
             <View style={[styles.formContainer]}>
               <View style={[styles.formItem]}>
-                <Text style={[baseStyles.textStyle.header]}>
+                <TextHeader>
                   {t('ConnectionSettings:server_config_title')}
-                </Text>
+                </TextHeader>
 
                 <Input
                   title={t('ConnectionSettings:server_config_fields.address')}
@@ -198,20 +199,20 @@ const ConnectionSettings = () => {
                 )}
                 {serverError && (
                   <Card type="error">
-                    <Text style={[baseStyles.textStyle.bold]}>
+                    <TextBase type="bold">
                       {t('ConnectionSettings:server_error.title')}
-                    </Text>
-                    <Text style={[baseStyles.textStyle.text]}>
+                    </TextBase>
+                    <TextBase>
                       {t('ConnectionSettings:server_error.info')}
-                    </Text>
+                    </TextBase>
                   </Card>
                 )}
               </View>
 
               <View style={[styles.formItem]}>
-                <Text style={[baseStyles.textStyle.header]}>
+                <TextHeader>
                   {t('ConnectionSettings:access_info_title')}
-                </Text>
+                </TextHeader>
                 <Input
                   title={t('ConnectionSettings:access_info_fields.username')}
                   onChangeText={onChangeText('username')}
@@ -226,12 +227,12 @@ const ConnectionSettings = () => {
               </View>
               {credentialsError && (
                 <Card type="error">
-                  <Text style={[baseStyles.textStyle.bold]}>
+                  <TextBase type="bold">
                     {t('ConnectionSettings:credentials_error.title')}
-                  </Text>
-                  <Text style={[baseStyles.textStyle.text]}>
+                  </TextBase>
+                  <TextBase>
                     {t('ConnectionSettings:credentials_error.info')}
-                  </Text>
+                  </TextBase>
                 </Card>
               )}
 
@@ -256,10 +257,10 @@ const ConnectionSettings = () => {
 
               {user?.name && (
                 <View style={styles.loggedInAs}>
-                  <Text style={baseStyles.textStyle.secondaryText}>
+                  <TextBase type="secondaryText">
                     {t('ConnectionSettings:connected_as')}
-                  </Text>
-                  <Text style={baseStyles.textStyle.text}>{user?.email}</Text>
+                  </TextBase>
+                  <TextBase>({user?.email})</TextBase>
                 </View>
               )}
             </View>

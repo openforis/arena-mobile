@@ -1,9 +1,11 @@
 import React from 'react';
 import {View} from 'react-native';
 
-import styles from './styles';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
+import _styles from './styles';
 
 const Card = ({children, type = 'primary', customStyles = {}}) => {
+  const styles = useThemedStyles({styles: _styles});
   return (
     <View style={[styles.container, styles[type], customStyles]}>
       {children}
