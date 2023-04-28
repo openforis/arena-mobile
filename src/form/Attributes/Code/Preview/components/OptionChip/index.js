@@ -1,6 +1,7 @@
 import React from 'react';
-import {Text, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
 import baseStyles from 'arena-mobile-ui/styles';
 
@@ -17,7 +18,7 @@ const OptionChip = ({
     <TouchableOpacity
       onPress={onPress}
       style={[styles.chipContainer({isActive})]}>
-      <Text style={[styles.label({isActive})]}>{label}</Text>
+      <TextBase customStyle={[styles.label({isActive})]}>{label}</TextBase>
       {iconName && onPressIcon && (
         <TouchableIcon
           onPress={onPressIcon}

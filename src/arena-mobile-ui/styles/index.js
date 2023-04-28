@@ -59,14 +59,17 @@ export const getBaseStyles = ({
   const textStyle = StyleSheet.create({
     title: {
       ...textSize.xxl,
+      color: colors.primaryText,
       fontWeight: 'bold',
     },
     header: {
       ...textSize.xl,
+      color: colors.primaryText,
       fontWeight: 'bold',
     },
     text: {
       ...textSize.m,
+      color: colors.primaryText,
     },
     secondaryText: {
       ...textSize.m,
@@ -74,13 +77,16 @@ export const getBaseStyles = ({
     },
     bold: {
       ...textSize.m,
+      color: colors.primaryText,
       fontWeight: 'bold',
     },
     bolder: {
       ...textSize.m,
+      color: colors.primaryText,
       fontWeight: '900',
     },
     lower: {
+      color: colors.primaryText,
       textTransform: 'lowercase',
     },
   });

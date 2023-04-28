@@ -43,23 +43,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
   },
-  headerTextInfo: {
-    ...baseStyles.textSize.s,
-    color: colors.neutralLight,
-    paddingBottom: baseStyles.bases.BASE,
-    textAlign: 'left',
-  },
-  headerText: {
-    ...baseStyles.textSize.l,
-    textAlign: 'left',
-    color: colors.neutralDark,
-    marginRight: baseStyles.bases.BASE_2,
-  },
-  optionsContainer: {
-    padding: baseStyles.bases.BASE_4,
-    backgroundColor: colors.white,
-    flexDirection: 'row',
-  },
   containerTabletMenuOpen: {
     width: WIDTH - ENTITY_SELECTOR_TABLET_WIDTH,
   },

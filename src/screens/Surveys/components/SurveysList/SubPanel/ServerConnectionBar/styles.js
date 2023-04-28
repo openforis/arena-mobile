@@ -18,7 +18,6 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   text: {
-    ...baseStyles.textSize.s,
     color: colors.neutral,
   },
   button: {
