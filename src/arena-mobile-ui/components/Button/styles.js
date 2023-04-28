@@ -36,6 +36,9 @@ const styles = ({colors, baseStyles}) =>
     baseText: {
       fontSize: baseStyles.fontSizes.m,
     },
+    bold: {
+      ...baseStyles.textStyle.bold,
+    },
     text: {
       primary: {
         color: colors.primaryContrastText,

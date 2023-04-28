@@ -1,6 +1,7 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {TextBase} from 'react-native';
+
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 
 import styles from './styles';
 

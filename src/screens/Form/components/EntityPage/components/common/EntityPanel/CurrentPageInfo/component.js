@@ -1,8 +1,9 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import {selectors as formSelectors} from 'state/form';
 
@@ -18,11 +19,11 @@ const CurrentPageInfo = () => {
   const {t} = useTranslation();
   return (
     <>
-      <Text style={[styles.headerTextInfo]}>
+      <TextBase size="s" style={styles.headerTextInfo}>
         {t('Form:navigation_panel.current_page')}:
-      </Text>
+      </TextBase>
       <View style={styles.container}>
-        <Text style={[styles.headerText, styles.label]}>{label}</Text>
+        <TextBase customStyle={styles.label}>{label}</TextBase>
         <View style={styles.selectorContainer}>
           <EntityNodeSelector theme="neutral" />
         </View>
