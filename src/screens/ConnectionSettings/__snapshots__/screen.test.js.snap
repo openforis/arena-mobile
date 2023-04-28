@@ -341,6 +341,7 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                     style={
                       {
                         "flex": 1,
+                        "fontSize": 16,
                       }
                     }
                     value=""
@@ -424,6 +425,9 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                         "fontWeight": "bold",
                       },
                       {
+                        "fontSize": 14,
+                      },
+                      {
                         "color": "#FFFFFF",
                       },
                       {},
@@ -435,6 +439,57 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                 </Text>
               </View>
             </View>
+          </View>
+          <View
+            accessibilityState={
+              {
+                "disabled": false,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onClick={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "transparent",
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "marginVertical": 8,
+                "opacity": 1,
+                "padding": 8,
+                "paddingVertical": 12,
+              }
+            }
+          >
+            <Text
+              numberOfLines={1}
+              style={
+                [
+                  {
+                    "fontSize": 14,
+                    "fontWeight": "bold",
+                  },
+                  {
+                    "fontSize": 14,
+                  },
+                  {
+                    "color": "#182112",
+                  },
+                  {},
+                  {},
+                ]
+              }
+            >
+              Version: undefined (undefined)
+            </Text>
           </View>
           <View
             style={
