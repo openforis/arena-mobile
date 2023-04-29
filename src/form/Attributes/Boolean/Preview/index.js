@@ -1,10 +1,11 @@
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import * as colors from 'arena-mobile-ui/colors';
 import Icon from 'arena-mobile-ui/components/Icon';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import baseStyles from 'arena-mobile-ui/styles';
 import {selectors as formSelectors} from 'state/form';
 import {useUpdateNode} from 'state/form/hooks/useNodeFormActions';
@@ -29,13 +30,13 @@ const BooleanOption = ({value, active = false, onPress, nodeDef}) => {
         size={baseStyles.bases.BASE_4}
         color={active ? colors.primaryContrastText : colors.secondary}
       />
-      <Text style={[styles.touchableLabel({active})]}>
+      <TextBase style={[styles.touchableLabel({active})]}>
         {t(
           `Form:nodeDefBoolean.labelValue.${
             nodeDef?.props.labelValue || 'trueFalse'
           }.${value}`,
         )}
-      </Text>
+      </TextBase>
     </TouchableOpacity>
   );
 };

@@ -312,6 +312,8 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                       {
                         "fontSize": 14,
                       },
+                      {},
+                      {},
                     ]
                   }
                 >

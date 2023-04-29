@@ -1,12 +1,13 @@
 import {Objects} from '@openforis/arena-core';
 import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import {Tooltip} from 'react-native-elements';
 import {useSelector} from 'react-redux';
 
 import * as colors from 'arena-mobile-ui/colors';
 import Icon from 'arena-mobile-ui/components/Icon';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelector} from 'state/survey';
 
@@ -70,15 +71,15 @@ const Validation = ({nodes, showValidation = true, absolute = false}) => {
         popover={
           <>
             {flatValidation.errors.map(error => (
-              <Text key={error.key}>
+              <TextBase key={error.key}>
                 {error?.messages?.[language] || t(`Validation:${error.key}`)}
-              </Text>
+              </TextBase>
             ))}
             {flatValidation.warnings.map(warning => (
-              <Text key={warning.key}>
+              <TextBase key={warning.key}>
                 {warning?.messages?.[language] ||
                   t(`Validation:${warning.key}`)}
-              </Text>
+              </TextBase>
             ))}
           </>
         }>

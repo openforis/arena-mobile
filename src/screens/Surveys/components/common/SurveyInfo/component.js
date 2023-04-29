@@ -1,20 +1,20 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import CreatedAndModified from 'arena-mobile-ui/components/CreatedAndModified';
-import baseStyles from 'arena-mobile-ui/styles';
 
 import styles from './styles';
 
 const SurveyInfo = ({survey}) => {
   return (
     <View style={styles.container}>
-      <Text style={[baseStyles.textStyle.bold, baseStyles.textSize.l]}>
+      <TextBase type="bold" size="l">
         {survey.props?.labels?.[survey?.props?.languages?.[0]]}
-      </Text>
-      <Text style={[baseStyles.textStyle.secondaryText, baseStyles.textSize.s]}>
+      </TextBase>
+      <TextBase type="secondaryText" size="s">
         {survey?.props?.name}
-      </Text>
+      </TextBase>
 
       <CreatedAndModified
         dateCreated={survey?.dateCreated}
