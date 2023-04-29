@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     padding: baseStyles.bases.BASE,
   },
   divider: {
-    height: 30,
+    height: baseStyles.bases.BASE_8,
   },
 });
 

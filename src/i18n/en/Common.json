@@ -19,6 +19,7 @@
   "no": "No",
   "true": "True",
   "false": "False",
+  "sort_by": "Sort by",
   "not_supported": "Not supported",
   "required_text": "Please type '{{requiredText}}' to confirm",
   "version": "Version",

@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     ...baseStyles.textSize.l,
     textAlign: 'left',
     color: colors.neutralDark,
-    marginRight: 8,
+    marginRight: baseStyles.bases.BASE_2,
   },
   optionsContainer: {
     padding: baseStyles.bases.BASE_4,

@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-
+import baseStyles from 'arena-mobile-ui/styles';
 import * as colors from 'arena-mobile-ui/colors';
 
 const styles = StyleSheet.create({
@@ -12,10 +12,10 @@ const styles = StyleSheet.create({
 
     borderColor: colors.neutralLight,
     borderBottomWidth: 1,
-    width: 24,
+    width: baseStyles.bases.BASE_6,
   },
   divider: {
-    height: 16,
+    height: baseStyles.bases.BASE_4,
   },
 });
 
