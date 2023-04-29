@@ -1,8 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-import baseStyles from 'arena-mobile-ui/styles';
-
-const styles = ({colors}) =>
+const styles = ({colors, baseStyles}) =>
   StyleSheet.create({
     base: {
       padding: baseStyles.bases.BASE_2,
@@ -34,6 +32,9 @@ const styles = ({colors}) =>
     },
     ghostBlack: {
       backgroundColor: colors.transparent,
+    },
+    baseText: {
+      fontSize: baseStyles.fontSizes.m,
     },
     text: {
       primary: {

@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     paddingVertical: baseStyles.bases.BASE,
+    fontSize: baseStyles.fontSizes.l,
   },
 });
 

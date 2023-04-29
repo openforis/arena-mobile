@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
+    fontSize: baseStyles.fontSizes.l,
   },
 });
 

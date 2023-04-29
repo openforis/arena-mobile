@@ -341,6 +341,7 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                     style={
                       {
                         "flex": 1,
+                        "fontSize": 16,
                       }
                     }
                     value=""
@@ -422,6 +423,9 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                       {
                         "fontSize": 14,
                         "fontWeight": "bold",
+                      },
+                      {
+                        "fontSize": 14,
                       },
                       {
                         "color": "#FFFFFF",

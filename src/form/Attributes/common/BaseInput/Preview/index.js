@@ -11,6 +11,7 @@ const NodeValueRender = ({node, nodeDef}) => {
   return (
     <Text
       style={[
+        styles.text,
         nodeDef.type === NodeDefType.text
           ? styles.textAlignLeft
           : styles.textAlignRight,

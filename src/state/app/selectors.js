@@ -28,6 +28,16 @@ const isDevModeEnabled = createSelector(getUi, ui => ui?.devMode);
 const getShowNames = createSelector(getUi, ui => ui?.showNames);
 const getIsTablet = createSelector(getUi, () => isTablet?.() || false);
 
+const getStyle = createSelector(getUi, ui => ui?.style);
+const getBaseModifier = createSelector(
+  getStyle,
+  style => style?.baseModifier || 1,
+);
+const getFontBaseModifier = createSelector(
+  getStyle,
+  style => style?.fontBaseModifier || 1,
+);
+
 /* Preferences settings */
 
 const getSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields =
@@ -51,6 +61,11 @@ export default {
 
   getShowNames,
 
+  // theme
+  getBaseModifier,
+  getFontBaseModifier,
+  
   /* Preferences settings */
   getSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields,
+
 };

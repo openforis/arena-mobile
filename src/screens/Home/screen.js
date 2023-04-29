@@ -9,13 +9,18 @@ import NavigateToSettings from 'navigation/components/NavigateToSettings';
 import NavigateToSurveys from 'navigation/components/NavigateToSurveys';
 import {selectors as surveySelectors} from 'state/survey';
 
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
+
 import Actions from './components/Actions';
 import Survey from './components/Survey';
 import User from './components/User';
-import styles from './styles';
+import _styles from './styles';
 
 const Home = () => {
   const survey = useSelector(surveySelectors.getSurvey);
+  const styles = useThemedStyles({
+    styles: _styles,
+  });
 
   return (
     <Layout>

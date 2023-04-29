@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
 });
 
 const baseInputStyle = {
-  fontSize: baseStyles.bases.BASE_4,
+  fontSize: baseStyles.fontSizes.l,
   paddingVertical: baseStyles.bases.BASE_2,
   paddingHorizontal: baseStyles.bases.BASE_3,
   borderWidth: 1,
@@ -22,7 +22,7 @@ const baseInputStyle = {
 };
 
 const baseInputStyleNeutral = {
-  fontSize: baseStyles.bases.BASE_4,
+  fontSize: baseStyles.fontSizes.l,
   paddingVertical: baseStyles.bases.BASE_2,
   paddingHorizontal: baseStyles.bases.BASE_3,
   borderWidth: 1,
