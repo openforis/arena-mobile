@@ -63,7 +63,7 @@ const SurveyCard = ({
 
             <Icon
               name={survey?.isInDevice ? 'cellphone' : 'cloud-outline'}
-              size={baseStyles.bases.BASE_6}
+              size="m"
             />
           </View>
         </View>

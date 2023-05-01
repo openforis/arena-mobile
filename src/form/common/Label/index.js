@@ -29,11 +29,7 @@ const Label = ({
       <TouchableOpacity style={styles.container} onLongPress={toggleModal}>
         {nodeDef?.props?.key && (
           <>
-            <Icon
-              name="key-variant"
-              size={baseStyles.bases.BASE_3}
-              color={iconColor}
-            />
+            <Icon name="key-variant" size="xs" color={iconColor} />
             <View style={styles.separator} />
           </>
         )}

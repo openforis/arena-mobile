@@ -35,7 +35,7 @@ const TableOption = ({withIcon = false}) => {
         withIcon ? (
           <Icon
             name={isEntityShowAsTable ? 'format-list-checks' : 'table-large'}
-            size={16}
+            size="s"
             color={colors.secondary}
           />
         ) : null

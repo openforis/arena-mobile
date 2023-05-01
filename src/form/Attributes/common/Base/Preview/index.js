@@ -42,7 +42,7 @@ const BaseDeletePreviewNode = ({node}) => {
     <Button
       onPress={_handleDelete}
       type="ghostBlack"
-      icon={<Icon name="trash-can-outline" size={baseStyles.bases.BASE_4} />}
+      icon={<Icon name="trash-can-outline" size="s" />}
       customContainerStyle={styles.buttonContainer}
     />
   );
@@ -129,7 +129,7 @@ const CreateNode = ({onPress, nodeDef}) => {
   return (
     <Button
       type="ghostBlack"
-      icon={<Icon name="plus" size={baseStyles.bases.BASE_4} />}
+      icon={<Icon name="plus" size="s" />}
       label={t('Form:add_new', {label: ''})}
       customContainerStyle={styles.buttonContainer}
       onPress={onPress}

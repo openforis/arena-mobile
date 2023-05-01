@@ -19,7 +19,7 @@ const LoadFileButton = ({onPress}) => {
     <Button
       onPress={onPress}
       type="secondary"
-      icon={<Icon name="upload" size={baseStyles.bases.BASE_4} />}
+      icon={<Icon name="upload" size="s" />}
       customContainerStyle={styles.buttonContainer}
     />
   );
@@ -30,7 +30,7 @@ const DeleteFileButton = ({onPress}) => {
     <Button
       onPress={onPress}
       type="ghostBlack"
-      icon={<Icon name="trash-can-outline" size={baseStyles.bases.BASE_4} />}
+      icon={<Icon name="trash-can-outline" size="s" />}
       customContainerStyle={styles.buttonContainer}
     />
   );

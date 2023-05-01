@@ -27,7 +27,7 @@ const BooleanOption = ({value, active = false, onPress, nodeDef}) => {
       style={[styles.touchableContainer({active})]}>
       <Icon
         name={active ? 'radiobox-marked' : 'radiobox-blank'}
-        size={baseStyles.bases.BASE_4}
+        size="s"
         color={active ? colors.primaryContrastText : colors.secondary}
       />
       <TextBase style={[styles.touchableLabel({active})]}>

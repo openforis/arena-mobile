@@ -11,11 +11,7 @@ import {alert} from 'arena-mobile-ui/utils';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 
 const TrashIconRed = (
-  <Icon
-    name="trash-can-outline"
-    size={baseStyles.fontSizes.l}
-    color={colors.error}
-  />
+  <Icon name="trash-can-outline" size="m" color={colors.error} />
 );
 import styles from './styles';
 

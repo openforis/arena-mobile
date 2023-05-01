@@ -6,7 +6,7 @@ export const getBaseStyles = ({
   baseModifier = 1,
   fontBaseModifier = 1,
 } = {}) => {
-  // 1, 1.25
+  // 0.75 1 1.25
   const _BASE = 4;
   // 1, 1.25, 1.5
   const _FONT_BASE = 4;
@@ -19,6 +19,15 @@ export const getBaseStyles = ({
     l: FONT_BASE * 4,
     m: FONT_BASE * 3.5,
     s: FONT_BASE * 3,
+    xs: FONT_BASE * 2,
+  };
+
+  const iconSizes = {
+    xxl: FONT_BASE * 10,
+    xl: FONT_BASE * 9,
+    l: FONT_BASE * 8,
+    m: FONT_BASE * 6,
+    s: FONT_BASE * 4,
     xs: FONT_BASE * 2,
   };
 
@@ -120,6 +129,7 @@ export const getBaseStyles = ({
   return {
     textStyle,
     textSize,
+    iconSizes,
     card,
     fontSizes,
     BASE,
