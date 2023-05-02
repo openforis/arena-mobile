@@ -18,7 +18,7 @@ const styles = ({baseStyles, colors}) =>
     },
     input: {
       flex: 1,
-      backgroundColor: colors.white,
+      backgroundColor: colors.backgroundLight,
       padding: baseStyles.bases.BASE_2,
       paddingVertical: baseStyles.bases.BASE_3,
       fontSize: baseStyles.fontSizes.m,

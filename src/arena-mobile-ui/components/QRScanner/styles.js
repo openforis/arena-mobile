@@ -8,8 +8,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     zIndex: 1,
-
-    backgroundColor: colors.white,
+    backgroundColor: colors.backgroundLight,
   },
 
   camera: {

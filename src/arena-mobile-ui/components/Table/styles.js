@@ -46,10 +46,10 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: MIN_WIDTH,
     minHeight: baseStyles.bases.BASE_8,
-    backgroundColor: colors.neutralLightest,
+    backgroundColor: colors.background,
   },
   oddRow: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.backgroundLight,
   },
 });
 

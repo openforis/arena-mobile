@@ -13,7 +13,7 @@ const baseInputStyle = {
 
   color: colors.black,
   paddingRight: baseStyles.bases.BASE_8,
-  backgroundColor: colors.white,
+  backgroundColor: colors.backgroundLight,
 };
 
 const styles = StyleSheet.create({

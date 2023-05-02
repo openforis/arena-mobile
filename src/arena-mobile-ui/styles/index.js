@@ -1,10 +1,11 @@
 import {StyleSheet} from 'react-native';
 
-import * as colors from '../colors';
+import * as _colors from '../colors';
 
 export const getBaseStyles = ({
   baseModifier = 1,
   fontBaseModifier = 1,
+  colors = _colors,
 } = {}) => {
   // 0.75 1 1.25
   const _BASE = 4;
@@ -82,7 +83,7 @@ export const getBaseStyles = ({
     },
     secondaryText: {
       ...textSize.m,
-      color: colors.neutralLight,
+      color: colors.secondaryText,
     },
     bold: {
       ...textSize.m,
@@ -106,7 +107,7 @@ export const getBaseStyles = ({
       borderWidth: 1,
       padding: BASE * 2,
       borderColor: colors.neutralLight,
-      backgroundColor: colors.white,
+      backgroundColor: colors.backgroundLight,
     },
     container: {
       borderRadius: 0,
@@ -114,7 +115,7 @@ export const getBaseStyles = ({
       marginBottom: 0,
       paddingLeft: bases.BASE_2 + bases.BASE_3,
       paddingRight: bases.BASE_3,
-      backgroundColor: colors.white,
+      backgroundColor: colors.backgroundLight,
       borderLeftColor: colors.transparent,
       flexDirection: 'row',
       justifyContent: 'space-between',

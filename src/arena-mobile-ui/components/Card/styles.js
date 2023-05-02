@@ -9,8 +9,8 @@ const styles = ({colors, baseStyles}) =>
       marginBottom: baseStyles.bases.BASE_4,
     },
     primary: {
-      backgroundColor: colors.white,
-      borderColor: colors.neutralLight,
+      backgroundColor: colors.backgroundLight,
+      borderColor: colors.borderColors,
     },
     error: {
       backgroundColor: colors.errorLighter,

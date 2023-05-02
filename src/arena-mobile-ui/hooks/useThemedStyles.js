@@ -7,8 +7,13 @@ import {selectors as appSelectors} from 'state/app';
 import * as colors from '../colors';
 import {getBaseStyles} from '../styles';
 
-const useThemedStyles = ({styles}) => {
+const useColorTheme = () => {
   const colorScheme = useColorScheme();
+  return colorScheme;
+};
+
+const useThemedStyles = ({styles}) => {
+  const colorScheme = useColorTheme();
   const baseModifier = useSelector(appSelectors.getBaseModifier);
   const fontBaseModifier = useSelector(appSelectors.getFontBaseModifier);
 
@@ -20,6 +25,7 @@ const useThemedStyles = ({styles}) => {
       getBaseStyles({
         baseModifier,
         fontBaseModifier,
+        colors: _colors,
       }),
     );
     return styles({colors: _colors, baseStyles: _baseStyles});
