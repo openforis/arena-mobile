@@ -1,9 +1,10 @@
 import {NodeDefs} from '@openforis/arena-core';
 import React, {useMemo, useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
@@ -42,8 +43,8 @@ const Entity = ({nodeDef, isCurrentEntity = false}) => {
       disabled={isDisabled}
       onPress={handleSelect}
       hitSlop={{top: 10, bottom: 10}}>
-      <Text
-        style={[
+      <TextBase
+        customStyle={[
           styles.text,
           isDisabled ? styles.textDisabled : {},
           isCurrentEntity ? styles.active : {},
@@ -52,7 +53,7 @@ const Entity = ({nodeDef, isCurrentEntity = false}) => {
         {NodeDefs.getLayoutRenderTypePerCycle({nodeDef, cycle}) === 'table'
           ? t('Form:nodeDefEntity.layout.table')
           : ''}
-      </Text>
+      </TextBase>
     </TouchableOpacity>
   );
 };

@@ -11,7 +11,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import ToggleShowNames from 'arena-mobile-ui/components/ToggleShowNames';
-import {useNavigateTo} from 'navigation/hooks';
+
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 import {useTranslation} from 'react-i18next';
@@ -21,10 +21,12 @@ import styles from './styles';
 
 const {width: WIDTH} = Dimensions.get('screen');
 
-export const ENTITY_SELECTOR_TABLET_WIDTH = Math.min(400, WIDTH * 0.33);
+export const ENTITY_SELECTOR_TABLET_WIDTH = Math.min(
+  Math.min(WIDTH * 0.9, 400),
+  WIDTH * 0.5,
+);
 
 const EntitySelector = () => {
-  const {navigateTo, routes} = useNavigateTo();
   const {t} = useTranslation();
 
   const dispatch = useDispatch();
@@ -60,10 +62,9 @@ const EntitySelector = () => {
     dispatch(formActions.closeEntitySelector());
   }, [dispatch]);
 
-  const handleNavigateToRecordList = useCallback(() => {
-    handleClose();
-    navigateTo({route: routes.RECORDS, replace: true})();
-  }, [handleClose, navigateTo]);
+  const handleLeave = useCallback(() => {
+    dispatch(formActions.leaveForm());
+  }, [dispatch]);
 
   return (
     <>
@@ -75,7 +76,7 @@ const EntitySelector = () => {
           <Button
             label={t('Form:leave_form_to_record_list_cta')}
             type="ghost"
-            onPress={handleNavigateToRecordList}
+            onPress={handleLeave}
           />
           <ToggleShowNames />
         </View>

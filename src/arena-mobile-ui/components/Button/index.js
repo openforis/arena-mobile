@@ -1,7 +1,6 @@
 import React from 'react';
 import {TouchableOpacity, Text} from 'react-native';
 
-import baseStyles from 'arena-mobile-ui/styles';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import _styles from './styles';
 
@@ -34,7 +33,7 @@ const Button = ({
       <Text
         numberOfLines={allowMultipleLines ? null : 1}
         style={[
-          bold && baseStyles.textStyle.bold,
+          bold && styles.bold,
           styles.baseText,
           styles.text[type],
           (disabled && styles.disabled.text[type]) || {},

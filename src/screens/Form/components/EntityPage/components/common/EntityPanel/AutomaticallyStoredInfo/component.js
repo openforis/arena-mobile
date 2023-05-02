@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect, useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
 
 import styles from './styles';
@@ -36,7 +37,9 @@ const AutomaticallyStoredInfo = () => {
 
   return (
     <View style={styles.container}>
-      <Text>{t('Form:navigation_panel.automatically_stored_info')}</Text>
+      <TextBase type="secondaryText" size="s" customStyle={styles.text}>
+        {t('Form:navigation_panel.automatically_stored_info')}
+      </TextBase>
       <TouchableIcon iconName="close" onPress={handleHide} />
     </View>
   );

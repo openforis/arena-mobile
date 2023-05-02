@@ -1,8 +1,9 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import Button from 'arena-mobile-ui/components/Button';
 import {useNavigateTo} from 'navigation/hooks';
 import {selectors as appSelectors} from 'state/app';
@@ -20,13 +21,13 @@ const SubPanel = ({errorRemoteServer}) => {
         styles.container,
         errorRemoteServer && styles.containerWithError,
       ]}>
-      <Text style={styles.text}>
+      <TextBase customStyle={styles.text} size="s">
         {errorRemoteServer
           ? t('Surveys:subpanel.server_connection_bar.error.info')
           : t('Surveys:subpanel.server_connection_bar.success.info', {
               serverUrl: currentServerUrl,
             })}
-      </Text>
+      </TextBase>
       {errorRemoteServer && (
         <Button
           label={t('Surveys:subpanel.server_connection_bar.error.cta_label')}

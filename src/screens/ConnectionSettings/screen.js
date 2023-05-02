@@ -2,7 +2,6 @@ import {Objects} from '@openforis/arena-core';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
-  Text,
   View,
   KeyboardAvoidingView,
   Platform,
@@ -21,7 +20,9 @@ import QRScanner, {
   useQRScanner,
   QRScannerButton,
 } from 'arena-mobile-ui/components/QRScanner';
-import baseStyles from 'arena-mobile-ui/styles';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import TextHeader from 'arena-mobile-ui/components/Texts/TextHeader';
+import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
 import {alert} from 'arena-mobile-ui/utils';
 import {selectors as appSelectors, actions as appActions} from 'state/app';
 import {selectors as userSelectors} from 'state/user';
@@ -125,9 +126,7 @@ const ConnectionSettings = () => {
             RightComponent={
               SHOW_QR_HELPER && <QRScannerButton handleShow={handleShow} />
             }>
-            <Text style={[baseStyles.textStyle.title]}>
-              {t('ConnectionSettings:title')}
-            </Text>
+            <TextTitle>{t('ConnectionSettings:title')}</TextTitle>
           </Header>
         )}
         <QRScanner
@@ -143,9 +142,9 @@ const ConnectionSettings = () => {
           <ScrollView>
             <View style={[styles.formContainer]}>
               <View style={[styles.formItem]}>
-                <Text style={[baseStyles.textStyle.header]}>
+                <TextHeader>
                   {t('ConnectionSettings:server_config_title')}
-                </Text>
+                </TextHeader>
 
                 <Input
                   title={t('ConnectionSettings:server_config_fields.address')}
@@ -157,20 +156,20 @@ const ConnectionSettings = () => {
 
                 {serverError && (
                   <Card type="error">
-                    <Text style={[baseStyles.textStyle.bold]}>
+                    <TextBase type="bold">
                       {t('ConnectionSettings:server_error.title')}
-                    </Text>
-                    <Text style={[baseStyles.textStyle.text]}>
+                    </TextBase>
+                    <TextBase>
                       {t('ConnectionSettings:server_error.info')}
-                    </Text>
+                    </TextBase>
                   </Card>
                 )}
               </View>
 
               <View style={[styles.formItem]}>
-                <Text style={[baseStyles.textStyle.header]}>
+                <TextHeader>
                   {t('ConnectionSettings:access_info_title')}
-                </Text>
+                </TextHeader>
                 <Input
                   title={t('ConnectionSettings:access_info_fields.username')}
                   onChangeText={onChangeText('username')}
@@ -185,12 +184,12 @@ const ConnectionSettings = () => {
               </View>
               {credentialsError && (
                 <Card type="error">
-                  <Text style={[baseStyles.textStyle.bold]}>
+                  <TextBase type="bold">
                     {t('ConnectionSettings:credentials_error.title')}
-                  </Text>
-                  <Text style={[baseStyles.textStyle.text]}>
+                  </TextBase>
+                  <TextBase>
                     {t('ConnectionSettings:credentials_error.info')}
-                  </Text>
+                  </TextBase>
                 </Card>
               )}
 
@@ -215,10 +214,10 @@ const ConnectionSettings = () => {
 
               {user?.name && (
                 <View style={styles.loggedInAs}>
-                  <Text style={baseStyles.textStyle.secondaryText}>
+                  <TextBase type="secondaryText">
                     {t('ConnectionSettings:connected_as')}
-                  </Text>
-                  <Text style={baseStyles.textStyle.text}>{user?.email}</Text>
+                  </TextBase>
+                  <TextBase>({user?.email})</TextBase>
                   <Button
                     type="deleteGhost"
                     onPress={handleLogout}

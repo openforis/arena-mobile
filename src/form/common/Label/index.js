@@ -1,7 +1,8 @@
 import React, {useCallback, useState} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 
 import Icon from 'arena-mobile-ui/components/Icon';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import baseStyles from 'arena-mobile-ui/styles';
 
@@ -36,11 +37,12 @@ const Label = ({
             <View style={styles.separator} />
           </>
         )}
-        <Text
-          style={[styles.textStyle, customStyles.textStyle || {}]}
+        <TextBase
+          size="l"
+          customStyle={[styles.textStyle, customStyles.textStyle || {}]}
           numberOfLines={numberOfLines}>
           {label}
-        </Text>
+        </TextBase>
       </TouchableOpacity>
       <DetailModal
         nodeDef={nodeDef}
