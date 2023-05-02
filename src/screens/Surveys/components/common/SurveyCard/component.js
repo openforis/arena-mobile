@@ -8,10 +8,11 @@ import CurrentItemLabel from 'arena-mobile-ui/components/CurrentItemLabel';
 import Icon from 'arena-mobile-ui/components/Icon';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import TouchableCard from 'arena-mobile-ui/components/TouchableCard';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as appSelectors} from 'state/app';
 
 import Actions from './Actions';
-import styles from './styles';
+import _styles from './styles';
 import SurveyStatus from './SurveyStatus';
 
 const SurveyCard = ({
@@ -23,6 +24,7 @@ const SurveyCard = ({
 }) => {
   const {t} = useTranslation();
   const currentServerUrl = useSelector(appSelectors.getServerUrl);
+  const styles = useThemedStyles({styles: _styles});
 
   return (
     <TouchableCard

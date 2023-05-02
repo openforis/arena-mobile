@@ -13,7 +13,7 @@ const Sorter = ({sortCriteriaIndex, setSortCriteriaIndex}) => {
   const {t} = useTranslation();
   return (
     <View style={styles.container}>
-      <TextBase style={styles.text}>{t('Common:sort_by')}</TextBase>
+      <TextBase customStyle={styles.text}>{t('Common:sort_by')}</TextBase>
 
       <TouchableIcon
         iconName={SORTERS[sortCriteriaIndex].icon}

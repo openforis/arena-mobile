@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     padding: baseStyles.bases.BASE_2,
     borderBottomColor: colors.neutralLighter,
-    backgroundColor: colors.white,
+    backgroundColor: colors.backgroundLight,
     marginBottom: baseStyles.bases.BASE_4,
   },
 });
