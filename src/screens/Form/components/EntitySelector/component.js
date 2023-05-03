@@ -63,7 +63,7 @@ const EntitySelector = () => {
   }, [dispatch]);
 
   const handleLeave = useCallback(() => {
-    dispatch(formActions.leaveForm());
+    dispatch(formActions.leaveForm?.());
   }, [dispatch]);
 
   return (

@@ -5,12 +5,9 @@ import {useSelector} from 'react-redux';
 
 import CreatedAndModified from 'arena-mobile-ui/components/CreatedAndModified';
 import CurrentItemLabel from 'arena-mobile-ui/components/CurrentItemLabel';
-import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import Icon from 'arena-mobile-ui/components/Icon';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import TouchableCard from 'arena-mobile-ui/components/TouchableCard';
-
-import baseStyles from 'arena-mobile-ui/styles';
-
 import {selectors as appSelectors} from 'state/app';
 
 import Actions from './Actions';
@@ -63,7 +60,7 @@ const SurveyCard = ({
 
             <Icon
               name={survey?.isInDevice ? 'cellphone' : 'cloud-outline'}
-              size={baseStyles.bases.BASE_6}
+              size="m"
             />
           </View>
         </View>

@@ -1,12 +1,13 @@
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
+import {View, ScrollView, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Header from 'arena-mobile-ui/components/Header';
 import Icon from 'arena-mobile-ui/components/Icon';
 import Layout from 'arena-mobile-ui/components/Layout';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import baseStyles from 'arena-mobile-ui/styles';
 import {useNavigateTo} from 'navigation/hooks';
 import {selectors as appSelectors} from 'state/app';
@@ -41,7 +42,7 @@ const SectionWithTitle = ({title, children, subSection = false}) => {
   return (
     <View style={[styles.container, (subSection && {marginTop: 0}: {})]}>
       <View style={{paddingVertical: baseStyles.bases.BASE_2}}>
-        <Text style={[baseStyles.textStyle.secondaryText]}>{title}</Text>
+        <TextBase type="secondaryText">{title}</TextBase>
       </View>
       {children}
     </View>
@@ -59,13 +60,13 @@ const SectionCard = ({position = 'middle', onPress, title, iconName}) => {
           position === 'only' && styles.sectionCardContainerOnly,
         ]}>
         <View style={styles.iconContainer}>
-          <Icon name={iconName} size={baseStyles.bases.BASE_4} />
+          <Icon name={iconName} size="s" />
         </View>
         <View style={styles.sectionCardTextContainer}>
-          <Text style={[baseStyles.textStyle.text]}>{title}</Text>
+          <TextBase>{title}</TextBase>
         </View>
         <View style={styles.iconContainer}>
-          <Icon name="chevron-right" size={baseStyles.bases.BASE_8} />
+          <Icon name="chevron-right" size="l" />
         </View>
       </View>
     </TouchableOpacity>
@@ -89,18 +90,17 @@ const ConnectionSettingsSection = () => {
         <TouchableOpacity onPress={handleNavigateToConnectionSettings}>
           <View style={styles.connectionSettingsContainer}>
             <View style={styles.connectionSettingsContainerIcon}>
-              <Text style={styles.connectionSettingsContainerIconText}>
+              <TextBase
+                customStyle={styles.connectionSettingsContainerIconText}>
                 {_extractInitials(user?.email)}
-              </Text>
+              </TextBase>
             </View>
             <View style={styles.connectionSettingsContainerText}>
-              <Text style={[baseStyles.textStyle.text]}>{user?.email}</Text>
-              <Text style={[baseStyles.textStyle.secondaryText]}>
-                {serverUrl}
-              </Text>
+              <TextBase>{user?.email}</TextBase>
+              <TextBase type="secondaryText">{serverUrl}</TextBase>
             </View>
             <View style={styles.iconContainer}>
-              <Icon name="chevron-right" size={baseStyles.bases.BASE_8} />
+              <Icon name="chevron-right" size="l" />
             </View>
           </View>
         </TouchableOpacity>
@@ -130,18 +130,16 @@ const Settings = () => {
     <Layout bottomStyle="background" topStyle="primary">
       <>
         <Header hasBackComponent>
-          <Text style={[baseStyles.textStyle.title]}>
-            {t('Settings:title')}
-          </Text>
+          <TextBase type="title">{t('Settings:title')}</TextBase>
         </Header>
 
         <ScrollView>
           <ConnectionSettingsSection />
           {user?.name ? (
             <>
-              <Text style={{paddingLeft: 16}}>
+              <TextBase customStyle={styles.textNameTitle}>
                 {t('Settings:survey.title')}
-              </Text>
+              </TextBase>
               <SectionWithTitle
                 title={t('Settings:survey.taxonomies.title')}
                 subSection>

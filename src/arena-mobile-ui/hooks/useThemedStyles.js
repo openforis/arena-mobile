@@ -1,6 +1,5 @@
 import {useMemo} from 'react';
 import {useColorScheme} from 'react-native';
-
 import {useSelector} from 'react-redux';
 
 import {selectors as appSelectors} from 'state/app';
@@ -24,7 +23,7 @@ const useThemedStyles = ({styles}) => {
       }),
     );
     return styles({colors: _colors, baseStyles: _baseStyles});
-  }, [colorScheme, styles]);
+  }, [colorScheme, styles, fontBaseModifier, baseModifier]);
 };
 
 export default useThemedStyles;

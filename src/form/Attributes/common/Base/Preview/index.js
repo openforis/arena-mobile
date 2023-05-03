@@ -7,7 +7,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {defaultCycle} from 'arena/config';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
-import baseStyles from 'arena-mobile-ui/styles';
 import AttributeHeader from 'form/common/Header';
 import Validation from 'form/common/Validation';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
@@ -42,7 +41,7 @@ const BaseDeletePreviewNode = ({node}) => {
     <Button
       onPress={_handleDelete}
       type="ghostBlack"
-      icon={<Icon name="trash-can-outline" size={baseStyles.bases.BASE_4} />}
+      icon={<Icon name="trash-can-outline" size="s" />}
       customContainerStyle={styles.buttonContainer}
     />
   );
@@ -129,7 +128,7 @@ const CreateNode = ({onPress, nodeDef}) => {
   return (
     <Button
       type="ghostBlack"
-      icon={<Icon name="plus" size={baseStyles.bases.BASE_4} />}
+      icon={<Icon name="plus" size="s" />}
       label={t('Form:add_new', {label: ''})}
       customContainerStyle={styles.buttonContainer}
       onPress={onPress}

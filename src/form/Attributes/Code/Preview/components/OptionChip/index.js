@@ -23,7 +23,7 @@ const OptionChip = ({
         <TouchableIcon
           onPress={onPressIcon}
           hitSlop={baseStyles.bases.BASE_6}
-          size={baseStyles.bases.BASE_4}
+          size="s"
           customStyle={[styles.icon({isActive})]}
           iconName={iconName}
         />
