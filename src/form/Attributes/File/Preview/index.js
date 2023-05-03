@@ -5,14 +5,14 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
-import baseStyles from 'arena-mobile-ui/styles';
 import {BasePreviewContainer} from 'form/Attributes/common/Base/Preview';
-import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as filesSelectors} from 'state/files';
+import {selectors as formSelectors, actions as formActions} from 'state/form';
+
+import {FileImage} from '../components/Preview/component';
 import {useFile, useFilePickerModal} from '../hooks';
 
 import styles from './styles';
-import {FileImage} from '../components/Preview/component';
 
 const LoadFileButton = ({onPress}) => {
   return (

@@ -4,7 +4,6 @@ import {View, TouchableOpacity} from 'react-native';
 import Icon from 'arena-mobile-ui/components/Icon';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
-import baseStyles from 'arena-mobile-ui/styles';
 
 import DetailModal from './DetailModal';
 import styles from './styles';

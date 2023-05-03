@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
     marginVertical: baseStyles.bases.BASE_6,
   },
   example: {
-    ...baseStyles.textStyle.header,
     textAlign: 'center',
   },
   optionContainer: {

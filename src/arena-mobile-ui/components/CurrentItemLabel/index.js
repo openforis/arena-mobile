@@ -3,6 +3,7 @@ import {View} from 'react-native';
 
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
+
 import _styles from './styles';
 
 const CurrentItemLabel = ({label}) => {

@@ -13,6 +13,9 @@ const styles = StyleSheet.create({
   dividers: {
     height: 100,
   },
+  textNameTitle: {
+    paddingLeft: 16,
+  },
   connectionSettingsContainer: {
     backgroundColor: 'white',
     ...baseStyles.card.basicCard,

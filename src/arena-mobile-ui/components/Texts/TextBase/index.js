@@ -2,6 +2,7 @@ import * as React from 'react';
 import {Text} from 'react-native';
 
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
+
 import _styles from '../styles';
 
 const TextBase = ({

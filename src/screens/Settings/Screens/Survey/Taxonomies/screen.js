@@ -1,31 +1,28 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useState, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
+import {View, ScrollView, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {
   getTaxonItemLabel,
-
   taxonomyVisibleFieldsOptions,
   exampleTaxon,
   DEFAULT_TAXONOMY_FIELDS,
-
 } from 'arena/taxonomy';
 import Button from 'arena-mobile-ui/components/Button';
 import Header from 'arena-mobile-ui/components/Header';
 import Icon from 'arena-mobile-ui/components/Icon';
 import Layout from 'arena-mobile-ui/components/Layout';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import baseStyles from 'arena-mobile-ui/styles';
 import {selectors as appSelectors, actions as appActions} from 'state/app';
 
 import styles from './styles';
 
 const SettingsSurveyTaxonomies = () => {
-
   const [taxonomyVisibleFieldsKey, setTaxonomyVisibleFieldsKey] = useState(
     DEFAULT_TAXONOMY_FIELDS,
-
   );
 
   const defaultVisibleFields = useSelector(
@@ -34,10 +31,8 @@ const SettingsSurveyTaxonomies = () => {
 
   useEffect(() => {
     if (defaultVisibleFields) {
-
       setTaxonomyVisibleFieldsKey(
         defaultVisibleFields.join('.') || DEFAULT_TAXONOMY_FIELDS,
-
       );
     }
   }, [defaultVisibleFields]);
@@ -49,31 +44,29 @@ const SettingsSurveyTaxonomies = () => {
   const handleSave = useCallback(() => {
     dispatch(
       appActions.setSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields({
-
         defaultVisibleFields: taxonomyVisibleFieldsKey.split('.'),
       }),
     );
     navigation.goBack();
   }, [dispatch, navigation, taxonomyVisibleFieldsKey]);
 
-
   return (
     <Layout bottomStyle="background" topStyle="primary">
       <>
         <Header hasBackComponent>
-          <Text style={[baseStyles.textStyle.title]}>
+          <TextBase type="title">
             {t('Settings:survey.taxonomies.title')}
-          </Text>
+          </TextBase>
         </Header>
         <ScrollView>
           <View style={styles.container}>
-            <Text style={baseStyles.textStyle.header}>
+            <TextBase type="header">
               {t('Settings:survey.taxonomies.screen.header')}
-            </Text>
-            <Text style={baseStyles.textStyle.info}>
+            </TextBase>
 
+            <TextBase>
               {t('Settings:survey.taxonomies.screen.description')}
-            </Text>
+            </TextBase>
 
             {Object.entries(taxonomyVisibleFieldsOptions).map(
               (option, index) => {
@@ -97,10 +90,10 @@ const SettingsSurveyTaxonomies = () => {
                           ? 'checkbox-marked'
                           : 'checkbox-blank-outline'
                       }
-                      size={baseStyles.bases.BASE_4}
+                      size="s"
                     />
-                    <Text
-                      style={[
+                    <TextBase
+                      customStyle={[
                         styles.optionText,
                         isSelected && styles.optionTextSelected,
                       ]}>
@@ -111,21 +104,20 @@ const SettingsSurveyTaxonomies = () => {
                           );
                         })
                         .join(', ')}
-                    </Text>
+                    </TextBase>
                   </TouchableOpacity>
                 );
               },
             )}
-
           </View>
           <View style={styles.exampleContainer}>
-            <Text style={styles.example}>
+            <TextBase type="header" customStyle={styles.exampleTitle}>
               {getTaxonItemLabel({
                 item: exampleTaxon,
                 taxonomyVisibleFields:
                   taxonomyVisibleFieldsOptions[taxonomyVisibleFieldsKey],
               })}
-            </Text>
+            </TextBase>
           </View>
 
           <View style={styles.buttonsContainer}>

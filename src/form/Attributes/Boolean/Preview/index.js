@@ -6,7 +6,6 @@ import {useSelector} from 'react-redux';
 import * as colors from 'arena-mobile-ui/colors';
 import Icon from 'arena-mobile-ui/components/Icon';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
-import baseStyles from 'arena-mobile-ui/styles';
 import {selectors as formSelectors} from 'state/form';
 import {useUpdateNode} from 'state/form/hooks/useNodeFormActions';
 
