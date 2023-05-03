@@ -15,7 +15,6 @@ import Header from 'arena-mobile-ui/components/Header';
 import Icon from 'arena-mobile-ui/components/Icon';
 import Layout from 'arena-mobile-ui/components/Layout';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
-import baseStyles from 'arena-mobile-ui/styles';
 import {selectors as appSelectors, actions as appActions} from 'state/app';
 
 import styles from './styles';
