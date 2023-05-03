@@ -7,7 +7,13 @@ import _styles from './styles';
 
 const Icon = ({name, size = 'm', color = null}) => {
   const styles = useThemedStyles({styles: _styles});
-  return <Icons name={name} size={styles.sizes[size]} color={color} />;
+  return (
+    <Icons
+      name={name}
+      size={styles.sizes[size]}
+      color={color || styles.colors.primaryText}
+    />
+  );
 };
 
 export default Icon;

@@ -13,6 +13,7 @@ const TextBase = ({
   ...props
 }) => {
   const styles = useThemedStyles({styles: _styles});
+
   return (
     <Text
       style={[styles[type] || {}, styles.sizes[size] || {}, customStyle]}

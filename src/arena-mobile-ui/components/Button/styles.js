@@ -17,7 +17,7 @@ const styles = ({colors, baseStyles}) =>
       backgroundColor: colors.neutralLightest,
     },
     secondary: {
-      backgroundColor: colors.white,
+      backgroundColor: colors.backgroundLight,
       borderColor: colors.neutralDarkest,
       borderWidth: 1,
     },

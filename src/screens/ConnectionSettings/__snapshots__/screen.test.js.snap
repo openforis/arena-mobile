@@ -5,7 +5,7 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
   style={
     [
       {
-        "backgroundColor": "#84AC67",
+        "backgroundColor": "#EDEDED",
         "flex": 1,
       },
       {
@@ -22,7 +22,7 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
     style={
       [
         {
-          "backgroundColor": "#84AC67",
+          "backgroundColor": "#EDEDED",
           "flex": 1,
         },
         {
@@ -87,7 +87,7 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
           }
         >
           <MockedMaterialCommunityIcons
-            color={null}
+            color="#182112"
             name="chevron-left"
             size={24}
           />
@@ -388,7 +388,7 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                     }
                   >
                     <MockedMaterialCommunityIcons
-                      color={null}
+                      color="#182112"
                       name="eye-off-outline"
                       size={24}
                     />

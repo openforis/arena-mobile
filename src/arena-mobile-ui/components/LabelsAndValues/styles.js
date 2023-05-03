@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 
   color: {
     info: {
-      color: colors.secondaryLighter,
+      color: colors.secondaryTextLight,
     },
     alert: {
       color: colors.alert,

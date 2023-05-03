@@ -1,10 +1,12 @@
 import React from 'react';
 import {View} from 'react-native';
 
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
+
 import Sorter from '../../../components/Sorter';
 
 import ServerConnectionBar from './ServerConnectionBar';
-import styles from './styles';
+import _styles from './styles';
 import SurveysOriginSelector from './SurveysOriginSelector';
 
 const SubPanel = ({
@@ -14,6 +16,7 @@ const SubPanel = ({
   sortCriteriaIndex,
   errorRemoteServer,
 }) => {
+  const styles = useThemedStyles({styles: _styles});
   return (
     <>
       {surveysOrigin === 'remote' && (

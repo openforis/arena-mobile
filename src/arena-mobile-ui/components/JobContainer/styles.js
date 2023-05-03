@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1,
 
-    backgroundColor: colors.white,
+    backgroundColor: colors.backgroundLight,
 
     width: width - (baseStyles.bases.BASE_3 * 2 - 2),
     left: baseStyles.bases.BASE_3,

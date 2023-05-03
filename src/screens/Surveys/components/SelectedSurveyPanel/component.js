@@ -1,12 +1,14 @@
 import React from 'react';
 import {View} from 'react-native';
 
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import LocalPanel from './components/LocalPanel';
 import RemotePanel from './components/RemotePanel';
 import SurveySelected from './components/SurveySelected';
-import styles from './styles';
+import _styles from './styles';
 
 const SelectedSurveyPanel = ({survey, unSelect, surveysOrigin}) => {
+  const styles = useThemedStyles({styles: _styles});
   return (
     <>
       <View style={[styles.overlay]} pointerEvents="none" />
