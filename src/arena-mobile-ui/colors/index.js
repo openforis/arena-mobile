@@ -147,5 +147,5 @@ const DarkTheme = {
 
 export const themes = {
   light: LightTheme,
-  dark: DarkTheme, //DarkTheme,
+  dark: DarkTheme,
 };
