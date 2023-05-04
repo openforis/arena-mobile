@@ -1,6 +1,7 @@
-import {Objects} from '@openforis/arena-core';
+import {Objects, NodeDefs} from '@openforis/arena-core';
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
+import {isTablet} from 'react-native-device-info';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {defaultCycle} from 'arena/config';
@@ -9,8 +10,6 @@ import Icon from 'arena-mobile-ui/components/Icon';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
-
-import {isTablet} from 'react-native-device-info';
 
 import styles from './styles';
 
@@ -34,6 +33,26 @@ const NavigationButton = ({nodeDef, align = 'right'}) => {
       }),
     );
   }, [nodeDef, dispatch]);
+
+  const applicable = useSelector(state =>
+    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  );
+  const cycle = useSelector(surveySelectors.getSurveyCycle);
+
+  const hierarchy = useSelector(formSelectors.getBreadCrumbs);
+  const parentNodeInHierarchy = hierarchy.find(
+    _node => _node.nodeDefUuid === nodeDef.parentUuid,
+  );
+
+  if (
+    (!applicable ||
+      Object.keys(
+        parentNodeInHierarchy?.meta?.childApplicability || {},
+      ).includes(nodeDef.uuid)) &&
+    NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef)
+  ) {
+    return <></>;
+  }
 
   return (
     <Button
@@ -118,7 +137,9 @@ const Next = ({parent}) => {
     !Objects.isEmpty(childrenIndex) &&
     (Objects.isEmpty(parent) || parent === false || childrenIndex?.length > 0)
   ) {
-    return <NavigationButton nodeDef={survey.nodeDefs[childrenIndex[0]]} />;
+    const nodeDef = survey.nodeDefs[childrenIndex[0]];
+
+    return <NavigationButton nodeDef={nodeDef} />;
   }
 
   const sibilings = getNodeDefIndex({survey, nodeDef: parent, cycle});
@@ -140,22 +161,16 @@ const Next = ({parent}) => {
 
     const parentIndex = parentSiblings?.indexOf(parent.uuid);
     if (parentIndex >= 0 && parentIndex + 1 < parentSiblings?.length) {
-      return (
-        <NavigationButton
-          nodeDef={survey.nodeDefs[parentSiblings?.[parentIndex + 1]]}
-        />
-      );
+      const nodeDef = survey.nodeDefs[parentSiblings?.[parentIndex + 1]];
+      return <NavigationButton nodeDef={nodeDef} />;
     }
 
     return <View />;
   }
 
   if (currentIndex < sibilings.length) {
-    return (
-      <NavigationButton
-        nodeDef={survey.nodeDefs[sibilings[currentIndex + 1]]}
-      />
-    );
+    const nodeDef = survey.nodeDefs[sibilings[currentIndex + 1]];
+    return <NavigationButton nodeDef={nodeDef} />;
   }
 
   return <View />;
