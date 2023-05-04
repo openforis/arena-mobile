@@ -17,8 +17,6 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
   },
   connectionSettingsContainer: {
-    backgroundColor: 'white',
-    ...baseStyles.card.basicCard,
     borderWidth: 0,
     flexDirection: 'row',
     padding: baseStyles.bases.BASE_4,
@@ -36,6 +34,7 @@ const styles = StyleSheet.create({
   connectionSettingsContainerIconText: {
     fontSize: baseStyles.bases.BASE_6,
     fontWeight: 'bold',
+    color: colors.black,
   },
   connectionSettingsContainerText: {
     paddingHorizontal: baseStyles.bases.BASE_4,
@@ -46,8 +45,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sectionCardContainer: {
-    backgroundColor: 'white',
-    ...baseStyles.card.basicCard,
     borderWidth: 0,
     flexDirection: 'row',
     padding: baseStyles.bases.BASE_4,

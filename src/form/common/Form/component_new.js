@@ -5,7 +5,6 @@ import Modal from 'react-native-modal';
 import {useSelector} from 'react-redux';
 
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
-
 import BooleanForm from 'form/Attributes/Boolean/Form';
 import CodeForm from 'form/Attributes/Code/Form';
 import BaseForm from 'form/Attributes/common/Base/Form';

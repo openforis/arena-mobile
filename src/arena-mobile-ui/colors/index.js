@@ -139,6 +139,8 @@ const DarkTheme = {
   primaryTextLight: primaryLighter,
   secondaryText: secondaryLightest,
   secondaryTextLight: secondaryLightest,
+  primaryContrastText: grey900,
+  primaryContrastTextLight: grey700,
   // -- backgrounds
   background: black,
   backgroundLight: neutralDark,

@@ -6,18 +6,19 @@ import {useSelector} from 'react-redux';
 import Header from 'arena-mobile-ui/components/Header';
 import Layout from 'arena-mobile-ui/components/Layout';
 import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import NavigateToHome from 'navigation/components/NavigateToHome';
 import formSelectors from 'state/form/selectors';
 
 import ListRecords from './components/ListRecords';
 import SelectedRecordPanel from './components/SelectedRecordPanel';
-import styles from './styles';
+import _styles from './styles';
 
 const Records = () => {
   const {t} = useTranslation();
   const currentRecord = useSelector(formSelectors.getRecord);
   const [selectedRecord, setSelectedRecord] = useState(null);
-
+  const styles = useThemedStyles({styles: _styles});
   const resetSelectedRecord = useCallback(() => {
     setSelectedRecord(false);
   }, []);

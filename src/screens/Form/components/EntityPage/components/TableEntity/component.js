@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import * as colors from 'arena-mobile-ui/colors';
 import TableComponent from 'arena-mobile-ui/components/Table';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import Label from 'form/common/Label';
 import {actions as formActions, selectors as formSelectors} from 'state/form';
 

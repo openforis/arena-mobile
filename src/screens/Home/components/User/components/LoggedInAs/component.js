@@ -1,12 +1,10 @@
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
-
 import {useSelector} from 'react-redux';
 
 import Card from 'arena-mobile-ui/components/Card';
 import LabelsAndValues from 'arena-mobile-ui/components/LabelsAndValues';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
-
 import {selectors as surveySelectors} from 'state/survey';
 import {selectors as userSelectors} from 'state/user';
 

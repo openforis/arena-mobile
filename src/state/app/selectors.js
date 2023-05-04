@@ -64,8 +64,7 @@ export default {
   // theme
   getBaseModifier,
   getFontBaseModifier,
-  
+
   /* Preferences settings */
   getSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields,
-
 };

@@ -41,7 +41,7 @@ const FormsByType = {
   [NodeDefType.taxon]: TaxonForm,
 };
 
-const Spacer = () => <View style={styles.spacer} />;
+const Spacer = () => <View style={_styles.spacer} />;
 
 const RenderForm = ({nodeDef}) => {
   if (!nodeDef) {
@@ -118,7 +118,7 @@ const AttributeFormWithModal = () => {
             <Spacer />
             <ScrollView
               keyboardShouldPersistTaps="handled"
-              style={[styles.scroll]}>
+              style={[styles.scroll, styles.scrollContainer]}>
               <RenderForm nodeDef={nodeDef} />
             </ScrollView>
           </KeyboardAvoidingView>

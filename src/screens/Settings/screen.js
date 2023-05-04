@@ -4,6 +4,7 @@ import {View, ScrollView, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
+import Card from 'arena-mobile-ui/components/Card';
 import Header from 'arena-mobile-ui/components/Header';
 import Icon from 'arena-mobile-ui/components/Icon';
 import Layout from 'arena-mobile-ui/components/Layout';
@@ -52,8 +53,8 @@ const SectionWithTitle = ({title, children, subSection = false}) => {
 const SectionCard = ({position = 'middle', onPress, title, iconName}) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <View
-        style={[
+      <Card
+        customStyles={[
           styles.sectionCardContainer,
           position === 'first' && styles.sectionCardContainerFirst,
           position === 'last' && styles.sectionCardContainerLast,
@@ -68,7 +69,7 @@ const SectionCard = ({position = 'middle', onPress, title, iconName}) => {
         <View style={styles.iconContainer}>
           <Icon name="chevron-right" size="l" />
         </View>
-      </View>
+      </Card>
     </TouchableOpacity>
   );
 };
@@ -88,7 +89,7 @@ const ConnectionSettingsSection = () => {
     <SectionWithTitle title={t('ConnectionSettings:title')}>
       {user?.name ? (
         <TouchableOpacity onPress={handleNavigateToConnectionSettings}>
-          <View style={styles.connectionSettingsContainer}>
+          <Card customStyles={styles.connectionSettingsContainer}>
             <View style={styles.connectionSettingsContainerIcon}>
               <TextBase
                 customStyle={styles.connectionSettingsContainerIconText}>
@@ -102,7 +103,7 @@ const ConnectionSettingsSection = () => {
             <View style={styles.iconContainer}>
               <Icon name="chevron-right" size="l" />
             </View>
-          </View>
+          </Card>
         </TouchableOpacity>
       ) : (
         <Button

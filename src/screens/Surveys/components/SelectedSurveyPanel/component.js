@@ -2,6 +2,7 @@ import React from 'react';
 import {View} from 'react-native';
 
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
+
 import LocalPanel from './components/LocalPanel';
 import RemotePanel from './components/RemotePanel';
 import SurveySelected from './components/SurveySelected';

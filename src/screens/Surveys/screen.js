@@ -7,7 +7,6 @@ import Header from 'arena-mobile-ui/components/Header';
 import Layout from 'arena-mobile-ui/components/Layout';
 import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
-
 import surveysSector from 'state/surveys/selectors';
 
 import SelectedSurveyPanel from './components/SelectedSurveyPanel';

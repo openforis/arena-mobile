@@ -15,11 +15,13 @@ import Header from 'arena-mobile-ui/components/Header';
 import Icon from 'arena-mobile-ui/components/Icon';
 import Layout from 'arena-mobile-ui/components/Layout';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as appSelectors, actions as appActions} from 'state/app';
 
-import styles from './styles';
+import _styles from './styles';
 
 const SettingsSurveyTaxonomies = () => {
+  const styles = useThemedStyles({styles: _styles});
   const [taxonomyVisibleFieldsKey, setTaxonomyVisibleFieldsKey] = useState(
     DEFAULT_TAXONOMY_FIELDS,
   );
@@ -71,14 +73,16 @@ const SettingsSurveyTaxonomies = () => {
               (option, index) => {
                 const [optionKey, optionValue] = option;
                 const isSelected = taxonomyVisibleFieldsKey === optionKey;
+
                 return (
                   <TouchableOpacity
                     key={optionKey}
                     style={[
                       styles.optionContainer,
                       index === 0 && styles.optionContainerFirst,
-                      index === taxonomyVisibleFieldsOptions.length - 1 &&
-                        styles.optionContainerLast,
+                      index ===
+                        Object.values(taxonomyVisibleFieldsOptions).length -
+                          1 && styles.optionContainerLast,
                       taxonomyVisibleFieldsKey === optionKey &&
                         styles.optionContainerSelected,
                     ]}
@@ -89,6 +93,7 @@ const SettingsSurveyTaxonomies = () => {
                           ? 'checkbox-marked'
                           : 'checkbox-blank-outline'
                       }
+                      color={isSelected && styles.optionTextSelected?.color}
                       size="s"
                     />
                     <TextBase
