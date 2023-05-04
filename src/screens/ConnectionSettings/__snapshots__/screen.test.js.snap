@@ -138,7 +138,6 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
         [
           [
             {
-              "backgroundColor": "#EDEDED",
               "flex": 1,
               "paddingTop": 8,
             },
