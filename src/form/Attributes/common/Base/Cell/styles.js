@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     alignItems: aligmentByType[nodeDef.type] || 'flex-end',
     flexDirection: 'row',
     opacity: applicable ? 1 : 0.5,
-    backgroundColor: applicable ? colors.white : colors.neutralLight,
+    backgroundColor: applicable ? colors.backgroundLight : colors.neutralLight,
   }),
 });
 

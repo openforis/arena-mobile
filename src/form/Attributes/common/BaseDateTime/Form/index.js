@@ -62,7 +62,7 @@ const DateForm = ({nodeDef}) => {
           textColor={
             Appearance.getColorScheme() === 'light'
               ? colors.black
-              : colors.white
+              : colors.backgroundLight
           }
         />
       )}

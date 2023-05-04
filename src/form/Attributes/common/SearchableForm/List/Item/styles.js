@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   },
   selectedItem: {
     backgroundColor: colors.secondary,
-    color: colors.white,
+    color: colors.backgroundLight,
   },
 });
 export default styles;

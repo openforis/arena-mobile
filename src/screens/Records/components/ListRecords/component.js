@@ -8,15 +8,17 @@ import CurrentItemLabel from 'arena-mobile-ui/components/CurrentItemLabel';
 import List from 'arena-mobile-ui/components/List';
 import TouchableCard from 'arena-mobile-ui/components/TouchableCard';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
 import formSelectors from 'state/form/selectors';
 import {useRecordsUuidsSorted, useRecordsSummary} from 'state/records/hooks';
 
-import styles from './styles';
+import _styles from './styles';
 
 const ListEmptyComponent = () => <View />;
 
 const RecordCard = ({record, recordUuid, isSelected, onSelect}) => {
+  const styles = useThemedStyles({styles: _styles});
   const currentRecordUuid = useSelector(formSelectors.getRecordUuid);
 
   const handlePress = useCallback(() => {

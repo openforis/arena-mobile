@@ -6,7 +6,6 @@ import baseStyles from 'arena-mobile-ui/styles';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
     paddingTop: baseStyles.bases.BASE_2,
   },
   formContainer: {

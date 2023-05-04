@@ -18,7 +18,7 @@ const baseInputStyle = {
   margin: baseStyles.bases.BASE,
   color: colors.black,
   paddingRight: baseStyles.bases.BASE_8,
-  backgroundColor: colors.white,
+  backgroundColor: colors.backgroundLight,
 };
 
 const baseInputStyleNeutral = {
@@ -30,7 +30,7 @@ const baseInputStyleNeutral = {
   margin: baseStyles.bases.BASE,
   color: colors.black,
   paddingRight: baseStyles.bases.BASE_8,
-  backgroundColor: colors.white,
+  backgroundColor: colors.backgroundLight,
   borderRadius: baseStyles.bases.BASE_2,
 };
 
