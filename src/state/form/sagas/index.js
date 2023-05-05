@@ -9,8 +9,10 @@ import handleImportRecords, {watchFileDownloadChannel} from './importRecords';
 import handleInitializeRecord from './initializeRecord';
 import handleSelectEntity from './selectEntity';
 import handleSelectEntityNode from './selectEntityNode';
+import handleLeaveForm from './leaveForm';
 
 export default function* () {
+  yield takeLatest(formActionTypes.leaveForm$, handleLeaveForm);
   yield takeLatest(formActionTypes.initializeRecord$, handleInitializeRecord);
   yield takeLatest(formActionTypes.continueRecord$, handleContinueRecord);
 
