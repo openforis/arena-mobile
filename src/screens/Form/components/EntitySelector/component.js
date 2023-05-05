@@ -1,4 +1,5 @@
 import React, {useRef, useEffect, useCallback} from 'react';
+import {useTranslation} from 'react-i18next';
 import {
   Dimensions,
   Animated,
@@ -11,10 +12,8 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import ToggleShowNames from 'arena-mobile-ui/components/ToggleShowNames';
-
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
-import {useTranslation} from 'react-i18next';
 
 import EntitySelectorTree from './components/EntitySelectorTree';
 import styles from './styles';
@@ -63,7 +62,7 @@ const EntitySelector = () => {
   }, [dispatch]);
 
   const handleLeave = useCallback(() => {
-    dispatch(formActions.leaveForm?.());
+    dispatch(formActions.leaveForm());
   }, [dispatch]);
 
   return (
