@@ -141,6 +141,7 @@ const DarkTheme = {
   secondaryTextLight: secondaryLightest,
   primaryContrastText: grey900,
   primaryContrastTextLight: grey700,
+
   // -- backgrounds
   background: black,
   backgroundLight: neutralDark,
@@ -149,5 +150,5 @@ const DarkTheme = {
 
 export const themes = {
   light: LightTheme,
-  dark: DarkTheme, //DarkTheme,
+  dark: DarkTheme,
 };

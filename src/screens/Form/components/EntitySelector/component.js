@@ -12,7 +12,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import ToggleShowNames from 'arena-mobile-ui/components/ToggleShowNames';
-import {useNavigateTo} from 'navigation/hooks';
+
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
@@ -30,7 +30,7 @@ const EntitySelector = () => {
   const {t} = useTranslation();
 
   const dispatch = useDispatch();
-  const {navigateTo, routes} = useNavigateTo();
+
 
   const isEntitySelectorOpened = useSelector(
     formSelectors.isEntitySelectorOpened,
@@ -64,10 +64,8 @@ const EntitySelector = () => {
   }, [dispatch]);
 
   const handleLeave = useCallback(() => {
-    //dispatch(formActions.leaveForm?.());
-
-    navigateTo({route: routes.RECORDS, replace: true})();
-  }, [dispatch, navigateTo, routes]);
+    dispatch(formActions.leaveForm());
+  }, [dispatch]);
 
   return (
     <>
