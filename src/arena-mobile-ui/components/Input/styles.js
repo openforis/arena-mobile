@@ -25,6 +25,7 @@ const styles = ({baseStyles, colors}) =>
       borderWidth: 1,
       borderColor: colors.neutralLight,
       marginVertical: baseStyles.bases.BASE,
+      color: colors.primaryText,
     },
   });
 

@@ -32,7 +32,7 @@ const styles = ({colors, baseStyles}) =>
       minHeight: HEIGHT,
     },
     scrollContainer: {
-      marginTop: baseStyles.bases.BASE_8,
+      marginTop: baseStyles.bases.BASE_14,
       backgroundColor: colors.backgroundLight,
     },
 

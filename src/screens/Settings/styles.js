@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     padding: baseStyles.bases.BASE_4,
     paddingTop: 0,
     marginVertical: baseStyles.bases.BASE_4,
+    marginBottom: 0,
   },
   dividers: {
     height: 100,
@@ -50,17 +51,26 @@ const styles = StyleSheet.create({
     padding: baseStyles.bases.BASE_4,
     justifyContent: 'space-between',
     paddingRight: 0,
+    marginBottom: 0,
+    borderBottomWidth: 1,
+    borderColor: colors.neutralLightest,
   },
   sectionCardContainerFirst: {
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
+    marginBottom: 0,
   },
   sectionCardContainerLast: {
+    marginTop: 0,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
+    borderBottomWidth: 0,
+  },
+  sectionCardContainerMiddle: {
+    borderRadius: 0,
   },
   sectionCardContainerOnly: {
-    borderRadius: 0,
+    borderBottomWidth: 0,
   },
 
   iconContainer: {

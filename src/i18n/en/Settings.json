@@ -36,5 +36,18 @@
         }
       }
     }
+  },
+  "style": {
+    "title": "Style",
+    "FontSize": {
+      "title": "Font Size",
+      "screen": {
+        "header": "Font Size",
+
+        "info": "",
+
+        "description": ""
+      }
+    }
   }
 }

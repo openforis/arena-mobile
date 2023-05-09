@@ -18,6 +18,7 @@ import DevMode from './DevMode';
 import styles from './styles';
 import Version from './Version';
 
+const SHOW_STYLE_SETTINGS = false;
 const extractFirstCharacters = (str, numberOfCharacters) => {
   if (str.length <= numberOfCharacters) {
     return str;
@@ -43,7 +44,11 @@ const SectionWithTitle = ({title, children, subSection = false}) => {
   return (
     <View style={[styles.container, (subSection && {marginTop: 0}: {})]}>
       <View style={{paddingVertical: baseStyles.bases.BASE_2}}>
-        <TextBase type="secondaryText">{title}</TextBase>
+        <TextBase
+          size={subSection ? 'l' : 'xl'}
+          type={subSection ? 'secondaryText' : 'header'}>
+          {title}
+        </TextBase>
       </View>
       {children}
     </View>
@@ -59,6 +64,7 @@ const SectionCard = ({position = 'middle', onPress, title, iconName}) => {
           position === 'first' && styles.sectionCardContainerFirst,
           position === 'last' && styles.sectionCardContainerLast,
           position === 'only' && styles.sectionCardContainerOnly,
+          position === 'middle' && styles.sectionCardContainerMiddle,
         ]}>
         <View style={styles.iconContainer}>
           <Icon name={iconName} size="s" />
@@ -138,7 +144,10 @@ const Settings = () => {
           <ConnectionSettingsSection />
           {user?.name ? (
             <>
-              <TextBase customStyle={styles.textNameTitle}>
+              <TextBase
+                customStyle={styles.textNameTitle}
+                size="xl"
+                type="header">
                 {t('Settings:survey.title')}
               </TextBase>
               <SectionWithTitle
@@ -150,8 +159,38 @@ const Settings = () => {
                   })}
                   title={t('Settings:survey.taxonomies.title')}
                   iconName="leaf"
+                  position="only"
                 />
               </SectionWithTitle>
+
+              {SHOW_STYLE_SETTINGS && (
+                <SectionWithTitle title={t('Settings:style.title')}>
+                  <SectionCard
+                    position="first"
+                    onPress={navigateTo({
+                      route: routes.SETTINGS_STYLE_FONT_BASE_MODIFIER,
+                    })}
+                    title={t('Settings:style.FontSize.title')}
+                    iconName="format-size"
+                  />
+                  <SectionCard
+                    position="middle"
+                    onPress={navigateTo({
+                      route: routes.SETTINGS_STYLE_FONT_BASE_MODIFIER,
+                    })}
+                    title={t('Settings:style.FontSize.title')}
+                    iconName="format-size"
+                  />
+                  <SectionCard
+                    position="last"
+                    onPress={navigateTo({
+                      route: routes.SETTINGS_STYLE_FONT_BASE_MODIFIER,
+                    })}
+                    title={t('Settings:style.FontSize.title')}
+                    iconName="format-size"
+                  />
+                </SectionWithTitle>
+              )}
             </>
           ) : null}
           <Version />

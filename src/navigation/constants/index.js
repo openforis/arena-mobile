@@ -4,6 +4,7 @@ import * as Home from 'screens/Home/constants';
 import * as Records from 'screens/Records/constants';
 import * as Settings from 'screens/Settings/constants';
 /* Settings */
+import * as SettingsStyleFontBaseModifier from 'screens/Settings/Screens/Style/FontBaseModifier/constants';
 import * as SettingsSurveyTaxonomies from 'screens/Settings/Screens/Survey/Taxonomies/constants';
 import * as Survey from 'screens/Survey/constants';
 import * as Surveys from 'screens/Surveys/constants';
@@ -18,6 +19,7 @@ export const KEYS = {
   [Form.key]: [Form.key],
   /* Settings */
   [SettingsSurveyTaxonomies.key]: [SettingsSurveyTaxonomies.key],
+  [SettingsStyleFontBaseModifier.key]: [SettingsStyleFontBaseModifier.key],
 };
 
 export const ROUTES = {
@@ -30,4 +32,5 @@ export const ROUTES = {
   [Form.key]: Form.route,
   /* Settings */
   [SettingsSurveyTaxonomies.key]: SettingsSurveyTaxonomies.route,
+  [SettingsStyleFontBaseModifier.key]: SettingsStyleFontBaseModifier.route,
 };

@@ -126,6 +126,7 @@ export const white = grey0;
 export const black = grey900;
 export const background = neutralLightest;
 export const backgroundLight = white;
+export const activeBackground = secondaryLightest;
 export const borderColors = neutralLight;
 
 export const transparent = 'transparent';
@@ -145,6 +146,9 @@ const DarkTheme = {
   // -- backgrounds
   background: black,
   backgroundLight: neutralDark,
+  backgroundLighter: neutralDarker,
+  activeBackground: grey400,
+
   borderColors: neutralDarker,
 };
 

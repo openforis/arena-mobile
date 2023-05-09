@@ -2,9 +2,9 @@ import {Objects} from '@openforis/arena-core';
 import React, {useRef, useEffect} from 'react';
 import {View, TextInput} from 'react-native';
 
-import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
-import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import * as colors from 'arena-mobile-ui/colors';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
 import _styles from './styles';
 
