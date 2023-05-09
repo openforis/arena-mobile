@@ -6,13 +6,17 @@ import Attribute from 'form/common/Attribute';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
-import styles from './styles';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
+
+import _styles from './styles';
 
 const Footer = () => {
+  const styles = useThemedStyles({styles: _styles});
   return <View style={[styles.block]} />;
 };
 
 const Attributes = () => {
+  const styles = useThemedStyles({styles: _styles});
   const nodeDef = useSelector(formSelectors.getParentEntityNodeDef);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
 

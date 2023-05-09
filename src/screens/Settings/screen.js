@@ -4,6 +4,7 @@ import {View, ScrollView, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
+import Card from 'arena-mobile-ui/components/Card';
 import Header from 'arena-mobile-ui/components/Header';
 import Icon from 'arena-mobile-ui/components/Icon';
 import Layout from 'arena-mobile-ui/components/Layout';
@@ -17,6 +18,7 @@ import DevMode from './DevMode';
 import styles from './styles';
 import Version from './Version';
 
+const SHOW_STYLE_SETTINGS = false;
 const extractFirstCharacters = (str, numberOfCharacters) => {
   if (str.length <= numberOfCharacters) {
     return str;
@@ -42,7 +44,11 @@ const SectionWithTitle = ({title, children, subSection = false}) => {
   return (
     <View style={[styles.container, (subSection && {marginTop: 0}: {})]}>
       <View style={{paddingVertical: baseStyles.bases.BASE_2}}>
-        <TextBase type="secondaryText">{title}</TextBase>
+        <TextBase
+          size={subSection ? 'l' : 'xl'}
+          type={subSection ? 'secondaryText' : 'header'}>
+          {title}
+        </TextBase>
       </View>
       {children}
     </View>
@@ -52,12 +58,13 @@ const SectionWithTitle = ({title, children, subSection = false}) => {
 const SectionCard = ({position = 'middle', onPress, title, iconName}) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <View
-        style={[
+      <Card
+        customStyles={[
           styles.sectionCardContainer,
           position === 'first' && styles.sectionCardContainerFirst,
           position === 'last' && styles.sectionCardContainerLast,
           position === 'only' && styles.sectionCardContainerOnly,
+          position === 'middle' && styles.sectionCardContainerMiddle,
         ]}>
         <View style={styles.iconContainer}>
           <Icon name={iconName} size="s" />
@@ -68,7 +75,7 @@ const SectionCard = ({position = 'middle', onPress, title, iconName}) => {
         <View style={styles.iconContainer}>
           <Icon name="chevron-right" size="l" />
         </View>
-      </View>
+      </Card>
     </TouchableOpacity>
   );
 };
@@ -88,7 +95,7 @@ const ConnectionSettingsSection = () => {
     <SectionWithTitle title={t('ConnectionSettings:title')}>
       {user?.name ? (
         <TouchableOpacity onPress={handleNavigateToConnectionSettings}>
-          <View style={styles.connectionSettingsContainer}>
+          <Card customStyles={styles.connectionSettingsContainer}>
             <View style={styles.connectionSettingsContainerIcon}>
               <TextBase
                 customStyle={styles.connectionSettingsContainerIconText}>
@@ -102,7 +109,7 @@ const ConnectionSettingsSection = () => {
             <View style={styles.iconContainer}>
               <Icon name="chevron-right" size="l" />
             </View>
-          </View>
+          </Card>
         </TouchableOpacity>
       ) : (
         <Button
@@ -137,7 +144,10 @@ const Settings = () => {
           <ConnectionSettingsSection />
           {user?.name ? (
             <>
-              <TextBase customStyle={styles.textNameTitle}>
+              <TextBase
+                customStyle={styles.textNameTitle}
+                size="xl"
+                type="header">
                 {t('Settings:survey.title')}
               </TextBase>
               <SectionWithTitle
@@ -149,8 +159,38 @@ const Settings = () => {
                   })}
                   title={t('Settings:survey.taxonomies.title')}
                   iconName="leaf"
+                  position="only"
                 />
               </SectionWithTitle>
+
+              {SHOW_STYLE_SETTINGS && (
+                <SectionWithTitle title={t('Settings:style.title')}>
+                  <SectionCard
+                    position="first"
+                    onPress={navigateTo({
+                      route: routes.SETTINGS_STYLE_FONT_BASE_MODIFIER,
+                    })}
+                    title={t('Settings:style.FontSize.title')}
+                    iconName="format-size"
+                  />
+                  <SectionCard
+                    position="middle"
+                    onPress={navigateTo({
+                      route: routes.SETTINGS_STYLE_FONT_BASE_MODIFIER,
+                    })}
+                    title={t('Settings:style.FontSize.title')}
+                    iconName="format-size"
+                  />
+                  <SectionCard
+                    position="last"
+                    onPress={navigateTo({
+                      route: routes.SETTINGS_STYLE_FONT_BASE_MODIFIER,
+                    })}
+                    title={t('Settings:style.FontSize.title')}
+                    iconName="format-size"
+                  />
+                </SectionWithTitle>
+              )}
             </>
           ) : null}
           <Version />

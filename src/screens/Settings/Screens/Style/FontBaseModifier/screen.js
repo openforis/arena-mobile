@@ -20,7 +20,7 @@ import {selectors as appSelectors, actions as appActions} from 'state/app';
 
 import _styles from './styles';
 
-const SettingsSurveyTaxonomies = () => {
+const SettingsStyleFontBaseModifier = () => {
   const styles = useThemedStyles({styles: _styles});
   const [taxonomyVisibleFieldsKey, setTaxonomyVisibleFieldsKey] = useState(
     DEFAULT_TAXONOMY_FIELDS,
@@ -142,4 +142,4 @@ const SettingsSurveyTaxonomies = () => {
   );
 };
 
-export default SettingsSurveyTaxonomies;
+export default SettingsStyleFontBaseModifier;

@@ -8,7 +8,7 @@ import * as colors from '../colors';
 import {getBaseStyles} from '../styles';
 
 const useColorTheme = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = null; //useColorScheme(); // to be added later when dark is ready;
   return colorScheme;
 };
 

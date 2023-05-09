@@ -4,6 +4,7 @@ import Home from 'screens/Home';
 import Records from 'screens/Records';
 import Settings from 'screens/Settings';
 /* Settings */
+import SettingsStyleFontBaseModifier from 'screens/Settings/Screens/Style/FontBaseModifier';
 import SettingsSurveyTaxonomies from 'screens/Settings/Screens/Survey/Taxonomies';
 import Survey from 'screens/Survey';
 import Surveys from 'screens/Surveys';
@@ -36,6 +37,10 @@ export const SCREENS = {
   /* Settings */
   [KEYS.SETTINGS_SURVEY_TAXONOMIES]: {
     component: SettingsSurveyTaxonomies,
+    options: {gestureEnabled: false},
+  },
+  [KEYS.SETTINGS_STYLE_FONT_BASE_MODIFIER]: {
+    component: SettingsStyleFontBaseModifier,
     options: {gestureEnabled: false},
   },
 };

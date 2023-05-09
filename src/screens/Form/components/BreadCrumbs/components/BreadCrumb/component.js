@@ -27,7 +27,7 @@ const BreadCrumb = ({breadCrumb: node, isLatests}) => {
   }, [node, dispatch]);
   return (
     <TouchableOpacity onPress={handleSelect}>
-      <TextBase key={node.key}>
+      <TextBase key={node.key} customStyle={{color: 'black'}}>
         {nodeDefName}[{keys}] {isLatests ? '' : ' > '}
       </TextBase>
     </TouchableOpacity>

@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
   container: {
     borderBottomWidth: 1,
     borderBottomColor: colors.neutralLightest,
-    backgroundColor: colors.white,
+    backgroundColor: colors.backgroundLight,
   },
   entityContainer: {
     flexDirection: 'row',

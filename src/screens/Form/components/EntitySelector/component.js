@@ -12,6 +12,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import ToggleShowNames from 'arena-mobile-ui/components/ToggleShowNames';
+
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
@@ -29,6 +30,7 @@ const EntitySelector = () => {
   const {t} = useTranslation();
 
   const dispatch = useDispatch();
+
 
   const isEntitySelectorOpened = useSelector(
     formSelectors.isEntitySelectorOpened,

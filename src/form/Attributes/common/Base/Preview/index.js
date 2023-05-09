@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {defaultCycle} from 'arena/config';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import AttributeHeader from 'form/common/Header';
 import Validation from 'form/common/Validation';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
@@ -17,7 +18,7 @@ import {
 } from 'state/nodes';
 import {selectors as surveySelectors} from 'state/survey';
 
-import styles from './styles';
+import _styles from './styles';
 
 // TODO move to arena-core
 NodeDefs.isHiddenWhenNotRelevant =
@@ -27,6 +28,7 @@ NodeDefs.isHiddenWhenNotRelevant =
   };
 
 const BaseDeletePreviewNode = ({node}) => {
+  const styles = useThemedStyles({styles: _styles});
   const handleDelete = useDeleteNode();
 
   const _handleDelete = useCallback(() => {
@@ -56,6 +58,7 @@ const BasePreviewNode = ({
 }) => {
   const dispatch = useDispatch();
 
+  const styles = useThemedStyles({styles: _styles});
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );
@@ -97,6 +100,7 @@ const BaseNodeValueRenderer = ({nodeDef}) => {
 };
 
 export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
+  const styles = useThemedStyles({styles: _styles});
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );
@@ -121,6 +125,7 @@ export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
 };
 
 const CreateNode = ({onPress, nodeDef}) => {
+  const styles = useThemedStyles({styles: _styles});
   const {t} = useTranslation();
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
