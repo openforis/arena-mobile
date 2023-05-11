@@ -85,12 +85,14 @@ platform :android do
 
     version_code_from_play_store_strings = google_play_track_version_codes(
       track: "beta",          # this can be alpha, beta etc.
-      json_key: PLAYSTORE_KEY_PATH,
+      json_key: PLAYSTORE_KEY_PATH,      
     )
     
     
+    puts "A #{version_code_from_play_store_strings}"
     version_code_from_play_store = version_code_from_play_store_strings[0].to_i
-    UPDATED_VERSION_CODE = version_code_from_play_store + 1
+    puts "A #{version_code_from_play_store}"
+    UPDATED_VERSION_CODE = version_code_from_play_store + 2
     puts "UPDATED_VERSION_CODE #{UPDATED_VERSION_CODE}"
     increment_version_code(
       gradle_file_path: BUILD_GRADLEW_PATH,

@@ -1,11 +1,10 @@
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import Card from 'arena-mobile-ui/components/Card';
 import LabelsAndValues from 'arena-mobile-ui/components/LabelsAndValues';
-import baseStyles from 'arena-mobile-ui/styles';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import {selectors as surveySelectors} from 'state/survey';
 import {selectors as userSelectors} from 'state/user';
 
@@ -19,9 +18,7 @@ const LoggedInAs = () => {
 
   return (
     <Card>
-      <Text style={[baseStyles.textStyle.secondaryText]}>
-        {t('Home:logged_in_as')}
-      </Text>
+      <TextBase type="secondaryText">{t('Home:logged_in_as')}</TextBase>
       <LabelsAndValues
         size="s"
         items={[

@@ -2,7 +2,6 @@ import {Objects} from '@openforis/arena-core';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
-  Text,
   View,
   KeyboardAvoidingView,
   Platform,
@@ -21,17 +20,15 @@ import QRScanner, {
   useQRScanner,
   QRScannerButton,
 } from 'arena-mobile-ui/components/QRScanner';
-import baseStyles from 'arena-mobile-ui/styles';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import TextHeader from 'arena-mobile-ui/components/Texts/TextHeader';
+import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
 import {alert} from 'arena-mobile-ui/utils';
 import {selectors as appSelectors, actions as appActions} from 'state/app';
-import globalActions from 'state/globalActions';
 import {selectors as userSelectors} from 'state/user';
 
 import styles from './styles';
-import Telemetry from './Telemetry';
-import Version from './Version';
 
-const SHOW_SERVER_OPTIONS = false;
 const SHOW_QR_HELPER = false;
 
 const _valueOrDefault = (value, defaultValue) =>
@@ -51,30 +48,26 @@ const ConnectionSettings = () => {
     [],
   );
 
-  const user = useSelector(userSelectors.getUser);
-  const handleSubmitForm = useCallback(() => {
-    dispatch(appActions.initConnection(formData));
-  }, [dispatch, formData]);
-
-  const handleResetData = useCallback(() => {
-    const requiredText = t('ConnectionSettings:reset.required');
+  const handleLogout = useCallback(() => {
+    const requiredText = t('ConnectionSettings:logout.required');
 
     alert({
-      title: t('ConnectionSettings:reset.title'),
-      message: t('ConnectionSettings:reset.message'),
-      acceptText: t('ConnectionSettings:reset.accept'),
-      dismissText: t('ConnectionSettings:reset.dismiss'),
+      title: t('ConnectionSettings:logout.title'),
+      message: t('ConnectionSettings:logout.message'),
+      acceptText: t('ConnectionSettings:logout.accept'),
+      dismissText: t('ConnectionSettings:logout.dismiss'),
       onAccept: () => {
-        dispatch(globalActions.reset());
+        dispatch(appActions.logout());
       },
       requiredText,
       requiredTextMessage: t('Common:required_text', {requiredText}),
     });
   }, [dispatch, t]);
 
-  const handleDisableDevMode = useCallback(() => {
-    dispatch(appActions.disableDevMode());
-  }, [dispatch]);
+  const user = useSelector(userSelectors.getUser);
+  const handleSubmitForm = useCallback(() => {
+    dispatch(appActions.initConnection(formData));
+  }, [dispatch, formData]);
 
   const {username, password} = useSelector(appSelectors.getAccessData);
 
@@ -83,7 +76,6 @@ const ConnectionSettings = () => {
 
   const credentialsError = useSelector(appSelectors.getCredentialsError);
   const serverError = useSelector(appSelectors.getServerError);
-  const isDevModeEnabled = useSelector(appSelectors.isDevModeEnabled);
 
   useEffect(() => {
     setFormData(prevData => ({
@@ -94,15 +86,6 @@ const ConnectionSettings = () => {
     }));
   }, [username, password, serverUrl]);
 
-  const handleSetServerUrl = useCallback(
-    _serverUrl => () => {
-      setFormData(prevData => ({
-        ...prevData,
-        serverUrl: _serverUrl || prevData.serverUrl,
-      }));
-    },
-    [setFormData],
-  );
   const {
     data: qrData,
     visible,
@@ -143,9 +126,7 @@ const ConnectionSettings = () => {
             RightComponent={
               SHOW_QR_HELPER && <QRScannerButton handleShow={handleShow} />
             }>
-            <Text style={[baseStyles.textStyle.title]}>
-              {t('ConnectionSettings:title')}
-            </Text>
+            <TextTitle>{t('ConnectionSettings:title')}</TextTitle>
           </Header>
         )}
         <QRScanner
@@ -161,9 +142,9 @@ const ConnectionSettings = () => {
           <ScrollView>
             <View style={[styles.formContainer]}>
               <View style={[styles.formItem]}>
-                <Text style={[baseStyles.textStyle.header]}>
+                <TextHeader>
                   {t('ConnectionSettings:server_config_title')}
-                </Text>
+                </TextHeader>
 
                 <Input
                   title={t('ConnectionSettings:server_config_fields.address')}
@@ -172,46 +153,23 @@ const ConnectionSettings = () => {
                   placeholder="https://test.openforis-arena.org"
                   autoCapitalize="none"
                 />
-                {SHOW_SERVER_OPTIONS && (
-                  <Button
-                    type="ghostBlack"
-                    onPress={handleSetServerUrl(
-                      'https://www.openforis-arena.org',
-                    )}
-                    label={t('ConnectionSettings:server_config_fields.prod', {
-                      url: 'https://www.openforis-arena.org',
-                    })}
-                    customContainerStyle={[styles.serverUrlButton]}
-                  />
-                )}
-                {isDevModeEnabled && SHOW_SERVER_OPTIONS && (
-                  <Button
-                    type="ghostBlack"
-                    onPress={handleSetServerUrl(
-                      'https://test.openforis-arena.org',
-                    )}
-                    label={t('ConnectionSettings:server_config_fields.prod', {
-                      url: 'https://test.openforis-arena.org',
-                    })}
-                    customContainerStyle={[styles.serverUrlButton]}
-                  />
-                )}
+
                 {serverError && (
                   <Card type="error">
-                    <Text style={[baseStyles.textStyle.bold]}>
+                    <TextBase type="bold">
                       {t('ConnectionSettings:server_error.title')}
-                    </Text>
-                    <Text style={[baseStyles.textStyle.text]}>
+                    </TextBase>
+                    <TextBase>
                       {t('ConnectionSettings:server_error.info')}
-                    </Text>
+                    </TextBase>
                   </Card>
                 )}
               </View>
 
               <View style={[styles.formItem]}>
-                <Text style={[baseStyles.textStyle.header]}>
+                <TextHeader>
                   {t('ConnectionSettings:access_info_title')}
-                </Text>
+                </TextHeader>
                 <Input
                   title={t('ConnectionSettings:access_info_fields.username')}
                   onChangeText={onChangeText('username')}
@@ -226,12 +184,12 @@ const ConnectionSettings = () => {
               </View>
               {credentialsError && (
                 <Card type="error">
-                  <Text style={[baseStyles.textStyle.bold]}>
+                  <TextBase type="bold">
                     {t('ConnectionSettings:credentials_error.title')}
-                  </Text>
-                  <Text style={[baseStyles.textStyle.text]}>
+                  </TextBase>
+                  <TextBase>
                     {t('ConnectionSettings:credentials_error.info')}
-                  </Text>
+                  </TextBase>
                 </Card>
               )}
 
@@ -256,37 +214,19 @@ const ConnectionSettings = () => {
 
               {user?.name && (
                 <View style={styles.loggedInAs}>
-                  <Text style={baseStyles.textStyle.secondaryText}>
+                  <TextBase type="secondaryText">
                     {t('ConnectionSettings:connected_as')}
-                  </Text>
-                  <Text style={baseStyles.textStyle.text}>{user?.email}</Text>
+                  </TextBase>
+                  <TextBase>({user?.email})</TextBase>
+                  <Button
+                    type="deleteGhost"
+                    onPress={handleLogout}
+                    label={t('ConnectionSettings:logout.cta')}
+                  />
                 </View>
               )}
             </View>
-            <Version />
-            {isDevModeEnabled && (
-              <>
-                <Telemetry />
-                <View style={styles.dividers} />
-                <View>
-                  <Button
-                    type="ghost"
-                    onPress={handleResetData}
-                    label={t('ConnectionSettings:reset.cta')}
-                    disabled={isLoading}
-                  />
-                </View>
-                <View style={styles.dividers} />
-                <View>
-                  <Button
-                    type="ghost"
-                    onPress={handleDisableDevMode}
-                    label={t('ConnectionSettings:devMode.disable')}
-                    disabled={isLoading}
-                  />
-                </View>
-              </>
-            )}
+
             <View style={styles.dividers} />
           </ScrollView>
         </KeyboardAvoidingView>

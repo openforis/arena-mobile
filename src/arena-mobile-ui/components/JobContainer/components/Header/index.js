@@ -1,11 +1,11 @@
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import baseStyles from 'arena-mobile-ui/styles';
 import surveySelectors from 'state/survey/selectors';
+import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
 
-import Icon from '../../../Icon';
+import Icon from 'arena-mobile-ui/components/Icon';
 
 import styles from './styles';
 
@@ -19,9 +19,9 @@ const Header = ({collapsed, setCollapsed}) => {
       style={styles.container}>
       <Icon name={collapsed ? 'chevron-right' : 'chevron-down'} />
       <View style={{flex: 1}}>
-        <Text style={[baseStyles.textStyle.title, baseStyles.textSize.m]}>
+        <TextTitle size="m">
           {job.type} - ({job?.progressPercent || uploadProgress}%)
-        </Text>
+        </TextTitle>
       </View>
     </TouchableOpacity>
   );

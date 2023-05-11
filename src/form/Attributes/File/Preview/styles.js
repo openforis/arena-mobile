@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: baseStyles.bases.BASE / 2,
   },
-  bottonContainer: {
+  buttonContainer: {
     paddingHorizontal: baseStyles.bases.BASE,
     marginVertical: 0,
     flex: 1,

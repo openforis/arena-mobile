@@ -1,10 +1,10 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as React from 'react';
+import {enableScreens} from 'react-native-screens';
 import Toast from 'react-native-toast-message';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Provider} from 'react-redux';
-import {enableScreens} from 'react-native-screens';
 enableScreens();
 MaterialCommunityIcons.loadFont();
 

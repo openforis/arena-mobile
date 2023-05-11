@@ -10,17 +10,17 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   background: {
-    borderRadius: 8,
+    borderRadius: baseStyles.bases.BASE_2,
 
     backgroundColor: colors.neutralLighter,
-    width: width - 24,
+    width: width - baseStyles.bases.BASE_6,
     justifyContent: 'center',
     paddingRight: baseStyles.bases.BASE_3,
   },
   backgroundProgress: {
     position: 'absolute',
 
-    borderRadius: 8,
+    borderRadius: baseStyles.bases.BASE_2,
 
     backgroundColor: colors.success,
   },

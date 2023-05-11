@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRightColor: colors.neutralLight,
     borderRightWidth: 1,
-    marginBottom: 17,
+    marginBottom: 18,
   },
 });
 

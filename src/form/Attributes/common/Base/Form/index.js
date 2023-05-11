@@ -4,10 +4,11 @@ import {View} from 'react-native';
 
 import Button from 'arena-mobile-ui/components/Button';
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import AttributeHeader from 'form/common/Header';
 import {useCloseNode} from 'state/form/hooks/useNodeFormActions';
 
-import styles from './styles';
+import _styles from './styles';
 
 const BaseForm = ({
   nodeDef,
@@ -15,6 +16,7 @@ const BaseForm = ({
   children,
   hasSubmitButton = true,
 }) => {
+  const styles = useThemedStyles({styles: _styles});
   const {t} = useTranslation();
 
   const _handleSubmit = useCallback(

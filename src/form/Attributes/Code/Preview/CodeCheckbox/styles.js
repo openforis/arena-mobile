@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 
+import baseStyles from 'arena-mobile-ui/styles';
 import * as colors from 'arena-mobile-ui/colors';
 
 const styles = StyleSheet.create({});
@@ -10,12 +11,12 @@ export const chipStyles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   chipContainer: ({isActive}) => ({
-    padding: 8,
+    padding: baseStyles.bases.BASE_2,
     backgroundColor: isActive ? colors.secondary : colors.transparent,
     borderWidth: 1,
     borderColor: colors.neutralLighter,
-    paddingHorizontal: 16,
-    margin: 2,
+    paddingHorizontal: baseStyles.bases.BASE_4,
+    margin: baseStyles.bases.BASE / 2,
   }),
   label: ({isActive}) => ({
     textAlign: 'center',

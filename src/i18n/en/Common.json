@@ -6,9 +6,13 @@
   "username": "Username (email)",
   "password": "Password",
   "access_info": "Access info",
+  "survey": "Survey",
+  "records": "Records",
+  "server": "Server",
   "server_config": "Server config",
   "server_address": "Server address",
   "connect": "Log In",
+  "cancel": "Cancel",
   "connection_settings": "Connection Settings",
   "show_labels": "Show labels",
   "show_names": "Show names",
@@ -18,8 +22,10 @@
   "no": "No",
   "true": "True",
   "false": "False",
+  "sort_by": "Sort by",
   "not_supported": "Not supported",
   "required_text": "Please type '{{requiredText}}' to confirm",
   "version": "Version",
-  "select_an_item": "Select an item..."
+  "select_an_item": "Select an item...",
+  "save": "Save"
 }

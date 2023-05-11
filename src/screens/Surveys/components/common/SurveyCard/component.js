@@ -1,24 +1,20 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import CreatedAndModified from 'arena-mobile-ui/components/CreatedAndModified';
 import CurrentItemLabel from 'arena-mobile-ui/components/CurrentItemLabel';
 import Icon from 'arena-mobile-ui/components/Icon';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import TouchableCard from 'arena-mobile-ui/components/TouchableCard';
-import baseStyles from 'arena-mobile-ui/styles';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as appSelectors} from 'state/app';
 
 import Actions from './Actions';
-import styles from './styles';
+import _styles from './styles';
 import SurveyStatus from './SurveyStatus';
 
-/*
- const handlePress = useCallback(() => {
-    onSelect?.(survey);
-  }, [survey, onSelect]);
-  */
 const SurveyCard = ({
   survey,
   onSelect,
@@ -28,6 +24,7 @@ const SurveyCard = ({
 }) => {
   const {t} = useTranslation();
   const currentServerUrl = useSelector(appSelectors.getServerUrl);
+  const styles = useThemedStyles({styles: _styles});
 
   return (
     <TouchableCard
@@ -35,19 +32,17 @@ const SurveyCard = ({
       <View style={styles.infoContainer}>
         <View style={[styles.payload]}>
           <View style={styles.labelCotainer}>
-            <Text style={[baseStyles.textStyle.bold, baseStyles.textSize.l]}>
+            <TextBase type="bold" size="l">
               {survey.props?.labels?.[survey?.props?.languages?.[0]]}
-            </Text>
+            </TextBase>
           </View>
 
-          <Text
-            style={[baseStyles.textStyle.secondaryText, baseStyles.textSize.s]}>
+          <TextBase type="secondaryText" size="s">
             {survey?.props?.name}
-          </Text>
-          <Text
-            style={[baseStyles.textStyle.secondaryText, baseStyles.textSize.s]}>
-            Server: {survey?.serverUrl || currentServerUrl}
-          </Text>
+          </TextBase>
+          <TextBase type="secondaryText" size="s">
+            {t('Common:server')}: {survey?.serverUrl || currentServerUrl}
+          </TextBase>
 
           <CreatedAndModified
             dateCreated={survey?.dateCreated}
@@ -67,7 +62,7 @@ const SurveyCard = ({
 
             <Icon
               name={survey?.isInDevice ? 'cellphone' : 'cloud-outline'}
-              size={24}
+              size="m"
             />
           </View>
         </View>

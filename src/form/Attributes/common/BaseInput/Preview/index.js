@@ -1,6 +1,7 @@
 import {NodeDefType} from '@openforis/arena-core';
 import React from 'react';
-import {Text} from 'react-native';
+
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 
 import {Preview as BasePreview} from '../../Base';
 import {getValueAsString} from '../Form';
@@ -9,14 +10,15 @@ import styles from './styles';
 
 const NodeValueRender = ({node, nodeDef}) => {
   return (
-    <Text
-      style={[
+    <TextBase
+      size="l"
+      cusomStyle={[
         nodeDef.type === NodeDefType.text
           ? styles.textAlignLeft
           : styles.textAlignRight,
       ]}>
       {getValueAsString(nodeDef, node)}
-    </Text>
+    </TextBase>
   );
 };
 

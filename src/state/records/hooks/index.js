@@ -16,7 +16,6 @@ export const useRecordsSummary = () => {
   const recordsUuids = useRecordsUuids();
   const surveyUuid = useSelector(surveySelectors.getSelectedSurveyUuid);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
-  const recordsInSurvey = useSelector(surveySelectors.getRecords);
   const [summary, setSummary] = useState();
 
   const getSummary = useCallback(async () => {
@@ -46,11 +45,6 @@ export const useRecordsSummary = () => {
         }
       }
 
-      for (const record of recordsInSurvey) {
-        const _recordSummary = getRecordSummary(record);
-        _summary[record.uuid] = _recordSummary;
-      }
-
       for (const uuid of recordsUuidsToDelete) {
         delete _summary[uuid];
       }
@@ -60,7 +54,7 @@ export const useRecordsSummary = () => {
       }
       setSummary(_summary);
     }
-  }, [recordsInSurvey, recordsUuids, surveyUuid, cycle]);
+  }, [recordsUuids, surveyUuid, cycle]);
 
   useFocusEffect(
     useCallback(() => {

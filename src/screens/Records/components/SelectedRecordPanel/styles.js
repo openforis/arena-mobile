@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     width,
-    backgroundColor: colors.white,
+    backgroundColor: colors.backgroundLight,
     bottom: 0,
     borderTopRightRadius: baseStyles.bases.BASE_4,
     borderTopLeftRadius: baseStyles.bases.BASE_4,

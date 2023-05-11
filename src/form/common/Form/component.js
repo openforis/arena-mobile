@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {useSelector} from 'react-redux';
 
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import BooleanForm from 'form/Attributes/Boolean/Form';
 import CodeForm from 'form/Attributes/Code/Form';
 import BaseForm from 'form/Attributes/common/Base/Form';
@@ -23,7 +24,7 @@ import TextForm from 'form/Attributes/Text/Form';
 import TimeForm from 'form/Attributes/Time/Form';
 import formSelectors from 'state/form/selectors';
 
-import styles from './styles';
+import _styles from './styles';
 
 const {height: HEIGHT} = Dimensions.get('screen');
 
@@ -40,9 +41,18 @@ const FormsByType = {
   [NodeDefType.taxon]: TaxonForm,
 };
 
-const Spacer = () => <View style={{height: 80}} />;
+const Spacer = () => <View style={_styles.spacer} />;
+
+const RenderForm = ({nodeDef}) => {
+  if (!nodeDef) {
+    return null;
+  }
+  const Form = FormsByType[nodeDef?.type] || BaseForm;
+  return <Form nodeDef={nodeDef} />;
+};
 
 const AttributeFormWithModal = () => {
+  const styles = useThemedStyles({styles: _styles});
   const panelHeight = useRef(new Animated.Value(0)).current;
   const backgroundOpacity = useRef(new Animated.Value(0)).current;
   const nodeDef = useSelector(formSelectors.getNodeDef);
@@ -108,11 +118,8 @@ const AttributeFormWithModal = () => {
             <Spacer />
             <ScrollView
               keyboardShouldPersistTaps="handled"
-              style={[styles.scroll]}>
-              {nodeDef &&
-                React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
-                  nodeDef,
-                })}
+              style={[styles.scroll, styles.scrollContainer]}>
+              <RenderForm nodeDef={nodeDef} />
             </ScrollView>
           </KeyboardAvoidingView>
         ) : (
@@ -120,10 +127,7 @@ const AttributeFormWithModal = () => {
             <Spacer />
 
             <View style={[styles.viewcontainer]}>
-              {nodeDef &&
-                React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
-                  nodeDef,
-                })}
+              <RenderForm nodeDef={nodeDef} />
             </View>
           </>
         )}
@@ -140,14 +144,7 @@ const AttributeForm = () => {
       nodeDef?.type,
     )
   ) {
-    return (
-      <>
-        {nodeDef &&
-          React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
-            nodeDef,
-          })}
-      </>
-    );
+    return <RenderForm nodeDef={nodeDef} />;
   }
 
   return <AttributeFormWithModal />;

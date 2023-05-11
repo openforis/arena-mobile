@@ -1,5 +1,7 @@
 import React from 'react';
-import {Text, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
+
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 
 import styles from './styles';
 
@@ -8,7 +10,9 @@ const ListItem = ({label, handlePress, selected}) => {
     <TouchableOpacity
       onPress={handlePress}
       style={[styles.card, selected ? styles.selectedItem : {}]}>
-      <Text style={selected ? styles.selectedItem : {}}>{label}</Text>
+      <TextBase customStyle={selected ? styles.selectedItem : {}}>
+        {label}
+      </TextBase>
     </TouchableOpacity>
   );
 };

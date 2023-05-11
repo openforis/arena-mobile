@@ -37,10 +37,10 @@ const useCode = ({nodeDef, node}) => {
     formSelectors.getNodeDefNodesInHierarchy(state, nodeDef),
   );
 
-  const _categoryItems = useMemo(
-    () => (node?.uuid ? nodeCategoryItems : nodeDefCategoryItems),
-    [node, nodeCategoryItems, nodeDefCategoryItems],
-  );
+  const _categoryItems = useMemo(() => {
+    const items = node?.uuid ? nodeCategoryItems : nodeDefCategoryItems;
+    return items.sort((a, b) => a.props.index - b.props.index);
+  }, [node, nodeCategoryItems, nodeDefCategoryItems]);
 
   const _getCategoryItemLabel = useCallback(
     item => getCategoryItemLabel(nodeDef, cycle, language)(item),

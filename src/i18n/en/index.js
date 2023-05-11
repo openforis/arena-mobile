@@ -6,6 +6,7 @@ import Form from './Form';
 import Home from './Home';
 import QRScanner from './QRScanner';
 import Records from './Records';
+import Settings from './Settings';
 import Survey from './Survey';
 import Surveys from './Surveys';
 import Validation from './Validation';
@@ -14,6 +15,7 @@ const lang = {
   Actions,
   Common,
   ConnectionSettings,
+  Settings,
   Form,
   Home,
   QRScanner,

@@ -6,6 +6,7 @@ import initialState from './initial.state';
 const data = handleActions(
   {
     [actions.setUser]: (state, {payload: {user}}) => user || state,
+    [actions.cleanUser]: () => initialState,
   },
   initialState || {},
 );

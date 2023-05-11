@@ -3,6 +3,7 @@ import {createActions} from 'redux-actions';
 import types from './actionTypes';
 
 const {form} = createActions({
+  [types.leaveForm$]: () => ({}),
   [types.SET_RECORD]: ({record}) => ({record}),
 
   [types.SET_PARENT_ENTITY_NODE]: ({node}) => ({

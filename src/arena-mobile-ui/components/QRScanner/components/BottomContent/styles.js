@@ -7,7 +7,7 @@ const {width} = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.backgroundLight,
     padding: baseStyles.bases.BASE_2,
     width: width * 0.9,
     borderRadius: baseStyles.bases.BASE,

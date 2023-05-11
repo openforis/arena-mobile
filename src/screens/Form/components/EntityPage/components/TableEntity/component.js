@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import * as colors from 'arena-mobile-ui/colors';
 import TableComponent from 'arena-mobile-ui/components/Table';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import Label from 'form/common/Label';
 import {actions as formActions, selectors as formSelectors} from 'state/form';
 
@@ -12,7 +13,7 @@ import EntityPanel from '../common/EntityPanel';
 
 import {Viewtoggler, Row} from './components';
 import {useEntityTableData} from './hooks';
-import styles from './styles';
+import _styles from './styles';
 
 const Table = () => {
   const {rows, headers, getWidth} = useEntityTableData();
@@ -66,6 +67,7 @@ const Table = () => {
 };
 
 const TableEntity = () => {
+  const styles = useThemedStyles({styles: _styles});
   const isEntityShowAsTable = useSelector(formSelectors.isEntityShowAsTable);
 
   return (

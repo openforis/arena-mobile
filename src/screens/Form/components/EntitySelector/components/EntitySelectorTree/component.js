@@ -3,8 +3,8 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
 import {defaultCycle} from 'arena/config';
+import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
@@ -39,6 +39,7 @@ const EntitySelectorTree = ({nodeDefUuid, level = 0}) => {
   const nodeDef = useSelector(state =>
     surveySelectors.getNodeDefByUuid(state, nodeDefUuid),
   );
+
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const childrenIndex = useChildrenIndex(nodeDefUuid);
 

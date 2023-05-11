@@ -1,3 +1,4 @@
+const leaveForm$ = 'form/leaveForm$';
 const SET_RECORD = 'form/SET_RECORD';
 const SET_PARENT_ENTITY_NODE = 'form/SET_PARENT_ENTITY_NODE';
 const SET_NODE = 'form/SET_NODE';
@@ -22,6 +23,8 @@ const TOGGLE_ENTITY_SHOW_AS_TABLE = 'form/TOGGLE_ENTITY_SHOW_AS_TABLE';
 const SET_VALIDATION = 'form/SET_VALIDATION';
 
 export default {
+  leaveForm$,
+
   SET_RECORD,
   SET_PARENT_ENTITY_NODE,
   SET_NODE,

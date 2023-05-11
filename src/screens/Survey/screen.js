@@ -1,30 +1,28 @@
 import * as React from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
+import {ScrollView, View} from 'react-native';
 
 import Header from 'arena-mobile-ui/components/Header';
 import Layout from 'arena-mobile-ui/components/Layout';
-import baseStyles from 'arena-mobile-ui/styles';
+import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
 import NavigateToSurveys from 'navigation/components/NavigateToSurveys';
 
 import Actions from './components/Actions';
 import SurveyDetail from './components/SurveyDetail';
 import styles from './styles';
 
-/*
-  TODO
-  - change language
-*/
 const Survey = () => {
+  const {t} = useTranslation();
   return (
     <Layout>
       <>
         <Header hasBackComponent={true} RightComponent={<NavigateToSurveys />}>
-          <Text style={[baseStyles.textStyle.title]}>Survey</Text>
+          <TextTitle>{t('Common:survey')}</TextTitle>
         </Header>
       </>
       <ScrollView style={[styles.container]}>
         <SurveyDetail />
-        <View style={{height: 200}} />
+        <View style={styles.spacer} />
       </ScrollView>
       <Actions />
     </Layout>
