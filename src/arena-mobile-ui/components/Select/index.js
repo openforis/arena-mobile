@@ -1,6 +1,9 @@
 import {Objects} from '@openforis/arena-core';
 import React, {useMemo, useRef, useEffect} from 'react';
 import RNPickerSelect from 'react-native-picker-select';
+import {useTranslation} from 'react-i18next';
+
+import * as colors from 'arena-mobile-ui/colors';
 
 import Icon from '../Icon';
 
@@ -11,12 +14,16 @@ const ChevronIcon = () => <Icon name="chevron-down" />;
 const _keyStractor = item => item?.uuid || item?.id || item;
 const _labelStractor = item => item.name || item;
 const _prepareItemFn =
-  ({keyStractor, labelStractor}) =>
+  ({keyStractor, labelStractor, selectedItemKey}) =>
   item => {
     return Object.assign({}, typeof item === 'object' ? item : {}, {
       key: keyStractor(item),
       value: item,
       label: labelStractor(item),
+      color:
+        selectedItemKey === keyStractor(item)
+          ? colors.secondary
+          : colors.neutralLighter,
     });
   };
 const _filterFn = () => true;
@@ -34,6 +41,7 @@ const Select = ({
   autoFocus = false,
   disabled = false,
 }) => {
+  const {t} = useTranslation();
   const selectRef = useRef(null);
 
   const _items = useMemo(
@@ -42,8 +50,15 @@ const Select = ({
         ? []
         : items
             .filter(filterFn)
-            .map(prepareItemFn({keyStractor, labelStractor})),
-    [items, keyStractor, labelStractor, prepareItemFn, filterFn],
+            .map(prepareItemFn({keyStractor, labelStractor, selectedItemKey})),
+    [
+      items,
+      keyStractor,
+      labelStractor,
+      prepareItemFn,
+      filterFn,
+      selectedItemKey,
+    ],
   );
 
   useEffect(() => {
@@ -77,6 +92,11 @@ const Select = ({
       disabled={disabled}
       useNativeAndroidPickerStyle={false}
       fixAndroidTouchableBug={true}
+      placeholder={{
+        label: t('Common:select_an_item'),
+        value: null,
+        color: colors.neutralLighter,
+      }}
     />
   );
 };
