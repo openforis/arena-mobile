@@ -85,7 +85,7 @@ platform :android do
 
     version_code_from_play_store_strings = google_play_track_version_codes(
       track: "beta",          # this can be alpha, beta etc.
-      json_key: PLAYSTORE_KEY_PATH,
+      json_key: PLAYSTORE_KEY_PATH,      
     )
     
     
