@@ -1,12 +1,12 @@
 import React from 'react';
-import {Text} from 'react-native';
 
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import BaseCell from 'form/Attributes/common/Base/Cell';
 
 const BaseValuesRenderer = ({nodes}) => (
-  <Text numberOfLines={1}>
+  <TextBase numberOfLines={1}>
     {nodes.map(node => node?.value?.fileName).join(', ')}
-  </Text>
+  </TextBase>
 );
 
 const Cell = ({nodeDef, nodes}) => (

@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     width: WIDTH,
-    backgroundColor: colors.white,
+    backgroundColor: colors.backgroundLight,
     bottom: 0,
     borderTopRightRadius: baseStyles.bases.BASE_4,
     borderTopLeftRadius: baseStyles.bases.BASE_4,
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   },
   header: {
     marginTop: baseStyles.bases.BASE_4,
-    backgroundColor: colors.white,
+    backgroundColor: colors.backgroundLight,
     padding: baseStyles.bases.BASE_4,
     paddingTop: 0,
     flexDirection: 'row',
@@ -42,23 +42,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-  },
-  headerTextInfo: {
-    ...baseStyles.textSize.s,
-    color: colors.neutralLight,
-    paddingBottom: baseStyles.bases.BASE,
-    textAlign: 'left',
-  },
-  headerText: {
-    ...baseStyles.textSize.l,
-    textAlign: 'left',
-    color: colors.neutralDark,
-    marginRight: 8,
-  },
-  optionsContainer: {
-    padding: baseStyles.bases.BASE_4,
-    backgroundColor: colors.white,
-    flexDirection: 'row',
   },
   containerTabletMenuOpen: {
     width: WIDTH - ENTITY_SELECTOR_TABLET_WIDTH,

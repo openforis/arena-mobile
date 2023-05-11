@@ -1,6 +1,7 @@
 import {NodeDefType} from '@openforis/arena-core';
 import React from 'react';
-import {Text} from 'react-native';
+
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 
 import {Preview as BasePreview} from '../../Base';
 
@@ -9,7 +10,7 @@ const placeHolder = {
   [NodeDefType.date]: 'YYYY-MM-DD',
 };
 const NodeValueRender = ({node, nodeDef}) => {
-  return <Text>{node.value || placeHolder[nodeDef.type]}</Text>;
+  return <TextBase>{node.value || placeHolder[nodeDef.type]}</TextBase>;
 };
 
 const Preview = ({nodeDef}) => (

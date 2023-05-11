@@ -1,34 +1,25 @@
 import {Objects} from '@openforis/arena-core';
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 
-import baseStyles from '../../styles';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 
 import styles from './styles';
 
 export const Label = ({label, size = 's', bolder = false}) => (
-  <Text
-    style={[
-      baseStyles.textStyle.secondaryText,
-      bolder ? baseStyles.textStyle.bolder : baseStyles.textStyle.bold,
-      baseStyles.textSize[size],
-    ]}
-    numberOfLines={1}>
+  <TextBase type={bolder ? 'bolder' : 'bold'} size={size} numberOfLines={1}>
     {label}
-  </Text>
+  </TextBase>
 );
 
 export const Value = ({label, size = 's', bolder = false, color = null}) => (
-  <Text
-    style={[
-      baseStyles.textStyle.secondaryText,
-      baseStyles.textSize[size],
-      bolder ? baseStyles.textStyle.bold : {},
-      color ? styles.color[color] : {},
-    ]}
+  <TextBase
+    type={bolder ? 'bolder' : 'bold'}
+    size={size}
+    customStyle={[color ? styles.color[color] : {}]}
     numberOfLines={1}>
     {label}
-  </Text>
+  </TextBase>
 );
 
 const LabelsAndValues = ({items, size, expanded = false, column = false}) => (

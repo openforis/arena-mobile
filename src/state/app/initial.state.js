@@ -5,13 +5,25 @@ const initialState = {
     [dataKeys.username]: '',
     [dataKeys.password]: '',
   },
-  preferences: {},
+  preferences: {
+    settings: {
+      survey: {
+        taxonomies: {
+          defaultVisibleFields: null,
+        },
+      },
+    },
+  },
   ui: {
     serverError: false,
     credentialsError: false,
     isLoading: false,
     showNames: false,
     devMode: false,
+    style: {
+      baseModifier: 1,
+      fontBaseModifier: 1,
+    },
   },
 };
 

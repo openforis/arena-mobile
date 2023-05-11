@@ -1,12 +1,16 @@
 import React from 'react';
 import {View} from 'react-native';
 
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
+
 import Attributes from '../common/Attributes';
 import EntityPanel from '../common/EntityPanel';
 
-import styles from './styles';
+import _styles from './styles';
 
 const Entity = () => {
+  const styles = useThemedStyles({styles: _styles});
+
   return (
     <View style={[styles.container]}>
       <Attributes />

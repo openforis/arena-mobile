@@ -1,11 +1,11 @@
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import * as colors from 'arena-mobile-ui/colors';
 import Icon from 'arena-mobile-ui/components/Icon';
-import baseStyles from 'arena-mobile-ui/styles';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import {selectors as formSelectors} from 'state/form';
 import {useUpdateNode} from 'state/form/hooks/useNodeFormActions';
 
@@ -26,21 +26,21 @@ const BooleanOption = ({value, active = false, onPress, nodeDef}) => {
       style={[styles.touchableContainer({active})]}>
       <Icon
         name={active ? 'radiobox-marked' : 'radiobox-blank'}
-        size={baseStyles.bases.BASE_4}
+        size="s"
         color={active ? colors.primaryContrastText : colors.secondary}
       />
-      <Text style={[styles.touchableLabel({active})]}>
+      <TextBase style={[styles.touchableLabel({active})]}>
         {t(
           `Form:nodeDefBoolean.labelValue.${
             nodeDef?.props.labelValue || 'trueFalse'
           }.${value}`,
         )}
-      </Text>
+      </TextBase>
     </TouchableOpacity>
   );
 };
 
-const Boolean = ({node, nodeDef}) => {
+const BooleanAttribute = ({node, nodeDef}) => {
   const updateNode = useUpdateNode();
 
   const handlePress = useCallback(
@@ -72,7 +72,7 @@ const Boolean = ({node, nodeDef}) => {
 };
 
 const Preview = ({nodeDef}) => {
-  return <BasePreview nodeDef={nodeDef} NodeValueRender={Boolean} />;
+  return <BasePreview nodeDef={nodeDef} NodeValueRender={BooleanAttribute} />;
 };
 
 export default Preview;

@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     color: colors.neutralDarkest,
 
     flexDirection: 'row',
-    backgroundColor: colors.white,
+    backgroundColor: colors.backgroundLight,
   },
   activeContainer: {
     backgroundColor: colors.secondaryLighter,

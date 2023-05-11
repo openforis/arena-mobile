@@ -1,6 +1,6 @@
 import React from 'react';
-import {Text} from 'react-native';
 
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import BaseCell from 'form/Attributes/common/Base/Cell';
 
 import {useCode} from '../Preview/hooks';
@@ -11,7 +11,7 @@ const BaseValuesRenderer = ({nodeDef, nodes}) => {
   });
 
   return (
-    <Text numberOfLines={1}>
+    <TextBase numberOfLines={1}>
       {nodes
         .map(node =>
           getCategoryItemLabel(
@@ -21,7 +21,7 @@ const BaseValuesRenderer = ({nodeDef, nodes}) => {
           ),
         )
         .join(',')}
-    </Text>
+    </TextBase>
   );
 };
 

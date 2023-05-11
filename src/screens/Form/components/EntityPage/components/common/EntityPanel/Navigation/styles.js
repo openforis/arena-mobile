@@ -8,7 +8,7 @@ const {width: WIDTH} = Dimensions.get('screen');
 const styles = StyleSheet.create({
   header: {
     marginTop: baseStyles.bases.BASE_4,
-    backgroundColor: colors.white,
+    backgroundColor: colors.backgroundLight,
     padding: baseStyles.bases.BASE_4,
     paddingTop: 0,
     flexDirection: 'row',
@@ -20,17 +20,12 @@ const styles = StyleSheet.create({
 
   optionsContainer: {
     padding: baseStyles.bases.BASE_4,
-    backgroundColor: colors.white,
+    backgroundColor: colors.backgroundLight,
     flexDirection: 'row',
   },
 
   buttonsContainer: {
     justifyContent: 'space-between',
-    flexDirection: 'row',
-    flex: 1,
-  },
-  buttonsContainerCenter: {
-    justifyContent: 'center',
     flexDirection: 'row',
     flex: 1,
   },

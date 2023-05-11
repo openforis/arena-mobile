@@ -1,6 +1,8 @@
 const initConnection$ = 'app/initConnection$';
+const logout$ = 'app/logout$';
 const SET_ACCESS_DATA = 'app/SET_ACCESS_DATA';
 const SET_SERVER_URL = 'app/SET_SERVER_URL';
+const CLEAN = 'app/CLEAN';
 
 /*ui*/
 const SET_LOADING = 'app/SET_LOADING';
@@ -11,10 +13,16 @@ const SET_SHOW_NAMES = 'app/SET_SHOW_NAMES';
 const SET_DEV_MODE = 'app/SET_DEV_MODE';
 const DISABLE_DEV_MODE = 'app/DISABLE_DEV_MODE';
 
+/* Preferences settings */
+const SET_SETTINGS_PREFERENCES_SURVEY_TAXONOMIES_DEFAULT_VISIBLE_FIELDS =
+  'app/SET_SETTINGS_PREFERENCES_SURVEY_TAXONOMIES_DEFAULT_VISIBLE_FIELDS';
+
 export default {
   initConnection$,
+  logout$,
   SET_ACCESS_DATA,
   SET_SERVER_URL,
+  CLEAN,
 
   /*ui*/
   SET_LOADING,
@@ -24,4 +32,7 @@ export default {
   SET_SHOW_NAMES,
   SET_DEV_MODE,
   DISABLE_DEV_MODE,
+
+  /* Preferences settings */
+  SET_SETTINGS_PREFERENCES_SURVEY_TAXONOMIES_DEFAULT_VISIBLE_FIELDS,
 };

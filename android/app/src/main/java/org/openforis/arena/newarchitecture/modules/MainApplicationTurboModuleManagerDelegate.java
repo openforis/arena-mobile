@@ -1,4 +1,4 @@
-package org.openforis.collect.arena.newarchitecture.modules;
+package org.openforis.arena.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

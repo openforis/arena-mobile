@@ -3,11 +3,11 @@ import React, {useCallback} from 'react';
 
 import TouchableIcon from '../TouchableIcon';
 
-const NavigateToIcon = ({route, icon}) => {
+const NavigateToIcon = ({route, icon, replace = false}) => {
   const navigation = useNavigation();
   const navigate = useCallback(
-    () => navigation.navigate(route),
-    [route, navigation],
+    () => (replace ? navigation.replace(route) : navigation.navigate(route)),
+    [route, navigation, replace],
   );
   return <TouchableIcon onPress={navigate} iconName={icon} />;
 };

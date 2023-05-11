@@ -1,9 +1,9 @@
 import React, {useCallback, useState} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 
 import Icon from 'arena-mobile-ui/components/Icon';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
-import baseStyles from 'arena-mobile-ui/styles';
 
 import DetailModal from './DetailModal';
 import styles from './styles';
@@ -28,19 +28,16 @@ const Label = ({
       <TouchableOpacity style={styles.container} onLongPress={toggleModal}>
         {nodeDef?.props?.key && (
           <>
-            <Icon
-              name="key-variant"
-              size={baseStyles.bases.BASE_3}
-              color={iconColor}
-            />
+            <Icon name="key-variant" size="xs" color={iconColor} />
             <View style={styles.separator} />
           </>
         )}
-        <Text
-          style={[styles.textStyle, customStyles.textStyle || {}]}
+        <TextBase
+          size="l"
+          customStyle={[styles.textStyle, customStyles.textStyle || {}]}
           numberOfLines={numberOfLines}>
           {label}
-        </Text>
+        </TextBase>
       </TouchableOpacity>
       <DetailModal
         nodeDef={nodeDef}

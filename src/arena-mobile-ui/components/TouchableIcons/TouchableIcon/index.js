@@ -6,7 +6,7 @@ import Icon from '../../Icon';
 const TouchableIcon = ({
   onPress,
   iconName,
-  size = 24,
+  size,
   customStyle = {},
   iconColor = null,
   hitSlop = 20,

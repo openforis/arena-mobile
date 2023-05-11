@@ -1,4 +1,4 @@
-package org.openforis.collect.arena.newarchitecture.components;
+package org.openforis.arena.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

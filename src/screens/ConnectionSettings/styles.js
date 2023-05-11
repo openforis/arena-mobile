@@ -6,7 +6,6 @@ import baseStyles from 'arena-mobile-ui/styles';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
     paddingTop: baseStyles.bases.BASE_2,
   },
   formContainer: {
@@ -17,7 +16,7 @@ const styles = StyleSheet.create({
     paddingVertical: baseStyles.bases.BASE_4,
   },
   header: {
-    fontSize: 18,
+    fontSize: baseStyles.fontSizes.xl,
     fontWeight: 'bold',
   },
   buttonContainer: {

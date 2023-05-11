@@ -1,7 +1,8 @@
 import React from 'react';
-import {Text, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import {actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
@@ -26,9 +27,9 @@ const BreadCrumb = ({breadCrumb: node, isLatests}) => {
   }, [node, dispatch]);
   return (
     <TouchableOpacity onPress={handleSelect}>
-      <Text key={node.key}>
+      <TextBase key={node.key} customStyle={{color: 'black'}}>
         {nodeDefName}[{keys}] {isLatests ? '' : ' > '}
-      </Text>
+      </TextBase>
     </TouchableOpacity>
   );
 };

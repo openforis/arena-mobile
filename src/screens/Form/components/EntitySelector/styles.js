@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
     width: 0,
     backgroundColor: colors.neutralLight,
     borderRightColor: colors.neutralLight,
-    borderRightWidth: 1,
+    borderRightWidth: 0,
     overflow: 'hidden',
   },
   scrollContainer: {

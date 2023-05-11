@@ -26,6 +26,13 @@ const expectedAppState = {
   },
   preferences: {
     serverUrl: payload.serverUrl,
+    settings: {
+      survey: {
+        taxonomies: {
+          defaultVisibleFields: null,
+        },
+      },
+    },
   },
   ui: {
     credentialsError: false,
@@ -33,6 +40,10 @@ const expectedAppState = {
     isLoading: false,
     showNames: false,
     devMode: false,
+    style: {
+      baseModifier: 1,
+      fontBaseModifier: 1,
+    },
   },
 };
 

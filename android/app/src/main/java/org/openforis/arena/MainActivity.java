@@ -1,4 +1,4 @@
-package org.openforis.collect.arena;
+package org.openforis.arena;
 
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;

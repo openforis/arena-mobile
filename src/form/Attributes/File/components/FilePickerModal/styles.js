@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
   container: {
     marginBottom: baseStyles.bases.BASE_8,
-    backgroundColor: colors.white,
+    backgroundColor: colors.backgroundLight,
     borderRadius: baseStyles.bases.BASE_4,
     padding: baseStyles.bases.BASE_2,
     marginHorizontal: Platform.OS === 'ios' ? baseStyles.bases.BASE_4 : 0,

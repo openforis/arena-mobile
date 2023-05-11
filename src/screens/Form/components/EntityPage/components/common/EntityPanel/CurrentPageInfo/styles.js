@@ -5,7 +5,6 @@ import baseStyles from 'arena-mobile-ui/styles';
 
 const styles = StyleSheet.create({
   headerTextInfo: {
-    ...baseStyles.textSize.s,
     color: colors.neutralLight,
     paddingBottom: baseStyles.bases.BASE,
     textAlign: 'left',

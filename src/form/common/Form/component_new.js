@@ -4,6 +4,7 @@ import {ScrollView, View, SafeAreaView} from 'react-native';
 import Modal from 'react-native-modal';
 import {useSelector} from 'react-redux';
 
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import BooleanForm from 'form/Attributes/Boolean/Form';
 import CodeForm from 'form/Attributes/Code/Form';
 import BaseForm from 'form/Attributes/common/Base/Form';
@@ -16,9 +17,10 @@ import TaxonForm from 'form/Attributes/Taxonomy/Form';
 import TextForm from 'form/Attributes/Text/Form';
 import TimeForm from 'form/Attributes/Time/Form';
 import formSelectors from 'state/form/selectors';
-const Spacer = () => <View style={{height: 80}} />;
 
-import styles from './styles';
+import _styles from './styles';
+
+const Spacer = () => <View style={{height: 80}} />;
 
 const FormsByType = {
   [NodeDefType.integer]: IntegerForm,
@@ -34,6 +36,7 @@ const FormsByType = {
 };
 
 const AttributeFormWithModal = () => {
+  const styles = useThemedStyles({styles: _styles});
   const nodeDef = useSelector(formSelectors.getNodeDef);
 
   if (![NodeDefType.code, NodeDefType.taxon].includes(nodeDef?.type)) {
@@ -49,7 +52,7 @@ const AttributeFormWithModal = () => {
           }}>
           <ScrollView
             keyboardShouldPersistTaps="handled"
-            style={[styles.scroll, {marginTop: 30, backgroundColor: 'white'}]}>
+            style={[styles.scroll, styles.scrollContainer]}>
             {nodeDef &&
               React.createElement(FormsByType[nodeDef?.type] || BaseForm, {
                 nodeDef,

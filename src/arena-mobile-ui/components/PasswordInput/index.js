@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import {Text, View, TextInput} from 'react-native';
-
-import baseStyles from 'arena-mobile-ui/styles';
+import {View, TextInput} from 'react-native';
 
 import {TouchableIcon} from '../TouchableIcons';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
-import styles from './styles';
+import _styles from './styles';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 
 const icons = {
   passwordVisible: 'eye-outline',
@@ -13,6 +13,7 @@ const icons = {
 };
 
 const PasswordInput = ({title, autoFocus = false, ...otherProps}) => {
+  const styles = useThemedStyles({styles: _styles});
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const togglePasswordVisible = () => {
@@ -25,7 +26,8 @@ const PasswordInput = ({title, autoFocus = false, ...otherProps}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={[baseStyles.textStyle.text]}>{title}</Text>
+      <TextBase>{title}</TextBase>
+
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}

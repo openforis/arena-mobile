@@ -1,11 +1,12 @@
 import {Objects} from '@openforis/arena-core';
 import React, {useRef, useEffect} from 'react';
-import {Text, View, TextInput} from 'react-native';
+import {View, TextInput} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
-import baseStyles from 'arena-mobile-ui/styles';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
-import styles from './styles';
+import _styles from './styles';
 
 export const InputContainer = ({
   title,
@@ -14,6 +15,7 @@ export const InputContainer = ({
   children,
   hasTitle,
 }) => {
+  const styles = useThemedStyles({styles: _styles});
   return (
     <View
       style={[
@@ -22,13 +24,9 @@ export const InputContainer = ({
         stacked ? styles.stacked : {},
       ]}>
       {hasTitle && (
-        <Text
-          style={[
-            baseStyles.textStyle.text,
-            horizontal ? styles.horizontalTitle : {},
-          ]}>
+        <TextBase customStyle={horizontal ? styles.horizontalTitle : {}}>
           {title}
-        </Text>
+        </TextBase>
       )}
       {children}
     </View>
@@ -46,9 +44,9 @@ const Input = ({
   stacked = false,
   customStyle = CUSTOM_STYLE,
   lateFocus = false,
-
   ...props
 }) => {
+  const styles = useThemedStyles({styles: _styles});
   const inputRef = useRef();
   useEffect(() => {
     if (lateFocus) {
