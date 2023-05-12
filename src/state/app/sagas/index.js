@@ -99,12 +99,7 @@ function* handleReset() {
 }
 
 function* handleLogout() {
-  yield all([
-    put(appActions.clean()),
-    put(userActions.cleanUser()),
-    put(globalActions.reset()),
-  ]);
-
+  yield put(userActions.cleanUser());
   yield call(navigator.navigatorDispatch, StackActions.replace(ROUTES.HOME));
 }
 

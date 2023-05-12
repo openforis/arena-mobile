@@ -31,9 +31,9 @@
   "logout": {
     "cta": "Log out",
     "title": "Are you sure about the Logout?",
-    "message": "All records and surveys are going to be removed from the device",
-    "accept": "Yes, clean all data and logout",
+    "message": "",
+    "accept": "Yes, logout",
     "dismiss": "No",
-    "required": "reset data and logout"
+    "required": "logout"
   }
 }
