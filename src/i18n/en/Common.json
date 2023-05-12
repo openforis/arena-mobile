@@ -26,5 +26,6 @@
   "not_supported": "Not supported",
   "required_text": "Please type '{{requiredText}}' to confirm",
   "version": "Version",
+  "select_an_item": "Select an item...",
   "save": "Save"
 }
