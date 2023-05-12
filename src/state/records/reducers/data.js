@@ -1,4 +1,5 @@
 import {handleActions} from 'redux-actions';
+import moment from 'moment-timezone';
 
 import {deleteValueByKey} from 'infra/objectUtils';
 import globalActions from 'state/globalActions';
@@ -12,7 +13,10 @@ const data = handleActions(
   {
     [actions.setRecord]: (state, {payload: {record = {}}}) => ({
       ...state,
-      [record.uuid]: {...record},
+      [record.uuid]: {
+        lastModifiedAt: moment().toISOString(),
+        ...record,
+      },
     }),
     [actions.cleanRecord]: (state, {payload: {recordUuid}}) => {
       let newState = {...state};

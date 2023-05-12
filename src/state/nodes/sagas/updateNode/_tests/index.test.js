@@ -1,4 +1,5 @@
 import MockDate from 'mockdate';
+import moment from 'moment';
 import {expectSaga} from 'redux-saga-test-plan';
 
 import globalInitialState from 'state/initial.state';
@@ -58,6 +59,7 @@ const initialState = {
         preview: false,
         uuid: 'RECORD_ONE_UUID',
         surveyUuid: mockSurvey.uuid,
+        lastModifiedAt: moment(mockDate).toISOString(),
 
         nodes: [],
         _nodesIndex: {

@@ -1,7 +1,8 @@
-import * as React from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+import moment from 'moment-timezone';
 
 import Button from 'arena-mobile-ui/components/Button';
 import {useNavigateTo} from 'navigation/hooks';
@@ -9,15 +10,45 @@ import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {useNumberRecords} from 'state/records/hooks';
 
 import styles from './styles';
+
+const NUMBER_OF_DAYS_TO_CONTINUE_RECORD = 3;
+
+const useHasRecordToContinue = () => {
+  const [currentRecordUuid, setCurrentRecordUuid] = useState(null);
+  const currentRecord = useSelector(formSelectors.getRecord);
+
+  useEffect(() => {
+    if (!currentRecord?.uuid) {
+      setCurrentRecordUuid(null);
+      return;
+    }
+
+    if (currentRecord?.lastModifiedAt) {
+      if (
+        moment().diff(moment(currentRecord?.lastModifiedAt), 'days') <=
+        NUMBER_OF_DAYS_TO_CONTINUE_RECORD
+      ) {
+        setCurrentRecordUuid(currentRecord?.uuid);
+      } else {
+        setCurrentRecordUuid(null);
+      }
+    } else {
+      setCurrentRecordUuid(currentRecord?.uuid);
+    }
+  }, [currentRecord]);
+
+  return currentRecordUuid;
+};
+
 const Actions = () => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
   const {navigateTo, routes} = useNavigateTo();
-  const currentRecordUuid = useSelector(formSelectors.getRecordUuid);
+  const currentRecordUuid = useHasRecordToContinue();
   const numberOfRecords = useNumberRecords();
   const numberOfErrors = 0;
 
-  const handleInitializeRecord = React.useCallback(() => {
+  const handleInitializeRecord = useCallback(() => {
     dispatch(formActions.initializeRecord());
   }, [dispatch]);
 
