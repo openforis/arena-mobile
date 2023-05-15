@@ -9,17 +9,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: baseStyles.bases.BASE / 2,
   },
-  buttonContainer: {
-    paddingHorizontal: baseStyles.bases.BASE,
-    marginVertical: 0,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-
-    marginHorizontal: baseStyles.bases.BASE,
-    paddingVertical: baseStyles.bases.BASE,
-  },
   previewThumbnail: {
     height: baseStyles.bases.BASE_14,
     width: baseStyles.bases.BASE_14,
