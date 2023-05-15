@@ -2,11 +2,10 @@ import React, {useCallback, useEffect, useRef, useMemo} from 'react';
 import {FlatList, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import Attribute from 'form/common/Attribute';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
-
-import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
 import _styles from './styles';
 

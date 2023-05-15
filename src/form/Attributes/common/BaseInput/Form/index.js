@@ -1,4 +1,4 @@
-import {NodeDefs, NodeDefType} from '@openforis/arena-core';
+import {NodeDefs, NodeDefType, Objects} from '@openforis/arena-core';
 import React, {useState, useCallback} from 'react';
 import {Platform} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -41,7 +41,10 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
   const handleClose = useCloseNode();
   const handleSubmit = useCallback(
     ({callback = handleClose} = {}) => {
-      const _newValue = newValue || String(node.value || '');
+      const _newValue =
+        newValue === '' || !Objects.isEmpty(newValue)
+          ? newValue
+          : String(node.value || '');
 
       const _value =
         nodeDef.type === NodeDefType.text
