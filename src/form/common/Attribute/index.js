@@ -1,4 +1,4 @@
-import {NodeDefs, NodeDefType} from '@openforis/arena-core';
+import {NodeDefType} from '@openforis/arena-core';
 import React from 'react';
 import {useSelector} from 'react-redux';
 

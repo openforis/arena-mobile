@@ -8,6 +8,7 @@ const pingServer = async ({serverUrl}) => {
 
     return true;
   } catch (error) {
+    console.log('Error ping', error);
     return false;
   }
 };

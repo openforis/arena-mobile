@@ -44,6 +44,7 @@ const Input = ({
   stacked = false,
   customStyle = CUSTOM_STYLE,
   lateFocus = false,
+  editable = true,
   ...props
 }) => {
   const styles = useThemedStyles({styles: _styles});
@@ -63,12 +64,17 @@ const Input = ({
       horizontal={horizontal}>
       <TextInput
         ref={inputRef}
-        style={[styles.input, customStyle]}
+        style={[
+          styles.input,
+          editable === false ? styles.noEditable : {},
+          customStyle,
+        ]}
         onChange={onChange}
         onChangeText={onChangeText}
         autoFocus={autoFocus}
         selectTextOnFocus={true}
         placeholderTextColor={colors.neutralLightest}
+        editable={editable}
         {...props}
       />
     </InputContainer>

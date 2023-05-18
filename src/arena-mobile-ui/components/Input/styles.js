@@ -27,6 +27,9 @@ const styles = ({baseStyles, colors}) =>
       marginVertical: baseStyles.bases.BASE,
       color: colors.primaryText,
     },
+    noEditable: {
+      color: colors.neutralLight,
+    },
   });
 
 export default styles;
