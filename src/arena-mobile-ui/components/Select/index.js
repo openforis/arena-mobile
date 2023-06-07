@@ -1,7 +1,8 @@
 import {Objects} from '@openforis/arena-core';
 import React, {useMemo, useRef, useEffect} from 'react';
-import RNPickerSelect from 'react-native-picker-select';
 import {useTranslation} from 'react-i18next';
+import {Platform} from 'react-native';
+import RNPickerSelect from 'react-native-picker-select';
 
 import * as colors from 'arena-mobile-ui/colors';
 
@@ -21,9 +22,11 @@ const _prepareItemFn =
       value: item,
       label: labelStractor(item),
       color:
-        selectedItemKey === keyStractor(item)
-          ? colors.secondary
-          : colors.neutralLighter,
+        Platform.OS === 'ios'
+          ? null
+          : selectedItemKey === keyStractor(item)
+          ? colors.neutralLighter
+          : colors.secondary,
     });
   };
 const _filterFn = () => true;

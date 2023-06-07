@@ -41,6 +41,8 @@ const styles = ({colors, baseStyles}) =>
       padding: baseStyles.bases.BASE_4,
       backgroundColor: colors.backgroundLight,
       flex: 1,
+      minHeight: HEIGHT,
+      marginTop: baseStyles.bases.BASE_14,
     },
     container: {
       flex: 1,

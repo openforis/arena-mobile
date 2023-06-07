@@ -127,6 +127,9 @@ const Form = ({nodeDef}) => {
         defaultValue={String(newValue.x || node?.value?.x || '')}
         keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'numeric'}
         textAlign="right"
+        editable={
+          nodeDef.props.allowOnlyDeviceCoordinate === true ? false : true
+        }
       />
 
       <Input
@@ -137,6 +140,9 @@ const Form = ({nodeDef}) => {
         defaultValue={String(newValue.y || node?.value?.y || '')}
         keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'numeric'}
         textAlign="right"
+        editable={
+          nodeDef.props.allowOnlyDeviceCoordinate === true ? false : true
+        }
       />
       <InputContainer
         horizontal={true}

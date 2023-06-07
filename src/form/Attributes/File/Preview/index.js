@@ -20,7 +20,6 @@ const LoadFileButton = ({onPress}) => {
       onPress={onPress}
       type="secondary"
       icon={<Icon name="upload" size="s" />}
-      customContainerStyle={styles.buttonContainer}
     />
   );
 };
@@ -31,7 +30,6 @@ const DeleteFileButton = ({onPress}) => {
       onPress={onPress}
       type="ghostBlack"
       icon={<Icon name="trash-can-outline" size="s" />}
-      customContainerStyle={styles.buttonContainer}
     />
   );
 };
@@ -40,7 +38,7 @@ const Container = ({children}) => (
   <View style={styles.container}>{children}</View>
 );
 
-const FileLabel = ({node}) => {
+const FilePreview = ({node}) => {
   const dispatch = useDispatch();
   const handleSelectNodeAndNodeDef = useCallback(
     event => {
@@ -88,7 +86,7 @@ const NodeValueRender = ({node = false, nodeDef}) => {
         <LoadFileButton node={node} onPress={toggleModal} />
         {node?.value && (
           <>
-            <FileLabel node={node} nodeDef={nodeDef} />
+            <FilePreview node={node} nodeDef={nodeDef} />
             <DeleteFileButton node={node} onPress={deleteFile} />
           </>
         )}
