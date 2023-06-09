@@ -27,13 +27,14 @@ jest.mock('uuid', () => ({
   },
 }));
 
-const expectedRecords = state => {
+const expectedRecords = (state, isNewRecord = false) => {
   return {
     ...state.records,
     data: {
       ...state.records.data,
       'BASE_UUID-1001': {
         ...state.records.data['BASE_UUID-1001'],
+        ...(isNewRecord ? {lastModifiedAt: null} : {}),
         _nodesIndex: {},
         nodes: {},
       },
@@ -95,11 +96,11 @@ describe('Survey > Cluster, Plot, Tree', () => {
     expect({
       ...storeState,
       form: {...storeState.form, validation: {}},
-      records: expectedRecords(storeState),
+      records: expectedRecords(storeState, true),
     }).toEqual({
       ...expectedState,
       form: {...expectedState.form, validation: {}},
-      records: expectedRecords(expectedState),
+      records: expectedRecords(expectedState, true),
     });
   });
 

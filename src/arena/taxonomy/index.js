@@ -23,7 +23,6 @@ export const taxonomyVisibleFieldsOptions = {
   ],
 };
 
-
 export const exampleTaxon = {
   id: '239',
   uuid: '7c0e4ed6-af1d-44d7-bf84-1ce1e484df59',
@@ -69,11 +68,7 @@ export const exampleTaxon = {
   },
 };
 
-export const getTaxonItemLabel = ({
-  item,
-  taxonomyVisibleFields = taxonomyVisibleFieldsOptions[DEFAULT_TAXONOMY_FIELDS],
-
-}) => {
+export const getTaxonItemLabel = ({item, taxonomyVisibleFields}) => {
   const vernacularNamesObj = item?.vernacularNames || {};
 
   const vernacularNames = Object.values(vernacularNamesObj)
@@ -81,7 +76,10 @@ export const getTaxonItemLabel = ({
     .flatMap(vernacularName => vernacularName?.props?.name)
     .filter(value => !!value);
 
-  return taxonomyVisibleFields
+  return (
+    taxonomyVisibleFields ||
+    taxonomyVisibleFieldsOptions[DEFAULT_TAXONOMY_FIELDS]
+  )
     ?.map(field => {
       if (field === props.vernacularNames) {
         if (!vernacularNames?.length) {

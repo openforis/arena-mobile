@@ -1633,10 +1633,10 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.36.0.tgz#9837f768c03a1e4a30bd304a64fb8844f0e72efe"
   integrity sha512-lxJ9R5ygVm8ZWgYdUweoq5ownDlJ4upvoWmO4eLxBYHdMo+vZ/Rx0EN6MbKWDJOSUGrqJy2Gt+Dyv/VKml0fjg==
 
-"@esri/proj-codes@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@esri/proj-codes/-/proj-codes-3.0.0.tgz#c7d1cef10609f3e169ec8b640bee6bf685241bf4"
-  integrity sha512-4yxeWoLpB50tGIVs2Mmjn6UloWx52pM9P9KloqZcBV4AkdWqeOyWrYT3TbWTg0yiCtGJKX0wRlQdQekdGMuHmg==
+"@esri/proj-codes@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@esri/proj-codes/-/proj-codes-3.1.0.tgz#c9602ad72a3ba2c0435f8fa547c0d2f00fbb5c4f"
+  integrity sha512-XySw4hYBq5It+zlXlESl3/Hr0xFGkbwaif5o8SJTiGfcWapU4LRh6JLey9Sg2BZGqS8IxpJENMEUl9J87t7adA==
 
 "@hapi/hoek@^9.0.0":
   version "9.2.1"
@@ -2146,21 +2146,21 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@openforis/arena-core@^0.0.132":
-  version "0.0.132"
-  resolved "https://npm.pkg.github.com/download/@openforis/arena-core/0.0.132/d26e1cdd408316118e663133c5da9c96c449de11#d26e1cdd408316118e663133c5da9c96c449de11"
-  integrity sha512-dznF0mp4BNt5tTFW1k6isPdljGnXEHsb0mrQY5PmxtC2liv4drCXrb7fqhpkvC6ILOwf2MyF0YONtgWtx6pkVg==
+"@openforis/arena-core@^0.0.141":
+  version "0.0.141"
+  resolved "https://npm.pkg.github.com/download/@openforis/arena-core/0.0.141/ebaa31665b297dd96315be4baba9c783bb1ffc3f#ebaa31665b297dd96315be4baba9c783bb1ffc3f"
+  integrity sha512-kDw7lLD5baChnxX06gQldD+P2JHN0beD79OzV9ePhGehArGzHbJxjNfxfm1igHb0URWwct+CbJPQvli2weTEsQ==
   dependencies:
-    "@esri/proj-codes" "^3.0.0"
+    "@esri/proj-codes" "^3.1.0"
     "@jsep-plugin/regex" "^1.0.3"
     bignumber.js "^9.1.1"
     date-fns "^2.29.3"
-    jsep "^1.3.7"
+    jsep "^1.3.8"
     lodash.differencewith "^4.5.0"
     lodash.frompairs "^4.0.1"
     lodash.isequal "^4.5.0"
     lodash.topairs "^4.3.0"
-    proj4 "^2.8.0"
+    proj4 "^2.9.0"
     uuid "^9.0.0"
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.3":
@@ -9034,10 +9034,10 @@ jsdom@^20.0.0:
     ws "^8.9.0"
     xml-name-validator "^4.0.0"
 
-jsep@^1.3.7:
-  version "1.3.7"
-  resolved "https://registry.yarnpkg.com/jsep/-/jsep-1.3.7.tgz#fee6a03ea2bbf61ae5264313a18231e02ab612b3"
-  integrity sha512-NFbZTr1t13fPKw53swmZFKwBkEDWDnno7uLJk+a+Rw9tGDTkGgnGdZJ8A/o3gR1+XaAXmSsbpfIBIBgqRBZWDA==
+jsep@^1.3.8:
+  version "1.3.8"
+  resolved "https://registry.yarnpkg.com/jsep/-/jsep-1.3.8.tgz#facb6eb908d085d71d950bd2b24b757c7b8a46d7"
+  integrity sha512-qofGylTGgYj9gZFsHuyWAN4jr35eJ66qJCK4eKDnldohuUoQFbU3iZn2zjvEbd9wOAhP9Wx5DsAAduTyE1PSWQ==
 
 jsesc@^2.5.1:
   version "2.5.2"
@@ -11395,10 +11395,10 @@ progress@^2.0.3:
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
 
-proj4@^2.8.0:
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/proj4/-/proj4-2.8.0.tgz#b2cb8f3ccd56d4dcc7c3e46155cd02caa804b170"
-  integrity sha512-baC+YcD4xsSqJ+CpCZljj2gcQDhlKb+J+Zjv/2KSBwWNjk4M0pafgQsE+mWurd84tflMIsP+7j7mtIpFDHzQfQ==
+proj4@^2.9.0:
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/proj4/-/proj4-2.9.0.tgz#1b61db8c998313f80e2514609b339fb2d28cbb82"
+  integrity sha512-BoDXEzCVnRJVZoOKA0QHTFtYoE8lUxtX1jST38DJ8U+v1ixY70Kpwi0Llu6YqSWEH2xqu4XMEBNGcgeRIEywoA==
   dependencies:
     mgrs "1.0.0"
     wkt-parser "^1.3.1"

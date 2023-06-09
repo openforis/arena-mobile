@@ -1,5 +1,5 @@
-import {handleActions} from 'redux-actions';
 import moment from 'moment-timezone';
+import {handleActions} from 'redux-actions';
 
 import {deleteValueByKey} from 'infra/objectUtils';
 import globalActions from 'state/globalActions';
@@ -11,11 +11,14 @@ import initialState from '../initial.state';
 
 const data = handleActions(
   {
-    [actions.setRecord]: (state, {payload: {record = {}}}) => ({
+    [actions.setRecord]: (
+      state,
+      {payload: {record = {}, isCreating = false}},
+    ) => ({
       ...state,
       [record.uuid]: {
-        lastModifiedAt: moment().toISOString(),
         ...record,
+        lastModifiedAt: isCreating ? null : moment().toISOString(),
       },
     }),
     [actions.cleanRecord]: (state, {payload: {recordUuid}}) => {

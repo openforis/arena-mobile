@@ -1,8 +1,8 @@
+import moment from 'moment-timezone';
 import React, {useEffect, useState, useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import moment from 'moment-timezone';
 
 import Button from 'arena-mobile-ui/components/Button';
 import {useNavigateTo} from 'navigation/hooks';

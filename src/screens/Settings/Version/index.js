@@ -1,11 +1,15 @@
 import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
+import {View} from 'react-native';
 import {useDispatch} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import {actions as appActions} from 'state/app';
 
 import {useDeviceUse} from '../hooks';
+
+import styles from './styles';
 
 const Version = () => {
   const dispatch = useDispatch();
@@ -21,11 +25,18 @@ const Version = () => {
 
   const data = useDeviceUse();
   return (
-    <Button
-      type="ghostBlack"
-      onPress={handleTap}
-      label={`${t('Common:version')}: ${data.version} (${data.buildNumber})`}
-    />
+    <View style={styles.container}>
+      <Button
+        type="ghostBlack"
+        onPress={handleTap}
+        label={`${t('Common:version')}: ${data.version} (${data.buildNumber})`}
+      />
+      {data.versionDate && (
+        <TextBase size="s" type="secondaryText">{`${t('Common:date')}: ${
+          data.versionDate
+        }`}</TextBase>
+      )}
+    </View>
   );
 };
 

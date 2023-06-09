@@ -1,8 +1,8 @@
 import {NodeDefType} from '@openforis/arena-core';
 import {StyleSheet} from 'react-native';
 
-import baseStyles from 'arena-mobile-ui/styles';
 import * as colors from 'arena-mobile-ui/colors';
+import baseStyles from 'arena-mobile-ui/styles';
 
 const aligmentByType = {
   [NodeDefType.integer]: 'flex-end',

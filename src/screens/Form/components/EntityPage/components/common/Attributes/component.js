@@ -26,7 +26,13 @@ const Attributes = () => {
   const nodeDefChildrenUuids = useMemo(() => {
     const layoutNodeDefChildrenUuids = (
       nodeDef.props.layout[cycle]?.layoutChildren || []
-    ).map(children => (typeof children === 'string' ? children : children.i));
+    )
+      .sort((a, b) => {
+        const aIndex = `${a.y || 0}_${a.x || 0}`;
+        const bIndex = `${b.y || 0}_${b.x || 0}`;
+        return aIndex > bIndex ? 1 : -1;
+      })
+      .map(children => (typeof children === 'string' ? children : children.i));
 
     return Array.from(
       new Set(

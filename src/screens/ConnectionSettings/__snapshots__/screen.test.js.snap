@@ -117,7 +117,7 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
             ]
           }
         >
-          Connection Settings
+          Connection
         </Text>
       </View>
       <View

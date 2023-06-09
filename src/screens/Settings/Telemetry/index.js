@@ -3,8 +3,8 @@ import {useTranslation} from 'react-i18next';
 import {View, ScrollView} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import Button from 'arena-mobile-ui/components/Button';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import {selectors as appSelectors} from 'state/app';
 import {selectors as filesSelectors} from 'state/files';
 import {selectors as formSelectors} from 'state/form';
@@ -79,7 +79,8 @@ const Telemetry = () => {
         <Button
           type="ghostBlack"
           onPress={cleanReselectCache}
-          label={t('Settings:telemetry.cta')}></Button>
+          label={t('Settings:telemetry.cta')}
+        />
         {Object.keys(telemetryKeys).map(telemetryKey => (
           <TelemetryObject key={telemetryKey} telemetryKey={telemetryKey} />
         ))}
