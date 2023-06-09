@@ -1,3 +1,4 @@
+import moment from 'moment/moment';
 import {useState, useEffect} from 'react';
 import DeviceInfo from 'react-native-device-info';
 
@@ -21,6 +22,7 @@ export const useDeviceUse = () => {
 
   const load = async () => {
     let used = 0;
+    let versionDate = false;
     try {
       const dirItems = await fs.readDir({dirPath: '.'});
       used = dirItems.reduce((acc, dirItem) => acc + dirItem.size, 0);
@@ -28,8 +30,16 @@ export const useDeviceUse = () => {
       console.log('error', e);
     }
 
+    try {
+      versionDate = await DeviceInfo.getLastUpdateTime();
+      versionDate = moment(versionDate).format('YYYY-MM-DD');
+    } catch (e) {
+      console.log('error', e);
+    }
+
     const data = {
       version: DeviceInfo.getReadableVersion(),
+      versionDate,
       buildNumber: DeviceInfo.getBuildNumber(),
       disk: {
         free: convertBytes(DeviceInfo.getFreeDiskStorageSync()),

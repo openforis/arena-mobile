@@ -1,5 +1,4 @@
 import {Objects, Records, RecordUpdater} from '@openforis/arena-core';
-
 import {select, all, put, call, fork} from 'redux-saga/effects';
 
 import formActions from 'state/form/actionCreators';
@@ -13,7 +12,8 @@ function* updateValidation(validation) {
 }
 
 function* handleCreateNodeAndDescendants({payload} = {}) {
-  const {nodeDef, parentNode} = payload;
+  const {nodeDef, parentNode, isCreating} = payload;
+
   const [record, recordNodes, survey, validation] = yield all([
     select(formSelectors.getRecord),
     select(formSelectors.getRecordNodesByUuid),
@@ -54,7 +54,7 @@ function* handleCreateNodeAndDescendants({payload} = {}) {
   delete updatedRecord.nodes;
 
   yield all([
-    put(recordsActions.setRecord({record: updatedRecord})),
+    put(recordsActions.setRecord({record: updatedRecord, isCreating})),
     put(nodesActions.setNodes({nodes: updatedNodes})),
   ]);
 

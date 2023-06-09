@@ -25,8 +25,8 @@ const _prepareItemFn =
         Platform.OS === 'ios'
           ? null
           : selectedItemKey === keyStractor(item)
-          ? colors.neutralLighter
-          : colors.secondary,
+          ? colors.secondary
+          : colors.neutralLighter,
     });
   };
 const _filterFn = () => true;

@@ -1,4 +1,3 @@
-import {SRSs} from '@openforis/arena-core';
 import moment from 'moment';
 import {put, select, call, all} from 'redux-saga/effects';
 
@@ -39,9 +38,7 @@ function* handleCreateRecord() {
 
     record = yield call(_createRecord, {survey, user, cycle});
 
-    yield call(SRSs.init);
-
-    yield put(recordsActions.setRecord({record}));
+    yield put(recordsActions.setRecord({record, isCreating: true}));
   } catch (error) {
     console.log('Error', error);
   }

@@ -2,6 +2,10 @@ import {Objects} from '@openforis/arena-core';
 
 const DEFAULT_JOIN_STRING = ',';
 const DEFAULT_STRING = '';
+const DEFAULT_EMPTY_STRING = '<Key missing>';
+
+const allKeysEmpty = ({nodes = []}) =>
+  nodes.every(node => Objects.isEmpty(node.value));
 
 export const getKeyNodeAsString = ({
   node,
@@ -41,8 +45,14 @@ export const getKeyNodesForEntityAsString = ({
   categoryItemIndex,
   joinString = DEFAULT_JOIN_STRING,
   defaultString = DEFAULT_STRING,
+  defaultEmptyString = DEFAULT_EMPTY_STRING,
 }) => {
   const keyNodes = getKeyNodesForEntity({entity, nodes, nodeDefsByUuid});
+  const areAllKeysEmpty = allKeysEmpty({nodes: keyNodes});
+
+  if (areAllKeysEmpty) {
+    return defaultEmptyString;
+  }
 
   return getKeyNodesAsString({
     nodes: keyNodes,
