@@ -15,7 +15,8 @@ const styles = StyleSheet.create({
     height: 100,
   },
   textNameTitle: {
-    paddingLeft: 16,
+    paddingLeft: baseStyles.bases.BASE_4,
+    paddingBottom: baseStyles.bases.BASE_2,
   },
   connectionSettingsContainer: {
     borderWidth: 0,

@@ -17,6 +17,7 @@ function* handleInitializeRootEntity() {
     payload: {
       nodeDef: rootNodeDef,
       parentNode: null,
+      isCreating: true,
     },
   });
 

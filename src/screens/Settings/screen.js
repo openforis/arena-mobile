@@ -40,16 +40,18 @@ const _extractInitials = (value = '') => {
   );
 };
 
-const SectionWithTitle = ({title, children, subSection = false}) => {
+const Section = ({title, children, subSection = false}) => {
   return (
     <View style={[styles.container, (subSection && {marginTop: 0}: {})]}>
-      <View style={{paddingVertical: baseStyles.bases.BASE_2}}>
-        <TextBase
-          size={subSection ? 'l' : 'xl'}
-          type={subSection ? 'secondaryText' : 'header'}>
-          {title}
-        </TextBase>
-      </View>
+      {title && (
+        <View style={{paddingVertical: baseStyles.bases.BASE_2}}>
+          <TextBase
+            size={subSection ? 'l' : 'xl'}
+            type={subSection ? 'secondaryText' : 'header'}>
+            {title}
+          </TextBase>
+        </View>
+      )}
       {children}
     </View>
   );
@@ -92,7 +94,7 @@ const ConnectionSettingsSection = () => {
   const serverUrl = useSelector(appSelectors.getServerUrl);
 
   return (
-    <SectionWithTitle title={t('ConnectionSettings:title')}>
+    <Section title={t('ConnectionSettings:title')}>
       {user?.name ? (
         <TouchableOpacity onPress={handleNavigateToConnectionSettings}>
           <Card customStyles={styles.connectionSettingsContainer}>
@@ -121,7 +123,7 @@ const ConnectionSettingsSection = () => {
           label={t('Settings:connect.cta')}
         />
       )}
-    </SectionWithTitle>
+    </Section>
   );
 };
 
@@ -150,9 +152,7 @@ const Settings = () => {
                 type="header">
                 {t('Settings:survey.title')}
               </TextBase>
-              <SectionWithTitle
-                title={t('Settings:survey.taxonomies.title')}
-                subSection>
+              <Section title={false} subSection>
                 <SectionCard
                   onPress={navigateTo({
                     route: routes.SETTINGS_SURVEY_TAXONOMIES,
@@ -161,10 +161,10 @@ const Settings = () => {
                   iconName="leaf"
                   position="only"
                 />
-              </SectionWithTitle>
+              </Section>
 
               {SHOW_STYLE_SETTINGS && (
-                <SectionWithTitle title={t('Settings:style.title')}>
+                <Section title={t('Settings:style.title')}>
                   <SectionCard
                     position="first"
                     onPress={navigateTo({
@@ -189,7 +189,7 @@ const Settings = () => {
                     title={t('Settings:style.FontSize.title')}
                     iconName="format-size"
                   />
-                </SectionWithTitle>
+                </Section>
               )}
             </>
           ) : null}

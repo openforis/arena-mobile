@@ -1,4 +1,4 @@
-import {SRSs, PointFactory, Points} from '@openforis/arena-core';
+import {PointFactory, Points} from '@openforis/arena-core';
 import React, {useState, useCallback, useEffect, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Platform, View} from 'react-native';
@@ -73,12 +73,6 @@ const Form = ({nodeDef}) => {
     },
     [setValue],
   );
-
-  useEffect(() => {
-    (async () => {
-      await SRSs.init();
-    })();
-  }, []);
 
   useEffect(() => {
     if (node.value) {
