@@ -59,7 +59,7 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
   );
 
   return (
-    <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit}>
+    <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit} nodes={[node]}>
       <Input
         autoCapitalize={
           autoCapitalizeByTransformFunction[

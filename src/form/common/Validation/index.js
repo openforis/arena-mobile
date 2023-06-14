@@ -32,7 +32,7 @@ const flatValidationObject = validation => {
   };
 };
 
-const Validation = ({nodes, showValidation = true, absolute = false}) => {
+const Validation = ({nodes = [], showValidation = true, absolute = false}) => {
   const {t} = useTranslation();
   const validation = useSelector(state =>
     formSelectors.getValidationByNodes(state, nodes),

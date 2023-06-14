@@ -15,6 +15,7 @@ const BaseForm = ({
   handleSubmit,
   children,
   hasSubmitButton = true,
+  nodes,
 }) => {
   const styles = useThemedStyles({styles: _styles});
   const {t} = useTranslation();
@@ -41,7 +42,7 @@ const BaseForm = ({
           onPress={handleClose}
         />
       </View>
-      <AttributeHeader nodeDef={nodeDef} showValidation={false} />
+      <AttributeHeader nodeDef={nodeDef} showValidation={true} nodes={nodes} />
       {children}
 
       <View style={styles.divider} />
