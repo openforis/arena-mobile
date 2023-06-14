@@ -1,133 +1,189 @@
+import {Slider} from '@miblanchard/react-native-slider';
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useState, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, ScrollView, TouchableOpacity} from 'react-native';
+import {View, ScrollView, Text} from 'react-native';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {
-  getTaxonItemLabel,
-  taxonomyVisibleFieldsOptions,
-  exampleTaxon,
-  DEFAULT_TAXONOMY_FIELDS,
-} from 'arena/taxonomy';
 import Button from 'arena-mobile-ui/components/Button';
+import Card from 'arena-mobile-ui/components/Card';
 import Header from 'arena-mobile-ui/components/Header';
-import Icon from 'arena-mobile-ui/components/Icon';
 import Layout from 'arena-mobile-ui/components/Layout';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
+import {
+  baseRanges as baseRanges,
+  fontRanges as baseFontRanges,
+} from 'arena-mobile-ui/styles';
 import {selectors as appSelectors, actions as appActions} from 'state/app';
 
 import _styles from './styles';
 
 const SettingsStyleFontBaseModifier = () => {
   const styles = useThemedStyles({styles: _styles});
-  const [taxonomyVisibleFieldsKey, setTaxonomyVisibleFieldsKey] = useState(
-    DEFAULT_TAXONOMY_FIELDS,
-  );
 
-  const defaultVisibleFields = useSelector(
-    appSelectors.getSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields,
-  );
-
-  useEffect(() => {
-    if (defaultVisibleFields) {
-      setTaxonomyVisibleFieldsKey(
-        defaultVisibleFields.join('.') || DEFAULT_TAXONOMY_FIELDS,
-      );
-    }
-  }, [defaultVisibleFields]);
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const {t} = useTranslation();
 
+  const [initialFontBaseModifier, setInitialFontBaseModifier] = useState(null);
+  const [initialBaseModifier, setInitialBaseModifier] = useState(null);
+
+  const fontBaseModifier = useSelector(appSelectors.getFontBaseModifier);
+  const [baseFontSizeSelected, setBaseFontSizeSelected] =
+    useState(fontBaseModifier);
+
+  const baseModifier = useSelector(appSelectors.getBaseModifier);
+  const [baseModifierSelected, setBaseModifierSelected] =
+    useState(baseModifier);
+
+  useEffect(() => {
+    if (!initialFontBaseModifier) {
+      setInitialFontBaseModifier(fontBaseModifier);
+    }
+  }, [fontBaseModifier, initialFontBaseModifier]);
+
+  useEffect(() => {
+    if (baseFontSizeSelected) {
+      dispatch(
+        appActions.setStyleFontBaseModifier({
+          fontBaseModifier: baseFontSizeSelected,
+        }),
+      );
+    }
+  }, [dispatch, baseFontSizeSelected]);
+
+  useEffect(() => {
+    if (!initialBaseModifier) {
+      setInitialBaseModifier(baseModifier);
+    }
+  }, [baseModifier, initialBaseModifier]);
+
+  useEffect(() => {
+    if (baseModifierSelected) {
+      dispatch(
+        appActions.setStyleBaseModifier({
+          baseModifier: baseModifierSelected,
+        }),
+      );
+    }
+  }, [dispatch, baseModifierSelected]);
+
   const handleSave = useCallback(() => {
     dispatch(
-      appActions.setSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields({
-        defaultVisibleFields: taxonomyVisibleFieldsKey.split('.'),
+      appActions.setStyleFontBaseModifier({
+        fontBaseModifier: baseFontSizeSelected,
       }),
     );
     navigation.goBack();
-  }, [dispatch, navigation, taxonomyVisibleFieldsKey]);
+  }, [dispatch, navigation, baseFontSizeSelected]);
+
+  const handleClose = useCallback(() => {
+    // reset to initail values
+    dispatch(
+      appActions.setStyleFontBaseModifier({
+        fontBaseModifier: initialFontBaseModifier,
+      }),
+    );
+    dispatch(
+      appActions.setStyleBaseModifier({
+        baseModifier: initialBaseModifier,
+      }),
+    );
+    navigation.goBack();
+  }, [dispatch, navigation, initialFontBaseModifier, initialBaseModifier]);
 
   return (
     <Layout bottomStyle="background" topStyle="primary">
       <>
         <Header hasBackComponent>
-          <TextBase type="title">
-            {t('Settings:survey.taxonomies.title')}
-          </TextBase>
+          <Text type="title">
+            {t('Settings:style.TextAndSpacingSize.title')}
+          </Text>
         </Header>
         <ScrollView>
           <View style={styles.container}>
-            <TextBase type="header">
-              {t('Settings:survey.taxonomies.screen.header')}
+            <TextBase type="header" customStyle={styles.title}>
+              {t('Settings:style.TextAndSpacingSize.screen.textSize.title')}{' '}
             </TextBase>
 
-            <TextBase>
-              {t('Settings:survey.taxonomies.screen.description')}
+            <Text>
+              {t('Settings:style.TextAndSpacingSize.screen.textSize.info')}{' '}
+            </Text>
+
+            <View style={styles.selectorContainer}>
+              <Icons name="format-font-size-decrease" size={40} />
+              <View style={styles.sliderContainer}>
+                <Slider
+                  value={baseFontSizeSelected}
+                  onValueChange={setBaseFontSizeSelected}
+                  minimumValue={baseFontRanges[0]}
+                  maximumValue={baseFontRanges[baseFontRanges.length - 1]}
+                />
+              </View>
+              <Icons name="format-font-size-increase" size={40} />
+            </View>
+            <Button
+              type="ghost"
+              onPress={() => setBaseFontSizeSelected(1)}
+              label={t(
+                'Settings:style.TextAndSpacingSize.screen.textSize.reset',
+              )}
+            />
+
+            <TextBase type="header" customStyle={styles.title}>
+              {t('Settings:style.TextAndSpacingSize.screen.spacingSize.title')}{' '}
             </TextBase>
 
-            {Object.entries(taxonomyVisibleFieldsOptions).map(
-              (option, index) => {
-                const [optionKey, optionValue] = option;
-                const isSelected = taxonomyVisibleFieldsKey === optionKey;
+            <Text>
+              {t('Settings:style.TextAndSpacingSize.screen.spacingSize.info')}{' '}
+            </Text>
 
-                return (
-                  <TouchableOpacity
-                    key={optionKey}
-                    style={[
-                      styles.optionContainer,
-                      index === 0 && styles.optionContainerFirst,
-                      index ===
-                        Object.values(taxonomyVisibleFieldsOptions).length -
-                          1 && styles.optionContainerLast,
-                      taxonomyVisibleFieldsKey === optionKey &&
-                        styles.optionContainerSelected,
-                    ]}
-                    onPress={() => setTaxonomyVisibleFieldsKey(optionKey)}>
-                    <Icon
-                      name={
-                        isSelected
-                          ? 'checkbox-marked'
-                          : 'checkbox-blank-outline'
-                      }
-                      color={isSelected && styles.optionTextSelected?.color}
-                      size="s"
-                    />
-                    <TextBase
-                      customStyle={[
-                        styles.optionText,
-                        isSelected && styles.optionTextSelected,
-                      ]}>
-                      {optionValue
-                        .map(field => {
-                          return t(
-                            `Settings:survey.taxonomies.screen.fields.${field}`,
-                          );
-                        })
-                        .join(', ')}
-                    </TextBase>
-                  </TouchableOpacity>
-                );
-              },
-            )}
+            <View style={styles.selectorContainer}>
+              <Icons name="arrow-collapse" size={40} />
+              <View style={styles.sliderContainer}>
+                <Slider
+                  value={baseModifierSelected}
+                  onValueChange={setBaseModifierSelected}
+                  minimumValue={baseRanges[0]}
+                  maximumValue={baseRanges[baseRanges.length - 1]}
+                />
+              </View>
+              <Icons name="arrow-expand" size={40} />
+            </View>
+
+            <Button
+              type="ghost"
+              onPress={() => setBaseModifierSelected(1)}
+              label={t(
+                'Settings:style.TextAndSpacingSize.screen.spacingSize.reset',
+              )}
+            />
           </View>
+
           <View style={styles.exampleContainer}>
-            <TextBase type="header" customStyle={styles.exampleTitle}>
-              {getTaxonItemLabel({
-                item: exampleTaxon,
-                taxonomyVisibleFields:
-                  taxonomyVisibleFieldsOptions[taxonomyVisibleFieldsKey],
-              })}
-            </TextBase>
+            <Card>
+              {[
+                'title',
+                'header',
+                'text',
+                'secondaryText',
+                'bold',
+                'bolder',
+              ].map(type => (
+                <TextBase key={type} type={type}>
+                  {t('Common:preview')} ({type})
+                </TextBase>
+              ))}
+            </Card>
           </View>
 
           <View style={styles.buttonsContainer}>
             <Button
               type="ghost"
-              onPress={navigation.goBack}
+              onPress={handleClose}
               label={t('Common:cancel')}
             />
             <Button

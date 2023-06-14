@@ -2,47 +2,31 @@ import {StyleSheet} from 'react-native';
 
 import * as _colors from '../colors';
 
-export const getBaseStyles = ({
-  baseModifier = 1,
-  fontBaseModifier = 1,
-  colors = _colors,
-} = {}) => {
-  // 0.75 1 1.25
-  const _BASE = 4;
-  // 1, 1.25, 1.5
-  const _FONT_BASE = 4;
-  const BASE = _BASE * baseModifier;
-  const FONT_BASE = _FONT_BASE * fontBaseModifier;
+// 0.75 1 1.25
+export const _BASE = 4;
+// 1, 1.25, 1.5
+export const _FONT_BASE = 4;
 
+export const baseRanges = [0.75, 0.9, 1, 1.1, 1.25, 1.35];
+export const fontRanges = [0.8, 1, 1.1, 1.25, 1.3, 1.5];
+
+export const _getFontStyles = ({fontBase, colors}) => {
   const fontSizes = {
-    xxl: FONT_BASE * 6,
-    xl: FONT_BASE * 5,
-    l: FONT_BASE * 4,
-    m: FONT_BASE * 3.5,
-    s: FONT_BASE * 3,
-    xs: FONT_BASE * 2,
+    xxl: fontBase * 6,
+    xl: fontBase * 5,
+    l: fontBase * 4,
+    m: fontBase * 3.5,
+    s: fontBase * 3,
+    xs: fontBase * 2,
   };
 
   const iconSizes = {
-    xxl: FONT_BASE * 10,
-    xl: FONT_BASE * 9,
-    l: FONT_BASE * 8,
-    m: FONT_BASE * 6,
-    s: FONT_BASE * 4,
-    xs: FONT_BASE * 2,
-  };
-
-  const bases = {
-    BASE, // 4
-    BASE_2: BASE * 2, // 8
-    BASE_3: BASE * 3, // 12
-    BASE_4: BASE * 4, // 16
-    BASE_6: BASE * 6, // 24
-    BASE_8: BASE * 8, // 32
-    BASE_12: BASE * 12, // 48
-    BASE_14: BASE * 16, // 56
-    BASE_16: BASE * 16, // 64
-    BASE_24: BASE * 24, // 96
+    xxl: fontBase * 10,
+    xl: fontBase * 9,
+    l: fontBase * 8,
+    m: fontBase * 6,
+    s: fontBase * 4,
+    xs: fontBase * 2,
   };
 
   const textSize = StyleSheet.create({
@@ -101,6 +85,41 @@ export const getBaseStyles = ({
     },
   });
 
+  return {
+    fontSizes,
+    iconSizes,
+    textSize,
+    textStyle,
+    defaultFontSize: fontSizes.m,
+    defaultIconSize: iconSizes.m,
+  };
+};
+export const getBaseStyles = ({
+  baseModifier = 1,
+  fontBaseModifier = 1,
+  colors = _colors,
+} = {}) => {
+  const BASE = _BASE * baseModifier;
+  const FONT_BASE = _FONT_BASE * fontBaseModifier;
+
+  const {fontSizes, iconSizes, textSize, textStyle} = _getFontStyles({
+    fontBase: FONT_BASE,
+    colors,
+  });
+
+  const bases = {
+    BASE, // 4
+    BASE_2: BASE * 2, // 8
+    BASE_3: BASE * 3, // 12
+    BASE_4: BASE * 4, // 16
+    BASE_6: BASE * 6, // 24
+    BASE_8: BASE * 8, // 32
+    BASE_12: BASE * 12, // 48
+    BASE_14: BASE * 16, // 56
+    BASE_16: BASE * 16, // 64
+    BASE_24: BASE * 24, // 96
+  };
+
   const card = StyleSheet.create({
     basicCard: {
       borderRadius: BASE,
@@ -135,6 +154,7 @@ export const getBaseStyles = ({
     fontSizes,
     BASE,
     bases,
+    colors,
   };
 };
 
