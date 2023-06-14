@@ -1,10 +1,10 @@
-import {Objects} from '@openforis/arena-core';
 import React, {useRef, useEffect} from 'react';
 import {View, TextInput} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
+import {Objects} from 'infra/objectUtils';
 
 import _styles from './styles';
 
@@ -52,7 +52,7 @@ const Input = ({
   useEffect(() => {
     if (lateFocus) {
       setTimeout(() => {
-        inputRef.current.focus();
+        inputRef?.current?.focus?.();
       }, 300);
     }
   }, [lateFocus]);

@@ -1,10 +1,11 @@
-import {NodeDefs, NodeDefType, Objects} from '@openforis/arena-core';
+import {NodeDefs, NodeDefType} from '@openforis/arena-core';
 import React, {useState, useCallback} from 'react';
 import {Platform} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import {transform, textTransformValues} from 'arena/utils/textUtils';
 import Input from 'arena-mobile-ui/components/Input';
+import {Objects} from 'infra/objectUtils';
 import {useCloseNode, useUpdateNode} from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
 

@@ -1,4 +1,3 @@
-import {Objects} from '@openforis/arena-core';
 import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
@@ -8,6 +7,7 @@ import {useSelector} from 'react-redux';
 import * as colors from 'arena-mobile-ui/colors';
 import Icon from 'arena-mobile-ui/components/Icon';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import {Objects} from 'infra/objectUtils';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelector} from 'state/survey';
 

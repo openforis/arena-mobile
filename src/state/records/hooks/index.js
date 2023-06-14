@@ -1,9 +1,9 @@
-import {Objects} from '@openforis/arena-core';
 import {useFocusEffect} from '@react-navigation/native';
 import {useCallback, useState, useMemo} from 'react';
 import {useSelector} from 'react-redux';
 
 import {getRecordSummary} from 'arena/record';
+import {Objects} from 'infra/objectUtils';
 import {
   getRecordsFiles,
   getRecord,

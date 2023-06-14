@@ -1,7 +1,7 @@
-import {Objects} from '@openforis/arena-core';
 import {StackActions} from '@react-navigation/core';
 import {takeLatest, put, select, call, all} from 'redux-saga/effects';
 
+import {Objects} from 'infra/objectUtils';
 import {ROUTES} from 'navigation/constants';
 import {cleanAllData} from 'state/__persistence';
 import {actions as formActions} from 'state/form';

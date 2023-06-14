@@ -1,4 +1,4 @@
-import {Objects} from '@openforis/arena-core';
+import {Objects} from 'infra/objectUtils';
 
 const DEFAULT_JOIN_STRING = ',';
 const DEFAULT_STRING = '';

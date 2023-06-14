@@ -1,8 +1,9 @@
-import {Objects, NodeDefs} from '@openforis/arena-core';
+import {NodeDefs} from '@openforis/arena-core';
 import {createCachedSelector, FifoObjectCache} from 're-reselect';
 import {createSelector} from 'reselect';
 
 import {getKeyNodesForEntityAsString} from 'arena/record';
+import {Objects} from 'infra/objectUtils';
 import {keySelectors, normalizeByUuid} from 'infra/stateUtils';
 import recordsSelectors from 'state/records/selectors';
 import {getCategoryItemIndex} from 'state/survey/selectors/base';

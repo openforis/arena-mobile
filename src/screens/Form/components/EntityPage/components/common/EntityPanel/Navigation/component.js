@@ -1,4 +1,4 @@
-import {Objects, NodeDefs} from '@openforis/arena-core';
+import {NodeDefs} from '@openforis/arena-core';
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import {isTablet} from 'react-native-device-info';
@@ -8,6 +8,7 @@ import {defaultCycle} from 'arena/config';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
+import {Objects} from 'infra/objectUtils';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 

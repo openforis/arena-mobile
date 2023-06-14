@@ -1,10 +1,10 @@
-import {Objects} from '@openforis/arena-core';
 import React, {useMemo, useRef, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Platform} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
 import * as colors from 'arena-mobile-ui/colors';
+import {Objects} from 'infra/objectUtils';
 
 import Icon from '../Icon';
 

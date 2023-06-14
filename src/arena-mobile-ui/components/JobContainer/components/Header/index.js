@@ -2,10 +2,9 @@ import React from 'react';
 import {View, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import surveySelectors from 'state/survey/selectors';
-import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
-
 import Icon from 'arena-mobile-ui/components/Icon';
+import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
+import surveySelectors from 'state/survey/selectors';
 
 import styles from './styles';
 

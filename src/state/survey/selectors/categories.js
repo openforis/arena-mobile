@@ -1,7 +1,7 @@
-import {Objects} from '@openforis/arena-core';
 import {createCachedSelector} from 're-reselect';
 import {createSelector} from 'reselect';
 
+import {Objects} from 'infra/objectUtils';
 import formSelectors from 'state/form/selectors';
 
 import {getSurvey, getCategoryItemIndex} from './base';

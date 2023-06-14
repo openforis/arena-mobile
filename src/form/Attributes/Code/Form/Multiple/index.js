@@ -1,4 +1,3 @@
-import {Objects} from '@openforis/arena-core';
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -6,6 +5,7 @@ import {useSelector} from 'react-redux';
 import List from 'form/Attributes/common/SearchableForm/List';
 import Header from 'form/Attributes/common/SearchableForm/List/Header';
 import ListItem from 'form/Attributes/common/SearchableForm/List/Item';
+import {Objects} from 'infra/objectUtils';
 import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
 

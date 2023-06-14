@@ -1,6 +1,6 @@
-import {Objects} from '@openforis/arena-core';
 import {call, select, put, all} from 'redux-saga/effects';
 
+import {Objects} from 'infra/objectUtils';
 import appSelectors from 'state/app/selectors';
 import formActions from 'state/form/actionCreators';
 import formSelectors from 'state/form/selectors';
