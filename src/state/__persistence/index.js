@@ -3,7 +3,6 @@ import {call, select, put, fork} from 'redux-saga/effects';
 
 import {getRecordKey, getRecordSummary} from 'arena/record';
 import * as fs from 'infra/fs';
-
 import nodesSelectors from 'state/nodes/selectors';
 import recordsActions from 'state/records/actionCreators';
 import recordsSelectors from 'state/records/selectors';
