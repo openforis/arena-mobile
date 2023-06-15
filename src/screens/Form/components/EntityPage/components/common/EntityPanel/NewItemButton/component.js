@@ -1,5 +1,4 @@
 import {NodeDefs} from '@openforis/arena-core';
-
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';

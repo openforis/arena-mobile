@@ -11,9 +11,6 @@ import {selectors as surveySelectors} from 'state/survey';
 
 import styles from './styles';
 
-NodeDefs.getLayoutRenderTypePerCycle = ({nodeDef, cycle = 0}) =>
-  nodeDef?.props?.layout?.[cycle]?.renderType;
-
 const Entity = ({nodeDef, isCurrentEntity = false}) => {
   const {t} = useTranslation();
   const nodeDefName = useNodeDefNameOrLabel({nodeDef});

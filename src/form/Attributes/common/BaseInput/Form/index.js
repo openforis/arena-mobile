@@ -1,4 +1,4 @@
-import {NodeDefs, NodeDefType} from '@openforis/arena-core';
+import {NodeDefType, NodeDefs} from '@openforis/arena-core';
 import React, {useState, useCallback} from 'react';
 import {Platform} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -10,9 +10,6 @@ import {useCloseNode, useUpdateNode} from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
 
 import {Form as BaseForm} from '../../Base';
-
-// TODO move to arena-core, maybe other name
-NodeDefs.getTextTransform = nodeDef => nodeDef?.props?.textTransform;
 
 const autoCapitalizeByTransformFunction = {
   [textTransformValues.none]: undefined,

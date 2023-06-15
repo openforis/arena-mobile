@@ -8,10 +8,6 @@ import CodeCheckbox from './CodeCheckbox';
 import CodeDropdown from './CodeDropdown';
 import {useCode} from './hooks';
 
-// TODO move to arena-core, maybe other name
-NodeDefs.getLayoutRenderTypePerCycle = ({nodeDef, cycle = 0}) =>
-  nodeDef?.props.layout[cycle]?.renderType;
-
 const MAX_NUMBER_ITEMS_FOR_CHECKBOX = 15;
 
 const Preview = ({nodeDef}) => {
