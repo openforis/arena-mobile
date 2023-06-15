@@ -23,10 +23,7 @@
       "title": "Taxonomies",
       "screen": {
         "header": "Taxonomies",
-
-        "info": "Select how do you wnat to see the taxonomies by default",
-
-        "description": "Select how do you want to see the taxonomies in the entry form",
+        "description": "Select how do you want to see the taxonomies in the entry form.",
         "fields": {
           "code": "(Code)",
           "genus": "Genus",
@@ -39,14 +36,20 @@
   },
   "style": {
     "title": "Style",
-    "FontSize": {
-      "title": "Font Size",
+    "TextAndSpacingSize": {
+      "title": "Text and Spacing Sizes",
       "screen": {
-        "header": "Font Size",
-
-        "info": "",
-
-        "description": ""
+        "header": "Text and Spacing Sizes",
+        "textSize": {
+          "title": "Text Size",
+          "info": "Manage the font size to optimize the reading experience and suit your personal style.",
+          "reset": "Reset to default"
+        },
+        "spacingSize": {
+          "title": "Spacing",
+          "info": "Modify the spacing to increase or decrease the gaps between text, buttons, and other elements",
+          "reset": "Reset to default"
+        }
       }
     }
   }

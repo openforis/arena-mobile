@@ -42,6 +42,23 @@ const appUi = handleActions(
       ...state,
       devMode: false,
     }),
+    [actions.setStyleBaseModifier]: (state, {payload: {baseModifier = 1}}) => ({
+      ...state,
+      style: {
+        ...state.style,
+        baseModifier,
+      },
+    }),
+    [actions.setStyleFontBaseModifier]: (
+      state,
+      {payload: {fontBaseModifier = 1}},
+    ) => ({
+      ...state,
+      style: {
+        ...state.style,
+        fontBaseModifier,
+      },
+    }),
   },
   initialState.ui,
 );

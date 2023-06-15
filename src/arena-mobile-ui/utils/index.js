@@ -57,6 +57,7 @@ export const alert = ({
       type: 'text',
       cancelable: false,
       defaultValue: '',
+      placeholder: '...',
     });
   }
 

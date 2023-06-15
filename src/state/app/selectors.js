@@ -29,14 +29,6 @@ const getShowNames = createSelector(getUi, ui => ui?.showNames);
 const getIsTablet = createSelector(getUi, () => isTablet?.() || false);
 
 const getStyle = createSelector(getUi, ui => ui?.style);
-const getBaseModifier = createSelector(
-  getStyle,
-  style => style?.baseModifier || 1,
-);
-const getFontBaseModifier = createSelector(
-  getStyle,
-  style => style?.fontBaseModifier || 1,
-);
 
 /* Preferences settings */
 
@@ -46,6 +38,16 @@ const getSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields =
     preferences =>
       preferences?.settings?.survey?.taxonomies?.defaultVisibleFields || null,
   );
+
+const getBaseModifier = createSelector(
+  getStyle,
+  style => style?.baseModifier || 1,
+);
+
+const getFontBaseModifier = createSelector(
+  getStyle,
+  style => style?.fontBaseModifier || 1,
+);
 
 export default {
   getAccessData,

@@ -43,6 +43,13 @@ const {app} = createActions({
   }) => ({
     defaultVisibleFields,
   }),
+  /* Style settings */
+  [types.SET_STYLE_BASE_MODIFIER]: ({baseModifier = 1}) => ({
+    baseModifier,
+  }),
+  [types.SET_STYLE_FONT_BASE_MODIFIER]: ({fontBaseModifier = 1}) => ({
+    fontBaseModifier,
+  }),
 });
 
 export default app;

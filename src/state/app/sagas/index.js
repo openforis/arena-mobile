@@ -4,8 +4,10 @@ import {takeLatest, put, select, call, all} from 'redux-saga/effects';
 
 import {ROUTES} from 'navigation/constants';
 import {cleanAllData} from 'state/__persistence';
+import {actions as formActions} from 'state/form';
 import globalActions from 'state/globalActions';
 import * as navigator from 'state/navigatorService';
+import {actions as surveyActions} from 'state/survey';
 import surveysSelectors from 'state/surveys/selectors';
 import {actions as userActions} from 'state/user';
 
@@ -100,6 +102,9 @@ function* handleReset() {
 
 function* handleLogout() {
   yield put(userActions.cleanUser());
+  yield put(appActions.cleanAccessData());
+  yield put(formActions.cleanForm());
+  yield put(surveyActions.cleanSurvey());
   yield call(navigator.navigatorDispatch, StackActions.replace(ROUTES.HOME));
 }
 
