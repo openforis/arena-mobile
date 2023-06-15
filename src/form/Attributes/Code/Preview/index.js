@@ -15,7 +15,7 @@ const Preview = ({nodeDef}) => {
   const {categoryItems} = useCode({nodeDef});
 
   if (
-    NodeDefs.getLayoutRenderTypePerCycle({nodeDef, cycle}) === 'checkbox' &&
+    NodeDefs.getLayoutRenderType(cycle)(nodeDef) === 'checkbox' &&
     categoryItems.length < MAX_NUMBER_ITEMS_FOR_CHECKBOX
   ) {
     return <CodeCheckbox nodeDef={nodeDef} />;

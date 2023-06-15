@@ -16,11 +16,7 @@ export const useIsTable = () => {
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   return useMemo(
-    () =>
-      NodeDefs.getLayoutRenderTypePerCycle({
-        nodeDef: parentEntityNodeDef,
-        cycle,
-      }) === 'table',
+    () => NodeDefs.getLayoutRenderType(cycle)(parentEntityNodeDef) === 'table',
     [parentEntityNodeDef, cycle],
   );
 };

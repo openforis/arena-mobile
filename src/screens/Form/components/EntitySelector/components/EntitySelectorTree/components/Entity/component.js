@@ -47,7 +47,7 @@ const Entity = ({nodeDef, isCurrentEntity = false}) => {
           isCurrentEntity ? styles.active : {},
         ]}>
         {nodeDefName}
-        {NodeDefs.getLayoutRenderTypePerCycle({nodeDef, cycle}) === 'table'
+        {NodeDefs.getLayoutRenderType(cycle)(nodeDef) === 'table'
           ? t('Form:nodeDefEntity.layout.table')
           : ''}
       </TextBase>
