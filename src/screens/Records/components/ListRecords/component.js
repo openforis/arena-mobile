@@ -31,7 +31,9 @@ const RecordCard = ({record, recordUuid, isSelected, onSelect}) => {
       onPress={handlePress}
       customStyles={[styles.container, isSelected ? styles.selected : {}]}>
       <View style={[styles.payload]}>
-        <TextBase type="bold">{record.recordKey || '-'}</TextBase>
+        <TextBase type="bold">
+          {record.recordKey || t('Records:empty_key')}
+        </TextBase>
         <CreatedAndModified
           dateCreated={record?.dateCreated}
           dateModified={record?.dateModified}

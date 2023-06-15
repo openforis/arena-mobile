@@ -48,7 +48,9 @@ export const useRecordsSummary = () => {
 
       for (const record of recordsInSurvey) {
         const _recordSummary = getRecordSummary(record);
-        _summary[record.uuid] = _recordSummary;
+        if (Objects.isEmpty(_summary[record.uuid])) {
+          _summary[record.uuid] = _recordSummary;
+        }
       }
 
       for (const uuid of recordsUuidsToDelete) {
