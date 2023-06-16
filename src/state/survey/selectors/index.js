@@ -25,7 +25,6 @@ import {
   getNodeDefChildren,
   getNodeDefEntityChildrenKeys,
   getNodeDefTableChildrenUuid,
-  getNodeDefEntityChildrenAttributesUuids,
 } from './nodeDefs';
 import {getNodes, getEntityNodeKeys, getEntityNodeKeysAsString} from './nodes';
 import {getRecords, getNumberRecords} from './records';
@@ -61,7 +60,6 @@ export default {
   getNodeDefEntityChildrenKeys,
 
   getNodeDefTableChildrenUuid,
-  getNodeDefEntityChildrenAttributesUuids,
 
   // ---- category
   getCategoryItems,

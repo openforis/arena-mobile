@@ -7,6 +7,7 @@ import {Objects} from 'infra/objectUtils';
 import {keySelectors, normalizeByUuid} from 'infra/stateUtils';
 import recordsSelectors from 'state/records/selectors';
 import {getCategoryItemIndex} from 'state/survey/selectors/base';
+import * as surveySelectorsBase from 'state/survey/selectors/base';
 import * as surveySelectorsNodeDefs from 'state/survey/selectors/nodeDefs';
 import * as surveySelectorsNodes from 'state/survey/selectors/nodes';
 
@@ -353,6 +354,58 @@ const canAddNode = createCachedSelector(
   },
 )(keySelectors.getUuidFromItem);
 
+const getFormAttributesNodeDefs = createSelector(
+  getParentEntityNodeDef,
+  surveySelectorsNodeDefs.getNodeDefsByUuid,
+  surveySelectorsBase.getSurveyCycle,
+  getParentEntityNode,
+  (parentEntityNodeDef, nodeDefsByUuid, cycle, parentEntityNode) => {
+    const isTable =
+      NodeDefs.getLayoutRenderType(cycle)(parentEntityNodeDef) === 'table';
+
+    const nodeDefUuidsInEntity =
+      parentEntityNodeDef.props.layout[cycle]?.layoutChildren;
+    const parentChildApplicability = parentEntityNode?.meta?.childApplicability;
+    const parentChildApplicabilityKeys = Object.keys(
+      parentChildApplicability || {},
+    );
+
+    let formAttributesNodeDefs = isTable
+      ? nodeDefUuidsInEntity
+      : nodeDefUuidsInEntity
+          .sort((a, b) => {
+            const aIndex = `${a.y || 0}_${a.x || 0}`;
+            const bIndex = `${b.y || 0}_${b.x || 0}`;
+            return aIndex > bIndex ? 1 : -1;
+          })
+          .map(children => children?.i || children);
+
+    formAttributesNodeDefs = formAttributesNodeDefs
+      .map(nodeDefUuid => nodeDefsByUuid[nodeDefUuid])
+      .filter(_nodeDef => {
+        const layoutProps = NodeDefs.getLayoutProps(cycle)(_nodeDef);
+
+        if (layoutProps?.hiddenInMobile === true) {
+          return false;
+        }
+        if (
+          parentChildApplicabilityKeys.includes(_nodeDef?.uuid) &&
+          parentChildApplicability?.[_nodeDef?.uuid] === false
+        ) {
+          return false;
+        }
+        return true;
+      });
+
+    return formAttributesNodeDefs;
+  },
+);
+
+const getFormAttributesNodeDefsUuids = createSelector(
+  getFormAttributesNodeDefs,
+  nodeDefs => nodeDefs.map(nodeDef => nodeDef.uuid),
+);
+
 export default {
   getFormStateData,
   getRecordUuid,
@@ -387,6 +440,8 @@ export default {
   getNodeDescendants,
 
   getNodeDescendantsByNodeDefUuid,
+  getFormAttributesNodeDefs,
+  getFormAttributesNodeDefsUuids,
 
   // ---- UI
   isEntitySelectorOpened,
