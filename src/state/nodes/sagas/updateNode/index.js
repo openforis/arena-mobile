@@ -9,7 +9,7 @@ import recordsActions from 'state/records/actionCreators';
 import recordsSelectors from 'state/records/selectors';
 import surveySelectors from 'state/survey/selectors';
 
-import {updateNodeAndDependants} from './methods';
+import {updateNodeAndDependants, callbackAndJump} from './methods';
 
 function* handleUpdateNode({payload}) {
   try {
@@ -54,9 +54,10 @@ function* handleUpdateNode({payload}) {
       put(formActions.setValidation({validation: updatedValidation})),
     ]);
 
-    if (callback) {
-      yield call(callback);
-    }
+    yield call(callbackAndJump, {
+      currentNode: updatedNode,
+      callback,
+    });
   } catch (e) {
     console.log('Updatenode', e);
   }

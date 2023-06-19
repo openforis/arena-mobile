@@ -107,7 +107,7 @@ const Form = ({nodeDef}) => {
   const _labelStractor = useCallback(item => item.name, []);
 
   return (
-    <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit}>
+    <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit} nodes={[node]}>
       <GetLocation
         handleSaveLocation={handleSaveLocation}
         selectedSrs={selectedSrs}

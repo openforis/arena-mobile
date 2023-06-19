@@ -140,7 +140,7 @@ const TaxonForm = ({nodeDef}) => {
   const node = useSelector(formSelectors.getNode);
 
   return (
-    <BaseForm nodeDef={nodeDef} hasSubmitButton={false}>
+    <BaseForm nodeDef={nodeDef} hasSubmitButton={false} nodes={[node]}>
       <Form nodeDef={nodeDef} node={node} />
     </BaseForm>
   );
