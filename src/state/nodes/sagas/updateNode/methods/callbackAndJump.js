@@ -1,4 +1,4 @@
-import {NodeDefType} from '@openforis/arena-core';
+import {NodeDefType, NodeDefs} from '@openforis/arena-core';
 import {call, select, put} from 'redux-saga/effects';
 
 import formActions from 'state/form/actionCreators';
@@ -37,9 +37,8 @@ function* callbackAndJump({currentNode, callback}) {
   );
 
   if (
-    [NodeDefType.coordinate, NodeDefType.file, NodeDefType.boolean].includes(
-      currentNodeDef.type,
-    )
+    [NodeDefType.file].includes(currentNodeDef.type) ||
+    NodeDefs.isMultiple(currentNodeDef)
   ) {
     _hasToJump = false;
   }

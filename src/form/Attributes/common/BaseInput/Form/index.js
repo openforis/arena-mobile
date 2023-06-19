@@ -49,6 +49,8 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
           ? transform({
               transformFunction: NodeDefs.getTextTransform(nodeDef),
             })(_newValue)
+          : _newValue === ''
+          ? ''
           : Number(_newValue.replace(',', '.'));
       handleUpdateNode({node, value: _value, callback});
     },

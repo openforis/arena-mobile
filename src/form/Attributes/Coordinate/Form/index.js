@@ -50,11 +50,11 @@ const Form = ({nodeDef}) => {
   const handleUpdateValue = useCallback(
     field => valueUpdated => {
       setValue(prevValue => {
-        const _value = Number((valueUpdated || '').replace(',', '.'));
+        const _value = String((valueUpdated || '').replace(',', '.'));
 
         return Object.assign({}, prevValue, {
           [field]:
-            DEFAULT_SRS_CODE === selectedSrs.code
+            DEFAULT_SRS_CODE === selectedSrs.code && _value !== ''
               ? toFixedIfLongerAndNumber(_value, 6)
               : _value,
         });
