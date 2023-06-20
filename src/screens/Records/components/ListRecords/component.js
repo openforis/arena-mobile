@@ -6,10 +6,9 @@ import {useSelector} from 'react-redux';
 import CreatedAndModified from 'arena-mobile-ui/components/CreatedAndModified';
 import CurrentItemLabel from 'arena-mobile-ui/components/CurrentItemLabel';
 import List from 'arena-mobile-ui/components/List';
-import TouchableCard from 'arena-mobile-ui/components/TouchableCard';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import TouchableCard from 'arena-mobile-ui/components/TouchableCard';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
-
 import formSelectors from 'state/form/selectors';
 import {useRecordsUuidsSorted, useRecordsSummary} from 'state/records/hooks';
 
@@ -32,7 +31,9 @@ const RecordCard = ({record, recordUuid, isSelected, onSelect}) => {
       onPress={handlePress}
       customStyles={[styles.container, isSelected ? styles.selected : {}]}>
       <View style={[styles.payload]}>
-        <TextBase type="bold">{record.recordKey || '-'}</TextBase>
+        <TextBase type="bold">
+          {record.recordKey || t('Records:empty_key')}
+        </TextBase>
         <CreatedAndModified
           dateCreated={record?.dateCreated}
           dateModified={record?.dateModified}
