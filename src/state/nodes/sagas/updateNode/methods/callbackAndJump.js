@@ -26,9 +26,9 @@ function* callbackAndJump({currentNode, callback}) {
     return;
   }
 
-  const HAST_TO_JUMP = true;
+  const HAS_TO_JUMP = true;
 
-  let _hasToJump = HAST_TO_JUMP;
+  let _hasToJump = HAS_TO_JUMP;
   const parentNode = yield select(state =>
     nodesSelectors.getNodeByUuid(state, currentNode.parentUuid),
   );
