@@ -21,7 +21,7 @@ import {selectors as appSelectors, actions as appActions} from 'state/app';
 import _styles from './styles';
 
 const SettingsSurveyTaxonomies = () => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   const [taxonomyVisibleFieldsKey, setTaxonomyVisibleFieldsKey] = useState(
     DEFAULT_TAXONOMY_FIELDS,
   );

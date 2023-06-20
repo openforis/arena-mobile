@@ -50,6 +50,9 @@ const {app} = createActions({
   [types.SET_STYLE_FONT_BASE_MODIFIER]: ({fontBaseModifier = 1}) => ({
     fontBaseModifier,
   }),
+  [types.SET_STYLE_COLOR_SCHEME]: ({colorScheme = 'light'}) => ({
+    colorScheme,
+  }),
 });
 
 export default app;

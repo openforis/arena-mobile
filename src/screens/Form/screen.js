@@ -129,13 +129,13 @@ const useAskBeforeLeave = () => {
 
 const Form = () => {
   useAskBeforeLeave();
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   return (
     <>
       <Layout bottomSafeArea={false}>
         <BreadCrumbs />
 
-        <View style={[styles.container]}>
+        <View style={styles.container}>
           <EntitySelector />
           <EntityPage />
         </View>

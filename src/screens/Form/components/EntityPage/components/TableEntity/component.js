@@ -67,11 +67,11 @@ const Table = () => {
 };
 
 const TableEntity = () => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   const isEntityShowAsTable = useSelector(formSelectors.isEntityShowAsTable);
 
   return (
-    <View style={[styles.container]}>
+    <View style={styles.container}>
       <Viewtoggler key={String(isEntityShowAsTable)} />
 
       {isEntityShowAsTable ? <Table /> : <Attributes />}

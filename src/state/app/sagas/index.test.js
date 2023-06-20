@@ -43,6 +43,7 @@ const expectedAppState = {
     style: {
       baseModifier: 1,
       fontBaseModifier: 1,
+      colorScheme: 'light',
     },
   },
 };

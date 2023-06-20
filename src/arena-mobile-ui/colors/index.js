@@ -153,7 +153,12 @@ const DarkTheme = {
   borderColors: neutralDarker,
 };
 
+export const themesKeys = {
+  light: 'light',
+  dark: 'dark',
+};
+
 export const themes = {
-  light: LightTheme,
-  dark: DarkTheme,
+  [themesKeys.light]: LightTheme,
+  [themesKeys.dark]: DarkTheme,
 };

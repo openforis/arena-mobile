@@ -36,7 +36,7 @@ const FormsByType = {
 };
 
 const AttributeFormWithModal = () => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   const nodeDef = useSelector(formSelectors.getNodeDef);
 
   if (![NodeDefType.code, NodeDefType.taxon].includes(nodeDef?.type)) {

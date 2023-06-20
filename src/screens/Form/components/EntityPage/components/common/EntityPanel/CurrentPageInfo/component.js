@@ -11,11 +11,15 @@ import EntityNodeSelector from '../EntityNodeSelector';
 
 import styles from './styles';
 
-const CurrentPageInfo = () => {
+const CurrentLabel = () => {
   const currentEntityNodeDef = useSelector(
     formSelectors.getParentEntityNodeDef,
   );
   const label = useNodeDefNameOrLabel({nodeDef: currentEntityNodeDef});
+  return <TextBase customStyle={styles.label}>{label}</TextBase>;
+};
+
+const CurrentPageInfo = () => {
   const {t} = useTranslation();
   return (
     <>
@@ -23,7 +27,7 @@ const CurrentPageInfo = () => {
         {t('Form:navigation_panel.current_page')}:
       </TextBase>
       <View style={styles.container}>
-        <TextBase customStyle={styles.label}>{label}</TextBase>
+        <CurrentLabel />
         <View style={styles.selectorContainer}>
           <EntityNodeSelector theme="neutral" />
         </View>

@@ -7,7 +7,6 @@ import Header from 'arena-mobile-ui/components/Header';
 import Layout from 'arena-mobile-ui/components/Layout';
 import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
-
 import surveysSector from 'state/surveys/selectors';
 
 import SelectedSurveyPanel from './components/SelectedSurveyPanel';
@@ -16,7 +15,7 @@ import _styles from './styles';
 
 const Surveys = () => {
   const {t} = useTranslation();
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
 
   const numberOfSurveys = useSelector(surveysSector.getNumberOfLocalSurveys);
   const [surveysOrigin, setSurveysOrigin] = useState('local');

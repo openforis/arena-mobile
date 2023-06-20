@@ -9,12 +9,12 @@ import {selectors as formSelectors} from 'state/form';
 import _styles from './styles';
 
 const Footer = () => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   return <View style={[styles.block]} />;
 };
 
 const Attributes = () => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
 
   const nodeDefChildrenUuids = useSelector(
     formSelectors.getFormAttributesNodeDefsUuids,
@@ -46,6 +46,7 @@ const Attributes = () => {
         renderItem={renderItem}
         data={nodeDefChildrenUuids}
         ListFooterComponent={Footer}
+        initialNumToRender={Math.min(nodeDefChildrenUuids.length, 6)}
       />
     </View>
   );

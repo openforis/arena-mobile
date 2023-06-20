@@ -7,7 +7,7 @@ import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import _styles from './styles';
 
 const CurrentItemLabel = ({label}) => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   return (
     <View style={[styles.container]}>
       <TextBase type="secondaryText" size="s" customStyle={styles.text}>
