@@ -1,5 +1,6 @@
-import {Objects} from '@openforis/arena-core';
 import moment from 'moment-timezone';
+
+import {Objects} from 'infra/objectUtils';
 
 import {SORT_FUNCTIONS_BY_TYPE} from '../../components/Sorter/config';
 

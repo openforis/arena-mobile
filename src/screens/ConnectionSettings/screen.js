@@ -1,4 +1,3 @@
-import {Objects} from '@openforis/arena-core';
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
@@ -24,6 +23,7 @@ import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import TextHeader from 'arena-mobile-ui/components/Texts/TextHeader';
 import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
 import {alert} from 'arena-mobile-ui/utils';
+import {Objects} from 'infra/objectUtils';
 import {selectors as appSelectors, actions as appActions} from 'state/app';
 import {selectors as userSelectors} from 'state/user';
 

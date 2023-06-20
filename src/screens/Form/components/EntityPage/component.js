@@ -9,14 +9,11 @@ import {selectors as surveySelectors} from 'state/survey';
 import Entity from './components/Entity';
 import TableEntity from './components/TableEntity';
 
-NodeDefs.getLayoutRenderTypePerCycle = ({nodeDef, cycle = 0}) =>
-  nodeDef?.props.layout[cycle]?.renderType;
-
 const EntityPage = () => {
   const nodeDef = useSelector(formSelectors.getParentEntityNodeDef);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const isTable = useMemo(
-    () => NodeDefs.getLayoutRenderTypePerCycle({nodeDef, cycle}) === 'table',
+    () => NodeDefs.getLayoutRenderType(cycle)(nodeDef) === 'table',
     [nodeDef, cycle],
   );
 

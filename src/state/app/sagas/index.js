@@ -1,13 +1,13 @@
-import {Objects} from '@openforis/arena-core';
 import {StackActions} from '@react-navigation/core';
 import {takeLatest, put, select, call, all} from 'redux-saga/effects';
 
+import {Objects} from 'infra/objectUtils';
 import {ROUTES} from 'navigation/constants';
 import {cleanAllData} from 'state/__persistence';
-import {actions as formActions} from 'state/form';
+import formActions from 'state/form/actionCreators';
 import globalActions from 'state/globalActions';
 import * as navigator from 'state/navigatorService';
-import {actions as surveyActions} from 'state/survey';
+import surveyActions from 'state/survey/actionCreators';
 import surveysSelectors from 'state/surveys/selectors';
 import {actions as userActions} from 'state/user';
 

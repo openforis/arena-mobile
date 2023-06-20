@@ -5,11 +5,6 @@ import {useSelector} from 'react-redux';
 import {selectors as formSelectors} from 'state/form';
 import surveySelectors from 'state/survey/selectors';
 
-NodeDefs.getLayoutProps =
-  (cycle = 0) =>
-  nodeDef =>
-    nodeDef.props?.layout?.[cycle] || {};
-
 const getCategoryItemLabel = (nodeDef, cycle, language) => categoryItem => {
   const {codeShown: hasToShowCode = true} =
     NodeDefs.getLayoutProps(cycle)(nodeDef);

@@ -4,10 +4,9 @@ import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
-import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
-import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import LabelsAndValues from 'arena-mobile-ui/components/LabelsAndValues';
-
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
 import {ROUTES} from 'navigation/constants';
 import * as navigator from 'state/navigatorService';
 import {useNumberRecords} from 'state/records/hooks';

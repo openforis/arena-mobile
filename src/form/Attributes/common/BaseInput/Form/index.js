@@ -1,17 +1,15 @@
-import {NodeDefs, NodeDefType, Objects} from '@openforis/arena-core';
+import {NodeDefType, NodeDefs} from '@openforis/arena-core';
 import React, {useState, useCallback} from 'react';
 import {Platform} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import {transform, textTransformValues} from 'arena/utils/textUtils';
 import Input from 'arena-mobile-ui/components/Input';
+import {Objects} from 'infra/objectUtils';
 import {useCloseNode, useUpdateNode} from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
 
 import {Form as BaseForm} from '../../Base';
-
-// TODO move to arena-core, maybe other name
-NodeDefs.getTextTransform = nodeDef => nodeDef?.props?.textTransform;
 
 const autoCapitalizeByTransformFunction = {
   [textTransformValues.none]: undefined,
@@ -51,6 +49,8 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
           ? transform({
               transformFunction: NodeDefs.getTextTransform(nodeDef),
             })(_newValue)
+          : _newValue === ''
+          ? ''
           : Number(_newValue.replace(',', '.'));
       handleUpdateNode({node, value: _value, callback});
     },
@@ -58,7 +58,7 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
   );
 
   return (
-    <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit}>
+    <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit} nodes={[node]}>
       <Input
         autoCapitalize={
           autoCapitalizeByTransformFunction[

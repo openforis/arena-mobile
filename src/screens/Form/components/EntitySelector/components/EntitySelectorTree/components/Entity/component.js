@@ -11,9 +11,6 @@ import {selectors as surveySelectors} from 'state/survey';
 
 import styles from './styles';
 
-NodeDefs.getLayoutRenderTypePerCycle = ({nodeDef, cycle = 0}) =>
-  nodeDef?.props?.layout?.[cycle]?.renderType;
-
 const Entity = ({nodeDef, isCurrentEntity = false}) => {
   const {t} = useTranslation();
   const nodeDefName = useNodeDefNameOrLabel({nodeDef});
@@ -50,7 +47,7 @@ const Entity = ({nodeDef, isCurrentEntity = false}) => {
           isCurrentEntity ? styles.active : {},
         ]}>
         {nodeDefName}
-        {NodeDefs.getLayoutRenderTypePerCycle({nodeDef, cycle}) === 'table'
+        {NodeDefs.getLayoutRenderType(cycle)(nodeDef) === 'table'
           ? t('Form:nodeDefEntity.layout.table')
           : ''}
       </TextBase>

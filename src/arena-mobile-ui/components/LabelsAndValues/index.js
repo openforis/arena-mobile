@@ -1,8 +1,8 @@
-import {Objects} from '@openforis/arena-core';
 import React from 'react';
 import {View} from 'react-native';
 
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import {Objects} from 'infra/objectUtils';
 
 import styles from './styles';
 

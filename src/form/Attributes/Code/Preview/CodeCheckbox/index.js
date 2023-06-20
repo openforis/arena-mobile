@@ -1,7 +1,8 @@
-import {NodeDefs, Objects} from '@openforis/arena-core';
+import {NodeDefs} from '@openforis/arena-core';
 import React, {useCallback, useMemo} from 'react';
 
 import {BasePreviewContainer} from 'form/Attributes/common/Base/Preview';
+import {Objects} from 'infra/objectUtils';
 import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 
 import ChipContainer from '../components/ChipsContainer';

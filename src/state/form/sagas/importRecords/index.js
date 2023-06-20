@@ -1,9 +1,9 @@
-import {Objects} from '@openforis/arena-core';
 import {channel} from 'redux-saga';
 import {call, select, put, delay, take} from 'redux-saga/effects';
 
 import {checkIfCurrentServerIsTheSurveysServer} from 'arena/survey';
 import * as fs from 'infra/fs';
+import {Objects} from 'infra/objectUtils';
 import {handleShowToast} from 'infra/toast';
 import {persistRecordWithKeyAndMergeCurrentNodes} from 'state/__persistence';
 import {selectors as appSelectors} from 'state/app';

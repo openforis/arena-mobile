@@ -14,6 +14,7 @@ const CodeForm = ({nodeDef}) => {
 
   return (
     <BaseForm
+      nodes={[node]}
       nodeDef={nodeDef}
       hasSubmitButton={NodeDefs.isMultiple(nodeDef)}
       handleSubmit={handleClose}>

@@ -59,21 +59,6 @@ export const getNodeDefEntityChildrenKeys = createCachedSelector(
   childrenNodeDefs => childrenNodeDefs.filter(_nodeDef => _nodeDef.props.key),
 )(_getCachedKeyObjectUuid);
 
-export const getNodeDefEntityChildrenAttributesUuids = createCachedSelector(
-  getNodeDefChildren,
-  nodeDefs => {
-    const attributes = [];
-    nodeDefs.forEach(nodeDef => {
-      // touch here if we like to show tables on the form
-      if (nodeDef.type !== 'entity') {
-        attributes.push(nodeDef.uuid);
-      }
-      return;
-    });
-    return attributes;
-  },
-)(_getCachedKeyObjectUuid);
-
 export const getNodeDefTableChildren = createCachedSelector(
   getNodeDefChildren,
   getSurveyCycle,

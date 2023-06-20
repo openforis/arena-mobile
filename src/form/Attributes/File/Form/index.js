@@ -47,7 +47,7 @@ const Form = ({nodeDef}) => {
   }, [node.value]);
 
   return (
-    <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit}>
+    <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit} nodes={[node]}>
       {canEditName && (
         <Input
           title={t('Form:nodeDefFile.name')}

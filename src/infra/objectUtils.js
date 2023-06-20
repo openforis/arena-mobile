@@ -1,3 +1,5 @@
+import {Objects as _Objects} from '@openforis/arena-core';
+
 export const deleteValueByKey =
   ({conditionToDelete = () => false}) =>
   obj => {
@@ -20,3 +22,5 @@ export const mergeNoSpread = (obj, newObj) => {
   });
   return result;
 };
+
+export const Objects = _Objects;
