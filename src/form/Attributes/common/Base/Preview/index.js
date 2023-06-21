@@ -4,7 +4,6 @@ import {useTranslation} from 'react-i18next';
 import {View, Text, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {defaultCycle} from 'arena/config';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
@@ -19,13 +18,6 @@ import {
 import {selectors as surveySelectors} from 'state/survey';
 
 import _styles from './styles';
-
-// TODO move to arena-core
-NodeDefs.isHiddenWhenNotRelevant =
-  (cycle = defaultCycle) =>
-  nodeDef => {
-    return nodeDef?.props?.layout?.[cycle]?.hiddenWhenNotRelevant;
-  };
 
 const BaseDeletePreviewNode = ({node}) => {
   const styles = useThemedStyles({styles: _styles});
@@ -118,7 +110,11 @@ export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
         applicable ? {} : styles.notApplicable,
         lastNodeDefUuid === nodeDef.uuid ? styles.lastNodeDef : {},
       ]}>
-      <AttributeHeader nodeDef={nodeDef} nodes={nodes} />
+      <AttributeHeader
+        nodeDef={nodeDef}
+        nodes={nodes}
+        showDescription={false}
+      />
       {children}
     </View>
   );
