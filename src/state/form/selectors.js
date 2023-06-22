@@ -398,6 +398,10 @@ const getFormAttributesNodeDefs = createSelector(
     formAttributesNodeDefs = formAttributesNodeDefs
       .map(nodeDefUuid => nodeDefsByUuid[nodeDefUuid])
       .filter(_nodeDef => {
+        if (Objects.isEmpty(_nodeDef)) {
+          return false;
+        }
+
         const layoutProps = NodeDefs.getLayoutProps(cycle)(_nodeDef);
 
         if (layoutProps?.hiddenInMobile === true) {
@@ -418,7 +422,7 @@ const getFormAttributesNodeDefs = createSelector(
 
 const getFormAttributesNodeDefsUuids = createSelector(
   getFormAttributesNodeDefs,
-  nodeDefs => nodeDefs.map(nodeDef => nodeDef.uuid),
+  nodeDefs => nodeDefs.map(nodeDef => nodeDef?.uuid),
 );
 
 export default {
