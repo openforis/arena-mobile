@@ -1,9 +1,6 @@
 import {NodeDefType} from '@openforis/arena-core';
 import {StyleSheet} from 'react-native';
 
-import * as colors from 'arena-mobile-ui/colors';
-import baseStyles from 'arena-mobile-ui/styles';
-
 const aligmentByType = {
   [NodeDefType.text]: 'flex-start',
   [NodeDefType.code]: 'flex-start',
@@ -22,7 +19,7 @@ const styles = ({colors, baseStyles}) =>
     container: {
       marginBottom: baseStyles.bases.BASE_4,
     },
-    notApplicable: {
+    disabled: {
       opacity: 0.5,
       backgroundColor: colors.neutralLighter,
     },

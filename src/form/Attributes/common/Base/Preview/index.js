@@ -51,9 +51,11 @@ const BasePreviewNode = ({
   const dispatch = useDispatch();
 
   const styles = useThemedStyles({styles: _styles});
-  const applicable = useSelector(state =>
-    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+
+  const disabled = useSelector(state =>
+    formSelectors.isNodeDefDisabled(state, nodeDef),
   );
+
   const handleSelectNodeAndNodeDef = useCallback(() => {
     dispatch(formActions.setNode({node: node}));
   }, [dispatch, node]);
@@ -63,7 +65,7 @@ const BasePreviewNode = ({
       <TouchableOpacity
         style={styles.nodeContainer({nodeDef})}
         onPress={handleSelectNodeAndNodeDef}
-        disabled={!applicable}>
+        disabled={disabled}>
         <View style={styles.block}>
           <NodeValueRender node={node} nodeDef={nodeDef} />
         </View>
@@ -96,6 +98,9 @@ export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );
+  const disabled = useSelector(state =>
+    formSelectors.isNodeDefDisabled(state, nodeDef),
+  );
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const lastNodeDefUuid = useSelector(nodesSelectors.getLastNodeDefUuid);
   const hidden =
@@ -107,7 +112,7 @@ export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
     <View
       style={[
         styles.container,
-        applicable ? {} : styles.notApplicable,
+        disabled ? styles.disabled : {},
         lastNodeDefUuid === nodeDef.uuid ? styles.lastNodeDef : {},
       ]}>
       <AttributeHeader
@@ -123,9 +128,10 @@ export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
 const CreateNode = ({onPress, nodeDef}) => {
   const styles = useThemedStyles({styles: _styles});
   const {t} = useTranslation();
-  const applicable = useSelector(state =>
-    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  const disabled = useSelector(state =>
+    formSelectors.isNodeDefDisabled(state, nodeDef),
   );
+
   return (
     <Button
       type="ghostBlack"
@@ -133,7 +139,7 @@ const CreateNode = ({onPress, nodeDef}) => {
       label={t('Form:add_new', {label: ''})}
       customContainerStyle={styles.buttonContainer}
       onPress={onPress}
-      disabled={!applicable}
+      disabled={disabled}
     />
   );
 };

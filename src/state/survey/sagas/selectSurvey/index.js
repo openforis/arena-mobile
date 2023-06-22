@@ -21,7 +21,6 @@ function* handleSelectSurvey({payload}) {
     if (!survey) {
       throw Error('Missing survey');
     }
-    // TODO get the default or the latests cycle and set that as default
 
     const cycles = Object.keys(survey.props.cycles);
     const lastCycle = cycles.pop();

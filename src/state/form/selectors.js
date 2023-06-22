@@ -104,6 +104,21 @@ const isNodeDefApplicable = createCachedSelector(
   cacheObject: new FifoObjectCache({cacheSize: 4000}),
 });
 
+const _getNodeDef = (_, nodeDef) => nodeDef;
+const isNodeDefDisabled = createCachedSelector(
+  getParentEntityNode,
+  _getNodeDef,
+  (parentEntityNode, nodeDef) => {
+    const applicable = !Object.keys(
+      parentEntityNode?.meta?.childApplicability || {},
+    ).includes(nodeDef.uuid);
+    return !applicable || NodeDefs.isReadOnly(nodeDef);
+  },
+)({
+  keySelector: keySelectors.getUuidFromItem,
+  cacheObject: new FifoObjectCache({cacheSize: 100}),
+});
+
 const getParentEntityNodeDefUuid = createSelector(
   getFormStateData,
   form => form.parentEntityNodeDef || false,
@@ -421,6 +436,7 @@ export default {
   getNodeDef,
 
   isNodeDefApplicable,
+  isNodeDefDisabled,
   canAddNode,
   getNodeChildren,
   getNodeDefChildren,
