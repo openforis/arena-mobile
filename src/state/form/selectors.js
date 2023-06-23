@@ -401,6 +401,9 @@ const getFormAttributesNodeDefs = createSelector(
         if (Objects.isEmpty(_nodeDef)) {
           return false;
         }
+        if (_nodeDef?.props?.hidden) {
+          return false;
+        }
 
         const layoutProps = NodeDefs.getLayoutProps(cycle)(_nodeDef);
 

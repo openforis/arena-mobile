@@ -9,16 +9,22 @@ import {selectors as formSelectors, actions as formActions} from 'state/form';
 
 import styles, {pickerSelectStyles, pickerSelectStylesNeutral} from './styles';
 
-export const EntityNodeSelector = ({theme = null} = {}) => {
+export const EntityNodeSelector = ({
+  theme = null,
+  parentNodeDef = false,
+  parentNode = false,
+} = {}) => {
   const [key, setKey] = useState(uuidv4());
 
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
+  const _parentEntityNodeDef = parentNodeDef || parentEntityNodeDef;
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
+  const _parentEntityNode = parentNode || parentEntityNode;
 
   const siblingNodesInhierarchy = useSelector(state =>
     formSelectors.getNodeDefNodesWithKeysAsStringInHierarchy(
       state,
-      parentEntityNodeDef,
+      _parentEntityNodeDef,
     ),
   );
 
@@ -45,7 +51,7 @@ export const EntityNodeSelector = ({theme = null} = {}) => {
 
   const _labelStractor = useCallback(item => item?.keyString || '-', []);
 
-  if (!NodeDefs.isMultiple(parentEntityNodeDef)) {
+  if (!NodeDefs.isMultiple(_parentEntityNodeDef)) {
     return <></>;
   }
 
@@ -58,7 +64,7 @@ export const EntityNodeSelector = ({theme = null} = {}) => {
           theme === 'neutral' ? pickerSelectStylesNeutral : pickerSelectStyles
         }
         onValueChange={handleSelectEntityNode}
-        selectedItemKey={parentEntityNode.uuid}
+        selectedItemKey={_parentEntityNode.uuid}
         labelStractor={_labelStractor}
       />
     </View>

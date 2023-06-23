@@ -12,34 +12,45 @@ import styles from './styles';
 
 const AddIcon = <Icon name="plus" />;
 
-export const useIsTable = () => {
+export const useIsTable = ({parentNodeDef} = {}) => {
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   return useMemo(
-    () => NodeDefs.getLayoutRenderType(cycle)(parentEntityNodeDef) === 'table',
-    [parentEntityNodeDef, cycle],
+    () =>
+      NodeDefs.getLayoutRenderType(cycle)(
+        parentNodeDef || parentEntityNodeDef,
+      ) === 'table',
+    [parentNodeDef, parentEntityNodeDef, cycle],
   );
 };
 
-const NewItemButton = ({visible, styleTheme, customContainerStyle}) => {
+const NewItemButton = ({
+  visible,
+  styleTheme,
+  customContainerStyle,
+  parentNodeDef = false,
+  parentNode = false,
+}) => {
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
+  const _parentEntityNodeDef = parentNodeDef || parentEntityNodeDef;
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
+  const _parentEntityNode = parentNode || parentEntityNode;
   const dispatch = useDispatch();
   const {t} = useTranslation();
   const handleCreateNewNodeEntity = useCallback(() => {
     dispatch(
       formActions.createEntity({
-        nodeDef: parentEntityNodeDef,
-        node: parentEntityNode,
+        nodeDef: _parentEntityNodeDef,
+        node: _parentEntityNode,
       }),
     );
-  }, [dispatch, parentEntityNodeDef, parentEntityNode]);
+  }, [dispatch, _parentEntityNodeDef, _parentEntityNode]);
 
   const keys = useSelector(state =>
-    surveySelectors.getEntityNodeKeysAsString(state, parentEntityNode),
+    surveySelectors.getEntityNodeKeysAsString(state, _parentEntityNode),
   );
 
-  const isTable = useIsTable();
+  const isTable = useIsTable({parentNodeDef: _parentEntityNodeDef});
 
   if (visible && keys.length > 0) {
     return (
