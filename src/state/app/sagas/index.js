@@ -52,7 +52,7 @@ function* handleAuthenticateUser() {
     }
 
     const {data} = yield race({
-      isServerValid: call(appApi.appApi.auth, {
+      data: call(appApi.auth, {
         email: username,
         password,
         serverUrl,
