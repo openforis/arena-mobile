@@ -1,8 +1,9 @@
 import React from 'react';
 import {View} from 'react-native';
 
-import styles from './styles';
 import TableOption from '../../../common/EntityPanel/TableOption';
+
+import styles from './styles';
 
 const Viewtoggler = () => {
   return (
