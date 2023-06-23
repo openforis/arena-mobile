@@ -21,8 +21,8 @@ const CodeDropdownMultiple = ({nodeDef}) => {
     nodeDef,
   });
 
-  const applicable = useSelector(state =>
-    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  const disabled = useSelector(state =>
+    formSelectors.isNodeDefDisabled(state, nodeDef),
   );
 
   const codeActions = useNodeFormActions({nodeDef});
@@ -40,11 +40,11 @@ const CodeDropdownMultiple = ({nodeDef}) => {
   const handleDelete = useCallback(
     ({node, label}) =>
       () => {
-        if (applicable) {
+        if (!disabled) {
           codeActions.handleDelete({node, label, requestConfirm: false});
         }
       },
-    [codeActions, applicable],
+    [codeActions, disabled],
   );
 
   const _labelStractor = useCallback(
@@ -88,7 +88,7 @@ const CodeDropdownMultiple = ({nodeDef}) => {
           icon={ChevronDown}
           customContainerStyle={styles.container}
           customTextStyle={styles.text}
-          disabled={!applicable}
+          disabled={disabled}
         />
       )}
     </>

@@ -1,3 +1,4 @@
+import {NodeDefs} from '@openforis/arena-core';
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';
@@ -16,9 +17,12 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
     nodeDef,
     node,
   });
-  const applicable = useSelector(state =>
-    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+
+  const disabled = useSelector(state =>
+    formSelectors.isNodeDefDisabled(state, nodeDef),
   );
+
+  const _disabled = disabled || categoryItems.length === 0;
 
   const selectedItem = useMemo(
     () => categoryItems.find(item => item.uuid === node?.value?.itemUuid),
@@ -36,7 +40,6 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
     dispatch(formActions.setNode({node: node}));
   }, [dispatch, node]);
 
-  const disabled = !applicable || categoryItems.length === 0;
   return (
     <Button
       onPress={handleSelectNodeAndNodeDef}
@@ -47,8 +50,8 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
       }
       icon={ChevronDown}
       customTextStyle={[styles.text, selectedItem ? styles.selected : {}]}
-      disabled={disabled}
-      customContainerStyle={disabled ? styles.disabled : {}}
+      disabled={_disabled}
+      customContainerStyle={_disabled ? styles.disabled : {}}
     />
   );
 };

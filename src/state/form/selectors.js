@@ -104,6 +104,21 @@ const isNodeDefApplicable = createCachedSelector(
   cacheObject: new FifoObjectCache({cacheSize: 4000}),
 });
 
+const _getNodeDef = (_, nodeDef) => nodeDef;
+const isNodeDefDisabled = createCachedSelector(
+  getParentEntityNode,
+  _getNodeDef,
+  (parentEntityNode, nodeDef) => {
+    const applicable = !Object.keys(
+      parentEntityNode?.meta?.childApplicability || {},
+    ).includes(nodeDef.uuid);
+    return !applicable || NodeDefs.isReadOnly(nodeDef);
+  },
+)({
+  keySelector: keySelectors.getUuidFromItem,
+  cacheObject: new FifoObjectCache({cacheSize: 100}),
+});
+
 const getParentEntityNodeDefUuid = createSelector(
   getFormStateData,
   form => form.parentEntityNodeDef || false,
@@ -383,6 +398,10 @@ const getFormAttributesNodeDefs = createSelector(
     formAttributesNodeDefs = formAttributesNodeDefs
       .map(nodeDefUuid => nodeDefsByUuid[nodeDefUuid])
       .filter(_nodeDef => {
+        if (Objects.isEmpty(_nodeDef)) {
+          return false;
+        }
+
         const layoutProps = NodeDefs.getLayoutProps(cycle)(_nodeDef);
 
         if (layoutProps?.hiddenInMobile === true) {
@@ -403,7 +422,7 @@ const getFormAttributesNodeDefs = createSelector(
 
 const getFormAttributesNodeDefsUuids = createSelector(
   getFormAttributesNodeDefs,
-  nodeDefs => nodeDefs.map(nodeDef => nodeDef.uuid),
+  nodeDefs => nodeDefs.map(nodeDef => nodeDef?.uuid),
 );
 
 export default {
@@ -421,6 +440,7 @@ export default {
   getNodeDef,
 
   isNodeDefApplicable,
+  isNodeDefDisabled,
   canAddNode,
   getNodeChildren,
   getNodeDefChildren,
