@@ -42,7 +42,12 @@ const BaseForm = ({
           onPress={handleClose}
         />
       </View>
-      <AttributeHeader nodeDef={nodeDef} showValidation={true} nodes={nodes} />
+      <AttributeHeader
+        nodeDef={nodeDef}
+        showValidation={true}
+        nodes={nodes}
+        showDescription={true}
+      />
       {children}
 
       <View style={styles.divider} />

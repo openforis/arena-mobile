@@ -2,11 +2,11 @@ import {NodeDefs} from '@openforis/arena-core';
 import React, {useCallback} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 
+import {defaultCycle} from 'arena/config';
 import * as colors from 'arena-mobile-ui/colors';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
-import {defaultCycle} from 'arena/config';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
@@ -26,6 +26,10 @@ const Preview = ({nodeDef}) => {
 
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  );
+
+  const disabled = useSelector(state =>
+    formSelectors.isNodeDefDisabled(state, nodeDef),
   );
 
   const dispatch = useDispatch();
@@ -49,12 +53,12 @@ const Preview = ({nodeDef}) => {
       icon={
         <Icon
           name="table-large"
-          color={!applicable ? colors.neutralLighter : colors.black}
+          color={disabled ? colors.neutralLighter : colors.black}
         />
       }
-      disabled={!applicable}
-      customContainerStyle={!applicable ? styles.notApplicable : {}}
-      customTextStyle={!applicable ? styles.notApplicable : {}}
+      disabled={disabled}
+      customContainerStyle={disabled ? styles.disabled : {}}
+      customTextStyle={disabled ? styles.disabled : {}}
     />
   );
 };

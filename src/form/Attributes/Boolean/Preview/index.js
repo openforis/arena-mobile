@@ -14,15 +14,15 @@ import {Preview as BasePreview} from '../../common/Base';
 import styles from './styles';
 
 const BooleanOption = ({value, active = false, onPress, nodeDef}) => {
-  const applicable = useSelector(state =>
-    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  const disabled = useSelector(state =>
+    formSelectors.isNodeDefDisabled(state, nodeDef),
   );
   const {t} = useTranslation();
   return (
     <TouchableOpacity
       onPress={onPress(value)}
       hitSlop={{top: 20, bottom: 20, left: 20, right: 20}}
-      disabled={!applicable}
+      disabled={disabled}
       style={[styles.touchableContainer({active})]}>
       <Icon
         name={active ? 'radiobox-marked' : 'radiobox-blank'}

@@ -72,6 +72,7 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
         keyboardType={keyboardType}
         textAlign={nodeDef.type === NodeDefType.text ? 'left' : 'right'}
         onSubmitEditing={handleSubmit}
+        editable={!NodeDefs.isReadOnly(nodeDef)}
       />
     </BaseForm>
   );
