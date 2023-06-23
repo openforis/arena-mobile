@@ -1,5 +1,13 @@
 import {StackActions} from '@react-navigation/core';
-import {takeLatest, put, select, call, all} from 'redux-saga/effects';
+import {
+  takeLatest,
+  put,
+  select,
+  call,
+  all,
+  race,
+  delay,
+} from 'redux-saga/effects';
 
 import {Objects} from 'infra/objectUtils';
 import {ROUTES} from 'navigation/constants';
@@ -34,16 +42,22 @@ function* handleAuthenticateUser() {
       throw Error('Server not valid');
     }
 
-    const isServerValid = yield call(appApi.pingServer, {serverUrl});
+    const {isServerValid} = yield race({
+      isServerValid: call(appApi.pingServer, {serverUrl}),
+      timeout: delay(15000),
+    });
 
     if (!isServerValid) {
       throw Error('Server not valid');
     }
 
-    const data = yield call(appApi.auth, {
-      email: username,
-      password,
-      serverUrl,
+    const {data} = yield race({
+      isServerValid: call(appApi.appApi.auth, {
+        email: username,
+        password,
+        serverUrl,
+      }),
+      timeout: delay(15000),
     });
 
     if (data?.user) {
