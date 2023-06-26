@@ -1,12 +1,13 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useState, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, ScrollView, Text} from 'react-native';
+import {View, ScrollView, Text, Pressable} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Card from 'arena-mobile-ui/components/Card';
 import Header from 'arena-mobile-ui/components/Header';
+import Icon from 'arena-mobile-ui/components/Icon';
 import Layout from 'arena-mobile-ui/components/Layout';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
@@ -51,7 +52,7 @@ const SettingsStyleColorScheme = () => {
   }, [dispatch, navigation, colorSchemeSelected]);
 
   const handleClose = useCallback(() => {
-    // reset to initail values
+    // reset to initial values
     dispatch(
       appActions.setStyleColorScheme({
         colorScheme: initialColorScheme,
@@ -66,45 +67,62 @@ const SettingsStyleColorScheme = () => {
       <>
         <Header hasBackComponent>
           <Text type="title">
-            {t('Settings:style.TextAndSpacingSize.title')}
+            {t('Settings:style.ColorScheme.title')} {colorSchemeSelected}
           </Text>
         </Header>
         <ScrollView>
           <View style={styles.container}>
             <TextBase type="header" customStyle={styles.title}>
-              {t('Settings:style.TextAndSpacingSize.screen.textSize.title')}{' '}
+              {t('Settings:style.ColorScheme.screen.header')}{' '}
             </TextBase>
 
-            <Text>
-              {t('Settings:style.TextAndSpacingSize.screen.textSize.info')}{' '}
-            </Text>
+            <Text>{t('Settings:style.ColorScheme.screen.info')} </Text>
 
+            <View style={{height: 100}} />
             {/* create two card touchables one with the light theme and the other with the dark theme */}
-            <Card
-              onPress={() => setColorSchemeSelected('light')}
-              customStyle={[
-                styles.card,
-                colorSchemeSelected === 'light' && styles.cardSelected,
-              ]}>
-              <View style={styles.cardContent}>
-                <TextBase type="header" customStyle={styles.cardTitle}>
-                  {t('Settings:style.TextAndSpacingSize.screen.textSize.light')}
-                </TextBase>
-              </View>
-            </Card>
+            <Pressable onPress={() => setColorSchemeSelected('light')}>
+              <Card
+                customStyle={[
+                  styles.card,
+                  colorSchemeSelected === 'light' && styles.cardSelected,
+                ]}>
+                <View style={styles.cardContent}>
+                  <Icon
+                    name={
+                      colorSchemeSelected === 'light'
+                        ? 'radiobox-marked'
+                        : 'radiobox-blank'
+                    }
+                    size="m"
+                  />
+                  <TextBase type="header" customStyle={styles.cardTitle}>
+                    {t('Settings:style.ColorScheme.screen.options.light')}
+                  </TextBase>
+                </View>
+              </Card>
+            </Pressable>
 
-            <Card
-              onPress={() => setColorSchemeSelected('dark')}
-              customStyle={[
-                styles.card,
-                colorSchemeSelected === 'dark' && styles.cardSelected,
-              ]}>
-              <View style={styles.cardContent}>
-                <TextBase type="header" customStyle={styles.cardTitle}>
-                  {t('Settings:style.TextAndSpacingSize.screen.textSize.dark')}
-                </TextBase>
-              </View>
-            </Card>
+            <Pressable onPress={() => setColorSchemeSelected('dark')}>
+              <Card
+                customStyle={[
+                  styles.card,
+                  colorSchemeSelected === 'dark' && styles.cardSelected,
+                ]}>
+                <View style={styles.cardContent}>
+                  <Icon
+                    name={
+                      colorSchemeSelected === 'dark'
+                        ? 'radiobox-marked'
+                        : 'radiobox-blank'
+                    }
+                    size="m"
+                  />
+                  <TextBase type="header" customStyle={styles.cardTitle}>
+                    {t('Settings:style.ColorScheme.screen.options.dark')}
+                  </TextBase>
+                </View>
+              </Card>
+            </Pressable>
           </View>
 
           <View style={styles.buttonsContainer}>

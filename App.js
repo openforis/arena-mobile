@@ -8,3 +8,8 @@ if (__DEV__) {
     port: 8081,
   });
 }
+if (!__DEV__) {
+  console.log = () => {};
+  console.warn = () => {};
+  console.error = () => {};
+}

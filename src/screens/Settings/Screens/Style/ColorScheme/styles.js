@@ -21,6 +21,9 @@ const styles = ({baseStyles}) =>
       flex: 1,
       paddingHorizontal: 16,
     },
+    cardContent: {
+      flexDirection: 'row',
+    },
     buttonsContainer: {
       padding: baseStyles.bases.BASE_4,
     },
