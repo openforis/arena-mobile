@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View} from 'react-native';
+import {Platform, View} from 'react-native';
 import {useDispatch} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
@@ -31,7 +31,7 @@ const Version = () => {
         onPress={handleTap}
         label={`${t('Common:version')}: ${data.version} (${data.buildNumber})`}
       />
-      {data.versionDate && (
+      {data.versionDate && Platform.OS !== 'ios' && (
         <TextBase size="s" type="secondaryText">{`${t('Common:date')}: ${
           data.versionDate
         }`}</TextBase>

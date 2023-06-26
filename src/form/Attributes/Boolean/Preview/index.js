@@ -40,7 +40,7 @@ const BooleanOption = ({value, active = false, onPress, nodeDef}) => {
   );
 };
 
-const BooleanAttribute = ({node, nodeDef}) => {
+export const BooleanAttribute = ({node, nodeDef}) => {
   const updateNode = useUpdateNode();
 
   const handlePress = useCallback(

@@ -21,6 +21,7 @@ function* handleCreateNodeAndDescendantsWithValue({payload} = {}) {
     payload: {
       updatedNode: updatedNodeWithValue,
       callback,
+      shouldJump: false,
     },
   });
 }

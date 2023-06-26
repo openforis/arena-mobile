@@ -13,6 +13,11 @@ const Footer = () => {
   return <View style={[styles.block]} />;
 };
 
+const Header = () => {
+  const styles = useThemedStyles(_styles);
+  return <View style={[styles.headerBlock]} />;
+};
+
 const Attributes = () => {
   const styles = useThemedStyles(_styles);
 
@@ -46,7 +51,8 @@ const Attributes = () => {
         renderItem={renderItem}
         data={nodeDefChildrenUuids}
         ListFooterComponent={Footer}
-        initialNumToRender={Math.min(nodeDefChildrenUuids.length, 6)}
+        ListHeaderComponent={Header}
+        initialNumToRender={6}
       />
     </View>
   );

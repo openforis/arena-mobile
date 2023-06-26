@@ -28,6 +28,9 @@ const {form} = createActions({
   [types.TOGGLE_ENTITY_SELECTOR]: () => ({}),
   [types.CLOSE_ENTITY_SELECTOR]: () => ({}),
   [types.TOGGLE_ENTITY_SHOW_AS_TABLE]: () => ({}),
+  /* PREFS */
+  [types.SET_HAS_TO_JUMP]: ({hasToJump}) => ({hasToJump}),
+  /* VALIDATION */
   [types.SET_VALIDATION]: ({validation}) => ({validation}),
   [types.importRecords$]: () => ({}),
 });

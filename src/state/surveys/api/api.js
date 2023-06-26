@@ -7,7 +7,8 @@ const getSurveys = async ({serverUrl}) => {
     params: {draft: false},
   });
   const {list} = data;
-  return list;
+
+  return list.filter(item => item.status === 'PUBLISHED');
 };
 
 const getSurveyPopulatedById = async ({serverUrl, surveyId}) => {
