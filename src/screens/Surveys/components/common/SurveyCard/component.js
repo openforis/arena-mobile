@@ -24,7 +24,7 @@ const SurveyCard = ({
 }) => {
   const {t} = useTranslation();
   const currentServerUrl = useSelector(appSelectors.getServerUrl);
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
 
   return (
     <TouchableCard

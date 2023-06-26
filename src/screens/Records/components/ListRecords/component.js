@@ -17,7 +17,7 @@ import _styles from './styles';
 const ListEmptyComponent = () => <View />;
 
 const RecordCard = ({record, recordUuid, isSelected, onSelect}) => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   const currentRecordUuid = useSelector(formSelectors.getRecordUuid);
 
   const handlePress = useCallback(() => {

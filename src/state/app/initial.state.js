@@ -23,6 +23,7 @@ const initialState = {
     style: {
       baseModifier: 1,
       fontBaseModifier: 1,
+      colorScheme: 'light',
     },
   },
 };

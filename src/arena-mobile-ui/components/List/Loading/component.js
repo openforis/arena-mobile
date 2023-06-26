@@ -43,10 +43,6 @@ const Loading = () => {
       <Animated.View style={[styles.item, {opacity: opacityAnim}]} />
       <Animated.View style={[styles.item, {opacity: opacityAnim}]} />
       <Animated.View style={[styles.item, {opacity: opacityAnim}]} />
-      <Animated.View style={[styles.item, {opacity: opacityAnim}]} />
-      <Animated.View style={[styles.item, {opacity: opacityAnim}]} />
-      <Animated.View style={[styles.item, {opacity: opacityAnim}]} />
-      <Animated.View style={[styles.item, {opacity: opacityAnim}]} />
     </View>
   );
 };

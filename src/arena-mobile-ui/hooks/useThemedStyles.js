@@ -8,11 +8,12 @@ import * as colors from '../colors';
 import {getBaseStyles} from '../styles';
 
 const useColorTheme = () => {
-  const colorScheme = null; //useColorScheme(); // to be added later when dark is ready;
-  return colorScheme;
+  const _colorScheme = useSelector(appSelectors.getColorScheme);
+  const colorScheme = useColorScheme();
+  return _colorScheme || colorScheme;
 };
 
-const useThemedStyles = ({styles}) => {
+const useThemedStyles = styles => {
   const colorScheme = useColorTheme();
   const baseModifier = useSelector(appSelectors.getBaseModifier);
   const fontBaseModifier = useSelector(appSelectors.getFontBaseModifier);

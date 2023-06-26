@@ -9,7 +9,7 @@ import EntityPanel from '../common/EntityPanel';
 import _styles from './styles';
 
 const Entity = () => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
 
   return (
     <View style={[styles.container]}>

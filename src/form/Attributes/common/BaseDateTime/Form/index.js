@@ -1,11 +1,12 @@
 import {NodeDefType} from '@openforis/arena-core';
 import moment from 'moment-timezone';
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, Appearance} from 'react-native';
+import {View} from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import {useSelector} from 'react-redux';
 
 import * as colors from 'arena-mobile-ui/colors';
+import appSelectors from 'state/app/selectors';
 import {useCloseNode, useUpdateNode} from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
 
@@ -23,6 +24,7 @@ const DateForm = ({nodeDef}) => {
   const [date, setDate] = useState();
 
   const node = useSelector(formSelectors.getNode);
+  const colorScheme = useSelector(appSelectors.getColorScheme);
 
   const handleClose = useCloseNode();
   const handleUpdate = useUpdateNode();
@@ -60,9 +62,7 @@ const DateForm = ({nodeDef}) => {
           onCancel={handleClose}
           date={date}
           textColor={
-            Appearance.getColorScheme() === 'light'
-              ? colors.black
-              : colors.backgroundLight
+            colorScheme === 'light' ? colors.black : colors.backgroundLight
           }
         />
       )}

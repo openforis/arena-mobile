@@ -49,6 +49,11 @@ const getFontBaseModifier = createSelector(
   style => style?.fontBaseModifier || 1,
 );
 
+const getColorScheme = createSelector(
+  getStyle,
+  style => style?.colorScheme || 'light',
+);
+
 export default {
   getAccessData,
   getServerUrl,
@@ -66,6 +71,7 @@ export default {
   // theme
   getBaseModifier,
   getFontBaseModifier,
+  getColorScheme,
 
   /* Preferences settings */
   getSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields,

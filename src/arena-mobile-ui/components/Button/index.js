@@ -18,7 +18,7 @@ const Button = ({
   bold = true,
   ...props
 }) => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   return (
     <TouchableOpacity
       style={[

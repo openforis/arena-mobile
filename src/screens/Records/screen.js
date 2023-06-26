@@ -18,7 +18,7 @@ const Records = () => {
   const {t} = useTranslation();
   const currentRecord = useSelector(formSelectors.getRecord);
   const [selectedRecord, setSelectedRecord] = useState(null);
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   const resetSelectedRecord = useCallback(() => {
     setSelectedRecord(false);
   }, []);

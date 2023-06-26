@@ -21,7 +21,7 @@ import {selectors as appSelectors, actions as appActions} from 'state/app';
 import _styles from './styles';
 
 const SettingsStyleFontBaseModifier = () => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
 
   const navigation = useNavigation();
   const dispatch = useDispatch();

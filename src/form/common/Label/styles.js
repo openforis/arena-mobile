@@ -16,4 +16,8 @@ const styles = StyleSheet.create({
   },
 });
 
+export const customStyles = {
+  textStyle: {},
+};
+
 export default styles;

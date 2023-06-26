@@ -173,24 +173,15 @@ const Settings = () => {
                     title={t('Settings:style.TextAndSpacingSize.title')}
                     iconName="format-size"
                   />
-                  {false && (
-                    <SectionCard
-                      position="middle"
-                      onPress={navigateTo({
-                        route: routes.SETTINGS_STYLE_FONT_BASE_MODIFIER,
-                      })}
-                      title={t('Settings:style.FontSize.title')}
-                      iconName="format-size"
-                    />
-                  )}
+
                   {false && (
                     <SectionCard
                       position="last"
                       onPress={navigateTo({
-                        route: routes.SETTINGS_STYLE_FONT_BASE_MODIFIER,
+                        route: routes.SETTINGS_STYLE_COLOR_SCHEME,
                       })}
-                      title={t('Settings:style.FontSize.title')}
-                      iconName="format-size"
+                      title={t('Settings:style.ColorScheme.title')}
+                      iconName="theme-light-dark"
                     />
                   )}
                 </Section>
