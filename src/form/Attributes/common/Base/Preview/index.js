@@ -9,8 +9,11 @@ import Icon from 'arena-mobile-ui/components/Icon';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import AttributeHeader from 'form/common/Header';
 import Validation from 'form/common/Validation';
-import {selectors as formSelectors, actions as formActions} from 'state/form';
-import {useDeleteNode} from 'state/form/hooks/useNodeFormActions';
+import {selectors as formSelectors} from 'state/form';
+import {
+  useDeleteNode,
+  useSelectNodeAndNodeDef,
+} from 'state/form/hooks/useNodeFormActions';
 import {
   selectors as nodesSelectors,
   actions as nodesActions,
@@ -48,16 +51,13 @@ const BasePreviewNode = ({
   NodeValueRender,
   canDelete,
 }) => {
-  const dispatch = useDispatch();
-
   const styles = useThemedStyles(_styles);
+
   const disabled = useSelector(state =>
     formSelectors.isNodeDefDisabled(state, nodeDef),
   );
 
-  const handleSelectNodeAndNodeDef = useCallback(() => {
-    dispatch(formActions.setNode({node: node}));
-  }, [dispatch, node]);
+  const handleSelectNodeAndNodeDef = useSelectNodeAndNodeDef({node, nodeDef});
 
   return (
     <View style={[styles.basePreviewContainer]}>

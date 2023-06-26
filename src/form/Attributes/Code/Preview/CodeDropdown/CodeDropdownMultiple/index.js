@@ -1,11 +1,13 @@
 import React, {useEffect, useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import ChevronDown from 'form/Attributes/common/SearchableForm/ChevronDown';
-import {selectors as formSelectors, actions as formActions} from 'state/form';
-import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
+import {selectors as formSelectors} from 'state/form';
+import useNodeFormActions, {
+  useSelectNodeAndNodeDef,
+} from 'state/form/hooks/useNodeFormActions';
 
 import ChipContainer from '../../components/ChipsContainer';
 import OptionChip from '../../components/OptionChip';
@@ -15,7 +17,6 @@ import styles from './styles';
 
 const CodeDropdownMultiple = ({nodeDef}) => {
   const {t} = useTranslation();
-  const dispatch = useDispatch();
 
   const {nodes, categoryItems, getCategoryItemLabel} = useCode({
     nodeDef,
@@ -27,9 +28,10 @@ const CodeDropdownMultiple = ({nodeDef}) => {
 
   const codeActions = useNodeFormActions({nodeDef});
 
-  const handleSelectNodeAndNodeDef = useCallback(() => {
-    dispatch(formActions.setNode({node: nodes[0]}));
-  }, [dispatch, nodes]);
+  const handleSelectNodeAndNodeDef = useSelectNodeAndNodeDef({
+    node: nodes[0],
+    nodeDef,
+  });
 
   useEffect(() => {
     if (nodes.length <= 0) {

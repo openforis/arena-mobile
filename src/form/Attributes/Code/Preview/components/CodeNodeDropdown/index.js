@@ -1,11 +1,11 @@
-import {NodeDefs} from '@openforis/arena-core';
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import ChevronDown from 'form/Attributes/common/SearchableForm/ChevronDown';
-import {selectors as formSelectors, actions as formActions} from 'state/form';
+import {selectors as formSelectors} from 'state/form';
+import {useSelectNodeAndNodeDef} from 'state/form/hooks/useNodeFormActions';
 
 import {useCode} from '../../hooks';
 
@@ -34,11 +34,10 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
     [getCategoryItemLabel],
   );
 
-  const dispatch = useDispatch();
-
-  const handleSelectNodeAndNodeDef = useCallback(() => {
-    dispatch(formActions.setNode({node: node}));
-  }, [dispatch, node]);
+  const handleSelectNodeAndNodeDef = useSelectNodeAndNodeDef({
+    node,
+    nodeDef,
+  });
 
   return (
     <Button
