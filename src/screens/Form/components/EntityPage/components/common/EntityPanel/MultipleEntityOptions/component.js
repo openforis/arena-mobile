@@ -3,14 +3,16 @@ import React from 'react';
 import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as formSelectors} from 'state/form';
 
 import DeleteNodeEntity from '../DeleteNodeEntity';
 import NewItemButton from '../NewItemButton';
 
-import styles from './styles';
+import _styles from './styles';
 
 const MultipleEntityOptions = () => {
+  const styles = useThemedStyles(_styles);
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
 
   if (

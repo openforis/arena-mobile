@@ -8,11 +8,12 @@ import {defaultCycle} from 'arena/config';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {Objects} from 'infra/objectUtils';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
-import styles from './styles';
+import _styles from './styles';
 
 const getNodeDefIndex = ({survey, nodeDef, cycle = defaultCycle}) => {
   return (
@@ -25,6 +26,7 @@ const ChevronLeft = <Icon name="chevron-left" />;
 const ChevronRight = <Icon name="chevron-right" />;
 
 const NavigationButton = ({nodeDef, align = 'right'}) => {
+  const styles = useThemedStyles(_styles);
   const dispatch = useDispatch();
   const nodeDefName = useNodeDefNameOrLabel({nodeDef});
   const handleSelect = useCallback(() => {
@@ -180,6 +182,7 @@ const Next = ({parent}) => {
 // next -> first children, next entity if single
 // prev -> prev entity if single or parent
 const Navigation = () => {
+  const styles = useThemedStyles(_styles);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const currentEntityNodeDef = useSelector(
     formSelectors.getParentEntityNodeDef,

@@ -18,7 +18,7 @@ const styles = ({colors, baseStyles}) =>
     },
     secondary: {
       backgroundColor: colors.backgroundLight,
-      borderColor: colors.neutralDarkest,
+      borderColor: colors.borderColorSecondary,
       borderWidth: 1,
     },
     delete: {
