@@ -12,5 +12,6 @@
     "cta_delete": "Delete this record",
     "cta_continue": "Continue this record"
   },
-  "current_record": "Current record"
+  "current_record": "Current record",
+  "empty_key": "<Key missing>"
 }

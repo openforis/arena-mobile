@@ -43,7 +43,11 @@ const ConnectionSettings = () => {
   const onChangeText = useCallback(
     key =>
       (value = '') => {
-        setFormData(prevValue => ({...prevValue, [key]: value.trim()}));
+        let _value = value.trim();
+        if (key === 'username') {
+          _value = _value.toLowerCase();
+        }
+        setFormData(prevValue => ({...prevValue, [key]: _value}));
       },
     [],
   );

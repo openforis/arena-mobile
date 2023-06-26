@@ -47,6 +47,15 @@ const Select = ({
   disabled = false,
 }) => {
   const {t} = useTranslation();
+  const PLACEHOLDER = useMemo(
+    () => ({
+      label: t('Select:placeholder'),
+      value: null,
+      color: colors.neutralLighter,
+    }),
+    [t],
+  );
+
   const selectRef = useRef(null);
 
   const _items = useMemo(
@@ -97,11 +106,7 @@ const Select = ({
       disabled={disabled}
       useNativeAndroidPickerStyle={false}
       fixAndroidTouchableBug={true}
-      placeholder={{
-        label: t('Common:select_an_item'),
-        value: null,
-        color: colors.neutralLighter,
-      }}
+      placeholder={PLACEHOLDER}
     />
   );
 };

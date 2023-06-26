@@ -34,7 +34,7 @@ const EntityPanel = () => {
       ]}>
       <View style={styles.header}>
         {SHOW_TREE_BUTTON && (
-          <EntitySelectorToggler customStyle={[styles.navigationBottom]} />
+          <EntitySelectorToggler customStyle={styles.navigationBottom} />
         )}
         <View style={styles.textContainer}>
           <CurrentPageInfo />

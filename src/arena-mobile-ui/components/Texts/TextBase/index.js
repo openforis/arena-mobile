@@ -3,16 +3,16 @@ import {Text} from 'react-native';
 
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
-import _styles from '../styles';
+import _styles, {customStyles as CUSTOM_STYLES} from '../styles';
 
 const TextBase = ({
   children,
   type = 'text',
   size = null,
-  customStyle = {},
+  customStyle = CUSTOM_STYLES,
   ...props
 }) => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
 
   return (
     <Text

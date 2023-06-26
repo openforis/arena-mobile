@@ -19,9 +19,7 @@ import _styles from './styles';
 const Home = () => {
   const {t} = useTranslation();
   const survey = useSelector(surveySelectors.getSurvey);
-  const styles = useThemedStyles({
-    styles: _styles,
-  });
+  const styles = useThemedStyles(_styles);
 
   return (
     <Layout>

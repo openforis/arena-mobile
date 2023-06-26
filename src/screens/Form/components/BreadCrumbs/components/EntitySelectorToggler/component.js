@@ -12,7 +12,7 @@ const EntitySelectorToggler = ({customStyle = {}}) => {
   const handleToggleEntitySelector = useCallback(() => {
     dispatch(formActions.toggleEntitySelector());
   }, [dispatch]);
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   return (
     <TouchableIcon
       iconName="file-tree"

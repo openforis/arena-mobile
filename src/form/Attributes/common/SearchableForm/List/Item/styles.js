@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
     borderColor: colors.neutralLight,
     borderWidth: 1,
     padding: baseStyles.bases.BASE_4,
+    flexDirection: 'row',
   },
   selectedItem: {
     backgroundColor: colors.secondary,

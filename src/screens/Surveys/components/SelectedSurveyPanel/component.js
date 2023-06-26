@@ -9,7 +9,7 @@ import SurveySelected from './components/SurveySelected';
 import _styles from './styles';
 
 const SelectedSurveyPanel = ({survey, unSelect, surveysOrigin}) => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   return (
     <>
       <View style={[styles.overlay]} pointerEvents="none" />

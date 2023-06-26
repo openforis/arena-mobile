@@ -6,7 +6,7 @@ import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import _styles from './styles';
 
 const Icon = ({name, size = 'm', color = null}) => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   return (
     <Icons
       name={name}

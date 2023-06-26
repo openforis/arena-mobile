@@ -39,49 +39,56 @@ const useAskBeforeLeave = () => {
   const {t} = useTranslation();
   const handleClose = useCloseNode();
 
-  const onPressBack = useCallback(() => {
-    if (currentEntityNodeDef.uuid === nodeDefRoot?.uuid) {
-      navigation.canGoBack()
-        ? navigation.goBack()
-        : navigator.reset(ROUTES.HOME);
-      return true;
-    }
+  const onPressBack = useCallback(
+    e => {
+      e?.preventDefault();
 
-    if (nodeDefForm) {
-      handleClose();
-      return;
-    }
+      if (!currentEntityNodeDef) {
+        navigator.reset(ROUTES.HOME);
+        return true;
+      }
+      if (currentEntityNodeDef.uuid === nodeDefRoot?.uuid) {
+        dispatch(formActions.leaveForm());
+        return true;
+      }
 
-    let prevNodeDef = false;
-    if (!currentEntityNodeDef.props?.layout?.[cycle]?.pageUuid) {
-      prevNodeDef = parentNodeDef;
-    } else {
-      prevNodeDef = getPrevNodeDef({
-        survey,
-        parent: parentNodeDef,
-        cycle,
-        currentEntityNodeDef,
-      });
-    }
-    if (prevNodeDef) {
-      dispatch(
-        formActions.selectEntity({
-          nodeDef: prevNodeDef,
-        }),
-      );
-    }
-    return;
-  }, [
-    currentEntityNodeDef,
-    nodeDefRoot,
-    cycle,
-    survey,
-    parentNodeDef,
-    dispatch,
-    nodeDefForm,
-    handleClose,
-    navigation,
-  ]);
+      if (nodeDefForm) {
+        handleClose();
+        return;
+      }
+
+      let prevNodeDef = false;
+      if (!currentEntityNodeDef.props?.layout?.[cycle]?.pageUuid) {
+        prevNodeDef = parentNodeDef;
+      } else {
+        prevNodeDef = getPrevNodeDef({
+          survey,
+          parent: parentNodeDef,
+          cycle,
+          currentEntityNodeDef,
+        });
+      }
+      if (prevNodeDef) {
+        dispatch(
+          formActions.selectEntity({
+            nodeDef: prevNodeDef,
+          }),
+        );
+        return true;
+      }
+      return false;
+    },
+    [
+      currentEntityNodeDef,
+      nodeDefRoot,
+      cycle,
+      survey,
+      parentNodeDef,
+      dispatch,
+      nodeDefForm,
+      handleClose,
+    ],
+  );
 
   useEffect(() => {
     const beforeRemoveScreenAction = e => {
@@ -108,7 +115,7 @@ const useAskBeforeLeave = () => {
     navigation.addListener('beforeRemove', beforeRemoveScreenAction);
     return () =>
       navigation.removeListener('beforeRemove', beforeRemoveScreenAction);
-  }, [navigation, t]);
+  }, [navigation, t, dispatch]);
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -122,13 +129,13 @@ const useAskBeforeLeave = () => {
 
 const Form = () => {
   useAskBeforeLeave();
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   return (
     <>
       <Layout bottomSafeArea={false}>
         <BreadCrumbs />
 
-        <View style={[styles.container]}>
+        <View style={styles.container}>
           <EntitySelector />
           <EntityPage />
         </View>

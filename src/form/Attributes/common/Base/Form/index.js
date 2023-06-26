@@ -17,7 +17,7 @@ const BaseForm = ({
   hasSubmitButton = true,
   nodes,
 }) => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   const {t} = useTranslation();
 
   const _handleSubmit = useCallback(

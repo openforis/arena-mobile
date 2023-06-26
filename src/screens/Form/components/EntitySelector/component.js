@@ -69,7 +69,9 @@ const EntitySelector = () => {
     <>
       <Animated.View style={[styles.container, {width: panelWidth}]}>
         <ScrollView style={[styles.scrollContainer]}>
-          <EntitySelectorTree nodeDefUuid={nodeDefRoot?.uuid} />
+          {isEntitySelectorOpened && (
+            <EntitySelectorTree nodeDefUuid={nodeDefRoot?.uuid} />
+          )}
         </ScrollView>
         <View style={styles.buttonsContainer}>
           <Button

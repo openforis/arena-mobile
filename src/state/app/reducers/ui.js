@@ -59,6 +59,16 @@ const appUi = handleActions(
         fontBaseModifier,
       },
     }),
+    [actions.setStyleColorScheme]: (
+      state,
+      {payload: {colorScheme = 'light'}},
+    ) => ({
+      ...state,
+      style: {
+        ...state.style,
+        colorScheme,
+      },
+    }),
   },
   initialState.ui,
 );

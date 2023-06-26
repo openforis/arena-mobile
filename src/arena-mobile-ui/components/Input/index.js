@@ -15,7 +15,7 @@ export const InputContainer = ({
   children,
   hasTitle,
 }) => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   return (
     <View
       style={[
@@ -47,7 +47,7 @@ const Input = ({
   editable = true,
   ...props
 }) => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   const inputRef = useRef();
   useEffect(() => {
     if (lateFocus) {

@@ -1,16 +1,15 @@
 import React from 'react';
 import {View} from 'react-native';
 
-import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
-
 import Button from 'arena-mobile-ui/components/Button';
-import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
 import _styles from './styles';
 
 const Empty = ({title, info, ctaLabel, onPress}) => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   return (
     <View style={styles.container}>
       <View>

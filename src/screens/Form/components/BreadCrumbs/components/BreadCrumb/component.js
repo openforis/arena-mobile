@@ -10,8 +10,8 @@ import {selectors as surveySelectors} from 'state/survey';
 
 import _styles from './styles';
 
-const BreadCrumb = ({breadCrumb: node, isLatests}) => {
-  const styles = useThemedStyles({styles: _styles});
+const BreadCrumb = ({breadCrumb: node}) => {
+  const styles = useThemedStyles(_styles);
   const dispatch = useDispatch();
   const nodeDefsByUuid = useSelector(surveySelectors.getNodeDefsByUuid);
   const keys = useSelector(state =>

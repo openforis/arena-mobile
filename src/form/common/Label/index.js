@@ -6,11 +6,11 @@ import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 
 import DetailModal from './DetailModal';
-import styles from './styles';
+import styles, {customStyles as CUSTOM_STYLES} from './styles';
 
 const Label = ({
   nodeDef,
-  customStyles = {},
+  customStyles = CUSTOM_STYLES,
   iconColor = null,
   numberOfLines = 0,
 }) => {

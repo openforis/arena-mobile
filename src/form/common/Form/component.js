@@ -52,7 +52,7 @@ const RenderForm = ({nodeDef}) => {
 };
 
 const AttributeFormWithModal = () => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   const panelHeight = useRef(new Animated.Value(0)).current;
   const backgroundOpacity = useRef(new Animated.Value(0)).current;
   const nodeDef = useSelector(formSelectors.getNodeDef);

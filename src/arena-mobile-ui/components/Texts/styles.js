@@ -8,4 +8,6 @@ const styles = ({baseStyles}) =>
     },
   });
 
+export const customStyles = StyleSheet.create({});
+
 export default styles;

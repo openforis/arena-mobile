@@ -51,6 +51,19 @@
           "reset": "Reset to default"
         }
       }
+    },
+    "ColorScheme": {
+      "title": "Color Scheme",
+      "screen": {
+        "header": "Color Scheme",
+        "info": "Choose the color scheme that best suits your needs.",
+        "reset": "Reset to default",
+        "options": {
+          "light": "Light",
+          "dark": "Dark"
+        }
+      }
     }
+    
   }
 }

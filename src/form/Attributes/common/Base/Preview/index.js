@@ -20,7 +20,7 @@ import {selectors as surveySelectors} from 'state/survey';
 import _styles from './styles';
 
 const BaseDeletePreviewNode = ({node}) => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   const handleDelete = useDeleteNode();
 
   const _handleDelete = useCallback(() => {
@@ -50,8 +50,7 @@ const BasePreviewNode = ({
 }) => {
   const dispatch = useDispatch();
 
-  const styles = useThemedStyles({styles: _styles});
-
+  const styles = useThemedStyles(_styles);
   const disabled = useSelector(state =>
     formSelectors.isNodeDefDisabled(state, nodeDef),
   );
@@ -94,7 +93,7 @@ const BaseNodeValueRenderer = ({nodeDef}) => {
 };
 
 export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );
@@ -126,7 +125,7 @@ export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
 };
 
 const CreateNode = ({onPress, nodeDef}) => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   const {t} = useTranslation();
   const disabled = useSelector(state =>
     formSelectors.isNodeDefDisabled(state, nodeDef),

@@ -16,7 +16,7 @@ const SubPanel = ({
   sortCriteriaIndex,
   errorRemoteServer,
 }) => {
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   return (
     <>
       {surveysOrigin === 'remote' && (
