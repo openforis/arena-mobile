@@ -11,7 +11,7 @@ import _styles from './styles';
 
 const BreadCrumbs = () => {
   const breadCrumbs = useSelector(formSelectors.getBreadCrumbs);
-  const styles = useThemedStyles({styles: _styles});
+  const styles = useThemedStyles(_styles);
   const scrollViewRef = useRef();
 
   return (
@@ -27,12 +27,9 @@ const BreadCrumbs = () => {
         onContentSizeChange={() =>
           scrollViewRef.current.scrollToEnd({animated: true})
         }>
-        {breadCrumbs.map((breadCrumb, index) => (
+        {breadCrumbs.map(breadCrumb => (
           <View key={breadCrumb.uuid} style={styles.breadCrumbContainer}>
-            <BreadCrumb
-              breadCrumb={breadCrumb}
-              isLatests={breadCrumbs.length - 1 === index}
-            />
+            <BreadCrumb breadCrumb={breadCrumb} />
           </View>
         ))}
       </ScrollView>
