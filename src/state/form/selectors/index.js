@@ -148,7 +148,7 @@ const getNodeDef = createCachedSelector(
 const getParentEntityNodeDef = createCachedSelector(
   surveySelectorsNodeDefs.getNodeDefsByUuid,
   getParentEntityNodeDefUuid,
-  (nodeDefsByUuid = {}, parentEntityNodeDefUuid) =>
+  (nodeDefsByUuid, parentEntityNodeDefUuid) =>
     nodeDefsByUuid[parentEntityNodeDefUuid],
 )(getParentEntityNodeDefUuidKey);
 

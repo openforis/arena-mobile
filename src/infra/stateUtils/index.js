@@ -20,6 +20,7 @@ export const keySelectors = {
   getUuidFromItem,
   mapItemsUuid,
   nodeUuid: stringKey,
+  nodeDefUuid: stringKey,
   recordUuid: stringKey,
   surveyUuid: stringKey,
 };

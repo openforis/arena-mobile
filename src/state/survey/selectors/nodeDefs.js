@@ -2,6 +2,7 @@ import {createCachedSelector} from 're-reselect';
 import {createSelector} from 'reselect';
 
 import {defaultCycle} from 'arena/config';
+import {EMPTY_OBJECT, keySelectors} from 'infra/stateUtils';
 
 import {getSurvey, getSurveyCycle} from './base';
 
@@ -10,14 +11,14 @@ const _getCachedKeyObjectUuid = (_, object) => object?.uuid || '_';
 // --- NodeDefs
 export const getNodeDefsByUuid = createSelector(
   getSurvey,
-  survey => survey.nodeDefs,
+  survey => survey.nodeDefs || EMPTY_OBJECT,
 );
 
 export const getNodeDefByUuid = createCachedSelector(
   getNodeDefsByUuid,
   (_, nodeDefUuid) => nodeDefUuid,
   (nodeDefsByUuid, nodeDefUuid) => nodeDefsByUuid[nodeDefUuid] || false,
-)((_state_, nodeDefUuid) => nodeDefUuid || '_');
+)(keySelectors.nodeDefUuid);
 
 export const getNodeDefs = createSelector(getNodeDefsByUuid, (nodeDefs = {}) =>
   Object.values(nodeDefs).filter(
@@ -33,7 +34,7 @@ export const getEntitiesNodeDefs = createSelector(getNodeDefs, nodeDefs =>
 );
 export const getEntitiesNodeDefsUuids = createSelector(
   getEntitiesNodeDefs,
-  (nodeDefEntities = []) => nodeDefEntities.map(entity => entity.uuid),
+  nodeDefEntities => (nodeDefEntities || []).map(entity => entity.uuid),
 );
 
 export const getNodeDefChildren = createCachedSelector(
@@ -71,5 +72,5 @@ export const getNodeDefTableChildren = createCachedSelector(
 
 export const getNodeDefTableChildrenUuid = createCachedSelector(
   getNodeDefTableChildren,
-  (children = []) => children.map(({uuid}) => uuid),
+  children => (children || []).map(({uuid}) => uuid),
 )(_getCachedKeyObjectUuid);
