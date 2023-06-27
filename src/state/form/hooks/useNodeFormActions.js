@@ -1,5 +1,5 @@
 import {NodeDefs} from '@openforis/arena-core';
-import {useCallback} from 'react';
+import {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useSelector, useDispatch} from 'react-redux';
 
@@ -112,21 +112,29 @@ const useNodeFormActions = ({nodeDef}) => {
   return {handleCreate, handleClose, handleUpdate, handleDelete};
 };
 
-export const useSelectNodeAndNodeDef = ({
+const DEFAULT_PARENT_NODE_DEF = false;
+const DEFAULT_PARENT_NODE = false;
+
+const useSelectNodeAndNodeDefKeyAttributes = ({
   node,
   nodeDef,
-  parentNodeDef = false,
-  parentNode = false,
+  parentNodeDef = DEFAULT_PARENT_NODE_DEF,
+  parentNode = DEFAULT_PARENT_NODE,
 }) => {
   const dispatch = useDispatch();
   const {t} = useTranslation();
 
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
 
-  const _parentEntityNodeDef = parentNodeDef || parentEntityNodeDef;
+  const _parentEntityNodeDef = useMemo(() => {
+    return parentNodeDef || parentEntityNodeDef;
+  }, [parentNodeDef, parentEntityNodeDef]);
 
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
-  const _parentEntityNode = parentNode || parentEntityNode;
+  const _parentEntityNode = useMemo(
+    () => parentNode || parentEntityNode,
+    [parentNode, parentEntityNode],
+  );
 
   const keys = useSelector(state =>
     surveySelectors.getEntityNodeKeysAsString(state, _parentEntityNode),
@@ -176,6 +184,35 @@ export const useSelectNodeAndNodeDef = ({
   ]);
 
   return handleSelectNodeAndNodeDef;
+};
+
+const _useSelectNodeAndNodeDef = ({node}) => {
+  const dispatch = useDispatch();
+
+  const handleSelectNodeAndNodeDef = useCallback(() => {
+    dispatch(formActions.setNode({node: node}));
+  }, [dispatch, node]);
+
+  return handleSelectNodeAndNodeDef;
+};
+export const useSelectNodeAndNodeDef = ({
+  node,
+  nodeDef,
+  parentNodeDef = DEFAULT_PARENT_NODE_DEF,
+  parentNode = DEFAULT_PARENT_NODE,
+}) => {
+  const hook = useMemo(() => {
+    return nodeDef.props.key
+      ? useSelectNodeAndNodeDefKeyAttributes
+      : _useSelectNodeAndNodeDef;
+  }, [nodeDef]);
+
+  return hook({
+    node,
+    nodeDef,
+    parentNodeDef,
+    parentNode,
+  });
 };
 
 export default useNodeFormActions;

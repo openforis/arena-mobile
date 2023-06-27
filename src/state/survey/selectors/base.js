@@ -1,23 +1,20 @@
 import {createSelector} from 'reselect';
 
 import {defaultCycle} from 'arena/config';
+import {EMPTY_OBJECT} from 'infra/stateUtils';
 
 const getState = state => state;
 const getSurveyState = createSelector(
   getState,
   state => state?.survey || false,
 );
-export const getSurvey = createSelector(
-  getSurveyState,
-  state => (state?.data && state?.data.uuid ? state?.data : false),
-  {
-    memoizeOptions: {maxSize: 10},
-  },
+export const getSurvey = createSelector(getSurveyState, state =>
+  state?.data && state?.data.uuid ? state?.data : false,
 );
 
 export const getUiState = createSelector(
   getSurveyState,
-  state => state?.ui || {},
+  state => state?.ui || EMPTY_OBJECT,
 );
 
 export const getSelectedSurveyId = createSelector(
@@ -42,7 +39,7 @@ export const getSelectedSurveyLanguages = createSelector(
 
 export const getSurveyCycles = createSelector(
   getSurvey,
-  survey => survey?.props?.cycles || {},
+  survey => survey?.props?.cycles || EMPTY_OBJECT,
 );
 
 export const getSelectedSurveyCycles = createSelector(

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
+import {StyleSheet} from 'react-native';
 
 import Button from 'arena-mobile-ui/components/Button';
 
@@ -19,6 +20,15 @@ const Header = ({
   placeholderButton,
 }) => {
   const {t} = useTranslation();
+  const buttonTextStyles = useMemo(() => {
+    StyleSheet.compose(styles.text, selectedItem ? styles.selected : {});
+  }, [selectedItem]);
+
+  const label = useMemo(() => {
+    return selectedItem
+      ? _labelStractor(selectedItem)
+      : placeholderButton || t('Form:select_empty');
+  }, [selectedItem, _labelStractor, placeholderButton, t]);
 
   return (
     <>
@@ -27,14 +37,10 @@ const Header = ({
           onPress={handleStartToSearch}
           type="secondary"
           iconPosition="right"
-          label={
-            selectedItem
-              ? _labelStractor(selectedItem)
-              : placeholderButton || t('Form:select_empty')
-          }
+          label={label}
           icon={ChevronDown}
           customContainerStyle={styles.select}
-          customTextStyle={[styles.text, selectedItem ? styles.selected : {}]}
+          customTextStyle={buttonTextStyles}
           disabled={!applicable}
         />
       ) : (

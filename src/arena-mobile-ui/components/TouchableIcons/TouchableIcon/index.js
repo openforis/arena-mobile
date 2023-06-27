@@ -1,24 +1,30 @@
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
 
 import Icon from '../../Icon';
+import Pressable from '../../Pressable';
 
 const TouchableIcon = ({
   onPress,
   iconName,
   size,
-  customStyle = {},
-  iconColor = null,
-  hitSlop = 20,
+  customStyle,
+  iconColor,
+  hitSlop,
 }) => {
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[customStyle]}
-      hitSlop={{top: hitSlop, bottom: hitSlop, left: hitSlop, right: hitSlop}}>
+    <Pressable onPress={onPress} style={customStyle} hitSlop={hitSlop}>
       <Icon name={iconName} size={size} color={iconColor} />
-    </TouchableOpacity>
+    </Pressable>
   );
+};
+
+TouchableIcon.defaultProps = {
+  onPress: () => {},
+  iconName: '',
+  size: 'm',
+  customStyle: {},
+  iconColor: null,
+  hitSlop: 20,
 };
 
 export default TouchableIcon;

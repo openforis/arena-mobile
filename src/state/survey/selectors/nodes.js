@@ -2,6 +2,7 @@ import {createCachedSelector} from 're-reselect';
 import {createSelector} from 'reselect';
 
 import {getKeyNodesAsString} from 'arena/record';
+import {EMPTY_OBJECT, keySelectors} from 'infra/stateUtils';
 import nodesSelectors from 'state/nodes/selectors';
 
 import {getSurvey, getCategoryItemIndex} from './base';
@@ -22,16 +23,16 @@ export const getNodes = createSelector(
 export const getEntityNodeKeys = createCachedSelector(
   nodesSelectors.getNodes,
   getNodeDefsByUuid,
-  (_, node) => node.uuid,
+  keySelectors.getUuidFromItem,
   (nodes, nodeDefsByUuid, nodeUuid) =>
     nodes.filter(
       n => n.parentUuid === nodeUuid && nodeDefsByUuid[n.nodeDefUuid].props.key,
     ),
-)((_state_, node) => node?.uuid || '_');
+)(keySelectors.getUuidFromItem);
 
 export const getEntityNodeKeysAsString = createCachedSelector(
   getEntityNodeKeys,
   getCategoryItemIndex,
-  (nodeKeys, categoryItemIndex = {}) =>
+  (nodeKeys, categoryItemIndex = EMPTY_OBJECT) =>
     getKeyNodesAsString({nodes: nodeKeys, categoryItemIndex}),
-)((_state_, node) => node?.uuid || '_');
+)(keySelectors.getUuidFromItem);

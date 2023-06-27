@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
+import {StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
@@ -39,6 +40,20 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
     nodeDef,
   });
 
+  const customTextStyle = useMemo(
+    () => StyleSheet.compose(styles.text, selectedItem ? styles.selected : {}),
+    [selectedItem],
+  );
+
+  const customContainerStyle = useMemo(
+    () =>
+      StyleSheet.compose(
+        styles.containerStyle,
+        _disabled ? styles.disabled : {},
+      ),
+    [_disabled],
+  );
+
   return (
     <Button
       onPress={handleSelectNodeAndNodeDef}
@@ -48,9 +63,9 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
         selectedItem ? _labelStractor(selectedItem) : t('Form:select_empty')
       }
       icon={ChevronDown}
-      customTextStyle={[styles.text, selectedItem ? styles.selected : {}]}
+      customTextStyle={customTextStyle}
       disabled={_disabled}
-      customContainerStyle={_disabled ? styles.disabled : {}}
+      customContainerStyle={customContainerStyle}
     />
   );
 };

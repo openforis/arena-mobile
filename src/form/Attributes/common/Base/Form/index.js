@@ -14,7 +14,7 @@ const BaseForm = ({
   nodeDef,
   handleSubmit,
   children,
-  hasSubmitButton = true,
+  hasSubmitButton,
   nodes,
 }) => {
   const styles = useThemedStyles(_styles);
@@ -61,6 +61,10 @@ const BaseForm = ({
       )}
     </View>
   );
+};
+
+BaseForm.defaultProps = {
+  hasSubmitButton: true,
 };
 
 export default BaseForm;

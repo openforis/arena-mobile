@@ -31,54 +31,66 @@ const flatValidationObject = validation => {
     errors,
   };
 };
+const basehitSlop = {left: 30, top: 10, right: 30, bottom: 10};
 
-const Validation = ({validation, absolute = false}) => {
-  const {t} = useTranslation();
+const Popover = ({message}) => {
+  return <TextBase>{message}</TextBase>;
+};
+const Validation = React.memo(
+  ({validation}) => {
+    const {t} = useTranslation();
 
-  const flatValidation = useMemo(
-    () => flatValidationObject(validation),
-    [validation],
-  );
+    const language = useSelector(surveySelector.getSelectedSurveyLanguage);
 
-  const language = useSelector(surveySelector.getSelectedSurveyLanguage);
+    const configBySeverityColor = useMemo(() => {
+      if (validation.errors.length > 0) {
+        return colors.error;
+      }
+      if (validation.warnings.length > 0) {
+        return colors.alert;
+      }
+      return colors.transparent;
+    }, [validation]);
 
-  const configBySeverityColor = useMemo(() => {
-    if (flatValidation.errors.length > 0) {
-      return colors.error;
+    const errorMessages = useMemo(
+      () =>
+        validation?.errors
+          ?.map(
+            error =>
+              error?.messages?.[language] || t(`Validation:${error.key}`),
+          )
+          .join('\n'),
+      [validation, t, language],
+    );
+
+    const warningMessages = useMemo(
+      () =>
+        validation?.warnings
+          ?.map(
+            warning =>
+              warning?.messages?.[language] || t(`Validation:${warning.key}`),
+          )
+          .join('\n'),
+      [validation, language, t],
+    );
+
+    const alertIcon = useMemo(() => {
+      return (
+        <View hitSlop={basehitSlop}>
+          <Icon name="alert-outline" color={configBySeverityColor} />
+        </View>
+      );
+    }, [configBySeverityColor]);
+
+    const popover = useMemo(() => {
+      return <Popover message={`${errorMessages} ${warningMessages}`} />;
+    }, [errorMessages, warningMessages]);
+
+    if (Objects.isEmpty(validation) || validation.valid) {
+      return <></>;
     }
-    if (flatValidation.warnings.length > 0) {
-      return colors.alert;
-    }
-    return colors.transparent;
-  }, [flatValidation]);
 
-  const errorMessages = useMemo(
-    () =>
-      flatValidation?.errors
-        ?.map(
-          error => error?.messages?.[language] || t(`Validation:${error.key}`),
-        )
-        .join('\n'),
-    [flatValidation, t, language],
-  );
-
-  const warningMessages = useMemo(
-    () =>
-      flatValidation?.warnings
-        ?.map(
-          warning =>
-            warning?.messages?.[language] || t(`Validation:${warning.key}`),
-        )
-        .join('\n'),
-    [flatValidation, language, t],
-  );
-
-  if (Objects.isEmpty(validation) || validation.valid) {
-    return <></>;
-  }
-
-  return (
-    <View style={[absolute ? styles.absolute : {}]}>
+    return (
       <Tooltip
         height={null}
         width={200}
@@ -86,33 +98,48 @@ const Validation = ({validation, absolute = false}) => {
         overlayColor={colors.transparent}
         animationType="none"
         skipAndroidStatusBar={true}
-        popover={
-          <TextBase>
-            {errorMessages} {warningMessages}
-          </TextBase>
-        }>
-        <View hitSlop={{left: 30, top: 10, right: 30, bottom: 10}}>
-          <Icon name="alert-outline" color={configBySeverityColor} />
-        </View>
+        popover={popover}>
+        {alertIcon}
       </Tooltip>
-    </View>
-  );
-};
+    );
+  },
+  (prevProps, nextProps) => {
+    return prevProps.validation.valid === nextProps.validation.valid;
+  },
+);
 
-const ValidationWrapper = ({
-  nodes,
-  showValidation = true,
-  absolute = false,
-}) => {
+const ValidationWrapper = ({nodes, showValidation, absolute}) => {
   const validation = useSelector(state =>
     formSelectors.getValidationByNodes(state, nodes),
+  );
+  const wrapperStyle = useMemo(
+    () => (absolute ? styles.absolute : styles.relative),
+    [absolute],
+  );
+
+  const flatValidation = useMemo(
+    () => flatValidationObject(validation),
+    [validation],
   );
 
   if (Objects.isEmpty(validation) || validation.valid || !showValidation) {
     return <></>;
   }
 
-  return <Validation validation={validation} absolute={absolute} />;
+  return (
+    <View style={wrapperStyle}>
+      <Validation validation={flatValidation} />
+    </View>
+  );
 };
 
-export default ValidationWrapper;
+ValidationWrapper.defaultProps = {
+  showValidation: true,
+  absolute: false,
+};
+
+export default React.memo(ValidationWrapper, (prevProps, nextProps) => {
+  return prevProps.nodes.every(node => {
+    return nextProps.nodes.some(_node => _node.uuid === node.uuid);
+  });
+});

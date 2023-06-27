@@ -1,7 +1,8 @@
 import React, {useCallback, useState} from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import {View} from 'react-native';
 
 import Icon from 'arena-mobile-ui/components/Icon';
+import Pressable from 'arena-mobile-ui/components/Pressable';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 
@@ -25,7 +26,7 @@ const Label = ({
 
   return (
     <>
-      <TouchableOpacity style={styles.container} onLongPress={toggleModal}>
+      <Pressable style={styles.container} onLongPress={toggleModal}>
         {nodeDef?.props?.key && (
           <>
             <Icon name="key-variant" size="xs" color={iconColor} />
@@ -38,7 +39,7 @@ const Label = ({
           numberOfLines={numberOfLines}>
           {label}
         </TextBase>
-      </TouchableOpacity>
+      </Pressable>
       <DetailModal
         nodeDef={nodeDef}
         isModalVisible={isDetailModalOpen}
@@ -48,4 +49,6 @@ const Label = ({
   );
 };
 
-export default Label;
+export default React.memo(Label, (prevProps, nextProps) => {
+  return prevProps.nodeDef.uuid === nextProps.nodeDef.uuid;
+});

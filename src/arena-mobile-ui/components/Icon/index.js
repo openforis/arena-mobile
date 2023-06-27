@@ -5,7 +5,7 @@ import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
 import _styles from './styles';
 
-const Icon = ({name, size = 'm', color = null}) => {
+const Icon = ({name, size, color}) => {
   const styles = useThemedStyles(_styles);
   return (
     <Icons
@@ -16,4 +16,10 @@ const Icon = ({name, size = 'm', color = null}) => {
   );
 };
 
-export default Icon;
+Icon.defaultProps = {
+  name: '',
+  size: 'm',
+  color: null,
+};
+
+export default React.memo(Icon);

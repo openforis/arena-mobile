@@ -53,7 +53,7 @@ const Actions = () => {
   }, [dispatch]);
 
   return (
-    <View style={[styles.container]}>
+    <View style={styles.container}>
       {numberOfRecords > 0 && (
         <Button
           type="secondary"

@@ -6,13 +6,19 @@ export const normalizeByUuid = arr => {
   return result;
 };
 
+export const DEFAULT_NO_KEY = '_';
 // cached keys
-const stringKey = (_, uuid) => uuid || '_';
-const getUuidFromItem = (_, item) => item?.uuid || '_';
+const identity = (_, item) => item;
+const stringKey = (_, uuid) => uuid || DEFAULT_NO_KEY;
+const getUuidFromItem = (_, item) => item?.uuid || DEFAULT_NO_KEY;
+const mapItemsUuid = (_, items) =>
+  items?.map(item => item.uuid).join('_') || DEFAULT_NO_KEY;
 
 export const keySelectors = {
+  identity,
   stringKey,
   getUuidFromItem,
+  mapItemsUuid,
   nodeUuid: stringKey,
   recordUuid: stringKey,
   surveyUuid: stringKey,
@@ -47,3 +53,5 @@ export const perfState = {
   end: perfEnd,
   exists,
 };
+
+export const EMPTY_OBJECT = {};

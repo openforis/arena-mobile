@@ -4,7 +4,12 @@ import {createSelector} from 'reselect';
 
 import {getKeyNodesForEntityAsString} from 'arena/record';
 import {Objects} from 'infra/objectUtils';
-import {keySelectors, normalizeByUuid} from 'infra/stateUtils';
+import {
+  keySelectors,
+  normalizeByUuid,
+  EMPTY_OBJECT,
+  DEFAULT_NO_KEY,
+} from 'infra/stateUtils';
 import recordsSelectors from 'state/records/selectors';
 import {getCategoryItemIndex} from 'state/survey/selectors/base';
 import * as surveySelectorsBase from 'state/survey/selectors/base';
@@ -12,12 +17,18 @@ import * as surveySelectorsNodeDefs from 'state/survey/selectors/nodeDefs';
 import * as surveySelectorsNodes from 'state/survey/selectors/nodes';
 
 const getState = state => state;
-const getFormState = createSelector(getState, state => state?.form || {});
+const getFormState = createSelector(
+  getState,
+  state => state?.form || EMPTY_OBJECT,
+);
 const getFormStateData = createSelector(
   getFormState,
-  state => state?.data || {},
+  state => state?.data || EMPTY_OBJECT,
 );
-const getFormStateUi = createSelector(getFormState, state => state?.ui || {});
+const getFormStateUi = createSelector(
+  getFormState,
+  state => state?.ui || EMPTY_OBJECT,
+);
 
 const getRecordUuid = createSelector(
   getFormStateData,
@@ -27,7 +38,7 @@ const getRecord = createCachedSelector(
   recordsSelectors.getRecordsByUuid,
   getRecordUuid,
   (records, recordUuid) => records[recordUuid] || false,
-)(state => getRecordUuid(state) || '_');
+)(state => getRecordUuid(state) || DEFAULT_NO_KEY);
 
 const getNodeUuid = createSelector(
   getFormStateData,
@@ -39,7 +50,7 @@ const getParentEntityNodeUuid = createSelector(
 );
 const getParentEntityNodeUuidKey = createSelector(
   getParentEntityNodeUuid,
-  parentEntityNode => parentEntityNode || '_',
+  parentEntityNode => parentEntityNode || DEFAULT_NO_KEY,
 );
 
 const getEntityNodeUuid = createSelector(
@@ -59,7 +70,7 @@ const getNode = createCachedSelector(
   getRecordNodesByUuid,
   getNodeUuid,
   (nodes, nodeUuid) => nodes[nodeUuid] || false,
-)(state => getNodeUuid(state) || '_');
+)(state => getNodeUuid(state) || DEFAULT_NO_KEY);
 
 const getParentEntityNode = createCachedSelector(
   getRecordNodesByUuid,
@@ -88,7 +99,7 @@ const getNodeDefUuid = createSelector(
 );
 const getNodeDefUuidKey = createSelector(
   getNodeDefUuid,
-  nodeDef => nodeDef || '_',
+  nodeDef => nodeDef || DEFAULT_NO_KEY,
 );
 
 const _getNodeDefUuid = (_, nodeDefUuid) => nodeDefUuid;
@@ -96,9 +107,9 @@ const isNodeDefApplicable = createCachedSelector(
   getParentEntityNode,
   _getNodeDefUuid,
   (parentEntityNode, nodeDefUuid) =>
-    !Object.keys(parentEntityNode?.meta?.childApplicability || {}).includes(
-      nodeDefUuid,
-    ),
+    !Object.keys(
+      parentEntityNode?.meta?.childApplicability || EMPTY_OBJECT,
+    ).includes(nodeDefUuid),
 )({
   keySelector: keySelectors.stringKey,
   cacheObject: new FifoObjectCache({cacheSize: 4000}),
@@ -110,7 +121,7 @@ const isNodeDefDisabled = createCachedSelector(
   _getNodeDef,
   (parentEntityNode, nodeDef) => {
     const applicable = !Object.keys(
-      parentEntityNode?.meta?.childApplicability || {},
+      parentEntityNode?.meta?.childApplicability || EMPTY_OBJECT,
     ).includes(nodeDef.uuid);
     return !applicable || NodeDefs.isReadOnly(nodeDef);
   },
@@ -125,7 +136,7 @@ const getParentEntityNodeDefUuid = createSelector(
 );
 const getParentEntityNodeDefUuidKey = createSelector(
   getParentEntityNodeDefUuid,
-  parentEntityNodeDef => parentEntityNodeDef || '_',
+  parentEntityNodeDef => parentEntityNodeDef || DEFAULT_NO_KEY,
 );
 
 const getNodeDef = createCachedSelector(
@@ -212,14 +223,14 @@ const getBreadCrumbs = createCachedSelector(
 
 const getNodeDefNodes = createCachedSelector(
   getRecordNodes,
-  (_, nodeDef) => nodeDef,
+  keySelectors.identity,
   (nodes, nodeDef) => nodes.filter(node => node.nodeDefUuid === nodeDef.uuid),
 )((_state_, nodeDef) => nodeDef.uuid);
 
 const getNodeDefNodesInHierarchy = createCachedSelector(
   getRecordNodes,
   getHierarchyUuid,
-  (_, nodeDef) => nodeDef,
+  keySelectors.identity,
   (nodes, hierarchyUuids, nodeDef) =>
     nodes.filter(
       node =>
@@ -240,12 +251,12 @@ const getEntityKey = createCachedSelector(
       nodeDefsByUuid,
       categoryItemIndex,
     }),
-)((_state_, entity) => entity?.uuid || '_');
+)((_state_, entity) => entity?.uuid || DEFAULT_NO_KEY);
 
 const getNodeDefNodesWithKeysAsStringInHierarchy = createCachedSelector(
   getRecordNodes,
   getHierarchyUuid,
-  (_, nodeDef) => nodeDef,
+  keySelectors.identity,
   surveySelectorsNodeDefs.getNodeDefsByUuid,
   getCategoryItemIndex,
   (nodes, hierarchyUuids, nodeDef, nodeDefsByUuid, categoryItemIndex) =>
@@ -265,7 +276,7 @@ const getNodeDefNodesWithKeysAsStringInHierarchy = createCachedSelector(
 
         return Object.assign({}, node, {keyString});
       }),
-)((_state_, nodeDef) => nodeDef?.uuid || '_');
+)((_state_, nodeDef) => nodeDef?.uuid || DEFAULT_NO_KEY);
 
 const _getDescendants = ({nodes, node}) => {
   let descendants = [];
@@ -289,13 +300,13 @@ const getNodeChildren = createCachedSelector(
     }
     return children;
   },
-)((_state_, node) => node?.uuid || '_');
+)((_state_, node) => node?.uuid || DEFAULT_NO_KEY);
 
 const getNodeDescendants = createCachedSelector(
   getRecordNodes,
   (_, node) => node,
   (recordNodes, node) => _getDescendants({nodes: recordNodes, node}),
-)((_state_, node) => node?.uuid || '_');
+)((_state_, node) => node?.uuid || DEFAULT_NO_KEY);
 
 const getNodeDescendantsByNodeDefUuid = createCachedSelector(
   getNodeDescendants,
@@ -318,45 +329,48 @@ const isEntityShowAsTable = createSelector(
 // --- Validation
 const getValidation = createSelector(
   getFormState,
-  formState => formState.validation || {},
+  formState => formState.validation || EMPTY_OBJECT,
 );
 
 const getValidationByKeys = ({keys, validation}) => {
-  let _validation = {};
-
-  Object.entries(validation?.fields || {}).some(([fieldKey, fieldValue]) => {
-    if (keys.includes(fieldKey)) {
-      _validation = Object.assign({}, fieldValue);
-      return true;
-    }
-    if (!Objects.isEmpty(fieldValue)) {
-      _validation = getValidationByKeys({
-        keys,
-        validation: fieldValue.value,
-      });
-      if (!Objects.isEmpty(_validation)) {
+  const _validation = Object.entries(validation?.fields || EMPTY_OBJECT).find(
+    ([fieldKey, fieldValue]) => {
+      if (keys.includes(fieldKey)) {
         return true;
       }
-    }
-    return false;
-  });
+      if (!Objects.isEmpty(fieldValue)) {
+        const _subValidation = getValidationByKeys({
+          keys,
+          validation: fieldValue.value,
+        });
+        if (!Objects.isEmpty(_subValidation)) {
+          return true;
+        }
+      }
+      return false;
+    },
+  );
 
-  return _validation;
+  if (_validation?.length > 0) {
+    return _validation[1];
+  }
+  return EMPTY_OBJECT;
 };
+
+const _getNodesUuids = (_, nodes) => nodes?.map(node => node.uuid) || [];
 
 const getValidationByNodes = createCachedSelector(
   getValidation,
-  (_, nodes) => nodes?.map(node => node.uuid) || [],
+  _getNodesUuids,
   (validation, nodesUuids) =>
     getValidationByKeys({keys: nodesUuids, validation}),
 )({
-  keySelector: (_state_, nodes) =>
-    nodes?.map(node => node.uuid).join('_') || '_',
+  keySelector: keySelectors.mapItemsUuid,
   cacheObject: new FifoObjectCache({cacheSize: 100}),
 });
 
 const canAddNode = createCachedSelector(
-  (_, nodeDef) => nodeDef,
+  keySelectors.identity,
   getNodeDefNodesInHierarchy,
   (nodeDef, nodeDefNodesInHierarchy = []) => {
     const maxCount = NodeDefs.getMaxCount(nodeDef);
@@ -382,7 +396,7 @@ const getFormAttributesNodeDefs = createSelector(
       parentEntityNodeDef.props.layout[cycle]?.layoutChildren;
     const parentChildApplicability = parentEntityNode?.meta?.childApplicability;
     const parentChildApplicabilityKeys = Object.keys(
-      parentChildApplicability || {},
+      parentChildApplicability || EMPTY_OBJECT,
     );
 
     let formAttributesNodeDefs = isTable

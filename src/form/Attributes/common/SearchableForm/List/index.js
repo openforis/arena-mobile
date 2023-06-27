@@ -15,25 +15,27 @@ const List = ({categoryItems, renderItem, searchText, nodes}) => {
     );
   }, [categoryItems, language]);
 
-  const categoryItemsFiltered = useMemo(() => {
+  const categoryItemsUuidsFiltered = useMemo(() => {
     let searchTextNormalized = false;
     if (searchText) {
       searchTextNormalized = searchText.toLowerCase().normalize('NFD');
     }
-    return categoryItemsWithIndexToSearch.filter(
-      categoryItem =>
-        (searchTextNormalized
-          ? categoryItem?.textForSearch.includes(searchTextNormalized)
-          : true) &&
-        !nodes.some(node => node?.value?.itemUuid === categoryItem.uuid),
-    );
+    return categoryItemsWithIndexToSearch
+      .filter(
+        categoryItem =>
+          (searchTextNormalized
+            ? categoryItem?.textForSearch.includes(searchTextNormalized)
+            : true) &&
+          !nodes.some(node => node?.value?.itemUuid === categoryItem.uuid),
+      )
+      .map(categoryItem => categoryItem.uuid);
   }, [categoryItemsWithIndexToSearch, searchText, nodes]);
 
-  const keyExtractor = useCallback(item => item.uuid, []);
+  const keyExtractor = useCallback(itemUuid => itemUuid, []);
 
   return (
     <ArenaList
-      data={categoryItemsFiltered}
+      data={categoryItemsUuidsFiltered}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
     />

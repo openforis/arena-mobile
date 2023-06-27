@@ -9,7 +9,7 @@ import {selectors as formSelectors, actions as formActions} from 'state/form';
 
 import styles, {pickerSelectStyles, pickerSelectStylesNeutral} from './styles';
 
-export const EntityNodeSelector = ({
+const EntityNodeSelector = ({
   theme = null,
   parentNodeDef = false,
   parentNode = false,
@@ -51,10 +51,6 @@ export const EntityNodeSelector = ({
 
   const _labelStractor = useCallback(item => item?.keyString || '-', []);
 
-  if (!NodeDefs.isMultiple(_parentEntityNodeDef)) {
-    return <></>;
-  }
-
   return (
     <View style={styles.container}>
       <Select
@@ -71,4 +67,25 @@ export const EntityNodeSelector = ({
   );
 };
 
-export default EntityNodeSelector;
+const EntityNodeSelectorWrapper = ({
+  theme = null,
+  parentNodeDef = false,
+  parentNode = false,
+} = {}) => {
+  const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
+  const _parentEntityNodeDef = parentNodeDef || parentEntityNodeDef;
+
+  if (!NodeDefs.isMultiple(_parentEntityNodeDef)) {
+    return <></>;
+  }
+
+  return (
+    <EntityNodeSelector
+      theme={theme}
+      parentNodeDef={parentNodeDef}
+      parentNode={parentNode}
+    />
+  );
+};
+
+export default EntityNodeSelectorWrapper;

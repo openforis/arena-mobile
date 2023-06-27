@@ -13,8 +13,36 @@ import {useSearch} from '../common/hooks/useSearch';
 
 import styles from './styles';
 
+const Item = ({item, selected, handleSelect, getCategoryItemLabel}) => {
+  const handleSelectItem = useCallback(
+    e => {
+      e.stopPropagation();
+      handleSelect(item)(e);
+    },
+    [handleSelect, item],
+  );
+
+  const label = useMemo(
+    () => getCategoryItemLabel(item),
+    [item, getCategoryItemLabel],
+  );
+
+  const iconName = useMemo(
+    () => (selected ? 'radiobox-marked' : 'radiobox-blank'),
+    [selected],
+  );
+
+  return (
+    <ListItem
+      handlePress={handleSelectItem}
+      label={label}
+      selected={selected}
+      icon={iconName}
+    />
+  );
+};
 const FormCodeSingle = ({nodeDef, node}) => {
-  const {categoryItems, getCategoryItemLabel} = useCode({
+  const {categoryItems, categoryItemsByUuid, getCategoryItemLabel} = useCode({
     nodeDef,
     node,
   });
@@ -33,8 +61,8 @@ const FormCodeSingle = ({nodeDef, node}) => {
   );
 
   const selectedItem = useMemo(
-    () => categoryItems.find(item => item.uuid === node?.value?.itemUuid),
-    [categoryItems, node],
+    () => categoryItemsByUuid[node?.value?.itemUuid],
+    [categoryItemsByUuid, node],
   );
 
   const handleSelect = useCallback(
@@ -57,17 +85,19 @@ const FormCodeSingle = ({nodeDef, node}) => {
 
   const renderItem = useCallback(
     ({item}) => {
-      const selected = selectedItem?.uuid === item.uuid;
+      const _item = categoryItemsByUuid[item];
+      const selected = selectedItem?.uuid === _item?.uuid;
+
       return (
-        <ListItem
-          handlePress={handleSelect(item)}
-          label={getCategoryItemLabel(item)}
+        <Item
+          item={_item}
           selected={selected}
-          icon={selected ? 'radiobox-marked' : 'radiobox-blank'}
+          getCategoryItemLabel={getCategoryItemLabel}
+          handleSelect={handleSelect}
         />
       );
     },
-    [handleSelect, selectedItem, getCategoryItemLabel],
+    [handleSelect, categoryItemsByUuid, selectedItem, getCategoryItemLabel],
   );
 
   return (

@@ -1,7 +1,8 @@
-import React from 'react';
-import {TouchableOpacity} from 'react-native';
+import React, {useMemo} from 'react';
+import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
+import Pressable from 'arena-mobile-ui/components/Pressable';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
@@ -10,17 +11,31 @@ import {selectors as surveySelectors} from 'state/survey';
 
 import _styles from './styles';
 
-const BreadCrumb = ({breadCrumb: node}) => {
+const Label = React.memo(
+  ({node}) => {
+    const nodeDefsByUuid = useSelector(surveySelectors.getNodeDefsByUuid);
+    const keys = useSelector(state =>
+      surveySelectors.getEntityNodeKeysAsString(state, node),
+    );
+
+    const nodeDefName = useNodeDefNameOrLabel({
+      nodeDef: nodeDefsByUuid[node.nodeDefUuid],
+    });
+
+    const breadCrumbLabel = useMemo(() => {
+      return `${nodeDefName}[${keys}]`;
+    }, [nodeDefName, keys]);
+
+    return <TextBase>{breadCrumbLabel}</TextBase>;
+  },
+  (prevProps, nextProps) => {
+    return prevProps.node.uuid === nextProps.node.uuid;
+  },
+);
+
+const BreadCrumb = ({node}) => {
   const styles = useThemedStyles(_styles);
   const dispatch = useDispatch();
-  const nodeDefsByUuid = useSelector(surveySelectors.getNodeDefsByUuid);
-  const keys = useSelector(state =>
-    surveySelectors.getEntityNodeKeysAsString(state, node),
-  );
-
-  const nodeDefName = useNodeDefNameOrLabel({
-    nodeDef: nodeDefsByUuid[node.nodeDefUuid],
-  });
 
   const handleSelect = React.useCallback(() => {
     dispatch(
@@ -29,13 +44,16 @@ const BreadCrumb = ({breadCrumb: node}) => {
       }),
     );
   }, [node, dispatch]);
+
   return (
-    <TouchableOpacity onPress={handleSelect} style={styles.container}>
-      <TextBase>
-        {nodeDefName}[{keys}]
-      </TextBase>
-    </TouchableOpacity>
+    <View style={styles.breadCrumbContainer}>
+      <Pressable onPress={handleSelect} style={styles.container}>
+        <Label node={node} />
+      </Pressable>
+    </View>
   );
 };
 
-export default BreadCrumb;
+export default React.memo(BreadCrumb, (prevProps, nextProps) => {
+  return prevProps.node.uuid === nextProps.node.uuid;
+});

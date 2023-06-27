@@ -1,11 +1,12 @@
 import {NodeDefs} from '@openforis/arena-core';
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
+import Pressable from 'arena-mobile-ui/components/Pressable';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import AttributeHeader from 'form/common/Header';
 import Validation from 'form/common/Validation';
@@ -59,23 +60,47 @@ const BasePreviewNode = ({
 
   const handleSelectNodeAndNodeDef = useSelectNodeAndNodeDef({node, nodeDef});
 
-  return (
-    <View style={[styles.basePreviewContainer]}>
-      <TouchableOpacity
-        style={styles.nodeContainer({nodeDef})}
-        onPress={handleSelectNodeAndNodeDef}
-        disabled={disabled}>
+  const validation = useMemo(() => {
+    if (!showValidation) {
+      return null;
+    }
+    return (
+      <Validation
+        nodeDef={nodeDef}
+        nodes={[node]}
+        showValidation={showValidation}
+        absolute={true}
+      />
+    );
+  }, [nodeDef, node, showValidation]);
+
+  const styleNodeContainer = useMemo(() => {
+    return StyleSheet.compose(
+      styles.nodeContainer({nodeDef}),
+      disabled ? styles.disabled : {},
+    );
+  }, [styles, nodeDef, disabled]);
+
+  const nodeRendered = useMemo(() => {
+    return (
+      <>
         <View style={styles.block}>
           <NodeValueRender node={node} nodeDef={nodeDef} />
         </View>
 
-        <Validation
-          nodeDef={nodeDef}
-          nodes={[node]}
-          showValidation={showValidation}
-          absolute={true}
-        />
-      </TouchableOpacity>
+        {validation}
+      </>
+    );
+  }, [node, nodeDef, styles, validation]);
+  return (
+    <View style={styles.basePreviewContainer}>
+      <Pressable
+        style={styleNodeContainer}
+        onPress={handleSelectNodeAndNodeDef}
+        disabled={disabled}>
+        {nodeRendered}
+      </Pressable>
+
       {canDelete && <BaseDeletePreviewNode node={node} />}
     </View>
   );
@@ -92,7 +117,7 @@ const BaseNodeValueRenderer = ({nodeDef}) => {
   );
 };
 
-export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
+const _BasePreviewContainer = ({nodeDef, nodes, children}) => {
   const styles = useThemedStyles(_styles);
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
@@ -102,25 +127,59 @@ export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
   );
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const lastNodeDefUuid = useSelector(nodesSelectors.getLastNodeDefUuid);
-  const hidden =
-    !applicable && NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef);
-  if (hidden) {
-    return <></>;
-  }
-  return (
-    <View
-      style={[
-        styles.container,
-        disabled ? styles.disabled : {},
-        lastNodeDefUuid === nodeDef.uuid ? styles.lastNodeDef : {},
-      ]}>
+  const containerStyle = useMemo(() => {
+    return StyleSheet.compose(
+      styles.container,
+      disabled ? styles.disabled : {},
+      lastNodeDefUuid === nodeDef.uuid ? styles.lastNodeDef : {},
+    );
+  }, [styles, disabled, lastNodeDefUuid, nodeDef]);
+
+  const hidden = useMemo(() => {
+    return !applicable && NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef);
+  }, [applicable, cycle, nodeDef]);
+
+  const header = useMemo(() => {
+    return (
       <AttributeHeader
         nodeDef={nodeDef}
         nodes={nodes}
         showDescription={false}
       />
+    );
+  }, [nodeDef, nodes]);
+
+  if (hidden) {
+    return <></>;
+  }
+
+  return (
+    <View style={containerStyle}>
+      {header}
       {children}
     </View>
+  );
+};
+
+export const BasePreviewContainer = ({nodeDef, nodes, children}) => {
+  const applicable = useSelector(state =>
+    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  );
+
+  const cycle = useSelector(surveySelectors.getSurveyCycle);
+
+  const hidden = useMemo(() => {
+    return !applicable && NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef);
+  }, [applicable, cycle, nodeDef]);
+
+  if (hidden) {
+    return <></>;
+  }
+
+  return (
+    <_BasePreviewContainer nodeDef={nodeDef} nodes={nodes}>
+      {children}
+    </_BasePreviewContainer>
   );
 };
 
@@ -163,21 +222,30 @@ const BasePreview = ({nodeDef, NodeValueRender = BaseNodeValueRenderer}) => {
     }
   }, [dispatch, parentEntityNode, nodeDef, nodes, _createNode]);
 
+  const content = useMemo(() => {
+    const numberOfNodes = nodes.length > 1;
+    return (
+      <>
+        {nodes?.map(node => (
+          <BasePreviewNode
+            key={node.uuid}
+            node={node}
+            nodeDef={nodeDef}
+            showValidation={numberOfNodes}
+            NodeValueRender={NodeValueRender}
+            canDelete={nodeDef?.props?.multiple}
+          />
+        ))}
+        {nodeDef?.props?.multiple && canAddNode && (
+          <CreateNode nodeDef={nodeDef} onPress={_createNode} />
+        )}
+      </>
+    );
+  }, [nodes, nodeDef, NodeValueRender, canAddNode, _createNode]);
+
   return (
     <BasePreviewContainer nodeDef={nodeDef} nodes={nodes}>
-      {nodes?.map(node => (
-        <BasePreviewNode
-          key={node.uuid}
-          node={node}
-          nodeDef={nodeDef}
-          showValidation={nodes.length > 1}
-          NodeValueRender={NodeValueRender}
-          canDelete={nodeDef?.props?.multiple}
-        />
-      ))}
-      {nodeDef?.props?.multiple && canAddNode && (
-        <CreateNode nodeDef={nodeDef} onPress={_createNode} />
-      )}
+      {content}
     </BasePreviewContainer>
   );
 };

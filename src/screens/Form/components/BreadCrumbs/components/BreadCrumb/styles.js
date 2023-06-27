@@ -2,6 +2,9 @@ import {StyleSheet} from 'react-native';
 
 const styles = ({baseStyles, colors}) =>
   StyleSheet.create({
+    breadCrumbContainer: {
+      height: '100%',
+    },
     container: {
       flexDirection: 'column',
       backgroundColor: colors.primaryLighter,
