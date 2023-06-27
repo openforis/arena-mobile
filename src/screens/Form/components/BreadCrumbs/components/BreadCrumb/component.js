@@ -7,6 +7,7 @@ import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {actions as formActions} from 'state/form';
+import {selectors as nodesSelectors} from 'state/nodes';
 import {selectors as surveySelectors} from 'state/survey';
 
 import _styles from './styles';
@@ -33,9 +34,12 @@ const Label = React.memo(
   },
 );
 
-const BreadCrumb = ({node}) => {
+const BreadCrumb = ({nodeUuid}) => {
   const styles = useThemedStyles(_styles);
   const dispatch = useDispatch();
+  const node = useSelector(state =>
+    nodesSelectors.getNodeByUuid(state, nodeUuid),
+  );
 
   const handleSelect = React.useCallback(() => {
     dispatch(
@@ -55,5 +59,5 @@ const BreadCrumb = ({node}) => {
 };
 
 export default React.memo(BreadCrumb, (prevProps, nextProps) => {
-  return prevProps.node.uuid === nextProps.node.uuid;
+  return prevProps.nodeUuid === nextProps.nodeUuid;
 });

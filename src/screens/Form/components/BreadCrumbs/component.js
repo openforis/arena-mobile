@@ -1,5 +1,5 @@
-import React, {useCallback, useRef} from 'react';
-import {View, FlatList} from 'react-native';
+import React, {useCallback, useMemo, useRef} from 'react';
+import {View, ScrollView} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
@@ -9,8 +9,31 @@ import BreadCrumb from './components/BreadCrumb';
 import EntitySelectorToggler from './components/EntitySelectorToggler';
 import _styles from './styles';
 
-const BreadCrumbsList = () => {
+const useBreadCrumbsUuids = () => {
   const breadCrumbs = useSelector(formSelectors.getBreadCrumbs);
+
+  const breadCrumbsUuids = useMemo(() => {
+    return breadCrumbs.map(node => node.uuid);
+  }, [breadCrumbs]);
+
+  return breadCrumbsUuids;
+};
+
+const BreadCrumbsItems = () => {
+  const breadCrumbsUuids = useBreadCrumbsUuids();
+
+  const breadCrumbs = useMemo(
+    () =>
+      breadCrumbsUuids.map(nodeUuid => {
+        return <BreadCrumb key={nodeUuid} nodeUuid={nodeUuid} />;
+      }),
+    [breadCrumbsUuids],
+  );
+
+  return <>{breadCrumbs}</>;
+};
+
+const BreadCrumbsList = () => {
   const styles = useThemedStyles(_styles);
   const scrollViewRef = useRef();
 
@@ -18,21 +41,15 @@ const BreadCrumbsList = () => {
     scrollViewRef.current.scrollToEnd({animated: true});
   }, [scrollViewRef]);
 
-  const renderItem = useCallback(({item}) => <BreadCrumb node={item} />, []);
-
-  const keyExtractor = useCallback(item => item.uuid, []);
-
   return (
-    <FlatList
+    <ScrollView
       horizontal={true}
       contentContainerStyle={styles.breadCrumbsList}
       ref={scrollViewRef}
       initialNumToRender={3}
-      data={breadCrumbs}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
-      onContentSizeChange={onContentSizeChange}
-    />
+      onContentSizeChange={onContentSizeChange}>
+      <BreadCrumbsItems />
+    </ScrollView>
   );
 };
 const BreadCrumbs = () => {
