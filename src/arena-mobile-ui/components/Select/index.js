@@ -21,12 +21,14 @@ const _prepareItemFn =
       key: keyStractor(item),
       value: item,
       label: labelStractor(item),
-      color:
-        Platform.OS === 'ios'
-          ? null
-          : selectedItemKey === keyStractor(item)
-          ? colors.secondary
-          : colors.neutralLighter,
+      ...(Platform.OS !== 'ios'
+        ? {
+            color:
+              selectedItemKey === keyStractor(item)
+                ? colors.secondary
+                : colors.neutralLighter,
+          }
+        : {}),
     });
   };
 const _filterFn = () => true;

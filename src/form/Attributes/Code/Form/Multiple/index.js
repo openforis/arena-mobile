@@ -62,16 +62,16 @@ const FormCodeMultiple = ({nodeDef}) => {
       );
       const selected = !Objects.isEmpty(selectedNode);
       const label = getCategoryItemLabel(item);
+      const action = selected
+        ? _handleDelete({node: selectedNode, label})
+        : handleSelect(item);
 
       return (
         <ListItem
           label={label}
-          handlePress={
-            selected
-              ? _handleDelete({node: selectedNode, label})
-              : handleSelect(item)
-          }
+          handlePress={action}
           selected={selected}
+          icon={selected ? 'checkbox-marked' : 'checkbox-blank-outline'}
         />
       );
     },

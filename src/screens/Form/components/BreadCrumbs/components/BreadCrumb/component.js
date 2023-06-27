@@ -4,10 +4,14 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
-const BreadCrumb = ({breadCrumb: node, isLatests}) => {
+import _styles from './styles';
+
+const BreadCrumb = ({breadCrumb: node}) => {
+  const styles = useThemedStyles(_styles);
   const dispatch = useDispatch();
   const nodeDefsByUuid = useSelector(surveySelectors.getNodeDefsByUuid);
   const keys = useSelector(state =>
@@ -26,9 +30,9 @@ const BreadCrumb = ({breadCrumb: node, isLatests}) => {
     );
   }, [node, dispatch]);
   return (
-    <TouchableOpacity onPress={handleSelect}>
-      <TextBase key={node.key} customStyle={{color: 'black'}}>
-        {nodeDefName}[{keys}] {isLatests ? '' : ' > '}
+    <TouchableOpacity onPress={handleSelect} style={styles.container}>
+      <TextBase>
+        {nodeDefName}[{keys}]
       </TextBase>
     </TouchableOpacity>
   );

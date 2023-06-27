@@ -166,7 +166,7 @@ const Settings = () => {
               {SHOW_STYLE_SETTINGS && (
                 <Section title={t('Settings:style.title')}>
                   <SectionCard
-                    position="only"
+                    position="first"
                     onPress={navigateTo({
                       route: routes.SETTINGS_STYLE_FONT_BASE_MODIFIER,
                     })}
@@ -174,16 +174,14 @@ const Settings = () => {
                     iconName="format-size"
                   />
 
-                  {false && (
-                    <SectionCard
-                      position="last"
-                      onPress={navigateTo({
-                        route: routes.SETTINGS_STYLE_COLOR_SCHEME,
-                      })}
-                      title={t('Settings:style.ColorScheme.title')}
-                      iconName="theme-light-dark"
-                    />
-                  )}
+                  <SectionCard
+                    position="last"
+                    onPress={navigateTo({
+                      route: routes.SETTINGS_STYLE_COLOR_SCHEME,
+                    })}
+                    title={t('Settings:style.ColorScheme.title')}
+                    iconName="theme-light-dark"
+                  />
                 </Section>
               )}
             </>

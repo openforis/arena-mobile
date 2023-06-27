@@ -63,6 +63,7 @@ const FormCodeSingle = ({nodeDef, node}) => {
           handlePress={handleSelect(item)}
           label={getCategoryItemLabel(item)}
           selected={selected}
+          icon={selected ? 'radiobox-marked' : 'radiobox-blank'}
         />
       );
     },

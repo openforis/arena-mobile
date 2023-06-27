@@ -11,7 +11,7 @@ import {actions as formActions, selectors as formSelectors} from 'state/form';
 import Attributes from '../common/Attributes';
 import EntityPanel from '../common/EntityPanel';
 
-import {Viewtoggler, Row} from './components';
+import {Row} from './components';
 import {useEntityTableData} from './hooks';
 import _styles from './styles';
 
@@ -72,8 +72,6 @@ const TableEntity = () => {
 
   return (
     <View style={styles.container}>
-      <Viewtoggler key={String(isEntityShowAsTable)} />
-
       {isEntityShowAsTable ? <Table /> : <Attributes />}
       <EntityPanel />
     </View>
