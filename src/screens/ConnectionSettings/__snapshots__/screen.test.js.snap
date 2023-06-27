@@ -62,18 +62,18 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
         }
       >
         <View
+          accessibilityState={
+            {
+              "disabled": false,
+            }
+          }
           accessible={true}
           collapsable={false}
           focusable={true}
-          hitSlop={
-            {
-              "bottom": 64,
-              "left": 64,
-              "right": 64,
-              "top": 64,
-            }
-          }
+          hitSlop={64}
+          onBlur={[Function]}
           onClick={[Function]}
+          onFocus={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
@@ -81,9 +81,12 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
           style={
-            {
-              "opacity": 1,
-            }
+            [
+              {},
+              {
+                "opacity": 1,
+              },
+            ]
           }
         >
           <MockedMaterialCommunityIcons
@@ -112,7 +115,6 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                 "fontSize": 24,
                 "fontWeight": "bold",
               },
-              {},
               {},
             ]
           }
@@ -181,7 +183,6 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                       "fontWeight": "bold",
                     },
                     {},
-                    {},
                   ]
                 }
               >
@@ -205,7 +206,6 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                         "color": "#182112",
                         "fontSize": 14,
                       },
-                      {},
                       {},
                     ]
                   }
@@ -259,7 +259,6 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                       "fontWeight": "bold",
                     },
                     {},
-                    {},
                   ]
                 }
               >
@@ -283,7 +282,6 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                         "color": "#182112",
                         "fontSize": 14,
                       },
-                      {},
                       {},
                     ]
                   }
@@ -332,7 +330,6 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                         "fontSize": 14,
                       },
                       {},
-                      {},
                     ]
                   }
                 >
@@ -369,18 +366,18 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                     value=""
                   />
                   <View
+                    accessibilityState={
+                      {
+                        "disabled": false,
+                      }
+                    }
                     accessible={true}
                     collapsable={false}
                     focusable={true}
-                    hitSlop={
-                      {
-                        "bottom": 20,
-                        "left": 20,
-                        "right": 20,
-                        "top": 20,
-                      }
-                    }
+                    hitSlop={20}
+                    onBlur={[Function]}
                     onClick={[Function]}
+                    onFocus={[Function]}
                     onResponderGrant={[Function]}
                     onResponderMove={[Function]}
                     onResponderRelease={[Function]}
@@ -388,9 +385,12 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                     onResponderTerminationRequest={[Function]}
                     onStartShouldSetResponder={[Function]}
                     style={
-                      {
-                        "opacity": 1,
-                      }
+                      [
+                        {},
+                        {
+                          "opacity": 1,
+                        },
+                      ]
                     }
                   >
                     <MockedMaterialCommunityIcons
@@ -418,7 +418,10 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                 accessible={true}
                 collapsable={false}
                 focusable={true}
+                hitSlop={20}
+                onBlur={[Function]}
                 onClick={[Function]}
+                onFocus={[Function]}
                 onResponderGrant={[Function]}
                 onResponderMove={[Function]}
                 onResponderRelease={[Function]}
@@ -426,16 +429,24 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                 onResponderTerminationRequest={[Function]}
                 onStartShouldSetResponder={[Function]}
                 style={
-                  {
-                    "alignItems": "center",
-                    "backgroundColor": "#3885CA",
-                    "flexDirection": "row",
-                    "justifyContent": "center",
-                    "marginVertical": 8,
-                    "opacity": 1,
-                    "padding": 8,
-                    "paddingVertical": 12,
-                  }
+                  [
+                    [
+                      {
+                        "alignItems": "center",
+                        "flexDirection": "row",
+                        "justifyContent": "center",
+                        "marginVertical": 8,
+                        "padding": 8,
+                        "paddingVertical": 12,
+                      },
+                      {
+                        "backgroundColor": "#3885CA",
+                      },
+                    ],
+                    {
+                      "opacity": 1,
+                    },
+                  ]
                 }
               >
                 <Text
@@ -450,10 +461,6 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                       {
                         "fontSize": 14,
                       },
-                      {
-                        "color": "#FFFFFF",
-                      },
-                      {},
                       {},
                     ]
                   }
