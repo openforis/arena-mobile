@@ -13,7 +13,7 @@ import {updateNodeAndDependants, callbackAndJump} from './methods';
 
 function* handleUpdateNode({payload}) {
   try {
-    const {updatedNode, callback} = payload;
+    const {updatedNode, callback, shouldJump} = payload;
 
     const [survey, node, record, recordNodes, validation] = yield all([
       select(surveySelectors.getSurvey),
@@ -57,6 +57,7 @@ function* handleUpdateNode({payload}) {
     yield call(callbackAndJump, {
       currentNode: updatedNode,
       callback,
+      shouldJump,
     });
   } catch (e) {
     console.log('Updatenode', e);

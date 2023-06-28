@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View, ScrollView, TouchableOpacity} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Card from 'arena-mobile-ui/components/Card';
@@ -12,13 +12,14 @@ import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import baseStyles from 'arena-mobile-ui/styles';
 import {useNavigateTo} from 'navigation/hooks';
 import {selectors as appSelectors} from 'state/app';
+import {actions as formActions} from 'state/form';
+import formPreferencesSelectors from 'state/form/selectors/preferences';
 import {selectors as userSelectors} from 'state/user';
 
 import DevMode from './DevMode';
 import styles from './styles';
 import Version from './Version';
 
-const SHOW_STYLE_SETTINGS = true;
 const extractFirstCharacters = (str, numberOfCharacters) => {
   if (str.length <= numberOfCharacters) {
     return str;
@@ -57,7 +58,13 @@ const Section = ({title, children, subSection = false}) => {
   );
 };
 
-const SectionCard = ({position = 'middle', onPress, title, iconName}) => {
+const SectionCard = ({
+  position = 'middle',
+  onPress,
+  title,
+  iconName,
+  isNavigation = true,
+}) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <Card
@@ -74,14 +81,38 @@ const SectionCard = ({position = 'middle', onPress, title, iconName}) => {
         <View style={styles.sectionCardTextContainer}>
           <TextBase>{title}</TextBase>
         </View>
-        <View style={styles.iconContainer}>
-          <Icon name="chevron-right" size="l" />
-        </View>
+        {isNavigation && (
+          <View style={styles.iconContainer}>
+            <Icon name="chevron-right" size="l" />
+          </View>
+        )}
       </Card>
     </TouchableOpacity>
   );
 };
 
+const FormSettings = () => {
+  const dispatch = useDispatch();
+
+  const {t} = useTranslation();
+
+  const hasToJump = useSelector(formPreferencesSelectors.getHasToJump);
+  const _updateHasToJump = useCallback(() => {
+    dispatch(formActions.setHasToJump({hasToJump: !hasToJump}));
+  }, [dispatch, hasToJump]);
+
+  return (
+    <Section title={t('Settings:form.title')}>
+      <SectionCard
+        position="only"
+        isNavigation={false}
+        onPress={_updateHasToJump}
+        title={t('Settings:form.jumpBetweenAttributes.title')}
+        iconName={hasToJump ? 'checkbox-marked' : 'checkbox-blank-outline'}
+      />
+    </Section>
+  );
+};
 const ConnectionSettingsSection = () => {
   const {navigateTo, routes} = useNavigateTo();
   const {t} = useTranslation();
@@ -163,27 +194,27 @@ const Settings = () => {
                 />
               </Section>
 
-              {SHOW_STYLE_SETTINGS && (
-                <Section title={t('Settings:style.title')}>
-                  <SectionCard
-                    position="first"
-                    onPress={navigateTo({
-                      route: routes.SETTINGS_STYLE_FONT_BASE_MODIFIER,
-                    })}
-                    title={t('Settings:style.TextAndSpacingSize.title')}
-                    iconName="format-size"
-                  />
+              <Section title={t('Settings:style.title')}>
+                <SectionCard
+                  position="first"
+                  onPress={navigateTo({
+                    route: routes.SETTINGS_STYLE_FONT_BASE_MODIFIER,
+                  })}
+                  title={t('Settings:style.TextAndSpacingSize.title')}
+                  iconName="format-size"
+                />
 
-                  <SectionCard
-                    position="last"
-                    onPress={navigateTo({
-                      route: routes.SETTINGS_STYLE_COLOR_SCHEME,
-                    })}
-                    title={t('Settings:style.ColorScheme.title')}
-                    iconName="theme-light-dark"
-                  />
-                </Section>
-              )}
+                <SectionCard
+                  position="last"
+                  onPress={navigateTo({
+                    route: routes.SETTINGS_STYLE_COLOR_SCHEME,
+                  })}
+                  title={t('Settings:style.ColorScheme.title')}
+                  iconName="theme-light-dark"
+                />
+              </Section>
+
+              <FormSettings />
             </>
           ) : null}
           <Version />

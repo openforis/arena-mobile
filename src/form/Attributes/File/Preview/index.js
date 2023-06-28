@@ -1,5 +1,5 @@
 import {NodeDefs} from '@openforis/arena-core';
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -101,14 +101,20 @@ const Preview = ({nodeDef}) => {
     formSelectors.getNodeDefNodesInHierarchy(state, nodeDef),
   );
 
+  const renderNodes = useMemo(() => {
+    if (nodeDef && (NodeDefs.isMultiple(nodeDef) || nodes.length === 0)) {
+      return (
+        <NodeValueRender key={`empty_${nodes.length}`} nodeDef={nodeDef} />
+      );
+    }
+    return nodes.map(node => (
+      <NodeValueRender key={node.uuid} node={node} nodeDef={nodeDef} />
+    ));
+  }, [nodeDef, nodes]);
+
   return (
     <BasePreviewContainer nodeDef={nodeDef} nodes={nodes}>
-      {nodes.map(node => (
-        <NodeValueRender key={node.uuid} node={node} nodeDef={nodeDef} />
-      ))}
-      {nodeDef && (NodeDefs.isMultiple(nodeDef) || nodes.length === 0) && (
-        <NodeValueRender key={`empty_${nodes.length}`} nodeDef={nodeDef} />
-      )}
+      {renderNodes}
     </BasePreviewContainer>
   );
 };

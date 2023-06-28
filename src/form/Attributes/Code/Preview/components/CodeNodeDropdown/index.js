@@ -1,11 +1,12 @@
-import {NodeDefs} from '@openforis/arena-core';
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {useDispatch, useSelector} from 'react-redux';
+import {StyleSheet} from 'react-native';
+import {useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import ChevronDown from 'form/Attributes/common/SearchableForm/ChevronDown';
-import {selectors as formSelectors, actions as formActions} from 'state/form';
+import {selectors as formSelectors} from 'state/form';
+import {useSelectNodeAndNodeDef} from 'state/form/hooks/useNodeFormActions';
 
 import {useCode} from '../../hooks';
 
@@ -34,11 +35,24 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
     [getCategoryItemLabel],
   );
 
-  const dispatch = useDispatch();
+  const handleSelectNodeAndNodeDef = useSelectNodeAndNodeDef({
+    node,
+    nodeDef,
+  });
 
-  const handleSelectNodeAndNodeDef = useCallback(() => {
-    dispatch(formActions.setNode({node: node}));
-  }, [dispatch, node]);
+  const customTextStyle = useMemo(
+    () => StyleSheet.compose(styles.text, selectedItem ? styles.selected : {}),
+    [selectedItem],
+  );
+
+  const customContainerStyle = useMemo(
+    () =>
+      StyleSheet.compose(
+        styles.containerStyle,
+        _disabled ? styles.disabled : {},
+      ),
+    [_disabled],
+  );
 
   return (
     <Button
@@ -49,9 +63,9 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
         selectedItem ? _labelStractor(selectedItem) : t('Form:select_empty')
       }
       icon={ChevronDown}
-      customTextStyle={[styles.text, selectedItem ? styles.selected : {}]}
+      customTextStyle={customTextStyle}
       disabled={_disabled}
-      customContainerStyle={_disabled ? styles.disabled : {}}
+      customContainerStyle={customContainerStyle}
     />
   );
 };

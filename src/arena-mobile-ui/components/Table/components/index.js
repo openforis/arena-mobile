@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, ScrollView} from 'react-native';
+
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 
 import styles from '../styles';

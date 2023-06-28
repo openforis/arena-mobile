@@ -3,12 +3,19 @@ import {StyleSheet} from 'react-native';
 const styles = ({baseStyles}) =>
   StyleSheet.create({
     container: {
-      paddingTop: baseStyles.bases.BASE_6,
       paddingVertical: baseStyles.bases.BASE_3,
-      paddingHorizontal: baseStyles.bases.BASE_3,
+      paddingHorizontal: 0,
+      paddingTop: 0,
+    },
+    headerBlock: {
+      minHeight: baseStyles.bases.BASE_8,
+      backgroundColor: baseStyles.colors.backgroundLight,
     },
     block: {
-      minHeight: 500,
+      minHeight: 300,
+      backgroundColor: baseStyles.colors.background,
+      borderTopColor: baseStyles.colors.backgroundLight,
+      borderTopWidth: baseStyles.bases.BASE_8,
     },
   });
 

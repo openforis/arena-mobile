@@ -4,7 +4,7 @@ import {select} from 'redux-saga/effects';
 import formSelectors from 'state/form/selectors';
 import surveySelectors from 'state/survey/selectors';
 
-function* getNextNodeDefUuid({currentNode, parentNode}) {
+function* getNextNode({currentNode, parentNode}) {
   let nextNode = false;
 
   const formNodeDefsUuids = yield select(
@@ -41,6 +41,8 @@ function* getNextNodeDefUuid({currentNode, parentNode}) {
         NodeDefType.code,
         NodeDefType.taxon,
         NodeDefType.coordinate,
+        NodeDefType.boolean,
+        NodeDefType.file,
       ].includes(nextNodeDef.type)
     ) {
       const currentEntityNodeDescendants = yield select(state =>
@@ -55,4 +57,4 @@ function* getNextNodeDefUuid({currentNode, parentNode}) {
   return nextNode;
 }
 
-export default getNextNodeDefUuid;
+export default getNextNode;

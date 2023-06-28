@@ -12,7 +12,7 @@ const Entity = () => {
   const styles = useThemedStyles(_styles);
 
   return (
-    <View style={[styles.container]}>
+    <View style={styles.container}>
       <Attributes />
       <EntityPanel />
     </View>

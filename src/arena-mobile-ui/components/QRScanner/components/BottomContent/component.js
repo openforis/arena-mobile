@@ -2,8 +2,8 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {View, TouchableOpacity} from 'react-native';
 
-import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import Icon from 'arena-mobile-ui/components/Icon';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import baseStyles from 'arena-mobile-ui/styles';
 
 import styles from './styles';
@@ -36,13 +36,13 @@ const BottomContent = ({
         </TextBase>
       </View>
 
-      <View style={[styles.buttonsContainer]}>
-        <TouchableOpacity style={[styles.button]} onPress={handleReactivate}>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.button} onPress={handleReactivate}>
           <Icon name="refresh" />
           <TextBase>{t('QRScanner:retry')}</TextBase>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.button]} onPress={handleClose}>
+        <TouchableOpacity style={styles.button} onPress={handleClose}>
           <Icon name="check" />
           <TextBase>{t('QRScanner:save')}</TextBase>
         </TouchableOpacity>

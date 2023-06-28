@@ -18,6 +18,7 @@ const styles = ({colors, baseStyles}) =>
   StyleSheet.create({
     container: {
       marginBottom: baseStyles.bases.BASE_4,
+      marginHorizontal: baseStyles.bases.BASE_3,
     },
     disabled: {
       opacity: 0.5,

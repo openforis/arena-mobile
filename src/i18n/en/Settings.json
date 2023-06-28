@@ -65,5 +65,11 @@
       }
     }
     
+  },
+  "form": {
+    "title": "Form",
+    "jumpBetweenAttributes": {
+      "title": "Jump between attributes (Experimental)"
+    }
   }
 }

@@ -1,32 +1,38 @@
 import {createCachedSelector, FifoObjectCache} from 're-reselect';
 import {createSelector} from 'reselect';
 
-import {keySelectors, normalizeByUuid} from 'infra/stateUtils';
+import {EMPTY_OBJECT, keySelectors, normalizeByUuid} from 'infra/stateUtils';
 
 const getState = state => state;
-const getNodesState = createSelector(getState, state => state?.nodes || {});
+const getNodesState = createSelector(
+  getState,
+  state => state?.nodes || EMPTY_OBJECT,
+);
 
-const getUiState = createSelector(getNodesState, state => state?.ui || {});
+const getUiState = createSelector(
+  getNodesState,
+  state => state?.ui || EMPTY_OBJECT,
+);
 
 const getNodesByUuid = createSelector(
   getNodesState,
-  state => state?.data || {},
+  state => state?.data || EMPTY_OBJECT,
 );
 
 const getNodes = createSelector(getNodesByUuid, nodes => Object.values(nodes), {
-  memoizeOptions: {maxSize: 10},
+  memoizeOptions: {maxSize: 3},
 });
 const getNumNodes = createSelector(getNodes, nodes => nodes.length);
 
 const getNodeByUuid = createCachedSelector(
   getNodesByUuid,
-  (_, nodeUuid) => nodeUuid,
+  keySelectors.nodeUuid,
   (nodessByUuid, nodeUuid) => nodessByUuid[nodeUuid] || false,
 )(keySelectors.nodeUuid);
 
 const getNodesByRecordUuid = createCachedSelector(
   getNodes,
-  (_, recordUuid) => recordUuid,
+  keySelectors.recordUuid,
   (nodes, recordUuid) => nodes.filter(node => node.recordUuid === recordUuid),
 )(keySelectors.recordUuid);
 

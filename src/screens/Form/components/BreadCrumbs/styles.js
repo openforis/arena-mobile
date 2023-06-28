@@ -15,9 +15,6 @@ const styles = ({colors}) =>
       justifyContent: 'flex-start',
       alignItems: 'center',
     },
-    breadCrumbContainer: {
-      height: '100%',
-    },
   });
 
 export default styles;

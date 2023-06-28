@@ -10,6 +10,9 @@ const initialState = {
     isEntitySelectorOpened: false,
     isEntityShowAsTable: false,
   },
+  preferences: {
+    hasToJump: false,
+  },
   validation: {},
 };
 

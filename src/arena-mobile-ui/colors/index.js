@@ -124,11 +124,15 @@ export const primaryContrastTextLight = grey50;
 
 export const white = grey0;
 export const black = grey900;
+export const backgroundDarker = neutralDarker;
 export const background = neutralLightest;
 export const backgroundLight = white;
 export const backgroundLighter = neutralLighter;
 export const activeBackground = secondaryLightest;
-export const borderColors = neutralLight;
+
+export const borderColor = neutralLight;
+export const borderColorContrast = neutralLightest;
+export const borderColorSecondary = neutralDarkest;
 
 export const transparent = 'transparent';
 export const translucidLight = '#ffffff50';
@@ -145,12 +149,16 @@ const DarkTheme = {
   primaryContrastTextLight: grey700,
 
   // -- backgrounds
+  backgroundDarker: neutralLighter,
   background: black,
   backgroundLight: neutralDark,
   backgroundLighter: neutralDarker,
   activeBackground: grey400,
+  neutralLightest: neutralDarkest,
 
-  borderColors: neutralDarker,
+  borderColorContrast: neutralLighter,
+  borderColor: neutralDarker,
+  borderColorSecondary: neutralLightest,
 };
 
 export const themesKeys = {

@@ -3,10 +3,11 @@ import {call, select, put} from 'redux-saga/effects';
 
 import formActions from 'state/form/actionCreators';
 import formSelectors from 'state/form/selectors';
+import formPreferencesSelectors from 'state/form/selectors/preferences';
 import nodesSelectors from 'state/nodes/selectors';
 import surveySelectors from 'state/survey/selectors';
 
-import getNextNodeDefUuid from './getNextNodeDefUuid';
+import getNextNode from './getNextNode';
 
 /* Function to jump between nodes */
 /*
@@ -17,28 +18,39 @@ import getNextNodeDefUuid from './getNextNodeDefUuid';
 
 */
 
-function* callbackAndJump({currentNode, callback}) {
+function* callbackAndJump({currentNode, callback, shouldJump = true}) {
+  let _hasToJump = yield select(formPreferencesSelectors.getHasToJump);
+
+  if (!shouldJump || !_hasToJump) {
+    if (callback) {
+      yield call(callback);
+    }
+    return;
+  }
+
   const currentNodeValidation = yield select(state =>
     formSelectors.getValidationByNodes(state, [currentNode]),
   );
 
-  if (currentNodeValidation.valid === false) {
-    return;
-  }
-
-  const HAS_TO_JUMP = true;
-
-  let _hasToJump = HAS_TO_JUMP;
-  const parentNode = yield select(state =>
-    nodesSelectors.getNodeByUuid(state, currentNode.parentUuid),
-  );
   const currentNodeDef = yield select(state =>
     surveySelectors.getNodeDefByUuid(state, currentNode.nodeDefUuid),
   );
 
   if (
+    currentNodeValidation.valid === false &&
+    ![NodeDefType.time, NodeDefType.date].includes(currentNodeDef.type)
+  ) {
+    return;
+  }
+
+  const parentNode = yield select(state =>
+    nodesSelectors.getNodeByUuid(state, currentNode.parentUuid),
+  );
+
+  if (
     [NodeDefType.file].includes(currentNodeDef.type) ||
-    NodeDefs.isMultiple(currentNodeDef)
+    (NodeDefs.isMultiple(currentNodeDef) &&
+      ![NodeDefType.code].includes(currentNodeDef.type))
   ) {
     _hasToJump = false;
   }
@@ -46,7 +58,7 @@ function* callbackAndJump({currentNode, callback}) {
   let nextNode = false;
 
   if (parentNode && _hasToJump) {
-    nextNode = yield call(getNextNodeDefUuid, {
+    nextNode = yield call(getNextNode, {
       currentNode,
       parentNode,
     });

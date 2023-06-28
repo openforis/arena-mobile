@@ -1,10 +1,14 @@
-import {useCallback} from 'react';
+import {NodeDefs} from '@openforis/arena-core';
+import {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useSelector, useDispatch} from 'react-redux';
 
+import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import {alert} from 'arena-mobile-ui/utils';
+import {Objects} from 'infra/objectUtils';
 
 import nodesActions from '../../nodes/actionCreators';
+import surveySelectors from '../../survey/selectors';
 import formActions from '../actionCreators';
 import formSelectors from '../selectors';
 
@@ -106,6 +110,109 @@ const useNodeFormActions = ({nodeDef}) => {
   const handleDelete = useDeleteNode();
 
   return {handleCreate, handleClose, handleUpdate, handleDelete};
+};
+
+const DEFAULT_PARENT_NODE_DEF = false;
+const DEFAULT_PARENT_NODE = false;
+
+const useSelectNodeAndNodeDefKeyAttributes = ({
+  node,
+  nodeDef,
+  parentNodeDef = DEFAULT_PARENT_NODE_DEF,
+  parentNode = DEFAULT_PARENT_NODE,
+}) => {
+  const dispatch = useDispatch();
+  const {t} = useTranslation();
+
+  const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
+
+  const _parentEntityNodeDef = useMemo(() => {
+    return parentNodeDef || parentEntityNodeDef;
+  }, [parentNodeDef, parentEntityNodeDef]);
+
+  const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
+  const _parentEntityNode = useMemo(
+    () => parentNode || parentEntityNode,
+    [parentNode, parentEntityNode],
+  );
+
+  const keys = useSelector(state =>
+    surveySelectors.getEntityNodeKeysAsString(state, _parentEntityNode),
+  );
+
+  const nodeDefName = useNodeDefNameOrLabel({
+    nodeDef: _parentEntityNodeDef,
+  });
+
+  const handleCreateNewNodeEntity = useCallback(() => {
+    dispatch(
+      formActions.createEntity({
+        nodeDef: _parentEntityNodeDef,
+        node: _parentEntityNode,
+      }),
+    );
+  }, [dispatch, _parentEntityNodeDef, _parentEntityNode]);
+
+  const handleSelectNodeAndNodeDef = useCallback(() => {
+    if (
+      NodeDefs.isMultiple(_parentEntityNodeDef) &&
+      nodeDef.props.key &&
+      !Objects.isEmpty(node.value)
+    ) {
+      alert({
+        title: t('Form:avoidOverWrite.alert.title'),
+        message: t('Form:avoidOverWrite.alert.message', {
+          name: `${nodeDefName} [${keys}]`,
+        }),
+        acceptText: t('Form:avoidOverWrite.alert.accept'),
+        dismissText: t('Form:avoidOverWrite.alert.dismiss'),
+        onAccept: handleCreateNewNodeEntity,
+        onDismiss: () => null,
+      });
+    } else {
+      dispatch(formActions.setNode({node: node}));
+    }
+  }, [
+    dispatch,
+    node,
+    _parentEntityNodeDef,
+    nodeDef,
+    t,
+    nodeDefName,
+    keys,
+    handleCreateNewNodeEntity,
+  ]);
+
+  return handleSelectNodeAndNodeDef;
+};
+
+const _useSelectNodeAndNodeDef = ({node}) => {
+  const dispatch = useDispatch();
+
+  const handleSelectNodeAndNodeDef = useCallback(() => {
+    dispatch(formActions.setNode({node: node}));
+  }, [dispatch, node]);
+
+  return handleSelectNodeAndNodeDef;
+};
+export const useSelectNodeAndNodeDef = ({
+  node,
+  nodeDef,
+  parentNodeDef = DEFAULT_PARENT_NODE_DEF,
+  parentNode = DEFAULT_PARENT_NODE,
+}) => {
+  const hook = useMemo(() => {
+    return nodeDef.props.key
+      ? useSelectNodeAndNodeDefKeyAttributes
+      : _useSelectNodeAndNodeDef;
+  }, [nodeDef]);
+
+  return hook({
+    node,
+    nodeDef,
+    parentNodeDef,
+    parentNode,
+  });
 };
 
 export default useNodeFormActions;

@@ -88,11 +88,7 @@ const AttributeFormWithModal = () => {
 const AttributeForm = () => {
   const nodeDef = useSelector(formSelectors.getNodeDef);
 
-  if (
-    [NodeDefType.date, NodeDefType.time, NodeDefType.boolean].includes(
-      nodeDef?.type,
-    )
-  ) {
+  if ([NodeDefType.date, NodeDefType.time].includes(nodeDef?.type)) {
     return (
       <>
         {nodeDef &&

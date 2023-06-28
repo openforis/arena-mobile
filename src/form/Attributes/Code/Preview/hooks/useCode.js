@@ -41,9 +41,19 @@ const useCode = ({nodeDef, node}) => {
     item => getCategoryItemLabel(nodeDef, cycle, language)(item),
     [nodeDef, cycle, language],
   );
+
+  const categoryItemsByUuid = useMemo(() => {
+    const items = _categoryItems.reduce((acc, item) => {
+      acc[item.uuid] = item;
+      return acc;
+    }, {});
+    return items;
+  }, [_categoryItems]);
+
   return {
     nodes,
     categoryItems: _categoryItems,
+    categoryItemsByUuid,
     getCategoryItemLabel: _getCategoryItemLabel,
   };
 };

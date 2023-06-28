@@ -1,6 +1,7 @@
 import React from 'react';
 
 import List from 'arena-mobile-ui/components/List';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
 import {
   TableContainer,
@@ -10,7 +11,7 @@ import {
   TableBody,
   _renderCell,
 } from './components';
-import styles from './styles';
+import _styles from './styles';
 import {_basicKeyExtractor, isOdd} from './utils';
 
 const Table = ({
@@ -26,9 +27,10 @@ const Table = ({
 
   getWidth = () => null,
   baseWidth = 150,
-  baseStyles = styles,
+
   customStyles = {},
 }) => {
+  const baseStyles = useThemedStyles(_styles);
   return (
     <TableContainer
       style={[baseStyles.container, customStyles?.container || {}]}>

@@ -1,5 +1,6 @@
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
+
+import Pressable from 'arena-mobile-ui/components/Pressable';
 
 import Cell from '../Cell';
 
@@ -7,7 +8,7 @@ import styles from './styles';
 
 const Row = ({item: parentNode, headers, getWidth, onPress}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.container]}>
+    <Pressable onPress={onPress} style={styles.container}>
       {headers.map(nodeDef => (
         <Cell
           key={`${parentNode.uuid}_${nodeDef.uuid}`}
@@ -16,7 +17,7 @@ const Row = ({item: parentNode, headers, getWidth, onPress}) => {
           getWidth={getWidth}
         />
       ))}
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 

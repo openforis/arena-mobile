@@ -1,5 +1,6 @@
 import {NodeDefs} from '@openforis/arena-core';
 import React, {useCallback} from 'react';
+import {View} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 
 import {defaultCycle} from 'arena/config';
@@ -7,10 +8,11 @@ import * as colors from 'arena-mobile-ui/colors';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
-import styles from './styles';
+import _styles from './styles';
 NodeDefs.isHiddenWhenNotRelevant =
   (cycle = defaultCycle) =>
   nodeDef => {
@@ -18,6 +20,7 @@ NodeDefs.isHiddenWhenNotRelevant =
   };
 
 const Preview = ({nodeDef}) => {
+  const styles = useThemedStyles(_styles);
   const label = useNodeDefNameOrLabel({nodeDef});
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const nodes = useSelector(state =>
@@ -45,21 +48,23 @@ const Preview = ({nodeDef}) => {
     return <></>;
   }
   return (
-    <Button
-      onPress={handleSelect}
-      type="secondary"
-      iconPosition="right"
-      label={`${label} (${nodes.length})`}
-      icon={
-        <Icon
-          name="table-large"
-          color={disabled ? colors.neutralLighter : colors.black}
-        />
-      }
-      disabled={disabled}
-      customContainerStyle={disabled ? styles.disabled : {}}
-      customTextStyle={disabled ? styles.disabled : {}}
-    />
+    <View style={styles.container}>
+      <Button
+        onPress={handleSelect}
+        type="secondary"
+        iconPosition="right"
+        label={`${label} (${nodes.length})`}
+        icon={
+          <Icon
+            name="table-large"
+            color={disabled ? colors.neutralLighter : colors.black}
+          />
+        }
+        disabled={disabled}
+        customContainerStyle={disabled ? styles.disabled : {}}
+        customTextStyle={disabled ? styles.disabled : {}}
+      />
+    </View>
   );
 };
 

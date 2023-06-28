@@ -2,8 +2,9 @@ import {Objects} from 'infra/objectUtils';
 
 const DEFAULT_JOIN_STRING = ',';
 const DEFAULT_STRING = '';
+const DEFAULT_EMPTY_ARRAY = [];
 
-const allKeysEmpty = ({nodes = []}) =>
+const allKeysEmpty = ({nodes = DEFAULT_EMPTY_ARRAY}) =>
   nodes.every(node => Objects.isEmpty(node.value));
 
 export const getKeyNodeAsString = ({
@@ -19,7 +20,7 @@ export const getKeyNodeAsString = ({
 };
 
 export const getKeyNodesAsString = ({
-  nodes = [],
+  nodes = DEFAULT_EMPTY_ARRAY,
   categoryItemIndex,
   joinString = DEFAULT_JOIN_STRING,
   defaultString = DEFAULT_STRING,
@@ -30,7 +31,11 @@ export const getKeyNodesAsString = ({
     )
     .join(joinString) || '';
 
-export const getKeyNodesForEntity = ({entity, nodes = [], nodeDefsByUuid}) =>
+export const getKeyNodesForEntity = ({
+  entity,
+  nodes = DEFAULT_EMPTY_ARRAY,
+  nodeDefsByUuid,
+}) =>
   nodes.filter(
     node =>
       node.parentUuid === entity.uuid &&

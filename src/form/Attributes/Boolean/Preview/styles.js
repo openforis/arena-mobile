@@ -8,20 +8,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
   },
-  touchableContainer: ({active}) => ({
-    padding: baseStyles.bases.BASE_2,
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: colors.neutralLighter,
-    flexDirection: 'row',
-    backgroundColor: active ? colors.secondary : colors.backgroundLight,
-  }),
-  touchableLabel: ({active}) => ({
-    paddingLeft: baseStyles.bases.BASE,
-    color: active ? colors.primaryContrastText : colors.secondary,
-  }),
 });
+
+export const booleanOptionStyles = ({active}) =>
+  StyleSheet.create({
+    touchableContainer: {
+      padding: baseStyles.bases.BASE_2,
+      flex: 1,
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: colors.neutralLighter,
+      flexDirection: 'row',
+      backgroundColor: active ? colors.secondary : colors.backgroundLight,
+    },
+    touchableLabel: {
+      paddingLeft: baseStyles.bases.BASE,
+      color: active ? colors.primaryContrastText : colors.secondary,
+    },
+  });
 
 export default styles;

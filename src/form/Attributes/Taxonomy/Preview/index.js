@@ -1,10 +1,11 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import ChevronDown from 'form/Attributes/common/SearchableForm/ChevronDown';
-import {selectors as formSelectors, actions as formActions} from 'state/form';
+import {selectors as formSelectors} from 'state/form';
+import {useSelectNodeAndNodeDef} from 'state/form/hooks/useNodeFormActions';
 import {selectors as surveySelectors} from 'state/survey';
 
 import {Preview as BasePreview} from '../../common/Base';
@@ -24,13 +25,14 @@ const Taxonomy = ({node, nodeDef}) => {
   );
 
   const {t} = useTranslation();
-  const dispatch = useDispatch();
+
   const _labelStractor = useTaxonItemLabelExtractor(nodeDef);
   const itemsArray = useMemo(() => Object.values(items), [items]);
 
-  const handleSelectNodeAndNodeDef = useCallback(() => {
-    dispatch(formActions.setNode({node: node}));
-  }, [dispatch, node]);
+  const handleSelectNodeAndNodeDef = useSelectNodeAndNodeDef({
+    node,
+    nodeDef,
+  });
 
   const selectedItem = useMemo(
     () => itemsArray.find(item => item.uuid === node?.value?.taxonUuid),

@@ -5,10 +5,11 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
-import styles from './styles';
+import _styles from './styles';
 
 const AddIcon = <Icon name="plus" />;
 
@@ -31,6 +32,7 @@ const NewItemButton = ({
   parentNodeDef = false,
   parentNode = false,
 }) => {
+  const styles = useThemedStyles(_styles);
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
   const _parentEntityNodeDef = parentNodeDef || parentEntityNodeDef;
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);

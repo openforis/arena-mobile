@@ -33,6 +33,14 @@
     },
     "cta_delete": "Delete this node"
   },
+  "avoidOverWrite": {
+    "alert": {
+      "title": "Creating a new item?",
+      "message": "It seems you're attempting to edit the key field of the current page {{ name }}. Do you want to create a new page instead?",
+      "accept": "Create New Page",
+      "dismiss": "Stay on Current Page"
+    }
+  },
   "nodeDefBoolean": {
     "labelValue": {
       "trueFalse": {

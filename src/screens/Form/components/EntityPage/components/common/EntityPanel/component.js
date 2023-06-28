@@ -3,6 +3,7 @@ import {View} from 'react-native';
 import {isTablet} from 'react-native-device-info';
 import {useSelector} from 'react-redux';
 
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import EntitySelectorToggler from 'screens/Form/components/BreadCrumbs/components/EntitySelectorToggler';
 import {useIsTable} from 'screens/Form/components/EntityPage/components/common/EntityPanel/NewItemButton/component';
 import {selectors as formSelectors} from 'state/form';
@@ -11,12 +12,13 @@ import AutomaticallyStoredInfo from './AutomaticallyStoredInfo';
 import CurrentPageInfo from './CurrentPageInfo';
 import MultipleEntityOptions from './MultipleEntityOptions';
 import Navigation from './Navigation';
-import styles from './styles';
+import _styles from './styles';
 import TableOption from './TableOption';
 
 const SHOW_TREE_BUTTON = false;
 
 const EntityPanel = () => {
+  const styles = useThemedStyles(_styles);
   const isEntitySelectorOpened = useSelector(
     formSelectors.isEntitySelectorOpened,
   );

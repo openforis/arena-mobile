@@ -10,7 +10,7 @@ const styles = ({colors, baseStyles}) =>
     },
     primary: {
       backgroundColor: colors.backgroundLight,
-      borderColor: colors.borderColors,
+      borderColor: colors.borderColor,
     },
     error: {
       backgroundColor: colors.errorLighter,

@@ -34,9 +34,10 @@ const DateForm = ({nodeDef}) => {
       handleUpdate({
         node,
         value: moment(dateTime).format(formats[nodeDef.type]),
+        callback: handleClose,
       });
     },
-    [node, nodeDef, handleUpdate],
+    [node, nodeDef, handleUpdate, handleClose],
   );
 
   useEffect(() => {
