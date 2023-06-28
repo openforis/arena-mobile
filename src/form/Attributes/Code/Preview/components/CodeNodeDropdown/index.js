@@ -1,3 +1,4 @@
+import {NodeDefs} from '@openforis/arena-core';
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
@@ -19,7 +20,14 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
     formSelectors.isNodeDefDisabled(state, nodeDef),
   );
 
-  const _disabled = disabled || categoryItems.length === 0;
+  const parentEntityNodeDef = useSelector(state =>
+    formSelectors.getParentEntityNodeDef(state, nodeDef),
+  );
+
+  const _disabled =
+    disabled ||
+    categoryItems.length === 0 ||
+    NodeDefs.isEnumerate(parentEntityNodeDef);
 
   const selectedItem = useMemo(
     () => categoryItems.find(item => item.uuid === node?.value?.itemUuid),

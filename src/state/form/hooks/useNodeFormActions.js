@@ -148,7 +148,7 @@ const useSelectNodeAndNodeDefKeyAttributes = ({
     if (!NodeDefs.isMultiple(_parentEntityNodeDef)) {
       return;
     }
-    if (NodeDefs.isEnumerated(_parentEntityNodeDef)) {
+    if (NodeDefs.isEnumerate(_parentEntityNodeDef)) {
       return;
     }
 
