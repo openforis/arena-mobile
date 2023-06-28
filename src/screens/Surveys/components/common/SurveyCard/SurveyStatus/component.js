@@ -24,6 +24,13 @@ const SurveyStatus = ({survey}) => {
         bolder: true,
       };
     }
+    if (actionType === 'UNPUBLISHED') {
+      return {
+        value: t('Surveys:status_labels.not_published'),
+        color: 'alert',
+        bolder: true,
+      };
+    }
 
     if (survey?.serverUrl && survey?.serverUrl !== currentServerUrl) {
       return {

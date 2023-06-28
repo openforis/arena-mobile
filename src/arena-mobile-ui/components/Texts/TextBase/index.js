@@ -9,8 +9,7 @@ const TextBase = ({children, type, size, customStyle, ...props}) => {
   const styles = useThemedStyles(_styles);
   const textStyles = useMemo(() => {
     return StyleSheet.compose(
-      styles[type] || {},
-      styles.sizes[size] || {},
+      StyleSheet.compose(styles[type] || {}, styles.sizes[size] || {}),
       customStyle,
     );
   }, [styles, type, size, customStyle]);

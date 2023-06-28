@@ -33,9 +33,7 @@ const styles = ({colors, baseStyles}) =>
     ghostBlack: {
       backgroundColor: colors.transparent,
     },
-    baseText: {
-      fontSize: baseStyles.fontSizes.m,
-    },
+
     bold: {
       ...baseStyles.textStyle.bold,
     },
@@ -56,7 +54,7 @@ const styles = ({colors, baseStyles}) =>
         color: colors.error,
       },
       ghost: {
-        color: colors.secondary,
+        color: colors.secondaryText,
       },
       ghostBlack: {
         color: colors.primaryText,
@@ -68,7 +66,7 @@ const styles = ({colors, baseStyles}) =>
       },
       text: {
         primary: {
-          color: colors.neutralLight,
+          color: colors.secondaryTextLight,
         },
       },
     },

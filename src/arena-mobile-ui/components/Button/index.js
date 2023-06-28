@@ -23,20 +23,24 @@ const Button = ({
   const styles = useThemedStyles(_styles);
   const containerStyles = useMemo(() => {
     return StyleSheet.compose(
-      styles.base,
-      styles[type],
-      disabled && (styles?.disabled?.[type] || {}),
-      customContainerStyle,
+      StyleSheet.compose(styles.base, styles[type]),
+      StyleSheet.compose(
+        disabled && styles?.disabled?.[type] ? styles.disabled[type] : {},
+        customContainerStyle,
+      ),
     );
   }, [styles, type, disabled, customContainerStyle]);
 
   const textStyles = useMemo(() => {
     return StyleSheet.compose(
-      bold && styles.bold,
-      styles.baseText,
-      styles.text[type],
-      (disabled && styles.disabled.text[type]) || {},
-    ).concat(customTextStyle);
+      StyleSheet.compose(bold ? styles.bold : {}, styles.text[type]),
+      StyleSheet.compose(
+        disabled && styles?.disabled?.text?.[type]
+          ? styles.disabled.text[type]
+          : {},
+        customTextStyle,
+      ),
+    );
   }, [styles, type, disabled, customTextStyle, bold]);
 
   return (

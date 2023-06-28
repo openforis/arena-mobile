@@ -20,16 +20,19 @@ const List = ({categoryItems, renderItem, searchText, nodes}) => {
     if (searchText) {
       searchTextNormalized = searchText.toLowerCase().normalize('NFD');
     }
-    return categoryItemsWithIndexToSearch
+
+    const _categoryItemsUuidsFiltered = categoryItemsWithIndexToSearch
       .filter(
         categoryItem =>
-          (searchTextNormalized
+          searchTextNormalized
             ? categoryItem?.textForSearch.includes(searchTextNormalized)
-            : true) &&
-          !nodes.some(node => node?.value?.itemUuid === categoryItem.uuid),
+            : true,
+        /*DONT_SHOW_SELECTED !nodes.some(node => node?.value?.itemUuid === categoryItem.uuid) */
       )
       .map(categoryItem => categoryItem.uuid);
-  }, [categoryItemsWithIndexToSearch, searchText, nodes]);
+
+    return _categoryItemsUuidsFiltered;
+  }, [categoryItemsWithIndexToSearch, searchText]);
 
   const keyExtractor = useCallback(itemUuid => itemUuid, []);
 

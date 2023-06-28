@@ -1,13 +1,9 @@
 import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {StyleSheet} from 'react-native';
 
-import Button from 'arena-mobile-ui/components/Button';
+import DropDownButton from 'arena-mobile-ui/components/Button/DropDownButton';
 
-import ChevronDown from '../../ChevronDown';
 import SearchBar from '../../SearchBar';
-
-import styles from './styles';
 
 const Header = ({
   searching,
@@ -20,9 +16,6 @@ const Header = ({
   placeholderButton,
 }) => {
   const {t} = useTranslation();
-  const buttonTextStyles = useMemo(() => {
-    StyleSheet.compose(styles.text, selectedItem ? styles.selected : {});
-  }, [selectedItem]);
 
   const label = useMemo(() => {
     return selectedItem
@@ -33,15 +26,11 @@ const Header = ({
   return (
     <>
       {!searching ? (
-        <Button
+        <DropDownButton
           onPress={handleStartToSearch}
-          type="secondary"
-          iconPosition="right"
           label={label}
-          icon={ChevronDown}
-          customContainerStyle={styles.select}
-          customTextStyle={buttonTextStyles}
           disabled={!applicable}
+          selected={selectedItem}
         />
       ) : (
         <SearchBar
