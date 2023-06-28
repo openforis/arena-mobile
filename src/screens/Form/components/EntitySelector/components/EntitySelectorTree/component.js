@@ -5,13 +5,14 @@ import {useSelector} from 'react-redux';
 
 import {defaultCycle} from 'arena/config';
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
 import Entity from './components/Entity';
 import HorizonalHelper from './components/HorizontalHelper';
 import VerticalHelper from './components/VerticalHelper';
-import styles from './styles';
+import _styles from './styles';
 
 NodeDefs.isHiddenWhenNotRelevant =
   (cycle = defaultCycle) =>
@@ -36,6 +37,7 @@ const useChildrenIndex = nodeDefUuid => {
 };
 
 const EntitySelectorTree = ({nodeDefUuid, level = 0}) => {
+  const styles = useThemedStyles(_styles);
   const nodeDef = useSelector(state =>
     surveySelectors.getNodeDefByUuid(state, nodeDefUuid),
   );
@@ -76,7 +78,7 @@ const EntitySelectorTree = ({nodeDefUuid, level = 0}) => {
   if (nodeDef) {
     return (
       <>
-        <View style={[styles.container]}>
+        <View style={styles.container}>
           <View style={styles.entityContainer}>
             {level > 0 && (
               <VerticalHelper childrenLength={childrenIndex?.length} />

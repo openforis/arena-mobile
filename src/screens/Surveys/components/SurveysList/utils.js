@@ -8,6 +8,7 @@ const ACTIONS = {
   USE: 'USE',
   DOWNLOAD: 'DOWNLOAD',
   UPDATE: 'UPDATE',
+  UNPUBLISHED: 'UNPUBLISHED',
 };
 
 const populateLocalSurveys = localSurveys => {
@@ -31,7 +32,7 @@ export const prepareSurveys = ({
 
   __surveys = populateLocalSurveys(localSurveys);
 
-  if (surveysOrigin === 'remote') {
+  if (surveysOrigin === 'remote' && surveys.length > 0) {
     for (const survey of surveys) {
       let listAction = ACTIONS.USE;
       if (localSurveysUuids.includes(survey.uuid)) {
@@ -40,7 +41,7 @@ export const prepareSurveys = ({
           moment(localSurvey.dateModified).diff(moment(survey.dateModified)) !==
           0;
 
-        if (isOutdated) {
+        if (isOutdated && survey.published) {
           listAction = ACTIONS.UPDATE;
         }
         const surveyIndex = __surveys.findIndex(s => s.uuid === survey.uuid);
@@ -50,6 +51,9 @@ export const prepareSurveys = ({
         });
       } else {
         listAction = ACTIONS.DOWNLOAD;
+        if (!survey.published) {
+          listAction = ACTIONS.UNPUBLISHED;
+        }
         __surveys.push(
           Object.assign(survey, {
             listAction,

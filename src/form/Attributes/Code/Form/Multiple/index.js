@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -14,10 +14,54 @@ import {useSearch} from '../common/hooks/useSearch';
 
 import styles from './styles';
 
+const Item = ({
+  item,
+  selectedNode,
+  selected,
+  handleSelect,
+  getCategoryItemLabel,
+  handleDelete,
+}) => {
+  const handleSelectItem = useCallback(
+    e => {
+      e.stopPropagation();
+      handleSelect(item)(e);
+    },
+    [handleSelect, item],
+  );
+  const label = useMemo(
+    () => getCategoryItemLabel(item),
+    [item, getCategoryItemLabel],
+  );
+
+  const action = useCallback(
+    e =>
+      selected
+        ? handleDelete({node: selectedNode, label})()
+        : handleSelectItem(e),
+    [selected, handleDelete, selectedNode, label, handleSelectItem],
+  );
+
+  const iconName = useMemo(
+    () => (selected ? 'checkbox-marked' : 'checkbox-blank-outline'),
+    [selected],
+  );
+
+  return (
+    <ListItem
+      handlePress={action}
+      label={label}
+      selected={selected}
+      icon={iconName}
+    />
+  );
+};
+
 const FormCodeMultiple = ({nodeDef}) => {
-  const {nodes, categoryItems, getCategoryItemLabel} = useCode({
-    nodeDef,
-  });
+  const {nodes, categoryItems, categoryItemsByUuid, getCategoryItemLabel} =
+    useCode({
+      nodeDef,
+    });
 
   const {
     searchText,
@@ -57,25 +101,30 @@ const FormCodeMultiple = ({nodeDef}) => {
 
   const renderItem = useCallback(
     ({item}) => {
+      const _item = categoryItemsByUuid[item];
       const selectedNode = nodes.find(
-        node => node?.value?.itemUuid === item.uuid,
+        node => node?.value?.itemUuid === _item.uuid,
       );
       const selected = !Objects.isEmpty(selectedNode);
-      const label = getCategoryItemLabel(item);
-      const action = selected
-        ? _handleDelete({node: selectedNode, label})
-        : handleSelect(item);
 
       return (
-        <ListItem
-          label={label}
-          handlePress={action}
+        <Item
+          item={_item}
+          selectedNode={selectedNode}
           selected={selected}
-          icon={selected ? 'checkbox-marked' : 'checkbox-blank-outline'}
+          getCategoryItemLabel={getCategoryItemLabel}
+          handleSelect={handleSelect}
+          handleDelete={_handleDelete}
         />
       );
     },
-    [handleSelect, getCategoryItemLabel, nodes, _handleDelete],
+    [
+      handleSelect,
+      categoryItemsByUuid,
+      getCategoryItemLabel,
+      nodes,
+      _handleDelete,
+    ],
   );
 
   return (
@@ -94,6 +143,7 @@ const FormCodeMultiple = ({nodeDef}) => {
         categoryItems={categoryItems}
         renderItem={renderItem}
         searchText={searchText}
+        nodes={nodes}
       />
     </View>
   );

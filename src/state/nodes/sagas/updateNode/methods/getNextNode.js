@@ -42,7 +42,7 @@ function* getNextNode({currentNode, parentNode}) {
         NodeDefType.taxon,
         NodeDefType.coordinate,
         NodeDefType.boolean,
-        NodeDefType.file,
+        /*NodeDefType.file,*/
       ].includes(nextNodeDef.type)
     ) {
       const currentEntityNodeDescendants = yield select(state =>

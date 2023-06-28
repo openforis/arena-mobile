@@ -1,14 +1,17 @@
 import React from 'react';
 import {View} from 'react-native';
 
-import styles from './styles';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
+
+import _styles from './styles';
 
 const VerticalHelper = () => {
+  const styles = useThemedStyles(_styles);
   return (
-    <View style={[styles.container]}>
-      <View style={[styles.helper]} />
+    <View style={styles.container}>
+      <View style={styles.helper} />
 
-      <View style={[styles.divider]} />
+      <View style={styles.divider} />
     </View>
   );
 };

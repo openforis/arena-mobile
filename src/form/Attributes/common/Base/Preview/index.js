@@ -129,8 +129,7 @@ const _BasePreviewContainer = ({nodeDef, nodes, children}) => {
   const lastNodeDefUuid = useSelector(nodesSelectors.getLastNodeDefUuid);
   const containerStyle = useMemo(() => {
     return StyleSheet.compose(
-      styles.container,
-      disabled ? styles.disabled : {},
+      StyleSheet.compose(styles.container, disabled ? styles.disabled : {}),
       lastNodeDefUuid === nodeDef.uuid ? styles.lastNodeDef : {},
     );
   }, [styles, disabled, lastNodeDefUuid, nodeDef]);

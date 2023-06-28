@@ -28,7 +28,7 @@ const MoreInfo = ({node}) => {
       />
       {collapsed && (
         <LabelsAndValues
-          items={Object.entries(node.value).map(([label, value]) => ({
+          items={Object.entries(node?.value || {}).map(([label, value]) => ({
             label,
             value: String(value) || '-',
           }))}

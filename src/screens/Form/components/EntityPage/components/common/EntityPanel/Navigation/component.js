@@ -50,8 +50,7 @@ const NavigationButton = ({nodeDef, align}) => {
 
   const customTextStyle = useMemo(() => {
     return StyleSheet.compose(
-      styles.text,
-      align === 'left' ? styles.textLeft : {},
+      StyleSheet.compose(styles.text, align === 'left' ? styles.textLeft : {}),
       isTablet() ? styles.textTablet : {},
     );
   }, [styles, align]);

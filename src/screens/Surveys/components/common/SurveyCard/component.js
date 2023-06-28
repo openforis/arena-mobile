@@ -30,7 +30,7 @@ const SurveyCard = ({
     <TouchableCard
       customStyles={[styles.container, isLocalSurvey ? styles.selected : {}]}>
       <View style={styles.infoContainer}>
-        <View style={[styles.payload]}>
+        <View style={styles.payload}>
           <View style={styles.labelCotainer}>
             <TextBase type="bold" size="l">
               {survey.props?.labels?.[survey?.props?.languages?.[0]]}
@@ -52,7 +52,7 @@ const SurveyCard = ({
             <SurveyStatus survey={survey} />
           )}
         </View>
-        <View style={[styles.moreInfo]}>
+        <View style={styles.moreInfo}>
           <View style={{alignItems: 'flex-end'}}>
             {isLocalSurvey ? (
               <CurrentItemLabel label={t('Surveys:active_survey')} />

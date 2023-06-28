@@ -33,14 +33,16 @@
     "select": "Use",
     "continue": "Continue",
     "download": "Download",
-    "update": "Update"
+    "update": "Update",
+    "unpublished": "-"
   },
 
   "status_labels": {
     "not_in_device": "Not in device.",
     "ready": "Up-to-date.",
     "update": "Outdated. Newer available.",
-    "not_this_server": "Not available in this server"
+    "not_this_server": "Not available in this server",
+    "not_published": "NOT published"
   },
   "toasts": {
     "server": "You already have this survey pointing to other server, connect to {{ surveyServer}} instead of {{ serverUrl }}",

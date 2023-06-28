@@ -40,6 +40,12 @@ const ActionButton = ({survey}) => {
         onPress: handleDownload,
       };
     }
+    if (actionType === 'UNPUBLISHED') {
+      return {
+        label: t('Surveys:actions.unpublished'),
+        onPress: () => {},
+      };
+    }
     if (actionType === 'UPDATE') {
       return {
         label: t('Surveys:actions.update'),

@@ -2,8 +2,7 @@ import React, {useEffect, useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
-import Button from 'arena-mobile-ui/components/Button';
-import ChevronDown from 'form/Attributes/common/SearchableForm/ChevronDown';
+import DropDownButton from 'arena-mobile-ui/components/Button/DropDownButton';
 import {selectors as formSelectors} from 'state/form';
 import useNodeFormActions, {
   useSelectNodeAndNodeDef,
@@ -12,8 +11,6 @@ import useNodeFormActions, {
 import ChipContainer from '../../components/ChipsContainer';
 import OptionChip from '../../components/OptionChip';
 import {useCode} from '../../hooks';
-
-import styles from './styles';
 
 const CodeDropdownMultiple = ({nodeDef}) => {
   const {t} = useTranslation();
@@ -82,14 +79,9 @@ const CodeDropdownMultiple = ({nodeDef}) => {
       </ChipContainer>
 
       {nodes.length !== categoryItems.length && (
-        <Button
+        <DropDownButton
           onPress={handleSelectNodeAndNodeDef}
-          type="secondary"
-          iconPosition="right"
           label={t('Form:select_empty')}
-          icon={ChevronDown}
-          customContainerStyle={styles.container}
-          customTextStyle={styles.text}
           disabled={disabled}
         />
       )}
