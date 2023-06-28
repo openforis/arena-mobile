@@ -145,6 +145,13 @@ const useSelectNodeAndNodeDefKeyAttributes = ({
   });
 
   const handleCreateNewNodeEntity = useCallback(() => {
+    if (!NodeDefs.isMultiple(_parentEntityNodeDef)) {
+      return;
+    }
+    if (NodeDefs.isEnumerated(_parentEntityNodeDef)) {
+      return;
+    }
+
     dispatch(
       formActions.createEntity({
         nodeDef: _parentEntityNodeDef,
@@ -167,7 +174,7 @@ const useSelectNodeAndNodeDefKeyAttributes = ({
         acceptText: t('Form:avoidOverWrite.alert.accept'),
         dismissText: t('Form:avoidOverWrite.alert.dismiss'),
         onAccept: handleCreateNewNodeEntity,
-        onDismiss: () => null,
+        onDismiss: () => dispatch(formActions.setNode({node: node})),
       });
     } else {
       dispatch(formActions.setNode({node: node}));

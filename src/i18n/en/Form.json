@@ -38,7 +38,7 @@
       "title": "Creating a new item?",
       "message": "It seems you're attempting to edit the key field of the current page {{ name }}. Do you want to create a new page instead?",
       "accept": "Create New Page",
-      "dismiss": "Stay on Current Page"
+      "dismiss": "Stay on Current Page and Edit"
     }
   },
   "nodeDefBoolean": {
@@ -86,7 +86,7 @@
       "audio": "Audio"
     }
   },
-  "leave_form_to_record_list_cta": "Go to records list", 
+  "leave_form_to_record_list_cta": "Go to records list",
   "beforeLeave": {
     "title": "Data is automatically saved, Are you sure to leave the form?",
     "message": "",
