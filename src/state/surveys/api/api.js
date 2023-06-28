@@ -4,17 +4,18 @@ import * as fs from 'infra/fs';
 const getSurveys = async ({serverUrl}) => {
   const {data} = await API({serverUrl}).get({
     path: 'api/surveys',
-    params: {draft: false},
+    params: {draft: false, backup: false},
   });
   const {list} = data;
 
-  return list.filter(item => item.status === 'PUBLISHED');
+  return list;
 };
 
 const getSurveyPopulatedById = async ({serverUrl, surveyId}) => {
   const {data} = await API({serverUrl}).get({
     path: `api/mobile/survey/${surveyId}?${new URLSearchParams({
       draft: false,
+      backup: false,
     })}`,
   });
   const {survey} = data;

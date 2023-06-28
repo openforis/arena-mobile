@@ -36,6 +36,13 @@ const basehitSlop = {left: 30, top: 10, right: 30, bottom: 10};
 const Popover = ({message}) => {
   return <TextBase>{message}</TextBase>;
 };
+
+const validationMessageToString = ({validation, type, t, language}) => {
+  return validation[type]
+    .map(item => item?.messages?.[language] || t(`Validation:${item.key}`))
+    .join('\n');
+};
+
 const Validation = React.memo(
   ({validation}) => {
     const {t} = useTranslation();
@@ -54,23 +61,13 @@ const Validation = React.memo(
 
     const errorMessages = useMemo(
       () =>
-        validation?.errors
-          ?.map(
-            error =>
-              error?.messages?.[language] || t(`Validation:${error.key}`),
-          )
-          .join('\n'),
+        validationMessageToString({validation, type: 'errors', t, language}),
       [validation, t, language],
     );
 
     const warningMessages = useMemo(
       () =>
-        validation?.warnings
-          ?.map(
-            warning =>
-              warning?.messages?.[language] || t(`Validation:${warning.key}`),
-          )
-          .join('\n'),
+        validationMessageToString({validation, type: 'warnings', t, language}),
       [validation, language, t],
     );
 
