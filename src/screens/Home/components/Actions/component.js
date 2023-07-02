@@ -74,7 +74,7 @@ const Actions = () => {
           onPress={handleInitializeRecord}
         />
       )}
-      <View style={[styles.separator]} />
+      <View style={styles.separator} />
       {currentRecordUuid ? (
         <Button
           type="primary"

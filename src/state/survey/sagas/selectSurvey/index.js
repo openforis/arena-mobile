@@ -24,7 +24,7 @@ function* handleSelectSurvey({payload}) {
 
     const cycles = Object.keys(survey.props.cycles);
     const lastCycle = cycles.pop();
-    const cycle = survey.props?.defaultCycle || lastCycle || defaultCycle;
+    const cycle = survey.props?.defaultCycleKey || lastCycle || defaultCycle;
     yield call(createSurveyFolder, {
       surveyUuid,
       cycle,

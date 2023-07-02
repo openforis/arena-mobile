@@ -18,7 +18,7 @@ const LoggedInAs = () => {
 
   return (
     <Card>
-      <TextBase type="secondaryText">{t('Home:logged_in_as')}</TextBase>
+      <TextBase type="secondary">{t('Home:logged_in_as')}</TextBase>
       <LabelsAndValues
         size="s"
         items={[

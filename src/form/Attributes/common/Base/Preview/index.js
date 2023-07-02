@@ -1,12 +1,13 @@
 import {NodeDefs} from '@openforis/arena-core';
 import React, {useCallback, useEffect, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import Pressable from 'arena-mobile-ui/components/Pressable';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import AttributeHeader from 'form/common/Header';
 import Validation from 'form/common/Validation';
@@ -110,9 +111,9 @@ const BaseNodeValueRenderer = ({nodeDef}) => {
   const {t} = useTranslation();
   return (
     <View>
-      <Text>
+      <TextBase type="secondary">
         {t('Common:not_supported')}: {nodeDef.type}{' '}
-      </Text>
+      </TextBase>
     </View>
   );
 };

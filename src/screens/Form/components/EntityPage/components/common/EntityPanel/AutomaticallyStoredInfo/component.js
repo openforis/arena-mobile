@@ -37,7 +37,7 @@ const AutomaticallyStoredInfo = () => {
 
   return (
     <View style={styles.container}>
-      <TextBase type="secondaryText" size="s" customStyle={styles.text}>
+      <TextBase type="secondary" size="s" customStyle={styles.text}>
         {t('Form:navigation_panel.automatically_stored_info')}
       </TextBase>
       <TouchableIcon iconName="close" onPress={handleHide} />

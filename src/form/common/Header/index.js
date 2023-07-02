@@ -3,15 +3,17 @@ import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as surveySelectors} from 'state/survey';
 
 import Label from '../Label';
 import Validation from '../Validation';
 
-import styles from './styles';
+import _styles from './styles';
 
 export const Header = ({nodeDef, nodes, showValidation, showDescription}) => {
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
+  const styles = useThemedStyles(_styles);
 
   return (
     <View style={styles.container}>

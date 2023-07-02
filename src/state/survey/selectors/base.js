@@ -56,7 +56,7 @@ export const getSurveyCycle = createSelector(
       return ui?.selectedSurveyCycle;
     }
     const lastCycle = surveyCycles.pop();
-    return survey.props?.defaultCycle || lastCycle || defaultCycle;
+    return survey.props?.defaultCycleKey || lastCycle || defaultCycle;
   },
 );
 

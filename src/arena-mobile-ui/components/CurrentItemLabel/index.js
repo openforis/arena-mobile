@@ -9,8 +9,8 @@ import _styles from './styles';
 const CurrentItemLabel = ({label}) => {
   const styles = useThemedStyles(_styles);
   return (
-    <View style={[styles.container]}>
-      <TextBase type="secondaryText" size="s" customStyle={styles.text}>
+    <View style={styles.container}>
+      <TextBase type="secondary" size="s" customStyle={styles.text}>
         {label}
       </TextBase>
     </View>

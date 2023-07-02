@@ -29,7 +29,7 @@ const Home = () => {
           RightComponent={<NavigateToSurveys />}>
           <TextTitle>{t('Home:header_title')}</TextTitle>
         </Header>
-        <ScrollView style={[styles.container]}>
+        <ScrollView style={styles.container}>
           <User />
           <Survey />
         </ScrollView>

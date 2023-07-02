@@ -39,12 +39,12 @@ const SurveyDetail = () => {
   if (survey) {
     return (
       <View>
-        <TextBase type="secondaryText" size="s">
+        <TextBase type="secondary" size="s">
           {t('Home:survey.card.active_survey')}
         </TextBase>
         <TextTitle>{surveyLabel}</TextTitle>
 
-        <TextBase type="secondaryText">{surveyDescription}</TextBase>
+        <TextBase type="secondary">{surveyDescription}</TextBase>
 
         <LabelsAndValues
           size="m"

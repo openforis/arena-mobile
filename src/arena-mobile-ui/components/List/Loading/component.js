@@ -39,7 +39,7 @@ const Loading = () => {
   const opacityAnim = useSkeletonAnimation();
 
   return (
-    <View style={[styles.container]}>
+    <View style={styles.container}>
       <Animated.View style={[styles.item, {opacity: opacityAnim}]} />
       <Animated.View style={[styles.item, {opacity: opacityAnim}]} />
       <Animated.View style={[styles.item, {opacity: opacityAnim}]} />

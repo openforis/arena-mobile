@@ -8,7 +8,7 @@ import styles from './styles';
 
 const SurveySelected = ({survey, unSelect}) => {
   return (
-    <View style={[styles.container]}>
+    <View style={styles.container}>
       <SurveyInfo survey={survey} />
       <TouchableIcon iconName="close" onPress={unSelect} />
     </View>

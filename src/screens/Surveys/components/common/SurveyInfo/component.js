@@ -1,8 +1,8 @@
 import React from 'react';
 import {View} from 'react-native';
 
-import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import CreatedAndModified from 'arena-mobile-ui/components/CreatedAndModified';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 
 import styles from './styles';
 
@@ -12,7 +12,7 @@ const SurveyInfo = ({survey}) => {
       <TextBase type="bold" size="l">
         {survey.props?.labels?.[survey?.props?.languages?.[0]]}
       </TextBase>
-      <TextBase type="secondaryText" size="s">
+      <TextBase type="secondary" size="s">
         {survey?.props?.name}
       </TextBase>
 
