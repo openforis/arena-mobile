@@ -23,7 +23,7 @@ const styles = ({baseStyles, colors}) =>
       paddingVertical: baseStyles.bases.BASE_3,
       fontSize: baseStyles.fontSizes.m,
       borderWidth: 1,
-      borderColor: colors.neutralLight,
+      borderColor: colors.borderColorSecondary,
       marginVertical: baseStyles.bases.BASE,
       color: colors.primaryText,
     },

@@ -145,9 +145,10 @@ const _BasePreviewContainer = ({nodeDef, nodes, children}) => {
         nodeDef={nodeDef}
         nodes={nodes}
         showDescription={false}
+        disabled={disabled}
       />
     );
-  }, [nodeDef, nodes]);
+  }, [nodeDef, nodes, disabled]);
 
   if (hidden) {
     return <></>;

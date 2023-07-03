@@ -1,4 +1,4 @@
-import {StyleSheet, Dimensions} from 'react-native';
+import {StyleSheet, Dimensions, Platform} from 'react-native';
 
 import {ENTITY_SELECTOR_TABLET_WIDTH} from 'screens/Form/components/EntitySelector/component';
 const {width: WIDTH} = Dimensions.get('screen');
@@ -12,12 +12,15 @@ const styles = ({colors, baseStyles}) =>
       bottom: 0,
       borderTopRightRadius: baseStyles.bases.BASE_4,
       borderTopLeftRadius: baseStyles.bases.BASE_4,
-      paddingBottom: baseStyles.bases.BASE_8,
-      borderColor: colors.neutralLighter,
+      paddingBottom:
+        Platform.OS === 'ios'
+          ? baseStyles.bases.BASE_6
+          : baseStyles.bases.BASE_3,
+      borderColor: colors.borderColorContrast,
       borderTopWidth: 1,
       borderRightWidth: 1,
       borderLeftWidth: 1,
-      left: -1,
+      left: 0,
       minHeight: 120,
       flexDirection: 'column',
     },

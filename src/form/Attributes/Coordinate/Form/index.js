@@ -106,8 +106,10 @@ const Form = ({nodeDef}) => {
   const _keyStractor = useCallback(item => item.code, []);
   const _labelStractor = useCallback(item => item.name, []);
 
+  const nodes = useMemo(() => [node], [node]);
+
   return (
-    <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit} nodes={[node]}>
+    <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit} nodes={nodes}>
       <GetLocation
         handleSaveLocation={handleSaveLocation}
         selectedSrs={selectedSrs}

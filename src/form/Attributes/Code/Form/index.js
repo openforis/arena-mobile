@@ -1,5 +1,5 @@
 import {NodeDefs} from '@openforis/arena-core';
-import React from 'react';
+import React, {useMemo} from 'react';
 import {useSelector} from 'react-redux';
 
 import BaseForm from 'form/Attributes/common/Base/Form';
@@ -12,9 +12,11 @@ const CodeForm = ({nodeDef}) => {
   const node = useSelector(formSelectors.getNode);
   const handleClose = useCloseNode();
 
+  const nodes = useMemo(() => [node], [node]);
+
   return (
     <BaseForm
-      nodes={[node]}
+      nodes={nodes}
       nodeDef={nodeDef}
       hasSubmitButton={NodeDefs.isMultiple(nodeDef)}
       handleSubmit={handleClose}>

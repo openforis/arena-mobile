@@ -118,6 +118,7 @@ export const successDarkest = green900;
 export const primaryText = primaryDarkest;
 export const primaryTextLight = primaryDarker;
 export const secondaryText = secondaryDarkest;
+export const secondaryTextButton = secondaryDarkest;
 export const secondaryTextLight = secondaryDarker;
 export const primaryContrastText = grey0;
 export const primaryContrastTextLight = grey50;
@@ -144,6 +145,7 @@ const DarkTheme = {
   primaryText: white,
   primaryTextLight: primaryLighter,
   secondaryText: secondaryLightest,
+  secondaryTextButton: white,
   secondaryTextLight: secondaryLightest,
   primaryContrastText: grey900,
   primaryContrastTextLight: grey700,
@@ -153,7 +155,7 @@ const DarkTheme = {
   background: black,
   backgroundLight: neutralDark,
   backgroundLighter: neutralDarker,
-  activeBackground: grey400,
+  activeBackground: secondary,
   neutralLightest: neutralDarkest,
 
   borderColorContrast: neutralLighter,

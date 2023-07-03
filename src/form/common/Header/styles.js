@@ -5,6 +5,9 @@ const styles = () =>
     container: {
       flexDirection: 'column',
     },
+    disabled: {
+      opacity: 0.3,
+    },
     textsContainer: {
       flexDirection: 'column',
     },

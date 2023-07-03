@@ -139,8 +139,10 @@ const Form = ({node, nodeDef}) => {
 const TaxonForm = ({nodeDef}) => {
   const node = useSelector(formSelectors.getNode);
 
+  const nodes = useMemo(() => [node], [node]);
+
   return (
-    <BaseForm nodeDef={nodeDef} hasSubmitButton={false} nodes={[node]}>
+    <BaseForm nodeDef={nodeDef} hasSubmitButton={false} nodes={nodes}>
       <Form nodeDef={nodeDef} node={node} />
     </BaseForm>
   );
