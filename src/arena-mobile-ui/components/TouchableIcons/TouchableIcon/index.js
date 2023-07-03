@@ -11,6 +11,9 @@ const TouchableIcon = ({
   iconColor,
   hitSlop,
 }) => {
+  if (!iconName) {
+    return null;
+  }
   return (
     <Pressable onPress={onPress} style={customStyle} hitSlop={hitSlop}>
       <Icon name={iconName} size={size} color={iconColor} />
@@ -20,7 +23,7 @@ const TouchableIcon = ({
 
 TouchableIcon.defaultProps = {
   onPress: () => {},
-  iconName: '',
+  iconName: false,
   size: 'm',
   customStyle: {},
   iconColor: null,
