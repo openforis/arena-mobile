@@ -47,7 +47,7 @@ const EntitySelectorTree = ({nodeDefUuid, level = 0}) => {
 
   const hierarchy = useSelector(formSelectors.getBreadCrumbs);
   const parentNodeInHierarchy = hierarchy.find(
-    _node => _node.nodeDefUuid === nodeDef.parentUuid,
+    _node => _node.nodeDefUuid === nodeDef?.parentUuid,
   );
 
   const applicable = useSelector(state =>
@@ -69,7 +69,7 @@ const EntitySelectorTree = ({nodeDefUuid, level = 0}) => {
     (!applicable ||
       Object.keys(
         parentNodeInHierarchy?.meta?.childApplicability || {},
-      ).includes(nodeDef.uuid)) &&
+      ).includes(nodeDef?.uuid)) &&
     NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef)
   ) {
     return <></>;
