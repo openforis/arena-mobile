@@ -16,6 +16,9 @@ const Label = React.memo(
   ({node}) => {
     const nodeDefsByUuid = useSelector(surveySelectors.getNodeDefsByUuid);
     const keys = useSelector(state =>
+      surveySelectors.getEntityNodeKeys(state, node),
+    );
+    const keysAsString = useSelector(state =>
       surveySelectors.getEntityNodeKeysAsString(state, node),
     );
 
@@ -24,8 +27,8 @@ const Label = React.memo(
     });
 
     const breadCrumbLabel = useMemo(() => {
-      return `${nodeDefName}[${keys}]`;
-    }, [nodeDefName, keys]);
+      return `${nodeDefName} ${keys.length > 0 ? `[${keysAsString}]` : ''}`;
+    }, [nodeDefName, keysAsString, keys]);
 
     return <TextBase>{breadCrumbLabel}</TextBase>;
   },
