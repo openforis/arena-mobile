@@ -191,10 +191,12 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
               <View
                 style={
                   [
-                    {
-                      "marginTop": 4,
-                    },
-                    {},
+                    [
+                      {
+                        "marginTop": 4,
+                      },
+                      {},
+                    ],
                     {},
                   ]
                 }
@@ -219,24 +221,27 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                   autoCapitalize="none"
                   autoFocus={false}
                   editable={true}
+                  onChange={[Function]}
                   onChangeText={[Function]}
                   placeholder="https://test.openforis-arena.org"
                   placeholderTextColor="#EDEDED"
                   selectTextOnFocus={true}
                   style={
                     [
-                      {
-                        "backgroundColor": "#FFFFFF",
-                        "borderColor": "#8C8C8C",
-                        "borderWidth": 1,
-                        "color": "#182112",
-                        "flex": 1,
-                        "fontSize": 14,
-                        "marginVertical": 4,
-                        "padding": 8,
-                        "paddingVertical": 12,
-                      },
-                      {},
+                      [
+                        {
+                          "backgroundColor": "#FFFFFF",
+                          "borderColor": "#0D0D0D",
+                          "borderWidth": 1,
+                          "color": "#182112",
+                          "flex": 1,
+                          "fontSize": 14,
+                          "marginVertical": 4,
+                          "padding": 8,
+                          "paddingVertical": 12,
+                        },
+                        {},
+                      ],
                       {},
                     ]
                   }
@@ -273,10 +278,12 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
               <View
                 style={
                   [
-                    {
-                      "marginTop": 4,
-                    },
-                    {},
+                    [
+                      {
+                        "marginTop": 4,
+                      },
+                      {},
+                    ],
                     {},
                   ]
                 }
@@ -301,23 +308,26 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                   autoCapitalize="none"
                   autoFocus={false}
                   editable={true}
+                  onChange={[Function]}
                   onChangeText={[Function]}
                   placeholderTextColor="#EDEDED"
                   selectTextOnFocus={true}
                   style={
                     [
-                      {
-                        "backgroundColor": "#FFFFFF",
-                        "borderColor": "#8C8C8C",
-                        "borderWidth": 1,
-                        "color": "#182112",
-                        "flex": 1,
-                        "fontSize": 14,
-                        "marginVertical": 4,
-                        "padding": 8,
-                        "paddingVertical": 12,
-                      },
-                      {},
+                      [
+                        {
+                          "backgroundColor": "#FFFFFF",
+                          "borderColor": "#0D0D0D",
+                          "borderWidth": 1,
+                          "color": "#182112",
+                          "flex": 1,
+                          "fontSize": 14,
+                          "marginVertical": 4,
+                          "padding": 8,
+                          "paddingVertical": 12,
+                        },
+                        {},
+                      ],
                       {},
                     ]
                   }
@@ -352,7 +362,7 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                     {
                       "alignItems": "center",
                       "backgroundColor": "#FFFFFF",
-                      "borderColor": "#8C8C8C",
+                      "borderColor": "#0D0D0D",
                       "borderWidth": 1,
                       "color": "#182112",
                       "flex": 1,
