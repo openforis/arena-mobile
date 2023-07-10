@@ -101,6 +101,8 @@ const useAskBeforeLeave = () => {
         dismissText: t('Form:beforeLeave.dismissText'),
         onDismiss: () => {},
         onAccept: () => {
+          dispatch(formActions.deleteRecordIfNotModified());
+
           if (e?.data?.action) {
             navigation.dispatch(e.data.action);
           } else if (navigation.canGoBack()) {

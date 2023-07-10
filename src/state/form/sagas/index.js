@@ -7,12 +7,16 @@ import handleCreateEntity from './createEntity';
 import handleDeleteNodeEntity from './deleteNodeEntity';
 import handleImportRecords, {watchFileDownloadChannel} from './importRecords';
 import handleInitializeRecord from './initializeRecord';
-import handleLeaveForm from './leaveForm';
+import handleLeaveForm, {handleDeleteRecordIfNotModified} from './leaveForm';
 import handleSelectEntity from './selectEntity';
 import handleSelectEntityNode from './selectEntityNode';
 
 export default function* () {
   yield takeLatest(formActionTypes.leaveForm$, handleLeaveForm);
+  yield takeLatest(
+    formActionTypes.deleteRecordIfNotModified$,
+    handleDeleteRecordIfNotModified,
+  );
   yield takeLatest(formActionTypes.initializeRecord$, handleInitializeRecord);
   yield takeLatest(formActionTypes.continueRecord$, handleContinueRecord);
 

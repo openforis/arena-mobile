@@ -8,6 +8,14 @@ import formSelectors from 'state/form/selectors';
 import * as navigator from 'state/navigatorService';
 import recordActions from 'state/records/actionCreators';
 
+export function* handleDeleteRecordIfNotModified() {
+  const record = yield select(formSelectors.getRecord);
+  if (!record.lastModifiedAt) {
+    yield put(recordActions.deleteRecord({recordUuid: record.uuid}));
+    yield put(formActions.clean());
+  }
+}
+
 function* handleLeaveForm() {
   yield put(formActions.closeEntitySelector());
   const record = yield select(formSelectors.getRecord);
@@ -15,10 +23,6 @@ function* handleLeaveForm() {
     yield call(persistRecordWithKeyAndMergeCurrentNodes, {record});
   }
   yield call(navigator.navigatorDispatch, StackActions.replace(ROUTES.RECORDS));
-  if (!record.lastModifiedAt) {
-    yield put(recordActions.deleteRecord({recordUuid: record.uuid}));
-    yield put(formActions.clean());
-  }
 }
 
 export default handleLeaveForm;
