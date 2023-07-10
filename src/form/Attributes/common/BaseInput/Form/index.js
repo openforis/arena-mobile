@@ -1,5 +1,5 @@
 import {NodeDefType, NodeDefs} from '@openforis/arena-core';
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useMemo} from 'react';
 import {Platform} from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -57,8 +57,10 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
     [nodeDef, node, newValue, handleUpdateNode, handleClose],
   );
 
+  const nodes = useMemo(() => [node], [node]);
+
   return (
-    <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit} nodes={[node]}>
+    <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit} nodes={nodes}>
       <Input
         autoCapitalize={
           autoCapitalizeByTransformFunction[

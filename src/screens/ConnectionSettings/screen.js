@@ -218,7 +218,7 @@ const ConnectionSettings = () => {
 
               {user?.name && (
                 <View style={styles.loggedInAs}>
-                  <TextBase type="secondaryText">
+                  <TextBase type="secondary">
                     {t('ConnectionSettings:connected_as')}
                   </TextBase>
                   <TextBase>({user?.email})</TextBase>

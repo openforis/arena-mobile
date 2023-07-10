@@ -45,7 +45,7 @@ const NavigationButton = ({nodeDef, align}) => {
 
   const hierarchy = useSelector(formSelectors.getBreadCrumbs);
   const parentNodeInHierarchy = hierarchy.find(
-    _node => _node.nodeDefUuid === nodeDef.parentUuid,
+    _node => _node.nodeDefUuid === nodeDef?.parentUuid,
   );
 
   const customTextStyle = useMemo(() => {
@@ -59,26 +59,30 @@ const NavigationButton = ({nodeDef, align}) => {
     (!applicable ||
       Object.keys(
         parentNodeInHierarchy?.meta?.childApplicability || {},
-      ).includes(nodeDef.uuid)) &&
+      ).includes(nodeDef?.uuid)) &&
     NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef)
   ) {
     return <></>;
   }
 
-  return (
-    <Button
-      onPress={handleSelect}
-      style={styles.button}
-      hitSlop={hitSlop}
-      allowMultipleLines={true}
-      label={nodeDefName}
-      type="neutral"
-      customTextStyle={customTextStyle}
-      icon={align === 'left' ? ChevronLeft : ChevronRight}
-      iconPosition={align === 'left' ? 'left' : 'right'}
-      bold={false}
-    />
-  );
+  if (nodeDef?.uuid) {
+    return (
+      <Button
+        onPress={handleSelect}
+        style={styles.button}
+        hitSlop={hitSlop}
+        allowMultipleLines={true}
+        label={nodeDefName}
+        type="neutral"
+        customTextStyle={customTextStyle}
+        icon={align === 'left' ? ChevronLeft : ChevronRight}
+        iconPosition={align === 'left' ? 'left' : 'right'}
+        bold={false}
+      />
+    );
+  }
+
+  return <></>;
 };
 
 NavigationButton.defaultProps = {
@@ -135,6 +139,12 @@ const Parent = ({parent}) => {
 const Next = ({parent}) => {
   const survey = useSelector(surveySelectors.getSurvey);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
+  /* TODO copy  has to jump to next entity
+  const formNodeDefsUuids = useSelector(formSelectors.getNodeDefsUuids);
+  const currentNodeDefIndex = formNodeDefsUuids.indexOf(
+    currentNode.nodeDefUuid,
+  );*/
+
   const currentEntityNodeDef = useSelector(
     formSelectors.getParentEntityNodeDef,
   );
@@ -164,6 +174,7 @@ const Next = ({parent}) => {
   if (currentIndex + 1 === sibilings.length && sibilings?.length > 0) {
     // next parent sibling
     const parentAncestor = survey.nodeDefs[parent.parentUuid];
+
     const parentSiblings = getNodeDefIndex({
       survey,
       nodeDef: parentAncestor,
@@ -173,6 +184,7 @@ const Next = ({parent}) => {
     const parentIndex = parentSiblings?.indexOf(parent.uuid);
     if (parentIndex >= 0 && parentIndex + 1 < parentSiblings?.length) {
       const nodeDef = survey.nodeDefs[parentSiblings?.[parentIndex + 1]];
+
       return <NavigationButton nodeDef={nodeDef} />;
     }
 
@@ -181,6 +193,7 @@ const Next = ({parent}) => {
 
   if (currentIndex < sibilings.length) {
     const nodeDef = survey.nodeDefs[sibilings[currentIndex + 1]];
+
     return <NavigationButton nodeDef={nodeDef} />;
   }
 

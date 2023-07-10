@@ -7,9 +7,8 @@ import {useSelector} from 'react-redux';
 import Button from 'arena-mobile-ui/components/Button';
 import Card from 'arena-mobile-ui/components/Card';
 import LabelsAndValues from 'arena-mobile-ui/components/LabelsAndValues';
-import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
-
+import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
 import {useNavigateTo} from 'navigation/hooks';
 import {selectors as surveySelectors} from 'state/survey';
 
@@ -36,7 +35,7 @@ const SurveyDetail = () => {
           onPress={navigateTo({route: routes.SURVEY})}
         />
       </View>
-      <TextBase type="secondaryText">
+      <TextBase type="secondary">
         {t('Home:survey.card.active_survey')}
       </TextBase>
       <TextTitle>

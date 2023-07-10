@@ -1,4 +1,5 @@
 const leaveForm$ = 'form/leaveForm$';
+const deleteRecordIfNotModified$ = 'form/deleteRecordIfNotModified$';
 const SET_RECORD = 'form/SET_RECORD';
 const SET_PARENT_ENTITY_NODE = 'form/SET_PARENT_ENTITY_NODE';
 const SET_NODE = 'form/SET_NODE';
@@ -27,6 +28,7 @@ const SET_VALIDATION = 'form/SET_VALIDATION';
 
 export default {
   leaveForm$,
+  deleteRecordIfNotModified$,
 
   SET_RECORD,
   SET_PARENT_ENTITY_NODE,

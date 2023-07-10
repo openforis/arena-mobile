@@ -17,12 +17,13 @@ const paddingByType = {
 const styles = ({colors, baseStyles}) =>
   StyleSheet.create({
     container: {
-      marginBottom: baseStyles.bases.BASE_4,
-      marginHorizontal: baseStyles.bases.BASE_3,
+      paddingTop: baseStyles.bases.BASE,
+      paddingBottom: baseStyles.bases.BASE_3,
+      paddingHorizontal: baseStyles.bases.BASE_3,
     },
     disabled: {
       opacity: 0.5,
-      backgroundColor: colors.neutralLighter,
+      backgroundColor: colors.backgroundDarker,
     },
     basePreviewContainer: {
       flexDirection: 'row',
@@ -30,7 +31,7 @@ const styles = ({colors, baseStyles}) =>
       alignItems: 'center',
     },
     nodeContainer: ({nodeDef}) => ({
-      borderColor: colors.neutralLighter,
+      borderColor: colors.borderColorSecondary,
       borderWidth: [
         NodeDefType.text,
         NodeDefType.integer,

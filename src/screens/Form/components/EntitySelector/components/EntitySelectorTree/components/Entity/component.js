@@ -34,7 +34,8 @@ const Entity = ({nodeDef, isCurrentEntity = false}) => {
 
   const isDisabled = useMemo(
     () =>
-      nodeDef.parentUuid && !hierarchyNodeDefUuids.includes(nodeDef.parentUuid),
+      nodeDef?.parentUuid &&
+      !hierarchyNodeDefUuids.includes(nodeDef?.parentUuid),
     [nodeDef, hierarchyNodeDefUuids],
   );
   const styleContainer = useMemo(() => {

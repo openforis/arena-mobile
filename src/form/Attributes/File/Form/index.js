@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback, useEffect, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
@@ -46,8 +46,9 @@ const Form = ({nodeDef}) => {
     }
   }, [node.value]);
 
+  const nodes = useMemo(() => [node], [node]);
   return (
-    <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit} nodes={[node]}>
+    <BaseForm nodeDef={nodeDef} handleSubmit={handleSubmit} nodes={nodes}>
       {canEditName && (
         <Input
           title={t('Form:nodeDefFile.name')}

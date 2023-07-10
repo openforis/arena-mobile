@@ -5,11 +5,12 @@ import {CustomMarker, TopContent} from './components';
 import styles from './styles';
 
 const QRScanner = ({
-  visible = false,
+  visible,
   onRead,
   qrData,
   cleanData,
   handleClose,
+  flashMode,
 }) => {
   const scanner = useRef(null);
 
@@ -25,10 +26,10 @@ const QRScanner = ({
   return (
     <QRCodeScanner
       ref={scanner}
-      containerStyle={[styles.container]}
-      cameraStyle={[styles.camera]}
-      topViewStyle={[styles.topView]}
-      bottomViewStyle={[styles.bottomView]}
+      containerStyle={styles.container}
+      cameraStyle={styles.camera}
+      topViewStyle={styles.topView}
+      bottomViewStyle={styles.bottomView}
       showMarker={true}
       onRead={onRead}
       reactivate={false}
@@ -41,10 +42,19 @@ const QRScanner = ({
           handleReactivate={handleReactivate}
         />
       }
-      flashMode={'off'}
+      flashMode={flashMode}
       topContent={<TopContent handleClose={handleClose} />}
     />
   );
+};
+
+QRScanner.defaultProps = {
+  visible: false,
+  onRead: () => {},
+  qrData: null,
+  cleanData: () => {},
+  handleClose: () => {},
+  flashMode: 'off',
 };
 
 export default QRScanner;

@@ -14,7 +14,7 @@ function* handleCreateEntity({payload} = {}) {
   const hierarchy = yield select(formSelectors.getHierarchy);
 
   const parentEntityNode = hierarchy.find(
-    _node => _node.nodeDefUuid === _nodeDef.parentUuid,
+    _node => _node.nodeDefUuid === _nodeDef?.parentUuid,
   );
 
   const nodeDefNodes = yield select(state =>

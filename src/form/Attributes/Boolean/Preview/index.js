@@ -7,6 +7,7 @@ import * as colors from 'arena-mobile-ui/colors';
 import Icon from 'arena-mobile-ui/components/Icon';
 import Pressable from 'arena-mobile-ui/components/Pressable';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as formSelectors} from 'state/form';
 import {useUpdateNode} from 'state/form/hooks/useNodeFormActions';
 
@@ -35,10 +36,11 @@ const BooleanOption = ({value, active, onPress, nodeDef}) => {
     formSelectors.isNodeDefDisabled(state, nodeDef),
   );
   const {t} = useTranslation();
+  const boleanStyles = useThemedStyles(booleanOptionStyles);
 
   const componentStyles = useMemo(
-    () => booleanOptionStyles({active}),
-    [active],
+    () => boleanStyles({active}),
+    [boleanStyles, active],
   );
 
   const pressableContent = useMemo(() => {

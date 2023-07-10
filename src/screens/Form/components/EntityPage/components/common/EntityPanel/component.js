@@ -1,5 +1,5 @@
-import React from 'react';
-import {View} from 'react-native';
+import React, {useMemo} from 'react';
+import {View, StyleSheet} from 'react-native';
 import {isTablet} from 'react-native-device-info';
 import {useSelector} from 'react-redux';
 
@@ -26,14 +26,15 @@ const EntityPanel = () => {
   const isTable = useIsTable();
   const _isTablet = isTablet();
 
+  const panelContainer = useMemo(() => {
+    return StyleSheet.compose(
+      styles.container,
+      _isTablet && isEntitySelectorOpened ? styles.containerTabletMenuOpen : {},
+    );
+  }, [styles, _isTablet, isEntitySelectorOpened]);
+
   return (
-    <View
-      style={[
-        styles.container,
-        _isTablet && isEntitySelectorOpened
-          ? styles.containerTabletMenuOpen
-          : {},
-      ]}>
+    <View style={panelContainer}>
       <View style={styles.header}>
         {SHOW_TREE_BUTTON && (
           <EntitySelectorToggler customStyle={styles.navigationBottom} />

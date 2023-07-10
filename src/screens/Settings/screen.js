@@ -48,7 +48,7 @@ const Section = ({title, children, subSection = false}) => {
         <View style={{paddingVertical: baseStyles.bases.BASE_2}}>
           <TextBase
             size={subSection ? 'l' : 'xl'}
-            type={subSection ? 'secondaryText' : 'header'}>
+            type={subSection ? 'secondary' : 'header'}>
             {title}
           </TextBase>
         </View>
@@ -137,7 +137,7 @@ const ConnectionSettingsSection = () => {
             </View>
             <View style={styles.connectionSettingsContainerText}>
               <TextBase>{user?.email}</TextBase>
-              <TextBase type="secondaryText">{serverUrl}</TextBase>
+              <TextBase type="secondary">{serverUrl}</TextBase>
             </View>
             <View style={styles.iconContainer}>
               <Icon name="chevron-right" size="l" />

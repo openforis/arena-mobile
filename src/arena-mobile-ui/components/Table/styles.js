@@ -20,7 +20,7 @@ const styles = ({colors, baseStyles}) =>
       alignItems: 'center',
       backgroundColor: colors.neutralDarker,
       borderWidth: 1,
-      borderColor: colors.borderColorContrast,
+      borderColor: colors.borderColorSecondary,
     },
     headerCell: {
       justifyContent: 'center',
@@ -28,7 +28,7 @@ const styles = ({colors, baseStyles}) =>
       alignItems: 'center',
       backgroundColor: colors.backgroundDarker,
       borderWidth: 1,
-      borderColor: colors.borderColorContrast,
+      borderColor: colors.borderColorSecondary,
     },
     cell: {
       justifyContent: 'center',

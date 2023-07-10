@@ -109,9 +109,9 @@ const SettingsStyleFontBaseModifier = () => {
               {t('Settings:style.TextAndSpacingSize.screen.textSize.title')}{' '}
             </TextBase>
 
-            <Text>
+            <TextBase type="secondary">
               {t('Settings:style.TextAndSpacingSize.screen.textSize.info')}{' '}
-            </Text>
+            </TextBase>
 
             <View style={styles.selectorContainer}>
               <Icons name="format-font-size-decrease" size={40} />
@@ -137,9 +137,9 @@ const SettingsStyleFontBaseModifier = () => {
               {t('Settings:style.TextAndSpacingSize.screen.spacingSize.title')}{' '}
             </TextBase>
 
-            <Text>
+            <TextBase type="secondary">
               {t('Settings:style.TextAndSpacingSize.screen.spacingSize.info')}{' '}
-            </Text>
+            </TextBase>
 
             <View style={styles.selectorContainer}>
               <Icons name="arrow-collapse" size={40} />
@@ -165,18 +165,13 @@ const SettingsStyleFontBaseModifier = () => {
 
           <View style={styles.exampleContainer}>
             <Card>
-              {[
-                'title',
-                'header',
-                'text',
-                'secondaryText',
-                'bold',
-                'bolder',
-              ].map(type => (
-                <TextBase key={type} type={type}>
-                  {t('Common:preview')} ({type})
-                </TextBase>
-              ))}
+              {['title', 'header', 'text', 'secondary', 'bold', 'bolder'].map(
+                type => (
+                  <TextBase key={type} type={type}>
+                    {t('Common:preview')} ({type})
+                  </TextBase>
+                ),
+              )}
             </Card>
           </View>
 

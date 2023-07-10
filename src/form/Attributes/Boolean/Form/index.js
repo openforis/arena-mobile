@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {useSelector} from 'react-redux';
 
 import BaseForm from 'form/Attributes/common/Base/Form';
@@ -10,8 +10,10 @@ const BooleanForm = () => {
   const nodeDef = useSelector(formSelectors.getNodeDef);
   const node = useSelector(formSelectors.getNode);
 
+  const nodes = useMemo(() => [node], [node]);
+
   return (
-    <BaseForm nodeDef={nodeDef} nodes={[node]}>
+    <BaseForm nodeDef={nodeDef} nodes={nodes}>
       <BooleanAttribute node={node} nodeDef={nodeDef} />
     </BaseForm>
   );

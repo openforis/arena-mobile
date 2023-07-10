@@ -37,10 +37,10 @@ const SurveyCard = ({
             </TextBase>
           </View>
 
-          <TextBase type="secondaryText" size="s">
+          <TextBase type="secondary" size="s">
             {survey?.props?.name}
           </TextBase>
-          <TextBase type="secondaryText" size="s">
+          <TextBase type="secondary" size="s">
             {t('Common:server')}: {survey?.serverUrl || currentServerUrl}
           </TextBase>
 

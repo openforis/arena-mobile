@@ -1,13 +1,15 @@
-import {NodeDefs} from '@openforis/arena-core';
+import {NodeDefType, NodeDefs} from '@openforis/arena-core';
 import React, {useCallback, useEffect, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import Pressable from 'arena-mobile-ui/components/Pressable';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
+import {useCode} from 'form/Attributes/Code/Preview/hooks';
 import AttributeHeader from 'form/common/Header';
 import Validation from 'form/common/Validation';
 import {selectors as formSelectors} from 'state/form';
@@ -110,10 +112,35 @@ const BaseNodeValueRenderer = ({nodeDef}) => {
   const {t} = useTranslation();
   return (
     <View>
-      <Text>
+      <TextBase type="secondary">
         {t('Common:not_supported')}: {nodeDef.type}{' '}
-      </Text>
+      </TextBase>
     </View>
+  );
+};
+
+const useIsDisabled = (nodeDef, node) => {
+  const disabled = useSelector(state =>
+    formSelectors.isNodeDefDisabled(state, nodeDef),
+  );
+
+  const {categoryItems} = useCode({
+    nodeDef,
+    node,
+  });
+
+  const parentEntityNodeDef = useSelector(state =>
+    formSelectors.getParentEntityNodeDef(state, nodeDef),
+  );
+
+  if (!NodeDefType.code !== nodeDef.type) {
+    return disabled;
+  }
+
+  return (
+    disabled ||
+    categoryItems.length === 0 ||
+    NodeDefs.isEnumerate(parentEntityNodeDef)
   );
 };
 
@@ -122,9 +149,9 @@ const _BasePreviewContainer = ({nodeDef, nodes, children}) => {
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );
-  const disabled = useSelector(state =>
-    formSelectors.isNodeDefDisabled(state, nodeDef),
-  );
+
+  const disabled = useIsDisabled(nodeDef, nodes);
+
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const lastNodeDefUuid = useSelector(nodesSelectors.getLastNodeDefUuid);
   const containerStyle = useMemo(() => {
@@ -144,9 +171,10 @@ const _BasePreviewContainer = ({nodeDef, nodes, children}) => {
         nodeDef={nodeDef}
         nodes={nodes}
         showDescription={false}
+        disabled={disabled}
       />
     );
-  }, [nodeDef, nodes]);
+  }, [nodeDef, nodes, disabled]);
 
   if (hidden) {
     return <></>;

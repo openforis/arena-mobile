@@ -1,8 +1,5 @@
 import {StyleSheet} from 'react-native';
 
-import * as colors from 'arena-mobile-ui/colors';
-import baseStyles from 'arena-mobile-ui/styles';
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -10,22 +7,24 @@ const styles = StyleSheet.create({
   },
 });
 
-export const booleanOptionStyles = ({active}) =>
-  StyleSheet.create({
-    touchableContainer: {
-      padding: baseStyles.bases.BASE_2,
-      flex: 1,
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-      borderWidth: 1,
-      borderColor: colors.neutralLighter,
-      flexDirection: 'row',
-      backgroundColor: active ? colors.secondary : colors.backgroundLight,
-    },
-    touchableLabel: {
-      paddingLeft: baseStyles.bases.BASE,
-      color: active ? colors.primaryContrastText : colors.secondary,
-    },
-  });
+export const booleanOptionStyles =
+  ({baseStyles, colors}) =>
+  ({active}) =>
+    StyleSheet.create({
+      touchableContainer: {
+        padding: baseStyles.bases.BASE_2,
+        flex: 1,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: colors.borderColorSecondary,
+        flexDirection: 'row',
+        backgroundColor: active ? colors.secondary : colors.backgroundLight,
+      },
+      touchableLabel: {
+        paddingLeft: baseStyles.bases.BASE,
+        color: active ? colors.primaryContrastText : colors.secondary,
+      },
+    });
 
 export default styles;

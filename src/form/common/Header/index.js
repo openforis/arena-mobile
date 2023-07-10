@@ -1,20 +1,36 @@
-import React from 'react';
-import {View} from 'react-native';
+import React, {useMemo} from 'react';
+import {View, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
+import {EMPTY_OBJECT} from 'infra/stateUtils';
 import {selectors as surveySelectors} from 'state/survey';
 
 import Label from '../Label';
 import Validation from '../Validation';
 
-import styles from './styles';
+import _styles from './styles';
 
-export const Header = ({nodeDef, nodes, showValidation, showDescription}) => {
+export const Header = ({
+  nodeDef,
+  nodes,
+  showValidation,
+  showDescription,
+  disabled,
+}) => {
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
+  const styles = useThemedStyles(_styles);
+
+  const containerStyle = useMemo(() => {
+    return StyleSheet.compose(
+      styles.container,
+      disabled ? styles.disabled : EMPTY_OBJECT,
+    );
+  }, [disabled, styles]);
 
   return (
-    <View style={styles.container}>
+    <View style={containerStyle}>
       <View style={styles.textsContainer}>
         <View style={styles.titleAndValidationContainer}>
           <Label nodeDef={nodeDef} />

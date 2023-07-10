@@ -32,7 +32,7 @@ const Version = () => {
         label={`${t('Common:version')}: ${data.version} (${data.buildNumber})`}
       />
       {data.versionDate && Platform.OS !== 'ios' && (
-        <TextBase size="s" type="secondaryText">{`${t('Common:date')}: ${
+        <TextBase size="s" type="secondary">{`${t('Common:date')}: ${
           data.versionDate
         }`}</TextBase>
       )}

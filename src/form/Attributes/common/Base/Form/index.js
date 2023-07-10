@@ -22,7 +22,7 @@ const BaseForm = ({
 
   const _handleSubmit = useCallback(
     ({callback = null} = {}) => {
-      handleSubmit({callback});
+      handleSubmit?.({callback});
     },
     [handleSubmit],
   );
@@ -65,6 +65,7 @@ const BaseForm = ({
 
 BaseForm.defaultProps = {
   hasSubmitButton: true,
+  handleSubmit: () => {},
 };
 
 export default BaseForm;

@@ -15,7 +15,6 @@ const styles = ({colors, baseStyles}) =>
       backgroundColor: colors.secondaryLighter,
     },
     text: {
-      color: colors.neutralDarkest,
       flex: 1,
       padding: baseStyles.bases.BASE_2,
     },

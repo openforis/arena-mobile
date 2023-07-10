@@ -1,5 +1,5 @@
-import React, {useRef, useEffect} from 'react';
-import {View, TextInput} from 'react-native';
+import React, {useRef, useEffect, useMemo} from 'react';
+import {View, TextInput, StyleSheet} from 'react-native';
 
 import * as colors from 'arena-mobile-ui/colors';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
@@ -16,18 +16,25 @@ export const InputContainer = ({
   hasTitle,
 }) => {
   const styles = useThemedStyles(_styles);
-  return (
-    <View
-      style={[
+
+  const constainerStyle = useMemo(() => {
+    return StyleSheet.compose(
+      StyleSheet.compose(
         styles.container,
         horizontal ? styles.horizontalContainer : {},
-        stacked ? styles.stacked : {},
-      ]}>
-      {hasTitle && (
-        <TextBase customStyle={horizontal ? styles.horizontalTitle : {}}>
-          {title}
-        </TextBase>
-      )}
+      ),
+      stacked ? styles.stacked : {},
+    );
+  }, [horizontal, stacked, styles]);
+
+  const titleStyle = useMemo(
+    () => (horizontal ? styles.horizontalTitle : styles.title),
+    [horizontal, styles],
+  );
+
+  return (
+    <View style={constainerStyle}>
+      {hasTitle && <TextBase customStyle={titleStyle}>{title}</TextBase>}
       {children}
     </View>
   );
@@ -39,12 +46,12 @@ const Input = ({
   onChange,
   onChangeText,
   title,
-  autoFocus = false,
-  horizontal = false,
-  stacked = false,
-  customStyle = CUSTOM_STYLE,
-  lateFocus = false,
-  editable = true,
+  autoFocus,
+  horizontal,
+  stacked,
+  customStyle,
+  lateFocus,
+  editable,
   ...props
 }) => {
   const styles = useThemedStyles(_styles);
@@ -56,6 +63,16 @@ const Input = ({
       }, 300);
     }
   }, [lateFocus]);
+  const textInputStyle = useMemo(() => {
+    return StyleSheet.compose(
+      StyleSheet.compose(
+        styles.input,
+        editable === false ? styles.noEditable : {},
+      ),
+      customStyle,
+    );
+  }, [editable, styles, customStyle]);
+
   return (
     <InputContainer
       title={title}
@@ -64,11 +81,7 @@ const Input = ({
       horizontal={horizontal}>
       <TextInput
         ref={inputRef}
-        style={[
-          styles.input,
-          editable === false ? styles.noEditable : {},
-          customStyle,
-        ]}
+        style={textInputStyle}
         onChange={onChange}
         onChangeText={onChangeText}
         autoFocus={autoFocus}
@@ -79,6 +92,18 @@ const Input = ({
       />
     </InputContainer>
   );
+};
+
+Input.defaultProps = {
+  onChange: () => {},
+  onChangeText: () => {},
+  title: '',
+  autoFocus: false,
+  horizontal: false,
+  stacked: false,
+  customStyle: CUSTOM_STYLE,
+  lateFocus: false,
+  editable: true,
 };
 
 export default Input;

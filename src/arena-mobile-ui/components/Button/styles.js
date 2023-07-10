@@ -42,7 +42,7 @@ const styles = ({colors, baseStyles}) =>
         color: colors.primaryContrastText,
       },
       secondary: {
-        color: colors.secondaryText,
+        color: colors.secondaryTextButton,
       },
       neutral: {
         color: colors.secondaryText,
