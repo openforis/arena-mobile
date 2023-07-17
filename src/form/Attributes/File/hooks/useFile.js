@@ -7,7 +7,6 @@ import {pickerTypes} from './useFilePickerModal';
 import useGetFile from './useGetFile';
 import useImage from './useImage';
 const useFile = ({nodeDef, node, isImage = false}) => {
-  // TODO type based on nodeDef
   const {getFile} = useGetFile();
   const {getImage, takePhoto} = useImage();
   const {handleCreate, handleUpdate, handleDelete} = useNodeFormActions({

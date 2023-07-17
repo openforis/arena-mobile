@@ -1,4 +1,4 @@
-import {useState, useCallback} from 'react';
+import {useState, useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   Platform,
@@ -15,6 +15,7 @@ import appConfig from '../../../../../app.json';
 const useGetLocation = () => {
   const {t} = useTranslation();
   const [location, setLocation] = useState(null);
+
   const hasPermissionIOS = useCallback(async () => {
     const openSetting = () => {
       Linking.openSettings().catch(() => {
@@ -89,36 +90,76 @@ const useGetLocation = () => {
     return false;
   }, [hasPermissionIOS, t]);
 
-  const getLocation = useCallback(async () => {
+  const _setLocation = useCallback(
+    position => {
+      setLocation(prevPosition => {
+        if (
+          prevPosition?.coords?.accuracy &&
+          position?.coords?.accuracy &&
+          prevPosition?.coords?.accuracy < position?.coords?.accuracy
+        ) {
+          return prevPosition;
+        }
+
+        return position;
+      });
+    },
+    [setLocation],
+  );
+
+  const _getLocation = useCallback(async () => {
     const hasPermission = await hasLocationPermission();
 
     if (!hasPermission) {
       return;
     }
 
-    Geolocation.getCurrentPosition(
+    const watcherId = Geolocation.watchPosition(
       position => {
-        setLocation(position);
+        _setLocation(position);
       },
       error => {
         alert({title: `Code ${error.code}`, message: error.message});
-        setLocation(null);
+        _setLocation(null);
       },
       {
-        accuracy: {
-          android: 'high',
-          ios: 'best',
-        },
-        enableHighAccuracy: true,
-        timeout: 15000,
-        maximumAge: 10000,
+        interval: 100,
+        fastestInterval: 100,
         distanceFilter: 0,
+        enableHighAccuracy: true,
+        accuracy: {
+          ios: 'best',
+          android: 'high',
+        },
+
         forceRequestLocation: true,
-        forceLocationManager: false,
+        forceLocationManager: true,
         showLocationDialog: true,
       },
     );
-  }, [hasLocationPermission]);
+
+    return watcherId;
+  }, [hasLocationPermission, _setLocation]);
+
+  const getLocation = useCallback(async () => {
+    const watcherId = await _getLocation();
+
+    setTimeout(() => {
+      Geolocation.clearWatch(watcherId);
+    }, 120000);
+  }, [_getLocation]);
+
+  useEffect(() => {
+    return () => {
+      Geolocation.stopObserving();
+    };
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      setLocation(false);
+    };
+  }, []);
 
   return {getLocation, location};
 };

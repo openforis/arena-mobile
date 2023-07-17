@@ -139,8 +139,8 @@ android {
         applicationId "org.openforis.arena"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion 
-        versionCode 1
-        versionName "1.0.8"
+        versionCode 38
+        versionName "1.0.10"
 
 
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString() 

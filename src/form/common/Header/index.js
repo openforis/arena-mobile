@@ -42,7 +42,7 @@ export const Header = ({
           />
         </View>
         {showDescription && nodeDef?.props?.descriptions?.[language] && (
-          <TextBase type="secondary">
+          <TextBase type="secondaryLight">
             {nodeDef.props.descriptions[language]}
           </TextBase>
         )}

@@ -431,6 +431,8 @@ PODS:
   - RNScreens (3.21.1):
     - React-Core
     - React-RCTImage
+  - RNSVG (13.10.0):
+    - React-Core
   - RNVectorIcons (9.2.0):
     - React-Core
   - RNZipArchive (6.0.9):
@@ -519,6 +521,7 @@ DEPENDENCIES:
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - RNZipArchive (from `../node_modules/react-native-zip-archive`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -643,6 +646,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   RNZipArchive:
@@ -714,6 +719,7 @@ SPEC CHECKSUMS:
   RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
   RNReanimated: ba021107f1dd90cb04c35c5d639392d5da27d065
   RNScreens: d3675ab2878704de70c9dae57fa5d024802404cc
+  RNSVG: 80584470ff1ffc7994923ea135a3e5ad825546b9
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   RNZipArchive: 68a0c6db4b1c103f846f1559622050df254a3ade
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
@@ -721,6 +727,6 @@ SPEC CHECKSUMS:
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: 7a4d48cfb35dfa542151e615fa73c1a0d88caf21
 
-PODFILE CHECKSUM: e78df03d995817e15088e9dbe069b6885fedd950
+PODFILE CHECKSUM: 6de6c89d55ab3783c727a68a55189cc0a698f981
 
 COCOAPODS: 1.11.3

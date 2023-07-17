@@ -1,5 +1,6 @@
-import * as fs from 'infra/fs';
 import {Platform} from 'react-native';
+
+import * as fs from 'infra/fs';
 import {uuidv4} from 'infra/uuid';
 import {getSurveyFolder} from 'state/__persistence';
 
@@ -62,7 +63,6 @@ const createFile = async ({node, cycle}) => {
   }
 };
 
-// TODO pass node and check surveyUuid and cycle
 const deleteFile = async ({
   surveyUuid,
   cycle,

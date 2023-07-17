@@ -1,15 +1,16 @@
 import {PointFactory, Points} from '@openforis/arena-core';
 import React, {useCallback, useState, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import LabelsAndValues from 'arena-mobile-ui/components/LabelsAndValues';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
 import useGetLocation from '../useGetLocation';
 
-import styles from './styles';
+import _styles from './styles';
 
 const DEFAULT_SRS_CODE = '4326';
 
@@ -22,6 +23,8 @@ export const toFixedIfLongerAndNumber = (value, decimals = 3) => {
   }
   return value;
 };
+
+const _sorter = (a, b) => (a > b ? 1 : a === b ? 0 : -1);
 
 const prepareItems = (location, {selectedSrs}) => {
   if (location?.coords) {
@@ -59,7 +62,7 @@ const prepareItems = (location, {selectedSrs}) => {
     ].concat(
       Object.keys(location?.coords || {})
         .filter(key => !pareparedFields.includes(key))
-        .sort()
+        .sort(_sorter)
         .map(key => ({
           label: key,
           value: toFixedIfLongerAndNumber(location?.coords[key], 2),
@@ -70,18 +73,25 @@ const prepareItems = (location, {selectedSrs}) => {
 };
 
 const GetLocation = ({handleSaveLocation, selectedSrs}) => {
+  const styles = useThemedStyles(_styles);
   const {t} = useTranslation();
   const [loading, setLoading] = useState(false);
   const {location, getLocation} = useGetLocation();
 
   const _handleSaveLocation = useCallback(() => {
-    setLoading(true);
-    handleSaveLocation(location);
+    if (location) {
+      setLoading(true);
+      handleSaveLocation(location);
+    }
   }, [location, handleSaveLocation]);
 
   useEffect(() => {
     setLoading(false);
   }, [location]);
+
+  useEffect(() => {
+    _handleSaveLocation();
+  }, [_handleSaveLocation]);
 
   return (
     <View style={styles.container}>
@@ -94,16 +104,59 @@ const GetLocation = ({handleSaveLocation, selectedSrs}) => {
         disabled={loading}
       />
       <LabelsAndValues items={prepareItems(location, {selectedSrs})} expanded />
-      {location?.coords && (
-        <Button
-          type="ghost"
-          label={t('Form:nodeDefCoordinate.use')}
-          customContainerStyle={styles.customContainerStyle}
-          onPress={_handleSaveLocation}
-        />
+      {location && (
+        <LocationAccuracyBar accuracy={location?.coords?.accuracy} />
       )}
     </View>
   );
+};
+
+const _getColor = accuracy => {
+  if (accuracy < 10) {
+    return 'green';
+  }
+  if (accuracy < 20) {
+    return 'orange';
+  }
+  return 'red';
+};
+
+const LocationAccuracyBar = ({accuracy}) => {
+  const styles = useThemedStyles(_styles);
+
+  const accuracyWidth = accuracy ? (50 - accuracy) * 2 : 100;
+
+  const color = _getColor(accuracy);
+  return (
+    <View style={styles.accuracyBarContainer}>
+      <View style={styles.accuracyBar}>
+        <View
+          style={[
+            styles.accuracyBarFill,
+            {width: `${accuracyWidth}%`, backgroundColor: color},
+          ]}
+        />
+      </View>
+      <AccuracyBarText accuracy={accuracy} />
+      <AccuracyBarSpinner />
+    </View>
+  );
+};
+
+const AccuracyBarText = ({accuracy}) => {
+  const styles = useThemedStyles(_styles);
+
+  return (
+    <View style={styles.accuracyBarTextContainer}>
+      <Text style={styles.accuracyBarText}>{String(accuracy.toFixed(3))}</Text>
+    </View>
+  );
+};
+
+const AccuracyBarSpinner = () => {
+  const styles = useThemedStyles(_styles);
+
+  return <View style={styles.accuracyBarSpinnerContainer} />;
 };
 
 export default GetLocation;
