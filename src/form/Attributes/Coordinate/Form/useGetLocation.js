@@ -141,8 +141,8 @@ const useGetLocation = () => {
     return watcherId;
   }, [hasLocationPermission, _setLocation]);
 
-  const getLocation = useCallback(() => {
-    const watcherId = _getLocation();
+  const getLocation = useCallback(async () => {
+    const watcherId = await _getLocation();
 
     setTimeout(() => {
       Geolocation.clearWatch(watcherId);
