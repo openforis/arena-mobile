@@ -15,11 +15,11 @@ const styles = ({baseStyles, colors}) =>
     }),
     label: ({isActive}) => ({
       textAlign: 'center',
-      color: isActive ? colors.primaryContrastText : colors.black,
+      color: isActive ? colors.primaryContrastText : colors.primaryText,
     }),
     icon: ({isActive}) => ({
       textAlign: 'center',
-      color: isActive ? colors.primaryContrastText : colors.black,
+      color: isActive ? colors.primaryContrastText : colors.primaryText,
       paddingLeft: baseStyles.bases.BASE_3,
     }),
   });

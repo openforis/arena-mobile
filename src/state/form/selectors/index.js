@@ -402,15 +402,19 @@ const getFormAttributesNodeDefs = createSelector(
     let formAttributesNodeDefs = isTable
       ? nodeDefUuidsInEntity
       : nodeDefUuidsInEntity
-          .sort((a, b) => {
-            const aIndex = `${a.y || 0}_${a.x || 0}`;
-            const bIndex = `${b.y || 0}_${b.x || 0}`;
+          ?.sort((a, b) => {
+            const aIndex = `${(String(a.y) || '0').padStart(5, '0')}_${(
+              String(a.x) || '0'
+            ).padStart(5, '0')}`;
+            const bIndex = `${(String(b.y) || '0').padStart(5, '0')}_${(
+              String(b.x) || '0'
+            ).padStart(5, '0')}`;
             return aIndex > bIndex ? 1 : -1;
           })
           .map(children => children?.i || children);
 
     formAttributesNodeDefs = formAttributesNodeDefs
-      .map(nodeDefUuid => nodeDefsByUuid[nodeDefUuid])
+      ?.map(nodeDefUuid => nodeDefsByUuid[nodeDefUuid])
       .filter(_nodeDef => {
         if (Objects.isEmpty(_nodeDef)) {
           return false;
