@@ -107,9 +107,13 @@ const Preview = ({nodeDef}) => {
         <NodeValueRender key={`empty_${nodes.length}`} nodeDef={nodeDef} />
       );
     }
-    return nodes.map(node => (
-      <NodeValueRender key={node.uuid} node={node} nodeDef={nodeDef} />
-    ));
+    return (
+      <>
+        {nodes.map(node => (
+          <NodeValueRender key={node.uuid} node={node} nodeDef={nodeDef} />
+        ))}
+      </>
+    );
   }, [nodeDef, nodes]);
 
   return (

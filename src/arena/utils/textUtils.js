@@ -1,4 +1,3 @@
-// TODO move this utils to arena-core
 import {Objects} from 'infra/objectUtils';
 
 export const textTransformValues = {

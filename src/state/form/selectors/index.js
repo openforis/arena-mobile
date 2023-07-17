@@ -383,6 +383,29 @@ const canAddNode = createCachedSelector(
   },
 )(keySelectors.getUuidFromItem);
 
+const generatePositionStringIndex = item => {
+  const {x, y} = item;
+  return `${(String(y) || '0').padStart(5, '0')}_${(String(x) || '0').padStart(
+    5,
+    '0',
+  )}`;
+};
+
+const getNodeDefAttributesSorted = ({nodeDefUuidsInEntity = [], isTable}) => {
+  let formAttributesNodeDefs = isTable
+    ? nodeDefUuidsInEntity
+    : nodeDefUuidsInEntity
+        ?.sort((a, b) => {
+          const aIndex = generatePositionStringIndex(a);
+          const bIndex = generatePositionStringIndex(b);
+
+          return aIndex > bIndex ? 1 : -1;
+        })
+        .map(children => children?.i || children);
+
+  return formAttributesNodeDefs;
+};
+
 const getFormAttributesNodeDefs = createSelector(
   getParentEntityNodeDef,
   surveySelectorsNodeDefs.getNodeDefsByUuid,
@@ -399,19 +422,10 @@ const getFormAttributesNodeDefs = createSelector(
       parentChildApplicability || EMPTY_OBJECT,
     );
 
-    let formAttributesNodeDefs = isTable
-      ? nodeDefUuidsInEntity
-      : nodeDefUuidsInEntity
-          ?.sort((a, b) => {
-            const aIndex = `${(String(a.y) || '0').padStart(5, '0')}_${(
-              String(a.x) || '0'
-            ).padStart(5, '0')}`;
-            const bIndex = `${(String(b.y) || '0').padStart(5, '0')}_${(
-              String(b.x) || '0'
-            ).padStart(5, '0')}`;
-            return aIndex > bIndex ? 1 : -1;
-          })
-          .map(children => children?.i || children);
+    let formAttributesNodeDefs = getNodeDefAttributesSorted({
+      nodeDefUuidsInEntity,
+      isTable,
+    });
 
     formAttributesNodeDefs = formAttributesNodeDefs
       ?.map(nodeDefUuid => nodeDefsByUuid[nodeDefUuid])
@@ -428,13 +442,11 @@ const getFormAttributesNodeDefs = createSelector(
         if (layoutProps?.hiddenInMobile === true) {
           return false;
         }
-        if (
+
+        return !(
           parentChildApplicabilityKeys.includes(_nodeDef?.uuid) &&
           parentChildApplicability?.[_nodeDef?.uuid] === false
-        ) {
-          return false;
-        }
-        return true;
+        );
       });
 
     return formAttributesNodeDefs;
