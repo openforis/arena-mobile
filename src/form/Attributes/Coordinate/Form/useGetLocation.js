@@ -107,37 +107,6 @@ const useGetLocation = () => {
     [setLocation],
   );
 
-  const getLocationOriginal = useCallback(async () => {
-    const hasPermission = await hasLocationPermission();
-
-    if (!hasPermission) {
-      return;
-    }
-
-    Geolocation.getCurrentPosition(
-      position => {
-        _setLocation(position);
-      },
-      error => {
-        alert({title: `Code ${error.code}`, message: error.message});
-        _setLocation(null);
-      },
-      {
-        accuracy: {
-          android: 'high',
-          ios: 'best',
-        },
-        enableHighAccuracy: true,
-        timeout: 20000,
-        maximumAge: 50,
-        distanceFilter: 0,
-        forceRequestLocation: true,
-        forceLocationManager: false,
-        showLocationDialog: true,
-      },
-    );
-  }, [hasLocationPermission, _setLocation]);
-
   const _getLocation = useCallback(async () => {
     const hasPermission = await hasLocationPermission();
 

@@ -391,16 +391,21 @@ const generatePositionStringIndex = item => {
   )}`;
 };
 
-const getNodeDefAttributesSorted = ({nodeDefUuidsInEntity = [], isTable}) => {
+const _sorter = (a, b) => {
+  const aIndex = generatePositionStringIndex(a);
+  const bIndex = generatePositionStringIndex(b);
+
+  return aIndex > bIndex ? 1 : -1;
+};
+
+const getNodeDefAttributeUuidsSorted = ({
+  nodeDefUuidsInEntity = [],
+  isTable,
+}) => {
   let formAttributesNodeDefs = isTable
     ? nodeDefUuidsInEntity
     : nodeDefUuidsInEntity
-        ?.sort((a, b) => {
-          const aIndex = generatePositionStringIndex(a);
-          const bIndex = generatePositionStringIndex(b);
-
-          return aIndex > bIndex ? 1 : -1;
-        })
+        ?.sort(_sorter)
         .map(children => children?.i || children);
 
   return formAttributesNodeDefs;
@@ -422,7 +427,7 @@ const getFormAttributesNodeDefs = createSelector(
       parentChildApplicability || EMPTY_OBJECT,
     );
 
-    let formAttributesNodeDefs = getNodeDefAttributesSorted({
+    let formAttributesNodeDefs = getNodeDefAttributeUuidsSorted({
       nodeDefUuidsInEntity,
       isTable,
     });

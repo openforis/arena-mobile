@@ -24,6 +24,8 @@ export const toFixedIfLongerAndNumber = (value, decimals = 3) => {
   return value;
 };
 
+const _sorter = (a, b) => (a > b ? 1 : a === b ? 0 : -1);
+
 const prepareItems = (location, {selectedSrs}) => {
   if (location?.coords) {
     const srs = DEFAULT_SRS_CODE;
@@ -60,7 +62,7 @@ const prepareItems = (location, {selectedSrs}) => {
     ].concat(
       Object.keys(location?.coords || {})
         .filter(key => !pareparedFields.includes(key))
-        .sort((a, b) => (a > b ? 1 : a === b ? 0 : -1))
+        .sort(_sorter)
         .map(key => ({
           label: key,
           value: toFixedIfLongerAndNumber(location?.coords[key], 2),
@@ -105,16 +107,18 @@ const GetLocation = ({handleSaveLocation, selectedSrs}) => {
       {location && (
         <LocationAccuracyBar accuracy={location?.coords?.accuracy} />
       )}
-      {location?.coords && false && (
-        <Button
-          type="ghost"
-          label={t('Form:nodeDefCoordinate.use')}
-          customContainerStyle={styles.customContainerStyle}
-          onPress={_handleSaveLocation}
-        />
-      )}
     </View>
   );
+};
+
+const _getColor = accuracy => {
+  if (accuracy < 10) {
+    return 'green';
+  }
+  if (accuracy < 20) {
+    return 'orange';
+  }
+  return 'red';
 };
 
 const LocationAccuracyBar = ({accuracy}) => {
@@ -122,7 +126,7 @@ const LocationAccuracyBar = ({accuracy}) => {
 
   const accuracyWidth = accuracy ? (50 - accuracy) * 2 : 100;
 
-  const color = accuracy < 10 ? 'green' : accuracy < 20 ? 'orange' : 'red';
+  const color = _getColor(accuracy);
   return (
     <View style={styles.accuracyBarContainer}>
       <View style={styles.accuracyBar}>
