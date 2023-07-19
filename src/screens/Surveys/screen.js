@@ -36,13 +36,13 @@ const Surveys = () => {
   }, [numberOfSurveys]);
 
   return (
-    <Layout bottomStyle={selectedSurvey ? 'primary' : 'background'}>
+    <Layout bottomSafeArea={false}>
       <>
         <Header hasBackComponent={true}>
           <TextTitle>{t(`Surveys:title.${surveysOrigin}`)}</TextTitle>
         </Header>
 
-        <View style={[styles.listContainer]}>
+        <View style={styles.listContainer}>
           <SurveysList
             surveysOrigin={surveysOrigin}
             setSurveysOrigin={setSurveysOrigin}

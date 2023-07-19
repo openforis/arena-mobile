@@ -19,9 +19,11 @@ const SubPanel = ({
   const styles = useThemedStyles(_styles);
   return (
     <>
-      {surveysOrigin === 'remote' && (
-        <ServerConnectionBar errorRemoteServer={errorRemoteServer} />
-      )}
+      <ServerConnectionBar
+        errorRemoteServer={errorRemoteServer}
+        info={surveysOrigin !== 'remote'}
+      />
+
       <View style={styles.buttonsContainer}>
         <SurveysOriginSelector
           surveysOrigin={surveysOrigin}
