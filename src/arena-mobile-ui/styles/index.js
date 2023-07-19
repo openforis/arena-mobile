@@ -116,6 +116,7 @@ export const getBaseStyles = ({
     BASE_2: BASE * 2, // 8
     BASE_3: BASE * 3, // 12
     BASE_4: BASE * 4, // 16
+    BASE_5: BASE * 5, // 20
     BASE_6: BASE * 6, // 24
     BASE_8: BASE * 8, // 32
     BASE_12: BASE * 12, // 48
