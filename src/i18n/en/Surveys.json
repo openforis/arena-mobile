@@ -17,6 +17,9 @@
       },
       "success": {
         "info": "Connected to: {{ serverUrl }}"
+      },
+      "info": {
+        "info": "Offline mode"
       }
     },
     "surveys_origin_selector": {

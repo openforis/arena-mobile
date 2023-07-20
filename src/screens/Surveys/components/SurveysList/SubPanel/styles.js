@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 
 const styles = ({colors, baseStyles}) =>
   StyleSheet.create({
@@ -10,6 +10,8 @@ const styles = ({colors, baseStyles}) =>
       paddingHorizontal: baseStyles.bases.BASE_4,
       alignItems: 'center',
       backgroundColor: colors.backgroundLight,
+      paddingBottom:
+        Platform.OS === 'ios' ? baseStyles.bases.BASE_8 : baseStyles.bases.BASE,
     },
   });
 
