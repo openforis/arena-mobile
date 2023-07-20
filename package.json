@@ -26,6 +26,7 @@
     "deprecated-react-native-prop-types": "^4.0.0",
     "i18next": "^22.4.11",
     "lodash.debounce": "^4.0.8",
+    "lodash.throttle": "^4.1.1",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
     "re-reselect": "^4.0.1",
