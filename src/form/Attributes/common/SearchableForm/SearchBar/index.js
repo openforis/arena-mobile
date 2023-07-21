@@ -1,4 +1,5 @@
 import throttle from 'lodash.throttle';
+import moment from 'moment/moment';
 import React, {useCallback, useState} from 'react';
 import {Keyboard, View} from 'react-native';
 
@@ -11,7 +12,7 @@ const SearchBar = ({handleStopToSearch, setSearchText, autoFocus}) => {
   const [clear, setClear] = useState(false);
 
   const _handleStopToSearch = useCallback(() => {
-    setClear(Math.random());
+    setClear(moment().format('x'));
     setSearchText('');
     Keyboard.dismiss();
     handleStopToSearch?.();
