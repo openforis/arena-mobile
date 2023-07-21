@@ -13,5 +13,15 @@
     "cta_continue": "Continue this record"
   },
   "current_record": "Current record",
-  "empty_key": "<Key missing>"
+  "empty_key": "<Key missing>",
+  "empty": {
+    "title": "No records",
+    "info": "You don't have any records yet. Create one to start using the app.",
+    "cta_label": "Create a record"
+  },
+  "error": {
+    "title": "Error",
+    "info": "There was an error loading the records. Please try again later.",
+    "cta_label": "Try again"
+  }
 }

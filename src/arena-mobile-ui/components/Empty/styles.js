@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 
 const styles = ({baseStyles}) =>
   StyleSheet.create({
@@ -8,6 +8,7 @@ const styles = ({baseStyles}) =>
       alignContent: 'center',
       padding: baseStyles.bases.BASE_4,
       paddingTop: baseStyles.bases.BASE_12,
+      paddingBottom: Platform.OS === 'ios' ? baseStyles.bases.BASE_8 : 0,
     },
     info: {
       marginTop: baseStyles.bases.BASE_3,

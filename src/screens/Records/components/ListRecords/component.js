@@ -1,20 +1,39 @@
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 
 import CreatedAndModified from 'arena-mobile-ui/components/CreatedAndModified';
 import CurrentItemLabel from 'arena-mobile-ui/components/CurrentItemLabel';
 import List from 'arena-mobile-ui/components/List';
+import Loading from 'arena-mobile-ui/components/List/Loading';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import TouchableCard from 'arena-mobile-ui/components/TouchableCard';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
+import {actions as formActions} from 'state/form';
 import formSelectors from 'state/form/selectors';
 import {useRecordsUuidsSorted, useRecordsSummary} from 'state/records/hooks';
 
+import Empty from './Empty';
+import Error from './Error';
 import _styles from './styles';
 
-const ListEmptyComponent = () => <View />;
+const ListEmptyComponent = ({loading, error}) => {
+  const dispatch = useDispatch();
+  const handleInitializeRecord = useCallback(() => {
+    dispatch(formActions.initializeRecord());
+  }, [dispatch]);
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <Error />;
+  }
+
+  return <Empty onPress={handleInitializeRecord} />;
+};
 
 const RecordCard = ({record, recordUuid, isSelected, onSelect}) => {
   const styles = useThemedStyles(_styles);
@@ -65,7 +84,7 @@ const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
   );
 
   if (recordUuids.length <= 0) {
-    return <></>;
+    return <ListEmptyComponent />;
   }
 
   return (
