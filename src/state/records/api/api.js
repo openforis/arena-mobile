@@ -28,6 +28,19 @@ const getRecord = async ({serverUrl, surveyId, recordUuid}) => {
   }
 };
 
+const getRecordsSummary = async ({serverUrl, surveyId, cycle}) => {
+  try {
+    const res = await API({serverUrl}).get({
+      path: `api/survey/${surveyId}/records/summary`,
+      params: {cycle},
+    });
+    return res?.data;
+  } catch (error) {
+    console.log('Error::recordApi:getRecordsSummary', {error});
+    return false;
+  }
+};
+
 const getNodeFile = async ({
   serverUrl,
   surveyId,
@@ -44,6 +57,6 @@ const getNodeFile = async ({
     onStart,
   });
 
-const recordsApi = {getRecords, getRecord, getNodeFile};
+const recordsApi = {getRecords, getRecord, getNodeFile, getRecordsSummary};
 
 export default recordsApi;

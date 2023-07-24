@@ -6,6 +6,7 @@ import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import CreateNewRecord from '../../../components/CreateNewRecord';
 
 import _styles from './styles';
+import SyncRecordsButton from './SyncRecordsButton';
 
 const SubPanel = ({}) => {
   const styles = useThemedStyles(_styles);
@@ -15,6 +16,7 @@ const SubPanel = ({}) => {
       <View style={styles.createNewRecordContainer}>
         <CreateNewRecord />
       </View>
+      <SyncRecordsButton />
     </View>
   );
 };
