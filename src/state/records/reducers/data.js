@@ -18,7 +18,7 @@ const data = handleActions(
       ...state,
       [record.uuid]: {
         ...record,
-        lastModifiedAt: isCreating ? null : moment().toISOString(),
+        dateModified: isCreating ? null : moment().toISOString(),
       },
     }),
     [actions.cleanRecord]: (state, {payload: {recordUuid}}) => {

@@ -1,7 +1,7 @@
 const initialState = {
   data: {},
   ui: {},
-  remoteRecordsSummary: [],
+  remoteRecordsSummary: {},
 };
 
 export default initialState;

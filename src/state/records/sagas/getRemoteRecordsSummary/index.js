@@ -7,7 +7,7 @@ import surveySelectors from 'state/survey/selectors';
 
 import recordsActions from '../../actionCreators';
 
-function* handleGetRemoteRecordsSummary({payload}) {
+function* handleGetRemoteRecordsSummary() {
   try {
     const survey = yield select(surveySelectors.getSurvey);
     const serverUrl = yield select(appSelectors.getServerUrl);
@@ -21,7 +21,17 @@ function* handleGetRemoteRecordsSummary({payload}) {
       cycle,
     });
     const {list} = recordsSummary;
-    //yield put(recordsActions.setRemoteRecordsSummary({recordsSummary}));
+
+    const recordsSummaryByRecordUuid = list.reduce((acc, recordSummary) => {
+      acc[recordSummary.uuid] = recordSummary;
+      return acc;
+    }, {});
+
+    yield put(
+      recordsActions.setRemoteRecordsSummary({
+        recordsSummary: recordsSummaryByRecordUuid,
+      }),
+    );
   } catch (e) {
     console.log(e);
   } finally {
