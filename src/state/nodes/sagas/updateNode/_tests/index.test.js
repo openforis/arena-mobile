@@ -59,7 +59,7 @@ const initialState = {
         preview: false,
         uuid: 'RECORD_ONE_UUID',
         surveyUuid: mockSurvey.uuid,
-        lastModifiedAt: moment(mockDate).toISOString(),
+        dateModified: moment(mockDate).toISOString(),
 
         nodes: [],
         _nodesIndex: {

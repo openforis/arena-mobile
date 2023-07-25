@@ -34,7 +34,7 @@ const expectedRecords = (state, isNewRecord = false) => {
       ...state.records.data,
       'BASE_UUID-1001': {
         ...state.records.data['BASE_UUID-1001'],
-        ...(isNewRecord ? {lastModifiedAt: null} : {}),
+        ...(isNewRecord ? {dateModified: null} : {}),
         _nodesIndex: {},
         nodes: {},
       },

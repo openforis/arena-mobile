@@ -10,7 +10,7 @@ import recordActions from 'state/records/actionCreators';
 
 export function* handleDeleteRecordIfNotModified() {
   const record = yield select(formSelectors.getRecord);
-  if (!record.lastModifiedAt) {
+  if (!record.dateModified) {
     yield put(recordActions.deleteRecord({recordUuid: record.uuid}));
     yield put(formActions.clean());
   }
@@ -19,7 +19,7 @@ export function* handleDeleteRecordIfNotModified() {
 function* handleLeaveForm() {
   yield put(formActions.closeEntitySelector());
   const record = yield select(formSelectors.getRecord);
-  if (record.lastModifiedAt) {
+  if (record.dateModified) {
     yield call(persistRecordWithKeyAndMergeCurrentNodes, {record});
   }
   yield call(navigator.navigatorDispatch, StackActions.replace(ROUTES.RECORDS));
