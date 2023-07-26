@@ -29,5 +29,16 @@
     "sync_records_button": {
       "label": "Sync records"
     }
+  },
+  "status": {
+    "syncing": "Syncing records...",
+    "synced": "Records synced",
+    "sync_error": "Error syncing records"
+  },
+  "record_status": {
+    "not_in_server": "Not in server",
+    "modified_download": "Modified in server",
+    "modified_upload": "Modified in device",
+    "synced": "Ok"
   }
 }

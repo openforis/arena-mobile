@@ -21,11 +21,15 @@ Label.defaultProps = {
 
 export const Value = ({label, size, bolder, color}) => {
   const styles = useThemedStyles(_styles);
+  const customStyle = useMemo(() => {
+    return color ? styles.color[color] : {};
+  }, [styles, color]);
+
   return (
     <TextBase
       type={bolder ? 'bolder' : 'bold'}
       size={size}
-      customStyle={[color ? styles.color[color] : {}]}
+      customStyle={customStyle}
       numberOfLines={1}>
       {label}
     </TextBase>
