@@ -31,7 +31,7 @@ const getFilesByUuidSurveyUuid = createCachedSelector(
 
 const getFilesByRecordUuid = createCachedSelector(
   getFiles,
-  (_, recordUuid) => recordUuid,
+  keySelectors.recordUuid,
   (files, recordUuid) => files.filter(file => file.recordUuid === recordUuid),
 )(keySelectors.recordUuid);
 

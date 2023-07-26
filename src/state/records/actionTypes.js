@@ -1,6 +1,11 @@
 const getRemoteRecordsSummary$ = 'records/getRemoteRecordsSummary$';
 const SET_REMOTE_RECORDS_SUMMARY = 'records/SET_REMOTE_RECORDS_SUMMARY';
 const CLEAN_REMOTE_RECORDS_SUMMARY = 'records/CLEAN_REMOTE_RECORDS_SUMMARY';
+const SET_GETTING_REMOTE_RECORDS_SUMMARY =
+  'records/SET_GETTING_REMOTE_RECORDS_SUMMARY';
+
+const SET_GETTING_REMOTE_RECORDS_SUMMARY_ERROR =
+  'records/SET_GETTING_REMOTE_RECORDS_SUMMARY_ERROR';
 
 const deleteRecord$ = 'records/deleteRecord$';
 const SET_RECORD = 'records/SET_RECORD';
@@ -11,6 +16,8 @@ export default {
   getRemoteRecordsSummary$,
   SET_REMOTE_RECORDS_SUMMARY,
   CLEAN_REMOTE_RECORDS_SUMMARY,
+  SET_GETTING_REMOTE_RECORDS_SUMMARY,
+  SET_GETTING_REMOTE_RECORDS_SUMMARY_ERROR,
 
   deleteRecord$,
   SET_RECORD,

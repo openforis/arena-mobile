@@ -1,4 +1,4 @@
-import {put, select, call} from 'redux-saga/effects';
+import {put, select, call, all} from 'redux-saga/effects';
 
 import {checkIfCurrentServerIsTheSurveysServer} from 'arena/survey';
 import {selectors as appSelectors} from 'state/app';
@@ -9,9 +9,16 @@ import recordsActions from '../../actionCreators';
 
 function* handleGetRemoteRecordsSummary() {
   try {
-    const survey = yield select(surveySelectors.getSurvey);
-    const serverUrl = yield select(appSelectors.getServerUrl);
-    const cycle = yield select(surveySelectors.getSurveyCycle);
+    yield put(
+      recordsActions.setGettingRemoteRecordsSummary({
+        isGettingRemoteRecordsSummary: true,
+      }),
+    );
+    const [survey, serverUrl, cycle] = yield all([
+      select(surveySelectors.getSurvey),
+      select(appSelectors.getServerUrl),
+      select(surveySelectors.getSurveyCycle),
+    ]);
 
     const surveyId = survey?.id;
     yield call(checkIfCurrentServerIsTheSurveysServer, {survey, serverUrl});
@@ -33,8 +40,18 @@ function* handleGetRemoteRecordsSummary() {
       }),
     );
   } catch (e) {
-    console.log(e);
+    yield put(
+      recordsActions.setGettingRemoteRecordsSummaryError({
+        error: true,
+      }),
+    ),
+      console.log(e);
   } finally {
+    yield put(
+      recordsActions.setGettingRemoteRecordsSummary({
+        isGettingRemoteRecordsSummary: false,
+      }),
+    );
     console.log('Finally:recordsData');
   }
 }

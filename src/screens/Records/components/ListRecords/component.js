@@ -37,6 +37,7 @@ const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
   const recordUuids = useRecordsUuidsSorted(recordsSummary);
 
   useEffect(() => {
+    dispatch(recordsActions.getRemoteRecordsSummary());
     return () => {
       dispatch(recordsActions.cleanRemoteRecordsSummary());
     };

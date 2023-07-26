@@ -6,11 +6,11 @@ import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import CreateNewRecord from '../../../components/CreateNewRecord';
 
 import FiltersAndSorters from './FiltersAndSorters';
-import ServerConnectionBar from './ServerConnectionBar';
+import RemoteSyncStatusBar from './RemoteSyncStatusBar';
 import _styles from './styles';
 import SyncRecordsButton from './SyncRecordsButton';
 
-const SubPanel = ({surveysOrigin, errorRemoteServer}) => {
+const SubPanel = () => {
   const styles = useThemedStyles(_styles);
 
   useEffect(() => {
@@ -19,10 +19,7 @@ const SubPanel = ({surveysOrigin, errorRemoteServer}) => {
 
   return (
     <>
-      <ServerConnectionBar
-        errorRemoteServer={errorRemoteServer}
-        info={surveysOrigin !== 'remote'}
-      />
+      <RemoteSyncStatusBar />
 
       <View style={styles.buttonsContainer}>
         <View style={styles.createNewRecordContainer}>

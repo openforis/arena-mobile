@@ -40,5 +40,18 @@
     "modified_download": "Modified in server",
     "modified_upload": "Modified in device",
     "synced": "Ok"
+  },
+  "status_connection_bar": {
+    "error": {
+      "info": "Error syncing to the server",
+      "cta_label": "Check settings"
+    },
+    "success": {
+      "info": "Synced to: {{ serverUrl }}"
+    },
+    "info": {
+      "info": "Offline mode",
+      "cta_label": "Sync"
+    }
   }
 }
