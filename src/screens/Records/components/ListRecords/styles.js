@@ -1,11 +1,5 @@
 import {StyleSheet} from 'react-native';
 
-const styles = ({baseStyles}) =>
-  StyleSheet.create({
-    ...baseStyles.card,
-    payload: {
-      flex: 1,
-    },
-  });
+const styles = () => StyleSheet.create({});
 
 export default styles;
