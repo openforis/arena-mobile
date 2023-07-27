@@ -32,13 +32,13 @@ const Records = () => {
   }, [currentRecord]);
 
   return (
-    <Layout bottomStyle={selectedRecord ? 'primary' : 'background'}>
+    <Layout bottomSafeArea={false}>
       <>
         <Header LeftComponent={NavigateToHome}>
           <TextTitle>{t('Common:records')}</TextTitle>
         </Header>
 
-        <View style={[styles.listContainer]}>
+        <View style={styles.listContainer}>
           <ListRecords
             selectedRecordUuid={selectedRecord?.uuid}
             setSelectedRecord={setSelectedRecord}

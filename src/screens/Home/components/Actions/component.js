@@ -5,11 +5,12 @@ import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {useNavigateTo} from 'navigation/hooks';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {useNumberRecords} from 'state/records/hooks';
 
-import styles from './styles';
+import _styles from './styles';
 
 const NUMBER_OF_DAYS_TO_CONTINUE_RECORD = 3;
 
@@ -41,6 +42,7 @@ const useHasRecordToContinue = () => {
 };
 
 const Actions = () => {
+  const styles = useThemedStyles(_styles);
   const {t} = useTranslation();
   const dispatch = useDispatch();
   const {navigateTo, routes} = useNavigateTo();
