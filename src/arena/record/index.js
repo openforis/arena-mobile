@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 import {Objects} from 'infra/objectUtils';
 
 const DEFAULT_JOIN_STRING = ',';
@@ -102,4 +104,36 @@ export const getRecordSummary = record => {
   });
 
   return recordSummary;
+};
+
+export const recordStatus = {
+  new: 'new',
+  modifiedLocally: 'modifiedLocally',
+  modifiedRemotely: 'modifiedRemotely',
+  notModified: 'notModified',
+  notInEntryStepAnymore: 'notInEntryStepAnymore',
+};
+
+export const getLocalRecordStatus = ({record, recordRemoteSummary}) => {
+  // check if all keys are ready
+
+  if (!recordRemoteSummary) {
+    return recordStatus.new;
+  }
+
+  if (recordRemoteSummary.step > 1) {
+    return recordStatus.notInEntryStepAnymore;
+  }
+
+  if (moment(record?.dateModified).isAfter(recordRemoteSummary?.dateModified)) {
+    return recordStatus.modifiedLocally;
+  }
+
+  if (
+    moment(record?.dateModified).isBefore(recordRemoteSummary?.dateModified)
+  ) {
+    return recordStatus.modifiedRemotely;
+  }
+
+  return recordStatus.notModified;
 };

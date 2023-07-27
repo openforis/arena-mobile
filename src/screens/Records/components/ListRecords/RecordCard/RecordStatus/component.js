@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next';
 import {View, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 
+import {getLocalRecordStatus, recordStatus} from 'arena/record';
 import Icon from 'arena-mobile-ui/components/Icon';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
@@ -18,7 +19,9 @@ const RecordStatus = ({record, recordUuid}) => {
   const {t} = useTranslation();
 
   const status = useMemo(() => {
-    if (!recordRemoteSummary) {
+    const _status = getLocalRecordStatus({record, recordRemoteSummary});
+
+    if (_status === recordStatus.new) {
       return {
         label: t('Records:record_status.not_in_server'),
         icon: 'cloud-alert',
@@ -27,7 +30,16 @@ const RecordStatus = ({record, recordUuid}) => {
       };
     }
 
-    if (recordRemoteSummary?.dateModified > record?.dateModified) {
+    if (_status === recordStatus.notInEntryStepAnymore) {
+      return {
+        label: t('Records:record_status.not_in_entry_step_anymore'),
+        icon: 'cloud-alert',
+        color: 'alert',
+        iconColor: styles.color.alert.color,
+      };
+    }
+
+    if (_status === recordStatus.modifiedRemotely) {
       return {
         label: t('Records:record_status.modified_download'),
         icon: 'clock-alert-outline',
@@ -36,7 +48,7 @@ const RecordStatus = ({record, recordUuid}) => {
       };
     }
 
-    if (recordRemoteSummary?.dateModified < record?.dateModified) {
+    if (_status === recordStatus.modifiedLocally) {
       return {
         label: t('Records:record_status.modified_upload'),
         icon: 'clock-alert-outline',
@@ -46,7 +58,7 @@ const RecordStatus = ({record, recordUuid}) => {
     }
 
     return {
-      label: t('Records:record_status.synced'),
+      label: t('Records:record_status.checked'),
       icon: 'cloud-check-outline',
       color: 'success',
       iconColor: styles.color.success.color,

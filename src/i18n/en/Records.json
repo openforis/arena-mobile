@@ -40,6 +40,7 @@
   },
   "record_status": {
     "not_in_server": "Not in server",
+    "not_in_entry_step_anymore": "Not in entry step anymore",
     "modified_download": "Modified in server",
     "modified_upload": "Modified in device",
     "checked": "Ok"
