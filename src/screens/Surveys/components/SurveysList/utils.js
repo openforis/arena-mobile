@@ -22,6 +22,7 @@ export const prepareSurveys = ({
   localSurveys,
   surveys,
   sortCriteria,
+  searchText,
 }) => {
   let __surveys = [...localSurveys];
   const localSurveysByUuids = localSurveys.reduce((acc, survey) => {
@@ -66,6 +67,22 @@ export const prepareSurveys = ({
   }
 
   const sortFunction = SORT_FUNCTIONS_BY_TYPE[sortCriteria?.type] || false;
+
+  if (searchText) {
+    __surveys = __surveys.filter(survey => {
+      const surveyName = survey.props.name?.toLowerCase() || '';
+      const survyeLabel = (
+        survey.props.labels?.[survey.props.languages?.[0]] || ''
+      ).toLowerCase();
+
+      const searchTextLower = searchText?.toLowerCase();
+
+      return (
+        surveyName.includes(searchTextLower) ||
+        survyeLabel.includes(searchTextLower)
+      );
+    });
+  }
 
   if (Objects.isEmpty(sortCriteria) || sortFunction === false) {
     return __surveys;

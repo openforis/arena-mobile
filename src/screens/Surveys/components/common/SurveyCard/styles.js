@@ -23,6 +23,9 @@ const styles = ({baseStyles}) =>
     payload: {
       flex: 1,
     },
+    activeSurveyContainer: {
+      alignItems: 'flex-end',
+    },
   });
 
 export default styles;

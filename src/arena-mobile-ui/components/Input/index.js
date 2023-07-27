@@ -52,6 +52,7 @@ const Input = ({
   customStyle,
   lateFocus,
   editable,
+  clear,
   ...props
 }) => {
   const styles = useThemedStyles(_styles);
@@ -63,6 +64,7 @@ const Input = ({
       }, 300);
     }
   }, [lateFocus]);
+
   const textInputStyle = useMemo(() => {
     return StyleSheet.compose(
       StyleSheet.compose(
@@ -72,6 +74,12 @@ const Input = ({
       customStyle,
     );
   }, [editable, styles, customStyle]);
+
+  useEffect(() => {
+    if (clear) {
+      inputRef?.current?.clear?.();
+    }
+  }, [clear]);
 
   return (
     <InputContainer

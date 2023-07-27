@@ -2,6 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {useSelector} from 'react-redux';
 
 import Loading from 'arena-mobile-ui/components/List/Loading';
+import SearchBar from 'form/Attributes/common/SearchableForm/SearchBar';
 import {
   hooks as surveysHooks,
   selectors as surveysSelectors,
@@ -45,6 +46,7 @@ const SurveysList = ({
   const localSurveys = useSelector(surveysSelectors.getSurveysAsList);
 
   const [sortCriteriaIndex, setSortCriteriaIndex] = useState(0);
+  const [searchText, setSearchText] = useState('');
   const sortCriteria = useMemo(
     () => SORTERS[sortCriteriaIndex],
     [sortCriteriaIndex],
@@ -75,12 +77,14 @@ const SurveysList = ({
         localSurveys,
         surveys,
         sortCriteria,
+        searchText,
       }),
-    [surveysOrigin, localSurveys, surveys, sortCriteria],
+    [surveysOrigin, localSurveys, surveys, sortCriteria, searchText],
   );
 
   return (
     <>
+      <SearchBar setSearchText={setSearchText} autoFocus={false} />
       <List
         data={_surveys}
         surveysOrigin={surveysOrigin}

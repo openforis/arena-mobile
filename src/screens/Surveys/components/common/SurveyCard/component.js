@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import CreatedAndModified from 'arena-mobile-ui/components/CreatedAndModified';
@@ -26,9 +26,15 @@ const SurveyCard = ({
   const currentServerUrl = useSelector(appSelectors.getServerUrl);
   const styles = useThemedStyles(_styles);
 
+  const containerStyle = useMemo(() => {
+    return StyleSheet.compose(
+      styles.container,
+      isLocalSurvey ? styles.selected : {},
+    );
+  }, [styles, isLocalSurvey]);
+
   return (
-    <TouchableCard
-      customStyles={[styles.container, isLocalSurvey ? styles.selected : {}]}>
+    <TouchableCard customStyles={containerStyle}>
       <View style={styles.infoContainer}>
         <View style={styles.payload}>
           <View style={styles.labelCotainer}>
@@ -53,7 +59,7 @@ const SurveyCard = ({
           )}
         </View>
         <View style={styles.moreInfo}>
-          <View style={{alignItems: 'flex-end'}}>
+          <View style={styles.activeSurveyContainer}>
             {isLocalSurvey ? (
               <CurrentItemLabel label={t('Surveys:active_survey')} />
             ) : (
