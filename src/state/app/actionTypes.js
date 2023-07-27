@@ -1,6 +1,7 @@
 const initConnection$ = 'app/initConnection$';
 const logout$ = 'app/logout$';
 const SET_ACCESS_DATA = 'app/SET_ACCESS_DATA';
+const CLEAN_ACCESS_DATA = 'app/CLEAN_ACCESS_DATA';
 const SET_SERVER_URL = 'app/SET_SERVER_URL';
 const CLEAN = 'app/CLEAN';
 
@@ -25,6 +26,7 @@ export default {
   initConnection$,
   logout$,
   SET_ACCESS_DATA,
+  CLEAN_ACCESS_DATA,
   SET_SERVER_URL,
   CLEAN,
 

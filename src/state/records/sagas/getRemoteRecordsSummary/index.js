@@ -1,4 +1,4 @@
-import {put, select, call, all} from 'redux-saga/effects';
+import {put, select, call, all, delay} from 'redux-saga/effects';
 
 import {checkIfCurrentServerIsTheSurveysServer} from 'arena/survey';
 import {selectors as appSelectors} from 'state/app';
@@ -14,6 +14,8 @@ function* handleGetRemoteRecordsSummary() {
         isGettingRemoteRecordsSummary: true,
       }),
     );
+
+    yield delay(300);
     const [survey, serverUrl, cycle] = yield all([
       select(surveySelectors.getSurvey),
       select(appSelectors.getServerUrl),

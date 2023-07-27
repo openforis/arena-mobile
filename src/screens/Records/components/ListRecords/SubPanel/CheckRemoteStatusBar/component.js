@@ -12,7 +12,7 @@ import {selectors as recordSelectors} from 'state/records';
 
 import _styles from './styles';
 
-const RemoteSyncStatusBar = () => {
+const CheckRemoteStatusBar = () => {
   const remoteRecordsSummaryError = useSelector(
     recordSelectors.getIsGettingRemoteRecordsSummaryError,
   );
@@ -41,6 +41,7 @@ const RemoteSyncStatusBar = () => {
         styles.container,
         remoteRecordsSummaryError && styles.containerWithError,
       ),
+
       !isReady && styles.containerWithInfo,
     );
   }, [remoteRecordsSummaryError, isReady, styles]);
@@ -66,9 +67,9 @@ const RemoteSyncStatusBar = () => {
   );
 };
 
-RemoteSyncStatusBar.defaultProps = {
+CheckRemoteStatusBar.defaultProps = {
   remoteRecordsSummaryError: false,
   info: null,
 };
 
-export default RemoteSyncStatusBar;
+export default CheckRemoteStatusBar;

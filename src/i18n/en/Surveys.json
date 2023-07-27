@@ -41,9 +41,9 @@
   },
 
   "status_labels": {
-    "not_in_device": "Not in device.",
-    "ready": "Up-to-date.",
-    "update": "Outdated. Newer available.",
+    "not_in_device": "Not in device",
+    "ready": "Up-to-date",
+    "update": "Outdated. Newer available",
     "not_this_server": "Not available in this server",
     "not_published": "NOT published"
   },

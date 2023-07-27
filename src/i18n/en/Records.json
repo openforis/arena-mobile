@@ -26,32 +26,35 @@
     "cta_label": "Try again"
   },
   "subpanel": {
-    "sync_records_button": {
-      "label": "Sync records"
+    "check_remote_records_button": {
+      "label": "Check remote status"
+    },
+    "upload_data": {
+      "label": "Send local data"
     }
   },
   "status": {
-    "syncing": "Syncing records...",
-    "synced": "Records synced",
-    "sync_error": "Error syncing records"
+    "checking": "Checking records...",
+    "checked": "Records checked",
+    "check_error": "Error checking records"
   },
   "record_status": {
     "not_in_server": "Not in server",
     "modified_download": "Modified in server",
     "modified_upload": "Modified in device",
-    "synced": "Ok"
+    "checked": "Ok"
   },
   "status_connection_bar": {
     "error": {
-      "info": "Error syncing to the server",
+      "info": "Error connection to the server",
       "cta_label": "Check settings"
     },
     "success": {
-      "info": "Synced to: {{ serverUrl }}"
+      "info": "Remote status checked from: {{ serverUrl }}"
     },
     "info": {
       "info": "Offline mode",
-      "cta_label": "Sync"
+      "cta_label": "Check"
     }
   }
 }

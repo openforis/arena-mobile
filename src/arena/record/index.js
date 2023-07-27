@@ -90,7 +90,7 @@ export const getRecordSummary = record => {
     'recordKey',
     'dateCreated',
     'dateModified',
-    'dateSynced',
+    'dateSynced', // TODO change
     'dateModified',
     'surveyUuid',
     'cycle',
