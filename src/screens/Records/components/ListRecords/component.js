@@ -17,6 +17,7 @@ import {useRecordsUuidsSorted, useRecordsSummary} from 'state/records/hooks';
 import Empty from './Empty';
 import Error from './Error';
 import _styles from './styles';
+import SubPanel from './SubPanel';
 
 const ListEmptyComponent = ({loading, error}) => {
   const dispatch = useDispatch();
@@ -88,12 +89,16 @@ const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
   }
 
   return (
-    <List
-      data={recordUuids}
-      ListEmptyComponent={ListEmptyComponent}
-      keyExtractor={keyExtractor}
-      renderItem={renderItem}
-    />
+    <>
+      <List
+        data={recordUuids}
+        ListEmptyComponent={ListEmptyComponent}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+      />
+
+      {recordUuids.length > 0 && <SubPanel />}
+    </>
   );
 };
 

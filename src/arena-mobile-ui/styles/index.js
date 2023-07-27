@@ -160,6 +160,7 @@ export const getBaseStyles = ({
     BASE,
     bases,
     colors,
+    FONT_BASE,
   };
 };
 

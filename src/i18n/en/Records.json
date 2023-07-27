@@ -13,6 +13,7 @@
     "cta_continue": "Continue this record"
   },
   "current_record": "Current record",
+  "create_new_record": "Create new record",
   "empty_key": "<Key missing>",
   "empty": {
     "title": "No records",
@@ -23,5 +24,10 @@
     "title": "Error",
     "info": "There was an error loading the records. Please try again later.",
     "cta_label": "Try again"
+  },
+  "subpanel": {
+    "sync_records_button": {
+      "label": "Sync records"
+    }
   }
 }
