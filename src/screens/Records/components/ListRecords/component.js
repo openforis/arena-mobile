@@ -36,8 +36,12 @@ const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
   const recordsSummary = useRecordsSummary();
   const recordUuids = useRecordsUuidsSorted(recordsSummary);
 
-  useEffect(() => {
+  const handleGetRemoteRecordsSummary = useCallback(() => {
     dispatch(recordsActions.getRemoteRecordsSummary());
+  }, [dispatch]);
+
+  useEffect(() => {
+    //dispatch(recordsActions.getRemoteRecordsSummary());
     return () => {
       dispatch(recordsActions.cleanRemoteRecordsSummary());
     };
@@ -66,6 +70,8 @@ const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
         ListEmptyComponent={ListEmptyComponent}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
+        onRefresh={handleGetRemoteRecordsSummary}
+        refreshing={false}
       />
 
       {recordUuids.length > 0 && <SubPanel />}
