@@ -20,6 +20,8 @@ const List = ({
   renderItem,
   stickyHeaderIndices,
   extraData,
+  onRefresh,
+  refreshing,
 }) => {
   return (
     <View style={styles.container}>
@@ -39,6 +41,8 @@ const List = ({
         extraData={extraData}
         maxToRenderPerBatch={4}
         CellRendererComponent={CellRendererComponent}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
       />
     </View>
   );
@@ -49,6 +53,8 @@ List.defaultProps = {
   stickyHeaderIndices: [],
 
   extraData: null,
+  onRefresh: () => {},
+  refreshing: false,
 };
 
 export default List;
