@@ -28,7 +28,13 @@ const UploadDataButton = () => {
       customTextStyle={styles.buttonText}
       allowMultipleLines={true}
       iconPosition={'right'}
-      icon={<Icon name="cloud-upload" size="m" />}
+      icon={
+        <Icon
+          name="cloud-upload"
+          size="m"
+          color={styles.colors.primaryContrastText}
+        />
+      }
     />
   );
 };

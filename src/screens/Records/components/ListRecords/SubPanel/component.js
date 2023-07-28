@@ -8,7 +8,6 @@ import {selectors as recordSelectors} from 'state/records';
 import CreateNewRecord from '../../../components/CreateNewRecord';
 
 import CheckRemoteRecordsButton from './CheckRemoteRecordsButton';
-import CheckRemoteStatusBar from './CheckRemoteStatusBar';
 import FiltersAndSorters from './FiltersAndSorters';
 import _styles from './styles';
 import UploadDataButton from './UploadDataButton';
@@ -25,8 +24,6 @@ const SubPanel = () => {
 
   return (
     <>
-      {!loading && <CheckRemoteStatusBar />}
-
       <View style={styles.buttonsContainer}>
         <View style={styles.createNewRecordContainer}>
           <CreateNewRecord />

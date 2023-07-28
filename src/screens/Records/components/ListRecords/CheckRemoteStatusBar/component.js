@@ -1,14 +1,18 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View, StyleSheet} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
+import Icon from 'arena-mobile-ui/components/Icon';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {useNavigateTo} from 'navigation/hooks';
 import {selectors as appSelectors} from 'state/app';
-import {selectors as recordSelectors} from 'state/records';
+import {
+  selectors as recordSelectors,
+  actions as recordsActions,
+} from 'state/records';
 
 import _styles from './styles';
 
@@ -22,6 +26,12 @@ const CheckRemoteStatusBar = () => {
   const {navigateTo, routes} = useNavigateTo();
   const currentServerUrl = useSelector(appSelectors.getServerUrl);
   const styles = useThemedStyles(_styles);
+
+  const dispatch = useDispatch();
+
+  const handleCheckRemoteRecords = useCallback(() => {
+    dispatch(recordsActions.getRemoteRecordsSummary());
+  }, [dispatch]);
 
   const infoLabel = useMemo(() => {
     if (remoteRecordsSummaryError) {
@@ -51,6 +61,18 @@ const CheckRemoteStatusBar = () => {
       <TextBase customStyle={styles.text} size="s">
         {infoLabel}
       </TextBase>
+      {!isReady && (
+        <Button
+          label={t('Records:subpanel.check_remote_records_button.label')}
+          onPress={handleCheckRemoteRecords}
+          type="ghostBlack"
+          customContainerStyle={styles.button}
+          customTextStyle={styles.buttonText}
+          allowMultipleLines={true}
+          iconPosition={'right'}
+          icon={<Icon name="cloud-sync" size="m" />}
+        />
+      )}
       {remoteRecordsSummaryError && (
         <Button
           label={t('Records:status_connection_bar.error.cta_label')}
