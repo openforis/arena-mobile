@@ -14,7 +14,7 @@ const styles = ({colors, baseStyles}) =>
         Platform.OS === 'ios' ? baseStyles.bases.BASE_8 : baseStyles.bases.BASE,
     },
     createNewRecordContainer: {
-      top: -(baseStyles.bases.BASE_3 * 6 + baseStyles.FONT_BASE * 6),
+      top: -(baseStyles.bases.BASE_3 * 4 + baseStyles.FONT_BASE * 3),
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
