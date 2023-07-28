@@ -125,12 +125,24 @@ export const getLocalRecordStatus = ({record, recordRemoteSummary}) => {
     return recordStatus.notInEntryStepAnymore;
   }
 
-  if (moment(record?.dateModified).isAfter(recordRemoteSummary?.dateModified)) {
+  if (
+    moment(record?.dateModified)
+      .second(0)
+      .millisecond(0)
+      .isAfter(
+        moment(recordRemoteSummary?.dateModified).second(0).millisecond(0),
+      )
+  ) {
     return recordStatus.modifiedLocally;
   }
 
   if (
-    moment(record?.dateModified).isBefore(recordRemoteSummary?.dateModified)
+    moment(record?.dateModified)
+      .second(0)
+      .millisecond(0)
+      .isBefore(
+        moment(recordRemoteSummary?.dateModified).second(0).millisecond(0),
+      )
   ) {
     return recordStatus.modifiedRemotely;
   }

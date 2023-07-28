@@ -34,7 +34,7 @@ export const useDeleteNode = () => {
         alert({
           title: t('Form:deleteNode.alert.title'),
           message: t('Form:deleteNode.alert.message', {
-            name: label ? label : node.uuid,
+            name: label || node.uuid,
           }),
           acceptText: t('Form:deleteNode.alert.accept'),
           dismissText: t('Form:deleteNode.alert.dismiss'),

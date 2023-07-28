@@ -11,7 +11,12 @@ const CreatedAndModified = ({dateCreated, dateModified, size}) => {
       size={size}
       items={[
         ...(dateCreated
-          ? [{label: t('Common:created'), value: moment(dateCreated).fromNow()}]
+          ? [
+              {
+                label: t('Common:created'),
+                value: moment(dateCreated).fromNow(),
+              },
+            ]
           : []),
         ...(dateModified
           ? [
