@@ -5,15 +5,17 @@ import {useDispatch} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {alert} from 'arena-mobile-ui/utils';
 import {actions as formActions} from 'state/form';
 import {actions as recordActions} from 'state/records';
 
-import styles from './styles';
+import _styles from './styles';
 
 const SelectedRecordPanel = ({record, unSelect}) => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
+  const styles = useThemedStyles(_styles);
 
   const handleDelete = useCallback(() => {
     alert({
@@ -40,8 +42,8 @@ const SelectedRecordPanel = ({record, unSelect}) => {
   }, [dispatch, record]);
 
   return (
-    <View style={[styles.container]}>
-      <View style={[styles.closeButtonContainer]}>
+    <View style={styles.container}>
+      <View style={styles.closeButtonContainer}>
         <TouchableIcon iconName="close" onPress={unSelect} />
       </View>
       <Button

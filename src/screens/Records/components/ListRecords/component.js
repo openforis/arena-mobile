@@ -1,22 +1,15 @@
-import React, {useCallback} from 'react';
-import {useTranslation} from 'react-i18next';
-import {View} from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
+import React, {useCallback, useEffect} from 'react';
+import {useDispatch} from 'react-redux';
 
-import CreatedAndModified from 'arena-mobile-ui/components/CreatedAndModified';
-import CurrentItemLabel from 'arena-mobile-ui/components/CurrentItemLabel';
 import List from 'arena-mobile-ui/components/List';
 import Loading from 'arena-mobile-ui/components/List/Loading';
-import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
-import TouchableCard from 'arena-mobile-ui/components/TouchableCard';
-import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {actions as formActions} from 'state/form';
-import formSelectors from 'state/form/selectors';
+import {actions as recordsActions} from 'state/records';
 import {useRecordsUuidsSorted, useRecordsSummary} from 'state/records/hooks';
 
 import Empty from './Empty';
 import Error from './Error';
-import _styles from './styles';
+import RecordCard from './RecordCard';
 import SubPanel from './SubPanel';
 
 const ListEmptyComponent = ({loading, error}) => {
@@ -36,41 +29,19 @@ const ListEmptyComponent = ({loading, error}) => {
   return <Empty onPress={handleInitializeRecord} />;
 };
 
-const RecordCard = ({record, recordUuid, isSelected, onSelect}) => {
-  const styles = useThemedStyles(_styles);
-  const currentRecordUuid = useSelector(formSelectors.getRecordUuid);
-
-  const handlePress = useCallback(() => {
-    onSelect?.(record);
-  }, [record, onSelect]);
-
-  const {t} = useTranslation();
-
-  return (
-    <TouchableCard
-      onPress={handlePress}
-      customStyles={[styles.container, isSelected ? styles.selected : {}]}>
-      <View style={[styles.payload]}>
-        <TextBase type="bold">
-          {record.recordKey || t('Records:empty_key')}
-        </TextBase>
-        <CreatedAndModified
-          dateCreated={record?.dateCreated}
-          dateModified={record?.dateModified}
-        />
-      </View>
-      {currentRecordUuid === recordUuid && (
-        <CurrentItemLabel label={t('Records:current_record')} />
-      )}
-    </TouchableCard>
-  );
-};
-
 const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
   const keyExtractor = useCallback(item => item, []);
+  const dispatch = useDispatch();
 
   const recordsSummary = useRecordsSummary();
   const recordUuids = useRecordsUuidsSorted(recordsSummary);
+
+  useEffect(() => {
+    dispatch(recordsActions.getRemoteRecordsSummary());
+    return () => {
+      dispatch(recordsActions.cleanRemoteRecordsSummary());
+    };
+  }, [dispatch]);
 
   const renderItem = useCallback(
     ({item: recordUuid}) => (

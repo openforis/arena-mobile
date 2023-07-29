@@ -24,9 +24,9 @@ const useHasRecordToContinue = () => {
       return;
     }
 
-    if (currentRecord?.lastModifiedAt) {
+    if (currentRecord?.dateModified) {
       if (
-        moment().diff(moment(currentRecord?.lastModifiedAt), 'days') <=
+        moment().diff(moment(currentRecord?.dateModified), 'days') <=
         NUMBER_OF_DAYS_TO_CONTINUE_RECORD
       ) {
         setCurrentRecordUuid(currentRecord?.uuid);

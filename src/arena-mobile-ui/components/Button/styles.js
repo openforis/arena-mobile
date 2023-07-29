@@ -15,6 +15,7 @@ const styles = ({colors, baseStyles}) =>
     },
     neutral: {
       backgroundColor: colors.neutralLightest,
+      borderRadius: baseStyles.bases.BASE,
     },
     secondary: {
       backgroundColor: colors.backgroundLight,

@@ -5,8 +5,8 @@ const styles = ({colors, baseStyles}) =>
     buttonsContainer: {
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'space-between',
-      padding: baseStyles.bases.BASE_2,
+
+      padding: baseStyles.bases.BASE,
       paddingHorizontal: baseStyles.bases.BASE_4,
       alignItems: 'center',
       backgroundColor: colors.backgroundLight,
@@ -23,6 +23,15 @@ const styles = ({colors, baseStyles}) =>
       backgroundColor: 'transparent',
       width: Dimensions.get('window').width,
     },
+    spinnerContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: baseStyles.bases.BASE_2,
+      flex: 1,
+    },
+    colors,
   });
 
 export default styles;

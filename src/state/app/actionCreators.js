@@ -13,6 +13,7 @@ const {app} = createActions({
     username,
     password,
   }),
+  [types.CLEAN_ACCESS_DATA]: () => ({}),
   [types.SET_SERVER_URL]: ({serverUrl = ''}) => ({
     serverUrl,
   }),

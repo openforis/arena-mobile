@@ -11,7 +11,7 @@ import {selectors as appSelectors} from 'state/app';
 
 import _styles from './styles';
 
-const SubPanel = ({errorRemoteServer, info}) => {
+const ServerConnectionBar = ({errorRemoteServer, info}) => {
   const {t} = useTranslation();
   const {navigateTo, routes} = useNavigateTo();
   const currentServerUrl = useSelector(appSelectors.getServerUrl);
@@ -55,9 +55,9 @@ const SubPanel = ({errorRemoteServer, info}) => {
   );
 };
 
-SubPanel.defaultProps = {
+ServerConnectionBar.defaultProps = {
   errorRemoteServer: false,
   info: null,
 };
 
-export default SubPanel;
+export default ServerConnectionBar;
