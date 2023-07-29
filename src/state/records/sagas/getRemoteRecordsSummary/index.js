@@ -46,8 +46,8 @@ function* handleGetRemoteRecordsSummary() {
       recordsActions.setGettingRemoteRecordsSummaryError({
         error: true,
       }),
-    ),
-      console.log(e);
+    );
+    console.log(e);
   } finally {
     yield put(
       recordsActions.setGettingRemoteRecordsSummary({

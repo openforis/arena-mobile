@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@miblanchard/react-native-slider": "^2.3.1",
-    "@openforis/arena-core": "0.0.141",
+    "@openforis/arena-core": "0.0.152",
     "@react-native-async-storage/async-storage": "^1.18.2",
     "@react-native-community/hooks": "^3.0.0",
     "@react-native-community/masked-view": "^0.1.11",

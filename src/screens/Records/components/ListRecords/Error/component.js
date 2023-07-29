@@ -3,7 +3,7 @@ import {useTranslation} from 'react-i18next';
 
 import Empty from 'arena-mobile-ui/components/Empty';
 
-const Error = () => {
+const ErrorList = () => {
   const {t} = useTranslation();
 
   return (
@@ -15,4 +15,4 @@ const Error = () => {
   );
 };
 
-export default Error;
+export default ErrorList;
