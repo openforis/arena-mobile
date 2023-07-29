@@ -4,10 +4,11 @@ export {default as callbackAndJump} from './callbackAndJump';
 export {default as getNextNode} from './getNextNode';
 
 export const updateNodeAndDependants = async ({survey, record, node}) => {
-  const updateResult = await RecordUpdater.updateNode({
+  const updateResult = await RecordUpdater.updateAttributeValue({
     survey,
     record,
-    node,
+    attributeUuid: node.uuid,
+    value: node.value,
   });
   return updateResult;
 };
