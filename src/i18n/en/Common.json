@@ -29,5 +29,6 @@
   "version": "Version",
   "select_an_item": "Select an item...",
   "save": "Save",
-  "preview": "Preview"
+  "preview": "Preview",
+  "ok": "OK"
 }
