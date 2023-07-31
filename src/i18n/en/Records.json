@@ -58,5 +58,15 @@
       "cta_label": "Check"
     }
   },
-  "pull_to_refresh": "Pull to check remote status"
+  "pull_to_refresh": "Pull to check remote status",
+  "job_sending_records": {
+    "sending": {
+      "title": "Sending Records",
+      "info": "Please wait while we send the records to the server."
+    },
+    "done": {
+      "title": "Sending Successful!",
+      "info": "The records have been successfully sent to the server."      
+    }
+  }
 }
