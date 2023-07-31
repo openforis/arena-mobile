@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, {useMemo, useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View, StyleSheet} from 'react-native';
@@ -20,7 +21,10 @@ const CheckRemoteStatusBar = () => {
   const remoteRecordsSummaryError = useSelector(
     recordSelectors.getIsGettingRemoteRecordsSummaryError,
   );
-  const isReady = useSelector(recordSelectors.isRecordsRemoteSummaryReady);
+  const isReady = useSelector(recordSelectors.isRemoteRecordsSummaryReady);
+  const lastCheck = useSelector(
+    recordSelectors.getRemoteRecordsSummaryLastCheck,
+  );
 
   const {t} = useTranslation();
   const {navigateTo, routes} = useNavigateTo();
@@ -58,9 +62,17 @@ const CheckRemoteStatusBar = () => {
 
   return (
     <View style={containerStyle}>
-      <TextBase customStyle={styles.text} size="s">
-        {infoLabel}
-      </TextBase>
+      <View>
+        <TextBase customStyle={styles.text} size="s">
+          {infoLabel}
+        </TextBase>
+        <TextBase customStyle={styles.text} size="s">
+          {lastCheck &&
+            `${t('Common:last_check')}: ${moment(lastCheck).format(
+              'YYYY-MM-DD HH:mm',
+            )}`}
+        </TextBase>
+      </View>
       {!isReady && (
         <Button
           label={t('Records:subpanel.check_remote_records_button.label')}

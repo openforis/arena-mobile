@@ -30,5 +30,6 @@
   "select_an_item": "Select an item...",
   "save": "Save",
   "preview": "Preview",
-  "ok": "OK"
+  "ok": "OK",
+  "last_check": "Last check",
 }
