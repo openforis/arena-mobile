@@ -16,7 +16,7 @@ import UploadDataButton from './UploadDataButton';
 const SubPanel = () => {
   const styles = useThemedStyles(_styles);
 
-  const isReady = useSelector(recordSelectors.isRecordsRemoteSummaryReady);
+  const isReady = useSelector(recordSelectors.isRemoteRecordsSummaryReady);
   const loading = useSelector(recordSelectors.getIsGettingRemoteRecordsSummary);
   useEffect(() => {
     return () => {};
