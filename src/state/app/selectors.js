@@ -54,6 +54,27 @@ const getColorScheme = createSelector(
   style => style?.colorScheme || 'light',
 );
 
+/* Image setting */
+const getImagesCompressQuality = createSelector(
+  getPreferences,
+  preferences => preferences?.settings?.images?.compressQuality || 0.5,
+);
+
+const getImagesCompressMaxHeight = createSelector(
+  getPreferences,
+  preferences => preferences?.settings?.images?.compressMaxHeight || 1024,
+);
+
+const getImagesCompressMaxWidth = createSelector(
+  getPreferences,
+  preferences => preferences?.settings?.images?.compressMaxWidth || 1024,
+);
+
+const getIsMaxResolution = createSelector(
+  getPreferences,
+  preferences => preferences?.settings?.images?.maxResolution || false,
+);
+
 export default {
   getAccessData,
   getServerUrl,
@@ -75,4 +96,10 @@ export default {
 
   /* Preferences settings */
   getSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields,
+
+  /* Image setting */
+  getImagesCompressQuality,
+  getImagesCompressMaxHeight,
+  getImagesCompressMaxWidth,
+  getIsMaxResolution,
 };
