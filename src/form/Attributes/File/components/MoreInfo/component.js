@@ -5,17 +5,19 @@ import {View} from 'react-native';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import LabelsAndValues from 'arena-mobile-ui/components/LabelsAndValues';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
-import style from './styles';
+import _styles from './styles';
 
 const MoreInfo = ({node}) => {
+  const styles = useThemedStyles(_styles);
   const [collapsed, setCollapsed] = useState(false);
   const {t} = useTranslation();
   const toggleCollapsed = useCallback(() => {
     setCollapsed(prevValue => !prevValue);
   }, [setCollapsed]);
   return (
-    <View style={style.container}>
+    <View style={styles.container}>
       <Button
         type="ghostBlack"
         icon={<Icon name={collapsed ? 'chevron-down' : 'chevron-right'} />}
