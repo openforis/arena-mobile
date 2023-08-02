@@ -15,6 +15,31 @@ import {selectors as appSelectors, actions as appActions} from 'state/app';
 
 import _styles from './styles';
 
+const SchemaPicker = ({isSelected, theme, setTheme}) => {
+  const styles = useThemedStyles(_styles);
+  const handleSelectTheme = useCallback(() => {
+    setTheme(theme);
+  }, [setTheme, theme]);
+
+  const {t} = useTranslation();
+
+  return (
+    <Pressable onPress={handleSelectTheme}>
+      <Card>
+        <View style={styles.cardContent}>
+          <Icon
+            name={isSelected ? 'radiobox-marked' : 'radiobox-blank'}
+            size="m"
+          />
+          <TextBase type="header" customStyle={styles.cardTitle}>
+            {t(`Settings:style.ColorScheme.screen.options.${theme}`)}
+          </TextBase>
+        </View>
+      </Card>
+    </Pressable>
+  );
+};
+
 const SettingsStyleColorScheme = () => {
   const styles = useThemedStyles(_styles);
   const colorScheme = useSelector(appSelectors.getColorScheme);
@@ -72,7 +97,7 @@ const SettingsStyleColorScheme = () => {
         </Header>
         <ScrollView>
           <View style={styles.container}>
-            <TextBase type="header" customStyle={styles.title}>
+            <TextBase type="header">
               {t('Settings:style.ColorScheme.screen.header')}{' '}
             </TextBase>
 
@@ -80,49 +105,18 @@ const SettingsStyleColorScheme = () => {
 
             <View style={{height: 100}} />
             {/* create two card touchables one with the light theme and the other with the dark theme */}
-            <Pressable onPress={() => setColorSchemeSelected('light')}>
-              <Card
-                customStyle={[
-                  styles.card,
-                  colorSchemeSelected === 'light' && styles.cardSelected,
-                ]}>
-                <View style={styles.cardContent}>
-                  <Icon
-                    name={
-                      colorSchemeSelected === 'light'
-                        ? 'radiobox-marked'
-                        : 'radiobox-blank'
-                    }
-                    size="m"
-                  />
-                  <TextBase type="header" customStyle={styles.cardTitle}>
-                    {t('Settings:style.ColorScheme.screen.options.light')}
-                  </TextBase>
-                </View>
-              </Card>
-            </Pressable>
 
-            <Pressable onPress={() => setColorSchemeSelected('dark')}>
-              <Card
-                customStyle={[
-                  styles.card,
-                  colorSchemeSelected === 'dark' && styles.cardSelected,
-                ]}>
-                <View style={styles.cardContent}>
-                  <Icon
-                    name={
-                      colorSchemeSelected === 'dark'
-                        ? 'radiobox-marked'
-                        : 'radiobox-blank'
-                    }
-                    size="m"
-                  />
-                  <TextBase type="header" customStyle={styles.cardTitle}>
-                    {t('Settings:style.ColorScheme.screen.options.dark')}
-                  </TextBase>
-                </View>
-              </Card>
-            </Pressable>
+            <SchemaPicker
+              isSelected={colorSchemeSelected === 'light'}
+              theme={'light'}
+              setTheme={setColorSchemeSelected}
+            />
+
+            <SchemaPicker
+              isSelected={colorSchemeSelected === 'dark'}
+              theme={'dark'}
+              setTheme={setColorSchemeSelected}
+            />
           </View>
 
           <View style={styles.buttonsContainer}>

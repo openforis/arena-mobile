@@ -10,15 +10,11 @@ const styles = ({baseStyles}) =>
     },
     title: {
       fontSize: 24,
-      fontWeight: 'bold',
     },
-    selectorContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+    info: {
+      fontSize: 16,
     },
     sliderContainer: {
-      flex: 1,
       paddingHorizontal: 16,
     },
     buttonsContainer: {

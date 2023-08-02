@@ -10,7 +10,7 @@ const Icon = ({name, size, color}) => {
   return (
     <Icons
       name={name}
-      size={styles.sizes[size]}
+      size={isNaN(size) ? styles.sizes[size] : size}
       color={color || styles.colors.primaryText}
     />
   );
