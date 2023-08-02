@@ -65,7 +65,7 @@ const SettingsSurveyTaxonomies = () => {
               {t('Settings:survey.taxonomies.screen.header')}
             </TextBase>
 
-            <TextBase>
+            <TextBase type="secondaryLight">
               {t('Settings:survey.taxonomies.screen.description')}
             </TextBase>
 

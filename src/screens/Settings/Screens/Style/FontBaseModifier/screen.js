@@ -1,15 +1,15 @@
-import {Slider} from '@miblanchard/react-native-slider';
 import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useState, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View, ScrollView, Text} from 'react-native';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Card from 'arena-mobile-ui/components/Card';
 import Header from 'arena-mobile-ui/components/Header';
+import Icon from 'arena-mobile-ui/components/Icon';
 import Layout from 'arena-mobile-ui/components/Layout';
+import Slider from 'arena-mobile-ui/components/Slider';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {
@@ -105,61 +105,50 @@ const SettingsStyleFontBaseModifier = () => {
         </Header>
         <ScrollView>
           <View style={styles.container}>
-            <TextBase type="header" customStyle={styles.title}>
-              {t('Settings:style.TextAndSpacingSize.screen.textSize.title')}{' '}
-            </TextBase>
-
-            <TextBase type="secondary">
-              {t('Settings:style.TextAndSpacingSize.screen.textSize.info')}{' '}
-            </TextBase>
-
-            <View style={styles.selectorContainer}>
-              <Icons name="format-font-size-decrease" size={40} />
-              <View style={styles.sliderContainer}>
-                <Slider
-                  value={baseFontSizeSelected}
-                  onValueChange={setBaseFontSizeSelected}
-                  minimumValue={baseFontRanges[0]}
-                  maximumValue={baseFontRanges[baseFontRanges.length - 1]}
-                />
-              </View>
-              <Icons name="format-font-size-increase" size={40} />
-            </View>
-            <Button
-              type="ghost"
-              onPress={() => setBaseFontSizeSelected(1)}
-              label={t(
+            <Slider
+              title={t(
+                'Settings:style.TextAndSpacingSize.screen.textSize.title',
+              )}
+              info={t('Settings:style.TextAndSpacingSize.screen.textSize.info')}
+              value={baseFontSizeSelected}
+              onValueChange={setBaseFontSizeSelected}
+              minimumValue={baseFontRanges[0]}
+              maximumValue={baseFontRanges[baseFontRanges.length - 1]}
+              onReset={() => setBaseFontSizeSelected(1)}
+              resetLabel={t(
                 'Settings:style.TextAndSpacingSize.screen.textSize.reset',
               )}
+              LeftComponent={
+                <Icon name="format-font-size-decrease" size={40} />
+              }
+              RightComponent={
+                <Icon name="format-font-size-increase" size={40} />
+              }
+              customSliderContainerStyle={styles.sliderContainer}
+              customTitleStyle={styles.title}
+              customInfoStyle={styles.info}
             />
 
-            <TextBase type="header" customStyle={styles.title}>
-              {t('Settings:style.TextAndSpacingSize.screen.spacingSize.title')}{' '}
-            </TextBase>
-
-            <TextBase type="secondary">
-              {t('Settings:style.TextAndSpacingSize.screen.spacingSize.info')}{' '}
-            </TextBase>
-
-            <View style={styles.selectorContainer}>
-              <Icons name="arrow-collapse" size={40} />
-              <View style={styles.sliderContainer}>
-                <Slider
-                  value={baseModifierSelected}
-                  onValueChange={setBaseModifierSelected}
-                  minimumValue={baseRanges[0]}
-                  maximumValue={baseRanges[baseRanges.length - 1]}
-                />
-              </View>
-              <Icons name="arrow-expand" size={40} />
-            </View>
-
-            <Button
-              type="ghost"
-              onPress={() => setBaseModifierSelected(1)}
-              label={t(
+            <Slider
+              title={t(
+                'Settings:style.TextAndSpacingSize.screen.spacingSize.title',
+              )}
+              info={t(
+                'Settings:style.TextAndSpacingSize.screen.spacingSize.info',
+              )}
+              value={baseModifierSelected}
+              onValueChange={setBaseModifierSelected}
+              minimumValue={baseRanges[0]}
+              maximumValue={baseRanges[baseRanges.length - 1]}
+              onReset={() => setBaseModifierSelected(1)}
+              resetLabel={t(
                 'Settings:style.TextAndSpacingSize.screen.spacingSize.reset',
               )}
+              LeftComponent={<Icon name="arrow-collapse" size={40} />}
+              RightComponent={<Icon name="arrow-expand" size={40} />}
+              customSliderContainerStyle={styles.sliderContainer}
+              customTitleStyle={styles.title}
+              customInfoStyle={styles.info}
             />
           </View>
 
