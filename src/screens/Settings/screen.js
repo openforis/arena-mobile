@@ -1,6 +1,6 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, ScrollView, TouchableOpacity} from 'react-native';
+import {View, ScrollView, TouchableOpacity, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
@@ -9,6 +9,7 @@ import Header from 'arena-mobile-ui/components/Header';
 import Icon from 'arena-mobile-ui/components/Icon';
 import Layout from 'arena-mobile-ui/components/Layout';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import baseStyles from 'arena-mobile-ui/styles';
 import {useNavigateTo} from 'navigation/hooks';
 import {selectors as appSelectors} from 'state/app';
@@ -17,7 +18,7 @@ import formPreferencesSelectors from 'state/form/selectors/preferences';
 import {selectors as userSelectors} from 'state/user';
 
 import DevMode from './DevMode';
-import styles from './styles';
+import _styles from './styles';
 import Version from './Version';
 
 const extractFirstCharacters = (str, numberOfCharacters) => {
@@ -42,8 +43,16 @@ const _extractInitials = (value = '') => {
 };
 
 const Section = ({title, children, subSection = false}) => {
+  const styles = useThemedStyles(_styles);
+  const containerStyle = useMemo(() => {
+    return StyleSheet.compose(
+      styles.container,
+      subSection && styles.subSection,
+    );
+  }, [styles, subSection]);
+
   return (
-    <View style={[styles.container, (subSection && {marginTop: 0}: {})]}>
+    <View style={containerStyle}>
       {title && (
         <View style={{paddingVertical: baseStyles.bases.BASE_2}}>
           <TextBase
@@ -65,6 +74,7 @@ const SectionCard = ({
   iconName,
   isNavigation = true,
 }) => {
+  const styles = useThemedStyles(_styles);
   return (
     <TouchableOpacity onPress={onPress}>
       <Card
@@ -114,6 +124,7 @@ const FormSettings = () => {
   );
 };
 const ConnectionSettingsSection = () => {
+  const styles = useThemedStyles(_styles);
   const {navigateTo, routes} = useNavigateTo();
   const {t} = useTranslation();
 
@@ -158,7 +169,26 @@ const ConnectionSettingsSection = () => {
   );
 };
 
+const ImagesQualityAndSizeSettings = () => {
+  const {navigateTo, routes} = useNavigateTo();
+  const {t} = useTranslation();
+
+  return (
+    <Section title={t('Settings:images_quality_and_size.title')}>
+      <SectionCard
+        position="only"
+        onPress={navigateTo({
+          route: routes.SETTINGS_IMAGES_QUALITY_AND_SIZE,
+        })}
+        title={t('Settings:images_quality_and_size.title')}
+        iconName="image-outline"
+      />
+    </Section>
+  );
+};
+
 const Settings = () => {
+  const styles = useThemedStyles(_styles);
   const {navigateTo, routes} = useNavigateTo();
   const {t} = useTranslation();
 
@@ -214,6 +244,7 @@ const Settings = () => {
                 />
               </Section>
 
+              <ImagesQualityAndSizeSettings />
               <FormSettings />
             </>
           ) : null}

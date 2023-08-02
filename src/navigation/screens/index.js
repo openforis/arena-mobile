@@ -48,4 +48,8 @@ export const SCREENS = {
     component: SettingsStyleColorScheme,
     options: {gestureEnabled: false},
   },
+  [KEYS.SETTINGS_IMAGES_QUALITY_AND_SIZE]: {
+    component: SettingsStyleColorScheme,
+    options: {gestureEnabled: false},
+  },
 };
