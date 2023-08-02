@@ -3,6 +3,7 @@ import * as Form from 'screens/Form/constants';
 import * as Home from 'screens/Home/constants';
 import * as Records from 'screens/Records/constants';
 import * as Settings from 'screens/Settings/constants';
+import * as SettingsImagesQualityAndSize from 'screens/Settings/Screens/ImagesQualityAndSize/constants';
 /* Settings */
 import * as SettingsStyleColorScheme from 'screens/Settings/Screens/Style/ColorScheme/constants';
 import * as SettingsStyleFontBaseModifier from 'screens/Settings/Screens/Style/FontBaseModifier/constants';
@@ -22,6 +23,7 @@ export const KEYS = {
   [SettingsSurveyTaxonomies.key]: [SettingsSurveyTaxonomies.key],
   [SettingsStyleFontBaseModifier.key]: [SettingsStyleFontBaseModifier.key],
   [SettingsStyleColorScheme.key]: [SettingsStyleColorScheme.key],
+  [SettingsImagesQualityAndSize.key]: [SettingsImagesQualityAndSize.key],
 };
 
 export const ROUTES = {
@@ -36,4 +38,5 @@ export const ROUTES = {
   [SettingsSurveyTaxonomies.key]: SettingsSurveyTaxonomies.route,
   [SettingsStyleFontBaseModifier.key]: SettingsStyleFontBaseModifier.route,
   [SettingsStyleColorScheme.key]: SettingsStyleColorScheme.route,
+  [SettingsImagesQualityAndSize.key]: SettingsImagesQualityAndSize.route,
 };
