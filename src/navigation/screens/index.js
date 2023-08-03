@@ -3,6 +3,7 @@ import Form from 'screens/Form';
 import Home from 'screens/Home';
 import Records from 'screens/Records';
 import Settings from 'screens/Settings';
+import SettingsImagesQualityAndSize from 'screens/Settings/Screens/ImagesQualityAndSize';
 /* Settings */
 import SettingsStyleColorScheme from 'screens/Settings/Screens/Style/ColorScheme';
 import SettingsStyleFontBaseModifier from 'screens/Settings/Screens/Style/FontBaseModifier';
@@ -49,7 +50,7 @@ export const SCREENS = {
     options: {gestureEnabled: false},
   },
   [KEYS.SETTINGS_IMAGES_QUALITY_AND_SIZE]: {
-    component: SettingsStyleColorScheme,
+    component: SettingsImagesQualityAndSize,
     options: {gestureEnabled: false},
   },
 };
