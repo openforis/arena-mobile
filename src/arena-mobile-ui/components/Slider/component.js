@@ -64,7 +64,9 @@ const SliderComponent = ({
         {RightComponent}
       </View>
 
-      <Button type="ghost" onPress={onReset} label={resetLabel} />
+      {resetLabel && (
+        <Button type="ghost" onPress={onReset} label={resetLabel} />
+      )}
     </>
   );
 };
