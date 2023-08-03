@@ -4,11 +4,13 @@ import {useSelector} from 'react-redux';
 
 import Icon from 'arena-mobile-ui/components/Icon';
 import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import surveySelectors from 'state/survey/selectors';
 
-import styles from './styles';
+import _styles from './styles';
 
 const Header = ({collapsed, setCollapsed}) => {
+  const styles = useThemedStyles(_styles);
   const job = useSelector(surveySelectors.getJob);
   const uploadProgress = useSelector(surveySelectors.getUploadProgress);
 

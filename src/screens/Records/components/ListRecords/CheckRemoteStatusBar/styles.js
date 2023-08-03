@@ -24,9 +24,12 @@ const styles = ({colors, baseStyles}) =>
       color: colors.neutral,
     },
     button: {
-      paddingVertical: baseStyles.bases.BASE_2,
+      paddingVertical: 0,
       margin: 0,
       maxWidth: 180,
+    },
+    buttonText: {
+      marginRight: baseStyles.bases.BASE_2,
     },
   });
 

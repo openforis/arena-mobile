@@ -16,10 +16,13 @@ const CellRendererComponent = ({children}) => {
 const List = ({
   data,
   ListEmptyComponent,
+  ListFooterComponent,
   keyExtractor,
   renderItem,
   stickyHeaderIndices,
   extraData,
+  onRefresh,
+  refreshing,
 }) => {
   return (
     <View style={styles.container}>
@@ -30,7 +33,7 @@ const List = ({
         renderItem={renderItem}
         ListEmptyComponent={ListEmptyComponent}
         keyExtractor={keyExtractor}
-        ListFooterComponent={Footer}
+        ListFooterComponent={ListFooterComponent}
         keyboardDismissMode="none"
         nestedScrollEnabled={true}
         keyboardShouldPersistTaps={'handled'}
@@ -39,6 +42,8 @@ const List = ({
         extraData={extraData}
         maxToRenderPerBatch={4}
         CellRendererComponent={CellRendererComponent}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
       />
     </View>
   );
@@ -48,7 +53,10 @@ List.defaultProps = {
   ListEmptyComponent: () => null,
   stickyHeaderIndices: [],
 
+  ListFooterComponent: Footer,
   extraData: null,
+  onRefresh: () => {},
+  refreshing: false,
 };
 
 export default List;

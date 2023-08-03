@@ -4,11 +4,13 @@ import {View} from 'react-native';
 
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 
+import useThemedStyles from '../../../../hooks/useThemedStyles';
 import ProgressBar from '../../../ProgressBar';
 
-import styles, {MAX_WIDTH} from './styles';
+import _styles, {MAX_WIDTH} from './styles';
 
 const Job = ({job, level = 0, index = 0}) => {
+  const styles = useThemedStyles(_styles);
   const {t} = useTranslation();
 
   return (

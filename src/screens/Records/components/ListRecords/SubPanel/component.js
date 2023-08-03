@@ -8,7 +8,6 @@ import {selectors as recordSelectors} from 'state/records';
 import CreateNewRecord from '../../../components/CreateNewRecord';
 
 import CheckRemoteRecordsButton from './CheckRemoteRecordsButton';
-import CheckRemoteStatusBar from './CheckRemoteStatusBar';
 import FiltersAndSorters from './FiltersAndSorters';
 import _styles from './styles';
 import UploadDataButton from './UploadDataButton';
@@ -17,7 +16,7 @@ import UploadDataButton from './UploadDataButton';
 const SubPanel = () => {
   const styles = useThemedStyles(_styles);
 
-  const isReady = useSelector(recordSelectors.isRecordsRemoteSummaryReady);
+  const isReady = useSelector(recordSelectors.isRemoteRecordsSummaryReady);
   const loading = useSelector(recordSelectors.getIsGettingRemoteRecordsSummary);
   useEffect(() => {
     return () => {};
@@ -25,8 +24,6 @@ const SubPanel = () => {
 
   return (
     <>
-      {!loading && <CheckRemoteStatusBar />}
-
       <View style={styles.buttonsContainer}>
         <View style={styles.createNewRecordContainer}>
           <CreateNewRecord />

@@ -51,11 +51,22 @@
       "cta_label": "Check settings"
     },
     "success": {
-      "info": "Remote status checked from: {{ serverUrl }}"
+      "info": "Remote status successfully checked from: {{ serverUrl }}"
     },
     "info": {
       "info": "Offline mode",
       "cta_label": "Check"
+    }
+  },
+  "pull_to_refresh": "Pull to check remote status",
+  "job_sending_records": {
+    "sending": {
+      "title": "Sending Records",
+      "info": "Please wait while we send the records to the server."
+    },
+    "done": {
+      "title": "Sending Successful!",
+      "info": "The records have been successfully sent to the server."      
     }
   }
 }

@@ -24,8 +24,8 @@ const RecordCard = ({record, recordUuid, isSelected, onSelect}) => {
   const styles = useThemedStyles(_styles);
   const currentRecordUuid = useSelector(formSelectors.getRecordUuid);
 
-  const isRecordsRemoteSummaryReady = useSelector(
-    recordsSelectors.isRecordsRemoteSummaryReady,
+  const isRemoteRecordsSummaryReady = useSelector(
+    recordsSelectors.isRemoteRecordsSummaryReady,
   );
 
   const {t} = useTranslation();
@@ -55,7 +55,7 @@ const RecordCard = ({record, recordUuid, isSelected, onSelect}) => {
             dateModified={record?.dateModified}
           />
 
-          {isRecordsRemoteSummaryReady && (
+          {isRemoteRecordsSummaryReady && (
             <RecordStatus record={record} recordUuid={recordUuid} />
           )}
         </View>

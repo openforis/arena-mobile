@@ -22,9 +22,14 @@ const getRemoteRecordsSummaryState = createSelector(
   state => state?.remoteRecordsSummary || {},
 );
 
-const isRecordsRemoteSummaryReady = createSelector(
+const isRemoteRecordsSummaryReady = createSelector(
   getRemoteRecordsSummaryState,
   remoteRecordsSummary => remoteRecordsSummary.isReady,
+);
+
+const getRemoteRecordsSummaryLastCheck = createSelector(
+  getRemoteRecordsSummaryState,
+  remoteRecordsSummary => remoteRecordsSummary.lastCheck,
 );
 
 const getRemoteRecordSummary = createCachedSelector(
@@ -71,7 +76,8 @@ const getRecordKey = createCachedSelector(
 export default {
   getRemoteRecordsSummary: getRemoteRecordsSummaryState,
   getRemoteRecordSummary,
-  isRecordsRemoteSummaryReady,
+  isRemoteRecordsSummaryReady,
+  getRemoteRecordsSummaryLastCheck,
   getIsGettingRemoteRecordsSummary,
   getIsGettingRemoteRecordsSummaryError,
   getRecordsByUuid: getRecordStateData,

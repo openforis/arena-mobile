@@ -1,23 +1,18 @@
 import React, {useRef, useEffect} from 'react';
 import {View, Dimensions, Animated} from 'react-native';
 
-import * as colors from 'arena-mobile-ui/colors';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
-import styles from './styles';
+import _styles from './styles';
 
 const {width} = Dimensions.get('screen');
 
-const ProgressBar = ({
-  progress,
-  success,
-  maxWidth = width - 24,
-  height = 4,
-  main = false,
-}) => {
+const ProgressBar = ({progress, success, maxWidth, height, main}) => {
+  const styles = useThemedStyles(_styles);
   const barWidth = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     Animated.timing(barWidth, {
-      toValue: (progress * maxWidth) / 100,
+      toValue: (Math.max(10, progress) * maxWidth) / 100,
       duration: 150,
       useNativeDriver: false,
     }).start();
@@ -33,7 +28,9 @@ const ProgressBar = ({
             width: maxWidth,
 
             backgroundColor:
-              main || success ? colors.neutralLighter : colors.errorLight,
+              main || success
+                ? styles.colors.neutralLighter
+                : styles.colors.errorLight,
           },
         ]}>
         <Animated.View
@@ -42,13 +39,23 @@ const ProgressBar = ({
             {
               height,
               width: barWidth,
-              backgroundColor: success ? colors.success : colors.error,
+              backgroundColor: success
+                ? styles.colors.success
+                : styles.colors.error,
             },
           ]}
         />
       </View>
     </View>
   );
+};
+
+ProgressBar.defaultProps = {
+  progress: 0,
+  success: true,
+  maxWidth: width - 24,
+  height: 4,
+  main: false,
 };
 
 export default ProgressBar;

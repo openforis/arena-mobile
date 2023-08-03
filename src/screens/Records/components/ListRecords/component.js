@@ -1,15 +1,25 @@
+import {t} from 'i18next';
 import React, {useCallback, useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+import {useTranslation} from 'react-i18next';
+import {View} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 
 import List from 'arena-mobile-ui/components/List';
 import Loading from 'arena-mobile-ui/components/List/Loading';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {actions as formActions} from 'state/form';
-import {actions as recordsActions} from 'state/records';
+import {
+  actions as recordsActions,
+  selectors as recordSelectors,
+} from 'state/records';
 import {useRecordsUuidsSorted, useRecordsSummary} from 'state/records/hooks';
 
+import CheckRemoteStatusBar from './CheckRemoteStatusBar';
 import Empty from './Empty';
 import Error from './Error';
 import RecordCard from './RecordCard';
+import _styles from './styles';
 import SubPanel from './SubPanel';
 
 const ListEmptyComponent = ({loading, error}) => {
@@ -29,6 +39,18 @@ const ListEmptyComponent = ({loading, error}) => {
   return <Empty onPress={handleInitializeRecord} />;
 };
 
+const FooterComponent = () => {
+  const styles = useThemedStyles(_styles);
+
+  const {t} = useTranslation();
+  return (
+    <View style={styles.footer}>
+      <TextBase type="secondary" size="xs">
+        {t('Records:pull_to_refresh')}
+      </TextBase>
+    </View>
+  );
+};
 const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
   const keyExtractor = useCallback(item => item, []);
   const dispatch = useDispatch();
@@ -36,8 +58,12 @@ const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
   const recordsSummary = useRecordsSummary();
   const recordUuids = useRecordsUuidsSorted(recordsSummary);
 
-  useEffect(() => {
+  const handleGetRemoteRecordsSummary = useCallback(() => {
     dispatch(recordsActions.getRemoteRecordsSummary());
+  }, [dispatch]);
+
+  useEffect(() => {
+    //dispatch(recordsActions.getRemoteRecordsSummary());
     return () => {
       dispatch(recordsActions.cleanRemoteRecordsSummary());
     };
@@ -55,17 +81,22 @@ const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
     [recordsSummary, selectedRecordUuid, setSelectedRecord],
   );
 
+  const loading = useSelector(recordSelectors.getIsGettingRemoteRecordsSummary);
   if (recordUuids.length <= 0) {
     return <ListEmptyComponent />;
   }
 
   return (
     <>
+      {!loading && <CheckRemoteStatusBar />}
       <List
         data={recordUuids}
         ListEmptyComponent={ListEmptyComponent}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
+        onRefresh={handleGetRemoteRecordsSummary}
+        refreshing={false}
+        ListFooterComponent={FooterComponent}
       />
 
       {recordUuids.length > 0 && <SubPanel />}
