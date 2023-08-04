@@ -34,6 +34,17 @@
       }
     }
   },
+  "images_quality_and_size": {
+    "title": "Images Quality And Size",
+    "screen": {
+      "header": "Images Quality And Size",
+      "description": "Select the quality of the images.",
+      "max_resolution": {
+        "title": "Force max resolution",
+      }
+    }
+  },
+
   "style": {
     "title": "Style",
     "TextAndSpacingSize": {
