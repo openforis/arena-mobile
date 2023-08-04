@@ -29,7 +29,7 @@ const ForceMaxResolution = () => {
 
   return (
     <Pressable onPress={handleSetIsMaxResolution} style={styles.container}>
-      <TextBase>
+      <TextBase type="bolder">
         {t('Settings:images_quality_and_size.screen.max_resolution.title')}
       </TextBase>
       <Switch

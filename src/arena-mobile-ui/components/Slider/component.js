@@ -22,6 +22,7 @@ const SliderComponent = ({
   customTitleStyle,
   customInfoStyle,
   customSliderContainerStyle,
+  disabled,
 }) => {
   const styles = useThemedStyles(_styles);
 
@@ -59,6 +60,7 @@ const SliderComponent = ({
             onValueChange={onValueChange}
             minimumValue={minimumValue}
             maximumValue={maximumValue}
+            disabled={disabled}
           />
         </View>
         {RightComponent}

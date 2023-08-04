@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-const styles = ({colors, baseStyles}) =>
+const styles = ({baseStyles}) =>
   StyleSheet.create({
     container: {
       flex: 1,
