@@ -23,13 +23,13 @@ const appPreferences = handleActions(
       ...state,
       compressMaxWidth,
     }),
-    [actions.setIsMaxResolution]: (state, {payload: {isMaxResolution}}) => {
-      console.log(isMaxResolution);
-      return {
-        ...state,
-        isMaxResolution,
-      };
-    },
+    [actions.setIsMaxResolution]: (state, {payload: {isMaxResolution}}) => ({
+      ...state,
+      isMaxResolution,
+    }),
+
+    [actions.resetImagesQualityAndSize]: () =>
+      initialState.preferences?.settings?.images,
   },
   initialState.preferences?.settings?.images,
 );

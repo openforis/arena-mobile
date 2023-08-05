@@ -2,12 +2,14 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View, ScrollView} from 'react-native';
+import {useDispatch} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Header from 'arena-mobile-ui/components/Header';
 import Layout from 'arena-mobile-ui/components/Layout';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
+import {actions as appActions} from 'state/app';
 
 import ForceMaxResolution from './ForceMaxResolution';
 import ImageQualitySettings from './ImageQualitySettings';
@@ -18,11 +20,17 @@ const SettingsImagesQualityAndSize = () => {
 
   const navigation = useNavigation();
 
+  const dispatch = useDispatch();
+
   const {t} = useTranslation();
 
   const handleSave = useCallback(() => {
     navigation.goBack();
   }, [navigation]);
+
+  const handleReset = useCallback(() => {
+    dispatch(appActions.resetImagesQualityAndSize());
+  }, [dispatch]);
 
   return (
     <Layout bottomStyle="background" topStyle="primary">
@@ -44,14 +52,16 @@ const SettingsImagesQualityAndSize = () => {
 
             <ForceMaxResolution />
             <ImageQualitySettings />
+            <Button
+              type="ghost"
+              onPress={handleReset}
+              label={t(
+                'Settings:style.TextAndSpacingSize.screen.textSize.reset',
+              )}
+            />
           </View>
 
           <View style={styles.buttonsContainer}>
-            <Button
-              type="ghost"
-              onPress={navigation.goBack}
-              label={t('Common:cancel')}
-            />
             <Button
               type="primary"
               onPress={handleSave}
