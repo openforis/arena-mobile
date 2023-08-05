@@ -5,11 +5,14 @@ const styles = ({colors, baseStyles}) =>
     container: {
       backgroundColor: colors.backgroundLighter,
 
-      borderRadius: baseStyles.bases.BASE_16,
-      padding: baseStyles.bases.BASE_16,
+      borderRadius: baseStyles.bases.BASE_4,
+      padding: baseStyles.bases.BASE_4,
     },
     disabled: {
       opacity: 0.5,
+    },
+    sliderContainer: {
+      marginBottom: baseStyles.bases.BASE_6,
     },
   });
 
