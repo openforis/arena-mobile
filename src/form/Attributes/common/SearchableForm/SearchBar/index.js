@@ -1,14 +1,21 @@
 import throttle from 'lodash.throttle';
 import moment from 'moment/moment';
-import React, {useCallback, useState} from 'react';
-import {Keyboard, View} from 'react-native';
+import React, {useCallback, useMemo, useState} from 'react';
+import {Keyboard, View, StyleSheet} from 'react-native';
 
 import Input from 'arena-mobile-ui/components/Input';
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
-import styles from './styles';
+import _styles from './styles';
 
-const SearchBar = ({handleStopToSearch, setSearchText, autoFocus}) => {
+const SearchBar = ({
+  handleStopToSearch,
+  setSearchText,
+  autoFocus,
+  containerStyle,
+}) => {
+  const styles = useThemedStyles(_styles);
   const [clear, setClear] = useState(false);
 
   const _handleStopToSearch = useCallback(() => {
@@ -22,8 +29,11 @@ const SearchBar = ({handleStopToSearch, setSearchText, autoFocus}) => {
     text => throttle(setSearchText, 500)(text),
     [setSearchText],
   );
+  const _containerStyle = useMemo(() => {
+    return StyleSheet.compose(styles.selectBarContainer, containerStyle);
+  }, [containerStyle, styles.selectBarContainer]);
   return (
-    <View style={styles.selectBarContainer}>
+    <View style={_containerStyle}>
       <View style={styles.selectContainer}>
         <Input
           onChangeText={deboundedSearch}
