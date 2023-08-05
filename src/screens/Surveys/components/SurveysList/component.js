@@ -2,6 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {useSelector} from 'react-redux';
 
 import Loading from 'arena-mobile-ui/components/List/Loading';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import SearchBar from 'form/Attributes/common/SearchableForm/SearchBar';
 import {
   hooks as surveysHooks,
@@ -13,7 +14,9 @@ import List from '../common/List';
 
 import Empty from './Empty';
 import Error from './Error';
+import _styles from './styles';
 import SubPanel from './SubPanel';
+import ServerConnectionBar from './SubPanel/ServerConnectionBar';
 import {prepareSurveys} from './utils';
 
 const ListEmptyComponent = ({
@@ -43,6 +46,7 @@ const SurveysList = ({
   setSurveysOrigin,
   setSelectedSurvey,
 }) => {
+  const styles = useThemedStyles(_styles);
   const localSurveys = useSelector(surveysSelectors.getSurveysAsList);
 
   const [sortCriteriaIndex, setSortCriteriaIndex] = useState(0);
@@ -84,7 +88,15 @@ const SurveysList = ({
 
   return (
     <>
-      <SearchBar setSearchText={setSearchText} autoFocus={false} />
+      <ServerConnectionBar
+        errorRemoteServer={errorRemoteServer}
+        info={surveysOrigin !== 'remote'}
+      />
+      <SearchBar
+        setSearchText={setSearchText}
+        autoFocus={false}
+        containerStyle={styles.searchBarcontainerStyle}
+      />
       <List
         data={_surveys}
         surveysOrigin={surveysOrigin}
