@@ -67,6 +67,7 @@ const {app} = createActions({
   [types.SET_IS_MAX_RESOLUTION]: ({isMaxResolution = false}) => ({
     isMaxResolution,
   }),
+  [types.RESET_IMAGES_QUALITY_AND_SIZE]: () => ({}),
   /* Language settings */
 });
 
