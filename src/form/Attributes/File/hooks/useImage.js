@@ -1,4 +1,5 @@
 import {useCallback} from 'react';
+import {Platform} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import {useSelector} from 'react-redux';
 
@@ -55,7 +56,10 @@ const useGetImage = ({cropping = false} = {}) => {
             ...(isMaxResolution
               ? {}
               : {
-                  compressImageQuality: compressQuality,
+                  compressImageQuality:
+                    Platform.OS === 'ios'
+                      ? Math.min(0.8, compressQuality) // this is because in IOS 0.8 is more than enough
+                      : compressQuality,
                   compressImageMaxHeight: compressMaxHeight,
                   compressImageMaxWidth: compressMaxWidth,
                 }),
