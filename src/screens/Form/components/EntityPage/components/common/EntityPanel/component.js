@@ -1,3 +1,4 @@
+import {NodeDefs} from '@openforis/arena-core';
 import React, {useMemo} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {isTablet} from 'react-native-device-info';
@@ -18,6 +19,7 @@ import TableOption from './TableOption';
 const SHOW_TREE_BUTTON = false;
 
 const EntityPanel = () => {
+  const nodeDef = useSelector(formSelectors.getParentEntityNodeDef);
   const styles = useThemedStyles(_styles);
   const isEntitySelectorOpened = useSelector(
     formSelectors.isEntitySelectorOpened,
@@ -25,6 +27,7 @@ const EntityPanel = () => {
 
   const isTable = useIsTable();
   const _isTablet = isTablet();
+  const isMultiple = useMemo(() => NodeDefs.isMultiple(nodeDef), [nodeDef]);
 
   const panelContainer = useMemo(() => {
     return StyleSheet.compose(
@@ -41,7 +44,7 @@ const EntityPanel = () => {
         )}
         <View style={styles.textContainer}>
           <CurrentPageInfo />
-          {isTable && <TableOption />}
+          {(isTable || isMultiple) && <TableOption />}
         </View>
         <MultipleEntityOptions />
       </View>
