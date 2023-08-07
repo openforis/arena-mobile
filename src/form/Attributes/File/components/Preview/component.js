@@ -44,17 +44,19 @@ const ImageStats = ({file}) => {
 
 const Preview = ({file}) => {
   const styles = useThemedStyles(_styles);
+
   const imgContainerStyle = useMemo(() => {
+    const resizeRatio =
+      MaxPreviewSize / Math.min(file?.meta?.width, file?.meta?.height);
+    const width = file?.meta?.width * resizeRatio;
+    const height = file?.meta?.height * resizeRatio;
+
     return StyleSheet.compose(
       styles.imgContainer,
       file?.meta?.width && file?.meta?.height
         ? {
-            width:
-              (file.meta.width / Math.min(file.meta.width, file.meta.height)) *
-              MaxPreviewSize,
-            height:
-              (file.meta.height / Math.min(file.meta.width, file.meta.height)) *
-              MaxPreviewSize,
+            width,
+            height,
           }
         : {},
     );
