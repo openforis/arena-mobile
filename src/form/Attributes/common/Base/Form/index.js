@@ -53,10 +53,7 @@ const BaseForm = ({
       <View style={styles.divider} />
       {hasSubmitButton && (
         <View>
-          <Button
-            label={t('Form:save_and_return')}
-            onPress={_handleSubmitAndClose}
-          />
+          <Button label={t('Form:done')} onPress={_handleSubmitAndClose} />
         </View>
       )}
     </View>
