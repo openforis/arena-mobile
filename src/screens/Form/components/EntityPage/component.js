@@ -16,9 +16,10 @@ const EntityPage = () => {
     () => NodeDefs.getLayoutRenderType(cycle)(nodeDef) === 'table',
     [nodeDef, cycle],
   );
+  const isMultiple = useMemo(() => NodeDefs.isMultiple(nodeDef), [nodeDef]);
 
   if (nodeDef?.uuid && NodeDefs.isEntity(nodeDef)) {
-    return isTable ? <TableEntity /> : <Entity />;
+    return isTable || isMultiple ? <TableEntity /> : <Entity />;
   }
   return <View />;
 };
