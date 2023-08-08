@@ -2,9 +2,11 @@ import React from 'react';
 import {View, SafeAreaView} from 'react-native';
 import Modal from 'react-native-modal';
 
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
+
 import PickerButton from '../PickerButton';
 
-import styles from './styles';
+import _styles from './styles';
 
 export const pickerTypes = {
   camera: 'camera',
@@ -31,6 +33,7 @@ const pickersWithIcon = {
 };
 
 const FilePickerModal = ({isModalVisible, toggleModal, handleByPickerType}) => {
+  const styles = useThemedStyles(_styles);
   return (
     <Modal
       isVisible={isModalVisible}

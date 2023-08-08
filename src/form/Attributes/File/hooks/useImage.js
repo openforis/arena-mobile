@@ -1,5 +1,8 @@
 import {useCallback} from 'react';
 import ImagePicker from 'react-native-image-crop-picker';
+import {useSelector} from 'react-redux';
+
+import {selectors as appSelectors} from 'state/app';
 
 const getFilesFromImage = image => {
   const name =
@@ -17,6 +20,13 @@ const getFilesFromImage = image => {
 };
 
 const useGetImage = ({cropping = false} = {}) => {
+  const compressQuality = useSelector(appSelectors.getImagesCompressQuality);
+  const compressMaxHeight = useSelector(
+    appSelectors.getImagesCompressMaxHeight,
+  );
+  const compressMaxWidth = useSelector(appSelectors.getImagesCompressMaxWidth);
+  const isMaxResolution = useSelector(appSelectors.getIsMaxResolution);
+
   const getImage = useCallback(
     ({callback = null} = {}) =>
       async () => {
@@ -42,6 +52,13 @@ const useGetImage = ({cropping = false} = {}) => {
           const image = await ImagePicker.openCamera({
             cropping,
             writeTempFile: true,
+            ...(isMaxResolution
+              ? {}
+              : {
+                  compressImageQuality: compressQuality,
+                  compressImageMaxHeight: compressMaxHeight,
+                  compressImageMaxWidth: compressMaxWidth,
+                }),
           });
 
           const files = getFilesFromImage(image);
@@ -50,7 +67,13 @@ const useGetImage = ({cropping = false} = {}) => {
           console.warn(err);
         }
       },
-    [cropping],
+    [
+      cropping,
+      compressQuality,
+      compressMaxHeight,
+      compressMaxWidth,
+      isMaxResolution,
+    ],
   );
 
   return {getImage, takePhoto};

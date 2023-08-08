@@ -27,6 +27,12 @@ const expectedAppState = {
   preferences: {
     serverUrl: payload.serverUrl,
     settings: {
+      images: {
+        compressMaxHeight: 1024,
+        compressMaxWidth: 1024,
+        compressQuality: 0.5,
+        maxResolution: false,
+      },
       survey: {
         taxonomies: {
           defaultVisibleFields: null,

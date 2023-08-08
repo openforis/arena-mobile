@@ -12,6 +12,12 @@ const initialState = {
           defaultVisibleFields: null,
         },
       },
+      images: {
+        compressQuality: 0.5,
+        compressMaxHeight: 1024,
+        compressMaxWidth: 1024,
+        maxResolution: false,
+      },
     },
   },
   ui: {
