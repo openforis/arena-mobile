@@ -1,4 +1,5 @@
 import {NodeDefType, NodeDefs} from '@openforis/arena-core';
+import throttle from 'lodash.throttle';
 import React, {useState, useCallback, useMemo} from 'react';
 import {Platform} from 'react-native';
 import {useSelector} from 'react-redux';
@@ -28,6 +29,23 @@ export const getValueAsString = (nodeDef, node, defaultValue = '') => {
   return String(node?.value);
 };
 
+const prepareValue = ({newValue, node, nodeDef}) => {
+  const _newValue =
+    newValue === '' || !Objects.isEmpty(newValue)
+      ? newValue
+      : String(node.value || '');
+
+  const _value =
+    nodeDef.type === NodeDefType.text
+      ? transform({
+          transformFunction: NodeDefs.getTextTransform(nodeDef),
+        })(_newValue)
+      : _newValue === ''
+      ? ''
+      : Number(_newValue.replace(',', '.'));
+  return _value;
+};
+
 // text default
 // float numeric  ios: decimal-pad
 // integer numeric, ios: number-pad
@@ -37,21 +55,31 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
 
   const handleUpdateNode = useUpdateNode();
   const handleClose = useCloseNode();
+
+  const handleUpdate = useCallback(
+    value => {
+      const _value = prepareValue({newValue: value, node, nodeDef});
+      handleUpdateNode({
+        node,
+        value: _value,
+        callback: false,
+        shouldJump: false,
+      });
+    },
+    [nodeDef, node, handleUpdateNode],
+  );
+
+  const deboundedUpdate = useCallback(
+    value => {
+      setValue(value);
+      throttle(handleUpdate, 500)(value);
+    },
+    [handleUpdate],
+  );
+
   const handleSubmit = useCallback(
     ({callback = handleClose} = {}) => {
-      const _newValue =
-        newValue === '' || !Objects.isEmpty(newValue)
-          ? newValue
-          : String(node.value || '');
-
-      const _value =
-        nodeDef.type === NodeDefType.text
-          ? transform({
-              transformFunction: NodeDefs.getTextTransform(nodeDef),
-            })(_newValue)
-          : _newValue === ''
-          ? ''
-          : Number(_newValue.replace(',', '.'));
+      const _value = prepareValue({newValue, node, nodeDef});
       handleUpdateNode({node, value: _value, callback});
     },
     [nodeDef, node, newValue, handleUpdateNode, handleClose],
@@ -67,7 +95,7 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
             NodeDefs.getTextTransform(nodeDef)
           ] || undefined
         }
-        onChangeText={setValue}
+        onChangeText={deboundedUpdate}
         defaultValue={getValueAsString(nodeDef, node)}
         autoFocus={Platform.OS === 'ios' ? true : false}
         lateFocus={Platform.OS === 'ios' ? false : true}
