@@ -72,7 +72,7 @@ const getImagesCompressMaxWidth = createSelector(
 
 const getIsMaxResolution = createSelector(
   getPreferences,
-  preferences => preferences?.settings?.images?.maxResolution || false,
+  preferences => preferences?.settings?.images?.isMaxResolution || false,
 );
 
 export default {

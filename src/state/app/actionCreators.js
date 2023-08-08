@@ -54,6 +54,21 @@ const {app} = createActions({
   [types.SET_STYLE_COLOR_SCHEME]: ({colorScheme = 'light'}) => ({
     colorScheme,
   }),
+  /* Images settings */
+  [types.SET_IMAGES_COMPRESS_QUALITY]: ({compressQuality = 0.5}) => ({
+    compressQuality,
+  }),
+  [types.SET_IMAGES_COMPRESS_MAX_HEIGHT]: ({compressMaxHeight = 1024}) => ({
+    compressMaxHeight,
+  }),
+  [types.SET_IMAGES_COMPRESS_MAX_WIDTH]: ({compressMaxWidth = 1024}) => ({
+    compressMaxWidth,
+  }),
+  [types.SET_IS_MAX_RESOLUTION]: ({isMaxResolution = false}) => ({
+    isMaxResolution,
+  }),
+  [types.RESET_IMAGES_QUALITY_AND_SIZE]: () => ({}),
+  /* Language settings */
 });
 
 export default app;

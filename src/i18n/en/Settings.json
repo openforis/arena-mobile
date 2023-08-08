@@ -34,6 +34,29 @@
       }
     }
   },
+  "images_quality_and_size": {
+    "title": "Images Quality And Size",
+    "screen": {
+      "header": "Images Quality And Size",
+      "description": "Select the quality of the images.",
+      "max_resolution": {
+        "title": "Force max resolution"
+      },
+      "quality": {
+        "label": "Quality {{ value }}{{ subfix }}",
+        "info": "Select the quality of the images."
+      },
+      "max_width": {
+        "label": "Max width  {{ value }} {{ subfix }}",
+        "info": "Select the max width of the images. ( from {{from}} to {{to}} pixels.)"
+      },
+      "max_height": {
+        "label": "Max height {{ value }} {{ subfix }}",
+        "info": "Select the max height of the images. ( from {{from}} to {{to}} pixels.)"
+      }
+    }
+  },
+
   "style": {
     "title": "Style",
     "TextAndSpacingSize": {
@@ -64,7 +87,7 @@
         }
       }
     }
-    
+
   },
   "form": {
     "title": "Form",

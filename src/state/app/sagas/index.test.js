@@ -31,7 +31,7 @@ const expectedAppState = {
         compressMaxHeight: 1024,
         compressMaxWidth: 1024,
         compressQuality: 0.5,
-        maxResolution: false,
+        isMaxResolution: false,
       },
       survey: {
         taxonomies: {

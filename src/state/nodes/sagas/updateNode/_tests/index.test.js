@@ -110,7 +110,6 @@ describe('Node updater', () => {
     const payload = {
       updatedNode: {
         ...baseMockNode,
-
         uuid: 'NOT_DEFINED_UUID',
         value: 5,
       },

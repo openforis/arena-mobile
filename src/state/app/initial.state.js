@@ -16,9 +16,10 @@ const initialState = {
         compressQuality: 0.5,
         compressMaxHeight: 1024,
         compressMaxWidth: 1024,
-        maxResolution: false,
+        isMaxResolution: false,
       },
     },
+    serverUrl: null,
   },
   ui: {
     serverError: false,

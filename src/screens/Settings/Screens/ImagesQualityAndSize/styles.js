@@ -8,12 +8,7 @@ const styles = ({baseStyles}) =>
       paddingTop: 0,
       marginVertical: baseStyles.bases.BASE_4,
     },
-    cardTitle: {
-      marginLeft: baseStyles.bases.BASE_2,
-    },
-    cardContent: {
-      flexDirection: 'row',
-    },
+
     buttonsContainer: {
       padding: baseStyles.bases.BASE_4,
     },
