@@ -9,11 +9,7 @@ import {selectors as formSelectors, actions as formActions} from 'state/form';
 
 import styles, {pickerSelectStyles, pickerSelectStylesNeutral} from './styles';
 
-const EntityNodeSelector = ({
-  theme = null,
-  parentNodeDef = false,
-  parentNode = false,
-} = {}) => {
+const EntityNodeSelector = ({theme, parentNodeDef, parentNode}) => {
   const [key, setKey] = useState(uuidv4());
 
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
@@ -67,11 +63,13 @@ const EntityNodeSelector = ({
   );
 };
 
-const EntityNodeSelectorWrapper = ({
-  theme = null,
-  parentNodeDef = false,
-  parentNode = false,
-} = {}) => {
+EntityNodeSelector.defaultProps = {
+  theme: null,
+  parentNodeDef: false,
+  parentNode: false,
+};
+
+const EntityNodeSelectorWrapper = ({theme, parentNodeDef, parentNode} = {}) => {
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
   const _parentEntityNodeDef = parentNodeDef || parentEntityNodeDef;
 
@@ -86,6 +84,12 @@ const EntityNodeSelectorWrapper = ({
       parentNode={parentNode}
     />
   );
+};
+
+EntityNodeSelectorWrapper.defaultProps = {
+  theme: null,
+  parentNodeDef: false,
+  parentNode: false,
 };
 
 export default EntityNodeSelectorWrapper;

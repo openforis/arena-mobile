@@ -27,8 +27,8 @@ const SurveyDetail = () => {
   } = useSelector(surveySelectors.getSurveyData);
 
   return (
-    <Card customStyles={[styles.container]}>
-      <View style={[styles.buttonContainer]}>
+    <Card customStyles={styles.container}>
+      <View style={styles.buttonContainer}>
         <Button
           type="ghost"
           label={t('Home:survey.card.go_to_survey_options')}
