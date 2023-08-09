@@ -6,9 +6,18 @@ import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
 import _styles from './styles';
 
-export const Label = ({label, size, bolder}) => {
+const useType = ({bolder, thin}) => {
+  if (thin) {
+    return 'primary';
+  }
+  return bolder ? 'bolder' : 'bold';
+};
+
+export const Label = ({label, size, bolder, thin}) => {
+  const type = useType({bolder, thin});
+
   return (
-    <TextBase type={bolder ? 'bolder' : 'bold'} size={size} numberOfLines={1}>
+    <TextBase type={type} size={size} numberOfLines={1}>
       {label}
     </TextBase>
   );
@@ -19,15 +28,16 @@ Label.defaultProps = {
   bolder: false,
 };
 
-export const Value = ({label, size, bolder, color}) => {
+export const Value = ({label, size, bolder, color, thin}) => {
   const styles = useThemedStyles(_styles);
   const customStyle = useMemo(() => {
     return color ? styles.color[color] : {};
   }, [styles, color]);
 
+  const type = useType({bolder, thin});
   return (
     <TextBase
-      type={bolder ? 'bolder' : 'bold'}
+      type={type}
       size={size}
       customStyle={customStyle}
       numberOfLines={1}>
@@ -40,13 +50,20 @@ Value.defaultProps = {
   color: null,
   size: 's',
   bolder: false,
+  thin: false,
 };
 
 const Labels = ({items, size, expanded}) => {
   const styles = useThemedStyles(_styles);
   const renderLabels = useMemo(() => {
-    return items.map(({label, bolder}) => (
-      <Label key={label} label={label} size={size} bolder={bolder} />
+    return items.map(({label, bolder, thin}) => (
+      <Label
+        key={label}
+        label={label}
+        size={size}
+        bolder={bolder}
+        thin={thin}
+      />
     ));
   }, [items, size]);
 
@@ -66,13 +83,14 @@ Labels.defaultProps = {
 const Values = ({items, size, expanded}) => {
   const styles = useThemedStyles(_styles);
   const renderValues = useMemo(() => {
-    return items.map(({label, value = '-', bolder, color}) => (
+    return items.map(({label, value = '-', bolder, color, thin}) => (
       <Value
         key={label}
         label={value}
         size={size}
         bolder={bolder}
         color={color}
+        thin={thin}
       />
     ));
   }, [items, size]);

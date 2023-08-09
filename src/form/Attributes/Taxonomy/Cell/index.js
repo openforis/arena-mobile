@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {useSelector} from 'react-redux';
 
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';

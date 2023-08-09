@@ -198,7 +198,7 @@ const _useSelectNodeAndNodeDef = ({node}) => {
   const dispatch = useDispatch();
 
   const handleSelectNodeAndNodeDef = useCallback(() => {
-    dispatch(formActions.setNode({node: node}));
+    dispatch(formActions.setNode({node}));
   }, [dispatch, node]);
 
   return handleSelectNodeAndNodeDef;

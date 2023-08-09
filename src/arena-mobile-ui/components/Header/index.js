@@ -9,11 +9,11 @@ import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import _styles from './styles';
 
 const Header = ({
-  hasBackComponent = false,
-  LeftComponent = null,
+  hasBackComponent,
+  LeftComponent,
   children,
-  RightComponent = null,
-  withBorder = true,
+  RightComponent,
+  withBorder,
 }) => {
   const styles = useThemedStyles(_styles);
   const containerStyle = useMemo(() => {
@@ -41,6 +41,13 @@ const Header = ({
       <JobContainer />
     </>
   );
+};
+
+Header.defaultProps = {
+  hasBackComponent: false,
+  LeftComponent: null,
+  RightComponent: null,
+  withBorder: true,
 };
 
 export default Header;

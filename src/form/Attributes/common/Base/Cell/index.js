@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -21,8 +21,12 @@ const Cell = ({nodeDef, nodes, ValuesRender = BaseValuesRenderer}) => {
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );
 
+  const containerStyle = useMemo(() => {
+    return styles.container({nodeDef, applicable});
+  }, [nodeDef, applicable]);
+
   return (
-    <View style={[styles.container({nodeDef, applicable})]}>
+    <View style={containerStyle}>
       <Validation nodeDef={nodeDef} nodes={nodes} showValidation={true} />
       {nodes.length > 0 && (
         <ValuesRender nodes={nodes} nodeDef={nodeDef} applicable={applicable} />

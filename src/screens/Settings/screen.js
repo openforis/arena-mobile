@@ -42,7 +42,7 @@ const _extractInitials = (value = '') => {
   );
 };
 
-const Section = ({title, children, subSection = false}) => {
+const Section = ({title, children, subSection}) => {
   const styles = useThemedStyles(_styles);
   const containerStyle = useMemo(() => {
     return StyleSheet.compose(
@@ -67,24 +67,35 @@ const Section = ({title, children, subSection = false}) => {
   );
 };
 
-const SectionCard = ({
-  position = 'middle',
-  onPress,
-  title,
-  iconName,
-  isNavigation = true,
-}) => {
+Section.defaultProps = {
+  title: false,
+  subSection: false,
+};
+
+const SectionCard = ({position, onPress, title, iconName, isNavigation}) => {
   const styles = useThemedStyles(_styles);
+  const containerStyle = useMemo(() => {
+    return StyleSheet.compose(
+      StyleSheet.compose(
+        styles.sectionCardContainer,
+
+        StyleSheet.compose(
+          StyleSheet.compose(
+            position === 'first' && styles.sectionCardContainerFirst,
+            position === 'last' && styles.sectionCardContainerLast,
+          ),
+          StyleSheet.compose(
+            position === 'only' && styles.sectionCardContainerOnly,
+            position === 'middle' && styles.sectionCardContainerMiddle,
+          ),
+        ),
+      ),
+    );
+  }, [styles, position]);
+
   return (
     <TouchableOpacity onPress={onPress}>
-      <Card
-        customStyles={[
-          styles.sectionCardContainer,
-          position === 'first' && styles.sectionCardContainerFirst,
-          position === 'last' && styles.sectionCardContainerLast,
-          position === 'only' && styles.sectionCardContainerOnly,
-          position === 'middle' && styles.sectionCardContainerMiddle,
-        ]}>
+      <Card customStyles={containerStyle}>
         <View style={styles.iconContainer}>
           <Icon name={iconName} size="s" />
         </View>
@@ -99,6 +110,10 @@ const SectionCard = ({
       </Card>
     </TouchableOpacity>
   );
+};
+SectionCard.defaultProps = {
+  position: 'middle',
+  isNavigation: true,
 };
 
 const FormSettings = () => {

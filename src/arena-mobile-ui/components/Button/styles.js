@@ -4,18 +4,18 @@ const styles = ({colors, baseStyles}) =>
   StyleSheet.create({
     base: {
       padding: baseStyles.bases.BASE_2,
-      paddingVertical: baseStyles.bases.BASE_3,
+      paddingVertical: baseStyles.bases.BASE_4,
       justifyContent: 'center',
       alignItems: 'center',
       marginVertical: baseStyles.bases.BASE_2,
       flexDirection: 'row',
+      borderRadius: baseStyles.bases.BASE,
     },
     primary: {
       backgroundColor: colors.secondary,
     },
     neutral: {
       backgroundColor: colors.neutralLightest,
-      borderRadius: baseStyles.bases.BASE,
     },
     secondary: {
       backgroundColor: colors.backgroundLight,
