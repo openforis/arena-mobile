@@ -10,6 +10,8 @@ const style = StyleSheet.create({
   container: {
     width: baseStyles.bases.BASE_16,
     height: baseStyles.bases.BASE_16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
