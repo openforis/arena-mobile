@@ -69,7 +69,7 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
     [nodeDef, node, handleUpdateNode],
   );
 
-  const deboundedUpdate = useCallback(
+  const debouncedUpdate = useCallback(
     value => {
       setValue(value);
       throttle(handleUpdate, 500)(value);
