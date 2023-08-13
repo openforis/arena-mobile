@@ -20,6 +20,7 @@ const Item = ({
   selected,
   handleSelect,
   getCategoryItemLabel,
+  getCategoryItemDescription,
   handleDelete,
 }) => {
   const handleSelectItem = useCallback(
@@ -32,6 +33,11 @@ const Item = ({
   const label = useMemo(
     () => getCategoryItemLabel(item),
     [item, getCategoryItemLabel],
+  );
+
+  const description = useMemo(
+    () => getCategoryItemDescription(item),
+    [item, getCategoryItemDescription],
   );
 
   const action = useCallback(
@@ -51,6 +57,7 @@ const Item = ({
     <ListItem
       handlePress={action}
       label={label}
+      description={description}
       selected={selected}
       icon={iconName}
     />
@@ -58,10 +65,15 @@ const Item = ({
 };
 
 const FormCodeMultiple = ({nodeDef}) => {
-  const {nodes, categoryItems, categoryItemsByUuid, getCategoryItemLabel} =
-    useCode({
-      nodeDef,
-    });
+  const {
+    nodes,
+    categoryItems,
+    categoryItemsByUuid,
+    getCategoryItemLabel,
+    getCategoryItemDescription,
+  } = useCode({
+    nodeDef,
+  });
 
   const {
     searchText,
@@ -113,6 +125,7 @@ const FormCodeMultiple = ({nodeDef}) => {
           selectedNode={selectedNode}
           selected={selected}
           getCategoryItemLabel={getCategoryItemLabel}
+          getCategoryItemDescription={getCategoryItemDescription}
           handleSelect={handleSelect}
           handleDelete={_handleDelete}
         />
@@ -122,6 +135,7 @@ const FormCodeMultiple = ({nodeDef}) => {
       handleSelect,
       categoryItemsByUuid,
       getCategoryItemLabel,
+      getCategoryItemDescription,
       nodes,
       _handleDelete,
     ],

@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     marginLeft: baseStyles.bases.BASE,
+    maxWidth: 140,
   },
 });
 

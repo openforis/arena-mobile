@@ -103,7 +103,12 @@ const GetLocation = ({handleSaveLocation, selectedSrs}) => {
         />
       )}
 
-      <LabelsAndValues items={prepareItems(location, {selectedSrs})} expanded />
+      <View style={styles.valuesContainer}>
+        <LabelsAndValues
+          items={prepareItems(location, {selectedSrs})}
+          expanded
+        />
+      </View>
 
       {loading && location && (
         <LocationAccuracyBar accuracy={location?.coords?.accuracy} />

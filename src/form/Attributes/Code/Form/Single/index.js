@@ -13,7 +13,13 @@ import {useSearch} from '../common/hooks/useSearch';
 
 import styles from './styles';
 
-const Item = ({item, selected, handleSelect, getCategoryItemLabel}) => {
+const Item = ({
+  item,
+  selected,
+  handleSelect,
+  getCategoryItemLabel,
+  getCategoryItemDescription,
+}) => {
   const handleSelectItem = useCallback(
     e => {
       e.stopPropagation();
@@ -27,6 +33,11 @@ const Item = ({item, selected, handleSelect, getCategoryItemLabel}) => {
     [item, getCategoryItemLabel],
   );
 
+  const description = useMemo(
+    () => getCategoryItemDescription(item),
+    [item, getCategoryItemDescription],
+  );
+
   const iconName = useMemo(
     () => (selected ? 'radiobox-marked' : 'radiobox-blank'),
     [selected],
@@ -36,13 +47,19 @@ const Item = ({item, selected, handleSelect, getCategoryItemLabel}) => {
     <ListItem
       handlePress={handleSelectItem}
       label={label}
+      description={description}
       selected={selected}
       icon={iconName}
     />
   );
 };
 const FormCodeSingle = ({nodeDef, node}) => {
-  const {categoryItems, categoryItemsByUuid, getCategoryItemLabel} = useCode({
+  const {
+    categoryItems,
+    categoryItemsByUuid,
+    getCategoryItemLabel,
+    getCategoryItemDescription,
+  } = useCode({
     nodeDef,
     node,
   });
@@ -78,11 +95,6 @@ const FormCodeSingle = ({nodeDef, node}) => {
     [handleUpdate, handleCreate, node],
   );
 
-  const _labelStractor = useCallback(
-    item => getCategoryItemLabel(item),
-    [getCategoryItemLabel],
-  );
-
   const renderItem = useCallback(
     ({item}) => {
       const _item = categoryItemsByUuid[item];
@@ -93,11 +105,18 @@ const FormCodeSingle = ({nodeDef, node}) => {
           item={_item}
           selected={selected}
           getCategoryItemLabel={getCategoryItemLabel}
+          getCategoryItemDescription={getCategoryItemDescription}
           handleSelect={handleSelect}
         />
       );
     },
-    [handleSelect, categoryItemsByUuid, selectedItem, getCategoryItemLabel],
+    [
+      handleSelect,
+      categoryItemsByUuid,
+      selectedItem,
+      getCategoryItemLabel,
+      getCategoryItemDescription,
+    ],
   );
 
   return (
@@ -106,7 +125,7 @@ const FormCodeSingle = ({nodeDef, node}) => {
         searching={searching}
         handleStartToSearch={handleStartToSearch}
         selectedItem={selectedItem}
-        _labelStractor={_labelStractor}
+        _labelStractor={getCategoryItemLabel}
         applicable={applicable}
         handleStopToSearch={handleStopToSearch}
         setSearchText={setSearchText}

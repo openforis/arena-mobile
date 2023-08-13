@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 import Icon from 'arena-mobile-ui/components/Icon';
 import Pressable from 'arena-mobile-ui/components/Pressable';
@@ -21,12 +21,30 @@ const ItemLabel = React.memo(
     );
   },
 );
+const ItemDescription = React.memo(
+  ({description, selected}) => {
+    const style = useMemo(() => {
+      return StyleSheet.compose(selected ? styles.selectedItemDescription : {});
+    }, [selected]);
+    return (
+      <TextBase type="secondary" customStyle={style}>
+        {description}
+      </TextBase>
+    );
+  },
+  (prevProps, nextProps) => {
+    return (
+      prevProps.description === nextProps.description &&
+      prevProps.selected === nextProps.selected
+    );
+  },
+);
 
 const _Icon = React.memo(({name}) => {
   return <Icon name={name} size="s" />;
 });
 
-const ListItem = ({label, handlePress, selected, icon}) => {
+const ListItem = ({label, description, handlePress, selected, icon}) => {
   const style = useMemo(() => {
     return StyleSheet.compose(
       styles.card,
@@ -38,7 +56,12 @@ const ListItem = ({label, handlePress, selected, icon}) => {
     <Pressable onPress={handlePress} style={style}>
       <_Icon name={icon} />
 
-      <ItemLabel label={label} selected={selected} />
+      <View>
+        <ItemLabel label={label} selected={selected} />
+        {description && (
+          <ItemDescription description={description} selected={selected} />
+        )}
+      </View>
     </Pressable>
   );
 };

@@ -1,4 +1,4 @@
-import {NodeDefs} from '@openforis/arena-core';
+import {NodeDefs, CategoryItems} from '@openforis/arena-core';
 import {useCallback, useMemo} from 'react';
 import {useSelector} from 'react-redux';
 
@@ -15,6 +15,11 @@ const getCategoryItemLabel = (nodeDef, cycle, language) => categoryItem => {
   const labelString = labels?.[language] || code || '';
 
   return categoryItem?.props?.code ? `${codeString} ${labelString}` : '-';
+};
+
+const getCategoryItemDescription = language => categoryItem => {
+  const {descriptions = {}} = categoryItem?.props || {};
+  return descriptions?.[language] || '';
 };
 
 const useCode = ({nodeDef, node}) => {
@@ -42,6 +47,11 @@ const useCode = ({nodeDef, node}) => {
     [nodeDef, cycle, language],
   );
 
+  const _getCategoryItemDescription = useCallback(
+    item => getCategoryItemDescription(language)(item),
+    [language],
+  );
+
   const categoryItemsByUuid = useMemo(() => {
     const items = _categoryItems.reduce((acc, item) => {
       acc[item.uuid] = item;
@@ -55,6 +65,7 @@ const useCode = ({nodeDef, node}) => {
     categoryItems: _categoryItems,
     categoryItemsByUuid,
     getCategoryItemLabel: _getCategoryItemLabel,
+    getCategoryItemDescription: _getCategoryItemDescription,
   };
 };
 export default useCode;
