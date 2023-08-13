@@ -14,5 +14,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary,
     color: colors.backgroundLight,
   },
+  selectedItemDescription: {
+    color: colors.backgroundLighter,
+  },
 });
 export default styles;

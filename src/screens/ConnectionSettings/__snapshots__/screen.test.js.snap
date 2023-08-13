@@ -81,7 +81,9 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
           style={
             [
               {
+                "alignItems": "center",
                 "height": 64,
+                "justifyContent": "center",
                 "width": 64,
               },
               {

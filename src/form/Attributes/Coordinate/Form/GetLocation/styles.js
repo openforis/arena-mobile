@@ -51,6 +51,9 @@ const styles = ({colors, baseStyles}) =>
       borderBottomRightRadius: 0,
       borderLeftWidth: 1,
     },
+    valuesContainer: {
+      padding: baseStyles.bases.BASE_2,
+    },
   });
 
 export default styles;
