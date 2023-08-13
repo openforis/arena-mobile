@@ -80,7 +80,10 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
           onStartShouldSetResponder={[Function]}
           style={
             [
-              {},
+              {
+                "height": 64,
+                "width": 64,
+              },
               {
                 "opacity": 1,
               },
@@ -456,11 +459,12 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                       [
                         {
                           "alignItems": "center",
+                          "borderRadius": 4,
                           "flexDirection": "row",
                           "justifyContent": "center",
                           "marginVertical": 8,
                           "padding": 8,
-                          "paddingVertical": 12,
+                          "paddingVertical": 16,
                         },
                         {
                           "backgroundColor": "#3885CA",

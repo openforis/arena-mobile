@@ -1,5 +1,4 @@
 import React, {useMemo, useRef, useEffect} from 'react';
-import {useTranslation} from 'react-i18next';
 import {Platform} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
@@ -38,24 +37,14 @@ const Select = ({
   customStyles,
   selectedItemKey,
   onValueChange,
-  keyStractor = _keyStractor,
-  labelStractor = _labelStractor,
-  prepareItemFn = _prepareItemFn,
-  filterFn = _filterFn,
-  doneText = 'ok',
-  autoFocus = false,
-  disabled = false,
+  keyStractor,
+  labelStractor,
+  prepareItemFn,
+  filterFn,
+  doneText,
+  autoFocus,
+  disabled,
 }) => {
-  const {t} = useTranslation();
-  const PLACEHOLDER = useMemo(
-    () => ({
-      label: t('Select:placeholder'),
-      value: null,
-      color: colors.neutralLighter,
-    }),
-    [t],
-  );
-
   const selectRef = useRef(null);
 
   const _items = useMemo(
@@ -106,9 +95,23 @@ const Select = ({
       disabled={disabled}
       useNativeAndroidPickerStyle={false}
       fixAndroidTouchableBug={true}
-      placeholder={PLACEHOLDER}
+      placeholder={{}}
     />
   );
+};
+
+Select.defaultProps = {
+  items: [],
+  customStyles: {},
+  selectedItemKey: null,
+  onValueChange: () => {},
+  keyStractor: _keyStractor,
+  labelStractor: _labelStractor,
+  prepareItemFn: _prepareItemFn,
+  filterFn: _filterFn,
+  doneText: 'ok',
+  autoFocus: false,
+  disabled: false,
 };
 
 export default Select;
