@@ -5,39 +5,51 @@ const styles = ({colors, baseStyles}) =>
     container: {
       backgroundColor: colors.neutralLightest,
       borderRadius: baseStyles.bases.BASE_2,
-      paddingHorizontal: baseStyles.bases.BASE_2,
+
       paddingBottom: 0,
     },
     customTextStyle: {paddingLeft: baseStyles.bases.BASE_2},
-    customContainerStyle: {justifyContent: 'flex-end'},
+
     accuracyBarContainer: {
       flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      marginTop: baseStyles.bases.BASE_2,
-      height: baseStyles.bases.BASE_4,
-      width: '100%',
+
+      padding: baseStyles.bases.BASE_2,
+      backgroundColor: colors.backgroundLighter,
+      borderRadius: baseStyles.bases.BASE_2,
+    },
+    accuracyIconContainer: {
+      backgroundColor: colors.white,
+      borderRadius: baseStyles.bases.BASE_12,
+      padding: baseStyles.bases.BASE_2,
     },
     accuracyBar: {
-      backgroundColor: colors.backgroundLight,
-      borderRadius: baseStyles.bases.BASE_2,
-      height: baseStyles.bases.BASE_4,
-      width: '100%',
-    },
-    accuracyBarFill: {
-      backgroundColor: colors.primary,
-      borderRadius: baseStyles.bases.BASE_2,
-      height: baseStyles.bases.BASE_4,
-    },
-    accuracyBarTextContainer: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
+      flexDirection: 'row',
+      justifyContent: 'center',
       alignItems: 'center',
     },
-    accuracyBarText: {
-      color: colors.text,
-      fontSize: baseStyles.fontSizes.FONT_SIZE_2,
+
+    accuracyPayload: {
+      paddingHorizontal: baseStyles.bases.BASE_2,
+    },
+    accuracyPill: {
+      width: baseStyles.bases.BASE_8,
+      height: baseStyles.bases.BASE_4,
+      backgroundColor: colors.background,
+      borderWidth: 1,
+      borderColor: colors.borderColor,
+      borderLeftWidth: 0,
+    },
+    accuracyPillLast: {
+      borderRadius: baseStyles.bases.BASE,
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
+    },
+
+    accuracyPillFirst: {
+      borderRadius: baseStyles.bases.BASE,
+      borderTopRightRadius: 0,
+      borderBottomRightRadius: 0,
+      borderLeftWidth: 1,
     },
   });
 

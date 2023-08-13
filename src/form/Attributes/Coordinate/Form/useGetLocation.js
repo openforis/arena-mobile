@@ -15,6 +15,7 @@ import appConfig from '../../../../../app.json';
 const useGetLocation = () => {
   const {t} = useTranslation();
   const [location, setLocation] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const hasPermissionIOS = useCallback(async () => {
     const openSetting = () => {
@@ -143,14 +144,17 @@ const useGetLocation = () => {
 
   const getLocation = useCallback(async () => {
     const watcherId = await _getLocation();
+    setLoading(true);
 
     setTimeout(() => {
+      setLoading(false);
       Geolocation.clearWatch(watcherId);
-    }, 120000);
+    }, 1000 * 60 * 25);
   }, [_getLocation]);
 
   useEffect(() => {
     return () => {
+      setLoading(false);
       Geolocation.stopObserving();
     };
   }, []);
@@ -161,7 +165,7 @@ const useGetLocation = () => {
     };
   }, []);
 
-  return {getLocation, location};
+  return {getLocation, location, loading};
 };
 
 export default useGetLocation;

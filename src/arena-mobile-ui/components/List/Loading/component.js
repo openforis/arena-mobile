@@ -3,7 +3,7 @@ import {View, Animated} from 'react-native';
 
 import styles from './styles';
 
-const useSkeletonAnimation = () => {
+export const useSkeletonAnimation = () => {
   const opacityAnim = useRef(new Animated.Value(0.8)).current;
 
   const anim = useRef(
