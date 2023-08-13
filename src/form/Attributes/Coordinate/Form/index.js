@@ -6,6 +6,7 @@ import {useSelector} from 'react-redux';
 
 import Input, {InputContainer} from 'arena-mobile-ui/components/Input';
 import Select from 'arena-mobile-ui/components/Select';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import BaseForm from 'form/Attributes/common/Base/Form';
 import {useUpdateNode} from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
@@ -17,6 +18,27 @@ import styles from './styles';
 const BASE_VALUE = {x: null, y: null, srs: null};
 
 const DEFAULT_SRS_CODE = '4326';
+
+const CoordinateInput = ({
+  allowOnlyDeviceCoordinate,
+  defaultValue,
+  coordinateKey,
+  handleUpdateValue,
+}) => {
+  const {t} = useTranslation();
+  return (
+    <Input
+      horizontal={true}
+      stacked={true}
+      title={t(`Form:nodeDefCoordinate.${coordinateKey}`)}
+      onChangeText={handleUpdateValue(coordinateKey)}
+      defaultValue={defaultValue}
+      keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'numeric'}
+      textAlign="right"
+      editable={!allowOnlyDeviceCoordinate}
+    />
+  );
+};
 
 const Form = ({nodeDef}) => {
   const {t} = useTranslation();
@@ -94,6 +116,9 @@ const Form = ({nodeDef}) => {
         srs: DEFAULT_SRS_CODE,
         x: Number(location.coords.longitude),
         y: Number(location.coords.latitude),
+        accuracy: Number(location.coords.accuracy).toFixed(3),
+        altitude: Number(location.coords.altitude).toFixed(2),
+        altitudeAccuracy: Number(location.coords.altitudeAccuracy).toFixed(3),
       });
 
       const transformedPoint = Points.transform(point, selectedSrs.code);
@@ -114,39 +139,60 @@ const Form = ({nodeDef}) => {
         handleSaveLocation={handleSaveLocation}
         selectedSrs={selectedSrs}
       />
-
-      <Input
-        horizontal={true}
-        stacked={true}
-        title={t('Form:nodeDefCoordinate.x')}
-        onChangeText={handleUpdateValue('x')}
+      <CoordinateInput
+        coordinateKey="x"
+        handleUpdateValue={handleUpdateValue}
         defaultValue={String(newValue.x || node?.value?.x || '')}
-        keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'numeric'}
-        textAlign="right"
-        editable={
-          nodeDef.props.allowOnlyDeviceCoordinate === true ? false : true
-        }
+        allowOnlyDeviceCoordinate={nodeDef.props.allowOnlyDeviceCoordinate}
       />
 
-      <Input
-        horizontal={true}
-        stacked={true}
-        title={t('Form:nodeDefCoordinate.y')}
-        onChangeText={handleUpdateValue('y')}
+      <CoordinateInput
+        coordinateKey="y"
+        handleUpdateValue={handleUpdateValue}
         defaultValue={String(newValue.y || node?.value?.y || '')}
-        keyboardType={Platform.OS === 'ios' ? 'decimal-pad' : 'numeric'}
-        textAlign="right"
-        editable={
-          nodeDef.props.allowOnlyDeviceCoordinate === true ? false : true
-        }
+        allowOnlyDeviceCoordinate={nodeDef.props.allowOnlyDeviceCoordinate}
       />
+
+      {nodeDef.props.includeAccuracy && (
+        <CoordinateInput
+          coordinateKey="accuracy"
+          handleUpdateValue={handleUpdateValue}
+          defaultValue={String(
+            newValue.accuracy || node?.value?.accuracy || '',
+          )}
+          allowOnlyDeviceCoordinate={nodeDef.props.allowOnlyDeviceCoordinate}
+        />
+      )}
+
+      {nodeDef.props.includeAltitude && (
+        <CoordinateInput
+          coordinateKey="altitude"
+          handleUpdateValue={handleUpdateValue}
+          defaultValue={String(
+            newValue.altitude || node?.value?.altitude || '',
+          )}
+          allowOnlyDeviceCoordinate={nodeDef.props.allowOnlyDeviceCoordinate}
+        />
+      )}
+
+      {nodeDef.props.includeAltitudeAccuracy && (
+        <CoordinateInput
+          coordinateKey="altitudeAccuracy"
+          handleUpdateValue={handleUpdateValue}
+          defaultValue={String(
+            newValue.altitudeAccuracy || node?.value?.altitudeAccuracy || '',
+          )}
+          allowOnlyDeviceCoordinate={nodeDef.props.allowOnlyDeviceCoordinate}
+        />
+      )}
+
       <InputContainer
         horizontal={true}
         stacked={true}
         title={t('Form:nodeDefCoordinate.srs')}
         hasTitle={true}>
         <View style={styles.selectContainer}>
-          {surveySrs.length > 0 && (
+          {surveySrs.length > 1 ? (
             <Select
               items={surveySrs}
               keyStractor={_keyStractor}
@@ -157,6 +203,10 @@ const Form = ({nodeDef}) => {
               }
               disabled={surveySrs.length <= 1}
             />
+          ) : (
+            <TextBase>
+              {selectedSrs.name} ({selectedSrs.code})
+            </TextBase>
           )}
         </View>
       </InputContainer>
