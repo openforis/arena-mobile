@@ -68,7 +68,7 @@ export const useUpdateNode = () => {
 
   const handleClose = useCloseNode();
   const handleUpdate = useCallback(
-    ({node, value = null, callback = handleClose}) => {
+    ({node, value = null, callback = handleClose, shouldJump = true}) => {
       dispatch(
         nodesActions.updateNode({
           updatedNode: {
@@ -76,6 +76,7 @@ export const useUpdateNode = () => {
             value,
           },
           callback,
+          shouldJump,
         }),
       );
     },
