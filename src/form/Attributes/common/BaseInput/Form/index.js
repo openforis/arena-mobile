@@ -69,7 +69,7 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
     [nodeDef, node, handleUpdateNode],
   );
 
-  const deboundedUpdate = useCallback(
+  const debouncedUpdate = useCallback(
     value => {
       setValue(value);
       throttle(handleUpdate, 500)(value);
@@ -95,7 +95,7 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
             NodeDefs.getTextTransform(nodeDef)
           ] || undefined
         }
-        onChangeText={deboundedUpdate}
+        onChangeText={debouncedUpdate}
         defaultValue={getValueAsString(nodeDef, node)}
         autoFocus={Platform.OS === 'ios' ? true : false}
         lateFocus={Platform.OS === 'ios' ? false : true}

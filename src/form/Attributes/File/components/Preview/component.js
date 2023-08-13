@@ -57,6 +57,7 @@ const Preview = ({file}) => {
         ? {
             width,
             height,
+
           }
         : {},
     );
