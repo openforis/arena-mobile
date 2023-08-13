@@ -95,7 +95,7 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
             NodeDefs.getTextTransform(nodeDef)
           ] || undefined
         }
-        onChangeText={deboundedUpdate}
+        onChangeText={debouncedUpdate}
         defaultValue={getValueAsString(nodeDef, node)}
         autoFocus={Platform.OS === 'ios' ? true : false}
         lateFocus={Platform.OS === 'ios' ? false : true}
