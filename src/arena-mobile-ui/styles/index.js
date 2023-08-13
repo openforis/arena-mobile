@@ -65,6 +65,10 @@ export const _getFontStyles = ({fontBase, colors}) => {
       ...textSize.m,
       color: colors.primaryText,
     },
+    primary: {
+      ...textSize.m,
+      color: colors.primaryText,
+    },
     secondary: {
       ...textSize.m,
       color: colors.secondaryText,

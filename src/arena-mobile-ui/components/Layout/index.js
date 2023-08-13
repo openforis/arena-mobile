@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, SafeAreaView} from 'react-native';
+import React, {useMemo} from 'react';
+import {View, SafeAreaView, StyleSheet} from 'react-native';
 
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
@@ -10,13 +10,20 @@ const DEFAULT_TOP_STYLE = 'primary';
 
 const Layout = ({children, bottomStyle, bottomSafeArea, topStyle}) => {
   const styles = useThemedStyles(_styles);
+  const containerStyle = useMemo(
+    () => StyleSheet.compose(styles.container, styles.top[topStyle]),
+    [styles, topStyle],
+  );
+  const bottomSafeAreaStyle = useMemo(
+    () => StyleSheet.compose(styles.container, styles.bottom[bottomStyle]),
+    [styles, bottomStyle],
+  );
+
   return (
-    <View style={[styles.container, styles.top[topStyle]]}>
+    <View style={containerStyle}>
       <SafeAreaView />
       {bottomSafeArea ? (
-        <SafeAreaView style={[styles.container, styles.bottom[bottomStyle]]}>
-          {children}
-        </SafeAreaView>
+        <SafeAreaView style={bottomSafeAreaStyle}>{children}</SafeAreaView>
       ) : (
         children
       )}
