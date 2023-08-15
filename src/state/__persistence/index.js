@@ -3,7 +3,6 @@ import {call, select, put, fork} from 'redux-saga/effects';
 import {getRecordKey, getRecordSummary} from 'arena/record';
 import * as fs from 'infra/fs';
 import {Objects} from 'infra/objectUtils';
-
 import nodesSelectors from 'state/nodes/selectors';
 import recordsActions from 'state/records/actionCreators';
 import recordsSelectors from 'state/records/selectors';
@@ -64,12 +63,15 @@ export function* persistRecordWithKeyAndMergeCurrentNodes({record}) {
     const categoryItemIndex = yield select(
       surveySelectors.getCategoryItemIndex,
     );
+    const taxonIndex = yield select(surveySelectors.getTaxonIndex);
+
     recordKey = yield call(
       getRecordKey,
       Object.values(Objects.isEmpty(nodes) ? record.nodes || {} : nodes),
       nodeDefRoot,
       nodeDefsByUuid,
       categoryItemIndex,
+      taxonIndex,
     );
   }
 

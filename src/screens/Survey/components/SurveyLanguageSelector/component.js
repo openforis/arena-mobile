@@ -50,7 +50,7 @@ const SurveyLanguageSelector = () => {
       items={surveyLanguages}
       handleChange={handleChange}
       selectedItemKey={surveyLanguage}
-      labelStractor={getLanguageLabel}
+      labelExtractor={getLanguageLabel}
     />
   );
 };

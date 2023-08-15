@@ -3,8 +3,17 @@ import {useTranslation} from 'react-i18next';
 
 import Empty from 'arena-mobile-ui/components/Empty';
 
-const EmptySuveysList = ({onPress, surveysOrigin}) => {
+const EmptySuveysList = ({onPress, surveysOrigin, hasSurveys}) => {
   const {t} = useTranslation();
+
+  if (hasSurveys) {
+    return (
+      <Empty
+        title={t('Surveys:empty_with_surveys.title')}
+        info={t('Surveys:empty_with_surveys.info')}
+      />
+    );
+  }
 
   return (
     <Empty

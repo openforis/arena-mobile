@@ -4,7 +4,7 @@ import {createSelector} from 'reselect';
 import {getRecordKey as _getRecordKey} from 'arena/record';
 import {keySelectors} from 'infra/stateUtils';
 import nodesSelectors from 'state/nodes/selectors';
-import {getCategoryItemIndex} from 'state/survey/selectors/base';
+import {getCategoryItemIndex, getTaxonIndex} from 'state/survey/selectors/base';
 import * as surveyNodeDefsSelectors from 'state/survey/selectors/nodeDefs';
 
 const getState = state => state;
@@ -68,9 +68,15 @@ const getRecordKey = createCachedSelector(
   surveyNodeDefsSelectors.getNodeDefRoot,
   surveyNodeDefsSelectors.getNodeDefsByUuid,
   getCategoryItemIndex,
-
-  (nodes, nodeDefRoot, nodeDefsByUuid, categoryItemIndex) =>
-    _getRecordKey(nodes, nodeDefRoot, nodeDefsByUuid, categoryItemIndex),
+  getTaxonIndex,
+  (nodes, nodeDefRoot, nodeDefsByUuid, categoryItemIndex, taxonIndex) =>
+    _getRecordKey(
+      nodes,
+      nodeDefRoot,
+      nodeDefsByUuid,
+      categoryItemIndex,
+      taxonIndex,
+    ),
 )((_state, recordUuid) => recordUuid);
 
 export default {

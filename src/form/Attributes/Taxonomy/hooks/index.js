@@ -12,7 +12,7 @@ export const useTaxonItemLabelExtractor = nodeDef => {
     appSelectors.getSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields,
   );
 
-  const _labelStractor = useCallback(
+  const _labelExtractor = useCallback(
     item => {
       return getTaxonItemLabel({
         item,
@@ -24,5 +24,5 @@ export const useTaxonItemLabelExtractor = nodeDef => {
     [language, defaultVisibleFields, nodeDef],
   );
 
-  return _labelStractor;
+  return _labelExtractor;
 };

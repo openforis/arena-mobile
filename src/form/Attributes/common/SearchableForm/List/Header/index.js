@@ -9,7 +9,7 @@ const Header = ({
   searching,
   handleStartToSearch,
   selectedItem,
-  _labelStractor,
+  _labelExtractor,
   applicable,
   handleStopToSearch,
   setSearchText,
@@ -19,9 +19,9 @@ const Header = ({
 
   const label = useMemo(() => {
     return selectedItem
-      ? _labelStractor(selectedItem)
+      ? _labelExtractor(selectedItem)
       : placeholderButton || t('Form:select_empty');
-  }, [selectedItem, _labelStractor, placeholderButton, t]);
+  }, [selectedItem, _labelExtractor, placeholderButton, t]);
 
   return (
     <>

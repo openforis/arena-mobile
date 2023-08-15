@@ -52,6 +52,10 @@
     "data_deleted": "All records in this survey were successfully deleted",
     "data_in_record_deleted": "All data in this record were successfully deleted"
   },
+  "empty_with_surveys": {
+    "title": "No results.",
+    "info": "It looks like you don't have any surveys for this search."
+  },
   "local": {
     "title": "Device",
     "error": {

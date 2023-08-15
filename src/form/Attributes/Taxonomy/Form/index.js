@@ -18,11 +18,12 @@ import styles from './styles';
 
 const getTextForSearch = (item, language) => {
   const vernacularNamesObj = item?.vernacularNames || {};
-  const vernacularNames = Object.values(vernacularNamesObj).flatMap(
-    vernacularName => vernacularName?.props?.name,
-  );
 
-  return [
+  const vernacularNames = Object.values(vernacularNamesObj)
+    .flatMap(vernacularName => vernacularName)
+    .map(vernacularName => vernacularName?.props?.name);
+
+  const normalizedString = [
     item?.props?.code,
     item.props.genus,
     item.props.family,
@@ -32,6 +33,8 @@ const getTextForSearch = (item, language) => {
     .join('.')
     .toLowerCase()
     .normalize('NFD');
+
+  return normalizedString;
 };
 
 const Form = ({node, nodeDef}) => {
@@ -61,7 +64,7 @@ const Form = ({node, nodeDef}) => {
     [actions, node],
   );
 
-  const _labelStractor = useTaxonItemLabelExtractor(nodeDef);
+  const _labelExtractor = useTaxonItemLabelExtractor(nodeDef);
 
   const itemsArray = useMemo(() => Object.values(items), [items]);
 
@@ -86,13 +89,13 @@ const Form = ({node, nodeDef}) => {
 
       return (
         <ListItem
-          label={_labelStractor(item)}
+          label={_labelExtractor(item)}
           handlePress={handleSelect(item)}
           selected={selected}
         />
       );
     },
-    [selectedItem, _labelStractor, handleSelect],
+    [selectedItem, _labelExtractor, handleSelect],
   );
 
   const taxonomiesWithIndexToSearch = useMemo(() => {
@@ -120,7 +123,7 @@ const Form = ({node, nodeDef}) => {
         searching={searching}
         handleStartToSearch={handleStartToSearch}
         selectedItem={selectedItem}
-        _labelStractor={_labelStractor}
+        _labelExtractor={_labelExtractor}
         applicable={applicable}
         handleStopToSearch={handleStopToSearch}
         setSearchText={setSearchText}

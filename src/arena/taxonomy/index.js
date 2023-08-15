@@ -88,7 +88,7 @@ export const getTaxonItemLabel = ({item, taxonomyVisibleFields}) => {
         return vernacularNames?.join(', ');
       }
       if (field === props.code) {
-        return `(${item.props.code})`;
+        return `(${item?.props?.code})`;
       }
       return item?.props?.[field];
     })

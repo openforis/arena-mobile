@@ -11,19 +11,19 @@ import styles from './styles';
 
 const ChevronIcon = () => <Icon name="chevron-down" />;
 
-const _keyStractor = item => item?.uuid || item?.id || item;
-const _labelStractor = item => item.name || item;
+const _keyExtractor = item => item?.uuid || item?.id || item;
+const _labelExtractor = item => item.name || item;
 const _prepareItemFn =
-  ({keyStractor, labelStractor, selectedItemKey}) =>
+  ({keyExtractor, labelExtractor, selectedItemKey}) =>
   item => {
     return Object.assign({}, typeof item === 'object' ? item : {}, {
-      key: keyStractor(item),
+      key: keyExtractor(item),
       value: item,
-      label: labelStractor(item),
+      label: labelExtractor(item),
       ...(Platform.OS !== 'ios'
         ? {
             color:
-              selectedItemKey === keyStractor(item)
+              selectedItemKey === keyExtractor(item)
                 ? colors.secondary
                 : colors.neutralLighter,
           }
@@ -37,8 +37,8 @@ const Select = ({
   customStyles,
   selectedItemKey,
   onValueChange,
-  keyStractor,
-  labelStractor,
+  keyExtractor,
+  labelExtractor,
   prepareItemFn,
   filterFn,
   doneText,
@@ -53,11 +53,13 @@ const Select = ({
         ? []
         : items
             .filter(filterFn)
-            .map(prepareItemFn({keyStractor, labelStractor, selectedItemKey})),
+            .map(
+              prepareItemFn({keyExtractor, labelExtractor, selectedItemKey}),
+            ),
     [
       items,
-      keyStractor,
-      labelStractor,
+      keyExtractor,
+      labelExtractor,
       prepareItemFn,
       filterFn,
       selectedItemKey,
@@ -105,8 +107,8 @@ Select.defaultProps = {
   customStyles: {},
   selectedItemKey: null,
   onValueChange: () => {},
-  keyStractor: _keyStractor,
-  labelStractor: _labelStractor,
+  keyExtractor: _keyExtractor,
+  labelExtractor: _labelExtractor,
   prepareItemFn: _prepareItemFn,
   filterFn: _filterFn,
   doneText: 'ok',

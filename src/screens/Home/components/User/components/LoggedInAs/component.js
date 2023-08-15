@@ -22,9 +22,9 @@ const LoggedInAs = () => {
       <LabelsAndValues
         size="s"
         items={[
-          {label: t('Home:username'), value: name},
+          {label: t('Home:name'), value: name},
           {label: t('Home:email'), value: email},
-          {label: t('Home:role'), value: role},
+          {label: t('Home:role'), value: t(`Home:roles.${role}.label`)},
         ]}
       />
     </Card>

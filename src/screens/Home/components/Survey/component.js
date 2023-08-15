@@ -2,8 +2,8 @@ import * as React from 'react';
 import {useSelector} from 'react-redux';
 
 import {selectors as surveySelectors} from 'state/survey';
-import {selectors as userSelectors} from 'state/user';
 import {selectors as surveysSelectors} from 'state/surveys';
+import {selectors as userSelectors} from 'state/user';
 
 import NoLocalSurveys from './components/NoLocalSurveys';
 import NoSurveySelected from './components/NoSurveySelected';

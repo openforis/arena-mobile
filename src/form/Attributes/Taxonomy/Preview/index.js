@@ -23,7 +23,7 @@ const Taxonomy = ({node, nodeDef}) => {
 
   const {t} = useTranslation();
 
-  const _labelStractor = useTaxonItemLabelExtractor(nodeDef);
+  const _labelExtractor = useTaxonItemLabelExtractor(nodeDef);
   const itemsArray = useMemo(() => Object.values(items), [items]);
 
   const handleSelectNodeAndNodeDef = useSelectNodeAndNodeDef({
@@ -40,7 +40,7 @@ const Taxonomy = ({node, nodeDef}) => {
     <DropDownButton
       onPress={handleSelectNodeAndNodeDef}
       label={
-        selectedItem ? _labelStractor(selectedItem) : t('Form:select_empty')
+        selectedItem ? _labelExtractor(selectedItem) : t('Form:select_empty')
       }
       selected={selectedItem}
       disabled={!applicable}

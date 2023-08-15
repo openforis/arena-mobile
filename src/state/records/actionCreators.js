@@ -15,7 +15,11 @@ const {records} = createActions({
     error,
   }),
 
-  [types.deleteRecord$]: ({recordUuid, callBack}) => ({recordUuid, callBack}),
+  [types.deleteRecord$]: ({recordUuid, callBack, showToast}) => ({
+    recordUuid,
+    callBack,
+    showToast,
+  }),
   [types.SET_RECORD]: ({record, isCreating = false}) => ({record, isCreating}),
   [types.CLEAN_RECORD]: ({recordUuid}) => ({
     recordUuid,
