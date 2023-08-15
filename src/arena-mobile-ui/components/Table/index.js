@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useMemo} from 'react';
+import {StyleSheet} from 'react-native';
 
 import List from 'arena-mobile-ui/components/List';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
@@ -31,24 +32,41 @@ const Table = ({
   customStyles = {},
 }) => {
   const baseStyles = useThemedStyles(_styles);
+  const containerStyles = useMemo(() => {
+    return StyleSheet.compose(baseStyles.container, customStyles?.container);
+  }, [baseStyles, customStyles]);
+
+  const headerStyles = useMemo(() => {
+    return StyleSheet.compose(baseStyles.header, customStyles?.header);
+  }, [baseStyles, customStyles]);
+
+  const headerRowStyles = useMemo(() => {
+    return StyleSheet.compose(baseStyles.headerRow, customStyles?.headerRow);
+  }, [baseStyles, customStyles]);
+
+  const headerCellStyles = useMemo(() => {
+    return StyleSheet.compose(baseStyles.headerCell, customStyles?.headerCell);
+  }, [baseStyles, customStyles]);
+
+  const bodyStyles = useMemo(() => {
+    return StyleSheet.compose(baseStyles.body, customStyles?.body);
+  }, [baseStyles, customStyles]);
+
   return (
-    <TableContainer
-      style={[baseStyles.container, customStyles?.container || {}]}>
-      <TableHeader style={[baseStyles.header, customStyles?.header || {}]}>
-        <TableRow
-          key="header"
-          style={[baseStyles.headerRow, customStyles?.headerRow || {}]}>
+    <TableContainer style={containerStyles}>
+      <TableHeader style={headerStyles}>
+        <TableRow key="header" style={headerRowStyles}>
           {headers?.map(item => (
             <TableCell
               key={headerCellKeyExtractor(item)}
-              style={[baseStyles.headerCell, customStyles?.headerCell || {}]}
+              style={headerCellStyles}
               width={getWidth(item) || baseWidth}>
               {renderHeaderCell({item})}
             </TableCell>
           ))}
         </TableRow>
       </TableHeader>
-      <TableBody style={[baseStyles.body, customStyles?.body || {}]}>
+      <TableBody style={bodyStyles}>
         <List
           data={rows}
           keyExtractor={keyRowExtractor}

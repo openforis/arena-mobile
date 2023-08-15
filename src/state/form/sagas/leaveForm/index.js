@@ -11,7 +11,9 @@ import recordActions from 'state/records/actionCreators';
 export function* handleDeleteRecordIfNotModified() {
   const record = yield select(formSelectors.getRecord);
   if (!record.dateModified) {
-    yield put(recordActions.deleteRecord({recordUuid: record.uuid}));
+    yield put(
+      recordActions.deleteRecord({recordUuid: record.uuid, showToast: false}),
+    );
     yield put(formActions.clean());
   }
 }

@@ -1,4 +1,4 @@
-import {NodeDefs} from '@openforis/arena-core';
+import {NodeDefs, NodeDefType} from '@openforis/arena-core';
 import {useCallback} from 'react';
 import {useSelector} from 'react-redux';
 
@@ -22,19 +22,21 @@ export const useEntityTableData = () => {
 
   const getWidth = useCallback(
     item => {
+      let width =
+        150 * Math.max(baseModifier, 1) * Math.max(fontBaseModifier, 1);
       if (item?.props?.layout) {
-        return (
+        width =
           Number(
             (
               NodeDefs.getLayoutProps(cycle)(item)?.columnWidth || '150'
             ).replace(/\D+/g, ''),
-          ) *
-          1.25 *
-          Math.max(baseModifier, 1) *
-          Math.max(fontBaseModifier, 1)
-        );
+          ) * 1.25;
       }
-      return 150;
+      if (NodeDefs.getType(item) === NodeDefType.taxon) {
+        width = width * 2;
+      }
+
+      return width;
     },
     [cycle, baseModifier, fontBaseModifier],
   );

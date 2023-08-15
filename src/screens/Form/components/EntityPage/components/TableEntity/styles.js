@@ -6,6 +6,11 @@ const styles = ({colors}) =>
       flex: 1,
       backgroundColor: colors.backgroundColor,
     },
+    header: {
+      textStyle: {
+        color: colors.neutralLightest,
+      },
+    },
   });
 
 export default styles;

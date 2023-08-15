@@ -5,17 +5,17 @@ import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import BaseCell from 'form/Attributes/common/Base/Cell';
 import {selectors as surveySelectors} from 'state/survey';
 
-const BaseValuesRenderer = ({nodes}) => {
+import {useTaxonItemLabelExtractor} from '../hooks';
+
+const BaseValuesRenderer = ({nodeDef, nodes}) => {
   const node = nodes[0];
+
+  const labelExtractor = useTaxonItemLabelExtractor(nodeDef);
 
   const taxonItem = useSelector(state =>
     surveySelectors.getTaxonomyItemByUuid(state, node?.value?.taxonUuid),
   );
-  return (
-    <TextBase numberOfLines={1}>
-      {taxonItem?.props?.code} - {taxonItem?.props?.genus}
-    </TextBase>
-  );
+  return <TextBase numberOfLines={1}>{labelExtractor(taxonItem)}</TextBase>;
 };
 
 const Cell = ({nodeDef, nodes}) => {

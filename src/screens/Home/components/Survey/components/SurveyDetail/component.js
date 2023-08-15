@@ -38,9 +38,7 @@ const SurveyDetail = () => {
       <TextBase type="secondary">
         {t('Home:survey.card.active_survey')}
       </TextBase>
-      <TextTitle>
-        {surveyLabel} ·{surveyLabel}{' '}
-      </TextTitle>
+      <TextTitle>{surveyLabel}</TextTitle>
 
       <LabelsAndValues
         size="s"

@@ -9,27 +9,40 @@ const DEFAULT_EMPTY_ARRAY = [];
 const allKeysEmpty = ({nodes = DEFAULT_EMPTY_ARRAY}) =>
   nodes.every(node => Objects.isEmpty(node.value));
 
-export const getKeyNodeAsString = ({
+const getKeyNodeAsString = ({
   node,
   categoryItemIndex,
+  taxonIndex,
   defaultString = DEFAULT_STRING,
 }) => {
   if (node?.value?.itemUuid) {
     const code = categoryItemIndex?.[node?.value?.itemUuid]?.props?.code;
     return code || defaultString;
   }
+
+  if (node?.value?.taxonUuid) {
+    const code = taxonIndex?.[node?.value?.taxonUuid]?.props?.code;
+    return code || defaultString;
+  }
+
   return Objects.isEmpty(node.value) ? defaultString : node.value;
 };
 
 export const getKeyNodesAsString = ({
   nodes = DEFAULT_EMPTY_ARRAY,
   categoryItemIndex,
+  taxonIndex,
   joinString = DEFAULT_JOIN_STRING,
   defaultString = DEFAULT_STRING,
 }) =>
   nodes
     .map(nodeKey =>
-      getKeyNodeAsString({node: nodeKey, categoryItemIndex, defaultString}),
+      getKeyNodeAsString({
+        node: nodeKey,
+        categoryItemIndex,
+        defaultString,
+        taxonIndex,
+      }),
     )
     .join(joinString) || '';
 
@@ -49,6 +62,8 @@ export const getKeyNodesForEntityAsString = ({
   nodes,
   nodeDefsByUuid,
   categoryItemIndex,
+
+  taxonIndex,
   joinString = DEFAULT_JOIN_STRING,
   defaultString = DEFAULT_STRING,
   defaultEmptyString,
@@ -63,6 +78,8 @@ export const getKeyNodesForEntityAsString = ({
   return getKeyNodesAsString({
     nodes: keyNodes,
     categoryItemIndex,
+
+    taxonIndex,
     defaultString,
     joinString,
   });
@@ -73,6 +90,8 @@ export const getRecordKey = (
   nodeDefRoot,
   nodeDefsByUuid,
   categoryItemIndex,
+
+  taxonIndex,
 ) => {
   const rootNode = nodes.find(node => node.nodeDefUuid === nodeDefRoot?.uuid);
 
@@ -81,6 +100,8 @@ export const getRecordKey = (
     nodes,
     nodeDefsByUuid,
     categoryItemIndex,
+
+    taxonIndex,
     defaultString: '-',
     joinString: '/',
   });

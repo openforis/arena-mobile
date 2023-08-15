@@ -95,16 +95,18 @@ function* handleDeleteSurveyFiles({payload}) {
 }
 
 function* handleDeleteRecordFiles({payload}) {
-  const {recordUuid} = payload;
+  const {recordUuid, showToast = true} = payload;
   const filesBySurvey = yield select(state =>
     filesSelectors.getFilesByRecordUuid(state, recordUuid),
   );
 
   yield call(handleDeleteFiles, Object.keys(filesBySurvey));
-  yield call(handleShowToast, {
-    message: t('Surveys:toasts.data_in_record_deleted'),
-    duration: 5000,
-  });
+  if (showToast) {
+    yield call(handleShowToast, {
+      message: t('Surveys:toasts.data_in_record_deleted'),
+      duration: 5000,
+    });
+  }
 }
 
 export default function* () {

@@ -147,7 +147,7 @@ const FormCodeMultiple = ({nodeDef}) => {
         searching={searching}
         handleStartToSearch={handleStartToSearch}
         selectedItem={null}
-        _labelStractor={null}
+        _labelExtractor={null}
         applicable={applicable}
         handleStopToSearch={handleStopToSearch}
         setSearchText={setSearchText}

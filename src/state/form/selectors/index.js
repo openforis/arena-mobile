@@ -244,12 +244,14 @@ const getEntityKey = createCachedSelector(
   surveySelectorsNodeDefs.getNodeDefsByUuid,
   (_, entity) => entity,
   getCategoryItemIndex,
-  (nodes, nodeDefsByUuid, entity, categoryItemIndex) =>
+  surveySelectorsBase.getTaxonIndex,
+  (nodes, nodeDefsByUuid, entity, categoryItemIndex, taxonIndex) =>
     getKeyNodesForEntityAsString({
       nodes,
       entity,
       nodeDefsByUuid,
       categoryItemIndex,
+      taxonIndex,
     }),
 )((_state_, entity) => entity?.uuid || DEFAULT_NO_KEY);
 
@@ -259,7 +261,15 @@ const getNodeDefNodesWithKeysAsStringInHierarchy = createCachedSelector(
   keySelectors.identity,
   surveySelectorsNodeDefs.getNodeDefsByUuid,
   getCategoryItemIndex,
-  (nodes, hierarchyUuids, nodeDef, nodeDefsByUuid, categoryItemIndex) =>
+  surveySelectorsBase.getTaxonIndex,
+  (
+    nodes,
+    hierarchyUuids,
+    nodeDef,
+    nodeDefsByUuid,
+    categoryItemIndex,
+    taxonIndex,
+  ) =>
     nodes
       .filter(
         node =>
@@ -272,6 +282,7 @@ const getNodeDefNodesWithKeysAsStringInHierarchy = createCachedSelector(
           entity: node,
           nodeDefsByUuid,
           categoryItemIndex,
+          taxonIndex,
         });
 
         return Object.assign({}, node, {keyString});

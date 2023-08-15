@@ -46,7 +46,7 @@ const CodeDropdownMultiple = ({nodeDef}) => {
     [codeActions, disabled],
   );
 
-  const _labelStractor = useCallback(
+  const _labelExtractor = useCallback(
     item => getCategoryItemLabel(item),
     [getCategoryItemLabel],
   );
@@ -65,7 +65,7 @@ const CodeDropdownMultiple = ({nodeDef}) => {
               _categoryItem => _categoryItem.uuid === node?.value?.itemUuid,
             );
 
-            const label = _labelStractor(categoryItem);
+            const label = _labelExtractor(categoryItem);
 
             return (
               <OptionChip

@@ -44,7 +44,7 @@ function* handleSelectEntity({payload}) {
     _node => _node.nodeDefUuid === nodeDef.uuid,
   );
 
-  // we move to some direct ancestor - TODO not working always
+  // we move to some direct ancestor
   if (nodeInHierarchyWithNodeDefSelected) {
     yield call(navigateToAncestor, {node: nodeInHierarchyWithNodeDefSelected});
     return;

@@ -34,7 +34,7 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
     [categoryItems, node],
   );
 
-  const _labelStractor = useCallback(
+  const _labelExtractor = useCallback(
     item => getCategoryItemLabel(item),
     [getCategoryItemLabel],
   );
@@ -48,7 +48,7 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
     <DropDownButton
       onPress={handleSelectNodeAndNodeDef}
       label={
-        selectedItem ? _labelStractor(selectedItem) : t('Form:select_empty')
+        selectedItem ? _labelExtractor(selectedItem) : t('Form:select_empty')
       }
       disabled={_disabled}
       selected={selectedItem}

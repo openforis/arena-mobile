@@ -24,6 +24,7 @@ const ListEmptyComponent = ({
   loading,
   surveysOrigin,
   setSurveysOrigin,
+  hasSurveys,
 }) => {
   if (loading) {
     return <Loading />;
@@ -37,6 +38,7 @@ const ListEmptyComponent = ({
     <Empty
       surveysOrigin={surveysOrigin}
       onPress={() => setSurveysOrigin('remote')}
+      hasSurveys={hasSurveys}
     />
   );
 };
@@ -86,17 +88,23 @@ const SurveysList = ({
     [surveysOrigin, localSurveys, surveys, sortCriteria, searchText],
   );
 
+  const hasSurveys = useMemo(() => {
+    return localSurveys.length > 0 || surveys.length > 0;
+  }, [localSurveys, surveys]);
+
   return (
     <>
       <ServerConnectionBar
         errorRemoteServer={errorRemoteServer}
         info={surveysOrigin !== 'remote'}
       />
-      <SearchBar
-        setSearchText={setSearchText}
-        autoFocus={false}
-        containerStyle={styles.searchBarcontainerStyle}
-      />
+      {hasSurveys && (
+        <SearchBar
+          setSearchText={setSearchText}
+          autoFocus={false}
+          containerStyle={styles.searchBarcontainerStyle}
+        />
+      )}
       <List
         data={_surveys}
         surveysOrigin={surveysOrigin}
@@ -107,6 +115,7 @@ const SurveysList = ({
             setSurveysOrigin={setSurveysOrigin}
             loading={loading}
             errorRemoteServer={errorRemoteServer}
+            hasSurveys={hasSurveys}
           />
         }
         errorRemoteServer={errorRemoteServer}

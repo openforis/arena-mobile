@@ -16,6 +16,7 @@ import {useEntityTableData} from './hooks';
 import _styles from './styles';
 
 const Table = () => {
+  const styles = useThemedStyles(_styles);
   const {rows, headers, getWidth} = useEntityTableData();
 
   const dispatch = useDispatch();
@@ -36,11 +37,11 @@ const Table = () => {
       <Label
         nodeDef={nodeDef}
         iconColor={colors.neutralLightest}
-        customStyles={{textStyle: {color: colors.neutralLightest}}}
+        customStyles={styles.header}
         numberOfLines={1}
       />
     ),
-    [],
+    [styles.header],
   );
 
   const renderRow = useCallback(

@@ -128,8 +128,8 @@ const Form = ({nodeDef}) => {
     [setValue, selectedSrs],
   );
 
-  const _keyStractor = useCallback(item => item.code, []);
-  const _labelStractor = useCallback(item => item.name, []);
+  const _keyExtractor = useCallback(item => item.code, []);
+  const _labelExtractor = useCallback(item => item.name, []);
 
   const nodes = useMemo(() => [node], [node]);
 
@@ -195,8 +195,8 @@ const Form = ({nodeDef}) => {
           {surveySrs.length > 1 ? (
             <Select
               items={surveySrs}
-              keyStractor={_keyStractor}
-              labelStractor={_labelStractor}
+              keyExtractor={_keyExtractor}
+              labelExtractor={_labelExtractor}
               onValueChange={handleSelect}
               selectedItemKey={
                 newValue.srs || node?.value?.srs || selectedSrs.code

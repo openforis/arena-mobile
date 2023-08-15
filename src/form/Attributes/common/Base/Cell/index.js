@@ -3,10 +3,11 @@ import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import Validation from 'form/common/Validation';
 import {selectors as formSelectors} from 'state/form';
 
-import styles from './styles';
+import _styles from './styles';
 
 const BaseValuesRenderer = ({nodes}) => {
   return (
@@ -17,13 +18,14 @@ const BaseValuesRenderer = ({nodes}) => {
 };
 
 const Cell = ({nodeDef, nodes, ValuesRender = BaseValuesRenderer}) => {
+  const styles = useThemedStyles(_styles);
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );
 
   const containerStyle = useMemo(() => {
     return styles.container({nodeDef, applicable});
-  }, [nodeDef, applicable]);
+  }, [styles, nodeDef, applicable]);
 
   return (
     <View style={containerStyle}>

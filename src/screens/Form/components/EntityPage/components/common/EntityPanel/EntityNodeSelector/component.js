@@ -45,7 +45,7 @@ const EntityNodeSelector = ({theme, parentNodeDef, parentNode}) => {
     [dispatch],
   );
 
-  const _labelStractor = useCallback(item => item?.keyString || '-', []);
+  const _labelExtractor = useCallback(item => item?.keyString || '-', []);
 
   return (
     <View style={styles.container}>
@@ -57,7 +57,7 @@ const EntityNodeSelector = ({theme, parentNodeDef, parentNode}) => {
         }
         onValueChange={handleSelectEntityNode}
         selectedItemKey={_parentEntityNode.uuid}
-        labelStractor={_labelStractor}
+        labelExtractor={_labelExtractor}
       />
     </View>
   );

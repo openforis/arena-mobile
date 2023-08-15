@@ -13,7 +13,7 @@ const SelectWithLabel = ({
   handleChange,
   items,
   selectedItemKey,
-  labelStractor,
+  labelExtractor,
 }) => {
   const styles = useThemedStyles(_styles);
   return (
@@ -21,7 +21,7 @@ const SelectWithLabel = ({
       <Label size="m" label={label} />
       <Select
         items={items}
-        labelStractor={labelStractor}
+        labelExtractor={labelExtractor}
         onValueChange={handleChange}
         selectedItemKey={selectedItemKey}
         customStyles={styles.pickerStyles}
@@ -31,7 +31,7 @@ const SelectWithLabel = ({
 };
 
 SelectWithLabel.defaultProps = {
-  labelStractor: undefined,
+  labelExtractor: undefined,
 };
 
 export default SelectWithLabel;

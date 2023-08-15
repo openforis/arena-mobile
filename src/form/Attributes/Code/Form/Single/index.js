@@ -125,7 +125,7 @@ const FormCodeSingle = ({nodeDef, node}) => {
         searching={searching}
         handleStartToSearch={handleStartToSearch}
         selectedItem={selectedItem}
-        _labelStractor={getCategoryItemLabel}
+        _labelExtractor={getCategoryItemLabel}
         applicable={applicable}
         handleStopToSearch={handleStopToSearch}
         setSearchText={setSearchText}
