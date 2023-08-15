@@ -10,6 +10,7 @@ import {
   getSurveySRS,
   getUiState,
   getCategoryItemIndex,
+  getTaxonIndex,
 } from './base';
 import {
   getCategoryItems,
@@ -71,6 +72,7 @@ export default {
   getTaxonomyItemsUuidsByTaxonomyUuid,
   getTaxonomyItemsByTaxonomyUuid,
   getTaxonomyItemByUuid,
+  getTaxonIndex,
 
   // --- Records
   getRecords,

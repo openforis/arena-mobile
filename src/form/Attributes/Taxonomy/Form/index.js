@@ -22,7 +22,7 @@ const getTextForSearch = (item, language) => {
     vernacularName => vernacularName?.props?.name,
   );
 
-  return [
+  const normalizedString = [
     item?.props?.code,
     item.props.genus,
     item.props.family,
@@ -32,6 +32,8 @@ const getTextForSearch = (item, language) => {
     .join('.')
     .toLowerCase()
     .normalize('NFD');
+
+  return normalizedString;
 };
 
 const Form = ({node, nodeDef}) => {
