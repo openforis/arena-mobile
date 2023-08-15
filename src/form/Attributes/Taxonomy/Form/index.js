@@ -18,9 +18,10 @@ import styles from './styles';
 
 const getTextForSearch = (item, language) => {
   const vernacularNamesObj = item?.vernacularNames || {};
-  const vernacularNames = Object.values(vernacularNamesObj).flatMap(
-    vernacularName => vernacularName?.props?.name,
-  );
+
+  const vernacularNames = Object.values(vernacularNamesObj)
+    .flatMap(vernacularName => vernacularName)
+    .map(vernacularName => vernacularName?.props?.name);
 
   const normalizedString = [
     item?.props?.code,
