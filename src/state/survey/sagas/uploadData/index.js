@@ -75,8 +75,8 @@ function* handlePrepareRecordsData() {
     console.log(e);
   } finally {
     console.log('Finally:recordsData');
-    return numberOfRecordsToUpload;
   }
+  return numberOfRecordsToUpload;
 }
 
 function* handlePrepareFilesData() {
@@ -157,8 +157,8 @@ function* handlePrepareZipData() {
     console.log(e);
   } finally {
     console.log('Finally');
-    return numberOfRecordsToUpload;
   }
+  return numberOfRecordsToUpload;
 }
 
 function* cleanTmpFolder() {
