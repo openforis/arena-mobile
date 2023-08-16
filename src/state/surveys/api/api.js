@@ -45,6 +45,7 @@ const uploadSurveyZip = async ({
     files,
     onStart,
     onProgress,
+    conflictResolutionStrategy: 'overwriteIfUpdated',
   });
 };
 

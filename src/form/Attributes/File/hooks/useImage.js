@@ -60,8 +60,8 @@ const useGetImage = ({cropping = false} = {}) => {
                     Platform.OS === 'ios'
                       ? Math.min(0.8, compressQuality) // this is because in IOS 0.8 is more than enough
                       : compressQuality,
-                  compressImageMaxHeight: compressMaxHeight,
-                  compressImageMaxWidth: compressMaxWidth,
+                  compressImageMaxHeight: Math.floor(compressMaxHeight),
+                  compressImageMaxWidth: Math.floor(compressMaxWidth),
                 }),
           });
 
