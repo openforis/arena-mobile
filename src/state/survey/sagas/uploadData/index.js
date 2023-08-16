@@ -45,6 +45,7 @@ function* checkIfShouldUpdate({recordUuid}) {
 }
 
 function* handlePrepareRecordsData() {
+  let numberOfRecordsToUpload = 0;
   try {
     yield call(fs.mkdir, {dirPath: RECORDS_BASE_PATH});
     const surveyUuid = yield select(surveySelectors.getSelectedSurveyUuid);
@@ -58,6 +59,7 @@ function* handlePrepareRecordsData() {
       const shouldUpdate = yield call(checkIfShouldUpdate, {recordUuid});
       if (shouldUpdate) {
         recordsJson.push({uuid: recordUuid, cycle});
+        numberOfRecordsToUpload = numberOfRecordsToUpload + 1;
         yield call(fs.copyFile, {
           sourcePath: recordFile.path,
           destinationPath: `${RECORDS_BASE_PATH}/${recordUuid}.json`,
@@ -73,6 +75,7 @@ function* handlePrepareRecordsData() {
     console.log(e);
   } finally {
     console.log('Finally:recordsData');
+    return numberOfRecordsToUpload;
   }
 }
 
@@ -139,8 +142,9 @@ function* handlePrepareFilesData() {
 }
 
 function* handlePrepareZipData() {
+  let numberOfRecordsToUpload = 0;
   try {
-    yield call(handlePrepareRecordsData);
+    numberOfRecordsToUpload = yield call(handlePrepareRecordsData);
     yield call(handlePrepareFilesData);
 
     yield call(zip, {
@@ -153,6 +157,7 @@ function* handlePrepareZipData() {
     console.log(e);
   } finally {
     console.log('Finally');
+    return numberOfRecordsToUpload;
   }
 }
 
@@ -223,9 +228,12 @@ function* handleUploadData() {
 
     yield call(cleanTmpFolder);
     yield call(fs.mkdir, {dirPath: TMP_SURVEYS_BASE_PATH});
-    yield call(handlePrepareZipData);
+    const numberOfRecordsToUpload = yield call(handlePrepareZipData);
     // UPLOAD DATA and track progress
 
+    if (numberOfRecordsToUpload === 0) {
+      return;
+    }
     yield call(WS({serverUrl}).create);
     yield call(WS({serverUrl}).on, {
       eventName: WebSocketEvents.jobUpdate,

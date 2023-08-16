@@ -133,7 +133,13 @@ export const deleteDir = async path => {
   return RNFetchBlob.fs.unlink(_path);
 };
 
-export const uploadFiles = async ({uploadUrl, files, onStart, onProgress}) => {
+export const uploadFiles = async ({
+  uploadUrl,
+  files,
+  onStart,
+  onProgress,
+  conflictResolutionStrategy,
+}) => {
   const _files = files.map(file =>
     Object.assign({}, file, {
       type: file.filetype,
@@ -147,12 +153,17 @@ export const uploadFiles = async ({uploadUrl, files, onStart, onProgress}) => {
     type: _files[0].type,
   };
 
-  return API({}).postFile(uploadUrl, file, progress => {
-    onProgress({
-      totalBytesSent: progress.loaded,
-      totalBytesExpectedToSend: progress.total,
-    });
-  });
+  return API({}).postFile(
+    uploadUrl,
+    file,
+    progress => {
+      onProgress({
+        totalBytesSent: progress.loaded,
+        totalBytesExpectedToSend: progress.total,
+      });
+    },
+    conflictResolutionStrategy,
+  );
 };
 
 const blobToBase64 = data => {

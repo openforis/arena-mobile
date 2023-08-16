@@ -36,7 +36,7 @@ const SettingsImagesQualityAndSize = () => {
     value => {
       dispatch(
         appActions.setImagesCompressMaxHeight({
-          compressMaxHeight: value,
+          compressMaxHeight: Math.floor(value),
         }),
       );
     },
@@ -47,7 +47,7 @@ const SettingsImagesQualityAndSize = () => {
     value => {
       dispatch(
         appActions.setImagesCompressMaxWidth({
-          compressMaxWidth: value,
+          compressMaxWidth: Math.floor(value),
         }),
       );
     },
