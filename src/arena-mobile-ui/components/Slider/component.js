@@ -1,5 +1,5 @@
 import {Slider} from '@miblanchard/react-native-slider';
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {View, StyleSheet} from 'react-native';
 
 import Button from 'arena-mobile-ui/components/Button';
@@ -23,6 +23,7 @@ const SliderComponent = ({
   customInfoStyle,
   customSliderContainerStyle,
   disabled,
+  isSingle,
 }) => {
   const styles = useThemedStyles(_styles);
 
@@ -42,6 +43,17 @@ const SliderComponent = ({
     );
   }, [styles, customSliderContainerStyle]);
 
+  const handleChange = useCallback(
+    _value => {
+      let __value = _value;
+      if (isSingle) {
+        __value = Array.isArray(_value) ? _value[0] : _value;
+      }
+      onValueChange(__value);
+    },
+    [onValueChange, isSingle],
+  );
+
   return (
     <>
       <TextBase type="header" customStyle={titleStyle}>
@@ -57,7 +69,7 @@ const SliderComponent = ({
         <View style={sliderContainerStyle}>
           <Slider
             value={value}
-            onValueChange={onValueChange}
+            onValueChange={handleChange}
             minimumValue={minimumValue}
             maximumValue={maximumValue}
             disabled={disabled}
@@ -71,6 +83,10 @@ const SliderComponent = ({
       )}
     </>
   );
+};
+
+SliderComponent.defaultProps = {
+  isSingle: true,
 };
 
 export default SliderComponent;
