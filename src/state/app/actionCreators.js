@@ -44,6 +44,10 @@ const {app} = createActions({
   }) => ({
     defaultVisibleFields,
   }),
+  [types.SET_SETTINGS_PREFERENCES_SURVEY_TAXONOMIES_SHOW_ONE_OPTION_PER_VERNACULAR_NAME]:
+    ({showOneOptionPerVernacularName = false}) => ({
+      showOneOptionPerVernacularName,
+    }),
   /* Style settings */
   [types.SET_STYLE_BASE_MODIFIER]: ({baseModifier = 1}) => ({
     baseModifier,

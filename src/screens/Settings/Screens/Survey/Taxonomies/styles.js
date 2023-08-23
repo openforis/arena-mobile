@@ -16,10 +16,22 @@ const styles = ({colors, baseStyles}) =>
       padding: baseStyles.bases.BASE_4,
     },
     exampleContainer: {
-      marginVertical: baseStyles.bases.BASE_6,
+      padding: baseStyles.bases.BASE_2,
+      paddingBottom: baseStyles.bases.BASE_6,
+
+      borderWidth: 1,
+      borderColor: colors.primary,
+      borderRadius: baseStyles.bases.BASE_2,
+      borderStyle: 'dashed',
+      marginHorizontal: baseStyles.bases.BASE_4,
+      marginVertical: baseStyles.bases.BASE_2,
+      marginBottom: baseStyles.bases.BASE,
     },
     exampleTitle: {
       textAlign: 'center',
+    },
+    exampleDisclaimer: {
+      textAlign: 'left',
     },
     optionContainer: {
       backgroundColor: colors.backgroundLight,
@@ -47,6 +59,15 @@ const styles = ({colors, baseStyles}) =>
     optionTextSelected: {
       fontWeight: 'bold',
       color: colors.primaryContrastText,
+    },
+    showOneOptionPerVernacularNameSwitchContainer: {
+      backgroundColor: colors.backgroundLight,
+      padding: baseStyles.bases.BASE_4,
+      borderBottomColor: colors.neutralLighter,
+      borderBottomWidth: 0.5,
+      flexDirection: 'row',
+      borderRadius: baseStyles.bases.BASE_2,
+      marginVertical: baseStyles.bases.BASE_4,
     },
   });
 

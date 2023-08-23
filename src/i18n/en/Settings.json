@@ -30,7 +30,10 @@
           "family": "Family",
           "scientificName": "Scientific Name",
           "vernacularNames": "Vernacular Names"
-        }
+          
+        },
+        "show_one_option_per_vernacular_name": "Show one option per vernacular name",
+        "example": "Example",
       }
     }
   },
@@ -53,6 +56,9 @@
       "max_height": {
         "label": "Max height {{ value }} {{ subfix }}",
         "info": "Select the max height of the images. ( from {{from}} to {{to}} pixels.)"
+      },
+      "aspect_ratio": {
+        "label": "Keep aspect ratio"
       }
     }
   },
