@@ -19,6 +19,8 @@ const autoCapitalizeByTransformFunction = {
   [textTransformValues.uppercase]: 'characters',
 };
 
+const isMultiline = nodeDef => nodeDef.props.textInputType === 'multiLine';
+
 export const getValueAsString = (nodeDef, node, defaultValue = '') => {
   if (nodeDef.type === NodeDefType.text) {
     return String(node?.value || defaultValue);
@@ -85,6 +87,10 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
     [nodeDef, node, newValue, handleUpdateNode, handleClose],
   );
 
+  const handleSubmitEnter = useCallback(() => {
+    handleSubmit({callback: isMultiline(nodeDef) ? false : handleClose});
+  }, [handleSubmit, handleClose, nodeDef]);
+
   const nodes = useMemo(() => [node], [node]);
 
   return (
@@ -101,8 +107,9 @@ const Form = ({nodeDef, keyboardType = 'default'}) => {
         lateFocus={Platform.OS === 'ios' ? false : true}
         keyboardType={keyboardType}
         textAlign={nodeDef.type === NodeDefType.text ? 'left' : 'right'}
-        onSubmitEditing={handleSubmit}
+        onSubmitEditing={handleSubmitEnter}
         editable={!NodeDefs.isReadOnly(nodeDef)}
+        multiline={isMultiline(nodeDef)}
       />
     </BaseForm>
   );

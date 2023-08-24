@@ -53,6 +53,7 @@ const Input = ({
   lateFocus,
   editable,
   clear,
+  multiline,
   ...props
 }) => {
   const styles = useThemedStyles(_styles);
@@ -86,7 +87,8 @@ const Input = ({
       title={title}
       hasTitle={!Objects.isEmpty(title)}
       stacked={stacked}
-      horizontal={horizontal}>
+      horizontal={horizontal}
+      multiline={multiline}>
       <TextInput
         ref={inputRef}
         style={textInputStyle}
@@ -96,6 +98,7 @@ const Input = ({
         selectTextOnFocus={true}
         placeholderTextColor={colors.neutralLightest}
         editable={editable}
+        multiline={multiline}
         {...props}
       />
     </InputContainer>
