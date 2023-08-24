@@ -68,13 +68,28 @@ export const exampleTaxon = {
   },
 };
 
-export const getTaxonItemLabel = ({item, taxonomyVisibleFields}) => {
+export const getVernacularNames = ({item}) => {
   const vernacularNamesObj = item?.vernacularNames || {};
 
   const vernacularNames = Object.values(vernacularNamesObj)
     .flat()
     .flatMap(vernacularName => vernacularName?.props?.name)
     .filter(value => !!value);
+
+  return vernacularNames;
+};
+
+export const getNumberOfItemsByVernacularNames = ({item}) => {
+  const vernacularNames = getVernacularNames({item});
+  return vernacularNames?.length;
+};
+
+export const getTaxonItemLabelByVernacularName = ({
+  item,
+  taxonomyVisibleFields,
+  vernacularPosition = -1,
+}) => {
+  const vernacularNames = getVernacularNames({item});
 
   return (
     taxonomyVisibleFields ||
@@ -85,6 +100,12 @@ export const getTaxonItemLabel = ({item, taxonomyVisibleFields}) => {
         if (!vernacularNames?.length) {
           return null;
         }
+        if (
+          vernacularPosition >= 0 &&
+          vernacularPosition < vernacularNames.length
+        ) {
+          return vernacularNames[vernacularPosition];
+        }
         return vernacularNames?.join(', ');
       }
       if (field === props.code) {
@@ -94,4 +115,16 @@ export const getTaxonItemLabel = ({item, taxonomyVisibleFields}) => {
     })
     .filter(value => !!value)
     .join(', ');
+};
+
+export const getTaxonItemLabel = ({item, taxonomyVisibleFields}) => {
+  return getTaxonItemLabelByVernacularName({
+    item,
+    taxonomyVisibleFields,
+    vernacularPosition: -1,
+  });
+};
+
+export const getVernacularNameUuid = item => {
+  return Object.values(item?.vernacularNames).flat()[0]?.uuid;
 };
