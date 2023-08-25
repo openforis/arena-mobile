@@ -1,13 +1,42 @@
 import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
+import {View} from 'react-native';
+import openMap from 'react-native-open-maps';
 import {useSelector} from 'react-redux';
 
+import Button from 'arena-mobile-ui/components/Button';
+import Icon from 'arena-mobile-ui/components/Icon';
 import LabelsAndValues from 'arena-mobile-ui/components/LabelsAndValues';
 import BasePreview from 'form/Attributes/common/Base/Preview';
+import formSelectors from 'state/form/selectors';
 import surveySelectors from 'state/survey/selectors';
 
 const coordinateText = coordinate =>
   !isNaN(coordinate) && Number(coordinate).toFixed(4);
+
+const OpenInMap = ({nodeDef}) => {
+  const nodes = useSelector(state =>
+    formSelectors.getNodeDefNodesInHierarchy(state, nodeDef),
+  );
+
+  const handleOpenMap = () => {
+    const {x, y} = nodes[0].value;
+    openMap({
+      query: `${y},${x}`,
+    });
+  };
+
+  return (
+    <View>
+      <Button
+        onPress={handleOpenMap}
+        type="ghostBlack"
+        label="Open in map"
+        icon={<Icon name="map" size="s" />}
+      />
+    </View>
+  );
+};
 
 export const NodeValueRender = ({node, nodeDef}) => {
   const {t} = useTranslation();
@@ -66,7 +95,12 @@ export const NodeValueRender = ({node, nodeDef}) => {
   );
 };
 const Preview = ({nodeDef}) => {
-  return <BasePreview nodeDef={nodeDef} NodeValueRender={NodeValueRender} />;
+  return (
+    <>
+      <BasePreview nodeDef={nodeDef} NodeValueRender={NodeValueRender} />
+      <OpenInMap nodeDef={nodeDef} />
+    </>
+  );
 };
 
 export default Preview;

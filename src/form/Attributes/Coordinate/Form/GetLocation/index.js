@@ -205,7 +205,7 @@ const BlinkingIconWithOpacityAnimation = ({name, customStyle, color}) => {
 
   return (
     <Animated.View style={{opacity: opacityAnim}}>
-      <Icon name={name} customStyle={customStyle} color={color} />
+      {name && <Icon name={name} customStyle={customStyle} color={color} />}
     </Animated.View>
   );
 };
