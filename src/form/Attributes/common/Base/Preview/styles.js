@@ -22,8 +22,7 @@ const styles = ({colors, baseStyles}) =>
       paddingHorizontal: baseStyles.bases.BASE_3,
     },
     disabled: {
-      opacity: 0.5,
-      backgroundColor: colors.backgroundDarker,
+      backgroundColor: colors.disabledBackground,
     },
     basePreviewContainer: {
       flexDirection: 'row',

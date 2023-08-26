@@ -26,6 +26,10 @@ const OpenInMap = ({nodeDef}) => {
     });
   };
 
+  if (!nodes[0]?.value?.x || !nodes[0]?.value?.y) {
+    return null;
+  }
+
   return (
     <View>
       <Button

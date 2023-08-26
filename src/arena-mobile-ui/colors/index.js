@@ -126,10 +126,12 @@ export const primaryContrastTextLight = grey50;
 export const white = grey0;
 export const black = grey900;
 export const backgroundDarker = neutralDarker;
+export const backgroundDark = neutralDark;
 export const background = neutralLightest;
 export const backgroundLight = white;
 export const backgroundLighter = neutralLighter;
 export const activeBackground = secondaryLightest;
+export const disabledBackground = neutralDark;
 
 export const borderColor = neutralLight;
 export const borderColorContrast = neutralLightest;
@@ -152,11 +154,13 @@ const DarkTheme = {
 
   // -- backgrounds
   backgroundDarker: neutralLighter,
+  backgroundDark: neutralLight,
   background: black,
   backgroundLight: neutralDark,
   backgroundLighter: neutralDarker,
   activeBackground: secondary,
   neutralLightest: neutralDarkest,
+  disabledBackground: neutralLight,
 
   borderColorContrast: neutralLighter,
   borderColor: neutralDarker,
