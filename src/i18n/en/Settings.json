@@ -30,10 +30,9 @@
           "family": "Family",
           "scientificName": "Scientific Name",
           "vernacularNames": "Vernacular Names"
-          
         },
         "show_one_option_per_vernacular_name": "Show one option per vernacular name",
-        "example": "Example",
+        "example": "Example"
       }
     }
   },
@@ -93,7 +92,6 @@
         }
       }
     }
-
   },
   "form": {
     "title": "Form",

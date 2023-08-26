@@ -12,7 +12,7 @@ let record = {
   surveyUuid: mockSurvey.uuid,
   surveyId: mockSurvey.id,
   dateCreated: moment(mockDate).toISOString(),
-  dateModified: moment(mockDate).toISOString(),
+  dateModified: moment(mockDate).format('yyyy-MM-DD_HH-mm-ss'),
   step: '1',
   cycle: '0',
   ownerName: undefined,

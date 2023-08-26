@@ -77,10 +77,14 @@ export const mockSurvey = {
   },
 };
 
+export const mockDate = '2021-05-01T10:11:12.000Z';
+
 export const mockRecord = {
   uuid: getCurrentUuid(),
   ownerUuid: mockUser.uuid,
   dateCreated: moment().toISOString(),
+  dateModified: moment(mockDate).format('yyyy-MM-DD_HH-mm-ss'),
+  meta: {},
   surveyUuid: mockSurvey.uuid,
   step: '1', // get from survey
   cycle: '0', // get from survey
@@ -90,7 +94,7 @@ export const baseClusterMockNode = {
   created: true,
   uuid: 'CLUSTER_UUID',
   dateCreated: moment().toISOString(),
-  dateModified: moment().toISOString(),
+
   surveyUuid: mockSurvey.uuid,
   recordUuid: mockRecord?.uuid,
   nodeDefUuid: mockSurvey?.nodeDefs?.NODE_DEF_PARENT_UUID?.uuid,
@@ -104,13 +108,13 @@ export const baseMockNode = {
   created: true,
   uuid: getCurrentUuid(),
   dateCreated: moment().toISOString(),
-  dateModified: moment().toISOString(),
+  dateModified: moment(mockDate).format('yyyy-MM-DD_HH-mm-ss'),
   surveyUuid: mockSurvey.uuid,
   recordUuid: mockRecord?.uuid,
   nodeDefUuid: mockSurvey?.nodeDefs?.NODE_DEF_UUID?.uuid,
   parentUuid: 'CLUSTER_UUID',
   value: null,
-  meta: {},
+
   refData: null,
 };
 export const initialState = {
@@ -150,5 +154,3 @@ export const initialStateWithNodesAndRecords = {
     },
   },
 };
-
-export const mockDate = '2021-05-01T10:11:12.000Z';

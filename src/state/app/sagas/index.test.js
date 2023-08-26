@@ -36,6 +36,7 @@ const expectedAppState = {
       survey: {
         taxonomies: {
           defaultVisibleFields: null,
+          showOneOptionPerVernacularName: false,
         },
       },
     },
