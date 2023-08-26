@@ -11,18 +11,32 @@ const appPreferences = handleActions(
     ) => ({...state, compressQuality}),
     [actions.setImagesCompressMaxHeight]: (
       state,
-      {payload: {compressMaxHeight}},
-    ) => ({
-      ...state,
-      compressMaxHeight,
-    }),
+      {payload: {compressMaxHeight, keepAspectRatio}},
+    ) => {
+      const ratio = compressMaxHeight / state.compressMaxHeight;
+
+      return {
+        ...state,
+        compressMaxHeight,
+        ...(keepAspectRatio
+          ? {compressMaxWidth: Math.floor(state.compressMaxWidth * ratio)}
+          : {}),
+      };
+    },
     [actions.setImagesCompressMaxWidth]: (
       state,
-      {payload: {compressMaxWidth}},
-    ) => ({
-      ...state,
-      compressMaxWidth,
-    }),
+      {payload: {compressMaxWidth, keepAspectRatio}},
+    ) => {
+      const ratio = compressMaxWidth / state.compressMaxWidth;
+
+      return {
+        ...state,
+        compressMaxWidth,
+        ...(keepAspectRatio
+          ? {compressMaxHeight: Math.floor(state.compressMaxHeight * ratio)}
+          : {}),
+      };
+    },
     [actions.setIsMaxResolution]: (state, {payload: {isMaxResolution}}) => ({
       ...state,
       isMaxResolution,

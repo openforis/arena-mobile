@@ -4,6 +4,7 @@ import {View, StyleSheet} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 
 import Slider from 'arena-mobile-ui/components/Slider';
+import Switch from 'arena-mobile-ui/components/Switch';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as appSelectors, actions as appActions} from 'state/app';
 
@@ -16,6 +17,7 @@ const SettingsImagesQualityAndSize = () => {
   const dispatch = useDispatch();
   const styles = useThemedStyles(_styles);
   const isMaxResolution = useSelector(appSelectors.getIsMaxResolution);
+  const [keepAspectRatio, setKeepAspectRatio] = React.useState(true);
 
   const compressQuality = useSelector(appSelectors.getImagesCompressQuality);
   const compressMaxHeight = useSelector(
@@ -37,10 +39,11 @@ const SettingsImagesQualityAndSize = () => {
       dispatch(
         appActions.setImagesCompressMaxHeight({
           compressMaxHeight: Math.floor(value),
+          keepAspectRatio,
         }),
       );
     },
-    [dispatch],
+    [dispatch, keepAspectRatio],
   );
 
   const handleSetCompresMaxWidth = useCallback(
@@ -48,10 +51,11 @@ const SettingsImagesQualityAndSize = () => {
       dispatch(
         appActions.setImagesCompressMaxWidth({
           compressMaxWidth: Math.floor(value),
+          keepAspectRatio,
         }),
       );
     },
-    [dispatch],
+    [dispatch, keepAspectRatio],
   );
 
   const handleSetCompresQuality = useCallback(
@@ -67,6 +71,10 @@ const SettingsImagesQualityAndSize = () => {
   const maxText = useMemo(() => {
     return t('Common:max');
   }, [t]);
+
+  const handleToggleAspectRatio = useCallback(() => {
+    setKeepAspectRatio(!keepAspectRatio);
+  }, [keepAspectRatio]);
 
   return (
     <View style={containerStyle}>
@@ -120,6 +128,13 @@ const SettingsImagesQualityAndSize = () => {
         onValueChange={handleSetCompresMaxWidth}
         minimumValue={MIN}
         maximumValue={MAX}
+        disabled={isMaxResolution}
+      />
+
+      <Switch
+        title={t('Settings:images_quality_and_size.screen.aspect_ratio.label')}
+        value={keepAspectRatio}
+        onValueChange={handleToggleAspectRatio}
         disabled={isMaxResolution}
       />
     </View>

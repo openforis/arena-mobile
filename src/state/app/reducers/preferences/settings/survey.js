@@ -15,6 +15,14 @@ const survey = handleActions(
         defaultVisibleFields,
       },
     }),
+    [actions.setSettingsPreferencesSurveyTaxonomiesShowOneOptionPerVernacularName]:
+      (state, {payload: {showOneOptionPerVernacularName = false}}) => ({
+        ...state,
+        taxonomies: {
+          ...state?.taxonomies,
+          showOneOptionPerVernacularName,
+        },
+      }),
   },
   initialState.preferences?.settings?.survey,
 );

@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useCallback, useState, useEffect} from 'react';
+import React, {useCallback, useState, useEffect, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View, ScrollView, TouchableOpacity} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -9,25 +9,85 @@ import {
   taxonomyVisibleFieldsOptions,
   exampleTaxon,
   DEFAULT_TAXONOMY_FIELDS,
+  getTaxonItemLabelByVernacularName,
+  getNumberOfItemsByVernacularNames,
 } from 'arena/taxonomy';
 import Button from 'arena-mobile-ui/components/Button';
 import Header from 'arena-mobile-ui/components/Header';
 import Icon from 'arena-mobile-ui/components/Icon';
 import Layout from 'arena-mobile-ui/components/Layout';
+import Switch from 'arena-mobile-ui/components/Switch';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as appSelectors, actions as appActions} from 'state/app';
 
 import _styles from './styles';
 
+const Example = ({taxonomyVisibleFields, showOneOptionPerVernacularName}) => {
+  const {t} = useTranslation();
+  const styles = useThemedStyles(_styles);
+
+  const taxonItemLabels = useMemo(() => {
+    const _taxonItemLabels = [];
+    if (
+      showOneOptionPerVernacularName &&
+      taxonomyVisibleFields.includes('vernacularNames')
+    ) {
+      const numberOfVernacularNames = getNumberOfItemsByVernacularNames({
+        item: exampleTaxon,
+      });
+      for (let i = 0; i < numberOfVernacularNames; i++) {
+        _taxonItemLabels.push(
+          getTaxonItemLabelByVernacularName({
+            item: exampleTaxon,
+            taxonomyVisibleFields,
+            vernacularPosition: i,
+          }),
+        );
+      }
+      return _taxonItemLabels;
+    }
+
+    return [
+      getTaxonItemLabel({
+        item: exampleTaxon,
+        taxonomyVisibleFields,
+      }),
+    ];
+  }, [taxonomyVisibleFields, showOneOptionPerVernacularName]);
+
+  return (
+    <>
+      {taxonItemLabels.map(taxonItemLabel => (
+        <View style={styles.exampleContainer} key={taxonItemLabel}>
+          <TextBase
+            type="secondaryLight"
+            size="xs"
+            customStyle={styles.exampleDisclaimer}>
+            {t('Settings:survey.taxonomies.screen.example')}
+          </TextBase>
+          <TextBase type="header" customStyle={styles.exampleTaxonItemLabel}>
+            {taxonItemLabel}
+          </TextBase>
+        </View>
+      ))}
+    </>
+  );
+};
+
 const SettingsSurveyTaxonomies = () => {
   const styles = useThemedStyles(_styles);
   const [taxonomyVisibleFieldsKey, setTaxonomyVisibleFieldsKey] = useState(
     DEFAULT_TAXONOMY_FIELDS,
   );
+  const [showOneOptionPerVernacularName, setShowOneOptionPerVernacularName] =
+    useState(false);
 
   const defaultVisibleFields = useSelector(
     appSelectors.getSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields,
+  );
+  const defaultShowOneOptionPerVernacularName = useSelector(
+    appSelectors.getSettingsPreferencesSurveyTaxonomiesShowOneOptionPerVernacularName,
   );
 
   useEffect(() => {
@@ -37,6 +97,12 @@ const SettingsSurveyTaxonomies = () => {
       );
     }
   }, [defaultVisibleFields]);
+  useEffect(() => {
+    if (defaultShowOneOptionPerVernacularName) {
+      setShowOneOptionPerVernacularName(defaultShowOneOptionPerVernacularName);
+    }
+  }, [defaultShowOneOptionPerVernacularName]);
+
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
@@ -48,8 +114,20 @@ const SettingsSurveyTaxonomies = () => {
         defaultVisibleFields: taxonomyVisibleFieldsKey.split('.'),
       }),
     );
+    dispatch(
+      appActions.setSettingsPreferencesSurveyTaxonomiesShowOneOptionPerVernacularName(
+        {
+          showOneOptionPerVernacularName,
+        },
+      ),
+    );
     navigation.goBack();
-  }, [dispatch, navigation, taxonomyVisibleFieldsKey]);
+  }, [
+    dispatch,
+    navigation,
+    taxonomyVisibleFieldsKey,
+    showOneOptionPerVernacularName,
+  ]);
 
   return (
     <Layout bottomStyle="background" topStyle="primary">
@@ -113,16 +191,29 @@ const SettingsSurveyTaxonomies = () => {
                 );
               },
             )}
+            <Switch
+              title={t(
+                'Settings:survey.taxonomies.screen.show_one_option_per_vernacular_name',
+              )}
+              value={showOneOptionPerVernacularName}
+              onValueChange={() =>
+                setShowOneOptionPerVernacularName(
+                  !showOneOptionPerVernacularName,
+                )
+              }
+              customContainerStyle={
+                styles.showOneOptionPerVernacularNameSwitchContainer
+              }
+              disabled={!taxonomyVisibleFieldsKey.includes('vernacularNames')}
+            />
           </View>
-          <View style={styles.exampleContainer}>
-            <TextBase type="header" customStyle={styles.exampleTitle}>
-              {getTaxonItemLabel({
-                item: exampleTaxon,
-                taxonomyVisibleFields:
-                  taxonomyVisibleFieldsOptions[taxonomyVisibleFieldsKey],
-              })}
-            </TextBase>
-          </View>
+
+          <Example
+            taxonomyVisibleFields={
+              taxonomyVisibleFieldsOptions[taxonomyVisibleFieldsKey]
+            }
+            showOneOptionPerVernacularName={showOneOptionPerVernacularName}
+          />
 
           <View style={styles.buttonsContainer}>
             <Button

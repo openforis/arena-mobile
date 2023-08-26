@@ -59,7 +59,7 @@ const initialState = {
         preview: false,
         uuid: 'RECORD_ONE_UUID',
         surveyUuid: mockSurvey.uuid,
-        dateModified: moment(mockDate).toISOString(),
+        dateModified: moment(mockDate).format('yyyy-MM-DD_HH-mm-ss'),
 
         nodes: [],
         _nodesIndex: {
@@ -153,6 +153,7 @@ describe('Node updater', () => {
           ...storeState.records.data,
           RECORD_ONE_UUID: {
             ...storeState.records.data.RECORD_ONE_UUID,
+            dateModified: moment(mockDate).format('yyyy-MM-DD_HH-mm-ss'),
             nodes: [],
           },
         },
@@ -172,7 +173,10 @@ describe('Node updater', () => {
         ...initialState.nodes,
         data: {
           ...initialState.nodes.data,
-          [getCurrentUuid(2)]: {...baseMockNode, value: 5},
+          [getCurrentUuid(2)]: {
+            ...baseMockNode,
+            value: 5,
+          },
         },
         ui: {
           ...initialState.nodes.ui,
@@ -204,6 +208,7 @@ describe('Node updater', () => {
           ...storeState.records.data,
           RECORD_ONE_UUID: {
             ...storeState.records.data.RECORD_ONE_UUID,
+            dateModified: moment(mockDate).format('yyyy-MM-DD_HH-mm-ss'),
             nodes: [],
           },
         },
@@ -290,6 +295,7 @@ describe('Node updater', () => {
           ...storeState.records.data,
           RECORD_ONE_UUID: {
             ...storeState.records.data.RECORD_ONE_UUID,
+            dateModified: moment(mockDate).format('yyyy-MM-DD_HH-mm-ss'),
             nodes: [],
           },
         },
@@ -350,6 +356,7 @@ describe('Node updater', () => {
           ...storeState.records.data,
           RECORD_ONE_UUID: {
             ...storeState.records.data.RECORD_ONE_UUID,
+            dateModified: moment(mockDate).format('yyyy-MM-DD_HH-mm-ss'),
             nodes: [],
           },
         },

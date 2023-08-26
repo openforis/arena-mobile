@@ -44,6 +44,10 @@ const {app} = createActions({
   }) => ({
     defaultVisibleFields,
   }),
+  [types.SET_SETTINGS_PREFERENCES_SURVEY_TAXONOMIES_SHOW_ONE_OPTION_PER_VERNACULAR_NAME]:
+    ({showOneOptionPerVernacularName = false}) => ({
+      showOneOptionPerVernacularName,
+    }),
   /* Style settings */
   [types.SET_STYLE_BASE_MODIFIER]: ({baseModifier = 1}) => ({
     baseModifier,
@@ -58,11 +62,19 @@ const {app} = createActions({
   [types.SET_IMAGES_COMPRESS_QUALITY]: ({compressQuality = 0.5}) => ({
     compressQuality,
   }),
-  [types.SET_IMAGES_COMPRESS_MAX_HEIGHT]: ({compressMaxHeight = 1024}) => ({
+  [types.SET_IMAGES_COMPRESS_MAX_HEIGHT]: ({
+    compressMaxHeight = 1024,
+    keepAspectRatio = true,
+  }) => ({
     compressMaxHeight,
+    keepAspectRatio,
   }),
-  [types.SET_IMAGES_COMPRESS_MAX_WIDTH]: ({compressMaxWidth = 1024}) => ({
+  [types.SET_IMAGES_COMPRESS_MAX_WIDTH]: ({
+    compressMaxWidth = 1024,
+    keepAspectRatio = true,
+  }) => ({
     compressMaxWidth,
+    keepAspectRatio,
   }),
   [types.SET_IS_MAX_RESOLUTION]: ({isMaxResolution = false}) => ({
     isMaxResolution,

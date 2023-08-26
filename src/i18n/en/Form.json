@@ -56,9 +56,9 @@
   "nodeDefCoordinate": {
     "x": "X",
     "y": "Y",
-    "accuracy": "Accuracy",
-    "altitude": "Altitude",
-    "altitudeAccuracy": "Altitude accuracy",
+    "accuracy": "Accuracy (m)",
+    "altitude": "Altitude (m)",
+    "altitudeAccuracy": "Altitude accuracy (m)",
     "srs": "SRS",
     "get_location": "Get location",
     "use": "Use",

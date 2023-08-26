@@ -39,6 +39,14 @@ const getSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields =
       preferences?.settings?.survey?.taxonomies?.defaultVisibleFields || null,
   );
 
+const getSettingsPreferencesSurveyTaxonomiesShowOneOptionPerVernacularName =
+  createSelector(
+    getPreferences,
+    preferences =>
+      preferences?.settings?.survey?.taxonomies
+        ?.showOneOptionPerVernacularName || false,
+  );
+
 const getBaseModifier = createSelector(
   getStyle,
   style => style?.baseModifier || 1,
@@ -54,20 +62,31 @@ const getColorScheme = createSelector(
   style => style?.colorScheme || 'light',
 );
 
+/* this is to avoid the error with the slider if there is some array stored from a previous version*/
+const ifArrayReturnFirstValue = value => {
+  if (Array.isArray(value)) {
+    return value[0];
+  }
+  return value;
+};
+
 /* Image setting */
-const getImagesCompressQuality = createSelector(
-  getPreferences,
-  preferences => preferences?.settings?.images?.compressQuality || 0.5,
+const getImagesCompressQuality = createSelector(getPreferences, preferences =>
+  ifArrayReturnFirstValue(
+    preferences?.settings?.images?.compressQuality || 0.5,
+  ),
 );
 
-const getImagesCompressMaxHeight = createSelector(
-  getPreferences,
-  preferences => preferences?.settings?.images?.compressMaxHeight || 1024,
+const getImagesCompressMaxHeight = createSelector(getPreferences, preferences =>
+  ifArrayReturnFirstValue(
+    preferences?.settings?.images?.compressMaxHeight || 1024,
+  ),
 );
 
-const getImagesCompressMaxWidth = createSelector(
-  getPreferences,
-  preferences => preferences?.settings?.images?.compressMaxWidth || 1024,
+const getImagesCompressMaxWidth = createSelector(getPreferences, preferences =>
+  ifArrayReturnFirstValue(
+    preferences?.settings?.images?.compressMaxWidth || 1024,
+  ),
 );
 
 const getIsMaxResolution = createSelector(
@@ -96,6 +115,7 @@ export default {
 
   /* Preferences settings */
   getSettingsPreferencesSurveyTaxonomiesDefaultVisibleFields,
+  getSettingsPreferencesSurveyTaxonomiesShowOneOptionPerVernacularName,
 
   /* Image setting */
   getImagesCompressQuality,

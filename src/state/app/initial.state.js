@@ -10,6 +10,7 @@ const initialState = {
       survey: {
         taxonomies: {
           defaultVisibleFields: null,
+          showOneOptionPerVernacularName: false,
         },
       },
       images: {

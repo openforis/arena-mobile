@@ -1820,11 +1820,6 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.36.0.tgz#9837f768c03a1e4a30bd304a64fb8844f0e72efe"
   integrity sha512-lxJ9R5ygVm8ZWgYdUweoq5ownDlJ4upvoWmO4eLxBYHdMo+vZ/Rx0EN6MbKWDJOSUGrqJy2Gt+Dyv/VKml0fjg==
 
-"@esri/proj-codes@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@esri/proj-codes/-/proj-codes-3.1.0.tgz#c9602ad72a3ba2c0435f8fa547c0d2f00fbb5c4f"
-  integrity sha512-XySw4hYBq5It+zlXlESl3/Hr0xFGkbwaif5o8SJTiGfcWapU4LRh6JLey9Sg2BZGqS8IxpJENMEUl9J87t7adA==
-
 "@hapi/hoek@^9.0.0":
   version "9.2.1"
   resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.2.1.tgz#9551142a1980503752536b5050fd99f4a7f13b17"
@@ -2343,15 +2338,14 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@openforis/arena-core@0.0.152":
-  version "0.0.152"
-  resolved "https://npm.pkg.github.com/download/@openforis/arena-core/0.0.152/081c42b8355da5065ed09298b41cd909a2ef1d85#081c42b8355da5065ed09298b41cd909a2ef1d85"
-  integrity sha512-/lTjWthatV310rVXLECaD8NPixF+eFZmy5vBXcGR9nZHcibqCqC5HRg3dEd4QrTjlgrTUwPetmfkmhsy8CQEWQ==
+"@openforis/arena-core@0.0.162":
+  version "0.0.162"
+  resolved "https://npm.pkg.github.com/download/@openforis/arena-core/0.0.162/163c55f3869146c349925afe253429a8fe46441f#163c55f3869146c349925afe253429a8fe46441f"
+  integrity sha512-4aZ5aVBmI2vyIF4eAFOfpbiqRxROZ3WoXIRw1LreRShgRWxNsoQtgNS5XcCHO+WAqOZ8ed0l3z7b+ea/ZX5KMA==
   dependencies:
-    "@esri/proj-codes" "^3.1.0"
     "@jsep-plugin/regex" "^1.0.3"
     bignumber.js "^9.1.1"
-    date-fns "^2.29.3"
+    date-fns "^2.30.0"
     jsep "^1.3.8"
     lodash.differencewith "^4.5.0"
     lodash.frompairs "^4.0.1"
@@ -5678,10 +5672,12 @@ data-urls@^3.0.2:
     whatwg-mimetype "^3.0.0"
     whatwg-url "^11.0.0"
 
-date-fns@^2.29.3:
-  version "2.29.3"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.29.3.tgz#27402d2fc67eb442b511b70bbdf98e6411cd68a8"
-  integrity sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==
+date-fns@^2.30.0:
+  version "2.30.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.30.0.tgz#f367e644839ff57894ec6ac480de40cae4b0f4d0"
+  integrity sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==
+  dependencies:
+    "@babel/runtime" "^7.21.0"
 
 dayjs@^1.8.15:
   version "1.10.7"
@@ -12001,7 +11997,7 @@ qs@6.9.7:
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.9.7.tgz#4610846871485e1e048f44ae3b94033f0e675afe"
   integrity sha512-IhMFgUmuNpyRfxA90umL7ByLlgRXu6tIfKPpF5TmcfRLlLCckfP/g3IQmju6jjpu+Hh8rA+2p6A27ZSPOOHdKw==
 
-query-string@^7.1.3:
+query-string@^7.1.0, query-string@^7.1.3:
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/query-string/-/query-string-7.1.3.tgz#a1cf90e994abb113a325804a972d98276fe02328"
   integrity sha512-hh2WYhq4fi8+b+/2Kg9CEge4fDPvHS534aOOvOZeQ3+Vf2mCFsaFBYj0i+iXcAq6I9Vzp5fjMFBlONvayDC1qg==
@@ -12310,6 +12306,13 @@ react-native-multiple-select@^0.5.12:
   integrity sha512-lFw0u798/2qHr4TwDdxMtReRtsNOCC2SWPzWHRGKE4XcBiUll0hHhke7iqQg4xJdfo46C/h69f1ZXphDOjZY3A==
   dependencies:
     prop-types "^15.7.2"
+
+react-native-open-maps@^0.4.3:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/react-native-open-maps/-/react-native-open-maps-0.4.3.tgz#767c6621dcf558241afe78a62c5f7924031f270e"
+  integrity sha512-v0F6NHABCG8/7112baa3LqH29fndxSLb2PGWGTPa/QGoQ3rPiXQgCGsASUQmUpQkrSL5DnnmXo5w2d06Q6euBA==
+  dependencies:
+    query-string "^7.1.0"
 
 react-native-permissions@3.6.1:
   version "3.6.1"

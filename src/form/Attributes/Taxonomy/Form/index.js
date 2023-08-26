@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
+import {getVernacularNames, getVernacularNameUuid} from 'arena/taxonomy';
 import List from 'arena-mobile-ui/components/List';
 import {useSearch} from 'form/Attributes/Code/Form/common/hooks/useSearch';
 import BaseForm from 'form/Attributes/common/Base/Form';
@@ -12,7 +13,7 @@ import {selectors as formSelectors} from 'state/form';
 import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import {selectors as surveySelectors} from 'state/survey';
 
-import {useTaxonItemLabelExtractor} from '../hooks';
+import {useTaxonItemLabelExtractor, useTaxonItemsWithSelected} from '../hooks';
 
 import styles from './styles';
 
@@ -40,13 +41,8 @@ const getTextForSearch = (item, language) => {
 const Form = ({node, nodeDef}) => {
   const {t} = useTranslation();
   const actions = useNodeFormActions({nodeDef});
+  const {itemsArray, selectedItem} = useTaxonItemsWithSelected({node, nodeDef});
 
-  const items = useSelector(state =>
-    surveySelectors.getTaxonomyItemsByTaxonomyUuid(
-      state,
-      nodeDef?.props?.taxonomyUuid,
-    ),
-  );
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
@@ -54,7 +50,10 @@ const Form = ({node, nodeDef}) => {
 
   const handleSelect = useCallback(
     item => () => {
-      let newValue = {taxonUuid: item?.uuid};
+      const vernacularNameUuid = getVernacularNameUuid(item);
+
+      const newValue = {taxonUuid: item?.uuid, vernacularNameUuid};
+
       if (node?.uuid) {
         actions.handleUpdate({node, value: newValue});
       } else {
@@ -66,13 +65,6 @@ const Form = ({node, nodeDef}) => {
 
   const _labelExtractor = useTaxonItemLabelExtractor(nodeDef);
 
-  const itemsArray = useMemo(() => Object.values(items), [items]);
-
-  const selectedItem = useMemo(
-    () => itemsArray.find(item => item.uuid === node?.value?.taxonUuid),
-    [itemsArray, node],
-  );
-
   const {
     searchText,
     searching,
@@ -81,11 +73,16 @@ const Form = ({node, nodeDef}) => {
     handleStopToSearch,
   } = useSearch();
 
-  const keyExtractor = useCallback(item => item.uuid, []);
+  const keyExtractor = useCallback(item => {
+    const vernacularNames = getVernacularNames({item});
+    return `${item.uuid}-${vernacularNames.join(',')}`;
+  }, []);
 
   const renderItem = useCallback(
     ({item}) => {
-      const selected = selectedItem?.uuid === item.uuid;
+      const selected =
+        selectedItem?.uuid === item.uuid &&
+        getVernacularNameUuid(selectedItem) === getVernacularNameUuid(item);
 
       return (
         <ListItem
@@ -111,7 +108,11 @@ const Form = ({node, nodeDef}) => {
     if (searchText) {
       searchTextNormalized = searchText.toLowerCase().normalize('NFD');
       return taxonomiesWithIndexToSearch.filter(_item =>
-        _item?.textForSearch.includes(searchTextNormalized),
+        searchTextNormalized
+          .split(' ')
+          .some(searchTextNormalizedItem =>
+            _item?.textForSearch.includes(searchTextNormalizedItem),
+          ),
       );
     }
     return taxonomiesWithIndexToSearch;

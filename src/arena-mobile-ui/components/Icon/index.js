@@ -7,6 +7,9 @@ import _styles from './styles';
 
 const Icon = ({name, size, color}) => {
   const styles = useThemedStyles(_styles);
+  if (!name) {
+    return null;
+  }
   return (
     <Icons
       name={name}
