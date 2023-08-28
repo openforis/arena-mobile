@@ -97,7 +97,7 @@ const GetLocation = ({handleSaveLocation, selectedSrs}) => {
           type="ghostBlack"
           icon={<Icon name="compass-outline" />}
           onPress={getLocation}
-          label={t('Form:get_location')}
+          label={t('Form:nodeDefCoordinate.get_location')}
           customTextStyle={styles.customTextStyle}
           disabled={loading}
         />
