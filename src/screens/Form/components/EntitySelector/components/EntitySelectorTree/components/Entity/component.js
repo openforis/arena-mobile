@@ -13,7 +13,7 @@ import {selectors as surveySelectors} from 'state/survey';
 
 import _styles from './styles';
 
-const Entity = ({nodeDef, isCurrentEntity = false}) => {
+const Entity = ({nodeDef, isCurrentEntity}) => {
   const styles = useThemedStyles(_styles);
   const {t} = useTranslation();
   const nodeDefName = useNodeDefNameOrLabel({nodeDef});
@@ -70,4 +70,7 @@ const Entity = ({nodeDef, isCurrentEntity = false}) => {
   );
 };
 
+Entity.defaultProps = {
+  isCurrentEntity: false,
+};
 export default Entity;

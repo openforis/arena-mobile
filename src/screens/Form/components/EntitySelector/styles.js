@@ -26,6 +26,15 @@ const styles = ({colors, baseStyles}) =>
       width: WIDTH * 0.1,
       backgroundColor: colors.translucidDark,
     },
+    pressableHeader: {
+      backgroundColor: colors.background,
+      width: '100%',
+      height: 50,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: baseStyles.bases.BASE_3,
+    },
   });
 
 export default styles;

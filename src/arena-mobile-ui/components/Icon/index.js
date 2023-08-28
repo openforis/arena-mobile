@@ -20,7 +20,7 @@ const Icon = ({name, size, color}) => {
 };
 
 Icon.defaultProps = {
-  name: '',
+  name: false,
   size: 'm',
   color: null,
 };
