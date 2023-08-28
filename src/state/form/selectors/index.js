@@ -40,6 +40,11 @@ const getRecord = createCachedSelector(
   (records, recordUuid) => records[recordUuid] || false,
 )(state => getRecordUuid(state) || DEFAULT_NO_KEY);
 
+const isRecordLocked = createSelector(
+  getRecord,
+  record => record?.locked || false,
+);
+
 const getNodeUuid = createSelector(
   getFormStateData,
   form => form.node || false,
@@ -295,7 +300,7 @@ const getNodeDefNodesWithKeysAsStringInHierarchy = createCachedSelector(
           taxonIndex,
         });
 
-        return Object.assign({}, node, {keyString});
+        return {...node, keyString};
       }),
 )((_state_, nodeDef) => nodeDef?.uuid || DEFAULT_NO_KEY);
 
@@ -479,6 +484,7 @@ export default {
   getRecordUuid,
 
   getRecord,
+  isRecordLocked,
   getRecordNodes,
   getRecordNodesByUuid,
 

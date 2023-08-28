@@ -47,6 +47,7 @@ const ValidationItem = ({field}) => {
 
   const handleSelect = useCallback(() => {
     /* Dispatch both and close the panel */
+    dispatch(formActions.toggleEntitySelector());
     dispatch(
       formActions.setParentEntityNode({
         node: parentNode,

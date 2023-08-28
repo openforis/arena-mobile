@@ -140,12 +140,11 @@ export const uploadFiles = async ({
   onProgress,
   conflictResolutionStrategy,
 }) => {
-  const _files = files.map(file =>
-    Object.assign({}, file, {
-      type: file.filetype,
-      uri: 'file:///' + file.filepath,
-    }),
-  );
+  const _files = files.map(file => ({
+    ...file,
+    type: file.filetype,
+    uri: 'file:///' + file.filepath,
+  }));
 
   const file = {
     uri: _files[0].uri,

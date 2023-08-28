@@ -16,7 +16,8 @@ const _labelExtractor = item => item.name || item;
 const _prepareItemFn =
   ({keyExtractor, labelExtractor, selectedItemKey}) =>
   item => {
-    return Object.assign({}, typeof item === 'object' ? item : {}, {
+    return {
+      ...(typeof item === 'object' ? item : {}),
       key: keyExtractor(item),
       value: item,
       label: labelExtractor(item),
@@ -28,7 +29,7 @@ const _prepareItemFn =
                 : colors.neutralLighter,
           }
         : {}),
-    });
+    };
   };
 const _filterFn = () => true;
 
@@ -75,14 +76,17 @@ const Select = ({
   const _styles = useMemo(() => {
     return Objects.isEmpty(customStyles)
       ? styles
-      : Object.assign({}, styles, {
-          inputIOS: Object.assign({}, styles.inputIOS, customStyles.inputIOS),
-          inputAndroid: Object.assign(
-            {},
-            styles.inputAndroid,
-            customStyles.inputAndroid,
-          ),
-        });
+      : {
+          ...styles,
+          inputIOS: {
+            ...(styles.inputIOS || {}),
+            ...(customStyles?.inputIOS || {}),
+          },
+          inputAndroid: {
+            ...(styles.inputAndroid || {}),
+            ...(customStyles?.inputAndroid || {}),
+          },
+        };
   }, [customStyles]);
 
   return (

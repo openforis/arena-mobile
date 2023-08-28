@@ -9,6 +9,8 @@ const SET_GETTING_REMOTE_RECORDS_SUMMARY_ERROR =
 
 const deleteRecord$ = 'records/deleteRecord$';
 const SET_RECORD = 'records/SET_RECORD';
+const LOCK_RECORD = 'records/LOCK_RECORD';
+const UNLOCK_RECORD = 'records/UNLOCK_RECORD';
 const CLEAN_RECORD = 'records/CLEAN_RECORD';
 const CLEAN_RECORDS = 'records/CLEAN_RECORDS';
 
@@ -21,6 +23,8 @@ export default {
 
   deleteRecord$,
   SET_RECORD,
+  LOCK_RECORD,
+  UNLOCK_RECORD,
   CLEAN_RECORD,
   CLEAN_RECORDS,
 };

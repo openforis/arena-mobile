@@ -20,7 +20,7 @@ const ui = handleActions(
       ...state,
       lastNodeDefUuid: updatedNode.nodeDefUuid,
     }),
-    [formActions.setNode]: (state, {payload: {node}}) => ({
+    [formActions.setNodeToEdit]: (state, {payload: {node}}) => ({
       ...state,
       lastNodeDefUuid: node?.nodeDefUuid
         ? node?.nodeDefUuid

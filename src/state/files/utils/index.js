@@ -51,11 +51,12 @@ const createFile = async ({node, cycle}) => {
       surveyUuid: node.surveyUuid,
       recordUuid: node.recordUuid,
       nodeUuid: node.uuid,
-      meta: Object.assign({}, node.value, {
+      meta: {
+        ...node.value,
         fileUuid,
         uri: destinationPath,
         path: destinationPath,
-      }),
+      },
     };
   } catch (e) {
     console.log('error creating', e);

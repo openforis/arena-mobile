@@ -13,7 +13,8 @@ const {form} = createActions({
       nodeDefUuid: node?.nodeDefUuid,
     },
   }),
-  [types.SET_NODE]: ({node}) => ({node}),
+  [types.setNode$]: ({node}) => ({node}),
+  [types.SET_NODE_TO_EDIT]: ({node}) => ({node}),
 
   [types.initializeRecord$]: () => ({}),
   [types.continueRecord$]: ({record}) => ({record}),
@@ -31,6 +32,11 @@ const {form} = createActions({
   [types.TOGGLE_ENTITY_SHOW_AS_TABLE]: () => ({}),
   /* PREFS */
   [types.SET_HAS_TO_JUMP]: ({hasToJump}) => ({hasToJump}),
+  [types.SET_HAS_TO_LOCK_RECORDS_WHEN_LEAVE]: ({
+    hasToLockRecordsWhenLeave,
+  }) => ({
+    hasToLockRecordsWhenLeave,
+  }),
   /* VALIDATION */
   [types.SET_VALIDATION]: ({validation}) => ({validation}),
   [types.importRecords$]: () => ({}),

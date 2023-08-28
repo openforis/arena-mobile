@@ -21,6 +21,20 @@ const data = handleActions(
         dateModified: isCreating ? null : moment().toISOString(),
       },
     }),
+    [actions.lockRecord]: (state, {payload: {recordUuid}}) => ({
+      ...state,
+      [recordUuid]: {
+        ...state[recordUuid],
+        locked: true,
+      },
+    }),
+    [actions.unlockRecord]: (state, {payload: {recordUuid}}) => ({
+      ...state,
+      [recordUuid]: {
+        ...state[recordUuid],
+        locked: false,
+      },
+    }),
     [actions.cleanRecord]: (state, {payload: {recordUuid}}) => {
       let newState = {...state};
       delete newState[recordUuid];

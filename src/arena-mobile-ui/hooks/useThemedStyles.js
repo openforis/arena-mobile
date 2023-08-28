@@ -20,15 +20,13 @@ const useThemedStyles = styles => {
 
   return useMemo(() => {
     const themedColors = colors.themes[colorScheme] || {};
-    const _colors = Object.assign({}, colors, themedColors);
-    const _baseStyles = Object.assign(
-      {},
-      getBaseStyles({
-        baseModifier,
-        fontBaseModifier,
-        colors: _colors,
-      }),
-    );
+    const _colors = {...colors, ...themedColors};
+    const _baseStyles = getBaseStyles({
+      baseModifier,
+      fontBaseModifier,
+      colors: _colors,
+    });
+
     return styles({colors: _colors, baseStyles: _baseStyles});
   }, [colorScheme, styles, fontBaseModifier, baseModifier]);
 };

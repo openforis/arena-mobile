@@ -2,7 +2,8 @@ const leaveForm$ = 'form/leaveForm$';
 const deleteRecordIfNotModified$ = 'form/deleteRecordIfNotModified$';
 const SET_RECORD = 'form/SET_RECORD';
 const SET_PARENT_ENTITY_NODE = 'form/SET_PARENT_ENTITY_NODE';
-const SET_NODE = 'form/SET_NODE';
+const setNode$ = 'form/SET_NODE$';
+const SET_NODE_TO_EDIT = 'form/SET_NODE_TO_EDIT';
 
 const initializeRecord$ = 'form/initializeRecord$';
 const continueRecord$ = 'form/continueRecord$';
@@ -22,6 +23,8 @@ const TOGGLE_ENTITY_SHOW_AS_TABLE = 'form/TOGGLE_ENTITY_SHOW_AS_TABLE';
 
 // PREFERENCES
 const SET_HAS_TO_JUMP = 'form/SET_HAS_TO_JUMP';
+const SET_HAS_TO_LOCK_RECORDS_WHEN_LEAVE =
+  'form/SET_HAS_TO_LOCK_RECORDS_WHEN_LEAVE';
 
 // VALIDATION
 const SET_VALIDATION = 'form/SET_VALIDATION';
@@ -32,7 +35,8 @@ export default {
 
   SET_RECORD,
   SET_PARENT_ENTITY_NODE,
-  SET_NODE,
+  setNode$,
+  SET_NODE_TO_EDIT,
 
   initializeRecord$,
   continueRecord$,
@@ -52,6 +56,7 @@ export default {
 
   /* PREFS */
   SET_HAS_TO_JUMP,
+  SET_HAS_TO_LOCK_RECORDS_WHEN_LEAVE,
 
   /* VALIDATION */
   SET_VALIDATION,

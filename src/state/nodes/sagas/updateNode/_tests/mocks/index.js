@@ -83,7 +83,7 @@ export const mockRecord = {
   uuid: getCurrentUuid(),
   ownerUuid: mockUser.uuid,
   dateCreated: moment().toISOString(),
-  dateModified: moment(mockDate).format('yyyy-MM-DD_HH-mm-ss'),
+  dateModified: moment(mockDate).toISOString(),
   meta: {},
   surveyUuid: mockSurvey.uuid,
   step: '1', // get from survey
@@ -108,13 +108,12 @@ export const baseMockNode = {
   created: true,
   uuid: getCurrentUuid(),
   dateCreated: moment().toISOString(),
-  dateModified: moment(mockDate).format('yyyy-MM-DD_HH-mm-ss'),
+  dateModified: moment(mockDate).toISOString(),
   surveyUuid: mockSurvey.uuid,
   recordUuid: mockRecord?.uuid,
   nodeDefUuid: mockSurvey?.nodeDefs?.NODE_DEF_UUID?.uuid,
   parentUuid: 'CLUSTER_UUID',
   value: null,
-
   refData: null,
 };
 export const initialState = {

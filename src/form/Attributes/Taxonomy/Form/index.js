@@ -4,11 +4,13 @@ import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import {getVernacularNames, getVernacularNameUuid} from 'arena/taxonomy';
+import Button from 'arena-mobile-ui/components/Button';
 import List from 'arena-mobile-ui/components/List';
 import {useSearch} from 'form/Attributes/Code/Form/common/hooks/useSearch';
 import BaseForm from 'form/Attributes/common/Base/Form';
 import Header from 'form/Attributes/common/SearchableForm/List/Header';
 import ListItem from 'form/Attributes/common/SearchableForm/List/Item';
+import {Objects} from 'infra/objectUtils';
 import {selectors as formSelectors} from 'state/form';
 import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import {selectors as surveySelectors} from 'state/survey';
@@ -47,6 +49,10 @@ const Form = ({node, nodeDef}) => {
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );
+
+  const handleCleanNode = useCallback(() => {
+    actions.handleClean({node});
+  }, [actions, node]);
 
   const handleSelect = useCallback(
     item => () => {
@@ -130,6 +136,15 @@ const Form = ({node, nodeDef}) => {
         setSearchText={setSearchText}
         placeholderButton={t('Form:select_empty_type_to_search')}
       />
+
+      {!Objects.isEmpty(node?.value?.taxonUuid) && (
+        <Button
+          onPress={handleCleanNode}
+          type="ghostBlack"
+          label={t('Form:clean')}
+          customStyle={styles.button}
+        />
+      )}
 
       <List
         data={itemsFiltered}

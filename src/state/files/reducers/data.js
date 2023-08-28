@@ -7,19 +7,15 @@ import initialState from '../initial.state';
 
 const data = handleActions(
   {
-    [actions.setFiles]: (state, {payload: {filesByUuid}}) => {
-      return {
-        ...state,
-        ...filesByUuid,
-      };
-    },
+    [actions.setFiles]: (state, {payload: {filesByUuid}}) => ({
+      ...state,
+      ...filesByUuid,
+    }),
     [actions.deleteFiles]: (state, {payload: {filesUuids = []}}) => {
-      const newFiles = Object.assign({}, state);
-
+      const newFiles = {...state};
       filesUuids.forEach(fileUuid => {
         delete newFiles[fileUuid];
       });
-
       return newFiles;
     },
     [globalActions.reset]: () => initialState.data || {},

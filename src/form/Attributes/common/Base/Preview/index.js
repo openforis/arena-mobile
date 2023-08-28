@@ -55,6 +55,7 @@ const BasePreviewNode = ({
   showValidation,
   NodeValueRender,
   canDelete,
+  parentEntityNode,
 }) => {
   const styles = useThemedStyles(_styles);
 
@@ -75,9 +76,10 @@ const BasePreviewNode = ({
         nodes={[node]}
         showValidation={showValidation}
         absolute={true}
+        parentEntityNode={parentEntityNode}
       />
     );
-  }, [nodeDef, node, showValidation]);
+  }, [nodeDef, node, showValidation, parentEntityNode]);
 
   const styleNodeContainer = useMemo(() => {
     return StyleSheet.compose(
@@ -273,6 +275,7 @@ const BasePreview = ({nodeDef, NodeValueRender = BaseNodeValueRenderer}) => {
             showValidation={numberOfNodes}
             NodeValueRender={NodeValueRender}
             canDelete={nodeDef?.props?.multiple}
+            parentEntityNode={parentEntityNode}
           />
         ))}
         {nodeDef?.props?.multiple && canAddNode && (
@@ -280,7 +283,14 @@ const BasePreview = ({nodeDef, NodeValueRender = BaseNodeValueRenderer}) => {
         )}
       </>
     );
-  }, [nodes, nodeDef, NodeValueRender, canAddNode, _createNode]);
+  }, [
+    nodes,
+    nodeDef,
+    NodeValueRender,
+    canAddNode,
+    _createNode,
+    parentEntityNode,
+  ]);
 
   return (
     <BasePreviewContainer nodeDef={nodeDef} nodes={nodes}>

@@ -12,7 +12,7 @@ const data = handleActions(
       ...state,
       record: record.uuid,
     }),
-    [actions.setNode]: (state, {payload: {node = false}}) => ({
+    [actions.setNodeToEdit]: (state, {payload: {node = false}}) => ({
       ...state,
       node: node.uuid || null,
       parentEntityNode: node.parentUuid || state.parentEntityNode,

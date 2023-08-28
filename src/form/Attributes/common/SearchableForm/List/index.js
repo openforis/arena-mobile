@@ -7,13 +7,14 @@ import surveySelectors from 'state/survey/selectors';
 
 const List = ({categoryItems, renderItem, searchText, nodes}) => {
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
-  const categoryItemsWithIndexToSearch = useMemo(() => {
-    return categoryItems.map(item =>
-      Object.assign({}, item, {
+  const categoryItemsWithIndexToSearch = useMemo(
+    () =>
+      categoryItems.map(item => ({
+        ...item,
         textForSearch: getTextForSearch(item, language),
-      }),
-    );
-  }, [categoryItems, language]);
+      })),
+    [categoryItems, language],
+  );
 
   const categoryItemsUuidsFiltered = useMemo(() => {
     let searchTextNormalized = false;

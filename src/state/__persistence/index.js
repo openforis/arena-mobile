@@ -75,14 +75,11 @@ export function* persistRecordWithKeyAndMergeCurrentNodes({record}) {
     );
   }
 
-  const _record = Object.assign(
-    {},
-    record,
-    Objects.isEmpty(nodes) ? {} : {nodes},
-    {
-      recordKey,
-    },
-  );
+  const _record = {
+    ...record,
+    ...(Objects.isEmpty(nodes) ? {} : {nodes}),
+    recordKey,
+  };
 
   yield call(persistRecordWithNodes, {record: _record});
 }

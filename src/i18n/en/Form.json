@@ -9,6 +9,9 @@
   "select_empty_type_to_search": "Type to search",
   "navigation": "Navigation",
   "validation_report": "Validation report",
+  "record_locked": "Record locked",
+  "unlock": "Unlock?",
+  "clean": "Clear",
   "navigation_panel": {
     "current_page": "Current page",
     "table": {

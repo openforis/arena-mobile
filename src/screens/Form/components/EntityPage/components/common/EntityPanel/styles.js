@@ -12,17 +12,43 @@ const styles = ({colors, baseStyles}) =>
       bottom: 0,
       borderTopRightRadius: baseStyles.bases.BASE_4,
       borderTopLeftRadius: baseStyles.bases.BASE_4,
-      paddingBottom:
-        Platform.OS === 'ios'
-          ? baseStyles.bases.BASE_6
-          : baseStyles.bases.BASE_3,
+      paddingBottom: Platform.OS === 'ios' ? baseStyles.bases.BASE_6 : 0,
       borderColor: colors.borderColorContrast,
       borderTopWidth: 1,
       borderRightWidth: 1,
       borderLeftWidth: 1,
       left: 0,
-      minHeight: 120,
+      minHeight:
+        baseStyles.bases.BASE_24 -
+        (Platform.OS === 'ios'
+          ? baseStyles.bases.BASE_8
+          : baseStyles.bases.BASE_12),
       flexDirection: 'column',
+    },
+    containerCollapsed: {
+      minHeight:
+        baseStyles.bases.BASE_24 -
+        (Platform.OS === 'ios'
+          ? baseStyles.bases.BASE_8
+          : baseStyles.bases.BASE_12),
+    },
+    containerCollapsedSuper: {
+      width: baseStyles.bases.BASE_24,
+      left: (WIDTH - baseStyles.bases.BASE_24) / 2,
+    },
+    collapseButtonContainer: {
+      flex: 1,
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    collapseButton: {
+      width: baseStyles.bases.BASE_24,
+      height: baseStyles.bases.BASE_6,
+      borderRadius: baseStyles.bases.BASE_6,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     header: {
       marginTop: baseStyles.bases.BASE_4,

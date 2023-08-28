@@ -33,9 +33,7 @@ function* handleUpdateNode({payload}) {
 
     // the record needs to be populated with the validation and records to make it works
     const recordWithNodesAndValidation = Records.addNodes(recordNodes)(record);
-    const fullRecord = Object.assign({}, recordWithNodesAndValidation, {
-      validation,
-    });
+    const fullRecord = {...recordWithNodesAndValidation, validation};
 
     const {
       nodes: updatedNodes,
