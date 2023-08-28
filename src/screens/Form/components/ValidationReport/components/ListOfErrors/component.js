@@ -112,7 +112,7 @@ const ValidationItems = ({fields}) => {
   return (
     <>
       {fields.map(field => (
-        <ValidationItem field={field} />
+        <ValidationItem key={field[0]} field={field} />
       ))}
     </>
   );
