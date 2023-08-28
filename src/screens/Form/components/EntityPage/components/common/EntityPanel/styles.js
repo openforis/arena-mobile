@@ -12,25 +12,27 @@ const styles = ({colors, baseStyles}) =>
       bottom: 0,
       borderTopRightRadius: baseStyles.bases.BASE_4,
       borderTopLeftRadius: baseStyles.bases.BASE_4,
-      paddingBottom:
-        Platform.OS === 'ios'
-          ? baseStyles.bases.BASE_6
-          : baseStyles.bases.BASE_3,
+      paddingBottom: Platform.OS === 'ios' ? baseStyles.bases.BASE_6 : 0,
       borderColor: colors.borderColorContrast,
       borderTopWidth: 1,
       borderRightWidth: 1,
       borderLeftWidth: 1,
       left: 0,
-      minHeight: 120,
-      flexDirection: 'column',
-    },
-    containerCollapsed: {
-      width: baseStyles.bases.BASE_24,
-      left: (WIDTH - baseStyles.bases.BASE_24) / 2,
       minHeight:
         baseStyles.bases.BASE_24 - Platform.OS === 'ios'
           ? baseStyles.bases.BASE_8
           : baseStyles.bases.BASE_12,
+      flexDirection: 'column',
+    },
+    containerCollapsed: {
+      minHeight:
+        baseStyles.bases.BASE_24 - Platform.OS === 'ios'
+          ? baseStyles.bases.BASE_8
+          : baseStyles.bases.BASE_12,
+    },
+    containerCollapsedSuper: {
+      width: baseStyles.bases.BASE_24,
+      left: (WIDTH - baseStyles.bases.BASE_24) / 2,
     },
     collapseButtonContainer: {
       flex: 1,

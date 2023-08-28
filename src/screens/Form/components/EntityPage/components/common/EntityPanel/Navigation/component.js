@@ -107,23 +107,25 @@ export const getPrevNodeDef = ({
   return false;
 };
 
-const Prev = ({parent}) => {
+const useGetPrev = ({parent}) => {
   const survey = useSelector(surveySelectors.getSurvey);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const currentEntityNodeDef = useSelector(
     formSelectors.getParentEntityNodeDef,
   );
 
-  if (Objects.isEmpty(parent) || parent === false) {
-    return <View />;
-  }
+  return Objects.isEmpty(parent) || parent === false
+    ? false
+    : getPrevNodeDef({
+        survey,
+        parent,
+        cycle,
+        currentEntityNodeDef,
+      });
+};
 
-  const prevNodeDef = getPrevNodeDef({
-    survey,
-    parent,
-    cycle,
-    currentEntityNodeDef,
-  });
+const Prev = ({parent}) => {
+  const prevNodeDef = useGetPrev({parent});
 
   if (prevNodeDef?.uuid) {
     return <NavigationButton nodeDef={prevNodeDef} align="left" />;
@@ -136,7 +138,7 @@ const Parent = ({parent}) => {
   return <NavigationButton nodeDef={parent} align="left" />;
 };
 
-const Next = ({parent}) => {
+const useGetNext = ({parent}) => {
   const survey = useSelector(surveySelectors.getSurvey);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   /* TODO copy  has to jump to next entity
@@ -148,56 +150,107 @@ const Next = ({parent}) => {
   const currentEntityNodeDef = useSelector(
     formSelectors.getParentEntityNodeDef,
   );
-  const childrenIndex = getNodeDefIndex({
-    survey,
-    nodeDef: currentEntityNodeDef,
-    cycle,
-  });
-
-  if (
-    !Objects.isEmpty(childrenIndex) &&
-    (Objects.isEmpty(parent) || parent === false || childrenIndex?.length > 0)
-  ) {
-    const nodeDef = survey.nodeDefs[childrenIndex[0]];
-
-    return <NavigationButton nodeDef={nodeDef} />;
-  }
-
-  const sibilings = getNodeDefIndex({survey, nodeDef: parent, cycle});
-
-  if (Objects.isEmpty(sibilings)) {
-    return <View />;
-  }
-
-  const currentIndex = sibilings.indexOf(currentEntityNodeDef.uuid);
-
-  if (currentIndex + 1 === sibilings.length && sibilings?.length > 0) {
-    // next parent sibling
-    const parentAncestor = survey.nodeDefs[parent.parentUuid];
-
-    const parentSiblings = getNodeDefIndex({
+  const nodeDef = useMemo(() => {
+    const childrenIndex = getNodeDefIndex({
       survey,
-      nodeDef: parentAncestor,
+      nodeDef: currentEntityNodeDef,
       cycle,
     });
 
-    const parentIndex = parentSiblings?.indexOf(parent.uuid);
-    if (parentIndex >= 0 && parentIndex + 1 < parentSiblings?.length) {
-      const nodeDef = survey.nodeDefs[parentSiblings?.[parentIndex + 1]];
-
-      return <NavigationButton nodeDef={nodeDef} />;
+    if (
+      !Objects.isEmpty(childrenIndex) &&
+      (Objects.isEmpty(parent) || parent === false || childrenIndex?.length > 0)
+    ) {
+      return survey.nodeDefs[childrenIndex[0]];
     }
 
-    return <View />;
-  }
+    const sibilings = getNodeDefIndex({survey, nodeDef: parent, cycle});
 
-  if (currentIndex < sibilings.length) {
-    const nodeDef = survey.nodeDefs[sibilings[currentIndex + 1]];
+    if (Objects.isEmpty(sibilings)) {
+      return false;
+    }
 
-    return <NavigationButton nodeDef={nodeDef} />;
+    const currentIndex = sibilings.indexOf(currentEntityNodeDef.uuid);
+
+    if (currentIndex + 1 === sibilings.length && sibilings?.length > 0) {
+      // next parent sibling
+      const parentAncestor = survey.nodeDefs[parent.parentUuid];
+
+      const parentSiblings = getNodeDefIndex({
+        survey,
+        nodeDef: parentAncestor,
+        cycle,
+      });
+
+      const parentIndex = parentSiblings?.indexOf(parent.uuid);
+      if (parentIndex >= 0 && parentIndex + 1 < parentSiblings?.length) {
+        return survey.nodeDefs[parentSiblings?.[parentIndex + 1]];
+      }
+      return false;
+    }
+
+    if (currentIndex < sibilings.length) {
+      return survey.nodeDefs[sibilings[currentIndex + 1]];
+    }
+
+    return false;
+  }, [survey, currentEntityNodeDef, cycle, parent]);
+
+  return nodeDef;
+};
+
+const Next = ({parent}) => {
+  const nextNodeDef = useGetNext({parent});
+
+  if (nextNodeDef?.uuid) {
+    return <NavigationButton nodeDef={nextNodeDef} />;
   }
 
   return <View />;
+};
+
+const useIsValidForNavigation = ({nodeDef}) => {
+  const applicable = useSelector(state =>
+    formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
+  );
+  const cycle = useSelector(surveySelectors.getSurveyCycle);
+
+  const hierarchy = useSelector(formSelectors.getBreadCrumbs);
+  const parentNodeInHierarchy = hierarchy.find(
+    _node => _node.nodeDefUuid === nodeDef?.parentUuid,
+  );
+
+  return !(
+    (!applicable ||
+      Object.keys(
+        parentNodeInHierarchy?.meta?.childApplicability || {},
+      ).includes(nodeDef?.uuid)) &&
+    NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef)
+  );
+};
+
+export const useGetHasNavigation = () => {
+  const cycle = useSelector(surveySelectors.getSurveyCycle);
+  const currentEntityNodeDef = useSelector(
+    formSelectors.getParentEntityNodeDef,
+  );
+  const parentNodeDef = useSelector(state =>
+    surveySelectors.getNodeDefByUuid(state, currentEntityNodeDef?.parentUuid),
+  );
+
+  const prevNodeDef = useGetPrev({parent: parentNodeDef});
+  const nextNodeDef = useGetNext({parent: parentNodeDef});
+  const prevNodeValid = useIsValidForNavigation({nodeDef: prevNodeDef});
+  const nextNodeValid = useIsValidForNavigation({nodeDef: nextNodeDef});
+
+  if (!currentEntityNodeDef.props?.layout?.[cycle]?.pageUuid) {
+    return Boolean(parentNodeDef?.uuid);
+  }
+
+  return Boolean(
+    (prevNodeDef?.uuid && prevNodeValid) ||
+      (nextNodeDef?.uuid && nextNodeValid),
+  );
 };
 
 // next -> first children, next entity if single
