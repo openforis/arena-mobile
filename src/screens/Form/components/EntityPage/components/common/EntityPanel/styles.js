@@ -19,16 +19,18 @@ const styles = ({colors, baseStyles}) =>
       borderLeftWidth: 1,
       left: 0,
       minHeight:
-        baseStyles.bases.BASE_24 - Platform.OS === 'ios'
+        baseStyles.bases.BASE_24 -
+        (Platform.OS === 'ios'
           ? baseStyles.bases.BASE_8
-          : baseStyles.bases.BASE_12,
+          : baseStyles.bases.BASE_12),
       flexDirection: 'column',
     },
     containerCollapsed: {
       minHeight:
-        baseStyles.bases.BASE_24 - Platform.OS === 'ios'
+        baseStyles.bases.BASE_24 -
+        (Platform.OS === 'ios'
           ? baseStyles.bases.BASE_8
-          : baseStyles.bases.BASE_12,
+          : baseStyles.bases.BASE_12),
     },
     containerCollapsedSuper: {
       width: baseStyles.bases.BASE_24,
