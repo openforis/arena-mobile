@@ -17,8 +17,8 @@ const baseInputStyle = {
 };
 
 const styles = StyleSheet.create({
-  inputIOS: Object.assign({}, baseInputStyle),
-  inputAndroid: Object.assign({}, baseInputStyle),
+  inputIOS: baseInputStyle,
+  inputAndroid: baseInputStyle,
   iconContainer: {
     top:
       Platform.OS === 'android'

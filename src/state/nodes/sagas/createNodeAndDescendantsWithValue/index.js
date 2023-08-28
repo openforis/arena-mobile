@@ -15,7 +15,7 @@ function* handleCreateNodeAndDescendantsWithValue({payload} = {}) {
 
   const updatedNodes = Object.values(nodes);
 
-  const updatedNodeWithValue = Object.assign({}, updatedNodes[0], {value});
+  const updatedNodeWithValue = {...updatedNodes[0], value};
 
   yield call(handleUpdateNode, {
     payload: {

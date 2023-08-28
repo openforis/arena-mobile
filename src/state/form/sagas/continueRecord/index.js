@@ -19,7 +19,7 @@ function* handleContinueRecord({payload}) {
       yield put(formActions.clean());
       yield call(persistRecordsAndNodes);
       const _record = yield call(getRecordWithNodes, {record});
-      const nodes = Object.assign({}, _record.nodes);
+      const nodes = {..._record.nodes};
       delete _record.nodes;
       yield all([
         put(recordsActions.setRecord({record: _record})),

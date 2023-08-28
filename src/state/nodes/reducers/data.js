@@ -19,13 +19,11 @@ const data = handleActions(
     [filesActions.setFiles]: (state, {payload: {filesByUuid = {}}}) => {
       const newNodes = {};
       Object.values(filesByUuid).forEach(file => {
-        const currentNode = Object.assign({}, state[file.nodeUuid]);
-        newNodes[file.nodeUuid] = Object.assign({}, currentNode, {
-          value: Object.assign({}, currentNode.value, {
-            uri: file.uri,
-            path: file.uri,
-          }),
-        });
+        const currentNode = {...state[file.nodeUuid]};
+        newNodes[file.nodeUuid] = {
+          ...currentNode,
+          value: {...currentNode.value, uri: file.uri, path: file.uri},
+        };
       });
 
       return {
@@ -42,7 +40,7 @@ const data = handleActions(
       return newState;
     },
     [actions.deleteNodes]: (state, {payload: {nodes = []}}) => {
-      const newNodes = Object.assign({}, state);
+      const newNodes = {...state};
 
       nodes.forEach(({uuid: nodeUuid}) => {
         delete newNodes[nodeUuid];

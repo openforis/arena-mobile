@@ -44,9 +44,8 @@ function* handleImportFileNodes(params) {
     const {serverUrl, surveyId, recordUuid, node} = params;
     const fileUri = `${NODE_FILES_IMPORT_BASE_PATH}/${node?.value?.fileName}`;
 
-    const nodeUpdated = Object.assign({}, node, {
-      value: Object.assign({}, node.value, {uri: fileUri}),
-    });
+    const nodeUpdated = {...node, value: {...node.value, uri: fileUri}};
+
     yield call(recordsApi.getNodeFile, {
       serverUrl,
       surveyId,

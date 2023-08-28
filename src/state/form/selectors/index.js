@@ -295,7 +295,7 @@ const getNodeDefNodesWithKeysAsStringInHierarchy = createCachedSelector(
           taxonIndex,
         });
 
-        return Object.assign({}, node, {keyString});
+        return {...node, keyString};
       }),
 )((_state_, nodeDef) => nodeDef?.uuid || DEFAULT_NO_KEY);
 

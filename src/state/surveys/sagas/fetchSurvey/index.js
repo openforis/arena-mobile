@@ -32,7 +32,7 @@ function* handleFetchSurvey({payload}) {
 
     yield put(
       surveysActions.setSurvey({
-        survey: Object.assign({}, surveyWithNodeDefs, {serverUrl}),
+        survey: {...surveyWithNodeDefs, serverUrl},
       }),
     );
   } catch (e) {

@@ -25,9 +25,7 @@ function* handleCreateNodeAndDescendants({payload} = {}) {
   const recordWithNodesAndValidation = Records.addNodes(recordNodes || {})(
     record,
   );
-  const fullRecord = Object.assign({}, recordWithNodesAndValidation, {
-    validation,
-  });
+  const fullRecord = {...recordWithNodesAndValidation, validation};
 
   let updateResult = false;
 
