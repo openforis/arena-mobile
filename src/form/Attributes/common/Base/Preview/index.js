@@ -4,13 +4,13 @@ import {useTranslation} from 'react-i18next';
 import {View, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {getValueAsString} from 'arena/node';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import Pressable from 'arena-mobile-ui/components/Pressable';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {useCode} from 'form/Attributes/Code/Preview/hooks';
-import {getValueAsString} from 'form/Attributes/common/BaseInput/Form';
 import CopyToClipboard from 'form/Attributes/common/CopyToClipboard';
 import AttributeHeader from 'form/common/Header';
 import Validation from 'form/common/Validation';

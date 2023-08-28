@@ -4,6 +4,7 @@ import React, {useState, useCallback, useMemo} from 'react';
 import {Platform} from 'react-native';
 import {useSelector} from 'react-redux';
 
+import {getValueAsString} from 'arena/node';
 import {transform, textTransformValues} from 'arena/utils/textUtils';
 import Input from 'arena-mobile-ui/components/Input';
 import {Objects} from 'infra/objectUtils';
@@ -20,16 +21,6 @@ const autoCapitalizeByTransformFunction = {
 };
 
 const isMultiline = nodeDef => nodeDef.props.textInputType === 'multiLine';
-
-export const getValueAsString = (nodeDef, node, defaultValue = '') => {
-  if (nodeDef.type === NodeDefType.text) {
-    return String(node?.value || defaultValue);
-  }
-  if (isNaN(node?.value)) {
-    return String(defaultValue);
-  }
-  return String(node?.value);
-};
 
 const prepareValue = ({newValue, node, nodeDef}) => {
   const _newValue =
