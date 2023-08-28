@@ -32,7 +32,16 @@ const useGetLocation = () => {
     }
 
     if (status === 'denied') {
-      alert({title: t('Form:nodeDefCoordinate.permissions.denied')});
+      alert({
+        title: t('Form:nodeDefCoordinate.permissions.denied', {
+          appName: appConfig.displayName,
+        }),
+        message: '',
+        acceptText: t('Form:nodeDefCoordinate.permissions.turn_on.accept'),
+        onAccept: openSetting,
+        dismissText: t('Form:nodeDefCoordinate.permissions.turn_on.reject'),
+        onDismiss: () => null,
+      });
     }
 
     if (status === 'disabled') {
@@ -52,40 +61,44 @@ const useGetLocation = () => {
   }, [t]);
 
   const hasLocationPermission = useCallback(async () => {
-    if (Platform.OS === 'ios') {
-      return hasPermissionIOS();
-    }
+    try {
+      if (Platform.OS === 'ios') {
+        return hasPermissionIOS();
+      }
 
-    if (Platform.OS === 'android' && Platform.Version < 23) {
-      return true;
-    }
+      if (Platform.OS === 'android' && Platform.Version < 23) {
+        return true;
+      }
 
-    const hasAndroidPermission = await PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-
-    if (hasAndroidPermission) {
-      return true;
-    }
-
-    const status = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-
-    if (status === PermissionsAndroid.RESULTS.GRANTED) {
-      return true;
-    }
-
-    if (status === PermissionsAndroid.RESULTS.DENIED) {
-      ToastAndroid.show(
-        t('Form:nodeDefCoordinate.permissions.toast.denied'),
-        ToastAndroid.LONG,
+      const hasAndroidPermission = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       );
-    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-      ToastAndroid.show(
-        t('Form:nodeDefCoordinate.permissions.toast.revoked'),
-        ToastAndroid.LONG,
+
+      if (hasAndroidPermission) {
+        return true;
+      }
+
+      const status = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       );
+
+      if (status === PermissionsAndroid.RESULTS.GRANTED) {
+        return true;
+      }
+
+      if (status === PermissionsAndroid.RESULTS.DENIED) {
+        ToastAndroid.show(
+          t('Form:nodeDefCoordinate.permissions.toast.denied'),
+          ToastAndroid.LONG,
+        );
+      } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+        ToastAndroid.show(
+          t('Form:nodeDefCoordinate.permissions.toast.revoked'),
+          ToastAndroid.LONG,
+        );
+      }
+    } catch (err) {
+      console.warn(err);
     }
 
     return false;
@@ -143,7 +156,7 @@ const useGetLocation = () => {
   }, [hasLocationPermission, _setLocation]);
 
   const getLocation = useCallback(async () => {
-    const watcherId = await _getLocation();
+    const watcherId = await _getLocation?.();
     setLoading(true);
 
     setTimeout(() => {

@@ -7,31 +7,35 @@ export const alert = ({
   acceptText,
   onAccept,
   dismissText,
-  onDismiss = () => null,
-  dismissStyle = 'cancel',
-  acceptStyle = 'default',
-  requiredText = false,
-  requiredTextMessage = '',
+  onDismiss,
+  dismissStyle,
+  acceptStyle,
+  requiredText,
+  requiredTextMessage,
 }) => {
   const buttons = [
-    dismissText && {
-      text: dismissText,
-      onPress: () => {
-        onDismiss?.();
-      },
-      style: dismissStyle,
-    },
-    acceptText && {
-      text: acceptText,
-      onPress: (inputText = null) => {
-        if (requiredText && inputText.trim() !== requiredText.trim()) {
-          return;
+    dismissText
+      ? {
+          text: dismissText,
+          onPress: () => {
+            onDismiss?.();
+          },
+          style: dismissStyle,
         }
-        onAccept?.();
-      },
-      style: acceptStyle,
-    },
-  ];
+      : null,
+    acceptText
+      ? {
+          text: acceptText,
+          onPress: (inputText = null) => {
+            if (requiredText && inputText.trim() !== requiredText.trim()) {
+              return;
+            }
+            onAccept?.();
+          },
+          style: acceptStyle,
+        }
+      : null,
+  ].filter(button => button !== null);
 
   const _message = `
     ${message}
@@ -62,4 +66,14 @@ export const alert = ({
   }
 
   return Alert.alert(title, message, buttons, {cancelable: false});
+};
+
+alert.defaultProps = {
+  title: '',
+  onAccept: () => null,
+  onDismiss: () => null,
+  dismissStyle: 'cancel',
+  acceptStyle: 'default',
+  requiredText: false,
+  requiredTextMessage: '',
 };
