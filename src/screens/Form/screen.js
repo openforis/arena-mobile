@@ -18,6 +18,7 @@ import BreadCrumbs from './components/BreadCrumbs';
 import EntityPage from './components/EntityPage';
 import {getPrevNodeDef} from './components/EntityPage/components/common/EntityPanel/Navigation/component';
 import EntitySelector from './components/EntitySelector';
+import RecordLocked from './components/RecordLocked/component';
 import _styles from './styles';
 
 const useAskBeforeLeave = () => {
@@ -132,10 +133,12 @@ const useAskBeforeLeave = () => {
 const Form = () => {
   useAskBeforeLeave();
   const styles = useThemedStyles(_styles);
+
   return (
     <>
       <Layout bottomSafeArea={false}>
         <BreadCrumbs />
+        <RecordLocked />
 
         <View style={styles.container}>
           <EntitySelector />

@@ -21,6 +21,8 @@ const {records} = createActions({
     showToast,
   }),
   [types.SET_RECORD]: ({record, isCreating = false}) => ({record, isCreating}),
+  [types.LOCK_RECORD]: ({recordUuid}) => ({recordUuid}),
+  [types.UNLOCK_RECORD]: ({recordUuid}) => ({recordUuid}),
   [types.CLEAN_RECORD]: ({recordUuid}) => ({
     recordUuid,
   }),

@@ -97,6 +97,9 @@
     "title": "Form",
     "jumpBetweenAttributes": {
       "title": "Jump between attributes (Experimental)"
+    },
+    "hasToLockRecordsWhenLeave": {
+      "title": "Lock records when leave form"
     }
   }
 }

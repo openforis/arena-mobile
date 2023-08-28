@@ -40,7 +40,7 @@ export const alert = ({
   const _message = `
     ${message}
     
-    ${requiredTextMessage}`;
+    ${requiredTextMessage || ''}`;
 
   if (Platform.OS === 'ios') {
     const type = requiredText ? 'plain-text' : 'default';

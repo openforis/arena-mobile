@@ -9,6 +9,13 @@ const preferences = handleActions(
       ...state,
       hasToJump,
     }),
+    [actions.setHasToLockRecordsWhenLeave]: (
+      state,
+      {payload: {hasToLockRecordsWhenLeave}},
+    ) => ({
+      ...state,
+      hasToLockRecordsWhenLeave,
+    }),
   },
   initialState.preferences || {},
 );

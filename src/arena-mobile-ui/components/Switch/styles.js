@@ -13,6 +13,9 @@ const styles = ({colors, baseStyles}) =>
     disabledText: {
       color: colors.neutralLighter,
     },
+    textStyle: {
+      maxWidth: 160,
+    },
   });
 
 export default styles;

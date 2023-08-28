@@ -7,8 +7,13 @@
   "delete": "Delete {{ label }}",
   "select_empty": " ",
   "select_empty_type_to_search": "Type to search",
+<<<<<<< HEAD
   "navigation": "Navigation",
   "validation_report": "Validation report",
+=======
+  "record_locked": "Record locked",
+  "unlock": "Unlock?",
+>>>>>>> 27b2846 (lock record)
   "navigation_panel": {
     "current_page": "Current page",
     "table": {

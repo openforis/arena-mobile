@@ -31,6 +31,11 @@ const {form} = createActions({
   [types.TOGGLE_ENTITY_SHOW_AS_TABLE]: () => ({}),
   /* PREFS */
   [types.SET_HAS_TO_JUMP]: ({hasToJump}) => ({hasToJump}),
+  [types.SET_HAS_TO_LOCK_RECORDS_WHEN_LEAVE]: ({
+    hasToLockRecordsWhenLeave,
+  }) => ({
+    hasToLockRecordsWhenLeave,
+  }),
   /* VALIDATION */
   [types.SET_VALIDATION]: ({validation}) => ({validation}),
   [types.importRecords$]: () => ({}),

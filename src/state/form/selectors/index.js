@@ -40,6 +40,11 @@ const getRecord = createCachedSelector(
   (records, recordUuid) => records[recordUuid] || false,
 )(state => getRecordUuid(state) || DEFAULT_NO_KEY);
 
+const isRecordLocked = createSelector(
+  getRecord,
+  record => record?.locked || false,
+);
+
 const getNodeUuid = createSelector(
   getFormStateData,
   form => form.node || false,
@@ -479,6 +484,7 @@ export default {
   getRecordUuid,
 
   getRecord,
+  isRecordLocked,
   getRecordNodes,
   getRecordNodesByUuid,
 

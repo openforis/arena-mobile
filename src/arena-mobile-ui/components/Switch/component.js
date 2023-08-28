@@ -24,12 +24,19 @@ const SwitchComponent = ({
     );
   }, [styles, customContainerStyle, disabled]);
 
+  const textStyles = React.useMemo(() => {
+    return StyleSheet.compose(
+      styles.textStyle,
+      disabled ? styles.disabledText : {},
+    );
+  }, [styles, disabled]);
+
   return (
     <Pressable
       onPress={onValueChange}
       style={containerStyles}
       disabled={disabled}>
-      <TextBase type="header" customStyle={disabled ? styles.disabledText : {}}>
+      <TextBase type="header" customStyle={textStyles}>
         {title}
       </TextBase>
       <Switch
