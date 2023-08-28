@@ -1,10 +1,10 @@
 import {NodeDefType} from '@openforis/arena-core';
 import React from 'react';
 
+import {getValueAsString} from 'arena/node';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 
 import {Preview as BasePreview} from '../../Base';
-import {getValueAsString} from '../Form';
 
 import styles from './styles';
 
