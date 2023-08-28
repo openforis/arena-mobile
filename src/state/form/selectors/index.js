@@ -1,4 +1,4 @@
-import {NodeDefs} from '@openforis/arena-core';
+import {NodeDefs, RecordValidations} from '@openforis/arena-core';
 import {createCachedSelector, FifoObjectCache} from 're-reselect';
 import {createSelector} from 'reselect';
 
@@ -188,6 +188,16 @@ const getAncestors = ({node, nodesByUuid}) => {
   ];
 };
 
+const getAncestorsOfNode = createCachedSelector(
+  getRecordNodesByUuid,
+  keySelectors.nodeUuid,
+  (nodesByUuid, nodeUuid) => {
+    const node = nodesByUuid[nodeUuid];
+    const ancestors = node ? getAncestors({node, nodesByUuid}) : [];
+    return ancestors.reverse();
+  },
+)(keySelectors.nodeUuid);
+
 const getHierarchy = createCachedSelector(
   getRecordNodesByUuid,
   getParentEntityNodeUuid,
@@ -344,28 +354,18 @@ const getValidation = createSelector(
 );
 
 const getValidationByKeys = ({keys, validation}) => {
-  const _validation = Object.entries(validation?.fields || EMPTY_OBJECT).find(
-    ([fieldKey, fieldValue]) => {
-      if (keys.includes(fieldKey)) {
-        return true;
-      }
-      if (!Objects.isEmpty(fieldValue)) {
-        const _subValidation = getValidationByKeys({
-          keys,
-          validation: fieldValue.value,
-        });
-        if (!Objects.isEmpty(_subValidation)) {
-          return true;
-        }
-      }
-      return false;
-    },
-  );
-
-  if (_validation?.length > 0) {
-    return _validation[1];
-  }
-  return EMPTY_OBJECT;
+  return keys
+    .map(nodeUuid =>
+      RecordValidations.getValidationNode({
+        nodeUuid,
+      })(validation),
+    )
+    .reduce((acc, curr) => {
+      return {
+        ...acc,
+        ...curr,
+      };
+    }, EMPTY_OBJECT);
 };
 
 const _getNodesUuids = (_, nodes) => nodes?.map(node => node.uuid) || [];
@@ -497,6 +497,7 @@ export default {
   getNodeDefChildrenUuids,
   getNodeDefChildrenAttributesUuids,
   getHierarchy,
+  getAncestorsOfNode,
   getEntityNode,
 
   getHierarchyNodeDefUuids,

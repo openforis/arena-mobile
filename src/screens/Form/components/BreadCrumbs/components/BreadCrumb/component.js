@@ -64,3 +64,10 @@ const BreadCrumb = ({nodeUuid}) => {
 export default React.memo(BreadCrumb, (prevProps, nextProps) => {
   return prevProps.nodeUuid === nextProps.nodeUuid;
 });
+
+export const BreadCrumbAsLabel = ({nodeUuid}) => {
+  const node = useSelector(state =>
+    nodesSelectors.getNodeByUuid(state, nodeUuid),
+  );
+  return <Label node={node} />;
+};

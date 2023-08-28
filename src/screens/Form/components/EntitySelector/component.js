@@ -6,15 +6,21 @@ import {
   ScrollView,
   View,
   TouchableOpacity,
+  Pressable,
 } from 'react-native';
 import {isTablet} from 'react-native-device-info';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
+import Icon from 'arena-mobile-ui/components/Icon';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import ToggleShowNames from 'arena-mobile-ui/components/ToggleShowNames';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
+
+import ListOfErrors from '../ValidationReport/components/ListOfErrors';
+import ShowNumberOfErrors from '../ValidationReport/components/ShowNumberOfErrors';
 
 import EntitySelectorTree from './components/EntitySelectorTree';
 import _styles from './styles';
@@ -27,6 +33,7 @@ export const ENTITY_SELECTOR_TABLET_WIDTH = Math.min(
 );
 
 const EntitySelector = () => {
+  const [showNavigation, setShowNavigation] = React.useState(true);
   const styles = useThemedStyles(_styles);
   const {t} = useTranslation();
 
@@ -59,6 +66,12 @@ const EntitySelector = () => {
     }
   }, [isEntitySelectorOpened]);
 
+  useEffect(() => {
+    if (isEntitySelectorOpened) {
+      setShowNavigation(true);
+    }
+  }, [isEntitySelectorOpened]);
+
   const handleClose = useCallback(() => {
     dispatch(formActions.closeEntitySelector());
   }, [dispatch]);
@@ -70,11 +83,32 @@ const EntitySelector = () => {
   return (
     <>
       <Animated.View style={[styles.container, {width: panelWidth}]}>
-        <ScrollView style={styles.scrollContainer}>
-          {isEntitySelectorOpened && (
-            <EntitySelectorTree nodeDefUuid={nodeDefRoot?.uuid} />
-          )}
-        </ScrollView>
+        <Pressable
+          onPress={() => setShowNavigation(!showNavigation)}
+          style={styles.pressableHeader}>
+          <Icon name={showNavigation ? 'chevron-down' : 'chevron-right'} />
+          <TextBase>{t('Form:navigation')}</TextBase>
+        </Pressable>
+        {showNavigation && (
+          <ScrollView style={styles.scrollContainer}>
+            {isEntitySelectorOpened && (
+              <EntitySelectorTree nodeDefUuid={nodeDefRoot?.uuid} />
+            )}
+          </ScrollView>
+        )}
+        <Pressable
+          onPress={() => setShowNavigation(false)}
+          style={styles.pressableHeader}>
+          <Icon name={!showNavigation ? 'chevron-down' : 'chevron-right'} />
+          <TextBase>{t('Form:validation_report')}</TextBase>
+
+          <ShowNumberOfErrors />
+        </Pressable>
+        {!showNavigation && (
+          <ScrollView style={styles.scrollContainer}>
+            {isEntitySelectorOpened && <ListOfErrors />}
+          </ScrollView>
+        )}
         <View style={styles.buttonsContainer}>
           <Button
             label={t('Form:leave_form_to_record_list_cta')}

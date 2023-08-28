@@ -3,8 +3,8 @@ import {StyleSheet} from 'react-native';
 const styles = ({colors, baseStyles}) =>
   StyleSheet.create({
     container: {
-      justifyContent: 'flex-start',
-      alignItems: 'flex-start',
+      justifyContent: 'space-between',
+      alignItems: 'center',
       color: colors.neutralDarkest,
       flex: 1,
       flexDirection: 'row',
@@ -15,7 +15,6 @@ const styles = ({colors, baseStyles}) =>
       backgroundColor: colors.secondaryLighter,
     },
     text: {
-      flex: 1,
       padding: baseStyles.bases.BASE_2,
     },
     textDisabled: {

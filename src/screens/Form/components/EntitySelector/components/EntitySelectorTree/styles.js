@@ -11,6 +11,7 @@ const styles = ({colors, baseStyles}) =>
       flexDirection: 'row',
       justifyContent: 'flex-start',
       alignItems: 'center',
+
       padding: 0,
     },
     expandContainer: {
