@@ -26,11 +26,7 @@ const styles = ({colors, baseStyles}) =>
       flexDirection: 'column',
     },
     containerCollapsed: {
-      minHeight:
-        baseStyles.bases.BASE_24 -
-        (Platform.OS === 'ios'
-          ? baseStyles.bases.BASE_8
-          : baseStyles.bases.BASE_8),
+      minHeight: baseStyles.bases.BASE_24 - baseStyles.bases.BASE_8,
     },
     containerCollapsedSuper: {
       width: baseStyles.bases.BASE_24,
