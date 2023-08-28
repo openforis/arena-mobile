@@ -16,8 +16,13 @@ const getHasToLockRecordsWhenLeave = createSelector(
   getFormStatePreferences,
   preferences => preferences?.hasToLockRecordsWhenLeave || false,
 );
+const showDescriptions = createSelector(
+  getFormStatePreferences,
+  preferences => preferences?.showDescriptions || false,
+);
 
 export default {
   getHasToJump,
   getHasToLockRecordsWhenLeave,
+  showDescriptions,
 };

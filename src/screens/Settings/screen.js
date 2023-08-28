@@ -125,6 +125,9 @@ const FormSettings = () => {
   const hasToLockRecordsWhenLeave = useSelector(
     formPreferencesSelectors.getHasToLockRecordsWhenLeave,
   );
+  const showDescriptions = useSelector(
+    formPreferencesSelectors.showDescriptions,
+  );
 
   const _updateHasToJump = useCallback(() => {
     dispatch(formActions.setHasToJump({hasToJump: !hasToJump}));
@@ -137,6 +140,11 @@ const FormSettings = () => {
     );
   }, [dispatch, hasToLockRecordsWhenLeave]);
 
+  const _updateShowDescriptions = useCallback(() => {
+    dispatch(
+      formActions.setShowDescriptions({showDescriptions: !showDescriptions}),
+    );
+  }, [dispatch, showDescriptions]);
   return (
     <Section title={t('Settings:form.title')}>
       <SectionCard
@@ -147,7 +155,7 @@ const FormSettings = () => {
         iconName={hasToJump ? 'checkbox-marked' : 'checkbox-blank-outline'}
       />
       <SectionCard
-        position="last"
+        position="middle"
         isNavigation={false}
         onPress={_updateHasToLockRecordsWhenLeave}
         title={t('Settings:form.hasToLockRecordsWhenLeave.title')}
@@ -155,6 +163,15 @@ const FormSettings = () => {
           hasToLockRecordsWhenLeave
             ? 'checkbox-marked'
             : 'checkbox-blank-outline'
+        }
+      />
+      <SectionCard
+        position="last"
+        isNavigation={false}
+        onPress={_updateShowDescriptions}
+        title={t('Settings:form.showDescriptions.title')}
+        iconName={
+          showDescriptions ? 'checkbox-marked' : 'checkbox-blank-outline'
         }
       />
     </Section>
