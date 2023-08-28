@@ -86,6 +86,28 @@ export const useUpdateNode = () => {
   return handleUpdate;
 };
 
+export const useCleanNode = () => {
+  const dispatch = useDispatch();
+
+  const handleClean = useCallback(
+    ({node, callback = false, shouldJump = false}) => {
+      dispatch(
+        nodesActions.updateNode({
+          updatedNode: {
+            ...node,
+            value: false,
+          },
+          callback,
+          shouldJump,
+        }),
+      );
+    },
+    [dispatch],
+  );
+
+  return handleClean;
+};
+
 const useNodeFormActions = ({nodeDef}) => {
   const dispatch = useDispatch();
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
@@ -93,6 +115,7 @@ const useNodeFormActions = ({nodeDef}) => {
   const handleClose = useCloseNode();
 
   const handleUpdate = useUpdateNode();
+  const handleClean = useCleanNode();
 
   const handleCreate = useCallback(
     ({value = null, callback = null}) => {
@@ -110,7 +133,7 @@ const useNodeFormActions = ({nodeDef}) => {
 
   const handleDelete = useDeleteNode();
 
-  return {handleCreate, handleClose, handleUpdate, handleDelete};
+  return {handleCreate, handleClose, handleUpdate, handleDelete, handleClean};
 };
 
 const DEFAULT_PARENT_NODE_DEF = false;

@@ -24,6 +24,28 @@ const styles = ({colors, baseStyles}) =>
       minHeight: 120,
       flexDirection: 'column',
     },
+    containerCollapsed: {
+      width: baseStyles.bases.BASE_24,
+      left: (WIDTH - baseStyles.bases.BASE_24) / 2,
+      minHeight:
+        baseStyles.bases.BASE_24 - Platform.OS === 'ios'
+          ? baseStyles.bases.BASE_8
+          : baseStyles.bases.BASE_12,
+    },
+    collapseButtonContainer: {
+      flex: 1,
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    collapseButton: {
+      width: baseStyles.bases.BASE_24,
+      height: baseStyles.bases.BASE_6,
+      borderRadius: baseStyles.bases.BASE_6,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     header: {
       marginTop: baseStyles.bases.BASE_4,
       backgroundColor: colors.backgroundLight,

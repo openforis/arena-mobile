@@ -13,7 +13,8 @@ const {form} = createActions({
       nodeDefUuid: node?.nodeDefUuid,
     },
   }),
-  [types.SET_NODE]: ({node}) => ({node}),
+  [types.setNode$]: ({node}) => ({node}),
+  [types.SET_NODE_TO_EDIT]: ({node}) => ({node}),
 
   [types.initializeRecord$]: () => ({}),
   [types.continueRecord$]: ({record}) => ({record}),

@@ -1,10 +1,13 @@
 import React, {useCallback, useMemo} from 'react';
+import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
+import Button from 'arena-mobile-ui/components/Button';
 import List from 'form/Attributes/common/SearchableForm/List';
 import Header from 'form/Attributes/common/SearchableForm/List/Header';
 import ListItem from 'form/Attributes/common/SearchableForm/List/Item';
+import {Objects} from 'infra/objectUtils';
 import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
 
@@ -54,6 +57,7 @@ const Item = ({
   );
 };
 const FormCodeSingle = ({nodeDef, node}) => {
+  const {t} = useTranslation();
   const {
     categoryItems,
     categoryItemsByUuid,
@@ -71,7 +75,9 @@ const FormCodeSingle = ({nodeDef, node}) => {
     handleStopToSearch,
   } = useSearch();
 
-  const {handleUpdate, handleCreate} = useNodeFormActions({nodeDef});
+  const {handleUpdate, handleCreate, handleClean} = useNodeFormActions({
+    nodeDef,
+  });
 
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
@@ -81,6 +87,10 @@ const FormCodeSingle = ({nodeDef, node}) => {
     () => categoryItemsByUuid[node?.value?.itemUuid],
     [categoryItemsByUuid, node],
   );
+
+  const handleCleanNode = useCallback(() => {
+    handleClean({node});
+  }, [handleClean, node]);
 
   const handleSelect = useCallback(
     categoryItem => e => {
@@ -130,6 +140,15 @@ const FormCodeSingle = ({nodeDef, node}) => {
         handleStopToSearch={handleStopToSearch}
         setSearchText={setSearchText}
       />
+
+      {!Objects.isEmpty(node?.value) && (
+        <Button
+          onPress={handleCleanNode}
+          type="ghostBlack"
+          label={t('Form:clean')}
+          customStyle={styles.button}
+        />
+      )}
 
       <List
         categoryItems={categoryItems}

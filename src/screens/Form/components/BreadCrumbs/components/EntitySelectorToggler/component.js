@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
