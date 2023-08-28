@@ -16,6 +16,10 @@ const preferences = handleActions(
       ...state,
       hasToLockRecordsWhenLeave,
     }),
+    [actions.setShowDescriptions]: (state, {payload: {showDescriptions}}) => ({
+      ...state,
+      showDescriptions,
+    }),
   },
   initialState.preferences || {},
 );

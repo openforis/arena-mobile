@@ -13,6 +13,7 @@ const initialState = {
   preferences: {
     hasToJump: false,
     hasToLockRecordsWhenLeave: true,
+    showDescriptions: true,
   },
   validation: {},
 };

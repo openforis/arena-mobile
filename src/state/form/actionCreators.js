@@ -37,6 +37,7 @@ const {form} = createActions({
   }) => ({
     hasToLockRecordsWhenLeave,
   }),
+  [types.SET_SHOW_DESCRIPTIONS]: ({showDescriptions}) => ({showDescriptions}),
   /* VALIDATION */
   [types.SET_VALIDATION]: ({validation}) => ({validation}),
   [types.importRecords$]: () => ({}),

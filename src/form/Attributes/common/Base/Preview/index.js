@@ -19,6 +19,7 @@ import {
   useDeleteNode,
   useSelectNodeAndNodeDef,
 } from 'state/form/hooks/useNodeFormActions';
+import formPreferencesSelectors from 'state/form/selectors/preferences';
 import {
   selectors as nodesSelectors,
   actions as nodesActions,
@@ -158,6 +159,9 @@ const _BasePreviewContainer = ({nodeDef, nodes, children}) => {
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );
 
+  const showDescriptions = useSelector(
+    formPreferencesSelectors.showDescriptions,
+  );
   const disabled = useIsDisabled(nodeDef, nodes);
 
   const cycle = useSelector(surveySelectors.getSurveyCycle);
@@ -184,11 +188,11 @@ const _BasePreviewContainer = ({nodeDef, nodes, children}) => {
       <AttributeHeader
         nodeDef={nodeDef}
         nodes={nodes}
-        showDescription={false}
+        showDescription={showDescriptions}
         disabled={disabled}
       />
     );
-  }, [nodeDef, nodes, disabled]);
+  }, [nodeDef, nodes, disabled, showDescriptions]);
 
   if (hidden) {
     return <></>;
