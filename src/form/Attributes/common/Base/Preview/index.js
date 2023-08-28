@@ -10,6 +10,8 @@ import Pressable from 'arena-mobile-ui/components/Pressable';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {useCode} from 'form/Attributes/Code/Preview/hooks';
+import {getValueAsString} from 'form/Attributes/common/BaseInput/Form';
+import CopyToClipboard from 'form/Attributes/common/CopyToClipboard';
 import AttributeHeader from 'form/common/Header';
 import Validation from 'form/common/Validation';
 import {selectors as formSelectors} from 'state/form';
@@ -59,6 +61,7 @@ const BasePreviewNode = ({
   const disabled = useSelector(state =>
     formSelectors.isNodeDefDisabled(state, nodeDef),
   );
+  const isReadOnly = NodeDefs.isReadOnly(nodeDef);
 
   const handleSelectNodeAndNodeDef = useSelectNodeAndNodeDef({node, nodeDef});
 
@@ -102,6 +105,9 @@ const BasePreviewNode = ({
         disabled={disabled}>
         {nodeRendered}
       </Pressable>
+      {isReadOnly && (
+        <CopyToClipboard value={getValueAsString(nodeDef, node)} />
+      )}
 
       {canDelete && <BaseDeletePreviewNode node={node} />}
     </View>
@@ -162,7 +168,13 @@ const _BasePreviewContainer = ({nodeDef, nodes, children}) => {
   }, [styles, disabled, lastNodeDefUuid, nodeDef]);
 
   const hidden = useMemo(() => {
-    return !applicable && NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef);
+    const layoutProps = NodeDefs.getLayoutProps(cycle)(nodeDef);
+
+    return (
+      !applicable &&
+      NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef) &&
+      layoutProps.hiddenInMobile
+    );
   }, [applicable, cycle, nodeDef]);
 
   const header = useMemo(() => {
