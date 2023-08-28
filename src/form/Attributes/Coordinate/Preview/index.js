@@ -70,19 +70,19 @@ export const NodeValueRender = ({node, nodeDef}) => {
         label: t('Form:nodeDefCoordinate.accuracy'),
         value: coordinateText(node?.value?.accuracy),
         thin: true,
-        show: nodeDef.props.includeAccuracy,
+        show: nodeDef?.props.includeAccuracy,
       },
       {
         label: t('Form:nodeDefCoordinate.altitude'),
         value: coordinateText(node?.value?.altitude),
         thin: true,
-        show: nodeDef.props.includeAltitude,
+        show: nodeDef?.props.includeAltitude,
       },
       {
         label: t('Form:nodeDefCoordinate.altitudeAccuracy'),
         value: coordinateText(node?.value?.altitudeAccuracy),
         thin: true,
-        show: nodeDef.props.includeAltitudeAccuracy,
+        show: nodeDef?.props.includeAltitudeAccuracy,
       },
       {
         label: t('Form:nodeDefCoordinate.srs'),

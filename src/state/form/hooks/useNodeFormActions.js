@@ -187,7 +187,7 @@ const useSelectNodeAndNodeDefKeyAttributes = ({
   const handleSelectNodeAndNodeDef = useCallback(() => {
     if (
       NodeDefs.isMultiple(_parentEntityNodeDef) &&
-      nodeDef.props.key &&
+      nodeDef?.props?.key &&
       !Objects.isEmpty(node.value)
     ) {
       alert({
@@ -233,7 +233,7 @@ export const useSelectNodeAndNodeDef = ({
   parentNode = DEFAULT_PARENT_NODE,
 }) => {
   const hook = useMemo(() => {
-    return nodeDef.props.key
+    return nodeDef?.props?.key
       ? useSelectNodeAndNodeDefKeyAttributes
       : _useSelectNodeAndNodeDef;
   }, [nodeDef]);

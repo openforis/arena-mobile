@@ -143,46 +143,46 @@ const Form = ({nodeDef}) => {
         coordinateKey="x"
         handleUpdateValue={handleUpdateValue}
         defaultValue={String(newValue.x || node?.value?.x || '')}
-        allowOnlyDeviceCoordinate={nodeDef.props.allowOnlyDeviceCoordinate}
+        allowOnlyDeviceCoordinate={nodeDef?.props?.allowOnlyDeviceCoordinate}
       />
 
       <CoordinateInput
         coordinateKey="y"
         handleUpdateValue={handleUpdateValue}
         defaultValue={String(newValue.y || node?.value?.y || '')}
-        allowOnlyDeviceCoordinate={nodeDef.props.allowOnlyDeviceCoordinate}
+        allowOnlyDeviceCoordinate={nodeDef?.props?.allowOnlyDeviceCoordinate}
       />
 
-      {nodeDef.props.includeAccuracy && (
+      {nodeDef?.props?.includeAccuracy && (
         <CoordinateInput
           coordinateKey="accuracy"
           handleUpdateValue={handleUpdateValue}
           defaultValue={String(
             newValue.accuracy || node?.value?.accuracy || '',
           )}
-          allowOnlyDeviceCoordinate={nodeDef.props.allowOnlyDeviceCoordinate}
+          allowOnlyDeviceCoordinate={nodeDef?.props?.allowOnlyDeviceCoordinate}
         />
       )}
 
-      {nodeDef.props.includeAltitude && (
+      {nodeDef?.props?.includeAltitude && (
         <CoordinateInput
           coordinateKey="altitude"
           handleUpdateValue={handleUpdateValue}
           defaultValue={String(
             newValue.altitude || node?.value?.altitude || '',
           )}
-          allowOnlyDeviceCoordinate={nodeDef.props.allowOnlyDeviceCoordinate}
+          allowOnlyDeviceCoordinate={nodeDef?.props?.allowOnlyDeviceCoordinate}
         />
       )}
 
-      {nodeDef.props.includeAltitudeAccuracy && (
+      {nodeDef?.props?.includeAltitudeAccuracy && (
         <CoordinateInput
           coordinateKey="altitudeAccuracy"
           handleUpdateValue={handleUpdateValue}
           defaultValue={String(
             newValue.altitudeAccuracy || node?.value?.altitudeAccuracy || '',
           )}
-          allowOnlyDeviceCoordinate={nodeDef.props.allowOnlyDeviceCoordinate}
+          allowOnlyDeviceCoordinate={nodeDef?.props?.allowOnlyDeviceCoordinate}
         />
       )}
 

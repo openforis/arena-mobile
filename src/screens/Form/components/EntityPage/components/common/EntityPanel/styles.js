@@ -30,7 +30,7 @@ const styles = ({colors, baseStyles}) =>
         baseStyles.bases.BASE_24 -
         (Platform.OS === 'ios'
           ? baseStyles.bases.BASE_8
-          : baseStyles.bases.BASE_12),
+          : baseStyles.bases.BASE_8),
     },
     containerCollapsedSuper: {
       width: baseStyles.bases.BASE_24,
@@ -45,8 +45,8 @@ const styles = ({colors, baseStyles}) =>
     },
     collapseButton: {
       width: baseStyles.bases.BASE_24,
-      height: baseStyles.bases.BASE_6,
-      borderRadius: baseStyles.bases.BASE_6,
+      height: baseStyles.bases.BASE_8,
+
       justifyContent: 'center',
       alignItems: 'center',
     },
