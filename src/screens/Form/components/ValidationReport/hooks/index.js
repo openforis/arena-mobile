@@ -9,7 +9,7 @@ export const useGetNumberOfErrors = () => {
   const numberOfErrors = useMemo(() => {
     let _numberOfErrors = 0;
 
-    Object.entries(_validation.fields).forEach(([key, value]) => {
+    Object.entries(_validation?.fields || {}).forEach(([_, value]) => {
       if (value.valid === false) {
         _numberOfErrors++;
       }
