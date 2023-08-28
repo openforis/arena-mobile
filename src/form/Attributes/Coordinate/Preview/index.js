@@ -8,6 +8,7 @@ import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import LabelsAndValues from 'arena-mobile-ui/components/LabelsAndValues';
 import BasePreview from 'form/Attributes/common/Base/Preview';
+import {Objects} from 'infra/objectUtils';
 import formSelectors from 'state/form/selectors';
 import surveySelectors from 'state/survey/selectors';
 
@@ -26,7 +27,10 @@ const OpenInMap = ({nodeDef}) => {
     });
   };
 
-  if (!nodes[0]?.value?.x || !nodes[0]?.value?.y) {
+  if (
+    Objects.isEmpty(nodes[0]?.value?.x) ||
+    Objects.isEmpty(nodes[0]?.value?.y)
+  ) {
     return null;
   }
 
