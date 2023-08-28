@@ -15,13 +15,13 @@ const styles = StyleSheet.create({
     maxWidth: 300,
   },
   label: {
-    maxWidth: 160,
+    maxWidth: 150,
   },
   selectorContainer: {
     flexDirection: 'column',
     alignItems: 'center',
     marginLeft: baseStyles.bases.BASE,
-    maxWidth: 140,
+    maxWidth: 120,
   },
 });
 

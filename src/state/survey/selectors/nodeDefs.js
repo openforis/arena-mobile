@@ -57,7 +57,7 @@ export const getNodeDefChildren = createCachedSelector(
 
 export const getNodeDefEntityChildrenKeys = createCachedSelector(
   getNodeDefChildren,
-  childrenNodeDefs => childrenNodeDefs.filter(_nodeDef => _nodeDef.props.key),
+  childrenNodeDefs => childrenNodeDefs.filter(_nodeDef => _nodeDef?.props?.key),
 )(_getCachedKeyObjectUuid);
 
 export const getNodeDefTableChildren = createCachedSelector(

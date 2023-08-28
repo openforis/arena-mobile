@@ -20,7 +20,7 @@ const autoCapitalizeByTransformFunction = {
   [textTransformValues.uppercase]: 'characters',
 };
 
-const isMultiline = nodeDef => nodeDef.props.textInputType === 'multiLine';
+const isMultiline = nodeDef => nodeDef?.props?.textInputType === 'multiLine';
 
 const prepareValue = ({newValue, node, nodeDef}) => {
   const _newValue =

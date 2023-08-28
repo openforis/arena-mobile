@@ -11,8 +11,8 @@ const useNodeDefNameOrLabel = ({nodeDef}) => {
   const nodeDefName = useMemo(() => {
     if (nodeDef?.uuid) {
       return showNames
-        ? nodeDef.props.name
-        : nodeDef.props?.labels?.[language] || nodeDef.props.name;
+        ? nodeDef?.props?.name
+        : nodeDef?.props?.labels?.[language] || nodeDef?.props?.name;
     }
     return '';
   }, [showNames, nodeDef, language]);
