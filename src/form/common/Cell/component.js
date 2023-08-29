@@ -21,6 +21,10 @@ const FormsByType = {
 };
 
 const Cell = ({nodeDef, nodes}) => {
+  if (nodeDef?.analysis) {
+    return null;
+  }
+
   return (
     <>
       {nodeDef &&

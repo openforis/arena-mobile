@@ -1,5 +1,5 @@
 import {NodeDefType} from '@openforis/arena-core';
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useMemo} from 'react';
 import {
   KeyboardAvoidingView,
   ScrollView,
@@ -7,6 +7,7 @@ import {
   Dimensions,
   Animated,
   View,
+  StyleSheet,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 
@@ -49,6 +50,40 @@ const RenderForm = ({nodeDef}) => {
   }
   const Form = FormsByType[nodeDef?.type] || BaseForm;
   return <Form nodeDef={nodeDef} />;
+};
+
+export const RenderFormContainer = () => {
+  const styles = useThemedStyles(_styles);
+  const nodeDef = useSelector(formSelectors.getNodeDef);
+  const scrollViewContainerStyles = useMemo(() => {
+    return StyleSheet.compose(styles.scroll, styles.scrollContainer);
+  }, [styles.scroll, styles.scrollContainer]);
+
+  if (![NodeDefType.code, NodeDefType.taxon].includes(nodeDef?.type)) {
+    return (
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        enabled>
+        <Spacer />
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          style={scrollViewContainerStyles}>
+          <RenderForm nodeDef={nodeDef} />
+        </ScrollView>
+      </KeyboardAvoidingView>
+    );
+  }
+
+  return (
+    <>
+      <Spacer />
+
+      <View style={styles.viewcontainer}>
+        <RenderForm nodeDef={nodeDef} />
+      </View>
+    </>
+  );
 };
 
 const AttributeFormWithModal = () => {
@@ -110,27 +145,7 @@ const AttributeFormWithModal = () => {
         />
       )}
       <Animated.View style={[styles.formContainer, {height: panelHeight}]}>
-        {![NodeDefType.code, NodeDefType.taxon].includes(nodeDef?.type) ? (
-          <KeyboardAvoidingView
-            style={[styles.container]}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            enabled>
-            <Spacer />
-            <ScrollView
-              keyboardShouldPersistTaps="handled"
-              style={[styles.scroll, styles.scrollContainer]}>
-              <RenderForm nodeDef={nodeDef} />
-            </ScrollView>
-          </KeyboardAvoidingView>
-        ) : (
-          <>
-            <Spacer />
-
-            <View style={[styles.viewcontainer]}>
-              <RenderForm nodeDef={nodeDef} />
-            </View>
-          </>
-        )}
+        <RenderFormContainer />
       </Animated.View>
     </>
   );
