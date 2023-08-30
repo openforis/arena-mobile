@@ -43,9 +43,13 @@ const useCode = ({nodeDef, node}) => {
   );
 
   const _categoryItems = useMemo(() => {
-    const itemsFilter = nodeDef?.propsAdvanced?.itemsFilter || '';
+    const itemsFilter = nodeDef?.propsAdvanced?.itemsFilter || false;
     const expressionEvaluator = new RecordExpressionEvaluator();
     const items = node?.uuid ? nodeCategoryItems : nodeDefCategoryItems;
+    if (!itemsFilter) {
+      return items.sort((a, b) => a.props.index - b.props.index);
+    }
+
     return items
       .filter(item => {
         try {
