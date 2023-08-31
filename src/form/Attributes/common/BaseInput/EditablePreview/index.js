@@ -21,8 +21,12 @@ const NodeValueRender = ({node, nodeDef, keyboardType = 'default'}) => {
   );
 };
 
-const EditablePreview = ({nodeDef}) => (
-  <BaseEditablePreview nodeDef={nodeDef} NodeValueRender={NodeValueRender} />
+const EditablePreview = ({nodeDef, keyboardType}) => (
+  <BaseEditablePreview
+    nodeDef={nodeDef}
+    NodeValueRender={NodeValueRender}
+    keyboardType={keyboardType}
+  />
 );
 
 export default EditablePreview;
