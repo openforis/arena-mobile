@@ -27,6 +27,10 @@ const ui = handleActions(
       ...state,
       isEntityShowAsTable: !state.isEntityShowAsTable,
     }),
+    [actions.toggleSingleNodeView]: state => ({
+      ...state,
+      isSingleNodeView: !state.isSingleNodeView,
+    }),
 
     [actions.selectEntityNode]: state => ({
       ...state,

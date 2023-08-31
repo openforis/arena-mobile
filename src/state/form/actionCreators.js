@@ -30,6 +30,7 @@ const {form} = createActions({
   [types.TOGGLE_ENTITY_SELECTOR]: () => ({}),
   [types.CLOSE_ENTITY_SELECTOR]: () => ({}),
   [types.TOGGLE_ENTITY_SHOW_AS_TABLE]: () => ({}),
+  [types.TOGGLE_SINGLE_NODE_VIEW]: () => ({}),
   /* PREFS */
   [types.SET_HAS_TO_JUMP]: ({hasToJump}) => ({hasToJump}),
   [types.SET_HAS_TO_LOCK_RECORDS_WHEN_LEAVE]: ({

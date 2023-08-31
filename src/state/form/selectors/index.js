@@ -352,6 +352,11 @@ const isEntityShowAsTable = createSelector(
   ui => ui?.isEntityShowAsTable || false,
 );
 
+const isSingleNodeView = createSelector(
+  getFormStateUi,
+  ui => ui?.isSingleNodeView || false,
+);
+
 // --- Validation
 const getValidation = createSelector(
   getFormState,
@@ -531,6 +536,7 @@ export default {
   // ---- UI
   isEntitySelectorOpened,
   isEntityShowAsTable,
+  isSingleNodeView,
 
   // ---- Validation
   getValidation,
