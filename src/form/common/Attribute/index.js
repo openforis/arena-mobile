@@ -2,6 +2,7 @@ import {NodeDefType} from '@openforis/arena-core';
 import React from 'react';
 import {useSelector} from 'react-redux';
 
+import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
 import BooleanEditablePreview from '../../Attributes/Boolean/EditablePreview';
@@ -54,21 +55,21 @@ const AttributesEditablesComponentByType = {
   [NodeDefType.entity]: EntityPreview,
 };
 
-const singleNodeView = false;
 const Attribute = ({nodeDefUuid}) => {
   const nodeDef = useSelector(state =>
     surveySelectors.getNodeDefByUuid(state, nodeDefUuid),
   );
+  const isSingleNodeView = useSelector(formSelectors.isSingleNodeView);
 
   if (
     !Object.keys(AttributesComponentByType).includes(nodeDef.type) &&
-    !singleNodeView
+    !isSingleNodeView
   ) {
     return null;
   }
   if (
     !Object.keys(AttributesEditablesComponentByType).includes(nodeDef.type) &&
-    singleNodeView
+    isSingleNodeView
   ) {
     return null;
   }
@@ -76,7 +77,7 @@ const Attribute = ({nodeDefUuid}) => {
     return null;
   }
 
-  if (singleNodeView) {
+  if (isSingleNodeView) {
     return React.createElement(
       AttributesEditablesComponentByType[nodeDef.type] || BaseEditablePreview,
       {
