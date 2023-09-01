@@ -24,24 +24,22 @@ const FormInput = ({
   node,
   nodeDef,
   keyboardType = 'default',
-}) => {
-  return (
-    <Input
-      autoCapitalize={
-        autoCapitalizeByTransformFunction[NodeDefs.getTextTransform(nodeDef)] ||
-        undefined
-      }
-      onChangeText={debouncedUpdate}
-      defaultValue={getValueAsString(nodeDef, node)}
-      autoFocus={Platform.OS === 'ios' ? true : false}
-      lateFocus={Platform.OS === 'ios' ? false : true}
-      keyboardType={keyboardType}
-      textAlign={nodeDef.type === NodeDefType.text ? 'left' : 'right'}
-      onSubmitEditing={handleSubmitEnter}
-      editable={!NodeDefs.isReadOnly(nodeDef)}
-      multiline={isMultiline(nodeDef)}
-    />
-  );
-};
+}) => (
+  <Input
+    autoCapitalize={
+      autoCapitalizeByTransformFunction[NodeDefs.getTextTransform(nodeDef)] ||
+      undefined
+    }
+    onChangeText={debouncedUpdate}
+    defaultValue={getValueAsString(nodeDef, node)}
+    autoFocus={Platform.OS === 'ios' ? true : false}
+    lateFocus={Platform.OS === 'ios' ? false : true}
+    keyboardType={keyboardType}
+    textAlign={nodeDef.type === NodeDefType.text ? 'left' : 'right'}
+    onSubmitEditing={handleSubmitEnter}
+    editable={!NodeDefs.isReadOnly(nodeDef)}
+    multiline={isMultiline(nodeDef)}
+  />
+);
 
 export default FormInput;

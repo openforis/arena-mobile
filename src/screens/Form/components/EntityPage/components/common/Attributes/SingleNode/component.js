@@ -1,16 +1,19 @@
-import React, {useMemo, useState} from 'react';
-import {View, PanResponder} from 'react-native';
+import React, {useEffect, useMemo, useState} from 'react';
+import {PanResponder} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
+import {useSelector} from 'react-redux';
 
-import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import Attribute from 'form/common/Attribute';
-
-import _styles from './styles';
+import {selectors as formSelectors} from 'state/form';
+import {selectors as nodesSelectos} from 'state/nodes';
 
 const SingleNode = React.memo(
   ({nodeDefChildrenUuids}) => {
-    const styles = useThemedStyles(_styles);
-
-    const [positionSelected, setPositionSelected] = useState(0);
+    const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
+    const lastNodeDefUuid = useSelector(nodesSelectos.getLastNodeDefUuid);
+    const [positionSelected, setPositionSelected] = useState(
+      nodeDefChildrenUuids.indexOf(lastNodeDefUuid),
+    );
 
     const panResponder = useMemo(
       () =>
@@ -40,13 +43,17 @@ const SingleNode = React.memo(
       [setPositionSelected, positionSelected, nodeDefChildrenUuids.length], // dependency list
     );
 
+    useEffect(() => {
+      setPositionSelected(0);
+    }, [parentEntityNode]);
+
     return (
-      <View style={styles.container} {...panResponder.panHandlers}>
+      <ScrollView {...panResponder.panHandlers}>
         <Attribute
           nodeDefUuid={nodeDefChildrenUuids[positionSelected]}
           shouldAutoSelect={true}
         />
-      </View>
+      </ScrollView>
     );
   },
   (prevProps, nextProps) => {

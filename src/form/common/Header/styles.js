@@ -1,9 +1,10 @@
 import {StyleSheet} from 'react-native';
 
-const styles = () =>
+const styles = ({baseStyles}) =>
   StyleSheet.create({
     container: {
       flexDirection: 'column',
+      marginBottom: baseStyles.bases.BASE_4,
     },
     disabled: {
       opacity: 0.3,

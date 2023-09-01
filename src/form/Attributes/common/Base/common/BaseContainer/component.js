@@ -70,7 +70,7 @@ const _BaseContainer = ({nodeDef, nodes, children}) => {
   );
 };
 
-export const BaseContainer = ({nodeDef, nodes, children}) => {
+const BaseContainer = ({nodeDef, nodes, children}) => {
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );

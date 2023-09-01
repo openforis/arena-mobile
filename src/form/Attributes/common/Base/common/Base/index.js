@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
-import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import {selectors as formSelectors} from 'state/form';
 import {actions as nodesActions} from 'state/nodes';
 
@@ -67,7 +66,6 @@ const BasePreview = ({
 
   return (
     <BaseContainer nodeDef={nodeDef} nodes={nodes}>
-      <TextBase>{keyboardType}</TextBase>
       {content}
     </BaseContainer>
   );

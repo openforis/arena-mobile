@@ -15,6 +15,9 @@ const noPaddingEditablePreview = [
   NodeDefType.boolean,
   NodeDefType.taxon,
   NodeDefType.code,
+  NodeDefType.decimal,
+  NodeDefType.integer,
+  NodeDefType.text,
 ];
 
 const withBorderPreview = [
@@ -59,13 +62,18 @@ const styles = ({colors, baseStyles}) =>
     block: {
       flex: 1,
     },
+    blockSingleNode: {
+      flex: 1,
+      justifyContent: 'center',
+      minHeight: baseStyles.bases.BASE_8,
+    },
     disabled: {
       backgroundColor: colors.disabledBackground,
     },
     baseContainer: {
       flexDirection: 'row',
       justifyContent: 'space-around',
-      alignItems: 'center',
+      alignItems: 'flex-start',
     },
   });
 

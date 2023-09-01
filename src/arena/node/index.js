@@ -7,5 +7,6 @@ export const getValueAsString = (nodeDef, node, defaultValue = '') => {
   if (isNaN(node?.value)) {
     return String(defaultValue);
   }
+
   return String(node?.value);
 };

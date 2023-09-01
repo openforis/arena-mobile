@@ -59,7 +59,7 @@ const BaseNode = ({
   const nodeRendered = useMemo(() => {
     return (
       <>
-        <View style={styles.block}>
+        <View style={isSingleNodeView ? styles.blockSingleNode : styles.block}>
           <NodeValueRender
             node={node}
             nodeDef={nodeDef}
@@ -70,7 +70,7 @@ const BaseNode = ({
         {validation}
       </>
     );
-  }, [node, nodeDef, styles, validation, keyboardType]);
+  }, [node, nodeDef, styles, validation, keyboardType, isSingleNodeView]);
   return (
     <View style={styles.baseContainer}>
       <Pressable

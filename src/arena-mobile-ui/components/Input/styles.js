@@ -4,6 +4,7 @@ const styles = ({baseStyles, colors}) =>
   StyleSheet.create({
     container: {
       marginTop: baseStyles.bases.BASE,
+      flex: 1,
     },
     stacked: {
       margin: 0,
