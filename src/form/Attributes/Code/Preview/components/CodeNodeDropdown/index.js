@@ -31,7 +31,7 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
 
   const selectedItem = useMemo(
     () => categoryItems?.find(item => item.uuid === node?.value?.itemUuid),
-    [categoryItems, node],
+    [categoryItems, node?.value?.itemUuid],
   );
 
   const _labelExtractor = useCallback(
