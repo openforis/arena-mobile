@@ -1,2 +1,2 @@
-import {EditablePreview} from '../../common/BaseInput';
-export default EditablePreview;
+import {Preview} from '../../common/BaseInput';
+export default Preview;

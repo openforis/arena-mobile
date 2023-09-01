@@ -17,7 +17,7 @@ export const InputContainer = ({
 }) => {
   const styles = useThemedStyles(_styles);
 
-  const constainerStyle = useMemo(() => {
+  const containerStyle = useMemo(() => {
     return StyleSheet.compose(
       StyleSheet.compose(
         styles.container,
@@ -33,7 +33,7 @@ export const InputContainer = ({
   );
 
   return (
-    <View style={constainerStyle}>
+    <View style={containerStyle}>
       {hasTitle && <TextBase customStyle={titleStyle}>{title}</TextBase>}
       {children}
     </View>
