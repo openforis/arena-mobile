@@ -198,6 +198,7 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                   [
                     [
                       {
+                        "flex": 1,
                         "marginTop": 4,
                       },
                       {},
@@ -285,6 +286,7 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                   [
                     [
                       {
+                        "flex": 1,
                         "marginTop": 4,
                       },
                       {},
