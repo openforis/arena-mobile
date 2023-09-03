@@ -6,6 +6,9 @@ const styles = ({baseStyles}) =>
       paddingVertical: baseStyles.bases.BASE_3,
       paddingHorizontal: 0,
       paddingTop: 0,
+      flex: 1,
+      justifyContent: 'flex-start',
+      alignContent: 'flex-start',
     },
     headerBlock: {
       minHeight: baseStyles.bases.BASE_8,

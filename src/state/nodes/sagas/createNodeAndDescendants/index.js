@@ -15,17 +15,10 @@ function* updateValidation(validation) {
 function* handleCreateNodeAndDescendants({payload} = {}) {
   const {nodeDef, parentNode, isCreating} = payload;
 
-  const [record, recordNodes, survey, validation] = yield all([
-    select(formSelectors.getRecord),
-    select(formSelectors.getRecordNodesByUuid),
+  const [fullRecord, survey] = yield all([
+    select(formSelectors.getFullRecord),
     select(surveySelectors.getSurvey),
-    select(formSelectors.getValidation),
   ]);
-
-  const recordWithNodesAndValidation = Records.addNodes(recordNodes || {})(
-    record,
-  );
-  const fullRecord = {...recordWithNodesAndValidation, validation};
 
   let updateResult = false;
 

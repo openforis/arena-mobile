@@ -2,7 +2,7 @@ import {NodeDefs, RecordValidations} from '@openforis/arena-core';
 import {createCachedSelector, FifoObjectCache} from 're-reselect';
 import {createSelector} from 'reselect';
 
-import {getKeyNodesForEntityAsString} from 'arena/record';
+import {getKeyNodesForEntityAsString, joinRecordItems} from 'arena/record';
 import {Objects} from 'infra/objectUtils';
 import {
   keySelectors,
@@ -479,11 +479,20 @@ const getFormAttributesNodeDefsUuids = createSelector(
   nodeDefs => nodeDefs.map(nodeDef => nodeDef?.uuid),
 );
 
+const getFullRecord = createSelector(
+  getRecord,
+  getRecordNodesByUuid,
+  getValidation,
+  (record, nodesByUuid, validation) =>
+    joinRecordItems({record, nodesByUuid, validation}),
+);
+
 export default {
   getFormStateData,
   getRecordUuid,
 
   getRecord,
+  getFullRecord,
   isRecordLocked,
   getRecordNodes,
   getRecordNodesByUuid,

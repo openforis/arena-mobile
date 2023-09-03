@@ -21,7 +21,7 @@ const BottomContent = ({
   }
 
   return (
-    <View style={[styles.container]}>
+    <View style={styles.container}>
       <View
         style={[qrData ? styles.dataContainer : styles.dataContainerNoData]}>
         <TextBase

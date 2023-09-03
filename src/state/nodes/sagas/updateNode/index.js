@@ -1,6 +1,6 @@
-import {Records} from '@openforis/arena-core';
 import {call, select, put, all} from 'redux-saga/effects';
 
+import {joinRecordItems} from 'arena/record';
 import formActions from 'state/form/actionCreators';
 import formSelectors from 'state/form/selectors';
 import nodesActions from 'state/nodes/actionCreators';
@@ -32,8 +32,12 @@ function* handleUpdateNode({payload}) {
     }
 
     // the record needs to be populated with the validation and records to make it works
-    const recordWithNodesAndValidation = Records.addNodes(recordNodes)(record);
-    const fullRecord = {...recordWithNodesAndValidation, validation};
+
+    const fullRecord = joinRecordItems({
+      record,
+      nodesByUuid: recordNodes,
+      validation,
+    });
 
     const {
       nodes: updatedNodes,
@@ -46,6 +50,7 @@ function* handleUpdateNode({payload}) {
     });
 
     delete updatedRecord.validation;
+    delete updatedRecord.nodes;
     yield all([
       put(recordsActions.setRecord({record: updatedRecord})),
       put(nodesActions.setNodes({nodes: updatedNodes})),

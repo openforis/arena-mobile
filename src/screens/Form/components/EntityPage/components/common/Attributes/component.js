@@ -73,7 +73,6 @@ const Attributes = React.memo(
 
 const AttributesContainer = () => {
   const styles = useThemedStyles(_styles);
-
   const nodeDefChildrenUuids = useAttributesUuids();
 
   return (
