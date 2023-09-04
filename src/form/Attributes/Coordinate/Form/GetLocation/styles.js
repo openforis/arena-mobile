@@ -30,6 +30,8 @@ const styles = ({colors, baseStyles}) =>
 
     accuracyPayload: {
       paddingHorizontal: baseStyles.bases.BASE_2,
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
     },
     accuracyPill: {
       width: baseStyles.bases.BASE_8,

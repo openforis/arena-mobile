@@ -7,7 +7,7 @@ import _styles from './styles';
 
 const {width} = Dimensions.get('screen');
 
-const ProgressBar = ({progress, success, maxWidth, height, main}) => {
+const ProgressBar = ({progress, success, info, maxWidth, height, main}) => {
   const styles = useThemedStyles(_styles);
   const barWidth = useRef(new Animated.Value(0)).current;
   useEffect(() => {
@@ -28,8 +28,8 @@ const ProgressBar = ({progress, success, maxWidth, height, main}) => {
             width: maxWidth,
 
             backgroundColor:
-              main || success
-                ? styles.colors.neutralLighter
+              main || success || info
+                ? styles.colors.neutralLight
                 : styles.colors.errorLight,
           },
         ]}>
@@ -39,7 +39,9 @@ const ProgressBar = ({progress, success, maxWidth, height, main}) => {
             {
               height,
               width: barWidth,
-              backgroundColor: success
+              backgroundColor: info
+                ? styles.colors.secondary
+                : success
                 ? styles.colors.success
                 : styles.colors.error,
             },
@@ -53,6 +55,7 @@ const ProgressBar = ({progress, success, maxWidth, height, main}) => {
 ProgressBar.defaultProps = {
   progress: 0,
   success: true,
+  info: false,
   maxWidth: width - 24,
   height: 4,
   main: false,
