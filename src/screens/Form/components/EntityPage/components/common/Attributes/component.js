@@ -1,84 +1,32 @@
-import React, {useCallback, useEffect, useMemo, useRef} from 'react';
-import {FlatList, View} from 'react-native';
+import React from 'react';
+import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
-import Attribute from 'form/common/Attribute';
 import {selectors as formSelectors} from 'state/form';
 
+import {useAttributesUuids} from './hooks';
+import ListForm from './ListForm';
+import SingleNode from './SingleNode';
 import _styles from './styles';
-
-const Footer = () => {
-  const styles = useThemedStyles(_styles);
-  return <View style={styles.block} />;
-};
-
-const Header = () => {
-  const styles = useThemedStyles(_styles);
-  return <View style={styles.headerBlock} />;
-};
-
-const useAttributesUuids = () => {
-  const nodeDefChildrenUuids = useSelector(
-    formSelectors.getFormAttributesNodeDefsUuids,
-  );
-
-  return useMemo(() => {
-    return nodeDefChildrenUuids;
-  }, [nodeDefChildrenUuids]);
-};
-
-const Attributes = React.memo(
-  ({nodeDefChildrenUuids}) => {
-    const styles = useThemedStyles(_styles);
-
-    const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
-
-    const renderItem = useCallback(
-      ({item: nodeDefUuid}) => <Attribute nodeDefUuid={nodeDefUuid} />,
-      [],
-    );
-
-    const keyExtractor = useCallback(key => key, []);
-
-    const flatListRef = useRef();
-
-    const toTop = useCallback(() => {
-      flatListRef.current.scrollToOffset({animated: false, offset: 0});
-    }, [flatListRef]);
-
-    useEffect(() => {
-      toTop();
-    }, [toTop, parentEntityNode]);
-
-    return (
-      <View style={styles.container}>
-        <FlatList
-          ref={flatListRef}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={keyExtractor}
-          renderItem={renderItem}
-          data={nodeDefChildrenUuids}
-          ListFooterComponent={Footer}
-          ListHeaderComponent={Header}
-          initialNumToRender={6}
-        />
-      </View>
-    );
-  },
-  (prevProps, nextProps) => {
-    return prevProps.nodeDefChildrenUuids === nextProps.nodeDefChildrenUuids;
-  },
-);
+import ToggleSingleMode from './ToggleButton';
 
 const AttributesContainer = () => {
   const styles = useThemedStyles(_styles);
   const nodeDefChildrenUuids = useAttributesUuids();
+  const isSingleNodeView = useSelector(formSelectors.isSingleNodeView);
 
   return (
-    <View style={styles.container}>
-      <Attributes nodeDefChildrenUuids={nodeDefChildrenUuids} />
-    </View>
+    <>
+      <View style={styles.container}>
+        {isSingleNodeView ? (
+          <SingleNode nodeDefChildrenUuids={nodeDefChildrenUuids} />
+        ) : (
+          <ListForm nodeDefChildrenUuids={nodeDefChildrenUuids} />
+        )}
+      </View>
+      <ToggleSingleMode />
+    </>
   );
 };
 export default AttributesContainer;

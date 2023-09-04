@@ -17,19 +17,13 @@ import styles, {booleanOptionStyles} from './styles';
 
 const hitSlop = {top: 20, bottom: 20, left: 20, right: 20};
 
-const TrueIcon = () => {
-  return (
-    <Icon
-      name={'radiobox-marked'}
-      size="s"
-      color={colors.primaryContrastText}
-    />
-  );
-};
+const TrueIcon = () => (
+  <Icon name={'radiobox-marked'} size="s" color={colors.primaryContrastText} />
+);
 
-const FalseIcon = () => {
-  return <Icon name={'radiobox-blank'} size="s" color={colors.secondary} />;
-};
+const FalseIcon = () => (
+  <Icon name={'radiobox-blank'} size="s" color={colors.secondary} />
+);
 
 const BooleanOption = ({value, active, onPress, nodeDef}) => {
   const disabled = useSelector(state =>
@@ -121,14 +115,11 @@ export const BooleanAttribute = React.memo(
   },
 );
 
-const Preview = ({nodeDef}) => {
-  return <BasePreview nodeDef={nodeDef} NodeValueRender={BooleanAttribute} />;
-};
+const Preview = ({nodeDef}) => (
+  <BasePreview nodeDef={nodeDef} NodeValueRender={BooleanAttribute} />
+);
 
 export default React.memo(
   Preview,
-
-  (prevProps, nextProps) => {
-    return prevProps.nodeDef.uuid === nextProps.nodeDef.uuid;
-  },
+  (prevProps, nextProps) => prevProps.nodeDef.uuid === nextProps.nodeDef.uuid,
 );

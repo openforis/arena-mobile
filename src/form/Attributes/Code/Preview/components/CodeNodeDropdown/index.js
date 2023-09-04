@@ -26,12 +26,12 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
 
   const _disabled =
     disabled ||
-    categoryItems.length === 0 ||
+    categoryItems?.length === 0 ||
     NodeDefs.isEnumerate(parentEntityNodeDef);
 
   const selectedItem = useMemo(
-    () => categoryItems.find(item => item.uuid === node?.value?.itemUuid),
-    [categoryItems, node],
+    () => categoryItems?.find(item => item.uuid === node?.value?.itemUuid),
+    [categoryItems, node?.value?.itemUuid],
   );
 
   const _labelExtractor = useCallback(

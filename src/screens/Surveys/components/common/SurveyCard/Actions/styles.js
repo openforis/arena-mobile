@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     flexDirection: 'row',
-
     padding: 0,
   },
   button: {

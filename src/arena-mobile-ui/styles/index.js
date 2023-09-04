@@ -155,11 +155,20 @@ export const getBaseStyles = ({
     },
   });
 
+  const buttons = {
+    buttonContainer: {
+      justifyContent: 'flex-end',
+      margin: 0,
+      paddingTop: bases.BASE,
+    },
+  };
+
   return {
     textStyle,
     textSize,
     iconSizes,
     card,
+    buttons,
     fontSizes,
     BASE,
     bases,

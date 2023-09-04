@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
-import {BasePreviewContainer} from 'form/Attributes/common/Base/Preview';
+import BaseContainer from 'form/Attributes/common/Base/common/BaseContainer';
 import {selectors as filesSelectors} from 'state/files';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 
@@ -117,9 +117,9 @@ const Preview = ({nodeDef}) => {
   }, [nodeDef, nodes]);
 
   return (
-    <BasePreviewContainer nodeDef={nodeDef} nodes={nodes}>
+    <BaseContainer nodeDef={nodeDef} nodes={nodes}>
       {renderNodes}
-    </BasePreviewContainer>
+    </BaseContainer>
   );
 };
 

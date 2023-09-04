@@ -1,7 +1,7 @@
 import {NodeDefs} from '@openforis/arena-core';
 import React, {useCallback, useMemo} from 'react';
 
-import {BasePreviewContainer} from 'form/Attributes/common/Base/Preview';
+import BaseContainer from 'form/Attributes/common/Base/common/BaseContainer';
 import {Objects} from 'infra/objectUtils';
 import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 
@@ -70,7 +70,7 @@ const CodeCheckbox = ({nodeDef}) => {
   }, [getCategoryItemLabel, categoryItems, nodes, nodeDef, handlePress]);
 
   return (
-    <BasePreviewContainer nodeDef={nodeDef} nodes={nodes}>
+    <BaseContainer nodeDef={nodeDef} nodes={nodes}>
       <ChipContainer>
         {options.map(({key, onPress, isActive, label}) => (
           <OptionChip
@@ -81,7 +81,7 @@ const CodeCheckbox = ({nodeDef}) => {
           />
         ))}
       </ChipContainer>
-    </BasePreviewContainer>
+    </BaseContainer>
   );
 };
 

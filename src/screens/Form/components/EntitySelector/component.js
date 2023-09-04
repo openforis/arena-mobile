@@ -19,6 +19,7 @@ import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
+import ToggleSingleMode from '../EntityPage/components/common/Attributes/ToggleButton/component';
 import ListOfErrors from '../ValidationReport/components/ListOfErrors';
 import ShowNumberOfErrors from '../ValidationReport/components/ShowNumberOfErrors';
 
@@ -115,7 +116,10 @@ const EntitySelector = () => {
             type="ghost"
             onPress={handleLeave}
           />
-          <ToggleShowNames />
+          <View>
+            <ToggleShowNames />
+            <ToggleSingleMode />
+          </View>
         </View>
       </Animated.View>
       {isEntitySelectorOpened && !isTablet() && (

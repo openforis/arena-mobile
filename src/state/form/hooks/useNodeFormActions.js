@@ -229,21 +229,26 @@ const _useSelectNodeAndNodeDef = ({node}) => {
 export const useSelectNodeAndNodeDef = ({
   node,
   nodeDef,
-  parentNodeDef = DEFAULT_PARENT_NODE_DEF,
-  parentNode = DEFAULT_PARENT_NODE,
+  parentNodeDef,
+  parentNode,
 }) => {
-  const hook = useMemo(() => {
-    return nodeDef?.props?.key
-      ? useSelectNodeAndNodeDefKeyAttributes
-      : _useSelectNodeAndNodeDef;
-  }, [nodeDef]);
+  const _useSelectNodeAndNodeDefKeyAttributes =
+    useSelectNodeAndNodeDefKeyAttributes({
+      node,
+      nodeDef,
+      parentNodeDef,
+      parentNode,
+    });
 
-  return hook({
+  const __useSelectNodeAndNodeDef = _useSelectNodeAndNodeDef({
     node,
-    nodeDef,
-    parentNodeDef,
-    parentNode,
   });
+
+  if (nodeDef?.props?.key) {
+    return _useSelectNodeAndNodeDefKeyAttributes;
+  }
+
+  return __useSelectNodeAndNodeDef;
 };
 
 export default useNodeFormActions;
