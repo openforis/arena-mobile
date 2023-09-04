@@ -5,6 +5,7 @@ import {View} from 'react-native';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import LabelsAndValues from 'arena-mobile-ui/components/LabelsAndValues';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
 import _styles from './styles';
@@ -29,12 +30,29 @@ const MoreInfo = ({node}) => {
         onPress={toggleCollapsed}
       />
       {collapsed && (
-        <LabelsAndValues
-          items={Object.entries(node?.value || {}).map(([label, value]) => ({
-            label,
-            value: String(value) || '-',
-          }))}
-        />
+        <>
+          <LabelsAndValues
+            items={Object.entries(node?.value || {})
+              .filter(([label]) => !(label === 'exif'))
+              .map(([label, value]) => ({
+                label,
+                value:
+                  label === 'exif'
+                    ? JSON.stringify(value || '-', null, 2)
+                    : String(value) || '-',
+              }))}
+          />
+          {node?.value?.exif && (
+            <>
+              <TextBase type="bold">
+                {t('Form:nodeDefFile.more_info.exif')}
+              </TextBase>
+              <TextBase style={styles.exifDescription}>
+                {JSON.stringify(node?.value?.exif || {}, null, 2)}
+              </TextBase>
+            </>
+          )}
+        </>
       )}
     </View>
   );
