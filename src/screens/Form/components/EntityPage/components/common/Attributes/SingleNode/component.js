@@ -5,12 +5,12 @@ import {useSelector} from 'react-redux';
 
 import Attribute from 'form/common/Attribute';
 import {selectors as formSelectors} from 'state/form';
-import {selectors as nodesSelectos} from 'state/nodes';
+import {selectors as nodesSelectors} from 'state/nodes';
 
 const SingleNode = React.memo(
   ({nodeDefChildrenUuids}) => {
     const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
-    const lastNodeDefUuid = useSelector(nodesSelectos.getLastNodeDefUuid);
+    const lastNodeDefUuid = useSelector(nodesSelectors.getLastNodeDefUuid);
     const [positionSelected, setPositionSelected] = useState(
       nodeDefChildrenUuids.indexOf(lastNodeDefUuid),
     );
