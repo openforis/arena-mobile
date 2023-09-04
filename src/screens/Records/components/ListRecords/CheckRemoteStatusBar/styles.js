@@ -1,35 +1,9 @@
 import {StyleSheet} from 'react-native';
 
-const styles = ({colors, baseStyles}) =>
+const styles = ({colors}) =>
   StyleSheet.create({
-    container: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      padding: baseStyles.bases.BASE_2,
-      paddingHorizontal: baseStyles.bases.BASE_5,
-
-      alignItems: 'center',
-      backgroundColor: colors.successLighter,
-    },
-    containerWithError: {
-      backgroundColor: colors.errorLighter,
-      padding: 0,
-    },
-    containerWithInfo: {
-      backgroundColor: colors.activeBackground,
-    },
-
     text: {
       color: colors.neutral,
-    },
-    button: {
-      paddingVertical: 0,
-      margin: 0,
-      maxWidth: 180,
-    },
-    buttonText: {
-      marginRight: baseStyles.bases.BASE_2,
     },
   });
 

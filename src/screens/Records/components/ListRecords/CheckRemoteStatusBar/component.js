@@ -1,11 +1,11 @@
 import moment from 'moment';
 import React, {useMemo, useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, StyleSheet} from 'react-native';
+import {View} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 
-import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
+import MessageBar from 'arena-mobile-ui/components/MessageBar/component';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {useNavigateTo} from 'navigation/hooks';
@@ -49,61 +49,56 @@ const CheckRemoteStatusBar = () => {
     });
   }, [remoteRecordsSummaryError, isReady, t, currentServerUrl]);
 
-  const containerStyle = useMemo(() => {
-    return StyleSheet.compose(
-      StyleSheet.compose(
-        styles.container,
-        remoteRecordsSummaryError && styles.containerWithError,
-      ),
-
-      !isReady && styles.containerWithInfo,
-    );
-  }, [remoteRecordsSummaryError, isReady, styles]);
+  const buttonConfig = useMemo(() => {
+    if (!isReady) {
+      return {
+        label: t('Records:subpanel.check_remote_records_button.label'),
+        onPress: handleCheckRemoteRecords,
+        icon: <Icon name="cloud-sync" size="m" />,
+        iconPosition: 'right',
+      };
+    }
+    if (remoteRecordsSummaryError) {
+      return {
+        label: t('Records:status_connection_bar.error.cta_label'),
+        onPress: navigateTo({
+          route: routes.CONNECTION_SETTINGS,
+          replace: true,
+        }),
+      };
+    }
+    return null;
+  }, [
+    isReady,
+    remoteRecordsSummaryError,
+    t,
+    handleCheckRemoteRecords,
+    navigateTo,
+    routes,
+  ]);
 
   return (
-    <View style={containerStyle}>
-      <View>
-        <TextBase customStyle={styles.text} size="s">
-          {infoLabel}
-        </TextBase>
-        <TextBase customStyle={styles.text} size="s">
-          {lastCheck &&
-            `${t('Common:last_check')}: ${moment(lastCheck).format(
-              'YYYY-MM-DD HH:mm',
-            )}`}
-        </TextBase>
-      </View>
-      {!isReady && (
-        <Button
-          label={t('Records:subpanel.check_remote_records_button.label')}
-          onPress={handleCheckRemoteRecords}
-          type="ghostBlack"
-          customContainerStyle={styles.button}
-          customTextStyle={styles.buttonText}
-          allowMultipleLines={true}
-          iconPosition={'right'}
-          icon={<Icon name="cloud-sync" size="m" />}
-        />
-      )}
-      {remoteRecordsSummaryError && (
-        <Button
-          label={t('Records:status_connection_bar.error.cta_label')}
-          onPress={navigateTo({
-            route: routes.CONNECTION_SETTINGS,
-            replace: true,
-          })}
-          type="ghostBlack"
-          customContainerStyle={styles.button}
-          allowMultipleLines={true}
-        />
-      )}
-    </View>
+    <MessageBar
+      label={
+        <View>
+          <TextBase customStyle={styles.text} size="s">
+            {infoLabel}
+          </TextBase>
+          <TextBase customStyle={styles.text} size="s">
+            {lastCheck &&
+              `${t('Common:last_check')}: ${moment(lastCheck).format(
+                'YYYY-MM-DD HH:mm',
+              )}`}
+          </TextBase>
+        </View>
+      }
+      type={remoteRecordsSummaryError ? 'error' : !isReady ? 'info' : 'success'}
+      buttonLabel={buttonConfig?.label}
+      onPress={buttonConfig?.onPress}
+      buttonIcon={buttonConfig?.icon}
+      buttonIconPosition={buttonConfig?.iconPosition}
+    />
   );
-};
-
-CheckRemoteStatusBar.defaultProps = {
-  remoteRecordsSummaryError: false,
-  info: null,
 };
 
 export default CheckRemoteStatusBar;
