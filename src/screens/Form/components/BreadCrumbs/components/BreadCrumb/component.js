@@ -6,7 +6,7 @@ import Pressable from 'arena-mobile-ui/components/Pressable';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
-import {actions as formActions} from 'state/form';
+import {actions as formActions, selectors as formSelectors} from 'state/form';
 import {selectors as nodesSelectors} from 'state/nodes';
 import {selectors as surveySelectors} from 'state/survey';
 
@@ -15,6 +15,7 @@ import _styles from './styles';
 const Label = React.memo(
   ({node}) => {
     const nodeDefsByUuid = useSelector(surveySelectors.getNodeDefsByUuid);
+    const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
     const keys = useSelector(state =>
       surveySelectors.getEntityNodeKeys(state, node),
     );
@@ -30,7 +31,11 @@ const Label = React.memo(
       return `${nodeDefName} ${keys.length > 0 ? `[${keysAsString}]` : ''}`;
     }, [nodeDefName, keysAsString, keys]);
 
-    return <TextBase>{breadCrumbLabel}</TextBase>;
+    return (
+      <TextBase type={parentEntityNode.uuid === node.uuid ? 'bold' : 'regular'}>
+        {breadCrumbLabel}
+      </TextBase>
+    );
   },
   (prevProps, nextProps) => {
     return prevProps.node.uuid === nextProps.node.uuid;

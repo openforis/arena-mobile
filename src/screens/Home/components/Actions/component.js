@@ -9,6 +9,7 @@ import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {useNavigateTo} from 'navigation/hooks';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {useNumberRecords} from 'state/records/hooks';
+import {selectors as userSelectors} from 'state/user';
 
 import _styles from './styles';
 
@@ -49,10 +50,15 @@ const Actions = () => {
   const currentRecordUuid = useHasRecordToContinue();
   const numberOfRecords = useNumberRecords();
   const numberOfErrors = 0;
+  const user = useSelector(userSelectors.getUser);
 
   const handleInitializeRecord = useCallback(() => {
     dispatch(formActions.initializeRecord());
   }, [dispatch]);
+
+  if (!user?.name) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>

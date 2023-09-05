@@ -116,7 +116,7 @@ const Form = ({node, nodeDef}) => {
       return taxonomiesWithIndexToSearch.filter(_item =>
         searchTextNormalized
           .split(' ')
-          .some(searchTextNormalizedItem =>
+          .every(searchTextNormalizedItem =>
             _item?.textForSearch.includes(searchTextNormalizedItem),
           ),
       );

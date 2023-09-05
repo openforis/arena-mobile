@@ -7,7 +7,7 @@ const styles = ({baseStyles}) =>
       marginBottom: baseStyles.bases.BASE_4,
     },
     disabled: {
-      opacity: 0.3,
+      opacity: 0.5,
     },
     textsContainer: {
       flexDirection: 'column',

@@ -85,7 +85,8 @@
     "name": "name",
     "more_info": {
       "show_detail": "Show detail",
-      "hide_detail": "Hide detail"
+      "hide_detail": "Hide detail",
+      "exif": "Exif"
     },
     "pickers": {
       "camera": "Camera",

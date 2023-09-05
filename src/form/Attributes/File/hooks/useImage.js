@@ -35,6 +35,7 @@ const useGetImage = ({cropping = false} = {}) => {
           const image = await ImagePicker.openPicker({
             cropping,
             writeTempFile: false,
+            includeExif: true,
           });
 
           const files = getFilesFromImage(image);
@@ -53,6 +54,7 @@ const useGetImage = ({cropping = false} = {}) => {
           const image = await ImagePicker.openCamera({
             cropping,
             writeTempFile: true,
+            includeExif: true,
             ...(isMaxResolution
               ? {}
               : {
