@@ -7,6 +7,7 @@ import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import LabelsAndValues from 'arena-mobile-ui/components/LabelsAndValues';
 import {useSkeletonAnimation} from 'arena-mobile-ui/components/List/Loading/component';
+import ProgressBar from 'arena-mobile-ui/components/ProgressBar';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
@@ -31,7 +32,6 @@ const _sorter = (a, b) => (a > b ? 1 : a === b ? 0 : -1);
 const prepareItems = (location, {selectedSrs}) => {
   if (location?.coords) {
     const srs = DEFAULT_SRS_CODE;
-    const accuracy = location.coords.accuracy;
     const x = Number(location.coords.longitude);
     const y = Number(location.coords.latitude);
 
@@ -41,14 +41,9 @@ const prepareItems = (location, {selectedSrs}) => {
       y,
     });
     const transformedPoint = Points.transform(point, selectedSrs.code);
-    const pareparedFields = ['longitude', 'latitude', 'accuracy'];
+    const pareparedFields = ['longitude', 'latitude'];
 
     return [
-      {
-        label: 'Accuracy',
-        value: toFixedIfLongerAndNumber(accuracy),
-        bolder: true,
-      },
       {
         label: 'X',
         value: toFixedIfLongerAndNumber(transformedPoint.x, 6),
@@ -78,7 +73,7 @@ const GetLocation = ({handleSaveLocation, selectedSrs}) => {
   const styles = useThemedStyles(_styles);
   const {t} = useTranslation();
 
-  const {location, getLocation, loading} = useGetLocation();
+  const {location, getLocation, loading, timeProgress} = useGetLocation();
 
   const _handleSaveLocation = useCallback(() => {
     if (location) {
@@ -111,7 +106,10 @@ const GetLocation = ({handleSaveLocation, selectedSrs}) => {
       </View>
 
       {loading && location && (
-        <LocationAccuracyBar accuracy={location?.coords?.accuracy} />
+        <LocationAccuracyBar
+          accuracy={location?.coords?.accuracy}
+          timeProgress={timeProgress}
+        />
       )}
     </View>
   );
@@ -154,7 +152,7 @@ const AccuracyPill = ({index, first, last, accuracyIndex}) => {
   return <View style={pillStyle} />;
 };
 
-const LocationAccuracyBar = ({accuracy}) => {
+const LocationAccuracyBar = ({accuracy, timeProgress}) => {
   const styles = useThemedStyles(_styles);
   const {t} = useTranslation();
 
@@ -195,6 +193,13 @@ const LocationAccuracyBar = ({accuracy}) => {
             />
           ))}
         </View>
+        <ProgressBar
+          progress={timeProgress}
+          height={4}
+          success={accuracyIndex === 0}
+          maxWidth={styles.accuracyPill.width * 5}
+          info={true}
+        />
       </View>
     </View>
   );

@@ -1,4 +1,4 @@
-import {useState, useCallback, useEffect} from 'react';
+import {useState, useCallback, useEffect, useRef} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
   Platform,
@@ -12,10 +12,14 @@ import {alert} from 'arena-mobile-ui/utils';
 
 import appConfig from '../../../../../app.json';
 
+const TIME_OUT_TIME = 1000 * 60 * 1;
+
 const useGetLocation = () => {
   const {t} = useTranslation();
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [time, setTime] = useState(0);
+  const intervalId = useRef();
 
   const hasPermissionIOS = useCallback(async () => {
     const openSetting = () => {
@@ -162,8 +166,22 @@ const useGetLocation = () => {
     setTimeout(() => {
       setLoading(false);
       Geolocation.clearWatch(watcherId);
-    }, 1000 * 60 * 25);
+      clearInterval(intervalId.current);
+    }, TIME_OUT_TIME);
   }, [_getLocation]);
+
+  useEffect(() => {
+    if (loading) {
+      intervalId.current = setInterval(() => {
+        setTime(_time => _time + 1000);
+      }, 1000);
+    } else {
+      setTime(0);
+    }
+    return () => {
+      clearInterval(intervalId.current);
+    };
+  }, [loading]);
 
   useEffect(() => {
     return () => {
@@ -178,7 +196,12 @@ const useGetLocation = () => {
     };
   }, []);
 
-  return {getLocation, location, loading};
+  return {
+    getLocation,
+    location,
+    loading,
+    timeProgress: 100 * Math.min(1, time / TIME_OUT_TIME),
+  };
 };
 
 export default useGetLocation;

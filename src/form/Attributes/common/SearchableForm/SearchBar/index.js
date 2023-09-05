@@ -46,6 +46,7 @@ const SearchBar = ({
           onBlur={handleStopToSearch}
           returnKeyType="done"
           clear={clear}
+          autoCorrect={false}
         />
       </View>
       <TouchableIcon

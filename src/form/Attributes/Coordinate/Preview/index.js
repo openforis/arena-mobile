@@ -94,21 +94,19 @@ export const NodeValueRender = ({node, nodeDef}) => {
   }, [node, nodeDef, selectedSrs, t]);
 
   return (
-    <LabelsAndValues
-      boldLabels={false}
-      expanded={true}
-      size="m"
-      items={items}
-    />
-  );
-};
-const Preview = ({nodeDef}) => {
-  return (
     <>
-      <BasePreview nodeDef={nodeDef} NodeValueRender={NodeValueRender} />
+      <LabelsAndValues
+        boldLabels={false}
+        expanded={true}
+        size="m"
+        items={items}
+      />
       <OpenInMap nodeDef={nodeDef} />
     </>
   );
+};
+const Preview = ({nodeDef}) => {
+  return <BasePreview nodeDef={nodeDef} NodeValueRender={NodeValueRender} />;
 };
 
 export default Preview;

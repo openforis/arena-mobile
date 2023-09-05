@@ -9,7 +9,6 @@ import {useAttributesUuids} from './hooks';
 import ListForm from './ListForm';
 import SingleNode from './SingleNode';
 import _styles from './styles';
-import ToggleSingleMode from './ToggleButton';
 
 const AttributesContainer = () => {
   const styles = useThemedStyles(_styles);
@@ -25,7 +24,6 @@ const AttributesContainer = () => {
           <ListForm nodeDefChildrenUuids={nodeDefChildrenUuids} />
         )}
       </View>
-      <ToggleSingleMode />
     </>
   );
 };
