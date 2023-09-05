@@ -8,18 +8,17 @@ const styles = ({colors, baseStyles}) =>
       justifyContent: 'space-between',
       padding: baseStyles.bases.BASE_2,
       paddingHorizontal: baseStyles.bases.BASE_5,
-
       alignItems: 'center',
-      backgroundColor: colors.successLighter,
     },
-    containerWithError: {
-      backgroundColor: colors.errorLighter,
-      padding: 0,
-    },
-    containerWithInfo: {
+    info: {
       backgroundColor: colors.activeBackground,
     },
-
+    success: {
+      backgroundColor: colors.successLighter,
+    },
+    error: {
+      backgroundColor: colors.errorLighter,
+    },
     text: {
       color: colors.neutral,
     },

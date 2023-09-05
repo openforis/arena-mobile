@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next';
 import {ScrollView} from 'react-native';
 import {useSelector} from 'react-redux';
 
+import CheckAppUpdateBar from 'arena-mobile-ui/components/CheckAppUpdateBar';
 import Header from 'arena-mobile-ui/components/Header';
 import Layout from 'arena-mobile-ui/components/Layout';
 import TextTitle from 'arena-mobile-ui/components/Texts/TextTitle';
@@ -29,6 +30,8 @@ const Home = () => {
           RightComponent={<NavigateToSurveys />}>
           <TextTitle>{t('Home:header_title')}</TextTitle>
         </Header>
+        <CheckAppUpdateBar />
+
         <ScrollView style={styles.container}>
           <User />
           <Survey />
