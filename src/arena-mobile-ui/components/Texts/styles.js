@@ -1,8 +1,11 @@
 import {StyleSheet} from 'react-native';
 
-const styles = ({baseStyles}) =>
+const styles = ({colors, baseStyles}) =>
   StyleSheet.create({
     ...baseStyles.textStyle,
+    success: {
+      color: colors.neutral,
+    },
     sizes: {
       ...baseStyles.textSize,
     },

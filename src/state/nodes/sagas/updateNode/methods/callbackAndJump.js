@@ -28,17 +28,16 @@ function* callbackAndJump({currentNode, callback, shouldJump = true}) {
     }
     return;
   }
+  const currentNodeDef = yield select(state =>
+    surveySelectors.getNodeDefByUuid(state, currentNode.nodeDefUuid),
+  );
 
-  if (isSingleNodeView) {
+  if (isSingleNodeView || NodeDefs.isMultiple(currentNodeDef)) {
     _hasToJump = false;
   }
 
   const currentNodeValidation = yield select(state =>
     formSelectors.getValidationByNodes(state, [currentNode]),
-  );
-
-  const currentNodeDef = yield select(state =>
-    surveySelectors.getNodeDefByUuid(state, currentNode.nodeDefUuid),
   );
 
   if (

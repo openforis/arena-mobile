@@ -25,7 +25,7 @@ const UpdateNeeded = () => {
   return (
     <MessageBar
       label={
-        <TextBase size="s" allowMultipleLines={true}>
+        <TextBase size="s" allowMultipleLines={true} isBackgroundSuccess={true}>
           {t('title')}
         </TextBase>
       }

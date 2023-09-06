@@ -18,6 +18,7 @@ const styles = ({baseStyles, colors}) =>
     input: {
       flex: 1,
       fontSize: baseStyles.fontSizes.m,
+      color: colors.primaryText,
     },
   });
 

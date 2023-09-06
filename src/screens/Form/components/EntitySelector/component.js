@@ -11,6 +11,7 @@ import {
 import {isTablet} from 'react-native-device-info';
 import {useDispatch, useSelector} from 'react-redux';
 
+import BackgroundPattern from 'arena-mobile-ui/components/BackgroundPattern';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
@@ -121,6 +122,7 @@ const EntitySelector = () => {
             <ToggleSingleMode />
           </View>
         </View>
+        <BackgroundPattern />
       </Animated.View>
       {isEntitySelectorOpened && !isTablet() && (
         <TouchableOpacity onPress={handleClose} style={styles.closer} />

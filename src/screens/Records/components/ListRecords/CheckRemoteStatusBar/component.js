@@ -81,10 +81,16 @@ const CheckRemoteStatusBar = () => {
     <MessageBar
       label={
         <View>
-          <TextBase customStyle={styles.text} size="s">
+          <TextBase
+            customStyle={styles.text}
+            size="s"
+            isBackgroundSuccess={true}>
             {infoLabel}
           </TextBase>
-          <TextBase customStyle={styles.text} size="s">
+          <TextBase
+            customStyle={styles.text}
+            size="s"
+            isBackgroundSuccess={true}>
             {lastCheck &&
               `${t('Common:last_check')}: ${moment(lastCheck).format(
                 'YYYY-MM-DD HH:mm',
