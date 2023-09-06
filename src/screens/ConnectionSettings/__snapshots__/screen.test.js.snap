@@ -119,7 +119,10 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                 },
                 {},
               ],
-              {},
+              [
+                {},
+                {},
+              ],
             ]
           }
         >
@@ -187,7 +190,10 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                       },
                       {},
                     ],
-                    {},
+                    [
+                      {},
+                      {},
+                    ],
                   ]
                 }
               >
@@ -217,7 +223,10 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                         },
                         {},
                       ],
-                      {},
+                      [
+                        {},
+                        {},
+                      ],
                     ]
                   }
                 >
@@ -275,7 +284,10 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                       },
                       {},
                     ],
-                    {},
+                    [
+                      {},
+                      {},
+                    ],
                   ]
                 }
               >
@@ -305,7 +317,10 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                         },
                         {},
                       ],
-                      {},
+                      [
+                        {},
+                        {},
+                      ],
                     ]
                   }
                 >
@@ -358,7 +373,10 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                         },
                         {},
                       ],
-                      {},
+                      [
+                        {},
+                        {},
+                      ],
                     ]
                   }
                 >
@@ -388,6 +406,7 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                     selectTextOnFocus={true}
                     style={
                       {
+                        "color": "#182112",
                         "flex": 1,
                         "fontSize": 14,
                       }
