@@ -9,6 +9,14 @@ const styles = ({colors, baseStyles}) =>
       backgroundColor: colors.backgroundLight,
       padding: baseStyles.bases.BASE_3,
     },
+    validationItemContainerError: {
+      borderLeftWidth: baseStyles.bases.BASE_2,
+      borderLeftColor: colors.error,
+    },
+    validationItemContainerWarning: {
+      borderLeftWidth: baseStyles.bases.BASE_2,
+      borderLeftColor: colors.warning,
+    },
     textContainer: {
       flex: 1,
     },

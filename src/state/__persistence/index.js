@@ -1,6 +1,10 @@
 import {call, select, put, fork} from 'redux-saga/effects';
 
-import {getRecordKey, getRecordSummary} from 'arena/record';
+import {
+  getRecordKey,
+  getRecordKeyWithLabel,
+  getRecordSummary,
+} from 'arena/record';
 import * as fs from 'infra/fs';
 import {Objects} from 'infra/objectUtils';
 import nodesSelectors from 'state/nodes/selectors';
@@ -57,14 +61,13 @@ export function* persistRecordWithKeyAndMergeCurrentNodes({record}) {
     recordsSelectors.getRecordKey(state, record.uuid),
   );
 
-  if (Objects.isEmpty(recordKey)) {
-    const nodeDefRoot = yield select(surveySelectors.getNodeDefRoot);
-    const nodeDefsByUuid = yield select(surveySelectors.getNodeDefsByUuid);
-    const categoryItemIndex = yield select(
-      surveySelectors.getCategoryItemIndex,
-    );
-    const taxonIndex = yield select(surveySelectors.getTaxonIndex);
+  const nodeDefRoot = yield select(surveySelectors.getNodeDefRoot);
+  const nodeDefsByUuid = yield select(surveySelectors.getNodeDefsByUuid);
+  const categoryItemIndex = yield select(surveySelectors.getCategoryItemIndex);
+  const taxonIndex = yield select(surveySelectors.getTaxonIndex);
+  const language = yield select(surveySelectors.getSelectedSurveyLanguage);
 
+  if (Objects.isEmpty(recordKey)) {
     recordKey = yield call(
       getRecordKey,
       Object.values(Objects.isEmpty(nodes) ? record.nodes || {} : nodes),
@@ -75,10 +78,21 @@ export function* persistRecordWithKeyAndMergeCurrentNodes({record}) {
     );
   }
 
+  const recordKeyWithLabel = yield call(
+    getRecordKeyWithLabel,
+    Object.values(Objects.isEmpty(nodes) ? record.nodes || {} : nodes),
+    nodeDefRoot,
+    nodeDefsByUuid,
+    categoryItemIndex,
+    taxonIndex,
+    language,
+  );
+
   const _record = {
     ...record,
     ...(Objects.isEmpty(nodes) ? {} : {nodes}),
     recordKey,
+    recordKeyWithLabel,
   };
 
   yield call(persistRecordWithNodes, {record: _record});

@@ -5,7 +5,12 @@ import {getKeyNodesAsString} from 'arena/record';
 import {EMPTY_OBJECT, keySelectors} from 'infra/stateUtils';
 import nodesSelectors from 'state/nodes/selectors';
 
-import {getSurvey, getCategoryItemIndex, getTaxonIndex} from './base';
+import {
+  getSurvey,
+  getCategoryItemIndex,
+  getTaxonIndex,
+  getSelectedSurveyLanguage,
+} from './base';
 import {getNodeDefsByUuid} from './nodeDefs';
 
 // --- Nodes -> maybe move as above to the form
@@ -39,5 +44,25 @@ export const getEntityNodeKeysAsString = createCachedSelector(
       nodes: nodeKeys,
       categoryItemIndex,
       taxonIndex,
+    }),
+)(keySelectors.getUuidFromItem);
+
+export const getEntityNodeKeysAsStringWithLabel = createCachedSelector(
+  getEntityNodeKeys,
+  getCategoryItemIndex,
+  getTaxonIndex,
+  getSelectedSurveyLanguage,
+  (
+    nodeKeys,
+    categoryItemIndex = EMPTY_OBJECT,
+    taxonIndex = EMPTY_OBJECT,
+    language,
+  ) =>
+    getKeyNodesAsString({
+      nodes: nodeKeys,
+      categoryItemIndex,
+      taxonIndex,
+      showLabels: true,
+      language,
     }),
 )(keySelectors.getUuidFromItem);

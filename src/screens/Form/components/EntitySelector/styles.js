@@ -21,6 +21,8 @@ const styles = ({colors, baseStyles}) =>
       justifyContent: 'space-between',
       flexDirection: 'row',
       paddingHorizontal: baseStyles.bases.BASE_3,
+      borderTopWidth: 1,
+      borderTopColor: colors.neutralLighter,
     },
     closer: {
       width: WIDTH * 0.1,

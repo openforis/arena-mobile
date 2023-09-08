@@ -11,7 +11,7 @@ const backgroundImages = {
   light: require('./tile.png'),
   dark: require('./tile_less_dark.png'),
 };
-const EntitySelector = () => {
+const BackgroundPattern = () => {
   const theme = useColorTheme();
   const styles = useThemedStyles(_styles);
 
@@ -24,4 +24,4 @@ const EntitySelector = () => {
   );
 };
 
-export default EntitySelector;
+export default BackgroundPattern;
