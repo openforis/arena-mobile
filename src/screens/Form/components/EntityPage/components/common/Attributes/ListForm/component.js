@@ -1,10 +1,12 @@
-import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import React, {useCallback, useEffect, useState, useRef} from 'react';
 import {FlatList, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import Attribute from 'form/common/Attribute';
 import {selectors as formSelectors} from 'state/form';
+
+import {useAttributesUuids} from '../hooks';
 
 import _styles from './styles';
 
@@ -18,24 +20,18 @@ const Header = () => {
   return <View style={styles.headerBlock} />;
 };
 
-const useAttributesUuids = () => {
-  const nodeDefChildrenUuids = useSelector(
-    formSelectors.getFormAttributesNodeDefsUuids,
-  );
-
-  return useMemo(() => {
-    return nodeDefChildrenUuids;
-  }, [nodeDefChildrenUuids]);
-};
-
 const Attributes = React.memo(
   ({nodeDefChildrenUuids}) => {
     const styles = useThemedStyles(_styles);
+    const [currentParentEntityNodeUuid, setCurrentParentEntityNodeUuid] =
+      useState(null);
 
     const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
 
     const renderItem = useCallback(
-      ({item: nodeDefUuid}) => <Attribute nodeDefUuid={nodeDefUuid} />,
+      ({item: nodeDefUuid}) => (
+        <Attribute key={nodeDefUuid} nodeDefUuid={nodeDefUuid} />
+      ),
       [],
     );
 
@@ -48,8 +44,11 @@ const Attributes = React.memo(
     }, [flatListRef]);
 
     useEffect(() => {
-      toTop();
-    }, [toTop, parentEntityNode]);
+      if (parentEntityNode.uuid !== currentParentEntityNodeUuid) {
+        setCurrentParentEntityNodeUuid(parentEntityNode.uuid);
+        toTop();
+      }
+    }, [toTop, parentEntityNode, currentParentEntityNodeUuid]);
 
     return (
       <View style={styles.container}>

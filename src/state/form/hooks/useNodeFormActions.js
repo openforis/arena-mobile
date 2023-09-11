@@ -90,12 +90,12 @@ export const useCleanNode = () => {
   const dispatch = useDispatch();
 
   const handleClean = useCallback(
-    ({node, callback = false, shouldJump = false}) => {
+    ({node, callback = false, shouldJump = false, value = false}) => {
       dispatch(
         nodesActions.updateNode({
           updatedNode: {
             ...node,
-            value: false,
+            value,
           },
           callback,
           shouldJump,
