@@ -47,7 +47,9 @@ const RecordCard = ({record, recordUuid, isSelected, onSelect}) => {
         <View style={styles.payload}>
           <View style={styles.labelCotainer}>
             <TextBase type="bold" size="l">
-              {record.recordKey || t('Records:empty_key')}
+              {record.recordKeyWithLabel ||
+                record.recordKey ||
+                t('Records:empty_key')}
             </TextBase>
           </View>
           <CreatedAndModified
