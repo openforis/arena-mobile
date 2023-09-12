@@ -8,7 +8,7 @@ import {selectors as recordSelectors} from 'state/records';
 import CreateNewRecord from '../../../components/CreateNewRecord';
 
 import CheckRemoteRecordsButton from './CheckRemoteRecordsButton';
-import FiltersAndSorters from './FiltersAndSorters';
+// import FiltersAndSorters from './FiltersAndSorters';
 import _styles from './styles';
 import UploadDataButton from './UploadDataButton';
 

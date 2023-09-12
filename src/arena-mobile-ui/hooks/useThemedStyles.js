@@ -7,7 +7,7 @@ import {selectors as appSelectors} from 'state/app';
 import * as colors from '../colors';
 import {getBaseStyles} from '../styles';
 
-const useColorTheme = () => {
+export const useColorTheme = () => {
   const _colorScheme = useSelector(appSelectors.getColorScheme);
   const colorScheme = useColorScheme();
   return _colorScheme || colorScheme;

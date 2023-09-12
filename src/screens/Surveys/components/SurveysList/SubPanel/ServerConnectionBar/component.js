@@ -27,7 +27,7 @@ const ServerConnectionBar = ({errorRemoteServer, info}) => {
   return (
     <MessageBar
       label={
-        <TextBase size="s" allowMultipleLines={true}>
+        <TextBase size="s" allowMultipleLines={true} isBackgroundSuccess={true}>
           {infoLabel}
         </TextBase>
       }

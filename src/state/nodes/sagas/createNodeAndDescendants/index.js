@@ -1,4 +1,4 @@
-import {Records, RecordUpdater} from '@openforis/arena-core';
+import {RecordUpdater} from '@openforis/arena-core';
 import {select, all, put, call, fork} from 'redux-saga/effects';
 
 import {Objects} from 'infra/objectUtils';
@@ -13,7 +13,7 @@ function* updateValidation(validation) {
 }
 
 function* handleCreateNodeAndDescendants({payload} = {}) {
-  const {nodeDef, parentNode, isCreating} = payload;
+  const {nodeDef, parentNode, isCreating, selectNode} = payload;
 
   const [fullRecord, survey] = yield all([
     select(formSelectors.getFullRecord),
@@ -28,16 +28,12 @@ function* handleCreateNodeAndDescendants({payload} = {}) {
       record: fullRecord,
     });
   } else {
-    updateResult = yield call(
-      RecordUpdater.createNodeAndDescendants,
-
-      {
-        survey,
-        record: fullRecord,
-        parentNode,
-        nodeDef,
-      },
-    );
+    updateResult = yield call(RecordUpdater.createNodeAndDescendants, {
+      survey,
+      record: fullRecord,
+      parentNode,
+      nodeDef,
+    });
   }
   const {nodes: updatedNodes, record: updatedRecord} = updateResult;
 
@@ -51,6 +47,13 @@ function* handleCreateNodeAndDescendants({payload} = {}) {
   ]);
 
   yield fork(updateValidation, _validation);
+
+  if (selectNode) {
+    const nodes = Object.values(updatedNodes);
+    if (nodes.length >= 1) {
+      yield put(formActions.setNode({node: nodes[0]}));
+    }
+  }
   return updatedNodes;
 }
 

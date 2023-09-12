@@ -57,7 +57,7 @@ function* handleAuthenticateUser() {
         password,
         serverUrl,
       }),
-      timeout: delay(15000),
+      timeout: delay(5000),
     });
 
     if (data?.user) {
