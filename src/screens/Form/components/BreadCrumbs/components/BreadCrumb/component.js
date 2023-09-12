@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useCallback} from 'react';
 import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -20,7 +20,7 @@ const Label = React.memo(
       surveySelectors.getEntityNodeKeys(state, node),
     );
     const keysAsString = useSelector(state =>
-      surveySelectors.getEntityNodeKeysAsString(state, node),
+      surveySelectors.getEntityNodeKeysAsStringWithLabel(state, node),
     );
 
     const nodeDefName = useNodeDefNameOrLabel({
@@ -49,7 +49,7 @@ const BreadCrumb = ({nodeUuid}) => {
     nodesSelectors.getNodeByUuid(state, nodeUuid),
   );
 
-  const handleSelect = React.useCallback(() => {
+  const handleSelect = useCallback(() => {
     dispatch(
       formActions.setParentEntityNode({
         node,

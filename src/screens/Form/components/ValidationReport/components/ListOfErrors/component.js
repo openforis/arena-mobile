@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Icon from 'arena-mobile-ui/components/Icon';
@@ -71,9 +71,23 @@ const ValidationItem = ({field}) => {
     });
   }, [ancestors]);
 
+  const containerStyle = useMemo(() => {
+    return StyleSheet.compose(
+      styles.validationItemContainer,
+      StyleSheet.compose(
+        field[1]?.fields?.value?.errors?.some(
+          ({severity}) => severity === 'warning',
+        ) && styles.validationItemContainerWarning,
+        field[1]?.fields?.value?.errors?.some(
+          ({severity}) => severity === 'error',
+        ) && styles.validationItemContainerError,
+      ),
+    );
+  }, [styles, field]);
+
   return (
     <>
-      <Pressable onPress={handleSelect} style={styles.validationItemContainer}>
+      <Pressable onPress={handleSelect} style={containerStyle}>
         <View style={styles.textContainer}>
           <View style={styles.pathContainer}>{labels}</View>
 

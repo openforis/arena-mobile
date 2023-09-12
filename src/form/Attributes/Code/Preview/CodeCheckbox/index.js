@@ -42,7 +42,7 @@ const CodeCheckbox = ({nodeDef}) => {
         }
 
         if (NodeDefs.isMultiple(nodeDef)) {
-          codeActions.handleDelete({node: _node, label});
+          codeActions.handleDelete({node: _node, label, requestConfirm: false});
           return;
         }
         codeActions.handleUpdate({

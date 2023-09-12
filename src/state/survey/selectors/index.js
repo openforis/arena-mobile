@@ -27,7 +27,12 @@ import {
   getNodeDefEntityChildrenKeys,
   getNodeDefTableChildrenUuid,
 } from './nodeDefs';
-import {getNodes, getEntityNodeKeys, getEntityNodeKeysAsString} from './nodes';
+import {
+  getNodes,
+  getEntityNodeKeys,
+  getEntityNodeKeysAsString,
+  getEntityNodeKeysAsStringWithLabel,
+} from './nodes';
 import {getRecords, getNumberRecords} from './records';
 import {getSurveyData} from './surveyData';
 import {
@@ -82,6 +87,7 @@ export default {
   getNodes,
   getEntityNodeKeys,
   getEntityNodeKeysAsString,
+  getEntityNodeKeysAsStringWithLabel,
 
   // --- UI
   getUiState,

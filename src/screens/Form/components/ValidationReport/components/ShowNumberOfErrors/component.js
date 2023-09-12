@@ -16,8 +16,16 @@ const ShowNumberOfErrors = () => {
 
   return (
     <View style={styles.validationReportHeader}>
-      <Icon name="alert-outline" />
-      <TextBase>({numberOfErrors})</TextBase>
+      <Icon
+        name="alert-outline"
+        color={numberOfErrors > 0 ? styles.colors.error : null}
+      />
+      <TextBase
+        customStyle={
+          numberOfErrors > 0 ? styles.validationReportHeaderTextError : null
+        }>
+        ({numberOfErrors})
+      </TextBase>
     </View>
   );
 };

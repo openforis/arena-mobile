@@ -15,10 +15,18 @@ const getKeyNodeAsString = ({
   categoryItemIndex,
   taxonIndex,
   defaultString = DEFAULT_STRING,
+  language,
+  showLabels = false,
 }) => {
   if (node?.value?.itemUuid) {
     const code = categoryItemIndex?.[node?.value?.itemUuid]?.props?.code;
-    return code || defaultString;
+    let label = false;
+    if (showLabels) {
+      label =
+        categoryItemIndex?.[node?.value?.itemUuid]?.props?.labels?.[language];
+    }
+
+    return label || code || defaultString;
   }
 
   if (node?.value?.taxonUuid) {
@@ -35,6 +43,8 @@ export const getKeyNodesAsString = ({
   taxonIndex,
   joinString = DEFAULT_JOIN_STRING,
   defaultString = DEFAULT_STRING,
+  showLabels,
+  language,
 }) =>
   nodes
     .map(nodeKey =>
@@ -43,6 +53,8 @@ export const getKeyNodesAsString = ({
         categoryItemIndex,
         defaultString,
         taxonIndex,
+        showLabels,
+        language,
       }),
     )
     .join(joinString) || '';
@@ -68,6 +80,9 @@ export const getKeyNodesForEntityAsString = ({
   joinString = DEFAULT_JOIN_STRING,
   defaultString = DEFAULT_STRING,
   defaultEmptyString,
+
+  showLabels,
+  language,
 }) => {
   const keyNodes = getKeyNodesForEntity({entity, nodes, nodeDefsByUuid});
   const areAllKeysEmpty = allKeysEmpty({nodes: keyNodes});
@@ -83,6 +98,9 @@ export const getKeyNodesForEntityAsString = ({
     taxonIndex,
     defaultString,
     joinString,
+
+    showLabels,
+    language,
   });
 };
 
@@ -93,6 +111,9 @@ export const getRecordKey = (
   categoryItemIndex,
 
   taxonIndex,
+
+  showLabels = false,
+  language = false,
 ) => {
   const rootNode = nodes.find(node => node.nodeDefUuid === nodeDefRoot?.uuid);
 
@@ -105,13 +126,41 @@ export const getRecordKey = (
     taxonIndex,
     defaultString: '-',
     joinString: '/',
+
+    showLabels,
+    language,
   });
+};
+
+export const getRecordKeyWithLabel = (
+  nodes,
+  nodeDefRoot,
+  nodeDefsByUuid,
+  categoryItemIndex,
+
+  taxonIndex,
+  language,
+) => {
+  const showLabels = true;
+
+  return getRecordKey(
+    nodes,
+    nodeDefRoot,
+    nodeDefsByUuid,
+    categoryItemIndex,
+
+    taxonIndex,
+
+    showLabels,
+    language,
+  );
 };
 
 export const getRecordSummary = record => {
   const keysWhitelist = [
     'uuid',
     'recordKey',
+    'recordKeyWithLabel',
     'dateCreated',
     'dateModified',
     'dateSynced', // TODO change

@@ -1,11 +1,14 @@
-import {NodeDefs} from '@openforis/arena-core';
-import React, {useCallback, useMemo} from 'react';
+import {NodeDefs, Objects} from '@openforis/arena-core';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
 import DropDownButton from 'arena-mobile-ui/components/Button/DropDownButton';
 import {selectors as formSelectors} from 'state/form';
-import {useSelectNodeAndNodeDef} from 'state/form/hooks/useNodeFormActions';
+import {
+  useSelectNodeAndNodeDef,
+  useCleanNode,
+} from 'state/form/hooks/useNodeFormActions';
 
 import {useCode} from '../../hooks';
 
@@ -16,6 +19,7 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
     node,
   });
 
+  const handleClean = useCleanNode();
   const disabled = useSelector(state =>
     formSelectors.isNodeDefDisabled(state, nodeDef),
   );
@@ -29,10 +33,12 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
     categoryItems?.length === 0 ||
     NodeDefs.isEnumerate(parentEntityNodeDef);
 
-  const selectedItem = useMemo(
-    () => categoryItems?.find(item => item.uuid === node?.value?.itemUuid),
-    [categoryItems, node?.value?.itemUuid],
-  );
+  const selectedItem = useMemo(() => {
+    if (node?.value?.itemUuid) {
+      return categoryItems?.find(item => item.uuid === node?.value?.itemUuid);
+    }
+    return false;
+  }, [categoryItems, node?.value?.itemUuid]);
 
   const _labelExtractor = useCallback(
     item => getCategoryItemLabel(item),
@@ -43,6 +49,12 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
     node,
     nodeDef,
   });
+
+  useEffect(() => {
+    if (Objects.isEmpty(selectedItem) && !Objects.isEmpty(node?.value)) {
+      handleClean({node, value: {}});
+    }
+  }, [selectedItem, node?.value, handleClean, node]);
 
   return (
     <DropDownButton
