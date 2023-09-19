@@ -21,8 +21,14 @@ const showDescriptions = createSelector(
   preferences => preferences?.showDescriptions || false,
 );
 
+const isSingleNodeView = createSelector(
+  getFormStatePreferences,
+  preferences => preferences?.isSingleNodeView || false,
+);
+
 export default {
   getHasToJump,
   getHasToLockRecordsWhenLeave,
   showDescriptions,
+  isSingleNodeView,
 };

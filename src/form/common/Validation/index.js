@@ -51,12 +51,12 @@ const validationMessageToString = ({
     .map(item => {
       return (
         item?.messages?.[language] ||
-        t(`Validation:${item.key}`, {
+        `${t(`Validation:${item.key}`, {
           nodeDefName: nodeDeflabel,
           count: count,
           maxCount: item?.params?.maxCount,
           minCount: item?.params?.minCount,
-        })
+        })}`
       );
     })
     .join('\n');
@@ -140,6 +140,8 @@ const Validation = React.memo(
   (prevProps, nextProps) => {
     return (
       prevProps.validation.valid === nextProps.validation.valid &&
+      prevProps.validation.errors?.[0]?.key ===
+        nextProps.validation.errors?.[0]?.key &&
       prevProps.nodeDef.uuid === nextProps.nodeDef.uuid
     );
   },

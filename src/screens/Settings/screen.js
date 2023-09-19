@@ -21,6 +21,7 @@ import DevMode from './DevMode';
 import _styles from './styles';
 import Version from './Version';
 
+const SINGLE_NODE = false;
 const extractFirstCharacters = (str, numberOfCharacters) => {
   if (str.length <= numberOfCharacters) {
     return str;
@@ -128,6 +129,9 @@ const FormSettings = () => {
   const showDescriptions = useSelector(
     formPreferencesSelectors.showDescriptions,
   );
+  const isSingleNodeView = useSelector(
+    formPreferencesSelectors.isSingleNodeView,
+  );
 
   const _updateHasToJump = useCallback(() => {
     dispatch(formActions.setHasToJump({hasToJump: !hasToJump}));
@@ -145,6 +149,10 @@ const FormSettings = () => {
       formActions.setShowDescriptions({showDescriptions: !showDescriptions}),
     );
   }, [dispatch, showDescriptions]);
+
+  const _toggleIsSingleNodeView = useCallback(() => {
+    dispatch(formActions.toggleSingleNodeView());
+  }, [dispatch]);
   return (
     <Section title={t('Settings:form.title')}>
       <SectionCard
@@ -165,6 +173,17 @@ const FormSettings = () => {
             : 'checkbox-blank-outline'
         }
       />
+      {SINGLE_NODE && (
+        <SectionCard
+          position="middle"
+          isNavigation={false}
+          onPress={_toggleIsSingleNodeView}
+          title={t('Settings:form.hasToLockRecordsWhenLeave.title')}
+          iconName={
+            isSingleNodeView ? 'checkbox-marked' : 'checkbox-blank-outline'
+          }
+        />
+      )}
       <SectionCard
         position="last"
         isNavigation={false}

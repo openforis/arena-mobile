@@ -2,7 +2,7 @@ import {NodeDefType} from '@openforis/arena-core';
 import React from 'react';
 import {useSelector} from 'react-redux';
 
-import {selectors as formSelectors} from 'state/form';
+import formPreferencesSelectors from 'state/form/selectors/preferences';
 import {selectors as surveySelectors} from 'state/survey';
 
 import BooleanEditablePreview from '../../Attributes/Boolean/EditablePreview';
@@ -59,7 +59,9 @@ const Attribute = ({nodeDefUuid}) => {
   const nodeDef = useSelector(state =>
     surveySelectors.getNodeDefByUuid(state, nodeDefUuid),
   );
-  const isSingleNodeView = useSelector(formSelectors.isSingleNodeView);
+  const isSingleNodeView = useSelector(
+    formPreferencesSelectors.isSingleNodeView,
+  );
 
   if (
     !Object.keys(AttributesComponentByType).includes(nodeDef.type) &&

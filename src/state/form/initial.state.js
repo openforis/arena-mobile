@@ -9,12 +9,12 @@ const initialState = {
   ui: {
     isEntitySelectorOpened: false,
     isEntityShowAsTable: false,
-    isSingleNodeView: false,
   },
   preferences: {
     hasToJump: false,
     hasToLockRecordsWhenLeave: true,
     showDescriptions: true,
+    isSingleNodeView: false,
   },
   validation: {},
 };
