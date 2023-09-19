@@ -1,9 +1,11 @@
 import React, {useMemo, useRef, useEffect} from 'react';
 import {Platform} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
+import {useSelector} from 'react-redux';
 
 import * as colors from 'arena-mobile-ui/colors';
 import {Objects} from 'infra/objectUtils';
+import appSelectors from 'state/app/selectors';
 
 import Icon from '../Icon';
 
@@ -46,6 +48,7 @@ const Select = ({
   autoFocus,
   disabled,
 }) => {
+  const colorScheme = useSelector(appSelectors.getColorScheme);
   const selectRef = useRef(null);
 
   const _items = useMemo(
@@ -102,6 +105,7 @@ const Select = ({
       useNativeAndroidPickerStyle={false}
       fixAndroidTouchableBug={true}
       placeholder={{}}
+      darkTheme={colorScheme === 'dark'}
     />
   );
 };

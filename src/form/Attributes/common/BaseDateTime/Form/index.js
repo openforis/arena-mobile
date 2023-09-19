@@ -65,6 +65,7 @@ const DateForm = ({nodeDef}) => {
           textColor={
             colorScheme === 'light' ? colors.black : colors.backgroundLight
           }
+          theme={colorScheme}
         />
       )}
     </View>
