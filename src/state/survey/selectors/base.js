@@ -60,6 +60,11 @@ export const getSurveyCycle = createSelector(
   },
 );
 
+export const getSurveyNumberOfCycles = createSelector(
+  getSelectedSurveyCycles,
+  cycles => cycles.length,
+);
+
 export const getSurveySRS = createSelector(
   getSurvey,
   survey => survey?.props?.srs || [],

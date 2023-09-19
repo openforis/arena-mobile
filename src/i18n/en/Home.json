@@ -27,6 +27,7 @@
       "language": "Language",
       "selected_language": "Selected language",
       "cycle": "Cycle",
+      "cycle_value": "{{ cycle }} out of {{ numberOfCycles }}",
       "selected_cycle": "Selected cycle",
       "go_to_survey_options": "Go to survey options",
       "number_of_records": "Record count"

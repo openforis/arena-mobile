@@ -23,6 +23,7 @@ const SurveyDetail = () => {
     name: surveyName,
     label: surveyLabel,
     cycle: surveyCycle,
+    numberOfCycles,
     language: surveyLanguage,
   } = useSelector(surveySelectors.getSurveyData);
 
@@ -58,7 +59,10 @@ const SurveyDetail = () => {
           },
           {
             label: t('Home:survey.card.cycle'),
-            value: String(Number(surveyCycle) + 1),
+            value: t('Home:survey.card.cycle_value', {
+              cycle: String(Number(surveyCycle) + 1),
+              numberOfCycles,
+            }),
           },
         ]}
       />
