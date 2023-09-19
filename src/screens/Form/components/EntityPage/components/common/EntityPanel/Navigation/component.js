@@ -101,7 +101,7 @@ export const getPrevNodeDef = ({
   if (currentIndex === 0) {
     return survey.nodeDefs[parent.uuid];
   }
-  if (currentIndex + 1 <= sibilings.length) {
+  if (currentIndex + 1 <= sibilings?.length) {
     return survey.nodeDefs[sibilings[currentIndex - 1]];
   }
   return false;
@@ -172,7 +172,7 @@ const useGetNext = ({parent}) => {
 
     const currentIndex = sibilings.indexOf(currentEntityNodeDef.uuid);
 
-    if (currentIndex + 1 === sibilings.length && sibilings?.length > 0) {
+    if (currentIndex + 1 === sibilings?.length && sibilings?.length > 0) {
       // next parent sibling
       const parentAncestor = survey.nodeDefs[parent.parentUuid];
 
@@ -189,7 +189,7 @@ const useGetNext = ({parent}) => {
       return false;
     }
 
-    if (currentIndex < sibilings.length) {
+    if (currentIndex < sibilings?.length) {
       return survey.nodeDefs[sibilings[currentIndex + 1]];
     }
 
