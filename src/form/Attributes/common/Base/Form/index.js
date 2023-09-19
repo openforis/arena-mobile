@@ -1,4 +1,4 @@
-import {NodeDefs} from '@openforis/arena-core';
+import {NodeDefType, NodeDefs} from '@openforis/arena-core';
 import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
@@ -32,10 +32,13 @@ const AddNodeButton = ({nodeDef}) => {
     );
   }, [dispatch, nodeDef, parentEntityNode]);
 
-  if (NodeDefs.isMultiple(nodeDef) && canAddNode) {
+  if (
+    NodeDefs.isMultiple(nodeDef) &&
+    canAddNode &&
+    NodeDefs.getType(nodeDef) !== NodeDefType.code
+  ) {
     return <Button label={t('Form:done_and_new')} onPress={_createNode} />;
   }
-
   return null;
 };
 
