@@ -26,11 +26,11 @@ const UpdateNeeded = () => {
     <MessageBar
       label={
         <TextBase size="s" allowMultipleLines={true} isBackgroundSuccess={true}>
-          {t('title')}
+          {t('Common:update_ready.title')}
         </TextBase>
       }
       type="info"
-      buttonLabel={t('store_button')}
+      buttonLabel={t('Common:update_ready.button')}
       onPress={onStoreButtonPressed}
     />
   );
