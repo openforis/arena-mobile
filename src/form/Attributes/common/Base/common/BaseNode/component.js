@@ -10,6 +10,7 @@ import CopyToClipboard from 'form/Attributes/common/CopyToClipboard';
 import Validation from 'form/common/Validation';
 import {selectors as formSelectors} from 'state/form';
 import {useSelectNodeAndNodeDef} from 'state/form/hooks/useNodeFormActions';
+import formPreferencesSelectors from 'state/form/selectors/preferences';
 
 import BaseDeleteNode from '../BaseDeleteNode';
 
@@ -30,7 +31,9 @@ const BaseNode = ({
     formSelectors.isNodeDefDisabled(state, nodeDef),
   );
   const isReadOnly = NodeDefs.isReadOnly(nodeDef);
-  const isSingleNodeView = useSelector(formSelectors.isSingleNodeView);
+  const isSingleNodeView = useSelector(
+    formPreferencesSelectors.isSingleNodeView,
+  );
 
   const handleSelectNodeAndNodeDef = useSelectNodeAndNodeDef({node, nodeDef});
 

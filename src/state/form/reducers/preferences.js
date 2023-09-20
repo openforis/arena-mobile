@@ -20,6 +20,10 @@ const preferences = handleActions(
       ...state,
       showDescriptions,
     }),
+    [actions.toggleSingleNodeView]: state => ({
+      ...state,
+      isSingleNodeView: !state.isSingleNodeView,
+    }),
   },
   initialState.preferences || {},
 );

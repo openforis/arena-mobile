@@ -16,6 +16,10 @@ const Cell = ({parentNode, nodeDef, getWidth}) => {
     ),
   );
 
+  if (nodeDef?.analysis) {
+    return null;
+  }
+
   return (
     <TableCell width={getWidth(nodeDef)} customStyle={styles.container}>
       <BaseCell nodes={descentantNodes} nodeDef={nodeDef} />

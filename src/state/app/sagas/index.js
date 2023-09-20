@@ -117,7 +117,7 @@ function* handleReset() {
 function* handleLogout() {
   yield put(userActions.cleanUser());
   yield put(appActions.cleanAccessData());
-  yield put(formActions.cleanForm());
+  yield put(formActions.clean());
   yield put(surveyActions.cleanSurvey());
   yield call(navigator.navigatorDispatch, StackActions.replace(ROUTES.HOME));
 }

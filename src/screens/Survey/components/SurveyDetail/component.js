@@ -24,6 +24,7 @@ const SurveyDetail = () => {
     name: surveyName,
     label: surveyLabel,
     description: surveyDescription,
+    numberOfCycles,
     cycle,
   } = useSelector(surveySelectors.getSurveyData);
   const {t} = useTranslation();
@@ -60,11 +61,16 @@ const SurveyDetail = () => {
             },
             {
               label: t('Home:survey.card.cycle'),
-              value: `${Number(cycle) + 1} (${surveyCycles[cycle]?.dateStart}${
-                surveyCycles[cycle]?.dateEnd
-                  ? ` - ${surveyCycles[cycle]?.dateEnd}`
-                  : ''
-              })`,
+              value: `${t('Home:survey.card.cycle_value', {
+                numberOfCycles,
+                cycle: `${String(Number(cycle) + 1)} (${
+                  surveyCycles[cycle]?.dateStart
+                }${
+                  surveyCycles[cycle]?.dateEnd
+                    ? ` - ${surveyCycles[cycle]?.dateEnd}`
+                    : ''
+                })`,
+              })}`,
             },
           ]}
         />

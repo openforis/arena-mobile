@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
-import {selectors as formSelectors} from 'state/form';
+import formPreferencesSelectors from 'state/form/selectors/preferences';
 
 import {useAttributesUuids} from './hooks';
 import ListForm from './ListForm';
@@ -13,7 +13,9 @@ import _styles from './styles';
 const AttributesContainer = () => {
   const styles = useThemedStyles(_styles);
   const nodeDefChildrenUuids = useAttributesUuids();
-  const isSingleNodeView = useSelector(formSelectors.isSingleNodeView);
+  const isSingleNodeView = useSelector(
+    formPreferencesSelectors.isSingleNodeView,
+  );
 
   return (
     <>

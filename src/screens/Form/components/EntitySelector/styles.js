@@ -37,6 +37,11 @@ const styles = ({colors, baseStyles}) =>
       justifyContent: 'space-between',
       paddingHorizontal: baseStyles.bases.BASE_3,
     },
+    headerText: {
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
   });
 
 export default styles;

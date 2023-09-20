@@ -1,5 +1,5 @@
 import {NodeDefs, NodeDefType} from '@openforis/arena-core';
-import {useCallback} from 'react';
+import {useCallback, useMemo} from 'react';
 import {useSelector} from 'react-redux';
 
 import {selectors as appSelectors} from 'state/app';
@@ -41,5 +41,9 @@ export const useEntityTableData = () => {
     [cycle, baseModifier, fontBaseModifier],
   );
 
-  return {headers: formNodeDefs, rows: nodes, getWidth};
+  const headers = useMemo(() => {
+    return formNodeDefs.filter(nodeDef => !nodeDef?.analysis);
+  }, [formNodeDefs]);
+
+  return {headers, rows: nodes, getWidth};
 };

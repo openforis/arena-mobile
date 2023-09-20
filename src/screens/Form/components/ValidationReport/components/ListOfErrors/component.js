@@ -15,10 +15,12 @@ import {selectors as surveySelectors} from 'state/survey';
 
 import _styles from './styles';
 
-const ValidationItem = ({field}) => {
+const ValidationItem = ({field, itemPosition}) => {
   const {t} = useTranslation();
 
   const styles = useThemedStyles(_styles);
+
+  const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
 
   const node = useSelector(state =>
     nodesSelectors.getNodeByUuid(
@@ -65,11 +67,14 @@ const ValidationItem = ({field}) => {
       const isLatest = index === ancestors.length - 1;
       return (
         <TextBase key={ancestor.uuid}>
-          <BreadCrumbAsLabel nodeUuid={ancestor.uuid} /> {isLatest ? '' : '>'}
+          {index === 0 && <TextBase bolder>{itemPosition + 1}. </TextBase>}
+
+          {index !== 0 && <BreadCrumbAsLabel nodeUuid={ancestor.uuid} />}
+          {index === 0 || isLatest ? '' : ' > '}
         </TextBase>
       );
     });
-  }, [ancestors]);
+  }, [ancestors, itemPosition]);
 
   const containerStyle = useMemo(() => {
     return StyleSheet.compose(
@@ -97,12 +102,13 @@ const ValidationItem = ({field}) => {
                 customStyle={styles.validationText}
                 key={`${error?.key}-${ancestorsUuids.join(',')}`}
                 type="error">
-                {t(`Validation:${error?.key}`, {
-                  nodeDefName: nodeDefName,
-                  count: error?.params?.count,
-                  maxCount: error?.params?.maxCount,
-                  minCount: error?.params?.minCount,
-                })}
+                {error?.messages[language] ||
+                  t(`Validation:${error?.key}`, {
+                    nodeDefName: nodeDefName,
+                    count: error?.params?.count,
+                    maxCount: error?.params?.maxCount,
+                    minCount: error?.params?.minCount,
+                  })}
               </TextBase>
             );
           })}
@@ -126,8 +132,12 @@ const ValidationItems = ({fields}) => {
 
   return (
     <>
-      {fields.map(field => (
-        <ValidationItem key={field[0]} field={field} />
+      {fields.map((field, itemPosition) => (
+        <ValidationItem
+          key={field[0]}
+          field={field}
+          itemPosition={itemPosition}
+        />
       ))}
     </>
   );

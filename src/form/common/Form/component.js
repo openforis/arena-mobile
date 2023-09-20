@@ -94,7 +94,7 @@ const AttributeFormWithModal = () => {
 
   useEffect(() => {
     if (nodeDef) {
-      const finalPanelHeight = HEIGHT;
+      const finalPanelHeight = HEIGHT * 0.9;
       Animated.sequence([
         Animated.delay(50),
         Animated.timing(panelHeight, {

@@ -19,7 +19,9 @@ import getNextNode from './getNextNode';
 */
 
 function* callbackAndJump({currentNode, callback, shouldJump = true}) {
-  const isSingleNodeView = yield select(formSelectors.isSingleNodeView);
+  const isSingleNodeView = yield select(
+    formPreferencesSelectors.isSingleNodeView,
+  );
   let _hasToJump = yield select(formPreferencesSelectors.getHasToJump);
 
   if (!shouldJump || !_hasToJump) {

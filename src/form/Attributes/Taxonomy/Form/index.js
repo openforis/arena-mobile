@@ -1,3 +1,4 @@
+import {Taxa} from '@openforis/arena-core';
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';
@@ -113,13 +114,20 @@ const Form = ({node, nodeDef}) => {
     let searchTextNormalized = false;
     if (searchText) {
       searchTextNormalized = searchText.toLowerCase().normalize('NFD');
-      return taxonomiesWithIndexToSearch.filter(_item =>
+      const _items = taxonomiesWithIndexToSearch.filter(_item =>
         searchTextNormalized
           .split(' ')
           .every(searchTextNormalizedItem =>
             _item?.textForSearch.includes(searchTextNormalizedItem),
           ),
       );
+
+      if (_items.length > 0) {
+        return _items;
+      }
+      return taxonomiesWithIndexToSearch.filter(_item => {
+        return ['UNK', 'UNL'].includes(Taxa.getCode(_item));
+      });
     }
     return taxonomiesWithIndexToSearch;
   }, [taxonomiesWithIndexToSearch, searchText]);

@@ -19,7 +19,9 @@ const _BaseContainer = ({nodeDef, nodes, children}) => {
   const applicable = useSelector(state =>
     formSelectors.isNodeDefApplicable(state, nodeDef?.uuid),
   );
-  const isSingleNodeView = useSelector(formSelectors.isSingleNodeView);
+  const isSingleNodeView = useSelector(
+    formPreferencesSelectors.isSingleNodeView,
+  );
 
   const showDescriptions = useSelector(
     formPreferencesSelectors.showDescriptions,

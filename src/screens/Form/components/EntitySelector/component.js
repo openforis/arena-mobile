@@ -16,6 +16,7 @@ import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import ToggleShowNames from 'arena-mobile-ui/components/ToggleShowNames';
+import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
@@ -32,6 +33,12 @@ export const ENTITY_SELECTOR_TABLET_WIDTH = Math.min(
   Math.min(WIDTH * 0.9, 400),
   WIDTH * 0.5,
 );
+
+const RootNodeDefLabel = () => {
+  const nodeDefRoot = useSelector(surveySelectors.getNodeDefRoot);
+  const nodeDeflabel = useNodeDefNameOrLabel({nodeDef: nodeDefRoot});
+  return <TextBase type="ghostBlack">Root: {nodeDeflabel}</TextBase>;
+};
 
 const EntitySelector = () => {
   const [showNavigation, setShowNavigation] = React.useState(true);
@@ -101,8 +108,10 @@ const EntitySelector = () => {
           onPress={() => setShowNavigation(false)}
           style={styles.pressableHeader}>
           <Icon name={!showNavigation ? 'chevron-down' : 'chevron-right'} />
-          <TextBase>{t('Form:validation_report')}</TextBase>
-
+          <View style={styles.headerText}>
+            <TextBase>{t('Form:validation_report')}</TextBase>
+            <RootNodeDefLabel />
+          </View>
           <ShowNumberOfErrors />
         </Pressable>
         {!showNavigation && (

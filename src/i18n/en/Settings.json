@@ -103,6 +103,9 @@
     },
     "showDescriptions": {
       "title": "Show descriptions"
+    },
+    "isSingleNodeView": {
+      "title": "Show form with only a single attribute"
     }
   }
 }
