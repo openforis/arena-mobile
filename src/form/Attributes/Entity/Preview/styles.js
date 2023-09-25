@@ -10,6 +10,7 @@ const styles = ({colors, baseStyles}) =>
     container: {
       paddingHorizontal: baseStyles.bases.BASE_3,
     },
+    colors,
   });
 
 export default styles;

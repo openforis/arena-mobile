@@ -4,7 +4,6 @@ import {View} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 
 import {defaultCycle} from 'arena/config';
-import * as colors from 'arena-mobile-ui/colors';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
@@ -57,7 +56,11 @@ const Preview = ({nodeDef}) => {
         icon={
           <Icon
             name="table-large"
-            color={disabled ? colors.neutralLighter : colors.black}
+            color={
+              disabled
+                ? styles.colors.neutralLighter
+                : styles.colors.primaryText
+            }
           />
         }
         disabled={disabled}
