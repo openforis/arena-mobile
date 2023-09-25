@@ -2,7 +2,7 @@ import {useEffect, useState, useCallback} from 'react';
 import VersionCheck from 'react-native-version-check';
 
 export const useGetAppHasUpdateAvailable = ({forceUpdate = false}) => {
-  const [updateAvailable, setUpdateAvailable] = useState({});
+  const [updateAvailable, setUpdateAvailable] = useState({isNeeded: false});
 
   const checkVersion = useCallback(async () => {
     try {
