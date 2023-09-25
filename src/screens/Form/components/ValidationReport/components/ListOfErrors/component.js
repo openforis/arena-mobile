@@ -101,8 +101,8 @@ const ValidationItem = ({field, itemPosition}) => {
               <TextBase
                 customStyle={styles.validationText}
                 key={`${error?.key}-${ancestorsUuids.join(',')}`}
-                type="error">
-                {error?.messages[language] ||
+                type="secondaryLight">
+                {error?.messages?.[language] ||
                   t(`Validation:${error?.key}`, {
                     nodeDefName: nodeDefName,
                     count: error?.params?.count,

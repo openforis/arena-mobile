@@ -141,6 +141,7 @@ const Parent = ({parent}) => {
 const useGetNext = ({parent}) => {
   const survey = useSelector(surveySelectors.getSurvey);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
+  const parentNode = useSelector(formSelectors.getParentEntityNode);
   /* TODO copy  has to jump to next entity
   const formNodeDefsUuids = useSelector(formSelectors.getNodeDefsUuids);
   const currentNodeDefIndex = formNodeDefsUuids.indexOf(
@@ -159,7 +160,12 @@ const useGetNext = ({parent}) => {
 
     if (
       !Objects.isEmpty(childrenIndex) &&
-      (Objects.isEmpty(parent) || parent === false || childrenIndex?.length > 0)
+      (Objects.isEmpty(parent) ||
+        parent === false ||
+        childrenIndex?.length > 0) &&
+      !Object.keys(parentNode?.meta?.childApplicability || {}).includes(
+        childrenIndex[0],
+      )
     ) {
       return survey.nodeDefs[childrenIndex[0]];
     }
@@ -194,7 +200,7 @@ const useGetNext = ({parent}) => {
     }
 
     return false;
-  }, [survey, currentEntityNodeDef, cycle, parent]);
+  }, [survey, currentEntityNodeDef, cycle, parent, parentNode]);
 
   return nodeDef;
 };
