@@ -1,7 +1,7 @@
 import {RecordValidations} from '@openforis/arena-core';
 import React, {useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {Tooltip} from 'react-native-elements';
 import {useSelector} from 'react-redux';
 
@@ -35,8 +35,16 @@ const flatValidationObject = validation => {
 };
 const basehitSlop = {left: 30, top: 10, right: 30, bottom: 10};
 
-const Popover = ({message}) => {
-  return <TextBase>{message}</TextBase>;
+const Popover = ({message, colorText}) => {
+  const configBySeverityColor = useMemo(() => {
+    return StyleSheet.create({
+      textStyle: {
+        color: colorText,
+      },
+    });
+  }, [colorText]);
+
+  return <TextBase style={configBySeverityColor.textStyle}>{message}</TextBase>;
 };
 
 const validationMessageToString = ({
@@ -72,12 +80,21 @@ const Validation = React.memo(
 
     const configBySeverityColor = useMemo(() => {
       if (validation.errors.length > 0) {
-        return colors.error;
+        return {
+          background: colors.error,
+          text: colors.white,
+        };
       }
       if (validation.warnings.length > 0) {
-        return colors.alert;
+        return {
+          background: colors.alert,
+          text: colors.black,
+        };
       }
-      return colors.transparent;
+      return {
+        background: colors.transparent,
+        text: colors.black,
+      };
     }, [validation]);
 
     const errorMessages = useMemo(
@@ -111,14 +128,19 @@ const Validation = React.memo(
     const alertIcon = useMemo(() => {
       return (
         <View hitSlop={basehitSlop}>
-          <Icon name="alert-outline" color={configBySeverityColor} />
+          <Icon name="alert-outline" color={configBySeverityColor.background} />
         </View>
       );
     }, [configBySeverityColor]);
 
     const popover = useMemo(() => {
-      return <Popover message={`${errorMessages} ${warningMessages}`} />;
-    }, [errorMessages, warningMessages]);
+      return (
+        <Popover
+          message={`${errorMessages} ${warningMessages}`}
+          colorText={configBySeverityColor.text}
+        />
+      );
+    }, [errorMessages, warningMessages, configBySeverityColor]);
 
     if (Objects.isEmpty(validation) || validation.valid) {
       return <></>;
@@ -128,7 +150,7 @@ const Validation = React.memo(
       <Tooltip
         height={null}
         width={200}
-        backgroundColor={configBySeverityColor}
+        backgroundColor={configBySeverityColor.background}
         overlayColor={colors.transparent}
         animationType="none"
         skipAndroidStatusBar={true}
