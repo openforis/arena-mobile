@@ -2,10 +2,32 @@ import {createStore, applyMiddleware} from 'redux';
 import {persistStore} from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
 
+import {alert} from 'arena-mobile-ui/utils';
+
+import {ROUTES} from '../navigation/constants';
+
+import * as navigator from './navigatorService';
 import reducers from './reducers';
 import sagas from './sagas';
 
-const sagaMiddleWare = createSagaMiddleware();
+const sagaMiddleWare = createSagaMiddleware({
+  onError: (error, stackTrace) => {
+    setImmediate(() => {
+      alert({
+        title:
+          'Oops! something unexpected happened. Please share this error with the Arena team.',
+        message: `
+          ${error.toString()}
+          ${JSON.stringify(stackTrace, null, 2)} 
+        `,
+        acceptText: 'Ok',
+        onAccept: () => {
+          navigator.reset(ROUTES.HOME);
+        },
+      });
+    });
+  },
+});
 
 const middlewares = [sagaMiddleWare];
 const getStore = () => {
