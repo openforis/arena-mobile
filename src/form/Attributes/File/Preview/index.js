@@ -63,7 +63,7 @@ const FilePreview = ({node}) => {
       type="secondary"
       customContainerStyle={styles.bottonContainer}
       customTextStyle={styles.fileLabel}
-      label={node?.value?.fileName}
+      label={''}
       allowMultipleLines={true}
     />
   );
