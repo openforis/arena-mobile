@@ -48,20 +48,22 @@ const Form = ({nodeDef}) => {
 
   const handleUpdateNode = useUpdateNode();
   const surveySrs = useSelector(surveySelectors.getSurveySRS);
+  const surveySrsIndex = useSelector(surveySelectors.getSurveySRSIndex);
 
   const selectedSrs = useMemo(() => {
-    const srsCode = newValue.srs || node?.value?.srs;
+    const srsCode = newValue?.srs || node?.value?.srs;
 
     return (
-      surveySrs.find(srs => String(srs.code) === String(srsCode)) ||
-      surveySrs[0]
+      surveySrsIndex[srsCode] ||
+      surveySrsIndex[DEFAULT_SRS_CODE] ||
+      Object.values(surveySrsIndex)[0]
     );
-  }, [surveySrs, node, newValue]);
+  }, [surveySrsIndex, node, newValue]);
 
   const handleSubmit = useCallback(
     ({callback = () => null} = {}) => {
       const _value = Object.assign({}, newValue, {
-        srs: newValue.srs || selectedSrs,
+        srs: newValue?.srs || selectedSrs,
       });
       const pointAsArenaCoreWants = PointFactory.createInstance(_value);
       handleUpdateNode({node, value: pointAsArenaCoreWants, callback});
@@ -89,11 +91,11 @@ const Form = ({nodeDef}) => {
     srs => {
       if (srs?.code) {
         setValue(prevValue =>
-          Points.transform(PointFactory.createInstance(prevValue), srs?.code),
+          Points.transform(prevValue, srs?.code, surveySrsIndex),
         );
       }
     },
-    [setValue],
+    [setValue, surveySrsIndex],
   );
 
   useEffect(() => {
@@ -121,11 +123,18 @@ const Form = ({nodeDef}) => {
         altitudeAccuracy: Number(location.coords.altitudeAccuracy).toFixed(3),
       });
 
-      const transformedPoint = Points.transform(point, selectedSrs.code);
+      const transformedPoint = Points.transform(
+        point,
+        selectedSrs.code,
+        surveySrsIndex,
+      );
 
+      if (transformedPoint.x === null || transformedPoint.y === null) {
+        return;
+      }
       setValue(transformedPoint);
     },
-    [setValue, selectedSrs],
+    [setValue, selectedSrs, surveySrsIndex],
   );
 
   const _keyExtractor = useCallback(item => item.code, []);
@@ -138,18 +147,19 @@ const Form = ({nodeDef}) => {
       <GetLocation
         handleSaveLocation={handleSaveLocation}
         selectedSrs={selectedSrs}
+        surveySrsIndex={surveySrsIndex}
       />
       <CoordinateInput
         coordinateKey="x"
         handleUpdateValue={handleUpdateValue}
-        defaultValue={String(newValue.x || node?.value?.x || '')}
+        defaultValue={String(newValue?.x || node?.value?.x || '')}
         allowOnlyDeviceCoordinate={nodeDef?.props?.allowOnlyDeviceCoordinate}
       />
 
       <CoordinateInput
         coordinateKey="y"
         handleUpdateValue={handleUpdateValue}
-        defaultValue={String(newValue.y || node?.value?.y || '')}
+        defaultValue={String(newValue?.y || node?.value?.y || '')}
         allowOnlyDeviceCoordinate={nodeDef?.props?.allowOnlyDeviceCoordinate}
       />
 
@@ -158,7 +168,7 @@ const Form = ({nodeDef}) => {
           coordinateKey="accuracy"
           handleUpdateValue={handleUpdateValue}
           defaultValue={String(
-            newValue.accuracy || node?.value?.accuracy || '',
+            newValue?.accuracy || node?.value?.accuracy || '',
           )}
           allowOnlyDeviceCoordinate={nodeDef?.props?.allowOnlyDeviceCoordinate}
         />
@@ -169,7 +179,7 @@ const Form = ({nodeDef}) => {
           coordinateKey="altitude"
           handleUpdateValue={handleUpdateValue}
           defaultValue={String(
-            newValue.altitude || node?.value?.altitude || '',
+            newValue?.altitude || node?.value?.altitude || '',
           )}
           allowOnlyDeviceCoordinate={nodeDef?.props?.allowOnlyDeviceCoordinate}
         />
@@ -180,7 +190,7 @@ const Form = ({nodeDef}) => {
           coordinateKey="altitudeAccuracy"
           handleUpdateValue={handleUpdateValue}
           defaultValue={String(
-            newValue.altitudeAccuracy || node?.value?.altitudeAccuracy || '',
+            newValue?.altitudeAccuracy || node?.value?.altitudeAccuracy || '',
           )}
           allowOnlyDeviceCoordinate={nodeDef?.props?.allowOnlyDeviceCoordinate}
         />
@@ -199,7 +209,7 @@ const Form = ({nodeDef}) => {
               labelExtractor={_labelExtractor}
               onValueChange={handleSelect}
               selectedItemKey={
-                newValue.srs || node?.value?.srs || selectedSrs.code
+                newValue?.srs || node?.value?.srs || selectedSrs.code
               }
               disabled={surveySrs.length <= 1}
             />
