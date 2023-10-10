@@ -1,6 +1,7 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as React from 'react';
+import ErrorBoundary from 'react-native-error-boundary';
 import {enableScreens} from 'react-native-screens';
 import Toast from 'react-native-toast-message';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -55,4 +56,12 @@ function Arena() {
   );
 }
 
-export default Arena;
+const ArenaWithErrorBoundary = () => {
+  return (
+    <ErrorBoundary>
+      <Arena />
+    </ErrorBoundary>
+  );
+};
+
+export default ArenaWithErrorBoundary;
