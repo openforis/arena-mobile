@@ -29,7 +29,7 @@ export const toFixedIfLongerAndNumber = (value, decimals = 3) => {
 
 const _sorter = (a, b) => (a > b ? 1 : a === b ? 0 : -1);
 
-const prepareItems = (location, {selectedSrs}) => {
+const prepareItems = (location, {selectedSrs, surveySrsIndex}) => {
   if (location?.coords) {
     const srs = DEFAULT_SRS_CODE;
     const x = Number(location.coords.longitude);
@@ -40,7 +40,12 @@ const prepareItems = (location, {selectedSrs}) => {
       x,
       y,
     });
-    const transformedPoint = Points.transform(point, selectedSrs.code);
+    const transformedPoint = Points.transform(
+      point,
+      selectedSrs.code,
+      surveySrsIndex,
+    );
+
     const pareparedFields = ['longitude', 'latitude'];
 
     return [
@@ -69,7 +74,7 @@ const prepareItems = (location, {selectedSrs}) => {
   return [];
 };
 
-const GetLocation = ({handleSaveLocation, selectedSrs}) => {
+const GetLocation = ({handleSaveLocation, selectedSrs, surveySrsIndex}) => {
   const styles = useThemedStyles(_styles);
   const {t} = useTranslation();
 
@@ -100,7 +105,7 @@ const GetLocation = ({handleSaveLocation, selectedSrs}) => {
 
       <View style={styles.valuesContainer}>
         <LabelsAndValues
-          items={prepareItems(location, {selectedSrs})}
+          items={prepareItems(location, {selectedSrs, surveySrsIndex})}
           expanded
         />
       </View>
