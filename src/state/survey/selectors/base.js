@@ -69,6 +69,10 @@ export const getSurveySRS = createSelector(
   getSurvey,
   survey => survey?.props?.srs || [],
 );
+export const getSurveySRSIndex = createSelector(getSurveySRS, srs =>
+  srs.reduce((acc, srsItem) => ({...acc, [srsItem.code]: srsItem}), {}),
+);
+
 export const getRefData = createSelector(getSurvey, survey => survey?.refData);
 
 export const getCategoryItemIndex = createSelector(

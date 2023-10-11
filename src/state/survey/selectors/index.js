@@ -8,6 +8,7 @@ import {
   getSurveyCycles,
   getSelectedSurveyCycles,
   getSurveySRS,
+  getSurveySRSIndex,
   getUiState,
   getCategoryItemIndex,
   getTaxonIndex,
@@ -52,6 +53,7 @@ export default {
   getSurveyCycles,
   getSelectedSurveyCycles,
   getSurveySRS,
+  getSurveySRSIndex,
 
   // --- survey
   getSurveyData,
