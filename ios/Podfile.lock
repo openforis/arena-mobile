@@ -283,7 +283,7 @@ PODS:
   - React-jsinspector (0.69.9)
   - React-logger (0.69.9):
     - glog
-  - react-native-blob-util (0.18.3):
+  - react-native-blob-util (0.19.1):
     - React-Core
   - react-native-camera (4.2.1):
     - React-Core
@@ -293,7 +293,7 @@ PODS:
     - React-Core
   - react-native-camera/RN (4.2.1):
     - React-Core
-  - react-native-date-picker (4.2.13):
+  - react-native-date-picker (4.3.3):
     - React-Core
   - react-native-document-picker (8.1.4):
     - React-Core
@@ -384,17 +384,17 @@ PODS:
     - React-perflogger (= 0.69.9)
   - RNCAsyncStorage (1.19.3):
     - React-Core
-  - RNCClipboard (1.11.2):
+  - RNCClipboard (1.12.1):
     - React-Core
   - RNCMaskedView (0.1.11):
     - React
-  - RNCPicker (2.4.10):
+  - RNCPicker (2.5.1):
     - React-Core
-  - RNDeviceInfo (10.6.0):
+  - RNDeviceInfo (10.11.0):
     - React-Core
   - RNFS (2.20.0):
     - React-Core
-  - RNGestureHandler (2.9.0):
+  - RNGestureHandler (2.13.2):
     - React-Core
   - RNImageCropPicker (0.38.1):
     - React-Core
@@ -437,15 +437,15 @@ PODS:
   - RNScreens (3.21.1):
     - React-Core
     - React-RCTImage
-  - RNSVG (13.10.0):
+  - RNSVG (13.14.0):
     - React-Core
   - RNVectorIcons (9.2.0):
     - React-Core
-  - RNZipArchive (6.0.9):
+  - RNZipArchive (6.1.0):
     - React-Core
-    - RNZipArchive/Core (= 6.0.9)
+    - RNZipArchive/Core (= 6.1.0)
     - SSZipArchive (~> 2.2)
-  - RNZipArchive/Core (6.0.9):
+  - RNZipArchive/Core (6.1.0):
     - React-Core
     - SSZipArchive (~> 2.2)
   - SocketRocket (0.6.0)
@@ -704,9 +704,9 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 3b506d7fc50275bf44f8fd5624f23eaedd78bf78
   React-jsinspector: 5b92a5a30e02e1a21802f293cc71e05d887c7378
   React-logger: 96d904c5bc87c2660d48e6a36fb2edf65f9cfb11
-  react-native-blob-util: 2d36383bb52c15c5451be81cb7ddf22bc34a12a6
+  react-native-blob-util: af2dc91365bfde33f61389cbd0c692af9a4a97cb
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
-  react-native-date-picker: 04e866ba4e7857f83abd504ad42e787f0f02ae00
+  react-native-date-picker: 1d61c76315098a6ad4c643a356f005916c7d4875
   react-native-document-picker: a9bd26996d1b2e4f412dd186041714c79af381d0
   react-native-flipper-performance-plugin: 42ec5017abd26e7c5a1f527f2db92c14a90cabdb
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
@@ -727,19 +727,19 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: df1518d092e8c74cafddc56690d1ac386ec24d7a
   ReactCommon: fac40473e2c4117522384027ab33ad0cb6717dc5
   RNCAsyncStorage: c913ede1fa163a71cea118ed4670bbaaa4b511bb
-  RNCClipboard: 3f0451a8100393908bea5c5c5b16f96d45f30bfc
+  RNCClipboard: d77213bfa269013bf4b857b7a9ca37ee062d8ef1
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
-  RNCPicker: 0bc2f0a29abcca7b7ed44a2d036aac9ab6d25700
-  RNDeviceInfo: 475a4c447168d0ad4c807e48ef5e0963a0f4eb1b
+  RNCPicker: 529d564911e93598cc399b56cc0769ce3675f8c8
+  RNDeviceInfo: bf8a32acbcb875f568217285d1793b0e8588c974
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
-  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
+  RNGestureHandler: bb86e378287f7713baf3ca205423eb8109790022
   RNImageCropPicker: 648356d68fbf9911a1016b3e3723885d28373eda
   RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
   RNReanimated: ba021107f1dd90cb04c35c5d639392d5da27d065
   RNScreens: d3675ab2878704de70c9dae57fa5d024802404cc
-  RNSVG: 80584470ff1ffc7994923ea135a3e5ad825546b9
+  RNSVG: d00c8f91c3cbf6d476451313a18f04d220d4f396
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
-  RNZipArchive: 68a0c6db4b1c103f846f1559622050df254a3ade
+  RNZipArchive: ef9451b849c45a29509bf44e65b788829ab07801
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   SSZipArchive: fe6a26b2a54d5a0890f2567b5cc6de5caa600aef
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
