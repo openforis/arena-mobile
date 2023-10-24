@@ -84,7 +84,7 @@ const BaseForm = ({
 
       <View style={styles.divider} />
       {hasSubmitButton && (
-        <View>
+        <View style={styles.buttonsContainer}>
           <AddNodeButton nodeDef={nodeDef} />
           <Button label={t('Form:done')} onPress={_handleSubmitAndClose} />
         </View>

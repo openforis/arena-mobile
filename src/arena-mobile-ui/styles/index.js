@@ -127,6 +127,9 @@ export const getBaseStyles = ({
     BASE_14: BASE * 16, // 56
     BASE_16: BASE * 16, // 64
     BASE_24: BASE * 24, // 96
+    BASE_30: BASE * 30, // 120
+    BASE_40: BASE * 40, // 160
+    BASE_48: BASE * 48, // 192
   };
 
   const card = StyleSheet.create({

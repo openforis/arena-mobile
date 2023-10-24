@@ -61,7 +61,6 @@ export const pickerSelectStylesNeutral = StyleSheet.create({
   inputAndroid: {
     ...baseInputStyleNeutral,
     borderRadius: 180,
-
     margin: 0,
     justifyContent: 'center',
     alignContent: 'center',

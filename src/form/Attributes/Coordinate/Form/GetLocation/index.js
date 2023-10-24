@@ -1,7 +1,7 @@
 import {PointFactory, Points} from '@openforis/arena-core';
 import React, {useCallback, useEffect, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, StyleSheet, Animated} from 'react-native';
+import {View, StyleSheet, Animated, ActivityIndicator} from 'react-native';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
@@ -102,7 +102,13 @@ const GetLocation = ({handleSaveLocation, selectedSrs, surveySrsIndex}) => {
           disabled={loading}
         />
       )}
-
+      {loading && !location && (
+        <ActivityIndicator
+          size="large"
+          color={styles?.colors?.primaryText}
+          style={styles.spinner}
+        />
+      )}
       <View style={styles.valuesContainer}>
         <LabelsAndValues
           items={prepareItems(location, {selectedSrs, surveySrsIndex})}

@@ -41,6 +41,19 @@ const getTextForSearch = (item, language) => {
   return normalizedString;
 };
 
+const generateKey = (item, textForSearch) => {
+  const vernacularNames = getVernacularNames({item});
+  const _textForSearch = textForSearch || item?.textForSearch || false;
+
+  const _key = _textForSearch
+    ? `${item.uuid}-${_textForSearch}-${Object.values(item?.vernacularNames)
+        .flatMap(i => i)
+        .map(i => i.uuid)}`
+    : `${item.uuid}-${vernacularNames.join(',')}`;
+
+  return _key;
+};
+
 const Form = ({node, nodeDef}) => {
   const {t} = useTranslation();
   const actions = useNodeFormActions({nodeDef});
@@ -81,8 +94,7 @@ const Form = ({node, nodeDef}) => {
   } = useSearch();
 
   const keyExtractor = useCallback(item => {
-    const vernacularNames = getVernacularNames({item});
-    return `${item.uuid}-${vernacularNames.join(',')}`;
+    return item?.keyIndex;
   }, []);
 
   const renderItem = useCallback(
@@ -103,11 +115,14 @@ const Form = ({node, nodeDef}) => {
   );
 
   const taxonomiesWithIndexToSearch = useMemo(() => {
-    return itemsArray.map(item =>
-      Object.assign({}, item, {
-        textForSearch: getTextForSearch(item, language),
-      }),
-    );
+    return itemsArray.map(item => {
+      const textForSearch = getTextForSearch(item, language);
+      return {
+        ...item,
+        textForSearch,
+        keyIndex: generateKey(item, textForSearch),
+      };
+    });
   }, [itemsArray, language]);
 
   const itemsFiltered = useMemo(() => {

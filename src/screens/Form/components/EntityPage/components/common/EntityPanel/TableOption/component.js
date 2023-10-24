@@ -15,6 +15,11 @@ const TableOption = ({withIcon}) => {
   const styles = useThemedStyles(_styles);
   const dispatch = useDispatch();
 
+  const nodeDef = useSelector(formSelectors.getParentEntityNodeDef);
+  const nodes = useSelector(state =>
+    formSelectors.getNodeDefNodesInHierarchy(state, nodeDef),
+  );
+
   const isEntityShowAsTable = useSelector(formSelectors.isEntityShowAsTable);
 
   const handleToggleTable = useCallback(() => {
@@ -24,11 +29,11 @@ const TableOption = ({withIcon}) => {
   return (
     <Button
       type="ghost"
-      label={t(
+      label={`${t(
         `Form:navigation_panel.table.${
           isEntityShowAsTable ? 'show_as_form' : 'show_as_table'
         }`,
-      )}
+      )} - (${nodes.length})`}
       customContainerStyle={styles.buttonContainer}
       onPress={handleToggleTable}
       icon={

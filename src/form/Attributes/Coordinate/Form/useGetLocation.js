@@ -141,9 +141,9 @@ const useGetLocation = () => {
         _setLocation(null);
       },
       {
-        interval: 100,
-        fastestInterval: 100,
-        distanceFilter: 0,
+        interval: 1000,
+        fastestInterval: 1000,
+        distanceFilter: 0.2,
         enableHighAccuracy: true,
         accuracy: {
           ios: 'best',

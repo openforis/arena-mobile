@@ -16,6 +16,7 @@ const data = handleActions(
       filesUuids.forEach(fileUuid => {
         delete newFiles[fileUuid];
       });
+
       return newFiles;
     },
     [globalActions.reset]: () => initialState.data || {},

@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Button from 'arena-mobile-ui/components/Button';
@@ -69,6 +69,16 @@ const ActionButton = ({survey}) => {
     handleUpdate,
     handleSelect,
   ]);
+
+  if (survey.id === isLoading) {
+    return (
+      <ActivityIndicator
+        size="large"
+        color={styles?.colors?.primaryText}
+        style={styles.spinner}
+      />
+    );
+  }
 
   return (
     <Button

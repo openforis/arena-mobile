@@ -3,6 +3,7 @@ const props = {
   code: 'code',
   scientificName: 'scientificName',
   vernacularNames: 'vernacularNames',
+  vernacularName: 'vernacularName', // in backend is called vernacularName in singular \_0_/
   genus: 'genus',
   family: 'family',
 };
@@ -96,7 +97,7 @@ export const getTaxonItemLabelByVernacularName = ({
     taxonomyVisibleFieldsOptions[DEFAULT_TAXONOMY_FIELDS]
   )
     ?.map(field => {
-      if (field === props.vernacularNames) {
+      if (field === props.vernacularNames || field === props.vernacularName) {
         if (!vernacularNames?.length) {
           return null;
         }
