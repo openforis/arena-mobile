@@ -15,7 +15,7 @@ jobs:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
       - uses: actions/setup-node@v1
         with:
-          node-version: '16.18.0'
+          node-version: '18.12.1'
           always-auth: true
           token: ${{secrets.ACCESS_TOKEN}}
           registry-url: 'https://npm.pkg.github.com'
