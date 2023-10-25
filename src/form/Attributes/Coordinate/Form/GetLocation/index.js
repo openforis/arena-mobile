@@ -27,7 +27,15 @@ export const toFixedIfLongerAndNumber = (value, decimals = 3) => {
   return value;
 };
 
-const _sorter = (a, b) => (a > b ? 1 : a === b ? 0 : -1);
+const _sorter = (a, b) => {
+  if (a > b) {
+    return 1;
+  }
+  if (a === b) {
+    return 0;
+  }
+  return -1;
+};
 
 const prepareItems = (location, {selectedSrs, surveySrsIndex}) => {
   if (location?.coords) {
@@ -163,6 +171,13 @@ const AccuracyPill = ({index, first, last, accuracyIndex}) => {
   return <View style={pillStyle} />;
 };
 
+AccuracyPill.defaultProps = {
+  index: 0,
+  first: false,
+  last: false,
+  accuracyIndex: 0,
+};
+
 const LocationAccuracyBar = ({accuracy, timeProgress}) => {
   const styles = useThemedStyles(_styles);
   const {t} = useTranslation();
@@ -227,3 +242,9 @@ const BlinkingIconWithOpacityAnimation = ({name, customStyle, color}) => {
 };
 
 export default GetLocation;
+
+GetLocation.defaultProps = {
+  handleSaveLocation: () => {},
+  selectedSrs: {},
+  surveySrsIndex: 0,
+};

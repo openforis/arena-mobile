@@ -178,6 +178,11 @@ const Form = ({node, nodeDef}) => {
   );
 };
 
+Form.defaultProps = {
+  node: null,
+  nodeDef: null,
+};
+
 const TaxonForm = ({nodeDef}) => {
   const node = useSelector(formSelectors.getNode);
 
