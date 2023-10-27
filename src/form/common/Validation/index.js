@@ -216,7 +216,7 @@ const ValidationWrapper = ({nodes, showValidation, absolute, nodeDef}) => {
       <Validation
         validation={flatValidation}
         nodeDef={nodeDef}
-        count={nodes.length}
+        count={nodes?.length}
       />
     </View>
   );

@@ -28,7 +28,7 @@ const styles = ({colors, baseStyles}) =>
       flex: 1,
     },
     text: {
-      width: WIDTH * 0.34,
+      width: WIDTH * 0.3,
       textAlign: 'right',
     },
     textTablet: {

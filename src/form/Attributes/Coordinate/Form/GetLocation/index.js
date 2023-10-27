@@ -1,7 +1,7 @@
 import {PointFactory, Points} from '@openforis/arena-core';
 import React, {useCallback, useEffect, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, StyleSheet, Animated} from 'react-native';
+import {View, StyleSheet, Animated, ActivityIndicator} from 'react-native';
 
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
@@ -27,7 +27,15 @@ export const toFixedIfLongerAndNumber = (value, decimals = 3) => {
   return value;
 };
 
-const _sorter = (a, b) => (a > b ? 1 : a === b ? 0 : -1);
+const _sorter = (a, b) => {
+  if (a > b) {
+    return 1;
+  }
+  if (a === b) {
+    return 0;
+  }
+  return -1;
+};
 
 const prepareItems = (location, {selectedSrs, surveySrsIndex}) => {
   if (location?.coords) {
@@ -102,7 +110,13 @@ const GetLocation = ({handleSaveLocation, selectedSrs, surveySrsIndex}) => {
           disabled={loading}
         />
       )}
-
+      {loading && !location && (
+        <ActivityIndicator
+          size="large"
+          color={styles?.colors?.primaryText}
+          style={styles.spinner}
+        />
+      )}
       <View style={styles.valuesContainer}>
         <LabelsAndValues
           items={prepareItems(location, {selectedSrs, surveySrsIndex})}
@@ -155,6 +169,13 @@ const AccuracyPill = ({index, first, last, accuracyIndex}) => {
     );
   }
   return <View style={pillStyle} />;
+};
+
+AccuracyPill.defaultProps = {
+  index: 0,
+  first: false,
+  last: false,
+  accuracyIndex: 0,
 };
 
 const LocationAccuracyBar = ({accuracy, timeProgress}) => {
@@ -221,3 +242,9 @@ const BlinkingIconWithOpacityAnimation = ({name, customStyle, color}) => {
 };
 
 export default GetLocation;
+
+GetLocation.defaultProps = {
+  handleSaveLocation: () => {},
+  selectedSrs: {},
+  surveySrsIndex: 0,
+};

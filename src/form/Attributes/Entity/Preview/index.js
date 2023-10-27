@@ -52,7 +52,7 @@ const Preview = ({nodeDef}) => {
         onPress={handleSelect}
         type="secondary"
         iconPosition="right"
-        label={`${label} (${nodes.length})`}
+        label={`${label} (${nodes?.length})`}
         icon={
           <Icon
             name="table-large"

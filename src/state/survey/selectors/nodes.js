@@ -31,7 +31,8 @@ export const getEntityNodeKeys = createCachedSelector(
   keySelectors.getUuidFromItem,
   (nodes, nodeDefsByUuid, nodeUuid) =>
     nodes.filter(
-      n => n.parentUuid === nodeUuid && nodeDefsByUuid[n.nodeDefUuid].props.key,
+      n =>
+        n.parentUuid === nodeUuid && nodeDefsByUuid[n?.nodeDefUuid]?.props?.key,
     ),
 )(keySelectors.getUuidFromItem);
 

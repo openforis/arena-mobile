@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 const styles = ({baseStyles, colors}) =>
   StyleSheet.create({
     container: {
-      paddingBottom: 100,
+      paddingBottom: baseStyles.bases.BASE_24,
       flex: 1,
     },
     closeHeader: {
@@ -17,6 +17,9 @@ const styles = ({baseStyles, colors}) =>
     },
     divider: {
       height: baseStyles.bases.BASE_8,
+    },
+    buttonsContainer: {
+      minHeight: baseStyles.bases.BASE_40,
     },
   });
 
