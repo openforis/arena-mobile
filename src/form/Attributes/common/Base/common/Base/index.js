@@ -28,7 +28,7 @@ const BasePreview = ({
   }, [dispatch, nodeDef, parentEntityNode]);
 
   useEffect(() => {
-    if (nodeDef && parentEntityNode && nodes.length === 0) {
+    if (nodeDef && parentEntityNode && nodes?.length === 0) {
       _createNode();
     }
   }, [dispatch, parentEntityNode, nodeDef, nodes, _createNode]);

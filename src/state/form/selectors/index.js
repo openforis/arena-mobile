@@ -394,7 +394,7 @@ const canAddNode = createCachedSelector(
       nodeDef &&
       NodeDefs.isMultiple(nodeDef) &&
       (Objects.isEmpty(maxCount) ||
-        nodeDefNodesInHierarchy.length < Number(maxCount))
+        nodeDefNodesInHierarchy?.length < Number(maxCount))
     );
   },
 )(keySelectors.getUuidFromItem);

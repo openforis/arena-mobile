@@ -12,7 +12,8 @@ import {alert} from 'arena-mobile-ui/utils';
 
 import appConfig from '../../../../../app.json';
 
-const TIME_OUT_TIME = 1000 * 60 * 1;
+const NUMBER_OF_MINUTES = 3;
+const TIME_OUT_TIME = 1000 * 60 * NUMBER_OF_MINUTES;
 
 const useGetLocation = () => {
   const {t} = useTranslation();
@@ -141,18 +142,17 @@ const useGetLocation = () => {
         _setLocation(null);
       },
       {
-        interval: 1000,
-        fastestInterval: 1000,
-        distanceFilter: 0.2,
+        interval: 5000,
+        fastestInterval: 2000,
+        distanceFilter: 0,
         enableHighAccuracy: true,
         accuracy: {
           ios: 'best',
           android: 'high',
         },
-
         forceRequestLocation: true,
-        forceLocationManager: true,
         showLocationDialog: true,
+        showsBackgroundLocationIndicator: true,
       },
     );
 

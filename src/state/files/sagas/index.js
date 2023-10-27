@@ -16,11 +16,16 @@ import arenaFileUtils from '../utils';
 
 function* filterFileNodes(nodes) {
   const nodeDefsByUuid = yield select(surveySelectors.getNodeDefsByUuid);
-  return Object.fromEntries(
-    Object.entries(nodes).filter(
-      ([_, node]) => nodeDefsByUuid[node.nodeDefUuid].type === NodeDefType.file,
-    ),
-  );
+  try {
+    return Object.fromEntries(
+      Object.entries(nodes).filter(
+        ([_, node]) =>
+          nodeDefsByUuid[node.nodeDefUuid]?.type === NodeDefType.file,
+      ),
+    );
+  } catch (e) {
+    return {};
+  }
 }
 
 function* handleDeleteFiles(filesByFileUuid) {
