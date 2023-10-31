@@ -1,0 +1,78 @@
+{
+  "header_title": "Arena",
+  "logged_in_as": "Conectado como",
+  "role": "Rol",
+  "name": "Nombre",
+  "email": "Correo electrónico",
+  "not_logged_in": {
+    "title": "No autenticado",
+    "info": "Por favor, inicie sesión en el sistema",
+    "cta": "Iniciar sesión"
+  },
+  "survey": {
+    "no_survey": {
+      "title": "Ninguna encuesta seleccionada",
+      "info": "Elija una encuesta válida o cargue una nueva",
+      "cta": "Seleccionar encuesta"
+    },
+    "no_surveys": {
+      "title": "No hay encuestas",
+      "info": "Por favor, cargue una encuesta válida",
+      "cta": "Cargar encuesta"
+    },
+    "card": {
+      "active_survey": "$t(Surveys:active_survey)",
+      "id": "Id",
+      "name": "Nombre",
+      "language": "Idioma",
+      "selected_language": "Idioma seleccionado",
+      "cycle": "Ciclo",
+      "cycle_value": "{{ cycle }} de {{ numberOfCycles }}",
+      "selected_cycle": "Ciclo seleccionado",
+      "go_to_survey_options": "Ir a opciones de encuesta",
+      "number_of_records": "Número de registros"
+    }
+  },
+  "roles": {
+    "systemAdmin": {
+      "label": "Administrador del sistema",
+      "label_plural": "Administradores del sistema",
+      "description": "Administradores del sistema de Arena"
+    },
+    "surveyManager": {
+      "label": "Administrador de encuestas",
+      "label_plural": "Administradores de encuestas",
+      "description": "Administradores de encuestas de Arena"
+    },
+    "surveyAdmin": {
+      "label": "Administrador de encuesta",
+      "label_plural": "Administradores de encuestas",
+      "description": "Todos los derechos"
+    },
+    "surveyEditor": {
+      "label": "Editor de encuestas",
+      "label_plural": "Editores de encuestas",
+      "description": "Puede editar encuestas, registros, invitar usuarios"
+    },
+    "dataEditor": {
+      "label": "Editor de datos",
+      "label_plural": "Editores de datos",
+      "description": "Puede editar registros en el paso de entrada de datos"
+    },
+    "dataCleanser": {
+      "label": "Limpiador de datos",
+      "label_plural": "Limpiadores de datos",
+      "description": "Puede editar registros en el paso de limpieza de datos"
+    },
+    "dataAnalyst": {
+      "label": "Analista de datos",
+      "label_plural": "Analistas de datos",
+      "description": "Puede editar registros en el paso de análisis de datos"
+    },
+    "surveyGuest": {
+      "label": "Invitado de encuesta",
+      "label_plural": "Invitados de encuesta",
+      "description": "Puede ver registros"
+    }
+  }
+}
