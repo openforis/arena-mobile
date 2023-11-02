@@ -81,6 +81,9 @@ const {app} = createActions({
   }),
   [types.RESET_IMAGES_QUALITY_AND_SIZE]: () => ({}),
   /* Language settings */
+  [types.SET_APPLICATION_LANGUAGE]: ({applicationLanguage = 'en'}) => ({
+    applicationLanguage,
+  }),
 });
 
 export default app;
