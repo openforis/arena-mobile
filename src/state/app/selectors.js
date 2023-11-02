@@ -94,6 +94,12 @@ const getIsMaxResolution = createSelector(
   preferences => preferences?.settings?.images?.isMaxResolution || false,
 );
 
+/* application language */
+const getApplicationLanguage = createSelector(
+  getUi,
+  ui => ui?.applicationLanguage || 'en',
+);
+
 export default {
   getAccessData,
   getServerUrl,
@@ -122,4 +128,7 @@ export default {
   getImagesCompressMaxHeight,
   getImagesCompressMaxWidth,
   getIsMaxResolution,
+
+  /* application language */
+  getApplicationLanguage,
 };
