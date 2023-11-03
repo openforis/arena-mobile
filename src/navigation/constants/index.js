@@ -3,11 +3,13 @@ import * as Form from 'screens/Form/constants';
 import * as Home from 'screens/Home/constants';
 import * as Records from 'screens/Records/constants';
 import * as Settings from 'screens/Settings/constants';
-import * as SettingsImagesQualityAndSize from 'screens/Settings/Screens/ImagesQualityAndSize/constants';
 /* Settings */
+import * as SettingsImagesQualityAndSize from 'screens/Settings/Screens/ImagesQualityAndSize/constants';
 import * as SettingsStyleColorScheme from 'screens/Settings/Screens/Style/ColorScheme/constants';
 import * as SettingsStyleFontBaseModifier from 'screens/Settings/Screens/Style/FontBaseModifier/constants';
 import * as SettingsSurveyTaxonomies from 'screens/Settings/Screens/Survey/Taxonomies/constants';
+import * as SettingsApplicationLanguage from 'screens/Settings/Screens/ApplicationLanguage/constants';
+
 import * as Survey from 'screens/Survey/constants';
 import * as Surveys from 'screens/Surveys/constants';
 
@@ -24,6 +26,7 @@ export const KEYS = {
   [SettingsStyleFontBaseModifier.key]: [SettingsStyleFontBaseModifier.key],
   [SettingsStyleColorScheme.key]: [SettingsStyleColorScheme.key],
   [SettingsImagesQualityAndSize.key]: [SettingsImagesQualityAndSize.key],
+  [SettingsApplicationLanguage.key]: [SettingsApplicationLanguage.key],
 };
 
 export const ROUTES = {
@@ -39,4 +42,5 @@ export const ROUTES = {
   [SettingsStyleFontBaseModifier.key]: SettingsStyleFontBaseModifier.route,
   [SettingsStyleColorScheme.key]: SettingsStyleColorScheme.route,
   [SettingsImagesQualityAndSize.key]: SettingsImagesQualityAndSize.route,
+  [SettingsApplicationLanguage.key]: SettingsApplicationLanguage.route,
 };

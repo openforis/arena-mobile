@@ -260,6 +260,24 @@ const ImagesQualityAndSizeSettings = () => {
   );
 };
 
+const Language = () => {
+  const {navigateTo, routes} = useNavigateTo();
+  const {t} = useTranslation();
+
+  return (
+    <Section title={t('Settings:application_language.title')}>
+      <SectionCard
+        position="only"
+        onPress={navigateTo({
+          route: routes.SETTINGS_APPLICATION_LANGUAGE,
+        })}
+        title={t('Settings:application_language.title')}
+        iconName="translate"
+      />
+    </Section>
+  );
+};
+
 const Settings = () => {
   const styles = useThemedStyles(_styles);
   const {navigateTo, routes} = useNavigateTo();
@@ -318,6 +336,7 @@ const Settings = () => {
               </Section>
 
               <ImagesQualityAndSizeSettings />
+              <Language />
               <FormSettings />
             </>
           ) : null}
