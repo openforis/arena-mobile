@@ -52,6 +52,7 @@ const expectedAppState = {
       fontBaseModifier: 1,
       colorScheme: 'light',
     },
+    applicationLanguage: 'en',
   },
 };
 

@@ -51,7 +51,7 @@ const SettingsApplicationLanguage = () => {
       <>
         <Header hasBackComponent>
           <TextBase type="title">
-            {t('Settings:images_quality_and_size.title')} {applicationLanguage}
+            {t('Settings:application_language.title')}
           </TextBase>
         </Header>
         <ScrollView>
