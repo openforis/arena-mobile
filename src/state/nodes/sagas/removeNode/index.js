@@ -1,41 +1,47 @@
-import {RecordNodesUpdater} from '@openforis/arena-core';
-import {select, all, put} from 'redux-saga/effects';
+import {RecordUpdater} from '@openforis/arena-core';
+import {select, all, put, fork, call} from 'redux-saga/effects';
 
 import formSelectors from 'state/form/selectors';
 import nodesActions from 'state/nodes/actionCreators';
 import recordsActions from 'state/records/actionCreators';
+import surveySelectors from 'state/survey/selectors';
+import {updateValidation} from '../createNodeAndDescendants';
 
 function* handleRemoveNode({payload}) {
   const {node} = payload;
-  const [record, recordNodesByUuid] = yield all([
-    select(formSelectors.getRecord),
-    select(formSelectors.getRecordNodesByUuid),
+
+  const [fullRecord, survey] = yield all([
+    select(formSelectors.getFullRecord),
+    select(surveySelectors.getSurvey),
   ]);
-  const recordWithNodes = {...record, nodes: {...(recordNodesByUuid || {})}};
 
-  const recordUpdated = RecordNodesUpdater.removeNode(node)(recordWithNodes);
-
-  let nodesToDelete = [];
-  const recordUpdatedNodes = Object.keys(recordUpdated.nodes);
-  Object.keys(recordNodesByUuid).forEach(nodeUuid => {
-    if (!recordUpdatedNodes.includes(nodeUuid)) {
-      nodesToDelete.push(recordNodesByUuid[nodeUuid]);
-    }
+  const updatedResult = yield call(RecordUpdater.deleteNodes, {
+    nodeUuids: [node.uuid],
+    record: fullRecord,
+    survey,
+    sideEffects: true,
   });
-  // this code is needed if you dont have the index as arena-core search descendants by index
-  const currentDescentands = yield select(state =>
-    formSelectors.getNodeDescendants(state, node),
-  );
 
-  nodesToDelete = nodesToDelete.concat(currentDescentands);
+  const {
+    nodesDeleted,
+    nodes: updatedNodes,
+    record: updatedRecord,
+    validation: _validation,
+  } = updatedResult;
+
+  delete updatedRecord?.validation;
+
+  const _nodes = updatedRecord?.nodes;
+  delete updatedRecord?.nodes;
+
+  yield put(nodesActions.deleteNodes({nodes: [node]}));
   yield all([
-    put(recordsActions.setRecord({record: recordUpdated})),
-    put(nodesActions.deleteNodes({nodes: nodesToDelete})),
-    //  -_0_- DONT remove the comment of the line bellow:  It re-renders all the nodes
-    //    |  ( It is suppused to be needed by arena-core, There "h", a cache inside of the one with its hierarchy is stored inside of each node. -_0_-)
-    //   / \
-    //put(nodesActions.setNodes({nodes: recordUpdated.nodes}))
+    put(nodesActions.deleteNodes({nodes: Object.values(nodesDeleted || {})})),
+    put(recordsActions.setRecord({record: updatedRecord})),
+    put(nodesActions.setNodes({nodes: _nodes})),
   ]);
+
+  yield fork(updateValidation, _validation);
 }
 
 export default handleRemoveNode;

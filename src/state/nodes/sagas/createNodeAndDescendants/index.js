@@ -8,7 +8,7 @@ import nodesActions from 'state/nodes/actionCreators';
 import recordsActions from 'state/records/actionCreators';
 import surveySelectors from 'state/survey/selectors';
 
-function* updateValidation(validation) {
+export function* updateValidation(validation) {
   yield put(formActions.setValidation({validation}));
 }
 
