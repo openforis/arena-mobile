@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useCallback, useState, useEffect} from 'react';
+import React, {useCallback} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, ScrollView, Text, Pressable} from 'react-native';
+import {View, ScrollView, Pressable} from 'react-native';
 
 import {useSelector, useDispatch} from 'react-redux';
 
