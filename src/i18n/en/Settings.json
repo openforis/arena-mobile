@@ -61,7 +61,9 @@
       }
     }
   },
-
+  "application_language": {
+    "title": "Language"
+  },
   "style": {
     "title": "Style",
     "TextAndSpacingSize": {

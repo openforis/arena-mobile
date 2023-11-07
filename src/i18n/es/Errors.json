@@ -1,0 +1,31 @@
+{
+  "appErrors": {
+    "cannotGetChild": "No se puede obtener el hijo \"{{childName}}\" del atributo {{name}}",
+    "cannotOverridePublishedTaxa": "No se puede sobrescribir las taxonomías publicadas",
+    "cantUpdateStep": "No se puede actualizar el paso",
+    "entryDataNotFound": "Datos de entrada no encontrados: {{entryName}}",
+    "generic": "Error inesperado: {{text}}",
+    "importingDataIntoWrongCollectSurvey": "Importando datos en la encuesta equivocada. URI esperado: {{collectSurveyUri}}",
+    "invalidType": "Tipo inválido {{type}}",
+    "jobCanceledOrErrorsFound": "Trabajo cancelado o se encontraron errores; transacción de reversión",
+    "paramIsRequired": "El parámetro {{param}} es requerido",
+    "chainCannotBeSaved": "La cadena es inválida y no se puede guardar",
+    "unableToFindParent": "No se puede encontrar el padre de {{name}}",
+    "unableToFindNode": "No se puede encontrar el nodo con el nombre {{name}}",
+    "unableToFindSibling": "No se puede encontrar el hermano con el nombre {{name}}",
+    "undefinedFunction": "Función indefinida \"{{fnName}}\" o tipos de parámetros incorrectos",
+    "invalidSyntax": "La sintaxis de la expresión es inválida",
+    "unsupportedFunctionType": "Tipo de función no soportado: {{exprType}}",
+    "functionHasTooFewArguments": "La función {{fnName}} requiere al menos {{minArgs}} (se obtuvieron {{numArgs}})",
+    "functionHasTooManyArguments": "La función {{fnName}} solo acepta como máximo {{maxArgs}} (se obtuvieron {{numArgs}})",
+    "userHasPendingInvitation": "Ya hay una invitación pendiente para el usuario con correo electrónico \"{{email}}\"; no se le puede invitar a esta encuesta hasta que la acepte",
+    "userHasRole": "El usuario dado ya tiene un rol en esta encuesta",
+    "userInvalid": "Usuario inválido",
+    "userIsAdmin": "El usuario dado ya es un administrador del sistema",
+    "userNotAllowedToChangePref": "El usuario no está autorizado para cambiar la preferencia",
+    "userNotAuthorized": "El usuario {{userName}} no está autorizado"
+  },
+  "systemErrors": {
+    "somethingWentWrong": "¡Ups! Algo salió mal. Intente actualizar la página."
+  }
+}

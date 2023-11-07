@@ -8,6 +8,7 @@ import SettingsImagesQualityAndSize from 'screens/Settings/Screens/ImagesQuality
 import SettingsStyleColorScheme from 'screens/Settings/Screens/Style/ColorScheme';
 import SettingsStyleFontBaseModifier from 'screens/Settings/Screens/Style/FontBaseModifier';
 import SettingsSurveyTaxonomies from 'screens/Settings/Screens/Survey/Taxonomies';
+import SettingsApplicationLanguage from 'screens/Settings/Screens/ApplicationLanguage';
 import Survey from 'screens/Survey';
 import Surveys from 'screens/Surveys';
 
@@ -51,6 +52,10 @@ export const SCREENS = {
   },
   [KEYS.SETTINGS_IMAGES_QUALITY_AND_SIZE]: {
     component: SettingsImagesQualityAndSize,
+    options: {gestureEnabled: false},
+  },
+  [KEYS.SETTINGS_APPLICATION_LANGUAGE]: {
+    component: SettingsApplicationLanguage,
     options: {gestureEnabled: false},
   },
 };

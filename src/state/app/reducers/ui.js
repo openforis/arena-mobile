@@ -69,6 +69,13 @@ const appUi = handleActions(
         colorScheme,
       },
     }),
+    [actions.setApplicationLanguage]: (
+      state,
+      {payload: {applicationLanguage = 'en'}},
+    ) => ({
+      ...state,
+      applicationLanguage,
+    }),
   },
   initialState.ui,
 );

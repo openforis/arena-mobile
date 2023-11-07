@@ -1,0 +1,113 @@
+{
+  "title": "Configuración",
+  "reset": {
+    "cta": "Restablecer",
+    "title": "¿Está seguro de que desea restablecer?",
+    "message": "Se eliminarán los registros y las encuestas del dispositivo",
+    "accept": "Sí, limpiar todos los datos",
+    "dismiss": "No",
+    "required": "restablecer"
+  },
+  "devMode": {
+    "disable": "Desactivar modo de desarrollo"
+  },
+  "telemetry": {
+    "cta": "telemetría"
+  },
+  "connect": {
+    "cta": "Conectar con el servidor"
+  },
+  "survey": {
+    "title": "Encuesta",
+    "taxonomies": {
+      "title": "Taxonomías",
+      "screen": {
+        "header": "Taxonomías",
+        "description": "Seleccione cómo desea ver las taxonomías en el formulario de entrada.",
+        "fields": {
+          "code": "(Código)",
+          "genus": "Género",
+          "family": "Familia",
+          "scientificName": "Nombre científico",
+          "vernacularNames": "Nombres vernáculos"
+        },
+        "show_one_option_per_vernacular_name": "Mostrar una opción por nombre vernáculo",
+        "example": "Ejemplo"
+      }
+    }
+  },
+  "images_quality_and_size": {
+    "title": "Calidad y tamaño de las imágenes",
+    "screen": {
+      "header": "Calidad y tamaño de las imágenes",
+      "description": "Seleccione la calidad de las imágenes.",
+      "max_resolution": {
+        "title": "Forzar resolución máxima"
+      },
+      "quality": {
+        "label": "Calidad {{ value }}{{ subfix }}",
+        "info": "Seleccione la calidad de las imágenes."
+      },
+      "max_width": {
+        "label": "Ancho máximo {{ value }} {{ subfix }}",
+        "info": "Seleccione el ancho máximo de las imágenes. (de {{from}} a {{to}} píxeles.)"
+      },
+      "max_height": {
+        "label": "Altura máxima {{ value }} {{ subfix }}",
+        "info": "Seleccione la altura máxima de las imágenes. (de {{from}} a {{to}} píxeles.)"
+      },
+      "aspect_ratio": {
+        "label": "Mantener relación de aspecto"
+      }
+    }
+  },
+  "application_language": {
+    "title": "Idioma"
+  },
+  "style": {
+    "title": "Estilo",
+    "TextAndSpacingSize": {
+      "title": "Tamaño de texto y espaciado",
+      "screen": {
+        "header": "Tamaño de texto y espaciado",
+        "textSize": {
+          "title": "Tamaño de texto",
+          "info": "Administre el tamaño de fuente para optimizar la experiencia de lectura y adaptarse a su estilo personal.",
+          "reset": "Restablecer a valores predeterminados"
+        },
+        "spacingSize": {
+          "title": "Espaciado",
+          "info": "Modifique el espaciado para aumentar o disminuir los espacios entre texto, botones y otros elementos",
+          "reset": "Restablecer a valores predeterminados"
+        }
+      }
+    },
+    "ColorScheme": {
+      "title": "Esquema de color",
+      "screen": {
+        "header": "Esquema de color",
+        "info": "Elija el esquema de color que mejor se adapte a sus necesidades.",
+        "reset": "Restablecer a valores predeterminados",
+        "options": {
+          "light": "Claro",
+          "dark": "Oscuro"
+        }
+      }
+    }
+  },
+  "form": {
+    "title": "Formulario",
+    "jumpBetweenAttributes": {
+      "title": "Saltar entre atributos (experimental)"
+    },
+    "hasToLockRecordsWhenLeave": {
+      "title": "Bloquear registros al salir del formulario"
+    },
+    "showDescriptions": {
+      "title": "Mostrar descripciones"
+    },
+    "isSingleNodeView": {
+      "title": "Mostrar formulario con un solo atributo"
+    }
+  }
+}

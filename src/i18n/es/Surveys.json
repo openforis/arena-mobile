@@ -1,0 +1,103 @@
+{
+  "active_survey": "Encuesta activa",
+  "status": "Estado",
+  "origin": {
+    "local": "Local",
+    "remote": "Remoto"
+  },
+  "title": {
+    "local": "Encuestas locales",
+    "remote": "Todas las encuestas"
+  },
+  "subpanel": {
+    "server_connection_bar": {
+      "error": {
+        "info": "Error al conectar con el servidor",
+        "cta_label": "Verificar configuración"
+      },
+      "success": {
+        "info": "Conectado a: {{ serverUrl }}"
+      },
+      "info": {
+        "info": "Modo sin conexión"
+      }
+    },
+    "surveys_origin_selector": {
+      "local": {
+        "label": "Conectar con el servidor"
+      },
+      "remote": {
+        "label": "Mostrar solo encuestas en este dispositivo"
+      }
+    }
+  },
+  "actions": {
+    "delete": "Eliminar",
+    "select": "Usar",
+    "continue": "Continuar",
+    "download": "Descargar",
+    "update": "Actualizar",
+    "unpublished": "-"
+  },
+
+  "status_labels": {
+    "not_in_device": "No en el dispositivo",
+    "ready": "Actualizado",
+    "update": "Desactualizado. Hay una versión más nueva disponible",
+    "not_this_server": "No disponible en este servidor",
+    "not_published": "NO publicado"
+  },
+  "toasts": {
+    "server": "Ya tienes esta encuesta apuntando a otro servidor, conecta con {{ surveyServer}} en lugar de {{ serverUrl }}",
+    "data_deleted": "Todos los registros en esta encuesta se eliminaron correctamente",
+    "data_in_record_deleted": "Todos los datos en este registro se eliminaron correctamente"
+  },
+  "empty_with_surveys": {
+    "title": "Sin resultados.",
+    "info": "Parece que no tienes ninguna encuesta para esta búsqueda."
+  },
+  "local": {
+    "title": "Dispositivo",
+    "error": {
+      "title": "Parece que no tienes ninguna encuesta en tu dispositivo.",
+      "info": "Conecta tu dispositivo y carga una encuesta válida.",
+      "cta_label": "Descargar desde el servidor"
+    },
+    "empty": {
+      "title": "Parece que no tienes ninguna encuesta en tu dispositivo.",
+      "info": "Conecta tu dispositivo y carga una encuesta válida.",
+      "cta_label": "Conectar con el servidor"
+    }
+  },
+  "error": {
+    "title": "Parece que hay algún error al conectar con el servidor.",
+    "info": "Por favor, revisa tu conexión e intenta de nuevo.",
+    "cta_label": "Verificar configuración de conexión"
+  },
+  "remote": {
+    "title": "Servidor",
+    "error": {
+      "title": "Parece que hay algún error al conectar con el servidor.",
+      "info": "Por favor, revisa tu conexión e intenta de nuevo.",
+      "cta_label": "Conectar con el servidor"
+    },
+    "empty": {
+      "title": "Parece que no hay encuestas en el servidor.",
+      "info": "Por favor, pregunta al administrador del servidor.",
+      "cta_label": "Volver a encuestas locales"
+    }
+  },
+  "selected_survey_panel": {
+    "more_actions": "Más opciones",
+    "delete": {
+      "alert": {
+        "title": "¿Estás seguro?",
+        "message": "Vas a eliminar la encuesta {{ name }} y todos sus datos del dispositivo.",
+        "accept": "Sí, eliminar",
+        "dismiss": "No",
+        "delete_data": "eliminar datos",
+        "delete_survey": "eliminar encuesta"
+      }
+    }
+  }
+}
