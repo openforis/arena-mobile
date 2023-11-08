@@ -79,7 +79,12 @@ const deleteFile = async ({
       nodeUuid,
     })}`;
 
-    await fs.deleteDir(dir);
+    try {
+      await fs.deleteDir(dir);
+    } catch (e) {
+      console.log('deleteFile: error deleting file', dir, e);
+      return false;
+    }
   }
 };
 
