@@ -29,10 +29,14 @@ function* filterFileNodes(nodes) {
 }
 
 function* handleDeleteFiles(filesByFileUuid) {
-  yield call(arenaFileUtils.deleteFiles, Object.values(filesByFileUuid));
-  yield put(
-    filesActionTypes.deleteFiles({filesUuids: Object.keys(filesByFileUuid)}),
-  );
+  try {
+    yield call(arenaFileUtils.deleteFiles, Object.values(filesByFileUuid));
+    yield put(
+      filesActionTypes.deleteFiles({filesUuids: Object.keys(filesByFileUuid)}),
+    );
+  } catch (e) {
+    console.log('handleDeleteFiles:', filesByFileUuid, e);
+  }
 }
 
 function* handleDeleteNodesFiles({payload}) {
