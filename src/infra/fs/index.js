@@ -131,7 +131,8 @@ export const deleteDir = async path => {
     return;
   }
   try {
-    return RNFetchBlob.fs.unlink(_path);
+    await RNFetchBlob.fs.unlink(_path);
+    return true;
   } catch (e) {
     console.log('deleteDir:unlink', _path, e);
   }
