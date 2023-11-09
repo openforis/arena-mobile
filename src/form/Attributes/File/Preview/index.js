@@ -83,12 +83,13 @@ const NodeValueRender = ({node = false, nodeDef}) => {
   return (
     <>
       <Container>
-        <LoadFileButton node={node} onPress={toggleModal} />
-        {node?.value && (
+        {node?.value ? (
           <>
             <FilePreview node={node} nodeDef={nodeDef} />
             <DeleteFileButton node={node} onPress={deleteFile} />
           </>
+        ) : (
+          <LoadFileButton node={node} onPress={toggleModal} />
         )}
       </Container>
       {modal}

@@ -29,13 +29,22 @@ export const useDeleteNode = () => {
   const handleClose = useCloseNode();
 
   const handleDelete = useCallback(
-    ({node, label, requestConfirm = true, callback = handleClose}) => {
+    ({
+      node,
+      label,
+      requestConfirm = true,
+      callback = handleClose,
+      isImage = false,
+    }) => {
       if (requestConfirm) {
         alert({
           title: t('Form:deleteNode.alert.title'),
-          message: t('Form:deleteNode.alert.message', {
-            name: label || node.uuid,
-          }),
+          message: t(
+            `Form:deleteNode.alert.message${isImage ? '_image' : ''}`,
+            {
+              name: label || node.uuid,
+            },
+          ),
           acceptText: t('Form:deleteNode.alert.accept'),
           dismissText: t('Form:deleteNode.alert.dismiss'),
           onAccept: () => {

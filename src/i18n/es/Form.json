@@ -33,6 +33,7 @@
     "alert": {
       "title": "¿Estás seguro?",
       "message": "Vas a eliminar {{ name }} y todos los datos relacionados.",
+      "message_image": "Vas a eliminar esta imagen",
       "accept": "Sí, eliminar",
       "dismiss": "No",
       "required": "eliminar"
