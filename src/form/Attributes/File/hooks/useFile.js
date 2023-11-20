@@ -28,9 +28,9 @@ const useFile = ({nodeDef, node, isImage = false}) => {
         fileUuid: node?.value?.fileUuid || uuidv4(),
       };
 
-      const fikeKeys = ['fileName', 'fileSize', 'fileUuid'];
+      const fileKeys = ['fileName', 'fileSize', 'fileUuid'];
       const fileValueFiltered = Object.keys(value).reduce((acc, key) => {
-        if (fikeKeys.includes(key)) {
+        if (fileKeys.includes(key)) {
           acc[key] = value[key];
         }
         return acc;
