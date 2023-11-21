@@ -27,7 +27,16 @@ const useFile = ({nodeDef, node, isImage = false}) => {
         fileSize: document.size,
         fileUuid: node?.value?.fileUuid || uuidv4(),
       };
-      action({node, value});
+
+      const fileKeys = ['fileName', 'fileSize', 'fileUuid'];
+      const fileValueFiltered = Object.keys(value).reduce((acc, key) => {
+        if (fileKeys.includes(key)) {
+          acc[key] = value[key];
+        }
+        return acc;
+      }, {});
+
+      action({node, value: fileValueFiltered});
     },
     [node],
   );
