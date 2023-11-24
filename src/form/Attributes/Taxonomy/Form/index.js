@@ -18,7 +18,8 @@ import {selectors as surveySelectors} from 'state/survey';
 
 import {useTaxonItemLabelExtractor, useTaxonItemsWithSelected} from '../hooks';
 
-import styles from './styles';
+import _styles from './styles';
+import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
 const getTextForSearch = (item, language) => {
   const vernacularNamesObj = item?.vernacularNames || {};
@@ -55,6 +56,7 @@ const generateKey = (item, textForSearch) => {
 };
 
 const Form = ({node, nodeDef}) => {
+  const styles = useThemedStyles(_styles);
   const {t} = useTranslation();
   const actions = useNodeFormActions({nodeDef});
   const {itemsArray, selectedItem} = useTaxonItemsWithSelected({node, nodeDef});
@@ -165,7 +167,7 @@ const Form = ({node, nodeDef}) => {
           onPress={handleCleanNode}
           type="ghostBlack"
           label={t('Form:clean')}
-          customStyle={styles.button}
+          customTextStyle={styles.buttonText}
         />
       )}
 
