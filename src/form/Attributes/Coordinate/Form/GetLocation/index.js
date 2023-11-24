@@ -135,7 +135,7 @@ const GetLocation = ({handleSaveLocation, selectedSrs, surveySrsIndex}) => {
 };
 
 const COLORS = ['#ed5b46', '#d97631', '#eaa200', '#e1b400', '#94f94b'];
-const ACCURACY_STEPS = [15, 19, 20, 40, 50];
+const ACCURACY_STEPS = [5, 10, 20, 40, 50];
 
 const _getIndex = ({accuracy, accuracySteps}) => {
   const accuracyIndex = accuracySteps.findIndex(step => accuracy <= step);
