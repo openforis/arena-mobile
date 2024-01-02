@@ -20,9 +20,10 @@ import i18n from 'i18n';
 const _LANGUAGES = {
   en: 'English',
   es: 'Español',
+  fr: 'Français',
 };
 
-const LANGUAGES = ['en', 'es'];
+const LANGUAGES = ['en', 'es', 'fr'];
 
 const SettingsApplicationLanguage = () => {
   const styles = useThemedStyles(_styles);
