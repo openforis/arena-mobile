@@ -17,6 +17,11 @@ import {selectors as appSelectors, actions as appActions} from 'state/app';
 import _styles from './styles';
 import i18n from 'i18n';
 
+const _LANGUAGES = {
+  en: 'English',
+  es: 'Español',
+};
+
 const LANGUAGES = ['en', 'es'];
 
 const SettingsApplicationLanguage = () => {
@@ -68,7 +73,8 @@ const SettingsApplicationLanguage = () => {
                     size="m"
                   />
                   <TextBase type="header" customStyle={styles.cardTitle}>
-                    {LANGUAGES[0]}
+                    {' '}
+                    {_LANGUAGES[LANGUAGES[0]]}
                   </TextBase>
                 </View>
               </Card>
@@ -86,7 +92,8 @@ const SettingsApplicationLanguage = () => {
                     size="m"
                   />
                   <TextBase type="header" customStyle={styles.cardTitle}>
-                    {LANGUAGES[1]}
+                    {' '}
+                    {_LANGUAGES[LANGUAGES[1]]}
                   </TextBase>
                 </View>
               </Card>
