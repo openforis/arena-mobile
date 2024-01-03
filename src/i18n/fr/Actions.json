@@ -1,0 +1,9 @@
+{
+  "new_record": "Créer un nouveau enregistrement",
+  "continue_record": "Continuer l'enregistrement actuel",
+  "validation_report": "Rapport de validation ({{count}})",
+  "records": "Aller à la liste des enregistrements ({{count}})",
+  "remove_records": "Supprimer tous les enregistrements",
+  "remove_survey": "Supprimer l'enquête",
+  "upload_data": "Télécharger des données"
+}

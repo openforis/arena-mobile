@@ -1,0 +1,39 @@
+{
+  "title": "Connexion",
+
+  "server_config_title": "Informations du serveur",
+  "server_config_fields": {
+    "address": "Adresse du serveur",
+    "test": "Utiliser : {{ url }}",
+    "prod": "Utiliser : {{ url }}"
+  },
+
+  "access_info_title": "Informations d'accès",
+  "access_info_fields": {
+    "username": "Nom d'utilisateur (email)",
+    "password": "Mot de passe"
+  },
+  "submit": "Se connecter",
+  "error": {
+    "title": "Une erreur s'est produite",
+    "info": "Veuillez vérifier les informations et votre connexion"
+  },
+  "server_error": {
+    "title": "Une erreur s'est produite",
+    "info": "Veuillez vérifier l'adresse du serveur"
+  },
+  "credentials_error": {
+    "title": "Une erreur s'est produite",
+    "info": "Veuillez vérifier les informations d'identification fournies ou récupérer votre mot de passe",
+    "forgot_password": "Mot de passe oublié ?"
+  },
+  "connected_as": "Connecté en tant que :",
+  "logout": {
+    "cta": "Se déconnecter",
+    "title": "Êtes-vous sûr de vouloir vous déconnecter ?",
+    "message": "",
+    "accept": "Oui, se déconnecter",
+    "dismiss": "Non",
+    "required": "déconnexion"
+  }
+}
