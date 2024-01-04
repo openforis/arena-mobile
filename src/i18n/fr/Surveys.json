@@ -1,0 +1,102 @@
+{
+  "active_survey": "Enquête active",
+  "status": "Statut",
+  "origin": {
+    "local": "Local",
+    "remote": "À distance"
+  },
+  "title": {
+    "local": "Enquêtes locales",
+    "remote": "Toutes les enquêtes"
+  },
+  "subpanel": {
+    "server_connection_bar": {
+      "error": {
+        "info": "Erreur de connexion au serveur",
+        "cta_label": "Vérifier la configuration"
+      },
+      "success": {
+        "info": "Connecté à : {{ serverUrl }}"
+      },
+      "info": {
+        "info": "Mode hors ligne"
+      }
+    },
+    "surveys_origin_selector": {
+      "local": {
+        "label": "Se connecter au serveur"
+      },
+      "remote": {
+        "label": "Afficher uniquement les enquêtes sur cet appareil"
+      }
+    }
+  },
+  "actions": {
+    "delete": "Supprimer",
+    "select": "Utiliser",
+    "continue": "Continuer",
+    "download": "Télécharger",
+    "update": "Mettre à jour",
+    "unpublished": "-"
+  },
+  "status_labels": {
+    "not_in_device": "Pas sur l'appareil",
+    "ready": "À jour",
+    "update": "Désuet. Une nouvelle version est disponible",
+    "not_this_server": "Non disponible sur ce serveur",
+    "not_published": "NON publié"
+  },
+  "toasts": {
+    "server": "Vous avez déjà cette enquête pointant vers un autre serveur, connectez-vous à {{ surveyServer}} au lieu de {{ serverUrl }}",
+    "data_deleted": "Tous les enregistrements de cette enquête ont été supprimés avec succès",
+    "data_in_record_deleted": "Toutes les données de cet enregistrement ont été supprimées avec succès"
+  },
+  "empty_with_surveys": {
+    "title": "Pas de résultats.",
+    "info": "Il semble que vous n'avez aucune enquête pour cette recherche."
+  },
+  "local": {
+    "title": "Appareil",
+    "error": {
+      "title": "Il semble que vous n'avez aucune enquête sur votre appareil.",
+      "info": "Connectez votre appareil et chargez une enquête valide.",
+      "cta_label": "Télécharger depuis le serveur"
+    },
+    "empty": {
+      "title": "Il semble que vous n'avez aucune enquête sur votre appareil.",
+      "info": "Connectez votre appareil et chargez une enquête valide.",
+      "cta_label": "Se connecter au serveur"
+    }
+  },
+  "error": {
+    "title": "Il semble y avoir une erreur lors de la connexion au serveur.",
+    "info": "Veuillez vérifier votre connexion et réessayer.",
+    "cta_label": "Vérifier la configuration de connexion"
+  },
+  "remote": {
+    "title": "Serveur",
+    "error": {
+      "title": "Il semble y avoir une erreur lors de la connexion au serveur.",
+      "info": "Veuillez vérifier votre connexion et réessayer.",
+      "cta_label": "Se connecter au serveur"
+    },
+    "empty": {
+      "title": "Il semble qu'il n'y ait pas d'enquêtes sur le serveur.",
+      "info": "Veuillez demander à l'administrateur du serveur.",
+      "cta_label": "Retour aux enquêtes locales"
+    }
+  },
+  "selected_survey_panel": {
+    "more_actions": "Plus d'options",
+    "delete": {
+      "alert": {
+        "title": "Êtes-vous sûr ?",
+        "message": "Vous allez supprimer l'enquête {{ name }} et toutes ses données de l'appareil.",
+        "accept": "Oui, supprimer",
+        "dismiss": "Non",
+        "delete_data": "supprimer les données",
+        "delete_survey": "supprimer l'enquête"
+      }
+    }
+  }
+}
