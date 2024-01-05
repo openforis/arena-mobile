@@ -21,9 +21,10 @@ const _LANGUAGES = {
   en: 'English',
   es: 'Español',
   fr: 'Français',
+  pt: 'Português',
 };
 
-const LANGUAGES = ['en', 'es', 'fr'];
+const LANGUAGES = ['en', 'es', 'fr', 'pt'];
 
 const SettingsApplicationLanguage = () => {
   const styles = useThemedStyles(_styles);
