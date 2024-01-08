@@ -1,0 +1,107 @@
+{
+  "add_new": "Novo {{ label }}",
+  "add_new_row": "Nova linha",
+  "add_new_item": "Novo item",
+  "done": "Feito",
+  "save": "Salvar",
+  "done_and_new": "Feito e novo",
+  "delete": "Excluir {{ label }}",
+  "select_empty": " ",
+  "select_empty_type_to_search": "Digite para pesquisar",
+  "navigation": "Navegação",
+  "validation_report": "Relatório de validação",
+  "record_locked": "Registro bloqueado",
+  "unlock": "Desbloquear?",
+  "clean": "Limpar",
+  "navigation_panel": {
+    "current_page": "Página atual",
+    "table": {
+      "show_as_table": "Mostrar como tabela",
+      "show_as_form": "Mostrar como formulário"
+    },
+    "multiple": {
+      "delete_this_item": "Excluir este item"
+    },
+    "automatically_stored_info": "Todos os dados inseridos são armazenados localmente e automaticamente"
+  },
+  "nodeDefEntity": {
+    "layout": {
+      "table": " (tabela)"
+    }
+  },
+  "deleteNode": {
+    "alert": {
+      "title": "Tem certeza?",
+      "message": "Você vai remover {{ name }} e todos os dados relacionados.",
+      "message_image": "Você vai remover esta imagem.",
+      "accept": "Sim, excluir",
+      "dismiss": "Não",
+      "required": "excluir"
+    },
+    "cta_delete": "Excluir este nó"
+  },
+  "avoidOverWrite": {
+    "alert": {
+      "title": "Criando um novo item?",
+      "message": "Parece que você está tentando editar o campo chave da página atual {{ name }}. Você quer criar uma nova página em vez disso?",
+      "accept": "Criar Nova Página",
+      "dismiss": "Ficar na Página Atual e Editar"
+    }
+  },
+  "nodeDefBoolean": {
+    "labelValue": {
+      "trueFalse": {
+        "true": "$t(Common:true)",
+        "false": "$t(Common:false)"
+      },
+      "yesNo": {
+        "true": "$t(Common:sim)",
+        "false": "$t(Common:não)"
+      }
+    }
+  },
+  "nodeDefCoordinate": {
+    "x": "X",
+    "y": "Y",
+    "accuracy": "Precisão (m)",
+    "altitude": "Altitude (m)",
+    "altitudeAccuracy": "Precisão da altitude (m)",
+    "srs": "SRS",
+    "get_location": "Obter localização",
+    "use": "Usar",
+    "permissions": {
+      "denied": "Permissão de localização negada",
+      "unable_settings": "Incapaz de abrir configurações",
+      "turn_on": {
+        "message": "Ative os Serviços de Localização para permitir que \"{{ appName }}\" determine sua localização.",
+        "accept": "Ir para Configurações",
+        "reject": "Não Usar Localização"
+      },
+      "toasts": {
+        "denied": "Permissão de localização negada pelo usuário.",
+        "revoked": "Permissão de localização revogada pelo usuário."
+      }
+    }
+  },
+  "nodeDefFile": {
+    "name": "nome",
+    "more_info": {
+      "show_detail": "Mostrar detalhe",
+      "hide_detail": "Ocultar detalhe",
+      "exif": "Exif"
+    },
+    "pickers": {
+      "camera": "Câmera",
+      "gallery": "Galeria",
+      "document": "Documento",
+      "audio": "Áudio"
+    }
+  },
+  "leave_form_to_record_list_cta": "Ir para lista de registros",
+  "beforeLeave": {
+    "title": "Os dados são salvos automaticamente, tem certeza de que deseja sair do formulário?",
+    "message": "",
+    "acceptText": "Ir para Lista de Registros",
+    "dismissText": "Ficar"
+  }
+}
