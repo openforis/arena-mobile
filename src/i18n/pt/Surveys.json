@@ -1,0 +1,102 @@
+{
+  "active_survey": "Pesquisa ativa",
+  "status": "Status",
+  "origin": {
+    "local": "Local",
+    "remote": "Remoto"
+  },
+  "title": {
+    "local": "Pesquisas locais",
+    "remote": "Todas as pesquisas"
+  },
+  "subpanel": {
+    "server_connection_bar": {
+      "error": {
+        "info": "Erro ao conectar ao servidor",
+        "cta_label": "Verificar configurações"
+      },
+      "success": {
+        "info": "Conectado a: {{ serverUrl }}"
+      },
+      "info": {
+        "info": "Modo offline"
+      }
+    },
+    "surveys_origin_selector": {
+      "local": {
+        "label": "Conectar com o servidor"
+      },
+      "remote": {
+        "label": "Mostrar apenas pesquisas neste dispositivo"
+      }
+    }
+  },
+  "actions": {
+    "delete": "Excluir",
+    "select": "Usar",
+    "continue": "Continuar",
+    "download": "Baixar",
+    "update": "Atualizar",
+    "unpublished": "-"
+  },
+  "status_labels": {
+    "not_in_device": "Não no dispositivo",
+    "ready": "Atualizado",
+    "update": "Desatualizado. Nova versão disponível",
+    "not_this_server": "Não disponível neste servidor",
+    "not_published": "NÃO publicado"
+  },
+  "toasts": {
+    "server": "Você já tem esta pesquisa apontando para outro servidor, conecte-se a {{ surveyServer}} em vez de {{ serverUrl }}",
+    "data_deleted": "Todos os registros nesta pesquisa foram excluídos com sucesso",
+    "data_in_record_deleted": "Todos os dados neste registro foram excluídos com sucesso"
+  },
+  "empty_with_surveys": {
+    "title": "Sem resultados.",
+    "info": "Parece que você não tem nenhuma pesquisa para esta busca."
+  },
+  "local": {
+    "title": "Dispositivo",
+    "error": {
+      "title": "Parece que você não tem nenhuma pesquisa em seu dispositivo.",
+      "info": "Conecte seu dispositivo e carregue uma pesquisa válida.",
+      "cta_label": "Baixar do servidor"
+    },
+    "empty": {
+      "title": "Parece que você não tem nenhuma pesquisa em seu dispositivo.",
+      "info": "Conecte seu dispositivo e carregue uma pesquisa válida.",
+      "cta_label": "Conectar ao servidor"
+    }
+  },
+  "error": {
+    "title": "Parece que há algum erro ao se conectar com o servidor.",
+    "info": "Por favor, revise sua conexão e tente novamente.",
+    "cta_label": "Verificar configurações de conexão"
+  },
+  "remote": {
+    "title": "Servidor",
+    "error": {
+      "title": "Parece que há algum erro ao se conectar com o servidor.",
+      "info": "Por favor, revise sua conexão e tente novamente.",
+      "cta_label": "Conectar ao servidor"
+    },
+    "empty": {
+      "title": "Parece que não há pesquisas no servidor.",
+      "info": "Por favor, pergunte ao administrador do servidor.",
+      "cta_label": "Voltar para pesquisas locais"
+    }
+  },
+  "selected_survey_panel": {
+    "more_actions": "Mais opções",
+    "delete": {
+      "alert": {
+        "title": "Tem certeza?",
+        "message": "Você vai remover a pesquisa {{ name }} e todos os seus dados do dispositivo.",
+        "accept": "Sim, excluir",
+        "dismiss": "Não",
+        "delete_data": "excluir dados",
+        "delete_survey": "excluir pesquisa"
+      }
+    }
+  }
+}
