@@ -25,7 +25,11 @@ const getServerError = createSelector(getUi, ui => ui?.serverError);
 const getCredentialsError = createSelector(getUi, ui => ui?.credentialsError);
 const isDevModeEnabled = createSelector(getUi, ui => ui?.devMode);
 
-const getShowNames = createSelector(getUi, ui => ui?.showNames);
+const getShowNames = createSelector(
+  getUi,
+  ui => false, //ui?.showNames
+);
+
 const getIsTablet = createSelector(getUi, () => isTablet?.() || false);
 
 const getStyle = createSelector(getUi, ui => ui?.style);
