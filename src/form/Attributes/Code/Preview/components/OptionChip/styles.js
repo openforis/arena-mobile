@@ -7,7 +7,7 @@ const styles = ({baseStyles, colors}) =>
       backgroundColor: isActive ? colors.secondary : colors.transparent,
       borderWidth: 1,
       borderColor: colors.neutralLighter,
-      paddingHorizontal: baseStyles.bases.BASE,
+      paddingHorizontal: baseStyles.bases.BASE_4,
       margin: baseStyles.bases.BASE / 2,
       flexDirection: 'row',
       justifyContent: 'center',
