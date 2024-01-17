@@ -1,0 +1,78 @@
+{
+  "header_title": "Arena",
+  "logged_in_as": "Connecté en tant que",
+  "role": "Rôle",
+  "name": "Nom",
+  "email": "Email",
+  "not_logged_in": {
+    "title": "Non authentifié",
+    "info": "Veuillez vous connecter au système",
+    "cta": "Se connecter"
+  },
+  "survey": {
+    "no_survey": {
+      "title": "Aucune enquête sélectionnée",
+      "info": "Choisissez une enquête valide ou chargez-en une nouvelle",
+      "cta": "Sélectionner une enquête"
+    },
+    "no_surveys": {
+      "title": "Pas d'enquêtes",
+      "info": "Veuillez charger une enquête valide",
+      "cta": "Charger une enquête"
+    },
+    "card": {
+      "active_survey": "$t(Surveys:enquête_active)",
+      "id": "Id",
+      "name": "Nom",
+      "language": "Langue",
+      "selected_language": "Langue sélectionnée",
+      "cycle": "Cycle",
+      "cycle_value": "{{ cycle }} de {{ numberOfCycles }}",
+      "selected_cycle": "Cycle sélectionné",
+      "go_to_survey_options": "Aller aux options de l'enquête",
+      "number_of_records": "Nombre d'enregistrements"
+    }
+  },
+  "roles": {
+    "systemAdmin": {
+      "label": "Administrateur du système",
+      "label_plural": "Administrateurs du système",
+      "description": "Administrateurs du système d'Arena"
+    },
+    "surveyManager": {
+      "label": "Administrateur d'enquêtes",
+      "label_plural": "Administrateurs d'enquêtes",
+      "description": "Administrateurs d'enquêtes d'Arena"
+    },
+    "surveyAdmin": {
+      "label": "Administrateur de l'enquête",
+      "label_plural": "Administrateurs de l'enquête",
+      "description": "Tous les droits"
+    },
+    "surveyEditor": {
+      "label": "Éditeur de l'enquête",
+      "label_plural": "Éditeurs de l'enquête",
+      "description": "Peut éditer des enquêtes, des enregistrements, inviter des utilisateurs"
+    },
+    "dataEditor": {
+      "label": "Éditeur de données",
+      "label_plural": "Éditeurs de données",
+      "description": "Peut éditer des enregistrements à l'étape de saisie des données"
+    },
+    "dataCleanser": {
+      "label": "Nettoyeur de données",
+      "label_plural": "Nettoyeurs de données",
+      "description": "Peut éditer des enregistrements à l'étape de nettoyage des données"
+    },
+    "dataAnalyst": {
+      "label": "Analyste de données",
+      "label_plural": "Analystes de données",
+      "description": "Peut éditer des enregistrements à l'étape d'analyse des données"
+    },
+    "surveyGuest": {
+      "label": "Invité de l'enquête",
+      "label_plural": "Invités de l'enquête",
+      "description": "Peut voir des enregistrements"
+    }
+  }
+}

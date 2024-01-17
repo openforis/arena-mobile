@@ -1,0 +1,24 @@
+{
+  "record": {
+    "keyDuplicate": "Clé d'enregistrement en double",
+    "oneOrMoreInvalidValues": "Une ou plusieurs valeurs sont invalides",
+    "uniqueAttributeDuplicate": "Valeur en double",
+
+    "attribute": {
+      "customValidation": "Valeur invalide",
+      "uniqueDuplicate": "Valeur en double",
+      "valueInvalid": "Valeur invalide",
+      "valueRequired": "Valeur requise"
+    },
+    "entity": {
+      "keyDuplicate": "Clé d'entité en double"
+    },
+    "nodes": {
+      "count": {
+        "invalid": "Les nœuds de {{nodeDefName}} doivent être exactement {{count}}",
+        "maxExceeded": "Les nœuds de {{nodeDefName}} doivent être inférieurs ou égaux à {{maxCount}}",
+        "minNotReached": "Les nœuds de {{nodeDefName}} doivent être supérieurs ou égaux à {{minCount}}"
+      }
+    }
+  }
+}

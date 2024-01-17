@@ -1,0 +1,72 @@
+{
+  "selected_record_panel": {
+    "delete": {
+      "alert": {
+        "title": "Êtes-vous sûr?",
+        "message": "Vous allez supprimer l'enregistrement {{ name }} et toutes les informations associées de l'appareil.",
+        "accept": "Oui, supprimer",
+        "dismiss": "Non",
+        "required": "supprimer"
+      }
+    },
+    "cta_delete": "Supprimer cet enregistrement",
+    "cta_continue": "Continuer cet enregistrement"
+  },
+  "current_record": "Enregistrement actuel",
+  "create_new_record": "Créer un nouvel enregistrement",
+  "empty_key": "<Clé manquante>",
+  "empty": {
+    "title": "Aucun enregistrement",
+    "info": "Vous n'avez encore aucun enregistrement. Créez-en un pour commencer à utiliser l'application.",
+    "cta_label": "Créer un enregistrement"
+  },
+  "error": {
+    "title": "Erreur",
+    "info": "Une erreur s'est produite lors du chargement des enregistrements. Veuillez réessayer plus tard.",
+    "cta_label": "Réessayer"
+  },
+  "subpanel": {
+    "check_remote_records_button": {
+      "label": "Vérifier l'état à distance"
+    },
+    "upload_data": {
+      "label": "Envoyer des données locales"
+    }
+  },
+  "status": {
+    "checking": "Vérification des enregistrements...",
+    "checked": "Enregistrements vérifiés",
+    "check_error": "Erreur lors de la vérification des enregistrements"
+  },
+  "record_status": {
+    "not_in_server": "Pas sur le serveur",
+    "not_in_entry_step_anymore": "Plus dans l'étape d'entrée",
+    "modified_download": "Modifié sur le serveur",
+    "modified_upload": "Modifié sur l'appareil",
+    "checked": "Ok"
+  },
+  "status_connection_bar": {
+    "error": {
+      "info": "Erreur de connexion au serveur",
+      "cta_label": "Vérifier les paramètres"
+    },
+    "success": {
+      "info": "État distant vérifié avec succès depuis : {{ serverUrl }}"
+    },
+    "info": {
+      "info": "Mode hors ligne",
+      "cta_label": "Vérifier"
+    }
+  },
+  "pull_to_refresh": "Tirer pour vérifier l'état distant",
+  "job_sending_records": {
+    "sending": {
+      "title": "Envoi des enregistrements",
+      "info": "Veuillez patienter pendant que nous envoyons les enregistrements au serveur."
+    },
+    "done": {
+      "title": "Envoi réussi !",
+      "info": "Les enregistrements ont été envoyés avec succès au serveur."
+    }
+  }
+}

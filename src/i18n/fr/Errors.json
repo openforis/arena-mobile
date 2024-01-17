@@ -1,0 +1,31 @@
+{
+  "appErrors": {
+    "cannotGetChild": "Impossible d'obtenir l'enfant \"{{childName}}\" de l'attribut {{name}}",
+    "cannotOverridePublishedTaxa": "Impossible de remplacer les taxonomies publiées",
+    "cantUpdateStep": "Impossible de mettre à jour l'étape",
+    "entryDataNotFound": "Données d'entrée non trouvées : {{entryName}}",
+    "generic": "Erreur inattendue : {{text}}",
+    "importingDataIntoWrongCollectSurvey": "Importation de données dans le mauvais sondage. URI attendu : {{collectSurveyUri}}",
+    "invalidType": "Type invalide {{type}}",
+    "jobCanceledOrErrorsFound": "Travail annulé ou des erreurs ont été trouvées ; transaction de retour",
+    "paramIsRequired": "Le paramètre {{param}} est requis",
+    "chainCannotBeSaved": "La chaîne est invalide et ne peut pas être enregistrée",
+    "unableToFindParent": "Impossible de trouver le parent de {{name}}",
+    "unableToFindNode": "Impossible de trouver le nœud avec le nom {{name}}",
+    "unableToFindSibling": "Impossible de trouver le frère avec le nom {{name}}",
+    "undefinedFunction": "Fonction indéfinie \"{{fnName}}\" ou types de paramètres incorrects",
+    "invalidSyntax": "La syntaxe de l'expression est invalide",
+    "unsupportedFunctionType": "Type de fonction non supporté : {{exprType}}",
+    "functionHasTooFewArguments": "La fonction {{fnName}} nécessite au moins {{minArgs}} (obtenu {{numArgs}})",
+    "functionHasTooManyArguments": "La fonction {{fnName}} accepte seulement au maximum {{maxArgs}} (obtenu {{numArgs}})",
+    "userHasPendingInvitation": "Il y a déjà une invitation en attente pour l'utilisateur avec l'email \"{{email}}\" ; il ne peut pas être invité à ce sondage jusqu'à ce qu'il l'accepte",
+    "userHasRole": "L'utilisateur donné a déjà un rôle dans ce sondage",
+    "userInvalid": "Utilisateur invalide",
+    "userIsAdmin": "L'utilisateur donné est déjà un administrateur du système",
+    "userNotAllowedToChangePref": "L'utilisateur n'est pas autorisé à changer la préférence",
+    "userNotAuthorized": "L'utilisateur {{userName}} n'est pas autorisé"
+  },
+  "systemErrors": {
+    "somethingWentWrong": "Oups ! Quelque chose a mal tourné. Essayez de rafraîchir la page."
+  }
+}
