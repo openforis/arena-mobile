@@ -1,0 +1,78 @@
+{
+  "header_title": "Arena",
+  "logged_in_as": "Logado como",
+  "role": "Função",
+  "name": "Nome",
+  "email": "Email",
+  "not_logged_in": {
+    "title": "Não autenticado",
+    "info": "Por favor, faça login no sistema",
+    "cta": "Entrar"
+  },
+  "survey": {
+    "no_survey": {
+      "title": "Nenhuma pesquisa selecionada",
+      "info": "Escolha uma pesquisa válida ou carregue uma nova",
+      "cta": "Selecionar pesquisa"
+    },
+    "no_surveys": {
+      "title": "Nenhuma pesquisa",
+      "info": "Por favor, carregue uma pesquisa válida",
+      "cta": "Carregar pesquisa"
+    },
+    "card": {
+      "active_survey": "$t(Pesquisas:pesquisa_ativa)",
+      "id": "Id",
+      "name": "Nome",
+      "language": "Idioma",
+      "selected_language": "Idioma selecionado",
+      "cycle": "Ciclo",
+      "cycle_value": "{{ cycle }} de {{ numberOfCycles }}",
+      "selected_cycle": "Ciclo selecionado",
+      "go_to_survey_options": "Ir para opções de pesquisa",
+      "number_of_records": "Contagem de registros"
+    }
+  },
+  "roles": {
+    "systemAdmin": {
+      "label": "Administrador do sistema",
+      "label_plural": "Administradores do sistema",
+      "description": "Administradores do sistema OF Arena"
+    },
+    "surveyManager": {
+      "label": "Gerente de pesquisa",
+      "label_plural": "Gerentes de pesquisa",
+      "description": "Gerentes de pesquisa OF Arena"
+    },
+    "surveyAdmin": {
+      "label": "Administrador de pesquisa",
+      "label_plural": "Administradores de pesquisa",
+      "description": "Direitos totais"
+    },
+    "surveyEditor": {
+      "label": "Editor de pesquisa",
+      "label_plural": "Editores de pesquisa",
+      "description": "Pode editar pesquisa, registros, convidar usuários"
+    },
+    "dataEditor": {
+      "label": "Editor de dados",
+      "label_plural": "Editores de dados",
+      "description": "Pode editar registros na etapa de entrada de dados"
+    },
+    "dataCleanser": {
+      "label": "Limpeza de dados",
+      "label_plural": "Limpezas de dados",
+      "description": "Pode editar registros na etapa de limpeza de dados"
+    },
+    "dataAnalyst": {
+      "label": "Analista de dados",
+      "label_plural": "Analistas de dados",
+      "description": "Pode editar registros na etapa de análise de dados"
+    },
+    "surveyGuest": {
+      "label": "Convidado da pesquisa",
+      "label_plural": "Convidados da pesquisa",
+      "description": "Pode visualizar registros"
+    }
+  }
+}

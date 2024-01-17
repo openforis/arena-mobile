@@ -1,0 +1,24 @@
+{
+  "record": {
+    "keyDuplicate": "Chave de registro duplicada",
+    "oneOrMoreInvalidValues": "Um ou mais valores são inválidos",
+    "uniqueAttributeDuplicate": "Valor duplicado",
+
+    "attribute": {
+      "customValidation": "Valor inválido",
+      "uniqueDuplicate": "Valor duplicado",
+      "valueInvalid": "Valor inválido",
+      "valueRequired": "Valor obrigatório"
+    },
+    "entity": {
+      "keyDuplicate": "Chave de entidade duplicada"
+    },
+    "nodes": {
+      "count": {
+        "invalid": "Os nós {{nodeDefName}} devem ser exatamente {{count}}",
+        "maxExceeded": "Os nós {{nodeDefName}} devem ser menos ou igual a {{maxCount}}",
+        "minNotReached": "Os nós {{nodeDefName}} devem ser mais ou igual a {{minCount}}"
+      }
+    }
+  }
+}

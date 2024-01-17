@@ -1,0 +1,31 @@
+{
+  "appErrors": {
+    "cannotGetChild": "Não é possível obter o filho \"{{childName}}\" do atributo {{name}}",
+    "cannotOverridePublishedTaxa": "Não é possível sobrescrever taxa publicada",
+    "cantUpdateStep": "Não é possível atualizar a etapa",
+    "entryDataNotFound": "Dados de entrada não encontrados: {{entryName}}",
+    "generic": "Erro inesperado: {{text}}",
+    "importingDataIntoWrongCollectSurvey": "Importando dados para a pesquisa errada. URI esperado: {{collectSurveyUri}}",
+    "invalidType": "Tipo inválido {{type}}",
+    "jobCanceledOrErrorsFound": "Trabalho cancelado ou erros encontrados; reverter transação",
+    "paramIsRequired": "Parâmetro {{param}} é obrigatório",
+    "chainCannotBeSaved": "A cadeia é inválida e não pode ser salva",
+    "unableToFindParent": "Não é possível encontrar o pai de {{name}}",
+    "unableToFindNode": "Não é possível encontrar o nó com o nome {{name}}",
+    "unableToFindSibling": "Não é possível encontrar o irmão com o nome {{name}}",
+    "undefinedFunction": "Função indefinida \"{{fnName}}\" ou tipos de parâmetros errados",
+    "invalidSyntax": "A sintaxe da expressão é inválida",
+    "unsupportedFunctionType": "Tipo de função não suportado: {{exprType}}",
+    "functionHasTooFewArguments": "A função {{fnName}} requer pelo menos {{minArgs}} (recebeu {{numArgs}})",
+    "functionHasTooManyArguments": "A função {{fnName}} aceita no máximo {{maxArgs}} (recebeu {{numArgs}})",
+    "userHasPendingInvitation": "Já existe um convite pendente para o usuário com o email \"{{email}}\"; ele/ela não pode ser convidado para esta pesquisa até que seja aceito",
+    "userHasRole": "O usuário dado já tem um papel nesta pesquisa",
+    "userInvalid": "Usuário inválido",
+    "userIsAdmin": "O usuário dado já é um administrador do sistema",
+    "userNotAllowedToChangePref": "Usuário não autorizado a alterar preferências",
+    "userNotAuthorized": "Usuário {{userName}} não está autorizado"
+  },
+  "systemErrors": {
+    "somethingWentWrong": "Opa! Algo deu errado. Tente atualizar a página."
+  }
+}

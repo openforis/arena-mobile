@@ -1,0 +1,39 @@
+{
+  "title": "Conexão",
+
+  "server_config_title": "Informações do servidor",
+  "server_config_fields": {
+    "address": "Endereço do servidor",
+    "test": "Usar: {{ url }}",
+    "prod": "Usar: {{ url }}"
+  },
+
+  "access_info_title": "Informações de acesso",
+  "access_info_fields": {
+    "username": "Nome de usuário (email)",
+    "password": "Senha"
+  },
+  "submit": "Entrar",
+  "error": {
+    "title": "Houve um erro",
+    "info": "Por favor, verifique as informações e sua conexão"
+  },
+  "server_error": {
+    "title": "Houve um erro",
+    "info": "Por favor, verifique o endereço do servidor"
+  },
+  "credentials_error": {
+    "title": "Houve um erro",
+    "info": "Por favor, verifique as credenciais fornecidas ou recupere sua senha",
+    "forgot_password": "Esqueceu sua senha?"
+  },
+  "connected_as": "Conectado como:",
+  "logout": {
+    "cta": "Sair",
+    "title": "Tem certeza sobre o Logout?",
+    "message": "",
+    "accept": "Sim, sair",
+    "dismiss": "Não",
+    "required": "logout"
+  }
+}

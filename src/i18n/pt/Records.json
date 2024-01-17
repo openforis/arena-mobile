@@ -1,0 +1,72 @@
+{
+  "selected_record_panel": {
+    "delete": {
+      "alert": {
+        "title": "Tem certeza?",
+        "message": "Você vai remover o registro {{ name }} e todas as informações relacionadas do dispositivo.",
+        "accept": "Sim, excluir",
+        "dismiss": "Não",
+        "required": "excluir"
+      }
+    },
+    "cta_delete": "Excluir este registro",
+    "cta_continue": "Continuar este registro"
+  },
+  "current_record": "Registro atual",
+  "create_new_record": "Criar novo registro",
+  "empty_key": "<Chave ausente>",
+  "empty": {
+    "title": "Sem registros",
+    "info": "Você ainda não tem nenhum registro. Crie um para começar a usar o aplicativo.",
+    "cta_label": "Criar um registro"
+  },
+  "error": {
+    "title": "Erro",
+    "info": "Houve um erro ao carregar os registros. Por favor, tente novamente mais tarde.",
+    "cta_label": "Tentar novamente"
+  },
+  "subpanel": {
+    "check_remote_records_button": {
+      "label": "Verificar status remoto"
+    },
+    "upload_data": {
+      "label": "Enviar dados locais"
+    }
+  },
+  "status": {
+    "checking": "Verificando registros...",
+    "checked": "Registros verificados",
+    "check_error": "Erro ao verificar registros"
+  },
+  "record_status": {
+    "not_in_server": "Não está no servidor",
+    "not_in_entry_step_anymore": "Não está mais na etapa de entrada",
+    "modified_download": "Modificado no servidor",
+    "modified_upload": "Modificado no dispositivo",
+    "checked": "Ok"
+  },
+  "status_connection_bar": {
+    "error": {
+      "info": "Erro de conexão com o servidor",
+      "cta_label": "Verificar configurações"
+    },
+    "success": {
+      "info": "Status remoto verificado com sucesso de: {{ serverUrl }}"
+    },
+    "info": {
+      "info": "Modo offline",
+      "cta_label": "Verificar"
+    }
+  },
+  "pull_to_refresh": "Puxe para verificar o status remoto",
+  "job_sending_records": {
+    "sending": {
+      "title": "Enviando Registros",
+      "info": "Por favor, aguarde enquanto enviamos os registros para o servidor."
+    },
+    "done": {
+      "title": "Envio bem-sucedido!",
+      "info": "Os registros foram enviados com sucesso para o servidor."      
+    }
+  }
+}
