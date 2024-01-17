@@ -8,6 +8,7 @@ import {selectors as formSelectors} from 'state/form';
 import BreadCrumb from './components/BreadCrumb';
 import EntitySelectorToggler from './components/EntitySelectorToggler';
 import _styles from './styles';
+import CloseForm from './components/CloseForm';
 
 const useBreadCrumbsUuids = () => {
   const breadCrumbs = useSelector(formSelectors.getBreadCrumbs);
@@ -62,6 +63,9 @@ const BreadCrumbs = () => {
       </View>
 
       <BreadCrumbsList />
+      <View style={styles.entitySelectorButton}>
+        <CloseForm />
+      </View>
     </View>
   );
 };
