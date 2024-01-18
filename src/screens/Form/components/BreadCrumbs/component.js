@@ -4,6 +4,7 @@ import {useSelector} from 'react-redux';
 
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as formSelectors} from 'state/form';
+import formPreferencesSelectors from 'state/form/selectors/preferences';
 
 import BreadCrumb from './components/BreadCrumb';
 import EntitySelectorToggler from './components/EntitySelectorToggler';
@@ -55,6 +56,9 @@ const BreadCrumbsList = () => {
 };
 const BreadCrumbs = () => {
   const styles = useThemedStyles(_styles);
+  const showCloseButtonInForm = useSelector(
+    formPreferencesSelectors.showCloseButtonInForm,
+  );
 
   return (
     <View style={styles.container}>
@@ -63,9 +67,11 @@ const BreadCrumbs = () => {
       </View>
 
       <BreadCrumbsList />
-      <View style={styles.entitySelectorButton}>
-        <CloseForm />
-      </View>
+      {showCloseButtonInForm && (
+        <View style={styles.entitySelectorButton}>
+          <CloseForm />
+        </View>
+      )}
     </View>
   );
 };
