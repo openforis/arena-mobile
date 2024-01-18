@@ -24,6 +24,10 @@ const preferences = handleActions(
       ...state,
       isSingleNodeView: !state.isSingleNodeView,
     }),
+    [actions.toggleShowCloseButtonInForm]: state => ({
+      ...state,
+      showCloseButtonInForm: !state.showCloseButtonInForm,
+    }),
   },
   initialState.preferences || {},
 );

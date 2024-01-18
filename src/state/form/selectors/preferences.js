@@ -26,9 +26,15 @@ const isSingleNodeView = createSelector(
   preferences => preferences?.isSingleNodeView || false,
 );
 
+const showCloseButtonInForm = createSelector(
+  getFormStatePreferences,
+  preferences => preferences?.showCloseButtonInForm || false,
+);
+
 export default {
   getHasToJump,
   getHasToLockRecordsWhenLeave,
   showDescriptions,
   isSingleNodeView,
+  showCloseButtonInForm,
 };

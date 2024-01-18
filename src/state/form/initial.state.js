@@ -15,6 +15,7 @@ const initialState = {
     hasToLockRecordsWhenLeave: true,
     showDescriptions: true,
     isSingleNodeView: false,
+    showCloseButtonInForm: true,
   },
   validation: {},
 };
