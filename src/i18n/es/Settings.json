@@ -108,6 +108,9 @@
     },
     "isSingleNodeView": {
       "title": "Mostrar formulario con un solo atributo"
+    },
+    "showCloseButtonInForm": {
+      "title": "Mostrar botón de cerrar en el formulario"
     }
   }
 }

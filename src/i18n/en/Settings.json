@@ -108,6 +108,9 @@
     },
     "isSingleNodeView": {
       "title": "Show form with only a single attribute"
+    },
+    "showCloseButtonInForm": {
+      "title": "Show close button in form"
     }
   }
 }
