@@ -28,9 +28,18 @@ const ui = handleActions(
       isEntityShowAsTable: !state.isEntityShowAsTable,
     }),
 
+    [actions.setShowMultipleEntityHome]: (
+      state,
+      {payload: {showMultipleEntityHome}},
+    ) => ({
+      ...state,
+      showMultipleEntityHome,
+    }),
+
     [actions.selectEntityNode]: state => ({
       ...state,
       isEntityShowAsTable: false,
+      showMultipleEntityHome: false,
     }),
     [actions.clean]: () => initialState.ui,
     [globalActions.reset]: () => initialState.ui || {},

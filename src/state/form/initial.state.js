@@ -9,6 +9,7 @@ const initialState = {
   ui: {
     isEntitySelectorOpened: false,
     isEntityShowAsTable: false,
+    showMultipleEntityHome: false,
   },
   preferences: {
     hasToJump: false,
