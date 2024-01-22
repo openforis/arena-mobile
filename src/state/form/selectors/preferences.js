@@ -31,10 +31,16 @@ const showCloseButtonInForm = createSelector(
   preferences => preferences?.showCloseButtonInForm || false,
 );
 
+const enableMultipleEntityHome = createSelector(
+  getFormStatePreferences,
+  preferences => preferences?.enableMultipleEntityHome || false,
+);
+
 export default {
   getHasToJump,
   getHasToLockRecordsWhenLeave,
   showDescriptions,
   isSingleNodeView,
   showCloseButtonInForm,
+  enableMultipleEntityHome,
 };
