@@ -111,6 +111,9 @@
     },
     "showCloseButtonInForm": {
       "title": "Afficher le bouton Fermer dans le formulaire"
+    },
+    "enableMultipleEntityHome": {
+      "title": "Activer l'accueil de plusieurs entités"
     }
   }
 }
