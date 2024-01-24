@@ -21,6 +21,9 @@ const CurrentLabel = () => {
 
 const CurrentPageInfo = () => {
   const {t} = useTranslation();
+  const showMultipleEntityHome = useSelector(
+    formSelectors.showMultipleEntityHome,
+  );
   return (
     <>
       <TextBase size="s" style={styles.headerTextInfo}>
@@ -28,9 +31,11 @@ const CurrentPageInfo = () => {
       </TextBase>
       <View style={styles.container}>
         <CurrentLabel />
-        <View style={styles.selectorContainer}>
-          <EntityNodeSelector theme="neutral" />
-        </View>
+        {!showMultipleEntityHome && (
+          <View style={styles.selectorContainer}>
+            <EntityNodeSelector theme="neutral" />
+          </View>
+        )}
       </View>
     </>
   );

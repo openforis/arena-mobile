@@ -6,7 +6,7 @@ import {useSelector} from 'react-redux';
 
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
-import EntitySelectorToggler from 'screens/Form/components/BreadCrumbs/components/EntitySelectorToggler';
+
 import {useIsTable} from 'screens/Form/components/EntityPage/components/common/EntityPanel/NewItemButton/component';
 import {selectors as formSelectors} from 'state/form';
 
@@ -18,7 +18,6 @@ import {useGetHasNavigation} from './Navigation/component';
 import _styles from './styles';
 import TableOption from './TableOption';
 
-const SHOW_TREE_BUTTON = false;
 const MULTILEVEL_COLLAPSE = true;
 
 const EntityPanel = () => {
@@ -28,6 +27,10 @@ const EntityPanel = () => {
   const styles = useThemedStyles(_styles);
   const isEntitySelectorOpened = useSelector(
     formSelectors.isEntitySelectorOpened,
+  );
+
+  const showMultipleEntityHome = useSelector(
+    formSelectors.showMultipleEntityHome,
   );
 
   const isTable = useIsTable();
@@ -75,14 +78,12 @@ const EntityPanel = () => {
       {collapseLevel === 0 && (
         <>
           <View style={styles.header}>
-            {SHOW_TREE_BUTTON && (
-              <EntitySelectorToggler customStyle={styles.navigationBottom} />
-            )}
             <View style={styles.textContainer}>
               <CurrentPageInfo />
               {(isTable || isMultiple) && <TableOption />}
             </View>
-            <MultipleEntityOptions />
+
+            {!showMultipleEntityHome && <MultipleEntityOptions />}
           </View>
         </>
       )}
