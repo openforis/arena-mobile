@@ -6,22 +6,35 @@ import formActions from 'state/form/actionCreators';
 import formSelectors from 'state/form/selectors';
 
 import handleCreateEntity from '../createEntity';
+import {NodeDefs} from '@openforis/arena-core';
+
+function* closeIfTablet() {
+  const isTablet = yield select(appSelectors.getIsTablet);
+
+  if (isTablet) {
+    yield put(formActions.closeEntitySelector());
+  }
+}
 
 function* navigateToNode(payload = {}) {
-  const {node = false} = payload;
+  const {node = false, nodeDef = false} = payload;
   if (!Objects.isEmpty(node)) {
     yield put(
       formActions.setParentEntityNode({
         node,
       }),
     );
+    if (NodeDefs.isMultiple(nodeDef)) {
+      yield put(
+        formActions.setShowMultipleEntityHome({
+          showMultipleEntityHome: true,
+        }),
+      );
+    }
   }
-  const isTablet = yield select(appSelectors.getIsTablet);
-
-  if (!isTablet) {
-    yield put(formActions.closeEntitySelector());
-  }
+  yield call(closeIfTablet);
 }
+
 const navigateToTheSame = navigateToNode;
 const navigateToAncestor = navigateToNode;
 const navigateToAncestorDescendant = navigateToNode;
@@ -46,7 +59,10 @@ function* handleSelectEntity({payload}) {
 
   // we move to some direct ancestor
   if (nodeInHierarchyWithNodeDefSelected) {
-    yield call(navigateToAncestor, {node: nodeInHierarchyWithNodeDefSelected});
+    yield call(navigateToAncestor, {
+      node: nodeInHierarchyWithNodeDefSelected,
+      nodeDef,
+    });
     return;
   }
 
@@ -61,7 +77,7 @@ function* handleSelectEntity({payload}) {
 
   // the children exists
   if (childEntityNode) {
-    yield call(navigateToDescendant, {node: childEntityNode});
+    yield call(navigateToDescendant, {node: childEntityNode, nodeDef});
     return;
   }
 
@@ -84,15 +100,15 @@ function* handleSelectEntity({payload}) {
         payload: {nodeDef, forceCreationIfSiblingExists: false},
       });
     } else {
-      yield call(navigateToAncestorDescendant, {node: ancestorDescentantNode});
+      yield call(navigateToAncestorDescendant, {
+        node: ancestorDescentantNode,
+        nodeDef,
+      });
       return;
     }
   }
 
-  const isTablet = yield select(appSelectors.getIsTablet);
-  if (!isTablet) {
-    yield put(formActions.closeEntitySelector());
-  }
+  yield call(closeIfTablet);
 }
 
 export default handleSelectEntity;
