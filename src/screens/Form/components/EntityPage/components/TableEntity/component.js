@@ -7,6 +7,7 @@ import TableComponent from 'arena-mobile-ui/components/Table';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import Label from 'form/common/Label';
 import {actions as formActions, selectors as formSelectors} from 'state/form';
+import formPreferencesSelectors from 'state/form/selectors/preferences';
 
 import Attributes from '../common/Attributes';
 import EntityPanel from '../common/EntityPanel';
@@ -14,6 +15,8 @@ import EntityPanel from '../common/EntityPanel';
 import {Row} from './components';
 import {useEntityTableData} from './hooks';
 import _styles from './styles';
+
+import MultipleEntityHome from '../common/MultipleEntityHome';
 
 const Table = () => {
   const styles = useThemedStyles(_styles);
@@ -70,7 +73,26 @@ const Table = () => {
 const TableEntity = () => {
   const styles = useThemedStyles(_styles);
   const isEntityShowAsTable = useSelector(formSelectors.isEntityShowAsTable);
+  const showMultipleEntityHome = useSelector(
+    formSelectors.showMultipleEntityHome,
+  );
+  const enableMultipleEntityHome = useSelector(
+    formPreferencesSelectors.enableMultipleEntityHome,
+  );
+  const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
 
+  if (
+    showMultipleEntityHome &&
+    parentEntityNodeDef &&
+    enableMultipleEntityHome
+  ) {
+    return (
+      <View style={styles.container}>
+        <MultipleEntityHome />
+        <EntityPanel />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       {isEntityShowAsTable ? <Table /> : <Attributes />}
