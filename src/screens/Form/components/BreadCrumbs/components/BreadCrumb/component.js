@@ -42,7 +42,7 @@ const Label = React.memo(
   },
 );
 
-const BreadCrumb = ({nodeUuid}) => {
+const BreadCrumb = ({nodeUuid, emptyNode}) => {
   const styles = useThemedStyles(_styles);
   const dispatch = useDispatch();
   const node = useSelector(state =>
@@ -52,17 +52,55 @@ const BreadCrumb = ({nodeUuid}) => {
   const handleSelect = useCallback(() => {
     dispatch(
       formActions.setParentEntityNode({
-        node,
+        node: node || emptyNode,
       }),
     );
-  }, [node, dispatch]);
+  }, [node, emptyNode, , dispatch]);
 
   return (
     <View style={styles.breadCrumbContainer}>
       <Pressable onPress={handleSelect} style={styles.container}>
-        <Label node={node} />
+        <Label node={node || emptyNode} />
       </Pressable>
     </View>
+  );
+};
+
+export const BreadCrumbMultipleHome = () => {
+  const currentParentEntityNode = useSelector(
+    formSelectors.getParentEntityNode,
+  );
+  const showMultipleEntityHome = useSelector(
+    formSelectors.showMultipleEntityHome,
+  );
+
+  const parentEntityNodeDefUuid = useSelector(
+    formSelectors.getParentEntityNodeDefUuid,
+  );
+
+  const shouldShow = useMemo(() => {
+    if (
+      showMultipleEntityHome &&
+      currentParentEntityNode.nodeDefUuid !== parentEntityNodeDefUuid
+    ) {
+      return true;
+    }
+  }, [
+    showMultipleEntityHome,
+    parentEntityNodeDefUuid,
+    currentParentEntityNode,
+  ]);
+
+  if (!shouldShow) {
+    return <></>;
+  }
+  return (
+    <BreadCrumb
+      emptyNode={{
+        uuid: null,
+        nodeDefUuid: parentEntityNodeDefUuid,
+      }}
+    />
   );
 };
 

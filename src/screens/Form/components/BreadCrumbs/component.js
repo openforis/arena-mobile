@@ -6,7 +6,7 @@ import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as formSelectors} from 'state/form';
 import formPreferencesSelectors from 'state/form/selectors/preferences';
 
-import BreadCrumb from './components/BreadCrumb';
+import BreadCrumb, {BreadCrumbMultipleHome} from './components/BreadCrumb';
 import EntitySelectorToggler from './components/EntitySelectorToggler';
 import _styles from './styles';
 import CloseForm from './components/CloseForm';
@@ -51,6 +51,7 @@ const BreadCrumbsList = () => {
       initialNumToRender={3}
       onContentSizeChange={onContentSizeChange}>
       <BreadCrumbsItems />
+      <BreadCrumbMultipleHome />
     </ScrollView>
   );
 };

@@ -1,1 +1,1 @@
-export {default, BreadCrumbAsLabel} from './component';
+export {default, BreadCrumbAsLabel, BreadCrumbMultipleHome} from './component';
