@@ -28,18 +28,17 @@ const SliderComponent = ({
   const styles = useThemedStyles(_styles);
 
   const titleStyle = useMemo(() => {
-    return StyleSheet.compose(
-      StyleSheet.compose(styles.title, customTitleStyle),
-    );
+    return StyleSheet.compose(styles.title, customTitleStyle);
   }, [styles, customTitleStyle]);
 
   const infoStyle = useMemo(() => {
-    return StyleSheet.compose(StyleSheet.compose(styles.info, customInfoStyle));
+    return StyleSheet.compose(styles.info, customInfoStyle);
   }, [styles, customInfoStyle]);
 
   const sliderContainerStyle = useMemo(() => {
     return StyleSheet.compose(
-      StyleSheet.compose(styles.sliderContainer, customSliderContainerStyle),
+      styles.sliderContainer,
+      customSliderContainerStyle,
     );
   }, [styles, customSliderContainerStyle]);
 
@@ -83,10 +82,6 @@ const SliderComponent = ({
       )}
     </>
   );
-};
-
-SliderComponent.defaultProps = {
-  isSingle: true,
 };
 
 export default SliderComponent;

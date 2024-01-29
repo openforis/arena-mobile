@@ -1,5 +1,5 @@
-import React, {useMemo} from 'react';
-import {StyleSheet} from 'react-native';
+import React, {useMemo, useCallback} from 'react';
+import {StyleSheet, Dimensions} from 'react-native';
 
 import List from 'arena-mobile-ui/components/List';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
@@ -15,6 +15,8 @@ import {
 import _styles from './styles';
 import {_basicKeyExtractor, isOdd} from './utils';
 
+const {width: WIDTH} = Dimensions.get('window');
+
 const Table = ({
   headers,
   rows,
@@ -24,14 +26,18 @@ const Table = ({
 
   /* body */
   keyRowExtractor = _basicKeyExtractor,
-  renderRow = () => undefined,
-
-  getWidth = () => null,
-  baseWidth = 150,
-
-  customStyles = {},
+  renderRow,
+  getWidth,
+  baseWidth,
+  customStyles,
 }) => {
   const baseStyles = useThemedStyles(_styles);
+
+  const minWidth = useMemo(() => {
+    if (headers.length <= 1) return WIDTH;
+    return false;
+  }, [baseStyles, customStyles]);
+
   const containerStyles = useMemo(() => {
     return StyleSheet.compose(baseStyles.container, customStyles?.container);
   }, [baseStyles, customStyles]);
@@ -52,6 +58,26 @@ const Table = ({
     return StyleSheet.compose(baseStyles.body, customStyles?.body);
   }, [baseStyles, customStyles]);
 
+  const rowStyles = useMemo(() => {
+    return StyleSheet.compose(baseStyles.row, customStyles?.row);
+  }, [baseStyles, customStyles]);
+
+  const oddRowStyles = useMemo(() => {
+    return StyleSheet.compose(
+      rowStyles,
+      StyleSheet.compose(baseStyles.oddRow, customStyles?.oddRow),
+    );
+  }, [rowStyles, baseStyles, customStyles]);
+
+  const renderRowContainer = useCallback(
+    ({item, index}) => (
+      <TableRow style={isOdd(index) ? oddRowStyles : rowStyles}>
+        {renderRow({item})}
+      </TableRow>
+    ),
+    [baseStyles, customStyles, renderRow, oddRowStyles, rowStyles],
+  );
+
   return (
     <TableContainer style={containerStyles}>
       <TableHeader style={headerStyles}>
@@ -60,7 +86,7 @@ const Table = ({
             <TableCell
               key={headerCellKeyExtractor(item)}
               style={headerCellStyles}
-              width={getWidth(item) || baseWidth}>
+              width={minWidth || getWidth(item) || baseWidth}>
               {renderHeaderCell({item})}
             </TableCell>
           ))}
@@ -70,22 +96,19 @@ const Table = ({
         <List
           data={rows}
           keyExtractor={keyRowExtractor}
-          renderItem={({item, index}) => (
-            <TableRow
-              style={[
-                baseStyles.row,
-                customStyles?.row || {},
-                ...(isOdd(index)
-                  ? [baseStyles.oddRow, customStyles?.oddRow || {}]
-                  : []),
-              ]}>
-              {renderRow({item})}
-            </TableRow>
-          )}
+          renderItem={renderRowContainer}
         />
       </TableBody>
     </TableContainer>
   );
 };
-
+Table.defaultProps = {
+  headers: [],
+  rows: [],
+  /* body */
+  renderRow: () => undefined,
+  getWidth: () => null,
+  baseWidth: 150,
+  customStyles: {},
+};
 export default Table;
