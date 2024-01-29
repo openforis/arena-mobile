@@ -6,7 +6,7 @@ import {useSelector} from 'react-redux';
 
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
-
+import formPreferencesSelectors from 'state/form/selectors/preferences';
 import {useIsTable} from 'screens/Form/components/EntityPage/components/common/EntityPanel/NewItemButton/component';
 import {selectors as formSelectors} from 'state/form';
 
@@ -31,6 +31,9 @@ const EntityPanel = () => {
 
   const showMultipleEntityHome = useSelector(
     formSelectors.showMultipleEntityHome,
+  );
+  const enableMultipleEntityHome = useSelector(
+    formPreferencesSelectors.enableMultipleEntityHome,
   );
 
   const isTable = useIsTable();
@@ -83,7 +86,9 @@ const EntityPanel = () => {
               {(isTable || isMultiple) && <TableOption />}
             </View>
 
-            {!showMultipleEntityHome && <MultipleEntityOptions />}
+            {!(enableMultipleEntityHome && showMultipleEntityHome) && (
+              <MultipleEntityOptions />
+            )}
           </View>
         </>
       )}
