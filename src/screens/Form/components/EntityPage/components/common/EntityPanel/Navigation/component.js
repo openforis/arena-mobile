@@ -3,7 +3,7 @@ import React, {useCallback, useMemo} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {isTablet} from 'react-native-device-info';
 import {useDispatch, useSelector} from 'react-redux';
-
+import formPreferencesSelectors from 'state/form/selectors/preferences';
 import {defaultCycle} from 'arena/config';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
@@ -114,6 +114,21 @@ const useGetPrev = ({parent}) => {
     formSelectors.getParentEntityNodeDef,
   );
 
+  const showMultipleEntityHome = useSelector(
+    formSelectors.showMultipleEntityHome,
+  );
+  const enableMultipleEntityHome = useSelector(
+    formPreferencesSelectors.enableMultipleEntityHome,
+  );
+
+  if (
+    enableMultipleEntityHome &&
+    NodeDefs.isMultiple(currentEntityNodeDef) &&
+    !showMultipleEntityHome
+  ) {
+    return currentEntityNodeDef;
+  }
+
   return Objects.isEmpty(parent) || parent === false
     ? false
     : getPrevNodeDef({
@@ -148,6 +163,13 @@ const useGetNext = ({parent}) => {
     currentNode.nodeDefUuid,
   );*/
 
+  const showMultipleEntityHome = useSelector(
+    formSelectors.showMultipleEntityHome,
+  );
+  const enableMultipleEntityHome = useSelector(
+    formPreferencesSelectors.enableMultipleEntityHome,
+  );
+
   const currentEntityNodeDef = useSelector(
     formSelectors.getParentEntityNodeDef,
   );
@@ -157,6 +179,15 @@ const useGetNext = ({parent}) => {
       nodeDef: currentEntityNodeDef,
       cycle,
     });
+
+    if (
+      enableMultipleEntityHome &&
+      NodeDefs.isMultiple(currentEntityNodeDef) &&
+      !showMultipleEntityHome &&
+      Objects.isEmpty(childrenIndex)
+    ) {
+      return false;
+    }
 
     if (
       !Objects.isEmpty(childrenIndex) &&
