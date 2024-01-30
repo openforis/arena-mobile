@@ -10,7 +10,7 @@ import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
 import _styles from './styles';
-
+import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 const AddIcon = <Icon name="plus" />;
 
 export const useIsTable = ({parentNodeDef} = {}) => {
@@ -31,6 +31,8 @@ const NewItemButton = ({
   customContainerStyle,
   parentNodeDef = false,
   parentNode = false,
+  checkKeys = true,
+  showNodeDefLabel = false,
 }) => {
   const styles = useThemedStyles(_styles);
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
@@ -53,13 +55,18 @@ const NewItemButton = ({
   );
 
   const isTable = useIsTable({parentNodeDef: _parentEntityNodeDef});
+  const label = useNodeDefNameOrLabel({nodeDef: _parentEntityNodeDef});
 
-  if (visible && keys.length > 0) {
+  if (visible && (!checkKeys || keys.length > 0)) {
     return (
       <Button
         type={styleTheme || 'secondary'}
         icon={AddIcon}
-        label={t(isTable ? 'Form:add_new_row' : 'Form:add_new_item')}
+        label={
+          showNodeDefLabel
+            ? t('Form:add_new', {label})
+            : t(isTable ? 'Form:add_new_row' : 'Form:add_new_item')
+        }
         customContainerStyle={[
           styles.buttonContainer,
           styles.addItem,
@@ -71,7 +78,6 @@ const NewItemButton = ({
       />
     );
   }
-  return <></>;
 };
 
 export default NewItemButton;
