@@ -5,13 +5,12 @@ import appSelectors from 'state/app/selectors';
 import formActions from 'state/form/actionCreators';
 import formSelectors from 'state/form/selectors';
 
-import handleCreateEntity from '../createEntity';
 import {NodeDefs} from '@openforis/arena-core';
 
 function* closeIfTablet() {
   const isTablet = yield select(appSelectors.getIsTablet);
 
-  if (isTablet) {
+  if (!isTablet) {
     yield put(formActions.closeEntitySelector());
   }
 }
@@ -24,18 +23,16 @@ function* navigateToNode(payload = {}) {
         node,
       }),
     );
-    if (NodeDefs.isMultiple(nodeDef)) {
-      yield put(
-        formActions.setShowMultipleEntityHome({
-          showMultipleEntityHome: true,
-        }),
-      );
-    }
   }
+  yield put(
+    formActions.setShowMultipleEntityHome({
+      showMultipleEntityHome: NodeDefs.isMultiple(nodeDef),
+    }),
+  );
   yield call(closeIfTablet);
 }
 
-const navigateToTheSame = navigateToNode;
+const navigateToSame = navigateToNode;
 const navigateToAncestor = navigateToNode;
 const navigateToAncestorDescendant = navigateToNode;
 const navigateToDescendant = navigateToNode;
@@ -48,7 +45,7 @@ function* handleSelectEntity({payload}) {
   const currentEntityNode = yield select(formSelectors.getParentEntityNode);
 
   if (currentEntityNode.nodeDefUuid === nodeDef.uuid) {
-    yield call(navigateToTheSame);
+    yield call(navigateToSame, {node: currentEntityNode, nodeDef});
     return;
   }
 
@@ -96,8 +93,16 @@ function* handleSelectEntity({payload}) {
     );
 
     if (Objects.isEmpty(ancestorDescentantNode)) {
-      yield call(handleCreateEntity, {
-        payload: {nodeDef, forceCreationIfSiblingExists: false},
+      const commonParentNode = hierarchy.find(
+        ancestorNode => ancestorNode.nodeDefUuid === nodeDef.parentUuid,
+      );
+
+      yield call(navigateToDescendant, {
+        nodeDef,
+        node: {
+          uuid: commonParentNode.uuid,
+          nodeDefUuid: nodeDef.uuid,
+        },
       });
     } else {
       yield call(navigateToAncestorDescendant, {

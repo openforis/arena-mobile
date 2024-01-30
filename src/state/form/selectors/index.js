@@ -503,6 +503,7 @@ export default {
   getRecordNodesByUuid,
 
   getParentEntityNodeDef,
+  getParentEntityNodeDefUuid,
   getParentEntityNode,
 
   getNode,

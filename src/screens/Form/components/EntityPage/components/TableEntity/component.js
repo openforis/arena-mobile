@@ -18,9 +18,9 @@ import _styles from './styles';
 
 import MultipleEntityHome from '../common/MultipleEntityHome';
 
-const Table = () => {
+export const Table = ({onlyKeys}) => {
   const styles = useThemedStyles(_styles);
-  const {rows, headers, getWidth} = useEntityTableData();
+  const {rows, headers, getWidth} = useEntityTableData({onlyKeys});
 
   const dispatch = useDispatch();
 
@@ -68,6 +68,10 @@ const Table = () => {
       getWidth={getWidth}
     />
   );
+};
+
+Table.defaultProps = {
+  onlyKeys: false,
 };
 
 const TableEntity = () => {

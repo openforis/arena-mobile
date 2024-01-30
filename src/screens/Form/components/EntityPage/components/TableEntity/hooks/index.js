@@ -1,12 +1,16 @@
 import {NodeDefs, NodeDefType} from '@openforis/arena-core';
 import {useCallback, useMemo} from 'react';
 import {useSelector} from 'react-redux';
-
+import {Dimensions} from 'react-native';
 import {selectors as appSelectors} from 'state/app';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
-export const useEntityTableData = () => {
+const onlyKeysFilter = nodeDef => NodeDefs.isKey(nodeDef) && !nodeDef?.analysis;
+const baseFilter = nodeDef => !nodeDef?.analysis;
+const {width: WIDTH} = Dimensions.get('window');
+
+export const useEntityTableData = ({onlyKeys}) => {
   const baseModifier = useSelector(appSelectors.getBaseModifier);
   const fontBaseModifier = useSelector(appSelectors.getFontBaseModifier);
 
@@ -20,8 +24,15 @@ export const useEntityTableData = () => {
 
   const formNodeDefs = useSelector(formSelectors.getFormAttributesNodeDefs);
 
+  const headers = useMemo(() => {
+    return formNodeDefs.filter(onlyKeys ? onlyKeysFilter : baseFilter);
+  }, [formNodeDefs, onlyKeys]);
+
   const getWidth = useCallback(
     item => {
+      if (headers.length <= 1) {
+        return WIDTH;
+      }
       let width =
         150 * Math.max(baseModifier, 1) * Math.max(fontBaseModifier, 1);
       if (item?.props?.layout) {
@@ -38,12 +49,8 @@ export const useEntityTableData = () => {
 
       return width;
     },
-    [cycle, baseModifier, fontBaseModifier],
+    [cycle, baseModifier, fontBaseModifier, headers],
   );
-
-  const headers = useMemo(() => {
-    return formNodeDefs.filter(nodeDef => !nodeDef?.analysis);
-  }, [formNodeDefs]);
 
   return {headers, rows: nodes, getWidth};
 };
