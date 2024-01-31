@@ -6,6 +6,12 @@ import handleCreateNodeAndDescendants from 'state/nodes/sagas/createNodeAndDesce
 
 function* setParentEntityNode(newNodeEntity) {
   yield put(formActions.setParentEntityNode({node: newNodeEntity}));
+
+  yield put(
+    formActions.setShowMultipleEntityHome({
+      showMultipleEntityHome: false,
+    }),
+  );
 }
 function* handleCreateEntity({payload} = {}) {
   const {nodeDef: _nodeDef = false, forceCreationIfSibilingExists = true} =
