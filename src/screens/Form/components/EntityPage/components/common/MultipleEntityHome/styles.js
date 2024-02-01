@@ -1,83 +1,23 @@
-import {StyleSheet, Dimensions, Platform} from 'react-native';
+import {StyleSheet} from 'react-native';
 
-import {ENTITY_SELECTOR_TABLET_WIDTH} from 'screens/Form/components/EntitySelector/component';
-const {width: WIDTH} = Dimensions.get('screen');
-
-const styles = ({colors, baseStyles}) =>
+const styles = ({baseStyles}) =>
   StyleSheet.create({
     container: {
-      position: 'absolute',
-      width: WIDTH,
-      backgroundColor: colors.backgroundLight,
-      bottom: 0,
-      borderTopRightRadius: baseStyles.bases.BASE_4,
-      borderTopLeftRadius: baseStyles.bases.BASE_4,
-      paddingBottom: Platform.OS === 'ios' ? baseStyles.bases.BASE_6 : 0,
-      borderColor: colors.borderColorContrast,
-      borderTopWidth: 1,
-      borderRightWidth: 1,
-      borderLeftWidth: 1,
-      left: 0,
-      minHeight:
-        baseStyles.bases.BASE_24 -
-        (Platform.OS === 'ios'
-          ? baseStyles.bases.BASE_8
-          : baseStyles.bases.BASE_12),
-      flexDirection: 'column',
-    },
-    containerCollapsed: {
-      minHeight: baseStyles.bases.BASE_24 - baseStyles.bases.BASE_8,
-    },
-    containerCollapsedSuper: {
-      width: baseStyles.bases.BASE_24,
-      left: (WIDTH - baseStyles.bases.BASE_24) / 2,
-    },
-    collapseButtonContainer: {
       flex: 1,
-      width: '100%',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
+      flexDirection: 'column',
+      paddingBottom: 100,
     },
-    collapseButton: {
-      width: baseStyles.bases.BASE_24,
-      height: baseStyles.bases.BASE_8,
-
-      justifyContent: 'center',
-      alignItems: 'center',
+    tableContainer: {
+      flex: 1,
+      flexDirection: 'column',
     },
     header: {
-      marginTop: baseStyles.bases.BASE_4,
-      backgroundColor: colors.backgroundLight,
-      padding: baseStyles.bases.BASE_4,
-      paddingTop: 0,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'flex-start',
-      flex: 1,
-      textAlign: 'left',
-    },
-    navigationBottom: {
-      marginLeft: 0,
-      marginBottom: 0,
-      marginTop: baseStyles.bases.BASE,
-    },
-    textContainer: {
       flexDirection: 'column',
-      justifyContent: 'flex-start',
-      alignItems: 'flex-start',
-    },
-    containerTabletMenuOpen: {
-      width: WIDTH - ENTITY_SELECTOR_TABLET_WIDTH,
-    },
-    button: {
-      borderRadius: baseStyles.bases.BASE,
-      backgroundColor: colors.neutralLightest,
       padding: baseStyles.bases.BASE_2,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
+    },
+    newItemsButton: {
+      width: '100%',
+      padding: baseStyles.bases.BASE_4,
       borderWidth: 0,
     },
   });
