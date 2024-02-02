@@ -111,9 +111,6 @@
     },
     "showCloseButtonInForm": {
       "title": "Show close button in form"
-    },
-    "enableMultipleEntityHome": {
-      "title": "Enable multiple entity home"
     }
   }
 }

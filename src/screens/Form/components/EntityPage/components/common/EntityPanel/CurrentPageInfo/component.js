@@ -6,7 +6,7 @@ import {useSelector} from 'react-redux';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import {selectors as formSelectors} from 'state/form';
-import formPreferencesSelectors from 'state/form/selectors/preferences';
+
 import EntityNodeSelector from '../EntityNodeSelector';
 
 import styles from './styles';
@@ -24,9 +24,7 @@ const CurrentPageInfo = () => {
   const showMultipleEntityHome = useSelector(
     formSelectors.showMultipleEntityHome,
   );
-  const enableMultipleEntityHome = useSelector(
-    formPreferencesSelectors.enableMultipleEntityHome,
-  );
+
   return (
     <>
       <TextBase size="s" style={styles.headerTextInfo}>
@@ -34,7 +32,7 @@ const CurrentPageInfo = () => {
       </TextBase>
       <View style={styles.container}>
         <CurrentLabel />
-        {!(enableMultipleEntityHome && showMultipleEntityHome) && (
+        {!showMultipleEntityHome && (
           <View style={styles.selectorContainer}>
             <EntityNodeSelector theme="neutral" />
           </View>

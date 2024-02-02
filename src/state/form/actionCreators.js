@@ -45,7 +45,7 @@ const {form} = createActions({
   }),
   [types.SET_SHOW_DESCRIPTIONS]: ({showDescriptions}) => ({showDescriptions}),
   [types.TOGGLE_SHOW_CLOSE_BUTTON_IN_FORM]: () => ({}),
-  [types.TOGGLE_ENABLE_MULTIPLE_ENTITY_HOME]: () => ({}),
+
   /* VALIDATION */
   [types.SET_VALIDATION]: ({validation}) => ({validation}),
   [types.importRecords$]: () => ({}),

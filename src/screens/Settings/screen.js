@@ -136,10 +136,6 @@ const FormSettings = () => {
     formPreferencesSelectors.showCloseButtonInForm,
   );
 
-  const enableMultipleEntityHome = useSelector(
-    formPreferencesSelectors.enableMultipleEntityHome,
-  );
-
   const _updateHasToJump = useCallback(() => {
     dispatch(formActions.setHasToJump({hasToJump: !hasToJump}));
   }, [dispatch, hasToJump]);
@@ -163,10 +159,6 @@ const FormSettings = () => {
 
   const _toggleShowCloseButtonInForm = useCallback(() => {
     dispatch(formActions.toggleShowCloseButtonInForm());
-  }, [dispatch]);
-
-  const _toggleEnableMultipleEntityHome = useCallback(() => {
-    dispatch(formActions.toggleEnableMultipleEntityHome());
   }, [dispatch]);
 
   return (
@@ -210,23 +202,12 @@ const FormSettings = () => {
         }
       />
       <SectionCard
-        position="middle"
+        position="last"
         isNavigation={false}
         onPress={_toggleShowCloseButtonInForm}
         title={t('Settings:form.showCloseButtonInForm.title')}
         iconName={
           showCloseButtonInForm ? 'checkbox-marked' : 'checkbox-blank-outline'
-        }
-      />
-      <SectionCard
-        position="last"
-        isNavigation={false}
-        onPress={_toggleEnableMultipleEntityHome}
-        title={t('Settings:form.enableMultipleEntityHome.title')}
-        iconName={
-          enableMultipleEntityHome
-            ? 'checkbox-marked'
-            : 'checkbox-blank-outline'
         }
       />
     </Section>

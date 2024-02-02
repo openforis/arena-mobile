@@ -7,7 +7,6 @@ import TableComponent from 'arena-mobile-ui/components/Table';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import Label from 'form/common/Label';
 import {actions as formActions, selectors as formSelectors} from 'state/form';
-import formPreferencesSelectors from 'state/form/selectors/preferences';
 
 import Attributes from '../common/Attributes';
 import EntityPanel from '../common/EntityPanel';
@@ -80,16 +79,10 @@ const TableEntity = () => {
   const showMultipleEntityHome = useSelector(
     formSelectors.showMultipleEntityHome,
   );
-  const enableMultipleEntityHome = useSelector(
-    formPreferencesSelectors.enableMultipleEntityHome,
-  );
+
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
 
-  if (
-    showMultipleEntityHome &&
-    parentEntityNodeDef &&
-    enableMultipleEntityHome
-  ) {
+  if (showMultipleEntityHome && parentEntityNodeDef) {
     return (
       <View style={styles.container}>
         <MultipleEntityHome />

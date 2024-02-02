@@ -17,7 +17,6 @@ const initialState = {
     showDescriptions: true,
     isSingleNodeView: false,
     showCloseButtonInForm: true,
-    enableMultipleEntityHome: false,
   },
   validation: {},
 };

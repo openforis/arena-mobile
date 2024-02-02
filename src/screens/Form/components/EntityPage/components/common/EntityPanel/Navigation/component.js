@@ -117,15 +117,8 @@ const useGetPrev = ({parent}) => {
   const showMultipleEntityHome = useSelector(
     formSelectors.showMultipleEntityHome,
   );
-  const enableMultipleEntityHome = useSelector(
-    formPreferencesSelectors.enableMultipleEntityHome,
-  );
 
-  if (
-    enableMultipleEntityHome &&
-    NodeDefs.isMultiple(currentEntityNodeDef) &&
-    !showMultipleEntityHome
-  ) {
+  if (NodeDefs.isMultiple(currentEntityNodeDef) && !showMultipleEntityHome) {
     return currentEntityNodeDef;
   }
 
@@ -166,9 +159,6 @@ const useGetNext = ({parent}) => {
   const showMultipleEntityHome = useSelector(
     formSelectors.showMultipleEntityHome,
   );
-  const enableMultipleEntityHome = useSelector(
-    formPreferencesSelectors.enableMultipleEntityHome,
-  );
 
   const currentEntityNodeDef = useSelector(
     formSelectors.getParentEntityNodeDef,
@@ -181,7 +171,6 @@ const useGetNext = ({parent}) => {
     });
 
     if (
-      enableMultipleEntityHome &&
       NodeDefs.isMultiple(currentEntityNodeDef) &&
       !showMultipleEntityHome &&
       Objects.isEmpty(childrenIndex)

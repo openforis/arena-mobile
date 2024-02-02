@@ -32,9 +32,6 @@ const EntityPanel = () => {
   const showMultipleEntityHome = useSelector(
     formSelectors.showMultipleEntityHome,
   );
-  const enableMultipleEntityHome = useSelector(
-    formPreferencesSelectors.enableMultipleEntityHome,
-  );
 
   const isTable = useIsTable();
   const _isTablet = isTablet();
@@ -83,12 +80,11 @@ const EntityPanel = () => {
           <View style={styles.header}>
             <View style={styles.textContainer}>
               <CurrentPageInfo />
-              {(isTable || isMultiple) && <TableOption />}
+              {(isTable || isMultiple) && !showMultipleEntityHome && (
+                <TableOption />
+              )}
             </View>
-
-            {!(enableMultipleEntityHome && showMultipleEntityHome) && (
-              <MultipleEntityOptions />
-            )}
+            {!showMultipleEntityHome && <MultipleEntityOptions />}
           </View>
         </>
       )}

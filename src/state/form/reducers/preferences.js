@@ -28,10 +28,6 @@ const preferences = handleActions(
       ...state,
       showCloseButtonInForm: !state.showCloseButtonInForm,
     }),
-    [actions.toggleEnableMultipleEntityHome]: state => ({
-      ...state,
-      enableMultipleEntityHome: !state.enableMultipleEntityHome,
-    }),
   },
   initialState.preferences || {},
 );

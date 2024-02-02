@@ -111,9 +111,6 @@
     },
     "showCloseButtonInForm": {
       "title": "Mostrar botón de cerrar en el formulario"
-    },
-    "enableMultipleEntityHome": {
-      "title": "Habilitar inicio de múltiples entidades"
     }
   }
 }
