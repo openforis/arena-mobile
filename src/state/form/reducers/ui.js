@@ -30,7 +30,7 @@ const ui = handleActions(
 
     [actions.setShowMultipleEntityHome]: (
       state,
-      {payload: {showMultipleEntityHome}},
+      {payload: {showMultipleEntityHome = false}},
     ) => ({
       ...state,
       showMultipleEntityHome,
