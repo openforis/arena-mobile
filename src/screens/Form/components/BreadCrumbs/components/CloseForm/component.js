@@ -13,25 +13,28 @@ import {useGetNumberOfErrors} from 'screens/Form/components/ValidationReport/hoo
 
 const EntitySelectorToggler = ({customStyle}) => {
   const dispatch = useDispatch();
-  const handleToggleEntitySelector = useCallback(() => {
-    dispatch(formActions.toggleEntitySelector());
-  }, [dispatch]);
+  const numberOfErrors = useGetNumberOfErrors();
+
+  const handleTogglePress = useCallback(
+    e => {
+      if (numberOfErrors > 0) {
+        dispatch(formActions.toggleEntitySelector());
+      } else {
+        dispatch(formActions.leaveForm());
+      }
+    },
+    [dispatch, numberOfErrors],
+  );
   const styles = useThemedStyles(_styles);
 
   const touchableStyle = [styles.entitySelectorButton, customStyle];
 
-  const numberOfErrors = useGetNumberOfErrors();
-
-  const handleLeave = useCallback(() => {
-    dispatch(formActions.leaveForm());
-  }, [dispatch]);
-
   return (
-    <Pressable onPress={numberOfErrors > 0 ? handleToggleEntitySelector : null}>
+    <Pressable onPress={handleTogglePress}>
       <TouchableIcon
         iconName="close"
         customStyle={touchableStyle}
-        onPress={numberOfErrors > 0 ? null : handleLeave}></TouchableIcon>
+        onPress={handleTogglePress}></TouchableIcon>
 
       {numberOfErrors > 0 && (
         <View style={styles.numberOfErrorsContainer}>
