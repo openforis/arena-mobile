@@ -22,4 +22,12 @@ export const mergeNoSpread = (obj, newObj) => {
   return result;
 };
 
+export const eqSet = (xs, ys) =>
+  xs.size === ys.size && [...xs].every(x => ys.has(x));
+
+export const compareArraysAsSets = (arrA, arrB) => {
+  const setA = new Set([...(arrA || [])]);
+  const setB = new Set([...(arrB || [])]);
+  return eqSet(setA, setB);
+};
 export const Objects = _Objects;

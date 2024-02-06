@@ -27,9 +27,14 @@ const Cell = ({nodeDef, nodes, ValuesRender = BaseValuesRenderer}) => {
     return styles.container({nodeDef, applicable});
   }, [styles, nodeDef, applicable]);
 
+  const nodesUuids = useMemo(() => nodes.map(node => node.uuid), [nodes]);
   return (
     <View style={containerStyle}>
-      <Validation nodeDef={nodeDef} nodes={nodes} showValidation={true} />
+      <Validation
+        nodeDef={nodeDef}
+        nodesUuids={nodesUuids}
+        showValidation={true}
+      />
       {nodes.length > 0 && (
         <ValuesRender nodes={nodes} nodeDef={nodeDef} applicable={applicable} />
       )}

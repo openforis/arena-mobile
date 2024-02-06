@@ -12,7 +12,7 @@ const MAX_NUMBER_ITEMS_FOR_CHECKBOX = 15;
 
 const Preview = ({nodeDef}) => {
   const cycle = useSelector(surveySelectors.getSurveyCycle);
-  const {categoryItems} = useCode({nodeDef});
+  const {categoryItems} = useCode(nodeDef);
 
   if (
     NodeDefs.getLayoutRenderType(cycle)(nodeDef) === 'checkbox' &&

@@ -15,9 +15,7 @@ import {useCode} from '../../hooks';
 const CodeDropdownMultiple = ({nodeDef}) => {
   const {t} = useTranslation();
 
-  const {nodes, categoryItems, getCategoryItemLabel} = useCode({
-    nodeDef,
-  });
+  const {nodes, categoryItems, getCategoryItemLabel} = useCode(nodeDef);
 
   const disabled = useSelector(state =>
     formSelectors.isNodeDefDisabled(state, nodeDef),

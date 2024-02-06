@@ -378,17 +378,13 @@ const getValidationByKeys = ({keys, validation}) => {
     }, EMPTY_OBJECT);
 };
 
-const _getNodesUuids = (_, nodes) => nodes?.map(node => node.uuid) || [];
+const _getNodesUuids = (_, nodesUuids) => nodesUuids;
 
 const getValidationByNodes = createCachedSelector(
-  getValidation,
-  _getNodesUuids,
+  [getValidation, _getNodesUuids],
   (validation, nodesUuids) =>
     getValidationByKeys({keys: nodesUuids, validation}),
-)({
-  keySelector: keySelectors.mapItemsUuid,
-  cacheObject: new FifoObjectCache({cacheSize: 100}),
-});
+)(keySelectors.joinItems);
 
 const canAddNode = createCachedSelector(
   keySelectors.identity,

@@ -6,9 +6,7 @@ import BaseCell from 'form/Attributes/common/Base/Cell';
 import {useCode} from '../Preview/hooks';
 
 const BaseValuesRenderer = ({nodeDef, nodes}) => {
-  const {categoryItems, getCategoryItemLabel} = useCode({
-    nodeDef,
-  });
+  const {categoryItems, getCategoryItemLabel} = useCode(nodeDef);
 
   return (
     <TextBase numberOfLines={1}>

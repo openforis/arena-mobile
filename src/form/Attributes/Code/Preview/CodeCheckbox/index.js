@@ -10,9 +10,7 @@ import OptionChip from '../components/OptionChip';
 import {useCode} from '../hooks';
 
 const CodeCheckbox = ({nodeDef}) => {
-  const {nodes, categoryItems, getCategoryItemLabel} = useCode({
-    nodeDef,
-  });
+  const {nodes, categoryItems, getCategoryItemLabel} = useCode(nodeDef);
 
   const codeActions = useNodeFormActions({nodeDef});
 

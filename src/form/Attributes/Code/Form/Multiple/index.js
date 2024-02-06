@@ -71,9 +71,7 @@ const FormCodeMultiple = ({nodeDef}) => {
     categoryItemsByUuid,
     getCategoryItemLabel,
     getCategoryItemDescription,
-  } = useCode({
-    nodeDef,
-  });
+  } = useCode(nodeDef);
 
   const {
     searchText,
