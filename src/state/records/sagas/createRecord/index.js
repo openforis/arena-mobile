@@ -38,6 +38,7 @@ function* handleCreateRecord() {
 
     record = yield call(_createRecord, {survey, user, cycle});
 
+    delete record.nodes;
     yield put(recordsActions.setRecord({record, isCreating: true}));
   } catch (error) {
     console.log('Error', error);

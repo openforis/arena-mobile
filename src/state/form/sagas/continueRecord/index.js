@@ -26,8 +26,6 @@ function* handleContinueRecord({payload}) {
         put(nodesActions.setNodes({nodes})),
       ]);
 
-      yield put(formActions.setRecord({record: _record}));
-
       const rootNodeDef = yield select(surveySelectors.getNodeDefRoot);
 
       const rootNode = yield select(state =>
