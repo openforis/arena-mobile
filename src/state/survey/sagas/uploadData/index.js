@@ -112,7 +112,7 @@ function* handlePrepareFilesData() {
 
         const fileContent = yield call(fileUtils.getFileContent, _file);
 
-        filesArr.push({
+        const fileToAppend = {
           uuid: _file.uuid,
           props: {
             ..._file.meta,
@@ -120,7 +120,12 @@ function* handlePrepareFilesData() {
             nodeUuid: _file.nodeUuid,
             recordUuid: _file.recordUuid,
           },
-        });
+        };
+
+        // we must to avoid the uri to send to the backend
+        delete fileToAppend.props.uri;
+
+        filesArr.push(fileToAppend);
 
         yield call(fs.writeFile, {
           filePath: `${FILES_BASE_PATH}/${_file.uuid}.bin`,
