@@ -15,7 +15,11 @@ export const deleteValueByKey =
 
 export const mergeSpread = (obj, newObj) => ({...obj, ...newObj});
 export const mergeNoSpread = (obj, newObj) => {
+  if (Objects.isEmpty(newObj)) return obj;
+  if (Objects.isEmpty(obj)) return newObj;
+
   const result = {...obj};
+
   Object.keys(newObj).forEach(key => {
     result[key] = newObj[key];
   });

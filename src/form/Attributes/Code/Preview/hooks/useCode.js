@@ -6,6 +6,8 @@ import {selectors as formSelectors} from 'state/form';
 import {selectors as nodesSelectors} from 'state/nodes';
 import surveySelectors from 'state/survey/selectors';
 
+import {Objects} from 'infra/objectUtils';
+
 const getCategoryItemLabel = (nodeDef, cycle, language) => categoryItem => {
   const {codeShown: hasToShowCode = true} =
     NodeDefs.getLayoutProps(cycle)(nodeDef);
@@ -25,7 +27,7 @@ export const useCodeWithNode = (nodeDef, node) => {
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const survey = useSelector(surveySelectors.getSurvey);
-  const record = useSelector(formSelectors.getFullRecord);
+  const record = useSelector(formSelectors.getFullRecord, Objects.shallowEqual);
 
   const nodeCategoryItems = useSelector(state =>
     surveySelectors.getNodeCategoryItems(state, nodeDef.uuid, node),

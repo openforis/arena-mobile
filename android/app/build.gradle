@@ -139,7 +139,7 @@ android {
         applicationId "org.openforis.arena"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion 
-        versionCode 120
+        versionCode 125
         versionName "1.0.33"
 
 

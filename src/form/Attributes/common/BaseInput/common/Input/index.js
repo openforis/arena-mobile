@@ -17,7 +17,7 @@ const isMultiline = nodeDef => nodeDef?.props?.textInputType === 'multiLine';
 
 // text default
 // float numeric  ios: decimal-pad
-// integer numeric, ios: number-pad
+// integer numeric, ios: number-pad / numbers-and-punctuation
 const FormInput = ({
   debouncedUpdate,
   handleSubmitEnter,

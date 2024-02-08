@@ -170,7 +170,10 @@ const Validation = React.memo(
 );
 
 const useValidationCount = ({parentEntityNode, nodeDef}) => {
-  const validation = useSelector(formSelectors.getValidation);
+  const validation = useSelector(
+    formSelectors.getValidation,
+    Objects.shallowEqual,
+  );
   const validationCount = RecordValidations.getValidationChildrenCount({
     nodeParentUuid: parentEntityNode?.uuid,
     nodeDefChildUuid: nodeDef.uuid,
