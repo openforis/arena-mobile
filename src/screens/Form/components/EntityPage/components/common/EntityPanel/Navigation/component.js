@@ -155,14 +155,14 @@ const useGetNext = ({parent}) => {
   const currentNodeDefIndex = formNodeDefsUuids.indexOf(
     currentNode.nodeDefUuid,
   );*/
+  const currentEntityNodeDef = useSelector(
+    formSelectors.getParentEntityNodeDef,
+  );
 
   const showMultipleEntityHome = useSelector(
     formSelectors.showMultipleEntityHome,
   );
 
-  const currentEntityNodeDef = useSelector(
-    formSelectors.getParentEntityNodeDef,
-  );
   const nodeDef = useMemo(() => {
     const childrenIndex = getNodeDefIndex({
       survey,
@@ -174,6 +174,14 @@ const useGetNext = ({parent}) => {
       NodeDefs.isMultiple(currentEntityNodeDef) &&
       !showMultipleEntityHome &&
       Objects.isEmpty(childrenIndex)
+    ) {
+      return false;
+    }
+
+    if (
+      NodeDefs.isMultiple(currentEntityNodeDef) &&
+      showMultipleEntityHome &&
+      parentNode.nodeDefUuid !== currentEntityNodeDef.uuid
     ) {
       return false;
     }

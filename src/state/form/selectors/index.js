@@ -239,19 +239,22 @@ const getBreadCrumbs = createCachedSelector(
 const getNodeDefNodes = createCachedSelector(
   getRecordNodes,
   keySelectors.identity,
-  (nodes, nodeDef) => nodes.filter(node => node.nodeDefUuid === nodeDef.uuid),
+  (nodes, nodeDef) => {
+    return nodes.filter(node => node.nodeDefUuid === nodeDef.uuid);
+  },
 )((_state_, nodeDef) => nodeDef.uuid);
 
 const getNodeDefNodesInHierarchy = createCachedSelector(
   getRecordNodes,
   getHierarchyUuid,
   keySelectors.identity,
-  (nodes, hierarchyUuids, nodeDef) =>
-    nodes.filter(
+  (nodes, hierarchyUuids, nodeDef) => {
+    return nodes.filter(
       node =>
         node.nodeDefUuid === nodeDef?.uuid &&
         hierarchyUuids.includes(node.parentUuid),
-    ),
+    );
+  },
 )((_state_, nodeDef) => nodeDef?.uuid || '__');
 
 const getEntityKey = createCachedSelector(

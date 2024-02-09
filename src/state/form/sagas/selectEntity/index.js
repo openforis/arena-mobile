@@ -100,7 +100,7 @@ function* handleSelectEntity({payload}) {
       yield call(navigateToDescendant, {
         nodeDef,
         node: {
-          uuid: commonParentNode.uuid,
+          uuid: commonParentNode?.uuid,
           nodeDefUuid: nodeDef.uuid,
         },
       });
