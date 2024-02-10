@@ -39,6 +39,8 @@
 	<string>Camera permissions are needed to get images to be uploaded to the survey</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location is needed to fill the form when needed</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Your location is needed to fill the form when needed</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Microphone is needed to record audio or video needed on some surveys</string>
 	<key>NSPhotoLibraryUsageDescription</key>
