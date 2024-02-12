@@ -55,7 +55,7 @@ const BreadCrumb = ({nodeUuid, emptyNode}) => {
         node: node || emptyNode,
       }),
     );
-  }, [node, emptyNode, , dispatch]);
+  }, [node, emptyNode, dispatch]);
 
   return (
     <View style={styles.breadCrumbContainer}>
