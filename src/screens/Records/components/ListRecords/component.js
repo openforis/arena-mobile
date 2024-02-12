@@ -51,8 +51,9 @@ const FooterComponent = () => {
     </View>
   );
 };
+const keyExtractor = item => item;
+
 const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
-  const keyExtractor = useCallback(item => item, []);
   const dispatch = useDispatch();
 
   const recordsSummary = useRecordsSummary();
@@ -82,7 +83,7 @@ const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
   );
 
   const loading = useSelector(recordSelectors.getIsGettingRemoteRecordsSummary);
-  if (recordUuids.length <= 0) {
+  if (recordUuids?.length <= 0) {
     return <ListEmptyComponent />;
   }
 
@@ -99,7 +100,7 @@ const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
         ListFooterComponent={FooterComponent}
       />
 
-      {recordUuids.length > 0 && <SubPanel />}
+      {recordUuids?.length > 0 && <SubPanel />}
     </>
   );
 };

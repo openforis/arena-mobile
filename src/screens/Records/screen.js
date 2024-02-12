@@ -10,6 +10,7 @@ import NavigateToHome from 'navigation/components/NavigateToHome';
 
 import ListRecords from './components/ListRecords';
 import SelectedRecordPanel from './components/SelectedRecordPanel';
+import RemoveAllSurveyData from './components/RemoveAllSurveyData';
 import _styles from './styles';
 
 const Records = () => {
@@ -24,7 +25,9 @@ const Records = () => {
   return (
     <Layout bottomSafeArea={false}>
       <>
-        <Header LeftComponent={NavigateToHome}>
+        <Header
+          LeftComponent={NavigateToHome}
+          RightComponent={<RemoveAllSurveyData />}>
           <TextTitle>{t('Common:records')}</TextTitle>
         </Header>
 
