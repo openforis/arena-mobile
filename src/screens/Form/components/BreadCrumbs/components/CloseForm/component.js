@@ -15,16 +15,13 @@ const EntitySelectorToggler = ({customStyle}) => {
   const dispatch = useDispatch();
   const numberOfErrors = useGetNumberOfErrors();
 
-  const handleTogglePress = useCallback(
-    e => {
-      if (numberOfErrors > 0) {
-        dispatch(formActions.toggleEntitySelector());
-      } else {
-        dispatch(formActions.leaveForm());
-      }
-    },
-    [dispatch, numberOfErrors],
-  );
+  const handleTogglePress = useCallback(() => {
+    if (numberOfErrors > 0) {
+      dispatch(formActions.toggleEntitySelector());
+    } else {
+      dispatch(formActions.leaveForm());
+    }
+  }, [dispatch, numberOfErrors]);
   const styles = useThemedStyles(_styles);
 
   const touchableStyle = [styles.entitySelectorButton, customStyle];
@@ -43,10 +40,6 @@ const EntitySelectorToggler = ({customStyle}) => {
       )}
     </Pressable>
   );
-};
-
-EntitySelectorToggler.defaultProps = {
-  customStyle: null,
 };
 
 export default EntitySelectorToggler;
