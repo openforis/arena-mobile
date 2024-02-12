@@ -9,6 +9,7 @@ const addEntity = (
     currentIndex,
     selectedNodeIndex,
     selectedNodeDefUuid,
+    showMultipleEntityHome = false,
   },
   _prevState = {},
 ) => {
@@ -16,6 +17,10 @@ const addEntity = (
     ..._prevState,
     form: {
       ..._prevState.form,
+      ui: {
+        ..._prevState.form.ui,
+        showMultipleEntityHome,
+      },
       data: {
         ..._prevState.form.data,
         parentEntityNode: getCurrentUuid(selectedNodeIndex || currentIndex),

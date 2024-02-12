@@ -31,6 +31,11 @@ const {form} = createActions({
   [types.CLOSE_ENTITY_SELECTOR]: () => ({}),
   [types.TOGGLE_ENTITY_SHOW_AS_TABLE]: () => ({}),
   [types.TOGGLE_SINGLE_NODE_VIEW]: () => ({}),
+  [types.SET_SHOW_MULTIPLE_ENTITY_HOME]: ({
+    showMultipleEntityHome = false,
+  }) => ({
+    showMultipleEntityHome,
+  }),
   /* PREFS */
   [types.SET_HAS_TO_JUMP]: ({hasToJump}) => ({hasToJump}),
   [types.SET_HAS_TO_LOCK_RECORDS_WHEN_LEAVE]: ({
@@ -39,6 +44,8 @@ const {form} = createActions({
     hasToLockRecordsWhenLeave,
   }),
   [types.SET_SHOW_DESCRIPTIONS]: ({showDescriptions}) => ({showDescriptions}),
+  [types.TOGGLE_SHOW_CLOSE_BUTTON_IN_FORM]: () => ({}),
+
   /* VALIDATION */
   [types.SET_VALIDATION]: ({validation}) => ({validation}),
   [types.importRecords$]: () => ({}),

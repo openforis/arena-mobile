@@ -15,6 +15,7 @@ const Icon = ({name, size, color}) => {
       name={name}
       size={isNaN(size) ? styles.sizes[size] : size}
       color={color || styles.colors.primaryText}
+      style={styles.icon}
     />
   );
 };

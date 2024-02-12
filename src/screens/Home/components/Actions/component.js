@@ -66,7 +66,7 @@ const Actions = () => {
         <Button
           type="secondary"
           label={t('Actions:records', {count: numberOfRecords})}
-          onPress={navigateTo({route: routes.RECORDS})}
+          onPress={navigateTo({route: routes.RECORDS, replace: true})}
         />
       )}
       {numberOfErrors > 0 && (
@@ -87,7 +87,7 @@ const Actions = () => {
         <Button
           type="primary"
           label={t('Actions:continue_record')}
-          onPress={navigateTo({route: routes.FORM})}
+          onPress={navigateTo({route: routes.FORM, replace: false})}
         />
       ) : (
         <Button

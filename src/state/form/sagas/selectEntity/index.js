@@ -5,10 +5,18 @@ import appSelectors from 'state/app/selectors';
 import formActions from 'state/form/actionCreators';
 import formSelectors from 'state/form/selectors';
 
-import handleCreateEntity from '../createEntity';
+import {NodeDefs} from '@openforis/arena-core';
+
+function* closeIfTablet() {
+  const isTablet = yield select(appSelectors.getIsTablet);
+
+  if (!isTablet) {
+    yield put(formActions.closeEntitySelector());
+  }
+}
 
 function* navigateToNode(payload = {}) {
-  const {node = false} = payload;
+  const {node = false, nodeDef = false} = payload;
   if (!Objects.isEmpty(node)) {
     yield put(
       formActions.setParentEntityNode({
@@ -16,13 +24,15 @@ function* navigateToNode(payload = {}) {
       }),
     );
   }
-  const isTablet = yield select(appSelectors.getIsTablet);
-
-  if (!isTablet) {
-    yield put(formActions.closeEntitySelector());
-  }
+  yield put(
+    formActions.setShowMultipleEntityHome({
+      showMultipleEntityHome: NodeDefs.isMultiple(nodeDef),
+    }),
+  );
+  yield call(closeIfTablet);
 }
-const navigateToTheSame = navigateToNode;
+
+const navigateToSame = navigateToNode;
 const navigateToAncestor = navigateToNode;
 const navigateToAncestorDescendant = navigateToNode;
 const navigateToDescendant = navigateToNode;
@@ -35,7 +45,7 @@ function* handleSelectEntity({payload}) {
   const currentEntityNode = yield select(formSelectors.getParentEntityNode);
 
   if (currentEntityNode.nodeDefUuid === nodeDef.uuid) {
-    yield call(navigateToTheSame);
+    yield call(navigateToSame, {node: currentEntityNode, nodeDef});
     return;
   }
 
@@ -46,7 +56,10 @@ function* handleSelectEntity({payload}) {
 
   // we move to some direct ancestor
   if (nodeInHierarchyWithNodeDefSelected) {
-    yield call(navigateToAncestor, {node: nodeInHierarchyWithNodeDefSelected});
+    yield call(navigateToAncestor, {
+      node: nodeInHierarchyWithNodeDefSelected,
+      nodeDef,
+    });
     return;
   }
 
@@ -61,7 +74,7 @@ function* handleSelectEntity({payload}) {
 
   // the children exists
   if (childEntityNode) {
-    yield call(navigateToDescendant, {node: childEntityNode});
+    yield call(navigateToDescendant, {node: childEntityNode, nodeDef});
     return;
   }
 
@@ -80,19 +93,27 @@ function* handleSelectEntity({payload}) {
     );
 
     if (Objects.isEmpty(ancestorDescentantNode)) {
-      yield call(handleCreateEntity, {
-        payload: {nodeDef, forceCreationIfSiblingExists: false},
+      const commonParentNode = hierarchy.find(
+        ancestorNode => ancestorNode.nodeDefUuid === nodeDef.parentUuid,
+      );
+
+      yield call(navigateToDescendant, {
+        nodeDef,
+        node: {
+          uuid: commonParentNode.uuid,
+          nodeDefUuid: nodeDef.uuid,
+        },
       });
     } else {
-      yield call(navigateToAncestorDescendant, {node: ancestorDescentantNode});
+      yield call(navigateToAncestorDescendant, {
+        node: ancestorDescentantNode,
+        nodeDef,
+      });
       return;
     }
   }
 
-  const isTablet = yield select(appSelectors.getIsTablet);
-  if (!isTablet) {
-    yield put(formActions.closeEntitySelector());
-  }
+  yield call(closeIfTablet);
 }
 
 export default handleSelectEntity;

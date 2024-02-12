@@ -15,9 +15,11 @@ import {Row} from './components';
 import {useEntityTableData} from './hooks';
 import _styles from './styles';
 
-const Table = () => {
+import MultipleEntityHome from '../common/MultipleEntityHome';
+
+export const Table = ({onlyKeys}) => {
   const styles = useThemedStyles(_styles);
-  const {rows, headers, getWidth} = useEntityTableData();
+  const {rows, headers, getWidth} = useEntityTableData({onlyKeys});
 
   const dispatch = useDispatch();
 
@@ -67,10 +69,27 @@ const Table = () => {
   );
 };
 
+Table.defaultProps = {
+  onlyKeys: false,
+};
+
 const TableEntity = () => {
   const styles = useThemedStyles(_styles);
   const isEntityShowAsTable = useSelector(formSelectors.isEntityShowAsTable);
+  const showMultipleEntityHome = useSelector(
+    formSelectors.showMultipleEntityHome,
+  );
 
+  const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
+
+  if (showMultipleEntityHome && parentEntityNodeDef) {
+    return (
+      <View style={styles.container}>
+        <MultipleEntityHome />
+        <EntityPanel />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       {isEntityShowAsTable ? <Table /> : <Attributes />}

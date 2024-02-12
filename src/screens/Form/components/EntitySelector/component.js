@@ -15,7 +15,7 @@ import BackgroundPattern from 'arena-mobile-ui/components/BackgroundPattern';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
-import ToggleShowNames from 'arena-mobile-ui/components/ToggleShowNames';
+
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
@@ -125,9 +125,6 @@ const EntitySelector = () => {
             type="ghost"
             onPress={handleLeave}
           />
-          <View>
-            <ToggleShowNames />
-          </View>
         </View>
         <BackgroundPattern />
       </Animated.View>

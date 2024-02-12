@@ -352,6 +352,11 @@ const isEntityShowAsTable = createSelector(
   ui => ui?.isEntityShowAsTable || false,
 );
 
+const showMultipleEntityHome = createSelector(
+  getFormStateUi,
+  ui => ui?.showMultipleEntityHome || false,
+);
+
 // --- Validation
 const getValidation = createSelector(
   getFormState,
@@ -498,6 +503,7 @@ export default {
   getRecordNodesByUuid,
 
   getParentEntityNodeDef,
+  getParentEntityNodeDefUuid,
   getParentEntityNode,
 
   getNode,
@@ -531,6 +537,7 @@ export default {
   // ---- UI
   isEntitySelectorOpened,
   isEntityShowAsTable,
+  showMultipleEntityHome,
 
   // ---- Validation
   getValidation,

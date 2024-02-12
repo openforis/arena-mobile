@@ -132,6 +132,9 @@ const FormSettings = () => {
   const isSingleNodeView = useSelector(
     formPreferencesSelectors.isSingleNodeView,
   );
+  const showCloseButtonInForm = useSelector(
+    formPreferencesSelectors.showCloseButtonInForm,
+  );
 
   const _updateHasToJump = useCallback(() => {
     dispatch(formActions.setHasToJump({hasToJump: !hasToJump}));
@@ -153,6 +156,11 @@ const FormSettings = () => {
   const _toggleIsSingleNodeView = useCallback(() => {
     dispatch(formActions.toggleSingleNodeView());
   }, [dispatch]);
+
+  const _toggleShowCloseButtonInForm = useCallback(() => {
+    dispatch(formActions.toggleShowCloseButtonInForm());
+  }, [dispatch]);
+
   return (
     <Section title={t('Settings:form.title')}>
       <SectionCard
@@ -185,12 +193,21 @@ const FormSettings = () => {
         />
       )}
       <SectionCard
-        position="last"
+        position="middle"
         isNavigation={false}
         onPress={_updateShowDescriptions}
         title={t('Settings:form.showDescriptions.title')}
         iconName={
           showDescriptions ? 'checkbox-marked' : 'checkbox-blank-outline'
+        }
+      />
+      <SectionCard
+        position="last"
+        isNavigation={false}
+        onPress={_toggleShowCloseButtonInForm}
+        title={t('Settings:form.showCloseButtonInForm.title')}
+        iconName={
+          showCloseButtonInForm ? 'checkbox-marked' : 'checkbox-blank-outline'
         }
       />
     </Section>

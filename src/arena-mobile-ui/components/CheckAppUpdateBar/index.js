@@ -10,10 +10,13 @@ import {useGetAppHasUpdateAvailable} from './hooks';
 const UpdateNeeded = () => {
   const {t} = useTranslation('UpdateNeeded');
 
-  const {isNeeded: isAppUpdateNeeded, storeUrl = false} =
-    useGetAppHasUpdateAvailable({
-      forceUpdate: true,
-    });
+  const updateAvailable = useGetAppHasUpdateAvailable({
+    forceUpdate: true,
+  });
+
+  const {isNeeded: isAppUpdateNeeded, storeUrl = false} = updateAvailable || {
+    isNeeded: false,
+  };
 
   const onStoreButtonPressed = useCallback(() => {
     storeUrl && Linking.openURL(storeUrl);

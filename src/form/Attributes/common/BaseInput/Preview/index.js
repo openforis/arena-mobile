@@ -26,4 +26,7 @@ const Preview = ({nodeDef}) => (
   <BasePreview nodeDef={nodeDef} NodeValueRender={NodeValueRender} />
 );
 
-export default Preview;
+export default React.memo(
+  Preview,
+  (prevProps, nextProps) => prevProps.nodeDef.uuid === nextProps.nodeDef.uuid,
+);

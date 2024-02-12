@@ -96,6 +96,11 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
             color="#182112"
             name="chevron-left"
             size={24}
+            style={
+              {
+                "paddingHorizontal": 8,
+              }
+            }
           />
         </View>
       </View>
@@ -445,6 +450,11 @@ exports[`<NavigationContainer /> should match snapshot 1`] = `
                       color="#182112"
                       name="eye-off-outline"
                       size={24}
+                      style={
+                        {
+                          "paddingHorizontal": 8,
+                        }
+                      }
                     />
                   </View>
                 </View>

@@ -152,11 +152,16 @@ describe('Survey > Cluster, Plot, Tree', () => {
                             |
                             +----- **TREE_UUID[7]** -> (TREE_KEY_UUID[8])
     */
-  it('Select Tree               ( 1[1[1*]] )', async () => {
+  it('Select Tree & Create Children              ( 1[1[1*]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
-      {type: 'tree', nodeIndex: 7, parentIndex: 5},
+      {
+        type: 'tree',
+        nodeIndex: 7,
+        parentIndex: 5,
+        showMultipleEntityHome: false,
+      },
       addEntity({type: 'tree', parentIndex: 5, currentIndex: 7}, prevState),
     );
 
@@ -164,6 +169,9 @@ describe('Survey > Cluster, Plot, Tree', () => {
       .withReducer(appReducers, prevState)
       .dispatch(
         formActions.selectEntity({nodeDef: mockSurvey.nodeDefs.TREE_UUID}),
+      )
+      .dispatch(
+        formActions.createEntity({nodeDef: mockSurvey.nodeDefs.TREE_UUID}),
       )
       .silentRun();
 
@@ -198,7 +206,11 @@ describe('Survey > Cluster, Plot, Tree', () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = addEntity(
-      {type: 'tree', parentIndex: 5, currentIndex: 9},
+      {
+        type: 'tree',
+        parentIndex: 5,
+        currentIndex: 9,
+      },
       prevState,
     );
 
@@ -338,7 +350,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
             |               |
             |               +----- **TREE_UUID[13]** -> (TREE_KEY_UUID[14])
     */
-  it('Select Tree               ( 1[1[1,2],2[1*]] )', async () => {
+  it('Select Tree  && Create           ( 1[1[1,2],2[1*]] )', async () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
@@ -350,6 +362,9 @@ describe('Survey > Cluster, Plot, Tree', () => {
       .withReducer(appReducers, prevState)
       .dispatch(
         formActions.selectEntity({nodeDef: mockSurvey.nodeDefs.TREE_UUID}),
+      )
+      .dispatch(
+        formActions.createEntity({nodeDef: mockSurvey.nodeDefs.TREE_UUID}),
       )
       .silentRun();
 
@@ -632,7 +647,12 @@ describe('Survey > Cluster, Plot, Tree', () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
-      {type: 'tree', nodeIndex: 7, parentIndex: 5},
+      {
+        type: 'tree',
+        nodeIndex: 7,
+        parentIndex: 5,
+        showMultipleEntityHome: true,
+      },
       prevState,
     );
 
@@ -690,7 +710,11 @@ describe('Survey > Cluster, Plot, Tree', () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
-      {type: 'plot', nodeIndex: 5, parentIndex: 2},
+      {
+        type: 'tree',
+        nodeIndex: 5,
+        showMultipleEntityHome: true,
+      },
       deleteNodes(
         {nodeIndexesToDelete: [getCurrentUuid(7), getCurrentUuid(8)]},
         prevState,
@@ -751,7 +775,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
-      {type: 'cluster', nodeIndex: 2, parentIndex: null},
+      {type: 'plot', nodeIndex: 2, showMultipleEntityHome: true},
       deleteNodes(
         {
           nodeIndexesToDelete: [
@@ -811,7 +835,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
-      {type: 'cluster', nodeIndex: 2},
+      {type: 'plot', nodeIndex: 2, showMultipleEntityHome: true},
       deleteNodes(
         {
           nodeIndexesToDelete: [
@@ -915,6 +939,9 @@ describe('Survey > Cluster, Plot, Tree', () => {
       .dispatch(
         formActions.selectEntity({nodeDef: mockSurvey.nodeDefs.TREE_UUID}),
       )
+      .dispatch(
+        formActions.createEntity({nodeDef: mockSurvey.nodeDefs.TREE_UUID}),
+      )
       .silentRun();
 
     expect({
@@ -946,7 +973,7 @@ describe('Survey > Cluster, Plot, Tree', () => {
     prevState = Object.assign({}, expectedState);
 
     expectedState = selectNode(
-      {type: 'plot', nodeIndex: 17, parentIndex: 2},
+      {type: 'tree', nodeIndex: 17, showMultipleEntityHome: true},
       deleteNodes(
         {nodeIndexesToDelete: [getCurrentUuid(19), getCurrentUuid(20)]},
         prevState,

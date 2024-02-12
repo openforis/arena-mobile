@@ -8,7 +8,6 @@ import _styles from './styles';
 
 const MessageBar = ({
   label,
-
   type,
   customContainerStyle,
   onPress,

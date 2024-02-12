@@ -26,6 +26,31 @@ const _LANGUAGES = {
 
 const LANGUAGES = ['en', 'es', 'fr', 'pt'];
 
+const LanguageSelector = ({language, selectedLanguage, onPress}) => {
+  const styles = useThemedStyles(_styles);
+
+  return (
+    <Pressable onPress={onPress}>
+      <Card>
+        <View style={styles.cardContent}>
+          <Icon
+            name={
+              language == selectedLanguage
+                ? 'radiobox-marked'
+                : 'radiobox-blank'
+            }
+            size="m"
+          />
+          <TextBase type="header" customStyle={styles.cardTitle}>
+            {' '}
+            {_LANGUAGES[language]}
+          </TextBase>
+        </View>
+      </Card>
+    </Pressable>
+  );
+};
+
 const SettingsApplicationLanguage = () => {
   const styles = useThemedStyles(_styles);
 
@@ -63,43 +88,14 @@ const SettingsApplicationLanguage = () => {
         </Header>
         <ScrollView>
           <View style={styles.container}>
-            <Pressable onPress={handleSelectLanguage(LANGUAGES[0])}>
-              <Card>
-                <View style={styles.cardContent}>
-                  <Icon
-                    name={
-                      LANGUAGES[0] == applicationLanguage
-                        ? 'radiobox-marked'
-                        : 'radiobox-blank'
-                    }
-                    size="m"
-                  />
-                  <TextBase type="header" customStyle={styles.cardTitle}>
-                    {' '}
-                    {_LANGUAGES[LANGUAGES[0]]}
-                  </TextBase>
-                </View>
-              </Card>
-            </Pressable>
-
-            <Pressable onPress={handleSelectLanguage(LANGUAGES[1])}>
-              <Card>
-                <View style={styles.cardContent}>
-                  <Icon
-                    name={
-                      LANGUAGES[1] == applicationLanguage
-                        ? 'radiobox-marked'
-                        : 'radiobox-blank'
-                    }
-                    size="m"
-                  />
-                  <TextBase type="header" customStyle={styles.cardTitle}>
-                    {' '}
-                    {_LANGUAGES[LANGUAGES[1]]}
-                  </TextBase>
-                </View>
-              </Card>
-            </Pressable>
+            {LANGUAGES.map(language => (
+              <LanguageSelector
+                key={language}
+                language={language}
+                selectedLanguage={applicationLanguage}
+                onPress={handleSelectLanguage(language)}
+              />
+            ))}
           </View>
 
           <View style={styles.buttonsContainer}>
