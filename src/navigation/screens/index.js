@@ -9,7 +9,6 @@ import SettingsStyleColorScheme from 'screens/Settings/Screens/Style/ColorScheme
 import SettingsStyleFontBaseModifier from 'screens/Settings/Screens/Style/FontBaseModifier';
 import SettingsSurveyTaxonomies from 'screens/Settings/Screens/Survey/Taxonomies';
 import SettingsApplicationLanguage from 'screens/Settings/Screens/ApplicationLanguage';
-import Survey from 'screens/Survey';
 import Surveys from 'screens/Surveys';
 
 import {KEYS} from '../constants';
@@ -24,7 +23,6 @@ export const SCREENS = {
     component: Settings,
     options: {gestureEnabled: false},
   },
-  [KEYS.SURVEY]: {component: Survey, options: {gestureEnabled: false}},
   [KEYS.SURVEYS]: {
     component: Surveys,
     options: {gestureEnabled: false},

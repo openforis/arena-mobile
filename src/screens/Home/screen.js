@@ -23,7 +23,7 @@ const Home = () => {
   const styles = useThemedStyles(_styles);
 
   return (
-    <Layout>
+    <Layout bottomStyle="backgroundLight">
       <>
         <Header
           LeftComponent={NavigateToSettings}
