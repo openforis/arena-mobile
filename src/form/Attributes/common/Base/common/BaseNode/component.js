@@ -11,13 +11,13 @@ import Validation from 'form/common/Validation';
 import {selectors as formSelectors} from 'state/form';
 import {useSelectNodeAndNodeDef} from 'state/form/hooks/useNodeFormActions';
 import formPreferencesSelectors from 'state/form/selectors/preferences';
-
+import nodesSelectors from 'state/nodes/selectors';
 import BaseDeleteNode from '../BaseDeleteNode';
 
 import _styles from './styles';
 
 const BaseNode = ({
-  node,
+  nodeUuid,
   nodeDef,
   showValidation,
   NodeValueRender,
@@ -27,6 +27,9 @@ const BaseNode = ({
 }) => {
   const styles = useThemedStyles(_styles);
 
+  const node = useSelector(state =>
+    nodesSelectors.getNodeByUuid(state, nodeUuid),
+  );
   const disabled = useSelector(state =>
     formSelectors.isNodeDefDisabled(state, nodeDef),
   );
@@ -41,10 +44,14 @@ const BaseNode = ({
     if (!showValidation) {
       return null;
     }
+    if (!node?.uuid) {
+      return null;
+    }
+
     return (
       <Validation
         nodeDef={nodeDef}
-        nodes={[node]}
+        nodesUuids={[node.uuid]}
         showValidation={showValidation}
         absolute={true}
         parentEntityNode={parentEntityNode}
@@ -74,6 +81,7 @@ const BaseNode = ({
       </>
     );
   }, [node, nodeDef, styles, validation, keyboardType, isSingleNodeView]);
+  if (!node) return null;
   return (
     <View style={styles.baseContainer}>
       <Pressable

@@ -10,13 +10,17 @@ import {useCode} from './hooks';
 
 const MAX_NUMBER_ITEMS_FOR_CHECKBOX = 15;
 
+const useNumberOfCategoryItems = nodeDef => {
+  const {categoryItems} = useCode(nodeDef);
+  return categoryItems.length;
+};
 const Preview = ({nodeDef}) => {
   const cycle = useSelector(surveySelectors.getSurveyCycle);
-  const {categoryItems} = useCode({nodeDef});
+  const numberOfCategoryItems = useNumberOfCategoryItems(nodeDef);
 
   if (
     NodeDefs.getLayoutRenderType(cycle)(nodeDef) === 'checkbox' &&
-    categoryItems.length < MAX_NUMBER_ITEMS_FOR_CHECKBOX
+    numberOfCategoryItems < MAX_NUMBER_ITEMS_FOR_CHECKBOX
   ) {
     return <CodeCheckbox nodeDef={nodeDef} />;
   }

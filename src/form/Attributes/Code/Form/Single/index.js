@@ -11,7 +11,7 @@ import {Objects} from 'infra/objectUtils';
 import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
 
-import {useCode} from '../../Preview/hooks';
+import {useCodeWithNode} from '../../Preview/hooks';
 import {useSearch} from '../common/hooks/useSearch';
 
 import styles from './styles';
@@ -63,10 +63,7 @@ const FormCodeSingle = ({nodeDef, node}) => {
     categoryItemsByUuid,
     getCategoryItemLabel,
     getCategoryItemDescription,
-  } = useCode({
-    nodeDef,
-    node,
-  });
+  } = useCodeWithNode(nodeDef, node);
   const {
     searchText,
     searching,

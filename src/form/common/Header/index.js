@@ -29,6 +29,8 @@ export const Header = ({
     );
   }, [disabled, styles]);
 
+  const nodesUuids = useMemo(() => nodes.map(node => node.uuid), [nodes]);
+
   return (
     <View style={containerStyle}>
       <View style={styles.textsContainer}>
@@ -37,7 +39,7 @@ export const Header = ({
 
           <Validation
             nodeDef={nodeDef}
-            nodes={nodes}
+            nodesUuids={nodesUuids}
             showValidation={showValidation}
           />
         </View>

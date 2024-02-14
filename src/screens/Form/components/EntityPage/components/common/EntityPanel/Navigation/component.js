@@ -3,7 +3,6 @@ import React, {useCallback, useMemo} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {isTablet} from 'react-native-device-info';
 import {useDispatch, useSelector} from 'react-redux';
-import formPreferencesSelectors from 'state/form/selectors/preferences';
 import {defaultCycle} from 'arena/config';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
@@ -155,14 +154,14 @@ const useGetNext = ({parent}) => {
   const currentNodeDefIndex = formNodeDefsUuids.indexOf(
     currentNode.nodeDefUuid,
   );*/
+  const currentEntityNodeDef = useSelector(
+    formSelectors.getParentEntityNodeDef,
+  );
 
   const showMultipleEntityHome = useSelector(
     formSelectors.showMultipleEntityHome,
   );
 
-  const currentEntityNodeDef = useSelector(
-    formSelectors.getParentEntityNodeDef,
-  );
   const nodeDef = useMemo(() => {
     const childrenIndex = getNodeDefIndex({
       survey,
@@ -174,6 +173,14 @@ const useGetNext = ({parent}) => {
       NodeDefs.isMultiple(currentEntityNodeDef) &&
       !showMultipleEntityHome &&
       Objects.isEmpty(childrenIndex)
+    ) {
+      return false;
+    }
+
+    if (
+      NodeDefs.isMultiple(currentEntityNodeDef) &&
+      showMultipleEntityHome &&
+      parentNode.nodeDefUuid !== currentEntityNodeDef.uuid
     ) {
       return false;
     }

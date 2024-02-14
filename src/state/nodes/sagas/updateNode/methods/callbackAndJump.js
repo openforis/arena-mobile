@@ -39,7 +39,7 @@ function* callbackAndJump({currentNode, callback, shouldJump = true}) {
   }
 
   const currentNodeValidation = yield select(state =>
-    formSelectors.getValidationByNodes(state, [currentNode]),
+    formSelectors.getValidationByNodes(state, [currentNode?.uuid]),
   );
 
   if (

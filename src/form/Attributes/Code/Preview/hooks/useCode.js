@@ -1,10 +1,12 @@
 import {NodeDefs, RecordExpressionEvaluator} from '@openforis/arena-core';
-import {useCallback, useMemo} from 'react';
+import {useCallback, useMemo, useEffect} from 'react';
 import {useSelector} from 'react-redux';
 
 import {selectors as formSelectors} from 'state/form';
 import {selectors as nodesSelectors} from 'state/nodes';
 import surveySelectors from 'state/survey/selectors';
+
+import {Objects} from 'infra/objectUtils';
 
 const getCategoryItemLabel = (nodeDef, cycle, language) => categoryItem => {
   const {codeShown: hasToShowCode = true} =
@@ -21,11 +23,11 @@ const getCategoryItemDescription = language => categoryItem => {
   return descriptions?.[language] || '';
 };
 
-const useCode = ({nodeDef, node}) => {
+export const useCodeWithNode = (nodeDef, node) => {
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const survey = useSelector(surveySelectors.getSurvey);
-  const record = useSelector(formSelectors.getFullRecord);
+  const record = useSelector(formSelectors.getFullRecord, Objects.shallowEqual);
 
   const nodeCategoryItems = useSelector(state =>
     surveySelectors.getNodeCategoryItems(state, nodeDef.uuid, node),
@@ -75,6 +77,55 @@ const useCode = ({nodeDef, node}) => {
     record,
     parentNode,
   ]);
+
+  const _getCategoryItemLabel = useCallback(
+    item => getCategoryItemLabel(nodeDef, cycle, language)(item),
+    [nodeDef, cycle, language],
+  );
+
+  const _getCategoryItemDescription = useCallback(
+    item => getCategoryItemDescription(language)(item),
+    [language],
+  );
+
+  const categoryItemsByUuid = useMemo(() => {
+    const items = _categoryItems.reduce((acc, item) => {
+      acc[item.uuid] = item;
+      return acc;
+    }, {});
+    return items;
+  }, [_categoryItems]);
+
+  return {
+    nodes,
+    categoryItems: _categoryItems,
+    categoryItemsByUuid,
+    getCategoryItemLabel: _getCategoryItemLabel,
+    getCategoryItemDescription: _getCategoryItemDescription,
+  };
+};
+
+const useCode = nodeDef => {
+  const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
+  const cycle = useSelector(surveySelectors.getSurveyCycle);
+
+  const nodeDefCategoryItems = useSelector(state =>
+    surveySelectors.getCategoryItems(state, nodeDef.uuid),
+  );
+
+  const nodes = useSelector(state =>
+    formSelectors.getNodeDefNodesInHierarchy(state, nodeDef),
+  );
+
+  const _categoryItems = useMemo(() => {
+    const itemsFilter = nodeDef?.propsAdvanced?.itemsFilter || false;
+
+    if (!itemsFilter) {
+      return nodeDefCategoryItems.sort((a, b) => a.props.index - b.props.index);
+    }
+
+    return items.sort((a, b) => a.props.index - b.props.index);
+  }, [nodeDef, nodeDefCategoryItems]);
 
   const _getCategoryItemLabel = useCallback(
     item => getCategoryItemLabel(nodeDef, cycle, language)(item),

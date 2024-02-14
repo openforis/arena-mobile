@@ -36,6 +36,7 @@ function* handleInitializeRecord() {
 
     const record = yield call(handleCreateRecord);
 
+    delete record.nodes;
     yield put(formActions.setRecord({record: record}));
 
     yield call(handleInitializeRootEntity);

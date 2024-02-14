@@ -9,7 +9,7 @@ import * as colors from 'arena-mobile-ui/colors';
 import Icon from 'arena-mobile-ui/components/Icon';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
-import {Objects} from 'infra/objectUtils';
+import {Objects, compareArraysAsSets} from 'infra/objectUtils';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelector} from 'state/survey';
 
@@ -169,8 +169,11 @@ const Validation = React.memo(
   },
 );
 
-const useValidationCount = ({nodes, parentEntityNode, nodeDef}) => {
-  const validation = useSelector(formSelectors.getValidation);
+const useValidationCount = ({parentEntityNode, nodeDef}) => {
+  const validation = useSelector(
+    formSelectors.getValidation,
+    Objects.shallowEqual,
+  );
   const validationCount = RecordValidations.getValidationChildrenCount({
     nodeParentUuid: parentEntityNode?.uuid,
     nodeDefChildUuid: nodeDef.uuid,
@@ -181,14 +184,13 @@ const useValidationCount = ({nodes, parentEntityNode, nodeDef}) => {
   }
   return validationCount;
 };
-const ValidationWrapper = ({nodes, showValidation, absolute, nodeDef}) => {
+const ValidationWrapper = ({nodesUuids, showValidation, absolute, nodeDef}) => {
   const validation = useSelector(state =>
-    formSelectors.getValidationByNodes(state, nodes),
+    formSelectors.getValidationByNodes(state, nodesUuids),
   );
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
 
   const validationCount = useValidationCount({
-    nodes,
     parentEntityNode,
     nodeDef,
   });
@@ -216,10 +218,14 @@ const ValidationWrapper = ({nodes, showValidation, absolute, nodeDef}) => {
       <Validation
         validation={flatValidation}
         nodeDef={nodeDef}
-        count={nodes?.length}
+        count={nodesUuids?.length}
       />
     </View>
   );
+};
+
+ValidationWrapper.defaultProps = {
+  nodesUuids: [],
 };
 
 ValidationWrapper.defaultProps = {
@@ -229,8 +235,7 @@ ValidationWrapper.defaultProps = {
 
 export default React.memo(ValidationWrapper, (prevProps, nextProps) => {
   return (
-    prevProps.nodes.every(node => {
-      return nextProps.nodes.some(_node => _node.uuid === node.uuid);
-    }) && prevProps.nodeDef.uuid === nextProps.nodeDef.uuid
+    compareArraysAsSets(prevProps.nodesUuids, nextProps.nodesUuids) &&
+    prevProps.nodeDef.uuid === nextProps.nodeDef.uuid
   );
 });

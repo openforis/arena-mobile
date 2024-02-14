@@ -13,6 +13,7 @@ const stringKey = (_, uuid) => uuid || DEFAULT_NO_KEY;
 const getUuidFromItem = (_, item) => item?.uuid || DEFAULT_NO_KEY;
 const mapItemsUuid = (_, items) =>
   items?.map(item => item.uuid).join('_') || DEFAULT_NO_KEY;
+const joinItems = (_, items) => items?.join('_') || DEFAULT_NO_KEY;
 
 export const keySelectors = {
   identity,
@@ -23,6 +24,7 @@ export const keySelectors = {
   nodeDefUuid: stringKey,
   recordUuid: stringKey,
   surveyUuid: stringKey,
+  joinItems,
 };
 
 // Performance
