@@ -44,11 +44,14 @@ const BaseNode = ({
     if (!showValidation) {
       return null;
     }
+    if (!node?.uuid) {
+      return null;
+    }
 
     return (
       <Validation
         nodeDef={nodeDef}
-        nodesUuids={[node?.uuid]}
+        nodesUuids={[node.uuid]}
         showValidation={showValidation}
         absolute={true}
         parentEntityNode={parentEntityNode}

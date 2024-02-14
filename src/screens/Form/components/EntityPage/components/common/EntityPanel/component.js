@@ -6,7 +6,6 @@ import {useSelector} from 'react-redux';
 
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
-import formPreferencesSelectors from 'state/form/selectors/preferences';
 import {useIsTable} from 'screens/Form/components/EntityPage/components/common/EntityPanel/NewItemButton/component';
 import {selectors as formSelectors} from 'state/form';
 
@@ -68,8 +67,8 @@ const EntityPanel = () => {
               MULTILEVEL_COLLAPSE && hasNavigation
                 ? (collapseLevel + 1) % 3
                 : collapseLevel === 2
-                ? 0
-                : 2,
+                  ? 0
+                  : 2,
             )
           }
           hitSlop={40}

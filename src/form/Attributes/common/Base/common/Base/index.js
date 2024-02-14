@@ -22,22 +22,11 @@ const Container = ({children, nodeDef}) => {
   );
 };
 
-const useNodesUuids = nodeDef => {
-  const [nodesUuids, setNodesUuids] = useState(undefined);
-  const nodes = useSelector(state =>
-    formSelectors.getNodeDefNodesInHierarchy(state, nodeDef),
-  );
-
-  useEffect(() => {
-    const _nodesUuids = nodes?.map(node => node.uuid);
-
-    if (!compareArraysAsSets(_nodesUuids, nodesUuids)) {
-      setNodesUuids(_nodesUuids);
-    }
-  }, [nodesUuids, nodes]);
-
-  return nodesUuids;
-};
+const useNodesUuids = nodeDef =>
+  useSelector(state => {
+    const nodes = formSelectors.getNodeDefNodesInHierarchy(state, nodeDef);
+    return nodes?.map(node => node.uuid);
+  }, compareArraysAsSets);
 
 const BasePreview = ({
   nodeDef,
