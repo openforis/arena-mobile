@@ -4,9 +4,9 @@ const styles = ({baseStyles}) =>
   StyleSheet.create({
     container: {
       marginTop: baseStyles.bases.BASE_2,
-    },
-    pickerStyles: {
-      marginHorizontal: 0,
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
     },
   });
 

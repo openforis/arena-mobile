@@ -7,6 +7,7 @@ import {Label} from '../LabelsAndValues';
 import Select from '../Select';
 
 import _styles from './styles';
+import {pickerSelectStylesNeutral} from 'screens/Form/components/EntityPage/components/common/EntityPanel/EntityNodeSelector/styles';
 
 const SelectWithLabel = ({
   label,
@@ -24,7 +25,7 @@ const SelectWithLabel = ({
         labelExtractor={labelExtractor}
         onValueChange={handleChange}
         selectedItemKey={selectedItemKey}
-        customStyles={styles.pickerStyles}
+        customStyles={pickerSelectStylesNeutral}
       />
     </View>
   );
