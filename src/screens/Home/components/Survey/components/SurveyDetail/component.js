@@ -19,27 +19,24 @@ const SHOW_CYCLE_SELECTOR = false;
 import SurveyCycleSelector from '../SurveyCycleSelector';
 import SurveyLanguageSelector from '../SurveyLanguageSelector';
 
-const ViewMoreText = ({label, value}) => {
+const ViewMoreText = ({value}) => {
+  const styles = useThemedStyles(_styles);
   const [showAll, setShowAll] = useState(false);
   return (
-    <View style={{paddingBottom: 18}}>
+    <View style={styles.viewMoreContainer}>
       <TextBase type="secondary" numberOfLines={showAll ? 0 : 2}>
         {value}
       </TextBase>
       <Pressable
         onPress={() => setShowAll(!showAll)}
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          right: 0,
-        }}>
+        style={styles.viewMoreButton}>
         <TextBase type="bold">{showAll ? 'View less' : 'View more'}</TextBase>
       </Pressable>
     </View>
   );
 };
 
-const _generateLabel = surveyLabel => {
+const _extractInitials = surveyLabel => {
   const labelSplit = String(surveyLabel)
     .toUpperCase()
     ?.replace(/[^a-zA-Z ]/g, '')
@@ -107,41 +104,16 @@ const SurveyDetail = () => {
     return _info;
   }, [records]);
   return (
-    <View customStyles={styles.container}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-        }}>
-        <View
-          style={{
-            justifyContent: 'flex-start',
-          }}>
-          <View
-            style={{
-              backgroundColor: 'red',
-              height: 64,
-              width: 64,
-              borderRadius: 8,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <TextBase
-              type="secondary"
-              customStyle={{
-                textAlign: 'center',
-                fontWeight: 'bold',
-              }}>
-              {_generateLabel(surveyLabel)}
+    <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        <View style={styles.initialsContainer}>
+          <View style={styles.initialsBox}>
+            <TextBase type="secondary" customStyle={styles.initialsText}>
+              {_extractInitials(surveyLabel)}
             </TextBase>
           </View>
         </View>
-        <View
-          style={{
-            paddingLeft: 8,
-            flex: 1,
-          }}>
+        <View style={styles.headerLabelAndName}>
           <TextBase type="secondary" size="xs">
             {t('Home:survey.card.active_survey')}
           </TextBase>
