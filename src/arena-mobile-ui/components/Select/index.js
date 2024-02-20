@@ -9,7 +9,7 @@ import appSelectors from 'state/app/selectors';
 
 import Icon from '../Icon';
 
-import styles from './styles';
+import styles, {pickerSelectStylesNeutral} from './styles';
 
 const ChevronIcon = () => <Icon name="chevron-down" />;
 
@@ -47,6 +47,7 @@ const Select = ({
   doneText,
   autoFocus,
   disabled,
+  theme,
 }) => {
   const colorScheme = useSelector(appSelectors.getColorScheme);
   const selectRef = useRef(null);
@@ -77,20 +78,23 @@ const Select = ({
   }, [autoFocus, selectRef]);
 
   const _styles = useMemo(() => {
+    const _baseStyles =
+      theme === 'neutral' ? pickerSelectStylesNeutral : styles;
+
     return Objects.isEmpty(customStyles)
-      ? styles
+      ? _baseStyles
       : {
-          ...styles,
+          ..._baseStyles,
           inputIOS: {
-            ...(styles.inputIOS || {}),
+            ...(_baseStyles.inputIOS || {}),
             ...(customStyles?.inputIOS || {}),
           },
           inputAndroid: {
-            ...(styles.inputAndroid || {}),
+            ...(_baseStyles.inputAndroid || {}),
             ...(customStyles?.inputAndroid || {}),
           },
         };
-  }, [customStyles]);
+  }, [customStyles, theme]);
 
   return (
     <RNPickerSelect
@@ -122,6 +126,7 @@ Select.defaultProps = {
   doneText: 'ok',
   autoFocus: false,
   disabled: false,
+  theme: null,
 };
 
 export default Select;

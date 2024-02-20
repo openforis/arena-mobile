@@ -22,6 +22,7 @@ import SurveyLanguageSelector from '../SurveyLanguageSelector';
 const ViewMoreText = ({value}) => {
   const styles = useThemedStyles(_styles);
   const [showAll, setShowAll] = useState(false);
+  const {t} = useTranslation();
   return (
     <View style={styles.viewMoreContainer}>
       <TextBase type="secondary" numberOfLines={showAll ? 0 : 2}>
@@ -30,32 +31,22 @@ const ViewMoreText = ({value}) => {
       <Pressable
         onPress={() => setShowAll(!showAll)}
         style={styles.viewMoreButton}>
-        <TextBase type="bold">{showAll ? 'View less' : 'View more'}</TextBase>
+        <TextBase type="bold">
+          {showAll ? t('Common:view_less') : t('Common:view_more')}
+        </TextBase>
       </Pressable>
     </View>
   );
 };
 
-const _extractInitials = surveyLabel => {
-  const labelSplit = String(surveyLabel)
+const _extractInitials = surveyLabel =>
+  String(surveyLabel)
     .toUpperCase()
-    ?.replace(/[^a-zA-Z ]/g, '')
-    .split(/\s+/);
-
-  if (labelSplit.length >= 3) {
-    return labelSplit[0][0] + labelSplit[1][0] + labelSplit[2][0];
-  }
-
-  if (labelSplit.length >= 2) {
-    return labelSplit[0][0] + labelSplit[1][0];
-  }
-
-  if (labelSplit.length >= 1) {
-    return labelSplit[0][0];
-  }
-
-  return labelSplit[0];
-};
+    .replace(/[^a-zA-Z ]/g, '')
+    .split(/\s+/)
+    .slice(0, 3)
+    .map(part => part[0])
+    .join('');
 
 const SurveyDetail = () => {
   const styles = useThemedStyles(_styles);
@@ -85,18 +76,15 @@ const SurveyDetail = () => {
       },
     ];
 
+    const currentCycle = surveyCycles[surveyCycle];
+    const cycleDatesFromTo = `(${currentCycle?.dateStart}${currentCycle?.dateEnd ? ` - ${currentCycle?.dateEnd}` : ''})`;
+
     if (numberOfCycles > 1) {
       _info.push({
         label: t('Home:survey.card.cycle'),
         value: `${t('Home:survey.card.cycle_value', {
           numberOfCycles,
-          cycle: `${String(Number(surveyCycle) + 1)} (${
-            surveyCycles[surveyCycle]?.dateStart
-          }${
-            surveyCycles[surveyCycle]?.dateEnd
-              ? ` - ${surveyCycles[surveyCycle]?.dateEnd}`
-              : ''
-          })`,
+          cycle: `${String(Number(surveyCycle) + 1)} ${cycleDatesFromTo}`,
         })}`,
       });
     }

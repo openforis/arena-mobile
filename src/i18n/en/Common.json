@@ -36,5 +36,7 @@
   "update_ready": {
     "title": "Update ready",
     "button": "Update App version"
-  }
+  },
+  "view_more": "View more",
+  "view_less": "View less"
 }

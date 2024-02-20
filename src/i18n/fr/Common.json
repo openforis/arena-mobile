@@ -36,5 +36,7 @@
   "update_ready": {
     "title": "Mise à jour prête",
     "button": "Mettre à jour la version de l'application"
-  }
+  },
+  "view_more": "Voir plus",
+  "view_less": "Voir moins"
 }

@@ -48,12 +48,16 @@ export const useCodeWithNode = (nodeDef, node) => {
     const itemsFilter = nodeDef?.propsAdvanced?.itemsFilter || false;
     const expressionEvaluator = new RecordExpressionEvaluator();
     const items = node?.uuid ? nodeCategoryItems : nodeDefCategoryItems;
+    if (Objects.isEmpty(items)) {
+      return [];
+    }
+
     if (!itemsFilter) {
-      return items?.sort((a, b) => a.props.index - b.props.index);
+      return items.sort((a, b) => a.props.index - b.props.index);
     }
 
     return items
-      ?.filter(item => {
+      .filter(item => {
         try {
           return expressionEvaluator.evalExpression({
             survey,

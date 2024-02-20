@@ -36,5 +36,7 @@
   "update_ready": {
     "title": "Actualización lista",
     "button": "Actualizar versión de la aplicación"
-  }
+  },
+  "view_more": "Ver más",
+  "view_less": "Ver menos"
 }
