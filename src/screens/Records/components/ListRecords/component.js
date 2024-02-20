@@ -83,7 +83,7 @@ const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
   );
 
   const loading = useSelector(recordSelectors.getIsGettingRemoteRecordsSummary);
-  if (recordUuids?.length <= 0) {
+  if (recordUuids?.length === 0) {
     return <ListEmptyComponent />;
   }
 

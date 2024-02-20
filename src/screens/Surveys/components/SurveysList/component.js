@@ -65,7 +65,7 @@ const SurveysList = ({
   } = surveysHooks.useRemoteSurveys({prefetch: false});
 
   useEffect(() => {
-    if (!loading && surveys.length <= 0) {
+    if (!loading && surveys.length === 0) {
       setSelectedSurvey(null);
     }
   }, [loading, surveys, setSelectedSurvey]);
