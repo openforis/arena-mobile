@@ -24,7 +24,7 @@ const SelectWithLabel = ({
         labelExtractor={labelExtractor}
         onValueChange={handleChange}
         selectedItemKey={selectedItemKey}
-        customStyles={styles.pickerStyles}
+        theme="neutral"
       />
     </View>
   );

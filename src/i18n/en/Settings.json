@@ -67,9 +67,9 @@
   "style": {
     "title": "Style",
     "TextAndSpacingSize": {
-      "title": "Text and Spacing Sizes",
+      "title": "Text size and Spacing",
       "screen": {
-        "header": "Text and Spacing Sizes",
+        "header": "Text size and Spacing",
         "textSize": {
           "title": "Text Size",
           "info": "Manage the font size to optimize the reading experience and suit your personal style.",

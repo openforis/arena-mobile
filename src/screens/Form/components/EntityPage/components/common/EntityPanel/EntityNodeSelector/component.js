@@ -7,7 +7,7 @@ import Select from 'arena-mobile-ui/components/Select';
 import {uuidv4} from 'infra/uuid';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 
-import styles, {pickerSelectStyles, pickerSelectStylesNeutral} from './styles';
+import styles from './styles';
 
 const EntityNodeSelector = ({theme, parentNodeDef, parentNode}) => {
   const [key, setKey] = useState(uuidv4());
@@ -52,9 +52,7 @@ const EntityNodeSelector = ({theme, parentNodeDef, parentNode}) => {
       <Select
         key={key}
         items={siblingNodesInhierarchy}
-        customStyles={
-          theme === 'neutral' ? pickerSelectStylesNeutral : pickerSelectStyles
-        }
+        theme="neutral"
         onValueChange={handleSelectEntityNode}
         selectedItemKey={_parentEntityNode.uuid}
         labelExtractor={_labelExtractor}

@@ -48,6 +48,10 @@ export const useCodeWithNode = (nodeDef, node) => {
     const itemsFilter = nodeDef?.propsAdvanced?.itemsFilter || false;
     const expressionEvaluator = new RecordExpressionEvaluator();
     const items = node?.uuid ? nodeCategoryItems : nodeDefCategoryItems;
+    if (Objects.isEmpty(items)) {
+      return [];
+    }
+
     if (!itemsFilter) {
       return items.sort((a, b) => a.props.index - b.props.index);
     }
@@ -118,13 +122,7 @@ const useCode = nodeDef => {
   );
 
   const _categoryItems = useMemo(() => {
-    const itemsFilter = nodeDef?.propsAdvanced?.itemsFilter || false;
-
-    if (!itemsFilter) {
-      return nodeDefCategoryItems.sort((a, b) => a.props.index - b.props.index);
-    }
-
-    return items.sort((a, b) => a.props.index - b.props.index);
+    return nodeDefCategoryItems.sort((a, b) => a.props.index - b.props.index);
   }, [nodeDef, nodeDefCategoryItems]);
 
   const _getCategoryItemLabel = useCallback(

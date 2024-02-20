@@ -64,20 +64,20 @@ const Actions = () => {
     <View style={styles.container}>
       {numberOfRecords > 0 && (
         <Button
-          type="secondary"
+          type="neutral"
           label={t('Actions:records', {count: numberOfRecords})}
           onPress={navigateTo({route: routes.RECORDS, replace: true})}
         />
       )}
       {numberOfErrors > 0 && (
         <Button
-          type="secondary"
+          type="neutral"
           label={t('Actions:validation_report', {count: numberOfErrors})}
         />
       )}
       {currentRecordUuid && (
         <Button
-          type="secondary"
+          type="neutral"
           label={t('Actions:new_record')}
           onPress={handleInitializeRecord}
         />

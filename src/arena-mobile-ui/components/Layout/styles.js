@@ -18,6 +18,9 @@ const styles = ({colors}) =>
       background: {
         backgroundColor: colors.background,
       },
+      backgroundLight: {
+        backgroundColor: colors.backgroundLight,
+      },
       primary: {
         backgroundColor: colors.primary,
       },

@@ -30,7 +30,7 @@ const Survey = () => {
     return <NoSurveySelected />;
   }
 
-  if (numSurveys <= 0) {
+  if (numSurveys === 0) {
     return <NoLocalSurveys />;
   }
   return <></>;

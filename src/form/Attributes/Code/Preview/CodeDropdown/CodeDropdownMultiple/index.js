@@ -29,7 +29,7 @@ const CodeDropdownMultiple = ({nodeDef}) => {
   });
 
   useEffect(() => {
-    if (nodes.length <= 0) {
+    if (nodes.length === 0) {
       codeActions.handleCreate({value: null});
     }
   }, [nodes, codeActions]);
@@ -49,7 +49,7 @@ const CodeDropdownMultiple = ({nodeDef}) => {
     [getCategoryItemLabel],
   );
 
-  if (categoryItems.length <= 0) {
+  if (categoryItems.length === 0) {
     return null;
   }
 
