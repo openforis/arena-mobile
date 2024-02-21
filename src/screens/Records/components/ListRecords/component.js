@@ -1,4 +1,3 @@
-import {t} from 'i18next';
 import React, {useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View} from 'react-native';

@@ -12,10 +12,7 @@ import Layout from 'arena-mobile-ui/components/Layout';
 import Slider from 'arena-mobile-ui/components/Slider';
 import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
-import {
-  baseRanges as baseRanges,
-  fontRanges as baseFontRanges,
-} from 'arena-mobile-ui/styles';
+import {baseRanges, fontRanges as baseFontRanges} from 'arena-mobile-ui/styles';
 import {selectors as appSelectors, actions as appActions} from 'state/app';
 
 import _styles from './styles';
