@@ -32,8 +32,8 @@ const FormInput = ({
     }
     onChangeText={debouncedUpdate}
     defaultValue={getValueAsString(nodeDef, node)}
-    autoFocus={Platform.OS === 'ios' ? true : false}
-    lateFocus={Platform.OS === 'ios' ? false : true}
+    autoFocus={Platform.OS === 'ios'}
+    lateFocus={Platform.OS !== 'ios'}
     keyboardType={keyboardType}
     textAlign={nodeDef.type === NodeDefType.text ? 'left' : 'right'}
     onSubmitEditing={handleSubmitEnter}
