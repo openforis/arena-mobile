@@ -6,6 +6,7 @@ import surveySelectors from 'state/survey/selectors';
 import {selectors as userSelector} from 'state/user';
 
 import recordsActions from '../../actionCreators';
+import DeviceInfo from 'react-native-device-info';
 
 // extract this creators to arena-core
 const _createRecord = ({survey, user, cycle}) => {
@@ -24,6 +25,13 @@ const _createRecord = ({survey, user, cycle}) => {
     // _nodeRootUuid
     // _nodesByParentAndDef
     // _nodesByDef
+    appInfo: {
+      createdWith: {
+        appId: 'arena-mobile',
+        appVersion: DeviceInfo.getReadableVersion(),
+        appPlatform: DeviceInfo.getSystemName(),
+      },
+    },
   };
 };
 
