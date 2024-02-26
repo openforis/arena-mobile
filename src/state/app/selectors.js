@@ -66,6 +66,11 @@ const getColorScheme = createSelector(
   style => style?.colorScheme || 'light',
 );
 
+const hasToUseMapsMeAsDefault = createSelector(
+  getPreferences,
+  preferences => preferences?.settings?.geo?.hasToUseMapsMeAsDefault,
+);
+
 /* this is to avoid the error with the slider if there is some array stored from a previous version*/
 const ifArrayReturnFirstValue = value => {
   if (Array.isArray(value)) {
@@ -133,6 +138,8 @@ export default {
   getImagesCompressMaxWidth,
   getIsMaxResolution,
 
+  /* Pref: GEO */
+  hasToUseMapsMeAsDefault,
   /* application language */
   getApplicationLanguage,
 };

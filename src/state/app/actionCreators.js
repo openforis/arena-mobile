@@ -80,6 +80,12 @@ const {app} = createActions({
     isMaxResolution,
   }),
   [types.RESET_IMAGES_QUALITY_AND_SIZE]: () => ({}),
+  /* GEO settings */
+  [types.SET_GEO_HAS_TO_USE_MAPS_ME_AS_DEFAULT]: ({
+    hasToUseMapsMeAsDefault = true,
+  }) => ({
+    hasToUseMapsMeAsDefault,
+  }),
   /* Language settings */
   [types.SET_APPLICATION_LANGUAGE]: ({applicationLanguage = 'en'}) => ({
     applicationLanguage,

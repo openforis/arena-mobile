@@ -19,6 +19,9 @@ const initialState = {
         compressMaxWidth: 1024,
         isMaxResolution: false,
       },
+      geo: {
+        hasToUseMapsMeAsDefault: true,
+      },
     },
     serverUrl: null,
   },
