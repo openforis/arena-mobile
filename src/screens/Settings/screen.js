@@ -12,7 +12,7 @@ import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import baseStyles from 'arena-mobile-ui/styles';
 import {useNavigateTo} from 'navigation/hooks';
-import {selectors as appSelectors} from 'state/app';
+import {selectors as appSelectors, actions as appActions} from 'state/app';
 import {actions as formActions} from 'state/form';
 import formPreferencesSelectors from 'state/form/selectors/preferences';
 import {selectors as userSelectors} from 'state/user';
@@ -295,6 +295,39 @@ const Language = () => {
   );
 };
 
+const Geo = () => {
+  const {t} = useTranslation();
+
+  const dispatch = useDispatch();
+
+  const hasToUseMapsMeAsDefault = useSelector(
+    appSelectors.hasToUseMapsMeAsDefault,
+  );
+  console.log('hasToUseMapsMeAsDefault', hasToUseMapsMeAsDefault);
+
+  const _updateHasToUseMapsMeAsDefault = useCallback(() => {
+    dispatch(
+      appActions.setGeoHasToUseMapsMeAsDefault({
+        hasToUseMapsMeAsDefault: !hasToUseMapsMeAsDefault,
+      }),
+    );
+  }, [dispatch, hasToUseMapsMeAsDefault]);
+
+  return (
+    <Section title={t('Settings:geo.title')}>
+      <SectionCard
+        position="only"
+        isNavigation={false}
+        onPress={_updateHasToUseMapsMeAsDefault}
+        title={t('Settings:geo.useMapsMeAsDefault.title')}
+        iconName={
+          hasToUseMapsMeAsDefault ? 'checkbox-marked' : 'checkbox-blank-outline'
+        }
+      />
+    </Section>
+  );
+};
+
 const Settings = () => {
   const styles = useThemedStyles(_styles);
   const {navigateTo, routes} = useNavigateTo();
@@ -354,6 +387,7 @@ const Settings = () => {
 
               <ImagesQualityAndSizeSettings />
               <Language />
+              <Geo />
               <FormSettings />
             </>
           ) : null}
