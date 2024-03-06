@@ -18,15 +18,13 @@ const AttributesContainer = () => {
   );
 
   return (
-    <>
-      <View style={styles.container}>
-        {isSingleNodeView ? (
-          <SingleNode nodeDefChildrenUuids={nodeDefChildrenUuids} />
-        ) : (
-          <ListForm nodeDefChildrenUuids={nodeDefChildrenUuids} />
-        )}
-      </View>
-    </>
+    <View style={styles.container}>
+      {isSingleNodeView ? (
+        <SingleNode nodeDefChildrenUuids={nodeDefChildrenUuids} />
+      ) : (
+        <ListForm nodeDefChildrenUuids={nodeDefChildrenUuids} />
+      )}
+    </View>
   );
 };
 export default AttributesContainer;

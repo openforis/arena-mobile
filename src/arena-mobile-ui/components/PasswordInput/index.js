@@ -9,21 +9,19 @@ import {TouchableIcon} from '../TouchableIcons';
 import _styles from './styles';
 
 const icons = {
-  passwordVisible: 'eye-outline',
-  passwordHidden: 'eye-off-outline',
+  visible: 'eye-outline',
+  hidden: 'eye-off-outline',
 };
 
 const PasswordInput = ({title, autoFocus = false, ...otherProps}) => {
   const styles = useThemedStyles(_styles);
-  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [visible, setVisible] = useState(false);
 
-  const togglePasswordVisible = () => {
-    setPasswordVisible(!passwordVisible);
+  const toggleVisible = () => {
+    setVisible(!visible);
   };
 
-  const rightIcon = passwordVisible
-    ? icons.passwordVisible
-    : icons.passwordHidden;
+  const rightIcon = visible ? icons.visible : icons.hidden;
 
   return (
     <View style={styles.container}>
@@ -34,10 +32,10 @@ const PasswordInput = ({title, autoFocus = false, ...otherProps}) => {
           style={styles.input}
           autoFocus={autoFocus}
           selectTextOnFocus={true}
-          secureTextEntry={!passwordVisible}
+          secureTextEntry={!visible}
           {...otherProps}
         />
-        <TouchableIcon onPress={togglePasswordVisible} iconName={rightIcon} />
+        <TouchableIcon onPress={toggleVisible} iconName={rightIcon} />
       </View>
     </View>
   );
