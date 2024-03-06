@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@miblanchard/react-native-slider": "^2.3.1",
-    "@openforis/arena-core": "0.0.182",
+    "@openforis/arena-core": "0.0.183",
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-clipboard/clipboard": "^1.12.1",
     "@react-native-community/datetimepicker": "^7.6.2",
