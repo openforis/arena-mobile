@@ -5,7 +5,7 @@ import BaseCell from 'form/Attributes/common/Base/Cell';
 
 const BaseValuesRenderer = ({nodes}) => (
   <TextBase numberOfLines={1}>
-    {nodes.map(node => node?.value?.fileName).join(', ')}
+    {nodes?.map(node => node?.value?.fileName).join(', ')}
   </TextBase>
 );
 

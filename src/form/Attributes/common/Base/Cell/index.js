@@ -12,7 +12,7 @@ import _styles from './styles';
 const BaseValuesRenderer = ({nodes}) => {
   return (
     <TextBase numberOfLines={1}>
-      {nodes.map(node => node.value).join(',')}
+      {nodes?.map(node => node.value).join(',')}
     </TextBase>
   );
 };
@@ -27,7 +27,7 @@ const Cell = ({nodeDef, nodes, ValuesRender = BaseValuesRenderer}) => {
     return styles.container({nodeDef, applicable});
   }, [styles, nodeDef, applicable]);
 
-  const nodesUuids = useMemo(() => nodes.map(node => node.uuid), [nodes]);
+  const nodesUuids = useMemo(() => nodes?.map(node => node.uuid), [nodes]);
   return (
     <View style={containerStyle}>
       <Validation

@@ -303,7 +303,6 @@ const Geo = () => {
   const hasToUseMapsMeAsDefault = useSelector(
     appSelectors.hasToUseMapsMeAsDefault,
   );
-  console.log('hasToUseMapsMeAsDefault', hasToUseMapsMeAsDefault);
 
   const _updateHasToUseMapsMeAsDefault = useCallback(() => {
     dispatch(

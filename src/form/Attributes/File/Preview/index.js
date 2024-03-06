@@ -110,7 +110,7 @@ const Preview = ({nodeDef}) => {
     }
     return (
       <>
-        {nodes.map(node => (
+        {nodes?.map(node => (
           <NodeValueRender key={node.uuid} node={node} nodeDef={nodeDef} />
         ))}
       </>

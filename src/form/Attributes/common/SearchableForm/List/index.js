@@ -5,6 +5,8 @@ import ArenaList from 'arena-mobile-ui/components/List';
 import {getTextForSearch} from 'form/Attributes/Code/Form/common/hooks/useSearch';
 import surveySelectors from 'state/survey/selectors';
 
+const keyExtractor = itemUuid => itemUuid;
+
 const List = ({categoryItems, renderItem, searchText, nodes}) => {
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
   const categoryItemsWithIndexToSearch = useMemo(
@@ -34,8 +36,6 @@ const List = ({categoryItems, renderItem, searchText, nodes}) => {
 
     return _categoryItemsUuidsFiltered;
   }, [categoryItemsWithIndexToSearch, searchText]);
-
-  const keyExtractor = useCallback(itemUuid => itemUuid, []);
 
   return (
     <ArenaList
