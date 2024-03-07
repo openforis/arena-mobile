@@ -6,10 +6,20 @@ import surveySelectors from 'state/survey/selectors';
 import {selectors as userSelector} from 'state/user';
 
 import recordsActions from '../../actionCreators';
-import DeviceInfo from 'react-native-device-info';
+import * as DeviceInfo from 'state/deviceInfoService';
 
 // extract this creators to arena-core
-const _createRecord = ({survey, user, cycle}) => {
+const _createRecord = async ({survey, user, cycle}) => {
+  let appVersion = '-';
+  let appPlatform = '-';
+
+  try {
+    appVersion = await DeviceInfo.getDeviceInfo().getReadableVersion();
+    appPlatform = await DeviceInfo.getDeviceInfo().getSystemName();
+  } catch (error) {
+    console.log('Error', error);
+  }
+
   return {
     preview: false, // no idea
     uuid: uuidv4(),
@@ -28,8 +38,8 @@ const _createRecord = ({survey, user, cycle}) => {
     appInfo: {
       createdWith: {
         appId: 'arena-mobile',
-        appVersion: DeviceInfo.getReadableVersion(),
-        appPlatform: DeviceInfo.getSystemName(),
+        appVersion,
+        appPlatform,
       },
     },
   };

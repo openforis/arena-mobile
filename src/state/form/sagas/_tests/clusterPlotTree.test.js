@@ -37,6 +37,13 @@ const expectedRecords = (state, isNewRecord = false) => {
         ...(isNewRecord ? {dateModified: null} : {}),
         _nodesIndex: {},
         nodes: {},
+        appInfo: {
+          createdWith: {
+            appId: 'arena-mobile',
+            appPlatform: '-',
+            appVersion: '-',
+          },
+        },
       },
     },
   };
