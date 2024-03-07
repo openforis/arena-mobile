@@ -1,9 +1,10 @@
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View} from 'react-native';
+import {Linking, View} from 'react-native';
 import openMap from 'react-native-open-maps';
 import {useSelector} from 'react-redux';
 
+import {NodeDefs} from '@openforis/arena-core';
 import Button from 'arena-mobile-ui/components/Button';
 import Icon from 'arena-mobile-ui/components/Icon';
 import LabelsAndValues from 'arena-mobile-ui/components/LabelsAndValues';
@@ -14,7 +15,10 @@ import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import formSelectors from 'state/form/selectors';
 import surveySelectors from 'state/survey/selectors';
 
+import appSelectors from 'state/app/selectors';
+
 import _styles from './styles';
+import {generateShortShowMapUrl} from 'infra/navigation/mapsme';
 const coordinateText = coordinate =>
   !isNaN(coordinate) && Number(coordinate).toFixed(4);
 
@@ -24,11 +28,23 @@ const CoordinateButtons = ({nodeDef, handleCleanCoordinates}) => {
     formSelectors.getNodeDefNodesInHierarchy(state, nodeDef),
   );
 
+  const hasToUseMapsMeAsDefault = useSelector(
+    appSelectors.hasToUseMapsMeAsDefault,
+  );
+
+  const isReadOnly = NodeDefs.isReadOnly(nodeDef);
+
   const handleOpenMap = () => {
+    console.log(nodes[0].value);
     const {x, y} = nodes[0].value;
-    openMap({
-      query: `${y},${x}`,
-    });
+    if (hasToUseMapsMeAsDefault) {
+      const url = generateShortShowMapUrl(Number(y), Number(x), 15, 'Location');
+      Linking.openURL(url);
+    } else {
+      openMap({
+        query: `${y},${x}`,
+      });
+    }
   };
 
   if (
@@ -46,11 +62,13 @@ const CoordinateButtons = ({nodeDef, handleCleanCoordinates}) => {
         label="Open in map"
         icon={<Icon name="map" size="s" />}
       />
-      <Button
-        onPress={handleCleanCoordinates}
-        type="ghostBlack"
-        icon={<Icon name="trash-can-outline" size="s" />}
-      />
+      {!isReadOnly && (
+        <Button
+          onPress={handleCleanCoordinates}
+          type="ghostBlack"
+          icon={<Icon name="trash-can-outline" size="s" />}
+        />
+      )}
     </View>
   );
 };

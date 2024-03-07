@@ -27,6 +27,9 @@ const expectedAppState = {
   preferences: {
     serverUrl: payload.serverUrl,
     settings: {
+      geo: {
+        hasToUseMapsMeAsDefault: true,
+      },
       images: {
         compressMaxHeight: 1024,
         compressMaxWidth: 1024,

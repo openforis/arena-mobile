@@ -9,8 +9,9 @@ const Footer = () => {
 const ItemSeparatorComponent = () => {
   return <></>;
 };
-const CellRendererComponent = ({children}) => {
-  return <>{children}</>;
+
+const CellRendererComponent = ({onLayout, children}) => {
+  return <View onLayout={onLayout}>{children}</View>;
 };
 
 const List = ({

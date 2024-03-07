@@ -64,6 +64,12 @@
   "application_language": {
     "title": "Idioma"
   },
+  "geo": {
+    "title": "Geo",
+    "useMapsMeAsDefault": {
+      "title": "Usar Maps.me como padrão"
+    }
+  },
   "style": {
     "title": "Estilo",
     "TextAndSpacingSize": {

@@ -366,7 +366,7 @@ const getValidation = createSelector(
 
 const getValidationByKeys = ({keys, validation}) => {
   return keys
-    .map(nodeUuid =>
+    ?.map(nodeUuid =>
       RecordValidations.getValidationNode({
         nodeUuid,
       })(validation),

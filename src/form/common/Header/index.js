@@ -29,7 +29,7 @@ export const Header = ({
     );
   }, [disabled, styles]);
 
-  const nodesUuids = useMemo(() => nodes.map(node => node.uuid), [nodes]);
+  const nodesUuids = useMemo(() => nodes?.map(node => node.uuid), [nodes]);
 
   return (
     <View style={containerStyle}>
@@ -63,8 +63,8 @@ export default React.memo(
   (prevProps, nextProps) => {
     return (
       prevProps.nodeDef.uuid === nextProps.nodeDef.uuid &&
-      prevProps.nodes.map(node => node.uuid) ===
-        nextProps.nodes.map(node => node.uuid)
+      prevProps.nodes?.map(node => node.uuid) ===
+        nextProps.nodes?.map(node => node.uuid)
     );
   },
 );

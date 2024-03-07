@@ -15,10 +15,17 @@ import {selectors as surveySelectors} from 'state/survey';
 import _styles from './styles';
 
 const getNodeDefIndex = ({survey, nodeDef, cycle = defaultCycle}) => {
-  return (
-    nodeDef?.uuid &&
-    survey.nodeDefs[nodeDef?.uuid].props.layout[cycle].indexChildren
-  );
+  try {
+    return (
+      nodeDef?.uuid &&
+      survey.nodeDefs[nodeDef?.uuid].props.layout[cycle].indexChildren
+    );
+  } catch (e) {
+    const maximum = Object.keys(
+      survey.nodeDefs[nodeDef?.uuid]?.props?.layout,
+    )?.reduce((max, key) => Math.max(max, Number(key)), 0);
+    throw `There is an Error with the survey Cycles please ask the survey admin current cycle is: ${Math.max(0, cycle) + 1} and maximum cycle is ${maximum + 1}`;
+  }
 };
 
 const ChevronLeft = <Icon name="chevron-left" />;

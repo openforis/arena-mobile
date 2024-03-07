@@ -12,10 +12,12 @@ MaterialCommunityIcons.loadFont();
 import 'i18n';
 
 import {setNavigator} from 'state/navigatorService';
+import {setDeviceInfo} from 'state/deviceInfoService';
 import getStore from 'state/store';
 
 import {ROUTES, KEYS} from './constants';
 import {SCREENS} from './screens';
+import DeviceInfo from 'react-native-device-info';
 
 const Stack = createNativeStackNavigator();
 const {store, persistor: _persistor} = getStore();
@@ -24,9 +26,14 @@ export const persistor = _persistor;
 
 function Arena() {
   const navigationRef = React.useRef(null);
+  const deviceInfo = React.useRef(null);
 
   React.useEffect(() => {
     setNavigator(navigationRef);
+  }, []);
+
+  React.useEffect(() => {
+    setDeviceInfo(DeviceInfo);
   }, []);
 
   return (
