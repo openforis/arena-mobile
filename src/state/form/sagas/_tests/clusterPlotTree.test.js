@@ -40,8 +40,8 @@ const expectedRecords = (state, isNewRecord = false) => {
         appInfo: {
           createdWith: {
             appId: 'arena-mobile',
-            appPlatform: '-',
-            appVersion: '-',
+            platform: '-',
+            version: '-',
           },
         },
       },

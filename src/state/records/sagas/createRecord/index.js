@@ -10,12 +10,12 @@ import * as DeviceInfo from 'state/deviceInfoService';
 
 // extract this creators to arena-core
 const _createRecord = async ({survey, user, cycle}) => {
-  let appVersion = '-';
-  let appPlatform = '-';
+  let version = '-';
+  let platform = '-';
 
   try {
-    appVersion = await DeviceInfo.getDeviceInfo().getReadableVersion();
-    appPlatform = await DeviceInfo.getDeviceInfo().getSystemName();
+    version = await DeviceInfo.getDeviceInfo().getReadableVersion();
+    platform = await DeviceInfo.getDeviceInfo().getSystemName();
   } catch (error) {
     console.log('Error', error);
   }
@@ -38,8 +38,8 @@ const _createRecord = async ({survey, user, cycle}) => {
     appInfo: {
       createdWith: {
         appId: 'arena-mobile',
-        appVersion,
-        appPlatform,
+        version,
+        platform,
       },
     },
   };
