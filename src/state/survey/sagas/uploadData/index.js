@@ -45,8 +45,8 @@ function* checkIfShouldUpdate({recordUuid}) {
 }
 
 function* handlePrepareRecordsData() {
-  let numberOfRecordsToUpload = 0;
   try {
+    const uuidsOfRecordsToUpload = [];
     yield call(fs.mkdir, {dirPath: RECORDS_BASE_PATH});
     const surveyUuid = yield select(surveySelectors.getSelectedSurveyUuid);
     const cycle = yield select(surveySelectors.getSurveyCycle);
@@ -58,8 +58,8 @@ function* handlePrepareRecordsData() {
       const recordUuid = recordFile.name.split('.json')[0];
       const shouldUpdate = yield call(checkIfShouldUpdate, {recordUuid});
       if (shouldUpdate) {
+        uuidsOfRecordsToUpload.push(recordUuid);
         recordsJson.push({uuid: recordUuid, cycle});
-        numberOfRecordsToUpload = numberOfRecordsToUpload + 1;
         yield call(fs.copyFile, {
           sourcePath: recordFile.path,
           destinationPath: `${RECORDS_BASE_PATH}/${recordUuid}.json`,
@@ -71,15 +71,47 @@ function* handlePrepareRecordsData() {
       filePath: `${RECORDS_BASE_PATH}/records.json`,
       content: JSON.stringify(recordsJson, null, 2),
     });
+    return uuidsOfRecordsToUpload;
   } catch (e) {
     console.log(e);
+    throw e;
   } finally {
     console.log('Finally:recordsData');
   }
-  return numberOfRecordsToUpload;
 }
 
-function* handlePrepareFilesData() {
+function* prepareFileData(fileUuid) {
+  // maybe this should be done using the internal storage, store the file summary into the same folder? maybe faster
+  const file = yield select(state =>
+    filesSelectors.getFileByUuid(state, fileUuid),
+  );
+
+  const fileContent = yield call(fileUtils.getFileContent, file);
+
+  const fileToExport = {
+    uuid: file.uuid,
+    props: {
+      ...file.meta,
+      name: file.meta.fileName,
+      nodeUuid: file.nodeUuid,
+      recordUuid: file.recordUuid,
+    },
+  };
+
+  // we must avoid sending uri and path to the backend
+  delete fileToExport.props.uri;
+  delete fileToExport.props.path;
+
+  yield call(fs.writeFile, {
+    filePath: `${FILES_BASE_PATH}/${file.uuid}.bin`,
+    content: fileContent,
+    encoding: 'base64',
+  });
+
+  return fileToExport;
+}
+
+function* handlePrepareFilesData({uuidsOfRecordsToUpload}) {
   try {
     yield call(fs.mkdir, {dirPath: FILES_BASE_PATH});
 
@@ -97,41 +129,13 @@ function* handlePrepareFilesData() {
         .split('arena-data/')[1]
         .split('files/')[1]
         .split('/');
-
       // fileObject = [_recordUuid, _nodeUuid, fileUuid, _fileName]
       const recordUuid = fileObject[0];
       const fileUuid = fileObject[2];
 
-      const shouldUpdate = yield call(checkIfShouldUpdate, {recordUuid});
-
-      if (shouldUpdate) {
-        // maybe this dhould be done used the internal storage, store the file summary into the same folder? maybe faster
-        const _file = yield select(state =>
-          filesSelectors.getFileByUuid(state, fileUuid),
-        );
-
-        const fileContent = yield call(fileUtils.getFileContent, _file);
-
-        const fileToAppend = {
-          uuid: _file.uuid,
-          props: {
-            ..._file.meta,
-            name: _file.meta.fileName,
-            nodeUuid: _file.nodeUuid,
-            recordUuid: _file.recordUuid,
-          },
-        };
-
-        // we must to avoid the uri to send to the backend
-        delete fileToAppend.props.uri;
-
-        filesArr.push(fileToAppend);
-
-        yield call(fs.writeFile, {
-          filePath: `${FILES_BASE_PATH}/${_file.uuid}.bin`,
-          content: fileContent,
-          encoding: 'base64',
-        });
+      if (uuidsOfRecordsToUpload.includes(recordUuid)) {
+        const fileToExport = yield call(prepareFileData, fileUuid);
+        filesArr.push(fileToExport);
       }
     }
 
@@ -139,18 +143,22 @@ function* handlePrepareFilesData() {
       filePath: `${FILES_BASE_PATH}/files.json`,
       content: JSON.stringify(filesArr, null, 2),
     });
+    return filesArr.length;
   } catch (e) {
     console.log(e);
+    throw e;
   } finally {
     console.log('Finally:FilesData');
   }
 }
 
 function* handlePrepareZipData() {
-  let numberOfRecordsToUpload = 0;
   try {
-    numberOfRecordsToUpload = yield call(handlePrepareRecordsData);
-    yield call(handlePrepareFilesData);
+    const uuidsOfRecordsToUpload = yield call(handlePrepareRecordsData);
+    const numberOfRecordsToUpload = uuidsOfRecordsToUpload.length;
+    const numberOfFilesToUpload = yield call(handlePrepareFilesData, {
+      uuidsOfRecordsToUpload,
+    });
 
     yield call(zip, {
       source: 'survey_zip',
@@ -158,12 +166,13 @@ function* handlePrepareZipData() {
       base: fs.TMP_BASE_PATH,
       baseOutput: fs.TMP_BASE_PATH,
     });
+    return {numberOfRecordsToUpload, numberOfFilesToUpload};
   } catch (e) {
     console.log(e);
+    throw e;
   } finally {
     console.log('Finally');
   }
-  return numberOfRecordsToUpload;
 }
 
 function* cleanTmpFolder() {
@@ -233,12 +242,22 @@ function* handleUploadData() {
 
     yield call(cleanTmpFolder);
     yield call(fs.mkdir, {dirPath: TMP_SURVEYS_BASE_PATH});
-    const numberOfRecordsToUpload = yield call(handlePrepareZipData);
-    // UPLOAD DATA and track progress
+    const {numberOfRecordsToUpload, numberOfFilesToUpload} =
+      yield call(handlePrepareZipData);
 
     if (numberOfRecordsToUpload === 0) {
+      yield call(handleShowToast, {
+        message: 'All records already uploaded to the server',
+      });
       return;
     }
+
+    // UPLOAD DATA and track progress
+
+    yield call(handleShowToast, {
+      message: `uploading ${numberOfRecordsToUpload} records and ${numberOfFilesToUpload} files`,
+    });
+
     yield call(WS({serverUrl}).create);
     yield call(WS({serverUrl}).on, {
       eventName: WebSocketEvents.jobUpdate,
@@ -253,8 +272,7 @@ function* handleUploadData() {
       onProgress: handleOnProgress(uploadFileChannel),
     });
   } catch (e) {
-    console.log(e);
-    yield call(handleShowToast, {message: e?.message});
+    yield call(handleShowToast, {message: `${e.message}: ${e.stack}`});
   } finally {
     console.log('Finally:upload');
     yield delay(2000);
