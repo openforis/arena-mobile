@@ -275,14 +275,14 @@ function* handleUploadData() {
       onProgress: handleOnProgress(uploadFileChannel),
     });
   } catch (e) {
-    const fullErrorMessage = `${e.message}\n${e.stack}`
+    const fullErrorMessage = `${e.message}\n${e.stack}`;
     alert({
       title: i18n.t('Records:error_sending_data'),
       message: fullErrorMessage,
       acceptText: i18n.t('Records:copy_error_message_to_clipboard'),
       onAccept: () => {
-        Clipboard.setString(fullErrorMessage)
-      }
+        Clipboard.setString(fullErrorMessage);
+      },
     });
   } finally {
     console.log('Finally:upload');
