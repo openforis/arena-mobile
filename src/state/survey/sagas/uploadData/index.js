@@ -2,7 +2,6 @@ import {channel} from 'redux-saga';
 import {put, select, call, take, delay} from 'redux-saga/effects';
 import i18n from 'i18n';
 
-import {alert} from 'arena-mobile-ui/utils';
 import {getLocalRecordStatus, recordStatus} from 'arena/record';
 import {checkIfCurrentServerIsTheSurveysServer} from 'arena/survey';
 import * as fs from 'infra/fs';
@@ -272,13 +271,6 @@ function* handleUploadData() {
       surveyCycle,
       onStart: handleUploadStart(uploadFileChannel),
       onProgress: handleOnProgress(uploadFileChannel),
-    });
-  } catch (e) {
-    const fullErrorMessage = `${e.message}\n${e.stack}`;
-    alert({
-      title: i18n.t('Records:error_sending_data'),
-      message: fullErrorMessage,
-      acceptText: i18n.t('Common:ok'),
     });
   } finally {
     console.log('Finally:upload');

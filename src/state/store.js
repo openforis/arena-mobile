@@ -11,14 +11,15 @@ import reducers from './reducers';
 import sagas from './sagas';
 
 const sagaMiddleWare = createSagaMiddleware({
-  onError: (error, stackTrace) => {
+  onError: (error, errorInfo) => {
     setImmediate(() => {
       alert({
-        title:
-          'Oops! something unexpected happened. Please share this error with the Arena team.',
+        title: 'Oops! something wrong happened',
         message: `
+          Please share it with the Arena team. \n
           ${error.toString()}
-          ${JSON.stringify(stackTrace, null, 2)} 
+          ${error.stack}
+          ${JSON.stringify(errorInfo, null, 2)} 
         `,
         acceptText: 'Ok',
         onAccept: () => {
