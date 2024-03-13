@@ -1,6 +1,9 @@
 import {channel} from 'redux-saga';
 import {put, select, call, take, delay} from 'redux-saga/effects';
+import i18n from 'i18n';
+import Clipboard from '@react-native-clipboard/clipboard';
 
+import {alert} from 'arena-mobile-ui/utils';
 import {getLocalRecordStatus, recordStatus} from 'arena/record';
 import {checkIfCurrentServerIsTheSurveysServer} from 'arena/survey';
 import * as fs from 'infra/fs';
@@ -247,7 +250,7 @@ function* handleUploadData() {
 
     if (numberOfRecordsToUpload === 0) {
       yield call(handleShowToast, {
-        message: 'All records already uploaded to the server',
+        message: i18n.t('Records:all_records_sent'),
       });
       return;
     }
@@ -272,7 +275,15 @@ function* handleUploadData() {
       onProgress: handleOnProgress(uploadFileChannel),
     });
   } catch (e) {
-    yield call(handleShowToast, {message: `${e.message}: ${e.stack}`});
+    const fullErrorMessage = `${e.message}\n${e.stack}`
+    alert({
+      title: i18n.t('Records:error_sending_data'),
+      message: fullErrorMessage,
+      acceptText: i18n.t('Records:copy_error_message_to_clipboard'),
+      onAccept: () => {
+        Clipboard.setString(fullErrorMessage)
+      }
+    });
   } finally {
     console.log('Finally:upload');
     yield delay(2000);
