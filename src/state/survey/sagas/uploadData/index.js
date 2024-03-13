@@ -1,5 +1,6 @@
 import {channel} from 'redux-saga';
 import {put, select, call, take, delay} from 'redux-saga/effects';
+import i18n from 'i18n';
 
 import {getLocalRecordStatus, recordStatus} from 'arena/record';
 import {checkIfCurrentServerIsTheSurveysServer} from 'arena/survey';
@@ -247,7 +248,7 @@ function* handleUploadData() {
 
     if (numberOfRecordsToUpload === 0) {
       yield call(handleShowToast, {
-        message: 'All records already uploaded to the server',
+        message: i18n.t('Records:all_records_sent'),
       });
       return;
     }
@@ -271,8 +272,6 @@ function* handleUploadData() {
       onStart: handleUploadStart(uploadFileChannel),
       onProgress: handleOnProgress(uploadFileChannel),
     });
-  } catch (e) {
-    yield call(handleShowToast, {message: `${e.message}: ${e.stack}`});
   } finally {
     console.log('Finally:upload');
     yield delay(2000);
