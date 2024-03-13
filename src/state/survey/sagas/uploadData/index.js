@@ -1,7 +1,6 @@
 import {channel} from 'redux-saga';
 import {put, select, call, take, delay} from 'redux-saga/effects';
 import i18n from 'i18n';
-import Clipboard from '@react-native-clipboard/clipboard';
 
 import {alert} from 'arena-mobile-ui/utils';
 import {getLocalRecordStatus, recordStatus} from 'arena/record';
@@ -279,10 +278,7 @@ function* handleUploadData() {
     alert({
       title: i18n.t('Records:error_sending_data'),
       message: fullErrorMessage,
-      acceptText: i18n.t('Records:copy_error_message_to_clipboard'),
-      onAccept: () => {
-        Clipboard.setString(fullErrorMessage);
-      },
+      acceptText: i18n.t('Common:ok'),
     });
   } finally {
     console.log('Finally:upload');

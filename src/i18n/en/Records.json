@@ -70,6 +70,5 @@
     }
   },
   "all_records_sent": "All records already sent to the server",
-  "error_sending_data": "Error sending data",
-  "copy_error_message_to_clipboard": "Copy error message to clipboard"
+  "error_sending_data": "Error sending data"
 }
