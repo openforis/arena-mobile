@@ -50,7 +50,7 @@ function* checkIfShouldUpdate({recordUuid}) {
   return status === recordStatus.new || status === recordStatus.modifiedLocally;
 }
 
-function* handlePrepareRecordsData({allRecords}) {
+function* handlePrepareRecordsData({includeAllRecords}) {
   try {
     const uuidsOfRecordsToUpload = [];
     yield call(fs.mkdir, {dirPath: RECORDS_BASE_PATH});
@@ -63,7 +63,7 @@ function* handlePrepareRecordsData({allRecords}) {
     for (const recordFile of recordFiles) {
       const recordUuid = recordFile.name.split('.json')[0];
       const shouldInclude =
-        allRecords || (yield call(checkIfShouldUpdate, {recordUuid}));
+        includeAllRecords || (yield call(checkIfShouldUpdate, {recordUuid}));
 
       if (shouldInclude) {
         uuidsOfRecordsToUpload.push(recordUuid);
@@ -161,12 +161,12 @@ function* handlePrepareFilesData({uuidsOfRecordsToUpload}) {
 }
 
 function* handlePrepareZipData({
-  allRecords = false,
+  includeAllRecords = false,
   outputFileName = null,
 } = {}) {
   try {
     const uuidsOfRecordsToUpload = yield call(handlePrepareRecordsData, {
-      allRecords,
+      includeAllRecords,
     });
     const numberOfRecordsToUpload = uuidsOfRecordsToUpload.length;
     const numberOfFilesToUpload = yield call(handlePrepareFilesData, {
@@ -235,18 +235,22 @@ const handleJobProgress = _channel => job => {
 };
 
 function* handleGenerateZipData({
-  allRecords = false,
+  includeAllRecords = false,
   outputFileName = null,
 } = {}) {
-  yield call(handleGetRemoteRecordsSummary);
-
+  if (!includeAllRecords) {
+    yield call(handleGetRemoteRecordsSummary);
+  }
   yield put(formActions.clean());
   yield call(persistRecordsAndNodes);
 
   yield call(cleanTmpFolder);
   yield call(fs.mkdir, {dirPath: TMP_SURVEYS_BASE_PATH});
 
-  return yield call(handlePrepareZipData, {allRecords, outputFileName});
+  return yield call(handlePrepareZipData, {
+    includeAllRecords,
+    outputFileName,
+  });
 }
 
 function* handleUploadData() {
@@ -300,14 +304,14 @@ function* handleUploadData() {
 }
 
 export function* handleShareData({payload}) {
-  const {allRecords = false} = payload;
+  const {includeAllRecords = false} = payload;
   const surveyName = yield select(surveySelectors.getSelectedSurveyName);
   const timestamp = moment().format('yyyy-MM-DD_HH-mm-ss');
   const outputFileName = `${surveyName}_data_${timestamp}.zip`;
 
   const {numberOfRecordsToUpload, outputFilePath} = yield call(
     handleGenerateZipData,
-    {allRecords, outputFileName},
+    {includeAllRecords, outputFileName},
   );
   if (numberOfRecordsToUpload === 0) {
     const message = i18n.t('Records:share_data.no_records_to_share');

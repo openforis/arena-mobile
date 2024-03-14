@@ -15,8 +15,8 @@ const ShareDataButton = () => {
   const dispatch = useDispatch();
   const {t} = useTranslation();
 
-  const shareData = useCallback(({allRecords = false}) => {
-    dispatch(surveyActions.shareSurveyData({allRecords}));
+  const shareData = useCallback(({includeAllRecords = false}) => {
+    dispatch(surveyActions.shareSurveyData({includeAllRecords}));
   });
 
   const onPress = useCallback(() => {
@@ -24,9 +24,9 @@ const ShareDataButton = () => {
       title: t('Records:share_data.title'),
       message: t('Records:share_data.message'),
       acceptText: t('Records:share_data.only_updated_records'),
-      onAccept: () => shareData({allRecords: false}),
+      onAccept: () => shareData({includeAllRecords: false}),
       dismissText: t('Records:share_data.all_records'),
-      onDismiss: () => shareData({allRecords: true}),
+      onDismiss: () => shareData({includeAllRecords: true}),
     });
   }, [shareData]);
 
