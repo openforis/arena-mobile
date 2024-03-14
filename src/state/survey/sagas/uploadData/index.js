@@ -315,8 +315,11 @@ export function* handleShareData({payload}) {
     return;
   }
 
-  const res = yield call(Share.open, {url: `file://${outputFilePath}`});
-  console.log('===res', res);
+  try {
+    yield call(Share.open, {url: `file://${outputFilePath}`});
+  } catch (error) {
+    // ignore it
+  }
 }
 
 export default handleUploadData;
