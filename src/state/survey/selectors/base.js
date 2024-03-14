@@ -27,6 +27,11 @@ export const getSelectedSurveyUuid = createSelector(
   survey => survey?.uuid,
 );
 
+export const getSelectedSurveyName = createSelector(
+  getSurvey,
+  survey => survey?.props?.name,
+);
+
 export const getSelectedSurveyLanguage = createSelector(
   getUiState,
   ui => ui.selectedSurveyLanguage,

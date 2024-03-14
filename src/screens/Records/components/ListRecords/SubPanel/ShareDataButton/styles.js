@@ -4,7 +4,7 @@ const styles = ({baseStyles, colors}) =>
   StyleSheet.create({
     button: {
       borderRadius: baseStyles.bases.BASE,
-      marginLeft: 50,
+      marginLeft: 30,
       padding: 0,
     },
     colors,
