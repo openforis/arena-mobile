@@ -31,6 +31,10 @@ const styles = ({colors, baseStyles}) =>
       paddingVertical: baseStyles.bases.BASE_2,
       flex: 1,
     },
+    bottomButtonsContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
     colors,
   });
 

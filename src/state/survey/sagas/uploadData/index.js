@@ -223,6 +223,18 @@ const handleJobProgress = _channel => job => {
   }
 };
 
+function* handleGenerateZipData() {
+  yield call(handleGetRemoteRecordsSummary);
+
+  yield put(formActions.clean());
+  yield call(persistRecordsAndNodes);
+
+  yield call(cleanTmpFolder);
+  yield call(fs.mkdir, {dirPath: TMP_SURVEYS_BASE_PATH});
+  
+  return yield call(handlePrepareZipData);
+}
+
 function* handleUploadData() {
   // check remoteSummary first -> Download and based on the status and filter upload the corresponding records
 
@@ -236,15 +248,7 @@ function* handleUploadData() {
 
     yield call(checkIfCurrentServerIsTheSurveysServer, {survey, serverUrl});
 
-    yield call(handleGetRemoteRecordsSummary);
-
-    yield put(formActions.clean());
-    yield call(persistRecordsAndNodes);
-
-    yield call(cleanTmpFolder);
-    yield call(fs.mkdir, {dirPath: TMP_SURVEYS_BASE_PATH});
-    const {numberOfRecordsToUpload, numberOfFilesToUpload} =
-      yield call(handlePrepareZipData);
+    const {numberOfRecordsToUpload, numberOfFilesToUpload} = yield call(handleGenerateZipData);
 
     if (numberOfRecordsToUpload === 0) {
       yield call(handleShowToast, {
@@ -277,6 +281,11 @@ function* handleUploadData() {
     yield delay(2000);
     yield put(surveyActions.setUploading({isUploading: false}));
   }
+}
+
+export function* handleShareData() {
+  const {numberOfRecordsToUpload, numberOfFilesToUpload} = yield call(handleGenerateZipData);
+  return {numberOfRecordsToUpload}
 }
 
 export default handleUploadData;

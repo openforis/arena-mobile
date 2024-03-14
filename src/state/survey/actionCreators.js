@@ -6,6 +6,7 @@ const {survey} = createActions({
   [types.selectSurvey$]: ({surveyUuid}) => ({surveyUuid}),
   [types.deleteSurveyData$]: ({surveyUuid = false} = {}) => ({surveyUuid}),
   [types.uploadSurveyData$]: () => ({}),
+  [types.shareSurveyData$]: () => ({}),
   [types.SET_SURVEY]: ({survey: _survey}) => ({survey: _survey}),
   [types.UPDATE_JOB]: ({job}) => ({job}),
 
