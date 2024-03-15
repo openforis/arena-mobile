@@ -43,18 +43,19 @@ export const cleanPathWithBase = (path = '') => {
 
 export const scanDir = async (
   pathOfDirToScan,
-  data = {directory: [], files: []},
+  data = {directories: [], files: []},
 ) => {
-  const readedFilesAndDir = await readDir({dirPath: pathOfDirToScan});
+  const filesAndDirsRead = await readDir({dirPath: pathOfDirToScan});
+  if (!filesAndDirsRead) return data;
 
   await Promise.all(
-    readedFilesAndDir.map(async eachItem => {
+    filesAndDirsRead.map(async eachItem => {
+      const itemPath = pathOfDirToScan + '/' + eachItem.name;
       if (eachItem.isDirectory()) {
-        const directoryPath = pathOfDirToScan + '/' + eachItem.name;
-        data.directory.push(directoryPath);
-        data = await scanDir(directoryPath, data);
+        data.directories.push(itemPath);
+        data = await scanDir(itemPath, data);
       } else {
-        data.files.push(pathOfDirToScan + '/' + eachItem.name);
+        data.files.push(itemPath);
       }
     }),
   );
