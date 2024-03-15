@@ -47,14 +47,15 @@ export const scanDir = async (
 ) => {
   const filesAndDirsRead = await readDir({dirPath: pathOfDirToScan});
   if (!filesAndDirsRead) return data;
+
   await Promise.all(
     filesAndDirsRead.map(async eachItem => {
+      const itemPath = pathOfDirToScan + '/' + eachItem.name;
       if (eachItem.isDirectory()) {
-        const directoryPath = pathOfDirToScan + '/' + eachItem.name;
-        data.directories.push(directoryPath);
-        data = await scanDir(directoryPath, data);
+        data.directories.push(itemPath);
+        data = await scanDir(itemPath, data);
       } else {
-        data.files.push(pathOfDirToScan + '/' + eachItem.name);
+        data.files.push(itemPath);
       }
     }),
   );
