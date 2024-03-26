@@ -11,6 +11,7 @@ import CheckRemoteRecordsButton from './CheckRemoteRecordsButton';
 // import FiltersAndSorters from './FiltersAndSorters';
 import _styles from './styles';
 import UploadDataButton from './UploadDataButton';
+import ShareDataButton from './ShareDataButton';
 
 // TODO add more actions to the CreateNewRecord button ... like a modal with options to create a new record
 const SubPanel = () => {
@@ -38,7 +39,12 @@ const SubPanel = () => {
           </View>
         )}
         {!loading && (
-          <>{isReady ? <UploadDataButton /> : <CheckRemoteRecordsButton />}</>
+          <View style={styles.bottomButtonsContainer}>
+            {isReady ? <UploadDataButton /> : <CheckRemoteRecordsButton />}
+            <ShareDataButton/>
+          </View>
+              
+        
         )}
       </View>
     </>

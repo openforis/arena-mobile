@@ -1,6 +1,8 @@
 import {channel} from 'redux-saga';
 import {put, select, call, take, delay} from 'redux-saga/effects';
+import Share from 'react-native-share';
 import i18n from 'i18n';
+import moment from 'moment';
 
 import {getLocalRecordStatus, recordStatus} from 'arena/record';
 import {checkIfCurrentServerIsTheSurveysServer} from 'arena/survey';
@@ -23,9 +25,12 @@ import surveysApi from 'state/surveys/api';
 
 import surveyActions from '../../actionCreators';
 import surveySelectors from '../../selectors';
-const TMP_SURVEYS_BASE_PATH = `${fs.TMP_BASE_PATH}/survey_zip`;
+
+const TMP_SURVEYS_FOLDER_NAME = 'survey_zip';
+const TMP_SURVEYS_BASE_PATH = `${fs.TMP_BASE_PATH}/${TMP_SURVEYS_FOLDER_NAME}`;
 const RECORDS_BASE_PATH = `${TMP_SURVEYS_BASE_PATH}/records`;
 const FILES_BASE_PATH = `${TMP_SURVEYS_BASE_PATH}/files`;
+const TMP_DEFAULT_OUTPUT_FILE_NAME = 'survey.zip';
 
 function* checkIfShouldUpdate({recordUuid}) {
   // TODO when filter checking if the recordUuids is in the whitelist or whitelist is empty based on filters and seclection
@@ -45,7 +50,7 @@ function* checkIfShouldUpdate({recordUuid}) {
   return status === recordStatus.new || status === recordStatus.modifiedLocally;
 }
 
-function* handlePrepareRecordsData() {
+function* handlePrepareRecordsData({includeAllRecords}) {
   try {
     const uuidsOfRecordsToUpload = [];
     yield call(fs.mkdir, {dirPath: RECORDS_BASE_PATH});
@@ -57,8 +62,10 @@ function* handlePrepareRecordsData() {
 
     for (const recordFile of recordFiles) {
       const recordUuid = recordFile.name.split('.json')[0];
-      const shouldUpdate = yield call(checkIfShouldUpdate, {recordUuid});
-      if (shouldUpdate) {
+      const shouldInclude =
+        includeAllRecords || (yield call(checkIfShouldUpdate, {recordUuid}));
+
+      if (shouldInclude) {
         uuidsOfRecordsToUpload.push(recordUuid);
         recordsJson.push({uuid: recordUuid, cycle});
         yield call(fs.copyFile, {
@@ -153,21 +160,25 @@ function* handlePrepareFilesData({uuidsOfRecordsToUpload}) {
   }
 }
 
-function* handlePrepareZipData() {
+function* handlePrepareZipData({
+  includeAllRecords = false,
+  outputFileName = null,
+} = {}) {
   try {
-    const uuidsOfRecordsToUpload = yield call(handlePrepareRecordsData);
+    const uuidsOfRecordsToUpload = yield call(handlePrepareRecordsData, {
+      includeAllRecords,
+    });
     const numberOfRecordsToUpload = uuidsOfRecordsToUpload.length;
     const numberOfFilesToUpload = yield call(handlePrepareFilesData, {
       uuidsOfRecordsToUpload,
     });
 
-    yield call(zip, {
-      source: 'survey_zip',
-      destination: 'survey.zip',
+    const outputFilePath = yield call(zip, {
+      source: TMP_SURVEYS_FOLDER_NAME,
+      destination: outputFileName ?? TMP_DEFAULT_OUTPUT_FILE_NAME,
       base: fs.TMP_BASE_PATH,
-      baseOutput: fs.TMP_BASE_PATH,
     });
-    return {numberOfRecordsToUpload, numberOfFilesToUpload};
+    return {numberOfRecordsToUpload, numberOfFilesToUpload, outputFilePath};
   } catch (e) {
     console.log(e);
     throw e;
@@ -223,6 +234,25 @@ const handleJobProgress = _channel => job => {
   }
 };
 
+function* handleGenerateZipData({
+  includeAllRecords = false,
+  outputFileName = null,
+} = {}) {
+  if (!includeAllRecords) {
+    yield call(handleGetRemoteRecordsSummary);
+  }
+  yield put(formActions.clean());
+  yield call(persistRecordsAndNodes);
+
+  yield call(cleanTmpFolder);
+  yield call(fs.mkdir, {dirPath: TMP_SURVEYS_BASE_PATH});
+
+  return yield call(handlePrepareZipData, {
+    includeAllRecords,
+    outputFileName,
+  });
+}
+
 function* handleUploadData() {
   // check remoteSummary first -> Download and based on the status and filter upload the corresponding records
 
@@ -236,15 +266,9 @@ function* handleUploadData() {
 
     yield call(checkIfCurrentServerIsTheSurveysServer, {survey, serverUrl});
 
-    yield call(handleGetRemoteRecordsSummary);
-
-    yield put(formActions.clean());
-    yield call(persistRecordsAndNodes);
-
-    yield call(cleanTmpFolder);
-    yield call(fs.mkdir, {dirPath: TMP_SURVEYS_BASE_PATH});
-    const {numberOfRecordsToUpload, numberOfFilesToUpload} =
-      yield call(handlePrepareZipData);
+    const {numberOfRecordsToUpload, numberOfFilesToUpload} = yield call(
+      handleGenerateZipData,
+    );
 
     if (numberOfRecordsToUpload === 0) {
       yield call(handleShowToast, {
@@ -276,6 +300,29 @@ function* handleUploadData() {
     console.log('Finally:upload');
     yield delay(2000);
     yield put(surveyActions.setUploading({isUploading: false}));
+  }
+}
+
+export function* handleShareData({payload}) {
+  const {includeAllRecords = false} = payload;
+  const surveyName = yield select(surveySelectors.getSelectedSurveyName);
+  const timestamp = moment().format('yyyy-MM-DD_HH-mm-ss');
+  const outputFileName = `${surveyName}_data_${timestamp}.zip`;
+
+  const {numberOfRecordsToUpload, outputFilePath} = yield call(
+    handleGenerateZipData,
+    {includeAllRecords, outputFileName},
+  );
+  if (numberOfRecordsToUpload === 0) {
+    const message = i18n.t('Records:share_data.no_records_to_share');
+    yield call(handleShowToast, {message});
+    return;
+  }
+
+  try {
+    yield call(Share.open, {url: `file://${outputFilePath}`});
+  } catch (error) {
+    // ignore it
   }
 }
 

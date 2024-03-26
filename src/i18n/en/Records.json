@@ -70,5 +70,12 @@
     }
   },
   "all_records_sent": "All records already sent to the server",
-  "error_sending_data": "Error sending data"
+  "error_sending_data": "Error sending data",
+  "share_data": {
+    "title": "Share data",
+    "message": "Share data by email or other ways",
+    "only_updated_records": "Only updated records",
+    "all_records": "All records",
+    "no_records_to_share": "No records to share"
+  }
 }
