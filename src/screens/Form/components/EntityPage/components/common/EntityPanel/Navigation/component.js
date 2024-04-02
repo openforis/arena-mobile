@@ -161,7 +161,7 @@ const getSibilings = ({survey, parent, cycle, currentEntityNodeDef}) => {
 
   const currentIndex = sibilings.indexOf(currentEntityNodeDef.uuid);
 
-  if (currentIndex + 1 === sibilings?.length && sibilings?.length > 0) {
+  if (currentIndex + 1 === sibilings?.length) {
     // next parent sibling
     const parentAncestor = survey.nodeDefs[parent.parentUuid];
 
