@@ -152,6 +152,37 @@ const Parent = ({parent}) => {
   return <NavigationButton nodeDef={parent} align="left" />;
 };
 
+const getSibilings = ({survey, parent, cycle, currentEntityNodeDef}) => {
+  const sibilings = getNodeDefIndex({survey, nodeDef: parent, cycle});
+
+  if (Objects.isEmpty(sibilings)) {
+    return false;
+  }
+
+  const currentIndex = sibilings.indexOf(currentEntityNodeDef.uuid);
+
+  if (currentIndex + 1 === sibilings?.length && sibilings?.length > 0) {
+    // next parent sibling
+    const parentAncestor = survey.nodeDefs[parent.parentUuid];
+
+    const parentSiblings = getNodeDefIndex({
+      survey,
+      nodeDef: parentAncestor,
+      cycle,
+    });
+
+    const parentIndex = parentSiblings?.indexOf(parent.uuid);
+    if (parentIndex >= 0 && parentIndex + 1 < parentSiblings?.length) {
+      return survey.nodeDefs[parentSiblings?.[parentIndex + 1]];
+    }
+    return false;
+  }
+
+  if (currentIndex < sibilings?.length) {
+    return survey.nodeDefs[sibilings[currentIndex + 1]];
+  }
+};
+
 const useGetNext = ({parent}) => {
   const survey = useSelector(surveySelectors.getSurvey);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
@@ -184,11 +215,18 @@ const useGetNext = ({parent}) => {
       return false;
     }
 
+    const sibilingIndex = getSibilings({
+      currentEntityNodeDef,
+      survey,
+      parent,
+      cycle,
+    });
     if (
       NodeDefs.isMultiple(currentEntityNodeDef) &&
       showMultipleEntityHome &&
       parentNode.nodeDefUuid !== currentEntityNodeDef.uuid
     ) {
+      if (sibilingIndex) return sibilingIndex;
       return false;
     }
 
@@ -204,34 +242,7 @@ const useGetNext = ({parent}) => {
       return survey.nodeDefs[childrenIndex[0]];
     }
 
-    const sibilings = getNodeDefIndex({survey, nodeDef: parent, cycle});
-
-    if (Objects.isEmpty(sibilings)) {
-      return false;
-    }
-
-    const currentIndex = sibilings.indexOf(currentEntityNodeDef.uuid);
-
-    if (currentIndex + 1 === sibilings?.length && sibilings?.length > 0) {
-      // next parent sibling
-      const parentAncestor = survey.nodeDefs[parent.parentUuid];
-
-      const parentSiblings = getNodeDefIndex({
-        survey,
-        nodeDef: parentAncestor,
-        cycle,
-      });
-
-      const parentIndex = parentSiblings?.indexOf(parent.uuid);
-      if (parentIndex >= 0 && parentIndex + 1 < parentSiblings?.length) {
-        return survey.nodeDefs[parentSiblings?.[parentIndex + 1]];
-      }
-      return false;
-    }
-
-    if (currentIndex < sibilings?.length) {
-      return survey.nodeDefs[sibilings[currentIndex + 1]];
-    }
+    if (sibilingIndex) return sibilingIndex;
 
     return false;
   }, [survey, currentEntityNodeDef, cycle, parent, parentNode]);
