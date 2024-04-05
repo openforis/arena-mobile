@@ -14,22 +14,24 @@ import {useFile, useFilePickerModal} from '../hooks';
 
 import styles from './styles';
 
-const LoadFileButton = ({onPress}) => {
+const LoadFileButton = ({onPress, disabled}) => {
   return (
     <Button
       onPress={onPress}
       type="secondary"
       icon={<Icon name="upload" size="s" />}
+      disabled={disabled}
     />
   );
 };
 
-const DeleteFileButton = ({onPress}) => {
+const DeleteFileButton = ({onPress, disabled}) => {
   return (
     <Button
       onPress={onPress}
       type="ghostBlack"
       icon={<Icon name="trash-can-outline" size="s" />}
+      disabled={disabled}
     />
   );
 };
@@ -80,16 +82,25 @@ const NodeValueRender = ({node = false, nodeDef}) => {
     handleByPickerType,
   });
 
+  const isRecordLocked = useSelector(formSelectors.isRecordLocked);
   return (
     <>
       <Container>
         {node?.value ? (
           <>
             <FilePreview node={node} nodeDef={nodeDef} />
-            <DeleteFileButton node={node} onPress={deleteFile} />
+            <DeleteFileButton
+              node={node}
+              onPress={deleteFile}
+              disabled={isRecordLocked}
+            />
           </>
         ) : (
-          <LoadFileButton node={node} onPress={toggleModal} />
+          <LoadFileButton
+            node={node}
+            onPress={toggleModal}
+            disabled={isRecordLocked}
+          />
         )}
       </Container>
       {modal}
