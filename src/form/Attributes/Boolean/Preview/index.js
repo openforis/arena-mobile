@@ -77,6 +77,7 @@ BooleanOption.defaultProps = {
 
 export const BooleanAttribute = React.memo(
   ({node, nodeDef}) => {
+    const isRecordLocked = useSelector(formSelectors.isRecordLocked);
     const updateNode = useUpdateNode();
 
     const handlePress = useCallback(
@@ -84,9 +85,12 @@ export const BooleanAttribute = React.memo(
         event.stopPropagation();
         event.preventDefault();
 
+        if (isRecordLocked) {
+          return;
+        }
         updateNode({node, value: String(value)});
       },
-      [updateNode, node],
+      [updateNode, node, isRecordLocked],
     );
 
     return (

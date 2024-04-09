@@ -57,6 +57,7 @@ const NewItemButton = ({
   const isTable = useIsTable({parentNodeDef: _parentEntityNodeDef});
   const label = useNodeDefNameOrLabel({nodeDef: _parentEntityNodeDef});
 
+  const isRecordLocked = useSelector(formSelectors.isRecordLocked);
   if (visible && (!checkKeys || keys.length > 0)) {
     return (
       <Button
@@ -75,6 +76,7 @@ const NewItemButton = ({
         customTextStyle={styles.button}
         onPress={handleCreateNewNodeEntity}
         allowMultipleLines={true}
+        disabled={isRecordLocked}
       />
     );
   }

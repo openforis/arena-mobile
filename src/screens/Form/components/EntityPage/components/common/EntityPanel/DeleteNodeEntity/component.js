@@ -25,7 +25,7 @@ const DeleteNodeEntity = () => {
   );
 
   const parentLabel = useNodeDefNameOrLabel({nodeDef: parentEntityNodeDef});
-
+  const isRecordLocked = useSelector(formSelectors.isRecordLocked);
   const handleDeleteEntityNode = useCallback(() => {
     alert({
       title: t('Form:deleteNode.alert.title'),
@@ -48,6 +48,7 @@ const DeleteNodeEntity = () => {
       label={t('Form:navigation_panel.multiple.delete_this_item')}
       customContainerStyle={styles.buttonContainer}
       onPress={handleDeleteEntityNode}
+      disabled={isRecordLocked}
     />
   );
 };

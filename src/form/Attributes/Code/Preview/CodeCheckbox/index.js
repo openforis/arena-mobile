@@ -8,11 +8,19 @@ import useNodeFormActions from 'state/form/hooks/useNodeFormActions';
 import ChipContainer from '../components/ChipsContainer';
 import OptionChip from '../components/OptionChip';
 import {useCode} from '../hooks';
+import {useSelector} from 'react-redux';
+import {selectors as formSelectors, actions as formActions} from 'state/form';
 
-const CodeCheckbox = ({nodeDef}) => {
+const CodeCheckbox = ({nodeDef, disabled: forceDisabled}) => {
   const {nodes, categoryItems, getCategoryItemLabel} = useCode(nodeDef);
 
   const codeActions = useNodeFormActions({nodeDef});
+
+  const _disabled = useSelector(state =>
+    formSelectors.isNodeDefDisabled(state, nodeDef),
+  );
+  const isReadOnly = NodeDefs.isReadOnly(nodeDef);
+  const isRecordLocked = useSelector(formSelectors.isRecordLocked);
 
   const handlePress = useCallback(
     ({categoryItem, node, label}) =>
@@ -58,24 +66,38 @@ const CodeCheckbox = ({nodeDef}) => {
         : nodes?.[0];
       const label = getCategoryItemLabel(categoryItem);
 
+      const disabled =
+        forceDisabled || isReadOnly || isRecordLocked || _disabled;
       return {
         key: categoryItem.uuid,
         onPress: handlePress({categoryItem, node, label}),
         isActive: node?.value?.itemUuid === categoryItem.uuid,
         label,
+        disabled,
       };
     });
-  }, [getCategoryItemLabel, categoryItems, nodes, nodeDef, handlePress]);
+  }, [
+    getCategoryItemLabel,
+    categoryItems,
+    nodes,
+    nodeDef,
+    handlePress,
+    isReadOnly,
+    isRecordLocked,
+    _disabled,
+    forceDisabled,
+  ]);
 
   return (
     <BaseContainer nodeDef={nodeDef} nodes={nodes}>
       <ChipContainer>
-        {options.map(({key, onPress, isActive, label}) => (
+        {options.map(({key, onPress, isActive, label, disabled}) => (
           <OptionChip
             key={key}
             onPress={onPress}
             isActive={isActive}
             label={label}
+            disabled={disabled}
           />
         ))}
       </ChipContainer>

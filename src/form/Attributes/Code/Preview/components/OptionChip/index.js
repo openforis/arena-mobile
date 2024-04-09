@@ -8,10 +8,20 @@ import baseStyles from 'arena-mobile-ui/styles';
 
 import _styles from './styles';
 
-const OptionChip = ({iconName, onPressIcon, isActive, label, onPress}) => {
+const OptionChip = ({
+  iconName,
+  onPressIcon,
+  isActive,
+  label,
+  onPress,
+  disabled,
+}) => {
   const styles = useThemedStyles(_styles);
   return (
-    <Pressable onPress={onPress} style={styles.chipContainer({isActive})}>
+    <Pressable
+      onPress={onPress}
+      style={styles.chipContainer({isActive})}
+      disabled={disabled}>
       <TextBase customStyle={styles.label({isActive})}>{label}</TextBase>
       {iconName && onPressIcon && (
         <TouchableIcon
@@ -32,5 +42,6 @@ OptionChip.defaultProps = {
   isActive: false,
   label: '',
   onPress: () => {},
+  disabled: false,
 };
 export default OptionChip;

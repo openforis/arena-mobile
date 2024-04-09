@@ -157,6 +157,8 @@ const useSelectNodeAndNodeDefKeyAttributes = ({
   const dispatch = useDispatch();
   const {t} = useTranslation();
 
+  const isRecordLocked = useSelector(formSelectors.isRecordLocked);
+
   const parentEntityNodeDef = useSelector(formSelectors.getParentEntityNodeDef);
 
   const _parentEntityNodeDef = useMemo(() => {
@@ -194,6 +196,9 @@ const useSelectNodeAndNodeDefKeyAttributes = ({
   }, [dispatch, _parentEntityNodeDef, _parentEntityNode]);
 
   const handleSelectNodeAndNodeDef = useCallback(() => {
+    if (isRecordLocked) {
+      return;
+    }
     if (
       NodeDefs.isMultiple(_parentEntityNodeDef) &&
       nodeDef?.props?.key &&
@@ -221,6 +226,7 @@ const useSelectNodeAndNodeDefKeyAttributes = ({
     nodeDefName,
     keys,
     handleCreateNewNodeEntity,
+    isRecordLocked,
   ]);
 
   return handleSelectNodeAndNodeDef;
