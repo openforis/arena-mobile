@@ -11,6 +11,7 @@ import globalActions from 'state/globalActions';
 
 import styles from '../styles';
 import Telemetry from '../Telemetry';
+import FileXplore from '../FileXplore';
 
 const Settings = () => {
   const dispatch = useDispatch();
@@ -51,6 +52,8 @@ const Settings = () => {
           disabled={isLoading}
         />
       </View>
+      <View style={styles.dividers} />
+      <FileXplore />
       <View style={styles.dividers} />
       <View>
         <Button

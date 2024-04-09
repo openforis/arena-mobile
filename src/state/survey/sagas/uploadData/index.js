@@ -173,6 +173,11 @@ function* handlePrepareZipData({
       uuidsOfRecordsToUpload,
     });
 
+    yield call(handleShowToast, {
+      message: `handlePrepareZipData: ${numberOfRecordsToUpload}, ${uuidsOfRecordsToUpload}, `,
+    });
+    yield delay(2000);
+
     const outputFilePath = yield call(zip, {
       source: TMP_SURVEYS_FOLDER_NAME,
       destination: outputFileName ?? TMP_DEFAULT_OUTPUT_FILE_NAME,
@@ -247,6 +252,11 @@ function* handleGenerateZipData({
   yield call(cleanTmpFolder);
   yield call(fs.mkdir, {dirPath: TMP_SURVEYS_BASE_PATH});
 
+  yield call(handleShowToast, {
+    message: `handleGenerateZipData: ${TMP_SURVEYS_BASE_PATH}`,
+  });
+  yield delay(2000);
+
   return yield call(handlePrepareZipData, {
     includeAllRecords,
     outputFileName,
@@ -264,11 +274,21 @@ function* handleUploadData() {
 
     const surveyId = survey?.id;
 
+    yield call(handleShowToast, {
+      message: `A: ${surveyId}`,
+    });
+
+    yield delay(2000);
     yield call(checkIfCurrentServerIsTheSurveysServer, {survey, serverUrl});
 
     const {numberOfRecordsToUpload, numberOfFilesToUpload} = yield call(
       handleGenerateZipData,
     );
+
+    yield call(handleShowToast, {
+      message: `numberOfRecordsToUpload: ${numberOfRecordsToUpload}`,
+    });
+    yield delay(2000);
 
     if (numberOfRecordsToUpload === 0) {
       yield call(handleShowToast, {
@@ -296,6 +316,12 @@ function* handleUploadData() {
       onStart: handleUploadStart(uploadFileChannel),
       onProgress: handleOnProgress(uploadFileChannel),
     });
+  } catch (e) {
+    console.log(e);
+    yield call(handleShowToast, {
+      message: JSON.stringify(e),
+    });
+    throw e;
   } finally {
     console.log('Finally:upload');
     yield delay(2000);
@@ -323,6 +349,7 @@ export function* handleShareData({payload}) {
     yield call(Share.open, {url: `file://${outputFilePath}`});
   } catch (error) {
     // ignore it
+    console.log(error);
   }
 }
 
