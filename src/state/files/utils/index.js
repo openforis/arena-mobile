@@ -103,8 +103,25 @@ const getFileContent = async file => {
   return fileContent;
 };
 
-const getFilesContent = async files =>
-  files.forEach(async file => getFileContent(file));
+const moveFileContent = async ({file, destinationPath, encoding}) => {
+  const source = file?.uri?.replace('%20', ' ');
+  const destination = destinationPath.replace('%20', ' ');
+
+  const exists = await fs.dirExists(source);
+  if (!exists) {
+    return;
+  }
+
+  await fs.copyFileInStream({
+    sourcePath: source,
+    destinationPath: destination,
+    encoding,
+  });
+
+  console.log('Finish');
+
+  return;
+};
 
 export default {
   createFile,
@@ -112,5 +129,5 @@ export default {
   deleteFiles,
   getSurveyFiles,
   getFileContent,
-  getFilesContent,
+  moveFileContent,
 };
