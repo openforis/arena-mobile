@@ -70,7 +70,8 @@ const EntitySelectorTree = ({nodeDefUuid, level = 0}) => {
       Object.keys(
         parentNodeInHierarchy?.meta?.childApplicability || {},
       ).includes(nodeDef?.uuid)) &&
-    NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef)
+    NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef) &&
+    NodeDefs.isHiddenInMobile(cycle)(nodeDef)
   ) {
     return <></>;
   }
