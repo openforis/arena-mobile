@@ -41,27 +41,10 @@ function* checkIfShouldUpdate({recordUuid}) {
     cycle,
     uuid: recordUuid,
   });
-
-  yield call(handleShowToast, {
-    message: `ckIfSUpd: ${cycle}.${surveyUuid}`,
-  });
-  yield delay(2000);
   const recordRemoteSummary = yield select(state =>
     recordSelectors.getRemoteRecordSummary(state, recordUuid),
   );
-
-  yield call(handleShowToast, {
-    message: `recordRemoteSummary`,
-  });
-  yield delay(2000);
-
   const status = getLocalRecordStatus({record, recordRemoteSummary});
-
-  yield call(handleShowToast, {
-    message: `rRS.status: ${status}`,
-  });
-  yield delay(2000);
-
   return status === recordStatus.new || status === recordStatus.modifiedLocally;
 }
 
@@ -74,11 +57,6 @@ function* handlePrepareRecordsData({includeAllRecords}) {
 
     const recordFiles = yield call(getRecordsFiles, {surveyUuid, cycle});
     const recordsJson = [];
-
-    yield call(handleShowToast, {
-      message: `PRcsA: ${recordFiles.length}`,
-    });
-    yield delay(2000);
 
     for (const recordFile of recordFiles) {
       const recordUuid = recordFile.name.split('.json')[0];
@@ -95,26 +73,21 @@ function* handlePrepareRecordsData({includeAllRecords}) {
       }
     }
 
-    yield call(handleShowToast, {
-      message: `PRcsB: ${JSON.stringify(recordsJson, null, 2)}`,
-    });
-    yield delay(2000);
-
     yield call(fs.writeFile, {
       filePath: `${RECORDS_BASE_PATH}/records.json`,
       content: JSON.stringify(recordsJson, null, 2),
     });
 
     yield call(handleShowToast, {
-      message: `PRcsC: ${uuidsOfRecordsToUpload.length}`,
+      message: `RECORDS: ${uuidsOfRecordsToUpload.length}`,
     });
-    yield delay(2000);
+    yield delay(700);
     return uuidsOfRecordsToUpload;
   } catch (e) {
     yield call(handleShowToast, {
-      message: `PRcs: ${e.message}`,
+      message: `PRcsERROR: ${e.message}`,
     });
-    yield delay(2000);
+    yield delay(700);
 
     console.log(e);
     throw e;
@@ -146,15 +119,27 @@ function* prepareFileData(fileUuid) {
   delete fileToExport.props.path;
 
   yield call(handleShowToast, {
-    message: `A.fileToExport: ${JSON.stringify(fileToExport, null, 2)}`,
+    message: `A.fileToExport: ${file.uuid}`,
   });
   yield delay(1000);
 
-  yield call(fs.writeFile, {
-    filePath: `${FILES_BASE_PATH}/${file.uuid}.bin`,
-    content: fileContent,
-    encoding: 'base64',
+  try {
+    yield call(fs.writeFile, {
+      filePath: `${FILES_BASE_PATH}/${file.uuid}.bin`,
+      content: fileContent,
+      encoding: 'base64',
+    });
+  } catch (e) {
+    yield call(handleShowToast, {
+      message: `EEEEERRRROR.fileToExport: ${e.message} ${file.uuid}`,
+    });
+    yield delay(500);
+  }
+
+  yield call(handleShowToast, {
+    message: `W.fileToExport: ${file.uuid}`,
   });
+  yield delay(500);
 
   return fileToExport;
 }
@@ -173,7 +158,7 @@ function* handlePrepareFilesData({uuidsOfRecordsToUpload}) {
     yield call(handleShowToast, {
       message: `A.handlePrepareFilesData: ${surveyFiles.length}`,
     });
-    yield delay(2000);
+    yield delay(700);
 
     const filesArr = [];
 
@@ -226,18 +211,18 @@ function* handlePrepareZipData({
     const numberOfRecordsToUpload = uuidsOfRecordsToUpload.length;
 
     yield call(handleShowToast, {
-      message: `A.handlePrepareZipData: ${numberOfRecordsToUpload}`,
+      message: `AA.handlePrepareZipData: ${numberOfRecordsToUpload}`,
     });
-    yield delay(2000);
+    yield delay(700);
 
     const numberOfFilesToUpload = yield call(handlePrepareFilesData, {
       uuidsOfRecordsToUpload,
     });
 
     yield call(handleShowToast, {
-      message: `handlePrepareZipData: ${numberOfRecordsToUpload}, ${uuidsOfRecordsToUpload}, `,
+      message: `EE.handlePrepareFilesData: ${numberOfRecordsToUpload}, ${uuidsOfRecordsToUpload}, `,
     });
-    yield delay(2000);
+    yield delay(700);
 
     const outputFilePath = yield call(zip, {
       source: TMP_SURVEYS_FOLDER_NAME,
@@ -247,6 +232,10 @@ function* handlePrepareZipData({
     return {numberOfRecordsToUpload, numberOfFilesToUpload, outputFilePath};
   } catch (e) {
     console.log(e);
+    yield call(handleShowToast, {
+      message: `EEROR.E: ${e.message}`,
+    });
+    yield delay(700);
     throw e;
   } finally {
     console.log('Finally');
@@ -316,7 +305,7 @@ function* handleGenerateZipData({
   yield call(handleShowToast, {
     message: `handleGenerateZipData: ${TMP_SURVEYS_BASE_PATH}`,
   });
-  yield delay(2000);
+  yield delay(700);
 
   return yield call(handlePrepareZipData, {
     includeAllRecords,
@@ -339,7 +328,7 @@ function* handleUploadData() {
       message: `A: ${surveyId}`,
     });
 
-    yield delay(2000);
+    yield delay(700);
     yield call(checkIfCurrentServerIsTheSurveysServer, {survey, serverUrl});
 
     const {numberOfRecordsToUpload, numberOfFilesToUpload} = yield call(
@@ -349,7 +338,7 @@ function* handleUploadData() {
     yield call(handleShowToast, {
       message: `numberOfRecordsToUpload: ${numberOfRecordsToUpload}`,
     });
-    yield delay(2000);
+    yield delay(700);
 
     if (numberOfRecordsToUpload === 0) {
       yield call(handleShowToast, {
@@ -385,7 +374,7 @@ function* handleUploadData() {
     throw e;
   } finally {
     console.log('Finally:upload');
-    yield delay(2000);
+    yield delay(700);
     yield put(surveyActions.setUploading({isUploading: false}));
   }
 }
