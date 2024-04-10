@@ -116,6 +116,42 @@ export const readfile = async ({filePath, encoding}) => {
   return RNFetchBlob.fs.readFile(path, encoding || DEFAULT_ENCODING);
 };
 
+export const copyFileInStream = async ({
+  sourcePath,
+  destinationPath,
+  encoding = DEFAULT_ENCODING,
+}) => {
+  try {
+    const writeStream = await RNFetchBlob.fs.writeStream(
+      destinationPath,
+      encoding,
+    );
+    const readStream = await RNFetchBlob.fs.readStream(sourcePath, encoding);
+
+    return new Promise((resolve, reject) => {
+      readStream.open();
+
+      readStream.onData(chunk => {
+        console.log('chunk', chunk);
+        writeStream.write(chunk);
+      });
+      readStream.onEnd(() => {
+        console.log('close');
+        writeStream.close();
+        resolve();
+      });
+
+      readStream.onError(err => {
+        console.log(err);
+        reject(err);
+      });
+    });
+  } catch (e) {
+    console.log('error', e);
+    return false;
+  }
+};
+
 export const readDir = async ({dirPath}) => {
   const _path = cleanPathWithBase(dirPath);
   const exists = await dirExists(_path);

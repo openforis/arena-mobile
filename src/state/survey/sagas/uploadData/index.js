@@ -78,17 +78,8 @@ function* handlePrepareRecordsData({includeAllRecords}) {
       content: JSON.stringify(recordsJson, null, 2),
     });
 
-    yield call(handleShowToast, {
-      message: `RECORDS: ${uuidsOfRecordsToUpload.length}`,
-    });
-    yield delay(700);
     return uuidsOfRecordsToUpload;
   } catch (e) {
-    yield call(handleShowToast, {
-      message: `PRcsERROR: ${e.message}`,
-    });
-    yield delay(700);
-
     console.log(e);
     throw e;
   } finally {
@@ -102,8 +93,6 @@ function* prepareFileData(fileUuid) {
     filesSelectors.getFileByUuid(state, fileUuid),
   );
 
-  const fileContent = yield call(fileUtils.getFileContent, file);
-
   const fileToExport = {
     uuid: file.uuid,
     props: {
@@ -115,32 +104,21 @@ function* prepareFileData(fileUuid) {
   };
 
   // we must avoid sending uri and path to the backend
-  delete fileToExport.props.uri;
   delete fileToExport.props.path;
 
-  yield call(handleShowToast, {
-    message: `A.fileToExport: ${file.uuid}`,
-  });
-  yield delay(1000);
-
   try {
-    yield call(fs.writeFile, {
-      filePath: `${FILES_BASE_PATH}/${file.uuid}.bin`,
-      content: fileContent,
+    yield call(fileUtils.moveFileContent, {
+      file,
+      destinationPath: `${FILES_BASE_PATH}/${file.uuid}.bin`,
       encoding: 'base64',
     });
   } catch (e) {
     yield call(handleShowToast, {
-      message: `EEEEERRRROR.fileToExport: ${e.message} ${file.uuid}`,
+      message: `Error.fileToExport: ${e.message} ${file.uuid}`,
     });
-    yield delay(500);
   }
 
-  yield call(handleShowToast, {
-    message: `W.fileToExport: ${file.uuid}`,
-  });
-  yield delay(500);
-
+  delete fileToExport.props.uri;
   return fileToExport;
 }
 
@@ -155,11 +133,6 @@ function* handlePrepareFilesData({uuidsOfRecordsToUpload}) {
       cycle,
     });
 
-    yield call(handleShowToast, {
-      message: `A.handlePrepareFilesData: ${surveyFiles.length}`,
-    });
-    yield delay(700);
-
     const filesArr = [];
 
     for (const file of surveyFiles) {
@@ -171,21 +144,11 @@ function* handlePrepareFilesData({uuidsOfRecordsToUpload}) {
       const recordUuid = fileObject[0];
       const fileUuid = fileObject[2];
 
-      yield call(handleShowToast, {
-        message: `A.File: ${fileObject.length}.${fileUuid}`,
-      });
-      yield delay(1000);
-
       if (uuidsOfRecordsToUpload.includes(recordUuid)) {
         const fileToExport = yield call(prepareFileData, fileUuid);
         filesArr.push(fileToExport);
       }
     }
-
-    yield call(handleShowToast, {
-      message: `A.handlePrepareFilesData: Ready to write`,
-    });
-    yield delay(1000);
 
     yield call(fs.writeFile, {
       filePath: `${FILES_BASE_PATH}/files.json`,
@@ -210,19 +173,9 @@ function* handlePrepareZipData({
     });
     const numberOfRecordsToUpload = uuidsOfRecordsToUpload.length;
 
-    yield call(handleShowToast, {
-      message: `AA.handlePrepareZipData: ${numberOfRecordsToUpload}`,
-    });
-    yield delay(700);
-
     const numberOfFilesToUpload = yield call(handlePrepareFilesData, {
       uuidsOfRecordsToUpload,
     });
-
-    yield call(handleShowToast, {
-      message: `EE.handlePrepareFilesData: ${numberOfRecordsToUpload}, ${uuidsOfRecordsToUpload}, `,
-    });
-    yield delay(700);
 
     const outputFilePath = yield call(zip, {
       source: TMP_SURVEYS_FOLDER_NAME,
@@ -233,9 +186,9 @@ function* handlePrepareZipData({
   } catch (e) {
     console.log(e);
     yield call(handleShowToast, {
-      message: `EEROR.E: ${e.message}`,
+      message: `ERROR: ${e.message}`,
     });
-    yield delay(700);
+
     throw e;
   } finally {
     console.log('Finally');
@@ -302,11 +255,6 @@ function* handleGenerateZipData({
   yield call(cleanTmpFolder);
   yield call(fs.mkdir, {dirPath: TMP_SURVEYS_BASE_PATH});
 
-  yield call(handleShowToast, {
-    message: `handleGenerateZipData: ${TMP_SURVEYS_BASE_PATH}`,
-  });
-  yield delay(700);
-
   return yield call(handlePrepareZipData, {
     includeAllRecords,
     outputFileName,
@@ -324,21 +272,11 @@ function* handleUploadData() {
 
     const surveyId = survey?.id;
 
-    yield call(handleShowToast, {
-      message: `A: ${surveyId}`,
-    });
-
-    yield delay(700);
     yield call(checkIfCurrentServerIsTheSurveysServer, {survey, serverUrl});
 
     const {numberOfRecordsToUpload, numberOfFilesToUpload} = yield call(
       handleGenerateZipData,
     );
-
-    yield call(handleShowToast, {
-      message: `numberOfRecordsToUpload: ${numberOfRecordsToUpload}`,
-    });
-    yield delay(700);
 
     if (numberOfRecordsToUpload === 0) {
       yield call(handleShowToast, {
@@ -373,8 +311,6 @@ function* handleUploadData() {
     });
     throw e;
   } finally {
-    console.log('Finally:upload');
-    yield delay(700);
     yield put(surveyActions.setUploading({isUploading: false}));
   }
 }
