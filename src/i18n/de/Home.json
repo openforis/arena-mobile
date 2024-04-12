@@ -1,0 +1,78 @@
+{
+  "header_title": "Arena",
+  "logged_in_as": "Eingeloggt als",
+  "role": "Rolle",
+  "name": "Name",
+  "email": "Email",
+  "not_logged_in": {
+    "title": "Nicht authentifiziert",
+    "info": "Bitte loggen Sie sich ins System ein",
+    "cta": "Einloggen"
+  },
+  "survey": {
+    "no_survey": {
+      "title": "Keine Umfrage ausgewählt",
+      "info": "Wählen Sie eine gültige Umfrage aus oder laden Sie eine neue hoch",
+      "cta": "Umfrage auswählen"
+    },
+    "no_surveys": {
+      "title": "Keine Umfragen",
+      "info": "Bitte laden Sie eine gültige Umfrage hoch",
+      "cta": "Umfrage hochladen"
+    },
+    "card": {
+      "active_survey": "$t(Surveys:active_survey)",
+      "id": "Id",
+      "name": "Name",
+      "language": "Sprache",
+      "selected_language": "Ausgewählte Sprache",
+      "cycle": "Zyklus",
+      "cycle_value": "{{ cycle }} von {{ numberOfCycles }}",
+      "selected_cycle": "Ausgewählter Zyklus",
+      "go_to_survey_options": "Zu den Umfrageoptionen gehen",
+      "number_of_records": "Anzahl der Datensätze"
+    }
+  },
+  "roles": {
+    "systemAdmin": {
+      "label": "Systemadministrator",
+      "label_plural": "Systemadministratoren",
+      "description": "OF Arena Systemadministratoren"
+    },
+    "surveyManager": {
+      "label": "Umfragemanager",
+      "label_plural": "Umfragemanager",
+      "description": "OF Arena Umfragemanager"
+    },
+    "surveyAdmin": {
+      "label": "Umfrageadministrator",
+      "label_plural": "Umfrageadministratoren",
+      "description": "Vollständige Rechte"
+    },
+    "surveyEditor": {
+      "label": "Umfrageeditor",
+      "label_plural": "Umfrageeditoren",
+      "description": "Kann Umfrage, Datensätze, Benutzer einladen bearbeiten"
+    },
+    "dataEditor": {
+      "label": "Dateneditor",
+      "label_plural": "Dateneditoren",
+      "description": "Kann Datensätze im Dateneingabeschritt bearbeiten"
+    },
+    "dataCleanser": {
+      "label": "Datenbereiniger",
+      "label_plural": "Datenbereiniger",
+      "description": "Kann Datensätze im Datenbereinigungsschritt bearbeiten"
+    },
+    "dataAnalyst": {
+      "label": "Datenanalyst",
+      "label_plural": "Datenanalysten",
+      "description": "Kann Datensätze im Datenanalyseschritt bearbeiten"
+    },
+    "surveyGuest": {
+      "label": "Umfragegast",
+      "label_plural": "Umfragegäste",
+      "description": "Kann Datensätze ansehen"
+    }
+  }
+}

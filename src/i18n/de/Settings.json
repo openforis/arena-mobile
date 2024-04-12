@@ -1,0 +1,122 @@
+{
+  "title": "Einstellungen",
+  "reset": {
+    "cta": "Zurücksetzen",
+    "title": "Sind Sie sicher, dass Sie zurücksetzen möchten?",
+    "message": "Datensätze und Umfragen werden vom Gerät entfernt",
+    "accept": "Ja, alle Daten löschen",
+    "dismiss": "Nein",
+    "required": "zurücksetzen"
+  },
+  "devMode": {
+    "disable": "Entwicklermodus deaktivieren"
+  },
+  "telemetry": {
+    "cta": "Telemetrie"
+  },
+  "connect": {
+    "cta": "Mit dem Server verbinden"
+  },
+  "survey": {
+    "title": "Umfrage",
+    "taxonomies": {
+      "title": "Taxonomien",
+      "screen": {
+        "header": "Taxonomien",
+        "description": "Wählen Sie aus, wie Sie die Taxonomien im Eingabeformular sehen möchten.",
+        "fields": {
+          "code": "(Code)",
+          "genus": "Gattung",
+          "family": "Familie",
+          "scientificName": "Wissenschaftlicher Name",
+          "vernacularNames": "Volkstümliche Namen"
+        },
+        "show_one_option_per_vernacular_name": "Zeige eine Option pro volkstümlichem Namen",
+        "example": "Beispiel"
+      }
+    }
+  },
+  "images_quality_and_size": {
+    "title": "Bildqualität und -größe",
+    "screen": {
+      "header": "Bildqualität und -größe",
+      "description": "Wählen Sie die Qualität der Bilder aus.",
+      "max_resolution": {
+        "title": "Maximale Auflösung erzwingen"
+      },
+      "quality": {
+        "label": "Qualität {{ value }}{{ subfix }}",
+        "info": "Wählen Sie die Qualität der Bilder aus."
+      },
+      "max_width": {
+        "label": "Maximale Breite  {{ value }} {{ subfix }}",
+        "info": "Wählen Sie die maximale Breite der Bilder aus. (von {{from}} bis {{to}} Pixel.)"
+      },
+      "max_height": {
+        "label": "Maximale Höhe {{ value }} {{ subfix }}",
+        "info": "Wählen Sie die maximale Höhe der Bilder aus. (von {{from}} bis {{to}} Pixel.)"
+      },
+      "aspect_ratio": {
+        "label": "Seitenverhältnis beibehalten"
+      }
+    }
+  },
+  "application_language": {
+    "title": "Sprache"
+  },
+  "geo": {
+    "title": "Geo",
+    "useMapsMeAsDefault": {
+      "title": "Maps.me als Standard verwenden"
+    }
+  },
+  "style": {
+    "title": "Stil",
+    "TextAndSpacingSize": {
+      "title": "Textgröße und Abstand",
+      "screen": {
+        "header": "Textgröße und Abstand",
+        "textSize": {
+          "title": "Textgröße",
+          "info": "Verwalten Sie die Schriftgröße, um das Leseerlebnis zu optimieren und Ihren persönlichen Stil anzupassen.",
+          "reset": "Auf Standard zurücksetzen"
+        },
+        "spacingSize": {
+          "title": "Abstand",
+          "info": "Ändern Sie den Abstand, um die Lücken zwischen Text, Schaltflächen und anderen Elementen zu vergrößern oder zu verkleinern",
+          "reset": "Auf Standard zurücksetzen"
+        }
+      }
+    },
+    "ColorScheme": {
+      "title": "Farbschema",
+      "screen": {
+        "header": "Farbschema",
+        "info": "Wählen Sie das Farbschema, das am besten zu Ihren Bedürfnissen passt.",
+        "reset": "Auf Standard zurücksetzen",
+        "options": {
+          "light": "Hell",
+          "dark": "Dunkel"
+        }
+      }
+    }
+  },
+  "form": {
+    "title": "Formular",
+    "jumpBetweenAttributes": {
+      "title": "Zwischen Attributen springen (Experimentell)"
+    },
+    "hasToLockRecordsWhenLeave": {
+      "title": "Datensätze sperren, wenn Formular verlassen wird"
+    },
+    "showDescriptions": {
+      "title": "Beschreibungen anzeigen"
+    },
+    "isSingleNodeView": {
+      "title": "Formular mit nur einem Attribut anzeigen"
+    },
+    "showCloseButtonInForm": {
+      "title": "Schließen-Schaltfläche im Formular anzeigen"
+    }
+  }
+}

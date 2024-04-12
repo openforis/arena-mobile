@@ -1,0 +1,103 @@
+{
+  "active_survey": "Aktive Umfrage",
+  "status": "Status",
+  "origin": {
+    "local": "Lokal",
+    "remote": "Remote"
+  },
+  "title": {
+    "local": "Lokale Umfragen",
+    "remote": "Alle Umfragen"
+  },
+  "subpanel": {
+    "server_connection_bar": {
+      "error": {
+        "info": "Fehler bei der Verbindung zum Server",
+        "cta_label": "Einstellungen prüfen"
+      },
+      "success": {
+        "info": "Verbunden mit: {{ serverUrl }}"
+      },
+      "info": {
+        "info": "Offline-Modus"
+      }
+    },
+    "surveys_origin_selector": {
+      "local": {
+        "label": "Mit dem Server verbinden"
+      },
+      "remote": {
+        "label": "Nur Umfragen auf diesem Gerät anzeigen"
+      }
+    }
+  },
+  "actions": {
+    "delete": "Löschen",
+    "select": "Verwenden",
+    "continue": "Fortsetzen",
+    "download": "Herunterladen",
+    "update": "Aktualisieren",
+    "unpublished": "-"
+  },
+
+  "status_labels": {
+    "not_in_device": "Nicht auf dem Gerät",
+    "ready": "Aktuell",
+    "update": "Veraltet. Neuere verfügbar",
+    "not_this_server": "Auf diesem Server nicht verfügbar",
+    "not_published": "NICHT veröffentlicht"
+  },
+  "toasts": {
+    "server": "Sie haben bereits diese Umfrage, die auf einen anderen Server zeigt, verbinden Sie sich mit {{ surveyServer}} statt mit {{ serverUrl }}",
+    "data_deleted": "Alle Datensätze in dieser Umfrage wurden erfolgreich gelöscht",
+    "data_in_record_deleted": "Alle Daten in diesem Datensatz wurden erfolgreich gelöscht"
+  },
+  "empty_with_surveys": {
+    "title": "Keine Ergebnisse.",
+    "info": "Es scheint, als hätten Sie keine Umfragen für diese Suche."
+  },
+  "local": {
+    "title": "Gerät",
+    "error": {
+      "title": "Es scheint, als hätten Sie keine Umfragen auf Ihrem Gerät.",
+      "info": "Verbinden Sie Ihr Gerät und laden Sie eine gültige Umfrage.",
+      "cta_label": "Vom Server herunterladen"
+    },
+    "empty": {
+      "title": "Es scheint, als hätten Sie keine Umfragen auf Ihrem Gerät.",
+      "info": "Verbinden Sie Ihr Gerät und laden Sie eine gültige Umfrage.",
+      "cta_label": "Mit dem Server verbinden"
+    }
+  },
+  "error": {
+    "title": "Es scheint, als gäbe es einen Fehler bei der Verbindung mit dem Server.",
+    "info": "Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+    "cta_label": "Verbindungseinstellungen prüfen"
+  },
+  "remote": {
+    "title": "Server",
+    "error": {
+      "title": "Es scheint, als gäbe es einen Fehler bei der Verbindung mit dem Server.",
+      "info": "Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+      "cta_label": "Mit dem Server verbinden"
+    },
+    "empty": {
+      "title": "Es scheint, als gäbe es keine Umfragen auf dem Server.",
+      "info": "Bitte fragen Sie den Server-Admin.",
+      "cta_label": "Zurück zu lokalen Umfragen"
+    }
+  },
+  "selected_survey_panel": {
+    "more_actions": "Mehr Optionen",
+    "delete": {
+      "alert": {
+        "title": "Sind Sie sicher?",
+        "message": "Sie werden die Umfrage {{ name }} und alle ihre Daten vom Gerät entfernen.",
+        "accept": "Ja, löschen",
+        "dismiss": "Nein",
+        "delete_data": "Daten löschen",
+        "delete_survey": "Umfrage löschen"
+      }
+    }
+  }
+}

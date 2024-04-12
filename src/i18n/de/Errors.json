@@ -1,0 +1,31 @@
+{
+  "appErrors": {
+    "cannotGetChild": "Kann Kind \"{{childName}}\" nicht vom Attribut {{name}} abrufen",
+    "cannotOverridePublishedTaxa": "Veröffentlichte Taxa können nicht überschrieben werden",
+    "cantUpdateStep": "Der Schritt kann nicht aktualisiert werden",
+    "entryDataNotFound": "Eintragsdaten nicht gefunden: {{entryName}}",
+    "generic": "Unerwarteter Fehler: {{text}}",
+    "importingDataIntoWrongCollectSurvey": "Daten werden in die falsche Umfrage importiert. Erwartete URI: {{collectSurveyUri}}",
+    "invalidType": "Ungültiger Typ {{type}}",
+    "jobCanceledOrErrorsFound": "Job abgebrochen oder Fehler gefunden; Transaktion zurückrollen",
+    "paramIsRequired": "Parameter {{param}} ist erforderlich",
+    "chainCannotBeSaved": "Die Kette ist ungültig und kann nicht gespeichert werden",
+    "unableToFindParent": "Elternteil von {{name}} kann nicht gefunden werden",
+    "unableToFindNode": "Knoten mit dem Namen {{name}} kann nicht gefunden werden",
+    "unableToFindSibling": "Geschwister mit dem Namen {{name}} können nicht gefunden werden",
+    "undefinedFunction": "Undefinierte Funktion \"{{fnName}}\" oder falsche Parametertypen",
+    "invalidSyntax": "Ausdruckssyntax ist ungültig",
+    "unsupportedFunctionType": "Nicht unterstützter Funktionstyp: {{exprType}}",
+    "functionHasTooFewArguments": "Funktion {{fnName}} erfordert mindestens {{minArgs}} (erhalten {{numArgs}})",
+    "functionHasTooManyArguments": "Funktion {{fnName}} akzeptiert höchstens {{maxArgs}} (erhalten {{numArgs}})",
+    "userHasPendingInvitation": "Es gibt bereits eine ausstehende Einladung für den Benutzer mit der E-Mail \"{{email}}\"; er/sie kann nicht zu dieser Umfrage eingeladen werden, bis sie akzeptiert wird",
+    "userHasRole": "Der angegebene Benutzer hat bereits eine Rolle in dieser Umfrage",
+    "userInvalid": "Ungültiger Benutzer",
+    "userIsAdmin": "Der angegebene Benutzer ist bereits ein Systemadministrator",
+    "userNotAllowedToChangePref": "Benutzer darf die Einstellungen nicht ändern",
+    "userNotAuthorized": "Benutzer {{userName}} ist nicht autorisiert"
+  },
+  "systemErrors": {
+    "somethingWentWrong": "Oooops! Etwas ist schief gelaufen. Versuchen Sie, die Seite zu aktualisieren."
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "record": {
+    "keyDuplicate": "Doppelter Datensatzschlüssel",
+    "oneOrMoreInvalidValues": "Ein oder mehrere Werte sind ungültig",
+    "uniqueAttributeDuplicate": "Doppelter Wert",
+
+    "attribute": {
+      "customValidation": "Ungültiger Wert",
+      "uniqueDuplicate": "Doppelter Wert",
+      "valueInvalid": "Ungültiger Wert",
+      "valueRequired": "Erforderlicher Wert"
+    },
+    "entity": {
+      "keyDuplicate": "Doppelter Entitätsschlüssel"
+    },
+    "nodes": {
+      "count": {
+        "invalid": "{{nodeDefName}} Knoten müssen genau {{count}} sein",
+        "maxExceeded": "{{nodeDefName}} Knoten müssen weniger oder gleich {{maxCount}} sein",
+        "minNotReached": "{{nodeDefName}} Knoten müssen mehr oder gleich {{minCount}} sein"
+      }
+    }
+  }
+}

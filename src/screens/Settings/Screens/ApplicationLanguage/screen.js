@@ -22,9 +22,10 @@ const _LANGUAGES = {
   es: 'Español',
   fr: 'Français',
   pt: 'Português',
+  de: 'Deutsch',
 };
 
-const LANGUAGES = ['en', 'es', 'fr', 'pt'];
+const LANGUAGES = ['en', 'es', 'fr', 'pt', 'de'];
 
 const LanguageSelector = ({language, selectedLanguage, onPress}) => {
   const styles = useThemedStyles(_styles);

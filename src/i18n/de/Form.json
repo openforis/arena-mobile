@@ -1,0 +1,107 @@
+{
+  "add_new": "Neu {{ label }}",
+  "add_new_row": "Neue Zeile",
+  "add_new_item": "Neuer Artikel",
+  "done": "Fertig",
+  "save": "Speichern",
+  "done_and_new": "Fertig und neu",
+  "delete": "{{ label }} löschen",
+  "select_empty": " ",
+  "select_empty_type_to_search": "Zum Suchen tippen",
+  "navigation": "Navigation",
+  "validation_report": "Validierungsbericht",
+  "record_locked": "Datensatz gesperrt",
+  "unlock": "Entsperren?",
+  "clean": "Löschen",
+  "navigation_panel": {
+    "current_page": "Aktuelle Seite",
+    "table": {
+      "show_as_table": "Als Tabelle anzeigen",
+      "show_as_form": "Als Formular anzeigen"
+    },
+    "multiple": {
+      "delete_this_item": "Diesen Artikel löschen"
+    },
+    "automatically_stored_info": "Alle eingegebenen Daten werden lokal und automatisch gespeichert"
+  },
+  "nodeDefEntity": {
+    "layout": {
+      "table": " (Tabelle)"
+    }
+  },
+  "deleteNode": {
+    "alert": {
+      "title": "Sind Sie sicher?",
+      "message": "Sie werden {{ name }} und alle zugehörigen Daten entfernen.",
+      "message_image": "Sie werden dieses Bild entfernen.",
+      "accept": "Ja, löschen",
+      "dismiss": "Nein",
+      "required": "löschen"
+    },
+    "cta_delete": "Diesen Knoten löschen"
+  },
+  "avoidOverWrite": {
+    "alert": {
+      "title": "Erstellen Sie einen neuen Artikel?",
+      "message": "Es scheint, dass Sie versuchen, das Schlüsselfeld der aktuellen Seite {{ name }} zu bearbeiten. Möchten Sie stattdessen eine neue Seite erstellen?",
+      "accept": "Neue Seite erstellen",
+      "dismiss": "Auf aktueller Seite bleiben und bearbeiten"
+    }
+  },
+  "nodeDefBoolean": {
+    "labelValue": {
+      "trueFalse": {
+        "true": "$t(Common:true)",
+        "false": "$t(Common:false)"
+      },
+      "yesNo": {
+        "true": "$t(Common:yes)",
+        "false": "$t(Common:no)"
+      }
+    }
+  },
+  "nodeDefCoordinate": {
+    "x": "X",
+    "y": "Y",
+    "accuracy": "Genauigkeit (m)",
+    "altitude": "Höhe (m)",
+    "altitudeAccuracy": "Höhengenauigkeit (m)",
+    "srs": "SRS",
+    "get_location": "Standort abrufen",
+    "use": "Verwenden",
+    "permissions": {
+      "denied": "Standortberechtigung verweigert",
+      "unable_settings": "Einstellungen können nicht geöffnet werden",
+      "turn_on": {
+        "message": "Schalten Sie die Standortdienste ein, um \"{{ appName }}\" Ihren Standort bestimmen zu lassen.",
+        "accept": "Zu den Einstellungen gehen",
+        "reject": "Standort nicht verwenden"
+      },
+      "toasts": {
+        "denied": "Standortberechtigung vom Benutzer verweigert.",
+        "revoked": "Standortberechtigung vom Benutzer widerrufen."
+      }
+    }
+  },
+  "nodeDefFile": {
+    "name": "Name",
+    "more_info": {
+      "show_detail": "Detail anzeigen",
+      "hide_detail": "Detail verbergen",
+      "exif": "Exif"
+    },
+    "pickers": {
+      "camera": "Kamera",
+      "gallery": "Galerie",
+      "document": "Dokument",
+      "audio": "Audio"
+    }
+  },
+  "leave_form_to_record_list_cta": "Zur Datensatzliste gehen",
+  "beforeLeave": {
+    "title": "Daten werden automatisch gespeichert, Sind Sie sicher, dass Sie das Formular verlassen möchten?",
+    "message": "",
+    "acceptText": "Zur Datensatzliste gehen",
+    "dismissText": "Bleiben"
+  }
+}
