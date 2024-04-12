@@ -6,11 +6,24 @@ import {selectors as appSelectors} from 'state/app';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as surveySelectors} from 'state/survey';
 
+const onlyKeysAndIncludedInMultipleEntitySummaryFilter = cycle => nodeDef => {
+  const layoutProps = NodeDefs.getLayoutProps(cycle)(nodeDef);
+  let include = false;
+  if (layoutProps) {
+    include = layoutProps.includedInMultipleEntitySummary;
+  }
+  if (nodeDef?.analysis) return false;
+  if (NodeDefs.isKey(nodeDef)) return true;
+  return layoutProps?.includedInMultipleEntitySummary;
+};
 const onlyKeysFilter = nodeDef => NodeDefs.isKey(nodeDef) && !nodeDef?.analysis;
 const baseFilter = nodeDef => !nodeDef?.analysis;
 const {width: WIDTH} = Dimensions.get('window');
 
-export const useEntityTableData = ({onlyKeys}) => {
+export const useEntityTableData = ({
+  onlyKeys,
+  onlyIncludedInMultipleEntitySummary,
+}) => {
   const baseModifier = useSelector(appSelectors.getBaseModifier);
   const fontBaseModifier = useSelector(appSelectors.getFontBaseModifier);
 
@@ -25,8 +38,16 @@ export const useEntityTableData = ({onlyKeys}) => {
   const formNodeDefs = useSelector(formSelectors.getFormAttributesNodeDefs);
 
   const headers = useMemo(() => {
-    return formNodeDefs.filter(onlyKeys ? onlyKeysFilter : baseFilter);
-  }, [formNodeDefs, onlyKeys]);
+    let _filter = baseFilter;
+
+    if (onlyIncludedInMultipleEntitySummary) {
+      _filter = onlyKeysAndIncludedInMultipleEntitySummaryFilter(cycle);
+    } else if (onlyKeys) {
+      _filter = onlyKeysFilter;
+    }
+
+    return formNodeDefs.filter(_filter);
+  }, [formNodeDefs, onlyIncludedInMultipleEntitySummary, onlyKeys]);
 
   const getWidth = useCallback(
     item => {
