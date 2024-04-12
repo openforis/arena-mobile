@@ -26,7 +26,7 @@ const MultipleEntityHome = () => {
     <View style={styles.container}>
       <Header />
       <View style={styles.tableContainer}>
-        <Table onlyKeys={true} />
+        <Table onlyKeys={true} onlyIncludedInMultipleEntitySummary={true} />
       </View>
     </View>
   );

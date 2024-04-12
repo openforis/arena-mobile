@@ -1,0 +1,39 @@
+{
+  "title": "Verbindung",
+
+  "server_config_title": "Serverinformationen",
+  "server_config_fields": {
+    "address": "Serveradresse",
+    "test": "Verwenden: {{ url }}",
+    "prod": "Verwenden: {{ url }}"
+  },
+
+  "access_info_title": "Zugangsinformationen",
+  "access_info_fields": {
+    "username": "Benutzername (E-Mail)",
+    "password": "Passwort"
+  },
+  "submit": "Einloggen",
+  "error": {
+    "title": "Es gab einen Fehler",
+    "info": "Bitte überprüfen Sie die Informationen und Ihre Verbindung"
+  },
+  "server_error": {
+    "title": "Es gab einen Fehler",
+    "info": "Bitte überprüfen Sie die Serveradresse"
+  },
+  "credentials_error": {
+    "title": "Es gab einen Fehler",
+    "info": "Bitte überprüfen Sie die bereitgestellten Anmeldeinformationen oder stellen Sie Ihr Passwort wieder her",
+    "forgot_password": "Passwort vergessen?"
+  },
+  "connected_as": "Eingeloggt als:",
+  "logout": {
+    "cta": "Ausloggen",
+    "title": "Sind Sie sicher, dass Sie sich abmelden möchten?",
+    "message": "",
+    "accept": "Ja, abmelden",
+    "dismiss": "Nein",
+    "required": "abmelden"
+  }
+}

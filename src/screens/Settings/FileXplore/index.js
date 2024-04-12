@@ -57,14 +57,11 @@ const Telemetry = () => {
   const onShare = useCallback(async item => {
     try {
       const url = `file://${item.path}`;
-      console.log('URL', url, item);
 
       const fileContent = await fs.readfile({
         filePath: item.path,
         encoding: 'base64',
       });
-
-      console.log('fileContent', fileContent);
 
       const actualData = 'data:application/zip;base64,' + fileContent;
 

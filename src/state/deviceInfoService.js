@@ -7,5 +7,5 @@ export function setDeviceInfo(deviceInfo) {
 }
 export const getDeviceInfo = () => {
   const deviceInfo = config?.deviceInfo;
-  return deviceInfo.current;
+  return deviceInfo;
 };

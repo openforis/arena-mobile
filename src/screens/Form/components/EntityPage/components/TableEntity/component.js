@@ -17,9 +17,12 @@ import _styles from './styles';
 
 import MultipleEntityHome from '../common/MultipleEntityHome';
 
-export const Table = ({onlyKeys}) => {
+export const Table = ({onlyKeys, onlyIncludedInMultipleEntitySummary}) => {
   const styles = useThemedStyles(_styles);
-  const {rows, headers, getWidth} = useEntityTableData({onlyKeys});
+  const {rows, headers, getWidth} = useEntityTableData({
+    onlyKeys,
+    onlyIncludedInMultipleEntitySummary,
+  });
 
   const dispatch = useDispatch();
 

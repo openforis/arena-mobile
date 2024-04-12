@@ -1,0 +1,9 @@
+{
+  "new_record": "Neuen Datensatz erstellen",
+  "continue_record": "Aktuellen Datensatz fortsetzen",
+  "validation_report": "Validierungsbericht ({{count}})",
+  "records": "Zur Datensatzliste gehen ({{count}})",
+  "remove_records": "Alle Datensätze entfernen",
+  "remove_survey": "Umfrage entfernen",
+  "upload_data": "Daten hochladen"
+}

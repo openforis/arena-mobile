@@ -1,0 +1,81 @@
+{
+  "selected_record_panel": {
+    "delete": {
+      "alert": {
+        "title": "Sind Sie sicher?",
+        "message": "Sie werden den Datensatz {{ name }} und alle zugehörigen Informationen vom Gerät entfernen.",
+        "accept": "Ja, löschen",
+        "dismiss": "Nein",
+        "required": "löschen"
+      }
+    },
+    "cta_delete": "Diesen Datensatz löschen",
+    "cta_continue": "Diesen Datensatz fortsetzen"
+  },
+  "current_record": "Aktueller Datensatz",
+  "create_new_record": "Neuen Datensatz erstellen",
+  "empty_key": "<Schlüssel fehlt>",
+  "empty": {
+    "title": "Keine Datensätze",
+    "info": "Sie haben noch keine Datensätze. Erstellen Sie einen, um die App zu nutzen.",
+    "cta_label": "Datensatz erstellen"
+  },
+  "error": {
+    "title": "Fehler",
+    "info": "Beim Laden der Datensätze ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+    "cta_label": "Erneut versuchen"
+  },
+  "subpanel": {
+    "check_remote_records_button": {
+      "label": "Remote-Status prüfen"
+    },
+    "upload_data": {
+      "label": "Lokale Daten senden"
+    }
+  },
+  "status": {
+    "checking": "Datensätze werden geprüft...",
+    "checked": "Datensätze geprüft",
+    "check_error": "Fehler beim Prüfen der Datensätze"
+  },
+  "record_status": {
+    "not_in_server": "Nicht auf dem Server",
+    "not_in_entry_step_anymore": "Nicht mehr im Eingabeschritt",
+    "modified_download": "Auf dem Server geändert",
+    "modified_upload": "Auf dem Gerät geändert",
+    "checked": "Ok"
+  },
+  "status_connection_bar": {
+    "error": {
+      "info": "Fehler bei der Verbindung zum Server",
+      "cta_label": "Einstellungen prüfen"
+    },
+    "success": {
+      "info": "Remote-Status erfolgreich geprüft von: {{ serverUrl }}"
+    },
+    "info": {
+      "info": "Offline-Modus",
+      "cta_label": "Prüfen"
+    }
+  },
+  "pull_to_refresh": "Ziehen, um den Remote-Status zu prüfen",
+  "job_sending_records": {
+    "sending": {
+      "title": "Datensätze werden gesendet",
+      "info": "Bitte warten Sie, während wir die Datensätze an den Server senden."
+    },
+    "done": {
+      "title": "Senden erfolgreich!",
+      "info": "Die Datensätze wurden erfolgreich an den Server gesendet."
+    }
+  },
+  "all_records_sent": "Alle Datensätze wurden bereits an den Server gesendet",
+  "error_sending_data": "Fehler beim Senden der Daten",
+  "share_data": {
+    "title": "Daten teilen",
+    "message": "Daten per E-Mail oder auf andere Weise teilen",
+    "only_updated_records": "Nur aktualisierte Datensätze",
+    "all_records": "Alle Datensätze",
+    "no_records_to_share": "Keine Datensätze zum Teilen"
+  }
+}
