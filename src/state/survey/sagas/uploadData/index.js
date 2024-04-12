@@ -25,6 +25,7 @@ import surveysApi from 'state/surveys/api';
 
 import surveyActions from '../../actionCreators';
 import surveySelectors from '../../selectors';
+import {Platform} from 'react-native';
 
 const TMP_SURVEYS_FOLDER_NAME = 'survey_zip';
 const TMP_SURVEYS_BASE_PATH = `${fs.TMP_BASE_PATH}/${TMP_SURVEYS_FOLDER_NAME}`;
@@ -332,6 +333,16 @@ export function* handleShareData({payload}) {
   }
 
   try {
+    let url = `file://${outputFilePath}`;
+    if (Platform.OS === 'ios') {
+      const fileContent = yield call(fs.readfile, {
+        filePath: url,
+        encoding: 'base64',
+      });
+      const actualData = 'data:application/zip;base64,' + fileContent;
+      url = actualData;
+    }
+
     yield call(Share.open, {url: `file://${outputFilePath}`});
   } catch (error) {
     // ignore it
