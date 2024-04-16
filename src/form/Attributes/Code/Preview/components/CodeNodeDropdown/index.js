@@ -28,7 +28,7 @@ const CodeNodeDropdown = ({nodeDef, node}) => {
   const _disabled =
     disabled ||
     categoryItems?.length === 0 ||
-    NodeDefs.isEnumerate(parentEntityNodeDef);
+    (NodeDefs.isEnumerate(parentEntityNodeDef) && NodeDefs.isKey(nodeDef));
 
   const selectedItem = useMemo(() => {
     if (node?.value?.itemUuid) {
