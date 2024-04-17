@@ -2641,10 +2641,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@openforis/arena-core@0.0.183":
-  version "0.0.183"
-  resolved "https://npm.pkg.github.com/download/@openforis/arena-core/0.0.183/09804e975b19f48337f0c9f705f1606016678e48#09804e975b19f48337f0c9f705f1606016678e48"
-  integrity sha512-eKsk8XZmS9GAqCKgbPrYAkxmPmdmnYoVdV+E2rMvTTTNUWgCxadFj+pDheb1Ux+z1eSPuTZ0dJN9QfvqDLG0hQ==
+"@openforis/arena-core@0.0.188":
+  version "0.0.188"
+  resolved "https://npm.pkg.github.com/download/@openforis/arena-core/0.0.188/ff79e8e185b69aa124595de65c56b16161878f49#ff79e8e185b69aa124595de65c56b16161878f49"
+  integrity sha512-BiYLoBpaEIbw5R6XJpxiYMjBl5biGLuj15lHyFj0egxWPpXaGuj0rJl1EHpk9DWwPDBKo21vGpuoxZQAjOHKJQ==
   dependencies:
     "@jsep-plugin/regex" "^1.0.3"
     bignumber.js "^9.1.2"
@@ -2654,7 +2654,7 @@
     lodash.frompairs "^4.0.1"
     lodash.isequal "^4.5.0"
     lodash.topairs "^4.3.0"
-    proj4 "^2.9.0"
+    proj4 "^2.11.0"
     uuid "^9.0.1"
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.3":
@@ -2679,10 +2679,10 @@
   dependencies:
     merge-options "^3.0.4"
 
-"@react-native-async-storage/async-storage@^1.19.3":
-  version "1.19.3"
-  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.19.3.tgz#ad5fe3ed0a82d4624aa4500321c1e09c02daeb46"
-  integrity sha512-CwGfoHCWdPOTPS+2fW6YRE1fFBpT9++ahLEroX5hkgwyoQ+TkmjOaUxixdEIoVua9Pz5EF2pGOIJzqOTMWfBlA==
+"@react-native-async-storage/async-storage@^1.23.1":
+  version "1.23.1"
+  resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.23.1.tgz#cad3cd4fab7dacfe9838dce6ecb352f79150c883"
+  integrity sha512-Qd2kQ3yi6Y3+AcUlrHxSLlnBvpdCEMVGFlVBneVOjaFaPU61g1huc38g339ysXspwY1QZA2aNhrk/KlHGO+ewA==
   dependencies:
     merge-options "^3.0.4"
 
@@ -12605,13 +12605,13 @@ progress@^2.0.3:
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
 
-proj4@^2.9.0:
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/proj4/-/proj4-2.9.0.tgz#1b61db8c998313f80e2514609b339fb2d28cbb82"
-  integrity sha512-BoDXEzCVnRJVZoOKA0QHTFtYoE8lUxtX1jST38DJ8U+v1ixY70Kpwi0Llu6YqSWEH2xqu4XMEBNGcgeRIEywoA==
+proj4@^2.11.0:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/proj4/-/proj4-2.11.0.tgz#795a5790aed30a7535d6a4c5775c0ce2a763cc41"
+  integrity sha512-SasuTkAx8HnWQHfIyhkdUNJorSJqINHAN3EyMWYiQRVorftz9DHz650YraFgczwgtHOxqnfuDxSNv3C8MUnHeg==
   dependencies:
     mgrs "1.0.0"
-    wkt-parser "^1.3.1"
+    wkt-parser "^1.3.3"
 
 promise@^8.1.0:
   version "8.1.0"
@@ -16186,10 +16186,10 @@ widest-line@^2.0.0:
   dependencies:
     string-width "^2.1.1"
 
-wkt-parser@^1.3.1:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/wkt-parser/-/wkt-parser-1.3.2.tgz#deeff04a21edc5b170a60da418e9ed1d1ab0e219"
-  integrity sha512-A26BOOo7sHAagyxG7iuRhnKMO7Q3mEOiOT4oGUmohtN/Li5wameeU4S6f8vWw6NADTVKljBs8bzA8JPQgSEMVQ==
+wkt-parser@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/wkt-parser/-/wkt-parser-1.3.3.tgz#46b4e3032dd9c86907f7e630b57e3c6ea2bb772b"
+  integrity sha512-ZnV3yH8/k58ZPACOXeiHaMuXIiaTk1t0hSUVisbO0t4RjA5wPpUytcxeyiN2h+LZRrmuHIh/1UlrR9e7DHDvTw==
 
 word-wrap@^1.2.3, word-wrap@~1.2.3:
   version "1.2.3"

@@ -20,6 +20,7 @@ xcuserdata
 DerivedData
 *.hmap
 *.ipa
+.build/
 *.xcuserstate
 ios/.xcode.env.local
 
