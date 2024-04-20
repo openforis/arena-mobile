@@ -109,6 +109,9 @@
     "hasToLockRecordsWhenLeave": {
       "title": "Datensätze sperren, wenn Formular verlassen wird"
     },
+    "hasToShowNotRelevantOnNavigationTree": {
+      "title": "Nicht relevant im Navigationsbaum anzeigen"
+    },
     "showDescriptions": {
       "title": "Beschreibungen anzeigen"
     },

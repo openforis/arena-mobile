@@ -109,6 +109,9 @@
     "hasToLockRecordsWhenLeave": {
       "title": "Bloquear registros ao sair do formulário"
     },
+    "hasToShowNotRelevantOnNavigationTree": {
+      "title": "Mostrar não relevante na árvore de navegação"
+    },
     "showDescriptions": {
       "title": "Mostrar descrições"
     },

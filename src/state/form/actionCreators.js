@@ -43,11 +43,16 @@ const {form} = createActions({
   }) => ({
     hasToLockRecordsWhenLeave,
   }),
+  [types.SET_HAS_TO_SHOW_NOT_RELEVANT_ON_NAVIGATION_TREE]: ({
+    hasToShowNotRelevantOnNavigationTree,
+  }) => ({
+    hasToShowNotRelevantOnNavigationTree,
+  }),
   [types.SET_SHOW_DESCRIPTIONS]: ({showDescriptions}) => ({showDescriptions}),
   [types.TOGGLE_SHOW_CLOSE_BUTTON_IN_FORM]: () => ({}),
 
-  /* VALIDATION */
-  [types.SET_VALIDATION]: ({validation}) => ({validation}),
+  /* UI */
+  [types.SET_LOADING]: ({isLoading = false}) => ({isLoading}),
   [types.importRecords$]: () => ({}),
 });
 

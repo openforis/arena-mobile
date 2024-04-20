@@ -109,6 +109,9 @@
     "hasToLockRecordsWhenLeave": {
       "title": "Verrouiller les enregistrements lors de la sortie du formulaire"
     },
+    "hasToShowNotRelevantOnNavigationTree": {
+      "title": "Afficher les attributs non pertinents dans l'arborescence de navigation"
+    },
     "showDescriptions": {
       "title": "Afficher les descriptions"
     },

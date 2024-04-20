@@ -7,6 +7,7 @@ import {defaultCycle} from 'arena/config';
 import {TouchableIcon} from 'arena-mobile-ui/components/TouchableIcons';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {selectors as formSelectors} from 'state/form';
+import formPreferencesSelectors from 'state/form/selectors/preferences';
 import {selectors as surveySelectors} from 'state/survey';
 
 import Entity from './components/Entity';
@@ -54,6 +55,9 @@ const EntitySelectorTree = ({nodeDefUuid, level = 0}) => {
     formSelectors.isNodeDefApplicable(state, nodeDefUuid),
   );
 
+  const hasToShowNotRelevantOnNavigationTree = useSelector(
+    formPreferencesSelectors.getHasToShowNotRelevantOnNavigationTree,
+  );
   const [showChildren, setShowChildren] = useState(true);
   const handleToggleVisibility = useCallback(
     () => setShowChildren(!showChildren),
@@ -65,14 +69,29 @@ const EntitySelectorTree = ({nodeDefUuid, level = 0}) => {
     formSelectors.getParentEntityNodeDef,
   );
 
-  if (
-    (!applicable ||
+  const isDisabled = useMemo(() => {
+    return (
+      !applicable ||
       Object.keys(
         parentNodeInHierarchy?.meta?.childApplicability || {},
-      ).includes(nodeDef?.uuid)) &&
-    NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef) &&
-    NodeDefs.isHiddenInMobile(cycle)(nodeDef)
-  ) {
+      ).includes(nodeDef?.uuid)
+    );
+  }, [
+    applicable,
+    cycle,
+    nodeDef,
+    parentNodeInHierarchy?.meta?.childApplicability,
+  ]);
+
+  const isHidden = useMemo(() => {
+    if (isDisabled) {
+      if (hasToShowNotRelevantOnNavigationTree) return false;
+      return NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef);
+    }
+    return NodeDefs.isHiddenInMobile(cycle)(nodeDef);
+  }, [isDisabled, hasToShowNotRelevantOnNavigationTree, nodeDef, cycle]);
+
+  if (isHidden) {
     return <></>;
   }
 
@@ -97,6 +116,7 @@ const EntitySelectorTree = ({nodeDefUuid, level = 0}) => {
               key={`entity-${nodeDef.uuid}`}
               nodeDef={nodeDef}
               isCurrentEntity={currentEntityNodeDef?.uuid === nodeDefUuid}
+              forceDisabled={isDisabled}
             />
           </View>
         </View>

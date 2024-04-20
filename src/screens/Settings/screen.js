@@ -126,6 +126,10 @@ const FormSettings = () => {
   const hasToLockRecordsWhenLeave = useSelector(
     formPreferencesSelectors.getHasToLockRecordsWhenLeave,
   );
+  const hasToShowNotRelevantOnNavigationTree = useSelector(
+    formPreferencesSelectors.getHasToShowNotRelevantOnNavigationTree,
+  );
+
   const showDescriptions = useSelector(
     formPreferencesSelectors.showDescriptions,
   );
@@ -146,6 +150,15 @@ const FormSettings = () => {
       }),
     );
   }, [dispatch, hasToLockRecordsWhenLeave]);
+
+  const _updateHasToShowNotRelevantOnNavigationTree = useCallback(() => {
+    dispatch(
+      formActions.setHasToShowNotRelevantOnNavigationTree({
+        hasToShowNotRelevantOnNavigationTree:
+          !hasToShowNotRelevantOnNavigationTree,
+      }),
+    );
+  }, [dispatch, hasToShowNotRelevantOnNavigationTree]);
 
   const _updateShowDescriptions = useCallback(() => {
     dispatch(
@@ -177,6 +190,17 @@ const FormSettings = () => {
         title={t('Settings:form.hasToLockRecordsWhenLeave.title')}
         iconName={
           hasToLockRecordsWhenLeave
+            ? 'checkbox-marked'
+            : 'checkbox-blank-outline'
+        }
+      />
+      <SectionCard
+        position="middle"
+        isNavigation={false}
+        onPress={_updateHasToShowNotRelevantOnNavigationTree}
+        title={t('Settings:form.hasToShowNotRelevantOnNavigationTree.title')}
+        iconName={
+          hasToShowNotRelevantOnNavigationTree
             ? 'checkbox-marked'
             : 'checkbox-blank-outline'
         }

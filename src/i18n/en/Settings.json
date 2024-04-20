@@ -109,6 +109,9 @@
     "hasToLockRecordsWhenLeave": {
       "title": "Lock records when leave form"
     },
+    "hasToShowNotRelevantOnNavigationTree": {
+      "title": "Show not relevant on navigation tree"
+    },
     "showDescriptions": {
       "title": "Show descriptions"
     },

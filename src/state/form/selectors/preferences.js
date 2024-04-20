@@ -16,6 +16,12 @@ const getHasToLockRecordsWhenLeave = createSelector(
   getFormStatePreferences,
   preferences => preferences?.hasToLockRecordsWhenLeave || false,
 );
+
+const getHasToShowNotRelevantOnNavigationTree = createSelector(
+  getFormStatePreferences,
+  preferences => preferences?.hasToShowNotRelevantOnNavigationTree || false,
+);
+
 const showDescriptions = createSelector(
   getFormStatePreferences,
   preferences => preferences?.showDescriptions || false,
@@ -34,6 +40,7 @@ const showCloseButtonInForm = createSelector(
 export default {
   getHasToJump,
   getHasToLockRecordsWhenLeave,
+  getHasToShowNotRelevantOnNavigationTree,
   showDescriptions,
   isSingleNodeView,
   showCloseButtonInForm,
