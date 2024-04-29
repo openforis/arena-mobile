@@ -1,10 +1,10 @@
 import {useMemo} from 'react';
 import {useSelector} from 'react-redux';
 
-import {selectors as formSelectors} from 'state/form';
+import {selectors as validationSelectors} from 'state/validation';
 
 export const useGetNumberOfErrors = () => {
-  const _validation = useSelector(formSelectors.getValidation);
+  const _validation = useSelector(validationSelectors.getValidation);
 
   const numberOfErrors = useMemo(() => {
     let _numberOfErrors = 0;

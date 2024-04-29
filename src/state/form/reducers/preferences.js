@@ -16,6 +16,13 @@ const preferences = handleActions(
       ...state,
       hasToLockRecordsWhenLeave,
     }),
+    [actions.setHasToShowNotRelevantOnNavigationTree]: (
+      state,
+      {payload: {hasToShowNotRelevantOnNavigationTree}},
+    ) => ({
+      ...state,
+      hasToShowNotRelevantOnNavigationTree,
+    }),
     [actions.setShowDescriptions]: (state, {payload: {showDescriptions}}) => ({
       ...state,
       showDescriptions,

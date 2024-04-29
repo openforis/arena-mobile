@@ -11,18 +11,20 @@ import {reducer as records} from './records';
 import {reducer as survey} from './survey';
 import {reducer as surveys} from './surveys';
 import {reducer as user} from './user';
+import {reducer as validation} from './validation';
 
 const getConfig = key => ({
   key: `${key}-store`,
   storage: FilesystemStorage,
   stateReconciler: hardSet,
-  throttle: 500,
+  throttle: 15000,
 });
 
 const appReducers = combineReducers({
   app: persistReducer(getConfig('app'), app),
   records: persistReducer(getConfig('records'), records),
   nodes: persistReducer(getConfig('nodes'), nodes),
+  validation,
   survey: persistReducer(getConfig('survey'), survey),
   surveys: persistReducer(getConfig('surveys'), surveys),
   user: persistReducer(getConfig('user'), user),

@@ -11,6 +11,7 @@ import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import {Objects, compareArraysAsSets} from 'infra/objectUtils';
 import {selectors as formSelectors} from 'state/form';
+import {selectors as validationSelectors} from 'state/validation';
 import {selectors as surveySelector} from 'state/survey';
 
 import styles from './styles';
@@ -171,7 +172,7 @@ const Validation = React.memo(
 
 const useValidationCount = ({parentEntityNode, nodeDef}) => {
   const validation = useSelector(
-    formSelectors.getValidation,
+    validationSelectors.getValidation,
     Objects.shallowEqual,
   );
   const validationCount = RecordValidations.getValidationChildrenCount({
@@ -186,7 +187,7 @@ const useValidationCount = ({parentEntityNode, nodeDef}) => {
 };
 const ValidationWrapper = ({nodesUuids, showValidation, absolute, nodeDef}) => {
   const validation = useSelector(state =>
-    formSelectors.getValidationByNodes(state, nodesUuids),
+    validationSelectors.getValidationByNodes(state, nodesUuids),
   );
   const parentEntityNode = useSelector(formSelectors.getParentEntityNode);
 

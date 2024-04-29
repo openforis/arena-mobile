@@ -10,15 +10,16 @@ const initialState = {
     isEntitySelectorOpened: false,
     isEntityShowAsTable: false,
     showMultipleEntityHome: false,
+    isLoading: false,
   },
   preferences: {
     hasToJump: false,
     hasToLockRecordsWhenLeave: true,
+    hasToShowNotRelevantOnNavigationTree: false,
     showDescriptions: true,
     isSingleNodeView: false,
     showCloseButtonInForm: true,
   },
-  validation: {},
 };
 
 export default initialState;

@@ -1,4 +1,4 @@
-import {NodeDefs, RecordValidations} from '@openforis/arena-core';
+import {NodeDefs} from '@openforis/arena-core';
 import {createCachedSelector, FifoObjectCache} from 're-reselect';
 import {createSelector} from 'reselect';
 
@@ -11,6 +11,7 @@ import {
   DEFAULT_NO_KEY,
 } from 'infra/stateUtils';
 import recordsSelectors from 'state/records/selectors';
+import validationSelectors from 'state/validation/selectors';
 import {getCategoryItemIndex} from 'state/survey/selectors/base';
 import * as surveySelectorsBase from 'state/survey/selectors/base';
 import * as surveySelectorsNodeDefs from 'state/survey/selectors/nodeDefs';
@@ -357,35 +358,7 @@ const showMultipleEntityHome = createSelector(
   getFormStateUi,
   ui => ui?.showMultipleEntityHome || false,
 );
-
-// --- Validation
-const getValidation = createSelector(
-  getFormState,
-  formState => formState.validation || EMPTY_OBJECT,
-);
-
-const getValidationByKeys = ({keys, validation}) => {
-  return keys
-    ?.map(nodeUuid =>
-      RecordValidations.getValidationNode({
-        nodeUuid,
-      })(validation),
-    )
-    .reduce((acc, curr) => {
-      return {
-        ...acc,
-        ...curr,
-      };
-    }, EMPTY_OBJECT);
-};
-
-const _getNodesUuids = (_, nodesUuids) => nodesUuids;
-
-const getValidationByNodes = createCachedSelector(
-  [getValidation, _getNodesUuids],
-  (validation, nodesUuids) =>
-    getValidationByKeys({keys: nodesUuids, validation}),
-)(keySelectors.joinItems);
+const isLoading = createSelector(getFormStateUi, ui => ui?.isLoading || false);
 
 const canAddNode = createCachedSelector(
   keySelectors.identity,
@@ -484,7 +457,7 @@ const getFormAttributesNodeDefsUuids = createSelector(
 const getFullRecord = createSelector(
   getRecord,
   getRecordNodesByUuid,
-  getValidation,
+  validationSelectors.getValidation,
   (record, nodesByUuid, validation) =>
     joinRecordItems({record, nodesByUuid, validation}),
 );
@@ -535,8 +508,5 @@ export default {
   isEntitySelectorOpened,
   isEntityShowAsTable,
   showMultipleEntityHome,
-
-  // ---- Validation
-  getValidation,
-  getValidationByNodes,
+  isLoading,
 };
