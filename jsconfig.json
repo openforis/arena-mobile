@@ -8,8 +8,8 @@
       "infra/*": ["infra/*"],
       "navigation/*": ["navigation/*"],
       "screens/*": ["screens/*"],
-      "state/*": ["state/*"]
-    }
+      "state/*": ["state/*"],
+    },
   },
-  "include": ["src", "wdyr.js"]
+  "include": ["src", "wdyr.js"],
 }

@@ -102,12 +102,14 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
       records: expectedRecords(storeState, true),
+      validation: {},
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
       records: expectedRecords(expectedState, true),
+      validation: {},
     });
   });
 
