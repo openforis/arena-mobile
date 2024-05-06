@@ -122,7 +122,21 @@
       "/test/"
     ],
     "testResultsProcessor": "jest-sonar-reporter",
-    "resolver": "<rootDir>/testResolver.js"
+    "resolver": "<rootDir>/testResolver.js",
+    "moduleDirectories": [
+      "node_modules",
+      "src",
+      "assets"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/.maestro/",
+      "@react-native"
+    ],
+    "moduleNameMapper": {
+      "\\.(png)$/": "<rootDir>/__mocks__/fileMock.js",
+      "<rootDir>/node_modules/@react-navigation/elements/lib/commonjs/assets/back-icon.png": "<rootDir>/__mocks__/fileMock.js"
+    }
   },
   "husky": {
     "hooks": {
