@@ -10,6 +10,7 @@ import useNodeDefNameOrLabel from 'arena-mobile-ui/hooks/useNodeDefNameOrLabel';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import {BreadCrumbAsLabel} from 'screens/Form/components/BreadCrumbs/components/BreadCrumb';
 import {selectors as formSelectors, actions as formActions} from 'state/form';
+import {selectors as validationSelectors} from 'state/validation';
 import {selectors as nodesSelectors} from 'state/nodes';
 import {selectors as surveySelectors} from 'state/survey';
 
@@ -145,7 +146,7 @@ const ValidationItems = ({fields}) => {
 
 const ListOfErrors = () => {
   const styles = useThemedStyles(_styles);
-  const validation = useSelector(formSelectors.getValidation);
+  const validation = useSelector(validationSelectors.getValidation);
 
   return (
     <View style={styles.validationContainer}>

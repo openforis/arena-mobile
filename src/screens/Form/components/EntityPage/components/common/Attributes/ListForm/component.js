@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState, useRef} from 'react';
-import {FlatList, View} from 'react-native';
+import {ActivityIndicator, FlatList, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
@@ -74,9 +74,19 @@ const AttributesContainer = () => {
   const styles = useThemedStyles(_styles);
   const nodeDefChildrenUuids = useAttributesUuids();
 
+  const isLoading = useSelector(formSelectors.isLoading);
+
   return (
     <View style={styles.container}>
-      <Attributes nodeDefChildrenUuids={nodeDefChildrenUuids} />
+      {isLoading ? (
+        <ActivityIndicator
+          size="large"
+          color={styles?.colors?.primaryText}
+          style={styles.spinner}
+        />
+      ) : (
+        <Attributes nodeDefChildrenUuids={nodeDefChildrenUuids} />
+      )}
     </View>
   );
 };

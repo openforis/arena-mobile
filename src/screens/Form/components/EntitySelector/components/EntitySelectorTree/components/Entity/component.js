@@ -13,7 +13,7 @@ import {selectors as surveySelectors} from 'state/survey';
 
 import _styles from './styles';
 
-const Entity = ({nodeDef, isCurrentEntity}) => {
+const Entity = ({nodeDef, isCurrentEntity, forceDisabled}) => {
   const styles = useThemedStyles(_styles);
   const {t} = useTranslation();
   const nodeDefName = useNodeDefNameOrLabel({nodeDef});
@@ -34,9 +34,10 @@ const Entity = ({nodeDef, isCurrentEntity}) => {
 
   const isDisabled = useMemo(
     () =>
-      nodeDef?.parentUuid &&
-      !hierarchyNodeDefUuids.includes(nodeDef?.parentUuid),
-    [nodeDef, hierarchyNodeDefUuids],
+      forceDisabled ||
+      (nodeDef?.parentUuid &&
+        !hierarchyNodeDefUuids.includes(nodeDef?.parentUuid)),
+    [nodeDef, hierarchyNodeDefUuids, forceDisabled],
   );
   const styleContainer = useMemo(() => {
     return StyleSheet.compose(
@@ -72,5 +73,6 @@ const Entity = ({nodeDef, isCurrentEntity}) => {
 
 Entity.defaultProps = {
   isCurrentEntity: false,
+  forceDisabled: false,
 };
 export default Entity;

@@ -12,10 +12,6 @@ import initialState from '../initial.state';
 
 const data = handleActions(
   {
-    [actions.setNode]: (state, {payload: {node}}) => ({
-      ...state,
-      [node.uuid]: node,
-    }),
     [filesActions.setFiles]: (state, {payload: {filesByUuid = {}}}) => {
       const newNodes = {};
       Object.values(filesByUuid).forEach(file => {

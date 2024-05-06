@@ -378,7 +378,7 @@ PODS:
     - React-jsi (= 0.69.9)
     - React-logger (= 0.69.9)
     - React-perflogger (= 0.69.9)
-  - RNCAsyncStorage (1.19.3):
+  - RNCAsyncStorage (1.23.1):
     - React-Core
   - RNCClipboard (1.12.1):
     - React-Core
@@ -732,7 +732,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: ea899478e6f10ee526f476f769ab33211be2addd
   React-runtimeexecutor: df1518d092e8c74cafddc56690d1ac386ec24d7a
   ReactCommon: fac40473e2c4117522384027ab33ad0cb6717dc5
-  RNCAsyncStorage: c913ede1fa163a71cea118ed4670bbaaa4b511bb
+  RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
   RNCClipboard: d77213bfa269013bf4b857b7a9ca37ee062d8ef1
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNCPicker: 529d564911e93598cc399b56cc0769ce3675f8c8

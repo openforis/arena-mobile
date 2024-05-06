@@ -65,6 +65,32 @@ const EntitySelectorTree = ({nodeDefUuid, level = 0}) => {
     formSelectors.getParentEntityNodeDef,
   );
 
+  const isDisabled = useMemo(() => {
+    return (
+      !applicable ||
+      Object.keys(
+        parentNodeInHierarchy?.meta?.childApplicability || {},
+      ).includes(nodeDef?.uuid)
+    );
+  }, [
+    applicable,
+    cycle,
+    nodeDef,
+    parentNodeInHierarchy?.meta?.childApplicability,
+  ]);
+
+  const isHidden = useMemo(() => {
+    if (NodeDefs.isHiddenInMobile(cycle)(nodeDef)) return true;
+    if (isDisabled) {
+      return NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDef);
+    }
+    return false;
+  }, [isDisabled, nodeDef, cycle]);
+
+  if (isHidden) {
+    return <></>;
+  }
+
   if (
     (!applicable ||
       Object.keys(
@@ -97,6 +123,7 @@ const EntitySelectorTree = ({nodeDefUuid, level = 0}) => {
               key={`entity-${nodeDef.uuid}`}
               nodeDef={nodeDef}
               isCurrentEntity={currentEntityNodeDef?.uuid === nodeDefUuid}
+              forceDisabled={isDisabled}
             />
           </View>
         </View>
