@@ -73,6 +73,10 @@ const ConnectionSettings = () => {
     dispatch(appActions.initConnection(formData));
   }, [dispatch, formData]);
 
+  useEffect(() => {
+    dispatch(appActions.setLoading(false));
+  }, [dispatch]);
+
   const {username, password} = useSelector(appSelectors.getAccessData);
 
   const serverUrl = useSelector(appSelectors.getServerUrl);
