@@ -16,6 +16,7 @@ import {getCategoryItemIndex} from 'state/survey/selectors/base';
 import * as surveySelectorsBase from 'state/survey/selectors/base';
 import * as surveySelectorsNodeDefs from 'state/survey/selectors/nodeDefs';
 import * as surveySelectorsNodes from 'state/survey/selectors/nodes';
+import validationSelectors from 'state/validation/selectors';
 
 const getState = state => state;
 const getFormState = createSelector(
@@ -358,6 +359,7 @@ const showMultipleEntityHome = createSelector(
   getFormStateUi,
   ui => ui?.showMultipleEntityHome || false,
 );
+
 const isLoading = createSelector(getFormStateUi, ui => ui?.isLoading || false);
 
 const canAddNode = createCachedSelector(

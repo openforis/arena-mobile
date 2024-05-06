@@ -75,6 +75,11 @@ export const Table = ({onlyKeys, onlyIncludedInMultipleEntitySummary}) => {
 Table.defaultProps = {
   onlyKeys: false,
 };
+const FormPage = () => {
+  const isEntityShowAsTable = useSelector(formSelectors.isEntityShowAsTable);
+
+  return isEntityShowAsTable ? <Table /> : <Attributes />;
+};
 
 const FormPage = () => {
   const isEntityShowAsTable = useSelector(formSelectors.isEntityShowAsTable);

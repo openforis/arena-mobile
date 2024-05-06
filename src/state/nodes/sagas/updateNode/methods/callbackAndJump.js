@@ -2,11 +2,10 @@ import {NodeDefType, NodeDefs} from '@openforis/arena-core';
 import {call, select, put} from 'redux-saga/effects';
 
 import formActions from 'state/form/actionCreators';
-
-import validationSelectors from 'state/validation/selectors';
 import formPreferencesSelectors from 'state/form/selectors/preferences';
 import nodesSelectors from 'state/nodes/selectors';
 import surveySelectors from 'state/survey/selectors';
+import validationSelectors from 'state/validation/selectors';
 
 import getNextNode from './getNextNode';
 

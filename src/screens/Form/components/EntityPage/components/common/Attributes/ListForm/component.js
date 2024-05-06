@@ -75,6 +75,8 @@ const AttributesContainer = () => {
   const nodeDefChildrenUuids = useAttributesUuids();
   const isLoading = useSelector(formSelectors.isLoading);
 
+  const isLoading = useSelector(formSelectors.isLoading);
+
   return (
     <View style={styles.container}>
       {isLoading ? (

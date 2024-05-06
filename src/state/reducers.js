@@ -30,6 +30,7 @@ const appReducers = combineReducers({
   user: persistReducer(getConfig('user'), user),
   form: persistReducer(getConfig('form'), form),
   files: persistReducer(getConfig('files'), files),
+  validation,
 });
 
 export default appReducers;
