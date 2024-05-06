@@ -6,6 +6,7 @@ import recordsState from './records/initial.state';
 import surveyState from './survey/initial.state';
 import surveysState from './surveys/initial.state';
 import userState from './user/initial.state';
+import validationState from './validation/initial.state';
 
 const globalInitialState = {
   app: appState,
@@ -16,6 +17,7 @@ const globalInitialState = {
   user: userState,
   files: filesState,
   form: formState,
+  validation: validationState,
 };
 
 export default globalInitialState;

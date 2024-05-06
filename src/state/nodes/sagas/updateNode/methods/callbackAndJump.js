@@ -2,10 +2,10 @@ import {NodeDefType, NodeDefs} from '@openforis/arena-core';
 import {call, select, put} from 'redux-saga/effects';
 
 import formActions from 'state/form/actionCreators';
-import formSelectors from 'state/form/selectors';
 import formPreferencesSelectors from 'state/form/selectors/preferences';
 import nodesSelectors from 'state/nodes/selectors';
 import surveySelectors from 'state/survey/selectors';
+import validationSelectors from 'state/validation/selectors';
 
 import getNextNode from './getNextNode';
 
@@ -39,7 +39,7 @@ function* callbackAndJump({currentNode, callback, shouldJump = true}) {
   }
 
   const currentNodeValidation = yield select(state =>
-    formSelectors.getValidationByNodes(state, [currentNode?.uuid]),
+    validationSelectors.getValidationByNodes(state, [currentNode?.uuid]),
   );
 
   if (

@@ -11,12 +11,13 @@ import {reducer as records} from './records';
 import {reducer as survey} from './survey';
 import {reducer as surveys} from './surveys';
 import {reducer as user} from './user';
+import {reducer as validation} from './validation';
 
 const getConfig = key => ({
   key: `${key}-store`,
   storage: FilesystemStorage,
   stateReconciler: hardSet,
-  throttle: 500,
+  throttle: 10000,
 });
 
 const appReducers = combineReducers({
@@ -28,6 +29,7 @@ const appReducers = combineReducers({
   user: persistReducer(getConfig('user'), user),
   form: persistReducer(getConfig('form'), form),
   files: persistReducer(getConfig('files'), files),
+  validation,
 });
 
 export default appReducers;

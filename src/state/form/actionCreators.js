@@ -47,7 +47,7 @@ const {form} = createActions({
   [types.TOGGLE_SHOW_CLOSE_BUTTON_IN_FORM]: () => ({}),
 
   /* VALIDATION */
-  [types.SET_VALIDATION]: ({validation}) => ({validation}),
+  [types.SET_LOADING]: ({isLoading = false}) => ({isLoading}),
   [types.importRecords$]: () => ({}),
 });
 
