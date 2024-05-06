@@ -44,7 +44,7 @@ function* handleAuthenticateUser() {
 
     const {isServerValid} = yield race({
       isServerValid: call(appApi.pingServer, {serverUrl}),
-      timeout: delay(15000),
+      timeout: delay(5000),
     });
 
     if (!isServerValid) {
@@ -82,10 +82,16 @@ function* handleAuthenticateUser() {
       );
     }
   } finally {
-    const numberOfSurveys = yield select(
-      surveysSelectors.getNumberOfLocalSurveys,
+    yield put(
+      appActions.setLoading({
+        isLoading: false,
+      }),
     );
+
     if (hasToNavigate) {
+      const numberOfSurveys = yield select(
+        surveysSelectors.getNumberOfLocalSurveys,
+      );
       yield call(
         navigator.navigatorDispatch,
         StackActions.replace(
@@ -93,12 +99,6 @@ function* handleAuthenticateUser() {
         ),
       );
     }
-
-    yield put(
-      appActions.setLoading({
-        isLoading: false,
-      }),
-    );
   }
 }
 
