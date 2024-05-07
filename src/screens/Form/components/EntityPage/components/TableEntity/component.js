@@ -87,6 +87,12 @@ const FormPage = () => {
   return isEntityShowAsTable ? <Table /> : <Attributes />;
 };
 
+const FormPage = () => {
+  const isEntityShowAsTable = useSelector(formSelectors.isEntityShowAsTable);
+
+  return isEntityShowAsTable ? <Table /> : <Attributes />;
+};
+
 const TableEntity = () => {
   const styles = useThemedStyles(_styles);
   const showMultipleEntityHome = useSelector(

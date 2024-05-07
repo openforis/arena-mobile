@@ -140,11 +140,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });
@@ -186,11 +188,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });
@@ -232,11 +236,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });
@@ -276,11 +282,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });
@@ -324,11 +332,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });
@@ -379,11 +389,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });
@@ -433,11 +445,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });
@@ -494,11 +508,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });
@@ -552,11 +568,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });
@@ -613,11 +631,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });
@@ -676,11 +696,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });
@@ -745,11 +767,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });
@@ -813,11 +837,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });
@@ -875,11 +901,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });
@@ -912,11 +940,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });
@@ -955,11 +985,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });
@@ -1004,11 +1036,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });
@@ -1042,11 +1076,13 @@ describe('Survey > Cluster, Plot, Tree', () => {
 
     expect({
       ...storeState,
-      form: {...storeState.form, validation: {}},
+      form: {...storeState.form},
+      validation: {},
       records: expectedRecords(storeState),
     }).toEqual({
       ...expectedState,
-      form: {...expectedState.form, validation: {}},
+      form: {...expectedState.form},
+      validation: {},
       records: expectedRecords(expectedState),
     });
   });

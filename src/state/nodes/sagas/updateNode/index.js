@@ -1,8 +1,10 @@
 import {call, select, put, all} from 'redux-saga/effects';
 
-import formSelectors from 'state/form/selectors';
+
+import {joinRecordItems} from 'arena/record';
 
 import validationActions from 'state/validation/actionCreators';
+import {selectors as validationSelectors} from 'state/validation';
 import nodesActions from 'state/nodes/actionCreators';
 import validationActions from 'state/validation/actionCreators';
 import nodesSelectors from 'state/nodes/selectors';
@@ -19,7 +21,13 @@ function* handleUpdateNode({payload}) {
     const [survey, node, fullRecord] = yield all([
       select(surveySelectors.getSurvey),
       select(state => nodesSelectors.getNodeByUuid(state, updatedNode.uuid)),
-      select(formSelectors.getFullRecord),
+      select(state =>
+        recordsSelectors.getRecordByUuid(state, updatedNode.recordUuid),
+      ),
+      select(state =>
+        nodesSelectors.getNodesByUuidRecordUuid(state, updatedNode.recordUuid),
+      ),
+      select(validationSelectors.getValidation),
     ]);
 
     if (!node?.uuid) {

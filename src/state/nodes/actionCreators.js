@@ -20,7 +20,6 @@ const {nodes} = createActions({
     value,
     callback,
   }),
-
   [types.SET_NODES]: ({nodes: _nodes = []}) => ({nodes: _nodes}),
   [types.DELETE_NODE]: ({node}) => ({node}),
   [types.DELETE_NODES]: ({nodes: _nodes}) => ({nodes: _nodes}),

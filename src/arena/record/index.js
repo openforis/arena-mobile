@@ -223,6 +223,7 @@ export const getLocalRecordStatus = ({record, recordRemoteSummary}) => {
 
 export const joinRecordItems = ({record, nodesByUuid, validation}) => {
   const recordWithNodes = Records.addNodes(nodesByUuid || {})(record);
+
   const fullRecord = {...recordWithNodes, validation};
   return fullRecord;
 };

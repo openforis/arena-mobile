@@ -51,7 +51,6 @@ const {form} = createActions({
   [types.SET_SHOW_DESCRIPTIONS]: ({showDescriptions}) => ({showDescriptions}),
   [types.TOGGLE_SHOW_CLOSE_BUTTON_IN_FORM]: () => ({}),
 
-  /* UI */
   [types.SET_LOADING]: ({isLoading = false}) => ({isLoading}),
   [types.importRecords$]: () => ({}),
 });
