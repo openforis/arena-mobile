@@ -6,7 +6,6 @@ import surveySelectors from 'state/survey/selectors';
 
 import CodeCheckbox from './CodeCheckbox';
 import CodeDropdown from './CodeDropdown';
-
 import {selectors as formSelectors} from 'state/form';
 
 const MAX_NUMBER_ITEMS_FOR_CHECKBOX = 15;

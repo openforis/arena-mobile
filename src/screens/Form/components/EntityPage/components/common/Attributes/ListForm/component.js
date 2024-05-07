@@ -73,9 +73,8 @@ const Attributes = React.memo(
 const AttributesContainer = () => {
   const styles = useThemedStyles(_styles);
   const nodeDefChildrenUuids = useAttributesUuids();
-
   const isLoading = useSelector(formSelectors.isLoading);
-
+  
   return (
     <View style={styles.container}>
       {isLoading ? (

@@ -1,4 +1,3 @@
-import {persistor} from 'navigation/index';
 import {call, select, put, fork, delay} from 'redux-saga/effects';
 
 import formActions from 'state/form/actionCreators';
@@ -20,7 +19,6 @@ function* handleCreateEntity({payload} = {}) {
 
   yield put(formActions.setLoading({isLoading: true}));
   yield delay(50);
-  yield call(persistor.pause, null);
 
   const hierarchy = yield select(formSelectors.getHierarchy);
 
@@ -58,7 +56,6 @@ function* handleCreateEntity({payload} = {}) {
   }
   yield delay(50);
   yield put(formActions.setLoading({isLoading: false}));
-
   yield call(persistor.persist, null);
 }
 
