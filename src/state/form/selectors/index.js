@@ -11,7 +11,7 @@ import {
   DEFAULT_NO_KEY,
 } from 'infra/stateUtils';
 import recordsSelectors from 'state/records/selectors';
-import valdiationSelectors from 'state/validation/selectors';
+import validationSelectors from 'state/validation/selectors';
 import {getCategoryItemIndex} from 'state/survey/selectors/base';
 import * as surveySelectorsBase from 'state/survey/selectors/base';
 import * as surveySelectorsNodeDefs from 'state/survey/selectors/nodeDefs';
@@ -456,7 +456,7 @@ const getFormAttributesNodeDefsUuids = createSelector(
 const getFullRecord = createSelector(
   getRecord,
   getRecordNodesByUuid,
-  valdiationSelectors.getValidation,
+  validationSelectors.getValidation,
   (record, nodesByUuid, validation) =>
     joinRecordItems({record, nodesByUuid, validation}),
 );
