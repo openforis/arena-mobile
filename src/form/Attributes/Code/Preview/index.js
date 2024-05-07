@@ -6,14 +6,16 @@ import surveySelectors from 'state/survey/selectors';
 
 import CodeCheckbox from './CodeCheckbox';
 import CodeDropdown from './CodeDropdown';
-import {useCode} from './hooks';
 import {selectors as formSelectors} from 'state/form';
 
 const MAX_NUMBER_ITEMS_FOR_CHECKBOX = 15;
 
 const useNumberOfCategoryItems = nodeDef => {
-  const {categoryItems} = useCode(nodeDef);
-  return categoryItems.length;
+  const numberOfItems = useSelector(state =>
+    surveySelectors.getNumberOfCategoryItems(state, nodeDef.uuid),
+  );
+
+  return numberOfItems;
 };
 
 const useIsKeyAndEnumerate = nodeDef => {
@@ -25,7 +27,7 @@ const useIsKeyAndEnumerate = nodeDef => {
   return key && enumerate;
 };
 
-const Preview = ({nodeDef}) => {
+const PreviewCode = ({nodeDef}) => {
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const numberOfCategoryItems = useNumberOfCategoryItems(nodeDef);
   const isKeyAndEnumerate = useIsKeyAndEnumerate(nodeDef);
@@ -44,4 +46,4 @@ const arePropsEqual = (prevProps, nextProps) => {
   return prevProps.nodeDef.uuid === nextProps.nodeDef.uuid;
 };
 
-export default memo(Preview, arePropsEqual);
+export default memo(PreviewCode, arePropsEqual);

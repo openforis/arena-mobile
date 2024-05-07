@@ -16,6 +16,7 @@ import {
 } from './base';
 import {
   getCategoryItems,
+  getNumberOfCategoryItems,
   getCategoryItemByUuid,
   getNodeCategoryItems,
 } from './categories';
@@ -73,6 +74,7 @@ export default {
 
   // ---- category
   getCategoryItems,
+  getNumberOfCategoryItems,
   getCategoryItemByUuid,
   getNodeCategoryItems,
   getCategoryItemIndex,
