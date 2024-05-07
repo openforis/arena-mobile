@@ -359,6 +359,8 @@ const showMultipleEntityHome = createSelector(
   ui => ui?.showMultipleEntityHome || false,
 );
 
+const isLoading = createSelector(getFormStateUi, ui => ui?.isLoading || false);
+
 const canAddNode = createCachedSelector(
   keySelectors.identity,
   getNodeDefNodesInHierarchy,
@@ -507,4 +509,5 @@ export default {
   isEntitySelectorOpened,
   isEntityShowAsTable,
   showMultipleEntityHome,
+  isLoading,
 };

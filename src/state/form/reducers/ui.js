@@ -9,7 +9,7 @@ const ui = handleActions(
   {
     [actions.setLoading]: (state, {payload: {isLoading}}) => ({
       ...state,
-      isLoading: isLoading,
+      isLoading,
     }),
     [actions.setError]: (state, {payload: {error}}) => ({
       ...state,

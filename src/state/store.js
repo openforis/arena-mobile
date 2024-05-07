@@ -38,7 +38,6 @@ const getStore = () => {
 
   const persistor = persistStore(store, {
     throttle: 5000,
-    debug: true,
   });
 
   return {store, persistor};
