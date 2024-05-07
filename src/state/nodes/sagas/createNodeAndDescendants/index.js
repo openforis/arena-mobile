@@ -3,13 +3,14 @@ import {select, all, put, call, fork} from 'redux-saga/effects';
 
 import {Objects} from 'infra/objectUtils';
 import formActions from 'state/form/actionCreators';
+import validationActions from 'state/validation/actionCreators';
 import formSelectors from 'state/form/selectors';
 import nodesActions from 'state/nodes/actionCreators';
 import recordsActions from 'state/records/actionCreators';
 import surveySelectors from 'state/survey/selectors';
 
 export function* updateValidation(validation) {
-  yield put(formActions.setValidation({validation}));
+  yield put(validationActions.setValidation({validation}));
 }
 
 function* handleCreateNodeAndDescendants({payload} = {}) {

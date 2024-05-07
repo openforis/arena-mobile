@@ -8,6 +8,7 @@ import appReducers from 'state/reducers';
 import surveysActions from 'state/surveys/actionCreators';
 import surveysApi from 'state/surveys/api';
 import surveysSagas from 'state/surveys/sagas';
+import validation from 'state/validation/actionCreators';
 
 const payload = {
   surveyUuid: 'SURVEY_1',
@@ -29,6 +30,9 @@ const mockSurvey = {
 
 const initialState = {
   ...globalInitialState,
+  validation: {
+    ...globalInitialState.validation,
+  },
   surveys: {
     ...globalInitialState.surveys,
     data: {
@@ -62,6 +66,9 @@ const initialStateWithNodesAndRecords = {
       ...globalInitialState.survey.data,
       ...mockSurvey,
     },
+  },
+  validation: {
+    ...globalInitialState.validation,
   },
   form: {
     ...globalInitialState.form,
@@ -131,6 +138,7 @@ describe('surveys sagas', () => {
 
       expect(storeState).toEqual({
         ...initialState,
+        validation: {},
         surveys: {
           ...initialState.surveys,
           data: {
@@ -170,6 +178,9 @@ describe('surveys sagas', () => {
           ...initialStateWithNodesAndRecords.survey,
           data: {uuid: 'OTHER_SURVEY'},
         },
+        validation: {
+          ...globalInitialState.validation,
+        },
         surveys: {
           ...globalInitialState.surveys,
         },
@@ -198,6 +209,9 @@ describe('surveys sagas', () => {
         ...initialStateWithNodesAndRecords,
         survey: {
           ...globalInitialState.survey,
+        },
+        validation: {
+          ...globalInitialState.validation,
         },
         surveys: {
           ...globalInitialState.surveys,

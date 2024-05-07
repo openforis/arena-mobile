@@ -18,7 +18,6 @@ const initialState = {
     isSingleNodeView: false,
     showCloseButtonInForm: true,
   },
-  validation: {},
 };
 
 export default initialState;

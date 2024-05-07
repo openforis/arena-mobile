@@ -1,8 +1,9 @@
 import {call, select, put, all} from 'redux-saga/effects';
 
 import {joinRecordItems} from 'arena/record';
-import formActions from 'state/form/actionCreators';
-import formSelectors from 'state/form/selectors';
+
+import validationActions from 'state/validation/actionCreators';
+import {selectors as validationSelectors} from 'state/validation';
 import nodesActions from 'state/nodes/actionCreators';
 import nodesSelectors from 'state/nodes/selectors';
 import recordsActions from 'state/records/actionCreators';
@@ -24,7 +25,7 @@ function* handleUpdateNode({payload}) {
       select(state =>
         nodesSelectors.getNodesByUuidRecordUuid(state, updatedNode.recordUuid),
       ),
-      select(formSelectors.getValidation),
+      select(validationSelectors.getValidation),
     ]);
 
     if (!node?.uuid) {
@@ -54,7 +55,7 @@ function* handleUpdateNode({payload}) {
     yield all([
       put(recordsActions.setRecord({record: updatedRecord})),
       put(nodesActions.setNodes({nodes: updatedNodes})),
-      put(formActions.setValidation({validation: updatedValidation})),
+      put(validationActions.setValidation({validation: updatedValidation})),
     ]);
 
     yield call(callbackAndJump, {
