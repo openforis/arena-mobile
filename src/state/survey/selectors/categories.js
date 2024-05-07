@@ -46,6 +46,11 @@ export const getCategoryItems = createCachedSelector(
   },
 )((_state_, nodeDefUuid) => nodeDefUuid || '__');
 
+export const getNumberOfCategoryItems = createCachedSelector(
+  getCategoryItems,
+  categoryItems => categoryItems.length,
+)((_state_, nodeDefUuid) => nodeDefUuid || '__');
+
 const getParentCodeNodeDef = createSelector(
   getNodeDefsByUuid,
   (_, __, node) => node,

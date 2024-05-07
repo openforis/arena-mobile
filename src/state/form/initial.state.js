@@ -10,6 +10,7 @@ const initialState = {
     isEntitySelectorOpened: false,
     isEntityShowAsTable: false,
     showMultipleEntityHome: false,
+    isLoading: false,
   },
   preferences: {
     hasToJump: false,
@@ -18,7 +19,6 @@ const initialState = {
     isSingleNodeView: false,
     showCloseButtonInForm: true,
   },
-  validation: {},
 };
 
 export default initialState;

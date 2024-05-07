@@ -11,6 +11,9 @@ const initialState = {
       [mockSurvey.uuid]: {...mockSurvey},
     },
   },
+  validation: {
+    ...globalInitialState.validation,
+  },
   survey: {
     ...globalInitialState.survey,
     data: {

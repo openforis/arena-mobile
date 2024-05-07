@@ -74,9 +74,11 @@ const ConnectionSettings = () => {
   }, [dispatch, formData]);
 
   useEffect(() => {
-    dispatch(appActions.setLoading({
-      isLoading: false,
-    })
+    dispatch(
+      appActions.setLoading({
+        isLoading: false,
+      }),
+    );
   }, [dispatch]);
 
   const {username, password} = useSelector(appSelectors.getAccessData);

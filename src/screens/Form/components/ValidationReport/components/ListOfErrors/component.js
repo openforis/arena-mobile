@@ -12,6 +12,7 @@ import {BreadCrumbAsLabel} from 'screens/Form/components/BreadCrumbs/components/
 import {selectors as formSelectors, actions as formActions} from 'state/form';
 import {selectors as nodesSelectors} from 'state/nodes';
 import {selectors as surveySelectors} from 'state/survey';
+import {selectors as validationSelectors} from 'state/validation';
 
 import _styles from './styles';
 
@@ -145,7 +146,7 @@ const ValidationItems = ({fields}) => {
 
 const ListOfErrors = () => {
   const styles = useThemedStyles(_styles);
-  const validation = useSelector(formSelectors.getValidation);
+  const validation = useSelector(validationSelectors.getValidation);
 
   return (
     <View style={styles.validationContainer}>

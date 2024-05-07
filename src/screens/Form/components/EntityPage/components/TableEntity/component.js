@@ -76,9 +76,14 @@ Table.defaultProps = {
   onlyKeys: false,
 };
 
+const FormPage = () => {
+  const isEntityShowAsTable = useSelector(formSelectors.isEntityShowAsTable);
+
+  return isEntityShowAsTable ? <Table /> : <Attributes />;
+};
+
 const TableEntity = () => {
   const styles = useThemedStyles(_styles);
-  const isEntityShowAsTable = useSelector(formSelectors.isEntityShowAsTable);
   const showMultipleEntityHome = useSelector(
     formSelectors.showMultipleEntityHome,
   );
@@ -95,7 +100,7 @@ const TableEntity = () => {
   }
   return (
     <View style={styles.container}>
-      {isEntityShowAsTable ? <Table /> : <Attributes />}
+      <FormPage />
       <EntityPanel />
     </View>
   );
