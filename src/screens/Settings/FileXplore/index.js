@@ -89,7 +89,6 @@ const Telemetry = () => {
   useEffect(() => {
     const getAppDir = async () => {
       const res = await fs.readDir({dirPath: fs.BASE_PATH_DATA});
-      console.log('RES', res);
       setFoldersAndFilesOnAppFolder(res);
       return [];
     };
@@ -102,7 +101,6 @@ const Telemetry = () => {
       const res = await fs.readDir({
         dirPath: `${fs.BASE_PATH_DATA}/${surveyUuid}/${cycle}/records`,
       });
-      console.log('RES', res);
       setFoldersAndFilesOnAppSurveyFolder(res);
       return [];
     };
@@ -113,7 +111,6 @@ const Telemetry = () => {
   useEffect(() => {
     const getTmpDir = async () => {
       const res = await fs.readDir({dirPath: fs.TMP_BASE_PATH});
-      console.log('RES', res);
       setFoldersAndFilesOnTempFolder(res);
       return [];
     };
