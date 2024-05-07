@@ -26,6 +26,7 @@ const appReducers = combineReducers({
   nodes: persistReducer(getConfig('nodes'), nodes),
   survey: persistReducer(getConfig('survey'), survey),
   surveys: persistReducer(getConfig('surveys'), surveys),
+  validation,
   user: persistReducer(getConfig('user'), user),
   form: persistReducer(getConfig('form'), form),
   files: persistReducer(getConfig('files'), files),

@@ -162,12 +162,12 @@ describe('Node updater', () => {
       ...initialState,
       form: {
         ...initialState.form,
-        validation: {
-          errors: [],
-          fields: {},
-          valid: true,
-          warnings: [],
-        },
+      },
+      validation: {
+        errors: [],
+        fields: {},
+        valid: true,
+        warnings: [],
       },
       nodes: {
         ...initialState.nodes,
@@ -217,38 +217,38 @@ describe('Node updater', () => {
       ...initialState,
       form: {
         ...initialState.form,
-        validation: {
-          errors: [],
-          fields: {
-            [getCurrentUuid(2)]: {
-              errors: [],
-              fields: {
-                value: {
-                  errors: [
-                    {
-                      key: 'record.attribute.customValidation',
-                      messages: {
-                        LANG: 'this_number > 0',
-                      },
-                      params: undefined,
-                      severity: 'error',
-                      valid: false,
-                    },
-                  ],
-                  fields: {},
-                  valid: false,
-                  warnings: [],
-                },
-              },
-              valid: false,
-              warnings: [],
-            },
-          },
-          valid: false,
-          warnings: [],
-        },
       },
 
+      validation: {
+        errors: [],
+        fields: {
+          [getCurrentUuid(2)]: {
+            errors: [],
+            fields: {
+              value: {
+                errors: [
+                  {
+                    key: 'record.attribute.customValidation',
+                    messages: {
+                      LANG: 'this_number > 0',
+                    },
+                    params: undefined,
+                    severity: 'error',
+                    valid: false,
+                  },
+                ],
+                fields: {},
+                valid: false,
+                warnings: [],
+              },
+            },
+            valid: false,
+            warnings: [],
+          },
+        },
+        valid: false,
+        warnings: [],
+      },
       nodes: {
         ...initialState.nodes,
         data: {
@@ -304,12 +304,13 @@ describe('Node updater', () => {
       ...initialState,
       form: {
         ...initialState.form,
-        validation: {
-          errors: [],
-          fields: {},
-          valid: true,
-          warnings: [],
-        },
+      },
+
+      validation: {
+        errors: [],
+        fields: {},
+        valid: true,
+        warnings: [],
       },
 
       nodes: {
@@ -365,36 +366,36 @@ describe('Node updater', () => {
       ...initialState,
       form: {
         ...initialState.form,
-        validation: {
-          errors: [],
-          fields: {
-            [getCurrentUuid(2)]: {
-              errors: [],
-              fields: {
-                value: {
-                  errors: [
-                    {
-                      key: 'record.attribute.customValidation',
-                      messages: {
-                        LANG: 'this_number > 0',
-                      },
-                      params: undefined,
-                      severity: 'error',
-                      valid: false,
+      },
+      validation: {
+        errors: [],
+        fields: {
+          [getCurrentUuid(2)]: {
+            errors: [],
+            fields: {
+              value: {
+                errors: [
+                  {
+                    key: 'record.attribute.customValidation',
+                    messages: {
+                      LANG: 'this_number > 0',
                     },
-                  ],
-                  fields: {},
-                  valid: false,
-                  warnings: [],
-                },
+                    params: undefined,
+                    severity: 'error',
+                    valid: false,
+                  },
+                ],
+                fields: {},
+                valid: false,
+                warnings: [],
               },
-              valid: false,
-              warnings: [],
             },
+            valid: false,
+            warnings: [],
           },
-          valid: false,
-          warnings: [],
         },
+        valid: false,
+        warnings: [],
       },
 
       nodes: {

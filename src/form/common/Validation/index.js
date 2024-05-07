@@ -13,6 +13,7 @@ import {Objects, compareArraysAsSets} from 'infra/objectUtils';
 import {selectors as formSelectors} from 'state/form';
 import {selectors as validationSelectors} from 'state/validation';
 import {selectors as surveySelector} from 'state/survey';
+import {selectors as validationSelectors} from 'state/validation';
 
 import styles from './styles';
 

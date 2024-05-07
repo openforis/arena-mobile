@@ -7,6 +7,5 @@ import ui from './ui';
 export default combineReducers({
   data,
   ui,
-
   preferences,
 });

@@ -6,10 +6,15 @@ import {keySelectors, EMPTY_OBJECT} from 'infra/stateUtils';
 
 const getState = state => state;
 
-// --- Validation
-const getValidation = createSelector(
+const getValidationState = createSelector(
   getState,
   state => state?.validation || EMPTY_OBJECT,
+);
+
+// --- Validation
+const getValidation = createSelector(
+  getValidationState,
+  formState => formState.validation || EMPTY_OBJECT,
 );
 
 const getValidationByKeys = ({keys, validation}) => {
