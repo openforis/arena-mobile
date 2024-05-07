@@ -10,6 +10,7 @@ const initialState = {
     isEntitySelectorOpened: false,
     isEntityShowAsTable: false,
     showMultipleEntityHome: false,
+    isLoading: false,
   },
   preferences: {
     hasToJump: false,
