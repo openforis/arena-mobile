@@ -37,7 +37,7 @@ const getStore = () => {
   sagaMiddleWare.run(sagas);
 
   const persistor = persistStore(store, {
-    throttle: 15000,
+    throttle: 5000,
   });
 
   return {store, persistor};
