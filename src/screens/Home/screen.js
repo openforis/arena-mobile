@@ -1,6 +1,7 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {ScrollView} from 'react-native';
+
+import {ScrollView, View} from 'react-native';
 import {useSelector} from 'react-redux';
 
 import CheckAppUpdateBar from 'arena-mobile-ui/components/CheckAppUpdateBar';
@@ -16,7 +17,23 @@ import Actions from './components/Actions';
 import Survey from './components/Survey';
 import User from './components/User';
 import _styles from './styles';
+import {useVersionData} from 'screens/Settings/hooks';
+import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 
+const Version = () => {
+  const {t} = useTranslation();
+  const styles = useThemedStyles(_styles);
+
+  const versionData = useVersionData();
+
+  return (
+    <View style={styles.versionContainer}>
+      <TextBase size={'xs'} type={'secondary'}>
+        {`${t('Common:version')}: ${versionData.version} (${versionData.buildNumber})`}
+      </TextBase>
+    </View>
+  );
+};
 const Home = () => {
   const {t} = useTranslation();
   const survey = useSelector(surveySelectors.getSurvey);
@@ -37,6 +54,7 @@ const Home = () => {
           <Survey />
         </ScrollView>
         {survey && <Actions />}
+        <Version></Version>
       </>
     </Layout>
   );
