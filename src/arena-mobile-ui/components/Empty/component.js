@@ -19,9 +19,13 @@ const Empty = ({title, info, ctaLabel, onPress}) => {
         </TextBase>
       </View>
 
-      <Button type="primary" label={ctaLabel} onPress={onPress} />
+      {ctaLabel && <Button type="primary" label={ctaLabel} onPress={onPress} />}
     </View>
   );
+};
+
+Empty.defaultProps = {
+  ctaLabel: false,
 };
 
 export default Empty;
