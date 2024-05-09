@@ -45,7 +45,7 @@ const RecordCard = ({record, recordUuid, isSelected, onSelect}) => {
     <TouchableCard onPress={handlePress} customStyles={containerStyle}>
       <View style={styles.infoContainer}>
         <View style={styles.payload}>
-          <View style={styles.labelCotainer}>
+          <View style={styles.labelContainer}>
             <TextBase type="bold" size="l">
               {record.recordKeyWithLabel ||
                 record.recordKey ||

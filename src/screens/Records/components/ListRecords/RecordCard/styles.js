@@ -10,7 +10,7 @@ const styles = ({baseStyles}) =>
     infoContainer: {
       flexDirection: 'row',
     },
-    labelCotainer: {
+    labelContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
