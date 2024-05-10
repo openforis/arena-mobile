@@ -11,22 +11,6 @@ const styles = ({baseStyles, colors}) =>
       justifyContent: 'space-between',
       alignItems: 'flex-start',
     },
-    initialsContainer: {
-      justifyContent: 'flex-start',
-    },
-    initialsBox: {
-      backgroundColor: colors.alertLightest,
-      height: baseStyles.bases.BASE_16,
-      width: baseStyles.bases.BASE_16,
-      borderRadius: baseStyles.bases.BASE_2,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    initialsText: {
-      textAlign: 'center',
-      fontWeight: 'bold',
-      color: colors.primaryContrast,
-    },
     headerLabelAndName: {
       paddingLeft: 8,
       flex: 1,

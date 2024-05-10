@@ -17,6 +17,34 @@ const convertBytes = numBytes => {
   return `${GB.toFixed(2)} GB`;
 };
 
+export const useVersionData = () => {
+  const [versionData, setVersionData] = useState({});
+
+  const load = async () => {
+    let versionDate = false;
+
+    try {
+      versionDate = await DeviceInfo.getLastUpdateTime();
+      versionDate = moment(versionDate).format('YYYY-MM-DD');
+    } catch (e) {
+      console.log('error', e);
+    }
+
+    const data = {
+      version: DeviceInfo.getReadableVersion(),
+      versionDate,
+      buildNumber: DeviceInfo.getBuildNumber(),
+    };
+    setVersionData(data);
+  };
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  return versionData;
+};
+
 export const useDeviceUse = () => {
   const [deviceUse, setDeviceUse] = useState({});
 

@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-
+import {StyleSheet, Dimensions} from 'react-native';
+const {width: WIDTH, height: HEIGHT} = Dimensions.get('screen');
 const styles = ({baseStyles}) =>
   StyleSheet.create({
     ...baseStyles.card,
@@ -10,10 +10,11 @@ const styles = ({baseStyles}) =>
     infoContainer: {
       flexDirection: 'row',
     },
-    labelCotainer: {
+    labelContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
+      maxWidth: WIDTH * 0.7,
     },
     moreInfo: {
       flexDirection: 'column',
@@ -22,6 +23,13 @@ const styles = ({baseStyles}) =>
     },
     payload: {
       flex: 1,
+      flexDirection: 'row',
+    },
+    headder: {
+      flexDirection: 'row',
+    },
+    visualDescriptionContainer: {
+      paddingRight: baseStyles.bases.BASE,
     },
     activeSurveyContainer: {
       alignItems: 'flex-end',

@@ -26,6 +26,26 @@ const getDescription = createSelector(
   (descriptions, language) => descriptions?.[language],
 );
 
+const DEFAULT_VISUAL_DESCRIPTION = {
+  /*backgroundColor: background,
+  color: text,
+  text: text,*/
+  extras: [
+    {
+      type: 'BAND',
+      backgroundColor: '#FF0000',
+      color: '#000000',
+      text: 'training',
+      position: 'BOTTON',
+    },
+  ],
+};
+
+const getVisualDescription = createSelector(
+  getSurvey,
+  survey => survey?.props?.visualDescription || DEFAULT_VISUAL_DESCRIPTION,
+);
+
 export const getSurveyData = createSelector(
   getName,
   getLabel,
@@ -33,12 +53,22 @@ export const getSurveyData = createSelector(
   getSelectedSurveyLanguage,
   getSurveyCycle,
   getSurveyNumberOfCycles,
-  (name, label, description, language, cycle, numberOfCycles) => ({
+  getVisualDescription,
+  (
     name,
     label,
     description,
     language,
     cycle,
     numberOfCycles,
+    visualDescription,
+  ) => ({
+    name,
+    label,
+    description,
+    language,
+    cycle,
+    numberOfCycles,
+    visualDescription,
   }),
 );

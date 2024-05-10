@@ -14,6 +14,7 @@ import {selectors as appSelectors} from 'state/app';
 import Actions from './Actions';
 import _styles from './styles';
 import SurveyStatus from './SurveyStatus';
+import VisualDescription from 'screens/Home/components/Survey/components/VisualDescription';
 
 const SurveyCard = ({
   survey,
@@ -37,26 +38,36 @@ const SurveyCard = ({
     <TouchableCard customStyles={containerStyle}>
       <View style={styles.infoContainer}>
         <View style={styles.payload}>
-          <View style={styles.labelCotainer}>
-            <TextBase type="bold" size="l">
-              {survey.props?.labels?.[survey?.props?.languages?.[0]]}
-            </TextBase>
+          <View style={styles.visualDescriptionContainer}>
+            <VisualDescription
+              surveyLabel={
+                survey?.props?.labels?.[survey?.props?.languages?.[0]]
+              }
+              visualDescription={survey?.props?.visualDescription}
+            />
           </View>
+          <View>
+            <View style={styles.labelContainer}>
+              <TextBase type="bold" size="l">
+                {survey.props?.labels?.[survey?.props?.languages?.[0]]}
+              </TextBase>
+            </View>
 
-          <TextBase type="secondary" size="s">
-            {survey?.props?.name}
-          </TextBase>
-          <TextBase type="secondary" size="s">
-            {t('Common:server')}: {survey?.serverUrl || currentServerUrl}
-          </TextBase>
+            <TextBase type="secondary" size="s">
+              {survey?.props?.name}
+            </TextBase>
+            <TextBase type="secondary" size="xs">
+              {t('Common:server')}: {survey?.serverUrl || currentServerUrl}
+            </TextBase>
 
-          <CreatedAndModified
-            dateCreated={survey?.dateCreated}
-            dateModified={survey?.dateModified}
-          />
-          {surveysOrigin === 'remote' && !errorRemoteServer && (
-            <SurveyStatus survey={survey} />
-          )}
+            <CreatedAndModified
+              dateCreated={survey?.dateCreated}
+              dateModified={survey?.dateModified}
+            />
+            {surveysOrigin === 'remote' && !errorRemoteServer && (
+              <SurveyStatus survey={survey} />
+            )}
+          </View>
         </View>
         <View style={styles.moreInfo}>
           <View style={styles.activeSurveyContainer}>
