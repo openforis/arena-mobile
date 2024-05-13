@@ -10,6 +10,7 @@ import {
   selectors as surveySelectors,
 } from 'state/survey';
 import {actions as surveysActions} from 'state/surveys';
+import {showToast} from 'infra/toast';
 
 const LocalPanel = ({survey, unSelect}) => {
   const {t} = useTranslation();
@@ -37,7 +38,17 @@ const LocalPanel = ({survey, unSelect}) => {
           }),
         );
       },
-      onDismiss: () => {},
+      onDismiss: () => {
+        showToast({
+          type: 'error',
+          position: 'bottom',
+          text1: t('Surveys:selected_survey_panel.delete.alert.dismiss_toast'),
+          visibilityTime: 1000,
+          props: {
+            text1NumberOfLines: 2,
+          },
+        });
+      },
       requiredText,
       requiredTextMessage: t('Common:required_text', {
         requiredText,

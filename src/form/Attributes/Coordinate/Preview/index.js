@@ -32,7 +32,9 @@ const CoordinateButtons = ({nodeDef, handleCleanCoordinates}) => {
     appSelectors.hasToUseMapsMeAsDefault,
   );
 
-  const isReadOnly = NodeDefs.isReadOnly(nodeDef);
+  const isReadOnly = Objects.isEmpty(nodeDef)
+    ? true
+    : NodeDefs.isReadOnly(nodeDef);
 
   const handleOpenMap = () => {
     console.log(nodes[0].value);

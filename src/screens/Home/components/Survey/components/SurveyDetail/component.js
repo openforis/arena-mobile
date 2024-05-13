@@ -18,6 +18,7 @@ const SHOW_CYCLE_SELECTOR = false;
 
 import SurveyCycleSelector from '../SurveyCycleSelector';
 import SurveyLanguageSelector from '../SurveyLanguageSelector';
+import VisualDescription from '../VisualDescription';
 
 const ViewMoreText = ({value}) => {
   const styles = useThemedStyles(_styles);
@@ -39,15 +40,6 @@ const ViewMoreText = ({value}) => {
   );
 };
 
-const _extractInitials = surveyLabel =>
-  String(surveyLabel)
-    .toUpperCase()
-    .replace(/[^a-zA-Z ]/g, '')
-    .split(/\s+/)
-    .slice(0, 3)
-    .map(part => part[0])
-    .join('');
-
 const SurveyDetail = () => {
   const styles = useThemedStyles(_styles);
   const {t} = useTranslation();
@@ -62,6 +54,7 @@ const SurveyDetail = () => {
     cycle: surveyCycle,
     description: surveyDescription,
     numberOfCycles,
+    visualDescription,
   } = useSelector(surveySelectors.getSurveyData);
 
   const info = useMemo(() => {
@@ -94,13 +87,10 @@ const SurveyDetail = () => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <View style={styles.initialsContainer}>
-          <View style={styles.initialsBox}>
-            <TextBase type="secondary" customStyle={styles.initialsText}>
-              {_extractInitials(surveyLabel)}
-            </TextBase>
-          </View>
-        </View>
+        <VisualDescription
+          surveyLabel={surveyLabel}
+          visualDescription={visualDescription}
+        />
         <View style={styles.headerLabelAndName}>
           <TextBase type="secondary" size="xs">
             {t('Home:survey.card.active_survey')}

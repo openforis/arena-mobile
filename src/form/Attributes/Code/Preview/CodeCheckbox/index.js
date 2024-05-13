@@ -9,7 +9,7 @@ import ChipContainer from '../components/ChipsContainer';
 import OptionChip from '../components/OptionChip';
 import {useCode} from '../hooks';
 import {useSelector} from 'react-redux';
-import {selectors as formSelectors, actions as formActions} from 'state/form';
+import {selectors as formSelectors} from 'state/form';
 
 const CodeCheckbox = ({nodeDef, disabled: forceDisabled}) => {
   const {nodes, categoryItems, getCategoryItemLabel} = useCode(nodeDef);

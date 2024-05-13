@@ -35,6 +35,8 @@ function* handleContinueRecord({payload}) {
       yield put(formActions.setParentEntityNode({node: rootNode[0]}));
     }
 
+    // recalculate validations
+
     yield call(navigator.navigatorDispatch, StackActions.replace(ROUTES.FORM));
   } catch (error) {
     console.log('Error', error);

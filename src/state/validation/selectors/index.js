@@ -11,10 +11,6 @@ const getValidationState = createSelector(
 );
 
 // --- Validation
-const getValidation = createSelector(
-  getValidationState,
-  formState => formState.validation || EMPTY_OBJECT,
-);
 
 const getValidationByKeys = ({keys, validation}) => {
   return keys
@@ -34,13 +30,13 @@ const getValidationByKeys = ({keys, validation}) => {
 const _getNodesUuids = (_, nodesUuids) => nodesUuids;
 
 const getValidationByNodes = createCachedSelector(
-  [getValidation, _getNodesUuids],
+  [getValidationState, _getNodesUuids],
   (validation, nodesUuids) =>
     getValidationByKeys({keys: nodesUuids, validation}),
 )(keySelectors.joinItems);
 
 export default {
   // ---- Validation
-  getValidation,
+  getValidation: getValidationState,
   getValidationByNodes,
 };

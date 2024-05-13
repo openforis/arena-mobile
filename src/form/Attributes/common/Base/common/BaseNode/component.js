@@ -15,6 +15,7 @@ import nodesSelectors from 'state/nodes/selectors';
 import BaseDeleteNode from '../BaseDeleteNode';
 
 import _styles from './styles';
+import {Objects} from 'infra/objectUtils';
 
 const BaseNode = ({
   nodeUuid,
@@ -33,7 +34,9 @@ const BaseNode = ({
   const disabled = useSelector(state =>
     formSelectors.isNodeDefDisabled(state, nodeDef),
   );
-  const isReadOnly = NodeDefs.isReadOnly(nodeDef);
+  const isReadOnly = Objects.isEmpty(nodeDef)
+    ? true
+    : NodeDefs.isReadOnly(nodeDef);
   const isSingleNodeView = useSelector(
     formPreferencesSelectors.isSingleNodeView,
   );
