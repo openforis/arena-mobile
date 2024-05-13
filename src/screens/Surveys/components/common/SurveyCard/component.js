@@ -34,22 +34,22 @@ const SurveyCard = ({
     );
   }, [styles, isLocalSurvey]);
 
+  const surveyLabel = survey?.props?.labels?.[survey?.props?.languages?.[0]];
+
   return (
     <TouchableCard customStyles={containerStyle}>
       <View style={styles.infoContainer}>
         <View style={styles.payload}>
           <View style={styles.visualDescriptionContainer}>
             <VisualDescription
-              surveyLabel={
-                survey?.props?.labels?.[survey?.props?.languages?.[0]]
-              }
+              surveyLabel={surveyLabe}
               visualDescription={survey?.props?.visualDescription}
             />
           </View>
           <View>
             <View style={styles.labelContainer}>
               <TextBase type="bold" size="l">
-                {survey.props?.labels?.[survey?.props?.languages?.[0]]}
+                {surveyLabel}
               </TextBase>
             </View>
 
