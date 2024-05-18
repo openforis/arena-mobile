@@ -23,31 +23,32 @@ const getCategoryItemDescription = language => categoryItem => {
   return descriptions?.[language] || '';
 };
 
-export const useCodeWithNode = (nodeDef, node) => {
+export const useCode = (nodeDef, node = false) => {
   const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
   const cycle = useSelector(surveySelectors.getSurveyCycle);
   const survey = useSelector(surveySelectors.getSurvey);
   const record = useSelector(formSelectors.getFullRecord, Objects.shallowEqual);
 
+  const nodes = useSelector(state =>
+    formSelectors.getNodeDefNodesInHierarchy(state, nodeDef),
+  );
+  const _node = useMemo(() => node || nodes?.[0], [node, nodes]);
+
   const nodeCategoryItems = useSelector(state =>
-    surveySelectors.getNodeCategoryItems(state, nodeDef.uuid, node),
+    surveySelectors.getNodeCategoryItems(state, nodeDef.uuid, _node),
   );
   const nodeDefCategoryItems = useSelector(state =>
     surveySelectors.getCategoryItems(state, nodeDef.uuid),
   );
 
   const parentNode = useSelector(state =>
-    nodesSelectors.getNodeByUuid(state, node?.parentUuid),
-  );
-
-  const nodes = useSelector(state =>
-    formSelectors.getNodeDefNodesInHierarchy(state, nodeDef),
+    nodesSelectors.getNodeByUuid(state, _node?.parentUuid),
   );
 
   const _categoryItems = useMemo(() => {
     const itemsFilter = nodeDef?.propsAdvanced?.itemsFilter || false;
     const expressionEvaluator = new RecordExpressionEvaluator();
-    const items = node?.uuid ? nodeCategoryItems : nodeDefCategoryItems;
+    const items = _node?.uuid ? nodeCategoryItems : nodeDefCategoryItems;
     if (Objects.isEmpty(items)) {
       return [];
     }
@@ -74,7 +75,7 @@ export const useCodeWithNode = (nodeDef, node) => {
       .sort((a, b) => a.props.index - b.props.index);
   }, [
     nodeDef,
-    node,
+    _node,
     nodeCategoryItems,
     nodeDefCategoryItems,
     survey,
@@ -109,46 +110,4 @@ export const useCodeWithNode = (nodeDef, node) => {
   };
 };
 
-const useCode = nodeDef => {
-  const language = useSelector(surveySelectors.getSelectedSurveyLanguage);
-  const cycle = useSelector(surveySelectors.getSurveyCycle);
-
-  const nodeDefCategoryItems = useSelector(state =>
-    surveySelectors.getCategoryItems(state, nodeDef.uuid),
-  );
-
-  const nodes = useSelector(state =>
-    formSelectors.getNodeDefNodesInHierarchy(state, nodeDef),
-  );
-
-  const _categoryItems = useMemo(() => {
-    return nodeDefCategoryItems.sort((a, b) => a.props.index - b.props.index);
-  }, [nodeDef, nodeDefCategoryItems]);
-
-  const _getCategoryItemLabel = useCallback(
-    item => getCategoryItemLabel(nodeDef, cycle, language)(item),
-    [nodeDef, cycle, language],
-  );
-
-  const _getCategoryItemDescription = useCallback(
-    item => getCategoryItemDescription(language)(item),
-    [language],
-  );
-
-  const categoryItemsByUuid = useMemo(() => {
-    const items = _categoryItems.reduce((acc, item) => {
-      acc[item.uuid] = item;
-      return acc;
-    }, {});
-    return items;
-  }, [_categoryItems]);
-
-  return {
-    nodes,
-    categoryItems: _categoryItems,
-    categoryItemsByUuid,
-    getCategoryItemLabel: _getCategoryItemLabel,
-    getCategoryItemDescription: _getCategoryItemDescription,
-  };
-};
 export default useCode;

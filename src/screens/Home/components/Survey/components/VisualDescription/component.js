@@ -7,7 +7,7 @@ import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 import _styles from './styles';
 
-const _extractInitials = surveyLabel =>
+const _extractInitials = (surveyLabel = '') =>
   String(surveyLabel)
     .toUpperCase()
     .replace(/[^a-zA-Z ]/g, '')

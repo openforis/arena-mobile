@@ -128,7 +128,7 @@ const Telemetry = () => {
       <TextBase>File Explorer:</TextBase>
       <TextBase>Arena Data: {foldersAndFilesOnAppFolder?.length}</TextBase>
       {foldersAndFilesOnAppFolder
-        .filter(item => item.name === surveyUuid)
+        ?.filter(item => item.name === surveyUuid)
         ?.map(item => (
           <TextBase key={item.name}>- {item.name}</TextBase>
         ))}

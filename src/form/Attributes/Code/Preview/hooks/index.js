@@ -1,1 +1,1 @@
-export {default as useCode, useCodeWithNode} from './useCode';
+export {default as useCode} from './useCode';

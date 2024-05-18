@@ -26,6 +26,9 @@ const SurveyCard = ({
   const {t} = useTranslation();
   const currentServerUrl = useSelector(appSelectors.getServerUrl);
   const styles = useThemedStyles(_styles);
+  const surveyLabel = useMemo(() => {
+    return survey?.props?.labels?.[survey?.props?.languages?.[0]] || '';
+  }, [survey]);
 
   const containerStyle = useMemo(() => {
     return StyleSheet.compose(
@@ -34,15 +37,13 @@ const SurveyCard = ({
     );
   }, [styles, isLocalSurvey]);
 
-  const surveyLabel = survey?.props?.labels?.[survey?.props?.languages?.[0]];
-
   return (
     <TouchableCard customStyles={containerStyle}>
       <View style={styles.infoContainer}>
         <View style={styles.payload}>
           <View style={styles.visualDescriptionContainer}>
             <VisualDescription
-              surveyLabel={surveyLabe}
+              surveyLabel={surveyLabel}
               visualDescription={survey?.props?.visualDescription}
             />
           </View>
