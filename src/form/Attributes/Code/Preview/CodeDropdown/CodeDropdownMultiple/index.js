@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback} from 'react';
+import React, {useEffect, useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
@@ -24,7 +24,7 @@ const CodeDropdownMultiple = ({nodeDef}) => {
   const codeActions = useNodeFormActions({nodeDef});
 
   const handleSelectNodeAndNodeDef = useSelectNodeAndNodeDef({
-    node: nodes[0],
+    node: nodes?.[0],
     nodeDef,
   });
 
@@ -49,6 +49,32 @@ const CodeDropdownMultiple = ({nodeDef}) => {
     [getCategoryItemLabel],
   );
 
+  const _nodesToShow = useMemo(() => {
+    const _nodes = [];
+    const _nodesToDelete = [];
+    for (const node of nodes) {
+      if (node?.value?.itemUuid) {
+        const categoryItem = categoryItems.find(
+          _categoryItem => _categoryItem.uuid === node?.value?.itemUuid,
+        );
+        if (!categoryItem) {
+          _nodesToDelete.push(node);
+        } else {
+          _nodes.push({node, label: _labelExtractor(categoryItem)});
+        }
+      }
+    }
+
+    // This is to delete nodes when hiearchical parent changes
+    if (_nodesToDelete.length > 0) {
+      for (const node of _nodesToDelete) {
+        codeActions.handleDelete({node, requestConfirm: false});
+      }
+    }
+
+    return _nodes;
+  }, [nodes, categoryItems, codeActions]);
+
   if (categoryItems.length === 0) {
     return null;
   }
@@ -56,27 +82,17 @@ const CodeDropdownMultiple = ({nodeDef}) => {
   return (
     <>
       <ChipContainer>
-        {nodes
-          .filter(node => node?.value?.itemUuid)
-          .map(node => {
-            const categoryItem = categoryItems.find(
-              _categoryItem => _categoryItem.uuid === node?.value?.itemUuid,
-            );
-
-            const label = _labelExtractor(categoryItem);
-
-            return (
-              <OptionChip
-                key={node.uuid}
-                label={label}
-                iconName="close"
-                onPressIcon={handleDelete({node, label})}
-              />
-            );
-          })}
+        {_nodesToShow.map(({node, label}) => (
+          <OptionChip
+            key={node.uuid}
+            label={label}
+            iconName="close"
+            onPressIcon={handleDelete({node, label})}
+          />
+        ))}
       </ChipContainer>
 
-      {nodes.length !== categoryItems.length && (
+      {_nodesToShow.length !== categoryItems.length && (
         <DropDownButton
           onPress={handleSelectNodeAndNodeDef}
           label={t('Form:select_empty')}

@@ -10,11 +10,11 @@ import {
   useCleanNode,
 } from 'state/form/hooks/useNodeFormActions';
 
-import {useCodeWithNode} from '../../hooks';
+import {useCode} from '../../hooks';
 
 const CodeNodeDropdown = ({nodeDef, node}) => {
   const {t} = useTranslation();
-  const {categoryItems, getCategoryItemLabel} = useCodeWithNode(nodeDef, node);
+  const {categoryItems, getCategoryItemLabel} = useCode(nodeDef, node);
 
   const handleClean = useCleanNode();
   const disabled = useSelector(state =>
