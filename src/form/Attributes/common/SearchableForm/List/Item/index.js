@@ -53,7 +53,7 @@ const ListItem = ({label, description, handlePress, selected, icon}) => {
   }, [selected]);
 
   return (
-    <Pressable onPress={handlePress} style={style}>
+    <Pressable onPress={handlePress} style={style} hitSlop={0}>
       <_Icon name={icon} />
 
       <View>

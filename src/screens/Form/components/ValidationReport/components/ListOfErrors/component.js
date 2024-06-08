@@ -93,7 +93,15 @@ const ValidationItem = ({field, itemPosition}) => {
 
   return (
     <>
-      <Pressable onPress={handleSelect} style={containerStyle}>
+      <Pressable
+        onPress={handleSelect}
+        style={containerStyle}
+        hitSlop={{
+          top: 0,
+          bottom: 0,
+          left: 10,
+          right: 10,
+        }}>
         <View style={styles.textContainer}>
           <View style={styles.pathContainer}>{labels}</View>
 

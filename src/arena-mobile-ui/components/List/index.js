@@ -10,8 +10,8 @@ const ItemSeparatorComponent = () => {
   return <></>;
 };
 
-const CellRendererComponent = ({onLayout, children}) => {
-  return <View onLayout={onLayout}>{children}</View>;
+const CellRendererComponent = ({children}) => {
+  return <View>{children}</View>;
 };
 
 const List = ({

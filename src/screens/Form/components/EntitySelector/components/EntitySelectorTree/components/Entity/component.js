@@ -65,7 +65,7 @@ const Entity = ({nodeDef, isCurrentEntity, forceDisabled}) => {
       style={styleContainer}
       disabled={isDisabled}
       onPress={handleSelect}
-      hitSlop={10}>
+      hitSlop={{top: 0, bottom: 0, left: 10, right: 10}}>
       <TextBase customStyle={textStyle}>{label}</TextBase>
     </Pressable>
   );

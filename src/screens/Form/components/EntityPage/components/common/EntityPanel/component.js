@@ -71,7 +71,12 @@ const EntityPanel = () => {
                   : 2,
             )
           }
-          hitSlop={40}
+          hitSlop={{
+            top: 0,
+            right: 80,
+            bottom: 20,
+            left: 80,
+          }}
         />
       </View>
       {collapseLevel === 0 && (

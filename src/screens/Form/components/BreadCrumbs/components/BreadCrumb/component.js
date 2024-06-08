@@ -59,7 +59,10 @@ const BreadCrumb = ({nodeUuid, emptyNode}) => {
 
   return (
     <View style={styles.breadCrumbContainer}>
-      <Pressable onPress={handleSelect} style={styles.container}>
+      <Pressable
+        onPress={handleSelect}
+        style={styles.container}
+        hitSlop={{left: 0, right: 0}}>
         <Label node={node || emptyNode} />
       </Pressable>
     </View>

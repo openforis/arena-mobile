@@ -49,6 +49,7 @@ const DeleteNodeEntity = () => {
       customContainerStyle={styles.buttonContainer}
       onPress={handleDeleteEntityNode}
       disabled={isRecordLocked}
+      hitSlop={4}
     />
   );
 };
