@@ -144,6 +144,7 @@ const FormCodeSingle = ({nodeDef, node}) => {
           type="ghostBlack"
           label={t('Form:clean')}
           customStyle={styles.button}
+          hitSlop={0}
         />
       )}
 

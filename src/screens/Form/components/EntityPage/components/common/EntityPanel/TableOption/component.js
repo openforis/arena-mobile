@@ -45,6 +45,7 @@ const TableOption = ({withIcon}) => {
         ) : null
       }
       iconPosition="right"
+      hitSlop={4}
     />
   );
 };

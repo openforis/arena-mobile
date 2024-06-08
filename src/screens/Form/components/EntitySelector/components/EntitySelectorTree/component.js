@@ -105,6 +105,7 @@ const EntitySelectorTree = ({nodeDefUuid, level = 0}) => {
                   iconName={showChildren ? 'chevron-down' : 'chevron-right'}
                   onPress={handleToggleVisibility}
                   customStyle={styles.expandIcon}
+                  hitSlop={5}
                 />
               )}
             </View>

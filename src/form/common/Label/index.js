@@ -26,7 +26,7 @@ const Label = ({
 
   return (
     <>
-      <Pressable style={styles.container} onLongPress={toggleModal}>
+      <Pressable style={styles.container} onLongPress={toggleModal} hitSlop={0}>
         {nodeDef?.props?.key && (
           <>
             <Icon name="key-variant" size="xs" color={iconColor} />

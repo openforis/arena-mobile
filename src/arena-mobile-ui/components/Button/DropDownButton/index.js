@@ -37,6 +37,7 @@ const CodeNodeDropdown = ({label, onPress, disabled, selected}) => {
       customContainerStyle={customContainerStyle}
       customTextStyle={customTextStyle}
       disabled={disabled}
+      hitSlop={4}
     />
   );
 };

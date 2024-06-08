@@ -15,7 +15,7 @@ import {Preview as BasePreview} from '../../common/Base';
 
 import styles, {booleanOptionStyles} from './styles';
 
-const hitSlop = {top: 20, bottom: 20, left: 20, right: 20};
+const hitSlop = {top: 10, bottom: 10, left: 0, right: 0};
 
 const TrueIcon = () => (
   <Icon name={'radiobox-marked'} size="s" color={colors.primaryContrastText} />
