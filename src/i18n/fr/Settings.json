@@ -70,6 +70,9 @@
       "title": "Utiliser Maps.me comme application de cartographie par défaut"
     }
   },
+  "diagnosis": {
+    "title": "Diagnostique"
+  },
   "style": {
     "title": "Style",
     "TextAndSpacingSize": {
