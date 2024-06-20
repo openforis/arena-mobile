@@ -9,6 +9,7 @@ import SettingsStyleColorScheme from 'screens/Settings/Screens/Style/ColorScheme
 import SettingsStyleFontBaseModifier from 'screens/Settings/Screens/Style/FontBaseModifier';
 import SettingsSurveyTaxonomies from 'screens/Settings/Screens/Survey/Taxonomies';
 import SettingsApplicationLanguage from 'screens/Settings/Screens/ApplicationLanguage';
+import SettingsDiagnosis from 'screens/Settings/Screens/Diagnosis';
 import Surveys from 'screens/Surveys';
 
 import {KEYS} from '../constants';
@@ -54,6 +55,10 @@ export const SCREENS = {
   },
   [KEYS.SETTINGS_APPLICATION_LANGUAGE]: {
     component: SettingsApplicationLanguage,
+    options: {gestureEnabled: false},
+  },
+  [KEYS.SETTINGS_DIAGNOSIS]: {
+    component: SettingsDiagnosis,
     options: {gestureEnabled: false},
   },
 };
