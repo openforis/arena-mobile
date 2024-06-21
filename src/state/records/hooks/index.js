@@ -19,48 +19,113 @@ export const useRecordsSummary = () => {
   const recordsInSurvey = useSelector(surveySelectors.getRecords);
   const [summary, setSummary] = useState();
 
+  const [debugLog, setDebugLog] = useState('');
+
   const getSummary = useCallback(async () => {
-    if (surveyUuid && cycle) {
-      const _summary = await getRecordsSummary({
-        surveyUuid,
-        cycle,
-      });
+    let _log = `useRecordsSummary
+    getSummary`;
 
-      const recordsUuidsToDelete = Object.keys(_summary);
+    try {
+      _log = `${_log}
+      **************************************
+      _surveyUuid: ${surveyUuid}
+      _cycle: ${cycle}
+      **************************************
+      `;
 
-      for (const recordUuid of recordsUuids) {
-        if (Objects.isEmpty(_summary[recordUuid])) {
-          const _record = await getRecord({
-            surveyUuid,
-            cycle,
-            uuid: recordUuid,
-          });
+      if (surveyUuid && cycle) {
+        const _summary = await getRecordsSummary({
+          surveyUuid,
+          cycle,
+        });
+        _log = `${_log}
+        01.Summary (${Object.keys(_summary).length}):  
+        ${JSON.stringify(_summary, null, 2)}`;
 
-          const _recordSummary = getRecordSummary(_record);
+        const recordsUuidsToDelete = Object.keys(_summary);
 
-          _summary[recordUuid] = _recordSummary;
+        _log = `${_log}
+02.recordsUuids
+        ${JSON.stringify(recordsUuids, null, 2)}`;
+
+        for (const recordUuid of recordsUuids) {
+          if (Objects.isEmpty(_summary[recordUuid])) {
+            _log = `${_log}
+            Record ${recordUuid} not in summary`;
+
+            const _record = await getRecord({
+              surveyUuid,
+              cycle,
+              uuid: recordUuid,
+            });
+
+            const _recordSummary = getRecordSummary(_record);
+
+            _log = `${_log}
+            Record ${recordUuid} summary: ${JSON.stringify(_recordSummary, null, 2)}`;
+
+            _summary[recordUuid] = _recordSummary;
+          } else {
+            _log = `${_log}
+            Record ${recordUuid} already in summary`;
+          }
+          const recordUuidIndex = recordsUuidsToDelete.indexOf(recordUuid);
+          if (recordUuidIndex >= 0) {
+            recordsUuidsToDelete.splice(recordUuidIndex, 1);
+          }
         }
-        const recordUuidIndex = recordsUuidsToDelete.indexOf(recordUuid);
-        if (recordUuidIndex >= 0) {
-          recordsUuidsToDelete.splice(recordUuidIndex, 1);
+
+        _log = `${_log}
+03.recordsInSurvey (In memory) (${recordsInSurvey.length})
+        ${JSON.stringify(
+          recordsInSurvey.map(record => ({
+            preview: record.preview,
+            uuid: record.uuid,
+            dateCreated: record.dateCreated,
+            cycle: record.cycle,
+            appInfo: record.appInfo,
+          })),
+          null,
+          2,
+        )}`;
+
+        for (const record of recordsInSurvey) {
+          const _recordSummary = getRecordSummary(record);
+
+          _log = `${_log}
+04.recordSummary
+        ${JSON.stringify(_recordSummary, null, 2)}`;
+
+          if (Objects.isEmpty(_summary[record.uuid])) {
+            _log = `${_log}
+            Record ${record.uuid} not in summary`;
+
+            _summary[record.uuid] = _recordSummary;
+          } else {
+            _log = `${_log}
+            Record ${record.uuid} already in summary`;
+          }
         }
-      }
 
-      for (const record of recordsInSurvey) {
-        const _recordSummary = getRecordSummary(record);
-        if (Objects.isEmpty(_summary[record.uuid])) {
-          _summary[record.uuid] = _recordSummary;
+        _log = `${_log}
+05.recordsUuidsToDelete
+        ${JSON.stringify(recordsUuidsToDelete, null, 2)}`;
+        for (const uuid of recordsUuidsToDelete) {
+          delete _summary[uuid];
         }
-      }
 
-      for (const uuid of recordsUuidsToDelete) {
-        delete _summary[uuid];
+        _log = `${_log}
+06.newSummaryToPersist
+        ${JSON.stringify(_summary, null, 2)}`;
+        if (!Objects.isEmpty(_summary)) {
+          await persistRecordsSummary({summary: _summary, surveyUuid, cycle});
+        }
+        setSummary(_summary);
       }
-
-      if (!Objects.isEmpty(_summary)) {
-        await persistRecordsSummary({summary: _summary, surveyUuid, cycle});
-      }
-      setSummary(_summary);
+    } catch (error) {
+      _log = `useRecordsSummary: getSummary: error: ${error}`;
+    } finally {
+      setDebugLog(_log);
     }
   }, [recordsInSurvey, recordsUuids, surveyUuid, cycle]);
 
@@ -70,7 +135,7 @@ export const useRecordsSummary = () => {
     }, [getSummary]),
   );
 
-  return summary;
+  return [summary, debugLog];
 };
 
 export const useNumberRecords = () => {
