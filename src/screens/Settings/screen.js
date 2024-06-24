@@ -327,6 +327,24 @@ const Geo = () => {
   );
 };
 
+const Diagnosis = () => {
+  const {navigateTo, routes} = useNavigateTo();
+  const {t} = useTranslation();
+
+  return (
+    <Section title={t('Settings:diagnosis.title')}>
+      <SectionCard
+        position="only"
+        onPress={navigateTo({
+          route: routes.SETTINGS_DIAGNOSIS,
+        })}
+        title={t('Settings:diagnosis.title')}
+        iconName="stethoscope"
+      />
+    </Section>
+  );
+};
+
 const Settings = () => {
   const styles = useThemedStyles(_styles);
   const {navigateTo, routes} = useNavigateTo();
@@ -388,6 +406,7 @@ const Settings = () => {
               <Language />
               <Geo />
               <FormSettings />
+              {isDevModeEnabled && <Diagnosis />}
             </>
           ) : null}
           <Version />

@@ -9,6 +9,7 @@ import * as SettingsStyleColorScheme from 'screens/Settings/Screens/Style/ColorS
 import * as SettingsStyleFontBaseModifier from 'screens/Settings/Screens/Style/FontBaseModifier/constants';
 import * as SettingsSurveyTaxonomies from 'screens/Settings/Screens/Survey/Taxonomies/constants';
 import * as SettingsApplicationLanguage from 'screens/Settings/Screens/ApplicationLanguage/constants';
+import * as SettingsDiagnosis from 'screens/Settings/Screens/Diagnosis/constants';
 
 import * as Surveys from 'screens/Surveys/constants';
 
@@ -25,6 +26,7 @@ export const KEYS = {
   [SettingsStyleColorScheme.key]: [SettingsStyleColorScheme.key],
   [SettingsImagesQualityAndSize.key]: [SettingsImagesQualityAndSize.key],
   [SettingsApplicationLanguage.key]: [SettingsApplicationLanguage.key],
+  [SettingsDiagnosis.key]: [SettingsDiagnosis.key],
 };
 
 export const ROUTES = {
@@ -40,4 +42,5 @@ export const ROUTES = {
   [SettingsStyleColorScheme.key]: SettingsStyleColorScheme.route,
   [SettingsImagesQualityAndSize.key]: SettingsImagesQualityAndSize.route,
   [SettingsApplicationLanguage.key]: SettingsApplicationLanguage.route,
+  [SettingsDiagnosis.key]: SettingsDiagnosis.route,
 };

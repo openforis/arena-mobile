@@ -55,7 +55,7 @@ const keyExtractor = item => item;
 const ListRecords = ({selectedRecordUuid, setSelectedRecord}) => {
   const dispatch = useDispatch();
 
-  const recordsSummary = useRecordsSummary();
+  const [recordsSummary] = useRecordsSummary();
   const recordUuids = useRecordsUuidsSorted(recordsSummary);
 
   const handleGetRemoteRecordsSummary = useCallback(() => {

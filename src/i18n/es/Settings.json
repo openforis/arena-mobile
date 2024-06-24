@@ -70,6 +70,9 @@
       "title": "Usar Maps.me como predeterminado"
     }
   },
+  "diagnosis": {
+    "title": "Diagnóstico"
+  },
   "style": {
     "title": "Estilo",
     "TextAndSpacingSize": {
