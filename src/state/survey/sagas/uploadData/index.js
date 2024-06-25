@@ -22,6 +22,7 @@ import recordActions from 'state/records/actionCreators';
 import handleGetRemoteRecordsSummary from 'state/records/sagas/getRemoteRecordsSummary';
 import recordSelectors from 'state/records/selectors';
 import surveysApi from 'state/surveys/api';
+import appActions from 'state/app/actionCreators';
 
 import surveyActions from '../../actionCreators';
 import surveySelectors from '../../selectors';
@@ -317,15 +318,29 @@ function* handleUploadData() {
 }
 
 export function* handleShareData({payload}) {
+  let log = '*******handleShareData*******';
   const {includeAllRecords = false} = payload;
   const surveyName = yield select(surveySelectors.getSelectedSurveyName);
   const timestamp = moment().format('yyyy-MM-DD_HH-mm-ss');
   const outputFileName = `${surveyName}_data_${timestamp}.zip`;
 
+  log = `${log}
+includeAllRecords: ${includeAllRecords}
+surveyName: ${surveyName}
+timestamp: ${timestamp}
+outputFileName: ${outputFileName}
+*******************`;
+
   const {numberOfRecordsToUpload, outputFilePath} = yield call(
     handleGenerateZipData,
     {includeAllRecords, outputFileName},
   );
+
+  log = `${log}
+  01.numberOfRecordsToUpload: ${numberOfRecordsToUpload}
+  02.outputFilePath: ${outputFilePath}
+  `;
+
   if (numberOfRecordsToUpload === 0) {
     const message = i18n.t('Records:share_data.no_records_to_share');
     yield call(handleShowToast, {message});
@@ -333,20 +348,31 @@ export function* handleShareData({payload}) {
   }
 
   try {
-    let url = `file://${outputFilePath}`;
     if (Platform.OS === 'ios') {
       const fileContent = yield call(fs.readfile, {
-        filePath: url,
+        filePath: outputFilePath,
         encoding: 'base64',
       });
       const actualData = 'data:application/zip;base64,' + fileContent;
       url = actualData;
+      yield call(Share.open, {url: actualData, filename: outputFileName});
+    } else {
+      yield call(Share.open, {
+        url: `file://${outputFilePath}`,
+        filename: outputFileName,
+      });
     }
-
-    yield call(Share.open, {url: `file://${outputFilePath}`});
   } catch (error) {
     // ignore it
+    log = `${log}
+  Error: ${error}
+  `;
     console.log(error);
+  } finally {
+    log = `${log}
+  finish
+  `;
+    yield put(appActions.diagnosisSetShareDataLog({shareDataLog: log}));
   }
 }
 

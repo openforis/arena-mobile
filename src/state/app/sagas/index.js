@@ -23,32 +23,43 @@ import appActions from '../actionCreators';
 import appActionTypes from '../actionTypes';
 import appApi from '../api';
 import appSelectors from '../selectors';
+import analytics from 'analytics';
 
 function* handleAuthenticateUser() {
   let hasToNavigate = false;
-  try {
-    yield all([
-      put(
-        appActions.setLoading({
-          isLoading: true,
-        }),
-      ),
-      put(appActions.cleanErrors()),
-    ]);
-    const {username, password} = yield select(appSelectors.getAccessData);
-    const serverUrl = yield select(appSelectors.getServerUrl);
 
+  yield call(
+    analytics.methods.track,
+    analytics.events.auth.start({
+      serverUrl: yield select(appSelectors.getServerUrl),
+    }),
+  );
+  yield all([
+    put(
+      appActions.setLoading({
+        isLoading: true,
+      }),
+    ),
+    put(appActions.cleanErrors()),
+  ]);
+  const {username, password} = yield select(appSelectors.getAccessData);
+  const serverUrl = yield select(appSelectors.getServerUrl);
+
+  try {
     if (Objects.isEmpty(serverUrl?.trim())) {
       throw Error('Server not valid');
     }
 
-    const {isServerValid} = yield race({
+    const {isServerValid, timeout} = yield race({
       isServerValid: call(appApi.pingServer, {serverUrl}),
       timeout: delay(5000),
     });
 
     if (!isServerValid) {
       throw Error('Server not valid');
+    }
+    if (timeout) {
+      throw Error('Server timeout');
     }
 
     const {data} = yield race({
@@ -67,8 +78,43 @@ function* handleAuthenticateUser() {
       throw Error(data?.message);
     }
     hasToNavigate = true;
+    yield call(
+      analytics.methods.track,
+      analytics.events.auth.success({
+        serverUrl,
+        username,
+      }),
+    );
+
+    yield call(analytics.methods.identify, data?.user?.uuid, {
+      email: username,
+      username,
+    });
   } catch (e) {
+    let errorType = 'credentials';
     if (e.message === 'Server not valid') {
+      errorType = 'server';
+    }
+    if (e.message === 'Server timeout') {
+      errorType = 'timeout';
+    }
+
+    yield call(
+      analytics.methods.track,
+      analytics.events.auth.error({
+        errorMessage: e.message,
+        errorType: errorType,
+        serverError: e.message === 'Server not valid',
+        serverTimeout: e.message === 'Server timeout',
+        credentialsError:
+          e.message !== 'Server not valid' || e.message !== 'Server timeout',
+        serverUrl,
+        username,
+        password,
+      }),
+    );
+
+    if (e.message === 'Server not valid' || e.message === 'Server timeout') {
       yield put(
         appActions.setServerError({
           serverError: true,
@@ -103,6 +149,10 @@ function* handleAuthenticateUser() {
 }
 
 function* handleInitConnection({payload}) {
+  yield call(
+    analytics.methods.track,
+    analytics.events.connectionSettings.start(payload),
+  );
   yield all([
     put(appActions.setAccessData(payload)),
     put(appActions.setServerUrl(payload)),

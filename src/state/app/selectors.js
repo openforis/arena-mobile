@@ -109,6 +109,13 @@ const getApplicationLanguage = createSelector(
   ui => ui?.applicationLanguage || 'en',
 );
 
+/* diagnosis */
+
+const getShareDataLog = createSelector(
+  getState,
+  app => app?.diagnosis?.shareDataLog || false,
+);
+
 export default {
   getAccessData,
   getServerUrl,
@@ -142,4 +149,7 @@ export default {
   hasToUseMapsMeAsDefault,
   /* application language */
   getApplicationLanguage,
+
+  /* diagnosis */
+  getShareDataLog,
 };

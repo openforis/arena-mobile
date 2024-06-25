@@ -28,6 +28,7 @@ import {selectors as appSelectors, actions as appActions} from 'state/app';
 import {selectors as userSelectors} from 'state/user';
 
 import styles from './styles';
+import analytics from 'analytics';
 
 const SHOW_QR_HELPER = false;
 
@@ -39,6 +40,10 @@ const ConnectionSettings = () => {
   const {t} = useTranslation();
 
   const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    analytics.methods.track(analytics.events.connectionSettings.view());
+  }, [dispatch]);
 
   const onChangeText = useCallback(
     key =>

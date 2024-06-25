@@ -1,5 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View, ScrollView} from 'react-native';
 
@@ -10,8 +9,11 @@ import TextBase from 'arena-mobile-ui/components/Texts/TextBase';
 import useThemedStyles from 'arena-mobile-ui/hooks/useThemedStyles';
 
 import {useRecordsUuidsSorted, useRecordsSummary} from 'state/records/hooks';
+import {useSelector, useDispatch} from 'react-redux';
+import {selectors as appSelectors, actions as appActions} from 'state/app';
 import _styles from './styles';
 import CopyToClipboard from 'form/Attributes/common/CopyToClipboard';
+import ShareDataButton from 'screens/Records/components/ListRecords/SubPanel/ShareDataButton';
 
 const RecordsScreen = () => {
   const [recordsSummary, debugLog] = useRecordsSummary();
@@ -45,13 +47,38 @@ const RecordsScreen = () => {
   );
 };
 
+const CheckExportSurvey = () => {
+  const shareDataLog = useSelector(appSelectors.getShareDataLog);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      appActions.diagnosisSetShareDataLog({
+        shareDataLog: 'press the share button',
+      }),
+    );
+  }, []);
+
+  return (
+    <View>
+      <ShareDataButton />
+      <CopyToClipboard value={JSON.stringify(shareDataLog)} />
+      <TextBase>{shareDataLog}</TextBase>
+    </View>
+  );
+};
+
+const CheckFiles = () => {
+  return (
+    <View>
+      <TextBase>''</TextBase>
+    </View>
+  );
+};
+
 const SettingsDiagnosis = () => {
   const styles = useThemedStyles(_styles);
-  const [showRecordsScreen, setShowRecordsScreen] = useState(false);
-
-  const handleShowRecordsScreen = useCallback(() => {
-    setShowRecordsScreen(!showRecordsScreen);
-  }, [showRecordsScreen]);
+  const [visibleDiagnosis, setVisibleDiagnosis] = useState(false);
 
   const {t} = useTranslation();
 
@@ -63,16 +90,44 @@ const SettingsDiagnosis = () => {
         </Header>
         <ScrollView>
           <View style={styles.container}>
-            <Button
-              type="primary"
-              onPress={handleShowRecordsScreen}
-              label={
-                showRecordsScreen
-                  ? t('hide_records_screen')
-                  : t('records list screen')
-              }
-            />
-            {showRecordsScreen && <RecordsScreen />}
+            {visibleDiagnosis ? (
+              <Button
+                type="primary"
+                onPress={() => setVisibleDiagnosis('')}
+                label={'Close'}
+              />
+            ) : (
+              <>
+                <Button
+                  type="primary"
+                  onPress={() => setVisibleDiagnosis('RECORDS_SCREEN')}
+                  label={t('records list screen')}
+                />
+                <Button
+                  type="primary"
+                  onPress={() => setVisibleDiagnosis('EXPORT_SURVEY')}
+                  label={t('export survey')}
+                />
+                {false && (
+                  <Button
+                    type="primary"
+                    onPress={() => setVisibleDiagnosis('FILES')}
+                    label={t('Check files')}
+                  />
+                )}
+                {false && (
+                  <Button
+                    type="primary"
+                    onPress={() => setVisibleDiagnosis('RECORDS')}
+                    label={t('Check records')}
+                  />
+                )}
+              </>
+            )}
+            {visibleDiagnosis === 'RECORDS_SCREEN' && <RecordsScreen />}
+            {visibleDiagnosis === 'EXPORT_SURVEY' && <CheckExportSurvey />}
+            {visibleDiagnosis === 'FILES' && <CheckFiles />}
+            {visibleDiagnosis === 'RECORDS' && <CheckRecords />}
           </View>
 
           <View style={styles.buttonsContainer}></View>

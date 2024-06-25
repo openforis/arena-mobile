@@ -36,6 +36,8 @@ const SET_GEO_HAS_TO_USE_MAPS_ME_AS_DEFAULT =
   'app/SET_GEO_HAS_TO_USE_MAPS_ME_AS_DEFAULT';
 /* languages settings */
 const SET_APPLICATION_LANGUAGE = 'app/SET_APPLICATION_LANGUAGE';
+/* diagnosis */
+const DIAGNOSIS_SET_SHARE_DATA_LOG = 'app/DIAGNOSIS_SET_SHARE_DATA_LOG';
 
 export default {
   initConnection$,
@@ -75,4 +77,7 @@ export default {
 
   /* Languages settings */
   SET_APPLICATION_LANGUAGE,
+
+  /* diagnosis */
+  DIAGNOSIS_SET_SHARE_DATA_LOG,
 };

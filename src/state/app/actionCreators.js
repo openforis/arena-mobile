@@ -90,6 +90,10 @@ const {app} = createActions({
   [types.SET_APPLICATION_LANGUAGE]: ({applicationLanguage = 'en'}) => ({
     applicationLanguage,
   }),
+  /* diagnosis */
+  [types.DIAGNOSIS_SET_SHARE_DATA_LOG]: ({shareDataLog = false}) => ({
+    shareDataLog,
+  }),
 });
 
 export default app;

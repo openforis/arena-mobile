@@ -132,7 +132,6 @@ export const copyFileInStream = async ({
       readStream.open();
 
       readStream.onData(chunk => {
-        console.log('chunk', chunk);
         writeStream.write(chunk);
       });
       readStream.onEnd(() => {
