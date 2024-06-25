@@ -24,6 +24,9 @@ const expectedAppState = {
     password: payload.password,
     username: payload.username,
   },
+  diagnosis: {
+    shareDataLog: false,
+  },
   preferences: {
     serverUrl: payload.serverUrl,
     settings: {

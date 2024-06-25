@@ -28,12 +28,6 @@ import analytics from 'analytics';
 function* handleAuthenticateUser() {
   let hasToNavigate = false;
 
-  yield call(
-    analytics.methods.track,
-    analytics.events.auth.start({
-      serverUrl: yield select(appSelectors.getServerUrl),
-    }),
-  );
   yield all([
     put(
       appActions.setLoading({
@@ -42,8 +36,10 @@ function* handleAuthenticateUser() {
     ),
     put(appActions.cleanErrors()),
   ]);
+
   const {username, password} = yield select(appSelectors.getAccessData);
   const serverUrl = yield select(appSelectors.getServerUrl);
+  yield call(analytics.methods.track, analytics.events.auth.start({serverUrl}));
 
   try {
     if (Objects.isEmpty(serverUrl?.trim())) {

@@ -30,6 +30,7 @@ jobs:
         run: yarn test
         env:
           TEST_PASSWORD: 'TEST_PASSWORD'
+          SEGMENT_API_KEY: 'SEGMENT_API_KEY'
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:

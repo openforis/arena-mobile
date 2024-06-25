@@ -19,7 +19,7 @@ const analytics = createClient({
 });
 
 const track = ({type, properties}) => {
-  console.log(process.env.SEGMENT_API_KEY, process.env);
+  console.log(process.env.SEGMENT_API_KEY);
   try {
     if (type && ANALYTICS_FEATURE_ENABLED) {
       if (

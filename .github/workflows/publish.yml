@@ -54,5 +54,6 @@ jobs:
         env:
           KEYSTORE: ${{secrets.KEYSTORE}}
           SEGMENT_API_KEY: ${{secrets.SEGMENT_API_KEY}}
+          SEGMENT_API_KEY: ${{secrets.SEGMENT_API_KEY}}
           ANDROID_KEYSTORE_PASSWORD: ${{secrets.ANDROID_KEYSTORE_PASSWORD}}
           PACKAGE_NAME: 'org.openforis.arena'
