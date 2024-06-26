@@ -25,6 +25,7 @@ import appApi from '../api';
 import appSelectors from '../selectors';
 import analytics from 'analytics';
 
+const DEFAULT_TIME_OUT = 25000;
 function* handleAuthenticateUser() {
   let hasToNavigate = false;
 
@@ -48,7 +49,7 @@ function* handleAuthenticateUser() {
 
     const {isServerValid, timeout} = yield race({
       isServerValid: call(appApi.pingServer, {serverUrl}),
-      timeout: delay(5000),
+      timeout: delay(DEFAULT_TIME_OUT),
     });
 
     if (!isServerValid) {
@@ -64,7 +65,7 @@ function* handleAuthenticateUser() {
         password,
         serverUrl,
       }),
-      timeout: delay(5000),
+      timeout: delay(DEFAULT_TIME_OUT),
     });
 
     if (data?.user) {
