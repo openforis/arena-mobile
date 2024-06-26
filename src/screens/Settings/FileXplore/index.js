@@ -145,7 +145,9 @@ const Telemetry = () => {
           }}
           key={item.name}
           onPress={() => onShare(item)}>
-          <TextBase>- {item.name}</TextBase>
+          <TextBase>
+            - {item.name} {item.size}
+          </TextBase>
         </Pressable>
       ))}
 
@@ -159,7 +161,9 @@ const Telemetry = () => {
           }}
           key={item.name}
           onPress={() => onShare(item)}>
-          <TextBase>- {item.name}</TextBase>
+          <TextBase>
+            - {item.name} {item.size}
+          </TextBase>
         </Pressable>
       ))}
     </View>

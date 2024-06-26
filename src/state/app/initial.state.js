@@ -25,6 +25,9 @@ const initialState = {
     },
     serverUrl: null,
   },
+  diagnosis: {
+    shareDataLog: false,
+  },
   ui: {
     serverError: false,
     credentialsError: false,

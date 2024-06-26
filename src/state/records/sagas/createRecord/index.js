@@ -14,8 +14,8 @@ const _createRecord = async ({survey, user, cycle}) => {
   let platform = '-';
 
   try {
-    version = await DeviceInfo.getDeviceInfo().getReadableVersion();
-    platform = await DeviceInfo.getDeviceInfo().getSystemName();
+    version = await DeviceInfo.getDeviceInfo()?.getReadableVersion();
+    platform = await DeviceInfo.getDeviceInfo()?.getSystemName();
   } catch (error) {
     console.log('Error', error);
   }

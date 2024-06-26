@@ -104,7 +104,7 @@ const getFileContent = async file => {
 };
 
 const moveFileContent = async ({file, destinationPath, encoding}) => {
-  const source = file?.uri?.replace('%20', ' ');
+  const source = fs.cleanPathWithBase(file?.uri.replace('%20', ' '));
   const destination = destinationPath.replace('%20', ' ');
 
   const exists = await fs.dirExists(source);

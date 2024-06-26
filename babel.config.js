@@ -11,6 +11,7 @@ module.exports = {
     ],*/
   ],
   plugins: [
+    'module:react-native-dotenv',
     'react-native-reanimated/plugin',
     '@babel/plugin-transform-template-literals',
     [
