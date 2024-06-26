@@ -2,7 +2,7 @@ import {createClient} from '@segment/analytics-react-native';
 import {segmentKey} from './segment-config';
 import {Objects} from 'infra/objectUtils';
 
-const ANALYTICS_FEATURE_ENABLED = true; //!__DEV__;
+const ANALYTICS_FEATURE_ENABLED = !__DEV__;
 
 const analytics = createClient({
   writeKey: segmentKey,
@@ -15,11 +15,9 @@ const analytics = createClient({
     trackAdvertising: true,
     trackDeepLinks: true,
   },
-  debug: __DEV__,
 });
 
 const track = ({type, properties}) => {
-  console.log(process.env.SEGMENT_API_KEY);
   try {
     if (type && ANALYTICS_FEATURE_ENABLED) {
       if (

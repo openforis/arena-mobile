@@ -3,7 +3,7 @@ import moment from 'moment';
 
 import globalInitialState from 'state/initial.state';
 
-import _getCurrentUuid from './getCurrentUuid';
+import {getCurrentUuid as _getCurrentUuid} from './getCurrentUuid';
 
 export const getCurrentUuid = _getCurrentUuid;
 

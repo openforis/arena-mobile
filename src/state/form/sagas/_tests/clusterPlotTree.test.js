@@ -19,11 +19,12 @@ import selectNode from './data/utils/selectNode';
 let prevState = Object.assign({}, initialState);
 let expectedState = Object.assign({}, initialState);
 
-const _getCurrentUuid = () => getCurrentUuid();
+const mockGetCurrentUuid = () => getCurrentUuid();
+let mockInd = 0;
 
 jest.mock('uuid', () => ({
   v4: () => {
-    return _getCurrentUuid();
+    return mockGetCurrentUuid?.() || `BASE_UUID-${++mockInd}`;
   },
 }));
 

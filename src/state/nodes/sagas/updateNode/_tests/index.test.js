@@ -86,9 +86,13 @@ const initialState = {
   },
 };
 
-const _getCurrentUuid = () => getCurrentUuid();
+const mockGetCurrentUuid = () => getCurrentUuid();
+let mockInd = 0;
+
 jest.mock('uuid', () => ({
-  v4: () => _getCurrentUuid(),
+  v4: () => {
+    return mockGetCurrentUuid?.() || `BASE_UUID--${++mockInd}`;
+  },
 }));
 
 describe('Node updater', () => {

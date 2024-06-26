@@ -24,16 +24,16 @@ export const useVersionData = () => {
     let versionDate = false;
 
     try {
-      versionDate = await DeviceInfo.getLastUpdateTime();
+      versionDate = await DeviceInfo?.getLastUpdateTime();
       versionDate = moment(versionDate).format('YYYY-MM-DD');
     } catch (e) {
       console.log('error', e);
     }
 
     const data = {
-      version: DeviceInfo.getReadableVersion(),
+      version: DeviceInfo?.getReadableVersion(),
       versionDate,
-      buildNumber: DeviceInfo.getBuildNumber(),
+      buildNumber: DeviceInfo?.getBuildNumber(),
     };
     setVersionData(data);
   };
