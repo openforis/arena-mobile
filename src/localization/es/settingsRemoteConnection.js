@@ -1,0 +1,20 @@
+export default {
+  clearCredentials: "Borrar credenciales",
+  clearCredentialsConfirmMessage: "¿Borrar las credenciales del usuario?",
+  email: "Correo electrónico",
+  errorConnectingWithServer: "Error al conectar con el servidor",
+  forgotPassword: "¿Olvidó su contraseña?",
+  login: "Iniciar sesión",
+  logout: "Cerrar sesión",
+  logoutConfirmMessage: "¿Cerrar sesión y borrar las credenciales del usuario?",
+  password: "Contraseña",
+  requestAccess: "¿Nuevo en Arena? Solicitar acceso",
+  serverUrl: "URL del servidor",
+  serverUrlNotValid: "URL del servidor no válida",
+  serverUrlType: {
+    default: "Predeterminada",
+    custom: "Personalizada",
+  },
+  testUrl: "Probar URL",
+  title: "Conexión al servidor remoto",
+};

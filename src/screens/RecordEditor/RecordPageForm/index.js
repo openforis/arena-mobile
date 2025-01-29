@@ -1,0 +1,1 @@
+export { RecordPageForm } from "./RecordPageForm";

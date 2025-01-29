@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "appComponents/*": ["appComponents/*"],
+      "components/*": ["components/*"],
+      "db/*": ["db/*"],
+      "hooks/*": ["hooks/*"],
+      "localization/*": ["localization/*"],
+      "model/*": ["model/*"],
+      "navigation/*": ["navigation/*"],
+      "screens/*": ["screens/*"],
+      "service/*": ["service/*"],
+      "state/*": ["state/*"],
+      "utils/*": ["utils/*"]
+    }
+  },
+  "include": ["src/**/*", "App.js"]
+}

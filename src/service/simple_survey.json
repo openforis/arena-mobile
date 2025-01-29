@@ -1,0 +1,473 @@
+{
+  "id": "1",
+  "uuid": "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3",
+  "published": false,
+  "draft": true,
+  "ownerUuid": "9a49313a-20c2-417d-b993-ea29cfc22e3e",
+  "template": false,
+  "dateCreated": "2023-01-22T21:20:20.840Z",
+  "dateModified": "2023-02-08T22:02:47.387Z",
+  "props": {
+    "srs": [
+      {
+        "code": "4326",
+        "name": "GCS WGS 1984",
+        "wkt": "GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\",6378137,298.257223563, AUTHORITY[\"EPSG\",\"7030\"]], AUTHORITY[\"EPSG\",\"6326\"]], PRIMEM[\"Greenwich\",0, AUTHORITY[\"EPSG\",\"8901\"]], UNIT[\"degree\",0.01745329251994328, AUTHORITY[\"EPSG\",\"9122\"]], AUTHORITY[\"EPSG\",\"4326\"]]"
+      }
+    ],
+    "name": "test_mobile",
+    "cycles": {
+      "0": {
+        "dateStart": "2023-01-22"
+      }
+    },
+    "labels": {
+      "en": "Test survey"
+    },
+    "languages": ["en"]
+  },
+  "authGroups": [
+    {
+      "uuid": "e48e1dc2-1940-42c8-a9c1-c936ed9d5152",
+      "name": "surveyAdmin",
+      "surveyUuid": "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3",
+      "permissions": [
+        "permissionsEdit",
+        "surveyEdit",
+        "recordView",
+        "recordCreate",
+        "recordEdit",
+        "recordCleanse",
+        "recordAnalyse",
+        "userEdit",
+        "userInvite"
+      ],
+      "recordSteps": {
+        "1": "all",
+        "2": "all",
+        "3": "all"
+      }
+    },
+    {
+      "uuid": "8f70f663-15ee-428a-8070-4cc66e0c0526",
+      "name": "surveyEditor",
+      "surveyUuid": "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3",
+      "permissions": [
+        "surveyEdit",
+        "recordView",
+        "recordCreate",
+        "recordEdit",
+        "recordCleanse",
+        "recordAnalyse"
+      ],
+      "recordSteps": {
+        "1": "all",
+        "2": "all",
+        "3": "all"
+      }
+    },
+    {
+      "uuid": "e51e8b24-e8eb-43e5-bbfd-11379441fbb0",
+      "name": "dataAnalyst",
+      "surveyUuid": "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3",
+      "permissions": [
+        "recordView",
+        "recordCreate",
+        "recordEdit",
+        "recordCleanse",
+        "recordAnalyse"
+      ],
+      "recordSteps": {
+        "1": "all",
+        "2": "all",
+        "3": "all"
+      }
+    },
+    {
+      "uuid": "1026c342-0f74-419c-b80c-a0b03cc8dc36",
+      "name": "dataCleanser",
+      "surveyUuid": "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3",
+      "permissions": [
+        "recordView",
+        "recordCreate",
+        "recordEdit",
+        "recordCleanse"
+      ],
+      "recordSteps": {
+        "1": "all",
+        "2": "all"
+      }
+    },
+    {
+      "uuid": "2a5cb445-ef1d-4c18-b7b4-a365a983894f",
+      "name": "dataEditor",
+      "surveyUuid": "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3",
+      "permissions": ["recordView", "recordCreate", "recordEdit"],
+      "recordSteps": {
+        "1": "own"
+      }
+    }
+  ],
+  "validation": null,
+  "nodeDefs": {
+    "4b65c369-f613-40d6-9dc5-4283c0f49dff": {
+      "id": "1",
+      "uuid": "4b65c369-f613-40d6-9dc5-4283c0f49dff",
+      "parentUuid": null,
+      "type": "entity",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "dateCreated": "2023-01-22T21:20:20.840Z",
+      "dateModified": "2023-02-08T22:02:19.822Z",
+      "propsAdvanced": {},
+      "meta": {
+        "h": []
+      },
+      "published": false,
+      "draft": true,
+      "props": {
+        "name": "cluster",
+        "cycles": ["0"],
+        "layout": {
+          "0": {
+            "pageUuid": "bda73ca2-b345-4457-80b3-160966cab2a9",
+            "renderType": "form",
+            "indexChildren": [],
+            "layoutChildren": [
+              {
+                "h": 1,
+                "i": "1c77500d-08ed-4978-a5ec-add8e6a30048",
+                "w": 1,
+                "x": 0,
+                "y": 0
+              },
+              {
+                "h": 1,
+                "i": "dd797afe-be6a-41a3-8573-389427e2a3ad",
+                "w": 1,
+                "x": 0,
+                "y": 1
+              },
+              {
+                "h": 1,
+                "i": "c9afeab4-2f88-4596-a718-2eb76ddde753",
+                "w": 1,
+                "x": 0,
+                "y": 2
+              },
+              {
+                "h": 1,
+                "i": "e98b6a64-7365-4b74-8f0d-41ac444800a8",
+                "w": 1,
+                "x": 0,
+                "y": 3
+              },
+              {
+                "h": 1,
+                "i": "4e727c8b-39a5-4773-8722-ad8b2f74ec45",
+                "w": 1,
+                "x": 0,
+                "y": 4
+              },
+              {
+                "h": 1,
+                "i": "70408922-9df5-42bc-88c5-2f018e0c330d",
+                "w": 1,
+                "x": 0,
+                "y": 5
+              }
+            ]
+          }
+        },
+        "multiple": false
+      }
+    },
+    "1c77500d-08ed-4978-a5ec-add8e6a30048": {
+      "id": "2",
+      "uuid": "1c77500d-08ed-4978-a5ec-add8e6a30048",
+      "parentUuid": "4b65c369-f613-40d6-9dc5-4283c0f49dff",
+      "type": "integer",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "dateCreated": "2023-01-22T21:20:40.342Z",
+      "dateModified": "2023-01-22T21:20:40.342Z",
+      "propsAdvanced": {},
+      "meta": {
+        "h": ["4b65c369-f613-40d6-9dc5-4283c0f49dff"]
+      },
+      "published": false,
+      "draft": true,
+      "props": {
+        "key": true,
+        "name": "cluster_id",
+        "cycles": ["0"],
+        "labels": {
+          "en": "Cluster ID"
+        }
+      }
+    },
+    "dd797afe-be6a-41a3-8573-389427e2a3ad": {
+      "id": "3",
+      "uuid": "dd797afe-be6a-41a3-8573-389427e2a3ad",
+      "parentUuid": "4b65c369-f613-40d6-9dc5-4283c0f49dff",
+      "type": "decimal",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "dateCreated": "2023-01-22T21:21:12.360Z",
+      "dateModified": "2023-01-22T21:22:39.017Z",
+      "propsAdvanced": {
+        "defaultValues": [
+          {
+            "uuid": "00592268-e395-4426-9d27-4c401b8797d4",
+            "applyIf": "",
+            "messages": {},
+            "severity": "error",
+            "expression": "cluster_id * 2"
+          }
+        ]
+      },
+      "meta": {
+        "h": ["4b65c369-f613-40d6-9dc5-4283c0f49dff"]
+      },
+      "draftAdvanced": true,
+      "draftAdvancedDefaultValues": true,
+      "published": false,
+      "draft": true,
+      "props": {
+        "name": "cluster_id_double",
+        "cycles": ["0"],
+        "labels": {
+          "en": "Double cluster ID"
+        },
+        "readOnly": true
+      }
+    },
+    "c9afeab4-2f88-4596-a718-2eb76ddde753": {
+      "id": "4",
+      "uuid": "c9afeab4-2f88-4596-a718-2eb76ddde753",
+      "parentUuid": "4b65c369-f613-40d6-9dc5-4283c0f49dff",
+      "type": "boolean",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "dateCreated": "2023-01-22T21:21:25.987Z",
+      "dateModified": "2023-01-22T21:22:45.812Z",
+      "propsAdvanced": {},
+      "meta": {
+        "h": ["4b65c369-f613-40d6-9dc5-4283c0f49dff"]
+      },
+      "published": false,
+      "draft": true,
+      "props": {
+        "name": "accessible",
+        "cycles": ["0"],
+        "labels": {
+          "en": "Accessible"
+        }
+      }
+    },
+    "e98b6a64-7365-4b74-8f0d-41ac444800a8": {
+      "id": "5",
+      "uuid": "e98b6a64-7365-4b74-8f0d-41ac444800a8",
+      "parentUuid": "4b65c369-f613-40d6-9dc5-4283c0f49dff",
+      "type": "text",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "dateCreated": "2023-01-22T21:21:36.776Z",
+      "dateModified": "2023-01-22T21:22:18.800Z",
+      "propsAdvanced": {},
+      "meta": {
+        "h": ["4b65c369-f613-40d6-9dc5-4283c0f49dff"]
+      },
+      "published": false,
+      "draft": true,
+      "props": {
+        "name": "always_relevant",
+        "cycles": ["0"],
+        "labels": {
+          "en": "Always relevant"
+        }
+      }
+    },
+    "4e727c8b-39a5-4773-8722-ad8b2f74ec45": {
+      "id": "6",
+      "uuid": "4e727c8b-39a5-4773-8722-ad8b2f74ec45",
+      "parentUuid": "4b65c369-f613-40d6-9dc5-4283c0f49dff",
+      "type": "text",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "dateCreated": "2023-01-22T21:22:01.174Z",
+      "dateModified": "2023-01-22T21:22:01.174Z",
+      "propsAdvanced": {
+        "applicable": [
+          {
+            "uuid": "fa94acba-2462-4731-b3a0-619838373319",
+            "applyIf": "",
+            "messages": {},
+            "severity": "error",
+            "expression": "accessible == true"
+          }
+        ]
+      },
+      "meta": {
+        "h": ["4b65c369-f613-40d6-9dc5-4283c0f49dff"]
+      },
+      "draftAdvanced": true,
+      "draftAdvancedApplicable": true,
+      "published": false,
+      "draft": true,
+      "props": {
+        "name": "relevant_if_accessible",
+        "cycles": ["0"],
+        "labels": {
+          "en": "Relevant if accessible"
+        }
+      }
+    },
+    "70408922-9df5-42bc-88c5-2f018e0c330d": {
+      "id": "7",
+      "uuid": "70408922-9df5-42bc-88c5-2f018e0c330d",
+      "parentUuid": "4b65c369-f613-40d6-9dc5-4283c0f49dff",
+      "type": "code",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "dateCreated": "2023-02-08T22:01:59.618Z",
+      "dateModified": "2023-02-08T22:02:47.387Z",
+      "propsAdvanced": {},
+      "meta": {
+        "h": ["4b65c369-f613-40d6-9dc5-4283c0f49dff"]
+      },
+      "published": false,
+      "draft": true,
+      "props": {
+        "name": "code_single_radiobox",
+        "cycles": ["0"],
+        "labels": {
+          "en": "Code single radiobox"
+        },
+        "layout": {
+          "0": {
+            "renderType": "checkbox"
+          }
+        },
+        "categoryUuid": "69be47b4-1f2f-41f1-b650-972fa6fae905",
+        "parentCodeDefUuid": null
+      }
+    }
+  },
+  "nodeDefsIndex": {
+    "childDefUuidPresenceByParentUuid": {
+      "4b65c369-f613-40d6-9dc5-4283c0f49dff": {
+        "1c77500d-08ed-4978-a5ec-add8e6a30048": true,
+        "dd797afe-be6a-41a3-8573-389427e2a3ad": true,
+        "c9afeab4-2f88-4596-a718-2eb76ddde753": true,
+        "e98b6a64-7365-4b74-8f0d-41ac444800a8": true,
+        "4e727c8b-39a5-4773-8722-ad8b2f74ec45": true,
+        "70408922-9df5-42bc-88c5-2f018e0c330d": true
+      }
+    },
+    "rootDefUuid": "4b65c369-f613-40d6-9dc5-4283c0f49dff"
+  },
+  "categories": {
+    "69be47b4-1f2f-41f1-b650-972fa6fae905": {
+      "id": 1,
+      "uuid": "69be47b4-1f2f-41f1-b650-972fa6fae905",
+      "props": {
+        "name": "list"
+      },
+      "published": false,
+      "levels": {
+        "0": {
+          "id": 1,
+          "uuid": "84887a07-9ffc-48e8-aad5-efde14adf064",
+          "index": 0,
+          "props": {
+            "name": "level_1"
+          },
+          "published": false
+        }
+      }
+    }
+  },
+  "taxonomies": {},
+  "dependencyGraph": {
+    "applicable": {
+      "c9afeab4-2f88-4596-a718-2eb76ddde753": [
+        "4e727c8b-39a5-4773-8722-ad8b2f74ec45"
+      ]
+    },
+    "defaultValues": {
+      "1c77500d-08ed-4978-a5ec-add8e6a30048": [
+        "dd797afe-be6a-41a3-8573-389427e2a3ad"
+      ]
+    },
+    "formula": {},
+    "validations": {}
+  },
+  "refData": {
+    "categoryItemUuidIndex": {
+      "69be47b4-1f2f-41f1-b650-972fa6fae905": {
+        "null": {
+          "1": "334e5bc6-f42d-4914-9e8a-3977a6e73a9d",
+          "2": "c4f5d3a3-4afb-4b43-88f2-f44ff13a6177",
+          "3": "54bc4d2e-8e08-487b-99d2-5add140497c3"
+        }
+      }
+    },
+    "categoryItemIndex": {
+      "334e5bc6-f42d-4914-9e8a-3977a6e73a9d": {
+        "categoryUuid": "69be47b4-1f2f-41f1-b650-972fa6fae905",
+        "parentUuid": null,
+        "uuid": "334e5bc6-f42d-4914-9e8a-3977a6e73a9d",
+        "levelUuid": "84887a07-9ffc-48e8-aad5-efde14adf064",
+        "published": false,
+        "draft": true,
+        "props": {
+          "code": "1",
+          "labels": {
+            "en": "Item 1"
+          },
+          "index": 1
+        }
+      },
+      "c4f5d3a3-4afb-4b43-88f2-f44ff13a6177": {
+        "categoryUuid": "69be47b4-1f2f-41f1-b650-972fa6fae905",
+        "parentUuid": null,
+        "uuid": "c4f5d3a3-4afb-4b43-88f2-f44ff13a6177",
+        "levelUuid": "84887a07-9ffc-48e8-aad5-efde14adf064",
+        "published": false,
+        "draft": true,
+        "props": {
+          "code": "2",
+          "labels": {
+            "en": "Item 2"
+          },
+          "index": 2
+        }
+      },
+      "54bc4d2e-8e08-487b-99d2-5add140497c3": {
+        "categoryUuid": "69be47b4-1f2f-41f1-b650-972fa6fae905",
+        "parentUuid": null,
+        "uuid": "54bc4d2e-8e08-487b-99d2-5add140497c3",
+        "levelUuid": "84887a07-9ffc-48e8-aad5-efde14adf064",
+        "published": false,
+        "draft": true,
+        "props": {
+          "code": "3",
+          "labels": {
+            "en": "Item 3"
+          },
+          "index": 3
+        }
+      }
+    },
+    "taxonUuidIndex": {},
+    "taxonIndex": {}
+  }
+}

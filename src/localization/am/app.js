@@ -1,0 +1,42 @@
+export default {
+  backup: "ምትኬ",
+  changelog: "የለውጥ መዝገብ",
+  confirmExit: {
+    title: "ውጣ",
+    message: "ከመተግበሪያው ይውጡ?\nሁሉም ለውጦች አስቀድመው ተቀምጠዋል።",
+  },
+  currentVersion: "የአሁኑ ቅጂ",
+  fullBackup: {
+    confirmMessage: "ሙሉ ምትኬ ይፍጠሩ?\nመጠኑ ወደ {{size}} አካባቢ ይሆናል።",
+    confirmTitle: "ምትኬ ይፍጠሩ",
+    error: "ሙሉ ምትኬን በመፍጠር ላይ ስህተት ተከስቷል: {{details}}",
+    shareTitle: "የ AME ሙሉ ምትኬ ያጋሩ",
+    title: "ሙሉ ምትኬ",
+  },
+  initializationStep: {
+    starting: "በመጀመር ላይ",
+    fetchingDeviceInfo: "የመሣሪያ መረጃን በመሰብሰብ ላይ",
+    fetchingSettings: "ቅንብሮችን በመሰብሰብ ላይ",
+    storingSettings: "ቅንብሮችን በማስቀመጥ ላይ",
+    settingFullScreen: "ሙሉ ማያ ገጽ በማዘጋጀት ላይ",
+    settingKeepScreenAwake: "ማያ ገጹ እንዳይጠፋ በማዘጋጀት ላይ",
+    startingGpsLocking: "የ GPS መቆለፊያን በመጀመር ላይ",
+    initializingDb: "DB ን በማስጀመር ላይ",
+    startingDbMigrations: "የ DB ፍልሰቶችን በመጀመር ላይ",
+    fetchingSurveys: "ዳሰሳዎችን በመሰብሰብ ላይ",
+    importingDemoSurvey: "የማሳያ ዳሰሳን በማስመጣት ላይ",
+    fetchingAndSettingLocalSurveys: "የአካባቢ ዳሰሳዎችን በመሰብሰብ እና በማዘጋጀት ላይ",
+    fetchingAndSettingSurvey: "ዳሰሳን በመሰብሰብ እና በማዘጋጀት ላይ",
+    checkingLoggedIn: "የተጠቃሚውን መግቢያ በመፈተሽ ላይ",
+    complete: "ተጠናቋል",
+  },
+  pleaseWaitMessage: "እባክዎን ይጠብቁ...",
+  update: "አዘምን",
+  updateAvailable: "ዝማኔ ይገኛል",
+  updateStatus: {
+    error: "የመተግበሪያውን ዝማኔ ሁኔታ መልሶ በማግኘት ላይ ስህተት: {{error}}",
+    networkNotAvailable:
+      "የመተግበሪያውን ዝማኔ ሁኔታ ማረጋገጥ አልተቻለም: $t(networkNotAvailable)",
+    upToDate: "መተግበሪያው ወቅታዊ ነው",
+  },
+};

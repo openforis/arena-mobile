@@ -1,0 +1,1 @@
+export { BottomNavigationBar } from "./BottomNavigationBar";
