@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Arena Mobile",
+    "name": "Arena Mobile 2",
     "slug": "arena-mobile",
     "owner": "openforis",
     "version": "2.0.0",
@@ -21,10 +21,10 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "org.openforis.arena_mobile",
-      "versionCode": 1
+      "versionCode": 2
     },
     "ios": {
-      "buildNumber": "1",
+      "buildNumber": "2",
       "bundleIdentifier": "org.openforis.arena-mobile",
       "config": {
         "usesNonExemptEncryption": false

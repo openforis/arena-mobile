@@ -64,7 +64,7 @@ export const RecordsListOptions = (props) => {
           loading={syncStatusLoading}
           mode="outlined"
           onPress={onRemoteSyncPress}
-          textKey="dataEntry:checkSyncStatus"
+          textKey="dataEntry:checkStatus"
         />
         <Button
           icon="file-import-outline"

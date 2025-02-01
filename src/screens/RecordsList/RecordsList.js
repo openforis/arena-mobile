@@ -536,10 +536,10 @@ export const RecordsList = () => {
               ...(networkAvailable
                 ? [
                     {
-                      key: "checkSyncStatus",
+                      key: "checkStatus",
                       icon: "cloud-refresh",
                       keepMenuOpenOnPress: true,
-                      label: "dataEntry:checkSyncStatus",
+                      label: "dataEntry:checkStatus",
                       disabled: !networkAvailable,
                       onPress: loadRecordsWithSyncStatus,
                     },

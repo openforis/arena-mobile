@@ -10,7 +10,7 @@ export default {
   createdOn: "Создано",
   delete: "Удалить",
   deleteSelectedTitle: "Удалить выбранное",
-  details: "Подробности",
+  details: "Детали",
   done: "Готово",
   empty: "--- ПУСТО ---",
   error: "Ошибка",
