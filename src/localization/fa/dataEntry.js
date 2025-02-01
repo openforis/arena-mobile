@@ -2,7 +2,7 @@ export default {
   confirmGoToListOfRecords: `به لیست رکوردها بروید؟
   
   (همه تغییرات قبلاً ذخیره شده اند)`,
-  checkSyncStatus: "بررسی وضعیت همگام سازی",
+  checkStatus: "بررسی وضعیت همگام سازی",
   closestSamplingPoint: {
     findClosestSamplingPoint: "یافتن نزدیکترین نقطه نمونه برداری",
     findingClosestSamplingPoint: "در حال یافتن نزدیکترین نقطه نمونه برداری",

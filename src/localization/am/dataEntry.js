@@ -1,6 +1,6 @@
 export default {
   confirmGoToListOfRecords: "ወደ መዝገቦች ዝርዝር ይሂዱ?\n\n(ሁሉም ለውጦች አስቀድመው ተቀምጠዋል)",
-  checkSyncStatus: "የማመሳሰል ሁኔታን ያረጋግጡ",
+  checkStatus: "የማመሳሰል ሁኔታን ያረጋግጡ",
   closestSamplingPoint: {
     findClosestSamplingPoint: "የቅርቡን ናሙና ነጥብ ያግኙ",
     findingClosestSamplingPoint: "የቅርቡን ናሙና ነጥብ በመፈለግ ላይ",

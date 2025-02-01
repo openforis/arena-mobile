@@ -1,5 +1,5 @@
 export default {
-  checkUpdates: "Проверить обновления",
+  checkUpdates: "Обновить",
   confirmDeleteSurvey: {
     title: "Удалить опрос",
     message: "Удалить выбранный опрос?",
@@ -12,7 +12,7 @@ export default {
   errorFetchingSurveysWithDetails:
     "$t(surveys:errorFetchingSurveys): {{details}}",
   fieldManual: "Руководство опроса",
-  importFromCloud: "Загрузить из облака",
+  importFromCloud: "Загрузить",
   importSurvey: "Загрузить опрос",
   importSurveyConfirmMessage: "Загрузить опрос «{{surveyName}}»?",
   loadStatus: {

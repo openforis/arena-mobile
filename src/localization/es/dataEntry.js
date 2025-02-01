@@ -1,7 +1,7 @@
 export default {
   confirmGoToListOfRecords:
     "¿Ir a la lista de registros?\n\n(todos los cambios ya están guardados)",
-  checkSyncStatus: "Comprobar sincronización",
+  checkStatus: "Comprobar sincronización",
   closestSamplingPoint: {
     findClosestSamplingPoint: "Buscar el punto de muestreo más cercano",
     findingClosestSamplingPoint: "Buscando el punto de muestreo más cercano",
