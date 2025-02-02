@@ -1,7 +1,7 @@
 export default {
   title: "تنظیمات",
   animationsEnabled: "انیمیشن ها فعال",
-  connectionToRemoteServer: "اتصال به سرور",
+  connectionToServer: "اتصال به سرور",
   fontScale: "مقیاس فونت (BETA): {{value}}",
   keepScreenAwake: "روشن نگه داشتن صفحه",
   fullScreen: "تمام صفحه",

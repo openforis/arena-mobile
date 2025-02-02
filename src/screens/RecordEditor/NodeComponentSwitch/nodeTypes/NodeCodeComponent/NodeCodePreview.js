@@ -58,7 +58,7 @@ export const NodeCodePreview = (props) => {
           {selectedItems.map((item) => (
             <Button
               key={item.uuid}
-              mode="outlined"
+              color="secondary"
               onPress={openEditDialog}
               style={styles.previewItem}
             >
@@ -82,9 +82,9 @@ export const NodeCodePreview = (props) => {
       )}
       {canFindClosestSamplingPointData && (
         <Button
-          mode="outlined"
-          textKey="dataEntry:closestSamplingPoint.findClosestSamplingPoint"
+          color="secondary"
           onPress={openFindClosestSamplingPointDialog}
+          textKey="dataEntry:closestSamplingPoint.findClosestSamplingPoint"
         />
       )}
     </HView>

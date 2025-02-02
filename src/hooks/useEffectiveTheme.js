@@ -1,11 +1,34 @@
 import { useMemo } from "react";
 import { useColorScheme } from "react-native";
-import { MD3DarkTheme, DefaultTheme } from "react-native-paper";
+import { DefaultTheme, MD3DarkTheme } from "react-native-paper";
 
 import { Themes, ThemesSettings } from "model";
+import { OFDarkTheme, OFLightTheme } from "theme";
 import { SettingsSelectors } from "../state/settings/selectors";
 
 const defaultFontSize = 16;
+
+const ColorSchemeName = {
+  dark: "dark",
+  light: "light",
+};
+
+const themeByThemeSetting = {
+  [ThemesSettings.light]: OFLightTheme,
+  [ThemesSettings.dark]: OFDarkTheme,
+  [ThemesSettings.light2]: DefaultTheme,
+  [ThemesSettings.dark2]: MD3DarkTheme,
+};
+
+const scaleFonts = (fontScale) => (fonts) => {
+  if (fontScale === 1) return fonts;
+  return Object.entries(fonts).reduce((acc, [fontKey, font]) => {
+    const fontSize = Math.floor(font.fontSize ?? defaultFontSize * fontScale);
+    const fontResized = { ...font, fontSize };
+    acc[fontKey] = fontResized;
+    return acc;
+  }, {});
+};
 
 export const useEffectiveTheme = () => {
   const colorScheme = useColorScheme();
@@ -14,22 +37,13 @@ export const useEffectiveTheme = () => {
     SettingsSelectors.useSettings();
 
   if (themeSetting === ThemesSettings.auto) {
-    themeSetting = colorScheme === "dark" ? Themes.dark : Themes.light;
+    themeSetting =
+      colorScheme === ColorSchemeName.dark ? Themes.dark : Themes.light;
   }
   return useMemo(() => {
-    const theme = themeSetting === Themes.dark ? MD3DarkTheme : DefaultTheme;
+    const theme = themeByThemeSetting[themeSetting];
     const { fonts } = theme;
-    const fontsResized = Object.entries(fonts).reduce(
-      (acc, [fontKey, font]) => {
-        const fontResized = {
-          ...font,
-          fontSize: Math.floor(font.fontSize ?? defaultFontSize * fontScale),
-        };
-        acc[fontKey] = fontResized;
-        return acc;
-      },
-      {}
-    );
+    const fontsResized = scaleFonts(fontScale)(fonts);
     return { ...theme, fonts: fontsResized };
   }, [fontScale, themeSetting]);
 };

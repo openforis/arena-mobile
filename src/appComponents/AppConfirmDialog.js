@@ -98,8 +98,8 @@ export const AppConfirmDialog = () => {
         </Dialog.Content>
         <Dialog.Actions>
           <Button
+            color="secondary"
             labelVariant="bodyLarge"
-            mode="outlined"
             onPress={cancel}
             style={cancelButtonStyle}
             textKey={cancelButtonTextKey}

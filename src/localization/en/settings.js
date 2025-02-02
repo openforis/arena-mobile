@@ -1,7 +1,7 @@
 export default {
   title: "Settings",
   animationsEnabled: "Animations enabled",
-  connectionToRemoteServer: "Connection to remote server",
+  connectionToServer: "Connection to server",
   fontScale: "Font scale (BETA): {{value}}",
   keepScreenAwake: "Keep screen awake",
   fullScreen: "Full screen",
@@ -24,6 +24,8 @@ It will help to get a better accuracy in a coordinate attributes.`,
     label: "Theme",
     auto: "Auto",
     dark: "Dark",
+    dark2: "Dark 2",
     light: "Light",
+    light2: "Light 2",
   },
 };

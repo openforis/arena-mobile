@@ -1,7 +1,7 @@
 export default {
   title: "ቅንብሮች",
   animationsEnabled: "አኒሜሽኖች ነቅተዋል",
-  connectionToRemoteServer: "ከሩቅ አገልጋይ ጋር ግንኙነት",
+  connectionToServer: "ከአገልጋይ ጋር ግንኙነት",
   fontScale: "የቅርጸ ቁምፊ መጠን (ቤታ)፡ {{value}}",
   keepScreenAwake: "ማያ ገጹን ነቅቶ ያቆዩት",
   fullScreen: "ሙሉ ማያ ገጽ",

@@ -16,5 +16,5 @@ export default {
     custom: "Personalizada",
   },
   testUrl: "Probar URL",
-  title: "Conexión al servidor remoto",
+  title: "Conexión al servidor",
 };

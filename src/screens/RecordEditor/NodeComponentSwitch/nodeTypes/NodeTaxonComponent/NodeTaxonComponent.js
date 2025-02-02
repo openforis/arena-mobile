@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { NodeDefs } from "@openforis/arena-core";
 
 import { Button, CloseIconButton, HView, Text, VView, View } from "components";
+import { useEffectiveTheme } from "hooks";
 import { RecordEditViewMode } from "model";
 import { SurveyOptionsSelectors } from "state";
 
@@ -23,6 +24,7 @@ export const NodeTaxonComponent = (props) => {
       `rendering NodeTaxonComponent for ${NodeDefs.getName(nodeDef)}`
     );
   }
+  const theme = useEffectiveTheme();
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -40,13 +42,14 @@ export const NodeTaxonComponent = (props) => {
   const selectedTaxonContainerStyle = useMemo(
     () => [
       styles.selectedTaxonContainer,
+      { borderColor: theme.colors.onSurfaceVariant },
       { height: selectedTaxonVernacularName ? 70 : 40 },
     ],
-    [selectedTaxonVernacularName]
+    [selectedTaxonVernacularName, theme.colors.onSurfaceVariant]
   );
 
   return (
-    <VView>
+    <VView style={styles.container}>
       <View style={styles.selectedTaxonWrapper}>
         {selectedTaxon ? (
           <HView style={selectedTaxonContainerStyle}>

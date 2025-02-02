@@ -45,7 +45,7 @@ const confirmGoToConnectionToRemoteServer =
   (dispatch) => {
     dispatch(
       ConfirmActions.show({
-        confirmButtonTextKey: "settings:connectionToRemoteServer",
+        confirmButtonTextKey: "settings:connectionToServer",
         messageKey: "settingsRemoteConnection:errorConnectingWithServer",
         titleKey: "authService:loginRequired",
         onConfirm: () =>

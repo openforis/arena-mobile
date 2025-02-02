@@ -16,5 +16,5 @@ export default {
     custom: "Custom",
   },
   testUrl: "Test URL",
-  title: "Connection to remote server",
+  title: "Connection to server",
 };

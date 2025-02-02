@@ -22,10 +22,10 @@ const properties = {
     options: LanguagesSettings,
   },
   theme: {
-    type: propertyType.options,
+    type: propertyType.dropdown,
     labelKey: "settings:theme.label",
     options: Object.values(ThemesSettings).map((theme) => ({
-      value: theme,
+      key: theme,
       label: `settings:theme.${theme}`,
     })),
   },

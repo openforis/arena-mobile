@@ -8,12 +8,12 @@ import { useTranslation } from "localization";
 import { JobStatus } from "@openforis/arena-core";
 
 const progressColorByStatus = {
-  [JobStatus.pending]: 'yellow',
-  [JobStatus.canceled]: 'brown',
-  [JobStatus.failed]: 'red',
-  [JobStatus.running]: 'blue',
-  [JobStatus.succeeded]: 'green',
-}
+  [JobStatus.pending]: "yellow",
+  [JobStatus.canceled]: "brown",
+  [JobStatus.failed]: "red",
+  [JobStatus.running]: "blue",
+  [JobStatus.succeeded]: "green",
+};
 
 export const JobMonitorDialog = () => {
   const { t } = useTranslation();
@@ -31,8 +31,8 @@ export const JobMonitorDialog = () => {
     titleKey,
   } = useJobMonitor();
 
-  const progress = progressPercent / 100
-  const progressColor = progressColorByStatus[status]
+  const progress = progressPercent / 100;
+  const progressColor = progressColorByStatus[status];
 
   return (
     <Portal>
@@ -44,25 +44,22 @@ export const JobMonitorDialog = () => {
             textKey={messageKey}
             textParams={messageParams}
           />
-          <Text
-            variant="bodyMedium"
-            textKey={`job:status.${status}`}
-          />
+          <Text variant="bodyMedium" textKey={`job:status.${status}`} />
           <ProgressBar progress={progress} color={progressColor} />
         </Dialog.Content>
         <Dialog.Actions>
-          {[JobStatus.pending, JobStatus.running].includes(status) &&
-          (
+          {[JobStatus.pending, JobStatus.running].includes(status) && (
             <Button
-              mode="outlined"
+              color="secondary"
               onPress={cancel}
               textKey={cancelButtonTextKey}
             />
           )}
-          {[JobStatus.canceled, JobStatus.failed, JobStatus.succeeded].includes(status) &&
-          (
+          {[JobStatus.canceled, JobStatus.failed, JobStatus.succeeded].includes(
+            status
+          ) && (
             <Button
-              mode="outlined"
+              color="secondary"
               onPress={close}
               textKey={closeButtonTextKey}
             />

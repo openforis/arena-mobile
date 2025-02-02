@@ -1,7 +1,7 @@
 export default {
   title: "Настройки",
   animationsEnabled: "Анимации включены",
-  connectionToRemoteServer: "Подключение к удаленному серверу",
+  connectionToServer: "Подключение к серверу",
   fontScale: "Размер шрифта (БЕТА): {{value}}",
   keepScreenAwake: "Не выключать экран",
   fullScreen: "Полный экран",
