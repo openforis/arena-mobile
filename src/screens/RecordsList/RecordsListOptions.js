@@ -64,7 +64,7 @@ export const RecordsListOptions = (props) => {
           icon="cloud-refresh"
           loading={syncStatusLoading}
           onPress={onRemoteSyncPress}
-          textKey="dataEntry:checkSyncStatus"
+          textKey="dataEntry:checkStatus"
         />
         <Button
           color="secondary"

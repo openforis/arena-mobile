@@ -2,7 +2,7 @@ export default {
   confirmGoToListOfRecords: `Go to list of records?
 
 (all changes already saved)`,
-  checkSyncStatus: "Check sync status",
+  checkStatus: "Check status",
   closestSamplingPoint: {
     findClosestSamplingPoint: "Find closest sampling point",
     findingClosestSamplingPoint: "Finding closest sampling point",

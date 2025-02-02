@@ -1,7 +1,5 @@
 export default {
-  confirmGoToListOfRecords:
-    "Перейти к списку записей?\n\n(все изменения уже сохранены)",
-  checkSyncStatus: "Проверить статус синхронизации",
+  checkStatus: "Проверить статус",
   closestSamplingPoint: {
     findClosestSamplingPoint: "Найти ближайшую точку сбора данных",
     findingClosestSamplingPoint: "Поиск ближайшей точки сбора данных",
@@ -16,6 +14,8 @@ export default {
   confirmDeleteValue: {
     message: "Удалить это значение?",
   },
+  confirmGoToListOfRecords:
+    "Перейти к списку записей?\n\n(все изменения уже сохранены)",
   confirmOverwriteValue: {
     message: "Перезаписать существующее значение?",
   },
@@ -47,7 +47,7 @@ export default {
   formLanguage: "Язык формы:",
   noEntitiesDefined: "Элемент не определен",
   goToDataEntry: "Перейти к вводу данных",
-  goToListOfRecords: "Перейти к списку записей",
+  goToListOfRecords: "К списку записей",
   gpsLockingEnabledWarning: "Внимание: блокировка GPS включена!",
   listOfRecords: "Список записей",
   localBackup: "Локальная резервная копия",
@@ -126,12 +126,12 @@ export default {
   fileAttribute: {
     chooseAudio: "Выберите аудиофайл",
     chooseFile: "Выберите файл",
-    choosePicture: "Выберите изображение",
+    choosePicture: "Выбрать",
     chooseVideo: "Выберите видеофайл",
     deleteConfirmMessage: "Удалить существующий файл?",
   },
   fileAttributeImage: {
-    imagePreview: "Предпросмотр изображения",
+    imagePreview: "Просмотр",
     pictureResizedToSize: "Размер изображения изменен до {{size}}",
     resolution: "Разрешение",
   },
