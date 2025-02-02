@@ -1,7 +1,7 @@
 export default {
   title: "Definições",
   animationsEnabled: "Animações ativadas",
-  connectionToRemoteServer: "Ligação ao servidor remoto",
+  connectionToServer: "Ligação ao servidor",
   fontScale: "Escala de fonte (BETA): {{value}}",
   keepScreenAwake: "Manter ecrã ativo",
   fullScreen: "Ecrã completo",

@@ -12,7 +12,7 @@ export const ConnectionToRemoteServerButton = (props) => {
     <Button
       onPress={() => navigation.navigate(screenKeys.settingsRemoteConnection)}
       style={style}
-      textKey="settings:connectionToRemoteServer"
+      textKey="settings:connectionToServer"
     />
   );
 };

@@ -16,5 +16,5 @@ export default {
     custom: "ብጁ",
   },
   testUrl: "URL ይሞክሩ",
-  title: "ከሩቅ አገልጋይ ጋር ግንኙነት",
+  title: "ከአገልጋይ ጋር ግንኙነት",
 };
