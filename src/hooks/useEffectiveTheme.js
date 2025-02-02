@@ -3,6 +3,7 @@ import { useColorScheme } from "react-native";
 import { DefaultTheme, MD3DarkTheme } from "react-native-paper";
 
 import { Themes, ThemesSettings } from "model";
+import { OFDarkTheme, OFLightTheme } from "theme";
 import { SettingsSelectors } from "../state/settings/selectors";
 
 const defaultFontSize = 16;
