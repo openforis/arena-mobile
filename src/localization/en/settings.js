@@ -24,6 +24,8 @@ It will help to get a better accuracy in a coordinate attributes.`,
     label: "Theme",
     auto: "Auto",
     dark: "Dark",
+    dark2: "Dark 2",
     light: "Light",
+    light2: "Light 2",
   },
 };

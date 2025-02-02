@@ -59,16 +59,16 @@ export const RecordsListOptions = (props) => {
           <Switch value={onlyLocal} onChange={onOnlyLocalChange} />
         </FormItem>
         <Button
+          color="secondary"
           disabled={!networkAvailable}
           icon="cloud-refresh"
           loading={syncStatusLoading}
-          mode="outlined"
           onPress={onRemoteSyncPress}
           textKey="dataEntry:checkSyncStatus"
         />
         <Button
+          color="secondary"
           icon="file-import-outline"
-          mode="text"
           onPress={onImportRecordsFromFilePress}
           textKey="recordsList:importRecordsFromFile.title"
         />

@@ -211,7 +211,7 @@ export const SettingsRemoteConnectionScreen = () => {
         <HView fullWidth style={styles.loginButtonBar}>
           <HView fullFlex>
             <Button
-              mode="outlined"
+              color="secondary"
               onPress={navigation.goBack}
               style={styles.goBackButton}
               textKey="common:goBack"
