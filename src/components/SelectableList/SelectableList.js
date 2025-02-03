@@ -63,36 +63,42 @@ export const SelectableList = (props) => {
     [multiple, onChange, selectedItems]
   );
 
+  const renderLeftIcon = useCallback(
+    ({ item }) =>
+      // eslint-disable-next-line react/display-name
+      () => {
+        const checked = selectedItems.includes(item);
+        return (
+          <ListItemIcon
+            multiple={multiple}
+            checked={checked}
+            editable={editable}
+            onItemSelect={onItemSelect}
+            item={item}
+          />
+        );
+      },
+    [editable, multiple, onItemSelect, selectedItems]
+  );
+
   const renderItem = useCallback(
-    ({ item }) => {
-      const checked = selectedItems.includes(item);
-      return (
-        <RNPList.Item
-          disabled={!editable}
-          title={itemLabelExtractor(item)}
-          description={itemDescriptionExtractor(item)}
-          left={() => (
-            <ListItemIcon
-              multiple={multiple}
-              checked={checked}
-              editable={editable}
-              onItemSelect={onItemSelect}
-              item={item}
-            />
-          )}
-          onPress={() => onItemSelect(item)}
-          removeClippedSubviews
-          style={styles.item}
-        />
-      );
-    },
+    ({ item }) => (
+      <RNPList.Item
+        disabled={!editable}
+        title={itemLabelExtractor(item)}
+        description={itemDescriptionExtractor(item)}
+        left={renderLeftIcon({ item })}
+        onPress={() => onItemSelect(item)}
+        removeClippedSubviews
+        style={styles.item}
+      />
+    ),
     [
       editable,
       itemDescriptionExtractor,
       itemLabelExtractor,
-      multiple,
       onItemSelect,
-      selectedItems,
+      renderLeftIcon,
     ]
   );
 

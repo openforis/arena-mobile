@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef } from "react";
-import PropTypes from "prop-types";
 import { VirtualizedList } from "react-native";
+import PropTypes from "prop-types";
 
 import { NodeDefs } from "@openforis/arena-core";
 
@@ -25,14 +25,7 @@ export const NodeEntityFormComponent = (props) => {
     listRef.current?.scrollToOffset?.({ offset: 0, animated: false });
   }, [nodeDef, parentNodeUuid]);
 
-  const onFormItemFocus = useCallback((event) => {
-    // event?.target
-    //   ?.getNativeRef?.()
-    //   ?.measureLayout(listRef.current, (_x, y, _width, _height) => {
-    //     // listRef.current?.scrollTo({ y: y - 40, animated: true });
-    //      listRef.current?.scrollToOffset({ offset: y - 40, animated: true });
-    //   });
-  }, []);
+  const onFormItemFocus = useCallback(() => {}, []);
 
   return (
     <VirtualizedList
