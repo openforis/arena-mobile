@@ -2,25 +2,23 @@ import PropTypes from "prop-types";
 
 import { NodeDefs } from "@openforis/arena-core";
 
-import { textDirections, useTextDirection } from "localization";
+import { Button, HView } from "components";
+import { useIsTextDirectionRtl } from "localization";
 import { SurveyDefs } from "model";
 import { SurveySelectors } from "state";
-import { Button } from "components/Button";
-import { HView } from "components/HView";
 
 import styles from "./styles";
 
 const OpenDropdownButton = (props) => {
   const { onPress, textKey = "dataEntry:code.selectItem", textParams } = props;
 
-  const textDirection = useTextDirection();
-  const iconPosition = textDirection === textDirections.ltr ? "right" : "left";
+  const isRtl = useIsTextDirectionRtl();
+  const iconPosition = isRtl ? "left" : "right";
 
   return (
     <Button
       icon="chevron-down"
       iconPosition={iconPosition}
-      mode="contained-tonal"
       textKey={textKey}
       textParams={textParams}
       onPress={onPress}

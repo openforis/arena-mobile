@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 
-import { NodeDefFileType, UUIDs } from "@openforis/arena-core";
+import { NodeDefFileType, NodeDefs, UUIDs } from "@openforis/arena-core";
 
 import {
   useRequestCameraPermission,
@@ -29,8 +29,8 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
   const { request: requestMediaLibraryPermission } =
     useRequestMediaLibraryPermission();
 
-  const { fileType = NodeDefFileType.other, maxSize: maxSizeMB = 10 } =
-    nodeDef.props;
+  const fileType = NodeDefs.getFileType(nodeDef) ?? NodeDefFileType.other;
+  const maxSizeMB = NodeDefs.getFileMaxSize(nodeDef) ?? 10;
   const maxSize = maxSizeMB * Math.pow(1024, 2); // nodeDef maxSize is in MB
 
   const mediaTypes =
@@ -53,7 +53,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
 
       const fileName = assetFileName ?? Files.getNameFromUri(sourceFileUri);
 
-      const { size: sourceFileSize } = await Files.getInfo(sourceFileUri);
+      const sourceFileSize = await Files.getSize(sourceFileUri);
 
       let fileUri = sourceFileUri;
       let fileSize = sourceFileSize;
@@ -97,14 +97,14 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
             quality: 1,
             mediaTypes,
           });
-    onFileSelected(result);
+    await onFileSelected(result);
   }, [requestMediaLibraryPermission, fileType, mediaTypes, onFileSelected]);
 
   const onOpenCameraPress = useCallback(async () => {
     if (!(await requestCameraPermission())) return;
 
     const result = await ImagePicker.launchCameraAsync({ mediaTypes });
-    onFileSelected(result);
+    await onFileSelected(result);
   }, [onFileSelected, requestCameraPermission, mediaTypes]);
 
   const onDeletePress = useCallback(async () => {

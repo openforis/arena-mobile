@@ -82,8 +82,7 @@ const _resizeToFitMaxSize = async ({
 };
 
 const resizeToFitMaxSize = async ({ fileUri, maxSize }) => {
-  const info = await Files.getInfo(fileUri);
-  const { size } = info;
+  const size = await Files.getSize(fileUri);
   if (size <= maxSize) return null;
 
   return new Promise((resolve) => {
