@@ -312,7 +312,6 @@ const useIsNodeDefCurrentActiveChild = (nodeDef) =>
       selectCurrentPageEntityActiveChildDefIndex(state);
     const childDefs = selectCurrentPageEntityRelevantChildDefs(state);
     const nodeDefIndex = childDefs.indexOf(nodeDef);
-    console.log("===nodeDefIndex", nodeDefIndex, activeChildDefIndex);
     return nodeDefIndex === activeChildDefIndex;
   });
 
