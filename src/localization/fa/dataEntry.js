@@ -52,7 +52,7 @@ export default {
   goToDataEntry: "رفتن به وارد کردن داده",
   goToListOfRecords: "رفتن به لیست رکوردها",
   gpsLockingEnabledWarning: "هشدار: قفل GPS فعال است!",
-  listOfRecords: "لیست رکوردها",
+  listOfRecords: "رکوردها",
   localBackup: "پشتیبان گیری محلی",
   newRecord: "جدید",
   noRecordsFound: "رکوردی یافت نشد",
