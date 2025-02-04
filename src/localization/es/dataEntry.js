@@ -49,7 +49,7 @@ export default {
   goToDataEntry: "Ir a la entrada de datos",
   goToListOfRecords: "Ir a la lista de registros",
   gpsLockingEnabledWarning: "Advertencia: ¡Bloqueo del GPS activado!",
-  listOfRecords: "Lista de registros",
+  listOfRecords: "Registros",
   localBackup: "Copia de seguridad local",
   newRecord: "Nuevo",
   noRecordsFound: "No se encontraron registros",

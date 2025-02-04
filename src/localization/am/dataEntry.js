@@ -45,7 +45,7 @@ export default {
   goToDataEntry: "ወደ መረጃ ማስገቢያ ይሂዱ",
   goToListOfRecords: "ወደ መዝገቦች ዝርዝር ይሂዱ",
   gpsLockingEnabledWarning: "ማስጠንቀቂያ፡ የጂፒኤስ መቆለፊያ ነቅቷል!",
-  listOfRecords: "የመዝገቦች ዝርዝር",
+  listOfRecords: "የመዝገቦች",
   localBackup: "የአካባቢ ምትኬ",
   newRecord: "አዲስ",
   noRecordsFound: "ምንም መዝገቦች አልተገኙም",
