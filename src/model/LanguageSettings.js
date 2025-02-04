@@ -9,8 +9,8 @@ export const Languages = [
   { key: "de", label: "German" },
   { key: "fa", label: "Persian" },
   { key: "pt", label: "Portuguese" },
-  { key: "es", label: "Spanish" },
   { key: "ru", label: "Russian" },
+  { key: "es", label: "Spanish" },
 ];
 
 export const LanguagesSettings = [
