@@ -1,0 +1,20 @@
+export default {
+  clearCredentials: "Anmeldedaten löschen",
+  clearCredentialsConfirmMessage: "Benutzeranmeldedaten löschen?",
+  email: "E-Mail",
+  errorConnectingWithServer: "Fehler bei der Verbindung zum Server",
+  forgotPassword: "Passwort vergessen?",
+  login: "Anmelden",
+  logout: "Abmelden",
+  logoutConfirmMessage: "Abmelden und Benutzeranmeldedaten löschen?",
+  password: "Passwort",
+  requestAccess: "Neu bei Arena? Zugriff anfordern",
+  serverUrl: "Server-URL",
+  serverUrlNotValid: "Server-URL ungültig",
+  serverUrlType: {
+    default: "Standard",
+    custom: "Benutzerdefiniert",
+  },
+  testUrl: "URL testen",
+  title: "Verbindung zum Server",
+};
