@@ -21,10 +21,10 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "org.openforis.arena_mobile",
-      "versionCode": 2
+      "versionCode": 3
     },
     "ios": {
-      "buildNumber": "2",
+      "buildNumber": "3",
       "bundleIdentifier": "org.openforis.arena-mobile",
       "config": {
         "usesNonExemptEncryption": false
