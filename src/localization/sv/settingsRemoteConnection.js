@@ -1,0 +1,20 @@
+export default {
+  clearCredentials: "Rensa inloggningsuppgifter",
+  clearCredentialsConfirmMessage: "Rensa användarens inloggningsuppgifter?",
+  email: "E-post",
+  errorConnectingWithServer: "Fel vid anslutning till servern",
+  forgotPassword: "Glömt lösenordet?",
+  login: "Logga in",
+  logout: "Logga ut",
+  logoutConfirmMessage: "Logga ut och rensa användarens inloggningsuppgifter?",
+  password: "Lösenord",
+  requestAccess: "Ny på Arena? Begär åtkomst",
+  serverUrl: "Server-URL",
+  serverUrlNotValid: "Server-URL:en är inte giltig",
+  serverUrlType: {
+    default: "Standard",
+    custom: "Anpassad",
+  },
+  testUrl: "Testa URL",
+  title: "Anslutning till servern",
+};

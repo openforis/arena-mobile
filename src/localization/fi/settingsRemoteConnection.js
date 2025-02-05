@@ -1,0 +1,20 @@
+export default {
+  clearCredentials: "Tyhjennä tunnistetiedot",
+  clearCredentialsConfirmMessage: "Tyhjennätkö käyttäjän tunnistetiedot?",
+  email: "Sähköposti",
+  errorConnectingWithServer: "Virhe yhdistettäessä palvelimeen",
+  forgotPassword: "Unohtuiko salasana?",
+  login: "Kirjaudu sisään",
+  logout: "Kirjaudu ulos",
+  logoutConfirmMessage: "Kirjaudu ulos ja tyhjennä käyttäjän tunnistetiedot?",
+  password: "Salasana",
+  requestAccess: "Uusi Arena? Pyydä pääsyä",
+  serverUrl: "Palvelimen URL-osoite",
+  serverUrlNotValid: "Palvelimen URL-osoite ei kelpaa",
+  serverUrlType: {
+    default: "Oletus",
+    custom: "Mukautettu",
+  },
+  testUrl: "Testaa URL-osoite",
+  title: "Yhteys palvelimeen",
+};

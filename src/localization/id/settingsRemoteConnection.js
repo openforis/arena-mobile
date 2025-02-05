@@ -1,0 +1,20 @@
+export default {
+  clearCredentials: "Hapus kredensial",
+  clearCredentialsConfirmMessage: "Hapus kredensial pengguna?",
+  email: "Email",
+  errorConnectingWithServer: "Kesalahan saat terhubung dengan server",
+  forgotPassword: "Lupa kata sandi?",
+  login: "Masuk",
+  logout: "Keluar",
+  logoutConfirmMessage: "Keluar dan hapus kredensial pengguna?",
+  password: "Kata sandi",
+  requestAccess: "Baru di Arena? Minta akses",
+  serverUrl: "URL Server",
+  serverUrlNotValid: "URL Server tidak valid",
+  serverUrlType: {
+    default: "Default",
+    custom: "Kustom",
+  },
+  testUrl: "Uji URL",
+  title: "Koneksi ke server",
+};
