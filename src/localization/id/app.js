@@ -12,7 +12,7 @@ export default {
   Ukurannya sekitar {{size}}.`,
     confirmTitle: "Hasilkan cadangan",
     error: "Kesalahan menghasilkan cadangan penuh: {{details}}",
-    shareTitle: "Bagikan cadangan penuh AME",
+    shareTitle: "Bagikan cadangan penuh AM",
     title: "Cadangan penuh",
   },
   initializationStep: {

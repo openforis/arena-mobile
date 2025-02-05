@@ -12,7 +12,7 @@ export default {
   Die Größe wird ungefähr {{size}} betragen.`,
     confirmTitle: "Sicherung erstellen",
     error: "Fehler beim Erstellen der vollständigen Sicherung: {{details}}",
-    shareTitle: "AME Vollständige Sicherung teilen",
+    shareTitle: "AM Vollständige Sicherung teilen",
     title: "Vollständige Sicherung",
   },
   initializationStep: {

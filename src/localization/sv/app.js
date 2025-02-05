@@ -12,7 +12,7 @@ export default {
   Storleken kommer att vara cirka {{size}}.`,
     confirmTitle: "Generera säkerhetskopia",
     error: "Fel vid generering av fullständig säkerhetskopia: {{details}}",
-    shareTitle: "Dela AME fullständig säkerhetskopia",
+    shareTitle: "Dela AM fullständig säkerhetskopia",
     title: "Fullständig säkerhetskopia",
   },
   initializationStep: {

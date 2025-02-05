@@ -12,7 +12,7 @@ All changes are already saved.`,
 The size will be around {{size}}.`,
     confirmTitle: "Generate backup",
     error: "Error generating full backup: {{details}}",
-    shareTitle: "Share AME full backup",
+    shareTitle: "Share AM full backup",
     title: "Full backup",
   },
   initializationStep: {

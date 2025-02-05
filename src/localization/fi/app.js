@@ -12,7 +12,7 @@ export default {
   Koko on noin {{size}}.`,
     confirmTitle: "Luo varmuuskopio",
     error: "Virhe täyden varmuuskopion luomisessa: {{details}}",
-    shareTitle: "Jaa AME:n täysi varmuuskopio",
+    shareTitle: "Jaa AM:n täysi varmuuskopio",
     title: "Täysi varmuuskopio",
   },
   initializationStep: {
