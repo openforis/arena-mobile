@@ -2,7 +2,7 @@ export default {
   title: "Настройки",
   animationsEnabled: "Анимации включены",
   connectionToServer: "Подключение к серверу",
-  fontScale: "Размер шрифта (БЕТА): {{value}}",
+  fontScale: "Размер шрифта: {{value}}",
   keepScreenAwake: "Не выключать экран",
   fullScreen: "Полный экран",
   language: {
@@ -13,7 +13,7 @@ export default {
   locationAccuracyWatchTimeout:
     "Время ожидания определения точности местоположения: {{value}} секунд",
   locationGpsLocked: {
-    label: "GPS заблокирован (БЕТА)",
+    label: "GPS заблокирован",
     description:
       "Внимание: расход заряда батареи увеличится!\nСигнал GPS будет заблокирован во время работы приложения.\nЭто позволит получить более точные координаты.",
     error:

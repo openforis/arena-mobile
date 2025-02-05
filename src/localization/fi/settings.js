@@ -2,7 +2,7 @@ export default {
   title: "Asetukset",
   animationsEnabled: "Animaatiot käytössä",
   connectionToServer: "Yhteys palvelimeen",
-  fontScale: "Fonttikoko (BETA): {{value}}",
+  fontScale: "Fonttikoko: {{value}}",
   keepScreenAwake: "Pidä näyttö hereillä",
   fullScreen: "Koko näyttö",
   language: {
@@ -12,7 +12,7 @@ export default {
   locationAccuracyWatchTimeout:
     "Sijainnin tarkkuuden valvonta-aika: {{value}} sekuntia",
   locationGpsLocked: {
-    label: "GPS lukittu (BETA)",
+    label: "GPS lukittu",
     description: `Varoitus: akun kulutus kasvaa!
 GPS-signaali lukitaan, kun sovellus on käynnissä.
 Se auttaa saamaan paremman tarkkuuden koordinaattiattribuuteissa.`,
