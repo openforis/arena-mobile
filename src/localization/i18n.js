@@ -9,11 +9,13 @@ import de from "./de";
 import en from "./en";
 import es from "./es";
 import fa from "./fa";
+import fi from "./fi";
 import fr from "./fr";
+import id from "./id";
 import pt from "./pt";
 import ru from "./ru";
 
-const resources = { de, en, es, fa, fr, pt, ru };
+const resources = { de, en, es, fa, fi, fr, id, pt, ru };
 const supportedLngs = Object.keys(resources);
 const fallbackLng = "en";
 const sysLng = SystemUtils.getLanguageCode();
