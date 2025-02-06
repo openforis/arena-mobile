@@ -8,7 +8,7 @@ export default {
   logout: "Kirjaudu ulos",
   logoutConfirmMessage: "Kirjaudu ulos ja tyhjennä käyttäjän tunnistetiedot?",
   password: "Salasana",
-  requestAccess: "Uusi Arena? Pyydä pääsyä",
+  requestAccess: "Uusi Arena käyttäjä? Pyydä pääsyä",
   serverUrl: "Palvelimen URL-osoite",
   serverUrlNotValid: "Palvelimen URL-osoite ei kelpaa",
   serverUrlType: {

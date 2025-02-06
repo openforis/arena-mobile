@@ -3,11 +3,11 @@ export default {
     title: "Kloonaa",
     confirm: {
       message:
-        "Kloonataanko valitut {{recordsCount}} tietuetta sykliin {{cycle}}?",
+        "Kloonataanko valitut {{recordsCount}} tietuetta jaksoon {{cycle}}?",
     },
     onlyRecordsImportedInDeviceOrModifiedLocallyCanBeCloned:
       "Vain laitteeseen tuodut tai paikallisesti muokatut tietueet voidaan kloonata seuraavaan sykliin",
-    completeSuccessfully: "Tietueet kloonattu onnistuneesti sykliin {{cycle}}!",
+    completeSuccessfully: "Tietueet kloonattu onnistuneesti jaksoon {{cycle}}!",
   },
   confirmImportRecordFromServer: "Tuodaanko tietue palvelimelta?",
   dateModifiedRemotely: "Muokkauspäivä etänä",
@@ -16,7 +16,7 @@ export default {
     message: "Poistetaanko valitut tietueet?",
   },
   duplicateKey: {
-    title: "Kaksoiskappaleavain",
+    title: "Avain on kahtena",
     message: `Toinen tietue samalla avaimella ({{keyValues}}) on jo olemassa.`,
   },
   exportRecords: {
@@ -30,7 +30,7 @@ export default {
     title: "Tuo",
     confirmMessage: `Tuodaanko tietueet valitusta tiedostosta
   {{fileName}}?`,
-    invalidFileType: "Virheellinen tiedostotyyppi (odotettiin .zip)",
+    invalidFileType: "Virheellinen tiedostotyyppi (oletus .zip)",
     overwriteExistingRecords: "Ylikirjoita olemassa olevat tietueet",
     selectFile: "Valitse tiedosto",
   },
@@ -45,6 +45,6 @@ export default {
     P: "Osittainen (ilman tiedostoja)",
     S: "Vain yhteenveto",
   },
-  origin: { title: "Alkuperä", L: "Paikallinen", R: "Etä" },
+  origin: { title: "Alkuperäinen", L: "Paikallinen", R: "Palvelin" },
   owner: "Omistaja",
 };

@@ -4,8 +4,8 @@ export default {
   (kaikki muutokset on jo tallennettu)`,
   checkStatus: "Tarkista tila",
   closestSamplingPoint: {
-    findClosestSamplingPoint: "Etsi lähin näytteenottopiste",
-    findingClosestSamplingPoint: "Etsitään lähintä näytteenottopistettä",
+    findClosestSamplingPoint: "Etsi lähin otantakohde",
+    findingClosestSamplingPoint: "Etsitään lähintä otantakohde",
     minDistanceItemFound: "Kohde löydetty {{minDistance}}m:n etäisyydeltä",
     minDistanceItemFound_plural:
       "Kohteet löydetty {{minDistance}}m:n etäisyydeltä",
@@ -46,7 +46,7 @@ export default {
     mergeConflictingRecords:
       "Yhdistä ristiriitaiset tietueet (samalla avaimella)",
     onlyRecordsInRemoteServerCanBeImported:
-      "Vain palvelimella jo olevat tai etäpalvelimella päivitetyt tietueet voidaan tuoda",
+      "Vain palvelimella jo olevat tai etänä päivitetyt tietueet voidaan tuoda",
   },
   exportNewOrUpdatedRecords: "Vie uudet tai päivitetyt tietueet",
   formLanguage: "Lomakkeen kieli:",
@@ -88,7 +88,7 @@ export default {
     new: "Uusi (ei vielä ladattu)",
     notModified: "Ei muokattu (ei muutoksia ladattavaksi)",
     modifiedLocally: "Muokattu paikallisesti",
-    modifiedRemotely: "Muokattu etäpalvelimella",
+    modifiedRemotely: "Muokattu palvelimella",
     notInEntryStepAnymore:
       "Ei enää syöttövaiheessa (puhdistus- tai analyysivaiheessa)",
   },
@@ -129,8 +129,8 @@ export default {
     y: "Y",
   },
   taxon: {
-    search: "Hae taksonia",
-    taxonNotSelected: "--- Taksonia ei ole valittu ---",
+    search: "Hae lajia",
+    taxonNotSelected: "--- Lajia ei ole valittu ---",
   },
   fileAttribute: {
     chooseAudio: "Valitse äänitiedosto",
@@ -149,7 +149,7 @@ export default {
     selectTarget: "Valitse vientikohde",
     selectTargetMessage: `Valitse viennin kohde:`,
     target: {
-      remote: "Etäpalvelin",
+      remote: "Palvelin",
       local: "Paikallinen kansio (Lataukset)",
       share: "Jaa tiedosto",
     },

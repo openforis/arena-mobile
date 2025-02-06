@@ -1,21 +1,21 @@
 export default {
-  checkUpdates: "Tarkista päivitykset",
+  checkUpdates: "Tarkista ohjelmistopäivitykset",
   confirmDeleteSurvey: {
-    title: "Poista kysely",
-    message: "Poistetaanko valittu kysely?",
-    message_other: "Poistetaanko valitut kyselyt?",
+    title: "Poista kyselylomake",
+    message: "Poistetaanko valittu kyselylomake?",
+    message_other: "Poistetaanko valitut kyselylomakkeet?",
   },
-  currentSurvey: "Nykyinen kysely",
+  currentSurvey: "Nykyinen kyselylomake",
   description: "Kuvaus",
   errorFetchingLocalSurvey:
-    "Virhe ladattaessa kyselyä sisäisestä tallennustilasta",
-  errorFetchingSurveys: "Virhe haettaessa kyselyitä etäpalvelimelta",
+    "Virhe ladattaessa kyselylomaketta sisäisestä tallennustilasta",
+  errorFetchingSurveys: "Virhe haettaessa kyselyitä palvelimelta",
   errorFetchingSurveysWithDetails:
     "$t(surveys:errorFetchingSurveys): {{details}}",
-  fieldManual: "Kenttäopas",
-  importFromCloud: "Tuo pilvestä",
-  importSurvey: "Tuo kysely",
-  importSurveyConfirmMessage: 'Tuodaanko kysely "{{surveyName}}"?',
+  fieldManual: "Kenttäohje",
+  importFromCloud: "Tuo pilvipalvelimelta",
+  importSurvey: "Tuo kyselylomake",
+  importSurveyConfirmMessage: 'Tuodaanko kyselylomake "{{surveyName}}"?',
   loadStatus: {
     label: "Lataustila",
     notInDevice: "ei laitteessa",
@@ -23,24 +23,25 @@ export default {
     upToDate: "ajan tasalla",
   },
   loadSurveysErrorMessage:
-    "Virhe haettaessa kyselyitä etäpalvelimelta.\n\nKäyttäjä ei ole kirjautunut sisään tai sessio on vanhentunut.\n\nKirjaudu palvelimelle?",
-  manageSurveys: "Hallitse kyselyitä",
-  noAvailableSurveysFound: "Saatavilla olevia kyselyitä ei löytynyt",
-  noSurveysMatchingYourSearch: "Hakuehtojasi vastaavia kyselyitä ei löydy",
+    "Virhe haettaessa kyselylomakkeita palvelimelta.\n\nKäyttäjä ei ole kirjautunut sisään tai sessio on vanhentunut.\n\nKirjaudu palvelimelle?",
+  manageSurveys: "Hallitse kyselylomakkeita",
+  noAvailableSurveysFound: "Saatavilla olevia kyselylomakkeita ei löytynyt",
+  noSurveysMatchingYourSearch:
+    "Hakuehtojasi vastaavia kyselylomakkeita ei löydy",
   publishedOn: "Julkaistu",
-  selectSurvey: "Valitse kysely",
-  surveysInTheCloud: "Kyselyt pilvessä",
-  surveysInTheDevice: "Kyselyt laitteessa",
-  title: "Kyselyt",
+  selectSurvey: "Valitse kyselylomake",
+  surveysInTheCloud: "Kyselylomakkeet pilvessä",
+  surveysInTheDevice: "Kyselylomakkeet laitteessa",
+  title: "Kyselylomakkeet",
   updateStatus: {
-    error: "Virhe haettaessa kyselyn päivitystilaa",
+    error: "Virhe haettaessa kyselylomakkeen päivitystilaa",
     networkNotAvailable:
-      "Kyselyn päivitystilaa ei voida tarkistaa: $t(networkNotAvailable)",
-    upToDate: "Kysely on ajan tasalla",
+      "Kyselylomakkeen päivitystä ei voida tarkistaa: $t(networkNotAvailable)",
+    upToDate: "Kyselylomake on ajan tasalla",
   },
-  updateSurvey: "Päivitä kysely",
+  updateSurvey: "Päivitä kyselylomake",
   updateSurveyWithNewVersionConfirmMessage:
-    'Kyselyllä "{{surveyName}}" on uusi versio; päivitetäänkö se?',
+    'Kyselylomakkeella "{{surveyName}}" on uusi versio; päivitetäänkö se?',
   updateSurveyConfirmMessage:
-    'Kysely "{{surveyName}}" on jo tässä laitteessa; päivitetäänkö se?',
+    'Kyselylomake "{{surveyName}}" on jo tässä laitteessa; päivitetäänkö se?',
 };
