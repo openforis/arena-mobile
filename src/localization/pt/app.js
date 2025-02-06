@@ -11,7 +11,7 @@ export default {
       "Gerar um backup completo?\nO tamanho será de cerca de {{size}}.",
     confirmTitle: "Gerar backup",
     error: "Erro ao gerar backup completo: {{details}}",
-    shareTitle: "Partilhar backup completo AME",
+    shareTitle: "Partilhar backup completo AM",
     title: "Backup completo",
   },
   initializationStep: {

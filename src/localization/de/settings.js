@@ -2,7 +2,7 @@ export default {
   title: "Einstellungen",
   animationsEnabled: "Animationen aktiviert",
   connectionToServer: "Verbindung zum Server",
-  fontScale: "Schriftgröße (BETA): {{value}}",
+  fontScale: "Schriftgröße: {{value}}",
   keepScreenAwake: "Bildschirm wach halten",
   fullScreen: "Vollbild",
   language: {
@@ -13,7 +13,7 @@ export default {
   locationAccuracyWatchTimeout:
     "Timeout für die Überwachung der Standortgenauigkeit: {{value}} Sekunden",
   locationGpsLocked: {
-    label: "GPS gesperrt (BETA)",
+    label: "GPS gesperrt",
     description: `Warnung: Der Batterieverbrauch wird steigen!
   Das GPS-Signal wird gesperrt, wenn die Anwendung läuft.
   Dies hilft, eine bessere Genauigkeit bei Koordinatenattributen zu erzielen.`,

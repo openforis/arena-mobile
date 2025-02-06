@@ -11,7 +11,7 @@ export default {
       "¿Generar una copia de seguridad completa?\nEl tamaño aproximado será de {{size}}.",
     confirmTitle: "Generar copia de seguridad",
     error: "Error al generar la copia de seguridad completa: {{details}}",
-    shareTitle: "Compartir copia de seguridad completa de AME",
+    shareTitle: "Compartir copia de seguridad completa de AM",
     title: "Copia de seguridad completa",
   },
   initializationStep: {

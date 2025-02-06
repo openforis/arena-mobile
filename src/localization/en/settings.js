@@ -2,7 +2,7 @@ export default {
   title: "Settings",
   animationsEnabled: "Animations enabled",
   connectionToServer: "Connection to server",
-  fontScale: "Font scale (BETA): {{value}}",
+  fontScale: "Font scale: {{value}}",
   keepScreenAwake: "Keep screen awake",
   fullScreen: "Full screen",
   language: {
@@ -12,7 +12,7 @@ export default {
   locationAccuracyWatchTimeout:
     "Location accuracy watch timeout: {{value}} seconds",
   locationGpsLocked: {
-    label: "GPS locked (BETA)",
+    label: "GPS locked",
     description: `Warning: battery consumption will increase! 
 GPS signal will be locked when the application is running. 
 It will help to get a better accuracy in a coordinate attributes.`,

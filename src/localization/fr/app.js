@@ -13,7 +13,7 @@ export default {
     confirmTitle: "Générer une sauvegarde",
     error:
       "Erreur lors de la génération de la sauvegarde complète: {{details}}",
-    shareTitle: "Partager la sauvegarde complète AME",
+    shareTitle: "Partager la sauvegarde complète AM",
     title: "Sauvegarde complète",
   },
   initializationStep: {
