@@ -19,7 +19,7 @@ Ini akan membantu mendapatkan akurasi yang lebih baik pada atribut koordinat.`,
     error:
       "Tidak dapat memulai penguncian GPS: penyedia lokasi tidak tersedia atau akses ke lokasi tidak diberikan",
   },
-  showStatusBar: "Tampilkan bilah status",
+  showStatusBar: "Tampilkan status",
   theme: {
     label: "Tema",
     auto: "Otomatis",

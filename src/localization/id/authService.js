@@ -1,13 +1,13 @@
 export default {
   error: {
     generic: "Kesalahan: {{details}}",
-    invalidServerUrl: "URL Server Tidak Valid",
-    invalidCredentials: "Email atau Kata Sandi Tidak Valid",
+    invalidServerUrl: "URL Server Salah",
+    invalidCredentials: "Email atau Kata Sandi Salah",
   },
-  loginRequired: "Diperlukan Login",
+  loginRequired: "Wajib untuk Login",
   loginSuccessful: "Login berhasil!",
   logout: "Logout",
-  logoutConfirmMessage: "Apakah Anda yakin ingin logout?",
+  logoutConfirmMessage: "Apakah Anda yakin ingin keluar?",
   logoutOptions: {
     keepEmailAddress: "Simpan alamat email",
   },

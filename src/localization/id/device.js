@@ -13,8 +13,8 @@ export default {
   internalMemory: {
     title: "Memori internal",
     storageAvailable: "Ruang penyimpanan tersedia",
-    recordFilesSize: "Ukuran file rekaman",
-    tempFilesSize: "Ukuran file sementara",
+    recordFilesSize: "Ukuran berkas rekaman",
+    tempFilesSize: "Ukuran berkas sementara",
   },
   network: {
     title: "Jaringan",

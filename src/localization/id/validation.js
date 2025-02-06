@@ -3,8 +3,8 @@ export default {
     generic: "Kesalahan tak terduga: {{text}}",
   },
   record: {
-    ancestorNotFound: "Node leluhur tidak ditemukan dalam catatan",
-    keyDuplicate: "Kunci catatan duplikat",
+    ancestorNotFound: "Titik Induk tidak ditemukan dalam data isian",
+    keyDuplicate: "Kunci data duplikat",
     oneOrMoreInvalidValues: "Satu atau beberapa nilai tidak valid",
     uniqueAttributeDuplicate: "Nilai duplikat",
 

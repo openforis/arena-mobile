@@ -6,6 +6,6 @@ export default {
   name: "Nama",
   email: "Email",
   serverUrl: "URL Server",
-  sessionExpired: "Sesi berakhir: silakan masuk lagi.",
+  sessionExpired: "Sesi berakhir: silakan melakukan login kembali.",
   welcomeMessage: "Hai, {{name}}!",
 };

@@ -1,5 +1,5 @@
 export default {
-  confirmGoToListOfRecords: `Pergi ke daftar catatan?
+  confirmGoToListOfRecords: `lanjut ke daftar isian?
   
   (semua perubahan sudah disimpan)`,
   checkStatus: "Periksa status",
@@ -21,61 +21,61 @@ export default {
     message: "Timpa nilai yang sudah ada?",
   },
   cycle: "Siklus",
-  cycleForNewRecords: "Siklus untuk catatan baru:",
+  cycleForNewRecords: "Siklus untuk data isian baru:",
   options: "Opsi",
   editNodeDef: "Edit {{nodeDef}}",
-  errorFetchingRecordsSyncStatus: `Kesalahan saat mengambil catatan dari server.
+  errorFetchingRecordsSyncStatus: `Kesalahan saat mengambil data isian dari server.
   
   Periksa pengaturan koneksi.
   
   Detail: {{details}}`,
   errorGeneratingRecordsExportFile:
-    "Kesalahan saat membuat file ekspor catatan: {{details}}",
-  errorLoadingRecords: "Kesalahan saat memuat catatan: {{details}}",
+    "Kesalahan saat membuat berkas ekspor data isian: {{details}}",
+  errorLoadingRecords: "Kesalahan saat memuat data isian: {{details}}",
   exportData: {
     title: "Ekspor data",
     confirm: {
       title: "Konfirmasi ekspor data",
-      message: `Catatan yang akan diekspor:
-  - {{newRecordsCount}} catatan baru;
-  - {{updatedRecordsCount}} catatan yang diperbarui
-  - {{conflictingRecordsCount}} catatan yang berkonflik`,
+      message: `Data isian yang akan diekspor:
+  - {{newRecordsCount}} Data isian baru;
+  - {{updatedRecordsCount}} data isian yang diperbarui
+  - {{conflictingRecordsCount}} data isian yang berkonflik`,
     },
-    noRecordsInDeviceToExport: "Tidak ada catatan di perangkat untuk diekspor",
-    onlyNewOrUpdatedRecords: "Ekspor hanya catatan baru atau yang diperbarui",
+    noRecordsInDeviceToExport: "Tidak ada data di perangkat untuk diekspor",
+    onlyNewOrUpdatedRecords: "Ekspor hanya data isian baru atau yang diperbarui",
     mergeConflictingRecords:
-      "Gabungkan catatan yang berkonflik (kunci yang sama)",
+      "Gabungkan data isian yang berkonflik (kunci yang sama)",
     onlyRecordsInRemoteServerCanBeImported:
-      "Hanya catatan yang sudah ada di server jarak jauh atau catatan yang telah diperbarui dari jarak jauh yang dapat diimpor",
+      "Hanya data isian yang sudah ada di server atau data isian yang telah diperbarui di server yang dapat diimpor",
   },
-  exportNewOrUpdatedRecords: "Ekspor catatan baru atau yang diperbarui",
+  exportNewOrUpdatedRecords: "Ekspor data isian baru atau yang diperbarui",
   formLanguage: "Bahasa formulir:",
   noEntitiesDefined: "Tidak ada entitas yang ditentukan",
   goToDataEntry: "Pergi ke entri data",
-  goToListOfRecords: "Pergi ke daftar catatan",
+  goToListOfRecords: "Pergi ke daftar data isian",
   gpsLockingEnabledWarning: "Peringatan: Penguncian GPS diaktifkan!",
-  listOfRecords: "Catatan",
+  listOfRecords: "Data",
   localBackup: "Cadangan lokal",
   newRecord: "Baru",
-  noRecordsFound: "Tidak ada catatan yang ditemukan",
-  recordEditor: "Editor catatan",
+  noRecordsFound: "Tidak ada data yang ditemukan",
+  recordEditor: "Editor data isian",
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {
       title: "Tampilkan nilai dari siklus sebelumnya",
       message: "Pilih siklus sebelumnya:",
       cycleItem: "Siklus {{cycleLabel}}",
     },
-    foundMessage: "Catatan di siklus sebelumnya ditemukan!",
+    foundMessage: "Data isian di siklus sebelumnya ditemukan!",
     notFoundMessage:
       "Catatan di siklus {{cycle}} dengan kunci {{keyValues}} tidak ditemukan",
     confirmFetchRecordInCycle:
       "Catatan di siklus {{cycle}} dengan kunci {{keyValues}} belum sepenuhnya dimuat; unduh dari server?",
     confirmSyncRecordsSummaryAndTryAgain:
-      "$t(dataEntry:recordInPreviousCycle.notFoundMessage): ambil daftar catatan dari server dan coba lagi?",
+      "$t(dataEntry:recordInPreviousCycle.notFoundMessage): ambil daftar data isian dari server dan coba lagi?",
     fetchError:
-      "Kesalahan saat mengambil catatan di siklus sebelumnya: {{details}}",
+      "Kesalahan saat mengambil data di siklus sebelumnya: {{details}}",
     multipleRecordsFound:
-      "Beberapa catatan dengan kunci {{keyValues}} ditemukan di siklus {{cycle}}",
+      "Beberapa data dengan kunci {{keyValues}} ditemukan di siklus {{cycle}}",
 
     valuePanelHeader: "Nilai di siklus {{prevCycle}}",
   },

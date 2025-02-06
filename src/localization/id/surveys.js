@@ -8,11 +8,11 @@ export default {
   currentSurvey: "Survei saat ini",
   description: "Deskripsi",
   errorFetchingLocalSurvey: "Kesalahan memuat survei dari penyimpanan internal",
-  errorFetchingSurveys: "Kesalahan mengambil survei dari server jarak jauh",
+  errorFetchingSurveys: "Kesalahan mengambil survei dari serverh",
   errorFetchingSurveysWithDetails:
     "$t(surveys:errorFetchingSurveys): {{details}}",
   fieldManual: "Manual lapangan",
-  importFromCloud: "Impor dari cloud",
+  importFromCloud: "Impor dari server",
   importSurvey: "Impor survei",
   importSurveyConfirmMessage: 'Impor survei "{{surveyName}}"?',
   loadStatus: {
@@ -22,14 +22,14 @@ export default {
     upToDate: "terkini",
   },
   loadSurveysErrorMessage:
-    "Kesalahan mengambil survei dari server jarak jauh.\n\nPengguna belum masuk atau sesi berakhir.\n\nMasuk ke server?",
+    "Kesalahan mengambil survei dari server.\n\nPengguna belum masuk atau sesi berakhir.\n\nMasuk ke server?",
   manageSurveys: "Kelola survei",
   noAvailableSurveysFound: "Tidak ada survei yang tersedia ditemukan",
   noSurveysMatchingYourSearch:
     "Tidak ada survei yang sesuai dengan pencarian Anda",
   publishedOn: "Diterbitkan pada",
   selectSurvey: "Pilih survei",
-  surveysInTheCloud: "Survei di cloud",
+  surveysInTheCloud: "Survei di server",
   surveysInTheDevice: "Survei di perangkat",
   title: "Survei",
   updateStatus: {
