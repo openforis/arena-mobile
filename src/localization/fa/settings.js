@@ -2,7 +2,7 @@ export default {
   title: "تنظیمات",
   animationsEnabled: "انیمیشن ها فعال",
   connectionToServer: "اتصال به سرور",
-  fontScale: "مقیاس فونت (BETA): {{value}}",
+  fontScale: "مقیاس فونت: {{value}}",
   keepScreenAwake: "روشن نگه داشتن صفحه",
   fullScreen: "تمام صفحه",
   language: {
@@ -11,7 +11,7 @@ export default {
   locationAccuracyThreshold: "آستانه دقت موقعیت مکانی (متر)",
   locationAccuracyWatchTimeout: "زمان انتظار دقت موقعیت مکانی: {{value}} ثانیه",
   locationGpsLocked: {
-    label: "GPS قفل شده (BETA)",
+    label: "GPS قفل شده",
     description: `هشدار: مصرف باتری افزایش می یابد!
   سیگنال GPS هنگام اجرای برنامه قفل خواهد شد.
   این به دستیابی به دقت بهتر در ویژگی های مختصات کمک می کند.`,

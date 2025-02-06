@@ -10,7 +10,7 @@ export default {
     confirmMessage: "ሙሉ ምትኬ ይፍጠሩ?\nመጠኑ ወደ {{size}} አካባቢ ይሆናል።",
     confirmTitle: "ምትኬ ይፍጠሩ",
     error: "ሙሉ ምትኬን በመፍጠር ላይ ስህተት ተከስቷል: {{details}}",
-    shareTitle: "የ AME ሙሉ ምትኬ ያጋሩ",
+    shareTitle: "የ AM ሙሉ ምትኬ ያጋሩ",
     title: "ሙሉ ምትኬ",
   },
   initializationStep: {

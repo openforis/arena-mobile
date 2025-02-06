@@ -2,7 +2,7 @@ export default {
   title: "Inställningar",
   animationsEnabled: "Animationer aktiverade",
   connectionToServer: "Anslutning till servern",
-  fontScale: "Fontskala (BETA): {{value}}",
+  fontScale: "Fontskala: {{value}}",
   keepScreenAwake: "Håll skärmen vaken",
   fullScreen: "Helskärm",
   language: {
@@ -12,7 +12,7 @@ export default {
   locationAccuracyWatchTimeout:
     "Timeout för övervakning av platsnoggrannhet: {{value}} sekunder",
   locationGpsLocked: {
-    label: "GPS låst (BETA)",
+    label: "GPS låst",
     description: `Varning: batteriförbrukningen kommer att öka!
 GPS-signalen kommer att låsas när applikationen körs.
 Det kommer att hjälpa till att få bättre noggrannhet i en koordinatattribut.`,

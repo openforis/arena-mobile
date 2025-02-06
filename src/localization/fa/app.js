@@ -12,7 +12,7 @@ export default {
   اندازه تقریبی {{size}} خواهد بود.`,
     confirmTitle: "ایجاد پشتیبان گیری",
     error: "خطا در ایجاد پشتیبان گیری کامل: {{details}}",
-    shareTitle: "به اشتراک گذاری پشتیبان گیری کامل AME",
+    shareTitle: "به اشتراک گذاری پشتیبان گیری کامل AM",
     title: "پشتیبان گیری کامل",
   },
   initializationStep: {

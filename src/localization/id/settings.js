@@ -2,7 +2,7 @@ export default {
   title: "Pengaturan",
   animationsEnabled: "Animasi diaktifkan",
   connectionToServer: "Koneksi ke server",
-  fontScale: "Skala font (BETA): {{value}}",
+  fontScale: "Skala font: {{value}}",
   keepScreenAwake: "Layar tetap terjaga",
   fullScreen: "Layar penuh",
   language: {
@@ -12,7 +12,7 @@ export default {
   locationAccuracyWatchTimeout:
     "Batas waktu pengawasan akurasi lokasi: {{value}} detik",
   locationGpsLocked: {
-    label: "GPS terkunci (BETA)",
+    label: "GPS terkunci",
     description: `Peringatan: konsumsi baterai akan meningkat!
 Sinyal GPS akan dikunci saat aplikasi berjalan.
 Ini akan membantu mendapatkan akurasi yang lebih baik pada atribut koordinat.`,
