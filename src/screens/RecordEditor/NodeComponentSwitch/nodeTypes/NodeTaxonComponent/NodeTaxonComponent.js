@@ -1,10 +1,9 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 
 import { NodeDefs } from "@openforis/arena-core";
 
 import { Button, CloseIconButton, HView, Text, VView, View } from "components";
-import { useEffectiveTheme } from "hooks";
 import { RecordEditViewMode } from "model";
 import { SurveyOptionsSelectors } from "state";
 
@@ -13,7 +12,7 @@ import { NodeTaxonEditDialog } from "./NodeTaxonEditDialog";
 import { NodeTaxonAutocomplete } from "./NodeTaxonAutocomplete";
 import { TaxonValuePreview } from "../../../NodeValuePreview/TaxonValuePreview";
 import { useTaxonByNodeValue } from "../../../NodeValuePreview/useTaxonByNodeValue";
-
+import { useDynamicStyles } from "./useDynamicStyles";
 import styles from "./styles";
 
 export const NodeTaxonComponent = (props) => {
@@ -24,7 +23,6 @@ export const NodeTaxonComponent = (props) => {
       `rendering NodeTaxonComponent for ${NodeDefs.getName(nodeDef)}`
     );
   }
-  const theme = useEffectiveTheme();
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -38,18 +36,12 @@ export const NodeTaxonComponent = (props) => {
 
   const selectedTaxon = useTaxonByNodeValue({ value });
   const selectedTaxonVernacularName = selectedTaxon?.vernacularName;
-
-  const selectedTaxonContainerStyle = useMemo(
-    () => [
-      styles.selectedTaxonContainer,
-      { borderColor: theme.colors.onSurfaceVariant },
-      { height: selectedTaxonVernacularName ? 70 : 40 },
-    ],
-    [selectedTaxonVernacularName, theme.colors.onSurfaceVariant]
-  );
+  const { containerStyle, selectedTaxonContainerStyle } = useDynamicStyles({
+    selectedTaxonVernacularName,
+  });
 
   return (
-    <VView style={styles.container}>
+    <VView style={containerStyle}>
       <View style={styles.selectedTaxonWrapper}>
         {selectedTaxon ? (
           <HView style={selectedTaxonContainerStyle}>
