@@ -1,8 +1,10 @@
 import { NodeDefs } from "@openforis/arena-core";
-import { Taxa } from "model/Taxa";
-import { useTaxa } from "./useTaxa";
+
+import { Taxa } from "model";
+import { SurveySelectors } from "state";
+
 import { useItemsFilter } from "../useItemsFilter";
-import { SurveySelectors } from "state/survey";
+import { useTaxa } from "./useTaxa";
 
 const alwaysIncludeTaxaFunction = (item) =>
   [Taxa.unlistedCode, Taxa.unknownCode].includes(item.props.code);

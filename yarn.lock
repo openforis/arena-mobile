@@ -4253,7 +4253,7 @@ __metadata:
     expo-document-picker: "npm:~12.0.2"
     expo-file-system: "npm:~17.0.1"
     expo-image-manipulator: "npm:~12.0.5"
-    expo-image-picker: "npm:~15.0.7"
+    expo-image-picker: "npm:~15.1.0"
     expo-localization: "npm:~15.0.3"
     expo-location: "npm:~17.0.1"
     expo-media-library: "npm:~16.0.5"
@@ -7245,14 +7245,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-image-picker@npm:~15.0.7":
-  version: 15.0.7
-  resolution: "expo-image-picker@npm:15.0.7"
+"expo-image-picker@npm:~15.1.0":
+  version: 15.1.0
+  resolution: "expo-image-picker@npm:15.1.0"
   dependencies:
     expo-image-loader: "npm:~4.7.0"
   peerDependencies:
     expo: "*"
-  checksum: 10c0/b8869732fa68e907f8da14038f10477bbbb098f3b144d857e9677c59a3557841bb7beac3dcf3b27896c3223d7723e8a83ffcd3d7376ba1d016ee8c9a76096e46
+  checksum: 10c0/a472217434dae08f462011d4bc2811196ffbe1c97392de1e5991fcc0b53125dc049cf8c2045b05a38044aaf642625cf231a4bf47e0a45feff5d10a76e65cd5fa
   languageName: node
   linkType: hard
 

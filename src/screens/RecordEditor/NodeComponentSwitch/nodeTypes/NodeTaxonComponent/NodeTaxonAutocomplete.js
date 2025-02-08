@@ -1,10 +1,11 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import PropTypes from "prop-types";
 
 import { NodeDefs } from "@openforis/arena-core";
 
 import { SelectableListWithFilter } from "components";
 import { Taxa } from "model";
+
 import { useTaxaFiltered } from "./useTaxaFiltered";
 
 const alwaysIncludeVernacularNames = false;
@@ -135,9 +136,14 @@ export const NodeTaxonAutocomplete = (props) => {
     [updateNodeValue]
   );
 
+  const filterItemsCallback = useMemo(
+    () => filterItems({ nodeDef, unlistedTaxon, unknownTaxon }),
+    [nodeDef, unknownTaxon, unlistedTaxon]
+  );
+
   return (
     <SelectableListWithFilter
-      filterItems={filterItems({ nodeDef, unlistedTaxon, unknownTaxon })}
+      filterItems={filterItemsCallback}
       itemKeyExtractor={itemKeyExtractor}
       itemLabelExtractor={itemLabelExtractor({ nodeDef })}
       itemDescriptionExtractor={itemDescriptionExtractor}
