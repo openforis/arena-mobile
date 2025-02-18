@@ -13,7 +13,7 @@ let { unzip, zip } = Environment.isExpoGo
 
 const PATH_SEPARATOR = "/";
 const DOWNLOAD_FOLDER = "Download";
-const TEMP_FOLDER_NAME = "mam_temp";
+const TEMP_FOLDER_NAME = "am_temp";
 
 const MIME_TYPES = {
   zip: "application/zip ",
