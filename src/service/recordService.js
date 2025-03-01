@@ -112,16 +112,30 @@ const determineRecordSyncStatus = ({
 const syncRecordSummaries = async ({ survey, cycle, onlyLocal }) => {
   const { id: surveyId } = survey;
 
-  const allRecordsSummariesInDevice = await fetchRecords({
-    survey,
-    cycle,
-    onlyLocal: false,
-  });
+  let allRecordsSummariesInDevice;
+  try {
+    allRecordsSummariesInDevice = await fetchRecords({
+      survey,
+      cycle,
+      onlyLocal: false,
+    });
+  } catch (error) {
+    throw new Error(
+      `error fetching full local records list. Details: ${error}`
+    );
+  }
 
-  const recordsSummariesRemote = await fetchRecordsSummariesRemote({
-    surveyRemoteId: survey.remoteId,
-    cycle,
-  });
+  let recordsSummariesRemote;
+  try {
+    recordsSummariesRemote = await fetchRecordsSummariesRemote({
+      surveyRemoteId: survey.remoteId,
+      cycle,
+    });
+  } catch (error) {
+    throw new Error(
+      `error fetching remote records summaries. Details: ${error}`
+    );
+  }
 
   const recordsSummariesLocalToDelete = allRecordsSummariesInDevice.filter(
     (recordSummaryLocal) =>
@@ -131,10 +145,16 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }) => {
       !ArrayUtils.findByUuid(recordSummaryLocal.uuid)(recordsSummariesRemote)
   );
   if (recordsSummariesLocalToDelete.length > 0) {
-    await deleteRecords({
-      surveyId,
-      recordUuids: recordsSummariesLocalToDelete.map((record) => record.uuid),
-    });
+    try {
+      await deleteRecords({
+        surveyId,
+        recordUuids: recordsSummariesLocalToDelete.map((record) => record.uuid),
+      });
+    } catch (error) {
+      throw new Error(
+        `error deleting local record summaries. Details: ${error}`
+      );
+    }
   }
 
   const recordSummariesToAdd = recordsSummariesRemote.filter(
@@ -145,11 +165,17 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }) => {
       )
   );
   if (recordSummariesToAdd.length > 0) {
-    await insertRecordSummaries({
-      survey,
-      cycle,
-      recordSummaries: recordSummariesToAdd,
-    });
+    try {
+      await insertRecordSummaries({
+        survey,
+        cycle,
+        recordSummaries: recordSummariesToAdd,
+      });
+    } catch (error) {
+      throw new Error(
+        `error inserting new record summaries. Details: ${error}`
+      );
+    }
   }
 
   for await (const recordSummaryLocal of allRecordsSummariesInDevice) {
@@ -162,17 +188,28 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }) => {
       loadStatus === RecordLoadStatus.summary &&
       recordSummaryRemote
     ) {
-      await RecordRepository.updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely(
-        { survey, recordSummary: recordSummaryRemote }
-      );
+      try {
+        await RecordRepository.updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely(
+          { survey, recordSummary: recordSummaryRemote }
+        );
+      } catch (error) {
+        throw new Error(
+          `error updating local record keys for record ${uuid}. Details: ${error}`
+        );
+      }
     }
   }
 
-  const recordsSummariesLocalReloaded = await fetchRecords({
-    survey,
-    cycle,
-    onlyLocal,
-  });
+  let recordsSummariesLocalReloaded;
+  try {
+    recordsSummariesLocalReloaded = await fetchRecords({
+      survey,
+      cycle,
+      onlyLocal,
+    });
+  } catch (error) {
+    throw new Error(`error fetching updated local records. Details: ${error}`);
+  }
 
   return recordsSummariesLocalReloaded.map((recordSummaryLocal) => {
     const localKeyValues = RecordSummaries.getKeyValuesFormatted({
