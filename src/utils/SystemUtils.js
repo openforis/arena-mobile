@@ -11,7 +11,7 @@ import { Environment } from "./Environment";
 const { nativeBuildVersion: buildNumber, nativeApplicationVersion: version } =
   Application;
 
-const appId = "mam";
+const appId = "am";
 const { isAndroid, isExpoGo, platform } = Environment;
 
 let SystemNavigationBar;

@@ -12,7 +12,7 @@ export default {
   Kisaran ukuran berkas {{size}}.`,
     confirmTitle: "Hasilkan cadangan",
     error: "Ada kesalahan menghasilkan pencadangan lengkap: {{details}}",
-    shareTitle: "Bagikan berkas hasil pencadangan lengkap AME",
+    shareTitle: "Bagikan berkas hasil pencadangan lengkap AM",
     title: "Berkas Cadangan lengkap",
   },
   initializationStep: {
