@@ -24,4 +24,7 @@ export default StyleSheet.create({
   exportDataMenuButton: {
     alignSelf: "flex-end",
   },
+  optionsContainer: {
+    gap: 10,
+  },
 });

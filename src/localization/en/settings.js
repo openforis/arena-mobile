@@ -15,7 +15,7 @@ export default {
     label: "GPS locked",
     description: `Warning: battery consumption will increase! 
 GPS signal will be locked when the application is running. 
-It will help to get a better accuracy in a coordinate attributes.`,
+It will help to get a better accuracy in coordinate attributes.`,
     error:
       "Cannot start GPS locking: location provider not available or access to location not granted",
   },
