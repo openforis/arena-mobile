@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 
-import { Dates } from "@openforis/arena-core";
+import { Dates, Surveys } from "@openforis/arena-core";
 import {
   Button,
   DataVisualizer,
@@ -13,7 +13,7 @@ import {
   Text,
   VView,
 } from "components";
-import { UpdateStatus } from "model";
+import { SurveyStatus, UpdateStatus } from "model";
 import { SurveyService } from "service";
 import { useIsNetworkConnected, useNavigationFocus } from "hooks";
 import { useSurveysSearch } from "screens/SurveysList/useSurveysSearch";
@@ -44,7 +44,7 @@ const dataFields = [
   {
     key: "status",
     header: "common:status",
-    style: { width: 10 },
+    style: { minWidth: 10 },
     cellRenderer: SurveyStatusCell,
   },
 ];
@@ -66,6 +66,9 @@ const determineSurveyStatus = ({ survey, remoteSurvey }) => {
 
   if (!remoteSurvey) {
     return UpdateStatus.error;
+  }
+  if (!Surveys.isVisibleInMobile(remoteSurvey)) {
+    return SurveyStatus.notVisibleInMobile;
   }
   if (Dates.isAfter(remoteSurvey.datePublished, survey.dateModified)) {
     return UpdateStatus.notUpToDate;

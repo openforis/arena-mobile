@@ -1,5 +1,13 @@
-import { DataVisualizerCellPropTypes, Icon } from "components";
-import { SurveyStatus, UpdateStatus } from "model";
+import { useMemo } from "react";
+
+import {
+  DataVisualizerCellPropTypes,
+  HView,
+  Icon,
+  Text,
+  Tooltip,
+} from "components";
+import { ScreenViewMode, SurveyStatus, UpdateStatus } from "model";
 
 const statusIconByStatus = {
   [UpdateStatus.error]: "alert",
@@ -17,12 +25,33 @@ const statusIconColorByStatus = {
   [SurveyStatus.notVisibleInMobile]: "red",
 };
 
-export const SurveyStatusCell = ({ item }) =>
-  item.status ? (
-    <Icon
-      color={statusIconColorByStatus[item.status]}
-      source={statusIconByStatus[item.status]}
-    />
-  ) : null;
+export const SurveyStatusCell = (props) => {
+  const { item, viewMode } = props;
+  const { status } = item;
+
+  const icon = useMemo(
+    () =>
+      status && (
+        <Icon
+          color={statusIconColorByStatus[status]}
+          source={statusIconByStatus[status]}
+        />
+      ),
+    [status]
+  );
+
+  if (!status) return null;
+
+  const textKey = status;
+
+  return viewMode === ScreenViewMode.list ? (
+    <HView style={{ width: "100%" }}>
+      {icon}
+      <Text textKey={textKey} />
+    </HView>
+  ) : (
+    <Tooltip titleKey={textKey}>{icon}</Tooltip>
+  );
+};
 
 SurveyStatusCell.propTypes = DataVisualizerCellPropTypes;
