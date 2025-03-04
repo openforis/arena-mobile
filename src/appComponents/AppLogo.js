@@ -23,7 +23,7 @@ export const AppLogo = (props) => {
     }).start();
   }, []);
 
-  const [logo] = useAssets(require("../../assets/icon_transparent.png"));
+  const [logo] = useAssets(require("../../assets/logo/icon_transparent.png"));
 
   if (!logo) return null;
 
