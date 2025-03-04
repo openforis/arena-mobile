@@ -565,7 +565,6 @@ export const RecordsList = () => {
                       icon: "cloud-refresh",
                       keepMenuOpenOnPress: true,
                       label: "dataEntry:checkStatus",
-                      disabled: !networkAvailable,
                       onPress: loadRecordsWithSyncStatus,
                     },
                   ]

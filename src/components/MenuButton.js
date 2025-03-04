@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Menu } from "react-native-paper";
 import PropTypes from "prop-types";
 
@@ -11,8 +11,8 @@ export const MenuButton = (props) => {
 
   const [visible, setVisible] = useState(false);
 
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
+  const openMenu = useCallback(() => setVisible(true), []);
+  const closeMenu = useCallback(() => setVisible(false), []);
 
   return (
     <Menu
