@@ -147,6 +147,8 @@ export const SurveysListLocal = () => {
   );
 
   const onCheckUpdatesPress = useCallback(async () => {
+    if (!(await checkLoggedInUser({ dispatch, navigation }))) return;
+
     setState((statePrev) => ({
       ...statePrev,
       updateStatusLoading: true,
@@ -168,7 +170,7 @@ export const SurveysListLocal = () => {
       updateStatusLoading: false,
       updateStatusChecked: true,
     }));
-  }, [surveys]);
+  }, [dispatch, navigation, surveys]);
 
   const onImportFromCloudPress = useCallback(async () => {
     if (await checkLoggedInUser({ dispatch, navigation })) {
