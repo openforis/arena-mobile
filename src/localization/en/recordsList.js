@@ -25,6 +25,12 @@ export default {
   importRecord: "Import record",
   importRecords: {
     title: "Import from server",
+    error: {
+      surveyNotVisibleInMobile:
+        "Cannot import records: this survey should not be visible in Arena Mobile",
+      recordsDownloadNotAllowed:
+        "Importing records from Arena server not allowed",
+    },
   },
   importRecordsFromFile: {
     title: "Import",
