@@ -28,6 +28,10 @@ export default {
   noSurveysMatchingYourSearch: "No surveys matching your search",
   publishedOn: "Published on",
   selectSurvey: "Select a survey",
+  status: {
+    notInArenaServer: "Not in Arena Server",
+    notVisibleInMobile: "Not visible in Arena Mobile",
+  },
   surveysInTheCloud: "Surveys in the cloud",
   surveysInTheDevice: "Surveys in the device",
   title: "Surveys",

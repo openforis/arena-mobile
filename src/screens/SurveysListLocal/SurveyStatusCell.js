@@ -1,6 +1,5 @@
 import { DataVisualizerCellPropTypes, Icon } from "components";
-import { UpdateStatus } from "model";
-import { SurveyStatus } from "./SurveyStatus";
+import { SurveyStatus, UpdateStatus } from "model";
 
 const statusIconByStatus = {
   [UpdateStatus.error]: "alert",
@@ -14,8 +13,8 @@ const statusIconColorByStatus = {
   [UpdateStatus.error]: "red",
   [UpdateStatus.notUpToDate]: "orange",
   [UpdateStatus.upToDate]: "green",
-  [SurveyStatus.notInArenaServer]: "orange",
-  [SurveyStatus.notVisibleInMobile]: "orange",
+  [SurveyStatus.notInArenaServer]: "red",
+  [SurveyStatus.notVisibleInMobile]: "red",
 };
 
 export const SurveyStatusCell = ({ item }) =>
