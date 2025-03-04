@@ -442,8 +442,7 @@ export const RecordsList = () => {
   const onSendDataPress = useCallback(async () => {
     const { errorKey } = checkCanSendData();
     if (errorKey) {
-      const details = t(`recordsList:sendData.error.${errorKey}`);
-      toaster("recordsList:sendData.error.generic", { details });
+      toaster("recordsList:sendData.error.generic", { details: t(errorKey) });
     } else {
       const { syncStatusFetched: syncStatusFetchedNext, records: recordsNext } =
         await loadRecordsWithSyncStatus();
