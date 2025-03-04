@@ -38,38 +38,45 @@ export const SelectedSurveyContainer = () => {
   const surveyDescription = Surveys.getDescription(lang)(survey);
   const fieldManualUrl = Surveys.getFieldManualLink(lang)(survey);
 
-  const [updateStatus, setUpdateStatus] = useState(UpdateStatus.loading);
+  const [state, setState] = useState({
+    updateStatus: UpdateStatus.loading,
+    errorKey: null,
+  });
+  const { updateStatus, errorKey } = state;
 
   useEffect(() => {
     const determineStatus = async () => {
       if (!user) {
-        return UpdateStatus.error;
+        setState({ updateStatus: UpdateStatus.error });
       }
       const surveyRemote = await SurveyService.fetchSurveySummaryRemote({
         id: survey.remoteId,
         name: surveyName,
       });
       if (!surveyRemote) {
-        return SurveyStatus.notInArenaServer;
+        setState({ updateStatus: SurveyStatus.notInArenaServer });
       } else if (surveyRemote.errorKey) {
-        return UpdateStatus.error;
+        setState({
+          updateStatus: UpdateStatus.error,
+          errorKey: surveyRemote.errorKey,
+        });
       } else if (!Surveys.isVisibleInMobile(surveyRemote)) {
-        return SurveyStatus.notVisibleInMobile;
+        setState({ updateStatus: SurveyStatus.notVisibleInMobile });
       } else if (
         Dates.isAfter(
           surveyRemote?.datePublished ?? surveyRemote?.dateModified,
           survey.datePublished ?? survey.dateModified
         )
       ) {
-        return UpdateStatus.notUpToDate;
+        setState({ updateStatus: UpdateStatus.notUpToDate });
       } else {
-        return UpdateStatus.upToDate;
+        setState({ updateStatus: UpdateStatus.upToDate });
       }
     };
     if (!networkAvailable) {
-      setUpdateStatus(UpdateStatus.networkNotAvailable);
+      setState({ updateStatus: UpdateStatus.networkNotAvailable });
     } else if (survey) {
-      setUpdateStatus(determineStatus());
+      determineStatus();
     }
   }, [networkAvailable, survey, surveyName, user]);
 
@@ -82,7 +89,10 @@ export const SelectedSurveyContainer = () => {
           <Text style={styles.surveyTitle} variant="titleMedium">
             {surveyTitle}
           </Text>
-          <SurveyUpdateStatusIcon updateStatus={updateStatus} />
+          <SurveyUpdateStatusIcon
+            updateStatus={updateStatus}
+            errorKey={errorKey}
+          />
         </HView>
         {surveyDescription && (
           <ViewMoreText numberOfLines={1}>

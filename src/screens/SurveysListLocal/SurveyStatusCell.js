@@ -42,7 +42,9 @@ export const SurveyStatusCell = (props) => {
 
   if (!status) return null;
 
-  const textKey = status;
+  const textKey = Object.keys(UpdateStatus).includes(status)
+    ? `app:updateStatus.${status}`
+    : `surveys:status.${status}`;
 
   return viewMode === ScreenViewMode.list ? (
     <HView style={{ width: "100%" }}>

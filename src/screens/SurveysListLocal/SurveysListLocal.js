@@ -13,7 +13,7 @@ import {
   Text,
   VView,
 } from "components";
-import { SurveyStatus, UpdateStatus } from "model";
+import { ScreenViewMode, SurveyStatus, UpdateStatus } from "model";
 import { SurveyService } from "service";
 import { useIsNetworkConnected, useNavigationFocus } from "hooks";
 import { useSurveysSearch } from "screens/SurveysList/useSurveysSearch";
@@ -32,40 +32,13 @@ import styles from "./styles";
 
 const { checkLoggedInUser } = RemoteConnectionUtils;
 
-const dataFields = [
-  {
-    key: "name",
-    header: "common:name",
-  },
-  {
-    key: "label",
-    header: "common:label",
-  },
-  {
-    key: "status",
-    header: "common:status",
-    style: { minWidth: 10 },
-    cellRenderer: SurveyStatusCell,
-  },
-];
-
-const dataFieldsWithUpdateStatusLoading = [
-  ...dataFields,
-  {
-    key: "status",
-    header: "common:status",
-    style: { width: 10 },
-    cellRenderer: LoadingIcon,
-  },
-];
-
 const testSurveyUuid = "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3";
 
 const determineSurveyStatus = ({ survey, remoteSurvey }) => {
   if (survey.uuid === testSurveyUuid) return null;
 
   if (!remoteSurvey) {
-    return UpdateStatus.error;
+    return SurveyStatus.notInArenaServer;
   }
   if (!Surveys.isVisibleInMobile(remoteSurvey)) {
     return SurveyStatus.notVisibleInMobile;
@@ -74,6 +47,16 @@ const determineSurveyStatus = ({ survey, remoteSurvey }) => {
     return UpdateStatus.notUpToDate;
   }
   return UpdateStatus.upToDate;
+};
+
+const determineStatusFieldStyle = ({ screenViewMode, updateStatusLoading }) => {
+  if (screenViewMode === ScreenViewMode.table) {
+    return { width: 10 };
+  }
+  if (!updateStatusLoading) {
+    return { minWidth: 10 };
+  }
+  return { width: 100, height: 30 };
 };
 
 export const SurveysListLocal = () => {
@@ -194,9 +177,29 @@ export const SurveysListLocal = () => {
   }, [dispatch, navigation]);
 
   const fields = useMemo(() => {
-    if (updateStatusLoading) return dataFieldsWithUpdateStatusLoading;
-    return dataFields;
-  }, [updateStatusLoading]);
+    const _fields = [
+      {
+        key: "name",
+        header: "common:name",
+      },
+      {
+        key: "label",
+        header: "common:label",
+      },
+    ];
+    if (updateStatusChecked || updateStatusLoading) {
+      _fields.push({
+        key: "status",
+        header: "common:status",
+        style: determineStatusFieldStyle({
+          screenViewMode,
+          updateStatusLoading,
+        }),
+        cellRenderer: updateStatusLoading ? LoadingIcon : SurveyStatusCell,
+      });
+    }
+    return _fields;
+  }, [screenViewMode, updateStatusChecked, updateStatusLoading]);
 
   if (loading) return <Loader />;
 

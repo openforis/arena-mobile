@@ -7,21 +7,25 @@ import { Surveys } from "@openforis/arena-core";
 
 import { UpdateStatusIcon } from "components";
 import { useToast } from "hooks";
+import { useTranslation } from "localization";
 import { SurveyStatus, UpdateStatus } from "model";
 import { SurveyActions, SurveySelectors } from "state";
 
-export const SurveyUpdateStatusIcon = ({ updateStatus }) => {
+export const SurveyUpdateStatusIcon = ({ updateStatus, errorKey }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const toaster = useToast();
+  const { t } = useTranslation();
   const survey = SurveySelectors.useCurrentSurvey();
   const [loading, setLoading] = useState(false);
 
   const onPress = () => {
     switch (updateStatus) {
-      case UpdateStatus.error:
-        toaster("surveys:updateStatus.error");
+      case UpdateStatus.error: {
+        const error = t(errorKey);
+        toaster("surveys:updateStatus.error", { error });
         break;
+      }
       case UpdateStatus.networkNotAvailable:
         toaster("surveys:updateStatus.networkNotAvailable");
         break;
@@ -61,4 +65,5 @@ export const SurveyUpdateStatusIcon = ({ updateStatus }) => {
 
 SurveyUpdateStatusIcon.propTypes = {
   updateStatus: PropTypes.string.isRequired,
+  errorKey: PropTypes.string,
 };

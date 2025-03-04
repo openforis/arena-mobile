@@ -29,7 +29,7 @@ export default {
   publishedOn: "Published on",
   selectSurvey: "Select a survey",
   status: {
-    notInArenaServer: "Not in Arena Server",
+    notInArenaServer: "Not in Arena server",
     notVisibleInMobile: "Not visible in Arena Mobile",
   },
   surveysInTheCloud: "Surveys in the cloud",
