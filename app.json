@@ -4,7 +4,7 @@
     "slug": "arena-mobile",
     "owner": "openforis",
     "version": "2.0.2",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo/icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
@@ -17,7 +17,7 @@
     "assetBundlePatterns": ["**/*"],
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive_icon.png",
+        "foregroundImage": "./assets/logo/adaptive_icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "org.openforis.arena_mobile",
@@ -40,7 +40,7 @@
       "supportsTablet": true
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/logo/favicon.png"
     },
     "extra": {
       "eas": {
