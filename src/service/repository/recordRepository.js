@@ -69,9 +69,11 @@ const extractRemoteRecordSummaryKeyColumnsValues = ({
 }) => {
   const { cycle } = recordSummary;
   const keyDefs = SurveyDefs.getRootKeyDefs({ survey, cycle });
-  const keyColumnsValues = keyDefs.map((keyDef) => {
-    const keyColName = Objects.camelize(NodeDefs.getName(keyDef));
-    const value = recordSummary[keyColName];
+  const keyColumnsValues = keyColumnNames.map((_keyColName, index) => {
+    const keyDef = keyDefs[index];
+    if (!keyDef) return null;
+    const recordSummaryKeyProp = Objects.camelize(NodeDefs.getName(keyDef));
+    const value = recordSummary[recordSummaryKeyProp];
     return toKeyColValue(value);
   });
   return keyColumnsValues;
@@ -204,7 +206,7 @@ const insertRecordSummaries = async ({ survey, cycle, recordSummaries }) => {
         [
           uuid,
           surveyId,
-          {}, // empty content
+          "{}", // empty content
           fixDatetime(dateCreated),
           fixDatetime(dateModified),
           fixDatetime(dateModified),

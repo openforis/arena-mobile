@@ -1,13 +1,13 @@
 import { JobMobile } from "model";
 import { Files } from "utils";
 
-const outputFileNamme = `ame_full_backup.zip`;
+const outputFileName = `am_full_backup.zip`;
 
 export class BackupJob extends JobMobile {
   async execute() {
     await super.onStart();
 
-    const outputFileUri = Files.path(Files.cacheDirectory, outputFileNamme);
+    const outputFileUri = Files.path(Files.cacheDirectory, outputFileName);
 
     await Files.zip(Files.documentDirectory, outputFileUri);
 

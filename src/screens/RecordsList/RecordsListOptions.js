@@ -37,7 +37,10 @@ export const RecordsListOptions = (props) => {
   const cycles = Surveys.getCycleKeys(survey);
 
   return (
-    <CollapsiblePanel headerKey="dataEntry:options">
+    <CollapsiblePanel
+      contentStyle={styles.optionsContainer}
+      headerKey="dataEntry:options"
+    >
       <SurveyLanguageSelector />
       {cycles.length > 1 && (
         <HView style={styles.formItem}>
