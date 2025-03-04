@@ -47,4 +47,13 @@ export default {
   },
   origin: { title: "Origin", L: "Local", R: "Remote" },
   owner: "Owner",
+  sendData: {
+    error: {
+      generic: "Cannot send data to the server: {{details}}",
+      surveyNotVisibleInMobile:
+        "the current survey should not be visible in Arena Mobile",
+      recordsUploadNotAllowed:
+        "records upload from Arena Mobile to the server not allowed",
+    },
+  },
 };

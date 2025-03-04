@@ -41,10 +41,6 @@ const dataFields = [
     key: "label",
     header: "common:label",
   },
-];
-
-const dataFieldsWithUpdateStatus = [
-  ...dataFields,
   {
     key: "status",
     header: "common:status",
@@ -195,10 +191,9 @@ export const SurveysListLocal = () => {
   }, [dispatch, navigation]);
 
   const fields = useMemo(() => {
-    if (updateStatusChecked) return dataFieldsWithUpdateStatus;
     if (updateStatusLoading) return dataFieldsWithUpdateStatusLoading;
     return dataFields;
-  }, [updateStatusChecked, updateStatusLoading]);
+  }, [updateStatusLoading]);
 
   if (loading) return <Loader />;
 
