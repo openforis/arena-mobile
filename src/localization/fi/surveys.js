@@ -34,6 +34,7 @@ export default {
     notInArenaServer: "Ei Arena-palvelimella",
     notVisibleInMobile: "Ei näy Arena Mobile -sovelluksessa",
   },
+  statusMessage: "Kyselyn tila on: {{status}}",
   surveysInTheCloud: "Kyselylomakkeet pilvessä",
   surveysInTheDevice: "Kyselylomakkeet laitteessa",
   title: "Kyselylomakkeet",

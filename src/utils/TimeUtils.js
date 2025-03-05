@@ -55,7 +55,9 @@ const formatRemainingTime = ({ time, upToTimePart = timeParts.minute, t }) => {
     }
   }
   const upToTimePartText = t(`common:timePart.${upToTimePart}`);
-  return t("common:lessThanOneTimePart", { timePart: upToTimePartText });
+  return t("common:remainingTime.lessThanOneTimePart", {
+    timePart: upToTimePartText,
+  });
 };
 
 const extractParts = (time) =>

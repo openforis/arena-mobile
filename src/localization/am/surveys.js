@@ -32,6 +32,7 @@ export default {
     notInArenaServer: "በአሬና አገልጋይ ውስጥ የለም",
     notVisibleInMobile: "በአሬና ሞባይል ላይ አይታይም",
   },
+  statusMessage: "የዳሰሳ ጥናት ሁኔታው: {{status}}",
   surveysInTheCloud: "በደመና ውስጥ ያሉ ዳሰሳዎች",
   surveysInTheDevice: "በመሣሪያው ውስጥ ያሉ ዳሰሳዎች",
   title: "ዳሰሳዎች",

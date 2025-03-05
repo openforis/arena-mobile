@@ -24,7 +24,7 @@ export const FullBackupButton = () => {
       const requiredSpace = Files.toHumanReadableFileSize(
         size - freeDiskStorage
       );
-      const details = t("common:notEnoughFreeDiskSpace", { requiredSpace });
+      const details = t("common:notEnoughDiskSpace", { requiredSpace });
       toaster("app:fullBackup.error", { details });
       return;
     }

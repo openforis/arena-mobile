@@ -20,6 +20,8 @@ export default {
     label: "Tema",
     auto: "Automático",
     dark: "Escuro",
+    dark2: "Escuro 2",
     light: "Claro",
+    light2: "Claro 2",
   },
 };

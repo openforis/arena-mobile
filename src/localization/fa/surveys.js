@@ -33,6 +33,7 @@ export default {
     notInArenaServer: "در سرور آرنا موجود نیست",
     notVisibleInMobile: "در آرنا موبایل قابل مشاهده نیست",
   },
+  statusMessage: "وضعیت نظرسنجی این است: {{status}}",
   surveysInTheCloud: "فرم‌های آماربرداری در فضای ابری",
   surveysInTheDevice: "فرم‌های آماربرداری در دستگاه",
   title: "فرم‌های آماربرداری",

@@ -33,6 +33,7 @@ export default {
     notInArenaServer: "No está en el servidor de Arena",
     notVisibleInMobile: "No visible en Arena Mobile",
   },
+  statusMessage: "El estado de la encuesta es: {{status}}",
   surveysInTheCloud: "Encuestas en la nube",
   surveysInTheDevice: "Encuestas en el dispositivo",
   title: "Encuestas",

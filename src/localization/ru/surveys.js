@@ -32,6 +32,7 @@ export default {
     notInArenaServer: "Нет на сервере Arena",
     notVisibleInMobile: "Не видно в Arena Mobile",
   },
+  statusMessage: "Статус опроса: {{status}}",
   surveysInTheCloud: "Опросы в облаке",
   surveysInTheDevice: "Опросы на устройстве",
   title: "Опросы",

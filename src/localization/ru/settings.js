@@ -24,6 +24,8 @@ export default {
     label: "Тема",
     auto: "Автомат",
     dark: "Темная",
+    dark2: "Темная 2",
     light: "Светлая",
+    light2: "Светлая 2",
   },
 };

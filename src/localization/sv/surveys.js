@@ -32,6 +32,7 @@ export default {
     notInArenaServer: "Inte på Arena-servern",
     notVisibleInMobile: "Inte synlig i Arena Mobile",
   },
+  statusMessage: "Enkätstatusen är: {{status}}",
   surveysInTheCloud: "Enkäter i molnet",
   surveysInTheDevice: "Enkäter i enheten",
   title: "Enkäter",
