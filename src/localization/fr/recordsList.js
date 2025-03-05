@@ -27,6 +27,12 @@ export default {
   importRecord: "Importer l'enregistrement",
   importRecords: {
     title: "Importer depuis le serveur",
+    error: {
+      surveyNotVisibleInMobile:
+        "Impossible d'importer les enregistrements : cette enquête ne devrait pas être visible dans Arena Mobile",
+      recordsDownloadNotAllowed:
+        "L'importation des enregistrements depuis le serveur Arena n'est pas autorisée",
+    },
   },
   importRecordsFromFile: {
     title: "Importer",
@@ -51,4 +57,13 @@ export default {
     R: "Distant",
   },
   owner: "Propriétaire",
+  sendData: {
+    error: {
+      generic: "Impossible d'envoyer les données au serveur : {{details}}",
+      surveyNotVisibleInMobile:
+        "L'enquête actuelle ne devrait pas être visible dans Arena Mobile",
+      recordsUploadNotAllowed:
+        "Le téléchargement des enregistrements d'Arena Mobile vers le serveur n'est pas autorisé",
+    },
+  },
 };

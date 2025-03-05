@@ -2,6 +2,8 @@ import { useCallback } from "react";
 import { FlatList, TouchableHighlight } from "react-native";
 import PropTypes from "prop-types";
 
+import { ScreenViewMode } from "model";
+
 import { Checkbox } from "../Checkbox";
 import { FormItem } from "../FormItem";
 import { HView } from "../HView";
@@ -68,7 +70,11 @@ export const DataList = (props) => {
                   style={style}
                   textVariant={textVariant}
                 >
-                  {CellRenderer ? <CellRenderer item={item} /> : item[key]}
+                  {CellRenderer ? (
+                    <CellRenderer item={item} viewMode={ScreenViewMode.list} />
+                  ) : (
+                    item[key]
+                  )}
                 </FormItem>
               );
             })}

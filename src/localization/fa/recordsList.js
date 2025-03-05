@@ -25,6 +25,11 @@ export default {
   importRecord: "وارد کردن رکورد",
   importRecords: {
     title: "وارد کردن از سرور",
+    error: {
+      surveyNotVisibleInMobile:
+        "وارد کردن رکوردها امکان‌پذیر نیست: این نظرسنجی نباید در آرنا موبایل قابل مشاهده باشد",
+      recordsDownloadNotAllowed: "وارد کردن رکوردها از سرور آرنا مجاز نیست",
+    },
   },
   importRecordsFromFile: {
     title: "وارد کردن",
@@ -47,4 +52,13 @@ export default {
   },
   origin: { title: "منشاء", L: "محلی", R: "از راه دور" },
   owner: "مالک",
+  sendData: {
+    error: {
+      generic: "ارسال داده‌ها به سرور امکان‌پذیر نیست: {{details}}",
+      surveyNotVisibleInMobile:
+        "نظرسنجی فعلی نباید در آرنا موبایل قابل مشاهده باشد",
+      recordsUploadNotAllowed:
+        "بارگذاری رکوردها از آرنا موبایل به سرور مجاز نیست",
+    },
+  },
 };

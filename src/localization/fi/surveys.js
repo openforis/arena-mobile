@@ -30,6 +30,10 @@ export default {
     "Hakuehtojasi vastaavia kyselylomakkeita ei löydy",
   publishedOn: "Julkaistu",
   selectSurvey: "Valitse kyselylomake",
+  status: {
+    notInArenaServer: "Ei Arena-palvelimella",
+    notVisibleInMobile: "Ei näy Arena Mobile -sovelluksessa",
+  },
   surveysInTheCloud: "Kyselylomakkeet pilvessä",
   surveysInTheDevice: "Kyselylomakkeet laitteessa",
   title: "Kyselylomakkeet",

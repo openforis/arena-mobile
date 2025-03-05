@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 
 import { useScreenKey } from "hooks";
+import { ScreenViewMode } from "model";
 
 import { ScreenOptionsState } from "./state";
 
@@ -16,4 +17,6 @@ export const ScreenOptionsSelectors = {
   selectScreenViewMode,
   useScreenViewMode,
   useCurrentScreenViewMode: () => useScreenViewMode(useScreenKey()),
+  useIsCurrentScreenViewAsList: () =>
+    useScreenViewMode(useScreenKey()) === ScreenViewMode.list,
 };

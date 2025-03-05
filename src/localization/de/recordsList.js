@@ -26,6 +26,12 @@ export default {
   importRecord: "Datensatz importieren",
   importRecords: {
     title: "Vom Server importieren",
+    error: {
+      surveyNotVisibleInMobile:
+        "Datensätze können nicht importiert werden: Diese Umfrage sollte in Arena Mobile nicht sichtbar sein",
+      recordsDownloadNotAllowed:
+        "Das Importieren von Datensätzen vom Arena-Server ist nicht erlaubt",
+    },
   },
   importRecordsFromFile: {
     title: "Importieren",
@@ -48,4 +54,13 @@ export default {
   },
   origin: { title: "Herkunft", L: "Lokal", R: "Remote" },
   owner: "Eigentümer",
+  sendData: {
+    error: {
+      generic: "Daten können nicht an den Server gesendet werden: {{details}}",
+      surveyNotVisibleInMobile:
+        "Die aktuelle Umfrage sollte in Arena Mobile nicht sichtbar sein",
+      recordsUploadNotAllowed:
+        "Das Hochladen von Datensätzen von Arena Mobile auf den Server ist nicht erlaubt",
+    },
+  },
 };

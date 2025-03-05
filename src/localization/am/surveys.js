@@ -28,6 +28,10 @@ export default {
   noSurveysMatchingYourSearch: "ከፍለጋዎ ጋር የሚዛመዱ ዳሰሳዎች የሉም",
   publishedOn: "የታተመው በ",
   selectSurvey: "ዳሰሳ ይምረጡ",
+  status: {
+    notInArenaServer: "በአሬና አገልጋይ ውስጥ የለም",
+    notVisibleInMobile: "በአሬና ሞባይል ላይ አይታይም",
+  },
   surveysInTheCloud: "በደመና ውስጥ ያሉ ዳሰሳዎች",
   surveysInTheDevice: "በመሣሪያው ውስጥ ያሉ ዳሰሳዎች",
   title: "ዳሰሳዎች",

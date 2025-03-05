@@ -4,5 +4,14 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
-  }
+  },
+  "i18n-ally.dirStructure": "dir",
+  "i18n-ally.editor.preferEditor": true,
+  "i18n-ally.enabledParsers": ["js", "json"],
+  "i18n-ally.fullReloadOnChanged": true,
+  "i18n-ally.ignoredLocales": ["empty"],
+  "i18n-ally.ignoreFiles": ["**/index.js", "empty/**"],
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.localesPaths": ["src/localization/"],
+  "i18n-ally.namespace": true
 }

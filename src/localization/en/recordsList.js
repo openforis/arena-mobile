@@ -25,6 +25,12 @@ export default {
   importRecord: "Import record",
   importRecords: {
     title: "Import from server",
+    error: {
+      surveyNotVisibleInMobile:
+        "Cannot import records: this survey should not be visible in Arena Mobile",
+      recordsDownloadNotAllowed:
+        "Importing records from Arena server not allowed",
+    },
   },
   importRecordsFromFile: {
     title: "Import",
@@ -47,4 +53,13 @@ export default {
   },
   origin: { title: "Origin", L: "Local", R: "Remote" },
   owner: "Owner",
+  sendData: {
+    error: {
+      generic: "Cannot send data to the server: {{details}}",
+      surveyNotVisibleInMobile:
+        "the current survey should not be visible in Arena Mobile",
+      recordsUploadNotAllowed:
+        "records upload from Arena Mobile to the server not allowed",
+    },
+  },
 };

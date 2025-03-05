@@ -68,4 +68,5 @@ export default {
     lessThanOneTimePart: "mindre än en {{timePart}} kvar",
     timePartLeft: "{{count}} {{timePart}} kvar",
   },
+  warning: "Varning",
 };

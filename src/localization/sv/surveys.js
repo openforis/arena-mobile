@@ -28,6 +28,10 @@ export default {
   noSurveysMatchingYourSearch: "Inga enkäter matchar din sökning",
   publishedOn: "Publicerad den",
   selectSurvey: "Välj en enkät",
+  status: {
+    notInArenaServer: "Inte på Arena-servern",
+    notVisibleInMobile: "Inte synlig i Arena Mobile",
+  },
   surveysInTheCloud: "Enkäter i molnet",
   surveysInTheDevice: "Enkäter i enheten",
   title: "Enkäter",

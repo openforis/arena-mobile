@@ -29,6 +29,10 @@ export default {
   noSurveysMatchingYourSearch: "هیچ فرمی مطابق با جستجوی شما یافت نشد",
   publishedOn: "منتشر شده در",
   selectSurvey: "یک فرم آماربرداری انتخاب کنید",
+  status: {
+    notInArenaServer: "در سرور آرنا موجود نیست",
+    notVisibleInMobile: "در آرنا موبایل قابل مشاهده نیست",
+  },
   surveysInTheCloud: "فرم‌های آماربرداری در فضای ابری",
   surveysInTheDevice: "فرم‌های آماربرداری در دستگاه",
   title: "فرم‌های آماربرداری",

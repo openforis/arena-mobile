@@ -70,4 +70,5 @@ export default {
     lessThanOneTimePart: "کمتر از یک {{timePart}} باقی مانده",
     timePartLeft: "{{count}} {{timePart}} باقی مانده",
   },
+  warning: "هشدار",
 };

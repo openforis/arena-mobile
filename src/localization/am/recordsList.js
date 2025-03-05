@@ -24,6 +24,11 @@ export default {
   importRecord: "መዝገብ አስገባ",
   importRecords: {
     title: "ከአገልጋዩ አስገባ",
+    error: {
+      surveyNotVisibleInMobile:
+        "መረጃዎችን ማስገባት አይቻልም: ይህ ዳሰሳ በአሬና ሞባይል ላይ መታየት የለበትም",
+      recordsDownloadNotAllowed: "መረጃዎችን ከአሬና አገልጋይ ማስገባት አይፈቀድም",
+    },
   },
   importRecordsFromFile: {
     title: "አስገባ",
@@ -47,4 +52,11 @@ export default {
     R: "የርቀት",
   },
   owner: "ባለቤት",
+  sendData: {
+    error: {
+      generic: "መረጃውን ወደ አገልጋዩ መላክ አይቻልም: {{details}}",
+      surveyNotVisibleInMobile: "የአሁኑ ዳሰሳ በአሬና ሞባይል ላይ መታየት የለበትም",
+      recordsUploadNotAllowed: "መረጃዎችን ከአሬና ሞባይል ወደ አገልጋዩ መስቀል አይፈቀድም",
+    },
+  },
 };

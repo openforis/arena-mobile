@@ -25,6 +25,11 @@ export default {
   importRecord: "Загрузить запись",
   importRecords: {
     title: "Загрузка с сервера",
+    error: {
+      surveyNotVisibleInMobile:
+        "Невозможно импортировать записи: этот опрос не должен быть виден в Arena Mobile",
+      recordsDownloadNotAllowed: "Импорт записей с сервера Arena не разрешен",
+    },
   },
   importRecordsFromFile: {
     title: "Загрузка",
@@ -48,4 +53,13 @@ export default {
     R: "Удаленный",
   },
   owner: "Владелец",
+  sendData: {
+    error: {
+      generic: "Невозможно отправить данные на сервер: {{details}}",
+      surveyNotVisibleInMobile:
+        "Текущий опрос не должен быть виден в Arena Mobile",
+      recordsUploadNotAllowed:
+        "Загрузка записей из Arena Mobile на сервер не разрешена",
+    },
+  },
 };
