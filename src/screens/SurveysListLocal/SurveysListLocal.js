@@ -40,9 +40,6 @@ const determineSurveyStatus = ({ survey, remoteSurvey }) => {
   if (!remoteSurvey) {
     return SurveyStatus.notInArenaServer;
   }
-  if (!Surveys.isVisibleInMobile(remoteSurvey)) {
-    return SurveyStatus.notVisibleInMobile;
-  }
   if (Dates.isAfter(remoteSurvey.datePublished, survey.dateModified)) {
     return UpdateStatus.notUpToDate;
   }
