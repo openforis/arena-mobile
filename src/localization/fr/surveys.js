@@ -30,6 +30,10 @@ export default {
   noSurveysMatchingYourSearch: "Aucune enquête ne correspond à votre recherche",
   publishedOn: "Publié le",
   selectSurvey: "Sélectionner une enquête",
+  status: {
+    notInArenaServer: "Pas sur le serveur Arena",
+    notVisibleInMobile: "Non visible dans Arena Mobile",
+  },
   surveysInTheCloud: "Enquêtes dans le cloud",
   surveysInTheDevice: "Enquêtes sur l'appareil",
   title: "Enquêtes",

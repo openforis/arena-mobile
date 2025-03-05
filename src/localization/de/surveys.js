@@ -30,6 +30,10 @@ export default {
     "Keine Umfragen gefunden, die Ihrer Suche entsprechen",
   publishedOn: "Veröffentlicht am",
   selectSurvey: "Eine Umfrage auswählen",
+  status: {
+    notInArenaServer: "Nicht auf dem Arena-Server",
+    notVisibleInMobile: "Nicht sichtbar in Arena Mobile",
+  },
   surveysInTheCloud: "Umfragen in der Cloud",
   surveysInTheDevice: "Umfragen auf dem Gerät",
   title: "Umfragen",

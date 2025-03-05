@@ -26,6 +26,12 @@ export default {
   importRecord: "Importar registro",
   importRecords: {
     title: "Importar desde el servidor",
+    error: {
+      surveyNotVisibleInMobile:
+        "No se pueden importar registros: esta encuesta no debería ser visible en Arena Mobile",
+      recordsDownloadNotAllowed:
+        "No se permite importar registros desde el servidor de Arena",
+    },
   },
   importRecordsFromFile: {
     title: "Importar",
@@ -50,4 +56,13 @@ export default {
     R: "Remoto",
   },
   owner: "Propietario",
+  sendData: {
+    error: {
+      generic: "No se pueden enviar datos al servidor: {{details}}",
+      surveyNotVisibleInMobile:
+        "La encuesta actual no debería ser visible en Arena Mobile",
+      recordsUploadNotAllowed:
+        "No se permite la carga de registros desde Arena Mobile al servidor",
+    },
+  },
 };

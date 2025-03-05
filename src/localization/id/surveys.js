@@ -29,6 +29,10 @@ export default {
     "Tidak ada survei yang sesuai dengan pencarian Anda",
   publishedOn: "Diterbitkan pada",
   selectSurvey: "Pilih survei",
+  status: {
+    notInArenaServer: "Tidak ada di server Arena",
+    notVisibleInMobile: "Tidak terlihat di Arena Mobile",
+  },
   surveysInTheCloud: "Survei di server",
   surveysInTheDevice: "Survei di perangkat",
   title: "Survei",
