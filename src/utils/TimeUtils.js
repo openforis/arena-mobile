@@ -45,13 +45,10 @@ const formatRemainingTime = ({ time, upToTimePart = timeParts.minute, t }) => {
     upToTimePartIndex + 1
   );
   for (const timePart of timePartsValuesFiltered) {
-    const value = _calculateValuePerTimePart(time, timePart);
-    if (value) {
-      const timePartText = t(`common:timePart.${timePart}`, { count: value });
-      return t("common:remainingTime", {
-        timePart: timePartText,
-        count: value,
-      });
+    const count = _calculateValuePerTimePart(time, timePart);
+    if (count) {
+      const timePart = t(`common:timePart.${timePart}`, { count });
+      return t("common:remainingTime.timePartLeft", { timePart, count });
     }
   }
   const upToTimePartText = t(`common:timePart.${upToTimePart}`);
