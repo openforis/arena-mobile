@@ -48,6 +48,8 @@ const dataImportOptions = {
   overwriteExistingRecords: "overwriteExistingRecords",
 };
 
+const importFileExtension = "zip";
+
 export const RecordsList = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -176,7 +178,7 @@ export const RecordsList = () => {
 
     const messagePrefix = "recordsList:importRecordsFromFile.";
 
-    if (Files.getExtension(fileName) !== "zip") {
+    if (Files.getExtension(fileName) !== importFileExtension) {
       toaster(`${messagePrefix}invalidFileType`);
       return;
     }
@@ -426,16 +428,38 @@ export const RecordsList = () => {
     [checkRecordsCanBeCloned, dispatch, loadRecords, records]
   );
 
-  const onSendDataPress = useCallback(async () => {
-    const { syncStatusFetched: syncStatusFetchedNext, records: recordsNext } =
-      await loadRecordsWithSyncStatus();
-    if (syncStatusFetchedNext) {
-      await exportSelectedRecords({
-        selectedRecords: recordsNext,
-        onlyRemote: true,
-      });
+  const checkCanSendData = useCallback(() => {
+    if (!Surveys.isVisibleInMobile(survey)) {
+      return {
+        errorKey: "recordsList:sendData.error.surveyNotVisibleInMobile",
+      };
+    } else if (!Surveys.isRecordsUploadFromMobileAllowed(survey)) {
+      return { errorKey: "recordsList:sendData.error.recordsUploadNotAllowed" };
     }
-  }, [exportSelectedRecords, loadRecordsWithSyncStatus]);
+    return {};
+  }, [survey]);
+
+  const onSendDataPress = useCallback(async () => {
+    const { errorKey } = checkCanSendData();
+    if (errorKey) {
+      toaster("recordsList:sendData.error.generic", { details: t(errorKey) });
+    } else {
+      const { syncStatusFetched: syncStatusFetchedNext, records: recordsNext } =
+        await loadRecordsWithSyncStatus();
+      if (syncStatusFetchedNext) {
+        await exportSelectedRecords({
+          selectedRecords: recordsNext,
+          onlyRemote: true,
+        });
+      }
+    }
+  }, [
+    checkCanSendData,
+    exportSelectedRecords,
+    loadRecordsWithSyncStatus,
+    t,
+    toaster,
+  ]);
 
   const recordsFiltered = useMemo(() => {
     if (Objects.isEmpty(searchValue)) return records;
@@ -540,7 +564,6 @@ export const RecordsList = () => {
                       icon: "cloud-refresh",
                       keepMenuOpenOnPress: true,
                       label: "dataEntry:checkStatus",
-                      disabled: !networkAvailable,
                       onPress: loadRecordsWithSyncStatus,
                     },
                   ]

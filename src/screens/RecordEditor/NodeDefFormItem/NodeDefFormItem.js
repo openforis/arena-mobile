@@ -28,9 +28,8 @@ export const NodeDefFormItem = (props) => {
   const styles = useStyles();
   const settings = SettingsSelectors.useSettings();
 
-  const alwaysVisible = Objects.isEmpty(NodeDefs.getApplicable(nodeDef));
-
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
+  const cycle = DataEntrySelectors.useRecordCycle();
   const visible = DataEntrySelectors.useRecordNodePointerVisibility({
     parentNodeUuid,
     nodeDefUuid: nodeDef.uuid,
@@ -38,6 +37,11 @@ export const NodeDefFormItem = (props) => {
   const isLinkedToPreviousCycleRecord =
     DataEntrySelectors.useIsLinkedToPreviousCycleRecord();
   const canEditRecord = DataEntrySelectors.useCanEditRecord();
+  const alwaysVisible = Objects.isEmpty(NodeDefs.getApplicable(nodeDef));
+
+  const includedInPreviousCycleLink =
+    !NodeDefs.isKey(nodeDef) &&
+    NodeDefs.isIncludedInPreviousCycleLink(cycle)(nodeDef);
 
   const formItemComponent = (
     <VView
@@ -56,7 +60,7 @@ export const NodeDefFormItem = (props) => {
           viewMode === RecordEditViewMode.oneNode ? { flex: 1 } : {},
         ]}
       >
-        {isLinkedToPreviousCycleRecord && (
+        {isLinkedToPreviousCycleRecord && includedInPreviousCycleLink && (
           <PreviousCycleNodeValuePreview nodeDef={nodeDef} />
         )}
         {canEditRecord ? (

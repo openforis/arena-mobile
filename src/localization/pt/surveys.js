@@ -29,6 +29,11 @@ export default {
   noSurveysMatchingYourSearch: "Nenhum inquérito corresponde à sua pesquisa",
   publishedOn: "Publicado em",
   selectSurvey: "Selecionar um inquérito",
+  status: {
+    notInArenaServer: "Não está no servidor Arena",
+    notVisibleInMobile: "Não visível no Arena Mobile",
+  },
+  statusMessage: "O status da pesquisa é: {{status}}",
   surveysInTheCloud: "Inquéritos na nuvem",
   surveysInTheDevice: "Inquéritos no dispositivo",
   title: "Inquéritos",

@@ -21,6 +21,8 @@ export default {
     label: "ገጽታ",
     auto: "ራስ-ሰር",
     dark: "ጨለማ",
+    dark2: "ጨለማ 2",
     light: "ብርሃን",
+    light2: "ብርሃን 2",
   },
 };

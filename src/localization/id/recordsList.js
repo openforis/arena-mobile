@@ -26,6 +26,12 @@ export default {
   importRecord: "Impor data isian",
   importRecords: {
     title: "Impor dari server",
+    error: {
+      surveyNotVisibleInMobile:
+        "Tidak dapat mengimpor catatan: survei ini seharusnya tidak terlihat di Arena Mobile",
+      recordsDownloadNotAllowed:
+        "Mengimpor catatan dari server Arena tidak diizinkan",
+    },
   },
   importRecordsFromFile: {
     title: "Impor",
@@ -48,4 +54,13 @@ export default {
   },
   origin: { title: "Asal", L: "Lokal", R: "Jarak Jauh" },
   owner: "Pemilik",
+  sendData: {
+    error: {
+      generic: "Tidak dapat mengirim data ke server: {{details}}",
+      surveyNotVisibleInMobile:
+        "Survei saat ini seharusnya tidak terlihat di Arena Mobile",
+      recordsUploadNotAllowed:
+        "Unggah catatan dari Arena Mobile ke server tidak diizinkan",
+    },
+  },
 };

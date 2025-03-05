@@ -45,17 +45,19 @@ const formatRemainingTime = ({ time, upToTimePart = timeParts.minute, t }) => {
     upToTimePartIndex + 1
   );
   for (const timePart of timePartsValuesFiltered) {
-    const value = _calculateValuePerTimePart(time, timePart);
-    if (value) {
-      const timePartText = t(`common:timePart.${timePart}`, { count: value });
-      return t("common:remainingTime", {
+    const count = _calculateValuePerTimePart(time, timePart);
+    if (count) {
+      const timePartText = t(`common:timePart.${timePart}`, { count });
+      return t("common:remainingTime.timePartLeft", {
         timePart: timePartText,
-        count: value,
+        count,
       });
     }
   }
   const upToTimePartText = t(`common:timePart.${upToTimePart}`);
-  return t("common:lessThanOneTimePart", { timePart: upToTimePartText });
+  return t("common:remainingTime.lessThanOneTimePart", {
+    timePart: upToTimePartText,
+  });
 };
 
 const extractParts = (time) =>

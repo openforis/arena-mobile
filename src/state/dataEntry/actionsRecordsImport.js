@@ -1,4 +1,4 @@
-import { JobStatus } from "@openforis/arena-core";
+import { JobStatus, Surveys } from "@openforis/arena-core";
 
 import { RecordService } from "service/recordService";
 import { RecordsAndFilesImportJob } from "service/recordsAndFilesImportJob";
@@ -78,6 +78,20 @@ const _onExportFromServerJobComplete = async ({
   }
 };
 
+const checkCanImportRecords = ({ dispatch, survey }) => {
+  let errorKey;
+  if (!Surveys.isVisibleInMobile(survey)) {
+    errorKey = "recordsList:importRecords.error.surveyNotVisibleInMobile";
+  } else if (!Surveys.isRecordsDownloadInMobileAllowed(survey)) {
+    errorKey = "recordsList:importRecords.error.recordsDownloadNotAllowed";
+  }
+  if (errorKey) {
+    dispatch(ToastActions.show(errorKey));
+    return false;
+  }
+  return true;
+};
+
 export const importRecordsFromServer =
   ({ recordUuids, onImportComplete }) =>
   async (dispatch, getState) => {
@@ -85,6 +99,8 @@ export const importRecordsFromServer =
       const state = getState();
       const survey = SurveySelectors.selectCurrentSurvey(state);
       const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
+
+      if (!checkCanImportRecords({ dispatch, survey })) return;
 
       const job = await RecordService.startExportRecordsFromRemoteServer({
         survey,

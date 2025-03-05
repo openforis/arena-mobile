@@ -25,6 +25,12 @@ export default {
   importRecord: "Importera post",
   importRecords: {
     title: "Importera från servern",
+    error: {
+      surveyNotVisibleInMobile:
+        "Kan inte importera poster: denna undersökning ska inte vara synlig i Arena Mobile",
+      recordsDownloadNotAllowed:
+        "Att importera poster från Arena-servern är inte tillåtet",
+    },
   },
   importRecordsFromFile: {
     title: "Importera",
@@ -47,4 +53,13 @@ export default {
   },
   origin: { title: "Ursprung", L: "Lokal", R: "Fjärr" },
   owner: "Ägare",
+  sendData: {
+    error: {
+      generic: "Kan inte skicka data till servern: {{details}}",
+      surveyNotVisibleInMobile:
+        "Den aktuella undersökningen ska inte vara synlig i Arena Mobile",
+      recordsUploadNotAllowed:
+        "Att ladda upp poster från Arena Mobile till servern är inte tillåtet",
+    },
+  },
 };

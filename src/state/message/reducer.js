@@ -33,6 +33,10 @@ export const MessageActions = {
       onDismiss,
       title,
     }),
+  setInfo: (contentKey, contentParams) =>
+    setMessage({ content: contentKey, contentParams }),
+  setWarning: (contentKey, contentParams) =>
+    setMessage({ content: contentKey, contentParams, title: "common:warning" }),
   dismissMessage,
 };
 export { MessageReducer };

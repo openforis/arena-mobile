@@ -25,6 +25,12 @@ export default {
   importRecord: "Tuo tietue",
   importRecords: {
     title: "Tuo palvelimelta",
+    error: {
+      surveyNotVisibleInMobile:
+        "Tietueita ei voi tuoda: tämän kyselyn ei pitäisi näkyä Arena Mobile -sovelluksessa",
+      recordsDownloadNotAllowed:
+        "Tietueiden tuonti Arena-palvelimelta ei ole sallittua",
+    },
   },
   importRecordsFromFile: {
     title: "Tuo",
@@ -47,4 +53,13 @@ export default {
   },
   origin: { title: "Alkuperäinen", L: "Paikallinen", R: "Palvelin" },
   owner: "Omistaja",
+  sendData: {
+    error: {
+      generic: "Tietoja ei voi lähettää palvelimelle: {{details}}",
+      surveyNotVisibleInMobile:
+        "نظرسنجی فعلی نباید در آرنا موبایل قابل مشاهده باشد",
+      recordsUploadNotAllowed:
+        "Tietueiden lataaminen Arena Mobile -sovelluksesta palvelimelle ei ole sallittua",
+    },
+  },
 };

@@ -1,9 +1,12 @@
+import { Surveys } from "@openforis/arena-core";
+
+import { i18n } from "localization";
 import { screenKeys } from "screens/screenKeys";
 import { PreferencesService, SurveyService } from "service";
+import { MessageActions } from "state/message";
 
 import { ConfirmActions } from "../confirm";
 import { SurveyActionTypes } from "./actionTypes";
-import { MessageActions } from "state/message";
 
 const {
   CURRENT_SURVEY_SET,
@@ -37,6 +40,12 @@ const fetchAndSetCurrentSurvey =
   async (dispatch) => {
     const survey = await SurveyService.fetchSurveyById(surveyId);
     if (survey) {
+      if (!Surveys.isVisibleInMobile(survey)) {
+        const status = i18n.t("surveys:status.notVisibleInMobile");
+        dispatch(
+          MessageActions.setWarning("surveys:statusMessage", { status })
+        );
+      }
       dispatch(setCurrentSurvey({ survey, navigation }));
     } else {
       dispatch(

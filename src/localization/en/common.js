@@ -69,4 +69,5 @@ export default {
     lessThanOneTimePart: "less than one {{timePart}} left",
     timePartLeft: "{{count}} {{timePart}} left",
   },
+  warning: "Warning",
 };

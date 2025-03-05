@@ -67,4 +67,5 @@ export default {
     lessThanOneTimePart: "осталось меньше одного {{timePart}}",
     timePartLeft: "осталось {{count}} {{timePart}}",
   },
+  warning: "Предупреждение",
 };

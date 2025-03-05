@@ -136,7 +136,7 @@ export const SurveysListRemote = () => {
       ...statePrev,
       errorKey,
       loading: false,
-      surveys: _surveys,
+      surveys: _surveys.filter(Surveys.isVisibleInMobile),
     }));
   };
 

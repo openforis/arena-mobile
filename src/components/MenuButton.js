@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Menu } from "react-native-paper";
 import PropTypes from "prop-types";
 
@@ -9,33 +9,29 @@ import { MenuItem } from "./MenuItem";
 export const MenuButton = (props) => {
   const { icon, items, label, style } = props;
 
-  const [visible, setVisible] = useState(false);
+  const [state, setState] = useState({ visible: false });
+  const { visible } = state;
 
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
+  const openMenu = useCallback(() => setState({ visible: true }), []);
+  const closeMenu = useCallback(() => setState({ visible: false }), []);
+
+  const anchor = useMemo(
+    () =>
+      label ? (
+        <Button
+          avoidMultiplePress={false}
+          icon={icon}
+          onPress={openMenu}
+          textKey={label}
+        />
+      ) : (
+        <IconButton avoidMultiplePress={false} icon={icon} onPress={openMenu} />
+      ),
+    [icon, label, openMenu]
+  );
 
   return (
-    <Menu
-      style={style}
-      visible={visible}
-      onDismiss={closeMenu}
-      anchor={
-        label ? (
-          <Button
-            avoidMultiplePress={false}
-            icon={icon}
-            onPress={openMenu}
-            textKey={label}
-          />
-        ) : (
-          <IconButton
-            avoidMultiplePress={false}
-            icon={icon}
-            onPress={openMenu}
-          />
-        )
-      }
-    >
+    <Menu style={style} visible={visible} onDismiss={closeMenu} anchor={anchor}>
       {items.map(
         ({
           key,
