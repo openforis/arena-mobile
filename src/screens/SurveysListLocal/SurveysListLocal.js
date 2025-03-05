@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 
-import { Dates, Surveys } from "@openforis/arena-core";
+import { Dates } from "@openforis/arena-core";
 import {
   Button,
   DataVisualizer,
