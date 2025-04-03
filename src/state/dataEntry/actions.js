@@ -21,7 +21,7 @@ import { screenKeys } from "screens/screenKeys";
 
 import { SystemUtils } from "utils";
 
-import { ConfirmActions } from "../confirm";
+import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { DeviceInfoActions, DeviceInfoSelectors } from "../deviceInfo";
 import { MessageActions } from "../message";
 import { SurveySelectors } from "../survey";
@@ -243,6 +243,66 @@ const _updateRecord = async ({ dispatch, survey, record }) => {
   return recordStored;
 };
 
+const updateRecordNodeFile = async ({
+  survey,
+  fileUri,
+  value,
+  node,
+  dispatch,
+}) => {
+  const surveyId = survey.id;
+
+  if (fileUri) {
+    const { fileUuid: fileUuidNext } = value || {};
+
+    await RecordFileService.saveRecordFile({
+      surveyId,
+      fileUuid: fileUuidNext,
+      sourceFileUri: fileUri,
+    });
+  }
+
+  const { value: valuePrev } = node;
+  const { fileUuid: fileUuidPrev } = valuePrev || {};
+  if (fileUuidPrev) {
+    await RecordFileService.deleteRecordFile({
+      surveyId,
+      fileUuid: fileUuidPrev,
+    });
+  }
+  dispatch(DeviceInfoActions.updateFreeDiskStorage());
+};
+
+const checkAndConfirmUpdateNode = async ({
+  dispatch,
+  getState,
+  node,
+  nodeDef,
+}) => {
+  const state = getState();
+  const survey = SurveySelectors.selectCurrentSurvey(state);
+  const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
+  const record = DataEntrySelectors.selectRecord(state);
+  const dependentEnumeratedEntityDefs =
+    Records.findDependentEnumeratedEntityDefsNotEmpty({
+      survey,
+      node,
+      nodeDef,
+    })(record);
+  const dependentEnumeratedEntityDefsLabel = dependentEnumeratedEntityDefs
+    ?.map((def) => NodeDefs.getLabelOrName(def, lang))
+    .join(", ");
+  if (dependentEnumeratedEntityDefsLabel) {
+    return await ConfirmUtils.confirm({
+      dispatch,
+      titleKey: "dataEntry:updateEnumeratedEntities",
+      messageKey: "dataEntry:confirmUpdateDependentEnumeratedEntities.message",
+      messageParams: { entityDefs: dependentEnumeratedEntityDefsLabel },
+    });
+  }
+  return true;
+};
+
 const updateAttribute =
   ({ uuid, value, fileUri = null }) =>
   async (dispatch, getState) => {
@@ -259,6 +319,11 @@ const updateAttribute =
       uuid: node.nodeDefUuid,
     });
 
+    if (
+      !(await checkAndConfirmUpdateNode({ dispatch, getState, node, nodeDef }))
+    )
+      return;
+
     let { record: recordUpdated, nodes: nodesUpdated } =
       await RecordUpdater.updateAttributeValue({
         user,
@@ -271,27 +336,7 @@ const updateAttribute =
     removeNodesFlags(nodesUpdated);
 
     if (NodeDefs.getType(nodeDef) === NodeDefType.file) {
-      const surveyId = survey.id;
-
-      if (fileUri) {
-        const { fileUuid: fileUuidNext } = value || {};
-
-        await RecordFileService.saveRecordFile({
-          surveyId,
-          fileUuid: fileUuidNext,
-          sourceFileUri: fileUri,
-        });
-      }
-
-      const { value: valuePrev } = node;
-      const { fileUuid: fileUuidPrev } = valuePrev || {};
-      if (fileUuidPrev) {
-        await RecordFileService.deleteRecordFile({
-          surveyId,
-          fileUuid: fileUuidPrev,
-        });
-      }
-      dispatch(DeviceInfoActions.updateFreeDiskStorage());
+      await updateRecordNodeFile({ survey, node, fileUri, value, dispatch });
     }
 
     const isRootKeyDef = SurveyDefs.isRootKeyDef({ survey, cycle, nodeDef });

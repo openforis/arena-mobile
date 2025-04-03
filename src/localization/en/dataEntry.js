@@ -20,6 +20,11 @@ export default {
   confirmOverwriteValue: {
     message: "Overwrite existing value?",
   },
+  confirmUpdateDependentEnumeratedEntities: {
+    message: `If you continue, some enumerated entities ({{entityDefs}}) will be re-enumerated, deleting the existing values inserted into them (if any).  
+  
+Update the enumerated entities?`,
+  },
   cycle: "Cycle",
   cycleForNewRecords: "Cycle for new records:",
   options: "Options",
@@ -91,7 +96,7 @@ Details: {{details}}`,
     notInEntryStepAnymore:
       "Not in entry step anymore (in cleansing or analysis step)",
   },
-
+  updateEnumeratedEntities: "Update enumerated entities",
   validationReport: {
     title: "Validation report",
     noErrorsFound: "Kudos, no errors found!",
