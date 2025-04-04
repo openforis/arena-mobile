@@ -21,6 +21,11 @@ export default {
   confirmOverwriteValue: {
     message: "Remplacer la valeur existante?",
   },
+  confirmUpdateDependentEnumeratedEntities: {
+    message:
+      "Si vous continuez, certaines entités énumérées dépendantes ({{entityDefs}}) seront ré-énumérées, supprimant les valeurs existantes qui y ont été insérées (le cas échéant).\n\nMettre à jour les entités énumérées ?",
+    title: "Mettre à jour les entités énumérées",
+  },
   cycle: "Cycle",
   cycleForNewRecords: "Cycle pour les nouveaux enregistrements:",
   options: "Options",

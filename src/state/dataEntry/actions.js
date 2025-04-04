@@ -295,7 +295,7 @@ const checkAndConfirmUpdateNode = async ({
   if (dependentEnumeratedEntityDefsLabel) {
     return await ConfirmUtils.confirm({
       dispatch,
-      titleKey: "dataEntry:updateEnumeratedEntities",
+      titleKey: "dataEntry:confirmUpdateDependentEnumeratedEntities.title",
       messageKey: "dataEntry:confirmUpdateDependentEnumeratedEntities.message",
       messageParams: { entityDefs: dependentEnumeratedEntityDefsLabel },
     });

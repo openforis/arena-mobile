@@ -20,6 +20,11 @@ export default {
   confirmOverwriteValue: {
     message: "Ylikirjoitetaanko olemassa oleva arvo?",
   },
+  confirmUpdateDependentEnumeratedEntities: {
+    message:
+      "Jos jatkat, jotkin riippuvaiset luetteloidut entiteetit ({{entityDefs}}) luetteloidaan uudelleen, jolloin niihin mahdollisesti lisätyt aiemmat arvot poistetaan.\n\nHaluatko päivittää luetteloidut entiteetit?",
+    title: "Päivitä luetteloidut entiteetit",
+  },
   cycle: "Jakso",
   cycleForNewRecords: "Jakso uusille tietueille:",
   options: "Valinnat",

@@ -19,6 +19,11 @@ export default {
   confirmOverwriteValue: {
     message: "آیا از بازنویسی مقدار موجود مطمئن هستید؟",
   },
+  confirmUpdateDependentEnumeratedEntities: {
+    message:
+      "اگر ادامه دهید، برخی از موجودیت‌های شمارشی وابسته ({{entityDefs}}) دوباره شمارش می‌شوند و مقادیر موجود وارد شده در آن‌ها (در صورت وجود) حذف می‌شوند.\n\nآیا موجودیت‌های شمارشی را به‌روزرسانی می‌کنید؟",
+    title: "به‌روزرسانی موجودیت‌های شمارشی",
+  },
   cycle: "چرخه",
   cycleForNewRecords: "چرخه برای رکوردهای جدید:",
   options: "گزینه ها",
