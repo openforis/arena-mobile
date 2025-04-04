@@ -20,6 +20,11 @@ export default {
   confirmOverwriteValue: {
     message: "Timpa nilai yang sudah ada?",
   },
+  confirmUpdateDependentEnumeratedEntities: {
+    message:
+      "Jika Anda melanjutkan, beberapa entitas terenumerasi dependen ({{entityDefs}}) akan di-enumerasi ulang, menghapus nilai-nilai yang ada yang dimasukkan ke dalamnya (jika ada).\n\nPerbarui entitas terenumerasi?",
+    title: "Perbarui entitas terenumerasi",
+  },
   cycle: "Siklus",
   cycleForNewRecords: "Siklus untuk data isian baru:",
   options: "Opsi",
@@ -42,7 +47,8 @@ export default {
   - {{conflictingRecordsCount}} data isian yang berkonflik`,
     },
     noRecordsInDeviceToExport: "Tidak ada data di perangkat untuk diekspor",
-    onlyNewOrUpdatedRecords: "Ekspor hanya data isian baru atau yang diperbarui",
+    onlyNewOrUpdatedRecords:
+      "Ekspor hanya data isian baru atau yang diperbarui",
     mergeConflictingRecords:
       "Gabungkan data isian yang berkonflik (kunci yang sama)",
     onlyRecordsInRemoteServerCanBeImported:

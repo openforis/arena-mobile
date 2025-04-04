@@ -21,6 +21,11 @@ export default {
   confirmOverwriteValue: {
     message: "Vorhandenen Wert überschreiben?",
   },
+  confirmUpdateDependentEnumeratedEntities: {
+    message:
+      "Wenn Sie fortfahren, werden einige abhängige, aufgezählte Entitäten ({{entityDefs}}) neu nummeriert, wodurch die bestehenden, eingegebenen Werte (falls vorhanden) gelöscht werden.\n\nMöchten Sie die aufgezählten Entitäten aktualisieren?",
+    title: "Aufgezählte Entitäten aktualisieren",
+  },
   cycle: "Zyklus",
   cycleForNewRecords: "Zyklus für neue Datensätze:",
   options: "Optionen",

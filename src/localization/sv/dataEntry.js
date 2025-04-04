@@ -20,6 +20,11 @@ export default {
   confirmOverwriteValue: {
     message: "Skriv över befintligt värde?",
   },
+  confirmUpdateDependentEnumeratedEntities: {
+    message:
+      "Om du fortsätter kommer vissa beroende, uppräknade entiteter ({{entityDefs}}) att räknas om, vilket raderar befintliga värden som har infogats i dem (om några).\n\nVill du uppdatera de uppräknade entiteterna?",
+    title: "Uppdatera uppräknade entiteter",
+  },
   cycle: "Cykel",
   cycleForNewRecords: "Cykel för nya poster:",
   options: "Alternativ",
@@ -164,4 +169,3 @@ export default {
     confirmTitle: "Redigering är låst",
   },
 };
-

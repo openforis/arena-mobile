@@ -20,6 +20,11 @@ export default {
   confirmOverwriteValue: {
     message: "¿Sobrescribir valor existente?",
   },
+  confirmUpdateDependentEnumeratedEntities: {
+    message:
+      "Si continúa, algunas entidades enumeradas dependientes ({{entityDefs}}) se volverán a enumerar, eliminando los valores existentes insertados en ellas (si los hay).\n\n¿Actualizar las entidades enumeradas?",
+    title: "Actualizar entidades enumeradas",
+  },
   cycle: "Ciclo",
   cycleForNewRecords: "Ciclo para nuevos registros:",
   options: "Opciones",
