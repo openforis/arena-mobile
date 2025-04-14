@@ -49,6 +49,8 @@ export const AppBar = (props) => {
   const isRtl = useIsTextDirectionRtl();
   const survey = SurveySelectors.useCurrentSurvey();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
+  const isLandscape = DeviceInfoSelectors.useOrientationIsLandscape();
+  const isTablet = DeviceInfoSelectors.useIsTablet();
   const editingRecord =
     DataEntrySelectors.useIsEditingRecord() &&
     screenKey === screenKeys.recordEditor;
@@ -64,7 +66,6 @@ export const AppBar = (props) => {
     DataEntrySelectors.useIsLinkedToPreviousCycleRecord();
   const isLoadingPreviousCycleRecord =
     DataEntrySelectors.usePreviousCycleRecordLoading();
-  const isTablet = DeviceInfoSelectors.useIsTablet();
 
   const [state, setState] = useState({ menuVisible: false });
 
@@ -120,7 +121,10 @@ export const AppBar = (props) => {
   }, [dispatch, isLinkedToPreviousCycleRecord]);
 
   return (
-    <RNPAppbar.Header elevated mode={editingRecord ? "medium" : "small"}>
+    <RNPAppbar.Header
+      elevated
+      mode={editingRecord && !isLandscape ? "medium" : "small"}
+    >
       <HView style={styles.topBarContainer} fullWidth transparent>
         {editingRecord && (
           <RNPAppbar.Action
@@ -150,7 +154,8 @@ export const AppBar = (props) => {
 
         {editingRecord && (
           <>
-            {!isTablet && <Spacer fullFlex fullWidth={false} />}
+            {isLandscape && <Breadcrumbs />}
+            {!isTablet && !isLandscape && <Spacer fullFlex fullWidth={false} />}
             {recordEditLockAvailable && (
               <RNPAppbar.Action
                 icon={
@@ -195,7 +200,7 @@ export const AppBar = (props) => {
           <OptionsMenu toggleMenu={toggleMenu} visible={menuVisible} />
         )}
       </HView>
-      {editingRecord && (
+      {editingRecord && !isLandscape && (
         <RNPAppbar.Content title={<Breadcrumbs />}></RNPAppbar.Content>
       )}
     </RNPAppbar.Header>
