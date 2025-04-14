@@ -53,7 +53,7 @@ export const NodeMultipleEntityListComponent = (props) => {
   const nodeDefLabel = NodeDefs.getLabelOrName(entityDef, lang);
   const parentEntity = Records.getNodeByUuid(parentEntityUuid)(record);
 
-  const tableFields = useMemo(
+  const visibleNodeDefs = useMemo(
     () =>
       isLandscape
         ? RecordNodes.getApplicableDescendantDefs({
@@ -71,6 +71,16 @@ export const NodeMultipleEntityListComponent = (props) => {
             maxSummaryDefs,
           }),
     [entityDef, isLandscape, maxSummaryDefs, parentEntity, record, survey]
+  );
+
+  const tableFields = useMemo(
+    () =>
+      visibleNodeDefs.map((summaryDef) => ({
+        key: NodeDefs.getName(summaryDef),
+        header: NodeDefs.getLabelOrName(summaryDef, lang),
+        style: { minWidth: isLandscape ? 150 : 100 },
+      })),
+    [isLandscape, lang, visibleNodeDefs]
   );
 
   const entities = Records.getChildren(parentEntity, entityDefUuid)(record);
@@ -115,10 +125,10 @@ export const NodeMultipleEntityListComponent = (props) => {
         entity,
         onlyKeys: false,
         lang,
-        summaryDefs: tableFields,
+        summaryDefs: visibleNodeDefs,
       }),
     }),
-    [survey, record, lang, tableFields]
+    [survey, record, lang, visibleNodeDefs]
   );
 
   const rows = entities.map(entityToRow);
@@ -133,11 +143,7 @@ export const NodeMultipleEntityListComponent = (props) => {
       {rows.length > 0 && (
         <ScrollView horizontal persistentScrollbar>
           <DataTable
-            fields={tableFields.map((summaryDef) => ({
-              key: NodeDefs.getName(summaryDef),
-              header: NodeDefs.getLabelOrName(summaryDef, lang),
-              style: { minWidth: isLandscape ? 150 : 100 },
-            }))}
+            fields={tableFields}
             items={rows}
             onItemPress={onRowPress}
             onDeleteSelectedItemIds={onDeleteSelectedNodeUuids}
