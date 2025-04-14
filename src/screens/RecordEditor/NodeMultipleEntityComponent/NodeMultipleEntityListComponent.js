@@ -2,9 +2,9 @@ import { useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 
-import { NodeDefs, Records } from "@openforis/arena-core";
+import { NodeDefs, Records, Surveys } from "@openforis/arena-core";
 
-import { DataTable, Text, VView } from "components";
+import { DataTable, ScrollView, Text, VView } from "components";
 import { RecordNodes } from "model/utils/RecordNodes";
 import {
   DataEntryActions,
@@ -53,17 +53,24 @@ export const NodeMultipleEntityListComponent = (props) => {
   const nodeDefLabel = NodeDefs.getLabelOrName(entityDef, lang);
   const parentEntity = Records.getNodeByUuid(parentEntityUuid)(record);
 
-  const visibleSummaryDefs = useMemo(
+  const tableFields = useMemo(
     () =>
-      RecordNodes.getApplicableSummaryDefs({
-        survey,
-        entityDef,
-        record,
-        parentEntity,
-        onlyKeys: false,
-        maxSummaryDefs,
-      }),
-    [entityDef, maxSummaryDefs, parentEntity, record, survey]
+      isLandscape
+        ? RecordNodes.getApplicableDescendantDefs({
+            survey,
+            entityDef,
+            record,
+            parentEntity,
+          })
+        : RecordNodes.getApplicableSummaryDefs({
+            survey,
+            entityDef,
+            record,
+            parentEntity,
+            onlyKeys: false,
+            maxSummaryDefs,
+          }),
+    [entityDef, isLandscape, maxSummaryDefs, parentEntity, record, survey]
   );
 
   const entities = Records.getChildren(parentEntity, entityDefUuid)(record);
@@ -108,10 +115,10 @@ export const NodeMultipleEntityListComponent = (props) => {
         entity,
         onlyKeys: false,
         lang,
-        summaryDefs: visibleSummaryDefs,
+        summaryDefs: tableFields,
       }),
     }),
-    [survey, record, lang, visibleSummaryDefs]
+    [survey, record, lang, tableFields]
   );
 
   const rows = entities.map(entityToRow);
@@ -124,16 +131,19 @@ export const NodeMultipleEntityListComponent = (props) => {
         <Text textKey="dataEntry:noEntitiesDefined" variant="titleMedium" />
       )}
       {rows.length > 0 && (
-        <DataTable
-          fields={visibleSummaryDefs.map((summaryDef) => ({
-            key: NodeDefs.getName(summaryDef),
-            header: NodeDefs.getLabelOrName(summaryDef, lang),
-          }))}
-          items={rows}
-          onItemPress={onRowPress}
-          onDeleteSelectedItemIds={onDeleteSelectedNodeUuids}
-          selectable={canEditRecord}
-        />
+        <ScrollView horizontal persistentScrollbar>
+          <DataTable
+            fields={tableFields.map((summaryDef) => ({
+              key: NodeDefs.getName(summaryDef),
+              header: NodeDefs.getLabelOrName(summaryDef, lang),
+              style: { minWidth: isLandscape ? 150 : 100 },
+            }))}
+            items={rows}
+            onItemPress={onRowPress}
+            onDeleteSelectedItemIds={onDeleteSelectedNodeUuids}
+            selectable={canEditRecord}
+          />
+        </ScrollView>
       )}
       {canAddNew && (
         <NewNodeButton nodeDefLabel={nodeDefLabel} onPress={onNewPress} />
