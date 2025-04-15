@@ -135,22 +135,29 @@ export const NodeMultipleEntityListComponent = (props) => {
 
   const canAddNew = canEditRecord && !NodeDefs.isEnumerate(entityDef);
 
+  const dataTable = (
+    <DataTable
+      fields={tableFields}
+      items={rows}
+      onItemPress={onRowPress}
+      onDeleteSelectedItemIds={onDeleteSelectedNodeUuids}
+      selectable={canEditRecord}
+    />
+  );
+
   return (
     <VView style={styles.container}>
       {rows.length === 0 && (
         <Text textKey="dataEntry:noEntitiesDefined" variant="titleMedium" />
       )}
-      {rows.length > 0 && (
-        <ScrollView horizontal persistentScrollbar>
-          <DataTable
-            fields={tableFields}
-            items={rows}
-            onItemPress={onRowPress}
-            onDeleteSelectedItemIds={onDeleteSelectedNodeUuids}
-            selectable={canEditRecord}
-          />
-        </ScrollView>
-      )}
+      {rows.length > 0 &&
+        (isLandscape ? (
+          <ScrollView horizontal persistentScrollbar>
+            {dataTable}
+          </ScrollView>
+        ) : (
+          dataTable
+        ))}
       {canAddNew && (
         <NewNodeButton nodeDefLabel={nodeDefLabel} onPress={onNewPress} />
       )}

@@ -66,6 +66,7 @@ export const AppBar = (props) => {
     DataEntrySelectors.useIsLinkedToPreviousCycleRecord();
   const isLoadingPreviousCycleRecord =
     DataEntrySelectors.usePreviousCycleRecordLoading();
+  const isInTwoRows = editingRecord && !isLandscape;
 
   const [state, setState] = useState({ menuVisible: false });
 
@@ -121,10 +122,7 @@ export const AppBar = (props) => {
   }, [dispatch, isLinkedToPreviousCycleRecord]);
 
   return (
-    <RNPAppbar.Header
-      elevated
-      mode={editingRecord && !isLandscape ? "medium" : "small"}
-    >
+    <RNPAppbar.Header elevated mode={isInTwoRows ? "medium" : "small"}>
       <HView style={styles.topBarContainer} fullWidth transparent>
         {editingRecord && (
           <RNPAppbar.Action
@@ -154,8 +152,8 @@ export const AppBar = (props) => {
 
         {editingRecord && (
           <>
-            {isLandscape && <Breadcrumbs />}
-            {!isTablet && !isLandscape && <Spacer fullFlex fullWidth={false} />}
+            {!isInTwoRows && <Breadcrumbs />}
+            {!isTablet && isInTwoRows && <Spacer fullFlex fullWidth={false} />}
             {recordEditLockAvailable && (
               <RNPAppbar.Action
                 icon={
@@ -200,7 +198,7 @@ export const AppBar = (props) => {
           <OptionsMenu toggleMenu={toggleMenu} visible={menuVisible} />
         )}
       </HView>
-      {editingRecord && !isLandscape && (
+      {isInTwoRows && (
         <RNPAppbar.Content title={<Breadcrumbs />}></RNPAppbar.Content>
       )}
     </RNPAppbar.Header>
