@@ -83,8 +83,6 @@ export const NodeMultipleEntityListComponent = (props) => {
     [isLandscape, lang, visibleNodeDefs]
   );
 
-  const entities = Records.getChildren(parentEntity, entityDefUuid)(record);
-
   const onNewPress = () => {
     dispatch(DataEntryActions.addNewEntity);
   };
@@ -131,18 +129,24 @@ export const NodeMultipleEntityListComponent = (props) => {
     [survey, record, lang, visibleNodeDefs]
   );
 
-  const rows = entities.map(entityToRow);
+  const rows = useMemo(() => {
+    const entities = Records.getChildren(parentEntity, entityDefUuid)(record);
+    return entities.map(entityToRow);
+  }, [entityDefUuid, entityToRow, parentEntity, record]);
 
   const canAddNew = canEditRecord && !NodeDefs.isEnumerate(entityDef);
 
-  const dataTable = (
-    <DataTable
-      fields={tableFields}
-      items={rows}
-      onItemPress={onRowPress}
-      onDeleteSelectedItemIds={onDeleteSelectedNodeUuids}
-      selectable={canEditRecord}
-    />
+  const dataTable = useMemo(
+    () => (
+      <DataTable
+        fields={tableFields}
+        items={rows}
+        onItemPress={onRowPress}
+        onDeleteSelectedItemIds={onDeleteSelectedNodeUuids}
+        selectable={canEditRecord}
+      />
+    ),
+    [canEditRecord, onDeleteSelectedNodeUuids, onRowPress, rows, tableFields]
   );
 
   return (
