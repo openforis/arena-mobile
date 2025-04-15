@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 
-import { NodeDefs, Records, Surveys } from "@openforis/arena-core";
+import { NodeDefs, Records } from "@openforis/arena-core";
 
 import { DataTable, ScrollView, Text, VView } from "components";
 import { RecordNodes } from "model/utils/RecordNodes";
