@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import { NodeDefs, Records } from "@openforis/arena-core";
 
-import { DataTable, Text, VView } from "components";
+import { DataTable, ScrollView, Text, VView } from "components";
 import { RecordNodes } from "model/utils/RecordNodes";
 import {
   DataEntryActions,
@@ -53,20 +53,35 @@ export const NodeMultipleEntityListComponent = (props) => {
   const nodeDefLabel = NodeDefs.getLabelOrName(entityDef, lang);
   const parentEntity = Records.getNodeByUuid(parentEntityUuid)(record);
 
-  const visibleSummaryDefs = useMemo(
+  const visibleNodeDefs = useMemo(
     () =>
-      RecordNodes.getApplicableSummaryDefs({
-        survey,
-        entityDef,
-        record,
-        parentEntity,
-        onlyKeys: false,
-        maxSummaryDefs,
-      }),
-    [entityDef, maxSummaryDefs, parentEntity, record, survey]
+      isLandscape
+        ? RecordNodes.getApplicableDescendantDefs({
+            survey,
+            entityDef,
+            record,
+            parentEntity,
+          })
+        : RecordNodes.getApplicableSummaryDefs({
+            survey,
+            entityDef,
+            record,
+            parentEntity,
+            onlyKeys: false,
+            maxSummaryDefs,
+          }),
+    [entityDef, isLandscape, maxSummaryDefs, parentEntity, record, survey]
   );
 
-  const entities = Records.getChildren(parentEntity, entityDefUuid)(record);
+  const tableFields = useMemo(
+    () =>
+      visibleNodeDefs.map((summaryDef) => ({
+        key: NodeDefs.getName(summaryDef),
+        header: NodeDefs.getLabelOrName(summaryDef, lang),
+        style: { minWidth: isLandscape ? 150 : 100 },
+      })),
+    [isLandscape, lang, visibleNodeDefs]
+  );
 
   const onNewPress = () => {
     dispatch(DataEntryActions.addNewEntity);
@@ -108,33 +123,45 @@ export const NodeMultipleEntityListComponent = (props) => {
         entity,
         onlyKeys: false,
         lang,
-        summaryDefs: visibleSummaryDefs,
+        summaryDefs: visibleNodeDefs,
       }),
     }),
-    [survey, record, lang, visibleSummaryDefs]
+    [survey, record, lang, visibleNodeDefs]
   );
 
-  const rows = entities.map(entityToRow);
+  const rows = useMemo(() => {
+    const entities = Records.getChildren(parentEntity, entityDefUuid)(record);
+    return entities.map(entityToRow);
+  }, [entityDefUuid, entityToRow, parentEntity, record]);
 
   const canAddNew = canEditRecord && !NodeDefs.isEnumerate(entityDef);
+
+  const dataTable = useMemo(
+    () => (
+      <DataTable
+        fields={tableFields}
+        items={rows}
+        onItemPress={onRowPress}
+        onDeleteSelectedItemIds={onDeleteSelectedNodeUuids}
+        selectable={canEditRecord}
+      />
+    ),
+    [canEditRecord, onDeleteSelectedNodeUuids, onRowPress, rows, tableFields]
+  );
 
   return (
     <VView style={styles.container}>
       {rows.length === 0 && (
         <Text textKey="dataEntry:noEntitiesDefined" variant="titleMedium" />
       )}
-      {rows.length > 0 && (
-        <DataTable
-          fields={visibleSummaryDefs.map((summaryDef) => ({
-            key: NodeDefs.getName(summaryDef),
-            header: NodeDefs.getLabelOrName(summaryDef, lang),
-          }))}
-          items={rows}
-          onItemPress={onRowPress}
-          onDeleteSelectedItemIds={onDeleteSelectedNodeUuids}
-          selectable={canEditRecord}
-        />
-      )}
+      {rows.length > 0 &&
+        (isLandscape ? (
+          <ScrollView horizontal persistentScrollbar>
+            {dataTable}
+          </ScrollView>
+        ) : (
+          dataTable
+        ))}
       {canAddNew && (
         <NewNodeButton nodeDefLabel={nodeDefLabel} onPress={onNewPress} />
       )}

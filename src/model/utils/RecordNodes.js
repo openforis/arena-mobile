@@ -251,6 +251,27 @@ const hasDescendantApplicableNodes = ({ record, parentEntity, nodeDef }) => {
   return descendants.some((node) => Records.isNodeApplicable({ record, node }));
 };
 
+const getApplicableDescendantDefs = ({
+  survey,
+  entityDef,
+  record,
+  parentEntity,
+  onlyAttributes = true,
+}) => {
+  const { cycle } = record;
+  const defs = Surveys.getDescendantsInSingleEntities({
+    survey,
+    cycle,
+    nodeDef: entityDef,
+  });
+  return defs.filter(
+    (nodeDef) =>
+      (!onlyAttributes || NodeDefs.isAttribute(nodeDef)) &&
+      (Objects.isEmpty(NodeDefs.getApplicable(nodeDef)) ||
+        hasDescendantApplicableNodes({ record, parentEntity, nodeDef }))
+  );
+};
+
 const getApplicableSummaryDefs = ({
   survey,
   entityDef,
@@ -285,5 +306,6 @@ export const RecordNodes = {
   findAncestor,
   cleanupAttributeValue,
   hasDescendantApplicableNodes,
+  getApplicableDescendantDefs,
   getApplicableSummaryDefs,
 };
