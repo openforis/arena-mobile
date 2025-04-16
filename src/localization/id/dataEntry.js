@@ -112,6 +112,10 @@ export default {
   },
 
   code: {
+    cannotAddMoreItems: {
+      maxCountReached:
+        "Tidak dapat menambahkan lebih banyak item: jumlah maksimum tercapai",
+    },
     selectItem: "Pilih item",
     selectItem_plural: "Pilih item",
   },

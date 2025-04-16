@@ -101,6 +101,10 @@ export default {
     oneNode: "Один узел",
   },
   code: {
+    cannotAddMoreItems: {
+      maxCountReached:
+        "Невозможно добавить больше элементов: достигнуто максимальное количество",
+    },
     selectItem: "Выберите элемент",
     selectItem_plural: "Выберите элементы",
   },

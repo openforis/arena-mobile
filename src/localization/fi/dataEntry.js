@@ -110,6 +110,9 @@ export default {
   },
 
   code: {
+    cannotAddMoreItems: {
+      maxCountReached: "Lisää kohteita ei voi: enimmäismäärä on saavutettu",
+    },
     selectItem: "Valitse kohde",
     selectItem_plural: "Valitse kohteet",
   },

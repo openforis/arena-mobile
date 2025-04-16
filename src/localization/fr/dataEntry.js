@@ -106,6 +106,10 @@ export default {
     oneNode: "Un nœud",
   },
   code: {
+    cannotAddMoreItems: {
+      maxCountReached:
+        "Impossible d'ajouter plus d'éléments : nombre maximum atteint",
+    },
     selectItem: "Sélectionner un élément",
     selectItem_plural: "Sélectionner des éléments",
   },

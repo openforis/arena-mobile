@@ -109,6 +109,10 @@ export default {
   },
 
   code: {
+    cannotAddMoreItems: {
+      maxCountReached:
+        "Kan inte lägga till fler objekt: maximalt antal har nåtts",
+    },
     selectItem: "Välj objekt",
     selectItem_plural: "Välj objekt",
   },

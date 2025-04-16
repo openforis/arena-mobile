@@ -95,6 +95,9 @@ export default {
     oneNode: "አንድ መስቀለኛ መንገድ",
   },
   code: {
+    cannotAddMoreItems: {
+      maxCountReached: "ተጨማሪ እቃዎችን መጨመር አይቻልም: ከፍተኛው ቆጠራ ደርሷል",
+    },
     selectItem: "ንጥል ይምረጡ",
     selectItem_plural: "ንጥሎችን ይምረጡ",
   },

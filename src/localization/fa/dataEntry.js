@@ -108,6 +108,10 @@ export default {
   },
 
   code: {
+    cannotAddMoreItems: {
+      maxCountReached:
+        "امکان افزودن موارد بیشتر وجود ندارد: حداکثر تعداد مجاز رسیده است",
+    },
     selectItem: "انتخاب مورد",
     selectItem_plural: "انتخاب موارد",
   },
