@@ -10,7 +10,12 @@ import {
 
 import { SurveyService } from "service/surveyService";
 
-import { DataEntryActions, DataEntrySelectors, SurveySelectors } from "state";
+import {
+  DataEntryActions,
+  DataEntrySelectors,
+  MessageActions,
+  SurveySelectors,
+} from "state";
 import { useItemsFilter } from "../useItemsFilter";
 
 export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
@@ -33,6 +38,10 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
   const parentItemUuid = DataEntrySelectors.useRecordCodeParentItemUuid({
     nodeDef,
     parentNodeUuid,
+  });
+  const maxCountReached = DataEntrySelectors.useIsNodeMaxCountReached({
+    parentNodeUuid,
+    nodeDef,
   });
 
   const _items = useMemo(() => {
@@ -94,6 +103,12 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
             value,
           })
         );
+      } else if (maxCountReached) {
+        dispatch(
+          MessageActions.setInfo(
+            "dataEntry:code.cannotAddMoreItems.maxCountReached"
+          )
+        );
       } else {
         dispatch(
           DataEntryActions.addNewAttribute({
@@ -104,7 +119,7 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
         );
       }
     },
-    [dispatch, nodeDef, nodes, parentNodeUuid]
+    [dispatch, maxCountReached, nodeDef, nodes, parentNodeUuid]
   );
 
   const onItemRemove = useCallback(

@@ -5,9 +5,10 @@ import { Button } from "components/Button";
 import styles from "./styles";
 
 export const NewNodeButton = (props) => {
-  const { nodeDefLabel, onPress } = props;
+  const { disabled = undefined, nodeDefLabel, onPress } = props;
   return (
     <Button
+      disabled={disabled}
       icon="plus"
       onPress={onPress}
       style={styles.newButton}
@@ -18,6 +19,7 @@ export const NewNodeButton = (props) => {
 };
 
 NewNodeButton.propTypes = {
+  disabled: PropTypes.bool,
   nodeDefLabel: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
 };

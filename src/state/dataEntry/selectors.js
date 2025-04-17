@@ -315,6 +315,24 @@ const useIsNodeDefCurrentActiveChild = (nodeDef) =>
     return nodeDefIndex === activeChildDefIndex;
   });
 
+const useIsNodeMaxCountReached = ({ parentNodeUuid, nodeDef }) =>
+  useSelector((state) => {
+    const record = selectRecord(state);
+    const parentNode = parentNodeUuid
+      ? Records.getNodeByUuid(parentNodeUuid)(record)
+      : null;
+    if (!parentNode) return false;
+
+    const maxCount = Nodes.getChildrenMaxCount({
+      parentNode,
+      nodeDef,
+    });
+    if (Objects.isEmpty(maxCount)) return false;
+
+    const siblings = Records.getChildren(parentNode, nodeDef.uuid)(record);
+    return siblings.length >= maxCount;
+  });
+
 export const DataEntrySelectors = {
   selectRecord,
   selectCurrentPageEntity,
@@ -400,6 +418,8 @@ export const DataEntrySelectors = {
     useSelector(selectCurrentPageEntityActiveChildDefIndex),
 
   useIsNodeDefCurrentActiveChild,
+
+  useIsNodeMaxCountReached,
 
   // page selector
   selectRecordPageSelectorMenuOpen,

@@ -36,6 +36,11 @@ export const MultipleAttributeComponentWrapper = (props) => {
     nodeDef,
   });
 
+  const maxCountReached = DataEntrySelectors.useIsNodeMaxCountReached({
+    parentNodeUuid,
+    nodeDef,
+  });
+
   const nodeDefLabel = NodeDefs.getLabelOrName(nodeDef, lang);
 
   const onNewPress = useCallback(() => {
@@ -82,7 +87,11 @@ export const MultipleAttributeComponentWrapper = (props) => {
           <IconButton icon="trash-can-outline" onPress={onDeletePress(node)} />
         </HView>
       ))}
-      <NewNodeButton nodeDefLabel={nodeDefLabel} onPress={onNewPress} />
+      <NewNodeButton
+        disabled={maxCountReached}
+        nodeDefLabel={nodeDefLabel}
+        onPress={onNewPress}
+      />
     </VView>
   );
 };

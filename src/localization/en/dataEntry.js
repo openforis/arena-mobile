@@ -109,6 +109,9 @@ Details: {{details}}`,
   },
 
   code: {
+    cannotAddMoreItems: {
+      maxCountReached: "Cannot add more items: max count reached",
+    },
     selectItem: "Select item",
     selectItem_plural: "Select items",
   },

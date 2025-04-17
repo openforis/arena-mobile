@@ -114,6 +114,10 @@ export default {
   },
 
   code: {
+    cannotAddMoreItems: {
+      maxCountReached:
+        "Es können keine weiteren Artikel hinzugefügt werden: maximale Anzahl erreicht",
+    },
     selectItem: "Element auswählen",
     selectItem_plural: "Elemente auswählen",
   },

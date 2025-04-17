@@ -101,6 +101,10 @@ export default {
     oneNode: "Un nodo",
   },
   code: {
+    cannotAddMoreItems: {
+      maxCountReached:
+        "No se pueden agregar más elementos: se ha alcanzado el número máximo",
+    },
     selectItem: "Seleccionar elemento",
     selectItem_plural: "Seleccionar elementos",
   },
