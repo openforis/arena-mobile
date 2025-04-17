@@ -58,6 +58,52 @@ const getNextOrPreviousMultipleEntityPointer = ({
   return null;
 };
 
+const findSiblingEntityPointer = ({
+  survey,
+  record,
+  cycle,
+  parentEntity,
+  entityDef,
+  offset,
+}) => {
+  let visitedParentEntity = parentEntity;
+  let visitedEntityDef = entityDef;
+  while (visitedEntityDef != null && !NodeDefs.isRoot(visitedEntityDef)) {
+    const parentEntityDef = Surveys.getNodeDefParent({
+      survey,
+      nodeDef: visitedEntityDef,
+    });
+    const siblingEntityDefs = RecordNodes.getApplicableChildrenEntityDefs({
+      survey,
+      nodeDef: parentEntityDef,
+      parentEntity: visitedParentEntity,
+      cycle,
+    });
+    const currentEntityDefIndex = siblingEntityDefs.indexOf(visitedEntityDef);
+    const siblingEntityDef = siblingEntityDefs[currentEntityDefIndex + offset];
+    if (siblingEntityDef) {
+      return { entityDef: siblingEntityDef, parentEntity: visitedParentEntity };
+    }
+    if (NodeDefs.isSingle(parentEntityDef)) {
+      visitedEntityDef = parentEntityDef;
+      const ancestorDef = Surveys.getNodeDefParent({
+        survey,
+        nodeDef: parentEntityDef,
+      });
+      visitedParentEntity = ancestorDef
+        ? Records.getAncestor({
+            record,
+            node: visitedParentEntity,
+            ancestorDefUuid: ancestorDef.uuid,
+          })
+        : null;
+    } else {
+      return null;
+    }
+  }
+  return null;
+};
+
 const getNextOrPrevSiblingEntityPointer = ({
   survey,
   record,
@@ -66,15 +112,9 @@ const getNextOrPrevSiblingEntityPointer = ({
   offset,
   entityUuid = null,
 }) => {
-  const parentEntityDef = Surveys.getNodeDefParent({
-    survey,
-    nodeDef: entityDef,
-  });
-
-  if (!parentEntityDef) {
+  if (NodeDefs.isRoot(entityDef)) {
     return null;
   }
-
   const { cycle } = record;
   const entity = entityUuid ? Records.getNodeByUuid(entityUuid)(record) : null;
 
@@ -82,23 +122,25 @@ const getNextOrPrevSiblingEntityPointer = ({
     // go back to list of entities
     return null;
   }
-  const siblingEntityDefs = RecordNodes.getApplicableChildrenEntityDefs({
-    survey,
-    nodeDef: parentEntityDef,
-    parentEntity,
-    cycle,
-  });
-  const currentEntityDefIndex = siblingEntityDefs.indexOf(entityDef);
-  const siblingEntityDef = siblingEntityDefs[currentEntityDefIndex + offset];
+
+  const { entityDef: siblingEntityDef, parentEntity: siblingParentEntity } =
+    findSiblingEntityPointer({
+      survey,
+      record,
+      cycle,
+      parentEntity,
+      entityDef,
+      offset,
+    }) ?? {};
 
   if (siblingEntityDef)
     return {
-      parentEntityUuid: parentEntity.uuid,
+      parentEntityUuid: siblingParentEntity.uuid,
       entityDef: siblingEntityDef,
       entityUuid: getSingleChildNodeUuid({
         record,
         entityDef: siblingEntityDef,
-        parentEntity,
+        parentEntity: siblingParentEntity,
       }),
     };
   return null;
