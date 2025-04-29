@@ -2,8 +2,6 @@ import { StyleSheet } from "react-native";
 import { useTheme } from "react-native-paper";
 import { DeviceInfoSelectors } from "state/deviceInfo";
 
-import { Environment } from "utils/Environment";
-
 export const useStyles = () => {
   const theme = useTheme();
   const isPhone = DeviceInfoSelectors.useIsPhone();
@@ -35,9 +33,4 @@ export const useStyles = () => {
     },
   });
 };
-const determineContainerFlex = ({ isPhone = true }) => {
-  if (isPhone) {
-    return Environment.isIOS ? 0.8 : 0.83;
-  }
-  return 1;
-};
+const determineContainerFlex = ({ isPhone = true }) => (isPhone ? 0.78 : 1);
