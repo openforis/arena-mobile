@@ -1,6 +1,7 @@
 import { Keyboard } from "react-native";
 
 import {
+  Dates,
   NodeDefs,
   NodeDefType,
   Numbers,
@@ -81,13 +82,17 @@ const createNewRecord =
     const cycle = Surveys.getDefaultCycleKey(survey);
     // to always use the selected cycle, use this: const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
     const appInfo = SystemUtils.getRecordAppInfo();
-    const recordEmpty = RecordFactory.createInstance({
-      surveyUuid: survey.uuid,
-      cycle,
-      user: user ?? {},
-      appInfo,
-    });
-
+    const now = Dates.nowFormattedForStorage();
+    const recordEmpty = {
+      ...RecordFactory.createInstance({
+        surveyUuid: survey.uuid,
+        cycle,
+        user: user ?? {},
+        appInfo,
+      }),
+      dateCreated: now,
+      dateModified: now,
+    };
     let { record, nodes } = await RecordUpdater.createRootEntity({
       user,
       survey,
