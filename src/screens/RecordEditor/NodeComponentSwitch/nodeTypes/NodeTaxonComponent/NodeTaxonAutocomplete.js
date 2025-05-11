@@ -29,10 +29,15 @@ const itemLabelExtractor =
   };
 
 const itemDescriptionExtractor = (taxon) => {
-  const { vernacularName, vernacularNameLangCode } = taxon;
-  return vernacularName
-    ? `${vernacularName} (${vernacularNameLangCode})`
-    : undefined;
+  const { vernacularNamesJoint, vernacularName, vernacularNameLangCode } =
+    taxon;
+  if (vernacularNamesJoint) {
+    return vernacularNamesJoint;
+  } else if (vernacularName) {
+    return `${vernacularName} (${vernacularNameLangCode})`;
+  } else {
+    return undefined;
+  }
 };
 
 const createTaxonValue = ({ taxon, inputValue }) => {
@@ -125,6 +130,7 @@ export const NodeTaxonAutocomplete = (props) => {
   const { taxa, unlistedTaxon, unknownTaxon } = useTaxaFiltered({
     nodeDef,
     parentNodeUuid,
+    joinVernacularNames: true,
   });
 
   const onSelectedItemsChange = useCallback(

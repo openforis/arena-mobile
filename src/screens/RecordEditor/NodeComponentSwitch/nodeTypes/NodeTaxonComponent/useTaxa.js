@@ -1,3 +1,4 @@
+import { Languages, LanguagesISO639part2 } from "@openforis/arena-core";
 import { Taxa } from "model/Taxa";
 import { useMemo } from "react";
 
@@ -19,7 +20,28 @@ const addVernacularNameObjectToItems =
     });
   };
 
-export const useTaxa = ({ survey, taxonomyUuid }) => {
+const joinVernacularNameObjects = ({ taxonItem }) => {
+  const vernacularNamesByLang = taxonItem.vernacularNames;
+  return Object.entries(vernacularNamesByLang)
+    .reduce((acc, [lang, vernacularNameObjects]) => {
+      const vernacularNamesInLangJoint = vernacularNameObjects
+        .map((vernacularNameObj) => {
+          const { name: vernacularName } = vernacularNameObj.props;
+          return vernacularName;
+        })
+        .join(" / ");
+      const langText = LanguagesISO639part2[lang]?.["en"] ?? lang;
+      acc.push(`${vernacularNamesInLangJoint} (${langText})`);
+      return acc;
+    }, [])
+    .join(" - ");
+};
+
+export const useTaxa = ({
+  survey,
+  taxonomyUuid,
+  joinVernacularNames = false,
+}) => {
   const { taxa, unknownTaxon, unlistedTaxon } = useMemo(() => {
     const taxaByCode = {};
     const allTaxa = Object.values(survey.refData?.taxonIndex ?? {});
@@ -38,11 +60,17 @@ export const useTaxa = ({ survey, taxonomyUuid }) => {
       const vernacularNamesByLang = taxon.vernacularNames;
       const vernacularNamesArray = Object.values(vernacularNamesByLang);
       if (vernacularNamesArray.length > 0) {
-        vernacularNamesArray.forEach((vernacularNameObjects) => {
-          vernacularNameObjects.forEach(
-            addVernacularNameObjectToItems(acc, taxonItem)
-          );
-        });
+        if (joinVernacularNames) {
+          taxonItem.vernacularNamesJoint = joinVernacularNameObjects({
+            taxonItem,
+          });
+        } else {
+          vernacularNamesArray.forEach((vernacularNameObjects) => {
+            vernacularNameObjects.forEach(
+              addVernacularNameObjectToItems(acc, taxonItem)
+            );
+          });
+        }
       }
       return acc;
     }, []);
