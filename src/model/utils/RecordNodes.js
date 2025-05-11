@@ -123,7 +123,7 @@ const getEntitySummaryValuesByNameFormatted = ({
       onlyKeys,
     });
   return summaryDefs.reduce((acc, summaryDef) => {
-    let formattedValue;
+    let formattedValue = "";
     try {
       const summaryNode = Records.getChild(entity, summaryDef.uuid)(record);
       if (!summaryNode) {
