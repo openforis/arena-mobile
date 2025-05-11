@@ -22,9 +22,8 @@ const addVernacularNameObjectToItems =
     });
   };
 
-const joinVernacularNameObjects = ({ taxonItem }) => {
-  const vernacularNamesByLang = taxonItem.vernacularNames;
-  return Object.entries(vernacularNamesByLang)
+const joinVernacularNameObjects = ({ taxonItem }) =>
+  Object.entries(taxonItem.vernacularNames)
     .reduce((acc, [lang, vernacularNameObjects]) => {
       const vernacularNamesInLangJoint = vernacularNameObjects
         .map((vernacularNameObj) => {
@@ -37,7 +36,6 @@ const joinVernacularNameObjects = ({ taxonItem }) => {
       return acc;
     }, [])
     .join(" - ");
-};
 
 export const useTaxa = ({
   survey,
