@@ -1,10 +1,11 @@
+import PropTypes from "prop-types";
 import { useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
 
 import { NodeDefs, Records } from "@openforis/arena-core";
 
 import { DataTable, ScrollView, Text, VView } from "components";
+import { useTranslation } from "localization";
 import { RecordNodes } from "model/utils/RecordNodes";
 import {
   DataEntryActions,
@@ -29,11 +30,12 @@ export const NodeMultipleEntityListComponent = (props) => {
   const dispatch = useDispatch();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const confirm = useConfirm();
+  const { t } = useTranslation()
 
   if (__DEV__) {
     console.log(
       "Rendering NodeMultipleEntityListComponent for " +
-        NodeDefs.getName(entityDef)
+      NodeDefs.getName(entityDef)
     );
   }
 
@@ -57,19 +59,19 @@ export const NodeMultipleEntityListComponent = (props) => {
     () =>
       isLandscape
         ? RecordNodes.getApplicableDescendantDefs({
-            survey,
-            entityDef,
-            record,
-            parentEntity,
-          })
+          survey,
+          entityDef,
+          record,
+          parentEntity,
+        })
         : RecordNodes.getApplicableSummaryDefs({
-            survey,
-            entityDef,
-            record,
-            parentEntity,
-            onlyKeys: false,
-            maxSummaryDefs,
-          }),
+          survey,
+          entityDef,
+          record,
+          parentEntity,
+          onlyKeys: false,
+          maxSummaryDefs,
+        }),
     [entityDef, isLandscape, maxSummaryDefs, parentEntity, record, survey]
   );
 
@@ -124,9 +126,10 @@ export const NodeMultipleEntityListComponent = (props) => {
         onlyKeys: false,
         lang,
         summaryDefs: visibleNodeDefs,
+        t
       }),
     }),
-    [survey, record, lang, visibleNodeDefs]
+    [survey, record, lang, t, visibleNodeDefs]
   );
 
   const rows = useMemo(() => {

@@ -3,10 +3,12 @@ import { useSelector } from "react-redux";
 
 import { NodeDefs, Objects, Records, Surveys } from "@openforis/arena-core";
 
+import { useTranslation } from "localization";
 import { RecordNodes } from "model";
 import { DataEntrySelectors, SurveySelectors } from "state";
 
 export const useBreadcrumbItems = () => {
+  const { t } = useTranslation();
   const survey = SurveySelectors.useCurrentSurvey();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const currentPageEntity = DataEntrySelectors.useCurrentPageEntity();
@@ -29,6 +31,7 @@ export const useBreadcrumbItems = () => {
             entity,
             lang,
             emptyValue: null,
+            t,
           });
         const keyValuesText =
           Object.values(keyValuesByName)
