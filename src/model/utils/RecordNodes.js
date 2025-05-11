@@ -28,6 +28,11 @@ const coordinateAttributeNumericFields = [
   valuePropsCoordinate[valuePropsCoordinate.altitudeAccuracy],
 ];
 
+const yesNoValueByBooleanValue = {
+  true: "yes",
+  false: "no",
+};
+
 const getNodeName = ({ survey, record, nodeUuid }) => {
   const node = Records.getNodeByUuid(nodeUuid)(record);
   if (node) {
@@ -83,6 +88,17 @@ const getRootEntityKeysFormatted = ({
     showLabel,
   });
 
+const formatBooleanValue = ({ nodeDef, value, t }) => {
+  if (Objects.isEmpty(value)) return "";
+  const booleanValueString = String(String(value) === "true");
+  const labelValue = nodeDef.props.labelValue ?? "trueFalse";
+  const labelKey =
+    labelValue === "trueFalse"
+      ? booleanValueString
+      : yesNoValueByBooleanValue[booleanValueString];
+  return t(`common:${labelKey}`);
+};
+
 const getEntitySummaryValuesByNameFormatted = ({
   survey,
   record,
@@ -91,6 +107,7 @@ const getEntitySummaryValuesByNameFormatted = ({
   lang,
   summaryDefs: summaryDefsParam = null,
   emptyValue = EMPTY_VALUE,
+  t,
 }) => {
   const { cycle } = record;
   const entityDef = Surveys.getNodeDefByUuid({
@@ -109,17 +126,25 @@ const getEntitySummaryValuesByNameFormatted = ({
     let formattedValue = "";
     try {
       const summaryNode = Records.getChild(entity, summaryDef.uuid)(record);
-      formattedValue = summaryNode
-        ? NodeValueFormatter.format({
-            survey,
-            cycle,
-            nodeDef: summaryDef,
-            node: summaryNode,
-            value: summaryNode.value,
-            showLabel: true,
-            lang,
-          })
-        : "";
+      if (!summaryNode) {
+        formattedValue = "";
+      } else if (NodeDefs.getType(summaryDef) === NodeDefType.boolean) {
+        formattedValue = formatBooleanValue({
+          nodeDef: summaryDef,
+          value: summaryNode.value,
+          t,
+        });
+      } else {
+        formattedValue = NodeValueFormatter.format({
+          survey,
+          cycle,
+          nodeDef: summaryDef,
+          node: summaryNode,
+          value: summaryNode.value,
+          showLabel: true,
+          lang,
+        });
+      }
     } catch (error) {
       //ignore it
     }
@@ -297,6 +322,7 @@ const getApplicableSummaryDefs = ({
 
 export const RecordNodes = {
   getNodeName,
+  formatBooleanValue,
   getEntityKeysFormatted,
   getRootEntityKeysFormatted,
   getEntitySummaryValuesByNameFormatted,
