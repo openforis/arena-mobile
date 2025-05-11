@@ -1,6 +1,8 @@
-import { Languages, LanguagesISO639part2 } from "@openforis/arena-core";
-import { Taxa } from "model/Taxa";
 import { useMemo } from "react";
+
+import { LanguagesISO639part2 } from "@openforis/arena-core";
+
+import { Taxa } from "model/Taxa";
 
 const calculateVernacularNamesCount = (taxon) =>
   Object.values(taxon.vernacularNames).reduce(
