@@ -79,7 +79,8 @@ const filterItems =
     ) {
       const taxon = taxa[index];
 
-      const { vernacularName, vernacularNamesCount } = taxon;
+      const { vernacularName, vernacularNamesCount, vernacularNamesJoint } =
+        taxon;
       const singleVernacularName = vernacularNamesCount === 1;
       if (
         alwaysIncludeSingleVernacularName &&
@@ -92,6 +93,8 @@ const filterItems =
       const { code } = taxon.props;
       const codeForSearch = preparePartForSearch(code);
       const vernacularNameParts = extractPartsForSearch(vernacularName);
+      const vernacularNamesJointParts =
+        extractPartsForSearch(vernacularNamesJoint);
 
       const itemLabel = itemLabelExtractor({ nodeDef })(taxon);
       const itemLabelParts = extractPartsForSearch(itemLabel);
@@ -100,8 +103,12 @@ const filterItems =
       const matchingLabel = inputValueParts.every((inputValuePart) =>
         itemLabelParts.some((part) => part.startsWith(inputValuePart))
       );
-      const matchingVernarcularName = inputValueParts.every((inputValuePart) =>
-        vernacularNameParts.some((part) => part.startsWith(inputValuePart))
+      const matchingVernarcularName = inputValueParts.every(
+        (inputValuePart) =>
+          vernacularNameParts.some((part) => part.startsWith(inputValuePart)) ||
+          vernacularNamesJointParts.some((part) =>
+            part.startsWith(inputValuePart)
+          )
       );
       if (
         ((matchingCode || matchingLabel) &&
