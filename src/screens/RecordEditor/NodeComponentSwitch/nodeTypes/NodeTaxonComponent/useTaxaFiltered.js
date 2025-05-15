@@ -9,12 +9,17 @@ import { useTaxa } from "./useTaxa";
 const alwaysIncludeTaxaFunction = (item) =>
   [Taxa.unlistedCode, Taxa.unknownCode].includes(item.props.code);
 
-export const useTaxaFiltered = ({ nodeDef, parentNodeUuid }) => {
+export const useTaxaFiltered = ({
+  nodeDef,
+  parentNodeUuid,
+  joinVernacularNames = false,
+}) => {
   const survey = SurveySelectors.useCurrentSurvey();
   const taxonomyUuid = NodeDefs.getTaxonomyUuid(nodeDef);
   const { taxa, unknownTaxon, unlistedTaxon } = useTaxa({
     survey,
     taxonomyUuid,
+    joinVernacularNames,
   });
   const taxaFiltered = useItemsFilter({
     nodeDef,
