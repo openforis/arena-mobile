@@ -1,8 +1,7 @@
 import { useMemo } from "react";
 
-import { LanguagesISO639part2 } from "@openforis/arena-core";
-
 import { Taxa } from "model/Taxa";
+import { LanguageUtils } from "utils/LanguageUtils";
 
 const calculateVernacularNamesCount = (taxon) =>
   Object.values(taxon.vernacularNames).reduce(
@@ -31,7 +30,7 @@ const joinVernacularNameObjects = ({ taxonItem }) =>
           return vernacularName;
         })
         .join(" / ");
-      const langText = LanguagesISO639part2[lang]?.["en"] ?? lang;
+      const langText = LanguageUtils.getLanguageLabel(lang);
       acc.push(`${vernacularNamesInLangJoint} (${langText})`);
       return acc;
     }, [])
