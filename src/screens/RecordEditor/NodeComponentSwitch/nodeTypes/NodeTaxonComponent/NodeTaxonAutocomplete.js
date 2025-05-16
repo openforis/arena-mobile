@@ -63,6 +63,43 @@ const preparePartForSearch = (part) => part.toLocaleLowerCase();
 const extractPartsForSearch = (value) =>
   value?.trim()?.split(" ").map(preparePartForSearch) ?? [];
 
+const isTaxonMatchingFilter = ({ nodeDef, taxon, inputValueParts }) => {
+  const { vernacularName, vernacularNamesCount, vernacularNamesJoint } = taxon;
+  const singleVernacularName = vernacularNamesCount === 1;
+  if (
+    alwaysIncludeSingleVernacularName &&
+    singleVernacularName &&
+    !vernacularName
+  ) {
+    // skip taxon without vernacular name specified
+    return false;
+  }
+  const { code } = taxon.props;
+  const codeForSearch = preparePartForSearch(code);
+  const vernacularNameParts = extractPartsForSearch(vernacularName);
+  const vernacularNamesJointParts = extractPartsForSearch(vernacularNamesJoint);
+
+  const itemLabel = itemLabelExtractor({ nodeDef })(taxon);
+  const itemLabelParts = extractPartsForSearch(itemLabel);
+
+  const matchingCode = codeForSearch.startsWith(inputValueParts[0]);
+  const matchingLabel = inputValueParts.every((inputValuePart) =>
+    itemLabelParts.some((part) => part.startsWith(inputValuePart))
+  );
+  const matchingVernarcularName = inputValueParts.every(
+    (inputValuePart) =>
+      vernacularNameParts.some((part) => part.startsWith(inputValuePart)) ||
+      vernacularNamesJointParts.some((part) => part.startsWith(inputValuePart))
+  );
+  return (
+    ((matchingCode || matchingLabel) &&
+      (alwaysIncludeVernacularNames ||
+        !vernacularName ||
+        (alwaysIncludeSingleVernacularName && singleVernacularName))) ||
+    matchingVernarcularName
+  );
+};
+
 const filterItems =
   ({ nodeDef, unlistedTaxon, unknownTaxon }) =>
   ({ items: taxa, filterInputValue }) => {
@@ -78,45 +115,7 @@ const filterItems =
       index++
     ) {
       const taxon = taxa[index];
-
-      const { vernacularName, vernacularNamesCount, vernacularNamesJoint } =
-        taxon;
-      const singleVernacularName = vernacularNamesCount === 1;
-      if (
-        alwaysIncludeSingleVernacularName &&
-        singleVernacularName &&
-        !vernacularName
-      ) {
-        // skip taxon without vernacular name specified
-        continue;
-      }
-      const { code } = taxon.props;
-      const codeForSearch = preparePartForSearch(code);
-      const vernacularNameParts = extractPartsForSearch(vernacularName);
-      const vernacularNamesJointParts =
-        extractPartsForSearch(vernacularNamesJoint);
-
-      const itemLabel = itemLabelExtractor({ nodeDef })(taxon);
-      const itemLabelParts = extractPartsForSearch(itemLabel);
-
-      const matchingCode = codeForSearch.startsWith(inputValueParts[0]);
-      const matchingLabel = inputValueParts.every((inputValuePart) =>
-        itemLabelParts.some((part) => part.startsWith(inputValuePart))
-      );
-      const matchingVernarcularName = inputValueParts.every(
-        (inputValuePart) =>
-          vernacularNameParts.some((part) => part.startsWith(inputValuePart)) ||
-          vernacularNamesJointParts.some((part) =>
-            part.startsWith(inputValuePart)
-          )
-      );
-      if (
-        ((matchingCode || matchingLabel) &&
-          (alwaysIncludeVernacularNames ||
-            !vernacularName ||
-            (alwaysIncludeSingleVernacularName && singleVernacularName))) ||
-        matchingVernarcularName
-      ) {
+      if (isTaxonMatchingFilter({ nodeDef, taxon, inputValueParts })) {
         taxaFiltered.push(taxon);
       }
     }
@@ -134,10 +133,11 @@ export const NodeTaxonAutocomplete = (props) => {
       `rendering NodeTaxonAutocomplete for ${NodeDefs.getName(nodeDef)}`
     );
   }
+
   const { taxa, unlistedTaxon, unknownTaxon } = useTaxaFiltered({
     nodeDef,
     parentNodeUuid,
-    joinVernacularNames: true,
+    joinVernacularNames: !NodeDefs.isVernacularNameSelectionKept(nodeDef),
   });
 
   const onSelectedItemsChange = useCallback(

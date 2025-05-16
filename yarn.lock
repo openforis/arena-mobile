@@ -3271,9 +3271,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< Updated upstream
 "@openforis/arena-core@npm:^1.0.24":
   version: 1.0.24
   resolution: "@openforis/arena-core@npm:1.0.24::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40openforis%2Farena-core%2F1.0.24%2Fe224ea2f8d104dc7f51668abb5e6cc564bbfa2a7"
+=======
+"@openforis/arena-core@npm:^1.0.23":
+  version: 1.0.23
+  resolution: "@openforis/arena-core@npm:1.0.23::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40openforis%2Farena-core%2F1.0.23%2Fd0769aaf24166eb58287ec119bce297a27ee9408"
+>>>>>>> Stashed changes
   dependencies:
     "@jsep-plugin/regex": "npm:^1.0.4"
     bignumber.js: "npm:^9.1.2"
@@ -3285,7 +3291,11 @@ __metadata:
     moment: "npm:^2.30.1"
     proj4: "npm:^2.15.0"
     uuid: "npm:^11.0.3"
+<<<<<<< Updated upstream
   checksum: 10c0/9f021c142fba54e2eb2d8c8179add345cca1c487df3f1365e1b696656b85ffa7161a6ceed840bf5bd874cf15386e5bcc94b2724a541c29d598d5e8b3e22914d9
+=======
+  checksum: 10c0/0a1f0bcd1f218fb49a8e25b9bd2339c0560f5de4df9883afa835af473beb8831bd5bd4cf7a8a257ee57d79cc8168c1c10e0267dd3d74bde4c2f7dd2b8fda9da7
+>>>>>>> Stashed changes
   languageName: node
   linkType: hard
 
@@ -4729,7 +4739,11 @@ __metadata:
     "@eslint/js": "npm:^9.21.0"
     "@expo/webpack-config": "npm:~19.0.1"
     "@miblanchard/react-native-slider": "npm:^2.6.0"
+<<<<<<< Updated upstream
     "@openforis/arena-core": "npm:^1.0.24"
+=======
+    "@openforis/arena-core": "npm:^1.0.23"
+>>>>>>> Stashed changes
     "@react-native-async-storage/async-storage": "npm:1.23.1"
     "@react-native-clipboard/clipboard": "npm:^1.15.0"
     "@react-native-community/datetimepicker": "npm:8.2.0"
