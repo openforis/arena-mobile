@@ -1,5 +1,7 @@
 import { NodeDefs } from "@openforis/arena-core";
 
+import { LanguageUtils } from "utils";
+
 const unlistedCode = "UNL";
 const unknownCode = "UNK";
 
@@ -23,7 +25,7 @@ const taxonToString = ({ nodeDef, taxon }) => {
   const vernacularNamePart =
     !vernacularName || !vernacularNameVisible
       ? ""
-      : `${vernacularName} (${vernacularNameLangCode})`;
+      : `${vernacularName} (${LanguageUtils.getLanguageLabel(vernacularNameLangCode)})`;
 
   const codePart = codeVisible ? `(${code})` : "";
 
@@ -35,8 +37,4 @@ ${vernacularNamePart}`,
   };
 };
 
-export const Taxa = {
-  unlistedCode,
-  unknownCode,
-  taxonToString,
-};
+export const Taxa = { unlistedCode, unknownCode, taxonToString };
