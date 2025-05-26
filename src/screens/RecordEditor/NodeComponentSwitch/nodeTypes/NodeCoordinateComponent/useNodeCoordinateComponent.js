@@ -209,14 +209,20 @@ export const useNodeCoordinateComponent = (props) => {
     watchingLocation,
   } = useLocationWatch({ locationCallback });
 
-  const distanceTarget = useSelector((state) => {
+  // Get the distance target for the coordinate node
+  const [distanceTarget, setDistanceTarget] = useState(null);
+  useSelector((state) => {
     const record = DataEntrySelectors.selectRecord(state);
     const node = Records.getNodeByUuid(nodeUuid)(record);
-    return RecordNodes.getCoordinateDistanceTarget({
+    RecordNodes.getCoordinateDistanceTarget({
       survey,
       nodeDef,
       record,
       node,
+    }).then((_distanceTarget) => {
+      if (!Objects.isEqual(_distanceTarget, distanceTarget)) {
+        setDistanceTarget(_distanceTarget);
+      }
     });
   }, Objects.isEqual);
 
