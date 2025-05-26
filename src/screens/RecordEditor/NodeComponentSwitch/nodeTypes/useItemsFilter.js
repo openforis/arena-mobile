@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSelector } from "react-redux";
 
 import {
@@ -14,8 +15,10 @@ export const useItemsFilter = ({
   parentNodeUuid,
   items,
   alwaysIncludeItemFunction = null,
-}) =>
-  useSelector((state) => {
+}) => {
+  const [filteredItems, setFilteredItems] = useState([]);
+
+  return useSelector((state) => {
     const itemsFilter = NodeDefs.getItemsFilter(nodeDef);
     if (items.length === 0 || Objects.isEmpty(itemsFilter) || !parentNodeUuid)
       return items;
@@ -24,19 +27,30 @@ export const useItemsFilter = ({
     const record = DataEntrySelectors.selectRecord(state);
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
     const expressionEvaluator = new RecordExpressionEvaluator();
-    return items.filter((item) => {
-      if (alwaysIncludeItemFunction?.(item)) return true;
+    Promise.all(
+      items.map((item) => {
+        if (alwaysIncludeItemFunction?.(item)) return true;
 
-      try {
-        return expressionEvaluator.evalExpression({
-          survey,
-          record,
-          node: parentNode,
-          query: itemsFilter,
-          item,
-        });
-      } catch (error) {
-        return false;
+        try {
+          return expressionEvaluator.evalExpression({
+            survey,
+            record,
+            node: parentNode,
+            query: itemsFilter,
+            item,
+          });
+        } catch (error) {
+          return false;
+        }
+      })
+    ).then((_itemsFilterResults) => {
+      const _filteredItems = items.filter(
+        (_, index) => _itemsFilterResults[index]
+      );
+      if (!Objects.isEqual(_filteredItems, filteredItems)) {
+        setFilteredItems(_filteredItems);
       }
     });
+    return filteredItems;
   }, Objects.isEqual);
+};
