@@ -10,6 +10,7 @@ import { useTaxaFiltered } from "./useTaxaFiltered";
 
 const alwaysIncludeVernacularNames = false;
 const alwaysIncludeSingleVernacularName = true;
+const maxTaxaDisplayed = 100;
 
 const itemKeyExtractor = (item) => `${item?.uuid}_${item?.vernacularNameUuid}`;
 
@@ -108,10 +109,9 @@ const filterItems =
     }
     const inputValueParts = extractPartsForSearch(filterInputValue);
     const taxaFiltered = [];
-    const limit = 30;
     for (
       let index = 0;
-      index < taxa.length && taxaFiltered.length < limit;
+      index < taxa.length && taxaFiltered.length < maxTaxaDisplayed;
       index++
     ) {
       const taxon = taxa[index];
@@ -154,15 +154,25 @@ export const NodeTaxonAutocomplete = (props) => {
     [nodeDef, unknownTaxon, unlistedTaxon]
   );
 
+  const selectedItems = useMemo(
+    () => (selectedTaxon ? [selectedTaxon] : []),
+    [selectedTaxon]
+  );
+
+  const nodeDefItemLabelExtractor = useMemo(
+    () => itemLabelExtractor({ nodeDef }),
+    [nodeDef]
+  );
+
   return (
     <SelectableListWithFilter
       filterItems={filterItemsCallback}
       itemKeyExtractor={itemKeyExtractor}
-      itemLabelExtractor={itemLabelExtractor({ nodeDef })}
+      itemLabelExtractor={nodeDefItemLabelExtractor}
       itemDescriptionExtractor={itemDescriptionExtractor}
       items={taxa}
       onSelectedItemsChange={onSelectedItemsChange}
-      selectedItems={selectedTaxon ? [selectedTaxon] : []}
+      selectedItems={selectedItems}
     />
   );
 };
