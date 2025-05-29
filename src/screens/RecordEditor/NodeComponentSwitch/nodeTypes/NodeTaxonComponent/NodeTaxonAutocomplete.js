@@ -10,6 +10,7 @@ import { useTaxaFiltered } from "./useTaxaFiltered";
 
 const alwaysIncludeVernacularNames = false;
 const alwaysIncludeSingleVernacularName = true;
+const maxDisplayedItems = 50;
 
 const itemKeyExtractor = (item) => `${item?.uuid}_${item?.vernacularNameUuid}`;
 
@@ -66,14 +67,6 @@ const extractPartsForSearch = (value) =>
 const isTaxonMatchingFilter = ({ nodeDef, taxon, inputValueParts }) => {
   const { vernacularName, vernacularNamesCount, vernacularNamesJoint } = taxon;
   const singleVernacularName = vernacularNamesCount === 1;
-  if (
-    alwaysIncludeSingleVernacularName &&
-    singleVernacularName &&
-    !vernacularName
-  ) {
-    // skip taxon without vernacular name specified
-    return false;
-  }
   const { code } = taxon.props;
   const codeForSearch = preparePartForSearch(code);
   const vernacularNameParts = extractPartsForSearch(vernacularName);
@@ -108,10 +101,9 @@ const filterItems =
     }
     const inputValueParts = extractPartsForSearch(filterInputValue);
     const taxaFiltered = [];
-    const limit = 30;
     for (
       let index = 0;
-      index < taxa.length && taxaFiltered.length < limit;
+      index < taxa.length && taxaFiltered.length < maxDisplayedItems;
       index++
     ) {
       const taxon = taxa[index];
@@ -150,7 +142,7 @@ export const NodeTaxonAutocomplete = (props) => {
   );
 
   const filterItemsCallback = useMemo(
-    () => filterItems({ nodeDef, unlistedTaxon, unknownTaxon }),
+    () => filterItems({ nodeDef, unknownTaxon, unlistedTaxon }),
     [nodeDef, unknownTaxon, unlistedTaxon]
   );
 
