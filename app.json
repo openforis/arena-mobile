@@ -3,7 +3,7 @@
     "name": "Arena Mobile 2",
     "slug": "arena-mobile",
     "owner": "openforis",
-    "version": "2.0.10",
+    "version": "2.0.11",
     "icon": "./assets/logo/icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
+    "updates": { "fallbackToCacheTimeout": 0 },
     "assetBundlePatterns": ["**/*"],
     "android": {
       "adaptiveIcon": {
@@ -21,14 +19,12 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "org.openforis.arena_mobile",
-      "versionCode": 15
+      "versionCode": 16
     },
     "ios": {
-      "buildNumber": "15",
+      "buildNumber": "16",
       "bundleIdentifier": "org.openforis.arena-mobile",
-      "config": {
-        "usesNonExemptEncryption": false
-      },
+      "config": { "usesNonExemptEncryption": false },
       "infoPlist": {
         "LSMinimumSystemVersion": "13.0",
         "NSCameraUsageDescription": "Camera is used only when collecting images in file attributes (if defined in your survey).",
@@ -39,29 +35,11 @@
       },
       "supportsTablet": true
     },
-    "web": {
-      "favicon": "./assets/logo/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "adc829ff-2bf8-4733-9e03-051d16d0f9ca"
-      }
-    },
+    "web": { "favicon": "./assets/logo/favicon.png" },
+    "extra": { "eas": { "projectId": "adc829ff-2bf8-4733-9e03-051d16d0f9ca" } },
     "plugins": [
-      [
-        "expo-asset",
-        {
-          "assets": ["assets"]
-        }
-      ],
-      [
-        "expo-build-properties",
-        {
-          "ios": {
-            "deploymentTarget": "15.5"
-          }
-        }
-      ],
+      ["expo-asset", { "assets": ["assets"] }],
+      ["expo-build-properties", { "ios": { "deploymentTarget": "15.5" } }],
       [
         "./plugins/modifyAndroidManifestAttributes",
         {
