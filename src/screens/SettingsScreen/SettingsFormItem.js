@@ -2,16 +2,19 @@ import { useMemo } from "react";
 import PropTypes from "prop-types";
 
 import { Text, VView, View } from "components";
-import { useIsTextDirectionRtl } from "localization";
+import { i18n, useIsTextDirectionRtl } from "localization";
 
 import styles from "./styles";
+
+const determineTextKey = (...possibleKeys) =>
+  possibleKeys.find((possibleKey) => possibleKey && i18n.exists(possibleKey));
 
 export const SettingsFormItem = (props) => {
   const {
     settingKey,
-    labelKey,
+    labelKey: labelKeyProp,
     labelParams,
-    descriptionKey,
+    descriptionKey: descriptionKeyProp,
     descriptionParams,
     direction = "vertical",
     children,
@@ -28,6 +31,17 @@ export const SettingsFormItem = (props) => {
             isRtl ? { flexDirection: "row-reverse" } : undefined,
           ],
     [direction, isRtl]
+  );
+
+  const labelKey = determineTextKey(
+    labelKeyProp,
+    `settings:${settingKey}.label`,
+    `settings:${settingKey}`
+  );
+
+  const descriptionKey = determineTextKey(
+    descriptionKeyProp,
+    `settings:${settingKey}.description`
   );
 
   return (

@@ -14,15 +14,26 @@ import { useConfirm } from "state/confirm";
 import { Files, ImageUtils } from "utils";
 
 import { useNodeComponentLocalState } from "screens/RecordEditor/useNodeComponentLocalState";
+import { SettingsSelectors } from "state/settings";
 
 const mediaTypesByFileType = {
   [NodeDefFileType.image]: ImagePicker.MediaTypeOptions.Images,
   [NodeDefFileType.video]: ImagePicker.MediaTypeOptions.Videos,
 };
 
+const determineFileMaxSize = ({ nodeDef, settings }) => {
+  const { imageSizeLimit, imageSizeUnlimited } = settings;
+  const nodeDefFileMaxSize = NodeDefs.getFileMaxSize(nodeDef);
+  if (imageSizeUnlimited) {
+    return nodeDefFileMaxSize;
+  }
+  return Math.min(nodeDefFileMaxSize ?? 0, imageSizeLimit ?? 0);
+};
+
 export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
   const toaster = useToast();
   const confirm = useConfirm();
+  const settings = SettingsSelectors.useSettings();
 
   const { request: requestCameraPermission } = useRequestCameraPermission();
 
@@ -30,8 +41,8 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
     useRequestMediaLibraryPermission();
 
   const fileType = NodeDefs.getFileType(nodeDef) ?? NodeDefFileType.other;
-  const maxSizeMB = NodeDefs.getFileMaxSize(nodeDef) ?? 10;
-  const maxSize = maxSizeMB * Math.pow(1024, 2); // nodeDef maxSize is in MB
+  const maxSizeMB = determineFileMaxSize({ nodeDef, settings });
+  const maxSize = maxSizeMB ? maxSizeMB * Math.pow(1024, 2) : undefined;
 
   const mediaTypes =
     mediaTypesByFileType[fileType] ?? ImagePicker.MediaTypeOptions.All;
@@ -58,7 +69,11 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
       let fileUri = sourceFileUri;
       let fileSize = sourceFileSize;
 
-      if (fileType === NodeDefFileType.image && sourceFileSize > maxSize) {
+      if (
+        fileType === NodeDefFileType.image &&
+        maxSize &&
+        sourceFileSize > maxSize
+      ) {
         // resize image
         setResizing(true);
         const {
