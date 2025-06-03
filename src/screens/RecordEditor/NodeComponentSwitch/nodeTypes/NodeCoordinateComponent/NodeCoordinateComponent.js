@@ -28,6 +28,7 @@ export const NodeCoordinateComponent = (props) => {
     editable,
     hideCompassNavigator,
     includedExtraFields,
+    inputFieldsEditable,
     locationAccuracyThreshold,
     locationWatchElapsedTime,
     locationWatchTimeout,
@@ -49,7 +50,7 @@ export const NodeCoordinateComponent = (props) => {
       <HView key={fieldKey} style={styles.formItem}>
         <Text style={labelStyle} textKey={`dataEntry:coordinate.${fieldKey}`} />
         <TextInput
-          editable={editable && !watchingLocation}
+          editable={inputFieldsEditable && !watchingLocation}
           keyboardType="numeric"
           style={[
             styles.numericTextInput,
@@ -60,7 +61,13 @@ export const NodeCoordinateComponent = (props) => {
         />
       </HView>
     ),
-    [applicable, editable, onChangeValueField, uiValue, watchingLocation]
+    [
+      applicable,
+      inputFieldsEditable,
+      onChangeValueField,
+      uiValue,
+      watchingLocation,
+    ]
   );
 
   return (
