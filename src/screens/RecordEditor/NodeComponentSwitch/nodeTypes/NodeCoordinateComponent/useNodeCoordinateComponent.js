@@ -284,9 +284,9 @@ export const useNodeCoordinateComponent = (props) => {
     [nodeDef, srs, srsIndex, onValueChange]
   );
 
-  const editable =
-    !NodeDefs.isReadOnly(nodeDef) &&
-    !NodeDefs.isAllowOnlyDeviceCoordinate(nodeDef);
+  const editable = !NodeDefs.isReadOnly(nodeDef);
+  const inputFieldsEditable =
+    editable && !NodeDefs.isAllowOnlyDeviceCoordinate(nodeDef);
 
   const deleteButtonVisible =
     editable &&
@@ -303,6 +303,7 @@ export const useNodeCoordinateComponent = (props) => {
     editable,
     hideCompassNavigator,
     includedExtraFields,
+    inputFieldsEditable,
     locationAccuracyThreshold,
     locationWatchElapsedTime,
     locationWatchProgress,

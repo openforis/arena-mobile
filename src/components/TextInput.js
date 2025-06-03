@@ -32,9 +32,17 @@ export const TextInput = forwardRef(function TextInput(props, ref) {
   const label = t(labelKey);
   const placeholder = t(placeholderKey);
 
-  const notEditableStyle = { backgroundColor: theme.colors.surfaceVariant };
+  const notEditableStyle = {
+    backgroundColor: theme.colors.surfaceVariant,
+  };
 
   const style = [...(showAsReadOnly ? [notEditableStyle] : []), styleProp];
+
+  const textColor = showAsReadOnly
+    ? theme.dark
+      ? theme.colors.background // workaround for dark theme: onSurfaceVariant would be too light
+      : theme.colors.onSurfaceVariant
+    : undefined;
 
   return (
     <RNPTextInput
@@ -53,6 +61,7 @@ export const TextInput = forwardRef(function TextInput(props, ref) {
       ref={ref}
       secureTextEntry={secureTextEntry}
       style={style}
+      textColor={textColor}
       theme={theme}
       value={value}
       {...otherProps}
