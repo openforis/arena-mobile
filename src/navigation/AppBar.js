@@ -9,6 +9,8 @@ import { HView, Spacer, Text } from "components";
 import { useScreenKey } from "hooks";
 import { RecordEditViewMode, ScreenViewMode } from "model";
 import { useIsTextDirectionRtl, useTranslation } from "localization";
+import { screenKeys } from "screens";
+import { Breadcrumbs } from "screens/RecordEditor/Breadcrumbs";
 import {
   DataEntryActions,
   DataEntrySelectors,
@@ -19,12 +21,10 @@ import {
   SurveyOptionsSelectors,
   SurveySelectors,
 } from "state";
-import { screenKeys } from "screens";
-import { Breadcrumbs } from "screens/RecordEditor/Breadcrumbs";
-import { OptionsMenu } from "./OptionsMenu";
-
-import styles from "./styles";
 import { BaseStyles } from "utils/BaseStyles";
+
+import { OptionsMenu } from "./OptionsMenu";
+import styles from "./styles";
 
 export const AppBar = (props) => {
   if (__DEV__) {
@@ -122,7 +122,11 @@ export const AppBar = (props) => {
   }, [dispatch, isLinkedToPreviousCycleRecord]);
 
   return (
-    <RNPAppbar.Header elevated mode={isInTwoRows ? "medium" : "small"}>
+    <RNPAppbar.Header
+      elevated
+      mode={isInTwoRows ? "medium" : "small"}
+      statusBarHeight={0}
+    >
       <HView style={styles.topBarContainer} fullWidth transparent>
         {editingRecord && (
           <RNPAppbar.Action

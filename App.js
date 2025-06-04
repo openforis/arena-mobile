@@ -5,16 +5,16 @@ import { configureStore } from "@reduxjs/toolkit";
 import { Provider as PaperProvider, ThemeProvider } from "react-native-paper";
 import { StatusBar } from "expo-status-bar";
 import ErrorBoundary from "react-native-error-boundary";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { AppConfirmDialog } from "appComponents/AppConfirmDialog";
 import { AppMessageDialog } from "appComponents/AppMessageDialog";
 import { JobMonitorDialog } from "appComponents/JobMonitorDialog";
 import { AppToast } from "appComponents/AppToast";
 import { ErrorFallbackComponent } from "appComponents/ErrorFallbackComponent";
-
+import { useEffectiveTheme } from "hooks";
 import { AppStack } from "navigation/AppStack";
 import { rootReducer } from "state/reducers";
-import { useEffectiveTheme } from "hooks";
 import { BaseStyles, Environment } from "utils";
 
 import { AppInitializer } from "./src/AppInitializer";
@@ -33,7 +33,9 @@ const AppInnerContainer = () => {
 
   const internalContainer = (
     <AppInitializer>
-      <AppStack />
+      <SafeAreaView style={{ flex: 1 }}>
+        <AppStack />
+      </SafeAreaView>
     </AppInitializer>
   );
 

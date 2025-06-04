@@ -24,12 +24,6 @@ export const HomeScreen = () => {
       <VView style={styles.container}>
         <AppLogo />
 
-        <Text
-          style={styles.appTitle}
-          variant="headlineSmall"
-          textKey="common:appTitle"
-        />
-
         <VersionNumberInfoButton />
 
         <LoginInfo />
