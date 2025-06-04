@@ -8,10 +8,7 @@ import { SettingsSelectors } from "../state/settings/selectors";
 
 const defaultFontSize = 16;
 
-const ColorSchemeName = {
-  dark: "dark",
-  light: "light",
-};
+const ColorSchemeName = { dark: "dark", light: "light" };
 
 const themeByThemeSetting = {
   [ThemesSettings.light]: OFLightTheme,
@@ -23,7 +20,8 @@ const themeByThemeSetting = {
 const scaleFonts = (fontScale) => (fonts) => {
   if (fontScale === 1) return fonts;
   return Object.entries(fonts).reduce((acc, [fontKey, font]) => {
-    const fontSize = Math.floor(font.fontSize ?? defaultFontSize * fontScale);
+    const fontSizePrev = font.fontSize ?? defaultFontSize;
+    const fontSize = Math.floor(fontSizePrev * fontScale);
     const fontResized = { ...font, fontSize };
     acc[fontKey] = fontResized;
     return acc;
