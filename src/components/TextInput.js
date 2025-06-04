@@ -32,9 +32,7 @@ export const TextInput = forwardRef(function TextInput(props, ref) {
   const label = t(labelKey);
   const placeholder = t(placeholderKey);
 
-  const notEditableStyle = {
-    backgroundColor: theme.colors.surfaceVariant,
-  };
+  const notEditableStyle = { backgroundColor: theme.colors.surfaceVariant };
 
   const style = [...(showAsReadOnly ? [notEditableStyle] : []), styleProp];
 
