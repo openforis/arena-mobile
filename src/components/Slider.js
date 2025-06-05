@@ -1,5 +1,5 @@
 import React from "react";
-import { Slider as RNSlider } from "@miblanchard/react-native-slider";
+import RNSlider from "@react-native-community/slider";
 import { useTheme } from "react-native-paper";
 import PropTypes from "prop-types";
 

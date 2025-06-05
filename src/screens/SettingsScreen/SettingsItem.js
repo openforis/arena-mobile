@@ -98,8 +98,8 @@ export const SettingsItem = (props) => {
             maxValue={maxValue}
             step={step}
             value={value}
-            onValueChange={(values) =>
-              onValueChange(Numbers.roundToPrecision(values[0], 2))
+            onValueChange={(value) =>
+              onValueChange(Numbers.roundToPrecision(value, 2))
             }
           />
         </SettingsFormItem>
