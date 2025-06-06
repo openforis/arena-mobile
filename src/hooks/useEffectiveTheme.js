@@ -17,22 +17,24 @@ const themeByThemeSetting = {
   [ThemesSettings.dark2]: MD3DarkTheme,
 };
 
-const scaleFonts = (fontScale) => (fonts) => {
-  if (fontScale === 1) return fonts;
-  return Object.entries(fonts).reduce((acc, [fontKey, font]) => {
+const scaleFonts = (fontScale) => (fonts) =>
+  Object.entries(fonts).reduce((acc, [fontKey, font]) => {
     const fontSizePrev = font.fontSize ?? defaultFontSize;
     const fontSize = Math.floor(fontSizePrev * fontScale);
     const fontResized = { ...font, fontSize };
     acc[fontKey] = fontResized;
     return acc;
   }, {});
-};
 
 export const useEffectiveTheme = () => {
   const colorScheme = useColorScheme();
 
-  let { theme: themeSetting = ThemesSettings.auto, fontScale = 1 } =
-    SettingsSelectors.useSettings();
+  let {
+    theme: themeSetting = ThemesSettings.auto,
+    fontScale: settingsFontScale = 1,
+  } = SettingsSelectors.useSettings();
+
+  const fontScale = settingsFontScale <= 0 ? 1 : settingsFontScale;
 
   if (themeSetting === ThemesSettings.auto) {
     themeSetting =
@@ -40,6 +42,9 @@ export const useEffectiveTheme = () => {
   }
   return useMemo(() => {
     const theme = themeByThemeSetting[themeSetting];
+    if (fontScale === 1) {
+      return theme;
+    }
     const { fonts } = theme;
     const fontsResized = scaleFonts(fontScale)(fonts);
     return { ...theme, fonts: fontsResized };

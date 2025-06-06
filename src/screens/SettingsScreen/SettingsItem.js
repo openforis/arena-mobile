@@ -27,11 +27,9 @@ export const SettingsItem = (props) => {
 
   const onValueChange = useCallback(
     (val) => {
-      if (val !== value) {
-        onPropValueChange({ key: settingKey })(val);
-      }
+      onPropValueChange({ key: settingKey })(val);
     },
-    [onPropValueChange, settingKey, value]
+    [onPropValueChange, settingKey]
   );
 
   switch (type) {
