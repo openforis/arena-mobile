@@ -5,7 +5,7 @@ import { AppLogo } from "appComponents/AppLogo";
 import { GpsLockingEnabledWarning } from "appComponents/GpsLockingEnabledWarning";
 import { LoginInfo } from "appComponents/LoginInfo";
 import { VersionNumberInfoButton } from "appComponents/VersionNumberInfoButton";
-import { Button, ScreenView, Text, VView } from "components";
+import { Button, ScreenView, VView } from "components";
 import { SurveySelectors } from "state";
 
 import { screenKeys } from "../screenKeys";
@@ -23,12 +23,6 @@ export const HomeScreen = () => {
     <ScreenView>
       <VView style={styles.container}>
         <AppLogo />
-
-        <Text
-          style={styles.appTitle}
-          variant="headlineSmall"
-          textKey="common:appTitle"
-        />
 
         <VersionNumberInfoButton />
 

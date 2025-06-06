@@ -42,12 +42,18 @@ export const Dropdown = (props) => {
     [disabled, onChange]
   );
 
+  const textFont = theme.fonts.labelMedium;
+  const textFontSize = textFont.fontSize;
+
   return (
     <RNPDropdown
       disabled={disabled}
       dropDownContainerMaxHeight={300}
       dropDownItemStyle={{ backgroundColor: theme.colors.surfaceVariant }}
-      dropDownItemTextStyle={{ color: theme.colors.onSurfaceVariant }}
+      dropDownItemTextStyle={{
+        color: theme.colors.onSurfaceVariant,
+        fontSize: textFontSize,
+      }}
       label={label}
       list={options}
       mode="outlined"

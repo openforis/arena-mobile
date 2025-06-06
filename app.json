@@ -11,8 +11,12 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "updates": { "fallbackToCacheTimeout": 0 },
-    "assetBundlePatterns": ["**/*"],
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo/adaptive_icon.png",
@@ -24,7 +28,9 @@
     "ios": {
       "buildNumber": "17",
       "bundleIdentifier": "org.openforis.arena-mobile",
-      "config": { "usesNonExemptEncryption": false },
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "infoPlist": {
         "LSMinimumSystemVersion": "13.0",
         "NSCameraUsageDescription": "Camera is used only when collecting images in file attributes (if defined in your survey).",
@@ -35,11 +41,31 @@
       },
       "supportsTablet": true
     },
-    "web": { "favicon": "./assets/logo/favicon.png" },
-    "extra": { "eas": { "projectId": "adc829ff-2bf8-4733-9e03-051d16d0f9ca" } },
+    "web": {
+      "favicon": "./assets/logo/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "adc829ff-2bf8-4733-9e03-051d16d0f9ca"
+      }
+    },
     "plugins": [
-      ["expo-asset", { "assets": ["assets"] }],
-      ["expo-build-properties", { "ios": { "deploymentTarget": "15.5" } }],
+      [
+        "expo-asset",
+        {
+          "assets": [
+            "assets"
+          ]
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "15.5"
+          }
+        }
+      ],
       [
         "./plugins/modifyAndroidManifestAttributes",
         {
@@ -51,7 +77,9 @@
       ],
       "expo-asset",
       "expo-localization",
-      "expo-secure-store"
+      "expo-secure-store",
+      "expo-sqlite",
+      "expo-web-browser"
     ]
   }
 }

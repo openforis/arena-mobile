@@ -27,11 +27,9 @@ export const SettingsItem = (props) => {
 
   const onValueChange = useCallback(
     (val) => {
-      if (val !== value) {
-        onPropValueChange({ key: settingKey })(val);
-      }
+      onPropValueChange({ key: settingKey })(val);
     },
-    [onPropValueChange, settingKey, value]
+    [onPropValueChange, settingKey]
   );
 
   switch (type) {
@@ -98,8 +96,8 @@ export const SettingsItem = (props) => {
             maxValue={maxValue}
             step={step}
             value={value}
-            onValueChange={(values) =>
-              onValueChange(Numbers.roundToPrecision(values[0], 2))
+            onValueChange={(value) =>
+              onValueChange(Numbers.roundToPrecision(value, 2))
             }
           />
         </SettingsFormItem>

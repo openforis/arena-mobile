@@ -35,7 +35,6 @@ export const BreadcrumbItem = (props) => {
       <Button
         color={isLastItem ? "primary" : "secondary"}
         compact
-        labelStyle={styles.itemButtonLabel}
         onPress={onItemPress}
         style={styles.itemButton}
         textKey={item.name}
