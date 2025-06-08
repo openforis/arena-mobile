@@ -5,6 +5,12 @@ export default {
   fontScale: "مقیاس فونت: {{value}}",
   keepScreenAwake: "روشن نگه داشتن صفحه",
   fullScreen: "تمام صفحه",
+  imageSizeLimit: "حجم تصاویر محدود به: {{value}}MB",
+  imageSizeUnlimited: {
+    label: "حجم تصاویر نامحدود",
+    description:
+      "تصاویر با حداکثر وضوح ارائه شده توسط دستگاه ذخیره خواهند شد، مگر اینکه محدودیتی در طراح فرم نظرسنجی تعیین شده باشد.",
+  },
   language: {
     label: "زبان برنامه",
   },

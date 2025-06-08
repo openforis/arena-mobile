@@ -5,6 +5,12 @@ export default {
   fontScale: "Escala de fuente: {{value}}",
   keepScreenAwake: "Mantener pantalla activa",
   fullScreen: "Pantalla completa",
+  imageSizeLimit: "Tamaño de imágenes limitado a: {{value}}MB",
+  imageSizeUnlimited: {
+    label: "Tamaño de imágenes ilimitado",
+    description:
+      "Las imágenes se almacenarán con la máxima resolución proporcionada por el dispositivo, a menos que se establezca un límite en el diseñador del formulario de encuesta.",
+  },
   locationAccuracyThreshold: "Precisión de la ubicación (metros)",
   locationAccuracyWatchTimeout:
     "Tiempo de espera de la precisión de la ubicación: {{value}} segundos",

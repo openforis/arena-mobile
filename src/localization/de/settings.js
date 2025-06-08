@@ -5,6 +5,12 @@ export default {
   fontScale: "Schriftgröße: {{value}}",
   keepScreenAwake: "Bildschirm wach halten",
   fullScreen: "Vollbild",
+  imageSizeLimit: "Bildgröße beschränkt auf: {{value}}MB",
+  imageSizeUnlimited: {
+    label: "Bildgröße unbegrenzt",
+    description:
+      "Bilder werden in der maximalen Auflösung gespeichert, die vom Gerät bereitgestellt wird, es sei denn, im Umfrageformular-Designer ist ein Limit festgelegt.",
+  },
   language: {
     label: "Sprache der Anwendung",
   },

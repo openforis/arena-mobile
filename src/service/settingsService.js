@@ -12,6 +12,8 @@ const defaultSettings = {
   animationsEnabled: true,
   fontScale: 1,
   fullScreen: false,
+  imageSizeUnlimited: false,
+  imageSizeLimit: 2, // MB
   language: LanguageConstants.system,
   locationAccuracyThreshold: 3,
   locationAccuracyWatchTimeout: 120,
