@@ -34,6 +34,8 @@ const { checkLoggedInUser } = RemoteConnectionUtils;
 
 const testSurveyUuid = "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3";
 
+const minSurveysToShowSearchBar = 5;
+
 const determineSurveyStatus = ({ survey, remoteSurvey }) => {
   if (survey.uuid === testSurveyUuid) return null;
 
@@ -204,7 +206,7 @@ export const SurveysListLocal = () => {
 
   return (
     <VView style={styles.container}>
-      {surveys.length > 1 && (
+      {surveys.length > minSurveysToShowSearchBar && (
         <Searchbar value={searchValue} onChange={onSearchValueChange} />
       )}
       {surveysFiltered.length === 0 && (
