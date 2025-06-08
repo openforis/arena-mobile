@@ -3553,7 +3553,6 @@ __metadata:
     expo-sensors: "npm:~14.1.4"
     expo-sharing: "npm:~13.1.5"
     expo-sqlite: "npm:~15.2.11"
-    expo-status-bar: "npm:~2.2.3"
     expo-web-browser: "npm:~14.1.6"
     i18next: "npm:^23.16.8"
     lz-string: "npm:^1.5.0"
@@ -6237,19 +6236,6 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/32552a36b1660f1c5ab1ede69a9218153ee4721a567fa314197277550dd0658143d23cf23d1007cdb456bef5a513aadc915b6b753dc207ef2f9a6d6e23809cf0
-  languageName: node
-  linkType: hard
-
-"expo-status-bar@npm:~2.2.3":
-  version: 2.2.3
-  resolution: "expo-status-bar@npm:2.2.3"
-  dependencies:
-    react-native-edge-to-edge: "npm:1.6.0"
-    react-native-is-edge-to-edge: "npm:^1.1.6"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 10c0/8deee621bd94336c9f9bab500f199f6ec5320eaf448c3e4b26e762cf0d0ad34d08ccae9753124c7e966c92cb370eb7440a0a8afba33e904f4a9964e5da1346d0
   languageName: node
   linkType: hard
 
@@ -10744,7 +10730,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-is-edge-to-edge@npm:^1.1.6, react-native-is-edge-to-edge@npm:^1.1.7":
+"react-native-is-edge-to-edge@npm:^1.1.7":
   version: 1.1.7
   resolution: "react-native-is-edge-to-edge@npm:1.1.7"
   peerDependencies:

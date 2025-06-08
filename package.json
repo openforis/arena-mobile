@@ -41,7 +41,6 @@
     "expo-sensors": "~14.1.4",
     "expo-sharing": "~13.1.5",
     "expo-sqlite": "~15.2.11",
-    "expo-status-bar": "~2.2.3",
     "expo-web-browser": "~14.1.6",
     "i18next": "^23.16.8",
     "lz-string": "^1.5.0",
