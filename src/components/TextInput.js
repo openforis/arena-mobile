@@ -36,11 +36,7 @@ export const TextInput = forwardRef(function TextInput(props, ref) {
 
   const style = [...(showAsReadOnly ? [notEditableStyle] : []), styleProp];
 
-  const textColor = showAsReadOnly
-    ? theme.dark
-      ? theme.colors.background // workaround for dark theme: onSurfaceVariant would be too light
-      : theme.colors.onSurfaceVariant
-    : undefined;
+  const textColor = showAsReadOnly ? theme.colors.onSurfaceVariant : undefined;
 
   return (
     <RNPTextInput
