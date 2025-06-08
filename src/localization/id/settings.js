@@ -5,6 +5,12 @@ export default {
   fontScale: "Skala font: {{value}}",
   keepScreenAwake: "Layar tetap terjaga",
   fullScreen: "Layar penuh",
+  imageSizeLimit: "Ukuran gambar terbatas hingga: {{value}}MB",
+  imageSizeUnlimited: {
+    label: "Ukuran gambar tidak terbatas",
+    description:
+      "Gambar akan disimpan dalam resolusi maksimum yang disediakan oleh perangkat, kecuali jika batas diatur dalam desainer formulir survei.",
+  },
   language: {
     label: "Bahasa aplikasi",
   },

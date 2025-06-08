@@ -5,6 +5,12 @@ export default {
   fontScale: "Escala de fonte: {{value}}",
   keepScreenAwake: "Manter ecrã ativo",
   fullScreen: "Ecrã completo",
+  imageSizeLimit: "Tamanho das imagens limitado a: {{value}}MB",
+  imageSizeUnlimited: {
+    label: "Tamanho das imagens ilimitado",
+    description:
+      "As imagens serão armazenadas na resolução máxima fornecida pelo dispositivo, a menos que um limite seja definido no designer do formulário da pesquisa.",
+  },
   locationAccuracyThreshold: "Limite de precisão da localização (metros)",
   locationAccuracyWatchTimeout:
     "Tempo limite de verificação da precisão da localização: {{value}} segundos",

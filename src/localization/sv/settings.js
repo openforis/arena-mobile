@@ -5,6 +5,12 @@ export default {
   fontScale: "Fontskala: {{value}}",
   keepScreenAwake: "Håll skärmen vaken",
   fullScreen: "Helskärm",
+  imageSizeLimit: "Bildstorlek begränsad till: {{value}}MB",
+  imageSizeUnlimited: {
+    label: "Bildstorlek obegränsad",
+    description:
+      "Bilder kommer att lagras i den maximala upplösningen som tillhandahålls av enheten, såvida inte en gräns är inställd i enkätformulärsdesignern.",
+  },
   language: {
     label: "Applikationsspråk",
   },
