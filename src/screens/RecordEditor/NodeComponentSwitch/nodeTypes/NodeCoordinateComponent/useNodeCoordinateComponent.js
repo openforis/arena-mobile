@@ -209,14 +209,20 @@ export const useNodeCoordinateComponent = (props) => {
     watchingLocation,
   } = useLocationWatch({ locationCallback });
 
-  const distanceTarget = useSelector((state) => {
+  // Get the distance target for the coordinate node
+  const [distanceTarget, setDistanceTarget] = useState(null);
+  useSelector((state) => {
     const record = DataEntrySelectors.selectRecord(state);
     const node = Records.getNodeByUuid(nodeUuid)(record);
-    return RecordNodes.getCoordinateDistanceTarget({
+    RecordNodes.getCoordinateDistanceTarget({
       survey,
       nodeDef,
       record,
       node,
+    }).then((_distanceTarget) => {
+      if (!Objects.isEqual(_distanceTarget, distanceTarget)) {
+        setDistanceTarget(_distanceTarget);
+      }
     });
   }, Objects.isEqual);
 
@@ -278,9 +284,9 @@ export const useNodeCoordinateComponent = (props) => {
     [nodeDef, srs, srsIndex, onValueChange]
   );
 
-  const editable =
-    !NodeDefs.isReadOnly(nodeDef) &&
-    !NodeDefs.isAllowOnlyDeviceCoordinate(nodeDef);
+  const editable = !NodeDefs.isReadOnly(nodeDef);
+  const inputFieldsEditable =
+    editable && !NodeDefs.isAllowOnlyDeviceCoordinate(nodeDef);
 
   const deleteButtonVisible =
     editable &&
@@ -297,6 +303,7 @@ export const useNodeCoordinateComponent = (props) => {
     editable,
     hideCompassNavigator,
     includedExtraFields,
+    inputFieldsEditable,
     locationAccuracyThreshold,
     locationWatchElapsedTime,
     locationWatchProgress,

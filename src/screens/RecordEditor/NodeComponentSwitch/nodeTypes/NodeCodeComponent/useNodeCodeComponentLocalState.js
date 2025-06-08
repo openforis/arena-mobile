@@ -59,11 +59,7 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
         });
   }, [survey, nodeDef, parentItemUuid]);
 
-  const items = useItemsFilter({
-    nodeDef,
-    parentNodeUuid,
-    items: _items,
-  });
+  const items = useItemsFilter({ nodeDef, parentNodeUuid, items: _items });
 
   const selectedItems = useMemo(
     () =>
@@ -97,12 +93,7 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
       const value = NodeValues.newCodeValue({ itemUuid });
       if (NodeDefs.isSingle(nodeDef)) {
         const node = nodes[0];
-        dispatch(
-          DataEntryActions.updateAttribute({
-            uuid: node.uuid,
-            value,
-          })
-        );
+        dispatch(DataEntryActions.updateAttribute({ uuid: node.uuid, value }));
       } else if (maxCountReached) {
         dispatch(
           MessageActions.setInfo(
@@ -111,11 +102,7 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
         );
       } else {
         dispatch(
-          DataEntryActions.addNewAttribute({
-            nodeDef,
-            parentNodeUuid,
-            value,
-          })
+          DataEntryActions.addNewAttribute({ nodeDef, parentNodeUuid, value })
         );
       }
     },
@@ -127,10 +114,7 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
       if (NodeDefs.isSingle(nodeDef)) {
         const node = nodes[0];
         dispatch(
-          DataEntryActions.updateAttribute({
-            uuid: node.uuid,
-            value: null,
-          })
+          DataEntryActions.updateAttribute({ uuid: node.uuid, value: null })
         );
       } else {
         const nodeToRemove = nodes.find(
@@ -145,13 +129,9 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
   const onSingleValueChange = useCallback(
     (itemUuid) => {
       const node = nodes[0];
-      const value = NodeValues.newCodeValue({ itemUuid });
-      dispatch(
-        DataEntryActions.updateAttribute({
-          uuid: node.uuid,
-          value,
-        })
-      );
+      const wasSelected = NodeValues.getItemUuid(node) === itemUuid;
+      const value = wasSelected ? null : NodeValues.newCodeValue({ itemUuid });
+      dispatch(DataEntryActions.updateAttribute({ uuid: node.uuid, value }));
     },
     [dispatch, nodes]
   );

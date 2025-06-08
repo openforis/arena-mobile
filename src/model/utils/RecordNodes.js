@@ -28,6 +28,11 @@ const coordinateAttributeNumericFields = [
   valuePropsCoordinate[valuePropsCoordinate.altitudeAccuracy],
 ];
 
+const yesNoValueByBooleanValue = {
+  true: "yes",
+  false: "no",
+};
+
 const getNodeName = ({ survey, record, nodeUuid }) => {
   const node = Records.getNodeByUuid(nodeUuid)(record);
   if (node) {
@@ -83,6 +88,17 @@ const getRootEntityKeysFormatted = ({
     showLabel,
   });
 
+const formatBooleanValue = ({ nodeDef, value, t }) => {
+  if (Objects.isEmpty(value)) return "";
+  const booleanValueString = String(String(value) === "true");
+  const labelValue = nodeDef.props.labelValue ?? "trueFalse";
+  const labelKey =
+    labelValue === "trueFalse"
+      ? booleanValueString
+      : yesNoValueByBooleanValue[booleanValueString];
+  return t(`common:${labelKey}`);
+};
+
 const getEntitySummaryValuesByNameFormatted = ({
   survey,
   record,
@@ -91,6 +107,7 @@ const getEntitySummaryValuesByNameFormatted = ({
   lang,
   summaryDefs: summaryDefsParam = null,
   emptyValue = EMPTY_VALUE,
+  t,
 }) => {
   const { cycle } = record;
   const entityDef = Surveys.getNodeDefByUuid({
@@ -109,17 +126,25 @@ const getEntitySummaryValuesByNameFormatted = ({
     let formattedValue = "";
     try {
       const summaryNode = Records.getChild(entity, summaryDef.uuid)(record);
-      formattedValue = summaryNode
-        ? NodeValueFormatter.format({
-            survey,
-            cycle,
-            nodeDef: summaryDef,
-            node: summaryNode,
-            value: summaryNode.value,
-            showLabel: true,
-            lang,
-          })
-        : "";
+      if (!summaryNode) {
+        formattedValue = "";
+      } else if (NodeDefs.getType(summaryDef) === NodeDefType.boolean) {
+        formattedValue = formatBooleanValue({
+          nodeDef: summaryDef,
+          value: summaryNode.value,
+          t,
+        });
+      } else {
+        formattedValue = NodeValueFormatter.format({
+          survey,
+          cycle,
+          nodeDef: summaryDef,
+          node: summaryNode,
+          value: summaryNode.value,
+          showLabel: true,
+          lang,
+        });
+      }
     } catch (error) {
       //ignore it
     }
@@ -158,12 +183,16 @@ const getSiblingNode = ({ record, parentEntity, node, offset }) => {
   return { siblingNode, siblingIndex };
 };
 
-const getCoordinateDistanceTarget = ({ survey, nodeDef, record, node }) => {
-  const possibleExpressions = {
-    simpleIdentifier: "\\w+",
-    categoryItemProp: `categoryItemProp\\s*\\(.*\\)\\s*`,
-    parentFunction: `parent\\s*\\(.*\\)\\s*`,
-  };
+const possibleDistanceTargetExpressions = {
+  simpleIdentifier: "\\w+",
+  categoryItemProp: `categoryItemProp\\s*\\(.*\\)\\s*`,
+  parentFunction: `parent\\s*\\(.*\\)\\s*`,
+};
+
+const distanceFunctionRegExp = (firstArgument, secondArgument) =>
+  `\\s*distance\\s*\\(\\s*(${firstArgument})\\s*,\\s*(${secondArgument})\\s*\\)`;
+
+const extractDistanceTargetExpression = ({ nodeDef }) => {
   const validations = NodeDefs.getValidations(nodeDef);
   const distanceValidation = validations?.expressions?.find((expression) =>
     /\s*distance\s*(.*)\s*/.test(expression.expression)
@@ -174,37 +203,48 @@ const getCoordinateDistanceTarget = ({ survey, nodeDef, record, node }) => {
   }
   const thisOrAttrName = `(?:this|${NodeDefs.getName(nodeDef)})`;
 
-  const distanceFunctionRegExp = (firstArgument, secondArgument) =>
-    `\\s*distance\\s*\\(\\s*(${firstArgument})\\s*,\\s*(${secondArgument})\\s*\\)`;
-
   let distanceTargetExpression = null;
-  Object.values(possibleExpressions).some((possibleExpression) => {
-    const expression = distanceValidation.expression;
-    // this or attribute name as 1st argument
-    let match = expression.match(
-      distanceFunctionRegExp(thisOrAttrName, possibleExpression)
-    );
-    if (match) {
-      distanceTargetExpression = match[2];
-      return true;
+  Object.values(possibleDistanceTargetExpressions).some(
+    (possibleExpression) => {
+      const expression = distanceValidation.expression;
+      // this or attribute name as 1st argument
+      let match = expression.match(
+        distanceFunctionRegExp(thisOrAttrName, possibleExpression)
+      );
+      if (match) {
+        distanceTargetExpression = match[2];
+        return true;
+      }
+      // this or attribute name as 2nd argument
+      match = expression.match(
+        distanceFunctionRegExp(possibleExpression, thisOrAttrName)
+      );
+      if (match) {
+        distanceTargetExpression = match[1];
+        return true;
+      }
+      return false;
     }
-    // this or attribute name as 2nd argument
-    match = expression.match(
-      distanceFunctionRegExp(possibleExpression, thisOrAttrName)
-    );
-    if (match) {
-      distanceTargetExpression = match[1];
-      return true;
-    }
-    return false;
-  });
+  );
+  return distanceTargetExpression;
+};
+
+const getCoordinateDistanceTarget = async ({
+  survey,
+  nodeDef,
+  record,
+  node,
+}) => {
+  const distanceTargetExpression = extractDistanceTargetExpression({ nodeDef });
   if (distanceTargetExpression) {
-    const distanceTarget = new RecordExpressionEvaluator().evalExpression({
-      survey,
-      record,
-      node,
-      query: distanceTargetExpression,
-    });
+    const distanceTarget = await new RecordExpressionEvaluator().evalExpression(
+      {
+        survey,
+        record,
+        node,
+        query: distanceTargetExpression,
+      }
+    );
     return distanceTarget;
   }
   return null;
@@ -297,6 +337,7 @@ const getApplicableSummaryDefs = ({
 
 export const RecordNodes = {
   getNodeName,
+  formatBooleanValue,
   getEntityKeysFormatted,
   getRootEntityKeysFormatted,
   getEntitySummaryValuesByNameFormatted,
