@@ -5,6 +5,12 @@ export default {
   fontScale: "የቅርጸ ቁምፊ መጠን (ቤታ)፡ {{value}}",
   keepScreenAwake: "ማያ ገጹን ነቅቶ ያቆዩት",
   fullScreen: "ሙሉ ማያ ገጽ",
+  imageSizeLimit: "የምስሎች መጠን እስከ: {{value}}MB የተገደበ ነው።",
+  imageSizeUnlimited: {
+    label: "የምስሎች መጠን ያልተገደበ",
+    description:
+      "የምስሎች መጠን በመሣሪያው በሚሰጠው ከፍተኛ ጥራት ይቀመጣል፣ በዳሰሳ ጥናት ቅጽ ዲዛይነር ላይ ገደብ ካልተቀመጠ በስተቀር።",
+  },
   language: {
     label: "የመተግበሪያ ቋንቋ",
   },

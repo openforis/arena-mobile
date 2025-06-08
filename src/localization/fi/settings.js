@@ -5,6 +5,12 @@ export default {
   fontScale: "Fonttikoko: {{value}}",
   keepScreenAwake: "Pidä näyttö hereillä",
   fullScreen: "Koko näyttö",
+  imageSizeLimit: "Kuvien koko rajoitettu: {{value}}MB",
+  imageSizeUnlimited: {
+    label: "Kuvien koko rajoittamaton",
+    description:
+      "Kuvat tallennetaan laitteen tarjoamalla maksimiresoluutiolla, ellei kyselylomakkeen suunnittelijassa ole asetettu rajoitusta.",
+  },
   language: {
     label: "Sovelluksen kieli",
   },

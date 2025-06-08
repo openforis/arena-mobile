@@ -40,7 +40,7 @@ export const SettingsScreen = () => {
         <ConnectionToRemoteServerButton style={styles.button} />
 
         {settingsPropertiesEntries
-          .filter(([, prop]) => !prop.isDisabled?.())
+          .filter(([, prop]) => !prop.isDisabled?.({ settings }))
           .map(([key, prop]) => (
             <VView key={key} style={styles.settingsItemWrapper}>
               <SettingsItem

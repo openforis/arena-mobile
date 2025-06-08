@@ -5,6 +5,12 @@ export default {
   fontScale: "Font scale: {{value}}",
   keepScreenAwake: "Keep screen awake",
   fullScreen: "Full screen",
+  imageSizeLimit: "Images size limited to: {{value}}MB",
+  imageSizeUnlimited: {
+    label: "Images size not limited",
+    description:
+      "Images will be stored in the maximum resolution provided by the device, unless a limit is set in the survey form designer",
+  },
   language: {
     label: "Application language",
   },
