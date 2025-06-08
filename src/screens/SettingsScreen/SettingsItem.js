@@ -10,7 +10,7 @@ import {
   Switch,
   TextInput,
 } from "components";
-
+import { i18n } from "localization";
 import { SettingsModel } from "model";
 import { SettingsFormItem } from "./SettingsFormItem";
 
@@ -18,9 +18,17 @@ const numberToString = (value) => (Objects.isEmpty(value) ? "" : String(value));
 const stringToNumber = (value) =>
   Objects.isEmpty(value) ? NaN : Number(value);
 
+const determineTextKey = (...possibleKeys) =>
+  possibleKeys.find((possibleKey) => possibleKey && i18n.exists(possibleKey));
+
 export const SettingsItem = (props) => {
   const { settings, settingKey, prop, onPropValueChange } = props;
-  const { type, labelKey, descriptionKey, options } = prop;
+  const {
+    type,
+    labelKey: labelKeyProp,
+    descriptionKey: descriptionKeyProp,
+    options,
+  } = prop;
   const value = settings[settingKey];
 
   const [error, setError] = useState(false);
@@ -30,6 +38,17 @@ export const SettingsItem = (props) => {
       onPropValueChange({ key: settingKey })(val);
     },
     [onPropValueChange, settingKey]
+  );
+
+  const labelKey = determineTextKey(
+    labelKeyProp,
+    `settings:${settingKey}.label`,
+    `settings:${settingKey}`
+  );
+
+  const descriptionKey = determineTextKey(
+    descriptionKeyProp,
+    `settings:${settingKey}.description`
   );
 
   switch (type) {
