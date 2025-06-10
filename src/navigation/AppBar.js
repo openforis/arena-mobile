@@ -122,11 +122,7 @@ export const AppBar = (props) => {
   }, [dispatch, isLinkedToPreviousCycleRecord]);
 
   return (
-    <RNPAppbar.Header
-      elevated
-      mode={isInTwoRows ? "medium" : "small"}
-      statusBarHeight={0}
-    >
+    <RNPAppbar.Header elevated mode={isInTwoRows ? "medium" : "small"}>
       <HView style={styles.topBarContainer} fullWidth transparent>
         {editingRecord && (
           <RNPAppbar.Action
