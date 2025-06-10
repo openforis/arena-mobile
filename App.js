@@ -3,6 +3,7 @@ import { KeyboardAvoidingView } from "react-native";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider as PaperProvider, ThemeProvider } from "react-native-paper";
+import { StatusBar } from "expo-status-bar";
 import ErrorBoundary from "react-native-error-boundary";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -17,7 +18,6 @@ import { rootReducer } from "state/reducers";
 import { BaseStyles, Environment } from "utils";
 
 import { AppInitializer } from "./src/AppInitializer";
-import styles from "./src/appStyles";
 
 const store = configureStore({ reducer: rootReducer });
 
@@ -33,7 +33,7 @@ const AppInnerContainer = () => {
 
   const internalContainer = (
     <AppInitializer>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={{ flex: 1 }}>
         <AppStack />
       </SafeAreaView>
     </AppInitializer>
@@ -46,6 +46,7 @@ const AppInnerContainer = () => {
           onError={onError}
           FallbackComponent={ErrorFallbackComponent}
         >
+          <StatusBar style={theme.dark ? "light" : "dark"} />
           {Environment.isIOS ? (
             <KeyboardAvoidingView behavior="height" style={BaseStyles.flexOne}>
               {internalContainer}
