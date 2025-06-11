@@ -8,9 +8,7 @@ import { screenKeys } from "screens/screenKeys";
 
 const Stack = createNativeStackNavigator();
 
-const screenOptions = {
-  header: (props) => React.createElement(AppBar, props),
-};
+const screenOptions = { header: (props) => React.createElement(AppBar, props) };
 
 export const AppStack = () => {
   if (__DEV__) {

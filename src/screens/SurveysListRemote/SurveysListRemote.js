@@ -32,6 +32,8 @@ const INITIAL_STATE = {
   errorKey: null,
 };
 
+const minSurveysToShowSearchBar = 5;
+
 const DescriptionCellRenderer = ({ item }) => {
   const defaultLanguage = Surveys.getDefaultLanguage(item);
   const description = item.props?.descriptions?.[defaultLanguage];
@@ -197,7 +199,7 @@ export const SurveysListRemote = () => {
 
   return (
     <VView fullFlex>
-      {surveys.length > 5 && (
+      {surveys.length > minSurveysToShowSearchBar && (
         <Searchbar value={searchValue} onChange={onSearchValueChange} />
       )}
       {surveysFiltered.length === 0 && (

@@ -212,6 +212,7 @@ export const SettingsRemoteConnectionScreen = () => {
           <HView fullFlex>
             <Button
               color="secondary"
+              compact
               onPress={navigation.goBack}
               style={styles.goBackButton}
               textKey="common:goBack"

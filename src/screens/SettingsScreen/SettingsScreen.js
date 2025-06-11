@@ -26,6 +26,8 @@ export const SettingsScreen = () => {
   const onPropValueChange =
     ({ key }) =>
     (value) => {
+      const oldValue = settings[key];
+      if (value === oldValue) return;
       dispatch(SettingsActions.updateSetting({ key, value }));
       setState((statePrev) =>
         Objects.assocPath({ obj: statePrev, path: ["settings", key], value })
