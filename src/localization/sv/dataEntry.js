@@ -149,7 +149,9 @@ export default {
   },
   fileAttributeImage: {
     imagePreview: "Förhandsvisning av bild",
-    pictureResizedToSize: "Bildstorlek ändrad till {{size}}",
+    pictureResizedToSize: `Bilden har ändrats till {{size}}.
+Maximalt tillåten storlek: {{maxSizeMB}}MB.
+Kontrollera inställningarna eller be undersökningsadministratören att ändra denna gräns.`,
     resolution: "Upplösning",
   },
   dataExport: {

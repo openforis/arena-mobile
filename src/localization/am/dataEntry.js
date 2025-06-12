@@ -134,7 +134,9 @@ export default {
 
   fileAttributeImage: {
     imagePreview: "የምስል ቅድመ እይታ",
-    pictureResizedToSize: "ምስሉ ወደ {{size}} መጠን ተቀይሯል",
+    pictureResizedToSize: `ስዕሉ ወደ {{size}} መጠን ተቀይሯል።
+የተፈቀደው ከፍተኛ መጠን: {{maxSizeMB}}MB።
+ይህን ገደብ ለመቀየር ቅንብሮችን ያረጋግጡ ወይም የዳሰሳ ጥናቱ አስተዳዳሪን ይጠይቁ።`,
     resolution: "ጥራት",
   },
   dataExport: {

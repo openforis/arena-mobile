@@ -141,7 +141,9 @@ export default {
   },
   fileAttributeImage: {
     imagePreview: "Просмотр",
-    pictureResizedToSize: "Размер изображения изменен до {{size}}",
+    pictureResizedToSize: `Размер изображения изменен до {{size}}.
+Максимально допустимый размер: {{maxSizeMB}}МБ.
+Проверьте настройки или попросите администратора опроса изменить это ограничение.`,
     resolution: "Разрешение",
   },
   dataExport: {

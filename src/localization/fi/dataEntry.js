@@ -149,7 +149,9 @@ export default {
   },
   fileAttributeImage: {
     imagePreview: "Kuvan esikatselu",
-    pictureResizedToSize: "Kuvan koko muutettu kokoon {{size}}",
+    pictureResizedToSize: `Kuva pienennetty kokoon {{size}}.
+Suurin sallittu koko: {{maxSizeMB}}MB.
+Tarkista asetukset tai pyydä kyselyn järjestelmänvalvojaa muuttamaan tätä rajaa.`,
     resolution: "Resoluutio",
   },
   dataExport: {

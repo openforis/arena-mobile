@@ -13,7 +13,7 @@ const defaultSettings = {
   fontScale: 1,
   fullScreen: false,
   imageSizeUnlimited: false,
-  imageSizeLimit: 2, // MB
+  imageSizeLimit: 4, // MB
   language: LanguageConstants.system,
   locationAccuracyThreshold: 3,
   locationAccuracyWatchTimeout: 120,

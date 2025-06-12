@@ -148,7 +148,9 @@ export default {
   },
   fileAttributeImage: {
     imagePreview: "پیش نمایش تصویر",
-    pictureResizedToSize: "تصویر به اندازه {{size}} تغییر اندازه یافت",
+    pictureResizedToSize: `اندازه تصویر به {{size}} تغییر یافت.
+حداکثر اندازه مجاز: {{maxSizeMB}} مگابایت.
+تنظیمات را بررسی کنید یا از مدیر نظرسنجی بخواهید این محدودیت را تغییر دهد.`,
     resolution: "رزولوشن",
   },
   dataExport: {

@@ -91,6 +91,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
 
           toaster("dataEntry:fileAttributeImage.pictureResizedToSize", {
             size: Files.toHumanReadableFileSize(resizedFileSize),
+            maxSizeMB,
           });
         }
         setResizing(false);
@@ -98,7 +99,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
       const valueUpdated = { fileUuid: UUIDs.v4(), fileName, fileSize };
       await updateNodeValue({ value: valueUpdated, fileUri });
     },
-    [fileType, maxSize, toaster, updateNodeValue]
+    [fileType, maxSize, maxSizeMB, toaster, updateNodeValue]
   );
 
   const onFileChoosePress = useCallback(async () => {

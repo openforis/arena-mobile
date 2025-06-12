@@ -154,7 +154,9 @@ export default {
   },
   fileAttributeImage: {
     imagePreview: "Bildvorschau",
-    pictureResizedToSize: "Bild auf {{size}} skaliert",
+    pictureResizedToSize: `Bild auf {{size}} geändert.
+Maximal zulässige Größe: {{maxSizeMB}}MB.
+Überprüfen Sie die Einstellungen oder bitten Sie den Umfrageadministrator, dieses Limit zu ändern.`,
     resolution: "Auflösung",
   },
   dataExport: {
