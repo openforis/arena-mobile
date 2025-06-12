@@ -146,7 +146,9 @@ export default {
   },
   fileAttributeImage: {
     imagePreview: "Aperçu de l'image",
-    pictureResizedToSize: "Image redimensionnée à {{size}}",
+    pictureResizedToSize: `Image redimensionnée à {{size}}.
+Taille maximale autorisée : {{maxSizeMB}} Mo.
+Vérifiez les paramètres ou demandez à l'administrateur de l'enquête de modifier cette limite.`,
     resolution: "Résolution",
   },
   dataExport: {

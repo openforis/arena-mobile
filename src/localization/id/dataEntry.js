@@ -152,7 +152,9 @@ export default {
   },
   fileAttributeImage: {
     imagePreview: "Pratinjau gambar",
-    pictureResizedToSize: "Ukuran gambar diubah menjadi {{size}}",
+    pictureResizedToSize: `Gambar diubah ukurannya menjadi {{size}}.
+Ukuran maksimum yang diizinkan: {{maxSizeMB}}MB.
+Periksa pengaturan atau minta administrator survei untuk mengubah batas ini.`,
     resolution: "Resolusi",
   },
   dataExport: {

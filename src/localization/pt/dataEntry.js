@@ -141,7 +141,9 @@ export default {
   },
   fileAttributeImage: {
     imagePreview: "Pré-visualização da imagem",
-    pictureResizedToSize: "Imagem redimensionada para {{size}}",
+    pictureResizedToSize: `Imagem redimensionada para {{size}}.
+Tamanho máximo permitido: {{maxSizeMB}}MB.
+Verifique as configurações ou peça ao administrador da pesquisa para alterar este limite.`,
     resolution: "Resolução",
   },
   dataExport: {

@@ -148,7 +148,9 @@ Details: {{details}}`,
   },
   fileAttributeImage: {
     imagePreview: "Image preview",
-    pictureResizedToSize: "Picture resized to {{size}}",
+    pictureResizedToSize: `Picture resized to {{size}}.
+Maximum size allowed: {{maxSizeMB}}MB.
+Check settings or ask the survey administrator to change this limit.`,
     resolution: "Resolution",
   },
   dataExport: {
