@@ -40,7 +40,7 @@ const setCurrentSurveyCycle =
   };
 
 const fetchAndSetCurrentSurvey =
-  ({ surveyId, preferredLanguage = null, navigation = null }) =>
+  ({ surveyId, navigation = null }) =>
   async (dispatch) => {
     const survey = await SurveyService.fetchSurveyById(surveyId);
     if (survey) {
@@ -50,6 +50,8 @@ const fetchAndSetCurrentSurvey =
           MessageActions.setWarning("surveys:statusMessage", { status })
         );
       }
+      const preferredLanguage =
+        await PreferencesService.getSurveyPreferredLanguage(surveyId);
       dispatch(setCurrentSurvey({ survey, preferredLanguage, navigation }));
     } else {
       dispatch(

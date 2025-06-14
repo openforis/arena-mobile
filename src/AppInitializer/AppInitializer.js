@@ -104,14 +104,9 @@ export const AppInitializer = (props) => {
 
     const currentSurveyId = await PreferencesService.getCurrentSurveyId();
     if (currentSurveyId) {
-      const preferredLanguage =
-        await PreferencesService.getSurveyPreferredLanguage(currentSurveyId);
       setStep(steps.fetchingAndSettingSurvey);
       dispatch(
-        SurveyActions.fetchAndSetCurrentSurvey({
-          surveyId: currentSurveyId,
-          preferredLanguage,
-        })
+        SurveyActions.fetchAndSetCurrentSurvey({ surveyId: currentSurveyId })
       );
     }
     setStep(steps.checkingLoggedIn);
