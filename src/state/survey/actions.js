@@ -7,6 +7,7 @@ import { MessageActions } from "state/message";
 
 import { ConfirmActions } from "../confirm";
 import { SurveyActionTypes } from "./actionTypes";
+import { SurveySelectors } from "./selectors";
 
 const {
   CURRENT_SURVEY_SET,
@@ -16,17 +17,20 @@ const {
 } = SurveyActionTypes;
 
 const setCurrentSurvey =
-  ({ survey, navigation = null }) =>
+  ({ survey, preferredLanguage = null, navigation = null }) =>
   async (dispatch) => {
-    dispatch({ type: CURRENT_SURVEY_SET, survey });
+    dispatch({ type: CURRENT_SURVEY_SET, survey, preferredLanguage });
     await PreferencesService.setCurrentSurveyId(survey.id);
     navigation?.navigate(screenKeys.recordsList);
   };
 
 const setCurrentSurveyPreferredLanguage =
   ({ lang }) =>
-  (dispatch) => {
+  async (dispatch, getState) => {
     dispatch({ type: CURRENT_SURVEY_PREFERRED_LANG_SET, lang });
+    const state = getState();
+    const surveyId = SurveySelectors.selectCurrentSurveyId(state);
+    await PreferencesService.setSurveyPreferredLanguage(surveyId, lang);
   };
 
 const setCurrentSurveyCycle =
@@ -36,7 +40,7 @@ const setCurrentSurveyCycle =
   };
 
 const fetchAndSetCurrentSurvey =
-  ({ surveyId, navigation = null }) =>
+  ({ surveyId, preferredLanguage = null, navigation = null }) =>
   async (dispatch) => {
     const survey = await SurveyService.fetchSurveyById(surveyId);
     if (survey) {
@@ -46,7 +50,7 @@ const fetchAndSetCurrentSurvey =
           MessageActions.setWarning("surveys:statusMessage", { status })
         );
       }
-      dispatch(setCurrentSurvey({ survey, navigation }));
+      dispatch(setCurrentSurvey({ survey, preferredLanguage, navigation }));
     } else {
       dispatch(
         MessageActions.setMessage({
@@ -109,12 +113,14 @@ const updateSurveyRemote =
 
 const deleteSurveys = (surveyIds) => async (dispatch, getState) => {
   const state = getState();
-  const surveyState = state.survey;
+  const currentSurveyId = SurveySelectors.selectCurrentSurveyId(state);
   await SurveyService.deleteSurveys(surveyIds);
   dispatch(fetchAndSetLocalSurveys());
 
+  await PreferencesService.clearPreferencesBySurveyIds(surveyIds);
+
   // reset current survey if among deleted ones
-  if (surveyIds.includes(surveyState.currentSurvey?.id)) {
+  if (surveyIds.includes(currentSurveyId)) {
     dispatch({ type: CURRENT_SURVEY_SET, survey: null });
     await PreferencesService.clearCurrentSurveyId();
   }
