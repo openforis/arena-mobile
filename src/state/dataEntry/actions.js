@@ -190,6 +190,7 @@ const editRecord =
       (await ConfirmUtils.confirm({
         dispatch,
         messageKey: "recordsList:continueEditing.confirm.message",
+        titleKey: "recordsList:continueEditing.title",
       }));
 
     await dispatch({
