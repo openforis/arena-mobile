@@ -9,6 +9,7 @@ const keys = {
 
 const surveyPreferencesKeys = {
   language: "language",
+  lastEditedPageByRecordId: "lastEditedPageByRecordId",
 };
 
 const preferencesStoredObjectManager = new StoredObjectManager(
@@ -33,8 +34,16 @@ const getPrereferencesBySurveyId = async (surveyId) => {
 };
 
 const getSurveyPreferredLanguage = async (surveyId) => {
-  const preferencesBySurveyId = await getPrereferencesBySurveyId(surveyId);
-  return preferencesBySurveyId[surveyPreferencesKeys.language];
+  const surveyPreferences = await getPrereferencesBySurveyId(surveyId);
+  return surveyPreferences[surveyPreferencesKeys.language];
+};
+
+const getSurveyRecordLastEditedPage = async (surveyId, recordId) => {
+  const surveyPreferences = await getPrereferencesBySurveyId(surveyId);
+  return Objects.path([
+    surveyPreferencesKeys.lastEditedPageByRecordId,
+    recordId,
+  ])(surveyPreferences);
 };
 
 const clearCurrentSurveyId = async () =>
@@ -70,6 +79,23 @@ const updateSurveyPreference = async (surveyId, key, value) =>
 const setSurveyPreferredLanguage = async (surveyId, lang) =>
   updateSurveyPreference(surveyId, surveyPreferencesKeys.language, lang);
 
+const setSurveyRecordLastEditedPage = async (surveyId, recordId, page) =>
+  updateSurveyPreferences(surveyId, (surveyPreferences) =>
+    Objects.assocPath({
+      obj: surveyPreferences,
+      path: [surveyPreferencesKeys.lastEditedPageByRecordId, recordId],
+      value: page,
+    })
+  );
+
+const clearSurveyRecordLastEditedPage = async (surveyId, recordId) =>
+  updateSurveyPreferences(surveyId, (surveyPreferences) =>
+    Objects.dissocPath({
+      obj: surveyPreferences,
+      path: [surveyPreferencesKeys.lastEditedPageByRecordId, recordId],
+    })
+  );
+
 const clearPreferencesBySurveyId = async (surveyId) => {
   await updateSurveyPreferences(surveyId, () => ({}));
 };
@@ -84,8 +110,11 @@ export const PreferencesService = {
   getCurrentSurveyId,
   setCurrentSurveyId,
   getSurveyPreferredLanguage,
+  getSurveyRecordLastEditedPage,
   clearCurrentSurveyId,
   setSurveyPreferredLanguage,
+  setSurveyRecordLastEditedPage,
+  clearSurveyRecordLastEditedPage,
   clearPreferencesBySurveyId,
   clearPreferencesBySurveyIds,
 };
