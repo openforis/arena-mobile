@@ -2,20 +2,24 @@ import { ConfirmActions } from "./reducer";
 
 const confirm = async ({
   dispatch,
-  titleKey,
-  titleParams,
+  cancelButtonTextKey,
+  confirmButtonTextKey,
   messageKey,
   messageParams,
+  titleKey,
+  titleParams,
   ...otherParams
 }) =>
   new Promise((resolve, reject) => {
     try {
       dispatch(
         ConfirmActions.show({
-          titleKey,
-          titleParams,
+          cancelButtonTextKey,
+          confirmButtonTextKey,
           messageKey,
           messageParams,
+          titleKey,
+          titleParams,
           ...otherParams,
           onConfirm: ({
             selectedMultipleChoiceValues,

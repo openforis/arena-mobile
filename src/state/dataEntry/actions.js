@@ -189,6 +189,8 @@ const editRecord =
       lastEditedPage &&
       (await ConfirmUtils.confirm({
         dispatch,
+        confirmButtonTextKey: "common:continue",
+        cancelButtonTextKey: "common:no",
         messageKey: "recordsList:continueEditing.confirm.message",
         titleKey: "recordsList:continueEditing.title",
       }));
@@ -200,7 +202,9 @@ const editRecord =
       recordEditLocked: locked && !resumeLastEditedPage,
       recordPageSelectorMenuOpen: false,
     });
+
     navigation.navigate(screenKeys.recordEditor);
+
     if (resumeLastEditedPage) {
       await dispatch(selectCurrentPageEntity(lastEditedPage));
     }
