@@ -10,6 +10,12 @@ export default {
     completeSuccessfully: "Записи успешно клонированы в цикл {{cycle}}!",
   },
   confirmImportRecordFromServer: "Загрузать запись с сервера?",
+  continueEditing: {
+    title: "Продолжить редактирование",
+    confirm: {
+      message: "Продолжить редактирование с того места, где вы остановились?",
+    },
+  },
   dateModifiedRemotely: "Дата изменения на удаленном сервере",
   deleteRecordsConfirm: {
     title: "Удалить записи",

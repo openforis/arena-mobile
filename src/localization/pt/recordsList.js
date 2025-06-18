@@ -11,6 +11,12 @@ export default {
       "Registos clonados com sucesso para o ciclo {{cycle}}!",
   },
   confirmImportRecordFromServer: "Importar registo do servidor?",
+  continueEditing: {
+    title: "Continuar a editar",
+    commands: {
+      message: "Continuar a editar de onde parou?",
+    },
+  },
   dateModifiedRemotely: "Data de modificação remota",
   deleteRecordsConfirm: {
     title: "Excluir registos",

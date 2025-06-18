@@ -11,6 +11,12 @@ export default {
       "Data isian telah berhasil diklon ke dalam siklus {{cycle}}!",
   },
   confirmImportRecordFromServer: "Impor data dari server?",
+  continueEditing: {
+    title: "Lanjutkan pengeditan",
+    confirm: {
+      message: "Lanjutkan pengeditan dari bagian terakhir Anda?",
+    },
+  },
   dateModifiedRemotely: "Tanggal diubah dari jarak jauh",
   deleteRecordsConfirm: {
     title: "Hapus data",
