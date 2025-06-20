@@ -121,7 +121,7 @@ export const RecordsList = () => {
       syncStatusLoading: true,
       syncStatusFetched: false,
     }));
-    const stateNext = { syncStatusLoading: false };
+    const stateNext = { loading: false, syncStatusLoading: false };
     try {
       if (await checkLoggedInUser({ dispatch, navigation })) {
         const _records = await RecordService.syncRecordSummaries({
@@ -291,12 +291,15 @@ export const RecordsList = () => {
           toaster(noRecordsToExportTextKey);
           return;
         }
+        setState((statePrev) => ({ ...statePrev, loading: true }));
         dispatch(
           DataEntryActions.exportRecords({
             cycle,
             recordUuids,
             conflictResolutionStrategy,
             onJobComplete: loadRecordsWithSyncStatus,
+            onEnd: () =>
+              setState((statePrev) => ({ ...statePrev, loading: false })),
             onlyRemote,
           })
         );
@@ -319,7 +322,14 @@ export const RecordsList = () => {
       return;
     }
     dispatch(
-      DataEntryActions.exportRecords({ cycle, recordUuids, onlyLocally: true })
+      DataEntryActions.exportRecords({
+        cycle,
+        recordUuids,
+        onlyLocally: true,
+        onEnd: () => {
+          setState((statePrev) => ({ ...statePrev, loading: false }));
+        },
+      })
     );
   }, [cycle, dispatch, records, toaster]);
 

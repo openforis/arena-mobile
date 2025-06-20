@@ -15,6 +15,7 @@ import {
 } from "@openforis/arena-core";
 
 import { RecordOrigin, RecordLoadStatus, SurveyDefs, RecordNodes } from "model";
+import { PreferencesService } from "service/preferencesService";
 import { RecordService } from "service/recordService";
 import { RecordFileService } from "service/recordFileService";
 
@@ -173,17 +174,59 @@ const deleteRecords = (recordUuids) => async (dispatch, getState) => {
   dispatch(DeviceInfoActions.updateFreeDiskStorage());
 };
 
+const checkEntityPageIsValidAndNotRoot = ({ survey, entityPage, record }) => {
+  const { parentEntityUuid, entityDefUuid, entityUuid } = entityPage;
+  const entityDef = Surveys.findNodeDefByUuid({ survey, uuid: entityDefUuid });
+  return (
+    entityDef &&
+    !NodeDefs.isRoot(entityDef) &&
+    (parentEntityUuid === null ||
+      !!Records.getNodeByUuid(parentEntityUuid)(record)) &&
+    (entityUuid === null || !!Records.getNodeByUuid(entityUuid)(record))
+  );
+};
+
 const editRecord =
   ({ navigation, record, locked = true }) =>
-  (dispatch) => {
-    dispatch({
+  async (dispatch, getState) => {
+    const state = getState();
+    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const surveyId = SurveySelectors.selectCurrentSurveyId(state);
+    const { id: recordId } = record;
+    const lastEditedPage =
+      await PreferencesService.getSurveyRecordLastEditedPage(
+        surveyId,
+        recordId
+      );
+    const resumeLastEditedPage =
+      lastEditedPage &&
+      checkEntityPageIsValidAndNotRoot({
+        survey,
+        entityPage: lastEditedPage,
+        record,
+      }) &&
+      (await ConfirmUtils.confirm({
+        dispatch,
+        confirmButtonTextKey: "common:continue",
+        cancelButtonTextKey: "common:no",
+        messageKey: "recordsList:continueEditing.confirm.message",
+        titleKey: "recordsList:continueEditing.title",
+      }));
+
+    await dispatch({
       type: RECORD_SET,
       record,
       recordEditLockAvailable: locked,
-      recordEditLocked: locked,
+      recordEditLocked:
+        locked && (!resumeLastEditedPage || lastEditedPage.locked),
       recordPageSelectorMenuOpen: false,
     });
+
     navigation.navigate(screenKeys.recordEditor);
+
+    if (resumeLastEditedPage) {
+      await dispatch(selectCurrentPageEntity(lastEditedPage));
+    }
   };
 
 const _fetchAndEditRecordInternal = async ({
@@ -469,11 +512,15 @@ const addNewAttribute =
 
 const selectCurrentPageEntity =
   ({ parentEntityUuid, entityDefUuid, entityUuid = null }) =>
-  (dispatch, getState) => {
+  async (dispatch, getState) => {
     const state = getState();
+    const surveyId = SurveySelectors.selectCurrentSurveyId(state);
+    const record = DataEntrySelectors.selectRecord(state);
+    const { id: recordId } = record;
     const { entityDef: prevEntityDef, entityUuid: prevEntityUuid } =
       DataEntrySelectors.selectCurrentPageEntity(state);
     const isPhone = DeviceInfoSelectors.selectIsPhone(state);
+    const locked = DataEntrySelectors.selectRecordEditLocked(state);
 
     const nextEntityUuid =
       entityDefUuid === prevEntityDef.uuid &&
@@ -491,6 +538,7 @@ const selectCurrentPageEntity =
       parentEntityUuid,
       entityDefUuid,
       entityUuid: nextEntityUuid,
+      locked,
     };
 
     dispatch({ type: PAGE_ENTITY_SET, payload });
@@ -502,6 +550,11 @@ const selectCurrentPageEntity =
     if (isPhone) {
       dispatch(closeRecordPageMenu);
     }
+    await PreferencesService.setSurveyRecordLastEditedPage(
+      surveyId,
+      recordId,
+      payload
+    );
   };
 
 const selectCurrentPageEntityActiveChildIndex =

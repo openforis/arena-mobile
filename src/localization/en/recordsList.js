@@ -10,6 +10,12 @@ export default {
     completeSuccessfully: "Records cloned successfully into cycle {{cycle}}!",
   },
   confirmImportRecordFromServer: "Import record from server?",
+  continueEditing: {
+    title: "Continue editing",
+    confirm: {
+      message: "Continue editing where you left off?",
+    },
+  },
   dateModifiedRemotely: "Date modified remotely",
   deleteRecordsConfirm: {
     title: "Delete records",

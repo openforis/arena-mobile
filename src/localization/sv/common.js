@@ -7,6 +7,7 @@ export default {
   confirm: "Bekräfta",
   confirmClearSelectedValue: "Rensa valt värde?",
   confirmClearSelectedValue_plural: "Rensa valda värden?",
+  continue: "Fortsätt",
   createdOn: "Skapad den",
   delete: "Ta bort",
   deleteSelectedTitle: "Ta bort valda",

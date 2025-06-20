@@ -10,6 +10,12 @@ export default {
     completeSuccessfully: "Tietueet kloonattu onnistuneesti jaksoon {{cycle}}!",
   },
   confirmImportRecordFromServer: "Tuodaanko tietue palvelimelta?",
+  continueEditing: {
+    title: "Jatka muokkausta",
+    confirm: {
+      message: "Jatketaanko muokkausta siitä, mihin jäit?",
+    },
+  },
   dateModifiedRemotely: "Muokkauspäivä etänä",
   deleteRecordsConfirm: {
     title: "Poista tietueet",
