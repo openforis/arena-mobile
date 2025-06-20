@@ -36,17 +36,7 @@ import { ArrayUtils } from "utils";
 
 import { RecordSyncStatusIcon } from "./RecordSyncStatusIcon";
 import { RecordsUtils } from "./RecordsUtils";
-
-const iconByLoadStatus = {
-  [RecordLoadStatus.complete]: "circle-slice-8",
-  [RecordLoadStatus.partial]: "circle-slice-4",
-  [RecordLoadStatus.summary]: "circle-outline",
-};
-
-const iconByOrigin = {
-  [RecordOrigin.local]: "cellphone",
-  [RecordOrigin.remote]: "cloud-outline",
-};
+import { RecordListConstants } from "./recordListConstants";
 
 const formatDateToDateTimeDisplay = (date) =>
   typeof date === "string"
@@ -58,7 +48,7 @@ const formatDateToDateTimeDisplay = (date) =>
     : Dates.format(date, DateFormats.datetimeDisplay);
 
 const RecordOriginTableCellRenderer = ({ item }) => (
-  <Icon source={iconByOrigin[item.origin]} />
+  <Icon source={RecordListConstants.iconByOrigin[item.origin]} />
 );
 RecordOriginTableCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
@@ -69,7 +59,7 @@ const RecordOriginListCellRenderer = ({ item }) => (
 RecordOriginListCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
 const RecordLoadStatusTableCellRenderer = ({ item }) => (
-  <Icon source={iconByLoadStatus[item.loadStatus]} />
+  <Icon source={RecordListConstants.iconByLoadStatus[item.loadStatus]} />
 );
 RecordLoadStatusTableCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
