@@ -23,6 +23,7 @@ export default {
   goBack: "Go back",
   info: "Info",
   label: "Label",
+  legend: "Legend",
   modifiedOn: "Modified on",
   name: "Name",
   networkNotAvailable: "Network not available!",

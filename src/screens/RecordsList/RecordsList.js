@@ -37,6 +37,7 @@ import { RecordsUtils } from "./RecordsUtils";
 import { RecordsListOptions } from "./RecordsListOptions";
 
 import styles from "./styles";
+import { RecordsListLegend } from "./RecordsListLegend";
 
 const { checkLoggedInUser } = RemoteConnectionUtils;
 
@@ -546,6 +547,9 @@ export const RecordsList = () => {
           </>
         )}
       </VView>
+
+      {syncStatusFetched && <RecordsListLegend />}
+
       {records.length > 0 && (
         <HView style={styles.bottomActionBar}>
           {newRecordButton}

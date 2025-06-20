@@ -23,6 +23,7 @@ export default {
   goBack: "Kembali",
   info: "Info",
   label: "Label",
+  legend: "Legenda",
   modifiedOn: "Diubah pada",
   name: "Nama",
   networkNotAvailable: "Jaringan tidak tersedia!",
