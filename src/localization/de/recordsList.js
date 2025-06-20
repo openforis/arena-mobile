@@ -11,6 +11,12 @@ export default {
       "Datensätze erfolgreich in den Zyklus {{cycle}} geklont!",
   },
   confirmImportRecordFromServer: "Datensatz vom Server importieren?",
+  continueEditing: {
+    title: "Bearbeitung fortsetzen",
+    confirm: {
+      message: "Bearbeitung dort fortsetzen, wo Sie aufgehört haben?",
+    },
+  },
   dateModifiedRemotely: "Datum der Remote-Änderung",
   deleteRecordsConfirm: {
     title: "Datensätze löschen",

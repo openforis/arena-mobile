@@ -11,6 +11,12 @@ export default {
       "¡Registros clonados correctamente al ciclo {{cycle}}!",
   },
   confirmImportRecordFromServer: "¿Importar registro del servidor?",
+  continueEditing: {
+    title: "Continuar editando",
+    confirm: {
+      message: "¿Continuar editando donde lo dejó?",
+    },
+  },
   dateModifiedRemotely: "Fecha de modificación remota",
   deleteRecordsConfirm: {
     title: "Eliminar registros",

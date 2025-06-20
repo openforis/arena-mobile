@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 
 import { Languages } from "@openforis/arena-core";
@@ -25,8 +25,12 @@ export const SurveyLanguageSelector = () => {
 
   const selectedValue = singleLanguage ? languages[0] : preferredLang;
 
-  const onChange = (lang) =>
-    dispatch(SurveyActions.setCurrentSurveyPreferredLanguage({ lang }));
+  const onChange = useCallback(
+    (lang) => {
+      dispatch(SurveyActions.setCurrentSurveyPreferredLanguage({ lang }));
+    },
+    [dispatch]
+  );
 
   return (
     <HView style={styles.formItem}>

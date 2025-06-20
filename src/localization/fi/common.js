@@ -7,6 +7,7 @@ export default {
   confirm: "Vahvista",
   confirmClearSelectedValue: "Tyhjennä valittu tieto?",
   confirmClearSelectedValue_plural: "Tyhjennä valitut tiedot?",
+  continue: "Jatka",
   createdOn: "Luotu",
   delete: "Poista",
   deleteSelectedTitle: "Poista valitut",
