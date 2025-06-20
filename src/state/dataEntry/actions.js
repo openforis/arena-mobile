@@ -174,10 +174,23 @@ const deleteRecords = (recordUuids) => async (dispatch, getState) => {
   dispatch(DeviceInfoActions.updateFreeDiskStorage());
 };
 
+const checkEntityPageIsValidAndNotRoot = ({ survey, entityPage, record }) => {
+  const { parentEntityUuid, entityDefUuid, entityUuid } = entityPage;
+  const entityDef = Surveys.findNodeDefByUuid({ survey, uuid: entityDefUuid });
+  return (
+    entityDef &&
+    !NodeDefs.isRoot(entityDef) &&
+    (parentEntityUuid === null ||
+      !!Records.getNodeByUuid(parentEntityUuid)(record)) &&
+    (entityUuid === null || !!Records.getNodeByUuid(entityUuid)(record))
+  );
+};
+
 const editRecord =
   ({ navigation, record, locked = true }) =>
   async (dispatch, getState) => {
     const state = getState();
+    const survey = SurveySelectors.selectCurrentSurvey(state);
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
     const { id: recordId } = record;
     const lastEditedPage =
@@ -187,6 +200,11 @@ const editRecord =
       );
     const resumeLastEditedPage =
       lastEditedPage &&
+      checkEntityPageIsValidAndNotRoot({
+        survey,
+        entityPage: lastEditedPage,
+        record,
+      }) &&
       (await ConfirmUtils.confirm({
         dispatch,
         confirmButtonTextKey: "common:continue",
@@ -199,7 +217,8 @@ const editRecord =
       type: RECORD_SET,
       record,
       recordEditLockAvailable: locked,
-      recordEditLocked: locked && !resumeLastEditedPage,
+      recordEditLocked:
+        locked && (!resumeLastEditedPage || lastEditedPage.locked),
       recordPageSelectorMenuOpen: false,
     });
 
@@ -501,6 +520,7 @@ const selectCurrentPageEntity =
     const { entityDef: prevEntityDef, entityUuid: prevEntityUuid } =
       DataEntrySelectors.selectCurrentPageEntity(state);
     const isPhone = DeviceInfoSelectors.selectIsPhone(state);
+    const locked = DataEntrySelectors.selectRecordEditLocked(state);
 
     const nextEntityUuid =
       entityDefUuid === prevEntityDef.uuid &&
@@ -518,6 +538,7 @@ const selectCurrentPageEntity =
       parentEntityUuid,
       entityDefUuid,
       entityUuid: nextEntityUuid,
+      locked,
     };
 
     dispatch({ type: PAGE_ENTITY_SET, payload });
