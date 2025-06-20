@@ -23,6 +23,7 @@ export default {
   goBack: "Palaa takaisin",
   info: "Info",
   label: "Nimiö",
+  legend: "Selite",
   modifiedOn: "Muokattu",
   name: "Nimi",
   networkNotAvailable: "Verkko ei ole käytettävissä!",
