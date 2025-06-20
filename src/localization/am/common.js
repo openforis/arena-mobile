@@ -7,6 +7,7 @@ export default {
   confirm: "አረጋግጥ",
   confirmClearSelectedValue: "የተመረጠውን እሴት አጽዳ?",
   confirmClearSelectedValue_plural: "የተመረጡትን እሴቶች አጽዳ?",
+  continue: "ይቀጥሉ",
   createdOn: "የተፈጠረው በ",
   delete: "ሰርዝ",
   deleteSelectedTitle: "የተመረጡትን ሰርዝ",

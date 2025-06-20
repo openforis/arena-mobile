@@ -36,6 +36,8 @@ const nextButtonIconPositionByTextDirection = {
   [rtl]: "left",
 };
 
+const entityCreationDelay = 500;
+
 export const BottomNavigationBar = () => {
   const styles = useStyles();
   const dispatch = useDispatch();
@@ -72,7 +74,10 @@ export const BottomNavigationBar = () => {
   } = useBottomNavigationBar();
 
   const onNewPress = useCallback(() => {
-    dispatch(DataEntryActions.addNewEntity);
+    setTimeout(() => {
+      // Delay the dispatch to allow current attribute update to complete)
+      dispatch(DataEntryActions.addNewEntity);
+    }, entityCreationDelay);
   }, [dispatch]);
 
   return (

@@ -6,6 +6,7 @@ export default {
   confirm: "Confirmar",
   confirmClearSelectedValue: "Limpar o valor selecionado?",
   confirmClearSelectedValue_plural: "Limpar os valores selecionados?",
+  continue: "Continuar",
   createdOn: "Criado em",
   delete: "Excluir",
   deleteSelectedTitle: "Excluir selecionados",
