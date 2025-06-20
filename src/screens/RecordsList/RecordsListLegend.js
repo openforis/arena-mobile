@@ -10,9 +10,7 @@ import styles from "./styles";
 
 const LegendItem = ({ icon, iconSource, textKey }) => (
   <HView>
-    {icon ? (
-      icon
-    ) : (
+    {icon ?? (
       <>
         <Icon source={iconSource} /> <Text textKey={textKey} />
       </>
