@@ -24,7 +24,6 @@ export default {
   goBack: "بازگشت",
   info: "اطلاعات",
   label: "برچسب",
-  legend: "افسانه",
   modifiedOn: "تغییر یافته در",
   name: "نام",
   networkNotAvailable: "شبکه در دسترس نیست!",

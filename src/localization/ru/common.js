@@ -23,7 +23,6 @@ export default {
   goBack: "Назад",
   info: "Информация",
   label: "Метка",
-  legend: "Легенда",
   modifiedOn: "Изменено",
   name: "Имя",
   networkNotAvailable: "Сеть недоступна!",

@@ -29,11 +29,11 @@ const colorBySyncStatus = {
 };
 
 export const RecordSyncStatusIcon = (props) => {
-  const { item, alwaysShowLabel = false } = props;
+  const { item } = props;
   const { syncStatus } = item;
 
   const screenViewMode = ScreenOptionsSelectors.useCurrentScreenViewMode();
-  const viewAsList = alwaysShowLabel || screenViewMode === ScreenViewMode.list;
+  const viewAsList = screenViewMode === ScreenViewMode.list;
 
   const iconColor = colorBySyncStatus[syncStatus];
 

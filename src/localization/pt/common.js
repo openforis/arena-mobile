@@ -22,7 +22,6 @@ export default {
   goBack: "Voltar",
   info: "Informação",
   label: "Etiqueta",
-  legend: "Legenda",
   modifiedOn: "Modificado em",
   name: "Nome",
   networkNotAvailable: "Rede não disponível!",
