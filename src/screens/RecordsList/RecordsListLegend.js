@@ -1,9 +1,12 @@
+import PropTypes from "prop-types";
+
 import { CollapsiblePanel, FieldSet, HView, Icon, Text } from "components";
 import { RecordLoadStatus, RecordOrigin, RecordSyncStatus } from "model";
 
 import { RecordListConstants } from "./recordListConstants";
-import styles from "./styles";
 import { RecordSyncStatusIcon } from "./RecordSyncStatusIcon";
+
+import styles from "./styles";
 
 const LegendItem = ({ icon, iconSource, textKey }) => (
   <HView>
@@ -16,6 +19,12 @@ const LegendItem = ({ icon, iconSource, textKey }) => (
     )}
   </HView>
 );
+
+LegendItem.propTypes = {
+  icon: PropTypes.element,
+  iconSource: PropTypes.string,
+  textKey: PropTypes.string.isRequired,
+};
 
 const visibleSyncStatus = [
   RecordSyncStatus.new,
@@ -35,6 +44,7 @@ export const RecordsListLegend = () => {
       <FieldSet headerKey="recordsList:loadStatus.title">
         {Object.values(RecordLoadStatus).map((loadStatus) => (
           <LegendItem
+            key={loadStatus}
             iconSource={RecordListConstants.iconByLoadStatus[loadStatus]}
             textKey={`recordsList:loadStatus.${loadStatus}`}
           />
@@ -43,6 +53,7 @@ export const RecordsListLegend = () => {
       <FieldSet headerKey="recordsList:origin.title">
         {Object.values(RecordOrigin).map((origin) => (
           <LegendItem
+            key={origin}
             iconSource={RecordListConstants.iconByOrigin[origin]}
             textKey={`recordsList:origin.${origin}`}
           />
@@ -51,6 +62,7 @@ export const RecordsListLegend = () => {
       <FieldSet headerKey="common:status">
         {visibleSyncStatus.map((syncStatus) => (
           <LegendItem
+            key={syncStatus}
             icon={
               <RecordSyncStatusIcon alwaysShowLabel item={{ syncStatus }} />
             }

@@ -19,14 +19,7 @@ import {
   Text,
 } from "components";
 import { useTranslation } from "localization";
-import {
-  Cycles,
-  RecordLoadStatus,
-  RecordOrigin,
-  ScreenViewMode,
-  SortDirection,
-  SurveyDefs,
-} from "model";
+import { Cycles, ScreenViewMode, SortDirection, SurveyDefs } from "model";
 import {
   DataEntryActions,
   ScreenOptionsSelectors,
