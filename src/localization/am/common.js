@@ -23,6 +23,7 @@ export default {
   goBack: "ተመለስ",
   info: "መረጃ",
   label: "መለያ",
+  legend: "አፈ ታሪክ",
   modifiedOn: "የተሻሻለው በ",
   name: "ስም",
   networkNotAvailable: "አውታረ መረብ የለም!",
