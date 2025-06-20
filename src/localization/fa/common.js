@@ -8,7 +8,6 @@ export default {
   confirmClearSelectedValue: "آیا از پاک کردن مقدار انتخاب شده مطمئن هستید؟",
   confirmClearSelectedValue_plural:
     "آیا از پاک کردن مقادیر انتخاب شده مطمئن هستید؟",
-  continue: "ادامه",
   createdOn: "ایجاد شده در",
   delete: "حذف",
   deleteSelectedTitle: "حذف انتخاب",

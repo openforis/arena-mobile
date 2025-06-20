@@ -7,7 +7,6 @@ export default {
   confirm: "Bestätigen",
   confirmClearSelectedValue: "Ausgewählten Wert löschen?",
   confirmClearSelectedValue_plural: "Ausgewählte Werte löschen?",
-  continue: "Weiter",
   createdOn: "Erstellt am",
   delete: "Löschen",
   deleteSelectedTitle: "Ausgewählte löschen",

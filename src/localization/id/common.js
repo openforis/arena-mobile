@@ -7,7 +7,6 @@ export default {
   confirm: "Konfirmasi",
   confirmClearSelectedValue: "Bersihkan nilai yang dipilih?",
   confirmClearSelectedValue_plural: "Bersihkan nilai-nilai yang dipilih?",
-  continue: "Lanjutkan",
   createdOn: "Dibuat pada",
   delete: "Hapus",
   deleteSelectedTitle: "Hapus yang dipilih",
@@ -70,5 +69,5 @@ export default {
     lessThanOneTimePart: "kurang dari satu {{timePart}} tersisa",
     timePartLeft: "{{count}} {{timePart}} tersisa",
   },
-  warning: "Peringatan",
+  warning: 'Peringatan'
 };

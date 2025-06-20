@@ -164,7 +164,6 @@ export const exportRecords =
     onlyLocally = false,
     onlyRemote = false,
     onJobComplete: onJobCompleteParam = null,
-    onEnd = null,
   }) =>
   async (dispatch, getState) => {
     const state = getState();
@@ -222,5 +221,4 @@ export const exportRecords =
     } catch (error) {
       dispatch(handleError(error));
     }
-    await onEnd?.();
   };

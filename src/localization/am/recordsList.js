@@ -9,12 +9,6 @@ export default {
     completeSuccessfully: "መዝገቦቹ በተሳካ ሁኔታ ወደ ዑደት {{cycle}} ተቀድተዋል!",
   },
   confirmImportRecordFromServer: "መዝገብ ከአገልጋዩ ያስገቡ?",
-  continueEditing: {
-    title: "አርትዖት ይቀጥሉ",
-    confirm: {
-      message: "ካቆሙበት ቦታ አርትዖት ይቀጥሉ?",
-    },
-  },
   dateModifiedRemotely: "የርቀት ማሻሻያ ቀን",
   deleteRecordsConfirm: {
     title: "መዝገቦችን ሰርዝ",

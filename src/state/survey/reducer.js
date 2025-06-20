@@ -7,13 +7,12 @@ import { determinePreferredSurveyLanguage } from "./surveyStateUtils";
 
 const actionHandlers = {
   [SurveyActionTypes.CURRENT_SURVEY_SET]: ({ state, action }) => {
-    const { survey, preferredLanguage = null } = action;
+    const { survey } = action;
 
     return {
       ...state,
       currentSurvey: survey,
-      currentSurveyPreferredLanguage:
-        preferredLanguage ?? determinePreferredSurveyLanguage(survey),
+      currentSurveyPreferredLanguage: determinePreferredSurveyLanguage(survey),
       currentSurveyCycle: survey ? Surveys.getDefaultCycleKey(survey) : null,
     };
   },
