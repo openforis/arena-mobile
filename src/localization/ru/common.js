@@ -7,7 +7,6 @@ export default {
   confirm: "Подтвердить",
   confirmClearSelectedValue: "Очистить выбранное значение?",
   confirmClearSelectedValue_plural: "Очистить выбранные значения?",
-  continue: "Продолжить",
   createdOn: "Создано",
   delete: "Удалить",
   deleteSelectedTitle: "Удалить выбранное",

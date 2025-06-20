@@ -10,12 +10,6 @@ export default {
     completeSuccessfully: "رکوردها با موفقیت به چرخه {{cycle}} کلون شدند!",
   },
   confirmImportRecordFromServer: "رکورد را از سرور وارد کنید؟",
-  continueEditing: {
-    title: "ادامه ویرایش",
-    confirm: {
-      message: "ادامه ویرایش از جایی که متوقف کردید؟",
-    },
-  },
   dateModifiedRemotely: "تاریخ تغییر در سرور",
   deleteRecordsConfirm: {
     title: "حذف رکوردها",
