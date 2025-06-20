@@ -10,6 +10,12 @@ export default {
     completeSuccessfully: "Poster har klonats till cykel {{cycle}}!",
   },
   confirmImportRecordFromServer: "Importera post från servern?",
+  continueEditing: {
+    title: "Fortsätt redigera",
+    confirm: {
+      message: "Fortsätta redigera där du slutade?",
+    },
+  },
   dateModifiedRemotely: "Datum ändrat på distans",
   deleteRecordsConfirm: {
     title: "Ta bort poster",

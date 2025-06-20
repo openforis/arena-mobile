@@ -47,6 +47,7 @@ const selectCurrentSurveyCycle = (state) =>
 
 export const SurveySelectors = {
   selectCurrentSurvey,
+  selectCurrentSurveyId,
   selectCurrentSurveyCycle,
   selectCurrentSurveyPreferredLang,
 

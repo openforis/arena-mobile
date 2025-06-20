@@ -11,6 +11,12 @@ export default {
       "Enregistrements clonés avec succès dans le cycle {{cycle}}!",
   },
   confirmImportRecordFromServer: "Importer l'enregistrement depuis le serveur?",
+  continueEditing: {
+    title: "Continuer l'édition",
+    confirm: {
+      message: "Continuer l'édition là où vous vous êtes arrêté(e) ?",
+    },
+  },
   dateModifiedRemotely: "Date de modification à distance",
   deleteRecordsConfirm: {
     title: "Supprimer les enregistrements",
