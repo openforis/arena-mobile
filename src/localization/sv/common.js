@@ -23,6 +23,7 @@ export default {
   goBack: "Gå tillbaka",
   info: "Info",
   label: "Etikett",
+  legend: "Förklaring",
   modifiedOn: "Ändrad den",
   name: "Namn",
   networkNotAvailable: "Nätverk inte tillgängligt!",
