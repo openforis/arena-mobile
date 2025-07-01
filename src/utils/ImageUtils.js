@@ -113,12 +113,16 @@ const resizeToFitMaxSize = async ({ fileUri, maxSize }) => {
   const size = await Files.getSize(fileUri);
   if (size <= maxSize) return null;
 
-  return new Promise((resolve) => {
-    Image.getSize(fileUri, (width, height) => {
-      _resizeToFitMaxSize({ fileUri, width, height, size, maxSize }).then(
-        (result) => resolve(result)
-      );
-    });
+  return new Promise((resolve, reject) => {
+    Image.getSize(
+      fileUri,
+      (width, height) => {
+        _resizeToFitMaxSize({ fileUri, width, height, size, maxSize }).then(
+          (result) => resolve(result)
+        );
+      },
+      (error) => reject(error)
+    );
   });
 };
 
@@ -136,6 +140,7 @@ const isValid = async (fileUri) => {
     const size = await getSize(fileUri);
     return !!size;
   } catch (error) {
+    console.warn("=== ImageUtils.isValid error:", error);
     return false;
   }
 };
