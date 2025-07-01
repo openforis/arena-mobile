@@ -1,5 +1,5 @@
 import { Image } from "react-native";
-import * as ImageManipulator from "expo-image-manipulator";
+import { ImageManipulator } from "expo-image-manipulator";
 
 import { Files } from "./Files";
 
@@ -22,43 +22,58 @@ const _resizeToFitMaxSize = async ({
 
   let sizeRatio = maxSize / size;
 
-  if (
+  const isSizeAcceptable = () =>
     sizeRatio >= minSuccessfullSizeRatio &&
-    sizeRatio <= maxSuccessfullSizeRatio
-  ) {
+    sizeRatio <= maxSuccessfullSizeRatio;
+
+  if (isSizeAcceptable()) {
     return generateSuccessfulResult();
   }
 
   let scale = 1;
-  const calculateNextScale = () => scale * sizeRatio; // scale * size ratio
+  const calculateNextScale = () => Math.sqrt(sizeRatio);
 
   const stack = [calculateNextScale()];
 
+  console.log("===resizing image", sourceWidth, size, maxSize);
   while (stack.length > 0) {
     scale = stack.pop();
 
-    const currentMaxWidth = Math.floor(sourceWidth * scale);
+    // max witdh always below source width (cannot enlarge original file)
+    const currentMaxWidth = Math.min(
+      Math.floor(sourceWidth * scale),
+      sourceWidth
+    );
+
+    console.log("===scale", scale);
+    console.log("=== currentMaxWidth", currentMaxWidth);
 
     try {
+      const imageContext = ImageManipulator.manipulate(fileUri);
+      imageContext.resize({ width: currentMaxWidth });
+      const resizedImage = await imageContext.renderAsync();
       const {
         uri: resizedImageUri,
         height: resizedImageHeight,
         width: resizedImageWidth,
-      } = await ImageManipulator.manipulateAsync(
-        fileUri,
-        [{ resize: { width: currentMaxWidth } }],
-        { compress: 0.9 }
-      );
+      } = await resizedImage.saveAsync({ compress: 0.9 });
 
       uri = resizedImageUri;
       height = resizedImageHeight;
       width = resizedImageWidth;
       size = await Files.getSize(resizedImageUri);
+
       sizeRatio = maxSize / size;
+      console.log("=== size", size);
+      console.log("=== size ratio", sizeRatio);
+      console.log("====is same size", currentMaxWidth === sourceWidth);
+      console.log("====size acceptable", isSizeAcceptable());
+      console.log("===under max size", sizeRatio <= maxSuccessfullSizeRatio);
 
       if (
-        sizeRatio >= minSuccessfullSizeRatio &&
-        sizeRatio <= maxSuccessfullSizeRatio
+        isSizeAcceptable() ||
+        (currentMaxWidth === sourceWidth &&
+          sizeRatio <= maxSuccessfullSizeRatio)
       ) {
         return generateSuccessfulResult();
       }
