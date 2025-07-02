@@ -3,7 +3,7 @@
     "name": "Arena Mobile 2",
     "slug": "arena-mobile",
     "owner": "openforis",
-    "version": "2.0.14",
+    "version": "2.0.15",
     "icon": "./assets/logo/icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -21,10 +21,10 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "org.openforis.arena_mobile",
-      "versionCode": 19
+      "versionCode": 20
     },
     "ios": {
-      "buildNumber": "19",
+      "buildNumber": "20",
       "bundleIdentifier": "org.openforis.arena-mobile",
       "config": {
         "usesNonExemptEncryption": false

@@ -1,38 +1,61 @@
 import { Image } from "react-native";
-import * as ImageManipulator from "expo-image-manipulator";
+import { ImageManipulator } from "expo-image-manipulator";
 
 import { Files } from "./Files";
 
+const compress = 0.9;
+
+const _scaleImage = async ({ sourceFileUri, sourceWidth, scale }) => {
+  const scaledWidth = Math.floor(sourceWidth * scale);
+  const imageContext = ImageManipulator.manipulate(sourceFileUri);
+  imageContext.resize({ width: scaledWidth });
+  const resizedImage = await imageContext.renderAsync();
+  const { uri, height, width } = await resizedImage.saveAsync({ compress });
+  const size = await Files.getSize(uri);
+  return { uri, height, width, size };
+};
+
 const _resizeToFitMaxSize = async ({
-  fileUri,
+  fileUri: sourceFileUri,
   width: sourceWidth,
-  // height: sourceHeight,
+  height: sourceHeight,
   size: sourceSize,
   maxSize,
-  maxTryings = 10,
-  minSuccessfullSizeRatio = 1, // = max size
-  maxSuccessfullSizeRatio = 1.05, // = max size - 5%
+  maxTryings = 5,
+  minSuccessfullSizeRatio = 0.95, // = max size - 5%
+  maxSuccessfullSizeRatio = 1.0, // = max size
 }) => {
   let tryings = 1;
-  let uri, width, height;
 
-  let size = sourceSize;
+  let lastResizeResult = {
+    uri: sourceFileUri,
+    size: sourceSize,
+    height: sourceHeight,
+    width: sourceWidth,
+  };
 
-  const generateSuccessfulResult = () => ({ uri, size, height, width });
+  const calculateSizeRatio = () => lastResizeResult.size / maxSize;
 
-  let sizeRatio = maxSize / size;
+  let sizeRatio = calculateSizeRatio();
 
-  if (
+  const isSizeAcceptable = () =>
     sizeRatio >= minSuccessfullSizeRatio &&
-    sizeRatio <= maxSuccessfullSizeRatio
-  ) {
-    return generateSuccessfulResult();
+    sizeRatio <= maxSuccessfullSizeRatio;
+
+  if (isSizeAcceptable()) {
+    return lastResizeResult;
   }
 
-  let scale = 1;
-  const calculateNextScale = () => scale * sizeRatio; // scale * size ratio
+  const initialScale = 1 / Math.sqrt(sizeRatio);
+  let scale;
+  let bestScaleSizeRatio;
+  let bestScaleResizeResult;
 
-  const stack = [calculateNextScale()];
+  const calculateNextScale = () =>
+    // max scale always 1 (cannot scale up)
+    Math.min(1, scale * (sizeRatio > 1 ? 0.75 : 1.25));
+
+  const stack = [initialScale];
 
   while (stack.length > 0) {
     scale = stack.pop();
@@ -40,32 +63,35 @@ const _resizeToFitMaxSize = async ({
     const currentMaxWidth = Math.floor(sourceWidth * scale);
 
     try {
-      const {
-        uri: resizedImageUri,
-        height: resizedImageHeight,
-        width: resizedImageWidth,
-      } = await ImageManipulator.manipulateAsync(
-        fileUri,
-        [{ resize: { width: currentMaxWidth } }],
-        { compress: 0.9 }
-      );
+      lastResizeResult = await _scaleImage({
+        sourceFileUri,
+        sourceWidth,
+        scale,
+      });
 
-      uri = resizedImageUri;
-      height = resizedImageHeight;
-      width = resizedImageWidth;
-      size = await Files.getSize(resizedImageUri);
-      sizeRatio = maxSize / size;
+      sizeRatio = calculateSizeRatio();
 
       if (
-        sizeRatio >= minSuccessfullSizeRatio &&
-        sizeRatio <= maxSuccessfullSizeRatio
+        isSizeAcceptable() ||
+        (currentMaxWidth === sourceWidth &&
+          sizeRatio <= maxSuccessfullSizeRatio)
       ) {
-        return generateSuccessfulResult();
+        return lastResizeResult;
+      }
+      if (
+        sizeRatio <= 1 &&
+        (!bestScaleSizeRatio || sizeRatio > bestScaleSizeRatio)
+      ) {
+        bestScaleSizeRatio = sizeRatio;
+        bestScaleResizeResult = lastResizeResult;
+      } else {
+        // delete temporary resized image file
+        await Files.del(lastResizeResult.uri);
       }
       if (
         tryings < maxTryings ||
         // always try to resize to fit max size
-        sizeRatio < 1
+        sizeRatio > 1
       ) {
         stack.push(calculateNextScale());
       } else {
@@ -76,21 +102,25 @@ const _resizeToFitMaxSize = async ({
       // inspect err to get more details.
       return { error };
     }
-    tryings = tryings + 1;
+    tryings += 1;
   }
-  return generateSuccessfulResult();
+  return bestScaleResizeResult ?? lastResizeResult;
 };
 
 const resizeToFitMaxSize = async ({ fileUri, maxSize }) => {
   const size = await Files.getSize(fileUri);
   if (size <= maxSize) return null;
 
-  return new Promise((resolve) => {
-    Image.getSize(fileUri, (width, height) => {
-      _resizeToFitMaxSize({ fileUri, width, height, size, maxSize }).then(
-        (result) => resolve(result)
-      );
-    });
+  return new Promise((resolve, reject) => {
+    Image.getSize(
+      fileUri,
+      (width, height) => {
+        _resizeToFitMaxSize({ fileUri, width, height, size, maxSize }).then(
+          (result) => resolve(result)
+        );
+      },
+      (error) => reject(error)
+    );
   });
 };
 
@@ -108,7 +138,7 @@ const isValid = async (fileUri) => {
     const size = await getSize(fileUri);
     return !!size;
   } catch (error) {
-    console.log("==error", error);
+    console.warn("=== ImageUtils.isValid error:", error);
     return false;
   }
 };
