@@ -104,7 +104,7 @@ const _resizeToFitMaxSize = async ({
     }
     tryings += 1;
   }
-  return bestScaleResizeResult ? bestScaleResizeResult : lastResizeResult;
+  return bestScaleResizeResult ?? lastResizeResult;
 };
 
 const resizeToFitMaxSize = async ({ fileUri, maxSize }) => {
