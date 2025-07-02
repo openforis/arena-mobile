@@ -48,7 +48,6 @@ const _resizeToFitMaxSize = async ({
 
   const initialScale = 1 / Math.sqrt(sizeRatio);
   let scale;
-  let bestScale;
   let bestScaleSizeRatio;
   let bestScaleResizeResult;
 
@@ -83,7 +82,6 @@ const _resizeToFitMaxSize = async ({
         sizeRatio <= 1 &&
         (!bestScaleSizeRatio || sizeRatio > bestScaleSizeRatio)
       ) {
-        bestScale = scale;
         bestScaleSizeRatio = sizeRatio;
         bestScaleResizeResult = lastResizeResult;
       } else {
@@ -106,9 +104,7 @@ const _resizeToFitMaxSize = async ({
     }
     tryings += 1;
   }
-  return bestScale && bestScale !== scale
-    ? bestScaleResizeResult
-    : lastResizeResult;
+  return bestScaleResizeResult ? bestScaleResizeResult : lastResizeResult;
 };
 
 const resizeToFitMaxSize = async ({ fileUri, maxSize }) => {
