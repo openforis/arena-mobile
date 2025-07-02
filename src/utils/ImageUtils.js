@@ -18,7 +18,7 @@ const _scaleImage = async ({ sourceFileUri, sourceWidth, scale }) => {
 const _resizeToFitMaxSize = async ({
   fileUri: sourceFileUri,
   width: sourceWidth,
-  // height: sourceHeight,
+  height: sourceHeight,
   size: sourceSize,
   maxSize,
   maxTryings = 5,
@@ -26,13 +26,15 @@ const _resizeToFitMaxSize = async ({
   maxSuccessfullSizeRatio = 1.0, // = max size
 }) => {
   let tryings = 1;
-  let uri, width, height;
 
-  let size = sourceSize;
+  let lastResizeResult = {
+    uri: sourceFileUri,
+    size: sourceSize,
+    height: sourceHeight,
+    width: sourceWidth,
+  };
 
-  const generateSuccessfulResult = () => ({ uri, size, height, width });
-
-  const calculateSizeRatio = () => size / maxSize;
+  const calculateSizeRatio = () => lastResizeResult.size / maxSize;
 
   let sizeRatio = calculateSizeRatio();
 
@@ -41,13 +43,14 @@ const _resizeToFitMaxSize = async ({
     sizeRatio <= maxSuccessfullSizeRatio;
 
   if (isSizeAcceptable()) {
-    return generateSuccessfulResult();
+    return lastResizeResult;
   }
 
   const initialScale = 1 / Math.sqrt(sizeRatio);
   let scale;
   let bestScale;
   let bestScaleSizeRatio;
+  let bestScaleResizeResult;
 
   const calculateNextScale = () =>
     // max scale always 1 (cannot scale up)
@@ -61,11 +64,11 @@ const _resizeToFitMaxSize = async ({
     const currentMaxWidth = Math.floor(sourceWidth * scale);
 
     try {
-      ({ uri, height, width, size } = await _scaleImage({
+      lastResizeResult = await _scaleImage({
         sourceFileUri,
         sourceWidth,
         scale,
-      }));
+      });
 
       sizeRatio = calculateSizeRatio();
 
@@ -74,7 +77,7 @@ const _resizeToFitMaxSize = async ({
         (currentMaxWidth === sourceWidth &&
           sizeRatio <= maxSuccessfullSizeRatio)
       ) {
-        return generateSuccessfulResult();
+        return lastResizeResult;
       }
       if (
         sizeRatio <= 1 &&
@@ -82,6 +85,10 @@ const _resizeToFitMaxSize = async ({
       ) {
         bestScale = scale;
         bestScaleSizeRatio = sizeRatio;
+        bestScaleResizeResult = lastResizeResult;
+      } else {
+        // delete temporary resized image file
+        await Files.del(lastResizeResult.uri);
       }
       if (
         tryings < maxTryings ||
@@ -99,14 +106,9 @@ const _resizeToFitMaxSize = async ({
     }
     tryings += 1;
   }
-  if (bestScale && bestScale !== scale) {
-    ({ uri, height, width, size } = await _scaleImage({
-      sourceFileUri,
-      sourceWidth,
-      scale: bestScale,
-    }));
-  }
-  return generateSuccessfulResult();
+  return bestScale && bestScale !== scale
+    ? bestScaleResizeResult
+    : lastResizeResult;
 };
 
 const resizeToFitMaxSize = async ({ fileUri, maxSize }) => {
