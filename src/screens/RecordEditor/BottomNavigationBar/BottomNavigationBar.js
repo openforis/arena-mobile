@@ -36,6 +36,7 @@ const nextButtonIconPositionByTextDirection = {
   [rtl]: "left",
 };
 
+// Delay the dispatch to allow current attribute update to complete)
 const entityCreationDelay = 500;
 
 export const BottomNavigationBar = () => {
