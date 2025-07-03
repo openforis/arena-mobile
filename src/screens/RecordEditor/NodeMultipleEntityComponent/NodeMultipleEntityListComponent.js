@@ -30,12 +30,12 @@ export const NodeMultipleEntityListComponent = (props) => {
   const dispatch = useDispatch();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const confirm = useConfirm();
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   if (__DEV__) {
     console.log(
       "Rendering NodeMultipleEntityListComponent for " +
-      NodeDefs.getName(entityDef)
+        NodeDefs.getName(entityDef)
     );
   }
 
@@ -59,19 +59,19 @@ export const NodeMultipleEntityListComponent = (props) => {
     () =>
       isLandscape
         ? RecordNodes.getApplicableDescendantDefs({
-          survey,
-          entityDef,
-          record,
-          parentEntity,
-        })
+            survey,
+            entityDef,
+            record,
+            parentEntity,
+          })
         : RecordNodes.getApplicableSummaryDefs({
-          survey,
-          entityDef,
-          record,
-          parentEntity,
-          onlyKeys: false,
-          maxSummaryDefs,
-        }),
+            survey,
+            entityDef,
+            record,
+            parentEntity,
+            onlyKeys: false,
+            maxSummaryDefs,
+          }),
     [entityDef, isLandscape, maxSummaryDefs, parentEntity, record, survey]
   );
 
@@ -86,7 +86,7 @@ export const NodeMultipleEntityListComponent = (props) => {
   );
 
   const onNewPress = () => {
-    dispatch(DataEntryActions.addNewEntity);
+    dispatch(DataEntryActions.addNewEntity());
   };
 
   const onRowPress = useCallback(
@@ -126,7 +126,7 @@ export const NodeMultipleEntityListComponent = (props) => {
         onlyKeys: false,
         lang,
         summaryDefs: visibleNodeDefs,
-        t
+        t,
       }),
     }),
     [survey, record, lang, t, visibleNodeDefs]

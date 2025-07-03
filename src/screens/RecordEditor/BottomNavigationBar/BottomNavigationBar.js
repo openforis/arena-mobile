@@ -74,10 +74,7 @@ export const BottomNavigationBar = () => {
   } = useBottomNavigationBar();
 
   const onNewPress = useCallback(() => {
-    setTimeout(() => {
-      // Delay the dispatch to allow current attribute update to complete)
-      dispatch(DataEntryActions.addNewEntity);
-    }, entityCreationDelay);
+    dispatch(DataEntryActions.addNewEntity({ delay: entityCreationDelay }));
   }, [dispatch]);
 
   return (
@@ -107,6 +104,7 @@ export const BottomNavigationBar = () => {
           avoidMultiplePress
           icon="plus"
           mode="contained"
+          multiplePressAvoidanceTimeout={entityCreationDelay + 200}
           onPress={onNewPress}
           selected
         />
