@@ -108,8 +108,7 @@ const createNewRecord =
     dispatch(editRecord({ navigation, record, locked: false }));
   };
 
-const addNewEntity = async (dispatch, getState) => {
-  Keyboard.dismiss();
+const _performAddEntity = async (dispatch, getState) => {
   const state = getState();
   const user = RemoteConnectionSelectors.selectLoggedUser(state);
   const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -146,6 +145,18 @@ const addNewEntity = async (dispatch, getState) => {
     })
   );
 };
+
+const addNewEntity =
+  (options = {}) =>
+  async (dispatch) => {
+    const { delay = null } = options;
+    Keyboard.dismiss();
+    if (delay) {
+      setTimeout(() => dispatch(_performAddEntity), delay);
+    } else {
+      dispatch(_performAddEntity);
+    }
+  };
 
 const deleteNodes = (nodeUuids) => async (dispatch, getState) => {
   const state = getState();

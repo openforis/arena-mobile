@@ -12,6 +12,7 @@ export const IconButton = (props) => {
     iconColor,
     loading = false,
     mode = "contained-tonal",
+    multiplePressAvoidanceTimeout = 500,
     onPress: onPressProp,
     size = 20,
     ...otherProps
@@ -20,6 +21,7 @@ export const IconButton = (props) => {
   const { actualLoading, onPress } = useButtonOnPress({
     avoidMultiplePress,
     loading,
+    multiplePressAvoidanceTimeout,
     onPressProp,
   });
 
@@ -44,6 +46,7 @@ IconButton.propTypes = {
   iconColor: PropTypes.string,
   loading: PropTypes.bool,
   mode: PropTypes.string,
+  multiplePressAvoidanceTimeout: PropTypes.number,
   onPress: PropTypes.func,
   size: PropTypes.number,
 };

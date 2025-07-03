@@ -36,6 +36,7 @@ const nextButtonIconPositionByTextDirection = {
   [rtl]: "left",
 };
 
+// Delay the dispatch to allow current attribute update to complete)
 const entityCreationDelay = 500;
 
 export const BottomNavigationBar = () => {
@@ -74,10 +75,7 @@ export const BottomNavigationBar = () => {
   } = useBottomNavigationBar();
 
   const onNewPress = useCallback(() => {
-    setTimeout(() => {
-      // Delay the dispatch to allow current attribute update to complete)
-      dispatch(DataEntryActions.addNewEntity);
-    }, entityCreationDelay);
+    dispatch(DataEntryActions.addNewEntity({ delay: entityCreationDelay }));
   }, [dispatch]);
 
   return (
@@ -107,6 +105,7 @@ export const BottomNavigationBar = () => {
           avoidMultiplePress
           icon="plus"
           mode="contained"
+          multiplePressAvoidanceTimeout={entityCreationDelay + 200}
           onPress={onNewPress}
           selected
         />
