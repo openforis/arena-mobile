@@ -1,4 +1,8 @@
-import { SegmentedButtons as RNPSegmentedButtons } from "react-native-paper";
+import { useMemo } from "react";
+import {
+  SegmentedButtons as RNPSegmentedButtons,
+  useTheme,
+} from "react-native-paper";
 import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
@@ -7,6 +11,17 @@ export const SegmentedButtons = (props) => {
   const { buttons, onChange, style, value } = props;
 
   const { t } = useTranslation();
+  const theme = useTheme();
+
+  const buttonsTheme = useMemo(
+    () => ({
+      colors: {
+        secondaryContainer: theme.colors.primary,
+        onSecondaryContainer: theme.colors.onPrimary,
+      },
+    }),
+    [theme]
+  );
 
   return (
     <RNPSegmentedButtons
@@ -17,6 +32,7 @@ export const SegmentedButtons = (props) => {
       }))}
       onValueChange={onChange}
       style={style}
+      theme={buttonsTheme}
       value={value}
     />
   );
