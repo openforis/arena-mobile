@@ -55,6 +55,12 @@ Details: {{details}}`,
   },
   exportNewOrUpdatedRecords: "Export new or updated records",
   formLanguage: "Form language:",
+  node: {
+    cannotAddMoreItems: {
+      maxCountReached: `Cannot add more items: 
+max count reached`,
+    },
+  },
   noEntitiesDefined: "No entities defined",
   goToDataEntry: "Go to data entry",
   goToListOfRecords: "Go to list of records",
@@ -109,9 +115,6 @@ Details: {{details}}`,
   },
 
   code: {
-    cannotAddMoreItems: {
-      maxCountReached: "Cannot add more items: max count reached",
-    },
     selectItem: "Select item",
     selectItem_plural: "Select items",
   },

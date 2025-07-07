@@ -315,8 +315,9 @@ const useIsNodeDefCurrentActiveChild = (nodeDef) =>
     return nodeDefIndex === activeChildDefIndex;
   });
 
-const useIsNodeMaxCountReached = ({ parentNodeUuid, nodeDef }) =>
-  useSelector((state) => {
+const selectIsMaxCountReached =
+  ({ parentNodeUuid, nodeDef }) =>
+  (state) => {
     const record = selectRecord(state);
     const parentNode = parentNodeUuid
       ? Records.getNodeByUuid(parentNodeUuid)(record)
@@ -331,7 +332,10 @@ const useIsNodeMaxCountReached = ({ parentNodeUuid, nodeDef }) =>
 
     const siblings = Records.getChildren(parentNode, nodeDef.uuid)(record);
     return siblings.length >= maxCount;
-  });
+  };
+
+const useIsNodeMaxCountReached = ({ parentNodeUuid, nodeDef }) =>
+  useSelector(selectIsMaxCountReached({ parentNodeUuid, nodeDef }));
 
 export const DataEntrySelectors = {
   selectRecord,
@@ -419,6 +423,7 @@ export const DataEntrySelectors = {
 
   useIsNodeDefCurrentActiveChild,
 
+  selectIsMaxCountReached,
   useIsNodeMaxCountReached,
 
   // page selector

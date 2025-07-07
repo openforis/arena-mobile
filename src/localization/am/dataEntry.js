@@ -53,6 +53,11 @@ export default {
   listOfRecords: "የመዝገቦች",
   localBackup: "የአካባቢ ምትኬ",
   newRecord: "አዲስ",
+  node: {
+    cannotAddMoreItems: {
+      maxCountReached: "ተጨማሪ እቃዎችን መጨመር አይቻልም: ከፍተኛው ቆጠራ ደርሷል",
+    },
+  },
   noRecordsFound: "ምንም መዝገቦች አልተገኙም",
   recordEditor: "የመዝገብ አርታዒ",
   recordInPreviousCycle: {
@@ -95,9 +100,6 @@ export default {
     oneNode: "አንድ መስቀለኛ መንገድ",
   },
   code: {
-    cannotAddMoreItems: {
-      maxCountReached: "ተጨማሪ እቃዎችን መጨመር አይቻልም: ከፍተኛው ቆጠራ ደርሷል",
-    },
     selectItem: "ንጥል ይምረጡ",
     selectItem_plural: "ንጥሎችን ይምረጡ",
   },

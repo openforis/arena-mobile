@@ -4,6 +4,7 @@ import {
   Dates,
   NodeDefs,
   NodeDefType,
+  Nodes,
   Numbers,
   Objects,
   PointFactory,
@@ -119,6 +120,20 @@ const _performAddEntity = async (dispatch, getState) => {
   const parentNode = currentParentNodeUuid
     ? Records.getNodeByUuid(currentParentNodeUuid)(record)
     : Records.getRoot(record);
+
+  if (
+    DataEntrySelectors.selectIsMaxCountReached({
+      parentNodeUuid: parentNode.uuid,
+      nodeDef,
+    })(state)
+  ) {
+    dispatch(
+      MessageActions.setWarning(
+        "dataEntry:node.cannotAddMoreItems.maxCountReached"
+      )
+    );
+    return;
+  }
 
   const { record: recordUpdated, nodes: nodesCreated } =
     await RecordUpdater.createNodeAndDescendants({

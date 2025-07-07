@@ -97,7 +97,7 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
       } else if (maxCountReached) {
         dispatch(
           MessageActions.setInfo(
-            "dataEntry:code.cannotAddMoreItems.maxCountReached"
+            "dataEntry:node.cannotAddMoreItems.maxCountReached"
           )
         );
       } else {

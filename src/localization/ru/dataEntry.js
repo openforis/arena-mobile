@@ -57,6 +57,12 @@ export default {
   listOfRecords: "Список записей",
   localBackup: "Локальная резервная копия",
   newRecord: "Новая",
+  node: {
+    cannotAddMoreItems: {
+      maxCountReached:
+        "Невозможно добавить больше элементов: достигнуто максимальное количество",
+    },
+  },
   noRecordsFound: "Записи не найдены",
   recordEditor: "Редактор записей",
   recordInPreviousCycle: {
@@ -101,10 +107,6 @@ export default {
     oneNode: "Один узел",
   },
   code: {
-    cannotAddMoreItems: {
-      maxCountReached:
-        "Невозможно добавить больше элементов: достигнуто максимальное количество",
-    },
     selectItem: "Выберите элемент",
     selectItem_plural: "Выберите элементы",
   },

@@ -63,6 +63,12 @@ export default {
   listOfRecords: "Data",
   localBackup: "Cadangan lokal",
   newRecord: "Baru",
+  node: {
+    cannotAddMoreItems: {
+      maxCountReached:
+        "Tidak dapat menambahkan lebih banyak item: jumlah maksimum tercapai",
+    },
+  },
   noRecordsFound: "Tidak ada data yang ditemukan",
   recordEditor: "Editor data isian",
   recordInPreviousCycle: {
@@ -112,10 +118,6 @@ export default {
   },
 
   code: {
-    cannotAddMoreItems: {
-      maxCountReached:
-        "Tidak dapat menambahkan lebih banyak item: jumlah maksimum tercapai",
-    },
     selectItem: "Pilih item",
     selectItem_plural: "Pilih item",
   },

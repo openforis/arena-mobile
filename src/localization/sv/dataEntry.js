@@ -61,6 +61,12 @@ export default {
   listOfRecords: "Poster",
   localBackup: "Lokal säkerhetskopia",
   newRecord: "Ny",
+  node: {
+    cannotAddMoreItems: {
+      maxCountReached:
+        "Kan inte lägga till fler objekt: maximalt antal har nåtts",
+    },
+  },
   noRecordsFound: "Inga poster hittades",
   recordEditor: "Postredigerare",
   recordInPreviousCycle: {
@@ -109,10 +115,6 @@ export default {
   },
 
   code: {
-    cannotAddMoreItems: {
-      maxCountReached:
-        "Kan inte lägga till fler objekt: maximalt antal har nåtts",
-    },
     selectItem: "Välj objekt",
     selectItem_plural: "Välj objekt",
   },
