@@ -1,6 +1,12 @@
 import { useMemo, useState } from "react";
 
-import { NodeDefs, Records, Surveys } from "@openforis/arena-core";
+import {
+  NodeDefs,
+  Objects,
+  Records,
+  RecordValidations,
+  Surveys,
+} from "@openforis/arena-core";
 
 import { RecordNodes } from "model";
 import { ValidationUtils } from "model/utils/ValidationUtils";
@@ -15,6 +21,8 @@ import { DataVisualizer, Text, VView } from "components";
 import { NodeEditDialog } from "screens/RecordEditor/NodeComponentSwitch/nodeTypes/NodeEditDialog";
 
 import styles from "./styles";
+
+const nodePathPartSeparator = " / ";
 
 const getNodePath = ({ survey, record, nodeUuid, lang }) => {
   const node = Records.getNodeByUuid(nodeUuid)(record);
@@ -41,7 +49,71 @@ const getNodePath = ({ survey, record, nodeUuid, lang }) => {
     }
     parts.unshift(part);
   })(record);
-  return parts.join(" / ");
+  return parts.join(nodePathPartSeparator);
+};
+
+const extractValidationItem = ({
+  survey,
+  record,
+  validationFieldKey,
+  validationResult,
+  lang,
+  t,
+}) => {
+  let invalidNodeDefUuid, invalidParentNodeUuid, invalidNodeUuid;
+  if (RecordValidations.isValidationChildrenCountKey(validationFieldKey)) {
+    invalidNodeDefUuid =
+      RecordValidations.extractValidationChildrenCountKeyNodeDefUuid(
+        validationFieldKey
+      );
+    invalidParentNodeUuid =
+      RecordValidations.extractValidationChildrenCountKeyParentUuid(
+        validationFieldKey
+      );
+  } else {
+    const node = Records.getNodeByUuid(validationFieldKey)(record);
+    if (!node) return null;
+
+    invalidNodeUuid = validationFieldKey;
+    invalidNodeDefUuid = node.nodeDefUuid;
+    invalidParentNodeUuid = node.parentUuid;
+  }
+  const invalidNodeDef = Surveys.getNodeDefByUuid({
+    survey,
+    uuid: invalidNodeDefUuid,
+  });
+
+  const path = invalidNodeUuid
+    ? getNodePath({
+        survey,
+        record,
+        nodeUuid: invalidNodeUuid,
+        lang,
+      })
+    : [
+        getNodePath({
+          survey,
+          record,
+          nodeUuid: invalidParentNodeUuid,
+          lang,
+        }),
+        NodeDefs.getLabelOrName(invalidNodeDef, lang),
+      ]
+        .filter(Objects.isNotEmpty)
+        .join(nodePathPartSeparator);
+
+  const error = ValidationUtils.getJointErrorText({
+    validation: validationResult,
+    t,
+    customMessageLang: lang,
+  });
+  return {
+    key: validationFieldKey,
+    nodeDef: invalidNodeDef,
+    parentNodeUuid: invalidParentNodeUuid,
+    path,
+    error,
+  };
 };
 
 export const RecordValidationReport = () => {
@@ -70,22 +142,18 @@ export const RecordValidationReport = () => {
   const items = useMemo(
     () =>
       Object.entries(validationFields).reduce(
-        (acc, [nodeUuid, validationResult]) => {
-          const node = Records.getNodeByUuid(nodeUuid)(record);
-          if (!node) return acc;
-
-          const nodeDef = Surveys.getNodeDefByUuid({
+        (acc, [validationFieldKey, validationResult]) => {
+          const validationItem = extractValidationItem({
             survey,
-            uuid: node.nodeDefUuid,
-          });
-          const parentNodeUuid = node.parentUuid;
-          const path = getNodePath({ survey, record, nodeUuid, lang });
-          const error = ValidationUtils.getJointErrorText({
-            validation: validationResult,
+            record,
+            validationFieldKey,
+            validationResult,
+            lang,
             t,
-            customMessageLang: lang,
           });
-          acc.push({ key: nodeUuid, nodeDef, parentNodeUuid, path, error });
+          if (validationItem) {
+            acc.push(validationItem);
+          }
           return acc;
         },
         []
