@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 
 import { NodeDefs, Records } from "@openforis/arena-core";
 
-import { DataTable, ScrollView, Text, VView } from "components";
+import { DataTable, HView, ScrollView, Text, VView } from "components";
 import { useTranslation } from "localization";
 import { RecordNodes } from "model/utils/RecordNodes";
 import {
@@ -16,6 +16,7 @@ import {
 } from "state";
 
 import { NewNodeButton } from "../NewNodeButton";
+import { NodeValidationIcon } from "../NodeValidationIcon";
 
 import styles from "./styles";
 
@@ -165,9 +166,15 @@ export const NodeMultipleEntityListComponent = (props) => {
         ) : (
           dataTable
         ))}
-      {canAddNew && (
-        <NewNodeButton nodeDefLabel={nodeDefLabel} onPress={onNewPress} />
-      )}
+      <HView fullWidth style={styles.buttonBar}>
+        {canAddNew && (
+          <NewNodeButton nodeDefLabel={nodeDefLabel} onPress={onNewPress} />
+        )}
+        <NodeValidationIcon
+          nodeDef={entityDef}
+          parentNodeUuid={parentEntityUuid}
+        />
+      </HView>
     </VView>
   );
 };
