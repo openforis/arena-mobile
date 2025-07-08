@@ -60,6 +60,12 @@ export default {
   listOfRecords: "رکوردها",
   localBackup: "پشتیبان گیری محلی",
   newRecord: "جدید",
+  node: {
+    cannotAddMoreItems: {
+      maxCountReached:
+        "امکان افزودن موارد بیشتر وجود ندارد: حداکثر تعداد مجاز رسیده است",
+    },
+  },
   noRecordsFound: "رکوردی یافت نشد",
   recordEditor: "ویرایشگر رکورد",
   recordInPreviousCycle: {
@@ -108,10 +114,6 @@ export default {
   },
 
   code: {
-    cannotAddMoreItems: {
-      maxCountReached:
-        "امکان افزودن موارد بیشتر وجود ندارد: حداکثر تعداد مجاز رسیده است",
-    },
     selectItem: "انتخاب مورد",
     selectItem_plural: "انتخاب موارد",
   },

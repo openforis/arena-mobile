@@ -57,6 +57,12 @@ export default {
   listOfRecords: "Registos",
   localBackup: "Cópia de segurança local",
   newRecord: "Novo",
+  node: {
+    cannotAddMoreItems: {
+      maxCountReached:
+        "Não é possível adicionar mais itens: limite máximo atingido",
+    },
+  },
   noRecordsFound: "Nenhum registo encontrado",
   recordEditor: "Editor de registos",
   recordInPreviousCycle: {
@@ -101,10 +107,6 @@ export default {
     oneNode: "Um nó",
   },
   code: {
-    cannotAddMoreItems: {
-      maxCountReached:
-        "Não é possível adicionar mais itens: limite máximo atingido",
-    },
     selectItem: "Selecionar item",
     selectItem_plural: "Selecionar itens",
   },

@@ -64,6 +64,12 @@ export default {
   listOfRecords: "Datensatzliste",
   localBackup: "Lokale Sicherung",
   newRecord: "Neu",
+  node: {
+    cannotAddMoreItems: {
+      maxCountReached:
+        "Es können keine weiteren Artikel hinzugefügt werden: maximale Anzahl erreicht",
+    },
+  },
   noRecordsFound: "Keine Datensätze gefunden",
   recordEditor: "Datensatzbearbeitung",
   recordInPreviousCycle: {
@@ -114,10 +120,6 @@ export default {
   },
 
   code: {
-    cannotAddMoreItems: {
-      maxCountReached:
-        "Es können keine weiteren Artikel hinzugefügt werden: maximale Anzahl erreicht",
-    },
     selectItem: "Element auswählen",
     selectItem_plural: "Elemente auswählen",
   },

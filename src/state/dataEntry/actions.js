@@ -120,6 +120,20 @@ const _performAddEntity = async (dispatch, getState) => {
     ? Records.getNodeByUuid(currentParentNodeUuid)(record)
     : Records.getRoot(record);
 
+  if (
+    DataEntrySelectors.selectIsMaxCountReached({
+      parentNodeUuid: parentNode.uuid,
+      nodeDef,
+    })(state)
+  ) {
+    dispatch(
+      MessageActions.setWarning(
+        "dataEntry:node.cannotAddMoreItems.maxCountReached"
+      )
+    );
+    return;
+  }
+
   const { record: recordUpdated, nodes: nodesCreated } =
     await RecordUpdater.createNodeAndDescendants({
       user,

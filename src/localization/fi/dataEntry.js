@@ -62,6 +62,11 @@ export default {
   listOfRecords: "Tietueet",
   localBackup: "Paikallinen varmuuskopio",
   newRecord: "Uusi",
+  node: {
+    cannotAddMoreItems: {
+      maxCountReached: "Lisää kohteita ei voi: enimmäismäärä on saavutettu",
+    },
+  },
   noRecordsFound: "Tietueita ei löydy",
   recordEditor: "Tietueen muokkain",
   recordInPreviousCycle: {
@@ -110,9 +115,6 @@ export default {
   },
 
   code: {
-    cannotAddMoreItems: {
-      maxCountReached: "Lisää kohteita ei voi: enimmäismäärä on saavutettu",
-    },
     selectItem: "Valitse kohde",
     selectItem_plural: "Valitse kohteet",
   },

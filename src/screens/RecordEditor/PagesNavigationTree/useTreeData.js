@@ -1,5 +1,4 @@
 import {
-  Arrays,
   NodeDefs,
   Nodes,
   Records,
@@ -50,12 +49,11 @@ const _processFieldValidation = ({
 }) => {
   if (fieldValidation.valid) return acc;
 
-  if (
-    validationKey.startsWith(
-      RecordValidations.prefixValidationFieldChildrenCount
-    )
-  ) {
-    const notValidNodeDefUuid = Arrays.last(validationKey.split("_"));
+  if (RecordValidations.isValidationChildrenCountKey(validationKey)) {
+    const notValidNodeDefUuid =
+      RecordValidations.extractValidationChildrenCountKeyNodeDefUuid(
+        validationKey
+      );
     const notValidNodeDefUuids = getAncestorAndSelfNodeDefUuids({
       survey,
       uuid: notValidNodeDefUuid,
