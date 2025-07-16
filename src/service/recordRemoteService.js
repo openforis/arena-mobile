@@ -2,6 +2,15 @@ import { Files } from "utils";
 
 import { RemoteService } from "./remoteService";
 
+const fetchRecordsSummaries = async ({ surveyRemoteId, cycle }) => {
+  const { data } = await RemoteService.get(
+    `api/survey/${surveyRemoteId}/records/summary`,
+    { cycle }
+  );
+  const { list } = data;
+  return list;
+};
+
 const startExportRecords = async ({ survey, cycle, recordUuids }) => {
   const { remoteId: surveyRemoteId } = survey;
   const params = { cycle, recordUuids };
@@ -49,6 +58,7 @@ const uploadRecords = async ({
 };
 
 export const RecordRemoteService = {
+  fetchRecordsSummaries,
   startExportRecords,
   downloadExportedRecordsFile,
   uploadRecords,

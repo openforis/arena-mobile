@@ -5,6 +5,7 @@ import {
   Objects,
   RecordFixer,
   Records,
+  Strings,
   Surveys,
 } from "@openforis/arena-core";
 
@@ -124,13 +125,16 @@ const findRecordSummariesByKeys = async ({ survey, cycle, keyValues }) => {
   const keyColsConditions = keyColumnNames
     .map((keyCol, index) => {
       const val = keyValues[index];
-      return Objects.isNil(val) ? `${keyCol} IS NULL` : `${keyCol} = ?`;
+      return Objects.isNil(val)
+        ? `${keyCol} IS NULL`
+        : `(${keyCol} = ? OR ${keyCol} = ?)`;
     })
     .join(" AND ");
   const keyColsParams = keyColumnNames.reduce((acc, _keyCol, index) => {
     const val = keyValues[index];
     if (!Objects.isNil(val)) {
-      acc.push(toKeyColValue(val));
+      const keyValueFormatted = toKeyColValue(val);
+      acc.push(keyValueFormatted, Strings.unquote(keyValueFormatted));
     }
     return acc;
   }, []);
