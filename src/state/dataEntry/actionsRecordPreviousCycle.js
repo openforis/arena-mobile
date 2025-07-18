@@ -49,77 +49,85 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
   prevCycle,
   lang,
 }) => {
-  dispatch({ type: RECORD_PREVIOUS_CYCLE_LOAD, loading: true });
+  try {
+    dispatch({ type: RECORD_PREVIOUS_CYCLE_LOAD, loading: true });
 
-  const prevCycleString = Cycles.labelFunction(prevCycle);
+    const prevCycleString = Cycles.labelFunction(prevCycle);
 
-  const keyValuesString = RecordNodes.getRootEntityKeysFormatted({
-    survey,
-    record,
-    lang,
-  }).join(", ");
-
-  const prevCycleRecordSummaries =
-    await RecordService.findRecordSummariesWithSameKeys({
+    const keyValuesString = RecordNodes.getRootEntityKeysFormatted({
       survey,
       record,
       lang,
-      cycle: prevCycle,
-    });
+    }).join(", ");
 
-  if (prevCycleRecordSummaries.length === 0) {
-    dispatch(unlinkFromRecordInPreviousCycle());
-    dispatch(
-      ToastActions.show("dataEntry:recordInPreviousCycle.notFoundMessage", {
-        cycle: prevCycleString,
-        keyValues: keyValuesString,
-      })
-    );
-  } else if (prevCycleRecordSummaries.length === 1) {
-    const prevCycleRecordSummary = prevCycleRecordSummaries[0];
-    const { id: prevCycleRecordId, uuid: prevCycleRecordUuid } =
-      prevCycleRecordSummary;
-
-    const doFetch = async () =>
-      _fetchRecordFromPreviousCycleAndLinkItInternal({
-        dispatch,
+    const prevCycleRecordSummaries =
+      await RecordService.findRecordSummariesWithSameKeys({
         survey,
-        recordId: prevCycleRecordId,
+        record,
+        lang,
+        cycle: prevCycle,
       });
-    if (!(await doFetch())) {
-      if (
-        await ConfirmUtils.confirm({
-          dispatch,
-          messageKey:
-            "dataEntry:recordInPreviousCycle.confirmFetchRecordInCycle",
-          messageParams: { cycle: prevCycleString, keyValues: keyValuesString },
-        })
-      ) {
-        dispatch(
-          importRecordsFromServer({
-            recordUuids: [prevCycleRecordUuid],
-            onImportComplete: doFetch,
-          })
-        );
-      }
-    }
-  } else {
-    dispatch(
-      ToastActions.show(
-        "dataEntry:recordInPreviousCycle.multipleRecordsFoundMessage",
-        {
+
+    if (prevCycleRecordSummaries.length === 0) {
+      dispatch(unlinkFromRecordInPreviousCycle());
+      dispatch(
+        ToastActions.show("dataEntry:recordInPreviousCycle.notFoundMessage", {
           cycle: prevCycleString,
           keyValues: keyValuesString,
-        }
-      )
-    );
-  }
-  dispatch({ type: RECORD_PREVIOUS_CYCLE_LOAD, loading: false });
+        })
+      );
+    } else if (prevCycleRecordSummaries.length === 1) {
+      const prevCycleRecordSummary = prevCycleRecordSummaries[0];
+      const { id: prevCycleRecordId, uuid: prevCycleRecordUuid } =
+        prevCycleRecordSummary;
 
-  return {
-    keyValues: keyValuesString,
-    prevCycleRecordIds: prevCycleRecordSummaries,
-  };
+      const doFetch = async () =>
+        _fetchRecordFromPreviousCycleAndLinkItInternal({
+          dispatch,
+          survey,
+          recordId: prevCycleRecordId,
+        });
+      if (!(await doFetch())) {
+        if (
+          await ConfirmUtils.confirm({
+            dispatch,
+            messageKey:
+              "dataEntry:recordInPreviousCycle.confirmFetchRecordInCycle",
+            messageParams: {
+              cycle: prevCycleString,
+              keyValues: keyValuesString,
+            },
+          })
+        ) {
+          dispatch(
+            importRecordsFromServer({
+              recordUuids: [prevCycleRecordUuid],
+              onImportComplete: doFetch,
+            })
+          );
+        }
+      }
+    } else {
+      dispatch(
+        ToastActions.show(
+          "dataEntry:recordInPreviousCycle.multipleRecordsFoundMessage",
+          {
+            cycle: prevCycleString,
+            keyValues: keyValuesString,
+          }
+        )
+      );
+    }
+
+    return {
+      keyValues: keyValuesString,
+      prevCycleRecordIds: prevCycleRecordSummaries,
+    };
+  } catch (error) {
+    console.log("====error", error);
+  } finally {
+    dispatch({ type: RECORD_PREVIOUS_CYCLE_LOAD, loading: false });
+  }
 };
 
 const _askPreviousCycleKey = async ({ dispatch, getState }) => {

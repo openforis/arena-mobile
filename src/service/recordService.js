@@ -17,7 +17,6 @@ import { ArrayUtils } from "utils";
 
 import { RecordRepository } from "./repository/recordRepository";
 import { RecordRemoteService } from "./recordRemoteService";
-import { RemoteService } from "./remoteService";
 import { RecordFileService } from "./recordFileService";
 
 const {
@@ -36,19 +35,11 @@ const {
 } = RecordRepository;
 
 const {
+  fetchRecordsSummaries: fetchRecordsSummariesRemoteServer,
   startExportRecords: startExportRecordsFromRemoteServer,
   downloadExportedRecordsFile: downloadExportedRecordsFileFromRemoteServer,
   uploadRecords: uploadRecordsToRemoteServer,
 } = RecordRemoteService;
-
-const fetchRecordsSummariesRemote = async ({ surveyRemoteId, cycle }) => {
-  const { data } = await RemoteService.get(
-    `api/survey/${surveyRemoteId}/records/summary`,
-    { cycle }
-  );
-  const { list } = data;
-  return list;
-};
 
 const toDate = (dateStr) => (dateStr ? new Date(dateStr) : null);
 
@@ -127,7 +118,7 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }) => {
 
   let recordsSummariesRemote;
   try {
-    recordsSummariesRemote = await fetchRecordsSummariesRemote({
+    recordsSummariesRemote = await fetchRecordsSummariesRemoteServer({
       surveyRemoteId: survey.remoteId,
       cycle,
     });

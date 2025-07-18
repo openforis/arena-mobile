@@ -2,6 +2,7 @@ import {
   DateFormats,
   Dates,
   NodeDefs,
+  NodeDefType,
   Objects,
   RecordFixer,
   Records,
@@ -119,26 +120,56 @@ const fetchRecords = async ({ survey, cycle = null, onlyLocal = true }) => {
   return rows.map(rowToRecord({ survey }));
 };
 
+const getKeyColCondition = ({ keyCol, keyDef, val }) => {
+  if (Objects.isNil(val)) {
+    return `${keyCol} IS NULL`;
+  }
+  const conditions = [`${keyCol} = ?`];
+  if (keyDef.type === NodeDefType.code) {
+    // key value could be a text (code) or a json object with itemUuid
+    conditions.push(
+      `(json_valid(${keyCol}) AND json(${keyCol}) ->> 'itemUuid' = ?)`
+    );
+  }
+  return `(${conditions.join(" OR ")})`;
+};
+
+const getKeyColParams = ({ keyDef, val }) => {
+  const params = [];
+  if (Objects.isNil(val)) {
+    return params;
+  }
+  const keyColumnParam = toKeyColValue(val);
+  params.push(keyColumnParam);
+  if (keyDef.type === NodeDefType.code) {
+    params.push(val.itemUuid);
+  }
+  return params;
+};
+
 const findRecordSummariesByKeys = async ({ survey, cycle, keyValues }) => {
   const { id: surveyId } = survey;
+  const keyDefs = Surveys.getRootKeys({ survey, cycle });
   const keyColsConditions = keyColumnNames
     .map((keyCol, index) => {
+      const keyDef = keyDefs[index];
       const val = keyValues[index];
-      return Objects.isNil(val) ? `${keyCol} IS NULL` : `${keyCol} = ?`;
+      return getKeyColCondition({ keyCol, keyDef, val });
     })
     .join(" AND ");
   const keyColsParams = keyColumnNames.reduce((acc, _keyCol, index) => {
+    const keyDef = keyDefs[index];
     const val = keyValues[index];
-    if (!Objects.isNil(val)) {
-      acc.push(toKeyColValue(val));
-    }
+    acc.push(...getKeyColParams({ keyDef, val }));
     return acc;
   }, []);
 
   const query = `SELECT ${summarySelectFieldsJoint}
     FROM record
     WHERE survey_id = ? AND cycle = ? AND ${keyColsConditions}`;
-  const rows = await dbClient.many(query, [surveyId, cycle, ...keyColsParams]);
+
+  const queryParams = [surveyId, cycle, ...keyColsParams];
+  const rows = await dbClient.many(query, queryParams);
   return rows.map(rowToRecord({ survey }));
 };
 
