@@ -79,14 +79,13 @@ max count reached`,
     foundMessage: "Record in previous cycle found!",
     notFoundMessage:
       "Record in cycle {{cycle}} with keys {{keyValues}} not found",
-    confirmFetchRecordInCycle:
-      "Record in cycle {{cycle}} with keys {{keyValues}} not fully loaded; download it from the server?",
-    confirmSyncRecordsSummaryAndTryAgain:
-      "$t(dataEntry:recordInPreviousCycle.notFoundMessage): fetch the list of records from the server and try again?",
+    confirmFetchRecordInCycle: `Record in cycle {{cycle}} with keys {{keyValues}} not fully loaded.
+Download it from the server?`,
+    confirmSyncRecordsSummaryAndTryAgain: `$t(dataEntry:recordInPreviousCycle.notFoundMessage).
+Fetch the list of records from the server and try again?`,
     fetchError: "Error fetching record in previuos cycle: {{details}}",
     multipleRecordsFound:
       "Multiple records with keys {{keyValues}} found in cycle {{cycle}}",
-
     valuePanelHeader: "Value in cycle {{prevCycle}}",
   },
   sendData: "Send data",

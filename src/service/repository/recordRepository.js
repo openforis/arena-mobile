@@ -6,7 +6,6 @@ import {
   Objects,
   RecordFixer,
   Records,
-  Strings,
   Surveys,
 } from "@openforis/arena-core";
 
@@ -125,11 +124,11 @@ const getKeyColCondition = ({ keyCol, keyDef, val }) => {
   if (Objects.isNil(val)) {
     return `${keyCol} IS NULL`;
   }
-  const conditions = [`${keyCol} = ?`, `${keyCol} = ?`];
+  const conditions = [`${keyCol} = ?`];
   if (keyDef.type === NodeDefType.code) {
+    // key value could be a text (code) or a json object with itemUuid
     conditions.push(
-      `(json_valid(${keyCol}) AND json(${keyCol}) ->> 'itemUuid' = ?)`,
-      `(json_valid(${keyCol}) AND json(${keyCol}) ->> 'code' = ?)`
+      `(json_valid(${keyCol}) AND json(${keyCol}) ->> 'itemUuid' = ?)`
     );
   }
   return `(${conditions.join(" OR ")})`;
@@ -140,11 +139,10 @@ const getKeyColParams = ({ keyDef, val }) => {
   if (Objects.isNil(val)) {
     return params;
   }
-  const keyValueFormatted = toKeyColValue(val);
-  params.push(keyValueFormatted, Strings.unquote(keyValueFormatted));
+  const keyColumnParam = toKeyColValue(val);
+  params.push(keyColumnParam);
   if (keyDef.type === NodeDefType.code) {
     params.push(val.itemUuid);
-    params.push(val.code);
   }
   return params;
 };
