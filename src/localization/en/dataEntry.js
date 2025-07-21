@@ -167,6 +167,7 @@ Check settings or ask the survey administrator to change this limit.`,
     shareExportedFile: "Share exported file",
   },
   location: {
+    label: "Location",
     gettingCurrentLocation: "Getting current location",
     usingCurrentLocation: "Using current location",
   },

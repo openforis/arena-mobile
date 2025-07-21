@@ -2194,6 +2194,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lodev09/react-native-exify@npm:^0.2.7":
+  version: 0.2.7
+  resolution: "@lodev09/react-native-exify@npm:0.2.7"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/f732609c930d46c03cb274a0b8b4de99cee259a5c5c75395a8dae438d38763971578b33d61ded370294e3796835d6d2b1a299117b9ca20321385d175df5fbd61
+  languageName: node
+  linkType: hard
+
 "@nicolo-ribaudo/eslint-scope-5-internals@npm:5.1.1-v1":
   version: 5.1.1-v1
   resolution: "@nicolo-ribaudo/eslint-scope-5-internals@npm:5.1.1-v1"
@@ -3662,6 +3672,7 @@ __metadata:
     "@eslint/eslintrc": "npm:^3.3.1"
     "@eslint/js": "npm:^9.31.0"
     "@expo/webpack-config": "npm:~19.0.1"
+    "@lodev09/react-native-exify": "npm:^0.2.7"
     "@openforis/arena-core": "npm:^1.0.32"
     "@react-native-async-storage/async-storage": "npm:2.1.2"
     "@react-native-clipboard/clipboard": "npm:^1.16.3"

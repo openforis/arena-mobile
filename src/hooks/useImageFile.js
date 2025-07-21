@@ -8,14 +8,10 @@ export const useImageFile = (uri, defaultExtension = defaultImageExtension) => {
   const tempFileUriRef = useRef(null);
   const [finalUri, setFinalUri] = useState(uri);
 
-  const copyToTempFileWithExtension = useCallback(async () => {
-    const fileName = Files.getNameFromUri(uri);
-    const tempFolderUri = Files.getTempFolderParentUri();
-    const fileNameWithExtension = `${fileName}.${defaultExtension}`;
-    const tempFileUri = Files.path(tempFolderUri, fileNameWithExtension);
-    await Files.copyFile({ from: uri, to: tempFileUri });
-    return tempFileUri;
-  }, [defaultExtension, uri]);
+  const copyToTempFileWithExtension = useCallback(
+    async () => Files.copyUriToTempFile({ uri, defaultExtension }),
+    [defaultExtension, uri]
+  );
 
   useEffect(() => {
     const fileName = Files.getNameFromUri(uri);
@@ -36,6 +32,7 @@ export const useImageFile = (uri, defaultExtension = defaultImageExtension) => {
       });
 
     return () => {
+      // delete temporary file
       const tempFile = tempFileUriRef.current;
       if (tempFile) {
         Files.del(tempFile)

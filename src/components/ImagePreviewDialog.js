@@ -2,8 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import PropTypes from "prop-types";
 
+import { Objects } from "@openforis/arena-core";
+
 import { useImageFile } from "hooks";
-import { Files, ImageUtils } from "utils";
+import { Files, ImageUtils, SystemUtils } from "utils";
 
 import { CollapsiblePanel } from "./CollapsiblePanel";
 import { Dialog } from "./Dialog";
@@ -28,12 +30,25 @@ const ImageInfo = (props) => {
 
   const imageUri = useImageFile(imageUriProp);
 
-  const { width, height, size } = info ?? {};
+  const { width, height, size, latitude, longitude } = info ?? {};
 
   const fetchInfo = useCallback(async () => {
     const { width, height } = await ImageUtils.getSize(imageUri);
+
+    // TODO remove it
+    const exifTags = await ImageUtils.getExifTags(imageUri);
+    SystemUtils.copyValueToClipboard(JSON.stringify(exifTags));
+
+    const { latitude, longitude } =
+      (await ImageUtils.getGPSLocation(imageUri)) ?? {};
     const size = await Files.getSize(imageUri);
-    setInfo({ width, height, size: Files.toHumanReadableFileSize(size) });
+    setInfo({
+      width,
+      height,
+      size: Files.toHumanReadableFileSize(size),
+      latitude,
+      longitude,
+    });
   }, [imageUri]);
 
   useEffect(() => {
@@ -46,10 +61,16 @@ const ImageInfo = (props) => {
 
   if (!info) return <LoadingIcon />;
 
+  const locationString =
+    Objects.isEmpty(latitude) || Objects.isEmpty(longitude)
+      ? "-"
+      : `${latitude},${longitude}`;
+
   return (
     <VView>
       <FormItem labelKey="common:size">{size}</FormItem>
       <FormItem labelKey="dataEntry:fileAttributeImage.resolution">{`${width}x${height}`}</FormItem>
+      <FormItem labelKey="dataEntry:location.label">{locationString}</FormItem>
     </VView>
   );
 };

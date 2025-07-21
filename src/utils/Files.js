@@ -1,6 +1,8 @@
+import { Buffer } from "buffer";
 import * as MediaLibrary from "expo-media-library";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system";
+import { File } from "expo-file-system/next";
 import mime from "mime";
 
 import { Strings, UUIDs } from "@openforis/arena-core";
@@ -125,6 +127,17 @@ const getMimeTypeFromName = (fileName) => mime.getType(fileName);
 
 const readAsString = async (fileUri) => FileSystem.readAsStringAsync(fileUri);
 
+const readAsBytes = async (fileUri) => {
+  const fileObj = new File(fileUri);
+  const fileHandle = fileObj.open();
+  return fileHandle.readBytes(fileHandle.size);
+};
+
+const readAsBuffer = async (fileUri) => {
+  const bytes = await readAsBytes(fileUri);
+  return Buffer.from(bytes);
+};
+
 const readJsonFromFile = async ({ fileUri }) => {
   if (await exists(fileUri)) {
     const content = await readAsString(fileUri);
@@ -208,6 +221,15 @@ const toHumanReadableFileSize = (bytes, { decimalPlaces = 1 } = {}) => {
   return bytes.toFixed(decimalPlaces) + " " + fileSizeUnits[unitIndex];
 };
 
+const copyUriToTempFile = async ({ uri, defaultExtension = "tmp" }) => {
+  const fileName = getNameFromUri(uri);
+  const tempFolderUri = getTempFolderParentUri();
+  const fileNameWithExtension = `${fileName}.${defaultExtension}`;
+  const tempFileUri = Files.path(tempFolderUri, fileNameWithExtension);
+  await copyFile({ from: uri, to: tempFileUri });
+  return tempFileUri;
+};
+
 export const Files = {
   MIME_TYPES,
   cacheDirectory,
@@ -215,6 +237,7 @@ export const Files = {
   path,
   getTempFolderParentUri,
   createTempFolder,
+  copyUriToTempFile,
   mkDir,
   del,
   visitDirFilesRecursively,
@@ -228,6 +251,8 @@ export const Files = {
   getExtension,
   getSize,
   readAsString,
+  readAsBuffer,
+  readAsBytes,
   readJsonFromFile,
   listDirectory,
   isSharingAvailable,

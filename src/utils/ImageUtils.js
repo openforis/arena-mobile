@@ -1,5 +1,6 @@
 import { Image } from "react-native";
 import { ImageManipulator } from "expo-image-manipulator";
+import * as Exify from "@lodev09/react-native-exify";
 
 import { Files } from "./Files";
 
@@ -133,6 +134,23 @@ const getSize = async (fileUri) =>
     );
   });
 
+const getExifTags = async (fileUri) => {
+  try {
+    return Exify.readAsync(fileUri);
+  } catch (_error) {
+    return null;
+  }
+};
+
+const getGPSLocation = async (fileUri) => {
+  const exifInfo = await getExifTags(fileUri);
+  if (!exifInfo) {
+    return null;
+  }
+  const { GPSLatitude: latitude, GPSLongitude: longitude } = exifInfo;
+  return { latitude, longitude };
+};
+
 const isValid = async (fileUri) => {
   try {
     const size = await getSize(fileUri);
@@ -145,6 +163,8 @@ const isValid = async (fileUri) => {
 
 export const ImageUtils = {
   getSize,
+  getExifTags,
+  getGPSLocation,
   isValid,
   resizeToFitMaxSize,
 };
