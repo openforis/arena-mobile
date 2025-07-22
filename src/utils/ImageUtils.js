@@ -112,7 +112,7 @@ const resizeToFitMaxSize = async ({ fileUri, maxSize }) => {
   const size = await Files.getSize(fileUri);
   if (size <= maxSize) return null;
 
-  return new Promise((resolve, reject) => {
+  const resizeResult = await new Promise((resolve, reject) => {
     Image.getSize(
       fileUri,
       (width, height) => {
@@ -123,6 +123,11 @@ const resizeToFitMaxSize = async ({ fileUri, maxSize }) => {
       (error) => reject(error)
     );
   });
+  const { uri: resultUri } = resizeResult;
+  if (fileUri !== resultUri) {
+    await copyExifTags(fileUri, resultUri);
+  }
+  return resizeResult;
 };
 
 const getSize = async (fileUri) =>
@@ -142,6 +147,18 @@ const getExifTags = async (fileUri) => {
   }
 };
 
+const copyExifTags = async (sourceFileUri, targetFileUri) => {
+  const tags = await getExifTags(sourceFileUri);
+  if (tags) {
+    try {
+      await Exify.writeAsync(targetFileUri, tags);
+    } catch (_error) {
+      return false;
+    }
+  }
+  return true;
+};
+
 const getGPSLocation = async (fileUri) => {
   const exifInfo = await getExifTags(fileUri);
   if (!exifInfo) {
@@ -156,7 +173,6 @@ const isValid = async (fileUri) => {
     const size = await getSize(fileUri);
     return !!size;
   } catch (error) {
-    console.warn("=== ImageUtils.isValid error:", error);
     return false;
   }
 };
@@ -164,6 +180,7 @@ const isValid = async (fileUri) => {
 export const ImageUtils = {
   getSize,
   getExifTags,
+  copyExifTags,
   getGPSLocation,
   isValid,
   resizeToFitMaxSize,

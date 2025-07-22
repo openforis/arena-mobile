@@ -11,6 +11,7 @@ export { useMagnetometerHeading } from "./useMagnetometerHeading";
 export { useNavigationFocus } from "./useNavigationFocus";
 export { useNavigationIsFocused } from "./useNavigationIsFocused";
 export { useRequestCameraPermission } from "./useRequestCameraPermission";
+export { useRequestImagePickerMediaLibraryPermission } from "./useRequestImagePickerMediaLibraryPermission";
 export { useRequestMediaLibraryPermission } from "./useRequestMediaLibraryPermission";
 export { useScreenKey } from "./useScreenKey";
 export { useToast } from "./useToast";

@@ -1,7 +1,10 @@
-import * as ImagePicker from "expo-image-picker";
+import * as MediaLibrary from "expo-media-library";
 
 import { useRequestPermission } from "./useRequestPermission";
 
 export const useRequestMediaLibraryPermission = () => {
-  return useRequestPermission(ImagePicker.requestMediaLibraryPermissionsAsync);
+  return useRequestPermission(
+    MediaLibrary.requestPermissionsAsync,
+    MediaLibrary.getPermissionsAsync
+  );
 };

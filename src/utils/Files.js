@@ -83,6 +83,8 @@ const getInfo = async (fileUri, ignoreErrors = true) => {
   }
 };
 
+const getAssetInfo = async (assetId) => MediaLibrary.getAssetInfoAsync(assetId);
+
 const getSize = async (fileUri, ignoreErrors = true) => {
   const info = await getInfo(fileUri, ignoreErrors);
   return info?.size ?? 0;
@@ -241,6 +243,7 @@ export const Files = {
   mkDir,
   del,
   visitDirFilesRecursively,
+  getAssetInfo,
   getDirSize,
   getFreeDiskStorage,
   getInfo,

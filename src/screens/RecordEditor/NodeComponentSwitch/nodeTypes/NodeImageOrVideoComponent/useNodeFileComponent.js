@@ -6,12 +6,13 @@ import { NodeDefFileType, NodeDefs, UUIDs } from "@openforis/arena-core";
 
 import {
   useRequestCameraPermission,
+  useRequestImagePickerMediaLibraryPermission,
   useRequestMediaLibraryPermission,
   useToast,
 } from "hooks";
 
 import { useConfirm } from "state/confirm";
-import { Files, ImageUtils } from "utils";
+import { Files, ImageUtils, SystemUtils } from "utils";
 
 import { useNodeComponentLocalState } from "screens/RecordEditor/useNodeComponentLocalState";
 import { SettingsSelectors } from "state/settings";
@@ -19,6 +20,11 @@ import { SettingsSelectors } from "state/settings";
 const mediaTypesByFileType = {
   [NodeDefFileType.image]: ImagePicker.MediaTypeOptions.Images,
   [NodeDefFileType.video]: ImagePicker.MediaTypeOptions.Videos,
+};
+
+const mediaTypeByFileType = {
+  [NodeDefFileType.image]: "photo",
+  [NodeDefFileType.video]: "video",
 };
 
 const determineFileMaxSize = ({ nodeDef, settings }) => {
@@ -36,9 +42,12 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
   const settings = SettingsSelectors.useSettings();
 
   const { request: requestCameraPermission } = useRequestCameraPermission();
-
-  const { request: requestMediaLibraryPermission } =
-    useRequestMediaLibraryPermission();
+  const {
+    hasPermission: hasMediaLibraryPermission,
+    request: requestMediaLibraryPermission,
+  } = useRequestMediaLibraryPermission();
+  const { request: requestImagePickerMediaLibraryPermission } =
+    useRequestImagePickerMediaLibraryPermission();
 
   const fileType = NodeDefs.getFileType(nodeDef) ?? NodeDefFileType.other;
   const maxSizeMB = determineFileMaxSize({ nodeDef, settings });
@@ -47,6 +56,14 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
   const mediaTypes =
     mediaTypesByFileType[fileType] ?? ImagePicker.MediaTypeOptions.All;
 
+  const imagePickerOptions = {
+    allowEditing: false,
+    exif: true,
+    legacy: true,
+    mediaTypes,
+    quality: 1,
+  };
+
   const { value, updateNodeValue } = useNodeComponentLocalState({
     nodeUuid,
   });
@@ -54,13 +71,20 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
 
   const onFileSelected = useCallback(
     async (result) => {
-      const { assets, canceled } = result;
-      if (canceled) return;
+      const { assets, canceled, didCancel } = result;
+      if (canceled || didCancel) return;
 
       const asset = assets?.[0];
       if (!asset) return;
 
-      const { name: assetFileName, uri: sourceFileUri } = asset;
+      const {
+        name: assetFileName,
+        uri: sourceFileUri,
+        exif: assetExif,
+        assetId,
+      } = asset;
+
+      console.log("===asset", JSON.stringify(asset));
 
       const fileName = assetFileName ?? Files.getNameFromUri(sourceFileUri);
 
@@ -68,6 +92,22 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
 
       let fileUri = sourceFileUri;
       let fileSize = sourceFileSize;
+
+      // TODO remove it
+      // const exifTags = await ImageUtils.getExifTags(sourceFileUri);
+      const reqResult = await requestMediaLibraryPermission();
+      console.warn(
+        "---media library permission?",
+        hasMediaLibraryPermission,
+        reqResult
+      );
+      if (reqResult) {
+        const assetInfo = await Files.getAssetInfo(assetId);
+        SystemUtils.copyValueToClipboard(JSON.stringify(assetInfo));
+        console.log("---asset info", JSON.stringify(assetInfo));
+      } else {
+        console.warn("---no media library permission");
+      }
 
       if (
         fileType === NodeDefFileType.image &&
@@ -99,29 +139,57 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
       const valueUpdated = { fileUuid: UUIDs.v4(), fileName, fileSize };
       await updateNodeValue({ value: valueUpdated, fileUri });
     },
-    [fileType, maxSize, maxSizeMB, toaster, updateNodeValue]
+    [
+      fileType,
+      hasMediaLibraryPermission,
+      maxSize,
+      maxSizeMB,
+      requestMediaLibraryPermission,
+      toaster,
+      updateNodeValue,
+    ]
   );
 
   const onFileChoosePress = useCallback(async () => {
-    if (!(await requestMediaLibraryPermission())) return;
+    if (
+      !(await requestMediaLibraryPermission()) ||
+      !(await requestImagePickerMediaLibraryPermission())
+    )
+      return;
 
     const result =
       fileType === NodeDefFileType.other
         ? await DocumentPicker.getDocumentAsync()
-        : await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true,
-            quality: 1,
-            mediaTypes,
-          });
+        : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
+
     await onFileSelected(result);
-  }, [requestMediaLibraryPermission, fileType, mediaTypes, onFileSelected]);
+  }, [
+    fileType,
+    mediaTypes,
+    onFileSelected,
+    requestImagePickerMediaLibraryPermission,
+    requestMediaLibraryPermission,
+  ]);
 
   const onOpenCameraPress = useCallback(async () => {
-    if (!(await requestCameraPermission())) return;
-
-    const result = await ImagePicker.launchCameraAsync({ mediaTypes });
-    await onFileSelected(result);
-  }, [onFileSelected, requestCameraPermission, mediaTypes]);
+    if (
+      !(await requestCameraPermission()) ||
+      !(await requestMediaLibraryPermission())
+    )
+      return;
+    try {
+      const result = await ImagePicker.launchCameraAsync(imagePickerOptions);
+      await onFileSelected(result);
+    } catch (error) {
+      console.log("---error taking picture", error);
+    }
+  }, [
+    onFileSelected,
+    requestCameraPermission,
+    requestMediaLibraryPermission,
+    hasMediaLibraryPermission,
+    mediaTypes,
+  ]);
 
   const onDeletePress = useCallback(async () => {
     if (
