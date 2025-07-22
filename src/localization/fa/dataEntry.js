@@ -167,6 +167,7 @@ export default {
     shareExportedFile: "اشتراک گذاری فایل اکسپورت شده",
   },
   location: {
+    label: "مکان",
     gettingCurrentLocation: "در حال دریافت موقعیت فعلی",
     usingCurrentLocation: "استفاده از موقعیت فعلی",
   },

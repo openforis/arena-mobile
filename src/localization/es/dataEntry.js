@@ -160,6 +160,7 @@ Verifique la configuración o pida al administrador de la encuesta que cambie es
     shareExportedFile: "Compartir archivo exportado",
   },
   location: {
+    label: "Ubicación",
     gettingCurrentLocation: "Obteniendo ubicación actual",
     usingCurrentLocation: "Usando ubicación actual",
   },

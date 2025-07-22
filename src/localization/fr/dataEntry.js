@@ -165,8 +165,9 @@ Vérifiez les paramètres ou demandez à l'administrateur de l'enquête de modif
     shareExportedFile: "Partager le fichier exporté",
   },
   location: {
-    gettingCurrentLocation: "Obtention de la position actuelle",
-    usingCurrentLocation: "Utilisation de la position actuelle",
+    label: "Emplacement",
+    gettingCurrentLocation: "Obtention de l'emplacement actuel",
+    usingCurrentLocation: "Utilisation de l'emplacement actuel",
   },
   unlock: {
     label: "Déverrouiller",

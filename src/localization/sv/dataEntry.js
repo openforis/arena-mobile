@@ -168,6 +168,7 @@ Kontrollera inställningarna eller be undersökningsadministratören att ändra 
     shareExportedFile: "Dela exporterad fil",
   },
   location: {
+    label: "Plats",
     gettingCurrentLocation: "Hämtar aktuell plats",
     usingCurrentLocation: "Använder aktuell plats",
   },

@@ -160,6 +160,7 @@ Verifique as configurações ou peça ao administrador da pesquisa para alterar 
     shareExportedFile: "Compartilhar arquivo exportado",
   },
   location: {
+    label: "Localização",
     gettingCurrentLocation: "Obtendo localização atual",
     usingCurrentLocation: "Usando localização atual",
   },

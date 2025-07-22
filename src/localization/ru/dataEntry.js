@@ -160,6 +160,7 @@ export default {
     shareExportedFile: "Поделиться экспортированным файлом",
   },
   location: {
+    label: "Местоположение",
     gettingCurrentLocation: "Получение текущего местоположения",
     usingCurrentLocation: "Использовать текущее местоположение",
   },

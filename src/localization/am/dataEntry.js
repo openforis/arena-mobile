@@ -153,6 +153,7 @@ export default {
     shareExportedFile: "የተላከውን ፋይል ያጋሩ",
   },
   location: {
+    label: "ቦታ",
     gettingCurrentLocation: "የአሁኑን ሥፍራ በማግኘት ላይ",
     usingCurrentLocation: "የአሁኑን ሥፍራ በመጠቀም ላይ",
   },

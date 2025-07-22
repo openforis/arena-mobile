@@ -173,6 +173,7 @@ Maximal zulässige Größe: {{maxSizeMB}}MB.
     shareExportedFile: "Exportierte Datei teilen",
   },
   location: {
+    label: "Standort",
     gettingCurrentLocation: "Aktuellen Standort wird abgerufen",
     usingCurrentLocation: "Aktueller Standort wird verwendet",
   },

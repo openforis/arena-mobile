@@ -171,6 +171,7 @@ Periksa pengaturan atau minta administrator survei untuk mengubah batas ini.`,
     shareExportedFile: "Bagikan file yang diekspor",
   },
   location: {
+    label: "Lokasi",
     gettingCurrentLocation: "Mendapatkan lokasi saat ini",
     usingCurrentLocation: "Menggunakan lokasi saat ini",
   },

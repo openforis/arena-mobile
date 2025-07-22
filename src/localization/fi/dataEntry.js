@@ -168,6 +168,7 @@ Tarkista asetukset tai pyydä kyselyn järjestelmänvalvojaa muuttamaan tätä r
     shareExportedFile: "Jaa viety tiedosto",
   },
   location: {
+    abel: "Sijainti",
     gettingCurrentLocation: "Haetaan nykyistä sijaintia",
     usingCurrentLocation: "Käytetään nykyistä sijaintia",
   },
