@@ -44,13 +44,10 @@ const writeGpsData = async ({ fileUri, location }) => {
 };
 
 const copyData = async ({ sourceFileUri, targetFileUri }) => {
-  const data = await ExifUtils.readData({ fileUri: sourceFileUri });
+  const data = await readData({ fileUri: sourceFileUri });
   if (data) {
-    try {
-      await ExifUtils.writeData({ fileUri: targetFileUri, data });
-    } catch (_error) {
-      return false;
-    }
+    await writeData({ fileUri: targetFileUri, data });
+    return true;
   }
   return true;
 };
