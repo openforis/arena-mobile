@@ -39,6 +39,7 @@ export default {
   search: "جستجو",
   selectAnItem: "یک مورد را انتخاب کنید",
   selectNewItems: "موارد جدید را انتخاب کنید",
+  shareFile: "اشتراک گذاری فایل",
   size: "اندازه",
   sizeAvailable: "{{size}} در دسترس",
   somethingWentWrong: "مشکلی رخ داده است: {{error}}",

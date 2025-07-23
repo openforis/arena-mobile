@@ -163,7 +163,7 @@ Tarkista asetukset tai pyydä kyselyn järjestelmänvalvojaa muuttamaan tätä r
     target: {
       remote: "Palvelin",
       local: "Paikallinen kansio (Lataukset)",
-      share: "Jaa tiedosto",
+      share: "$t(common:shareFile)",
     },
     shareExportedFile: "Jaa viety tiedosto",
   },

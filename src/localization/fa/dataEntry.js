@@ -162,7 +162,7 @@ export default {
     target: {
       remote: "سرور راه دور",
       local: "پوشه محلی (دانلود)",
-      share: "اشتراک گذاری فایل",
+      share: "$t(common:shareFile)",
     },
     shareExportedFile: "اشتراک گذاری فایل اکسپورت شده",
   },

@@ -155,7 +155,7 @@ Verifique la configuración o pida al administrador de la encuesta que cambie es
     target: {
       remote: "Servidor remoto",
       local: "Carpeta local (Descarga)",
-      share: "Compartir archivo",
+      share: "$t(common:shareFile)",
     },
     shareExportedFile: "Compartir archivo exportado",
   },

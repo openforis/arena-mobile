@@ -38,6 +38,7 @@ export default {
   search: "Поиск",
   selectAnItem: "Выберите элемент",
   selectNewItems: "Выберите новые элементы",
+  shareFile: "Поделиться файлом",
   size: "Размер",
   sizeAvailable: "{{size}} доступно",
   somethingWentWrong: "Что-то пошло не так: {{error}}",

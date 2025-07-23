@@ -38,6 +38,7 @@ export default {
   search: "Haku",
   selectAnItem: "Valitse kohde",
   selectNewItems: "Valitse uusia kohteita",
+  shareFile: "Jaa tiedosto",
   size: "Koko",
   sizeAvailable: "{{size}} käytettävissä",
   somethingWentWrong: "Jokin meni pieleen: {{error}}",

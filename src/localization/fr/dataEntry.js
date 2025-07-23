@@ -160,7 +160,7 @@ Vérifiez les paramètres ou demandez à l'administrateur de l'enquête de modif
     target: {
       remote: "Serveur distant",
       local: "Dossier local (Téléchargement)",
-      share: "Partager le fichier",
+      share: "$t(common:shareFile)",
     },
     shareExportedFile: "Partager le fichier exporté",
   },

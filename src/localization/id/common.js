@@ -38,6 +38,7 @@ export default {
   search: "Cari",
   selectAnItem: "Pilih item",
   selectNewItems: "Pilih item baru",
+  shareFile: "Bagikan file",
   size: "Ukuran",
   sizeAvailable: "{{size}} tersedia",
   somethingWentWrong: "Terjadi kesalahan: {{error}}",

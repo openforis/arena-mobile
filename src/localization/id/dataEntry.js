@@ -166,7 +166,7 @@ Periksa pengaturan atau minta administrator survei untuk mengubah batas ini.`,
     target: {
       remote: "Server jarak jauh",
       local: "Folder lokal (Unduhan)",
-      share: "Bagikan file",
+      share: "$t(common:shareFile)",
     },
     shareExportedFile: "Bagikan file yang diekspor",
   },

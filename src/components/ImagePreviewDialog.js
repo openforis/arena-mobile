@@ -2,17 +2,17 @@ import { useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import PropTypes from "prop-types";
 
-import { Numbers, Objects, PointFactory, Points } from "@openforis/arena-core";
+import { Numbers, Objects, PointFactory } from "@openforis/arena-core";
 
 import { useImageFile } from "hooks";
 import { Files, ImageUtils } from "utils";
 
+import { Button } from "./Button";
 import { CollapsiblePanel } from "./CollapsiblePanel";
 import { CopyToClipboardButton } from "./CopyToClipboardButton";
 import { Dialog } from "./Dialog";
 import { FormItem } from "./FormItem";
 import { HView } from "./HView";
-import { IconButton } from "./IconButton";
 import { Image } from "./Image";
 import { LoadingIcon } from "./LoadingIcon";
 import { OpenMapButton } from "./OpenMapButton";
@@ -22,6 +22,7 @@ import { VView } from "./VView";
 const styles = StyleSheet.create({
   dialog: { display: "flex", height: "90%", padding: 5 },
   content: { display: "flex", height: "80%", gap: 20 },
+  shareButton: { alignSelf: "center" },
   details: { flex: 1 },
   image: { flex: 1, resizeMode: "contain" },
 });
@@ -38,11 +39,8 @@ const ImageInfo = (props) => {
   const fetchInfo = useCallback(async () => {
     const { width, height } = await ImageUtils.getSize(imageUri);
 
-    let { latitude, longitude } =
+    const { latitude, longitude } =
       (await ImageUtils.getGPSLocation(imageUri)) ?? {};
-
-    latitude = 1;
-    longitude = 2;
 
     const size = await Files.getSize(imageUri);
 
@@ -122,6 +120,14 @@ export const ImagePreviewDialog = (props) => {
     >
       <VView style={styles.content} transparent>
         <Image source={{ uri: imageUri }} style={styles.image} />
+
+        <Button
+          icon="share"
+          onPress={onSharePress}
+          style={styles.shareButton}
+          textKey="common:shareFile"
+        />
+
         <HView transparent>
           <CollapsiblePanel
             containerStyle={styles.details}
@@ -129,7 +135,6 @@ export const ImagePreviewDialog = (props) => {
           >
             <ImageInfo imageUri={imageUri} />
           </CollapsiblePanel>
-          <IconButton icon="share" onPress={onSharePress} textKey="share" />
         </HView>
       </VView>
     </Dialog>
