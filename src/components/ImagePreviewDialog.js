@@ -8,16 +8,16 @@ import { useImageFile } from "hooks";
 import { Files, ImageUtils } from "utils";
 
 import { CollapsiblePanel } from "./CollapsiblePanel";
+import { CopyToClipboardButton } from "./CopyToClipboardButton";
 import { Dialog } from "./Dialog";
 import { FormItem } from "./FormItem";
 import { HView } from "./HView";
-import { Image } from "./Image";
 import { IconButton } from "./IconButton";
+import { Image } from "./Image";
 import { LoadingIcon } from "./LoadingIcon";
 import { OpenMapButton } from "./OpenMapButton";
-import { VView } from "./VView";
 import { Text } from "./Text";
-import { CopyToClipboardButton } from "./CopyToClipboardButton";
+import { VView } from "./VView";
 
 const styles = StyleSheet.create({
   dialog: { display: "flex", height: "90%", padding: 5 },
