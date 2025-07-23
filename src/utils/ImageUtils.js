@@ -4,7 +4,7 @@ import { ImageManipulator } from "expo-image-manipulator";
 import { Files } from "./Files";
 import { ExifUtils } from "./ExifUtils";
 
-const compress = 0.9;
+const compress = 0.95; // default compression ratio for resized images
 
 const _scaleImage = async ({ sourceFileUri, sourceWidth, scale }) => {
   const scaledWidth = Math.floor(sourceWidth * scale);
