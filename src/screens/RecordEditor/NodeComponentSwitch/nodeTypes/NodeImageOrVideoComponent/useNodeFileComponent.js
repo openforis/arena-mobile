@@ -102,9 +102,6 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
         }
         setResizing(false);
       }
-      // if (location) {
-      //   await ExifUtils.writeGpsData({ fileUri, location });
-      // }
       const valueUpdated = { fileUuid: UUIDs.v4(), fileName, fileSize };
       await updateNodeValue({ value: valueUpdated, fileUri });
     },
