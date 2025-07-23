@@ -60,7 +60,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
   const [resizing, setResizing] = useState(false);
 
   const onFileSelected = useCallback(
-    async (result, location = null) => {
+    async (result) => {
       const { assets, canceled, didCancel } = result;
       if (canceled || didCancel) return;
 
@@ -127,14 +127,10 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
     if (!(await requestCameraPermission())) return;
 
     try {
-      const storeLocationInfo =
-        await Permissions.requestLocationForegroundPermission();
-
+      // request location permission fot geo tagging
+      await Permissions.requestLocationForegroundPermission();
       const result = await ImagePicker.launchCameraAsync(imagePickerOptions);
-      const location = storeLocationInfo
-        ? await Location.getCurrentPositionAsync()
-        : null;
-      await onFileSelected(result, location);
+      await onFileSelected(result);
     } catch (error) {
       toaster(`Error opening camera: ` + error);
     }

@@ -2,12 +2,18 @@ import React, { useCallback } from "react";
 
 import { Objects } from "@openforis/arena-core";
 
-import { HView, IconButton, Text, TextInput, VView } from "components";
+import {
+  HView,
+  IconButton,
+  OpenMapButton,
+  Text,
+  TextInput,
+  VView,
+} from "components";
 import { LocationWatchingMonitor } from "components/LocationWatchingMonitor";
 import { SrsDropdown } from "../../../SrsDropdown";
 import { useNodeCoordinateComponent } from "./useNodeCoordinateComponent";
 import { LocationNavigator } from "./LocationNavigator";
-import { OpenMapButton } from "./OpenMapButton";
 import { NodeComponentPropTypes } from "../nodeComponentPropTypes";
 
 import styles from "./styles";

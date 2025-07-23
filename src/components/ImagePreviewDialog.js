@@ -2,10 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import PropTypes from "prop-types";
 
-import { Objects } from "@openforis/arena-core";
+import { Numbers, Objects, PointFactory, Points } from "@openforis/arena-core";
 
 import { useImageFile } from "hooks";
-import { ExifUtils, Files, ImageUtils, SystemUtils } from "utils";
+import { Files, ImageUtils } from "utils";
 
 import { CollapsiblePanel } from "./CollapsiblePanel";
 import { Dialog } from "./Dialog";
@@ -14,7 +14,10 @@ import { HView } from "./HView";
 import { Image } from "./Image";
 import { IconButton } from "./IconButton";
 import { LoadingIcon } from "./LoadingIcon";
+import { OpenMapButton } from "./OpenMapButton";
 import { VView } from "./VView";
+import { Text } from "./Text";
+import { CopyToClipboardButton } from "./CopyToClipboardButton";
 
 const styles = StyleSheet.create({
   dialog: { display: "flex", height: "90%", padding: 5 },
@@ -35,12 +38,11 @@ const ImageInfo = (props) => {
   const fetchInfo = useCallback(async () => {
     const { width, height } = await ImageUtils.getSize(imageUri);
 
-    // TODO remove it
-    const exifTags = await ExifUtils.readData({ fileUri: imageUri });
-    SystemUtils.copyValueToClipboard(JSON.stringify(exifTags));
-
-    const { latitude, longitude } =
+    let { latitude, longitude } =
       (await ImageUtils.getGPSLocation(imageUri)) ?? {};
+
+    latitude = 1;
+    longitude = 2;
 
     const size = await Files.getSize(imageUri);
 
@@ -63,16 +65,39 @@ const ImageInfo = (props) => {
 
   if (!info) return <LoadingIcon />;
 
-  const locationString =
-    Objects.isEmpty(latitude) || Objects.isEmpty(longitude)
-      ? "-"
-      : `${latitude},${longitude}`;
+  const isValidLocation =
+    Objects.isNotEmpty(latitude) && Objects.isNotEmpty(longitude);
+
+  const locationString = isValidLocation
+    ? `${Numbers.formatDecimal(latitude, 4)}, ${Numbers.formatDecimal(longitude, 4)}`
+    : "-";
+
+  const locationStringFull = isValidLocation
+    ? `${String(latitude)}, ${String(longitude)}`
+    : "";
+
+  const locationPoint = isValidLocation
+    ? PointFactory.createInstance({
+        x: longitude,
+        y: latitude,
+      })
+    : null;
 
   return (
     <VView>
       <FormItem labelKey="common:size">{size}</FormItem>
       <FormItem labelKey="dataEntry:fileAttributeImage.resolution">{`${width}x${height}`}</FormItem>
-      <FormItem labelKey="dataEntry:location.label">{locationString}</FormItem>
+      <FormItem labelKey="dataEntry:location.label">
+        <VView>
+          <Text>{locationString}</Text>
+          {isValidLocation && (
+            <HView>
+              <CopyToClipboardButton value={locationStringFull} />
+              <OpenMapButton point={locationPoint} size={20} />
+            </HView>
+          )}
+        </VView>
+      </FormItem>
     </VView>
   );
 };
