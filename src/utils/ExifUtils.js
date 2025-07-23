@@ -45,10 +45,10 @@ const writeGpsData = async ({ fileUri, location }) => {
 
 const copyData = async ({ sourceFileUri, targetFileUri }) => {
   const data = await readData({ fileUri: sourceFileUri });
-  if (data) {
-    await writeData({ fileUri: targetFileUri, data });
-    return true;
+  if (!data) {
+    return false;
   }
+  await writeData({ fileUri: targetFileUri, data });
   return true;
 };
 
