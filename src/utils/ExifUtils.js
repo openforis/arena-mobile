@@ -1,5 +1,3 @@
-// import DmsCoordinates from "dms-conversion";
-
 import { AMConstants } from "./AMConstants";
 import { Environment } from "./Environment";
 
@@ -7,14 +5,6 @@ let Exify;
 if (!Environment.isExpoGo) {
   Exify = require("@lodev09/react-native-exify");
 }
-
-// const convertLatLonToDms = (latitude, longitude) => {
-//   const dmsCoords = new DmsCoordinates(latitude, longitude);
-//   return {
-//     latitude: dmsCoords.latitude.toString(),
-//     longitude: dmsCoords.longitude.toString(),
-//   };
-// };
 
 const readData = async ({ fileUri }) => Exify?.readAsync(fileUri);
 
