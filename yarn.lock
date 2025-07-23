@@ -3685,6 +3685,7 @@ __metadata:
     "@reduxjs/toolkit": "npm:^2.8.2"
     babel-plugin-module-resolver: "npm:^5.0.2"
     babel-plugin-transform-remove-strict-mode: "npm:^0.0.2"
+    dms-conversion: "npm:^3.1.4"
     dotenv: "npm:^17.2.0"
     eslint: "npm:^9.31.0"
     eslint-plugin-ft-flow: "npm:^3.0.11"
@@ -5337,6 +5338,13 @@ __metadata:
   dependencies:
     path-type: "npm:^4.0.0"
   checksum: 10c0/dcac00920a4d503e38bb64001acb19df4efc14536ada475725e12f52c16777afdee4db827f55f13a908ee7efc0cb282e2e3dbaeeb98c0993dd93d1802d3bf00c
+  languageName: node
+  linkType: hard
+
+"dms-conversion@npm:^3.1.4":
+  version: 3.1.4
+  resolution: "dms-conversion@npm:3.1.4"
+  checksum: 10c0/1caff41d1a8d83a59d034de33c6b10a44a94d3f22ea9c47da4c0b86dcbdab41d9ab4542a269417c0925fb346f5614040db3fbad08e847378588aece1587e730a
   languageName: node
   linkType: hard
 

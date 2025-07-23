@@ -1,8 +1,8 @@
 import { Image } from "react-native";
 import { ImageManipulator } from "expo-image-manipulator";
-import * as Exify from "@lodev09/react-native-exify";
 
 import { Files } from "./Files";
+import { ExifUtils } from "./ExifUtils";
 
 const compress = 0.9;
 
@@ -125,7 +125,10 @@ const resizeToFitMaxSize = async ({ fileUri, maxSize }) => {
   });
   const { uri: resultUri } = resizeResult;
   if (fileUri !== resultUri) {
-    await copyExifTags(fileUri, resultUri);
+    await ExifUtils.copyData({
+      sourceFileUri: fileUri,
+      targetFileUri: resultUri,
+    });
   }
   return resizeResult;
 };
@@ -139,28 +142,8 @@ const getSize = async (fileUri) =>
     );
   });
 
-const getExifTags = async (fileUri) => {
-  try {
-    return Exify.readAsync(fileUri);
-  } catch (_error) {
-    return null;
-  }
-};
-
-const copyExifTags = async (sourceFileUri, targetFileUri) => {
-  const tags = await getExifTags(sourceFileUri);
-  if (tags) {
-    try {
-      await Exify.writeAsync(targetFileUri, tags);
-    } catch (_error) {
-      return false;
-    }
-  }
-  return true;
-};
-
 const getGPSLocation = async (fileUri) => {
-  const exifInfo = await getExifTags(fileUri);
+  const exifInfo = await ExifUtils.readData({ fileUri });
   if (!exifInfo) {
     return null;
   }
@@ -179,8 +162,6 @@ const isValid = async (fileUri) => {
 
 export const ImageUtils = {
   getSize,
-  getExifTags,
-  copyExifTags,
   getGPSLocation,
   isValid,
   resizeToFitMaxSize,

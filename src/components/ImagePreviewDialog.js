@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { Objects } from "@openforis/arena-core";
 
 import { useImageFile } from "hooks";
-import { Files, ImageUtils, SystemUtils } from "utils";
+import { ExifUtils, Files, ImageUtils, SystemUtils } from "utils";
 
 import { CollapsiblePanel } from "./CollapsiblePanel";
 import { Dialog } from "./Dialog";
@@ -36,12 +36,14 @@ const ImageInfo = (props) => {
     const { width, height } = await ImageUtils.getSize(imageUri);
 
     // TODO remove it
-    const exifTags = await ImageUtils.getExifTags(imageUri);
+    const exifTags = await ExifUtils.readData({ fileUri: imageUri });
     SystemUtils.copyValueToClipboard(JSON.stringify(exifTags));
 
     const { latitude, longitude } =
       (await ImageUtils.getGPSLocation(imageUri)) ?? {};
+
     const size = await Files.getSize(imageUri);
+
     setInfo({
       width,
       height,
