@@ -7,7 +7,7 @@ import { Points } from "@openforis/arena-core";
 import { IconButton } from "components/IconButton";
 
 export const OpenMapButton = (props) => {
-  const { point, size = 30, srsIndex } = props;
+  const { point, size = 30, srsIndex = undefined } = props;
 
   const pointLatLng = useMemo(
     () => Points.toLatLong(point, srsIndex),
@@ -34,5 +34,5 @@ export const OpenMapButton = (props) => {
 OpenMapButton.propTypes = {
   point: PropTypes.object,
   size: PropTypes.number,
-  srsIndex: PropTypes.object.isRequired,
+  srsIndex: PropTypes.object,
 };

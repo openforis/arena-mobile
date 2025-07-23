@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { NodeDefType, NodeDefs, Objects } from "@openforis/arena-core";
 
 import { CopyToClipboardButton, HView, TextInput } from "components";
-import { useToast } from "hooks";
 import { RecordEditViewMode } from "model";
 import { DataEntrySelectors, SurveyOptionsSelectors } from "state";
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
@@ -30,8 +29,6 @@ export const NodeTextComponent = (props) => {
   const styles = useStyles({ wrapperStyle });
 
   const isNumeric = !!isNumericByType[nodeDef.type];
-
-  const toaster = useToast();
 
   const editable = !NodeDefs.isReadOnly(nodeDef);
   const multiline =

@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
-import * as Location from "expo-location";
 
 import { NodeDefFileType, NodeDefs, UUIDs } from "@openforis/arena-core";
 
