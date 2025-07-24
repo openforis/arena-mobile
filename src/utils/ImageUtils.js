@@ -2,8 +2,9 @@ import { Image } from "react-native";
 import { ImageManipulator } from "expo-image-manipulator";
 
 import { Files } from "./Files";
+import { ExifUtils } from "./ExifUtils";
 
-const compress = 0.9;
+const compress = 0.95; // default compression ratio for resized images
 
 const _scaleImage = async ({ sourceFileUri, sourceWidth, scale }) => {
   const scaledWidth = Math.floor(sourceWidth * scale);
@@ -111,7 +112,7 @@ const resizeToFitMaxSize = async ({ fileUri, maxSize }) => {
   const size = await Files.getSize(fileUri);
   if (size <= maxSize) return null;
 
-  return new Promise((resolve, reject) => {
+  const resizeResult = await new Promise((resolve, reject) => {
     Image.getSize(
       fileUri,
       (width, height) => {
@@ -122,6 +123,14 @@ const resizeToFitMaxSize = async ({ fileUri, maxSize }) => {
       (error) => reject(error)
     );
   });
+  const { uri: resultUri } = resizeResult;
+  if (fileUri !== resultUri) {
+    await ExifUtils.copyData({
+      sourceFileUri: fileUri,
+      targetFileUri: resultUri,
+    });
+  }
+  return resizeResult;
 };
 
 const getSize = async (fileUri) =>
@@ -133,18 +142,27 @@ const getSize = async (fileUri) =>
     );
   });
 
+const getGPSLocation = async (fileUri) => {
+  const exifInfo = await ExifUtils.readData({ fileUri });
+  if (!exifInfo) {
+    return null;
+  }
+  const { GPSLatitude: latitude, GPSLongitude: longitude } = exifInfo;
+  return { latitude, longitude };
+};
+
 const isValid = async (fileUri) => {
   try {
     const size = await getSize(fileUri);
     return !!size;
   } catch (error) {
-    console.warn("=== ImageUtils.isValid error:", error);
     return false;
   }
 };
 
 export const ImageUtils = {
   getSize,
+  getGPSLocation,
   isValid,
   resizeToFitMaxSize,
 };

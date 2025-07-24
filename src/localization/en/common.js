@@ -38,6 +38,7 @@ export default {
   search: "Search",
   selectAnItem: "Select an item",
   selectNewItems: "Select new items",
+  shareFile: "Share file",
   size: "Size",
   sizeAvailable: "{{size}} available",
   somethingWentWrong: "Something went wrong: {{error}}",

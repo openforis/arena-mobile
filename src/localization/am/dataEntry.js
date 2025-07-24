@@ -148,11 +148,12 @@ export default {
     target: {
       remote: "የርቀት አገልጋይ",
       local: "የአካባቢ አቃፊ (ማውረድ)",
-      share: "ፋይል ያጋሩ",
+      share: "$t(common:shareFile)",
     },
     shareExportedFile: "የተላከውን ፋይል ያጋሩ",
   },
   location: {
+    label: "ቦታ",
     gettingCurrentLocation: "የአሁኑን ሥፍራ በማግኘት ላይ",
     usingCurrentLocation: "የአሁኑን ሥፍራ በመጠቀም ላይ",
   },

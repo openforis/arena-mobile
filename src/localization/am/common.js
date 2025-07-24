@@ -37,6 +37,7 @@ export default {
   search: "ፈልግ",
   selectAnItem: "አንድ ንጥል ይምረጡ",
   selectNewItems: "አዲስ ንጥሎችን ይምረጡ",
+  shareFile: "ፋይል ያጋሩ",
   size: "መጠን",
   sizeAvailable: "{{size}} ይገኛል",
   somethingWentWrong: "አንድ ችግር ተከስቷል: {{error}}",

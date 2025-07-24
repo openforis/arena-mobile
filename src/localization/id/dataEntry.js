@@ -166,11 +166,12 @@ Periksa pengaturan atau minta administrator survei untuk mengubah batas ini.`,
     target: {
       remote: "Server jarak jauh",
       local: "Folder lokal (Unduhan)",
-      share: "Bagikan file",
+      share: "$t(common:shareFile)",
     },
     shareExportedFile: "Bagikan file yang diekspor",
   },
   location: {
+    label: "Lokasi",
     gettingCurrentLocation: "Mendapatkan lokasi saat ini",
     usingCurrentLocation: "Menggunakan lokasi saat ini",
   },

@@ -160,13 +160,14 @@ Vérifiez les paramètres ou demandez à l'administrateur de l'enquête de modif
     target: {
       remote: "Serveur distant",
       local: "Dossier local (Téléchargement)",
-      share: "Partager le fichier",
+      share: "$t(common:shareFile)",
     },
     shareExportedFile: "Partager le fichier exporté",
   },
   location: {
-    gettingCurrentLocation: "Obtention de la position actuelle",
-    usingCurrentLocation: "Utilisation de la position actuelle",
+    label: "Emplacement",
+    gettingCurrentLocation: "Obtention de l'emplacement actuel",
+    usingCurrentLocation: "Utilisation de l'emplacement actuel",
   },
   unlock: {
     label: "Déverrouiller",

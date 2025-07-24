@@ -37,6 +37,7 @@ export default {
   search: "Rechercher",
   selectAnItem: "Sélectionner un élément",
   selectNewItems: "Sélectionner de nouveaux éléments",
+  shareFile: "Partager le fichier",
   size: "Taille",
   sizeAvailable: "{{size}} disponibles",
   somethingWentWrong: "Une erreur s'est produite: {{error}}",

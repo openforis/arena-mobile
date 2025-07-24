@@ -162,11 +162,12 @@ Check settings or ask the survey administrator to change this limit.`,
     target: {
       remote: "Remote server",
       local: "Local folder (Download)",
-      share: "Share file",
+      share: "$t(common:shareFile)",
     },
     shareExportedFile: "Share exported file",
   },
   location: {
+    label: "Location",
     gettingCurrentLocation: "Getting current location",
     usingCurrentLocation: "Using current location",
   },

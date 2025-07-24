@@ -3,9 +3,7 @@ import PropTypes from "prop-types";
 
 import { NodeDefType, NodeDefs, Objects } from "@openforis/arena-core";
 
-import { SystemUtils } from "utils";
-import { HView, IconButton, TextInput } from "components";
-import { useToast } from "hooks";
+import { CopyToClipboardButton, HView, TextInput } from "components";
 import { RecordEditViewMode } from "model";
 import { DataEntrySelectors, SurveyOptionsSelectors } from "state";
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
@@ -31,8 +29,6 @@ export const NodeTextComponent = (props) => {
   const styles = useStyles({ wrapperStyle });
 
   const isNumeric = !!isNumericByType[nodeDef.type];
-
-  const toaster = useToast();
 
   const editable = !NodeDefs.isReadOnly(nodeDef);
   const multiline =
@@ -70,12 +66,6 @@ export const NodeTextComponent = (props) => {
     [updateNodeValue]
   );
 
-  const onCopyPress = () => {
-    if (SystemUtils.copyValueToClipboard(uiValue)) {
-      toaster("common:textCopiedToClipboard");
-    }
-  };
-
   // focus on text input when in single-node view mode and this is the active item
   useEffect(() => {
     if (
@@ -109,13 +99,7 @@ export const NodeTextComponent = (props) => {
         onChange={onChange}
         value={uiValue}
       />
-      {!editable && (
-        <IconButton
-          disabled={Objects.isEmpty(uiValue)}
-          icon="content-copy"
-          onPress={onCopyPress}
-        />
-      )}
+      {!editable && <CopyToClipboardButton value={uiValue} />}
     </HView>
   );
 };

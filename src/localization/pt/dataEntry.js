@@ -155,11 +155,12 @@ Verifique as configurações ou peça ao administrador da pesquisa para alterar 
     target: {
       remote: "Servidor remoto",
       local: "Pasta local (Download)",
-      share: "Compartilhar arquivo",
+      share: "$t(common:shareFile)",
     },
     shareExportedFile: "Compartilhar arquivo exportado",
   },
   location: {
+    label: "Localização",
     gettingCurrentLocation: "Obtendo localização atual",
     usingCurrentLocation: "Usando localização atual",
   },

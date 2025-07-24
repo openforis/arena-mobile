@@ -168,11 +168,12 @@ Maximal zulässige Größe: {{maxSizeMB}}MB.
     target: {
       remote: "Remote-Server",
       local: "Lokaler Ordner (Download)",
-      share: "Datei teilen",
+      share: "$t(common:shareFile)",
     },
     shareExportedFile: "Exportierte Datei teilen",
   },
   location: {
+    label: "Standort",
     gettingCurrentLocation: "Aktuellen Standort wird abgerufen",
     usingCurrentLocation: "Aktueller Standort wird verwendet",
   },

@@ -38,6 +38,7 @@ export default {
   search: "Sök",
   selectAnItem: "Välj ett objekt",
   selectNewItems: "Välj nya objekt",
+  shareFile: "Dela fil",
   size: "Storlek",
   sizeAvailable: "{{size}} tillgängligt",
   somethingWentWrong: "Något gick fel: {{error}}",

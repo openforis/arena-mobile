@@ -155,11 +155,12 @@ export default {
     target: {
       remote: "Удаленный сервер",
       local: "Локальная папка (Загрузка)",
-      share: "Поделиться файлом",
+      share: "$t(common:shareFile)",
     },
     shareExportedFile: "Поделиться экспортированным файлом",
   },
   location: {
+    label: "Местоположение",
     gettingCurrentLocation: "Получение текущего местоположения",
     usingCurrentLocation: "Использовать текущее местоположение",
   },

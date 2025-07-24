@@ -163,11 +163,12 @@ Kontrollera inställningarna eller be undersökningsadministratören att ändra 
     target: {
       remote: "Fjärrserver",
       local: "Lokal mapp (Nedladdning)",
-      share: "Dela fil",
+      share: "$t(common:shareFile)",
     },
     shareExportedFile: "Dela exporterad fil",
   },
   location: {
+    label: "Plats",
     gettingCurrentLocation: "Hämtar aktuell plats",
     usingCurrentLocation: "Använder aktuell plats",
   },

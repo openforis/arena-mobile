@@ -2,11 +2,12 @@ import React, { useCallback, useMemo } from "react";
 import openMap from "react-native-open-maps";
 import PropTypes from "prop-types";
 
-import { IconButton } from "components/IconButton";
 import { Points } from "@openforis/arena-core";
 
+import { IconButton } from "components/IconButton";
+
 export const OpenMapButton = (props) => {
-  const { point, srsIndex } = props;
+  const { point, size = 30, srsIndex = undefined } = props;
 
   const pointLatLng = useMemo(
     () => Points.toLatLong(point, srsIndex),
@@ -27,10 +28,11 @@ export const OpenMapButton = (props) => {
 
   if (!pointLatLng) return null;
 
-  return <IconButton icon="map" onPress={onPress} size={30} />;
+  return <IconButton icon="map" onPress={onPress} size={size} />;
 };
 
 OpenMapButton.propTypes = {
   point: PropTypes.object,
-  srsIndex: PropTypes.object.isRequired,
+  size: PropTypes.number,
+  srsIndex: PropTypes.object,
 };
