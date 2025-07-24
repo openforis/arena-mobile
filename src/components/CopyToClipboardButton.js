@@ -18,7 +18,7 @@ export const CopyToClipboardButton = (props) => {
     if (SystemUtils.copyValueToClipboard(value)) {
       toaster("common:textCopiedToClipboard");
     }
-  }, []);
+  }, [toaster, value]);
 
   return (
     <IconButton
