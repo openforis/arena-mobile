@@ -30,7 +30,7 @@ export default {
   },
   importRecord: "وارد کردن رکورد",
   importRecords: {
-    title: "وارد کردن از سرور",
+    title: "$t(common:import)",
     error: {
       surveyNotVisibleInMobile:
         "وارد کردن رکوردها امکان‌پذیر نیست: این نظرسنجی نباید در آرنا موبایل قابل مشاهده باشد",

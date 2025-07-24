@@ -32,7 +32,7 @@ export default {
   },
   importRecord: "Importer l'enregistrement",
   importRecords: {
-    title: "Importer depuis le serveur",
+    title: "$t(common:import)",
     error: {
       surveyNotVisibleInMobile:
         "Impossible d'importer les enregistrements : cette enquête ne devrait pas être visible dans Arena Mobile",

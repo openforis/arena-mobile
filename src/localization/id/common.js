@@ -21,6 +21,7 @@ export default {
   filter: "Saring",
   fromToOf: `{{from}}-{{to}} dari {{of}}`,
   goBack: "Kembali",
+  import: "Impor",
   info: "Info",
   label: "Label",
   legend: "Legenda",

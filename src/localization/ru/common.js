@@ -21,6 +21,7 @@ export default {
   filter: "Фильтр",
   fromToOf: "{{from}}-{{to}} из {{of}}",
   goBack: "Назад",
+  import: "Импорт",
   info: "Информация",
   label: "Метка",
   legend: "Легенда",

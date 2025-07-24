@@ -29,7 +29,7 @@ export default {
   },
   importRecord: "መዝገብ አስገባ",
   importRecords: {
-    title: "ከአገልጋዩ አስገባ",
+    title: "$t(common:import)",
     error: {
       surveyNotVisibleInMobile:
         "መረጃዎችን ማስገባት አይቻልም: ይህ ዳሰሳ በአሬና ሞባይል ላይ መታየት የለበትም",
