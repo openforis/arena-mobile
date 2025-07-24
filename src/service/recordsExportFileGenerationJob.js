@@ -106,7 +106,9 @@ export class RecordsExportFileGenerationJob extends JobMobile {
       }
 
       const outputFileName = `recordsExport-${Dates.nowFormattedForStorage()}.zip`;
-      this.outputFileUri = Files.path(Files.documentDirectory, outputFileName);
+
+      // store exported file in cache directory to allow sharing it later on
+      this.outputFileUri = Files.path(Files.cacheDirectory, outputFileName);
 
       await Files.zip(tempFolderUri, this.outputFileUri);
     } finally {
