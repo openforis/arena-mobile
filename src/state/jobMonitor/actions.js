@@ -1,4 +1,4 @@
-import { JobStatus } from "@openforis/arena-core";
+import { JobMessageOutType, JobStatus } from "@openforis/arena-core";
 import { WebSocketService } from "service";
 
 const JOB_MONITOR_START = "JOB_MONITOR_START";
@@ -19,6 +19,8 @@ const start =
     onJobEnd = undefined,
     onCancel = undefined,
     onClose = undefined,
+    remote = true,
+    autoDismiss = false,
   }) =>
   async (dispatch) => {
     dispatch({
@@ -32,29 +34,52 @@ const start =
         messageParams,
         onCancel,
         onClose,
+        remote,
+        autoDismiss,
       },
     });
 
-    const ws = await WebSocketService.open();
-
-    const notifyJobUpdate = (job) => {
-      const { ended, progressPercent, status } = job;
+    const handleJobUpdate = ({ job, ended, progressPercent, status }) => {
       dispatch({
         type: JOB_MONITOR_UPDATE,
-        payload: {
-          progressPercent,
-          status,
-        },
+        payload: { progressPercent, status },
       });
       if (ended) {
-        WebSocketService.close();
+        if (remote) {
+          WebSocketService.close();
+        }
         if (onJobComplete && status === JobStatus.succeeded) {
           onJobComplete(job);
         }
         onJobEnd?.(job);
+        if (autoDismiss) {
+          dispatch(close())
+        }
       }
     };
-    ws.on(WebSocketService.EVENTS.jobUpdate, notifyJobUpdate);
+
+    if (remote) {
+      const ws = await WebSocketService.open();
+
+      const notifyJobUpdate = (job) => {
+        const { ended, progressPercent, status } = job;
+        handleJobUpdate({ job, ended, progressPercent, status });
+      };
+      ws.on(WebSocketService.EVENTS.jobUpdate, notifyJobUpdate);
+    } else {
+      job.on(JobMessageOutType.summaryUpdate, (jobSummary) => {
+        const { processed, status, total } = jobSummary;
+        const progressPercent = total
+          ? Math.floor((processed / total) * 100)
+          : -1;
+        const ended = [
+          JobStatus.canceled,
+          JobStatus.failed,
+          JobStatus.succeeded,
+        ].includes(status);
+        handleJobUpdate({ job: jobSummary, ended, progressPercent, status });
+      });
+    }
   };
 
 const startAsync = async ({ dispatch, ...otherParams }) =>

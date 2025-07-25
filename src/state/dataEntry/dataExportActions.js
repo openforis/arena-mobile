@@ -11,6 +11,7 @@ import { MessageActions } from "../message";
 import { SurveySelectors } from "../survey";
 import { Files } from "utils";
 import { ValidationUtils } from "model/utils/ValidationUtils";
+import { RecordsUploadJob } from "service/recordsUploadJob";
 
 const { t } = i18n;
 
@@ -36,13 +37,22 @@ const startUploadDataToRemoteServer =
     const cycle = Surveys.getDefaultCycleKey(survey);
 
     try {
-      const remoteJob = await RecordService.uploadRecordsToRemoteServer({
+      const uploadJob = new RecordsUploadJob({
         survey,
         cycle,
         fileUri: outputFileUri,
         conflictResolutionStrategy,
       });
 
+      const uploadJobComplete = await JobMonitorActions.startAsync({
+        dispatch,
+        job: uploadJob,
+        titleKey: "dataEntry:exportData.title",
+        remote: false,
+        autoDismiss: true,
+      });
+
+      const { remoteJob } = uploadJobComplete.result;
       dispatch(
         JobMonitorActions.start({
           jobUuid: remoteJob.uuid,
