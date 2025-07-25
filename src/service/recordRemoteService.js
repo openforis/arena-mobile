@@ -38,6 +38,7 @@ const uploadRecords = async ({
   cycle,
   fileUri,
   conflictResolutionStrategy,
+  onUploadProgress,
 }) => {
   const surveyRemoteId = survey.remoteId;
   const params = {
@@ -51,7 +52,8 @@ const uploadRecords = async ({
   };
   const { data } = await RemoteService.postMultipartData(
     `api/mobile/survey/${surveyRemoteId}`,
-    params
+    params,
+    onUploadProgress
   );
   const { job } = data;
   return job;

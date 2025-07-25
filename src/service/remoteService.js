@@ -34,9 +34,10 @@ const getFile = async (uri, params, callback) => {
 
 const post = async (uri, data) => API.post(await getServerUrl(), uri, data);
 
-const postMultipartData = async (uri, data) =>
+const postMultipartData = async (uri, data, onUploadProgress) =>
   API.post(await getServerUrl(), uri, data, {
     headers: multipartDataHeaders,
+    onUploadProgress,
   });
 
 export const RemoteService = {

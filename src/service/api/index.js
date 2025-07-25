@@ -1,5 +1,6 @@
-import { Strings, UUIDs } from "@openforis/arena-core";
+import { APIAxios } from "./apiAxios";
 
+<<<<<<< Updated upstream
 import { Files } from "utils";
 
 const defaultOptions = {
@@ -125,3 +126,6 @@ export const API = {
   post,
   test,
 };
+=======
+export const API = APIAxios;
+>>>>>>> Stashed changes
