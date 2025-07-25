@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
 });
 
 const ImageInfo = (props) => {
-  const { imageUri: imageUriProp } = props;
+  const { imageUri: imageUriProp, showGeotagInfo = false } = props;
 
   const [info, setInfo] = useState(null);
 
@@ -85,27 +85,30 @@ const ImageInfo = (props) => {
     <VView>
       <FormItem labelKey="common:size">{size}</FormItem>
       <FormItem labelKey="dataEntry:fileAttributeImage.resolution">{`${width}x${height}`}</FormItem>
-      <FormItem labelKey="dataEntry:location.label">
-        <VView>
-          <Text>{locationString}</Text>
-          {isValidLocation && (
-            <HView>
-              <CopyToClipboardButton value={locationStringFull} />
-              <OpenMapButton point={locationPoint} size={20} />
-            </HView>
-          )}
-        </VView>
-      </FormItem>
+      {showGeotagInfo && (
+        <FormItem labelKey="dataEntry:location.label">
+          <VView>
+            <Text>{locationString}</Text>
+            {isValidLocation && (
+              <HView>
+                <CopyToClipboardButton value={locationStringFull} />
+                <OpenMapButton point={locationPoint} size={20} />
+              </HView>
+            )}
+          </VView>
+        </FormItem>
+      )}
     </VView>
   );
 };
 
 ImageInfo.propTypes = {
   imageUri: PropTypes.string.isRequired,
+  showGeotagInfo: PropTypes.bool,
 };
 
 export const ImagePreviewDialog = (props) => {
-  const { fileName, imageUri, onClose } = props;
+  const { fileName, imageUri, onClose, showGeotagInfo = false } = props;
 
   const onSharePress = useCallback(async () => {
     const mimeType = Files.getMimeTypeFromName(fileName);
@@ -133,7 +136,7 @@ export const ImagePreviewDialog = (props) => {
             containerStyle={styles.details}
             headerKey="common:details"
           >
-            <ImageInfo imageUri={imageUri} />
+            <ImageInfo imageUri={imageUri} showGeotagInfo={showGeotagInfo} />
           </CollapsiblePanel>
         </HView>
       </VView>
@@ -145,4 +148,5 @@ ImagePreviewDialog.propTypes = {
   fileName: PropTypes.string.isRequired,
   imageUri: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
+  showGeotagInfo: PropTypes.bool,
 };
