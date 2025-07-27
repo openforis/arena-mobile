@@ -33,7 +33,7 @@ const downloadExportedRecordsFile = async ({ survey, fileName }) => {
   return fileUri;
 };
 
-const uploadRecords = ({
+const uploadRecords = async ({
   survey,
   cycle,
   fileUri,
@@ -50,7 +50,7 @@ const uploadRecords = ({
     cycle,
     conflictResolutionStrategy,
   };
-  const { promise, cancel } = RemoteService.postCancelableMultipartData(
+  const { promise, cancel } = await RemoteService.postCancelableMultipartData(
     `api/mobile/survey/${surveyRemoteId}`,
     params,
     onUploadProgress
