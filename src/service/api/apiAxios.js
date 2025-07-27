@@ -120,12 +120,7 @@ const post = async (serverUrl, uri, params, options = {}) => {
   return { data, response };
 };
 
-const postCancelableMultipartData = async (
-  serverUrl,
-  uri,
-  params,
-  options = {}
-) =>
+const postCancelableMultipartData = (serverUrl, uri, params, options = {}) =>
   postCancelable(serverUrl, uri, APIUtils.objectToFormData(params), {
     headers: multipartDataHeaders,
     ...options,
