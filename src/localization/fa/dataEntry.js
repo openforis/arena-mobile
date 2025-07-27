@@ -101,7 +101,9 @@ export default {
     notInEntryStepAnymore:
       "دیگر در مرحله ورود نیست (در مرحله پاکسازی یا تجزیه و تحلیل است)",
   },
-
+  uploadingData: {
+    title: "در حال بارگذاری داده",
+  },
   validationReport: {
     title: "گزارش اعتبارسنجی",
     noErrorsFound: "تبریک، خطایی یافت نشد!",

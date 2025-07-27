@@ -102,6 +102,9 @@ export default {
     notInEntryStepAnymore:
       "Plus à l'étape de saisie (à l'étape de nettoyage ou d'analyse)",
   },
+  uploadingData: {
+    title: "Téléchargement des données",
+  },
   validationReport: {
     title: "Rapport de validation",
     noErrorsFound: "Bravo, aucune erreur trouvée!",

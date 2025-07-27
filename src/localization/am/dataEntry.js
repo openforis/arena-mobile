@@ -90,6 +90,9 @@ export default {
     modifiedRemotely: "በሩቅ አገልጋይ የተሻሻለ",
     notInEntryStepAnymore: "ከእንግዲህ በማስገቢያ ደረጃ የለም (በማጽዳት ወይም ትንተና ደረጃ)",
   },
+  uploadingData: {
+    title: "Տվյալների վերբեռնում",
+  },
   validationReport: {
     title: "የማረጋገጫ ሪፖርት",
     noErrorsFound: "እንኳን ደስ አላችሁ፣ ምንም ስህተቶች አልተገኙም!",

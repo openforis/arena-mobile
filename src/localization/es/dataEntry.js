@@ -97,6 +97,9 @@ export default {
     notInEntryStepAnymore:
       "Ya no está en la fase de entrada (la fase de limpieza o análisis)",
   },
+  uploadingData: {
+    title: "Cargando datos",
+  },
   validationReport: {
     title: "Informe de validación",
     noErrorsFound: "¡Enhorabuena, no se encontraron errores!",

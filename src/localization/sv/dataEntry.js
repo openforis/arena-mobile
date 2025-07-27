@@ -102,7 +102,9 @@ export default {
     notInEntryStepAnymore:
       "Inte längre i inmatningssteget (i rensnings- eller analyssteget)",
   },
-
+  uploadingData: {
+    title: "Laddar upp data",
+  },
   validationReport: {
     title: "Valideringsrapport",
     noErrorsFound: "Bra, inga fel hittades!",

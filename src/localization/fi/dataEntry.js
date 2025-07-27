@@ -102,7 +102,9 @@ export default {
     notInEntryStepAnymore:
       "Ei enää syöttövaiheessa (puhdistus- tai analyysivaiheessa)",
   },
-
+  uploadingData: {
+    title: "Ladataan tietoja",
+  },
   validationReport: {
     title: "Validointiraportti",
     noErrorsFound: "Hienoa, virheitä ei löytynyt!",
