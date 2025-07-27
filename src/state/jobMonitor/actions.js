@@ -7,9 +7,15 @@ const JOB_MONITOR_END = "JOB_MONITOR_END";
 
 const getJobMonitorState = (state) => state.jobMonitor;
 
+const calculateProgressPercent = ({ jobSummary }) => {
+  const { total, processed } = jobSummary;
+  return total ? Math.floor((processed / total) * 100) : -1;
+};
+
 const start =
   ({
-    jobUuid,
+    jobUuid = null, // jobUuid must be provided when monitoring a remote job
+    job = null, // job must be provided when monitoring a local job
     titleKey = "common:processing",
     cancelButtonTextKey = "common:cancel",
     closeButtonTextKey = "common:close",
@@ -19,7 +25,6 @@ const start =
     onJobEnd = undefined,
     onCancel = undefined,
     onClose = undefined,
-    remote = true,
     autoDismiss = false,
   }) =>
   async (dispatch) => {
@@ -34,51 +39,54 @@ const start =
         messageParams,
         onCancel,
         onClose,
-        remote,
         autoDismiss,
       },
     });
 
-    const handleJobUpdate = ({ job, ended, progressPercent, status }) => {
+    const handleJobUpdate = ({
+      jobSummary,
+      ended,
+      progressPercent,
+      status,
+    }) => {
       dispatch({
         type: JOB_MONITOR_UPDATE,
         payload: { progressPercent, status },
       });
       if (ended) {
-        if (remote) {
+        if (!job) {
+          // remote job
           WebSocketService.close();
         }
-        if (onJobComplete && status === JobStatus.succeeded) {
-          onJobComplete(job);
+        if (status === JobStatus.succeeded) {
+          if (autoDismiss) {
+            dispatch(close());
+          }
+          onJobComplete?.(jobSummary);
         }
-        onJobEnd?.(job);
-        if (autoDismiss) {
-          dispatch(close())
-        }
+        onJobEnd?.(jobSummary);
       }
     };
 
-    if (remote) {
-      const ws = await WebSocketService.open();
-
-      const notifyJobUpdate = (job) => {
-        const { ended, progressPercent, status } = job;
-        handleJobUpdate({ job, ended, progressPercent, status });
-      };
-      ws.on(WebSocketService.EVENTS.jobUpdate, notifyJobUpdate);
-    } else {
+    if (job) {
       job.on(JobMessageOutType.summaryUpdate, (jobSummary) => {
-        const { processed, status, total } = jobSummary;
-        const progressPercent = total
-          ? Math.floor((processed / total) * 100)
-          : -1;
+        const { status } = jobSummary;
+        const progressPercent = calculateProgressPercent({ jobSummary });
         const ended = [
           JobStatus.canceled,
           JobStatus.failed,
           JobStatus.succeeded,
         ].includes(status);
-        handleJobUpdate({ job: jobSummary, ended, progressPercent, status });
+        handleJobUpdate({ jobSummary, ended, progressPercent, status });
       });
+    } else {
+      const ws = await WebSocketService.open();
+
+      const notifyJobUpdate = (jobSummary) => {
+        const { ended, progressPercent, status } = jobSummary;
+        handleJobUpdate({ jobSummary, ended, progressPercent, status });
+      };
+      ws.on(WebSocketService.EVENTS.jobUpdate, notifyJobUpdate);
     }
   };
 

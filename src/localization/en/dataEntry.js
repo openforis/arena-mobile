@@ -102,6 +102,9 @@ Fetch the list of records from the server and try again?`,
     notInEntryStepAnymore:
       "Not in entry step anymore (in cleansing or analysis step)",
   },
+  uploadingData: {
+    title: "Uploading data",
+  },
   validationReport: {
     title: "Validation report",
     noErrorsFound: "Kudos, no errors found!",

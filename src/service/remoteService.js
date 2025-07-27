@@ -7,8 +7,6 @@ const statusToErrorKey = {
   401: "invalid_credentials",
 };
 
-const multipartDataHeaders = { "Content-Type": "multipart/form-data" };
-
 const handleError = ({ error }) => {
   if (error.response) {
     const status = error.response?.status;
@@ -35,10 +33,7 @@ const getFile = async (uri, params, callback) => {
 const post = async (uri, data) => API.post(await getServerUrl(), uri, data);
 
 const postMultipartData = async (uri, data, onUploadProgress) =>
-  API.post(await getServerUrl(), uri, data, {
-    headers: multipartDataHeaders,
-    onUploadProgress,
-  });
+  API.postMultipartData(await getServerUrl(), uri, data, { onUploadProgress });
 
 export const RemoteService = {
   getServerUrl,

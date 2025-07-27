@@ -3,8 +3,8 @@ import { JobMobile } from "model";
 import { RecordService } from "./recordService";
 
 export class RecordsUploadJob extends JobMobile {
-  constructor({ survey, cycle, fileUri, conflictResolutionStrategy }) {
-    super({ survey, cycle, fileUri, conflictResolutionStrategy });
+  constructor({ user, survey, cycle, fileUri, conflictResolutionStrategy }) {
+    super({ user, survey, cycle, fileUri, conflictResolutionStrategy });
   }
 
   async execute() {

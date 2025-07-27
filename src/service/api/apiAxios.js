@@ -3,6 +3,7 @@ import axios from "axios";
 import { Strings, UUIDs } from "@openforis/arena-core";
 
 import { Files } from "utils";
+import { APIUtils } from "./apiUtils";
 
 const defaultOptions = {
   credentials: "include",
@@ -15,6 +16,8 @@ const errorMessageByCode = {
   500: "Internal server error",
 };
 
+const multipartDataHeaders = { "Content-Type": "multipart/form-data" };
+
 const getUrl = ({ serverUrl, uri }) => {
   const parts = [];
   parts.push(Strings.removeSuffix("/")(serverUrl));
@@ -22,7 +25,7 @@ const getUrl = ({ serverUrl, uri }) => {
   return parts.join("/");
 };
 
-const fetchWithTimeout = async (url, opts = {}, timeout = 120000) => {
+const sendRequest = async (url, opts = {}, timeout = 120000) => {
   const options = { ...defaultOptions, ...opts };
   return axios.request({ url, ...options, timeout });
 };
@@ -41,7 +44,7 @@ const getUrlWithParams = ({ serverUrl, uri, params = {} }) => {
 
 const _sendGet = async (serverUrl, uri, params = {}, options = {}) => {
   const url = getUrlWithParams({ serverUrl, uri, params });
-  return fetchWithTimeout(url, options, options?.timeout);
+  return sendRequest(url, options, options?.timeout);
 };
 
 const get = async (serverUrl, uri, params = {}, options = {}) => {
@@ -85,7 +88,7 @@ const test = async (serverUrl, uri, params = {}) => {
 };
 
 const post = async (serverUrl, uri, params, options = {}) => {
-  const response = await fetchWithTimeout(getUrl({ serverUrl, uri }), {
+  const response = await sendRequest(getUrl({ serverUrl, uri }), {
     ...options,
     method: "post",
     data: params,
@@ -96,10 +99,17 @@ const post = async (serverUrl, uri, params, options = {}) => {
   return { data, response };
 };
 
+const postMultipartData = async (serverUrl, uri, params, options = {}) =>
+  post(serverUrl, uri, APIUtils.objectToFormData(params), {
+    headers: multipartDataHeaders,
+    ...options,
+  });
+
 export const APIAxios = {
   get,
   getFileAsText,
   getFile,
   post,
+  postMultipartData,
   test,
 };

@@ -1,4 +1,5 @@
 import { Files } from "utils";
+import { APIUtils } from "./apiUtils";
 
 const defaultOptions = {
   credentials: "include",
@@ -99,11 +100,7 @@ const test = async (serverUrl, uri, params = {}) => {
 };
 
 const post = async (serverUrl, uri, params, options = {}) => {
-  const formData = Object.entries(params).reduce((acc, [key, value]) => {
-    const formDataValue = Array.isArray(value) ? JSON.stringify(value) : value;
-    acc.append(key, formDataValue);
-    return acc;
-  }, new FormData());
+  const formData = APIUtils.objectToFormData(params);
 
   const response = await fetchWithTimeout(getUrl({ serverUrl, uri }), {
     ...options,
