@@ -25,9 +25,19 @@ const getUrl = ({ serverUrl, uri }) => {
   return parts.join("/");
 };
 
-const sendRequest = async (url, opts = {}, timeout = 120000) => {
-  const options = { ...defaultOptions, ...opts };
-  return axios.request({ url, ...options, timeout });
+const _sendRequest = async (url, opts = {}, timeout = 120000) => {
+  const controller = new AbortController();
+  const options = {
+    ...defaultOptions,
+    ...opts,
+    url,
+    signal: controller.signal,
+    timeout,
+  };
+  return {
+    promise: axios.request(options),
+    cancel: () => controller.abort(),
+  };
 };
 
 const getUrlWithParams = ({ serverUrl, uri, params = {} }) => {
@@ -42,16 +52,17 @@ const getUrlWithParams = ({ serverUrl, uri, params = {} }) => {
   );
 };
 
-const _sendGet = async (serverUrl, uri, params = {}, options = {}) => {
+const _sendGet = (serverUrl, uri, params = {}, options = {}) => {
   const url = getUrlWithParams({ serverUrl, uri, params });
-  return sendRequest(url, options, options?.timeout);
+  return _sendRequest(url, options, options?.timeout);
 };
 
 const get = async (serverUrl, uri, params = {}, options = {}) => {
-  const response = await _sendGet(serverUrl, uri, params, options);
+  const { promise, cancel } = _sendGet(serverUrl, uri, params, options);
+  const response = await promise;
   const { status, data } = response;
   if (status === 200) {
-    return { data };
+    return { data, cancel };
   } else {
     const errorMessage = errorMessageByCode[status] ?? errorMessageByCode[500];
     throw new Error(errorMessage);
@@ -59,7 +70,8 @@ const get = async (serverUrl, uri, params = {}, options = {}) => {
 };
 
 const getFileAsText = async (serverUrl, uri, params, options) => {
-  const response = await _sendGet(serverUrl, uri, params, options);
+  const { promise } = _sendGet(serverUrl, uri, params, options);
+  const response = await promise;
   return response.data;
 };
 
@@ -80,24 +92,44 @@ const getFile = async ({
 
 const test = async (serverUrl, uri, params = {}) => {
   try {
-    const response = await _sendGet(serverUrl, uri, params);
+    const { promise } = _sendGet(serverUrl, uri, params);
+    const response = await promise;
     return response?.data?.status === "ok";
   } catch (e) {
     return false;
   }
 };
 
-const post = async (serverUrl, uri, params, options = {}) => {
-  const response = await sendRequest(getUrl({ serverUrl, uri }), {
+const postCancelable = (serverUrl, uri, params, options = {}) => {
+  const { promise, cancel } = _sendRequest(getUrl({ serverUrl, uri }), {
     ...options,
     method: "post",
     data: params,
   });
 
+  return { promise, cancel };
+};
+
+const post = async (serverUrl, uri, params, options = {}) => {
+  const { promise } = postCancelable(serverUrl, uri, params, options);
+
+  const response = await promise;
+
   const { data } = response;
 
   return { data, response };
 };
+
+const postCancelableMultipartData = async (
+  serverUrl,
+  uri,
+  params,
+  options = {}
+) =>
+  postCancelable(serverUrl, uri, APIUtils.objectToFormData(params), {
+    headers: multipartDataHeaders,
+    ...options,
+  });
 
 const postMultipartData = async (serverUrl, uri, params, options = {}) =>
   post(serverUrl, uri, APIUtils.objectToFormData(params), {
@@ -110,6 +142,7 @@ export const APIAxios = {
   getFileAsText,
   getFile,
   post,
+  postCancelableMultipartData,
   postMultipartData,
   test,
 };

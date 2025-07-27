@@ -10,7 +10,7 @@ export class RecordsUploadJob extends JobMobile {
   async execute() {
     const { survey, cycle, fileUri, conflictResolutionStrategy } = this.context;
 
-    const remoteJob = await RecordService.uploadRecordsToRemoteServer({
+    const { promise, cancel } = RecordService.uploadRecordsToRemoteServer({
       survey,
       cycle,
       fileUri,
@@ -23,7 +23,15 @@ export class RecordsUploadJob extends JobMobile {
       },
     });
 
+    this.cancelUpload = cancel;
+    const { data } = await promise;
+    const { remoteJob } = data;
     this.remoteJob = remoteJob;
+  }
+
+  async cancel() {
+    this.cancelUpload?.();
+    await super.cancel();
   }
 
   async prepareResult() {
