@@ -25,9 +25,9 @@ const getUrl = ({ serverUrl, uri }) => {
   return parts.join("/");
 };
 
-const _sendRequest = async (url, opts = {}, timeout = 120000) => {
+const _sendRequest = (url, opts = {}, timeout = 120000) => {
   const controller = new AbortController();
-  const options = {
+  const config = {
     ...defaultOptions,
     ...opts,
     url,
@@ -35,7 +35,7 @@ const _sendRequest = async (url, opts = {}, timeout = 120000) => {
     timeout,
   };
   return {
-    promise: axios.request(options),
+    promise: axios.request(config),
     cancel: () => controller.abort(),
   };
 };
