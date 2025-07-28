@@ -90,8 +90,11 @@ const startAsync = async ({ dispatch, ...otherParams }) =>
       start({
         ...otherParams,
         onJobEnd: (jobEnd) => {
-          if (jobEnd.status === JobStatus.succeeded) {
+          const { status } = jobEnded;
+          if (status === JobStatus.succeeded) {
             resolve(jobEnd);
+          } else if (status === JobStatus.canceled) {
+            reject();
           } else {
             reject(jobEnd);
           }

@@ -65,7 +65,11 @@ const startUploadDataToRemoteServer =
         })
       );
     } catch (error) {
-      dispatch(handleError(error));
+      if (error) {
+        dispatch(handleError(error));
+      } else {
+        // job canceled, do nothing
+      }
     }
   };
 
