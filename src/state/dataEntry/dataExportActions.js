@@ -47,13 +47,13 @@ const startUploadDataToRemoteServer =
         conflictResolutionStrategy,
       });
 
+      uploadJob.start(); // do not wait for job to complete: monitor job progress instead
+
       const uploadJobComplete = await JobMonitorActions.startAsync({
         dispatch,
         job: uploadJob,
         titleKey: "dataEntry:uploadingData.title",
       });
-
-      uploadJob.start(); // do not wait for job to complete: monitor job progress instead
 
       const { remoteJob } = uploadJobComplete.result;
 
