@@ -5,6 +5,8 @@ import { RecordService } from "./recordService";
 export class RecordsUploadJob extends JobMobile {
   constructor({ user, survey, cycle, fileUri, conflictResolutionStrategy }) {
     super({ user, survey, cycle, fileUri, conflictResolutionStrategy });
+    this.cancelUpload = null; // cancels upload request
+    this.remoteJob = null; // job started on remote server after file upload
   }
 
   async execute() {
