@@ -31,7 +31,7 @@ import { SurveySelectors } from "../survey";
 import { RemoteConnectionSelectors } from "../remoteConnection";
 import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntrySelectors } from "./selectors";
-import { exportRecords } from "./dataExportActions";
+import { exportRecords } from "./actionsDataExport";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
 import {
   importRecordsFromFile,
