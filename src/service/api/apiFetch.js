@@ -10,13 +10,6 @@ const errorMessageByCode = {
   500: "Internal server error",
 };
 
-const getUrl = ({ serverUrl, uri }) => {
-  const parts = [];
-  parts.push(Strings.removeSuffix("/")(serverUrl));
-  parts.push(Strings.removePrefix("/")(uri));
-  return parts.join("/");
-};
-
 const fetchWithTimeout = async (url, opts = {}, timeout = 120000) => {
   const options = { ...defaultOptions, ...opts };
   const controller = new AbortController();
@@ -30,20 +23,8 @@ const fetchWithTimeout = async (url, opts = {}, timeout = 120000) => {
   return result;
 };
 
-const getUrlWithParams = ({ serverUrl, uri, params = {} }) => {
-  const requestParams = Object.entries(params).reduce((acc, [key, value]) => {
-    acc.append(key, value);
-    return acc;
-  }, new URLSearchParams());
-  const requestParamsString = requestParams.toString();
-  return (
-    getUrl({ serverUrl, uri }) +
-    (requestParamsString ? "?" + requestParamsString : "")
-  );
-};
-
 const _sendGet = async (serverUrl, uri, params = {}, options = {}) => {
-  const url = getUrlWithParams({ serverUrl, uri, params });
+  const url = APIUtils.getUrlWithParams({ serverUrl, uri, params });
   return fetchWithTimeout(url, options, options?.timeout);
 };
 
@@ -86,7 +67,7 @@ const test = async (serverUrl, uri, params = {}) => {
 const post = async (serverUrl, uri, params, options = {}) => {
   const formData = APIUtils.objectToFormData(params);
 
-  const response = await fetchWithTimeout(getUrl({ serverUrl, uri }), {
+  const response = await fetchWithTimeout(APIUtils.getUrl({ serverUrl, uri }), {
     ...options,
     method: "POST",
     body: formData,
