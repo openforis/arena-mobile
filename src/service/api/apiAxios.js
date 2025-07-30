@@ -1,7 +1,5 @@
 import axios from "axios";
 
-import { Strings } from "@openforis/arena-core";
-
 import { APIUtils } from "./apiUtils";
 
 const defaultOptions = {
@@ -16,13 +14,6 @@ const errorMessageByCode = {
 };
 
 const multipartDataHeaders = { "Content-Type": "multipart/form-data" };
-
-const getUrl = ({ serverUrl, uri }) => {
-  const parts = [];
-  parts.push(Strings.removeSuffix("/")(serverUrl));
-  parts.push(Strings.removePrefix("/")(uri));
-  return parts.join("/");
-};
 
 const _sendRequest = (url, opts = {}, timeout = 120000) => {
   const controller = new AbortController();
@@ -39,20 +30,8 @@ const _sendRequest = (url, opts = {}, timeout = 120000) => {
   };
 };
 
-const getUrlWithParams = ({ serverUrl, uri, params = {} }) => {
-  const requestParams = Object.entries(params).reduce((acc, [key, value]) => {
-    acc.append(key, value);
-    return acc;
-  }, new URLSearchParams());
-  const requestParamsString = requestParams.toString();
-  return (
-    getUrl({ serverUrl, uri }) +
-    (requestParamsString ? "?" + requestParamsString : "")
-  );
-};
-
 const _sendGet = (serverUrl, uri, params = {}, options = {}) => {
-  const url = getUrlWithParams({ serverUrl, uri, params });
+  const url = APIUtils.getUrlWithParams({ serverUrl, uri, params });
   return _sendRequest(url, options, options?.timeout);
 };
 
@@ -85,11 +64,14 @@ const test = async (serverUrl, uri, params = {}) => {
 };
 
 const postCancelable = (serverUrl, uri, params, options = {}) => {
-  const { promise, cancel } = _sendRequest(getUrl({ serverUrl, uri }), {
-    ...options,
-    method: "post",
-    data: params,
-  });
+  const { promise, cancel } = _sendRequest(
+    APIUtils.getUrl({ serverUrl, uri }),
+    {
+      ...options,
+      method: "post",
+      data: params,
+    }
+  );
 
   return { promise, cancel };
 };
