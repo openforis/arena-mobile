@@ -1,11 +1,15 @@
+import { DateFormats, Dates } from "@openforis/arena-core";
 import { JobMobile } from "model";
 import { Files } from "utils";
 
-const outputFileName = `am_full_backup.zip`;
+const outputFileNamePrefix = `arena_mobile_full_backup_`;
 
 export class BackupJob extends JobMobile {
   async execute() {
     await super.onStart();
+
+    const timestamp = Dates.format(new Date(), DateFormats.datetimeDefault);
+    const outputFileName = `${outputFileNamePrefix}${timestamp}.zip`;
 
     const outputFileUri = Files.path(Files.cacheDirectory, outputFileName);
 
