@@ -17,6 +17,8 @@ const RECORDS_SUMMARY_JSON_FILENAME = "records.json";
 const FILES_FOLDER_NAME = "files";
 const FILES_SUMMARY_JSON_FILENAME = "files.json";
 
+const recordsExportFileNamePrefix = "am-records-export-";
+
 export class RecordsExportFileGenerationJob extends JobMobile {
   constructor({ survey, cycle, recordUuids, user }) {
     super({ survey, cycle, recordUuids, user });
@@ -105,7 +107,7 @@ export class RecordsExportFileGenerationJob extends JobMobile {
         });
       }
 
-      const outputFileName = `recordsExport-${Dates.nowFormattedForStorage()}.zip`;
+      const outputFileName = `${recordsExportFileNamePrefix}${Dates.nowFormattedForStorage()}.zip`;
 
       // store exported file in cache directory to allow sharing it later on
       this.outputFileUri = Files.path(Files.cacheDirectory, outputFileName);

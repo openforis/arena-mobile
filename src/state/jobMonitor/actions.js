@@ -90,7 +90,7 @@ const startAsync = async ({ dispatch, ...otherParams }) =>
       start({
         ...otherParams,
         onJobEnd: (jobEnd) => {
-          const { status } = jobEnded;
+          const { status } = jobEnd;
           if (status === JobStatus.succeeded) {
             resolve(jobEnd);
           } else if (status === JobStatus.canceled) {
@@ -103,20 +103,23 @@ const startAsync = async ({ dispatch, ...otherParams }) =>
     );
   });
 
-const cancel = () => (dispatch, getState) => {
+const cancel = () => async (dispatch, getState) => {
   const state = getState();
   const jobMonitorState = getJobMonitorState(state);
-  const { onCancel } = jobMonitorState;
+  const { onCancel, job } = jobMonitorState;
   onCancel?.();
+  if (job?.cancel) {
+    // cancel local job
+    await job.cancel();
+  }
   dispatch(close());
 };
 
-const close = () => async (dispatch, getState) => {
+const close = () => (dispatch, getState) => {
   const state = getState();
   const jobMonitorState = getJobMonitorState(state);
-  const { onClose, job } = jobMonitorState;
+  const { onClose } = jobMonitorState;
   onClose?.();
-  await job?.cancel?.();
   dispatch({ type: JOB_MONITOR_END });
 };
 
