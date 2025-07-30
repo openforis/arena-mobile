@@ -1,4 +1,3 @@
-import { Files } from "utils";
 import { APIUtils } from "./apiUtils";
 
 const defaultOptions = {
@@ -75,21 +74,6 @@ const getFileAsText = async (serverUrl, uri, params, options) => {
   });
 };
 
-const getFile = async ({
-  serverUrl,
-  uri,
-  params,
-  callback: _callback,
-  targetFileUri = null,
-  options = {},
-}) => {
-  const actualTargetFileUri =
-    targetFileUri ?? Files.path(Files.cacheDirectory, UUIDs.v4() + ".tmp");
-  const url = getUrlWithParams({ serverUrl, uri, params });
-  await Files.download(url, actualTargetFileUri, options);
-  return actualTargetFileUri;
-};
-
 const test = async (serverUrl, uri, params = {}) => {
   try {
     const response = await _sendGet(serverUrl, uri, params);
@@ -116,7 +100,6 @@ export const APIFetch = {
   get,
   getFileAsBlob,
   getFileAsText,
-  getFile,
   post,
   test,
 };

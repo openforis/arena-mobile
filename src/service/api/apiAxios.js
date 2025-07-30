@@ -1,8 +1,7 @@
 import axios from "axios";
 
-import { Strings, UUIDs } from "@openforis/arena-core";
+import { Strings } from "@openforis/arena-core";
 
-import { Files } from "utils";
 import { APIUtils } from "./apiUtils";
 
 const defaultOptions = {
@@ -75,21 +74,6 @@ const getFileAsText = async (serverUrl, uri, params, options) => {
   return response.data;
 };
 
-const getFile = async ({
-  serverUrl,
-  uri,
-  params,
-  callback: _callback,
-  targetFileUri = null,
-  options = {},
-}) => {
-  const actualTargetFileUri =
-    targetFileUri ?? Files.path(Files.cacheDirectory, UUIDs.v4() + ".tmp");
-  const url = getUrlWithParams({ serverUrl, uri, params });
-  await Files.download(url, actualTargetFileUri, options);
-  return actualTargetFileUri;
-};
-
 const test = async (serverUrl, uri, params = {}) => {
   try {
     const { promise } = _sendGet(serverUrl, uri, params);
@@ -135,7 +119,6 @@ const postMultipartData = async (serverUrl, uri, params, options = {}) =>
 export const APIAxios = {
   get,
   getFileAsText,
-  getFile,
   post,
   postCancelableMultipartData,
   postMultipartData,
