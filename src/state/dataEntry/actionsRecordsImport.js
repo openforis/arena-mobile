@@ -119,6 +119,10 @@ export const importRecordsFromServer =
         onImportComplete,
       });
     } catch (error) {
-      handleImportErrors({ dispatch, error });
+      if (error) {
+        handleImportErrors({ dispatch, error });
+      } else {
+        // job canceled, do nothing
+      }
     }
   };

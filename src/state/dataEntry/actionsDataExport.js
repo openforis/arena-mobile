@@ -11,6 +11,8 @@ import { MessageActions } from "../message";
 import { SurveySelectors } from "../survey";
 import { Files } from "utils";
 import { ValidationUtils } from "model/utils/ValidationUtils";
+import { RecordsUploadJob } from "service/recordsUploadJob";
+import { RemoteConnectionSelectors } from "state/remoteConnection";
 
 const { t } = i18n;
 
@@ -24,7 +26,7 @@ const handleError = (error) => (dispatch) =>
   dispatch(
     MessageActions.setMessage({
       content: "dataEntry:dataExport.error",
-      contentParams: { details: error.toString() },
+      contentParams: { details: error?.toString?.() ?? JSON.stringify(error) },
     })
   );
 
@@ -32,16 +34,28 @@ const startUploadDataToRemoteServer =
   ({ outputFileUri, conflictResolutionStrategy, onJobComplete = null }) =>
   async (dispatch, getState) => {
     const state = getState();
+    const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const cycle = Surveys.getDefaultCycleKey(survey);
 
     try {
-      const remoteJob = await RecordService.uploadRecordsToRemoteServer({
+      const uploadJob = new RecordsUploadJob({
+        user,
         survey,
         cycle,
         fileUri: outputFileUri,
         conflictResolutionStrategy,
       });
+
+      uploadJob.start(); // do not wait for job to complete: monitor job progress instead
+
+      const uploadJobComplete = await JobMonitorActions.startAsync({
+        dispatch,
+        job: uploadJob,
+        titleKey: "dataEntry:uploadingData.title",
+      });
+
+      const { remoteJob } = uploadJobComplete.result;
 
       dispatch(
         JobMonitorActions.start({
@@ -51,7 +65,11 @@ const startUploadDataToRemoteServer =
         })
       );
     } catch (error) {
-      dispatch(handleError(error));
+      if (error) {
+        dispatch(handleError(error));
+      } else {
+        // job canceled, do nothing
+      }
     }
   };
 

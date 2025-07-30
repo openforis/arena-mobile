@@ -1,4 +1,5 @@
 import {
+  DateFormats,
   Dates,
   NodeDefType,
   NodeDefs,
@@ -16,6 +17,8 @@ const RECORDS_FOLDER_NAME = "records";
 const RECORDS_SUMMARY_JSON_FILENAME = "records.json";
 const FILES_FOLDER_NAME = "files";
 const FILES_SUMMARY_JSON_FILENAME = "files.json";
+
+const recordsExportFileNamePrefix = "arena_mobile_data_";
 
 export class RecordsExportFileGenerationJob extends JobMobile {
   constructor({ survey, cycle, recordUuids, user }) {
@@ -105,7 +108,8 @@ export class RecordsExportFileGenerationJob extends JobMobile {
         });
       }
 
-      const outputFileName = `recordsExport-${Dates.nowFormattedForStorage()}.zip`;
+      const timestamp = Dates.format(new Date(), DateFormats.datetimeDefault);
+      const outputFileName = `${recordsExportFileNamePrefix}${timestamp}.zip`;
 
       // store exported file in cache directory to allow sharing it later on
       this.outputFileUri = Files.path(Files.cacheDirectory, outputFileName);

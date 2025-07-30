@@ -38,6 +38,7 @@ const uploadRecords = async ({
   cycle,
   fileUri,
   conflictResolutionStrategy,
+  onUploadProgress,
 }) => {
   const surveyRemoteId = survey.remoteId;
   const params = {
@@ -49,12 +50,12 @@ const uploadRecords = async ({
     cycle,
     conflictResolutionStrategy,
   };
-  const { data } = await RemoteService.postMultipartData(
+  const { promise, cancel } = await RemoteService.postCancelableMultipartData(
     `api/mobile/survey/${surveyRemoteId}`,
-    params
+    params,
+    onUploadProgress
   );
-  const { job } = data;
-  return job;
+  return { promise, cancel };
 };
 
 export const RecordRemoteService = {

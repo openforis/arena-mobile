@@ -6,7 +6,8 @@ import { SecureStoreService } from "./SecureStoreService";
 const sIdCookiePrefix = "connect.sid=";
 
 const extractConnectSID = (headers) => {
-  const cookie = headers?.map["set-cookie"];
+  const cookies = headers?.["set-cookie"];
+  const cookie = cookies?.[0];
   return cookie?.substring(
     sIdCookiePrefix.length,
     cookie.indexOf(";", sIdCookiePrefix.length)

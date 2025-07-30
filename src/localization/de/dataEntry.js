@@ -107,7 +107,9 @@ export default {
     notInEntryStepAnymore:
       "Nicht mehr im Eingabeschritt (im Bereinigungs- oder Analyseschritt)",
   },
-
+  uploadingData: {
+    title: "Daten werden hochgeladen",
+  },
   validationReport: {
     title: "Validierungsbericht",
     noErrorsFound: "Super, keine Fehler gefunden!",

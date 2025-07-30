@@ -105,7 +105,9 @@ export default {
     notInEntryStepAnymore:
       "Tidak lagi dalam tahap entri (dalam tahap pembersihan atau analisis)",
   },
-
+  uploadingData: {
+    title: "Mengunggah data",
+  },
   validationReport: {
     title: "Laporan validasi",
     noErrorsFound: "Bagus, tidak ada kesalahan ditemukan!",

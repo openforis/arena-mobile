@@ -97,6 +97,9 @@ export default {
     notInEntryStepAnymore:
       "Этап ввода завершен (запись на этапе очистки или анализа)",
   },
+  uploadingData: {
+    title: "Загрузка данных",
+  },
   validationReport: {
     title: "Отчет о проверке правильности",
     noErrorsFound: "Отлично, ошибок не найдено!",
