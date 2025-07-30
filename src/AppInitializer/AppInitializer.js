@@ -64,6 +64,8 @@ export const AppInitializer = (props) => {
     if (__DEV__) {
       console.log("Initializing app");
     }
+    await SystemUtils.cleanupTempFiles();
+
     setStep(steps.fetchingDeviceInfo);
     await dispatch(DeviceInfoActions.initDeviceInfo());
 

@@ -30,7 +30,7 @@ export default {
   },
   importRecord: "Tuo tietue",
   importRecords: {
-    title: "Tuo palvelimelta",
+    title: "$t(common:import)",
     error: {
       surveyNotVisibleInMobile:
         "Tietueita ei voi tuoda: tämän kyselyn ei pitäisi näkyä Arena Mobile -sovelluksessa",

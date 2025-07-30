@@ -31,7 +31,7 @@ export default {
   },
   importRecord: "Datensatz importieren",
   importRecords: {
-    title: "Vom Server importieren",
+    title: "$t(common:import)",
     error: {
       surveyNotVisibleInMobile:
         "Datensätze können nicht importiert werden: Diese Umfrage sollte in Arena Mobile nicht sichtbar sein",

@@ -20,6 +20,7 @@ export default {
   filter: "Filtrar",
   fromToOf: "{{from}}-{{to}} de {{of}}",
   goBack: "Voltar",
+  import: "Importar",
   info: "Informação",
   label: "Etiqueta",
   legend: "Legenda",

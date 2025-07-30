@@ -31,7 +31,7 @@ export default {
   },
   importRecord: "Importar registro",
   importRecords: {
-    title: "Importar desde el servidor",
+    title: "$t(common:import)",
     error: {
       surveyNotVisibleInMobile:
         "No se pueden importar registros: esta encuesta no debería ser visible en Arena Mobile",

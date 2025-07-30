@@ -21,6 +21,7 @@ export default {
   filter: "Suodata",
   fromToOf: `{{from}}-{{to}} / {{of}}`,
   goBack: "Palaa takaisin",
+  import: "Tuoda",
   info: "Info",
   label: "Nimiö",
   legend: "Selite",

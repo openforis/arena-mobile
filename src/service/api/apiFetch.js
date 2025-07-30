@@ -84,7 +84,7 @@ const getFile = async ({
   options = {},
 }) => {
   const actualTargetFileUri =
-    targetFileUri ?? Files.path(Files.documentDirectory, UUIDs.v4() + ".zip");
+    targetFileUri ?? Files.path(Files.cacheDirectory, UUIDs.v4() + ".tmp");
   const url = getUrlWithParams({ serverUrl, uri, params });
   await Files.download(url, actualTargetFileUri, options);
   return actualTargetFileUri;

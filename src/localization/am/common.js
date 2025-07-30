@@ -21,6 +21,7 @@ export default {
   filter: "አጣራ",
   fromToOf: "{{from}}-{{to}} ከ {{of}}",
   goBack: "ተመለስ",
+  import: "አስመጣ",
   info: "መረጃ",
   label: "መለያ",
   legend: "አፈ ታሪክ",

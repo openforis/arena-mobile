@@ -21,6 +21,7 @@ export default {
   filter: "Filter",
   fromToOf: `{{from}}-{{to}} of {{of}}`,
   goBack: "Go back",
+  import: "Import",
   info: "Info",
   label: "Label",
   legend: "Legend",

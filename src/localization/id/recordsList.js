@@ -31,7 +31,7 @@ export default {
   },
   importRecord: "Impor data isian",
   importRecords: {
-    title: "Impor dari server",
+    title: "$t(common:import)",
     error: {
       surveyNotVisibleInMobile:
         "Tidak dapat mengimpor catatan: survei ini seharusnya tidak terlihat di Arena Mobile",

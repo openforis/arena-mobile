@@ -22,6 +22,7 @@ export default {
   filter: "فیلتر",
   fromToOf: `{{from}} به {{to}} از {{of}}`,
   goBack: "بازگشت",
+  import: "واردات",
   info: "اطلاعات",
   label: "برچسب",
   legend: "افسانه",
