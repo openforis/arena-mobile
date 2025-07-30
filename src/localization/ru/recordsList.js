@@ -30,7 +30,7 @@ export default {
   },
   importRecord: "Загрузить запись",
   importRecords: {
-    title: "Загрузка с сервера",
+    title: "$t(common:import)",
     error: {
       surveyNotVisibleInMobile:
         "Невозможно импортировать записи: этот опрос не должен быть виден в Arena Mobile",

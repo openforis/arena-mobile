@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { TouchableHighlight } from "react-native";
 
-import { NodeDefFileType } from "@openforis/arena-core";
+import { NodeDefFileType, NodeDefs } from "@openforis/arena-core";
 
 import { IconButton, Image, ImagePreviewDialog, Text, VView } from "components";
 import { RecordFileService } from "service";
@@ -63,6 +63,7 @@ export const ImageOrVideoValuePreview = (props) => {
           fileName={fileName}
           imageUri={fileUri}
           onClose={closeImagePreview}
+          showGeotagInfo={NodeDefs.isGeotagInformationShown(nodeDef)}
         />
       )}
     </>

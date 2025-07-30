@@ -30,7 +30,7 @@ export default {
   },
   importRecord: "Importera post",
   importRecords: {
-    title: "Importera från servern",
+    title: "$t(common:import)",
     error: {
       surveyNotVisibleInMobile:
         "Kan inte importera poster: denna undersökning ska inte vara synlig i Arena Mobile",

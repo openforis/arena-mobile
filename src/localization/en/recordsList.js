@@ -30,7 +30,7 @@ export default {
   },
   importRecord: "Import record",
   importRecords: {
-    title: "Import from server",
+    title: "$t(common:import)",
     error: {
       surveyNotVisibleInMobile:
         "Cannot import records: this survey should not be visible in Arena Mobile",

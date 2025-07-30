@@ -21,6 +21,7 @@ export default {
   filter: "Filtrera",
   fromToOf: `{{from}}-{{to}} av {{of}}`,
   goBack: "Gå tillbaka",
+  import: "Importera",
   info: "Info",
   label: "Etikett",
   legend: "Förklaring",
