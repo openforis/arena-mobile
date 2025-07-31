@@ -36,11 +36,11 @@ const _sendGet = (serverUrl, uri, params = {}, options = {}) => {
 };
 
 const get = async (serverUrl, uri, params = {}, options = {}) => {
-  const { promise, cancel } = _sendGet(serverUrl, uri, params, options);
+  const { promise } = _sendGet(serverUrl, uri, params, options);
   const response = await promise;
   const { status, data } = response;
   if (status === 200) {
-    return { data, cancel };
+    return { data };
   } else {
     const errorMessage = errorMessageByCode[status] ?? errorMessageByCode[500];
     throw new Error(errorMessage);
