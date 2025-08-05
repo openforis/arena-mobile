@@ -30,23 +30,32 @@ const fetchUserOrLoginAgain = async ({ serverUrl, email, password }) => {
   return data.user;
 };
 
-const loginAndSetUser = () => async (dispatch) => {
-  const settings = await SettingsService.fetchSettings();
-  const { serverUrl, email, password } = settings;
-  if (!serverUrl || !email || !password) {
-    return;
-  }
-  dispatch({ type: USER_LOADING });
-  const connectSID = await SecureStoreService.getConnectSIDCookie();
-  let user = null;
-  if (!connectSID) {
-    const loginRes = await AuthService.login({ serverUrl, email, password });
-    user = loginRes.user;
-  } else {
-    user = await fetchUserOrLoginAgain({ serverUrl, email, password });
-  }
-  dispatch({ type: USER_SET, user });
-};
+const loginAndSetUser =
+  ({ onlyIfNotSet = true } = {}) =>
+  async (dispatch, getState) => {
+    if (onlyIfNotSet) {
+      const state = getState();
+      const userPrev = RemoteConnectionSelectors.selectLoggedUser(state);
+      if (userPrev) {
+        return;
+      }
+    }
+    const settings = await SettingsService.fetchSettings();
+    const { serverUrl, email, password } = settings;
+    if (!serverUrl || !email || !password) {
+      return;
+    }
+    dispatch({ type: USER_LOADING });
+    const connectSID = await SecureStoreService.getConnectSIDCookie();
+    let user = null;
+    if (!connectSID) {
+      const loginRes = await AuthService.login({ serverUrl, email, password });
+      user = loginRes.user;
+    } else {
+      user = await fetchUserOrLoginAgain({ serverUrl, email, password });
+    }
+    dispatch({ type: USER_SET, user });
+  };
 
 const confirmGoToConnectionToRemoteServer =
   ({ navigation }) =>

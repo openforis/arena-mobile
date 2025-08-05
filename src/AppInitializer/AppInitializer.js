@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import { DowngradeError, initialize as initializeDb } from "db";
 import { AppLogo } from "appComponents/AppLogo";
 import { Text, View, VView } from "components";
-import { useIsNetworkConnected } from "hooks";
 import {
   DataMigrationService,
   PreferencesService,
@@ -50,7 +49,6 @@ export const AppInitializer = (props) => {
   const { children } = props;
 
   const dispatch = useDispatch();
-  const networkAvailable = useIsNetworkConnected();
 
   const [state, setState] = useState({
     loading: true,
@@ -113,15 +111,14 @@ export const AppInitializer = (props) => {
         SurveyActions.fetchAndSetCurrentSurvey({ surveyId: currentSurveyId })
       );
     }
-    if (networkAvailable) {
-      setStep(steps.checkingLoggedIn);
-      await dispatch(RemoteConnectionActions.loginAndSetUser());
-    }
+    setStep(steps.checkingLoggedIn);
+    await dispatch(RemoteConnectionActions.loginAndSetUser());
+
     setStep(steps.complete);
     if (__DEV__) {
       console.log("App initialized");
     }
-  }, [dispatch, networkAvailable]);
+  }, [dispatch]);
 
   useEffect(() => {
     initialize()
