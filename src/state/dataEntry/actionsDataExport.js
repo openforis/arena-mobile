@@ -22,11 +22,25 @@ const exportType = {
   share: "share",
 };
 
+const errorOrJobToString = (errorOrJob) => {
+  if (!errorOrJob) {
+    return "";
+  }
+  if (errorOrJob instanceof Error) {
+    return errorOrJob.message ?? errorOrJob.toString();
+  }
+  // job
+  if (errorOrJob.status === JobStatus.failed) {
+    return JSON.stringify(errorOrJob.errors);
+  }
+  return JSON.stringify(errorOrJob);
+};
+
 const handleError = (error) => (dispatch) =>
   dispatch(
     MessageActions.setMessage({
       content: "dataEntry:dataExport.error",
-      contentParams: { details: error?.toString?.() ?? JSON.stringify(error) },
+      contentParams: { details: errorOrJobToString(error) },
     })
   );
 
