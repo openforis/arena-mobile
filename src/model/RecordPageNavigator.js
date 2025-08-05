@@ -79,6 +79,7 @@ const findSiblingEntityPointer = ({
       nodeDef: parentEntityDef,
       parentEntity: visitedParentEntity,
       cycle,
+      onlyInOwnPage: true,
     });
     const currentEntityDefIndex = siblingEntityDefs.indexOf(visitedEntityDef);
     const siblingEntityDef =
@@ -171,7 +172,8 @@ const getFirstChildEntityPointer = ({
     nodeDef: entityDef,
     parentEntity: actualEntity,
     cycle,
-  }).filter((childDef) => NodeDefs.isDisplayInOwnPage(cycle)(childDef));
+    onlyInOwnPage: true,
+  });
 
   if (childrenEntityDefs.length > 0) {
     const firstChildEntityDef = childrenEntityDefs[0];
