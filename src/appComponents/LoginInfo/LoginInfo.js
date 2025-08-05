@@ -1,4 +1,4 @@
-import { FieldSet, HView, Icon, Text, VView } from "components";
+import { FieldSet, HView, Icon, LoadingIcon, Text, VView } from "components";
 import { useIsNetworkConnected } from "hooks";
 import { UserSummary } from "navigation/UserSummary";
 import { RemoteConnectionSelectors, SettingsSelectors } from "state";
@@ -16,9 +16,13 @@ const determineErrorKey = ({ networkAvailable, credentialsSpecified }) => {
 export const LoginInfo = () => {
   const networkAvailable = useIsNetworkConnected();
   const user = RemoteConnectionSelectors.useLoggedInUser();
+  const userIsLoading = RemoteConnectionSelectors.useLoggedInUserIsLoading();
   const settings = SettingsSelectors.useSettings();
   const { email, password } = settings;
 
+  if (userIsLoading) {
+    return <LoadingIcon />;
+  }
   if (user) {
     return <UserSummary style={styles.userSummary} />;
   }

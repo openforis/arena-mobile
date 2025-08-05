@@ -112,7 +112,7 @@ export const AppInitializer = (props) => {
       );
     }
     setStep(steps.checkingLoggedIn);
-    dispatch(RemoteConnectionActions.checkLoggedIn());
+    await dispatch(RemoteConnectionActions.loginAndSetUser());
 
     setStep(steps.complete);
     if (__DEV__) {
