@@ -74,9 +74,6 @@ const findSiblingEntityPointer = ({
       survey,
       nodeDef: visitedEntityDef,
     });
-    console.log("===include single entities", includeSingleEntities);
-    console.log("===visited def", NodeDefs.getName(visitedEntityDef));
-    console.log("===parent def", NodeDefs.getName(parentEntityDef));
     const siblingEntityDefs = RecordNodes.getApplicableChildrenEntityDefs({
       survey,
       nodeDef: parentEntityDef,
@@ -148,9 +145,6 @@ const getNextOrPrevSiblingEntityPointer = ({
       includeSingleEntities,
     }) ?? {};
 
-  console.log("===entity def", NodeDefs.getName(entityDef));
-  console.log("===siblingEntityDef", NodeDefs.getName(siblingEntityDef));
-
   if (siblingEntityDef)
     return {
       parentEntityUuid: siblingParentEntity.uuid,
@@ -177,7 +171,8 @@ const getFirstChildEntityPointer = ({
     nodeDef: entityDef,
     parentEntity: actualEntity,
     cycle,
-  });
+  }).filter((childDef) => NodeDefs.isDisplayInOwnPage(cycle)(childDef));
+
   if (childrenEntityDefs.length > 0) {
     const firstChildEntityDef = childrenEntityDefs[0];
     return {
@@ -202,6 +197,8 @@ const getNextEntityPointer = ({ survey, record, currentEntityPointer }) => {
   const entity = entityUuid ? Records.getNodeByUuid(entityUuid)(record) : null;
   const actualEntity = entity || parentEntity;
 
+  console.log("-====entity def", NodeDefs.getName(entityDef), entityUuid);
+
   if (entityUuid) {
     const firstChildEntityPointer = getFirstChildEntityPointer({
       survey,
@@ -211,6 +208,10 @@ const getNextEntityPointer = ({ survey, record, currentEntityPointer }) => {
       actualEntity,
     });
     if (firstChildEntityPointer) {
+      console.log(
+        "-====first child entity pointer entity def",
+        NodeDefs.getName(firstChildEntityPointer.entityDef)
+      );
       return firstChildEntityPointer;
     }
   }
@@ -227,7 +228,12 @@ const getNextEntityPointer = ({ survey, record, currentEntityPointer }) => {
     parentEntity,
     offset: 1,
   });
+
   if (nextEntityPointer) {
+    console.log(
+      "-====next entity pointer entity def",
+      NodeDefs.getName(nextEntityPointer.entityDef)
+    );
     return nextEntityPointer;
   }
 
