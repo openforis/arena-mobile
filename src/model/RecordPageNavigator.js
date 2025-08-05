@@ -199,8 +199,6 @@ const getNextEntityPointer = ({ survey, record, currentEntityPointer }) => {
   const entity = entityUuid ? Records.getNodeByUuid(entityUuid)(record) : null;
   const actualEntity = entity || parentEntity;
 
-  console.log("-====entity def", NodeDefs.getName(entityDef), entityUuid);
-
   if (entityUuid) {
     const firstChildEntityPointer = getFirstChildEntityPointer({
       survey,
@@ -210,10 +208,6 @@ const getNextEntityPointer = ({ survey, record, currentEntityPointer }) => {
       actualEntity,
     });
     if (firstChildEntityPointer) {
-      console.log(
-        "-====first child entity pointer entity def",
-        NodeDefs.getName(firstChildEntityPointer.entityDef)
-      );
       return firstChildEntityPointer;
     }
   }
@@ -232,10 +226,6 @@ const getNextEntityPointer = ({ survey, record, currentEntityPointer }) => {
   });
 
   if (nextEntityPointer) {
-    console.log(
-      "-====next entity pointer entity def",
-      NodeDefs.getName(nextEntityPointer.entityDef)
-    );
     return nextEntityPointer;
   }
 
