@@ -1,5 +1,3 @@
-import { Objects } from "@openforis/arena-core";
-
 import { i18n } from "localization";
 import { UserLogoutOptions } from "model/UserLogoutOptions";
 import { AuthService, SecureStoreService, SettingsService } from "service";
