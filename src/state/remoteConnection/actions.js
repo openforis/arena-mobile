@@ -1,3 +1,5 @@
+import { Objects } from "@openforis/arena-core";
+
 import { i18n } from "localization";
 import { UserLogoutOptions } from "model/UserLogoutOptions";
 import { AuthService, SecureStoreService, SettingsService } from "service";
@@ -9,24 +11,32 @@ import { SettingsActions } from "../settings";
 import { RemoteConnectionSelectors } from "./selectors";
 
 const LOGGED_OUT = "LOGGED_OUT";
+const USER_LOADING = "USER_LOADING";
 const USER_SET = "USER_SET";
 const USER_PROFILE_ICON_INFO_SET = "USER_PROFILE_ICON_INFO_SET";
 
 const fetchUserOrLoginAgain = async ({ serverUrl, email, password }) => {
+  let user;
   try {
-    const user = await AuthService.fetchUser();
-    return user;
+    user = await AuthService.fetchUser();
   } catch (error) {
-    // session expired
-    const { user } = await AuthService.login({ serverUrl, email, password });
+    // ignore it
+  }
+  if (user) {
     return user;
   }
+  // session expired
+  const data = await AuthService.login({ serverUrl, email, password });
+  return data.user;
 };
 
-const checkLoggedIn = () => async (dispatch) => {
+const loginAndSetUser = () => async (dispatch) => {
   const settings = await SettingsService.fetchSettings();
   const { serverUrl, email, password } = settings;
-  if (!serverUrl || !email || !password) return;
+  if (!serverUrl || !email || !password) {
+    return;
+  }
+  dispatch({ type: USER_LOADING });
   const connectSID = await SecureStoreService.getConnectSIDCookie();
   let user = null;
   if (!connectSID) {
@@ -35,9 +45,7 @@ const checkLoggedIn = () => async (dispatch) => {
   } else {
     user = await fetchUserOrLoginAgain({ serverUrl, email, password });
   }
-  if (user) {
-    dispatch({ type: USER_SET, user });
-  }
+  dispatch({ type: USER_SET, user });
 };
 
 const confirmGoToConnectionToRemoteServer =
@@ -168,10 +176,11 @@ const logout = () => (dispatch) => {
 
 export const RemoteConnectionActions = {
   LOGGED_OUT,
+  USER_LOADING,
   USER_SET,
   USER_PROFILE_ICON_INFO_SET,
   confirmGoToConnectionToRemoteServer,
-  checkLoggedIn,
+  loginAndSetUser,
   login,
   fetchLoggedInUserProfileIcon,
   clearUserCredentials,
