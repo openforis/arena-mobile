@@ -65,6 +65,7 @@ const findSiblingEntityPointer = ({
   parentEntity,
   entityDef,
   offset,
+  includeSingleEntities = false,
 }) => {
   let visitedParentEntity = parentEntity;
   let visitedEntityDef = entityDef;
@@ -73,6 +74,9 @@ const findSiblingEntityPointer = ({
       survey,
       nodeDef: visitedEntityDef,
     });
+    console.log("===include single entities", includeSingleEntities);
+    console.log("===visited def", NodeDefs.getName(visitedEntityDef));
+    console.log("===parent def", NodeDefs.getName(parentEntityDef));
     const siblingEntityDefs = RecordNodes.getApplicableChildrenEntityDefs({
       survey,
       nodeDef: parentEntityDef,
@@ -80,7 +84,10 @@ const findSiblingEntityPointer = ({
       cycle,
     });
     const currentEntityDefIndex = siblingEntityDefs.indexOf(visitedEntityDef);
-    const siblingEntityDef = siblingEntityDefs[currentEntityDefIndex + offset];
+    const siblingEntityDef =
+      currentEntityDefIndex > 0
+        ? siblingEntityDefs[currentEntityDefIndex + offset]
+        : null;
     if (siblingEntityDef) {
       return { entityDef: siblingEntityDef, parentEntity: visitedParentEntity };
     }
@@ -97,6 +104,12 @@ const findSiblingEntityPointer = ({
             ancestorDefUuid: ancestorDef.uuid,
           })
         : null;
+      if (includeSingleEntities) {
+        return {
+          entityDef: visitedEntityDef,
+          parentEntity: visitedParentEntity,
+        };
+      }
     } else {
       return null;
     }
@@ -111,6 +124,7 @@ const getNextOrPrevSiblingEntityPointer = ({
   parentEntity,
   offset,
   entityUuid = null,
+  includeSingleEntities = false,
 }) => {
   if (NodeDefs.isRoot(entityDef)) {
     return null;
@@ -131,7 +145,11 @@ const getNextOrPrevSiblingEntityPointer = ({
       parentEntity,
       entityDef,
       offset,
+      includeSingleEntities,
     }) ?? {};
+
+  console.log("===entity def", NodeDefs.getName(entityDef));
+  console.log("===siblingEntityDef", NodeDefs.getName(siblingEntityDef));
 
   if (siblingEntityDef)
     return {
@@ -263,6 +281,7 @@ const getPrevEntityPointer = ({ survey, record, currentEntityPointer }) => {
     entityUuid,
     parentEntity,
     offset: -1,
+    includeSingleEntities: true,
   });
   if (prevPointer !== null) {
     return prevPointer;
