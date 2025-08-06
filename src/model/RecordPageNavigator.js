@@ -69,39 +69,45 @@ const findSiblingEntityPointer = ({
 }) => {
   let visitedParentEntity = parentEntity;
   let visitedEntityDef = entityDef;
+  let visitedParentEntityDef = null;
+
+  const getVisitedParentEntityDef = () =>
+    Surveys.getNodeDefParent({ survey, nodeDef: visitedEntityDef });
+
+  const getVisitedParentEntity = () =>
+    visitedParentEntityDef
+      ? Records.getAncestor({
+          record,
+          node: visitedParentEntity,
+          ancestorDefUuid: visitedParentEntityDef.uuid,
+        })
+      : null;
+
   while (visitedEntityDef != null && !NodeDefs.isRoot(visitedEntityDef)) {
-    const parentEntityDef = Surveys.getNodeDefParent({
-      survey,
-      nodeDef: visitedEntityDef,
-    });
+    visitedParentEntityDef = getVisitedParentEntityDef();
     const siblingEntityDefs = RecordNodes.getApplicableChildrenEntityDefs({
       survey,
-      nodeDef: parentEntityDef,
+      nodeDef: visitedParentEntityDef,
       parentEntity: visitedParentEntity,
       cycle,
       onlyInOwnPage: true,
     });
     const currentEntityDefIndex = siblingEntityDefs.indexOf(visitedEntityDef);
     const siblingEntityDef =
-      currentEntityDefIndex > 0
+      currentEntityDefIndex >= 0
         ? siblingEntityDefs[currentEntityDefIndex + offset]
         : null;
     if (siblingEntityDef) {
       return { entityDef: siblingEntityDef, parentEntity: visitedParentEntity };
     }
-    if (NodeDefs.isSingle(parentEntityDef)) {
-      visitedEntityDef = parentEntityDef;
-      const ancestorDef = Surveys.getNodeDefParent({
-        survey,
-        nodeDef: parentEntityDef,
-      });
-      visitedParentEntity = ancestorDef
-        ? Records.getAncestor({
-            record,
-            node: visitedParentEntity,
-            ancestorDefUuid: ancestorDef.uuid,
-          })
-        : null;
+    if (
+      NodeDefs.isSingle(visitedParentEntityDef) &&
+      !NodeDefs.isRoot(visitedParentEntityDef)
+    ) {
+      // visit parent entity and find siblings there
+      visitedEntityDef = visitedParentEntityDef;
+      visitedParentEntityDef = getVisitedParentEntityDef();
+      visitedParentEntity = getVisitedParentEntity();
       if (includeSingleEntities) {
         return {
           entityDef: visitedEntityDef,
@@ -266,6 +272,7 @@ const getPrevEntityPointer = ({ survey, record, currentEntityPointer }) => {
   });
 
   if (!parentEntityDef) {
+    // entityDef is the root entity: no previous pointers to return;
     return null;
   }
   const parentEntity = parentEntityUuid
@@ -281,7 +288,7 @@ const getPrevEntityPointer = ({ survey, record, currentEntityPointer }) => {
     offset: -1,
     includeSingleEntities: true,
   });
-  if (prevPointer !== null) {
+  if (prevPointer) {
     return prevPointer;
   }
   if (NodeDefs.isMultiple(entityDef) && entityUuid) {
