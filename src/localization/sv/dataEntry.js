@@ -51,6 +51,8 @@ export default {
     mergeConflictingRecords: "Slå samman konflikterande poster (samma nycklar)",
     onlyRecordsInRemoteServerCanBeImported:
       "Endast poster som redan finns på fjärrservern eller poster som har uppdaterats på distans kan importeras",
+    exportedSuccessfullyButFilesMissing:
+      "Data exporterades framgångsrikt, men {{missingFiles}} filer/bilder saknas eller är skadade. Vänligen kontrollera dina register och även registren på servern.",
   },
   exportNewOrUpdatedRecords: "Exportera nya eller uppdaterade poster",
   formLanguage: "Formulärspråk:",

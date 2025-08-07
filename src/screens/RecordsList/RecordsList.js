@@ -293,12 +293,26 @@ export const RecordsList = () => {
           return;
         }
         setState((statePrev) => ({ ...statePrev, loading: true }));
+
+        const onJobComplete = async (jobCompleted) => {
+          const { result } = jobCompleted;
+          const { missingFiles } = result;
+          
+          await loadRecordsWithSyncStatus();
+
+          if (missingFiles > 0) {
+            toaster(
+              "dataEntry:exportData.exportedSuccessfullyButFilesMissing",
+              { missingFiles }
+            );
+          }
+        };
         dispatch(
           DataEntryActions.exportRecords({
             cycle,
             recordUuids,
             conflictResolutionStrategy,
-            onJobComplete: loadRecordsWithSyncStatus,
+            onJobComplete,
             onEnd: () =>
               setState((statePrev) => ({ ...statePrev, loading: false })),
             onlyRemote,

@@ -53,6 +53,8 @@ export default {
       "Gabungkan data isian yang berkonflik (kunci yang sama)",
     onlyRecordsInRemoteServerCanBeImported:
       "Hanya data isian yang sudah ada di server atau data isian yang telah diperbarui di server yang dapat diimpor",
+    exportedSuccessfullyButFilesMissing:
+      "Data berhasil diekspor tetapi {{missingFiles}} file/gambar hilang atau rusak. Silakan periksa catatan Anda dan juga catatan di server.",
   },
   exportNewOrUpdatedRecords: "Ekspor data isian baru atau yang diperbarui",
   formLanguage: "Bahasa formulir:",

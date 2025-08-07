@@ -54,6 +54,8 @@ export default {
       "In Konflikt stehende Datensätze zusammenführen (gleiche Schlüssel)",
     onlyRecordsInRemoteServerCanBeImported:
       "Nur Datensätze, die bereits auf dem Remote-Server vorhanden sind oder die remote aktualisiert wurden, können importiert werden",
+    exportedSuccessfullyButFilesMissing:
+      "Daten wurden erfolgreich exportiert, aber {{missingFiles}} Dateien/Bilder fehlen oder sind defekt. Bitte überprüfen Sie Ihre Aufzeichnungen und die Aufzeichnungen auf dem Server.",
   },
   exportNewOrUpdatedRecords: "Neue oder aktualisierte Datensätze exportieren",
   formLanguage: "Formularsprache:",
