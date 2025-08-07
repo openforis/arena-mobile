@@ -50,6 +50,8 @@ export default {
     mergeConflictingRecords: "ادغام رکوردهای متناقض (کلیدهای یکسان)",
     onlyRecordsInRemoteServerCanBeImported:
       "فقط رکوردهایی که قبلاً در سرور از راه دور وجود دارند یا رکوردهایی که از راه دور به روز شده اند قابل وارد کردن هستند",
+    exportedSuccessfullyButFilesMissing:
+      "داده‌ها با موفقیت صادر شدند اما {{missingFiles}} فایل/تصویر گم شده یا خراب است. لطفاً سوابق خود و همچنین سوابق روی سرور را بررسی کنید.",
   },
   exportNewOrUpdatedRecords: "اکسپورت رکوردهای جدید یا به روز شده",
   formLanguage: "زبان فرم:",
