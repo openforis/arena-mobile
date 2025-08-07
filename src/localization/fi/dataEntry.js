@@ -52,6 +52,8 @@ export default {
       "Yhdistä ristiriitaiset tietueet (samalla avaimella)",
     onlyRecordsInRemoteServerCanBeImported:
       "Vain palvelimella jo olevat tai etänä päivitetyt tietueet voidaan tuoda",
+    exportedSuccessfullyButFilesMissing:
+      "Tiedot vietiin onnistuneesti, mutta {{missingFiles}} tiedostoa/kuvaa puuttuu tai on vioittunut. Tarkista tietueesi ja myös palvelimen tietueet.",
   },
   exportNewOrUpdatedRecords: "Vie uudet tai päivitetyt tietueet",
   formLanguage: "Lomakkeen kieli:",

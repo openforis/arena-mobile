@@ -47,6 +47,8 @@ export default {
     mergeConflictingRecords: "Unir registos com conflitos (mesmas chaves)",
     onlyRecordsInRemoteServerCanBeImported:
       "Apenas registos já presentes no servidor remoto ou registos que foram atualizados remotamente podem ser importados",
+    exportedSuccessfullyButFilesMissing:
+      "Dados exportados com sucesso, mas {{missingFiles}} arquivos/imagens estão faltando ou corrompidos. Verifique seus registros e também os registros no servidor.",
   },
   exportNewOrUpdatedRecords: "Exportar registos novos ou atualizados",
   formLanguage: "Idioma do formulário:",

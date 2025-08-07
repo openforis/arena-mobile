@@ -50,6 +50,8 @@ export default {
       "Fusionner les enregistrements conflictuels (mêmes clés)",
     onlyRecordsInRemoteServerCanBeImported:
       "Seuls les enregistrements déjà présents sur le serveur distant ou les enregistrements qui ont été mis à jour à distance peuvent être importés",
+    exportedSuccessfullyButFilesMissing:
+      "Données exportées avec succès, mais {{missingFiles}} fichiers/images sont manquants ou corrompus. Veuillez vérifier vos enregistrements et également les enregistrements sur le serveur.",
   },
   exportNewOrUpdatedRecords:
     "Exporter les nouveaux enregistrements ou les enregistrements mis à jour",

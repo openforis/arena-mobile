@@ -43,6 +43,8 @@ export default {
     mergeConflictingRecords: "የሚጋጩ መዝገቦችን አዋህድ (ተመሳሳይ ቁልፎች)",
     onlyRecordsInRemoteServerCanBeImported:
       "በሩቅ አገልጋይ ውስጥ ያሉ ወይም በርቀት የተሻሻሉ መዝገቦች ብቻ ማስገባት ይቻላል",
+    exportedSuccessfullyButFilesMissing:
+      "ውሂብ በተሳካ ሁኔታ ወደ ውጭ ተልኳል ግን {{missingFiles}} ፋይሎች/ምስሎች ጠፍተዋል ወይም ተሰብረዋል። እባክዎ መዝገቦችዎን እና በአገልጋዩ ላይ ያሉትን መዝገቦች ያረጋግጡ።",
   },
   exportNewOrUpdatedRecords: "አዲስ ወይም የተሻሻሉ መዝገቦችን ላክ",
   formLanguage: "የቅጽ ቋንቋ፡",
