@@ -52,6 +52,8 @@ Details: {{details}}`,
     mergeConflictingRecords: "Merge conflicting records (same keys)",
     onlyRecordsInRemoteServerCanBeImported:
       "Only records already in remote server or records that have been updated remotely can be imported",
+    exportedSuccessfullyButFilesMissing: `Data exported successfully but {{missingFiles}} files/images are missing or broken.
+Please check your records and check also records on the server`,
   },
   exportNewOrUpdatedRecords: "Export new or updated records",
   formLanguage: "Form language:",
