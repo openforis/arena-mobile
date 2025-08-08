@@ -43,7 +43,6 @@ export const BottomNavigationBar = () => {
   const styles = useStyles();
   const dispatch = useDispatch();
   const textDirection = useTextDirection();
-  const prevButtonIcon = prevIconByTextDirection[textDirection];
   const prevButtonIconPosition =
     prevButtonIconPositionByTextDirection[textDirection];
   const prevButtonStyle =
@@ -78,10 +77,17 @@ export const BottomNavigationBar = () => {
     dispatch(DataEntryActions.addNewEntity({ delay: entityCreationDelay }));
   }, [dispatch]);
 
+  const prevButtonGoesToList =
+    prevEntityPointer?.entityDef === entityDef && !prevEntityPointer.entityUuid;
+  const prevButtonIcon = prevButtonGoesToList
+    ? "format-list-bulleted"
+    : prevIconByTextDirection[textDirection];
+
   return (
     <HView style={styles.container}>
       <View style={styles.buttonContainer} transparent>
         {listOfRecordsButtonVisible && <NavigateToRecordsListButton />}
+
         {prevPageButtonVisible && (
           <NodePageNavigationButton
             icon={prevButtonIcon}
