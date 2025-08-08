@@ -216,9 +216,18 @@ const getNextEntityPointer = ({ survey, record, currentEntityPointer }) => {
     if (firstChildEntityPointer) {
       return firstChildEntityPointer;
     }
+  } else {
+    // multiple entity list view
+    const { cycle } = record;
+    if (!NodeDefs.isDisplayInOwnPage(cycle)(entityDef)) {
+      // entity shown inside parent page: do not allow go to "next" entity;
+      // user should go to the parent page and continue filling it
+      return null;
+    }
   }
 
   if (NodeDefs.isRoot(entityDef)) {
+    // root entity: no siblings in this case
     return null;
   }
 
