@@ -165,11 +165,13 @@ const getApplicableChildrenEntityDefs = ({
   nodeDef,
   parentEntity,
   cycle,
+  onlyInOwnPage = false,
 }) =>
   SurveyDefs.getChildrenDefs({ survey, nodeDef, cycle }).filter(
     (childDef) =>
       NodeDefs.isEntity(childDef) &&
-      Nodes.isChildApplicable(parentEntity, childDef.uuid)
+      Nodes.isChildApplicable(parentEntity, childDef.uuid) &&
+      (!onlyInOwnPage || NodeDefs.isDisplayInOwnPage(cycle)(childDef))
   );
 
 const getSiblingNode = ({ record, parentEntity, node, offset }) => {
