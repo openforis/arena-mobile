@@ -1,5 +1,3 @@
-import { useMemo } from "react";
-import { useTheme } from "react-native-paper";
 import PropTypes from "prop-types";
 
 import { NodeDefs } from "@openforis/arena-core";
@@ -12,31 +10,10 @@ import { SurveySelectors } from "state";
 import styles from "./styles";
 
 const OpenDropdownButton = (props) => {
-  const {
-    emptySelection = false,
-    onPress,
-    textKey = "dataEntry:code.selectItem",
-    textParams,
-  } = props;
+  const { onPress, textKey = "dataEntry:code.selectItem", textParams } = props;
 
   const isRtl = useIsTextDirectionRtl();
   const iconPosition = isRtl ? "left" : "right";
-  const theme = useTheme();
-
-  const { style, textColor } = useMemo(
-    () => ({
-      style: [
-        styles.openDropdownButton,
-        emptySelection
-          ? null
-          : {
-              backgroundColor: theme.colors.secondary,
-            },
-      ],
-      textColor: emptySelection ? undefined : theme.colors.onSecondary,
-    }),
-    [emptySelection, theme.colors.onSecondary, theme.colors.secondary]
-  );
 
   return (
     <Button
@@ -45,14 +22,12 @@ const OpenDropdownButton = (props) => {
       textKey={textKey}
       textParams={textParams}
       onPress={onPress}
-      style={style}
-      textColor={textColor}
+      style={styles.openDropdownButton}
     />
   );
 };
 
 OpenDropdownButton.propTypes = {
-  emptySelection: PropTypes.bool,
   onPress: PropTypes.func.isRequired,
   textKey: PropTypes.string,
   textParams: PropTypes.object,
@@ -73,7 +48,6 @@ export const NodeCodePreview = (props) => {
   const canFindClosestSamplingPointData =
     SurveyDefs.isCodeAttributeFromSamplingPointData({ survey, nodeDef }) &&
     SurveyDefs.hasSamplingPointDataLocation(survey);
-  const emptySelection = selectedItems.length === 0;
 
   return (
     <HView style={{ flexWrap: "wrap" }}>
@@ -90,14 +64,12 @@ export const NodeCodePreview = (props) => {
             </Button>
           ))}
           <OpenDropdownButton
-            emptySelection={emptySelection}
             onPress={openEditDialog}
             textParams={{ count: 2 }}
           />
         </>
       ) : (
         <OpenDropdownButton
-          emptySelection={emptySelection}
           onPress={openEditDialog}
           textKey={
             selectedItems.length === 1
