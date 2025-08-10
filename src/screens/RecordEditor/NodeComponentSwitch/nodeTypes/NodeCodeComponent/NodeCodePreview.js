@@ -23,15 +23,20 @@ const OpenDropdownButton = (props) => {
   const iconPosition = isRtl ? "left" : "right";
   const theme = useTheme();
 
-  const { style, textColor } = useMemo(() => {
-    const selectionStyle = emptySelection
-      ? undefined
-      : { backgroundColor: theme.colors.secondary };
-    return {
-      style: [styles.openDropdownButton, selectionStyle],
+  const { style, textColor } = useMemo(
+    () => ({
+      style: [
+        styles.openDropdownButton,
+        emptySelection
+          ? null
+          : {
+              backgroundColor: theme.colors.secondary,
+            },
+      ],
       textColor: emptySelection ? undefined : theme.colors.onSecondary,
-    };
-  }, [emptySelection, theme.colors.onSecondary, theme.colors.secondary]);
+    }),
+    [emptySelection, theme.colors.onSecondary, theme.colors.secondary]
+  );
 
   return (
     <Button
