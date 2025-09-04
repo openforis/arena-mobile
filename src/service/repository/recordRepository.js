@@ -7,10 +7,16 @@ import {
   RecordFixer,
   Records,
   Surveys,
+  Validations,
 } from "@openforis/arena-core";
 
 import { DbUtils, dbClient } from "db";
-import { RecordLoadStatus, RecordOrigin, SurveyDefs } from "model";
+import {
+  RecordLoadStatus,
+  RecordOrigin,
+  SurveyDefs,
+  ValidationUtils,
+} from "model";
 import { SystemUtils } from "utils";
 
 const SUPPORTED_KEYS = 5;
@@ -34,6 +40,7 @@ const insertColumns = [
 const insertColumnsJoint = insertColumns.join(", ");
 const keyColumnNamesJoint = keyColumnNames.join(", ");
 const summarySelectFieldsJoint = `id, uuid, date_created, date_modified, date_modified_remote, date_synced, cycle, owner_uuid, owner_name, load_status, origin, ${keyColumnNamesJoint}`;
+const summarySelectFieldsJointWithValidation = `${summarySelectFieldsJoint}, json(content) ->> 'validation' AS validation`;
 
 const toKeyColValue = (value) => {
   if (Objects.isEmpty(value)) return null;
@@ -88,7 +95,7 @@ const getPlaceholders = (count) =>
 const fetchRecord = async ({ survey, recordId, includeContent = true }) => {
   const { id: surveyId } = survey;
   const row = await dbClient.one(
-    `SELECT ${summarySelectFieldsJoint}${includeContent ? ", content" : ""}
+    `SELECT ${summarySelectFieldsJointWithValidation}${includeContent ? ", content" : ""}
     FROM record
     WHERE survey_id = ? AND id = ?`,
     [surveyId, recordId]
@@ -112,7 +119,7 @@ const fetchRecords = async ({ survey, cycle = null, onlyLocal = true }) => {
     whereConditions.push("origin = ?");
     queryParams.push(RecordOrigin.local);
   }
-  const query = `SELECT ${summarySelectFieldsJoint}
+  const query = `SELECT ${summarySelectFieldsJointWithValidation}
     FROM record
     WHERE ${whereConditions.join(" AND ")}
     ORDER BY date_modified DESC`;
@@ -164,7 +171,7 @@ const findRecordSummariesByKeys = async ({ survey, cycle, keyValues }) => {
     return acc;
   }, []);
 
-  const query = `SELECT ${summarySelectFieldsJoint}
+  const query = `SELECT ${summarySelectFieldsJointWithValidation}
     FROM record
     WHERE survey_id = ? AND cycle = ? AND ${keyColsConditions}`;
 
@@ -448,6 +455,13 @@ const rowToRecord =
       result.info = {
         createdWith: SystemUtils.getRecordAppInfo(),
       };
+    }
+    const { validation } = result;
+    if (validation) {
+      const validationObj = JSON.parse(validation);
+      result.errors = ValidationUtils.countNestedErrors(validationObj);
+      result.warnings = ValidationUtils.countNestedWarnings(validationObj);
+      delete result.validation;
     }
     return result;
   };

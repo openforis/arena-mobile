@@ -15,6 +15,7 @@ export default {
   done: "Done",
   empty: "--- EMPTY ---",
   error: "Error",
+  error_other: "Errors",
   exit: "Exit",
   export: "Export",
   false: "False",
@@ -74,4 +75,5 @@ export default {
     timePartLeft: "{{count}} {{timePart}} left",
   },
   warning: "Warning",
+  warning_other: "Warnings",
 };

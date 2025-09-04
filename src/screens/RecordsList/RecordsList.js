@@ -297,7 +297,7 @@ export const RecordsList = () => {
         const onJobComplete = async (jobCompleted) => {
           const { result } = jobCompleted;
           const { missingFiles } = result;
-          
+
           await loadRecordsWithSyncStatus();
 
           if (missingFiles > 0) {

@@ -153,6 +153,17 @@ export const RecordsDataVisualizer = (props) => {
         textVariant: "titleLarge",
       })),
       {
+        key: "errors",
+        header: "common:error_other",
+        sortable: true,
+        style: { maxWidth: 50 },
+      },
+      {
+        key: "warnings",
+        header: "common:warning_other",
+        optional: true,
+      },
+      {
         key: "dateModified",
         header: "common:modifiedOn",
         optional: true,

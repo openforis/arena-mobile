@@ -1,4 +1,8 @@
-import { Objects, ValidationSeverity } from "@openforis/arena-core";
+import {
+  Objects,
+  Validations,
+  ValidationSeverity,
+} from "@openforis/arena-core";
 
 const customValidationKey = "record.attribute.customValidation";
 
@@ -24,7 +28,8 @@ const traverseValidation =
     while (stack.length > 0) {
       const v = stack.pop();
       if (visitor(v) !== false) {
-        stack.push(...Object.values(v.fields ?? {}));
+        const fieldsValidations = Validations.getFieldValidations(v);
+        stack.push(...Object.values(fieldsValidations));
       }
     }
   };
@@ -86,8 +91,31 @@ const findInnerValidation =
     return result;
   };
 
+const countInnerValidationsErrorsOrWarnings =
+  ({ errors = true } = {}) =>
+  (validation) => {
+    let count = 0;
+    traverseValidation({
+      visitor: (v) => {
+        const elements = errors ? v.errors : v.warnings;
+        const elementsLength = elements?.length ?? 0;
+        if (elementsLength > 0) {
+          count += elementsLength;
+        }
+      },
+    })(validation);
+    return count;
+  };
+
 const hasNestedErrors = findInnerValidation({ predicate: isError });
 const hasNestedWarnings = findInnerValidation({ predicate: isWarning });
+
+const countNestedErrors = countInnerValidationsErrorsOrWarnings({
+  errors: true,
+});
+const countNestedWarnings = countInnerValidationsErrorsOrWarnings({
+  errors: false,
+});
 
 export const ValidationUtils = {
   getJointErrorText,
@@ -98,4 +126,6 @@ export const ValidationUtils = {
   isWarning,
   hasNestedErrors,
   hasNestedWarnings,
+  countNestedErrors,
+  countNestedWarnings,
 };
