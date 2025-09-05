@@ -43,13 +43,24 @@ const { checkLoggedInUser } = RemoteConnectionUtils;
 
 const minRecordsToShowSearchBar = 5;
 const noRecordsToExportTextKey =
-  "dataEntry:exportData.noRecordsInDeviceToExport";
+  "dataEntry:dataExport.noRecordsInDeviceToExport";
 
 const dataImportOptions = {
   overwriteExistingRecords: "overwriteExistingRecords",
 };
 
 const importFileExtension = "zip";
+
+const conflictingRecordsExportOptions = [
+  {
+    value: ConflictResolutionStrategy.overwriteIfUpdated,
+    label: "dataEntry:dataExport.onlyNewOrUpdatedRecords",
+  },
+  {
+    value: ConflictResolutionStrategy.merge,
+    label: "dataEntry:dataExport.mergeConflictingRecords",
+  },
+];
 
 export const RecordsList = () => {
   const navigation = useNavigation();
@@ -242,27 +253,23 @@ export const RecordsList = () => {
         return { confirmResult: false };
       }
       const confirmSingleChoiceOptions =
-        conflictingRecordsCount > 0
-          ? [
-              {
-                value: ConflictResolutionStrategy.overwriteIfUpdated,
-                label: "dataEntry:exportData.onlyNewOrUpdatedRecords",
-              },
-              {
-                value: ConflictResolutionStrategy.merge,
-                label: "dataEntry:exportData.mergeConflictingRecords",
-              },
-            ]
-          : [];
+        conflictingRecordsCount > 0 ? conflictingRecordsExportOptions : [];
+
+      const recordsWithErrorsCount = records.filter((r) => r.errors > 0).length;
+      const messageKey = recordsWithErrorsCount
+        ? "dataEntry:dataExport.confirm.messageRecordsWithErrors"
+        : "dataEntry:dataExport.confirm.message";
+
       const confirmResult = await confirm({
-        titleKey: "dataEntry:exportData.confirm.title",
-        messageKey: "dataEntry:exportData.confirm.message",
+        titleKey: "dataEntry:dataExport.confirm.title",
+        messageKey,
         messageParams: {
           newRecordsCount,
           updatedRecordsCount,
           conflictingRecordsCount,
+          recordsWithErrorsCount,
         },
-        confirmButtonTextKey: "dataEntry:exportData.title",
+        confirmButtonTextKey: "dataEntry:dataExport.title",
         singleChoiceOptions: confirmSingleChoiceOptions,
         defaultSingleChoiceValue: confirmSingleChoiceOptions[0]?.value,
       });
@@ -302,7 +309,7 @@ export const RecordsList = () => {
 
           if (missingFiles > 0) {
             toaster(
-              "dataEntry:exportData.exportedSuccessfullyButFilesMissing",
+              "dataEntry:dataExport.exportedSuccessfullyButFilesMissing",
               { missingFiles }
             );
           }
@@ -388,7 +395,7 @@ export const RecordsList = () => {
           );
         })
       ) {
-        toaster("dataEntry:exportData.onlyRecordsInRemoteServerCanBeImported");
+        toaster("dataEntry:dataExport.onlyRecordsInRemoteServerCanBeImported");
         return false;
       }
       return true;
