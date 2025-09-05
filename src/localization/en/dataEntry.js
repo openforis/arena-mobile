@@ -36,7 +36,9 @@ Update the enumerated entities?`,
 - {{updatedRecordsCount}} updated records
 - {{conflictingRecordsCount}} conflicting records`,
       messageRecordsWithErrors: `$t(dataEntry:dataExport.confirm.message)
-- {{recordsWithErrorsCount}} records with ERRORS`,
+
+Records with ERRORS: {{recordsWithErrorsCount}}
+`,
     },
     error: "Error exporting data. Details: {{details}}",
     exportedSuccessfullyButFilesMissing: `Data exported successfully but {{missingFiles}} files/images are missing or broken.
