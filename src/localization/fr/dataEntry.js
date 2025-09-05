@@ -36,23 +36,6 @@ export default {
     "Erreur lors de la génération du fichier d'exportation des enregistrements: {{details}}",
   errorLoadingRecords:
     "Erreur lors du chargement des enregistrements: {{details}}",
-  exportData: {
-    title: "Exporter les données",
-    confirm: {
-      title: "Confirmer l'exportation des données",
-      message:
-        "Enregistrements à exporter:\n- {{newRecordsCount}} nouveaux enregistrements;\n- {{updatedRecordsCount}} enregistrements mis à jour\n- {{conflictingRecordsCount}} enregistrements conflictuels",
-    },
-    noRecordsInDeviceToExport: "Aucun enregistrement à exporter sur l'appareil",
-    onlyNewOrUpdatedRecords:
-      "Exporter uniquement les enregistrements nouveaux ou mis à jour",
-    mergeConflictingRecords:
-      "Fusionner les enregistrements conflictuels (mêmes clés)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Seuls les enregistrements déjà présents sur le serveur distant ou les enregistrements qui ont été mis à jour à distance peuvent être importés",
-    exportedSuccessfullyButFilesMissing:
-      "Données exportées avec succès, mais {{missingFiles}} fichiers/images sont manquants ou corrompus. Veuillez vérifier vos enregistrements et également les enregistrements sur le serveur.",
-  },
   exportNewOrUpdatedRecords:
     "Exporter les nouveaux enregistrements ou les enregistrements mis à jour",
   formLanguage: "Langue du formulaire:",
@@ -168,6 +151,21 @@ Vérifiez les paramètres ou demandez à l'administrateur de l'enquête de modif
       share: "$t(common:shareFile)",
     },
     shareExportedFile: "Partager le fichier exporté",
+    title: "Exporter les données",
+    confirm: {
+      title: "Confirmer l'exportation des données",
+      message:
+        "Enregistrements à exporter:\n- {{newRecordsCount}} nouveaux enregistrements;\n- {{updatedRecordsCount}} enregistrements mis à jour\n- {{conflictingRecordsCount}} enregistrements conflictuels",
+    },
+    noRecordsInDeviceToExport: "Aucun enregistrement à exporter sur l'appareil",
+    onlyNewOrUpdatedRecords:
+      "Exporter uniquement les enregistrements nouveaux ou mis à jour",
+    mergeConflictingRecords:
+      "Fusionner les enregistrements conflictuels (mêmes clés)",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Seuls les enregistrements déjà présents sur le serveur distant ou les enregistrements qui ont été mis à jour à distance peuvent être importés",
+    exportedSuccessfullyButFilesMissing:
+      "Données exportées avec succès, mais {{missingFiles}} fichiers/images sont manquants ou corrompus. Veuillez vérifier vos enregistrements et également les enregistrements sur le serveur.",
   },
   location: {
     label: "Emplacement",

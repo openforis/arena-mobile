@@ -37,25 +37,6 @@ export default {
   errorGeneratingRecordsExportFile:
     "Kesalahan saat membuat berkas ekspor data isian: {{details}}",
   errorLoadingRecords: "Kesalahan saat memuat data isian: {{details}}",
-  exportData: {
-    title: "Ekspor data",
-    confirm: {
-      title: "Konfirmasi ekspor data",
-      message: `Data isian yang akan diekspor:
-  - {{newRecordsCount}} Data isian baru;
-  - {{updatedRecordsCount}} data isian yang diperbarui
-  - {{conflictingRecordsCount}} data isian yang berkonflik`,
-    },
-    noRecordsInDeviceToExport: "Tidak ada data di perangkat untuk diekspor",
-    onlyNewOrUpdatedRecords:
-      "Ekspor hanya data isian baru atau yang diperbarui",
-    mergeConflictingRecords:
-      "Gabungkan data isian yang berkonflik (kunci yang sama)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Hanya data isian yang sudah ada di server atau data isian yang telah diperbarui di server yang dapat diimpor",
-    exportedSuccessfullyButFilesMissing:
-      "Data berhasil diekspor tetapi {{missingFiles}} file/gambar hilang atau rusak. Silakan periksa catatan Anda dan juga catatan di server.",
-  },
   exportNewOrUpdatedRecords: "Ekspor data isian baru atau yang diperbarui",
   formLanguage: "Bahasa formulir:",
   noEntitiesDefined: "Tidak ada entitas yang ditentukan",
@@ -173,6 +154,23 @@ Periksa pengaturan atau minta administrator survei untuk mengubah batas ini.`,
       share: "$t(common:shareFile)",
     },
     shareExportedFile: "Bagikan file yang diekspor",
+    title: "Ekspor data",
+    confirm: {
+      title: "Konfirmasi ekspor data",
+      message: `Data isian yang akan diekspor:
+  - {{newRecordsCount}} Data isian baru;
+  - {{updatedRecordsCount}} data isian yang diperbarui
+  - {{conflictingRecordsCount}} data isian yang berkonflik`,
+    },
+    noRecordsInDeviceToExport: "Tidak ada data di perangkat untuk diekspor",
+    onlyNewOrUpdatedRecords:
+      "Ekspor hanya data isian baru atau yang diperbarui",
+    mergeConflictingRecords:
+      "Gabungkan data isian yang berkonflik (kunci yang sama)",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Hanya data isian yang sudah ada di server atau data isian yang telah diperbarui di server yang dapat diimpor",
+    exportedSuccessfullyButFilesMissing:
+      "Data berhasil diekspor tetapi {{missingFiles}} file/gambar hilang atau rusak. Silakan periksa catatan Anda dan juga catatan di server.",
   },
   location: {
     label: "Lokasi",

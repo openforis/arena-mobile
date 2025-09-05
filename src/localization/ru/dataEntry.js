@@ -33,23 +33,6 @@ export default {
   errorGeneratingRecordsExportFile:
     "Ошибка создания файла экспорта записей: {{details}}",
   errorLoadingRecords: "Ошибка загрузки записей: {{details}}",
-  exportData: {
-    title: "Экспорт данных",
-    confirm: {
-      title: "Подтвердить экспорт данных",
-      message:
-        "Записи для экспорта:\n- {{newRecordsCount}} новых записей;\n- {{updatedRecordsCount}} обновленных записей\n- {{conflictingRecordsCount}} конфликтующих записей",
-    },
-    noRecordsInDeviceToExport: "На устройстве нет записей для экспорта",
-    onlyNewOrUpdatedRecords:
-      "Экспортировать только новые или обновленные записи",
-    mergeConflictingRecords:
-      "Объединить конфликтующие записи (с одинаковыми ключами)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Могут быть импортированы только записи, находящиеся на удаленном сервере, или записи, обновленные удаленно",
-    exportedSuccessfullyButFilesMissing:
-      "Данные успешно экспортированы, но {{missingFiles}} файлов/изображений отсутствуют или повреждены. Пожалуйста, проверьте свои записи, а также записи на сервере.",
-  },
   exportNewOrUpdatedRecords: "Экспортировать новые или обновленные записи",
   formLanguage: "Язык формы:",
   noEntitiesDefined: "Элемент не определен",
@@ -163,6 +146,21 @@ export default {
       share: "$t(common:shareFile)",
     },
     shareExportedFile: "Поделиться экспортированным файлом",
+    title: "Экспорт данных",
+    confirm: {
+      title: "Подтвердить экспорт данных",
+      message:
+        "Записи для экспорта:\n- {{newRecordsCount}} новых записей;\n- {{updatedRecordsCount}} обновленных записей\n- {{conflictingRecordsCount}} конфликтующих записей",
+    },
+    noRecordsInDeviceToExport: "На устройстве нет записей для экспорта",
+    onlyNewOrUpdatedRecords:
+      "Экспортировать только новые или обновленные записи",
+    mergeConflictingRecords:
+      "Объединить конфликтующие записи (с одинаковыми ключами)",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Могут быть импортированы только записи, находящиеся на удаленном сервере, или записи, обновленные удаленно",
+    exportedSuccessfullyButFilesMissing:
+      "Данные успешно экспортированы, но {{missingFiles}} файлов/изображений отсутствуют или повреждены. Пожалуйста, проверьте свои записи, а также записи на сервере.",
   },
   location: {
     label: "Местоположение",

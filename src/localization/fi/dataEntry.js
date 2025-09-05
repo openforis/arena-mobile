@@ -37,24 +37,6 @@ export default {
   errorGeneratingRecordsExportFile:
     "Virhe tietueiden vientitiedoston luomisessa: {{details}}",
   errorLoadingRecords: "Virhe tietueiden lataamisessa: {{details}}",
-  exportData: {
-    title: "Vie tiedot",
-    confirm: {
-      title: "Vahvista tietojen vienti",
-      message: `Vietävät tietueet:
-  - {{newRecordsCount}} uutta tietuetta;
-  - {{updatedRecordsCount}} päivitettyä tietuetta
-  - {{conflictingRecordsCount}} ristiriitaista tietuetta`,
-    },
-    noRecordsInDeviceToExport: "Laitteessa ei ole vietäviä tietueita",
-    onlyNewOrUpdatedRecords: "Vie vain uudet tai päivitetyt tietueet",
-    mergeConflictingRecords:
-      "Yhdistä ristiriitaiset tietueet (samalla avaimella)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Vain palvelimella jo olevat tai etänä päivitetyt tietueet voidaan tuoda",
-    exportedSuccessfullyButFilesMissing:
-      "Tiedot vietiin onnistuneesti, mutta {{missingFiles}} tiedostoa/kuvaa puuttuu tai on vioittunut. Tarkista tietueesi ja myös palvelimen tietueet.",
-  },
   exportNewOrUpdatedRecords: "Vie uudet tai päivitetyt tietueet",
   formLanguage: "Lomakkeen kieli:",
   noEntitiesDefined: "Entiteettejä ei ole määritetty",
@@ -170,6 +152,22 @@ Tarkista asetukset tai pyydä kyselyn järjestelmänvalvojaa muuttamaan tätä r
       share: "$t(common:shareFile)",
     },
     shareExportedFile: "Jaa viety tiedosto",
+    title: "Vie tiedot",
+    confirm: {
+      title: "Vahvista tietojen vienti",
+      message: `Vietävät tietueet:
+  - {{newRecordsCount}} uutta tietuetta;
+  - {{updatedRecordsCount}} päivitettyä tietuetta
+  - {{conflictingRecordsCount}} ristiriitaista tietuetta`,
+    },
+    noRecordsInDeviceToExport: "Laitteessa ei ole vietäviä tietueita",
+    onlyNewOrUpdatedRecords: "Vie vain uudet tai päivitetyt tietueet",
+    mergeConflictingRecords:
+      "Yhdistä ristiriitaiset tietueet (samalla avaimella)",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Vain palvelimella jo olevat tai etänä päivitetyt tietueet voidaan tuoda",
+    exportedSuccessfullyButFilesMissing:
+      "Tiedot vietiin onnistuneesti, mutta {{missingFiles}} tiedostoa/kuvaa puuttuu tai on vioittunut. Tarkista tietueesi ja myös palvelimen tietueet.",
   },
   location: {
     abel: "Sijainti",

@@ -36,23 +36,6 @@ export default {
   errorGeneratingRecordsExportFile:
     "خطا در ایجاد فایل اکسپورت رکوردها: {{details}}",
   errorLoadingRecords: "خطا در بارگذاری رکوردها: {{details}}",
-  exportData: {
-    title: "اکسپورت داده ها",
-    confirm: {
-      title: "تایید اکسپورت داده ها",
-      message: `رکوردهای قابل اکسپورت:
-  - {{newRecordsCount}} رکورد جدید؛
-  - {{updatedRecordsCount}} رکورد به روز شده
-  - {{conflictingRecordsCount}} رکورد متناقض`,
-    },
-    noRecordsInDeviceToExport: "هیچ رکوردی در دستگاه برای اکسپورت وجود ندارد",
-    onlyNewOrUpdatedRecords: "فقط رکوردهای جدید یا به روز شده را اکسپورت کنید",
-    mergeConflictingRecords: "ادغام رکوردهای متناقض (کلیدهای یکسان)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "فقط رکوردهایی که قبلاً در سرور از راه دور وجود دارند یا رکوردهایی که از راه دور به روز شده اند قابل وارد کردن هستند",
-    exportedSuccessfullyButFilesMissing:
-      "داده‌ها با موفقیت صادر شدند اما {{missingFiles}} فایل/تصویر گم شده یا خراب است. لطفاً سوابق خود و همچنین سوابق روی سرور را بررسی کنید.",
-  },
   exportNewOrUpdatedRecords: "اکسپورت رکوردهای جدید یا به روز شده",
   formLanguage: "زبان فرم:",
   noEntitiesDefined: "هیچ موجودیتی تعریف نشده است",
@@ -169,6 +152,21 @@ export default {
       share: "$t(common:shareFile)",
     },
     shareExportedFile: "اشتراک گذاری فایل اکسپورت شده",
+    title: "اکسپورت داده ها",
+    confirm: {
+      title: "تایید اکسپورت داده ها",
+      message: `رکوردهای قابل اکسپورت:
+  - {{newRecordsCount}} رکورد جدید؛
+  - {{updatedRecordsCount}} رکورد به روز شده
+  - {{conflictingRecordsCount}} رکورد متناقض`,
+    },
+    noRecordsInDeviceToExport: "هیچ رکوردی در دستگاه برای اکسپورت وجود ندارد",
+    onlyNewOrUpdatedRecords: "فقط رکوردهای جدید یا به روز شده را اکسپورت کنید",
+    mergeConflictingRecords: "ادغام رکوردهای متناقض (کلیدهای یکسان)",
+    onlyRecordsInRemoteServerCanBeImported:
+      "فقط رکوردهایی که قبلاً در سرور از راه دور وجود دارند یا رکوردهایی که از راه دور به روز شده اند قابل وارد کردن هستند",
+    exportedSuccessfullyButFilesMissing:
+      "داده‌ها با موفقیت صادر شدند اما {{missingFiles}} فایل/تصویر گم شده یا خراب است. لطفاً سوابق خود و همچنین سوابق روی سرور را بررسی کنید.",
   },
   location: {
     label: "مکان",
