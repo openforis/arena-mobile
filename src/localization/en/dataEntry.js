@@ -32,7 +32,7 @@ Update the enumerated entities?`,
     confirm: {
       title: "Confirm export data",
       message: `Records to export:
-- {{newRecordsCount}} new records;
+- {{newRecordsCount}} new records
 - {{updatedRecordsCount}} updated records
 - {{conflictingRecordsCount}} conflicting records`,
       messageRecordsWithErrors: `$t(dataEntry:dataExport.confirm.message)
