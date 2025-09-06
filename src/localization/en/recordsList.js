@@ -59,6 +59,7 @@ export default {
   },
   origin: { title: "Origin", L: "Local", R: "Remote" },
   owner: "Owner",
+  recordHasErrorsOrWarningsTooltip: "Record has {{count}} {{itemsTypeText}}",
   sendData: {
     error: {
       generic: "Cannot send data to the server: {{details}}",

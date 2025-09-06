@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-import { NodeDefs } from "@openforis/arena-core";
+import { NodeDefs, ValidationSeverity } from "@openforis/arena-core";
 
 import { Icon, Tooltip } from "components";
 import { useTranslation } from "localization";
@@ -11,12 +11,12 @@ const { getJointErrorText, getJointWarningText, isNotValid } = ValidationUtils;
 
 const colors = {
   tooltipBackgroundColor: {
-    error: "red",
-    warning: "orange",
+    [ValidationSeverity.error]: "red",
+    [ValidationSeverity.warning]: "orange",
   },
   tooltipTextColor: {
-    error: "white",
-    warningTextColor: "black",
+    [ValidationSeverity.error]: "white",
+    [ValidationSeverity.warning]: "black",
   },
 };
 

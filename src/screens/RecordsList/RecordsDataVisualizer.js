@@ -30,6 +30,7 @@ import { ArrayUtils } from "utils";
 import { RecordSyncStatusIcon } from "./RecordSyncStatusIcon";
 import { RecordsUtils } from "./RecordsUtils";
 import { RecordListConstants } from "./recordListConstants";
+import { RecordErrorIcon } from "./RecordErrorIcon";
 
 const formatDateToDateTimeDisplay = (date) =>
   typeof date === "string"
@@ -157,26 +158,29 @@ export const RecordsDataVisualizer = (props) => {
         header: "common:error_other",
         sortable: true,
         style: { maxWidth: 50 },
-      },
-      {
-        key: "warnings",
-        header: "common:warning_other",
-        optional: true,
-      },
-      {
-        key: "dateModified",
-        header: "common:modifiedOn",
-        optional: true,
-        sortable: true,
-        style: { minWidth: 50 },
+        cellRenderer: viewAsList ? undefined : RecordErrorIcon,
       }
     );
     if (viewAsList) {
-      result.push({
-        key: "dateCreated",
-        header: "common:createdOn",
-        optional: true,
-      });
+      result.push(
+        {
+          key: "warnings",
+          header: "common:warning_other",
+          optional: true,
+        },
+        {
+          key: "dateModified",
+          header: "common:modifiedOn",
+          optional: true,
+          sortable: true,
+          style: { minWidth: 50 },
+        },
+        {
+          key: "dateCreated",
+          header: "common:createdOn",
+          optional: true,
+        }
+      );
     }
     if (showRemoteProps) {
       result.push({
