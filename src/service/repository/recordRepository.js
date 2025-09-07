@@ -7,7 +7,6 @@ import {
   RecordFixer,
   Records,
   Surveys,
-  Validations,
 } from "@openforis/arena-core";
 
 import { DbUtils, dbClient } from "db";
@@ -457,11 +456,10 @@ const rowToRecord =
       };
     }
     const { validation } = result;
-    if (validation) {
+    if (validation && typeof validation === "string") {
       const validationObj = JSON.parse(validation);
       result.errors = ValidationUtils.countNestedErrors(validationObj);
       result.warnings = ValidationUtils.countNestedWarnings(validationObj);
-      delete result.validation;
     }
     return result;
   };
