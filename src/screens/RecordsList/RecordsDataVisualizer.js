@@ -98,6 +98,11 @@ export const RecordsDataVisualizer = (props) => {
     setSelectedRecordUuids([]);
   }, [records]);
 
+  const recordsHaveErrorsOrWarnings = useMemo(
+    () => records.some((r) => r.errors || r.warnings),
+    [records]
+  );
+
   const rootDefKeys = useMemo(
     () => (survey ? SurveyDefs.getRootKeyDefs({ survey, cycle }) : []),
     [survey, cycle]
@@ -152,22 +157,26 @@ export const RecordsDataVisualizer = (props) => {
         headerLabelVariant: "titleMedium",
         sortable: true,
         textVariant: "titleLarge",
-      })),
-      {
+      }))
+    );
+    if (recordsHaveErrorsOrWarnings) {
+      result.push({
         key: "errors",
         header: "common:error_other",
         sortable: true,
         style: { maxWidth: 50 },
         cellRenderer: viewAsList ? undefined : RecordErrorIcon,
-      }
-    );
+      });
+    }
     if (viewAsList) {
-      result.push(
-        {
+      if (recordsHaveErrorsOrWarnings) {
+        result.push({
           key: "warnings",
           header: "common:warning_other",
           optional: true,
-        },
+        });
+      }
+      result.push(
         {
           key: "dateModified",
           header: "common:modifiedOn",
@@ -227,10 +236,11 @@ export const RecordsDataVisualizer = (props) => {
     return result;
   }, [
     rootDefKeys,
+    recordsHaveErrorsOrWarnings,
+    viewAsList,
     showRemoteProps,
     syncStatusLoading,
     syncStatusFetched,
-    viewAsList,
     lang,
   ]);
 

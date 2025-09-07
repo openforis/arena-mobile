@@ -1,6 +1,6 @@
 import { ValidationSeverity } from "@openforis/arena-core";
 
-import { Icon, Tooltip } from "components";
+import { DataVisualizerCellPropTypes, Icon, Tooltip } from "components";
 import { useTranslation } from "localization";
 
 const colors = {
@@ -46,3 +46,5 @@ export const RecordErrorIcon = (props) => {
     </Tooltip>
   );
 };
+
+RecordErrorIcon.propTypes = DataVisualizerCellPropTypes;
