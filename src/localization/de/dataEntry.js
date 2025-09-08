@@ -75,6 +75,12 @@ export default {
 
     valuePanelHeader: "Wert im Zyklus {{prevCycle}}",
   },
+  recordStatus: {
+    new: "neu",
+    updated: "aktualisiert",
+    conflicting: "konfliktbehaftet",
+    withValidationErrors: "mit Validierungsfehlern",
+  },
   sendData: "Daten senden",
   showOnlyLocalRecords: "Nur lokale Datensätze anzeigen",
   syncedOn: "Synchronisiert am",
@@ -160,9 +166,7 @@ Maximal zulässige Größe: {{maxSizeMB}}MB.
     confirm: {
       title: "Export von Daten bestätigen",
       message: `Zu exportierende Datensätze:
-  - {{newRecordsCount}} neue Datensätze;
-  - {{updatedRecordsCount}} aktualisierte Datensätze
-  - {{conflictingRecordsCount}} in Konflikt stehende Datensätze`,
+{{recordsCountSummary}}`,
     },
     noRecordsInDeviceToExport: "Keine Datensätze auf dem Gerät zum Exportieren",
     onlyNewOrUpdatedRecords:

@@ -72,6 +72,12 @@ export default {
 
     valuePanelHeader: "مقدار در چرخه {{prevCycle}}",
   },
+  recordStatus: {
+    new: "جدید",
+    updated: "به‌روز‌شده",
+    conflicting: "متعارض",
+    withValidationErrors: "با خطاهای اعتبارسنجی",
+  },
   sendData: "ارسال داده",
   showOnlyLocalRecords: "فقط رکوردهای محلی را نشان دهید",
   syncedOn: "همگام سازی شده در",
@@ -156,9 +162,7 @@ export default {
     confirm: {
       title: "تایید اکسپورت داده ها",
       message: `رکوردهای قابل اکسپورت:
-  - {{newRecordsCount}} رکورد جدید؛
-  - {{updatedRecordsCount}} رکورد به روز شده
-  - {{conflictingRecordsCount}} رکورد متناقض`,
+{{recordsCountSummary}}`,
     },
     noRecordsInDeviceToExport: "هیچ رکوردی در دستگاه برای اکسپورت وجود ندارد",
     onlyNewOrUpdatedRecords: "فقط رکوردهای جدید یا به روز شده را اکسپورت کنید",

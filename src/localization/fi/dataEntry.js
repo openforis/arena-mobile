@@ -72,6 +72,12 @@ export default {
 
     valuePanelHeader: "Arvo jaksossa {{prevCycle}}",
   },
+  recordStatus: {
+    new: "uusi",
+    updated: "päivitetty",
+    conflicting: "ristiriitainen",
+    withValidationErrors: "validointivirheillä",
+  },
   sendData: "Lähetä tiedot",
   showOnlyLocalRecords: "Näytä vain paikalliset tietueet",
   syncedOn: "Synkronoitu",
@@ -156,9 +162,7 @@ Tarkista asetukset tai pyydä kyselyn järjestelmänvalvojaa muuttamaan tätä r
     confirm: {
       title: "Vahvista tietojen vienti",
       message: `Vietävät tietueet:
-  - {{newRecordsCount}} uutta tietuetta;
-  - {{updatedRecordsCount}} päivitettyä tietuetta
-  - {{conflictingRecordsCount}} ristiriitaista tietuetta`,
+{{recordsCountSummary}}`,
     },
     noRecordsInDeviceToExport: "Laitteessa ei ole vietäviä tietueita",
     onlyNewOrUpdatedRecords: "Vie vain uudet tai päivitetyt tietueet",

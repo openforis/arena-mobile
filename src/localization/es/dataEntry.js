@@ -69,6 +69,12 @@ export default {
       "Se encontraron múltiples registros con claves {{keyValues}} en ciclo {{cycle}}",
     valuePanelHeader: "Valor en ciclo {{prevCycle}}",
   },
+  recordStatus: {
+    new: "nuevo",
+    updated: "actualizado",
+    conflicting: "en conflicto",
+    withValidationErrors: "con errores de validación",
+  },
   sendData: "Enviar datos",
   showOnlyLocalRecords: "Mostrar solo registros locales",
   syncedOn: "Sincronizado el",
@@ -150,8 +156,8 @@ Verifique la configuración o pida al administrador de la encuesta que cambie es
     title: "Exportar datos",
     confirm: {
       title: "Confirmar exportación de datos",
-      message:
-        "Registros a exportar:\n- {{newRecordsCount}} nuevos registros;\n- {{updatedRecordsCount}} registros actualizados\n- {{conflictingRecordsCount}} registros conflictivos",
+      message: `Registros a exportar:
+{{recordsCountSummary}}`,
     },
     noRecordsInDeviceToExport:
       "No hay registros en el dispositivo para exportar",

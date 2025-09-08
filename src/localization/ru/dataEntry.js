@@ -68,6 +68,12 @@ export default {
       "Найдено несколько записей с ключами {{keyValues}} в цикле {{cycle}}",
     valuePanelHeader: "Значение в цикле {{prevCycle}}",
   },
+  recordStatus: {
+    new: "новый",
+    updated: "обновлено",
+    conflicting: "противоречивый",
+    withValidationErrors: "с ошибками валидации",
+  },
   sendData: "Отправить данные",
   showOnlyLocalRecords: "Показать только локальные записи",
   syncedOn: "Синхронизировано",
@@ -149,8 +155,8 @@ export default {
     title: "Экспорт данных",
     confirm: {
       title: "Подтвердить экспорт данных",
-      message:
-        "Записи для экспорта:\n- {{newRecordsCount}} новых записей;\n- {{updatedRecordsCount}} обновленных записей\n- {{conflictingRecordsCount}} конфликтующих записей",
+      message: `Записи для экспорта:
+{{recordsCountSummary}}`,
     },
     noRecordsInDeviceToExport: "На устройстве нет записей для экспорта",
     onlyNewOrUpdatedRecords:

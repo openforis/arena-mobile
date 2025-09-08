@@ -73,6 +73,12 @@ export default {
       "Plusieurs enregistrements avec les clés {{keyValues}} trouvés dans le cycle {{cycle}}",
     valuePanelHeader: "Valeur dans le cycle {{prevCycle}}",
   },
+  recordStatus: {
+    new: "nouveau",
+    updated: "mis à jour",
+    conflicting: "conflictuel",
+    withValidationErrors: "avec des erreurs de validation",
+  },
   sendData: "Envoyer données",
   showOnlyLocalRecords: "Afficher uniquement les enregistrements locaux",
   syncedOn: "Synchronisé le",
@@ -154,8 +160,8 @@ Vérifiez les paramètres ou demandez à l'administrateur de l'enquête de modif
     title: "Exporter les données",
     confirm: {
       title: "Confirmer l'exportation des données",
-      message:
-        "Enregistrements à exporter:\n- {{newRecordsCount}} nouveaux enregistrements;\n- {{updatedRecordsCount}} enregistrements mis à jour\n- {{conflictingRecordsCount}} enregistrements conflictuels",
+      message: `Enregistrements à exporter:
+{{recordsCountSummary}}`,
     },
     noRecordsInDeviceToExport: "Aucun enregistrement à exporter sur l'appareil",
     onlyNewOrUpdatedRecords:

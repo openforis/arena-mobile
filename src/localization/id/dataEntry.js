@@ -74,6 +74,12 @@ export default {
 
     valuePanelHeader: "Nilai di siklus {{prevCycle}}",
   },
+  recordStatus: {
+    new: "baru",
+    updated: "diperbarui",
+    conflicting: "bertentangan",
+    withValidationErrors: "dengan kesalahan validasi",
+  },
   sendData: "Kirim data",
   showOnlyLocalRecords: "Tampilkan hanya catatan lokal",
   syncedOn: "Disinkronkan pada",
@@ -158,9 +164,7 @@ Periksa pengaturan atau minta administrator survei untuk mengubah batas ini.`,
     confirm: {
       title: "Konfirmasi ekspor data",
       message: `Data isian yang akan diekspor:
-  - {{newRecordsCount}} Data isian baru;
-  - {{updatedRecordsCount}} data isian yang diperbarui
-  - {{conflictingRecordsCount}} data isian yang berkonflik`,
+{{recordsCountSummary}}`,
     },
     noRecordsInDeviceToExport: "Tidak ada data di perangkat untuk diekspor",
     onlyNewOrUpdatedRecords:

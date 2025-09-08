@@ -73,6 +73,12 @@ export default {
 
     valuePanelHeader: "Värde i cykel {{prevCycle}}",
   },
+  recordStatus: {
+    new: "ny",
+    updated: "uppdaterad",
+    conflicting: "konfliktfylld",
+    withValidationErrors: "med valideringsfel",
+  },
   sendData: "Skicka data",
   showOnlyLocalRecords: "Visa endast lokala poster",
   syncedOn: "Synkroniserad den",
@@ -157,9 +163,7 @@ Kontrollera inställningarna eller be undersökningsadministratören att ändra 
     confirm: {
       title: "Bekräfta dataexport",
       message: `Poster att exportera:
-  - {{newRecordsCount}} nya poster;
-  - {{updatedRecordsCount}} uppdaterade poster
-  - {{conflictingRecordsCount}} konflikterande poster`,
+{{recordsCountSummary}}`,
     },
     noRecordsInDeviceToExport: "Inga poster i enheten att exportera",
     onlyNewOrUpdatedRecords: "Exportera endast nya eller uppdaterade poster",

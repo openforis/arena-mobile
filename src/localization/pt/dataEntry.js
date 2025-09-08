@@ -69,6 +69,12 @@ export default {
       "Vários registos com as chaves {{keyValues}} encontrados no ciclo {{cycle}}",
     valuePanelHeader: "Valor no ciclo {{prevCycle}}",
   },
+  recordStatus: {
+    new: "novo",
+    updated: "atualizado",
+    conflicting: "conflitante",
+    withValidationErrors: "com erros de validação",
+  },
   sendData: "Enviar dados",
   showOnlyLocalRecords: "Mostrar apenas registos locais",
   syncedOn: "Sincronizado em",
@@ -150,8 +156,8 @@ Verifique as configurações ou peça ao administrador da pesquisa para alterar 
     title: "Exportar dados",
     confirm: {
       title: "Confirmar exportação de dados",
-      message:
-        "Registos a exportar:\n- {{newRecordsCount}} novos registos;\n- {{updatedRecordsCount}} registos atualizados\n- {{conflictingRecordsCount}} registos com conflitos",
+      message: `Registos a exportar:
+{{recordsCountSummary}}`,
     },
     noRecordsInDeviceToExport:
       "Não existem registos no dispositivo para exportar",

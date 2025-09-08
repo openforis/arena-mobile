@@ -64,6 +64,12 @@ export default {
       "በ {{cycle}} ዙር ውስጥ {{keyValues}} ቁልፎች ያላቸው ብዙ መዝገቦች ተገኝተዋል",
     valuePanelHeader: "እሴት በ {{prevCycle}} ዙር",
   },
+  recordStatus: {
+    new: "አዲስ",
+    updated: "የዘመነ",
+    conflicting: "የሚጋጭ",
+    withValidationErrors: "ከማረጋገጫ ስህተቶች ጋር",
+  },
   sendData: "ውሂብ ላክ",
   showOnlyLocalRecords: "የአካባቢ መዝገቦችን ብቻ አሳይ",
   syncedOn: "የተመሳሰለው በ",
@@ -144,8 +150,8 @@ export default {
     title: "ውሂብ ላክ",
     confirm: {
       title: "ውሂብ መላክን አረጋግጥ",
-      message:
-        "የሚላኩ መዝገቦች፡\n- {{newRecordsCount}} አዲስ መዝገቦች፤\n- {{updatedRecordsCount}} የተሻሻሉ መዝገቦች\n- {{conflictingRecordsCount}} የሚጋጩ መዝገቦች",
+      message: `የሚላኩ መዝገቦች፡
+{{recordsCountSummary}}`,
     },
     noRecordsInDeviceToExport: "በመሣሪያው ውስጥ የሚላክ መዝገብ የለም",
     onlyNewOrUpdatedRecords: "አዲስ ወይም የተሻሻሉ መዝገቦችን ብቻ ላክ",
