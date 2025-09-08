@@ -37,7 +37,7 @@ Update the enumerated entities?`,
 - {{conflictingRecordsCount}} conflicting records`,
       messageRecordsWithErrors: `$t(dataEntry:dataExport.confirm.message)
 
-Records with ERRORS: {{recordsWithErrorsCount}}
+Records with validation errors: {{recordsWithErrorsCount}}
 `,
     },
     error: "Error exporting data. Details: {{details}}",

@@ -223,6 +223,7 @@ export const RecordsDataVisualizer = (props) => {
         key: "syncStatus",
         header: "common:status",
         cellRenderer: syncStatusLoading ? LoadingIcon : RecordSyncStatusIcon,
+        style: { maxWidth: 50 },
       });
     }
     if (syncStatusFetched && viewAsList) {
