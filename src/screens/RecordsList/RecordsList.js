@@ -62,6 +62,12 @@ const conflictingRecordsExportOptions = [
   },
 ];
 
+const generateRecordsCountSummaryText = ({ recordsCountSummary, t }) =>
+  Object.entries(recordsCountSummary)
+    .filter(([_key, value]) => value > 0) // exclude items with 0 count
+    .map(([key, value]) => `${value}: ${t(`dataEntry:recordStatus.${key}`)}`)
+    .join("\n");
+
 export const RecordsList = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -256,26 +262,28 @@ export const RecordsList = () => {
         conflictingRecordsCount > 0 ? conflictingRecordsExportOptions : [];
 
       const recordsWithErrorsCount = records.filter((r) => r.errors > 0).length;
-      const messageKey = recordsWithErrorsCount
-        ? "dataEntry:dataExport.confirm.messageRecordsWithErrors"
-        : "dataEntry:dataExport.confirm.message";
 
+      const recordsCountSummary = {
+        new: newRecordsCount,
+        updated: updatedRecordsCount,
+        conflicting: conflictingRecordsCount,
+        withValidationErrors: recordsWithErrorsCount,
+      };
+      const recordsCountSummaryText = generateRecordsCountSummaryText({
+        recordsCountSummary,
+        t,
+      });
       const confirmResult = await confirm({
         titleKey: "dataEntry:dataExport.confirm.title",
-        messageKey,
-        messageParams: {
-          newRecordsCount,
-          updatedRecordsCount,
-          conflictingRecordsCount,
-          recordsWithErrorsCount,
-        },
+        messageKey: "dataEntry:dataExport.confirm.message",
+        messageParams: { recordsCountSummary: recordsCountSummaryText },
         confirmButtonTextKey: "dataEntry:dataExport.title",
         singleChoiceOptions: confirmSingleChoiceOptions,
         defaultSingleChoiceValue: confirmSingleChoiceOptions[0]?.value,
       });
       return { newRecords, updatedRecords, conflictingRecords, confirmResult };
     },
-    [confirm, toaster]
+    [confirm, t, toaster]
   );
 
   const exportSelectedRecords = useCallback(

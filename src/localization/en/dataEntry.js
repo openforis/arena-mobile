@@ -32,13 +32,7 @@ Update the enumerated entities?`,
     confirm: {
       title: "Confirm export data",
       message: `Records to export:
-- {{newRecordsCount}} new records
-- {{updatedRecordsCount}} updated records
-- {{conflictingRecordsCount}} conflicting records`,
-      messageRecordsWithErrors: `$t(dataEntry:dataExport.confirm.message)
-
-Records with validation errors: {{recordsWithErrorsCount}}
-`,
+{{recordsCountSummary}}`,
     },
     error: "Error exporting data. Details: {{details}}",
     exportedSuccessfullyButFilesMissing: `Data exported successfully but {{missingFiles}} files/images are missing or broken.
@@ -47,6 +41,7 @@ Please check your records and check also records on the server`,
     onlyNewOrUpdatedRecords: "Export only new or updated records",
     onlyRecordsInRemoteServerCanBeImported:
       "Only records already in remote server or records that have been updated remotely can be imported",
+
     selectTarget: "Select export target",
     selectTargetMessage: `Select the target of the export:`,
     target: {
@@ -102,6 +97,12 @@ Fetch the list of records from the server and try again?`,
     multipleRecordsFound:
       "Multiple records with keys {{keyValues}} found in cycle {{cycle}}",
     valuePanelHeader: "Value in cycle {{prevCycle}}",
+  },
+  recordStatus: {
+    new: "new",
+    updated: "updated",
+    conflicting: "conflicting",
+    withValidationErrors: "with validation errors",
   },
   sendData: "Send data",
   showOnlyLocalRecords: "Show only local records",
