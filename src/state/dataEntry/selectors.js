@@ -177,10 +177,16 @@ const selectRecordCodeParentItemUuid =
       : null;
   };
 
-const selectRecordHasErrors = (state) => {
+const selectRecordIsNotValid = (state) => {
   const record = selectRecord(state);
   const validation = record ? Validations.getValidation(record) : null;
   return ValidationUtils.isNotValid(validation);
+};
+
+const selectRecordHasErrors = (state) => {
+  const record = selectRecord(state);
+  const validation = record ? Validations.getValidation(record) : null;
+  return validation && ValidationUtils.countNestedErrors(validation) > 0;
 };
 
 const selectCurrentPageEntity = (state) => {
@@ -410,6 +416,7 @@ export const DataEntrySelectors = {
   useRecordCodeParentItemUuid: ({ parentNodeUuid, nodeDef }) =>
     useSelector(selectRecordCodeParentItemUuid({ parentNodeUuid, nodeDef })),
 
+  useRecordIsNotValid: () => useSelector(selectRecordIsNotValid),
   useRecordHasErrors: () => useSelector(selectRecordHasErrors),
 
   useCurrentPageEntity: () =>

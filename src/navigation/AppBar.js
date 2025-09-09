@@ -59,6 +59,7 @@ export const AppBar = (props) => {
   const recordEditLocked =
     DataEntrySelectors.useRecordEditLocked() && editingRecord;
   const recordEditViewMode = SurveyOptionsSelectors.useRecordEditViewMode();
+  const recordIsNotValid = DataEntrySelectors.useRecordIsNotValid();
   const recordHasErrors = DataEntrySelectors.useRecordHasErrors();
   const canRecordBeLinkedToPreviousCycle =
     DataEntrySelectors.useCanRecordBeLinkedToPreviousCycle();
@@ -164,8 +165,12 @@ export const AppBar = (props) => {
                 onPress={toggleRecordLock}
               />
             )}
-            {recordHasErrors && (
-              <RNPAppbar.Action icon="alert" onPress={onValidationIconPress} />
+            {recordIsNotValid && (
+              <RNPAppbar.Action
+                icon="alert"
+                color={recordHasErrors ? "red" : "orange"}
+                onPress={onValidationIconPress}
+              />
             )}
             {canRecordBeLinkedToPreviousCycle && (
               <RNPAppbar.Action
