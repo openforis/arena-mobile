@@ -69,7 +69,9 @@ export default {
       surveyNotVisibleInMobile:
         "L'enquête actuelle ne devrait pas être visible dans Arena Mobile",
       recordsUploadNotAllowed:
-        "Le téléchargement des enregistrements d'Arena Mobile vers le serveur n'est pas autorisé",
+        "Le téléchargement des enregistrements sur le serveur n'est pas autorisé",
+      recordsWithErrorsUploadNotAllowed:
+        "Le téléchargement des enregistrements avec des erreurs de validation sur le serveur n'est pas autorisé",
     },
   },
 };

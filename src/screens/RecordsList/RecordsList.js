@@ -475,9 +475,17 @@ export const RecordsList = () => {
       };
     } else if (!Surveys.isRecordsUploadFromMobileAllowed(survey)) {
       return { errorKey: "recordsList:sendData.error.recordsUploadNotAllowed" };
+    } else if (
+      records.filter((r) => r.errors).length > 0 &&
+      !Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey)
+    ) {
+      return {
+        errorKey:
+          "recordsList:sendData.error.recordsWithErrorsUploadNotAllowed",
+      };
     }
     return {};
-  }, [survey]);
+  }, [records, survey]);
 
   const onSendDataPress = useCallback(async () => {
     const { errorKey } = checkCanSendData();

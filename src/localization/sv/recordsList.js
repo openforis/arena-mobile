@@ -65,7 +65,9 @@ export default {
       surveyNotVisibleInMobile:
         "Den aktuella undersökningen ska inte vara synlig i Arena Mobile",
       recordsUploadNotAllowed:
-        "Att ladda upp poster från Arena Mobile till servern är inte tillåtet",
+        "Det är inte tillåtet att ladda upp poster till servern",
+      recordsWithErrorsUploadNotAllowed:
+        "Det är inte tillåtet att ladda upp poster med valideringsfel till servern",
     },
   },
 };
