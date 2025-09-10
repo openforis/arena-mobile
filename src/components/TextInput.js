@@ -1,8 +1,10 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useMemo } from "react";
 import PropTypes from "prop-types";
 import { TextInput as RNPTextInput, useTheme } from "react-native-paper";
 
 import { useTranslation } from "localization";
+
+const multilineStyle = { lineHeight: 24 };
 
 export const TextInput = forwardRef(function TextInput(props, ref) {
   const {
@@ -32,15 +34,22 @@ export const TextInput = forwardRef(function TextInput(props, ref) {
   const label = t(labelKey);
   const placeholder = t(placeholderKey);
 
-  const notEditableStyle = { backgroundColor: theme.colors.surfaceVariant };
-
-  const style = [...(showAsReadOnly ? [notEditableStyle] : []), styleProp];
+  const style = useMemo(() => {
+    return [
+      ...(multiline ? [multilineStyle] : []),
+      ...(showAsReadOnly
+        ? [{ backgroundColor: theme.colors.surfaceVariant }]
+        : []),
+      styleProp,
+    ];
+  }, [multiline, showAsReadOnly, styleProp, theme.colors.surfaceVariant]);
 
   const textColor = showAsReadOnly ? theme.colors.onSurfaceVariant : undefined;
 
   return (
     <RNPTextInput
       autoCapitalize={autoCapitalize}
+      contentStyle={{ overflow: "visible", scrollbarColor: "red" }}
       disabled={disabled}
       editable={editable}
       error={error}
@@ -52,6 +61,7 @@ export const TextInput = forwardRef(function TextInput(props, ref) {
       onChangeText={onChange}
       onPressIn={onPressIn}
       placeholder={placeholder}
+      scrollEnabled={multiline}
       ref={ref}
       secureTextEntry={secureTextEntry}
       style={style}
