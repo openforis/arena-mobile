@@ -9,6 +9,7 @@ import {
   NodeDefs,
   Objects,
   Surveys,
+  Validations,
 } from "@openforis/arena-core";
 
 import {
@@ -49,7 +50,6 @@ RecordOriginTableCellRenderer.propTypes = DataVisualizerCellPropTypes;
 const RecordOriginListCellRenderer = ({ item }) => (
   <Text textKey={`recordsList:origin.${item.origin}`} />
 );
-
 RecordOriginListCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
 const RecordLoadStatusTableCellRenderer = ({ item }) => (
@@ -60,8 +60,17 @@ RecordLoadStatusTableCellRenderer.propTypes = DataVisualizerCellPropTypes;
 const RecordLoadStatusListCellRenderer = ({ item }) => (
   <Text textKey={`recordsList:loadStatus.${item.loadStatus}`} />
 );
-
 RecordLoadStatusListCellRenderer.propTypes = DataVisualizerCellPropTypes;
+
+const RecordErrorsListCellRenderer = ({ item }) => (
+  <Text>{Validations.getErrorsCount(item.validation)}</Text>
+);
+RecordErrorsListCellRenderer.propTypes = DataVisualizerCellPropTypes;
+
+const RecordWarningsListCellRenderer = ({ item }) => (
+  <Text>{Validations.getWarningsCount(item.validation)}</Text>
+);
+RecordWarningsListCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
 export const RecordsDataVisualizer = (props) => {
   const {
@@ -99,7 +108,14 @@ export const RecordsDataVisualizer = (props) => {
   }, [records]);
 
   const recordsHaveErrorsOrWarnings = useMemo(
-    () => records.some((r) => r.errors || r.warnings),
+    () =>
+      records.some((r) => {
+        const validation = Validations.getValidation(r);
+        return (
+          Validations.getErrorsCount(validation) ||
+          Validations.getWarningsCount(validation)
+        );
+      }),
     [records]
   );
 
@@ -164,8 +180,10 @@ export const RecordsDataVisualizer = (props) => {
         key: "errors",
         header: "common:error_other",
         sortable: true,
-        style: { maxWidth: 50 },
-        cellRenderer: viewAsList ? undefined : RecordErrorIcon,
+        style: viewAsList ? undefined : { maxWidth: 50 },
+        cellRenderer: viewAsList
+          ? RecordErrorsListCellRenderer
+          : RecordErrorIcon,
       });
     }
     if (viewAsList) {
@@ -174,6 +192,7 @@ export const RecordsDataVisualizer = (props) => {
           key: "warnings",
           header: "common:warning_other",
           optional: true,
+          cellRenderer: RecordWarningsListCellRenderer,
         });
       }
       result.push(
@@ -223,7 +242,7 @@ export const RecordsDataVisualizer = (props) => {
         key: "syncStatus",
         header: "common:status",
         cellRenderer: syncStatusLoading ? LoadingIcon : RecordSyncStatusIcon,
-        style: { maxWidth: 50 },
+        style: viewAsList ? undefined : { maxWidth: 50 },
       });
     }
     if (syncStatusFetched && viewAsList) {

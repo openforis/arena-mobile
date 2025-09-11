@@ -11,7 +11,7 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordNodes, SurveyDefs, ValidationUtils } from "model";
+import { RecordNodes, SurveyDefs } from "model";
 import { SurveySelectors } from "../survey/selectors";
 
 const getDataEntryState = (state) => state.dataEntry;
@@ -180,13 +180,13 @@ const selectRecordCodeParentItemUuid =
 const selectRecordIsNotValid = (state) => {
   const record = selectRecord(state);
   const validation = record ? Validations.getValidation(record) : null;
-  return ValidationUtils.isNotValid(validation);
+  return Validations.isNotValid(validation);
 };
 
 const selectRecordHasErrors = (state) => {
   const record = selectRecord(state);
   const validation = record ? Validations.getValidation(record) : null;
-  return validation && ValidationUtils.countNestedErrors(validation) > 0;
+  return validation && Validations.getErrorsCount(validation) > 0;
 };
 
 const selectCurrentPageEntity = (state) => {

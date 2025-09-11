@@ -96,10 +96,12 @@ export const PageNodesList = () => {
       );
       if (
         fieldValidations.length === 0 ||
-        fieldValidations.every(ValidationUtils.isValid)
+        fieldValidations.every(Validations.isValid)
       )
         return null;
-      const hasErrors = fieldValidations.some(ValidationUtils.hasNestedErrors);
+      const hasErrors = fieldValidations.some(
+        Validations.calculateHasNestedErrors
+      );
       const hasWarnings = !hasErrors;
       return <AlertIcon hasErrors={hasErrors} hasWarnings={hasWarnings} />;
     },

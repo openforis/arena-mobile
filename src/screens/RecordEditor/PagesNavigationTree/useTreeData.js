@@ -75,7 +75,7 @@ const _processFieldValidation = ({
     });
     if (notValidNodeInTree) {
       const notValidTreeItemId = notValidNodeInTree.nodeDefUuid;
-      if (ValidationUtils.hasNestedErrors(fieldValidation)) {
+      if (Validations.calculateHasNestedErrors(fieldValidation)) {
         acc.treeItemIdsWithErrors.add(notValidTreeItemId);
       } else {
         acc.treeItemIdsWithWarnings.add(notValidTreeItemId);

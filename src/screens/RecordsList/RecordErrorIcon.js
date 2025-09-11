@@ -1,4 +1,4 @@
-import { ValidationSeverity } from "@openforis/arena-core";
+import { Validations, ValidationSeverity } from "@openforis/arena-core";
 
 import { DataVisualizerCellPropTypes, Icon, Tooltip } from "components";
 import { useTranslation } from "localization";
@@ -17,7 +17,9 @@ const colors = {
 export const RecordErrorIcon = (props) => {
   const { item: record } = props;
   const { t } = useTranslation();
-  const { errors, warnings } = record || {};
+  const validation = Validations.getValidation(record);
+  const errors = Validations.getErrorsCount(validation);
+  const warnings = Validations.getWarningsCount(validation);
 
   if (!errors && !warnings) return null;
 

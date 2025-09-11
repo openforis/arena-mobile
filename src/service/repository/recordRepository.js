@@ -7,6 +7,7 @@ import {
   RecordFixer,
   Records,
   Surveys,
+  Validations,
 } from "@openforis/arena-core";
 
 import { DbUtils, dbClient } from "db";
@@ -455,11 +456,15 @@ const rowToRecord =
         createdWith: SystemUtils.getRecordAppInfo(),
       };
     }
-    const { validation } = result;
-    if (validation && typeof validation === "string") {
-      const validationObj = JSON.parse(validation);
-      result.errors = ValidationUtils.countNestedErrors(validationObj);
-      result.warnings = ValidationUtils.countNestedWarnings(validationObj);
+    let validation = result.validation;
+    if (validation) {
+      if (typeof validation === "string") {
+        validation = JSON.parse(validation);
+      }
+      if (!validation.counts) {
+        validation = Validations.updateCounts(validation);
+      }
+      result.validation = validation;
     }
     return result;
   };
