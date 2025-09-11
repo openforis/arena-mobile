@@ -14,6 +14,8 @@ const isNumericByType = {
   [NodeDefType.integer]: true,
 };
 
+const multilineNumberOfLines = 5;
+
 export const NodeTextComponent = (props) => {
   const { nodeDef, nodeUuid, style: styleProp, wrapperStyle } = props;
 
@@ -95,7 +97,7 @@ export const NodeTextComponent = (props) => {
         ref={inputRef}
         style={style}
         multiline={multiline}
-        numberOfLines={multiline ? 4 : 1}
+        numberOfLines={multiline ? multilineNumberOfLines : 1}
         onChange={onChange}
         value={uiValue}
       />
