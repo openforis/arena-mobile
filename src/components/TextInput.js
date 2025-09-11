@@ -49,7 +49,6 @@ export const TextInput = forwardRef(function TextInput(props, ref) {
   return (
     <RNPTextInput
       autoCapitalize={autoCapitalize}
-      contentStyle={{ overflow: "visible", scrollbarColor: "red" }}
       disabled={disabled}
       editable={editable}
       error={error}
@@ -61,7 +60,6 @@ export const TextInput = forwardRef(function TextInput(props, ref) {
       onChangeText={onChange}
       onPressIn={onPressIn}
       placeholder={placeholder}
-      scrollEnabled={multiline}
       ref={ref}
       secureTextEntry={secureTextEntry}
       style={style}
