@@ -65,7 +65,10 @@ const conflictingRecordsExportOptions = [
 const generateRecordsCountSummaryText = ({ recordsCountSummary, t }) =>
   Object.entries(recordsCountSummary)
     .filter(([_key, value]) => value > 0) // exclude items with 0 count
-    .map(([key, value]) => `${value}: ${t(`dataEntry:recordStatus.${key}`)}`)
+    .map(([key, value]) => {
+      const statusText = t(`dataEntry:recordStatus.${key}`);
+      return `${value}: ${statusText}`;
+    })
     .join("\n");
 
 export const RecordsList = () => {

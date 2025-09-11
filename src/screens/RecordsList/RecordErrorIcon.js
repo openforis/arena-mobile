@@ -30,7 +30,7 @@ export const RecordErrorIcon = (props) => {
   const tooltipBackgroundColor = colors.tooltipBackgroundColor[severity];
   const tooltipTextColor = colors.tooltipTextColor[severity];
 
-  const count = errors ? errors : warnings;
+  const count = errors > 0 ? errors : warnings;
   const messageKey = "recordsList:recordHasErrorsOrWarningsTooltip";
   const itemsTypeKey =
     severity === ValidationSeverity.error ? "common:error" : "common:warning";
