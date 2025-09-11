@@ -1,8 +1,4 @@
-import {
-  Objects,
-  Validations,
-  ValidationSeverity,
-} from "@openforis/arena-core";
+import { Validations, ValidationSeverity } from "@openforis/arena-core";
 
 const customValidationKey = "record.attribute.customValidation";
 

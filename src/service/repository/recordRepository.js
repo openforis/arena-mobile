@@ -11,12 +11,7 @@ import {
 } from "@openforis/arena-core";
 
 import { DbUtils, dbClient } from "db";
-import {
-  RecordLoadStatus,
-  RecordOrigin,
-  SurveyDefs,
-  ValidationUtils,
-} from "model";
+import { RecordLoadStatus, RecordOrigin, SurveyDefs } from "model";
 import { SystemUtils } from "utils";
 
 const SUPPORTED_KEYS = 5;

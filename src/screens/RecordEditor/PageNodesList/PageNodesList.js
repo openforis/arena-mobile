@@ -11,7 +11,7 @@ import {
 } from "@openforis/arena-core";
 
 import { AlertIcon, VView } from "components";
-import { RecordPageNavigator, ValidationUtils } from "model";
+import { RecordPageNavigator } from "model";
 import { DataEntryActions, DataEntrySelectors, SurveySelectors } from "state";
 
 import { NodePageNavigationButton } from "../BottomNavigationBar/NodePageNavigationButton";

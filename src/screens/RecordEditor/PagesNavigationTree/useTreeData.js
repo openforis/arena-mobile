@@ -8,7 +8,6 @@ import {
 } from "@openforis/arena-core";
 
 import { RecordNodes } from "model/utils/RecordNodes";
-import { ValidationUtils } from "model/utils/ValidationUtils";
 
 import { DataEntrySelectors, SurveySelectors } from "state";
 
