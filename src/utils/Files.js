@@ -129,6 +129,13 @@ const getMimeTypeFromName = (fileName) => mime.getType(fileName);
 
 const readAsString = async (fileUri) => FileSystem.readAsStringAsync(fileUri);
 
+const readChunk = async (fileUri, chunkNumber, chunkSize) =>
+  FileSystem.readAsStringAsync(fileUri, {
+    encoding: FileSystem.EncodingType.Base64,
+    position: (chunkNumber - 1) * chunkSize,
+    length: chunkSize,
+  });
+
 const readAsBytes = async (fileUri) => {
   const fileObj = new File(fileUri);
   const fileHandle = fileObj.open();
@@ -254,6 +261,7 @@ export const Files = {
   getExtension,
   getSize,
   readAsString,
+  readChunk,
   readAsBuffer,
   readAsBytes,
   readJsonFromFile,

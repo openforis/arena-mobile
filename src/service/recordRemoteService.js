@@ -1,6 +1,7 @@
 import { Files } from "utils";
 
 import { RemoteService } from "./remoteService";
+import { RNFileProcessor } from "utils/RNFileProcessor";
 
 const fetchRecordsSummaries = async ({ surveyRemoteId, cycle }) => {
   const { data } = await RemoteService.get(
@@ -41,21 +42,36 @@ const uploadRecords = async ({
   onUploadProgress,
 }) => {
   const surveyRemoteId = survey.remoteId;
-  const params = {
-    file: {
-      uri: fileUri,
-      name: "arena-mobile-data.zip",
-      type: Files.MIME_TYPES.zip,
-    },
-    cycle,
-    conflictResolutionStrategy,
-  };
-  const { promise, cancel } = await RemoteService.postCancelableMultipartData(
-    `api/mobile/survey/${surveyRemoteId}`,
-    params,
-    onUploadProgress
-  );
-  return { promise, cancel };
+  return new Promise((resolve, reject) => {
+    new RNFileProcessor({
+      filePath: fileUri,
+      chunkProcessor: async ({ chunk, totalChunks, content }) => {
+        const params = {
+          file: content,
+          cycle,
+          conflictResolutionStrategy,
+        };
+        const progressHandler = (progressEvent) => {
+          const { processed: uploadedChunk, total: chunkSize } = progressEvent;
+          const previouslyUploadedChunks = chunk - 1;
+          const uploadedChunkPercent = uploadedChunk / chunkSize;
+          const uploadedChunks =
+            previouslyUploadedChunks + uploadedChunkPercent;
+          onUploadProgress({ total: totalChunks, processed: uploadedChunks });
+        };
+        const { promise } = await RemoteService.postCancelableMultipartData(
+          `api/mobile/survey/${surveyRemoteId}`,
+          params,
+          progressHandler
+        );
+        const result = await promise;
+        if (chunk === totalChunks) {
+          resolve(result);
+        }
+      },
+      onError: reject,
+    }).start();
+  });
 };
 
 export const RecordRemoteService = {
