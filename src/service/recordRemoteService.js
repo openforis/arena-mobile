@@ -1,7 +1,6 @@
-import { Files } from "utils";
+import { RNFileProcessor } from "utils/RNFileProcessor";
 
 import { RemoteService } from "./remoteService";
-import { RNFileProcessor } from "utils/RNFileProcessor";
 
 const fetchRecordsSummaries = async ({ surveyRemoteId, cycle }) => {
   const { data } = await RemoteService.get(
@@ -49,6 +48,8 @@ const uploadRecords = ({
       chunkProcessor: async ({ chunk, totalChunks, content }) => {
         const params = {
           file: content,
+          chunk,
+          totalChunks,
           cycle,
           conflictResolutionStrategy,
         };
@@ -66,6 +67,7 @@ const uploadRecords = ({
           progressHandler
         );
         const result = await promise;
+
         if (chunk === totalChunks) {
           resolve(result);
         }
