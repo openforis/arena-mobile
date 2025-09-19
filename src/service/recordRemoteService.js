@@ -34,7 +34,7 @@ const downloadExportedRecordsFile = async ({ survey, fileName }) => {
   return fileUri;
 };
 
-const uploadRecords = async ({
+const uploadRecords = ({
   survey,
   cycle,
   fileUri,
