@@ -3,6 +3,7 @@ import * as Location from "expo-location";
 import { PointFactory } from "@openforis/arena-core";
 
 import { Permissions, Refs } from "utils";
+import { ToastActions } from "../state/toast";
 import { SettingsSelectors } from "../state/settings";
 import { useIsMountedRef } from "./useIsMountedRef";
 
@@ -126,7 +127,12 @@ export const useLocationWatch = ({
   }, [_stopLocationWatch, isMountedRef, locationCallback]);
 
   const startLocationWatch = useCallback(async () => {
-    if (!(await Permissions.requestLocationForegroundPermission())) return;
+    if (!(await Permissions.requestLocationForegroundPermission())) {
+      if (!(await Permissions.isLocationServiceEnabled())) {
+        dispatch(ToastActions.show("devuce:locationServiceDisabled.warning"));
+        return;
+      }
+    }
 
     _stopLocationWatch();
     locationSubscriptionRef.current = await Location.watchPositionAsync(

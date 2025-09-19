@@ -16,6 +16,10 @@ export default {
     recordFilesSize: "Record files size",
     tempFilesSize: "Temporary files size",
   },
+  locationServiceDisabled: {
+    warning:
+      "Location service disabled; please enable it in the device settings.",
+  },
   network: {
     title: "Network",
     statusLabel: "Network status",
