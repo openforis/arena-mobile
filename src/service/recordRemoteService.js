@@ -42,8 +42,9 @@ const uploadRecords = async ({
   onUploadProgress,
 }) => {
   const surveyRemoteId = survey.remoteId;
-  return new Promise((resolve, reject) => {
-    new RNFileProcessor({
+  let fileProcessor = null;
+  const promise = new Promise((resolve, reject) => {
+    fileProcessor = new RNFileProcessor({
       filePath: fileUri,
       chunkProcessor: async ({ chunk, totalChunks, content }) => {
         const params = {
@@ -70,8 +71,10 @@ const uploadRecords = async ({
         }
       },
       onError: reject,
-    }).start();
+    });
+    fileProcessor.start();
   });
+  return { promise, cancel: () => fileProcessor.cancel() };
 };
 
 export const RecordRemoteService = {
