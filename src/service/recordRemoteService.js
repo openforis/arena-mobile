@@ -54,12 +54,11 @@ const uploadRecords = ({
           conflictResolutionStrategy,
         };
         const progressHandler = (progressEvent) => {
-          const { processed: uploadedChunk, total: chunkSize } = progressEvent;
+          const { progress: uploadedChunkPercent } = progressEvent;
           const previouslyUploadedChunks = chunk - 1;
-          const uploadedChunkPercent = uploadedChunk / chunkSize;
           const uploadedChunks =
             previouslyUploadedChunks + uploadedChunkPercent;
-          onUploadProgress({ total: totalChunks, processed: uploadedChunks });
+          onUploadProgress({ total: totalChunks, loaded: uploadedChunks });
         };
         const { promise } = await RemoteService.postCancelableMultipartData(
           `api/mobile/survey/${surveyRemoteId}`,

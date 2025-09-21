@@ -37,7 +37,6 @@ const start =
       type: JOB_MONITOR_START,
       payload: {
         jobUuid,
-        job,
         titleKey,
         cancelButtonTextKey,
         closeButtonTextKey,
@@ -50,12 +49,12 @@ const start =
     });
 
     const onJobUpdate = (jobSummary) => {
-      const { status } = jobSummary;
+      const { status, errors } = jobSummary;
       const progressPercent = calculateJobProgressPercent({ jobSummary });
 
       dispatch({
         type: JOB_MONITOR_UPDATE,
-        payload: { progressPercent, status },
+        payload: { progressPercent, status, errors },
       });
       if (isJobStatusEnded(status)) {
         if (!job) {
@@ -73,12 +72,14 @@ const start =
     };
 
     if (job) {
+      // local job: listen to job update events
       if (isJobStatusEnded(job.status)) {
         onJobUpdate(job.summary);
       } else {
         job.on(JobMessageOutType.summaryUpdate, onJobUpdate);
       }
     } else {
+      // remote job; open Web Socket and listen to job update events
       const ws = await WebSocketService.open();
       ws.on(WebSocketService.EVENTS.jobUpdate, onJobUpdate);
     }
