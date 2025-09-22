@@ -12,6 +12,7 @@ import {
   Records,
   RecordUpdater,
   Surveys,
+  Validations,
 } from "@openforis/arena-core";
 
 import { RecordOrigin, RecordLoadStatus, SurveyDefs, RecordNodes } from "model";
@@ -311,7 +312,13 @@ const fetchAndEditRecord =
   };
 
 const _updateRecord = async ({ dispatch, survey, record }) => {
-  const recordStored = await RecordService.updateRecord({ survey, record });
+  const validation = Validations.getValidation(record);
+  const validationUpdated = Validations.updateCounts(validation);
+  const recordUpdated = { ...record, validation: validationUpdated };
+  const recordStored = await RecordService.updateRecord({
+    survey,
+    record: recordUpdated,
+  });
   await dispatch({ type: RECORD_SET, record: recordStored });
   return recordStored;
 };

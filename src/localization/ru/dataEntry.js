@@ -33,23 +33,6 @@ export default {
   errorGeneratingRecordsExportFile:
     "Ошибка создания файла экспорта записей: {{details}}",
   errorLoadingRecords: "Ошибка загрузки записей: {{details}}",
-  exportData: {
-    title: "Экспорт данных",
-    confirm: {
-      title: "Подтвердить экспорт данных",
-      message:
-        "Записи для экспорта:\n- {{newRecordsCount}} новых записей;\n- {{updatedRecordsCount}} обновленных записей\n- {{conflictingRecordsCount}} конфликтующих записей",
-    },
-    noRecordsInDeviceToExport: "На устройстве нет записей для экспорта",
-    onlyNewOrUpdatedRecords:
-      "Экспортировать только новые или обновленные записи",
-    mergeConflictingRecords:
-      "Объединить конфликтующие записи (с одинаковыми ключами)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Могут быть импортированы только записи, находящиеся на удаленном сервере, или записи, обновленные удаленно",
-    exportedSuccessfullyButFilesMissing:
-      "Данные успешно экспортированы, но {{missingFiles}} файлов/изображений отсутствуют или повреждены. Пожалуйста, проверьте свои записи, а также записи на сервере.",
-  },
   exportNewOrUpdatedRecords: "Экспортировать новые или обновленные записи",
   formLanguage: "Язык формы:",
   noEntitiesDefined: "Элемент не определен",
@@ -84,6 +67,12 @@ export default {
     multipleRecordsFound:
       "Найдено несколько записей с ключами {{keyValues}} в цикле {{cycle}}",
     valuePanelHeader: "Значение в цикле {{prevCycle}}",
+  },
+  recordStatus: {
+    new: "новый",
+    updated: "обновлено",
+    conflicting: "противоречивый",
+    withValidationErrors: "с ошибками валидации",
   },
   sendData: "Отправить данные",
   showOnlyLocalRecords: "Показать только локальные записи",
@@ -163,6 +152,21 @@ export default {
       share: "$t(common:shareFile)",
     },
     shareExportedFile: "Поделиться экспортированным файлом",
+    title: "Экспорт данных",
+    confirm: {
+      title: "Подтвердить экспорт данных",
+      message: `Записи для экспорта:
+{{recordsCountSummary}}`,
+    },
+    noRecordsInDeviceToExport: "На устройстве нет записей для экспорта",
+    onlyNewOrUpdatedRecords:
+      "Экспортировать только новые или обновленные записи",
+    mergeConflictingRecords:
+      "Объединить конфликтующие записи (с одинаковыми ключами)",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Могут быть импортированы только записи, находящиеся на удаленном сервере, или записи, обновленные удаленно",
+    exportedSuccessfullyButFilesMissing:
+      "Данные успешно экспортированы, но {{missingFiles}} файлов/изображений отсутствуют или повреждены. Пожалуйста, проверьте свои записи, а также записи на сервере.",
   },
   location: {
     label: "Местоположение",

@@ -43,13 +43,33 @@ const { checkLoggedInUser } = RemoteConnectionUtils;
 
 const minRecordsToShowSearchBar = 5;
 const noRecordsToExportTextKey =
-  "dataEntry:exportData.noRecordsInDeviceToExport";
+  "dataEntry:dataExport.noRecordsInDeviceToExport";
 
 const dataImportOptions = {
   overwriteExistingRecords: "overwriteExistingRecords",
 };
 
 const importFileExtension = "zip";
+
+const conflictingRecordsExportOptions = [
+  {
+    value: ConflictResolutionStrategy.overwriteIfUpdated,
+    label: "dataEntry:dataExport.onlyNewOrUpdatedRecords",
+  },
+  {
+    value: ConflictResolutionStrategy.merge,
+    label: "dataEntry:dataExport.mergeConflictingRecords",
+  },
+];
+
+const generateRecordsCountSummaryText = ({ recordsCountSummary, t }) =>
+  Object.entries(recordsCountSummary)
+    .filter(([_key, value]) => value > 0) // exclude items with 0 count
+    .map(([key, value]) => {
+      const statusText = t(`dataEntry:recordStatus.${key}`);
+      return `${value}: ${statusText}`;
+    })
+    .join("\n");
 
 export const RecordsList = () => {
   const navigation = useNavigation();
@@ -242,33 +262,31 @@ export const RecordsList = () => {
         return { confirmResult: false };
       }
       const confirmSingleChoiceOptions =
-        conflictingRecordsCount > 0
-          ? [
-              {
-                value: ConflictResolutionStrategy.overwriteIfUpdated,
-                label: "dataEntry:exportData.onlyNewOrUpdatedRecords",
-              },
-              {
-                value: ConflictResolutionStrategy.merge,
-                label: "dataEntry:exportData.mergeConflictingRecords",
-              },
-            ]
-          : [];
+        conflictingRecordsCount > 0 ? conflictingRecordsExportOptions : [];
+
+      const recordsWithErrorsCount = records.filter((r) => r.errors > 0).length;
+
+      const recordsCountSummary = {
+        new: newRecordsCount,
+        updated: updatedRecordsCount,
+        conflicting: conflictingRecordsCount,
+        withValidationErrors: recordsWithErrorsCount,
+      };
+      const recordsCountSummaryText = generateRecordsCountSummaryText({
+        recordsCountSummary,
+        t,
+      });
       const confirmResult = await confirm({
-        titleKey: "dataEntry:exportData.confirm.title",
-        messageKey: "dataEntry:exportData.confirm.message",
-        messageParams: {
-          newRecordsCount,
-          updatedRecordsCount,
-          conflictingRecordsCount,
-        },
-        confirmButtonTextKey: "dataEntry:exportData.title",
+        titleKey: "dataEntry:dataExport.confirm.title",
+        messageKey: "dataEntry:dataExport.confirm.message",
+        messageParams: { recordsCountSummary: recordsCountSummaryText },
+        confirmButtonTextKey: "dataEntry:dataExport.title",
         singleChoiceOptions: confirmSingleChoiceOptions,
         defaultSingleChoiceValue: confirmSingleChoiceOptions[0]?.value,
       });
       return { newRecords, updatedRecords, conflictingRecords, confirmResult };
     },
-    [confirm, toaster]
+    [confirm, t, toaster]
   );
 
   const exportSelectedRecords = useCallback(
@@ -297,12 +315,12 @@ export const RecordsList = () => {
         const onJobComplete = async (jobCompleted) => {
           const { result } = jobCompleted;
           const { missingFiles } = result;
-          
+
           await loadRecordsWithSyncStatus();
 
           if (missingFiles > 0) {
             toaster(
-              "dataEntry:exportData.exportedSuccessfullyButFilesMissing",
+              "dataEntry:dataExport.exportedSuccessfullyButFilesMissing",
               { missingFiles }
             );
           }
@@ -388,7 +406,7 @@ export const RecordsList = () => {
           );
         })
       ) {
-        toaster("dataEntry:exportData.onlyRecordsInRemoteServerCanBeImported");
+        toaster("dataEntry:dataExport.onlyRecordsInRemoteServerCanBeImported");
         return false;
       }
       return true;
@@ -460,9 +478,17 @@ export const RecordsList = () => {
       };
     } else if (!Surveys.isRecordsUploadFromMobileAllowed(survey)) {
       return { errorKey: "recordsList:sendData.error.recordsUploadNotAllowed" };
+    } else if (
+      records.filter((r) => r.errors).length > 0 &&
+      !Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey)
+    ) {
+      return {
+        errorKey:
+          "recordsList:sendData.error.recordsWithErrorsUploadNotAllowed",
+      };
     }
     return {};
-  }, [survey]);
+  }, [records, survey]);
 
   const onSendDataPress = useCallback(async () => {
     const { errorKey } = checkCanSendData();

@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Dates, Surveys } from "@openforis/arena-core";
 
@@ -44,41 +44,46 @@ export const SelectedSurveyContainer = () => {
   });
   const { updateStatus, errorKey } = state;
 
-  useEffect(() => {
-    const determineStatus = async () => {
-      if (!user) {
-        setState({ updateStatus: UpdateStatus.error });
-      }
-      const surveyRemote = await SurveyService.fetchSurveySummaryRemote({
-        id: survey.remoteId,
-        name: surveyName,
-      });
-      if (!surveyRemote) {
-        setState({ updateStatus: SurveyStatus.notInArenaServer });
-      } else if (surveyRemote.errorKey) {
-        setState({
-          updateStatus: UpdateStatus.error,
-          errorKey: surveyRemote.errorKey,
-        });
-      } else if (!Surveys.isVisibleInMobile(surveyRemote)) {
-        setState({ updateStatus: SurveyStatus.notVisibleInMobile });
-      } else if (
-        Dates.isAfter(
-          surveyRemote?.datePublished ?? surveyRemote?.dateModified,
-          survey.datePublished ?? survey.dateModified
-        )
-      ) {
-        setState({ updateStatus: UpdateStatus.notUpToDate });
-      } else {
-        setState({ updateStatus: UpdateStatus.upToDate });
-      }
-    };
+  const determineStatus = useCallback(async () => {
+    if (!survey) {
+      return;
+    }
+    if (!user) {
+      setState({ updateStatus: UpdateStatus.error });
+      return;
+    }
     if (!networkAvailable) {
       setState({ updateStatus: UpdateStatus.networkNotAvailable });
-    } else if (survey) {
-      determineStatus();
+      return;
+    }
+    const surveyRemote = await SurveyService.fetchSurveySummaryRemote({
+      id: survey.remoteId,
+      name: surveyName,
+    });
+    if (!surveyRemote) {
+      setState({ updateStatus: SurveyStatus.notInArenaServer });
+    } else if (surveyRemote.errorKey) {
+      setState({
+        updateStatus: UpdateStatus.error,
+        errorKey: surveyRemote.errorKey,
+      });
+    } else if (!Surveys.isVisibleInMobile(surveyRemote)) {
+      setState({ updateStatus: SurveyStatus.notVisibleInMobile });
+    } else if (
+      Dates.isAfter(
+        surveyRemote?.datePublished ?? surveyRemote?.dateModified,
+        survey.datePublished ?? survey.dateModified
+      )
+    ) {
+      setState({ updateStatus: UpdateStatus.notUpToDate });
+    } else {
+      setState({ updateStatus: UpdateStatus.upToDate });
     }
   }, [networkAvailable, survey, surveyName, user]);
+
+  useEffect(() => {
+    determineStatus();
+  }, [determineStatus]);
 
   if (!survey) return null;
 
@@ -90,6 +95,7 @@ export const SelectedSurveyContainer = () => {
             {surveyTitle}
           </Text>
           <SurveyUpdateStatusIcon
+            onPress={determineStatus}
             updateStatus={updateStatus}
             errorKey={errorKey}
           />

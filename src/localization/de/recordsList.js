@@ -66,7 +66,9 @@ export default {
       surveyNotVisibleInMobile:
         "Die aktuelle Umfrage sollte in Arena Mobile nicht sichtbar sein",
       recordsUploadNotAllowed:
-        "Das Hochladen von Datensätzen von Arena Mobile auf den Server ist nicht erlaubt",
+        "Das Hochladen von Datensätzen auf den Server ist nicht erlaubt",
+      recordsWithErrorsUploadNotAllowed:
+        "Das Hochladen von Datensätzen mit Validierungsfehlern auf den Server ist nicht erlaubt",
     },
   },
 };

@@ -62,7 +62,9 @@ export default {
     error: {
       generic: "መረጃውን ወደ አገልጋዩ መላክ አይቻልም: {{details}}",
       surveyNotVisibleInMobile: "የአሁኑ ዳሰሳ በአሬና ሞባይል ላይ መታየት የለበትም",
-      recordsUploadNotAllowed: "መረጃዎችን ከአሬና ሞባይል ወደ አገልጋዩ መስቀል አይፈቀድም",
+      recordsUploadNotAllowed: "ወደ አገልጋዩ መዝገቦችን መስቀል አይፈቀድም",
+      recordsWithErrorsUploadNotAllowed:
+        "የማረጋገጫ ስህተቶች ያሉባቸውን መዝገቦች ወደ አገልጋዩ መስቀል አይፈቀድም",
     },
   },
 };

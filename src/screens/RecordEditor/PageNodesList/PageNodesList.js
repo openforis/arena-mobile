@@ -11,7 +11,7 @@ import {
 } from "@openforis/arena-core";
 
 import { AlertIcon, VView } from "components";
-import { RecordPageNavigator, ValidationUtils } from "model";
+import { RecordPageNavigator } from "model";
 import { DataEntryActions, DataEntrySelectors, SurveySelectors } from "state";
 
 import { NodePageNavigationButton } from "../BottomNavigationBar/NodePageNavigationButton";
@@ -96,10 +96,12 @@ export const PageNodesList = () => {
       );
       if (
         fieldValidations.length === 0 ||
-        fieldValidations.every(ValidationUtils.isValid)
+        fieldValidations.every(Validations.isValid)
       )
         return null;
-      const hasErrors = fieldValidations.some(ValidationUtils.hasNestedErrors);
+      const hasErrors = fieldValidations.some(
+        Validations.calculateHasNestedErrors
+      );
       const hasWarnings = !hasErrors;
       return <AlertIcon hasErrors={hasErrors} hasWarnings={hasWarnings} />;
     },
