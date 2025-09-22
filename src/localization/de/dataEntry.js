@@ -38,25 +38,6 @@ export default {
   errorGeneratingRecordsExportFile:
     "Fehler beim Erstellen der Exportdatei für Datensätze: {{details}}",
   errorLoadingRecords: "Fehler beim Laden von Datensätzen: {{details}}",
-  exportData: {
-    title: "Daten exportieren",
-    confirm: {
-      title: "Export von Daten bestätigen",
-      message: `Zu exportierende Datensätze:
-  - {{newRecordsCount}} neue Datensätze;
-  - {{updatedRecordsCount}} aktualisierte Datensätze
-  - {{conflictingRecordsCount}} in Konflikt stehende Datensätze`,
-    },
-    noRecordsInDeviceToExport: "Keine Datensätze auf dem Gerät zum Exportieren",
-    onlyNewOrUpdatedRecords:
-      "Nur neue oder aktualisierte Datensätze exportieren",
-    mergeConflictingRecords:
-      "In Konflikt stehende Datensätze zusammenführen (gleiche Schlüssel)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Nur Datensätze, die bereits auf dem Remote-Server vorhanden sind oder die remote aktualisiert wurden, können importiert werden",
-    exportedSuccessfullyButFilesMissing:
-      "Daten wurden erfolgreich exportiert, aber {{missingFiles}} Dateien/Bilder fehlen oder sind defekt. Bitte überprüfen Sie Ihre Aufzeichnungen und die Aufzeichnungen auf dem Server.",
-  },
   exportNewOrUpdatedRecords: "Neue oder aktualisierte Datensätze exportieren",
   formLanguage: "Formularsprache:",
   noEntitiesDefined: "Keine Entitäten definiert",
@@ -93,6 +74,12 @@ export default {
       "Mehrere Datensätze mit den Schlüsseln {{keyValues}} im Zyklus {{cycle}} gefunden",
 
     valuePanelHeader: "Wert im Zyklus {{prevCycle}}",
+  },
+  recordStatus: {
+    new: "neu",
+    updated: "aktualisiert",
+    conflicting: "konfliktbehaftet",
+    withValidationErrors: "mit Validierungsfehlern",
   },
   sendData: "Daten senden",
   showOnlyLocalRecords: "Nur lokale Datensätze anzeigen",
@@ -175,6 +162,21 @@ Maximal zulässige Größe: {{maxSizeMB}}MB.
       share: "$t(common:shareFile)",
     },
     shareExportedFile: "Exportierte Datei teilen",
+    title: "Daten exportieren",
+    confirm: {
+      title: "Export von Daten bestätigen",
+      message: `Zu exportierende Datensätze:
+{{recordsCountSummary}}`,
+    },
+    noRecordsInDeviceToExport: "Keine Datensätze auf dem Gerät zum Exportieren",
+    onlyNewOrUpdatedRecords:
+      "Nur neue oder aktualisierte Datensätze exportieren",
+    mergeConflictingRecords:
+      "In Konflikt stehende Datensätze zusammenführen (gleiche Schlüssel)",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Nur Datensätze, die bereits auf dem Remote-Server vorhanden sind oder die remote aktualisiert wurden, können importiert werden",
+    exportedSuccessfullyButFilesMissing:
+      "Daten wurden erfolgreich exportiert, aber {{missingFiles}} Dateien/Bilder fehlen oder sind defekt. Bitte überprüfen Sie Ihre Aufzeichnungen und die Aufzeichnungen auf dem Server.",
   },
   location: {
     label: "Standort",

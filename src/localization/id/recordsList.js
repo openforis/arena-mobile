@@ -65,8 +65,9 @@ export default {
       generic: "Tidak dapat mengirim data ke server: {{details}}",
       surveyNotVisibleInMobile:
         "Survei saat ini seharusnya tidak terlihat di Arena Mobile",
-      recordsUploadNotAllowed:
-        "Unggah catatan dari Arena Mobile ke server tidak diizinkan",
+      recordsUploadNotAllowed: "Mengunggah rekaman ke server tidak diizinkan",
+      recordsWithErrorsUploadNotAllowed:
+        "Mengunggah rekaman dengan kesalahan validasi ke server tidak diizinkan",
     },
   },
 };

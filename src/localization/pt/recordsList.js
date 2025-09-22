@@ -67,7 +67,9 @@ export default {
       surveyNotVisibleInMobile:
         "A pesquisa atual não deve ser visível no Arena Mobile",
       recordsUploadNotAllowed:
-        "O upload de registros do Arena Mobile para o servidor não é permitido",
+        "Não é permitido carregar registros para o servidor",
+      recordsWithErrorsUploadNotAllowed:
+        "Não é permitido carregar registros com erros de validação para o servidor",
     },
   },
 };

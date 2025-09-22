@@ -8,7 +8,6 @@ import {
 } from "@openforis/arena-core";
 
 import { RecordNodes } from "model/utils/RecordNodes";
-import { ValidationUtils } from "model/utils/ValidationUtils";
 
 import { DataEntrySelectors, SurveySelectors } from "state";
 
@@ -75,7 +74,7 @@ const _processFieldValidation = ({
     });
     if (notValidNodeInTree) {
       const notValidTreeItemId = notValidNodeInTree.nodeDefUuid;
-      if (ValidationUtils.hasNestedErrors(fieldValidation)) {
+      if (Validations.calculateHasNestedErrors(fieldValidation)) {
         acc.treeItemIdsWithErrors.add(notValidTreeItemId);
       } else {
         acc.treeItemIdsWithWarnings.add(notValidTreeItemId);

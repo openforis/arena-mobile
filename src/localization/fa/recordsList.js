@@ -63,8 +63,9 @@ export default {
       generic: "ارسال داده‌ها به سرور امکان‌پذیر نیست: {{details}}",
       surveyNotVisibleInMobile:
         "نظرسنجی فعلی نباید در آرنا موبایل قابل مشاهده باشد",
-      recordsUploadNotAllowed:
-        "بارگذاری رکوردها از آرنا موبایل به سرور مجاز نیست",
+      recordsUploadNotAllowed: "بارگذاری سوابق در سرور مجاز نیست",
+      recordsWithErrorsUploadNotAllowed:
+        "بارگذاری سوابق با خطاهای اعتبارسنجی در سرور مجاز نیست",
     },
   },
 };

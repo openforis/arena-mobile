@@ -34,22 +34,6 @@ export default {
   errorGeneratingRecordsExportFile:
     "Erro ao gerar ficheiro de exportação de registos: {{details}}",
   errorLoadingRecords: "Erro ao carregar registros: {{details}}",
-  exportData: {
-    title: "Exportar dados",
-    confirm: {
-      title: "Confirmar exportação de dados",
-      message:
-        "Registos a exportar:\n- {{newRecordsCount}} novos registos;\n- {{updatedRecordsCount}} registos atualizados\n- {{conflictingRecordsCount}} registos com conflitos",
-    },
-    noRecordsInDeviceToExport:
-      "Não existem registos no dispositivo para exportar",
-    onlyNewOrUpdatedRecords: "Exportar apenas registos novos ou atualizados",
-    mergeConflictingRecords: "Unir registos com conflitos (mesmas chaves)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Apenas registos já presentes no servidor remoto ou registos que foram atualizados remotamente podem ser importados",
-    exportedSuccessfullyButFilesMissing:
-      "Dados exportados com sucesso, mas {{missingFiles}} arquivos/imagens estão faltando ou corrompidos. Verifique seus registros e também os registros no servidor.",
-  },
   exportNewOrUpdatedRecords: "Exportar registos novos ou atualizados",
   formLanguage: "Idioma do formulário:",
   noEntitiesDefined: "Nenhuma entidade definida",
@@ -84,6 +68,12 @@ export default {
     multipleRecordsFound:
       "Vários registos com as chaves {{keyValues}} encontrados no ciclo {{cycle}}",
     valuePanelHeader: "Valor no ciclo {{prevCycle}}",
+  },
+  recordStatus: {
+    new: "novo",
+    updated: "atualizado",
+    conflicting: "conflitante",
+    withValidationErrors: "com erros de validação",
   },
   sendData: "Enviar dados",
   showOnlyLocalRecords: "Mostrar apenas registos locais",
@@ -163,6 +153,20 @@ Verifique as configurações ou peça ao administrador da pesquisa para alterar 
       share: "$t(common:shareFile)",
     },
     shareExportedFile: "Compartilhar arquivo exportado",
+    title: "Exportar dados",
+    confirm: {
+      title: "Confirmar exportação de dados",
+      message: `Registos a exportar:
+{{recordsCountSummary}}`,
+    },
+    noRecordsInDeviceToExport:
+      "Não existem registos no dispositivo para exportar",
+    onlyNewOrUpdatedRecords: "Exportar apenas registos novos ou atualizados",
+    mergeConflictingRecords: "Unir registos com conflitos (mesmas chaves)",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Apenas registos já presentes no servidor remoto ou registos que foram atualizados remotamente podem ser importados",
+    exportedSuccessfullyButFilesMissing:
+      "Dados exportados com sucesso, mas {{missingFiles}} arquivos/imagens estão faltando ou corrompidos. Verifique seus registros e também os registros no servidor.",
   },
   location: {
     label: "Localização",
