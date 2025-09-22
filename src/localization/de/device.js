@@ -16,6 +16,10 @@ export default {
     recordFilesSize: "Größe der Datensatzdateien",
     tempFilesSize: "Größe der temporären Dateien",
   },
+  locationServiceDisabled: {
+    warning:
+      "Standortdienst deaktiviert; bitte aktivieren Sie ihn in den Geräteeinstellungen.",
+  },
   network: {
     title: "Netzwerk",
     statusLabel: "Netzwerkstatus",

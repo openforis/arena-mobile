@@ -16,6 +16,10 @@ export default {
     recordFilesSize: "Taille des fichiers d'enregistrement",
     tempFilesSize: "Taille des fichiers temporaires",
   },
+  locationServiceDisabled: {
+    warning:
+      "Service de localisation désactivé; veuillez l'activer dans les paramètres de l'appareil.",
+  },
   network: {
     title: "Réseau",
     statusLabel: "État du réseau",
