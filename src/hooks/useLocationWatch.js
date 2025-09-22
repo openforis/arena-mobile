@@ -129,7 +129,7 @@ export const useLocationWatch = ({
   const startLocationWatch = useCallback(async () => {
     if (!(await Permissions.requestLocationForegroundPermission())) {
       if (!(await Permissions.isLocationServiceEnabled())) {
-        dispatch(ToastActions.show("devuce:locationServiceDisabled.warning"));
+        dispatch(ToastActions.show("device:locationServiceDisabled.warning"));
         return;
       }
     }
