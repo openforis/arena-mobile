@@ -67,8 +67,9 @@ export default {
       generic: "No se pueden enviar datos al servidor: {{details}}",
       surveyNotVisibleInMobile:
         "La encuesta actual no debería ser visible en Arena Mobile",
-      recordsUploadNotAllowed:
-        "No se permite la carga de registros desde Arena Mobile al servidor",
+      recordsUploadNotAllowed: "No se permite subir registros al servidor",
+      recordsWithErrorsUploadNotAllowed:
+        "No se permite subir registros con errores de validación al servidor",
     },
   },
 };

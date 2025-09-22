@@ -64,8 +64,9 @@ export default {
       generic: "Невозможно отправить данные на сервер: {{details}}",
       surveyNotVisibleInMobile:
         "Текущий опрос не должен быть виден в Arena Mobile",
-      recordsUploadNotAllowed:
-        "Загрузка записей из Arena Mobile на сервер не разрешена",
+      recordsUploadNotAllowed: "Загрузка записей на сервер не разрешена",
+      recordsWithErrorsUploadNotAllowed:
+        "Загрузка записей с ошибками валидации на сервер не разрешена",
     },
   },
 };

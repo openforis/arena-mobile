@@ -34,22 +34,6 @@ export default {
   errorGeneratingRecordsExportFile:
     "Error al generar archivo de exportación de registros: {{details}}",
   errorLoadingRecords: "Error al cargar registros: {{details}}",
-  exportData: {
-    title: "Exportar datos",
-    confirm: {
-      title: "Confirmar exportación de datos",
-      message:
-        "Registros a exportar:\n- {{newRecordsCount}} nuevos registros;\n- {{updatedRecordsCount}} registros actualizados\n- {{conflictingRecordsCount}} registros conflictivos",
-    },
-    noRecordsInDeviceToExport:
-      "No hay registros en el dispositivo para exportar",
-    onlyNewOrUpdatedRecords: "Exportar solo registros nuevos o actualizados",
-    mergeConflictingRecords: "Fusionar registros conflictivos (mismas claves)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Solo se pueden importar registros que ya están en el servidor remoto o registros que se han actualizado remotamente",
-    exportedSuccessfullyButFilesMissing:
-      "Los datos se exportaron correctamente, pero faltan o están rotos {{missingFiles}} archivos/imágenes. Por favor, revise sus registros y también los registros en el servidor.",
-  },
   exportNewOrUpdatedRecords: "Exportar registros nuevos o actualizados",
   formLanguage: "Idioma del formulario:",
   noEntitiesDefined: "No se han definido entidades",
@@ -84,6 +68,12 @@ export default {
     multipleRecordsFound:
       "Se encontraron múltiples registros con claves {{keyValues}} en ciclo {{cycle}}",
     valuePanelHeader: "Valor en ciclo {{prevCycle}}",
+  },
+  recordStatus: {
+    new: "nuevo",
+    updated: "actualizado",
+    conflicting: "en conflicto",
+    withValidationErrors: "con errores de validación",
   },
   sendData: "Enviar datos",
   showOnlyLocalRecords: "Mostrar solo registros locales",
@@ -163,6 +153,20 @@ Verifique la configuración o pida al administrador de la encuesta que cambie es
       share: "$t(common:shareFile)",
     },
     shareExportedFile: "Compartir archivo exportado",
+    title: "Exportar datos",
+    confirm: {
+      title: "Confirmar exportación de datos",
+      message: `Registros a exportar:
+{{recordsCountSummary}}`,
+    },
+    noRecordsInDeviceToExport:
+      "No hay registros en el dispositivo para exportar",
+    onlyNewOrUpdatedRecords: "Exportar solo registros nuevos o actualizados",
+    mergeConflictingRecords: "Fusionar registros conflictivos (mismas claves)",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Solo se pueden importar registros que ya están en el servidor remoto o registros que se han actualizado remotamente",
+    exportedSuccessfullyButFilesMissing:
+      "Los datos se exportaron correctamente, pero faltan o están rotos {{missingFiles}} archivos/imágenes. Por favor, revise sus registros y también los registros en el servidor.",
   },
   location: {
     label: "Ubicación",
