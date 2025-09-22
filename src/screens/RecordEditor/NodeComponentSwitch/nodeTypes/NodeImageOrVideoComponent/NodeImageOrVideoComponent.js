@@ -1,3 +1,5 @@
+import { StyleSheet } from "react-native";
+import { Camera } from "react-native-vision-camera";
 import PropTypes from "prop-types";
 
 import { NodeDefFileType, NodeDefs } from "@openforis/arena-core";
@@ -47,6 +49,15 @@ export const NodeImageOrVideoComponent = (props) => {
     onFileChoosePress,
     resizing,
   } = useNodeFileComponent({ nodeDef, nodeUuid });
+
+  const device = useCameraDevice("back");
+
+  const cameraOpen = true;
+  if (device && cameraOpen) {
+    return (
+      <Camera style={StyleSheet.absoluteFill} device={device} isActive={true} />
+    );
+  }
 
   return (
     <HView style={styles.container}>

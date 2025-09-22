@@ -73,6 +73,7 @@
     "react-native-system-navigation-bar": "^2.6.4",
     "react-native-version-number": "^0.3.6",
     "react-native-view-more-text": "^2.2.0",
+    "react-native-vision-camera": "^4.7.2",
     "react-native-web": "^0.20.0",
     "react-native-zip-archive": "^7.0.2",
     "react-redux": "^9.2.0",
