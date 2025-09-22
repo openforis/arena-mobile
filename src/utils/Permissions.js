@@ -1,8 +1,12 @@
 import * as Location from "expo-location";
 
-const requestLocationForegroundPermission = async () => {
+const isLocationServiceEnabled = async () => {
   const providerStatus = await Location.getProviderStatusAsync();
-  if (!providerStatus.locationServicesEnabled) {
+  return providerStatus.locationServicesEnabled;
+};
+
+const requestLocationForegroundPermission = async () => {
+  if (!(await isLocationServiceEnabled())) {
     return false;
   }
   const currentStatus = await Location.getForegroundPermissionsAsync();
@@ -15,5 +19,6 @@ const requestLocationForegroundPermission = async () => {
 };
 
 export const Permissions = {
+  isLocationServiceEnabled,
   requestLocationForegroundPermission,
 };

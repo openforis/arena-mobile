@@ -16,6 +16,10 @@ export default {
     recordFilesSize: "Ukuran berkas rekaman",
     tempFilesSize: "Ukuran berkas sementara",
   },
+  locationServiceDisabled: {
+    warning:
+      "Layanan lokasi dinonaktifkan; mohon aktifkan di pengaturan perangkat.",
+  },
   network: {
     title: "Jaringan",
     statusLabel: "Status jaringan",

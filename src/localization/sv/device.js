@@ -16,6 +16,10 @@ export default {
     recordFilesSize: "Storlek på inspelningsfiler",
     tempFilesSize: "Storlek på temporära filer",
   },
+  locationServiceDisabled: {
+    warning:
+      "Platstjänsten är inaktiverad; vänligen aktivera den i enhetens inställningar.",
+  },
   network: {
     title: "Nätverk",
     statusLabel: "Nätverksstatus",

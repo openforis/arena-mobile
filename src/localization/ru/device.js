@@ -16,6 +16,10 @@ export default {
     recordFilesSize: "Размер файлов записи",
     tempFilesSize: "Размер временных файлов",
   },
+  locationServiceDisabled: {
+    warning:
+      "Служба определения местоположения отключена; пожалуйста, включите ее в настройках устройства.",
+  },
   network: {
     title: "Сеть",
     statusLabel: "Состояние сети",
