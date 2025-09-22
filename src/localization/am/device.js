@@ -16,6 +16,9 @@ export default {
     recordFilesSize: "የመዝገብ ፋይሎች መጠን",
     tempFilesSize: "ጊዜያዊ ፋይሎች መጠን",
   },
+  locationServiceDisabled: {
+    warning: "የአካባቢ አገልግሎት ተሰናክሏል፤ እባክዎ በመሳሪያው መቼቶች ውስጥ ያንቁት።",
+  },
   network: {
     title: "አውታረ መረብ",
     statusLabel: "የአውታረ መረብ ሁኔታ",

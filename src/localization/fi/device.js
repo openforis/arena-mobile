@@ -16,6 +16,10 @@ export default {
     recordFilesSize: "Tallennustiedostojen koko",
     tempFilesSize: "Väliaikaisten tiedostojen koko",
   },
+  locationServiceDisabled: {
+    warning:
+      "Sijaintipalvelu on pois käytöstä; ota se käyttöön laitteen asetuksissa.",
+  },
   network: {
     title: "Verkko",
     statusLabel: "Verkon tila",
