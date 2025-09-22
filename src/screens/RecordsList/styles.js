@@ -1,6 +1,9 @@
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
+  optionsContainer: {
+    gap: 10,
+  },
   container: {
     flex: 1,
   },
@@ -9,7 +12,7 @@ export default StyleSheet.create({
   innerContainer: {
     flex: 1,
     padding: 4,
-    gap: 4,
+    gap: 8,
   },
   cyclesSelector: { width: 300 },
   bottomActionBar: {
@@ -23,8 +26,5 @@ export default StyleSheet.create({
   },
   exportDataMenuButton: {
     alignSelf: "flex-end",
-  },
-  optionsContainer: {
-    gap: 10,
   },
 });

@@ -9,6 +9,7 @@ import {
   NodeDefs,
   Objects,
   Surveys,
+  Validations,
 } from "@openforis/arena-core";
 
 import {
@@ -30,6 +31,7 @@ import { ArrayUtils } from "utils";
 import { RecordSyncStatusIcon } from "./RecordSyncStatusIcon";
 import { RecordsUtils } from "./RecordsUtils";
 import { RecordListConstants } from "./recordListConstants";
+import { RecordErrorIcon } from "./RecordErrorIcon";
 
 const formatDateToDateTimeDisplay = (date) =>
   typeof date === "string"
@@ -48,7 +50,6 @@ RecordOriginTableCellRenderer.propTypes = DataVisualizerCellPropTypes;
 const RecordOriginListCellRenderer = ({ item }) => (
   <Text textKey={`recordsList:origin.${item.origin}`} />
 );
-
 RecordOriginListCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
 const RecordLoadStatusTableCellRenderer = ({ item }) => (
@@ -59,8 +60,17 @@ RecordLoadStatusTableCellRenderer.propTypes = DataVisualizerCellPropTypes;
 const RecordLoadStatusListCellRenderer = ({ item }) => (
   <Text textKey={`recordsList:loadStatus.${item.loadStatus}`} />
 );
-
 RecordLoadStatusListCellRenderer.propTypes = DataVisualizerCellPropTypes;
+
+const RecordErrorsListCellRenderer = ({ item }) => (
+  <Text>{Validations.getErrorsCount(item.validation)}</Text>
+);
+RecordErrorsListCellRenderer.propTypes = DataVisualizerCellPropTypes;
+
+const RecordWarningsListCellRenderer = ({ item }) => (
+  <Text>{Validations.getWarningsCount(item.validation)}</Text>
+);
+RecordWarningsListCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
 export const RecordsDataVisualizer = (props) => {
   const {
@@ -96,6 +106,18 @@ export const RecordsDataVisualizer = (props) => {
   useEffect(() => {
     setSelectedRecordUuids([]);
   }, [records]);
+
+  const recordsHaveErrorsOrWarnings = useMemo(
+    () =>
+      records.some((r) => {
+        const validation = Validations.getValidation(r);
+        return (
+          Validations.getErrorsCount(validation) ||
+          Validations.getWarningsCount(validation)
+        );
+      }),
+    [records]
+  );
 
   const rootDefKeys = useMemo(
     () => (survey ? SurveyDefs.getRootKeyDefs({ survey, cycle }) : []),
@@ -151,21 +173,42 @@ export const RecordsDataVisualizer = (props) => {
         headerLabelVariant: "titleMedium",
         sortable: true,
         textVariant: "titleLarge",
-      })),
-      {
-        key: "dateModified",
-        header: "common:modifiedOn",
-        optional: true,
-        sortable: true,
-        style: { minWidth: 50 },
-      }
+      }))
     );
-    if (viewAsList) {
+    if (recordsHaveErrorsOrWarnings) {
       result.push({
-        key: "dateCreated",
-        header: "common:createdOn",
-        optional: true,
+        key: "errors",
+        header: "common:error_other",
+        sortable: true,
+        style: viewAsList ? undefined : { maxWidth: 50 },
+        cellRenderer: viewAsList
+          ? RecordErrorsListCellRenderer
+          : RecordErrorIcon,
       });
+    }
+    if (viewAsList) {
+      if (recordsHaveErrorsOrWarnings) {
+        result.push({
+          key: "warnings",
+          header: "common:warning_other",
+          optional: true,
+          cellRenderer: RecordWarningsListCellRenderer,
+        });
+      }
+      result.push(
+        {
+          key: "dateModified",
+          header: "common:modifiedOn",
+          optional: true,
+          sortable: true,
+          style: { minWidth: 50 },
+        },
+        {
+          key: "dateCreated",
+          header: "common:createdOn",
+          optional: true,
+        }
+      );
     }
     if (showRemoteProps) {
       result.push({
@@ -199,6 +242,7 @@ export const RecordsDataVisualizer = (props) => {
         key: "syncStatus",
         header: "common:status",
         cellRenderer: syncStatusLoading ? LoadingIcon : RecordSyncStatusIcon,
+        style: viewAsList ? undefined : { maxWidth: 50 },
       });
     }
     if (syncStatusFetched && viewAsList) {
@@ -212,10 +256,11 @@ export const RecordsDataVisualizer = (props) => {
     return result;
   }, [
     rootDefKeys,
+    recordsHaveErrorsOrWarnings,
+    viewAsList,
     showRemoteProps,
     syncStatusLoading,
     syncStatusFetched,
-    viewAsList,
     lang,
   ]);
 

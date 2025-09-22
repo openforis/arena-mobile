@@ -65,7 +65,9 @@ export default {
       surveyNotVisibleInMobile:
         "نظرسنجی فعلی نباید در آرنا موبایل قابل مشاهده باشد",
       recordsUploadNotAllowed:
-        "Tietueiden lataaminen Arena Mobile -sovelluksesta palvelimelle ei ole sallittua",
+        "Tietueiden lataaminen palvelimelle ei ole sallittua",
+      recordsWithErrorsUploadNotAllowed:
+        "Tietueiden, joissa on validointivirheitä, lataaminen palvelimelle ei ole sallittua",
     },
   },
 };

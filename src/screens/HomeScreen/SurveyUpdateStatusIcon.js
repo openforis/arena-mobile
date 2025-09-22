@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { Surveys } from "@openforis/arena-core";
@@ -11,7 +11,11 @@ import { useTranslation } from "localization";
 import { SurveyStatus, UpdateStatus } from "model";
 import { SurveyActions, SurveySelectors } from "state";
 
-export const SurveyUpdateStatusIcon = ({ updateStatus, errorKey }) => {
+export const SurveyUpdateStatusIcon = ({
+  errorKey,
+  onPress: onPressProp = undefined,
+  updateStatus,
+}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const toaster = useToast();
@@ -19,7 +23,9 @@ export const SurveyUpdateStatusIcon = ({ updateStatus, errorKey }) => {
   const survey = SurveySelectors.useCurrentSurvey();
   const [loading, setLoading] = useState(false);
 
-  const onPress = () => {
+  const onPress = useCallback(async () => {
+    await onPressProp?.();
+
     switch (updateStatus) {
       case UpdateStatus.error: {
         const error = t(errorKey);
@@ -53,7 +59,17 @@ export const SurveyUpdateStatusIcon = ({ updateStatus, errorKey }) => {
         );
         break;
     }
-  };
+  }, [
+    dispatch,
+    errorKey,
+    navigation,
+    onPressProp,
+    survey,
+    t,
+    toaster,
+    updateStatus,
+  ]);
+
   return (
     <UpdateStatusIcon
       loading={loading}
@@ -64,6 +80,7 @@ export const SurveyUpdateStatusIcon = ({ updateStatus, errorKey }) => {
 };
 
 SurveyUpdateStatusIcon.propTypes = {
-  updateStatus: PropTypes.string.isRequired,
   errorKey: PropTypes.string,
+  onPress: PropTypes.func,
+  updateStatus: PropTypes.string.isRequired,
 };

@@ -59,13 +59,14 @@ export default {
   },
   origin: { title: "Origin", L: "Local", R: "Remote" },
   owner: "Owner",
+  recordHasErrorsOrWarningsTooltip: "Record has {{count}} {{itemsTypeText}}",
   sendData: {
     error: {
       generic: "Cannot send data to the server: {{details}}",
       surveyNotVisibleInMobile:
         "the current survey should not be visible in Arena Mobile",
-      recordsUploadNotAllowed:
-        "records upload from Arena Mobile to the server not allowed",
+      recordsUploadNotAllowed: "uploading records to the server not allowed",
+      recordsWithErrorsUploadNotAllowed: `uploading records with validation errors to the server not allowed`,
     },
   },
 };

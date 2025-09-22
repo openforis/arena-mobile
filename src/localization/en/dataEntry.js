@@ -28,7 +28,31 @@ Update the enumerated entities?`,
   },
   cycle: "Cycle",
   cycleForNewRecords: "Cycle for new records:",
-  options: "Options",
+  dataExport: {
+    confirm: {
+      title: "Confirm export data",
+      message: `Records to export:
+{{recordsCountSummary}}`,
+    },
+    error: "Error exporting data. Details: {{details}}",
+    exportedSuccessfullyButFilesMissing: `Data exported successfully but {{missingFiles}} files/images are missing or broken.
+Please check your records and check also records on the server`,
+    noRecordsInDeviceToExport: "No records in the device to export",
+    onlyNewOrUpdatedRecords: "Export only new or updated records",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Only records already in remote server or records that have been updated remotely can be imported",
+
+    selectTarget: "Select export target",
+    selectTargetMessage: `Select the target of the export:`,
+    target: {
+      remote: "Remote server",
+      local: "Local folder (Download)",
+      share: "$t(common:shareFile)",
+    },
+    shareExportedFile: "Share exported file",
+    title: "Export data",
+    mergeConflictingRecords: "Merge conflicting records (same keys)",
+  },
   editNodeDef: "Edit {{nodeDef}}",
   errorFetchingRecordsSyncStatus: `Error fetching records from server.
 
@@ -38,23 +62,6 @@ Details: {{details}}`,
   errorGeneratingRecordsExportFile:
     "Error generating records export file: {{details}}",
   errorLoadingRecords: "Error loading records: {{details}}",
-  exportData: {
-    title: "Export data",
-    confirm: {
-      title: "Confirm export data",
-      message: `Records to export:
-- {{newRecordsCount}} new records;
-- {{updatedRecordsCount}} updated records
-- {{conflictingRecordsCount}} conflicting records`,
-    },
-    noRecordsInDeviceToExport: "No records in the device to export",
-    onlyNewOrUpdatedRecords: "Export only new or updated records",
-    mergeConflictingRecords: "Merge conflicting records (same keys)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Only records already in remote server or records that have been updated remotely can be imported",
-    exportedSuccessfullyButFilesMissing: `Data exported successfully but {{missingFiles}} files/images are missing or broken.
-Please check your records and check also records on the server`,
-  },
   exportNewOrUpdatedRecords: "Export new or updated records",
   formLanguage: "Form language:",
   node: {
@@ -71,6 +78,7 @@ max count reached`,
   localBackup: "Local backup",
   newRecord: "New",
   noRecordsFound: "No records found",
+  options: "Options",
   recordEditor: "Record editor",
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {
@@ -89,6 +97,12 @@ Fetch the list of records from the server and try again?`,
     multipleRecordsFound:
       "Multiple records with keys {{keyValues}} found in cycle {{cycle}}",
     valuePanelHeader: "Value in cycle {{prevCycle}}",
+  },
+  recordStatus: {
+    new: "new",
+    updated: "updated",
+    conflicting: "conflicting",
+    withValidationErrors: "with validation errors",
   },
   sendData: "Send data",
   showOnlyLocalRecords: "Show only local records",
@@ -159,17 +173,6 @@ Fetch the list of records from the server and try again?`,
 Maximum size allowed: {{maxSizeMB}}MB.
 Check settings or ask the survey administrator to change this limit.`,
     resolution: "Resolution",
-  },
-  dataExport: {
-    error: "Error exporting data. Details: {{details}}",
-    selectTarget: "Select export target",
-    selectTargetMessage: `Select the target of the export:`,
-    target: {
-      remote: "Remote server",
-      local: "Local folder (Download)",
-      share: "$t(common:shareFile)",
-    },
-    shareExportedFile: "Share exported file",
   },
   location: {
     label: "Location",

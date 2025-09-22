@@ -1,22 +1,26 @@
 import PropTypes from "prop-types";
 
-import { NodeDefs } from "@openforis/arena-core";
+import {
+  NodeDefs,
+  Validations,
+  ValidationSeverity,
+} from "@openforis/arena-core";
 
 import { Icon, Tooltip } from "components";
 import { useTranslation } from "localization";
 import { ValidationUtils } from "model";
 import { DataEntrySelectors, SurveySelectors } from "state";
 
-const { getJointErrorText, getJointWarningText, isNotValid } = ValidationUtils;
+const { getJointErrorText, getJointWarningText } = ValidationUtils;
 
 const colors = {
   tooltipBackgroundColor: {
-    error: "red",
-    warning: "orange",
+    [ValidationSeverity.error]: "red",
+    [ValidationSeverity.warning]: "orange",
   },
   tooltipTextColor: {
-    error: "white",
-    warningTextColor: "black",
+    [ValidationSeverity.error]: "white",
+    [ValidationSeverity.warning]: "black",
   },
 };
 
@@ -75,7 +79,7 @@ export const NodeValidationIcon = (props) => {
       />
     );
   }
-  if (isNotValid(validation) && NodeDefs.isSingle(nodeDef)) {
+  if (Validations.isNotValid(validation) && NodeDefs.isSingle(nodeDef)) {
     const errMsg = getJointErrorText({ validation, t, customMessageLang });
     const warnMsg = getJointWarningText({ validation, t, customMessageLang });
     return (

@@ -37,23 +37,6 @@ export default {
   errorGeneratingRecordsExportFile:
     "Fel vid generering av exportfil för poster: {{details}}",
   errorLoadingRecords: "Fel vid laddning av poster: {{details}}",
-  exportData: {
-    title: "Exportera data",
-    confirm: {
-      title: "Bekräfta dataexport",
-      message: `Poster att exportera:
-  - {{newRecordsCount}} nya poster;
-  - {{updatedRecordsCount}} uppdaterade poster
-  - {{conflictingRecordsCount}} konflikterande poster`,
-    },
-    noRecordsInDeviceToExport: "Inga poster i enheten att exportera",
-    onlyNewOrUpdatedRecords: "Exportera endast nya eller uppdaterade poster",
-    mergeConflictingRecords: "Slå samman konflikterande poster (samma nycklar)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Endast poster som redan finns på fjärrservern eller poster som har uppdaterats på distans kan importeras",
-    exportedSuccessfullyButFilesMissing:
-      "Data exporterades framgångsrikt, men {{missingFiles}} filer/bilder saknas eller är skadade. Vänligen kontrollera dina register och även registren på servern.",
-  },
   exportNewOrUpdatedRecords: "Exportera nya eller uppdaterade poster",
   formLanguage: "Formulärspråk:",
   noEntitiesDefined: "Inga entiteter definierade",
@@ -89,6 +72,12 @@ export default {
       "Flera poster med nycklar {{keyValues}} hittades i cykel {{cycle}}",
 
     valuePanelHeader: "Värde i cykel {{prevCycle}}",
+  },
+  recordStatus: {
+    new: "ny",
+    updated: "uppdaterad",
+    conflicting: "konfliktfylld",
+    withValidationErrors: "med valideringsfel",
   },
   sendData: "Skicka data",
   showOnlyLocalRecords: "Visa endast lokala poster",
@@ -170,6 +159,19 @@ Kontrollera inställningarna eller be undersökningsadministratören att ändra 
       share: "$t(common:shareFile)",
     },
     shareExportedFile: "Dela exporterad fil",
+    title: "Exportera data",
+    confirm: {
+      title: "Bekräfta dataexport",
+      message: `Poster att exportera:
+{{recordsCountSummary}}`,
+    },
+    noRecordsInDeviceToExport: "Inga poster i enheten att exportera",
+    onlyNewOrUpdatedRecords: "Exportera endast nya eller uppdaterade poster",
+    mergeConflictingRecords: "Slå samman konflikterande poster (samma nycklar)",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Endast poster som redan finns på fjärrservern eller poster som har uppdaterats på distans kan importeras",
+    exportedSuccessfullyButFilesMissing:
+      "Data exporterades framgångsrikt, men {{missingFiles}} filer/bilder saknas eller är skadade. Vänligen kontrollera dina register och även registren på servern.",
   },
   location: {
     label: "Plats",

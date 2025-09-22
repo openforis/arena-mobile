@@ -31,21 +31,6 @@ export default {
   errorGeneratingRecordsExportFile:
     "የመዝገብ ወደ ውጭ መላኪያ ፋይል በመፍጠር ላይ ስህተት፡ {{details}}",
   errorLoadingRecords: "መዝገቦችን በመጫን ላይ ስህተት፡ {{details}}",
-  exportData: {
-    title: "ውሂብ ላክ",
-    confirm: {
-      title: "ውሂብ መላክን አረጋግጥ",
-      message:
-        "የሚላኩ መዝገቦች፡\n- {{newRecordsCount}} አዲስ መዝገቦች፤\n- {{updatedRecordsCount}} የተሻሻሉ መዝገቦች\n- {{conflictingRecordsCount}} የሚጋጩ መዝገቦች",
-    },
-    noRecordsInDeviceToExport: "በመሣሪያው ውስጥ የሚላክ መዝገብ የለም",
-    onlyNewOrUpdatedRecords: "አዲስ ወይም የተሻሻሉ መዝገቦችን ብቻ ላክ",
-    mergeConflictingRecords: "የሚጋጩ መዝገቦችን አዋህድ (ተመሳሳይ ቁልፎች)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "በሩቅ አገልጋይ ውስጥ ያሉ ወይም በርቀት የተሻሻሉ መዝገቦች ብቻ ማስገባት ይቻላል",
-    exportedSuccessfullyButFilesMissing:
-      "ውሂብ በተሳካ ሁኔታ ወደ ውጭ ተልኳል ግን {{missingFiles}} ፋይሎች/ምስሎች ጠፍተዋል ወይም ተሰብረዋል። እባክዎ መዝገቦችዎን እና በአገልጋዩ ላይ ያሉትን መዝገቦች ያረጋግጡ።",
-  },
   exportNewOrUpdatedRecords: "አዲስ ወይም የተሻሻሉ መዝገቦችን ላክ",
   formLanguage: "የቅጽ ቋንቋ፡",
   noEntitiesDefined: "ምንም ክፍሎች አልተገለጹም",
@@ -78,6 +63,12 @@ export default {
     multipleRecordsFound:
       "በ {{cycle}} ዙር ውስጥ {{keyValues}} ቁልፎች ያላቸው ብዙ መዝገቦች ተገኝተዋል",
     valuePanelHeader: "እሴት በ {{prevCycle}} ዙር",
+  },
+  recordStatus: {
+    new: "አዲስ",
+    updated: "የዘመነ",
+    conflicting: "የሚጋጭ",
+    withValidationErrors: "ከማረጋገጫ ስህተቶች ጋር",
   },
   sendData: "ውሂብ ላክ",
   showOnlyLocalRecords: "የአካባቢ መዝገቦችን ብቻ አሳይ",
@@ -156,6 +147,19 @@ export default {
       share: "$t(common:shareFile)",
     },
     shareExportedFile: "የተላከውን ፋይል ያጋሩ",
+    title: "ውሂብ ላክ",
+    confirm: {
+      title: "ውሂብ መላክን አረጋግጥ",
+      message: `የሚላኩ መዝገቦች፡
+{{recordsCountSummary}}`,
+    },
+    noRecordsInDeviceToExport: "በመሣሪያው ውስጥ የሚላክ መዝገብ የለም",
+    onlyNewOrUpdatedRecords: "አዲስ ወይም የተሻሻሉ መዝገቦችን ብቻ ላክ",
+    mergeConflictingRecords: "የሚጋጩ መዝገቦችን አዋህድ (ተመሳሳይ ቁልፎች)",
+    onlyRecordsInRemoteServerCanBeImported:
+      "በሩቅ አገልጋይ ውስጥ ያሉ ወይም በርቀት የተሻሻሉ መዝገቦች ብቻ ማስገባት ይቻላል",
+    exportedSuccessfullyButFilesMissing:
+      "ውሂብ በተሳካ ሁኔታ ወደ ውጭ ተልኳል ግን {{missingFiles}} ፋይሎች/ምስሎች ጠፍተዋል ወይም ተሰብረዋል። እባክዎ መዝገቦችዎን እና በአገልጋዩ ላይ ያሉትን መዝገቦች ያረጋግጡ።",
   },
   location: {
     label: "ቦታ",
