@@ -1,6 +1,7 @@
 import { UUIDs } from "@openforis/arena-core";
 import { RNFileProcessor } from "utils/RNFileProcessor";
 
+import { Functions } from "utils/Functions";
 import { RemoteService } from "./remoteService";
 
 const fetchRecordsSummaries = async ({ surveyRemoteId, cycle }) => {
@@ -44,6 +45,11 @@ const uploadRecords = ({
   const surveyRemoteId = survey.remoteId;
   const fileId = UUIDs.v4();
   let fileProcessor = null;
+
+  const debouncedUploadProgress = Functions.throttle(({ total, loaded }) => {
+    onUploadProgress({ total, loaded });
+  }, 1000);
+
   const promise = new Promise((resolve, reject) => {
     fileProcessor = new RNFileProcessor({
       filePath: fileUri,
@@ -61,8 +67,12 @@ const uploadRecords = ({
           const previouslyUploadedChunks = chunk - 1;
           const uploadedChunks =
             previouslyUploadedChunks + uploadedChunkPercent;
-          onUploadProgress({ total: totalChunks, loaded: uploadedChunks });
+          debouncedUploadProgress({
+            total: totalChunks,
+            loaded: uploadedChunks,
+          });
         };
+
         const { promise } = await RemoteService.postCancelableMultipartData(
           `api/mobile/survey/${surveyRemoteId}`,
           params,
@@ -75,6 +85,7 @@ const uploadRecords = ({
         }
       },
       onError: reject,
+      chunkSize: 1024,
     });
     fileProcessor.start();
   });

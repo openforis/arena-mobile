@@ -21,7 +21,7 @@ const MIME_TYPES = {
   zip: "application/zip ",
 };
 
-const defaultChunkSize = 1024 * 1024 * 10; // 10MB
+const defaultChunkSize = 1024 * 1024 * 10; // 10 MB
 
 const { cacheDirectory, documentDirectory, readDirectoryAsync } = FileSystem;
 
@@ -98,8 +98,11 @@ const getSizeBase64 = async (fileUri, ignoreErrors = true) => {
     let lastContentSize = 0;
     let chunk = 1;
     while (chunk === 1 || lastContentSize > 0) {
-      const chunkContent = await readChunk(fileUri, chunk, chunkSize);
-      lastContentSize = chunkContent?.length ?? 0;
+      const chunkContent = await readChunk(fileUri, chunk);
+      lastContentSize = Buffer.from(
+        chunkContent,
+        FileSystem.EncodingType.Base64
+      ).length;
       size += lastContentSize;
       chunk += 1;
     }
