@@ -9,12 +9,10 @@ import {
   useRequestImagePickerMediaLibraryPermission,
   useToast,
 } from "hooks";
-
-import { useConfirm } from "state/confirm";
-import { Files, ImageUtils, Permissions } from "utils";
-
 import { useNodeComponentLocalState } from "screens/RecordEditor/useNodeComponentLocalState";
+import { useConfirm } from "state/confirm";
 import { SettingsSelectors } from "state/settings";
+import { Files, ImageUtils, Permissions } from "utils";
 
 const mediaTypeByFileType = {
   [NodeDefFileType.image]: "images",
