@@ -12,7 +12,8 @@ const LegendItem = ({ icon, iconSource, textKey }) => (
   <HView>
     {icon ?? (
       <>
-        <Icon source={iconSource} /> <Text textKey={textKey} />
+        <Icon source={iconSource} />
+        <Text textKey={textKey} />
       </>
     )}
   </HView>
