@@ -5,7 +5,7 @@ const getItem = async (key) => {
     const value = await AsyncStorage.getItem(key);
     return value === null ? null : JSON.parse(value);
   } catch (e) {
-    // error reading value
+    // ignore errors
   }
 };
 
@@ -13,11 +13,20 @@ const setItem = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, JSON.stringify(value));
   } catch (e) {
-    // saving error
+    // ignore errors
+  }
+};
+
+const removeItem = async (key) => {
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (e) {
+    // ignore errors
   }
 };
 
 export const AsyncStorageUtils = {
   getItem,
   setItem,
+  removeItem,
 };
