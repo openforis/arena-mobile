@@ -7,6 +7,9 @@ import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { MessageActions } from "../message";
 import { SettingsActions } from "../settings";
 import { RemoteConnectionSelectors } from "./selectors";
+import { DeviceInfoSelectors } from "state/deviceInfo";
+import { AsyncStorageUtils } from "service/asyncStorage/AsyncStorageUtils";
+import { asyncStorageKeys } from "service/asyncStorage/asyncStorageKeys";
 
 const LOGGED_OUT = "LOGGED_OUT";
 const USER_LOADING = "USER_LOADING";
@@ -31,16 +34,31 @@ const fetchUserOrLoginAgain = async ({ serverUrl, email, password }) => {
 const loginAndSetUser =
   ({ onlyIfNotSet = true } = {}) =>
   async (dispatch, getState) => {
+    const state = getState();
     if (onlyIfNotSet) {
-      const state = getState();
+      // if user is already set in store, do not try to fetch it again
       const userPrev = RemoteConnectionSelectors.selectLoggedUser(state);
       if (userPrev) {
         return;
       }
     }
+    const deviceInfo = DeviceInfoSelectors.selectDeviceInfo(state);
+    const { isNetworkConnected } = deviceInfo;
+    if (!isNetworkConnected) {
+      // retrieve user from async storage (if any)
+      const userInAsyncStorage = await AsyncStorageUtils.getItem(
+        asyncStorageKeys.loggedInUser
+      );
+      if (userInAsyncStorage) {
+        dispatch({ type: USER_SET, user: userInAsyncStorage });
+      }
+      return;
+    }
+
     const settings = await SettingsService.fetchSettings();
     const { serverUrl, email, password } = settings;
     if (!serverUrl || !email || !password) {
+      // missing information to perform login; user cannot be fetched;
       return;
     }
     dispatch({ type: USER_LOADING });
@@ -75,6 +93,7 @@ const login =
     const res = await AuthService.login({ serverUrl, email, password });
     const { user, error, message } = res;
     if (user) {
+      await AsyncStorageUtils.setItem(asyncStorageKeys.loggedInUser, user);
       const settings = await SettingsService.fetchSettings();
       const settingsUpdated = { ...settings, serverUrl, email, password };
       await dispatch(SettingsActions.updateSettings(settingsUpdated));
@@ -154,6 +173,7 @@ const _doLogout =
   ({ keepEmailAddress }) =>
   async (dispatch) => {
     await AuthService.logout();
+    await AsyncStorageUtils.removeItem(asyncStorageKeys.loggedInUser);
     dispatch(_clearUserCredentialsInternal({ keepEmailAddress }));
   };
 
