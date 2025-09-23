@@ -1,3 +1,4 @@
+import { UUIDs } from "@openforis/arena-core";
 import { RNFileProcessor } from "utils/RNFileProcessor";
 
 import { RemoteService } from "./remoteService";
@@ -41,6 +42,7 @@ const uploadRecords = ({
   onUploadProgress,
 }) => {
   const surveyRemoteId = survey.remoteId;
+  const fileId = UUIDs.v4();
   let fileProcessor = null;
   const promise = new Promise((resolve, reject) => {
     fileProcessor = new RNFileProcessor({
@@ -48,6 +50,7 @@ const uploadRecords = ({
       chunkProcessor: async ({ chunk, totalChunks, content }) => {
         const params = {
           file: content,
+          fileId,
           chunk,
           totalChunks,
           cycle,

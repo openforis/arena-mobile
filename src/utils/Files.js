@@ -21,6 +21,8 @@ const MIME_TYPES = {
   zip: "application/zip ",
 };
 
+const defaultChunkSize = 1024 * 1024 * 10; // 10MB
+
 const { cacheDirectory, documentDirectory, readDirectoryAsync } = FileSystem;
 
 const path = (...parts) =>
@@ -90,6 +92,26 @@ const getSize = async (fileUri, ignoreErrors = true) => {
   return info?.size ?? 0;
 };
 
+const getSizeBase64 = async (fileUri, ignoreErrors = true) => {
+  try {
+    let size = 0; // result
+    let lastContentSize = 0;
+    let chunk = 1;
+    while (chunk === 1 || lastContentSize > 0) {
+      const chunkContent = await readChunk(fileUri, chunk, chunkSize);
+      lastContentSize = chunkContent?.length ?? 0;
+      size += lastContentSize;
+      chunk += 1;
+    }
+    return size;
+  } catch (error) {
+    if (ignoreErrors) {
+      return 0;
+    }
+    throw error;
+  }
+};
+
 const getDirSize = async (dirUri) => {
   let total = 0;
   await visitDirFilesRecursively({
@@ -129,7 +151,7 @@ const getMimeTypeFromName = (fileName) => mime.getType(fileName);
 
 const readAsString = async (fileUri) => FileSystem.readAsStringAsync(fileUri);
 
-const readChunk = async (fileUri, chunkNumber, chunkSize) =>
+const readChunk = async (fileUri, chunkNumber, chunkSize = defaultChunkSize) =>
   FileSystem.readAsStringAsync(fileUri, {
     encoding: FileSystem.EncodingType.Base64,
     position: (chunkNumber - 1) * chunkSize,
@@ -260,6 +282,7 @@ export const Files = {
   getNameFromUri,
   getExtension,
   getSize,
+  getSizeBase64,
   readAsString,
   readChunk,
   readAsBuffer,

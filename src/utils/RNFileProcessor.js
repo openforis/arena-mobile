@@ -4,7 +4,7 @@ import { Files } from "./Files";
 export class RNFileProcessor extends FileProcessor {
   async calculateFileSize() {
     const { filePath: fileUri } = this;
-    return Files.getSize(fileUri);
+    return Files.getSizeBase64(fileUri);
   }
 
   async extractCurrentFileChunk() {
