@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 
@@ -39,19 +39,23 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
   const { request: requestImagePickerMediaLibraryPermission } =
     useRequestImagePickerMediaLibraryPermission();
 
+  const geotagInfoShown = NodeDefs.isGeotagInformationShown(nodeDef);
   const fileType = NodeDefs.getFileType(nodeDef) ?? NodeDefFileType.other;
   const maxSizeMB = determineFileMaxSize({ nodeDef, settings });
   const maxSize = maxSizeMB ? maxSizeMB * Math.pow(1024, 2) : undefined;
 
   const mediaTypes = mediaTypeByFileType[fileType];
 
-  const imagePickerOptions = {
-    allowEditing: false,
-    exif: true,
-    legacy: true,
-    mediaTypes,
-    quality: 1,
-  };
+  const imagePickerOptions = useMemo(
+    () => ({
+      allowEditing: false,
+      exif: true,
+      legacy: true,
+      mediaTypes,
+      quality: 1,
+    }),
+    [mediaTypes]
+  );
 
   const { value, updateNodeValue } = useNodeComponentLocalState({
     nodeUuid,
@@ -111,26 +115,43 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
   const onFileChoosePress = useCallback(async () => {
     if (!(await requestImagePickerMediaLibraryPermission())) return;
 
+    if (geotagInfoShown) {
+      await Permissions.requestLocationForegroundPermission();
+    }
     const result =
       fileType === NodeDefFileType.other
         ? await DocumentPicker.getDocumentAsync()
         : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
 
     await onFileSelected(result);
-  }, [fileType, onFileSelected, requestImagePickerMediaLibraryPermission]);
+  }, [
+    fileType,
+    geotagInfoShown,
+    imagePickerOptions,
+    onFileSelected,
+    requestImagePickerMediaLibraryPermission,
+  ]);
 
   const onOpenCameraPress = useCallback(async () => {
     if (!(await requestCameraPermission())) return;
 
     try {
-      // request location permission fot geo tagging
-      await Permissions.requestLocationForegroundPermission();
+      if (geotagInfoShown) {
+        await Permissions.requestLocationForegroundPermission();
+      }
+
       const result = await ImagePicker.launchCameraAsync(imagePickerOptions);
       await onFileSelected(result);
     } catch (error) {
       toaster(`Error opening camera: ` + error);
     }
-  }, [onFileSelected, requestCameraPermission]);
+  }, [
+    geotagInfoShown,
+    imagePickerOptions,
+    onFileSelected,
+    requestCameraPermission,
+    toaster,
+  ]);
 
   const onDeletePress = useCallback(async () => {
     if (
