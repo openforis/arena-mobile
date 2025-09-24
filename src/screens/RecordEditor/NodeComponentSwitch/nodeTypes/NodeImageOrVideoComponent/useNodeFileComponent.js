@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
+import { launchImageLibrary } from "react-native-image-picker";
 
 import { NodeDefFileType, NodeDefs, UUIDs } from "@openforis/arena-core";
 
@@ -15,8 +16,8 @@ import { SettingsSelectors } from "state/settings";
 import { Files, ImageUtils, Permissions } from "utils";
 
 const mediaTypeByFileType = {
-  [NodeDefFileType.image]: "images",
-  [NodeDefFileType.video]: "videos",
+  [NodeDefFileType.image]: "photo",
+  [NodeDefFileType.video]: "video",
 };
 
 const determineFileMaxSize = ({ nodeDef, settings }) => {
@@ -80,17 +81,15 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
   const maxSizeMB = determineFileMaxSize({ nodeDef, settings });
   const maxSize = maxSizeMB ? maxSizeMB * Math.pow(1024, 2) : undefined;
 
-  const mediaTypes = mediaTypeByFileType[fileType];
+  const mediaType = mediaTypeByFileType[fileType];
 
   const imagePickerOptions = useMemo(
     () => ({
-      allowEditing: false,
-      exif: true,
-      legacy: true,
-      mediaTypes,
+      includeExtra: true,
+      mediaType,
       quality: 1,
     }),
-    [mediaTypes]
+    [mediaType]
   );
 
   const { value, updateNodeValue } = useNodeComponentLocalState({
@@ -144,7 +143,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
     const result =
       fileType === NodeDefFileType.other
         ? await DocumentPicker.getDocumentAsync()
-        : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
+        : await launchImageLibrary(imagePickerOptions);
 
     await onFileSelected(result);
   }, [

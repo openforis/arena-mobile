@@ -3876,6 +3876,7 @@ __metadata:
     react-native-dropdown-picker: "npm:^5.4.6"
     react-native-error-boundary: "npm:^2.0.0"
     react-native-final-tree-view: "npm:^3.0.0"
+    react-native-image-picker: "npm:^8.2.1"
     react-native-keychain: "npm:^10.0.0"
     react-native-markdown-display: "npm:^7.0.2"
     react-native-modal-datetime-picker: "npm:^18.0.0"
@@ -11428,6 +11429,16 @@ __metadata:
   dependencies:
     prop-types: "npm:^15.5.10"
   checksum: 10c0/04d1cb35f2acacda593c80f2d9845f7dc0ed5e0e1fb62043ba5351f914162dcd92f1ae98e80ebf9752f6b4131b1634f6a9ac90e9c649f30b5591f3187d99811f
+  languageName: node
+  linkType: hard
+
+"react-native-image-picker@npm:^8.2.1":
+  version: 8.2.1
+  resolution: "react-native-image-picker@npm:8.2.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/82b6c51ece8d16806975aff7675d26280fdd2391c05ca9415620195cc6643ca0db4601d3b24e117d7f5331c2e55ba7c03090d276e55b3b5687a636245428a047
   languageName: node
   linkType: hard
 
