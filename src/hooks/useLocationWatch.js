@@ -3,9 +3,9 @@ import * as Location from "expo-location";
 import { PointFactory } from "@openforis/arena-core";
 
 import { Permissions, Refs } from "utils";
-import { ToastActions } from "../state/toast";
 import { SettingsSelectors } from "../state/settings";
 import { useIsMountedRef } from "./useIsMountedRef";
+import { useToast } from "./useToast";
 
 const locationWatchElapsedTimeIntervalDelay = 1000;
 const defaultLocationAccuracyThreshold = 4;
@@ -45,6 +45,7 @@ export const useLocationWatch = ({
   const locationSubscriptionRef = useRef(null);
   const locationAccuracyWatchTimeoutRef = useRef(null);
   const locationWatchIntervalRef = useRef(null);
+  const toaster = useToast();
 
   const settings = SettingsSelectors.useSettings();
   const { locationAccuracyThreshold = defaultLocationAccuracyThreshold } =
@@ -129,11 +130,10 @@ export const useLocationWatch = ({
   const startLocationWatch = useCallback(async () => {
     if (!(await Permissions.requestLocationForegroundPermission())) {
       if (!(await Permissions.isLocationServiceEnabled())) {
-        dispatch(ToastActions.show("device:locationServiceDisabled.warning"));
+        toaster("device:locationServiceDisabled.warning");
         return;
       }
     }
-
     _stopLocationWatch();
     locationSubscriptionRef.current = await Location.watchPositionAsync(
       { accuracy, distanceInterval },
@@ -164,8 +164,9 @@ export const useLocationWatch = ({
     accuracy,
     distanceInterval,
     locationCallback,
-    locationWatchTimeout,
     stopOnTimeout,
+    toaster,
+    locationWatchTimeout,
     stopLocationWatch,
   ]);
 
