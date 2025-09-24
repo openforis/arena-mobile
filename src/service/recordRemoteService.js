@@ -50,6 +50,7 @@ const uploadRecords = ({
     onUploadProgress({ total, loaded });
   }, 1000);
 
+  let lastRequestCancel = null;
   const promise = new Promise((resolve, reject) => {
     fileProcessor = new RNFileProcessor({
       filePath: fileUri,
@@ -73,11 +74,13 @@ const uploadRecords = ({
           });
         };
 
-        const { promise } = await RemoteService.postCancelableMultipartData(
-          `api/mobile/survey/${surveyRemoteId}`,
-          params,
-          progressHandler
-        );
+        const { promise, cancel } =
+          await RemoteService.postCancelableMultipartData(
+            `api/mobile/survey/${surveyRemoteId}`,
+            params,
+            progressHandler
+          );
+        lastRequestCancel = cancel;
         const result = await promise;
 
         if (chunk === totalChunks) {
@@ -85,11 +88,16 @@ const uploadRecords = ({
         }
       },
       onError: reject,
-      chunkSize: 1024,
     });
     fileProcessor.start();
   });
-  return { promise, cancel: () => fileProcessor.cancel() };
+  return {
+    promise,
+    cancel: () => {
+      lastRequestCancel?.();
+      fileProcessor.stop();
+    },
+  };
 };
 
 export const RecordRemoteService = {
