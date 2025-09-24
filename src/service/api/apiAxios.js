@@ -72,7 +72,6 @@ const postCancelable = (serverUrl, uri, params, options = {}) => {
       data: params,
     }
   );
-
   return { promise, cancel };
 };
 

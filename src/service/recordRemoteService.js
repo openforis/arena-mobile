@@ -4,6 +4,8 @@ import { RNFileProcessor } from "utils/RNFileProcessor";
 import { Functions } from "utils/Functions";
 import { RemoteService } from "./remoteService";
 
+const uploadChunkSize = 700 * 1024; // 700KB (post requests bigger than this are truncated, check why)
+
 const fetchRecordsSummaries = async ({ surveyRemoteId, cycle }) => {
   const { data } = await RemoteService.get(
     `api/survey/${surveyRemoteId}/records/summary`,
@@ -88,6 +90,7 @@ const uploadRecords = ({
         }
       },
       onError: reject,
+      chunkSize: uploadChunkSize,
     });
     fileProcessor.start();
   });
