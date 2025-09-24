@@ -28,6 +28,44 @@ const determineFileMaxSize = ({ nodeDef, settings }) => {
   return Math.min(nodeDefFileMaxSize ?? 0, imageSizeLimit ?? 0);
 };
 
+const resizeImage = async (
+  sourceFileUri,
+  sourceFileSize,
+  maxSize,
+  maxSizeMB,
+  setResizing,
+  toaster
+) => {
+  setResizing(true);
+
+  let fileUri, fileSize;
+
+  const {
+    error,
+    uri: resizedFileUri,
+    size: resizedFileSize,
+  } = (await ImageUtils.resizeToFitMaxSize({
+    fileUri: sourceFileUri,
+    maxSize,
+  })) || {};
+
+  if (!error && resizedFileUri) {
+    fileUri = resizedFileUri;
+    fileSize = resizedFileSize;
+
+    toaster("dataEntry:fileAttributeImage.pictureResizedToSize", {
+      size: Files.toHumanReadableFileSize(resizedFileSize),
+      maxSizeMB,
+    });
+  } else {
+    fileUri = sourceFileUri;
+    fileSize = sourceFileSize;
+  }
+  setResizing(false);
+
+  return { fileUri, fileSize };
+};
+
 export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
   const toaster = useToast();
   const confirm = useConfirm();
@@ -82,27 +120,14 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
         maxSize &&
         sourceFileSize > maxSize
       ) {
-        // resize image
-        setResizing(true);
-        const {
-          error,
-          uri: resizedFileUri,
-          size: resizedFileSize,
-        } = (await ImageUtils.resizeToFitMaxSize({
-          fileUri: sourceFileUri,
+        ({ fileUri, fileSize } = await resizeImage(
+          sourceFileUri,
+          sourceFileSize,
           maxSize,
-        })) || {};
-
-        if (!error && resizedFileUri) {
-          fileUri = resizedFileUri;
-          fileSize = resizedFileSize;
-
-          toaster("dataEntry:fileAttributeImage.pictureResizedToSize", {
-            size: Files.toHumanReadableFileSize(resizedFileSize),
-            maxSizeMB,
-          });
-        }
-        setResizing(false);
+          maxSizeMB,
+          setResizing,
+          toaster
+        ));
       }
       const valueUpdated = { fileUuid: UUIDs.v4(), fileName, fileSize };
       await updateNodeValue({ value: valueUpdated, fileUri });
@@ -137,7 +162,6 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
       if (geotagInfoShown) {
         await Permissions.requestLocationForegroundPermission();
       }
-
       const result = await ImagePicker.launchCameraAsync(imagePickerOptions);
       await onFileSelected(result);
     } catch (error) {
