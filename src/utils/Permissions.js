@@ -1,4 +1,6 @@
 import * as Location from "expo-location";
+import { PermissionsAndroid } from "react-native";
+import { Environment } from "./Environment";
 
 const isLocationServiceEnabled = async () => {
   const providerStatus = await Location.getProviderStatusAsync();
@@ -18,7 +20,28 @@ const requestLocationForegroundPermission = async () => {
   return foregroundPermission.granted;
 };
 
+const requestAccessMediaLocation = async () => {
+  if (Environment.isAndroid) {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_MEDIA_LOCATION,
+        {
+          title: "Arena Mobile needs Media Location Permission",
+          message: "Arena Mobile needs access to media location.",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK",
+        }
+      );
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    } catch (err) {
+      return false;
+    }
+  }
+  return true;
+};
+
 export const Permissions = {
   isLocationServiceEnabled,
   requestLocationForegroundPermission,
+  requestAccessMediaLocation,
 };

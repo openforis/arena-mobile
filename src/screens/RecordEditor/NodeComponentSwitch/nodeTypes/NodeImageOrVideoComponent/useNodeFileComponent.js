@@ -139,7 +139,8 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
     if (!(await requestImagePickerMediaLibraryPermission())) return;
 
     if (geotagInfoShown) {
-      await Permissions.requestLocationForegroundPermission();
+      await Permissions.requestAccessMediaLocation();
+      // await Permissions.requestLocationForegroundPermission();
     }
     const result =
       fileType === NodeDefFileType.other
