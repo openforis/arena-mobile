@@ -17,6 +17,14 @@ const calculateJobProgressPercent = ({ jobSummary }) => {
   );
 };
 
+const createOnCancelCallback = ({ job, onCancelProp }) => {
+  if (!job && !onCancelProp) return undefined;
+  return async () => {
+    await job?.cancel();
+    onCancelProp?.();
+  };
+};
+
 const start =
   ({
     jobUuid = null, // jobUuid must be provided when monitoring a remote job
@@ -28,7 +36,7 @@ const start =
     messageParams = {},
     onJobComplete = undefined,
     onJobEnd = undefined,
-    onCancel = undefined,
+    onCancel: onCancelProp = undefined,
     onClose = undefined,
     autoDismiss = false,
   }) =>
@@ -42,7 +50,7 @@ const start =
         closeButtonTextKey,
         messageKey,
         messageParams,
-        onCancel,
+        onCancel: createOnCancelCallback({ job, onCancelProp }),
         onClose,
         autoDismiss,
       },
@@ -107,12 +115,8 @@ const startAsync = async ({ dispatch, ...otherParams }) =>
 const cancel = () => async (dispatch, getState) => {
   const state = getState();
   const jobMonitorState = getJobMonitorState(state);
-  const { onCancel, job } = jobMonitorState;
-  onCancel?.();
-  if (job?.cancel) {
-    // cancel local job
-    await job.cancel();
-  }
+  const { onCancel } = jobMonitorState;
+  await onCancel?.();
   dispatch(close());
 };
 
