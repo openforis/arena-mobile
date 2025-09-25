@@ -17,6 +17,31 @@ const calculateJobProgressPercent = ({ jobSummary }) => {
   );
 };
 
+const createOnJobUpdateCallback =
+  ({ dispatch, job, autoDismiss, onJobComplete, onJobEnd }) =>
+  (jobSummary) => {
+    const { status, errors } = jobSummary;
+    const progressPercent = calculateJobProgressPercent({ jobSummary });
+
+    dispatch({
+      type: JOB_MONITOR_UPDATE,
+      payload: { progressPercent, status, errors },
+    });
+    if (isJobStatusEnded(status)) {
+      if (!job) {
+        // remote job
+        WebSocketService.close();
+      }
+      if (status === JobStatus.succeeded) {
+        if (autoDismiss) {
+          dispatch(close());
+        }
+        onJobComplete?.(jobSummary);
+      }
+      onJobEnd?.(jobSummary);
+    }
+  };
+
 const createOnCancelCallback = ({ job, onCancelProp }) => {
   if (!job && !onCancelProp) return undefined;
   return async () => {
@@ -56,28 +81,13 @@ const start =
       },
     });
 
-    const onJobUpdate = (jobSummary) => {
-      const { status, errors } = jobSummary;
-      const progressPercent = calculateJobProgressPercent({ jobSummary });
-
-      dispatch({
-        type: JOB_MONITOR_UPDATE,
-        payload: { progressPercent, status, errors },
-      });
-      if (isJobStatusEnded(status)) {
-        if (!job) {
-          // remote job
-          WebSocketService.close();
-        }
-        if (status === JobStatus.succeeded) {
-          if (autoDismiss) {
-            dispatch(close());
-          }
-          onJobComplete?.(jobSummary);
-        }
-        onJobEnd?.(jobSummary);
-      }
-    };
+    const onJobUpdate = createOnJobUpdateCallback({
+      dispatch,
+      job,
+      autoDismiss,
+      onJobComplete,
+      onJobEnd,
+    });
 
     if (job) {
       // local job: listen to job update events
