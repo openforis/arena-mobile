@@ -23,7 +23,7 @@ const requestLocationForegroundPermission = async () => {
 const requestAccessMediaLocation = async () => {
   if (Environment.isAndroid) {
     try {
-      const granted = await PermissionsAndroid.request(
+      const status = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_MEDIA_LOCATION,
         {
           title: "Arena Mobile needs Media Location Permission",
@@ -32,8 +32,8 @@ const requestAccessMediaLocation = async () => {
           buttonPositive: "OK",
         }
       );
-      return granted === PermissionsAndroid.RESULTS.GRANTED;
-    } catch (err) {
+      return status === PermissionsAndroid.RESULTS.GRANTED;
+    } catch (_error) {
       return false;
     }
   }

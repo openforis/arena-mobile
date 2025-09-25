@@ -138,15 +138,19 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
   const onFileChoosePress = useCallback(async () => {
     if (!(await requestImagePickerMediaLibraryPermission())) return;
 
+    let mediaLocationAccessAllowed = true;
     if (geotagInfoShown) {
-      await Permissions.requestAccessMediaLocation();
-      // await Permissions.requestLocationForegroundPermission();
+      mediaLocationAccessAllowed =
+        await Permissions.requestAccessMediaLocation();
     }
     const result =
       fileType === NodeDefFileType.other
         ? await DocumentPicker.getDocumentAsync()
         : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
 
+    if (!mediaLocationAccessAllowed) {
+      toaster("Media location access denied");
+    }
     await onFileSelected(result);
   }, [
     fileType,
@@ -154,6 +158,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
     imagePickerOptions,
     onFileSelected,
     requestImagePickerMediaLibraryPermission,
+    toaster,
   ]);
 
   const onOpenCameraPress = useCallback(async () => {
