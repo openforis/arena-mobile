@@ -1,18 +1,16 @@
-import { useCallback, useMemo, useState } from "react";
-import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
+import { useCallback, useMemo, useState } from "react";
 
 import { NodeDefFileType, NodeDefs, UUIDs } from "@openforis/arena-core";
 
-import {
-  useRequestCameraPermission,
-  useRequestImagePickerMediaLibraryPermission,
-  useToast,
-} from "hooks";
+import { useRequestCameraPermission, useToast } from "hooks";
 import { useNodeComponentLocalState } from "screens/RecordEditor/useNodeComponentLocalState";
 import { useConfirm } from "state/confirm";
 import { SettingsSelectors } from "state/settings";
 import { Files, ImageUtils, Permissions } from "utils";
+
+import { useCheckCanAccessMediaLibrary } from "./useCheckCanAccessMediaLibrary";
 
 const mediaTypeByFileType = {
   [NodeDefFileType.image]: "images",
@@ -72,8 +70,8 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
   const settings = SettingsSelectors.useSettings();
 
   const { request: requestCameraPermission } = useRequestCameraPermission();
-  const { request: requestImagePickerMediaLibraryPermission } =
-    useRequestImagePickerMediaLibraryPermission();
+
+  const canAccessMediaLibrary = useCheckCanAccessMediaLibrary();
 
   const geotagInfoShown = NodeDefs.isGeotagInformationShown(nodeDef);
   const fileType = NodeDefs.getFileType(nodeDef) ?? NodeDefFileType.other;
@@ -136,29 +134,21 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
   );
 
   const onFileChoosePress = useCallback(async () => {
-    if (!(await requestImagePickerMediaLibraryPermission())) return;
-
-    let mediaLocationAccessAllowed = true;
-    if (geotagInfoShown) {
-      mediaLocationAccessAllowed =
-        await Permissions.requestAccessMediaLocation();
+    if (!(await canAccessMediaLibrary({ geotagInfoShown }))) {
+      return;
     }
     const result =
       fileType === NodeDefFileType.other
         ? await DocumentPicker.getDocumentAsync()
         : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
 
-    if (!mediaLocationAccessAllowed) {
-      toaster("Media location access denied");
-    }
     await onFileSelected(result);
   }, [
+    canAccessMediaLibrary,
     fileType,
     geotagInfoShown,
     imagePickerOptions,
     onFileSelected,
-    requestImagePickerMediaLibraryPermission,
-    toaster,
   ]);
 
   const onOpenCameraPress = useCallback(async () => {
