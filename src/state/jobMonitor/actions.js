@@ -105,6 +105,12 @@ const start =
 
 const startAsync = async ({ dispatch, ...otherParams }) =>
   new Promise((resolve, reject) => {
+    const { job } = otherParams;
+    if (job) {
+      job.start().catch((error) => {
+        reject(error);
+      });
+    }
     dispatch(
       start({
         ...otherParams,
@@ -115,6 +121,7 @@ const startAsync = async ({ dispatch, ...otherParams }) =>
           } else if (status === JobStatus.canceled) {
             reject();
           } else {
+            console.log("===job failed", jobEnd);
             reject(jobEnd);
           }
         },

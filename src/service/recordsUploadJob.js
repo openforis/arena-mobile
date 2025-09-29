@@ -13,7 +13,7 @@ export class RecordsUploadJob extends JobMobile {
     const { survey, cycle, fileUri, conflictResolutionStrategy } = this.context;
 
     const startFromChunk =
-      this.summary.processed > 0 ? this.summary.processed : 1;
+      this.summary.processed > 0 ? Math.floor(this.summary.processed) : 1;
 
     const { promise, cancel } = RecordService.uploadRecordsToRemoteServer({
       survey,

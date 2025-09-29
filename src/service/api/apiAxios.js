@@ -4,7 +4,8 @@ import { APIUtils } from "./apiUtils";
 
 const defaultOptions = {
   credentials: "include",
-  withCreadentials: true,
+  withCredentials: true,
+  timeout: 120000,
 };
 
 const errorMessageByCode = {
@@ -15,14 +16,13 @@ const errorMessageByCode = {
 
 const multipartDataHeaders = { "Content-Type": "multipart/form-data" };
 
-const _sendRequest = (url, opts = {}, timeout = 120000) => {
+const _sendRequest = (url, opts = {}) => {
   const controller = new AbortController();
   const config = {
     ...defaultOptions,
     ...opts,
     url,
     signal: controller.signal,
-    timeout,
   };
   return {
     promise: axios.request(config),
@@ -32,7 +32,7 @@ const _sendRequest = (url, opts = {}, timeout = 120000) => {
 
 const _sendGet = (serverUrl, uri, params = {}, options = {}) => {
   const url = APIUtils.getUrlWithParams({ serverUrl, uri, params });
-  return _sendRequest(url, options, options?.timeout);
+  return _sendRequest(url, options);
 };
 
 const get = async (serverUrl, uri, params = {}, options = {}) => {

@@ -60,15 +60,12 @@ const startUploadDataToRemoteServer =
       conflictResolutionStrategy,
     });
 
-    const startAndWaitForJob = async (job) => {
-      job.start(); // do not wait for job to complete: monitor job progress instead
-
-      return JobMonitorActions.startAsync({
+    const startAndWaitForJob = async () =>
+      JobMonitorActions.startAsync({
         dispatch,
         job: uploadJob,
         titleKey: "dataEntry:uploadingData.title",
       });
-    };
 
     try {
       let uploadComplete = false;
@@ -76,7 +73,7 @@ const startUploadDataToRemoteServer =
 
       while (!uploadComplete) {
         try {
-          uploadJobComplete = await startAndWaitForJob(uploadJob);
+          uploadJobComplete = await startAndWaitForJob();
           uploadComplete = !!uploadJobComplete;
         } catch (error) {
           // break the loop if job is canceled or user doesn't confirm to retry

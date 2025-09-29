@@ -44,6 +44,7 @@ const uploadRecords = ({
   startFromChunk,
   conflictResolutionStrategy,
   onUploadProgress,
+  requestTimeout = 20000,
 }) => {
   const surveyRemoteId = survey.remoteId;
   let fileProcessor = null;
@@ -80,7 +81,8 @@ const uploadRecords = ({
           await RemoteService.postCancelableMultipartData(
             `api/mobile/survey/${surveyRemoteId}`,
             params,
-            progressHandler
+            progressHandler,
+            { timeout: requestTimeout }
           );
         lastRequestCancel = cancel;
         const result = await promise;
@@ -91,6 +93,7 @@ const uploadRecords = ({
       },
       onError: reject,
       chunkSize: uploadChunkSize,
+      maxTryings: 2,
     });
     fileProcessor.start(startFromChunk);
   });

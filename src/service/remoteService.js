@@ -32,8 +32,14 @@ const getFile = async (uri, params, callback) => {
 
 const post = async (uri, data) => API.post(await getServerUrl(), uri, data);
 
-const postCancelableMultipartData = async (uri, data, onUploadProgress) =>
+const postCancelableMultipartData = async (
+  uri,
+  data,
+  onUploadProgress,
+  options = {}
+) =>
   API.postCancelableMultipartData(await getServerUrl(), uri, data, {
+    ...options,
     onUploadProgress,
   });
 
