@@ -4,7 +4,7 @@ import { AuthService, RecordService } from "service";
 import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerationJob";
 
 import { i18n } from "localization";
-import { ConfirmActions } from "../confirm";
+import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { JobMonitorActions } from "../jobMonitor";
 import { MessageActions } from "../message";
 
@@ -52,22 +52,40 @@ const startUploadDataToRemoteServer =
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const cycle = Surveys.getDefaultCycleKey(survey);
 
-    try {
-      const uploadJob = new RecordsUploadJob({
-        user,
-        survey,
-        cycle,
-        fileUri: outputFileUri,
-        conflictResolutionStrategy,
-      });
+    const uploadJob = new RecordsUploadJob({
+      user,
+      survey,
+      cycle,
+      fileUri: outputFileUri,
+      conflictResolutionStrategy,
+    });
 
-      uploadJob.start(); // do not wait for job to complete: monitor job progress instead
+    const startAndWaitForJob = async (job) => {
+      job.start(); // do not wait for job to complete: monitor job progress instead
 
-      const uploadJobComplete = await JobMonitorActions.startAsync({
+      return JobMonitorActions.startAsync({
         dispatch,
         job: uploadJob,
         titleKey: "dataEntry:uploadingData.title",
       });
+    };
+
+    try {
+      let uploadComplete = false;
+      let uploadJobComplete = null;
+
+      while (!uploadComplete) {
+        try {
+          uploadJobComplete = await startAndWaitForJob(uploadJob);
+          uploadComplete = !!uploadJobComplete;
+        } catch (error) {
+          // break the loop if job is canceled or user doesn't confirm to retry
+          // (error is null if job was canceled)
+          uploadComplete =
+            !error || !(await ConfirmUtils.confirm({ dispatch }));
+        }
+      }
+      if (!uploadJobComplete) return;
 
       const { remoteJob } = uploadJobComplete.result;
 

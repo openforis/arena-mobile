@@ -12,11 +12,16 @@ export class RecordsUploadJob extends JobMobile {
   async execute() {
     const { survey, cycle, fileUri, conflictResolutionStrategy } = this.context;
 
+    const startFromChunk =
+      this.summary.processed > 0 ? this.summary.processed : 1;
+
     const { promise, cancel } = RecordService.uploadRecordsToRemoteServer({
       survey,
       cycle,
       fileUri,
+      fileId: this.summary.uuid,
       conflictResolutionStrategy,
+      startFromChunk,
       onUploadProgress: (progressEvent) => {
         const { loaded, total } = progressEvent;
         this.summary.total = total;

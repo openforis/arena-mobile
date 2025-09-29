@@ -1,4 +1,3 @@
-import { UUIDs } from "@openforis/arena-core";
 import { RNFileProcessor } from "utils/RNFileProcessor";
 
 import { Functions } from "utils/Functions";
@@ -41,11 +40,12 @@ const uploadRecords = ({
   survey,
   cycle,
   fileUri,
+  fileId,
+  startFromChunk,
   conflictResolutionStrategy,
   onUploadProgress,
 }) => {
   const surveyRemoteId = survey.remoteId;
-  const fileId = UUIDs.v4();
   let fileProcessor = null;
 
   const debouncedUploadProgress = Functions.throttle(({ total, loaded }) => {
@@ -92,7 +92,7 @@ const uploadRecords = ({
       onError: reject,
       chunkSize: uploadChunkSize,
     });
-    fileProcessor.start();
+    fileProcessor.start(startFromChunk);
   });
   return {
     promise,
