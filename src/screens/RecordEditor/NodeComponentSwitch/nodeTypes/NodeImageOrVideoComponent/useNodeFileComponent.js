@@ -38,6 +38,7 @@ const setLocationInFile = async (fileUri) => {
     }
   } catch (error) {
     // ignore it
+    console.log("Error setting location in file exif data: " + error);
   }
 };
 
