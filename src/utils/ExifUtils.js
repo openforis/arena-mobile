@@ -1,3 +1,5 @@
+import { Objects } from "@openforis/arena-core";
+
 import { AMConstants } from "./AMConstants";
 import { Environment } from "./Environment";
 
@@ -9,6 +11,19 @@ if (!Environment.isExpoGo) {
 const readData = async ({ fileUri }) => Exify?.readAsync(fileUri);
 
 const writeData = async ({ fileUri, data }) => Exify?.writeAsync(fileUri, data);
+
+const hasGpsData = async ({ fileUri }) => {
+  const data = await readData({ fileUri });
+  if (!data) {
+    return false;
+  }
+  return (
+    Objects.isNotEmpty(data.GPSLatitude) &&
+    Number(data.GPSLatitude) !== 0 &&
+    Objects.isNotEmpty(data.GPSLongitude) &&
+    Number(data.GPSLongitude) !== 0
+  );
+};
 
 const writeGpsData = async ({ fileUri, location }) => {
   const { coords, timestamp } = location;
@@ -54,6 +69,7 @@ const copyData = async ({ sourceFileUri, targetFileUri }) => {
 
 export const ExifUtils = {
   readData,
+  hasGpsData,
   writeData,
   writeGpsData,
   copyData,

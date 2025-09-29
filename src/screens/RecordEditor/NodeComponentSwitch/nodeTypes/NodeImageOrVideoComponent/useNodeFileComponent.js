@@ -1,18 +1,17 @@
 import { useCallback, useMemo, useState } from "react";
-import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
+import * as Location from "expo-location";
 
 import { NodeDefFileType, NodeDefs, UUIDs } from "@openforis/arena-core";
 
-import {
-  useRequestCameraPermission,
-  useRequestImagePickerMediaLibraryPermission,
-  useToast,
-} from "hooks";
+import { useRequestCameraPermission, useToast } from "hooks";
 import { useNodeComponentLocalState } from "screens/RecordEditor/useNodeComponentLocalState";
 import { useConfirm } from "state/confirm";
 import { SettingsSelectors } from "state/settings";
-import { Files, ImageUtils, Permissions } from "utils";
+import { ExifUtils, Files, ImageUtils, Permissions } from "utils";
+
+import { useCheckCanAccessMediaLibrary } from "./useCheckCanAccessMediaLibrary";
 
 const mediaTypeByFileType = {
   [NodeDefFileType.image]: "images",
@@ -26,6 +25,21 @@ const determineFileMaxSize = ({ nodeDef, settings }) => {
     return nodeDefFileMaxSize;
   }
   return Math.min(nodeDefFileMaxSize ?? 0, imageSizeLimit ?? 0);
+};
+
+const setLocationInFile = async (fileUri) => {
+  // get current location and set it in file exif metadata
+  try {
+    if (await Permissions.requestLocationForegroundPermission()) {
+      const location = await Location.getCurrentPositionAsync();
+      if (location) {
+        await ExifUtils.writeGpsData({ fileUri, location });
+      }
+    }
+  } catch (error) {
+    // ignore it
+    console.log("Error setting location in file exif data: " + error);
+  }
 };
 
 const resizeImage = async (
@@ -72,8 +86,8 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
   const settings = SettingsSelectors.useSettings();
 
   const { request: requestCameraPermission } = useRequestCameraPermission();
-  const { request: requestImagePickerMediaLibraryPermission } =
-    useRequestImagePickerMediaLibraryPermission();
+
+  const canAccessMediaLibrary = useCheckCanAccessMediaLibrary();
 
   const geotagInfoShown = NodeDefs.isGeotagInformationShown(nodeDef);
   const fileType = NodeDefs.getFileType(nodeDef) ?? NodeDefFileType.other;
@@ -99,7 +113,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
   const [resizing, setResizing] = useState(false);
 
   const onFileSelected = useCallback(
-    async (result) => {
+    async (result, fromCamera = false) => {
       const { assets, canceled, didCancel } = result;
       if (canceled || didCancel) return;
 
@@ -129,17 +143,22 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
           toaster
         ));
       }
+      if (
+        fromCamera &&
+        geotagInfoShown &&
+        !(await ExifUtils.hasGpsData({ fileUri }))
+      ) {
+        await setLocationInFile(fileUri);
+      }
       const valueUpdated = { fileUuid: UUIDs.v4(), fileName, fileSize };
       await updateNodeValue({ value: valueUpdated, fileUri });
     },
-    [fileType, maxSize, maxSizeMB, toaster, updateNodeValue]
+    [fileType, geotagInfoShown, maxSize, maxSizeMB, toaster, updateNodeValue]
   );
 
   const onFileChoosePress = useCallback(async () => {
-    if (!(await requestImagePickerMediaLibraryPermission())) return;
-
-    if (geotagInfoShown) {
-      await Permissions.requestLocationForegroundPermission();
+    if (!(await canAccessMediaLibrary({ geotagInfoShown }))) {
+      return;
     }
     const result =
       fileType === NodeDefFileType.other
@@ -148,11 +167,11 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
 
     await onFileSelected(result);
   }, [
+    canAccessMediaLibrary,
     fileType,
     geotagInfoShown,
     imagePickerOptions,
     onFileSelected,
-    requestImagePickerMediaLibraryPermission,
   ]);
 
   const onOpenCameraPress = useCallback(async () => {
@@ -160,10 +179,11 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
 
     try {
       if (geotagInfoShown) {
+        // request location permission to allow using location in camera app
         await Permissions.requestLocationForegroundPermission();
       }
       const result = await ImagePicker.launchCameraAsync(imagePickerOptions);
-      await onFileSelected(result);
+      await onFileSelected(result, true);
     } catch (error) {
       toaster(`Error opening camera: ` + error);
     }
