@@ -3,8 +3,9 @@ import * as Keychain from "react-native-keychain";
 import { AsyncStorageUtils } from "./asyncStorage/AsyncStorageUtils";
 import { asyncStorageKeys } from "./asyncStorage/asyncStorageKeys";
 import { API } from "./api";
-import { LanguageConstants, ThemesSettings } from "model";
-import { SystemUtils } from "utils";
+import { ThemesSettings } from "model/Themes";
+import { LanguageConstants } from "model/LanguageSettings";
+import { SystemUtils } from "utils/SystemUtils";
 
 const defaultServerUrl = "https://www.openforis-arena.org";
 
