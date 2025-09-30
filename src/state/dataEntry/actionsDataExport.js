@@ -9,7 +9,7 @@ import { JobMonitorActions } from "../jobMonitor";
 import { MessageActions } from "../message";
 
 import { SurveySelectors } from "../survey";
-import { Files } from "utils";
+import { Files, Jobs } from "utils";
 import { ValidationUtils } from "model/utils/ValidationUtils";
 import { RecordsUploadJob } from "service/recordsUploadJob";
 import { RemoteConnectionSelectors } from "state/remoteConnection";
@@ -76,10 +76,26 @@ const startUploadDataToRemoteServer =
           uploadJobComplete = await startAndWaitForJob();
           uploadComplete = !!uploadJobComplete;
         } catch (error) {
-          // break the loop if job is canceled or user doesn't confirm to retry
-          // (error is null if job was canceled)
-          uploadComplete =
-            !error || !(await ConfirmUtils.confirm({ dispatch }));
+          if (!error) {
+            // (error is null if job was canceled)
+            // job canceled: break the loop
+            uploadComplete = true;
+          } else {
+            // error occurred
+            const { errors } = error;
+            const errorMessage = errors
+              ? Jobs.extractErrorMessage({ errors, t })
+              : String(error);
+
+            // break the loop if user doesn't confirm to retry
+            const retryConfirmed = await ConfirmUtils.confirm({
+              dispatch,
+              messageKey: "dataEntry:dataExport.error",
+              messageParams: { details: errorMessage },
+              confirmButtonTextKey: "common:tryAgain",
+            });
+            uploadComplete = !retryConfirmed;
+          }
         }
       }
       if (!uploadJobComplete) return;

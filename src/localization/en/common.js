@@ -50,6 +50,7 @@ export default {
   swipeToConfirm: "Swipe to confirm",
   textCopiedToClipboard: "Text copied to clipboard",
   true: "True",
+  tryAgain: "Try again",
   yes: "Yes",
 
   timePart: {

@@ -7,6 +7,7 @@ import { useJobMonitor } from "state/jobMonitor/useJobMonitor";
 
 import { Button, ProgressBar, Text } from "components";
 import { useTranslation } from "localization";
+import { Jobs } from "utils";
 
 const progressColorByStatus = {
   [JobStatus.pending]: "yellow",
@@ -14,26 +15,6 @@ const progressColorByStatus = {
   [JobStatus.failed]: "red",
   [JobStatus.running]: "blue",
   [JobStatus.succeeded]: "green",
-};
-
-const extractErrorMessages = ({ errors, t }) => {
-  const firstLevelErrors = Object.values(errors);
-  const secondLevelErrors = firstLevelErrors.flatMap((firstLevelError) =>
-    Object.values(firstLevelError)
-  );
-  const errorItems = secondLevelErrors.reduce((acc, secondLevelError) => {
-    acc.push(...(secondLevelError.errors ?? []));
-    return acc;
-  }, []);
-  return errorItems
-    .reduce((acc, errorItem) => {
-      const { key, params } = errorItem;
-      if (key) {
-        acc.push(t(key, params));
-      }
-      return acc;
-    }, [])
-    .join("\n");
 };
 
 export const JobMonitorDialog = () => {
@@ -63,7 +44,7 @@ export const JobMonitorDialog = () => {
     JobStatus.succeeded,
   ].includes(status);
 
-  const errorsText = errors ? extractErrorMessages({ errors, t }) : null;
+  const errorsText = errors ? Jobs.extractErrorMessage({ errors, t }) : null;
 
   return (
     <Portal>

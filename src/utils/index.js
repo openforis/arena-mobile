@@ -6,6 +6,7 @@ export { ExifUtils } from "./ExifUtils";
 export { Files } from "./Files";
 export { Functions } from "./Functions";
 export { ImageUtils } from "./ImageUtils";
+export { Jobs } from "./Jobs";
 export { LanguageUtils } from "./LanguageUtils";
 export { Permissions } from "./Permissions";
 export { Refs } from "./Refs";

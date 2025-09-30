@@ -72,5 +72,6 @@ export default {
     lessThanOneTimePart: "vähemmän kuin yksi {{timePart}} jäljellä",
     timePartLeft: "{{count}} {{timePart}} jäljellä",
   },
+  tryAgain: "Yritä uudelleen",
   warning: "Varoitus",
 };

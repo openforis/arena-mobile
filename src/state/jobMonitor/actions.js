@@ -121,7 +121,6 @@ const startAsync = async ({ dispatch, ...otherParams }) =>
           } else if (status === JobStatus.canceled) {
             reject();
           } else {
-            console.log("===job failed", jobEnd);
             reject(jobEnd);
           }
         },
