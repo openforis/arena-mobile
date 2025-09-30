@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - File attribute (image): keep media location when selecting image from gallery;
+- Data upload (big files): upload data in chunks to allow retrying;
 
 ## [2.1.3] - 2025-09-24
 
