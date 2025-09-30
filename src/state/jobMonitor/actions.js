@@ -17,6 +17,39 @@ const calculateJobProgressPercent = ({ jobSummary }) => {
   );
 };
 
+const createOnJobUpdateCallback =
+  ({ dispatch, job, autoDismiss, onJobComplete, onJobEnd }) =>
+  (jobSummary) => {
+    const { status, errors } = jobSummary;
+    const progressPercent = calculateJobProgressPercent({ jobSummary });
+
+    dispatch({
+      type: JOB_MONITOR_UPDATE,
+      payload: { progressPercent, status, errors },
+    });
+    if (isJobStatusEnded(status)) {
+      if (!job) {
+        // remote job
+        WebSocketService.close();
+      }
+      if (status === JobStatus.succeeded) {
+        if (autoDismiss) {
+          dispatch(close());
+        }
+        onJobComplete?.(jobSummary);
+      }
+      onJobEnd?.(jobSummary);
+    }
+  };
+
+const createOnCancelCallback = ({ job, onCancelProp }) => {
+  if (!job && !onCancelProp) return undefined;
+  return async () => {
+    await job?.cancel();
+    onCancelProp?.();
+  };
+};
+
 const start =
   ({
     jobUuid = null, // jobUuid must be provided when monitoring a remote job
@@ -28,7 +61,7 @@ const start =
     messageParams = {},
     onJobComplete = undefined,
     onJobEnd = undefined,
-    onCancel = undefined,
+    onCancel: onCancelProp = undefined,
     onClose = undefined,
     autoDismiss = false,
   }) =>
@@ -37,48 +70,34 @@ const start =
       type: JOB_MONITOR_START,
       payload: {
         jobUuid,
-        job,
         titleKey,
         cancelButtonTextKey,
         closeButtonTextKey,
         messageKey,
         messageParams,
-        onCancel,
+        onCancel: createOnCancelCallback({ job, onCancelProp }),
         onClose,
         autoDismiss,
       },
     });
 
-    const onJobUpdate = (jobSummary) => {
-      const { status } = jobSummary;
-      const progressPercent = calculateJobProgressPercent({ jobSummary });
-
-      dispatch({
-        type: JOB_MONITOR_UPDATE,
-        payload: { progressPercent, status },
-      });
-      if (isJobStatusEnded(status)) {
-        if (!job) {
-          // remote job
-          WebSocketService.close();
-        }
-        if (status === JobStatus.succeeded) {
-          if (autoDismiss) {
-            dispatch(close());
-          }
-          onJobComplete?.(jobSummary);
-        }
-        onJobEnd?.(jobSummary);
-      }
-    };
+    const onJobUpdate = createOnJobUpdateCallback({
+      dispatch,
+      job,
+      autoDismiss,
+      onJobComplete,
+      onJobEnd,
+    });
 
     if (job) {
+      // local job: listen to job update events
       if (isJobStatusEnded(job.status)) {
         onJobUpdate(job.summary);
       } else {
         job.on(JobMessageOutType.summaryUpdate, onJobUpdate);
       }
     } else {
+      // remote job; open Web Socket and listen to job update events
       const ws = await WebSocketService.open();
       ws.on(WebSocketService.EVENTS.jobUpdate, onJobUpdate);
     }
@@ -86,6 +105,12 @@ const start =
 
 const startAsync = async ({ dispatch, ...otherParams }) =>
   new Promise((resolve, reject) => {
+    const { job } = otherParams;
+    if (job) {
+      job.start().catch((error) => {
+        reject(error);
+      });
+    }
     dispatch(
       start({
         ...otherParams,
@@ -106,12 +131,8 @@ const startAsync = async ({ dispatch, ...otherParams }) =>
 const cancel = () => async (dispatch, getState) => {
   const state = getState();
   const jobMonitorState = getJobMonitorState(state);
-  const { onCancel, job } = jobMonitorState;
-  onCancel?.();
-  if (job?.cancel) {
-    // cancel local job
-    await job.cancel();
-  }
+  const { onCancel } = jobMonitorState;
+  await onCancel?.();
   dispatch(close());
 };
 

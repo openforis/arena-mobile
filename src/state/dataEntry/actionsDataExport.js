@@ -4,12 +4,12 @@ import { AuthService, RecordService } from "service";
 import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerationJob";
 
 import { i18n } from "localization";
-import { ConfirmActions } from "../confirm";
+import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { JobMonitorActions } from "../jobMonitor";
 import { MessageActions } from "../message";
 
 import { SurveySelectors } from "../survey";
-import { Files } from "utils";
+import { Files, Jobs } from "utils";
 import { ValidationUtils } from "model/utils/ValidationUtils";
 import { RecordsUploadJob } from "service/recordsUploadJob";
 import { RemoteConnectionSelectors } from "state/remoteConnection";
@@ -52,22 +52,53 @@ const startUploadDataToRemoteServer =
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const cycle = Surveys.getDefaultCycleKey(survey);
 
-    try {
-      const uploadJob = new RecordsUploadJob({
-        user,
-        survey,
-        cycle,
-        fileUri: outputFileUri,
-        conflictResolutionStrategy,
-      });
+    const uploadJob = new RecordsUploadJob({
+      user,
+      survey,
+      cycle,
+      fileUri: outputFileUri,
+      conflictResolutionStrategy,
+    });
 
-      uploadJob.start(); // do not wait for job to complete: monitor job progress instead
-
-      const uploadJobComplete = await JobMonitorActions.startAsync({
+    const startAndWaitForJob = async () =>
+      JobMonitorActions.startAsync({
         dispatch,
         job: uploadJob,
         titleKey: "dataEntry:uploadingData.title",
       });
+
+    try {
+      let uploadComplete = false;
+      let uploadJobComplete = null;
+
+      while (!uploadComplete) {
+        try {
+          uploadJobComplete = await startAndWaitForJob();
+          uploadComplete = !!uploadJobComplete;
+        } catch (error) {
+          if (!error) {
+            // (error is null if job was canceled)
+            // job canceled: break the loop
+            uploadComplete = true;
+          } else {
+            // error occurred
+            const { errors } = error;
+            const errorMessage = errors
+              ? Jobs.extractErrorMessage({ errors, t })
+              : String(error);
+
+            // break the loop if user doesn't confirm to retry
+            const retryConfirmed = await ConfirmUtils.confirm({
+              dispatch,
+              messageKey: "dataEntry:dataExport.error",
+              messageParams: { details: errorMessage },
+              confirmButtonTextKey: "common:tryAgain",
+            });
+            uploadComplete = !retryConfirmed;
+          }
+        }
+      }
+      if (!uploadJobComplete) return;
 
       const { remoteJob } = uploadJobComplete.result;
 

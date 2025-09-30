@@ -1,11 +1,13 @@
 import React from "react";
 import { Dialog, Portal } from "react-native-paper";
 
+import { JobStatus } from "@openforis/arena-core";
+
 import { useJobMonitor } from "state/jobMonitor/useJobMonitor";
 
 import { Button, ProgressBar, Text } from "components";
 import { useTranslation } from "localization";
-import { JobStatus } from "@openforis/arena-core";
+import { Jobs } from "utils";
 
 const progressColorByStatus = {
   [JobStatus.pending]: "yellow",
@@ -24,6 +26,7 @@ export const JobMonitorDialog = () => {
     cancelButtonTextKey,
     close,
     closeButtonTextKey,
+    errors,
     messageKey,
     messageParams,
     progressPercent,
@@ -33,6 +36,15 @@ export const JobMonitorDialog = () => {
 
   const progress = progressPercent / 100;
   const progressColor = progressColorByStatus[status];
+
+  const canCancelJob = [JobStatus.pending, JobStatus.running].includes(status);
+  const jobEnded = [
+    JobStatus.canceled,
+    JobStatus.failed,
+    JobStatus.succeeded,
+  ].includes(status);
+
+  const errorsText = errors ? Jobs.extractErrorMessage({ errors, t }) : null;
 
   return (
     <Portal>
@@ -46,18 +58,20 @@ export const JobMonitorDialog = () => {
           />
           <Text variant="bodyMedium" textKey={`job:status.${status}`} />
           <ProgressBar progress={progress} color={progressColor} />
+          {status === JobStatus.failed && (
+            <Text variant="bodyMedium">{errorsText}</Text>
+          )}
         </Dialog.Content>
         <Dialog.Actions>
-          {[JobStatus.pending, JobStatus.running].includes(status) && (
+          {canCancelJob && (
             <Button
               color="secondary"
               onPress={cancel}
               textKey={cancelButtonTextKey}
             />
           )}
-          {[JobStatus.canceled, JobStatus.failed, JobStatus.succeeded].includes(
-            status
-          ) && (
+
+          {jobEnded && (
             <Button
               color="secondary"
               onPress={close}

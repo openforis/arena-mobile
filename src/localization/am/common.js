@@ -71,5 +71,6 @@ export default {
     lessThanOneTimePart: "ከአንድ {{timePart}} በታች ቀርቷል",
     timePartLeft: "{{count}} {{timePart}} ቀርቷል",
   },
+  tryAgain: "እንደገና ይሞክሩ",
   warning: "Warning",
 };

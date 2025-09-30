@@ -1,5 +1,6 @@
 import about from "./about";
 import app from "./app";
+import appErrors from "./appErrors";
 import authService from "./authService";
 import common from "./common";
 import dataEntry from "./dataEntry";
@@ -16,6 +17,7 @@ import validation from "./validation";
 export default {
   about,
   app,
+  appErrors,
   authService,
   common,
   dataEntry,
