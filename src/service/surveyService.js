@@ -11,6 +11,8 @@ const {
   updateSurvey,
 } = SurveyRepository;
 
+const remoteSurveyFetchTimeout = 60000; // 1 min
+
 const _insertSurvey = async (survey) => {
   const surveyDb = await insertSurvey(survey);
   return SurveyFSRepository.saveSurveyFile(surveyDb);
@@ -67,7 +69,11 @@ const fetchSurveySummaryRemote = async ({ id, name }) => {
 };
 
 const fetchSurveyRemoteById = async ({ id }) => {
-  const { data } = await RemoteService.get(`api/mobile/survey/${id}`);
+  const { data } = await RemoteService.get(
+    `api/mobile/survey/${id}`,
+    {},
+    { timeout: remoteSurveyFetchTimeout }
+  );
   const { survey } = data;
   return survey;
 };

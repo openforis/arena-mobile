@@ -5,7 +5,7 @@ import { APIUtils } from "./apiUtils";
 const defaultOptions = {
   credentials: "include",
   withCredentials: true,
-  timeout: 120000,
+  timeout: 40000, // 40 seconds
 };
 
 const errorMessageByCode = {

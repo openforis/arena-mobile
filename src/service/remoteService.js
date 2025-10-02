@@ -20,7 +20,8 @@ const handleError = ({ error }) => {
 const getServerUrl = async () =>
   (await SettingsService.fetchSettings()).serverUrl;
 
-const get = async (uri, params) => API.get(await getServerUrl(), uri, params);
+const get = async (uri, params, options = {}) =>
+  API.get(await getServerUrl(), uri, params, options);
 
 const getFile = async (uri, params, callback) => {
   const serverUrl = await getServerUrl();
