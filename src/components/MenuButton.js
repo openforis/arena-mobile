@@ -9,11 +9,15 @@ import { MenuItem } from "./MenuItem";
 export const MenuButton = (props) => {
   const { icon, items, label, style } = props;
 
-  const [state, setState] = useState({ visible: false });
-  const { visible } = state;
+  const [menuVisible, setMenuVisible] = useState(false);
 
-  const openMenu = useCallback(() => setState({ visible: true }), []);
-  const closeMenu = useCallback(() => setState({ visible: false }), []);
+  const openMenu = useCallback(() => {
+    setMenuVisible(true);
+  }, []);
+
+  const closeMenu = useCallback(() => {
+    setMenuVisible(false);
+  }, []);
 
   const anchor = useMemo(
     () =>
@@ -30,8 +34,12 @@ export const MenuButton = (props) => {
     [icon, label, openMenu]
   );
 
+  if (!menuVisible) {
+    return anchor;
+  }
+
   return (
-    <Menu style={style} visible={visible} onDismiss={closeMenu} anchor={anchor}>
+    <Menu style={style} visible onDismiss={closeMenu} anchor={anchor}>
       {items.map(
         ({
           key,
