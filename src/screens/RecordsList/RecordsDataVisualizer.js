@@ -119,10 +119,18 @@ export const RecordsDataVisualizer = (props) => {
     [records]
   );
 
-  const rootDefKeys = useMemo(
-    () => (survey ? SurveyDefs.getRootKeyDefs({ survey, cycle }) : []),
-    [survey, cycle]
-  );
+  const rootDefKeysAndSummaryAttributes = useMemo(() => {
+    if (!survey) return [];
+    const keyDefs = SurveyDefs.getRootKeyDefs({ survey, cycle });
+    const rootDef = Surveys.getNodeDefRoot({ survey });
+    const summaryAttributes =
+      Surveys.getNodeDefsIncludedInMultipleEntitySummary({
+        survey,
+        cycle,
+        nodeDef: rootDef,
+      });
+    return [...keyDefs, ...summaryAttributes];
+  }, [survey, cycle]);
 
   const recordToItem = useCallback(
     (recordSummary) => {
@@ -167,7 +175,7 @@ export const RecordsDataVisualizer = (props) => {
   const fields = useMemo(() => {
     const result = [];
     result.push(
-      ...rootDefKeys.map((keyDef) => ({
+      ...rootDefKeysAndSummaryAttributes.map((keyDef) => ({
         key: Objects.camelize(NodeDefs.getName(keyDef)),
         header: NodeDefs.getLabelOrName(keyDef, lang),
         headerLabelVariant: "titleMedium",
@@ -255,7 +263,7 @@ export const RecordsDataVisualizer = (props) => {
     }
     return result;
   }, [
-    rootDefKeys,
+    rootDefKeysAndSummaryAttributes,
     recordsHaveErrorsOrWarnings,
     viewAsList,
     showRemoteProps,
