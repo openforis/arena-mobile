@@ -273,6 +273,8 @@ export const RecordsDataVisualizer = (props) => {
     }
     return result;
   }, [
+    rootKeyDefs,
+    rootSummaryDefs,
     recordsHaveErrorsOrWarnings,
     viewAsList,
     showRemoteProps,

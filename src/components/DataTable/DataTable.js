@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import { DataTable as RNPDataTable } from "react-native-paper";
 import PropTypes from "prop-types";
 
+import { Objects } from "@openforis/arena-core";
+
 import { useTranslation } from "localization";
 import { SortDirection } from "model";
 import { DeviceInfoSelectors } from "state/deviceInfo";
@@ -130,7 +132,7 @@ export const DataTable = (props) => {
                     {CellRenderer ? (
                       <CellRenderer item={item} />
                     ) : (
-                      String(item[fKey] ?? "")
+                      String(Objects.path(fKey.split("."))(item) ?? "")
                     )}
                   </RNPDataTable.Cell>
                 )

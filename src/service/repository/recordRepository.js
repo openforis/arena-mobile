@@ -44,8 +44,10 @@ const insertColumns = [
 const insertColumnsJoint = insertColumns.join(", ");
 const keyColumnNamesJoint = keyColumnNames.join(", ");
 const keyColumnsSet = toColumnsSet(keyColumnNames);
+const summaryAttributesColumnNamesJoint =
+  summaryAttributesColumnNames.join(", ");
 const summaryColumnsSet = toColumnsSet(summaryAttributesColumnNames);
-const summarySelectFieldsJoint = `id, uuid, date_created, date_modified, date_modified_remote, date_synced, cycle, owner_uuid, owner_name, load_status, origin, ${keyColumnNamesJoint}`;
+const summarySelectFieldsJoint = `id, uuid, date_created, date_modified, date_modified_remote, date_synced, cycle, owner_uuid, owner_name, load_status, origin, ${keyColumnNamesJoint}, ${summaryAttributesColumnNamesJoint}`;
 const summarySelectFieldsJointWithValidation = `${summarySelectFieldsJoint}, json(content) ->> 'validation' AS validation`;
 
 const toKeyOrSummaryColValue = (value) => {
@@ -367,11 +369,10 @@ const updateRecordKeysAndContent = async ({
   origin = RecordOrigin.local,
 }) => {
   const keyColumnsValues = extractKeyColumnsValues({ survey, record });
-  const summaryAttributesColumnsValues = extractSummaryAttributesValues({
+  const summaryAttributesValues = extractSummaryAttributesValues({
     survey,
     record,
   });
-  const summaryAttributesValues = summaryAttributesColumnsValues;
   const dateModifiedColumn =
     origin === RecordOrigin.remote ? "date_modified_remote" : "date_modified";
 
