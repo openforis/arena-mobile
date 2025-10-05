@@ -119,17 +119,20 @@ export const RecordsDataVisualizer = (props) => {
     [records]
   );
 
-  const rootDefKeysAndSummaryAttributes = useMemo(() => {
+  const rootKeyDefs = useMemo(() => {
     if (!survey) return [];
-    const keyDefs = SurveyDefs.getRootKeyDefs({ survey, cycle });
+    return SurveyDefs.getRootKeyDefs({ survey, cycle });
+  }, [survey, cycle]);
+
+  const rootSummaryDefs = useMemo(() => {
+    if (!survey) return [];
     const rootDef = Surveys.getNodeDefRoot({ survey });
-    const summaryAttributes =
-      Surveys.getNodeDefsIncludedInMultipleEntitySummary({
-        survey,
-        cycle,
-        nodeDef: rootDef,
-      });
-    return [...keyDefs, ...summaryAttributes];
+    const summaryDefs = Surveys.getNodeDefsIncludedInMultipleEntitySummary({
+      survey,
+      cycle,
+      nodeDef: rootDef,
+    });
+    return summaryDefs;
   }, [survey, cycle]);
 
   const recordToItem = useCallback(
@@ -175,8 +178,15 @@ export const RecordsDataVisualizer = (props) => {
   const fields = useMemo(() => {
     const result = [];
     result.push(
-      ...rootDefKeysAndSummaryAttributes.map((keyDef) => ({
-        key: Objects.camelize(NodeDefs.getName(keyDef)),
+      ...rootKeyDefs.map((keyDef) => ({
+        key: `keysObj.${NodeDefs.getName(keyDef)}`,
+        header: NodeDefs.getLabelOrName(keyDef, lang),
+        headerLabelVariant: "titleMedium",
+        sortable: true,
+        textVariant: "titleLarge",
+      })),
+      ...rootSummaryDefs.map((keyDef) => ({
+        key: `summaryAttributesObj.${NodeDefs.getName(keyDef)}`,
         header: NodeDefs.getLabelOrName(keyDef, lang),
         headerLabelVariant: "titleMedium",
         sortable: true,
@@ -263,7 +273,6 @@ export const RecordsDataVisualizer = (props) => {
     }
     return result;
   }, [
-    rootDefKeysAndSummaryAttributes,
     recordsHaveErrorsOrWarnings,
     viewAsList,
     showRemoteProps,

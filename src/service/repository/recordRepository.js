@@ -15,9 +15,17 @@ import { RecordLoadStatus, RecordOrigin, SurveyDefs } from "model";
 import { SystemUtils } from "utils";
 
 const SUPPORTED_KEYS = 5;
+const SUPPORTED_SUMMARY_ATTRIBUTES = 5;
+
+const toColumnsSet = (columns) => columns.map((col) => `${col} = ?`).join(", ");
+
 const keyColumnNames = Array.from(Array(SUPPORTED_KEYS).keys()).map(
-  (keyIdx) => `key${keyIdx + 1}`
+  (idx) => `key${idx + 1}`
 );
+const summaryAttributesColumnNames = Array.from(
+  Array(SUPPORTED_SUMMARY_ATTRIBUTES).keys()
+).map((idx) => `summary${idx + 1}`);
+
 const insertColumns = [
   "uuid",
   "survey_id",
@@ -31,20 +39,23 @@ const insertColumns = [
   "load_status",
   "origin",
   ...keyColumnNames,
+  ...summaryAttributesColumnNames,
 ];
 const insertColumnsJoint = insertColumns.join(", ");
 const keyColumnNamesJoint = keyColumnNames.join(", ");
+const keyColumnsSet = toColumnsSet(keyColumnNames);
+const summaryColumnsSet = toColumnsSet(summaryAttributesColumnNames);
 const summarySelectFieldsJoint = `id, uuid, date_created, date_modified, date_modified_remote, date_synced, cycle, owner_uuid, owner_name, load_status, origin, ${keyColumnNamesJoint}`;
 const summarySelectFieldsJointWithValidation = `${summarySelectFieldsJoint}, json(content) ->> 'validation' AS validation`;
 
-const toKeyColValue = (value) => {
+const toKeyOrSummaryColValue = (value) => {
   if (Objects.isEmpty(value)) return null;
   if (typeof value === "string") return value;
   return JSON.stringify(value);
 };
 
-const extractKeyColValue = ({ row, keyCol }) => {
-  const colValue = row[keyCol];
+const extractKeyOrSummaryColValue = ({ row, col }) => {
+  const colValue = row[col];
   try {
     return JSON.parse(colValue);
   } catch (error) {
@@ -61,9 +72,32 @@ const extractKeyColumnsValues = ({ survey, record }) => {
   });
   const keyColumnsValues = keyColumnNames.map((_keyCol, idx) => {
     const value = keyValues[idx];
-    return toKeyColValue(value);
+    return toKeyOrSummaryColValue(value);
   });
   return keyColumnsValues;
+};
+
+const extractSummaryAttributesValues = ({ survey, record }) => {
+  const rootDef = Surveys.getNodeDefRoot({ survey });
+  const summaryAttributeDefs =
+    Surveys.getNodeDefsIncludedInMultipleEntitySummary({
+      survey,
+      nodeDef: rootDef,
+    });
+  const summaryAttributesColumnValues = summaryAttributesColumnNames.map(
+    (_keyCol, idx) => {
+      const nodeDef = summaryAttributeDefs[idx];
+      if (!nodeDef) return null;
+      const root = Records.getRoot(record);
+      const summaryNode = Records.getDescendant({
+        record,
+        node: root,
+        nodeDefDescendant: nodeDef,
+      });
+      return toKeyOrSummaryColValue(summaryNode?.value);
+    }
+  );
+  return summaryAttributesColumnValues;
 };
 
 const extractRemoteRecordSummaryKeyColumnsValues = ({
@@ -75,11 +109,34 @@ const extractRemoteRecordSummaryKeyColumnsValues = ({
   const keyColumnsValues = keyColumnNames.map((_keyColName, index) => {
     const keyDef = keyDefs[index];
     if (!keyDef) return null;
-    const recordSummaryKeyProp = Objects.camelize(NodeDefs.getName(keyDef));
-    const value = recordSummary[recordSummaryKeyProp];
-    return toKeyColValue(value);
+    const value = recordSummary.keysObj?.[NodeDefs.getName(keyDef)];
+    return toKeyOrSummaryColValue(value);
   });
   return keyColumnsValues;
+};
+
+const extractRemoteRecordSummarySummaryColumnsValues = ({
+  survey,
+  recordSummary,
+}) => {
+  const { cycle } = recordSummary;
+  const rootDef = Surveys.getNodeDefRoot({ survey });
+  const summaryAttributeDefs =
+    Surveys.getNodeDefsIncludedInMultipleEntitySummary({
+      survey,
+      cycle,
+      nodeDef: rootDef,
+    });
+  const summaryColumnsValues = summaryAttributesColumnNames.map(
+    (_summaryColName, index) => {
+      const summaryDef = summaryAttributeDefs[index];
+      if (!summaryDef) return null;
+      const value =
+        recordSummary.summaryAttributesObj?.[NodeDefs.getName(summaryDef)];
+      return toKeyOrSummaryColValue(value);
+    }
+  );
+  return summaryColumnsValues;
 };
 
 const getPlaceholders = (count) =>
@@ -141,7 +198,7 @@ const getKeyColParams = ({ keyDef, val }) => {
   if (Objects.isNil(val)) {
     return params;
   }
-  const keyColumnParam = toKeyColValue(val);
+  const keyColumnParam = toKeyOrSummaryColValue(val);
   params.push(keyColumnParam);
   if (keyDef.type === NodeDefType.code) {
     params.push(val.itemUuid);
@@ -195,6 +252,10 @@ const insertRecord = async ({
 }) => {
   const { id: surveyId } = survey;
   const keyColumnsValues = extractKeyColumnsValues({ survey, record });
+  const summaryAttributesColumnValues = extractSummaryAttributesValues({
+    survey,
+    record,
+  });
   const { uuid, dateCreated, dateModified, cycle, ownerUuid, ownerName } =
     record;
 
@@ -214,6 +275,7 @@ const insertRecord = async ({
       loadStatus,
       RecordOrigin.local,
       ...keyColumnsValues,
+      ...summaryAttributesColumnValues,
     ]
   );
   record.id = insertId;
@@ -233,6 +295,11 @@ const insertRecordSummaries = async ({ survey, cycle, recordSummaries }) => {
         survey,
         recordSummary,
       });
+      const summaryAttributesColumnValues =
+        extractRemoteRecordSummarySummaryColumnsValues({
+          survey,
+          recordSummary,
+        });
       const { insertId } = await dbClient.runSql(
         `INSERT INTO record (${insertColumnsJoint})
         VALUES (${getPlaceholders(insertColumns.length)})`,
@@ -249,6 +316,7 @@ const insertRecordSummaries = async ({ survey, cycle, recordSummaries }) => {
           loadStatus,
           origin,
           ...keyColumnsValues,
+          ...summaryAttributesColumnValues,
         ]
       );
       insertedIds.push(insertId);
@@ -262,10 +330,11 @@ const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = async ({
   recordSummary,
 }) => {
   const { dateModified, ownerUuid, ownerName, uuid } = recordSummary;
-  const keyColumnsSet = keyColumnNames
-    .map((keyCol) => `${keyCol} = ?`)
-    .join(", ");
   const keyColumnsValues = extractRemoteRecordSummaryKeyColumnsValues({
+    survey,
+    recordSummary,
+  });
+  const summaryColumnValues = extractRemoteRecordSummarySummaryColumnsValues({
     survey,
     recordSummary,
   });
@@ -275,7 +344,8 @@ const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = async ({
       owner_name = ?,
       date_modified_remote = ?, 
       date_synced = ?,
-      ${keyColumnsSet} 
+      ${keyColumnsSet},
+      ${summaryColumnsSet}
     WHERE survey_id = ? AND uuid = ?`,
     [
       ownerUuid,
@@ -283,6 +353,7 @@ const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = async ({
       fixDatetime(dateModified),
       Dates.nowFormattedForStorage(),
       ...keyColumnsValues,
+      ...summaryColumnValues,
       survey.id,
       uuid,
     ]
@@ -295,10 +366,12 @@ const updateRecordKeysAndContent = async ({
   updateOrigin = false,
   origin = RecordOrigin.local,
 }) => {
-  const keyColumnsSet = keyColumnNames
-    .map((keyCol) => `${keyCol} = ?`)
-    .join(", ");
   const keyColumnsValues = extractKeyColumnsValues({ survey, record });
+  const summaryAttributesColumnsValues = extractSummaryAttributesValues({
+    survey,
+    record,
+  });
+  const summaryAttributesValues = summaryAttributesColumnsValues;
   const dateModifiedColumn =
     origin === RecordOrigin.remote ? "date_modified_remote" : "date_modified";
 
@@ -309,7 +382,8 @@ const updateRecordKeysAndContent = async ({
       load_status = ?, 
       ${updateOrigin ? "origin = ?," : ""}
       date_synced = ?,
-      ${keyColumnsSet} 
+      ${keyColumnsSet},
+      ${summaryColumnsSet}
     WHERE survey_id = ? AND uuid = ?`,
     [
       JSON.stringify(record),
@@ -318,6 +392,7 @@ const updateRecordKeysAndContent = async ({
       ...(updateOrigin ? [origin] : []),
       Dates.nowFormattedForStorage(),
       ...keyColumnsValues,
+      ...summaryAttributesValues,
       survey.id,
       record.uuid,
     ]
@@ -436,16 +511,33 @@ const rowToRecord =
         });
       }
     }
-    // camelize key attribute columns
-    keyColumnNames.forEach((keyCol, index) => {
-      const keyValue = extractKeyColValue({ row, keyCol });
+    // put key attributes inside keysObj property
+    result.keysObj = {};
+    keyColumnNames.forEach((col, index) => {
+      const keyValue = extractKeyOrSummaryColValue({ row, col });
       const keyDef = keyDefs[index];
       if (keyDef) {
-        result[Objects.camelize(keyDef.props.name)] = keyValue;
+        result.keysObj[NodeDefs.getName(keyDef)] = keyValue;
       }
-      delete result[keyCol];
+      delete result[col];
     });
-
+    // put summary attributes inside summaryAttributesObj property
+    result.summaryAttributesObj = {};
+    const rootDef = Surveys.getNodeDefRoot({ survey });
+    const summaryDefs = Surveys.getNodeDefsIncludedInMultipleEntitySummary({
+      survey,
+      cycle,
+      nodeDef: rootDef,
+    });
+    summaryAttributesColumnNames.forEach((col, index) => {
+      const summaryDef = summaryDefs[index];
+      if (summaryDef) {
+        const summaryValue = extractKeyOrSummaryColValue({ row, col });
+        result.summaryAttributesObj[NodeDefs.getName(summaryDef)] =
+          summaryValue;
+      }
+      delete result[col];
+    });
     if (!result.info?.createdWith) {
       result.info = {
         createdWith: SystemUtils.getRecordAppInfo(),
