@@ -11,7 +11,12 @@ import {
 } from "@openforis/arena-core";
 
 import { DbUtils, dbClient } from "db";
-import { RecordLoadStatus, RecordOrigin, SurveyDefs } from "model";
+import {
+  RecordLoadStatus,
+  RecordOrigin,
+  RecordSummaries,
+  SurveyDefs,
+} from "model";
 import { SystemUtils } from "utils";
 
 const SUPPORTED_KEYS = 5;
@@ -111,7 +116,7 @@ const extractRemoteRecordSummaryKeyColumnsValues = ({
   const keyColumnsValues = keyColumnNames.map((_keyColName, index) => {
     const keyDef = keyDefs[index];
     if (!keyDef) return null;
-    const value = recordSummary.keysObj?.[NodeDefs.getName(keyDef)];
+    const value = RecordSummaries.getKeyValue({ recordSummary, keyDef });
     return toKeyOrSummaryColValue(value);
   });
   return keyColumnsValues;
