@@ -75,6 +75,12 @@ const _isRootKeyDuplicate = async ({ survey, record, lang }) => {
   );
 };
 
+const prepareRecordForStorage = ({ record }) => {
+  const validation = Validations.getValidation(record);
+  const validationUpdated = Validations.updateCounts(validation);
+  return { ...record, validation: validationUpdated };
+};
+
 const createNewRecord =
   ({ navigation }) =>
   async (dispatch, getState) => {
@@ -103,6 +109,8 @@ const createNewRecord =
 
     record.surveyId = survey.id;
     removeNodesFlags(nodes);
+
+    record = prepareRecordForStorage({ record });
 
     record = await RecordService.insertRecord({ survey, record });
 
@@ -312,9 +320,7 @@ const fetchAndEditRecord =
   };
 
 const _updateRecord = async ({ dispatch, survey, record }) => {
-  const validation = Validations.getValidation(record);
-  const validationUpdated = Validations.updateCounts(validation);
-  const recordUpdated = { ...record, validation: validationUpdated };
+  const recordUpdated = prepareRecordForStorage({ record });
   const recordStored = await RecordService.updateRecord({
     survey,
     record: recordUpdated,
