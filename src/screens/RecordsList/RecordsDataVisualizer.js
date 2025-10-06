@@ -206,7 +206,7 @@ export const RecordsDataVisualizer = (props) => {
         key: "errors",
         header: "common:error_other",
         sortable: true,
-        style: viewAsList ? undefined : { maxWidth: 50 },
+        style: viewAsList ? undefined : { maxWidth: 54 },
         cellRenderer: viewAsList
           ? RecordErrorsListCellRenderer
           : RecordErrorIcon,
