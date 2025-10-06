@@ -6,8 +6,10 @@ const getKeyValuesByDefUuid = ({ survey, recordSummary }) => {
   const { cycle } = recordSummary;
   const rootKeyDefs = SurveyDefs.getRootKeyDefs({ survey, cycle });
   return rootKeyDefs.reduce((acc, keyDef) => {
-    const recordKeyProp = Objects.camelize(NodeDefs.getName(keyDef));
-    acc[keyDef.uuid] = recordSummary[recordKeyProp];
+    const value = Objects.path(["keysObj", NodeDefs.getName(keyDef)])(
+      recordSummary
+    );
+    acc[keyDef.uuid] = value;
     return acc;
   }, {});
 };

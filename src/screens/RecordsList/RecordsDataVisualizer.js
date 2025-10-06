@@ -143,10 +143,18 @@ export const RecordsDataVisualizer = (props) => {
         recordSummary,
         t,
       });
+      const valuesBySummaryAttribute =
+        RecordsUtils.getValuesBySummaryAttributeFormatted({
+          survey,
+          lang,
+          recordSummary,
+          t,
+        });
       return {
         ...recordSummary,
         key: recordSummary.uuid,
-        ...valuesByKey,
+        keysObj: valuesByKey,
+        summaryAttributesObj: valuesBySummaryAttribute,
         dateCreated: formatDateToDateTimeDisplay(recordSummary.dateCreated),
         dateModified: formatDateToDateTimeDisplay(recordSummary.dateModified),
         dateModifiedRemote: formatDateToDateTimeDisplay(

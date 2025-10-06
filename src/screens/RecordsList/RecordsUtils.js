@@ -6,22 +6,29 @@ import {
 } from "@openforis/arena-core";
 import { SurveyDefs } from "model";
 
-const getValuesByKeyFormatted = ({ survey, lang, recordSummary, t = null }) => {
+const getValuesByKeyOrSummaryAttributeFormatted = ({
+  survey,
+  lang,
+  recordSummary,
+  valuesWrapperProp,
+  t = null,
+}) => {
   const { cycle } = recordSummary;
-  const rootDefKeys = SurveyDefs.getRootKeyDefs({ survey, cycle });
   const rootDef = Surveys.getNodeDefRoot({ survey });
-  const rootSummaryAttributes =
-    Surveys.getNodeDefsIncludedInMultipleEntitySummary({
-      survey,
-      cycle,
-      nodeDef: rootDef,
-    });
-  return [...rootDefKeys, ...rootSummaryAttributes].reduce((acc, keyDef) => {
-    const recordKeyProp = Objects.camelize(NodeDefs.getName(keyDef));
-    const value = recordSummary[recordKeyProp];
+  const nodeDefs =
+    valuesWrapperProp === "keysObj"
+      ? SurveyDefs.getRootKeyDefs({ survey, cycle })
+      : Surveys.getNodeDefsIncludedInMultipleEntitySummary({
+          survey,
+          cycle,
+          nodeDef: rootDef,
+        });
+  return nodeDefs.reduce((acc, nodeDef) => {
+    const nodeDefName = NodeDefs.getName(nodeDef);
+    const value = Objects.path([valuesWrapperProp, nodeDefName])(recordSummary);
     let valueFormatted = NodeValueFormatter.format({
       survey,
-      nodeDef: keyDef,
+      nodeDef: nodeDef,
       value,
       showLabel: true,
       lang,
@@ -33,11 +40,35 @@ const getValuesByKeyFormatted = ({ survey, lang, recordSummary, t = null }) => {
         valueFormatted = String(value);
       }
     }
-    acc[recordKeyProp] = valueFormatted;
+    acc[nodeDefName] = valueFormatted;
     return acc;
   }, {});
 };
 
+const getValuesByKeyFormatted = ({ survey, lang, recordSummary, t = null }) =>
+  getValuesByKeyOrSummaryAttributeFormatted({
+    survey,
+    lang,
+    recordSummary,
+    valuesWrapperProp: "keysObj",
+    t,
+  });
+
+const getValuesBySummaryAttributeFormatted = ({
+  survey,
+  lang,
+  recordSummary,
+  t = null,
+}) =>
+  getValuesByKeyOrSummaryAttributeFormatted({
+    survey,
+    lang,
+    recordSummary,
+    valuesWrapperProp: "summaryAttributesObj",
+    t,
+  });
+
 export const RecordsUtils = {
   getValuesByKeyFormatted,
+  getValuesBySummaryAttributeFormatted,
 };
