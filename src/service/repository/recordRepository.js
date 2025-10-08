@@ -1,4 +1,5 @@
 import {
+  Arrays,
   DateFormats,
   Dates,
   NodeDefs,
@@ -24,12 +25,15 @@ const SUPPORTED_SUMMARY_ATTRIBUTES = 5;
 
 const toColumnsSet = (columns) => columns.map((col) => `${col} = ?`).join(", ");
 
-const keyColumnNames = Array.from(Array(SUPPORTED_KEYS).keys()).map(
-  (idx) => `key${idx + 1}`
+const generateColumnNamesWithPrefix = (prefix, count) =>
+  Array.from(Arrays.fromNumberOfElements(count).keys()).map(
+    (idx) => `${prefix}${idx + 1}`
+  );
+const keyColumnNames = generateColumnNamesWithPrefix("key", SUPPORTED_KEYS);
+const summaryAttributesColumnNames = generateColumnNamesWithPrefix(
+  "summary",
+  SUPPORTED_SUMMARY_ATTRIBUTES
 );
-const summaryAttributesColumnNames = Array.from(
-  Array(SUPPORTED_SUMMARY_ATTRIBUTES).keys()
-).map((idx) => `summary${idx + 1}`);
 
 const insertColumns = [
   "uuid",
@@ -506,10 +510,10 @@ const rowToRecord =
       }
       // fix node dates format
       if (hasToBeFixed) {
-        Records.getNodesArray(result).forEach((node) => {
+        for (const node of Records.getNodesArray(result)) {
           node.dateCreated = fixDatetime(node.dateCreated);
           node.dateModified = fixDatetime(node.dateModified);
-        });
+        }
         RecordFixer.insertMissingSingleNodes({
           survey,
           record: result,
@@ -519,14 +523,15 @@ const rowToRecord =
     }
     // put key attributes inside keysObj property
     result.keysObj = {};
-    keyColumnNames.forEach((col, index) => {
-      const keyValue = extractKeyOrSummaryColValue({ row, col });
+    for (let index = 0; index < keyColumnNames.length; index++) {
       const keyDef = keyDefs[index];
       if (keyDef) {
+        const col = keyColumnNames[index];
+        const keyValue = extractKeyOrSummaryColValue({ row, col });
         result.keysObj[NodeDefs.getName(keyDef)] = keyValue;
       }
       delete result[col];
-    });
+    }
     // put summary attributes inside summaryAttributesObj property
     result.summaryAttributesObj = {};
     const rootDef = Surveys.getNodeDefRoot({ survey });
