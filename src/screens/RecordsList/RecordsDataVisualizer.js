@@ -119,10 +119,21 @@ export const RecordsDataVisualizer = (props) => {
     [records]
   );
 
-  const rootDefKeys = useMemo(
-    () => (survey ? SurveyDefs.getRootKeyDefs({ survey, cycle }) : []),
-    [survey, cycle]
-  );
+  const rootKeyDefs = useMemo(() => {
+    if (!survey) return [];
+    return SurveyDefs.getRootKeyDefs({ survey, cycle });
+  }, [survey, cycle]);
+
+  const rootSummaryDefs = useMemo(() => {
+    if (!survey) return [];
+    const rootDef = Surveys.getNodeDefRoot({ survey });
+    const summaryDefs = Surveys.getNodeDefsIncludedInMultipleEntitySummary({
+      survey,
+      cycle,
+      nodeDef: rootDef,
+    });
+    return summaryDefs;
+  }, [survey, cycle]);
 
   const recordToItem = useCallback(
     (recordSummary) => {
@@ -132,10 +143,18 @@ export const RecordsDataVisualizer = (props) => {
         recordSummary,
         t,
       });
+      const valuesBySummaryAttribute =
+        RecordsUtils.getValuesBySummaryAttributeFormatted({
+          survey,
+          lang,
+          recordSummary,
+          t,
+        });
       return {
         ...recordSummary,
         key: recordSummary.uuid,
-        ...valuesByKey,
+        keysObj: valuesByKey,
+        summaryAttributesObj: valuesBySummaryAttribute,
         dateCreated: formatDateToDateTimeDisplay(recordSummary.dateCreated),
         dateModified: formatDateToDateTimeDisplay(recordSummary.dateModified),
         dateModifiedRemote: formatDateToDateTimeDisplay(
@@ -167,8 +186,15 @@ export const RecordsDataVisualizer = (props) => {
   const fields = useMemo(() => {
     const result = [];
     result.push(
-      ...rootDefKeys.map((keyDef) => ({
-        key: Objects.camelize(NodeDefs.getName(keyDef)),
+      ...rootKeyDefs.map((keyDef) => ({
+        key: `keysObj.${NodeDefs.getName(keyDef)}`,
+        header: NodeDefs.getLabelOrName(keyDef, lang),
+        headerLabelVariant: "titleMedium",
+        sortable: true,
+        textVariant: "titleLarge",
+      })),
+      ...rootSummaryDefs.map((keyDef) => ({
+        key: `summaryAttributesObj.${NodeDefs.getName(keyDef)}`,
         header: NodeDefs.getLabelOrName(keyDef, lang),
         headerLabelVariant: "titleMedium",
         sortable: true,
@@ -180,7 +206,7 @@ export const RecordsDataVisualizer = (props) => {
         key: "errors",
         header: "common:error_other",
         sortable: true,
-        style: viewAsList ? undefined : { maxWidth: 50 },
+        style: viewAsList ? undefined : { maxWidth: 54 },
         cellRenderer: viewAsList
           ? RecordErrorsListCellRenderer
           : RecordErrorIcon,
@@ -255,7 +281,8 @@ export const RecordsDataVisualizer = (props) => {
     }
     return result;
   }, [
-    rootDefKeys,
+    rootKeyDefs,
+    rootSummaryDefs,
     recordsHaveErrorsOrWarnings,
     viewAsList,
     showRemoteProps,

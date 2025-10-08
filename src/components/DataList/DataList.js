@@ -2,6 +2,8 @@ import { useCallback } from "react";
 import { FlatList, TouchableHighlight } from "react-native";
 import PropTypes from "prop-types";
 
+import { Objects } from "@openforis/arena-core";
+
 import { ScreenViewMode } from "model";
 
 import { Checkbox } from "../Checkbox";
@@ -73,7 +75,7 @@ export const DataList = (props) => {
                   {CellRenderer ? (
                     <CellRenderer item={item} viewMode={ScreenViewMode.list} />
                   ) : (
-                    item[key]
+                    String(Objects.path(key.split("."))(item) ?? "")
                   )}
                 </FormItem>
               );
