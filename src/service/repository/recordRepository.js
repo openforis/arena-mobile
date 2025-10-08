@@ -483,13 +483,46 @@ const fixDatetime = (dateStringOrNumber) => {
   return Dates.formatForStorage(parsed);
 };
 
+const fixRowKeyAttributesColumns = ({ survey, cycle, result, row }) => {
+  // put key attributes inside keysObj property
+  result.keysObj = {};
+  const keyDefs = SurveyDefs.getRootKeyDefs({ survey, cycle });
+  for (let index = 0; index < keyColumnNames.length; index++) {
+    const keyDef = keyDefs[index];
+    if (keyDef) {
+      const col = keyColumnNames[index];
+      const keyValue = extractKeyOrSummaryColValue({ row, col });
+      result.keysObj[NodeDefs.getName(keyDef)] = keyValue;
+    }
+    delete result[col];
+  }
+};
+
+const fixRowSummaryAttributesColumns = ({ survey, cycle, result, row }) => {
+  // put summary attributes inside summaryAttributesObj property
+  result.summaryAttributesObj = {};
+  const rootDef = Surveys.getNodeDefRoot({ survey });
+  const summaryDefs = Surveys.getNodeDefsIncludedInMultipleEntitySummary({
+    survey,
+    cycle,
+    nodeDef: rootDef,
+  });
+  summaryAttributesColumnNames.forEach((col, index) => {
+    const summaryDef = summaryDefs[index];
+    if (summaryDef) {
+      const summaryValue = extractKeyOrSummaryColValue({ row, col });
+      result.summaryAttributesObj[NodeDefs.getName(summaryDef)] = summaryValue;
+    }
+    delete result[col];
+  });
+};
+
 const rowToRecord =
   ({ survey }) =>
   (row) => {
     const sideEffect = true;
     const hasToBeFixed = true;
     const { cycle, content } = row;
-    const keyDefs = SurveyDefs.getRootKeyDefs({ survey, cycle });
     const hasContent = !Objects.isEmpty(content) && content !== "{}";
     const result = hasContent
       ? JSON.parse(row.content)
@@ -521,34 +554,9 @@ const rowToRecord =
         });
       }
     }
-    // put key attributes inside keysObj property
-    result.keysObj = {};
-    for (let index = 0; index < keyColumnNames.length; index++) {
-      const keyDef = keyDefs[index];
-      if (keyDef) {
-        const col = keyColumnNames[index];
-        const keyValue = extractKeyOrSummaryColValue({ row, col });
-        result.keysObj[NodeDefs.getName(keyDef)] = keyValue;
-      }
-      delete result[col];
-    }
-    // put summary attributes inside summaryAttributesObj property
-    result.summaryAttributesObj = {};
-    const rootDef = Surveys.getNodeDefRoot({ survey });
-    const summaryDefs = Surveys.getNodeDefsIncludedInMultipleEntitySummary({
-      survey,
-      cycle,
-      nodeDef: rootDef,
-    });
-    summaryAttributesColumnNames.forEach((col, index) => {
-      const summaryDef = summaryDefs[index];
-      if (summaryDef) {
-        const summaryValue = extractKeyOrSummaryColValue({ row, col });
-        result.summaryAttributesObj[NodeDefs.getName(summaryDef)] =
-          summaryValue;
-      }
-      delete result[col];
-    });
+    fixRowKeyAttributesColumns({ survey, cycle, result, row });
+    fixRowSummaryAttributesColumns({ survey, cycle, result, row });
+
     if (!result.info?.createdWith) {
       result.info = {
         createdWith: SystemUtils.getRecordAppInfo(),
