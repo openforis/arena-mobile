@@ -1,18 +1,12 @@
 import { useCallback } from "react";
 
-import {
-  useRequestImagePickerMediaLibraryPermission,
-  useRequestMediaLibraryPermission,
-  useToast,
-} from "hooks";
+import { useRequestImagePickerMediaLibraryPermission, useToast } from "hooks";
 import { useTranslation } from "localization";
 import { Permissions } from "utils";
 
 export const useCheckCanAccessMediaLibrary = () => {
   const { request: requestImagePickerMediaLibraryPermission } =
     useRequestImagePickerMediaLibraryPermission();
-  const { request: requestMediaLibraryPermission } =
-    useRequestMediaLibraryPermission();
   const { t } = useTranslation();
   const toaster = useToast();
 
@@ -30,10 +24,7 @@ export const useCheckCanAccessMediaLibrary = () => {
     async ({ geotagInfoShown }) => {
       let permission = t("permissions:mediaLibrary");
       try {
-        if (
-          !(await requestImagePickerMediaLibraryPermission()) ||
-          !(await requestMediaLibraryPermission())
-        ) {
+        if (!(await requestImagePickerMediaLibraryPermission())) {
           toaster("permissions:permissionDenied", { permission });
           return false;
         }
@@ -61,7 +52,6 @@ export const useCheckCanAccessMediaLibrary = () => {
     [
       onPermissionRequestError,
       requestImagePickerMediaLibraryPermission,
-      requestMediaLibraryPermission,
       t,
       toaster,
     ]
