@@ -1,6 +1,7 @@
 import { PermissionsAndroid } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
+import * as MediaLibrary from "expo-media-library";
 
 import { i18n } from "localization/i18n";
 import { Environment } from "./Environment";
@@ -43,18 +44,18 @@ const requestAccessMediaLocation = async () => {
 };
 
 const requestImagePickerMediaLibraryPermissions = async () => {
-  const result = ImagePicker.requestMediaLibraryPermissionsAsync();
+  const result = await ImagePicker.requestMediaLibraryPermissionsAsync();
   return result.granted;
 };
 
 const requestMediaLibraryPermissions = async () => {
   const result = Environment.isExpoGo
-    ? { status: MediaLibrary.PermissionStatus.GRANTED }
+    ? { status: MediaLibrary.PermissionStatus.GRANTED, granted: true }
     : await MediaLibrary.requestPermissionsAsync(
         false,
         mediaLibraryGranularPermissions
       );
-  return result.status === MediaLibrary.PermissionStatus.GRANTED;
+  return result.granted;
 };
 
 export const Permissions = {
