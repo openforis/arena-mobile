@@ -7,9 +7,12 @@ import { Permissions } from "utils";
 const mediaLibraryPermissions = {
   mediaLibrary: "mediaLibrary",
   accessMediaLocation: "accessMediaLocation",
+  imagePickerMediaLibrary: "imagePickerMediaLibrary",
 };
 
 const requestFunctionByPermission = {
+  [mediaLibraryPermissions.imagePickerMediaLibrary]: async () =>
+    Permissions.requestImagePickerMediaLibraryPermissions(),
   [mediaLibraryPermissions.mediaLibrary]: async () =>
     Permissions.requestMediaLibraryPermissions(),
   [mediaLibraryPermissions.accessMediaLocation]: async () =>
@@ -32,7 +35,10 @@ export const useCheckCanAccessMediaLibrary = () => {
 
   return useCallback(
     async ({ geotagInfoShown }) => {
-      const permissionsToTry = [mediaLibraryPermissions.mediaLibrary];
+      const permissionsToTry = [
+        mediaLibraryPermissions.imagePickerMediaLibrary,
+        mediaLibraryPermissions.mediaLibrary,
+      ];
       if (geotagInfoShown) {
         permissionsToTry.push(mediaLibraryPermissions.accessMediaLocation);
       }
@@ -40,7 +46,8 @@ export const useCheckCanAccessMediaLibrary = () => {
         const permissionLabel = t(`permissions:${permission}`);
         try {
           const requestPermission = requestFunctionByPermission[permission];
-          if (!(await requestPermission())) {
+          const granted = await requestPermission();
+          if (!granted) {
             toaster("permissions:permissionDenied", {
               permission: permissionLabel,
             });

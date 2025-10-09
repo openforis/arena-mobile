@@ -5,6 +5,8 @@ import * as Location from "expo-location";
 import { i18n } from "localization/i18n";
 import { Environment } from "./Environment";
 
+const mediaLibraryGranularPermissions = ["photo", "video"];
+
 const isLocationServiceEnabled = async () => {
   const providerStatus = await Location.getProviderStatusAsync();
   return providerStatus.locationServicesEnabled;
@@ -40,12 +42,25 @@ const requestAccessMediaLocation = async () => {
   return true;
 };
 
-const requestMediaLibraryPermissions = async () =>
-  ImagePicker.requestMediaLibraryPermissionsAsync();
+const requestImagePickerMediaLibraryPermissions = async () => {
+  const result = ImagePicker.requestMediaLibraryPermissionsAsync();
+  return result.granted;
+};
+
+const requestMediaLibraryPermissions = async () => {
+  const result = Environment.isExpoGo
+    ? { status: MediaLibrary.PermissionStatus.GRANTED }
+    : await MediaLibrary.requestPermissionsAsync(
+        false,
+        mediaLibraryGranularPermissions
+      );
+  return result.status === MediaLibrary.PermissionStatus.GRANTED;
+};
 
 export const Permissions = {
   isLocationServiceEnabled,
   requestLocationForegroundPermission,
   requestAccessMediaLocation,
+  requestImagePickerMediaLibraryPermissions,
   requestMediaLibraryPermissions,
 };
