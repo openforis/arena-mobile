@@ -39,8 +39,8 @@ export const useCheckCanAccessMediaLibrary = () => {
       for (const permission of permissionsToTry) {
         const permissionLabel = t(`permissions:${permission}`);
         try {
-          const requestFunction = requestFunctionByPermission[permission];
-          if (!(await requestFunction())) {
+          const requestPermission = requestFunctionByPermission[permission];
+          if (!(await requestPermission())) {
             toaster("permissions:permissionDenied", {
               permission: permissionLabel,
             });
