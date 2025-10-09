@@ -1,12 +1,22 @@
 import { useCallback } from "react";
 
-import { useRequestImagePickerMediaLibraryPermission, useToast } from "hooks";
+import { useToast } from "hooks";
 import { useTranslation } from "localization";
 import { Permissions } from "utils";
 
+const mediaLibraryPermissions = {
+  mediaLibrary: "mediaLibrary",
+  accessMediaLocation: "accessMediaLocation",
+};
+
+const requestFunctionByPermission = {
+  [mediaLibraryPermissions.mediaLibrary]: async () =>
+    Permissions.requestMediaLibraryPermissions(),
+  [mediaLibraryPermissions.accessMediaLocation]: async () =>
+    Permissions.requestAccessMediaLocation(),
+};
+
 export const useCheckCanAccessMediaLibrary = () => {
-  const { request: requestImagePickerMediaLibraryPermission } =
-    useRequestImagePickerMediaLibraryPermission();
   const { t } = useTranslation();
   const toaster = useToast();
 
@@ -22,26 +32,20 @@ export const useCheckCanAccessMediaLibrary = () => {
 
   return useCallback(
     async ({ geotagInfoShown }) => {
-      let permission = t("permissions:mediaLibrary");
-      try {
-        if (!(await requestImagePickerMediaLibraryPermission())) {
-          toaster("permissions:permissionDenied", { permission });
-          return false;
-        }
-      } catch (error) {
-        onPermissionRequestError({ permission, error });
-        return false;
-      }
-
+      const permissionsToTry = [mediaLibraryPermissions.mediaLibrary];
       if (geotagInfoShown) {
-        permission = t("permissions:accessMediaLocation");
+        permissionsToTry.push(mediaLibraryPermissions.accessMediaLocation);
+      }
+      for (const permission of permissionsToTry) {
+        const permissionLabel = t(`permissions:${permission}`);
         try {
-          const mediaLocationAccessAllowed =
-            await Permissions.requestAccessMediaLocation();
-          if (!mediaLocationAccessAllowed) {
-            toaster("permissions:permissionDenied", { permission });
+          const requestFunction = requestFunctionByPermission[permission];
+          if (!(await requestFunction())) {
+            toaster("permissions:permissionDenied", {
+              permission: permissionLabel,
+            });
+            return false;
           }
-          return mediaLocationAccessAllowed;
         } catch (error) {
           onPermissionRequestError({ permission, error });
           return false;
@@ -49,11 +53,6 @@ export const useCheckCanAccessMediaLibrary = () => {
       }
       return true;
     },
-    [
-      onPermissionRequestError,
-      requestImagePickerMediaLibraryPermission,
-      t,
-      toaster,
-    ]
+    [onPermissionRequestError, t, toaster]
   );
 };

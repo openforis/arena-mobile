@@ -1,5 +1,6 @@
-import * as Location from "expo-location";
 import { PermissionsAndroid } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import * as Location from "expo-location";
 
 import { i18n } from "localization/i18n";
 import { Environment } from "./Environment";
@@ -39,8 +40,12 @@ const requestAccessMediaLocation = async () => {
   return true;
 };
 
+const requestMediaLibraryPermissions = async () =>
+  ImagePicker.requestMediaLibraryPermissionsAsync();
+
 export const Permissions = {
   isLocationServiceEnabled,
   requestLocationForegroundPermission,
   requestAccessMediaLocation,
+  requestMediaLibraryPermissions,
 };

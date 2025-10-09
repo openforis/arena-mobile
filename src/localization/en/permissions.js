@@ -1,4 +1,5 @@
 export default {
+  permissionDenied: "Permission {{permission}} denied",
   permissionRequestTitle: "{{permission}} permission",
   permissionRequestMessage:
     "$t(common:appTitle) needs {{permission}} permission",
