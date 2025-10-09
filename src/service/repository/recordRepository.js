@@ -483,37 +483,47 @@ const fixDatetime = (dateStringOrNumber) => {
   return Dates.formatForStorage(parsed);
 };
 
-const fixRowKeyAttributesColumns = ({ survey, cycle, result, row }) => {
-  // put key attributes inside keysObj property
-  result.keysObj = {};
-  const keyDefs = SurveyDefs.getRootKeyDefs({ survey, cycle });
-  for (let index = 0; index < keyColumnNames.length; index++) {
-    const keyDef = keyDefs[index];
-    if (keyDef) {
-      const col = keyColumnNames[index];
-      const keyValue = extractKeyOrSummaryColValue({ row, col });
-      result.keysObj[NodeDefs.getName(keyDef)] = keyValue;
+const fixRowKeyOrSummaryAttributeColumns = ({
+  result,
+  row,
+  columnNames,
+  defs,
+  wrapperProp,
+}) => {
+  result[wrapperProp] = {};
+  for (let index = 0; index < columnNames.length; index++) {
+    const col = columnNames[index];
+    const def = defs[index];
+    if (def) {
+      const value = extractKeyOrSummaryColValue({ row, col });
+      result[wrapperProp][NodeDefs.getName(def)] = value;
     }
     delete result[col];
   }
 };
 
+const fixRowKeyAttributesColumns = ({ survey, cycle, result, row }) =>
+  fixRowKeyOrSummaryAttributeColumns({
+    result,
+    row,
+    columnNames: keyColumnNames,
+    defs: SurveyDefs.getRootKeyDefs({ survey, cycle }),
+    wrapperProp: "keysObj",
+  });
+
 const fixRowSummaryAttributesColumns = ({ survey, cycle, result, row }) => {
-  // put summary attributes inside summaryAttributesObj property
-  result.summaryAttributesObj = {};
   const rootDef = Surveys.getNodeDefRoot({ survey });
   const summaryDefs = Surveys.getNodeDefsIncludedInMultipleEntitySummary({
     survey,
     cycle,
     nodeDef: rootDef,
   });
-  summaryAttributesColumnNames.forEach((col, index) => {
-    const summaryDef = summaryDefs[index];
-    if (summaryDef) {
-      const summaryValue = extractKeyOrSummaryColValue({ row, col });
-      result.summaryAttributesObj[NodeDefs.getName(summaryDef)] = summaryValue;
-    }
-    delete result[col];
+  fixRowKeyOrSummaryAttributeColumns({
+    result,
+    row,
+    columnNames: keyColumnNames,
+    defs: summaryDefs,
+    wrapperProp: "summaryAttributesObj",
   });
 };
 
