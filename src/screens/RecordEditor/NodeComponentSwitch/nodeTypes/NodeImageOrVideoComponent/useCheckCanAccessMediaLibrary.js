@@ -7,6 +7,8 @@ import { Permissions } from "utils";
 const mediaLibraryPermissions = {
   accessMediaLocation: "accessMediaLocation",
   imagePickerMediaLibrary: "imagePickerMediaLibrary",
+  mediaLibrary: "mediaLibrary",
+  mediaLibraryWriteOnly: "mediaLibraryWriteOnly",
 };
 
 const requestFunctionByPermission = {
@@ -14,6 +16,10 @@ const requestFunctionByPermission = {
     Permissions.requestImagePickerMediaLibraryPermissions(),
   [mediaLibraryPermissions.accessMediaLocation]: async () =>
     Permissions.requestAccessMediaLocation(),
+  [mediaLibraryPermissions.mediaLibrary]: async () =>
+    Permissions.requestMediaLibraryPermissions(),
+  [mediaLibraryPermissions.mediaLibraryWriteOnly]: async () =>
+    Permissions.requestMediaLibraryPermissionsWriteOnly(),
 };
 
 export const useCheckCanAccessMediaLibrary = () => {
@@ -34,6 +40,8 @@ export const useCheckCanAccessMediaLibrary = () => {
     async ({ geotagInfoShown }) => {
       const permissionsToTry = [
         mediaLibraryPermissions.imagePickerMediaLibrary,
+        mediaLibraryPermissions.mediaLibrary,
+        mediaLibraryPermissions.mediaLibraryWriteOnly,
       ];
       if (geotagInfoShown) {
         permissionsToTry.push(mediaLibraryPermissions.accessMediaLocation);

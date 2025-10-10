@@ -1,5 +1,6 @@
 import { PermissionsAndroid } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
 
 import { i18n } from "localization/i18n";
@@ -40,10 +41,18 @@ const requestAccessMediaLocation = async () => {
   return true;
 };
 
+const requestMediaLibraryPermissions = async () => {
+  const { granted } = await MediaLibrary.requestPermissionsAsync();
+  return granted;
+};
+
+const requestMediaLibraryPermissionsWriteOnly = async () => {
+  const { granted } = await MediaLibrary.requestPermissionsAsync(true);
+  return granted;
+};
+
 const requestImagePickerMediaLibraryPermissions = async () => {
-  const writeOnly = true; // pass true to allow access to media location in Android
-  const result =
-    await ImagePicker.requestMediaLibraryPermissionsAsync(writeOnly);
+  const result = await ImagePicker.requestMediaLibraryPermissionsAsync(true); // Pass 'true' to request ACCESS_MEDIA_LOCATION on Android
   return result.granted;
 };
 
@@ -52,4 +61,6 @@ export const Permissions = {
   requestLocationForegroundPermission,
   requestAccessMediaLocation,
   requestImagePickerMediaLibraryPermissions,
+  requestMediaLibraryPermissions,
+  requestMediaLibraryPermissionsWriteOnly,
 };
