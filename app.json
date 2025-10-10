@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "Arena Mobile 2",
+    "name": "Arena Mobile",
     "slug": "arena-mobile",
     "owner": "openforis",
-    "version": "2.1.5",
+    "version": "2.1.6",
     "icon": "./assets/logo/icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -20,12 +20,15 @@
         "foregroundImage": "./assets/logo/adaptive_icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "blockedPermissions": [
+        "android.permission.READ_MEDIA_IMAGES", 
+        "android.permission.READ_MEDIA_VIDEO"
+      ],
       "package": "org.openforis.arena_mobile",
-      "versionCode": 35,
-      "permissions": ["android.permission.ACCESS_MEDIA_LOCATION"]
+      "versionCode": 37
     },
     "ios": {
-      "buildNumber": "35",
+      "buildNumber": "37",
       "bundleIdentifier": "org.openforis.arena-mobile",
       "config": {
         "usesNonExemptEncryption": false
@@ -63,11 +66,14 @@
           }
         }
       ],
+      ["expo-image-picker",
+        {
+          "photosPermission": "Arena Mobile accesses your photos to let you attach them to your records."
+        }
+      ],
       [
         "expo-media-library",
         {
-          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
-          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
           "isAccessMediaLocationEnabled": true
         }
       ],

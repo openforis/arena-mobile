@@ -1,18 +1,28 @@
 import { useCallback } from "react";
 
-import {
-  useRequestImagePickerMediaLibraryPermission,
-  useRequestMediaLibraryPermission,
-  useToast,
-} from "hooks";
+import { useToast } from "hooks";
 import { useTranslation } from "localization";
 import { Permissions } from "utils";
 
+const mediaLibraryPermissions = {
+  accessMediaLocation: "accessMediaLocation",
+  imagePickerMediaLibrary: "imagePickerMediaLibrary",
+  mediaLibrary: "mediaLibrary",
+  mediaLibraryWriteOnly: "mediaLibraryWriteOnly",
+};
+
+const requestFunctionByPermission = {
+  [mediaLibraryPermissions.imagePickerMediaLibrary]: async () =>
+    Permissions.requestImagePickerMediaLibraryPermissions(),
+  [mediaLibraryPermissions.accessMediaLocation]: async () =>
+    Permissions.requestAccessMediaLocation(),
+  [mediaLibraryPermissions.mediaLibrary]: async () =>
+    Permissions.requestMediaLibraryPermissions(),
+  [mediaLibraryPermissions.mediaLibraryWriteOnly]: async () =>
+    Permissions.requestMediaLibraryPermissionsWriteOnly(),
+};
+
 export const useCheckCanAccessMediaLibrary = () => {
-  const { request: requestImagePickerMediaLibraryPermission } =
-    useRequestImagePickerMediaLibraryPermission();
-  const { request: requestMediaLibraryPermission } =
-    useRequestMediaLibraryPermission();
   const { t } = useTranslation();
   const toaster = useToast();
 
@@ -28,29 +38,25 @@ export const useCheckCanAccessMediaLibrary = () => {
 
   return useCallback(
     async ({ geotagInfoShown }) => {
-      let permission = t("permissions:mediaLibrary");
-      try {
-        if (
-          !(await requestImagePickerMediaLibraryPermission()) ||
-          !(await requestMediaLibraryPermission())
-        ) {
-          toaster("permissions:permissionDenied", { permission });
-          return false;
-        }
-      } catch (error) {
-        onPermissionRequestError({ permission, error });
-        return false;
-      }
-
-      if (geotagInfoShown) {
-        permission = t("permissions:accessMediaLocation");
+      const permissionsToTry = [
+        mediaLibraryPermissions.imagePickerMediaLibrary,
+        mediaLibraryPermissions.mediaLibrary,
+        // mediaLibraryPermissions.mediaLibraryWriteOnly,
+      ];
+      // if (geotagInfoShown) {
+      //   permissionsToTry.push(mediaLibraryPermissions.accessMediaLocation);
+      // }
+      for (const permission of permissionsToTry) {
+        const permissionLabel = t(`permissions:${permission}`);
         try {
-          const mediaLocationAccessAllowed =
-            await Permissions.requestAccessMediaLocation();
-          if (!mediaLocationAccessAllowed) {
-            toaster("permissions:permissionDenied", { permission });
+          const requestPermission = requestFunctionByPermission[permission];
+          const granted = await requestPermission();
+          if (!granted) {
+            toaster("permissions:permissionDenied", {
+              permission: permissionLabel,
+            });
+            return false;
           }
-          return mediaLocationAccessAllowed;
         } catch (error) {
           onPermissionRequestError({ permission, error });
           return false;
@@ -58,12 +64,6 @@ export const useCheckCanAccessMediaLibrary = () => {
       }
       return true;
     },
-    [
-      onPermissionRequestError,
-      requestImagePickerMediaLibraryPermission,
-      requestMediaLibraryPermission,
-      t,
-      toaster,
-    ]
+    [onPermissionRequestError, t, toaster]
   );
 };

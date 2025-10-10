@@ -1,4 +1,5 @@
 import {
+  Arrays,
   DateFormats,
   Dates,
   NodeDefs,
@@ -24,12 +25,15 @@ const SUPPORTED_SUMMARY_ATTRIBUTES = 5;
 
 const toColumnsSet = (columns) => columns.map((col) => `${col} = ?`).join(", ");
 
-const keyColumnNames = Array.from(Array(SUPPORTED_KEYS).keys()).map(
-  (idx) => `key${idx + 1}`
+const generateColumnNamesWithPrefix = (prefix, count) =>
+  Array.from(Arrays.fromNumberOfElements(count).keys()).map(
+    (idx) => `${prefix}${idx + 1}`
+  );
+const keyColumnNames = generateColumnNamesWithPrefix("key", SUPPORTED_KEYS);
+const summaryAttributesColumnNames = generateColumnNamesWithPrefix(
+  "summary",
+  SUPPORTED_SUMMARY_ATTRIBUTES
 );
-const summaryAttributesColumnNames = Array.from(
-  Array(SUPPORTED_SUMMARY_ATTRIBUTES).keys()
-).map((idx) => `summary${idx + 1}`);
 
 const insertColumns = [
   "uuid",
@@ -479,13 +483,56 @@ const fixDatetime = (dateStringOrNumber) => {
   return Dates.formatForStorage(parsed);
 };
 
+const fixRowKeyOrSummaryAttributeColumns = ({
+  result,
+  row,
+  columnNames,
+  defs,
+  wrapperProp,
+}) => {
+  result[wrapperProp] = {};
+  for (let index = 0; index < columnNames.length; index++) {
+    const col = columnNames[index];
+    const def = defs[index];
+    if (def) {
+      const value = extractKeyOrSummaryColValue({ row, col });
+      result[wrapperProp][NodeDefs.getName(def)] = value;
+    }
+    delete result[col];
+  }
+};
+
+const fixRowKeyAttributesColumns = ({ survey, cycle, result, row }) =>
+  fixRowKeyOrSummaryAttributeColumns({
+    result,
+    row,
+    columnNames: keyColumnNames,
+    defs: SurveyDefs.getRootKeyDefs({ survey, cycle }),
+    wrapperProp: "keysObj",
+  });
+
+const fixRowSummaryAttributesColumns = ({ survey, cycle, result, row }) => {
+  const rootDef = Surveys.getNodeDefRoot({ survey });
+  const summaryDefs = Surveys.getNodeDefsIncludedInMultipleEntitySummary({
+    survey,
+    cycle,
+    nodeDef: rootDef,
+  });
+  fixRowKeyOrSummaryAttributeColumns({
+    result,
+    row,
+    columnNames: keyColumnNames,
+    defs: summaryDefs,
+    wrapperProp: "summaryAttributesObj",
+  });
+};
+
 const rowToRecord =
   ({ survey }) =>
   (row) => {
     const sideEffect = true;
     const hasToBeFixed = true;
     const { cycle, content } = row;
-    const keyDefs = SurveyDefs.getRootKeyDefs({ survey, cycle });
     const hasContent = !Objects.isEmpty(content) && content !== "{}";
     const result = hasContent
       ? JSON.parse(row.content)
@@ -506,10 +553,10 @@ const rowToRecord =
       }
       // fix node dates format
       if (hasToBeFixed) {
-        Records.getNodesArray(result).forEach((node) => {
+        for (const node of Records.getNodesArray(result)) {
           node.dateCreated = fixDatetime(node.dateCreated);
           node.dateModified = fixDatetime(node.dateModified);
-        });
+        }
         RecordFixer.insertMissingSingleNodes({
           survey,
           record: result,
@@ -517,33 +564,9 @@ const rowToRecord =
         });
       }
     }
-    // put key attributes inside keysObj property
-    result.keysObj = {};
-    keyColumnNames.forEach((col, index) => {
-      const keyValue = extractKeyOrSummaryColValue({ row, col });
-      const keyDef = keyDefs[index];
-      if (keyDef) {
-        result.keysObj[NodeDefs.getName(keyDef)] = keyValue;
-      }
-      delete result[col];
-    });
-    // put summary attributes inside summaryAttributesObj property
-    result.summaryAttributesObj = {};
-    const rootDef = Surveys.getNodeDefRoot({ survey });
-    const summaryDefs = Surveys.getNodeDefsIncludedInMultipleEntitySummary({
-      survey,
-      cycle,
-      nodeDef: rootDef,
-    });
-    summaryAttributesColumnNames.forEach((col, index) => {
-      const summaryDef = summaryDefs[index];
-      if (summaryDef) {
-        const summaryValue = extractKeyOrSummaryColValue({ row, col });
-        result.summaryAttributesObj[NodeDefs.getName(summaryDef)] =
-          summaryValue;
-      }
-      delete result[col];
-    });
+    fixRowKeyAttributesColumns({ survey, cycle, result, row });
+    fixRowSummaryAttributesColumns({ survey, cycle, result, row });
+
     if (!result.info?.createdWith) {
       result.info = {
         createdWith: SystemUtils.getRecordAppInfo(),

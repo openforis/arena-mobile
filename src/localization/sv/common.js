@@ -1,6 +1,5 @@
 export default {
   about: "Om",
-  appTitle: "Arena Mobile 2",
   cancel: "Avbryt",
   clear: "Rensa",
   close: "Stäng",
