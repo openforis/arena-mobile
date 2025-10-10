@@ -3824,6 +3824,7 @@ __metadata:
     expo-file-system: "npm:~19.0.16"
     expo-image-manipulator: "npm:~14.0.7"
     expo-image-picker: "npm:~17.0.8"
+    expo-intent-launcher: "npm:^13.0.7"
     expo-localization: "npm:~17.0.7"
     expo-location: "npm:~19.0.7"
     expo-media-library: "npm:~18.2.0"
@@ -6490,6 +6491,15 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: 10c0/9ae865851707338b656d9f7022999e97ef8a7a4e9988dee0c85b6c4f1079afdf8e80f831a5612f6e42aa203a623bdb72bb25e32d4d6bb7c26092192f7c39af93
+  languageName: node
+  linkType: hard
+
+"expo-intent-launcher@npm:^13.0.7":
+  version: 13.0.7
+  resolution: "expo-intent-launcher@npm:13.0.7"
+  peerDependencies:
+    expo: "*"
+  checksum: 10c0/931076ae1b145e76d9347047bdcf673cfb63fb690934cc7f04d2e8ff2eaf5b3c977c0e1ebacb6374dc7021d024c96275c5ff8a6feca3d8bb2ddadd1cf38e24c6
   languageName: node
   linkType: hard
 

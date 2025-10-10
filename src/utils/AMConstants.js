@@ -1,4 +1,5 @@
 export const AMConstants = {
-  appName: "Open Foris Arena Mobile",
-  appNameCompact: "OFArenaMobile",
+  appNameFull: "Open Foris Arena Mobile",
+  appNameCompact: "Arena Mobile",
+  appNameCompactInternal: "OFArenaMobile",
 };

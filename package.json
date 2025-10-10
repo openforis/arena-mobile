@@ -35,6 +35,7 @@
     "expo-file-system": "~19.0.16",
     "expo-image-manipulator": "~14.0.7",
     "expo-image-picker": "~17.0.8",
+    "expo-intent-launcher": "^13.0.7",
     "expo-localization": "~17.0.7",
     "expo-location": "~19.0.7",
     "expo-media-library": "~18.2.0",

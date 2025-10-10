@@ -1,4 +1,6 @@
+import { Linking } from "react-native";
 import * as Application from "expo-application";
+import * as IntentLauncher from "expo-intent-launcher";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import * as Localization from "expo-localization";
 import * as ExpoScreenOrientation from "expo-screen-orientation";
@@ -119,6 +121,17 @@ const cleanupTempFiles = async () => {
   }
 };
 
+const openAppSettings = () => {
+  if (Environment.isIOS) {
+    Linking.openURL("app-settings:");
+  } else {
+    IntentLauncher.startActivityAsync(
+      IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+      { data: "package:" + Environment.pkg }
+    );
+  }
+};
+
 export const SystemUtils = {
   addOrientationChangeListener,
   copyValueToClipboard,
@@ -132,4 +145,5 @@ export const SystemUtils = {
   getLocale,
   getLanguageCode,
   cleanupTempFiles,
+  openAppSettings,
 };
