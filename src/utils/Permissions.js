@@ -42,7 +42,7 @@ const requestAccessMediaLocation = async () => {
 };
 
 const requestMediaLibraryPermissions = async () => {
-  const { granted } = await MediaLibrary.requestPermissionsAsync();
+  const { granted } = await MediaLibrary.requestPermissionsAsync(false, true);
   return granted;
 };
 
@@ -52,8 +52,9 @@ const requestMediaLibraryPermissionsWriteOnly = async () => {
 };
 
 const requestImagePickerMediaLibraryPermissions = async () => {
-  const result = await ImagePicker.requestMediaLibraryPermissionsAsync(true); // Pass 'true' to request ACCESS_MEDIA_LOCATION on Android
-  return result.granted;
+  const { granted } =
+    await ImagePicker.requestMediaLibraryPermissionsAsync(true); // Pass 'true' to request ACCESS_MEDIA_LOCATION on Android
+  return granted;
 };
 
 export const Permissions = {

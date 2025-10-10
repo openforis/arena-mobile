@@ -113,7 +113,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
   const [resizing, setResizing] = useState(false);
 
   const onFileSelected = useCallback(
-    async (result, fromCamera = false) => {
+    async ({ result, fromCamera = false }) => {
       const { assets, canceled, didCancel } = result;
       if (canceled || didCancel) return;
 
@@ -165,7 +165,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
         ? await DocumentPicker.getDocumentAsync()
         : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
 
-    await onFileSelected(result);
+    await onFileSelected({ result });
   }, [
     canAccessMediaLibrary,
     fileType,
@@ -183,7 +183,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
         await Permissions.requestLocationForegroundPermission();
       }
       const result = await ImagePicker.launchCameraAsync(imagePickerOptions);
-      await onFileSelected(result, true);
+      await onFileSelected({ result, fromCamera: true });
     } catch (error) {
       toaster(`Error opening camera: ` + error);
     }

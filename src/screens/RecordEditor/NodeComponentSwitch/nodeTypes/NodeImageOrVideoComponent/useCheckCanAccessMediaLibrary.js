@@ -41,11 +41,11 @@ export const useCheckCanAccessMediaLibrary = () => {
       const permissionsToTry = [
         mediaLibraryPermissions.imagePickerMediaLibrary,
         mediaLibraryPermissions.mediaLibrary,
-        mediaLibraryPermissions.mediaLibraryWriteOnly,
+        // mediaLibraryPermissions.mediaLibraryWriteOnly,
       ];
-      if (geotagInfoShown) {
-        permissionsToTry.push(mediaLibraryPermissions.accessMediaLocation);
-      }
+      // if (geotagInfoShown) {
+      //   permissionsToTry.push(mediaLibraryPermissions.accessMediaLocation);
+      // }
       for (const permission of permissionsToTry) {
         const permissionLabel = t(`permissions:${permission}`);
         try {

@@ -20,9 +20,12 @@
         "foregroundImage": "./assets/logo/adaptive_icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "blockedPermissions": [
+        "android.permission.READ_MEDIA_IMAGES", 
+        "android.permission.READ_MEDIA_VIDEO"
+      ],
       "package": "org.openforis.arena_mobile",
-      "versionCode": 37,
-      "permissions": ["android.permission.ACCESS_MEDIA_LOCATION"]
+      "versionCode": 37
     },
     "ios": {
       "buildNumber": "37",
@@ -61,6 +64,11 @@
           "ios": {
             "deploymentTarget": "15.5"
           }
+        }
+      ],
+      ["expo-image-picker",
+        {
+          "photosPermission": "Arena Mobile accesses your photos to let you attach them to your records."
         }
       ],
       [
