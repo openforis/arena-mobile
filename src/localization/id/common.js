@@ -1,6 +1,5 @@
 export default {
   about: "Tentang",
-  appTitle: "Arena Mobile 2",
   cancel: "Batal",
   clear: "Bersihkan",
   close: "Tutup",

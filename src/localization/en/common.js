@@ -1,6 +1,6 @@
 export default {
   about: "About",
-  appTitle: "Arena Mobile 2",
+  appTitle: "Arena Mobile",
   cancel: "Cancel",
   clear: "Clear",
   close: "Close",
