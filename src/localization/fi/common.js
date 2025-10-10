@@ -1,6 +1,5 @@
 export default {
   about: "Tietoja",
-  appTitle: "Arena Mobile 2",
   cancel: "Kumoa",
   clear: "Tyhjennä",
   close: "Sulje",
