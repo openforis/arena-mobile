@@ -6,7 +6,7 @@ import {
   useToast,
 } from "hooks";
 import { useTranslation } from "localization";
-import { Permissions } from "utils";
+import { Permissions, SystemUtils } from "utils";
 
 export const useCheckCanAccessMediaLibrary = () => {
   const { request: requestImagePickerMediaLibraryPermission } =
@@ -30,10 +30,7 @@ export const useCheckCanAccessMediaLibrary = () => {
     async ({ geotagInfoShown }) => {
       let permission = t("permissions:mediaLibrary");
       try {
-        if (
-          !(await requestImagePickerMediaLibraryPermission()) ||
-          !(await requestMediaLibraryPermission())
-        ) {
+        if (!(await requestImagePickerMediaLibraryPermission())) {
           toaster("permissions:permissionDenied", { permission });
           return false;
         }
@@ -47,8 +44,10 @@ export const useCheckCanAccessMediaLibrary = () => {
         try {
           const mediaLocationAccessAllowed =
             await Permissions.requestAccessMediaLocation();
+
           if (!mediaLocationAccessAllowed) {
             toaster("permissions:permissionDenied", { permission });
+            SystemUtils.openAppSettings();
           }
           return mediaLocationAccessAllowed;
         } catch (error) {
@@ -61,7 +60,6 @@ export const useCheckCanAccessMediaLibrary = () => {
     [
       onPermissionRequestError,
       requestImagePickerMediaLibraryPermission,
-      requestMediaLibraryPermission,
       t,
       toaster,
     ]

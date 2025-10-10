@@ -121,12 +121,12 @@ const cleanupTempFiles = async () => {
   }
 };
 
-const openAppSettings = () => {
+const openAppSettings = async () => {
   if (Environment.isIOS) {
-    Linking.openURL("app-settings:");
+    await Linking.openSettings();
   } else {
-    IntentLauncher.startActivityAsync(
-      IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS,
+    await IntentLauncher.startActivityAsync(
+      IntentLauncher.ActivityAction.APPLICATION_DETAILS_SETTINGS,
       { data: "package:" + Environment.pkg }
     );
   }
