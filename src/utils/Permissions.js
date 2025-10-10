@@ -41,7 +41,9 @@ const requestAccessMediaLocation = async () => {
 };
 
 const requestImagePickerMediaLibraryPermissions = async () => {
-  const result = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  const writeOnly = true; // pass true to allow access to media location in Android
+  const result =
+    await ImagePicker.requestMediaLibraryPermissionsAsync(writeOnly);
   return result.granted;
 };
 
