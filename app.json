@@ -64,10 +64,14 @@
         }
       ],
       [
+        "expo-image-picker",
+        {
+          "photosPermission": "Please allow $(PRODUCT_NAME) access to your photos to attach them to your records."
+        }
+      ],
+      [
         "expo-media-library",
         {
-          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos if you need to attach them to your records.",
-          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
           "isAccessMediaLocationEnabled": true
         }
       ],

@@ -25,12 +25,14 @@ const requestLocationForegroundPermission = async () => {
 
 const requestAccessMediaLocation = async () => {
   if (Environment.isAndroid) {
-    const permission = i18n.t("permissions:accessMediaLocation");
+    const permission = i18n.t("permissions:types.accessMediaLocation");
     const status = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_MEDIA_LOCATION,
       {
-        title: i18n.t("permissions:permissionRequestTitle", { permission }),
-        message: i18n.t("permissions:permissionRequestMessage", { permission }),
+        title: i18n.t("permissions:permissionRequest.title", { permission }),
+        message: i18n.t("permissions:permissionRequest.message", {
+          permission,
+        }),
         buttonNegative: i18n.t("common:cancel"),
         buttonPositive: i18n.t("common:ok"),
       }
