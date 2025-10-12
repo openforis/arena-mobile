@@ -18,7 +18,6 @@ const { t } = i18n;
 
 const exportType = {
   remote: "remote",
-  local: "local",
   share: "share",
 };
 
@@ -137,13 +136,6 @@ const onExportConfirmed =
             })
           );
           break;
-        case exportType.local: {
-          const res = await Files.moveFileToDownloadFolder(outputFileUri);
-          if (!res) {
-            throw new Error("Permission denied");
-          }
-          break;
-        }
         default:
           await Files.shareFile({
             url: outputFileUri,

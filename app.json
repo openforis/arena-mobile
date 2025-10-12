@@ -70,12 +70,6 @@
         }
       ],
       [
-        "expo-media-library",
-        {
-          "isAccessMediaLocationEnabled": true
-        }
-      ],
-      [
         "./plugins/modifyAndroidManifestAttributes",
         {
           "application": {
