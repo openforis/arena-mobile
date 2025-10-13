@@ -34,6 +34,7 @@ export default {
   notEnoughDiskSpace:
     "Недостаточно свободного места на диске (требуется еще {{requiredSpace}})",
   ok: "Ок",
+  openSettings: "Открыть настройки",
   path: "Путь доступа",
   rowsPerPage: "Строк на странице",
   search: "Поиск",

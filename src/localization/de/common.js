@@ -33,6 +33,7 @@ export default {
   notEnoughDiskSpace:
     "Nicht genügend freier Speicherplatz ({{requiredSpace}} mehr erforderlich)",
   ok: "Ok",
+  openSettings: "Einstellungen öffnen",
   path: "Pfad",
   rowsPerPage: "Zeilen pro Seite",
   search: "Suchen",

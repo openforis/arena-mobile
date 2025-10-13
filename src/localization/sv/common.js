@@ -33,6 +33,7 @@ export default {
   notEnoughDiskSpace:
     "Inte tillräckligt med ledigt diskutrymme ({{requiredSpace}} mer krävs)",
   ok: "Ok",
+  openSettings: "Öppna inställningar",
   path: "Sökväg",
   rowsPerPage: "Rader per sida",
   search: "Sök",

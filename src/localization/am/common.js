@@ -33,6 +33,7 @@ export default {
   noItemsMatchingSearch: "ከፍለጋዎ ጋር የሚዛመድ ንጥል የለም",
   notEnoughDiskSpace: "በቂ ነፃ የዲስክ ቦታ የለም (ተጨማሪ {{requiredSpace}} ያስፈልጋል)",
   ok: "እሺ",
+  openSettings: "ቅንብሮችን ክፈት",
   path: "መንገድ",
   rowsPerPage: "በገጽ ያሉ ረድፎች",
   search: "ፈልግ",
