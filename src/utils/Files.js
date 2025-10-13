@@ -1,5 +1,4 @@
 import { Buffer } from "buffer";
-import * as MediaLibrary from "expo-media-library";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system/legacy";
 import { File } from "expo-file-system/next";
@@ -14,7 +13,6 @@ let { unzip, zip } = Environment.isExpoGo
   : (require("react-native-zip-archive") ?? {});
 
 const PATH_SEPARATOR = "/";
-const DOWNLOAD_FOLDER = "Download";
 const TEMP_FOLDER_NAME = "am_temp";
 
 const MIME_TYPES = {
@@ -84,8 +82,6 @@ const getInfo = async (fileUri, ignoreErrors = true) => {
     throw error;
   }
 };
-
-const getAssetInfo = async (assetId) => MediaLibrary.getAssetInfoAsync(assetId);
 
 const getSize = async (fileUri, ignoreErrors = true) => {
   const info = await getInfo(fileUri, ignoreErrors);
@@ -199,22 +195,6 @@ const del = async (fileUri, ignoreErrors = false) =>
 const download = async (uri, targetUri, options) =>
   FileSystem.downloadAsync(uri, targetUri, options);
 
-const moveFileToDownloadFolder = async (fileUri) => {
-  const permissionsResponse = await MediaLibrary.requestPermissionsAsync(true);
-  if (!permissionsResponse.granted) {
-    return false;
-  }
-
-  const asset = await MediaLibrary.createAssetAsync(fileUri);
-  const album = await MediaLibrary.getAlbumAsync(DOWNLOAD_FOLDER);
-  if (album == null) {
-    await MediaLibrary.createAlbumAsync(DOWNLOAD_FOLDER, asset, false);
-  } else {
-    await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-  }
-  return true;
-};
-
 const writeStringToFile = async ({ content, fileUri }) =>
   FileSystem.writeAsStringAsync(fileUri, content);
 
@@ -275,7 +255,6 @@ export const Files = {
   mkDir,
   del,
   visitDirFilesRecursively,
-  getAssetInfo,
   getDirSize,
   getFreeDiskStorage,
   getInfo,
@@ -296,7 +275,6 @@ export const Files = {
   shareFile,
   copyFile,
   moveFile,
-  moveFileToDownloadFolder,
   download,
   writeJsonToFile,
   writeStringToFile,

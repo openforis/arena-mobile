@@ -21,11 +21,11 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "org.openforis.arena_mobile",
-      "versionCode": 37,
+      "versionCode": 38,
       "permissions": ["android.permission.ACCESS_MEDIA_LOCATION"]
     },
     "ios": {
-      "buildNumber": "37",
+      "buildNumber": "38",
       "bundleIdentifier": "org.openforis.arena-mobile",
       "config": {
         "usesNonExemptEncryption": false
@@ -64,11 +64,9 @@
         }
       ],
       [
-        "expo-media-library",
+        "expo-image-picker",
         {
-          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
-          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
-          "isAccessMediaLocationEnabled": true
+          "photosPermission": "Please allow $(PRODUCT_NAME) access to your photos to attach them to your records."
         }
       ],
       [

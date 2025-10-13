@@ -52,8 +52,8 @@ const writeGpsData = async ({ fileUri, location }) => {
       .slice(0, 10)
       .replace(/-/g, ":"),
 
-    UserComment: `Geotagged from ${AMConstants.appName} app`,
-    Make: AMConstants.appNameCompact,
+    UserComment: `Geotagged from ${AMConstants.appNameFull} app`,
+    Make: AMConstants.appNameCompactInternal,
   };
   await writeData({ fileUri, data: { ...existingTags, ...newTags } });
 };

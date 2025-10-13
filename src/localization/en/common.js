@@ -35,6 +35,7 @@ export default {
   notEnoughDiskSpace:
     "Not enough free disk space ({{requiredSpace}} more is required)",
   ok: "Ok",
+  openSettings: "Open settings",
   path: "Path",
   rowsPerPage: "Rows per page",
   search: "Search",
