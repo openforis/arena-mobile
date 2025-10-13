@@ -33,6 +33,7 @@ export default {
   notEnoughDiskSpace:
     "Espaço em disco insuficiente (são necessários mais {{requiredSpace}})",
   ok: "Ok",
+  openSettings: "Abrir configurações",
   path: "Caminho",
   rowsPerPage: "Linhas por página",
   search: "Pesquisar",

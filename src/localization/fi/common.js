@@ -33,6 +33,7 @@ export default {
   notEnoughDiskSpace:
     "Ei tarpeeksi vapaata levytilaa (tarvitaan vielä {{requiredSpace}})",
   ok: "Ok",
+  openSettings: "Avaa asetukset",
   path: "Polku",
   rowsPerPage: "Rivejä sivulla",
   search: "Haku",

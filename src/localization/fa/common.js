@@ -35,6 +35,7 @@ export default {
   notEnoughDiskSpace:
     "فضای خالی دیسک کافی نیست (به {{requiredSpace}} فضای بیشتر نیاز است)",
   ok: "باشه",
+  openSettings: "باز کردن تنظیمات",
   path: "مسیر",
   rowsPerPage: "ردیف در هر صفحه",
   search: "جستجو",

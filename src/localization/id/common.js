@@ -33,6 +33,7 @@ export default {
   notEnoughDiskSpace:
     "Tidak cukup ruang disk (diperlukan {{requiredSpace}} lagi)",
   ok: "Ok",
+  openSettings: "Buka pengaturan",
   path: "Path",
   rowsPerPage: "Baris per halaman",
   search: "Cari",
