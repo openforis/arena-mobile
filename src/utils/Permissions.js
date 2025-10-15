@@ -24,7 +24,11 @@ const requestLocationForegroundPermission = async () => {
 };
 
 const requestAccessMediaLocation = async () => {
-  if (Environment.isAndroid && Environment.androidApiLevel >= 10) {
+  if (
+    !Environment.isExpoGo &&
+    Environment.isAndroid &&
+    Environment.androidApiLevel >= 10
+  ) {
     const permission = i18n.t("permissions:types.accessMediaLocation");
     const status = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_MEDIA_LOCATION,

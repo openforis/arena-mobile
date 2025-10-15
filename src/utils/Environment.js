@@ -1,6 +1,6 @@
 import { Platform } from "react-native";
 import Constants, { ExecutionEnvironment } from "expo-constants";
-import Device from "expo-device";
+import * as Device from "expo-device";
 
 const platform = Platform.OS;
 const androidApiLevel = Device.platformApiLevel;
