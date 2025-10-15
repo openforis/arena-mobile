@@ -1,7 +1,9 @@
 import { Platform } from "react-native";
 import Constants, { ExecutionEnvironment } from "expo-constants";
+import Device from "expo-device";
 
 const platform = Platform.OS;
+const androidApiLevel = Device.platformApiLevel;
 
 const isExpoGo =
   Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
@@ -13,9 +15,10 @@ const pkg = Constants.expoConfig.android
   : "host.exp.exponent";
 
 export const Environment = {
+  androidApiLevel,
   isExpoGo,
   isAndroid,
   isIOS,
-  platform,
   pkg,
+  platform,
 };
