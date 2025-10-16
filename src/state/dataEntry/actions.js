@@ -636,8 +636,9 @@ const navigateToRecordsList =
         confirmButtonTextKey: "dataEntry:goToListOfRecords",
         messageKey: "dataEntry:confirmGoToListOfRecords",
         onConfirm: () => {
+          // pop=true pops the current screen from the stack and avoids going back to it (unmounts the RecordEditor component)
+          navigation.navigate({ name: screenKeys.recordsList, pop: true });
           dispatch({ type: DATA_ENTRY_RESET });
-          navigation.navigate(screenKeys.recordsList);
         },
       })
     );
