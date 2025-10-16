@@ -636,8 +636,8 @@ const navigateToRecordsList =
         confirmButtonTextKey: "dataEntry:goToListOfRecords",
         messageKey: "dataEntry:confirmGoToListOfRecords",
         onConfirm: () => {
+          navigation.navigate({ name: screenKeys.recordsList, pop: true });
           dispatch({ type: DATA_ENTRY_RESET });
-          navigation.navigate(screenKeys.recordsList);
         },
       })
     );
