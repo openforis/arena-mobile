@@ -62,13 +62,11 @@ export const AppConfirmDialog = () => {
             </VView>
           )}
           {singleChoiceOptions?.length > 0 && (
-            // @ts-expect-error TS(2786): 'RadioButtonGroup' cannot be used as a JSX compone... Remove this comment to see the full error message
             <RadioButtonGroup
               onValueChange={onSingleChoiceOptionChange}
               value={selectedSingleChoiceValue}
             >
               <VView transparent>
-                // @ts-expect-error TS(2786): 'RadioButton' cannot be used as a JSX component.
                 {singleChoiceOptions.map((option: any) => <RadioButton
                   key={option.value}
                   label={t(option.label, option.labelParams)}
