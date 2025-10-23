@@ -1,9 +1,18 @@
-import { changeLanguage, i18n, useTranslation } from "./i18n";
+import {
+  changeLanguage,
+  i18n,
+  useTranslation as useI18nTranslation,
+} from "./i18n";
 import {
   textDirections,
   useIsTextDirectionRtl,
   useTextDirection,
 } from "./useTextDirection";
+
+const useTranslation = () => {
+  const { t } = useI18nTranslation();
+  return { t: (key: string, params?: any) => t(key, params) as string };
+};
 
 export {
   changeLanguage,

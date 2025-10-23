@@ -1,4 +1,3 @@
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
@@ -13,7 +12,7 @@ export const FormItem = ({
   labelStyle = undefined,
   labelVariant = "labelLarge",
   style,
-  textVariant = "bodyLarge"
+  textVariant = "bodyLarge",
 }: any) => {
   const { t } = useTranslation();
   const label = `${t(labelKey)}:`;
@@ -21,22 +20,17 @@ export const FormItem = ({
     typeof children === "string" || typeof children === "number";
 
   return (
-    // @ts-expect-error TS(2709): Cannot use namespace 'HView' as a type.
     <HView style={[{ alignItems: "baseline" }, style]}>
       <Text
-        // @ts-expect-error TS(7027): Unreachable code detected.
         numberOfLines={labelNumberOfLines}
         style={labelStyle}
-        // @ts-expect-error TS(2304): Cannot find name 'variant'.
         variant={labelVariant}
       >
         {label}
       </Text>
       {hasTextContent ? (
-        // @ts-expect-error TS(2304): Cannot find name 'variant'.
         <Text variant={textVariant}>{children}</Text>
       ) : (
-        // @ts-expect-error TS(2304): Cannot find name 'children'.
         children
       )}
     </HView>

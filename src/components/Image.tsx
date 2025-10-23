@@ -1,5 +1,4 @@
 import { Image as RNImage } from "react-native";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { useImageFile } from "hooks";
@@ -12,7 +11,6 @@ export const Image = (props: any) => {
   const sourceUri = useImageFile(sourcePropUri, defaultExtension);
 
   if (!sourceUri) return null;
-  // @ts-expect-error TS(7027): Unreachable code detected.
   return <RNImage source={{ uri: sourceUri }} style={style} />;
 };
 

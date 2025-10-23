@@ -1,12 +1,11 @@
 import { Snackbar } from "react-native-paper";
 import { useDispatch } from "react-redux";
 
-import { useTranslation } from "localization";
 import { ToastActions, ToastSelectors } from "state";
+import { Text } from "components/Text";
 
 export const AppToast = () => {
   const dispatch = useDispatch();
-  const { t } = useTranslation();
 
   const toastContent = ToastSelectors.useToastContent();
   const { textKey, textParams } = toastContent;
@@ -17,7 +16,7 @@ export const AppToast = () => {
 
   return (
     <Snackbar visible={!!textKey} onDismiss={onDismiss}>
-      {t(textKey: any, textParams: any)}
+      <Text textKey={textKey} textParams={textParams} />
     </Snackbar>
   );
 };
