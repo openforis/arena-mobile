@@ -1,11 +1,13 @@
 import React from "react";
 
+// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { Text, VView } from "components";
+// @ts-expect-error TS(2307): Cannot find module 'model/Taxa' or its correspondi... Remove this comment to see the full error message
 import { Taxa } from "model/Taxa";
 import { NodeValuePreviewPropTypes } from "./NodeValuePreviewPropTypes";
 import { useTaxonByNodeValue } from "./useTaxonByNodeValue";
 
-export const TaxonValuePreview = (props) => {
+export const TaxonValuePreview = (props: any) => {
   const { nodeDef, style, value } = props;
 
   const taxon = useTaxonByNodeValue({ value });

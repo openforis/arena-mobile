@@ -8,7 +8,11 @@ export class DowngradeError extends Error {
 }
 
 export default class SQLiteClient {
-  constructor(name, migrations, debug = false) {
+  migrations: any;
+  name: any;
+  privateConnected: any;
+  privateDb: any;
+  constructor(name: any, migrations: any, debug = false) {
     this.name = name;
     this.migrations = migrations;
     this.privateDb = null;
@@ -23,25 +27,25 @@ export default class SQLiteClient {
     return this.privateDb;
   }
 
-  async runSql(sql, params) {
+  async runSql(sql: any, params: any) {
     const result = await this.privateDb.runAsync(sql, params);
     const { lastInsertRowId: insertId, changes: rowsAffected } = result;
     return { insertId, rowsAffected };
   }
 
-  async executeSql(sql) {
+  async executeSql(sql: any) {
     await this.privateDb.execAsync(sql);
   }
 
-  async transaction(callback) {
+  async transaction(callback: any) {
     return this.privateDb.withTransactionAsync(callback);
   }
 
-  async one(sql, params) {
+  async one(sql: any, params: any) {
     return this.privateDb.getFirstAsync(sql, params);
   }
 
-  async many(sql, params) {
+  async many(sql: any, params: any) {
     return this.privateDb.getAllAsync(sql, params);
   }
 
@@ -72,6 +76,7 @@ export default class SQLiteClient {
   }
 
   async runMigrationsIfNecessary() {
+    // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
     const dbUserVersionRow = await this.one("PRAGMA user_version");
     const prevDbVersion = dbUserVersionRow.user_version;
     console.log(`==== current DB version: ${prevDbVersion}`);
@@ -91,6 +96,7 @@ export default class SQLiteClient {
       for await (const migration of migrationsToRun) {
         await migration(this);
         currentDbVersion += 1;
+        // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
         await this.runSql(`PRAGMA user_version = ${currentDbVersion}`);
       }
       console.log("==== DB migrations complete ====");

@@ -1,11 +1,15 @@
 import { NodeDefs } from "@openforis/arena-core";
 
+// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { LanguageUtils } from "utils";
 
 const unlistedCode = "UNL";
 const unknownCode = "UNK";
 
-const taxonToString = ({ nodeDef, taxon }) => {
+const taxonToString = ({
+  nodeDef,
+  taxon
+}: any) => {
   if (!nodeDef || !taxon) return null;
 
   const { code, scientificName } = taxon.props;

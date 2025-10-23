@@ -19,26 +19,26 @@ const preferencesStoredObjectManager = new StoredObjectManager(
 const getCurrentSurveyId = async () =>
   await preferencesStoredObjectManager.getValue(keys.currentSurveyId);
 
-const setCurrentSurveyId = async (surveyId) => {
+const setCurrentSurveyId = async (surveyId: any) => {
   await preferencesStoredObjectManager.updateValue(
     keys.currentSurveyId,
     surveyId
   );
 };
 
-const getPrereferencesBySurveyId = async (surveyId) => {
+const getPrereferencesBySurveyId = async (surveyId: any) => {
   const preferencesBySurveyId = await preferencesStoredObjectManager.getValue(
     keys.preferencesBySurveyId
   );
   return preferencesBySurveyId?.[surveyId] || {};
 };
 
-const getSurveyPreferredLanguage = async (surveyId) => {
+const getSurveyPreferredLanguage = async (surveyId: any) => {
   const surveyPreferences = await getPrereferencesBySurveyId(surveyId);
   return surveyPreferences[surveyPreferencesKeys.language];
 };
 
-const getSurveyRecordLastEditedPage = async (surveyId, recordId) => {
+const getSurveyRecordLastEditedPage = async (surveyId: any, recordId: any) => {
   const surveyPreferences = await getPrereferencesBySurveyId(surveyId);
   return Objects.path([
     surveyPreferencesKeys.lastEditedPageByRecordId,
@@ -49,7 +49,7 @@ const getSurveyRecordLastEditedPage = async (surveyId, recordId) => {
 const clearCurrentSurveyId = async () =>
   await preferencesStoredObjectManager.deleteValue(keys.currentSurveyId);
 
-const updateSurveyPreferences = async (surveyId, updateFn) => {
+const updateSurveyPreferences = async (surveyId: any, updateFn: any) => {
   const preferencesBySurveyId =
     (await preferencesStoredObjectManager.getValue(
       keys.preferencesBySurveyId
@@ -70,37 +70,35 @@ const updateSurveyPreferences = async (surveyId, updateFn) => {
   );
 };
 
-const updateSurveyPreference = async (surveyId, key, value) =>
-  updateSurveyPreferences(surveyId, (surveyPreferences) => ({
+const updateSurveyPreference = async (surveyId: any, key: any, value: any) =>
+  updateSurveyPreferences(surveyId, (surveyPreferences: any) => ({
     ...surveyPreferences,
-    [key]: value,
+    [key]: value
   }));
 
-const setSurveyPreferredLanguage = async (surveyId, lang) =>
+const setSurveyPreferredLanguage = async (surveyId: any, lang: any) =>
   updateSurveyPreference(surveyId, surveyPreferencesKeys.language, lang);
 
-const setSurveyRecordLastEditedPage = async (surveyId, recordId, page) =>
-  updateSurveyPreferences(surveyId, (surveyPreferences) =>
-    Objects.assocPath({
-      obj: surveyPreferences,
-      path: [surveyPreferencesKeys.lastEditedPageByRecordId, recordId],
-      value: page,
-    })
+const setSurveyRecordLastEditedPage = async (surveyId: any, recordId: any, page: any) =>
+  updateSurveyPreferences(surveyId, (surveyPreferences: any) => Objects.assocPath({
+    obj: surveyPreferences,
+    path: [surveyPreferencesKeys.lastEditedPageByRecordId, recordId],
+    value: page,
+  })
   );
 
-const clearSurveyRecordLastEditedPage = async (surveyId, recordId) =>
-  updateSurveyPreferences(surveyId, (surveyPreferences) =>
-    Objects.dissocPath({
-      obj: surveyPreferences,
-      path: [surveyPreferencesKeys.lastEditedPageByRecordId, recordId],
-    })
+const clearSurveyRecordLastEditedPage = async (surveyId: any, recordId: any) =>
+  updateSurveyPreferences(surveyId, (surveyPreferences: any) => Objects.dissocPath({
+    obj: surveyPreferences,
+    path: [surveyPreferencesKeys.lastEditedPageByRecordId, recordId],
+  })
   );
 
-const clearPreferencesBySurveyId = async (surveyId) => {
+const clearPreferencesBySurveyId = async (surveyId: any) => {
   await updateSurveyPreferences(surveyId, () => ({}));
 };
 
-const clearPreferencesBySurveyIds = async (surveyIds) => {
+const clearPreferencesBySurveyIds = async (surveyIds: any) => {
   for (const surveyId of surveyIds) {
     await clearPreferencesBySurveyId(surveyId);
   }

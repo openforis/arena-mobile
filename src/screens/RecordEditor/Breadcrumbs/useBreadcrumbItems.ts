@@ -3,8 +3,11 @@ import { useSelector } from "react-redux";
 
 import { NodeDefs, Objects, Records, Surveys } from "@openforis/arena-core";
 
+// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { useTranslation } from "localization";
+// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { RecordNodes } from "model";
+// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 import { DataEntrySelectors, SurveySelectors } from "state";
 
 export const useBreadcrumbItems = () => {
@@ -17,7 +20,12 @@ export const useBreadcrumbItems = () => {
   const entityDefUuid = entityDef.uuid;
 
   const itemLabelFunction = useCallback(
-    ({ nodeDef, record = null, entity = null, parentEntity = null }) => {
+    ({
+      nodeDef,
+      record = null,
+      entity = null,
+      parentEntity = null
+    }: any) => {
       const nodeDefLabel = NodeDefs.getLabelOrName(nodeDef, lang);
 
       if (

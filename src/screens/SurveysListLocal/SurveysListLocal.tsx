@@ -12,17 +12,24 @@ import {
   Searchbar,
   Text,
   VView,
+// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 } from "components";
+// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { ScreenViewMode, SurveyStatus, UpdateStatus } from "model";
+// @ts-expect-error TS(2307): Cannot find module 'service' or its corresponding ... Remove this comment to see the full error message
 import { SurveyService } from "service";
+// @ts-expect-error TS(2307): Cannot find module 'hooks' or its corresponding ty... Remove this comment to see the full error message
 import { useIsNetworkConnected, useNavigationFocus } from "hooks";
+// @ts-expect-error TS(2307): Cannot find module 'screens/SurveysList/useSurveys... Remove this comment to see the full error message
 import { useSurveysSearch } from "screens/SurveysList/useSurveysSearch";
 import {
   RemoteConnectionUtils,
   SurveyActions,
   ScreenOptionsSelectors,
   useConfirm,
+// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 } from "state";
+// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { ArrayUtils } from "utils";
 
 import { screenKeys } from "../screenKeys";
@@ -36,7 +43,10 @@ const testSurveyUuid = "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3";
 
 const minSurveysToShowSearchBar = 5;
 
-const determineSurveyStatus = ({ survey, remoteSurvey }) => {
+const determineSurveyStatus = ({
+  survey,
+  remoteSurvey
+}: any) => {
   if (survey.uuid === testSurveyUuid) return null;
 
   if (!remoteSurvey) {
@@ -48,7 +58,10 @@ const determineSurveyStatus = ({ survey, remoteSurvey }) => {
   return UpdateStatus.upToDate;
 };
 
-const determineStatusFieldStyle = ({ screenViewMode, updateStatusLoading }) => {
+const determineStatusFieldStyle = ({
+  screenViewMode,
+  updateStatusLoading
+}: any) => {
   if (screenViewMode === ScreenViewMode.table) {
     return { width: 10 };
   }
@@ -77,7 +90,10 @@ export const SurveysListLocal = () => {
 
     setState((statePrev) => ({
       ...statePrev,
-      surveys: _surveys.map((survey) => ({ ...survey, key: survey.id })),
+      surveys: _surveys.map((survey: any) => ({
+        ...survey,
+        key: survey.id
+      })),
       loading: false,
       updateStatusChecked: false,
       updateStatusLoading: false,
@@ -90,7 +106,7 @@ export const SurveysListLocal = () => {
     useSurveysSearch({ surveys });
 
   const onDeleteSelectedItemIds = useCallback(
-    async (surveyIds) => {
+    async (surveyIds: any) => {
       if (
         await confirm({
           titleKey: "surveys:confirmDeleteSurvey.title",
@@ -106,7 +122,7 @@ export const SurveysListLocal = () => {
   );
 
   const onItemPress = useCallback(
-    async (survey) => {
+    async (survey: any) => {
       const {
         id: surveyId,
         name: surveyName,
@@ -159,10 +175,13 @@ export const SurveysListLocal = () => {
       remoteSurveySummaries
     );
     const surveysUpdated = surveys.map((survey) => {
+      // @ts-expect-error TS(2339): Property 'uuid' does not exist on type 'never'.
       const remoteSurvey = remoteSurveySummariesByUuid[survey.uuid];
       const status = determineSurveyStatus({ survey, remoteSurvey });
+      // @ts-expect-error TS(2698): Spread types may only be created from object types... Remove this comment to see the full error message
       return { ...survey, status };
     });
+    // @ts-expect-error TS(2345): Argument of type '(statePrev: { surveys: never[]; ... Remove this comment to see the full error message
     setState((statePrev) => ({
       ...statePrev,
       surveys: surveysUpdated,
@@ -173,6 +192,7 @@ export const SurveysListLocal = () => {
 
   const onImportFromCloudPress = useCallback(async () => {
     if (await checkLoggedInUser({ dispatch, navigation })) {
+      // @ts-expect-error TS(2769): No overload matches this call.
       navigation.navigate(screenKeys.surveysListRemote);
     }
   }, [dispatch, navigation]);
@@ -192,6 +212,7 @@ export const SurveysListLocal = () => {
       _fields.push({
         key: "status",
         header: "common:status",
+        // @ts-expect-error TS(2345): Argument of type '{ key: string; header: string; s... Remove this comment to see the full error message
         style: determineStatusFieldStyle({
           screenViewMode,
           updateStatusLoading,

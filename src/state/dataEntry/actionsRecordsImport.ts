@@ -1,6 +1,8 @@
 import { JobStatus, Surveys } from "@openforis/arena-core";
 
+// @ts-expect-error TS(2307): Cannot find module 'service/recordService' or its ... Remove this comment to see the full error message
 import { RecordService } from "service/recordService";
+// @ts-expect-error TS(2307): Cannot find module 'service/recordsAndFilesImportJ... Remove this comment to see the full error message
 import { RecordsAndFilesImportJob } from "service/recordsAndFilesImportJob";
 import { JobMonitorActions } from "../jobMonitor/actions";
 import { MessageActions } from "../message";
@@ -8,14 +10,22 @@ import { RemoteConnectionSelectors } from "../remoteConnection/selectors";
 import { SurveySelectors } from "../survey/selectors";
 import { ToastActions } from "../toast";
 
-const handleImportErrors = ({ dispatch, error = null, errors = null }) => {
+const handleImportErrors = ({
+  dispatch,
+  error = null,
+  errors = null
+}: any) => {
   const details = error?.toString() ?? JSON.stringify(errors);
   dispatch(ToastActions.show("recordsList:importFailed", { details }));
 };
 
 export const importRecordsFromFile =
-  ({ fileUri, onImportComplete, overwriteExistingRecords = true }) =>
-  async (dispatch, getState) => {
+  ({
+    fileUri,
+    onImportComplete,
+    overwriteExistingRecords = true
+  }: any) =>
+  async (dispatch: any, getState: any) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -57,8 +67,8 @@ const _onExportFromServerJobComplete = async ({
   dispatch,
   state,
   job,
-  onImportComplete,
-}) => {
+  onImportComplete
+}: any) => {
   try {
     const { outputFileName: fileName } = job.result;
 
@@ -78,7 +88,10 @@ const _onExportFromServerJobComplete = async ({
   }
 };
 
-const checkCanImportRecords = ({ dispatch, survey }) => {
+const checkCanImportRecords = ({
+  dispatch,
+  survey
+}: any) => {
   let errorKey;
   if (!Surveys.isVisibleInMobile(survey)) {
     errorKey = "recordsList:importRecords.error.surveyNotVisibleInMobile";
@@ -93,8 +106,11 @@ const checkCanImportRecords = ({ dispatch, survey }) => {
 };
 
 export const importRecordsFromServer =
-  ({ recordUuids, onImportComplete }) =>
-  async (dispatch, getState) => {
+  ({
+    recordUuids,
+    onImportComplete
+  }: any) =>
+  async (dispatch: any, getState: any) => {
     try {
       const state = getState();
       const survey = SurveySelectors.selectCurrentSurvey(state);

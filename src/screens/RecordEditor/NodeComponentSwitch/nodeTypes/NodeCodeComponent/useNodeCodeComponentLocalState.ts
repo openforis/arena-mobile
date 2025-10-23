@@ -8,6 +8,7 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
+// @ts-expect-error TS(2307): Cannot find module 'service/surveyService' or its ... Remove this comment to see the full error message
 import { SurveyService } from "service/surveyService";
 
 import {
@@ -15,10 +16,14 @@ import {
   DataEntrySelectors,
   MessageActions,
   SurveySelectors,
+// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 } from "state";
 import { useItemsFilter } from "../useItemsFilter";
 
-export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
+export const useNodeCodeComponentLocalState = ({
+  parentNodeUuid,
+  nodeDef
+}: any) => {
   const dispatch = useDispatch();
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -63,9 +68,10 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
 
   const selectedItems = useMemo(
     () =>
-      nodes.reduce((acc, node) => {
+      nodes.reduce((acc: any, node: any) => {
         const item = Surveys.getCategoryItemByUuid({
           survey,
+          // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
           itemUuid: NodeValues.getItemUuid(node),
         });
         if (item) acc.push(item);
@@ -78,7 +84,7 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
     selectedItems.length === 1 ? selectedItems[0].uuid : null;
 
   const itemLabelFunction = useCallback(
-    (item) => {
+    (item: any) => {
       if (!item) return "";
 
       return NodeDefs.isCodeShown(cycle)(nodeDef)
@@ -89,7 +95,7 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
   );
 
   const onItemAdd = useCallback(
-    (itemUuid) => {
+    (itemUuid: any) => {
       const value = NodeValues.newCodeValue({ itemUuid });
       if (NodeDefs.isSingle(nodeDef)) {
         const node = nodes[0];
@@ -110,7 +116,7 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
   );
 
   const onItemRemove = useCallback(
-    (itemUuid) => {
+    (itemUuid: any) => {
       if (NodeDefs.isSingle(nodeDef)) {
         const node = nodes[0];
         dispatch(
@@ -118,7 +124,7 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
         );
       } else {
         const nodeToRemove = nodes.find(
-          (node) => NodeValues.getItemUuid(node) === itemUuid
+          (node: any) => NodeValues.getItemUuid(node) === itemUuid
         );
         dispatch(DataEntryActions.deleteNodes([nodeToRemove.uuid]));
       }
@@ -127,7 +133,7 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
   );
 
   const onSingleValueChange = useCallback(
-    (itemUuid) => {
+    (itemUuid: any) => {
       const node = nodes[0];
       const wasSelected = NodeValues.getItemUuid(node) === itemUuid;
       const value = wasSelected ? null : NodeValues.newCodeValue({ itemUuid });

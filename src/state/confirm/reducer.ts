@@ -9,8 +9,10 @@ const initialState = {
 const confirm = createAsyncThunk(
   "confirm/show",
   async (params, { getState }) => {
+    // @ts-expect-error TS(2339): Property 'selectedMultipleChoiceValues' does not e... Remove this comment to see the full error message
     const { selectedMultipleChoiceValues, selectedSingleChoiceValue } = params;
     const state = getState();
+    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     const { onConfirm } = state.confirm;
     await onConfirm?.({
       selectedMultipleChoiceValues,
@@ -23,6 +25,7 @@ const cancel = createAsyncThunk(
   "confirm/cancel",
   async (_params, { getState }) => {
     const state = getState();
+    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     const { onCancel } = state.confirm;
     await onCancel?.();
   }
@@ -64,8 +67,8 @@ export const ConfirmActions = {
     defaultMultipleChoiceValues = [],
     defaultSingleChoiceValue = null,
     swipeToConfirm = false,
-    swipeToConfirmTitleKey = "common:swipeToConfirm",
-  }) =>
+    swipeToConfirmTitleKey = "common:swipeToConfirm"
+  }: any) =>
     show({
       titleKey,
       cancelButtonStyle,
@@ -86,7 +89,11 @@ export const ConfirmActions = {
   dismiss,
 
   // internal (called from dialog component)
-  confirm: ({ selectedMultipleChoiceValues, selectedSingleChoiceValue }) =>
+  confirm: ({
+    selectedMultipleChoiceValues,
+    selectedSingleChoiceValue
+  }: any) =>
+    // @ts-expect-error TS(2345): Argument of type '{ selectedMultipleChoiceValues: ... Remove this comment to see the full error message
     confirm({ selectedMultipleChoiceValues, selectedSingleChoiceValue }),
   cancel,
 };

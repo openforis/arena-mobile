@@ -8,18 +8,20 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
+// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { RecordEditViewMode, RecordPageNavigator } from "model";
 import {
   DataEntrySelectors,
   SurveyOptionsSelectors,
   SurveySelectors,
+// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 } from "state";
 
 const calculateIsMaxCountReached = ({
   entityDef,
   parentEntityUuid,
-  record,
-}) => {
+  record
+}: any) => {
   const parentNode = parentEntityUuid
     ? Records.getNodeByUuid(parentEntityUuid)(record)
     : null;
@@ -39,8 +41,8 @@ const calculateHasCurrentEntityKeysSpecified = ({
   survey,
   entityDef,
   record,
-  entityUuid,
-}) => {
+  entityUuid
+}: any) => {
   const keyDefs = Surveys.getNodeDefKeys({ survey, nodeDef: entityDef });
   if (Objects.isEmpty(keyDefs)) return false;
 

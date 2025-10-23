@@ -1,16 +1,20 @@
 import React from "react";
 import { useDispatch } from "react-redux";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Surveys } from "@openforis/arena-core";
 
+// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { Cycles } from "model";
+// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { Dropdown, HView, SegmentedButtons, Text } from "components";
+// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 import { SurveyActions, SurveySelectors } from "state";
 
 import styles from "./styles";
 
-export const SurveyCycleSelector = (props) => {
+export const SurveyCycleSelector = (props: any) => {
   const { style } = props;
 
   const dispatch = useDispatch();
@@ -27,7 +31,7 @@ export const SurveyCycleSelector = (props) => {
 
   const selectedValue = singleCycle ? defaultCycleKey : cycle;
 
-  const onChange = (selectedCycleKey) => {
+  const onChange = (selectedCycleKey: any) => {
     dispatch(
       SurveyActions.setCurrentSurveyCycle({ cycleKey: selectedCycleKey })
     );

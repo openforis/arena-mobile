@@ -1,15 +1,17 @@
 import { useMemo } from "react";
 import { Text as RNText } from "react-native-paper";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
+// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { useIsTextDirectionRtl, useTranslation } from "localization";
 
-const styleToObject = (style) =>
-  Array.isArray(style)
-    ? Object.assign({}, ...style.map(styleToObject))
-    : (style ?? {});
+// @ts-expect-error TS(7023): 'styleToObject' implicitly has return type 'any' b... Remove this comment to see the full error message
+const styleToObject = (style: any) => Array.isArray(style)
+  ? Object.assign({}, ...style.map(styleToObject))
+  : (style ?? {});
 
-export const Text = (props) => {
+export const Text = (props: any) => {
   const {
     children,
     numberOfLines,

@@ -1,9 +1,13 @@
 import React from "react";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 import { Button as RNPButton } from "react-native-paper";
 
+// @ts-expect-error TS(2307): Cannot find module 'hooks/useEffectiveTheme' or it... Remove this comment to see the full error message
 import { useEffectiveTheme } from "hooks/useEffectiveTheme";
+// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { textDirections, useTextDirection, useTranslation } from "localization";
+// @ts-expect-error TS(2307): Cannot find module 'utils/BaseStyles' or its corre... Remove this comment to see the full error message
 import { BaseStyles } from "utils/BaseStyles";
 import { useButtonOnPress } from "./useButtonPress";
 
@@ -12,7 +16,7 @@ const iconPositionByTextDirection = {
   [textDirections.rtl]: "right",
 };
 
-export const Button = (props) => {
+export const Button = (props: any) => {
   const {
     avoidMultiplePress = true,
     color = "primary",

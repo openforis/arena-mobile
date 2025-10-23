@@ -1,8 +1,10 @@
 import { useEffect, useRef } from "react";
 import { Animated, Image } from "react-native";
 import { useAssets } from "expo-asset";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
+// @ts-expect-error TS(2307): Cannot find module 'components/HeartbeatAnimation'... Remove this comment to see the full error message
 import { HeartbeatAnimation } from "components/HeartbeatAnimation";
 
 const defaultStyle = { width: 50, height: 50 };
@@ -10,7 +12,7 @@ const defaultStyle = { width: 50, height: 50 };
 const animMinScale = 0.8;
 const animMaxScale = 1;
 
-export const AppLogo = (props) => {
+export const AppLogo = (props: any) => {
   const { animated = false, style } = props;
 
   const scaleValueRef = useRef(new Animated.Value(1));
@@ -27,6 +29,7 @@ export const AppLogo = (props) => {
 
   if (!logo) return null;
 
+  // @ts-expect-error TS(2769): No overload matches this call.
   const image = <Image source={logo} style={[defaultStyle, style]} />;
 
   if (animated) {

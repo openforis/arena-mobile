@@ -1,16 +1,18 @@
 import { useMemo } from "react";
 
+// @ts-expect-error TS(2307): Cannot find module 'model/Taxa' or its correspondi... Remove this comment to see the full error message
 import { Taxa } from "model/Taxa";
+// @ts-expect-error TS(2307): Cannot find module 'utils/LanguageUtils' or its co... Remove this comment to see the full error message
 import { LanguageUtils } from "utils/LanguageUtils";
 
-const calculateVernacularNamesCount = (taxon) =>
-  Object.values(taxon.vernacularNames).reduce(
-    (acc, vernacularNamesArray) => acc + vernacularNamesArray.length,
-    0
-  );
+const calculateVernacularNamesCount = (taxon: any) => Object.values(taxon.vernacularNames).reduce(
+  // @ts-expect-error TS(2571): Object is of type 'unknown'.
+  (acc, vernacularNamesArray) => acc + vernacularNamesArray.length,
+  0
+);
 
 const addVernacularNameObjectToItems =
-  (items, taxonItem) => (vernacularNameObj) => {
+  (items: any, taxonItem: any) => (vernacularNameObj: any) => {
     const { name: vernacularName, lang: vernacularNameLangCode } =
       vernacularNameObj.props;
     items.push({
@@ -21,16 +23,20 @@ const addVernacularNameObjectToItems =
     });
   };
 
-const joinVernacularNameObjects = ({ taxonItem }) =>
+const joinVernacularNameObjects = ({
+  taxonItem
+}: any) =>
   Object.entries(taxonItem.vernacularNames)
     .reduce((acc, [lang, vernacularNameObjects]) => {
+      // @ts-expect-error TS(2571): Object is of type 'unknown'.
       const vernacularNamesInLangJoint = vernacularNameObjects
-        .map((vernacularNameObj) => {
+        .map((vernacularNameObj: any) => {
           const { name: vernacularName } = vernacularNameObj.props;
           return vernacularName;
         })
         .join(" / ");
       const langText = LanguageUtils.getLanguageLabel(lang);
+      // @ts-expect-error TS(2345): Argument of type 'string' is not assignable to par... Remove this comment to see the full error message
       acc.push(`${vernacularNamesInLangJoint} (${langText})`);
       return acc;
     }, [])
@@ -39,23 +45,29 @@ const joinVernacularNameObjects = ({ taxonItem }) =>
 export const useTaxa = ({
   survey,
   taxonomyUuid,
-  joinVernacularNames = false,
-}) => {
+  joinVernacularNames = false
+}: any) => {
   const { taxa, unknownTaxon, unlistedTaxon } = useMemo(() => {
     const taxaByCode = {};
     const allTaxa = Object.values(survey.refData?.taxonIndex ?? {});
     const taxaReduced = allTaxa.reduce((acc, taxon) => {
+      // @ts-expect-error TS(2571): Object is of type 'unknown'.
       if (taxon.taxonomyUuid !== taxonomyUuid) {
         return acc;
       }
+      // @ts-expect-error TS(2571): Object is of type 'unknown'.
       const taxonCode = taxon.props.code;
+      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       taxaByCode[taxonCode] = taxon;
 
       const taxonItem = {
+        // @ts-expect-error TS(2698): Spread types may only be created from object types... Remove this comment to see the full error message
         ...taxon,
         vernacularNamesCount: calculateVernacularNamesCount(taxon),
       };
+      // @ts-expect-error TS(2571): Object is of type 'unknown'.
       acc.push(taxonItem);
+      // @ts-expect-error TS(2571): Object is of type 'unknown'.
       const vernacularNamesByLang = taxon.vernacularNames;
       const vernacularNamesArray = Object.values(vernacularNamesByLang);
       if (vernacularNamesArray.length > 0) {
@@ -65,6 +77,7 @@ export const useTaxa = ({
           });
         } else {
           vernacularNamesArray.forEach((vernacularNameObjects) => {
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             vernacularNameObjects.forEach(
               addVernacularNameObjectToItems(acc, taxonItem)
             );
@@ -73,7 +86,9 @@ export const useTaxa = ({
       }
       return acc;
     }, []);
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     const _unlistedTaxon = taxaByCode[Taxa.unlistedCode];
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     const _unknownTaxon = taxaByCode[Taxa.unknownCode];
     return {
       taxa: taxaReduced,

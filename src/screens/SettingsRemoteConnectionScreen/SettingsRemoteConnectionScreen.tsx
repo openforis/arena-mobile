@@ -16,14 +16,19 @@ import {
   TextInput,
   TextInputPassword,
   VView,
+// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 } from "components";
+// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { useTranslation } from "localization";
+// @ts-expect-error TS(2307): Cannot find module 'service' or its corresponding ... Remove this comment to see the full error message
 import { SettingsService } from "service";
 import {
   MessageActions,
   RemoteConnectionActions,
   RemoteConnectionSelectors,
+// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 } from "state";
+// @ts-expect-error TS(2307): Cannot find module 'hooks' or its corresponding ty... Remove this comment to see the full error message
 import { useIsNetworkConnected } from "hooks";
 import styles from "./styles";
 
@@ -80,26 +85,24 @@ export const SettingsRemoteConnectionScreen = () => {
   }, [initialize, user]);
 
   const onServerUrlTypeChange = useCallback(
-    async (type) =>
-      setState((statePrev) => ({
-        ...statePrev,
-        serverUrlType: type,
-        serverUrl:
-          type === serverUrlTypes.default
-            ? SettingsService.defaultServerUrl
-            : serverUrl,
-        serverUrlVerified: false,
-      })),
+    async (type: any) => setState((statePrev) => ({
+      ...statePrev,
+      serverUrlType: type,
+      serverUrl:
+        type === serverUrlTypes.default
+          ? SettingsService.defaultServerUrl
+          : serverUrl,
+      serverUrlVerified: false,
+    })),
     [serverUrl]
   );
 
   const onServerUrlChange = useCallback(
-    (serverUrlUpdated) =>
-      setState((statePrev) => ({
-        ...statePrev,
-        serverUrl: serverUrlUpdated.trim(),
-        serverUrlVerified: false,
-      })),
+    (serverUrlUpdated: any) => setState((statePrev) => ({
+      ...statePrev,
+      serverUrl: serverUrlUpdated.trim(),
+      serverUrlVerified: false,
+    })),
     []
   );
 
@@ -116,16 +119,15 @@ export const SettingsRemoteConnectionScreen = () => {
   }, [dispatch, serverUrl]);
 
   const onEmailChange = useCallback(
-    (text) =>
-      setState((statePrev) => ({
-        ...statePrev,
-        email: text,
-      })),
+    (text: any) => setState((statePrev) => ({
+      ...statePrev,
+      email: text,
+    })),
     []
   );
 
   const onPasswordChange = useCallback(
-    (text) => setState((statePrev) => ({ ...statePrev, password: text })),
+    (text: any) => setState((statePrev) => ({ ...statePrev, password: text })),
     []
   );
 

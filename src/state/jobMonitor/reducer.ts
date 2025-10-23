@@ -13,12 +13,18 @@ const initialState = {
 };
 
 const actionHandlers = {
-  [JobMonitorActions.JOB_MONITOR_START]: ({ state, action }) => ({
+  [JobMonitorActions.JOB_MONITOR_START]: ({
+    state,
+    action
+  }: any) => ({
     ...initialState,
     ...action.payload,
     isOpen: true,
   }),
-  [JobMonitorActions.JOB_MONITOR_UPDATE]: ({state, action}) => ({
+  [JobMonitorActions.JOB_MONITOR_UPDATE]: ({
+    state,
+    action
+  }: any) => ({
     ...state,
     ...action.payload
   }),

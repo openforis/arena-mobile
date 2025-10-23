@@ -2,14 +2,16 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { TouchableOpacity } from "react-native";
 import { Avatar } from "react-native-paper";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import {
   RemoteConnectionActions,
   RemoteConnectionSelectors,
+// @ts-expect-error TS(2307): Cannot find module 'state/remoteConnection' or its... Remove this comment to see the full error message
 } from "state/remoteConnection";
 
-const UserProfileAvatar = (props) => {
+const UserProfileAvatar = (props: any) => {
   const { loading, size, uri, user } = props;
   if (loading) return <Avatar.Icon icon="loading" size={size} />;
   if (uri) return <Avatar.Image source={{ uri }} size={size} />;
@@ -27,7 +29,7 @@ UserProfileAvatar.propTypes = {
   user: PropTypes.object,
 };
 
-export const UserProfileIcon = (props) => {
+export const UserProfileIcon = (props: any) => {
   const { onPress, size = 30 } = props;
   if (__DEV__) console.log(`rendering UserProfileIcon`);
 

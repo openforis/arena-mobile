@@ -4,9 +4,13 @@ import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import MenuDrawer from "react-native-side-drawer";
 
+// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { HView, VView, View } from "components";
+// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { useIsTextDirectionRtl } from "localization";
+// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { RecordEditViewMode } from "model";
+// @ts-expect-error TS(2307): Cannot find module 'hooks' or its corresponding ty... Remove this comment to see the full error message
 import { useBackHandler, useNavigationIsFocused } from "hooks";
 import {
   DataEntryActions,
@@ -14,6 +18,7 @@ import {
   DeviceInfoSelectors,
   SettingsSelectors,
   SurveyOptionsSelectors,
+// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 } from "state";
 
 import { BottomNavigationBar } from "./BottomNavigationBar";
@@ -36,6 +41,7 @@ export const RecordEditor = () => {
   const isNavigationFocused = useNavigationIsFocused();
   const isRtl = useIsTextDirectionRtl();
 
+  // @ts-expect-error TS(7030): Not all code paths return a value.
   const onBack = useCallback(() => {
     if (isNavigationFocused) {
       dispatch(DataEntryActions.navigateToRecordsList({ navigation }));
@@ -86,8 +92,10 @@ export const RecordEditor = () => {
 
   if (isPhone) {
     return (
+      // @ts-expect-error TS(2769): No overload matches this call.
       <MenuDrawer
         animationTime={250}
+        // @ts-expect-error TS(2786): 'RecordEditorDrawer' cannot be used as a JSX compo... Remove this comment to see the full error message
         drawerContent={<RecordEditorDrawer />}
         drawerPercentage={75}
         opacity={0.4}
@@ -103,6 +111,7 @@ export const RecordEditor = () => {
     <HView style={styles.externalContainerInTablet}>
       {pageSelectorOpen && (
         <View style={styles.drawerWrapperInTablet}>
+          // @ts-expect-error TS(2786): 'RecordEditorDrawer' cannot be used as a JSX compo... Remove this comment to see the full error message
           <RecordEditorDrawer />
         </View>
       )}

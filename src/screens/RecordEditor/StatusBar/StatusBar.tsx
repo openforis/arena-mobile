@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import {
@@ -8,10 +9,15 @@ import {
   HView,
   Icon,
   Text,
+// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 } from "components";
+// @ts-expect-error TS(2307): Cannot find module 'appComponents/GpsLockingEnable... Remove this comment to see the full error message
 import { GpsLockingEnabledWarning } from "appComponents/GpsLockingEnabledWarning";
+// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { useTranslation } from "localization";
+// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { BatteryState } from "model";
+// @ts-expect-error TS(2307): Cannot find module 'service' or its corresponding ... Remove this comment to see the full error message
 import { RecordFileService } from "service";
 import {
   DeviceInfoSelectors,
@@ -19,8 +25,11 @@ import {
   SurveySelectors,
   useBatteryStateListener,
   useFreeDiskStorageMonitor,
+// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 } from "state";
+// @ts-expect-error TS(2307): Cannot find module 'state/deviceInfo/useIsNetworkC... Remove this comment to see the full error message
 import { useIsNetworkConnectedMonitor } from "state/deviceInfo/useIsNetworkConnectedMonitor";
+// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { Environment, Files, TimeUtils } from "utils";
 
 import { BatteryIcon } from "./BatteryIcon";
@@ -29,10 +38,9 @@ import styles from "./styles";
 
 const batteryStatusAvailable = !Environment.isIOS;
 
-const getBatteryPercent = (batteryLevel) =>
-  `${Math.round(batteryLevel * 100)}%`;
+const getBatteryPercent = (batteryLevel: any) => `${Math.round(batteryLevel * 100)}%`;
 
-const StatusBarPanel = (props) => {
+const StatusBarPanel = (props: any) => {
   const {
     batteryLevel,
     batteryState,
@@ -113,6 +121,7 @@ const StatusBarPanel = (props) => {
             {recordFilesSize}
           </FormItem>
         )}
+        // @ts-expect-error TS(2365): Operator '>' cannot be applied to types 'string' a... Remove this comment to see the full error message
         {tempFilesSize > 0 && (
           <FormItem labelKey="device:internalMemory.tempFilesSize">
             {tempFilesSize}
@@ -151,19 +160,17 @@ export const StatusBar = () => {
   const settings = SettingsSelectors.useSettings();
   const { locationGpsLocked } = settings;
 
-  const formatRemainingTimeCompact = (time) =>
-    TimeUtils.formatRemainingTimeIfLessThan1Day({
-      time,
-      t,
-      formatMode: TimeUtils.formatModes.compact,
-    });
+  const formatRemainingTimeCompact = (time: any) => TimeUtils.formatRemainingTimeIfLessThan1Day({
+    time,
+    t,
+    formatMode: TimeUtils.formatModes.compact,
+  });
 
-  const formatRemainingTimeShort = (time) =>
-    TimeUtils.formatRemainingTimeIfLessThan1Day({
-      time,
-      t,
-      formatMode: TimeUtils.formatModes.short,
-    });
+  const formatRemainingTimeShort = (time: any) => TimeUtils.formatRemainingTimeIfLessThan1Day({
+    time,
+    t,
+    formatMode: TimeUtils.formatModes.short,
+  });
 
   const batteryTimeToDischargeFormatted = formatRemainingTimeCompact(
     batteryTimeToDischarge

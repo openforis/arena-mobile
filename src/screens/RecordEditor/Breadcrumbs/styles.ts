@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+// @ts-expect-error TS(2307): Cannot find module 'utils/BaseStyles' or its corre... Remove this comment to see the full error message
 import { BaseStyles } from "utils/BaseStyles";
 
 export default StyleSheet.create({

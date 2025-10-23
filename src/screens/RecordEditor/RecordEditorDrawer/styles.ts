@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { useTheme } from "react-native-paper";
+// @ts-expect-error TS(2307): Cannot find module 'state/deviceInfo' or its corre... Remove this comment to see the full error message
 import { DeviceInfoSelectors } from "state/deviceInfo";
 
 export const useStyles = () => {

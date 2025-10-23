@@ -1,8 +1,11 @@
 import i18n from "i18next";
 import { initReactI18next, useTranslation } from "react-i18next";
 
+// @ts-expect-error TS(2307): Cannot find module 'model/LanguageSettings' or its... Remove this comment to see the full error message
 import { LanguageConstants } from "model/LanguageSettings";
+// @ts-expect-error TS(2307): Cannot find module 'service/settingsService' or it... Remove this comment to see the full error message
 import { SettingsService } from "service/settingsService";
+// @ts-expect-error TS(2307): Cannot find module 'utils/SystemUtils' or its corr... Remove this comment to see the full error message
 import { SystemUtils } from "utils/SystemUtils";
 
 import de from "./de";
@@ -20,22 +23,20 @@ const supportedLngs = Object.keys(resources);
 const fallbackLng = "en";
 const sysLng = SystemUtils.getLanguageCode();
 
-const toSupportedLanguage = (lang) =>
-  supportedLngs.includes(lang) ? lang : fallbackLng;
+const toSupportedLanguage = (lang: any) => supportedLngs.includes(lang) ? lang : fallbackLng;
 
 const systemLanguageOrDefault = toSupportedLanguage(sysLng);
 
-const toFinalSuppotedLang = (lang) =>
-  lang === LanguageConstants.system
-    ? systemLanguageOrDefault
-    : toSupportedLanguage(lang);
+const toFinalSuppotedLang = (lang: any) => lang === LanguageConstants.system
+  ? systemLanguageOrDefault
+  : toSupportedLanguage(lang);
 
 const languageDetector = {
   type: "languageDetector",
   async: true,
-  detect: (callback) => {
+  detect: (callback: any) => {
     SettingsService.fetchSettings()
-      .then((settings) => {
+      .then((settings: any) => {
         const { language: langInSettings } = settings;
         const targetLanguage = toFinalSuppotedLang(langInSettings);
         callback(targetLanguage);
@@ -46,7 +47,9 @@ const languageDetector = {
   },
 };
 
+// @ts-expect-error TS(2769): No overload matches this call.
 i18n
+  // @ts-expect-error TS(2345): Argument of type '{ type: string; async: boolean; ... Remove this comment to see the full error message
   .use(languageDetector)
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
@@ -62,7 +65,7 @@ i18n
     supportedLngs,
   });
 
-const changeLanguage = (lang) => {
+const changeLanguage = (lang: any) => {
   const supportedLang = toFinalSuppotedLang(lang);
   i18n.changeLanguage(supportedLang);
 };

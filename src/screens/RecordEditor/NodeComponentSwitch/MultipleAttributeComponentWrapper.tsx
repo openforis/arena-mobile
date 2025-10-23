@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 
 import { NodeDefs, Nodes } from "@openforis/arena-core";
 
+// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { HView, IconButton, VView } from "components";
 import {
   DataEntryActions,
@@ -10,6 +11,7 @@ import {
   MessageActions,
   SurveySelectors,
   useConfirm,
+// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 } from "state";
 
 import { NewNodeButton } from "../NewNodeButton";
@@ -18,7 +20,7 @@ import { NodeComponentPropTypes } from "./nodeTypes/nodeComponentPropTypes";
 
 import styles from "./multipleAttributeComponentWrapperStyles";
 
-export const MultipleAttributeComponentWrapper = (props) => {
+export const MultipleAttributeComponentWrapper = (props: any) => {
   const { nodeDef, parentNodeUuid } = props;
 
   if (__DEV__) {
@@ -62,7 +64,7 @@ export const MultipleAttributeComponentWrapper = (props) => {
     }
   }, [dispatch, nodeDef, nodes, parentNodeUuid]);
 
-  const onDeletePress = (node) => async () => {
+  const onDeletePress = (node: any) => async () => {
     const performDelete = () =>
       dispatch(DataEntryActions.deleteNodes([node.uuid]));
 
@@ -76,17 +78,16 @@ export const MultipleAttributeComponentWrapper = (props) => {
 
   return (
     <VView style={styles.container}>
-      {nodes.map((node) => (
-        <HView key={node.uuid}>
-          <SingleAttributeComponentSwitch
-            nodeDef={nodeDef}
-            nodeUuid={node.uuid}
-            parentNodeUuid={parentNodeUuid}
-            wrapperStyle={styles.attributeComponentWrapper}
-          />
-          <IconButton icon="trash-can-outline" onPress={onDeletePress(node)} />
-        </HView>
-      ))}
+      {nodes.map((node: any) => <HView key={node.uuid}>
+        <SingleAttributeComponentSwitch
+          nodeDef={nodeDef}
+          nodeUuid={node.uuid}
+          parentNodeUuid={parentNodeUuid}
+          wrapperStyle={styles.attributeComponentWrapper}
+        />
+        <IconButton icon="trash-can-outline" onPress={onDeletePress(node)} />
+      </HView>)}
+      // @ts-expect-error TS(2786): 'NewNodeButton' cannot be used as a JSX component.
       <NewNodeButton
         disabled={maxCountReached}
         nodeDefLabel={nodeDefLabel}

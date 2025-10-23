@@ -1,11 +1,16 @@
+// @ts-expect-error TS(2307): Cannot find module 'utils/RNFileProcessor' or its ... Remove this comment to see the full error message
 import { RNFileProcessor } from "utils/RNFileProcessor";
 
+// @ts-expect-error TS(2307): Cannot find module 'utils/Functions' or its corres... Remove this comment to see the full error message
 import { Functions } from "utils/Functions";
 import { RemoteService } from "./remoteService";
 
 const uploadChunkSize = 700 * 1024; // 700KB (post requests bigger than this are truncated, check why)
 
-const fetchRecordsSummaries = async ({ surveyRemoteId, cycle }) => {
+const fetchRecordsSummaries = async ({
+  surveyRemoteId,
+  cycle
+}: any) => {
   const { data } = await RemoteService.get(
     `api/survey/${surveyRemoteId}/records/summary`,
     { cycle }
@@ -14,7 +19,11 @@ const fetchRecordsSummaries = async ({ surveyRemoteId, cycle }) => {
   return list;
 };
 
-const startExportRecords = async ({ survey, cycle, recordUuids }) => {
+const startExportRecords = async ({
+  survey,
+  cycle,
+  recordUuids
+}: any) => {
   const { remoteId: surveyRemoteId } = survey;
   const params = { cycle, recordUuids };
 
@@ -27,8 +36,12 @@ const startExportRecords = async ({ survey, cycle, recordUuids }) => {
   return job;
 };
 
-const downloadExportedRecordsFile = async ({ survey, fileName }) => {
+const downloadExportedRecordsFile = async ({
+  survey,
+  fileName
+}: any) => {
   const { remoteId: surveyRemoteId } = survey;
+  // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
   const fileUri = await RemoteService.getFile(
     `api/survey/${surveyRemoteId}/records/export/download`,
     { fileName }
@@ -44,20 +57,27 @@ const uploadRecords = ({
   startFromChunk,
   conflictResolutionStrategy,
   onUploadProgress,
-  requestTimeout = 20000,
-}) => {
+  requestTimeout = 20000
+}: any) => {
   const surveyRemoteId = survey.remoteId;
-  let fileProcessor = null;
+  let fileProcessor: any = null;
 
-  const debouncedUploadProgress = Functions.throttle(({ total, loaded }) => {
+  const debouncedUploadProgress = Functions.throttle(({
+    total,
+    loaded
+  }: any) => {
     onUploadProgress({ total, loaded });
   }, 1000);
 
-  let lastRequestCancel = null;
+  let lastRequestCancel: any = null;
   const promise = new Promise((resolve, reject) => {
     fileProcessor = new RNFileProcessor({
       filePath: fileUri,
-      chunkProcessor: async ({ chunk, totalChunks, content }) => {
+      chunkProcessor: async ({
+        chunk,
+        totalChunks,
+        content
+      }: any) => {
         const params = {
           file: content,
           fileId,
@@ -66,7 +86,7 @@ const uploadRecords = ({
           cycle,
           conflictResolutionStrategy,
         };
-        const progressHandler = (progressEvent) => {
+        const progressHandler = (progressEvent: any) => {
           const { progress: uploadedChunkPercent } = progressEvent;
           const previouslyUploadedChunks = chunk - 1;
           const uploadedChunks =

@@ -1,6 +1,8 @@
 import React from "react";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
+// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { UpdateStatus } from "model";
 
 import { IconButton } from "../IconButton";
@@ -15,7 +17,11 @@ const iconByUpdateStatus = {
   [UpdateStatus.error]: "alert-circle",
 };
 
-export const UpdateStatusIcon = ({ loading, updateStatus, onPress }) => {
+export const UpdateStatusIcon = ({
+  loading,
+  updateStatus,
+  onPress
+}: any) => {
   const icon = loading ? "loading" : iconByUpdateStatus[updateStatus];
 
   return (

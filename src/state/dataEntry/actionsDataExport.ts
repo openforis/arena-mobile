@@ -1,17 +1,24 @@
 import { JobStatus, Objects, Surveys } from "@openforis/arena-core";
 
+// @ts-expect-error TS(2307): Cannot find module 'service' or its corresponding ... Remove this comment to see the full error message
 import { AuthService, RecordService } from "service";
+// @ts-expect-error TS(2307): Cannot find module 'service/recordsExportFileGener... Remove this comment to see the full error message
 import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerationJob";
 
+// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { i18n } from "localization";
 import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { JobMonitorActions } from "../jobMonitor";
 import { MessageActions } from "../message";
 
 import { SurveySelectors } from "../survey";
+// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { Files, Jobs } from "utils";
+// @ts-expect-error TS(2307): Cannot find module 'model/utils/ValidationUtils' o... Remove this comment to see the full error message
 import { ValidationUtils } from "model/utils/ValidationUtils";
+// @ts-expect-error TS(2307): Cannot find module 'service/recordsUploadJob' or i... Remove this comment to see the full error message
 import { RecordsUploadJob } from "service/recordsUploadJob";
+// @ts-expect-error TS(2307): Cannot find module 'state/remoteConnection' or its... Remove this comment to see the full error message
 import { RemoteConnectionSelectors } from "state/remoteConnection";
 
 const { t } = i18n;
@@ -21,7 +28,7 @@ const exportType = {
   share: "share",
 };
 
-const errorOrJobToString = (errorOrJob) => {
+const errorOrJobToString = (errorOrJob: any) => {
   if (!errorOrJob) {
     return "";
   }
@@ -35,17 +42,20 @@ const errorOrJobToString = (errorOrJob) => {
   return JSON.stringify(errorOrJob);
 };
 
-const handleError = (error) => (dispatch) =>
-  dispatch(
-    MessageActions.setMessage({
-      content: "dataEntry:dataExport.error",
-      contentParams: { details: errorOrJobToString(error) },
-    })
-  );
+const handleError = (error: any) => (dispatch: any) => dispatch(
+  MessageActions.setMessage({
+    content: "dataEntry:dataExport.error",
+    contentParams: { details: errorOrJobToString(error) },
+  })
+);
 
 const startUploadDataToRemoteServer =
-  ({ outputFileUri, conflictResolutionStrategy, onJobComplete = null }) =>
-  async (dispatch, getState) => {
+  ({
+    outputFileUri,
+    conflictResolutionStrategy,
+    onJobComplete = null
+  }: any) =>
+  async (dispatch: any, getState: any) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -81,6 +91,7 @@ const startUploadDataToRemoteServer =
             uploadComplete = true;
           } else {
             // error occurred
+            // @ts-expect-error TS(2339): Property 'errors' does not exist on type 'unknown'... Remove this comment to see the full error message
             const { errors } = error;
             const errorMessage = errors
               ? Jobs.extractErrorMessage({ errors, t })
@@ -99,6 +110,7 @@ const startUploadDataToRemoteServer =
       }
       if (!uploadJobComplete) return;
 
+      // @ts-expect-error TS(2571): Object is of type 'unknown'.
       const { remoteJob } = uploadJobComplete.result;
 
       dispatch(
@@ -122,9 +134,9 @@ const onExportConfirmed =
     selectedSingleChoiceValue,
     conflictResolutionStrategy,
     outputFileUri,
-    onJobComplete,
-  }) =>
-  async (dispatch) => {
+    onJobComplete
+  }: any) =>
+  async (dispatch: any) => {
     try {
       switch (selectedSingleChoiceValue) {
         case exportType.remote:
@@ -148,7 +160,11 @@ const onExportConfirmed =
     }
   };
 
-const _onExportFileGenerationError = ({ errors, dispatch }) => {
+const _onExportFileGenerationError = ({
+  errors,
+  dispatch
+}: any) => {
+  // @ts-expect-error TS(2571): Object is of type 'unknown'.
   const validationErrors = Object.values(errors).map((item) => item.error);
   const details = validationErrors
     .map((validationError) =>
@@ -172,8 +188,8 @@ const _onExportFileGenerationSucceeded = async ({
   onlyRemote = false,
   conflictResolutionStrategy,
   onJobComplete,
-  dispatch,
-}) => {
+  dispatch
+}: any) => {
   const { outputFileUri } = result || {};
   const availableExportTypes = [];
   if (!onlyLocally) {
@@ -182,7 +198,9 @@ const _onExportFileGenerationSucceeded = async ({
   if (!onlyRemote && (await Files.isSharingAvailable())) {
     availableExportTypes.push(exportType.share);
   }
-  const onConfirm = ({ selectedSingleChoiceValue }) => {
+  const onConfirm = ({
+    selectedSingleChoiceValue
+  }: any) => {
     dispatch(
       onExportConfirmed({
         selectedSingleChoiceValue,
@@ -219,14 +237,14 @@ export const exportRecords =
     onlyLocally = false,
     onlyRemote = false,
     onJobComplete: onJobCompleteParam = null,
-    onEnd = null,
-  }) =>
-  async (dispatch, getState) => {
+    onEnd = null
+  }: any) =>
+  async (dispatch: any, getState: any) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const surveyId = survey.id;
 
-    const onJobComplete = async (jobComplete) => {
+    const onJobComplete = async (jobComplete: any) => {
       const { result } = jobComplete;
       const { mergedRecordsMap } = result;
 

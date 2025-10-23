@@ -6,7 +6,10 @@ import { SurveyActionTypes } from "./actionTypes";
 import { determinePreferredSurveyLanguage } from "./surveyStateUtils";
 
 const actionHandlers = {
-  [SurveyActionTypes.CURRENT_SURVEY_SET]: ({ state, action }) => {
+  [SurveyActionTypes.CURRENT_SURVEY_SET]: ({
+    state,
+    action
+  }: any) => {
     const { survey, preferredLanguage = null } = action;
 
     return {
@@ -19,16 +22,22 @@ const actionHandlers = {
   },
   [SurveyActionTypes.CURRENT_SURVEY_PREFERRED_LANG_SET]: ({
     state,
-    action,
-  }) => ({
+    action
+  }: any) => ({
     ...state,
     currentSurveyPreferredLanguage: action.lang,
   }),
-  [SurveyActionTypes.CURRENT_SURVEY_CYCLE_SET]: ({ state, action }) => ({
+  [SurveyActionTypes.CURRENT_SURVEY_CYCLE_SET]: ({
+    state,
+    action
+  }: any) => ({
     ...state,
     currentSurveyCycle: action.cycleKey,
   }),
-  [SurveyActionTypes.SURVEYS_LOCAL_SET]: ({ state, action }) => ({
+  [SurveyActionTypes.SURVEYS_LOCAL_SET]: ({
+    state,
+    action
+  }: any) => ({
     ...state,
     surveysLocal: action.surveys,
   }),

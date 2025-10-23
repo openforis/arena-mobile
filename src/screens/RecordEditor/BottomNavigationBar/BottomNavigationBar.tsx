@@ -3,9 +3,13 @@ import { useDispatch } from "react-redux";
 
 import { NodeDefs } from "@openforis/arena-core";
 
+// @ts-expect-error TS(2307): Cannot find module 'appComponents/NavigateToRecord... Remove this comment to see the full error message
 import { NavigateToRecordsListButton } from "appComponents/NavigateToRecordsListButton";
+// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { HView, IconButton, View } from "components";
+// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { textDirections, useTextDirection } from "localization";
+// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 import { DataEntryActions, DataEntrySelectors } from "state";
 
 import { NodePageNavigationButton } from "./NodePageNavigationButton";

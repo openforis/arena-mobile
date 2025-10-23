@@ -5,10 +5,15 @@ import * as Location from "expo-location";
 
 import { NodeDefFileType, NodeDefs, UUIDs } from "@openforis/arena-core";
 
+// @ts-expect-error TS(2307): Cannot find module 'hooks' or its corresponding ty... Remove this comment to see the full error message
 import { useRequestCameraPermission, useToast } from "hooks";
+// @ts-expect-error TS(2307): Cannot find module 'screens/RecordEditor/useNodeCo... Remove this comment to see the full error message
 import { useNodeComponentLocalState } from "screens/RecordEditor/useNodeComponentLocalState";
+// @ts-expect-error TS(2307): Cannot find module 'state/confirm' or its correspo... Remove this comment to see the full error message
 import { useConfirm } from "state/confirm";
+// @ts-expect-error TS(2307): Cannot find module 'state/settings' or its corresp... Remove this comment to see the full error message
 import { SettingsSelectors } from "state/settings";
+// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { ExifUtils, Files, ImageUtils, Permissions } from "utils";
 
 import { useCheckCanAccessMediaLibrary } from "./useCheckCanAccessMediaLibrary";
@@ -18,7 +23,10 @@ const mediaTypeByFileType = {
   [NodeDefFileType.video]: "videos",
 };
 
-const determineFileMaxSize = ({ nodeDef, settings }) => {
+const determineFileMaxSize = ({
+  nodeDef,
+  settings
+}: any) => {
   const { imageSizeLimit, imageSizeUnlimited } = settings;
   const nodeDefFileMaxSize = NodeDefs.getFileMaxSize(nodeDef);
   if (imageSizeUnlimited) {
@@ -27,7 +35,7 @@ const determineFileMaxSize = ({ nodeDef, settings }) => {
   return Math.min(nodeDefFileMaxSize ?? 0, imageSizeLimit ?? 0);
 };
 
-const setLocationInFile = async (fileUri) => {
+const setLocationInFile = async (fileUri: any) => {
   // get current location and set it in file exif metadata
   try {
     if (await Permissions.requestLocationForegroundPermission()) {
@@ -43,12 +51,12 @@ const setLocationInFile = async (fileUri) => {
 };
 
 const resizeImage = async (
-  sourceFileUri,
-  sourceFileSize,
-  maxSize,
-  maxSizeMB,
-  setResizing,
-  toaster
+  sourceFileUri: any,
+  sourceFileSize: any,
+  maxSize: any,
+  maxSizeMB: any,
+  setResizing: any,
+  toaster: any
 ) => {
   setResizing(true);
 
@@ -80,7 +88,10 @@ const resizeImage = async (
   return { fileUri, fileSize };
 };
 
-export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
+export const useNodeFileComponent = ({
+  nodeDef,
+  nodeUuid
+}: any) => {
   const toaster = useToast();
   const confirm = useConfirm();
   const settings = SettingsSelectors.useSettings();
@@ -94,6 +105,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
   const maxSizeMB = determineFileMaxSize({ nodeDef, settings });
   const maxSize = maxSizeMB ? maxSizeMB * Math.pow(1024, 2) : undefined;
 
+  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   const mediaTypes = mediaTypeByFileType[fileType];
 
   const imagePickerOptions = useMemo(
@@ -113,7 +125,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }) => {
   const [resizing, setResizing] = useState(false);
 
   const onFileSelected = useCallback(
-    async (result, fromCamera = false) => {
+    async (result: any, fromCamera = false) => {
       const { assets, canceled, didCancel } = result;
       if (canceled || didCancel) return;
 

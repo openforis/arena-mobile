@@ -6,7 +6,9 @@ import {
   Icon,
   Text,
   Tooltip,
+// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 } from "components";
+// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { ScreenViewMode, SurveyStatus, UpdateStatus } from "model";
 
 const statusIconByStatus = {
@@ -25,7 +27,7 @@ const statusIconColorByStatus = {
   [SurveyStatus.notVisibleInMobile]: "red",
 };
 
-export const SurveyStatusCell = (props) => {
+export const SurveyStatusCell = (props: any) => {
   const { item, viewMode } = props;
   const { status } = item;
 

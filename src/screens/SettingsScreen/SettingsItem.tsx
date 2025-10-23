@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Numbers, Objects } from "@openforis/arena-core";
@@ -9,19 +10,21 @@ import {
   Slider,
   Switch,
   TextInput,
+// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 } from "components";
+// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { i18n } from "localization";
+// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { SettingsModel } from "model";
 import { SettingsFormItem } from "./SettingsFormItem";
 
-const numberToString = (value) => (Objects.isEmpty(value) ? "" : String(value));
-const stringToNumber = (value) =>
-  Objects.isEmpty(value) ? NaN : Number(value);
+const numberToString = (value: any) => Objects.isEmpty(value) ? "" : String(value);
+const stringToNumber = (value: any) => Objects.isEmpty(value) ? NaN : Number(value);
 
-const determineTextKey = (...possibleKeys) =>
+const determineTextKey = (...possibleKeys: any[]) =>
   possibleKeys.find((possibleKey) => possibleKey && i18n.exists(possibleKey));
 
-export const SettingsItem = (props) => {
+export const SettingsItem = (props: any) => {
   const { settings, settingKey, prop, onPropValueChange } = props;
   const {
     type,
@@ -34,7 +37,7 @@ export const SettingsItem = (props) => {
   const [error, setError] = useState(false);
 
   const onValueChange = useCallback(
-    (val) => {
+    (val: any) => {
       onPropValueChange({ key: settingKey })(val);
     },
     [onPropValueChange, settingKey]
@@ -67,7 +70,7 @@ export const SettingsItem = (props) => {
       return (
         <Dropdown
           items={options}
-          itemKeyExtractor={(item) => item.key}
+          itemKeyExtractor={(item: any) => item.key}
           label={labelKey}
           onChange={onPropValueChange({ key: settingKey })}
           value={value}
@@ -83,7 +86,7 @@ export const SettingsItem = (props) => {
           <TextInput
             error={error}
             keyboardType="numeric"
-            onChange={(val) => {
+            onChange={(val: any) => {
               const valueNext = stringToNumber(val);
               setError(numberToString(valueNext) !== val);
               onValueChange(valueNext);
@@ -115,8 +118,7 @@ export const SettingsItem = (props) => {
             maxValue={maxValue}
             step={step}
             value={value}
-            onValueChange={(value) =>
-              onValueChange(Numbers.roundToPrecision(value, 2))
+            onValueChange={(value: any) => onValueChange(Numbers.roundToPrecision(value, 2))
             }
           />
         </SettingsFormItem>

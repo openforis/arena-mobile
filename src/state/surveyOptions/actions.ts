@@ -1,6 +1,6 @@
 const RECORD_EDIT_VIEW_MODE_SET = "RECORD_EDIT_VIEW_MODE_SET";
 
-const setRecordEditViewMode = (viewMode) => (dispatch) => {
+const setRecordEditViewMode = (viewMode: any) => (dispatch: any) => {
   dispatch({ type: RECORD_EDIT_VIEW_MODE_SET, viewMode });
 };
 

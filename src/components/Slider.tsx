@@ -1,15 +1,16 @@
 import React, { useCallback } from "react";
 import RNSlider from "@react-native-community/slider";
 import { useTheme } from "react-native-paper";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
-export const Slider = (props) => {
+export const Slider = (props: any) => {
   const { maxValue, minValue, onValueChange, step, value } = props;
 
   const theme = useTheme();
 
   const onChange = useCallback(
-    (val) => {
+    (val: any) => {
       if (val !== value) {
         onValueChange(val);
       }

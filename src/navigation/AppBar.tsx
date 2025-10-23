@@ -1,15 +1,22 @@
 import { useCallback, useState } from "react";
 import { Appbar as RNPAppbar } from "react-native-paper";
 import { useDispatch } from "react-redux";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Surveys } from "@openforis/arena-core";
 
+// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { HView, Spacer, Text } from "components";
+// @ts-expect-error TS(2307): Cannot find module 'hooks' or its corresponding ty... Remove this comment to see the full error message
 import { useScreenKey } from "hooks";
+// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { RecordEditViewMode, ScreenViewMode } from "model";
+// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { useIsTextDirectionRtl, useTranslation } from "localization";
+// @ts-expect-error TS(2307): Cannot find module 'screens' or its corresponding ... Remove this comment to see the full error message
 import { screenKeys } from "screens";
+// @ts-expect-error TS(2307): Cannot find module 'screens/RecordEditor/Breadcrum... Remove this comment to see the full error message
 import { Breadcrumbs } from "screens/RecordEditor/Breadcrumbs";
 import {
   DataEntryActions,
@@ -20,13 +27,15 @@ import {
   SurveyOptionsActions,
   SurveyOptionsSelectors,
   SurveySelectors,
+// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 } from "state";
+// @ts-expect-error TS(2307): Cannot find module 'utils/BaseStyles' or its corre... Remove this comment to see the full error message
 import { BaseStyles } from "utils/BaseStyles";
 
 import { OptionsMenu } from "./OptionsMenu";
 import styles from "./styles";
 
-export const AppBar = (props) => {
+export const AppBar = (props: any) => {
   if (__DEV__) {
     console.log(`rendering AppBar`);
   }
@@ -200,6 +209,7 @@ export const AppBar = (props) => {
         )}
 
         {hasOptionsMenuVisible && (
+          // @ts-expect-error TS(2786): 'OptionsMenu' cannot be used as a JSX component.
           <OptionsMenu toggleMenu={toggleMenu} visible={menuVisible} />
         )}
       </HView>

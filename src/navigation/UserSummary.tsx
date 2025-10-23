@@ -1,15 +1,20 @@
 import { useContext } from "react";
 import { useDispatch } from "react-redux";
 import { NavigationContext } from "@react-navigation/native";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
+// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { Button, HView, Text, VView } from "components";
+// @ts-expect-error TS(2307): Cannot find module 'screens/screenKeys' or its cor... Remove this comment to see the full error message
 import { screenKeys } from "screens/screenKeys";
+// @ts-expect-error TS(2307): Cannot find module 'service' or its corresponding ... Remove this comment to see the full error message
 import { SettingsService } from "service";
 import {
   RemoteConnectionActions,
   RemoteConnectionSelectors,
   SettingsSelectors,
+// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 } from "state";
 
 import { UserProfileIcon } from "./UserProfileIcon";
@@ -38,7 +43,9 @@ export const UserSummary = ({
     <HView style={[styles.container, style]} transparent>
       <UserProfileIcon
         onPress={() => {
+          // @ts-expect-error TS(2531): Object is possibly 'null'.
           navigation.navigate(screenKeys.settingsRemoteConnection);
+          // @ts-expect-error TS(2349): This expression is not callable.
           onButtonPress?.();
         }}
         size={profileIconSize}
@@ -60,10 +67,12 @@ export const UserSummary = ({
         {showLogoutButton && (
           <Button
             mode="text"
+            // @ts-expect-error TS(2339): Property 'logoutButton' does not exist on type '{ ... Remove this comment to see the full error message
             style={styles.logoutButton}
             textKey="loginInfo:logout"
             onPress={() => {
               dispatch(RemoteConnectionActions.logout());
+              // @ts-expect-error TS(2349): This expression is not callable.
               onButtonPress?.();
             }}
           />

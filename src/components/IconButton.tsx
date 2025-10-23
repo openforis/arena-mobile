@@ -1,10 +1,11 @@
 import React from "react";
 import { IconButton as RNPIconButton } from "react-native-paper";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { useButtonOnPress } from "./useButtonPress";
 
-export const IconButton = (props) => {
+export const IconButton = (props: any) => {
   const {
     avoidMultiplePress = true,
     disabled,

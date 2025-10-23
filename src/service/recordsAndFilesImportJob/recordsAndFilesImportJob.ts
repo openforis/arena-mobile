@@ -1,12 +1,22 @@
+// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { JobMobile } from "model";
+// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { Files } from "utils";
 
 import { RecordsImportJob } from "./recordsImportJob";
 import { FilesImportJob } from "./filesImportJob";
 
 export class RecordsAndFilesImportJob extends JobMobile {
-  constructor({ survey, user, fileUri, overwriteExistingRecords = true }) {
+  context: any;
+  jobs: any;
+  constructor({
+    survey,
+    user,
+    fileUri,
+    overwriteExistingRecords = true
+  }: any) {
     super({ survey, user, fileUri, overwriteExistingRecords }, [
+      // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
       new RecordsImportJob({ survey, user, fileUri, overwriteExistingRecords }),
       new FilesImportJob({ survey, user, fileUri }),
     ]);

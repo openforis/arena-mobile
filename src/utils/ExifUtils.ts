@@ -3,16 +3,23 @@ import { Objects } from "@openforis/arena-core";
 import { AMConstants } from "./AMConstants";
 import { Environment } from "./Environment";
 
-let Exify;
+let Exify: any;
 if (!Environment.isExpoGo) {
   Exify = require("@lodev09/react-native-exify");
 }
 
-const readData = async ({ fileUri }) => Exify?.readAsync(fileUri);
+const readData = async ({
+  fileUri
+}: any) => Exify?.readAsync(fileUri);
 
-const writeData = async ({ fileUri, data }) => Exify?.writeAsync(fileUri, data);
+const writeData = async ({
+  fileUri,
+  data
+}: any) => Exify?.writeAsync(fileUri, data);
 
-const hasGpsData = async ({ fileUri }) => {
+const hasGpsData = async ({
+  fileUri
+}: any) => {
   const data = await readData({ fileUri });
   if (!data) {
     return false;
@@ -25,7 +32,10 @@ const hasGpsData = async ({ fileUri }) => {
   );
 };
 
-const writeGpsData = async ({ fileUri, location }) => {
+const writeGpsData = async ({
+  fileUri,
+  location
+}: any) => {
   const { coords, timestamp } = location;
   const { latitude, longitude, altitude } = coords;
   const locationTimestampObj = new Date(timestamp);
@@ -58,7 +68,10 @@ const writeGpsData = async ({ fileUri, location }) => {
   await writeData({ fileUri, data: { ...existingTags, ...newTags } });
 };
 
-const copyData = async ({ sourceFileUri, targetFileUri }) => {
+const copyData = async ({
+  sourceFileUri,
+  targetFileUri
+}: any) => {
   const data = await readData({ fileUri: sourceFileUri });
   if (!data) {
     return false;

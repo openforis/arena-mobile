@@ -2,17 +2,22 @@ import React from "react";
 import { createStaticNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
+// @ts-expect-error TS(2307): Cannot find module 'screens/screens' or its corres... Remove this comment to see the full error message
 import { screens } from "screens/screens";
 import { AppBar } from "./AppBar";
+// @ts-expect-error TS(2307): Cannot find module 'screens/screenKeys' or its cor... Remove this comment to see the full error message
 import { screenKeys } from "screens/screenKeys";
 
-const screenOptions = { header: (props) => React.createElement(AppBar, props) };
+const screenOptions = { header: (props: any) => React.createElement(AppBar, props) };
 
+// @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
 const RootStack = createNativeStackNavigator({
   initialRouteName: screenKeys.home,
   screenOptions: screenOptions,
   screens: Object.entries(screens).reduce((acc, [key, screen]) => {
+    // @ts-expect-error TS(2339): Property 'component' does not exist on type 'unkno... Remove this comment to see the full error message
     const { component, ...options } = screen;
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     acc[key] = {
       screen: component,
       options,

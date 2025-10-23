@@ -1,14 +1,20 @@
-const extractErrorMessage = ({ errors, t }) => {
+const extractErrorMessage = ({
+  errors,
+  t
+}: any) => {
   const firstLevelErrors = Object.values(errors);
   const secondLevelErrors = firstLevelErrors.flatMap((firstLevelError) =>
+    // @ts-expect-error TS(2769): No overload matches this call.
     Object.values(firstLevelError)
   );
   const errorItems = secondLevelErrors.reduce((acc, secondLevelError) => {
+    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     acc.push(...(secondLevelError.errors ?? []));
     return acc;
   }, []);
+  // @ts-expect-error TS(2571): Object is of type 'unknown'.
   return errorItems
-    .reduce((acc, errorItem) => {
+    .reduce((acc: any, errorItem: any) => {
       const { key, params } = errorItem;
       if (key) {
         const messageKey =

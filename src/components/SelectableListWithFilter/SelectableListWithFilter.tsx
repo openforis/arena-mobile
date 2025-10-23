@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Chip } from "react-native-paper";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Arrays, Objects } from "@openforis/arena-core";
 
+// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { Functions } from "utils";
 import { IconButton } from "../IconButton";
 import { LoadingIcon } from "../LoadingIcon";
@@ -17,19 +19,19 @@ import { SelectableList } from "../SelectableList";
 
 import styles from "./styles";
 
-const _objToArray = (obj) => {
+const _objToArray = (obj: any) => {
   if (!obj) return [];
   if (Array.isArray(obj)) return obj;
   return [obj];
 };
 
-export const SelectableListWithFilter = (props) => {
+export const SelectableListWithFilter = (props: any) => {
   const {
     editable = true,
     filterItems,
-    itemKeyExtractor = (item) => item?.key,
-    itemLabelExtractor = (item) => item?.label,
-    itemDescriptionExtractor = (item) => item?.description,
+    itemKeyExtractor = (item: any) => item?.key,
+    itemLabelExtractor = (item: any) => item?.label,
+    itemDescriptionExtractor = (item: any) => item?.description,
     items = [],
     itemsCountToShowFilter = 10,
     maxItemsToShow = 1000,
@@ -53,7 +55,7 @@ export const SelectableListWithFilter = (props) => {
         return items.slice(0, maxItemsToShow);
       } else {
         return items
-          .filter((item) => !selectedItems.includes(item))
+          .filter((item: any) => !selectedItems.includes(item))
           .slice(0, maxItemsToShow);
       }
     }
@@ -61,12 +63,12 @@ export const SelectableListWithFilter = (props) => {
       return filterItems({ items, filterInputValue });
     }
     return items.filter(
-      (item) =>
-        !selectedItems.includes(item) &&
-        (Objects.isEmpty(filterInputValue) ||
-          itemLabelExtractor(item)
-            .toLocaleLowerCase()
-            .includes(filterInputValue.toLocaleLowerCase()))
+      (item: any) => !selectedItems.includes(item) &&
+      (Objects.isEmpty(filterInputValue) ||
+        itemLabelExtractor(item)
+          .toLocaleLowerCase()
+          // @ts-expect-error TS(2531): Object is possibly 'null'.
+          .includes(filterInputValue.toLocaleLowerCase()))
     );
   }, [
     filterItems,
@@ -104,7 +106,7 @@ export const SelectableListWithFilter = (props) => {
   );
 
   const onFilterInputChange = useCallback(
-    (text) => {
+    (text: any) => {
       inputValueRef.current = text;
       if (debounceFiltering) {
         if (!loading) {
@@ -128,21 +130,21 @@ export const SelectableListWithFilter = (props) => {
   );
 
   const _onSelectedItemsChange = useCallback(
-    (selectedItemsNext) => {
+    (selectedItemsNext: any) => {
       onSelectedItemsChange(selectedItemsNext, inputValueRef.current);
     },
     [onSelectedItemsChange]
   );
 
   const onListSelectionChange = useCallback(
-    (newValue) => {
+    (newValue: any) => {
       _onSelectedItemsChange(_objToArray(newValue));
     },
     [_onSelectedItemsChange]
   );
 
   const onItemRemove = useCallback(
-    (item) => {
+    (item: any) => {
       _onSelectedItemsChange(Arrays.removeItem(item)(selectedItems));
     },
     [_onSelectedItemsChange, selectedItems]
@@ -161,6 +163,7 @@ export const SelectableListWithFilter = (props) => {
       {filterVisible && (
         <>
           {selectedItems.length > 0 && (
+            // @ts-expect-error TS(2322): Type '{ children: Element; persistentScrollbar: tr... Remove this comment to see the full error message
             <ScrollView
               persistentScrollbar
               style={
@@ -170,14 +173,12 @@ export const SelectableListWithFilter = (props) => {
               }
             >
               <View style={styles.selectedItemsContainer}>
-                {selectedItems.map((item) => (
-                  <Chip
-                    key={itemKeyExtractor(item)}
-                    onClose={() => onItemRemove(item)}
-                  >
-                    {itemLabelExtractor(item)}
-                  </Chip>
-                ))}
+                {selectedItems.map((item: any) => <Chip
+                  key={itemKeyExtractor(item)}
+                  onClose={() => onItemRemove(item)}
+                >
+                  {itemLabelExtractor(item)}
+                </Chip>)}
               </View>
             </ScrollView>
           )}

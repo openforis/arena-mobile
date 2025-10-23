@@ -11,61 +11,68 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
+// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { RecordNodes, SurveyDefs } from "model";
 import { SurveySelectors } from "../survey/selectors";
 
-const getDataEntryState = (state) => state.dataEntry;
+const getDataEntryState = (state: any) => state.dataEntry;
 
-const selectRecord = (state) => getDataEntryState(state).record;
+const selectRecord = (state: any) => getDataEntryState(state).record;
 
-const selectIsEditingRecord = (state) => !!selectRecord(state);
+const selectIsEditingRecord = (state: any) => !!selectRecord(state);
 
-const selectRecordEditLocked = (state) =>
-  !!getDataEntryState(state).recordEditLocked;
+const selectRecordEditLocked = (state: any) => !!getDataEntryState(state).recordEditLocked;
 
-const selectIsRecordInDefaultCycle = (state) => {
+const selectIsRecordInDefaultCycle = (state: any) => {
   const survey = SurveySelectors.selectCurrentSurvey(state);
   const defaultCycle = survey ? Surveys.getDefaultCycleKey(survey) : null;
   const record = selectRecord(state);
   return String(defaultCycle) === String(record?.cycle);
 };
 
-const selectRecordEditLockAvailable = (state) =>
-  !!getDataEntryState(state).recordEditLockAvailable &&
-  selectIsEditingRecord(state) &&
-  selectIsRecordInDefaultCycle(state);
+const selectRecordEditLockAvailable = (state: any) => !!getDataEntryState(state).recordEditLockAvailable &&
+selectIsEditingRecord(state) &&
+selectIsRecordInDefaultCycle(state);
 
-const selectCanEditRecord = (state) => {
+const selectCanEditRecord = (state: any) => {
   const editLocked = selectRecordEditLocked(state);
   const recordInDefaultCycle = selectIsRecordInDefaultCycle(state);
   return !editLocked && recordInDefaultCycle;
 };
 
-const selectRecordRootNodeUuid = (state) => {
+const selectRecordRootNodeUuid = (state: any) => {
   const record = selectRecord(state);
   return Records.getRoot(record)?.uuid;
 };
 
-const selectRecordCycle = (state) => {
+const selectRecordCycle = (state: any) => {
   const record = selectRecord(state);
   return record.cycle;
 };
 
 const selectRecordSingleNodeUuid =
-  ({ parentNodeUuid, nodeDefUuid }) =>
-  (state) => {
+  ({
+    parentNodeUuid,
+    nodeDefUuid
+  }: any) =>
+  (state: any) => {
     const record = selectRecord(state);
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
+    // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
     const node = Records.getChild(parentNode, nodeDefUuid)(record);
     return node?.uuid;
   };
 
 const selectRecordEntitiesUuidsAndKeyValues =
-  ({ parentNodeUuid, nodeDefUuid }) =>
-  (state) => {
+  ({
+    parentNodeUuid,
+    nodeDefUuid
+  }: any) =>
+  (state: any) => {
     const record = selectRecord(state);
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
+    // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
     const entities = Records.getChildren(parentNode, nodeDefUuid)(record);
     return entities.map((entity) => ({
       uuid: entity.uuid,
@@ -74,23 +81,30 @@ const selectRecordEntitiesUuidsAndKeyValues =
   };
 
 const selectRecordNodePointerValidation =
-  (state) =>
-  ({ parentNodeUuid, nodeDefUuid }) => {
+  (state: any) => ({
+    parentNodeUuid,
+    nodeDefUuid
+  }: any) => {
     const record = selectRecord(state);
     const nodeParent = Records.getNodeByUuid(parentNodeUuid)(record);
+    // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
     const nodes = Records.getChildren(nodeParent, nodeDefUuid)(record);
     if (nodes.length === 0) return undefined;
 
     const node = nodes[0];
     const validation = RecordValidations.getValidationNode({
+      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       nodeUuid: node.uuid,
     })(record.validation);
     return validation;
   };
 
 const selectRecordNodePointerValidationChildrenCount =
-  ({ parentNodeUuid, nodeDefUuid }) =>
-  (state) => {
+  ({
+    parentNodeUuid,
+    nodeDefUuid
+  }: any) =>
+  (state: any) => {
     const record = selectRecord(state);
     const validationChildrenCount =
       RecordValidations.getValidationChildrenCount({
@@ -101,12 +115,16 @@ const selectRecordNodePointerValidationChildrenCount =
   };
 
 const selectRecordNodePointerVisibility =
-  ({ parentNodeUuid, nodeDefUuid }) =>
-  (state) => {
+  ({
+    parentNodeUuid,
+    nodeDefUuid
+  }: any) =>
+  (state: any) => {
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const record = selectRecord(state);
 
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
+    // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
     const applicable = Nodes.isChildApplicable(parentNode, nodeDefUuid);
     const nodeDefChild = Surveys.getNodeDefByUuid({
       survey,
@@ -119,8 +137,10 @@ const selectRecordNodePointerVisibility =
   };
 
 const selectRecordAttributeInfo =
-  ({ nodeUuid }) =>
-  (state) => {
+  ({
+    nodeUuid
+  }: any) =>
+  (state: any) => {
     const record = selectRecord(state);
     const attribute = Records.getNodeByUuid(nodeUuid)(record);
     if (!attribute) {
@@ -135,24 +155,30 @@ const selectRecordAttributeInfo =
   };
 
 const selectRecordChildNodes =
-  ({ parentEntityUuid, nodeDef }) =>
-  (state) => {
+  ({
+    parentEntityUuid,
+    nodeDef
+  }: any) =>
+  (state: any) => {
     const record = selectRecord(state);
     const parentEntity = Records.getNodeByUuid(parentEntityUuid)(record);
+    // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
     const nodes = Records.getChildren(parentEntity, nodeDef.uuid)(record);
     return { nodes };
   };
 
 const selectChildDefs =
-  ({ nodeDef }) =>
-  (state) => {
+  ({
+    nodeDef
+  }: any) =>
+  (state: any) => {
     const cycle = selectRecordCycle(state);
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const childDefs = SurveyDefs.getChildrenDefs({
       survey,
       nodeDef,
       cycle,
-    }).filter((childDef) => {
+    }).filter((childDef: any) => {
       // only child defs not hidden in mobile and in same page
       const layoutProps = NodeDefs.getLayoutProps(cycle)(childDef);
       return !layoutProps.pageUuid;
@@ -161,14 +187,18 @@ const selectChildDefs =
   };
 
 const selectRecordCodeParentItemUuid =
-  ({ nodeDef, parentNodeUuid }) =>
-  (state) => {
+  ({
+    nodeDef,
+    parentNodeUuid
+  }: any) =>
+  (state: any) => {
     const parentCodeDefUuid = NodeDefs.getParentCodeDefUuid(nodeDef);
     if (!parentCodeDefUuid) return null;
 
     const record = selectRecord(state);
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
     const parentCodeAttribute = Records.getParentCodeAttribute({
+      // @ts-expect-error TS(2322): Type 'Node | undefined' is not assignable to type ... Remove this comment to see the full error message
       parentNode,
       nodeDef,
     })(record);
@@ -177,19 +207,20 @@ const selectRecordCodeParentItemUuid =
       : null;
   };
 
-const selectRecordIsNotValid = (state) => {
+const selectRecordIsNotValid = (state: any) => {
   const record = selectRecord(state);
   const validation = record ? Validations.getValidation(record) : null;
+  // @ts-expect-error TS(2345): Argument of type 'Validation | null' is not assign... Remove this comment to see the full error message
   return Validations.isNotValid(validation);
 };
 
-const selectRecordHasErrors = (state) => {
+const selectRecordHasErrors = (state: any) => {
   const record = selectRecord(state);
   const validation = record ? Validations.getValidation(record) : null;
   return validation && Validations.getErrorsCount(validation) > 0;
 };
 
-const selectCurrentPageEntity = (state) => {
+const selectCurrentPageEntity = (state: any) => {
   const survey = SurveySelectors.selectCurrentSurvey(state);
   const record = selectRecord(state);
 
@@ -205,6 +236,7 @@ const selectCurrentPageEntity = (state) => {
     return {
       parentEntityUuid: null,
       entityDef: Surveys.getNodeDefRoot({ survey }),
+      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       entityUuid: Records.getRoot(record).uuid,
     };
   }
@@ -219,7 +251,7 @@ const selectCurrentPageEntity = (state) => {
   };
 };
 
-const selectCurrentPageEntityRelevantChildDefs = (state) => {
+const selectCurrentPageEntityRelevantChildDefs = (state: any) => {
   const { parentEntityUuid, entityDef, entityUuid } =
     selectCurrentPageEntity(state);
   const childDefs = selectChildDefs({ nodeDef: entityDef })(state);
@@ -228,37 +260,30 @@ const selectCurrentPageEntityRelevantChildDefs = (state) => {
   if (!actualEntityUuid) return [];
   const parentEntity = Records.getNodeByUuid(actualEntityUuid)(record);
   if (!parentEntity) return [];
-  return childDefs.filter((childDef) =>
-    Nodes.isChildApplicable(parentEntity, childDef.uuid)
+  return childDefs.filter((childDef: any) => Nodes.isChildApplicable(parentEntity, childDef.uuid)
   );
 };
 
-const selectCurrentPageEntityActiveChildDefIndex = (state) =>
-  getDataEntryState(state).activeChildDefIndex;
+const selectCurrentPageEntityActiveChildDefIndex = (state: any) => getDataEntryState(state).activeChildDefIndex;
 
 // record page
-const selectRecordPageSelectorMenuOpen = (state) =>
-  getDataEntryState(state).recordPageSelectorMenuOpen;
+const selectRecordPageSelectorMenuOpen = (state: any) => getDataEntryState(state).recordPageSelectorMenuOpen;
 
 // record previous cycle
-const selectCanRecordBeLinkedToPreviousCycleRecord = (state) => {
+const selectCanRecordBeLinkedToPreviousCycleRecord = (state: any) => {
   const record = selectRecord(state);
   return record?.cycle > "0";
 };
 
-const selectPreviousCycleRecord = (state) =>
-  getDataEntryState(state).previousCycleRecord;
+const selectPreviousCycleRecord = (state: any) => getDataEntryState(state).previousCycleRecord;
 
-const selectPreviousCycleKey = (state) =>
-  selectPreviousCycleRecord(state)?.cycle;
+const selectPreviousCycleKey = (state: any) => selectPreviousCycleRecord(state)?.cycle;
 
-const selectPreviousCycleRecordLoading = (state) =>
-  getDataEntryState(state).previousCycleRecordLoading;
+const selectPreviousCycleRecordLoading = (state: any) => getDataEntryState(state).previousCycleRecordLoading;
 
-const selectIsLinkedToPreviousCycleRecord = (state) =>
-  getDataEntryState(state).linkToPreviousCycleRecord;
+const selectIsLinkedToPreviousCycleRecord = (state: any) => getDataEntryState(state).linkToPreviousCycleRecord;
 
-const selectPreviousCycleRecordPageEntity = (state) => {
+const selectPreviousCycleRecordPageEntity = (state: any) => {
   const { entityDef } = selectCurrentPageEntity(state);
   if (NodeDefs.isRoot(entityDef)) {
     const previousCycleRecord = selectPreviousCycleRecord(state);
@@ -266,6 +291,7 @@ const selectPreviousCycleRecordPageEntity = (state) => {
       ? {}
       : {
           previousCycleParentEntityUuid: null,
+          // @ts-expect-error TS(2532): Object is possibly 'undefined'.
           previousCycleEntityUuid: Records.getRoot(previousCycleRecord).uuid,
         };
   } else {
@@ -273,7 +299,10 @@ const selectPreviousCycleRecordPageEntity = (state) => {
   }
 };
 
-const extractAttibuteValue = ({ state, attribute }) => {
+const extractAttibuteValue = ({
+  state,
+  attribute
+}: any) => {
   const { nodeDefUuid, value } = attribute ?? {};
   if (!value) return value;
   const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -282,21 +311,27 @@ const extractAttibuteValue = ({ state, attribute }) => {
 };
 
 const selectPreviousCycleRecordAttributeValue =
-  ({ nodeDef, parentNodeUuid }) =>
-  (state) => {
+  ({
+    nodeDef,
+    parentNodeUuid
+  }: any) =>
+  (state: any) => {
     if (!parentNodeUuid) {
       return null;
     }
     const record = selectPreviousCycleRecord(state);
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
+    // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
     const attributes = Records.getChildren(parentNode, nodeDef.uuid)(record);
     const attribute = attributes[0];
     return extractAttibuteValue({ state, attribute });
   };
 
 const selectPreviousCycleEntityWithSameKeys =
-  ({ entityUuid }) =>
-  (state) => {
+  ({
+    entityUuid
+  }: any) =>
+  (state: any) => {
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const record = selectRecord(state);
     const previousCycleRecord = selectPreviousCycleRecord(state);
@@ -312,18 +347,20 @@ const selectPreviousCycleEntityWithSameKeys =
     });
   };
 
-const useIsNodeDefCurrentActiveChild = (nodeDef) =>
-  useSelector((state) => {
-    const activeChildDefIndex =
-      selectCurrentPageEntityActiveChildDefIndex(state);
-    const childDefs = selectCurrentPageEntityRelevantChildDefs(state);
-    const nodeDefIndex = childDefs.indexOf(nodeDef);
-    return nodeDefIndex === activeChildDefIndex;
-  });
+const useIsNodeDefCurrentActiveChild = (nodeDef: any) => useSelector((state) => {
+  const activeChildDefIndex =
+    selectCurrentPageEntityActiveChildDefIndex(state);
+  const childDefs = selectCurrentPageEntityRelevantChildDefs(state);
+  const nodeDefIndex = childDefs.indexOf(nodeDef);
+  return nodeDefIndex === activeChildDefIndex;
+});
 
 const selectIsMaxCountReached =
-  ({ parentNodeUuid, nodeDef }) =>
-  (state) => {
+  ({
+    parentNodeUuid,
+    nodeDef
+  }: any) =>
+  (state: any) => {
     const record = selectRecord(state);
     const parentNode = parentNodeUuid
       ? Records.getNodeByUuid(parentNodeUuid)(record)
@@ -340,7 +377,10 @@ const selectIsMaxCountReached =
     return siblings.length >= maxCount;
   };
 
-const useIsNodeMaxCountReached = ({ parentNodeUuid, nodeDef }) =>
+const useIsNodeMaxCountReached = ({
+  parentNodeUuid,
+  nodeDef
+}: any) =>
   useSelector(selectIsMaxCountReached({ parentNodeUuid, nodeDef }));
 
 export const DataEntrySelectors = {
@@ -365,13 +405,21 @@ export const DataEntrySelectors = {
 
   useRecordRootNodeUuid: () => useSelector(selectRecordRootNodeUuid),
 
-  useRecordSingleNodeUuid: ({ parentNodeUuid, nodeDefUuid }) =>
+  useRecordSingleNodeUuid: ({
+    parentNodeUuid,
+    nodeDefUuid
+  }: any) =>
     useSelector(selectRecordSingleNodeUuid({ parentNodeUuid, nodeDefUuid })),
 
-  useRecordEntityChildDefs: ({ nodeDef }) =>
+  useRecordEntityChildDefs: ({
+    nodeDef
+  }: any) =>
     useSelector(selectChildDefs({ nodeDef }), Objects.isEqual),
 
-  useRecordNodePointerValidation: ({ parentNodeUuid, nodeDefUuid }) =>
+  useRecordNodePointerValidation: ({
+    parentNodeUuid,
+    nodeDefUuid
+  }: any) =>
     useSelector(
       (state) =>
         selectRecordNodePointerValidation(state)({
@@ -383,8 +431,8 @@ export const DataEntrySelectors = {
 
   useRecordNodePointerValidationChildrenCount: ({
     parentNodeUuid,
-    nodeDefUuid,
-  }) =>
+    nodeDefUuid
+  }: any) =>
     useSelector(
       selectRecordNodePointerValidationChildrenCount({
         parentNodeUuid,
@@ -393,27 +441,41 @@ export const DataEntrySelectors = {
       Objects.isEqual
     ),
 
-  useRecordNodePointerVisibility: ({ parentNodeUuid, nodeDefUuid }) =>
+  useRecordNodePointerVisibility: ({
+    parentNodeUuid,
+    nodeDefUuid
+  }: any) =>
     useSelector(
       selectRecordNodePointerVisibility({ parentNodeUuid, nodeDefUuid })
     ),
 
-  useRecordAttributeInfo: ({ nodeUuid }) =>
+  useRecordAttributeInfo: ({
+    nodeUuid
+  }: any) =>
     useSelector(selectRecordAttributeInfo({ nodeUuid }), Objects.isEqual),
 
-  useRecordChildNodes: ({ parentEntityUuid, nodeDef }) =>
+  useRecordChildNodes: ({
+    parentEntityUuid,
+    nodeDef
+  }: any) =>
     useSelector(
       selectRecordChildNodes({ parentEntityUuid, nodeDef }),
       Objects.isEqual
     ),
 
-  useRecordEntitiesUuidsAndKeyValues: ({ parentNodeUuid, nodeDefUuid }) =>
+  useRecordEntitiesUuidsAndKeyValues: ({
+    parentNodeUuid,
+    nodeDefUuid
+  }: any) =>
     useSelector(
       selectRecordEntitiesUuidsAndKeyValues({ parentNodeUuid, nodeDefUuid }),
       Objects.isEqual
     ),
 
-  useRecordCodeParentItemUuid: ({ parentNodeUuid, nodeDef }) =>
+  useRecordCodeParentItemUuid: ({
+    parentNodeUuid,
+    nodeDef
+  }: any) =>
     useSelector(selectRecordCodeParentItemUuid({ parentNodeUuid, nodeDef })),
 
   useRecordIsNotValid: () => useSelector(selectRecordIsNotValid),
@@ -457,7 +519,10 @@ export const DataEntrySelectors = {
   selectPreviousCycleEntityWithSameKeys,
 
   selectPreviousCycleRecordAttributeValue,
-  usePreviousCycleRecordAttributeValue: ({ nodeDef, parentNodeUuid }) =>
+  usePreviousCycleRecordAttributeValue: ({
+    nodeDef,
+    parentNodeUuid
+  }: any) =>
     useSelector(
       selectPreviousCycleRecordAttributeValue({ nodeDef, parentNodeUuid })
     ),

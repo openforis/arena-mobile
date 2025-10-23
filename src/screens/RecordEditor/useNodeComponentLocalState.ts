@@ -2,12 +2,16 @@ import { Objects } from "@openforis/arena-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
+// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 import { DataEntryActions, DataEntrySelectors, StoreUtils, useConfirm } from "state";
+// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { Functions } from "utils";
 
-const getNodeUpdateActionKey = ({ nodeUuid }) => `node_update_${nodeUuid}`;
+const getNodeUpdateActionKey = ({
+  nodeUuid
+}: any) => `node_update_${nodeUuid}`;
 
-const isNodeValueEqualDefault = (nodeValueA, nodeValueB) =>
+const isNodeValueEqualDefault = (nodeValueA: any, nodeValueB: any) =>
   Objects.isEqual(nodeValueA, nodeValueB) ||
   JSON.stringify(nodeValueA) === JSON.stringify(nodeValueB) ||
   (Objects.isEmpty(nodeValueA) && Objects.isEmpty(nodeValueB));
@@ -17,8 +21,8 @@ export const useNodeComponentLocalState = ({
   updateDelay = 0,
   uiValueToNodeValue = Functions.identity,
   nodeValueToUiValue = Functions.identity,
-  isNodeValueEqual = isNodeValueEqualDefault,
-}) => {
+  isNodeValueEqual = isNodeValueEqualDefault
+}: any) => {
   const dispatch = useDispatch();
   const dirtyRef = useRef(false);
   const debouncedUpdateRef = useRef(null);
@@ -76,6 +80,7 @@ export const useNodeComponentLocalState = ({
   ]);
 
   const updateNodeValue = useCallback(
+    // @ts-expect-error TS(7031): Binding element 'uiValueUpdated' implicitly has an... Remove this comment to see the full error message
     async ({ value: uiValueUpdated, fileUri = null, ignoreDelay = false }) => {
       const nodeValueUpdated = uiValueToNodeValue(uiValueUpdated);
 
@@ -107,6 +112,7 @@ export const useNodeComponentLocalState = ({
           validation: null,
         }));
 
+        // @ts-expect-error TS(2339): Property 'cancel' does not exist on type 'never'.
         debouncedUpdateRef.current?.cancel();
 
         debouncedUpdateRef.current = StoreUtils.debounceAction(
@@ -115,6 +121,7 @@ export const useNodeComponentLocalState = ({
           updateDelay
         );
 
+        // @ts-expect-error TS(2345): Argument of type 'null' is not assignable to param... Remove this comment to see the full error message
         dispatch(debouncedUpdateRef.current);
       } else {
         dispatch(action);

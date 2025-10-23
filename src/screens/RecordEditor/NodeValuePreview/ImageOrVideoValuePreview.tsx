@@ -3,16 +3,20 @@ import { TouchableHighlight } from "react-native";
 
 import { NodeDefFileType, NodeDefs } from "@openforis/arena-core";
 
+// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { IconButton, Image, ImagePreviewDialog, Text, VView } from "components";
+// @ts-expect-error TS(2307): Cannot find module 'service' or its corresponding ... Remove this comment to see the full error message
 import { RecordFileService } from "service";
+// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 import { SurveySelectors } from "state";
+// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { Files } from "utils";
 
 import { NodeValuePreviewPropTypes } from "./NodeValuePreviewPropTypes";
 
 import styles from "./imageOrVideoValuePreviewStyles";
 
-export const ImageOrVideoValuePreview = (props) => {
+export const ImageOrVideoValuePreview = (props: any) => {
   const { nodeDef, value } = props;
 
   const { fileType = NodeDefFileType.other } = nodeDef.props;

@@ -1,14 +1,17 @@
 import { useCallback, useMemo } from "react";
 import { TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
+// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { AlertIcon, HView, Text } from "components";
+// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 import { DataEntryActions } from "state";
 
 import styles from "./EntityButtonStyles";
 
-export const EntityButton = (props) => {
+export const EntityButton = (props: any) => {
   const { treeNode, isCurrentEntity } = props;
   const { label, entityPointer, hasErrors, hasWarnings } = treeNode;
 

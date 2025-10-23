@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import * as Location from "expo-location";
 import { PointFactory } from "@openforis/arena-core";
 
+// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { Permissions, Refs } from "utils";
 import { SettingsSelectors } from "../state/settings";
 import { useIsMountedRef } from "./useIsMountedRef";
@@ -11,7 +12,7 @@ const locationWatchElapsedTimeIntervalDelay = 1000;
 const defaultLocationAccuracyThreshold = 4;
 const defaultLocationAccuracyWatchTimeout = 120000; // 2 mins
 
-const locationToPoint = (location) => {
+const locationToPoint = (location: any) => {
   if (!location) return null;
 
   const { coords } = location;
@@ -23,7 +24,9 @@ const locationToPoint = (location) => {
   });
 };
 
-const getLocationWatchTimeout = ({ settings }) => {
+const getLocationWatchTimeout = ({
+  settings
+}: any) => {
   const {
     locationAccuracyWatchTimeout: locationAccuracyWatchTimeoutSetting, // in seconds
   } = settings;
@@ -36,6 +39,7 @@ const getLocationWatchTimeout = ({ settings }) => {
 export const useLocationWatch = ({
   accuracy = Location.Accuracy.Highest,
   distanceInterval = 0.01,
+  // @ts-expect-error TS(7031): Binding element 'locationCallbackProp' implicitly ... Remove this comment to see the full error message
   locationCallback: locationCallbackProp,
   stopOnAccuracyThreshold = true,
   stopOnTimeout = true,
@@ -70,6 +74,7 @@ export const useLocationWatch = ({
   const _stopLocationWatch = useCallback(() => {
     const wasActive = !!locationSubscriptionRef.current;
     if (wasActive) {
+      // @ts-expect-error TS(2339): Property 'remove' does not exist on type 'never'.
       locationSubscriptionRef.current?.remove();
       locationSubscriptionRef.current = null;
 
@@ -85,7 +90,7 @@ export const useLocationWatch = ({
   }, [clearLocationWatchTimeout]);
 
   const locationCallback = useCallback(
-    (location) => {
+    (location: any) => {
       lastLocationRef.current = location; // location could be null when watch timeout is reached
 
       const { coords } = location ?? {};
@@ -135,12 +140,14 @@ export const useLocationWatch = ({
       }
     }
     _stopLocationWatch();
+    // @ts-expect-error TS(2322): Type 'LocationSubscription' is not assignable to t... Remove this comment to see the full error message
     locationSubscriptionRef.current = await Location.watchPositionAsync(
       { accuracy, distanceInterval },
       locationCallback
     );
 
     if (stopOnTimeout) {
+      // @ts-expect-error TS(2322): Type 'number' is not assignable to type 'null'.
       locationWatchIntervalRef.current = setInterval(() => {
         setState((statePrev) => {
           const elapsedTimeNext =
@@ -154,6 +161,7 @@ export const useLocationWatch = ({
         });
       }, locationWatchElapsedTimeIntervalDelay);
 
+      // @ts-expect-error TS(2322): Type 'number' is not assignable to type 'null'.
       locationAccuracyWatchTimeoutRef.current = setTimeout(() => {
         stopLocationWatch();
       }, locationWatchTimeout);

@@ -1,29 +1,38 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
+// @ts-expect-error TS(2307): Cannot find module 'db' or its corresponding type ... Remove this comment to see the full error message
 import { DowngradeError, initialize as initializeDb } from "db";
+// @ts-expect-error TS(2307): Cannot find module 'appComponents/AppLogo' or its ... Remove this comment to see the full error message
 import { AppLogo } from "appComponents/AppLogo";
+// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { Text, View, VView } from "components";
 import {
   DataMigrationService,
   PreferencesService,
   SettingsService,
   SurveyService,
+// @ts-expect-error TS(2307): Cannot find module 'service' or its corresponding ... Remove this comment to see the full error message
 } from "service";
 import {
   DeviceInfoActions,
   RemoteConnectionActions,
   SettingsActions,
   SurveyActions,
+// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 } from "state";
+// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { SystemUtils } from "utils";
 
 import styles from "./styles";
 
 // Crypto (for internal UUIDs generation)
 import * as Crypto from "expo-crypto";
+// @ts-expect-error TS(2304): Cannot find name 'global'.
 if (!global.crypto) {
+  // @ts-expect-error TS(2304): Cannot find name 'global'.
   global.crypto = Crypto;
 }
 
@@ -45,7 +54,7 @@ const steps = {
   complete: "complete",
 };
 
-export const AppInitializer = (props) => {
+export const AppInitializer = (props: any) => {
   const { children } = props;
 
   const dispatch = useDispatch();
@@ -57,8 +66,7 @@ export const AppInitializer = (props) => {
   });
   const { loading, errorMessage, step } = state;
 
-  const setStep = (stepNew) =>
-    setState((statePrev) => ({ ...statePrev, step: stepNew }));
+  const setStep = (stepNew: any) => setState((statePrev) => ({ ...statePrev, step: stepNew }));
 
   const initialize = useCallback(async () => {
     if (__DEV__) {
@@ -133,6 +141,7 @@ export const AppInitializer = (props) => {
           err instanceof DowngradeError
             ? "Downgrade error"
             : "Unexpected error: " + err;
+        // @ts-expect-error TS(2345): Argument of type '(statePrev: { loading: boolean; ... Remove this comment to see the full error message
         setState((statePrev) => ({
           ...statePrev,
           loading: false,
