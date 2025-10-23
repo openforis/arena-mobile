@@ -8,7 +8,7 @@ import { DataEntryActions, DataEntrySelectors, useConfirm } from "state";
 import { NodeValuePreview } from "./NodeValuePreview";
 import { NodeValuePreviewPropTypes } from "./NodeValuePreview/NodeValuePreviewPropTypes";
 
-export const CurrentRecordNodeValuePreview = (props) => {
+export const CurrentRecordNodeValuePreview = (props: any) => {
   const { nodeDef, parentNodeUuid } = props;
 
   if (__DEV__) {
@@ -35,6 +35,7 @@ export const CurrentRecordNodeValuePreview = (props) => {
         titleKey: "dataEntry:unlock.confirmTitle",
       }))
     ) {
+      // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
       dispatch(DataEntryActions.toggleRecordEditLock);
     }
   }, [confirm, dispatch, recordEditLocked]);

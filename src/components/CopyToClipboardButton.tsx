@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Objects } from "@openforis/arena-core";
@@ -9,7 +10,7 @@ import { SystemUtils } from "utils";
 
 import { IconButton } from "./IconButton";
 
-export const CopyToClipboardButton = (props) => {
+export const CopyToClipboardButton = (props: any) => {
   const { value } = props;
 
   const toaster = useToast();

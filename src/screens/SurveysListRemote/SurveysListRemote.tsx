@@ -34,7 +34,9 @@ const INITIAL_STATE = {
 
 const minSurveysToShowSearchBar = 5;
 
-const DescriptionCellRenderer = ({ item }) => {
+const DescriptionCellRenderer = ({
+  item
+}: any) => {
   const defaultLanguage = Surveys.getDefaultLanguage(item);
   const description = item.props?.descriptions?.[defaultLanguage];
   return description ? <Text>{description}</Text> : null;
@@ -42,7 +44,9 @@ const DescriptionCellRenderer = ({ item }) => {
 
 DescriptionCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const DatePublishedCellRenderer = ({ item }) => (
+const DatePublishedCellRenderer = ({
+  item
+}: any) => (
   <Text>
     {Dates.convertDate({
       dateStr: item.datePublished,
@@ -54,10 +58,12 @@ const DatePublishedCellRenderer = ({ item }) => (
 
 DatePublishedCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const StatusCell = ({ item }) => {
+const StatusCell = ({
+  item
+}: any) => {
   const surveysLocal = SurveySelectors.useSurveysLocal();
   const localSurvey = surveysLocal.find(
-    (surveyLocal) => surveyLocal.uuid === item.uuid
+    (surveyLocal: any) => surveyLocal.uuid === item.uuid
   );
   let messageKey = null;
   if (!localSurvey) {
@@ -96,6 +102,7 @@ export const SurveysListRemote = () => {
         {
           key: "description",
           header: "surveys:description",
+          // @ts-expect-error TS(2345): Argument of type '{ key: string; header: string; c... Remove this comment to see the full error message
           cellRenderer: DescriptionCellRenderer,
         },
         {
@@ -120,6 +127,7 @@ export const SurveysListRemote = () => {
     setState(INITIAL_STATE);
 
     const data = await SurveyService.fetchSurveySummariesRemote();
+    // @ts-expect-error TS(2339): Property 'surveys' does not exist on type '{ error... Remove this comment to see the full error message
     const { surveys: _surveys = [], errorKey } = data;
 
     if (errorKey) {
@@ -129,6 +137,7 @@ export const SurveysListRemote = () => {
           confirmButtonTextKey: "loginInfo:login",
           messageKey: "surveys:loadSurveysErrorMessage",
           onConfirm: () =>
+            // @ts-expect-error TS(2769): No overload matches this call.
             navigation.navigate(screenKeys.settingsRemoteConnection),
           onCancel: () => navigation.goBack(),
         })
@@ -148,15 +157,16 @@ export const SurveysListRemote = () => {
     useSurveysSearch({ surveys });
 
   const onRowPress = useCallback(
-    (surveySummary) => {
+    (surveySummary: any) => {
       const surveyName = surveySummary.props.name;
       const localSurveyWithSameUuid = surveysLocal.find(
-        (surveyLocal) => surveyLocal.uuid === surveySummary.uuid
+        (surveyLocal: any) => surveyLocal.uuid === surveySummary.uuid
       );
 
       if (localSurveyWithSameUuid) {
         // update existing survey
         dispatch(
+          // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => Promise<void>... Remove this comment to see the full error message
           SurveyActions.updateSurveyRemote({
             surveyId: localSurveyWithSameUuid.id,
             surveyRemoteId: surveySummary.id,
@@ -177,6 +187,7 @@ export const SurveysListRemote = () => {
               setState((statePrev) => ({ ...statePrev, loading: true }));
               const surveyId = surveySummary.id;
               dispatch(
+                // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => Promise<void>... Remove this comment to see the full error message
                 SurveyActions.importSurveyRemote({ surveyId, navigation })
               );
             },
@@ -213,11 +224,12 @@ export const SurveysListRemote = () => {
         />
       )}
       {surveysFiltered.length > 0 && (
+        // @ts-expect-error TS(2786): 'DataVisualizer' cannot be used as a JSX component... Remove this comment to see the full error message
         <DataVisualizer
           fields={dataFields}
-          items={surveysFiltered.map((survey) => ({
+          items={surveysFiltered.map((survey: any) => ({
             key: survey.uuid,
-            ...survey,
+            ...survey
           }))}
           mode={screenViewMode}
           onItemPress={onRowPress}

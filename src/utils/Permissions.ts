@@ -27,17 +27,23 @@ const requestAccessMediaLocation = async () => {
   if (
     !Environment.isExpoGo &&
     Environment.isAndroid &&
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
     Environment.androidApiLevel >= 10
   ) {
+    // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
     const permission = i18n.t("permissions:types.accessMediaLocation");
     const status = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_MEDIA_LOCATION,
       {
+        // @ts-expect-error TS(2554): Expected 0 arguments, but got 2.
         title: i18n.t("permissions:permissionRequest.title", { permission }),
+        // @ts-expect-error TS(2554): Expected 0 arguments, but got 2.
         message: i18n.t("permissions:permissionRequest.message", {
           permission,
         }),
+        // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
         buttonNegative: i18n.t("common:cancel"),
+        // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
         buttonPositive: i18n.t("common:ok"),
       }
     );

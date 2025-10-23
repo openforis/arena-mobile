@@ -1,9 +1,10 @@
 import { Tooltip as RNPTooltip } from "react-native-paper";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
 
-export const Tooltip = (props) => {
+export const Tooltip = (props: any) => {
   const { backgroundColor, children, textColor, titleKey, titleParams } = props;
 
   const { t } = useTranslation();
@@ -20,10 +21,14 @@ export const Tooltip = (props) => {
       : undefined;
 
   return (
+    // @ts-expect-error TS(2749): 'RNPTooltip' refers to a value, but is being used ... Remove this comment to see the full error message
     <RNPTooltip
+      // @ts-expect-error TS(2304): Cannot find name 'enterTouchDelay'.
       enterTouchDelay={50}
+      // @ts-expect-error TS(7027): Unreachable code detected.
       theme={theme}
-      title={t(titleKey, titleParams)}
+      // @ts-expect-error TS(2304): Cannot find name 'title'.
+      title={t(titleKey: any, titleParams: any)}
     >
       {children}
     </RNPTooltip>

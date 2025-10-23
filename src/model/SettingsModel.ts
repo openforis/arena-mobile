@@ -67,7 +67,9 @@ const properties = {
     minValue: 0.5,
     maxValue: 10,
     step: 0.5,
-    isDisabled: ({ settings }) => settings.imageSizeUnlimited,
+    isDisabled: ({
+      settings
+    }: any) => settings.imageSizeUnlimited,
   },
 };
 

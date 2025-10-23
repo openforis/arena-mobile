@@ -8,17 +8,18 @@ const keys = {
   viewMode: "viewMode",
 };
 
-const getViewMode = (screenKey) => (state) =>
-  state?.[screenKey]?.[keys.viewMode] ?? ScreenViewMode.table;
+const getViewMode = (screenKey: any) => (state: any) => state?.[screenKey]?.[keys.viewMode] ?? ScreenViewMode.table;
 
 const assocViewMode =
-  ({ screenKey, viewMode }) =>
-  (state) =>
-    Objects.assocPath({
-      obj: state,
-      path: [screenKey, keys.viewMode],
-      value: viewMode,
-    });
+  ({
+    screenKey,
+    viewMode
+  }: any) =>
+  (state: any) => Objects.assocPath({
+    obj: state,
+    path: [screenKey, keys.viewMode],
+    value: viewMode,
+  });
 
 export const ScreenOptionsState = {
   stateKey,

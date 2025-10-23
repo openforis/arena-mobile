@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Dialog, Portal } from "react-native-paper";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
@@ -9,7 +10,7 @@ import { CollapsiblePanel } from "./CollapsiblePanel";
 import { ScrollView } from "./ScrollView";
 import { Text } from "./Text";
 
-export const MessageDialog = (props) => {
+export const MessageDialog = (props: any) => {
   const {
     content,
     contentParams,
@@ -31,6 +32,7 @@ export const MessageDialog = (props) => {
           <Text variant="bodyLarge">{t(content, contentParams)}</Text>
           {details && (
             <CollapsiblePanel headerKey="common:details">
+              // @ts-expect-error TS(2322): Type '{ children: Element; persistentScrollbar: tr... Remove this comment to see the full error message
               <ScrollView
                 persistentScrollbar
                 transparent

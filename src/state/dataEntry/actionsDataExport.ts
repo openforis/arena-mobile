@@ -21,7 +21,7 @@ const exportType = {
   share: "share",
 };
 
-const errorOrJobToString = (errorOrJob) => {
+const errorOrJobToString = (errorOrJob: any) => {
   if (!errorOrJob) {
     return "";
   }
@@ -35,17 +35,20 @@ const errorOrJobToString = (errorOrJob) => {
   return JSON.stringify(errorOrJob);
 };
 
-const handleError = (error) => (dispatch) =>
-  dispatch(
-    MessageActions.setMessage({
-      content: "dataEntry:dataExport.error",
-      contentParams: { details: errorOrJobToString(error) },
-    })
-  );
+const handleError = (error: any) => (dispatch: any) => dispatch(
+  MessageActions.setMessage({
+    content: "dataEntry:dataExport.error",
+    contentParams: { details: errorOrJobToString(error) },
+  })
+);
 
 const startUploadDataToRemoteServer =
-  ({ outputFileUri, conflictResolutionStrategy, onJobComplete = null }) =>
-  async (dispatch, getState) => {
+  ({
+    outputFileUri,
+    conflictResolutionStrategy,
+    onJobComplete = null
+  }: any) =>
+  async (dispatch: any, getState: any) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -81,6 +84,7 @@ const startUploadDataToRemoteServer =
             uploadComplete = true;
           } else {
             // error occurred
+            // @ts-expect-error TS(2339): Property 'errors' does not exist on type 'unknown'... Remove this comment to see the full error message
             const { errors } = error;
             const errorMessage = errors
               ? Jobs.extractErrorMessage({ errors, t })
@@ -99,6 +103,7 @@ const startUploadDataToRemoteServer =
       }
       if (!uploadJobComplete) return;
 
+      // @ts-expect-error TS(2571): Object is of type 'unknown'.
       const { remoteJob } = uploadJobComplete.result;
 
       dispatch(
@@ -122,9 +127,9 @@ const onExportConfirmed =
     selectedSingleChoiceValue,
     conflictResolutionStrategy,
     outputFileUri,
-    onJobComplete,
-  }) =>
-  async (dispatch) => {
+    onJobComplete
+  }: any) =>
+  async (dispatch: any) => {
     try {
       switch (selectedSingleChoiceValue) {
         case exportType.remote:
@@ -140,6 +145,7 @@ const onExportConfirmed =
           await Files.shareFile({
             url: outputFileUri,
             mimeType: Files.MIME_TYPES.zip,
+            // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
             dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
           });
       }
@@ -148,7 +154,11 @@ const onExportConfirmed =
     }
   };
 
-const _onExportFileGenerationError = ({ errors, dispatch }) => {
+const _onExportFileGenerationError = ({
+  errors,
+  dispatch
+}: any) => {
+  // @ts-expect-error TS(2571): Object is of type 'unknown'.
   const validationErrors = Object.values(errors).map((item) => item.error);
   const details = validationErrors
     .map((validationError) =>
@@ -172,8 +182,8 @@ const _onExportFileGenerationSucceeded = async ({
   onlyRemote = false,
   conflictResolutionStrategy,
   onJobComplete,
-  dispatch,
-}) => {
+  dispatch
+}: any) => {
   const { outputFileUri } = result || {};
   const availableExportTypes = [];
   if (!onlyLocally) {
@@ -182,7 +192,9 @@ const _onExportFileGenerationSucceeded = async ({
   if (!onlyRemote && (await Files.isSharingAvailable())) {
     availableExportTypes.push(exportType.share);
   }
-  const onConfirm = ({ selectedSingleChoiceValue }) => {
+  const onConfirm = ({
+    selectedSingleChoiceValue
+  }: any) => {
     dispatch(
       onExportConfirmed({
         selectedSingleChoiceValue,
@@ -219,14 +231,14 @@ export const exportRecords =
     onlyLocally = false,
     onlyRemote = false,
     onJobComplete: onJobCompleteParam = null,
-    onEnd = null,
-  }) =>
-  async (dispatch, getState) => {
+    onEnd = null
+  }: any) =>
+  async (dispatch: any, getState: any) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const surveyId = survey.id;
 
-    const onJobComplete = async (jobComplete) => {
+    const onJobComplete = async (jobComplete: any) => {
       const { result } = jobComplete;
       const { mergedRecordsMap } = result;
 
@@ -252,6 +264,7 @@ export const exportRecords =
         recordUuids,
         user,
       });
+      // @ts-expect-error TS(2339): Property 'start' does not exist on type 'RecordsEx... Remove this comment to see the full error message
       await job.start();
       const { summary } = job;
       const { errors, result, status } = summary;

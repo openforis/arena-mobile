@@ -9,8 +9,8 @@ const getFile = async ({
   params,
   callback: _callback,
   targetFileUri = null,
-  options = {},
-}) => {
+  options = {}
+}: any) => {
   const actualTargetFileUri =
     targetFileUri ?? Files.path(Files.cacheDirectory, UUIDs.v4() + ".tmp");
   const url = APIUtils.getUrlWithParams({ serverUrl, uri, params });

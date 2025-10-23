@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-export const useNavigationEvent = (type, handler) => {
+export const useNavigationEvent = (type: any, handler: any) => {
   const navigation = useNavigation();
 
   useEffect(() => {

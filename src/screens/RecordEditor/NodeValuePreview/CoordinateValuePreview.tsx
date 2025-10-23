@@ -5,7 +5,7 @@ import { NodeDefs } from "@openforis/arena-core";
 import { FormItem, Text, VView } from "components";
 import { NodeValuePreviewPropTypes } from "./NodeValuePreviewPropTypes";
 
-export const CoordinateValuePreview = (props) => {
+export const CoordinateValuePreview = (props: any) => {
   const { nodeDef, value } = props;
 
   const fields = useMemo(() => {
@@ -16,6 +16,7 @@ export const CoordinateValuePreview = (props) => {
   return (
     <VView>
       {fields.map((fieldKey) => (
+        // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
         <FormItem key={fieldKey} labelKey={`dataEntry:coordinate.${fieldKey}`}>
           <Text>{value[fieldKey]}</Text>
         </FormItem>

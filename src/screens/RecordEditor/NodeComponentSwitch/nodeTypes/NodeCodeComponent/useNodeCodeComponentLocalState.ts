@@ -18,7 +18,10 @@ import {
 } from "state";
 import { useItemsFilter } from "../useItemsFilter";
 
-export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
+export const useNodeCodeComponentLocalState = ({
+  parentNodeUuid,
+  nodeDef
+}: any) => {
   const dispatch = useDispatch();
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -66,8 +69,10 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
       nodes.reduce((acc, node) => {
         const item = Surveys.getCategoryItemByUuid({
           survey,
+          // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
           itemUuid: NodeValues.getItemUuid(node),
         });
+        // @ts-expect-error TS(2345): Argument of type 'CategoryItem' is not assignable ... Remove this comment to see the full error message
         if (item) acc.push(item);
         return acc;
       }, []),
@@ -75,10 +80,11 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
   );
 
   const selectedItemUuid =
+    // @ts-expect-error TS(2532): Object is possibly 'undefined'.
     selectedItems.length === 1 ? selectedItems[0].uuid : null;
 
   const itemLabelFunction = useCallback(
-    (item) => {
+    (item: any) => {
       if (!item) return "";
 
       return NodeDefs.isCodeShown(cycle)(nodeDef)
@@ -89,19 +95,22 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
   );
 
   const onItemAdd = useCallback(
-    (itemUuid) => {
+    (itemUuid: any) => {
       const value = NodeValues.newCodeValue({ itemUuid });
       if (NodeDefs.isSingle(nodeDef)) {
         const node = nodes[0];
+        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         dispatch(DataEntryActions.updateAttribute({ uuid: node.uuid, value }));
       } else if (maxCountReached) {
         dispatch(
+          // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
           MessageActions.setInfo(
             "dataEntry:node.cannotAddMoreItems.maxCountReached"
           )
         );
       } else {
         dispatch(
+          // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
           DataEntryActions.addNewAttribute({ nodeDef, parentNodeUuid, value })
         );
       }
@@ -110,16 +119,18 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
   );
 
   const onItemRemove = useCallback(
-    (itemUuid) => {
+    (itemUuid: any) => {
       if (NodeDefs.isSingle(nodeDef)) {
         const node = nodes[0];
         dispatch(
+          // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
           DataEntryActions.updateAttribute({ uuid: node.uuid, value: null })
         );
       } else {
         const nodeToRemove = nodes.find(
           (node) => NodeValues.getItemUuid(node) === itemUuid
         );
+        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         dispatch(DataEntryActions.deleteNodes([nodeToRemove.uuid]));
       }
     },
@@ -127,10 +138,12 @@ export const useNodeCodeComponentLocalState = ({ parentNodeUuid, nodeDef }) => {
   );
 
   const onSingleValueChange = useCallback(
-    (itemUuid) => {
+    (itemUuid: any) => {
       const node = nodes[0];
+      // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
       const wasSelected = NodeValues.getItemUuid(node) === itemUuid;
       const value = wasSelected ? null : NodeValues.newCodeValue({ itemUuid });
+      // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
       dispatch(DataEntryActions.updateAttribute({ uuid: node.uuid, value }));
     },
     [dispatch, nodes]

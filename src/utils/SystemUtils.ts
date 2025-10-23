@@ -17,17 +17,17 @@ const { nativeBuildVersion: buildNumber, nativeApplicationVersion: version } =
 const appId = "am";
 const { isAndroid, isExpoGo, platform } = Environment;
 
-let SystemNavigationBar;
+let SystemNavigationBar: any;
 if (!isExpoGo && isAndroid) {
   SystemNavigationBar = require("react-native-system-navigation-bar")?.default;
 }
 
-let Clipboard;
+let Clipboard: any;
 if (!isExpoGo) {
   Clipboard = require("@react-native-clipboard/clipboard")?.default;
 }
 
-const copyValueToClipboard = (value) => {
+const copyValueToClipboard = (value: any) => {
   try {
     Clipboard?.setString(value);
     return true;
@@ -57,7 +57,7 @@ const getRecordAppInfo = () => ({
   platform,
 });
 
-const setFullScreen = async (fullScreen) => {
+const setFullScreen = async (fullScreen: any) => {
   try {
     await SystemNavigationBar?.stickyImmersive(fullScreen);
   } catch (e) {
@@ -65,7 +65,7 @@ const setFullScreen = async (fullScreen) => {
   }
 };
 
-const setKeepScreenAwake = async (keepScreenAwake) => {
+const setKeepScreenAwake = async (keepScreenAwake: any) => {
   if (keepScreenAwake) {
     await activateKeepAwakeAsync();
   } else {
@@ -78,7 +78,7 @@ const getOrientation = async () => {
   return ScreenOrientation.fromExpoOrientation(orientationExpo);
 };
 
-const addOrientationChangeListener = (handler) => {
+const addOrientationChangeListener = (handler: any) => {
   ExpoScreenOrientation.addOrientationChangeListener((event) => {
     const orientationNext = event?.orientationInfo?.orientation;
     handler(ScreenOrientation.fromExpoOrientation(orientationNext));

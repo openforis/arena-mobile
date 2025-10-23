@@ -24,9 +24,15 @@ import styles from "./styles";
 
 const nodePathPartSeparator = " / ";
 
-const getNodePath = ({ survey, record, nodeUuid, lang }) => {
+const getNodePath = ({
+  survey,
+  record,
+  nodeUuid,
+  lang
+}: any) => {
   const node = Records.getNodeByUuid(nodeUuid)(record);
-  const parts = [];
+  const parts: any = [];
+  // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
   Records.visitAncestorsAndSelf(node, (visitedAncestor) => {
     const nodeDef = Surveys.getNodeDefByUuid({
       survey,
@@ -58,8 +64,8 @@ const extractValidationItem = ({
   validationFieldKey,
   validationResult,
   lang,
-  t,
-}) => {
+  t
+}: any) => {
   let invalidNodeDefUuid, invalidParentNodeUuid, invalidNodeUuid;
   if (RecordValidations.isValidationChildrenCountKey(validationFieldKey)) {
     invalidNodeDefUuid =
@@ -152,6 +158,7 @@ export const RecordValidationReport = () => {
             t,
           });
           if (validationItem) {
+            // @ts-expect-error TS(2345): Argument of type '{ key: any; nodeDef: NodeDef<Nod... Remove this comment to see the full error message
             acc.push(validationItem);
           }
           return acc;
@@ -161,7 +168,7 @@ export const RecordValidationReport = () => {
     [lang, record, survey, t, validationFields]
   );
 
-  const onRowPress = (item) => {
+  const onRowPress = (item: any) => {
     const {
       key: dialogNodeUuid,
       nodeDef: dialogNodeDef,
@@ -184,6 +191,7 @@ export const RecordValidationReport = () => {
         />
       )}
       {items.length > 0 && (
+        // @ts-expect-error TS(2786): 'DataVisualizer' cannot be used as a JSX component... Remove this comment to see the full error message
         <DataVisualizer
           fields={[
             {
@@ -205,6 +213,7 @@ export const RecordValidationReport = () => {
           nodeDef={dialogNodeDef}
           nodeUuid={dialogNodeUuid}
           parentNodeUuid={dialogParentNodeUuid}
+          // @ts-expect-error TS(2345): Argument of type '{ editDialogOpen: false; }' is n... Remove this comment to see the full error message
           onDismiss={() => setState({ editDialogOpen: false })}
         />
       )}

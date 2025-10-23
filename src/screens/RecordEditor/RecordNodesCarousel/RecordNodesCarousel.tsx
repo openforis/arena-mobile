@@ -33,16 +33,17 @@ export const RecordNodesCarousel = () => {
     DataEntrySelectors.useCurrentPageEntityActiveChildIndex();
 
   const onPageSelected = useCallback(
-    (e) => {
+    (e: any) => {
       const position = e.nativeEvent.position;
       dispatch(
+        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         DataEntryActions.selectCurrentPageEntityActiveChildIndex(position)
       );
     },
     [dispatch]
   );
 
-  const onPageScrollStateChanged = useCallback((e) => {
+  const onPageScrollStateChanged = useCallback((e: any) => {
     pagerViewScrollStateRef.current = e.nativeEvent.pageScrollState;
   }, []);
 
@@ -53,6 +54,7 @@ export const RecordNodesCarousel = () => {
         pagerViewScrollStateRef.current === "idle"
       ) {
         // set page only when not scrolling to avoid polling between pages
+        // @ts-expect-error TS(2339): Property 'setPage' does not exist on type 'never'.
         pagerViewRef.current?.setPage(activeChildIndex);
       }
     });

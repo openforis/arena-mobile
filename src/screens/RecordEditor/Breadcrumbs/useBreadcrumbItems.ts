@@ -17,7 +17,12 @@ export const useBreadcrumbItems = () => {
   const entityDefUuid = entityDef.uuid;
 
   const itemLabelFunction = useCallback(
-    ({ nodeDef, record = null, entity = null, parentEntity = null }) => {
+    ({
+      nodeDef,
+      record = null,
+      entity = null,
+      parentEntity = null
+    }: any) => {
       const nodeDefLabel = NodeDefs.getLabelOrName(nodeDef, lang);
 
       if (

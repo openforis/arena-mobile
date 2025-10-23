@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { Appbar as RNPAppbar } from "react-native-paper";
 import { useDispatch } from "react-redux";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Surveys } from "@openforis/arena-core";
@@ -26,7 +27,7 @@ import { BaseStyles } from "utils/BaseStyles";
 import { OptionsMenu } from "./OptionsMenu";
 import styles from "./styles";
 
-export const AppBar = (props) => {
+export const AppBar = (props: any) => {
   if (__DEV__) {
     console.log(`rendering AppBar`);
   }
@@ -79,6 +80,7 @@ export const AppBar = (props) => {
       : t(titleOption);
 
   const onToggleDrawerPress = useCallback(
+    // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
     () => dispatch(DataEntryActions.toggleRecordPageMenuOpen),
     [dispatch]
   );
@@ -90,17 +92,20 @@ export const AppBar = (props) => {
   );
 
   const onToggleScreenViewModePress = useCallback(
+    // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
     () => dispatch(ScreenOptionsActions.toggleScreenViewMode({ screenKey })),
     [dispatch, screenKey]
   );
 
   const toggleRecordLock = useCallback(
+    // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
     () => dispatch(DataEntryActions.toggleRecordEditLock),
     [dispatch]
   );
 
   const toggleRecordEditViewMode = useCallback(() => {
     dispatch(
+      // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => void' is not ... Remove this comment to see the full error message
       SurveyOptionsActions.setRecordEditViewMode(
         recordEditViewMode === RecordEditViewMode.form
           ? RecordEditViewMode.oneNode
@@ -116,6 +121,7 @@ export const AppBar = (props) => {
 
   const onLinkToPreviousCyclePress = useCallback(() => {
     dispatch(
+      // @ts-expect-error TS(2345): Argument of type '((dispatch: any) => Promise<void... Remove this comment to see the full error message
       isLinkedToPreviousCycleRecord
         ? DataEntryActions.unlinkFromRecordInPreviousCycle()
         : DataEntryActions.linkToRecordInPreviousCycle()
@@ -200,6 +206,7 @@ export const AppBar = (props) => {
         )}
 
         {hasOptionsMenuVisible && (
+          // @ts-expect-error TS(2786): 'OptionsMenu' cannot be used as a JSX component.
           <OptionsMenu toggleMenu={toggleMenu} visible={menuVisible} />
         )}
       </HView>

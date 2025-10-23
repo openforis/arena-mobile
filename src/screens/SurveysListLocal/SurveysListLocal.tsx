@@ -36,7 +36,10 @@ const testSurveyUuid = "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3";
 
 const minSurveysToShowSearchBar = 5;
 
-const determineSurveyStatus = ({ survey, remoteSurvey }) => {
+const determineSurveyStatus = ({
+  survey,
+  remoteSurvey
+}: any) => {
   if (survey.uuid === testSurveyUuid) return null;
 
   if (!remoteSurvey) {
@@ -48,7 +51,10 @@ const determineSurveyStatus = ({ survey, remoteSurvey }) => {
   return UpdateStatus.upToDate;
 };
 
-const determineStatusFieldStyle = ({ screenViewMode, updateStatusLoading }) => {
+const determineStatusFieldStyle = ({
+  screenViewMode,
+  updateStatusLoading
+}: any) => {
   if (screenViewMode === ScreenViewMode.table) {
     return { width: 10 };
   }
@@ -77,7 +83,10 @@ export const SurveysListLocal = () => {
 
     setState((statePrev) => ({
       ...statePrev,
-      surveys: _surveys.map((survey) => ({ ...survey, key: survey.id })),
+      surveys: _surveys.map((survey: any) => ({
+        ...survey,
+        key: survey.id
+      })),
       loading: false,
       updateStatusChecked: false,
       updateStatusLoading: false,
@@ -90,7 +99,7 @@ export const SurveysListLocal = () => {
     useSurveysSearch({ surveys });
 
   const onDeleteSelectedItemIds = useCallback(
-    async (surveyIds) => {
+    async (surveyIds: any) => {
       if (
         await confirm({
           titleKey: "surveys:confirmDeleteSurvey.title",
@@ -98,6 +107,7 @@ export const SurveysListLocal = () => {
           swipeToConfirm: true,
         })
       ) {
+        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         await dispatch(SurveyActions.deleteSurveys(surveyIds));
         await loadSurveys();
       }
@@ -106,7 +116,7 @@ export const SurveysListLocal = () => {
   );
 
   const onItemPress = useCallback(
-    async (survey) => {
+    async (survey: any) => {
       const {
         id: surveyId,
         name: surveyName,
@@ -120,12 +130,14 @@ export const SurveysListLocal = () => {
       const fetchAndSetSurvey = () => {
         setLoading();
         dispatch(
+          // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => Promise<void>... Remove this comment to see the full error message
           SurveyActions.fetchAndSetCurrentSurvey({ surveyId, navigation })
         );
       };
 
       if (updateStatusChecked && status === UpdateStatus.notUpToDate) {
         dispatch(
+          // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => Promise<void>... Remove this comment to see the full error message
           SurveyActions.updateSurveyRemote({
             surveyId,
             surveyName,
@@ -153,16 +165,20 @@ export const SurveysListLocal = () => {
       updateStatusLoading: true,
       updateStatusChecked: false,
     }));
+    // @ts-expect-error TS(2339): Property 'surveys' does not exist on type '{ error... Remove this comment to see the full error message
     const { surveys: remoteSurveySummaries } =
       await SurveyService.fetchSurveySummariesRemote();
     const remoteSurveySummariesByUuid = ArrayUtils.indexByUuid(
       remoteSurveySummaries
     );
     const surveysUpdated = surveys.map((survey) => {
+      // @ts-expect-error TS(2339): Property 'uuid' does not exist on type 'never'.
       const remoteSurvey = remoteSurveySummariesByUuid[survey.uuid];
       const status = determineSurveyStatus({ survey, remoteSurvey });
+      // @ts-expect-error TS(2698): Spread types may only be created from object types... Remove this comment to see the full error message
       return { ...survey, status };
     });
+    // @ts-expect-error TS(2345): Argument of type '(statePrev: { surveys: never[]; ... Remove this comment to see the full error message
     setState((statePrev) => ({
       ...statePrev,
       surveys: surveysUpdated,
@@ -173,6 +189,7 @@ export const SurveysListLocal = () => {
 
   const onImportFromCloudPress = useCallback(async () => {
     if (await checkLoggedInUser({ dispatch, navigation })) {
+      // @ts-expect-error TS(2769): No overload matches this call.
       navigation.navigate(screenKeys.surveysListRemote);
     }
   }, [dispatch, navigation]);
@@ -192,6 +209,7 @@ export const SurveysListLocal = () => {
       _fields.push({
         key: "status",
         header: "common:status",
+        // @ts-expect-error TS(2345): Argument of type '{ key: string; header: string; s... Remove this comment to see the full error message
         style: determineStatusFieldStyle({
           screenViewMode,
           updateStatusLoading,
@@ -220,6 +238,7 @@ export const SurveysListLocal = () => {
         />
       )}
       {surveysFiltered.length > 0 && (
+        // @ts-expect-error TS(2786): 'DataVisualizer' cannot be used as a JSX component... Remove this comment to see the full error message
         <DataVisualizer
           fields={fields}
           mode={screenViewMode}

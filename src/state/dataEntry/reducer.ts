@@ -19,7 +19,10 @@ const actionHandlers = {
   [SurveyActionTypes.CURRENT_SURVEY_SET]: () => ({ ...initialState }),
   [DataEntryActionTypes.DATA_ENTRY_RESET]: () => ({ ...initialState }),
 
-  [DataEntryActionTypes.RECORD_SET]: ({ state, action }) => ({
+  [DataEntryActionTypes.RECORD_SET]: ({
+    state,
+    action
+  }: any) => ({
     ...state,
     record: action.record,
     recordEditLockAvailable:
@@ -28,43 +31,60 @@ const actionHandlers = {
     recordPageSelectorMenuOpen:
       action.recordPageSelectorMenuOpen ?? state.recordPageSelectorMenuOpen,
   }),
-  [DataEntryActionTypes.RECORD_EDIT_LOCKED]: ({ state, action }) => ({
+  [DataEntryActionTypes.RECORD_EDIT_LOCKED]: ({
+    state,
+    action
+  }: any) => ({
     ...state,
     recordEditLocked: action.locked,
   }),
-  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_LOAD]: ({ state, action }) => ({
+  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_LOAD]: ({
+    state,
+    action
+  }: any) => ({
     ...state,
     previousCycleRecordLoading: action.loading,
   }),
-  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_SET]: ({ state, action }) => ({
+  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_SET]: ({
+    state,
+    action
+  }: any) => ({
     ...state,
     linkToPreviousCycleRecord: true,
     previousCycleRecord: action.record,
     previousCycleRecordPageEntity: {},
   }),
-  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_RESET]: ({ state }) => ({
+  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_RESET]: ({
+    state
+  }: any) => ({
     ...state,
     linkToPreviousCycleRecord: false,
     previousCycleRecord: null,
     previousCycleRecordPageEntity: {},
   }),
-  [DataEntryActionTypes.PAGE_ENTITY_SET]: ({ state, action }) => ({
+  [DataEntryActionTypes.PAGE_ENTITY_SET]: ({
+    state,
+    action
+  }: any) => ({
     ...state,
     recordCurrentPageEntity: action.payload,
     activeChildDefIndex: 0,
   }),
   [DataEntryActionTypes.PAGE_ENTITY_ACTIVE_CHILD_INDEX_SET]: ({
     state,
-    action,
-  }) => ({ ...state, activeChildDefIndex: action.index }),
-  [DataEntryActionTypes.PAGE_SELECTOR_MENU_OPEN_SET]: ({ state, action }) => ({
+    action
+  }: any) => ({ ...state, activeChildDefIndex: action.index }),
+  [DataEntryActionTypes.PAGE_SELECTOR_MENU_OPEN_SET]: ({
+    state,
+    action
+  }: any) => ({
     ...state,
     recordPageSelectorMenuOpen: action.open,
   }),
   [DataEntryActionTypes.PREVIOUS_CYCLE_PAGE_ENTITY_SET]: ({
     state,
-    action,
-  }) => ({
+    action
+  }: any) => ({
     ...state,
     previousCycleRecordPageEntity: action.payload,
   }),

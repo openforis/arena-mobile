@@ -62,8 +62,12 @@ const conflictingRecordsExportOptions = [
   },
 ];
 
-const generateRecordsCountSummaryText = ({ recordsCountSummary, t }) =>
+const generateRecordsCountSummaryText = ({
+  recordsCountSummary,
+  t
+}: any) =>
   Object.entries(recordsCountSummary)
+    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     .filter(([_key, value]) => value > 0) // exclude items with 0 count
     .map(([key, value]) => {
       const statusText = t(`dataEntry:recordStatus.${key}`);
@@ -169,17 +173,15 @@ export const RecordsList = () => {
   }, [dispatch, navigation, survey, cycle, onlyLocal]);
 
   const onOnlyLocalChange = useCallback(
-    (onlyLocalUpdated) =>
-      setState((statePrev) => ({ ...statePrev, onlyLocal: onlyLocalUpdated })),
+    (onlyLocalUpdated: any) => setState((statePrev) => ({ ...statePrev, onlyLocal: onlyLocalUpdated })),
     []
   );
 
   const onSearchValueChange = useCallback(
-    (searchValueUpdated) =>
-      setState((statePrev) => ({
-        ...statePrev,
-        searchValue: searchValueUpdated,
-      })),
+    (searchValueUpdated: any) => setState((statePrev) => ({
+      ...statePrev,
+      searchValue: searchValueUpdated,
+    })),
     []
   );
 
@@ -217,12 +219,14 @@ export const RecordsList = () => {
       ],
     });
     if (confirmResult) {
+      // @ts-expect-error TS(2339): Property 'selectedMultipleChoiceValues' does not e... Remove this comment to see the full error message
       const { selectedMultipleChoiceValues } = confirmResult;
       const overwriteExistingRecords = selectedMultipleChoiceValues.includes(
         dataImportOptions.overwriteExistingRecords
       );
 
       dispatch(
+        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         DataEntryActions.importRecordsFromFile({
           fileUri: uri,
           overwriteExistingRecords,
@@ -234,13 +238,15 @@ export const RecordsList = () => {
 
   const onNewRecordPress = useCallback(() => {
     setState((statePrev) => ({ ...statePrev, loading: true }));
+    // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
     dispatch(DataEntryActions.createNewRecord({ navigation }));
   }, [dispatch, navigation]);
 
   const confirmExportRecords = useCallback(
-    async ({ records }) => {
-      const getRecordsByStatus = (status) =>
-        records.filter((r) => r.syncStatus === status);
+    async ({
+      records
+    }: any) => {
+      const getRecordsByStatus = (status: any) => records.filter((r: any) => r.syncStatus === status);
       const newRecords = getRecordsByStatus(RecordSyncStatus.new);
       const newRecordsCount = newRecords.length;
 
@@ -264,7 +270,7 @@ export const RecordsList = () => {
       const confirmSingleChoiceOptions =
         conflictingRecordsCount > 0 ? conflictingRecordsExportOptions : [];
 
-      const recordsWithErrorsCount = records.filter((r) => r.errors > 0).length;
+      const recordsWithErrorsCount = records.filter((r: any) => r.errors > 0).length;
 
       const recordsCountSummary = {
         new: newRecordsCount,
@@ -290,7 +296,10 @@ export const RecordsList = () => {
   );
 
   const exportSelectedRecords = useCallback(
-    async ({ selectedRecords, onlyRemote = false }) => {
+    async ({
+      selectedRecords,
+      onlyRemote = false
+    }: any) => {
       const { newRecords, updatedRecords, conflictingRecords, confirmResult } =
         await confirmExportRecords({ records: selectedRecords });
       if (confirmResult) {
@@ -299,6 +308,7 @@ export const RecordsList = () => {
         let conflictResolutionStrategy =
           ConflictResolutionStrategy.overwriteIfUpdated;
         if (
+          // @ts-expect-error TS(2571): Object is of type 'unknown'.
           confirmResult.selectedSingleChoiceValue ===
           ConflictResolutionStrategy.merge
         ) {
@@ -312,7 +322,7 @@ export const RecordsList = () => {
         }
         setState((statePrev) => ({ ...statePrev, loading: true }));
 
-        const onJobComplete = async (jobCompleted) => {
+        const onJobComplete = async (jobCompleted: any) => {
           const { result } = jobCompleted;
           const { missingFiles } = result;
 
@@ -326,6 +336,7 @@ export const RecordsList = () => {
           }
         };
         dispatch(
+          // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
           DataEntryActions.exportRecords({
             cycle,
             recordUuids,
@@ -347,7 +358,9 @@ export const RecordsList = () => {
 
   const onExportAllRecordsPress = useCallback(() => {
     const recordUuids = records
+      // @ts-expect-error TS(2339): Property 'origin' does not exist on type 'never'.
       .filter((record) => record.origin === RecordOrigin.local)
+      // @ts-expect-error TS(2339): Property 'uuid' does not exist on type 'never'.
       .map((record) => record.uuid);
 
     if (recordUuids.length === 0) {
@@ -355,6 +368,7 @@ export const RecordsList = () => {
       return;
     }
     dispatch(
+      // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
       DataEntryActions.exportRecords({
         cycle,
         recordUuids,
@@ -367,8 +381,9 @@ export const RecordsList = () => {
   }, [cycle, dispatch, records, toaster]);
 
   const onExportSelectedRecordUuids = useCallback(
-    async (recordUuids) => {
+    async (recordUuids: any) => {
       const selectedRecords = records.filter((record) =>
+        // @ts-expect-error TS(2339): Property 'uuid' does not exist on type 'never'.
         recordUuids.includes(record.uuid)
       );
       await exportSelectedRecords({ selectedRecords });
@@ -377,7 +392,7 @@ export const RecordsList = () => {
   );
 
   const onDeleteSelectedRecordUuids = useCallback(
-    async (recordUuids) => {
+    async (recordUuids: any) => {
       if (
         await confirm({
           titleKey: "recordsList:deleteRecordsConfirm.title",
@@ -385,6 +400,7 @@ export const RecordsList = () => {
           swipeToConfirm: true,
         })
       ) {
+        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         await dispatch(DataEntryActions.deleteRecords(recordUuids));
         await loadRecords();
       }
@@ -393,13 +409,13 @@ export const RecordsList = () => {
   );
 
   const checkRecordsCanBeImported = useCallback(
-    (selectedRecords) => {
+    (selectedRecords: any) => {
       const selectedLocalRecords = selectedRecords.filter(
-        (record) => record.origin === RecordOrigin.local
+        (record: any) => record.origin === RecordOrigin.local
       );
       if (
         selectedLocalRecords.length > 0 &&
-        selectedLocalRecords.some((record) => {
+        selectedLocalRecords.some((record: any) => {
           const { dateModified, dateModifiedRemote, dateSynced } = record;
           return (
             !dateSynced || !Dates.isAfter(dateModifiedRemote, dateModified)
@@ -415,14 +431,16 @@ export const RecordsList = () => {
   );
 
   const onImportSelectedRecordUuids = useCallback(
-    (selectedRecordUuids) => {
+    (selectedRecordUuids: any) => {
       const selectedRecords = records.filter((record) =>
+        // @ts-expect-error TS(2339): Property 'uuid' does not exist on type 'never'.
         selectedRecordUuids.includes(record.uuid)
       );
       if (!checkRecordsCanBeImported(selectedRecords)) {
         return;
       }
       dispatch(
+        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         DataEntryActions.importRecordsFromServer({
           recordUuids: selectedRecordUuids,
           onImportComplete: loadRecords,
@@ -433,14 +451,14 @@ export const RecordsList = () => {
   );
 
   const checkRecordsCanBeCloned = useCallback(
-    (selectedRecords) => {
+    (selectedRecords: any) => {
       const selectedRemoteRecords = selectedRecords.filter(
-        (record) => record.origin === RecordOrigin.remote
+        (record: any) => record.origin === RecordOrigin.remote
       );
       if (
         selectedRemoteRecords.length > 0 &&
         selectedRemoteRecords.some(
-          (record) => record.loadStatus !== RecordLoadStatus.complete
+          (record: any) => record.loadStatus !== RecordLoadStatus.complete
         )
       ) {
         toaster(
@@ -454,14 +472,16 @@ export const RecordsList = () => {
   );
 
   const onCloneSelectedRecordUuids = useCallback(
-    (selectedRecordUuids) => {
+    (selectedRecordUuids: any) => {
       const selectedRecords = records.filter((record) =>
+        // @ts-expect-error TS(2339): Property 'uuid' does not exist on type 'never'.
         selectedRecordUuids.includes(record.uuid)
       );
       if (!checkRecordsCanBeCloned(selectedRecords)) {
         return;
       }
       dispatch(
+        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         DataEntryActions.cloneRecordsIntoDefaultCycle({
           recordSummaries: selectedRecords,
           callback: loadRecords,
@@ -479,6 +499,7 @@ export const RecordsList = () => {
     } else if (!Surveys.isRecordsUploadFromMobileAllowed(survey)) {
       return { errorKey: "recordsList:sendData.error.recordsUploadNotAllowed" };
     } else if (
+      // @ts-expect-error TS(2339): Property 'errors' does not exist on type 'never'.
       records.filter((r) => r.errors).length > 0 &&
       !Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey)
     ) {
@@ -495,6 +516,7 @@ export const RecordsList = () => {
     if (errorKey) {
       toaster("recordsList:sendData.error.generic", { details: t(errorKey) });
     } else {
+      // @ts-expect-error TS(2339): Property 'syncStatusFetched' does not exist on typ... Remove this comment to see the full error message
       const { syncStatusFetched: syncStatusFetchedNext, records: recordsNext } =
         await loadRecordsWithSyncStatus();
       if (syncStatusFetchedNext) {
@@ -548,6 +570,7 @@ export const RecordsList = () => {
   return (
     <VView style={styles.container}>
       <VView style={styles.innerContainer}>
+        // @ts-expect-error TS(2786): 'RecordsListOptions' cannot be used as a JSX compo... Remove this comment to see the full error message
         <RecordsListOptions
           onImportRecordsFromFilePress={onImportRecordsFromFilePress}
           onlyLocal={onlyLocal}
@@ -588,6 +611,7 @@ export const RecordsList = () => {
         )}
       </VView>
 
+      // @ts-expect-error TS(2786): 'RecordsListLegend' cannot be used as a JSX compon... Remove this comment to see the full error message
       {syncStatusFetched && <RecordsListLegend />}
 
       {records.length > 0 && (

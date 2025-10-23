@@ -17,16 +17,22 @@ const {
 } = SurveyActionTypes;
 
 const setCurrentSurvey =
-  ({ survey, preferredLanguage = null, navigation = null }) =>
-  async (dispatch) => {
+  ({
+    survey,
+    preferredLanguage = null,
+    navigation = null
+  }: any) =>
+  async (dispatch: any) => {
     dispatch({ type: CURRENT_SURVEY_SET, survey, preferredLanguage });
     await PreferencesService.setCurrentSurveyId(survey.id);
     navigation?.navigate(screenKeys.recordsList);
   };
 
 const setCurrentSurveyPreferredLanguage =
-  ({ lang }) =>
-  async (dispatch, getState) => {
+  ({
+    lang
+  }: any) =>
+  async (dispatch: any, getState: any) => {
     dispatch({ type: CURRENT_SURVEY_PREFERRED_LANG_SET, lang });
     const state = getState();
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
@@ -34,17 +40,23 @@ const setCurrentSurveyPreferredLanguage =
   };
 
 const setCurrentSurveyCycle =
-  ({ cycleKey }) =>
-  (dispatch) => {
+  ({
+    cycleKey
+  }: any) =>
+  (dispatch: any) => {
     dispatch({ type: CURRENT_SURVEY_CYCLE_SET, cycleKey });
   };
 
 const fetchAndSetCurrentSurvey =
-  ({ surveyId, navigation = null }) =>
-  async (dispatch) => {
+  ({
+    surveyId,
+    navigation = null
+  }: any) =>
+  async (dispatch: any) => {
     const survey = await SurveyService.fetchSurveyById(surveyId);
     if (survey) {
       if (!Surveys.isVisibleInMobile(survey)) {
+        // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
         const status = i18n.t("surveys:status.notVisibleInMobile");
         dispatch(
           MessageActions.setWarning("surveys:statusMessage", { status })
@@ -62,21 +74,27 @@ const fetchAndSetCurrentSurvey =
     }
   };
 
-const fetchAndSetLocalSurveys = () => async (dispatch) => {
+const fetchAndSetLocalSurveys = () => async (dispatch: any) => {
   const surveys = await SurveyService.fetchSurveySummariesLocal();
   dispatch({ type: SURVEYS_LOCAL_SET, surveys });
 };
 
 const _onSurveyInsertOrUpdate =
-  ({ survey, navigation }) =>
-  async (dispatch) => {
+  ({
+    survey,
+    navigation
+  }: any) =>
+  async (dispatch: any) => {
     dispatch(setCurrentSurvey({ survey, navigation }));
     dispatch(fetchAndSetLocalSurveys());
   };
 
 const importSurveyRemote =
-  ({ surveyId, navigation }) =>
-  async (dispatch) => {
+  ({
+    surveyId,
+    navigation
+  }: any) =>
+  async (dispatch: any) => {
     const survey = await SurveyService.importSurveyRemote({ id: surveyId });
     dispatch(_onSurveyInsertOrUpdate({ survey, navigation }));
   };
@@ -90,9 +108,9 @@ const updateSurveyRemote =
     confirmMessageKey = "surveys:updateSurveyConfirmMessage",
     onConfirm = null,
     onCancel = null,
-    onComplete = null,
-  }) =>
-  async (dispatch) => {
+    onComplete = null
+  }: any) =>
+  async (dispatch: any) => {
     dispatch(
       ConfirmActions.show({
         confirmButtonTextKey: "surveys:updateSurvey",
@@ -113,7 +131,7 @@ const updateSurveyRemote =
     );
   };
 
-const deleteSurveys = (surveyIds) => async (dispatch, getState) => {
+const deleteSurveys = (surveyIds: any) => async (dispatch: any, getState: any) => {
   const state = getState();
   const currentSurveyId = SurveySelectors.selectCurrentSurveyId(state);
   await SurveyService.deleteSurveys(surveyIds);

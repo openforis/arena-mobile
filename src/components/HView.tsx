@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { useIsTextDirectionRtl } from "localization";
@@ -13,7 +14,7 @@ const baseStyle = {
 
 const rtlStyle = { flexDirection: "row-reverse" };
 
-export const HView = (props) => {
+export const HView = (props: any) => {
   const {
     children,
     fullWidth = false,

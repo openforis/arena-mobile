@@ -6,7 +6,7 @@ import { RecordNodes } from "model";
 
 import { NodeValuePreviewPropTypes } from "./NodeValuePreviewPropTypes";
 
-export const BooleanValuePreview = (props) => {
+export const BooleanValuePreview = (props: any) => {
   const { nodeDef, value } = props;
 
   const { t } = useTranslation();

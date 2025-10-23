@@ -1,12 +1,13 @@
 import React, { useCallback, useMemo } from "react";
 import openMap from "react-native-open-maps";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Points } from "@openforis/arena-core";
 
 import { IconButton } from "components/IconButton";
 
-export const OpenMapButton = (props) => {
+export const OpenMapButton = (props: any) => {
   const { point, size = 30, srsIndex = undefined } = props;
 
   const pointLatLng = useMemo(

@@ -16,7 +16,11 @@ const USER_LOADING = "USER_LOADING";
 const USER_SET = "USER_SET";
 const USER_PROFILE_ICON_INFO_SET = "USER_PROFILE_ICON_INFO_SET";
 
-const fetchUserOrLoginAgain = async ({ serverUrl, email, password }) => {
+const fetchUserOrLoginAgain = async ({
+  serverUrl,
+  email,
+  password
+}: any) => {
   let user;
   try {
     user = await AuthService.fetchUser();
@@ -33,7 +37,7 @@ const fetchUserOrLoginAgain = async ({ serverUrl, email, password }) => {
 
 const loginAndSetUser =
   ({ onlyIfNotSet = true } = {}) =>
-  async (dispatch, getState) => {
+  async (dispatch: any, getState: any) => {
     const state = getState();
     if (onlyIfNotSet) {
       // if user is already set in store, do not try to fetch it again
@@ -74,8 +78,10 @@ const loginAndSetUser =
   };
 
 const confirmGoToConnectionToRemoteServer =
-  ({ navigation }) =>
-  (dispatch) => {
+  ({
+    navigation
+  }: any) =>
+  (dispatch: any) => {
     dispatch(
       ConfirmActions.show({
         confirmButtonTextKey: "settings:connectionToServer",
@@ -88,8 +94,14 @@ const confirmGoToConnectionToRemoteServer =
   };
 
 const login =
-  ({ serverUrl, email, password, navigation = null, showBack = false }) =>
-  async (dispatch) => {
+  ({
+    serverUrl,
+    email,
+    password,
+    navigation = null,
+    showBack = false
+  }: any) =>
+  async (dispatch: any) => {
     const res = await AuthService.login({ serverUrl, email, password });
     const { user, error, message } = res;
     if (user) {
@@ -114,6 +126,7 @@ const login =
         ? "invalidCredentials"
         : "generic";
       const errorKey = `authService:error.${errorKeySuffix}`;
+      // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
       const details = i18n.t(error ?? message);
 
       dispatch(
@@ -125,7 +138,7 @@ const login =
     }
   };
 
-const fetchLoggedInUserProfileIcon = async (dispatch, getState) => {
+const fetchLoggedInUserProfileIcon = async (dispatch: any, getState: any) => {
   if (__DEV__) console.log("fetching user profile icon");
   const state = getState();
   const user = RemoteConnectionSelectors.selectLoggedUser(state);
@@ -142,8 +155,10 @@ const fetchLoggedInUserProfileIcon = async (dispatch, getState) => {
 };
 
 const _clearUserCredentialsInternal =
-  ({ keepEmailAddress } = {}) =>
-  async (dispatch) => {
+  ({
+    keepEmailAddress
+  }: any = {}) =>
+  async (dispatch: any) => {
     const settings = await SettingsService.fetchSettings();
     const settingsUpdated = {
       ...settings,
@@ -155,7 +170,7 @@ const _clearUserCredentialsInternal =
     dispatch({ type: USER_SET, user: null });
   };
 
-const clearUserCredentials = () => async (dispatch) => {
+const clearUserCredentials = () => async (dispatch: any) => {
   const confirmButtonTextKey = "settingsRemoteConnection:clearCredentials";
   const confirmMessageKey = confirmButtonTextKey + "ConfirmMessage";
   if (
@@ -170,14 +185,16 @@ const clearUserCredentials = () => async (dispatch) => {
 };
 
 const _doLogout =
-  ({ keepEmailAddress }) =>
-  async (dispatch) => {
+  ({
+    keepEmailAddress
+  }: any) =>
+  async (dispatch: any) => {
     await AuthService.logout();
     await AsyncStorageUtils.removeItem(asyncStorageKeys.loggedInUser);
     dispatch(_clearUserCredentialsInternal({ keepEmailAddress }));
   };
 
-const logout = () => (dispatch) => {
+const logout = () => (dispatch: any) => {
   dispatch(
     ConfirmActions.show({
       confirmButtonTextKey: "authService:logout",
@@ -189,7 +206,9 @@ const logout = () => (dispatch) => {
         })
       ),
       titleKey: "authService:logout",
-      onConfirm: ({ selectedMultipleChoiceValues }) =>
+      onConfirm: ({
+        selectedMultipleChoiceValues
+      }: any) =>
         dispatch(
           _doLogout({
             keepEmailAddress: selectedMultipleChoiceValues.includes(

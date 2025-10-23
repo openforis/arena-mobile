@@ -1,10 +1,14 @@
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Icon } from "components/Icon";
 import { useTheme } from "react-native-paper";
 import { BatteryState } from "model/BatteryState";
 
-const getBatteryIconSource = ({ batteryLevel, batteryState }) => {
+const getBatteryIconSource = ({
+  batteryLevel,
+  batteryState
+}: any) => {
   if (batteryLevel < 0.1) return "battery-alert-variant-outline";
   const suffix = batteryState === BatteryState.charging ? "-charging" : "";
   const iconName = `battery${suffix}`;
@@ -13,13 +17,14 @@ const getBatteryIconSource = ({ batteryLevel, batteryState }) => {
   return `${iconName}-${batteryLevelDec}`; // e.g. battery-level-50 or battery-level-50-charging
 };
 
-export const BatteryIcon = (props) => {
+export const BatteryIcon = (props: any) => {
   const { batteryLevel, batteryState } = props;
   const theme = useTheme();
   const color =
     batteryLevel < 0.2 ? theme.colors.error : theme.colors.onBackground;
   const iconSource = getBatteryIconSource({ batteryLevel, batteryState });
 
+  // @ts-expect-error TS(7027): Unreachable code detected.
   return <Icon color={color} source={iconSource} />;
 };
 

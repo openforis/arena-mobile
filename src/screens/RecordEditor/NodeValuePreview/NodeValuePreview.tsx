@@ -23,7 +23,7 @@ const componentByNodeDefType = {
   [NodeDefType.taxon]: TaxonValuePreview,
 };
 
-export const NodeValuePreview = (props) => {
+export const NodeValuePreview = (props: any) => {
   const { nodeDef, value } = props;
 
   if (__DEV__) {
@@ -37,10 +37,12 @@ export const NodeValuePreview = (props) => {
     return <Text>---</Text>;
   }
 
+  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   const component = componentByNodeDefType[nodeDef.type];
   if (component) {
     return React.createElement(component, { nodeDef, value });
   }
+  // @ts-expect-error TS(2345): Argument of type '{ survey: any; nodeDef: any; val... Remove this comment to see the full error message
   const valueFormatted = NodeValueFormatter.format({
     survey,
     nodeDef,

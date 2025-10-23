@@ -14,6 +14,7 @@ const defaultLocalState = {
 export const useConfirmDialog = () => {
   const dispatch = useDispatch();
 
+  // @ts-expect-error TS(2571): Object is of type 'unknown'.
   const confirmState = useSelector((state) => state.confirm);
 
   const [state, setState] = useState(defaultLocalState);
@@ -35,6 +36,7 @@ export const useConfirmDialog = () => {
 
   const confirm = useCallback(() => {
     dispatch(
+      // @ts-expect-error TS(2345): Argument of type 'AsyncThunkAction<void, void, Asy... Remove this comment to see the full error message
       ConfirmActions.confirm({
         selectedMultipleChoiceValues,
         selectedSingleChoiceValue,
@@ -43,12 +45,15 @@ export const useConfirmDialog = () => {
   }, [dispatch, selectedMultipleChoiceValues, selectedSingleChoiceValue]);
 
   const cancel = useCallback(() => {
+    // @ts-expect-error TS(2345): Argument of type 'AsyncThunkAction<void, void, Asy... Remove this comment to see the full error message
     dispatch(ConfirmActions.cancel());
   }, [dispatch]);
 
-  const onMultipleChoiceOptionChange = useCallback((value) => {
+  const onMultipleChoiceOptionChange = useCallback((value: any) => {
+    // @ts-expect-error TS(2345): Argument of type '(statePrev: { selectedMultipleCh... Remove this comment to see the full error message
     setState((statePrev) => {
       const prevSelection = statePrev.selectedMultipleChoiceValues ?? [];
+      // @ts-expect-error TS(2345): Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
       const nextChecked = !prevSelection.includes(value);
       const nextSelection = nextChecked
         ? Arrays.addItem(value)(prevSelection)
@@ -60,7 +65,7 @@ export const useConfirmDialog = () => {
     });
   }, []);
 
-  const onSingleChoiceOptionChange = useCallback((value) => {
+  const onSingleChoiceOptionChange = useCallback((value: any) => {
     setState((statePrev) => ({
       ...statePrev,
       selectedSingleChoiceValue: value,

@@ -10,7 +10,9 @@ const isExpoGo =
 const isAndroid = platform === "android";
 const isIOS = platform === "ios";
 
+// @ts-expect-error TS(2531): Object is possibly 'null'.
 const pkg = Constants.expoConfig.android
+  // @ts-expect-error TS(2531): Object is possibly 'null'.
   ? Constants.expoConfig.android.package
   : "host.exp.exponent";
 

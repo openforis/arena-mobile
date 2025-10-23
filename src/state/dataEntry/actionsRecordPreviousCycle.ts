@@ -20,8 +20,8 @@ const {
 const _fetchRecordFromPreviousCycleAndLinkItInternal = async ({
   dispatch,
   survey,
-  recordId,
-}) => {
+  recordId
+}: any) => {
   dispatch({ type: RECORD_PREVIOUS_CYCLE_LOAD, loading: true });
 
   const recordSummary = await RecordService.fetchRecordSummary({
@@ -42,13 +42,14 @@ const _fetchRecordFromPreviousCycleAndLinkItInternal = async ({
   return loaded;
 };
 
+// @ts-expect-error TS(7030): Not all code paths return a value.
 const _fetchRecordFromPreviousCycleAndLinkIt = async ({
   dispatch,
   survey,
   record,
   prevCycle,
-  lang,
-}) => {
+  lang
+}: any) => {
   try {
     dispatch({ type: RECORD_PREVIOUS_CYCLE_LOAD, loading: true });
 
@@ -130,7 +131,10 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
   }
 };
 
-const _askPreviousCycleKey = async ({ dispatch, getState }) => {
+const _askPreviousCycleKey = async ({
+  dispatch,
+  getState
+}: any) => {
   const state = getState();
   const survey = SurveySelectors.selectCurrentSurvey(state);
   const record = DataEntrySelectors.selectRecord(state);
@@ -153,13 +157,15 @@ const _askPreviousCycleKey = async ({ dispatch, getState }) => {
     defaultSingleChoiceValue: Cycles.getPrevCycleKey(cycleKey),
   });
   if (confirmResult) {
+    // @ts-expect-error TS(2339): Property 'selectedSingleChoiceValue' does not exis... Remove this comment to see the full error message
     const { selectedSingleChoiceValue: selectedCycleKey } = confirmResult;
     return selectedCycleKey;
   }
   return undefined;
 };
 
-const linkToRecordInPreviousCycle = () => async (dispatch, getState) => {
+// @ts-expect-error TS(7030): Not all code paths return a value.
+const linkToRecordInPreviousCycle = () => async (dispatch: any, getState: any) => {
   try {
     const state = getState();
     const selectedCycleKey = await _askPreviousCycleKey({ dispatch, getState });
@@ -177,6 +183,7 @@ const linkToRecordInPreviousCycle = () => async (dispatch, getState) => {
         prevCycle: selectedCycleKey,
         lang,
       });
+    // @ts-expect-error TS(2339): Property 'keyValues' does not exist on type '{ key... Remove this comment to see the full error message
     const { keyValues, prevCycleRecordIds } =
       await fetchRecordFromPreviousCycleInternal();
 
@@ -200,16 +207,17 @@ const linkToRecordInPreviousCycle = () => async (dispatch, getState) => {
       await fetchRecordFromPreviousCycleInternal();
     }
   } catch (error) {
+    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     const details = `${error.toString()} - ${error.stack}`;
     ToastActions.show("dataEntry:recordInPreviousCycleFetchError", { details });
   }
 };
 
-const unlinkFromRecordInPreviousCycle = () => async (dispatch) => {
+const unlinkFromRecordInPreviousCycle = () => async (dispatch: any) => {
   dispatch({ type: RECORD_PREVIOUS_CYCLE_RESET });
 };
 
-const updatePreviousCyclePageEntity = (dispatch, getState) => {
+const updatePreviousCyclePageEntity = (dispatch: any, getState: any) => {
   const state = getState();
   const { parentEntityUuid, entityUuid } =
     DataEntrySelectors.selectCurrentPageEntity(state);

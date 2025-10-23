@@ -18,7 +18,7 @@ import { NodeComponentPropTypes } from "./nodeTypes/nodeComponentPropTypes";
 
 import styles from "./multipleAttributeComponentWrapperStyles";
 
-export const MultipleAttributeComponentWrapper = (props) => {
+export const MultipleAttributeComponentWrapper = (props: any) => {
   const { nodeDef, parentNodeUuid } = props;
 
   if (__DEV__) {
@@ -54,6 +54,7 @@ export const MultipleAttributeComponentWrapper = (props) => {
       );
     } else {
       dispatch(
+        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         DataEntryActions.addNewAttribute({
           nodeDef,
           parentNodeUuid,
@@ -62,8 +63,9 @@ export const MultipleAttributeComponentWrapper = (props) => {
     }
   }, [dispatch, nodeDef, nodes, parentNodeUuid]);
 
-  const onDeletePress = (node) => async () => {
+  const onDeletePress = (node: any) => async () => {
     const performDelete = () =>
+      // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
       dispatch(DataEntryActions.deleteNodes([node.uuid]));
 
     if (
@@ -87,6 +89,7 @@ export const MultipleAttributeComponentWrapper = (props) => {
           <IconButton icon="trash-can-outline" onPress={onDeletePress(node)} />
         </HView>
       ))}
+      // @ts-expect-error TS(2786): 'NewNodeButton' cannot be used as a JSX component.
       <NewNodeButton
         disabled={maxCountReached}
         nodeDefLabel={nodeDefLabel}

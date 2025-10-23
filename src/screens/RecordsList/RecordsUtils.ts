@@ -11,8 +11,8 @@ const getValuesByKeyOrSummaryAttributeFormatted = ({
   lang,
   recordSummary,
   valuesWrapperProp,
-  t = null,
-}) => {
+  t = null
+}: any) => {
   const { cycle } = recordSummary;
   const rootDef = Surveys.getNodeDefRoot({ survey });
   const nodeDefs =
@@ -26,6 +26,7 @@ const getValuesByKeyOrSummaryAttributeFormatted = ({
   return nodeDefs.reduce((acc, nodeDef) => {
     const nodeDefName = NodeDefs.getName(nodeDef);
     const value = Objects.path([valuesWrapperProp, nodeDefName])(recordSummary);
+    // @ts-expect-error TS(2345): Argument of type '{ survey: any; nodeDef: NodeDef<... Remove this comment to see the full error message
     let valueFormatted = NodeValueFormatter.format({
       survey,
       nodeDef: nodeDef,
@@ -40,12 +41,18 @@ const getValuesByKeyOrSummaryAttributeFormatted = ({
         valueFormatted = String(value);
       }
     }
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     acc[nodeDefName] = valueFormatted;
     return acc;
   }, {});
 };
 
-const getValuesByKeyFormatted = ({ survey, lang, recordSummary, t = null }) =>
+const getValuesByKeyFormatted = ({
+  survey,
+  lang,
+  recordSummary,
+  t = null
+}: any) =>
   getValuesByKeyOrSummaryAttributeFormatted({
     survey,
     lang,
@@ -58,8 +65,8 @@ const getValuesBySummaryAttributeFormatted = ({
   survey,
   lang,
   recordSummary,
-  t = null,
-}) =>
+  t = null
+}: any) =>
   getValuesByKeyOrSummaryAttributeFormatted({
     survey,
     lang,

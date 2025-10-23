@@ -4,14 +4,14 @@ export const useButtonOnPress = ({
   avoidMultiplePress,
   loading,
   multiplePressAvoidanceTimeout = 500,
-  onPressProp,
-}) => {
+  onPressProp
+}: any) => {
   const [temporaryLoading, setTemporaryLoading] = useState(false);
 
   const actualLoading = loading || temporaryLoading;
 
   const onPress = useCallback(
-    (event) => {
+    (event: any) => {
       if (!actualLoading) {
         if (avoidMultiplePress) {
           setTemporaryLoading(true);

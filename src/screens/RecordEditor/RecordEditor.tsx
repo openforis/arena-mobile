@@ -36,8 +36,10 @@ export const RecordEditor = () => {
   const isNavigationFocused = useNavigationIsFocused();
   const isRtl = useIsTextDirectionRtl();
 
+  // @ts-expect-error TS(7030): Not all code paths return a value.
   const onBack = useCallback(() => {
     if (isNavigationFocused) {
+      // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => void' is not ... Remove this comment to see the full error message
       dispatch(DataEntryActions.navigateToRecordsList({ navigation }));
       return true; // the event will not be bubbled up & no other back action will execute
     }
@@ -49,6 +51,7 @@ export const RecordEditor = () => {
 
   const onInternalContainerPress = useCallback(() => {
     if (isPhone) {
+      // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
       dispatch(DataEntryActions.toggleRecordPageMenuOpen);
     }
   }, [dispatch, isPhone]);
@@ -86,8 +89,10 @@ export const RecordEditor = () => {
 
   if (isPhone) {
     return (
+      // @ts-expect-error TS(2769): No overload matches this call.
       <MenuDrawer
         animationTime={250}
+        // @ts-expect-error TS(2786): 'RecordEditorDrawer' cannot be used as a JSX compo... Remove this comment to see the full error message
         drawerContent={<RecordEditorDrawer />}
         drawerPercentage={75}
         opacity={0.4}
@@ -103,6 +108,7 @@ export const RecordEditor = () => {
     <HView style={styles.externalContainerInTablet}>
       {pageSelectorOpen && (
         <View style={styles.drawerWrapperInTablet}>
+          // @ts-expect-error TS(2786): 'RecordEditorDrawer' cannot be used as a JSX compo... Remove this comment to see the full error message
           <RecordEditorDrawer />
         </View>
       )}

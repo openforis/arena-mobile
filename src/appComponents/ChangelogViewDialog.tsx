@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
 import { useTheme } from "react-native-paper";
 import Markdown from "react-native-markdown-display";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Dialog } from "components/Dialog";
@@ -16,7 +17,7 @@ const changelogUrl =
   "https://raw.githubusercontent.com/openforis/arena-mobile/master/";
 const changelogUri = "CHANGELOG.md";
 
-export const ChangelogViewDialog = (props) => {
+export const ChangelogViewDialog = (props: any) => {
   const {
     onClose,
     onUpdate = null,
@@ -32,6 +33,7 @@ export const ChangelogViewDialog = (props) => {
       StyleSheet.create({
         formItem: { backgroundColor: "transparent" },
         markdown: {
+          // @ts-expect-error TS(2322): Type '{ body: { color: string; backgroundColor: st... Remove this comment to see the full error message
           body: {
             color: theme.colors.onBackground,
             backgroundColor: theme.colors.surfaceVariant,
@@ -50,12 +52,14 @@ export const ChangelogViewDialog = (props) => {
   );
 
   useEffect(() => {
+    // @ts-expect-error TS(2554): Expected 4 arguments, but got 2.
     API.getFileAsText(changelogUrl, changelogUri).then((text) => {
       setContent(text);
     });
   }, []);
 
   return (
+    // @ts-expect-error TS(2786): 'Dialog' cannot be used as a JSX component.
     <Dialog
       actions={onUpdate ? [{ onPress: onUpdate, textKey: "app:update" }] : []}
       onClose={onClose}
@@ -64,13 +68,16 @@ export const ChangelogViewDialog = (props) => {
     >
       <VView style={styles.content}>
         {showCurrentVersionNumber && (
+          // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
           <FormItem labelKey="app:currentVersion" style={styles.formItem}>
             <VersionNumberInfoText includeUpdateTime={false} />
           </FormItem>
         )}
         {!content && <LoadingIcon />}
         {content && (
+          // @ts-expect-error TS(2322): Type '{ children: Element; style: ViewStyle | Text... Remove this comment to see the full error message
           <ScrollView style={styles.changelogContent} persistentScrollbar>
+            // @ts-expect-error TS(2769): No overload matches this call.
             <Markdown style={styles.markdown}>{content}</Markdown>
           </ScrollView>
         )}

@@ -12,7 +12,10 @@ const initialState = {
 const actionHandlers = {
   [SurveyActionTypes.CURRENT_SURVEY_SET]: () => ({ ...initialState }),
 
-  [SurveyOptionsActions.RECORD_EDIT_VIEW_MODE_SET]: ({ state, action }) => ({
+  [SurveyOptionsActions.RECORD_EDIT_VIEW_MODE_SET]: ({
+    state,
+    action
+  }: any) => ({
     ...state,
     [SurveyOptionsState.keys.recordEditViewMode]: action.viewMode,
   }),

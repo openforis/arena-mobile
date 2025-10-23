@@ -30,6 +30,7 @@ export const VersionNumberInfoButton = () => {
           if (error) {
             setState({
               updateStatus: UpdateStatus.error,
+              // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'null'.
               updateStatusError: error.toString(),
             });
           } else {
@@ -37,22 +38,26 @@ export const VersionNumberInfoButton = () => {
               updateStatus: needsUpdate
                 ? UpdateStatus.notUpToDate
                 : UpdateStatus.upToDate,
+              // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'null'.
               updateUrl: url,
             });
           }
         })
         .catch((error) => {
+          // @ts-expect-error TS(2345): Argument of type '{ updateStatus: string; updateSt... Remove this comment to see the full error message
           setState({
             updateStatus: UpdateStatus.error,
             updateStatusError: error.toString(),
           });
         });
     } else {
+      // @ts-expect-error TS(2345): Argument of type '{ updateStatus: string; }' is no... Remove this comment to see the full error message
       setState({ updateStatus: UpdateStatus.networkNotAvailable });
     }
   }, [networkAvailable]);
 
   const onUpdateConfirm = useCallback(
+    // @ts-expect-error TS(2345): Argument of type 'null' is not assignable to param... Remove this comment to see the full error message
     () => Linking.openURL(updateUrl),
     [updateUrl]
   );

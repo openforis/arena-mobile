@@ -3,7 +3,7 @@ import { TextInput as RNPTextInput } from "react-native-paper";
 
 import { TextInput } from "./TextInput";
 
-export const TextInputPassword = (props) => {
+export const TextInputPassword = (props: any) => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
 
   const toggleSecureTextEntry = useCallback(() => {

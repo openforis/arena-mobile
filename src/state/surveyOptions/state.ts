@@ -7,9 +7,8 @@ const keys = {
   viewModesByScreen: "viewModesByScreen",
 };
 
-const getRecordEditViewMode = (state) => state[keys.recordEditViewMode];
-const getScreenViewMode = (screenKey) => (state) =>
-  state?.[keys.viewModesByScreen]?.[screenKey] ?? ScreenViewMode.table;
+const getRecordEditViewMode = (state: any) => state[keys.recordEditViewMode];
+const getScreenViewMode = (screenKey: any) => (state: any) => state?.[keys.viewModesByScreen]?.[screenKey] ?? ScreenViewMode.table;
 
 export const SurveyOptionsState = {
   stateKey,

@@ -1,4 +1,5 @@
 import React from "react";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 import { Button as RNPButton } from "react-native-paper";
 
@@ -12,7 +13,7 @@ const iconPositionByTextDirection = {
   [textDirections.rtl]: "right",
 };
 
-export const Button = (props) => {
+export const Button = (props: any) => {
   const {
     avoidMultiplePress = true,
     color = "primary",
@@ -36,6 +37,7 @@ export const Button = (props) => {
 
   const contentStyle =
     iconPosition === "left" ? undefined : BaseStyles.flexDirectionRowReverse;
+  // @ts-expect-error TS(2532): Object is possibly 'undefined'.
   const labelStyle = labelVariant ? theme.fonts[labelVariant] : undefined;
 
   const { actualLoading, onPress } = useButtonOnPress({
@@ -46,6 +48,7 @@ export const Button = (props) => {
 
   const mode = color === "secondary" ? "outlined" : modeProp;
   const buttonColor =
+    // @ts-expect-error TS(2532): Object is possibly 'undefined'.
     mode !== "text" && color === "primary" ? theme.colors[color] : undefined;
 
   return (

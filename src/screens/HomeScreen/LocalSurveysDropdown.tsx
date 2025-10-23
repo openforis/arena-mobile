@@ -13,8 +13,9 @@ export const LocalSurveysDropdown = () => {
   const surveySummaries = SurveySelectors.useSurveysLocal();
 
   const onChange = useCallback(
-    async (surveyId) => {
+    async (surveyId: any) => {
       dispatch(
+        // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => Promise<void>... Remove this comment to see the full error message
         SurveyActions.fetchAndSetCurrentSurvey({ surveyId, navigation })
       );
     },
@@ -24,8 +25,8 @@ export const LocalSurveysDropdown = () => {
   return (
     <Dropdown
       items={surveySummaries}
-      itemKeyExtractor={(item) => item.id}
-      itemLabelExtractor={(item) => item.name}
+      itemKeyExtractor={(item: any) => item.id}
+      itemLabelExtractor={(item: any) => item.name}
       label={t("surveys:selectSurvey")}
       onChange={onChange}
       value={null}

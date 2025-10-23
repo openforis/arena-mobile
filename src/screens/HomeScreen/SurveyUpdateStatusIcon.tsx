@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -14,8 +15,8 @@ import { SurveyActions, SurveySelectors } from "state";
 export const SurveyUpdateStatusIcon = ({
   errorKey,
   onPress: onPressProp = undefined,
-  updateStatus,
-}) => {
+  updateStatus
+}: any) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const toaster = useToast();
@@ -46,6 +47,7 @@ export const SurveyUpdateStatusIcon = ({
         break;
       case UpdateStatus.notUpToDate:
         dispatch(
+          // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => Promise<void>... Remove this comment to see the full error message
           SurveyActions.updateSurveyRemote({
             surveyId: survey.id,
             surveyName: Surveys.getName(survey),

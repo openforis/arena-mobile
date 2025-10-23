@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { DateFormats, Dates, Objects } from "@openforis/arena-core";
@@ -8,7 +9,7 @@ import { DateTimePicker } from "components";
 import { useNodeComponentLocalState } from "../../useNodeComponentLocalState";
 import { NodeComponentPropTypes } from "./nodeComponentPropTypes";
 
-export const NodeDateTimeComponent = (props) => {
+export const NodeDateTimeComponent = (props: any) => {
   const { mode, nodeDef, nodeUuid } = props;
 
   if (__DEV__) {
@@ -22,7 +23,7 @@ export const NodeDateTimeComponent = (props) => {
   const { value, updateNodeValue } = useNodeComponentLocalState({ nodeUuid });
 
   const onChange = useCallback(
-    (date) => {
+    (date: any) => {
       const dateNodeValue = Dates.format(date, formatStorage);
       updateNodeValue({ value: dateNodeValue });
     },

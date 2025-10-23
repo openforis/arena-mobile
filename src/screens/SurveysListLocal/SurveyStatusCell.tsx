@@ -25,7 +25,7 @@ const statusIconColorByStatus = {
   [SurveyStatus.notVisibleInMobile]: "red",
 };
 
-export const SurveyStatusCell = (props) => {
+export const SurveyStatusCell = (props: any) => {
   const { item, viewMode } = props;
   const { status } = item;
 
@@ -52,6 +52,7 @@ export const SurveyStatusCell = (props) => {
       <Text textKey={textKey} />
     </HView>
   ) : (
+    // @ts-expect-error TS(2786): 'Tooltip' cannot be used as a JSX component.
     <Tooltip titleKey={textKey}>{icon}</Tooltip>
   );
 };

@@ -1,4 +1,4 @@
-const quoteValues = (values) => values.map((val) => `"${val}"`).toString();
+const quoteValues = (values: any) => values.map((val: any) => `"${val}"`).toString();
 
 export const DbUtils = {
   quoteValues,

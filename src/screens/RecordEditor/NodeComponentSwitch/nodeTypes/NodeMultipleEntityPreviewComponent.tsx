@@ -12,7 +12,7 @@ const styles = {
   editButton: { alignSelf: "center" },
 };
 
-export const NodeMultipleEntityPreviewComponent = (props) => {
+export const NodeMultipleEntityPreviewComponent = (props: any) => {
   const { nodeDef, parentNodeUuid } = props;
 
   if (__DEV__) {
@@ -26,6 +26,7 @@ export const NodeMultipleEntityPreviewComponent = (props) => {
   const onEditPress = useCallback(
     () =>
       dispatch(
+        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         DataEntryActions.selectCurrentPageEntity({
           parentEntityUuid: parentNodeUuid,
           entityDefUuid,

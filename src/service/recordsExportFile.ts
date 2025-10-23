@@ -5,11 +5,9 @@ const recordsSummaryJsonPath = Files.path(recordsFolderPath, "records.json");
 const filesFolderPath = "files";
 const filesSummaryJsonPath = Files.path(filesFolderPath, "files.json");
 
-const getRecordContentJsonPath = (recordUuid) =>
-  Files.path(recordsFolderPath, recordUuid + ".json");
+const getRecordContentJsonPath = (recordUuid: any) => Files.path(recordsFolderPath, recordUuid + ".json");
 
-const getFilePath = (fileUuid) =>
-  Files.path(filesFolderPath, fileUuid + ".bin");
+const getFilePath = (fileUuid: any) => Files.path(filesFolderPath, fileUuid + ".bin");
 
 export const RecordsExportFile = {
   recordsFolderPath,

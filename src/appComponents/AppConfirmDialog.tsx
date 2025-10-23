@@ -50,32 +50,30 @@ export const AppConfirmDialog = () => {
           <Text textKey={messageKey} textParams={messageParams} />
           {multipleChoiceOptions?.length > 0 && (
             <VView transparent>
-              {multipleChoiceOptions.map((option) => (
-                <Checkbox
-                  key={option.value}
-                  checked={
-                    selectedMultipleChoiceValues?.includes(option.value) ??
-                    false
-                  }
-                  label={t(option.label)}
-                  onPress={() => onMultipleChoiceOptionChange(option.value)}
-                />
-              ))}
+              {multipleChoiceOptions.map((option: any) => <Checkbox
+                key={option.value}
+                checked={
+                  selectedMultipleChoiceValues?.includes(option.value) ??
+                  false
+                }
+                label={t(option.label)}
+                onPress={() => onMultipleChoiceOptionChange(option.value)}
+              />)}
             </VView>
           )}
           {singleChoiceOptions?.length > 0 && (
+            // @ts-expect-error TS(2786): 'RadioButtonGroup' cannot be used as a JSX compone... Remove this comment to see the full error message
             <RadioButtonGroup
               onValueChange={onSingleChoiceOptionChange}
               value={selectedSingleChoiceValue}
             >
               <VView transparent>
-                {singleChoiceOptions.map((option) => (
-                  <RadioButton
-                    key={option.value}
-                    label={t(option.label, option.labelParams)}
-                    value={option.value}
-                  />
-                ))}
+                // @ts-expect-error TS(2786): 'RadioButton' cannot be used as a JSX component.
+                {singleChoiceOptions.map((option: any) => <RadioButton
+                  key={option.value}
+                  label={t(option.label, option.labelParams)}
+                  value={option.value}
+                />)}
               </VView>
             </RadioButtonGroup>
           )}

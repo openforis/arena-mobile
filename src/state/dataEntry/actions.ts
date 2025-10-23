@@ -55,15 +55,22 @@ const {
   updatePreviousCyclePageEntity,
 } = DataEntryActionsRecordPreviousCycle;
 
-const removeNodesFlags = (nodes) => {
+const removeNodesFlags = (nodes: any) => {
   Object.values(nodes).forEach((node) => {
+    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     delete node["created"];
+    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     delete node["deleted"];
+    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     delete node["updated"];
   });
 };
 
-const _isRootKeyDuplicate = async ({ survey, record, lang }) => {
+const _isRootKeyDuplicate = async ({
+  survey,
+  record,
+  lang
+}: any) => {
   const recordSummaries = await RecordService.findRecordSummariesWithSameKeys({
     survey,
     record,
@@ -75,15 +82,19 @@ const _isRootKeyDuplicate = async ({ survey, record, lang }) => {
   );
 };
 
-const prepareRecordForStorage = ({ record }) => {
+const prepareRecordForStorage = ({
+  record
+}: any) => {
   const validation = Validations.getValidation(record);
   const validationUpdated = Validations.updateCounts(validation);
   return { ...record, validation: validationUpdated };
 };
 
 const createNewRecord =
-  ({ navigation }) =>
-  async (dispatch, getState) => {
+  ({
+    navigation
+  }: any) =>
+  async (dispatch: any, getState: any) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -96,6 +107,7 @@ const createNewRecord =
         surveyUuid: survey.uuid,
         cycle,
         user: user ?? {},
+        // @ts-expect-error TS(2322): Type '{ appId: string; version: string | null; pla... Remove this comment to see the full error message
         appInfo,
       }),
       dateCreated: now,
@@ -117,7 +129,7 @@ const createNewRecord =
     dispatch(editRecord({ navigation, record, locked: false }));
   };
 
-const _performAddEntity = async (dispatch, getState) => {
+const _performAddEntity = async (dispatch: any, getState: any) => {
   const state = getState();
   const user = RemoteConnectionSelectors.selectLoggedUser(state);
   const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -131,11 +143,13 @@ const _performAddEntity = async (dispatch, getState) => {
 
   if (
     DataEntrySelectors.selectIsMaxCountReached({
+      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       parentNodeUuid: parentNode.uuid,
       nodeDef,
     })(state)
   ) {
     dispatch(
+      // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
       MessageActions.setWarning(
         "dataEntry:node.cannotAddMoreItems.maxCountReached"
       )
@@ -162,8 +176,10 @@ const _performAddEntity = async (dispatch, getState) => {
 
   dispatch(
     selectCurrentPageEntity({
+      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       parentEntityUuid: parentNode.uuid,
       entityDefUuid: nodeDef.uuid,
+      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       entityUuid: nodeCreated.uuid,
     })
   );
@@ -171,7 +187,8 @@ const _performAddEntity = async (dispatch, getState) => {
 
 const addNewEntity =
   (options = {}) =>
-  async (dispatch) => {
+  async (dispatch: any) => {
+    // @ts-expect-error TS(2339): Property 'delay' does not exist on type '{}'.
     const { delay = null } = options;
     Keyboard.dismiss();
     if (delay) {
@@ -181,7 +198,7 @@ const addNewEntity =
     }
   };
 
-const deleteNodes = (nodeUuids) => async (dispatch, getState) => {
+const deleteNodes = (nodeUuids: any) => async (dispatch: any, getState: any) => {
   const state = getState();
   const user = RemoteConnectionSelectors.selectLoggedUser(state);
   const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -199,7 +216,7 @@ const deleteNodes = (nodeUuids) => async (dispatch, getState) => {
   await _updateRecord({ dispatch, survey, record: recordUpdated });
 };
 
-const deleteRecords = (recordUuids) => async (dispatch, getState) => {
+const deleteRecords = (recordUuids: any) => async (dispatch: any, getState: any) => {
   const state = getState();
   const survey = SurveySelectors.selectCurrentSurvey(state);
 
@@ -208,7 +225,11 @@ const deleteRecords = (recordUuids) => async (dispatch, getState) => {
   dispatch(DeviceInfoActions.updateFreeDiskStorage());
 };
 
-const checkEntityPageIsValidAndNotRoot = ({ survey, entityPage, record }) => {
+const checkEntityPageIsValidAndNotRoot = ({
+  survey,
+  entityPage,
+  record
+}: any) => {
   const { parentEntityUuid, entityDefUuid, entityUuid } = entityPage;
   const entityDef = Surveys.findNodeDefByUuid({ survey, uuid: entityDefUuid });
   return (
@@ -221,8 +242,12 @@ const checkEntityPageIsValidAndNotRoot = ({ survey, entityPage, record }) => {
 };
 
 const editRecord =
-  ({ navigation, record, locked = true }) =>
-  async (dispatch, getState) => {
+  ({
+    navigation,
+    record,
+    locked = true
+  }: any) =>
+  async (dispatch: any, getState: any) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
@@ -267,15 +292,18 @@ const _fetchAndEditRecordInternal = async ({
   dispatch,
   navigation,
   survey,
-  recordId,
-}) => {
+  recordId
+}: any) => {
   const record = await RecordService.fetchRecord({ survey, recordId });
   await dispatch(editRecord({ navigation, record }));
 };
 
 const fetchAndEditRecord =
-  ({ navigation, recordSummary }) =>
-  async (dispatch, getState) => {
+  ({
+    navigation,
+    recordSummary
+  }: any) =>
+  async (dispatch: any, getState: any) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const {
@@ -319,7 +347,11 @@ const fetchAndEditRecord =
     }
   };
 
-const _updateRecord = async ({ dispatch, survey, record }) => {
+const _updateRecord = async ({
+  dispatch,
+  survey,
+  record
+}: any) => {
   const recordUpdated = prepareRecordForStorage({ record });
   const recordStored = await RecordService.updateRecord({
     survey,
@@ -334,8 +366,8 @@ const updateRecordNodeFile = async ({
   fileUri,
   value,
   node,
-  dispatch,
-}) => {
+  dispatch
+}: any) => {
   const surveyId = survey.id;
 
   if (fileUri) {
@@ -363,8 +395,8 @@ const checkAndConfirmUpdateNode = async ({
   dispatch,
   getState,
   node,
-  nodeDef,
-}) => {
+  nodeDef
+}: any) => {
   const state = getState();
   const survey = SurveySelectors.selectCurrentSurvey(state);
   const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
@@ -390,8 +422,12 @@ const checkAndConfirmUpdateNode = async ({
 };
 
 const updateAttribute =
-  ({ uuid, value, fileUri = null }) =>
-  async (dispatch, getState) => {
+  ({
+    uuid,
+    value,
+    fileUri = null
+  }: any) =>
+  async (dispatch: any, getState: any) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -402,6 +438,7 @@ const updateAttribute =
     const node = Records.getNodeByUuid(uuid)(record);
     const nodeDef = Surveys.getNodeDefByUuid({
       survey,
+      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       uuid: node.nodeDefUuid,
     });
 
@@ -456,8 +493,11 @@ const updateAttribute =
   };
 
 const performCoordinateValueSrsConversion =
-  ({ nodeUuid, srsTo }) =>
-  async (dispatch, getState) => {
+  ({
+    nodeUuid,
+    srsTo
+  }: any) =>
+  async (dispatch: any, getState: any) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const record = DataEntrySelectors.selectRecord(state);
@@ -470,7 +510,9 @@ const performCoordinateValueSrsConversion =
     const pointTo = Points.transform(pointFrom, srsTo, srsIndex);
     const nextValue = {
       ...prevValue,
+      // @ts-expect-error TS(2531): Object is possibly 'null'.
       x: Numbers.roundToPrecision(pointTo.x, 6),
+      // @ts-expect-error TS(2531): Object is possibly 'null'.
       y: Numbers.roundToPrecision(pointTo.y, 6),
       srs: srsTo,
     };
@@ -478,8 +520,11 @@ const performCoordinateValueSrsConversion =
   };
 
 const updateCoordinateValueSrs =
-  ({ nodeUuid, srsTo }) =>
-  async (dispatch, getState) => {
+  ({
+    nodeUuid,
+    srsTo
+  }: any) =>
+  async (dispatch: any, getState: any) => {
     const state = getState();
     const record = DataEntrySelectors.selectRecord(state);
 
@@ -514,8 +559,12 @@ const updateCoordinateValueSrs =
   };
 
 const addNewAttribute =
-  ({ nodeDef, parentNodeUuid, value = null }) =>
-  async (dispatch, getState) => {
+  ({
+    nodeDef,
+    parentNodeUuid,
+    value = null
+  }: any) =>
+  async (dispatch: any, getState: any) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -540,6 +589,7 @@ const addNewAttribute =
         user,
         survey,
         record: recordUpdated,
+        // @ts-expect-error TS(2532): Object is possibly 'undefined'.
         attributeUuid: nodeCreated.uuid,
         value,
       }
@@ -549,8 +599,12 @@ const addNewAttribute =
   };
 
 const selectCurrentPageEntity =
-  ({ parentEntityUuid, entityDefUuid, entityUuid = null }) =>
-  async (dispatch, getState) => {
+  ({
+    parentEntityUuid,
+    entityDefUuid,
+    entityUuid = null
+  }: any) =>
+  async (dispatch: any, getState: any) => {
     const state = getState();
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
     const record = DataEntrySelectors.selectRecord(state);
@@ -596,7 +650,7 @@ const selectCurrentPageEntity =
   };
 
 const selectCurrentPageEntityActiveChildIndex =
-  (index) => (dispatch, getState) => {
+  (index: any) => (dispatch: any, getState: any) => {
     dispatch({ type: PAGE_ENTITY_ACTIVE_CHILD_INDEX_SET, index });
     const state = getState();
     const isPhone = DeviceInfoSelectors.selectIsPhone(state);
@@ -605,14 +659,14 @@ const selectCurrentPageEntityActiveChildIndex =
     }
   };
 
-const toggleRecordPageMenuOpen = (dispatch, getState) => {
+const toggleRecordPageMenuOpen = (dispatch: any, getState: any) => {
   Keyboard.dismiss();
   const state = getState();
   const open = DataEntrySelectors.selectRecordPageSelectorMenuOpen(state);
   dispatch({ type: PAGE_SELECTOR_MENU_OPEN_SET, open: !open });
 };
 
-const closeRecordPageMenu = (dispatch, getState) => {
+const closeRecordPageMenu = (dispatch: any, getState: any) => {
   const state = getState();
   const pageSelectorMenuOpen =
     DataEntrySelectors.selectRecordPageSelectorMenuOpen(state);
@@ -621,7 +675,7 @@ const closeRecordPageMenu = (dispatch, getState) => {
   }
 };
 
-const toggleRecordEditLock = (dispatch, getState) => {
+const toggleRecordEditLock = (dispatch: any, getState: any) => {
   Keyboard.dismiss();
   const state = getState();
   const locked = DataEntrySelectors.selectRecordEditLocked(state);
@@ -629,8 +683,10 @@ const toggleRecordEditLock = (dispatch, getState) => {
 };
 
 const navigateToRecordsList =
-  ({ navigation }) =>
-  (dispatch) => {
+  ({
+    navigation
+  }: any) =>
+  (dispatch: any) => {
     dispatch(
       ConfirmActions.show({
         confirmButtonTextKey: "dataEntry:goToListOfRecords",

@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import Collapsible from "react-native-collapsible";
 import { TouchableOpacity } from "react-native";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { HView } from "../HView";
@@ -10,7 +11,7 @@ import { VView } from "../VView";
 
 import { useStyles } from "./styles";
 
-export const CollapsiblePanel = (props) => {
+export const CollapsiblePanel = (props: any) => {
   const {
     children,
     containerStyle = null,

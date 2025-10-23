@@ -16,8 +16,9 @@ export const AppToast = () => {
   };
 
   return (
+    // @ts-expect-error TS(7027): Unreachable code detected.
     <Snackbar visible={!!textKey} onDismiss={onDismiss}>
-      {t(textKey, textParams)}
+      {t(textKey: any, textParams: any)}
     </Snackbar>
   );
 };

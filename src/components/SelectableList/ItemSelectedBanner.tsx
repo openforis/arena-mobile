@@ -1,10 +1,14 @@
 import { useMemo } from "react";
 import { Banner } from "react-native-paper";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
 
-const customActionToAction = ({ t, customAction }) => {
+const customActionToAction = ({
+  t,
+  customAction
+}: any) => {
   const {
     labelKey,
     labelParams,
@@ -15,7 +19,7 @@ const customActionToAction = ({ t, customAction }) => {
   return { label: t(labelKey, labelParams), mode, onPress, ...otherProps };
 };
 
-export const ItemSelectedBanner = (props) => {
+export const ItemSelectedBanner = (props: any) => {
   const {
     canDelete,
     onDeleteSelected,
@@ -39,6 +43,7 @@ export const ItemSelectedBanner = (props) => {
     );
   }, [canDelete, customActions, onDeleteSelected, t]);
 
+  // @ts-expect-error TS(2741): Property 'children' is missing in type '{ actions:... Remove this comment to see the full error message
   return <Banner actions={actions} visible={selectedItemIds.length > 0} />;
 };
 

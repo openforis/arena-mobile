@@ -7,7 +7,7 @@ export const useConfirm = () => {
   const dispatch = useDispatch();
 
   return useCallback(
-    (params) => ConfirmUtils.confirm({ dispatch, ...params }),
+    (params: any) => ConfirmUtils.confirm({ dispatch, ...params }),
     [dispatch]
   );
 };

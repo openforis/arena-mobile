@@ -1,11 +1,12 @@
 import React, { useCallback } from "react";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Checkbox, HView } from "components";
 
 import styles from "./styles";
 
-export const NodeCodeMultipleCheckboxComponent = (props) => {
+export const NodeCodeMultipleCheckboxComponent = (props: any) => {
   const {
     editable,
     itemLabelFunction,
@@ -16,7 +17,7 @@ export const NodeCodeMultipleCheckboxComponent = (props) => {
   } = props;
 
   const onItemSelect = useCallback(
-    (item) => {
+    (item: any) => {
       const wasSelected = selectedItems.includes(item);
       if (wasSelected) {
         onItemRemove(item.uuid);
@@ -29,16 +30,14 @@ export const NodeCodeMultipleCheckboxComponent = (props) => {
 
   return (
     <HView style={styles.container}>
-      {items.map((item) => (
-        <Checkbox
-          key={item.uuid}
-          label={itemLabelFunction(item)}
-          disabled={!editable}
-          checked={selectedItems.includes(item)}
-          onPress={() => onItemSelect(item)}
-          style={styles.item}
-        />
-      ))}
+      {items.map((item: any) => <Checkbox
+        key={item.uuid}
+        label={itemLabelFunction(item)}
+        disabled={!editable}
+        checked={selectedItems.includes(item)}
+        onPress={() => onItemSelect(item)}
+        style={styles.item}
+      />)}
     </HView>
   );
 };

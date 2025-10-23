@@ -7,9 +7,12 @@ const statusToErrorKey = {
   401: "invalid_credentials",
 };
 
-const handleError = ({ error }) => {
+const handleError = ({
+  error
+}: any) => {
   if (error.response) {
     const status = error.response?.status;
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     const errorKey = statusToErrorKey[status] || error.errorMessage;
     return { errorKey };
   } else {
@@ -20,10 +23,10 @@ const handleError = ({ error }) => {
 const getServerUrl = async () =>
   (await SettingsService.fetchSettings()).serverUrl;
 
-const get = async (uri, params, options = {}) =>
+const get = async (uri: any, params: any, options = {}) =>
   API.get(await getServerUrl(), uri, params, options);
 
-const getFile = async (uri, params, callback) => {
+const getFile = async (uri: any, params: any, callback: any) => {
   const serverUrl = await getServerUrl();
   const authCookie =
     "connect.sid=" + (await SecureStoreService.getConnectSIDCookie());
@@ -31,12 +34,12 @@ const getFile = async (uri, params, callback) => {
   return API.getFile({ serverUrl, uri, params, callback, options });
 };
 
-const post = async (uri, data) => API.post(await getServerUrl(), uri, data);
+const post = async (uri: any, data: any) => API.post(await getServerUrl(), uri, data);
 
 const postCancelableMultipartData = async (
-  uri,
-  data,
-  onUploadProgress,
+  uri: any,
+  data: any,
+  onUploadProgress: any,
   options = {}
 ) =>
   API.postCancelableMultipartData(await getServerUrl(), uri, data, {
@@ -44,7 +47,7 @@ const postCancelableMultipartData = async (
     onUploadProgress,
   });
 
-const postMultipartData = async (uri, data, onUploadProgress) =>
+const postMultipartData = async (uri: any, data: any, onUploadProgress: any) =>
   API.postMultipartData(await getServerUrl(), uri, data, { onUploadProgress });
 
 export const RemoteService = {

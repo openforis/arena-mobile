@@ -1,3 +1,4 @@
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 import { useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
@@ -20,12 +21,16 @@ import { NodeValidationIcon } from "../NodeValidationIcon";
 
 import styles from "./styles";
 
-const determineMaxSummaryDefs = ({ isDrawerOpen, isTablet, isLandscape }) => {
+const determineMaxSummaryDefs = ({
+  isDrawerOpen,
+  isTablet,
+  isLandscape
+}: any) => {
   const result = isTablet && !isDrawerOpen ? 5 : 3;
   return isLandscape ? result + 2 : result;
 };
 
-export const NodeMultipleEntityListComponent = (props) => {
+export const NodeMultipleEntityListComponent = (props: any) => {
   const { entityDef, parentEntityUuid } = props;
 
   const dispatch = useDispatch();
@@ -87,12 +92,16 @@ export const NodeMultipleEntityListComponent = (props) => {
   );
 
   const onNewPress = () => {
+    // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => Promise<void>... Remove this comment to see the full error message
     dispatch(DataEntryActions.addNewEntity());
   };
 
   const onRowPress = useCallback(
-    ({ uuid }) => {
+    ({
+      uuid
+    }: any) => {
       dispatch(
+        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         DataEntryActions.selectCurrentPageEntity({
           parentEntityUuid,
           entityDefUuid,
@@ -104,12 +113,13 @@ export const NodeMultipleEntityListComponent = (props) => {
   );
 
   const onDeleteSelectedNodeUuids = useCallback(
-    async (nodeUuids) => {
+    async (nodeUuids: any) => {
       if (
         await confirm({
           messageKey: "dataEntry:confirmDeleteSelectedItems.message",
         })
       ) {
+        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         dispatch(DataEntryActions.deleteNodes(nodeUuids));
       }
     },
@@ -117,9 +127,10 @@ export const NodeMultipleEntityListComponent = (props) => {
   );
 
   const entityToRow = useCallback(
-    (entity) => ({
+    (entity: any) => ({
       key: entity.uuid,
       uuid: entity.uuid,
+
       ...RecordNodes.getEntitySummaryValuesByNameFormatted({
         survey,
         record,
@@ -128,12 +139,13 @@ export const NodeMultipleEntityListComponent = (props) => {
         lang,
         summaryDefs: visibleNodeDefs,
         t,
-      }),
+      })
     }),
     [survey, record, lang, t, visibleNodeDefs]
   );
 
   const rows = useMemo(() => {
+    // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
     const entities = Records.getChildren(parentEntity, entityDefUuid)(record);
     return entities.map(entityToRow);
   }, [entityDefUuid, entityToRow, parentEntity, record]);
@@ -160,6 +172,7 @@ export const NodeMultipleEntityListComponent = (props) => {
       )}
       {rows.length > 0 &&
         (isLandscape ? (
+          // @ts-expect-error TS(2322): Type '{ children: Element; horizontal: true; persi... Remove this comment to see the full error message
           <ScrollView horizontal persistentScrollbar>
             {dataTable}
           </ScrollView>
@@ -168,6 +181,7 @@ export const NodeMultipleEntityListComponent = (props) => {
         ))}
       <HView fullWidth style={styles.buttonBar}>
         {canAddNew && (
+          // @ts-expect-error TS(2786): 'NewNodeButton' cannot be used as a JSX component.
           <NewNodeButton nodeDefLabel={nodeDefLabel} onPress={onNewPress} />
         )}
         <NodeValidationIcon

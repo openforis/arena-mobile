@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import {
@@ -33,46 +34,57 @@ import { RecordsUtils } from "./RecordsUtils";
 import { RecordListConstants } from "./recordListConstants";
 import { RecordErrorIcon } from "./RecordErrorIcon";
 
-const formatDateToDateTimeDisplay = (date) =>
-  typeof date === "string"
-    ? Dates.convertDate({
-        dateStr: date,
-        formatFrom: DateFormats.datetimeStorage,
-        formatTo: DateFormats.datetimeDisplay,
-      })
-    : Dates.format(date, DateFormats.datetimeDisplay);
+const formatDateToDateTimeDisplay = (date: any) => typeof date === "string"
+  ? Dates.convertDate({
+      dateStr: date,
+      formatFrom: DateFormats.datetimeStorage,
+      formatTo: DateFormats.datetimeDisplay,
+    })
+  : Dates.format(date, DateFormats.datetimeDisplay);
 
-const RecordOriginTableCellRenderer = ({ item }) => (
+const RecordOriginTableCellRenderer = ({
+  item
+}: any) => (
   <Icon source={RecordListConstants.iconByOrigin[item.origin]} />
 );
 RecordOriginTableCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const RecordOriginListCellRenderer = ({ item }) => (
+const RecordOriginListCellRenderer = ({
+  item
+}: any) => (
   <Text textKey={`recordsList:origin.${item.origin}`} />
 );
 RecordOriginListCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const RecordLoadStatusTableCellRenderer = ({ item }) => (
+const RecordLoadStatusTableCellRenderer = ({
+  item
+}: any) => (
   <Icon source={RecordListConstants.iconByLoadStatus[item.loadStatus]} />
 );
 RecordLoadStatusTableCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const RecordLoadStatusListCellRenderer = ({ item }) => (
+const RecordLoadStatusListCellRenderer = ({
+  item
+}: any) => (
   <Text textKey={`recordsList:loadStatus.${item.loadStatus}`} />
 );
 RecordLoadStatusListCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const RecordErrorsListCellRenderer = ({ item }) => (
+const RecordErrorsListCellRenderer = ({
+  item
+}: any) => (
   <Text>{Validations.getErrorsCount(item.validation)}</Text>
 );
 RecordErrorsListCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const RecordWarningsListCellRenderer = ({ item }) => (
+const RecordWarningsListCellRenderer = ({
+  item
+}: any) => (
   <Text>{Validations.getWarningsCount(item.validation)}</Text>
 );
 RecordWarningsListCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-export const RecordsDataVisualizer = (props) => {
+export const RecordsDataVisualizer = (props: any) => {
   const {
     onCloneSelectedRecordUuids,
     onDeleteSelectedRecordUuids,
@@ -109,7 +121,7 @@ export const RecordsDataVisualizer = (props) => {
 
   const recordsHaveErrorsOrWarnings = useMemo(
     () =>
-      records.some((r) => {
+      records.some((r: any) => {
         const validation = Validations.getValidation(r);
         return (
           Validations.getErrorsCount(validation) ||
@@ -136,7 +148,7 @@ export const RecordsDataVisualizer = (props) => {
   }, [survey, cycle]);
 
   const recordToItem = useCallback(
-    (recordSummary) => {
+    (recordSummary: any) => {
       const valuesByKey = RecordsUtils.getValuesByKeyFormatted({
         survey,
         lang,
@@ -175,8 +187,9 @@ export const RecordsDataVisualizer = (props) => {
   }, [records, recordToItem, sort]);
 
   const onItemPress = useCallback(
-    (recordSummary) => {
+    (recordSummary: any) => {
       dispatch(
+        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         DataEntryActions.fetchAndEditRecord({ navigation, recordSummary })
       );
     },
@@ -291,7 +304,7 @@ export const RecordsDataVisualizer = (props) => {
     lang,
   ]);
 
-  const onSelectionChange = useCallback((selection) => {
+  const onSelectionChange = useCallback((selection: any) => {
     setSelectedRecordUuids(selection);
   }, []);
 
@@ -307,7 +320,7 @@ export const RecordsDataVisualizer = (props) => {
     onExportSelectedRecordUuids(selectedRecordUuids);
   }, [selectedRecordUuids, onExportSelectedRecordUuids]);
 
-  const onSortChange = useCallback((sortNext) => {
+  const onSortChange = useCallback((sortNext: any) => {
     setSort(sortNext);
   }, []);
 
@@ -345,6 +358,7 @@ export const RecordsDataVisualizer = (props) => {
   ]);
 
   return (
+    // @ts-expect-error TS(2786): 'DataVisualizer' cannot be used as a JSX component... Remove this comment to see the full error message
     <DataVisualizer
       fields={fields}
       mode={screenViewMode}

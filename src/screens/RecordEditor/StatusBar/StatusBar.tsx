@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import {
@@ -29,10 +30,9 @@ import styles from "./styles";
 
 const batteryStatusAvailable = !Environment.isIOS;
 
-const getBatteryPercent = (batteryLevel) =>
-  `${Math.round(batteryLevel * 100)}%`;
+const getBatteryPercent = (batteryLevel: any) => `${Math.round(batteryLevel * 100)}%`;
 
-const StatusBarPanel = (props) => {
+const StatusBarPanel = (props: any) => {
   const {
     batteryLevel,
     batteryState,
@@ -60,6 +60,7 @@ const StatusBarPanel = (props) => {
         : null;
       const cacheSize = await Files.getDirSize(Files.getTempFolderParentUri());
       setState({
+        // @ts-expect-error TS(2322): Type 'string | null' is not assignable to type 'st... Remove this comment to see the full error message
         recordFilesSize: recordFilesSize
           ? Files.toHumanReadableFileSize(recordFilesSize)
           : null,
@@ -72,30 +73,38 @@ const StatusBarPanel = (props) => {
   return (
     <>
       {batteryStatusAvailable && (
+        // @ts-expect-error TS(2786): 'FieldSet' cannot be used as a JSX component.
         <FieldSet headerKey="device:battery.title">
+          // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
           <FormItem labelKey="device:battery.level">
             {getBatteryPercent(batteryLevel)}
           </FormItem>
           {batteryState && (
+            // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
             <FormItem labelKey="device:battery.statusLabel">
               {t(`device:battery.status.${batteryState}`)}
             </FormItem>
           )}
           {batteryTimeToDischargeFormattedShort && (
+            // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
             <FormItem labelKey="device:battery.timeLeftToDischarge">
               {batteryTimeToDischargeFormattedShort}
             </FormItem>
           )}
           {batteryTimeToFullChargeFormattedShort && (
+            // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
             <FormItem labelKey="device:battery.timeLeftToFullCharge">
               {batteryTimeToFullChargeFormattedShort}
             </FormItem>
           )}
         </FieldSet>
       )}
+      // @ts-expect-error TS(2786): 'GpsLockingEnabledWarning' cannot be used as a JSX... Remove this comment to see the full error message
       <GpsLockingEnabledWarning />
 
+      // @ts-expect-error TS(2786): 'FieldSet' cannot be used as a JSX component.
       <FieldSet headerKey="device:network.title">
+        // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
         <FormItem labelKey="device:network.statusLabel">
           {t(
             `device:network.status.${
@@ -104,16 +113,21 @@ const StatusBarPanel = (props) => {
           )}
         </FormItem>
       </FieldSet>
+      // @ts-expect-error TS(2786): 'FieldSet' cannot be used as a JSX component.
       <FieldSet headerKey="device:internalMemory.title">
+        // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
         <FormItem labelKey="device:internalMemory.storageAvailable">
           {freeDiskStorageFormatted}
         </FormItem>
         {recordFilesSize && (
+          // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
           <FormItem labelKey="device:internalMemory.recordFilesSize">
             {recordFilesSize}
           </FormItem>
         )}
+        // @ts-expect-error TS(2365): Operator '>' cannot be applied to types 'string' a... Remove this comment to see the full error message
         {tempFilesSize > 0 && (
+          // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
           <FormItem labelKey="device:internalMemory.tempFilesSize">
             {tempFilesSize}
           </FormItem>
@@ -151,19 +165,17 @@ export const StatusBar = () => {
   const settings = SettingsSelectors.useSettings();
   const { locationGpsLocked } = settings;
 
-  const formatRemainingTimeCompact = (time) =>
-    TimeUtils.formatRemainingTimeIfLessThan1Day({
-      time,
-      t,
-      formatMode: TimeUtils.formatModes.compact,
-    });
+  const formatRemainingTimeCompact = (time: any) => TimeUtils.formatRemainingTimeIfLessThan1Day({
+    time,
+    t,
+    formatMode: TimeUtils.formatModes.compact,
+  });
 
-  const formatRemainingTimeShort = (time) =>
-    TimeUtils.formatRemainingTimeIfLessThan1Day({
-      time,
-      t,
-      formatMode: TimeUtils.formatModes.short,
-    });
+  const formatRemainingTimeShort = (time: any) => TimeUtils.formatRemainingTimeIfLessThan1Day({
+    time,
+    t,
+    formatMode: TimeUtils.formatModes.short,
+  });
 
   const batteryTimeToDischargeFormatted = formatRemainingTimeCompact(
     batteryTimeToDischarge

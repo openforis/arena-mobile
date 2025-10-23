@@ -18,8 +18,8 @@ import {
 const calculateIsMaxCountReached = ({
   entityDef,
   parentEntityUuid,
-  record,
-}) => {
+  record
+}: any) => {
   const parentNode = parentEntityUuid
     ? Records.getNodeByUuid(parentEntityUuid)(record)
     : null;
@@ -39,8 +39,8 @@ const calculateHasCurrentEntityKeysSpecified = ({
   survey,
   entityDef,
   record,
-  entityUuid,
-}) => {
+  entityUuid
+}: any) => {
   const keyDefs = Surveys.getNodeDefKeys({ survey, nodeDef: entityDef });
   if (Objects.isEmpty(keyDefs)) return false;
 
@@ -123,6 +123,7 @@ export const useBottomNavigationBar = () =>
       prevEntityPointer &&
       !!entityUuid &&
       NodeDefs.isMultiple(entityDef) &&
+      // @ts-expect-error TS(2345): Argument of type 'NodeDef<NodeDefType, NodeDefProp... Remove this comment to see the full error message
       !NodeDefs.isEnumerate(entityDef) &&
       !maxCountReached &&
       hasCurrentEntityKeysSpecified;

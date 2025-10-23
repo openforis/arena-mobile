@@ -4,9 +4,18 @@ import { Files } from "utils";
 import { RecordsImportJob } from "./recordsImportJob";
 import { FilesImportJob } from "./filesImportJob";
 
+// @ts-expect-error TS(2507): Type 'typeof JobMobile' is not a constructor funct... Remove this comment to see the full error message
 export class RecordsAndFilesImportJob extends JobMobile {
-  constructor({ survey, user, fileUri, overwriteExistingRecords = true }) {
+  context: any;
+  jobs: any;
+  constructor({
+    survey,
+    user,
+    fileUri,
+    overwriteExistingRecords = true
+  }: any) {
     super({ survey, user, fileUri, overwriteExistingRecords }, [
+      // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
       new RecordsImportJob({ survey, user, fileUri, overwriteExistingRecords }),
       new FilesImportJob({ survey, user, fileUri }),
     ]);

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { DowngradeError, initialize as initializeDb } from "db";
@@ -23,7 +24,9 @@ import styles from "./styles";
 
 // Crypto (for internal UUIDs generation)
 import * as Crypto from "expo-crypto";
+// @ts-expect-error TS(2304): Cannot find name 'global'.
 if (!global.crypto) {
+  // @ts-expect-error TS(2304): Cannot find name 'global'.
   global.crypto = Crypto;
 }
 
@@ -45,7 +48,7 @@ const steps = {
   complete: "complete",
 };
 
-export const AppInitializer = (props) => {
+export const AppInitializer = (props: any) => {
   const { children } = props;
 
   const dispatch = useDispatch();
@@ -57,8 +60,7 @@ export const AppInitializer = (props) => {
   });
   const { loading, errorMessage, step } = state;
 
-  const setStep = (stepNew) =>
-    setState((statePrev) => ({ ...statePrev, step: stepNew }));
+  const setStep = (stepNew: any) => setState((statePrev) => ({ ...statePrev, step: stepNew }));
 
   const initialize = useCallback(async () => {
     if (__DEV__) {
@@ -67,12 +69,14 @@ export const AppInitializer = (props) => {
     await SystemUtils.cleanupTempFiles();
 
     setStep(steps.fetchingDeviceInfo);
+    // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => Promise<void>... Remove this comment to see the full error message
     await dispatch(DeviceInfoActions.initDeviceInfo());
 
     setStep(steps.fetchingSettings);
     const settings = await SettingsService.fetchSettings();
 
     setStep(steps.storingSettings);
+    // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => Promise<void>... Remove this comment to see the full error message
     await dispatch(SettingsActions.updateSettings(settings));
 
     if (settings.fullScreen) {
@@ -85,6 +89,7 @@ export const AppInitializer = (props) => {
     }
     if (settings.locationGpsLocked) {
       setStep(steps.startingGpsLocking);
+      // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => Promise<boole... Remove this comment to see the full error message
       await dispatch(SettingsActions.startGpsLocking());
     }
     setStep(steps.initializingDb);
@@ -102,16 +107,19 @@ export const AppInitializer = (props) => {
       await SurveyService.importDemoSurvey();
     }
     setStep(steps.fetchingAndSettingLocalSurveys);
+    // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => Promise<void>... Remove this comment to see the full error message
     await dispatch(SurveyActions.fetchAndSetLocalSurveys());
 
     const currentSurveyId = await PreferencesService.getCurrentSurveyId();
     if (currentSurveyId) {
       setStep(steps.fetchingAndSettingSurvey);
       dispatch(
+        // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => Promise<void>... Remove this comment to see the full error message
         SurveyActions.fetchAndSetCurrentSurvey({ surveyId: currentSurveyId })
       );
     }
     setStep(steps.checkingLoggedIn);
+    // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
     await dispatch(RemoteConnectionActions.loginAndSetUser());
 
     setStep(steps.complete);
@@ -133,6 +141,7 @@ export const AppInitializer = (props) => {
           err instanceof DowngradeError
             ? "Downgrade error"
             : "Unexpected error: " + err;
+        // @ts-expect-error TS(2345): Argument of type '(statePrev: { loading: boolean; ... Remove this comment to see the full error message
         setState((statePrev) => ({
           ...statePrev,
           loading: false,

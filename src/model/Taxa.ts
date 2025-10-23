@@ -5,7 +5,10 @@ import { LanguageUtils } from "utils";
 const unlistedCode = "UNL";
 const unknownCode = "UNK";
 
-const taxonToString = ({ nodeDef, taxon }) => {
+const taxonToString = ({
+  nodeDef,
+  taxon
+}: any) => {
   if (!nodeDef || !taxon) return null;
 
   const { code, scientificName } = taxon.props;

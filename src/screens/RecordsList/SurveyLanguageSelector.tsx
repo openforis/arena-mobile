@@ -16,17 +16,19 @@ export const SurveyLanguageSelector = () => {
   const languages = survey.props.languages;
   const singleLanguage = languages.length === 1;
 
-  const langLabelFn = (langCode) => Languages[langCode]["en"];
+  // @ts-expect-error TS(2532): Object is possibly 'undefined'.
+  const langLabelFn = (langCode: any) => Languages[langCode]["en"];
 
-  const items = languages.map((langCode) => ({
+  const items = languages.map((langCode: any) => ({
     value: langCode,
-    label: langLabelFn(langCode),
+    label: langLabelFn(langCode)
   }));
 
   const selectedValue = singleLanguage ? languages[0] : preferredLang;
 
   const onChange = useCallback(
-    (lang) => {
+    (lang: any) => {
+      // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
       dispatch(SurveyActions.setCurrentSurveyPreferredLanguage({ lang }));
     },
     [dispatch]

@@ -3,7 +3,7 @@ import LZString from "lz-string";
 import { DbUtils, dbClient } from "db";
 import { Objects, Surveys } from "@openforis/arena-core";
 
-const insertSurvey = async (survey) => {
+const insertSurvey = async (survey: any) => {
   const { id, uuid, dateCreated, datePublished, dateModified } = survey;
   const name = Surveys.getName(survey);
   const defaultLang = Surveys.getDefaultLanguage(survey);
@@ -27,7 +27,10 @@ const insertSurvey = async (survey) => {
   return survey;
 };
 
-const updateSurvey = async ({ id, survey }) => {
+const updateSurvey = async ({
+  id,
+  survey
+}: any) => {
   await dbClient.runSql(
     `UPDATE survey SET name = ?, label = ?, content = ?, date_created = ?, date_modified = ?
      WHERE id = ?`,
@@ -45,7 +48,7 @@ const updateSurvey = async ({ id, survey }) => {
   return survey;
 };
 
-const fetchSurveyById = async (id) => {
+const fetchSurveyById = async (id: any) => {
   const row = await dbClient.one(
     "SELECT remote_id, content FROM survey WHERE id = ?",
     [id]
@@ -60,15 +63,17 @@ const fetchSurveyById = async (id) => {
 };
 
 const fetchSurveySummaries = async () => {
+  // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
   const surveys = await dbClient.many(
     `SELECT id, server_url, remote_id, uuid, name, label, date_modified
     FROM survey
     ORDER BY name`
   );
-  return surveys.map((survey) => Objects.camelize(survey));
+  return surveys.map((survey: any) => Objects.camelize(survey));
 };
 
-const deleteSurveys = async (surveyIds) => {
+const deleteSurveys = async (surveyIds: any) => {
+  // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
   await dbClient.runSql(
     `DELETE FROM survey WHERE id IN (${DbUtils.quoteValues(surveyIds)})`
   );

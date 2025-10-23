@@ -2,12 +2,20 @@ import { Surveys, Records, NodeDefs, Nodes } from "@openforis/arena-core";
 
 import { RecordNodes } from "model/utils/RecordNodes";
 
-const getSingleChildNodeUuid = ({ record, entityDef, parentEntity }) =>
+const getSingleChildNodeUuid = ({
+  record,
+  entityDef,
+  parentEntity
+}: any) =>
   NodeDefs.isMultiple(entityDef)
     ? null
     : Records.getChild(parentEntity, entityDef.uuid)(record)?.uuid;
 
-const getAncestorMultipleEntity = ({ survey, record, entity }) => {
+const getAncestorMultipleEntity = ({
+  survey,
+  record,
+  entity
+}: any) => {
   let currentEntity = entity;
   let currentEntityDef = Surveys.getNodeDefByUuid({
     survey,
@@ -30,8 +38,8 @@ const getNextOrPreviousMultipleEntityPointer = ({
   survey,
   record,
   entity,
-  offset,
-}) => {
+  offset
+}: any) => {
   if (Nodes.isRoot(entity)) return null;
 
   const parentEntity = Records.getParent(entity)(record);
@@ -40,6 +48,7 @@ const getNextOrPreviousMultipleEntityPointer = ({
     survey,
     uuid: entityDefUuid,
   });
+  // @ts-expect-error TS(2339): Property 'index' does not exist on type '{ sibling... Remove this comment to see the full error message
   const { siblingNode, index: siblingIndex } = RecordNodes.getSiblingNode({
     record,
     parentEntity,
@@ -49,6 +58,7 @@ const getNextOrPreviousMultipleEntityPointer = ({
 
   if (siblingNode) {
     return {
+      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       parentEntityUuid: parentEntity.uuid,
       entityDef,
       entityUuid: siblingNode.uuid,
@@ -65,11 +75,11 @@ const findSiblingEntityPointer = ({
   parentEntity,
   entityDef,
   offset,
-  includeSingleEntities = false,
-}) => {
+  includeSingleEntities = false
+}: any) => {
   let visitedParentEntity = parentEntity;
   let visitedEntityDef = entityDef;
-  let visitedParentEntityDef = null;
+  let visitedParentEntityDef: any = null;
 
   const getVisitedParentEntityDef = () =>
     Surveys.getNodeDefParent({ survey, nodeDef: visitedEntityDef });
@@ -128,8 +138,8 @@ const getNextOrPrevSiblingEntityPointer = ({
   parentEntity,
   offset,
   entityUuid = null,
-  includeSingleEntities = false,
-}) => {
+  includeSingleEntities = false
+}: any) => {
   if (NodeDefs.isRoot(entityDef)) {
     return null;
   }
@@ -170,8 +180,8 @@ const getFirstChildEntityPointer = ({
   record,
   entityDef,
   entityUuid,
-  actualEntity,
-}) => {
+  actualEntity
+}: any) => {
   const { cycle } = record;
   const childrenEntityDefs = RecordNodes.getApplicableChildrenEntityDefs({
     survey,
@@ -196,7 +206,11 @@ const getFirstChildEntityPointer = ({
   return null;
 };
 
-const getNextEntityPointer = ({ survey, record, currentEntityPointer }) => {
+const getNextEntityPointer = ({
+  survey,
+  record,
+  currentEntityPointer
+}: any) => {
   const { parentEntityUuid, entityDef, entityUuid } = currentEntityPointer;
 
   const parentEntity = parentEntityUuid
@@ -272,7 +286,11 @@ const getNextEntityPointer = ({ survey, record, currentEntityPointer }) => {
   };
 };
 
-const getPrevEntityPointer = ({ survey, record, currentEntityPointer }) => {
+const getPrevEntityPointer = ({
+  survey,
+  record,
+  currentEntityPointer
+}: any) => {
   const { parentEntityUuid, entityDef, entityUuid } = currentEntityPointer;
 
   const parentEntityDef = Surveys.getNodeDefParent({
@@ -307,6 +325,7 @@ const getPrevEntityPointer = ({ survey, record, currentEntityPointer }) => {
       entityUuid: null,
     };
   }
+  // @ts-expect-error TS(2345): Argument of type 'Node | null | undefined' is not ... Remove this comment to see the full error message
   const ancestorEntity = Records.getParent(parentEntity)(record);
   return {
     parentEntityUuid: ancestorEntity?.uuid,

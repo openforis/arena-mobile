@@ -25,13 +25,15 @@ export const Breadcrumbs = () => {
 
   useEffect(() => {
     // scroll to the end (right) when selected entity changes
+    // @ts-expect-error TS(2339): Property 'scrollToEnd' does not exist on type 'nev... Remove this comment to see the full error message
     scrollViewRef?.current?.scrollToEnd({ animated: true });
   }, [entityDefUuid]);
 
   const items = useBreadcrumbItems();
 
   const onItemPress = useCallback(
-    (pageEntityItem) => {
+    (pageEntityItem: any) => {
+      // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
       dispatch(DataEntryActions.selectCurrentPageEntity(pageEntityItem));
     },
     [dispatch]

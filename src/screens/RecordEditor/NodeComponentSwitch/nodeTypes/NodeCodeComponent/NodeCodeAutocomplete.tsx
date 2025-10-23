@@ -1,13 +1,14 @@
 import React, { useCallback } from "react";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { SelectableListWithFilter } from "components";
 
 import { SurveySelectors } from "state/survey";
 
-const itemKeyExtractor = (item) => item?.uuid;
+const itemKeyExtractor = (item: any) => item?.uuid;
 
-export const NodeCodeAutocomplete = (props) => {
+export const NodeCodeAutocomplete = (props: any) => {
   const {
     editable = true,
     itemLabelFunction,
@@ -22,13 +23,13 @@ export const NodeCodeAutocomplete = (props) => {
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
 
   const onSelectedItemsChange = useCallback(
-    (selectedItemsUpdated) => {
+    (selectedItemsUpdated: any) => {
       if (multiple) {
         const newItem = selectedItemsUpdated.find(
-          (item) => !selectedItems.includes(item)
+          (item: any) => !selectedItems.includes(item)
         );
         const removedItem = selectedItems.find(
-          (item) => !selectedItemsUpdated.includes(item)
+          (item: any) => !selectedItemsUpdated.includes(item)
         );
         if (removedItem) {
           onItemRemove(removedItem.uuid);
@@ -45,7 +46,7 @@ export const NodeCodeAutocomplete = (props) => {
   );
 
   const itemDescriptionExtractor = useCallback(
-    (item) => item?.props?.descriptions?.[lang],
+    (item: any) => item?.props?.descriptions?.[lang],
     [lang]
   );
 

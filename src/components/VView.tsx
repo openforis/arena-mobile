@@ -4,7 +4,7 @@ import { View } from "./View";
 
 const baseStyle = { display: "flex", flexDirection: "column" };
 
-export const VView = (props) => {
+export const VView = (props: any) => {
   const { children, style: styleProp, ...otherProps } = props;
 
   const style = useMemo(() => [baseStyle, styleProp], [styleProp]);

@@ -14,8 +14,8 @@ export const useItemsFilter = ({
   nodeDef,
   parentNodeUuid,
   items,
-  alwaysIncludeItemFunction = null,
-}) => {
+  alwaysIncludeItemFunction = null
+}: any) => {
   const [filteredItems, setFilteredItems] = useState([]);
 
   return useSelector((state) => {
@@ -28,14 +28,16 @@ export const useItemsFilter = ({
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
     const expressionEvaluator = new RecordExpressionEvaluator();
     Promise.all(
-      items.map((item) => {
+      items.map((item: any) => {
         if (alwaysIncludeItemFunction?.(item)) return true;
 
         try {
           return expressionEvaluator.evalExpression({
             survey,
             record,
+            // @ts-expect-error TS(2322): Type 'Node | undefined' is not assignable to type ... Remove this comment to see the full error message
             node: parentNode,
+            // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
             query: itemsFilter,
             item,
           });
@@ -45,7 +47,7 @@ export const useItemsFilter = ({
       })
     ).then((_itemsFilterResults) => {
       const _filteredItems = items.filter(
-        (_, index) => _itemsFilterResults[index]
+        (_: any, index: any) => _itemsFilterResults[index]
       );
       if (!Objects.isEqual(_filteredItems, filteredItems)) {
         setFilteredItems(_filteredItems);

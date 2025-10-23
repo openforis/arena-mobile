@@ -24,7 +24,9 @@ const iconByNodeDefType = {
   [NodeDefType.coordinate]: () => "map-marker-outline",
   [NodeDefType.date]: () => "calendar-range",
   [NodeDefType.decimal]: () => "decimal",
-  [NodeDefType.entity]: ({ nodeDef }) =>
+  [NodeDefType.entity]: ({
+    nodeDef
+  }: any) =>
     NodeDefs.isSingle(nodeDef) ? "window-maximize" : "table",
   [NodeDefType.file]: () => "file-outline",
   [NodeDefType.integer]: () => "numeric",
@@ -33,8 +35,8 @@ const iconByNodeDefType = {
   [NodeDefType.time]: () => "clock-time-three-outline",
 };
 
-const getNodeDefIcon = (nodeDef) =>
-  iconByNodeDefType[nodeDef.type]?.({ nodeDef });
+// @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+const getNodeDefIcon = (nodeDef: any) => iconByNodeDefType[nodeDef.type]?.({ nodeDef });
 
 export const PageNodesList = () => {
   const dispatch = useDispatch();
@@ -75,21 +77,28 @@ export const PageNodesList = () => {
   );
 
   const onItemPress = useCallback(
-    (index) => () =>
+    (index: any) => () =>
+      // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
       dispatch(DataEntryActions.selectCurrentPageEntityActiveChildIndex(index)),
     [dispatch]
   );
 
   const renderItemLeftIcon = useCallback(
-    ({ item, ...otherProps }) => (
+    ({
+      item,
+      ...otherProps
+    }: any) => (
       <List.Icon {...otherProps} icon={getNodeDefIcon(item)} />
     ),
     []
   );
 
   const renderItemRightIcon = useCallback(
-    ({ item }) => {
+    ({
+      item
+    }: any) => {
       const nodeDefUuid = item.uuid;
+      // @ts-expect-error TS(2345): Argument of type 'Node | null | undefined' is not ... Remove this comment to see the full error message
       const nodes = Records.getChildren(parentEntity, nodeDefUuid)(record);
       const fieldValidations = nodes.map((node) =>
         Validations.getFieldValidation(node.uuid)(validation)
@@ -109,7 +118,10 @@ export const PageNodesList = () => {
   );
 
   const renderItem = useCallback(
-    ({ index, item }) => {
+    ({
+      index,
+      item
+    }: any) => {
       const isActiveItem = index === activeChildIndex;
 
       return (

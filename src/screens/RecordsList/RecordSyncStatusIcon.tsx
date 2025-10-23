@@ -28,7 +28,7 @@ const colorBySyncStatus = {
   [RecordSyncStatus.notUpToDate]: colors.yellow,
 };
 
-export const RecordSyncStatusIcon = (props) => {
+export const RecordSyncStatusIcon = (props: any) => {
   const { item, alwaysShowLabel = false } = props;
   const { syncStatus } = item;
 
@@ -53,6 +53,7 @@ export const RecordSyncStatusIcon = (props) => {
       <Text textKey={textKey} />
     </HView>
   ) : (
+    // @ts-expect-error TS(2786): 'Tooltip' cannot be used as a JSX component.
     <Tooltip titleKey={textKey}>{icon}</Tooltip>
   );
 };

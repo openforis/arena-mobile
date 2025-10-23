@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import TreeView from "react-native-final-tree-view";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { HView, ScrollView } from "components";
@@ -10,7 +11,12 @@ import { EntityButton } from "./EntityButton";
 import { Indicator } from "./Indicator";
 import { useTreeData } from "./useTreeData";
 
-const TreeNode = ({ node: treeNode, level, isExpanded, hasChildrenNodes }) => {
+const TreeNode = ({
+  node: treeNode,
+  level,
+  isExpanded,
+  hasChildrenNodes
+}: any) => {
   const { isCurrentEntity, isRoot } = treeNode;
   const style = useMemo(
     () => ({
@@ -49,14 +55,18 @@ export const PagesNavigationTree = () => {
   const dispatch = useDispatch();
 
   const onNodePress = useCallback(
-    ({ node }) => {
+    ({
+      node
+    }: any) => {
       const { entityPointer } = node;
+      // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
       dispatch(DataEntryActions.selectCurrentPageEntity(entityPointer));
     },
     [dispatch]
   );
 
   return (
+    // @ts-expect-error TS(2322): Type '{ children: Element; showsVerticalScrollIndi... Remove this comment to see the full error message
     <ScrollView
       showsVerticalScrollIndicator
       style={{ flex: 1, backgroundColor: "transparent" }}

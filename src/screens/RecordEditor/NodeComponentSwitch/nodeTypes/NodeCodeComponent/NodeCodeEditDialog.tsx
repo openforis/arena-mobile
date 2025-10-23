@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { NodeDefs } from "@openforis/arena-core";
@@ -6,7 +7,7 @@ import { NodeDefs } from "@openforis/arena-core";
 import { NodeCodeAutocomplete } from "./NodeCodeAutocomplete";
 import { NodeEditDialogInternal } from "../NodeEditDialogInternal";
 
-export const NodeCodeEditDialog = (props) => {
+export const NodeCodeEditDialog = (props: any) => {
   const {
     editable = true,
     itemLabelFunction,
@@ -23,7 +24,7 @@ export const NodeCodeEditDialog = (props) => {
   const multiple = NodeDefs.isMultiple(nodeDef);
 
   const onSingleValueChange = useCallback(
-    (selectedItemUuid) => {
+    (selectedItemUuid: any) => {
       onSingleValueChangeProp?.(selectedItemUuid);
       if (selectedItemUuid) {
         onDismiss?.();

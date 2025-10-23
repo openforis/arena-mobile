@@ -80,26 +80,24 @@ export const SettingsRemoteConnectionScreen = () => {
   }, [initialize, user]);
 
   const onServerUrlTypeChange = useCallback(
-    async (type) =>
-      setState((statePrev) => ({
-        ...statePrev,
-        serverUrlType: type,
-        serverUrl:
-          type === serverUrlTypes.default
-            ? SettingsService.defaultServerUrl
-            : serverUrl,
-        serverUrlVerified: false,
-      })),
+    async (type: any) => setState((statePrev) => ({
+      ...statePrev,
+      serverUrlType: type,
+      serverUrl:
+        type === serverUrlTypes.default
+          ? SettingsService.defaultServerUrl
+          : serverUrl,
+      serverUrlVerified: false,
+    })),
     [serverUrl]
   );
 
   const onServerUrlChange = useCallback(
-    (serverUrlUpdated) =>
-      setState((statePrev) => ({
-        ...statePrev,
-        serverUrl: serverUrlUpdated.trim(),
-        serverUrlVerified: false,
-      })),
+    (serverUrlUpdated: any) => setState((statePrev) => ({
+      ...statePrev,
+      serverUrl: serverUrlUpdated.trim(),
+      serverUrlVerified: false,
+    })),
     []
   );
 
@@ -116,16 +114,15 @@ export const SettingsRemoteConnectionScreen = () => {
   }, [dispatch, serverUrl]);
 
   const onEmailChange = useCallback(
-    (text) =>
-      setState((statePrev) => ({
-        ...statePrev,
-        email: text,
-      })),
+    (text: any) => setState((statePrev) => ({
+      ...statePrev,
+      email: text,
+    })),
     []
   );
 
   const onPasswordChange = useCallback(
-    (text) => setState((statePrev) => ({ ...statePrev, password: text })),
+    (text: any) => setState((statePrev) => ({ ...statePrev, password: text })),
     []
   );
 
@@ -137,6 +134,7 @@ export const SettingsRemoteConnectionScreen = () => {
       email: emailNew,
     }));
     dispatch(
+      // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => Promise<void>... Remove this comment to see the full error message
       RemoteConnectionActions.login({
         serverUrl,
         email: emailNew,
@@ -148,23 +146,29 @@ export const SettingsRemoteConnectionScreen = () => {
 
   const onLogout = useCallback(async () => {
     if (networkAvailable) {
+      // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => void' is not ... Remove this comment to see the full error message
       dispatch(RemoteConnectionActions.logout());
     } else {
+      // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => Promise<void>... Remove this comment to see the full error message
       dispatch(RemoteConnectionActions.clearUserCredentials());
     }
   }, [dispatch, networkAvailable]);
 
   return (
+    // @ts-expect-error TS(2786): 'ScreenView' cannot be used as a JSX component.
     <ScreenView>
       <VView style={styles.container}>
         {!networkAvailable && <Text textKey="common:networkNotAvailable" />}
+        // @ts-expect-error TS(2786): 'FieldSet' cannot be used as a JSX component.
         <FieldSet headerKey="settingsRemoteConnection:serverUrl">
+          // @ts-expect-error TS(2786): 'RadioButtonGroup' cannot be used as a JSX compone... Remove this comment to see the full error message
           <RadioButtonGroup
             onValueChange={onServerUrlTypeChange}
             value={serverUrlType}
           >
             <HView>
               {Object.values(serverUrlTypes).map((type) => (
+                // @ts-expect-error TS(2786): 'RadioButton' cannot be used as a JSX component.
                 <RadioButton
                   key={type}
                   disabled={!networkAvailable}
@@ -176,6 +180,7 @@ export const SettingsRemoteConnectionScreen = () => {
           </RadioButtonGroup>
           <HView>
             <TextInput
+              // @ts-expect-error TS(2322): Type '{ disabled: boolean; onChange: (serverUrlUpd... Remove this comment to see the full error message
               disabled={
                 serverUrlType === serverUrlTypes.default || !networkAvailable
               }
@@ -195,6 +200,7 @@ export const SettingsRemoteConnectionScreen = () => {
           )}
         </FieldSet>
         <TextInput
+          // @ts-expect-error TS(2322): Type '{ autoCapitalize: string; disabled: boolean;... Remove this comment to see the full error message
           autoCapitalize="none"
           disabled={!networkAvailable}
           keyboardType="email-address"
@@ -240,10 +246,12 @@ export const SettingsRemoteConnectionScreen = () => {
             }
           />
         )}
+        // @ts-expect-error TS(2786): 'Link' cannot be used as a JSX component.
         <Link
           labelKey="settingsRemoteConnection:forgotPassword"
           url={forgotPasswordUrl}
         />
+        // @ts-expect-error TS(2786): 'Link' cannot be used as a JSX component.
         <Link
           labelKey="settingsRemoteConnection:requestAccess"
           url={requestAccessUrl}
