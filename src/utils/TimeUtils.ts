@@ -4,20 +4,22 @@ const msInOneHour = msInOneMinute * 60;
 const msInOneDay = msInOneHour * 24;
 const msInOneYear = msInOneDay * 365;
 
-const timeParts = {
-  year: "year",
-  day: "day",
-  hour: "hour",
-  minute: "minute",
-  second: "second",
-};
+enum TimePart {
+  year = "year",
+  day = "day",
+  hour = "hour",
+  minute = "minute",
+  second = "second",
+}
+
+type TimePartsDictionary = { [key in TimePart]: number };
 
 const msPerTimePart = {
-  [timeParts.year]: msInOneYear,
-  [timeParts.day]: msInOneDay,
-  [timeParts.hour]: msInOneHour,
-  [timeParts.minute]: msInOneMinute,
-  [timeParts.second]: msInOneSecond,
+  [TimePart.year]: msInOneYear,
+  [TimePart.day]: msInOneDay,
+  [TimePart.hour]: msInOneHour,
+  [TimePart.minute]: msInOneMinute,
+  [TimePart.second]: msInOneSecond,
 };
 
 const formatModes = {
@@ -26,25 +28,23 @@ const formatModes = {
   short: "short",
 };
 
-const _calculateValuePerTimePart = (time: any, part: any) => {
-  const timePartsValues = Object.values(timeParts);
+const _calculateValuePerTimePart = (time: number, part: TimePart) => {
+  const timePartsValues = Object.values(TimePart);
   const prevTimePart = timePartsValues[timePartsValues.indexOf(part) - 1];
   const timeEffective = prevTimePart
-    // @ts-expect-error TS(2532): Object is possibly 'undefined'.
     ? time % msPerTimePart[prevTimePart]
     : time;
-  // @ts-expect-error TS(2532): Object is possibly 'undefined'.
   return Math.floor(timeEffective / msPerTimePart[part]);
 };
 
 const formatRemainingTime = ({
   time,
-  upToTimePart = timeParts.minute,
-  t
+  upToTimePart = TimePart.minute,
+  t,
 }: any) => {
   if (!time) return "";
 
-  const timePartsValues = Object.values(timeParts);
+  const timePartsValues = Object.values(TimePart);
   const upToTimePartIndex = timePartsValues.indexOf(upToTimePart);
   const timePartsValuesFiltered = timePartsValues.slice(
     0,
@@ -66,19 +66,22 @@ const formatRemainingTime = ({
   });
 };
 
-const extractParts = (time: any) => !time
-  ? null
-  : Object.values(timeParts).reduce((acc, timePart) => {
-      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-      acc[timePart] = _calculateValuePerTimePart(time, timePart);
-      return acc;
-    }, {});
+const extractParts = (time: any): TimePartsDictionary | null =>
+  !time
+    ? null
+    : (Object.values(TimePart).reduce(
+        (acc: TimePartsDictionary, timePart: TimePart) => {
+          acc[timePart] = _calculateValuePerTimePart(time, timePart);
+          return acc;
+        },
+        {} as TimePartsDictionary
+      ) as TimePartsDictionary);
 
 const _formatRemainingHoursAndMinutes = ({
   hours,
   minutes,
   t,
-  formatMode
+  formatMode,
 }: any) => {
   switch (formatMode) {
     case formatModes.full:
@@ -99,12 +102,7 @@ const _formatRemainingHoursAndMinutes = ({
   }
 };
 
-const _formatRemainingTimePart = ({
-  timePart,
-  count,
-  t,
-  formatMode
-}: any) => {
+const _formatRemainingTimePart = ({ timePart, count, t, formatMode }: any) => {
   const timePartText = t(`common:timePart.${timePart}`, { count });
   switch (formatMode) {
     case formatModes.full:
@@ -125,12 +123,11 @@ const _formatRemainingTimePart = ({
 const formatRemainingTimeIfLessThan1Day = ({
   time,
   t,
-  formatMode = formatModes.full
+  formatMode = formatModes.full,
 }: any) => {
   const parts = extractParts(time);
   if (!parts) return "";
 
-  // @ts-expect-error TS(2339): Property 'year' does not exist on type '{}'.
   const { year: years, day: days, hour: hours, minute: minutes } = parts;
   if (years || days) return "";
   if (hours && minutes) {
@@ -138,13 +135,13 @@ const formatRemainingTimeIfLessThan1Day = ({
   }
   if (hours || minutes) {
     return _formatRemainingTimePart({
-      timePart: hours ? timeParts.hour : timeParts.minute,
+      timePart: hours ? TimePart.hour : TimePart.minute,
       count: hours || minutes,
       t,
       formatMode,
     });
   }
-  const minuteTimePartText = t(`common:timePart.${timeParts.minute}`);
+  const minuteTimePartText = t(`common:timePart.${TimePart.minute}`);
   return t("common:remainingTime.lessThanOneTimePart", {
     timePart: minuteTimePartText,
   });
