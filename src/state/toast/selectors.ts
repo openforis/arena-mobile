@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 
-const selectToastContent = (state: any) => state.toast;
+const selectToastContent = (state) => state.toast;
 
 export const ToastSelectors = {
   selectToastContent,

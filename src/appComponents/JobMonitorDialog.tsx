@@ -3,14 +3,10 @@ import { Dialog, Portal } from "react-native-paper";
 
 import { JobStatus } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'state/jobMonitor/useJobMonitor... Remove this comment to see the full error message
 import { useJobMonitor } from "state/jobMonitor/useJobMonitor";
 
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { Button, ProgressBar, Text } from "components";
-// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { useTranslation } from "localization";
-// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { Jobs } from "utils";
 
 const progressColorByStatus = {
@@ -39,7 +35,6 @@ export const JobMonitorDialog = () => {
   } = useJobMonitor();
 
   const progress = progressPercent / 100;
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   const progressColor = progressColorByStatus[status];
 
   const canCancelJob = [JobStatus.pending, JobStatus.running].includes(status);

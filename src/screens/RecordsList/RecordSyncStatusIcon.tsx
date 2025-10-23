@@ -6,11 +6,8 @@ import {
   Icon,
   Text,
   Tooltip,
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 } from "components";
-// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { RecordSyncStatus, ScreenViewMode } from "model";
-// @ts-expect-error TS(2307): Cannot find module 'state/screenOptions' or its co... Remove this comment to see the full error message
 import { ScreenOptionsSelectors } from "state/screenOptions";
 
 const colors = {
@@ -31,7 +28,7 @@ const colorBySyncStatus = {
   [RecordSyncStatus.notUpToDate]: colors.yellow,
 };
 
-export const RecordSyncStatusIcon = (props: any) => {
+export const RecordSyncStatusIcon = (props) => {
   const { item, alwaysShowLabel = false } = props;
   const { syncStatus } = item;
 

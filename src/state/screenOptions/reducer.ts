@@ -8,10 +8,7 @@ const initialState = {
 };
 
 const actionHandlers = {
-  [ScreenOptionsActions.SCREEN_VIEW_MODE_SET]: ({
-    state,
-    action
-  }: any) =>
+  [ScreenOptionsActions.SCREEN_VIEW_MODE_SET]: ({ state, action }) =>
     ScreenOptionsState.assocViewMode({
       screenKey: action.screenKey,
       viewMode: action.viewMode,

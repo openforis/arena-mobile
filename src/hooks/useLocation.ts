@@ -21,12 +21,7 @@ export const useLocation = () => {
   } = state;
 
   const locationCallback = useCallback(
-    ({
-      location,
-      locationAccuracy,
-      pointLatLong,
-      thresholdReached
-    }: any) => {
+    ({ location, locationAccuracy, pointLatLong, thresholdReached }) => {
       if (thresholdReached) {
         setState((statePrev) => ({
           ...statePrev,

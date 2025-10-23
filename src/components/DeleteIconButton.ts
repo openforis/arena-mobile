@@ -1,10 +1,9 @@
 import { IconButton } from "./IconButton";
 
-export const DeleteIconButton = (props: any) => {
+export const DeleteIconButton = (props) => {
   const { children, ...otherProps } = props;
 
   return (
-    // @ts-expect-error TS(7027): Unreachable code detected.
     <IconButton icon="trash-can-outline" {...otherProps}>
       {children}
     </IconButton>

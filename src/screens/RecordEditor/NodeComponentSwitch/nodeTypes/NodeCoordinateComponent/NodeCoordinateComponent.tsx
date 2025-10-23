@@ -9,9 +9,7 @@ import {
   Text,
   TextInput,
   VView,
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 } from "components";
-// @ts-expect-error TS(2307): Cannot find module 'components/LocationWatchingMon... Remove this comment to see the full error message
 import { LocationWatchingMonitor } from "components/LocationWatchingMonitor";
 import { SrsDropdown } from "../../../SrsDropdown";
 import { useNodeCoordinateComponent } from "./useNodeCoordinateComponent";
@@ -20,7 +18,7 @@ import { NodeComponentPropTypes } from "../nodeComponentPropTypes";
 
 import styles from "./styles";
 
-export const NodeCoordinateComponent = (props: any) => {
+export const NodeCoordinateComponent = (props) => {
   const { nodeDef } = props;
 
   if (__DEV__) {
@@ -54,10 +52,7 @@ export const NodeCoordinateComponent = (props: any) => {
   } = useNodeCoordinateComponent(props);
 
   const createNumericFieldFormItem = useCallback(
-    ({
-      fieldKey,
-      labelStyle = styles.formItemLabel
-    }: any) => (
+    ({ fieldKey, labelStyle = styles.formItemLabel }) => (
       <HView key={fieldKey} style={styles.formItem}>
         <Text style={labelStyle} textKey={`dataEntry:coordinate.${fieldKey}`} />
         <TextInput

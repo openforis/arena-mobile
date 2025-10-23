@@ -1,22 +1,17 @@
 import { useMemo } from "react";
 import { useTheme } from "react-native-paper";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { NodeDefs } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { Button, HView } from "components";
-// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { useIsTextDirectionRtl } from "localization";
-// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { SurveyDefs } from "model";
-// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 import { SurveySelectors } from "state";
 
 import styles from "./styles";
 
-const OpenDropdownButton = (props: any) => {
+const OpenDropdownButton = (props) => {
   const {
     emptySelection = false,
     onPress,
@@ -58,7 +53,7 @@ OpenDropdownButton.propTypes = {
   textParams: PropTypes.object,
 };
 
-export const NodeCodePreview = (props: any) => {
+export const NodeCodePreview = (props) => {
   const {
     itemLabelFunction,
     nodeDef,
@@ -79,14 +74,16 @@ export const NodeCodePreview = (props: any) => {
     <HView style={{ flexWrap: "wrap" }}>
       {multiple ? (
         <>
-          {selectedItems.map((item: any) => <Button
-            key={item.uuid}
-            color="secondary"
-            onPress={openEditDialog}
-            style={styles.previewItem}
-          >
-            {itemLabelFunction(item)}
-          </Button>)}
+          {selectedItems.map((item) => (
+            <Button
+              key={item.uuid}
+              color="secondary"
+              onPress={openEditDialog}
+              style={styles.previewItem}
+            >
+              {itemLabelFunction(item)}
+            </Button>
+          ))}
           <OpenDropdownButton
             emptySelection={emptySelection}
             onPress={openEditDialog}

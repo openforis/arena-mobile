@@ -11,24 +11,21 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'db' or its corresponding type ... Remove this comment to see the full error message
 import { DbUtils, dbClient } from "db";
 import {
   RecordLoadStatus,
   RecordOrigin,
   RecordSummaries,
   SurveyDefs,
-// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 } from "model";
-// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { SystemUtils } from "utils";
 
 const SUPPORTED_KEYS = 5;
 const SUPPORTED_SUMMARY_ATTRIBUTES = 5;
 
-const toColumnsSet = (columns: any) => columns.map((col: any) => `${col} = ?`).join(", ");
+const toColumnsSet = (columns) => columns.map((col) => `${col} = ?`).join(", ");
 
-const generateColumnNamesWithPrefix = (prefix: any, count: any) =>
+const generateColumnNamesWithPrefix = (prefix, count) =>
   Array.from(Arrays.fromNumberOfElements(count).keys()).map(
     (idx) => `${prefix}${idx + 1}`
   );
@@ -62,16 +59,13 @@ const summaryColumnsSet = toColumnsSet(summaryAttributesColumnNames);
 const summarySelectFieldsJoint = `id, uuid, date_created, date_modified, date_modified_remote, date_synced, cycle, owner_uuid, owner_name, load_status, origin, ${keyColumnNamesJoint}, ${summaryAttributesColumnNamesJoint}`;
 const summarySelectFieldsJointWithValidation = `${summarySelectFieldsJoint}, json(content) ->> 'validation' AS validation`;
 
-const toKeyOrSummaryColValue = (value: any) => {
+const toKeyOrSummaryColValue = (value) => {
   if (Objects.isEmpty(value)) return null;
   if (typeof value === "string") return value;
   return JSON.stringify(value);
 };
 
-const extractKeyOrSummaryColValue = ({
-  row,
-  col
-}: any) => {
+const extractKeyOrSummaryColValue = ({ row, col }) => {
   const colValue = row[col];
   try {
     return JSON.parse(colValue);
@@ -80,15 +74,11 @@ const extractKeyOrSummaryColValue = ({
   }
 };
 
-const extractKeyColumnsValues = ({
-  survey,
-  record
-}: any) => {
+const extractKeyColumnsValues = ({ survey, record }) => {
   const keyValues = Records.getEntityKeyValues({
     survey,
     cycle: record.cycle,
     record,
-    // @ts-expect-error TS(2322): Type 'Node | undefined' is not assignable to type ... Remove this comment to see the full error message
     entity: Records.getRoot(record),
   });
   const keyColumnsValues = keyColumnNames.map((_keyCol, idx) => {
@@ -98,13 +88,9 @@ const extractKeyColumnsValues = ({
   return keyColumnsValues;
 };
 
-const extractSummaryAttributesValues = ({
-  survey,
-  record
-}: any) => {
+const extractSummaryAttributesValues = ({ survey, record }) => {
   const rootDef = Surveys.getNodeDefRoot({ survey });
   const summaryAttributeDefs =
-    // @ts-expect-error TS(2345): Argument of type '{ survey: any; nodeDef: NodeDefE... Remove this comment to see the full error message
     Surveys.getNodeDefsIncludedInMultipleEntitySummary({
       survey,
       nodeDef: rootDef,
@@ -116,7 +102,6 @@ const extractSummaryAttributesValues = ({
       const root = Records.getRoot(record);
       const summaryNode = Records.getDescendant({
         record,
-        // @ts-expect-error TS(2322): Type 'Node | undefined' is not assignable to type ... Remove this comment to see the full error message
         node: root,
         nodeDefDescendant: nodeDef,
       });
@@ -128,8 +113,8 @@ const extractSummaryAttributesValues = ({
 
 const extractRemoteRecordSummaryKeyColumnsValues = ({
   survey,
-  recordSummary
-}: any) => {
+  recordSummary,
+}) => {
   const { cycle } = recordSummary;
   const keyDefs = SurveyDefs.getRootKeyDefs({ survey, cycle });
   const keyColumnsValues = keyColumnNames.map((_keyColName, index) => {
@@ -143,8 +128,8 @@ const extractRemoteRecordSummaryKeyColumnsValues = ({
 
 const extractRemoteRecordSummarySummaryColumnsValues = ({
   survey,
-  recordSummary
-}: any) => {
+  recordSummary,
+}) => {
   const { cycle } = recordSummary;
   const rootDef = Surveys.getNodeDefRoot({ survey });
   const summaryAttributeDefs =
@@ -165,15 +150,12 @@ const extractRemoteRecordSummarySummaryColumnsValues = ({
   return summaryColumnsValues;
 };
 
-const getPlaceholders = (count: any) => Array.from(Array(count).keys())
-  .map(() => "?")
-  .join(", ");
+const getPlaceholders = (count) =>
+  Array.from(Array(count).keys())
+    .map(() => "?")
+    .join(", ");
 
-const fetchRecord = async ({
-  survey,
-  recordId,
-  includeContent = true
-}: any) => {
+const fetchRecord = async ({ survey, recordId, includeContent = true }) => {
   const { id: surveyId } = survey;
   const row = await dbClient.one(
     `SELECT ${summarySelectFieldsJointWithValidation}${includeContent ? ", content" : ""}
@@ -184,17 +166,10 @@ const fetchRecord = async ({
   return rowToRecord({ survey })(row);
 };
 
-const fetchRecordSummary = async ({
-  survey,
-  recordId
-}: any) =>
+const fetchRecordSummary = async ({ survey, recordId }) =>
   fetchRecord({ survey, recordId, includeContent: false });
 
-const fetchRecords = async ({
-  survey,
-  cycle = null,
-  onlyLocal = true
-}: any) => {
+const fetchRecords = async ({ survey, cycle = null, onlyLocal = true }) => {
   const { id: surveyId } = survey;
   const whereConditions = ["merged_into_record_uuid IS NULL", "survey_id = ?"];
   const queryParams = [surveyId];
@@ -215,11 +190,7 @@ const fetchRecords = async ({
   return rows.map(rowToRecord({ survey }));
 };
 
-const getKeyColCondition = ({
-  keyCol,
-  keyDef,
-  val
-}: any) => {
+const getKeyColCondition = ({ keyCol, keyDef, val }) => {
   if (Objects.isNil(val)) {
     return `${keyCol} IS NULL`;
   }
@@ -233,11 +204,8 @@ const getKeyColCondition = ({
   return `(${conditions.join(" OR ")})`;
 };
 
-const getKeyColParams = ({
-  keyDef,
-  val
-}: any) => {
-  const params: any = [];
+const getKeyColParams = ({ keyDef, val }) => {
+  const params = [];
   if (Objects.isNil(val)) {
     return params;
   }
@@ -249,11 +217,7 @@ const getKeyColParams = ({
   return params;
 };
 
-const findRecordSummariesByKeys = async ({
-  survey,
-  cycle,
-  keyValues
-}: any) => {
+const findRecordSummariesByKeys = async ({ survey, cycle, keyValues }) => {
   const { id: surveyId } = survey;
   const keyDefs = Surveys.getRootKeys({ survey, cycle });
   const keyColsConditions = keyColumnNames
@@ -266,7 +230,6 @@ const findRecordSummariesByKeys = async ({
   const keyColsParams = keyColumnNames.reduce((acc, _keyCol, index) => {
     const keyDef = keyDefs[index];
     const val = keyValues[index];
-    // @ts-expect-error TS(2345): Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
     acc.push(...getKeyColParams({ keyDef, val }));
     return acc;
   }, []);
@@ -280,9 +243,7 @@ const findRecordSummariesByKeys = async ({
   return rows.map(rowToRecord({ survey }));
 };
 
-const fetchRecordsWithEmptyCycle = async ({
-  survey
-}: any) => {
+const fetchRecordsWithEmptyCycle = async ({ survey }) => {
   const { id: surveyId } = survey;
 
   const rows = await dbClient.many(
@@ -298,8 +259,8 @@ const fetchRecordsWithEmptyCycle = async ({
 const insertRecord = async ({
   survey,
   record,
-  loadStatus = RecordLoadStatus.complete
-}: any) => {
+  loadStatus = RecordLoadStatus.complete,
+}) => {
   const { id: surveyId } = survey;
   const keyColumnsValues = extractKeyColumnsValues({ survey, record });
   const summaryAttributesColumnValues = extractSummaryAttributesValues({
@@ -332,15 +293,11 @@ const insertRecord = async ({
   return record;
 };
 
-const insertRecordSummaries = async ({
-  survey,
-  cycle,
-  recordSummaries
-}: any) => {
+const insertRecordSummaries = async ({ survey, cycle, recordSummaries }) => {
   const { id: surveyId } = survey;
   const loadStatus = RecordLoadStatus.summary;
   const origin = RecordOrigin.remote;
-  const insertedIds: any = [];
+  const insertedIds = [];
   await dbClient.transaction(async () => {
     for await (const recordSummary of recordSummaries) {
       const { dateCreated, dateModified, ownerUuid, ownerName, uuid } =
@@ -381,8 +338,8 @@ const insertRecordSummaries = async ({
 
 const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = async ({
   survey,
-  recordSummary
-}: any) => {
+  recordSummary,
+}) => {
   const { dateModified, ownerUuid, ownerName, uuid } = recordSummary;
   const keyColumnsValues = extractRemoteRecordSummaryKeyColumnsValues({
     survey,
@@ -418,8 +375,8 @@ const updateRecordKeysAndContent = async ({
   survey,
   record,
   updateOrigin = false,
-  origin = RecordOrigin.local
-}: any) => {
+  origin = RecordOrigin.local,
+}) => {
   const keyColumnsValues = extractKeyColumnsValues({ survey, record });
   const summaryAttributesValues = extractSummaryAttributesValues({
     survey,
@@ -452,10 +409,7 @@ const updateRecordKeysAndContent = async ({
   );
 };
 
-const updateRecord = async ({
-  survey,
-  record
-}: any) => {
+const updateRecord = async ({ survey, record }) => {
   const recordUpdated = Objects.assocPath({
     obj: record,
     path: ["info", "modifiedWith"],
@@ -470,16 +424,10 @@ const updateRecord = async ({
   return recordUpdated;
 };
 
-const updateRecordWithContentFetchedRemotely = async ({
-  survey,
-  record
-}: any) =>
+const updateRecordWithContentFetchedRemotely = async ({ survey, record }) =>
   updateRecordKeysAndContent({ survey, record, origin: RecordOrigin.remote });
 
-const updateRecordsDateSync = async ({
-  surveyId,
-  recordUuids
-}: any) => {
+const updateRecordsDateSync = async ({ surveyId, recordUuids }) => {
   const sql = `UPDATE record 
   SET date_synced = ?
   WHERE survey_id = ? 
@@ -487,10 +435,7 @@ const updateRecordsDateSync = async ({
   return dbClient.runSql(sql, [Dates.nowFormattedForStorage(), surveyId]);
 };
 
-const updateRecordsMergedInto = async ({
-  surveyId,
-  mergedRecordsMap
-}: any) => {
+const updateRecordsMergedInto = async ({ surveyId, mergedRecordsMap }) => {
   await dbClient.transaction(async () => {
     for await (const [uuid, mergedIntoRecordUuid] of Object.entries(
       mergedRecordsMap
@@ -505,10 +450,7 @@ const updateRecordsMergedInto = async ({
   });
 };
 
-const fixRecordCycle = async ({
-  survey,
-  recordId
-}: any) => {
+const fixRecordCycle = async ({ survey, recordId }) => {
   const record = await fetchRecord({ survey, recordId });
   const { cycle = Surveys.getDefaultCycleKey(survey) } = record;
   return dbClient.runSql(`UPDATE record SET cycle = ? WHERE id = ?`, [
@@ -517,16 +459,13 @@ const fixRecordCycle = async ({
   ]);
 };
 
-const deleteRecords = async ({
-  surveyId,
-  recordUuids
-}: any) => {
+const deleteRecords = async ({ surveyId, recordUuids }) => {
   const sql = `DELETE FROM record 
     WHERE survey_id = ? AND uuid IN (${DbUtils.quoteValues(recordUuids)})`;
   return dbClient.runSql(sql, [surveyId]);
 };
 
-const fixDatetime = (dateStringOrNumber: any) => {
+const fixDatetime = (dateStringOrNumber) => {
   if (!dateStringOrNumber) return dateStringOrNumber;
 
   if (typeof dateStringOrNumber === "number") {
@@ -541,7 +480,6 @@ const fixDatetime = (dateStringOrNumber: any) => {
     return dateStringOrNumber;
 
   const parsed = Dates.parse(dateStringOrNumber, formatFrom);
-  // @ts-expect-error TS(2345): Argument of type 'Date | undefined' is not assigna... Remove this comment to see the full error message
   return Dates.formatForStorage(parsed);
 };
 
@@ -550,8 +488,8 @@ const fixRowKeyOrSummaryAttributeColumns = ({
   row,
   columnNames,
   defs,
-  wrapperProp
-}: any) => {
+  wrapperProp,
+}) => {
   result[wrapperProp] = {};
   for (let index = 0; index < columnNames.length; index++) {
     const col = columnNames[index];
@@ -564,12 +502,7 @@ const fixRowKeyOrSummaryAttributeColumns = ({
   }
 };
 
-const fixRowKeyAttributesColumns = ({
-  survey,
-  cycle,
-  result,
-  row
-}: any) =>
+const fixRowKeyAttributesColumns = ({ survey, cycle, result, row }) =>
   fixRowKeyOrSummaryAttributeColumns({
     result,
     row,
@@ -578,12 +511,7 @@ const fixRowKeyAttributesColumns = ({
     wrapperProp: "keysObj",
   });
 
-const fixRowSummaryAttributesColumns = ({
-  survey,
-  cycle,
-  result,
-  row
-}: any) => {
+const fixRowSummaryAttributesColumns = ({ survey, cycle, result, row }) => {
   const rootDef = Surveys.getNodeDefRoot({ survey });
   const summaryDefs = Surveys.getNodeDefsIncludedInMultipleEntitySummary({
     survey,
@@ -599,9 +527,7 @@ const fixRowSummaryAttributesColumns = ({
   });
 };
 
-const fixRowValidation = ({
-  result
-}: any) => {
+const fixRowValidation = ({ result }) => {
   let validation = result.validation;
   if (validation) {
     if (typeof validation === "string") {
@@ -615,10 +541,8 @@ const fixRowValidation = ({
 };
 
 const rowToRecord =
-  ({
-    survey
-  }: any) =>
-  (row: any) => {
+  ({ survey }) =>
+  (row) => {
     const sideEffect = true;
     const hasToBeFixed = true;
     const { cycle, content } = row;

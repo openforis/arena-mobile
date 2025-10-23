@@ -15,19 +15,13 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { RecordOrigin, RecordLoadStatus, SurveyDefs, RecordNodes } from "model";
-// @ts-expect-error TS(2307): Cannot find module 'service/preferencesService' or... Remove this comment to see the full error message
 import { PreferencesService } from "service/preferencesService";
-// @ts-expect-error TS(2307): Cannot find module 'service/recordService' or its ... Remove this comment to see the full error message
 import { RecordService } from "service/recordService";
-// @ts-expect-error TS(2307): Cannot find module 'service/recordFileService' or ... Remove this comment to see the full error message
 import { RecordFileService } from "service/recordFileService";
 
-// @ts-expect-error TS(2307): Cannot find module 'screens/screenKeys' or its cor... Remove this comment to see the full error message
 import { screenKeys } from "screens/screenKeys";
 
-// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { SystemUtils } from "utils";
 
 import { ConfirmActions, ConfirmUtils } from "../confirm";
@@ -61,22 +55,15 @@ const {
   updatePreviousCyclePageEntity,
 } = DataEntryActionsRecordPreviousCycle;
 
-const removeNodesFlags = (nodes: any) => {
+const removeNodesFlags = (nodes) => {
   Object.values(nodes).forEach((node) => {
-    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     delete node["created"];
-    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     delete node["deleted"];
-    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     delete node["updated"];
   });
 };
 
-const _isRootKeyDuplicate = async ({
-  survey,
-  record,
-  lang
-}: any) => {
+const _isRootKeyDuplicate = async ({ survey, record, lang }) => {
   const recordSummaries = await RecordService.findRecordSummariesWithSameKeys({
     survey,
     record,
@@ -88,19 +75,15 @@ const _isRootKeyDuplicate = async ({
   );
 };
 
-const prepareRecordForStorage = ({
-  record
-}: any) => {
+const prepareRecordForStorage = ({ record }) => {
   const validation = Validations.getValidation(record);
   const validationUpdated = Validations.updateCounts(validation);
   return { ...record, validation: validationUpdated };
 };
 
 const createNewRecord =
-  ({
-    navigation
-  }: any) =>
-  async (dispatch: any, getState: any) => {
+  ({ navigation }) =>
+  async (dispatch, getState) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -134,7 +117,7 @@ const createNewRecord =
     dispatch(editRecord({ navigation, record, locked: false }));
   };
 
-const _performAddEntity = async (dispatch: any, getState: any) => {
+const _performAddEntity = async (dispatch, getState) => {
   const state = getState();
   const user = RemoteConnectionSelectors.selectLoggedUser(state);
   const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -148,13 +131,11 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
 
   if (
     DataEntrySelectors.selectIsMaxCountReached({
-      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       parentNodeUuid: parentNode.uuid,
       nodeDef,
     })(state)
   ) {
     dispatch(
-      // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
       MessageActions.setWarning(
         "dataEntry:node.cannotAddMoreItems.maxCountReached"
       )
@@ -181,10 +162,8 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
 
   dispatch(
     selectCurrentPageEntity({
-      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       parentEntityUuid: parentNode.uuid,
       entityDefUuid: nodeDef.uuid,
-      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       entityUuid: nodeCreated.uuid,
     })
   );
@@ -192,8 +171,7 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
 
 const addNewEntity =
   (options = {}) =>
-  async (dispatch: any) => {
-    // @ts-expect-error TS(2339): Property 'delay' does not exist on type '{}'.
+  async (dispatch) => {
     const { delay = null } = options;
     Keyboard.dismiss();
     if (delay) {
@@ -203,7 +181,7 @@ const addNewEntity =
     }
   };
 
-const deleteNodes = (nodeUuids: any) => async (dispatch: any, getState: any) => {
+const deleteNodes = (nodeUuids) => async (dispatch, getState) => {
   const state = getState();
   const user = RemoteConnectionSelectors.selectLoggedUser(state);
   const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -221,7 +199,7 @@ const deleteNodes = (nodeUuids: any) => async (dispatch: any, getState: any) => 
   await _updateRecord({ dispatch, survey, record: recordUpdated });
 };
 
-const deleteRecords = (recordUuids: any) => async (dispatch: any, getState: any) => {
+const deleteRecords = (recordUuids) => async (dispatch, getState) => {
   const state = getState();
   const survey = SurveySelectors.selectCurrentSurvey(state);
 
@@ -230,11 +208,7 @@ const deleteRecords = (recordUuids: any) => async (dispatch: any, getState: any)
   dispatch(DeviceInfoActions.updateFreeDiskStorage());
 };
 
-const checkEntityPageIsValidAndNotRoot = ({
-  survey,
-  entityPage,
-  record
-}: any) => {
+const checkEntityPageIsValidAndNotRoot = ({ survey, entityPage, record }) => {
   const { parentEntityUuid, entityDefUuid, entityUuid } = entityPage;
   const entityDef = Surveys.findNodeDefByUuid({ survey, uuid: entityDefUuid });
   return (
@@ -247,12 +221,8 @@ const checkEntityPageIsValidAndNotRoot = ({
 };
 
 const editRecord =
-  ({
-    navigation,
-    record,
-    locked = true
-  }: any) =>
-  async (dispatch: any, getState: any) => {
+  ({ navigation, record, locked = true }) =>
+  async (dispatch, getState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
@@ -297,18 +267,15 @@ const _fetchAndEditRecordInternal = async ({
   dispatch,
   navigation,
   survey,
-  recordId
-}: any) => {
+  recordId,
+}) => {
   const record = await RecordService.fetchRecord({ survey, recordId });
   await dispatch(editRecord({ navigation, record }));
 };
 
 const fetchAndEditRecord =
-  ({
-    navigation,
-    recordSummary
-  }: any) =>
-  async (dispatch: any, getState: any) => {
+  ({ navigation, recordSummary }) =>
+  async (dispatch, getState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const {
@@ -352,11 +319,7 @@ const fetchAndEditRecord =
     }
   };
 
-const _updateRecord = async ({
-  dispatch,
-  survey,
-  record
-}: any) => {
+const _updateRecord = async ({ dispatch, survey, record }) => {
   const recordUpdated = prepareRecordForStorage({ record });
   const recordStored = await RecordService.updateRecord({
     survey,
@@ -371,8 +334,8 @@ const updateRecordNodeFile = async ({
   fileUri,
   value,
   node,
-  dispatch
-}: any) => {
+  dispatch,
+}) => {
   const surveyId = survey.id;
 
   if (fileUri) {
@@ -400,8 +363,8 @@ const checkAndConfirmUpdateNode = async ({
   dispatch,
   getState,
   node,
-  nodeDef
-}: any) => {
+  nodeDef,
+}) => {
   const state = getState();
   const survey = SurveySelectors.selectCurrentSurvey(state);
   const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
@@ -427,12 +390,8 @@ const checkAndConfirmUpdateNode = async ({
 };
 
 const updateAttribute =
-  ({
-    uuid,
-    value,
-    fileUri = null
-  }: any) =>
-  async (dispatch: any, getState: any) => {
+  ({ uuid, value, fileUri = null }) =>
+  async (dispatch, getState) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -443,7 +402,6 @@ const updateAttribute =
     const node = Records.getNodeByUuid(uuid)(record);
     const nodeDef = Surveys.getNodeDefByUuid({
       survey,
-      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       uuid: node.nodeDefUuid,
     });
 
@@ -498,11 +456,8 @@ const updateAttribute =
   };
 
 const performCoordinateValueSrsConversion =
-  ({
-    nodeUuid,
-    srsTo
-  }: any) =>
-  async (dispatch: any, getState: any) => {
+  ({ nodeUuid, srsTo }) =>
+  async (dispatch, getState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const record = DataEntrySelectors.selectRecord(state);
@@ -515,9 +470,7 @@ const performCoordinateValueSrsConversion =
     const pointTo = Points.transform(pointFrom, srsTo, srsIndex);
     const nextValue = {
       ...prevValue,
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
       x: Numbers.roundToPrecision(pointTo.x, 6),
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
       y: Numbers.roundToPrecision(pointTo.y, 6),
       srs: srsTo,
     };
@@ -525,11 +478,8 @@ const performCoordinateValueSrsConversion =
   };
 
 const updateCoordinateValueSrs =
-  ({
-    nodeUuid,
-    srsTo
-  }: any) =>
-  async (dispatch: any, getState: any) => {
+  ({ nodeUuid, srsTo }) =>
+  async (dispatch, getState) => {
     const state = getState();
     const record = DataEntrySelectors.selectRecord(state);
 
@@ -564,12 +514,8 @@ const updateCoordinateValueSrs =
   };
 
 const addNewAttribute =
-  ({
-    nodeDef,
-    parentNodeUuid,
-    value = null
-  }: any) =>
-  async (dispatch: any, getState: any) => {
+  ({ nodeDef, parentNodeUuid, value = null }) =>
+  async (dispatch, getState) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -594,7 +540,6 @@ const addNewAttribute =
         user,
         survey,
         record: recordUpdated,
-        // @ts-expect-error TS(2532): Object is possibly 'undefined'.
         attributeUuid: nodeCreated.uuid,
         value,
       }
@@ -604,12 +549,8 @@ const addNewAttribute =
   };
 
 const selectCurrentPageEntity =
-  ({
-    parentEntityUuid,
-    entityDefUuid,
-    entityUuid = null
-  }: any) =>
-  async (dispatch: any, getState: any) => {
+  ({ parentEntityUuid, entityDefUuid, entityUuid = null }) =>
+  async (dispatch, getState) => {
     const state = getState();
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
     const record = DataEntrySelectors.selectRecord(state);
@@ -655,7 +596,7 @@ const selectCurrentPageEntity =
   };
 
 const selectCurrentPageEntityActiveChildIndex =
-  (index: any) => (dispatch: any, getState: any) => {
+  (index) => (dispatch, getState) => {
     dispatch({ type: PAGE_ENTITY_ACTIVE_CHILD_INDEX_SET, index });
     const state = getState();
     const isPhone = DeviceInfoSelectors.selectIsPhone(state);
@@ -664,14 +605,14 @@ const selectCurrentPageEntityActiveChildIndex =
     }
   };
 
-const toggleRecordPageMenuOpen = (dispatch: any, getState: any) => {
+const toggleRecordPageMenuOpen = (dispatch, getState) => {
   Keyboard.dismiss();
   const state = getState();
   const open = DataEntrySelectors.selectRecordPageSelectorMenuOpen(state);
   dispatch({ type: PAGE_SELECTOR_MENU_OPEN_SET, open: !open });
 };
 
-const closeRecordPageMenu = (dispatch: any, getState: any) => {
+const closeRecordPageMenu = (dispatch, getState) => {
   const state = getState();
   const pageSelectorMenuOpen =
     DataEntrySelectors.selectRecordPageSelectorMenuOpen(state);
@@ -680,7 +621,7 @@ const closeRecordPageMenu = (dispatch: any, getState: any) => {
   }
 };
 
-const toggleRecordEditLock = (dispatch: any, getState: any) => {
+const toggleRecordEditLock = (dispatch, getState) => {
   Keyboard.dismiss();
   const state = getState();
   const locked = DataEntrySelectors.selectRecordEditLocked(state);
@@ -688,10 +629,8 @@ const toggleRecordEditLock = (dispatch: any, getState: any) => {
 };
 
 const navigateToRecordsList =
-  ({
-    navigation
-  }: any) =>
-  (dispatch: any) => {
+  ({ navigation }) =>
+  (dispatch) => {
     dispatch(
       ConfirmActions.show({
         confirmButtonTextKey: "dataEntry:goToListOfRecords",

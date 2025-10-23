@@ -2,19 +2,17 @@ import React, { useCallback, useState } from "react";
 import { Pressable } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TextInput as RNPTextInput } from "react-native-paper";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Dates } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'state/confirm' or its correspo... Remove this comment to see the full error message
 import { useConfirm } from "state/confirm";
 
 import { HView } from "./HView";
 import { IconButton } from "./IconButton";
 import { TextInput } from "./TextInput";
 
-export const DateTimePicker = (props: any) => {
+export const DateTimePicker = (props) => {
   const {
     editable = true,
     format,
@@ -36,7 +34,7 @@ export const DateTimePicker = (props: any) => {
   }, []);
 
   const onConfirm = useCallback(
-    (selectedDate: any) => {
+    (selectedDate) => {
       hidePicker();
       onChangeProp(selectedDate);
     },
@@ -44,7 +42,7 @@ export const DateTimePicker = (props: any) => {
   );
 
   const onClear = useCallback(
-    async (event: any) => {
+    async (event) => {
       event.stopPropagation();
       if (await confirm({ messageKey: "common:confirmClearSelectedValue" })) {
         hidePicker();
@@ -61,7 +59,6 @@ export const DateTimePicker = (props: any) => {
     <HView>
       <Pressable onPress={editable ? showPicker : undefined}>
         <TextInput
-          // @ts-expect-error TS(2322): Type '{ editable: boolean; nonEditableStyleVisible... Remove this comment to see the full error message
           editable={false}
           nonEditableStyleVisible={false}
           onPressIn={showPicker}

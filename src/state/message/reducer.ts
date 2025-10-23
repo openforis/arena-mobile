@@ -23,8 +23,8 @@ export const MessageActions = {
     details = null,
     detailsParams = null,
     onDismiss = null,
-    title = "common:info"
-  }: any) =>
+    title = "common:info",
+  }) =>
     setMessage({
       content,
       contentParams,
@@ -33,9 +33,9 @@ export const MessageActions = {
       onDismiss,
       title,
     }),
-  setInfo: (contentKey: any, contentParams: any) =>
+  setInfo: (contentKey, contentParams) =>
     setMessage({ content: contentKey, contentParams }),
-  setWarning: (contentKey: any, contentParams: any) =>
+  setWarning: (contentKey, contentParams) =>
     setMessage({ content: contentKey, contentParams, title: "common:warning" }),
   dismissMessage,
 };

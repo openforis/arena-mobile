@@ -1,4 +1,3 @@
-// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { Files } from "utils";
 import { GenericFileRepository } from "./genericFileRepository";
 
@@ -10,27 +9,16 @@ const getRecordFilesParentDirectoryUri = () =>
 const getRecordFilesParentDirectorySize = async () =>
   Files.getDirSize(getRecordFilesParentDirectoryUri());
 
-const getRecordFileDirectoryUri = ({
-  surveyId
-}: any) =>
+const getRecordFileDirectoryUri = ({ surveyId }) =>
   `${getRecordFilesParentDirectoryUri()}/${surveyId}`;
 
-const getRecordFilesDirectorySize = async ({
-  surveyId
-}: any) =>
+const getRecordFilesDirectorySize = async ({ surveyId }) =>
   Files.getDirSize(getRecordFileDirectoryUri({ surveyId }));
 
-const getRecordFileUri = ({
-  surveyId,
-  fileUuid
-}: any) =>
+const getRecordFileUri = ({ surveyId, fileUuid }) =>
   `${getRecordFileDirectoryUri({ surveyId })}/${fileUuid}`;
 
-const saveRecordFile = async ({
-  surveyId,
-  fileUuid,
-  sourceFileUri
-}: any) => {
+const saveRecordFile = async ({ surveyId, fileUuid, sourceFileUri }) => {
   await GenericFileRepository.makeDirIfNotExists(
     getRecordFileDirectoryUri({ surveyId })
   );
@@ -43,10 +31,7 @@ const saveRecordFile = async ({
   });
 };
 
-const deleteRecordFile = async ({
-  surveyId,
-  fileUuid
-}: any) => {
+const deleteRecordFile = async ({ surveyId, fileUuid }) => {
   const fileUri = getRecordFileUri({ surveyId, fileUuid });
   await GenericFileRepository.deleteFile(fileUri);
 };

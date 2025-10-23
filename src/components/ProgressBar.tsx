@@ -1,9 +1,8 @@
 import * as React from "react";
 import { ProgressBar as RNPProgressBar } from "react-native-paper";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
-export const ProgressBar = (props: any) => {
+export const ProgressBar = (props) => {
   const { color, indeterminate = false, progress = 100, style } = props;
 
   return (

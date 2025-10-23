@@ -1,16 +1,13 @@
 import { Queue } from "@openforis/arena-core";
 
 export class AverageAnglePicker {
-  _expireAfter: any;
-  _limit: any;
-  _queue: any;
   constructor({ limit = 50, expireAfterMs = 1000 } = {}) {
     this._queue = new Queue();
     this._limit = limit;
     this._expireAfter = expireAfterMs;
   }
 
-  push(value: any) {
+  push(value) {
     this._queue.enqueue({ creationDate: Date.now(), value });
     this._cleanup();
     return this._calculateWeightedAverageValue();
@@ -28,7 +25,7 @@ export class AverageAnglePicker {
 
   _calculateAverageValue() {
     let total = 0;
-    this._queue.items.forEach((item: any) => {
+    this._queue.items.forEach((item) => {
       total += item.value;
     });
     return total / this._queue.size;
@@ -38,7 +35,7 @@ export class AverageAnglePicker {
     const items = this._queue.items;
     let min = NaN;
     let max = NaN;
-    items.forEach((item: any) => {
+    items.forEach((item) => {
       const value = item.value;
       min = Number.isNaN(min) ? value : Math.min(min, value);
       max = Number.isNaN(max) ? value : Math.max(max, value);
@@ -52,7 +49,7 @@ export class AverageAnglePicker {
     const items = this._queue.items;
     const { min, max } = this._calculateMinMax();
     const hasToAdapt = max - min > 180;
-    items.forEach((item: any, index: any) => {
+    items.forEach((item, index) => {
       const weight = this._calculateItemWeight(index);
       const value =
         hasToAdapt && item.value < 180 ? item.value + 360 : item.value;
@@ -62,7 +59,7 @@ export class AverageAnglePicker {
     return total / totalWeight;
   }
 
-  _calculateItemWeight(index: any) {
+  _calculateItemWeight(index) {
     // first item => 2 other items 1
     return index === this._queue.size - 1 ? 2 : 1;
   }

@@ -1,10 +1,9 @@
 import { useMemo } from "react";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { View } from "./View";
 
-export const Spacer = (props: any) => {
+export const Spacer = (props) => {
   const { fullFlex = true, fullWidth = true, width = undefined } = props;
 
   const style = useMemo(() => (width ? { width } : undefined), [width]);

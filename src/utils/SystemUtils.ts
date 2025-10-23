@@ -7,7 +7,6 @@ import * as ExpoScreenOrientation from "expo-screen-orientation";
 
 import { Dates, FileNames, UUIDs } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { ScreenOrientation } from "model";
 import { Environment } from "./Environment";
 import { Files } from "./Files";
@@ -18,17 +17,17 @@ const { nativeBuildVersion: buildNumber, nativeApplicationVersion: version } =
 const appId = "am";
 const { isAndroid, isExpoGo, platform } = Environment;
 
-let SystemNavigationBar: any;
+let SystemNavigationBar;
 if (!isExpoGo && isAndroid) {
   SystemNavigationBar = require("react-native-system-navigation-bar")?.default;
 }
 
-let Clipboard: any;
+let Clipboard;
 if (!isExpoGo) {
   Clipboard = require("@react-native-clipboard/clipboard")?.default;
 }
 
-const copyValueToClipboard = (value: any) => {
+const copyValueToClipboard = (value) => {
   try {
     Clipboard?.setString(value);
     return true;
@@ -58,7 +57,7 @@ const getRecordAppInfo = () => ({
   platform,
 });
 
-const setFullScreen = async (fullScreen: any) => {
+const setFullScreen = async (fullScreen) => {
   try {
     await SystemNavigationBar?.stickyImmersive(fullScreen);
   } catch (e) {
@@ -66,7 +65,7 @@ const setFullScreen = async (fullScreen: any) => {
   }
 };
 
-const setKeepScreenAwake = async (keepScreenAwake: any) => {
+const setKeepScreenAwake = async (keepScreenAwake) => {
   if (keepScreenAwake) {
     await activateKeepAwakeAsync();
   } else {
@@ -79,7 +78,7 @@ const getOrientation = async () => {
   return ScreenOrientation.fromExpoOrientation(orientationExpo);
 };
 
-const addOrientationChangeListener = (handler: any) => {
+const addOrientationChangeListener = (handler) => {
   ExpoScreenOrientation.addOrientationChangeListener((event) => {
     const orientationNext = event?.orientationInfo?.orientation;
     handler(ScreenOrientation.fromExpoOrientation(orientationNext));

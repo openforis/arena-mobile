@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { Animated } from "react-native";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
-export const Fade = (props: any) => {
+export const Fade = (props) => {
   const {
     duration = 500,
     visible: visibleProp = true,
@@ -18,7 +17,8 @@ export const Fade = (props: any) => {
   });
   const { animatedValue, childrenVisible } = state;
 
-  const setChildrenVisible = (value: any) => setState((statePrev) => ({ ...statePrev, childrenVisible: value }));
+  const setChildrenVisible = (value) =>
+    setState((statePrev) => ({ ...statePrev, childrenVisible: value }));
 
   useEffect(() => {
     if (visibleProp) {

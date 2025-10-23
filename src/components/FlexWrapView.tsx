@@ -1,10 +1,7 @@
 import React, { useMemo } from "react";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
-// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { useIsTextDirectionRtl } from "localization";
-// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { BaseStyles } from "utils";
 
 import { View } from "./View";
@@ -17,7 +14,7 @@ const baseStyle = {
   columnGap: 10,
 };
 
-export const FlexWrapView = (props: any) => {
+export const FlexWrapView = (props) => {
   const { children, style: styleProp = {}, ...otherProps } = props;
 
   const isRtl = useIsTextDirectionRtl();

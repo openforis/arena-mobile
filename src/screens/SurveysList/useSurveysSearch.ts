@@ -2,9 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { Objects } from "@openforis/arena-core";
 
-export const useSurveysSearch = ({
-  surveys
-}: any) => {
+export const useSurveysSearch = ({ surveys }) => {
   const [state, setState] = useState({
     surveysFiltered: surveys,
     searchValue: "",
@@ -16,10 +14,11 @@ export const useSurveysSearch = ({
   }, [surveys]);
 
   const onSearchValueChange = useCallback(
-    (val: any) => {
-      const _surveysFiltered = surveys.filter((survey: any) => {
+    (val) => {
+      const _surveysFiltered = surveys.filter((survey) => {
         const { name, defaultLabel } = survey;
-        const prepareForSearch = (v: any) => Objects.isEmpty(v) ? "" : v.toLocaleLowerCase().trim();
+        const prepareForSearch = (v) =>
+          Objects.isEmpty(v) ? "" : v.toLocaleLowerCase().trim();
         return (
           prepareForSearch(name).includes(prepareForSearch(val)) ||
           prepareForSearch(defaultLabel).includes(val)

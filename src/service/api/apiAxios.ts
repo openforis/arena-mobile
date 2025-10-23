@@ -16,7 +16,7 @@ const errorMessageByCode = {
 
 const multipartDataHeaders = { "Content-Type": "multipart/form-data" };
 
-const _sendRequest = (url: any, opts = {}) => {
+const _sendRequest = (url, opts = {}) => {
   const controller = new AbortController();
   const config = {
     ...defaultOptions,
@@ -30,31 +30,30 @@ const _sendRequest = (url: any, opts = {}) => {
   };
 };
 
-const _sendGet = (serverUrl: any, uri: any, params = {}, options = {}) => {
+const _sendGet = (serverUrl, uri, params = {}, options = {}) => {
   const url = APIUtils.getUrlWithParams({ serverUrl, uri, params });
   return _sendRequest(url, options);
 };
 
-const get = async (serverUrl: any, uri: any, params = {}, options = {}) => {
+const get = async (serverUrl, uri, params = {}, options = {}) => {
   const { promise } = _sendGet(serverUrl, uri, params, options);
   const response = await promise;
   const { status, data } = response;
   if (status === 200) {
     return { data };
   } else {
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     const errorMessage = errorMessageByCode[status] ?? errorMessageByCode[500];
     throw new Error(errorMessage);
   }
 };
 
-const getFileAsText = async (serverUrl: any, uri: any, params: any, options: any) => {
+const getFileAsText = async (serverUrl, uri, params, options) => {
   const { promise } = _sendGet(serverUrl, uri, params, options);
   const response = await promise;
   return response.data;
 };
 
-const test = async (serverUrl: any, uri: any, params = {}) => {
+const test = async (serverUrl, uri, params = {}) => {
   try {
     const { promise } = _sendGet(serverUrl, uri, params);
     const response = await promise;
@@ -64,7 +63,7 @@ const test = async (serverUrl: any, uri: any, params = {}) => {
   }
 };
 
-const postCancelable = (serverUrl: any, uri: any, params: any, options = {}) => {
+const postCancelable = (serverUrl, uri, params, options = {}) => {
   const { promise, cancel } = _sendRequest(
     APIUtils.getUrl({ serverUrl, uri }),
     {
@@ -76,7 +75,7 @@ const postCancelable = (serverUrl: any, uri: any, params: any, options = {}) => 
   return { promise, cancel };
 };
 
-const post = async (serverUrl: any, uri: any, params: any, options = {}) => {
+const post = async (serverUrl, uri, params, options = {}) => {
   const { promise } = postCancelable(serverUrl, uri, params, options);
 
   const response = await promise;
@@ -86,13 +85,13 @@ const post = async (serverUrl: any, uri: any, params: any, options = {}) => {
   return { data, response };
 };
 
-const postCancelableMultipartData = (serverUrl: any, uri: any, params: any, options = {}) =>
+const postCancelableMultipartData = (serverUrl, uri, params, options = {}) =>
   postCancelable(serverUrl, uri, APIUtils.objectToFormData(params), {
     headers: multipartDataHeaders,
     ...options,
   });
 
-const postMultipartData = async (serverUrl: any, uri: any, params: any, options = {}) =>
+const postMultipartData = async (serverUrl, uri, params, options = {}) =>
   post(serverUrl, uri, APIUtils.objectToFormData(params), {
     headers: multipartDataHeaders,
     ...options,

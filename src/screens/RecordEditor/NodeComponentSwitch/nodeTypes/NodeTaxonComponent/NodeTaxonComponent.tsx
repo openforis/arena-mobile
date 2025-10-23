@@ -1,14 +1,10 @@
 import { useState } from "react";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { NodeDefs } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { Button, CloseIconButton, HView, Text, VView, View } from "components";
-// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { RecordEditViewMode } from "model";
-// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 import { SurveyOptionsSelectors } from "state";
 
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
@@ -19,7 +15,7 @@ import { useTaxonByNodeValue } from "../../../NodeValuePreview/useTaxonByNodeVal
 import { useDynamicStyles } from "./useDynamicStyles";
 import styles from "./styles";
 
-export const NodeTaxonComponent = (props: any) => {
+export const NodeTaxonComponent = (props) => {
   const { nodeDef, nodeUuid, parentNodeUuid } = props;
 
   if (__DEV__) {
@@ -39,7 +35,6 @@ export const NodeTaxonComponent = (props: any) => {
   });
 
   const selectedTaxon = useTaxonByNodeValue({ value });
-  // @ts-expect-error TS(2551): Property 'vernacularName' does not exist on type '... Remove this comment to see the full error message
   const selectedTaxonVernacularName = selectedTaxon?.vernacularName;
   const { containerStyle, selectedTaxonContainerStyle } = useDynamicStyles({
     selectedTaxonVernacularName,

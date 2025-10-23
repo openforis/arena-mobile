@@ -1,4 +1,4 @@
-export const migration_001_base = async (dbClient: any) => {
+export const migration_001_base = async (dbClient) => {
   await dbClient.transaction(async () => {
     await dbClient.executeSql(`CREATE TABLE IF NOT EXISTS survey (
         id          INTEGER         PRIMARY KEY AUTOINCREMENT,

@@ -13,20 +13,17 @@ const {
 
 const remoteSurveyFetchTimeout = 60000; // 1 min
 
-const _insertSurvey = async (survey: any) => {
+const _insertSurvey = async (survey) => {
   const surveyDb = await insertSurvey(survey);
   return SurveyFSRepository.saveSurveyFile(surveyDb);
 };
 
-const _updateSurvey = async ({
-  id,
-  survey
-}: any) => {
+const _updateSurvey = async ({ id, survey }) => {
   const surveyDb = await updateSurvey({ id, survey });
   return SurveyFSRepository.saveSurveyFile(surveyDb);
 };
 
-const fetchSurveyById = async (surveyId: any) => {
+const fetchSurveyById = async (surveyId) => {
   const surveyDb = await SurveyRepository.fetchSurveyById(surveyId);
   return surveyDb.props
     ? surveyDb
@@ -36,14 +33,13 @@ const fetchSurveyById = async (surveyId: any) => {
 const fetchCategoryItems = ({
   survey,
   categoryUuid,
-  parentItemUuid = null
-}: any) => {
+  parentItemUuid = null,
+}) => {
   const items = Surveys.getCategoryItems({
     survey,
     categoryUuid,
     parentItemUuid,
   });
-  // @ts-expect-error TS(2532): Object is possibly 'undefined'.
   items.sort((itemA, itemB) => itemA.props.index - itemB.props.index);
   return items;
 };
@@ -58,26 +54,21 @@ const fetchSurveySummariesRemote = async () => {
   }
 };
 
-const fetchSurveySummaryRemote = async ({
-  id,
-  name
-}: any) => {
+const fetchSurveySummaryRemote = async ({ id, name }) => {
   try {
     const { data } = await RemoteService.get("api/surveys", {
       draft: false,
       search: name,
     });
     const { list: surveys } = data;
-    const survey = surveys.find((s: any) => s.id === id);
+    const survey = surveys.find((s) => s.id === id);
     return survey;
   } catch (error) {
     return RemoteService.handleError({ error });
   }
 };
 
-const fetchSurveyRemoteById = async ({
-  id
-}: any) => {
+const fetchSurveyRemoteById = async ({ id }) => {
   const { data } = await RemoteService.get(
     `api/mobile/survey/${id}`,
     {},
@@ -91,25 +82,21 @@ const getSurveysStorageSize = async () => SurveyFSRepository.getStorageSize();
 
 const importDemoSurvey = async () => _insertSurvey(demoSurvey);
 
-const importSurveyRemote = async ({
-  id
-}: any) => {
+const importSurveyRemote = async ({ id }) => {
   const survey = await fetchSurveyRemoteById({ id });
   return _insertSurvey(survey);
 };
 
-const updateSurveyRemote = async ({
-  surveyId,
-  surveyRemoteId
-}: any) => {
+const updateSurveyRemote = async ({ surveyId, surveyRemoteId }) => {
   const survey = await fetchSurveyRemoteById({ id: surveyRemoteId });
   return _updateSurvey({ id: surveyId, survey });
 };
 
-const deleteSurveys = async (surveyIds: any) => {
+const deleteSurveys = async (surveyIds) => {
   await SurveyRepository.deleteSurveys(surveyIds);
   await Promise.all(
-    surveyIds.map((surveyId: any) => SurveyFSRepository.deleteSurveyFile({ surveyId })
+    surveyIds.map((surveyId) =>
+      SurveyFSRepository.deleteSurveyFile({ surveyId })
     )
   );
 };

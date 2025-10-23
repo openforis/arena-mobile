@@ -1,11 +1,11 @@
-const clearIntervalRef = (ref: any) => {
+const clearIntervalRef = (ref) => {
   if (ref.current) {
     clearInterval(ref.current);
     ref.current = null;
   }
 };
 
-const clearTimeoutRef = (ref: any) => {
+const clearTimeoutRef = (ref) => {
   if (ref.current) {
     clearTimeout(ref.current);
     ref.current = null;

@@ -1,13 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Numbers, Objects, PointFactory } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'hooks' or its corresponding ty... Remove this comment to see the full error message
 import { useImageFile } from "hooks";
-// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { Files, ImageUtils } from "utils";
 
 import { Button } from "./Button";
@@ -30,14 +27,13 @@ const styles = StyleSheet.create({
   image: { flex: 1, resizeMode: "contain" },
 });
 
-const ImageInfo = (props: any) => {
+const ImageInfo = (props) => {
   const { imageUri: imageUriProp, showGeotagInfo = false } = props;
 
   const [info, setInfo] = useState(null);
 
   const imageUri = useImageFile(imageUriProp);
 
-  // @ts-expect-error TS(2339): Property 'width' does not exist on type '{}'.
   const { width, height, size, latitude, longitude } = info ?? {};
 
   const fetchInfo = useCallback(async () => {
@@ -49,7 +45,6 @@ const ImageInfo = (props: any) => {
     const size = await Files.getSize(imageUri);
 
     setInfo({
-      // @ts-expect-error TS(2345): Argument of type '{ width: any; height: any; size:... Remove this comment to see the full error message
       width,
       height,
       size: Files.toHumanReadableFileSize(size),
@@ -88,12 +83,9 @@ const ImageInfo = (props: any) => {
 
   return (
     <VView>
-      // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
       <FormItem labelKey="common:size">{size}</FormItem>
-      // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
       <FormItem labelKey="dataEntry:fileAttributeImage.resolution">{`${width}x${height}`}</FormItem>
       {showGeotagInfo && (
-        // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
         <FormItem labelKey="dataEntry:location.label">
           <VView>
             <Text>{locationString}</Text>
@@ -115,7 +107,7 @@ ImageInfo.propTypes = {
   showGeotagInfo: PropTypes.bool,
 };
 
-export const ImagePreviewDialog = (props: any) => {
+export const ImagePreviewDialog = (props) => {
   const { fileName, imageUri, onClose, showGeotagInfo = false } = props;
 
   const onSharePress = useCallback(async () => {
@@ -124,14 +116,12 @@ export const ImagePreviewDialog = (props: any) => {
   }, [fileName, imageUri]);
 
   return (
-    // @ts-expect-error TS(2786): 'Dialog' cannot be used as a JSX component.
     <Dialog
       onClose={onClose}
       style={styles.dialog}
       title="dataEntry:fileAttributeImage.imagePreview"
     >
       <VView style={styles.content} transparent>
-        // @ts-expect-error TS(2786): 'Image' cannot be used as a JSX component.
         <Image source={{ uri: imageUri }} style={styles.image} />
 
         <Button

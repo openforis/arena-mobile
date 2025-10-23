@@ -1,13 +1,9 @@
 import React, { useCallback, useState } from "react";
 import { Linking } from "react-native";
 
-// @ts-expect-error TS(2307): Cannot find module 'appComponents/ChangelogViewDia... Remove this comment to see the full error message
 import { ChangelogViewDialog } from "appComponents/ChangelogViewDialog";
-// @ts-expect-error TS(2307): Cannot find module 'appComponents/VersionNumberInf... Remove this comment to see the full error message
 import { VersionNumberInfoButton } from "appComponents/VersionNumberInfoButton";
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { Button, FormItem, ScreenView, Text, VView } from "components";
-// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { useTranslation } from "localization";
 
 import styles from "./styles";

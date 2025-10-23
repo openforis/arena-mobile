@@ -2,7 +2,6 @@ import { PermissionsAndroid } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 
-// @ts-expect-error TS(2307): Cannot find module 'localization/i18n' or its corr... Remove this comment to see the full error message
 import { i18n } from "localization/i18n";
 import { Environment } from "./Environment";
 
@@ -28,7 +27,6 @@ const requestAccessMediaLocation = async () => {
   if (
     !Environment.isExpoGo &&
     Environment.isAndroid &&
-    // @ts-expect-error TS(2531): Object is possibly 'null'.
     Environment.androidApiLevel >= 10
   ) {
     const permission = i18n.t("permissions:types.accessMediaLocation");

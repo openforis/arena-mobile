@@ -1,12 +1,11 @@
 import { useSelector } from "react-redux";
 import * as Device from "expo-device";
 
-// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { ScreenOrientation } from "model";
 
-const selectDeviceInfo = (state: any) => state.deviceInfo;
+const selectDeviceInfo = (state) => state.deviceInfo;
 
-const selectIsDeviceType = (type: any) => (state: any) => {
+const selectIsDeviceType = (type) => (state) => {
   const info = selectDeviceInfo(state);
   const { deviceType } = info;
   return deviceType === type;
@@ -14,9 +13,9 @@ const selectIsDeviceType = (type: any) => (state: any) => {
 
 const selectIsPhone = selectIsDeviceType(Device.DeviceType.PHONE);
 const selectIsTablet = selectIsDeviceType(Device.DeviceType.TABLET);
-const selectBatteryLevel = (state: any) => selectDeviceInfo(state).batteryLevel;
-const selectBatteryState = (state: any) => selectDeviceInfo(state).batteryState;
-const selectOrientation = (state: any) => selectDeviceInfo(state).orientation;
+const selectBatteryLevel = (state) => selectDeviceInfo(state).batteryLevel;
+const selectBatteryState = (state) => selectDeviceInfo(state).batteryState;
+const selectOrientation = (state) => selectDeviceInfo(state).orientation;
 
 export const DeviceInfoSelectors = {
   selectDeviceInfo,

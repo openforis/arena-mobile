@@ -1,10 +1,6 @@
 import { Animated } from "react-native";
 
-export const HeartbeatAnimation = ({
-  value,
-  minValue,
-  maxValue
-}: any) =>
+export const HeartbeatAnimation = ({ value, minValue, maxValue }) =>
   Animated.loop(
     Animated.sequence([
       Animated.timing(value, {

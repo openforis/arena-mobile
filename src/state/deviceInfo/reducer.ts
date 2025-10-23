@@ -4,15 +4,10 @@ import { DeviceInfoActions } from "./actions";
 const initialState = {};
 
 const actionHandlers = {
-  [DeviceInfoActions.DEVICE_INFO_SET]: ({
-    action
-  }: any) => ({
+  [DeviceInfoActions.DEVICE_INFO_SET]: ({ action }) => ({
     ...action.payload,
   }),
-  [DeviceInfoActions.DEVICE_INFO_UPDATE]: ({
-    state,
-    action
-  }: any) => ({
+  [DeviceInfoActions.DEVICE_INFO_UPDATE]: ({ state, action }) => ({
     ...state,
     ...action.payload,
   }),

@@ -8,25 +8,20 @@ const initialState = {
 };
 
 const actionHandlers = {
-  [RemoteConnectionActions.USER_LOADING]: ({
-    state
-  }: any) => ({
+  [RemoteConnectionActions.USER_LOADING]: ({ state }) => ({
     ...state,
     user: null,
     userLoading: true,
   }),
-  [RemoteConnectionActions.USER_SET]: ({
-    state,
-    action
-  }: any) => ({
+  [RemoteConnectionActions.USER_SET]: ({ state, action }) => ({
     ...state,
     user: action.user,
     userLoading: false,
   }),
   [RemoteConnectionActions.USER_PROFILE_ICON_INFO_SET]: ({
     state,
-    action
-  }: any) => ({
+    action,
+  }) => ({
     ...state,
     userProfileIconInfo: action.payload,
   }),

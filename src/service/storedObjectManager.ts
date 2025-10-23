@@ -1,10 +1,7 @@
 import { AsyncStorageUtils } from "./asyncStorage/AsyncStorageUtils";
 
 export default class StoredObjectManager {
-  _instance: any;
-  defaultValues: any;
-  storageKey: any;
-  constructor(storageKey: any, defaultValues = {}) {
+  constructor(storageKey, defaultValues = {}) {
     this._instance = null;
     this.storageKey = storageKey;
     this.defaultValues = defaultValues;
@@ -20,24 +17,24 @@ export default class StoredObjectManager {
     return this._instance;
   }
 
-  async saveObject(object: any) {
+  async saveObject(object) {
     await AsyncStorageUtils.setItem(this.storageKey, object);
     this._instance = object;
   }
 
-  async getValue(key: any) {
+  async getValue(key) {
     const obj = await this.fetchObject();
     return obj?.[key];
   }
 
-  async updateValue(key: any, value: any) {
+  async updateValue(key, value) {
     const objectPrev = await this.fetchObject();
     const objectNext = { ...objectPrev, [key]: value };
     await this.saveObject(objectNext);
     return objectNext;
   }
 
-  async deleteValue(key: any) {
+  async deleteValue(key) {
     const objPrev = await this.fetchObject();
     const objNext = { ...objPrev };
     delete objNext[key];

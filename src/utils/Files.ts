@@ -8,10 +8,7 @@ import { Strings, UUIDs } from "@openforis/arena-core";
 
 import { Environment } from "./Environment";
 
-let {
-  unzip,
-  zip
-}: any = Environment.isExpoGo
+let { unzip, zip } = Environment.isExpoGo
   ? {}
   : (require("react-native-zip-archive") ?? {});
 
@@ -26,7 +23,7 @@ const defaultChunkSize = 1024 * 1024 * 10; // 10 MB
 
 const { cacheDirectory, documentDirectory, readDirectoryAsync } = FileSystem;
 
-const path = (...parts: any[]) =>
+const path = (...parts) =>
   parts.map(Strings.removeSuffix(PATH_SEPARATOR)).join(PATH_SEPARATOR);
 
 const getTempFolderParentUri = () => path(cacheDirectory, TEMP_FOLDER_NAME);
@@ -37,11 +34,12 @@ const createTempFolder = async () => {
   return uri;
 };
 
-const mkDir = async (dir: any) => FileSystem.makeDirectoryAsync(dir, {
-  intermediates: true,
-});
+const mkDir = async (dir) =>
+  FileSystem.makeDirectoryAsync(dir, {
+    intermediates: true,
+  });
 
-const listDir = async (dirUri: any) => {
+const listDir = async (dirUri) => {
   try {
     const fileNames = await FileSystem.readDirectoryAsync(dirUri);
     return fileNames.map((fileName) => path(dirUri, fileName));
@@ -53,8 +51,8 @@ const listDir = async (dirUri: any) => {
 const visitDirFilesRecursively = async ({
   dirUri,
   visitor,
-  visitDirectories = false
-}: any) => {
+  visitDirectories = false,
+}) => {
   const stack = [dirUri];
   while (stack.length > 0) {
     const currentDirUri = stack.pop();
@@ -73,7 +71,7 @@ const visitDirFilesRecursively = async ({
   }
 };
 
-const getInfo = async (fileUri: any, ignoreErrors = true) => {
+const getInfo = async (fileUri, ignoreErrors = true) => {
   try {
     const info = await FileSystem.getInfoAsync(fileUri);
     return info;
@@ -85,13 +83,12 @@ const getInfo = async (fileUri: any, ignoreErrors = true) => {
   }
 };
 
-const getSize = async (fileUri: any, ignoreErrors = true) => {
+const getSize = async (fileUri, ignoreErrors = true) => {
   const info = await getInfo(fileUri, ignoreErrors);
-  // @ts-expect-error TS(2339): Property 'size' does not exist on type 'FileInfo'.
   return info?.size ?? 0;
 };
 
-const getSizeBase64 = async (fileUri: any, ignoreErrors = true) => {
+const getSizeBase64 = async (fileUri, ignoreErrors = true) => {
   try {
     let size = 0; // result
     let lastContentSize = 0;
@@ -114,11 +111,11 @@ const getSizeBase64 = async (fileUri: any, ignoreErrors = true) => {
   }
 };
 
-const getDirSize = async (dirUri: any) => {
+const getDirSize = async (dirUri) => {
   let total = 0;
   await visitDirFilesRecursively({
     dirUri,
-    visitor: async (fileUri: any) => {
+    visitor: async (fileUri) => {
       const size = await getSize(fileUri);
       total += size;
     },
@@ -126,55 +123,52 @@ const getDirSize = async (dirUri: any) => {
   return total;
 };
 
-const exists = async (fileUri: any) => {
+const exists = async (fileUri) => {
   const info = await getInfo(fileUri);
   return info?.exists;
 };
 
 const getFreeDiskStorage = async () => FileSystem.getFreeDiskStorageAsync();
 
-const jsonToString = (obj: any) => JSON.stringify(obj, null, 2);
+const jsonToString = (obj) => JSON.stringify(obj, null, 2);
 
-const getNameFromUri = (uri: any) => uri.substring(uri.lastIndexOf("/") + 1);
+const getNameFromUri = (uri) => uri.substring(uri.lastIndexOf("/") + 1);
 
-const getExtension = (uri: any) => {
+const getExtension = (uri) => {
   const indexOfDot = uri.lastIndexOf(".");
   return indexOfDot < 0 || indexOfDot === uri.length
     ? ""
     : uri.substring(indexOfDot + 1).toLocaleLowerCase();
 };
 
-const getMimeTypeFromUri = (uri: any) => {
+const getMimeTypeFromUri = (uri) => {
   const fileName = getNameFromUri(uri);
   return getMimeTypeFromName(fileName);
 };
 
-const getMimeTypeFromName = (fileName: any) => mime.getType(fileName);
+const getMimeTypeFromName = (fileName) => mime.getType(fileName);
 
-const readAsString = async (fileUri: any) => FileSystem.readAsStringAsync(fileUri);
+const readAsString = async (fileUri) => FileSystem.readAsStringAsync(fileUri);
 
-const readChunk = async (fileUri: any, chunkNumber: any, chunkSize = defaultChunkSize) =>
+const readChunk = async (fileUri, chunkNumber, chunkSize = defaultChunkSize) =>
   FileSystem.readAsStringAsync(fileUri, {
     encoding: FileSystem.EncodingType.Base64,
     position: (chunkNumber - 1) * chunkSize,
     length: chunkSize,
   });
 
-const readAsBytes = async (fileUri: any) => {
+const readAsBytes = async (fileUri) => {
   const fileObj = new File(fileUri);
   const fileHandle = fileObj.open();
-  // @ts-expect-error TS(2345): Argument of type 'number | null' is not assignable... Remove this comment to see the full error message
   return fileHandle.readBytes(fileHandle.size);
 };
 
-const readAsBuffer = async (fileUri: any) => {
+const readAsBuffer = async (fileUri) => {
   const bytes = await readAsBytes(fileUri);
   return Buffer.from(bytes);
 };
 
-const readJsonFromFile = async ({
-  fileUri
-}: any) => {
+const readJsonFromFile = async ({ fileUri }) => {
   if (await exists(fileUri)) {
     const content = await readAsString(fileUri);
     return JSON.parse(content);
@@ -182,7 +176,7 @@ const readJsonFromFile = async ({
   return null;
 };
 
-const listDirectory = async (fileUri: any) => {
+const listDirectory = async (fileUri) => {
   try {
     return readDirectoryAsync(fileUri);
   } catch (e) {
@@ -191,32 +185,20 @@ const listDirectory = async (fileUri: any) => {
   }
 };
 
-const copyFile = async ({
-  from,
-  to
-}: any) => FileSystem.copyAsync({ from, to });
+const copyFile = async ({ from, to }) => FileSystem.copyAsync({ from, to });
 
-const moveFile = async ({
-  from,
-  to
-}: any) => FileSystem.moveAsync({ from, to });
+const moveFile = async ({ from, to }) => FileSystem.moveAsync({ from, to });
 
-const del = async (fileUri: any, ignoreErrors = false) =>
+const del = async (fileUri, ignoreErrors = false) =>
   FileSystem.deleteAsync(fileUri, { idempotent: ignoreErrors });
 
-const download = async (uri: any, targetUri: any, options: any) =>
+const download = async (uri, targetUri, options) =>
   FileSystem.downloadAsync(uri, targetUri, options);
 
-const writeStringToFile = async ({
-  content,
-  fileUri
-}: any) =>
+const writeStringToFile = async ({ content, fileUri }) =>
   FileSystem.writeAsStringAsync(fileUri, content);
 
-const writeJsonToFile = async ({
-  content,
-  fileUri
-}: any) =>
+const writeJsonToFile = async ({ content, fileUri }) =>
   writeStringToFile({ content: jsonToString(content), fileUri });
 
 const isSharingAvailable = async () => Sharing.isAvailableAsync();
@@ -224,15 +206,15 @@ const isSharingAvailable = async () => Sharing.isAvailableAsync();
 const shareFile = async ({
   url,
   mimeType: mimeTypeParam = null,
-  dialogTitle
-}: any) => {
+  dialogTitle,
+}) => {
   const mimeType = mimeTypeParam ?? getMimeTypeFromUri(url);
   await Sharing.shareAsync(url, { mimeType, dialogTitle });
 };
 
 const fileSizeUnits = ["kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 
-const toHumanReadableFileSize = (bytes: any, { decimalPlaces = 1 } = {}) => {
+const toHumanReadableFileSize = (bytes, { decimalPlaces = 1 } = {}) => {
   const threshold = 1024;
 
   if (Math.abs(bytes) < threshold) {
@@ -253,10 +235,7 @@ const toHumanReadableFileSize = (bytes: any, { decimalPlaces = 1 } = {}) => {
   return bytes.toFixed(decimalPlaces) + " " + fileSizeUnits[unitIndex];
 };
 
-const copyUriToTempFile = async ({
-  uri,
-  defaultExtension = "tmp"
-}: any) => {
+const copyUriToTempFile = async ({ uri, defaultExtension = "tmp" }) => {
   const fileName = getNameFromUri(uri);
   const tempFolderUri = getTempFolderParentUri();
   const fileNameWithExtension = `${fileName}.${defaultExtension}`;

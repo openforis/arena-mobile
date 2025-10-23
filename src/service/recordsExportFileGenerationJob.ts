@@ -7,9 +7,7 @@ import {
   Records,
 } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { JobMobile } from "model";
-// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { Files } from "utils";
 
 import { RecordService } from "./recordService";
@@ -23,16 +21,7 @@ const FILES_SUMMARY_JSON_FILENAME = "files.json";
 const recordsExportFileNamePrefix = "arena_mobile_data_";
 
 export class RecordsExportFileGenerationJob extends JobMobile {
-  context: any;
-  incrementProcessedItems: any;
-  outputFileUri: any;
-  summary: any;
-  constructor({
-    survey,
-    cycle,
-    recordUuids,
-    user
-  }: any) {
+  constructor({ survey, cycle, recordUuids, user }) {
     super({ survey, cycle, recordUuids, user });
   }
 
@@ -54,7 +43,8 @@ export class RecordsExportFileGenerationJob extends JobMobile {
         cycle,
       });
 
-      const recordsToExport = recordsSummary.filter((recordSummary: any) => recordUuids.includes(recordSummary.uuid)
+      const recordsToExport = recordsSummary.filter((recordSummary) =>
+        recordUuids.includes(recordSummary.uuid)
       );
 
       // set total
@@ -65,15 +55,11 @@ export class RecordsExportFileGenerationJob extends JobMobile {
         RECORDS_SUMMARY_JSON_FILENAME
       );
       await Files.writeJsonToFile({
-        content: recordsToExport.map(({
-          uuid,
-          cycle
-        }: any) => ({ uuid, cycle })),
+        content: recordsToExport.map(({ uuid, cycle }) => ({ uuid, cycle })),
         fileUri: tempRecordsSummaryJsonFileUri,
       });
 
       const nodeDefsFile = Object.values(survey.nodeDefs).filter(
-        // @ts-expect-error TS(2345): Argument of type 'unknown' is not assignable to pa... Remove this comment to see the full error message
         (nodeDef) => NodeDefs.getType(nodeDef) === NodeDefType.file
       );
 
@@ -134,21 +120,17 @@ export class RecordsExportFileGenerationJob extends JobMobile {
     }
   }
 
-  async writeRecordFiles({
-    tempFolderUri,
-    nodeDefsFile,
-    record
-  }: any) {
+  async writeRecordFiles({ tempFolderUri, nodeDefsFile, record }) {
     const { survey } = this.context;
     const surveyId = survey.id;
 
-    const nodesFile = nodeDefsFile.reduce((acc: any, nodeDefFile: any) => {
+    const nodesFile = nodeDefsFile.reduce((acc, nodeDefFile) => {
       const nodeDefFileUuid = nodeDefFile.uuid;
       acc.push(...Records.getNodesByDefUuid(nodeDefFileUuid)(record));
       return acc;
     }, []);
 
-    const recordFiles = nodesFile.reduce((acc: any, nodeFile: any) => {
+    const recordFiles = nodesFile.reduce((acc, nodeFile) => {
       if (!nodeFile.value) return acc;
 
       const { fileName: name, fileSize: size, fileUuid } = nodeFile.value;

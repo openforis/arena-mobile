@@ -1,4 +1,3 @@
-// @ts-expect-error TS(2307): Cannot find module 'utils/Files' or its correspond... Remove this comment to see the full error message
 import { Files } from "utils/Files";
 import { GenericFileRepository } from "./genericFileRepository";
 
@@ -7,21 +6,17 @@ const SURVEY_FILES_DIR_NAME = "survey_files";
 const getSurveyFilesDirUri = () =>
   GenericFileRepository.getDirUri(SURVEY_FILES_DIR_NAME);
 
-const getSurveyFileUri = ({
-  surveyId
-}: any) =>
+const getSurveyFileUri = ({ surveyId }) =>
   `${getSurveyFilesDirUri()}/${surveyId}.json`;
 
 const getStorageSize = async () => Files.getDirSize(getSurveyFilesDirUri());
 
-const readSurveyFile = async ({
-  surveyId
-}: any) => {
+const readSurveyFile = async ({ surveyId }) => {
   const fileUri = getSurveyFileUri({ surveyId });
   return Files.readJsonFromFile({ fileUri });
 };
 
-const saveSurveyFile = async (survey: any) => {
+const saveSurveyFile = async (survey) => {
   const { id: surveyId } = survey;
   await GenericFileRepository.makeDirIfNotExists(getSurveyFilesDirUri());
 
@@ -32,9 +27,7 @@ const saveSurveyFile = async (survey: any) => {
   return survey;
 };
 
-const deleteSurveyFile = async ({
-  surveyId
-}: any) => {
+const deleteSurveyFile = async ({ surveyId }) => {
   const fileUri = getSurveyFileUri({ surveyId });
   await GenericFileRepository.deleteFile(fileUri);
 };

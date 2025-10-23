@@ -1,8 +1,6 @@
 import { Objects } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { Cycles, RecordLoadStatus, RecordNodes, RecordOrigin } from "model";
-// @ts-expect-error TS(2307): Cannot find module 'service' or its corresponding ... Remove this comment to see the full error message
 import { RecordService } from "service";
 import { ToastActions } from "../toast";
 import { ConfirmUtils } from "../confirm";
@@ -22,8 +20,8 @@ const {
 const _fetchRecordFromPreviousCycleAndLinkItInternal = async ({
   dispatch,
   survey,
-  recordId
-}: any) => {
+  recordId,
+}) => {
   dispatch({ type: RECORD_PREVIOUS_CYCLE_LOAD, loading: true });
 
   const recordSummary = await RecordService.fetchRecordSummary({
@@ -44,14 +42,13 @@ const _fetchRecordFromPreviousCycleAndLinkItInternal = async ({
   return loaded;
 };
 
-// @ts-expect-error TS(7030): Not all code paths return a value.
 const _fetchRecordFromPreviousCycleAndLinkIt = async ({
   dispatch,
   survey,
   record,
   prevCycle,
-  lang
-}: any) => {
+  lang,
+}) => {
   try {
     dispatch({ type: RECORD_PREVIOUS_CYCLE_LOAD, loading: true });
 
@@ -133,10 +130,7 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
   }
 };
 
-const _askPreviousCycleKey = async ({
-  dispatch,
-  getState
-}: any) => {
+const _askPreviousCycleKey = async ({ dispatch, getState }) => {
   const state = getState();
   const survey = SurveySelectors.selectCurrentSurvey(state);
   const record = DataEntrySelectors.selectRecord(state);
@@ -151,23 +145,21 @@ const _askPreviousCycleKey = async ({
     dispatch,
     titleKey: `${confirmKeysPrefix}title`,
     messageKey: `${confirmKeysPrefix}message`,
-    singleChoiceOptions: prevCycleKeys.map((cycleKey: any) => ({
+    singleChoiceOptions: prevCycleKeys.map((cycleKey) => ({
       value: cycleKey,
       label: `${confirmKeysPrefix}cycleItem`,
-      labelParams: { cycleLabel: Cycles.labelFunction(cycleKey) }
+      labelParams: { cycleLabel: Cycles.labelFunction(cycleKey) },
     })),
     defaultSingleChoiceValue: Cycles.getPrevCycleKey(cycleKey),
   });
   if (confirmResult) {
-    // @ts-expect-error TS(2339): Property 'selectedSingleChoiceValue' does not exis... Remove this comment to see the full error message
     const { selectedSingleChoiceValue: selectedCycleKey } = confirmResult;
     return selectedCycleKey;
   }
   return undefined;
 };
 
-// @ts-expect-error TS(7030): Not all code paths return a value.
-const linkToRecordInPreviousCycle = () => async (dispatch: any, getState: any) => {
+const linkToRecordInPreviousCycle = () => async (dispatch, getState) => {
   try {
     const state = getState();
     const selectedCycleKey = await _askPreviousCycleKey({ dispatch, getState });
@@ -185,7 +177,6 @@ const linkToRecordInPreviousCycle = () => async (dispatch: any, getState: any) =
         prevCycle: selectedCycleKey,
         lang,
       });
-    // @ts-expect-error TS(2339): Property 'keyValues' does not exist on type '{ key... Remove this comment to see the full error message
     const { keyValues, prevCycleRecordIds } =
       await fetchRecordFromPreviousCycleInternal();
 
@@ -209,17 +200,16 @@ const linkToRecordInPreviousCycle = () => async (dispatch: any, getState: any) =
       await fetchRecordFromPreviousCycleInternal();
     }
   } catch (error) {
-    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     const details = `${error.toString()} - ${error.stack}`;
     ToastActions.show("dataEntry:recordInPreviousCycleFetchError", { details });
   }
 };
 
-const unlinkFromRecordInPreviousCycle = () => async (dispatch: any) => {
+const unlinkFromRecordInPreviousCycle = () => async (dispatch) => {
   dispatch({ type: RECORD_PREVIOUS_CYCLE_RESET });
 };
 
-const updatePreviousCyclePageEntity = (dispatch: any, getState: any) => {
+const updatePreviousCyclePageEntity = (dispatch, getState) => {
   const state = getState();
   const { parentEntityUuid, entityUuid } =
     DataEntrySelectors.selectCurrentPageEntity(state);

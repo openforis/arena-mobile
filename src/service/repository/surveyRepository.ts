@@ -1,10 +1,9 @@
 import LZString from "lz-string";
 
-// @ts-expect-error TS(2307): Cannot find module 'db' or its corresponding type ... Remove this comment to see the full error message
 import { DbUtils, dbClient } from "db";
 import { Objects, Surveys } from "@openforis/arena-core";
 
-const insertSurvey = async (survey: any) => {
+const insertSurvey = async (survey) => {
   const { id, uuid, dateCreated, datePublished, dateModified } = survey;
   const name = Surveys.getName(survey);
   const defaultLang = Surveys.getDefaultLanguage(survey);
@@ -28,10 +27,7 @@ const insertSurvey = async (survey: any) => {
   return survey;
 };
 
-const updateSurvey = async ({
-  id,
-  survey
-}: any) => {
+const updateSurvey = async ({ id, survey }) => {
   await dbClient.runSql(
     `UPDATE survey SET name = ?, label = ?, content = ?, date_created = ?, date_modified = ?
      WHERE id = ?`,
@@ -49,7 +45,7 @@ const updateSurvey = async ({
   return survey;
 };
 
-const fetchSurveyById = async (id: any) => {
+const fetchSurveyById = async (id) => {
   const row = await dbClient.one(
     "SELECT remote_id, content FROM survey WHERE id = ?",
     [id]
@@ -69,10 +65,10 @@ const fetchSurveySummaries = async () => {
     FROM survey
     ORDER BY name`
   );
-  return surveys.map((survey: any) => Objects.camelize(survey));
+  return surveys.map((survey) => Objects.camelize(survey));
 };
 
-const deleteSurveys = async (surveyIds: any) => {
+const deleteSurveys = async (surveyIds) => {
   await dbClient.runSql(
     `DELETE FROM survey WHERE id IN (${DbUtils.quoteValues(surveyIds)})`
   );

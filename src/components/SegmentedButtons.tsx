@@ -3,13 +3,11 @@ import {
   SegmentedButtons as RNPSegmentedButtons,
   useTheme,
 } from "react-native-paper";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
-// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { useTranslation } from "localization";
 
-export const SegmentedButtons = (props: any) => {
+export const SegmentedButtons = (props) => {
   const { buttons, onChange, style, value } = props;
 
   const { t } = useTranslation();
@@ -27,11 +25,7 @@ export const SegmentedButtons = (props: any) => {
 
   return (
     <RNPSegmentedButtons
-      buttons={buttons.map(({
-        icon,
-        label,
-        value
-      }: any) => ({
+      buttons={buttons.map(({ icon, label, value }) => ({
         icon,
         label: t(label),
         value,

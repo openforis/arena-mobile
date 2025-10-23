@@ -1,13 +1,10 @@
 import React from "react";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { NodeDefType } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 import { DataEntrySelectors } from "state";
 
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { Text } from "components";
 
 import { NodeBooleanComponent } from "./nodeTypes/NodeBooleanComponent";
@@ -32,7 +29,7 @@ const nodeDefComponentByType = {
   [NodeDefType.time]: NodeTimeComponent,
 };
 
-export const SingleAttributeComponentSwitch = (props: any) => {
+export const SingleAttributeComponentSwitch = (props) => {
   const {
     nodeDef,
     nodeUuid: nodeUuidProp,
@@ -42,7 +39,6 @@ export const SingleAttributeComponentSwitch = (props: any) => {
     wrapperStyle,
   } = props;
 
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   const component = nodeDefComponentByType[nodeDef.type];
 
   const { nodes } = DataEntrySelectors.useRecordChildNodes({

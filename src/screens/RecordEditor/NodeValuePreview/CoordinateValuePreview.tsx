@@ -2,11 +2,10 @@ import { useMemo } from "react";
 
 import { NodeDefs } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { FormItem, Text, VView } from "components";
 import { NodeValuePreviewPropTypes } from "./NodeValuePreviewPropTypes";
 
-export const CoordinateValuePreview = (props: any) => {
+export const CoordinateValuePreview = (props) => {
   const { nodeDef, value } = props;
 
   const fields = useMemo(() => {

@@ -5,10 +5,8 @@ import Dots from "react-native-dots-pagination";
 
 import { NodeDefs } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'state/dataEntry' or its corres... Remove this comment to see the full error message
 import { DataEntryActions, DataEntrySelectors } from "state/dataEntry";
 
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { VView, View } from "components";
 
 import { NodeDefFormItem } from "../NodeDefFormItem";
@@ -35,7 +33,7 @@ export const RecordNodesCarousel = () => {
     DataEntrySelectors.useCurrentPageEntityActiveChildIndex();
 
   const onPageSelected = useCallback(
-    (e: any) => {
+    (e) => {
       const position = e.nativeEvent.position;
       dispatch(
         DataEntryActions.selectCurrentPageEntityActiveChildIndex(position)
@@ -44,7 +42,7 @@ export const RecordNodesCarousel = () => {
     [dispatch]
   );
 
-  const onPageScrollStateChanged = useCallback((e: any) => {
+  const onPageScrollStateChanged = useCallback((e) => {
     pagerViewScrollStateRef.current = e.nativeEvent.pageScrollState;
   }, []);
 
@@ -55,7 +53,6 @@ export const RecordNodesCarousel = () => {
         pagerViewScrollStateRef.current === "idle"
       ) {
         // set page only when not scrolling to avoid polling between pages
-        // @ts-expect-error TS(2339): Property 'setPage' does not exist on type 'never'.
         pagerViewRef.current?.setPage(activeChildIndex);
       }
     });
@@ -70,9 +67,11 @@ export const RecordNodesCarousel = () => {
         ref={pagerViewRef}
         style={styles.pager}
       >
-        {childrenDefs.map((childDef: any) => <View key={childDef.uuid} style={styles.childContainer}>
-          <NodeDefFormItem nodeDef={childDef} parentNodeUuid={entityUuid} />
-        </View>)}
+        {childrenDefs.map((childDef) => (
+          <View key={childDef.uuid} style={styles.childContainer}>
+            <NodeDefFormItem nodeDef={childDef} parentNodeUuid={entityUuid} />
+          </View>
+        ))}
       </PagerView>
     );
   }, [childrenDefs, entityUuid, onPageSelected, onPageScrollStateChanged]);

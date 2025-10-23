@@ -1,5 +1,4 @@
 import React, { useCallback } from "react";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { NodeDefs } from "@openforis/arena-core";
@@ -7,7 +6,7 @@ import { NodeDefs } from "@openforis/arena-core";
 import { NodeEditDialogInternal } from "../NodeEditDialogInternal";
 import { NodeTaxonAutocomplete } from "./NodeTaxonAutocomplete";
 
-export const NodeTaxonEditDialog = (props: any) => {
+export const NodeTaxonEditDialog = (props) => {
   const {
     nodeDef,
     onDismiss,
@@ -21,7 +20,6 @@ export const NodeTaxonEditDialog = (props: any) => {
     );
   }
   const updateNodeValue = useCallback(
-    // @ts-expect-error TS(7031): Binding element 'valueNext' implicitly has an 'any... Remove this comment to see the full error message
     ({ value: valueNext }) => {
       onDismiss();
       updateNodeValueProp({ value: valueNext });

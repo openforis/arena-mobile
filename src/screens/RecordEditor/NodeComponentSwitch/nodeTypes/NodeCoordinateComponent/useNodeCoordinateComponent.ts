@@ -11,40 +11,28 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'hooks' or its corresponding ty... Remove this comment to see the full error message
 import { useLocationWatch } from "hooks";
-// @ts-expect-error TS(2307): Cannot find module 'model/utils/RecordNodes' or it... Remove this comment to see the full error message
 import { RecordNodes } from "model/utils/RecordNodes";
 import {
   DataEntryActions,
   DataEntrySelectors,
   SurveySelectors,
   useConfirm,
-// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 } from "state";
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 
-const stringToNumber = (str: any) => Numbers.toNumber(str);
-const numberToString = (num: any, roundToDecimals = NaN) => {
+const stringToNumber = (str) => Numbers.toNumber(str);
+const numberToString = (num, roundToDecimals = NaN) => {
   if (Objects.isEmpty(num)) return "";
   return String(Numbers.roundToPrecision(num, roundToDecimals));
 };
-const pointToUiValue = ({
-  x,
-  y,
-  srs
-}: any) => ({
+const pointToUiValue = ({ x, y, srs }) => ({
   x: numberToString(x),
   y: numberToString(y),
   srs,
 });
 
-const locationToUiValue = ({
-  location,
-  nodeDef,
-  srsTo,
-  srsIndex
-}: any) => {
+const locationToUiValue = ({ location, nodeDef, srsTo, srsIndex }) => {
   const { coords } = location;
   const { latitude, longitude, accuracy } = coords;
 
@@ -53,7 +41,6 @@ const locationToUiValue = ({
     y: latitude,
   });
   const point = Points.transform(pointLatLong, srsTo, srsIndex);
-  // @ts-expect-error TS(2339): Property 'x' does not exist on type 'Point | null'... Remove this comment to see the full error message
   const { x, y } = point;
 
   const includedExtraFields = NodeDefs.getCoordinateAdditionalFields(nodeDef);
@@ -65,18 +52,16 @@ const locationToUiValue = ({
   });
 
   includedExtraFields.forEach((field) => {
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     result[field] = numberToString(coords[field], 2);
   });
   // always include accuracy
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   result["accuracy"] = numberToString(accuracy, 2);
   return result;
 };
 
 const nonNumericFields = ["srs"];
 
-export const useNodeCoordinateComponent = (props: any) => {
+export const useNodeCoordinateComponent = (props) => {
   const { nodeDef, nodeUuid } = props;
 
   const dispatch = useDispatch();
@@ -85,7 +70,6 @@ export const useNodeCoordinateComponent = (props: any) => {
   const srsIndex = SurveySelectors.useCurrentSurveySrsIndex();
   const srss = useMemo(() => Surveys.getSRSs(survey), [survey]);
   const singleSrs = srss.length === 1;
-  // @ts-expect-error TS(2532): Object is possibly 'undefined'.
   const defaultSrsCode = srss[0].code;
   const includedExtraFields = useMemo(
     () => NodeDefs.getCoordinateAdditionalFields(nodeDef),
@@ -103,12 +87,11 @@ export const useNodeCoordinateComponent = (props: any) => {
   const { compassNavigatorVisible } = state;
 
   const nodeValueToUiValue = useCallback(
-    (nodeValue: any) => {
+    (nodeValue) => {
       const { x, y, srs = defaultSrsCode } = nodeValue ?? {};
 
       const result = pointToUiValue({ x, y, srs });
       includedExtraFields.forEach((fieldKey) => {
-        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         result[fieldKey] = numberToString(nodeValue?.[fieldKey]);
       });
       return result;
@@ -117,7 +100,7 @@ export const useNodeCoordinateComponent = (props: any) => {
   );
 
   const uiValueToNodeValue = useCallback(
-    (uiValue: any) => {
+    (uiValue) => {
       const { x, y, srs } = uiValue ?? {};
 
       if (Objects.isEmpty(x) && Objects.isEmpty(y)) return null;
@@ -128,7 +111,6 @@ export const useNodeCoordinateComponent = (props: any) => {
         srs,
       };
       includedExtraFields.forEach((fieldKey) => {
-        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         result[fieldKey] = stringToNumber(uiValue?.[fieldKey]);
       });
       return result;
@@ -137,13 +119,12 @@ export const useNodeCoordinateComponent = (props: any) => {
   );
 
   const isNodeValueEqual = useCallback(
-    (nodeValueA: any, nodeValueB: any) => {
-      const transformCoordinateValue = (coordVal: any) => {
+    (nodeValueA, nodeValueB) => {
+      const transformCoordinateValue = (coordVal) => {
         if (!coordVal) return null;
         const coordValCleaned = Object.entries(coordVal).reduce(
           (acc, [key, value]) => {
             if (includedFields.includes(key)) {
-              // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
               acc[key] = nonNumericFields.includes(key)
                 ? value
                 : Numbers.toNumber(value);
@@ -152,9 +133,7 @@ export const useNodeCoordinateComponent = (props: any) => {
           },
           {}
         );
-        // @ts-expect-error TS(2339): Property 'srs' does not exist on type '{}'.
         if (!coordValCleaned.srs) {
-          // @ts-expect-error TS(2339): Property 'srs' does not exist on type '{}'.
           coordValCleaned.srs = defaultSrsCode;
         }
         return coordValCleaned;
@@ -187,7 +166,6 @@ export const useNodeCoordinateComponent = (props: any) => {
   } = uiValue ?? {};
 
   const onValueChange = useCallback(
-    // @ts-expect-error TS(7031): Binding element 'valueNext' implicitly has an 'any... Remove this comment to see the full error message
     ({ value: valueNext, ignoreDelay = false }) => {
       if (!valueNext.srs && singleSrs) {
         // set default SRS
@@ -199,7 +177,7 @@ export const useNodeCoordinateComponent = (props: any) => {
   );
 
   const onChangeValueField = useCallback(
-    (fieldKey: any) => (val: any) => {
+    (fieldKey) => (val) => {
       const valueNext = { ...uiValue, [fieldKey]: val };
       onValueChange({ value: valueNext });
     },
@@ -207,9 +185,7 @@ export const useNodeCoordinateComponent = (props: any) => {
   );
 
   const locationCallback = useCallback(
-    ({
-      location
-    }: any) => {
+    ({ location }) => {
       if (!location) return;
 
       const valueNext = locationToUiValue({
@@ -243,7 +219,7 @@ export const useNodeCoordinateComponent = (props: any) => {
       nodeDef,
       record,
       node,
-    }).then((_distanceTarget: any) => {
+    }).then((_distanceTarget) => {
       if (!Objects.isEqual(_distanceTarget, distanceTarget)) {
         setDistanceTarget(_distanceTarget);
       }
@@ -255,7 +231,7 @@ export const useNodeCoordinateComponent = (props: any) => {
   }, [stopLocationWatch]);
 
   const onChangeSrs = useCallback(
-    (srsTo: any) => {
+    (srsTo) => {
       dispatch(DataEntryActions.updateCoordinateValueSrs({ nodeUuid, srsTo }));
     },
     [dispatch, nodeUuid]
@@ -278,10 +254,11 @@ export const useNodeCoordinateComponent = (props: any) => {
   }, [stopLocationWatch]);
 
   const setCompassNavigatorVisible = useCallback(
-    (visible: any) => setState((statePrev) => ({
-      ...statePrev,
-      compassNavigatorVisible: visible,
-    })),
+    (visible) =>
+      setState((statePrev) => ({
+        ...statePrev,
+        compassNavigatorVisible: visible,
+      })),
     []
   );
 
@@ -295,7 +272,7 @@ export const useNodeCoordinateComponent = (props: any) => {
   );
 
   const onCompassNavigatorUseCurrentLocation = useCallback(
-    (location: any) => {
+    (location) => {
       const valueNext = locationToUiValue({
         location,
         nodeDef,

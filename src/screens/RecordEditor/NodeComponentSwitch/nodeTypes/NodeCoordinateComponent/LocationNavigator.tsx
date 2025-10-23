@@ -1,18 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { Dimensions, Image } from "react-native";
 import { useTheme } from "react-native-paper";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Objects, Points } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'hooks' or its corresponding ty... Remove this comment to see the full error message
 import { useLocationWatch, useMagnetometerHeading } from "hooks";
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { Button, FormItem, HView, Modal, Text, View, VView } from "components";
-// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 import { SurveySelectors } from "state";
-// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { SystemUtils } from "utils";
 
 import styles from "./locationNavigatorStyles";
@@ -47,28 +42,28 @@ const targetLocationMarkerStyle = {
   resizeMode: "contain",
 };
 
-const getArrowImageByAngle = (angle: any) => {
+const getArrowImageByAngle = (angle) => {
   if (angle <= 20 || 360 - angle <= 20) return arrowUpGreen;
   if (angle <= 45 || 360 - angle <= 45) return arrowUpOrange;
   return arrowUpRed;
 };
 
-const radsToDegrees = (rads: any) => {
+const radsToDegrees = (rads) => {
   let degrees = rads * (180 / Math.PI);
   degrees = -(degrees + 90);
   while (degrees < 0) degrees += 360;
   return degrees;
 };
 
-const calculateAngleBetweenPoints = (point1: any, point2: any) => {
+const calculateAngleBetweenPoints = (point1, point2) => {
   const angleRads = Math.atan2(point1.y - point2.y, point1.x - point2.x);
   return radsToDegrees(angleRads);
 };
 
-const formatNumber = (num: any, decimals = 2, unit = "") =>
+const formatNumber = (num, decimals = 2, unit = "") =>
   Objects.isEmpty(num) ? "-" : num.toFixed(decimals) + unit;
 
-export const LocationNavigator = (props: any) => {
+export const LocationNavigator = (props) => {
   const { targetPoint, onDismiss, onUseCurrentLocation } = props;
 
   if (__DEV__) {
@@ -88,7 +83,7 @@ export const LocationNavigator = (props: any) => {
 
   const srsIndex = SurveySelectors.useCurrentSurveySrsIndex();
 
-  const updateState = useCallback((params: any) => {
+  const updateState = useCallback((params) => {
     if (__DEV__) {
       console.log("LocationNavigator: updateState");
     }
@@ -96,11 +91,7 @@ export const LocationNavigator = (props: any) => {
   }, []);
 
   const locationCallback = useCallback(
-    ({
-      location,
-      locationAccuracy,
-      pointLatLong
-    }: any) => {
+    ({ location, locationAccuracy, pointLatLong }) => {
       if (__DEV__) {
         console.log(`LocationNavigator location callback`, location);
       }
@@ -130,7 +121,6 @@ export const LocationNavigator = (props: any) => {
 
   const { currentLocation, angleToTarget, accuracy, distance } = state;
   const { longitude: currentLocationX, latitude: currentLocationY } =
-    // @ts-expect-error TS(2339): Property 'coords' does not exist on type 'never'.
     currentLocation?.coords || {};
 
   const arrowToTargetVisible =
@@ -228,7 +218,6 @@ export const LocationNavigator = (props: any) => {
                   transform: [{ rotate: angleToTargetDifference + "deg" }],
                 }}
               >
-                // @ts-expect-error TS(2769): No overload matches this call.
                 <Image source={circleGreen} style={targetLocationMarkerStyle} />
               </View>
             )}

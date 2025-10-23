@@ -16,9 +16,10 @@ const isLandscapeByKey = {
   [keys.LANDSCAPE_RIGHT]: true,
 };
 
-const isPortrait = (orientation: any) => !!isPortraitByKey[orientation];
-const isLandscape = (orientation: any) => !!isLandscapeByKey[orientation];
-const fromExpoOrientation = (expoOrientation: any) => Object.values(keys).includes(expoOrientation) ? expoOrientation : null;
+const isPortrait = (orientation) => !!isPortraitByKey[orientation];
+const isLandscape = (orientation) => !!isLandscapeByKey[orientation];
+const fromExpoOrientation = (expoOrientation) =>
+  Object.values(keys).includes(expoOrientation) ? expoOrientation : null;
 
 export const ScreenOrientation = {
   keys,

@@ -1,12 +1,8 @@
 import { useCallback } from "react";
 
-// @ts-expect-error TS(2307): Cannot find module 'hooks' or its corresponding ty... Remove this comment to see the full error message
 import { useToast } from "hooks";
-// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { useTranslation } from "localization";
-// @ts-expect-error TS(2307): Cannot find module 'state/confirm' or its correspo... Remove this comment to see the full error message
 import { useConfirm } from "state/confirm";
-// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { Permissions, SystemUtils } from "utils";
 
 const mediaLibraryPermissions = {
@@ -21,15 +17,8 @@ const requestFunctionByPermission = {
     Permissions.requestAccessMediaLocation(),
 };
 
-const checkCanAccessMediaLibrary = async ({
-  toaster,
-  t,
-  geotagInfoShown
-}: any) => {
-  const onPermissionRequestError = ({
-    permission,
-    error
-  }: any) => {
+const checkCanAccessMediaLibrary = async ({ toaster, t, geotagInfoShown }) => {
+  const onPermissionRequestError = ({ permission, error }) => {
     toaster("permissions:errorRequestingPermission", {
       permission,
       details: String(error),
@@ -44,7 +33,6 @@ const checkCanAccessMediaLibrary = async ({
     const permissionLabel = t(`permissions:types.${permission}`);
     try {
       const requestPermission = requestFunctionByPermission[permission];
-      // @ts-expect-error TS(2722): Cannot invoke an object which is possibly 'undefin... Remove this comment to see the full error message
       const granted = await requestPermission();
       if (!granted) {
         toaster("permissions:permissionDenied", {
@@ -66,9 +54,7 @@ export const useCheckCanAccessMediaLibrary = () => {
   const toaster = useToast();
 
   return useCallback(
-    async ({
-      geotagInfoShown
-    }: any) => {
+    async ({ geotagInfoShown }) => {
       let canAccess = await checkCanAccessMediaLibrary({
         toaster,
         t,

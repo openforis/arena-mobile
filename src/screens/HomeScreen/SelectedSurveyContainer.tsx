@@ -11,15 +11,10 @@ import {
   Text,
   ViewMoreText,
   VView,
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 } from "components";
-// @ts-expect-error TS(2307): Cannot find module 'hooks' or its corresponding ty... Remove this comment to see the full error message
 import { useIsNetworkConnected } from "hooks";
-// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { SurveyStatus, UpdateStatus } from "model";
-// @ts-expect-error TS(2307): Cannot find module 'service' or its corresponding ... Remove this comment to see the full error message
 import { SurveyService } from "service";
-// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 import { RemoteConnectionSelectors, SurveySelectors } from "state";
 
 import { screenKeys } from "../screenKeys";
@@ -54,12 +49,10 @@ export const SelectedSurveyContainer = () => {
       return;
     }
     if (!user) {
-      // @ts-expect-error TS(2345): Argument of type '{ updateStatus: any; }' is not a... Remove this comment to see the full error message
       setState({ updateStatus: UpdateStatus.error });
       return;
     }
     if (!networkAvailable) {
-      // @ts-expect-error TS(2345): Argument of type '{ updateStatus: any; }' is not a... Remove this comment to see the full error message
       setState({ updateStatus: UpdateStatus.networkNotAvailable });
       return;
     }
@@ -68,7 +61,6 @@ export const SelectedSurveyContainer = () => {
       name: surveyName,
     });
     if (!surveyRemote) {
-      // @ts-expect-error TS(2345): Argument of type '{ updateStatus: any; }' is not a... Remove this comment to see the full error message
       setState({ updateStatus: SurveyStatus.notInArenaServer });
     } else if (surveyRemote.errorKey) {
       setState({
@@ -76,7 +68,6 @@ export const SelectedSurveyContainer = () => {
         errorKey: surveyRemote.errorKey,
       });
     } else if (!Surveys.isVisibleInMobile(surveyRemote)) {
-      // @ts-expect-error TS(2345): Argument of type '{ updateStatus: any; }' is not a... Remove this comment to see the full error message
       setState({ updateStatus: SurveyStatus.notVisibleInMobile });
     } else if (
       Dates.isAfter(
@@ -84,10 +75,8 @@ export const SelectedSurveyContainer = () => {
         survey.datePublished ?? survey.dateModified
       )
     ) {
-      // @ts-expect-error TS(2345): Argument of type '{ updateStatus: any; }' is not a... Remove this comment to see the full error message
       setState({ updateStatus: UpdateStatus.notUpToDate });
     } else {
-      // @ts-expect-error TS(2345): Argument of type '{ updateStatus: any; }' is not a... Remove this comment to see the full error message
       setState({ updateStatus: UpdateStatus.upToDate });
     }
   }, [networkAvailable, survey, surveyName, user]);
@@ -122,7 +111,6 @@ export const SelectedSurveyContainer = () => {
         <Button
           style={styles.goToDataEntryButton}
           textKey="dataEntry:goToDataEntry"
-          // @ts-expect-error TS(2769): No overload matches this call.
           onPress={() => navigation.navigate(screenKeys.recordsList)}
         />
       </VView>

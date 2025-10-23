@@ -1,3 +1,4 @@
 import { useNavigationEvent } from "./useNavigationEvent";
 
-export const useNavigationFocus = (onFocus: any) => useNavigationEvent("focus", onFocus);
+export const useNavigationFocus = (onFocus) =>
+  useNavigationEvent("focus", onFocus);

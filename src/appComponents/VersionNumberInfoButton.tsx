@@ -2,11 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Linking } from "react-native";
 import { checkVersion } from "react-native-check-version";
 
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { HView, UpdateStatusIcon } from "components";
-// @ts-expect-error TS(2307): Cannot find module 'hooks' or its corresponding ty... Remove this comment to see the full error message
 import { useIsNetworkConnected, useToast } from "hooks";
-// @ts-expect-error TS(2307): Cannot find module 'model/UpdateStatus' or its cor... Remove this comment to see the full error message
 import { UpdateStatus } from "model/UpdateStatus";
 
 import styles from "./versionNumberInfoStyles";
@@ -33,7 +30,6 @@ export const VersionNumberInfoButton = () => {
           if (error) {
             setState({
               updateStatus: UpdateStatus.error,
-              // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'null'.
               updateStatusError: error.toString(),
             });
           } else {
@@ -41,26 +37,22 @@ export const VersionNumberInfoButton = () => {
               updateStatus: needsUpdate
                 ? UpdateStatus.notUpToDate
                 : UpdateStatus.upToDate,
-              // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'null'.
               updateUrl: url,
             });
           }
         })
         .catch((error) => {
-          // @ts-expect-error TS(2345): Argument of type '{ updateStatus: any; updateStatu... Remove this comment to see the full error message
           setState({
             updateStatus: UpdateStatus.error,
             updateStatusError: error.toString(),
           });
         });
     } else {
-      // @ts-expect-error TS(2345): Argument of type '{ updateStatus: any; }' is not a... Remove this comment to see the full error message
       setState({ updateStatus: UpdateStatus.networkNotAvailable });
     }
   }, [networkAvailable]);
 
   const onUpdateConfirm = useCallback(
-    // @ts-expect-error TS(2345): Argument of type 'null' is not assignable to param... Remove this comment to see the full error message
     () => Linking.openURL(updateUrl),
     [updateUrl]
   );

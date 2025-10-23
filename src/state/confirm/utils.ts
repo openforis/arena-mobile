@@ -9,7 +9,7 @@ const confirm = async ({
   titleKey,
   titleParams,
   ...otherParams
-}: any) =>
+}) =>
   new Promise((resolve, reject) => {
     try {
       dispatch(
@@ -23,8 +23,8 @@ const confirm = async ({
           ...otherParams,
           onConfirm: ({
             selectedMultipleChoiceValues,
-            selectedSingleChoiceValue
-          }: any) => {
+            selectedSingleChoiceValue,
+          }) => {
             dispatch(ConfirmActions.dismiss());
 
             resolve({

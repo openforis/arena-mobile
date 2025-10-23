@@ -1,14 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { NodeDefType, NodeDefs, Objects } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { CopyToClipboardButton, HView, TextInput } from "components";
-// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { RecordEditViewMode } from "model";
-// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 import { DataEntrySelectors, SurveyOptionsSelectors } from "state";
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 import { useStyles } from "./styles";
@@ -20,14 +16,13 @@ const isNumericByType = {
 
 const multilineNumberOfLines = 5;
 
-export const NodeTextComponent = (props: any) => {
+export const NodeTextComponent = (props) => {
   const { nodeDef, nodeUuid, style: styleProp, wrapperStyle } = props;
 
   if (__DEV__) {
     console.log(`rendering NodeTextComponent for ${nodeDef.props.name}`);
   }
 
-  // @ts-expect-error TS(2554): Expected 1 arguments, but got 0.
   const inputRef = useRef();
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
   const isActiveChild =
@@ -35,7 +30,6 @@ export const NodeTextComponent = (props: any) => {
 
   const styles = useStyles({ wrapperStyle });
 
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   const isNumeric = !!isNumericByType[nodeDef.type];
 
   const editable = !NodeDefs.isReadOnly(nodeDef);
@@ -44,12 +38,12 @@ export const NodeTextComponent = (props: any) => {
     nodeDef.props.textInputType === "multiLine";
 
   const nodeValueToUiValue = useCallback(
-    (value: any) => Objects.isEmpty(value) ? "" : String(value),
+    (value) => (Objects.isEmpty(value) ? "" : String(value)),
     []
   );
 
   const uiValueToNodeValue = useCallback(
-    (uiValue: any) => {
+    (uiValue) => {
       if (Objects.isEmpty(uiValue)) return null;
       if (isNumeric) {
         return Number(String(uiValue).replaceAll(",", "."));
@@ -68,7 +62,7 @@ export const NodeTextComponent = (props: any) => {
     });
 
   const onChange = useCallback(
-    (value: any) => {
+    (value) => {
       updateNodeValue({ value });
     },
     [updateNodeValue]
@@ -82,7 +76,6 @@ export const NodeTextComponent = (props: any) => {
       viewMode === RecordEditViewMode.oneNode &&
       isActiveChild
     ) {
-      // @ts-expect-error TS(2571): Object is of type 'unknown'.
       inputRef.current.focus();
     }
   }, [editable, isActiveChild, viewMode]);

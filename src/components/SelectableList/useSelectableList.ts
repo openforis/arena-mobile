@@ -7,7 +7,7 @@ const initialState = {
   selectedItemIds: [],
 };
 
-export const useSelectableList = (props: any) => {
+export const useSelectableList = (props) => {
   const {
     items,
     onItemPress: onItemPressProp,
@@ -50,7 +50,7 @@ export const useSelectableList = (props: any) => {
   }, [selectedItemIds, selectedItemIdsProp]);
 
   const onItemSelect = useCallback(
-    (item: any) => {
+    (item) => {
       const { key } = item;
       const selected = !selectedItemIds.includes(key);
       const selectedItemIdsNext = selected
@@ -85,7 +85,7 @@ export const useSelectableList = (props: any) => {
   }, [selectedItemIds, onDeleteSelectedItemIds, onSelectionChange]);
 
   const onItemPress = useCallback(
-    (item: any) => {
+    (item) => {
       if (selectionEnabled) {
         onItemSelect(item);
       } else {
@@ -96,7 +96,7 @@ export const useSelectableList = (props: any) => {
   );
 
   const onItemLongPress = useCallback(
-    (item: any) => {
+    (item) => {
       if (selectable) {
         onItemSelect(item);
       } else {

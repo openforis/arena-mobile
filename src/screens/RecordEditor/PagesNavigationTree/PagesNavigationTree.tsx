@@ -1,24 +1,16 @@
 import { useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import TreeView from "react-native-final-tree-view";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { HView, ScrollView } from "components";
-// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 import { DataEntryActions } from "state";
 
 import { EntityButton } from "./EntityButton";
 import { Indicator } from "./Indicator";
 import { useTreeData } from "./useTreeData";
 
-const TreeNode = ({
-  node: treeNode,
-  level,
-  isExpanded,
-  hasChildrenNodes
-}: any) => {
+const TreeNode = ({ node: treeNode, level, isExpanded, hasChildrenNodes }) => {
   const { isCurrentEntity, isRoot } = treeNode;
   const style = useMemo(
     () => ({
@@ -57,9 +49,7 @@ export const PagesNavigationTree = () => {
   const dispatch = useDispatch();
 
   const onNodePress = useCallback(
-    ({
-      node
-    }: any) => {
+    ({ node }) => {
       const { entityPointer } = node;
       dispatch(DataEntryActions.selectCurrentPageEntity(entityPointer));
     },

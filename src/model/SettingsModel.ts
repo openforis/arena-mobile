@@ -1,4 +1,3 @@
-// @ts-expect-error TS(2307): Cannot find module 'utils/Environment' or its corr... Remove this comment to see the full error message
 import { Environment } from "utils/Environment";
 import { ThemesSettings } from "./Themes";
 import { LanguagesSettings } from "./LanguageSettings";
@@ -68,9 +67,7 @@ const properties = {
     minValue: 0.5,
     maxValue: 10,
     step: 0.5,
-    isDisabled: ({
-      settings
-    }: any) => settings.imageSizeUnlimited,
+    isDisabled: ({ settings }) => settings.imageSizeUnlimited,
   },
 };
 

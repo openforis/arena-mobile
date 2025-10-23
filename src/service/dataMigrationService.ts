@@ -22,9 +22,7 @@ const fixRecordCycle = async () => {
   }
 };
 
-const migrateData = async ({
-  prevDbVersion
-}: any) => {
+const migrateData = async ({ prevDbVersion }) => {
   if (prevDbVersion <= 2) {
     await fixRecordCycle();
   }

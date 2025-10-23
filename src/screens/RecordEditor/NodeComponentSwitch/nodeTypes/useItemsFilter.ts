@@ -8,15 +8,14 @@ import {
   Records,
 } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 import { DataEntrySelectors, SurveySelectors } from "state";
 
 export const useItemsFilter = ({
   nodeDef,
   parentNodeUuid,
   items,
-  alwaysIncludeItemFunction = null
-}: any) => {
+  alwaysIncludeItemFunction = null,
+}) => {
   const [filteredItems, setFilteredItems] = useState([]);
 
   return useSelector((state) => {
@@ -29,16 +28,14 @@ export const useItemsFilter = ({
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
     const expressionEvaluator = new RecordExpressionEvaluator();
     Promise.all(
-      items.map((item: any) => {
+      items.map((item) => {
         if (alwaysIncludeItemFunction?.(item)) return true;
 
         try {
           return expressionEvaluator.evalExpression({
             survey,
             record,
-            // @ts-expect-error TS(2322): Type 'Node | undefined' is not assignable to type ... Remove this comment to see the full error message
             node: parentNode,
-            // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
             query: itemsFilter,
             item,
           });
@@ -48,7 +45,7 @@ export const useItemsFilter = ({
       })
     ).then((_itemsFilterResults) => {
       const _filteredItems = items.filter(
-        (_: any, index: any) => _itemsFilterResults[index]
+        (_, index) => _itemsFilterResults[index]
       );
       if (!Objects.isEqual(_filteredItems, filteredItems)) {
         setFilteredItems(_filteredItems);

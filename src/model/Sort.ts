@@ -1,7 +1,7 @@
 const asc = "ascending";
 const desc = "descending";
 
-const getNextSortDirection = (sortPrev: any) => {
+const getNextSortDirection = (sortPrev) => {
   if (!sortPrev) return asc;
   if (sortPrev === asc) return desc;
   return undefined;

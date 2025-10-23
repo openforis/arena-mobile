@@ -1,13 +1,11 @@
 import React, { useCallback } from "react";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { Checkbox, HView } from "components";
 
 import styles from "./styles";
 
-export const NodeCodeMultipleCheckboxComponent = (props: any) => {
+export const NodeCodeMultipleCheckboxComponent = (props) => {
   const {
     editable,
     itemLabelFunction,
@@ -18,7 +16,7 @@ export const NodeCodeMultipleCheckboxComponent = (props: any) => {
   } = props;
 
   const onItemSelect = useCallback(
-    (item: any) => {
+    (item) => {
       const wasSelected = selectedItems.includes(item);
       if (wasSelected) {
         onItemRemove(item.uuid);
@@ -31,14 +29,16 @@ export const NodeCodeMultipleCheckboxComponent = (props: any) => {
 
   return (
     <HView style={styles.container}>
-      {items.map((item: any) => <Checkbox
-        key={item.uuid}
-        label={itemLabelFunction(item)}
-        disabled={!editable}
-        checked={selectedItems.includes(item)}
-        onPress={() => onItemSelect(item)}
-        style={styles.item}
-      />)}
+      {items.map((item) => (
+        <Checkbox
+          key={item.uuid}
+          label={itemLabelFunction(item)}
+          disabled={!editable}
+          checked={selectedItems.includes(item)}
+          onPress={() => onItemSelect(item)}
+          style={styles.item}
+        />
+      ))}
     </HView>
   );
 };

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import {
@@ -19,19 +18,14 @@ import {
   Icon,
   LoadingIcon,
   Text,
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 } from "components";
-// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { useTranslation } from "localization";
-// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { Cycles, ScreenViewMode, SortDirection, SurveyDefs } from "model";
 import {
   DataEntryActions,
   ScreenOptionsSelectors,
   SurveySelectors,
-// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 } from "state";
-// @ts-expect-error TS(2307): Cannot find module 'utils' or its corresponding ty... Remove this comment to see the full error message
 import { ArrayUtils } from "utils";
 
 import { RecordSyncStatusIcon } from "./RecordSyncStatusIcon";
@@ -39,57 +33,46 @@ import { RecordsUtils } from "./RecordsUtils";
 import { RecordListConstants } from "./recordListConstants";
 import { RecordErrorIcon } from "./RecordErrorIcon";
 
-const formatDateToDateTimeDisplay = (date: any) => typeof date === "string"
-  ? Dates.convertDate({
-      dateStr: date,
-      formatFrom: DateFormats.datetimeStorage,
-      formatTo: DateFormats.datetimeDisplay,
-    })
-  : Dates.format(date, DateFormats.datetimeDisplay);
+const formatDateToDateTimeDisplay = (date) =>
+  typeof date === "string"
+    ? Dates.convertDate({
+        dateStr: date,
+        formatFrom: DateFormats.datetimeStorage,
+        formatTo: DateFormats.datetimeDisplay,
+      })
+    : Dates.format(date, DateFormats.datetimeDisplay);
 
-const RecordOriginTableCellRenderer = ({
-  item
-}: any) => (
+const RecordOriginTableCellRenderer = ({ item }) => (
   <Icon source={RecordListConstants.iconByOrigin[item.origin]} />
 );
 RecordOriginTableCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const RecordOriginListCellRenderer = ({
-  item
-}: any) => (
+const RecordOriginListCellRenderer = ({ item }) => (
   <Text textKey={`recordsList:origin.${item.origin}`} />
 );
 RecordOriginListCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const RecordLoadStatusTableCellRenderer = ({
-  item
-}: any) => (
+const RecordLoadStatusTableCellRenderer = ({ item }) => (
   <Icon source={RecordListConstants.iconByLoadStatus[item.loadStatus]} />
 );
 RecordLoadStatusTableCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const RecordLoadStatusListCellRenderer = ({
-  item
-}: any) => (
+const RecordLoadStatusListCellRenderer = ({ item }) => (
   <Text textKey={`recordsList:loadStatus.${item.loadStatus}`} />
 );
 RecordLoadStatusListCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const RecordErrorsListCellRenderer = ({
-  item
-}: any) => (
+const RecordErrorsListCellRenderer = ({ item }) => (
   <Text>{Validations.getErrorsCount(item.validation)}</Text>
 );
 RecordErrorsListCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const RecordWarningsListCellRenderer = ({
-  item
-}: any) => (
+const RecordWarningsListCellRenderer = ({ item }) => (
   <Text>{Validations.getWarningsCount(item.validation)}</Text>
 );
 RecordWarningsListCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-export const RecordsDataVisualizer = (props: any) => {
+export const RecordsDataVisualizer = (props) => {
   const {
     onCloneSelectedRecordUuids,
     onDeleteSelectedRecordUuids,
@@ -126,7 +109,7 @@ export const RecordsDataVisualizer = (props: any) => {
 
   const recordsHaveErrorsOrWarnings = useMemo(
     () =>
-      records.some((r: any) => {
+      records.some((r) => {
         const validation = Validations.getValidation(r);
         return (
           Validations.getErrorsCount(validation) ||
@@ -153,7 +136,7 @@ export const RecordsDataVisualizer = (props: any) => {
   }, [survey, cycle]);
 
   const recordToItem = useCallback(
-    (recordSummary: any) => {
+    (recordSummary) => {
       const valuesByKey = RecordsUtils.getValuesByKeyFormatted({
         survey,
         lang,
@@ -192,7 +175,7 @@ export const RecordsDataVisualizer = (props: any) => {
   }, [records, recordToItem, sort]);
 
   const onItemPress = useCallback(
-    (recordSummary: any) => {
+    (recordSummary) => {
       dispatch(
         DataEntryActions.fetchAndEditRecord({ navigation, recordSummary })
       );
@@ -203,12 +186,12 @@ export const RecordsDataVisualizer = (props: any) => {
   const fields = useMemo(() => {
     const result = [];
     result.push(
-      ...rootKeyDefs.map((keyDef: any) => ({
+      ...rootKeyDefs.map((keyDef) => ({
         key: `keysObj.${NodeDefs.getName(keyDef)}`,
         header: NodeDefs.getLabelOrName(keyDef, lang),
         headerLabelVariant: "titleMedium",
         sortable: true,
-        textVariant: "titleLarge"
+        textVariant: "titleLarge",
       })),
       ...rootSummaryDefs.map((keyDef) => ({
         key: `summaryAttributesObj.${NodeDefs.getName(keyDef)}`,
@@ -308,7 +291,7 @@ export const RecordsDataVisualizer = (props: any) => {
     lang,
   ]);
 
-  const onSelectionChange = useCallback((selection: any) => {
+  const onSelectionChange = useCallback((selection) => {
     setSelectedRecordUuids(selection);
   }, []);
 
@@ -324,7 +307,7 @@ export const RecordsDataVisualizer = (props: any) => {
     onExportSelectedRecordUuids(selectedRecordUuids);
   }, [selectedRecordUuids, onExportSelectedRecordUuids]);
 
-  const onSortChange = useCallback((sortNext: any) => {
+  const onSortChange = useCallback((sortNext) => {
     setSort(sortNext);
   }, []);
 

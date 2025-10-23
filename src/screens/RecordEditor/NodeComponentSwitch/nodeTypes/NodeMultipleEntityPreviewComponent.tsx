@@ -3,9 +3,7 @@ import { useDispatch } from "react-redux";
 
 import { NodeDefs } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { Button, VView } from "components";
-// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 import { DataEntryActions, SurveySelectors } from "state";
 
 import { NodeComponentPropTypes } from "./nodeComponentPropTypes";
@@ -14,7 +12,7 @@ const styles = {
   editButton: { alignSelf: "center" },
 };
 
-export const NodeMultipleEntityPreviewComponent = (props: any) => {
+export const NodeMultipleEntityPreviewComponent = (props) => {
   const { nodeDef, parentNodeUuid } = props;
 
   if (__DEV__) {

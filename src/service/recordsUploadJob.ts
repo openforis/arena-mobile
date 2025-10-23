@@ -1,21 +1,9 @@
-// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { JobMobile } from "model";
 
 import { RecordService } from "./recordService";
 
 export class RecordsUploadJob extends JobMobile {
-  cancelUpload: any;
-  context: any;
-  emitSummaryUpdateEvent: any;
-  remoteJob: any;
-  summary: any;
-  constructor({
-    user,
-    survey,
-    cycle,
-    fileUri,
-    conflictResolutionStrategy
-  }: any) {
+  constructor({ user, survey, cycle, fileUri, conflictResolutionStrategy }) {
     super({ user, survey, cycle, fileUri, conflictResolutionStrategy });
     this.cancelUpload = null; // cancels upload request
     this.remoteJob = null; // job started on remote server after file upload
@@ -34,7 +22,7 @@ export class RecordsUploadJob extends JobMobile {
       fileId: this.summary.uuid,
       conflictResolutionStrategy,
       startFromChunk,
-      onUploadProgress: (progressEvent: any) => {
+      onUploadProgress: (progressEvent) => {
         const { loaded, total } = progressEvent;
         this.summary.total = total;
         this.summary.processed = loaded;
@@ -42,7 +30,6 @@ export class RecordsUploadJob extends JobMobile {
       },
     });
     this.cancelUpload = cancel;
-    // @ts-expect-error TS(2339): Property 'data' does not exist on type 'unknown'.
     const { data } = await promise;
     const { job } = data;
     this.remoteJob = job;

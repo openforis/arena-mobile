@@ -1,4 +1,4 @@
-export const migration_002 = async (dbClient: any) => {
+export const migration_002 = async (dbClient) => {
   await dbClient.transaction(async () => {
     await dbClient.executeSql(`ALTER TABLE record ADD COLUMN summary1 TEXT;`);
     await dbClient.executeSql(`ALTER TABLE record ADD COLUMN summary2 TEXT;`);

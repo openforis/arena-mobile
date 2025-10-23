@@ -8,39 +8,25 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { RecordNodes } from "model";
-// @ts-expect-error TS(2307): Cannot find module 'model/utils/ValidationUtils' o... Remove this comment to see the full error message
 import { ValidationUtils } from "model/utils/ValidationUtils";
-// @ts-expect-error TS(2307): Cannot find module 'localization' or its correspon... Remove this comment to see the full error message
 import { useTranslation } from "localization";
 
-// @ts-expect-error TS(2307): Cannot find module 'state/dataEntry' or its corres... Remove this comment to see the full error message
 import { DataEntrySelectors } from "state/dataEntry";
-// @ts-expect-error TS(2307): Cannot find module 'state/screenOptions' or its co... Remove this comment to see the full error message
 import { ScreenOptionsSelectors } from "state/screenOptions";
-// @ts-expect-error TS(2307): Cannot find module 'state/survey' or its correspon... Remove this comment to see the full error message
 import { SurveySelectors } from "state/survey";
 
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { DataVisualizer, Text, VView } from "components";
 
-// @ts-expect-error TS(2307): Cannot find module 'screens/RecordEditor/NodeCompo... Remove this comment to see the full error message
 import { NodeEditDialog } from "screens/RecordEditor/NodeComponentSwitch/nodeTypes/NodeEditDialog";
 
 import styles from "./styles";
 
 const nodePathPartSeparator = " / ";
 
-const getNodePath = ({
-  survey,
-  record,
-  nodeUuid,
-  lang
-}: any) => {
+const getNodePath = ({ survey, record, nodeUuid, lang }) => {
   const node = Records.getNodeByUuid(nodeUuid)(record);
-  const parts: any = [];
-  // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
+  const parts = [];
   Records.visitAncestorsAndSelf(node, (visitedAncestor) => {
     const nodeDef = Surveys.getNodeDefByUuid({
       survey,
@@ -72,8 +58,8 @@ const extractValidationItem = ({
   validationFieldKey,
   validationResult,
   lang,
-  t
-}: any) => {
+  t,
+}) => {
   let invalidNodeDefUuid, invalidParentNodeUuid, invalidNodeUuid;
   if (RecordValidations.isValidationChildrenCountKey(validationFieldKey)) {
     invalidNodeDefUuid =
@@ -166,7 +152,6 @@ export const RecordValidationReport = () => {
             t,
           });
           if (validationItem) {
-            // @ts-expect-error TS(2345): Argument of type '{ key: any; nodeDef: NodeDef<Nod... Remove this comment to see the full error message
             acc.push(validationItem);
           }
           return acc;
@@ -176,7 +161,7 @@ export const RecordValidationReport = () => {
     [lang, record, survey, t, validationFields]
   );
 
-  const onRowPress = (item: any) => {
+  const onRowPress = (item) => {
     const {
       key: dialogNodeUuid,
       nodeDef: dialogNodeDef,
@@ -220,7 +205,6 @@ export const RecordValidationReport = () => {
           nodeDef={dialogNodeDef}
           nodeUuid={dialogNodeUuid}
           parentNodeUuid={dialogParentNodeUuid}
-          // @ts-expect-error TS(2345): Argument of type '{ editDialogOpen: false; }' is n... Remove this comment to see the full error message
           onDismiss={() => setState({ editDialogOpen: false })}
         />
       )}

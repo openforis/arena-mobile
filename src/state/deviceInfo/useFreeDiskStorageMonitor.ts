@@ -10,9 +10,7 @@ export const useFreeDiskStorageMonitor = () => {
   const intervalIdRef = useRef(null);
 
   useEffect(() => {
-    // @ts-expect-error TS(2322): Type 'number' is not assignable to type 'null'.
     intervalIdRef.current = setInterval(() => {
-      // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
       dispatch(DeviceInfoActions.updateFreeDiskStorage());
     }, freeDiskSpaceUpdateDelay);
 

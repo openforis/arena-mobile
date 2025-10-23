@@ -11,13 +11,9 @@ import {
   Searchbar,
   Text,
   VView,
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 } from "components";
-// @ts-expect-error TS(2307): Cannot find module 'hooks' or its corresponding ty... Remove this comment to see the full error message
 import { useNavigationFocus } from "hooks";
-// @ts-expect-error TS(2307): Cannot find module 'model/ScreenViewMode' or its c... Remove this comment to see the full error message
 import { ScreenViewMode } from "model/ScreenViewMode";
-// @ts-expect-error TS(2307): Cannot find module 'service' or its corresponding ... Remove this comment to see the full error message
 import { SurveyService } from "service";
 import {
   ConfirmActions,
@@ -25,7 +21,6 @@ import {
   ScreenOptionsSelectors,
   SurveyActions,
   SurveySelectors,
-// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 } from "state";
 
 import { screenKeys } from "../screenKeys";
@@ -39,9 +34,7 @@ const INITIAL_STATE = {
 
 const minSurveysToShowSearchBar = 5;
 
-const DescriptionCellRenderer = ({
-  item
-}: any) => {
+const DescriptionCellRenderer = ({ item }) => {
   const defaultLanguage = Surveys.getDefaultLanguage(item);
   const description = item.props?.descriptions?.[defaultLanguage];
   return description ? <Text>{description}</Text> : null;
@@ -49,9 +42,7 @@ const DescriptionCellRenderer = ({
 
 DescriptionCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const DatePublishedCellRenderer = ({
-  item
-}: any) => (
+const DatePublishedCellRenderer = ({ item }) => (
   <Text>
     {Dates.convertDate({
       dateStr: item.datePublished,
@@ -63,12 +54,10 @@ const DatePublishedCellRenderer = ({
 
 DatePublishedCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const StatusCell = ({
-  item
-}: any) => {
+const StatusCell = ({ item }) => {
   const surveysLocal = SurveySelectors.useSurveysLocal();
   const localSurvey = surveysLocal.find(
-    (surveyLocal: any) => surveyLocal.uuid === item.uuid
+    (surveyLocal) => surveyLocal.uuid === item.uuid
   );
   let messageKey = null;
   if (!localSurvey) {
@@ -107,7 +96,6 @@ export const SurveysListRemote = () => {
         {
           key: "description",
           header: "surveys:description",
-          // @ts-expect-error TS(2345): Argument of type '{ key: string; header: string; c... Remove this comment to see the full error message
           cellRenderer: DescriptionCellRenderer,
         },
         {
@@ -141,7 +129,6 @@ export const SurveysListRemote = () => {
           confirmButtonTextKey: "loginInfo:login",
           messageKey: "surveys:loadSurveysErrorMessage",
           onConfirm: () =>
-            // @ts-expect-error TS(2769): No overload matches this call.
             navigation.navigate(screenKeys.settingsRemoteConnection),
           onCancel: () => navigation.goBack(),
         })
@@ -161,10 +148,10 @@ export const SurveysListRemote = () => {
     useSurveysSearch({ surveys });
 
   const onRowPress = useCallback(
-    (surveySummary: any) => {
+    (surveySummary) => {
       const surveyName = surveySummary.props.name;
       const localSurveyWithSameUuid = surveysLocal.find(
-        (surveyLocal: any) => surveyLocal.uuid === surveySummary.uuid
+        (surveyLocal) => surveyLocal.uuid === surveySummary.uuid
       );
 
       if (localSurveyWithSameUuid) {
@@ -228,9 +215,9 @@ export const SurveysListRemote = () => {
       {surveysFiltered.length > 0 && (
         <DataVisualizer
           fields={dataFields}
-          items={surveysFiltered.map((survey: any) => ({
+          items={surveysFiltered.map((survey) => ({
             key: survey.uuid,
-            ...survey
+            ...survey,
           }))}
           mode={screenViewMode}
           onItemPress={onRowPress}

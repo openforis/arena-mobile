@@ -2,15 +2,13 @@ import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { TouchableOpacity } from "react-native";
 
-// @ts-expect-error TS(2307): Cannot find module 'components' or its correspondi... Remove this comment to see the full error message
 import { FlexWrapView } from "components";
-// @ts-expect-error TS(2307): Cannot find module 'state' or its corresponding ty... Remove this comment to see the full error message
 import { DataEntryActions, DataEntrySelectors, useConfirm } from "state";
 
 import { NodeValuePreview } from "./NodeValuePreview";
 import { NodeValuePreviewPropTypes } from "./NodeValuePreview/NodeValuePreviewPropTypes";
 
-export const CurrentRecordNodeValuePreview = (props: any) => {
+export const CurrentRecordNodeValuePreview = (props) => {
   const { nodeDef, parentNodeUuid } = props;
 
   if (__DEV__) {
@@ -44,11 +42,13 @@ export const CurrentRecordNodeValuePreview = (props: any) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <FlexWrapView>
-        {nodes.map((node: any) => <NodeValuePreview
-          key={node.uuid}
-          nodeDef={nodeDef}
-          value={node.value}
-        />)}
+        {nodes.map((node) => (
+          <NodeValuePreview
+            key={node.uuid}
+            nodeDef={nodeDef}
+            value={node.value}
+          />
+        ))}
       </FlexWrapView>
     </TouchableOpacity>
   );

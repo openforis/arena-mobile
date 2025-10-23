@@ -1,12 +1,10 @@
 import { useEffect } from "react";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
-// @ts-expect-error TS(2307): Cannot find module 'state/message' or its correspo... Remove this comment to see the full error message
 import { MessageActions } from "state/message";
 import { useDispatch } from "react-redux";
 
-export const ErrorFallbackComponent = (props: any) => {
+export const ErrorFallbackComponent = (props) => {
   const { error, resetError } = props;
 
   const dispatch = useDispatch();

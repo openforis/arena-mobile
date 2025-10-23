@@ -1,18 +1,16 @@
 import { JobMessageOutType, JobStatus } from "@openforis/arena-core";
-// @ts-expect-error TS(2307): Cannot find module 'service' or its corresponding ... Remove this comment to see the full error message
 import { WebSocketService } from "service";
 
 const JOB_MONITOR_START = "JOB_MONITOR_START";
 const JOB_MONITOR_UPDATE = "JOB_MONITOR_UPDATE";
 const JOB_MONITOR_END = "JOB_MONITOR_END";
 
-const getJobMonitorState = (state: any) => state.jobMonitor;
+const getJobMonitorState = (state) => state.jobMonitor;
 
-const isJobStatusEnded = (status: any) => [JobStatus.canceled, JobStatus.failed, JobStatus.succeeded].includes(status);
+const isJobStatusEnded = (status) =>
+  [JobStatus.canceled, JobStatus.failed, JobStatus.succeeded].includes(status);
 
-const calculateJobProgressPercent = ({
-  jobSummary
-}: any) => {
+const calculateJobProgressPercent = ({ jobSummary }) => {
   const { total, processed, progressPercent } = jobSummary;
   return (
     progressPercent ?? (total ? Math.floor((processed / total) * 100) : -1)
@@ -20,14 +18,8 @@ const calculateJobProgressPercent = ({
 };
 
 const createOnJobUpdateCallback =
-  ({
-    dispatch,
-    job,
-    autoDismiss,
-    onJobComplete,
-    onJobEnd
-  }: any) =>
-  (jobSummary: any) => {
+  ({ dispatch, job, autoDismiss, onJobComplete, onJobEnd }) =>
+  (jobSummary) => {
     const { status, errors } = jobSummary;
     const progressPercent = calculateJobProgressPercent({ jobSummary });
 
@@ -50,10 +42,7 @@ const createOnJobUpdateCallback =
     }
   };
 
-const createOnCancelCallback = ({
-  job,
-  onCancelProp
-}: any) => {
+const createOnCancelCallback = ({ job, onCancelProp }) => {
   if (!job && !onCancelProp) return undefined;
   return async () => {
     await job?.cancel();
@@ -63,12 +52,8 @@ const createOnCancelCallback = ({
 
 const start =
   ({
-    // jobUuid must be provided when monitoring a remote job
-    jobUuid = null,
-
-    // job must be provided when monitoring a local job
-    job = null,
-
+    jobUuid = null, // jobUuid must be provided when monitoring a remote job
+    job = null, // job must be provided when monitoring a local job
     titleKey = "common:processing",
     cancelButtonTextKey = "common:cancel",
     closeButtonTextKey = "common:close",
@@ -78,9 +63,9 @@ const start =
     onJobEnd = undefined,
     onCancel: onCancelProp = undefined,
     onClose = undefined,
-    autoDismiss = false
-  }: any) =>
-  async (dispatch: any) => {
+    autoDismiss = false,
+  }) =>
+  async (dispatch) => {
     dispatch({
       type: JOB_MONITOR_START,
       payload: {
@@ -118,21 +103,18 @@ const start =
     }
   };
 
-const startAsync = async ({
-  dispatch,
-  ...otherParams
-}: any) =>
+const startAsync = async ({ dispatch, ...otherParams }) =>
   new Promise((resolve, reject) => {
     const { job } = otherParams;
     if (job) {
-      job.start().catch((error: any) => {
+      job.start().catch((error) => {
         reject(error);
       });
     }
     dispatch(
       start({
         ...otherParams,
-        onJobEnd: (jobEnd: any) => {
+        onJobEnd: (jobEnd) => {
           const { status } = jobEnd;
           if (status === JobStatus.succeeded) {
             resolve(jobEnd);
@@ -146,7 +128,7 @@ const startAsync = async ({
     );
   });
 
-const cancel = () => async (dispatch: any, getState: any) => {
+const cancel = () => async (dispatch, getState) => {
   const state = getState();
   const jobMonitorState = getJobMonitorState(state);
   const { onCancel } = jobMonitorState;
@@ -154,7 +136,7 @@ const cancel = () => async (dispatch: any, getState: any) => {
   dispatch(close());
 };
 
-const close = () => (dispatch: any, getState: any) => {
+const close = () => (dispatch, getState) => {
   const state = getState();
   const jobMonitorState = getJobMonitorState(state);
   const { onClose } = jobMonitorState;

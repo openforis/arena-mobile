@@ -26,22 +26,16 @@ const formatModes = {
   short: "short",
 };
 
-const _calculateValuePerTimePart = (time: any, part: any) => {
+const _calculateValuePerTimePart = (time, part) => {
   const timePartsValues = Object.values(timeParts);
   const prevTimePart = timePartsValues[timePartsValues.indexOf(part) - 1];
   const timeEffective = prevTimePart
-    // @ts-expect-error TS(2532): Object is possibly 'undefined'.
     ? time % msPerTimePart[prevTimePart]
     : time;
-  // @ts-expect-error TS(2532): Object is possibly 'undefined'.
   return Math.floor(timeEffective / msPerTimePart[part]);
 };
 
-const formatRemainingTime = ({
-  time,
-  upToTimePart = timeParts.minute,
-  t
-}: any) => {
+const formatRemainingTime = ({ time, upToTimePart = timeParts.minute, t }) => {
   if (!time) return "";
 
   const timePartsValues = Object.values(timeParts);
@@ -66,20 +60,15 @@ const formatRemainingTime = ({
   });
 };
 
-const extractParts = (time: any) => !time
-  ? null
-  : Object.values(timeParts).reduce((acc, timePart) => {
-      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-      acc[timePart] = _calculateValuePerTimePart(time, timePart);
-      return acc;
-    }, {});
+const extractParts = (time) =>
+  !time
+    ? null
+    : Object.values(timeParts).reduce((acc, timePart) => {
+        acc[timePart] = _calculateValuePerTimePart(time, timePart);
+        return acc;
+      }, {});
 
-const _formatRemainingHoursAndMinutes = ({
-  hours,
-  minutes,
-  t,
-  formatMode
-}: any) => {
+const _formatRemainingHoursAndMinutes = ({ hours, minutes, t, formatMode }) => {
   switch (formatMode) {
     case formatModes.full:
       return t("common:remainingTime.canLastHoursAndMinutes", {
@@ -99,12 +88,7 @@ const _formatRemainingHoursAndMinutes = ({
   }
 };
 
-const _formatRemainingTimePart = ({
-  timePart,
-  count,
-  t,
-  formatMode
-}: any) => {
+const _formatRemainingTimePart = ({ timePart, count, t, formatMode }) => {
   const timePartText = t(`common:timePart.${timePart}`, { count });
   switch (formatMode) {
     case formatModes.full:
@@ -125,12 +109,11 @@ const _formatRemainingTimePart = ({
 const formatRemainingTimeIfLessThan1Day = ({
   time,
   t,
-  formatMode = formatModes.full
-}: any) => {
+  formatMode = formatModes.full,
+}) => {
   const parts = extractParts(time);
   if (!parts) return "";
 
-  // @ts-expect-error TS(2339): Property 'year' does not exist on type '{}'.
   const { year: years, day: days, hour: hours, minute: minutes } = parts;
   if (years || days) return "";
   if (hours && minutes) {

@@ -4,7 +4,6 @@ import {
   Objects,
   Surveys,
 } from "@openforis/arena-core";
-// @ts-expect-error TS(2307): Cannot find module 'model' or its corresponding ty... Remove this comment to see the full error message
 import { SurveyDefs } from "model";
 
 const getValuesByKeyOrSummaryAttributeFormatted = ({
@@ -12,8 +11,8 @@ const getValuesByKeyOrSummaryAttributeFormatted = ({
   lang,
   recordSummary,
   valuesWrapperProp,
-  t = null
-}: any) => {
+  t = null,
+}) => {
   const { cycle } = recordSummary;
   const rootDef = Surveys.getNodeDefRoot({ survey });
   const nodeDefs =
@@ -24,10 +23,9 @@ const getValuesByKeyOrSummaryAttributeFormatted = ({
           cycle,
           nodeDef: rootDef,
         });
-  return nodeDefs.reduce((acc: any, nodeDef: any) => {
+  return nodeDefs.reduce((acc, nodeDef) => {
     const nodeDefName = NodeDefs.getName(nodeDef);
     const value = Objects.path([valuesWrapperProp, nodeDefName])(recordSummary);
-    // @ts-expect-error TS(2345): Argument of type '{ survey: any; nodeDef: any; val... Remove this comment to see the full error message
     let valueFormatted = NodeValueFormatter.format({
       survey,
       nodeDef: nodeDef,
@@ -47,12 +45,7 @@ const getValuesByKeyOrSummaryAttributeFormatted = ({
   }, {});
 };
 
-const getValuesByKeyFormatted = ({
-  survey,
-  lang,
-  recordSummary,
-  t = null
-}: any) =>
+const getValuesByKeyFormatted = ({ survey, lang, recordSummary, t = null }) =>
   getValuesByKeyOrSummaryAttributeFormatted({
     survey,
     lang,
@@ -65,8 +58,8 @@ const getValuesBySummaryAttributeFormatted = ({
   survey,
   lang,
   recordSummary,
-  t = null
-}: any) =>
+  t = null,
+}) =>
   getValuesByKeyOrSummaryAttributeFormatted({
     survey,
     lang,

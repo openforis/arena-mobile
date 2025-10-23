@@ -1,4 +1,3 @@
-// @ts-expect-error TS(2307): Cannot find module 'state/survey' or its correspon... Remove this comment to see the full error message
 import { SurveyActionTypes } from "state/survey";
 import { StoreUtils } from "../storeUtils";
 
@@ -20,10 +19,7 @@ const actionHandlers = {
   [SurveyActionTypes.CURRENT_SURVEY_SET]: () => ({ ...initialState }),
   [DataEntryActionTypes.DATA_ENTRY_RESET]: () => ({ ...initialState }),
 
-  [DataEntryActionTypes.RECORD_SET]: ({
-    state,
-    action
-  }: any) => ({
+  [DataEntryActionTypes.RECORD_SET]: ({ state, action }) => ({
     ...state,
     record: action.record,
     recordEditLockAvailable:
@@ -32,60 +28,43 @@ const actionHandlers = {
     recordPageSelectorMenuOpen:
       action.recordPageSelectorMenuOpen ?? state.recordPageSelectorMenuOpen,
   }),
-  [DataEntryActionTypes.RECORD_EDIT_LOCKED]: ({
-    state,
-    action
-  }: any) => ({
+  [DataEntryActionTypes.RECORD_EDIT_LOCKED]: ({ state, action }) => ({
     ...state,
     recordEditLocked: action.locked,
   }),
-  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_LOAD]: ({
-    state,
-    action
-  }: any) => ({
+  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_LOAD]: ({ state, action }) => ({
     ...state,
     previousCycleRecordLoading: action.loading,
   }),
-  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_SET]: ({
-    state,
-    action
-  }: any) => ({
+  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_SET]: ({ state, action }) => ({
     ...state,
     linkToPreviousCycleRecord: true,
     previousCycleRecord: action.record,
     previousCycleRecordPageEntity: {},
   }),
-  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_RESET]: ({
-    state
-  }: any) => ({
+  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_RESET]: ({ state }) => ({
     ...state,
     linkToPreviousCycleRecord: false,
     previousCycleRecord: null,
     previousCycleRecordPageEntity: {},
   }),
-  [DataEntryActionTypes.PAGE_ENTITY_SET]: ({
-    state,
-    action
-  }: any) => ({
+  [DataEntryActionTypes.PAGE_ENTITY_SET]: ({ state, action }) => ({
     ...state,
     recordCurrentPageEntity: action.payload,
     activeChildDefIndex: 0,
   }),
   [DataEntryActionTypes.PAGE_ENTITY_ACTIVE_CHILD_INDEX_SET]: ({
     state,
-    action
-  }: any) => ({ ...state, activeChildDefIndex: action.index }),
-  [DataEntryActionTypes.PAGE_SELECTOR_MENU_OPEN_SET]: ({
-    state,
-    action
-  }: any) => ({
+    action,
+  }) => ({ ...state, activeChildDefIndex: action.index }),
+  [DataEntryActionTypes.PAGE_SELECTOR_MENU_OPEN_SET]: ({ state, action }) => ({
     ...state,
     recordPageSelectorMenuOpen: action.open,
   }),
   [DataEntryActionTypes.PREVIOUS_CYCLE_PAGE_ENTITY_SET]: ({
     state,
-    action
-  }: any) => ({
+    action,
+  }) => ({
     ...state,
     previousCycleRecordPageEntity: action.payload,
   }),

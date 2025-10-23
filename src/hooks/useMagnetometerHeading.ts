@@ -3,17 +3,16 @@ import { Magnetometer } from "expo-sensors";
 
 import { Numbers, Objects } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2307): Cannot find module 'utils/AverageAnglePicker' or i... Remove this comment to see the full error message
 import { AverageAnglePicker } from "utils/AverageAnglePicker";
-// @ts-expect-error TS(2307): Cannot find module 'utils/Functions' or its corres... Remove this comment to see the full error message
 import { Functions } from "utils/Functions";
 
 const updateHeadingThrottleDelay = 200;
 const averageAnglePicker = new AverageAnglePicker();
 
-const radsToDegrees = (rads: any) => (rads >= 0 ? rads : rads + 2 * Math.PI) * (180 / Math.PI);
+const radsToDegrees = (rads) =>
+  (rads >= 0 ? rads : rads + 2 * Math.PI) * (180 / Math.PI);
 
-const magnetometerDataToAngle = (magnetometer: any) => {
+const magnetometerDataToAngle = (magnetometer) => {
   let angle = 0;
   if (magnetometer) {
     const { x, y } = magnetometer;
@@ -46,7 +45,7 @@ export const useMagnetometerHeading = () => {
   );
 
   const onMagnetometerData = useCallback(
-    (data: any) => {
+    (data) => {
       const prevMagnetometerAngle = lastMagnetometerAngleRef.current;
       const magnetometerAngle = magnetometerDataToAngle(data);
       let avgAngle = averageAnglePicker.push(magnetometerAngle);
@@ -65,7 +64,6 @@ export const useMagnetometerHeading = () => {
     try {
       const available = await Magnetometer.isAvailableAsync();
       if (available) {
-        // @ts-expect-error TS(2322): Type 'EventSubscription' is not assignable to type... Remove this comment to see the full error message
         magnetometerSubscriptionRef.current =
           Magnetometer.addListener(onMagnetometerData);
       } else {
@@ -79,7 +77,6 @@ export const useMagnetometerHeading = () => {
   useEffect(() => {
     subscribeToMagnetometerData();
     return () => {
-      // @ts-expect-error TS(2339): Property 'remove' does not exist on type 'never'.
       magnetometerSubscriptionRef.current?.remove();
     };
   }, [subscribeToMagnetometerData]);
