@@ -1,19 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
-    "paths": {
-      "appComponents/*": ["appComponents/*"],
-      "components/*": ["components/*"],
-      "db/*": ["db/*"],
-      "hooks/*": ["hooks/*"],
-      "localization/*": ["localization/*"],
-      "model/*": ["model/*"],
-      "navigation/*": ["navigation/*"],
-      "screens/*": ["screens/*"],
-      "service/*": ["service/*"],
-      "state/*": ["state/*"],
-      "utils/*": ["utils/*"]
-    },
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -32,9 +18,8 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
-    "allowUnreachableCode": false,
+    "allowUnreachableCode": false
   },
-  "include": ["src/**/*", "App.ts"],
   "exclude": [
     "node_modules",
     "babel.config.js",
