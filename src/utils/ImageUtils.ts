@@ -6,11 +6,22 @@ import { ExifUtils } from "./ExifUtils";
 
 const compress = 0.95; // default compression ratio for resized images
 
+type ImageScaleResult = {
+  uri: string;
+  height: number;
+  width: number;
+  size: number;
+};
+
+type ImageScaleError = {
+  error: any;
+};
+
 const _scaleImage = async ({
   sourceFileUri,
   sourceWidth,
-  scale
-}: any) => {
+  scale,
+}: any): Promise<ImageScaleResult> => {
   const scaledWidth = Math.floor(sourceWidth * scale);
   const imageContext = ImageManipulator.manipulate(sourceFileUri);
   imageContext.resize({ width: scaledWidth });
@@ -32,11 +43,11 @@ const _resizeToFitMaxSize = async ({
   minSuccessfullSizeRatio = 0.95,
 
   // = max size
-  maxSuccessfullSizeRatio = 1.0
-}: any) => {
+  maxSuccessfullSizeRatio = 1.0,
+}: any): Promise<ImageScaleResult | ImageScaleError> => {
   let tryings = 1;
 
-  let lastResizeResult = {
+  let lastResizeResult: ImageScaleResult = {
     uri: sourceFileUri,
     size: sourceSize,
     height: sourceHeight,
@@ -118,40 +129,46 @@ const _resizeToFitMaxSize = async ({
 
 const resizeToFitMaxSize = async ({
   fileUri,
-  maxSize
-}: any) => {
+  maxSize,
+}: any): Promise<ImageScaleResult | ImageScaleError | null> => {
   const size = await Files.getSize(fileUri);
   if (size <= maxSize) return null;
 
-  const resizeResult = await new Promise((resolve, reject) => {
+  const resizeResult: ImageScaleResult | ImageScaleError = await new Promise(
+    (resolve, reject) => {
+      Image.getSize(
+        fileUri,
+        (width, height) => {
+          _resizeToFitMaxSize({ fileUri, width, height, size, maxSize })
+            .then((result) => resolve(result))
+            .catch((error) => reject(error));
+        },
+        (error) => reject(error)
+      );
+    }
+  );
+  if ("error" in resizeResult) {
+    return resizeResult;
+  } else {
+    const { uri: resultUri } = resizeResult;
+    if (fileUri !== resultUri) {
+      await ExifUtils.copyData({
+        sourceFileUri: fileUri,
+        targetFileUri: resultUri,
+      });
+    }
+    return resizeResult;
+  }
+};
+
+const getSize = async (fileUri: any) =>
+  new Promise((resolve, reject) => {
     Image.getSize(
       fileUri,
-      (width, height) => {
-        _resizeToFitMaxSize({ fileUri, width, height, size, maxSize }).then(
-          (result) => resolve(result)
-        );
-      },
+      (width, height) => resolve({ width, height }),
       (error) => reject(error)
     );
   });
-  // @ts-expect-error TS(2339): Property 'uri' does not exist on type 'unknown'.
-  const { uri: resultUri } = resizeResult;
-  if (fileUri !== resultUri) {
-    await ExifUtils.copyData({
-      sourceFileUri: fileUri,
-      targetFileUri: resultUri,
-    });
-  }
-  return resizeResult;
-};
-
-const getSize = async (fileUri: any) => new Promise((resolve, reject) => {
-  Image.getSize(
-    fileUri,
-    (width, height) => resolve({ width, height }),
-    (error) => reject(error)
-  );
-});
 
 const getGPSLocation = async (fileUri: any) => {
   const exifInfo = await ExifUtils.readData({ fileUri });

@@ -16,20 +16,13 @@ export const NavigateToRecordsListButton = () => {
   const textDirection = useTextDirection();
 
   return (
-    // @ts-expect-error TS(2709): Cannot use namespace 'Button' as a type.
     <Button
-      // @ts-expect-error TS(2304): Cannot find name 'avoidMultiplePress'.
       avoidMultiplePress={false}
-      // @ts-expect-error TS(7027): Unreachable code detected.
       icon="format-list-bulleted"
-      // @ts-expect-error TS(2304): Cannot find name 'onPress'.
       onPress={() =>
-        // @ts-expect-error TS(2304): Cannot find name 'dispatch'.
-        dispatch(DataEntryActions.navigateToRecordsList({ navigation }))
+        DataEntryActions.navigateToRecordsList({ navigation })(dispatch)
       }
-      // @ts-expect-error TS(2304): Cannot find name 'style'.
       style={styleByTextDirection[textDirection]}
-      // @ts-expect-error TS(2304): Cannot find name 'textKey'.
       textKey="dataEntry:listOfRecords"
     />
   );

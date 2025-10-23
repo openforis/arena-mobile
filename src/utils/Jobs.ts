@@ -1,20 +1,29 @@
+import { ValidationResult } from "@openforis/arena-core";
+import {
+  Validation,
+  ValidationFields,
+} from "@openforis/arena-core/dist/validation/validation";
+
 const extractErrorMessage = ({
   errors,
-  t
-}: any) => {
+  t,
+}: {
+  errors: ValidationFields;
+  t: any;
+}): string => {
   const firstLevelErrors = Object.values(errors);
-  const secondLevelErrors = firstLevelErrors.flatMap((firstLevelError) =>
-    // @ts-expect-error TS(2769): No overload matches this call.
-    Object.values(firstLevelError)
+  const secondLevelErrors: Validation[] = firstLevelErrors.flatMap(
+    (firstLevelError) => Object.values(firstLevelError)
   );
-  const errorItems = secondLevelErrors.reduce((acc, secondLevelError) => {
-    // @ts-expect-error TS(2571): Object is of type 'unknown'.
-    acc.push(...(secondLevelError.errors ?? []));
-    return acc;
-  }, []);
-  // @ts-expect-error TS(2571): Object is of type 'unknown'.
+  const errorItems: ValidationResult[] = secondLevelErrors.reduce(
+    (acc, secondLevelError: Validation) => {
+      acc.push(...(secondLevelError.errors ?? []));
+      return acc;
+    },
+    [] as ValidationResult[]
+  );
   return errorItems
-    .reduce((acc: any, errorItem: any) => {
+    .reduce((acc: any, errorItem: ValidationResult) => {
       const { key, params } = errorItem;
       if (key) {
         const messageKey =

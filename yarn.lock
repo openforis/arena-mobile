@@ -2999,6 +2999,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash.debounce@npm:^4.0.9":
+  version: 4.0.9
+  resolution: "@types/lodash.debounce@npm:4.0.9"
+  dependencies:
+    "@types/lodash": "npm:*"
+  checksum: 10c0/9fbb24e5e52616faf60ba5c82d8c6517f4b86fc6e9ab353b4c56c0760f63d9bf53af3f2d8f6c37efa48090359fb96dba1087d497758511f6c40677002191d042
+  languageName: node
+  linkType: hard
+
+"@types/lodash.throttle@npm:^4.1.9":
+  version: 4.1.9
+  resolution: "@types/lodash.throttle@npm:4.1.9"
+  dependencies:
+    "@types/lodash": "npm:*"
+  checksum: 10c0/93f7096dcaea8f54a4f52d5175d97a471f155f5bae4649c967cc29bcae506a456476d13b4392361799b31c3b96659560e1bbfddf00f550a50c685f6c037411a6
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*, @types/lodash@npm:^4.17.20":
+  version: 4.17.20
+  resolution: "@types/lodash@npm:4.17.20"
+  checksum: 10c0/98cdd0faae22cbb8079a01a3bb65aa8f8c41143367486c1cbf5adc83f16c9272a2a5d2c1f541f61d0d73da543c16ee1d21cf2ef86cb93cd0cc0ac3bced6dd88f
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*":
   version: 22.15.18
   resolution: "@types/node@npm:22.15.18"
@@ -3436,6 +3461,9 @@ __metadata:
     "@react-navigation/native-stack": "npm:^7.5.1"
     "@reduxjs/toolkit": "npm:^2.9.2"
     "@types/jest": "npm:^30.0.0"
+    "@types/lodash": "npm:^4.17.20"
+    "@types/lodash.debounce": "npm:^4.0.9"
+    "@types/lodash.throttle": "npm:^4.1.9"
     "@types/prop-types": "npm:^15.7.15"
     "@types/react": "npm:^19.2.2"
     "@types/react-native": "npm:^0.73.0"

@@ -5,11 +5,16 @@ import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import * as Localization from "expo-localization";
 import * as ExpoScreenOrientation from "expo-screen-orientation";
 
-import { Dates, FileNames, UUIDs } from "@openforis/arena-core";
+import { AppInfo, Dates, FileNames, UUIDs } from "@openforis/arena-core";
 
 import { ScreenOrientation } from "model";
 import { Environment } from "./Environment";
 import { Files } from "./Files";
+
+export interface ArenaMobileAppInfo extends AppInfo {
+  buildNumber?: string | null;
+  lastUpdateTime?: string | null;
+}
 
 const { nativeBuildVersion: buildNumber, nativeApplicationVersion: version } =
   Application;
@@ -40,11 +45,12 @@ const copyValueToClipboard = (value: any) => {
 const getLastUpdateTime = async () =>
   isAndroid ? Application.getLastUpdateTimeAsync() : null;
 
-const getApplicationInfo = async () => {
+const getApplicationInfo = async (): Promise<ArenaMobileAppInfo> => {
   const lastUpdateTime = await getLastUpdateTime();
   return {
+    appId,
     buildNumber,
-    version,
+    version: version ?? "0",
     lastUpdateTime: lastUpdateTime
       ? Dates.formatForStorage(lastUpdateTime)
       : null,

@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
-import { Animated, Image } from "react-native";
-import { useAssets } from "expo-asset";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
+import { Animated, Image, ImageSourcePropType } from "react-native";
+import { Asset, useAssets } from "expo-asset";
 import PropTypes from "prop-types";
 
 import { HeartbeatAnimation } from "components/HeartbeatAnimation";
@@ -24,12 +23,17 @@ export const AppLogo = (props: any) => {
     }).start();
   }, []);
 
-  const [logo] = useAssets(require("../../assets/logo/icon_transparent.png"));
+  const [logoAssets] = useAssets(
+    require("../../assets/logo/icon_transparent.png")
+  );
+  if (!logoAssets) return null;
 
-  if (!logo) return null;
-
-  // @ts-expect-error TS(2769): No overload matches this call.
-  const image = <Image source={logo} style={[defaultStyle, style]} />;
+  const image = (
+    <Image
+      source={logoAssets as ImageSourcePropType}
+      style={[defaultStyle, style]}
+    />
+  );
 
   if (animated) {
     return (

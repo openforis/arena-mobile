@@ -39,6 +39,7 @@ import {
   importRecordsFromServer,
 } from "./actionsRecordsImport";
 import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
+import { UnknownAction } from "redux";
 
 const {
   DATA_ENTRY_RESET,
@@ -66,11 +67,7 @@ const removeNodesFlags = (nodes: any) => {
   });
 };
 
-const _isRootKeyDuplicate = async ({
-  survey,
-  record,
-  lang
-}: any) => {
+const _isRootKeyDuplicate = async ({ survey, record, lang }: any) => {
   const recordSummaries = await RecordService.findRecordSummariesWithSameKeys({
     survey,
     record,
@@ -82,18 +79,14 @@ const _isRootKeyDuplicate = async ({
   );
 };
 
-const prepareRecordForStorage = ({
-  record
-}: any) => {
+const prepareRecordForStorage = ({ record }: any) => {
   const validation = Validations.getValidation(record);
   const validationUpdated = Validations.updateCounts(validation);
   return { ...record, validation: validationUpdated };
 };
 
 const createNewRecord =
-  ({
-    navigation
-  }: any) =>
+  ({ navigation }: any) =>
   async (dispatch: any, getState: any) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
@@ -198,37 +191,39 @@ const addNewEntity =
     }
   };
 
-const deleteNodes = (nodeUuids: any) => async (dispatch: any, getState: any) => {
-  const state = getState();
-  const user = RemoteConnectionSelectors.selectLoggedUser(state);
-  const survey = SurveySelectors.selectCurrentSurvey(state);
-  const record = DataEntrySelectors.selectRecord(state);
+const deleteNodes =
+  (nodeUuids: any) => async (dispatch: any, getState: any) => {
+    const state = getState();
+    const user = RemoteConnectionSelectors.selectLoggedUser(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const record = DataEntrySelectors.selectRecord(state);
 
-  const { record: recordUpdated, nodes } = await RecordUpdater.deleteNodes({
-    user,
-    survey,
-    record,
-    nodeUuids,
-  });
+    const { record: recordUpdated, nodes } = await RecordUpdater.deleteNodes({
+      user,
+      survey,
+      record,
+      nodeUuids,
+    });
 
-  removeNodesFlags(nodes);
+    removeNodesFlags(nodes);
 
-  await _updateRecord({ dispatch, survey, record: recordUpdated });
-};
+    await _updateRecord({ dispatch, survey, record: recordUpdated });
+  };
 
-const deleteRecords = (recordUuids: any) => async (dispatch: any, getState: any) => {
-  const state = getState();
-  const survey = SurveySelectors.selectCurrentSurvey(state);
+const deleteRecords =
+  (recordUuids: any) => async (dispatch: any, getState: any) => {
+    const state = getState();
+    const survey = SurveySelectors.selectCurrentSurvey(state);
 
-  await RecordService.deleteRecords({ surveyId: survey.id, recordUuids });
+    await RecordService.deleteRecords({ surveyId: survey.id, recordUuids });
 
-  dispatch(DeviceInfoActions.updateFreeDiskStorage());
-};
+    dispatch(DeviceInfoActions.updateFreeDiskStorage());
+  };
 
 const checkEntityPageIsValidAndNotRoot = ({
   survey,
   entityPage,
-  record
+  record,
 }: any) => {
   const { parentEntityUuid, entityDefUuid, entityUuid } = entityPage;
   const entityDef = Surveys.findNodeDefByUuid({ survey, uuid: entityDefUuid });
@@ -242,11 +237,7 @@ const checkEntityPageIsValidAndNotRoot = ({
 };
 
 const editRecord =
-  ({
-    navigation,
-    record,
-    locked = true
-  }: any) =>
+  ({ navigation, record, locked = true }: any) =>
   async (dispatch: any, getState: any) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -292,17 +283,14 @@ const _fetchAndEditRecordInternal = async ({
   dispatch,
   navigation,
   survey,
-  recordId
+  recordId,
 }: any) => {
   const record = await RecordService.fetchRecord({ survey, recordId });
   await dispatch(editRecord({ navigation, record }));
 };
 
 const fetchAndEditRecord =
-  ({
-    navigation,
-    recordSummary
-  }: any) =>
+  ({ navigation, recordSummary }: any) =>
   async (dispatch: any, getState: any) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -347,11 +335,7 @@ const fetchAndEditRecord =
     }
   };
 
-const _updateRecord = async ({
-  dispatch,
-  survey,
-  record
-}: any) => {
+const _updateRecord = async ({ dispatch, survey, record }: any) => {
   const recordUpdated = prepareRecordForStorage({ record });
   const recordStored = await RecordService.updateRecord({
     survey,
@@ -366,7 +350,7 @@ const updateRecordNodeFile = async ({
   fileUri,
   value,
   node,
-  dispatch
+  dispatch,
 }: any) => {
   const surveyId = survey.id;
 
@@ -395,7 +379,7 @@ const checkAndConfirmUpdateNode = async ({
   dispatch,
   getState,
   node,
-  nodeDef
+  nodeDef,
 }: any) => {
   const state = getState();
   const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -422,11 +406,7 @@ const checkAndConfirmUpdateNode = async ({
 };
 
 const updateAttribute =
-  ({
-    uuid,
-    value,
-    fileUri = null
-  }: any) =>
+  ({ uuid, value, fileUri = null }: any) =>
   async (dispatch: any, getState: any) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
@@ -493,10 +473,7 @@ const updateAttribute =
   };
 
 const performCoordinateValueSrsConversion =
-  ({
-    nodeUuid,
-    srsTo
-  }: any) =>
+  ({ nodeUuid, srsTo }: any) =>
   async (dispatch: any, getState: any) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -520,10 +497,7 @@ const performCoordinateValueSrsConversion =
   };
 
 const updateCoordinateValueSrs =
-  ({
-    nodeUuid,
-    srsTo
-  }: any) =>
+  ({ nodeUuid, srsTo }: any) =>
   async (dispatch: any, getState: any) => {
     const state = getState();
     const record = DataEntrySelectors.selectRecord(state);
@@ -559,11 +533,7 @@ const updateCoordinateValueSrs =
   };
 
 const addNewAttribute =
-  ({
-    nodeDef,
-    parentNodeUuid,
-    value = null
-  }: any) =>
+  ({ nodeDef, parentNodeUuid, value = null }: any) =>
   async (dispatch: any, getState: any) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
@@ -599,11 +569,7 @@ const addNewAttribute =
   };
 
 const selectCurrentPageEntity =
-  ({
-    parentEntityUuid,
-    entityDefUuid,
-    entityUuid = null
-  }: any) =>
+  ({ parentEntityUuid, entityDefUuid, entityUuid = null }: any) =>
   async (dispatch: any, getState: any) => {
     const state = getState();
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
@@ -683,10 +649,8 @@ const toggleRecordEditLock = (dispatch: any, getState: any) => {
 };
 
 const navigateToRecordsList =
-  ({
-    navigation
-  }: any) =>
-  (dispatch: any) => {
+  ({ navigation }: any) =>
+  (dispatch: any) =>
     dispatch(
       ConfirmActions.show({
         confirmButtonTextKey: "dataEntry:goToListOfRecords",
@@ -698,7 +662,6 @@ const navigateToRecordsList =
         },
       })
     );
-  };
 
 export const DataEntryActions = {
   createNewRecord,
