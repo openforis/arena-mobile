@@ -15,8 +15,7 @@ export const LocalSurveysDropdown = () => {
   const onChange = useCallback(
     async (surveyId: any) => {
       dispatch(
-        // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => Promise<void>... Remove this comment to see the full error message
-        SurveyActions.fetchAndSetCurrentSurvey({ surveyId, navigation })
+        SurveyActions.fetchAndSetCurrentSurvey({ surveyId, navigation }) as any
       );
     },
     [dispatch, navigation]

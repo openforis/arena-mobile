@@ -2,12 +2,15 @@ import { Objects } from "@openforis/arena-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { DataEntryActions, DataEntrySelectors, StoreUtils, useConfirm } from "state";
+import {
+  DataEntryActions,
+  DataEntrySelectors,
+  StoreUtils,
+  useConfirm,
+} from "state";
 import { Functions } from "utils";
 
-const getNodeUpdateActionKey = ({
-  nodeUuid
-}: any) => `node_update_${nodeUuid}`;
+const getNodeUpdateActionKey = ({ nodeUuid }: any) => `node_update_${nodeUuid}`;
 
 const isNodeValueEqualDefault = (nodeValueA: any, nodeValueB: any) =>
   Objects.isEqual(nodeValueA, nodeValueB) ||
@@ -19,12 +22,12 @@ export const useNodeComponentLocalState = ({
   updateDelay = 0,
   uiValueToNodeValue = Functions.identity,
   nodeValueToUiValue = Functions.identity,
-  isNodeValueEqual = isNodeValueEqualDefault
+  isNodeValueEqual = isNodeValueEqualDefault,
 }: any) => {
   const dispatch = useDispatch();
   const dirtyRef = useRef(false);
-  const debouncedUpdateRef = useRef(null);
-  const confirm = useConfirm()
+  const debouncedUpdateRef = useRef(null as any);
+  const confirm = useConfirm();
 
   const {
     applicable,
@@ -78,8 +81,11 @@ export const useNodeComponentLocalState = ({
   ]);
 
   const updateNodeValue = useCallback(
-    // @ts-expect-error TS(7031): Binding element 'uiValueUpdated' implicitly has an... Remove this comment to see the full error message
-    async ({ value: uiValueUpdated, fileUri = null, ignoreDelay = false }) => {
+    async ({
+      value: uiValueUpdated,
+      fileUri = null,
+      ignoreDelay = false,
+    }: any) => {
       const nodeValueUpdated = uiValueToNodeValue(uiValueUpdated);
 
       if (
@@ -110,7 +116,6 @@ export const useNodeComponentLocalState = ({
           validation: null,
         }));
 
-        // @ts-expect-error TS(2339): Property 'cancel' does not exist on type 'never'.
         debouncedUpdateRef.current?.cancel();
 
         debouncedUpdateRef.current = StoreUtils.debounceAction(
@@ -119,11 +124,9 @@ export const useNodeComponentLocalState = ({
           updateDelay
         );
 
-        // @ts-expect-error TS(2345): Argument of type 'null' is not assignable to param... Remove this comment to see the full error message
         dispatch(debouncedUpdateRef.current);
       } else {
-        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
-        dispatch(action);
+        dispatch(action as never);
       }
     },
     [uiValueToNodeValue, updateDelay, nodeUuid, dispatch]

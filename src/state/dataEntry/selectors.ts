@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 
 import {
+  NodeDefEntity,
   NodeDefs,
   Nodes,
   NodeValues,
@@ -20,7 +21,8 @@ const selectRecord = (state: any) => getDataEntryState(state).record;
 
 const selectIsEditingRecord = (state: any) => !!selectRecord(state);
 
-const selectRecordEditLocked = (state: any) => !!getDataEntryState(state).recordEditLocked;
+const selectRecordEditLocked = (state: any) =>
+  !!getDataEntryState(state).recordEditLocked;
 
 const selectIsRecordInDefaultCycle = (state: any) => {
   const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -29,9 +31,10 @@ const selectIsRecordInDefaultCycle = (state: any) => {
   return String(defaultCycle) === String(record?.cycle);
 };
 
-const selectRecordEditLockAvailable = (state: any) => !!getDataEntryState(state).recordEditLockAvailable &&
-selectIsEditingRecord(state) &&
-selectIsRecordInDefaultCycle(state);
+const selectRecordEditLockAvailable = (state: any) =>
+  !!getDataEntryState(state).recordEditLockAvailable &&
+  selectIsEditingRecord(state) &&
+  selectIsRecordInDefaultCycle(state);
 
 const selectCanEditRecord = (state: any) => {
   const editLocked = selectRecordEditLocked(state);
@@ -50,10 +53,7 @@ const selectRecordCycle = (state: any) => {
 };
 
 const selectRecordSingleNodeUuid =
-  ({
-    parentNodeUuid,
-    nodeDefUuid
-  }: any) =>
+  ({ parentNodeUuid, nodeDefUuid }: any) =>
   (state: any) => {
     const record = selectRecord(state);
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
@@ -63,10 +63,7 @@ const selectRecordSingleNodeUuid =
   };
 
 const selectRecordEntitiesUuidsAndKeyValues =
-  ({
-    parentNodeUuid,
-    nodeDefUuid
-  }: any) =>
+  ({ parentNodeUuid, nodeDefUuid }: any) =>
   (state: any) => {
     const record = selectRecord(state);
     const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -80,10 +77,8 @@ const selectRecordEntitiesUuidsAndKeyValues =
   };
 
 const selectRecordNodePointerValidation =
-  (state: any) => ({
-    parentNodeUuid,
-    nodeDefUuid
-  }: any) => {
+  (state: any) =>
+  ({ parentNodeUuid, nodeDefUuid }: any) => {
     const record = selectRecord(state);
     const nodeParent = Records.getNodeByUuid(parentNodeUuid)(record);
     // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
@@ -99,10 +94,7 @@ const selectRecordNodePointerValidation =
   };
 
 const selectRecordNodePointerValidationChildrenCount =
-  ({
-    parentNodeUuid,
-    nodeDefUuid
-  }: any) =>
+  ({ parentNodeUuid, nodeDefUuid }: any) =>
   (state: any) => {
     const record = selectRecord(state);
     const validationChildrenCount =
@@ -114,10 +106,7 @@ const selectRecordNodePointerValidationChildrenCount =
   };
 
 const selectRecordNodePointerVisibility =
-  ({
-    parentNodeUuid,
-    nodeDefUuid
-  }: any) =>
+  ({ parentNodeUuid, nodeDefUuid }: any) =>
   (state: any) => {
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const record = selectRecord(state);
@@ -136,9 +125,7 @@ const selectRecordNodePointerVisibility =
   };
 
 const selectRecordAttributeInfo =
-  ({
-    nodeUuid
-  }: any) =>
+  ({ nodeUuid }: any) =>
   (state: any) => {
     const record = selectRecord(state);
     const attribute = Records.getNodeByUuid(nodeUuid)(record);
@@ -154,10 +141,7 @@ const selectRecordAttributeInfo =
   };
 
 const selectRecordChildNodes =
-  ({
-    parentEntityUuid,
-    nodeDef
-  }: any) =>
+  ({ parentEntityUuid, nodeDef }: any) =>
   (state: any) => {
     const record = selectRecord(state);
     const parentEntity = Records.getNodeByUuid(parentEntityUuid)(record);
@@ -167,9 +151,7 @@ const selectRecordChildNodes =
   };
 
 const selectChildDefs =
-  ({
-    nodeDef
-  }: any) =>
+  ({ nodeDef }: any) =>
   (state: any) => {
     const cycle = selectRecordCycle(state);
     const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -186,18 +168,14 @@ const selectChildDefs =
   };
 
 const selectRecordCodeParentItemUuid =
-  ({
-    nodeDef,
-    parentNodeUuid
-  }: any) =>
+  ({ nodeDef, parentNodeUuid }: any) =>
   (state: any) => {
     const parentCodeDefUuid = NodeDefs.getParentCodeDefUuid(nodeDef);
     if (!parentCodeDefUuid) return null;
 
     const record = selectRecord(state);
-    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
+    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
     const parentCodeAttribute = Records.getParentCodeAttribute({
-      // @ts-expect-error TS(2322): Type 'Node | undefined' is not assignable to type ... Remove this comment to see the full error message
       parentNode,
       nodeDef,
     })(record);
@@ -209,8 +187,7 @@ const selectRecordCodeParentItemUuid =
 const selectRecordIsNotValid = (state: any) => {
   const record = selectRecord(state);
   const validation = record ? Validations.getValidation(record) : null;
-  // @ts-expect-error TS(2345): Argument of type 'Validation | null' is not assign... Remove this comment to see the full error message
-  return Validations.isNotValid(validation);
+  return validation && Validations.isNotValid(validation);
 };
 
 const selectRecordHasErrors = (state: any) => {
@@ -219,7 +196,15 @@ const selectRecordHasErrors = (state: any) => {
   return validation && Validations.getErrorsCount(validation) > 0;
 };
 
-const selectCurrentPageEntity = (state: any) => {
+const selectCurrentPageEntity = (
+  state: any
+): {
+  parentEntityUuid?: string | null | undefined;
+  entityDef: NodeDefEntity;
+  entityUuid?: string | null | undefined;
+  previousCycleParentEntityUuid?: string;
+  previousCycleEntityUuid?: string;
+} => {
   const survey = SurveySelectors.selectCurrentSurvey(state);
   const record = selectRecord(state);
 
@@ -235,11 +220,13 @@ const selectCurrentPageEntity = (state: any) => {
     return {
       parentEntityUuid: null,
       entityDef: Surveys.getNodeDefRoot({ survey }),
-      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
-      entityUuid: Records.getRoot(record).uuid,
+      entityUuid: Records.getRoot(record)?.uuid,
     };
   }
-  const entityDef = Surveys.getNodeDefByUuid({ survey, uuid: entityDefUuid });
+  const entityDef = Surveys.getNodeDefByUuid({
+    survey,
+    uuid: entityDefUuid,
+  })! as NodeDefEntity;
 
   return {
     parentEntityUuid,
@@ -264,10 +251,12 @@ const selectCurrentPageEntityRelevantChildDefs = (state: any) => {
   );
 };
 
-const selectCurrentPageEntityActiveChildDefIndex = (state: any) => getDataEntryState(state).activeChildDefIndex;
+const selectCurrentPageEntityActiveChildDefIndex = (state: any) =>
+  getDataEntryState(state).activeChildDefIndex;
 
 // record page
-const selectRecordPageSelectorMenuOpen = (state: any) => getDataEntryState(state).recordPageSelectorMenuOpen;
+const selectRecordPageSelectorMenuOpen = (state: any) =>
+  getDataEntryState(state).recordPageSelectorMenuOpen;
 
 // record previous cycle
 const selectCanRecordBeLinkedToPreviousCycleRecord = (state: any) => {
@@ -275,13 +264,17 @@ const selectCanRecordBeLinkedToPreviousCycleRecord = (state: any) => {
   return record?.cycle > "0";
 };
 
-const selectPreviousCycleRecord = (state: any) => getDataEntryState(state).previousCycleRecord;
+const selectPreviousCycleRecord = (state: any) =>
+  getDataEntryState(state).previousCycleRecord;
 
-const selectPreviousCycleKey = (state: any) => selectPreviousCycleRecord(state)?.cycle;
+const selectPreviousCycleKey = (state: any) =>
+  selectPreviousCycleRecord(state)?.cycle;
 
-const selectPreviousCycleRecordLoading = (state: any) => getDataEntryState(state).previousCycleRecordLoading;
+const selectPreviousCycleRecordLoading = (state: any) =>
+  getDataEntryState(state).previousCycleRecordLoading;
 
-const selectIsLinkedToPreviousCycleRecord = (state: any) => getDataEntryState(state).linkToPreviousCycleRecord;
+const selectIsLinkedToPreviousCycleRecord = (state: any) =>
+  getDataEntryState(state).linkToPreviousCycleRecord;
 
 const selectPreviousCycleRecordPageEntity = (state: any) => {
   const { entityDef } = selectCurrentPageEntity(state);
@@ -299,10 +292,7 @@ const selectPreviousCycleRecordPageEntity = (state: any) => {
   }
 };
 
-const extractAttibuteValue = ({
-  state,
-  attribute
-}: any) => {
+const extractAttibuteValue = ({ state, attribute }: any) => {
   const { nodeDefUuid, value } = attribute ?? {};
   if (!value) return value;
   const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -311,10 +301,7 @@ const extractAttibuteValue = ({
 };
 
 const selectPreviousCycleRecordAttributeValue =
-  ({
-    nodeDef,
-    parentNodeUuid
-  }: any) =>
+  ({ nodeDef, parentNodeUuid }: any) =>
   (state: any) => {
     if (!parentNodeUuid) {
       return null;
@@ -328,9 +315,7 @@ const selectPreviousCycleRecordAttributeValue =
   };
 
 const selectPreviousCycleEntityWithSameKeys =
-  ({
-    entityUuid
-  }: any) =>
+  ({ entityUuid }: any) =>
   (state: any) => {
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const record = selectRecord(state);
@@ -347,19 +332,17 @@ const selectPreviousCycleEntityWithSameKeys =
     });
   };
 
-const useIsNodeDefCurrentActiveChild = (nodeDef: any) => useSelector((state) => {
-  const activeChildDefIndex =
-    selectCurrentPageEntityActiveChildDefIndex(state);
-  const childDefs = selectCurrentPageEntityRelevantChildDefs(state);
-  const nodeDefIndex = childDefs.indexOf(nodeDef);
-  return nodeDefIndex === activeChildDefIndex;
-});
+const useIsNodeDefCurrentActiveChild = (nodeDef: any) =>
+  useSelector((state) => {
+    const activeChildDefIndex =
+      selectCurrentPageEntityActiveChildDefIndex(state);
+    const childDefs = selectCurrentPageEntityRelevantChildDefs(state);
+    const nodeDefIndex = childDefs.indexOf(nodeDef);
+    return nodeDefIndex === activeChildDefIndex;
+  });
 
 const selectIsMaxCountReached =
-  ({
-    parentNodeUuid,
-    nodeDef
-  }: any) =>
+  ({ parentNodeUuid, nodeDef }: any) =>
   (state: any) => {
     const record = selectRecord(state);
     const parentNode = parentNodeUuid
@@ -377,10 +360,7 @@ const selectIsMaxCountReached =
     return siblings.length >= maxCount;
   };
 
-const useIsNodeMaxCountReached = ({
-  parentNodeUuid,
-  nodeDef
-}: any) =>
+const useIsNodeMaxCountReached = ({ parentNodeUuid, nodeDef }: any) =>
   useSelector(selectIsMaxCountReached({ parentNodeUuid, nodeDef }));
 
 export const DataEntrySelectors = {
@@ -405,21 +385,13 @@ export const DataEntrySelectors = {
 
   useRecordRootNodeUuid: () => useSelector(selectRecordRootNodeUuid),
 
-  useRecordSingleNodeUuid: ({
-    parentNodeUuid,
-    nodeDefUuid
-  }: any) =>
+  useRecordSingleNodeUuid: ({ parentNodeUuid, nodeDefUuid }: any) =>
     useSelector(selectRecordSingleNodeUuid({ parentNodeUuid, nodeDefUuid })),
 
-  useRecordEntityChildDefs: ({
-    nodeDef
-  }: any) =>
+  useRecordEntityChildDefs: ({ nodeDef }: any) =>
     useSelector(selectChildDefs({ nodeDef }), Objects.isEqual),
 
-  useRecordNodePointerValidation: ({
-    parentNodeUuid,
-    nodeDefUuid
-  }: any) =>
+  useRecordNodePointerValidation: ({ parentNodeUuid, nodeDefUuid }: any) =>
     useSelector(
       (state) =>
         selectRecordNodePointerValidation(state)({
@@ -431,7 +403,7 @@ export const DataEntrySelectors = {
 
   useRecordNodePointerValidationChildrenCount: ({
     parentNodeUuid,
-    nodeDefUuid
+    nodeDefUuid,
   }: any) =>
     useSelector(
       selectRecordNodePointerValidationChildrenCount({
@@ -441,41 +413,27 @@ export const DataEntrySelectors = {
       Objects.isEqual
     ),
 
-  useRecordNodePointerVisibility: ({
-    parentNodeUuid,
-    nodeDefUuid
-  }: any) =>
+  useRecordNodePointerVisibility: ({ parentNodeUuid, nodeDefUuid }: any) =>
     useSelector(
       selectRecordNodePointerVisibility({ parentNodeUuid, nodeDefUuid })
     ),
 
-  useRecordAttributeInfo: ({
-    nodeUuid
-  }: any) =>
+  useRecordAttributeInfo: ({ nodeUuid }: any) =>
     useSelector(selectRecordAttributeInfo({ nodeUuid }), Objects.isEqual),
 
-  useRecordChildNodes: ({
-    parentEntityUuid,
-    nodeDef
-  }: any) =>
+  useRecordChildNodes: ({ parentEntityUuid, nodeDef }: any) =>
     useSelector(
       selectRecordChildNodes({ parentEntityUuid, nodeDef }),
       Objects.isEqual
     ),
 
-  useRecordEntitiesUuidsAndKeyValues: ({
-    parentNodeUuid,
-    nodeDefUuid
-  }: any) =>
+  useRecordEntitiesUuidsAndKeyValues: ({ parentNodeUuid, nodeDefUuid }: any) =>
     useSelector(
       selectRecordEntitiesUuidsAndKeyValues({ parentNodeUuid, nodeDefUuid }),
       Objects.isEqual
     ),
 
-  useRecordCodeParentItemUuid: ({
-    parentNodeUuid,
-    nodeDef
-  }: any) =>
+  useRecordCodeParentItemUuid: ({ parentNodeUuid, nodeDef }: any) =>
     useSelector(selectRecordCodeParentItemUuid({ parentNodeUuid, nodeDef })),
 
   useRecordIsNotValid: () => useSelector(selectRecordIsNotValid),
@@ -519,10 +477,7 @@ export const DataEntrySelectors = {
   selectPreviousCycleEntityWithSameKeys,
 
   selectPreviousCycleRecordAttributeValue,
-  usePreviousCycleRecordAttributeValue: ({
-    nodeDef,
-    parentNodeUuid
-  }: any) =>
+  usePreviousCycleRecordAttributeValue: ({ nodeDef, parentNodeUuid }: any) =>
     useSelector(
       selectPreviousCycleRecordAttributeValue({ nodeDef, parentNodeUuid })
     ),

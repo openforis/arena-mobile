@@ -54,19 +54,17 @@ export const MultipleAttributeComponentWrapper = (props: any) => {
       );
     } else {
       dispatch(
-        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         DataEntryActions.addNewAttribute({
           nodeDef,
           parentNodeUuid,
-        })
+        }) as never
       );
     }
   }, [dispatch, nodeDef, nodes, parentNodeUuid]);
 
   const onDeletePress = (node: any) => async () => {
     const performDelete = () =>
-      // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
-      dispatch(DataEntryActions.deleteNodes([node.uuid]));
+      dispatch(DataEntryActions.deleteNodes([node.uuid]) as never);
 
     if (
       Nodes.isValueBlank(node) ||
@@ -89,7 +87,6 @@ export const MultipleAttributeComponentWrapper = (props: any) => {
           <IconButton icon="trash-can-outline" onPress={onDeletePress(node)} />
         </HView>
       ))}
-      // @ts-expect-error TS(2786): 'NewNodeButton' cannot be used as a JSX component.
       <NewNodeButton
         disabled={maxCountReached}
         nodeDefLabel={nodeDefLabel}

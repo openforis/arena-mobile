@@ -7,7 +7,7 @@ import { NodeComponentPropTypes } from "./nodeComponentPropTypes";
 import { useIsTextDirectionRtl } from "localization/useTextDirection";
 
 const booleanValues = ["true", "false"];
-const yesNoValueByBooleanValue = {
+const yesNoValueByBooleanValue: Record<string, string> = {
   true: "yes",
   false: "no",
 };
@@ -38,15 +38,13 @@ export const NodeBooleanComponent = (props: any) => {
   const getLabelKey = useCallback(
     (booleanValue: any) => labelValue === "trueFalse"
       ? booleanValue
-      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       : yesNoValueByBooleanValue[booleanValue],
     [labelValue]
   );
 
   const style = useMemo(() => {
-    const _style = [baseStyle];
+    const _style: any[] = [baseStyle];
     if (isRtl) {
-      // @ts-expect-error TS(2345): Argument of type '{ alignSelf: string; }' is not a... Remove this comment to see the full error message
       _style.push(rtlStyle);
     }
     return _style;

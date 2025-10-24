@@ -1,5 +1,4 @@
 import React from "react";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { NodeDefType } from "@openforis/arena-core";
@@ -17,7 +16,7 @@ import { NodeTaxonComponent } from "./nodeTypes/NodeTaxonComponent";
 import { NodeTextComponent } from "./nodeTypes/NodeTextComponent";
 import { NodeTimeComponent } from "./nodeTypes/NodeTimeComponent";
 
-const nodeDefComponentByType = {
+const nodeDefComponentByType: Record<string, any> = {
   [NodeDefType.boolean]: NodeBooleanComponent,
   [NodeDefType.code]: NodeCodeComponent,
   [NodeDefType.coordinate]: NodeCoordinateComponent,
@@ -40,7 +39,6 @@ export const SingleAttributeComponentSwitch = (props: any) => {
     wrapperStyle,
   } = props;
 
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   const component = nodeDefComponentByType[nodeDef.type];
 
   const { nodes } = DataEntrySelectors.useRecordChildNodes({

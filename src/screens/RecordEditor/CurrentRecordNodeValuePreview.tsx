@@ -35,8 +35,7 @@ export const CurrentRecordNodeValuePreview = (props: any) => {
         titleKey: "dataEntry:unlock.confirmTitle",
       }))
     ) {
-      // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
-      dispatch(DataEntryActions.toggleRecordEditLock);
+      dispatch(DataEntryActions.toggleRecordEditLock as never);
     }
   }, [confirm, dispatch, recordEditLocked]);
 

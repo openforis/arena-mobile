@@ -22,7 +22,7 @@ import { RecordEditorDrawer } from "./RecordEditorDrawer";
 import { RecordNodesCarousel } from "./RecordNodesCarousel";
 import { StatusBar } from "./StatusBar";
 
-import styles from "./styles.js";
+import styles from "./styles";
 
 export const RecordEditor = () => {
   if (__DEV__) {
@@ -36,13 +36,12 @@ export const RecordEditor = () => {
   const isNavigationFocused = useNavigationIsFocused();
   const isRtl = useIsTextDirectionRtl();
 
-  // @ts-expect-error TS(7030): Not all code paths return a value.
   const onBack = useCallback(() => {
     if (isNavigationFocused) {
-      // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => void' is not ... Remove this comment to see the full error message
-      dispatch(DataEntryActions.navigateToRecordsList({ navigation }));
+      dispatch(DataEntryActions.navigateToRecordsList({ navigation }) as any);
       return true; // the event will not be bubbled up & no other back action will execute
     }
+    return false
   }, [dispatch, isNavigationFocused, navigation]);
 
   useBackHandler(onBack);
@@ -51,8 +50,7 @@ export const RecordEditor = () => {
 
   const onInternalContainerPress = useCallback(() => {
     if (isPhone) {
-      // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
-      dispatch(DataEntryActions.toggleRecordPageMenuOpen);
+      dispatch(DataEntryActions.toggleRecordPageMenuOpen as any);
     }
   }, [dispatch, isPhone]);
 
@@ -89,7 +87,6 @@ export const RecordEditor = () => {
 
   if (isPhone) {
     return (
-      // @ts-expect-error TS(2769): No overload matches this call.
       <MenuDrawer
         animationTime={250}
         drawerContent={<RecordEditorDrawer />}

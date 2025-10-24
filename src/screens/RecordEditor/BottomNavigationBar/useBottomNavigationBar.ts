@@ -123,7 +123,6 @@ export const useBottomNavigationBar = () =>
       prevEntityPointer &&
       !!entityUuid &&
       NodeDefs.isMultiple(entityDef) &&
-      // @ts-expect-error TS(2345): Argument of type 'NodeDef<NodeDefType, NodeDefProp... Remove this comment to see the full error message
       !NodeDefs.isEnumerate(entityDef) &&
       !maxCountReached &&
       hasCurrentEntityKeysSpecified;

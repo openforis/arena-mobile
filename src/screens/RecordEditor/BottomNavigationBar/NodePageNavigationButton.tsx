@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { NodeDefs, Objects } from "@openforis/arena-core";
@@ -21,12 +20,11 @@ export const NodePageNavigationButton = (props: any) => {
   const onPress = useCallback(
     () =>
       dispatch(
-        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         DataEntryActions.selectCurrentPageEntity({
           parentEntityUuid,
           entityDefUuid: entityDef.uuid,
           entityUuid,
-        })
+        }) as never
       ),
     [dispatch, entityDef.uuid, entityUuid, parentEntityUuid]
   );

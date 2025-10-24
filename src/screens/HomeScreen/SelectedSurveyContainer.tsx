@@ -22,6 +22,11 @@ import { SurveyUpdateStatusIcon } from "./SurveyUpdateStatusIcon";
 
 import styles from "./selectedSurveyContainerStyles";
 
+type SelectedSurveyContainerState = {
+  updateStatus: string,
+  errorKey?: string | null
+}
+
 export const SelectedSurveyContainer = () => {
   const navigation = useNavigation();
   const networkAvailable = useIsNetworkConnected();
@@ -41,7 +46,7 @@ export const SelectedSurveyContainer = () => {
   const [state, setState] = useState({
     updateStatus: UpdateStatus.loading,
     errorKey: null,
-  });
+  } as SelectedSurveyContainerState);
   const { updateStatus, errorKey } = state;
 
   const determineStatus = useCallback(async () => {
@@ -49,12 +54,10 @@ export const SelectedSurveyContainer = () => {
       return;
     }
     if (!user) {
-      // @ts-expect-error TS(2345): Argument of type '{ updateStatus: string; }' is no... Remove this comment to see the full error message
       setState({ updateStatus: UpdateStatus.error });
       return;
     }
     if (!networkAvailable) {
-      // @ts-expect-error TS(2345): Argument of type '{ updateStatus: string; }' is no... Remove this comment to see the full error message
       setState({ updateStatus: UpdateStatus.networkNotAvailable });
       return;
     }
@@ -63,7 +66,6 @@ export const SelectedSurveyContainer = () => {
       name: surveyName,
     });
     if (!surveyRemote) {
-      // @ts-expect-error TS(2345): Argument of type '{ updateStatus: string; }' is no... Remove this comment to see the full error message
       setState({ updateStatus: SurveyStatus.notInArenaServer });
     } else if (surveyRemote.errorKey) {
       setState({
@@ -71,7 +73,6 @@ export const SelectedSurveyContainer = () => {
         errorKey: surveyRemote.errorKey,
       });
     } else if (!Surveys.isVisibleInMobile(surveyRemote)) {
-      // @ts-expect-error TS(2345): Argument of type '{ updateStatus: string; }' is no... Remove this comment to see the full error message
       setState({ updateStatus: SurveyStatus.notVisibleInMobile });
     } else if (
       Dates.isAfter(
@@ -79,10 +80,8 @@ export const SelectedSurveyContainer = () => {
         survey.datePublished ?? survey.dateModified
       )
     ) {
-      // @ts-expect-error TS(2345): Argument of type '{ updateStatus: string; }' is no... Remove this comment to see the full error message
       setState({ updateStatus: UpdateStatus.notUpToDate });
     } else {
-      // @ts-expect-error TS(2345): Argument of type '{ updateStatus: string; }' is no... Remove this comment to see the full error message
       setState({ updateStatus: UpdateStatus.upToDate });
     }
   }, [networkAvailable, survey, surveyName, user]);
@@ -94,7 +93,6 @@ export const SelectedSurveyContainer = () => {
   if (!survey) return null;
 
   return (
-    // @ts-expect-error TS(2786): 'Card' cannot be used as a JSX component.
     <Card style={styles.container}>
       <VView style={styles.internalContainer} transparent>
         <HView style={styles.surveyTitleContainer} transparent>
@@ -108,20 +106,17 @@ export const SelectedSurveyContainer = () => {
           />
         </HView>
         {surveyDescription && (
-          // @ts-expect-error TS(2786): 'ViewMoreText' cannot be used as a JSX component.
           <ViewMoreText numberOfLines={1}>
             <Text variant="titleSmall">{surveyDescription}</Text>
           </ViewMoreText>
         )}
         {fieldManualUrl && (
-          // @ts-expect-error TS(2786): 'Link' cannot be used as a JSX component.
           <Link labelKey="surveys:fieldManual" url={fieldManualUrl} />
         )}
         <Button
           style={styles.goToDataEntryButton}
           textKey="dataEntry:goToDataEntry"
-          // @ts-expect-error TS(2769): No overload matches this call.
-          onPress={() => navigation.navigate(screenKeys.recordsList)}
+          onPress={() => navigation.navigate(screenKeys.recordsList as never)}
         />
       </VView>
     </Card>

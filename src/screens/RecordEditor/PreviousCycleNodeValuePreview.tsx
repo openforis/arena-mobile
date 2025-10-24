@@ -17,7 +17,6 @@ const PreviousCycleNodeValuePreviewInnerComponent = (props: any) => {
       parentNodeUuid: previousCycleEntityUuid,
     });
 
-  // @ts-expect-error TS(7027): Unreachable code detected.
   return <NodeValuePreview nodeDef={nodeDef} value={previousCycleValue} />;
 };
 
@@ -39,14 +38,10 @@ export const PreviousCycleNodeValuePreview = (props: any) => {
   }
 
   return (
-    // @ts-expect-error TS(2709): Cannot use namespace 'CollapsiblePanel' as a type.
     <CollapsiblePanel
-      // @ts-expect-error TS(2304): Cannot find name 'headerKey'.
       headerKey="dataEntry:recordInPreviousCycle.valuePanelHeader"
-      // @ts-expect-error TS(7027): Unreachable code detected.
       headerParams={{ prevCycle: Cycles.labelFunction(prevCycle) }}
     >
-      // @ts-expect-error TS(2709): Cannot use namespace 'PreviousCycleNodeValuePrevie... Remove this comment to see the full error message
       <PreviousCycleNodeValuePreviewInnerComponent nodeDef={nodeDef} />
     </CollapsiblePanel>
   );

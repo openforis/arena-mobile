@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from "react";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Button, HView, Icon } from "components";
@@ -24,9 +23,8 @@ export const BreadcrumbItem = (props: any) => {
   );
 
   const style = useMemo(() => {
-    const _style = [styles.item];
+    const _style: any[] = [styles.item];
     if (irRtl) {
-      // @ts-expect-error TS(2345): Argument of type 'ViewStyle | TextStyle | ImageSty... Remove this comment to see the full error message
       _style.push(styles.itemRtl);
     }
     return _style;

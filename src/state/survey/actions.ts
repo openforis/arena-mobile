@@ -17,11 +17,7 @@ const {
 } = SurveyActionTypes;
 
 const setCurrentSurvey =
-  ({
-    survey,
-    preferredLanguage = null,
-    navigation = null
-  }: any) =>
+  ({ survey, preferredLanguage = null, navigation = null }: any) =>
   async (dispatch: any) => {
     dispatch({ type: CURRENT_SURVEY_SET, survey, preferredLanguage });
     await PreferencesService.setCurrentSurveyId(survey.id);
@@ -29,9 +25,7 @@ const setCurrentSurvey =
   };
 
 const setCurrentSurveyPreferredLanguage =
-  ({
-    lang
-  }: any) =>
+  ({ lang }: any) =>
   async (dispatch: any, getState: any) => {
     dispatch({ type: CURRENT_SURVEY_PREFERRED_LANG_SET, lang });
     const state = getState();
@@ -40,18 +34,13 @@ const setCurrentSurveyPreferredLanguage =
   };
 
 const setCurrentSurveyCycle =
-  ({
-    cycleKey
-  }: any) =>
+  ({ cycleKey }: any) =>
   (dispatch: any) => {
     dispatch({ type: CURRENT_SURVEY_CYCLE_SET, cycleKey });
   };
 
 const fetchAndSetCurrentSurvey =
-  ({
-    surveyId,
-    navigation = null
-  }: any) =>
+  ({ surveyId, navigation = null }: { surveyId: number; navigation?: any }) =>
   async (dispatch: any) => {
     const survey = await SurveyService.fetchSurveyById(surveyId);
     if (survey) {
@@ -80,20 +69,14 @@ const fetchAndSetLocalSurveys = () => async (dispatch: any) => {
 };
 
 const _onSurveyInsertOrUpdate =
-  ({
-    survey,
-    navigation
-  }: any) =>
+  ({ survey, navigation }: any) =>
   async (dispatch: any) => {
     dispatch(setCurrentSurvey({ survey, navigation }));
     dispatch(fetchAndSetLocalSurveys());
   };
 
 const importSurveyRemote =
-  ({
-    surveyId,
-    navigation
-  }: any) =>
+  ({ surveyId, navigation }: any) =>
   async (dispatch: any) => {
     const survey = await SurveyService.importSurveyRemote({ id: surveyId });
     dispatch(_onSurveyInsertOrUpdate({ survey, navigation }));
@@ -108,7 +91,7 @@ const updateSurveyRemote =
     confirmMessageKey = "surveys:updateSurveyConfirmMessage",
     onConfirm = null,
     onCancel = null,
-    onComplete = null
+    onComplete = null,
   }: any) =>
   async (dispatch: any) => {
     dispatch(
@@ -131,20 +114,21 @@ const updateSurveyRemote =
     );
   };
 
-const deleteSurveys = (surveyIds: any) => async (dispatch: any, getState: any) => {
-  const state = getState();
-  const currentSurveyId = SurveySelectors.selectCurrentSurveyId(state);
-  await SurveyService.deleteSurveys(surveyIds);
-  dispatch(fetchAndSetLocalSurveys());
+const deleteSurveys =
+  (surveyIds: any) => async (dispatch: any, getState: any) => {
+    const state = getState();
+    const currentSurveyId = SurveySelectors.selectCurrentSurveyId(state);
+    await SurveyService.deleteSurveys(surveyIds);
+    dispatch(fetchAndSetLocalSurveys());
 
-  await PreferencesService.clearPreferencesBySurveyIds(surveyIds);
+    await PreferencesService.clearPreferencesBySurveyIds(surveyIds);
 
-  // reset current survey if among deleted ones
-  if (surveyIds.includes(currentSurveyId)) {
-    dispatch({ type: CURRENT_SURVEY_SET, survey: null });
-    await PreferencesService.clearCurrentSurveyId();
-  }
-};
+    // reset current survey if among deleted ones
+    if (surveyIds.includes(currentSurveyId)) {
+      dispatch({ type: CURRENT_SURVEY_SET, survey: null });
+      await PreferencesService.clearCurrentSurveyId();
+    }
+  };
 
 export const SurveyActions = {
   setCurrentSurvey,

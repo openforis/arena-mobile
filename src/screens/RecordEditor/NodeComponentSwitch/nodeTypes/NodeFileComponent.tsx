@@ -20,11 +20,9 @@ export const NodeFileComponent = (props: any) => {
   const { fileType = NodeDefFileType.other } = nodeDef.props;
 
   if (supportedFileTypes.includes(fileType)) {
-    // @ts-expect-error TS(2709): Cannot use namespace 'NodeImageOrVideoComponent' a... Remove this comment to see the full error message
     return <NodeImageOrVideoComponent {...props} />;
   }
 
-  // @ts-expect-error TS(7027): Unreachable code detected.
   return <Text textKey={`File type not supported (${fileType})`} />;
 };
 

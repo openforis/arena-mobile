@@ -19,9 +19,7 @@ export const NodeSingleEntityComponent = (props: any) => {
   if (!nodeUuid) return null;
 
   return (
-    // @ts-expect-error TS(2709): Cannot use namespace 'FieldSet' as a type.
     <FieldSet headerKey={nodeDef.props.name}>
-      // @ts-expect-error TS(7027): Unreachable code detected.
       <NodeEntityFormComponent nodeDef={nodeDef} parentNodeUuid={nodeUuid} />
     </FieldSet>
   );

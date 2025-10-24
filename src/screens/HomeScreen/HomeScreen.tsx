@@ -28,7 +28,6 @@ export const HomeScreen = () => {
 
         <LoginInfo />
 
-        // @ts-expect-error TS(2786): 'GpsLockingEnabledWarning' cannot be used as a JSX... Remove this comment to see the full error message
         <GpsLockingEnabledWarning />
 
         {surveySelected && <SelectedSurveyContainer />}
@@ -39,8 +38,7 @@ export const HomeScreen = () => {
             surveySelected ? "surveys:manageSurveys" : "surveys:selectSurvey"
           }
           style={styles.manageSurveysButton}
-          // @ts-expect-error TS(2769): No overload matches this call.
-          onPress={() => navigation.navigate(screenKeys.surveysListLocal)}
+          onPress={() => navigation.navigate(screenKeys.surveysListLocal as never)}
         />
       </VView>
     </ScreenView>

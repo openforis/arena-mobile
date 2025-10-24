@@ -38,18 +38,12 @@ export const RecordErrorIcon = (props: any) => {
   const messageParams = { count, itemsTypeText };
 
   return (
-    // @ts-expect-error TS(2709): Cannot use namespace 'Tooltip' as a type.
     <Tooltip
-      // @ts-expect-error TS(2304): Cannot find name 'backgroundColor'.
       backgroundColor={tooltipBackgroundColor}
-      // @ts-expect-error TS(7027): Unreachable code detected.
       textColor={tooltipTextColor}
-      // @ts-expect-error TS(2304): Cannot find name 'titleKey'.
       titleKey={messageKey}
-      // @ts-expect-error TS(2304): Cannot find name 'titleParams'.
       titleParams={messageParams}
     >
-      // @ts-expect-error TS(2709): Cannot use namespace 'Icon' as a type.
       <Icon color={tooltipBackgroundColor} source="alert" />
     </Tooltip>
   );
