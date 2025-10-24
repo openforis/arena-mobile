@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { useIsTextDirectionRtl } from "localization";
@@ -23,8 +22,7 @@ export const FlexWrapView = (props: any) => {
   const style = useMemo(() => {
     const _style = [baseStyle];
     if (isRtl) {
-      // @ts-expect-error TS(2345): Argument of type 'ViewStyle | TextStyle | ImageSty... Remove this comment to see the full error message
-      _style.push(BaseStyles.flexDirectionRowReverse);
+      _style.push(BaseStyles.flexDirectionRowReverse as any);
     }
     _style.push(styleProp);
     return _style;

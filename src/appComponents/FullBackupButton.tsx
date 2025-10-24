@@ -40,8 +40,7 @@ export const FullBackupButton = () => {
         const dialogTitle = t("app:fullBackup.shareTitle");
         await Files.shareFile({ url: fullBackupUri, dialogTitle });
       } catch (error) {
-        // @ts-expect-error TS(2571): Object is of type 'unknown'.
-        toaster("app:fullBackup.error", { details: error.toString() });
+        toaster("app:fullBackup.error", { details: String(error) });
       }
     }
   }, [confirm, t, toaster]);

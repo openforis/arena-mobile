@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { DataTable as RNPDataTable } from "react-native-paper";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Objects } from "@openforis/arena-core";
@@ -77,18 +76,17 @@ export const DataTable = (props: any) => {
   const onHeaderPress = (fieldKey: any) => {
     const fieldSortPrev = sort?.[fieldKey];
     const fieldSortNext = SortDirection.getNextSortDirection(fieldSortPrev);
-    const sortNext = {};
+    const sortNext:any = {};
     // allow only one sort field at a time
     if (fieldSortNext) {
-      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       sortNext[fieldKey] = fieldSortNext;
     }
     onSortChange(sortNext);
   };
 
   useEffect(() => {
-    // @ts-expect-error TS(2339): Property 'scrollTo' does not exist on type 'never'... Remove this comment to see the full error message
-    rowsScrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: false });
+    const rowsScrollViewEl:any = rowsScrollViewRef.current 
+    rowsScrollViewEl?.scrollTo({ x: 0, y: 0, animated: false });
   }, [visibleRows]);
 
   return (
@@ -113,11 +111,11 @@ export const DataTable = (props: any) => {
             {t(field.header)}
           </RNPDataTable.Title>)}
           {selectionEnabled && (
-            // @ts-expect-error TS(2741): Property 'children' is missing in type '{ style: {... Remove this comment to see the full error message
-            <RNPDataTable.Title style={{ maxWidth: 40, minWidth: 40 }} />
+            <RNPDataTable.Title style={{ maxWidth: 40 as const, minWidth: 40 as const }}>
+              <>{              /* spacer */              }</>
+            </RNPDataTable.Title>
           )}
         </RNPDataTable.Header>
-        // @ts-expect-error TS(2322): Type '{ children: any; persistentScrollbar: true; ... Remove this comment to see the full error message
         <ScrollView persistentScrollbar ref={rowsScrollViewRef}>
           {visibleRows.map((item: any) => <RNPDataTable.Row
             key={item.key}

@@ -1,4 +1,3 @@
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { ProgressBar } from "../ProgressBar";
@@ -25,12 +24,9 @@ export const AccuracyProgressBar = (props: any) => {
   });
 
   return (
-    // @ts-expect-error TS(2709): Cannot use namespace 'ProgressBar' as a type.
     <ProgressBar
       progress={progress}
-      // @ts-expect-error TS(7027): Unreachable code detected.
       color={color}
-      // @ts-expect-error TS(2588): Cannot assign to 'style' because it is a constant.
       style={[{ margin: 0 }, style]}
     />
   );

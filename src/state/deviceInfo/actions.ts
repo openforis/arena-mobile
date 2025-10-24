@@ -14,6 +14,7 @@ const batteryStatusFromExpoBatteryState = {
   [Battery.BatteryState.CHARGING]: BatteryState.charging,
   [Battery.BatteryState.FULL]: BatteryState.full,
   [Battery.BatteryState.UNPLUGGED]: BatteryState.unplugged,
+  [Battery.BatteryState.UNKNOWN]: BatteryState.unknown,
 };
 
 const setDeviceInfo = (deviceInfo: any) => (dispatch: any) => {
@@ -25,7 +26,6 @@ const _getPowerState = async () => {
     await Battery.getPowerStateAsync();
   return {
     batteryLevel,
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     batteryState: batteryStatusFromExpoBatteryState[expoBatteryState],
   };
 };
@@ -64,9 +64,9 @@ const determineBatteryStateUpdateActionPayload = ({
   batteryState,
   batteryStateChanged,
   batteryLevelMeasureStartTime,
-  batteryLevelAtStartTime
+  batteryLevelAtStartTime,
 }: any) => {
-  const payload = {};
+  const payload: any = {};
   Object.assign(payload, {
     batteryLevel,
     batteryState,
@@ -92,13 +92,11 @@ const determineBatteryStateUpdateActionPayload = ({
     if (batteryState === BatteryState.unplugged) {
       const timeLeft = -chargeTimeDiff;
       if (timeLeft >= 0) {
-        // @ts-expect-error TS(2339): Property 'batteryTimeToDischarge' does not exist o... Remove this comment to see the full error message
         payload.batteryTimeToDischarge = timeLeft;
       }
     } else if (batteryState === BatteryState.charging) {
       const timeLeft = chargeTimeDiff;
       if (timeLeft >= 0) {
-        // @ts-expect-error TS(2339): Property 'batteryTimeToFullCharge' does not exist ... Remove this comment to see the full error message
         payload.batteryTimeToFullCharge = chargeTimeDiff;
       }
     }
@@ -152,9 +150,10 @@ const updateFreeDiskStorage = () => async (dispatch: any, getState: any) => {
   dispatch({ type: DEVICE_INFO_UPDATE, payload: { freeDiskStorage } });
 };
 
-const updateIsNetworkConnected = (isNetworkConnected: any) => async (dispatch: any) => {
-  dispatch({ type: DEVICE_INFO_UPDATE, payload: { isNetworkConnected } });
-};
+const updateIsNetworkConnected =
+  (isNetworkConnected: any) => async (dispatch: any) => {
+    dispatch({ type: DEVICE_INFO_UPDATE, payload: { isNetworkConnected } });
+  };
 
 const updateOrientation = (orientation: any) => async (dispatch: any) => {
   dispatch({ type: DEVICE_INFO_UPDATE, payload: { orientation } });

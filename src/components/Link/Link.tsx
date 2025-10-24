@@ -1,6 +1,5 @@
 import { Paragraph } from "react-native-paper";
 import * as WebBrowser from "expo-web-browser";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
@@ -16,9 +15,8 @@ export const Link = (props: any) => {
   };
 
   return (
-    // @ts-expect-error TS(7027): Unreachable code detected.
     <Paragraph style={styles.paragraph} onPress={onPress}>
-      {t(labelKey: any, labelParams: any)}
+      {t(labelKey, labelParams)}
     </Paragraph>
   );
 };

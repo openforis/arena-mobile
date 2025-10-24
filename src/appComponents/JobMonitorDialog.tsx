@@ -35,8 +35,7 @@ export const JobMonitorDialog = () => {
   } = useJobMonitor();
 
   const progress = progressPercent / 100;
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-  const progressColor = progressColorByStatus[status];
+  const progressColor = progressColorByStatus[status as JobStatus];
 
   const canCancelJob = [JobStatus.pending, JobStatus.running].includes(status);
   const jobEnded = [

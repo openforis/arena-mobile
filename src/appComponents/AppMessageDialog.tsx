@@ -13,8 +13,7 @@ export const AppMessageDialog = () => {
     detailsParams,
     onDismiss: onDismissProp,
     title,
-  // @ts-expect-error TS(2571): Object is of type 'unknown'.
-  } = useSelector((state) => state.message);
+  } = useSelector((state:any) => state.message);
 
   const onDismiss = useCallback(() => {
     onDismissProp?.();

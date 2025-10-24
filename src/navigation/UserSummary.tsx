@@ -1,8 +1,6 @@
 import { useContext } from "react";
 import { useDispatch } from "react-redux";
 import { NavigationContext } from "@react-navigation/native";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
-import PropTypes from "prop-types";
 
 import { Button, HView, Text, VView } from "components";
 import { screenKeys } from "screens/screenKeys";
@@ -22,26 +20,32 @@ const styles = {
   text: { textAlign: "center", width: "100%" },
 };
 
+type UserSummaryProps = {
+  navigation?: any,
+  onButtonPress?: (() => void) | null,
+  profileIconSize?: number, 
+  showLogoutButton?: boolean,
+  style?:any 
+}
+
 export const UserSummary = ({
   navigation: navigationProp = null,
   onButtonPress = null,
   profileIconSize = 60,
   showLogoutButton = true,
   style = null,
-}) => {
-  const dispatch = useDispatch();
+}: UserSummaryProps) => {
+  const dispatch:any = useDispatch();
   const user = RemoteConnectionSelectors.useLoggedInUser();
   const settings = SettingsSelectors.useSettings();
   const { serverUrl } = settings;
-  const navigation = useContext(NavigationContext) ?? navigationProp;
+  const navigation = (useContext(NavigationContext) ?? navigationProp)!;
 
   return (
     <HView style={[styles.container, style]} transparent>
       <UserProfileIcon
         onPress={() => {
-          // @ts-expect-error TS(2531): Object is possibly 'null'.
-          navigation.navigate(screenKeys.settingsRemoteConnection);
-          // @ts-expect-error TS(2349): This expression is not callable.
+          navigation.navigate(screenKeys.settingsRemoteConnection as never);
           onButtonPress?.();
         }}
         size={profileIconSize}
@@ -63,13 +67,9 @@ export const UserSummary = ({
         {showLogoutButton && (
           <Button
             mode="text"
-            // @ts-expect-error TS(2339): Property 'logoutButton' does not exist on type '{ ... Remove this comment to see the full error message
-            style={styles.logoutButton}
             textKey="loginInfo:logout"
             onPress={() => {
-              // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => void' is not ... Remove this comment to see the full error message
               dispatch(RemoteConnectionActions.logout());
-              // @ts-expect-error TS(2349): This expression is not callable.
               onButtonPress?.();
             }}
           />
@@ -77,12 +77,4 @@ export const UserSummary = ({
       </VView>
     </HView>
   );
-};
-
-UserSummary.propTypes = {
-  navigation: PropTypes.object,
-  onButtonPress: PropTypes.func,
-  profileIconSize: PropTypes.number,
-  showLogoutButton: PropTypes.bool,
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 };

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Chip } from "react-native-paper";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Arrays, Objects } from "@openforis/arena-core";
@@ -162,7 +161,6 @@ export const SelectableListWithFilter = (props: any) => {
       {filterVisible && (
         <>
           {selectedItems.length > 0 && (
-            // @ts-expect-error TS(2322): Type '{ children: Element; persistentScrollbar: tr... Remove this comment to see the full error message
             <ScrollView
               persistentScrollbar
               style={

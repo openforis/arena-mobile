@@ -48,7 +48,12 @@ const get = async (serverUrl: any, uri: any, params = {}, options = {}) => {
   }
 };
 
-const getFileAsText = async (serverUrl: any, uri: any, params: any, options: any) => {
+const getFileAsText = async (
+  serverUrl: any,
+  uri: any,
+  params?: any,
+  options?: any
+) => {
   const { promise } = _sendGet(serverUrl, uri, params, options);
   const response = await promise;
   return response.data;
@@ -64,7 +69,12 @@ const test = async (serverUrl: any, uri: any, params = {}) => {
   }
 };
 
-const postCancelable = (serverUrl: any, uri: any, params: any, options = {}) => {
+const postCancelable = (
+  serverUrl: any,
+  uri: any,
+  params: any,
+  options = {}
+) => {
   const { promise, cancel } = _sendRequest(
     APIUtils.getUrl({ serverUrl, uri }),
     {
@@ -86,13 +96,23 @@ const post = async (serverUrl: any, uri: any, params: any, options = {}) => {
   return { data, response };
 };
 
-const postCancelableMultipartData = (serverUrl: any, uri: any, params: any, options = {}) =>
+const postCancelableMultipartData = (
+  serverUrl: any,
+  uri: any,
+  params: any,
+  options = {}
+) =>
   postCancelable(serverUrl, uri, APIUtils.objectToFormData(params), {
     headers: multipartDataHeaders,
     ...options,
   });
 
-const postMultipartData = async (serverUrl: any, uri: any, params: any, options = {}) =>
+const postMultipartData = async (
+  serverUrl: any,
+  uri: any,
+  params: any,
+  options = {}
+) =>
   post(serverUrl, uri, APIUtils.objectToFormData(params), {
     headers: multipartDataHeaders,
     ...options,

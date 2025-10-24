@@ -17,7 +17,7 @@ export const BaseStyles = StyleSheet.create({
   fullHeight,
   fullWidthAndHeight: {
     ...fullWidth,
-    fullHeight,
+    ...fullHeight,
   },
   mirrorX,
 });

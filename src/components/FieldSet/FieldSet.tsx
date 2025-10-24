@@ -1,5 +1,4 @@
 import { useTheme } from "react-native-paper";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Text } from "../Text";
@@ -13,7 +12,6 @@ export const FieldSet = (props: any) => {
   const theme = useTheme();
 
   return (
-    // @ts-expect-error TS(2709): Cannot use namespace 'View' as a type.
     <View
       style={[
         styles.container,
@@ -22,9 +20,7 @@ export const FieldSet = (props: any) => {
       ]}
     >
       <Text
-        // @ts-expect-error TS(7027): Unreachable code detected.
         style={[styles.legend, { backgroundColor: theme.colors.surface }]}
-        // @ts-expect-error TS(2304): Cannot find name 'textKey'.
         textKey={headerKey}
       />
       {children}

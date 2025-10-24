@@ -1,5 +1,4 @@
 import { Dialog as RNPDialog, Portal } from "react-native-paper";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
@@ -17,22 +16,17 @@ export const Dialog = (props: any) => {
 
   const { t } = useTranslation();
   return (
-    // @ts-expect-error TS(2749): 'Portal' refers to a value, but is being used as a... Remove this comment to see the full error message
     <Portal>
-      // @ts-expect-error TS(7027): Unreachable code detected.
       <RNPDialog onDismiss={onClose} style={style} visible>
-        // @ts-expect-error TS(2503): Cannot find namespace 'RNPDialog'.
-        <RNPDialog.Title>{t(title: any)}</RNPDialog.Title>
+        <RNPDialog.Title>{t(title)}</RNPDialog.Title>
         <RNPDialog.Content>{children}</RNPDialog.Content>
         <RNPDialog.Actions>
           {actions.map(({
             onPress,
             textKey
           }: any) => (
-            // @ts-expect-error TS(2709): Cannot use namespace 'Button' as a type.
             <Button key={textKey} onPress={onPress} textKey={textKey} />
           ))}
-          // @ts-expect-error TS(2304): Cannot find name 'onPress'.
           <Button onPress={onClose} textKey={closeButtonTextKey} />
         </RNPDialog.Actions>
       </RNPDialog>

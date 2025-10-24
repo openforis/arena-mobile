@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { Banner } from "react-native-paper";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
@@ -43,8 +42,9 @@ export const ItemSelectedBanner = (props: any) => {
     );
   }, [canDelete, customActions, onDeleteSelected, t]);
 
-  // @ts-expect-error TS(2741): Property 'children' is missing in type '{ actions:... Remove this comment to see the full error message
-  return <Banner actions={actions} visible={selectedItemIds.length > 0} />;
+  return <Banner actions={actions} visible={selectedItemIds.length > 0}>
+    <>{/* undefined children not allowed*/}</>
+    </Banner>;
 };
 
 ItemSelectedBanner.propTypes = {

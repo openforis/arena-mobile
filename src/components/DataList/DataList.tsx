@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { FlatList, TouchableHighlight } from "react-native";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Objects } from "@openforis/arena-core";
@@ -67,7 +66,6 @@ export const DataList = (props: any) => {
                 textVariant = "titleMedium",
               } = field;
               return (
-                // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
                 <FormItem
                   key={key}
                   labelKey={header}
