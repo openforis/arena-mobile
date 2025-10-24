@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { TouchableOpacity } from "react-native";
 import { Avatar } from "react-native-paper";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import {
@@ -39,7 +38,6 @@ export const UserProfileIcon = (props: any) => {
 
   useEffect(() => {
     if (user && !loaded && !uri) {
-      // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
       dispatch(RemoteConnectionActions.fetchLoggedInUserProfileIcon);
     }
   }, [dispatch, user, loaded, uri]);

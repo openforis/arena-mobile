@@ -8,19 +8,17 @@ import { screenKeys } from "screens/screenKeys";
 
 const screenOptions = { header: (props: any) => React.createElement(AppBar, props) };
 
-// @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
 const RootStack = createNativeStackNavigator({
   initialRouteName: screenKeys.home,
   screenOptions: screenOptions,
   screens: Object.entries(screens).reduce((acc, [key, screen]) => {
     const { component, ...options } = screen;
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     acc[key] = {
       screen: component,
       options,
     };
     return acc;
-  }, {}),
+  }, {} as Record<string, any>),
 });
 
 const Navigation = createStaticNavigation(RootStack);

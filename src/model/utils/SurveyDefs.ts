@@ -7,29 +7,18 @@ import {
 
 const samplingPointDataCategoryName = "sampling_point_data";
 
-const getRootKeyDefs = ({
-  survey,
-  cycle
-}: any) => {
+const getRootKeyDefs = ({ survey, cycle }: any) => {
   const rootDef = Surveys.getNodeDefRoot({ survey });
   return Surveys.getNodeDefKeys({ survey, nodeDef: rootDef, cycle });
 };
 
-const isRootKeyDef = ({
-  survey,
-  cycle,
-  nodeDef
-}: any) => {
+const isRootKeyDef = ({ survey, cycle, nodeDef }: any) => {
   if (!NodeDefs.isKey(nodeDef)) return false;
   const rootKeyDefs = getRootKeyDefs({ survey, cycle });
   return rootKeyDefs.includes(nodeDef);
 };
 
-const getChildrenDefs = ({
-  survey,
-  nodeDef,
-  cycle
-}: any) =>
+const getChildrenDefs = ({ survey, nodeDef, cycle }: any) =>
   Surveys.getNodeDefChildrenSorted({
     survey,
     nodeDef,
@@ -48,7 +37,7 @@ const getEntitySummaryDefs = ({
   entityDef,
   cycle,
   onlyKeys = true,
-  maxSummaryDefs = 3
+  maxSummaryDefs = 3,
 }: any) => {
   const keyDefs = Surveys.getNodeDefKeys({ survey, cycle, nodeDef: entityDef });
 
@@ -99,16 +88,12 @@ const hasSamplingPointDataLocation = (survey: any) => {
   );
 };
 
-const isCodeAttributeFromSamplingPointData = ({
-  survey,
-  nodeDef
-}: any) => {
+const isCodeAttributeFromSamplingPointData = ({ survey, nodeDef }: any) => {
   if (nodeDef.type !== NodeDefType.code) return false;
 
   const category = Surveys.getCategoryByUuid({
     survey,
-    // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
-    categoryUuid: NodeDefs.getCategoryUuid(nodeDef),
+    categoryUuid: NodeDefs.getCategoryUuid(nodeDef)!,
   });
   if (!category) return false;
 

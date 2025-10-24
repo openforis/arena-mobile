@@ -29,12 +29,9 @@ export const AboutScreen = () => {
   );
 
   return (
-    // @ts-expect-error TS(2786): 'ScreenView' cannot be used as a JSX component.
     <ScreenView>
       <VView style={styles.formWrapper}>
-        // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
         <FormItem labelKey="about:developedBy">{developedBy}</FormItem>
-        // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
         <FormItem labelKey="about:support">
           <VView>
             <Text
@@ -44,11 +41,9 @@ export const AboutScreen = () => {
             <Button onPress={onSupportPress}>{supportEmailAddress}</Button>
           </VView>
         </FormItem>
-        // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
         <FormItem labelKey="about:version">
           <VersionNumberInfoButton />
         </FormItem>
-        // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
         <FormItem labelKey="app:changelog">
           <Button
             onPress={toggleChangelogDialogOpen}

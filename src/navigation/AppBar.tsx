@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
 import { Appbar as RNPAppbar } from "react-native-paper";
 import { useDispatch } from "react-redux";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Surveys } from "@openforis/arena-core";
@@ -80,8 +79,7 @@ export const AppBar = (props: any) => {
       : t(titleOption);
 
   const onToggleDrawerPress = useCallback(
-    // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
-    () => dispatch(DataEntryActions.toggleRecordPageMenuOpen),
+    () => dispatch(DataEntryActions.toggleRecordPageMenuOpen as never),
     [dispatch]
   );
 
@@ -92,25 +90,22 @@ export const AppBar = (props: any) => {
   );
 
   const onToggleScreenViewModePress = useCallback(
-    // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
-    () => dispatch(ScreenOptionsActions.toggleScreenViewMode({ screenKey })),
+    () => dispatch(ScreenOptionsActions.toggleScreenViewMode({ screenKey }) as never),
     [dispatch, screenKey]
   );
 
   const toggleRecordLock = useCallback(
-    // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
-    () => dispatch(DataEntryActions.toggleRecordEditLock),
+    () => dispatch(DataEntryActions.toggleRecordEditLock as never),
     [dispatch]
   );
 
   const toggleRecordEditViewMode = useCallback(() => {
     dispatch(
-      // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => void' is not ... Remove this comment to see the full error message
       SurveyOptionsActions.setRecordEditViewMode(
         recordEditViewMode === RecordEditViewMode.form
           ? RecordEditViewMode.oneNode
           : RecordEditViewMode.form
-      )
+      ) as never
     );
   }, [dispatch, recordEditViewMode]);
 
@@ -121,10 +116,9 @@ export const AppBar = (props: any) => {
 
   const onLinkToPreviousCyclePress = useCallback(() => {
     dispatch(
-      // @ts-expect-error TS(2345): Argument of type '((dispatch: any) => Promise<void... Remove this comment to see the full error message
-      isLinkedToPreviousCycleRecord
+      (isLinkedToPreviousCycleRecord
         ? DataEntryActions.unlinkFromRecordInPreviousCycle()
-        : DataEntryActions.linkToRecordInPreviousCycle()
+        : DataEntryActions.linkToRecordInPreviousCycle()) as never
     );
   }, [dispatch, isLinkedToPreviousCycleRecord]);
 
@@ -206,7 +200,6 @@ export const AppBar = (props: any) => {
         )}
 
         {hasOptionsMenuVisible && (
-          // @ts-expect-error TS(2786): 'OptionsMenu' cannot be used as a JSX component.
           <OptionsMenu toggleMenu={toggleMenu} visible={menuVisible} />
         )}
       </HView>

@@ -8,6 +8,9 @@ import {
   RecordExpressionEvaluator,
   Records,
   Surveys,
+  NodeDefEntity,
+  NodeDef,
+  NodeDefExpression,
 } from "@openforis/arena-core";
 import { valuePropsCoordinate } from "@openforis/arena-core/dist/node/nodeValueProps";
 import { SurveyDefs } from "./SurveyDefs";
@@ -28,16 +31,12 @@ const coordinateAttributeNumericFields = [
   valuePropsCoordinate[valuePropsCoordinate.altitudeAccuracy],
 ];
 
-const yesNoValueByBooleanValue = {
+const yesNoValueByBooleanValue: Record<string, string> = {
   true: "yes",
   false: "no",
 };
 
-const getNodeName = ({
-  survey,
-  record,
-  nodeUuid
-}: any) => {
+const getNodeName = ({ survey, record, nodeUuid }: any) => {
   const node = Records.getNodeByUuid(nodeUuid)(record);
   if (node) {
     const nodeDef = Surveys.getNodeDefByUuid({
@@ -55,7 +54,7 @@ const getEntityKeysFormatted = ({
   entity,
   lang,
   showLabel = true,
-  emptyValue = ""
+  emptyValue = "",
 }: any) => {
   const { cycle } = record;
   const entityDef = Surveys.getNodeDefByUuid({
@@ -82,7 +81,7 @@ const getRootEntityKeysFormatted = ({
   survey,
   record,
   lang,
-  showLabel = true
+  showLabel = true,
 }: any) =>
   getEntityKeysFormatted({
     survey,
@@ -92,18 +91,13 @@ const getRootEntityKeysFormatted = ({
     showLabel,
   });
 
-const formatBooleanValue = ({
-  nodeDef,
-  value,
-  t
-}: any) => {
+const formatBooleanValue = ({ nodeDef, value, t }: any) => {
   if (Objects.isEmpty(value)) return "";
   const booleanValueString = String(String(value) === "true");
   const labelValue = nodeDef.props.labelValue ?? "trueFalse";
   const labelKey =
     labelValue === "trueFalse"
       ? booleanValueString
-      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       : yesNoValueByBooleanValue[booleanValueString];
   return t(`common:${labelKey}`);
 };
@@ -116,7 +110,7 @@ const getEntitySummaryValuesByNameFormatted = ({
   lang,
   summaryDefs: summaryDefsParam = null,
   emptyValue = EMPTY_VALUE,
-  t
+  t,
 }: any) => {
   const { cycle } = record;
   const entityDef = Surveys.getNodeDefByUuid({
@@ -131,43 +125,45 @@ const getEntitySummaryValuesByNameFormatted = ({
       entityDef,
       onlyKeys,
     });
-  // @ts-expect-error TS(7006): Parameter 'acc' implicitly has an 'any' type.
-  return summaryDefs.reduce((acc, summaryDef) => {
-    let formattedValue = "";
-    try {
-      const summaryNode = Records.getChild(entity, summaryDef.uuid)(record);
-      if (!summaryNode) {
-        formattedValue = "";
-      } else if (NodeDefs.getType(summaryDef) === NodeDefType.boolean) {
-        formattedValue = formatBooleanValue({
-          nodeDef: summaryDef,
-          value: summaryNode.value,
-          t,
-        });
-      } else {
-        formattedValue = NodeValueFormatter.format({
-          survey,
-          cycle,
-          nodeDef: summaryDef,
-          node: summaryNode,
-          value: summaryNode.value,
-          showLabel: true,
-          lang,
-        });
+  return summaryDefs.reduce(
+    (acc: Record<string, string>, summaryDef: NodeDef<any, any>) => {
+      let formattedValue = "";
+      try {
+        const summaryNode = Records.getChild(entity, summaryDef.uuid)(record);
+        if (!summaryNode) {
+          formattedValue = "";
+        } else if (NodeDefs.getType(summaryDef) === NodeDefType.boolean) {
+          formattedValue = formatBooleanValue({
+            nodeDef: summaryDef,
+            value: summaryNode.value,
+            t,
+          });
+        } else {
+          formattedValue = NodeValueFormatter.format({
+            survey,
+            cycle,
+            nodeDef: summaryDef,
+            node: summaryNode,
+            value: summaryNode.value,
+            showLabel: true,
+            lang,
+          });
+        }
+      } catch (error) {
+        //ignore it
       }
-    } catch (error) {
-      //ignore it
-    }
-    if (typeof formattedValue === "object") {
-      formattedValue = JSON.stringify(formattedValue);
-    }
-    if (Objects.isEmpty(formattedValue)) {
-      formattedValue = emptyValue;
-    }
-    acc[NodeDefs.getName(summaryDef)] = formattedValue;
+      if (typeof formattedValue === "object") {
+        formattedValue = JSON.stringify(formattedValue);
+      }
+      if (Objects.isEmpty(formattedValue)) {
+        formattedValue = emptyValue;
+      }
+      acc[NodeDefs.getName(summaryDef)] = formattedValue;
 
-    return acc;
-  }, {});
+      return acc;
+    },
+    {}
+  );
 };
 
 const getApplicableChildrenEntityDefs = ({
@@ -175,22 +171,17 @@ const getApplicableChildrenEntityDefs = ({
   nodeDef,
   parentEntity,
   cycle,
-  onlyInOwnPage = false
+  onlyInOwnPage = false,
 }: any) =>
   SurveyDefs.getChildrenDefs({ survey, nodeDef, cycle }).filter(
     (childDef) =>
       NodeDefs.isEntity(childDef) &&
       Nodes.isChildApplicable(parentEntity, childDef.uuid) &&
-      // @ts-expect-error TS(2345): Argument of type 'NodeDef<NodeDefType, NodeDefProp... Remove this comment to see the full error message
-      (!onlyInOwnPage || NodeDefs.isDisplayInOwnPage(cycle)(childDef))
+      (!onlyInOwnPage ||
+        NodeDefs.isDisplayInOwnPage(cycle)(childDef as NodeDefEntity))
   );
 
-const getSiblingNode = ({
-  record,
-  parentEntity,
-  node,
-  offset
-}: any) => {
+const getSiblingNode = ({ record, parentEntity, node, offset }: any) => {
   const siblingNodes = Records.getChildren(
     parentEntity,
     node.nodeDefUuid
@@ -210,13 +201,11 @@ const possibleDistanceTargetExpressions = {
 const distanceFunctionRegExp = (firstArgument: any, secondArgument: any) =>
   `\\s*distance\\s*\\(\\s*(${firstArgument})\\s*,\\s*(${secondArgument})\\s*\\)`;
 
-const extractDistanceTargetExpression = ({
-  nodeDef
-}: any) => {
+const extractDistanceTargetExpression = ({ nodeDef }: any) => {
   const validations = NodeDefs.getValidations(nodeDef);
-  const distanceValidation = validations?.expressions?.find((expression) =>
-    // @ts-expect-error TS(2345): Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
-    /\s*distance\s*(.*)\s*/.test(expression.expression)
+  const distanceValidation = validations?.expressions?.find(
+    (expression: NodeDefExpression) =>
+      /\s*distance\s*(.*)\s*/.test(expression.expression!)
   );
 
   if (!distanceValidation) {
@@ -227,9 +216,8 @@ const extractDistanceTargetExpression = ({
   let distanceTargetExpression = null;
   Object.values(possibleDistanceTargetExpressions).some(
     (possibleExpression) => {
-      const expression = distanceValidation.expression;
+      const expression = distanceValidation.expression!;
       // this or attribute name as 1st argument
-      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       let match = expression.match(
         distanceFunctionRegExp(thisOrAttrName, possibleExpression)
       );
@@ -238,7 +226,6 @@ const extractDistanceTargetExpression = ({
         return true;
       }
       // this or attribute name as 2nd argument
-      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       match = expression.match(
         distanceFunctionRegExp(possibleExpression, thisOrAttrName)
       );
@@ -256,13 +243,13 @@ const getCoordinateDistanceTarget = async ({
   survey,
   nodeDef,
   record,
-  node
+  node,
 }: any) => {
   const distanceTargetExpression = extractDistanceTargetExpression({ nodeDef });
   if (distanceTargetExpression) {
     const distanceTarget = await new RecordExpressionEvaluator().evalExpression(
-      // @ts-expect-error TS(2345): Argument of type '{ survey: any; record: any; node... Remove this comment to see the full error message
       {
+        user: {} as any,
         survey,
         record,
         node,
@@ -274,11 +261,7 @@ const getCoordinateDistanceTarget = async ({
   return null;
 };
 
-const findAncestor = ({
-  record,
-  node,
-  predicate
-}: any) => {
+const findAncestor = ({ record, node, predicate }: any) => {
   let result: any = null;
   Records.visitAncestorsAndSelf(node, (visitedAncestor) => {
     if (!result && predicate(visitedAncestor)) {
@@ -288,10 +271,7 @@ const findAncestor = ({
   return result;
 };
 
-const cleanupAttributeValue = ({
-  value,
-  attributeDef
-}: any) => {
+const cleanupAttributeValue = ({ value, attributeDef }: any) => {
   if (NodeDefs.getType(attributeDef) === NodeDefType.coordinate) {
     const additionalFields =
       NodeDefs.getCoordinateAdditionalFields(attributeDef);
@@ -304,10 +284,8 @@ const cleanupAttributeValue = ({
       delete value[field];
     });
     coordinateAttributeNumericFields.forEach((field) => {
-      // @ts-expect-error TS(2538): Type 'undefined' cannot be used as an index type.
       const fieldValue = value[field];
       if (!Objects.isNil(fieldValue) && typeof fieldValue === "string") {
-        // @ts-expect-error TS(2538): Type 'undefined' cannot be used as an index type.
         value[field] = Numbers.toNumber(fieldValue);
       }
     });
@@ -318,7 +296,7 @@ const cleanupAttributeValue = ({
 const hasDescendantApplicableNodes = ({
   record,
   parentEntity,
-  nodeDef
+  nodeDef,
 }: any) => {
   const descendants = Records.getDescendantsOrSelf({
     record,
@@ -333,7 +311,7 @@ const getApplicableDescendantDefs = ({
   entityDef,
   record,
   parentEntity,
-  onlyAttributes = true
+  onlyAttributes = true,
 }: any) => {
   const { cycle } = record;
   const defs = Surveys.getDescendantsInSingleEntities({
@@ -355,7 +333,7 @@ const getApplicableSummaryDefs = ({
   record,
   parentEntity,
   onlyKeys = false,
-  maxSummaryDefs = undefined
+  maxSummaryDefs = undefined,
 }: any) => {
   const { cycle } = record;
   const summaryDefs = SurveyDefs.getEntitySummaryDefs({
