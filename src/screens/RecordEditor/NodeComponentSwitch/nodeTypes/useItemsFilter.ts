@@ -14,7 +14,7 @@ export const useItemsFilter = ({
   nodeDef,
   parentNodeUuid,
   items,
-  alwaysIncludeItemFunction = null
+  alwaysIncludeItemFunction = null,
 }: any) => {
   const [filteredItems, setFilteredItems] = useState([]);
 
@@ -35,10 +35,8 @@ export const useItemsFilter = ({
           return expressionEvaluator.evalExpression({
             survey,
             record,
-            // @ts-expect-error TS(2322): Type 'Node | undefined' is not assignable to type ... Remove this comment to see the full error message
-            node: parentNode,
-            // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
-            query: itemsFilter,
+            node: parentNode!,
+            query: itemsFilter!,
             item,
           });
         } catch (error) {

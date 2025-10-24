@@ -26,11 +26,10 @@ export const NodeMultipleEntityPreviewComponent = (props: any) => {
   const onEditPress = useCallback(
     () =>
       dispatch(
-        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         DataEntryActions.selectCurrentPageEntity({
           parentEntityUuid: parentNodeUuid,
           entityDefUuid,
-        })
+        }) as never
       ),
     [dispatch, entityDefUuid, parentNodeUuid]
   );

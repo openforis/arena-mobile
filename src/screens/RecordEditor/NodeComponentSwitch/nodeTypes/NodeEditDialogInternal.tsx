@@ -1,6 +1,5 @@
 import * as React from "react";
 import { StyleSheet } from "react-native";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
@@ -27,7 +26,6 @@ export const NodeEditDialogInternal = (props: any) => {
 
   return (
     <Modal showCloseButton={false} onDismiss={onDone ?? onDismiss}>
-      // @ts-expect-error TS(2786): 'NodeDefFormItemHeader' cannot be used as a JSX co... Remove this comment to see the full error message
       <NodeDefFormItemHeader
         nodeDef={nodeDef}
         parentNodeUuid={parentNodeUuid}
