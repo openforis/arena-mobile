@@ -1,7 +1,9 @@
 import {
+  LanguageCode,
   NodeDefs,
   NodeValueFormatter,
   Objects,
+  Survey,
   Surveys,
 } from "@openforis/arena-core";
 import { SurveyDefs } from "model";
@@ -11,8 +13,14 @@ const getValuesByKeyOrSummaryAttributeFormatted = ({
   lang,
   recordSummary,
   valuesWrapperProp,
-  t = null
-}: any) => {
+  t = null,
+}: {
+  survey: Survey;
+  lang: LanguageCode;
+  recordSummary: any;
+  valuesWrapperProp: string;
+  t: any;
+}) => {
   const { cycle } = recordSummary;
   const rootDef = Surveys.getNodeDefRoot({ survey });
   const nodeDefs =
@@ -23,35 +31,37 @@ const getValuesByKeyOrSummaryAttributeFormatted = ({
           cycle,
           nodeDef: rootDef,
         });
-  return nodeDefs.reduce((acc, nodeDef) => {
-    const nodeDefName = NodeDefs.getName(nodeDef);
-    const value = Objects.path([valuesWrapperProp, nodeDefName])(recordSummary);
-    // @ts-expect-error TS(2345): Argument of type '{ survey: any; nodeDef: NodeDef<... Remove this comment to see the full error message
-    let valueFormatted = NodeValueFormatter.format({
-      survey,
-      nodeDef: nodeDef,
-      value,
-      showLabel: true,
-      lang,
-    });
-    if (Objects.isEmpty(valueFormatted)) {
-      if (Objects.isEmpty(value)) {
-        valueFormatted = t ? t("common:empty") : null;
-      } else {
-        valueFormatted = String(value);
+  return nodeDefs.reduce(
+    (acc, nodeDef) => {
+      const nodeDefName = NodeDefs.getName(nodeDef);
+      const value = Objects.path([valuesWrapperProp, nodeDefName])(
+        recordSummary
+      );
+      let valueFormatted = NodeValueFormatter.format({
+        survey,
+        cycle,
+        nodeDef: nodeDef,
+        value,
+        showLabel: true,
+        lang,
+      });
+      if (Objects.isEmpty(valueFormatted)) {
+        valueFormatted = Objects.isEmpty(value)
+          ? t?.("common:empty")
+          : String(value);
       }
-    }
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-    acc[nodeDefName] = valueFormatted;
-    return acc;
-  }, {});
+      acc[nodeDefName] = valueFormatted;
+      return acc;
+    },
+    {} as Record<string, string>
+  );
 };
 
 const getValuesByKeyFormatted = ({
   survey,
   lang,
   recordSummary,
-  t = null
+  t = null,
 }: any) =>
   getValuesByKeyOrSummaryAttributeFormatted({
     survey,
@@ -65,7 +75,7 @@ const getValuesBySummaryAttributeFormatted = ({
   survey,
   lang,
   recordSummary,
-  t = null
+  t = null,
 }: any) =>
   getValuesByKeyOrSummaryAttributeFormatted({
     survey,

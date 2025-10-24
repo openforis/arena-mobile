@@ -75,8 +75,7 @@ export const NodeValidationIcon = (props: any) => {
   if (!validation && !validationChildrenCount) return null;
 
   if (validationChildrenCount && !validationChildrenCount.valid) {
-    // @ts-expect-error TS(2532): Object is possibly 'undefined'.
-    const error = validationChildrenCount.errors[0];
+    const error = validationChildrenCount.errors?.[0];
     const { key: messageKey, params: messageParams } = error ?? {};
     return (
       <ValidationIcon

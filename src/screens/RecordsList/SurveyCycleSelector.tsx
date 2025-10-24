@@ -1,6 +1,5 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Surveys } from "@openforis/arena-core";
@@ -30,8 +29,9 @@ export const SurveyCycleSelector = (props: any) => {
 
   const onChange = (selectedCycleKey: any) => {
     dispatch(
-      // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => void' is not ... Remove this comment to see the full error message
-      SurveyActions.setCurrentSurveyCycle({ cycleKey: selectedCycleKey })
+      SurveyActions.setCurrentSurveyCycle({
+        cycleKey: selectedCycleKey,
+      }) as never
     );
   };
 
