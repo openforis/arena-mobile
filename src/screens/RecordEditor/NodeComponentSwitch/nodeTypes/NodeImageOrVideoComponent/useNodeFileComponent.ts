@@ -13,15 +13,12 @@ import { ExifUtils, Files, ImageUtils, Permissions } from "utils";
 
 import { useCheckCanAccessMediaLibrary } from "./useCheckCanAccessMediaLibrary";
 
-const mediaTypeByFileType = {
+const mediaTypeByFileType: Record<string, string> = {
   [NodeDefFileType.image]: "images",
   [NodeDefFileType.video]: "videos",
 };
 
-const determineFileMaxSize = ({
-  nodeDef,
-  settings
-}: any) => {
+const determineFileMaxSize = ({ nodeDef, settings }: any) => {
   const { imageSizeLimit, imageSizeUnlimited } = settings;
   const nodeDefFileMaxSize = NodeDefs.getFileMaxSize(nodeDef);
   if (imageSizeUnlimited) {
@@ -57,17 +54,19 @@ const resizeImage = async (
 
   let fileUri, fileSize;
 
-  const {
-    // @ts-expect-error TS(2339): Property 'error' does not exist on type 'unknown'.
-    error,
-    // @ts-expect-error TS(2339): Property 'uri' does not exist on type 'unknown'.
-    uri: resizedFileUri,
-    // @ts-expect-error TS(2339): Property 'size' does not exist on type 'unknown'.
-    size: resizedFileSize,
-  } = (await ImageUtils.resizeToFitMaxSize({
+  const imageScaleResult = await ImageUtils.resizeToFitMaxSize({
     fileUri: sourceFileUri,
     maxSize,
-  })) || {};
+  });
+
+  let resizedFileUri, resizedFileSize, error;
+  if (imageScaleResult) {
+    if ("error" in imageScaleResult) {
+      error = imageScaleResult.error;
+    } else {
+      ({ size: resizedFileSize, uri: resizedFileUri } = imageScaleResult);
+    }
+  }
 
   if (!error && resizedFileUri) {
     fileUri = resizedFileUri;
@@ -86,10 +85,7 @@ const resizeImage = async (
   return { fileUri, fileSize };
 };
 
-export const useNodeFileComponent = ({
-  nodeDef,
-  nodeUuid
-}: any) => {
+export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
   const toaster = useToast();
   const confirm = useConfirm();
   const settings = SettingsSelectors.useSettings();
@@ -103,7 +99,6 @@ export const useNodeFileComponent = ({
   const maxSizeMB = determineFileMaxSize({ nodeDef, settings });
   const maxSize = maxSizeMB ? maxSizeMB * Math.pow(1024, 2) : undefined;
 
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   const mediaTypes = mediaTypeByFileType[fileType];
 
   const imagePickerOptions = useMemo(

@@ -52,14 +52,10 @@ export const NodeCoordinateComponent = (props: any) => {
   } = useNodeCoordinateComponent(props);
 
   const createNumericFieldFormItem = useCallback(
-    ({
-      fieldKey,
-      labelStyle = styles.formItemLabel
-    }: any) => (
+    ({ fieldKey, labelStyle = styles.formItemLabel }: any) => (
       <HView key={fieldKey} style={styles.formItem}>
         <Text style={labelStyle} textKey={`dataEntry:coordinate.${fieldKey}`} />
         <TextInput
-          // @ts-expect-error TS(2322): Type '{ editable: boolean; keyboardType: string; s... Remove this comment to see the full error message
           editable={inputFieldsEditable && !watchingLocation}
           keyboardType="numeric"
           style={[

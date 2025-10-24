@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { NodeDefType, NodeDefs, Objects } from "@openforis/arena-core";
@@ -10,7 +9,7 @@ import { DataEntrySelectors, SurveyOptionsSelectors } from "state";
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 import { useStyles } from "./styles";
 
-const isNumericByType = {
+const isNumericByType: Record<string, boolean> = {
   [NodeDefType.decimal]: true,
   [NodeDefType.integer]: true,
 };
@@ -24,15 +23,13 @@ export const NodeTextComponent = (props: any) => {
     console.log(`rendering NodeTextComponent for ${nodeDef.props.name}`);
   }
 
-  // @ts-expect-error TS(2554): Expected 1 arguments, but got 0.
-  const inputRef = useRef();
+  const inputRef = useRef(null as any);
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
   const isActiveChild =
     DataEntrySelectors.useIsNodeDefCurrentActiveChild(nodeDef);
 
   const styles = useStyles({ wrapperStyle });
 
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   const isNumeric = !!isNumericByType[nodeDef.type];
 
   const editable = !NodeDefs.isReadOnly(nodeDef);
@@ -41,7 +38,7 @@ export const NodeTextComponent = (props: any) => {
     nodeDef.props.textInputType === "multiLine";
 
   const nodeValueToUiValue = useCallback(
-    (value: any) => Objects.isEmpty(value) ? "" : String(value),
+    (value: any) => (Objects.isEmpty(value) ? "" : String(value)),
     []
   );
 
@@ -79,7 +76,6 @@ export const NodeTextComponent = (props: any) => {
       viewMode === RecordEditViewMode.oneNode &&
       isActiveChild
     ) {
-      // @ts-expect-error TS(2571): Object is of type 'unknown'.
       inputRef.current.focus();
     }
   }, [editable, isActiveChild, viewMode]);
@@ -95,7 +91,6 @@ export const NodeTextComponent = (props: any) => {
   return (
     <HView style={styles.wrapper}>
       <TextInput
-        // @ts-expect-error TS(2322): Type '{ editable: boolean; error: boolean; keyboar... Remove this comment to see the full error message
         editable={editable}
         error={invalidValue}
         keyboardType={isNumeric ? "numeric" : undefined}

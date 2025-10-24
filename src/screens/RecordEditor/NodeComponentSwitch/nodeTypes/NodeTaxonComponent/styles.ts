@@ -1,8 +1,8 @@
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
-  container: { gap: 10 },
-  containerOneNode: { flex: 1 },
+  container: { gap: 10 as const },
+  containerOneNode: { flex: 1 as const },
   searchButton: {
     alignSelf: "center",
   },

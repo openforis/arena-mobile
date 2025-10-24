@@ -6,14 +6,14 @@ import { ExifUtils } from "./ExifUtils";
 
 const compress = 0.95; // default compression ratio for resized images
 
-type ImageScaleResult = {
+export type ImageScaleResult = {
   uri: string;
   height: number;
   width: number;
   size: number;
 };
 
-type ImageScaleError = {
+export type ImageScaleError = {
   error: any;
 };
 

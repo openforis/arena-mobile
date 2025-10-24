@@ -16,7 +16,6 @@ export const CoordinateValuePreview = (props: any) => {
   return (
     <VView>
       {fields.map((fieldKey) => (
-        // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
         <FormItem key={fieldKey} labelKey={`dataEntry:coordinate.${fieldKey}`}>
           <Text>{value[fieldKey]}</Text>
         </FormItem>

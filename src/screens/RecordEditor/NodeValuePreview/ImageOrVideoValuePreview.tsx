@@ -18,7 +18,7 @@ export const ImageOrVideoValuePreview = (props: any) => {
   const { fileType = NodeDefFileType.other } = nodeDef.props;
   const surveyId = SurveySelectors.useCurrentSurveyId();
   const [imagePreviewOpen, setImagePreviewOpen] = useState(false);
-  const [fileUri, setFileUri] = useState(null);
+  const [fileUri, setFileUri] = useState(null as string | null);
 
   const { fileName: valueFileName, fileNameCalculated, fileUuid } = value || {};
 
@@ -28,7 +28,6 @@ export const ImageOrVideoValuePreview = (props: any) => {
     const fileUriUpdated = fileUuid
       ? RecordFileService.getRecordFileUri({ surveyId, fileUuid })
       : null;
-    // @ts-expect-error TS(2345): Argument of type 'string | null' is not assignable... Remove this comment to see the full error message
     setFileUri(fileUriUpdated);
   }, [fileUuid, surveyId]);
 
@@ -51,7 +50,6 @@ export const ImageOrVideoValuePreview = (props: any) => {
     <>
       {fileType === NodeDefFileType.image ? (
         <TouchableHighlight onPress={onImagePreviewPress}>
-          // @ts-expect-error TS(2786): 'Image' cannot be used as a JSX component.
           <Image source={{ uri: fileUri }} style={styles.image} />
         </TouchableHighlight>
       ) : (

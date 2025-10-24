@@ -1,4 +1,3 @@
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import {
@@ -25,25 +24,23 @@ const colors = {
   },
 };
 
-const ValidationIcon = (props: any) => {
+type ValidationIconProps = {
+  severity: ValidationSeverity;
+  messageKey: string;
+  messageParams: any;
+};
+
+const ValidationIcon = (props: ValidationIconProps) => {
   const { severity, messageKey, messageParams } = props;
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   const tooltipBackgroundColor = colors.tooltipBackgroundColor[severity];
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   const tooltipTextColor = colors.tooltipTextColor[severity];
   return (
-    // @ts-expect-error TS(2709): Cannot use namespace 'Tooltip' as a type.
     <Tooltip
-      // @ts-expect-error TS(2304): Cannot find name 'backgroundColor'.
       backgroundColor={tooltipBackgroundColor}
-      // @ts-expect-error TS(7027): Unreachable code detected.
       textColor={tooltipTextColor}
-      // @ts-expect-error TS(2304): Cannot find name 'titleKey'.
       titleKey={messageKey}
-      // @ts-expect-error TS(2304): Cannot find name 'titleParams'.
       titleParams={messageParams}
     >
-      // @ts-expect-error TS(2709): Cannot use namespace 'Icon' as a type.
       <Icon color={tooltipBackgroundColor} source="alert" />
     </Tooltip>
   );
@@ -82,27 +79,23 @@ export const NodeValidationIcon = (props: any) => {
     const error = validationChildrenCount.errors[0];
     const { key: messageKey, params: messageParams } = error ?? {};
     return (
-      // @ts-expect-error TS(2709): Cannot use namespace 'ValidationIcon' as a type.
       <ValidationIcon
-        // @ts-expect-error TS(2349): This expression is not callable.
         messageKey={`validation:${messageKey}`}
-        // @ts-expect-error TS(2304): Cannot find name 'messageParams'.
         messageParams={messageParams}
-        // @ts-expect-error TS(2304): Cannot find name 'severity'.
-        severity="error"
+        severity={ValidationSeverity.error}
       />
     );
   }
-  // @ts-expect-error TS(2552): Cannot find name 'validation'. Did you mean 'Valid... Remove this comment to see the full error message
-  if (Validations.isNotValid(validation) && NodeDefs.isSingle(nodeDef)) {
-    // @ts-expect-error TS(2552): Cannot find name 'validation'. Did you mean 'Valid... Remove this comment to see the full error message
+  if (
+    validation &&
+    Validations.isNotValid(validation) &&
+    NodeDefs.isSingle(nodeDef)
+  ) {
     const errMsg = getJointErrorText({ validation, t, customMessageLang });
-    // @ts-expect-error TS(2552): Cannot find name 'validation'. Did you mean 'Valid... Remove this comment to see the full error message
     const warnMsg = getJointWarningText({ validation, t, customMessageLang });
     return (
       <ValidationIcon
         messageKey={errMsg ?? warnMsg}
-        // @ts-expect-error TS(2304): Cannot find name 'severity'.
         severity={errMsg ? "error" : "warning"}
       />
     );
@@ -110,7 +103,6 @@ export const NodeValidationIcon = (props: any) => {
   return null;
 };
 
-// @ts-expect-error TS(7027): Unreachable code detected.
 NodeValidationIcon.propTypes = {
   nodeDef: PropTypes.object.isRequired,
   parentNodeUuid: PropTypes.string,

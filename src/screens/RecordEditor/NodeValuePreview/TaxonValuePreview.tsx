@@ -12,11 +12,10 @@ export const TaxonValuePreview = (props: any) => {
 
   if (!taxon) return null;
 
-  // @ts-expect-error TS(2339): Property 'scientificNameAndCode' does not exist on... Remove this comment to see the full error message
   const { scientificNameAndCode, vernacularNamePart } = Taxa.taxonToString({
     nodeDef,
     taxon,
-  });
+  })!;
 
   return (
     <VView fullFlex style={style} transparent>

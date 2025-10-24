@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo } from "react";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { NodeDefs } from "@openforis/arena-core";
@@ -13,12 +12,11 @@ const alwaysIncludeVernacularNames = false;
 const alwaysIncludeSingleVernacularName = true;
 const maxDisplayedItems = 50;
 
-const itemKeyExtractor = (item: any) => `${item?.uuid}_${item?.vernacularNameUuid}`;
+const itemKeyExtractor = (item: any) =>
+  `${item?.uuid}_${item?.vernacularNameUuid}`;
 
 const itemLabelExtractor =
-  ({
-    nodeDef
-  }: any) =>
+  ({ nodeDef }: any) =>
   (taxon: any) => {
     const { props, scientificName } = taxon;
     const { code, scientificName: scientificNameProp } = props;
@@ -44,15 +42,11 @@ const itemDescriptionExtractor = (taxon: any) => {
   }
 };
 
-const createTaxonValue = ({
-  taxon,
-  inputValue
-}: any) => {
-  let value = null;
+const createTaxonValue = ({ taxon, inputValue }: any) => {
+  let value: any = null;
   if (taxon) {
     value = { taxonUuid: taxon.uuid };
     if (taxon.vernacularNameUuid) {
-      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       value["vernacularNameUuid"] = taxon.vernacularNameUuid;
     }
     if (
@@ -60,7 +54,6 @@ const createTaxonValue = ({
       [Taxa.unknownCode, Taxa.unlistedCode].includes(taxon.props.code)
     ) {
       // keep scientific name for unlisted/unknown taxa
-      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       value["scientificName"] = inputValue;
     }
   }
@@ -69,13 +62,10 @@ const createTaxonValue = ({
 
 const preparePartForSearch = (part: any) => part.toLocaleLowerCase();
 
-const extractPartsForSearch = (value: any) => value?.trim()?.split(" ").map(preparePartForSearch) ?? [];
+const extractPartsForSearch = (value: any) =>
+  value?.trim()?.split(" ").map(preparePartForSearch) ?? [];
 
-const isTaxonMatchingFilter = ({
-  nodeDef,
-  taxon,
-  inputValueParts
-}: any) => {
+const isTaxonMatchingFilter = ({ nodeDef, taxon, inputValueParts }: any) => {
   const { vernacularName, vernacularNamesCount, vernacularNamesJoint } = taxon;
   const singleVernacularName = vernacularNamesCount === 1;
   const { code } = taxon.props;
@@ -87,11 +77,17 @@ const isTaxonMatchingFilter = ({
   const itemLabelParts = extractPartsForSearch(itemLabel);
 
   const matchingCode = codeForSearch.startsWith(inputValueParts[0]);
-  const matchingLabel = inputValueParts.every((inputValuePart: any) => itemLabelParts.some((part: any) => part.startsWith(inputValuePart))
+  const matchingLabel = inputValueParts.every((inputValuePart: any) =>
+    itemLabelParts.some((part: any) => part.startsWith(inputValuePart))
   );
   const matchingVernarcularName = inputValueParts.every(
-    (inputValuePart: any) => vernacularNameParts.some((part: any) => part.startsWith(inputValuePart)) ||
-    vernacularNamesJointParts.some((part: any) => part.startsWith(inputValuePart))
+    (inputValuePart: any) =>
+      vernacularNameParts.some((part: any) =>
+        part.startsWith(inputValuePart)
+      ) ||
+      vernacularNamesJointParts.some((part: any) =>
+        part.startsWith(inputValuePart)
+      )
   );
   return (
     ((matchingCode || matchingLabel) &&
@@ -103,15 +99,8 @@ const isTaxonMatchingFilter = ({
 };
 
 const filterItems =
-  ({
-    nodeDef,
-    unlistedTaxon,
-    unknownTaxon
-  }: any) =>
-  ({
-    items: taxa,
-    filterInputValue
-  }: any) => {
+  ({ nodeDef, unlistedTaxon, unknownTaxon }: any) =>
+  ({ items: taxa, filterInputValue }: any) => {
     if ((filterInputValue?.trim().length ?? 0) === 0) {
       return [];
     }

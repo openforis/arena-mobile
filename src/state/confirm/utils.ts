@@ -1,5 +1,10 @@
 import { ConfirmActions } from "./reducer";
 
+export type ConfirmResult = {
+  selectedMultipleChoiceValues: any[];
+  selectedSingleChoiceValue: string;
+};
+
 const confirm = async ({
   dispatch,
   cancelButtonTextKey,
@@ -9,7 +14,7 @@ const confirm = async ({
   titleKey,
   titleParams,
   ...otherParams
-}: any) =>
+}: any): Promise<ConfirmResult | null> =>
   new Promise((resolve, reject) => {
     try {
       dispatch(
@@ -23,7 +28,7 @@ const confirm = async ({
           ...otherParams,
           onConfirm: ({
             selectedMultipleChoiceValues,
-            selectedSingleChoiceValue
+            selectedSingleChoiceValue,
           }: any) => {
             dispatch(ConfirmActions.dismiss());
 
@@ -32,7 +37,7 @@ const confirm = async ({
               selectedSingleChoiceValue,
             });
           },
-          onCancel: () => resolve(false),
+          onCancel: () => resolve(null),
         })
       );
     } catch (error) {

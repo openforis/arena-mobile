@@ -1,13 +1,15 @@
 import { useMemo } from "react";
 
+import { Taxon, VernacularName } from "@openforis/arena-core";
+
 import { Taxa } from "model/Taxa";
 import { LanguageUtils } from "utils/LanguageUtils";
 
-const calculateVernacularNamesCount = (taxon: any) => Object.values(taxon.vernacularNames).reduce(
-  // @ts-expect-error TS(2571): Object is of type 'unknown'.
-  (acc, vernacularNamesArray) => acc + vernacularNamesArray.length,
-  0
-);
+const calculateVernacularNamesCount = (taxon: Taxon) =>
+  Object.values(taxon.vernacularNames ?? {}).reduce(
+    (acc, vernacularNamesArray) => acc + vernacularNamesArray.length,
+    0
+  );
 
 const addVernacularNameObjectToItems =
   (items: any, taxonItem: any) => (vernacularNameObj: any) => {
@@ -22,71 +24,68 @@ const addVernacularNameObjectToItems =
   };
 
 const joinVernacularNameObjects = ({
-  taxonItem
-}: any) =>
-  Object.entries(taxonItem.vernacularNames)
-    .reduce((acc, [lang, vernacularNameObjects]) => {
-      // @ts-expect-error TS(2571): Object is of type 'unknown'.
-      const vernacularNamesInLangJoint = vernacularNameObjects
-        .map((vernacularNameObj: any) => {
-          const { name: vernacularName } = vernacularNameObj.props;
-          return vernacularName;
-        })
-        .join(" / ");
-      const langText = LanguageUtils.getLanguageLabel(lang);
-      // @ts-expect-error TS(2345): Argument of type 'string' is not assignable to par... Remove this comment to see the full error message
-      acc.push(`${vernacularNamesInLangJoint} (${langText})`);
-      return acc;
-    }, [])
-    .join(" - ");
+  taxonItem,
+}: {
+  taxonItem: Taxon;
+}): string => {
+  const parts = [];
+  const vernacularNameEntries = Object.entries(taxonItem.vernacularNames ?? {});
+  for (const [lang, vernacularNameObjects] of vernacularNameEntries) {
+    const vernacularNamesInLangJoint = vernacularNameObjects
+      .map((vernacularNameObj: any) => {
+        const { name: vernacularName } = vernacularNameObj.props;
+        return vernacularName;
+      })
+      .join(" / ");
+    const langText = LanguageUtils.getLanguageLabel(lang);
+    parts.push(`${vernacularNamesInLangJoint} (${langText})`);
+  }
+  return parts.join(" - ");
+};
 
 export const useTaxa = ({
   survey,
   taxonomyUuid,
-  joinVernacularNames = false
+  joinVernacularNames = false,
 }: any) => {
   const { taxa, unknownTaxon, unlistedTaxon } = useMemo(() => {
-    const taxaByCode = {};
-    const allTaxa = Object.values(survey.refData?.taxonIndex ?? {});
-    const taxaReduced = allTaxa.reduce((acc, taxon) => {
-      // @ts-expect-error TS(2571): Object is of type 'unknown'.
+    const taxaByCode: Record<string, Taxon> = {};
+    const allTaxa: Taxon[] = Object.values(survey.refData?.taxonIndex ?? {});
+    const taxaReduced = [];
+    for (const taxon of allTaxa) {
       if (taxon.taxonomyUuid !== taxonomyUuid) {
-        return acc;
+        continue;
       }
-      // @ts-expect-error TS(2571): Object is of type 'unknown'.
       const taxonCode = taxon.props.code;
-      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       taxaByCode[taxonCode] = taxon;
 
-      const taxonItem = {
-        // @ts-expect-error TS(2698): Spread types may only be created from object types... Remove this comment to see the full error message
+      const taxonItem: any = {
         ...taxon,
         vernacularNamesCount: calculateVernacularNamesCount(taxon),
       };
-      // @ts-expect-error TS(2571): Object is of type 'unknown'.
-      acc.push(taxonItem);
-      // @ts-expect-error TS(2571): Object is of type 'unknown'.
-      const vernacularNamesByLang = taxon.vernacularNames;
-      const vernacularNamesArray = Object.values(vernacularNamesByLang);
+      taxaReduced.push(taxonItem);
+      const vernacularNamesByLang = taxon.vernacularNames ?? {};
+      const vernacularNamesArray: VernacularName[][] = Object.values(
+        vernacularNamesByLang
+      );
       if (vernacularNamesArray.length > 0) {
         if (joinVernacularNames) {
           taxonItem.vernacularNamesJoint = joinVernacularNameObjects({
             taxonItem,
           });
         } else {
-          vernacularNamesArray.forEach((vernacularNameObjects) => {
-            // @ts-expect-error TS(2571): Object is of type 'unknown'.
-            vernacularNameObjects.forEach(
-              addVernacularNameObjectToItems(acc, taxonItem)
-            );
-          });
+          for (const vernacularNameObjects of vernacularNamesArray) {
+            for (const vernacularNameObject of vernacularNameObjects) {
+              addVernacularNameObjectToItems(
+                taxaReduced,
+                taxonItem
+              )(vernacularNameObject);
+            }
+          }
         }
       }
-      return acc;
-    }, []);
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+    }
     const _unlistedTaxon = taxaByCode[Taxa.unlistedCode];
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     const _unknownTaxon = taxaByCode[Taxa.unknownCode];
     return {
       taxa: taxaReduced,

@@ -5,42 +5,38 @@ import { useTranslation } from "localization";
 import { useConfirm } from "state/confirm";
 import { Permissions, SystemUtils } from "utils";
 
-const mediaLibraryPermissions = {
-  accessMediaLocation: "accessMediaLocation",
-  imagePickerMediaLibrary: "imagePickerMediaLibrary",
-};
+enum MediaLibraryPermission {
+  accessMediaLocation = "accessMediaLocation",
+  imagePickerMediaLibrary = "imagePickerMediaLibrary",
+}
 
 const requestFunctionByPermission = {
-  [mediaLibraryPermissions.imagePickerMediaLibrary]: async () =>
+  [MediaLibraryPermission.imagePickerMediaLibrary]: async () =>
     Permissions.requestImagePickerMediaLibraryPermissions(),
-  [mediaLibraryPermissions.accessMediaLocation]: async () =>
+  [MediaLibraryPermission.accessMediaLocation]: async () =>
     Permissions.requestAccessMediaLocation(),
 };
 
 const checkCanAccessMediaLibrary = async ({
   toaster,
   t,
-  geotagInfoShown
+  geotagInfoShown,
 }: any) => {
-  const onPermissionRequestError = ({
-    permission,
-    error
-  }: any) => {
+  const onPermissionRequestError = ({ permission, error }: any) => {
     toaster("permissions:errorRequestingPermission", {
       permission,
       details: String(error),
     });
   };
 
-  const permissionsToTry = [mediaLibraryPermissions.imagePickerMediaLibrary];
+  const permissionsToTry = [MediaLibraryPermission.imagePickerMediaLibrary];
   if (geotagInfoShown) {
-    permissionsToTry.push(mediaLibraryPermissions.accessMediaLocation);
+    permissionsToTry.push(MediaLibraryPermission.accessMediaLocation);
   }
   for (const permission of permissionsToTry) {
     const permissionLabel = t(`permissions:types.${permission}`);
     try {
       const requestPermission = requestFunctionByPermission[permission];
-      // @ts-expect-error TS(2722): Cannot invoke an object which is possibly 'undefin... Remove this comment to see the full error message
       const granted = await requestPermission();
       if (!granted) {
         toaster("permissions:permissionDenied", {
@@ -62,9 +58,7 @@ export const useCheckCanAccessMediaLibrary = () => {
   const toaster = useToast();
 
   return useCallback(
-    async ({
-      geotagInfoShown
-    }: any) => {
+    async ({ geotagInfoShown }: any) => {
       let canAccess = await checkCanAccessMediaLibrary({
         toaster,
         t,

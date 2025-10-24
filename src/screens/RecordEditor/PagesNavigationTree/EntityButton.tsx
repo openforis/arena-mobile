@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { AlertIcon, HView, Text } from "components";
@@ -16,8 +15,7 @@ export const EntityButton = (props: any) => {
   const dispatch = useDispatch();
 
   const onPress = useCallback(() => {
-    // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
-    dispatch(DataEntryActions.selectCurrentPageEntity(entityPointer));
+    dispatch(DataEntryActions.selectCurrentPageEntity(entityPointer) as never);
   }, [dispatch, entityPointer]);
 
   const textStyle = useMemo(

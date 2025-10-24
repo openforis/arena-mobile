@@ -7,8 +7,12 @@ const unknownCode = "UNK";
 
 const taxonToString = ({
   nodeDef,
-  taxon
-}: any) => {
+  taxon,
+}: any): {
+  fullText: string;
+  scientificNameAndCode: string;
+  vernacularNamePart: string;
+} | null => {
   if (!nodeDef || !taxon) return null;
 
   const { code, scientificName } = taxon.props;

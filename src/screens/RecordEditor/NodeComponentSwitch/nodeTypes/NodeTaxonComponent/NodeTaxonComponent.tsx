@@ -1,5 +1,4 @@
 import { useState } from "react";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { NodeDefs } from "@openforis/arena-core";
@@ -36,7 +35,6 @@ export const NodeTaxonComponent = (props: any) => {
   });
 
   const selectedTaxon = useTaxonByNodeValue({ value });
-  // @ts-expect-error TS(2551): Property 'vernacularName' does not exist on type '... Remove this comment to see the full error message
   const selectedTaxonVernacularName = selectedTaxon?.vernacularName;
   const { containerStyle, selectedTaxonContainerStyle } = useDynamicStyles({
     selectedTaxonVernacularName,
@@ -52,7 +50,6 @@ export const NodeTaxonComponent = (props: any) => {
               style={styles.selectedTaxonText}
               value={value}
             />
-            // @ts-expect-error TS(2786): 'CloseIconButton' cannot be used as a JSX componen... Remove this comment to see the full error message
             <CloseIconButton mode="text" onPress={onClearPress} />
           </HView>
         ) : (

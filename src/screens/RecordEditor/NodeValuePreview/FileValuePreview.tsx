@@ -9,7 +9,6 @@ export const FileValuePreview = (props: any) => {
   const { fileType = NodeDefFileType.other } = nodeDef.props;
 
   if (fileType === NodeDefFileType.image) {
-    // @ts-expect-error TS(7027): Unreachable code detected.
     return <ImageOrVideoValuePreview nodeDef={nodeDef} value={value} />;
   }
 

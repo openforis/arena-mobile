@@ -1,5 +1,4 @@
 import React from "react";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { NodeDefs, Objects } from "@openforis/arena-core";
@@ -51,7 +50,6 @@ export const NodeDefFormItem = (props: any) => {
         viewMode === RecordEditViewMode.oneNode ? styles.formItemOneNode : {},
       ]}
     >
-      // @ts-expect-error TS(2786): 'NodeDefFormItemHeader' cannot be used as a JSX co... Remove this comment to see the full error message
       <NodeDefFormItemHeader
         nodeDef={nodeDef}
         parentNodeUuid={parentNodeUuid}
@@ -63,11 +61,9 @@ export const NodeDefFormItem = (props: any) => {
         ]}
       >
         {isLinkedToPreviousCycleRecord && includedInPreviousCycleLink && (
-          // @ts-expect-error TS(2786): 'PreviousCycleNodeValuePreview' cannot be used as ... Remove this comment to see the full error message
           <PreviousCycleNodeValuePreview nodeDef={nodeDef} />
         )}
         {canEditRecord ? (
-          // @ts-expect-error TS(2786): 'NodeComponentSwitch' cannot be used as a JSX comp... Remove this comment to see the full error message
           <NodeComponentSwitch
             nodeDef={nodeDef}
             parentNodeUuid={parentNodeUuid}

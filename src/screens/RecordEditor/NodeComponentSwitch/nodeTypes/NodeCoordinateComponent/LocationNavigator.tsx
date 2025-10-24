@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Dimensions, Image } from "react-native";
 import { useTheme } from "react-native-paper";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Objects, Points } from "@openforis/arena-core";
@@ -64,6 +63,20 @@ const calculateAngleBetweenPoints = (point1: any, point2: any) => {
 const formatNumber = (num: any, decimals = 2, unit = "") =>
   Objects.isEmpty(num) ? "-" : num.toFixed(decimals) + unit;
 
+type LocationNavigatorState = {
+  currentLocation?: any;
+  angleToTarget: 0;
+  accuracy: 0;
+  distance: 0;
+};
+
+const initialState: LocationNavigatorState = {
+  currentLocation: null,
+  angleToTarget: 0,
+  accuracy: 0,
+  distance: 0,
+};
+
 export const LocationNavigator = (props: any) => {
   const { targetPoint, onDismiss, onUseCurrentLocation } = props;
 
@@ -73,12 +86,7 @@ export const LocationNavigator = (props: any) => {
 
   const theme = useTheme();
 
-  const [state, setState] = useState({
-    currentLocation: null,
-    angleToTarget: 0,
-    accuracy: 0,
-    distance: 0,
-  });
+  const [state, setState] = useState(initialState);
 
   const compassBg = theme.dark ? compassBgWhite : compassBgBlack;
 
@@ -92,11 +100,7 @@ export const LocationNavigator = (props: any) => {
   }, []);
 
   const locationCallback = useCallback(
-    ({
-      location,
-      locationAccuracy,
-      pointLatLong
-    }: any) => {
+    ({ location, locationAccuracy, pointLatLong }: any) => {
       if (__DEV__) {
         console.log(`LocationNavigator location callback`, location);
       }
@@ -126,7 +130,6 @@ export const LocationNavigator = (props: any) => {
 
   const { currentLocation, angleToTarget, accuracy, distance } = state;
   const { longitude: currentLocationX, latitude: currentLocationY } =
-    // @ts-expect-error TS(2339): Property 'coords' does not exist on type 'never'.
     currentLocation?.coords || {};
 
   const arrowToTargetVisible =
@@ -185,7 +188,6 @@ export const LocationNavigator = (props: any) => {
           resizeMode: "contain",
         }}
       /> */}
-
           <View style={compassWrapperStyle}>
             <Image
               source={compassBg}
@@ -224,38 +226,28 @@ export const LocationNavigator = (props: any) => {
                   transform: [{ rotate: angleToTargetDifference + "deg" }],
                 }}
               >
-                // @ts-expect-error TS(2769): No overload matches this call.
                 <Image source={circleGreen} style={targetLocationMarkerStyle} />
               </View>
             )}
           </View>
-
           <HView style={styles.fieldsRow}>
-            // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
             <FormItem labelKey="dataEntry:coordinate.accuracy">
               {formatNumber(accuracy, undefined, "m")}
             </FormItem>
-            // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
             <FormItem labelKey="dataEntry:coordinate.distance">
               {formatNumber(distance, undefined, "m")}
             </FormItem>
           </HView>
           <HView style={styles.fieldsRow}>
-            // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
             <FormItem labelKey="dataEntry:coordinate.heading">
               {formatNumber(heading, 1, Symbols.degree)}
             </FormItem>
-            // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
             <FormItem labelKey="dataEntry:coordinate.angleToTargetLocation">
               {formatNumber(angleToTarget, 0, Symbols.degree)}
             </FormItem>
           </HView>
-          // @ts-expect-error TS(2786): 'FormItem' cannot be used as a JSX component.
           <FormItem labelKey="dataEntry:coordinate.currentLocation">
-            {`${formatNumber(currentLocationX, 5)}, ${formatNumber(
-              currentLocationY,
-              5
-            )}`}
+            {`${formatNumber(currentLocationX, 5)}, ${formatNumber(currentLocationY, 5)}`}
           </FormItem>
         </VView>
         <HView style={styles.bottomBar}>

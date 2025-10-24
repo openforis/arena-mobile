@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { VirtualizedList } from "react-native";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
-import { NodeDefs } from "@openforis/arena-core";
+import { NodeDef, NodeDefs } from "@openforis/arena-core";
 
 import { DataEntrySelectors } from "state";
 
@@ -23,8 +22,8 @@ export const NodeEntityFormComponent = (props: any) => {
   const childrenDefs = DataEntrySelectors.useRecordEntityChildDefs({ nodeDef });
 
   useEffect(() => {
-    // @ts-expect-error TS(2339): Property 'scrollToOffset' does not exist on type '... Remove this comment to see the full error message
-    listRef.current?.scrollToOffset?.({ offset: 0, animated: false });
+    const listEl: any = listRef.current;
+    listEl?.scrollToOffset?.({ offset: 0, animated: false });
   }, [nodeDef, parentNodeUuid]);
 
   const onFormItemFocus = useCallback(() => {}, []);
@@ -33,14 +32,12 @@ export const NodeEntityFormComponent = (props: any) => {
     <VirtualizedList
       ref={listRef}
       getItemCount={() => childrenDefs.length}
-      getItem={(_data, index) => childrenDefs[index]}
+      getItem={(_data, index) => childrenDefs[index]!}
       initialNumToRender={10}
-      // @ts-expect-error TS(2571): Object is of type 'unknown'.
-      keyExtractor={(childDef) => childDef.uuid}
+      keyExtractor={(childDef: NodeDef<any>) => childDef.uuid}
       persistentScrollbar
       renderItem={({ item: childDef }) => (
         <NodeDefFormItem
-          // @ts-expect-error TS(2571): Object is of type 'unknown'.
           key={childDef.uuid}
           nodeDef={childDef}
           parentNodeUuid={parentNodeUuid}

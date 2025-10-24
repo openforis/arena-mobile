@@ -38,6 +38,7 @@ import { RecordsListOptions } from "./RecordsListOptions";
 
 import styles from "./styles";
 import { RecordsListLegend } from "./RecordsListLegend";
+import { ConfirmResult } from "state/confirm/utils";
 
 const { checkLoggedInUser } = RemoteConnectionUtils;
 
@@ -64,16 +65,27 @@ const conflictingRecordsExportOptions = [
 
 const generateRecordsCountSummaryText = ({
   recordsCountSummary,
-  t
-}: any) =>
+  t,
+}: {
+  recordsCountSummary: Record<string, number>;
+  t: any;
+}) =>
   Object.entries(recordsCountSummary)
-    // @ts-expect-error TS(2571): Object is of type 'unknown'.
     .filter(([_key, value]) => value > 0) // exclude items with 0 count
     .map(([key, value]) => {
       const statusText = t(`dataEntry:recordStatus.${key}`);
       return `${value}: ${statusText}`;
     })
     .join("\n");
+
+type RecordListState = {
+  loading: boolean;
+  onlyLocal?: boolean;
+  records?: any[];
+  searchValue?: string;
+  syncStatusLoading: boolean;
+  syncStatusFetched?: boolean;
+};
 
 export const RecordsList = () => {
   const navigation = useNavigation();
@@ -86,7 +98,7 @@ export const RecordsList = () => {
   const toaster = useToast();
   const confirm = useConfirm();
 
-  const defaultCycleKey = Surveys.getDefaultCycleKey(survey);
+  const defaultCycleKey = survey ? Surveys.getDefaultCycleKey(survey) : null;
 
   const [state, setState] = useState({
     loading: true,
@@ -95,7 +107,7 @@ export const RecordsList = () => {
     searchValue: "",
     syncStatusLoading: false,
     syncStatusFetched: false,
-  });
+  } as RecordListState);
   const {
     loading,
     onlyLocal,
@@ -140,48 +152,54 @@ export const RecordsList = () => {
   // refresh records list on navigation focus (e.g. going back to records list screen)
   useNavigationFocus(loadRecords);
 
-  const loadRecordsWithSyncStatus = useCallback(async () => {
-    setState((statePrev) => ({
-      ...statePrev,
-      syncStatusLoading: true,
-      syncStatusFetched: false,
-    }));
-    const stateNext = { loading: false, syncStatusLoading: false };
-    try {
-      if (await checkLoggedInUser({ dispatch, navigation })) {
-        const _records = await RecordService.syncRecordSummaries({
-          survey,
-          cycle,
-          onlyLocal,
-        });
-        Object.assign(stateNext, {
-          loading: false,
-          records: _records,
-          syncStatusFetched: true,
-        });
+  const loadRecordsWithSyncStatus =
+    useCallback(async (): Promise<RecordListState> => {
+      setState((statePrev) => ({
+        ...statePrev,
+        syncStatusLoading: true,
+        syncStatusFetched: false,
+      }));
+      const stateNext = {
+        loading: false,
+        syncStatusLoading: false,
+      };
+      try {
+        if (await checkLoggedInUser({ dispatch, navigation })) {
+          const _records = await RecordService.syncRecordSummaries({
+            survey,
+            cycle,
+            onlyLocal,
+          });
+          Object.assign(stateNext, {
+            loading: false,
+            records: _records,
+            syncStatusFetched: true,
+          });
+        }
+      } catch (error) {
+        dispatch(
+          MessageActions.setMessage({
+            content: "dataEntry:errorFetchingRecordsSyncStatus",
+            contentParams: { details: String(error) },
+          })
+        );
       }
-    } catch (error) {
-      dispatch(
-        MessageActions.setMessage({
-          content: "dataEntry:errorFetchingRecordsSyncStatus",
-          contentParams: { details: String(error) },
-        })
-      );
-    }
-    setState((statePrev) => ({ ...statePrev, ...stateNext }));
-    return stateNext;
-  }, [dispatch, navigation, survey, cycle, onlyLocal]);
+      setState((statePrev) => ({ ...statePrev, ...stateNext }));
+      return stateNext;
+    }, [dispatch, navigation, survey, cycle, onlyLocal]);
 
   const onOnlyLocalChange = useCallback(
-    (onlyLocalUpdated: any) => setState((statePrev) => ({ ...statePrev, onlyLocal: onlyLocalUpdated })),
+    (onlyLocalUpdated: any) =>
+      setState((statePrev) => ({ ...statePrev, onlyLocal: onlyLocalUpdated })),
     []
   );
 
   const onSearchValueChange = useCallback(
-    (searchValueUpdated: any) => setState((statePrev) => ({
-      ...statePrev,
-      searchValue: searchValueUpdated,
-    })),
+    (searchValueUpdated: any) =>
+      setState((statePrev) => ({
+        ...statePrev,
+        searchValue: searchValueUpdated,
+      })),
     []
   );
 
@@ -219,34 +237,37 @@ export const RecordsList = () => {
       ],
     });
     if (confirmResult) {
-      // @ts-expect-error TS(2339): Property 'selectedMultipleChoiceValues' does not e... Remove this comment to see the full error message
       const { selectedMultipleChoiceValues } = confirmResult;
       const overwriteExistingRecords = selectedMultipleChoiceValues.includes(
         dataImportOptions.overwriteExistingRecords
       );
 
       dispatch(
-        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         DataEntryActions.importRecordsFromFile({
           fileUri: uri,
           overwriteExistingRecords,
           onImportComplete: loadRecords,
-        })
+        }) as never
       );
     }
   }, [confirm, dispatch, loadRecords, toaster]);
 
   const onNewRecordPress = useCallback(() => {
     setState((statePrev) => ({ ...statePrev, loading: true }));
-    // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
-    dispatch(DataEntryActions.createNewRecord({ navigation }));
+    dispatch(DataEntryActions.createNewRecord({ navigation }) as never);
   }, [dispatch, navigation]);
 
   const confirmExportRecords = useCallback(
     async ({
-      records
-    }: any) => {
-      const getRecordsByStatus = (status: any) => records.filter((r: any) => r.syncStatus === status);
+      records,
+    }: any): Promise<{
+      newRecords?: any[];
+      updatedRecords?: any[];
+      conflictingRecords?: any[];
+      confirmResult: ConfirmResult | boolean | null;
+    }> => {
+      const getRecordsByStatus = (status: any) =>
+        records.filter((r: any) => r.syncStatus === status);
       const newRecords = getRecordsByStatus(RecordSyncStatus.new);
       const newRecordsCount = newRecords.length;
 
@@ -270,7 +291,9 @@ export const RecordsList = () => {
       const confirmSingleChoiceOptions =
         conflictingRecordsCount > 0 ? conflictingRecordsExportOptions : [];
 
-      const recordsWithErrorsCount = records.filter((r: any) => r.errors > 0).length;
+      const recordsWithErrorsCount = records.filter(
+        (r: any) => r.errors > 0
+      ).length;
 
       const recordsCountSummary = {
         new: newRecordsCount,
@@ -296,23 +319,19 @@ export const RecordsList = () => {
   );
 
   const exportSelectedRecords = useCallback(
-    async ({
-      selectedRecords,
-      onlyRemote = false
-    }: any) => {
+    async ({ selectedRecords, onlyRemote = false }: any) => {
       const { newRecords, updatedRecords, conflictingRecords, confirmResult } =
         await confirmExportRecords({ records: selectedRecords });
       if (confirmResult) {
-        const recordsToExport = [...newRecords, ...updatedRecords];
+        const recordsToExport = [...newRecords!, ...updatedRecords!];
 
         let conflictResolutionStrategy =
           ConflictResolutionStrategy.overwriteIfUpdated;
         if (
-          // @ts-expect-error TS(2571): Object is of type 'unknown'.
-          confirmResult.selectedSingleChoiceValue ===
+          (confirmResult as ConfirmResult).selectedSingleChoiceValue ===
           ConflictResolutionStrategy.merge
         ) {
-          recordsToExport.push(...conflictingRecords);
+          recordsToExport.push(...conflictingRecords!);
           conflictResolutionStrategy = ConflictResolutionStrategy.merge;
         }
         const recordUuids = recordsToExport.map((r) => r.uuid);
@@ -336,7 +355,6 @@ export const RecordsList = () => {
           }
         };
         dispatch(
-          // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
           DataEntryActions.exportRecords({
             cycle,
             recordUuids,
@@ -345,7 +363,7 @@ export const RecordsList = () => {
             onEnd: () =>
               setState((statePrev) => ({ ...statePrev, loading: false })),
             onlyRemote,
-          })
+          }) as never
         );
       }
     },
@@ -358,17 +376,14 @@ export const RecordsList = () => {
 
   const onExportAllRecordsPress = useCallback(() => {
     const recordUuids = records
-      // @ts-expect-error TS(2339): Property 'origin' does not exist on type 'never'.
-      .filter((record) => record.origin === RecordOrigin.local)
-      // @ts-expect-error TS(2339): Property 'uuid' does not exist on type 'never'.
+      ?.filter((record) => record.origin === RecordOrigin.local)
       .map((record) => record.uuid);
 
-    if (recordUuids.length === 0) {
+    if (recordUuids?.length === 0) {
       toaster(noRecordsToExportTextKey);
       return;
     }
     dispatch(
-      // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
       DataEntryActions.exportRecords({
         cycle,
         recordUuids,
@@ -376,14 +391,13 @@ export const RecordsList = () => {
         onEnd: () => {
           setState((statePrev) => ({ ...statePrev, loading: false }));
         },
-      })
+      }) as never
     );
   }, [cycle, dispatch, records, toaster]);
 
   const onExportSelectedRecordUuids = useCallback(
     async (recordUuids: any) => {
-      const selectedRecords = records.filter((record) =>
-        // @ts-expect-error TS(2339): Property 'uuid' does not exist on type 'never'.
+      const selectedRecords = records?.filter((record) =>
         recordUuids.includes(record.uuid)
       );
       await exportSelectedRecords({ selectedRecords });
@@ -400,8 +414,7 @@ export const RecordsList = () => {
           swipeToConfirm: true,
         })
       ) {
-        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
-        await dispatch(DataEntryActions.deleteRecords(recordUuids));
+        await dispatch(DataEntryActions.deleteRecords(recordUuids) as never);
         await loadRecords();
       }
     },
@@ -432,19 +445,17 @@ export const RecordsList = () => {
 
   const onImportSelectedRecordUuids = useCallback(
     (selectedRecordUuids: any) => {
-      const selectedRecords = records.filter((record) =>
-        // @ts-expect-error TS(2339): Property 'uuid' does not exist on type 'never'.
+      const selectedRecords = records?.filter((record) =>
         selectedRecordUuids.includes(record.uuid)
       );
       if (!checkRecordsCanBeImported(selectedRecords)) {
         return;
       }
       dispatch(
-        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         DataEntryActions.importRecordsFromServer({
           recordUuids: selectedRecordUuids,
           onImportComplete: loadRecords,
-        })
+        }) as never
       );
     },
     [checkRecordsCanBeImported, dispatch, loadRecords, records]
@@ -473,25 +484,28 @@ export const RecordsList = () => {
 
   const onCloneSelectedRecordUuids = useCallback(
     (selectedRecordUuids: any) => {
-      const selectedRecords = records.filter((record) =>
-        // @ts-expect-error TS(2339): Property 'uuid' does not exist on type 'never'.
+      const selectedRecords = records?.filter((record) =>
         selectedRecordUuids.includes(record.uuid)
       );
       if (!checkRecordsCanBeCloned(selectedRecords)) {
         return;
       }
       dispatch(
-        // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
         DataEntryActions.cloneRecordsIntoDefaultCycle({
           recordSummaries: selectedRecords,
           callback: loadRecords,
-        })
+        }) as never
       );
     },
     [checkRecordsCanBeCloned, dispatch, loadRecords, records]
   );
 
   const checkCanSendData = useCallback(() => {
+    if (!survey) {
+      return {
+        errorKey: "recordsList:sendData.error.surveyNotSelected",
+      };
+    }
     if (!Surveys.isVisibleInMobile(survey)) {
       return {
         errorKey: "recordsList:sendData.error.surveyNotVisibleInMobile",
@@ -499,8 +513,7 @@ export const RecordsList = () => {
     } else if (!Surveys.isRecordsUploadFromMobileAllowed(survey)) {
       return { errorKey: "recordsList:sendData.error.recordsUploadNotAllowed" };
     } else if (
-      // @ts-expect-error TS(2339): Property 'errors' does not exist on type 'never'.
-      records.filter((r) => r.errors).length > 0 &&
+      (records?.filter((r) => r.errors).length ?? 0) > 0 &&
       !Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey)
     ) {
       return {
@@ -516,7 +529,6 @@ export const RecordsList = () => {
     if (errorKey) {
       toaster("recordsList:sendData.error.generic", { details: t(errorKey) });
     } else {
-      // @ts-expect-error TS(2339): Property 'syncStatusFetched' does not exist on typ... Remove this comment to see the full error message
       const { syncStatusFetched: syncStatusFetchedNext, records: recordsNext } =
         await loadRecordsWithSyncStatus();
       if (syncStatusFetchedNext) {
@@ -537,14 +549,14 @@ export const RecordsList = () => {
   const recordsFiltered = useMemo(() => {
     if (Objects.isEmpty(searchValue)) return records;
 
-    return records.filter((recordSummary) => {
+    return records?.filter((recordSummary) => {
       const valuesByKey = RecordsUtils.getValuesByKeyFormatted({
         survey,
         lang,
         recordSummary,
         t,
       });
-      const searchValueLowerCase = searchValue.toLocaleLowerCase();
+      const searchValueLowerCase = searchValue?.toLocaleLowerCase() ?? "";
       return Object.values(valuesByKey).some(
         (value) =>
           !Objects.isEmpty(value) &&
@@ -567,10 +579,11 @@ export const RecordsList = () => {
     [cycle, defaultCycleKey, onNewRecordPress]
   );
 
+  const recordsLength = records?.length ?? 0;
+
   return (
     <VView style={styles.container}>
       <VView style={styles.innerContainer}>
-        // @ts-expect-error TS(2786): 'RecordsListOptions' cannot be used as a JSX compo... Remove this comment to see the full error message
         <RecordsListOptions
           onImportRecordsFromFilePress={onImportRecordsFromFilePress}
           onlyLocal={onlyLocal}
@@ -582,10 +595,10 @@ export const RecordsList = () => {
           <Loader />
         ) : (
           <>
-            {records.length > minRecordsToShowSearchBar && (
+            {recordsLength > minRecordsToShowSearchBar && (
               <Searchbar value={searchValue} onChange={onSearchValueChange} />
             )}
-            {records.length === 0 && (
+            {recordsLength === 0 && (
               <>
                 <Text
                   textKey="dataEntry:noRecordsFound"
@@ -594,7 +607,7 @@ export const RecordsList = () => {
                 {newRecordButton}
               </>
             )}
-            {records.length > 0 && (
+            {recordsLength > 0 && (
               <RecordsDataVisualizer
                 loadRecords={loadRecords}
                 onCloneSelectedRecordUuids={onCloneSelectedRecordUuids}
@@ -610,11 +623,8 @@ export const RecordsList = () => {
           </>
         )}
       </VView>
-
-      // @ts-expect-error TS(2786): 'RecordsListLegend' cannot be used as a JSX compon... Remove this comment to see the full error message
       {syncStatusFetched && <RecordsListLegend />}
-
-      {records.length > 0 && (
+      {recordsLength > 0 && (
         <HView style={styles.bottomActionBar}>
           {newRecordButton}
           <Button

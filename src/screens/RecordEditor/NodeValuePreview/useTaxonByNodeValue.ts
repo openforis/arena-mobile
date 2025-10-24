@@ -1,22 +1,18 @@
 import { useMemo } from "react";
 
-import { NodeValues, Surveys } from "@openforis/arena-core";
+import { NodeValues, Surveys, VernacularName } from "@openforis/arena-core";
 
 import { SurveySelectors } from "state/survey";
 
-const findVernacularNameByUuid = ({
-  taxon,
-  vernacularNameUuid
-}: any) => {
+const findVernacularNameByUuid = ({ taxon, vernacularNameUuid }: any) => {
   const vernacularNamesByLang = taxon.vernacularNames;
-  const vernacularNamesArray = Object.values(vernacularNamesByLang).flat();
-  // @ts-expect-error TS(2769): No overload matches this call.
+  const vernacularNamesArray: VernacularName[] = Object.values(
+    vernacularNamesByLang
+  ).flat() as VernacularName[];
   return vernacularNamesArray.find(({ uuid }) => uuid === vernacularNameUuid);
 };
 
-export const useTaxonByNodeValue = ({
-  value
-}: any) => {
+export const useTaxonByNodeValue = ({ value }: any): any => {
   const survey = SurveySelectors.useCurrentSurvey();
 
   return useMemo(() => {
@@ -24,7 +20,7 @@ export const useTaxonByNodeValue = ({
     const vernacularNameUuid = NodeValues.getValueVernacularNameUuid(value);
     if (!taxonUuid) return null;
     const { scientificName } = value;
-    let taxon = Surveys.getTaxonByUuid({ survey, taxonUuid });
+    let taxon: any = Surveys.getTaxonByUuid({ survey, taxonUuid });
 
     if (vernacularNameUuid) {
       const vernacularNameObj = findVernacularNameByUuid({
@@ -33,11 +29,9 @@ export const useTaxonByNodeValue = ({
       });
       if (vernacularNameObj) {
         const { name: vernacularName, lang: vernacularNameLangCode } =
-          // @ts-expect-error TS(2571): Object is of type 'unknown'.
           vernacularNameObj.props;
         taxon = {
           ...taxon,
-          // @ts-expect-error TS(2322): Type '{ vernacularName: any; vernacularNameLangCod... Remove this comment to see the full error message
           vernacularName,
           vernacularNameLangCode,
           vernacularNameUuid,
