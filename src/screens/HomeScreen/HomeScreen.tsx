@@ -20,7 +20,6 @@ export const HomeScreen = () => {
   const surveySelected = !!survey;
 
   return (
-    // @ts-expect-error TS(2786): 'ScreenView' cannot be used as a JSX component.
     <ScreenView>
       <VView style={styles.container}>
         <AppLogo />

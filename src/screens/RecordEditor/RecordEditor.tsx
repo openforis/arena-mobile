@@ -92,7 +92,6 @@ export const RecordEditor = () => {
       // @ts-expect-error TS(2769): No overload matches this call.
       <MenuDrawer
         animationTime={250}
-        // @ts-expect-error TS(2786): 'RecordEditorDrawer' cannot be used as a JSX compo... Remove this comment to see the full error message
         drawerContent={<RecordEditorDrawer />}
         drawerPercentage={75}
         opacity={0.4}
@@ -108,7 +107,6 @@ export const RecordEditor = () => {
     <HView style={styles.externalContainerInTablet}>
       {pageSelectorOpen && (
         <View style={styles.drawerWrapperInTablet}>
-          // @ts-expect-error TS(2786): 'RecordEditorDrawer' cannot be used as a JSX compo... Remove this comment to see the full error message
           <RecordEditorDrawer />
         </View>
       )}
