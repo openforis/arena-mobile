@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
 import { Menu } from "react-native-paper";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Button } from "./Button";
@@ -50,7 +49,6 @@ export const MenuButton = (props: any) => {
           onPress,
           keepMenuOpenOnPress = false
         }: any) => (
-          // @ts-expect-error TS(2786): 'MenuItem' cannot be used as a JSX component.
           <MenuItem
             key={key}
             disabled={disabled}

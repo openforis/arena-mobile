@@ -46,7 +46,7 @@ export const SelectableListWithFilter = (props: any) => {
   const calculateItemsFiltered = useCallback(() => {
     if (!filterVisible) return items;
 
-    const filterInputValue = inputValueRef.current;
+    const filterInputValue:string|null = inputValueRef.current;
 
     if (Objects.isEmpty(filterInputValue)) {
       if (selectedItems.length === 0) {
@@ -65,8 +65,7 @@ export const SelectableListWithFilter = (props: any) => {
       (Objects.isEmpty(filterInputValue) ||
         itemLabelExtractor(item)
           .toLocaleLowerCase()
-          // @ts-expect-error TS(2531): Object is possibly 'null'.
-          .includes(filterInputValue.toLocaleLowerCase()))
+          .includes(filterInputValue!.toLocaleLowerCase()))
     );
   }, [
     filterItems,

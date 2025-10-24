@@ -3,12 +3,11 @@ import { Refs } from "utils";
 
 export const useIsMountedRef = ({ delay = 0 } = { delay: 0 }) => {
   const mountedRef = useRef(false);
-  const mountedTimeoutRef = useRef(null); // avoid a render after unmount
+  const mountedTimeoutRef = useRef(null as any); // avoid a render after unmount
 
   useEffect(() => {
     if (delay > 0) {
       // set mounted with a timeout
-      // @ts-expect-error TS(2322): Type 'number' is not assignable to type 'null'.
       mountedTimeoutRef.current = setTimeout(() => {
         mountedTimeoutRef.current = null;
         mountedRef.current = true;

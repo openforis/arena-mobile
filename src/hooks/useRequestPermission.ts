@@ -4,15 +4,13 @@ const permissionGranted = "granted";
 
 export const useRequestPermission = (
   requestFunction: any,
-  getterFunction = null
+  getterFunction = null as any
 ) => {
-  const [hasPermission, setHasPermission] = useState(null);
+  const [hasPermission, setHasPermission] = useState(null as any);
 
   useEffect(() => {
     if (getterFunction) {
-      // @ts-expect-error TS(2349): This expression is not callable.
       getterFunction().then((result: any) => {
-        // @ts-expect-error TS(2345): Argument of type 'boolean' is not assignable to pa... Remove this comment to see the full error message
         setHasPermission(result.granted === permissionGranted);
       });
     }
@@ -25,7 +23,6 @@ export const useRequestPermission = (
       const { status } = await requestFunction(...parameters);
       const granted = status === permissionGranted;
 
-      // @ts-expect-error TS(2345): Argument of type 'boolean' is not assignable to pa... Remove this comment to see the full error message
       setHasPermission(granted);
       return granted;
     },

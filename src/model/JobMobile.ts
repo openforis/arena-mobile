@@ -1,13 +1,17 @@
-import { JobBase } from "@openforis/arena-core";
+import { JobBase, Logger } from "@openforis/arena-core";
 
-// @ts-expect-error TS(2707): Generic type 'JobBase<C, R>' requires between 1 an... Remove this comment to see the full error message
-export class JobMobile extends JobBase {
-  createLogger() {
+export abstract class JobMobile extends JobBase<any, any> {
+  createLogger(): Logger {
     const log = (message: any) => console.log(message);
     return {
+      isDebugEnabled: () => true,
+      isInfoEnabled: () => true,
+      isWarnEnabled: () => true,
+      isErrorEnabled: () => true,
       debug: (message: any) => log(message),
       error: (message: any) => log(message),
-      warning: (message: any) => log(message),
+      info: (message: any) => log(message),
+      warn: (message: any) => log(message),
     };
   }
 }

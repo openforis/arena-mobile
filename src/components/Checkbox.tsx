@@ -1,7 +1,6 @@
 import React from "react";
 import { Checkbox as RNPCheckbox } from "react-native-paper";
 import { StyleSheet } from "react-native";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 const styles = StyleSheet.create({

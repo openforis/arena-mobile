@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useTheme } from "react-native-paper";
 import RNPDropdown from "react-native-paper-dropdown";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
@@ -48,7 +47,7 @@ export const Dropdown = (props: any) => {
 
   return (
     <RNPDropdown
-      // @ts-expect-error TS(2322): Type '{ disabled: any; dropDownContainerMaxHeight:... Remove this comment to see the full error message
+      // @ts-ignore
       disabled={disabled}
       dropDownContainerMaxHeight={300}
       dropDownItemStyle={{ backgroundColor: theme.colors.surfaceVariant }}

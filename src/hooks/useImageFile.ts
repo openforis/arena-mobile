@@ -4,8 +4,11 @@ import { Environment, Files } from "utils";
 
 const defaultImageExtension = "jpg";
 
-export const useImageFile = (uri: any, defaultExtension = defaultImageExtension) => {
-  const tempFileUriRef = useRef(null);
+export const useImageFile = (
+  uri: any,
+  defaultExtension = defaultImageExtension
+) => {
+  const tempFileUriRef = useRef(null as any);
   const [finalUri, setFinalUri] = useState(uri);
 
   const copyToTempFileWithExtension = useCallback(
@@ -24,7 +27,6 @@ export const useImageFile = (uri: any, defaultExtension = defaultImageExtension)
 
     copyToTempFileWithExtension()
       .then((tempFileUri) => {
-        // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'null'.
         tempFileUriRef.current = tempFileUri;
         setFinalUri(tempFileUri);
       })

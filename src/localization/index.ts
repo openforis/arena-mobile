@@ -4,7 +4,7 @@ import {
   useTranslation as useI18nTranslation,
 } from "./i18n";
 import {
-  textDirections,
+  TextDirection,
   useIsTextDirectionRtl,
   useTextDirection,
 } from "./useTextDirection";
@@ -17,7 +17,7 @@ const useTranslation = () => {
 export {
   changeLanguage,
   i18n,
-  textDirections,
+  TextDirection as textDirections,
   useIsTextDirectionRtl,
   useTextDirection,
   useTranslation,

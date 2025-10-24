@@ -23,8 +23,10 @@ import styles from "./styles";
 
 // Crypto (for internal UUIDs generation)
 import * as Crypto from "expo-crypto";
-if (!globalThis.crypto) {
-  globalThis.crypto = Crypto;
+// @ts-ignore
+if (!global.crypto) {
+  // @ts-ignore
+  global.crypto = Crypto;
 }
 
 const steps = {
@@ -107,20 +109,17 @@ export const AppInitializer = (props: any) => {
       await SurveyService.importDemoSurvey();
     }
     setStep(steps.fetchingAndSettingLocalSurveys);
-    // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => Promise<void>... Remove this comment to see the full error message
-    await dispatch(SurveyActions.fetchAndSetLocalSurveys());
+    await dispatch(SurveyActions.fetchAndSetLocalSurveys() as any);
 
     const currentSurveyId = await PreferencesService.getCurrentSurveyId();
     if (currentSurveyId) {
       setStep(steps.fetchingAndSettingSurvey);
       dispatch(
-        // @ts-expect-error TS(2345): Argument of type '(dispatch: any) => Promise<void>... Remove this comment to see the full error message
-        SurveyActions.fetchAndSetCurrentSurvey({ surveyId: currentSurveyId })
+        SurveyActions.fetchAndSetCurrentSurvey({ surveyId: currentSurveyId }) as any
       );
     }
     setStep(steps.checkingLoggedIn);
-    // @ts-expect-error TS(2345): Argument of type '(dispatch: any, getState: any) =... Remove this comment to see the full error message
-    await dispatch(RemoteConnectionActions.loginAndSetUser());
+    await dispatch(RemoteConnectionActions.loginAndSetUser() as any);
 
     setStep(steps.complete);
     if (__DEV__) {

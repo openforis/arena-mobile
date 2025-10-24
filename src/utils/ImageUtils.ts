@@ -161,7 +161,9 @@ const resizeToFitMaxSize = async ({
   }
 };
 
-const getSize = async (fileUri: any) =>
+const getSize = async (
+  fileUri: any
+): Promise<{ width: number; height: number }> =>
   new Promise((resolve, reject) => {
     Image.getSize(
       fileUri,

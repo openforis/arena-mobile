@@ -9,7 +9,8 @@ import { Functions } from "utils/Functions";
 const updateHeadingThrottleDelay = 200;
 const averageAnglePicker = new AverageAnglePicker();
 
-const radsToDegrees = (rads: any) => (rads >= 0 ? rads : rads + 2 * Math.PI) * (180 / Math.PI);
+const radsToDegrees = (rads: any) =>
+  (rads >= 0 ? rads : rads + 2 * Math.PI) * (180 / Math.PI);
 
 const magnetometerDataToAngle = (magnetometer: any) => {
   let angle = 0;
@@ -25,7 +26,7 @@ const magnetometerDataToAngle = (magnetometer: any) => {
 };
 
 export const useMagnetometerHeading = () => {
-  const magnetometerSubscriptionRef = useRef(null);
+  const magnetometerSubscriptionRef = useRef(null as any);
   const lastMagnetometerAngleRef = useRef(0);
 
   const [magnetometerAvailable, setMagnetometerAvailable] = useState(true);
@@ -63,7 +64,6 @@ export const useMagnetometerHeading = () => {
     try {
       const available = await Magnetometer.isAvailableAsync();
       if (available) {
-        // @ts-expect-error TS(2322): Type 'EventSubscription' is not assignable to type... Remove this comment to see the full error message
         magnetometerSubscriptionRef.current =
           Magnetometer.addListener(onMagnetometerData);
       } else {
@@ -77,7 +77,6 @@ export const useMagnetometerHeading = () => {
   useEffect(() => {
     subscribeToMagnetometerData();
     return () => {
-      // @ts-expect-error TS(2339): Property 'remove' does not exist on type 'never'.
       magnetometerSubscriptionRef.current?.remove();
     };
   }, [subscribeToMagnetometerData]);

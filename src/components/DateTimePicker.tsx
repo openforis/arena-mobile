@@ -2,7 +2,6 @@ import React, { useCallback, useState } from "react";
 import { Pressable } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TextInput as RNPTextInput } from "react-native-paper";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Dates } from "@openforis/arena-core";
@@ -60,7 +59,6 @@ export const DateTimePicker = (props: any) => {
     <HView>
       <Pressable onPress={editable ? showPicker : undefined}>
         <TextInput
-          // @ts-expect-error TS(2322): Type '{ editable: boolean; nonEditableStyleVisible... Remove this comment to see the full error message
           editable={false}
           nonEditableStyleVisible={false}
           onPressIn={showPicker}

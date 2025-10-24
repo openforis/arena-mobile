@@ -23,9 +23,7 @@ const locationToPoint = (location: any) => {
   });
 };
 
-const getLocationWatchTimeout = ({
-  settings
-}: any) => {
+const getLocationWatchTimeout = ({ settings }: any) => {
   const {
     locationAccuracyWatchTimeout: locationAccuracyWatchTimeoutSetting, // in seconds
   } = settings;
@@ -38,16 +36,15 @@ const getLocationWatchTimeout = ({
 export const useLocationWatch = ({
   accuracy = Location.Accuracy.Highest,
   distanceInterval = 0.01,
-  // @ts-expect-error TS(7031): Binding element 'locationCallbackProp' implicitly ... Remove this comment to see the full error message
   locationCallback: locationCallbackProp,
   stopOnAccuracyThreshold = true,
   stopOnTimeout = true,
-}) => {
+}: any) => {
   const isMountedRef = useIsMountedRef();
   const lastLocationRef = useRef(null);
-  const locationSubscriptionRef = useRef(null);
+  const locationSubscriptionRef = useRef(null as any);
   const locationAccuracyWatchTimeoutRef = useRef(null);
-  const locationWatchIntervalRef = useRef(null);
+  const locationWatchIntervalRef = useRef(null as any);
   const toaster = useToast();
 
   const settings = SettingsSelectors.useSettings();
@@ -73,8 +70,7 @@ export const useLocationWatch = ({
   const _stopLocationWatch = useCallback(() => {
     const wasActive = !!locationSubscriptionRef.current;
     if (wasActive) {
-      // @ts-expect-error TS(2339): Property 'remove' does not exist on type 'never'.
-      locationSubscriptionRef.current?.remove();
+      locationSubscriptionRef.current.remove();
       locationSubscriptionRef.current = null;
 
       clearLocationWatchTimeout();
@@ -139,14 +135,13 @@ export const useLocationWatch = ({
       }
     }
     _stopLocationWatch();
-    // @ts-expect-error TS(2322): Type 'LocationSubscription' is not assignable to t... Remove this comment to see the full error message
+
     locationSubscriptionRef.current = await Location.watchPositionAsync(
       { accuracy, distanceInterval },
       locationCallback
     );
 
     if (stopOnTimeout) {
-      // @ts-expect-error TS(2322): Type 'number' is not assignable to type 'null'.
       locationWatchIntervalRef.current = setInterval(() => {
         setState((statePrev) => {
           const elapsedTimeNext =
@@ -160,7 +155,6 @@ export const useLocationWatch = ({
         });
       }, locationWatchElapsedTimeIntervalDelay);
 
-      // @ts-expect-error TS(2322): Type 'number' is not assignable to type 'null'.
       locationAccuracyWatchTimeoutRef.current = setTimeout(() => {
         stopLocationWatch();
       }, locationWatchTimeout);

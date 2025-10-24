@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
 import { FlatList } from "react-native";
 import { List as RNPList } from "react-native-paper";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
 
 import { Arrays } from "@openforis/arena-core";
@@ -19,7 +18,6 @@ const ListItemIcon = (props: any) => {
   return multiple ? (
     <Checkbox checked={checked} disabled={!editable} onPress={onPress} />
   ) : (
-    // @ts-expect-error TS(2786): 'RadioButton' cannot be used as a JSX component.
     <RadioButton checked={checked} disabled={!editable} onPress={onPress} />
   );
 };

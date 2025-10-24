@@ -20,13 +20,15 @@ const supportedLngs = Object.keys(resources);
 const fallbackLng = "en";
 const sysLng = SystemUtils.getLanguageCode();
 
-const toSupportedLanguage = (lang: any) => supportedLngs.includes(lang) ? lang : fallbackLng;
+const toSupportedLanguage = (lang: any) =>
+  supportedLngs.includes(lang) ? lang : fallbackLng;
 
 const systemLanguageOrDefault = toSupportedLanguage(sysLng);
 
-const toFinalSuppotedLang = (lang: any) => lang === LanguageConstants.system
-  ? systemLanguageOrDefault
-  : toSupportedLanguage(lang);
+const toFinalSuppotedLang = (lang: any) =>
+  lang === LanguageConstants.system
+    ? systemLanguageOrDefault
+    : toSupportedLanguage(lang);
 
 const languageDetector = {
   type: "languageDetector",
@@ -42,11 +44,9 @@ const languageDetector = {
         callback(systemLanguageOrDefault);
       });
   },
-};
+} as any;
 
-// @ts-expect-error TS(2769): No overload matches this call.
 i18n
-  // @ts-expect-error TS(2345): Argument of type '{ type: string; async: boolean; ... Remove this comment to see the full error message
   .use(languageDetector)
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
@@ -60,7 +60,7 @@ i18n
       useSuspense: false,
     },
     supportedLngs,
-  });
+  } as any);
 
 const changeLanguage = (lang: any) => {
   const supportedLang = toFinalSuppotedLang(lang);

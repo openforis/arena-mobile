@@ -1,7 +1,6 @@
 import React from "react";
-// @ts-expect-error TS(7016): Could not find a declaration file for module 'prop... Remove this comment to see the full error message
 import PropTypes from "prop-types";
-import { Button as RNPButton } from "react-native-paper";
+import { MD3TypescaleKey, Button as RNPButton } from "react-native-paper";
 
 import { useEffectiveTheme } from "hooks/useEffectiveTheme";
 import { textDirections, useTextDirection, useTranslation } from "localization";
@@ -37,8 +36,7 @@ export const Button = (props: any) => {
 
   const contentStyle =
     iconPosition === "left" ? undefined : BaseStyles.flexDirectionRowReverse;
-  // @ts-expect-error TS(2532): Object is possibly 'undefined'.
-  const labelStyle = labelVariant ? theme.fonts[labelVariant] : undefined;
+  const labelStyle = labelVariant ? theme?.fonts[labelVariant as MD3TypescaleKey] : undefined;
 
   const { actualLoading, onPress } = useButtonOnPress({
     avoidMultiplePress,
@@ -48,8 +46,7 @@ export const Button = (props: any) => {
 
   const mode = color === "secondary" ? "outlined" : modeProp;
   const buttonColor =
-    // @ts-expect-error TS(2532): Object is possibly 'undefined'.
-    mode !== "text" && color === "primary" ? theme.colors[color] : undefined;
+    mode !== "text" && color === "primary" ? theme?.colors[color as never] : undefined;
 
   return (
     <RNPButton

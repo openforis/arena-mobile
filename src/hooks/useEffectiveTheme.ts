@@ -1,10 +1,11 @@
 import { useMemo } from "react";
 import { useColorScheme } from "react-native";
-import { DefaultTheme, MD3DarkTheme } from "react-native-paper";
+import { DefaultTheme, MD3DarkTheme, MD3Theme } from "react-native-paper";
 
 import { Themes, ThemesSettings } from "model";
 import { OFDarkTheme, OFLightTheme } from "theme";
 import { SettingsSelectors } from "../state/settings/selectors";
+import { MD3Typescale } from "react-native-paper/src/types";
 
 const defaultFontSize = 16;
 
@@ -17,18 +18,16 @@ const themeByThemeSetting = {
   [ThemesSettings.dark2]: MD3DarkTheme,
 };
 
-const scaleFonts = (fontScale: any) => (fonts: any) => Object.entries(fonts).reduce((acc, [fontKey, font]) => {
-  // @ts-expect-error TS(2571): Object is of type 'unknown'.
-  const fontSizePrev = font.fontSize ?? defaultFontSize;
-  const fontSize = Math.floor(fontSizePrev * fontScale);
-  // @ts-expect-error TS(2698): Spread types may only be created from object types... Remove this comment to see the full error message
-  const fontResized = { ...font, fontSize };
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-  acc[fontKey] = fontResized;
-  return acc;
-}, {});
+const scaleFonts = (fontScale: number) => (fonts: MD3Typescale) =>
+  Object.entries(fonts).reduce((acc, [fontKey, font]) => {
+    const fontSizePrev = (font as any).fontSize ?? defaultFontSize;
+    const fontSize = Math.floor(fontSizePrev * fontScale);
+    const fontResized = { ...font, fontSize };
+    acc[fontKey] = fontResized;
+    return acc;
+  }, {} as any);
 
-export const useEffectiveTheme = () => {
+export const useEffectiveTheme = (): MD3Theme | undefined => {
   const colorScheme = useColorScheme();
 
   let {
@@ -44,12 +43,11 @@ export const useEffectiveTheme = () => {
   }
   return useMemo(() => {
     const theme = themeByThemeSetting[themeSetting];
-    if (fontScale === 1) {
+    if (!theme || fontScale === 1) {
       return theme;
     }
-    // @ts-expect-error TS(2339): Property 'fonts' does not exist on type 'MD3Theme ... Remove this comment to see the full error message
     const { fonts } = theme;
     const fontsResized = scaleFonts(fontScale)(fonts);
-    return { ...theme, fonts: fontsResized };
+    return { ...theme, fonts: fontsResized } as MD3Theme;
   }, [fontScale, themeSetting]);
 };

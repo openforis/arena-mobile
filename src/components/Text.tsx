@@ -4,8 +4,7 @@ import PropTypes from "prop-types";
 
 import { useIsTextDirectionRtl, useTranslation } from "localization";
 
-// @ts-expect-error TS(7023): 'styleToObject' implicitly has return type 'any' b... Remove this comment to see the full error message
-const styleToObject = (style: any) => Array.isArray(style)
+const styleToObject = (style: any):any => Array.isArray(style)
   ? Object.assign({}, ...style.map(styleToObject))
   : (style ?? {});
 
