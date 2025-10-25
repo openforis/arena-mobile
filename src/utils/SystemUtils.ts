@@ -53,7 +53,7 @@ const getApplicationInfo = async (): Promise<ArenaMobileAppInfo> => {
   return {
     appId,
     buildNumber,
-    version: version ?? "0",
+    version,
     lastUpdateTime: lastUpdateTime
       ? Dates.formatForStorage(lastUpdateTime)
       : null,

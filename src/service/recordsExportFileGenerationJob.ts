@@ -6,7 +6,6 @@ import {
   Objects,
   Records,
   Survey,
-  Surveys,
 } from "@openforis/arena-core";
 
 import { JobMobile } from "model";

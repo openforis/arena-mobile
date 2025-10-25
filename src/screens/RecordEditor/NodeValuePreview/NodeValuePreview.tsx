@@ -9,10 +9,7 @@ import {
 import { Text } from "components";
 import { SurveySelectors } from "state";
 
-import {
-  NodeValuePreviewProps,
-  NodeValuePreviewPropTypes,
-} from "./NodeValuePreviewPropTypes";
+import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 
 import { CoordinateValuePreview } from "./CoordinateValuePreview";
 import { BooleanValuePreview } from "./BooleanValuePreview";

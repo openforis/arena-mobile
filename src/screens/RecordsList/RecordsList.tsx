@@ -397,7 +397,7 @@ export const RecordsList = () => {
 
   const onExportSelectedRecordUuids = useCallback(
     async (recordUuids: any) => {
-      const selectedRecords = records?.filter((record) =>
+      const selectedRecords = records!.filter((record) =>
         recordUuids.includes(record.uuid)
       );
       await exportSelectedRecords({ selectedRecords });
