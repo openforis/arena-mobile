@@ -2,53 +2,27 @@
   "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
-      "appComponents/*": [
-        "appComponents/*"
-      ],
-      "components/*": [
-        "components/*"
-      ],
-      "db/*": [
-        "db/*"
-      ],
-      "hooks/*": [
-        "hooks/*"
-      ],
-      "localization/*": [
-        "localization/*"
-      ],
-      "model/*": [
-        "model/*"
-      ],
-      "navigation/*": [
-        "navigation/*"
-      ],
-      "screens/*": [
-        "screens/*"
-      ],
-      "service/*": [
-        "service/*"
-      ],
-      "state/*": [
-        "state/*"
-      ],
-      "utils/*": [
-        "utils/*"
-      ]
+      "appComponents/*": ["appComponents/*"],
+      "components/*": ["components/*"],
+      "db/*": ["db/*"],
+      "hooks/*": ["hooks/*"],
+      "localization/*": ["localization/*"],
+      "model/*": ["model/*"],
+      "navigation/*": ["navigation/*"],
+      "screens/*": ["screens/*"],
+      "service/*": ["service/*"],
+      "state/*": ["state/*"],
+      "utils/*": ["utils/*"]
     },
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "isolatedModules": true,
     "jsx": "react-native",
-    "lib": [
-      "esnext"
-    ],
-    "types": [
-      "react-native",
-      "jest"
-    ],
-    "moduleResolution": "node",
+    "lib": ["esnext"],
+    "types": ["react-native", "jest"],
+    "moduleResolution": "node16",
+    "module": "Node16",
     "noEmit": true,
     "strict": true,
     "target": "esnext",
@@ -61,10 +35,7 @@
     "noImplicitOverride": true,
     "allowUnreachableCode": false
   },
-  "include": [
-    "src/**/*",
-    "App.ts"
-  ],
+  "include": ["src/**/*", "App.ts"],
   "exclude": [
     "node_modules",
     "babel.config.js",
