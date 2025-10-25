@@ -2,12 +2,21 @@ import { Environment } from "utils/Environment";
 import { ThemesSettings } from "./Themes";
 import { LanguagesSettings } from "./LanguageSettings";
 
-const propertyType = {
-  boolean: "boolean",
-  numeric: "numeric",
-  options: "options",
-  dropdown: "dropdown",
-  slider: "slider",
+enum PropertyType {
+  boolean = "boolean",
+  numeric = "numeric",
+  options = "options",
+  dropdown = "dropdown",
+  slider = "slider",
+}
+
+type SettingsProperty = {
+  type: PropertyType;
+  options?: any[];
+  isDisabled?: ({ settings }: any) => boolean;
+  minValue?: number;
+  maxValue?: number;
+  step?: number;
 };
 
 const keys = {
@@ -15,66 +24,64 @@ const keys = {
   locationGpsLocked: "locationGpsLocked",
 };
 
-const properties = {
+const properties: Record<string, SettingsProperty> = {
   [keys.language]: {
-    type: propertyType.dropdown,
+    type: PropertyType.dropdown,
     options: LanguagesSettings,
   },
   theme: {
-    type: propertyType.dropdown,
+    type: PropertyType.dropdown,
     options: Object.values(ThemesSettings).map((theme) => ({
       key: theme,
       label: `settings:theme.${theme}`,
     })),
   },
   fullScreen: {
-    type: propertyType.boolean,
+    type: PropertyType.boolean,
     isDisabled: () => Environment.isIOS,
   },
   keepScreenAwake: {
-    type: propertyType.boolean,
+    type: PropertyType.boolean,
   },
   animationsEnabled: {
-    type: propertyType.boolean,
+    type: PropertyType.boolean,
   },
   showStatusBar: {
-    type: propertyType.boolean,
+    type: PropertyType.boolean,
   },
   fontScale: {
-    type: propertyType.slider,
+    type: PropertyType.slider,
     minValue: 0.6,
     maxValue: 1.6,
     step: 0.2,
   },
   locationAccuracyThreshold: {
-    type: propertyType.numeric,
+    type: PropertyType.numeric,
   },
   locationAccuracyWatchTimeout: {
-    type: propertyType.slider,
+    type: PropertyType.slider,
     minValue: 30,
     maxValue: 300,
     step: 30,
   },
   [keys.locationGpsLocked]: {
-    type: propertyType.boolean,
+    type: PropertyType.boolean,
   },
   // image resolution
   imageSizeUnlimited: {
-    type: propertyType.boolean,
+    type: PropertyType.boolean,
   },
   imageSizeLimit: {
-    type: propertyType.slider,
+    type: PropertyType.slider,
     minValue: 0.5,
     maxValue: 10,
     step: 0.5,
-    isDisabled: ({
-      settings
-    }: any) => settings.imageSizeUnlimited,
+    isDisabled: ({ settings }: any) => settings.imageSizeUnlimited,
   },
 };
 
 export const SettingsModel = {
+  PropertyType,
   keys,
-  propertyType,
   properties,
 };

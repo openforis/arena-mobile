@@ -41,12 +41,12 @@ const {
   uploadRecords: uploadRecordsToRemoteServer,
 } = RecordRemoteService;
 
-const toDate = (dateStr: any) => dateStr ? new Date(dateStr) : null;
+const toDate = (dateStr: any) => (dateStr ? new Date(dateStr) : null);
 
 const determineLocalRecordSyncStatus = ({
   survey,
   recordSummaryLocal,
-  recordSummaryRemote
+  recordSummaryRemote,
 }: any) => {
   const keyValues = RecordSummaries.getKeyValues({
     survey,
@@ -67,14 +67,13 @@ const determineLocalRecordSyncStatus = ({
   }
   const dateModifiedLocal = toDate(recordSummaryLocal.dateModified);
   const dateModifiedRemote = Dates.parseISO(recordSummaryRemote.dateModified);
-
-  // @ts-expect-error TS(2345): Argument of type 'Date | null' is not assignable t... Remove this comment to see the full error message
-  if (Dates.isAfter(dateModifiedLocal, dateModifiedRemote)) {
-    return RecordSyncStatus.modifiedLocally;
-  }
-  // @ts-expect-error TS(2345): Argument of type 'Date | null' is not assignable t... Remove this comment to see the full error message
-  if (Dates.isBefore(dateModifiedLocal, dateModifiedRemote)) {
-    return RecordSyncStatus.modifiedRemotely;
+  if (dateModifiedLocal && dateModifiedRemote) {
+    if (Dates.isAfter(dateModifiedLocal, dateModifiedRemote)) {
+      return RecordSyncStatus.modifiedLocally;
+    }
+    if (Dates.isBefore(dateModifiedLocal, dateModifiedRemote)) {
+      return RecordSyncStatus.modifiedRemotely;
+    }
   }
   return RecordSyncStatus.notModified;
 };
@@ -82,7 +81,7 @@ const determineLocalRecordSyncStatus = ({
 const determineRecordSyncStatus = ({
   survey,
   recordSummaryLocal,
-  recordSummaryRemote
+  recordSummaryRemote,
 }: any) => {
   if (recordSummaryLocal.origin === RecordOrigin.local) {
     return determineLocalRecordSyncStatus({
@@ -95,19 +94,18 @@ const determineRecordSyncStatus = ({
     const dateModifiedRemote = Dates.parseISO(
       recordSummaryRemote?.dateModified
     );
-    // @ts-expect-error TS(2345): Argument of type 'Date | null' is not assignable t... Remove this comment to see the full error message
-    if (Dates.isBefore(dateSynced, dateModifiedRemote)) {
+    if (
+      dateSynced &&
+      dateModifiedRemote &&
+      Dates.isBefore(dateSynced, dateModifiedRemote)
+    ) {
       return RecordSyncStatus.notUpToDate;
     }
   }
   return RecordSyncStatus.syncNotApplicable;
 };
 
-const syncRecordSummaries = async ({
-  survey,
-  cycle,
-  onlyLocal
-}: any) => {
+const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
   const { id: surveyId } = survey;
 
   let allRecordsSummariesInDevice: any;
@@ -136,16 +134,20 @@ const syncRecordSummaries = async ({
   }
 
   const recordsSummariesLocalToDelete = allRecordsSummariesInDevice.filter(
-    (recordSummaryLocal: any) => // record summary is not locally modified and is no more in server
-    recordSummaryLocal.origin === RecordOrigin.remote &&
-    recordSummaryLocal.loadStatus === RecordLoadStatus.summary &&
-    !ArrayUtils.findByUuid(recordSummaryLocal.uuid)(recordsSummariesRemote)
+    (
+      recordSummaryLocal: any // record summary is not locally modified and is no more in server
+    ) =>
+      recordSummaryLocal.origin === RecordOrigin.remote &&
+      recordSummaryLocal.loadStatus === RecordLoadStatus.summary &&
+      !ArrayUtils.findByUuid(recordSummaryLocal.uuid)(recordsSummariesRemote)
   );
   if (recordsSummariesLocalToDelete.length > 0) {
     try {
       await deleteRecords({
         surveyId,
-        recordUuids: recordsSummariesLocalToDelete.map((record: any) => record.uuid),
+        recordUuids: recordsSummariesLocalToDelete.map(
+          (record: any) => record.uuid
+        ),
       });
     } catch (error) {
       throw new Error(
@@ -155,10 +157,12 @@ const syncRecordSummaries = async ({
   }
 
   const recordSummariesToAdd = recordsSummariesRemote.filter(
-    (recordSummaryRemote: any) => // remote records not in local db
-    !ArrayUtils.findByUuid(recordSummaryRemote.uuid)(
-      allRecordsSummariesInDevice
-    )
+    (
+      recordSummaryRemote: any // remote records not in local db
+    ) =>
+      !ArrayUtils.findByUuid(recordSummaryRemote.uuid)(
+        allRecordsSummariesInDevice
+      )
   );
   if (recordSummariesToAdd.length > 0) {
     try {
@@ -236,7 +240,7 @@ const findRecordSummariesByKeys = async ({
   survey,
   cycle,
   keyValues,
-  keyValuesFormatted
+  keyValuesFormatted,
 }: any) => {
   const recordSummariesForKeyValues =
     await RecordRepository.findRecordSummariesByKeys({
@@ -267,15 +271,14 @@ const findRecordSummariesWithSameKeys = async ({
   survey,
   record,
   lang,
-  cycle: cycleParam = null
+  cycle: cycleParam = null,
 }: any) => {
   const cycle = cycleParam ?? Records.getCycle(record);
-  const rootEntity = Records.getRoot(record);
+  const rootEntity = Records.getRoot(record)!;
   const keyValues = Records.getEntityKeyValues({
     survey,
     record,
     cycle,
-    // @ts-expect-error TS(2322): Type 'Node | undefined' is not assignable to type ... Remove this comment to see the full error message
     entity: rootEntity,
   });
   const keyValuesFormatted = RecordNodes.getRootEntityKeysFormatted({
@@ -294,10 +297,10 @@ const findRecordSummariesWithSameKeys = async ({
 
 const cloneRecordsIntoDefaultCycle = async ({
   survey,
-  recordSummaries
+  recordSummaries,
 }: any) => {
   const surveyId = survey.id;
-  const defaultCycle = Surveys.getDefaultCycleKey(survey);
+  const defaultCycle = Surveys.getDefaultCycleKey(survey)!;
 
   for await (const recordSummary of recordSummaries) {
     const { id: recordId } = recordSummary;
@@ -310,7 +313,6 @@ const cloneRecordsIntoDefaultCycle = async ({
       RecordCloner.cloneRecord({
         survey,
         record,
-        // @ts-expect-error TS(2322): Type 'string | undefined' is not assignable to typ... Remove this comment to see the full error message
         cycleTo: defaultCycle,
         sideEffect: true,
       });

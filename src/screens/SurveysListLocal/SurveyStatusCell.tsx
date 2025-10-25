@@ -52,7 +52,6 @@ export const SurveyStatusCell = (props: any) => {
       <Text textKey={textKey} />
     </HView>
   ) : (
-    // @ts-expect-error TS(2786): 'Tooltip' cannot be used as a JSX component.
     <Tooltip titleKey={textKey}>{icon}</Tooltip>
   );
 };

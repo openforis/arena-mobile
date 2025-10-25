@@ -1,11 +1,13 @@
 import { useMemo, useState } from "react";
 
 import {
+  NodeDef,
   NodeDefs,
   Objects,
   Records,
   RecordValidations,
   Surveys,
+  Validations,
 } from "@openforis/arena-core";
 
 import { RecordNodes } from "model";
@@ -24,15 +26,12 @@ import styles from "./styles";
 
 const nodePathPartSeparator = " / ";
 
-const getNodePath = ({
-  survey,
-  record,
-  nodeUuid,
-  lang
-}: any) => {
-  const node = Records.getNodeByUuid(nodeUuid)(record);
+const getNodePath = ({ survey, record, nodeUuid, lang }: any) => {
   const parts: any = [];
-  // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
+  const node = Records.getNodeByUuid(nodeUuid)(record);
+  if (!node) {
+    return parts;
+  }
   Records.visitAncestorsAndSelf(node, (visitedAncestor) => {
     const nodeDef = Surveys.getNodeDefByUuid({
       survey,
@@ -64,8 +63,14 @@ const extractValidationItem = ({
   validationFieldKey,
   validationResult,
   lang,
-  t
-}: any) => {
+  t,
+}: any): {
+  key: string;
+  nodeDef: NodeDef<any>;
+  parentNodeUuid?: string;
+  path: string;
+  error: string;
+} | null => {
   let invalidNodeDefUuid, invalidParentNodeUuid, invalidNodeUuid;
   if (RecordValidations.isValidationChildrenCountKey(validationFieldKey)) {
     invalidNodeDefUuid =
@@ -122,18 +127,24 @@ const extractValidationItem = ({
   };
 };
 
+type RecordValidationReportState = {
+  editDialogOpen: boolean;
+  dialogNodeDef?: object;
+  dialogNodeUuid?: string;
+  dialogParentNodeUuid?: string;
+};
+
+const initialState: RecordValidationReportState = {
+  editDialogOpen: false,
+};
+
 export const RecordValidationReport = () => {
   const { t } = useTranslation();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const survey = SurveySelectors.useCurrentSurvey();
   const record = DataEntrySelectors.useRecord();
   const screenViewMode = ScreenOptionsSelectors.useCurrentScreenViewMode();
-  const [state, setState] = useState({
-    editDialogOpen: false,
-    dialogNodeDef: null,
-    dialogNodeUuid: null,
-    dialogParentNodeUuid: null,
-  });
+  const [state, setState] = useState(initialState);
 
   const {
     editDialogOpen,
@@ -143,9 +154,9 @@ export const RecordValidationReport = () => {
   } = state;
 
   const { validation } = record;
-  const { fields: validationFields } = validation;
+  const validationFields = Validations.getFieldValidations(validation);
 
-  const items = useMemo(
+  const items: any[] = useMemo(
     () =>
       Object.entries(validationFields).reduce(
         (acc, [validationFieldKey, validationResult]) => {
@@ -158,12 +169,11 @@ export const RecordValidationReport = () => {
             t,
           });
           if (validationItem) {
-            // @ts-expect-error TS(2345): Argument of type '{ key: any; nodeDef: NodeDef<Nod... Remove this comment to see the full error message
             acc.push(validationItem);
           }
           return acc;
         },
-        []
+        [] as any[]
       ),
     [lang, record, survey, t, validationFields]
   );
@@ -191,7 +201,6 @@ export const RecordValidationReport = () => {
         />
       )}
       {items.length > 0 && (
-        // @ts-expect-error TS(2786): 'DataVisualizer' cannot be used as a JSX component... Remove this comment to see the full error message
         <DataVisualizer
           fields={[
             {
@@ -213,7 +222,6 @@ export const RecordValidationReport = () => {
           nodeDef={dialogNodeDef}
           nodeUuid={dialogNodeUuid}
           parentNodeUuid={dialogParentNodeUuid}
-          // @ts-expect-error TS(2345): Argument of type '{ editDialogOpen: false; }' is n... Remove this comment to see the full error message
           onDismiss={() => setState({ editDialogOpen: false })}
         />
       )}

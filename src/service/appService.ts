@@ -21,18 +21,14 @@ const estimateFullBackupSize = async () => {
 };
 
 const generateFullBackup = async () => {
-  // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
   const job = new BackupJob({ user: {} });
-  // @ts-expect-error TS(2339): Property 'start' does not exist on type 'BackupJob... Remove this comment to see the full error message
   await job.start();
 
-  // @ts-expect-error TS(2339): Property 'summary' does not exist on type 'BackupJ... Remove this comment to see the full error message
   const { status, result } = job.summary;
   switch (status) {
     case JobStatus.succeeded:
       return result.outputFileUri;
     case JobStatus.failed:
-      // @ts-expect-error TS(2339): Property 'summary' does not exist on type 'BackupJ... Remove this comment to see the full error message
       throw new Error(JSON.stringify(job.summary.errors));
     default:
       return null;

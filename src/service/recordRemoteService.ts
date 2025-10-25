@@ -39,7 +39,6 @@ const downloadExportedRecordsFile = async ({
   fileName
 }: any) => {
   const { remoteId: surveyRemoteId } = survey;
-  // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
   const fileUri = await RemoteService.getFile(
     `api/survey/${surveyRemoteId}/records/export/download`,
     { fileName }

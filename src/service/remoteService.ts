@@ -2,17 +2,14 @@ import { API } from "./api";
 import { SecureStoreService } from "./SecureStoreService";
 import { SettingsService } from "./settingsService";
 
-const statusToErrorKey = {
+const statusToErrorKey: Record<string, string> = {
   500: "internal_server_error",
   401: "invalid_credentials",
 };
 
-const handleError = ({
-  error
-}: any) => {
+const handleError = ({ error }: any): { errorKey: string } => {
   if (error.response) {
     const status = error.response?.status;
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     const errorKey = statusToErrorKey[status] || error.errorMessage;
     return { errorKey };
   } else {
@@ -23,10 +20,10 @@ const handleError = ({
 const getServerUrl = async () =>
   (await SettingsService.fetchSettings()).serverUrl;
 
-const get = async (uri: any, params: any, options = {}) =>
+const get = async (uri: any, params?: any, options = {}) =>
   API.get(await getServerUrl(), uri, params, options);
 
-const getFile = async (uri: any, params: any, callback: any) => {
+const getFile = async (uri: any, params?: any, callback?: any) => {
   const serverUrl = await getServerUrl();
   const authCookie =
     "connect.sid=" + (await SecureStoreService.getConnectSIDCookie());
@@ -34,7 +31,8 @@ const getFile = async (uri: any, params: any, callback: any) => {
   return API.getFile({ serverUrl, uri, params, callback, options });
 };
 
-const post = async (uri: any, data: any) => API.post(await getServerUrl(), uri, data);
+const post = async (uri: any, data?: any) =>
+  API.post(await getServerUrl(), uri, data);
 
 const postCancelableMultipartData = async (
   uri: any,

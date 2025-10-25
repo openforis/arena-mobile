@@ -18,10 +18,7 @@ const _insertSurvey = async (survey: any) => {
   return SurveyFSRepository.saveSurveyFile(surveyDb);
 };
 
-const _updateSurvey = async ({
-  id,
-  survey
-}: any) => {
+const _updateSurvey = async ({ id, survey }: any) => {
   const surveyDb = await updateSurvey({ id, survey });
   return SurveyFSRepository.saveSurveyFile(surveyDb);
 };
@@ -36,19 +33,22 @@ const fetchSurveyById = async (surveyId: any) => {
 const fetchCategoryItems = ({
   survey,
   categoryUuid,
-  parentItemUuid = null
+  parentItemUuid = null,
 }: any) => {
   const items = Surveys.getCategoryItems({
     survey,
     categoryUuid,
     parentItemUuid,
   });
-  // @ts-expect-error TS(2532): Object is possibly 'undefined'.
-  items.sort((itemA, itemB) => itemA.props.index - itemB.props.index);
+  items.sort(
+    (itemA, itemB) => (itemA.props.index ?? -1) - (itemB.props.index ?? -1)
+  );
   return items;
 };
 
-const fetchSurveySummariesRemote = async () => {
+const fetchSurveySummariesRemote = async (): Promise<
+  { surveys: any[] } | { errorKey: string }
+> => {
   try {
     const { data } = await RemoteService.get("api/surveys", { draft: false });
     const { list: surveys } = data;
@@ -58,10 +58,7 @@ const fetchSurveySummariesRemote = async () => {
   }
 };
 
-const fetchSurveySummaryRemote = async ({
-  id,
-  name
-}: any) => {
+const fetchSurveySummaryRemote = async ({ id, name }: any) => {
   try {
     const { data } = await RemoteService.get("api/surveys", {
       draft: false,
@@ -75,9 +72,7 @@ const fetchSurveySummaryRemote = async ({
   }
 };
 
-const fetchSurveyRemoteById = async ({
-  id
-}: any) => {
+const fetchSurveyRemoteById = async ({ id }: any) => {
   const { data } = await RemoteService.get(
     `api/mobile/survey/${id}`,
     {},
@@ -91,17 +86,12 @@ const getSurveysStorageSize = async () => SurveyFSRepository.getStorageSize();
 
 const importDemoSurvey = async () => _insertSurvey(demoSurvey);
 
-const importSurveyRemote = async ({
-  id
-}: any) => {
+const importSurveyRemote = async ({ id }: any) => {
   const survey = await fetchSurveyRemoteById({ id });
   return _insertSurvey(survey);
 };
 
-const updateSurveyRemote = async ({
-  surveyId,
-  surveyRemoteId
-}: any) => {
+const updateSurveyRemote = async ({ surveyId, surveyRemoteId }: any) => {
   const survey = await fetchSurveyRemoteById({ id: surveyRemoteId });
   return _updateSurvey({ id: surveyId, survey });
 };
@@ -109,7 +99,8 @@ const updateSurveyRemote = async ({
 const deleteSurveys = async (surveyIds: any) => {
   await SurveyRepository.deleteSurveys(surveyIds);
   await Promise.all(
-    surveyIds.map((surveyId: any) => SurveyFSRepository.deleteSurveyFile({ surveyId })
+    surveyIds.map((surveyId: any) =>
+      SurveyFSRepository.deleteSurveyFile({ surveyId })
     )
   );
 };
