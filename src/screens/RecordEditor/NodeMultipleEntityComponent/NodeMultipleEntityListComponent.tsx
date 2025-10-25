@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
 
@@ -29,7 +28,12 @@ const determineMaxSummaryDefs = ({
   return isLandscape ? result + 2 : result;
 };
 
-export const NodeMultipleEntityListComponent = (props: any) => {
+type NodeMultipleEntityListComponentProps = {
+  entityDef: any;
+  parentEntityUuid?: string;
+};
+
+export const NodeMultipleEntityListComponent = (props: NodeMultipleEntityListComponentProps) => {
   const { entityDef, parentEntityUuid } = props;
 
   const dispatch = useDispatch();
@@ -58,7 +62,7 @@ export const NodeMultipleEntityListComponent = (props: any) => {
   });
 
   const nodeDefLabel = NodeDefs.getLabelOrName(entityDef, lang);
-  const parentEntity = Records.getNodeByUuid(parentEntityUuid)(record);
+  const parentEntity = Records.getNodeByUuid(parentEntityUuid!)(record)!;
 
   const visibleNodeDefs = useMemo(
     () =>
@@ -184,9 +188,4 @@ export const NodeMultipleEntityListComponent = (props: any) => {
       </HView>
     </VView>
   );
-};
-
-NodeMultipleEntityListComponent.propTypes = {
-  entityDef: PropTypes.object.isRequired,
-  parentEntityUuid: PropTypes.string,
 };

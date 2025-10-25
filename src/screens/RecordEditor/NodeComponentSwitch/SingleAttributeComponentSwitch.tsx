@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import { NodeDefType } from "@openforis/arena-core";
 
@@ -29,7 +28,16 @@ const nodeDefComponentByType: Record<string, any> = {
   [NodeDefType.time]: NodeTimeComponent,
 };
 
-export const SingleAttributeComponentSwitch = (props: any) => {
+type Props = {
+  nodeDef: any;
+  nodeUuid?: string;
+  onFocus?: () => void;
+  parentNodeUuid?: string;
+  style?: any;
+  wrapperStyle?: any;
+};
+
+export const SingleAttributeComponentSwitch = (props: Props) => {
   const {
     nodeDef,
     nodeUuid: nodeUuidProp,
@@ -59,13 +67,4 @@ export const SingleAttributeComponentSwitch = (props: any) => {
     style,
     wrapperStyle,
   });
-};
-
-SingleAttributeComponentSwitch.propTypes = {
-  nodeDef: PropTypes.object.isRequired,
-  nodeUuid: PropTypes.string,
-  onFocus: PropTypes.func,
-  parentNodeUuid: PropTypes.string,
-  style: PropTypes.object,
-  wrapperStyle: PropTypes.object,
 };

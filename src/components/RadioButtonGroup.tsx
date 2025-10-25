@@ -1,17 +1,16 @@
 import { RadioButton as RNPRadioButton } from "react-native-paper";
-import PropTypes from "prop-types";
 
-export const RadioButtonGroup = (props: any) => {
+type Props = {
+  children: React.ReactNode;
+  onValueChange: (value: string) => void;
+  value?: string;
+};
+
+export const RadioButtonGroup = (props: Props) => {
   const { children, onValueChange, value } = props;
   return (
     <RNPRadioButton.Group onValueChange={onValueChange} value={value}>
       {children}
     </RNPRadioButton.Group>
   );
-};
-
-RadioButtonGroup.propTypes = {
-  children: PropTypes.node.isRequired,
-  onValueChange: PropTypes.func.isRequired,
-  value: PropTypes.string,
 };

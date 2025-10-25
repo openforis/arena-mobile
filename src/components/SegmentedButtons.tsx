@@ -3,11 +3,24 @@ import {
   SegmentedButtons as RNPSegmentedButtons,
   useTheme,
 } from "react-native-paper";
-import PropTypes from "prop-types";
+import { StyleProp, ViewStyle } from "react-native";
 
 import { useTranslation } from "localization";
 
-export const SegmentedButtons = (props: any) => {
+type ButtonItem = {
+  icon?: string;
+  label?: string;
+  value: string;
+};
+
+type Props = {
+  buttons: ButtonItem[];
+  onChange: (value: string) => void;
+  style?: StyleProp<ViewStyle>;
+  value?: any;
+};
+
+export const SegmentedButtons = (props: Props) => {
   const { buttons, onChange, style, value } = props;
 
   const { t } = useTranslation();
@@ -25,11 +38,7 @@ export const SegmentedButtons = (props: any) => {
 
   return (
     <RNPSegmentedButtons
-      buttons={buttons.map(({
-        icon,
-        label,
-        value
-      }: any) => ({
+      buttons={buttons.map(({ icon, label, value }: any) => ({
         icon,
         label: t(label),
         value,
@@ -40,17 +49,4 @@ export const SegmentedButtons = (props: any) => {
       value={value}
     />
   );
-};
-
-SegmentedButtons.propTypes = {
-  buttons: PropTypes.arrayOf(
-    PropTypes.shape({
-      icon: PropTypes.string,
-      label: PropTypes.string,
-      value: PropTypes.string.isRequired,
-    })
-  ),
-  onChange: PropTypes.func.isRequired,
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  value: PropTypes.any,
 };

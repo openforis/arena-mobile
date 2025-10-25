@@ -6,7 +6,7 @@ const iconByLoadStatus = {
   [RecordLoadStatus.summary]: "circle-outline",
 };
 
-const iconByOrigin = {
+const iconByOrigin: Record<RecordOrigin, string> = {
   [RecordOrigin.local]: "cellphone",
   [RecordOrigin.remote]: "cloud-outline",
 };

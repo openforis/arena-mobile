@@ -1,18 +1,28 @@
 import React, { useCallback } from "react";
-import PropTypes from "prop-types";
 
 import { Checkbox, HView } from "components";
 
 import styles from "./styles";
 
-export const NodeCodeMultipleCheckboxComponent = (props: any) => {
+type NodeCodeMultipleCheckboxComponentProps = {
+  editable?: boolean;
+  itemLabelFunction: (item: any) => string;
+  items: any[];
+  onItemAdd: (uuid: string) => void;
+  onItemRemove: (uuid: string) => void;
+  selectedItems?: any[];
+};
+
+export const NodeCodeMultipleCheckboxComponent = (
+  props: NodeCodeMultipleCheckboxComponentProps
+) => {
   const {
     editable,
     itemLabelFunction,
     items,
     onItemAdd,
     onItemRemove,
-    selectedItems,
+    selectedItems = [],
   } = props;
 
   const onItemSelect = useCallback(
@@ -29,23 +39,16 @@ export const NodeCodeMultipleCheckboxComponent = (props: any) => {
 
   return (
     <HView style={styles.container}>
-      {items.map((item: any) => <Checkbox
-        key={item.uuid}
-        label={itemLabelFunction(item)}
-        disabled={!editable}
-        checked={selectedItems.includes(item)}
-        onPress={() => onItemSelect(item)}
-        style={styles.item}
-      />)}
+      {items.map((item: any) => (
+        <Checkbox
+          key={item.uuid}
+          label={itemLabelFunction(item)}
+          disabled={!editable}
+          checked={selectedItems.includes(item)}
+          onPress={() => onItemSelect(item)}
+          style={styles.item}
+        />
+      ))}
     </HView>
   );
-};
-
-NodeCodeMultipleCheckboxComponent.propTypes = {
-  editable: PropTypes.bool,
-  itemLabelFunction: PropTypes.func,
-  items: PropTypes.array,
-  onItemAdd: PropTypes.func,
-  onItemRemove: PropTypes.func,
-  selectedItems: PropTypes.array,
 };

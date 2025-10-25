@@ -6,7 +6,7 @@ import { DateFormats, Dates, Surveys } from "@openforis/arena-core";
 
 import {
   DataVisualizer,
-  DataVisualizerCellPropTypes,
+  DataVisualizerCellProps,
   Loader,
   Searchbar,
   Text,
@@ -34,15 +34,13 @@ const INITIAL_STATE = {
 
 const minSurveysToShowSearchBar = 5;
 
-const DescriptionCellRenderer = ({ item }: any) => {
+const DescriptionCellRenderer = ({ item }: DataVisualizerCellProps) => {
   const defaultLanguage = Surveys.getDefaultLanguage(item);
   const description = item.props?.descriptions?.[defaultLanguage];
   return description ? <Text>{description}</Text> : null;
 };
 
-DescriptionCellRenderer.propTypes = DataVisualizerCellPropTypes;
-
-const DatePublishedCellRenderer = ({ item }: any) => (
+const DatePublishedCellRenderer = ({ item }: DataVisualizerCellProps) => (
   <Text>
     {Dates.convertDate({
       dateStr: item.datePublished,
@@ -52,9 +50,7 @@ const DatePublishedCellRenderer = ({ item }: any) => (
   </Text>
 );
 
-DatePublishedCellRenderer.propTypes = DataVisualizerCellPropTypes;
-
-const StatusCell = ({ item }: any) => {
+const StatusCell = ({ item }: DataVisualizerCellProps) => {
   const surveysLocal = SurveySelectors.useSurveysLocal();
   const localSurvey = surveysLocal.find(
     (surveyLocal: any) => surveyLocal.uuid === item.uuid
@@ -69,8 +65,6 @@ const StatusCell = ({ item }: any) => {
   }
   return <Text textKey={messageKey} />;
 };
-
-StatusCell.propTypes = DataVisualizerCellPropTypes;
 
 export const SurveysListRemote = () => {
   const navigation = useNavigation();
@@ -120,7 +114,7 @@ export const SurveysListRemote = () => {
     setState(INITIAL_STATE);
 
     const data = await SurveyService.fetchSurveySummariesRemote();
-    const { surveys: _surveys = [], errorKey } = data;
+    const { surveys: _surveys = [], errorKey } = data as any;
 
     if (errorKey) {
       dispatch(

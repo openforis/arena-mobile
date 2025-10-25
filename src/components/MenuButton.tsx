@@ -1,12 +1,19 @@
 import { useCallback, useMemo, useState } from "react";
 import { Menu } from "react-native-paper";
-import PropTypes from "prop-types";
+import { StyleProp, ViewStyle } from "react-native";
 
 import { Button } from "./Button";
 import { IconButton } from "./IconButton";
 import { MenuItem } from "./MenuItem";
 
-export const MenuButton = (props: any) => {
+type Props = {
+  icon?: string;
+  items: any[];
+  label?: string;
+  style?: StyleProp<ViewStyle>;
+};
+
+export const MenuButton = (props: Props) => {
   const { icon, items, label, style } = props;
 
   const [menuVisible, setMenuVisible] = useState(false);
@@ -65,11 +72,4 @@ export const MenuButton = (props: any) => {
       )}
     </Menu>
   );
-};
-
-MenuButton.propTypes = {
-  icon: PropTypes.string,
-  items: PropTypes.array.isRequired,
-  label: PropTypes.string,
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 };

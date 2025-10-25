@@ -1,13 +1,7 @@
-import { IconButton } from "./IconButton";
+import { IconButton, IconButtonProps } from "./IconButton";
 
-export const WarningIconButton = (props: any) => {
-  const { children, ...otherProps } = props;
+export const WarningIconButton = (props: IconButtonProps) => {
+  const { ...otherProps } = props;
 
-  return (
-    <IconButton icon="alert" mode="contained" {...otherProps}>
-      {children}
-    </IconButton>
-  );
+  return <IconButton icon="alert" mode="contained" {...otherProps} />;
 };
-
-WarningIconButton.propTypes = IconButton.propTypes;

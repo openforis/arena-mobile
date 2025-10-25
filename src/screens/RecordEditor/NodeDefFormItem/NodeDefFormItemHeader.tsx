@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 import { NodeDefs, Objects } from "@openforis/arena-core";
 
 import { SurveySelectors } from "state/survey";
@@ -10,7 +8,12 @@ import { HView, Text, ViewMoreText } from "components";
 import { NodeValidationIcon } from "../NodeValidationIcon";
 import { useStyles } from "./styles";
 
-export const NodeDefFormItemHeader = (props: any) => {
+type NodeDefFormItemHeaderProps = {
+  nodeDef: any;
+  parentNodeUuid?: string;
+};
+
+export const NodeDefFormItemHeader = (props: NodeDefFormItemHeaderProps) => {
   const { nodeDef, parentNodeUuid } = props;
 
   const isRtl = useIsTextDirectionRtl();
@@ -41,9 +44,4 @@ export const NodeDefFormItemHeader = (props: any) => {
       )}
     </>
   );
-};
-
-NodeDefFormItemHeader.propTypes = {
-  nodeDef: PropTypes.object.isRequired,
-  parentNodeUuid: PropTypes.string,
 };

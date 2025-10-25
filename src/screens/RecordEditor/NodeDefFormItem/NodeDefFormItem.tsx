@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import { NodeDefs, Objects } from "@openforis/arena-core";
 
@@ -19,7 +18,13 @@ import { PreviousCycleNodeValuePreview } from "../PreviousCycleNodeValuePreview"
 
 import { useStyles } from "./styles";
 
-export const NodeDefFormItem = (props: any) => {
+type NodeDefFormItemProps = {
+  nodeDef: any;
+  parentNodeUuid?: string;
+  onFocus?: () => void;
+};
+
+export const NodeDefFormItem = (props: NodeDefFormItemProps) => {
   const { nodeDef, parentNodeUuid, onFocus } = props;
 
   if (__DEV__) {
@@ -88,10 +93,4 @@ export const NodeDefFormItem = (props: any) => {
   }
 
   return visible ? formItemComponent : null;
-};
-
-NodeDefFormItem.propTypes = {
-  nodeDef: PropTypes.object.isRequired,
-  parentNodeUuid: PropTypes.string,
-  onFocus: PropTypes.func,
 };

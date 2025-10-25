@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
+import { StyleProp, ViewStyle } from "react-native";
 
 import { Surveys } from "@openforis/arena-core";
 
@@ -10,7 +10,11 @@ import { SurveyActions, SurveySelectors } from "state";
 
 import styles from "./styles";
 
-export const SurveyCycleSelector = (props: any) => {
+type SurveyCycleSelectorProps = {
+  style?: StyleProp<ViewStyle>;
+};
+
+export const SurveyCycleSelector = (props: SurveyCycleSelectorProps) => {
   const { style } = props;
 
   const dispatch = useDispatch();
@@ -50,8 +54,4 @@ export const SurveyCycleSelector = (props: any) => {
       )}
     </HView>
   );
-};
-
-SurveyCycleSelector.propTypes = {
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 };

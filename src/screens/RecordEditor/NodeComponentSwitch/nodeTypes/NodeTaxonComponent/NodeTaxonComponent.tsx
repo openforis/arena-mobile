@@ -1,5 +1,4 @@
 import { useState } from "react";
-import PropTypes from "prop-types";
 
 import { NodeDefs } from "@openforis/arena-core";
 
@@ -15,7 +14,13 @@ import { useTaxonByNodeValue } from "../../../NodeValuePreview/useTaxonByNodeVal
 import { useDynamicStyles } from "./useDynamicStyles";
 import styles from "./styles";
 
-export const NodeTaxonComponent = (props: any) => {
+type NodeTaxonComponentProps = {
+  nodeDef: any;
+  nodeUuid?: string;
+  parentNodeUuid?: string;
+};
+
+export const NodeTaxonComponent = (props: NodeTaxonComponentProps) => {
   const { nodeDef, nodeUuid, parentNodeUuid } = props;
 
   if (__DEV__) {
@@ -45,12 +50,8 @@ export const NodeTaxonComponent = (props: any) => {
       <View style={styles.selectedTaxonWrapper}>
         {selectedTaxon ? (
           <HView style={selectedTaxonContainerStyle}>
-            <TaxonValuePreview
-              nodeDef={nodeDef}
-              style={styles.selectedTaxonText}
-              value={value}
-            />
-            <CloseIconButton mode="text" onPress={onClearPress} />
+            <TaxonValuePreview nodeDef={nodeDef} value={value} />
+            <CloseIconButton onPress={onClearPress} />
           </HView>
         ) : (
           <Text textKey="dataEntry:taxon.taxonNotSelected" />
@@ -84,10 +85,4 @@ export const NodeTaxonComponent = (props: any) => {
       )}
     </VView>
   );
-};
-
-NodeTaxonComponent.propTypes = {
-  nodeDef: PropTypes.object.isRequired,
-  nodeUuid: PropTypes.string,
-  parentNodeUuid: PropTypes.string,
 };

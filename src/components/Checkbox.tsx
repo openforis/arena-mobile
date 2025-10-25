@@ -1,7 +1,6 @@
 import React from "react";
 import { Checkbox as RNPCheckbox } from "react-native-paper";
 import { StyleSheet } from "react-native";
-import PropTypes from "prop-types";
 
 const styles = StyleSheet.create({
   base: {
@@ -10,8 +9,16 @@ const styles = StyleSheet.create({
   },
 });
 
-export const Checkbox = (props: any) => {
-  const { checked, disabled, label, onPress, style: styleProp } = props;
+type Props = {
+  checked: boolean;
+  disabled?: boolean;
+  label?: string;
+  onPress: () => void;
+  style?: any;
+};
+
+export const Checkbox = (props: Props) => {
+  const { checked, disabled, label = "", onPress, style: styleProp } = props;
 
   return (
     <RNPCheckbox.Item
@@ -23,12 +30,4 @@ export const Checkbox = (props: any) => {
       style={[styles.base, styleProp]}
     />
   );
-};
-
-Checkbox.propTypes = {
-  checked: PropTypes.bool.isRequired,
-  disabled: PropTypes.bool,
-  label: PropTypes.string,
-  onPress: PropTypes.func.isRequired,
-  style: PropTypes.object,
 };

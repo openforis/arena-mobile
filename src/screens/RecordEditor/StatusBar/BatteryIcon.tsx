@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 import { Icon } from "components/Icon";
 import { useTheme } from "react-native-paper";
 import { BatteryState } from "model/BatteryState";
@@ -13,7 +11,12 @@ const getBatteryIconSource = ({ batteryLevel, batteryState }: any) => {
   return `${iconName}-${batteryLevelDec}`; // e.g. battery-level-50 or battery-level-50-charging
 };
 
-export const BatteryIcon = (props: any) => {
+type BatteryIconProps = {
+  batteryLevel: number;
+  batteryState?: string;
+};
+
+export const BatteryIcon = (props: BatteryIconProps) => {
   const { batteryLevel, batteryState } = props;
   const theme = useTheme();
   const color =
@@ -21,9 +24,4 @@ export const BatteryIcon = (props: any) => {
   const iconSource = getBatteryIconSource({ batteryLevel, batteryState });
 
   return <Icon color={color} source={iconSource} />;
-};
-
-BatteryIcon.propTypes = {
-  batteryLevel: PropTypes.number.isRequired,
-  batteryState: PropTypes.string,
 };

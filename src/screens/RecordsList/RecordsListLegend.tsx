@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 import { CollapsiblePanel, FieldSet, HView, Icon, Text } from "components";
 import { RecordLoadStatus, RecordOrigin, RecordSyncStatus } from "model";
 
@@ -8,22 +6,22 @@ import { RecordSyncStatusIcon } from "./RecordSyncStatusIcon";
 
 import styles from "./styles";
 
-const LegendItem = ({ icon, iconSource, textKey }: any) => (
+type LegendItemProps = {
+  icon?: React.ReactElement;
+  iconSource?: string;
+  textKey: string;
+};
+
+const LegendItem = ({ icon, iconSource, textKey }: LegendItemProps) => (
   <HView>
     {icon ?? (
       <>
-        <Icon source={iconSource} />
+        <Icon source={iconSource!} />
         <Text textKey={textKey} />
       </>
     )}
   </HView>
 );
-
-LegendItem.propTypes = {
-  icon: PropTypes.element,
-  iconSource: PropTypes.string,
-  textKey: PropTypes.string.isRequired,
-};
 
 const visibleSyncStatus = [
   RecordSyncStatus.new,
@@ -50,7 +48,7 @@ export const RecordsListLegend = () => {
         ))}
       </FieldSet>
       <FieldSet headerKey="recordsList:origin.title">
-        {Object.values(RecordOrigin).map((origin: any) => (
+        {Object.values(RecordOrigin).map((origin) => (
           <LegendItem
             key={origin}
             iconSource={RecordListConstants.iconByOrigin[origin]}

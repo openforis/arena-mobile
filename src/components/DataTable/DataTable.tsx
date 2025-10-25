@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { DataTable as RNPDataTable } from "react-native-paper";
-import PropTypes from "prop-types";
 
 import { Objects } from "@openforis/arena-core";
 
@@ -14,7 +13,23 @@ import { VView } from "../VView";
 import { ItemSelectedBanner, useSelectableList } from "../SelectableList";
 import { usePagination } from "./usePagination";
 
-export const DataTable = (props: any) => {
+export type DataTableProps = {
+  canDelete?: boolean;
+  fields: any[];
+  items: any[];
+  onItemPress?: (item: any) => void;
+  onItemLongPress?: (item: any) => void;
+  onSelectionChange?: (selectedIds: string[]) => void;
+  onSortChange?: (sort: any) => void;
+  onDeleteSelectedItemIds?: (ids: string[]) => void;
+  selectable?: boolean;
+  selectedItemIds?: string[];
+  selectedItemsCustomActions?: any[];
+  showPagination?: boolean;
+  sort?: any;
+};
+
+export const DataTable = (props: DataTableProps) => {
   const {
     canDelete = true,
     fields,
@@ -76,16 +91,16 @@ export const DataTable = (props: any) => {
   const onHeaderPress = (fieldKey: any) => {
     const fieldSortPrev = sort?.[fieldKey];
     const fieldSortNext = SortDirection.getNextSortDirection(fieldSortPrev);
-    const sortNext:any = {};
+    const sortNext: any = {};
     // allow only one sort field at a time
     if (fieldSortNext) {
       sortNext[fieldKey] = fieldSortNext;
     }
-    onSortChange(sortNext);
+    onSortChange?.(sortNext);
   };
 
   useEffect(() => {
-    const rowsScrollViewEl:any = rowsScrollViewRef.current 
+    const rowsScrollViewEl: any = rowsScrollViewRef.current;
     rowsScrollViewEl?.scrollTo({ x: 0, y: 0, animated: false });
   }, [visibleRows]);
 
@@ -99,57 +114,63 @@ export const DataTable = (props: any) => {
       />
       <RNPDataTable style={{ flex: 1 }}>
         <RNPDataTable.Header>
-          {visibleFields.map((field: any) => <RNPDataTable.Title
-            key={field.key}
-            onPress={() =>
-              field.sortable ? onHeaderPress(field.key) : undefined
-            }
-            sortDirection={sort?.[field.key]}
-            style={[{ flex: 1 }, field.style]}
-            textStyle={{ fontWeight: "bold", fontSize: 15 }}
-          >
-            {t(field.header)}
-          </RNPDataTable.Title>)}
+          {visibleFields.map((field: any) => (
+            <RNPDataTable.Title
+              key={field.key}
+              onPress={() =>
+                field.sortable ? onHeaderPress(field.key) : undefined
+              }
+              sortDirection={sort?.[field.key]}
+              style={[{ flex: 1 }, field.style]}
+              textStyle={{ fontWeight: "bold", fontSize: 15 }}
+            >
+              {t(field.header)}
+            </RNPDataTable.Title>
+          ))}
           {selectionEnabled && (
-            <RNPDataTable.Title style={{ maxWidth: 40 as const, minWidth: 40 as const }}>
-              <>{              /* spacer */              }</>
+            <RNPDataTable.Title
+              style={{ maxWidth: 40 as const, minWidth: 40 as const }}
+            >
+              <>{/* spacer */}</>
             </RNPDataTable.Title>
           )}
         </RNPDataTable.Header>
         <ScrollView persistentScrollbar ref={rowsScrollViewRef}>
-          {visibleRows.map((item: any) => <RNPDataTable.Row
-            key={item.key}
-            onPress={() => onItemPress(item)}
-            onLongPress={() => onItemLongPress(item)}
-          >
-            {visibleFields.map(
-              ({
-                key: fKey,
-                style,
-                cellRenderer: CellRenderer = null
-              }: any) => (
-                <RNPDataTable.Cell
-                  key={fKey}
-                  style={style}
-                  textStyle={{ flex: 1 }}
-                >
-                  {CellRenderer ? (
-                    <CellRenderer item={item} />
-                  ) : (
-                    String(Objects.path(fKey.split("."))(item) ?? "")
-                  )}
+          {visibleRows.map((item: any) => (
+            <RNPDataTable.Row
+              key={item.key}
+              onPress={() => onItemPress(item)}
+              onLongPress={() => onItemLongPress(item)}
+            >
+              {visibleFields.map(
+                ({
+                  key: fKey,
+                  style,
+                  cellRenderer: CellRenderer = null,
+                }: any) => (
+                  <RNPDataTable.Cell
+                    key={fKey}
+                    style={style}
+                    textStyle={{ flex: 1 }}
+                  >
+                    {CellRenderer ? (
+                      <CellRenderer item={item} />
+                    ) : (
+                      String(Objects.path(fKey.split("."))(item) ?? "")
+                    )}
+                  </RNPDataTable.Cell>
+                )
+              )}
+              {selectionEnabled && (
+                <RNPDataTable.Cell style={{ maxWidth: 40, minWidth: 40 }}>
+                  <Checkbox
+                    checked={selectedItemIds.includes(item.key)}
+                    onPress={() => onItemSelect(item)}
+                  />
                 </RNPDataTable.Cell>
-              )
-            )}
-            {selectionEnabled && (
-              <RNPDataTable.Cell style={{ maxWidth: 40, minWidth: 40 }}>
-                <Checkbox
-                  checked={selectedItemIds.includes(item.key)}
-                  onPress={() => onItemSelect(item)}
-                />
-              </RNPDataTable.Cell>
-            )}
-          </RNPDataTable.Row>)}
+              )}
+            </RNPDataTable.Row>
+          ))}
         </ScrollView>
         {showPagination && (
           <RNPDataTable.Pagination
@@ -171,20 +192,4 @@ export const DataTable = (props: any) => {
       </RNPDataTable>
     </VView>
   );
-};
-
-DataTable.propTypes = {
-  canDelete: PropTypes.bool,
-  fields: PropTypes.array.isRequired,
-  items: PropTypes.array.isRequired,
-  onItemPress: PropTypes.func,
-  onItemLongPress: PropTypes.func,
-  onSelectionChange: PropTypes.func,
-  onSortChange: PropTypes.func,
-  onDeleteSelectedItemIds: PropTypes.func,
-  selectable: PropTypes.bool,
-  selectedItemIds: PropTypes.array,
-  selectedItemsCustomActions: PropTypes.array,
-  showPagination: PropTypes.bool,
-  sort: PropTypes.object,
 };

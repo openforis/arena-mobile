@@ -1,5 +1,4 @@
 import React, { useCallback } from "react";
-import PropTypes from "prop-types";
 
 import { SelectableListWithFilter } from "components";
 
@@ -7,7 +6,18 @@ import { SurveySelectors } from "state/survey";
 
 const itemKeyExtractor = (item: any) => item?.uuid;
 
-export const NodeCodeAutocomplete = (props: any) => {
+type NodeCodeAutocompleteProps = {
+  editable?: boolean;
+  itemLabelFunction: (item: any) => string;
+  items?: any[];
+  multiple?: boolean;
+  onItemAdd: (uuid: string) => void;
+  onItemRemove: (uuid: string) => void;
+  onSingleValueChange: (uuid: string) => void;
+  selectedItems?: any[];
+};
+
+export const NodeCodeAutocomplete = (props: NodeCodeAutocompleteProps) => {
   const {
     editable = true,
     itemLabelFunction,
@@ -61,15 +71,4 @@ export const NodeCodeAutocomplete = (props: any) => {
       selectedItems={selectedItems}
     />
   );
-};
-
-NodeCodeAutocomplete.propTypes = {
-  editable: PropTypes.bool,
-  itemLabelFunction: PropTypes.func.isRequired,
-  items: PropTypes.array,
-  multiple: PropTypes.bool,
-  onItemAdd: PropTypes.func.isRequired,
-  onItemRemove: PropTypes.func.isRequired,
-  onSingleValueChange: PropTypes.func.isRequired,
-  selectedItems: PropTypes.array,
 };

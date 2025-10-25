@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { useTheme } from "react-native-paper";
-import PropTypes from "prop-types";
 
 import { NodeDefs } from "@openforis/arena-core";
 
@@ -11,7 +10,14 @@ import { SurveySelectors } from "state";
 
 import styles from "./styles";
 
-const OpenDropdownButton = (props: any) => {
+type OpenDropdownButtonProps = {
+  emptySelection?: boolean;
+  onPress: () => void;
+  textKey?: string;
+  textParams?: any;
+};
+
+const OpenDropdownButton = (props: OpenDropdownButtonProps) => {
   const {
     emptySelection = false,
     onPress,
@@ -46,14 +52,15 @@ const OpenDropdownButton = (props: any) => {
   );
 };
 
-OpenDropdownButton.propTypes = {
-  emptySelection: PropTypes.bool,
-  onPress: PropTypes.func.isRequired,
-  textKey: PropTypes.string,
-  textParams: PropTypes.object,
+type NodeCodePreviewProps = {
+  itemLabelFunction: (item: any) => string;
+  nodeDef: any;
+  openEditDialog: () => void;
+  openFindClosestSamplingPointDialog: () => void;
+  selectedItems?: any[];
 };
 
-export const NodeCodePreview = (props: any) => {
+export const NodeCodePreview = (props: NodeCodePreviewProps) => {
   const {
     itemLabelFunction,
     nodeDef,
@@ -108,12 +115,4 @@ export const NodeCodePreview = (props: any) => {
       )}
     </HView>
   );
-};
-
-NodeCodePreview.propTypes = {
-  itemLabelFunction: PropTypes.func.isRequired,
-  nodeDef: PropTypes.object.isRequired,
-  openEditDialog: PropTypes.func.isRequired,
-  openFindClosestSamplingPointDialog: PropTypes.func.isRequired,
-  selectedItems: PropTypes.array,
 };

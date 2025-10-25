@@ -1,13 +1,27 @@
 import React, { useMemo } from "react";
+import { StyleProp, StyleSheet, ViewStyle } from "react-native";
 
 import { View } from "./View";
 
-const baseStyle = { display: "flex", flexDirection: "column" };
+const baseStyle = StyleSheet.create({
+  base: { display: "flex", flexDirection: "column" },
+});
 
-export const VView = (props: any) => {
+type Props = {
+  children?: React.ReactNode;
+  fullFlex?: boolean;
+  fullWidth?: boolean;
+  style?: StyleProp<ViewStyle>;
+  transparent?: boolean;
+};
+
+export const VView = (props: Props) => {
   const { children, style: styleProp, ...otherProps } = props;
 
-  const style = useMemo(() => [baseStyle, styleProp], [styleProp]);
+  const style: StyleProp<ViewStyle> = useMemo(
+    () => [baseStyle.base, styleProp],
+    [styleProp]
+  );
 
   return (
     <View style={style} {...otherProps}>
@@ -15,5 +29,3 @@ export const VView = (props: any) => {
     </View>
   );
 };
-
-VView.propTypes = View.propTypes;

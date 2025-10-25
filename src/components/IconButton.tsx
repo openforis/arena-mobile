@@ -1,10 +1,17 @@
 import React from "react";
 import { IconButton as RNPIconButton } from "react-native-paper";
-import PropTypes from "prop-types";
 
 import { useButtonOnPress } from "./useButtonPress";
+import { ButtonProps } from "./Button";
 
-export const IconButton = (props: any) => {
+type IconButtonMode = "outlined" | "contained" | "contained-tonal";
+
+export type IconButtonProps = ButtonProps & {
+  mode?: IconButtonMode;
+  size?: number;
+};
+
+export const IconButton = (props: IconButtonProps) => {
   const {
     avoidMultiplePress = true,
     disabled,
@@ -37,16 +44,4 @@ export const IconButton = (props: any) => {
       {...otherProps}
     />
   );
-};
-
-IconButton.propTypes = {
-  avoidMultiplePress: PropTypes.bool,
-  disabled: PropTypes.bool,
-  icon: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-  iconColor: PropTypes.string,
-  loading: PropTypes.bool,
-  mode: PropTypes.string,
-  multiplePressAvoidanceTimeout: PropTypes.number,
-  onPress: PropTypes.func,
-  size: PropTypes.number,
 };

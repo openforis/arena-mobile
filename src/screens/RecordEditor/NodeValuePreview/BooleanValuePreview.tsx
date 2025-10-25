@@ -4,9 +4,9 @@ import { Text } from "components";
 import { useTranslation } from "localization";
 import { RecordNodes } from "model";
 
-import { NodeValuePreviewPropTypes } from "./NodeValuePreviewPropTypes";
+import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 
-export const BooleanValuePreview = (props: any) => {
+export const BooleanValuePreview = (props: NodeValuePreviewProps) => {
   const { nodeDef, value } = props;
 
   const { t } = useTranslation();
@@ -18,5 +18,3 @@ export const BooleanValuePreview = (props: any) => {
 
   return <Text>{valueFormatted}</Text>;
 };
-
-BooleanValuePreview.propTypes = NodeValuePreviewPropTypes;

@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 import { Surveys } from "@openforis/arena-core";
 
 import {
@@ -20,7 +18,15 @@ import { SurveyLanguageSelector } from "./SurveyLanguageSelector";
 
 import styles from "./styles";
 
-export const RecordsListOptions = (props: any) => {
+type RecordsListOptionsProps = {
+  onlyLocal?: boolean;
+  onOnlyLocalChange: (value: boolean) => void;
+  syncStatusLoading?: boolean;
+  onRemoteSyncPress: () => void;
+  onImportRecordsFromFilePress: () => void;
+};
+
+export const RecordsListOptions = (props: RecordsListOptionsProps) => {
   const {
     onlyLocal,
     onOnlyLocalChange,
@@ -78,12 +84,4 @@ export const RecordsListOptions = (props: any) => {
       </FlexWrapView>
     </CollapsiblePanel>
   );
-};
-
-RecordsListOptions.propTypes = {
-  onlyLocal: PropTypes.bool,
-  onOnlyLocalChange: PropTypes.func.isRequired,
-  syncStatusLoading: PropTypes.bool,
-  onRemoteSyncPress: PropTypes.func.isRequired,
-  onImportRecordsFromFilePress: PropTypes.func.isRequired,
 };

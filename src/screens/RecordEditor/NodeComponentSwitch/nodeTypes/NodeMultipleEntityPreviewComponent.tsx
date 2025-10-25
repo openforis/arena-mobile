@@ -6,13 +6,16 @@ import { NodeDefs } from "@openforis/arena-core";
 import { Button, VView } from "components";
 import { DataEntryActions, SurveySelectors } from "state";
 
-import { NodeComponentPropTypes } from "./nodeComponentPropTypes";
+import { NodeComponentProps } from "./nodeComponentPropTypes";
+import { StyleSheet } from "react-native";
 
-const styles = {
+const styles = StyleSheet.create({
   editButton: { alignSelf: "center" },
-};
+});
 
-export const NodeMultipleEntityPreviewComponent = (props: any) => {
+export const NodeMultipleEntityPreviewComponent = (
+  props: NodeComponentProps
+) => {
   const { nodeDef, parentNodeUuid } = props;
 
   if (__DEV__) {
@@ -45,5 +48,3 @@ export const NodeMultipleEntityPreviewComponent = (props: any) => {
     </VView>
   );
 };
-
-NodeMultipleEntityPreviewComponent.propTypes = NodeComponentPropTypes;

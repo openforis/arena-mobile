@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
 import Collapsible from "react-native-collapsible";
-import { TouchableOpacity } from "react-native";
-import PropTypes from "prop-types";
+import { StyleProp, TouchableOpacity, ViewStyle } from "react-native";
 
 import { HView } from "../HView";
 import { Icon } from "../Icon";
@@ -10,7 +9,16 @@ import { VView } from "../VView";
 
 import { useStyles } from "./styles";
 
-export const CollapsiblePanel = (props: any) => {
+type CollapsiblePanelProps = {
+  children?: React.ReactNode;
+  containerStyle?: StyleProp<ViewStyle>;
+  contentStyle?: StyleProp<ViewStyle>;
+  headerContent?: React.ReactNode;
+  headerKey?: string;
+  headerParams?: any;
+};
+
+export const CollapsiblePanel = (props: CollapsiblePanelProps) => {
   const {
     children,
     containerStyle = null,
@@ -56,13 +64,4 @@ export const CollapsiblePanel = (props: any) => {
       </Collapsible>
     </VView>
   );
-};
-
-CollapsiblePanel.propTypes = {
-  children: PropTypes.node,
-  containerStyle: PropTypes.object,
-  contentStyle: PropTypes.object,
-  headerContent: PropTypes.node,
-  headerKey: PropTypes.string,
-  headerParams: PropTypes.object,
 };

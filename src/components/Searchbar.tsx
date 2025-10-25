@@ -1,12 +1,17 @@
 import React from "react";
 import { Searchbar as RNPSearchbar } from "react-native-paper";
-import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
 
 const baseStyle = { margin: 5 };
 
-export const Searchbar = (props: any) => {
+type Props = {
+  placeholder?: string;
+  onChange: (value: string) => void;
+  value?: any;
+};
+
+export const Searchbar = (props: Props) => {
   const {
     placeholder: placeholderProp = "common:search",
     onChange,
@@ -23,10 +28,4 @@ export const Searchbar = (props: any) => {
       value={value}
     />
   );
-};
-
-Searchbar.propTypes = {
-  placeholder: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.any,
 };

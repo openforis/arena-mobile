@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { FlatList, TouchableHighlight } from "react-native";
-import PropTypes from "prop-types";
 
 import { Objects } from "@openforis/arena-core";
 
@@ -13,7 +12,18 @@ import { VView } from "../VView";
 import { ItemSelectedBanner, useSelectableList } from "../SelectableList";
 import { useStyles } from "./styles";
 
-export const DataList = (props: any) => {
+export type DataListProps = {
+  fields: any[];
+  items: any[];
+  onItemPress?: (item: any) => void;
+  onItemLongPress?: (item: any) => void;
+  onDeleteSelectedItemIds?: (ids: string[]) => void;
+  onSelectionChange?: (selectedIds: string[]) => void;
+  selectable?: boolean;
+  selectedItemsCustomActions?: any[];
+};
+
+export const DataList = (props: DataListProps) => {
   const {
     fields,
     items,
@@ -118,15 +128,4 @@ export const DataList = (props: any) => {
       />
     </VView>
   );
-};
-
-DataList.propTypes = {
-  fields: PropTypes.array.isRequired,
-  items: PropTypes.array.isRequired,
-  onItemPress: PropTypes.func,
-  onItemLongPress: PropTypes.func,
-  onDeleteSelectedItemIds: PropTypes.func,
-  onSelectionChange: PropTypes.func,
-  selectable: PropTypes.bool,
-  selectedItemsCustomActions: PropTypes.array,
 };

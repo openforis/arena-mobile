@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Dialog, Portal } from "react-native-paper";
-import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
 
@@ -9,7 +8,18 @@ import { CollapsiblePanel } from "./CollapsiblePanel";
 import { ScrollView } from "./ScrollView";
 import { Text } from "./Text";
 
-export const MessageDialog = (props: any) => {
+type MessageDialogProps = {
+  content: string;
+  contentParams?: any;
+  details?: string;
+  detailsParams?: any;
+  doneButtonLabel?: string;
+  onDismiss?: () => void;
+  onDone?: () => void;
+  title?: string;
+};
+
+export const MessageDialog = (props: MessageDialogProps) => {
   const {
     content,
     contentParams,
@@ -51,15 +61,4 @@ export const MessageDialog = (props: any) => {
       </Dialog>
     </Portal>
   );
-};
-
-MessageDialog.propTypes = {
-  content: PropTypes.string,
-  contentParams: PropTypes.object,
-  details: PropTypes.string,
-  detailsParams: PropTypes.object,
-  doneButtonLabel: PropTypes.string,
-  onDismiss: PropTypes.func,
-  onDone: PropTypes.func,
-  title: PropTypes.string,
 };

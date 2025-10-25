@@ -1,10 +1,23 @@
 import { Dialog as RNPDialog, Portal } from "react-native-paper";
-import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
 import { Button } from "../Button";
 
-export const Dialog = (props: any) => {
+type DialogAction = {
+  onPress: () => void;
+  textKey: string;
+};
+
+type DialogProps = {
+  children?: React.ReactNode;
+  actions?: DialogAction[];
+  closeButtonTextKey?: string;
+  onClose: () => void;
+  style?: any;
+  title: string;
+};
+
+export const Dialog = (props: DialogProps) => {
   const {
     actions = [],
     children,
@@ -32,13 +45,4 @@ export const Dialog = (props: any) => {
       </RNPDialog>
     </Portal>
   );
-};
-
-Dialog.propTypes = {
-  children: PropTypes.node,
-  actions: PropTypes.array,
-  closeButtonTextKey: PropTypes.string,
-  onClose: PropTypes.func.isRequired,
-  style: PropTypes.object,
-  title: PropTypes.string.isRequired,
 };

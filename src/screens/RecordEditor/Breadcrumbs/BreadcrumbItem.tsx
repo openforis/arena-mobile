@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from "react";
-import PropTypes from "prop-types";
 
 import { Button, HView, Icon } from "components";
 import { useIsTextDirectionRtl } from "localization";
@@ -12,7 +11,13 @@ const Separator = () => {
   return <Icon source={iconSource} />;
 };
 
-export const BreadcrumbItem = (props: any) => {
+type Props = {
+  isLastItem?: boolean;
+  item: any;
+  onItemPress: (item: any) => void;
+};
+
+export const BreadcrumbItem = (props: Props) => {
   const { isLastItem = false, item, onItemPress: onItemPressProp } = props;
 
   const irRtl = useIsTextDirectionRtl();
@@ -42,10 +47,4 @@ export const BreadcrumbItem = (props: any) => {
       {!isLastItem && <Separator />}
     </HView>
   );
-};
-
-BreadcrumbItem.propTypes = {
-  isLastItem: PropTypes.bool,
-  item: PropTypes.object.isRequired,
-  onItemPress: PropTypes.func.isRequired,
 };

@@ -1,10 +1,14 @@
 import { useNavigation } from "@react-navigation/native";
-import PropTypes from "prop-types";
+import { StyleProp, ViewStyle } from "react-native";
 
 import { Button } from "components";
 import { screenKeys } from "screens";
 
-export const ConnectionToRemoteServerButton = (props: any) => {
+type Props = {
+  style?: StyleProp<ViewStyle>;
+};
+
+export const ConnectionToRemoteServerButton = (props: Props) => {
   const { style = null } = props;
   const navigation = useNavigation();
 
@@ -17,8 +21,4 @@ export const ConnectionToRemoteServerButton = (props: any) => {
       textKey="settings:connectionToServer"
     />
   );
-};
-
-ConnectionToRemoteServerButton.propTypes = {
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 };

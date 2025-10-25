@@ -1,17 +1,16 @@
 import { Snackbar as RNPSnackbar } from "react-native-paper";
-import PropTypes from "prop-types";
 
-export const Snackbar = (props: any) => {
-  const { content, onDismiss, visible } = props;
+type Props = {
+  content?: any;
+  onDismiss: () => void;
+  visible?: boolean;
+};
+
+export const Snackbar = (props: Props) => {
+  const { content, onDismiss, visible = false } = props;
   return (
     <RNPSnackbar visible={visible} onDismiss={onDismiss}>
       {content}
     </RNPSnackbar>
   );
-};
-
-Snackbar.propTypes = {
-  content: PropTypes.any,
-  onDismiss: PropTypes.func,
-  visible: PropTypes.bool,
 };

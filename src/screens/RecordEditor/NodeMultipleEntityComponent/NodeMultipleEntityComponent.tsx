@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 import { NodeDefs } from "@openforis/arena-core";
 
 import { RecordEditViewMode } from "model";
@@ -8,7 +6,13 @@ import { NodeEntityFormComponent } from "../NodeComponentSwitch/nodeTypes/NodeEn
 import { NodeMultipleEntityListComponent } from "./NodeMultipleEntityListComponent";
 import { RecordNodesCarousel } from "../RecordNodesCarousel";
 
-export const NodeMultipleEntityComponent = (props: any) => {
+type NodeMultipleEntityComponentProps = {
+  entityDef: any;
+  parentEntityUuid?: string;
+  entityUuid?: string;
+};
+
+export const NodeMultipleEntityComponent = (props: NodeMultipleEntityComponentProps) => {
   const { entityDef, parentEntityUuid, entityUuid } = props;
 
   if (__DEV__) {
@@ -37,10 +41,4 @@ export const NodeMultipleEntityComponent = (props: any) => {
       parentEntityUuid={parentEntityUuid}
     />
   );
-};
-
-NodeMultipleEntityComponent.propTypes = {
-  entityDef: PropTypes.object.isRequired,
-  parentEntityUuid: PropTypes.string,
-  entityUuid: PropTypes.string,
 };

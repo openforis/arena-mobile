@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
-import { FlatList } from "react-native";
+import { FlatList, StyleProp, ViewStyle } from "react-native";
 import { List as RNPList } from "react-native-paper";
-import PropTypes from "prop-types";
 
 import { Arrays } from "@openforis/arena-core";
 
@@ -10,7 +9,15 @@ import { RadioButton } from "../RadioButton";
 
 import styles from "./styles";
 
-const ListItemIcon = (props: any) => {
+type ListItemIconProps = {
+  multiple: boolean;
+  checked: boolean;
+  editable: boolean;
+  onItemSelect: (item: any) => void;
+  item: any;
+};
+
+const ListItemIcon = (props: ListItemIconProps) => {
   const { multiple, checked, editable, onItemSelect, item } = props;
 
   const onPress = useCallback(() => onItemSelect(item), [item, onItemSelect]);
@@ -22,15 +29,19 @@ const ListItemIcon = (props: any) => {
   );
 };
 
-ListItemIcon.propTypes = {
-  multiple: PropTypes.bool.isRequired,
-  checked: PropTypes.bool.isRequired,
-  editable: PropTypes.bool.isRequired,
-  onItemSelect: PropTypes.func.isRequired,
-  item: PropTypes.object.isRequired,
+export type SelectableListProps = {
+  editable?: boolean;
+  itemKeyExtractor?: (item: any) => string;
+  itemLabelExtractor?: (item: any) => string;
+  itemDescriptionExtractor?: (item: any) => string;
+  items: any[];
+  multiple?: boolean;
+  onChange?: (items: any[]) => void;
+  selectedItems?: any[];
+  style?: StyleProp<ViewStyle>;
 };
 
-export const SelectableList = (props: any) => {
+export const SelectableList = (props: SelectableListProps) => {
   const {
     editable = true,
     itemKeyExtractor,
@@ -64,9 +75,7 @@ export const SelectableList = (props: any) => {
   );
 
   const renderItem = useCallback(
-    ({
-      item
-    }: any) => (
+    ({ item }: any) => (
       <RNPList.Item
         disabled={!editable}
         title={itemLabelExtractor(item)}
@@ -104,16 +113,4 @@ export const SelectableList = (props: any) => {
       style={style}
     />
   );
-};
-
-SelectableList.propTypes = {
-  editable: PropTypes.bool,
-  itemKeyExtractor: PropTypes.func,
-  itemLabelExtractor: PropTypes.func,
-  itemDescriptionExtractor: PropTypes.func,
-  items: PropTypes.array.isRequired,
-  multiple: PropTypes.bool,
-  onChange: PropTypes.func,
-  selectedItems: PropTypes.array,
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 };

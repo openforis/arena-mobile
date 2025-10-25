@@ -1,12 +1,24 @@
 import React, { useCallback } from "react";
-import PropTypes from "prop-types";
 
 import { NodeDefs } from "@openforis/arena-core";
 
 import { NodeCodeAutocomplete } from "./NodeCodeAutocomplete";
 import { NodeEditDialogInternal } from "../NodeEditDialogInternal";
 
-export const NodeCodeEditDialog = (props: any) => {
+type NodeCodeEditDialogProps = {
+  editable?: boolean;
+  itemLabelFunction: (item: any) => string;
+  items?: any[];
+  nodeDef?: any;
+  onDismiss?: () => void;
+  onItemAdd: (uuid: string) => void;
+  onItemRemove: (uuid: string) => void;
+  onSingleValueChange: (uuid: string) => void;
+  parentNodeUuid?: string;
+  selectedItems?: any[];
+};
+
+export const NodeCodeEditDialog = (props: NodeCodeEditDialogProps) => {
   const {
     editable = true,
     itemLabelFunction,
@@ -50,17 +62,4 @@ export const NodeCodeEditDialog = (props: any) => {
       />
     </NodeEditDialogInternal>
   );
-};
-
-NodeCodeEditDialog.propTypes = {
-  editable: PropTypes.bool,
-  itemLabelFunction: PropTypes.func.isRequired,
-  items: PropTypes.array,
-  nodeDef: PropTypes.object,
-  onDismiss: PropTypes.func,
-  onItemAdd: PropTypes.func.isRequired,
-  onItemRemove: PropTypes.func.isRequired,
-  onSingleValueChange: PropTypes.func.isRequired,
-  parentNodeUuid: PropTypes.string,
-  selectedItems: PropTypes.array,
 };

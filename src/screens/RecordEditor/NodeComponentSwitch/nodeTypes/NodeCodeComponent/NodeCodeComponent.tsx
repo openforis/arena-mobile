@@ -16,11 +16,15 @@ import { NodeCodeEditDialog } from "./NodeCodeEditDialog";
 import { NodeCodePreview } from "./NodeCodePreview";
 import { NodeCodeAutocomplete } from "./NodeCodeAutocomplete";
 import { NodeCodeFindClosestSamplingPointDialog } from "./NodeCodeFindClosestSamplingPointDialog";
-import { NodeComponentPropTypes } from "../nodeComponentPropTypes";
+import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 const MAX_VISIBLE_ITEMS = 10;
 
-export const NodeCodeComponent = (props: any) => {
+type Props = NodeComponentProps & {
+  onFocus?: () => void;
+};
+
+export const NodeCodeComponent = (props: Props) => {
   const { parentNodeUuid, nodeDef } = props;
 
   if (__DEV__) {
@@ -56,7 +60,6 @@ export const NodeCodeComponent = (props: any) => {
   if (!editable) {
     return (
       <NodeCodeReadOnlyValue
-        nodeDef={nodeDef}
         itemLabelFunction={itemLabelFunction}
         selectedItems={selectedItems}
       />
@@ -97,13 +100,11 @@ export const NodeCodeComponent = (props: any) => {
             <NodeCodeFindClosestSamplingPointDialog
               itemLabelFunction={itemLabelFunction}
               items={items}
-              nodeDef={nodeDef}
               onDismiss={closeFindClosestSamplingPointDialog}
               onItemSelected={(selectedMinDistanceItem) => {
                 onSingleValueChange(selectedMinDistanceItem.uuid);
                 closeFindClosestSamplingPointDialog();
               }}
-              parentNodeUuid={parentNodeUuid}
             />
           )}
         </>
@@ -144,5 +145,3 @@ export const NodeCodeComponent = (props: any) => {
     />
   );
 };
-
-NodeCodeComponent.propTypes = NodeComponentPropTypes;

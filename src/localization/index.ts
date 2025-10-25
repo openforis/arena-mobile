@@ -11,7 +11,10 @@ import {
 
 const useTranslation = () => {
   const { t } = useI18nTranslation();
-  return { t: (key: string, params?: any) => t(key, params) as string };
+  return {
+    t: (key?: string, params?: any) =>
+      (key?.length ?? 0) > 0 ? (t(key!, params) as string) : "",
+  };
 };
 
 export {

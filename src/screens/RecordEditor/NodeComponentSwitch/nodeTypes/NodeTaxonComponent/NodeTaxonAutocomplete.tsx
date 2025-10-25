@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo } from "react";
-import PropTypes from "prop-types";
 
 import { NodeDefs } from "@openforis/arena-core";
 
@@ -122,7 +121,14 @@ const filterItems =
     return taxaFiltered;
   };
 
-export const NodeTaxonAutocomplete = (props: any) => {
+type NodeTaxonAutocompleteProps = {
+  nodeDef: any;
+  parentNodeUuid?: string;
+  selectedTaxon?: any;
+  updateNodeValue: (params: { value: any }) => void;
+};
+
+export const NodeTaxonAutocomplete = (props: NodeTaxonAutocompleteProps) => {
   const { nodeDef, parentNodeUuid, selectedTaxon, updateNodeValue } = props;
 
   if (__DEV__) {
@@ -162,11 +168,4 @@ export const NodeTaxonAutocomplete = (props: any) => {
       selectedItems={selectedTaxon ? [selectedTaxon] : []}
     />
   );
-};
-
-NodeTaxonAutocomplete.propTypes = {
-  nodeDef: PropTypes.object.isRequired,
-  parentNodeUuid: PropTypes.string,
-  selectedTaxon: PropTypes.object,
-  updateNodeValue: PropTypes.func.isRequired,
 };

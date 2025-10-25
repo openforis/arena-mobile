@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
 import { useTheme } from "react-native-paper";
 import Markdown from "react-native-markdown-display";
-import PropTypes from "prop-types";
 
 import { Dialog } from "components";
 import { FormItem } from "components/FormItem";
@@ -16,7 +15,14 @@ const changelogUrl =
   "https://raw.githubusercontent.com/openforis/arena-mobile/master/";
 const changelogUri = "CHANGELOG.md";
 
-export const ChangelogViewDialog = (props: any) => {
+type ChangelogViewDialogProps = {
+  onClose: () => void;
+  onUpdate?: () => void;
+  showCurrentVersionNumber?: boolean;
+  title?: string;
+};
+
+export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
   const {
     onClose,
     onUpdate = null,
@@ -77,11 +83,4 @@ export const ChangelogViewDialog = (props: any) => {
       </VView>
     </Dialog>
   );
-};
-
-ChangelogViewDialog.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  onUpdate: PropTypes.func,
-  showCurrentVersionNumber: PropTypes.bool,
-  title: PropTypes.string,
 };

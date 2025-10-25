@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 
 import {
-  DataVisualizerCellPropTypes,
+  DataVisualizerCellProps,
   HView,
   Icon,
   Text,
@@ -28,7 +28,11 @@ const colorBySyncStatus = {
   [RecordSyncStatus.notUpToDate]: colors.yellow,
 };
 
-export const RecordSyncStatusIcon = (props: any) => {
+type Props = DataVisualizerCellProps & {
+  alwaysShowLabel?: boolean;
+};
+
+export const RecordSyncStatusIcon = (props: Props) => {
   const { item, alwaysShowLabel = false } = props;
   const { syncStatus } = item;
 
@@ -56,5 +60,3 @@ export const RecordSyncStatusIcon = (props: any) => {
     <Tooltip titleKey={textKey}>{icon}</Tooltip>
   );
 };
-
-RecordSyncStatusIcon.propTypes = DataVisualizerCellPropTypes;

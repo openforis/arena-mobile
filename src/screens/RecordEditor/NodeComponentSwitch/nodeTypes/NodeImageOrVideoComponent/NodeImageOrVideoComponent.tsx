@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 import { NodeDefFileType, NodeDefs } from "@openforis/arena-core";
 
 import {
@@ -28,7 +26,12 @@ const cameraButtonAvailableByFileType: Record<string, boolean> = {
   [NodeDefFileType.video]: true,
 };
 
-export const NodeImageOrVideoComponent = (props: any) => {
+type NodeImageOrVideoComponentProps = {
+  nodeDef: any;
+  nodeUuid?: string;
+};
+
+export const NodeImageOrVideoComponent = (props: NodeImageOrVideoComponentProps) => {
   const { nodeDef, nodeUuid } = props;
 
   if (__DEV__) {
@@ -80,9 +83,4 @@ export const NodeImageOrVideoComponent = (props: any) => {
       </VView>
     </HView>
   );
-};
-
-NodeImageOrVideoComponent.propTypes = {
-  nodeDef: PropTypes.object.isRequired,
-  nodeUuid: PropTypes.string,
 };

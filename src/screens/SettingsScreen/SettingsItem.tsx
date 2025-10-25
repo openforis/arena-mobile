@@ -1,5 +1,4 @@
 import { useCallback, useState } from "react";
-import PropTypes from "prop-types";
 
 import { Numbers, Objects } from "@openforis/arena-core";
 
@@ -22,7 +21,14 @@ const stringToNumber = (value: any) =>
 const determineTextKey = (...possibleKeys: any[]) =>
   possibleKeys.find((possibleKey) => possibleKey && i18n.exists(possibleKey));
 
-export const SettingsItem = (props: any) => {
+type SettingsItemProps = {
+  settings: any;
+  settingKey: string;
+  prop: any;
+  onPropValueChange: (params: { key: string }) => (value: any) => void;
+};
+
+export const SettingsItem = (props: SettingsItemProps) => {
   const { settings, settingKey, prop, onPropValueChange } = props;
   const {
     type,
@@ -126,11 +132,4 @@ export const SettingsItem = (props: any) => {
     default:
       return null;
   }
-};
-
-SettingsItem.propTypes = {
-  settings: PropTypes.object.isRequired,
-  settingKey: PropTypes.string.isRequired,
-  prop: PropTypes.object.isRequired,
-  onPropValueChange: PropTypes.func.isRequired,
 };

@@ -1,9 +1,20 @@
-import { forwardRef } from "react";
-import { ScrollView as RNScrollView } from "react-native";
+import { forwardRef, Ref } from "react";
+import { ScrollView as RNScrollView, StyleProp, ViewStyle } from "react-native";
 import { useTheme } from "react-native-paper";
-import PropTypes from "prop-types";
 
-export const ScrollView = forwardRef(function ScrollView(props: any, ref) {
+type Props = {
+  children?: React.ReactNode;
+  horizontal?: boolean;
+  persistentScrollbar?: boolean;
+  showsVerticalScrollIndicator?: boolean;
+  style?: StyleProp<ViewStyle>;
+  transparent?: boolean;
+};
+
+export const ScrollView = forwardRef(function ScrollView(
+  props: Props,
+  ref: Ref<RNScrollView>
+) {
   const {
     children,
     persistentScrollbar,
@@ -31,10 +42,3 @@ export const ScrollView = forwardRef(function ScrollView(props: any, ref) {
     </RNScrollView>
   );
 });
-
-ScrollView.propTypes = {
-  children: PropTypes.node,
-  persistentScrollbar: PropTypes.bool,
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  transparent: PropTypes.bool,
-};

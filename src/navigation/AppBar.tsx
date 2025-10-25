@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
 import { Appbar as RNPAppbar } from "react-native-paper";
 import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
 
 import { Surveys } from "@openforis/arena-core";
 
@@ -26,7 +25,13 @@ import { BaseStyles } from "utils/BaseStyles";
 import { OptionsMenu } from "./OptionsMenu";
 import styles from "./styles";
 
-export const AppBar = (props: any) => {
+type Props = {
+  back?: any;
+  navigation: any;
+  options: any;
+};
+
+export const AppBar = (props: Props) => {
   if (__DEV__) {
     console.log(`rendering AppBar`);
   }
@@ -208,10 +213,4 @@ export const AppBar = (props: any) => {
       )}
     </RNPAppbar.Header>
   );
-};
-
-AppBar.propTypes = {
-  back: PropTypes.object,
-  navigation: PropTypes.object.isRequired,
-  options: PropTypes.object.isRequired,
 };

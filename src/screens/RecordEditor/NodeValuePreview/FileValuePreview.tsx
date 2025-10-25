@@ -1,12 +1,12 @@
-import { NodeDefFileType } from "@openforis/arena-core";
+import { NodeDefFileType, NodeDefs } from "@openforis/arena-core";
 
-import { NodeValuePreviewPropTypes } from "./NodeValuePreviewPropTypes";
+import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 import { ImageOrVideoValuePreview } from "./ImageOrVideoValuePreview";
 
-export const FileValuePreview = (props: any) => {
+export const FileValuePreview = (props: NodeValuePreviewProps) => {
   const { nodeDef, value } = props;
 
-  const { fileType = NodeDefFileType.other } = nodeDef.props;
+  const fileType = NodeDefs.getFileType(nodeDef) ?? NodeDefFileType.other;
 
   if (fileType === NodeDefFileType.image) {
     return <ImageOrVideoValuePreview nodeDef={nodeDef} value={value} />;
@@ -14,5 +14,3 @@ export const FileValuePreview = (props: any) => {
 
   return null;
 };
-
-FileValuePreview.propTypes = NodeValuePreviewPropTypes;

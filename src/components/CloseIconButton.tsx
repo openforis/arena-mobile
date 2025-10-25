@@ -1,13 +1,7 @@
-import { IconButton } from "./IconButton";
+import { IconButton, IconButtonProps } from "./IconButton";
 
-export const CloseIconButton = (props: any) => {
-  const { children, ...otherProps } = props;
+export const CloseIconButton = (props: IconButtonProps) => {
+  const { ...otherProps } = props;
 
-  return (
-    <IconButton icon="close" {...otherProps}>
-      {children}
-    </IconButton>
-  );
+  return <IconButton icon="close" {...otherProps} />;
 };
-
-CloseIconButton.propTypes = IconButton.propTypes;

@@ -1,12 +1,19 @@
 import React, { useCallback } from "react";
-import PropTypes from "prop-types";
 
 import { NodeDefs } from "@openforis/arena-core";
 
 import { NodeEditDialogInternal } from "../NodeEditDialogInternal";
 import { NodeTaxonAutocomplete } from "./NodeTaxonAutocomplete";
 
-export const NodeTaxonEditDialog = (props: any) => {
+type NodeTaxonEditDialogProps = {
+  nodeDef: any;
+  onDismiss: () => void;
+  parentNodeUuid?: string;
+  selectedTaxon?: any;
+  updateNodeValue: (params: { value: any }) => void;
+};
+
+export const NodeTaxonEditDialog = (props: NodeTaxonEditDialogProps) => {
   const {
     nodeDef,
     onDismiss,
@@ -41,12 +48,4 @@ export const NodeTaxonEditDialog = (props: any) => {
       />
     </NodeEditDialogInternal>
   );
-};
-
-NodeTaxonEditDialog.propTypes = {
-  nodeDef: PropTypes.object.isRequired,
-  onDismiss: PropTypes.func.isRequired,
-  parentNodeUuid: PropTypes.string,
-  selectedTaxon: PropTypes.object,
-  updateNodeValue: PropTypes.func.isRequired,
 };

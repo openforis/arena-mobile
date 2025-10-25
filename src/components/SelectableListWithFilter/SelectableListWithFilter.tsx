@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
 import { Chip } from "react-native-paper";
-import PropTypes from "prop-types";
 
 import { Arrays, Objects } from "@openforis/arena-core";
 
@@ -16,6 +16,7 @@ import { View } from "../View";
 import { SelectableList } from "../SelectableList";
 
 import styles from "./styles";
+import { SelectableListProps } from "components/SelectableList/SelectableList";
 
 const _objToArray = (obj: any) => {
   if (!obj) return [];
@@ -23,7 +24,14 @@ const _objToArray = (obj: any) => {
   return [obj];
 };
 
-export const SelectableListWithFilter = (props: any) => {
+type Props = SelectableListProps & {
+  filterItems?: (params: { items: any[]; filterInputValue: string }) => any[];
+  itemsCountToShowFilter?: number;
+  maxItemsToShow?: number;
+  onSelectedItemsChange: (items: any[], filterValue?: string | null) => void;
+};
+
+export const SelectableListWithFilter = (props: Props) => {
   const {
     editable = true,
     filterItems,
@@ -46,7 +54,7 @@ export const SelectableListWithFilter = (props: any) => {
   const calculateItemsFiltered = useCallback(() => {
     if (!filterVisible) return items;
 
-    const filterInputValue:string|null = inputValueRef.current;
+    const filterInputValue: string | null = inputValueRef.current;
 
     if (Objects.isEmpty(filterInputValue)) {
       if (selectedItems.length === 0) {
@@ -61,11 +69,12 @@ export const SelectableListWithFilter = (props: any) => {
       return filterItems({ items, filterInputValue });
     }
     return items.filter(
-      (item: any) => !selectedItems.includes(item) &&
-      (Objects.isEmpty(filterInputValue) ||
-        itemLabelExtractor(item)
-          .toLocaleLowerCase()
-          .includes(filterInputValue!.toLocaleLowerCase()))
+      (item: any) =>
+        !selectedItems.includes(item) &&
+        (Objects.isEmpty(filterInputValue) ||
+          itemLabelExtractor(item)
+            .toLocaleLowerCase()
+            .includes(filterInputValue!.toLocaleLowerCase()))
     );
   }, [
     filterItems,
@@ -169,12 +178,14 @@ export const SelectableListWithFilter = (props: any) => {
               }
             >
               <View style={styles.selectedItemsContainer}>
-                {selectedItems.map((item: any) => <Chip
-                  key={itemKeyExtractor(item)}
-                  onClose={() => onItemRemove(item)}
-                >
-                  {itemLabelExtractor(item)}
-                </Chip>)}
+                {selectedItems.map((item: any) => (
+                  <Chip
+                    key={itemKeyExtractor(item)}
+                    onClose={() => onItemRemove(item)}
+                  >
+                    {itemLabelExtractor(item)}
+                  </Chip>
+                ))}
               </View>
             </ScrollView>
           )}
@@ -220,18 +231,4 @@ export const SelectableListWithFilter = (props: any) => {
       )}
     </VView>
   );
-};
-
-SelectableListWithFilter.propTypes = {
-  editable: PropTypes.bool,
-  filterItems: PropTypes.func,
-  itemKeyExtractor: PropTypes.func,
-  itemLabelExtractor: PropTypes.func,
-  itemDescriptionExtractor: PropTypes.func,
-  items: PropTypes.array,
-  itemsCountToShowFilter: PropTypes.number,
-  maxItemsToShow: PropTypes.number,
-  multiple: PropTypes.bool,
-  onSelectedItemsChange: PropTypes.func.isRequired,
-  selectedItems: PropTypes.array,
 };

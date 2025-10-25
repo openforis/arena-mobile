@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { StyleProp, ViewStyle } from "react-native";
 import { MD3TypescaleKey, Button as RNPButton } from "react-native-paper";
 
 import { useEffectiveTheme } from "hooks/useEffectiveTheme";
@@ -12,7 +12,36 @@ const iconPositionByTextDirection = {
   [textDirections.rtl]: "right",
 };
 
-export const Button = (props: any) => {
+export type ButtonMode =
+  | "text"
+  | "outlined"
+  | "contained"
+  | "elevated"
+  | "contained-tonal";
+type ButtonColor = "primary" | "secondary" | "tertiary";
+export type ButtonIconPosition = "left" | "right";
+
+export type ButtonProps = {
+  avoidMultiplePress?: boolean;
+  children?: React.ReactNode;
+  color?: ButtonColor;
+  compact?: boolean;
+  disabled?: boolean;
+  icon?: string | any;
+  iconColor?: string;
+  iconPosition?: ButtonIconPosition;
+  labelVariant?: string;
+  loading?: boolean;
+  mode?: ButtonMode;
+  multiplePressAvoidanceTimeout?: number;
+  onPress?: () => void;
+  style?: StyleProp<ViewStyle>;
+  textColor?: string;
+  textKey?: string;
+  textParams?: any;
+};
+
+export const Button = (props: ButtonProps) => {
   const {
     avoidMultiplePress = true,
     color = "primary",
@@ -21,6 +50,7 @@ export const Button = (props: any) => {
     labelVariant = undefined,
     loading,
     mode: modeProp = "contained",
+    multiplePressAvoidanceTimeout,
     onPress: onPressProp,
     textKey,
     textParams,
@@ -32,21 +62,26 @@ export const Button = (props: any) => {
   const textDirection = useTextDirection();
   const iconPosition =
     iconPositionProp ?? iconPositionByTextDirection[textDirection];
-  const text = textKey?.length > 0 ? t(textKey, textParams) : undefined;
+  const text = (textKey?.length ?? 0) > 0 ? t(textKey!, textParams) : undefined;
 
   const contentStyle =
     iconPosition === "left" ? undefined : BaseStyles.flexDirectionRowReverse;
-  const labelStyle = labelVariant ? theme?.fonts[labelVariant as MD3TypescaleKey] : undefined;
+  const labelStyle = labelVariant
+    ? theme?.fonts[labelVariant as MD3TypescaleKey]
+    : undefined;
 
   const { actualLoading, onPress } = useButtonOnPress({
     avoidMultiplePress,
     loading,
+    multiplePressAvoidanceTimeout,
     onPressProp,
   });
 
   const mode = color === "secondary" ? "outlined" : modeProp;
   const buttonColor =
-    mode !== "text" && color === "primary" ? theme?.colors[color as never] : undefined;
+    mode !== "text" && color === "primary"
+      ? theme?.colors[color as never]
+      : undefined;
 
   return (
     <RNPButton
@@ -62,23 +97,4 @@ export const Button = (props: any) => {
       {children}
     </RNPButton>
   );
-};
-
-Button.propTypes = {
-  avoidMultiplePress: PropTypes.bool,
-  children: PropTypes.node,
-  color: PropTypes.oneOf(["primary", "secondary", "tertiary"]),
-  iconPosition: PropTypes.oneOf(["left", "right"]),
-  labelVariant: PropTypes.string,
-  loading: PropTypes.bool,
-  mode: PropTypes.oneOf([
-    "text",
-    "outlined",
-    "contained",
-    "elevated",
-    "contained-tonal",
-  ]),
-  onPress: PropTypes.func,
-  textKey: PropTypes.string,
-  textParams: PropTypes.object,
 };

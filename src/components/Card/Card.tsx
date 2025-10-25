@@ -1,9 +1,13 @@
 import { Card as RNPCard } from "react-native-paper";
-import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
 
-export const Card = (props: any) => {
+type Props = {
+  children?: React.ReactNode;
+  titleKey?: string;
+};
+
+export const Card = (props: Props) => {
   const { children, titleKey } = props;
 
   const { t } = useTranslation();
@@ -15,9 +19,4 @@ export const Card = (props: any) => {
       <RNPCard.Content>{children}</RNPCard.Content>
     </RNPCard>
   );
-};
-
-Card.propTypes = {
-  children: PropTypes.node,
-  titleKey: PropTypes.string,
 };

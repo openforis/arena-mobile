@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import { UpdateStatus } from "model";
 
@@ -15,11 +14,17 @@ const iconByUpdateStatus = {
   [UpdateStatus.error]: "alert-circle",
 };
 
+type Props = {
+  loading?: boolean;
+  onPress: () => void;
+  updateStatus: string;
+};
+
 export const UpdateStatusIcon = ({
   loading,
   updateStatus,
   onPress
-}: any) => {
+}: Props) => {
   const icon = loading ? "loading" : iconByUpdateStatus[updateStatus];
 
   return (
@@ -30,10 +35,4 @@ export const UpdateStatusIcon = ({
       onPress={onPress}
     />
   );
-};
-
-UpdateStatusIcon.propTypes = {
-  loading: PropTypes.bool,
-  onPress: PropTypes.func.isRequired,
-  updateStatus: PropTypes.string.isRequired,
 };

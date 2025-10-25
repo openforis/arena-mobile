@@ -1,9 +1,19 @@
-import PropTypes from "prop-types";
+import { StyleProp, TextStyle } from "react-native";
 
 import { useTranslation } from "localization";
 
 import { HView } from "./HView";
 import { Text } from "./Text";
+
+type Props = {
+  children?: React.ReactNode;
+  labelKey: string;
+  labelNumberOfLines?: number;
+  labelStyle?: StyleProp<TextStyle>;
+  labelVariant?: string;
+  style?: any;
+  textVariant?: string;
+};
 
 export const FormItem = ({
   children,
@@ -13,7 +23,7 @@ export const FormItem = ({
   labelVariant = "labelLarge",
   style,
   textVariant = "bodyLarge",
-}: any) => {
+}: Props) => {
   const { t } = useTranslation();
   const label = `${t(labelKey)}:`;
   const hasTextContent =
@@ -24,25 +34,15 @@ export const FormItem = ({
       <Text
         numberOfLines={labelNumberOfLines}
         style={labelStyle}
-        variant={labelVariant}
+        variant={labelVariant as any}
       >
         {label}
       </Text>
       {hasTextContent ? (
-        <Text variant={textVariant}>{children}</Text>
+        <Text variant={textVariant as any}>{children}</Text>
       ) : (
         children
       )}
     </HView>
   );
-};
-
-FormItem.propTypes = {
-  children: PropTypes.node,
-  labelKey: PropTypes.string.isRequired,
-  labelNumberOfLines: PropTypes.number,
-  labelStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  labelVariant: PropTypes.string,
-  style: PropTypes.object,
-  textVariant: PropTypes.string,
 };

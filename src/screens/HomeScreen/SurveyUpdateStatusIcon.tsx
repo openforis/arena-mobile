@@ -1,5 +1,4 @@
 import { useNavigation } from "@react-navigation/native";
-import PropTypes from "prop-types";
 import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 
@@ -11,16 +10,22 @@ import { useTranslation } from "localization";
 import { SurveyStatus, UpdateStatus } from "model";
 import { SurveyActions, SurveySelectors } from "state";
 
+type Props = {
+  errorKey?: string;
+  onPress?: () => void;
+  updateStatus: string;
+};
+
 export const SurveyUpdateStatusIcon = ({
   errorKey,
   onPress: onPressProp = undefined,
-  updateStatus
-}: any) => {
+  updateStatus,
+}: Props) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const toaster = useToast();
   const { t } = useTranslation();
-  const survey = SurveySelectors.useCurrentSurvey();
+  const survey = SurveySelectors.useCurrentSurvey()!;
   const [loading, setLoading] = useState(false);
 
   const onPress = useCallback(async () => {
@@ -77,10 +82,4 @@ export const SurveyUpdateStatusIcon = ({
       onPress={onPress}
     />
   );
-};
-
-SurveyUpdateStatusIcon.propTypes = {
-  errorKey: PropTypes.string,
-  onPress: PropTypes.func,
-  updateStatus: PropTypes.string.isRequired,
 };

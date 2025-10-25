@@ -14,11 +14,11 @@ import {
 
 import { NewNodeButton } from "../NewNodeButton";
 import { SingleAttributeComponentSwitch } from "./SingleAttributeComponentSwitch";
-import { NodeComponentPropTypes } from "./nodeTypes/nodeComponentPropTypes";
+import { NodeComponentProps } from "./nodeTypes/nodeComponentPropTypes";
 
 import styles from "./multipleAttributeComponentWrapperStyles";
 
-export const MultipleAttributeComponentWrapper = (props: any) => {
+export const MultipleAttributeComponentWrapper = (props: NodeComponentProps) => {
   const { nodeDef, parentNodeUuid } = props;
 
   if (__DEV__) {
@@ -95,5 +95,3 @@ export const MultipleAttributeComponentWrapper = (props: any) => {
     </VView>
   );
 };
-
-MultipleAttributeComponentWrapper.propTypes = NodeComponentPropTypes;

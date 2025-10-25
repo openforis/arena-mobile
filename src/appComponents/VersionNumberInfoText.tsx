@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import { DateFormats, Dates } from "@openforis/arena-core";
 
@@ -18,7 +17,11 @@ const getLastUpdateTimeText = (lastUpdateTime: any) => {
   return ` (${lastUpdateTimeFormatted})`;
 };
 
-export const VersionNumberInfoText = (props: any) => {
+type Props = {
+  includeUpdateTime?: boolean;
+};
+
+export const VersionNumberInfoText = (props: Props) => {
   const { includeUpdateTime = true } = props;
 
   const appInfo = useAppInfo();
@@ -30,8 +33,4 @@ export const VersionNumberInfoText = (props: any) => {
       {includeUpdateTime ? lastUpdateTimeText : ""}
     </Text>
   );
-};
-
-VersionNumberInfoText.propTypes = {
-  includeUpdateTime: PropTypes.bool,
 };

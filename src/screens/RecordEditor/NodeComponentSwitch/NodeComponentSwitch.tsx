@@ -10,9 +10,13 @@ import { NodeSingleEntityComponent } from "./nodeTypes/NodeSingleEntityComponent
 import { SingleAttributeComponentSwitch } from "./SingleAttributeComponentSwitch";
 import { MultipleAttributeComponentWrapper } from "./MultipleAttributeComponentWrapper";
 import { NodeMultipleEntityComponent } from "../NodeMultipleEntityComponent";
-import { NodeComponentPropTypes } from "./nodeTypes/nodeComponentPropTypes";
+import { NodeComponentProps } from "./nodeTypes/nodeComponentPropTypes";
 
-export const NodeComponentSwitch = (props: any) => {
+type Props = NodeComponentProps & {
+  onFocus?: () => void;
+};
+
+export const NodeComponentSwitch = (props: Props) => {
   const { nodeDef, parentNodeUuid, onFocus } = props;
 
   if (__DEV__) {
@@ -73,5 +77,3 @@ export const NodeComponentSwitch = (props: any) => {
     />
   );
 };
-
-NodeComponentSwitch.propTypes = NodeComponentPropTypes;

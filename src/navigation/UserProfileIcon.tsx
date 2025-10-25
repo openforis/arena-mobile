@@ -2,14 +2,20 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { TouchableOpacity } from "react-native";
 import { Avatar } from "react-native-paper";
-import PropTypes from "prop-types";
 
 import {
   RemoteConnectionActions,
   RemoteConnectionSelectors,
 } from "state/remoteConnection";
 
-const UserProfileAvatar = (props: any) => {
+type UserProfileAvatarProps = {
+  loading?: boolean;
+  size?: number;
+  uri?: string;
+  user?: any;
+};
+
+const UserProfileAvatar = (props: UserProfileAvatarProps) => {
   const { loading, size, uri, user } = props;
   if (loading) return <Avatar.Icon icon="loading" size={size} />;
   if (uri) return <Avatar.Image source={{ uri }} size={size} />;
@@ -20,14 +26,12 @@ const UserProfileAvatar = (props: any) => {
   return <Avatar.Icon icon="account-off" size={size} />;
 };
 
-UserProfileAvatar.propTypes = {
-  loading: PropTypes.bool,
-  size: PropTypes.number,
-  uri: PropTypes.string,
-  user: PropTypes.object,
+type Props = {
+  onPress?: () => void;
+  size?: number;
 };
 
-export const UserProfileIcon = (props: any) => {
+export const UserProfileIcon = (props: Props) => {
   const { onPress, size = 30 } = props;
   if (__DEV__) console.log(`rendering UserProfileIcon`);
 
@@ -38,7 +42,7 @@ export const UserProfileIcon = (props: any) => {
 
   useEffect(() => {
     if (user && !loaded && !uri) {
-      dispatch(RemoteConnectionActions.fetchLoggedInUserProfileIcon);
+      dispatch(RemoteConnectionActions.fetchLoggedInUserProfileIcon as never);
     }
   }, [dispatch, user, loaded, uri]);
 
@@ -47,9 +51,4 @@ export const UserProfileIcon = (props: any) => {
       <UserProfileAvatar loading={loading} size={size} uri={uri} user={user} />
     </TouchableOpacity>
   );
-};
-
-UserProfileIcon.propTypes = {
-  onPress: PropTypes.func,
-  size: PropTypes.number,
 };

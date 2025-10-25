@@ -1,5 +1,4 @@
 import { NodeDateTimeComponent } from "./NodeDateTimeComponent";
+import { NodeComponentProps } from "./nodeComponentPropTypes";
 
-export const NodeDateComponent = (props: any) => <NodeDateTimeComponent mode="date" {...props} />;
-
-NodeDateComponent.propTypes = NodeDateTimeComponent.propTypes;
+export const NodeDateComponent = (props: NodeComponentProps) => <NodeDateTimeComponent mode="date" {...props} />;

@@ -1,14 +1,18 @@
 import { useCallback, useMemo } from "react";
 import { TouchableOpacity } from "react-native";
 import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
 
 import { AlertIcon, HView, Text } from "components";
 import { DataEntryActions } from "state";
 
 import styles from "./EntityButtonStyles";
 
-export const EntityButton = (props: any) => {
+type EntityButtonProps = {
+  treeNode: any;
+  isCurrentEntity?: boolean;
+};
+
+export const EntityButton = (props: EntityButtonProps) => {
   const { treeNode, isCurrentEntity } = props;
   const { label, entityPointer, hasErrors, hasWarnings } = treeNode;
 
@@ -36,9 +40,4 @@ export const EntityButton = (props: any) => {
       </HView>
     </TouchableOpacity>
   );
-};
-
-EntityButton.propTypes = {
-  treeNode: PropTypes.object.isRequired,
-  isCurrentEntity: PropTypes.bool,
 };

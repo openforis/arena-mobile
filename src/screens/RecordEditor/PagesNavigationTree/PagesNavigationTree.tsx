@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
+import { StyleProp, ViewStyle } from "react-native";
 import { useDispatch } from "react-redux";
 import TreeView from "react-native-final-tree-view";
-import PropTypes from "prop-types";
 
 import { HView, ScrollView } from "components";
 import { DataEntryActions } from "state";
@@ -10,14 +10,21 @@ import { EntityButton } from "./EntityButton";
 import { Indicator } from "./Indicator";
 import { useTreeData } from "./useTreeData";
 
+type TreeNodeProps = {
+  node: any;
+  level: number;
+  isExpanded?: boolean;
+  hasChildrenNodes?: boolean;
+};
+
 const TreeNode = ({
   node: treeNode,
   level,
   isExpanded,
   hasChildrenNodes,
-}: any) => {
+}: TreeNodeProps) => {
   const { isCurrentEntity, isRoot } = treeNode;
-  const style = useMemo(
+  const style: StyleProp<ViewStyle> = useMemo(
     () => ({
       alignItems: "center",
       backgroundColor: "transparent",
@@ -40,13 +47,6 @@ const TreeNode = ({
       <EntityButton treeNode={treeNode} isCurrentEntity={isCurrentEntity} />
     </HView>
   );
-};
-
-TreeNode.propTypes = {
-  node: PropTypes.object.isRequired,
-  level: PropTypes.number.isRequired,
-  isExpanded: PropTypes.bool,
-  hasChildrenNodes: PropTypes.bool,
 };
 
 export const PagesNavigationTree = () => {

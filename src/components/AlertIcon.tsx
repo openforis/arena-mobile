@@ -1,9 +1,13 @@
 import { useMemo } from "react";
-import PropTypes from "prop-types";
 
 import { Icon } from "./Icon";
 
-export const AlertIcon = (props: any) => {
+type Props = {
+  hasErrors?: boolean;
+  hasWarnings?: boolean;
+};
+
+export const AlertIcon = (props: Props) => {
   const { hasErrors, hasWarnings } = props;
 
   const iconColor = useMemo(() => {
@@ -13,9 +17,4 @@ export const AlertIcon = (props: any) => {
   }, [hasErrors, hasWarnings]);
 
   return iconColor ? <Icon color={iconColor} source="alert" /> : null;
-};
-
-AlertIcon.propTypes = {
-  hasErrors: PropTypes.bool,
-  hasWarnings: PropTypes.bool,
 };

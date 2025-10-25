@@ -1,9 +1,16 @@
 import React, { useCallback } from "react";
 import RNSlider from "@react-native-community/slider";
 import { useTheme } from "react-native-paper";
-import PropTypes from "prop-types";
 
-export const Slider = (props: any) => {
+type Props = {
+  maxValue?: number;
+  minValue?: number;
+  onValueChange?: (value: number) => void;
+  step?: number;
+  value?: number;
+};
+
+export const Slider = (props: Props) => {
   const { maxValue, minValue, onValueChange, step, value } = props;
 
   const theme = useTheme();
@@ -11,7 +18,7 @@ export const Slider = (props: any) => {
   const onChange = useCallback(
     (val: any) => {
       if (val !== value) {
-        onValueChange(val);
+        onValueChange?.(val);
       }
     },
     [onValueChange, value]
@@ -29,12 +36,4 @@ export const Slider = (props: any) => {
       value={value}
     />
   );
-};
-
-Slider.propTypes = {
-  maxValue: PropTypes.number,
-  minValue: PropTypes.number,
-  onValueChange: PropTypes.func,
-  step: PropTypes.number,
-  value: PropTypes.number,
 };

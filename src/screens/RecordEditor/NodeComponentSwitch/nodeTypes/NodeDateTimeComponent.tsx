@@ -1,14 +1,19 @@
 import { useCallback } from "react";
-import PropTypes from "prop-types";
 
 import { DateFormats, Dates, Objects } from "@openforis/arena-core";
 
 import { DateTimePicker } from "components";
 
 import { useNodeComponentLocalState } from "../../useNodeComponentLocalState";
-import { NodeComponentPropTypes } from "./nodeComponentPropTypes";
 
-export const NodeDateTimeComponent = (props: any) => {
+type NodeDateTimeComponentProps = {
+  mode?: "date" | "time";
+  nodeDef: any;
+  nodeUuid?: string;
+  parentNodeUuid?: string;
+};
+
+export const NodeDateTimeComponent = (props: NodeDateTimeComponentProps) => {
   const { mode, nodeDef, nodeUuid } = props;
 
   if (__DEV__) {
@@ -44,9 +49,4 @@ export const NodeDateTimeComponent = (props: any) => {
       value={dateValue}
     />
   );
-};
-
-NodeDateTimeComponent.propTypes = {
-  ...NodeComponentPropTypes,
-  mode: PropTypes.oneOf(["date", "time"]),
 };

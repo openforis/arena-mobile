@@ -1,12 +1,19 @@
 import { Menu } from "react-native-paper";
-import PropTypes from "prop-types";
 
 import { useIsTextDirectionRtl, useTranslation } from "localization";
 
 const styleRtl = { alignSelf: "flex-end" as const };
 const textStyleRtl = { textAlign: "right" as const, marginRight: 6 };
 
-export const MenuItem = (props: any) => {
+type Props = {
+  disabled?: boolean;
+  icon?: string;
+  onPress: () => void;
+  title: string;
+  toggleMenu?: () => void;
+};
+
+export const MenuItem = (props: Props) => {
   const { disabled, icon, onPress, title, toggleMenu = undefined } = props;
 
   const { t } = useTranslation();
@@ -26,12 +33,4 @@ export const MenuItem = (props: any) => {
       trailingIcon={isRtl ? icon : undefined}
     />
   );
-};
-
-MenuItem.propTypes = {
-  disabled: PropTypes.bool,
-  icon: PropTypes.string,
-  onPress: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  toggleMenu: PropTypes.func,
 };

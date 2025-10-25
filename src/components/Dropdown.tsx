@@ -1,11 +1,21 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useTheme } from "react-native-paper";
 import RNPDropdown from "react-native-paper-dropdown";
-import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
 
-export const Dropdown = (props: any) => {
+type DropdownProps = {
+  disabled?: boolean;
+  itemKeyExtractor?: (item: any) => any;
+  itemLabelExtractor?: (item: any) => string;
+  label?: string;
+  items?: any[];
+  onChange?: (value: any) => void;
+  showLabel?: boolean;
+  value?: any;
+};
+
+export const Dropdown = (props: DropdownProps) => {
   const {
     disabled,
     itemKeyExtractor = (item: any) => item.value,
@@ -65,15 +75,4 @@ export const Dropdown = (props: any) => {
       visible={open}
     />
   );
-};
-
-Dropdown.propTypes = {
-  disabled: PropTypes.bool,
-  itemKeyExtractor: PropTypes.func,
-  itemLabelExtractor: PropTypes.func,
-  label: PropTypes.string,
-  items: PropTypes.array,
-  onChange: PropTypes.func,
-  showLabel: PropTypes.bool,
-  value: PropTypes.any,
 };

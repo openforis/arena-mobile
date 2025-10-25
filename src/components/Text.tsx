@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Text as RNText } from "react-native-paper";
-import PropTypes from "prop-types";
+import { StyleProp, TextStyle } from "react-native";
 
 import { useIsTextDirectionRtl, useTranslation } from "localization";
 
@@ -8,7 +8,34 @@ const styleToObject = (style: any):any => Array.isArray(style)
   ? Object.assign({}, ...style.map(styleToObject))
   : (style ?? {});
 
-export const Text = (props: any) => {
+type TextVariant =
+  | "displayLarge"
+  | "displayMedium"
+  | "displaySmall"
+  | "headlineLarge"
+  | "headlineMedium"
+  | "headlineSmall"
+  | "titleLarge"
+  | "titleMedium"
+  | "titleSmall"
+  | "labelLarge"
+  | "labelMedium"
+  | "labelSmall"
+  | "bodyLarge"
+  | "bodyMedium"
+  | "bodySmall";
+
+type Props = {
+  children?: React.ReactNode;
+  numberOfLines?: number;
+  selectable?: boolean;
+  style?: StyleProp<TextStyle>;
+  textKey?: string;
+  textParams?: any;
+  variant?: TextVariant;
+};
+
+export const Text = (props: Props) => {
   const {
     children,
     numberOfLines,
@@ -42,30 +69,4 @@ export const Text = (props: any) => {
       {children}
     </RNText>
   );
-};
-
-Text.propTypes = {
-  children: PropTypes.node,
-  numberOfLines: PropTypes.number,
-  selectable: PropTypes.bool,
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  textKey: PropTypes.string,
-  textParams: PropTypes.object,
-  variant: PropTypes.oneOf([
-    "displayLarge",
-    "displayMedium",
-    "displaySmall",
-    "headlineLarge",
-    "headlineMedium",
-    "headlineSmall",
-    "titleLarge",
-    "titleMedium",
-    "titleSmall",
-    "labelLarge",
-    "labelMedium",
-    "labelSmall",
-    "bodyLarge",
-    "bodyMedium",
-    "bodySmall",
-  ]),
 };

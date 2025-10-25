@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
 
 import { DowngradeError, initialize as initializeDb } from "db";
 import { AppLogo } from "appComponents/AppLogo";
@@ -53,7 +52,11 @@ type AppInitializerState = {
   step: string,
 }
 
-export const AppInitializer = (props: any) => {
+type Props = {
+  children?: React.ReactNode;
+};
+
+export const AppInitializer = (props: Props) => {
   const { children } = props;
 
   const dispatch = useDispatch();
@@ -166,8 +169,4 @@ export const AppInitializer = (props: any) => {
   }
 
   return children;
-};
-
-AppInitializer.propTypes = {
-  children: PropTypes.node,
 };

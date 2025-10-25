@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import PropTypes from "prop-types";
 
 import {
   DateFormats,
@@ -12,15 +11,15 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import {
-  DataVisualizer,
-  DataVisualizerCellPropTypes,
-  Icon,
-  LoadingIcon,
-  Text,
-} from "components";
+import { DataVisualizer, Icon, LoadingIcon, Text } from "components";
 import { useTranslation } from "localization";
-import { Cycles, ScreenViewMode, SortDirection, SurveyDefs } from "model";
+import {
+  Cycles,
+  RecordOrigin,
+  ScreenViewMode,
+  SortDirection,
+  SurveyDefs,
+} from "model";
 import {
   DataEntryActions,
   ScreenOptionsSelectors,
@@ -42,37 +41,52 @@ const formatDateToDateTimeDisplay = (date: any) =>
       })
     : Dates.format(date, DateFormats.datetimeDisplay);
 
-const RecordOriginTableCellRenderer = ({ item }: any) => (
-  <Icon source={RecordListConstants.iconByOrigin[item.origin]} />
-);
-RecordOriginTableCellRenderer.propTypes = DataVisualizerCellPropTypes;
+type DataVisualizerCellProps = {
+  item: any;
+};
 
-const RecordOriginListCellRenderer = ({ item }: any) => (
+const RecordOriginTableCellRenderer = ({ item }: DataVisualizerCellProps) => (
+  <Icon
+    source={RecordListConstants.iconByOrigin[item.origin as RecordOrigin]}
+  />
+);
+
+const RecordOriginListCellRenderer = ({ item }: DataVisualizerCellProps) => (
   <Text textKey={`recordsList:origin.${item.origin}`} />
 );
-RecordOriginListCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const RecordLoadStatusTableCellRenderer = ({ item }: any) => (
+const RecordLoadStatusTableCellRenderer = ({
+  item,
+}: DataVisualizerCellProps) => (
   <Icon source={RecordListConstants.iconByLoadStatus[item.loadStatus]} />
 );
-RecordLoadStatusTableCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const RecordLoadStatusListCellRenderer = ({ item }: any) => (
+const RecordLoadStatusListCellRenderer = ({
+  item,
+}: DataVisualizerCellProps) => (
   <Text textKey={`recordsList:loadStatus.${item.loadStatus}`} />
 );
-RecordLoadStatusListCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const RecordErrorsListCellRenderer = ({ item }: any) => (
+const RecordErrorsListCellRenderer = ({ item }: DataVisualizerCellProps) => (
   <Text>{Validations.getErrorsCount(item.validation)}</Text>
 );
-RecordErrorsListCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-const RecordWarningsListCellRenderer = ({ item }: any) => (
+const RecordWarningsListCellRenderer = ({ item }: DataVisualizerCellProps) => (
   <Text>{Validations.getWarningsCount(item.validation)}</Text>
 );
-RecordWarningsListCellRenderer.propTypes = DataVisualizerCellPropTypes;
 
-export const RecordsDataVisualizer = (props: any) => {
+type RecordsDataVisualizerProps = {
+  onCloneSelectedRecordUuids: (uuids: string[]) => void;
+  onDeleteSelectedRecordUuids: (uuids: string[]) => void;
+  onExportSelectedRecordUuids: (uuids: string[]) => void;
+  onImportSelectedRecordUuids: (uuids: string[]) => void;
+  records: any[];
+  showRemoteProps?: boolean;
+  syncStatusFetched?: boolean;
+  syncStatusLoading?: boolean;
+};
+
+export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
   const {
     onCloneSelectedRecordUuids,
     onDeleteSelectedRecordUuids,
@@ -362,15 +376,4 @@ export const RecordsDataVisualizer = (props: any) => {
       sort={sort}
     />
   );
-};
-
-RecordsDataVisualizer.propTypes = {
-  onCloneSelectedRecordUuids: PropTypes.func.isRequired,
-  onDeleteSelectedRecordUuids: PropTypes.func.isRequired,
-  onExportSelectedRecordUuids: PropTypes.func.isRequired,
-  onImportSelectedRecordUuids: PropTypes.func.isRequired,
-  records: PropTypes.array.isRequired,
-  showRemoteProps: PropTypes.bool,
-  syncStatusFetched: PropTypes.bool,
-  syncStatusLoading: PropTypes.bool,
 };

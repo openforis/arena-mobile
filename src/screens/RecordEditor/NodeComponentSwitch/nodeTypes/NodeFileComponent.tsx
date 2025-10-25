@@ -2,7 +2,7 @@ import { NodeDefFileType } from "@openforis/arena-core";
 
 import { Text } from "components";
 import { NodeImageOrVideoComponent } from "./NodeImageOrVideoComponent";
-import { NodeComponentPropTypes } from "./nodeComponentPropTypes";
+import { NodeComponentProps } from "./nodeComponentPropTypes";
 
 const supportedFileTypes = [
   NodeDefFileType.other,
@@ -10,7 +10,7 @@ const supportedFileTypes = [
   NodeDefFileType.video,
 ];
 
-export const NodeFileComponent = (props: any) => {
+export const NodeFileComponent = (props: NodeComponentProps) => {
   const { nodeDef } = props;
 
   if (__DEV__) {
@@ -25,5 +25,3 @@ export const NodeFileComponent = (props: any) => {
 
   return <Text textKey={`File type not supported (${fileType})`} />;
 };
-
-NodeFileComponent.propTypes = NodeComponentPropTypes;

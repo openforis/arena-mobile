@@ -1,12 +1,21 @@
 import { useMemo } from "react";
-import PropTypes from "prop-types";
 
 import { Text, VView, View } from "components";
 import { useIsTextDirectionRtl } from "localization";
 
 import styles from "./styles";
 
-export const SettingsFormItem = (props: any) => {
+type SettingsFormItemProps = {
+  settingKey: string;
+  labelKey?: string;
+  labelParams?: any;
+  descriptionKey?: string;
+  descriptionParams?: any;
+  direction?: string;
+  children?: React.ReactNode;
+};
+
+export const SettingsFormItem = (props: SettingsFormItemProps) => {
   const {
     settingKey,
     labelKey,
@@ -45,14 +54,4 @@ export const SettingsFormItem = (props: any) => {
       {children}
     </View>
   );
-};
-
-SettingsFormItem.propTypes = {
-  settingKey: PropTypes.string.isRequired,
-  labelKey: PropTypes.string,
-  labelParams: PropTypes.object,
-  descriptionKey: PropTypes.string,
-  descriptionParams: PropTypes.object,
-  direction: PropTypes.string,
-  children: PropTypes.node,
 };

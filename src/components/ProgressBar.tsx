@@ -1,8 +1,15 @@
 import * as React from "react";
 import { ProgressBar as RNPProgressBar } from "react-native-paper";
-import PropTypes from "prop-types";
+import { StyleProp, ViewStyle } from "react-native";
 
-export const ProgressBar = (props: any) => {
+type Props = {
+  color?: string;
+  indeterminate?: boolean;
+  progress?: number;
+  style?: StyleProp<ViewStyle>;
+};
+
+export const ProgressBar = (props: Props) => {
   const { color, indeterminate = false, progress = 100, style } = props;
 
   return (
@@ -20,11 +27,4 @@ export const ProgressBar = (props: any) => {
       ]}
     />
   );
-};
-
-ProgressBar.propTypes = {
-  color: PropTypes.string,
-  indeterminate: PropTypes.bool,
-  progress: PropTypes.number,
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 };

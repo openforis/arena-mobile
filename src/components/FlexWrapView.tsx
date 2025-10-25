@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import PropTypes from "prop-types";
+import { StyleProp, ViewStyle } from "react-native";
 
 import { useIsTextDirectionRtl } from "localization";
 import { BaseStyles } from "utils";
@@ -7,24 +7,31 @@ import { BaseStyles } from "utils";
 import { View } from "./View";
 
 const baseStyle = {
-  display: "flex",
-  flexDirection: "row",
-  flexWrap: "wrap",
-  alignItems: "center",
-  columnGap: 10,
+  display: "flex" as const,
+  flexDirection: "row" as const,
+  flexWrap: "wrap" as const,
+  alignItems: "center" as const,
+  columnGap: 10 as const,
 };
 
-export const FlexWrapView = (props: any) => {
-  const { children, style: styleProp = {}, ...otherProps } = props;
+type Props = {
+  children?: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+};
+
+export const FlexWrapView = (props: Props) => {
+  const { children, style: styleProp, ...otherProps } = props;
 
   const isRtl = useIsTextDirectionRtl();
 
-  const style = useMemo(() => {
-    const _style = [baseStyle];
+  const style: StyleProp<ViewStyle> = useMemo(() => {
+    const _style: StyleProp<ViewStyle> = [baseStyle];
     if (isRtl) {
       _style.push(BaseStyles.flexDirectionRowReverse as any);
     }
-    _style.push(styleProp);
+    if (styleProp) {
+      _style.push(styleProp);
+    }
     return _style;
   }, [isRtl, styleProp]);
 
@@ -33,9 +40,4 @@ export const FlexWrapView = (props: any) => {
       {children}
     </View>
   );
-};
-
-FlexWrapView.propTypes = {
-  children: PropTypes.node,
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 };

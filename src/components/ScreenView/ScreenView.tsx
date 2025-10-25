@@ -1,15 +1,13 @@
-import PropTypes from "prop-types";
-
 import { ScrollView } from "../ScrollView";
 
 import appStyles from "appStyles";
 
+type Props = {
+  children?: React.ReactNode;
+};
+
 export const ScreenView = ({
   children
-}: any) => (
+}: Props) => (
   <ScrollView style={appStyles.screenContainer}>{children}</ScrollView>
 );
-
-ScreenView.propTypes = {
-  children: PropTypes.node,
-};

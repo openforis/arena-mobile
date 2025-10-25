@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
-import { StyleSheet, View as RNView } from "react-native";
+import { StyleSheet, View as RNView, StyleProp, ViewStyle } from "react-native";
 import { useTheme } from "react-native-paper";
-import PropTypes from "prop-types";
 
 const styles = StyleSheet.create({
   fullWidth: {
@@ -12,7 +11,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export const View = (props: any) => {
+type Props = {
+  children?: React.ReactNode;
+  fullFlex?: boolean;
+  fullWidth?: boolean;
+  style?: StyleProp<ViewStyle>;
+  transparent?: boolean;
+};
+
+export const View = (props: Props) => {
   const {
     children,
     fullFlex = false,
@@ -42,12 +49,4 @@ export const View = (props: any) => {
       {children}
     </RNView>
   );
-};
-
-View.propTypes = {
-  children: PropTypes.node,
-  fullFlex: PropTypes.bool,
-  fullWidth: PropTypes.bool,
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  transparent: PropTypes.bool,
 };

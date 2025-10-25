@@ -14,11 +14,11 @@ import { LocationWatchingMonitor } from "components/LocationWatchingMonitor";
 import { SrsDropdown } from "../../../SrsDropdown";
 import { useNodeCoordinateComponent } from "./useNodeCoordinateComponent";
 import { LocationNavigator } from "./LocationNavigator";
-import { NodeComponentPropTypes } from "../nodeComponentPropTypes";
+import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 import styles from "./styles";
 
-export const NodeCoordinateComponent = (props: any) => {
+export const NodeCoordinateComponent = (props: NodeComponentProps) => {
   const { nodeDef } = props;
 
   if (__DEV__) {
@@ -146,5 +146,3 @@ export const NodeCoordinateComponent = (props: any) => {
     </VView>
   );
 };
-
-NodeCoordinateComponent.propTypes = NodeComponentPropTypes;

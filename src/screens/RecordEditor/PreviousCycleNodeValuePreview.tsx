@@ -3,9 +3,9 @@ import { Cycles } from "model";
 import { DataEntrySelectors, SurveySelectors } from "state";
 
 import { NodeValuePreview } from "./NodeValuePreview";
-import { NodeValuePreviewPropTypes } from "./NodeValuePreview/NodeValuePreviewPropTypes";
+import { NodeValuePreviewProps } from "./NodeValuePreview/NodeValuePreviewPropTypes";
 
-const PreviousCycleNodeValuePreviewInnerComponent = (props: any) => {
+const PreviousCycleNodeValuePreviewInnerComponent = (props: NodeValuePreviewProps) => {
   const { nodeDef } = props;
 
   const { previousCycleEntityUuid } =
@@ -20,10 +20,7 @@ const PreviousCycleNodeValuePreviewInnerComponent = (props: any) => {
   return <NodeValuePreview nodeDef={nodeDef} value={previousCycleValue} />;
 };
 
-PreviousCycleNodeValuePreviewInnerComponent.propTypes =
-  NodeValuePreviewPropTypes;
-
-export const PreviousCycleNodeValuePreview = (props: any) => {
+export const PreviousCycleNodeValuePreview = (props: NodeValuePreviewProps) => {
   const { nodeDef } = props;
 
   if (__DEV__) {
@@ -46,5 +43,3 @@ export const PreviousCycleNodeValuePreview = (props: any) => {
     </CollapsiblePanel>
   );
 };
-
-PreviousCycleNodeValuePreview.propTypes = NodeValuePreviewPropTypes;

@@ -1,13 +1,7 @@
-import { IconButton } from "./IconButton";
+import { IconButton, IconButtonProps } from "./IconButton";
 
-export const DeleteIconButton = (props: any) => {
-  const { children, ...otherProps } = props;
+export const DeleteIconButton = (props: IconButtonProps) => {
+  const { ...otherProps } = props;
 
-  return (
-    <IconButton icon="trash-can-outline" {...otherProps}>
-      {children}
-    </IconButton>
-  );
+  return <IconButton icon="trash-can-outline" {...otherProps} />;
 };
-
-DeleteIconButton.propTypes = IconButton.propTypes;

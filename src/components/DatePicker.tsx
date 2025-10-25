@@ -4,6 +4,10 @@ import { DateFormats } from "@openforis/arena-core";
 
 import { DateTimePicker } from "./DateTimePicker";
 
-export const DatePicker = (props: any) => <DateTimePicker {...props} format={DateFormats.dateDisplay} mode="date" />;
+type Props = {
+  editable?: boolean;
+  onChange: (date: Date | null) => void;
+  value?: any;
+};
 
-DatePicker.propTypes = DateTimePicker.propTypes;
+export const DatePicker = (props: Props) => <DateTimePicker {...props} format={DateFormats.dateDisplay} mode="date" />;

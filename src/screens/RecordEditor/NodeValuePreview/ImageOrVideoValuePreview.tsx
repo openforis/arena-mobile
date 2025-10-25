@@ -8,14 +8,15 @@ import { RecordFileService } from "service";
 import { SurveySelectors } from "state";
 import { Files } from "utils";
 
-import { NodeValuePreviewPropTypes } from "./NodeValuePreviewPropTypes";
+import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 
 import styles from "./imageOrVideoValuePreviewStyles";
 
-export const ImageOrVideoValuePreview = (props: any) => {
+export const ImageOrVideoValuePreview = (props: NodeValuePreviewProps) => {
   const { nodeDef, value } = props;
 
-  const { fileType = NodeDefFileType.other } = nodeDef.props;
+  const fileType = NodeDefs.getFileType(nodeDef) ?? NodeDefFileType.other;
+
   const surveyId = SurveySelectors.useCurrentSurveyId();
   const [imagePreviewOpen, setImagePreviewOpen] = useState(false);
   const [fileUri, setFileUri] = useState(null as string | null);
@@ -69,5 +70,3 @@ export const ImageOrVideoValuePreview = (props: any) => {
     </>
   );
 };
-
-ImageOrVideoValuePreview.propTypes = NodeValuePreviewPropTypes;

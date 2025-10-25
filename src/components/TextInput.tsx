@@ -1,14 +1,36 @@
-import React, { forwardRef, useMemo } from "react";
-import PropTypes from "prop-types";
+import React, { forwardRef, Ref, useMemo } from "react";
 import { TextInput as RNPTextInput, useTheme } from "react-native-paper";
+import { StyleProp, ViewStyle, KeyboardTypeOptions } from "react-native";
 
 import { useTranslation } from "localization";
 
 const multilineStyle = { lineHeight: 24 };
 
-export const TextInput = forwardRef(function TextInput(props:any, ref) {
+type Props = {
+  autoCapitalize?: "none" | "sentences" | "words" | "characters" | undefined;
+  defaultValue?: any;
+  disabled?: boolean;
+  editable?: boolean;
+  error?: boolean;
+  keyboardType?: KeyboardTypeOptions;
+  label?: string;
+  nonEditableStyleVisible?: boolean;
+  multiline?: boolean;
+  numberOfLines?: number;
+  placeholder?: string;
+  onChange?: (text: string) => void;
+  onPressIn?: () => void;
+  secureTextEntry?: boolean;
+  style?: StyleProp<ViewStyle>;
+  value?: string;
+};
+
+export const TextInput = forwardRef(function TextInput(
+  props: Props,
+  ref: Ref<any>
+) {
   const {
-    autoCapitalize,
+    autoCapitalize = "none",
     disabled = false,
     editable = true,
     error = false,
@@ -70,21 +92,3 @@ export const TextInput = forwardRef(function TextInput(props:any, ref) {
     />
   );
 });
-
-TextInput.propTypes = {
-  autoCapitalize: PropTypes.string,
-  disabled: PropTypes.bool,
-  editable: PropTypes.bool,
-  error: PropTypes.bool,
-  keyboardType: PropTypes.string,
-  label: PropTypes.string,
-  nonEditableStyleVisible: PropTypes.bool,
-  multiline: PropTypes.bool,
-  numberOfLines: PropTypes.number,
-  placeholder: PropTypes.string,
-  onChange: PropTypes.func,
-  onPressIn: PropTypes.func,
-  secureTextEntry: PropTypes.bool,
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-  value: PropTypes.string,
-};

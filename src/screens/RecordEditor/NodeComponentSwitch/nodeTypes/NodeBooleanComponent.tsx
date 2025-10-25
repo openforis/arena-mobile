@@ -3,7 +3,7 @@ import { useCallback, useMemo } from "react";
 import { SegmentedButtons, View } from "components";
 
 import { useNodeComponentLocalState } from "../../useNodeComponentLocalState";
-import { NodeComponentPropTypes } from "./nodeComponentPropTypes";
+import { NodeComponentProps } from "./nodeComponentPropTypes";
 import { useIsTextDirectionRtl } from "localization/useTextDirection";
 
 const booleanValues = ["true", "false"];
@@ -15,7 +15,7 @@ const yesNoValueByBooleanValue: Record<string, string> = {
 const baseStyle = { width: 200 };
 const rtlStyle = { alignSelf: "flex-end" };
 
-export const NodeBooleanComponent = (props: any) => {
+export const NodeBooleanComponent = (props: NodeComponentProps) => {
   const { nodeDef, nodeUuid } = props;
 
   if (__DEV__) {
@@ -63,5 +63,3 @@ export const NodeBooleanComponent = (props: any) => {
     </View>
   );
 };
-
-NodeBooleanComponent.propTypes = NodeComponentPropTypes;

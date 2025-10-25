@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 import {
   NodeDefs,
   Validations,
@@ -27,7 +25,7 @@ const colors = {
 type ValidationIconProps = {
   severity: ValidationSeverity;
   messageKey: string;
-  messageParams: any;
+  messageParams?: any;
 };
 
 const ValidationIcon = (props: ValidationIconProps) => {
@@ -46,13 +44,12 @@ const ValidationIcon = (props: ValidationIconProps) => {
   );
 };
 
-ValidationIcon.propTypes = {
-  messageKey: PropTypes.string.isRequired,
-  messageParams: PropTypes.object,
-  severity: PropTypes.oneOf(["error", "warning"]),
+type NodeValidationIconProps = {
+  nodeDef: any;
+  parentNodeUuid?: string;
 };
 
-export const NodeValidationIcon = (props: any) => {
+export const NodeValidationIcon = (props: NodeValidationIconProps) => {
   const { nodeDef, parentNodeUuid } = props;
 
   const { t } = useTranslation();
@@ -95,14 +92,11 @@ export const NodeValidationIcon = (props: any) => {
     return (
       <ValidationIcon
         messageKey={errMsg ?? warnMsg}
-        severity={errMsg ? "error" : "warning"}
+        severity={
+          errMsg ? ValidationSeverity.error : ValidationSeverity.warning
+        }
       />
     );
   }
   return null;
-};
-
-NodeValidationIcon.propTypes = {
-  nodeDef: PropTypes.object.isRequired,
-  parentNodeUuid: PropTypes.string,
 };

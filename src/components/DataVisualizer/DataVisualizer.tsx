@@ -1,24 +1,24 @@
-import PropTypes from "prop-types";
-
 import { ScreenViewMode } from "model/ScreenViewMode";
 
 import { DataTable } from "../DataTable";
 import { DataList } from "../DataList";
 import { VView } from "../VView";
+import { DataTableProps } from "components/DataTable/DataTable";
+import { DataListProps } from "components/DataList/DataList";
 
-export const DataVisualizer = (props: any) => {
+type Props = (DataTableProps | DataListProps) & {
+  mode: string;
+};
+
+export const DataVisualizer = (props: Props) => {
   const { mode } = props;
   return (
     <VView style={{ flex: 1 }}>
       {mode === ScreenViewMode.table ? (
-        <DataTable {...props} />
+        <DataTable {...(props as any as DataTableProps)} />
       ) : (
-        <DataList {...props} />
+        <DataList {...(props as any as DataListProps)} />
       )}
     </VView>
   );
-};
-
-DataVisualizer.propTypes = {
-  mode: PropTypes.string.isRequired,
 };

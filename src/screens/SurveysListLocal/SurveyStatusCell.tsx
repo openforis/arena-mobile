@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import {
-  DataVisualizerCellPropTypes,
+  DataVisualizerCellProps,
   HView,
   Icon,
   Text,
@@ -25,7 +25,11 @@ const statusIconColorByStatus = {
   [SurveyStatus.notVisibleInMobile]: "red",
 };
 
-export const SurveyStatusCell = (props: any) => {
+type Props = DataVisualizerCellProps & {
+  viewMode?: string;
+};
+
+export const SurveyStatusCell = (props: Props) => {
   const { item, viewMode } = props;
   const { status } = item;
 
@@ -55,5 +59,3 @@ export const SurveyStatusCell = (props: any) => {
     <Tooltip titleKey={textKey}>{icon}</Tooltip>
   );
 };
-
-SurveyStatusCell.propTypes = DataVisualizerCellPropTypes;

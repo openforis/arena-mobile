@@ -1,4 +1,4 @@
-export const RecordOrigin = {
-  local: "L",
-  remote: "R",
-};
+export enum RecordOrigin {
+  local = "L",
+  remote = "R",
+}

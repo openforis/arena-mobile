@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-
 import { FieldSet } from "../FieldSet";
 import { Button } from "../Button";
 import { HView } from "../HView";
@@ -11,7 +9,17 @@ import { ElapsedTimeProgressBar } from "./ElapsedTimeProgressBar";
 
 import styles from "./styles";
 
-export const LocationWatchingMonitor = (props: any) => {
+type LocationWatchingMonitorProps = {
+  locationAccuracy?: number | string;
+  locationAccuracyThreshold: number;
+  locationWatchElapsedTime: number;
+  locationWatchTimeout: number;
+  onStart: () => void;
+  onStop: () => void;
+  watchingLocation: boolean;
+};
+
+export const LocationWatchingMonitor = (props: LocationWatchingMonitorProps) => {
   const {
     locationAccuracy,
     locationAccuracyThreshold,
@@ -70,14 +78,4 @@ export const LocationWatchingMonitor = (props: any) => {
       )}
     </VView>
   );
-};
-
-LocationWatchingMonitor.propTypes = {
-  locationAccuracy: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  locationAccuracyThreshold: PropTypes.number.isRequired,
-  locationWatchElapsedTime: PropTypes.number.isRequired,
-  locationWatchTimeout: PropTypes.number.isRequired,
-  onStart: PropTypes.func.isRequired,
-  onStop: PropTypes.func.isRequired,
-  watchingLocation: PropTypes.bool.isRequired,
 };

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
-import PropTypes from "prop-types";
 
 import { Numbers, Objects, PointFactory } from "@openforis/arena-core";
 
@@ -35,7 +34,12 @@ type ImageInfoState = {
   longitude: number,
 } | null
 
-const ImageInfo = (props: any) => {
+type ImageInfoProps = {
+  imageUri: string;
+  showGeotagInfo?: boolean;
+};
+
+const ImageInfo = (props: ImageInfoProps) => {
   const { imageUri: imageUriProp, showGeotagInfo = false } = props;
 
   const [info, setInfo] = useState(null as ImageInfoState);
@@ -110,12 +114,14 @@ const ImageInfo = (props: any) => {
   );
 };
 
-ImageInfo.propTypes = {
-  imageUri: PropTypes.string.isRequired,
-  showGeotagInfo: PropTypes.bool,
+type ImagePreviewDialogProps = {
+  fileName: string;
+  imageUri: string;
+  onClose: () => void;
+  showGeotagInfo?: boolean;
 };
 
-export const ImagePreviewDialog = (props: any) => {
+export const ImagePreviewDialog = (props: ImagePreviewDialogProps) => {
   const { fileName, imageUri, onClose, showGeotagInfo = false } = props;
 
   const onSharePress = useCallback(async () => {
@@ -150,11 +156,4 @@ export const ImagePreviewDialog = (props: any) => {
       </VView>
     </Dialog>
   );
-};
-
-ImagePreviewDialog.propTypes = {
-  fileName: PropTypes.string.isRequired,
-  imageUri: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
-  showGeotagInfo: PropTypes.bool,
 };

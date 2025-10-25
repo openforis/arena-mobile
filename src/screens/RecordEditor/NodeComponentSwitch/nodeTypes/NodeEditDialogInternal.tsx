@@ -1,6 +1,5 @@
 import * as React from "react";
 import { StyleSheet } from "react-native";
-import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
 
@@ -12,7 +11,16 @@ const styles = StyleSheet.create({
   doneButton: { alignSelf: "center" },
 });
 
-export const NodeEditDialogInternal = (props: any) => {
+type Props = {
+  children?: React.ReactNode;
+  doneButtonLabel?: string;
+  nodeDef: any;
+  onDismiss: () => void;
+  onDone?: () => void;
+  parentNodeUuid?: string;
+};
+
+export const NodeEditDialogInternal = (props: Props) => {
   const {
     children,
     doneButtonLabel = "common:close",
@@ -36,13 +44,4 @@ export const NodeEditDialogInternal = (props: any) => {
       </Button>
     </Modal>
   );
-};
-
-NodeEditDialogInternal.propTypes = {
-  children: PropTypes.node,
-  doneButtonLabel: PropTypes.string,
-  nodeDef: PropTypes.object.isRequired,
-  onDismiss: PropTypes.func.isRequired,
-  onDone: PropTypes.func,
-  parentNodeUuid: PropTypes.string,
 };

@@ -1,9 +1,16 @@
 import { Tooltip as RNPTooltip } from "react-native-paper";
-import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
 
-export const Tooltip = (props: any) => {
+type Props = {
+  backgroundColor?: string;
+  children: React.ReactElement;
+  textColor?: string;
+  titleKey: string;
+  titleParams?: any;
+};
+
+export const Tooltip = (props: Props) => {
   const { backgroundColor, children, textColor, titleKey, titleParams } = props;
 
   const { t } = useTranslation();
@@ -28,12 +35,4 @@ export const Tooltip = (props: any) => {
       {children}
     </RNPTooltip>
   );
-};
-
-Tooltip.propTypes = {
-  backgroundColor: PropTypes.string,
-  children: PropTypes.node,
-  textColor: PropTypes.string,
-  titleKey: PropTypes.string.isRequired,
-  titleParams: PropTypes.object,
 };

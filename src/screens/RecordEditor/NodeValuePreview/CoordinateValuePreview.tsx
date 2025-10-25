@@ -3,9 +3,9 @@ import { useMemo } from "react";
 import { NodeDefs } from "@openforis/arena-core";
 
 import { FormItem, Text, VView } from "components";
-import { NodeValuePreviewPropTypes } from "./NodeValuePreviewPropTypes";
+import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 
-export const CoordinateValuePreview = (props: any) => {
+export const CoordinateValuePreview = (props: NodeValuePreviewProps) => {
   const { nodeDef, value } = props;
 
   const fields = useMemo(() => {
@@ -23,5 +23,3 @@ export const CoordinateValuePreview = (props: any) => {
     </VView>
   );
 };
-
-CoordinateValuePreview.propTypes = NodeValuePreviewPropTypes;

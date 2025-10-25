@@ -6,9 +6,13 @@ import { FlexWrapView } from "components";
 import { DataEntryActions, DataEntrySelectors, useConfirm } from "state";
 
 import { NodeValuePreview } from "./NodeValuePreview";
-import { NodeValuePreviewPropTypes } from "./NodeValuePreview/NodeValuePreviewPropTypes";
+import { NodeValuePreviewProps } from "./NodeValuePreview/NodeValuePreviewPropTypes";
 
-export const CurrentRecordNodeValuePreview = (props: any) => {
+type Props = NodeValuePreviewProps & {
+  parentNodeUuid?: string;
+};
+
+export const CurrentRecordNodeValuePreview = (props: Props) => {
   const { nodeDef, parentNodeUuid } = props;
 
   if (__DEV__) {
@@ -53,5 +57,3 @@ export const CurrentRecordNodeValuePreview = (props: any) => {
     </TouchableOpacity>
   );
 };
-
-CurrentRecordNodeValuePreview.propTypes = NodeValuePreviewPropTypes;

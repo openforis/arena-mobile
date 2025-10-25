@@ -1,26 +1,32 @@
 import React, { useMemo } from "react";
-import PropTypes from "prop-types";
 
 import { Dropdown, Text } from "components";
 import { SurveySelectors } from "state";
 
-export const SrsDropdown = (props: any) => {
+type SrsDropdownProps = {
+  editable?: boolean;
+  onChange: (value: any) => void;
+  value?: any;
+};
+
+export const SrsDropdown = (props: SrsDropdownProps) => {
   const { editable, onChange, value } = props;
 
-  const survey = SurveySelectors.useCurrentSurvey();
+  const survey = SurveySelectors.useCurrentSurvey()!;
   const srss = survey.props.srs;
   const singleSrs = srss.length === 1;
 
   const items = useMemo(
-    () => srss.map((srs: any) => ({
-      value: srs.code,
-      label: srs.name
-    })),
+    () =>
+      srss.map((srs: any) => ({
+        value: srs.code,
+        label: srs.name,
+      })),
     [srss]
   );
 
   if (singleSrs) {
-    return <Text>{srss[0].name}</Text>;
+    return <Text>{srss[0]!.name}</Text>;
   }
 
   return (
@@ -31,10 +37,4 @@ export const SrsDropdown = (props: any) => {
       value={value}
     />
   );
-};
-
-SrsDropdown.propTypes = {
-  editable: PropTypes.bool,
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.any,
 };

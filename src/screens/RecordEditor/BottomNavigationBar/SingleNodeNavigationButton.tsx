@@ -1,15 +1,23 @@
 import { useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
+import { StyleProp, ViewStyle } from "react-native";
 
 import { NodeDefs } from "@openforis/arena-core";
 
 import { Button } from "components";
+import { ButtonIconPosition } from "components/Button";
 import { DataEntryActions, DataEntrySelectors, SurveySelectors } from "state";
 
 import buttonStyles from "./buttonStyles";
 
-export const SingleNodeNavigationButton = (props: any) => {
+type Props = {
+  childDefIndex: number;
+  icon?: string;
+  iconPosition?: ButtonIconPosition;
+  style?: StyleProp<ViewStyle>;
+};
+
+export const SingleNodeNavigationButton = (props: Props) => {
   const { childDefIndex, icon, iconPosition, style: styleProp } = props;
 
   const dispatch = useDispatch();
@@ -20,14 +28,16 @@ export const SingleNodeNavigationButton = (props: any) => {
   const onPress = useCallback(
     () =>
       dispatch(
-        DataEntryActions.selectCurrentPageEntityActiveChildIndex(childDefIndex) as never
+        DataEntryActions.selectCurrentPageEntityActiveChildIndex(
+          childDefIndex
+        ) as never
       ),
     [childDefIndex, dispatch]
   );
 
   const style = useMemo(() => [buttonStyles.button, styleProp], [styleProp]);
 
-  if (!childDef) return null
+  if (!childDef) return null;
 
   return (
     <Button
@@ -38,11 +48,4 @@ export const SingleNodeNavigationButton = (props: any) => {
       onPress={onPress}
     />
   );
-};
-
-SingleNodeNavigationButton.propTypes = {
-  childDefIndex: PropTypes.number,
-  icon: PropTypes.string,
-  iconPosition: PropTypes.string,
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 };

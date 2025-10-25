@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { VirtualizedList } from "react-native";
-import PropTypes from "prop-types";
 
 import { NodeDef, NodeDefs } from "@openforis/arena-core";
 
@@ -10,7 +9,12 @@ import { NodeDefFormItem } from "../../../NodeDefFormItem";
 
 import styles from "./styles";
 
-export const NodeEntityFormComponent = (props: any) => {
+type NodeEntityFormComponentProps = {
+  nodeDef: any;
+  parentNodeUuid?: string;
+};
+
+export const NodeEntityFormComponent = (props: NodeEntityFormComponentProps) => {
   const { nodeDef, parentNodeUuid } = props;
 
   if (__DEV__) {
@@ -64,9 +68,4 @@ export const NodeEntityFormComponent = (props: any) => {
     //   </VView>
     // </ScrollView>
   );
-};
-
-NodeEntityFormComponent.propTypes = {
-  nodeDef: PropTypes.object.isRequired,
-  parentNodeUuid: PropTypes.string,
 };

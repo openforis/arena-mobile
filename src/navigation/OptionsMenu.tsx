@@ -3,7 +3,6 @@ import { Appbar as RNPAppbar, Divider, Menu } from "react-native-paper";
 import { BackHandler } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as WebBrowser from "expo-web-browser";
-import PropTypes from "prop-types";
 
 import { Surveys } from "@openforis/arena-core";
 
@@ -20,8 +19,13 @@ import { Environment } from "utils";
 
 import { UserSummary } from "./UserSummary";
 
-export const OptionsMenu = (props: any) => {
-  const { toggleMenu, visible } = props;
+type Props = {
+  toggleMenu: () => void;
+  visible?: boolean;
+};
+
+export const OptionsMenu = (props: Props) => {
+  const { toggleMenu, visible = false } = props;
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -65,7 +69,9 @@ export const OptionsMenu = (props: any) => {
           <MenuItem
             icon="view-list"
             onPress={() => {
-              dispatch(DataEntryActions.navigateToRecordsList({ navigation }) as any);
+              dispatch(
+                DataEntryActions.navigateToRecordsList({ navigation }) as any
+              );
             }}
             title="dataEntry:listOfRecords"
             toggleMenu={toggleMenu}
@@ -121,9 +127,4 @@ export const OptionsMenu = (props: any) => {
       )}
     </Menu>
   );
-};
-
-OptionsMenu.propTypes = {
-  toggleMenu: PropTypes.func.isRequired,
-  visible: PropTypes.bool,
 };

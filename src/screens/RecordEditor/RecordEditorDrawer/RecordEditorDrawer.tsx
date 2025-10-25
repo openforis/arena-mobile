@@ -27,7 +27,7 @@ export const RecordEditorDrawer = () => {
   }
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const survey = SurveySelectors.useCurrentSurvey();
+  const survey = SurveySelectors.useCurrentSurvey()!;
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const pageSelectorOpen = DataEntrySelectors.useIsRecordPageSelectorMenuOpen();
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
@@ -46,7 +46,9 @@ export const RecordEditorDrawer = () => {
           textKey={Surveys.getLabel(lang)(survey) ?? Surveys.getName(survey)}
         />
         <CloseIconButton
-          onPress={() => dispatch(DataEntryActions.toggleRecordPageMenuOpen as any)}
+          onPress={() =>
+            dispatch(DataEntryActions.toggleRecordPageMenuOpen as any)
+          }
           style={styles.closeButton}
           size={26}
         />

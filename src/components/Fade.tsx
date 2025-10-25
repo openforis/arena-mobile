@@ -1,8 +1,14 @@
 import { useEffect, useState } from "react";
 import { Animated } from "react-native";
-import PropTypes from "prop-types";
 
-export const Fade = (props: any) => {
+type Props = {
+  duration?: number;
+  visible?: boolean;
+  style?: any;
+  children?: React.ReactNode;
+};
+
+export const Fade = (props: Props) => {
   const {
     duration = 500,
     visible: visibleProp = true,
@@ -50,11 +56,4 @@ export const Fade = (props: any) => {
       {childrenVisible ? children : null}
     </Animated.View>
   );
-};
-
-Fade.propTypes = {
-  duration: PropTypes.number,
-  visible: PropTypes.bool,
-  style: PropTypes.object,
-  children: PropTypes.node,
 };

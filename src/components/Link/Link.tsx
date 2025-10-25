@@ -1,12 +1,17 @@
 import { Paragraph } from "react-native-paper";
 import * as WebBrowser from "expo-web-browser";
-import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
 
 import styles from "./styles";
 
-export const Link = (props: any) => {
+type Props = {
+  labelKey: string;
+  labelParams?: any;
+  url: string;
+};
+
+export const Link = (props: Props) => {
   const { labelKey, labelParams, url } = props;
   const { t } = useTranslation();
 
@@ -19,10 +24,4 @@ export const Link = (props: any) => {
       {t(labelKey, labelParams)}
     </Paragraph>
   );
-};
-
-Link.propTypes = {
-  labelKey: PropTypes.string.isRequired,
-  labelParams: PropTypes.object,
-  url: PropTypes.string.isRequired,
 };

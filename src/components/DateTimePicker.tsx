@@ -2,7 +2,6 @@ import React, { useCallback, useState } from "react";
 import { Pressable } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TextInput as RNPTextInput } from "react-native-paper";
-import PropTypes from "prop-types";
 
 import { Dates } from "@openforis/arena-core";
 
@@ -12,7 +11,15 @@ import { HView } from "./HView";
 import { IconButton } from "./IconButton";
 import { TextInput } from "./TextInput";
 
-export const DateTimePicker = (props: any) => {
+type DateTimePickerProps = {
+  editable?: boolean;
+  format: string;
+  mode?: "date" | "time";
+  onChange: (date: Date | null) => void;
+  value?: any;
+};
+
+export const DateTimePicker = (props: DateTimePickerProps) => {
   const {
     editable = true,
     format,
@@ -82,12 +89,4 @@ export const DateTimePicker = (props: any) => {
       />
     </HView>
   );
-};
-
-DateTimePicker.propTypes = {
-  editable: PropTypes.bool,
-  format: PropTypes.string.isRequired,
-  mode: PropTypes.oneOf(["date", "time"]),
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.any,
 };

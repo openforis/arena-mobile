@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import PropTypes from "prop-types";
+import { StyleProp, ViewStyle } from "react-native";
 
 import { NodeDefType, NodeDefs, Objects } from "@openforis/arena-core";
 
@@ -16,7 +16,14 @@ const isNumericByType: Record<string, boolean> = {
 
 const multilineNumberOfLines = 5;
 
-export const NodeTextComponent = (props: any) => {
+type NodeTextComponentProps = {
+  nodeDef: any;
+  nodeUuid?: string;
+  style?: any;
+  wrapperStyle?: any;
+};
+
+export const NodeTextComponent = (props: NodeTextComponentProps) => {
   const { nodeDef, nodeUuid, style: styleProp, wrapperStyle } = props;
 
   if (__DEV__) {
@@ -104,11 +111,4 @@ export const NodeTextComponent = (props: any) => {
       {!editable && <CopyToClipboardButton value={uiValue} />}
     </HView>
   );
-};
-
-NodeTextComponent.propTypes = {
-  nodeDef: PropTypes.object.isRequired,
-  nodeUuid: PropTypes.string,
-  style: PropTypes.object,
-  wrapperStyle: PropTypes.object,
 };

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 
 import {
   CollapsiblePanel,
@@ -32,7 +31,16 @@ const batteryStatusAvailable = !Environment.isIOS;
 const getBatteryPercent = (batteryLevel: any) =>
   `${Math.round(batteryLevel * 100)}%`;
 
-const StatusBarPanel = (props: any) => {
+type StatusBarPanelProps = {
+  batteryLevel?: number;
+  batteryState?: string;
+  batteryTimeToDischargeFormattedShort?: string;
+  batteryTimeToFullChargeFormattedShort?: string;
+  freeDiskStorageFormatted?: string;
+  isNetworkConnected?: boolean;
+};
+
+const StatusBarPanel = (props: StatusBarPanelProps) => {
   const {
     batteryLevel,
     batteryState,
@@ -121,15 +129,6 @@ const StatusBarPanel = (props: any) => {
       </FieldSet>
     </>
   );
-};
-
-StatusBarPanel.propTypes = {
-  batteryLevel: PropTypes.number,
-  batteryState: PropTypes.string,
-  batteryTimeToDischargeFormattedShort: PropTypes.string,
-  batteryTimeToFullChargeFormattedShort: PropTypes.string,
-  freeDiskStorageFormatted: PropTypes.string,
-  isNetworkConnected: PropTypes.bool,
 };
 
 export const StatusBar = () => {

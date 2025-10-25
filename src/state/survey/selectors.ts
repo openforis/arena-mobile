@@ -9,7 +9,9 @@ import { determinePreferredSurveyLanguage } from "./surveyStateUtils";
 
 const getSurveyState = (state: any) => state.survey;
 
-const selectCurrentSurvey = (state: any): Survey | undefined =>
+const selectCurrentSurvey = (
+  state: any
+): (Survey & { remoteId?: number }) | undefined =>
   getSurveyState(state).currentSurvey;
 
 const selectCurrentSurveyId = (state: any) => selectCurrentSurvey(state)?.id;

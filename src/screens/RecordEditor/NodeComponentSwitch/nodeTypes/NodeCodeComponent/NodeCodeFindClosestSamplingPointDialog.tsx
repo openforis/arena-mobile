@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 
 import { Objects, Points } from "@openforis/arena-core";
 
@@ -17,12 +16,19 @@ import {
 import { useLocation } from "hooks";
 import { SurveySelectors } from "state";
 
+type NodeCodeFindClosestSamplingPointDialogProps = {
+  itemLabelFunction: (item: any) => string;
+  items: any[];
+  onDismiss: () => void;
+  onItemSelected: (item: any) => void;
+};
+
 export const NodeCodeFindClosestSamplingPointDialog = ({
   itemLabelFunction,
   items,
   onDismiss,
-  onItemSelected
-}: any) => {
+  onItemSelected,
+}: NodeCodeFindClosestSamplingPointDialogProps) => {
   const srsIndex = SurveySelectors.useCurrentSurveySrsIndex();
 
   const {
@@ -35,12 +41,12 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
     startLocationWatch,
     stopLocationWatch,
     wathingLocation,
-  }:any = useLocation();
+  }: any = useLocation();
 
   const [state, setState] = useState({
     findingMinDistanceItems: false,
     minDistance: NaN,
-    minDistanceItems: null,
+    minDistanceItems: null as any[] | null,
     selectedMinDistanceItem: null,
   });
 
@@ -59,11 +65,9 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
       const itemLocation = item?.props?.extra?.location;
       if (itemLocation) {
         const itemLocationPoint = Points.parse(itemLocation);
-        const distance = Points.distance(
-          pointLatLong,
-          itemLocationPoint!,
-          srsIndex
-        ) ?? Infinity;
+        const distance =
+          Points.distance(pointLatLong, itemLocationPoint!, srsIndex) ??
+          Infinity;
         if (Objects.isEmpty(minDistance) || distance < minDistance) {
           minDistance = distance;
           minDistanceItems = [item];
@@ -173,11 +177,4 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
       )}
     </Modal>
   );
-};
-
-NodeCodeFindClosestSamplingPointDialog.propTypes = {
-  itemLabelFunction: PropTypes.func.isRequired,
-  items: PropTypes.array.isRequired,
-  onDismiss: PropTypes.func.isRequired,
-  onItemSelected: PropTypes.func.isRequired,
 };

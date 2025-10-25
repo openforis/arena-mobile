@@ -1,5 +1,4 @@
 import { Portal, Modal as RNPModal } from "react-native-paper";
-import PropTypes from "prop-types";
 
 import { CloseIconButton } from "../CloseIconButton";
 import { HView } from "../HView";
@@ -8,7 +7,15 @@ import { VView } from "../VView";
 
 import styles from "./styles";
 
-export const Modal = (props: any) => {
+type ModalProps = {
+  children: React.ReactNode;
+  onDismiss: () => void;
+  showCloseButton?: boolean;
+  titleKey?: string;
+  titleParams?: any;
+};
+
+export const Modal = (props: ModalProps) => {
   const {
     children,
     onDismiss,
@@ -36,12 +43,4 @@ export const Modal = (props: any) => {
       </RNPModal>
     </Portal>
   );
-};
-
-Modal.propTypes = {
-  children: PropTypes.node.isRequired,
-  onDismiss: PropTypes.func.isRequired,
-  showCloseButton: PropTypes.bool,
-  titleKey: PropTypes.string,
-  titleParams: PropTypes.object,
 };

@@ -1,15 +1,24 @@
 import { useCallback, useMemo } from "react";
 import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
+import { StyleProp, ViewStyle } from "react-native";
 
 import { NodeDefs, Objects } from "@openforis/arena-core";
 
 import { Button } from "components";
+import { ButtonIconPosition, ButtonMode } from "components/Button";
 import { DataEntryActions, SurveySelectors } from "state";
 
 import buttonStyles from "./buttonStyles";
 
-export const NodePageNavigationButton = (props: any) => {
+type Props = {
+  entityPointer?: any;
+  icon?: string;
+  iconPosition?: ButtonIconPosition;
+  mode?: ButtonMode;
+  style?: StyleProp<ViewStyle>;
+};
+
+export const NodePageNavigationButton = (props: Props) => {
   const { entityPointer, icon, iconPosition, mode, style: styleProp } = props;
 
   const { parentEntityUuid, entityDef, entityUuid, index } = entityPointer;
@@ -44,12 +53,4 @@ export const NodePageNavigationButton = (props: any) => {
       onPress={onPress}
     />
   );
-};
-
-NodePageNavigationButton.propTypes = {
-  entityPointer: PropTypes.object,
-  icon: PropTypes.string,
-  iconPosition: PropTypes.string,
-  mode: PropTypes.string,
-  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 };

@@ -1,8 +1,16 @@
-import { RadioButton as RNPRadioButton } from "react-native-paper"
-import PropTypes from "prop-types";
+import { RadioButton as RNPRadioButton } from "react-native-paper";
 
-export const RadioButton = (props: any) => {
-  const { checked, disabled, label, onPress, style, value } = props;
+type Props = {
+  checked?: boolean;
+  disabled?: boolean;
+  label?: string;
+  onPress?: () => void;
+  style?: any;
+  value?: string;
+};
+
+export const RadioButton = (props: Props) => {
+  const { checked, disabled, label = "", onPress, style, value = "" } = props;
 
   return (
     <RNPRadioButton.Item
@@ -15,13 +23,4 @@ export const RadioButton = (props: any) => {
       value={value}
     />
   );
-};
-
-RadioButton.propTypes = {
-  checked: PropTypes.bool,
-  disabled: PropTypes.bool,
-  label: PropTypes.string,
-  onPress: PropTypes.func,
-  style: PropTypes.object,
-  value: PropTypes.string,
 };

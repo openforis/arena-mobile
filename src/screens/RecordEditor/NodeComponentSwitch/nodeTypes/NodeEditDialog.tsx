@@ -1,5 +1,4 @@
 import * as React from "react";
-import PropTypes from "prop-types";
 
 import { useTranslation } from "localization";
 
@@ -7,7 +6,15 @@ import { Button, Modal } from "components";
 
 import { NodeDefFormItem } from "screens/RecordEditor/NodeDefFormItem";
 
-export const NodeEditDialog = (props: any) => {
+type Props = {
+  doneButtonLabel?: string;
+  nodeDef: any;
+  onDismiss: () => void;
+  onDone?: () => void;
+  parentNodeUuid?: string;
+};
+
+export const NodeEditDialog = (props: Props) => {
   const {
     doneButtonLabel = "common:close",
     nodeDef,
@@ -24,12 +31,4 @@ export const NodeEditDialog = (props: any) => {
       <Button onPress={onDone ?? onDismiss}>{t(doneButtonLabel)}</Button>
     </Modal>
   );
-};
-
-NodeEditDialog.propTypes = {
-  doneButtonLabel: PropTypes.string,
-  nodeDef: PropTypes.object.isRequired,
-  onDismiss: PropTypes.func.isRequired,
-  onDone: PropTypes.func,
-  parentNodeUuid: PropTypes.string,
 };

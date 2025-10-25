@@ -2,9 +2,9 @@ import { FieldSet } from "components";
 import { DataEntrySelectors } from "state";
 
 import { NodeEntityFormComponent } from "./NodeEntityFormComponent";
-import { NodeComponentPropTypes } from "./nodeComponentPropTypes";
+import { NodeComponentProps } from "./nodeComponentPropTypes";
 
-export const NodeSingleEntityComponent = (props: any) => {
+export const NodeSingleEntityComponent = (props: NodeComponentProps) => {
   const { nodeDef, parentNodeUuid } = props;
 
   if (__DEV__) {
@@ -24,5 +24,3 @@ export const NodeSingleEntityComponent = (props: any) => {
     </FieldSet>
   );
 };
-
-NodeSingleEntityComponent.propTypes = NodeComponentPropTypes;

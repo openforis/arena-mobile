@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import PropTypes from "prop-types";
 
 import { Objects } from "@openforis/arena-core";
 
@@ -9,7 +8,11 @@ import { SystemUtils } from "utils";
 
 import { IconButton } from "./IconButton";
 
-export const CopyToClipboardButton = (props: any) => {
+type Props = {
+  value?: string;
+};
+
+export const CopyToClipboardButton = (props: Props) => {
   const { value } = props;
 
   const toaster = useToast();
@@ -27,8 +30,4 @@ export const CopyToClipboardButton = (props: any) => {
       onPress={onPress}
     />
   );
-};
-
-CopyToClipboardButton.propTypes = {
-  value: PropTypes.string,
 };
