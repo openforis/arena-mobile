@@ -1,4 +1,6 @@
-export const migration_001_base = async (dbClient: any) => {
+import SQLiteClient from "db/SQLiteClient";
+
+export const migration_001_base = async (dbClient: SQLiteClient) => {
   await dbClient.transaction(async () => {
     await dbClient.executeSql(`CREATE TABLE IF NOT EXISTS survey (
         id          INTEGER         PRIMARY KEY AUTOINCREMENT,

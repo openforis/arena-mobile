@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Animated, Image, ImageSourcePropType } from "react-native";
-import { Asset, useAssets } from "expo-asset";
+import { useAssets } from "expo-asset";
 import PropTypes from "prop-types";
 
 import { HeartbeatAnimation } from "components/HeartbeatAnimation";
@@ -16,12 +16,14 @@ export const AppLogo = (props: any) => {
   const scaleValueRef = useRef(new Animated.Value(1));
 
   useEffect(() => {
-    HeartbeatAnimation({
-      value: scaleValueRef.current,
-      minValue: animMinScale,
-      maxValue: animMaxScale,
-    }).start();
-  }, []);
+    if (animated) {
+      HeartbeatAnimation({
+        value: scaleValueRef.current,
+        minValue: animMinScale,
+        maxValue: animMaxScale,
+      }).start();
+    }
+  }, [animated]);
 
   const [logoAssets] = useAssets(
     require("../../assets/logo/icon_transparent.png")

@@ -30,15 +30,15 @@ export const View = (props: any) => {
   );
 
   const style = useMemo(() => {
-    const parts:any[] = [{ backgroundColor }];
+    const parts: any[] = [{ backgroundColor }];
     if (fullFlex) parts.push(styles.fullFlex);
     if (fullWidth) parts.push(styles.fullWidth);
     if (styleProp) parts.push(styleProp);
-    return parts.reduce((acc, part) => ({...acc, ...part}), {})
+    return parts;
   }, [backgroundColor, fullFlex, fullWidth, styleProp]);
 
   return (
-    <RNView  style={style} {...otherProps}>
+    <RNView style={style} {...otherProps}>
       {children}
     </RNView>
   );
