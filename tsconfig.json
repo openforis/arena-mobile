@@ -21,8 +21,6 @@
     "jsx": "react-native",
     "lib": ["esnext"],
     "types": ["react-native", "jest"],
-    "moduleResolution": "node16",
-    "module": "Node16",
     "noEmit": true,
     "strict": true,
     "target": "esnext",
