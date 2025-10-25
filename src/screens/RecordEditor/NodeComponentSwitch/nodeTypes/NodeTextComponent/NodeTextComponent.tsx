@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { StyleProp, ViewStyle } from "react-native";
 
 import { NodeDefType, NodeDefs, Objects } from "@openforis/arena-core";
 

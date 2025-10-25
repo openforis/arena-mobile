@@ -146,12 +146,7 @@ export const RecordValidationReport = () => {
   const screenViewMode = ScreenOptionsSelectors.useCurrentScreenViewMode();
   const [state, setState] = useState(initialState);
 
-  const {
-    editDialogOpen,
-    dialogNodeDef,
-    dialogNodeUuid,
-    dialogParentNodeUuid,
-  } = state;
+  const { editDialogOpen, dialogNodeDef, dialogParentNodeUuid } = state;
 
   const { validation } = record;
   const validationFields = Validations.getFieldValidations(validation);

@@ -446,7 +446,7 @@ export const RecordsList = () => {
 
   const onImportSelectedRecordUuids = useCallback(
     (selectedRecordUuids: any) => {
-      const selectedRecords = records?.filter((record) =>
+      const selectedRecords = records.filter((record) =>
         selectedRecordUuids.includes(record.uuid)
       );
       if (!checkRecordsCanBeImported(selectedRecords)) {
