@@ -6,7 +6,7 @@ import { IconButton } from "../IconButton";
 
 import styles from "./styles";
 
-const iconByUpdateStatus = {
+const iconByUpdateStatus: Record<UpdateStatus, string> = {
   [UpdateStatus.loading]: "loading",
   [UpdateStatus.upToDate]: "check",
   [UpdateStatus.networkNotAvailable]: "alert",
@@ -17,14 +17,10 @@ const iconByUpdateStatus = {
 type Props = {
   loading?: boolean;
   onPress: () => void;
-  updateStatus: string;
+  updateStatus: UpdateStatus;
 };
 
-export const UpdateStatusIcon = ({
-  loading,
-  updateStatus,
-  onPress
-}: Props) => {
+export const UpdateStatusIcon = ({ loading, updateStatus, onPress }: Props) => {
   const icon = loading ? "loading" : iconByUpdateStatus[updateStatus];
 
   return (

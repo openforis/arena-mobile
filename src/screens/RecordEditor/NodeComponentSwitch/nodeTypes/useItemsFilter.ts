@@ -8,7 +8,11 @@ import {
   Records,
 } from "@openforis/arena-core";
 
-import { DataEntrySelectors, SurveySelectors } from "state";
+import {
+  DataEntrySelectors,
+  RemoteConnectionSelectors,
+  SurveySelectors,
+} from "state";
 
 export const useItemsFilter = ({
   nodeDef,
@@ -23,7 +27,8 @@ export const useItemsFilter = ({
     if (items.length === 0 || Objects.isEmpty(itemsFilter) || !parentNodeUuid)
       return items;
 
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const user = RemoteConnectionSelectors.useLoggedInUser();
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
     const expressionEvaluator = new RecordExpressionEvaluator();
@@ -33,6 +38,7 @@ export const useItemsFilter = ({
 
         try {
           return expressionEvaluator.evalExpression({
+            user,
             survey,
             record,
             node: parentNode!,

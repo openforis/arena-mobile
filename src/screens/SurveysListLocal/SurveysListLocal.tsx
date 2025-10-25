@@ -172,7 +172,7 @@ export const SurveysListLocal = () => {
       updateStatusChecked: false,
     }));
     const { surveys: remoteSurveySummaries } =
-      await SurveyService.fetchSurveySummariesRemote();
+      (await SurveyService.fetchSurveySummariesRemote()) as any;
     const remoteSurveySummariesByUuid = ArrayUtils.indexByUuid(
       remoteSurveySummaries
     );

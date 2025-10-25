@@ -17,12 +17,7 @@ export const useBreadcrumbItems = () => {
   const entityDefUuid = entityDef.uuid;
 
   const itemLabelFunction = useCallback(
-    ({
-      nodeDef,
-      record = null,
-      entity = null,
-      parentEntity = null
-    }: any) => {
+    ({ nodeDef, record = null, entity = null, parentEntity = null }: any) => {
       const nodeDefLabel = NodeDefs.getLabelOrName(nodeDef, lang);
 
       if (
@@ -53,7 +48,7 @@ export const useBreadcrumbItems = () => {
     if (!actualEntityUuid) return [];
 
     const record = DataEntrySelectors.selectRecord(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
 
     const _items = [];
 

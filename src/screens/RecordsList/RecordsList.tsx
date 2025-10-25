@@ -81,7 +81,7 @@ const generateRecordsCountSummaryText = ({
 type RecordListState = {
   loading: boolean;
   onlyLocal?: boolean;
-  records?: any[];
+  records: any[];
   searchValue?: string;
   syncStatusLoading: boolean;
   syncStatusFetched?: boolean;
@@ -160,6 +160,7 @@ export const RecordsList = () => {
         syncStatusFetched: false,
       }));
       const stateNext = {
+        records,
         loading: false,
         syncStatusLoading: false,
       };
@@ -186,7 +187,7 @@ export const RecordsList = () => {
       }
       setState((statePrev) => ({ ...statePrev, ...stateNext }));
       return stateNext;
-    }, [dispatch, navigation, survey, cycle, onlyLocal]);
+    }, [dispatch, navigation, survey, cycle, records, onlyLocal]);
 
   const onOnlyLocalChange = useCallback(
     (onlyLocalUpdated: any) =>
@@ -609,7 +610,6 @@ export const RecordsList = () => {
             )}
             {recordsLength > 0 && (
               <RecordsDataVisualizer
-                loadRecords={loadRecords}
                 onCloneSelectedRecordUuids={onCloneSelectedRecordUuids}
                 onDeleteSelectedRecordUuids={onDeleteSelectedRecordUuids}
                 onExportSelectedRecordUuids={onExportSelectedRecordUuids}

@@ -7,7 +7,7 @@ type Props = {
 };
 
 export const RadioButtonGroup = (props: Props) => {
-  const { children, onValueChange, value } = props;
+  const { children, onValueChange, value = "" } = props;
   return (
     <RNPRadioButton.Group onValueChange={onValueChange} value={value}>
       {children}

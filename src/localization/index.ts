@@ -12,7 +12,7 @@ import {
 const useTranslation = () => {
   const { t } = useI18nTranslation();
   return {
-    t: (key?: string, params?: any) =>
+    t: (key?: string | null, params?: any) =>
       (key?.length ?? 0) > 0 ? (t(key!, params) as string) : "",
   };
 };
@@ -20,7 +20,7 @@ const useTranslation = () => {
 export {
   changeLanguage,
   i18n,
-  TextDirection as textDirections,
+  TextDirection as TextDirection,
   useIsTextDirectionRtl,
   useTextDirection,
   useTranslation,

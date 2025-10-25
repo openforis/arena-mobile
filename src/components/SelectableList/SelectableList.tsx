@@ -60,6 +60,8 @@ export const SelectableList = (props: SelectableListProps) => {
 
   const onItemSelect = useCallback(
     (item: any) => {
+      if (!onChange) return;
+
       const wasSelected = selectedItems.includes(item);
       let selectedItemsNext;
       if (multiple) {

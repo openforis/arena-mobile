@@ -3,6 +3,7 @@ import { ArrayUtils, Files } from "utils";
 
 import { RecordsExportFile } from "../recordsExportFile";
 import { RecordService } from "../recordService";
+import { Record } from "@openforis/arena-core";
 
 export class RecordsImportJob extends JobMobile {
   insertedRecords: any;
@@ -41,10 +42,10 @@ export class RecordsImportJob extends JobMobile {
         unzippedFolderUri,
         RecordsExportFile.getRecordContentJsonPath(recordUuid)
       );
-      const record = await Files.readJsonFromFile({ fileUri: contentPath });
-      if (!record)
+      const recordObj = await Files.readJsonFromFile({ fileUri: contentPath });
+      if (!recordObj)
         throw new Error(`missing file in archive for record ${recordUuid}`);
-
+      const record = recordObj as Record;
       if (record.surveyUuid && record.surveyUuid !== survey.uuid)
         throw new Error(
           `this record cannot be imported in the current survey; it has been created with another one;`
@@ -65,7 +66,7 @@ export class RecordsImportJob extends JobMobile {
     }
   }
 
-  async prepareResult() {
+  override async prepareResult() {
     const { insertedRecords, updatedRecords } = this;
     return { insertedRecords, updatedRecords };
   }

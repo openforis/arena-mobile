@@ -41,7 +41,7 @@ export const RecordEditor = () => {
       dispatch(DataEntryActions.navigateToRecordsList({ navigation }) as any);
       return true; // the event will not be bubbled up & no other back action will execute
     }
-    return false
+    return false;
   }, [dispatch, isNavigationFocused, navigation]);
 
   useBackHandler(onBack);
@@ -87,6 +87,7 @@ export const RecordEditor = () => {
 
   if (isPhone) {
     return (
+      // @ts-ignore
       <MenuDrawer
         animationTime={250}
         drawerContent={<RecordEditorDrawer />}

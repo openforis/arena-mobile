@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { StyleProp, ViewStyle } from "react-native";
 
@@ -18,7 +18,7 @@ export const SurveyCycleSelector = (props: SurveyCycleSelectorProps) => {
   const { style } = props;
 
   const dispatch = useDispatch();
-  const survey = SurveySelectors.useCurrentSurvey();
+  const survey = SurveySelectors.useCurrentSurvey()!;
   const cycle = SurveySelectors.useCurrentSurveyCycle();
   const defaultCycleKey = Surveys.getDefaultCycleKey(survey);
   const cycles = survey?.props?.cycles || {};
@@ -31,13 +31,16 @@ export const SurveyCycleSelector = (props: SurveyCycleSelectorProps) => {
 
   const selectedValue = singleCycle ? defaultCycleKey : cycle;
 
-  const onChange = (selectedCycleKey: any) => {
-    dispatch(
-      SurveyActions.setCurrentSurveyCycle({
-        cycleKey: selectedCycleKey,
-      }) as never
-    );
-  };
+  const onChange = useCallback(
+    async (selectedCycleKey: any) => {
+      dispatch(
+        SurveyActions.setCurrentSurveyCycle({
+          cycleKey: selectedCycleKey,
+        }) as never
+      );
+    },
+    [dispatch]
+  );
 
   return (
     <HView style={[styles.formItem, style]}>

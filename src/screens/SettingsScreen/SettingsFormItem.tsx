@@ -34,7 +34,7 @@ export const SettingsFormItem = (props: SettingsFormItemProps) => {
         ? styles.settingsFormItemVertical
         : [
             styles.settingsFormItemHorizontal,
-            isRtl ? { flexDirection: "row-reverse" } : undefined,
+            isRtl ? styles.settingsFormItemHorizontalRtl : undefined,
           ],
     [direction, isRtl]
   );

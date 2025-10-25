@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Dimensions, Image } from "react-native";
+import { Dimensions, Image, StyleSheet } from "react-native";
 import { useTheme } from "react-native-paper";
 
 import { Objects, Points } from "@openforis/arena-core";
@@ -30,16 +30,17 @@ const arrowToTargetHeight = compassImageSize * 0.7;
 const targetLocationBoxWidth = compassImageSize * 0.7;
 const targetLocationMarkerHeight = height / 26;
 
-const compassWrapperStyle = {
-  height: compassImageSize,
-  width: compassImageSize,
-};
-
-const targetLocationMarkerStyle = {
-  alignSelf: "center",
-  height: targetLocationMarkerHeight,
-  resizeMode: "contain",
-};
+const dynamicStyles = StyleSheet.create({
+  compassWrapper: {
+    height: compassImageSize,
+    width: compassImageSize,
+  },
+  targetLocationMarker: {
+    alignSelf: "center",
+    height: targetLocationMarkerHeight,
+    resizeMode: "contain",
+  },
+});
 
 const getArrowImageByAngle = (angle: any) => {
   if (angle <= 20 || 360 - angle <= 20) return arrowUpGreen;
@@ -193,7 +194,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
           resizeMode: "contain",
         }}
       /> */}
-          <View style={compassWrapperStyle}>
+          <View style={dynamicStyles.compassWrapper}>
             <Image
               source={compassBg}
               style={{
@@ -231,7 +232,10 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
                   transform: [{ rotate: angleToTargetDifference + "deg" }],
                 }}
               >
-                <Image source={circleGreen} style={targetLocationMarkerStyle} />
+                <Image
+                  source={circleGreen}
+                  style={dynamicStyles.targetLocationMarker}
+                />
               </View>
             )}
           </View>

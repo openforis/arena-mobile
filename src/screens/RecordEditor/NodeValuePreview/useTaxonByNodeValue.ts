@@ -13,7 +13,7 @@ const findVernacularNameByUuid = ({ taxon, vernacularNameUuid }: any) => {
 };
 
 export const useTaxonByNodeValue = ({ value }: any): any => {
-  const survey = SurveySelectors.useCurrentSurvey();
+  const survey = SurveySelectors.useCurrentSurvey()!;
 
   return useMemo(() => {
     const taxonUuid = NodeValues.getValueTaxonUuid(value);

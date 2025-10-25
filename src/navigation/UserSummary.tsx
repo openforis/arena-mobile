@@ -12,21 +12,22 @@ import {
 } from "state";
 
 import { UserProfileIcon } from "./UserProfileIcon";
+import { StyleSheet } from "react-native";
 
-const styles = {
+const styles = StyleSheet.create({
   container: { alignItems: "center", padding: 10, minWidth: 200 },
   innerContainer: { flex: 1 },
   button: {},
   text: { textAlign: "center", width: "100%" },
-};
+});
 
 type UserSummaryProps = {
-  navigation?: any,
-  onButtonPress?: (() => void) | null,
-  profileIconSize?: number, 
-  showLogoutButton?: boolean,
-  style?:any 
-}
+  navigation?: any;
+  onButtonPress?: (() => void) | null;
+  profileIconSize?: number;
+  showLogoutButton?: boolean;
+  style?: any;
+};
 
 export const UserSummary = ({
   navigation: navigationProp = null,
@@ -35,7 +36,7 @@ export const UserSummary = ({
   showLogoutButton = true,
   style = null,
 }: UserSummaryProps) => {
-  const dispatch:any = useDispatch();
+  const dispatch: any = useDispatch();
   const user = RemoteConnectionSelectors.useLoggedInUser();
   const settings = SettingsSelectors.useSettings();
   const { serverUrl } = settings;

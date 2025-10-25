@@ -220,7 +220,6 @@ export const RecordValidationReport = () => {
       {editDialogOpen && (
         <NodeEditDialog
           nodeDef={dialogNodeDef}
-          nodeUuid={dialogNodeUuid}
           parentNodeUuid={dialogParentNodeUuid}
           onDismiss={() => setState({ editDialogOpen: false })}
         />

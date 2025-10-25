@@ -9,8 +9,8 @@ type DropdownProps = {
   itemKeyExtractor?: (item: any) => any;
   itemLabelExtractor?: (item: any) => string;
   label?: string;
-  items?: any[];
-  onChange?: (value: any) => void;
+  items: any[];
+  onChange?: (value: any) => Promise<void>;
   showLabel?: boolean;
   value?: any;
 };
@@ -37,7 +37,7 @@ export const Dropdown = (props: DropdownProps) => {
   const itemToOption = useCallback(
     (item: any) => ({
       value: itemKeyExtractor(item),
-      label: t(itemLabelExtractor(item))
+      label: t(itemLabelExtractor(item)),
     }),
     [itemKeyExtractor, itemLabelExtractor, t]
   );
@@ -47,7 +47,7 @@ export const Dropdown = (props: DropdownProps) => {
   const setValue = useCallback(
     async (val: any) => {
       if (disabled) return;
-      await onChange(val);
+      await onChange?.(val);
     },
     [disabled, onChange]
   );

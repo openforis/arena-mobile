@@ -23,16 +23,16 @@ import { SurveyUpdateStatusIcon } from "./SurveyUpdateStatusIcon";
 import styles from "./selectedSurveyContainerStyles";
 
 type SelectedSurveyContainerState = {
-  updateStatus: string,
-  errorKey?: string | null
-}
+  updateStatus: UpdateStatus | SurveyStatus;
+  errorKey?: string | null;
+};
 
 export const SelectedSurveyContainer = () => {
   const navigation = useNavigation();
   const networkAvailable = useIsNetworkConnected();
   const user = RemoteConnectionSelectors.useLoggedInUser();
 
-  const survey = SurveySelectors.useCurrentSurvey();
+  const survey = SurveySelectors.useCurrentSurvey()!;
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
 
   const surveyName = Surveys.getName(survey);
@@ -77,6 +77,7 @@ export const SelectedSurveyContainer = () => {
     } else if (
       Dates.isAfter(
         surveyRemote?.datePublished ?? surveyRemote?.dateModified,
+        // @ts-ignore
         survey.datePublished ?? survey.dateModified
       )
     ) {

@@ -45,12 +45,12 @@ export class RecordsUploadJob extends JobMobile {
     this.remoteJob = job;
   }
 
-  async cancel() {
+  override async cancel() {
     this.cancelUpload?.();
     await super.cancel();
   }
 
-  async prepareResult() {
+  override async prepareResult() {
     const { remoteJob } = this;
     return { remoteJob };
   }

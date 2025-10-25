@@ -25,7 +25,7 @@ export const SettingsScreen = () => {
 
   const onPropValueChange =
     ({ key }: any) =>
-    (value: any) => {
+    async (value: any) => {
       const oldValue = settings[key];
       if (value === oldValue) return;
       dispatch(SettingsActions.updateSetting({ key, value }) as never);

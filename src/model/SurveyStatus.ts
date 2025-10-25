@@ -1,4 +1,4 @@
-export const SurveyStatus = {
-  notInArenaServer: "notInArenaServer",
-  notVisibleInMobile: "notVisibleInMobile",
-};
+export enum SurveyStatus {
+  notInArenaServer = "notInArenaServer",
+  notVisibleInMobile = "notVisibleInMobile",
+}

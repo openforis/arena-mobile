@@ -6,11 +6,14 @@ import { useTranslation } from "localization";
 import { AppService } from "service";
 import { Files } from "utils";
 import { useConfirm } from "state/confirm";
+import { StyleSheet } from "react-native";
 
-const style = {
-  alignSelf: "center",
-  margin: 10,
-};
+const styles = StyleSheet.create({
+  base: {
+    alignSelf: "center",
+    margin: 10,
+  },
+});
 
 export const FullBackupButton = () => {
   const toaster = useToast();
@@ -46,6 +49,10 @@ export const FullBackupButton = () => {
   }, [confirm, t, toaster]);
 
   return (
-    <Button onPress={onPress} style={style} textKey="app:fullBackup.title" />
+    <Button
+      onPress={onPress}
+      style={styles.base}
+      textKey="app:fullBackup.title"
+    />
   );
 };

@@ -36,7 +36,7 @@ export const useNodeCodeComponentLocalState = ({
     nodeDef,
   });
 
-  const survey = SurveySelectors.useCurrentSurvey();
+  const survey = SurveySelectors.useCurrentSurvey()!;
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const cycle = DataEntrySelectors.useRecordCycle();
   const parentItemUuid = DataEntrySelectors.useRecordCodeParentItemUuid({

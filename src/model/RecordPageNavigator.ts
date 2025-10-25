@@ -40,6 +40,7 @@ const getNextOrPreviousMultipleEntityPointer = ({
     survey,
     uuid: entityDefUuid,
   });
+  // @ts-ignore
   const { siblingNode, index: siblingIndex } = RecordNodes.getSiblingNode({
     record,
     parentEntity,

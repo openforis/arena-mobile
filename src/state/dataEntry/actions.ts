@@ -187,7 +187,7 @@ const deleteNodes =
   (nodeUuids: any) => async (dispatch: any, getState: any) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
 
     const { record: recordUpdated, nodes } = await RecordUpdater.deleteNodes({
@@ -205,7 +205,7 @@ const deleteNodes =
 const deleteRecords =
   (recordUuids: any) => async (dispatch: any, getState: any) => {
     const state = getState();
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
 
     await RecordService.deleteRecords({ surveyId: survey.id, recordUuids });
 
@@ -374,7 +374,7 @@ const checkAndConfirmUpdateNode = async ({
   nodeDef,
 }: any) => {
   const state = getState();
-  const survey = SurveySelectors.selectCurrentSurvey(state);
+  const survey = SurveySelectors.selectCurrentSurvey(state)!;
   const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
   const record = DataEntrySelectors.selectRecord(state);
   const dependentEnumeratedEntityDefs =

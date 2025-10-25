@@ -25,7 +25,7 @@ type SettingsItemProps = {
   settings: any;
   settingKey: string;
   prop: any;
-  onPropValueChange: (params: { key: string }) => (value: any) => void;
+  onPropValueChange: (params: { key: string }) => (value: any) => Promise<void>;
 };
 
 export const SettingsItem = (props: SettingsItemProps) => {

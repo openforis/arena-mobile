@@ -9,16 +9,20 @@ import {
 } from "components";
 import { ScreenViewMode, SurveyStatus, UpdateStatus } from "model";
 
-const statusIconByStatus = {
+const statusIconByStatus: Record<UpdateStatus | SurveyStatus, string> = {
   [UpdateStatus.error]: "alert",
+  [UpdateStatus.loading]: "alert",
+  [UpdateStatus.networkNotAvailable]: "alert",
   [UpdateStatus.notUpToDate]: "update",
   [UpdateStatus.upToDate]: "check",
   [SurveyStatus.notInArenaServer]: "alert",
   [SurveyStatus.notVisibleInMobile]: "alert",
 };
 
-const statusIconColorByStatus = {
+const statusIconColorByStatus: Record<UpdateStatus | SurveyStatus, string> = {
   [UpdateStatus.error]: "red",
+  [UpdateStatus.loading]: "orange",
+  [UpdateStatus.networkNotAvailable]: "orange",
   [UpdateStatus.notUpToDate]: "orange",
   [UpdateStatus.upToDate]: "green",
   [SurveyStatus.notInArenaServer]: "red",
@@ -31,7 +35,7 @@ type Props = DataVisualizerCellProps & {
 
 export const SurveyStatusCell = (props: Props) => {
   const { item, viewMode } = props;
-  const { status } = item;
+  const status: SurveyStatus | UpdateStatus = item.status;
 
   const icon = useMemo(
     () =>

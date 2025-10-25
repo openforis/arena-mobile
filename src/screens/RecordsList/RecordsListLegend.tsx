@@ -39,7 +39,7 @@ export const RecordsListLegend = () => {
       headerKey="common:legend"
     >
       <FieldSet headerKey="recordsList:loadStatus.title">
-        {Object.values(RecordLoadStatus).map((loadStatus: any) => (
+        {Object.values(RecordLoadStatus).map((loadStatus) => (
           <LegendItem
             key={loadStatus}
             iconSource={RecordListConstants.iconByLoadStatus[loadStatus]}

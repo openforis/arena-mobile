@@ -1,23 +1,17 @@
 import { useMemo } from "react";
-import { StyleProp, StyleSheet, ViewStyle } from "react-native";
+import { StyleSheet } from "react-native";
 
 import { useIsTextDirectionRtl } from "localization";
 
-import { View } from "./View";
+import { View, ViewProps } from "./View";
 
-const defaultStyle = StyleSheet.create({
+const styles = StyleSheet.create({
   base: { display: "flex", flexDirection: "row", gap: 4 },
+  rtlStyle: { flexDirection: "row-reverse" },
 });
 
-const rtlStyle = { flexDirection: "row-reverse" };
-
-type Props = {
-  children?: React.ReactNode;
-  fullFlex?: boolean;
-  fullWidth?: boolean;
-  style?: StyleProp<ViewStyle>;
+type Props = ViewProps & {
   textDirectionAware?: boolean;
-  transparent?: boolean;
 };
 
 export const HView = (props: Props) => {
@@ -33,8 +27,8 @@ export const HView = (props: Props) => {
 
   const style = useMemo(
     () => [
-      defaultStyle.base,
-      textDirectionAware && isRtl ? rtlStyle : undefined,
+      styles.base,
+      textDirectionAware && isRtl ? styles.rtlStyle : undefined,
       styleProp,
     ],
     [isRtl, styleProp, textDirectionAware]

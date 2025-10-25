@@ -11,9 +11,9 @@ import { SurveyStatus, UpdateStatus } from "model";
 import { SurveyActions, SurveySelectors } from "state";
 
 type Props = {
-  errorKey?: string;
+  errorKey?: string | null;
   onPress?: () => void;
-  updateStatus: string;
+  updateStatus: UpdateStatus | SurveyStatus;
 };
 
 export const SurveyUpdateStatusIcon = ({
@@ -78,7 +78,7 @@ export const SurveyUpdateStatusIcon = ({
   return (
     <UpdateStatusIcon
       loading={loading}
-      updateStatus={updateStatus}
+      updateStatus={updateStatus as UpdateStatus}
       onPress={onPress}
     />
   );

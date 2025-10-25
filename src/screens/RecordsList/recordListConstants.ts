@@ -1,6 +1,6 @@
 import { RecordLoadStatus, RecordOrigin } from "model";
 
-const iconByLoadStatus = {
+const iconByLoadStatus: Record<RecordLoadStatus, string> = {
   [RecordLoadStatus.complete]: "circle-slice-8",
   [RecordLoadStatus.partial]: "circle-slice-4",
   [RecordLoadStatus.summary]: "circle-outline",

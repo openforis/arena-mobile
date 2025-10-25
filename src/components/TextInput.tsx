@@ -20,6 +20,7 @@ type Props = {
   placeholder?: string;
   onChange?: (text: string) => void;
   onPressIn?: () => void;
+  right?: React.ReactNode;
   secureTextEntry?: boolean;
   style?: StyleProp<ViewStyle>;
   value?: string;
@@ -42,6 +43,7 @@ export const TextInput = forwardRef(function TextInput(
     placeholder: placeholderKey,
     onChange,
     onPressIn,
+    right,
     secureTextEntry,
     style: styleProp = {},
     value,
@@ -83,6 +85,7 @@ export const TextInput = forwardRef(function TextInput(
       onPressIn={onPressIn}
       placeholder={placeholder}
       ref={ref}
+      right={right}
       secureTextEntry={secureTextEntry}
       style={style}
       textColor={textColor}

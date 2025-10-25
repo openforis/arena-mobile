@@ -1,15 +1,15 @@
 import React from "react";
-import { StyleProp, ViewStyle } from "react-native";
+import { StyleProp, TextStyle, ViewStyle } from "react-native";
 import { MD3TypescaleKey, Button as RNPButton } from "react-native-paper";
 
 import { useEffectiveTheme } from "hooks/useEffectiveTheme";
-import { textDirections, useTextDirection, useTranslation } from "localization";
+import { TextDirection, useTextDirection, useTranslation } from "localization";
 import { BaseStyles } from "utils/BaseStyles";
 import { useButtonOnPress } from "./useButtonPress";
 
 const iconPositionByTextDirection = {
-  [textDirections.ltr]: "left",
-  [textDirections.rtl]: "right",
+  [TextDirection.ltr]: "left",
+  [TextDirection.rtl]: "right",
 };
 
 export type ButtonMode =
@@ -30,6 +30,7 @@ export type ButtonProps = {
   icon?: string | any;
   iconColor?: string;
   iconPosition?: ButtonIconPosition;
+  labelStyle?: StyleProp<TextStyle>;
   labelVariant?: string;
   loading?: boolean;
   mode?: ButtonMode;

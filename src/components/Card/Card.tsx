@@ -1,9 +1,11 @@
 import { Card as RNPCard } from "react-native-paper";
 
 import { useTranslation } from "localization";
+import { StyleProp, ViewStyle } from "react-native";
 
 type Props = {
   children?: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
   titleKey?: string;
 };
 

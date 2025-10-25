@@ -9,13 +9,10 @@ import { ToastActions } from "state/toast";
 const textKeyPrefix = "recordsList:cloneRecords.";
 
 export const cloneRecordsIntoDefaultCycle =
-  ({
-    recordSummaries,
-    callback = null
-  }: any) =>
+  ({ recordSummaries, callback = null }: any) =>
   async (dispatch: any, getState: any) => {
     const state = getState();
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const cycle = Surveys.getDefaultCycleKey(survey);
     const cycleLabel = Cycles.labelFunction(cycle);
 

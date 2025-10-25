@@ -65,7 +65,7 @@ const selectRecordEntitiesUuidsAndKeyValues =
   ({ parentNodeUuid, nodeDefUuid }: any) =>
   (state: any) => {
     const record = selectRecord(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
     const entities = Records.getChildren(parentNode, nodeDefUuid)(record);
     return entities.map((entity) => ({
@@ -193,13 +193,13 @@ const selectRecordHasErrors = (state: any) => {
 const selectCurrentPageEntity = (
   state: any
 ): {
-  parentEntityUuid?: string | null | undefined;
+  parentEntityUuid?: string | undefined;
   entityDef: NodeDefEntity;
-  entityUuid?: string | null | undefined;
+  entityUuid: string;
   previousCycleParentEntityUuid?: string;
   previousCycleEntityUuid?: string;
 } => {
-  const survey = SurveySelectors.selectCurrentSurvey(state);
+  const survey = SurveySelectors.selectCurrentSurvey(state)!;
   const record = selectRecord(state);
 
   const {
@@ -212,9 +212,9 @@ const selectCurrentPageEntity = (
 
   if (!parentEntityUuid) {
     return {
-      parentEntityUuid: null,
+      parentEntityUuid: undefined,
       entityDef: Surveys.getNodeDefRoot({ survey }),
-      entityUuid: Records.getRoot(record)?.uuid,
+      entityUuid: Records.getRoot(record)?.uuid!,
     };
   }
   const entityDef = Surveys.getNodeDefByUuid({
@@ -311,7 +311,7 @@ const selectPreviousCycleRecordAttributeValue =
 const selectPreviousCycleEntityWithSameKeys =
   ({ entityUuid }: any) =>
   (state: any) => {
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = selectRecord(state);
     const previousCycleRecord = selectPreviousCycleRecord(state);
 

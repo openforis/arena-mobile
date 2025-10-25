@@ -26,7 +26,7 @@ export const SurveyLanguageSelector = () => {
   const selectedValue = singleLanguage ? languages[0] : preferredLang;
 
   const onChange = useCallback(
-    (lang: any) => {
+    async (lang: any) => {
       dispatch(
         SurveyActions.setCurrentSurveyPreferredLanguage({ lang }) as never
       );

@@ -46,7 +46,7 @@ const updateSurvey = async ({ id, survey }: any) => {
 };
 
 const fetchSurveyById = async (id: any) => {
-  const row = await dbClient.one(
+  const row: any = await dbClient.one(
     "SELECT remote_id, content FROM survey WHERE id = ?",
     [id]
   );

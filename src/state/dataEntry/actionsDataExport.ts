@@ -48,7 +48,7 @@ const startUploadDataToRemoteServer =
   async (dispatch: any, getState: any) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const cycle = Surveys.getDefaultCycleKey(survey);
 
     const uploadJob = new RecordsUploadJob({
@@ -223,7 +223,7 @@ export const exportRecords =
   }: any) =>
   async (dispatch: any, getState: any) => {
     const state = getState();
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const surveyId = survey.id;
 
     const onJobComplete = async (jobComplete: any) => {

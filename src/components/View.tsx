@@ -11,15 +11,16 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+export type ViewProps = {
   children?: React.ReactNode;
   fullFlex?: boolean;
   fullWidth?: boolean;
+  pointerEvents?: "box-none" | "none" | "box-only" | "auto" | undefined;
   style?: StyleProp<ViewStyle>;
   transparent?: boolean;
 };
 
-export const View = (props: Props) => {
+export const View = (props: ViewProps) => {
   const {
     children,
     fullFlex = false,

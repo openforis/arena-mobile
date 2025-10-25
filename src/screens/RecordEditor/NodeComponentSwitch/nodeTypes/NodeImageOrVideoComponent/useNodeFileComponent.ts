@@ -13,7 +13,7 @@ import { ExifUtils, Files, ImageUtils, Permissions } from "utils";
 
 import { useCheckCanAccessMediaLibrary } from "./useCheckCanAccessMediaLibrary";
 
-const mediaTypeByFileType: Record<string, string> = {
+const mediaTypeByFileType: Record<string, ImagePicker.MediaType> = {
   [NodeDefFileType.image]: "images",
   [NodeDefFileType.video]: "videos",
 };

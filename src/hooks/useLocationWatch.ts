@@ -42,8 +42,10 @@ export const useLocationWatch = ({
 }: any) => {
   const isMountedRef = useIsMountedRef();
   const lastLocationRef = useRef(null);
-  const locationSubscriptionRef = useRef(null as any);
-  const locationAccuracyWatchTimeoutRef = useRef(null);
+  const locationSubscriptionRef = useRef(
+    null as Location.LocationSubscription | null
+  );
+  const locationAccuracyWatchTimeoutRef = useRef(null as number | null);
   const locationWatchIntervalRef = useRef(null as any);
   const toaster = useToast();
 
@@ -68,9 +70,10 @@ export const useLocationWatch = ({
   }, []);
 
   const _stopLocationWatch = useCallback(() => {
-    const wasActive = !!locationSubscriptionRef.current;
+    const subscription = locationSubscriptionRef.current;
+    const wasActive = !!subscription;
     if (wasActive) {
-      locationSubscriptionRef.current.remove();
+      subscription.remove();
       locationSubscriptionRef.current = null;
 
       clearLocationWatchTimeout();

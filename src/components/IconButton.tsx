@@ -8,6 +8,7 @@ type IconButtonMode = "outlined" | "contained" | "contained-tonal";
 
 export type IconButtonProps = ButtonProps & {
   mode?: IconButtonMode;
+  selected?: boolean;
   size?: number;
 };
 

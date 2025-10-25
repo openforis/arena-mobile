@@ -5,7 +5,7 @@ import { NodeDefs } from "@openforis/arena-core";
 
 import { NavigateToRecordsListButton } from "appComponents/NavigateToRecordsListButton";
 import { HView, IconButton, View } from "components";
-import { textDirections, useTextDirection } from "localization";
+import { TextDirection, useTextDirection } from "localization";
 import { DataEntryActions, DataEntrySelectors } from "state";
 
 import { NodePageNavigationButton } from "./NodePageNavigationButton";
@@ -13,15 +13,19 @@ import { SingleNodeNavigationButton } from "./SingleNodeNavigationButton";
 import { useBottomNavigationBar } from "./useBottomNavigationBar";
 
 import { useStyles } from "./styles";
+import { ButtonIconPosition } from "components/Button";
 
-const { ltr, rtl } = textDirections;
+const { ltr, rtl } = TextDirection;
 
 const prevIconByTextDirection = {
   [ltr]: "chevron-left",
   [rtl]: "chevron-right",
 };
 
-const prevButtonIconPositionByTextDirection = {
+const prevButtonIconPositionByTextDirection: Record<
+  TextDirection,
+  ButtonIconPosition
+> = {
   [ltr]: "left",
   [rtl]: "right",
 };
@@ -31,7 +35,10 @@ const nextIconByTextDirection = {
   [rtl]: "chevron-left",
 };
 
-const nextButtonIconPositionByTextDirection = {
+const nextButtonIconPositionByTextDirection: Record<
+  TextDirection,
+  ButtonIconPosition
+> = {
   [ltr]: "right",
   [rtl]: "left",
 };
@@ -74,7 +81,9 @@ export const BottomNavigationBar = () => {
   } = useBottomNavigationBar();
 
   const onNewPress = useCallback(() => {
-    dispatch(DataEntryActions.addNewEntity({ delay: entityCreationDelay }) as never);
+    dispatch(
+      DataEntryActions.addNewEntity({ delay: entityCreationDelay }) as never
+    );
   }, [dispatch]);
 
   const prevButtonGoesToList =

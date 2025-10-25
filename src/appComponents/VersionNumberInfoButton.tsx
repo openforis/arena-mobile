@@ -12,7 +12,7 @@ import { VersionNumberInfoText } from "./VersionNumberInfoText";
 
 type State = {
   changelogDialogOpen?: boolean;
-  updateStatus: string;
+  updateStatus: UpdateStatus;
   updateStatusError?: string;
   updateUrl?: string;
 };

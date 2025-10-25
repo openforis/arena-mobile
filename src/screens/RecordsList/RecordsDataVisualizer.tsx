@@ -15,6 +15,7 @@ import { DataVisualizer, Icon, LoadingIcon, Text } from "components";
 import { useTranslation } from "localization";
 import {
   Cycles,
+  RecordLoadStatus,
   RecordOrigin,
   ScreenViewMode,
   SortDirection,
@@ -58,7 +59,11 @@ const RecordOriginListCellRenderer = ({ item }: DataVisualizerCellProps) => (
 const RecordLoadStatusTableCellRenderer = ({
   item,
 }: DataVisualizerCellProps) => (
-  <Icon source={RecordListConstants.iconByLoadStatus[item.loadStatus]} />
+  <Icon
+    source={
+      RecordListConstants.iconByLoadStatus[item.loadStatus as RecordLoadStatus]
+    }
+  />
 );
 
 const RecordLoadStatusListCellRenderer = ({
@@ -102,7 +107,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
   const navigation = useNavigation();
   const { t } = useTranslation();
 
-  const survey = SurveySelectors.useCurrentSurvey();
+  const survey = SurveySelectors.useCurrentSurvey()!;
   const cycle = SurveySelectors.useCurrentSurveyCycle();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const defaultCycleKey = Surveys.getDefaultCycleKey(survey);

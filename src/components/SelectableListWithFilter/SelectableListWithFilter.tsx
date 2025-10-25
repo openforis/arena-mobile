@@ -25,7 +25,10 @@ const _objToArray = (obj: any) => {
 };
 
 type Props = SelectableListProps & {
-  filterItems?: (params: { items: any[]; filterInputValue: string }) => any[];
+  filterItems?: (params: {
+    items: any[];
+    filterInputValue: string | null;
+  }) => any[];
   itemsCountToShowFilter?: number;
   maxItemsToShow?: number;
   onSelectedItemsChange: (items: any[], filterValue?: string | null) => void;

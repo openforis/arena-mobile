@@ -181,7 +181,7 @@ export class RecordsExportFileGenerationJob extends JobMobile {
     };
   }
 
-  async prepareResult() {
+  override async prepareResult() {
     const { outputFileUri } = this;
     return { outputFileUri };
   }

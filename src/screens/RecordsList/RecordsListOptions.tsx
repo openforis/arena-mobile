@@ -36,7 +36,7 @@ export const RecordsListOptions = (props: RecordsListOptionsProps) => {
   } = props;
 
   const networkAvailable = useIsNetworkConnected();
-  const survey = SurveySelectors.useCurrentSurvey();
+  const survey = SurveySelectors.useCurrentSurvey()!;
 
   const defaultCycleKey = Surveys.getDefaultCycleKey(survey);
   const defaultCycleText = Cycles.labelFunction(defaultCycleKey);

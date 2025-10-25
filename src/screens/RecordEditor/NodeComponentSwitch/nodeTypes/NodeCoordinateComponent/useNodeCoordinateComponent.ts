@@ -83,7 +83,7 @@ export const useNodeCoordinateComponent = (props: any) => {
 
   const dispatch = useDispatch();
   const confirm = useConfirm();
-  const survey = SurveySelectors.useCurrentSurvey();
+  const survey = SurveySelectors.useCurrentSurvey()!;
   const srsIndex = SurveySelectors.useCurrentSurveySrsIndex();
   const srss = useMemo(() => Surveys.getSRSs(survey), [survey]);
   const singleSrs = srss.length === 1;
@@ -257,7 +257,7 @@ export const useNodeCoordinateComponent = (props: any) => {
   }, [stopLocationWatch]);
 
   const onChangeSrs = useCallback(
-    (srsTo: any) => {
+    async (srsTo: any) => {
       dispatch(
         DataEntryActions.updateCoordinateValueSrs({ nodeUuid, srsTo }) as never
       );

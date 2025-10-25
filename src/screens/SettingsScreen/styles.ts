@@ -17,6 +17,9 @@ export default StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  settingsFormItemHorizontalRtl: {
+    flexDirection: "row-reverse",
+  },
   button: {
     alignSelf: "center",
   },
