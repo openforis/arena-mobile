@@ -2,19 +2,17 @@ import { JobMobile } from "model";
 
 import { RecordService } from "./recordService";
 
-// @ts-expect-error TS(2507): Type 'typeof JobMobile' is not a constructor funct... Remove this comment to see the full error message
+// @ts-ignore
 export class RecordsUploadJob extends JobMobile {
   cancelUpload: any;
-  context: any;
-  emitSummaryUpdateEvent: any;
+  override emitSummaryUpdateEvent: any;
   remoteJob: any;
-  summary: any;
   constructor({
     user,
     survey,
     cycle,
     fileUri,
-    conflictResolutionStrategy
+    conflictResolutionStrategy,
   }: any) {
     super({ user, survey, cycle, fileUri, conflictResolutionStrategy });
     this.cancelUpload = null; // cancels upload request
@@ -42,8 +40,7 @@ export class RecordsUploadJob extends JobMobile {
       },
     });
     this.cancelUpload = cancel;
-    // @ts-expect-error TS(2339): Property 'data' does not exist on type 'unknown'.
-    const { data } = await promise;
+    const { data } = (await promise) as any;
     const { job } = data;
     this.remoteJob = job;
   }

@@ -2,8 +2,10 @@ import { Keyboard } from "react-native";
 
 import {
   Dates,
+  Node,
   NodeDefs,
   NodeDefType,
+  Nodes,
   Numbers,
   Objects,
   PointFactory,
@@ -39,7 +41,7 @@ import {
   importRecordsFromServer,
 } from "./actionsRecordsImport";
 import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
-import { UnknownAction } from "redux";
+import { NodesMap } from "@openforis/arena-core/dist/node";
 
 const {
   DATA_ENTRY_RESET,
@@ -56,15 +58,10 @@ const {
   updatePreviousCyclePageEntity,
 } = DataEntryActionsRecordPreviousCycle;
 
-const removeNodesFlags = (nodes: any) => {
-  Object.values(nodes).forEach((node) => {
-    // @ts-expect-error TS(2571): Object is of type 'unknown'.
-    delete node["created"];
-    // @ts-expect-error TS(2571): Object is of type 'unknown'.
-    delete node["deleted"];
-    // @ts-expect-error TS(2571): Object is of type 'unknown'.
-    delete node["updated"];
-  });
+const removeNodesFlags = (nodes: NodesMap) => {
+  for (const node of Object.values(nodes)) {
+    Nodes.removeStatusFlags(node);
+  }
 };
 
 const _isRootKeyDuplicate = async ({ survey, record, lang }: any) => {
@@ -90,7 +87,7 @@ const createNewRecord =
   async (dispatch: any, getState: any) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const cycle = Surveys.getDefaultCycleKey(survey);
     // to always use the selected cycle, use this: const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
     const appInfo = SystemUtils.getRecordAppInfo();
@@ -100,7 +97,6 @@ const createNewRecord =
         surveyUuid: survey.uuid,
         cycle,
         user: user ?? {},
-        // @ts-expect-error TS(2322): Type '{ appId: string; version: string | null; pla... Remove this comment to see the full error message
         appInfo,
       }),
       dateCreated: now,
@@ -125,24 +121,24 @@ const createNewRecord =
 const _performAddEntity = async (dispatch: any, getState: any) => {
   const state = getState();
   const user = RemoteConnectionSelectors.selectLoggedUser(state);
-  const survey = SurveySelectors.selectCurrentSurvey(state);
+  const survey = SurveySelectors.selectCurrentSurvey(state)!;
   const record = DataEntrySelectors.selectRecord(state);
   const { parentEntityUuid: currentParentNodeUuid, entityDef: nodeDef } =
     DataEntrySelectors.selectCurrentPageEntity(state);
 
-  const parentNode = currentParentNodeUuid
-    ? Records.getNodeByUuid(currentParentNodeUuid)(record)
-    : Records.getRoot(record);
+  const parentNode = (
+    currentParentNodeUuid
+      ? Records.getNodeByUuid(currentParentNodeUuid)(record)
+      : Records.getRoot(record)
+  )!;
 
   if (
     DataEntrySelectors.selectIsMaxCountReached({
-      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       parentNodeUuid: parentNode.uuid,
       nodeDef,
     })(state)
   ) {
     dispatch(
-      // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
       MessageActions.setWarning(
         "dataEntry:node.cannotAddMoreItems.maxCountReached"
       )
@@ -163,25 +159,22 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
 
   const nodeCreated = Object.values(nodesCreated).find(
     (nodeCreated) => nodeCreated.nodeDefUuid === nodeDef.uuid
-  );
+  )!;
 
   await _updateRecord({ dispatch, survey, record: recordUpdated });
 
   dispatch(
     selectCurrentPageEntity({
-      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       parentEntityUuid: parentNode.uuid,
       entityDefUuid: nodeDef.uuid,
-      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       entityUuid: nodeCreated.uuid,
     })
   );
 };
 
 const addNewEntity =
-  (options = {}) =>
+  (options = {} as any) =>
   async (dispatch: any) => {
-    // @ts-expect-error TS(2339): Property 'delay' does not exist on type '{}'.
     const { delay = null } = options;
     Keyboard.dismiss();
     if (delay) {
@@ -410,15 +403,14 @@ const updateAttribute =
   async (dispatch: any, getState: any) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
     const record = DataEntrySelectors.selectRecord(state);
 
     const cycle = Records.getCycle(record);
-    const node = Records.getNodeByUuid(uuid)(record);
+    const node = Records.getNodeByUuid(uuid)(record)!;
     const nodeDef = Surveys.getNodeDefByUuid({
       survey,
-      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       uuid: node.nodeDefUuid,
     });
 
@@ -476,20 +468,18 @@ const performCoordinateValueSrsConversion =
   ({ nodeUuid, srsTo }: any) =>
   async (dispatch: any, getState: any) => {
     const state = getState();
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
     const srsIndex = Surveys.getSRSIndex(survey);
 
     const node = Records.getNodeByUuid(nodeUuid)(record);
     const prevValue = node?.value ?? {};
     const { x, y, srs } = prevValue;
-    const pointFrom = PointFactory.createInstance({ x, y, srs });
-    const pointTo = Points.transform(pointFrom, srsTo, srsIndex);
+    const pointFrom = PointFactory.createInstance({ x, y, srs })!;
+    const pointTo = Points.transform(pointFrom, srsTo, srsIndex)!;
     const nextValue = {
       ...prevValue,
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
       x: Numbers.roundToPrecision(pointTo.x, 6),
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
       y: Numbers.roundToPrecision(pointTo.y, 6),
       srs: srsTo,
     };
@@ -537,7 +527,7 @@ const addNewAttribute =
   async (dispatch: any, getState: any) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
 
@@ -552,14 +542,13 @@ const addNewAttribute =
 
     const nodeCreated = Object.values(nodesCreated).find(
       (nodeCreated) => nodeCreated.nodeDefUuid === nodeDef.uuid
-    );
+    )!;
 
     const { record: recordUpdated2 } = await RecordUpdater.updateAttributeValue(
       {
         user,
         survey,
         record: recordUpdated,
-        // @ts-expect-error TS(2532): Object is possibly 'undefined'.
         attributeUuid: nodeCreated.uuid,
         value,
       }

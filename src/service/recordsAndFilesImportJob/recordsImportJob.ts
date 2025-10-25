@@ -4,12 +4,8 @@ import { ArrayUtils, Files } from "utils";
 import { RecordsExportFile } from "../recordsExportFile";
 import { RecordService } from "../recordService";
 
-// @ts-expect-error TS(2507): Type 'typeof JobMobile' is not a constructor funct... Remove this comment to see the full error message
 export class RecordsImportJob extends JobMobile {
-  context: any;
-  incrementProcessedItems: any;
   insertedRecords: any;
-  summary: any;
   updatedRecords: any;
   async execute() {
     const { survey, unzippedFolderUri, overwriteExistingRecords } =
@@ -19,9 +15,15 @@ export class RecordsImportJob extends JobMobile {
       unzippedFolderUri,
       RecordsExportFile.recordsSummaryJsonPath
     );
-    const fileRecordsSummary = await Files.readJsonFromFile({
+    const fileRecordsSummaryObj = await Files.readJsonFromFile({
       fileUri: fileRecordsSummaryJsonUri,
     });
+
+    if (!fileRecordsSummaryObj) {
+      return;
+    }
+
+    const fileRecordsSummary = fileRecordsSummaryObj as any[];
 
     this.summary.total = fileRecordsSummary.length;
     this.insertedRecords = 0;

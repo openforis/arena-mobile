@@ -45,7 +45,7 @@ export default class SQLiteClient {
     return this.privateDb!.getFirstAsync(sql, params);
   }
 
-  async many(sql: any, params: any) {
+  async many(sql: any, params?: any) {
     return this.privateDb!.getAllAsync(sql, params);
   }
 

@@ -2,17 +2,13 @@ import { FileProcessor } from "@openforis/arena-core";
 import { Files } from "./Files";
 
 export class RNFileProcessor extends FileProcessor {
-  // @ts-expect-error TS(4114): This member must have an 'override' modifier becau... Remove this comment to see the full error message
-  async calculateFileSize() {
-    // @ts-expect-error TS(2341): Property 'filePath' is private and only accessible... Remove this comment to see the full error message
-    const { filePath: fileUri } = this;
+  override async calculateFileSize() {
+    const { filePath: fileUri } = this as any;
     return Files.getSize(fileUri);
   }
 
-  // @ts-expect-error TS(4114): This member must have an 'override' modifier becau... Remove this comment to see the full error message
-  async extractCurrentFileChunk() {
-    // @ts-expect-error TS(2341): Property 'filePath' is private and only accessible... Remove this comment to see the full error message
-    const { filePath: fileUri, currentChunkNumber, chunkSize } = this;
+  override async extractCurrentFileChunk() {
+    const { filePath: fileUri, currentChunkNumber, chunkSize } = this as any;
     return Files.readChunk(fileUri, currentChunkNumber, chunkSize);
   }
 }

@@ -45,7 +45,6 @@ const fetchAndSetCurrentSurvey =
     const survey = await SurveyService.fetchSurveyById(surveyId);
     if (survey) {
       if (!Surveys.isVisibleInMobile(survey)) {
-        // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
         const status = i18n.t("surveys:status.notVisibleInMobile");
         dispatch(
           MessageActions.setWarning("surveys:statusMessage", { status })

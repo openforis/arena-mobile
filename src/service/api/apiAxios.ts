@@ -8,7 +8,7 @@ const defaultOptions = {
   timeout: 40000, // 40 seconds
 };
 
-const errorMessageByCode = {
+const errorMessageByCode: Record<number, string> = {
   401: "User not authorized",
   403: "Forbidden",
   500: "Internal server error",
@@ -42,7 +42,6 @@ const get = async (serverUrl: any, uri: any, params = {}, options = {}) => {
   if (status === 200) {
     return { data };
   } else {
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     const errorMessage = errorMessageByCode[status] ?? errorMessageByCode[500];
     throw new Error(errorMessage);
   }

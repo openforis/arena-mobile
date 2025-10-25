@@ -26,13 +26,12 @@ const defaultSettings = {
 
 let INSTANCE: any = null;
 
-const systemSettingApplierByKey = {
-  ["fullScreen"]: async ({
-    value
-  }: any) => SystemUtils.setFullScreen(value),
-  ["keepScreenAwake"]: async ({
-    value
-  }: any) =>
+const systemSettingApplierByKey: Record<
+  string,
+  ({ key, value }: { key?: string; value: any }) => Promise<any>
+> = {
+  ["fullScreen"]: async ({ value }: any) => SystemUtils.setFullScreen(value),
+  ["keepScreenAwake"]: async ({ value }: any) =>
     SystemUtils.setKeepScreenAwake(value),
 };
 
@@ -46,14 +45,10 @@ const fetchSettings = async () => {
   return INSTANCE;
 };
 
-const updateSetting = async ({
-  key,
-  value
-}: any) => {
+const updateSetting = async ({ key, value }: any) => {
   const settingsPrev = await fetchSettings();
   const settingsNext = { ...settingsPrev, [key]: value };
   await saveSettings(settingsNext);
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   await systemSettingApplierByKey[key]?.({ key, value });
   return settingsNext;
 };
@@ -63,7 +58,8 @@ const saveSettings = async (settings: any) => {
   INSTANCE = settings;
 };
 
-const getCredentials = async (server: any) => Keychain.getInternetCredentials(server);
+const getCredentials = async (server: any) =>
+  Keychain.getInternetCredentials(server);
 
 const setCredentials = async (server: any, email: any, password: any) =>
   Keychain.setInternetCredentials(server, email, password);

@@ -16,8 +16,11 @@ export interface ArenaMobileAppInfo extends AppInfo {
   lastUpdateTime?: string | null;
 }
 
-const { nativeBuildVersion: buildNumber, nativeApplicationVersion: version } =
+const defaultVersion = "2.0";
+
+const { nativeBuildVersion: buildNumber, nativeApplicationVersion } =
   Application;
+let version = nativeApplicationVersion ?? defaultVersion;
 
 const appId = "am";
 const { isAndroid, isExpoGo, platform } = Environment;
@@ -57,9 +60,10 @@ const getApplicationInfo = async (): Promise<ArenaMobileAppInfo> => {
   };
 };
 
-const getRecordAppInfo = () => ({
+const getRecordAppInfo = (): ArenaMobileAppInfo => ({
   appId,
   version,
+  // @ts-ignore
   platform,
 });
 

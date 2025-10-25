@@ -27,10 +27,7 @@ const insertSurvey = async (survey: any) => {
   return survey;
 };
 
-const updateSurvey = async ({
-  id,
-  survey
-}: any) => {
+const updateSurvey = async ({ id, survey }: any) => {
   await dbClient.runSql(
     `UPDATE survey SET name = ?, label = ?, content = ?, date_created = ?, date_modified = ?
      WHERE id = ?`,
@@ -63,7 +60,6 @@ const fetchSurveyById = async (id: any) => {
 };
 
 const fetchSurveySummaries = async () => {
-  // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
   const surveys = await dbClient.many(
     `SELECT id, server_url, remote_id, uuid, name, label, date_modified
     FROM survey
@@ -73,7 +69,6 @@ const fetchSurveySummaries = async () => {
 };
 
 const deleteSurveys = async (surveyIds: any) => {
-  // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
   await dbClient.runSql(
     `DELETE FROM survey WHERE id IN (${DbUtils.quoteValues(surveyIds)})`
   );

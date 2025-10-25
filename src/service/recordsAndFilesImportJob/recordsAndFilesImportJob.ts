@@ -4,24 +4,16 @@ import { Files } from "utils";
 import { RecordsImportJob } from "./recordsImportJob";
 import { FilesImportJob } from "./filesImportJob";
 
-// @ts-expect-error TS(2507): Type 'typeof JobMobile' is not a constructor funct... Remove this comment to see the full error message
+// @ts-ignore
 export class RecordsAndFilesImportJob extends JobMobile {
-  context: any;
-  jobs: any;
-  constructor({
-    survey,
-    user,
-    fileUri,
-    overwriteExistingRecords = true
-  }: any) {
+  constructor({ survey, user, fileUri, overwriteExistingRecords = true }: any) {
     super({ survey, user, fileUri, overwriteExistingRecords }, [
-      // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
       new RecordsImportJob({ survey, user, fileUri, overwriteExistingRecords }),
       new FilesImportJob({ survey, user, fileUri }),
     ]);
   }
 
-  async onStart() {
+  override async onStart() {
     await super.onStart();
     const { fileUri } = this.context;
 
@@ -32,14 +24,14 @@ export class RecordsAndFilesImportJob extends JobMobile {
     this.context.unzippedFolderUri = unzippedFolderUri;
   }
 
-  async prepareResult() {
+  override async prepareResult() {
     const recordsImportJob = this.jobs?.[0];
-    const recordsImportJobSummary = recordsImportJob?.summary ?? {};
+    const recordsImportJobSummary: any = recordsImportJob?.summary ?? {};
     const { result = {}, processed } = recordsImportJobSummary;
     return { ...result, processedRecords: processed };
   }
 
-  async onEnd() {
+  override async onEnd() {
     await super.onEnd();
     await Files.del(this.context.unzippedFolderUri, true);
   }

@@ -8,21 +8,13 @@ import { RemoteConnectionSelectors } from "../remoteConnection/selectors";
 import { SurveySelectors } from "../survey/selectors";
 import { ToastActions } from "../toast";
 
-const handleImportErrors = ({
-  dispatch,
-  error = null,
-  errors = null
-}: any) => {
+const handleImportErrors = ({ dispatch, error = null, errors = null }: any) => {
   const details = error?.toString() ?? JSON.stringify(errors);
   dispatch(ToastActions.show("recordsList:importFailed", { details }));
 };
 
 export const importRecordsFromFile =
-  ({
-    fileUri,
-    onImportComplete,
-    overwriteExistingRecords = true
-  }: any) =>
+  ({ fileUri, onImportComplete, overwriteExistingRecords = true }: any) =>
   async (dispatch: any, getState: any) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
@@ -36,10 +28,8 @@ export const importRecordsFromFile =
     });
 
     try {
-      // @ts-expect-error TS(2339): Property 'start' does not exist on type 'RecordsAn... Remove this comment to see the full error message
       await importJob.start();
 
-      // @ts-expect-error TS(2339): Property 'summary' does not exist on type 'Records... Remove this comment to see the full error message
       const { status, errors, result } = importJob.summary;
 
       if (status === JobStatus.succeeded) {
@@ -67,7 +57,7 @@ const _onExportFromServerJobComplete = async ({
   dispatch,
   state,
   job,
-  onImportComplete
+  onImportComplete,
 }: any) => {
   try {
     const { outputFileName: fileName } = job.result;
@@ -88,10 +78,7 @@ const _onExportFromServerJobComplete = async ({
   }
 };
 
-const checkCanImportRecords = ({
-  dispatch,
-  survey
-}: any) => {
+const checkCanImportRecords = ({ dispatch, survey }: any) => {
   let errorKey;
   if (!Surveys.isVisibleInMobile(survey)) {
     errorKey = "recordsList:importRecords.error.surveyNotVisibleInMobile";
@@ -106,10 +93,7 @@ const checkCanImportRecords = ({
 };
 
 export const importRecordsFromServer =
-  ({
-    recordUuids,
-    onImportComplete
-  }: any) =>
+  ({ recordUuids, onImportComplete }: any) =>
   async (dispatch: any, getState: any) => {
     try {
       const state = getState();

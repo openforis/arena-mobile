@@ -1,4 +1,8 @@
-import { JobMessageOutType, JobStatus } from "@openforis/arena-core";
+import {
+  JobMessageOutType,
+  JobStatus,
+  JobSummary,
+} from "@openforis/arena-core";
 import { WebSocketService } from "service";
 
 const JOB_MONITOR_START = "JOB_MONITOR_START";
@@ -7,11 +11,10 @@ const JOB_MONITOR_END = "JOB_MONITOR_END";
 
 const getJobMonitorState = (state: any) => state.jobMonitor;
 
-const isJobStatusEnded = (status: any) => [JobStatus.canceled, JobStatus.failed, JobStatus.succeeded].includes(status);
+const isJobStatusEnded = (status: any) =>
+  [JobStatus.canceled, JobStatus.failed, JobStatus.succeeded].includes(status);
 
-const calculateJobProgressPercent = ({
-  jobSummary
-}: any) => {
+const calculateJobProgressPercent = ({ jobSummary }: any) => {
   const { total, processed, progressPercent } = jobSummary;
   return (
     progressPercent ?? (total ? Math.floor((processed / total) * 100) : -1)
@@ -19,13 +22,7 @@ const calculateJobProgressPercent = ({
 };
 
 const createOnJobUpdateCallback =
-  ({
-    dispatch,
-    job,
-    autoDismiss,
-    onJobComplete,
-    onJobEnd
-  }: any) =>
+  ({ dispatch, job, autoDismiss, onJobComplete, onJobEnd }: any) =>
   (jobSummary: any) => {
     const { status, errors } = jobSummary;
     const progressPercent = calculateJobProgressPercent({ jobSummary });
@@ -49,10 +46,7 @@ const createOnJobUpdateCallback =
     }
   };
 
-const createOnCancelCallback = ({
-  job,
-  onCancelProp
-}: any) => {
+const createOnCancelCallback = ({ job, onCancelProp }: any) => {
   if (!job && !onCancelProp) return undefined;
   return async () => {
     await job?.cancel();
@@ -77,7 +71,7 @@ const start =
     onJobEnd = undefined,
     onCancel: onCancelProp = undefined,
     onClose = undefined,
-    autoDismiss = false
+    autoDismiss = false,
   }: any) =>
   async (dispatch: any) => {
     dispatch({
@@ -120,7 +114,7 @@ const start =
 const startAsync = async ({
   dispatch,
   ...otherParams
-}: any) =>
+}: any): Promise<JobSummary<any> | undefined> =>
   new Promise((resolve, reject) => {
     const { job } = otherParams;
     if (job) {
@@ -131,7 +125,7 @@ const startAsync = async ({
     dispatch(
       start({
         ...otherParams,
-        onJobEnd: (jobEnd: any) => {
+        onJobEnd: (jobEnd: JobSummary<any>) => {
           const { status } = jobEnd;
           if (status === JobStatus.succeeded) {
             resolve(jobEnd);

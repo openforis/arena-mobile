@@ -16,11 +16,7 @@ const USER_LOADING = "USER_LOADING";
 const USER_SET = "USER_SET";
 const USER_PROFILE_ICON_INFO_SET = "USER_PROFILE_ICON_INFO_SET";
 
-const fetchUserOrLoginAgain = async ({
-  serverUrl,
-  email,
-  password
-}: any) => {
+const fetchUserOrLoginAgain = async ({ serverUrl, email, password }: any) => {
   let user;
   try {
     user = await AuthService.fetchUser();
@@ -78,9 +74,7 @@ const loginAndSetUser =
   };
 
 const confirmGoToConnectionToRemoteServer =
-  ({
-    navigation
-  }: any) =>
+  ({ navigation }: any) =>
   (dispatch: any) => {
     dispatch(
       ConfirmActions.show({
@@ -94,13 +88,7 @@ const confirmGoToConnectionToRemoteServer =
   };
 
 const login =
-  ({
-    serverUrl,
-    email,
-    password,
-    navigation = null,
-    showBack = false
-  }: any) =>
+  ({ serverUrl, email, password, navigation = null, showBack = false }: any) =>
   async (dispatch: any) => {
     const res = await AuthService.login({ serverUrl, email, password });
     const { user, error, message } = res;
@@ -126,7 +114,6 @@ const login =
         ? "invalidCredentials"
         : "generic";
       const errorKey = `authService:error.${errorKeySuffix}`;
-      // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
       const details = i18n.t(error ?? message);
 
       dispatch(
@@ -155,9 +142,7 @@ const fetchLoggedInUserProfileIcon = async (dispatch: any, getState: any) => {
 };
 
 const _clearUserCredentialsInternal =
-  ({
-    keepEmailAddress
-  }: any = {}) =>
+  ({ keepEmailAddress }: any = {}) =>
   async (dispatch: any) => {
     const settings = await SettingsService.fetchSettings();
     const settingsUpdated = {
@@ -185,9 +170,7 @@ const clearUserCredentials = () => async (dispatch: any) => {
 };
 
 const _doLogout =
-  ({
-    keepEmailAddress
-  }: any) =>
+  ({ keepEmailAddress }: any) =>
   async (dispatch: any) => {
     await AuthService.logout();
     await AsyncStorageUtils.removeItem(asyncStorageKeys.loggedInUser);
@@ -206,9 +189,7 @@ const logout = () => (dispatch: any) => {
         })
       ),
       titleKey: "authService:logout",
-      onConfirm: ({
-        selectedMultipleChoiceValues
-      }: any) =>
+      onConfirm: ({ selectedMultipleChoiceValues }: any) =>
         dispatch(
           _doLogout({
             keepEmailAddress: selectedMultipleChoiceValues.includes(

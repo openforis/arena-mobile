@@ -56,8 +56,7 @@ const selectRecordSingleNodeUuid =
   ({ parentNodeUuid, nodeDefUuid }: any) =>
   (state: any) => {
     const record = selectRecord(state);
-    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
-    // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
+    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
     const node = Records.getChild(parentNode, nodeDefUuid)(record);
     return node?.uuid;
   };
@@ -67,8 +66,7 @@ const selectRecordEntitiesUuidsAndKeyValues =
   (state: any) => {
     const record = selectRecord(state);
     const survey = SurveySelectors.selectCurrentSurvey(state);
-    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
-    // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
+    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
     const entities = Records.getChildren(parentNode, nodeDefUuid)(record);
     return entities.map((entity) => ({
       uuid: entity.uuid,
@@ -80,14 +78,12 @@ const selectRecordNodePointerValidation =
   (state: any) =>
   ({ parentNodeUuid, nodeDefUuid }: any) => {
     const record = selectRecord(state);
-    const nodeParent = Records.getNodeByUuid(parentNodeUuid)(record);
-    // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
+    const nodeParent = Records.getNodeByUuid(parentNodeUuid)(record)!;
     const nodes = Records.getChildren(nodeParent, nodeDefUuid)(record);
     if (nodes.length === 0) return undefined;
 
-    const node = nodes[0];
+    const node = nodes[0]!;
     const validation = RecordValidations.getValidationNode({
-      // @ts-expect-error TS(2532): Object is possibly 'undefined'.
       nodeUuid: node.uuid,
     })(record.validation);
     return validation;
@@ -108,11 +104,10 @@ const selectRecordNodePointerValidationChildrenCount =
 const selectRecordNodePointerVisibility =
   ({ parentNodeUuid, nodeDefUuid }: any) =>
   (state: any) => {
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = selectRecord(state);
 
-    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
-    // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
+    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
     const applicable = Nodes.isChildApplicable(parentNode, nodeDefUuid);
     const nodeDefChild = Surveys.getNodeDefByUuid({
       survey,
@@ -144,8 +139,7 @@ const selectRecordChildNodes =
   ({ parentEntityUuid, nodeDef }: any) =>
   (state: any) => {
     const record = selectRecord(state);
-    const parentEntity = Records.getNodeByUuid(parentEntityUuid)(record);
-    // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
+    const parentEntity = Records.getNodeByUuid(parentEntityUuid)(record)!;
     const nodes = Records.getChildren(parentEntity, nodeDef.uuid)(record);
     return { nodes };
   };
@@ -280,13 +274,14 @@ const selectPreviousCycleRecordPageEntity = (state: any) => {
   const { entityDef } = selectCurrentPageEntity(state);
   if (NodeDefs.isRoot(entityDef)) {
     const previousCycleRecord = selectPreviousCycleRecord(state);
-    return !previousCycleRecord
-      ? {}
-      : {
-          previousCycleParentEntityUuid: null,
-          // @ts-expect-error TS(2532): Object is possibly 'undefined'.
-          previousCycleEntityUuid: Records.getRoot(previousCycleRecord).uuid,
-        };
+    if (!previousCycleRecord) {
+      return {};
+    }
+    const previousCycleRecordRootEntity = Records.getRoot(previousCycleRecord)!;
+    return {
+      previousCycleParentEntityUuid: null,
+      previousCycleEntityUuid: previousCycleRecordRootEntity.uuid,
+    };
   } else {
     return getDataEntryState(state).previousCycleRecordPageEntity;
   }
@@ -295,7 +290,7 @@ const selectPreviousCycleRecordPageEntity = (state: any) => {
 const extractAttibuteValue = ({ state, attribute }: any) => {
   const { nodeDefUuid, value } = attribute ?? {};
   if (!value) return value;
-  const survey = SurveySelectors.selectCurrentSurvey(state);
+  const survey = SurveySelectors.selectCurrentSurvey(state)!;
   const attributeDef = Surveys.getNodeDefByUuid({ survey, uuid: nodeDefUuid });
   return RecordNodes.cleanupAttributeValue({ value, attributeDef });
 };
@@ -307,8 +302,7 @@ const selectPreviousCycleRecordAttributeValue =
       return null;
     }
     const record = selectPreviousCycleRecord(state);
-    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
-    // @ts-expect-error TS(2345): Argument of type 'Node | undefined' is not assigna... Remove this comment to see the full error message
+    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
     const attributes = Records.getChildren(parentNode, nodeDef.uuid)(record);
     const attribute = attributes[0];
     return extractAttibuteValue({ state, attribute });

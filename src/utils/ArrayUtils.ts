@@ -15,30 +15,33 @@ const determineDateFormat = (
       value.length === format.length && Dates.isValidDateInFormat(value, format)
   );
 
-const findByUuid = (uuid: any) => (array: any) => array.find((item: any) => item.uuid === uuid);
+const findByUuid = (uuid: any) => (array: any) =>
+  array.find((item: any) => item.uuid === uuid);
 
-const sortCompareFn = (sortProp: any, sortDirection: any) => (itemA: any, itemB: any) => {
-  const sortDirectionFactor = sortDirection === "ascending" ? 1 : -1;
-  const propA = itemA[sortProp];
-  const propB = itemB[sortProp];
-  const emptyA = Objects.isEmpty(propA);
-  const emptyB = Objects.isEmpty(propB);
-  if (emptyA && emptyB) return 0;
-  if (emptyA) return -1 * sortDirectionFactor;
-  if (emptyB) return 1 * sortDirectionFactor;
+const sortCompareFn =
+  (sortProp: any, sortDirection: any) => (itemA: any, itemB: any) => {
+    const sortDirectionFactor = sortDirection === "ascending" ? 1 : -1;
+    const propA = itemA[sortProp];
+    const propB = itemB[sortProp];
+    const emptyA = Objects.isEmpty(propA);
+    const emptyB = Objects.isEmpty(propB);
+    if (emptyA && emptyB) return 0;
+    if (emptyA) return -1 * sortDirectionFactor;
+    if (emptyB) return 1 * sortDirectionFactor;
 
-  if (typeof propA === "string" && typeof propB === "string") {
-    const dateFormat = determineDateFormat(propA);
-    if (dateFormat) {
-      const dateA = Dates.parse(propA, dateFormat);
-      const dateB = Dates.parse(propB, dateFormat);
-      // @ts-expect-error TS(2362): The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
-      return (dateA - dateB) * sortDirectionFactor;
+    if (typeof propA === "string" && typeof propB === "string") {
+      const dateFormat = determineDateFormat(propA);
+      if (dateFormat) {
+        const dateA = Dates.parse(propA, dateFormat);
+        const dateB = Dates.parse(propB, dateFormat);
+        const timeA = dateA instanceof Date && !isNaN(dateA.getTime()) ? dateA.getTime() : 0;
+        const timeB = dateB instanceof Date && !isNaN(dateB.getTime()) ? dateB.getTime() : 0;
+        return (timeA - timeB) * sortDirectionFactor;
+      }
+      return propA.localeCompare(propB) * sortDirectionFactor;
     }
-    return propA.localeCompare(propB) * sortDirectionFactor;
-  }
-  return (propA - propB) * sortDirectionFactor;
-};
+    return (propA - propB) * sortDirectionFactor;
+  };
 
 const sortByProp =
   (sortProp: any, sortDirection = "ascending") =>
@@ -57,10 +60,11 @@ const sortByProps = (sortObj: any) => (array: any) => {
   });
 };
 
-const indexByUuid = (array: any) => array.reduce((acc: any, item: any) => {
-  acc[item.uuid] = item;
-  return acc;
-}, {});
+const indexByUuid = (array: any) =>
+  array.reduce((acc: any, item: any) => {
+    acc[item.uuid] = item;
+    return acc;
+  }, {});
 
 export const ArrayUtils = {
   findByUuid,

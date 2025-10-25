@@ -4,9 +4,7 @@ import { Files } from "utils";
 
 const outputFileNamePrefix = `arena_mobile_full_backup_`;
 
-// @ts-expect-error TS(2507): Type 'typeof JobMobile' is not a constructor funct... Remove this comment to see the full error message
 export class BackupJob extends JobMobile {
-  context: any;
   async execute() {
     await super.onStart();
 
@@ -20,7 +18,7 @@ export class BackupJob extends JobMobile {
     this.context.outputFileUri = outputFileUri;
   }
 
-  async prepareResult() {
+  override async prepareResult() {
     const { outputFileUri } = this.context;
     return { outputFileUri };
   }
