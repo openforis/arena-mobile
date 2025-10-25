@@ -485,7 +485,7 @@ export const RecordsList = () => {
 
   const onCloneSelectedRecordUuids = useCallback(
     (selectedRecordUuids: any) => {
-      const selectedRecords = records?.filter((record) =>
+      const selectedRecords = records.filter((record) =>
         selectedRecordUuids.includes(record.uuid)
       );
       if (!checkRecordsCanBeCloned(selectedRecords)) {
@@ -514,7 +514,7 @@ export const RecordsList = () => {
     } else if (!Surveys.isRecordsUploadFromMobileAllowed(survey)) {
       return { errorKey: "recordsList:sendData.error.recordsUploadNotAllowed" };
     } else if (
-      (records?.filter((r) => r.errors).length ?? 0) > 0 &&
+      (records.filter((r) => r.errors).length ?? 0) > 0 &&
       !Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey)
     ) {
       return {
@@ -550,7 +550,7 @@ export const RecordsList = () => {
   const recordsFiltered = useMemo(() => {
     if (Objects.isEmpty(searchValue)) return records;
 
-    return records?.filter((recordSummary) => {
+    return records.filter((recordSummary) => {
       const valuesByKey = RecordsUtils.getValuesByKeyFormatted({
         survey,
         lang,
