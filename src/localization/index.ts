@@ -1,9 +1,8 @@
-import {
-  changeLanguage,
-  i18n,
-  useTranslation as useI18nTranslation,
-} from "./i18n";
-import {
+import { useTranslation as useI18nTranslation } from "./i18n";
+
+export { changeLanguage, i18n } from "./i18n";
+
+export {
   TextDirection,
   useIsTextDirectionRtl,
   useTextDirection,
@@ -17,11 +16,4 @@ const useTranslation = () => {
   };
 };
 
-export {
-  changeLanguage,
-  i18n,
-  TextDirection as TextDirection,
-  useIsTextDirectionRtl,
-  useTextDirection,
-  useTranslation,
-};
+export { useTranslation };

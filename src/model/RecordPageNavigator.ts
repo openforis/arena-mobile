@@ -316,7 +316,10 @@ const getPrevEntityPointer = ({
       entityUuid: null,
     };
   }
-  const ancestorEntity = Records.getParent(parentEntity!)(record);
+  const ancestorEntity = parentEntity
+    ? Records.getParent(parentEntity)(record)
+    : null;
+
   return {
     parentEntityUuid: ancestorEntity?.uuid,
     entityDef: parentEntityDef,

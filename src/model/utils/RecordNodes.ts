@@ -17,11 +17,11 @@ import { SurveyDefs } from "./SurveyDefs";
 
 const EMPTY_VALUE = "---";
 
-const coordinateAttributeMandatoryFields = [
+const coordinateAttributeMandatoryFields: Set<string> = new Set([
   valuePropsCoordinate[valuePropsCoordinate.x],
   valuePropsCoordinate[valuePropsCoordinate.y],
   valuePropsCoordinate[valuePropsCoordinate.srs],
-];
+]);
 
 const coordinateAttributeNumericFields = [
   valuePropsCoordinate[valuePropsCoordinate.x],
@@ -127,7 +127,7 @@ const getEntitySummaryValuesByNameFormatted = ({
     });
   return summaryDefs.reduce(
     (acc: Record<string, string>, summaryDef: NodeDef<any, any>) => {
-      let formattedValue = "";
+      let formattedValue: string;
       try {
         const summaryNode = Records.getChild(entity, summaryDef.uuid)(record);
         if (!summaryNode) {
@@ -151,6 +151,7 @@ const getEntitySummaryValuesByNameFormatted = ({
         }
       } catch (error) {
         //ignore it
+        formattedValue = "";
       }
       if (typeof formattedValue === "object") {
         formattedValue = JSON.stringify(formattedValue);
@@ -282,7 +283,7 @@ const cleanupAttributeValue = ({ value, attributeDef }: any) => {
       NodeDefs.getCoordinateAdditionalFields(attributeDef);
     const fieldsToRemove = Object.keys(value).filter(
       (field) =>
-        !coordinateAttributeMandatoryFields.includes(field) &&
+        !coordinateAttributeMandatoryFields.has(field) &&
         !additionalFields.includes(field)
     );
     fieldsToRemove.forEach((field) => {
