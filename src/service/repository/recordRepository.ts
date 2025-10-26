@@ -18,6 +18,7 @@ import {
   RecordSummaries,
   SurveyDefs,
 } from "model";
+import { ArenaMobileRecord } from "model/ArenaMobileRecord";
 import { SystemUtils } from "utils";
 
 const SUPPORTED_KEYS = 5;
@@ -162,7 +163,7 @@ const fetchRecord = async ({
   survey,
   recordId,
   includeContent = true,
-}: any) => {
+}: any): Promise<ArenaMobileRecord> => {
   const { id: surveyId } = survey;
   const row = await dbClient.one(
     `SELECT ${summarySelectFieldsJointWithValidation}${includeContent ? ", content" : ""}
@@ -483,7 +484,7 @@ const deleteRecords = async ({ surveyId, recordUuids }: any) => {
   return dbClient.runSql(sql, [surveyId]);
 };
 
-const fixDatetime = (dateStringOrNumber: any) => {
+const fixDatetime = (dateStringOrNumber: any): string | undefined => {
   if (!dateStringOrNumber) return dateStringOrNumber;
 
   if (typeof dateStringOrNumber === "number") {
@@ -498,7 +499,7 @@ const fixDatetime = (dateStringOrNumber: any) => {
     return dateStringOrNumber;
 
   const parsed = Dates.parse(dateStringOrNumber, formatFrom);
-  return parsed ? Dates.formatForStorage(parsed) : null;
+  return parsed ? Dates.formatForStorage(parsed) : undefined;
 };
 
 const fixRowKeyOrSummaryAttributeColumns = ({
@@ -565,12 +566,12 @@ const fixRowValidation = ({ result }: any) => {
 
 const rowToRecord =
   ({ survey }: any) =>
-  (row: any) => {
+  (row: any): ArenaMobileRecord => {
     const sideEffect = true;
     const hasToBeFixed = true;
     const { cycle, content } = row;
     const hasContent = !Objects.isEmpty(content) && content !== "{}";
-    const result = hasContent
+    const result: ArenaMobileRecord = hasContent
       ? JSON.parse(row.content)
       : Objects.camelize(row, { skip: ["content"] });
 

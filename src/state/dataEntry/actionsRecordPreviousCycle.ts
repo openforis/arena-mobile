@@ -50,7 +50,7 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
   lang,
 }: any): Promise<{
   keyValues: string;
-  prevCycleRecordIds: string[];
+  prevCycleRecordIds: number[];
 } | null> => {
   try {
     dispatch({ type: RECORD_PREVIOUS_CYCLE_LOAD, loading: true });
@@ -80,7 +80,7 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
         })
       );
     } else if (prevCycleRecordSummaries.length === 1) {
-      const prevCycleRecordSummary = prevCycleRecordSummaries[0];
+      const prevCycleRecordSummary = prevCycleRecordSummaries[0]!;
       const { id: prevCycleRecordId, uuid: prevCycleRecordUuid } =
         prevCycleRecordSummary;
 
@@ -124,7 +124,9 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
 
     return {
       keyValues: keyValuesString,
-      prevCycleRecordIds: prevCycleRecordSummaries,
+      prevCycleRecordIds: prevCycleRecordSummaries.map(
+        (recordSummary) => recordSummary.id!
+      ),
     };
   } catch (error) {
     console.log("====error", error);

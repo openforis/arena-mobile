@@ -71,7 +71,7 @@ const _isRootKeyDuplicate = async ({ survey, record, lang }: any) => {
   });
   return (
     recordSummaries.length > 1 ||
-    (recordSummaries.length === 1 && recordSummaries[0].uuid !== record.uuid)
+    (recordSummaries.length === 1 && recordSummaries[0]!.uuid !== record.uuid)
   );
 };
 
