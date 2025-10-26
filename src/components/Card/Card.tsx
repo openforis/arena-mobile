@@ -10,13 +10,13 @@ type Props = {
 };
 
 export const Card = (props: Props) => {
-  const { children, titleKey } = props;
+  const { children, style, titleKey } = props;
 
   const { t } = useTranslation();
 
   const title = titleKey ? t(titleKey) : null;
   return (
-    <RNPCard>
+    <RNPCard style={style}>
       {title && <RNPCard.Title title={title} titleVariant="titleMedium" />}
       <RNPCard.Content>{children}</RNPCard.Content>
     </RNPCard>

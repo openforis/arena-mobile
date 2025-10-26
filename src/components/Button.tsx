@@ -27,7 +27,7 @@ export type ButtonProps = {
   color?: ButtonColor;
   compact?: boolean;
   disabled?: boolean;
-  icon?: string | any;
+  icon?: any;
   iconColor?: string;
   iconPosition?: ButtonIconPosition;
   labelStyle?: StyleProp<TextStyle>;
