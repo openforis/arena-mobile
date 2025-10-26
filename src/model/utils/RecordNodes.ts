@@ -192,10 +192,13 @@ const getSiblingNode = ({ record, parentEntity, node, offset }: any) => {
   return { siblingNode, siblingIndex };
 };
 
+const functionCallExpression = (functionName: string): string =>
+  `${functionName}\\s*\\((?:[^()]*|\\([^()]*\\))*\\)`;
+
 const possibleDistanceTargetExpressions = {
   simpleIdentifier: "\\w+",
-  categoryItemProp: `categoryItemProp\\s*\\(.*\\)\\s*`,
-  parentFunction: `parent\\s*\\(.*\\)\\s*`,
+  categoryItemProp: functionCallExpression("categoryItemProp"),
+  parentFunction: functionCallExpression("parent"),
 };
 
 const distanceFunctionRegExp = (firstArgument: any, secondArgument: any) =>
@@ -205,7 +208,9 @@ const extractDistanceTargetExpression = ({ nodeDef }: any) => {
   const validations = NodeDefs.getValidations(nodeDef);
   const distanceValidation = validations?.expressions?.find(
     (expression: NodeDefExpression) =>
-      /\s*distance\s*(.*)\s*/.test(expression.expression!)
+      new RegExp(functionCallExpression("distance")).test(
+        expression.expression!
+      )
   );
 
   if (!distanceValidation) {
