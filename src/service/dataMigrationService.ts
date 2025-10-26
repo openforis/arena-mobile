@@ -3,12 +3,14 @@ import { SurveyService } from "./surveyService";
 
 const fixRecordCycle = async () => {
   const surveySummaries = await SurveyService.fetchSurveySummariesLocal();
-  for await (const surveySummary of surveySummaries) {
+  for (const surveySummary of surveySummaries) {
     try {
       const surveyId = surveySummary.id;
       const survey = await SurveyService.fetchSurveyById(surveyId);
-      const records = await RecordService.fetchRecordsWithEmptyCycle({ survey });
-      for await (const recordSummary of records) {
+      const records = await RecordService.fetchRecordsWithEmptyCycle({
+        survey,
+      });
+      for (const recordSummary of records) {
         try {
           const { id: recordId } = recordSummary;
           await RecordService.fixRecordCycle({ survey, recordId });
@@ -22,9 +24,7 @@ const fixRecordCycle = async () => {
   }
 };
 
-const migrateData = async ({
-  prevDbVersion
-}: any) => {
+const migrateData = async ({ prevDbVersion }: any) => {
   if (prevDbVersion <= 2) {
     await fixRecordCycle();
   }

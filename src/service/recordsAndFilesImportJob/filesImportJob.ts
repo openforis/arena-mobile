@@ -24,7 +24,7 @@ export class FilesImportJob extends JobMobile {
 
     this.summary.total = filesSummary.length;
 
-    for await (const fileSummary of filesSummary) {
+    for (const fileSummary of filesSummary) {
       const { uuid: fileUuid } = fileSummary;
 
       const sourceFileUri = Files.path(

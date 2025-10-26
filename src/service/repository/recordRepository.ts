@@ -255,7 +255,9 @@ const findRecordSummariesByKeys = async ({ survey, cycle, keyValues }: any) => {
   return rows.map(rowToRecord({ survey }));
 };
 
-const fetchRecordsWithEmptyCycle = async ({ survey }: any) => {
+const fetchRecordsWithEmptyCycle = async ({
+  survey,
+}: any): Promise<ArenaMobileRecord[]> => {
   const { id: surveyId } = survey;
 
   const rows = await dbClient.many(
@@ -315,7 +317,7 @@ const insertRecordSummaries = async ({
   const origin = RecordOrigin.remote;
   const insertedIds: any = [];
   await dbClient.transaction(async () => {
-    for await (const recordSummary of recordSummaries) {
+    for (const recordSummary of recordSummaries) {
       const { dateCreated, dateModified, ownerUuid, ownerName, uuid } =
         recordSummary;
       const keyColumnsValues = extractRemoteRecordSummaryKeyColumnsValues({
@@ -456,9 +458,7 @@ const updateRecordsDateSync = async ({ surveyId, recordUuids }: any) => {
 
 const updateRecordsMergedInto = async ({ surveyId, mergedRecordsMap }: any) => {
   await dbClient.transaction(async () => {
-    for await (const [uuid, mergedIntoRecordUuid] of Object.entries(
-      mergedRecordsMap
-    ))
+    for (const [uuid, mergedIntoRecordUuid] of Object.entries(mergedRecordsMap))
       await dbClient.runSql(
         `UPDATE record 
          SET merged_into_record_uuid = ? 

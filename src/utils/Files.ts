@@ -57,7 +57,7 @@ const visitDirFilesRecursively = async ({
   while (stack.length > 0) {
     const currentDirUri = stack.pop();
     const fileUris = await listDir(currentDirUri);
-    for await (const fileUri of fileUris) {
+    for (const fileUri of fileUris) {
       const info = await getInfo(fileUri);
       if (info) {
         if (!info.isDirectory || visitDirectories) {

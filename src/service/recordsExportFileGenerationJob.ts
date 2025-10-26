@@ -80,7 +80,7 @@ export class RecordsExportFileGenerationJob extends JobMobile {
 
       const files = [];
 
-      for await (const recordSummary of recordsToExport) {
+      for (const recordSummary of recordsToExport) {
         const { id: recordId, uuid } = recordSummary;
         const record = await RecordService.fetchRecord({ survey, recordId });
         if (!record.ownerUuid && user) {
@@ -159,7 +159,7 @@ export class RecordsExportFileGenerationJob extends JobMobile {
       return acc;
     }, []);
 
-    for await (const recordFile of recordFiles) {
+    for (const recordFile of recordFiles) {
       const { uuid: fileUuid } = recordFile;
       const fileUri = RecordFileService.getRecordFileUri({
         surveyId,

@@ -36,7 +36,7 @@ export class RecordsImportJob extends JobMobile {
     });
     const recordsSummaryByUuid = ArrayUtils.indexByUuid(recordsSummary);
 
-    for await (const recordUuidAndCycle of fileRecordsSummary) {
+    for (const recordUuidAndCycle of fileRecordsSummary) {
       const { uuid: recordUuid } = recordUuidAndCycle;
       const contentPath = Files.path(
         unzippedFolderUri,

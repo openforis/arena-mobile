@@ -12,7 +12,7 @@ import { SurveyActions, SurveySelectors } from "state";
 
 type Props = {
   errorKey?: string | null;
-  onPress?: () => void;
+  onPress?: () => Promise<void>;
   updateStatus: UpdateStatus | SurveyStatus;
 };
 

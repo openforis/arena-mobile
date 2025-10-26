@@ -178,7 +178,7 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
     }
   }
 
-  for await (const recordSummaryLocal of allRecordsSummariesInDevice) {
+  for (const recordSummaryLocal of allRecordsSummariesInDevice) {
     const { origin, loadStatus, uuid } = recordSummaryLocal;
     const recordSummaryRemote = ArrayUtils.findByUuid(uuid)(
       recordsSummariesRemote
@@ -302,7 +302,7 @@ const cloneRecordsIntoDefaultCycle = async ({
   const surveyId = survey.id;
   const defaultCycle = Surveys.getDefaultCycleKey(survey)!;
 
-  for await (const recordSummary of recordSummaries) {
+  for (const recordSummary of recordSummaries) {
     const { id: recordId } = recordSummary;
     const record = await RecordRepository.fetchRecord({
       survey,
@@ -319,7 +319,7 @@ const cloneRecordsIntoDefaultCycle = async ({
     await RecordRepository.insertRecord({ survey, record: recordCloned });
 
     // clone files
-    for await (const [oldFileUuid, fileUuid] of Object.entries(
+    for (const [oldFileUuid, fileUuid] of Object.entries(
       newFileUuidsByOldUuid
     )) {
       const sourceFileUri = RecordFileService.getRecordFileUri({

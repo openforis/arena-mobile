@@ -8,11 +8,11 @@ export class DowngradeError extends Error {
 }
 
 export default class SQLiteClient {
-  migrations: any;
+  migrations: any[];
   name: any;
   privateConnected: boolean;
   privateDb: SQLite.SQLiteDatabase | null;
-  constructor(name: any, migrations: any, debug = false) {
+  constructor(name: any, migrations: any[], debug = false) {
     this.name = name;
     this.migrations = migrations;
     this.privateDb = null;
@@ -92,7 +92,7 @@ export default class SQLiteClient {
       );
       let currentDbVersion = prevDbVersion;
       console.log("==== DB migrations start ====");
-      for await (const migration of migrationsToRun) {
+      for (const migration of migrationsToRun) {
         await migration(this);
         currentDbVersion += 1;
         await this.runSql(`PRAGMA user_version = ${currentDbVersion}`);
