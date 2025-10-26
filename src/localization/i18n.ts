@@ -1,5 +1,5 @@
 import i18n from "i18next";
-import { initReactI18next, useTranslation } from "react-i18next";
+import { initReactI18next } from "react-i18next";
 
 import { LanguageConstants } from "model/LanguageSettings";
 import { SettingsService } from "service/settingsService";
@@ -14,6 +14,8 @@ import fr from "./fr";
 import id from "./id";
 import pt from "./pt";
 import ru from "./ru";
+
+export { useTranslation } from "react-i18next";
 
 const resources = { de, en, es, fa, fi, fr, id, pt, ru };
 const supportedLngs = Object.keys(resources);
@@ -67,4 +69,4 @@ const changeLanguage = (lang: any) => {
   i18n.changeLanguage(supportedLang);
 };
 
-export { changeLanguage, i18n, useTranslation };
+export { changeLanguage, i18n };

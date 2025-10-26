@@ -15,7 +15,7 @@ export type ViewProps = {
   children?: React.ReactNode;
   fullFlex?: boolean;
   fullWidth?: boolean;
-  pointerEvents?: "box-none" | "none" | "box-only" | "auto" | undefined;
+  pointerEvents?: "box-none" | "none" | "box-only" | "auto";
   style?: StyleProp<ViewStyle>;
   transparent?: boolean;
 };

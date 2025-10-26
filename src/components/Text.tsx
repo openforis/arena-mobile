@@ -4,9 +4,10 @@ import { StyleProp, TextStyle } from "react-native";
 
 import { useIsTextDirectionRtl, useTranslation } from "localization";
 
-const styleToObject = (style: any):any => Array.isArray(style)
-  ? Object.assign({}, ...style.map(styleToObject))
-  : (style ?? {});
+const styleToObject = (style: any): any =>
+  Array.isArray(style)
+    ? Object.assign({}, ...style.map(styleToObject))
+    : (style ?? {});
 
 type TextVariant =
   | "displayLarge"
@@ -55,7 +56,7 @@ export const Text = (props: Props) => {
     }
     const _style = styleToObject(styleProp);
     const { textAlign } = _style;
-    return !textAlign ? [_style, { textAlign: "right" }] : _style;
+    return textAlign ? _style : [_style, { textAlign: "right" }];
   }, [isRtl, styleProp]);
 
   return (

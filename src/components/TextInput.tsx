@@ -7,7 +7,7 @@ import { useTranslation } from "localization";
 const multilineStyle = { lineHeight: 24 };
 
 type Props = {
-  autoCapitalize?: "none" | "sentences" | "words" | "characters" | undefined;
+  autoCapitalize?: "none" | "sentences" | "words" | "characters";
   defaultValue?: any;
   disabled?: boolean;
   editable?: boolean;
