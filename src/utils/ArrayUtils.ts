@@ -29,7 +29,7 @@ const getSortFactor = (sortDirection: Sort): 1 | -1 =>
  * Helper to safely get the timestamp or 0
  */
 const getTimeSafely = (date: Date | undefined): number =>
-  date instanceof Date && !isNaN(date.getTime()) ? date.getTime() : 0;
+  date instanceof Date && !Number.isNaN(date.getTime()) ? date.getTime() : 0;
 
 /**
  * Compares two property values (propA and propB) based on their type.
