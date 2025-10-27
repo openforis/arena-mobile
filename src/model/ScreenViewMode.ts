@@ -1,4 +1,4 @@
-export const ScreenViewMode = {
-  table: "table",
-  list: "list",
-};
+export enum ScreenViewMode {
+  table = "table",
+  list = "list",
+}

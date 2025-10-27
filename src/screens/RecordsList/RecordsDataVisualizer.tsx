@@ -56,21 +56,19 @@ const RecordOriginListCellRenderer = ({ item }: DataVisualizerCellProps) => (
   <Text textKey={`recordsList:origin.${item.origin}`} />
 );
 
-const RecordLoadStatusTableCellRenderer = ({
-  item,
-}: DataVisualizerCellProps) => (
-  <Icon
-    source={
-      RecordListConstants.iconByLoadStatus[item.loadStatus as RecordLoadStatus]
-    }
-  />
-);
+const recordLoadStatusCellRendererByViewMode: Record<ScreenViewMode, any> = {
+  [ScreenViewMode.list]: ({ item }: DataVisualizerCellProps) => (
+    <Text textKey={`recordsList:loadStatus.${item.loadStatus}`} />
+  ),
+  [ScreenViewMode.table]:  ({ item }: DataVisualizerCellProps) => (
+    <Icon
+      source={
+        RecordListConstants.iconByLoadStatus[item.loadStatus as RecordLoadStatus]
+      }
+    />
+  )
+}
 
-const RecordLoadStatusListCellRenderer = ({
-  item,
-}: DataVisualizerCellProps) => (
-  <Text textKey={`recordsList:loadStatus.${item.loadStatus}`} />
-);
 
 const getSyncStatusCellRenderer = ({syncStatusLoading}: {syncStatusLoading?: boolean}) =>
   syncStatusLoading ? LoadingIcon : RecordSyncStatusIcon;
@@ -209,6 +207,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     [dispatch, navigation]
   );
 
+
   const fields = useMemo(() => {
     const result = [];
     result.push(
@@ -284,9 +283,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
         key: "loadStatus",
         header: "recordsList:loadStatus.title",
         style: { minWidth: 10 },
-        cellRenderer: viewAsList
-          ? RecordLoadStatusListCellRenderer
-          : RecordLoadStatusTableCellRenderer,
+        cellRenderer: recordLoadStatusCellRendererByViewMode[screenViewMode],
       });
     }
     if (syncStatusLoading || syncStatusFetched) {
