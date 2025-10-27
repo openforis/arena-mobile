@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 
 import {
+  NodeDef,
   NodeDefs,
   Objects,
   RecordExpressionEvaluator,
@@ -18,8 +19,13 @@ export const useItemsFilter = ({
   nodeDef,
   parentNodeUuid,
   items,
-  alwaysIncludeItemFunction = null,
-}: any) => {
+  alwaysIncludeItemFunction = undefined,
+}: {
+  nodeDef: NodeDef<any>;
+  parentNodeUuid?: string;
+  items: any[];
+  alwaysIncludeItemFunction?: (item: any) => boolean;
+}) => {
   const [filteredItems, setFilteredItems] = useState([]);
 
   return useSelector((state) => {
@@ -27,7 +33,7 @@ export const useItemsFilter = ({
     if (items.length === 0 || Objects.isEmpty(itemsFilter) || !parentNodeUuid)
       return items;
 
-    const user = RemoteConnectionSelectors.useLoggedInUser();
+    const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
@@ -51,7 +57,7 @@ export const useItemsFilter = ({
       })
     ).then((_itemsFilterResults) => {
       const _filteredItems = items.filter(
-        (_: any, index: any) => _itemsFilterResults[index]
+        (_: any, index: any) => !!_itemsFilterResults[index]
       );
       if (!Objects.isEqual(_filteredItems, filteredItems)) {
         setFilteredItems(_filteredItems);

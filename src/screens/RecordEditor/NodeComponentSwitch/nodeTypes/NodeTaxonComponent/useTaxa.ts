@@ -11,17 +11,30 @@ const calculateVernacularNamesCount = (taxon: Taxon) =>
     0
   );
 
-const addVernacularNameObjectToItems =
-  (items: any, taxonItem: any) => (vernacularNameObj: any) => {
+const vernacularNameObjectToItem =
+  (taxonItem: any) =>
+  (vernacularNameObj: any): any => {
     const { name: vernacularName, lang: vernacularNameLangCode } =
       vernacularNameObj.props;
-    items.push({
+    return {
       ...taxonItem,
       vernacularName,
       vernacularNameLangCode,
       vernacularNameUuid: vernacularNameObj.uuid,
-    });
+    };
   };
+
+const getAllVernacularNameObjects = (
+  vernacularNamesArray: VernacularName[][]
+) => {
+  const result: VernacularName[] = [];
+  for (const vernacularNameObjects of vernacularNamesArray) {
+    for (const vernacularNameObject of vernacularNameObjects) {
+      result.push(vernacularNameObject);
+    }
+  }
+  return result;
+};
 
 const joinVernacularNameObjects = ({
   taxonItem,
@@ -74,14 +87,11 @@ export const useTaxa = ({
             taxonItem,
           });
         } else {
-          for (const vernacularNameObjects of vernacularNamesArray) {
-            for (const vernacularNameObject of vernacularNameObjects) {
-              addVernacularNameObjectToItems(
-                taxaReduced,
-                taxonItem
-              )(vernacularNameObject);
-            }
-          }
+          const vernacularNames: VernacularName[] =
+            getAllVernacularNameObjects(vernacularNamesArray);
+          taxaReduced.push(
+            ...vernacularNames.map(vernacularNameObjectToItem(taxonItem))
+          );
         }
       }
     }
