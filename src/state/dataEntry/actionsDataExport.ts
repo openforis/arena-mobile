@@ -43,6 +43,38 @@ const handleError = (error: any) => (dispatch: any) =>
     })
   );
 
+/**
+ * Helper to handle a job error and prompt the user for a retry.
+ * Returns true if the user confirms a retry, false otherwise.
+ * */
+const handleUploadJobError = async ({
+  dispatch,
+  error,
+}: {
+  error: any;
+  dispatch: any;
+}): Promise<boolean> => {
+  if (!error) {
+    // (error is null if job was canceled)
+    return false;
+  } else {
+    // error occurred
+    const { errors } = error;
+    const errorMessage = errors
+      ? Jobs.extractErrorMessage({ errors, t })
+      : String(error);
+
+    // break the loop if user doesn't confirm to retry
+    const retryConfirmed = await ConfirmUtils.confirm({
+      dispatch,
+      messageKey: "dataEntry:dataExport.error",
+      messageParams: { details: errorMessage },
+      confirmButtonTextKey: "common:tryAgain",
+    });
+    return !!retryConfirmed;
+  }
+};
+
 const startUploadDataToRemoteServer =
   ({ outputFileUri, conflictResolutionStrategy, onJobComplete = null }: any) =>
   async (dispatch: any, getState: any) => {
@@ -66,55 +98,28 @@ const startUploadDataToRemoteServer =
         titleKey: "dataEntry:uploadingData.title",
       });
 
-    try {
-      let uploadComplete = false;
-      let uploadJobComplete = null;
+    let shouldRetryUpload = false;
+    let uploadJobComplete = null;
 
-      while (!uploadComplete) {
-        try {
-          uploadJobComplete = await startAndWaitForJob();
-          uploadComplete = !!uploadJobComplete;
-        } catch (error: any) {
-          if (!error) {
-            // (error is null if job was canceled)
-            // job canceled: break the loop
-            uploadComplete = true;
-          } else {
-            // error occurred
-            const { errors } = error;
-            const errorMessage = errors
-              ? Jobs.extractErrorMessage({ errors, t })
-              : String(error);
-
-            // break the loop if user doesn't confirm to retry
-            const retryConfirmed = await ConfirmUtils.confirm({
-              dispatch,
-              messageKey: "dataEntry:dataExport.error",
-              messageParams: { details: errorMessage },
-              confirmButtonTextKey: "common:tryAgain",
-            });
-            uploadComplete = !retryConfirmed;
-          }
-        }
-      }
-      if (!uploadJobComplete) return;
-
-      const { remoteJob } = uploadJobComplete.result;
-
-      dispatch(
-        JobMonitorActions.start({
-          jobUuid: remoteJob.uuid,
-          titleKey: "dataEntry:dataExport.title",
-          onJobComplete,
-        })
-      );
-    } catch (error) {
-      if (error) {
-        dispatch(handleError(error));
-      } else {
-        // job canceled, do nothing
+    while (shouldRetryUpload) {
+      try {
+        uploadJobComplete = await startAndWaitForJob();
+        shouldRetryUpload = !uploadJobComplete;
+      } catch (error: any) {
+        shouldRetryUpload = await handleUploadJobError({ dispatch, error });
       }
     }
+    if (!uploadJobComplete) return;
+
+    const { remoteJob } = uploadJobComplete.result;
+
+    dispatch(
+      JobMonitorActions.start({
+        jobUuid: remoteJob.uuid,
+        titleKey: "dataEntry:dataExport.title",
+        onJobComplete,
+      })
+    );
   };
 
 const onExportConfirmed =
