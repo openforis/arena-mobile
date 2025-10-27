@@ -17,7 +17,7 @@ export const useStyles = () => {
           backgroundColor: theme.colors.surfaceVariant,
           borderWidth: 1,
           gap: 10,
-          marginTop: 50,
+          marginTop: 40,
           paddingVertical: 4,
           paddingHorizontal: 10,
         },
