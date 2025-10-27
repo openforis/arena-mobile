@@ -61,7 +61,7 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
     let minDistanceItems: any = [];
     let minDistance: any = null;
 
-    items.forEach((item: any) => {
+    for (const item of items) {
       const itemLocation = item?.props?.extra?.location;
       if (itemLocation) {
         const itemLocationPoint = Points.parse(itemLocation);
@@ -75,7 +75,7 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
           minDistanceItems.push(item);
         }
       }
-    });
+    }
     return {
       minDistance,
       minDistanceItems,

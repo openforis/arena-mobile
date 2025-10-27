@@ -309,11 +309,11 @@ const findRecordSummariesByKeys = async ({
       keyValues: keyValuesFormatted,
     });
   const recordSummaries = [...recordSummariesForKeyValues];
-  recordSummariesForKeyValuesFormatted.forEach((recordSummary: any) => {
+  for (const recordSummary of recordSummariesForKeyValuesFormatted) {
     if (!recordSummariesForKeyValuesByUuid[recordSummary.uuid]) {
       recordSummaries.push(recordSummary);
     }
-  });
+  }
   return recordSummaries;
 };
 

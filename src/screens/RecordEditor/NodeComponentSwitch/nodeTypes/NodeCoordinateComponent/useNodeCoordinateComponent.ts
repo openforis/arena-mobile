@@ -67,10 +67,10 @@ const locationToUiValue = ({
     srs: srsTo,
   });
 
-  includedExtraFields.forEach((field) => {
+  for (const field of includedExtraFields) {
     // @ts-ignore
     result[field] = numberToString(coords[field], 2);
-  });
+  }
   // always include accuracy
   result.accuracy = numberToString(accuracy, 2);
   return result;
@@ -108,10 +108,10 @@ export const useNodeCoordinateComponent = (props: any) => {
       const { x, y, srs = defaultSrsCode } = nodeValue ?? {};
 
       const result = pointToUiValue({ x, y, srs });
-      includedExtraFields.forEach((fieldKey) => {
+      for (const fieldKey of includedExtraFields) {
         // @ts-ignore
         result[fieldKey] = numberToString(nodeValue?.[fieldKey]);
-      });
+      }
       return result;
     },
     [includedExtraFields, defaultSrsCode]
@@ -128,10 +128,10 @@ export const useNodeCoordinateComponent = (props: any) => {
         y: stringToNumber(y),
         srs,
       };
-      includedExtraFields.forEach((fieldKey) => {
+      for (const fieldKey of includedExtraFields) {
         // @ts-ignore
         result[fieldKey] = stringToNumber(uiValue?.[fieldKey]);
-      });
+      }
       return result;
     },
     [includedExtraFields]

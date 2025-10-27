@@ -28,9 +28,9 @@ export class AverageAnglePicker {
 
   _calculateAverageValue() {
     let total = 0;
-    this._queue.items.forEach((item: any) => {
+    for (const item of this._queue.items) {
       total += item.value;
-    });
+    }
     return total / this._queue.size;
   }
 
@@ -38,11 +38,11 @@ export class AverageAnglePicker {
     const items = this._queue.items;
     let min = Number.NaN;
     let max = Number.NaN;
-    items.forEach((item: any) => {
+    for (const item of items) {
       const value = item.value;
       min = Number.isNaN(min) ? value : Math.min(min, value);
       max = Number.isNaN(max) ? value : Math.max(max, value);
-    });
+    }
     return { min, max };
   }
 
@@ -52,13 +52,14 @@ export class AverageAnglePicker {
     const items = this._queue.items;
     const { min, max } = this._calculateMinMax();
     const hasToAdapt = max - min > 180;
-    items.forEach((item: any, index: any) => {
+    for (let index = 0; index < items.length; index++) {
+      const item = items[index];
       const weight = this._calculateItemWeight(index);
       const value =
         hasToAdapt && item.value < 180 ? item.value + 360 : item.value;
       total += value * weight;
       totalWeight += weight;
-    });
+    }
     return total / totalWeight;
   }
 

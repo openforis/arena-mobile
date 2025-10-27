@@ -62,11 +62,11 @@ const _processFieldValidation = ({
       survey,
       uuid: notValidNodeDefUuid,
     });
-    notValidNodeDefUuids.forEach((uuid) => {
+    for (const uuid of notValidNodeDefUuids) {
       if (treeItemsById[uuid]) {
         acc.treeItemIdsWithErrors.add(uuid);
       }
-    });
+    }
   } else {
     const node = Records.getNodeByUuid(validationKey)(record);
     if (!node) return acc;
@@ -102,7 +102,10 @@ const findNotValidTreeItemIds = ({ survey, record, treeItemsById }: any) => {
         fieldValidation,
         validationKey,
       }),
-    { treeItemIdsWithErrors: new Set(), treeItemIdsWithWarnings: new Set() }
+    {
+      treeItemIdsWithErrors: new Set<string>(),
+      treeItemIdsWithWarnings: new Set<string>(),
+    }
   );
 };
 
@@ -200,7 +203,7 @@ export const useTreeData = () => {
           childDef.parentUuid === currentEntityDef.uuid
       );
 
-    applicableChildrenEntityDefs.forEach((childDef) => {
+    for (const childDef of applicableChildrenEntityDefs) {
       const childEntity = getChildEntity({
         record,
         entity: visitedEntity,
@@ -225,23 +228,23 @@ export const useTreeData = () => {
           entity: childEntity,
         });
       }
-    });
+    }
   }
 
   const { treeItemIdsWithErrors, treeItemIdsWithWarnings } =
     findNotValidTreeItemIds({ survey, record, treeItemsById });
 
-  treeItemIdsWithErrors.forEach((treeItemId) => {
-    const treeItem = treeItemsById[treeItemId as string];
+  for (const treeItemId of treeItemIdsWithErrors) {
+    const treeItem = treeItemsById[treeItemId];
     if (treeItem) {
       treeItem.hasErrors = true;
     }
-  });
-  treeItemIdsWithWarnings.forEach((treeItemId) => {
-    const treeItem = treeItemsById[treeItemId as string];
+  }
+  for (const treeItemId of treeItemIdsWithWarnings) {
+    const treeItem = treeItemsById[treeItemId];
     if (treeItem) {
       treeItem.hasWarnings = true;
     }
-  });
+  }
   return [rootTreeItem];
 };

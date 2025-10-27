@@ -286,15 +286,15 @@ const cleanupAttributeValue = ({ value, attributeDef }: any) => {
         !coordinateAttributeMandatoryFields.has(field) &&
         !additionalFields.includes(field)
     );
-    fieldsToRemove.forEach((field) => {
+    for (const field of fieldsToRemove) {
       delete value[field];
-    });
-    coordinateAttributeNumericFields.forEach((field) => {
+    }
+    for (const field of coordinateAttributeNumericFields) {
       const fieldValue = value[field];
       if (!Objects.isNil(fieldValue) && typeof fieldValue === "string") {
         value[field] = Numbers.toNumber(fieldValue);
       }
-    });
+    }
   }
   return value;
 };
