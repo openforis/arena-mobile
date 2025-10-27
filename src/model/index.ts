@@ -15,7 +15,7 @@ export { RecordUpdateConflictResolutionStrategy } from "./RecordUpdateConflictRe
 export { ScreenOrientation } from "./ScreenOrientation";
 export { ScreenViewMode } from "./ScreenViewMode";
 export { SettingsModel } from "./SettingsModel";
-export { SortDirection } from "./Sort";
+export { Sort, SortUtils } from "./Sort";
 export { SurveyStatus } from "./SurveyStatus";
 export { Taxa } from "./Taxa";
 export { Themes, ThemesSettings } from "./Themes";

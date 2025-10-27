@@ -1,7 +1,8 @@
 import { DateFormats, Dates, Objects } from "@openforis/arena-core";
 
-type SortDirection = "ascending" | "descending";
-type SortObject = Record<string, SortDirection>;
+import { Sort } from "model";
+
+type SortObject = Record<string, Sort>;
 
 const determineDateFormat = (
   value: any,
@@ -21,8 +22,8 @@ const determineDateFormat = (
 /**
  * Helper to determine the factor based on sort direction
  */
-const getSortFactor = (sortDirection: "ascending" | "descending"): 1 | -1 =>
-  sortDirection === "ascending" ? 1 : -1;
+const getSortFactor = (sortDirection: Sort): 1 | -1 =>
+  sortDirection === Sort.asc ? 1 : -1;
 
 /**
  * Helper to safely get the timestamp or 0
@@ -60,7 +61,7 @@ const compareValues = (propA: any, propB: any): number => {
  * It handles property access, empty/null values, and delegates value comparison.
  */
 const sortCompareFn =
-  (sortProp: string, sortDirection: SortDirection) =>
+  (sortProp: string, sortDirection: Sort) =>
   (itemA: any, itemB: any): number => {
     const propA = itemA[sortProp];
     const propB = itemB[sortProp];
@@ -87,7 +88,7 @@ const findByUuid = (uuid: any) => (array: any) =>
   array.find((item: any) => item.uuid === uuid);
 
 const sortByProp =
-  (sortProp: any, sortDirection: SortDirection = "ascending") =>
+  (sortProp: any, sortDirection: Sort = Sort.asc) =>
   (array: any) => {
     array.sort(sortCompareFn(sortProp, sortDirection));
   };

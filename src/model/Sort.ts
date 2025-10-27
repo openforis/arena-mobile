@@ -1,14 +1,14 @@
-const asc = "ascending";
-const desc = "descending";
+export enum Sort {
+  asc = "ascending",
+  desc = "descending",
+}
 
-const getNextSortDirection = (sortPrev: any) => {
-  if (!sortPrev) return asc;
-  if (sortPrev === asc) return desc;
+const getNextSortDirection = (sortPrev: Sort) => {
+  if (!sortPrev) return Sort.asc;
+  if (sortPrev === Sort.asc) return Sort.desc;
   return undefined;
 };
 
-export const SortDirection = {
-  asc,
-  desc,
+export const SortUtils = {
   getNextSortDirection,
 };

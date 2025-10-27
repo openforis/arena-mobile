@@ -18,7 +18,7 @@ import {
   RecordLoadStatus,
   RecordOrigin,
   ScreenViewMode,
-  SortDirection,
+  Sort,
   SurveyDefs,
 } from "model";
 import {
@@ -72,6 +72,10 @@ const RecordLoadStatusListCellRenderer = ({
   <Text textKey={`recordsList:loadStatus.${item.loadStatus}`} />
 );
 
+const getSyncStatusCellRenderer = ({syncStatusLoading}: {syncStatusLoading?: boolean}) =>
+  syncStatusLoading ? LoadingIcon : RecordSyncStatusIcon;
+
+
 const RecordErrorsListCellRenderer = ({ item }: DataVisualizerCellProps) => (
   <Text>{Validations.getErrorsCount(item.validation)}</Text>
 );
@@ -119,7 +123,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
   const screenViewMode = ScreenOptionsSelectors.useCurrentScreenViewMode();
   const viewAsList = screenViewMode === ScreenViewMode.list;
   const [selectedRecordUuids, setSelectedRecordUuids] = useState([]);
-  const [sort, setSort] = useState({ dateModified: SortDirection.desc });
+  const [sort, setSort] = useState({ dateModified: Sort.desc });
 
   // reset selected record uuids on records change
   useEffect(() => {
@@ -289,7 +293,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
       result.push({
         key: "syncStatus",
         header: "common:status",
-        cellRenderer: syncStatusLoading ? LoadingIcon : RecordSyncStatusIcon,
+        cellRenderer: getSyncStatusCellRenderer({ syncStatusLoading }),
         style: viewAsList ? undefined : { maxWidth: 50 },
       });
     }
@@ -382,3 +386,4 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     />
   );
 };
+

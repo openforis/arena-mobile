@@ -4,7 +4,7 @@ import { DataTable as RNPDataTable } from "react-native-paper";
 import { Objects } from "@openforis/arena-core";
 
 import { useTranslation } from "localization";
-import { SortDirection } from "model";
+import { SortUtils } from "model";
 import { DeviceInfoSelectors } from "state/deviceInfo";
 
 import { Checkbox } from "../Checkbox";
@@ -90,7 +90,7 @@ export const DataTable = (props: DataTableProps) => {
 
   const onHeaderPress = (fieldKey: any) => {
     const fieldSortPrev = sort?.[fieldKey];
-    const fieldSortNext = SortDirection.getNextSortDirection(fieldSortPrev);
+    const fieldSortNext = SortUtils.getNextSortDirection(fieldSortPrev);
     const sortNext: any = {};
     // allow only one sort field at a time
     if (fieldSortNext) {
