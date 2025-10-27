@@ -118,7 +118,7 @@ const startAsync = async ({
   new Promise((resolve, reject) => {
     const { job } = otherParams;
     if (job) {
-      job.start().catch((error: any) => {
+      job.start().catch((error: Error) => {
         reject(error);
       });
     }

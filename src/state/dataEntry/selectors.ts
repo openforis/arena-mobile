@@ -193,7 +193,7 @@ const selectRecordHasErrors = (state: any) => {
 const selectCurrentPageEntity = (
   state: any
 ): {
-  parentEntityUuid?: string | undefined;
+  parentEntityUuid?: string;
   entityDef: NodeDefEntity;
   entityUuid: string;
   previousCycleParentEntityUuid?: string;

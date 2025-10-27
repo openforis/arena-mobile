@@ -41,7 +41,7 @@ const confirm = async ({
         })
       );
     } catch (error) {
-      reject(error);
+      reject(error as Error);
     }
   });
 

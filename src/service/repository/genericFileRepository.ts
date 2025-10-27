@@ -4,7 +4,7 @@ const getDirUri = (subFolder: any) => `${Files.documentDirectory}${subFolder}`;
 
 const makeDirIfNotExists = async (dirUri: any) => {
   const dirInfo = await Files.getInfo(dirUri);
-  if (!dirInfo || !dirInfo?.exists) {
+  if (!dirInfo?.exists) {
     await Files.mkDir(dirUri);
   }
 };
