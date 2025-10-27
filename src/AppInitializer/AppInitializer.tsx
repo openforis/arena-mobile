@@ -22,10 +22,8 @@ import styles from "./styles";
 
 // Crypto (for internal UUIDs generation)
 import * as Crypto from "expo-crypto";
-// @ts-ignore
-if (!global.crypto) {
-  // @ts-ignore
-  global.crypto = Crypto;
+if (!(globalThis as any).crypto) {
+  (globalThis as any).crypto = Crypto;
 }
 
 const steps = {
