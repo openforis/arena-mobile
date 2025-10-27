@@ -46,37 +46,46 @@ type DataVisualizerCellProps = {
   item: any;
 };
 
-const RecordOriginTableCellRenderer = ({ item }: DataVisualizerCellProps) => (
-  <Icon
-    source={RecordListConstants.iconByOrigin[item.origin as RecordOrigin]}
-  />
-);
-
-const RecordOriginListCellRenderer = ({ item }: DataVisualizerCellProps) => (
-  <Text textKey={`recordsList:origin.${item.origin}`} />
-);
+const recordOriginCellRendererByViewMode: Record<ScreenViewMode, any> = {
+  [ScreenViewMode.list]: ({ item }: DataVisualizerCellProps) => (
+    <Text textKey={`recordsList:origin.${item.origin}`} />
+  ),
+  [ScreenViewMode.table]: ({ item }: DataVisualizerCellProps) => (
+    <Icon
+      source={RecordListConstants.iconByOrigin[item.origin as RecordOrigin]}
+    />
+  ),
+};
 
 const recordLoadStatusCellRendererByViewMode: Record<ScreenViewMode, any> = {
   [ScreenViewMode.list]: ({ item }: DataVisualizerCellProps) => (
     <Text textKey={`recordsList:loadStatus.${item.loadStatus}`} />
   ),
-  [ScreenViewMode.table]:  ({ item }: DataVisualizerCellProps) => (
+  [ScreenViewMode.table]: ({ item }: DataVisualizerCellProps) => (
     <Icon
       source={
-        RecordListConstants.iconByLoadStatus[item.loadStatus as RecordLoadStatus]
+        RecordListConstants.iconByLoadStatus[
+          item.loadStatus as RecordLoadStatus
+        ]
       }
     />
-  )
-}
+  ),
+};
 
-
-const getSyncStatusCellRenderer = ({syncStatusLoading}: {syncStatusLoading?: boolean}) =>
-  syncStatusLoading ? LoadingIcon : RecordSyncStatusIcon;
-
+const getSyncStatusCellRenderer = ({
+  syncStatusLoading,
+}: {
+  syncStatusLoading?: boolean;
+}) => (syncStatusLoading ? LoadingIcon : RecordSyncStatusIcon);
 
 const RecordErrorsListCellRenderer = ({ item }: DataVisualizerCellProps) => (
   <Text>{Validations.getErrorsCount(item.validation)}</Text>
 );
+
+const recordErrorsCellRendererByScrenMode: Record<ScreenViewMode, any> = {
+  [ScreenViewMode.list]: RecordErrorsListCellRenderer,
+  [ScreenViewMode.table]: RecordErrorIcon,
+};
 
 const RecordWarningsListCellRenderer = ({ item }: DataVisualizerCellProps) => (
   <Text>{Validations.getWarningsCount(item.validation)}</Text>
@@ -207,7 +216,6 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     [dispatch, navigation]
   );
 
-
   const fields = useMemo(() => {
     const result = [];
     result.push(
@@ -232,9 +240,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
         header: "common:error_other",
         sortable: true,
         style: viewAsList ? undefined : { maxWidth: 54 },
-        cellRenderer: viewAsList
-          ? RecordErrorsListCellRenderer
-          : RecordErrorIcon,
+        cellRenderer: recordErrorsCellRendererByScrenMode[screenViewMode],
       });
     }
     if (viewAsList) {
@@ -266,9 +272,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
         key: "origin",
         header: "recordsList:origin.title",
         style: { minWidth: 10 },
-        cellRenderer: viewAsList
-          ? RecordOriginListCellRenderer
-          : RecordOriginTableCellRenderer,
+        cellRenderer: recordOriginCellRendererByViewMode[screenViewMode],
       });
       if (viewAsList) {
         result.push(
@@ -383,4 +387,3 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     />
   );
 };
-
