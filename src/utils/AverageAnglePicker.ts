@@ -36,8 +36,8 @@ export class AverageAnglePicker {
 
   _calculateMinMax() {
     const items = this._queue.items;
-    let min = NaN;
-    let max = NaN;
+    let min = Number.NaN;
+    let max = Number.NaN;
     items.forEach((item: any) => {
       const value = item.value;
       min = Number.isNaN(min) ? value : Math.min(min, value);

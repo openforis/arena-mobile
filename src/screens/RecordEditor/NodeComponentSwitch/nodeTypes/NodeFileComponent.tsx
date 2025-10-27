@@ -4,11 +4,11 @@ import { Text } from "components";
 import { NodeImageOrVideoComponent } from "./NodeImageOrVideoComponent";
 import { NodeComponentProps } from "./nodeComponentPropTypes";
 
-const supportedFileTypes = [
+const supportedFileTypes = new Set([
   NodeDefFileType.other,
   NodeDefFileType.image,
   NodeDefFileType.video,
-];
+]);
 
 export const NodeFileComponent = (props: NodeComponentProps) => {
   const { nodeDef } = props;
@@ -19,7 +19,7 @@ export const NodeFileComponent = (props: NodeComponentProps) => {
 
   const { fileType = NodeDefFileType.other } = nodeDef.props;
 
-  if (supportedFileTypes.includes(fileType)) {
+  if (supportedFileTypes.has(fileType)) {
     return <NodeImageOrVideoComponent {...props} />;
   }
 

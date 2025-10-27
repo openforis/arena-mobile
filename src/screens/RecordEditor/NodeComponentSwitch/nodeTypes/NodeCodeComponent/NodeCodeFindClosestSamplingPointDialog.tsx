@@ -45,7 +45,7 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
 
   const [state, setState] = useState({
     findingMinDistanceItems: false,
-    minDistance: NaN,
+    minDistance: Number.NaN,
     minDistanceItems: null as any[] | null,
     selectedMinDistanceItem: null,
   });
@@ -87,7 +87,7 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
       setState((statePrev) => ({
         ...statePrev,
         findingMinDistanceItems: true,
-        minDistance: NaN,
+        minDistance: Number.NaN,
         minDistanceItems: null,
       }));
       const { minDistance, minDistanceItems } = findItemsWithMinDistance();

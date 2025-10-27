@@ -17,13 +17,13 @@ const getChildEntity = ({ record, entity, currentEntity, childDef }: any) => {
   if (NodeDefs.isSingle(childDef)) {
     return Records.getChild(entity, childDef.uuid)(record);
   }
-  const currentEntityAndAncestorUuids = [
+  const currentEntityAndAncestorUuids = new Set([
     ...Nodes.getHierarchy(currentEntity),
     currentEntity.uuid,
-  ];
+  ]);
   const children = Records.getChildren(entity, childDef.uuid)(record);
   return children.find((child) =>
-    currentEntityAndAncestorUuids.includes(child.uuid)
+    currentEntityAndAncestorUuids.has(child.uuid)
   );
 };
 

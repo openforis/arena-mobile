@@ -23,7 +23,7 @@ import {
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 
 const stringToNumber = (str: any) => Numbers.toNumber(str);
-const numberToString = (num: any, roundToDecimals = NaN) => {
+const numberToString = (num: any, roundToDecimals = Number.NaN) => {
   if (Objects.isEmpty(num)) return "";
   return String(Numbers.roundToPrecision(num, roundToDecimals));
 };
@@ -76,7 +76,7 @@ const locationToUiValue = ({
   return result;
 };
 
-const nonNumericFields = ["srs"];
+const nonNumericFields = new Set(["srs"]);
 
 export const useNodeCoordinateComponent = (props: any) => {
   const { nodeDef, nodeUuid } = props;
@@ -93,7 +93,7 @@ export const useNodeCoordinateComponent = (props: any) => {
     [nodeDef]
   );
   const includedFields = useMemo(
-    () => ["x", "y", "srs", ...includedExtraFields],
+    () => new Set(["x", "y", "srs", ...includedExtraFields]),
     [includedExtraFields]
   );
 
@@ -144,9 +144,9 @@ export const useNodeCoordinateComponent = (props: any) => {
         const coordValCleaned: NodeValueCoordinate = Object.entries(
           coordVal
         ).reduce((acc, [key, value]) => {
-          if (includedFields.includes(key)) {
+          if (includedFields.has(key)) {
             // @ts-ignore
-            acc[key] = nonNumericFields.includes(key)
+            acc[key] = nonNumericFields.has(key)
               ? value
               : Numbers.toNumber(value);
           }

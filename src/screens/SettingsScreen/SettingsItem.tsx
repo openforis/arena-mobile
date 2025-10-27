@@ -16,7 +16,7 @@ import { SettingsFormItem } from "./SettingsFormItem";
 const numberToString = (value: any) =>
   Objects.isEmpty(value) ? "" : String(value);
 const stringToNumber = (value: any) =>
-  Objects.isEmpty(value) ? NaN : Number(value);
+  Objects.isEmpty(value) ? Number.NaN : Number(value);
 
 const determineTextKey = (...possibleKeys: any[]) =>
   possibleKeys.find((possibleKey) => possibleKey && i18n.exists(possibleKey));
