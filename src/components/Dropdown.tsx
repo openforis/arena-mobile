@@ -52,19 +52,27 @@ export const Dropdown = (props: DropdownProps) => {
     [disabled, onChange]
   );
 
-  const textFont = theme.fonts.labelMedium;
-  const textFontSize = textFont.fontSize;
+  const dropDownItemTextStyle = useMemo(() => {
+    const textFont = theme.fonts.labelMedium;
+    const textFontSize = textFont.fontSize;
+    return {
+      color: theme.colors.onSurfaceVariant,
+      fontSize: textFontSize,
+    };
+  }, [theme]);
+
+  const dropDownItemStyle = useMemo(
+    () => ({ backgroundColor: theme.colors.surfaceVariant }),
+    [theme]
+  );
 
   return (
     <RNPDropdown
       // @ts-ignore
       disabled={disabled}
       dropDownContainerMaxHeight={300}
-      dropDownItemStyle={{ backgroundColor: theme.colors.surfaceVariant }}
-      dropDownItemTextStyle={{
-        color: theme.colors.onSurfaceVariant,
-        fontSize: textFontSize,
-      }}
+      dropDownItemStyle={dropDownItemStyle}
+      dropDownItemTextStyle={dropDownItemTextStyle}
       label={label}
       list={options}
       mode="outlined"

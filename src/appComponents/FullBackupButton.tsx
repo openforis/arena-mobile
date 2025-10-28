@@ -1,12 +1,12 @@
 import { useCallback } from "react";
+import { StyleSheet } from "react-native";
 
 import { Button } from "components";
 import { useToast } from "hooks";
 import { useTranslation } from "localization";
 import { AppService } from "service";
-import { Files } from "utils";
 import { useConfirm } from "state/confirm";
-import { StyleSheet } from "react-native";
+import { Files } from "utils";
 
 const styles = StyleSheet.create({
   base: {

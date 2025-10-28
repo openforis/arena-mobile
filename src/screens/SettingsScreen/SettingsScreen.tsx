@@ -15,6 +15,9 @@ import styles from "./styles";
 const settingsPropertiesEntries = Object.entries(SettingsModel.properties);
 
 export const SettingsScreen = () => {
+  if (__DEV__) {
+    console.log(`rendering SettingsScreen`);
+  }
   const dispatch = useDispatch();
 
   const settingsStored = SettingsSelectors.useSettings();

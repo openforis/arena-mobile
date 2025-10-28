@@ -30,12 +30,16 @@ type SettingsItemProps = {
 
 export const SettingsItem = (props: SettingsItemProps) => {
   const { settings, settingKey, prop, onPropValueChange } = props;
+  if (__DEV__) {
+    console.log("rendering SettingsItem " + settingKey);
+  }
   const {
     type,
     labelKey: labelKeyProp,
     descriptionKey: descriptionKeyProp,
     options,
   } = prop;
+
   const value = settings[settingKey];
 
   const [error, setError] = useState(false);
