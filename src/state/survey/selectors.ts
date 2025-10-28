@@ -1,7 +1,12 @@
 import { useSelector } from "react-redux";
 
-import { NodeDefEntity, Objects, Survey, Surveys } from "@openforis/arena-core";
-import { SRSIndex } from "@openforis/arena-core/dist/srs";
+import {
+  NodeDefEntity,
+  Objects,
+  SRSIndex,
+  Survey,
+  Surveys,
+} from "@openforis/arena-core";
 
 import { SurveyDefs } from "model";
 

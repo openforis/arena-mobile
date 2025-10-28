@@ -11,24 +11,24 @@ import {
   NodeDefEntity,
   NodeDef,
   NodeDefExpression,
+  NodeValues,
 } from "@openforis/arena-core";
-import { valuePropsCoordinate } from "@openforis/arena-core/dist/node/nodeValueProps";
 import { SurveyDefs } from "./SurveyDefs";
 
 const EMPTY_VALUE = "---";
 
 const coordinateAttributeMandatoryFields: Set<string> = new Set([
-  valuePropsCoordinate[valuePropsCoordinate.x],
-  valuePropsCoordinate[valuePropsCoordinate.y],
-  valuePropsCoordinate[valuePropsCoordinate.srs],
+  NodeValues.ValuePropsCoordinate.x,
+  NodeValues.ValuePropsCoordinate.y,
+  NodeValues.ValuePropsCoordinate.srs,
 ]);
 
 const coordinateAttributeNumericFields = [
-  valuePropsCoordinate[valuePropsCoordinate.x],
-  valuePropsCoordinate[valuePropsCoordinate.y],
-  valuePropsCoordinate[valuePropsCoordinate.accuracy],
-  valuePropsCoordinate[valuePropsCoordinate.altitude],
-  valuePropsCoordinate[valuePropsCoordinate.altitudeAccuracy],
+  NodeValues.ValuePropsCoordinate.x,
+  NodeValues.ValuePropsCoordinate.y,
+  NodeValues.ValuePropsCoordinate.accuracy,
+  NodeValues.ValuePropsCoordinate.altitude,
+  NodeValues.ValuePropsCoordinate.altitudeAccuracy,
 ];
 
 const yesNoValueByBooleanValue: Record<string, string> = {

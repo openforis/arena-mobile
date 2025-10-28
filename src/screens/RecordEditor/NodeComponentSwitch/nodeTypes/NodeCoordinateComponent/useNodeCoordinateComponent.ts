@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {
   NodeDefs,
+  NodeValueCoordinate,
   Numbers,
   Objects,
   PointFactory,
@@ -10,7 +11,6 @@ import {
   Records,
   Surveys,
 } from "@openforis/arena-core";
-import { NodeValueCoordinate } from "@openforis/arena-core/dist/node";
 
 import { useLocationWatch } from "hooks";
 import { RecordNodes } from "model/utils/RecordNodes";

@@ -1,8 +1,8 @@
-import { ValidationResult } from "@openforis/arena-core";
 import {
   Validation,
   ValidationFields,
-} from "@openforis/arena-core/dist/validation/validation";
+  ValidationResult,
+} from "@openforis/arena-core";
 
 const extractErrorMessage = ({
   errors,

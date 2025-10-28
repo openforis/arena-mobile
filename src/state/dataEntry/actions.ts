@@ -5,6 +5,7 @@ import {
   NodeDefs,
   NodeDefType,
   Nodes,
+  NodesMap,
   Numbers,
   Objects,
   PointFactory,
@@ -40,7 +41,6 @@ import {
   importRecordsFromServer,
 } from "./actionsRecordsImport";
 import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
-import { NodesMap } from "@openforis/arena-core/dist/node";
 
 const {
   DATA_ENTRY_RESET,

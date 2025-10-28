@@ -1,9 +1,9 @@
-import { Record } from "@openforis/arena-core";
+import { ArenaRecord } from "@openforis/arena-core";
 
 import { RecordLoadStatus } from "./RecordLoadStatus";
 import { RecordOrigin } from "./RecordOrigin";
 
-export type ArenaMobileRecord = Record & {
+export type ArenaMobileRecord = ArenaRecord & {
   dateModifiedRemote?: string;
   dateSynced?: string;
   loadStatus?: RecordLoadStatus;
