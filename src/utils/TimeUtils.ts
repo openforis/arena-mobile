@@ -66,16 +66,14 @@ const formatRemainingTime = ({
   });
 };
 
-const extractParts = (time: any): TimePartsDictionary | null =>
-  !time
-    ? null
-    : (Object.values(TimePart).reduce(
-        (acc: TimePartsDictionary, timePart: TimePart) => {
-          acc[timePart] = _calculateValuePerTimePart(time, timePart);
-          return acc;
-        },
-        {} as TimePartsDictionary
-      ) as TimePartsDictionary);
+const extractParts = (time: any): TimePartsDictionary | null => {
+  if (!time) return null;
+  const timeParts = {} as TimePartsDictionary;
+  for (const timePart of Object.values(TimePart)) {
+    timeParts[timePart] = _calculateValuePerTimePart(time, timePart);
+  }
+  return timeParts;
+};
 
 const _formatRemainingHoursAndMinutes = ({
   hours,
