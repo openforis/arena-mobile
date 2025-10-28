@@ -10,7 +10,6 @@ type NodeDateTimeComponentProps = {
   mode?: "date" | "time";
   nodeDef: any;
   nodeUuid?: string;
-  parentNodeUuid?: string;
 };
 
 export const NodeDateTimeComponent = (props: NodeDateTimeComponentProps) => {

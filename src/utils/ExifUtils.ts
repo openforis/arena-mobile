@@ -60,7 +60,7 @@ const writeGpsData = async ({
     GPSDateStamp: locationTimestampObj
       .toISOString()
       .slice(0, 10)
-      .replace(/-/g, ":"),
+      .replaceAll(/-/, ":"),
 
     UserComment: `Geotagged from ${AMConstants.appNameFull} app`,
     Make: AMConstants.appNameCompactInternal,

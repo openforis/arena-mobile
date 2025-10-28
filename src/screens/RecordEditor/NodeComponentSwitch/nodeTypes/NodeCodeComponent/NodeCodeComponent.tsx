@@ -20,11 +20,7 @@ import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 const MAX_VISIBLE_ITEMS = 10;
 
-type Props = NodeComponentProps & {
-  onFocus?: () => void;
-};
-
-export const NodeCodeComponent = (props: Props) => {
+export const NodeCodeComponent = (props: NodeComponentProps) => {
   const { parentNodeUuid, nodeDef } = props;
 
   if (__DEV__) {
