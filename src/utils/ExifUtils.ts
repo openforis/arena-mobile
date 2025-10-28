@@ -8,18 +8,12 @@ if (!Environment.isExpoGo) {
   Exify = require("@lodev09/react-native-exify");
 }
 
-const readData = async ({
-  fileUri
-}: any) => Exify?.readAsync(fileUri);
+const readData = async ({ fileUri }: any) => Exify?.readAsync(fileUri);
 
-const writeData = async ({
-  fileUri,
-  data
-}: any) => Exify?.writeAsync(fileUri, data);
+const writeData = async ({ fileUri, data }: any) =>
+  Exify?.writeAsync(fileUri, data);
 
-const hasGpsData = async ({
-  fileUri
-}: any) => {
+const hasGpsData = async ({ fileUri }: any) => {
   const data = await readData({ fileUri });
   if (!data) {
     return false;
@@ -32,10 +26,7 @@ const hasGpsData = async ({
   );
 };
 
-const writeGpsData = async ({
-  fileUri,
-  location
-}: any) => {
+const writeGpsData = async ({ fileUri, location }: any) => {
   const { coords, timestamp } = location;
   const { latitude, longitude, altitude } = coords;
   const locationTimestampObj = new Date(timestamp);
@@ -60,7 +51,7 @@ const writeGpsData = async ({
     GPSDateStamp: locationTimestampObj
       .toISOString()
       .slice(0, 10)
-      .replaceAll(/-/, ":"),
+      .replaceAll("-", ":"),
 
     UserComment: `Geotagged from ${AMConstants.appNameFull} app`,
     Make: AMConstants.appNameCompactInternal,
@@ -68,10 +59,7 @@ const writeGpsData = async ({
   await writeData({ fileUri, data: { ...existingTags, ...newTags } });
 };
 
-const copyData = async ({
-  sourceFileUri,
-  targetFileUri
-}: any) => {
+const copyData = async ({ sourceFileUri, targetFileUri }: any) => {
   const data = await readData({ fileUri: sourceFileUri });
   if (!data) {
     return false;
