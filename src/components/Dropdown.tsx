@@ -32,7 +32,20 @@ export const Dropdown = (props: DropdownProps) => {
 
   const label = showLabel ? t(labelProp) : "";
 
-  const [open, setOpen] = useState(false);
+  const [state, setState] = useState({
+    open: false,
+    /**
+     * workaround: used to force re-render when opening or closing the dropdown;
+     * without this, the dropdown remains closed after selecting an already selected item;
+     */
+    timeOpenSet: Date.now(),
+  });
+
+  const { open, timeOpenSet } = state;
+
+  const setOpen = useCallback((val: boolean) => {
+    setState({ open: val, timeOpenSet: Date.now() });
+  }, []);
 
   const itemToOption = useCallback(
     (item: any) => ({
@@ -73,6 +86,7 @@ export const Dropdown = (props: DropdownProps) => {
       dropDownContainerMaxHeight={300}
       dropDownItemStyle={dropDownItemStyle}
       dropDownItemTextStyle={dropDownItemTextStyle}
+      key={timeOpenSet}
       label={label}
       list={options}
       mode="outlined"
