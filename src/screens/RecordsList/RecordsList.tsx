@@ -578,6 +578,48 @@ export const RecordsList = () => {
     [cycle, defaultCycleKey, onNewRecordPress]
   );
 
+  const downloadMenuItems = useMemo(() => {
+    const items = [];
+    if (networkAvailable) {
+      items.push({
+        key: "checkStatus",
+        icon: "cloud-refresh",
+        keepMenuOpenOnPress: true,
+        label: "dataEntry:checkStatus",
+        onPress: loadRecordsWithSyncStatus,
+      });
+    } else {
+      items.push({
+        key: "networkNotAvailable",
+        keepMenuOpenOnPress: false,
+        label: "common:networkNotAvailable",
+        disabled: true,
+      });
+    }
+    items.push(
+      {
+        key: "exportNewOrUpdatedRecords",
+        icon: "upload",
+        label: "dataEntry:exportNewOrUpdatedRecords",
+        disabled: !syncStatusFetched,
+        onPress: onExportNewOrUpdatedRecordsPress,
+      },
+      {
+        key: "exportAllRecords",
+        icon: "download",
+        label: "dataEntry:localBackup",
+        onPress: onExportAllRecordsPress,
+      }
+    );
+    return items;
+  }, [
+    networkAvailable,
+    syncStatusFetched,
+    loadRecordsWithSyncStatus,
+    onExportAllRecordsPress,
+    onExportNewOrUpdatedRecordsPress,
+  ]);
+
   const recordsLength = records?.length ?? 0;
 
   return (
@@ -632,42 +674,7 @@ export const RecordsList = () => {
           />
           <MenuButton
             icon="download"
-            items={[
-              ...(!networkAvailable
-                ? [
-                    {
-                      key: "networkNotAvailable",
-                      keepMenuOpenOnPress: false,
-                      label: "common:networkNotAvailable",
-                      disabled: true,
-                    },
-                  ]
-                : []),
-              ...(networkAvailable
-                ? [
-                    {
-                      key: "checkStatus",
-                      icon: "cloud-refresh",
-                      keepMenuOpenOnPress: true,
-                      label: "dataEntry:checkStatus",
-                      onPress: loadRecordsWithSyncStatus,
-                    },
-                  ]
-                : []),
-              {
-                key: "exportNewOrUpdatedRecords",
-                icon: "upload",
-                label: "dataEntry:exportNewOrUpdatedRecords",
-                disabled: !syncStatusFetched,
-                onPress: onExportNewOrUpdatedRecordsPress,
-              },
-              {
-                key: "exportAllRecords",
-                icon: "download",
-                label: "dataEntry:localBackup",
-                onPress: onExportAllRecordsPress,
-              },
-            ]}
+            items={downloadMenuItems}
             style={styles.exportDataMenuButton}
           />
         </HView>

@@ -54,10 +54,7 @@ const handleUploadJobError = async ({
   error: any;
   dispatch: any;
 }): Promise<boolean> => {
-  if (!error) {
-    // (error is null if job was canceled)
-    return false;
-  } else {
+  if (error) {
     // error occurred
     const { errors } = error;
     const errorMessage = errors
@@ -72,6 +69,9 @@ const handleUploadJobError = async ({
       confirmButtonTextKey: "common:tryAgain",
     });
     return !!retryConfirmed;
+  } else {
+    // (error is null if job was canceled)
+    return false;
   }
 };
 
