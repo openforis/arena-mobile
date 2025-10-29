@@ -1,16 +1,16 @@
 import { combineReducers } from "redux";
 
-import { ConfirmReducer } from "./confirm";
-import { DataEntryReducer } from "./dataEntry";
-import { DeviceInfoReducer } from "./deviceInfo";
-import { JobMonitorReducer } from "./jobMonitor";
-import { MessageReducer } from "./message";
-import { RemoteConnectionReducer } from "./remoteConnection";
-import { ScreenOptionsReducer } from "./screenOptions";
-import { SettingsReducer } from "./settings";
-import { SurveyReducer } from "./survey";
-import { SurveyOptionsReducer } from "./surveyOptions";
-import { ToastReducer } from "./toast";
+import { ConfirmReducer } from "./confirm/reducer";
+import { DataEntryReducer } from "./dataEntry/reducer";
+import { DeviceInfoReducer } from "./deviceInfo/reducer";
+import { JobMonitorReducer } from "./jobMonitor/reducer";
+import { MessageReducer } from "./message/reducer";
+import { RemoteConnectionReducer } from "./remoteConnection/reducer";
+import { ScreenOptionsReducer } from "./screenOptions/reducer";
+import { SettingsReducer } from "./settings/reducer";
+import { SurveyReducer } from "./survey/reducer";
+import { SurveyOptionsReducer } from "./surveyOptions/reducer";
+import { ToastReducer } from "./toast/reducer";
 
 export const rootReducer = combineReducers({
   confirm: ConfirmReducer,
