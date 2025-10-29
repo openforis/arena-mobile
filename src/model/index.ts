@@ -1,3 +1,4 @@
+export type { ArenaMobileRecord } from "./ArenaMobileRecord";
 export { BatteryState } from "./BatteryState";
 export { Cycles } from "./Cycles";
 export { JobMobile } from "./JobMobile";

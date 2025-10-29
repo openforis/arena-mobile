@@ -9,7 +9,7 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordNodes } from "model/utils/RecordNodes";
+import { ArenaMobileRecord, RecordNodes } from "model";
 
 import { DataEntrySelectors, SurveySelectors } from "state";
 
@@ -126,6 +126,54 @@ type TreeItem = {
   hasWarnings?: boolean;
 };
 
+const createChildTreeItem = ({
+  record,
+  visitedEntity,
+  childDef,
+  currentEntity,
+  createTreeItem,
+}: {
+  record: ArenaMobileRecord;
+  visitedEntity: any;
+  childDef: NodeDef<any>;
+  currentEntity: any;
+  createTreeItem: ({ nodeDef, parentEntityUuid, entityUuid }: any) => TreeItem;
+}) => {
+  const childEntity = getChildEntity({
+    record,
+    entity: visitedEntity,
+    childDef,
+    currentEntity,
+  });
+
+  const treeItem = createTreeItem({
+    nodeDef: childDef,
+    parentEntityUuid: visitedEntity.uuid,
+    entityUuid: childEntity?.uuid,
+  });
+  return { treeItem, childEntity };
+};
+
+const isChildDefIncluded =
+  ({
+    visitedEntityDef,
+    currentEntityDef,
+  }: {
+    visitedEntityDef: NodeDefEntity;
+    currentEntityDef: NodeDefEntity;
+  }) =>
+  (childDef: NodeDef<any>): boolean =>
+    Surveys.isNodeDefAncestor({
+      nodeDefAncestor: visitedEntityDef,
+      nodeDefDescendant: currentEntityDef,
+    }) ||
+    // is current entity def
+    childDef.uuid === currentEntityDef.uuid ||
+    // is sibling of current entity def
+    childDef.parentUuid === currentEntityDef.parentUuid ||
+    // is child of current entity def
+    childDef.parentUuid === currentEntityDef.uuid;
+
 export const useTreeData = () => {
   const survey = SurveySelectors.useCurrentSurvey();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
@@ -189,32 +237,15 @@ export const useTreeData = () => {
         nodeDef: visitedEntityDef,
         parentEntity: visitedEntity,
         cycle,
-      }).filter(
-        (childDef) =>
-          Surveys.isNodeDefAncestor({
-            nodeDefAncestor: visitedEntityDef,
-            nodeDefDescendant: currentEntityDef,
-          }) ||
-          // is current entity def
-          childDef.uuid === currentEntityDef.uuid ||
-          // is sibling of current entity def
-          childDef.parentUuid === currentEntityDef.parentUuid ||
-          // is child of current entity def
-          childDef.parentUuid === currentEntityDef.uuid
-      );
+      }).filter(isChildDefIncluded({ visitedEntityDef, currentEntityDef }));
 
     for (const childDef of applicableChildrenEntityDefs) {
-      const childEntity = getChildEntity({
+      const { treeItem, childEntity } = createChildTreeItem({
         record,
-        entity: visitedEntity,
+        visitedEntity,
         childDef,
         currentEntity,
-      });
-
-      const treeItem = createTreeItem({
-        nodeDef: childDef,
-        parentEntityUuid: visitedEntity.uuid,
-        entityUuid: childEntity?.uuid,
+        createTreeItem,
       });
 
       parentTreeItem.children.push(treeItem);
