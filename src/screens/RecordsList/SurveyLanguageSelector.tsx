@@ -1,35 +1,39 @@
-import React, { useCallback } from "react";
-import { useDispatch } from "react-redux";
+import React, { useCallback, useMemo } from "react";
 
-import { LanguageCode, Languages } from "@openforis/arena-core";
+import { LanguageCode, Languages, Surveys } from "@openforis/arena-core";
 
 import { Dropdown, HView, Text } from "components";
-import { SurveyActions, SurveySelectors } from "state";
+import { SurveyActions, SurveySelectors, useAppDispatch } from "state";
 
 import styles from "./styles";
 
 export const SurveyLanguageSelector = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const survey = SurveySelectors.useCurrentSurvey()!;
   const preferredLang = SurveySelectors.useCurrentSurveyPreferredLang();
 
-  const languages = survey.props.languages;
+  const languages = Surveys.getLanguages(survey);
   const singleLanguage = languages.length === 1;
 
-  const langLabelFn = (langCode: LanguageCode) => Languages[langCode]?.["en"];
+  const langLabelFn = useCallback(
+    (langCode: LanguageCode) => Languages[langCode]?.[LanguageCode.en],
+    []
+  );
 
-  const items = languages.map((langCode: any) => ({
-    value: langCode,
-    label: langLabelFn(langCode),
-  }));
+  const items = useMemo(
+    () =>
+      languages.map((langCode: any) => ({
+        value: langCode,
+        label: langLabelFn(langCode),
+      })),
+    [languages]
+  );
 
   const selectedValue = singleLanguage ? languages[0] : preferredLang;
 
   const onChange = useCallback(
     async (lang: any) => {
-      dispatch(
-        SurveyActions.setCurrentSurveyPreferredLanguage({ lang }) as never
-      );
+      dispatch(SurveyActions.setCurrentSurveyPreferredLanguage({ lang }));
     },
     [dispatch]
   );
