@@ -64,11 +64,11 @@ const loginAndSetUser =
     dispatch({ type: USER_LOADING });
     const connectSID = await SecureStoreService.getConnectSIDCookie();
     let user = null;
-    if (!connectSID) {
+    if (connectSID) {
+      user = await fetchUserOrLoginAgain({ serverUrl, email, password });
+    } else {
       const loginRes = await AuthService.login({ serverUrl, email, password });
       user = loginRes.user;
-    } else {
-      user = await fetchUserOrLoginAgain({ serverUrl, email, password });
     }
     dispatch({ type: USER_SET, user });
   };
