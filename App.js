@@ -1,4 +1,3 @@
-import { configureStore } from "@reduxjs/toolkit";
 import { StatusBar } from "expo-status-bar";
 import { KeyboardAvoidingView } from "react-native";
 import ErrorBoundary from "react-native-error-boundary";
@@ -13,13 +12,11 @@ import { ErrorFallbackComponent } from "appComponents/ErrorFallbackComponent";
 import { JobMonitorDialog } from "appComponents/JobMonitorDialog";
 import { useEffectiveTheme } from "hooks";
 import { AppStack } from "navigation/AppStack";
-import { rootReducer } from "state/reducers";
+import { store } from "state/store";
 import { BaseStyles, Environment } from "utils";
 
 import { AppInitializer } from "./src/AppInitializer";
 import styles from "./src/appStyles";
-
-const store = configureStore({ reducer: rootReducer });
 
 const safeAreaEdges = ["right", "bottom", "left"];
 

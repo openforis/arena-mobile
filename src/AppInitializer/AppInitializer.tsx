@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 
 import { DowngradeError, initialize as initializeDb } from "db";
 import { AppLogo } from "appComponents/AppLogo";
@@ -15,6 +14,7 @@ import {
   RemoteConnectionActions,
   SettingsActions,
   SurveyActions,
+  useAppDispatch,
 } from "state";
 import { SystemUtils } from "utils";
 
@@ -45,10 +45,10 @@ const steps = {
 };
 
 type AppInitializerState = {
-  loading: boolean,
-  errorMessage?: string | null,
-  step: string,
-}
+  loading: boolean;
+  errorMessage?: string | null;
+  step: string;
+};
 
 type Props = {
   children?: React.ReactNode;
@@ -57,7 +57,7 @@ type Props = {
 export const AppInitializer = (props: Props) => {
   const { children } = props;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [state, setState] = useState({
     loading: true,
@@ -66,7 +66,8 @@ export const AppInitializer = (props: Props) => {
   } as AppInitializerState);
   const { loading, errorMessage, step } = state;
 
-  const setStep = (stepNew: any) => setState((statePrev) => ({ ...statePrev, step: stepNew }));
+  const setStep = (stepNew: any) =>
+    setState((statePrev) => ({ ...statePrev, step: stepNew }));
 
   const initialize = useCallback(async () => {
     if (__DEV__) {
@@ -75,13 +76,13 @@ export const AppInitializer = (props: Props) => {
     await SystemUtils.cleanupTempFiles();
 
     setStep(steps.fetchingDeviceInfo);
-    await dispatch(DeviceInfoActions.initDeviceInfo() as any);
+    await dispatch(DeviceInfoActions.initDeviceInfo());
 
     setStep(steps.fetchingSettings);
     const settings = await SettingsService.fetchSettings();
 
     setStep(steps.storingSettings);
-    await dispatch(SettingsActions.updateSettings(settings) as any);
+    await dispatch(SettingsActions.updateSettings(settings));
 
     if (settings.fullScreen) {
       setStep(steps.settingFullScreen);
@@ -93,7 +94,7 @@ export const AppInitializer = (props: Props) => {
     }
     if (settings.locationGpsLocked) {
       setStep(steps.startingGpsLocking);
-      await dispatch(SettingsActions.startGpsLocking() as any);
+      await dispatch(SettingsActions.startGpsLocking());
     }
     setStep(steps.initializingDb);
     const { dbMigrationsRun, prevDbVersion } = await initializeDb();
@@ -110,17 +111,19 @@ export const AppInitializer = (props: Props) => {
       await SurveyService.importDemoSurvey();
     }
     setStep(steps.fetchingAndSettingLocalSurveys);
-    await dispatch(SurveyActions.fetchAndSetLocalSurveys() as any);
+    await dispatch(SurveyActions.fetchAndSetLocalSurveys());
 
     const currentSurveyId = await PreferencesService.getCurrentSurveyId();
     if (currentSurveyId) {
       setStep(steps.fetchingAndSettingSurvey);
       dispatch(
-        SurveyActions.fetchAndSetCurrentSurvey({ surveyId: currentSurveyId }) as any
+        SurveyActions.fetchAndSetCurrentSurvey({
+          surveyId: currentSurveyId,
+        }) as any
       );
     }
     setStep(steps.checkingLoggedIn);
-    await dispatch(RemoteConnectionActions.loginAndSetUser() as any);
+    await dispatch(RemoteConnectionActions.loginAndSetUser());
 
     setStep(steps.complete);
     if (__DEV__) {
