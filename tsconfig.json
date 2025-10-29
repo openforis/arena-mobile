@@ -1,6 +1,17 @@
 {
   "compilerOptions": {
+    "allowUnreachableCode": false,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": "./src",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-native",
+    "lib": ["esnext"],
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
     "paths": {
       "appComponents/*": ["appComponents/*"],
       "components/*": ["components/*"],
@@ -14,31 +25,23 @@
       "state/*": ["state/*"],
       "utils/*": ["utils/*"]
     },
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "jsx": "react-native",
-    "lib": ["esnext"],
-    "types": ["react-native", "jest"],
-    "noEmit": true,
-    "strict": true,
-    "target": "esnext",
-    "noImplicitReturns": true,
     "resolveJsonModule": true,
+    "target": "esnext",
+    "types": ["react-native", "jest"],
+    // Recommended Options
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noUncheckedSideEffectImports": true,
     "skipLibCheck": true,
-    "noUncheckedIndexedAccess": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "allowUnreachableCode": false
+    "strict": true,
+    // "verbatimModuleSyntax": true,
   },
-  "include": ["src/**/*", "App.ts"],
   "exclude": [
     "node_modules",
     "babel.config.js",
     "metro.config.js",
     "jest.config.js"
   ],
-  "extends": "expo/tsconfig.base"
+  "extends": "expo/tsconfig.base",
+  "include": ["src/**/*", "App.ts"],
 }
