@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 
 import { Objects } from "@openforis/arena-core";
 
@@ -7,7 +6,7 @@ import { ConnectionToRemoteServerButton } from "appComponents/ConnectionToRemote
 import { FullBackupButton } from "appComponents/FullBackupButton";
 import { Card, ScreenView, VView } from "components";
 import { SettingsModel } from "model";
-import { SettingsActions, SettingsSelectors } from "state";
+import { SettingsActions, SettingsSelectors, useAppDispatch } from "state";
 
 import { SettingsItem } from "./SettingsItem";
 import styles from "./styles";
@@ -18,7 +17,7 @@ export const SettingsScreen = () => {
   if (__DEV__) {
     console.log(`rendering SettingsScreen`);
   }
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const settingsStored = SettingsSelectors.useSettings();
 
@@ -31,7 +30,7 @@ export const SettingsScreen = () => {
     async (value: any) => {
       const oldValue = settings[key];
       if (value === oldValue) return;
-      dispatch(SettingsActions.updateSetting({ key, value }) as never);
+      dispatch(SettingsActions.updateSetting({ key, value }));
       setState((statePrev) =>
         Objects.assocPath({ obj: statePrev, path: ["settings", key], value })
       );

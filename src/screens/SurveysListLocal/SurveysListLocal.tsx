@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 
 import { Dates } from "@openforis/arena-core";
@@ -22,6 +21,7 @@ import {
   SurveyActions,
   ScreenOptionsSelectors,
   useConfirm,
+  useAppDispatch,
 } from "state";
 import { ArrayUtils } from "utils";
 
@@ -77,7 +77,7 @@ const initialState: SurveysListLocalState = {
 
 export const SurveysListLocal = () => {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [state, setState] = useState(initialState);
   const networkAvailable = useIsNetworkConnected();
   const screenViewMode = ScreenOptionsSelectors.useCurrentScreenViewMode();
@@ -113,7 +113,7 @@ export const SurveysListLocal = () => {
           swipeToConfirm: true,
         })
       ) {
-        await dispatch(SurveyActions.deleteSurveys(surveyIds) as never);
+        await dispatch(SurveyActions.deleteSurveys(surveyIds));
         await loadSurveys();
       }
     },
@@ -135,10 +135,7 @@ export const SurveysListLocal = () => {
       const fetchAndSetSurvey = () => {
         setLoading();
         dispatch(
-          SurveyActions.fetchAndSetCurrentSurvey({
-            surveyId,
-            navigation,
-          }) as never
+          SurveyActions.fetchAndSetCurrentSurvey({ surveyId, navigation })
         );
       };
 
@@ -154,7 +151,7 @@ export const SurveysListLocal = () => {
             onConfirm: setLoading,
             onComplete: fetchAndSetSurvey,
             onCancel: fetchAndSetSurvey,
-          }) as never
+          })
         );
       } else {
         fetchAndSetSurvey();

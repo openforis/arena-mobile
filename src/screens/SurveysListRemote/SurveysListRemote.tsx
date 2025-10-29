@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 
 import { DateFormats, Dates, Surveys } from "@openforis/arena-core";
@@ -21,6 +20,7 @@ import {
   ScreenOptionsSelectors,
   SurveyActions,
   SurveySelectors,
+  useAppDispatch,
 } from "state";
 
 import { screenKeys } from "../screenKeys";
@@ -68,7 +68,7 @@ const StatusCell = ({ item }: DataVisualizerCellProps) => {
 
 export const SurveysListRemote = () => {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const surveysLocal = SurveySelectors.useSurveysLocal();
   const screenViewMode = ScreenOptionsSelectors.useCurrentScreenViewMode();
   const viewAsList = screenViewMode === ScreenViewMode.list;
@@ -158,19 +158,14 @@ export const SurveysListRemote = () => {
             navigation,
             onConfirm: () =>
               setState((statePrev) => ({ ...statePrev, loading: true })),
-          }) as never
+          })
         );
       } else {
         // import new survey
         const onNewSurveyImportConfirm = () => {
           setState((statePrev) => ({ ...statePrev, loading: true }));
           const surveyId = surveySummary.id;
-          dispatch(
-            SurveyActions.importSurveyRemote({
-              surveyId,
-              navigation,
-            }) as never
-          );
+          dispatch(SurveyActions.importSurveyRemote({ surveyId, navigation }));
         };
         dispatch(
           ConfirmActions.show({

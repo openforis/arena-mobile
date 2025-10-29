@@ -1,16 +1,16 @@
-import { useDispatch } from "react-redux";
 import { useEffect, useRef } from "react";
 import * as Battery from "expo-battery";
 
+import { useAppDispatch } from "state/store";
 import { DeviceInfoActions } from "./actions";
 
 export const useBatteryStateListener = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const subscriptionRef = useRef<Battery.Subscription | null>(null);
 
   useEffect(() => {
     subscriptionRef.current = Battery.addBatteryStateListener(() => {
-      dispatch(DeviceInfoActions.updatePowerState() as never);
+      dispatch(DeviceInfoActions.updatePowerState());
     });
     return () => {
       const subscription = subscriptionRef.current;

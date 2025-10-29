@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { Arrays } from "@openforis/arena-core";
 
 import { ConfirmActions } from "./reducer";
+import { useAppDispatch } from "state/store";
 
 type ConfirmDialogState = {
   selectedMultipleChoiceValues: any[];
@@ -18,7 +19,7 @@ const defaultLocalState: ConfirmDialogState = {
 };
 
 export const useConfirmDialog = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const confirmState = useSelector((state: any) => state.confirm);
 
@@ -44,12 +45,12 @@ export const useConfirmDialog = () => {
       ConfirmActions.confirm({
         selectedMultipleChoiceValues,
         selectedSingleChoiceValue,
-      }) as never
+      })
     );
   }, [dispatch, selectedMultipleChoiceValues, selectedSingleChoiceValue]);
 
   const cancel = useCallback(() => {
-    dispatch(ConfirmActions.cancel() as never);
+    dispatch(ConfirmActions.cancel());
   }, [dispatch]);
 
   const onMultipleChoiceOptionChange = useCallback((value: any) => {

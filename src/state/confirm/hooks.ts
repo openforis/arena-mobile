@@ -1,10 +1,10 @@
 import { useCallback } from "react";
-import { useDispatch } from "react-redux";
 
 import { ConfirmUtils } from "./utils";
+import { useAppDispatch } from "state/store";
 
 export const useConfirm = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return useCallback(
     (params: any) => ConfirmUtils.confirm({ dispatch, ...params }),

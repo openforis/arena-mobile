@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 
 import {
@@ -23,6 +22,7 @@ import {
   MessageActions,
   RemoteConnectionActions,
   RemoteConnectionSelectors,
+  useAppDispatch,
 } from "state";
 import { useIsNetworkConnected } from "hooks";
 import styles from "./styles";
@@ -37,7 +37,7 @@ const serverUrlTypes = {
 };
 
 export const SettingsRemoteConnectionScreen = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const { t } = useTranslation();
   const networkAvailable = useIsNetworkConnected();
