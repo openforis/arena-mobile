@@ -142,15 +142,15 @@ export const SettingsRemoteConnectionScreen = () => {
         email: emailNew,
         password,
         navigation,
-      }) as never
+      })
     );
   }, [dispatch, email, navigation, password, serverUrl]);
 
   const onLogout = useCallback(async () => {
     if (networkAvailable) {
-      dispatch(RemoteConnectionActions.logout() as never);
+      dispatch(RemoteConnectionActions.logout());
     } else {
-      dispatch(RemoteConnectionActions.clearUserCredentials() as never);
+      dispatch(RemoteConnectionActions.clearUserCredentials());
     }
   }, [dispatch, networkAvailable]);
 
