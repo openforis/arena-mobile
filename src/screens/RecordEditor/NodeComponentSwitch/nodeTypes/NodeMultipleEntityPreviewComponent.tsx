@@ -1,10 +1,9 @@
 import { useCallback } from "react";
-import { useDispatch } from "react-redux";
 
 import { NodeDefs } from "@openforis/arena-core";
 
 import { Button, VView } from "components";
-import { DataEntryActions, SurveySelectors } from "state";
+import { DataEntryActions, SurveySelectors, useAppDispatch } from "state";
 
 import { NodeComponentProps } from "./nodeComponentPropTypes";
 import { StyleSheet } from "react-native";
@@ -22,7 +21,7 @@ export const NodeMultipleEntityPreviewComponent = (
     console.log("rendering NodeMultipleEntityPreviewComponent");
   }
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const entityDefUuid = nodeDef.uuid;
 
@@ -32,7 +31,7 @@ export const NodeMultipleEntityPreviewComponent = (
         DataEntryActions.selectCurrentPageEntity({
           parentEntityUuid: parentNodeUuid,
           entityDefUuid,
-        }) as never
+        })
       ),
     [dispatch, entityDefUuid, parentNodeUuid]
   );

@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { TouchableOpacity } from "react-native";
 import { Avatar } from "react-native-paper";
 
@@ -7,6 +6,7 @@ import {
   RemoteConnectionActions,
   RemoteConnectionSelectors,
 } from "state/remoteConnection";
+import { useAppDispatch } from "state/store";
 
 type UserProfileAvatarProps = {
   loading?: boolean;
@@ -35,14 +35,14 @@ export const UserProfileIcon = (props: Props) => {
   const { onPress, size = 30 } = props;
   if (__DEV__) console.log(`rendering UserProfileIcon`);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const user = RemoteConnectionSelectors.useLoggedInUser();
   const iconInfo = RemoteConnectionSelectors.useLoggedInUserProfileIconInfo();
   const { loading, uri, loaded } = iconInfo ?? {};
 
   useEffect(() => {
     if (user && !loaded && !uri) {
-      dispatch(RemoteConnectionActions.fetchLoggedInUserProfileIcon as never);
+      dispatch(RemoteConnectionActions.fetchLoggedInUserProfileIcon);
     }
   }, [dispatch, user, loaded, uri]);
 

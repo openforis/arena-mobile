@@ -1,11 +1,12 @@
 import React, { useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { MessageDialog } from "../components";
 import { MessageActions } from "../state/message";
+import { useAppDispatch } from "state/store";
 
 export const AppMessageDialog = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const {
     content,
     contentParams,
@@ -13,7 +14,7 @@ export const AppMessageDialog = () => {
     detailsParams,
     onDismiss: onDismissProp,
     title,
-  } = useSelector((state:any) => state.message);
+  } = useSelector((state: any) => state.message);
 
   const onDismiss = useCallback(() => {
     onDismissProp?.();

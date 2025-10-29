@@ -1,12 +1,10 @@
 import { Snackbar } from "react-native-paper";
-import { useDispatch } from "react-redux";
 
 import { useTranslation } from "localization";
-import { ToastActions, ToastSelectors } from "state";
-
+import { ToastActions, ToastSelectors, useAppDispatch } from "state";
 
 export const AppToast = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const { t } = useTranslation();
 

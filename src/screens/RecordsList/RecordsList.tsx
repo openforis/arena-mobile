@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import * as DocumentPicker from "expo-document-picker";
 
@@ -27,6 +26,7 @@ import {
   DataEntryActions,
   MessageActions,
   SurveySelectors,
+  useAppDispatch,
   useConfirm,
 } from "state";
 import { RemoteConnectionUtils } from "state/remoteConnection/remoteConnectionUtils";
@@ -89,7 +89,7 @@ type RecordListState = {
 
 export const RecordsList = () => {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const networkAvailable = useIsNetworkConnected();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
@@ -248,14 +248,14 @@ export const RecordsList = () => {
           fileUri: uri,
           overwriteExistingRecords,
           onImportComplete: loadRecords,
-        }) as never
+        })
       );
     }
   }, [confirm, dispatch, loadRecords, toaster]);
 
   const onNewRecordPress = useCallback(() => {
     setState((statePrev) => ({ ...statePrev, loading: true }));
-    dispatch(DataEntryActions.createNewRecord({ navigation }) as never);
+    dispatch(DataEntryActions.createNewRecord({ navigation }));
   }, [dispatch, navigation]);
 
   const confirmExportRecords = useCallback(
@@ -364,7 +364,7 @@ export const RecordsList = () => {
             onEnd: () =>
               setState((statePrev) => ({ ...statePrev, loading: false })),
             onlyRemote,
-          }) as never
+          })
         );
       }
     },
@@ -392,7 +392,7 @@ export const RecordsList = () => {
         onEnd: () => {
           setState((statePrev) => ({ ...statePrev, loading: false }));
         },
-      }) as never
+      })
     );
   }, [cycle, dispatch, records, toaster]);
 
@@ -415,7 +415,7 @@ export const RecordsList = () => {
           swipeToConfirm: true,
         })
       ) {
-        await dispatch(DataEntryActions.deleteRecords(recordUuids) as never);
+        await dispatch(DataEntryActions.deleteRecords(recordUuids));
         await loadRecords();
       }
     },
@@ -456,7 +456,7 @@ export const RecordsList = () => {
         DataEntryActions.importRecordsFromServer({
           recordUuids: selectedRecordUuids,
           onImportComplete: loadRecords,
-        }) as never
+        })
       );
     },
     [checkRecordsCanBeImported, dispatch, loadRecords, records]
@@ -495,7 +495,7 @@ export const RecordsList = () => {
         DataEntryActions.cloneRecordsIntoDefaultCycle({
           recordSummaries: selectedRecords,
           callback: loadRecords,
-        }) as never
+        })
       );
     },
     [checkRecordsCanBeCloned, dispatch, loadRecords, records]

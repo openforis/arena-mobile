@@ -1,12 +1,11 @@
 import React, { useCallback } from "react";
-import { useDispatch } from "react-redux";
 
 import { NodeDefs } from "@openforis/arena-core";
 
 import { NavigateToRecordsListButton } from "appComponents/NavigateToRecordsListButton";
 import { HView, IconButton, View } from "components";
 import { TextDirection, useTextDirection } from "localization";
-import { DataEntryActions, DataEntrySelectors } from "state";
+import { DataEntryActions, DataEntrySelectors, useAppDispatch } from "state";
 
 import { NodePageNavigationButton } from "./NodePageNavigationButton";
 import { SingleNodeNavigationButton } from "./SingleNodeNavigationButton";
@@ -48,7 +47,7 @@ const entityCreationDelay = 500;
 
 export const BottomNavigationBar = () => {
   const styles = useStyles();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const textDirection = useTextDirection();
   const prevButtonIconPosition =
     prevButtonIconPositionByTextDirection[textDirection];
@@ -81,9 +80,7 @@ export const BottomNavigationBar = () => {
   } = useBottomNavigationBar();
 
   const onNewPress = useCallback(() => {
-    dispatch(
-      DataEntryActions.addNewEntity({ delay: entityCreationDelay }) as never
-    );
+    dispatch(DataEntryActions.addNewEntity({ delay: entityCreationDelay }));
   }, [dispatch]);
 
   const prevButtonGoesToList =

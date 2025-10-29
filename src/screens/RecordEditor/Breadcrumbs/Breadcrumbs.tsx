@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { ScrollView } from "react-native";
-import { useDispatch } from "react-redux";
 
 import { useIsTextDirectionRtl } from "localization";
 import { DataEntryActions } from "state/dataEntry/actions";
 import { DataEntrySelectors } from "state/dataEntry/selectors";
+import { useAppDispatch } from "state/store";
 
 import { BreadcrumbItem } from "./BreadcrumbItem";
 import { useBreadcrumbItems } from "./useBreadcrumbItems";
@@ -15,7 +15,7 @@ export const Breadcrumbs = () => {
   if (__DEV__) {
     console.log(`rendering Breadcrumbs`);
   }
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const isRtl = useIsTextDirectionRtl();
   const scrollViewRef = useRef(null as any);
 
@@ -32,7 +32,7 @@ export const Breadcrumbs = () => {
 
   const onItemPress = useCallback(
     (pageEntityItem: any) => {
-      dispatch(DataEntryActions.selectCurrentPageEntity(pageEntityItem) as never);
+      dispatch(DataEntryActions.selectCurrentPageEntity(pageEntityItem));
     },
     [dispatch]
   );

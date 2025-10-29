@@ -1,12 +1,16 @@
 import { useCallback, useMemo } from "react";
-import { useDispatch } from "react-redux";
 import { StyleProp, ViewStyle } from "react-native";
 
 import { NodeDefs } from "@openforis/arena-core";
 
 import { Button } from "components";
 import { ButtonIconPosition } from "components/Button";
-import { DataEntryActions, DataEntrySelectors, SurveySelectors } from "state";
+import {
+  DataEntryActions,
+  DataEntrySelectors,
+  SurveySelectors,
+  useAppDispatch,
+} from "state";
 
 import buttonStyles from "./buttonStyles";
 
@@ -20,7 +24,7 @@ type Props = {
 export const SingleNodeNavigationButton = (props: Props) => {
   const { childDefIndex, icon, iconPosition, style: styleProp } = props;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const childDefs = DataEntrySelectors.useCurrentPageEntityRelevantChildDefs();
   const childDef = childDefs[childDefIndex];
@@ -28,9 +32,7 @@ export const SingleNodeNavigationButton = (props: Props) => {
   const onPress = useCallback(
     () =>
       dispatch(
-        DataEntryActions.selectCurrentPageEntityActiveChildIndex(
-          childDefIndex
-        ) as never
+        DataEntryActions.selectCurrentPageEntityActiveChildIndex(childDefIndex)
       ),
     [childDefIndex, dispatch]
   );

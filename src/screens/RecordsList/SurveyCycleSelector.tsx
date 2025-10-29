@@ -1,12 +1,11 @@
 import React, { useCallback } from "react";
-import { useDispatch } from "react-redux";
 import { StyleProp, ViewStyle } from "react-native";
 
 import { Surveys } from "@openforis/arena-core";
 
 import { Cycles } from "model";
 import { Dropdown, HView, SegmentedButtons, Text } from "components";
-import { SurveyActions, SurveySelectors } from "state";
+import { SurveyActions, SurveySelectors, useAppDispatch } from "state";
 
 import styles from "./styles";
 
@@ -14,10 +13,12 @@ type SurveyCycleSelectorProps = {
   style?: StyleProp<ViewStyle>;
 };
 
+const minItemsToShowDropdown = 4;
+
 export const SurveyCycleSelector = (props: SurveyCycleSelectorProps) => {
   const { style } = props;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const survey = SurveySelectors.useCurrentSurvey()!;
   const cycle = SurveySelectors.useCurrentSurveyCycle();
   const defaultCycleKey = Surveys.getDefaultCycleKey(survey);
@@ -34,9 +35,7 @@ export const SurveyCycleSelector = (props: SurveyCycleSelectorProps) => {
   const onChange = useCallback(
     async (selectedCycleKey: any) => {
       dispatch(
-        SurveyActions.setCurrentSurveyCycle({
-          cycleKey: selectedCycleKey,
-        }) as never
+        SurveyActions.setCurrentSurveyCycle({ cycleKey: selectedCycleKey })
       );
     },
     [dispatch]
@@ -45,7 +44,7 @@ export const SurveyCycleSelector = (props: SurveyCycleSelectorProps) => {
   return (
     <HView style={[styles.formItem, style]}>
       <Text textKey="dataEntry:cycle" />
-      {items.length <= 3 ? (
+      {items.length < minItemsToShowDropdown ? (
         <SegmentedButtons
           buttons={items}
           onChange={onChange}

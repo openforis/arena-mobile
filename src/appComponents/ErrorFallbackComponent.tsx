@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { MessageActions } from "state/message";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "state/store";
 
 type Props = {
   error: any;
@@ -11,7 +11,7 @@ type Props = {
 export const ErrorFallbackComponent = (props: Props) => {
   const { error, resetError } = props;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(

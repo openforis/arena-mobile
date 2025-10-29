@@ -1,11 +1,11 @@
 import { Objects } from "@openforis/arena-core";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
 
 import {
   DataEntryActions,
   DataEntrySelectors,
   StoreUtils,
+  useAppDispatch,
   useConfirm,
 } from "state";
 import { Functions } from "utils";
@@ -24,7 +24,7 @@ export const useNodeComponentLocalState = ({
   nodeValueToUiValue = Functions.identity,
   isNodeValueEqual = isNodeValueEqualDefault,
 }: any) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const dirtyRef = useRef(false);
   const debouncedUpdateRef = useRef(null as any);
   const confirm = useConfirm();
@@ -126,7 +126,7 @@ export const useNodeComponentLocalState = ({
 
         dispatch(debouncedUpdateRef.current);
       } else {
-        dispatch(action as never);
+        dispatch(action);
       }
     },
     [uiValueToNodeValue, updateDelay, nodeUuid, dispatch]

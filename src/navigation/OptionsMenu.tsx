@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import { Appbar as RNPAppbar, Divider, Menu } from "react-native-paper";
 import { BackHandler } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -14,6 +13,7 @@ import {
   DataEntryActions,
   DataEntrySelectors,
   SurveySelectors,
+  useAppDispatch,
 } from "state";
 import { Environment } from "utils";
 
@@ -27,7 +27,7 @@ type Props = {
 export const OptionsMenu = (props: Props) => {
   const { toggleMenu, visible = false } = props;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const screenKey = useScreenKey();
   const editingRecord =
@@ -69,9 +69,7 @@ export const OptionsMenu = (props: Props) => {
           <MenuItem
             icon="view-list"
             onPress={() => {
-              dispatch(
-                DataEntryActions.navigateToRecordsList({ navigation }) as any
-              );
+              dispatch(DataEntryActions.navigateToRecordsList({ navigation }));
             }}
             title="dataEntry:listOfRecords"
             toggleMenu={toggleMenu}

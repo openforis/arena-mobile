@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useDispatch } from "react-redux";
 import PagerView from "react-native-pager-view";
 import Dots from "react-native-dots-pagination";
 
@@ -8,13 +7,14 @@ import { NodeDefs } from "@openforis/arena-core";
 import { DataEntryActions, DataEntrySelectors } from "state/dataEntry";
 
 import { VView, View } from "components";
+import { useAppDispatch } from "state/store";
 
 import { NodeDefFormItem } from "../NodeDefFormItem";
 
 import styles from "./styles";
 
 export const RecordNodesCarousel = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { entityDef, entityUuid, parentEntityUuid } =
     DataEntrySelectors.useCurrentPageEntity();
 
@@ -36,9 +36,7 @@ export const RecordNodesCarousel = () => {
     (e: any) => {
       const position = e.nativeEvent.position;
       dispatch(
-        DataEntryActions.selectCurrentPageEntityActiveChildIndex(
-          position
-        ) as never
+        DataEntryActions.selectCurrentPageEntityActiveChildIndex(position)
       );
     },
     [dispatch]

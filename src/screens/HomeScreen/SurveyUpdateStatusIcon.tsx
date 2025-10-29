@@ -1,6 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
 import { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
 
 import { Surveys } from "@openforis/arena-core";
 
@@ -8,7 +7,7 @@ import { UpdateStatusIcon } from "components";
 import { useToast } from "hooks";
 import { useTranslation } from "localization";
 import { SurveyStatus, UpdateStatus } from "model";
-import { SurveyActions, SurveySelectors } from "state";
+import { SurveyActions, SurveySelectors, useAppDispatch } from "state";
 
 type Props = {
   errorKey?: string | null;
@@ -21,7 +20,7 @@ export const SurveyUpdateStatusIcon = ({
   onPress: onPressProp = undefined,
   updateStatus,
 }: Props) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const toaster = useToast();
   const { t } = useTranslation();
@@ -60,7 +59,7 @@ export const SurveyUpdateStatusIcon = ({
               "surveys:updateSurveyWithNewVersionConfirmMessage",
             onConfirm: () => setLoading(true),
             onComplete: () => setLoading(false),
-          }) as any
+          })
         );
         break;
     }

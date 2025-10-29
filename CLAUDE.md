@@ -235,10 +235,9 @@ const currentSurvey = useSelector(SurveySelectors.selectCurrentSurvey)
 
 ### Dispatching Actions
 ```javascript
-import { useDispatch } from "react-redux"
-import { SurveyActions } from "state"
+import { SurveyActions, useAppDispatch } from "state"
 
-const dispatch = useDispatch()
+const dispatch = useAppDispatch()
 dispatch(SurveyActions.fetchAndSetCurrentSurvey({ surveyId }))
 ```
 

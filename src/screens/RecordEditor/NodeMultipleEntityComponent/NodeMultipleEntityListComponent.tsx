@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from "react";
-import { useDispatch } from "react-redux";
 
 import { NodeDefs, Records } from "@openforis/arena-core";
 
@@ -11,6 +10,7 @@ import {
   DataEntrySelectors,
   DeviceInfoSelectors,
   SurveySelectors,
+  useAppDispatch,
   useConfirm,
 } from "state";
 
@@ -22,7 +22,7 @@ import styles from "./styles";
 const determineMaxSummaryDefs = ({
   isDrawerOpen,
   isTablet,
-  isLandscape
+  isLandscape,
 }: any) => {
   const result = isTablet && !isDrawerOpen ? 5 : 3;
   return isLandscape ? result + 2 : result;
@@ -33,10 +33,12 @@ type NodeMultipleEntityListComponentProps = {
   parentEntityUuid?: string;
 };
 
-export const NodeMultipleEntityListComponent = (props: NodeMultipleEntityListComponentProps) => {
+export const NodeMultipleEntityListComponent = (
+  props: NodeMultipleEntityListComponentProps
+) => {
   const { entityDef, parentEntityUuid } = props;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const confirm = useConfirm();
   const { t } = useTranslation();
@@ -95,19 +97,17 @@ export const NodeMultipleEntityListComponent = (props: NodeMultipleEntityListCom
   );
 
   const onNewPress = () => {
-    dispatch(DataEntryActions.addNewEntity() as never);
+    dispatch(DataEntryActions.addNewEntity());
   };
 
   const onRowPress = useCallback(
-    ({
-      uuid
-    }: any) => {
+    ({ uuid }: any) => {
       dispatch(
         DataEntryActions.selectCurrentPageEntity({
           parentEntityUuid,
           entityDefUuid,
           entityUuid: uuid,
-        }) as never
+        })
       );
     },
     [dispatch, parentEntityUuid, entityDefUuid]
@@ -120,7 +120,7 @@ export const NodeMultipleEntityListComponent = (props: NodeMultipleEntityListCom
           messageKey: "dataEntry:confirmDeleteSelectedItems.message",
         })
       ) {
-        dispatch(DataEntryActions.deleteNodes(nodeUuids) as never);
+        dispatch(DataEntryActions.deleteNodes(nodeUuids));
       }
     },
     [confirm, dispatch]
@@ -139,7 +139,7 @@ export const NodeMultipleEntityListComponent = (props: NodeMultipleEntityListCom
         lang,
         summaryDefs: visibleNodeDefs,
         t,
-      })
+      }),
     }),
     [survey, record, lang, t, visibleNodeDefs]
   );

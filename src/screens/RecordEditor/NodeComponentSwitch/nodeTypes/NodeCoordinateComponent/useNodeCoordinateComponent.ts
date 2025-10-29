@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import {
   NodeDefs,
@@ -18,6 +18,7 @@ import {
   DataEntryActions,
   DataEntrySelectors,
   SurveySelectors,
+  useAppDispatch,
   useConfirm,
 } from "state";
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
@@ -81,7 +82,7 @@ const nonNumericFields = new Set(["srs"]);
 export const useNodeCoordinateComponent = (props: any) => {
   const { nodeDef, nodeUuid } = props;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const confirm = useConfirm();
   const survey = SurveySelectors.useCurrentSurvey()!;
   const srsIndex = SurveySelectors.useCurrentSurveySrsIndex();
@@ -258,9 +259,7 @@ export const useNodeCoordinateComponent = (props: any) => {
 
   const onChangeSrs = useCallback(
     async (srsTo: any) => {
-      dispatch(
-        DataEntryActions.updateCoordinateValueSrs({ nodeUuid, srsTo }) as never
-      );
+      dispatch(DataEntryActions.updateCoordinateValueSrs({ nodeUuid, srsTo }));
     },
     [dispatch, nodeUuid]
   );

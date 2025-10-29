@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from "react";
 import { FlatList } from "react-native";
-import { useDispatch } from "react-redux";
 import { List } from "react-native-paper";
 
 import {
@@ -12,7 +11,12 @@ import {
 
 import { AlertIcon, VView } from "components";
 import { RecordPageNavigator } from "model";
-import { DataEntryActions, DataEntrySelectors, SurveySelectors } from "state";
+import {
+  DataEntryActions,
+  DataEntrySelectors,
+  SurveySelectors,
+  useAppDispatch,
+} from "state";
 
 import { NodePageNavigationButton } from "../BottomNavigationBar/NodePageNavigationButton";
 
@@ -37,7 +41,7 @@ const getNodeDefIcon = (nodeDef: any) =>
   iconByNodeDefType[nodeDef.type]?.({ nodeDef });
 
 export const PageNodesList = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const childDefs = DataEntrySelectors.useCurrentPageEntityRelevantChildDefs();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
@@ -76,9 +80,7 @@ export const PageNodesList = () => {
 
   const onItemPress = useCallback(
     (index: any) => () =>
-      dispatch(
-        DataEntryActions.selectCurrentPageEntityActiveChildIndex(index) as never
-      ),
+      dispatch(DataEntryActions.selectCurrentPageEntityActiveChildIndex(index)),
     [dispatch]
   );
 

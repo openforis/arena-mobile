@@ -1,21 +1,20 @@
 import React, { useCallback } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 
 import { useTranslation } from "localization";
 import { Dropdown } from "components";
-import { SurveyActions, SurveySelectors } from "state";
+import { SurveyActions, SurveySelectors, useAppDispatch } from "state";
 
 export const LocalSurveysDropdown = () => {
   const navigation = useNavigation();
   const { t } = useTranslation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const surveySummaries = SurveySelectors.useSurveysLocal();
 
   const onChange = useCallback(
     async (surveyId: any) => {
       dispatch(
-        SurveyActions.fetchAndSetCurrentSurvey({ surveyId, navigation }) as any
+        SurveyActions.fetchAndSetCurrentSurvey({ surveyId, navigation })
       );
     },
     [dispatch, navigation]

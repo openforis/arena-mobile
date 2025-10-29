@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
 
 import {
   CategoryItem,
@@ -16,6 +15,7 @@ import {
   DataEntrySelectors,
   MessageActions,
   SurveySelectors,
+  useAppDispatch,
 } from "state";
 import { useItemsFilter } from "../useItemsFilter";
 
@@ -23,7 +23,7 @@ export const useNodeCodeComponentLocalState = ({
   parentNodeUuid,
   nodeDef,
 }: any) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [
@@ -68,10 +68,8 @@ export const useNodeCodeComponentLocalState = ({
   const selectedItems = useMemo(
     () =>
       nodes.reduce((acc, node) => {
-        const item = Surveys.getCategoryItemByUuid({
-          survey,
-          itemUuid: NodeValues.getItemUuid(node)!,
-        });
+        const itemUuid = NodeValues.getItemUuid(node)!;
+        const item = Surveys.getCategoryItemByUuid({ survey, itemUuid });
         if (item) acc.push(item);
         return acc;
       }, [] as CategoryItem[]),
@@ -97,9 +95,7 @@ export const useNodeCodeComponentLocalState = ({
       const value = NodeValues.newCodeValue({ itemUuid });
       if (NodeDefs.isSingle(nodeDef)) {
         const node = nodes[0];
-        dispatch(
-          DataEntryActions.updateAttribute({ uuid: node?.uuid, value }) as never
-        );
+        dispatch(DataEntryActions.updateAttribute({ uuid: node?.uuid, value }));
       } else if (maxCountReached) {
         dispatch(
           MessageActions.setInfo(
@@ -108,11 +104,7 @@ export const useNodeCodeComponentLocalState = ({
         );
       } else {
         dispatch(
-          DataEntryActions.addNewAttribute({
-            nodeDef,
-            parentNodeUuid,
-            value,
-          }) as never
+          DataEntryActions.addNewAttribute({ nodeDef, parentNodeUuid, value })
         );
       }
     },
@@ -124,16 +116,13 @@ export const useNodeCodeComponentLocalState = ({
       if (NodeDefs.isSingle(nodeDef)) {
         const node = nodes[0];
         dispatch(
-          DataEntryActions.updateAttribute({
-            uuid: node?.uuid,
-            value: null,
-          }) as never
+          DataEntryActions.updateAttribute({ uuid: node?.uuid, value: null })
         );
       } else {
         const nodeToRemove = nodes.find(
           (node) => NodeValues.getItemUuid(node) === itemUuid
         );
-        dispatch(DataEntryActions.deleteNodes([nodeToRemove?.uuid]) as never);
+        dispatch(DataEntryActions.deleteNodes([nodeToRemove?.uuid]));
       }
     },
     [dispatch, nodeDef, nodes]
@@ -144,9 +133,7 @@ export const useNodeCodeComponentLocalState = ({
       const node = nodes[0];
       const wasSelected = NodeValues.getItemUuid(node!) === itemUuid;
       const value = wasSelected ? null : NodeValues.newCodeValue({ itemUuid });
-      dispatch(
-        DataEntryActions.updateAttribute({ uuid: node!.uuid, value }) as never
-      );
+      dispatch(DataEntryActions.updateAttribute({ uuid: node!.uuid, value }));
     },
     [dispatch, nodes]
   );

@@ -1,6 +1,5 @@
 import { useCallback, useState } from "react";
 import { Appbar as RNPAppbar } from "react-native-paper";
-import { useDispatch } from "react-redux";
 
 import { Surveys } from "@openforis/arena-core";
 
@@ -19,6 +18,7 @@ import {
   SurveyOptionsActions,
   SurveyOptionsSelectors,
   SurveySelectors,
+  useAppDispatch,
 } from "state";
 import { BaseStyles } from "utils/BaseStyles";
 
@@ -50,7 +50,7 @@ export const AppBar = (props: Props) => {
   const screenKey = useScreenKey();
   const screenViewMode = ScreenOptionsSelectors.useScreenViewMode(screenKey);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const isRtl = useIsTextDirectionRtl();
   const survey = SurveySelectors.useCurrentSurvey();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
@@ -84,7 +84,7 @@ export const AppBar = (props: Props) => {
       : t(titleOption);
 
   const onToggleDrawerPress = useCallback(
-    () => dispatch(DataEntryActions.toggleRecordPageMenuOpen as never),
+    () => dispatch(DataEntryActions.toggleRecordPageMenuOpen),
     [dispatch]
   );
 
@@ -95,12 +95,12 @@ export const AppBar = (props: Props) => {
   );
 
   const onToggleScreenViewModePress = useCallback(
-    () => dispatch(ScreenOptionsActions.toggleScreenViewMode({ screenKey }) as never),
+    () => dispatch(ScreenOptionsActions.toggleScreenViewMode({ screenKey })),
     [dispatch, screenKey]
   );
 
   const toggleRecordLock = useCallback(
-    () => dispatch(DataEntryActions.toggleRecordEditLock as never),
+    () => dispatch(DataEntryActions.toggleRecordEditLock),
     [dispatch]
   );
 
@@ -110,7 +110,7 @@ export const AppBar = (props: Props) => {
         recordEditViewMode === RecordEditViewMode.form
           ? RecordEditViewMode.oneNode
           : RecordEditViewMode.form
-      ) as never
+      )
     );
   }, [dispatch, recordEditViewMode]);
 
@@ -121,9 +121,9 @@ export const AppBar = (props: Props) => {
 
   const onLinkToPreviousCyclePress = useCallback(() => {
     dispatch(
-      (isLinkedToPreviousCycleRecord
+      isLinkedToPreviousCycleRecord
         ? DataEntryActions.unlinkFromRecordInPreviousCycle()
-        : DataEntryActions.linkToRecordInPreviousCycle()) as never
+        : DataEntryActions.linkToRecordInPreviousCycle()
     );
   }, [dispatch, isLinkedToPreviousCycleRecord]);
 

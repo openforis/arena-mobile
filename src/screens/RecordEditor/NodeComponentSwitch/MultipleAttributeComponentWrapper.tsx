@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import { useDispatch } from "react-redux";
 
 import { NodeDefs, Nodes } from "@openforis/arena-core";
 
@@ -9,6 +8,7 @@ import {
   DataEntrySelectors,
   MessageActions,
   SurveySelectors,
+  useAppDispatch,
   useConfirm,
 } from "state";
 
@@ -18,7 +18,9 @@ import { NodeComponentProps } from "./nodeTypes/nodeComponentPropTypes";
 
 import styles from "./multipleAttributeComponentWrapperStyles";
 
-export const MultipleAttributeComponentWrapper = (props: NodeComponentProps) => {
+export const MultipleAttributeComponentWrapper = (
+  props: NodeComponentProps
+) => {
   const { nodeDef, parentNodeUuid } = props;
 
   if (__DEV__) {
@@ -27,7 +29,7 @@ export const MultipleAttributeComponentWrapper = (props: NodeComponentProps) => 
     );
   }
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const confirm = useConfirm();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
 
@@ -53,18 +55,13 @@ export const MultipleAttributeComponentWrapper = (props: NodeComponentProps) => 
         })
       );
     } else {
-      dispatch(
-        DataEntryActions.addNewAttribute({
-          nodeDef,
-          parentNodeUuid,
-        }) as never
-      );
+      dispatch(DataEntryActions.addNewAttribute({ nodeDef, parentNodeUuid }));
     }
   }, [dispatch, nodeDef, nodes, parentNodeUuid]);
 
   const onDeletePress = (node: any) => async () => {
     const performDelete = () =>
-      dispatch(DataEntryActions.deleteNodes([node.uuid]) as never);
+      dispatch(DataEntryActions.deleteNodes([node.uuid]));
 
     if (
       Nodes.isValueBlank(node) ||

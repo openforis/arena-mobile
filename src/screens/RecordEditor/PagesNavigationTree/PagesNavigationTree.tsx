@@ -1,10 +1,9 @@
 import { useCallback, useMemo } from "react";
 import { StyleProp, ViewStyle } from "react-native";
-import { useDispatch } from "react-redux";
 import TreeView from "react-native-final-tree-view";
 
 import { HView, ScrollView } from "components";
-import { DataEntryActions } from "state";
+import { DataEntryActions, useAppDispatch } from "state";
 
 import { EntityButton } from "./EntityButton";
 import { Indicator } from "./Indicator";
@@ -51,14 +50,12 @@ const TreeNode = ({
 
 export const PagesNavigationTree = () => {
   const data = useTreeData();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const onNodePress = useCallback(
     ({ node }: any) => {
       const { entityPointer } = node;
-      dispatch(
-        DataEntryActions.selectCurrentPageEntity(entityPointer) as never
-      );
+      dispatch(DataEntryActions.selectCurrentPageEntity(entityPointer));
     },
     [dispatch]
   );

@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 
 import {
@@ -25,6 +24,7 @@ import {
   DataEntryActions,
   ScreenOptionsSelectors,
   SurveySelectors,
+  useAppDispatch,
 } from "state";
 import { ArrayUtils } from "utils";
 
@@ -114,7 +114,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     syncStatusLoading,
   } = props;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const { t } = useTranslation();
 
@@ -210,7 +210,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
         DataEntryActions.fetchAndEditRecord({
           navigation,
           recordSummary,
-        }) as never
+        })
       );
     },
     [dispatch, navigation]

@@ -1,6 +1,5 @@
 import React, { useCallback } from "react";
 import { Pressable } from "react-native";
-import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import MenuDrawer from "react-native-side-drawer";
 
@@ -14,6 +13,7 @@ import {
   DeviceInfoSelectors,
   SettingsSelectors,
   SurveyOptionsSelectors,
+  useAppDispatch,
 } from "state";
 
 import { BottomNavigationBar } from "./BottomNavigationBar";
@@ -28,7 +28,7 @@ export const RecordEditor = () => {
   if (__DEV__) {
     console.log(`rendering RecordEditor`);
   }
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const pageSelectorOpen = DataEntrySelectors.useIsRecordPageSelectorMenuOpen();
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
   const { showStatusBar } = SettingsSelectors.useSettings();
@@ -38,7 +38,7 @@ export const RecordEditor = () => {
 
   const onBack = useCallback(() => {
     if (isNavigationFocused) {
-      dispatch(DataEntryActions.navigateToRecordsList({ navigation }) as any);
+      dispatch(DataEntryActions.navigateToRecordsList({ navigation }));
       return true; // the event will not be bubbled up & no other back action will execute
     }
     return false;
@@ -50,7 +50,7 @@ export const RecordEditor = () => {
 
   const onInternalContainerPress = useCallback(() => {
     if (isPhone) {
-      dispatch(DataEntryActions.toggleRecordPageMenuOpen as any);
+      dispatch(DataEntryActions.toggleRecordPageMenuOpen);
     }
   }, [dispatch, isPhone]);
 

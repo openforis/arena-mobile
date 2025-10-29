@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { useDispatch } from "react-redux";
 import { NavigationContext } from "@react-navigation/native";
 
 import { Button, HView, Text, VView } from "components";
@@ -9,6 +8,7 @@ import {
   RemoteConnectionActions,
   RemoteConnectionSelectors,
   SettingsSelectors,
+  useAppDispatch,
 } from "state";
 
 import { UserProfileIcon } from "./UserProfileIcon";
@@ -36,7 +36,7 @@ export const UserSummary = ({
   showLogoutButton = true,
   style = null,
 }: UserSummaryProps) => {
-  const dispatch: any = useDispatch();
+  const dispatch = useAppDispatch();
   const user = RemoteConnectionSelectors.useLoggedInUser();
   const settings = SettingsSelectors.useSettings();
   const { serverUrl } = settings;

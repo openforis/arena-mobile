@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import * as WebBrowser from "expo-web-browser";
 
@@ -14,6 +13,7 @@ import {
   DataEntrySelectors,
   SurveyOptionsSelectors,
   SurveySelectors,
+  useAppDispatch,
 } from "state";
 
 import { PagesNavigationTree } from "../PagesNavigationTree";
@@ -25,7 +25,7 @@ export const RecordEditorDrawer = () => {
   if (__DEV__) {
     console.log(`rendering RecordEditorDrawer`);
   }
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const survey = SurveySelectors.useCurrentSurvey()!;
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
@@ -46,9 +46,7 @@ export const RecordEditorDrawer = () => {
           textKey={Surveys.getLabel(lang)(survey) ?? Surveys.getName(survey)}
         />
         <CloseIconButton
-          onPress={() =>
-            dispatch(DataEntryActions.toggleRecordPageMenuOpen as any)
-          }
+          onPress={() => dispatch(DataEntryActions.toggleRecordPageMenuOpen)}
           style={styles.closeButton}
           size={26}
         />

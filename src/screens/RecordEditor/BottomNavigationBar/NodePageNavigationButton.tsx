@@ -1,12 +1,11 @@
 import { useCallback, useMemo } from "react";
-import { useDispatch } from "react-redux";
 import { StyleProp, ViewStyle } from "react-native";
 
 import { NodeDefs, Objects } from "@openforis/arena-core";
 
 import { Button } from "components";
 import { ButtonIconPosition, ButtonMode } from "components/Button";
-import { DataEntryActions, SurveySelectors } from "state";
+import { DataEntryActions, SurveySelectors, useAppDispatch } from "state";
 
 import buttonStyles from "./buttonStyles";
 
@@ -23,7 +22,7 @@ export const NodePageNavigationButton = (props: Props) => {
 
   const { parentEntityUuid, entityDef, entityUuid, index } = entityPointer;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
 
   const onPress = useCallback(
@@ -33,7 +32,7 @@ export const NodePageNavigationButton = (props: Props) => {
           parentEntityUuid,
           entityDefUuid: entityDef.uuid,
           entityUuid,
-        }) as never
+        })
       ),
     [dispatch, entityDef.uuid, entityUuid, parentEntityUuid]
   );

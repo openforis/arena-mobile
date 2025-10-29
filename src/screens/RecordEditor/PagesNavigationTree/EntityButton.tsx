@@ -1,9 +1,8 @@
 import { useCallback, useMemo } from "react";
 import { TouchableOpacity } from "react-native";
-import { useDispatch } from "react-redux";
 
 import { AlertIcon, HView, Text } from "components";
-import { DataEntryActions } from "state";
+import { DataEntryActions, useAppDispatch } from "state";
 
 import styles from "./EntityButtonStyles";
 
@@ -16,10 +15,10 @@ export const EntityButton = (props: EntityButtonProps) => {
   const { treeNode, isCurrentEntity } = props;
   const { label, entityPointer, hasErrors, hasWarnings } = treeNode;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const onPress = useCallback(() => {
-    dispatch(DataEntryActions.selectCurrentPageEntity(entityPointer) as never);
+    dispatch(DataEntryActions.selectCurrentPageEntity(entityPointer));
   }, [dispatch, entityPointer]);
 
   const textStyle = useMemo(

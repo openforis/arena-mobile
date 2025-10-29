@@ -1,9 +1,13 @@
 import { useCallback } from "react";
-import { useDispatch } from "react-redux";
 import { TouchableOpacity } from "react-native";
 
 import { FlexWrapView } from "components";
-import { DataEntryActions, DataEntrySelectors, useConfirm } from "state";
+import {
+  DataEntryActions,
+  DataEntrySelectors,
+  useAppDispatch,
+  useConfirm,
+} from "state";
 
 import { NodeValuePreview } from "./NodeValuePreview";
 import { NodeValuePreviewProps } from "./NodeValuePreview/NodeValuePreviewPropTypes";
@@ -21,7 +25,7 @@ export const CurrentRecordNodeValuePreview = (props: Props) => {
     );
   }
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const confirm = useConfirm();
   const recordEditLocked = DataEntrySelectors.useRecordEditLocked();
 
@@ -39,7 +43,7 @@ export const CurrentRecordNodeValuePreview = (props: Props) => {
         titleKey: "dataEntry:unlock.confirmTitle",
       }))
     ) {
-      dispatch(DataEntryActions.toggleRecordEditLock as never);
+      dispatch(DataEntryActions.toggleRecordEditLock);
     }
   }, [confirm, dispatch, recordEditLocked]);
 
