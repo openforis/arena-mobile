@@ -90,19 +90,16 @@ const startUploadDataToRemoteServer =
       conflictResolutionStrategy,
     });
 
-    const startAndWaitForJob = async () =>
-      JobMonitorActions.startAsync({
-        dispatch,
-        job: uploadJob,
-        titleKey: "dataEntry:uploadingData.title",
-      });
-
     let shouldRetryUpload = false;
     let uploadJobComplete = null;
 
     while (shouldRetryUpload) {
       try {
-        uploadJobComplete = await startAndWaitForJob();
+        uploadJobComplete = await JobMonitorActions.startAsync({
+          dispatch,
+          job: uploadJob,
+          titleKey: "dataEntry:uploadingData.title",
+        });
         shouldRetryUpload = !uploadJobComplete;
       } catch (error: any) {
         shouldRetryUpload = await handleUploadJobError({ dispatch, error });
