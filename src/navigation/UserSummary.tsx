@@ -1,18 +1,18 @@
 import { useContext } from "react";
+import { StyleSheet } from "react-native";
 import { NavigationContext } from "@react-navigation/native";
 
 import { Button, HView, Text, VView } from "components";
 import { screenKeys } from "screens/screenKeys";
-import { SettingsService } from "service";
 import {
   RemoteConnectionActions,
   RemoteConnectionSelectors,
   SettingsSelectors,
   useAppDispatch,
 } from "state";
+import { AMConstants } from "utils";
 
 import { UserProfileIcon } from "./UserProfileIcon";
-import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: { alignItems: "center", padding: 10, minWidth: 200 },
@@ -52,7 +52,7 @@ export const UserSummary = ({
         size={profileIconSize}
       />
       <VView style={styles.innerContainer} transparent>
-        {serverUrl != SettingsService.defaultServerUrl && (
+        {serverUrl != AMConstants.defaultServerUrl && (
           <Text numberOfLines={1} style={styles.text}>
             {serverUrl}
           </Text>

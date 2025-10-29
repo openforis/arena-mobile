@@ -25,6 +25,8 @@ import {
   useAppDispatch,
 } from "state";
 import { useIsNetworkConnected } from "hooks";
+import { AMConstants } from "utils";
+
 import styles from "./styles";
 
 const forgotPasswordUrl =
@@ -44,7 +46,7 @@ export const SettingsRemoteConnectionScreen = () => {
   const user = RemoteConnectionSelectors.useLoggedInUser();
 
   const [state, setState] = useState({
-    serverUrl: SettingsService.defaultServerUrl,
+    serverUrl: AMConstants.defaultServerUrl,
     serverUrlType: serverUrlTypes.default,
     serverUrlVerified: false,
     email: "",
@@ -58,10 +60,10 @@ export const SettingsRemoteConnectionScreen = () => {
     const settings = await SettingsService.fetchSettings();
     const serverUrlNext = settings.serverUrl
       ? settings.serverUrl
-      : SettingsService.defaultServerUrl;
+      : AMConstants.defaultServerUrl;
 
     const serverUrlTypeNext =
-      serverUrlNext === SettingsService.defaultServerUrl
+      serverUrlNext === AMConstants.defaultServerUrl
         ? serverUrlTypes.default
         : serverUrlTypes.custom;
 
@@ -86,7 +88,7 @@ export const SettingsRemoteConnectionScreen = () => {
         serverUrlType: type,
         serverUrl:
           type === serverUrlTypes.default
-            ? SettingsService.defaultServerUrl
+            ? AMConstants.defaultServerUrl
             : serverUrl,
         serverUrlVerified: false,
       })),

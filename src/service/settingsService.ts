@@ -5,9 +5,7 @@ import { asyncStorageKeys } from "./asyncStorage/asyncStorageKeys";
 import { API } from "./api";
 import { ThemesSettings } from "model/Themes";
 import { LanguageConstants } from "model/LanguageSettings";
-import { SystemUtils } from "utils/SystemUtils";
-
-const defaultServerUrl = "https://www.openforis-arena.org";
+import { AMConstants, SystemUtils } from "utils";
 
 const defaultSettings = {
   animationsEnabled: true,
@@ -20,7 +18,7 @@ const defaultSettings = {
   locationAccuracyWatchTimeout: 120,
   locationGpsLocked: false,
   serverUrlType: "default",
-  serverUrl: defaultServerUrl,
+  serverUrl: AMConstants.defaultServerUrl,
   theme: ThemesSettings.auto,
 };
 
@@ -73,7 +71,6 @@ const testServerUrl = async (serverUrl: any) => {
 };
 
 export const SettingsService = {
-  defaultServerUrl,
   fetchSettings,
   updateSetting,
   saveSettings,
