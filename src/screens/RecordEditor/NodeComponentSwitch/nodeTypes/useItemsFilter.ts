@@ -26,7 +26,7 @@ export const useItemsFilter = ({
   items: any[];
   alwaysIncludeItemFunction?: (item: any) => boolean;
 }) => {
-  const [filteredItems, setFilteredItems] = useState([]);
+  const [filteredItems, setFilteredItems] = useState([] as any[]);
 
   return useSelector((state) => {
     const itemsFilter = NodeDefs.getItemsFilter(nodeDef);

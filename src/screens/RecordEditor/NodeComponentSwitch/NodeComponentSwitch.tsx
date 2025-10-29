@@ -62,11 +62,7 @@ export const NodeComponentSwitch = (props: Props) => {
 
   if (nodeDef.type === NodeDefType.code) {
     return (
-      <NodeCodeComponent
-        nodeDef={nodeDef}
-        parentNodeUuid={parentNodeUuid}
-        onFocus={onFocus}
-      />
+      <NodeCodeComponent nodeDef={nodeDef} parentNodeUuid={parentNodeUuid} />
     );
   }
 
