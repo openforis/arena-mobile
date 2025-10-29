@@ -1,6 +1,6 @@
 import { DateFormats, Dates, Objects } from "@openforis/arena-core";
 
-import { Sort } from "model";
+import { Sort } from "model/Sort";
 
 type SortObject = Record<string, Sort>;
 

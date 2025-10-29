@@ -1,6 +1,6 @@
 import { NodeDefs } from "@openforis/arena-core";
 
-import { LanguageUtils } from "utils";
+import { LanguageUtils } from "utils/LanguageUtils";
 
 const unlistedCode = "UNL";
 const unknownCode = "UNK";
