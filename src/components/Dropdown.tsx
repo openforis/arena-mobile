@@ -46,6 +46,8 @@ export const Dropdown = (props: DropdownProps) => {
   const setOpen = useCallback((val: boolean) => {
     setState({ open: val, timeOpenSet: Date.now() });
   }, []);
+  const closeDropDown = useCallback(() => setOpen(false), [setOpen]);
+  const openDropDown = useCallback(() => setOpen(true), [setOpen]);
 
   const itemToOption = useCallback(
     (item: any) => ({
@@ -90,9 +92,9 @@ export const Dropdown = (props: DropdownProps) => {
       label={label}
       list={options}
       mode="outlined"
-      onDismiss={() => setOpen(false)}
+      onDismiss={closeDropDown}
       setValue={setValue}
-      showDropDown={() => setOpen(true)}
+      showDropDown={openDropDown}
       value={value}
       visible={open}
     />
