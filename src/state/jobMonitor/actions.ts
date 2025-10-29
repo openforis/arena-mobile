@@ -3,6 +3,8 @@ import {
   JobStatus,
   JobSummary,
 } from "@openforis/arena-core";
+
+import { JobCancelError } from "model";
 import { WebSocketService } from "service";
 
 const JOB_MONITOR_START = "JOB_MONITOR_START";
@@ -130,7 +132,7 @@ const startAsync = async ({
           if (status === JobStatus.succeeded) {
             resolve(jobEnd);
           } else if (status === JobStatus.canceled) {
-            reject();
+            reject(new JobCancelError());
           } else {
             reject(jobEnd);
           }

@@ -7,6 +7,7 @@ import { MessageActions } from "../message";
 import { RemoteConnectionSelectors } from "../remoteConnection/selectors";
 import { SurveySelectors } from "../survey/selectors";
 import { ToastActions } from "../toast";
+import { JobCancelError } from "model/JobCancelError";
 
 const handleImportErrors = ({ dispatch, error = null, errors = null }: any) => {
   const details = error?.toString() ?? JSON.stringify(errors);
@@ -119,10 +120,10 @@ export const importRecordsFromServer =
         onImportComplete,
       });
     } catch (error) {
-      if (error) {
-        handleImportErrors({ dispatch, error });
-      } else {
+      if (error instanceof JobCancelError) {
         // job canceled, do nothing
+      } else {
+        handleImportErrors({ dispatch, error });
       }
     }
   };

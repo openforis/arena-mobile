@@ -1,6 +1,7 @@
 export type { ArenaMobileRecord } from "./ArenaMobileRecord";
 export { BatteryState } from "./BatteryState";
 export { Cycles } from "./Cycles";
+export { JobCancelError } from "./JobCancelError";
 export { JobMobile } from "./JobMobile";
 export {
   LanguageConstants,
