@@ -428,7 +428,6 @@ export const RecordsList = () => {
         (record: any) => record.origin === RecordOrigin.local
       );
       if (
-        selectedLocalRecords.length > 0 &&
         selectedLocalRecords.some((record: any) => {
           const { dateModified, dateModifiedRemote, dateSynced } = record;
           return (
@@ -468,7 +467,6 @@ export const RecordsList = () => {
         (record: any) => record.origin === RecordOrigin.remote
       );
       if (
-        selectedRemoteRecords.length > 0 &&
         selectedRemoteRecords.some(
           (record: any) => record.loadStatus !== RecordLoadStatus.complete
         )

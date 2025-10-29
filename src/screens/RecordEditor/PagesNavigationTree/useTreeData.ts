@@ -5,13 +5,20 @@ import {
   Nodes,
   Records,
   RecordValidations,
+  Survey,
   Surveys,
+  Validation,
   Validations,
 } from "@openforis/arena-core";
 
 import { ArenaMobileRecord, RecordNodes } from "model";
 
 import { DataEntrySelectors, SurveySelectors } from "state";
+
+type TreeValidationAccumulator = {
+  treeItemIdsWithErrors: Set<string>;
+  treeItemIdsWithWarnings: Set<string>;
+};
 
 const getChildEntity = ({ record, entity, currentEntity, childDef }: any) => {
   if (NodeDefs.isSingle(childDef)) {
@@ -27,20 +34,34 @@ const getChildEntity = ({ record, entity, currentEntity, childDef }: any) => {
   );
 };
 
-const getAncestorAndSelfNodeDefUuids = ({ survey, uuid }: any) => {
-  const result = [];
-  let currentNodeDef: NodeDef<any> | undefined = Surveys.getNodeDefByUuid({
+const processChildrenCountValidation = ({
+  survey,
+  validationKey,
+  treeItemsById,
+  acc,
+}: {
+  survey: Survey;
+  validationKey: string;
+  treeItemsById: any;
+  acc: TreeValidationAccumulator;
+}) => {
+  const notValidNodeDefUuid =
+    RecordValidations.extractValidationChildrenCountKeyNodeDefUuid(
+      validationKey
+    );
+  const notValidNodedef = Surveys.getNodeDefByUuid({
     survey,
-    uuid,
+    uuid: notValidNodeDefUuid,
   });
-  while (currentNodeDef) {
-    result.unshift(currentNodeDef.uuid);
-    currentNodeDef = Surveys.getNodeDefParent({
-      survey,
-      nodeDef: currentNodeDef,
-    });
-  }
-  return result;
+  Surveys.visitAncestorsAndSelfNodeDef({
+    survey,
+    nodeDef: notValidNodedef,
+    visitor: (ancestorNodeDef) => {
+      if (treeItemsById[ancestorNodeDef.uuid]) {
+        acc.treeItemIdsWithErrors.add(ancestorNodeDef.uuid);
+      }
+    },
+  });
 };
 
 const _processFieldValidation = ({
@@ -50,23 +71,23 @@ const _processFieldValidation = ({
   acc,
   fieldValidation,
   validationKey,
-}: any) => {
+}: {
+  survey: Survey;
+  record: ArenaMobileRecord;
+  treeItemsById: any;
+  acc: TreeValidationAccumulator;
+  fieldValidation: Validation;
+  validationKey: string;
+}) => {
   if (fieldValidation.valid) return acc;
 
   if (RecordValidations.isValidationChildrenCountKey(validationKey)) {
-    const notValidNodeDefUuid =
-      RecordValidations.extractValidationChildrenCountKeyNodeDefUuid(
-        validationKey
-      );
-    const notValidNodeDefUuids = getAncestorAndSelfNodeDefUuids({
+    processChildrenCountValidation({
       survey,
-      uuid: notValidNodeDefUuid,
+      validationKey,
+      treeItemsById,
+      acc,
     });
-    for (const uuid of notValidNodeDefUuids) {
-      if (treeItemsById[uuid]) {
-        acc.treeItemIdsWithErrors.add(uuid);
-      }
-    }
   } else {
     const node = Records.getNodeByUuid(validationKey)(record);
     if (!node) return acc;
@@ -74,7 +95,7 @@ const _processFieldValidation = ({
     const notValidNodeInTree = RecordNodes.findAncestor({
       record,
       node,
-      predicate: (visitedAncestor: any) =>
+      predicate: (visitedAncestor) =>
         !!treeItemsById[visitedAncestor.nodeDefUuid],
     });
     if (notValidNodeInTree) {
@@ -92,21 +113,23 @@ const _processFieldValidation = ({
 const findNotValidTreeItemIds = ({ survey, record, treeItemsById }: any) => {
   const validation = Validations.getValidation(record);
   const fieldValidations = Validations.getFieldValidations(validation);
-  return Object.entries(fieldValidations).reduce(
-    (acc, [validationKey, fieldValidation]) =>
-      _processFieldValidation({
-        survey,
-        record,
-        treeItemsById,
-        acc,
-        fieldValidation,
-        validationKey,
-      }),
-    {
-      treeItemIdsWithErrors: new Set<string>(),
-      treeItemIdsWithWarnings: new Set<string>(),
-    }
-  );
+  const acc: TreeValidationAccumulator = {
+    treeItemIdsWithErrors: new Set<string>(),
+    treeItemIdsWithWarnings: new Set<string>(),
+  };
+  for (const [validationKey, fieldValidation] of Object.entries(
+    fieldValidations
+  )) {
+    _processFieldValidation({
+      survey,
+      record,
+      treeItemsById,
+      acc,
+      fieldValidation,
+      validationKey,
+    });
+  }
+  return acc;
 };
 
 type EntityPointer = {

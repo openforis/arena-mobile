@@ -12,6 +12,8 @@ import {
   NodeDef,
   NodeDefExpression,
   NodeValues,
+  ArenaRecord,
+  ArenaRecordNode,
 } from "@openforis/arena-core";
 import { SurveyDefs } from "./SurveyDefs";
 
@@ -267,7 +269,15 @@ const getCoordinateDistanceTarget = async ({
   return null;
 };
 
-const findAncestor = ({ record, node, predicate }: any) => {
+const findAncestor = ({
+  record,
+  node,
+  predicate,
+}: {
+  record: ArenaRecord;
+  node: ArenaRecordNode;
+  predicate: (node: ArenaRecordNode) => boolean;
+}) => {
   let result: any = null;
   Records.visitAncestorsAndSelf(node, (visitedAncestor) => {
     if (!result && predicate(visitedAncestor)) {
