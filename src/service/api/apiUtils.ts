@@ -7,12 +7,10 @@ const objectToFormData = (obj: any) =>
     return acc;
   }, new FormData());
 
-const getUrl = ({ serverUrl, uri }: any) => {
-  const parts = [];
-  parts.push(Strings.removeSuffix("/")(serverUrl));
-  parts.push(Strings.removePrefix("/")(uri));
-  return parts.join("/");
-};
+const getUrl = ({ serverUrl, uri }: any) =>
+  [Strings.removeSuffix("/")(serverUrl), Strings.removePrefix("/")(uri)].join(
+    "/"
+  );
 
 const getUrlWithParams = ({ serverUrl, uri, params = {} }: any) => {
   const requestParams = Object.entries(params).reduce((acc, [key, value]) => {

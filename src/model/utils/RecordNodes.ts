@@ -197,7 +197,7 @@ const functionCallExpression = (functionName: string): string =>
   `${functionName}\\s*\\((?:[^()]*|\\([^()]*\\))*\\)`;
 
 const possibleDistanceTargetExpressions = {
-  simpleIdentifier: "\\w+",
+  simpleIdentifier: String.raw`\w+`,
   categoryItemProp: functionCallExpression("categoryItemProp"),
   parentFunction: functionCallExpression("parent"),
 };
