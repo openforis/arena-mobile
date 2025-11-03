@@ -8,10 +8,13 @@ class SurveyDownloadJob extends JobMobile {
   }
 }
 
-// @ts-ignore
 export class SurveyImportJob extends JobMobile {
   constructor({ id, user }: any) {
     super({ id, user });
     this.jobs = [new SurveyDownloadJob({ id })];
+  }
+
+  protected override execute(): Promise<void> {
+    return Promise.resolve();
   }
 }
