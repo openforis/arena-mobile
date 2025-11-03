@@ -7,7 +7,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Arena Mobile is a React Native mobile application built with Expo for offline data collection on Android and iOS. It's a companion app to Open Foris Arena, enabling field data collection for forest inventories, surveys, and interviews with support for diverse data types (numbers, coordinates, images, videos, text) and customizable validation rules.
 
 **Key Technologies:**
-- React Native 0.81.4 with Expo 54
+- React Native 0.81.5 with Expo 54
+- TypeScript (migrated from JavaScript)
 - Redux Toolkit for state management
 - React Navigation for routing
 - React Native Paper for UI components
@@ -35,9 +36,12 @@ yarn web
 ```bash
 # Run linter with auto-fix
 yarn lint
+
+# Type check TypeScript files
+yarn test:types
 ```
 
-**Note:** This project does not have automated tests. Testing is done manually on devices.
+**Note:** This project does not have automated unit tests. Testing is done manually on devices.
 
 ### Building & Deployment
 ```bash
@@ -80,28 +84,28 @@ Each domain exports: `Actions`, `Reducer`, `Selectors`, and sometimes `State` ut
 ### Data Layer
 
 **Database (src/db/):**
-- `SQLiteClient.js`: Custom wrapper around expo-sqlite with migration support
+- `SQLiteClient.ts`: Custom wrapper around expo-sqlite with migration support
 - `migrations/`: Sequential database schema migrations (version-controlled via PRAGMA user_version)
 - Database is initialized in `AppInitializer` before app renders
 
 **Repositories (src/service/repository/):**
-- `recordRepository.js`: CRUD operations for survey records (17k+ lines, complex)
-- `surveyRepository.js`: Survey metadata storage/retrieval
-- `surveyFSRepository.js`: Survey file system operations
-- `recordFileRepository.js`: Record file attachments
+- `recordRepository.ts`: CRUD operations for survey records (~630 lines, complex)
+- `surveyRepository.ts`: Survey metadata storage/retrieval
+- `surveyFSRepository.ts`: Survey file system operations
+- `recordFileRepository.ts`: Record file attachments
 - Repositories interact directly with SQLite, not abstracted ORMs
 
 **Services (src/service/):**
 - Business logic layer between components and repositories
-- `surveyService.js`: Survey import, export, demo survey loading
-- `recordService.js`: Record lifecycle, validation, updates
-- `recordRemoteService.js`: Server sync for records
-- `authService.js`: Authentication tokens, secure storage
-- `preferencesService.js`: User preferences persistence
-- Job services (`*Job.js`): Background operations (imports, exports, backups)
+- `surveyService.ts`: Survey import, export, demo survey loading
+- `recordService.ts`: Record lifecycle, validation, updates
+- `recordRemoteService.ts`: Server sync for records
+- `authService.ts`: Authentication tokens, secure storage
+- `preferencesService.ts`: User preferences persistence
+- Job services (`*Job.ts`): Background operations (imports, exports, backups)
 
 ### Navigation (src/navigation/)
-Single `AppStack` component using React Navigation Native Stack. Screen definitions in `src/screens/screens.js` with keys in `src/screens/screenKeys.js`.
+Single `AppStack` component using React Navigation Native Stack. Screen definitions in `src/screens/screens.ts` with keys in `src/screens/screenKeys.ts`.
 
 ### Screens (src/screens/)
 Major screens:
@@ -116,7 +120,7 @@ Major screens:
 ### Record Editor Architecture
 `src/screens/RecordEditor/` is the most complex screen:
 
-- **RecordEditor.js**: Main container coordinating all subcomponents
+- **RecordEditor.tsx**: Main container coordinating all subcomponents
 - **RecordPageForm**: Renders a single page of form fields
 - **NodeComponentSwitch**: Maps node types to specific input components
   - `nodeTypes/`: Individual input components (NodeTextComponent, NodeCodeComponent, NodeCoordinateComponent, NodeImageOrVideoComponent, NodeTaxonComponent, NodeDateComponent, NodeFileComponent, etc.)
@@ -128,7 +132,7 @@ Major screens:
 - **Breadcrumbs**: Hierarchical location indicator
 - **RecordEditorDrawer**: Side drawer with validation and navigation
 
-**Key State Hook:** `useNodeComponentLocalState.js` - manages local editing state for node components
+**Key State Hook:** `useNodeComponentLocalState.ts` - manages local editing state for node components
 
 ### Components (src/components/)
 Reusable UI components wrapping React Native Paper and custom implementations:
@@ -144,7 +148,7 @@ Reusable UI components wrapping React Native Paper and custom implementations:
 - RTL support via `useTextDirection` hook
 
 ### Theme (src/theme/)
-- `OFLightTheme.js` and `OFDarkTheme.js` extend React Native Paper themes
+- `OFLightTheme.ts` and `OFDarkTheme.ts` extend React Native Paper themes
 - `useEffectiveTheme` hook in `src/hooks/` selects theme based on settings
 - User can choose system, light, or dark mode in settings
 
@@ -153,12 +157,12 @@ Common utilities including:
 - `SystemUtils`: Platform-specific operations (full screen, keep awake, file cleanup)
 - `Environment`: Platform detection (isAndroid, isIOS, isWeb)
 - `BaseStyles`: Shared style constants
-- `Permissions.js`: Permission handling for camera, location, media library
+- `Permissions.ts`: Permission handling for camera, location, media library
 
 ## App Initialization Flow
 
-1. **App.js**: Redux store setup, theme provider, error boundary
-2. **AppInitializer**: Sequential initialization (see `src/AppInitializer/AppInitializer.js`):
+1. **App.js**: Redux store setup, theme provider, error boundary (note: still .js file, not migrated to TypeScript yet)
+2. **AppInitializer**: Sequential initialization (see `src/AppInitializer/AppInitializer.tsx`):
    - Fetch device info (battery, storage)
    - Load settings from secure storage
    - Apply settings (full screen, GPS lock, keep awake)
@@ -206,7 +210,7 @@ Key permissions (configured in `app.json`):
 - **Media Library**: For selecting images from gallery
 - **ACCESS_MEDIA_LOCATION** (Android): To preserve GPS location data in images
 
-All permission checks are in `src/utils/Permissions.js`.
+All permission checks are in `src/utils/Permissions.ts`.
 
 ## File Handling
 
@@ -226,7 +230,7 @@ All permission checks are in `src/utils/Permissions.js`.
 ## Common Patterns
 
 ### Accessing Redux State
-```javascript
+```typescript
 import { useSelector } from "react-redux"
 import { SurveySelectors } from "state"
 
@@ -234,23 +238,22 @@ const currentSurvey = useSelector(SurveySelectors.selectCurrentSurvey)
 ```
 
 ### Dispatching Actions
-```javascript
-import { useDispatch } from "react-redux"
-import { SurveyActions } from "state"
+```typescript
+import { SurveyActions, useAppDispatch } from "state"
 
-const dispatch = useDispatch()
+const dispatch = useAppDispatch()
 dispatch(SurveyActions.fetchAndSetCurrentSurvey({ surveyId }))
 ```
 
 ### Using Services
-```javascript
+```typescript
 import { RecordService } from "service"
 
 const records = await RecordService.fetchRecords({ surveyId })
 ```
 
 ### Translations
-```javascript
+```typescript
 import { Text } from "components"
 
 // Using textKey prop (preferred)
@@ -264,10 +267,9 @@ const message = t("app:welcomeMessage")
 
 ## Important Notes
 
-- **No TypeScript**: This is a JavaScript project. Do not add TypeScript files.
+- **TypeScript Migration**: This project has been migrated to TypeScript. All source files in `src/` use `.ts` or `.tsx` extensions. TypeScript config is in `tsconfig.json` with strict mode enabled.
 - **Expo Managed Workflow**: Uses Expo's managed workflow. Config plugins in `app.json` and custom plugins in `plugins/` directory.
 - **Yarn Berry**: Uses Yarn 4.10.3 (configured in `packageManager` field)
 - **Development Mode**: `__DEV__` global checks for development-only code
 - **Platform-Specific Code**: Use `Environment.isAndroid`, `Environment.isIOS`, or `Platform.select()`
-- **Large Codebase**: `recordRepository.js` is 17k+ lines. Be careful when modifying.
 - **Offline-First**: App must work completely offline. Server sync is optional.

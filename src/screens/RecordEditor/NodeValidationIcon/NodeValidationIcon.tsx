@@ -1,0 +1,102 @@
+import {
+  NodeDefs,
+  Validations,
+  ValidationSeverity,
+} from "@openforis/arena-core";
+
+import { Icon, Tooltip } from "components";
+import { useTranslation } from "localization";
+import { ValidationUtils } from "model";
+import { DataEntrySelectors, SurveySelectors } from "state";
+
+const { getJointErrorText, getJointWarningText } = ValidationUtils;
+
+const colors = {
+  tooltipBackgroundColor: {
+    [ValidationSeverity.error]: "red",
+    [ValidationSeverity.warning]: "orange",
+  },
+  tooltipTextColor: {
+    [ValidationSeverity.error]: "white",
+    [ValidationSeverity.warning]: "black",
+  },
+};
+
+type ValidationIconProps = {
+  severity: ValidationSeverity;
+  messageKey: string;
+  messageParams?: any;
+};
+
+const ValidationIcon = (props: ValidationIconProps) => {
+  const { severity, messageKey, messageParams } = props;
+  const tooltipBackgroundColor = colors.tooltipBackgroundColor[severity];
+  const tooltipTextColor = colors.tooltipTextColor[severity];
+  return (
+    <Tooltip
+      backgroundColor={tooltipBackgroundColor}
+      textColor={tooltipTextColor}
+      titleKey={messageKey}
+      titleParams={messageParams}
+    >
+      <Icon color={tooltipBackgroundColor} source="alert" />
+    </Tooltip>
+  );
+};
+
+type NodeValidationIconProps = {
+  nodeDef: any;
+  parentNodeUuid?: string;
+};
+
+export const NodeValidationIcon = (props: NodeValidationIconProps) => {
+  const { nodeDef, parentNodeUuid } = props;
+
+  const { t } = useTranslation();
+  const lang = SurveySelectors.useCurrentSurveyPreferredLang();
+  const customMessageLang = lang;
+
+  const nodeDefUuid = nodeDef.uuid;
+
+  const validation = DataEntrySelectors.useRecordNodePointerValidation({
+    parentNodeUuid,
+    nodeDefUuid,
+  });
+
+  const validationChildrenCount =
+    DataEntrySelectors.useRecordNodePointerValidationChildrenCount({
+      parentNodeUuid,
+      nodeDefUuid,
+    });
+
+  if (!validation && !validationChildrenCount) return null;
+
+  if (validationChildrenCount && !validationChildrenCount.valid) {
+    const error = validationChildrenCount.errors?.[0];
+    const { key: messageKey, params: messageParams } = error ?? {};
+    return (
+      <ValidationIcon
+        messageKey={`validation:${messageKey}`}
+        messageParams={messageParams}
+        severity={ValidationSeverity.error}
+      />
+    );
+  }
+  if (
+    validation &&
+    Validations.isNotValid(validation) &&
+    NodeDefs.isSingle(nodeDef)
+  ) {
+    const errMsg = getJointErrorText({ validation, t, customMessageLang });
+    const warnMsg = getJointWarningText({ validation, t, customMessageLang });
+    return (
+      <ValidationIcon
+        messageKey={errMsg ?? warnMsg}
+        severity={
+          errMsg ? ValidationSeverity.error : ValidationSeverity.warning
+        }
+      />
+    );
+  }
+  return null;
+};

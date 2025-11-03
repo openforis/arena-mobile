@@ -1,0 +1,237 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { Chip } from "react-native-paper";
+
+import { Arrays, Objects } from "@openforis/arena-core";
+
+import { Functions } from "utils";
+import { IconButton } from "../IconButton";
+import { LoadingIcon } from "../LoadingIcon";
+import { ScrollView } from "../ScrollView";
+import { Searchbar } from "../Searchbar";
+import { Text } from "../Text";
+import { VView } from "../VView";
+import { View } from "../View";
+
+import { SelectableList } from "../SelectableList";
+
+import styles from "./styles";
+import { SelectableListProps } from "components/SelectableList/SelectableList";
+
+const _objToArray = (obj: any) => {
+  if (!obj) return [];
+  if (Array.isArray(obj)) return obj;
+  return [obj];
+};
+
+type Props = SelectableListProps & {
+  filterItems?: (params: {
+    items: any[];
+    filterInputValue: string | null;
+  }) => any[];
+  itemsCountToShowFilter?: number;
+  maxItemsToShow?: number;
+  onSelectedItemsChange: (items: any[], filterValue?: string | null) => void;
+};
+
+export const SelectableListWithFilter = (props: Props) => {
+  const {
+    editable = true,
+    filterItems,
+    itemKeyExtractor = (item: any) => item?.key,
+    itemLabelExtractor = (item: any) => item?.label,
+    itemDescriptionExtractor = (item: any) => item?.description,
+    items = [],
+    itemsCountToShowFilter = 10,
+    maxItemsToShow = 1000,
+    multiple = false,
+    onSelectedItemsChange,
+    selectedItems = [],
+  } = props;
+
+  const inputValueRef = useRef(null);
+
+  const filterVisible = items.length > itemsCountToShowFilter;
+  const debounceFiltering = items.length > maxItemsToShow;
+
+  const calculateItemsFiltered = useCallback(() => {
+    if (!filterVisible) return items;
+
+    const filterInputValue: string | null = inputValueRef.current;
+
+    if (Objects.isEmpty(filterInputValue)) {
+      if (selectedItems.length === 0) {
+        return items.slice(0, maxItemsToShow);
+      } else {
+        return items
+          .filter((item: any) => !selectedItems.includes(item))
+          .slice(0, maxItemsToShow);
+      }
+    }
+    if (filterItems) {
+      return filterItems({ items, filterInputValue });
+    }
+    return items.filter(
+      (item: any) =>
+        !selectedItems.includes(item) &&
+        (Objects.isEmpty(filterInputValue) ||
+          itemLabelExtractor(item)
+            .toLocaleLowerCase()
+            .includes(filterInputValue!.toLocaleLowerCase()))
+    );
+  }, [
+    filterItems,
+    filterVisible,
+    itemLabelExtractor,
+    items,
+    maxItemsToShow,
+    selectedItems,
+  ]);
+
+  const [state, setState] = useState({
+    loading: false,
+    itemsFiltered: calculateItemsFiltered(),
+  });
+  const { loading, itemsFiltered } = state;
+
+  const updateItemsFiltered = useCallback(() => {
+    const itemsFilteredNext = calculateItemsFiltered();
+    setState((statePrev) => {
+      const { itemsFiltered } = statePrev;
+      if (!Objects.isEqual(itemsFiltered, itemsFilteredNext)) {
+        return {
+          ...statePrev,
+          loading: false,
+          itemsFiltered: itemsFilteredNext,
+        };
+      }
+      return debounceFiltering ? { ...statePrev, loading: false } : statePrev;
+    });
+  }, [calculateItemsFiltered, debounceFiltering]);
+
+  const updateItemsFilteredDebouced = useMemo(
+    () => Functions.debounce(updateItemsFiltered, 500),
+    [updateItemsFiltered]
+  );
+
+  const onFilterInputChange = useCallback(
+    (text: any) => {
+      inputValueRef.current = text;
+      if (debounceFiltering) {
+        if (!loading) {
+          setState((statePrev) => ({
+            ...statePrev,
+            loading: true,
+            itemsFiltered: [],
+          }));
+        }
+        updateItemsFilteredDebouced();
+      } else {
+        updateItemsFiltered();
+      }
+    },
+    [
+      debounceFiltering,
+      loading,
+      updateItemsFiltered,
+      updateItemsFilteredDebouced,
+    ]
+  );
+
+  const _onSelectedItemsChange = useCallback(
+    (selectedItemsNext: any) => {
+      onSelectedItemsChange(selectedItemsNext, inputValueRef.current);
+    },
+    [onSelectedItemsChange]
+  );
+
+  const onListSelectionChange = useCallback(
+    (newValue: any) => {
+      _onSelectedItemsChange(_objToArray(newValue));
+    },
+    [_onSelectedItemsChange]
+  );
+
+  const onItemRemove = useCallback(
+    (item: any) => {
+      _onSelectedItemsChange(Arrays.removeItem(item)(selectedItems));
+    },
+    [_onSelectedItemsChange, selectedItems]
+  );
+
+  useEffect(() => {
+    updateItemsFiltered();
+  }, [updateItemsFiltered, items, selectedItems]);
+
+  const onClearPress = useCallback(() => {
+    _onSelectedItemsChange([]);
+  }, [_onSelectedItemsChange]);
+
+  return (
+    <VView style={styles.container}>
+      {filterVisible && (
+        <>
+          {selectedItems.length > 0 && (
+            <ScrollView
+              persistentScrollbar
+              style={
+                multiple
+                  ? styles.selectedItemsContainerWrapper
+                  : styles.selectedItemContainerWrapper
+              }
+            >
+              <View style={styles.selectedItemsContainer}>
+                {selectedItems.map((item: any) => (
+                  <Chip
+                    key={itemKeyExtractor(item)}
+                    onClose={() => onItemRemove(item)}
+                  >
+                    {itemLabelExtractor(item)}
+                  </Chip>
+                ))}
+              </View>
+            </ScrollView>
+          )}
+          {(multiple || selectedItems.length === 0) && (
+            <Text
+              variant="titleMedium"
+              textKey={
+                multiple ? "common:selectNewItems" : "common:selectAnItem"
+              }
+            />
+          )}
+          <Searchbar onChange={onFilterInputChange} />
+
+          {loading && <LoadingIcon />}
+
+          {!loading && itemsFiltered.length === 0 && (
+            <Text
+              variant="titleMedium"
+              textKey="common:noItemsMatchingSearch"
+            />
+          )}
+        </>
+      )}
+
+      <SelectableList
+        editable={editable}
+        itemKeyExtractor={itemKeyExtractor}
+        itemLabelExtractor={itemLabelExtractor}
+        itemDescriptionExtractor={itemDescriptionExtractor}
+        items={itemsFiltered}
+        multiple={multiple}
+        onChange={onListSelectionChange}
+        selectedItems={selectedItems}
+        style={styles.list}
+      />
+
+      {!filterVisible && (
+        <IconButton
+          icon="delete"
+          onPress={onClearPress}
+          style={styles.clearButton}
+        />
+      )}
+    </VView>
+  );
+};

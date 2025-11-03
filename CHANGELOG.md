@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - TO-BE-RELEASED
+
+### Fixed
+
+- Layout adjustments (record edit drawer);
+- Settings screen: error in Android previous to 8;
+- Settings screen: dropdown selector disabling after selecting an already selected value;
+
 ## [2.1.7] - 2025-10-16
 
 ### Fixed
