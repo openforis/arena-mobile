@@ -29,10 +29,6 @@ import { AMConstants } from "utils";
 
 import styles from "./styles";
 
-const forgotPasswordUrl =
-  "https://www.openforis-arena.org/guest/forgotPassword";
-const requestAccessUrl = "https://www.openforis-arena.org/guest/accessRequest";
-
 const serverUrlTypes = {
   default: "default",
   custom: "custom",
@@ -244,11 +240,11 @@ export const SettingsRemoteConnectionScreen = () => {
         )}
         <Link
           labelKey="settingsRemoteConnection:forgotPassword"
-          url={forgotPasswordUrl}
+          url={AMConstants.forgotPasswordUrl}
         />
         <Link
           labelKey="settingsRemoteConnection:requestAccess"
-          url={requestAccessUrl}
+          url={AMConstants.requestAccessUrl}
         />
       </VView>
     </ScreenView>

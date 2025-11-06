@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 
 import { APIUtils } from "./apiUtils";
 
@@ -14,15 +14,26 @@ const errorMessageByCode: Record<number, string> = {
   500: "Internal server error",
 };
 
+let _authToken: string;
+
+const setAuthToken = (token: string) => {
+  _authToken = token;
+};
+
 const multipartDataHeaders = { "Content-Type": "multipart/form-data" };
 
 const _sendRequest = (url: any, opts = {}) => {
   const controller = new AbortController();
-  const config = {
+  const config: AxiosRequestConfig = {
     ...defaultOptions,
     ...opts,
     url,
     signal: controller.signal,
+  };
+  // add authorization header
+  config.headers = {
+    ...(config.headers ?? {}),
+    Authorization: `Bearer ${_authToken}`,
   };
   return {
     promise: axios.request(config),
