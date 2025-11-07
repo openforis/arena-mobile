@@ -40,19 +40,18 @@ const _prepareGet = (
   return _prepareRequest(url, config);
 };
 
-const get = async (
-  options: RequestOptions
-): Promise<{ data: any; status: number }> => {
+const get = async (options: RequestOptions): Promise<any> => {
   const { promise } = _prepareGet(options);
   const response = await promise;
-  const { status, data } = response;
-  return { data, status };
+  const { data } = response;
+  return data;
 };
 
-const getFileAsText = async (options: RequestOptions) => {
+const getFileAsText = async (options: RequestOptions): Promise<any> => {
   const { promise } = _prepareGet(options);
   const response = await promise;
-  return response.data;
+  const { data } = response;
+  return data;
 };
 
 const test = async (options: RequestOptions): Promise<boolean> => {
