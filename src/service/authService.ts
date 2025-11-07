@@ -30,6 +30,8 @@ const extractAuthTokens = (response: any) => {
 
 let _authToken: string | null = null;
 
+const getAuthToken = (): string | null => _authToken;
+
 const setAuthToken = (token: string | null) => {
   _authToken = token;
 };
@@ -113,8 +115,9 @@ const refreshAuthTokens = async () => {
 
 export const AuthService = {
   authTokenRefreshUrl,
+  getAuthToken,
+  generateAuthorizationHeaders,
   login,
   logout,
-  generateAuthorizationHeaders,
   refreshAuthTokens,
 };
