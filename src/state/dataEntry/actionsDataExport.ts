@@ -90,7 +90,7 @@ const startUploadDataToRemoteServer =
       conflictResolutionStrategy,
     });
 
-    let shouldRetryUpload = false;
+    let shouldRetryUpload = true;
     let uploadJobComplete = null;
 
     while (shouldRetryUpload) {
