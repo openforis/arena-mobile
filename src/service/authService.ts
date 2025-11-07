@@ -19,12 +19,16 @@ const extractCookieValue = (
   );
 };
 
-const extractRefreshToken = (headers: any) =>
-  extractCookieValue(headers, refreshTokenCookieName);
+const extractAuthTokens = (response: any) => {
+  const { data, headers } = response;
+  const { authToken } = data;
+  const refreshToken = extractCookieValue(headers, refreshTokenCookieName);
+  return { authToken, refreshToken };
+};
 
-let _authToken: string;
+let _authToken: string | null = null;
 
-const setAuthToken = (token: string) => {
+const setAuthToken = (token: string | null) => {
   _authToken = token;
 };
 
@@ -46,9 +50,7 @@ const login = async ({ serverUrl: serverUrlParam, email, password }: any) => {
         password,
       },
     });
-    const { authToken } = data;
-    const { headers } = response;
-    const refreshToken = extractRefreshToken(headers);
+    const { authToken, refreshToken } = extractAuthTokens(response);
     if (authToken && refreshToken) {
       setAuthToken(authToken);
       await SecureStoreService.setAuthRefreshToken(refreshToken);
@@ -82,8 +84,25 @@ const logout = async () => {
   }
 };
 
+const refreshAuthTokens = async () => {
+  try {
+    const serverUrl = await getServerUrl();
+    const { response } = await API.post({
+      serverUrl,
+      uri: "/auth/token/refresh",
+    });
+    const { authToken, refreshToken } = extractAuthTokens(response);
+    setAuthToken(authToken);
+    await SecureStoreService.setAuthRefreshToken(refreshToken);
+  } catch (error) {
+    setAuthToken(null);
+    await SecureStoreService.setAuthRefreshToken(null);
+  }
+};
+
 export const AuthService = {
   login,
   logout,
   generateAuthorizationHeaders,
+  refreshAuthTokens,
 };

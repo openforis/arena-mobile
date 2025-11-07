@@ -2,6 +2,7 @@ import { Dictionary } from "@openforis/arena-core";
 
 import { API } from "./api";
 import { SettingsService } from "./settingsService";
+import { AuthService } from "./authService";
 
 const statusToErrorKey: Record<string, string> = {
   500: "internal_server_error",
@@ -21,40 +22,98 @@ const handleError = ({ error }: any): { errorKey: string } => {
 const getServerUrl = async () =>
   (await SettingsService.fetchSettings()).serverUrl;
 
-const get = async (uri: string, data?: Dictionary<any>, config = {}) =>
-  API.get({ serverUrl: await getServerUrl(), uri, data, config });
+const attachAuthenticationHeaders = (config: Dictionary<any> = {}) => {
+  const headers = {
+    ...config?.headers,
+    ...AuthService.generateAuthorizationHeaders(),
+  };
+  return { ...config, headers };
+};
 
-const getFile = async (uri: string, data?: Dictionary<any>, callback?: any) =>
-  API.getFile({ serverUrl: await getServerUrl(), uri, data, callback });
+const withRetry = async (callback: () => Promise<any>): Promise<any> => {
+  try {
+    return callback();
+  } catch (error: any) {
+    if (error?.response?.status === 401) {
+      await AuthService.refreshAuthTokens();
+      return callback();
+    }
+    throw error;
+  }
+};
 
-const post = async (uri: string, data?: Dictionary<any>) =>
-  API.post({ serverUrl: await getServerUrl(), uri, data });
+const get = async (uri: string, data?: Dictionary<any>, config = {}) => {
+  const serverUrl = await getServerUrl();
+  const sendRequest = async () =>
+    API.get({
+      serverUrl,
+      uri,
+      data,
+      config: attachAuthenticationHeaders(config),
+    });
+  return withRetry(sendRequest);
+};
+
+const getFile = async (uri: string, data?: Dictionary<any>, callback?: any) => {
+  const serverUrl = await getServerUrl();
+  const sendRequest = async () =>
+    API.getFile({
+      serverUrl,
+      uri,
+      data,
+      callback,
+      config: attachAuthenticationHeaders(),
+    });
+  return withRetry(sendRequest);
+};
+
+const post = async (uri: string, data?: Dictionary<any>) => {
+  const serverUrl = await getServerUrl();
+  const sendRequest = async () =>
+    API.post({
+      serverUrl,
+      uri,
+      data,
+      config: attachAuthenticationHeaders(),
+    });
+  return withRetry(sendRequest);
+};
 
 const postCancelableMultipartData = async (
   uri: string,
   data: Dictionary<any>,
   onUploadProgress: any
-) =>
-  API.postCancelableMultipartData({
-    serverUrl: await getServerUrl(),
-    uri,
-    data,
-    config: {
-      onUploadProgress,
-    },
-  });
+) => {
+  const serverUrl = await getServerUrl();
+  const sendRequest = async () =>
+    API.postCancelableMultipartData({
+      serverUrl,
+      uri,
+      data,
+      config: attachAuthenticationHeaders({
+        onUploadProgress,
+      }),
+    });
+  return withRetry(sendRequest);
+};
 
 const postMultipartData = async (
   uri: string,
   data: Dictionary<any>,
   onUploadProgress: any
-) =>
-  API.postMultipartData({
-    serverUrl: await getServerUrl(),
-    uri,
-    data,
-    config: { onUploadProgress },
-  });
+) => {
+  const serverUrl = await getServerUrl();
+  const sendRequest = async () =>
+    API.postMultipartData({
+      serverUrl,
+      uri,
+      data,
+      config: attachAuthenticationHeaders({
+        onUploadProgress,
+      }),
+    });
+  return withRetry(sendRequest);
+};
 
 export const RemoteService = {
   getServerUrl,
