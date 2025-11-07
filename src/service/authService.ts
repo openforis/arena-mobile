@@ -6,6 +6,8 @@ import { SettingsService } from "./settingsService";
 
 const refreshTokenCookieName = "refreshToken";
 
+const authTokenRefreshUrl = "/auth/token/refresh";
+
 const extractCookieValue = (
   headers: Dictionary<string>,
   cookieName: string
@@ -87,9 +89,15 @@ const logout = async () => {
 const refreshAuthTokens = async () => {
   try {
     const serverUrl = await getServerUrl();
+    const refreshTokenPrev = await SecureStoreService.getAuthRefreshToken();
+    if (!refreshTokenPrev) {
+      throw new Error("Error refreshing auth tokens; missing refresh token.");
+    }
+    const headers = { Cookie: `refreshToken=${refreshTokenPrev};` };
     const { response } = await API.post({
       serverUrl,
-      uri: "/auth/token/refresh",
+      uri: authTokenRefreshUrl,
+      config: { headers },
     });
     const { authToken, refreshToken } = extractAuthTokens(response);
     setAuthToken(authToken);
@@ -104,6 +112,7 @@ const refreshAuthTokens = async () => {
 };
 
 export const AuthService = {
+  authTokenRefreshUrl,
   login,
   logout,
   generateAuthorizationHeaders,

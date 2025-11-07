@@ -35,7 +35,10 @@ const withRetry = async (callback: () => Promise<any>): Promise<any> => {
     const result = await callback();
     return result;
   } catch (error: any) {
-    if (error?.response?.status === 401) {
+    if (
+      Number(error?.response?.status) === 401 &&
+      error?.config?.url !== AuthService.authTokenRefreshUrl
+    ) {
       await AuthService.refreshAuthTokens();
       const resultRetried = await callback();
       return resultRetried;
