@@ -95,8 +95,11 @@ const refreshAuthTokens = async () => {
     setAuthToken(authToken);
     await SecureStoreService.setAuthRefreshToken(refreshToken);
   } catch (error) {
+    // clear stored tokens
     setAuthToken(null);
     await SecureStoreService.setAuthRefreshToken(null);
+
+    throw error;
   }
 };
 

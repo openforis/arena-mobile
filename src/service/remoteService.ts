@@ -32,11 +32,13 @@ const attachAuthenticationHeaders = (config: Dictionary<any> = {}) => {
 
 const withRetry = async (callback: () => Promise<any>): Promise<any> => {
   try {
-    return callback();
+    const result = await callback();
+    return result;
   } catch (error: any) {
     if (error?.response?.status === 401) {
       await AuthService.refreshAuthTokens();
-      return callback();
+      const resultRetried = await callback();
+      return resultRetried;
     }
     throw error;
   }
@@ -85,14 +87,13 @@ const postCancelableMultipartData = async (
   onUploadProgress: any
 ) => {
   const serverUrl = await getServerUrl();
+  const config = { onUploadProgress };
   const sendRequest = async () =>
     API.postCancelableMultipartData({
       serverUrl,
       uri,
       data,
-      config: attachAuthenticationHeaders({
-        onUploadProgress,
-      }),
+      config: attachAuthenticationHeaders(config),
     });
   return withRetry(sendRequest);
 };
@@ -103,14 +104,13 @@ const postMultipartData = async (
   onUploadProgress: any
 ) => {
   const serverUrl = await getServerUrl();
+  const config = { onUploadProgress };
   const sendRequest = async () =>
     API.postMultipartData({
       serverUrl,
       uri,
       data,
-      config: attachAuthenticationHeaders({
-        onUploadProgress,
-      }),
+      config: attachAuthenticationHeaders(config),
     });
   return withRetry(sendRequest);
 };

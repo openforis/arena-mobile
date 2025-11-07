@@ -21,11 +21,6 @@ const _prepareRequest = (
     url,
     signal: controller.signal,
   };
-  // add authorization header
-  config.headers = {
-    ...(config.headers ?? {}),
-    // ...APIUtils.getAuthorizationHeaders(),
-  };
   return {
     promise: axios.request(config),
     cancel: () => controller.abort(),
@@ -40,24 +35,19 @@ const _prepareGet = (
   return _prepareRequest(url, config);
 };
 
-const get = async (options: RequestOptions): Promise<any> => {
+const get = async (options: RequestOptions): Promise<AxiosResponse> => {
   const { promise } = _prepareGet(options);
-  const response = await promise;
-  const { data } = response;
-  return data;
+  return promise;
 };
 
 const getFileAsText = async (options: RequestOptions): Promise<any> => {
-  const { promise } = _prepareGet(options);
-  const response = await promise;
-  const { data } = response;
+  const { data } = await get(options);
   return data;
 };
 
 const test = async (options: RequestOptions): Promise<boolean> => {
   try {
-    const { promise } = _prepareGet(options);
-    const response = await promise;
+    const response = await get(options);
     return response?.data?.status === "ok";
   } catch (e) {
     return false;
