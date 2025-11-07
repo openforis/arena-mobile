@@ -1,5 +1,5 @@
+import { Dictionary } from "@openforis/arena-core/dist/common";
 import { API } from "./api";
-import { SecureStoreService } from "./SecureStoreService";
 import { SettingsService } from "./settingsService";
 
 const statusToErrorKey: Record<string, string> = {
@@ -20,33 +20,42 @@ const handleError = ({ error }: any): { errorKey: string } => {
 const getServerUrl = async () =>
   (await SettingsService.fetchSettings()).serverUrl;
 
-const get = async (uri: any, params?: any, options = {}) =>
-  API.get(await getServerUrl(), uri, params, options);
+const get = async (uri: string, data?: Dictionary<any>, config = {}) =>
+  API.get({ serverUrl: await getServerUrl(), uri, data, config });
 
-const getFile = async (uri: any, params?: any, callback?: any) => {
-  const serverUrl = await getServerUrl();
-  const authCookie =
-    "connect.sid=" + (await SecureStoreService.getConnectSIDCookie());
-  const options = { headers: { Cookie: authCookie } };
-  return API.getFile({ serverUrl, uri, params, callback, options });
-};
+const getFile = async (uri: string, data?: Dictionary<any>, callback?: any) =>
+  API.getFile({ serverUrl: await getServerUrl(), uri, data, callback });
 
-const post = async (uri: any, data?: any) =>
-  API.post(await getServerUrl(), uri, data);
+const post = async (uri: string, data?: Dictionary<any>) =>
+  API.post({ serverUrl: await getServerUrl(), uri, data });
 
 const postCancelableMultipartData = async (
-  uri: any,
-  data: any,
+  uri: string,
+  data: Dictionary<any>,
   onUploadProgress: any,
   options = {}
 ) =>
-  API.postCancelableMultipartData(await getServerUrl(), uri, data, {
-    ...options,
-    onUploadProgress,
+  API.postCancelableMultipartData({
+    serverUrl: await getServerUrl(),
+    uri,
+    data,
+    config: {
+      ...options,
+      onUploadProgress,
+    },
   });
 
-const postMultipartData = async (uri: any, data: any, onUploadProgress: any) =>
-  API.postMultipartData(await getServerUrl(), uri, data, { onUploadProgress });
+const postMultipartData = async (
+  uri: string,
+  data: Dictionary<any>,
+  onUploadProgress: any
+) =>
+  API.postMultipartData({
+    serverUrl: await getServerUrl(),
+    uri,
+    data,
+    config: { onUploadProgress },
+  });
 
 export const RemoteService = {
   getServerUrl,

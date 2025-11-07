@@ -8,6 +8,7 @@ import { BackupJob } from "./backupJob/BackupJob";
 import { RecordFileRepository } from "./repository/recordFileRepository";
 import { SurveyFSRepository } from "./repository/surveyFSRepository";
 import { SettingsService } from "./settingsService";
+import { UserService } from "./userService";
 
 const getDbUri = () =>
   Files.path(Files.documentDirectory, "SQLite", dbClient?.name);
@@ -41,7 +42,7 @@ const checkLoggedInUser = async () => {
   if (!serverUrl || !email || !password) return;
 
   try {
-    const user = await AuthService.fetchUser();
+    const user = await UserService.fetchUser();
     return user;
   } catch (error) {
     // session expired

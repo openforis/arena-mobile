@@ -1,42 +1,57 @@
-import { ImageUtils } from "utils/ImageUtils";
+import { Dictionary } from "@openforis/arena-core/dist/common";
 import { API } from "./api";
 import { RemoteService } from "./remoteService";
 import { SecureStoreService } from "./SecureStoreService";
+import { SettingsService } from "./settingsService";
 
-const sIdCookiePrefix = "connect.sid=";
+const refreshTokenCookieName = "refreshToken";
 
-const extractConnectSID = (headers: any) => {
+const extractCookieValue = (
+  headers: Dictionary<string>,
+  cookieName: string
+): string | undefined => {
   const cookies = headers?.["set-cookie"];
   const cookie = cookies?.[0];
+  // cookie string is in the format cookieName=cookieValue
   return cookie?.substring(
-    sIdCookiePrefix.length,
-    cookie.indexOf(";", sIdCookiePrefix.length)
+    cookieName.length + 1,
+    cookie.indexOf(";", cookieName.length + 1)
   );
 };
 
-const fetchUser = async () => {
-  const { data } = await RemoteService.get("/auth/user");
-  return data.user;
+const extractRefreshToken = (headers: any) =>
+  extractCookieValue(headers, refreshTokenCookieName);
+
+let _authToken: string;
+
+const setAuthToken = (token: string) => {
+  _authToken = token;
 };
 
-const fetchUserPicture = async (userUuid: any) => {
-  const fileUri = await RemoteService.getFile(
-    `/api/user/${userUuid}/profilePicture`
-  );
-  return (await ImageUtils.isValid(fileUri)) ? fileUri : null;
-};
+const generateAuthorizationHeaders = () => ({
+  Authorization: `Bearer ${_authToken}`,
+});
+
+const getServerUrl = async () =>
+  (await SettingsService.fetchSettings()).serverUrl;
 
 const login = async ({ serverUrl: serverUrlParam, email, password }: any) => {
-  const serverUrl = serverUrlParam ?? (await RemoteService.getServerUrl());
+  const serverUrl = serverUrlParam ?? (await getServerUrl());
   try {
-    const { data, response } = await API.post(serverUrl, "/auth/login", {
-      email,
-      password,
+    const { data, response } = await API.post({
+      serverUrl,
+      uri: "/auth/login",
+      data: {
+        email,
+        password,
+      },
     });
+    const { authToken } = data;
     const { headers } = response;
-    const connectSID = extractConnectSID(headers);
-    if (connectSID) {
-      await SecureStoreService.setConnectSIDCookie(connectSID);
+    const refreshToken = extractRefreshToken(headers);
+    if (authToken && refreshToken) {
+      setAuthToken(authToken);
+      await SecureStoreService.setAuthRefreshToken(refreshToken);
       return data;
     }
     return { error: "authService:error.invalidCredentials" };
@@ -54,7 +69,10 @@ const login = async ({ serverUrl: serverUrlParam, email, password }: any) => {
 
 const logout = async () => {
   try {
-    const res = await RemoteService.post("/auth/logout");
+    const res = await API.post({
+      serverUrl: await getServerUrl(),
+      uri: "/auth/logout",
+    });
     return res?.data;
   } catch (err: any) {
     if (!err.response) {
@@ -65,8 +83,7 @@ const logout = async () => {
 };
 
 export const AuthService = {
-  fetchUser,
-  fetchUserPicture,
   login,
   logout,
+  generateAuthorizationHeaders,
 };

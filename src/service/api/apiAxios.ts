@@ -1,9 +1,9 @@
 import axios, { AxiosRequestConfig } from "axios";
 
+import { RequestOptions } from "./apiTypes";
 import { APIUtils } from "./apiUtils";
 
-const defaultOptions = {
-  credentials: "include",
+const defaultConfig: AxiosRequestConfig = {
   withCredentials: true,
   timeout: 40000, // 40 seconds
 };
@@ -14,26 +14,20 @@ const errorMessageByCode: Record<number, string> = {
   500: "Internal server error",
 };
 
-let _authToken: string;
-
-const setAuthToken = (token: string) => {
-  _authToken = token;
-};
-
 const multipartDataHeaders = { "Content-Type": "multipart/form-data" };
 
-const _sendRequest = (url: any, opts = {}) => {
+const _sendRequest = (url: any, conf: AxiosRequestConfig = {}) => {
   const controller = new AbortController();
   const config: AxiosRequestConfig = {
-    ...defaultOptions,
-    ...opts,
+    ...defaultConfig,
+    ...conf,
     url,
     signal: controller.signal,
   };
   // add authorization header
   config.headers = {
     ...(config.headers ?? {}),
-    Authorization: `Bearer ${_authToken}`,
+    // ...APIUtils.getAuthorizationHeaders(),
   };
   return {
     promise: axios.request(config),
@@ -41,13 +35,13 @@ const _sendRequest = (url: any, opts = {}) => {
   };
 };
 
-const _sendGet = (serverUrl: any, uri: any, params = {}, options = {}) => {
-  const url = APIUtils.getUrlWithParams({ serverUrl, uri, params });
+const _sendGet = (options: RequestOptions) => {
+  const url = APIUtils.getUrlWithParams(options);
   return _sendRequest(url, options);
 };
 
-const get = async (serverUrl: any, uri: any, params = {}, options = {}) => {
-  const { promise } = _sendGet(serverUrl, uri, params, options);
+const get = async (options: RequestOptions) => {
+  const { promise } = _sendGet(options);
   const response = await promise;
   const { status, data } = response;
   if (status === 200) {
@@ -58,20 +52,15 @@ const get = async (serverUrl: any, uri: any, params = {}, options = {}) => {
   }
 };
 
-const getFileAsText = async (
-  serverUrl: any,
-  uri: any,
-  params?: any,
-  options?: any
-) => {
-  const { promise } = _sendGet(serverUrl, uri, params, options);
+const getFileAsText = async (options: RequestOptions) => {
+  const { promise } = _sendGet(options);
   const response = await promise;
   return response.data;
 };
 
-const test = async (serverUrl: any, uri: any, params = {}) => {
+const test = async (options: RequestOptions) => {
   try {
-    const { promise } = _sendGet(serverUrl, uri, params);
+    const { promise } = _sendGet(options);
     const response = await promise;
     return response?.data?.status === "ok";
   } catch (e) {
@@ -79,25 +68,21 @@ const test = async (serverUrl: any, uri: any, params = {}) => {
   }
 };
 
-const postCancelable = (
-  serverUrl: any,
-  uri: any,
-  params: any,
-  options = {}
-) => {
+const postCancelable = (options: RequestOptions) => {
+  const { serverUrl, uri, data } = options;
   const { promise, cancel } = _sendRequest(
     APIUtils.getUrl({ serverUrl, uri }),
     {
       ...options,
       method: "post",
-      data: params,
+      data,
     }
   );
   return { promise, cancel };
 };
 
-const post = async (serverUrl: any, uri: any, params: any, options = {}) => {
-  const { promise } = postCancelable(serverUrl, uri, params, options);
+const post = async (options: RequestOptions) => {
+  const { promise } = postCancelable(options);
 
   const response = await promise;
 
@@ -106,27 +91,27 @@ const post = async (serverUrl: any, uri: any, params: any, options = {}) => {
   return { data, response };
 };
 
-const postCancelableMultipartData = (
-  serverUrl: any,
-  uri: any,
-  params: any,
-  options = {}
-) =>
-  postCancelable(serverUrl, uri, APIUtils.objectToFormData(params), {
-    headers: multipartDataHeaders,
-    ...options,
-  });
+const _prepareMultipartData = (options: RequestOptions): RequestOptions => {
+  const { data, config: configParam } = options;
 
-const postMultipartData = async (
-  serverUrl: any,
-  uri: any,
-  params: any,
-  options = {}
-) =>
-  post(serverUrl, uri, APIUtils.objectToFormData(params), {
-    headers: multipartDataHeaders,
+  const formData = APIUtils.objectToFormData(data);
+
+  const axiosRequestOptions: AxiosRequestConfig = {
+    headers: multipartDataHeaders, // Assuming this variable is defined elsewhere
+    ...configParam,
+  };
+  return {
     ...options,
-  });
+    data: formData,
+    config: axiosRequestOptions,
+  };
+};
+
+const postCancelableMultipartData = (options: RequestOptions) =>
+  postCancelable(_prepareMultipartData(options));
+
+const postMultipartData = async (options: RequestOptions) =>
+  post(_prepareMultipartData(options));
 
 export const APIAxios = {
   get,

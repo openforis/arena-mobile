@@ -1,20 +1,23 @@
+import * as FileSystem from "expo-file-system/legacy";
+
 import { UUIDs } from "@openforis/arena-core";
 
 import { Files } from "utils";
 import { APIUtils } from "./apiUtils";
+import { RequestOptions } from "./apiTypes";
 
-const getFile = async ({
-  serverUrl,
-  uri,
-  params,
-  callback: _callback,
-  targetFileUri = null,
-  options = {}
-}: any) => {
+type FileRequestOptions = RequestOptions & {
+  callback: () => void;
+  targetFileUri?: string;
+  config?: FileSystem.DownloadOptions;
+};
+
+const getFile = async (options: FileRequestOptions) => {
+  const { serverUrl, uri, data, targetFileUri, config } = options;
   const actualTargetFileUri =
     targetFileUri ?? Files.path(Files.cacheDirectory, UUIDs.v4() + ".tmp");
-  const url = APIUtils.getUrlWithParams({ serverUrl, uri, params });
-  await Files.download(url, actualTargetFileUri, options);
+  const url = APIUtils.getUrlWithParams({ serverUrl, uri, data });
+  await Files.download(url, actualTargetFileUri, config);
   return actualTargetFileUri;
 };
 

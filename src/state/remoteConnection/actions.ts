@@ -1,6 +1,11 @@
 import { i18n } from "localization";
 import { UserLogoutOptions } from "model/UserLogoutOptions";
-import { AuthService, SecureStoreService, SettingsService } from "service";
+import {
+  AuthService,
+  SecureStoreService,
+  SettingsService,
+  UserService,
+} from "service";
 import { screenKeys } from "screens/screenKeys";
 
 import { ConfirmActions, ConfirmUtils } from "../confirm";
@@ -19,7 +24,7 @@ const USER_PROFILE_ICON_INFO_SET = "USER_PROFILE_ICON_INFO_SET";
 const fetchUserOrLoginAgain = async ({ serverUrl, email, password }: any) => {
   let user;
   try {
-    user = await AuthService.fetchUser();
+    user = await UserService.fetchUser();
   } catch (error) {
     // ignore it
   }
@@ -62,7 +67,7 @@ const loginAndSetUser =
       return;
     }
     dispatch({ type: USER_LOADING });
-    const connectSID = await SecureStoreService.getConnectSIDCookie();
+    const connectSID = await SecureStoreService.getAuthRefreshToken();
     let user = null;
     if (connectSID) {
       user = await fetchUserOrLoginAgain({ serverUrl, email, password });
@@ -134,7 +139,7 @@ const fetchLoggedInUserProfileIcon = async (dispatch: any, getState: any) => {
     type: USER_PROFILE_ICON_INFO_SET,
     payload: { loaded: false, loading: true, uri: null },
   });
-  const uri = await AuthService.fetchUserPicture(user.uuid);
+  const uri = await UserService.fetchUserPicture(user.uuid);
   dispatch({
     type: USER_PROFILE_ICON_INFO_SET,
     payload: { loaded: true, loading: false, uri },
