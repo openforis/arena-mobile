@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 import { RequestOptions } from "./apiTypes";
 import { APIUtils } from "./apiUtils";
@@ -8,15 +8,12 @@ const defaultConfig: AxiosRequestConfig = {
   timeout: 40000, // 40 seconds
 };
 
-const errorMessageByCode: Record<number, string> = {
-  401: "User not authorized",
-  403: "Forbidden",
-  500: "Internal server error",
-};
-
 const multipartDataHeaders = { "Content-Type": "multipart/form-data" };
 
-const _sendRequest = (url: any, conf: AxiosRequestConfig = {}) => {
+const _prepareRequest = (
+  url: string,
+  conf: AxiosRequestConfig = {}
+): { promise: Promise<AxiosResponse>; cancel: () => void } => {
   const controller = new AbortController();
   const config: AxiosRequestConfig = {
     ...defaultConfig,
@@ -35,32 +32,32 @@ const _sendRequest = (url: any, conf: AxiosRequestConfig = {}) => {
   };
 };
 
-const _sendGet = (options: RequestOptions) => {
+const _prepareGet = (
+  options: RequestOptions
+): { promise: Promise<AxiosResponse>; cancel: () => void } => {
   const url = APIUtils.getUrlWithParams(options);
-  return _sendRequest(url, options);
+  const { config } = options;
+  return _prepareRequest(url, config);
 };
 
-const get = async (options: RequestOptions) => {
-  const { promise } = _sendGet(options);
+const get = async (
+  options: RequestOptions
+): Promise<{ data: any; status: number }> => {
+  const { promise } = _prepareGet(options);
   const response = await promise;
   const { status, data } = response;
-  if (status === 200) {
-    return { data };
-  } else {
-    const errorMessage = errorMessageByCode[status] ?? errorMessageByCode[500];
-    throw new Error(errorMessage);
-  }
+  return { data, status };
 };
 
 const getFileAsText = async (options: RequestOptions) => {
-  const { promise } = _sendGet(options);
+  const { promise } = _prepareGet(options);
   const response = await promise;
   return response.data;
 };
 
-const test = async (options: RequestOptions) => {
+const test = async (options: RequestOptions): Promise<boolean> => {
   try {
-    const { promise } = _sendGet(options);
+    const { promise } = _prepareGet(options);
     const response = await promise;
     return response?.data?.status === "ok";
   } catch (e) {
@@ -68,20 +65,19 @@ const test = async (options: RequestOptions) => {
   }
 };
 
-const postCancelable = (options: RequestOptions) => {
-  const { serverUrl, uri, data } = options;
-  const { promise, cancel } = _sendRequest(
-    APIUtils.getUrl({ serverUrl, uri }),
-    {
-      ...options,
-      method: "post",
-      data,
-    }
-  );
+const postCancelable = (
+  options: RequestOptions
+): { promise: Promise<AxiosResponse>; cancel: () => void } => {
+  const { serverUrl, uri, data, config } = options;
+  const url = APIUtils.getUrl({ serverUrl, uri });
+  const newConfig = { ...config, method: "post", data };
+  const { promise, cancel } = _prepareRequest(url, newConfig);
   return { promise, cancel };
 };
 
-const post = async (options: RequestOptions) => {
+const post = async (
+  options: RequestOptions
+): Promise<{ data: any; response: AxiosResponse }> => {
   const { promise } = postCancelable(options);
 
   const response = await promise;
@@ -97,7 +93,7 @@ const _prepareMultipartData = (options: RequestOptions): RequestOptions => {
   const formData = APIUtils.objectToFormData(data);
 
   const axiosRequestOptions: AxiosRequestConfig = {
-    headers: multipartDataHeaders, // Assuming this variable is defined elsewhere
+    headers: multipartDataHeaders,
     ...configParam,
   };
   return {
@@ -107,10 +103,14 @@ const _prepareMultipartData = (options: RequestOptions): RequestOptions => {
   };
 };
 
-const postCancelableMultipartData = (options: RequestOptions) =>
+const postCancelableMultipartData = (
+  options: RequestOptions
+): { promise: Promise<AxiosResponse>; cancel: () => void } =>
   postCancelable(_prepareMultipartData(options));
 
-const postMultipartData = async (options: RequestOptions) =>
+const postMultipartData = async (
+  options: RequestOptions
+): Promise<{ data: any; response: AxiosResponse }> =>
   post(_prepareMultipartData(options));
 
 export const APIAxios = {

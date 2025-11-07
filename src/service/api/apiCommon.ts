@@ -12,7 +12,7 @@ type FileRequestOptions = RequestOptions & {
   config?: FileSystem.DownloadOptions;
 };
 
-const getFile = async (options: FileRequestOptions) => {
+const getFile = async (options: FileRequestOptions): Promise<string> => {
   const { serverUrl, uri, data, targetFileUri, config } = options;
   const actualTargetFileUri =
     targetFileUri ?? Files.path(Files.cacheDirectory, UUIDs.v4() + ".tmp");

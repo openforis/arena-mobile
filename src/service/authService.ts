@@ -1,6 +1,6 @@
-import { Dictionary } from "@openforis/arena-core/dist/common";
+import { Dictionary } from "@openforis/arena-core";
+
 import { API } from "./api";
-import { RemoteService } from "./remoteService";
 import { SecureStoreService } from "./SecureStoreService";
 import { SettingsService } from "./settingsService";
 
@@ -69,11 +69,11 @@ const login = async ({ serverUrl: serverUrlParam, email, password }: any) => {
 
 const logout = async () => {
   try {
-    const res = await API.post({
+    const { data } = await API.post({
       serverUrl: await getServerUrl(),
       uri: "/auth/logout",
     });
-    return res?.data;
+    return data;
   } catch (err: any) {
     if (!err.response) {
       return { error: "authService:error.invalidServerUrl" };

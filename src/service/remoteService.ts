@@ -1,4 +1,5 @@
-import { Dictionary } from "@openforis/arena-core/dist/common";
+import { Dictionary } from "@openforis/arena-core";
+
 import { API } from "./api";
 import { SettingsService } from "./settingsService";
 
@@ -32,15 +33,13 @@ const post = async (uri: string, data?: Dictionary<any>) =>
 const postCancelableMultipartData = async (
   uri: string,
   data: Dictionary<any>,
-  onUploadProgress: any,
-  options = {}
+  onUploadProgress: any
 ) =>
   API.postCancelableMultipartData({
     serverUrl: await getServerUrl(),
     uri,
     data,
     config: {
-      ...options,
       onUploadProgress,
     },
   });
