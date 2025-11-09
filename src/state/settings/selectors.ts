@@ -1,6 +1,8 @@
 import { useSelector } from "react-redux";
 
-const selectSettings = (state: any) => state.settings;
+import { SettingsObject } from "model/SettingsModel";
+
+const selectSettings = (state: any) => state.settings as SettingsObject;
 
 export const SettingsSelectors = {
   selectSettings,

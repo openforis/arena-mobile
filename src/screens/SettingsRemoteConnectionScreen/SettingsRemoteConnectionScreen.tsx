@@ -67,8 +67,8 @@ export const SettingsRemoteConnectionScreen = () => {
       ...statePrev,
       serverUrl: serverUrlNext,
       serverUrlType: serverUrlTypeNext,
-      email: settings.email || "",
-      password: settings.password || "",
+      email: settings.email ?? "",
+      password: settings.password ?? "",
     }));
   }, []);
 

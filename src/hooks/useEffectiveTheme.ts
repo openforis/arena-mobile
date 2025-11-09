@@ -39,7 +39,9 @@ export const useEffectiveTheme = (): MD3Theme | undefined => {
 
   if (themeSetting === ThemesSettings.auto) {
     themeSetting =
-      colorScheme === ColorSchemeName.dark ? Themes.dark : Themes.light;
+      colorScheme === ColorSchemeName.dark
+        ? ThemesSettings.dark
+        : ThemesSettings.light;
   }
   return useMemo(() => {
     const theme = themeByThemeSetting[themeSetting];

@@ -5,12 +5,14 @@ import { asyncStorageKeys } from "./asyncStorage/asyncStorageKeys";
 import { API } from "./api";
 import { ThemesSettings } from "model/Themes";
 import { LanguageConstants } from "model/LanguageSettings";
+import { SettingsObject } from "model/SettingsModel";
 import { AMConstants, SystemUtils } from "utils";
 
-const defaultSettings = {
+const defaultSettings: SettingsObject = {
   animationsEnabled: true,
   fontScale: 1,
   fullScreen: false,
+  keepScreenAwake: false,
   imageSizeUnlimited: false,
   imageSizeLimit: 4, // MB
   language: LanguageConstants.system,
@@ -19,10 +21,11 @@ const defaultSettings = {
   locationGpsLocked: false,
   serverUrlType: "default",
   serverUrl: AMConstants.defaultServerUrl,
+  showStatusBar: false,
   theme: ThemesSettings.auto,
 };
 
-let INSTANCE: any = null;
+let INSTANCE: SettingsObject | null = null;
 
 const systemSettingApplierByKey: Record<
   string,
@@ -33,14 +36,14 @@ const systemSettingApplierByKey: Record<
     SystemUtils.setKeepScreenAwake(value),
 };
 
-const fetchSettings = async () => {
+const fetchSettings = async (): Promise<SettingsObject> => {
   if (!INSTANCE) {
     INSTANCE = {
       ...defaultSettings,
       ...(await AsyncStorageUtils.getItem(asyncStorageKeys.settings)),
     };
   }
-  return INSTANCE;
+  return INSTANCE!;
 };
 
 const updateSetting = async ({ key, value }: any) => {
@@ -51,7 +54,7 @@ const updateSetting = async ({ key, value }: any) => {
   return settingsNext;
 };
 
-const saveSettings = async (settings: any) => {
+const saveSettings = async (settings: SettingsObject) => {
   await AsyncStorageUtils.setItem(asyncStorageKeys.settings, settings);
   INSTANCE = settings;
 };
