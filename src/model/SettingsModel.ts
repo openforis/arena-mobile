@@ -93,6 +93,7 @@ export type SettingsObject = {
   locationAccuracyWatchTimeout: number;
   locationGpsLocked: boolean;
   password?: string;
+  savePassword: boolean;
   serverUrlType: "default";
   serverUrl: string;
   showStatusBar: boolean;

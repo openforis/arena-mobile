@@ -93,23 +93,35 @@ const confirmGoToConnectionToRemoteServer =
   };
 
 const login =
-  ({ serverUrl, email, password, navigation = null, showBack = false }: any) =>
+  ({
+    serverUrl,
+    email,
+    password,
+    savePassword = false,
+    navigation = null,
+    showBack = false,
+  }: any) =>
   async (dispatch: any) => {
     const res = await AuthService.login({ serverUrl, email, password });
     const { user, error, message } = res;
     if (user) {
       await AsyncStorageUtils.setItem(asyncStorageKeys.loggedInUser, user);
       const settings = await SettingsService.fetchSettings();
-      const settingsUpdated = { ...settings, serverUrl, email, password };
+      const settingsUpdated = { ...settings, serverUrl, email };
+      if (savePassword) {
+        Object.assign(settingsUpdated, { password });
+      }
       await dispatch(SettingsActions.updateSettings(settingsUpdated));
-      dispatch(
-        ConfirmActions.show({
-          titleKey: "authService:loginSuccessful",
-          confirmButtonTextKey: "common:goBack",
-          cancelButtonTextKey: "common:close",
-          onConfirm: navigation.goBack,
-        })
-      );
+      if (showBack) {
+        dispatch(
+          ConfirmActions.show({
+            titleKey: "authService:loginSuccessful",
+            confirmButtonTextKey: "common:goBack",
+            cancelButtonTextKey: "common:close",
+            onConfirm: navigation.goBack,
+          })
+        );
+      }
       dispatch({ type: USER_SET, user });
     } else if (message || error) {
       const errorKeySuffix = [

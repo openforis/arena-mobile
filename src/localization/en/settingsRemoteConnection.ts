@@ -9,6 +9,7 @@ export default {
   logoutConfirmMessage: "Logout and clear user credentials?",
   password: "Password",
   requestAccess: "New to Arena? Request access",
+  savePassword: "Save password",
   serverUrl: "Server URL",
   serverUrlNotValid: "Server URL not valid",
   serverUrlType: {
