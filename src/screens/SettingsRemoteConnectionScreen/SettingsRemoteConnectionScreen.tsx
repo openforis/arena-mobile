@@ -3,7 +3,6 @@ import { useNavigation } from "@react-navigation/native";
 
 import {
   Button,
-  Checkbox,
   FieldSet,
   HView,
   Icon,
@@ -48,17 +47,10 @@ export const SettingsRemoteConnectionScreen = () => {
     serverUrlVerified: false,
     email: "",
     password: "",
-    savePassword: false,
   });
 
-  const {
-    email,
-    password,
-    savePassword,
-    serverUrl,
-    serverUrlType,
-    serverUrlVerified,
-  } = state;
+  const { email, password, serverUrl, serverUrlType, serverUrlVerified } =
+    state;
 
   const initialize = useCallback(async () => {
     const settings = await SettingsService.fetchSettings();
@@ -77,7 +69,6 @@ export const SettingsRemoteConnectionScreen = () => {
       serverUrlType: serverUrlTypeNext,
       email: settings.email ?? "",
       password: settings.password ?? "",
-      savePassword: settings.savePassword,
     }));
   }, []);
 
@@ -136,12 +127,6 @@ export const SettingsRemoteConnectionScreen = () => {
     []
   );
 
-  const onSavePasswordPress = useCallback(
-    () =>
-      setState((statePrev) => ({ ...statePrev, savePassword: !savePassword })),
-    [savePassword]
-  );
-
   const onLogin = useCallback(() => {
     // normalize email
     const emailNew = email.trim().toLocaleLowerCase();
@@ -154,12 +139,11 @@ export const SettingsRemoteConnectionScreen = () => {
         serverUrl,
         email: emailNew,
         password,
-        savePassword,
         navigation,
         showBack: true,
       })
     );
-  }, [dispatch, email, navigation, password, savePassword, serverUrl]);
+  }, [dispatch, email, navigation, password, serverUrl]);
 
   const onLogout = useCallback(async () => {
     if (networkAvailable) {
@@ -222,11 +206,6 @@ export const SettingsRemoteConnectionScreen = () => {
           label="settingsRemoteConnection:password"
           onChange={onPasswordChange}
           value={password}
-        />
-        <Checkbox
-          checked={savePassword}
-          label="settingsRemoteConnection:savePassword"
-          onPress={onSavePasswordPress}
         />
 
         <HView fullWidth style={styles.loginButtonBar}>

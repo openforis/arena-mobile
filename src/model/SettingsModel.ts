@@ -92,7 +92,7 @@ export type SettingsObject = {
   locationAccuracyThreshold: number;
   locationAccuracyWatchTimeout: number;
   locationGpsLocked: boolean;
-  password?: string;
+  password?: string; // deprecated; not stored anymore;
   savePassword: boolean;
   serverUrlType: "default";
   serverUrl: string;

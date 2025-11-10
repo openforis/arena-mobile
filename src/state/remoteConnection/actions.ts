@@ -21,19 +21,16 @@ const USER_LOADING = "USER_LOADING";
 const USER_SET = "USER_SET";
 const USER_PROFILE_ICON_INFO_SET = "USER_PROFILE_ICON_INFO_SET";
 
-const fetchUserOrLoginAgain = async ({ serverUrl, email, password }: any) => {
+const fetchUser = async () => {
   let user;
   try {
     user = await UserService.fetchUser();
+    return user;
   } catch (error) {
     // ignore it
+    console.log("Error fetching user: " + error);
+    return null;
   }
-  if (user) {
-    return user;
-  }
-  // session expired
-  const data = await AuthService.login({ serverUrl, email, password });
-  return data.user;
 };
 
 const loginAndSetUser =
@@ -58,24 +55,16 @@ const loginAndSetUser =
         dispatch({ type: USER_SET, user: userInAsyncStorage });
       }
       return;
-    }
-
-    const settings = await SettingsService.fetchSettings();
-    const { serverUrl, email, password } = settings;
-    if (!serverUrl || !email || !password) {
-      // missing information to perform login; user cannot be fetched;
-      return;
-    }
-    dispatch({ type: USER_LOADING });
-    const connectSID = await SecureStoreService.getAuthRefreshToken();
-    let user = null;
-    if (connectSID) {
-      user = await fetchUserOrLoginAgain({ serverUrl, email, password });
     } else {
-      const loginRes = await AuthService.login({ serverUrl, email, password });
-      user = loginRes.user;
+      const refreshToken = await SecureStoreService.getAuthRefreshToken();
+      if (!refreshToken) {
+        // missing information; user cannot be fetched;
+        return;
+      }
+      dispatch({ type: USER_LOADING });
+      const user = await fetchUser();
+      dispatch({ type: USER_SET, user });
     }
-    dispatch({ type: USER_SET, user });
   };
 
 const confirmGoToConnectionToRemoteServer =
@@ -93,14 +82,7 @@ const confirmGoToConnectionToRemoteServer =
   };
 
 const login =
-  ({
-    serverUrl,
-    email,
-    password,
-    savePassword = false,
-    navigation = null,
-    showBack = false,
-  }: any) =>
+  ({ serverUrl, email, password, navigation = null, showBack = false }: any) =>
   async (dispatch: any) => {
     const res = await AuthService.login({ serverUrl, email, password });
     const { user, error, message } = res;
@@ -108,9 +90,6 @@ const login =
       await AsyncStorageUtils.setItem(asyncStorageKeys.loggedInUser, user);
       const settings = await SettingsService.fetchSettings();
       const settingsUpdated = { ...settings, serverUrl, email };
-      if (savePassword) {
-        Object.assign(settingsUpdated, { password });
-      }
       await dispatch(SettingsActions.updateSettings(settingsUpdated));
       if (showBack) {
         dispatch(
@@ -162,10 +141,11 @@ const _clearUserCredentialsInternal =
   ({ keepEmailAddress }: any = {}) =>
   async (dispatch: any) => {
     const settings = await SettingsService.fetchSettings();
+    const emailNext = keepEmailAddress ? settings.email : undefined;
     const settingsUpdated = {
       ...settings,
-      email: keepEmailAddress ? settings.email : null,
-      password: null,
+      email: emailNext,
+      password: undefined,
     };
     await dispatch(SettingsActions.updateSettings(settingsUpdated));
     dispatch({ type: USER_PROFILE_ICON_INFO_SET, payload: null });

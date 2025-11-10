@@ -38,16 +38,15 @@ const generateFullBackup = async () => {
 
 const checkLoggedInUser = async () => {
   const settings = await SettingsService.fetchSettings();
-  const { serverUrl, email, password } = settings;
-  if (!serverUrl || !email || !password) return;
+  const { serverUrl, email } = settings;
+  if (!serverUrl || !email) return;
 
   try {
     const user = await UserService.fetchUser();
     return user;
   } catch (error) {
     // session expired
-    const { user } = await AuthService.login({ serverUrl, email, password });
-    return user;
+    return null;
   }
 };
 
