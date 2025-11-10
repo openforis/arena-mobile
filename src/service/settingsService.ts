@@ -19,7 +19,6 @@ const defaultSettings: SettingsObject = {
   locationAccuracyThreshold: 3,
   locationAccuracyWatchTimeout: 120,
   locationGpsLocked: false,
-  savePassword: false,
   serverUrlType: "default",
   serverUrl: AMConstants.defaultServerUrl,
   showStatusBar: false,
