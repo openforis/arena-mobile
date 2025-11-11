@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Layout adjustments (record edit drawer);
 - Settings screen: error in Android previous to 8;
 - Settings screen: dropdown selector disabling after selecting an already selected value;
+- Record list: fixed sorting by summary attributes;
 
 ## [2.1.7] - 2025-10-16
 
