@@ -50,15 +50,17 @@ export const AppConfirmDialog = () => {
           <Text textKey={messageKey} textParams={messageParams} />
           {multipleChoiceOptions?.length > 0 && (
             <VView transparent>
-              {multipleChoiceOptions.map((option: any) => <Checkbox
-                key={option.value}
-                checked={
-                  selectedMultipleChoiceValues?.includes(option.value) ??
-                  false
-                }
-                label={t(option.label)}
-                onPress={() => onMultipleChoiceOptionChange(option.value)}
-              />)}
+              {multipleChoiceOptions.map((option: any) => (
+                <Checkbox
+                  key={option.value}
+                  checked={
+                    selectedMultipleChoiceValues?.includes(option.value) ??
+                    false
+                  }
+                  label={t(option.label)}
+                  onPress={() => onMultipleChoiceOptionChange(option.value)}
+                />
+              ))}
             </VView>
           )}
           {singleChoiceOptions?.length > 0 && (
@@ -67,11 +69,13 @@ export const AppConfirmDialog = () => {
               value={selectedSingleChoiceValue}
             >
               <VView transparent>
-                {singleChoiceOptions.map((option: any) => <RadioButton
-                  key={option.value}
-                  label={t(option.label, option.labelParams)}
-                  value={option.value}
-                />)}
+                {singleChoiceOptions.map((option: any) => (
+                  <RadioButton
+                    key={option.value}
+                    label={t(option.label, option.labelParams)}
+                    value={option.value}
+                  />
+                ))}
               </VView>
             </RadioButtonGroup>
           )}

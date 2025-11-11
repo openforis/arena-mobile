@@ -1,6 +1,8 @@
 import React from "react";
+import { StyleProp, StyleSheet, TextStyle, ViewStyle } from "react-native";
 import { Checkbox as RNPCheckbox } from "react-native-paper";
-import { StyleSheet } from "react-native";
+
+import { useTranslation } from "localization";
 
 const styles = StyleSheet.create({
   base: {
@@ -13,17 +15,32 @@ type Props = {
   checked: boolean;
   disabled?: boolean;
   label?: string;
+  labelIsI18nKey?: boolean;
+  labelStyle?: StyleProp<TextStyle>;
   onPress: () => void;
-  style?: any;
+  style?: StyleProp<ViewStyle>;
 };
 
 export const Checkbox = (props: Props) => {
-  const { checked, disabled, label = "", onPress, style: styleProp } = props;
+  const {
+    checked,
+    disabled,
+    label: labelProp = "",
+    labelIsI18nKey = true,
+    labelStyle,
+    onPress,
+    style: styleProp,
+  } = props;
+
+  const { t } = useTranslation();
+
+  const label = labelIsI18nKey ? t(labelProp) : labelProp;
 
   return (
     <RNPCheckbox.Item
       disabled={disabled}
       label={label}
+      labelStyle={labelStyle}
       mode="android"
       onPress={onPress}
       status={checked ? "checked" : "unchecked"}

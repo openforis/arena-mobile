@@ -100,7 +100,7 @@ const extractSummaryAttributesValues = ({ survey, record }: any) => {
       nodeDef: rootDef,
     });
   const summaryAttributesColumnValues = summaryAttributesColumnNames.map(
-    (_keyCol, idx) => {
+    (_summaryCol, idx) => {
       const nodeDef = summaryAttributeDefs[idx];
       if (!nodeDef) return null;
       const root = Records.getRoot(record);
@@ -545,7 +545,7 @@ const fixRowSummaryAttributesColumns = ({
   fixRowKeyOrSummaryAttributeColumns({
     result,
     row,
-    columnNames: keyColumnNames,
+    columnNames: summaryAttributesColumnNames,
     defs: summaryDefs,
     wrapperProp: "summaryAttributesObj",
   });

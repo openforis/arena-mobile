@@ -8,4 +8,5 @@ export { RemoteJobService } from "./remoteJobService";
 export { SecureStoreService } from "./SecureStoreService";
 export { SettingsService } from "./settingsService";
 export { SurveyService } from "./surveyService";
+export { UserService } from "./userService";
 export { WebSocketService } from "./webSocketService";

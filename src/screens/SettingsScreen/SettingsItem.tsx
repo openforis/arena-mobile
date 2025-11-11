@@ -10,7 +10,7 @@ import {
   TextInput,
 } from "components";
 import { i18n } from "localization";
-import { SettingsModel } from "model";
+import { SettingsModel, SettingsObject } from "model";
 import { SettingsFormItem } from "./SettingsFormItem";
 
 const numberToString = (value: any) =>
@@ -23,9 +23,11 @@ const determineTextKey = (...possibleKeys: any[]) =>
 
 type SettingsItemProps = {
   settings: any;
-  settingKey: string;
+  settingKey: keyof SettingsObject;
   prop: any;
-  onPropValueChange: (params: { key: string }) => (value: any) => Promise<void>;
+  onPropValueChange: (params: {
+    key: keyof SettingsObject;
+  }) => (value: any) => Promise<void>;
 };
 
 export const SettingsItem = (props: SettingsItemProps) => {

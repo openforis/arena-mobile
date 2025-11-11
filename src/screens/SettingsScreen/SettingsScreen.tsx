@@ -5,7 +5,7 @@ import { Objects } from "@openforis/arena-core";
 import { ConnectionToRemoteServerButton } from "appComponents/ConnectionToRemoteServerButton";
 import { FullBackupButton } from "appComponents/FullBackupButton";
 import { Card, ScreenView, VView } from "components";
-import { SettingsModel } from "model";
+import { SettingsModel, SettingsObject } from "model";
 import { SettingsActions, SettingsSelectors, useAppDispatch } from "state";
 
 import { SettingsItem } from "./SettingsItem";
@@ -26,7 +26,7 @@ export const SettingsScreen = () => {
   const { settings } = state;
 
   const onPropValueChange =
-    ({ key }: any) =>
+    ({ key }: { key: keyof SettingsObject }) =>
     async (value: any) => {
       const oldValue = settings[key];
       if (value === oldValue) return;
@@ -46,7 +46,7 @@ export const SettingsScreen = () => {
             <VView key={key} style={styles.settingsItemWrapper}>
               <SettingsItem
                 settings={settings}
-                settingKey={key}
+                settingKey={key as keyof SettingsObject}
                 prop={prop}
                 onPropValueChange={onPropValueChange}
               />

@@ -33,7 +33,7 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
   const theme = useTheme();
   const [content, setContent] = useState(null);
 
-  const styles:any = useMemo(
+  const styles: any = useMemo(
     () =>
       StyleSheet.create({
         formItem: { backgroundColor: "transparent" },
@@ -56,9 +56,11 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
   );
 
   useEffect(() => {
-    API.getFileAsText(changelogUrl, changelogUri).then((text) => {
-      setContent(text);
-    });
+    API.getFileAsText({ serverUrl: changelogUrl, uri: changelogUri }).then(
+      (text) => {
+        setContent(text);
+      }
+    );
   }, []);
 
   return (

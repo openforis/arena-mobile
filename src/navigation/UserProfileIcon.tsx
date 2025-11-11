@@ -19,8 +19,9 @@ const UserProfileAvatar = (props: UserProfileAvatarProps) => {
   const { loading, size, uri, user } = props;
   if (loading) return <Avatar.Icon icon="loading" size={size} />;
   if (uri) return <Avatar.Image source={{ uri }} size={size} />;
-  if (user) {
-    const userFirstLetter = user?.name.substring(0, 1).toLocaleUpperCase();
+  const userName = user?.name;
+  if (userName) {
+    const userFirstLetter = userName.substring(0, 1).toLocaleUpperCase();
     return <Avatar.Text label={userFirstLetter} size={size} />;
   }
   return <Avatar.Icon icon="account-off" size={size} />;

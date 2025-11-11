@@ -43,6 +43,7 @@ export const NodeCodeMultipleCheckboxComponent = (
         <Checkbox
           key={item.uuid}
           label={itemLabelFunction(item)}
+          labelIsI18nKey={false}
           disabled={!editable}
           checked={selectedItems.includes(item)}
           onPress={() => onItemSelect(item)}
