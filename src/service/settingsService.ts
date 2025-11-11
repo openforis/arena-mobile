@@ -36,15 +36,11 @@ const systemSettingApplierByKey: Record<
     SystemUtils.setKeepScreenAwake(value),
 };
 
-const fetchSettings = async (): Promise<SettingsObject> => {
-  if (!INSTANCE) {
-    INSTANCE = {
-      ...defaultSettings,
-      ...(await AsyncStorageUtils.getItem(asyncStorageKeys.settings)),
-    };
-  }
-  return INSTANCE!;
-};
+const fetchSettings = async (): Promise<SettingsObject> =>
+  (INSTANCE ??= {
+    ...defaultSettings,
+    ...(await AsyncStorageUtils.getItem(asyncStorageKeys.settings)),
+  });
 
 const updateSetting = async ({ key, value }: any) => {
   const settingsPrev = await fetchSettings();

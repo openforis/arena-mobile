@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 import { useColorScheme } from "react-native";
 import { DefaultTheme, MD3DarkTheme, MD3Theme } from "react-native-paper";
+import { MD3Typescale } from "react-native-paper/src/types";
 
-import { Themes, ThemesSettings } from "model";
+import { ThemesSettings } from "model";
 import { OFDarkTheme, OFLightTheme } from "theme";
 import { SettingsSelectors } from "../state/settings/selectors";
-import { MD3Typescale } from "react-native-paper/src/types";
 
 const defaultFontSize = 16;
 

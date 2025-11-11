@@ -3,7 +3,6 @@ import { JobStatus } from "@openforis/arena-core";
 import { dbClient } from "db";
 import { Files } from "utils";
 
-import { AuthService } from "./authService";
 import { BackupJob } from "./backupJob/BackupJob";
 import { RecordFileRepository } from "./repository/recordFileRepository";
 import { SurveyFSRepository } from "./repository/surveyFSRepository";

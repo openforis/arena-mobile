@@ -46,16 +46,7 @@ const loginAndSetUser =
     }
     const deviceInfo = DeviceInfoSelectors.selectDeviceInfo(state);
     const { isNetworkConnected } = deviceInfo;
-    if (!isNetworkConnected) {
-      // retrieve user from async storage (if any)
-      const userInAsyncStorage = await AsyncStorageUtils.getItem(
-        asyncStorageKeys.loggedInUser
-      );
-      if (userInAsyncStorage) {
-        dispatch({ type: USER_SET, user: userInAsyncStorage });
-      }
-      return;
-    } else {
+    if (isNetworkConnected) {
       const refreshToken = await SecureStoreService.getAuthRefreshToken();
       if (!refreshToken) {
         // missing information; user cannot be fetched;
@@ -64,6 +55,14 @@ const loginAndSetUser =
       dispatch({ type: USER_LOADING });
       const user = await fetchUser();
       dispatch({ type: USER_SET, user });
+    } else {
+      // retrieve user from async storage (if any)
+      const userInAsyncStorage = await AsyncStorageUtils.getItem(
+        asyncStorageKeys.loggedInUser
+      );
+      if (userInAsyncStorage) {
+        dispatch({ type: USER_SET, user: userInAsyncStorage });
+      }
     }
   };
 
