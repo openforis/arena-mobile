@@ -40,6 +40,7 @@ export const Checkbox = (props: Props) => {
     <RNPCheckbox.Item
       disabled={disabled}
       label={label}
+      labelStyle={labelStyle}
       mode="android"
       onPress={onPress}
       status={checked ? "checked" : "unchecked"}
