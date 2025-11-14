@@ -24,7 +24,7 @@ const determineText = ({
     return null;
   }
   if (textIsI18nKey) {
-    return t(textKey!, textParams);
+    return t(textKey, textParams);
   }
   return String(textKey);
 };
