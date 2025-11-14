@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   container: {
-    marginLeft: 10,
+    marginLeft: 4,
     flexWrap: "wrap",
   },
   item: {

@@ -13,6 +13,7 @@ import styles from "./styles";
 type OpenDropdownButtonProps = {
   emptySelection?: boolean;
   onPress: () => void;
+  textIsI18nKey?: boolean;
   textKey?: string;
   textParams?: any;
 };
@@ -21,6 +22,7 @@ const OpenDropdownButton = (props: OpenDropdownButtonProps) => {
   const {
     emptySelection = false,
     onPress,
+    textIsI18nKey = true,
     textKey = "dataEntry:code.selectItem",
     textParams,
   } = props;
@@ -43,11 +45,12 @@ const OpenDropdownButton = (props: OpenDropdownButtonProps) => {
     <Button
       icon="chevron-down"
       iconPosition={iconPosition}
-      textKey={textKey}
-      textParams={textParams}
       onPress={onPress}
       style={style}
       textColor={textColor}
+      textIsI18nKey={textIsI18nKey}
+      textKey={textKey}
+      textParams={textParams}
     />
   );
 };
@@ -77,18 +80,25 @@ export const NodeCodePreview = (props: NodeCodePreviewProps) => {
     SurveyDefs.hasSamplingPointDataLocation(survey);
   const emptySelection = selectedItems.length === 0;
 
+  const selectedItemLabel =
+    !multiple && selectedItems.length === 1
+      ? itemLabelFunction(selectedItems[0])
+      : null;
+
   return (
-    <HView style={{ flexWrap: "wrap" }}>
+    <HView style={styles.container}>
       {multiple ? (
         <>
-          {selectedItems.map((item: any) => <Button
-            key={item.uuid}
-            color="secondary"
-            onPress={openEditDialog}
-            style={styles.previewItem}
-          >
-            {itemLabelFunction(item)}
-          </Button>)}
+          {selectedItems.map((item: any) => (
+            <Button
+              key={item.uuid}
+              color="secondary"
+              onPress={openEditDialog}
+              style={styles.previewItem}
+            >
+              {itemLabelFunction(item)}
+            </Button>
+          ))}
           <OpenDropdownButton
             emptySelection={emptySelection}
             onPress={openEditDialog}
@@ -99,11 +109,8 @@ export const NodeCodePreview = (props: NodeCodePreviewProps) => {
         <OpenDropdownButton
           emptySelection={emptySelection}
           onPress={openEditDialog}
-          textKey={
-            selectedItems.length === 1
-              ? itemLabelFunction(selectedItems[0])
-              : "dataEntry:code.selectItem"
-          }
+          textIsI18nKey={emptySelection}
+          textKey={emptySelection ? undefined : selectedItemLabel!}
         />
       )}
       {canFindClosestSamplingPointData && (

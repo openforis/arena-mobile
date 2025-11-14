@@ -46,6 +46,7 @@ export const SingleNodeNavigationButton = (props: Props) => {
       icon={icon}
       iconPosition={iconPosition}
       style={style}
+      textIsI18nKey={false}
       textKey={NodeDefs.getLabelOrName(childDef, lang)}
       onPress={onPress}
     />
