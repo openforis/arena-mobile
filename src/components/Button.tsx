@@ -10,15 +10,15 @@ import { BaseStyles } from "utils/BaseStyles";
 import { useButtonOnPress } from "./useButtonPress";
 
 const determineText = ({
-  textKey,
   textIsI18nKey,
+  textKey,
   textParams,
   t,
 }: {
-  textKey: string | undefined;
   textIsI18nKey: boolean;
-  t: (key?: string | null, params?: any) => string;
+  textKey: string | undefined;
   textParams: any;
+  t: (key?: string | null, params?: any) => string;
 }) => {
   if (Objects.isEmpty(textKey)) {
     return null;
@@ -87,7 +87,7 @@ export const Button = (props: ButtonProps) => {
   const textDirection = useTextDirection();
   const iconPosition =
     iconPositionProp ?? iconPositionByTextDirection[textDirection];
-  const text = determineText({ textKey, textIsI18nKey, t, textParams });
+  const text = determineText({ textIsI18nKey, textKey, textParams, t });
 
   const contentStyle =
     iconPosition === "left" ? undefined : BaseStyles.flexDirectionRowReverse;
