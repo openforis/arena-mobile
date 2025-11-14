@@ -42,6 +42,7 @@ export const BreadcrumbItem = (props: Props) => {
         compact
         onPress={onItemPress}
         style={styles.itemButton}
+        textIsI18nKey={false}
         textKey={item.name}
       />
       {!isLastItem && <Separator />}

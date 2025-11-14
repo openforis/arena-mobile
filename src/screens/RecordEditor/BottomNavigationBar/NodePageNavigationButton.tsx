@@ -45,6 +45,7 @@ export const NodePageNavigationButton = (props: Props) => {
       iconPosition={iconPosition}
       mode={mode}
       style={style}
+      textIsI18nKey={false}
       textKey={
         NodeDefs.getLabelOrName(entityDef, lang) +
         (Objects.isEmpty(index) ? "" : `[${index + 1}]`)
