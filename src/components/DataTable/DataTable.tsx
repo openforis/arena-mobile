@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { StyleProp, ViewStyle } from "react-native";
 import { DataTable as RNPDataTable } from "react-native-paper";
 
 import { Objects } from "@openforis/arena-core";
@@ -13,9 +14,18 @@ import { VView } from "../VView";
 import { ItemSelectedBanner, useSelectableList } from "../SelectableList";
 import { usePagination } from "./usePagination";
 
+export type DataTableField = {
+  key: string;
+  header: string;
+  style?: StyleProp<ViewStyle>;
+  cellRenderer?: ({ item }: { item: any }) => React.ReactElement;
+  optional?: boolean;
+  sortable?: boolean;
+};
+
 export type DataTableProps = {
   canDelete?: boolean;
-  fields: any[];
+  fields: DataTableField[];
   items: any[];
   onItemPress?: (item: any) => void;
   onItemLongPress?: (item: any) => void;
