@@ -1,9 +1,11 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 
-import { NodeDefs, Records } from "@openforis/arena-core";
+import { NodeDefs, Objects, Records } from "@openforis/arena-core";
 
 import { DataTable, HView, ScrollView, Text, VView } from "components";
+import { DataTableField } from "components/DataTable/DataTable";
 import { useTranslation } from "localization";
+import { SortObject } from "model";
 import { RecordNodes } from "model/utils/RecordNodes";
 import {
   DataEntryActions,
@@ -13,6 +15,7 @@ import {
   useAppDispatch,
   useConfirm,
 } from "state";
+import { ArrayUtils } from "utils/ArrayUtils";
 
 import { NewNodeButton } from "../NewNodeButton";
 import { NodeValidationIcon } from "../NodeValidationIcon";
@@ -42,6 +45,7 @@ export const NodeMultipleEntityListComponent = (
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const confirm = useConfirm();
   const { t } = useTranslation();
+  const [sort, setSort] = useState(undefined as SortObject | undefined);
 
   if (__DEV__) {
     console.log(
@@ -86,13 +90,16 @@ export const NodeMultipleEntityListComponent = (
     [entityDef, isLandscape, maxSummaryDefs, parentEntity, record, survey]
   );
 
-  const tableFields = useMemo(
+  const tableFields: DataTableField[] = useMemo(
     () =>
-      visibleNodeDefs.map((summaryDef) => ({
-        key: NodeDefs.getName(summaryDef),
-        header: NodeDefs.getLabelOrName(summaryDef, lang),
-        style: { minWidth: isLandscape ? 150 : 100 },
-      })),
+      visibleNodeDefs.map(
+        (summaryDef): DataTableField => ({
+          key: NodeDefs.getName(summaryDef),
+          header: NodeDefs.getLabelOrName(summaryDef, lang),
+          style: { minWidth: isLandscape ? 150 : 100 },
+          sortable: true,
+        })
+      ),
     [isLandscape, lang, visibleNodeDefs]
   );
 
@@ -126,6 +133,10 @@ export const NodeMultipleEntityListComponent = (
     [confirm, dispatch]
   );
 
+  const onSortChange = useCallback((sortNext: SortObject) => {
+    setSort(sortNext);
+  }, []);
+
   const entityToRow = useCallback(
     (entity: any) => ({
       key: entity.uuid,
@@ -146,8 +157,12 @@ export const NodeMultipleEntityListComponent = (
 
   const rows = useMemo(() => {
     const entities = Records.getChildren(parentEntity, entityDefUuid)(record);
-    return entities.map(entityToRow);
-  }, [entityDefUuid, entityToRow, parentEntity, record]);
+    const _rows = entities.map(entityToRow);
+    if (Objects.isNotEmpty(sort)) {
+      ArrayUtils.sortByProps(sort!)(_rows);
+    }
+    return _rows;
+  }, [entityDefUuid, entityToRow, parentEntity, record, sort]);
 
   const canAddNew = canEditRecord && !NodeDefs.isEnumerate(entityDef);
 
@@ -156,12 +171,22 @@ export const NodeMultipleEntityListComponent = (
       <DataTable
         fields={tableFields}
         items={rows}
-        onItemPress={onRowPress}
         onDeleteSelectedItemIds={onDeleteSelectedNodeUuids}
+        onItemPress={onRowPress}
+        onSortChange={onSortChange}
         selectable={canEditRecord}
+        sort={sort}
       />
     ),
-    [canEditRecord, onDeleteSelectedNodeUuids, onRowPress, rows, tableFields]
+    [
+      canEditRecord,
+      onDeleteSelectedNodeUuids,
+      onRowPress,
+      onSortChange,
+      rows,
+      sort,
+      tableFields,
+    ]
   );
 
   return (
