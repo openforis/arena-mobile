@@ -3,7 +3,9 @@ import { useCallback, useMemo, useState } from "react";
 import { NodeDefs, Objects, Records } from "@openforis/arena-core";
 
 import { DataTable, HView, ScrollView, Text, VView } from "components";
+import { DataTableField } from "components/DataTable/DataTable";
 import { useTranslation } from "localization";
+import { SortObject } from "model";
 import { RecordNodes } from "model/utils/RecordNodes";
 import {
   DataEntryActions,
@@ -13,13 +15,12 @@ import {
   useAppDispatch,
   useConfirm,
 } from "state";
+import { ArrayUtils } from "utils/ArrayUtils";
 
 import { NewNodeButton } from "../NewNodeButton";
 import { NodeValidationIcon } from "../NodeValidationIcon";
 
 import styles from "./styles";
-import { DataTableField } from "components/DataTable/DataTable";
-import { ArrayUtils } from "utils/ArrayUtils";
 
 const determineMaxSummaryDefs = ({
   isDrawerOpen,
@@ -44,7 +45,7 @@ export const NodeMultipleEntityListComponent = (
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const confirm = useConfirm();
   const { t } = useTranslation();
-  const [sort, setSort] = useState(null);
+  const [sort, setSort] = useState(undefined as SortObject | undefined);
 
   if (__DEV__) {
     console.log(
@@ -132,7 +133,7 @@ export const NodeMultipleEntityListComponent = (
     [confirm, dispatch]
   );
 
-  const onSortChange = useCallback((sortNext: any) => {
+  const onSortChange = useCallback((sortNext: SortObject) => {
     setSort(sortNext);
   }, []);
 
@@ -161,7 +162,7 @@ export const NodeMultipleEntityListComponent = (
       ArrayUtils.sortByProps(sort!)(_rows);
     }
     return _rows;
-  }, [entityDefUuid, entityToRow, parentEntity, record]);
+  }, [entityDefUuid, entityToRow, parentEntity, record, sort]);
 
   const canAddNew = canEditRecord && !NodeDefs.isEnumerate(entityDef);
 

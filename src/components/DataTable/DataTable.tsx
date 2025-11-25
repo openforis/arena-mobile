@@ -2,10 +2,10 @@ import { useEffect, useRef } from "react";
 import { StyleProp, ViewStyle } from "react-native";
 import { DataTable as RNPDataTable } from "react-native-paper";
 
-import { Objects } from "@openforis/arena-core";
+import { Dictionary, Objects } from "@openforis/arena-core";
 
 import { useTranslation } from "localization";
-import { SortUtils } from "model";
+import { Sort, SortObject, SortUtils } from "model";
 import { DeviceInfoSelectors } from "state/deviceInfo";
 
 import { Checkbox } from "../Checkbox";
@@ -30,13 +30,13 @@ export type DataTableProps = {
   onItemPress?: (item: any) => void;
   onItemLongPress?: (item: any) => void;
   onSelectionChange?: (selectedIds: string[]) => void;
-  onSortChange?: (sort: any) => void;
+  onSortChange?: (sort: SortObject) => void;
   onDeleteSelectedItemIds?: (ids: string[]) => void;
   selectable?: boolean;
   selectedItemIds?: string[];
   selectedItemsCustomActions?: any[];
   showPagination?: boolean;
-  sort?: any;
+  sort?: SortObject;
 };
 
 export const DataTable = (props: DataTableProps) => {
@@ -98,10 +98,10 @@ export const DataTable = (props: DataTableProps) => {
 
   const visibleRows = showPagination ? visibleItems : items;
 
-  const onHeaderPress = (fieldKey: any) => {
+  const onHeaderPress = (fieldKey: string) => {
     const fieldSortPrev = sort?.[fieldKey];
     const fieldSortNext = SortUtils.getNextSortDirection(fieldSortPrev);
-    const sortNext: any = {};
+    const sortNext: Dictionary<Sort> = {};
     // allow only one sort field at a time
     if (fieldSortNext) {
       sortNext[fieldKey] = fieldSortNext;
