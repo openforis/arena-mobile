@@ -184,6 +184,7 @@ export const NodeMultipleEntityListComponent = (
       onRowPress,
       onSortChange,
       rows,
+      sort,
       tableFields,
     ]
   );
