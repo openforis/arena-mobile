@@ -18,6 +18,7 @@ export { ScreenOrientation } from "./ScreenOrientation";
 export { ScreenViewMode } from "./ScreenViewMode";
 export { SettingsModel } from "./SettingsModel";
 export { Sort, SortUtils } from "./Sort";
+export type { SortObject } from "./Sort";
 export { SurveyStatus } from "./SurveyStatus";
 export { Taxa } from "./Taxa";
 export { Themes, ThemesSettings } from "./Themes";

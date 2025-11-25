@@ -1,8 +1,6 @@
 import { DateFormats, Dates, Objects } from "@openforis/arena-core";
 
-import { Sort } from "model/Sort";
-
-type SortObject = Record<string, Sort>;
+import { Sort, SortObject } from "model/Sort";
 
 const determineDateFormat = (
   value: any,
