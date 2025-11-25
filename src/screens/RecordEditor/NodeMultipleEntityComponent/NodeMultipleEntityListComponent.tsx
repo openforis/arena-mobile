@@ -178,7 +178,14 @@ export const NodeMultipleEntityListComponent = (
         sort={sort}
       />
     ),
-    [canEditRecord, onDeleteSelectedNodeUuids, onRowPress, rows, tableFields]
+    [
+      canEditRecord,
+      onDeleteSelectedNodeUuids,
+      onRowPress,
+      onSortChange,
+      rows,
+      tableFields,
+    ]
   );
 
   return (
