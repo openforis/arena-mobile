@@ -140,27 +140,26 @@ export const useNodeCoordinateComponent = (props: any) => {
 
   const isNodeValueEqual = useCallback(
     (nodeValueA: any, nodeValueB: any) => {
-      const transformCoordinateValue = (coordVal: NodeValueCoordinate) => {
+      const cleanupValue = (
+        coordVal: NodeValueCoordinate
+      ): NodeValueCoordinate | null => {
         if (!coordVal) return null;
-        const coordValCleaned: NodeValueCoordinate = Object.entries(
-          coordVal
-        ).reduce((acc, [key, value]) => {
+        const coordValCleaned = {} as NodeValueCoordinate;
+        for (const [key, value] of Object.entries(coordVal)) {
           if (includedFields.has(key)) {
             // @ts-ignore
-            acc[key] = nonNumericFields.has(key)
+            coordValCleaned[key] = nonNumericFields.has(key)
               ? value
               : Numbers.toNumber(value);
           }
-          return acc;
-        }, {} as NodeValueCoordinate);
-
+        }
         if (!coordValCleaned.srs) {
           coordValCleaned.srs = defaultSrsCode;
         }
         return coordValCleaned;
       };
-      const coordValA = transformCoordinateValue(nodeValueA);
-      const coordValB = transformCoordinateValue(nodeValueB);
+      const coordValA = cleanupValue(nodeValueA);
+      const coordValB = cleanupValue(nodeValueB);
       return (
         Objects.isEqual(coordValA, coordValB) ||
         JSON.stringify(coordValA) === JSON.stringify(coordValB) ||

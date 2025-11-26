@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import * as Location from "expo-location";
-import { PointFactory } from "@openforis/arena-core";
+import { Objects, PointFactory } from "@openforis/arena-core";
 
 import { Permissions, Refs } from "utils";
 import { SettingsSelectors } from "../state/settings";
@@ -41,7 +41,7 @@ export const useLocationWatch = ({
   stopOnTimeout = true,
 }: any) => {
   const isMountedRef = useIsMountedRef();
-  const lastLocationRef = useRef(null);
+  const lastLocationRef = useRef(null as Location.LocationObject | null);
   const locationSubscriptionRef = useRef(
     null as Location.LocationSubscription | null
   );
@@ -88,14 +88,15 @@ export const useLocationWatch = ({
   }, [clearLocationWatchTimeout]);
 
   const locationCallback = useCallback(
-    (location: any) => {
+    (location: Location.LocationObject | null) => {
       lastLocationRef.current = location; // location could be null when watch timeout is reached
 
       const { coords } = location ?? {};
       const { accuracy: locationAccuracy } = coords ?? {};
 
       const accuracyThresholdReached =
-        locationAccuracy <= locationAccuracyThreshold;
+        Objects.isNotEmpty(locationAccuracy) &&
+        locationAccuracy! <= locationAccuracyThreshold;
       const timeoutReached =
         stopOnTimeout && locationSubscriptionRef.current === null;
       const thresholdReached = accuracyThresholdReached || timeoutReached;
