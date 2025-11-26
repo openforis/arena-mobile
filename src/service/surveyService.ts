@@ -3,7 +3,7 @@ import { Surveys } from "@openforis/arena-core";
 import { SurveyRepository } from "./repository/surveyRepository";
 import { SurveyFSRepository } from "./repository/surveyFSRepository";
 import { RemoteService } from "./remoteService";
-import demoSurvey from "./simple_survey.json";
+import demoSurvey from "./demoSurvey.json";
 
 const {
   fetchSurveySummaries: fetchSurveySummariesLocal,

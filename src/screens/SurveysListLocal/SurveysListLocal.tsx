@@ -32,12 +32,12 @@ import styles from "./styles";
 
 const { checkLoggedInUser } = RemoteConnectionUtils;
 
-const testSurveyUuid = "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3";
+const demoSurveyUuid = "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3";
 
 const minSurveysToShowSearchBar = 5;
 
 const determineSurveyStatus = ({ survey, remoteSurvey }: any) => {
-  if (survey.uuid === testSurveyUuid) return null;
+  if (survey.uuid === demoSurveyUuid) return null;
 
   if (!remoteSurvey) {
     return SurveyStatus.notInArenaServer;
