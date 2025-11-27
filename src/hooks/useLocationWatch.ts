@@ -1,8 +1,12 @@
 import { useCallback, useRef, useState } from "react";
 import * as Location from "expo-location";
-import { PointFactory } from "@openforis/arena-core";
+import { Point, PointFactory } from "@openforis/arena-core";
 
 import { Permissions, Refs } from "utils";
+import {
+  LocationAverager,
+  LocationPoint,
+} from "utils/LocationAverageCalculator";
 import { SettingsSelectors } from "../state/settings";
 import { useIsMountedRef } from "./useIsMountedRef";
 import { useToast } from "./useToast";
@@ -10,12 +14,12 @@ import { useToast } from "./useToast";
 const locationWatchElapsedTimeIntervalDelay = 1000;
 const defaultLocationAccuracyThreshold = 4;
 const defaultLocationAccuracyWatchTimeout = 120000; // 2 mins
+const minLocationReadingsForAccuracyThreshold = 5;
 
-const locationToPoint = (location: any) => {
-  if (!location) return null;
+const locationToPoint = (locationPoint: LocationPoint): Point | null => {
+  if (!locationPoint) return null;
 
-  const { coords } = location;
-  const { latitude, longitude } = coords;
+  const { latitude, longitude } = locationPoint;
 
   return PointFactory.createInstance({
     x: longitude,
@@ -39,14 +43,26 @@ export const useLocationWatch = ({
   locationCallback: locationCallbackProp,
   stopOnAccuracyThreshold = true,
   stopOnTimeout = true,
-}: any) => {
+}: {
+  accuracy?: Location.LocationAccuracy;
+  distanceInterval?: number;
+  locationCallback: (params: {
+    location: LocationPoint | null;
+    locationAccuracy: number | null | undefined;
+    pointLatLong: Point | null;
+    thresholdReached: boolean;
+  }) => void;
+  stopOnAccuracyThreshold?: boolean;
+  stopOnTimeout?: boolean;
+}) => {
   const isMountedRef = useIsMountedRef();
-  const lastLocationRef = useRef(null);
+  const lastLocationRef = useRef(null as LocationPoint | null);
   const locationSubscriptionRef = useRef(
     null as Location.LocationSubscription | null
   );
   const locationAccuracyWatchTimeoutRef = useRef(null as number | null);
-  const locationWatchIntervalRef = useRef(null as any);
+  const locationWatchIntervalRef = useRef(null as number | null);
+  const locationAveragerRef = useRef(null as LocationAverager | null);
   const toaster = useToast();
 
   const settings = SettingsSelectors.useSettings();
@@ -75,6 +91,7 @@ export const useLocationWatch = ({
     if (wasActive) {
       subscription.remove();
       locationSubscriptionRef.current = null;
+      locationAveragerRef.current = null;
 
       clearLocationWatchTimeout();
 
@@ -88,14 +105,26 @@ export const useLocationWatch = ({
   }, [clearLocationWatchTimeout]);
 
   const locationCallback = useCallback(
-    (location: any) => {
-      lastLocationRef.current = location; // location could be null when watch timeout is reached
+    (locationPoint: LocationPoint | null) => {
+      if (!locationPoint) {
+        lastLocationRef.current = locationPoint; // location could be null when watch timeout is reached
+        return;
+      }
 
-      const { coords } = location ?? {};
-      const { accuracy: locationAccuracy } = coords ?? {};
+      const locationAverager = locationAveragerRef.current!;
+      locationAverager.addReading(locationPoint);
+
+      const lastAveragedLocation = locationAverager.calculateAveragedLocation();
+      lastLocationRef.current = lastAveragedLocation;
+
+      if (!lastAveragedLocation) return;
+
+      const { accuracy: locationAccuracy } = lastAveragedLocation;
 
       const accuracyThresholdReached =
-        locationAccuracy <= locationAccuracyThreshold;
+        locationAccuracy &&
+        locationAccuracy <= locationAccuracyThreshold &&
+        lastAveragedLocation.count > minLocationReadingsForAccuracyThreshold;
       const timeoutReached =
         stopOnTimeout && locationSubscriptionRef.current === null;
       const thresholdReached = accuracyThresholdReached || timeoutReached;
@@ -105,10 +134,10 @@ export const useLocationWatch = ({
       ) {
         _stopLocationWatch();
       }
-      const pointLatLong = locationToPoint(location);
+      const pointLatLong = locationToPoint(locationPoint);
 
       locationCallbackProp({
-        location,
+        location: locationPoint,
         locationAccuracy,
         pointLatLong,
         thresholdReached,
@@ -141,8 +170,9 @@ export const useLocationWatch = ({
 
     locationSubscriptionRef.current = await Location.watchPositionAsync(
       { accuracy, distanceInterval },
-      locationCallback
+      (location) => locationCallback(location.coords)
     );
+    locationAveragerRef.current = new LocationAverager();
 
     if (stopOnTimeout) {
       locationWatchIntervalRef.current = setInterval(() => {

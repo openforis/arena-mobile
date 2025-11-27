@@ -11,6 +11,7 @@ npm-debug.*
 *.orig.*
 web-build/
 yarn-error.log
+.yarn/install-state.gz
 
 # macOS
 .DS_Store

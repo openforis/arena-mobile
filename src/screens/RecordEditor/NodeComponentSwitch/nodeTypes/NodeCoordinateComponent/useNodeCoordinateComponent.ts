@@ -9,6 +9,7 @@ import {
   PointFactory,
   Points,
   Records,
+  SRSIndex,
   Surveys,
 } from "@openforis/arena-core";
 
@@ -22,6 +23,7 @@ import {
   useConfirm,
 } from "state";
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
+import { LocationPoint } from "utils/LocationAverageCalculator";
 
 const stringToNumber = (str: any) => Numbers.toNumber(str);
 const numberToString = (num: any, roundToDecimals = Number.NaN) => {
@@ -46,9 +48,13 @@ const locationToUiValue = ({
   nodeDef,
   srsTo,
   srsIndex,
-}: any): LocationUiValue | null => {
-  const { coords } = location;
-  const { latitude, longitude, accuracy } = coords;
+}: {
+  location: LocationPoint;
+  nodeDef: any;
+  srsTo: string;
+  srsIndex?: SRSIndex;
+}): LocationUiValue | null => {
+  const { latitude, longitude, accuracy } = location;
 
   const pointLatLong = PointFactory.createInstance({
     x: longitude,
@@ -212,7 +218,7 @@ export const useNodeCoordinateComponent = (props: any) => {
   );
 
   const locationCallback = useCallback(
-    ({ location }: any) => {
+    ({ location }: { location: LocationPoint | null }) => {
       if (!location) return;
 
       const valueNext = locationToUiValue({
