@@ -307,9 +307,9 @@ describe("LocationAverager", () => {
 
       const result = averager.calculateAveragedLocation();
       expect(result).not.toBeNull();
-      expect(result?.latitude).toBeCloseTo(37.7749, 3);
-      expect(result?.longitude).toBeCloseTo(-122.4194, 3);
-      expect(result?.accuracy).toBeCloseTo(5.6, 1);
+      expect(result?.latitude).toBeCloseTo(37.7749, 4);
+      expect(result?.longitude).toBeCloseTo(-122.4194, 4);
+      expect(result?.accuracy).toBeCloseTo(5, 1);
       expect(result?.count).toBeGreaterThan(0);
     });
 

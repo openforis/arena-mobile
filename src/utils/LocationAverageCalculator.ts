@@ -69,37 +69,47 @@ export class LocationAverager {
 
   /**
    * Calculates the final averaged location after filtering out accuracy outliers
-   * using the N * Standard Deviation rule on the current window of readings.
+   * using the Median Absolute Deviation (MAD) method, which is more robust to extreme outliers.
    * @returns The AveragedLocation object or null if not enough data is present.
    */
   public calculateAveragedLocation(): AveragedLocation | null {
     const readings = this.readings;
 
-    // We need at least 2 points to calculate standard deviation reliably.
+    // We need at least 2 points to calculate statistics reliably.
     if (readings.length < 2) return null;
 
-    // --- 1. Calculate Mean Accuracy ---
-    const accuracyValues: number[] = readings.map(
-      (coord) => coord.accuracy ?? 0
-    );
-    const sumAccuracy: number = accuracyValues.reduce(sumReducer, 0);
-    const meanAccuracy = sumAccuracy / readings.length;
+    // --- 1. Extract and sort accuracy values ---
+    const accuracyValues: number[] = readings
+      .map((coord) => coord.accuracy ?? 0)
+      .sort((a, b) => a - b);
+    console.log("===Accuracy Values (sorted):", accuracyValues);
 
-    // --- 2. Calculate Standard Deviation ($\sigma$) of Accuracy ---
-    const squaredDifferences = accuracyValues.map((acc) =>
-      Math.pow(acc - meanAccuracy, 2)
-    );
-    const variance = squaredDifferences.reduce(sumReducer, 0) / readings.length;
-    const standardDeviation = Math.sqrt(variance);
+    // --- 2. Calculate Median Accuracy ---
+    const median = this.calculateMedian(accuracyValues);
+    console.log("===Median Accuracy:", median);
 
-    // --- 3. Determine Exclusion Threshold  ---
-    const accuracyThreshold =
-      meanAccuracy + this.sdMultiplier * standardDeviation;
+    // --- 3. Calculate Median Absolute Deviation (MAD) ---
+    const absoluteDeviations = accuracyValues
+      .map((acc) => Math.abs(acc - median))
+      .sort((a, b) => a - b);
+    const mad = this.calculateMedian(absoluteDeviations);
+    console.log("===MAD:", mad);
 
-    // --- 4. Filter Outliers ---
+    // --- 4. Determine Exclusion Threshold using Modified Z-score ---
+    // Modified Z-score = 0.6745 * (value - median) / MAD
+    // Typically, values with modified Z-score > 3.5 are considered outliers
+    // This translates to: |value - median| > 3.5 * MAD / 0.6745 ≈ 5.19 * MAD
+    // We'll use a threshold of median + sdMultiplier * 1.4826 * MAD
+    // (1.4826 is the constant to make MAD consistent with SD for normal distributions)
+    const madScaledToSD = 1.4826 * mad;
+    const accuracyThreshold = median + this.sdMultiplier * madScaledToSD;
+    console.log("===Accuracy Threshold:", accuracyThreshold);
+
+    // --- 5. Filter Outliers ---
     const filteredReadings = readings.filter(
       (coord) => coord.accuracy !== null && coord.accuracy <= accuracyThreshold
     );
+    console.log("===Filtered Readings:", filteredReadings);
 
     if (filteredReadings.length === 0) {
       // All readings were excluded as outliers
@@ -118,17 +128,33 @@ export class LocationAverager {
     );
 
     const count = filteredReadings.length;
+    console.log("===Count of Filtered Readings:", count);
 
-    return {
+    const result = {
       latitude: finalTotal.latitude / count,
       longitude: finalTotal.longitude / count,
       accuracy: finalTotal.accuracy! / count,
       count,
     };
+    console.log("===Averaged Location Result:", result);
+    return result;
+  }
+
+  /**
+   * Calculates the median of a sorted array of numbers.
+   * @param sortedValues An array of numbers sorted in ascending order.
+   * @returns The median value.
+   */
+  private calculateMedian(sortedValues: number[]): number {
+    const length = sortedValues.length;
+    if (length === 0) return 0;
+
+    const midIndex = Math.floor(length / 2);
+    const midValue = sortedValues[midIndex]!;
+    return length % 2 === 0
+      ? // Even number of elements: average the two middle values
+        (sortedValues[midIndex - 1]! + midValue) / 2
+      : // Odd number of elements: return the middle value
+        midValue;
   }
 }
-
-// --- Helper Functions ---
-
-const sumReducer = (accumulator: number, currentValue: number) =>
-  accumulator + currentValue;
