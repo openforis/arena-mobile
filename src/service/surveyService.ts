@@ -11,6 +11,8 @@ const {
   updateSurvey,
 } = SurveyRepository;
 
+const demoSurveyUuid = "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3";
+
 const remoteSurveyFetchTimeout = 60000; // 1 min
 
 const _insertSurvey = async (survey: any) => {
@@ -106,6 +108,7 @@ const deleteSurveys = async (surveyIds: any) => {
 };
 
 export const SurveyService = {
+  demoSurveyUuid,
   fetchSurveyRemoteById,
   fetchSurveySummariesLocal,
   fetchSurveySummariesRemote,
