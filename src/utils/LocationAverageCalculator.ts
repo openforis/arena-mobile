@@ -8,7 +8,7 @@ const DEFAULT_WINDOW_SIZE = 10; // Default size for the observation window
 const madScaleFactor = 1.4826; // constant to make MAD consistent with SD for normal distributions
 
 /**
- * Stores a fixed "window" of the most recent LocationCoords, filters outliers
+ * Stores a fixed "window" of the most recent LocationPoint objects, filters outliers
  * using Standard Deviation (SD) of accuracy, and calculates the final averaged location.
  */
 export class LocationAverager {
@@ -20,8 +20,8 @@ export class LocationAverager {
    * @param sdMultiplier - The number of standard deviations (N) to use for the exclusion rule (N*SD).
    */
   constructor(
-    private maxWindowSize: number = DEFAULT_WINDOW_SIZE,
-    private sdMultiplier: number = SD_MULTIPLIER
+    private readonly maxWindowSize: number = DEFAULT_WINDOW_SIZE,
+    private readonly sdMultiplier: number = SD_MULTIPLIER
   ) {
     if (this.maxWindowSize < 1) {
       throw new Error("maxWindowSize must be at least 1.");
@@ -31,10 +31,10 @@ export class LocationAverager {
   /**
    * Adds a new location reading to the internal store, maintaining the fixed window size.
    * If the window is full, the oldest reading is removed (FIFO).
-   * @param coord The LocationCoords object to store.
+   * @param locationPoint The LocationPoint object to store.
    */
-  public addReading(coord: LocationPoint): void {
-    this.readings.push(coord);
+  public addReading(locationPoint: LocationPoint): void {
+    this.readings.push(locationPoint);
 
     // Enforce the window size (FIFO logic)
     if (this.readings.length > this.maxWindowSize) {
@@ -101,7 +101,7 @@ export class LocationAverager {
       return null;
     }
 
-    // --- 5. Average the remaining (filtered) coordinates ---
+    // --- 6. Average the remaining (filtered) coordinates ---
     const finalTotal = filteredReadings.reduce(
       (acc, coord) => {
         acc.latitude += coord.latitude;

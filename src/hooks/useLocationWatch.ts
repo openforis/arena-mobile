@@ -107,8 +107,9 @@ export const useLocationWatch = ({
         lastLocationRef.current = locationPoint; // location could be null when watch timeout is reached
         return;
       }
+      const locationAverager = locationAveragerRef.current;
+      if (!locationAverager) return;
 
-      const locationAverager = locationAveragerRef.current!;
       locationAverager.addReading(locationPoint);
 
       const lastAveragedLocation = locationAverager.calculateAveragedLocation();
@@ -131,7 +132,7 @@ export const useLocationWatch = ({
       ) {
         _stopLocationWatch();
       }
-      const pointLatLong = locationToPoint(locationPoint);
+      const pointLatLong = locationToPoint(lastAveragedLocation);
 
       locationCallbackProp({
         location: lastAveragedLocation,
