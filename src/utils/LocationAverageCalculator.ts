@@ -102,7 +102,7 @@ export class LocationAverager {
     );
 
     if (filteredReadings.length === 0) {
-      console.warn("All readings were excluded as outliers.");
+      // All readings were excluded as outliers
       return null;
     }
 
@@ -111,7 +111,7 @@ export class LocationAverager {
       (acc, coord) => {
         acc.latitude += coord.latitude;
         acc.longitude += coord.longitude;
-        acc.accuracy += coord.accuracy!; // accuracy is guaranteed non-null here
+        acc.accuracy! += coord.accuracy!; // accuracy is guaranteed non-null here
         return acc;
       },
       { latitude: 0, longitude: 0, accuracy: 0 }
@@ -122,7 +122,7 @@ export class LocationAverager {
     return {
       latitude: finalTotal.latitude / count,
       longitude: finalTotal.longitude / count,
-      accuracy: finalTotal.accuracy / count,
+      accuracy: finalTotal.accuracy! / count,
       count,
     };
   }

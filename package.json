@@ -8,6 +8,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "eslint --fix --ext .js,.jsx .",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "test:types": "tsc"
   },
   "dependencies": {
@@ -101,6 +104,7 @@
     "eslint-plugin-ft-flow": "^3.0.11",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-native": "^5.0.0",
+    "jest": "^30.2.0",
     "metro-react-native-babel-preset": "^0.77.0",
     "prettier": "^3.6.2",
     "typescript": "^5.9.3"
