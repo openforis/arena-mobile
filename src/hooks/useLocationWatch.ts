@@ -2,11 +2,9 @@ import { useCallback, useRef, useState } from "react";
 import * as Location from "expo-location";
 import { Point, PointFactory } from "@openforis/arena-core";
 
+import { LocationPoint } from "model";
 import { Permissions, Refs } from "utils";
-import {
-  LocationAverager,
-  LocationPoint,
-} from "utils/LocationAverageCalculator";
+import { LocationAverager } from "utils/LocationAverageCalculator";
 import { SettingsSelectors } from "../state/settings";
 import { useIsMountedRef } from "./useIsMountedRef";
 import { useToast } from "./useToast";
@@ -136,7 +134,7 @@ export const useLocationWatch = ({
       const pointLatLong = locationToPoint(locationPoint);
 
       locationCallbackProp({
-        location: locationPoint,
+        location: lastAveragedLocation,
         locationAccuracy,
         pointLatLong,
         thresholdReached,

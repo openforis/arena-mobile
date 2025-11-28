@@ -1,4 +1,5 @@
-import { LocationAverager, LocationPoint } from "./LocationAverageCalculator";
+import { LocationPoint } from "model";
+import { LocationAverager } from "./LocationAverageCalculator";
 
 describe("LocationAverager", () => {
   describe("Constructor", () => {

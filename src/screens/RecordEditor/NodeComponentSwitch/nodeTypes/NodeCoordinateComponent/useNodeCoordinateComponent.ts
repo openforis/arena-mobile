@@ -14,6 +14,7 @@ import {
 } from "@openforis/arena-core";
 
 import { useLocationWatch } from "hooks";
+import { LocationPoint } from "model";
 import { RecordNodes } from "model/utils/RecordNodes";
 import {
   DataEntryActions,
@@ -23,7 +24,6 @@ import {
   useConfirm,
 } from "state";
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
-import { LocationPoint } from "utils/LocationAverageCalculator";
 
 const stringToNumber = (str: any) => Numbers.toNumber(str);
 const numberToString = (num: any, roundToDecimals = Number.NaN) => {

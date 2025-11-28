@@ -8,6 +8,7 @@ export {
   Languages,
   LanguagesSettings,
 } from "./LanguageSettings";
+export type { LocationPoint, AveragedLocation } from "./LocationPoint";
 export { RecordEditViewMode } from "./RecordEditViewMode";
 export { RecordLoadStatus } from "./RecordLoadStatus";
 export { RecordOrigin } from "./RecordOrigin";

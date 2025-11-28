@@ -6,6 +6,7 @@ import { Objects, Points } from "@openforis/arena-core";
 
 import { useLocationWatch, useMagnetometerHeading } from "hooks";
 import { Button, FormItem, HView, Modal, Text, View, VView } from "components";
+import { LocationPoint } from "model";
 import { SurveySelectors } from "state";
 import { SystemUtils } from "utils";
 
@@ -64,7 +65,7 @@ const formatNumber = (num: any, decimals = 2, unit = "") =>
   Objects.isEmpty(num) ? "-" : num.toFixed(decimals) + unit;
 
 type LocationNavigatorState = {
-  currentLocation?: any;
+  currentLocation?: LocationPoint | null;
   angleToTarget: 0;
   accuracy: 0;
   distance: 0;
@@ -136,7 +137,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
 
   const { currentLocation, angleToTarget, accuracy, distance } = state;
   const { longitude: currentLocationX, latitude: currentLocationY } =
-    currentLocation?.coords || {};
+    currentLocation ?? {};
 
   const arrowToTargetVisible =
     distance >= arrowToTargetVisibleDistanceThreshold;
