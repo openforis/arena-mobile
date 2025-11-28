@@ -76,7 +76,7 @@ const locationToUiValue = ({
 
   for (const field of includedExtraFields) {
     // @ts-ignore
-    result[field] = numberToString(coords[field], 2);
+    result[field] = numberToString(location[field], 2);
   }
   // always include accuracy
   result.accuracy = numberToString(accuracy, 2);

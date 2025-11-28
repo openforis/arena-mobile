@@ -14,7 +14,7 @@ const defaultLocationAccuracyThreshold = 4;
 const defaultLocationAccuracyWatchTimeout = 120000; // 2 mins
 const minLocationReadingsForAccuracyThreshold = 5;
 
-const locationToPoint = (locationPoint: LocationPoint): Point | null => {
+const locationPointToPoint = (locationPoint: LocationPoint): Point | null => {
   if (!locationPoint) return null;
 
   const { latitude, longitude } = locationPoint;
@@ -23,6 +23,13 @@ const locationToPoint = (locationPoint: LocationPoint): Point | null => {
     x: longitude,
     y: latitude,
   });
+};
+
+const locationToLocationPoint = (
+  location: Location.LocationObject
+): LocationPoint => {
+  const { coords } = location;
+  return { ...coords, accuracy: coords.accuracy };
 };
 
 const getLocationWatchTimeout = ({ settings }: any) => {
@@ -132,7 +139,7 @@ export const useLocationWatch = ({
       ) {
         _stopLocationWatch();
       }
-      const pointLatLong = locationToPoint(lastAveragedLocation);
+      const pointLatLong = locationPointToPoint(lastAveragedLocation);
 
       locationCallbackProp({
         location: lastAveragedLocation,
@@ -169,7 +176,7 @@ export const useLocationWatch = ({
 
     locationSubscriptionRef.current = await Location.watchPositionAsync(
       { accuracy, distanceInterval },
-      (location) => locationCallback(location.coords)
+      (location) => locationCallback(locationToLocationPoint(location))
     );
     locationAveragerRef.current = new LocationAverager();
 

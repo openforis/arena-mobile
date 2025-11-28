@@ -72,17 +72,17 @@ export class LocationAverager {
 
     // --- 1. Extract and sort accuracy values ---
     const accuracyValues: number[] = readings
-      .map((coord) => coord.accuracy ?? 0) // Treat null accuracy as 0
-      .sort((a, b) => a - b);
+      .map((locationPoint) => locationPoint.accuracy ?? 0) // Treat null accuracy as 0
+      .sort((a, b) => a - b); 
 
     // --- 2. Calculate Median Accuracy ---
-    const median = this.calculateMedian(accuracyValues);
+    const median = calculateMedian(accuracyValues);
 
     // --- 3. Calculate Median Absolute Deviation (MAD) ---
     const absoluteDeviations = accuracyValues
       .map((acc) => Math.abs(acc - median))
       .sort((a, b) => a - b);
-    const mad = this.calculateMedian(absoluteDeviations);
+    const mad = calculateMedian(absoluteDeviations);
 
     // --- 4. Determine Exclusion Threshold using Modified Z-score ---
     // Modified Z-score = 0.6745 * (value - median) / MAD
@@ -102,15 +102,24 @@ export class LocationAverager {
     }
 
     // --- 6. Average the remaining (filtered) coordinates ---
-    const finalTotal = filteredReadings.reduce(
-      (acc, coord) => {
-        acc.latitude += coord.latitude;
-        acc.longitude += coord.longitude;
-        acc.accuracy! += coord.accuracy!; // accuracy is guaranteed non-null here
-        return acc;
-      },
-      { latitude: 0, longitude: 0, accuracy: 0 }
-    );
+    const finalTotal = {
+      latitude: 0,
+      longitude: 0,
+      accuracy: 0,
+      altitude: null,
+      altitudeAccuracy: null,
+      heading: null,
+      speed: null,
+    };
+    for (const filteredReading of filteredReadings) {
+      finalTotal.latitude += filteredReading.latitude;
+      finalTotal.longitude += filteredReading.longitude;
+      finalTotal.accuracy! += filteredReading.accuracy!; // accuracy is guaranteed non-null here
+      addPropertyFromSource(finalTotal, filteredReading, "altitude");
+      addPropertyFromSource(finalTotal, filteredReading, "altitudeAccuracy");
+      addPropertyFromSource(finalTotal, filteredReading, "heading");
+      addPropertyFromSource(finalTotal, filteredReading, "speed");
+    }
 
     const count = filteredReadings.length;
 
@@ -118,25 +127,44 @@ export class LocationAverager {
       latitude: finalTotal.latitude / count,
       longitude: finalTotal.longitude / count,
       accuracy: finalTotal.accuracy! / count,
+      altitude:
+        finalTotal.altitude !== null ? finalTotal.altitude / count : null,
+      altitudeAccuracy:
+        finalTotal.altitudeAccuracy !== null
+          ? finalTotal.altitudeAccuracy / count
+          : null,
+      heading: finalTotal.heading !== null ? finalTotal.heading / count : null,
+      speed: finalTotal.speed !== null ? finalTotal.speed / count : null,
       count,
     };
   }
-
-  /**
-   * Calculates the median of a sorted array of numbers.
-   * @param sortedValues An array of numbers sorted in ascending order.
-   * @returns The median value.
-   */
-  private calculateMedian(sortedValues: number[]): number {
-    const length = sortedValues.length;
-    if (length === 0) return 0;
-
-    const midIndex = Math.floor(length / 2);
-    const midValue = sortedValues[midIndex]!;
-    return length % 2 === 0
-      ? // Even number of elements: average the two middle values
-        (sortedValues[midIndex - 1]! + midValue) / 2
-      : // Odd number of elements: return the middle value
-        midValue;
-  }
 }
+
+const addPropertyFromSource = (target: any, source: any, property: string) => {
+  const targetValue = target[property];
+  const sourceValue = source[property];
+  if (targetValue === undefined || targetValue === null) {
+    target[property] = sourceValue;
+  } else if (sourceValue !== undefined && sourceValue !== null) {
+    target[property] += sourceValue;
+  }
+};
+
+// --- Helper Methods ---
+/**
+ * Calculates the median of a sorted array of numbers.
+ * @param sortedValues An array of numbers sorted in ascending order.
+ * @returns The median value.
+ */
+const calculateMedian = (sortedValues: number[]): number => {
+  const length = sortedValues.length;
+  if (length === 0) return 0;
+
+  const midIndex = Math.floor(length / 2);
+  const midValue = sortedValues[midIndex]!;
+  return length % 2 === 0
+    ? // Even number of elements: average the two middle values
+      (sortedValues[midIndex - 1]! + midValue) / 2
+    : // Odd number of elements: return the middle value
+      midValue;
+};
