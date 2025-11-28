@@ -10,7 +10,7 @@ import { ElapsedTimeProgressBar } from "./ElapsedTimeProgressBar";
 import styles from "./styles";
 
 type LocationWatchingMonitorProps = {
-  locationAccuracy?: number | string;
+  locationAccuracy?: number | string | null;
   locationAccuracyThreshold: number;
   locationWatchElapsedTime: number;
   locationWatchTimeout: number;
@@ -19,7 +19,9 @@ type LocationWatchingMonitorProps = {
   watchingLocation: boolean;
 };
 
-export const LocationWatchingMonitor = (props: LocationWatchingMonitorProps) => {
+export const LocationWatchingMonitor = (
+  props: LocationWatchingMonitorProps
+) => {
   const {
     locationAccuracy,
     locationAccuracyThreshold,
