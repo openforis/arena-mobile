@@ -1,8 +1,4 @@
-import {
-  LocationAverager,
-  LocationPoint,
-  AveragedLocation,
-} from "./LocationAverageCalculator";
+import { LocationAverager, LocationPoint } from "./LocationAverageCalculator";
 
 describe("LocationAverager", () => {
   describe("Constructor", () => {
@@ -337,7 +333,7 @@ describe("LocationAverager", () => {
         { latitude: 40.7128, longitude: -74.006, accuracy: 5 },
         { latitude: 40.7129, longitude: -74.0061, accuracy: 6 },
         { latitude: 40.713, longitude: -74.0062, accuracy: 5 },
-        { latitude: 50.0, longitude: -80.0, accuracy: 1000 }, // Extreme outlier
+        { latitude: 50, longitude: -80, accuracy: 1000 }, // Extreme outlier
       ];
 
       readings.forEach((reading) => averager.addReading(reading));
