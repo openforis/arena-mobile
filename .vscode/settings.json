@@ -5,6 +5,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
+  "eslint.options": { "overrideConfigFile": "./eslint.config.mjs" },
   "i18n-ally.dirStructure": "dir",
   "i18n-ally.editor.preferEditor": true,
   "i18n-ally.enabledParsers": ["js", "json"],
