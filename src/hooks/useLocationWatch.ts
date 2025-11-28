@@ -91,7 +91,6 @@ export const useLocationWatch = ({
     if (wasActive) {
       subscription.remove();
       locationSubscriptionRef.current = null;
-      locationAveragerRef.current = null;
 
       clearLocationWatchTimeout();
 
@@ -157,6 +156,7 @@ export const useLocationWatch = ({
       locationCallback(lastLocationRef.current);
     }
     lastLocationRef.current = null;
+    locationAveragerRef.current = null;
   }, [_stopLocationWatch, isMountedRef, locationCallback]);
 
   const startLocationWatch = useCallback(async () => {

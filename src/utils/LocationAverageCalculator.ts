@@ -15,6 +15,8 @@ export type AveragedLocation = LocationPoint & {
 const SD_MULTIPLIER = 2; // Default 2 Standard Deviations for outlier exclusion
 const DEFAULT_WINDOW_SIZE = 10; // Default size for the observation window
 
+const madScaleFactor = 1.4826; // constant to make MAD consistent with SD for normal distributions
+
 /**
  * Stores a fixed "window" of the most recent LocationCoords, filters outliers
  * using Standard Deviation (SD) of accuracy, and calculates the final averaged location.
@@ -80,36 +82,29 @@ export class LocationAverager {
 
     // --- 1. Extract and sort accuracy values ---
     const accuracyValues: number[] = readings
-      .map((coord) => coord.accuracy ?? 0)
+      .map((coord) => coord.accuracy ?? 0) // Treat null accuracy as 0
       .sort((a, b) => a - b);
-    console.log("===Accuracy Values (sorted):", accuracyValues);
 
     // --- 2. Calculate Median Accuracy ---
     const median = this.calculateMedian(accuracyValues);
-    console.log("===Median Accuracy:", median);
 
     // --- 3. Calculate Median Absolute Deviation (MAD) ---
     const absoluteDeviations = accuracyValues
       .map((acc) => Math.abs(acc - median))
       .sort((a, b) => a - b);
     const mad = this.calculateMedian(absoluteDeviations);
-    console.log("===MAD:", mad);
 
     // --- 4. Determine Exclusion Threshold using Modified Z-score ---
     // Modified Z-score = 0.6745 * (value - median) / MAD
     // Typically, values with modified Z-score > 3.5 are considered outliers
     // This translates to: |value - median| > 3.5 * MAD / 0.6745 ≈ 5.19 * MAD
-    // We'll use a threshold of median + sdMultiplier * 1.4826 * MAD
-    // (1.4826 is the constant to make MAD consistent with SD for normal distributions)
-    const madScaledToSD = 1.4826 * mad;
-    const accuracyThreshold = median + this.sdMultiplier * madScaledToSD;
-    console.log("===Accuracy Threshold:", accuracyThreshold);
+    // We'll use a threshold of median + sdMultiplier * madScaleFactor * MAD
+    const accuracyThreshold = median + this.sdMultiplier * madScaleFactor * mad;
 
     // --- 5. Filter Outliers ---
     const filteredReadings = readings.filter(
       (coord) => coord.accuracy !== null && coord.accuracy <= accuracyThreshold
     );
-    console.log("===Filtered Readings:", filteredReadings);
 
     if (filteredReadings.length === 0) {
       // All readings were excluded as outliers
@@ -128,16 +123,13 @@ export class LocationAverager {
     );
 
     const count = filteredReadings.length;
-    console.log("===Count of Filtered Readings:", count);
 
-    const result = {
+    return {
       latitude: finalTotal.latitude / count,
       longitude: finalTotal.longitude / count,
       accuracy: finalTotal.accuracy! / count,
       count,
     };
-    console.log("===Averaged Location Result:", result);
-    return result;
   }
 
   /**
