@@ -23,6 +23,7 @@ import {
   useAppDispatch,
   useConfirm,
 } from "state";
+import { log } from "utils";
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 
 const stringToNumber = (str: any) => Numbers.toNumber(str);
@@ -271,6 +272,7 @@ export const useNodeCoordinateComponent = (props: any) => {
   );
 
   const onStartGpsPress = useCallback(async () => {
+    log.debug("onStartGpsPress");
     const valueExists =
       Objects.isNotEmpty(uiValueX) && Objects.isNotEmpty(uiValueY);
     if (
@@ -283,6 +285,7 @@ export const useNodeCoordinateComponent = (props: any) => {
     }
     if (valueExists) {
       // clear existing value before starting GPS
+      log.debug("Clearing existing coordinate value before starting GPS");
       await updateNodeValue({ value: null, ignoreDelay: true });
     }
     await startLocationWatch();

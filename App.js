@@ -13,7 +13,7 @@ import { JobMonitorDialog } from "appComponents/JobMonitorDialog";
 import { useEffectiveTheme } from "hooks";
 import { AppStack } from "navigation/AppStack";
 import { store } from "state/store";
-import { BaseStyles, Environment } from "utils";
+import { BaseStyles, Environment, log } from "utils";
 
 import { AppInitializer } from "./src/AppInitializer";
 import styles from "./src/appStyles";
@@ -22,12 +22,12 @@ const safeAreaEdges = ["right", "bottom", "left"];
 
 const AppInnerContainer = () => {
   if (__DEV__) {
-    console.log(`rendering AppInnerContainer`);
+    log.debug(`rendering AppInnerContainer`);
   }
   const theme = useEffectiveTheme();
 
   const onError = (error, stackTrace) => {
-    console.log(stackTrace, error);
+    log.debug(stackTrace, error);
   };
 
   const internalContainer = (

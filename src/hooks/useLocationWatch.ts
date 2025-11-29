@@ -3,7 +3,7 @@ import * as Location from "expo-location";
 import { Point, PointFactory } from "@openforis/arena-core";
 
 import { LocationPoint } from "model";
-import { Permissions, Refs } from "utils";
+import { log, Permissions, Refs } from "utils";
 import { LocationAverager } from "utils/LocationAverageCalculator";
 import { SettingsSelectors } from "../state/settings";
 import { useIsMountedRef } from "./useIsMountedRef";
@@ -110,6 +110,8 @@ export const useLocationWatch = ({
 
   const locationCallback = useCallback(
     (locationPoint: LocationPoint | null) => {
+      log.debug(`Location received in watch: ${JSON.stringify(locationPoint)}`);
+
       if (!locationPoint) {
         lastLocationRef.current = locationPoint; // location could be null when watch timeout is reached
         return;
@@ -121,22 +123,24 @@ export const useLocationWatch = ({
 
       const lastAveragedLocation = locationAverager.calculateAveragedLocation();
       lastLocationRef.current = lastAveragedLocation;
+      log.debug(`Averaged location: ${JSON.stringify(lastAveragedLocation)}`);
 
       if (!lastAveragedLocation) return;
 
       const { accuracy: locationAccuracy } = lastAveragedLocation;
 
       const accuracyThresholdReached =
+        stopOnAccuracyThreshold &&
         locationAccuracy &&
         locationAccuracy <= locationAccuracyThreshold &&
         lastAveragedLocation.count > minLocationReadingsForAccuracyThreshold;
+      log.debug(`accuracyThresholdReached: ${accuracyThresholdReached}`);
       const timeoutReached =
         stopOnTimeout && locationSubscriptionRef.current === null;
+      log.debug(`timeoutReached: ${timeoutReached}`);
       const thresholdReached = accuracyThresholdReached || timeoutReached;
-      if (
-        (stopOnAccuracyThreshold && accuracyThresholdReached) ||
-        (stopOnTimeout && timeoutReached)
-      ) {
+      if (thresholdReached) {
+        log.debug("Threshold reached, stopping location watch");
         _stopLocationWatch();
       }
       const pointLatLong = locationPointToPoint(lastAveragedLocation);
@@ -166,6 +170,8 @@ export const useLocationWatch = ({
   }, [_stopLocationWatch, isMountedRef, locationCallback]);
 
   const startLocationWatch = useCallback(async () => {
+    log.debug("Starting location watch");
+
     if (!(await Permissions.requestLocationForegroundPermission())) {
       if (!(await Permissions.isLocationServiceEnabled())) {
         toaster("device:locationServiceDisabled.warning");

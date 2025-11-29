@@ -3658,6 +3658,7 @@ __metadata:
     react-native-error-boundary: "npm:^3.1.0"
     react-native-final-tree-view: "npm:^3.0.0"
     react-native-keychain: "npm:^10.0.0"
+    react-native-logs: "npm:^5.5.0"
     react-native-markdown-display: "npm:^7.0.2"
     react-native-modal-datetime-picker: "npm:^18.0.0"
     react-native-open-maps: "npm:^0.4.3"
@@ -9698,6 +9699,13 @@ __metadata:
   version: 10.0.0
   resolution: "react-native-keychain@npm:10.0.0"
   checksum: 10c0/a632ad27e58264506d2b373d329a867f042fb014e8a78db3a63031e953d61b5c98066eed1be238ee6c186d3f213d0efaa2a26526fb3a1d36a624c4460e982230
+  languageName: node
+  linkType: hard
+
+"react-native-logs@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "react-native-logs@npm:5.5.0"
+  checksum: 10c0/38b011a5cff39c672821baa15bf09e6a98caeab0b64cf6778fcf765f89382799b04dcb604399d016940796106d4187411add84d1de485dd38655c5dc9fc078c9
   languageName: node
   linkType: hard
 
