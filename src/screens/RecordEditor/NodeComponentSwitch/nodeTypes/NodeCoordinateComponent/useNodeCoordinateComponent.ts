@@ -271,16 +271,22 @@ export const useNodeCoordinateComponent = (props: any) => {
   );
 
   const onStartGpsPress = useCallback(async () => {
+    const valueExists =
+      Objects.isNotEmpty(uiValueX) && Objects.isNotEmpty(uiValueY);
     if (
-      Objects.isEmpty(uiValueX) ||
-      Objects.isEmpty(uiValueY) ||
-      (await confirm({
+      valueExists &&
+      !(await confirm({
         messageKey: "dataEntry:confirmOverwriteValue.message",
       }))
     ) {
-      await startLocationWatch();
+      return;
     }
-  }, [confirm, startLocationWatch, uiValueX, uiValueY]);
+    if (valueExists) {
+      // clear existing value before starting GPS
+      await updateNodeValue({ value: null, ignoreDelay: true });
+    }
+    await startLocationWatch();
+  }, [confirm, startLocationWatch, uiValueX, uiValueY, updateNodeValue]);
 
   const onStopGpsPress = useCallback(() => {
     stopLocationWatch();
