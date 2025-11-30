@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { KeyboardAvoidingView } from "react-native";
 import ErrorBoundary from "react-native-error-boundary";
 import { Provider as PaperProvider, ThemeProvider } from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Edges, SafeAreaView } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 
 import { AppConfirmDialog } from "appComponents/AppConfirmDialog";
@@ -18,14 +18,14 @@ import { BaseStyles, Environment, log } from "utils";
 import { AppInitializer } from "./src/AppInitializer";
 import styles from "./src/appStyles";
 
-const safeAreaEdges = ["right", "bottom", "left"];
+const safeAreaEdges: Edges = ["right", "bottom", "left"];
 
 const AppInnerContainer = () => {
   log.debug(`rendering AppInnerContainer`);
 
   const theme = useEffectiveTheme();
 
-  const onError = (error, stackTrace) => {
+  const onError = (error: Error, stackTrace: string) => {
     log.error(stackTrace, error);
   };
 
