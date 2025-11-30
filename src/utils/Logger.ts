@@ -4,8 +4,6 @@ import { Files } from "./Files";
 
 const logsDirectory = "logs";
 const logsPath = Files.path(Files.documentDirectory, logsDirectory);
-const LOG_FILE_MAX_SIZE = 1024 * 1024; // Example: 1 MB
-const MAX_LOG_FILES = 5;
 
 export const initializeLogger = async () => {
   await Files.mkDir(logsPath);
@@ -13,9 +11,7 @@ export const initializeLogger = async () => {
   try {
     await FileLogger.configure({
       logsDirectory,
-      logPrefix: "arena-mobile-",
-      maximumFileSize: LOG_FILE_MAX_SIZE,
-      maximumNumberOfFiles: MAX_LOG_FILES,
+      logPrefix: "arena-mobile",
     });
   } catch (error) {
     console.log("Error initializing logger: " + error);
