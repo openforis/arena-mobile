@@ -93,6 +93,11 @@ export const AppBar = (props: Props) => {
     [menuVisible]
   );
 
+  const onMenuDismiss = useCallback(
+    () => setState((statePrev) => ({ ...statePrev, menuVisible: false })),
+    []
+  );
+
   const onToggleScreenViewModePress = useCallback(
     () => dispatch(ScreenOptionsActions.toggleScreenViewMode({ screenKey })),
     [dispatch, screenKey]
@@ -204,7 +209,11 @@ export const AppBar = (props: Props) => {
         )}
 
         {hasOptionsMenuVisible && (
-          <OptionsMenu toggleMenu={toggleMenu} visible={menuVisible} />
+          <OptionsMenu
+            onDismiss={onMenuDismiss}
+            toggleMenu={toggleMenu}
+            visible={menuVisible}
+          />
         )}
       </HView>
       {isInTwoRows && (
