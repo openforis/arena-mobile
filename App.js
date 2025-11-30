@@ -21,13 +21,12 @@ import styles from "./src/appStyles";
 const safeAreaEdges = ["right", "bottom", "left"];
 
 const AppInnerContainer = () => {
-  if (__DEV__) {
-    log.debug(`rendering AppInnerContainer`);
-  }
+  log.debug(`rendering AppInnerContainer`);
+
   const theme = useEffectiveTheme();
 
   const onError = (error, stackTrace) => {
-    log.debug(stackTrace, error);
+    log.error(stackTrace, error);
   };
 
   const internalContainer = (
@@ -64,9 +63,7 @@ const AppInnerContainer = () => {
 };
 
 const App = () => {
-  if (__DEV__) {
-    console.log(`rendering App`);
-  }
+  log.debug(`rendering App`);
   return (
     <Provider store={store}>
       <AppInnerContainer />
