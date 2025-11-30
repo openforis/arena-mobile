@@ -7,6 +7,7 @@ import { DataTableField } from "components/DataTable/DataTable";
 import { useTranslation } from "localization";
 import { SortObject } from "model";
 import { RecordNodes } from "model/utils/RecordNodes";
+import { log } from "utils";
 import {
   DataEntryActions,
   DataEntrySelectors,
@@ -47,12 +48,10 @@ export const NodeMultipleEntityListComponent = (
   const { t } = useTranslation();
   const [sort, setSort] = useState(undefined as SortObject | undefined);
 
-  if (__DEV__) {
-    console.log(
-      "Rendering NodeMultipleEntityListComponent for " +
-        NodeDefs.getName(entityDef)
-    );
-  }
+  log.debug(
+    "Rendering NodeMultipleEntityListComponent for " +
+      NodeDefs.getName(entityDef)
+  );
 
   const entityDefUuid = entityDef.uuid;
   const survey = SurveySelectors.useCurrentSurvey();

@@ -4,6 +4,7 @@ import { List as RNPList } from "react-native-paper";
 
 import { Arrays } from "@openforis/arena-core";
 
+import { log } from "utils";
 import { Checkbox } from "../Checkbox";
 import { RadioButton } from "../RadioButton";
 
@@ -54,9 +55,7 @@ export const SelectableList = (props: SelectableListProps) => {
     style,
   } = props;
 
-  if (__DEV__) {
-    console.log(`rendering SelectableList`);
-  }
+  log.debug(`rendering SelectableList`);
 
   const onItemSelect = useCallback(
     (item: any) => {

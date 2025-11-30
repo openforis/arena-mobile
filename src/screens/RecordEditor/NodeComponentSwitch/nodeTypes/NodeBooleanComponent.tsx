@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react";
 
 import { SegmentedButtons, View } from "components";
+import { log } from "utils";
 
 import { useNodeComponentLocalState } from "../../useNodeComponentLocalState";
 import { NodeComponentProps } from "./nodeComponentPropTypes";
@@ -18,9 +19,7 @@ const rtlStyle = { alignSelf: "flex-end" };
 export const NodeBooleanComponent = (props: NodeComponentProps) => {
   const { nodeDef, nodeUuid } = props;
 
-  if (__DEV__) {
-    console.log(`rendering NodeBooleanComponent for ${nodeDef.props.name}`);
-  }
+  log.debug(`rendering NodeBooleanComponent for ${nodeDef.props.name}`);
   const isRtl = useIsTextDirectionRtl();
   const { value, updateNodeValue } = useNodeComponentLocalState({
     nodeUuid,
@@ -36,9 +35,10 @@ export const NodeBooleanComponent = (props: NodeComponentProps) => {
   const labelValue = nodeDef.props.labelValue ?? "trueFalse";
 
   const getLabelKey = useCallback(
-    (booleanValue: any) => labelValue === "trueFalse"
-      ? booleanValue
-      : yesNoValueByBooleanValue[booleanValue],
+    (booleanValue: any) =>
+      labelValue === "trueFalse"
+        ? booleanValue
+        : yesNoValueByBooleanValue[booleanValue],
     [labelValue]
   );
 

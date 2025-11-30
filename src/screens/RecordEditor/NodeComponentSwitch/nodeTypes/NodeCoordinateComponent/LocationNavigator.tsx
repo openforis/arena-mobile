@@ -8,7 +8,7 @@ import { useLocationWatch, useMagnetometerHeading } from "hooks";
 import { Button, FormItem, HView, Modal, Text, View, VView } from "components";
 import { LocationPoint } from "model";
 import { SurveySelectors } from "state";
-import { SystemUtils } from "utils";
+import { SystemUtils, log } from "utils";
 
 import styles from "./locationNavigatorStyles";
 
@@ -87,9 +87,7 @@ type LocationNavigatorProps = {
 export const LocationNavigator = (props: LocationNavigatorProps) => {
   const { targetPoint, onDismiss, onUseCurrentLocation } = props;
 
-  if (__DEV__) {
-    console.log(`rendering LocationNavigator`);
-  }
+  log.debug(`rendering LocationNavigator`);
 
   const theme = useTheme();
 
@@ -100,17 +98,13 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
   const srsIndex = SurveySelectors.useCurrentSurveySrsIndex();
 
   const updateState = useCallback((params: any) => {
-    if (__DEV__) {
-      console.log("LocationNavigator: updateState");
-    }
+    log.debug("LocationNavigator: updateState");
     setState((statePrev) => ({ ...statePrev, ...params }));
   }, []);
 
   const locationCallback = useCallback(
     ({ location, locationAccuracy, pointLatLong }: any) => {
-      if (__DEV__) {
-        console.log(`LocationNavigator location callback`, location);
-      }
+      log.debug(`LocationNavigator location callback`, location);
       if (!location) return;
       const angleToTargetNew = calculateAngleBetweenPoints(
         pointLatLong,

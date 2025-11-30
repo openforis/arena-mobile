@@ -1,3 +1,4 @@
+import { log } from "utils";
 import { FieldSet } from "../FieldSet";
 import { Button } from "../Button";
 import { HView } from "../HView";
@@ -32,9 +33,7 @@ export const LocationWatchingMonitor = (
     watchingLocation,
   } = props;
 
-  if (__DEV__) {
-    console.log(`rendering LocationWatchingMonitor`);
-  }
+  log.debug(`rendering LocationWatchingMonitor`);
 
   const locationAccuracyFormatted =
     typeof locationAccuracy === "string"

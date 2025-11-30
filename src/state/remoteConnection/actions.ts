@@ -2,6 +2,7 @@ import { i18n } from "localization";
 import { UserLogoutOptions } from "model/UserLogoutOptions";
 import { AuthService, SecureStoreService, SettingsService } from "service";
 import { screenKeys } from "screens/screenKeys";
+import { log } from "utils";
 
 import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { MessageActions } from "../message";
@@ -126,7 +127,7 @@ const login =
   };
 
 const fetchLoggedInUserProfileIcon = async (dispatch: any, getState: any) => {
-  if (__DEV__) console.log("fetching user profile icon");
+  log.debug("fetching user profile icon");
   const state = getState();
   const user = RemoteConnectionSelectors.selectLoggedUser(state);
   if (!user) return;

@@ -7,6 +7,7 @@ import { HView, Spacer, Text } from "components";
 import { useScreenKey } from "hooks";
 import { RecordEditViewMode, ScreenViewMode } from "model";
 import { useIsTextDirectionRtl, useTranslation } from "localization";
+import { log } from "utils";
 import { screenKeys } from "screens";
 import { Breadcrumbs } from "screens/RecordEditor/Breadcrumbs";
 import {
@@ -32,9 +33,7 @@ type Props = {
 };
 
 export const AppBar = (props: Props) => {
-  if (__DEV__) {
-    console.log(`rendering AppBar`);
-  }
+  log.debug(`rendering AppBar`);
   const { back, navigation, options } = props;
 
   const { t } = useTranslation();

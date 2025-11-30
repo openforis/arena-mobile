@@ -5,6 +5,7 @@ import { NodeDefs } from "@openforis/arena-core";
 import { Button, CloseIconButton, HView, Text, VView, View } from "components";
 import { RecordEditViewMode } from "model";
 import { SurveyOptionsSelectors } from "state";
+import { log } from "utils";
 
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 import { NodeTaxonEditDialog } from "./NodeTaxonEditDialog";
@@ -23,11 +24,7 @@ type NodeTaxonComponentProps = {
 export const NodeTaxonComponent = (props: NodeTaxonComponentProps) => {
   const { nodeDef, nodeUuid, parentNodeUuid } = props;
 
-  if (__DEV__) {
-    console.log(
-      `rendering NodeTaxonComponent for ${NodeDefs.getName(nodeDef)}`
-    );
-  }
+  log.debug(`rendering NodeTaxonComponent for ${NodeDefs.getName(nodeDef)}`);
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);

@@ -5,6 +5,7 @@ import { useIsTextDirectionRtl } from "localization";
 import { DataEntryActions } from "state/dataEntry/actions";
 import { DataEntrySelectors } from "state/dataEntry/selectors";
 import { useAppDispatch } from "state/store";
+import { log } from "utils";
 
 import { BreadcrumbItem } from "./BreadcrumbItem";
 import { useBreadcrumbItems } from "./useBreadcrumbItems";
@@ -12,9 +13,7 @@ import { useBreadcrumbItems } from "./useBreadcrumbItems";
 import styles from "./styles";
 
 export const Breadcrumbs = () => {
-  if (__DEV__) {
-    console.log(`rendering Breadcrumbs`);
-  }
+  log.debug(`rendering Breadcrumbs`);
   const dispatch = useAppDispatch();
   const isRtl = useIsTextDirectionRtl();
   const scrollViewRef = useRef(null as any);

@@ -7,6 +7,7 @@ import { FullBackupButton } from "appComponents/FullBackupButton";
 import { Card, ScreenView, VView } from "components";
 import { SettingsModel } from "model";
 import { SettingsActions, SettingsSelectors, useAppDispatch } from "state";
+import { log } from "utils";
 
 import { SettingsItem } from "./SettingsItem";
 import styles from "./styles";
@@ -14,9 +15,7 @@ import styles from "./styles";
 const settingsPropertiesEntries = Object.entries(SettingsModel.properties);
 
 export const SettingsScreen = () => {
-  if (__DEV__) {
-    console.log(`rendering SettingsScreen`);
-  }
+  log.debug(`rendering SettingsScreen`);
   const dispatch = useAppDispatch();
 
   const settingsStored = SettingsSelectors.useSettings();

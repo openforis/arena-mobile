@@ -11,6 +11,7 @@ import {
 } from "components";
 import { i18n } from "localization";
 import { SettingsModel } from "model";
+import { log } from "utils";
 import { SettingsFormItem } from "./SettingsFormItem";
 
 const numberToString = (value: any) =>
@@ -30,9 +31,7 @@ type SettingsItemProps = {
 
 export const SettingsItem = (props: SettingsItemProps) => {
   const { settings, settingKey, prop, onPropValueChange } = props;
-  if (__DEV__) {
-    console.log("rendering SettingsItem " + settingKey);
-  }
+  log.debug("rendering SettingsItem " + settingKey);
   const {
     type,
     labelKey: labelKeyProp,

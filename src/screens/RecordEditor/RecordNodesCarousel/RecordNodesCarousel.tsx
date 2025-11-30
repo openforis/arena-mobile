@@ -5,6 +5,7 @@ import Dots from "react-native-dots-pagination";
 import { NodeDefs } from "@openforis/arena-core";
 
 import { DataEntryActions, DataEntrySelectors } from "state/dataEntry";
+import { log } from "utils";
 
 import { VView, View } from "components";
 import { useAppDispatch } from "state/store";
@@ -18,11 +19,7 @@ export const RecordNodesCarousel = () => {
   const { entityDef, entityUuid, parentEntityUuid } =
     DataEntrySelectors.useCurrentPageEntity();
 
-  if (__DEV__) {
-    console.log(
-      `rendering RecordNodesCarousel of ${NodeDefs.getName(entityDef)}`
-    );
-  }
+  log.debug(`rendering RecordNodesCarousel of ${NodeDefs.getName(entityDef)}`);
 
   const pagerViewRef = useRef(null);
   const pagerViewScrollStateRef = useRef(null);

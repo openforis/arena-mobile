@@ -138,9 +138,6 @@ export const AppInitializer = (props: Props) => {
       })
       .catch((err) => {
         log.error("Error during app initialization", err);
-        if (__DEV__) {
-          console.error("===error", err);
-        }
         const errorMessage =
           err instanceof DowngradeError
             ? "Downgrade error"

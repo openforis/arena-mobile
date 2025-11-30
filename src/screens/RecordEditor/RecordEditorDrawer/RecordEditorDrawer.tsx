@@ -8,6 +8,7 @@ import { GpsLockingEnabledWarning } from "appComponents/GpsLockingEnabledWarning
 import { NavigateToRecordsListButton } from "appComponents/NavigateToRecordsListButton";
 import { RecordEditViewMode } from "model";
 import { screenKeys } from "screens/screenKeys";
+import { log } from "utils";
 import {
   DataEntryActions,
   DataEntrySelectors,
@@ -22,9 +23,7 @@ import { PageNodesList } from "../PageNodesList";
 import { useStyles } from "./styles";
 
 export const RecordEditorDrawer = () => {
-  if (__DEV__) {
-    console.log(`rendering RecordEditorDrawer`);
-  }
+  log.debug(`rendering RecordEditorDrawer`);
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
   const survey = SurveySelectors.useCurrentSurvey()!;

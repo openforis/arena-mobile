@@ -11,6 +11,7 @@ import {
   VView,
 } from "components";
 import { LocationWatchingMonitor } from "components/LocationWatchingMonitor";
+import { log } from "utils";
 import { SrsDropdown } from "../../../SrsDropdown";
 import { useNodeCoordinateComponent } from "./useNodeCoordinateComponent";
 import { LocationNavigator } from "./LocationNavigator";
@@ -21,9 +22,7 @@ import styles from "./styles";
 export const NodeCoordinateComponent = (props: NodeComponentProps) => {
   const { nodeDef } = props;
 
-  if (__DEV__) {
-    console.log(`rendering NodeCoordinateComponent for ${nodeDef.props.name}`);
-  }
+  log.debug(`rendering NodeCoordinateComponent for ${nodeDef.props.name}`);
 
   const {
     accuracy,

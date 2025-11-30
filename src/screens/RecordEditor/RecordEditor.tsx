@@ -7,6 +7,7 @@ import { HView, VView, View } from "components";
 import { useIsTextDirectionRtl } from "localization";
 import { RecordEditViewMode } from "model";
 import { useBackHandler, useNavigationIsFocused } from "hooks";
+import { log } from "utils";
 import {
   DataEntryActions,
   DataEntrySelectors,
@@ -25,9 +26,7 @@ import { StatusBar } from "./StatusBar";
 import styles from "./styles";
 
 export const RecordEditor = () => {
-  if (__DEV__) {
-    console.log(`rendering RecordEditor`);
-  }
+  log.debug(`rendering RecordEditor`);
   const dispatch = useAppDispatch();
   const pageSelectorOpen = DataEntrySelectors.useIsRecordPageSelectorMenuOpen();
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
