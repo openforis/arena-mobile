@@ -3656,9 +3656,9 @@ __metadata:
     react-native-dots-pagination: "npm:^0.3.1"
     react-native-dropdown-picker: "npm:^5.4.6"
     react-native-error-boundary: "npm:^3.1.0"
-    react-native-file-logger: "npm:^0.7.1"
     react-native-final-tree-view: "npm:^3.0.0"
     react-native-keychain: "npm:^10.0.0"
+    react-native-logs: "npm:^5.5.0"
     react-native-markdown-display: "npm:^7.0.2"
     react-native-modal-datetime-picker: "npm:^18.0.0"
     react-native-open-maps: "npm:^0.4.3"
@@ -6312,13 +6312,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"generator-function@npm:^2.0.0":
-  version: 2.0.1
-  resolution: "generator-function@npm:2.0.1"
-  checksum: 10c0/8a9f59df0f01cfefafdb3b451b80555e5cf6d76487095db91ac461a0e682e4ff7a9dbce15f4ecec191e53586d59eece01949e05a4b4492879600bbbe8e28d6b8
-  languageName: node
-  linkType: hard
-
 "gensync@npm:^1.0.0-beta.2":
   version: 1.0.0-beta.2
   resolution: "gensync@npm:1.0.0-beta.2"
@@ -6799,7 +6792,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inherits@npm:2, inherits@npm:2.0.4, inherits@npm:^2.0.3, inherits@npm:~2.0.3":
+"inherits@npm:2, inherits@npm:2.0.4, inherits@npm:~2.0.3":
   version: 2.0.4
   resolution: "inherits@npm:2.0.4"
   checksum: 10c0/4e531f648b29039fb7426fb94075e6545faa1eb9fe83c29f0b6d9e7263aceb4289d2d4557db0d428188eeb449cc7c5e77b0a0b2c4e248ff2a65933a0dee49ef2
@@ -6849,16 +6842,6 @@ __metadata:
     jsbn: "npm:1.1.0"
     sprintf-js: "npm:^1.1.3"
   checksum: 10c0/331cd07fafcb3b24100613e4b53e1a2b4feab11e671e655d46dc09ee233da5011284d09ca40c4ecbdfe1d0004f462958675c224a804259f2f78d2465a87824bc
-  languageName: node
-  linkType: hard
-
-"is-arguments@npm:^1.0.4":
-  version: 1.2.0
-  resolution: "is-arguments@npm:1.2.0"
-  dependencies:
-    call-bound: "npm:^1.0.2"
-    has-tostringtag: "npm:^1.0.2"
-  checksum: 10c0/6377344b31e9fcb707c6751ee89b11f132f32338e6a782ec2eac9393b0cbd32235dad93052998cda778ee058754860738341d8114910d50ada5615912bb929fc
   languageName: node
   linkType: hard
 
@@ -7007,19 +6990,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-generator-function@npm:^1.0.7":
-  version: 1.1.2
-  resolution: "is-generator-function@npm:1.1.2"
-  dependencies:
-    call-bound: "npm:^1.0.4"
-    generator-function: "npm:^2.0.0"
-    get-proto: "npm:^1.0.1"
-    has-tostringtag: "npm:^1.0.2"
-    safe-regex-test: "npm:^1.1.0"
-  checksum: 10c0/83da102e89c3e3b71d67b51d47c9f9bc862bceb58f87201727e27f7fa19d1d90b0ab223644ecaee6fc6e3d2d622bb25c966fbdaf87c59158b01ce7c0fe2fa372
-  languageName: node
-  linkType: hard
-
 "is-glob@npm:^4.0.0, is-glob@npm:^4.0.1, is-glob@npm:^4.0.3":
   version: 4.0.3
   resolution: "is-glob@npm:4.0.3"
@@ -7116,7 +7086,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-typed-array@npm:^1.1.13, is-typed-array@npm:^1.1.14, is-typed-array@npm:^1.1.15, is-typed-array@npm:^1.1.3":
+"is-typed-array@npm:^1.1.13, is-typed-array@npm:^1.1.14, is-typed-array@npm:^1.1.15":
   version: 1.1.15
   resolution: "is-typed-array@npm:1.1.15"
   dependencies:
@@ -9694,18 +9664,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-file-logger@npm:^0.7.1":
-  version: 0.7.1
-  resolution: "react-native-file-logger@npm:0.7.1"
-  dependencies:
-    util: "npm:^0.12.5"
-  peerDependencies:
-    react: ">=16.0.0"
-    react-native: ">=0.60.0"
-  checksum: 10c0/3c81ad93fd341ee23f6e1770599f8966aaae1d4bc698b6c89cd1184298c7b8ed022e41c7f9aec6951ffbc15c80397d69c8cfe2c4bc5a6a7def1863a702533ba7
-  languageName: node
-  linkType: hard
-
 "react-native-final-tree-view@npm:^3.0.0":
   version: 3.0.0
   resolution: "react-native-final-tree-view@npm:3.0.0"
@@ -9741,6 +9699,13 @@ __metadata:
   version: 10.0.0
   resolution: "react-native-keychain@npm:10.0.0"
   checksum: 10c0/a632ad27e58264506d2b373d329a867f042fb014e8a78db3a63031e953d61b5c98066eed1be238ee6c186d3f213d0efaa2a26526fb3a1d36a624c4460e982230
+  languageName: node
+  linkType: hard
+
+"react-native-logs@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "react-native-logs@npm:5.5.0"
+  checksum: 10c0/38b011a5cff39c672821baa15bf09e6a98caeab0b64cf6778fcf765f89382799b04dcb604399d016940796106d4187411add84d1de485dd38655c5dc9fc078c9
   languageName: node
   linkType: hard
 
@@ -11560,19 +11525,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"util@npm:^0.12.5":
-  version: 0.12.5
-  resolution: "util@npm:0.12.5"
-  dependencies:
-    inherits: "npm:^2.0.3"
-    is-arguments: "npm:^1.0.4"
-    is-generator-function: "npm:^1.0.7"
-    is-typed-array: "npm:^1.1.3"
-    which-typed-array: "npm:^1.1.2"
-  checksum: 10c0/c27054de2cea2229a66c09522d0fa1415fb12d861d08523a8846bf2e4cbf0079d4c3f725f09dcb87493549bcbf05f5798dce1688b53c6c17201a45759e7253f3
-  languageName: node
-  linkType: hard
-
 "utils-merge@npm:1.0.1":
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
@@ -11750,7 +11702,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"which-typed-array@npm:^1.1.16, which-typed-array@npm:^1.1.18, which-typed-array@npm:^1.1.2":
+"which-typed-array@npm:^1.1.16, which-typed-array@npm:^1.1.18":
   version: 1.1.19
   resolution: "which-typed-array@npm:1.1.19"
   dependencies:
