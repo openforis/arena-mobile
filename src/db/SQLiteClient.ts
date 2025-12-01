@@ -1,4 +1,5 @@
 import * as SQLite from "expo-sqlite";
+import { log } from "utils";
 
 export class DowngradeError extends Error {
   constructor() {
@@ -54,7 +55,7 @@ export default class SQLiteClient {
       return { dbMigrationsRun: false };
     }
     try {
-      console.log("=== DB connection start ===");
+      log.debug("=== DB connection start ===");
 
       this.privateDb = await SQLite.openDatabaseAsync(this.name);
 
@@ -62,10 +63,10 @@ export default class SQLiteClient {
         await this.runMigrationsIfNecessary();
 
       this.privateConnected = true;
-      console.log("=== DB connection complete ===");
+      log.debug("=== DB connection complete ===");
       return { dbMigrationsRun, prevDbVersion, nextDbVersion };
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       if (error instanceof DowngradeError) {
         throw error;
       }
@@ -78,9 +79,9 @@ export default class SQLiteClient {
   async runMigrationsIfNecessary() {
     const dbUserVersionRow: any = await this.one("PRAGMA user_version");
     const prevDbVersion = dbUserVersionRow.user_version;
-    console.log(`==== current DB version: ${prevDbVersion}`);
+    log.debug(`==== current DB version: ${prevDbVersion}`);
     const nextDbVersion = this.migrations.length;
-    console.log(`==== next DB version: ${nextDbVersion}`);
+    log.debug(`==== next DB version: ${nextDbVersion}`);
     if (prevDbVersion > nextDbVersion) {
       throw new DowngradeError();
     }
@@ -91,13 +92,13 @@ export default class SQLiteClient {
         nextDbVersion
       );
       let currentDbVersion = prevDbVersion;
-      console.log("==== DB migrations start ====");
+      log.debug("==== DB migrations start ====");
       for (const migration of migrationsToRun) {
         await migration(this);
         currentDbVersion += 1;
         await this.runSql(`PRAGMA user_version = ${currentDbVersion}`);
       }
-      console.log("==== DB migrations complete ====");
+      log.debug("==== DB migrations complete ====");
     }
     return {
       dbMigrationsRun: dbMigrationsNecessary,

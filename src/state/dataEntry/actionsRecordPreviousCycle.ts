@@ -1,6 +1,7 @@
 import { Objects } from "@openforis/arena-core";
 
 import { Cycles, RecordLoadStatus, RecordNodes, RecordOrigin } from "model";
+import { log } from "utils";
 import { RecordService } from "service";
 import { ToastActions } from "../toast";
 import { ConfirmUtils } from "../confirm";
@@ -129,7 +130,7 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
       ),
     };
   } catch (error) {
-    console.log("====error", error);
+    log.error(error);
     return null;
   } finally {
     dispatch({ type: RECORD_PREVIOUS_CYCLE_LOAD, loading: false });
