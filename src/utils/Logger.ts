@@ -1,9 +1,10 @@
 import {
-  logger,
-  fileAsyncTransport,
   consoleTransport,
+  fileAsyncTransport,
+  logger,
 } from "react-native-logs";
 import * as FileSystem from "expo-file-system/legacy";
+
 import { Files } from "./Files";
 
 const maxRotatedFiles = 5; // Total log files will be 6 (Current + 5 Rotated)
@@ -34,13 +35,10 @@ const rotateLogFilesOnStartup = async (filePath: string): Promise<void> => {
     const currentLogInfo = await FileSystem.getInfoAsync(currentLogPath);
 
     if (currentLogInfo.exists) {
-      console.log("Log file found at startup. Initiating rotation...");
-
       const oldestLogFileName = `${logFileNamePrefix}.${maxRotatedFiles}.log`;
       // 1. Delete the oldest log file (arena-mobile.5.log)
       const oldestLogPath = Files.path(filePath, oldestLogFileName);
       await FileSystem.deleteAsync(oldestLogPath, { idempotent: true });
-      console.log(`Deleted oldest log: ${oldestLogFileName}`);
 
       // 2. Shift existing rotated files up (e.g., 4 -> 5, 3 -> 4, etc.)
       for (let i = maxRotatedFiles - 1; i >= 1; i--) {
@@ -103,8 +101,9 @@ const argToString = (arg: any): string => {
 };
 const write = (level: LogLevel, ...args: any[]) => {
   const msg = args.map(argToString).join(" ");
+  const logFunc = _log?.[level];
   try {
-    _log ? _log[level]?.(msg) : console.log(msg);
+    logFunc ? logFunc(msg) : console.log(msg);
   } catch (error) {
     console.log(msg);
   }
