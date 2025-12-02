@@ -17,6 +17,11 @@ export default {
   locationAccuracyThreshold: "Sijainnin tarkkuuden kynnysarvo (metriä)",
   locationAccuracyWatchTimeout:
     "Sijainnin tarkkuuden seuranta-aika: {{value}} sekuntia",
+  locationAveragingEnabled: {
+    label: "Sijainnin keskiarvoistus käytössä",
+    description:
+      "Kun tämä on käytössä, tallennettu sijainti on useiden sijaintilukemien keskiarvo, mikä parantaa tarkkuutta",
+  },
   locationGpsLocked: {
     label: "GPS lukittu",
     description: `Varoitus: akun kulutus kasvaa!

@@ -17,6 +17,11 @@ export default {
   locationAccuracyThreshold: "Tröskelvärde för platsnoggrannhet (meter)",
   locationAccuracyWatchTimeout:
     "Timeout för övervakning av platsnoggrannhet: {{value}} sekunder",
+  locationAveragingEnabled: {
+    label: "Platsgenomsnitt aktiverat",
+    description:
+      "När aktiverat kommer den inspelade platsen att vara genomsnittet av flera platsavläsningar, vilket förbättrar noggrannheten",
+  },
   locationGpsLocked: {
     label: "GPS låst",
     description: `Varning: batteriförbrukningen kommer att öka!

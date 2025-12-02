@@ -18,6 +18,11 @@ export default {
     "Schwellenwert für die Standortgenauigkeit (Meter)",
   locationAccuracyWatchTimeout:
     "Timeout für die Überwachung der Standortgenauigkeit: {{value}} Sekunden",
+  locationAveragingEnabled: {
+    label: "Standortmittelung aktiviert",
+    description:
+      "Wenn aktiviert, ist der aufgezeichnete Standort der Durchschnitt mehrerer Standortmessungen, was die Genauigkeit verbessert",
+  },
   locationGpsLocked: {
     label: "GPS gesperrt",
     description: `Warnung: Der Batterieverbrauch wird steigen!
@@ -26,6 +31,7 @@ export default {
     error:
       "GPS-Sperrung kann nicht gestartet werden: Standortanbieter nicht verfügbar oder Zugriff auf den Standort nicht gewährt",
   },
+
   showStatusBar: "Statusleiste anzeigen",
   theme: {
     label: "Design",

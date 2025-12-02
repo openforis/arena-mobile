@@ -14,6 +14,11 @@ export default {
   locationAccuracyThreshold: "Limite de precisão da localização (metros)",
   locationAccuracyWatchTimeout:
     "Tempo limite de verificação da precisão da localização: {{value}} segundos",
+  locationAveragingEnabled: {
+    label: "Média de localização ativada",
+    description:
+      "Quando ativada, a localização registada será a média de múltiplas leituras de localização, melhorando a precisão",
+  },
   locationGpsLocked: {
     label: "GPS bloqueado",
     description:
