@@ -75,7 +75,11 @@ export const SettingsScreen = () => {
         <Card titleKey="app:backup">
           <FullBackupButton />
         </Card>
-        <Card contentStyle={styles.logsCardContent} titleKey="app:logs.title">
+        <Card
+          contentStyle={styles.logsCardContent}
+          titleKey="app:logs.title"
+          subtitleKey="app:logs.subtitle"
+        >
           <Button
             icon="download"
             onPress={onExportLogsPress}

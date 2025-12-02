@@ -32,6 +32,7 @@ export default {
   },
   logs: {
     title: "መዝገቦች",
+    subtitle: "የመዝገብ ፋይሎች ችግሮችን ለመፍታት የሚረዱ የምርመራ መረጃዎችን ያከማቹ።",
     clear: {
       label: "መዝገቦችን አጽዳ",
       confirmMessage: "ሁሉንም የመዝገብ ፋይሎች መሰረዝ እርግጠኛ ነዎት?",

@@ -36,6 +36,8 @@ export default {
   },
   logs: {
     title: "Journaux",
+    subtitle:
+      "Les fichiers journaux stockent des informations de diagnostic qui peuvent aider à résoudre les problèmes.",
     clear: {
       label: "Effacer les journaux",
       confirmMessage:

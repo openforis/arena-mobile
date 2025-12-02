@@ -34,6 +34,8 @@ The size will be around {{size}}.`,
   },
   logs: {
     title: "Logs",
+    subtitle:
+      "Log files store diagnostic information that can help troubleshoot issues.",
     clear: {
       label: "Clear Logs",
       confirmMessage: "Are you sure you want to delete all log files?",

@@ -34,6 +34,8 @@ export default {
   },
   logs: {
     title: "Log",
+    subtitle:
+      "File log menyimpan informasi diagnostik yang dapat membantu memecahkan masalah.",
     clear: {
       label: "Hapus log",
       confirmMessage: "Apakah Anda yakin ingin menghapus semua file log?",

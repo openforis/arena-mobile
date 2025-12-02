@@ -33,6 +33,8 @@ export default {
   },
   logs: {
     title: "Registos",
+    subtitle:
+      "Os ficheiros de registo armazenam informações de diagnóstico que podem ajudar a resolver problemas.",
     clear: {
       label: "Limpar registos",
       confirmMessage:

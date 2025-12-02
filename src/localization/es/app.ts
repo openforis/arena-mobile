@@ -34,6 +34,8 @@ export default {
   },
   logs: {
     title: "Registros",
+    subtitle:
+      "Los archivos de registro almacenan información de diagnóstico que puede ayudar a solucionar problemas.",
     clear: {
       label: "Borrar registros",
       confirmMessage:

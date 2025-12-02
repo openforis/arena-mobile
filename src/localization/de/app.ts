@@ -34,6 +34,8 @@ export default {
   },
   logs: {
     title: "Protokolle",
+    subtitle:
+      "Protokolldateien speichern Diagnoseinformationen, die bei der Fehlerbehebung helfen können.",
     clear: {
       label: "Protokolle löschen",
       confirmMessage:

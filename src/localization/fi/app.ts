@@ -34,6 +34,8 @@ export default {
   },
   logs: {
     title: "Lokit",
+    subtitle:
+      "Lokitiedostot tallentavat diagnostiikkatietoja, jotka voivat auttaa ongelmien ratkaisemisessa.",
     clear: {
       label: "Tyhjennä lokit",
       confirmMessage: "Haluatko varmasti poistaa kaikki lokitiedostot?",
