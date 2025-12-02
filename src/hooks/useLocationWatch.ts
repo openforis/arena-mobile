@@ -111,35 +111,40 @@ export const useLocationWatch = ({
   }, [clearLocationWatchTimeout]);
 
   const locationCallback = useCallback(
-    (locationPoint: LocationPoint | null) => {
-      log.debug(`Location received in watch: ${JSON.stringify(locationPoint)}`);
+    (locationPointParam: LocationPoint | null) => {
+      log.debug(
+        `Location received in watch: ${JSON.stringify(locationPointParam)}`
+      );
 
-      if (!locationPoint) {
-        lastLocationRef.current = locationPoint; // location could be null when watch timeout is reached
+      if (!locationPointParam) {
+        lastLocationRef.current = locationPointParam; // location could be null when watch timeout is reached
         return;
       }
-      const locationAverager = locationAveragerRef.current;
-      if (!locationAverager) return;
 
-      locationAverager.addReading(locationPoint);
+      let locationPoint: LocationPoint | AveragedLocation | null =
+        locationPointParam;
 
-      const locationPointToConsider = locationAveragingEnabled
-        ? locationAverager.calculateAveragedLocation()
-        : locationPoint;
-      lastLocationRef.current = locationPointToConsider;
+      if (locationAveragingEnabled) {
+        const locationAverager = locationAveragerRef.current;
+        if (!locationAverager) return;
+        locationAverager.addReading(locationPointParam);
+        locationPoint = locationAverager.calculateAveragedLocation();
+      }
 
-      log.debug(`Location used: ${JSON.stringify(locationPointToConsider)}`);
+      lastLocationRef.current = locationPoint;
 
-      if (!locationPointToConsider) return;
+      log.debug(`Location used: ${JSON.stringify(locationPoint)}`);
 
-      const { accuracy: locationAccuracy } = locationPointToConsider;
+      if (!locationPoint) return;
+
+      const { accuracy: locationAccuracy } = locationPoint;
 
       const accuracyThresholdReached =
         stopOnAccuracyThreshold &&
         locationAccuracy &&
         locationAccuracy <= locationAccuracyThreshold &&
         (!locationAveragingEnabled ||
-          (locationPointToConsider as AveragedLocation).count >
+          (locationPoint as AveragedLocation).count >
             minLocationReadingsForAccuracyThreshold);
 
       const timeoutReached =
@@ -151,10 +156,10 @@ export const useLocationWatch = ({
         log.debug("Threshold reached, stopping location watch");
         _stopLocationWatch();
       }
-      const pointLatLong = locationPointToPoint(locationPointToConsider);
+      const pointLatLong = locationPointToPoint(locationPoint);
 
       locationCallbackProp({
-        location: locationPointToConsider,
+        location: locationPoint,
         locationAccuracy,
         pointLatLong,
         thresholdReached,
@@ -193,7 +198,9 @@ export const useLocationWatch = ({
       { accuracy, distanceInterval },
       (location) => locationCallback(locationToLocationPoint(location))
     );
-    locationAveragerRef.current = new LocationAverager();
+    if (locationAveragingEnabled) {
+      locationAveragerRef.current = new LocationAverager();
+    }
 
     if (stopOnTimeout) {
       locationWatchIntervalRef.current = setInterval(() => {
@@ -218,9 +225,10 @@ export const useLocationWatch = ({
     _stopLocationWatch,
     accuracy,
     distanceInterval,
-    locationCallback,
+    locationAveragingEnabled,
     stopOnTimeout,
     toaster,
+    locationCallback,
     locationWatchTimeout,
     stopLocationWatch,
   ]);
