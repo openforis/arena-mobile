@@ -62,6 +62,45 @@ const rotateLogFilesOnStartup = async (filePath: string): Promise<void> => {
   }
 };
 
+const argToString = (arg: any): string => {
+  if (typeof arg === "string") {
+    return arg;
+  } else if (arg instanceof Error) {
+    return arg.message;
+  } else {
+    try {
+      return JSON.stringify(arg);
+    } catch {
+      return String(arg);
+    }
+  }
+};
+
+const write = (level: LogLevel, ...args: any[]) => {
+  const msg = args.map(argToString).join(" ");
+  const logFunc = _log?.[level];
+  try {
+    logFunc ? logFunc(msg) : console.log(msg);
+  } catch (error) {
+    console.log(msg);
+  }
+};
+
+export const log = {
+  debug: (...args: any[]) => {
+    write(LogLevel.Debug, ...args);
+  },
+  info: (...args: any[]) => {
+    write(LogLevel.Info, ...args);
+  },
+  warn: (...args: any[]) => {
+    write(LogLevel.Warning, ...args);
+  },
+  error: (...args: any[]) => {
+    write(LogLevel.Error, ...args);
+  },
+};
+
 export const initializeLogger = async () => {
   await Files.mkDir(logsPath);
 
@@ -81,31 +120,9 @@ export const initializeLogger = async () => {
         filePath: logsPath,
       },
     });
+    log.debug("Logger initialized");
   } catch (error) {
     console.error("Error initializing logger: " + error);
-  }
-};
-
-const argToString = (arg: any): string => {
-  if (typeof arg === "string") {
-    return arg;
-  } else if (arg instanceof Error) {
-    return arg.message;
-  } else {
-    try {
-      return JSON.stringify(arg);
-    } catch {
-      return String(arg);
-    }
-  }
-};
-const write = (level: LogLevel, ...args: any[]) => {
-  const msg = args.map(argToString).join(" ");
-  const logFunc = _log?.[level];
-  try {
-    logFunc ? logFunc(msg) : console.log(msg);
-  } catch (error) {
-    console.log(msg);
   }
 };
 
@@ -116,19 +133,4 @@ export const clear = async () => {
     await Files.del(filePath, true);
   }
   await initializeLogger();
-};
-
-export const log = {
-  debug: (...args: any[]) => {
-    write(LogLevel.Debug, ...args);
-  },
-  info: (...args: any[]) => {
-    write(LogLevel.Info, ...args);
-  },
-  warn: (...args: any[]) => {
-    write(LogLevel.Warning, ...args);
-  },
-  error: (...args: any[]) => {
-    write(LogLevel.Error, ...args);
-  },
 };
