@@ -5,12 +5,13 @@ import { StyleProp, ViewStyle } from "react-native";
 
 type Props = {
   children?: React.ReactNode;
+  contentStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
   titleKey?: string;
 };
 
 export const Card = (props: Props) => {
-  const { children, style, titleKey } = props;
+  const { children, contentStyle, style, titleKey } = props;
 
   const { t } = useTranslation();
 
@@ -18,7 +19,7 @@ export const Card = (props: Props) => {
   return (
     <RNPCard style={style}>
       {title && <RNPCard.Title title={title} titleVariant="titleMedium" />}
-      <RNPCard.Content>{children}</RNPCard.Content>
+      <RNPCard.Content style={contentStyle}>{children}</RNPCard.Content>
     </RNPCard>
   );
 };

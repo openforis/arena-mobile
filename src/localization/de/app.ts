@@ -32,6 +32,15 @@ export default {
     checkingLoggedIn: "Angemeldet prüfen",
     complete: "Abgeschlossen",
   },
+  logs: {
+    title: "Protokolle",
+    clear: {
+      label: "Protokolle löschen",
+      confirmMessage:
+        "Sind Sie sicher, dass Sie alle Protokolldateien löschen möchten?",
+    },
+    exportLabel: "Protokolle exportieren",
+  },
   pleaseWaitMessage: "Bitte warten...",
   update: "Aktualisieren",
   updateAvailable: "Update verfügbar",

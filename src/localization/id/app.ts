@@ -32,6 +32,14 @@ export default {
     checkingLoggedIn: "Memeriksa status login",
     complete: "Selesai",
   },
+  logs: {
+    title: "Log",
+    clear: {
+      label: "Hapus log",
+      confirmMessage: "Apakah Anda yakin ingin menghapus semua file log?",
+    },
+    exportLabel: "Ekspor log",
+  },
   pleaseWaitMessage: "Harap tunggu...",
   update: "Perbarui",
   updateAvailable: "Pembaruan tersedia",

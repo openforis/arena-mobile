@@ -30,6 +30,14 @@ export default {
     checkingLoggedIn: "የተጠቃሚውን መግቢያ በመፈተሽ ላይ",
     complete: "ተጠናቋል",
   },
+  logs: {
+    title: "መዝገቦች",
+    clear: {
+      label: "መዝገቦችን አጽዳ",
+      confirmMessage: "ሁሉንም የመዝገብ ፋይሎች መሰረዝ እርግጠኛ ነዎት?",
+    },
+    exportLabel: "መዝገቦችን ወደ ውጭ ላክ",
+  },
   pleaseWaitMessage: "እባክዎን ይጠብቁ...",
   update: "አዘምን",
   updateAvailable: "ዝማኔ ይገኛል",

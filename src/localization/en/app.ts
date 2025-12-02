@@ -34,6 +34,10 @@ The size will be around {{size}}.`,
   },
   logs: {
     title: "Logs",
+    clear: {
+      label: "Clear Logs",
+      confirmMessage: "Are you sure you want to delete all log files?",
+    },
     exportLabel: "Export Logs",
   },
   pleaseWaitMessage: "Please wait...",

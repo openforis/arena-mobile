@@ -24,4 +24,10 @@ export default StyleSheet.create({
   button: {
     alignSelf: "center",
   },
+  logsCardContent: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+  },
 });

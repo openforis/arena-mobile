@@ -31,6 +31,14 @@ export default {
     checkingLoggedIn: "Проверка авторизации",
     complete: "Завершено",
   },
+  logs: {
+    title: "Журналы",
+    clear: {
+      label: "Очистить журналы",
+      confirmMessage: "Вы уверены, что хотите удалить все файлы журналов?",
+    },
+    exportLabel: "Экспортировать журналы",
+  },
   pleaseWaitMessage: "Пожалуйста, подождите...",
   update: "Обновить",
   updateAvailable: "Доступно обновление",

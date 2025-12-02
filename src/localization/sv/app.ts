@@ -32,6 +32,14 @@ export default {
     checkingLoggedIn: "Kontrollerar inloggad",
     complete: "Slutfört",
   },
+  logs: {
+    title: "Loggar",
+    clear: {
+      label: "Rensa loggar",
+      confirmMessage: "Är du säker på att du vill radera alla loggfiler?",
+    },
+    exportLabel: "Exportera loggar",
+  },
   pleaseWaitMessage: "Vänta...",
   update: "Uppdatera",
   updateAvailable: "Uppdatering tillgänglig",

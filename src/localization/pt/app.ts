@@ -31,6 +31,15 @@ export default {
     checkingLoggedIn: "A verificar início de sessão",
     complete: "Completo",
   },
+  logs: {
+    title: "Registos",
+    clear: {
+      label: "Limpar registos",
+      confirmMessage:
+        "Tem a certeza de que deseja eliminar todos os ficheiros de registo?",
+    },
+    exportLabel: "Exportar registos",
+  },
   pleaseWaitMessage: "Por favor, aguarde...",
   update: "Atualizar",
   updateAvailable: "Atualização disponível",

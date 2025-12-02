@@ -33,6 +33,15 @@ export default {
     checkingLoggedIn: "در حال بررسی ورود",
     complete: "تکمیل شد",
   },
+  logs: {
+    title: "گزارش‌ها",
+    clear: {
+      label: "پاک کردن گزارش‌ها",
+      confirmMessage:
+        "آیا مطمئن هستید که می‌خواهید همه فایل‌های گزارش را حذف کنید؟",
+    },
+    exportLabel: "صادرات گزارش‌ها",
+  },
   pleaseWaitMessage: "لطفا صبر کنید...",
   update: "به روز رسانی",
   updateAvailable: "به روز رسانی موجود است",

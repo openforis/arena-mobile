@@ -7,7 +7,12 @@ import { FullBackupButton } from "appComponents/FullBackupButton";
 import { Button, Card, HView, ScreenView, VView } from "components";
 import { SettingsModel } from "model";
 import { AppService } from "service/appService";
-import { SettingsActions, SettingsSelectors, useAppDispatch } from "state";
+import {
+  SettingsActions,
+  SettingsSelectors,
+  useAppDispatch,
+  useConfirm,
+} from "state";
 import { log, clearLogs } from "utils";
 
 import { SettingsItem } from "./SettingsItem";
@@ -18,6 +23,7 @@ const settingsPropertiesEntries = Object.entries(SettingsModel.properties);
 export const SettingsScreen = () => {
   log.debug(`rendering SettingsScreen`);
   const dispatch = useAppDispatch();
+  const confirm = useConfirm();
 
   const settingsStored = SettingsSelectors.useSettings();
 
@@ -41,8 +47,14 @@ export const SettingsScreen = () => {
   }, []);
 
   const onClearLogsPress = useCallback(async () => {
-    await clearLogs();
-  }, []);
+    if (
+      await confirm({
+        messageKey: "app:logs.clear.confirmMessage",
+      })
+    ) {
+      await clearLogs();
+    }
+  }, [confirm]);
 
   return (
     <ScreenView>
@@ -63,14 +75,17 @@ export const SettingsScreen = () => {
         <Card titleKey="app:backup">
           <FullBackupButton />
         </Card>
-        <Card titleKey="app:logs.title">
-          <HView>
-            <Button
-              onPress={onExportLogsPress}
-              textKey="app:logs.exportLabel"
-            />
-            <Button onPress={onClearLogsPress} textKey="app:logs.clear" />
-          </HView>
+        <Card contentStyle={styles.logsCardContent} titleKey="app:logs.title">
+          <Button
+            icon="download"
+            onPress={onExportLogsPress}
+            textKey="app:logs.exportLabel"
+          />
+          <Button
+            icon="trash-can-outline"
+            onPress={onClearLogsPress}
+            textKey="app:logs.clear.label"
+          />
         </Card>
       </VView>
     </ScreenView>
