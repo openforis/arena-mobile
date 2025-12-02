@@ -19,20 +19,17 @@ const initSettings = () => async (dispatch: any) => {
 };
 
 const updateSetting =
-  ({
-    key,
-    value
-  }: any) =>
+  ({ key, value }: any) =>
   async (dispatch: any) => {
     let canPersist = true;
 
-    if (key === SettingsModel.keys.locationGpsLocked) {
+    if (key === SettingsModel.SettingKey.locationGpsLocked) {
       if (value) {
         canPersist = await dispatch(startGpsLocking());
       } else {
         _stopGpsLocking();
       }
-    } else if (key === SettingsModel.keys.language) {
+    } else if (key === SettingsModel.SettingKey.language) {
       changeLanguage(value);
     }
     if (canPersist) {

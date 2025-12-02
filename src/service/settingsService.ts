@@ -5,45 +5,56 @@ import { asyncStorageKeys } from "./asyncStorage/asyncStorageKeys";
 import { API } from "./api";
 import { ThemesSettings } from "model/Themes";
 import { LanguageConstants } from "model/LanguageSettings";
+import { SettingKey } from "model/SettingsModel";
 import { AMConstants, SystemUtils } from "utils";
 
-const defaultSettings = {
+const defaultSettings: Partial<SettingsObject> = {
   animationsEnabled: true,
   fontScale: 1,
-  fullScreen: false,
   imageSizeUnlimited: false,
   imageSizeLimit: 4, // MB
   language: LanguageConstants.system,
   locationAccuracyThreshold: 3,
   locationAccuracyWatchTimeout: 120,
-  locationGpsLocked: false,
+  locationAveragingEnabled: true,
   serverUrlType: "default",
   serverUrl: AMConstants.defaultServerUrl,
   theme: ThemesSettings.auto,
 };
 
-let INSTANCE: any = null;
+type SettingsObject = Record<SettingKey, any>;
 
-const systemSettingApplierByKey: Record<
-  string,
-  ({ key, value }: { key?: string; value: any }) => Promise<any>
+let INSTANCE: SettingsObject | null = null;
+
+interface SystemSettingApplier {
+  ({ key, value }: { key?: SettingKey; value: any }): Promise<any>;
+}
+
+const systemSettingApplierByKey: Partial<
+  Record<SettingKey, SystemSettingApplier>
 > = {
-  ["fullScreen"]: async ({ value }: any) => SystemUtils.setFullScreen(value),
-  ["keepScreenAwake"]: async ({ value }: any) =>
+  fullScreen: async ({ value }: any) => SystemUtils.setFullScreen(value),
+  keepScreenAwake: async ({ value }: any) =>
     SystemUtils.setKeepScreenAwake(value),
 };
 
-const fetchSettings = async () => {
+const fetchSettings = async (): Promise<SettingsObject> => {
   if (!INSTANCE) {
     INSTANCE = {
       ...defaultSettings,
       ...(await AsyncStorageUtils.getItem(asyncStorageKeys.settings)),
     };
   }
-  return INSTANCE;
+  return INSTANCE!;
 };
 
-const updateSetting = async ({ key, value }: any) => {
+const updateSetting = async ({
+  key,
+  value,
+}: {
+  key: SettingKey;
+  value: any;
+}): Promise<SettingsObject> => {
   const settingsPrev = await fetchSettings();
   const settingsNext = { ...settingsPrev, [key]: value };
   await saveSettings(settingsNext);
@@ -51,7 +62,7 @@ const updateSetting = async ({ key, value }: any) => {
   return settingsNext;
 };
 
-const saveSettings = async (settings: any) => {
+const saveSettings = async (settings: SettingsObject) => {
   await AsyncStorageUtils.setItem(asyncStorageKeys.settings, settings);
   INSTANCE = settings;
 };

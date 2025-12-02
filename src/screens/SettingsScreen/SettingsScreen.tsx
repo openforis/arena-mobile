@@ -4,7 +4,7 @@ import { Objects } from "@openforis/arena-core";
 
 import { ConnectionToRemoteServerButton } from "appComponents/ConnectionToRemoteServerButton";
 import { FullBackupButton } from "appComponents/FullBackupButton";
-import { Button, Card, HView, ScreenView, VView } from "components";
+import { Button, Card, ScreenView, VView } from "components";
 import { SettingsModel } from "model";
 import { AppService } from "service/appService";
 import {

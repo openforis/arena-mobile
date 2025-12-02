@@ -25,6 +25,11 @@ It will help to get a better accuracy in coordinate attributes.`,
     error:
       "Cannot start GPS locking: location provider not available or access to location not granted",
   },
+  locationAveragingEnabled: {
+    label: "Location averaging enabled",
+    description:
+      "When enabled, the recorded location will be the average of multiple location readings, improving accuracy",
+  },
   showStatusBar: "Show status bar",
   theme: {
     label: "Theme",
