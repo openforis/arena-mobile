@@ -12,7 +12,7 @@ const logFileNamePrefix = "arena-mobile";
 const logFileName = `${logFileNamePrefix}.log`;
 
 const logsDirectory = "logs";
-const logsPath = Files.path(Files.documentDirectory, logsDirectory);
+export const logsPath = Files.path(Files.documentDirectory, logsDirectory);
 
 let _log: ReturnType<typeof logger.createLogger> | null = null;
 
@@ -107,6 +107,15 @@ const write = (level: LogLevel, ...args: any[]) => {
   } catch (error) {
     console.log(msg);
   }
+};
+
+export const clear = async () => {
+  const logFiles = await Files.listDirectory(logsPath);
+  for (const file of logFiles) {
+    const filePath = Files.path(logsPath, file);
+    await Files.del(filePath, true);
+  }
+  await initializeLogger();
 };
 
 export const log = {

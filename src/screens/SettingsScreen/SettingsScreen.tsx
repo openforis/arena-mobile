@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import { Objects } from "@openforis/arena-core";
 
 import { ConnectionToRemoteServerButton } from "appComponents/ConnectionToRemoteServerButton";
 import { FullBackupButton } from "appComponents/FullBackupButton";
-import { Card, ScreenView, VView } from "components";
+import { Button, Card, HView, ScreenView, VView } from "components";
 import { SettingsModel } from "model";
+import { AppService } from "service/appService";
 import { SettingsActions, SettingsSelectors, useAppDispatch } from "state";
-import { log } from "utils";
+import { log, clearLogs } from "utils";
 
 import { SettingsItem } from "./SettingsItem";
 import styles from "./styles";
@@ -35,6 +36,14 @@ export const SettingsScreen = () => {
       );
     };
 
+  const onExportLogsPress = useCallback(async () => {
+    await AppService.exportLogsAndShareThem();
+  }, []);
+
+  const onClearLogsPress = useCallback(async () => {
+    await clearLogs();
+  }, []);
+
   return (
     <ScreenView>
       <VView style={styles.settingsWrapper}>
@@ -53,6 +62,15 @@ export const SettingsScreen = () => {
           ))}
         <Card titleKey="app:backup">
           <FullBackupButton />
+        </Card>
+        <Card titleKey="app:logs.title">
+          <HView>
+            <Button
+              onPress={onExportLogsPress}
+              textKey="app:logs.exportLabel"
+            />
+            <Button onPress={onClearLogsPress} textKey="app:logs.clear" />
+          </HView>
         </Card>
       </VView>
     </ScreenView>

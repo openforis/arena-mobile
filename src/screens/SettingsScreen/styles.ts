@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   settingsWrapper: {
     marginBottom: 20,
+    rowGap: 4,
   },
   settingsItemWrapper: {
     paddingVertical: 12,

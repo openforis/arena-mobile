@@ -6,7 +6,7 @@ export { ExifUtils } from "./ExifUtils";
 export { Files } from "./Files";
 export { Functions } from "./Functions";
 export { ImageUtils } from "./ImageUtils";
-export { initializeLogger, log } from "./Logger";
+export { initializeLogger, log, logsPath, clear as clearLogs } from "./Logger";
 export { Jobs } from "./Jobs";
 export { LanguageUtils } from "./LanguageUtils";
 export { Permissions } from "./Permissions";
