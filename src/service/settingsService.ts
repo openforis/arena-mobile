@@ -5,7 +5,7 @@ import { asyncStorageKeys } from "./asyncStorage/asyncStorageKeys";
 import { API } from "./api";
 import { ThemesSettings } from "model/Themes";
 import { LanguageConstants } from "model/LanguageSettings";
-import { SettingKey } from "model/SettingsModel";
+import { SettingKey, SettingsObject } from "model/SettingsModel";
 import { AMConstants, SystemUtils } from "utils";
 
 const defaultSettings: Partial<SettingsObject> = {
@@ -21,8 +21,6 @@ const defaultSettings: Partial<SettingsObject> = {
   serverUrl: AMConstants.defaultServerUrl,
   theme: ThemesSettings.auto,
 };
-
-type SettingsObject = Record<SettingKey, any>;
 
 let INSTANCE: SettingsObject | null = null;
 

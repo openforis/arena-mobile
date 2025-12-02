@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import * as Location from "expo-location";
 import { Point, PointFactory } from "@openforis/arena-core";
 
-import { LocationPoint } from "model";
+import { AveragedLocation, LocationPoint } from "model";
 import { log, Permissions, Refs } from "utils";
 import { LocationAverager } from "utils/LocationAverageCalculator";
 import { SettingsSelectors } from "../state/settings";
@@ -71,8 +71,10 @@ export const useLocationWatch = ({
   const toaster = useToast();
 
   const settings = SettingsSelectors.useSettings();
-  const { locationAccuracyThreshold = defaultLocationAccuracyThreshold } =
-    settings;
+  const {
+    locationAccuracyThreshold = defaultLocationAccuracyThreshold,
+    locationAveragingEnabled,
+  } = settings;
 
   const locationWatchTimeout = getLocationWatchTimeout({ settings });
 
@@ -121,42 +123,49 @@ export const useLocationWatch = ({
 
       locationAverager.addReading(locationPoint);
 
-      const lastAveragedLocation = locationAverager.calculateAveragedLocation();
-      lastLocationRef.current = lastAveragedLocation;
-      log.debug(`Averaged location: ${JSON.stringify(lastAveragedLocation)}`);
+      const locationPointToConsider = locationAveragingEnabled
+        ? locationAverager.calculateAveragedLocation()
+        : locationPoint;
+      lastLocationRef.current = locationPointToConsider;
 
-      if (!lastAveragedLocation) return;
+      log.debug(`Location used: ${JSON.stringify(locationPointToConsider)}`);
 
-      const { accuracy: locationAccuracy } = lastAveragedLocation;
+      if (!locationPointToConsider) return;
+
+      const { accuracy: locationAccuracy } = locationPointToConsider;
 
       const accuracyThresholdReached =
         stopOnAccuracyThreshold &&
         locationAccuracy &&
         locationAccuracy <= locationAccuracyThreshold &&
-        lastAveragedLocation.count > minLocationReadingsForAccuracyThreshold;
-      log.debug(`accuracyThresholdReached: ${accuracyThresholdReached}`);
+        (!locationAveragingEnabled ||
+          (locationPointToConsider as AveragedLocation).count >
+            minLocationReadingsForAccuracyThreshold);
+
       const timeoutReached =
         stopOnTimeout && locationSubscriptionRef.current === null;
-      log.debug(`timeoutReached: ${timeoutReached}`);
+
       const thresholdReached = accuracyThresholdReached || timeoutReached;
+
       if (thresholdReached) {
         log.debug("Threshold reached, stopping location watch");
         _stopLocationWatch();
       }
-      const pointLatLong = locationPointToPoint(lastAveragedLocation);
+      const pointLatLong = locationPointToPoint(locationPointToConsider);
 
       locationCallbackProp({
-        location: lastAveragedLocation,
+        location: locationPointToConsider,
         locationAccuracy,
         pointLatLong,
         thresholdReached,
       });
     },
     [
-      locationCallbackProp,
-      locationAccuracyThreshold,
+      locationAveragingEnabled,
       stopOnAccuracyThreshold,
+      locationAccuracyThreshold,
       stopOnTimeout,
+      locationCallbackProp,
       _stopLocationWatch,
     ]
   );

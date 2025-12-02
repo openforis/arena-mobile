@@ -37,6 +37,8 @@ export enum SettingKey {
   theme = "theme",
 }
 
+export type SettingsObject = Record<SettingKey, any>;
+
 type SettingsProperties = Partial<Record<SettingKey, SettingsProperty>>;
 
 const properties: SettingsProperties = {
