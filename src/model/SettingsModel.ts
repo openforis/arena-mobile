@@ -37,8 +37,6 @@ export enum SettingKey {
   theme = "theme",
 }
 
-export type SettingsObject = Record<SettingKey, any>;
-
 type SettingsProperties = Partial<Record<SettingKey, SettingsProperty>>;
 
 const properties: SettingsProperties = {
@@ -111,6 +109,7 @@ export type SettingsObject = {
   language: LanguageConstants;
   locationAccuracyThreshold: number;
   locationAccuracyWatchTimeout: number;
+  locationAveragingEnabled: boolean;
   locationGpsLocked: boolean;
   password?: string; // deprecated; not stored anymore;
   serverUrlType: "default";
