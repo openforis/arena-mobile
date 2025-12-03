@@ -1,6 +1,6 @@
-export const LanguageConstants = {
-  system: "system",
-};
+export enum LanguageConstants {
+  system = "system",
+}
 
 export const Languages = [
   { key: "en", label: "English" },

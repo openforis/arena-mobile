@@ -64,6 +64,7 @@ const sortCompareFn =
     const sortPropPath = sortProp?.split(".");
     const propA = Objects.path(sortPropPath)(itemA);
     const propB = Objects.path(sortPropPath)(itemB);
+
     const sortDirectionFactor = getSortFactor(sortDirection);
 
     const emptyA = Objects.isEmpty(propA);

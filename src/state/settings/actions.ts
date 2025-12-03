@@ -1,7 +1,7 @@
 import * as Location from "expo-location";
 
 import { changeLanguage } from "localization";
-import { SettingsModel } from "model";
+import { SettingsModel, SettingsObject } from "model";
 import { SettingsService } from "service";
 import { Permissions } from "utils";
 
@@ -41,9 +41,11 @@ const updateSetting =
     }
   };
 
-const updateSettings = (settings: any) => async (dispatch: any) => {
-  await SettingsService.saveSettings(settings);
-  dispatch(setSettings(settings));
+const updateSettings = (settings: SettingsObject) => async (dispatch: any) => {
+  const settingsUpdated = { ...settings };
+  delete settingsUpdated["password"];
+  await SettingsService.saveSettings(settingsUpdated);
+  dispatch(setSettings(settingsUpdated));
 };
 
 let gpsLockingSubscription: any = null;
