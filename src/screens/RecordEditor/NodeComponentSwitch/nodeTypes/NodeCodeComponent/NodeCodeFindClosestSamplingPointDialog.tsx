@@ -63,19 +63,24 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
 
     for (const item of items) {
       const itemLocation = item?.props?.extra?.location;
-      if (itemLocation) {
-        const itemLocationPoint = Points.parse(itemLocation);
-        let distance;
-        distance = pointLatLong
-          ? (Points.distance(pointLatLong, itemLocationPoint!, srsIndex) ??
-            Infinity)
-          : Infinity;
-        if (Objects.isEmpty(minDistance) || distance < minDistance) {
-          minDistance = distance;
-          minDistanceItems = [item];
-        } else if (distance === minDistance) {
-          minDistanceItems.push(item);
-        }
+      if (!itemLocation) {
+        continue;
+      }
+      const itemLocationPoint = Points.parse(itemLocation);
+      let distance: number;
+      if (pointLatLong) {
+        distance =
+          Points.distance(pointLatLong, itemLocationPoint!, srsIndex) ??
+          Infinity;
+      } else {
+        distance = Infinity;
+      }
+      const isFirstItem = Objects.isEmpty(minDistance);
+      if (isFirstItem || distance < minDistance) {
+        minDistance = distance;
+        minDistanceItems = [item];
+      } else if (distance === minDistance) {
+        minDistanceItems.push(item);
       }
     }
     return {
