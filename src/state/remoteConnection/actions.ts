@@ -29,7 +29,7 @@ const fetchUser = async () => {
     return user;
   } catch (error) {
     // ignore it
-    console.log("Error fetching user: " + error);
+    log.error("Error fetching user", error);
     return null;
   }
 };
@@ -148,6 +148,7 @@ const _clearUserCredentialsInternal =
       password: undefined,
     };
     await dispatch(SettingsActions.updateSettings(settingsUpdated));
+    await SecureStoreService.setAuthRefreshToken(null);
     dispatch({ type: USER_PROFILE_ICON_INFO_SET, payload: null });
     dispatch({ type: USER_SET, user: null });
   };

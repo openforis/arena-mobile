@@ -14,10 +14,12 @@ const extractCookieValue = (
 ): string | undefined => {
   const cookies = headers?.["set-cookie"];
   const cookie = cookies?.[0];
+  if (!cookie) return undefined;
   // cookie string is in the format cookieName=cookieValue
-  return cookie?.substring(
+  const endIndex = cookie.indexOf(";", cookieName.length + 1);
+  return cookie.substring(
     cookieName.length + 1,
-    cookie.indexOf(";", cookieName.length + 1)
+    endIndex > 0 ? endIndex : undefined
   );
 };
 
