@@ -128,13 +128,13 @@ export class LocationAverager {
       longitude: finalTotal.longitude / count,
       accuracy: finalTotal.accuracy / count,
       altitude:
-        finalTotal.altitude !== null ? finalTotal.altitude / count : null,
+        finalTotal.altitude === null ? null : finalTotal.altitude / count,
       altitudeAccuracy:
-        finalTotal.altitudeAccuracy !== null
-          ? finalTotal.altitudeAccuracy / count
-          : null,
-      heading: finalTotal.heading !== null ? finalTotal.heading / count : null,
-      speed: finalTotal.speed !== null ? finalTotal.speed / count : null,
+        finalTotal.altitudeAccuracy === null
+          ? null
+          : finalTotal.altitudeAccuracy / count,
+      heading: finalTotal.heading === null ? null : finalTotal.heading / count,
+      speed: finalTotal.speed === null ? null : finalTotal.speed / count,
       count,
     };
   }
