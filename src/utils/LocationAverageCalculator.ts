@@ -73,7 +73,7 @@ export class LocationAverager {
     // --- 1. Extract and sort accuracy values ---
     const accuracyValues: number[] = readings
       .map((locationPoint) => locationPoint.accuracy ?? 0) // Treat null accuracy as 0
-      .sort((a, b) => a - b); 
+      .sort((a, b) => a - b);
 
     // --- 2. Calculate Median Accuracy ---
     const median = calculateMedian(accuracyValues);
@@ -114,7 +114,7 @@ export class LocationAverager {
     for (const filteredReading of filteredReadings) {
       finalTotal.latitude += filteredReading.latitude;
       finalTotal.longitude += filteredReading.longitude;
-      finalTotal.accuracy! += filteredReading.accuracy!; // accuracy is guaranteed non-null here
+      finalTotal.accuracy += filteredReading.accuracy!;
       addPropertyFromSource(finalTotal, filteredReading, "altitude");
       addPropertyFromSource(finalTotal, filteredReading, "altitudeAccuracy");
       addPropertyFromSource(finalTotal, filteredReading, "heading");
@@ -126,7 +126,7 @@ export class LocationAverager {
     return {
       latitude: finalTotal.latitude / count,
       longitude: finalTotal.longitude / count,
-      accuracy: finalTotal.accuracy! / count,
+      accuracy: finalTotal.accuracy / count,
       altitude:
         finalTotal.altitude !== null ? finalTotal.altitude / count : null,
       altitudeAccuracy:

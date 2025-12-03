@@ -24,9 +24,9 @@ const defaultSettings: Partial<SettingsObject> = {
 
 let INSTANCE: SettingsObject | null = null;
 
-interface SystemSettingApplier {
+type SystemSettingApplier = {
   ({ key, value }: { key?: SettingKey; value: any }): Promise<any>;
-}
+};
 
 const systemSettingApplierByKey: Partial<
   Record<SettingKey, SystemSettingApplier>
@@ -36,15 +36,11 @@ const systemSettingApplierByKey: Partial<
     SystemUtils.setKeepScreenAwake(value),
 };
 
-const fetchSettings = async (): Promise<SettingsObject> => {
-  if (!INSTANCE) {
-    INSTANCE = {
-      ...defaultSettings,
-      ...(await AsyncStorageUtils.getItem(asyncStorageKeys.settings)),
-    };
-  }
-  return INSTANCE!;
-};
+const fetchSettings = async (): Promise<SettingsObject> =>
+  (INSTANCE ??= {
+    ...defaultSettings,
+    ...(await AsyncStorageUtils.getItem(asyncStorageKeys.settings)),
+  });
 
 const updateSetting = async ({
   key,
