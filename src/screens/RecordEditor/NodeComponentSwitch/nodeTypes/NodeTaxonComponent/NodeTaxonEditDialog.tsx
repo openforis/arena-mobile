@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 
 import { NodeDefs } from "@openforis/arena-core";
 
+import { log } from "utils";
 import { NodeEditDialogInternal } from "../NodeEditDialogInternal";
 import { NodeTaxonAutocomplete } from "./NodeTaxonAutocomplete";
 
@@ -21,11 +22,7 @@ export const NodeTaxonEditDialog = (props: NodeTaxonEditDialogProps) => {
     selectedTaxon,
     updateNodeValue: updateNodeValueProp,
   } = props;
-  if (__DEV__) {
-    console.log(
-      `rendering NodeTaxonEditDialog for ${NodeDefs.getName(nodeDef)}`
-    );
-  }
+  log.debug(`rendering NodeTaxonEditDialog for ${NodeDefs.getName(nodeDef)}`);
   const updateNodeValue = useCallback(
     ({ value: valueNext }: { value: any }) => {
       onDismiss();

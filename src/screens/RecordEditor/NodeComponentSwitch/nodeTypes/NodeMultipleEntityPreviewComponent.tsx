@@ -4,6 +4,7 @@ import { NodeDefs } from "@openforis/arena-core";
 
 import { Button, VView } from "components";
 import { DataEntryActions, SurveySelectors, useAppDispatch } from "state";
+import { log } from "utils";
 
 import { NodeComponentProps } from "./nodeComponentPropTypes";
 import { StyleSheet } from "react-native";
@@ -17,9 +18,7 @@ export const NodeMultipleEntityPreviewComponent = (
 ) => {
   const { nodeDef, parentNodeUuid } = props;
 
-  if (__DEV__) {
-    console.log("rendering NodeMultipleEntityPreviewComponent");
-  }
+  log.debug("rendering NodeMultipleEntityPreviewComponent");
 
   const dispatch = useAppDispatch();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();

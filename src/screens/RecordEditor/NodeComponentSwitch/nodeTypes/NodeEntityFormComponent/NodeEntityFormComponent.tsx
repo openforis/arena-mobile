@@ -4,6 +4,7 @@ import { VirtualizedList } from "react-native";
 import { NodeDef, NodeDefs } from "@openforis/arena-core";
 
 import { DataEntrySelectors } from "state";
+import { log } from "utils";
 
 import { NodeDefFormItem } from "../../../NodeDefFormItem";
 
@@ -14,12 +15,12 @@ type NodeEntityFormComponentProps = {
   parentNodeUuid?: string;
 };
 
-export const NodeEntityFormComponent = (props: NodeEntityFormComponentProps) => {
+export const NodeEntityFormComponent = (
+  props: NodeEntityFormComponentProps
+) => {
   const { nodeDef, parentNodeUuid } = props;
 
-  if (__DEV__) {
-    console.log(`rendering NodeDefEntityForm for ${NodeDefs.getName(nodeDef)}`);
-  }
+  log.debug(`rendering NodeDefEntityForm for ${NodeDefs.getName(nodeDef)}`);
 
   const listRef = useRef(null);
 

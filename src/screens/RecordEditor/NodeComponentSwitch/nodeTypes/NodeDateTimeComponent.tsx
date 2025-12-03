@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { DateFormats, Dates, Objects } from "@openforis/arena-core";
 
 import { DateTimePicker } from "components";
+import { log } from "utils";
 
 import { useNodeComponentLocalState } from "../../useNodeComponentLocalState";
 
@@ -15,9 +16,7 @@ type NodeDateTimeComponentProps = {
 export const NodeDateTimeComponent = (props: NodeDateTimeComponentProps) => {
   const { mode, nodeDef, nodeUuid } = props;
 
-  if (__DEV__) {
-    console.log(`rendering NodeDateTimeComponent for ${nodeDef.props.name}`);
-  }
+  log.debug(`rendering NodeDateTimeComponent for ${nodeDef.props.name}`);
   const formatDisplay =
     mode === "date" ? DateFormats.dateDisplay : DateFormats.timeStorage;
   const formatStorage =

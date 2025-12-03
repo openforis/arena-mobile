@@ -21,7 +21,7 @@ import {
   RecordUpdateConflictResolutionStrategy as ConflictResolutionStrategy,
   RecordLoadStatus,
 } from "model";
-import { RecordService } from "service";
+import { RecordService, SurveyService } from "service";
 import {
   DataEntryActions,
   MessageActions,
@@ -99,6 +99,7 @@ export const RecordsList = () => {
   const confirm = useConfirm();
 
   const defaultCycleKey = survey ? Surveys.getDefaultCycleKey(survey) : null;
+  const isDemoSurvey = survey?.uuid === SurveyService.demoSurveyUuid;
 
   const [state, setState] = useState({
     loading: true,
@@ -580,21 +581,23 @@ export const RecordsList = () => {
 
   const downloadMenuItems = useMemo(() => {
     const items = [];
-    if (networkAvailable) {
-      items.push({
-        key: "checkStatus",
-        icon: "cloud-refresh",
-        keepMenuOpenOnPress: true,
-        label: "dataEntry:checkStatus",
-        onPress: loadRecordsWithSyncStatus,
-      });
-    } else {
-      items.push({
-        key: "networkNotAvailable",
-        keepMenuOpenOnPress: false,
-        label: "common:networkNotAvailable",
-        disabled: true,
-      });
+    if (!isDemoSurvey) {
+      if (networkAvailable) {
+        items.push({
+          key: "checkStatus",
+          icon: "cloud-refresh",
+          keepMenuOpenOnPress: true,
+          label: "dataEntry:checkStatus",
+          onPress: loadRecordsWithSyncStatus,
+        });
+      } else {
+        items.push({
+          key: "networkNotAvailable",
+          keepMenuOpenOnPress: false,
+          label: "common:networkNotAvailable",
+          disabled: true,
+        });
+      }
     }
     items.push(
       {
@@ -667,11 +670,13 @@ export const RecordsList = () => {
       {recordsLength > 0 && (
         <HView style={styles.bottomActionBar}>
           {newRecordButton}
-          <Button
-            icon="cloud-refresh"
-            onPress={onSendDataPress}
-            textKey="dataEntry:sendData"
-          />
+          {!isDemoSurvey && (
+            <Button
+              icon="cloud-refresh"
+              onPress={onSendDataPress}
+              textKey="dataEntry:sendData"
+            />
+          )}
           <MenuButton
             icon="download"
             items={downloadMenuItems}

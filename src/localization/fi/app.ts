@@ -32,6 +32,16 @@ export default {
     checkingLoggedIn: "Kirjautumisen tarkistus",
     complete: "Valmis",
   },
+  logs: {
+    title: "Lokit",
+    subtitle:
+      "Lokitiedostot tallentavat diagnostiikkatietoja, jotka voivat auttaa ongelmien ratkaisemisessa.",
+    clear: {
+      label: "Tyhjennä lokit",
+      confirmMessage: "Haluatko varmasti poistaa kaikki lokitiedostot?",
+    },
+    exportLabel: "Vie lokit",
+  },
   pleaseWaitMessage: "Odota hetki...",
   update: "Päivitä",
   updateAvailable: "Päivitys saatavilla",

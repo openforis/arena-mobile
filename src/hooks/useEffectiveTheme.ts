@@ -27,7 +27,7 @@ const scaleFonts = (fontScale: number) => (fonts: MD3Typescale) =>
     return acc;
   }, {} as any);
 
-export const useEffectiveTheme = (): MD3Theme | undefined => {
+export const useEffectiveTheme = (): MD3Theme => {
   const colorScheme = useColorScheme();
 
   let {
@@ -44,8 +44,8 @@ export const useEffectiveTheme = (): MD3Theme | undefined => {
         : ThemesSettings.light;
   }
   return useMemo(() => {
-    const theme = themeByThemeSetting[themeSetting];
-    if (!theme || fontScale === 1) {
+    const theme = themeByThemeSetting[themeSetting]!;
+    if (fontScale === 1) {
       return theme;
     }
     const { fonts } = theme;

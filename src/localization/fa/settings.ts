@@ -16,6 +16,11 @@ export default {
   },
   locationAccuracyThreshold: "آستانه دقت موقعیت مکانی (متر)",
   locationAccuracyWatchTimeout: "زمان انتظار دقت موقعیت مکانی: {{value}} ثانیه",
+  locationAveragingEnabled: {
+    label: "میانگین گیری موقعیت مکانی فعال",
+    description:
+      "هنگامی که فعال باشد، موقعیت مکانی ثبت شده میانگین چندین خوانش موقعیت مکانی خواهد بود که دقت را بهبود می بخشد",
+  },
   locationGpsLocked: {
     label: "GPS قفل شده",
     description: `هشدار: مصرف باتری افزایش می یابد!

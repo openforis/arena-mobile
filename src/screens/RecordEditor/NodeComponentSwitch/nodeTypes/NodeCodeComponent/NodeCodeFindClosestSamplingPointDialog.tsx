@@ -40,8 +40,8 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
     pointLatLong,
     startLocationWatch,
     stopLocationWatch,
-    wathingLocation,
-  }: any = useLocation();
+    watchingLocation,
+  } = useLocation();
 
   const [state, setState] = useState({
     findingMinDistanceItems: false,
@@ -63,17 +63,24 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
 
     for (const item of items) {
       const itemLocation = item?.props?.extra?.location;
-      if (itemLocation) {
-        const itemLocationPoint = Points.parse(itemLocation);
-        const distance =
+      if (!itemLocation) {
+        continue;
+      }
+      const itemLocationPoint = Points.parse(itemLocation);
+      let distance: number;
+      if (pointLatLong) {
+        distance =
           Points.distance(pointLatLong, itemLocationPoint!, srsIndex) ??
           Infinity;
-        if (Objects.isEmpty(minDistance) || distance < minDistance) {
-          minDistance = distance;
-          minDistanceItems = [item];
-        } else if (distance === minDistance) {
-          minDistanceItems.push(item);
-        }
+      } else {
+        distance = Infinity;
+      }
+      const isFirstItem = Objects.isEmpty(minDistance);
+      if (isFirstItem || distance < minDistance) {
+        minDistance = distance;
+        minDistanceItems = [item];
+      } else if (distance === minDistance) {
+        minDistanceItems.push(item);
       }
     }
     return {
@@ -111,7 +118,7 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
     >
       {!locationFetched && (
         <>
-          {wathingLocation && (
+          {watchingLocation && (
             <Text textKey="dataEntry:location.gettingCurrentLocation" />
           )}
           <LocationWatchingMonitor
@@ -121,7 +128,7 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
             locationWatchTimeout={locationWatchTimeout}
             onStart={startLocationWatch}
             onStop={stopLocationWatch}
-            watchingLocation={wathingLocation}
+            watchingLocation={watchingLocation}
           />
         </>
       )}
@@ -166,7 +173,7 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
           />
         </>
       )}
-      {!wathingLocation && (
+      {!watchingLocation && (
         <HView style={{ justifyContent: "center" }}>
           <Button
             disabled={!selectedMinDistanceItem}

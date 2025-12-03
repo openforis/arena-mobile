@@ -8,6 +8,7 @@ import {
 
 import { Text } from "components";
 import { SurveySelectors } from "state";
+import { log } from "utils";
 
 import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 
@@ -26,9 +27,7 @@ const componentByNodeDefType: Record<string, any> = {
 export const NodeValuePreview = (props: NodeValuePreviewProps) => {
   const { nodeDef, value } = props;
 
-  if (__DEV__) {
-    console.log(`rendering NodeValuePreview for ${NodeDefs.getName(nodeDef)}`);
-  }
+  log.debug(`rendering NodeValuePreview for ${NodeDefs.getName(nodeDef)}`);
 
   const survey = SurveySelectors.useCurrentSurvey();
   const cycle = SurveySelectors.useCurrentSurveyCycle();

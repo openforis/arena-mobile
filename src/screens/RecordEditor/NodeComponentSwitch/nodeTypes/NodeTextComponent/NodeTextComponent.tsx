@@ -5,6 +5,7 @@ import { NodeDefType, NodeDefs, Objects } from "@openforis/arena-core";
 import { CopyToClipboardButton, HView, TextInput } from "components";
 import { RecordEditViewMode } from "model";
 import { DataEntrySelectors, SurveyOptionsSelectors } from "state";
+import { log } from "utils";
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 import { useStyles } from "./styles";
 
@@ -25,9 +26,7 @@ type NodeTextComponentProps = {
 export const NodeTextComponent = (props: NodeTextComponentProps) => {
   const { nodeDef, nodeUuid, style: styleProp, wrapperStyle } = props;
 
-  if (__DEV__) {
-    console.log(`rendering NodeTextComponent for ${nodeDef.props.name}`);
-  }
+  log.debug(`rendering NodeTextComponent for ${nodeDef.props.name}`);
 
   const inputRef = useRef(null as any);
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();

@@ -5,20 +5,18 @@ import { asyncStorageKeys } from "./asyncStorage/asyncStorageKeys";
 import { API } from "./api";
 import { ThemesSettings } from "model/Themes";
 import { LanguageConstants } from "model/LanguageSettings";
-import { SettingsObject } from "model/SettingsModel";
+import { SettingKey, SettingsObject } from "model/SettingsModel";
 import { AMConstants, SystemUtils } from "utils";
 
-const defaultSettings: SettingsObject = {
+const defaultSettings: Partial<SettingsObject> = {
   animationsEnabled: true,
   fontScale: 1,
-  fullScreen: false,
-  keepScreenAwake: false,
   imageSizeUnlimited: false,
   imageSizeLimit: 4, // MB
   language: LanguageConstants.system,
   locationAccuracyThreshold: 3,
   locationAccuracyWatchTimeout: 120,
-  locationGpsLocked: false,
+  locationAveragingEnabled: true,
   serverUrlType: "default",
   serverUrl: AMConstants.defaultServerUrl,
   showStatusBar: false,
@@ -27,12 +25,19 @@ const defaultSettings: SettingsObject = {
 
 let INSTANCE: SettingsObject | null = null;
 
-const systemSettingApplierByKey: Record<
-  string,
-  ({ key, value }: { key?: string; value: any }) => Promise<any>
+type SystemSettingApplier = ({
+  key,
+  value,
+}: {
+  key?: SettingKey;
+  value: any;
+}) => Promise<any>;
+
+const systemSettingApplierByKey: Partial<
+  Record<SettingKey, SystemSettingApplier>
 > = {
-  ["fullScreen"]: async ({ value }: any) => SystemUtils.setFullScreen(value),
-  ["keepScreenAwake"]: async ({ value }: any) =>
+  fullScreen: async ({ value }: any) => SystemUtils.setFullScreen(value),
+  keepScreenAwake: async ({ value }: any) =>
     SystemUtils.setKeepScreenAwake(value),
 };
 
@@ -42,7 +47,13 @@ const fetchSettings = async (): Promise<SettingsObject> =>
     ...(await AsyncStorageUtils.getItem(asyncStorageKeys.settings)),
   });
 
-const updateSetting = async ({ key, value }: any) => {
+const updateSetting = async ({
+  key,
+  value,
+}: {
+  key: SettingKey;
+  value: any;
+}): Promise<SettingsObject> => {
   const settingsPrev = await fetchSettings();
   const settingsNext = { ...settingsPrev, [key]: value };
   await saveSettings(settingsNext);

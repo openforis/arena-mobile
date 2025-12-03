@@ -17,6 +17,11 @@ export default {
   locationAccuracyThreshold: "Ambang akurasi lokasi (meter)",
   locationAccuracyWatchTimeout:
     "Batas waktu pengawasan akurasi lokasi: {{value}} detik",
+  locationAveragingEnabled: {
+    label: "Rata-rata lokasi diaktifkan",
+    description:
+      "Jika diaktifkan, lokasi yang direkam akan menjadi rata-rata dari beberapa pembacaan lokasi, meningkatkan akurasi",
+  },
   locationGpsLocked: {
     label: "GPS terkunci",
     description: `Peringatan: konsumsi baterai akan meningkat!

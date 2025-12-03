@@ -8,6 +8,7 @@ export {
   Languages,
   LanguagesSettings,
 } from "./LanguageSettings";
+export type { LocationPoint, AveragedLocation } from "./LocationPoint";
 export { RecordEditViewMode } from "./RecordEditViewMode";
 export { RecordLoadStatus } from "./RecordLoadStatus";
 export { RecordOrigin } from "./RecordOrigin";
@@ -19,6 +20,7 @@ export { ScreenViewMode } from "./ScreenViewMode";
 export { SettingsModel } from "./SettingsModel";
 export type { SettingsObject } from "./SettingsModel";
 export { Sort, SortUtils } from "./Sort";
+export type { SortObject } from "./Sort";
 export { SurveyStatus } from "./SurveyStatus";
 export { Taxa } from "./Taxa";
 export { Themes, ThemesSettings } from "./Themes";

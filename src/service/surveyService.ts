@@ -3,13 +3,15 @@ import { Surveys } from "@openforis/arena-core";
 import { SurveyRepository } from "./repository/surveyRepository";
 import { SurveyFSRepository } from "./repository/surveyFSRepository";
 import { RemoteService } from "./remoteService";
-import demoSurvey from "./simple_survey.json";
+import demoSurvey from "./demoSurvey.json";
 
 const {
   fetchSurveySummaries: fetchSurveySummariesLocal,
   insertSurvey,
   updateSurvey,
 } = SurveyRepository;
+
+const demoSurveyUuid = "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3";
 
 const remoteSurveyFetchTimeout = 60000; // 1 min
 
@@ -106,6 +108,7 @@ const deleteSurveys = async (surveyIds: any) => {
 };
 
 export const SurveyService = {
+  demoSurveyUuid,
   fetchSurveyRemoteById,
   fetchSurveySummariesLocal,
   fetchSurveySummariesRemote,

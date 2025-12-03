@@ -1,4 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
+import { Point } from "@openforis/arena-core";
+
+import { LocationPoint } from "model";
 import { useLocationWatch } from "./useLocationWatch";
 
 const defaultState = {
@@ -6,10 +9,22 @@ const defaultState = {
   locationAccuracy: null,
   locationFetched: false,
   pointLatLong: null,
-  wathingLocation: false,
+  watchingLocation: false,
 };
 
-export const useLocation = () => {
+export const useLocation = (): {
+  location: LocationPoint | null;
+  locationAccuracy: number | null;
+  locationAccuracyThreshold: number;
+  locationFetched: boolean;
+  locationWatchElapsedTime: number;
+  locationWatchProgress: number;
+  locationWatchTimeout: number;
+  pointLatLong: Point | null;
+  startLocationWatch: () => void;
+  stopLocationWatch: () => void;
+  watchingLocation: boolean;
+} => {
   const [state, setState] = useState(defaultState);
 
   const {
@@ -17,16 +32,11 @@ export const useLocation = () => {
     locationAccuracy,
     locationFetched,
     pointLatLong,
-    wathingLocation,
+    watchingLocation,
   } = state;
 
   const locationCallback = useCallback(
-    ({
-      location,
-      locationAccuracy,
-      pointLatLong,
-      thresholdReached
-    }: any) => {
+    ({ location, locationAccuracy, pointLatLong, thresholdReached }: any) => {
       if (thresholdReached) {
         setState((statePrev) => ({
           ...statePrev,
@@ -34,7 +44,7 @@ export const useLocation = () => {
           locationFetched: true,
           location,
           pointLatLong,
-          wathingLocation: false,
+          watchingLocation: false,
         }));
       } else {
         setState((statePrev) => ({
@@ -60,7 +70,7 @@ export const useLocation = () => {
     setState((statePrev) => ({
       ...statePrev,
       ...defaultState,
-      wathingLocation: true,
+      watchingLocation: true,
     }));
 
     return () => {
@@ -79,6 +89,6 @@ export const useLocation = () => {
     pointLatLong,
     startLocationWatch,
     stopLocationWatch,
-    wathingLocation,
+    watchingLocation,
   };
 };

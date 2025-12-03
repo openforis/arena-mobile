@@ -1,7 +1,7 @@
-import { JobStatus } from "@openforis/arena-core";
+import { Dates, JobStatus } from "@openforis/arena-core";
 
 import { dbClient } from "db";
-import { Files } from "utils";
+import { Files, logsPath } from "utils";
 
 import { BackupJob } from "./backupJob/BackupJob";
 import { RecordFileRepository } from "./repository/recordFileRepository";
@@ -35,6 +35,28 @@ const generateFullBackup = async () => {
   }
 };
 
+const exportLogsAndShareThem = async () => {
+  // Create a temp file path for the zip
+  const timestamp = Dates.nowFormattedForExpression();
+  const zipFileName = `arena-mobile-logs-${timestamp}.zip`;
+  const zipFileUri = Files.path(Files.cacheDirectory, zipFileName);
+
+  // Zip the logs directory
+  await Files.zip(logsPath, zipFileUri);
+
+  // Share the zip file
+  await Files.shareFile({
+    url: zipFileUri,
+    mimeType: Files.MIME_TYPES.zip,
+    dialogTitle: "Share Logs",
+  });
+
+  // Clean up temp file after sharing
+  await Files.del(zipFileUri, true);
+
+  return zipFileUri;
+};
+
 const checkLoggedInUser = async () => {
   const settings = await SettingsService.fetchSettings();
   const { serverUrl, email } = settings;
@@ -52,5 +74,6 @@ const checkLoggedInUser = async () => {
 export const AppService = {
   estimateFullBackupSize,
   generateFullBackup,
+  exportLogsAndShareThem,
   checkLoggedInUser,
 };

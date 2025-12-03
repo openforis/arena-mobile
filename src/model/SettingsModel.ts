@@ -19,13 +19,30 @@ type SettingsProperty = {
   step?: number;
 };
 
-const keys = {
-  language: "language",
-  locationGpsLocked: "locationGpsLocked",
-};
+export enum SettingKey {
+  animationsEnabled = "animationsEnabled",
+  fontScale = "fontScale",
+  fullScreen = "fullScreen",
+  imageSizeUnlimited = "imageSizeUnlimited",
+  imageSizeLimit = "imageSizeLimit",
+  keepScreenAwake = "keepScreenAwake",
+  language = "language",
+  locationAccuracyThreshold = "locationAccuracyThreshold",
+  locationAccuracyWatchTimeout = "locationAccuracyWatchTimeout",
+  locationAveragingEnabled = "locationAveragingEnabled",
+  locationGpsLocked = "locationGpsLocked",
+  serverUrlType = "serverUrlType",
+  serverUrl = "serverUrl",
+  showStatusBar = "showStatusBar",
+  theme = "theme",
+}
 
-const properties: Record<string, SettingsProperty> = {
-  [keys.language]: {
+export type SettingsObject = Record<SettingKey, any>;
+
+type SettingsProperties = Partial<Record<SettingKey, SettingsProperty>>;
+
+const properties: SettingsProperties = {
+  language: {
     type: PropertyType.dropdown,
     options: LanguagesSettings,
   },
@@ -64,7 +81,10 @@ const properties: Record<string, SettingsProperty> = {
     maxValue: 300,
     step: 30,
   },
-  [keys.locationGpsLocked]: {
+  locationAveragingEnabled: {
+    type: PropertyType.boolean,
+  },
+  locationGpsLocked: {
     type: PropertyType.boolean,
   },
   // image resolution
@@ -101,6 +121,6 @@ export type SettingsObject = {
 
 export const SettingsModel = {
   PropertyType,
-  keys,
+  SettingKey,
   properties,
 };

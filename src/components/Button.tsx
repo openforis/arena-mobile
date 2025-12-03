@@ -2,10 +2,32 @@ import React from "react";
 import { StyleProp, TextStyle, ViewStyle } from "react-native";
 import { MD3TypescaleKey, Button as RNPButton } from "react-native-paper";
 
+import { Objects } from "@openforis/arena-core";
+
 import { useEffectiveTheme } from "hooks/useEffectiveTheme";
 import { TextDirection, useTextDirection, useTranslation } from "localization";
 import { BaseStyles } from "utils/BaseStyles";
 import { useButtonOnPress } from "./useButtonPress";
+
+const determineText = ({
+  textIsI18nKey,
+  textKey,
+  textParams,
+  t,
+}: {
+  textIsI18nKey: boolean;
+  textKey: string | undefined;
+  textParams: any;
+  t: (key?: string | null, params?: any) => string;
+}) => {
+  if (Objects.isEmpty(textKey)) {
+    return null;
+  }
+  if (textIsI18nKey) {
+    return t(textKey, textParams);
+  }
+  return String(textKey);
+};
 
 const iconPositionByTextDirection = {
   [TextDirection.ltr]: "left",
@@ -38,6 +60,7 @@ export type ButtonProps = {
   onPress?: () => void;
   style?: StyleProp<ViewStyle>;
   textColor?: string;
+  textIsI18nKey?: boolean;
   textKey?: string;
   textParams?: any;
 };
@@ -55,6 +78,7 @@ export const Button = (props: ButtonProps) => {
     onPress: onPressProp,
     textKey,
     textParams,
+    textIsI18nKey = true,
     ...otherProps
   } = props;
 
@@ -63,7 +87,7 @@ export const Button = (props: ButtonProps) => {
   const textDirection = useTextDirection();
   const iconPosition =
     iconPositionProp ?? iconPositionByTextDirection[textDirection];
-  const text = (textKey?.length ?? 0) > 0 ? t(textKey!, textParams) : undefined;
+  const text = determineText({ textIsI18nKey, textKey, textParams, t });
 
   const contentStyle =
     iconPosition === "left" ? undefined : BaseStyles.flexDirectionRowReverse;

@@ -2,7 +2,7 @@ export default {
   title: "Paramètres",
   animationsEnabled: "Animations activées",
   connectionToServer: "Connexion au serveur",
-  fontScale: "Échelle de la police (BÊTA): {{value}}",
+  fontScale: "Échelle de la police: {{value}}",
   keepScreenAwake: "Maintenir l'écran allumé",
   fullScreen: "Plein écran",
   imageSizeLimit: "Taille des images limitée à: {{value}}MB",
@@ -14,8 +14,13 @@ export default {
   locationAccuracyThreshold: "Seuil de précision de la localisation (mètres)",
   locationAccuracyWatchTimeout:
     "Délai de surveillance de la précision de la localisation: {{value}} secondes",
+  locationAveragingEnabled: {
+    label: "Moyenne de localisation activée",
+    description:
+      "Lorsqu'elle est activée, la localisation enregistrée sera la moyenne de plusieurs lectures de localisation, améliorant la précision",
+  },
   locationGpsLocked: {
-    label: "GPS verrouillé (BÊTA)",
+    label: "GPS verrouillé",
     description:
       "Avertissement: la consommation de la batterie augmentera!\nLe signal GPS sera verrouillé lorsque l'application est en cours d'exécution.\nCela aidera à obtenir une meilleure précision dans les attributs de coordonnées.",
     error:

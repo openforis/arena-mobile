@@ -32,6 +32,16 @@ The size will be around {{size}}.`,
     checkingLoggedIn: "Checking logged in",
     complete: "Complete",
   },
+  logs: {
+    title: "Logs",
+    subtitle:
+      "Log files store diagnostic information that can help troubleshoot issues.",
+    clear: {
+      label: "Clear Logs",
+      confirmMessage: "Are you sure you want to delete all log files?",
+    },
+    exportLabel: "Export Logs",
+  },
   pleaseWaitMessage: "Please wait...",
   update: "Update",
   updateAvailable: "Update available",

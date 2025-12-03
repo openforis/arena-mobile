@@ -1,6 +1,7 @@
 import { NodeDefFileType } from "@openforis/arena-core";
 
 import { Text } from "components";
+import { log } from "utils";
 import { NodeImageOrVideoComponent } from "./NodeImageOrVideoComponent";
 import { NodeComponentProps } from "./nodeComponentPropTypes";
 
@@ -13,9 +14,7 @@ const supportedFileTypes = new Set([
 export const NodeFileComponent = (props: NodeComponentProps) => {
   const { nodeDef } = props;
 
-  if (__DEV__) {
-    console.log(`rendering NodeFileComponent for ${nodeDef.props.name}`);
-  }
+  log.debug(`rendering NodeFileComponent for ${nodeDef.props.name}`);
 
   const { fileType = NodeDefFileType.other } = nodeDef.props;
 

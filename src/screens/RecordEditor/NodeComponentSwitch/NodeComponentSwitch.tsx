@@ -2,6 +2,7 @@ import { NodeDefType, NodeDefs } from "@openforis/arena-core";
 
 import { RecordEditViewMode } from "model";
 import { SurveyOptionsSelectors } from "state";
+import { log } from "utils";
 
 import { NodeCodeComponent } from "./nodeTypes/NodeCodeComponent";
 import { NodeMultipleEntityPreviewComponent } from "./nodeTypes/NodeMultipleEntityPreviewComponent";
@@ -19,9 +20,7 @@ type Props = NodeComponentProps & {
 export const NodeComponentSwitch = (props: Props) => {
   const { nodeDef, parentNodeUuid, onFocus } = props;
 
-  if (__DEV__) {
-    console.log(`rendering NodeComponentSwitch for ${nodeDef.props.name}`);
-  }
+  log.debug(`rendering NodeComponentSwitch for ${nodeDef.props.name}`);
 
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
 

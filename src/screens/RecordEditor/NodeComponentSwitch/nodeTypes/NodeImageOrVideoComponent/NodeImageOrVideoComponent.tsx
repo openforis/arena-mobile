@@ -10,6 +10,7 @@ import {
   View,
 } from "components";
 import { ImageOrVideoValuePreview } from "screens/RecordEditor/NodeValuePreview/ImageOrVideoValuePreview";
+import { log } from "utils";
 import { useNodeFileComponent } from "./useNodeFileComponent";
 
 import styles from "./styles";
@@ -31,14 +32,12 @@ type NodeImageOrVideoComponentProps = {
   nodeUuid?: string;
 };
 
-export const NodeImageOrVideoComponent = (props: NodeImageOrVideoComponentProps) => {
+export const NodeImageOrVideoComponent = (
+  props: NodeImageOrVideoComponentProps
+) => {
   const { nodeDef, nodeUuid } = props;
 
-  if (__DEV__) {
-    console.log(
-      `rendering NodeImageOrVideoComponent for ${nodeDef.props.name}`
-    );
-  }
+  log.debug(`rendering NodeImageOrVideoComponent for ${nodeDef.props.name}`);
 
   const { fileType = NodeDefFileType.other } = nodeDef.props;
   const fileChooseTextKeySuffix = fileChooseTextKeySuffixByFileType[fileType];

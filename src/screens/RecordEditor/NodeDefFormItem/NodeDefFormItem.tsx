@@ -7,6 +7,7 @@ import {
   SettingsSelectors,
   SurveyOptionsSelectors,
 } from "state";
+import { log } from "utils";
 
 import { Fade, VView } from "components";
 import { RecordEditViewMode } from "model";
@@ -27,9 +28,7 @@ type NodeDefFormItemProps = {
 export const NodeDefFormItem = (props: NodeDefFormItemProps) => {
   const { nodeDef, parentNodeUuid, onFocus } = props;
 
-  if (__DEV__) {
-    console.log(`Rendering form item ${nodeDef.props.name}`);
-  }
+  log.debug(`Rendering form item ${nodeDef.props.name}`);
   const styles = useStyles();
   const settings = SettingsSelectors.useSettings();
 

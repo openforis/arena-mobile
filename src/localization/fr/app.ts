@@ -34,6 +34,17 @@ export default {
     checkingLoggedIn: "Vérification de la connexion",
     complete: "Terminé",
   },
+  logs: {
+    title: "Journaux",
+    subtitle:
+      "Les fichiers journaux stockent des informations de diagnostic qui peuvent aider à résoudre les problèmes.",
+    clear: {
+      label: "Effacer les journaux",
+      confirmMessage:
+        "Êtes-vous sûr de vouloir supprimer tous les fichiers journaux?",
+    },
+    exportLabel: "Exporter les journaux",
+  },
   pleaseWaitMessage: "Veuillez patienter...",
   update: "Mettre à jour",
   updateAvailable: "Mise à jour disponible",
