@@ -9,7 +9,7 @@ const madScaleFactor = 1.4826; // constant to make MAD consistent with SD for no
 
 /**
  * Stores a fixed "window" of the most recent LocationPoint objects, filters outliers
- * using Standard Deviation (SD) of accuracy, and calculates the final averaged location.
+ * using Median Absolute Deviation (MAD) of accuracy, and calculates the final averaged location.
  */
 export class LocationAverager {
   private readings: LocationPoint[] = [];
@@ -17,7 +17,7 @@ export class LocationAverager {
   /**
    * Initializes the averager with the statistical multiplier and window size.
    * @param maxWindowSize - The maximum number of recent readings to store (the size of the observation window).
-   * @param sdMultiplier - The number of standard deviations (N) to use for the exclusion rule (N*SD).
+   * @param sdMultiplier - The multiplier to use with MAD for the exclusion threshold (N*MAD).
    */
   constructor(
     private readonly maxWindowSize: number = DEFAULT_WINDOW_SIZE,
@@ -31,7 +31,7 @@ export class LocationAverager {
   /**
    * Adds a new location reading to the internal store, maintaining the fixed window size.
    * If the window is full, the oldest reading is removed (FIFO).
-   * @param locationPoint The LocationPoint object to store.
+   * @param locationPoint - The LocationPoint object to store.
    */
   public addReading(locationPoint: LocationPoint): void {
     this.readings.push(locationPoint);
@@ -45,6 +45,7 @@ export class LocationAverager {
 
   /**
    * Returns the current number of stored readings in the window.
+   * @returns The number of readings currently stored.
    */
   public getCount(): number {
     return this.readings.length;
@@ -153,7 +154,7 @@ const addPropertyFromSource = (target: any, source: any, property: string) => {
 // --- Helper Methods ---
 /**
  * Calculates the median of a sorted array of numbers.
- * @param sortedValues An array of numbers sorted in ascending order.
+ * @param sortedValues - An array of numbers sorted in ascending order.
  * @returns The median value.
  */
 const calculateMedian = (sortedValues: number[]): number => {
