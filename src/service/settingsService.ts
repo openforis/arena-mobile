@@ -24,9 +24,13 @@ const defaultSettings: Partial<SettingsObject> = {
 
 let INSTANCE: SettingsObject | null = null;
 
-type SystemSettingApplier = {
-  ({ key, value }: { key?: SettingKey; value: any }): Promise<any>;
-};
+type SystemSettingApplier = ({
+  key,
+  value,
+}: {
+  key?: SettingKey;
+  value: any;
+}) => Promise<any>;
 
 const systemSettingApplierByKey: Partial<
   Record<SettingKey, SystemSettingApplier>
