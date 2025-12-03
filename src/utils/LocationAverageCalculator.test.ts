@@ -251,10 +251,10 @@ describe("LocationAverager", () => {
       expect(result === null || result.count > 0).toBe(true);
     });
 
-    it("should handle readings with null accuracy by treating them as 0", () => {
+    it("should handle readings with null accuracy by treating them as 1000", () => {
       const averager = new LocationAverager();
       const readings: LocationPoint[] = [
-        { latitude: 40.7128, longitude: -74.006, accuracy: null },
+        { latitude: 40.7128, longitude: -74.006, accuracy: null }, // reading will be ignored in filtering
         { latitude: 40.7129, longitude: -74.0061, accuracy: 10 },
       ];
 

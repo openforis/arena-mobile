@@ -275,18 +275,17 @@ export const useNodeCoordinateComponent = (props: any) => {
     log.debug("onStartGpsPress");
     const valueExists =
       Objects.isNotEmpty(uiValueX) && Objects.isNotEmpty(uiValueY);
-    if (
-      valueExists &&
-      !(await confirm({
-        messageKey: "dataEntry:confirmOverwriteValue.message",
-      }))
-    ) {
-      return;
-    }
     if (valueExists) {
-      // clear existing value before starting GPS
-      log.debug("Clearing existing coordinate value before starting GPS");
-      await updateNodeValue({ value: null, ignoreDelay: true });
+      if (
+        await confirm({ messageKey: "dataEntry:confirmOverwriteValue.message" })
+      ) {
+        // clear existing value before starting GPS
+        log.debug("Clearing existing coordinate value before starting GPS");
+        await updateNodeValue({ value: null, ignoreDelay: true });
+      } else {
+        // value exists and user did not confirm overwrite; do not start GPS
+        return;
+      }
     }
     await startLocationWatch();
   }, [confirm, startLocationWatch, uiValueX, uiValueY, updateNodeValue]);
