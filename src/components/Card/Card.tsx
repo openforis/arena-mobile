@@ -14,6 +14,7 @@ type Props = {
 const defaultStyles = StyleSheet.create({
   subtitle: {
     textAlign: "justify",
+    fontStyle: "italic",
   },
 });
 
