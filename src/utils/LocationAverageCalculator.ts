@@ -9,7 +9,7 @@ const madScaleFactor = 1.4826; // constant to make MAD consistent with SD for no
 
 /**
  * Stores a fixed "window" of the most recent LocationPoint objects, filters outliers
- * using Standard Deviation (SD) of accuracy, and calculates the final averaged location.
+ * using Median Absolute Deviation (MAD) of accuracy, and calculates the final averaged location.
  */
 export class LocationAverager {
   private readings: LocationPoint[] = [];
@@ -17,7 +17,7 @@ export class LocationAverager {
   /**
    * Initializes the averager with the statistical multiplier and window size.
    * @param maxWindowSize - The maximum number of recent readings to store (the size of the observation window).
-   * @param sdMultiplier - The number of standard deviations (N) to use for the exclusion rule (N*SD).
+   * @param sdMultiplier - The multiplier (N) used with MAD for outlier exclusion (N * madScaleFactor * MAD).
    */
   constructor(
     private readonly maxWindowSize: number = DEFAULT_WINDOW_SIZE,
