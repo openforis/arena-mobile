@@ -73,7 +73,7 @@ export class LocationAverager {
 
     // --- 1. Extract and sort accuracy values ---
     const accuracyValues: number[] = readings
-      .map((locationPoint) => locationPoint.accuracy ?? 0) // Treat null accuracy as 0
+      .map((locationPoint) => locationPoint.accuracy ?? 1000) // Treat null accuracy as 1000 (very poor accuracy)
       .sort((a, b) => a - b);
 
     // --- 2. Calculate Median Accuracy ---
