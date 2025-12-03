@@ -11,6 +11,7 @@ import {
   useAppDispatch,
   useConfirm,
 } from "state";
+import { log } from "utils";
 
 import { NewNodeButton } from "../NewNodeButton";
 import { SingleAttributeComponentSwitch } from "./SingleAttributeComponentSwitch";
@@ -23,11 +24,9 @@ export const MultipleAttributeComponentWrapper = (
 ) => {
   const { nodeDef, parentNodeUuid } = props;
 
-  if (__DEV__) {
-    console.log(
-      `rendering MultipleAttributeComponentWrapper for ${nodeDef.props.name} - parentNodeUuid: ${parentNodeUuid}`
-    );
-  }
+  log.debug(
+    `rendering MultipleAttributeComponentWrapper for ${nodeDef.props.name} - parentNodeUuid: ${parentNodeUuid}`
+  );
 
   const dispatch = useAppDispatch();
   const confirm = useConfirm();

@@ -1,12 +1,19 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import { Objects } from "@openforis/arena-core";
 
 import { ConnectionToRemoteServerButton } from "appComponents/ConnectionToRemoteServerButton";
 import { FullBackupButton } from "appComponents/FullBackupButton";
-import { Card, ScreenView, VView } from "components";
+import { Button, Card, ScreenView, VView } from "components";
 import { SettingsModel } from "model";
-import { SettingsActions, SettingsSelectors, useAppDispatch } from "state";
+import { AppService } from "service/appService";
+import {
+  SettingsActions,
+  SettingsSelectors,
+  useAppDispatch,
+  useConfirm,
+} from "state";
+import { log, clearLogs } from "utils";
 
 import { SettingsItem } from "./SettingsItem";
 import styles from "./styles";
@@ -14,10 +21,9 @@ import styles from "./styles";
 const settingsPropertiesEntries = Object.entries(SettingsModel.properties);
 
 export const SettingsScreen = () => {
-  if (__DEV__) {
-    console.log(`rendering SettingsScreen`);
-  }
+  log.debug(`rendering SettingsScreen`);
   const dispatch = useAppDispatch();
+  const confirm = useConfirm();
 
   const settingsStored = SettingsSelectors.useSettings();
 
@@ -35,6 +41,20 @@ export const SettingsScreen = () => {
         Objects.assocPath({ obj: statePrev, path: ["settings", key], value })
       );
     };
+
+  const onExportLogsPress = useCallback(async () => {
+    await AppService.exportLogsAndShareThem();
+  }, []);
+
+  const onClearLogsPress = useCallback(async () => {
+    if (
+      await confirm({
+        messageKey: "app:logs.clear.confirmMessage",
+      })
+    ) {
+      await clearLogs();
+    }
+  }, [confirm]);
 
   return (
     <ScreenView>
@@ -54,6 +74,22 @@ export const SettingsScreen = () => {
           ))}
         <Card titleKey="app:backup">
           <FullBackupButton />
+        </Card>
+        <Card
+          contentStyle={styles.logsCardContent}
+          titleKey="app:logs.title"
+          subtitleKey="app:logs.subtitle"
+        >
+          <Button
+            icon="download"
+            onPress={onExportLogsPress}
+            textKey="app:logs.exportLabel"
+          />
+          <Button
+            icon="trash-can-outline"
+            onPress={onClearLogsPress}
+            textKey="app:logs.clear.label"
+          />
         </Card>
       </VView>
     </ScreenView>

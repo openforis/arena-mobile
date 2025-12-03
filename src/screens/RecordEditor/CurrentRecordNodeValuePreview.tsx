@@ -8,6 +8,7 @@ import {
   useAppDispatch,
   useConfirm,
 } from "state";
+import { log } from "utils";
 
 import { NodeValuePreview } from "./NodeValuePreview";
 import { NodeValuePreviewProps } from "./NodeValuePreview/NodeValuePreviewPropTypes";
@@ -19,11 +20,9 @@ type Props = NodeValuePreviewProps & {
 export const CurrentRecordNodeValuePreview = (props: Props) => {
   const { nodeDef, parentNodeUuid } = props;
 
-  if (__DEV__) {
-    console.log(
-      `rendering CurrentRecordNodeValuePreview for ${nodeDef.props.name}`
-    );
-  }
+  log.debug(
+    `rendering CurrentRecordNodeValuePreview for ${nodeDef.props.name}`
+  );
 
   const dispatch = useAppDispatch();
   const confirm = useConfirm();

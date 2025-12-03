@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Appbar as RNPAppbar, Divider, Menu } from "react-native-paper";
 import { BackHandler } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -20,12 +21,13 @@ import { Environment } from "utils";
 import { UserSummary } from "./UserSummary";
 
 type Props = {
+  onDismiss: () => void;
   toggleMenu: () => void;
   visible?: boolean;
 };
 
 export const OptionsMenu = (props: Props) => {
-  const { toggleMenu, visible = false } = props;
+  const { toggleMenu, visible = false, onDismiss } = props;
 
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
@@ -39,12 +41,17 @@ export const OptionsMenu = (props: Props) => {
     ? Surveys.getFieldManualLink(lang)(survey)
     : null;
 
+  const anchor = useMemo(
+    () => <RNPAppbar.Action icon="dots-vertical" onPress={toggleMenu} />,
+    [toggleMenu]
+  );
+
+  if (!visible) {
+    return anchor;
+  }
+
   return (
-    <Menu
-      anchor={<RNPAppbar.Action icon="dots-vertical" onPress={toggleMenu} />}
-      onDismiss={toggleMenu}
-      visible={visible}
-    >
+    <Menu anchor={anchor} onDismiss={onDismiss} visible>
       <UserSummary
         navigation={navigation}
         onButtonPress={() => toggleMenu()}

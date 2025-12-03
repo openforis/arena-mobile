@@ -32,6 +32,17 @@ export default {
     checkingLoggedIn: "Comprobando inicio de sesión",
     complete: "Completo",
   },
+  logs: {
+    title: "Registros",
+    subtitle:
+      "Los archivos de registro almacenan información de diagnóstico que puede ayudar a solucionar problemas.",
+    clear: {
+      label: "Borrar registros",
+      confirmMessage:
+        "¿Está seguro de que desea eliminar todos los archivos de registro?",
+    },
+    exportLabel: "Exportar registros",
+  },
   pleaseWaitMessage: "Por favor, espere...",
   update: "Actualizar",
   updateAvailable: "Actualización disponible",

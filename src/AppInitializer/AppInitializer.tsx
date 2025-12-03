@@ -16,7 +16,7 @@ import {
   SurveyActions,
   useAppDispatch,
 } from "state";
-import { SystemUtils } from "utils";
+import { initializeLogger, log, SystemUtils } from "utils";
 
 import styles from "./styles";
 
@@ -66,13 +66,16 @@ export const AppInitializer = (props: Props) => {
   } as AppInitializerState);
   const { loading, errorMessage, step } = state;
 
-  const setStep = (stepNew: any) =>
+  const setStep = (stepNew: any) => {
+    log.debug(`App initialization step: ${stepNew}`);
     setState((statePrev) => ({ ...statePrev, step: stepNew }));
+  };
 
   const initialize = useCallback(async () => {
-    if (__DEV__) {
-      console.log("Initializing app");
-    }
+    log.debug(`Initializing app`);
+
+    await initializeLogger();
+
     await SystemUtils.cleanupTempFiles();
 
     setStep(steps.fetchingDeviceInfo);
@@ -126,9 +129,6 @@ export const AppInitializer = (props: Props) => {
     await dispatch(RemoteConnectionActions.loginAndSetUser());
 
     setStep(steps.complete);
-    if (__DEV__) {
-      console.log("App initialized");
-    }
   }, [dispatch]);
 
   useEffect(() => {
@@ -137,9 +137,7 @@ export const AppInitializer = (props: Props) => {
         setState((statePrev) => ({ ...statePrev, loading: false }));
       })
       .catch((err) => {
-        if (__DEV__) {
-          console.error("===error", err);
-        }
+        log.error("Error during app initialization", err);
         const errorMessage =
           err instanceof DowngradeError
             ? "Downgrade error"

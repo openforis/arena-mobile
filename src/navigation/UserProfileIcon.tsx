@@ -7,6 +7,7 @@ import {
   RemoteConnectionSelectors,
 } from "state/remoteConnection";
 import { useAppDispatch } from "state/store";
+import { log } from "utils";
 
 type UserProfileAvatarProps = {
   loading?: boolean;
@@ -33,7 +34,7 @@ type Props = {
 
 export const UserProfileIcon = (props: Props) => {
   const { onPress, size = 30 } = props;
-  if (__DEV__) console.log(`rendering UserProfileIcon`);
+  log.debug(`rendering UserProfileIcon`);
 
   const dispatch = useAppDispatch();
   const user = RemoteConnectionSelectors.useLoggedInUser();

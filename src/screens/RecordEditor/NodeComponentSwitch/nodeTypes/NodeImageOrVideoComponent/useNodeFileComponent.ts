@@ -9,7 +9,7 @@ import { useRequestCameraPermission, useToast } from "hooks";
 import { useNodeComponentLocalState } from "screens/RecordEditor/useNodeComponentLocalState";
 import { useConfirm } from "state/confirm";
 import { SettingsSelectors } from "state/settings";
-import { ExifUtils, Files, ImageUtils, Permissions } from "utils";
+import { ExifUtils, Files, ImageUtils, log, Permissions } from "utils";
 
 import { useCheckCanAccessMediaLibrary } from "./useCheckCanAccessMediaLibrary";
 
@@ -38,7 +38,7 @@ const setLocationInFile = async (fileUri: any) => {
     }
   } catch (error) {
     // ignore it
-    console.log("Error setting location in file exif data: " + error);
+    log.error("Error setting location in file exif data: " + error);
   }
 };
 

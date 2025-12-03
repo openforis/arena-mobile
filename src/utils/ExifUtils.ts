@@ -1,3 +1,5 @@
+import * as Location from "expo-location";
+
 import { Objects } from "@openforis/arena-core";
 
 import { AMConstants } from "./AMConstants";
@@ -26,7 +28,13 @@ const hasGpsData = async ({ fileUri }: any) => {
   );
 };
 
-const writeGpsData = async ({ fileUri, location }: any) => {
+const writeGpsData = async ({
+  fileUri,
+  location,
+}: {
+  fileUri: string;
+  location: Location.LocationObject;
+}) => {
   const { coords, timestamp } = location;
   const { latitude, longitude, altitude } = coords;
   const locationTimestampObj = new Date(timestamp);
@@ -40,7 +48,7 @@ const writeGpsData = async ({ fileUri, location }: any) => {
     GPSLongitude: longitude,
     GPSLongitudeRef: longitude >= 0 ? "E" : "W",
     GPSAltitude: altitude,
-    GPSAltitudeRef: altitude < 0 ? 1 : 0, // 0 for above sea, 1 for below
+    GPSAltitudeRef: (altitude ?? 0) < 0 ? 1 : 0, // 0 for above sea, 1 for below
     // GPSTimeStamp: [hours, minutes, seconds] UTC
     GPSTimeStamp: [
       locationTimestampObj.getUTCHours(),

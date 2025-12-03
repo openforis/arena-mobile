@@ -9,10 +9,12 @@ import {
   PointFactory,
   Points,
   Records,
+  SRSIndex,
   Surveys,
 } from "@openforis/arena-core";
 
 import { useLocationWatch } from "hooks";
+import { LocationPoint } from "model";
 import { RecordNodes } from "model/utils/RecordNodes";
 import {
   DataEntryActions,
@@ -21,6 +23,7 @@ import {
   useAppDispatch,
   useConfirm,
 } from "state";
+import { log } from "utils";
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 
 const stringToNumber = (str: any) => Numbers.toNumber(str);
@@ -46,9 +49,13 @@ const locationToUiValue = ({
   nodeDef,
   srsTo,
   srsIndex,
-}: any): LocationUiValue | null => {
-  const { coords } = location;
-  const { latitude, longitude, accuracy } = coords;
+}: {
+  location: LocationPoint;
+  nodeDef: any;
+  srsTo: string;
+  srsIndex?: SRSIndex;
+}): LocationUiValue | null => {
+  const { latitude, longitude, accuracy } = location;
 
   const pointLatLong = PointFactory.createInstance({
     x: longitude,
@@ -70,7 +77,7 @@ const locationToUiValue = ({
 
   for (const field of includedExtraFields) {
     // @ts-ignore
-    result[field] = numberToString(coords[field], 2);
+    result[field] = numberToString(location[field], 2);
   }
   // always include accuracy
   result.accuracy = numberToString(accuracy, 2);
@@ -212,7 +219,7 @@ export const useNodeCoordinateComponent = (props: any) => {
   );
 
   const locationCallback = useCallback(
-    ({ location }: any) => {
+    ({ location }: { location: LocationPoint | null }) => {
       if (!location) return;
 
       const valueNext = locationToUiValue({
@@ -265,16 +272,23 @@ export const useNodeCoordinateComponent = (props: any) => {
   );
 
   const onStartGpsPress = useCallback(async () => {
-    if (
-      Objects.isEmpty(uiValueX) ||
-      Objects.isEmpty(uiValueY) ||
-      (await confirm({
-        messageKey: "dataEntry:confirmOverwriteValue.message",
-      }))
-    ) {
-      await startLocationWatch();
+    log.debug("onStartGpsPress");
+    const valueExists =
+      Objects.isNotEmpty(uiValueX) && Objects.isNotEmpty(uiValueY);
+    if (valueExists) {
+      if (
+        await confirm({ messageKey: "dataEntry:confirmOverwriteValue.message" })
+      ) {
+        // clear existing value before starting GPS
+        log.debug("Clearing existing coordinate value before starting GPS");
+        await updateNodeValue({ value: null, ignoreDelay: true });
+      } else {
+        // value exists and user did not confirm overwrite; do not start GPS
+        return;
+      }
     }
-  }, [confirm, startLocationWatch, uiValueX, uiValueY]);
+    await startLocationWatch();
+  }, [confirm, startLocationWatch, uiValueX, uiValueY, updateNodeValue]);
 
   const onStopGpsPress = useCallback(() => {
     stopLocationWatch();

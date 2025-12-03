@@ -43,5 +43,5 @@
     "jest.config.js"
   ],
   "extends": "expo/tsconfig.base",
-  "include": ["src/**/*", "App.ts"],
+  "include": ["src/**/*", "App.tsx"],
 }

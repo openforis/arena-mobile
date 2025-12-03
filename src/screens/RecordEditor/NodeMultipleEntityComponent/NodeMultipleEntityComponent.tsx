@@ -2,6 +2,7 @@ import { NodeDefs } from "@openforis/arena-core";
 
 import { RecordEditViewMode } from "model";
 import { SurveyOptionsSelectors } from "state";
+import { log } from "utils";
 import { NodeEntityFormComponent } from "../NodeComponentSwitch/nodeTypes/NodeEntityFormComponent";
 import { NodeMultipleEntityListComponent } from "./NodeMultipleEntityListComponent";
 import { RecordNodesCarousel } from "../RecordNodesCarousel";
@@ -12,14 +13,14 @@ type NodeMultipleEntityComponentProps = {
   entityUuid?: string;
 };
 
-export const NodeMultipleEntityComponent = (props: NodeMultipleEntityComponentProps) => {
+export const NodeMultipleEntityComponent = (
+  props: NodeMultipleEntityComponentProps
+) => {
   const { entityDef, parentEntityUuid, entityUuid } = props;
 
-  if (__DEV__) {
-    console.log(
-      "Rendering NodeMultipleEntityComponent for " + NodeDefs.getName(entityDef)
-    );
-  }
+  log.debug(
+    "Rendering NodeMultipleEntityComponent for " + NodeDefs.getName(entityDef)
+  );
 
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
 

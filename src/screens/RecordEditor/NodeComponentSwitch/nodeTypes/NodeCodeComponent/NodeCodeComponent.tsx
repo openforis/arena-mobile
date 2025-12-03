@@ -5,6 +5,7 @@ import {
   SurveyOptionsSelectors,
   SurveySelectors,
 } from "state";
+import { log } from "utils";
 
 import { RecordEditViewMode } from "model/RecordEditViewMode";
 
@@ -23,9 +24,7 @@ const MAX_VISIBLE_ITEMS = 10;
 export const NodeCodeComponent = (props: NodeComponentProps) => {
   const { parentNodeUuid, nodeDef } = props;
 
-  if (__DEV__) {
-    console.log(`rendering NodeCodeComponent for ${NodeDefs.getName(nodeDef)}`);
-  }
+  log.debug(`rendering NodeCodeComponent for ${NodeDefs.getName(nodeDef)}`);
 
   const {
     closeEditDialog,

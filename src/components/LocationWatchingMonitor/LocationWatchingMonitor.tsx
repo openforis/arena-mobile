@@ -1,3 +1,4 @@
+import { log } from "utils";
 import { FieldSet } from "../FieldSet";
 import { Button } from "../Button";
 import { HView } from "../HView";
@@ -10,7 +11,7 @@ import { ElapsedTimeProgressBar } from "./ElapsedTimeProgressBar";
 import styles from "./styles";
 
 type LocationWatchingMonitorProps = {
-  locationAccuracy?: number | string;
+  locationAccuracy?: number | string | null;
   locationAccuracyThreshold: number;
   locationWatchElapsedTime: number;
   locationWatchTimeout: number;
@@ -19,7 +20,9 @@ type LocationWatchingMonitorProps = {
   watchingLocation: boolean;
 };
 
-export const LocationWatchingMonitor = (props: LocationWatchingMonitorProps) => {
+export const LocationWatchingMonitor = (
+  props: LocationWatchingMonitorProps
+) => {
   const {
     locationAccuracy,
     locationAccuracyThreshold,
@@ -30,9 +33,7 @@ export const LocationWatchingMonitor = (props: LocationWatchingMonitorProps) => 
     watchingLocation,
   } = props;
 
-  if (__DEV__) {
-    console.log(`rendering LocationWatchingMonitor`);
-  }
+  log.debug(`rendering LocationWatchingMonitor`);
 
   const locationAccuracyFormatted =
     typeof locationAccuracy === "string"

@@ -41,13 +41,18 @@ export const SettingsFormItem = (props: SettingsFormItemProps) => {
 
   return (
     <View key={settingKey} style={style}>
-      <VView style={{ flex: 1 }}>
-        <Text textKey={labelKey} textParams={labelParams} />
+      <VView fullFlex>
+        <Text
+          textKey={labelKey}
+          textParams={labelParams}
+          variant="labelLarge"
+        />
         {descriptionKey && (
           <Text
-            variant="labelMedium"
+            style={styles.settingsItemDescription}
             textKey={descriptionKey}
             textParams={descriptionParams}
+            variant="labelMedium"
           />
         )}
       </VView>

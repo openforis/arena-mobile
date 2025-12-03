@@ -6,6 +6,7 @@ import { NavigateToRecordsListButton } from "appComponents/NavigateToRecordsList
 import { HView, IconButton, View } from "components";
 import { TextDirection, useTextDirection } from "localization";
 import { DataEntryActions, DataEntrySelectors, useAppDispatch } from "state";
+import { log } from "utils";
 
 import { NodePageNavigationButton } from "./NodePageNavigationButton";
 import { SingleNodeNavigationButton } from "./SingleNodeNavigationButton";
@@ -62,11 +63,7 @@ export const BottomNavigationBar = () => {
   const currentEntityPointer = DataEntrySelectors.useCurrentPageEntity();
   const { entityDef } = currentEntityPointer;
 
-  if (__DEV__) {
-    console.log(
-      `rendering BottomNavigationBar for ${NodeDefs.getName(entityDef)}`
-    );
-  }
+  log.debug(`rendering BottomNavigationBar for ${NodeDefs.getName(entityDef)}`);
   const {
     activeChildIndex,
     listOfRecordsButtonVisible,

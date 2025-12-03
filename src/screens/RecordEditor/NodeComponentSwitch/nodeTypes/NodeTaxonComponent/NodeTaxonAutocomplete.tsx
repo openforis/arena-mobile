@@ -4,6 +4,7 @@ import { NodeDefs } from "@openforis/arena-core";
 
 import { SelectableListWithFilter } from "components";
 import { Taxa } from "model";
+import { log } from "utils";
 
 import { useTaxaFiltered } from "./useTaxaFiltered";
 
@@ -131,11 +132,7 @@ type NodeTaxonAutocompleteProps = {
 export const NodeTaxonAutocomplete = (props: NodeTaxonAutocompleteProps) => {
   const { nodeDef, parentNodeUuid, selectedTaxon, updateNodeValue } = props;
 
-  if (__DEV__) {
-    console.log(
-      `rendering NodeTaxonAutocomplete for ${NodeDefs.getName(nodeDef)}`
-    );
-  }
+  log.debug(`rendering NodeTaxonAutocomplete for ${NodeDefs.getName(nodeDef)}`);
 
   const { taxa, unlistedTaxon, unknownTaxon } = useTaxaFiltered({
     nodeDef,

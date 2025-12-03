@@ -1,5 +1,6 @@
 import { FieldSet } from "components";
 import { DataEntrySelectors } from "state";
+import { log } from "utils";
 
 import { NodeEntityFormComponent } from "./NodeEntityFormComponent";
 import { NodeComponentProps } from "./nodeComponentPropTypes";
@@ -7,9 +8,7 @@ import { NodeComponentProps } from "./nodeComponentPropTypes";
 export const NodeSingleEntityComponent = (props: NodeComponentProps) => {
   const { nodeDef, parentNodeUuid } = props;
 
-  if (__DEV__) {
-    console.log("rendering NodeSingleEntityComponent");
-  }
+  log.debug("rendering NodeSingleEntityComponent");
 
   const nodeUuid = DataEntrySelectors.useRecordSingleNodeUuid({
     parentNodeUuid,
