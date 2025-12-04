@@ -27,6 +27,7 @@ export { Link } from "./Link";
 export { LocationWatchingMonitor } from "./LocationWatchingMonitor";
 export { Loader } from "./Loader";
 export { LoadingIcon } from "./LoadingIcon";
+export { Markdown } from "./Markdown";
 export { MenuButton } from "./MenuButton";
 export { MenuItem } from "./MenuItem";
 export { MessageDialog } from "./MessageDialog";
