@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
 import { useTheme } from "react-native-paper";
-import Markdown from "react-native-markdown-display";
 
-import { Dialog } from "components";
+import { Dialog, Markdown } from "components";
 import { FormItem } from "components/FormItem";
 import { LoadingIcon } from "components/LoadingIcon";
 import { ScrollView } from "components/ScrollView";
@@ -77,7 +76,7 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
         {!content && <LoadingIcon />}
         {content && (
           <ScrollView style={styles.changelogContent} persistentScrollbar>
-            <Markdown style={styles.markdown}>{content}</Markdown>
+            <Markdown content={content} style={styles.markdown} />
           </ScrollView>
         )}
       </VView>

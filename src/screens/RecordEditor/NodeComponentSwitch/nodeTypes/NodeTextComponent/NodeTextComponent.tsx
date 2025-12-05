@@ -1,10 +1,21 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
-import { NodeDefType, NodeDefs, Objects } from "@openforis/arena-core";
+import {
+  NodeDefTextInputType,
+  NodeDefType,
+  NodeDefs,
+  NodeValueFormatter,
+  Objects,
+} from "@openforis/arena-core";
 
 import { CopyToClipboardButton, HView, TextInput } from "components";
 import { RecordEditViewMode } from "model";
-import { DataEntrySelectors, SurveyOptionsSelectors } from "state";
+import { NodeTextReadOnlyValuePreview } from "screens/RecordEditor/NodeValuePreview/NodeTextReadOnlyValuePreview";
+import {
+  DataEntrySelectors,
+  SurveyOptionsSelectors,
+  SurveySelectors,
+} from "state";
 import { log } from "utils";
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 import { useStyles } from "./styles";
@@ -23,29 +34,31 @@ type NodeTextComponentProps = {
   wrapperStyle?: any;
 };
 
+const nodeValueToUiValue = (value: any) =>
+  Objects.isEmpty(value) ? "" : String(value);
+
 export const NodeTextComponent = (props: NodeTextComponentProps) => {
   const { nodeDef, nodeUuid, style: styleProp, wrapperStyle } = props;
 
   log.debug(`rendering NodeTextComponent for ${nodeDef.props.name}`);
 
-  const inputRef = useRef(null as any);
+  const survey = SurveySelectors.useCurrentSurvey()!;
+  const cycle = SurveySelectors.useCurrentSurveyCycle();
+  const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
   const isActiveChild =
     DataEntrySelectors.useIsNodeDefCurrentActiveChild(nodeDef);
+  const inputRef = useRef(null as any);
 
   const styles = useStyles({ wrapperStyle });
 
   const isNumeric = !!isNumericByType[nodeDef.type];
 
-  const editable = !NodeDefs.isReadOnly(nodeDef);
+  const isReadOnly = NodeDefs.isReadOnly(nodeDef);
+  const editable = !isReadOnly;
   const multiline =
     NodeDefs.getType(nodeDef) === NodeDefType.text &&
-    nodeDef.props.textInputType === "multiLine";
-
-  const nodeValueToUiValue = useCallback(
-    (value: any) => (Objects.isEmpty(value) ? "" : String(value)),
-    []
-  );
+    NodeDefs.getTextInputType(nodeDef) === NodeDefTextInputType.multiLine;
 
   const uiValueToNodeValue = useCallback(
     (uiValue: any) => {
@@ -58,7 +71,7 @@ export const NodeTextComponent = (props: NodeTextComponentProps) => {
     [isNumeric]
   );
 
-  const { applicable, invalidValue, uiValue, updateNodeValue } =
+  const { applicable, invalidValue, value, uiValue, updateNodeValue } =
     useNodeComponentLocalState({
       nodeUuid,
       updateDelay: 500,
@@ -95,17 +108,32 @@ export const NodeTextComponent = (props: NodeTextComponentProps) => {
 
   return (
     <HView style={styles.wrapper}>
-      <TextInput
-        editable={editable}
-        error={invalidValue}
-        keyboardType={isNumeric ? "numeric" : undefined}
-        ref={inputRef}
-        style={style}
-        multiline={multiline}
-        numberOfLines={multiline ? multilineNumberOfLines : 1}
-        onChange={onChange}
-        value={uiValue}
-      />
+      {isReadOnly ? (
+        <NodeTextReadOnlyValuePreview
+          nodeDef={nodeDef}
+          value={value}
+          valueFormatted={NodeValueFormatter.format({
+            survey,
+            cycle,
+            nodeDef,
+            value,
+            showLabel: true,
+            lang,
+          })}
+        />
+      ) : (
+        <TextInput
+          editable={editable}
+          error={invalidValue}
+          keyboardType={isNumeric ? "numeric" : undefined}
+          ref={inputRef}
+          style={style}
+          multiline={multiline}
+          numberOfLines={multiline ? multilineNumberOfLines : 1}
+          onChange={onChange}
+          value={uiValue}
+        />
+      )}
       {!editable && <CopyToClipboardButton value={uiValue} />}
     </HView>
   );

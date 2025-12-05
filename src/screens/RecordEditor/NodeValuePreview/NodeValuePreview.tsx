@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 import {
   NodeDefs,
   NodeDefType,
@@ -16,12 +16,16 @@ import { CoordinateValuePreview } from "./CoordinateValuePreview";
 import { BooleanValuePreview } from "./BooleanValuePreview";
 import { FileValuePreview } from "./FileValuePreview";
 import { TaxonValuePreview } from "./TaxonValuePreview";
+import { TextValuePreview } from "./TextValuePreview";
 
-const componentByNodeDefType: Record<string, any> = {
+const componentByNodeDefType: Partial<
+  Record<NodeDefType, (props: NodeValuePreviewProps) => JSX.Element | null>
+> = {
   [NodeDefType.boolean]: BooleanValuePreview,
   [NodeDefType.coordinate]: CoordinateValuePreview,
   [NodeDefType.file]: FileValuePreview,
   [NodeDefType.taxon]: TaxonValuePreview,
+  [NodeDefType.text]: TextValuePreview,
 };
 
 export const NodeValuePreview = (props: NodeValuePreviewProps) => {
@@ -37,10 +41,6 @@ export const NodeValuePreview = (props: NodeValuePreviewProps) => {
     return <Text>---</Text>;
   }
 
-  const component = componentByNodeDefType[nodeDef.type];
-  if (component) {
-    return React.createElement(component, { nodeDef, value });
-  }
   const valueFormatted = NodeValueFormatter.format({
     survey,
     cycle,
@@ -49,5 +49,10 @@ export const NodeValuePreview = (props: NodeValuePreviewProps) => {
     showLabel: true,
     lang,
   });
+
+  const component = componentByNodeDefType[NodeDefs.getType(nodeDef)];
+  if (component) {
+    return React.createElement(component, { nodeDef, value, valueFormatted });
+  }
   return <Text>{valueFormatted}</Text>;
 };

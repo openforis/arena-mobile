@@ -1,12 +1,13 @@
-import { Paragraph } from "react-native-paper";
+import { useCallback } from "react";
 import * as WebBrowser from "expo-web-browser";
 
+import { Text } from "components/Text";
 import { useTranslation } from "localization";
 
 import styles from "./styles";
 
 type Props = {
-  labelKey: string;
+  labelKey?: string;
   labelParams?: any;
   url: string;
 };
@@ -15,13 +16,15 @@ export const Link = (props: Props) => {
   const { labelKey, labelParams, url } = props;
   const { t } = useTranslation();
 
-  const onPress = async () => {
+  const onPress = useCallback(async () => {
     await WebBrowser.openBrowserAsync(url);
-  };
+  }, [url]);
+
+  const label = labelKey ? t(labelKey, labelParams) : url;
 
   return (
-    <Paragraph style={styles.paragraph} onPress={onPress}>
-      {t(labelKey, labelParams)}
-    </Paragraph>
+    <Text onPress={onPress} style={styles.paragraph} variant="bodyMedium">
+      {label}
+    </Text>
   );
 };
