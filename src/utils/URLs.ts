@@ -1,10 +1,21 @@
+import { Linking } from "react-native";
+
+const isValidUrl = (url: string) => {
+  return Linking.canOpenURL(url);
+};
+
 const normalizeUrl = (url: string) => {
-  if (url.startsWith("http://") || url.startsWith("https://")) {
-    return url;
+  let normalized = url;
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    normalized = `https://${url}`;
   }
-  return `https://${url}`;
+  if (!isValidUrl(normalized)) {
+    throw new Error(`Invalid URL: ${url}`);
+  }
+  return normalized;
 };
 
 export const URLs = {
+  isValidUrl,
   normalizeUrl,
 };

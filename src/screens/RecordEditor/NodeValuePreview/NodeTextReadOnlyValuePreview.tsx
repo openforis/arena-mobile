@@ -19,7 +19,10 @@ export const NodeTextReadOnlyValuePreview = (props: NodeValuePreviewProps) => {
     return <Markdown content={value} />;
   }
   if (isHyperlink) {
-    return <Link url={URLs.normalizeUrl(value)} />;
+    const url = URLs.normalizeUrl(value);
+    if (url) {
+      return <Link url={url} />;
+    }
   }
   return <Text>{valueFormatted}</Text>;
 };

@@ -71,7 +71,7 @@ export const NodeTextComponent = (props: NodeTextComponentProps) => {
     [isNumeric]
   );
 
-  const { applicable, invalidValue, uiValue, updateNodeValue } =
+  const { applicable, invalidValue, value, uiValue, updateNodeValue } =
     useNodeComponentLocalState({
       nodeUuid,
       updateDelay: 500,
@@ -111,12 +111,12 @@ export const NodeTextComponent = (props: NodeTextComponentProps) => {
       {isReadOnly ? (
         <NodeTextReadOnlyValuePreview
           nodeDef={nodeDef}
-          value={uiValue}
+          value={value}
           valueFormatted={NodeValueFormatter.format({
             survey,
             cycle,
             nodeDef,
-            value: uiValue,
+            value,
             showLabel: true,
             lang,
           })}
