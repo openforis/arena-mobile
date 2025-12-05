@@ -7,5 +7,6 @@ type MarkdownProps = {
 
 export const Markdown = (props: MarkdownProps) => {
   const { content, style } = props;
-  return <RNMarkdown style={style}>{content}</RNMarkdown>;
+
+  return <RNMarkdown style={style}>{content ?? ""}</RNMarkdown>;
 };
