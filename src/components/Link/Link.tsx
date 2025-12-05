@@ -1,11 +1,10 @@
-import { Paragraph } from "react-native-paper";
+import { useCallback } from "react";
 import * as WebBrowser from "expo-web-browser";
 
+import { Text } from "components/Text";
 import { useTranslation } from "localization";
 
 import styles from "./styles";
-import { useCallback } from "react";
-import { Text } from "components/Text";
 
 type Props = {
   labelKey?: string;
