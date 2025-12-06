@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import { NodeDefs, NodeDefText } from "@openforis/arena-core";
 
 import { Link, Markdown, Text } from "components";
@@ -5,7 +7,6 @@ import { DataEntrySelectors } from "state/dataEntry";
 import { URLs } from "utils";
 
 import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
-import { useEffect, useState } from "react";
 
 export const NodeTextReadOnlyValuePreview = (props: NodeValuePreviewProps) => {
   const { nodeDef, value, valueFormatted } = props;
@@ -20,7 +21,7 @@ export const NodeTextReadOnlyValuePreview = (props: NodeValuePreviewProps) => {
 
   useEffect(() => {
     const normalizeUrl = async () => {
-      const url = await URLs.normalizeUrl(value);
+      const url = await URLs.normalizeUrl("===test.org");
       setNormalizedUrl(url);
     };
     if (isHyperlink) {
