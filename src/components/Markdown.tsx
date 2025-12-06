@@ -1,8 +1,9 @@
+import { StyleSheet } from "react-native";
 import RNMarkdown from "react-native-markdown-display";
 
 type MarkdownProps = {
   content: string;
-  style?: any;
+  style?: StyleSheet.NamedStyles<any>;
 };
 
 export const Markdown = (props: MarkdownProps) => {
