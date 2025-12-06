@@ -13,3 +13,4 @@ export { Permissions } from "./Permissions";
 export { Refs } from "./Refs";
 export { SystemUtils } from "./SystemUtils";
 export { TimeUtils } from "./TimeUtils";
+export { URLs } from "./URLs";

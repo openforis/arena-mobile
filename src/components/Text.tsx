@@ -29,6 +29,7 @@ type TextVariant =
 type Props = {
   children?: React.ReactNode;
   numberOfLines?: number;
+  onPress?: () => void;
   selectable?: boolean;
   style?: StyleProp<TextStyle>;
   textKey?: string;
@@ -40,6 +41,7 @@ export const Text = (props: Props) => {
   const {
     children,
     numberOfLines,
+    onPress,
     selectable,
     style: styleProp,
     textKey,
@@ -62,6 +64,7 @@ export const Text = (props: Props) => {
   return (
     <RNText
       numberOfLines={numberOfLines}
+      onPress={onPress}
       selectable={selectable}
       style={style}
       variant={variant}
