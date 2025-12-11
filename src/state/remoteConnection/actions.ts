@@ -101,7 +101,7 @@ const login =
       dispatch(
         ConfirmActions.show({
           titleKey: "authService:loginSuccessful",
-          confirmButtonTextKey: "common:goBack",
+          confirmButtonTextKey: "common:continue",
           cancelButtonTextKey: "common:close",
           onConfirm: navigation.goBack,
         })
