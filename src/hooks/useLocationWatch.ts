@@ -93,6 +93,7 @@ export const useLocationWatch = ({
   }, []);
 
   const _stopLocationWatch = useCallback(() => {
+    log.debug("Stopping location watch");
     const subscription = locationSubscriptionRef.current;
     const wasActive = !!subscription;
     if (wasActive) {
@@ -112,10 +113,6 @@ export const useLocationWatch = ({
 
   const locationCallback = useCallback(
     (locationPointParam: LocationPoint | null) => {
-      log.debug(
-        `Location received in watch: ${JSON.stringify(locationPointParam)}`
-      );
-
       if (!locationPointParam) {
         lastLocationRef.current = locationPointParam; // location could be null when watch timeout is reached
         return;
@@ -132,8 +129,6 @@ export const useLocationWatch = ({
       }
 
       lastLocationRef.current = locationPoint;
-
-      log.debug(`Location used: ${JSON.stringify(locationPoint)}`);
 
       if (!locationPoint) return;
 
@@ -153,7 +148,7 @@ export const useLocationWatch = ({
       const thresholdReached = accuracyThresholdReached || timeoutReached;
 
       if (thresholdReached) {
-        log.debug("Threshold reached, stopping location watch");
+        log.debug("Threshold reached");
         _stopLocationWatch();
       }
       const pointLatLong = locationPointToPoint(locationPoint);
