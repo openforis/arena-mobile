@@ -1,4 +1,4 @@
-import { format, writeToString } from "@fast-csv/format";
+import Papa from "papaparse";
 import { Files } from "./Files";
 
 const writeCsvHeaders = async ({
@@ -8,7 +8,10 @@ const writeCsvHeaders = async ({
   fileUri: string;
   headers: string[];
 }) => {
-  const headerRowString = await writeToString([headers], { headers: true });
+  const headerRowString = Papa.unparse({
+    fields: headers,
+    data: [], // No data rows, just the header
+  });
   await Files.writeStringToFile({
     content: headerRowString,
     fileUri,
@@ -18,15 +21,24 @@ const writeCsvHeaders = async ({
 
 const appendCsvRows = async ({
   fileUri,
+  headers,
   rows,
 }: {
   fileUri: string;
+  headers: string[];
   rows: any[];
 }) => {
-  const content = await writeToString(rows, { headers: false });
-
+  const rowString = Papa.unparse(
+    {
+      fields: headers, // Pass headers to ensure column order is respected, even if not printing them
+      data: rows,
+    },
+    {
+      header: false, // Do not print headers again
+    }
+  );
   await Files.appendStringToFile({
-    content,
+    content: rowString,
     fileUri,
     encoding: Files.EncodingType.UTF8,
   });

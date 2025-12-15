@@ -119,38 +119,39 @@ const startUploadDataToRemoteServer =
     );
   };
 
-const startCsvDataExportJob = () => async (dispatch: any, getState: any) => {
-  const state = getState();
-  const user = RemoteConnectionSelectors.selectLoggedUser(state);
-  const survey = SurveySelectors.selectCurrentSurvey(state)!;
-  const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
+export const startCsvDataExportJob =
+  () => async (dispatch: any, getState: any) => {
+    const state = getState();
+    const user = RemoteConnectionSelectors.selectLoggedUser(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
+    const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
 
-  const dataExportJob = new FlatDataExportJob({
-    type: "FlatDataExportJob",
-    user,
-    survey,
-    surveyId: survey.id!,
-    cycle,
-    options: {},
-  });
+    const dataExportJob = new FlatDataExportJob({
+      type: "FlatDataExportJob",
+      user,
+      survey,
+      surveyId: survey.id!,
+      cycle,
+      options: {},
+    });
 
-  await JobMonitorActions.startAsync({
-    dispatch,
-    job: dataExportJob,
-    titleKey: "dataEntry:exportingData.title",
-    onJobComplete: (jobComplete: JobSummary<any>) => {
-      const { result } = jobComplete;
-      const { outputFileUri } = result || {};
-      if (outputFileUri) {
-        Files.shareFile({
-          url: outputFileUri,
-          mimeType: Files.MIME_TYPES.zip,
-          dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
-        });
-      }
-    },
-  });
-};
+    await JobMonitorActions.startAsync({
+      dispatch,
+      job: dataExportJob,
+      titleKey: "dataEntry:exportingData.title",
+      onJobComplete: (jobComplete: JobSummary<any>) => {
+        const { result } = jobComplete;
+        const { outputFileUri } = result || {};
+        if (outputFileUri) {
+          Files.shareFile({
+            url: outputFileUri,
+            mimeType: Files.MIME_TYPES.zip,
+            dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
+          });
+        }
+      },
+    });
+  };
 
 const onExportConfirmed =
   ({

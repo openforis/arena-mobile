@@ -1967,32 +1967,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fast-csv/format@npm:5.0.5":
-  version: 5.0.5
-  resolution: "@fast-csv/format@npm:5.0.5"
-  dependencies:
-    lodash.escaperegexp: "npm:^4.1.2"
-    lodash.isboolean: "npm:^3.0.3"
-    lodash.isfunction: "npm:^3.0.9"
-    lodash.isnil: "npm:^4.0.0"
-  checksum: 10c0/9c61b61799e8f07380eaf67dd93204b3787b1cce73efad761a5b6bc43e58d37e6672ed96c19ce189dd525a5280a700247636d3bc6d3118a33b6209748d72ea4b
-  languageName: node
-  linkType: hard
-
-"@fast-csv/parse@npm:5.0.5":
-  version: 5.0.5
-  resolution: "@fast-csv/parse@npm:5.0.5"
-  dependencies:
-    lodash.escaperegexp: "npm:^4.1.2"
-    lodash.groupby: "npm:^4.6.0"
-    lodash.isfunction: "npm:^3.0.9"
-    lodash.isnil: "npm:^4.0.0"
-    lodash.isundefined: "npm:^3.0.1"
-    lodash.uniq: "npm:^4.5.0"
-  checksum: 10c0/849610401684e8dc0ed4375b38e514a8fcdc590cd73283688c0ab0f2ca793f29baf1ba4d0a5c189621125635bc2cc3d2083bd0ef56ff3615bd3e7c0f43fe49ec
-  languageName: node
-  linkType: hard
-
 "@humanfs/core@npm:^0.19.1":
   version: 0.19.1
   resolution: "@humanfs/core@npm:0.19.1"
@@ -2514,7 +2488,7 @@ __metadata:
 
 "@openforis/arena-core@file:../arena-core::locator=arena-mobile%40workspace%3A.":
   version: 1.0.66
-  resolution: "@openforis/arena-core@file:../arena-core#../arena-core::hash=9b5224&locator=arena-mobile%40workspace%3A."
+  resolution: "@openforis/arena-core@file:../arena-core#../arena-core::hash=038d36&locator=arena-mobile%40workspace%3A."
   dependencies:
     "@jsep-plugin/regex": "npm:^1.0.4"
     bignumber.js: "npm:^9.3.1"
@@ -2526,7 +2500,7 @@ __metadata:
     moment: "npm:^2.30.1"
     proj4: "npm:^2.19.10"
     uuid: "npm:^11.0.3"
-  checksum: 10c0/836cc436427d11916856d37b01403efc779b634739b2dacfb6a076a0cefc605c4850d1b9614b29288cd2698367c1922de270edea6f934dfe581eb33d6d6c77b7
+  checksum: 10c0/757fea32d0301d5903b546e8f8915d71c5768741bd552bab21906b83cf0b14d48939a701c863bf60214f7b985301ab5b7b3df52bc8e8d17ce01d942ce7352813
   languageName: node
   linkType: hard
 
@@ -3217,6 +3191,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/papaparse@npm:^5":
+  version: 5.5.2
+  resolution: "@types/papaparse@npm:5.5.2"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/27b097b6f8f204b20ade1f2cbf4798eb38caa5fbfa3180fd0faa5e3f9aea371c1786ae180d56f3287556463eefe3100c953e316ea6ee99d7ae1d04111cfc9e50
+  languageName: node
+  linkType: hard
+
 "@types/react-native@npm:^0.73.0":
   version: 0.73.0
   resolution: "@types/react-native@npm:0.73.0"
@@ -3650,6 +3633,7 @@ __metadata:
     "@types/lodash": "npm:^4.17.20"
     "@types/lodash.debounce": "npm:^4.0.9"
     "@types/lodash.throttle": "npm:^4.1.9"
+    "@types/papaparse": "npm:^5"
     "@types/react": "npm:~19.1.10"
     "@types/react-native": "npm:^0.73.0"
     "@types/react-test-renderer": "npm:^19.1.0"
@@ -3685,12 +3669,12 @@ __metadata:
     expo-sqlite: "npm:~16.0.10"
     expo-status-bar: "npm:~3.0.9"
     expo-web-browser: "npm:~15.0.10"
-    fast-csv: "npm:^5.0.5"
     i18next: "npm:^25.6.1"
     jest: "npm:~29.7.0"
     lz-string: "npm:^1.5.0"
     metro-react-native-babel-preset: "npm:^0.77.0"
     mime: "npm:^4.1.0"
+    papaparse: "npm:^5.5.3"
     prettier: "npm:^3.6.2"
     react: "npm:19.1.0"
     react-dom: "npm:19.1.0"
@@ -6028,16 +6012,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-csv@npm:^5.0.5":
-  version: 5.0.5
-  resolution: "fast-csv@npm:5.0.5"
-  dependencies:
-    "@fast-csv/format": "npm:5.0.5"
-    "@fast-csv/parse": "npm:5.0.5"
-  checksum: 10c0/d2ad0028544443a484be63537a8c4ac678a3b223e9b6029a56291db7d1c44323529b3d00c9fe28bc48cc93ef68b2cd15a2ee15426abb558a8b5cc2736c61c63f
-  languageName: node
-  linkType: hard
-
 "fast-deep-equal@npm:^3.1.1, fast-deep-equal@npm:^3.1.3":
   version: 3.1.3
   resolution: "fast-deep-equal@npm:3.1.3"
@@ -8113,13 +8087,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.escaperegexp@npm:^4.1.2":
-  version: 4.1.2
-  resolution: "lodash.escaperegexp@npm:4.1.2"
-  checksum: 10c0/484ad4067fa9119bb0f7c19a36ab143d0173a081314993fe977bd00cf2a3c6a487ce417a10f6bac598d968364f992153315f0dbe25c9e38e3eb7581dd333e087
-  languageName: node
-  linkType: hard
-
 "lodash.frompairs@npm:^4.0.1":
   version: 4.0.1
   resolution: "lodash.frompairs@npm:4.0.1"
@@ -8134,45 +8101,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.groupby@npm:^4.6.0":
-  version: 4.6.0
-  resolution: "lodash.groupby@npm:4.6.0"
-  checksum: 10c0/3d136cad438ad6c3a078984ef60e057a3498b1312aa3621b00246ecb99e8f2c4d447e2815460db7a0b661a4fe4e2eeee96c84cb661a824bad04b6cf1f7bc6e9b
-  languageName: node
-  linkType: hard
-
-"lodash.isboolean@npm:^3.0.3":
-  version: 3.0.3
-  resolution: "lodash.isboolean@npm:3.0.3"
-  checksum: 10c0/0aac604c1ef7e72f9a6b798e5b676606042401dd58e49f051df3cc1e3adb497b3d7695635a5cbec4ae5f66456b951fdabe7d6b387055f13267cde521f10ec7f7
-  languageName: node
-  linkType: hard
-
 "lodash.isequal@npm:^4.5.0":
   version: 4.5.0
   resolution: "lodash.isequal@npm:4.5.0"
   checksum: 10c0/dfdb2356db19631a4b445d5f37868a095e2402292d59539a987f134a8778c62a2810c2452d11ae9e6dcac71fc9de40a6fedcb20e2952a15b431ad8b29e50e28f
-  languageName: node
-  linkType: hard
-
-"lodash.isfunction@npm:^3.0.9":
-  version: 3.0.9
-  resolution: "lodash.isfunction@npm:3.0.9"
-  checksum: 10c0/e88620922f5f104819496884779ca85bfc542efb2946df661ab3e2cd38da5c8375434c6adbedfc76dd3c2b04075d2ba8ec215cfdedf08ddd2e3c3467e8a26ccd
-  languageName: node
-  linkType: hard
-
-"lodash.isnil@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "lodash.isnil@npm:4.0.0"
-  checksum: 10c0/1a410a62eb2e797f077d038c11cbf1ea18ab36f713982849f086f86e050234d69988c76fa18d00278c0947daec67e9ecbc666326b8a06b43e36d3ece813a8120
-  languageName: node
-  linkType: hard
-
-"lodash.isundefined@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "lodash.isundefined@npm:3.0.1"
-  checksum: 10c0/00ca2ae6fc83e10f806769130ee62b5bf419a4aaa52d1a084164b4cf2b2ab1dbf7246e05c72cf0df2ebf4ea38ab565a688c1a7362b54331bb336ea8b492f327f
   languageName: node
   linkType: hard
 
@@ -8194,13 +8126,6 @@ __metadata:
   version: 4.3.0
   resolution: "lodash.topairs@npm:4.3.0"
   checksum: 10c0/3b517179b60c695c9fac23d932531c2eced5d8c5c3b83ad19bd897fdca1a307f216d29d2c171fd615ad8b393b15161acdc592c1ac612d2d72fa42f0b0c30b183
-  languageName: node
-  linkType: hard
-
-"lodash.uniq@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "lodash.uniq@npm:4.5.0"
-  checksum: 10c0/262d400bb0952f112162a320cc4a75dea4f66078b9e7e3075ffbc9c6aa30b3e9df3cf20e7da7d566105e1ccf7804e4fbd7d804eee0b53de05d83f16ffbf41c5e
   languageName: node
   linkType: hard
 
@@ -9311,6 +9236,13 @@ __metadata:
   version: 1.0.1
   resolution: "package-json-from-dist@npm:1.0.1"
   checksum: 10c0/62ba2785eb655fec084a257af34dbe24292ab74516d6aecef97ef72d4897310bc6898f6c85b5cd22770eaa1ce60d55a0230e150fb6a966e3ecd6c511e23d164b
+  languageName: node
+  linkType: hard
+
+"papaparse@npm:^5.5.3":
+  version: 5.5.3
+  resolution: "papaparse@npm:5.5.3"
+  checksum: 10c0/623aae6a35703308fd5a39d616fb3837231ebc70697346355ea508154d3f24df75b6554b736afc1924192205518a5db14e75f5e1cf35d154326050a37cdd9447
   languageName: node
   linkType: hard
 

@@ -72,6 +72,7 @@ type FlatDataExportJobContext = JobMobileContext & {
 export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   private tempFolderUri?: string;
   private nodeDefsToExport?: any;
+  headersByNodeDefUuid: any;
 
   determineNodeDefsToExport() {
     const { survey, cycle, options } = this.context;
@@ -99,6 +100,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     const { survey } = this.context;
 
     this.nodeDefsToExport = this.determineNodeDefsToExport();
+    this.headersByNodeDefUuid = {};
     this.tempFolderUri = await Files.createTempFolder();
 
     await this.createDataExportFiles();
@@ -132,6 +134,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
       const headers = flatDataExportFields.map((field) =>
         typeof field === "string" ? field : field.name
       );
+      this.headersByNodeDefUuid[nodeDef.uuid] = headers;
       const fileName = FlatDataFiles.getFileName({
         nodeDef,
         index,
@@ -187,8 +190,10 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
         extension: "csv",
       });
       const tempFileUri = Files.path(this.tempFolderUri, fileName);
+      const headers = this.headersByNodeDefUuid[nodeDef.uuid];
       await FlatDataWriter.appendCsvRows({
         fileUri: tempFileUri,
+        headers,
         rows: csvRows,
       });
       nodeDefToExportIndex += 1;
