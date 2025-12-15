@@ -1,4 +1,4 @@
-import { JobStatus, Objects, Surveys } from "@openforis/arena-core";
+import { JobStatus, JobSummary, Objects, Surveys } from "@openforis/arena-core";
 
 import { AuthService, RecordService } from "service";
 import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerationJob";
@@ -13,6 +13,7 @@ import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { JobMonitorActions } from "../jobMonitor";
 import { MessageActions } from "../message";
 import { SurveySelectors } from "../survey";
+import { FlatDataExportJob } from "service/dataExportJob";
 
 const { t } = i18n;
 
@@ -117,6 +118,39 @@ const startUploadDataToRemoteServer =
       })
     );
   };
+
+const startCsvDataExportJob = () => async (dispatch: any, getState: any) => {
+  const state = getState();
+  const user = RemoteConnectionSelectors.selectLoggedUser(state);
+  const survey = SurveySelectors.selectCurrentSurvey(state)!;
+  const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
+
+  const dataExportJob = new FlatDataExportJob({
+    type: "FlatDataExportJob",
+    user,
+    survey,
+    surveyId: survey.id!,
+    cycle,
+    options: {},
+  });
+
+  await JobMonitorActions.startAsync({
+    dispatch,
+    job: dataExportJob,
+    titleKey: "dataEntry:exportingData.title",
+    onJobComplete: (jobComplete: JobSummary<any>) => {
+      const { result } = jobComplete;
+      const { outputFileUri } = result || {};
+      if (outputFileUri) {
+        Files.shareFile({
+          url: outputFileUri,
+          mimeType: Files.MIME_TYPES.zip,
+          dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
+        });
+      }
+    },
+  });
+};
 
 const onExportConfirmed =
   ({

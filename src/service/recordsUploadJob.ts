@@ -1,9 +1,16 @@
 import { JobMobile } from "model";
 
+import { JobMobileContext } from "model";
 import { RecordService } from "./recordService";
 
+type RecordsUploadJobContext = JobMobileContext & {
+  cycle: string;
+  fileUri: string;
+  conflictResolutionStrategy: string;
+};
+
 // @ts-ignore
-export class RecordsUploadJob extends JobMobile {
+export class RecordsUploadJob extends JobMobile<RecordsUploadJobContext> {
   cancelUpload: any;
   override emitSummaryUpdateEvent: any;
   remoteJob: any;

@@ -1,14 +1,15 @@
 import { JobMobile } from "model";
 import { Files } from "utils";
 
-import { RecordsImportJob } from "./recordsImportJob";
 import { FilesImportJob } from "./filesImportJob";
+import { RecordsAndFilesImportJobContext } from "./RecordsAndFilesImportJobContext";
+import { RecordsImportJob } from "./recordsImportJob";
 
 // @ts-ignore
-export class RecordsAndFilesImportJob extends JobMobile {
+export class RecordsAndFilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
   constructor({ survey, user, fileUri, overwriteExistingRecords = true }: any) {
     super({ survey, user, fileUri, overwriteExistingRecords }, [
-      new RecordsImportJob({ survey, user, fileUri, overwriteExistingRecords }),
+      new RecordsImportJob({ survey, user, overwriteExistingRecords }),
       new FilesImportJob({ survey, user, fileUri }),
     ]);
   }

@@ -2,8 +2,9 @@ import { JobMobile } from "model";
 import { Files } from "utils";
 import { RecordsExportFile } from "../recordsExportFile";
 import { RecordFileService } from "../recordFileService";
+import { RecordsAndFilesImportJobContext } from "./RecordsAndFilesImportJobContext";
 
-export class FilesImportJob extends JobMobile {
+export class FilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
   constructor({ survey, recordUuids, user, fileUri }: any) {
     super({ survey, recordUuids, user, fileUri });
   }

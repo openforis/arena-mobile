@@ -1,1 +1,1 @@
-export { DataExportJob } from "./DataExportJob";
+export { FlatDataExportJob } from "./FlatDataExportJob";

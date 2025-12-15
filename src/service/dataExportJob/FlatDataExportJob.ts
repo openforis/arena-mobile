@@ -5,12 +5,12 @@ import {
   DataExportOptions,
   DataQuery,
   DataQueryMode,
+  Dates,
   FlatDataExportFields,
   FlatDataFiles,
   NodeDef,
   NodeDefs,
   NodeDefType,
-  Nodes,
   NodeValueFormatter,
   NodeValues,
   Records,
@@ -18,7 +18,7 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
-import { JobMobile } from "model/JobMobile";
+import { JobMobile, JobMobileContext } from "model/JobMobile";
 import { RecordService } from "service/recordService";
 import { Files } from "utils/Files";
 import { FlatDataWriter } from "utils/FlatDataWriter";
@@ -62,13 +62,19 @@ const rowDataExtractorByNodeDefType: Partial<
   },
 };
 
-export class DataExportJob extends JobMobile {
-  getNodeDefsToExport() {
-    const {
-      survey,
-      cycle,
-      options,
-    }: { survey: Survey; cycle: string; options: any } = this.context;
+type FlatDataExportJobContext = JobMobileContext & {
+  survey: Survey;
+  cycle: string;
+  options: DataExportOptions;
+  outputFileUri?: string;
+};
+
+export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
+  private tempFolderUri?: string;
+  private nodeDefsToExport?: any;
+
+  determineNodeDefsToExport() {
+    const { survey, cycle, options } = this.context;
     const { exportSingleEntitiesIntoSeparateFiles } = options;
     const result: NodeDef<any>[] = [];
     Surveys.visitDescendantsAndSelfNodeDef({
@@ -92,11 +98,10 @@ export class DataExportJob extends JobMobile {
   protected override async execute(): Promise<void> {
     const { survey } = this.context;
 
-    const nodeDefsToExport = this.getNodeDefsToExport();
+    this.nodeDefsToExport = this.determineNodeDefsToExport();
+    this.tempFolderUri = await Files.createTempFolder();
 
-    const tempFolderUri = await Files.createTempFolder();
-
-    await this.createDataExportFiles({ nodeDefsToExport, tempFolderUri });
+    await this.createDataExportFiles();
 
     const recordSummaries = await RecordService.fetchRecords({
       survey,
@@ -106,21 +111,17 @@ export class DataExportJob extends JobMobile {
     this.summary.total = recordSummaries.length;
 
     for (const recordSummary of recordSummaries) {
-      await this.exportRecord({ recordSummary, nodeDefsToExport });
+      await this.exportRecord({
+        recordSummary,
+      });
       this.incrementProcessedItems();
     }
   }
 
-  private async createDataExportFiles({
-    nodeDefsToExport,
-    tempFolderUri,
-  }: {
-    nodeDefsToExport: NodeDef<any>[];
-    tempFolderUri: string;
-  }) {
+  private async createDataExportFiles() {
     const { survey } = this.context;
     let index = 0;
-    for (const nodeDef of nodeDefsToExport) {
+    for (const nodeDef of this.nodeDefsToExport) {
       const query: DataQuery = {
         mode: DataQueryMode.raw,
         entityDefUuid: nodeDef.uuid,
@@ -136,18 +137,13 @@ export class DataExportJob extends JobMobile {
         index,
         extension: "csv",
       });
-      const tempFileUri = Files.path(tempFolderUri, fileName);
+      const tempFileUri = Files.path(this.tempFolderUri, fileName);
       await FlatDataWriter.writeCsvHeaders({ fileUri: tempFileUri, headers });
+      index += 1;
     }
   }
 
-  private async exportRecord({
-    recordSummary,
-    nodeDefsToExport,
-  }: {
-    recordSummary: any;
-    nodeDefsToExport: NodeDef<any>[];
-  }) {
+  private async exportRecord({ recordSummary }: { recordSummary: any }) {
     const { survey, cycle, options } = this.context;
 
     const record = await RecordService.fetchRecord({
@@ -155,7 +151,9 @@ export class DataExportJob extends JobMobile {
       recordId: recordSummary.id,
     });
 
-    for (const nodeDef of nodeDefsToExport) {
+    let nodeDefToExportIndex = 0;
+    for (const nodeDef of this.nodeDefsToExport) {
+      const csvRows = [];
       if (NodeDefs.isAttribute(nodeDef)) {
         // exporting multiple attribute
       } else {
@@ -180,8 +178,20 @@ export class DataExportJob extends JobMobile {
             });
             csvRowData.push(...nodeRowData);
           }
+          csvRows.push(csvRowData);
         }
       }
+      const fileName = FlatDataFiles.getFileName({
+        nodeDef,
+        index: nodeDefToExportIndex,
+        extension: "csv",
+      });
+      const tempFileUri = Files.path(this.tempFolderUri, fileName);
+      await FlatDataWriter.appendCsvRows({
+        fileUri: tempFileUri,
+        rows: csvRows,
+      });
+      nodeDefToExportIndex += 1;
     }
   }
 
@@ -219,5 +229,17 @@ export class DataExportJob extends JobMobile {
       value,
     });
     return [valueFormatted];
+  }
+
+  protected override async onEnd(): Promise<void> {
+    await super.onEnd();
+    const { survey } = this.context;
+    const surveyName = Surveys.getName(survey);
+    const timestamp = Dates.nowFormattedForExpression();
+    const outputFileName = `arena-mobile-data-export-${surveyName}-${timestamp}.zip`;
+    const outputFileUri = Files.path(Files.cacheDirectory, outputFileName);
+    await Files.zip(this.tempFolderUri, outputFileUri);
+
+    this.context.outputFileUri = outputFileUri;
   }
 }

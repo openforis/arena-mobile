@@ -5,8 +5,9 @@ import { ArrayUtils, Files } from "utils";
 
 import { RecordsExportFile } from "../recordsExportFile";
 import { RecordService } from "../recordService";
+import { RecordsAndFilesImportJobContext } from "./RecordsAndFilesImportJobContext";
 
-export class RecordsImportJob extends JobMobile {
+export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
   insertedRecords: any;
   updatedRecords: any;
   async execute() {
