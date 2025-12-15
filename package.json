@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@lodev09/react-native-exify": "^0.2.7",
-    "@openforis/arena-core": "^1.0.66",
+    "@openforis/arena-core": "../arena-core",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-clipboard/clipboard": "^1.16.3",
     "@react-native-community/datetimepicker": "8.4.4",
@@ -50,6 +50,7 @@
     "expo-sqlite": "~16.0.10",
     "expo-status-bar": "~3.0.9",
     "expo-web-browser": "~15.0.10",
+    "fast-csv": "^5.0.5",
     "i18next": "^25.6.1",
     "lz-string": "^1.5.0",
     "mime": "^4.1.0",

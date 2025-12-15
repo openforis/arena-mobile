@@ -151,8 +151,10 @@ const getMimeTypeFromUri = (uri: any) => {
 
 const getMimeTypeFromName = (fileName: any) => mime.getType(fileName);
 
-const readAsString = async (fileUri: any) =>
-  FileSystem.readAsStringAsync(fileUri);
+const readAsString = async (
+  fileUri: string,
+  encoding?: FileSystem.EncodingType
+) => FileSystem.readAsStringAsync(fileUri, encoding ? { encoding } : undefined);
 
 const readChunk = async (
   fileUri: any,
@@ -208,11 +210,40 @@ const del = async (fileUri: any, ignoreErrors = false) =>
 const download = async (uri: any, targetUri: any, options: any) =>
   FileSystem.downloadAsync(uri, targetUri, options);
 
-const writeStringToFile = async ({ content, fileUri }: any) =>
-  FileSystem.writeAsStringAsync(fileUri, content);
+const writeStringToFile = async ({
+  content,
+  fileUri,
+  encoding,
+}: {
+  content: string;
+  fileUri: string;
+  encoding?: FileSystem.EncodingType;
+}) =>
+  FileSystem.writeAsStringAsync(
+    fileUri,
+    content,
+    encoding ? { encoding } : undefined
+  );
 
 const writeJsonToFile = async ({ content, fileUri }: any) =>
   writeStringToFile({ content: jsonToString(content), fileUri });
+
+const appendStringToFile = async ({
+  content,
+  fileUri,
+  encoding,
+}: {
+  content: string;
+  fileUri: string;
+  encoding?: FileSystem.EncodingType;
+}) => {
+  let finalContent = content;
+  if (await exists(fileUri)) {
+    const currentContent = await readAsString(fileUri, encoding);
+    finalContent = currentContent + content;
+  }
+  await writeStringToFile({ content: finalContent, fileUri, encoding });
+};
 
 const isSharingAvailable = async () => Sharing.isAvailableAsync();
 
@@ -259,6 +290,7 @@ const copyUriToTempFile = async ({ uri, defaultExtension = "tmp" }: any) => {
 
 export const Files = {
   MIME_TYPES,
+  EncodingType: FileSystem.EncodingType,
   cacheDirectory,
   documentDirectory,
   path,
@@ -291,6 +323,7 @@ export const Files = {
   download,
   writeJsonToFile,
   writeStringToFile,
+  appendStringToFile,
   toHumanReadableFileSize,
   unzip,
   zip,
