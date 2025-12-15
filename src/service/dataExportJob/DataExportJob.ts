@@ -1,10 +1,18 @@
 import {
+  ArenaRecord,
+  ArenaRecordNode,
+  CategoryItems,
+  DataExportOptions,
   DataQuery,
   DataQueryMode,
   FlatDataExportFields,
   FlatDataFiles,
   NodeDef,
   NodeDefs,
+  NodeDefType,
+  Nodes,
+  NodeValueFormatter,
+  NodeValues,
   Records,
   Survey,
   Surveys,
@@ -14,6 +22,45 @@ import { JobMobile } from "model/JobMobile";
 import { RecordService } from "service/recordService";
 import { Files } from "utils/Files";
 import { FlatDataWriter } from "utils/FlatDataWriter";
+
+type RowDataExtractor = ({
+  survey,
+  cycle,
+  record,
+  node,
+  nodeDef,
+  options,
+}: {
+  survey: Survey;
+  cycle: string;
+  record: any;
+  node: any;
+  nodeDef: NodeDef<any>;
+  options: DataExportOptions;
+}) => any[];
+
+const rowDataExtractorByNodeDefType: Partial<
+  Record<NodeDefType, RowDataExtractor>
+> = {
+  [NodeDefType.code]: ({ survey, node, options }) => {
+    const itemUuid = NodeValues.getItemUuid(node);
+    if (itemUuid) {
+      const item = Surveys.getCategoryItemByUuid({ survey, itemUuid });
+      if (item) {
+        const result = [CategoryItems.getCode(item)];
+        if (options.includeCategoryItemsLabels) {
+          const label = CategoryItems.getLabel(
+            item,
+            Surveys.getDefaultLanguage(survey)
+          );
+          result.push(label);
+        }
+        return result;
+      }
+    }
+    return ["", ""];
+  },
+};
 
 export class DataExportJob extends JobMobile {
   getNodeDefsToExport() {
@@ -59,7 +106,7 @@ export class DataExportJob extends JobMobile {
     this.summary.total = recordSummaries.length;
 
     for (const recordSummary of recordSummaries) {
-      await this.exportRecord({ recordSummary });
+      await this.exportRecord({ recordSummary, nodeDefsToExport });
       this.incrementProcessedItems();
     }
   }
@@ -101,7 +148,7 @@ export class DataExportJob extends JobMobile {
     recordSummary: any;
     nodeDefsToExport: NodeDef<any>[];
   }) {
-    const { survey } = this.context;
+    const { survey, cycle, options } = this.context;
 
     const record = await RecordService.fetchRecord({
       survey,
@@ -109,10 +156,68 @@ export class DataExportJob extends JobMobile {
     });
 
     for (const nodeDef of nodeDefsToExport) {
-      const nodes = Records.getNodesByDefUuid(nodeDef.uuid)(record);
-      for (const node of nodes) {
-        
+      if (NodeDefs.isAttribute(nodeDef)) {
+        // exporting multiple attribute
+      } else {
+        const descendantDefs = Surveys.getDescendantsInSingleEntities({
+          survey,
+          cycle,
+          nodeDef,
+        });
+        const nodes = Records.getNodesByDefUuid(nodeDef.uuid)(record);
+        for (const node of nodes) {
+          const csvRowData = [];
+          for (const nodeDefDescendant of descendantDefs) {
+            const nodeDescendant = Records.getDescendant({
+              record,
+              node,
+              nodeDefDescendant,
+            });
+            const nodeRowData = this.extractRowNodeData({
+              record,
+              node: nodeDescendant,
+              nodeDef: nodeDefDescendant,
+            });
+            csvRowData.push(...nodeRowData);
+          }
+        }
       }
     }
+  }
+
+  private extractRowNodeData({
+    record,
+    node,
+    nodeDef,
+  }: {
+    record: ArenaRecord;
+    node: ArenaRecordNode;
+    nodeDef: NodeDef<any>;
+  }): any[] {
+    const { survey, cycle, options } = this.context;
+    const nodeValueExtractor =
+      rowDataExtractorByNodeDefType[NodeDefs.getType(nodeDef)];
+
+    if (nodeValueExtractor) {
+      return nodeValueExtractor({
+        survey,
+        cycle,
+        record,
+        node,
+        nodeDef,
+        options,
+      });
+    }
+    const { value } = node;
+
+    // default extractor
+    const valueFormatted = NodeValueFormatter.format({
+      survey,
+      cycle,
+      node,
+      nodeDef,
+      value,
+    });
+    return [valueFormatted];
   }
 }
