@@ -37,6 +37,9 @@ Update the enumerated entities?`,
     error: "Error exporting data. Details: {{details}}",
     exportedSuccessfullyButFilesMissing: `Data exported successfully but {{missingFiles}} files/images are missing or broken.
 Please check your records and check also records on the server`,
+    exportingData: "Exporting data...",
+    exportToCsv: "Export to CSV",
+    mergeConflictingRecords: "Merge conflicting records (same keys)",
     noRecordsInDeviceToExport: "No records in the device to export",
     onlyNewOrUpdatedRecords: "Export only new or updated records",
     onlyRecordsInRemoteServerCanBeImported:
@@ -44,14 +47,13 @@ Please check your records and check also records on the server`,
 
     selectTarget: "Select export target",
     selectTargetMessage: `Select the target of the export:`,
+    shareExportedFile: "Share exported file",
     target: {
       remote: "Remote server",
       local: "Local folder (Download)",
       share: "$t(common:shareFile)",
     },
-    shareExportedFile: "Share exported file",
     title: "Export data",
-    mergeConflictingRecords: "Merge conflicting records (same keys)",
   },
   editNodeDef: "Edit {{nodeDef}}",
   errorFetchingRecordsSyncStatus: `Error fetching records from server.

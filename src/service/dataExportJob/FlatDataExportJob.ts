@@ -6,17 +6,19 @@ import {
   DataQuery,
   DataQueryMode,
   Dates,
-  FlatDataExportFields,
+  FlatDataExportModel,
   FlatDataFiles,
   NodeDef,
   NodeDefs,
   NodeDefType,
   NodeValueFormatter,
   NodeValues,
+  Objects,
   Records,
   Survey,
   Surveys,
 } from "@openforis/arena-core";
+import { ArenaMobileRecord } from "model/ArenaMobileRecord";
 
 import { JobMobile, JobMobileContext } from "model/JobMobile";
 import { RecordService } from "service/recordService";
@@ -43,6 +45,9 @@ const rowDataExtractorByNodeDefType: Partial<
   Record<NodeDefType, RowDataExtractor>
 > = {
   [NodeDefType.code]: ({ survey, node, options }) => {
+    if (Objects.isEmpty(node?.value)) {
+      return ["", ""];
+    }
     const itemUuid = NodeValues.getItemUuid(node);
     if (itemUuid) {
       const item = Surveys.getCategoryItemByUuid({ survey, itemUuid });
@@ -72,7 +77,8 @@ type FlatDataExportJobContext = JobMobileContext & {
 export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   private tempFolderUri?: string;
   private nodeDefsToExport?: any;
-  headersByNodeDefUuid: any;
+  private dataExportModelByNodeDefUuid: Record<string, FlatDataExportModel> =
+    {};
 
   determineNodeDefsToExport() {
     const { survey, cycle, options } = this.context;
@@ -99,9 +105,9 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   protected override async execute(): Promise<void> {
     const { survey } = this.context;
 
-    this.nodeDefsToExport = this.determineNodeDefsToExport();
-    this.headersByNodeDefUuid = {};
     this.tempFolderUri = await Files.createTempFolder();
+
+    this.nodeDefsToExport = this.determineNodeDefsToExport();
 
     await this.createDataExportFiles();
 
@@ -113,28 +119,24 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     this.summary.total = recordSummaries.length;
 
     for (const recordSummary of recordSummaries) {
-      await this.exportRecord({
-        recordSummary,
-      });
+      await this.exportRecord({ recordSummary });
       this.incrementProcessedItems();
     }
   }
 
   private async createDataExportFiles() {
-    const { survey } = this.context;
+    const { survey, cycle } = this.context;
     let index = 0;
     for (const nodeDef of this.nodeDefsToExport) {
-      const query: DataQuery = {
-        mode: DataQueryMode.raw,
-        entityDefUuid: nodeDef.uuid,
-      };
-      const flatDataExportFields = FlatDataExportFields.getFlatDataExportFields(
-        { survey, query }
-      );
-      const headers = flatDataExportFields.map((field) =>
-        typeof field === "string" ? field : field.name
-      );
-      this.headersByNodeDefUuid[nodeDef.uuid] = headers;
+      const dataExportModel = new FlatDataExportModel({
+        survey,
+        cycle,
+        nodeDefContext: nodeDef,
+      });
+      const headers = dataExportModel.headers;
+
+      this.dataExportModelByNodeDefUuid[nodeDef.uuid] = dataExportModel;
+
       const fileName = FlatDataFiles.getFileName({
         nodeDef,
         index,
@@ -147,7 +149,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   }
 
   private async exportRecord({ recordSummary }: { recordSummary: any }) {
-    const { survey, cycle, options } = this.context;
+    const { survey } = this.context;
 
     const record = await RecordService.fetchRecord({
       survey,
@@ -160,29 +162,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
       if (NodeDefs.isAttribute(nodeDef)) {
         // exporting multiple attribute
       } else {
-        const descendantDefs = Surveys.getDescendantsInSingleEntities({
-          survey,
-          cycle,
-          nodeDef,
-        });
-        const nodes = Records.getNodesByDefUuid(nodeDef.uuid)(record);
-        for (const node of nodes) {
-          const csvRowData = [];
-          for (const nodeDefDescendant of descendantDefs) {
-            const nodeDescendant = Records.getDescendant({
-              record,
-              node,
-              nodeDefDescendant,
-            });
-            const nodeRowData = this.extractRowNodeData({
-              record,
-              node: nodeDescendant,
-              nodeDef: nodeDefDescendant,
-            });
-            csvRowData.push(...nodeRowData);
-          }
-          csvRows.push(csvRowData);
-        }
+        csvRows.push(...this.exportRecordEntities({ nodeDef, record }));
       }
       const fileName = FlatDataFiles.getFileName({
         nodeDef,
@@ -190,14 +170,91 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
         extension: "csv",
       });
       const tempFileUri = Files.path(this.tempFolderUri, fileName);
-      const headers = this.headersByNodeDefUuid[nodeDef.uuid];
+      const dataExportModel = this.dataExportModelByNodeDefUuid[nodeDef.uuid]!;
+
       await FlatDataWriter.appendCsvRows({
         fileUri: tempFileUri,
-        headers,
+        headers: dataExportModel.headers,
         rows: csvRows,
       });
       nodeDefToExportIndex += 1;
     }
+    await this.generateOutputFile();
+  }
+
+  private async generateOutputFile() {
+    const { survey } = this.context;
+    const surveyName = Surveys.getName(survey);
+    const timestamp = Dates.nowFormattedForExpression();
+    const outputFileName = `arena-mobile-data-export-${surveyName}-${timestamp}.zip`;
+    const outputFileUri = Files.path(Files.cacheDirectory, outputFileName);
+    await Files.zip(this.tempFolderUri, outputFileUri);
+  }
+
+  private exportRecordEntities({
+    nodeDef,
+    record,
+  }: {
+    nodeDef: NodeDef<any>;
+    record: ArenaMobileRecord;
+  }): any[] {
+    const { survey, cycle, options } = this.context;
+    const { addCycle, includeAncestorAttributes } = options;
+
+    const dataExportModel = this.dataExportModelByNodeDefUuid[nodeDef.uuid]!;
+    const csvRows = [];
+
+    const nodes = Records.getNodesByDefUuid(nodeDef.uuid)(record);
+    for (const node of nodes) {
+      const csvRowData = [];
+      if (addCycle) {
+        csvRowData.push(cycle);
+      }
+      // ancestor (or key) attributes
+      Surveys.visitAncestorsAndSelfNodeDef({
+        survey,
+        nodeDef,
+        visitor: (nodeDefAncestor) => {
+          console.log("===nodeDefAncestor", NodeDefs.getName(nodeDefAncestor));
+          const ancestorNode = Records.getAncestor({
+            record,
+            node,
+            ancestorDefUuid: nodeDefAncestor.uuid,
+          })!;
+          console.log("===ancestorNode", ancestorNode);
+          const ancestorNodesRowValues = [];
+          const ancestorAttributeDefsConsidered =
+            includeAncestorAttributes || nodeDefAncestor === nodeDef
+              ? dataExportModel.extractAncestorAttributeDefs(nodeDefAncestor)
+              : Surveys.getNodeDefKeys({
+                  survey,
+                  cycle,
+                  nodeDef: nodeDefAncestor,
+                });
+          console.log(
+            "===ancestorAttributeDefsConsidered",
+            ancestorAttributeDefsConsidered.map((ad) => NodeDefs.getName(ad))
+          );
+          for (const ancestorAttrDef of ancestorAttributeDefsConsidered) {
+            const ancestorAttributeNode = Records.getDescendant({
+              record,
+              node: ancestorNode,
+              nodeDefDescendant: ancestorAttrDef,
+            });
+            const ancestorNodeRowValues = this.extractRowNodeData({
+              record,
+              node: ancestorAttributeNode,
+              nodeDef: ancestorAttrDef,
+            });
+            ancestorNodesRowValues.push(...ancestorNodeRowValues);
+          }
+          csvRowData.unshift(...ancestorNodesRowValues);
+        },
+      });
+
+      csvRows.push(csvRowData);
+    }
+    return csvRows;
   }
 
   private extractRowNodeData({
@@ -206,7 +263,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     nodeDef,
   }: {
     record: ArenaRecord;
-    node: ArenaRecordNode;
+    node: ArenaRecordNode | null | undefined;
     nodeDef: NodeDef<any>;
   }): any[] {
     const { survey, cycle, options } = this.context;
@@ -223,28 +280,22 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
         options,
       });
     }
-    const { value } = node;
-
+    const value = node?.value;
+    if (Objects.isEmpty(value)) {
+      return [""];
+    }
     // default extractor
     const valueFormatted = NodeValueFormatter.format({
       survey,
       cycle,
-      node,
+      node: node!,
       nodeDef,
       value,
     });
     return [valueFormatted];
   }
 
-  protected override async onEnd(): Promise<void> {
-    await super.onEnd();
-    const { survey } = this.context;
-    const surveyName = Surveys.getName(survey);
-    const timestamp = Dates.nowFormattedForExpression();
-    const outputFileName = `arena-mobile-data-export-${surveyName}-${timestamp}.zip`;
-    const outputFileUri = Files.path(Files.cacheDirectory, outputFileName);
-    await Files.zip(this.tempFolderUri, outputFileUri);
-
-    this.context.outputFileUri = outputFileUri;
-  }
+  // protected override cleanup(): Promise<void> {
+  //   return Files.del(this.tempFolderUri);
+  // }
 }

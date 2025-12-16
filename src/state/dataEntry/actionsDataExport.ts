@@ -5,6 +5,7 @@ import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerat
 
 import { i18n } from "localization";
 import { JobCancelError, ValidationUtils } from "model";
+import { FlatDataExportJob } from "service/dataExportJob";
 import { RecordsUploadJob } from "service/recordsUploadJob";
 import { RemoteConnectionSelectors } from "state/remoteConnection";
 import { Files, Jobs } from "utils";
@@ -13,7 +14,6 @@ import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { JobMonitorActions } from "../jobMonitor";
 import { MessageActions } from "../message";
 import { SurveySelectors } from "../survey";
-import { FlatDataExportJob } from "service/dataExportJob";
 
 const { t } = i18n;
 
@@ -138,7 +138,7 @@ export const startCsvDataExportJob =
     await JobMonitorActions.startAsync({
       dispatch,
       job: dataExportJob,
-      titleKey: "dataEntry:exportingData.title",
+      titleKey: "dataEntry:dataExport.exportingData",
       onJobComplete: (jobComplete: JobSummary<any>) => {
         const { result } = jobComplete;
         const { outputFileUri } = result || {};

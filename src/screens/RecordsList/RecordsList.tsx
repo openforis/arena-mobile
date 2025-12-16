@@ -619,7 +619,7 @@ export const RecordsList = () => {
       },
       {
         key: "exportToCsv",
-        icon: "file-delimited",
+        icon: "file-excel",
         label: "dataEntry:dataExport.exportToCsv",
         onPress: onExportToCsvPress,
       }
