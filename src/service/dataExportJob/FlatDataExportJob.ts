@@ -1,6 +1,7 @@
 import {
   ArenaRecord,
   ArenaRecordNode,
+  Arrays,
   CategoryItems,
   DataExportOptions,
   DataQuery,
@@ -9,6 +10,7 @@ import {
   FlatDataExportModel,
   FlatDataFiles,
   NodeDef,
+  NodeDefCoordinate,
   NodeDefs,
   NodeDefType,
   NodeValueFormatter,
@@ -17,6 +19,7 @@ import {
   Records,
   Survey,
   Surveys,
+  Taxa,
 } from "@openforis/arena-core";
 import { ArenaMobileRecord } from "model/ArenaMobileRecord";
 
@@ -36,34 +39,120 @@ type RowDataExtractor = ({
   survey: Survey;
   cycle: string;
   record: any;
-  node: any;
+  node: ArenaRecordNode | null | undefined;
   nodeDef: NodeDef<any>;
   options: DataExportOptions;
-}) => any[];
+}) => string[] | null[];
+
+const extractCategoryItem = ({
+  survey,
+  node,
+}: {
+  survey: Survey;
+  node: ArenaRecordNode;
+}) => {
+  if (Objects.isNotEmpty(node?.value)) {
+    const itemUuid = NodeValues.getItemUuid(node);
+    if (itemUuid) {
+      return Surveys.getCategoryItemByUuid({ survey, itemUuid });
+    }
+  }
+  return null;
+};
+
+const extractTaxon = ({
+  survey,
+  node,
+}: {
+  survey: Survey;
+  node: ArenaRecordNode;
+}) => {
+  if (Objects.isNotEmpty(node?.value)) {
+    const taxonUuid = NodeValues.getValueTaxonUuid(node);
+    if (taxonUuid) {
+      return Surveys.getTaxonByUuid({ survey, taxonUuid });
+    }
+  }
+  return null;
+};
 
 const rowDataExtractorByNodeDefType: Partial<
   Record<NodeDefType, RowDataExtractor>
 > = {
   [NodeDefType.code]: ({ survey, node, options }) => {
-    if (Objects.isEmpty(node?.value)) {
-      return ["", ""];
+    const item = extractCategoryItem({ survey, node });
+    if (!item) {
+      return [null, null];
     }
-    const itemUuid = NodeValues.getItemUuid(node);
-    if (itemUuid) {
-      const item = Surveys.getCategoryItemByUuid({ survey, itemUuid });
-      if (item) {
-        const result = [CategoryItems.getCode(item)];
-        if (options.includeCategoryItemsLabels) {
-          const label = CategoryItems.getLabel(
-            item,
-            Surveys.getDefaultLanguage(survey)
-          );
-          result.push(label);
-        }
-        return result;
-      }
+    const result = [CategoryItems.getCode(item)];
+    if (options.includeCategoryItemsLabels) {
+      const label = CategoryItems.getLabel(
+        item,
+        Surveys.getDefaultLanguage(survey)
+      );
+      result.push(label);
     }
-    return ["", ""];
+    return result;
+  },
+  [NodeDefType.coordinate]: ({ node, nodeDef }) => {
+    const additionalFields = NodeDefs.getCoordinateAdditionalFields(
+      nodeDef as NodeDefCoordinate
+    );
+    const totalFieldsCount = 4 + additionalFields.length;
+    const value = node?.value;
+    if (Objects.isEmpty(value)) {
+      return Arrays.fromNumberOfElements(totalFieldsCount).map(() => null);
+    }
+    const { x, y, srs } = value;
+    return [x, y, srs, ...additionalFields.map((field) => value[field])];
+  },
+  [NodeDefType.date]: ({ node: nodeParam }) => {
+    if (Objects.isEmpty(nodeParam?.value)) {
+      return [null];
+    }
+    const node = nodeParam!;
+    const [year, month, day] = [
+      NodeValues.getDateYear(node),
+      NodeValues.getDateMonth(node),
+      NodeValues.getDateDay(node),
+    ];
+    return Dates.isValidDate(year, month, day)
+      ? [`${year}-${month}-${day}`]
+      : [null];
+  },
+  [NodeDefType.taxon]: ({ survey, node: nodeParam, options }) => {
+    const { includeTaxonScientificName } = options;
+    const value = nodeParam?.value;
+    if (Objects.isEmpty(value)) {
+      const emptyFieldsCount = includeTaxonScientificName ? 3 : 1;
+      return Arrays.fromNumberOfElements(emptyFieldsCount).map(() => null);
+    }
+    const node = nodeParam!;
+    const taxon = extractTaxon({ survey, node });
+    if (!taxon) {
+      const emptyFieldsCount = includeTaxonScientificName ? 3 : 1;
+      return Arrays.fromNumberOfElements(emptyFieldsCount).map(() => null);
+    }
+    const vernacularNameUuid = NodeValues.getValueVernacularNameUuid(value);
+    const { vernacularName, vernacularLang } =
+      Taxa.getVernacularNameAndLang(vernacularNameUuid)(taxon);
+    const vernacularNameText = `${vernacularName} (${vernacularLang})`;
+    return [
+      Taxa.getCode(taxon),
+      Taxa.getScientificName(taxon),
+      vernacularNameText,
+    ];
+  },
+  [NodeDefType.time]: ({ node: nodeParam }) => {
+    if (Objects.isEmpty(nodeParam?.value)) {
+      return [null];
+    }
+    const node = nodeParam!;
+    const [hour, minute] = [
+      NodeValues.getTimeHour(node),
+      NodeValues.getTimeMinute(node),
+    ];
+    return Dates.isValidTime(hour, minute) ? [`${hour}:${minute}`] : [null];
   },
 };
 
@@ -215,13 +304,11 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
         survey,
         nodeDef,
         visitor: (nodeDefAncestor) => {
-          console.log("===nodeDefAncestor", NodeDefs.getName(nodeDefAncestor));
           const ancestorNode = Records.getAncestor({
             record,
             node,
             ancestorDefUuid: nodeDefAncestor.uuid,
           })!;
-          console.log("===ancestorNode", ancestorNode);
           const ancestorNodesRowValues = [];
           const ancestorAttributeDefsConsidered =
             includeAncestorAttributes || nodeDefAncestor === nodeDef
@@ -231,10 +318,6 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
                   cycle,
                   nodeDef: nodeDefAncestor,
                 });
-          console.log(
-            "===ancestorAttributeDefsConsidered",
-            ancestorAttributeDefsConsidered.map((ad) => NodeDefs.getName(ad))
-          );
           for (const ancestorAttrDef of ancestorAttributeDefsConsidered) {
             const ancestorAttributeNode = Records.getDescendant({
               record,
