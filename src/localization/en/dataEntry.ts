@@ -1,3 +1,5 @@
+import { DataExportOption } from "@openforis/arena-core";
+
 export default {
   confirmGoToListOfRecords: `Go to list of records?
 
@@ -33,7 +35,9 @@ Update the enumerated entities?`,
       title: "Confirm export data",
       message: `Records to export:
 {{recordsCountSummary}}`,
+      selectOptions: `Select export options:`,
     },
+
     error: "Error exporting data. Details: {{details}}",
     exportedSuccessfullyButFilesMissing: `Data exported successfully but {{missingFiles}} files/images are missing or broken.
 Please check your records and check also records on the server`,
@@ -44,7 +48,13 @@ Please check your records and check also records on the server`,
     onlyNewOrUpdatedRecords: "Export only new or updated records",
     onlyRecordsInRemoteServerCanBeImported:
       "Only records already in remote server or records that have been updated remotely can be imported",
-
+    option: {
+      [DataExportOption.addCycle]: "Add cycle",
+      [DataExportOption.includeAncestorAttributes]: "Ancestor attributes",
+      [DataExportOption.includeCategoryItemsLabels]: "Category items labels",
+      [DataExportOption.includeFileAttributeDefs]: "File attribute definitions",
+      [DataExportOption.includeTaxonScientificName]: "Taxon scientific name",
+    },
     selectTarget: "Select export target",
     selectTargetMessage: `Select the target of the export:`,
     shareExportedFile: "Share exported file",

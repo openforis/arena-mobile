@@ -116,7 +116,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
 
     let nodeDefToExportIndex = 0;
     for (const nodeDef of this.nodeDefsToExport) {
-      const csvRows = this.exportRecordEntities({ nodeDef, record });
+      const csvRows = this.exportRecordNodes({ nodeDef, record });
 
       const fileName = FlatDataFiles.getFileName({
         nodeDef,
@@ -145,7 +145,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     await Files.zip(this.tempFolderUri, outputFileUri);
   }
 
-  private exportRecordEntities({
+  private exportRecordNodes({
     nodeDef,
     record,
   }: {

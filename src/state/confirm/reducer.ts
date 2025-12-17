@@ -48,6 +48,29 @@ const confirmSlice = createSlice({
 const { actions, reducer: ConfirmReducer } = confirmSlice;
 const { show, dismiss } = actions;
 
+export type OnConfirmParams = {
+  selectedMultipleChoiceValues?: string[];
+  selectedSingleChoiceValue?: string | null;
+};
+
+export type ConfirmShowParams = {
+  titleKey?: string;
+  cancelButtonStyle?: any;
+  cancelButtonTextKey?: string;
+  confirmButtonStyle?: any;
+  confirmButtonTextKey?: string;
+  messageKey: string;
+  messageParams?: any;
+  multipleChoiceOptions?: Array<{ label: string; value: string }>;
+  onConfirm: (params: OnConfirmParams) => Promise<void>;
+  onCancel?: () => Promise<void>;
+  singleChoiceOptions?: Array<{ label: string; value: string }>;
+  defaultMultipleChoiceValues?: string[];
+  defaultSingleChoiceValue?: string | null;
+  swipeToConfirm?: boolean;
+  swipeToConfirmTitleKey?: string;
+};
+
 export const ConfirmActions = {
   show: ({
     titleKey = "common:confirm",
@@ -65,7 +88,7 @@ export const ConfirmActions = {
     defaultSingleChoiceValue = null,
     swipeToConfirm = false,
     swipeToConfirmTitleKey = "common:swipeToConfirm",
-  }: any) =>
+  }: ConfirmShowParams) =>
     show({
       titleKey,
       cancelButtonStyle,
