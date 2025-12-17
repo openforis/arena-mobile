@@ -146,6 +146,18 @@ const rowDataExtractorByNodeDefType: Partial<
       ? [`${year}-${month}-${day}`]
       : [null];
   },
+  [NodeDefType.file]: ({ node: nodeParam, nodeDef }) => {
+    if (Objects.isEmpty(nodeParam?.value)) {
+      return [null];
+    }
+    const node = nodeParam!;
+    const fileNameExpression = NodeDefs.getFileNameExpression(nodeDef);
+    const fileUuid = NodeValues.getFileUuid(node);
+    const fileName = fileNameExpression
+      ? NodeValues.getFileNameCalculated(node)
+      : NodeValues.getFileName(node);
+    return [fileUuid, fileName];
+  },
   [NodeDefType.taxon]: ({ survey, node: nodeParam, options }) => {
     const { includeTaxonScientificName } = options;
     const value = nodeParam?.value;
