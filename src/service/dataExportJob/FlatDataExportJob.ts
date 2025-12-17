@@ -20,6 +20,7 @@ import {
   Survey,
   Surveys,
   Taxa,
+  Taxon,
 } from "@openforis/arena-core";
 import { ArenaMobileRecord } from "model/ArenaMobileRecord";
 
@@ -42,7 +43,7 @@ type RowDataExtractor = ({
   node: ArenaRecordNode | null | undefined;
   nodeDef: NodeDef<any>;
   options: DataExportOptions;
-}) => string[] | null[];
+}) => (string | null | undefined)[];
 
 const extractCategoryItem = ({
   survey,
@@ -76,20 +77,56 @@ const extractTaxon = ({
   return null;
 };
 
+const extractScientificName = ({
+  taxon,
+  node,
+}: {
+  taxon: Taxon;
+  node: ArenaRecordNode;
+}): string => {
+  const taxonScientificName = Taxa.getScientificName(taxon);
+  if (Taxa.isUnknownOrUnlisted(taxon)) {
+    const nodeScientificName = NodeValues.getScientificName(node);
+    return nodeScientificName ?? taxonScientificName;
+  }
+  return taxonScientificName;
+};
+
+const extractVernacularName = ({
+  taxon,
+  node,
+}: {
+  taxon: Taxon;
+  node: ArenaRecordNode;
+}): string | undefined => {
+  const vernacularNameUuid = NodeValues.getVernacularNameUuid(node);
+  if (vernacularNameUuid) {
+    const { vernacularName, vernacularLang } =
+      Taxa.getVernacularNameAndLang(vernacularNameUuid)(taxon);
+    return vernacularName ? `${vernacularName} (${vernacularLang})` : undefined;
+  }
+  if (Taxa.isUnknownOrUnlisted(taxon)) {
+    return NodeValues.getVernacularName(node);
+  }
+  return undefined;
+};
+
 const rowDataExtractorByNodeDefType: Partial<
   Record<NodeDefType, RowDataExtractor>
 > = {
-  [NodeDefType.code]: ({ survey, node, options }) => {
+  [NodeDefType.code]: ({ survey, node: nodeParam, options }) => {
+    if (Objects.isEmpty(nodeParam?.value)) {
+      return [null, null];
+    }
+    const node = nodeParam!;
     const item = extractCategoryItem({ survey, node });
     if (!item) {
       return [null, null];
     }
     const result = [CategoryItems.getCode(item)];
     if (options.includeCategoryItemsLabels) {
-      const label = CategoryItems.getLabel(
-        item,
-        Surveys.getDefaultLanguage(survey)
-      );
+      const lang = Surveys.getDefaultLanguage(survey);
+      const label = CategoryItems.getLabel(item, lang);
       result.push(label);
     }
     return result;
@@ -133,15 +170,13 @@ const rowDataExtractorByNodeDefType: Partial<
       const emptyFieldsCount = includeTaxonScientificName ? 3 : 1;
       return Arrays.fromNumberOfElements(emptyFieldsCount).map(() => null);
     }
-    const vernacularNameUuid = NodeValues.getValueVernacularNameUuid(value);
-    const { vernacularName, vernacularLang } =
-      Taxa.getVernacularNameAndLang(vernacularNameUuid)(taxon);
-    const vernacularNameText = `${vernacularName} (${vernacularLang})`;
-    return [
-      Taxa.getCode(taxon),
-      Taxa.getScientificName(taxon),
-      vernacularNameText,
-    ];
+    const code = Taxa.getCode(taxon);
+    if (includeTaxonScientificName) {
+      const scientificName = extractScientificName({ taxon, node });
+      const vernacularName = extractVernacularName({ taxon, node });
+      return [code, scientificName, vernacularName];
+    }
+    return [code];
   },
   [NodeDefType.time]: ({ node: nodeParam }) => {
     if (Objects.isEmpty(nodeParam?.value)) {
@@ -291,7 +326,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     const { addCycle, includeAncestorAttributes } = options;
 
     const dataExportModel = this.dataExportModelByNodeDefUuid[nodeDef.uuid]!;
-    const csvRows = [];
+    const csvRowsData = [];
 
     const nodes = Records.getNodesByDefUuid(nodeDef.uuid)(record);
     for (const node of nodes) {
@@ -335,9 +370,9 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
         },
       });
 
-      csvRows.push(csvRowData);
+      csvRowsData.push(csvRowData);
     }
-    return csvRows;
+    return csvRowsData;
   }
 
   private extractRowNodeData({
