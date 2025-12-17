@@ -1,4 +1,5 @@
 import {
+  DataExportDefaultOptions,
   DataExportOptions,
   Dates,
   FlatDataExportModel,
@@ -29,6 +30,13 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   private nodeDefsToExport?: any;
   private dataExportModelByNodeDefUuid: Record<string, FlatDataExportModel> =
     {};
+
+  constructor(context: FlatDataExportJobContext) {
+    super({
+      ...context,
+      options: { ...DataExportDefaultOptions, ...context.options },
+    });
+  }
 
   determineNodeDefsToExport() {
     const { survey, cycle, options } = this.context;
@@ -108,12 +116,8 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
 
     let nodeDefToExportIndex = 0;
     for (const nodeDef of this.nodeDefsToExport) {
-      const csvRows = [];
-      if (NodeDefs.isAttribute(nodeDef)) {
-        // exporting multiple attribute
-      } else {
-        csvRows.push(...this.exportRecordEntities({ nodeDef, record }));
-      }
+      const csvRows = this.exportRecordEntities({ nodeDef, record });
+
       const fileName = FlatDataFiles.getFileName({
         nodeDef,
         index: nodeDefToExportIndex,

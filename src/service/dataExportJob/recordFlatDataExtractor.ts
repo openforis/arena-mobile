@@ -11,6 +11,7 @@ import {
   NodeValueFormatter,
   NodeValues,
   Objects,
+  Strings,
   Survey,
   Surveys,
   Taxa,
@@ -104,16 +105,18 @@ const rowDataExtractorByNodeDefType: Partial<
   Record<NodeDefType, RowDataExtractor>
 > = {
   [NodeDefType.code]: ({ survey, node: nodeParam, options }) => {
+    const { includeCategoryItemsLabels } = options;
+    const totalFieldsCount = includeCategoryItemsLabels ? 2 : 1;
     if (Objects.isEmpty(nodeParam?.value)) {
-      return [null, null];
+      return Arrays.fromNumberOfElements(totalFieldsCount).map(() => null);
     }
     const node = nodeParam!;
     const item = extractCategoryItem({ survey, node });
     if (!item) {
-      return [null, null];
+      return Arrays.fromNumberOfElements(totalFieldsCount).map(() => null);
     }
     const result = [CategoryItems.getCode(item)];
-    if (options.includeCategoryItemsLabels) {
+    if (includeCategoryItemsLabels) {
       const lang = Surveys.getDefaultLanguage(survey);
       const label = CategoryItems.getLabel(item, lang);
       result.push(label);
@@ -130,7 +133,8 @@ const rowDataExtractorByNodeDefType: Partial<
       return Arrays.fromNumberOfElements(totalFieldsCount).map(() => null);
     }
     const { x, y, srs } = value;
-    return [x, y, srs, ...additionalFields.map((field) => value[field])];
+    const srsText = Strings.prependIfMissing("EPSG:")(srs);
+    return [x, y, srsText, ...additionalFields.map((field) => value[field])];
   },
   [NodeDefType.date]: ({ node: nodeParam }) => {
     if (Objects.isEmpty(nodeParam?.value)) {

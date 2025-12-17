@@ -1,4 +1,10 @@
-import { JobStatus, JobSummary, Objects, Surveys } from "@openforis/arena-core";
+import {
+  DataExportDefaultOptions,
+  JobStatus,
+  JobSummary,
+  Objects,
+  Surveys,
+} from "@openforis/arena-core";
 
 import { AuthService, RecordService } from "service";
 import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerationJob";
@@ -132,7 +138,7 @@ export const startCsvDataExportJob =
       survey,
       surveyId: survey.id!,
       cycle,
-      options: {},
+      options: DataExportDefaultOptions,
     });
 
     await JobMonitorActions.startAsync({
