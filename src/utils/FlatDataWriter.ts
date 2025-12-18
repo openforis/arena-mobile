@@ -7,9 +7,9 @@ const toString = (val: any): string =>
  * Escapes a value for CSV formatting.
  * Wraps in quotes if the value contains commas, newlines, or quotes.
  */
-const formatCSVValue = (val: any): string => {
+const formatCSVValue = (val: any, alwaysWrap?: boolean): string => {
   const stringified = toString(val);
-  if (stringified.length > 0 && /[",\n\r]/.test(stringified)) {
+  if (alwaysWrap || (stringified.length > 0 && /[",\n\r]/.test(stringified))) {
     // Escape quotes by doubling them and wrap the value in quotes
     return `"${stringified.replace(/"/g, '""')}"`;
   }
@@ -29,7 +29,8 @@ const writeCsvHeaders = async ({
   fileUri: string;
   headers: string[];
 }) => {
-  const csvContent = headers.map(formatCSVValue).join(",") + "\n";
+  const csvContent =
+    headers.map((header) => formatCSVValue(header, true)).join(",") + "\n";
   await Files.writeStringToFile({
     content: csvContent,
     fileUri,
@@ -51,7 +52,9 @@ const appendCsvRows = async ({
   rows: any[][];
 }) => {
   const csvRows =
-    rows.map((row) => row.map(formatCSVValue).join(",")).join("\n") + "\n";
+    rows
+      .map((row) => row.map((val) => formatCSVValue(val, true)).join(","))
+      .join("\n") + "\n";
   await Files.appendStringToFile({
     content: csvRows,
     fileUri,
