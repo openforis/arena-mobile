@@ -1,3 +1,5 @@
+import { DataExportOption } from "@openforis/arena-core";
+
 export default {
   confirmGoToListOfRecords:
     "Ir para a lista de registos?\n\n(todas as alterações já foram gravadas)",
@@ -144,29 +146,42 @@ Verifique as configurações ou peça ao administrador da pesquisa para alterar 
     resolution: "Resolução",
   },
   dataExport: {
+    confirm: {
+      title: "Confirmar exportação de dados",
+      message: `Registos a exportar:
+{{recordsCountSummary}}`,
+      selectOptions: `Selecionar opções de exportação:`,
+    },
+
     error: "Erro ao exportar dados. Detalhes: {{details}}",
+    exportedSuccessfullyButFilesMissing:
+      "Dados exportados com sucesso, mas {{missingFiles}} arquivos/imagens estão faltando ou corrompidos. Verifique seus registros e também os registros no servidor.",
+    exportingData: "Exportando dados...",
+    exportToCsv: "Exportar para CSV",
+    mergeConflictingRecords: "Unir registos com conflitos (mesmas chaves)",
+    noRecordsInDeviceToExport:
+      "Não existem registos no dispositivo para exportar",
+    onlyNewOrUpdatedRecords: "Exportar apenas registos novos ou atualizados",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Apenas registos já presentes no servidor remoto ou registos que foram atualizados remotamente podem ser importados",
+    option: {
+      [DataExportOption.addCycle]: "Adicionar ciclo",
+      [DataExportOption.includeAncestorAttributes]: "Atributos ancestrais",
+      [DataExportOption.includeCategoryItemsLabels]:
+        "Etiquetas de itens de categoria",
+      [DataExportOption.includeFileAttributeDefs]:
+        "Definições de atributos de arquivo",
+      [DataExportOption.includeTaxonScientificName]: "Nome científico do táxon",
+    },
     selectTarget: "Selecionar destino de exportação",
     selectTargetMessage: "Selecione o destino da exportação:",
+    shareExportedFile: "Compartilhar arquivo exportado",
     target: {
       remote: "Servidor remoto",
       local: "Pasta local (Download)",
       share: "$t(common:shareFile)",
     },
-    shareExportedFile: "Compartilhar arquivo exportado",
     title: "Exportar dados",
-    confirm: {
-      title: "Confirmar exportação de dados",
-      message: `Registos a exportar:
-{{recordsCountSummary}}`,
-    },
-    noRecordsInDeviceToExport:
-      "Não existem registos no dispositivo para exportar",
-    onlyNewOrUpdatedRecords: "Exportar apenas registos novos ou atualizados",
-    mergeConflictingRecords: "Unir registos com conflitos (mesmas chaves)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Apenas registos já presentes no servidor remoto ou registos que foram atualizados remotamente podem ser importados",
-    exportedSuccessfullyButFilesMissing:
-      "Dados exportados com sucesso, mas {{missingFiles}} arquivos/imagens estão faltando ou corrompidos. Verifique seus registros e também os registros no servidor.",
   },
   location: {
     label: "Localização",

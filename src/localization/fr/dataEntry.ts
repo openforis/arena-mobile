@@ -1,3 +1,5 @@
+import { DataExportOption } from "@openforis/arena-core";
+
 export default {
   confirmGoToListOfRecords:
     "Aller à la liste des enregistrements?\n\n(toutes les modifications sont déjà enregistrées)",
@@ -148,30 +150,44 @@ Vérifiez les paramètres ou demandez à l'administrateur de l'enquête de modif
     resolution: "Résolution",
   },
   dataExport: {
+    confirm: {
+      title: "Confirmer l'exportation des données",
+      message: `Enregistrements à exporter:
+{{recordsCountSummary}}`,
+      selectOptions: `Sélectionner les options d'exportation:`,
+    },
+
     error: "Erreur lors de l'exportation des données. Détails: {{details}}",
+    exportedSuccessfullyButFilesMissing:
+      "Données exportées avec succès, mais {{missingFiles}} fichiers/images sont manquants ou corrompus. Veuillez vérifier vos enregistrements et également les enregistrements sur le serveur.",
+    exportingData: "Exportation des données...",
+    exportToCsv: "Exporter en CSV",
+    mergeConflictingRecords:
+      "Fusionner les enregistrements conflictuels (mêmes clés)",
+    noRecordsInDeviceToExport: "Aucun enregistrement à exporter sur l'appareil",
+    onlyNewOrUpdatedRecords:
+      "Exporter uniquement les enregistrements nouveaux ou mis à jour",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Seuls les enregistrements déjà présents sur le serveur distant ou les enregistrements qui ont été mis à jour à distance peuvent être importés",
+    option: {
+      [DataExportOption.addCycle]: "Ajouter le cycle",
+      [DataExportOption.includeAncestorAttributes]: "Attributs ancêtres",
+      [DataExportOption.includeCategoryItemsLabels]:
+        "Étiquettes des éléments de catégorie",
+      [DataExportOption.includeFileAttributeDefs]:
+        "Définitions d'attributs de fichier",
+      [DataExportOption.includeTaxonScientificName]:
+        "Nom scientifique du taxon",
+    },
     selectTarget: "Sélectionner la cible d'exportation",
     selectTargetMessage: "Sélectionner la cible de l'exportation:",
+    shareExportedFile: "Partager le fichier exporté",
     target: {
       remote: "Serveur distant",
       local: "Dossier local (Téléchargement)",
       share: "$t(common:shareFile)",
     },
-    shareExportedFile: "Partager le fichier exporté",
     title: "Exporter les données",
-    confirm: {
-      title: "Confirmer l'exportation des données",
-      message: `Enregistrements à exporter:
-{{recordsCountSummary}}`,
-    },
-    noRecordsInDeviceToExport: "Aucun enregistrement à exporter sur l'appareil",
-    onlyNewOrUpdatedRecords:
-      "Exporter uniquement les enregistrements nouveaux ou mis à jour",
-    mergeConflictingRecords:
-      "Fusionner les enregistrements conflictuels (mêmes clés)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Seuls les enregistrements déjà présents sur le serveur distant ou les enregistrements qui ont été mis à jour à distance peuvent être importés",
-    exportedSuccessfullyButFilesMissing:
-      "Données exportées avec succès, mais {{missingFiles}} fichiers/images sont manquants ou corrompus. Veuillez vérifier vos enregistrements et également les enregistrements sur le serveur.",
   },
   location: {
     label: "Emplacement",

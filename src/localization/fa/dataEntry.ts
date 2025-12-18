@@ -1,3 +1,5 @@
+import { DataExportOption } from "@openforis/arena-core";
+
 export default {
   confirmGoToListOfRecords: `به لیست رکوردها بروید؟
   
@@ -149,28 +151,40 @@ export default {
     resolution: "رزولوشن",
   },
   dataExport: {
+    confirm: {
+      title: "تایید اکسپورت داده ها",
+      message: `رکوردهای قابل اکسپورت:
+{{recordsCountSummary}}`,
+      selectOptions: `گزینه‌های اکسپورت را انتخاب کنید:`,
+    },
+
     error: "خطا در اکسپورت داده ها. جزئیات: {{details}}",
+    exportedSuccessfullyButFilesMissing:
+      "داده‌ها با موفقیت صادر شدند اما {{missingFiles}} فایل/تصویر گم شده یا خراب است. لطفاً سوابق خود و همچنین سوابق روی سرور را بررسی کنید.",
+    exportingData: "در حال اکسپورت داده ها...",
+    exportToCsv: "اکسپورت به CSV",
+    mergeConflictingRecords: "ادغام رکوردهای متناقض (کلیدهای یکسان)",
+    noRecordsInDeviceToExport: "هیچ رکوردی در دستگاه برای اکسپورت وجود ندارد",
+    onlyNewOrUpdatedRecords: "فقط رکوردهای جدید یا به روز شده را اکسپورت کنید",
+    onlyRecordsInRemoteServerCanBeImported:
+      "فقط رکوردهایی که قبلاً در سرور از راه دور وجود دارند یا رکوردهایی که از راه دور به روز شده اند قابل وارد کردن هستند",
+    option: {
+      [DataExportOption.addCycle]: "افزودن چرخه",
+      [DataExportOption.includeAncestorAttributes]: "ویژگی‌های اجدادی",
+      [DataExportOption.includeCategoryItemsLabels]:
+        "برچسب‌های موارد دسته‌بندی",
+      [DataExportOption.includeFileAttributeDefs]: "تعریف‌های ویژگی فایل",
+      [DataExportOption.includeTaxonScientificName]: "نام علمی طبقه‌بندی",
+    },
     selectTarget: "انتخاب  روش اکسپورت",
     selectTargetMessage: `روش اکسپورت را انتخاب کنید:`,
+    shareExportedFile: "اشتراک گذاری فایل اکسپورت شده",
     target: {
       remote: "سرور راه دور",
       local: "پوشه محلی (دانلود)",
       share: "$t(common:shareFile)",
     },
-    shareExportedFile: "اشتراک گذاری فایل اکسپورت شده",
     title: "اکسپورت داده ها",
-    confirm: {
-      title: "تایید اکسپورت داده ها",
-      message: `رکوردهای قابل اکسپورت:
-{{recordsCountSummary}}`,
-    },
-    noRecordsInDeviceToExport: "هیچ رکوردی در دستگاه برای اکسپورت وجود ندارد",
-    onlyNewOrUpdatedRecords: "فقط رکوردهای جدید یا به روز شده را اکسپورت کنید",
-    mergeConflictingRecords: "ادغام رکوردهای متناقض (کلیدهای یکسان)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "فقط رکوردهایی که قبلاً در سرور از راه دور وجود دارند یا رکوردهایی که از راه دور به روز شده اند قابل وارد کردن هستند",
-    exportedSuccessfullyButFilesMissing:
-      "داده‌ها با موفقیت صادر شدند اما {{missingFiles}} فایل/تصویر گم شده یا خراب است. لطفاً سوابق خود و همچنین سوابق روی سرور را بررسی کنید.",
   },
   location: {
     label: "مکان",
