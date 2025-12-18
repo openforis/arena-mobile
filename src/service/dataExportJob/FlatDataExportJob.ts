@@ -26,9 +26,13 @@ type FlatDataExportJobContext = JobMobileContext & {
   outputFileUri?: string;
 };
 
+export type FlatDataExportJobResult = {
+  outputFileUri: string;
+};
+
 export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   private tempFolderUri?: string;
-  private nodeDefsToExport?: any;
+  private nodeDefsToExport?: NodeDef<any>[];
   private dataExportModelByNodeDefUuid: Record<string, FlatDataExportModel> =
     {};
 
@@ -39,7 +43,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     });
   }
 
-  determineNodeDefsToExport() {
+  determineNodeDefsToExport(): NodeDef<any>[] {
     const { survey, cycle, options } = this.context;
     const { exportSingleEntitiesIntoSeparateFiles } = options;
     const result: NodeDef<any>[] = [];
@@ -64,16 +68,23 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   protected override async execute(): Promise<void> {
     const { survey } = this.context;
 
+    this.logger.debug("Creating temporary folder for data export files");
     this.tempFolderUri = await Files.createTempFolder();
 
     this.nodeDefsToExport = this.determineNodeDefsToExport();
-
+    this.logger.debug(`Determined nodeDefs to export:`, {
+      nodeDefsToExport: this.nodeDefsToExport.map(NodeDefs.getName),
+    });
+    this.logger.debug("Creating data export files");
     await this.createDataExportFiles();
 
+    this.logger.debug("Fetching records to export...");
     const recordSummaries = await RecordService.fetchRecords({ survey });
+    this.logger.debug(`Found ${recordSummaries.length} records to export`);
 
     this.summary.total = recordSummaries.length;
 
+    this.logger.debug("Exporting records...");
     for (const recordSummary of recordSummaries) {
       await this.exportRecord({ recordSummary });
       this.incrementProcessedItems();
@@ -85,7 +96,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   private async createDataExportFiles() {
     const { survey, cycle, options } = this.context;
     let index = 0;
-    for (const nodeDef of this.nodeDefsToExport) {
+    for (const nodeDef of this.nodeDefsToExport!) {
       const dataExportModel = new FlatDataExportModel({
         survey,
         cycle,
@@ -116,7 +127,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     });
 
     let nodeDefToExportIndex = 0;
-    for (const nodeDef of this.nodeDefsToExport) {
+    for (const nodeDef of this.nodeDefsToExport!) {
       const csvRows = this.exportRecordNodes({ nodeDef, record });
 
       const fileName = FlatDataFiles.getFileName({
@@ -137,12 +148,15 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   }
 
   private async generateOutputFile() {
+    this.logger.debug("Generating output file...");
     const { survey } = this.context;
     const surveyName = Surveys.getName(survey);
     const timestamp = Dates.nowFormattedForExpression();
     const outputFileName = `arena-mobile-data-export-${surveyName}-${timestamp}.zip`;
     const outputFileUri = Files.path(Files.cacheDirectory, outputFileName);
+    this.context.outputFileUri = outputFileUri;
     await Files.zip(this.tempFolderUri, outputFileUri);
+    this.logger.debug(`Output file generated: ${outputFileUri}`);
   }
 
   private exportRecordNodes({
@@ -233,9 +247,10 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     return ancestoNodeRowData;
   }
 
-  protected override async prepareResult(): Promise<any> {
+  protected override async prepareResult(): Promise<FlatDataExportJobResult> {
     const { outputFileUri } = this.context;
-    return { outputFileUri };
+    // at this point, outputFileUri must be defined
+    return { outputFileUri: outputFileUri! };
   }
 
   protected override async cleanup(): Promise<void> {
