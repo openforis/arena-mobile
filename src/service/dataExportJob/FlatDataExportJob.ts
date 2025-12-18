@@ -1,4 +1,5 @@
 import {
+  ArenaRecordNode,
   DataExportDefaultOptions,
   DataExportOptions,
   Dates,
@@ -83,13 +84,14 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   }
 
   private async createDataExportFiles() {
-    const { survey, cycle } = this.context;
+    const { survey, cycle, options } = this.context;
     let index = 0;
     for (const nodeDef of this.nodeDefsToExport) {
       const dataExportModel = new FlatDataExportModel({
         survey,
         cycle,
         nodeDefContext: nodeDef,
+        options,
       });
       const headers = dataExportModel.headers;
 
@@ -153,52 +155,28 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     record: ArenaMobileRecord;
   }): any[] {
     const { survey, cycle, options } = this.context;
-    const { addCycle, includeAncestorAttributes } = options;
+    const { addCycle } = options;
 
-    const dataExportModel = this.dataExportModelByNodeDefUuid[nodeDef.uuid]!;
     const csvRowsData = [];
 
     const nodes = Records.getNodesByDefUuid(nodeDef.uuid)(record);
     for (const node of nodes) {
+      // every node will be a row in the CSV file
       const csvRowData = [];
       if (addCycle) {
         csvRowData.push(cycle);
       }
-      // ancestor (or key) attributes
+      // extract node (entity or attribute) data and ancestor attributes (or only key attributes) data
       Surveys.visitAncestorsAndSelfNodeDef({
         survey,
         nodeDef,
         visitor: (nodeDefAncestor) => {
-          const ancestorNode = Records.getAncestor({
+          const ancestorNodesRowValues = this.extractAncestorNodeRowData({
             record,
+            nodeDef,
             node,
-            ancestorDefUuid: nodeDefAncestor.uuid,
-          })!;
-          const ancestorNodesRowValues = [];
-          const ancestorAttributeDefsConsidered =
-            includeAncestorAttributes || nodeDefAncestor === nodeDef
-              ? dataExportModel.extractAncestorAttributeDefs(nodeDefAncestor)
-              : Surveys.getNodeDefKeys({
-                  survey,
-                  cycle,
-                  nodeDef: nodeDefAncestor,
-                });
-          for (const ancestorAttrDef of ancestorAttributeDefsConsidered) {
-            const ancestorAttributeNode = Records.getDescendant({
-              record,
-              node: ancestorNode,
-              nodeDefDescendant: ancestorAttrDef,
-            });
-            const ancestorNodeRowValues = extractRowNodeData({
-              survey,
-              cycle,
-              record,
-              node: ancestorAttributeNode,
-              nodeDef: ancestorAttrDef,
-              options,
-            });
-            ancestorNodesRowValues.push(...ancestorNodeRowValues);
-          }
+            nodeDefAncestor,
+          });
           csvRowData.unshift(...ancestorNodesRowValues);
         },
       });
@@ -208,6 +186,54 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     return csvRowsData;
   }
 
+  private extractAncestorNodeRowData({
+    record,
+    nodeDef,
+    node,
+    nodeDefAncestor,
+  }: {
+    record: ArenaMobileRecord;
+    nodeDef: NodeDef<any>;
+    node: ArenaRecordNode;
+    nodeDefAncestor: NodeDef<any>;
+  }) {
+    const { survey, cycle, options } = this.context;
+    const { includeAncestorAttributes } = options;
+    const dataExportModel = this.dataExportModelByNodeDefUuid[nodeDef.uuid]!;
+
+    const ancestoNodeRowData = [];
+
+    const ancestorNode = Records.getAncestor({
+      record,
+      node,
+      ancestorDefUuid: nodeDefAncestor.uuid,
+    })!;
+    const ancestorAttributeDefs =
+      includeAncestorAttributes || nodeDefAncestor === nodeDef
+        ? dataExportModel.extractAncestorAttributeDefs(nodeDefAncestor)
+        : Surveys.getNodeDefKeys({
+            survey,
+            cycle,
+            nodeDef: nodeDefAncestor,
+          });
+    for (const ancestorAttrDef of ancestorAttributeDefs) {
+      const ancestorAttributeNode = Records.getDescendant({
+        record,
+        node: ancestorNode,
+        nodeDefDescendant: ancestorAttrDef,
+      });
+      const ancestorAttributeRowData = extractRowNodeData({
+        survey,
+        cycle,
+        record,
+        node: ancestorAttributeNode,
+        nodeDef: ancestorAttrDef,
+        options,
+      });
+      ancestoNodeRowData.push(...ancestorAttributeRowData);
+    }
+    return ancestoNodeRowData;
+  }
   // protected override cleanup(): Promise<void> {
   //   return Files.del(this.tempFolderUri);
   // }

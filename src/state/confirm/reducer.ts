@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Keyboard } from "react-native";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isOpen: false,
@@ -62,7 +62,7 @@ export type ConfirmShowParams = {
   messageKey: string;
   messageParams?: any;
   multipleChoiceOptions?: Array<{ label: string; value: string }>;
-  onConfirm: (params: OnConfirmParams) => Promise<void>;
+  onConfirm: (params: OnConfirmParams) => Promise<void> | void;
   onCancel?: () => Promise<void>;
   singleChoiceOptions?: Array<{ label: string; value: string }>;
   defaultMultipleChoiceValues?: string[];
@@ -109,7 +109,10 @@ export const ConfirmActions = {
   dismiss,
 
   // internal (called from dialog component)
-  confirm: ({ selectedMultipleChoiceValues, selectedSingleChoiceValue }: any) =>
+  confirm: ({
+    selectedMultipleChoiceValues,
+    selectedSingleChoiceValue,
+  }: OnConfirmParams) =>
     confirm({ selectedMultipleChoiceValues, selectedSingleChoiceValue }),
   cancel,
 };
