@@ -70,10 +70,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
 
     await this.createDataExportFiles();
 
-    const recordSummaries = await RecordService.fetchRecords({
-      survey,
-      onlyLocal: false,
-    });
+    const recordSummaries = await RecordService.fetchRecords({ survey });
 
     this.summary.total = recordSummaries.length;
 
@@ -81,6 +78,8 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
       await this.exportRecord({ recordSummary });
       this.incrementProcessedItems();
     }
+
+    await this.generateOutputFile();
   }
 
   private async createDataExportFiles() {
@@ -135,7 +134,6 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
       });
       nodeDefToExportIndex += 1;
     }
-    await this.generateOutputFile();
   }
 
   private async generateOutputFile() {
@@ -234,7 +232,16 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     }
     return ancestoNodeRowData;
   }
-  // protected override cleanup(): Promise<void> {
-  //   return Files.del(this.tempFolderUri);
-  // }
+
+  protected override async prepareResult(): Promise<any> {
+    const { outputFileUri } = this.context;
+    return { outputFileUri };
+  }
+
+  protected override async cleanup(): Promise<void> {
+    await super.cleanup();
+    if (this.tempFolderUri) {
+      return Files.del(this.tempFolderUri);
+    }
+  }
 }

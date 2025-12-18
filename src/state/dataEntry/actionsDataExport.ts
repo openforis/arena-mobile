@@ -179,7 +179,7 @@ export const startCsvDataExportJob =
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
       const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
 
-      const selectedDataExporOptions = {
+      const selectedDataExportOptions = {
         ...DataExportDefaultOptions,
         ...selectedOptionsToDataExportOptions({
           availableOptions: availableDataExportOptions,
@@ -193,7 +193,7 @@ export const startCsvDataExportJob =
         survey,
         surveyId: survey.id!,
         cycle,
-        options: selectedDataExporOptions,
+        options: selectedDataExportOptions,
       });
 
       await JobMonitorActions.startAsync({
