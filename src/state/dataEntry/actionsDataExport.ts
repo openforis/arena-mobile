@@ -175,6 +175,8 @@ export const startCsvDataExportJob =
     const onConfirm = async ({
       selectedMultipleChoiceValues,
     }: OnConfirmParams) => {
+      await dispatch(ConfirmActions.dismiss());
+
       const user = RemoteConnectionSelectors.selectLoggedUser(state);
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
       const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
@@ -197,6 +199,7 @@ export const startCsvDataExportJob =
       });
 
       await JobMonitorActions.startAsync({
+        autoDismiss: true,
         dispatch,
         job: dataExportJob,
         titleKey: "dataEntry:dataExport.exportingData",
