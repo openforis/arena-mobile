@@ -59,7 +59,7 @@ const extractTaxon = ({
   node: ArenaRecordNode;
 }) => {
   if (Objects.isNotEmpty(node?.value)) {
-    const taxonUuid = NodeValues.getValueTaxonUuid(node);
+    const taxonUuid = NodeValues.getTaxonUuid(node);
     if (taxonUuid) {
       return Surveys.getTaxonByUuid({ survey, taxonUuid });
     }
