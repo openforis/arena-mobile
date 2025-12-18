@@ -1,6 +1,27 @@
-import Papa from "papaparse";
 import { Files } from "./Files";
 
+const toString = (val: any): string =>
+  val === null || val === undefined ? "" : String(val);
+
+/**
+ * Escapes a value for CSV formatting.
+ * Wraps in quotes if the value contains commas, newlines, or quotes.
+ */
+const formatCSVValue = (val: any): string => {
+  const stringified = toString(val);
+  if (stringified.length > 0 && /[",\n\r]/.test(stringified)) {
+    // Escape quotes by doubling them and wrap the value in quotes
+    return `"${stringified.replace(/"/g, '""')}"`;
+  }
+  return stringified;
+};
+
+/**
+ * Writes CSV headers to a file.
+ *
+ * @param fileUri - The URI of the file to write to.
+ * @param headers - An array of header strings.
+ */
 const writeCsvHeaders = async ({
   fileUri,
   headers,
@@ -8,37 +29,31 @@ const writeCsvHeaders = async ({
   fileUri: string;
   headers: string[];
 }) => {
-  const headerRowString = Papa.unparse({
-    fields: headers,
-    data: [], // No data rows, just the header
-  });
+  const csvContent = headers.map(formatCSVValue).join(",") + "\n";
   await Files.writeStringToFile({
-    content: headerRowString,
+    content: csvContent,
     fileUri,
     encoding: Files.EncodingType.UTF8,
   });
 };
 
+/**
+ * Appends rows of data to a CSV file.
+ *
+ * @param fileUri - The URI of the file to append to.
+ * @param rows - An array of rows, where each row is an array of values.
+ */
 const appendCsvRows = async ({
   fileUri,
-  headers,
   rows,
 }: {
   fileUri: string;
-  headers: string[];
-  rows: any[];
+  rows: any[][];
 }) => {
-  const rowString = Papa.unparse(
-    {
-      fields: headers, // Pass headers to ensure column order is respected, even if not printing them
-      data: rows,
-    },
-    {
-      header: false, // Do not print headers again
-    }
-  );
+  const csvRows =
+    rows.map((row) => row.map(formatCSVValue).join(",")).join("\n") + "\n";
   await Files.appendStringToFile({
-    content: rowString,
+    content: csvRows,
     fileUri,
     encoding: Files.EncodingType.UTF8,
   });

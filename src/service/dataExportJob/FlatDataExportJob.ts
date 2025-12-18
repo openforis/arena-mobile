@@ -136,11 +136,9 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
         extension: "csv",
       });
       const tempFileUri = Files.path(this.tempFolderUri, fileName);
-      const dataExportModel = this.dataExportModelByNodeDefUuid[nodeDef.uuid]!;
 
       await FlatDataWriter.appendCsvRows({
         fileUri: tempFileUri,
-        headers: dataExportModel.headers,
         rows: csvRows,
       });
       nodeDefToExportIndex += 1;
@@ -253,10 +251,10 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     return { outputFileUri: outputFileUri! };
   }
 
-  protected override async cleanup(): Promise<void> {
-    await super.cleanup();
-    if (this.tempFolderUri) {
-      return Files.del(this.tempFolderUri);
-    }
-  }
+  // protected override async cleanup(): Promise<void> {
+  //   await super.cleanup();
+  //   if (this.tempFolderUri) {
+  //     return Files.del(this.tempFolderUri);
+  //   }
+  // }
 }
