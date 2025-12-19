@@ -1,3 +1,4 @@
+import { Strings } from "@openforis/arena-core";
 import { Files } from "./Files";
 
 const toString = (
@@ -6,11 +7,10 @@ const toString = (
 ): string | null | undefined => {
   const opts = { ...defaultOptions, ...options };
   const { nullsToEmpty } = opts;
-  return val === null || val === undefined
-    ? nullsToEmpty
-      ? ""
-      : val
-    : String(val);
+  if (val === null || val === undefined || Number.isNaN(val)) {
+    return nullsToEmpty ? "" : val;
+  }
+  return String(val);
 };
 
 type FormatOptions = {
@@ -39,7 +39,7 @@ const formatCSVValue = (
     ((stringified?.length ?? 0) > 0 && /[",\n\r]/.test(stringified!))
   ) {
     // Escape quotes by doubling them and wrap the value in quotes
-    return `"${(stringified ?? "").replace(/"/g, '""')}"`;
+    return Strings.quoteDouble(`${(stringified ?? "").replaceAll('"', '""')}`);
   }
   return stringified;
 };
