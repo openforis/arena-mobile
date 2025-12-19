@@ -119,7 +119,8 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   }
 
   private async exportRecord({ recordSummary }: { recordSummary: any }) {
-    const { survey } = this.context;
+    const { survey, options } = this.context;
+    const { nullsToEmpty } = options;
 
     const record = await RecordService.fetchRecord({
       survey,
@@ -140,6 +141,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
       await FlatDataWriter.appendCsvRows({
         fileUri: tempFileUri,
         rows: csvRows,
+        options: { nullsToEmpty },
       });
       nodeDefToExportIndex += 1;
     }

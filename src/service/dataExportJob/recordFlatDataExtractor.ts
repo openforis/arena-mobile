@@ -40,10 +40,10 @@ const extractCategoryItem = ({
   node,
 }: {
   survey: Survey;
-  node: ArenaRecordNode;
+  node?: ArenaRecordNode | null | undefined;
 }) => {
   if (Objects.isNotEmpty(node?.value)) {
-    const itemUuid = NodeValues.getItemUuid(node);
+    const itemUuid = NodeValues.getItemUuid(node!);
     if (itemUuid) {
       return Surveys.getCategoryItemByUuid({ survey, itemUuid });
     }
@@ -56,10 +56,10 @@ const extractTaxon = ({
   node,
 }: {
   survey: Survey;
-  node: ArenaRecordNode;
+  node?: ArenaRecordNode | null | undefined;
 }) => {
   if (Objects.isNotEmpty(node?.value)) {
-    const taxonUuid = NodeValues.getTaxonUuid(node);
+    const taxonUuid = NodeValues.getTaxonUuid(node!);
     if (taxonUuid) {
       return Surveys.getTaxonByUuid({ survey, taxonUuid });
     }
@@ -101,19 +101,18 @@ const extractVernacularName = ({
   return undefined;
 };
 
+const emptyFields = (emptyFieldsCount: number = 1) =>
+  Arrays.fromNumberOfElements(emptyFieldsCount).map(() => null);
+
 const rowDataExtractorByNodeDefType: Partial<
   Record<NodeDefType, RowDataExtractor>
 > = {
-  [NodeDefType.code]: ({ survey, node: nodeParam, options }) => {
+  [NodeDefType.code]: ({ survey, node, options }) => {
     const { includeCategoryItemsLabels } = options;
     const totalFieldsCount = includeCategoryItemsLabels ? 2 : 1;
-    if (Objects.isEmpty(nodeParam?.value)) {
-      return Arrays.fromNumberOfElements(totalFieldsCount).map(() => null);
-    }
-    const node = nodeParam!;
     const item = extractCategoryItem({ survey, node });
     if (!item) {
-      return Arrays.fromNumberOfElements(totalFieldsCount).map(() => null);
+      return emptyFields(totalFieldsCount);
     }
     const result = [CategoryItems.getCode(item)];
     if (includeCategoryItemsLabels) {
@@ -130,15 +129,16 @@ const rowDataExtractorByNodeDefType: Partial<
     const totalFieldsCount = 4 + additionalFields.length;
     const value = node?.value;
     if (Objects.isEmpty(value)) {
-      return Arrays.fromNumberOfElements(totalFieldsCount).map(() => null);
+      return emptyFields(totalFieldsCount);
     }
     const { x, y, srs } = value;
     const srsText = Strings.prependIfMissing("EPSG:")(srs);
     return [x, y, srsText, ...additionalFields.map((field) => value[field])];
   },
   [NodeDefType.date]: ({ node: nodeParam }) => {
+    const totalFieldsCount = 1;
     if (Objects.isEmpty(nodeParam?.value)) {
-      return [null];
+      return emptyFields(totalFieldsCount);
     }
     const node = nodeParam!;
     const [year, month, day] = [
@@ -148,11 +148,12 @@ const rowDataExtractorByNodeDefType: Partial<
     ];
     return Dates.isValidDate(year, month, day)
       ? [`${year}-${month}-${day}`]
-      : [null];
+      : emptyFields(totalFieldsCount);
   },
   [NodeDefType.file]: ({ node: nodeParam, nodeDef }) => {
+    const totalFieldsCount = 2;
     if (Objects.isEmpty(nodeParam?.value)) {
-      return [null];
+      return emptyFields(totalFieldsCount);
     }
     const node = nodeParam!;
     const fileNameExpression = NodeDefs.getFileNameExpression(nodeDef);
@@ -162,37 +163,34 @@ const rowDataExtractorByNodeDefType: Partial<
       : NodeValues.getFileName(node);
     return [fileUuid, fileName];
   },
-  [NodeDefType.taxon]: ({ survey, node: nodeParam, options }) => {
+  [NodeDefType.taxon]: ({ survey, node, options }) => {
     const { includeTaxonScientificName } = options;
-    const value = nodeParam?.value;
-    if (Objects.isEmpty(value)) {
-      const emptyFieldsCount = includeTaxonScientificName ? 3 : 1;
-      return Arrays.fromNumberOfElements(emptyFieldsCount).map(() => null);
-    }
-    const node = nodeParam!;
+    const totalFieldsCount = includeTaxonScientificName ? 3 : 1;
     const taxon = extractTaxon({ survey, node });
     if (!taxon) {
-      const emptyFieldsCount = includeTaxonScientificName ? 3 : 1;
-      return Arrays.fromNumberOfElements(emptyFieldsCount).map(() => null);
+      return emptyFields(totalFieldsCount);
     }
     const code = Taxa.getCode(taxon);
     if (includeTaxonScientificName) {
-      const scientificName = extractScientificName({ taxon, node });
-      const vernacularName = extractVernacularName({ taxon, node });
+      const scientificName = extractScientificName({ taxon, node: node! });
+      const vernacularName = extractVernacularName({ taxon, node: node! });
       return [code, scientificName, vernacularName];
     }
     return [code];
   },
   [NodeDefType.time]: ({ node: nodeParam }) => {
+    const totalFieldsCount = 1;
     if (Objects.isEmpty(nodeParam?.value)) {
-      return [null];
+      return emptyFields(totalFieldsCount);
     }
     const node = nodeParam!;
     const [hour, minute] = [
       NodeValues.getTimeHour(node),
       NodeValues.getTimeMinute(node),
     ];
-    return Dates.isValidTime(hour, minute) ? [`${hour}:${minute}`] : [null];
+    return Dates.isValidTime(hour, minute)
+      ? [`${hour}:${minute}:00`]
+      : emptyFields(totalFieldsCount);
   },
 };
 
