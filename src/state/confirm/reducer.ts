@@ -1,5 +1,5 @@
-import { Keyboard } from "react-native";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { Keyboard } from "react-native";
 
 const initialState = {
   isOpen: false,
