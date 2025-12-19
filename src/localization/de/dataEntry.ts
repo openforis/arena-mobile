@@ -179,7 +179,7 @@ Maximal zulässige Größe: {{maxSizeMB}}MB.
       [DataExportOption.includeAncestorAttributes]: "Vorfahrenattribute",
       [DataExportOption.includeCategoryItemsLabels]:
         "Kategorie-Elementbeschriftungen",
-      [DataExportOption.includeFileAttributeDefs]: "Dateiattributdefinitionen",
+      [DataExportOption.includeFileAttributeDefs]: "Dateiattribute",
       [DataExportOption.includeTaxonScientificName]:
         "Wissenschaftlicher Name des Taxons",
     },

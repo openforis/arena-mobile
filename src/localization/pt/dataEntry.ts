@@ -169,8 +169,7 @@ Verifique as configurações ou peça ao administrador da pesquisa para alterar 
       [DataExportOption.includeAncestorAttributes]: "Atributos ancestrais",
       [DataExportOption.includeCategoryItemsLabels]:
         "Etiquetas de itens de categoria",
-      [DataExportOption.includeFileAttributeDefs]:
-        "Definições de atributos de arquivo",
+      [DataExportOption.includeFileAttributeDefs]: "Atributos de arquivo",
       [DataExportOption.includeTaxonScientificName]: "Nome científico do táxon",
     },
     selectTarget: "Selecionar destino de exportação",

@@ -174,8 +174,7 @@ Vérifiez les paramètres ou demandez à l'administrateur de l'enquête de modif
       [DataExportOption.includeAncestorAttributes]: "Attributs ancêtres",
       [DataExportOption.includeCategoryItemsLabels]:
         "Étiquettes des éléments de catégorie",
-      [DataExportOption.includeFileAttributeDefs]:
-        "Définitions d'attributs de fichier",
+      [DataExportOption.includeFileAttributeDefs]: "Attributs de fichier",
       [DataExportOption.includeTaxonScientificName]:
         "Nom scientifique du taxon",
     },
