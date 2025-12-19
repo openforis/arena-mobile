@@ -190,7 +190,7 @@ Tarkista asetukset tai pyydä kyselyn järjestelmänvalvojaa muuttamaan tätä r
     title: "Vie tiedot",
   },
   location: {
-    abel: "Sijainti",
+    label: "Sijainti",
     gettingCurrentLocation: "Haetaan nykyistä sijaintia",
     usingCurrentLocation: "Käytetään nykyistä sijaintia",
   },

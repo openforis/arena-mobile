@@ -213,7 +213,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     const { includeAncestorAttributes } = options;
     const dataExportModel = this.dataExportModelByNodeDefUuid[nodeDef.uuid]!;
 
-    const ancestoNodeRowData = [];
+    const ancestorNodeRowData = [];
 
     const ancestorNode = Records.getAncestor({
       record,
@@ -242,9 +242,9 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
         nodeDef: ancestorAttrDef,
         options,
       });
-      ancestoNodeRowData.push(...ancestorAttributeRowData);
+      ancestorNodeRowData.push(...ancestorAttributeRowData);
     }
-    return ancestoNodeRowData;
+    return ancestorNodeRowData;
   }
 
   protected override async prepareResult(): Promise<FlatDataExportJobResult> {
