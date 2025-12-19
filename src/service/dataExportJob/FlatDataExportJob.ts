@@ -253,10 +253,10 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     return { outputFileUri: outputFileUri! };
   }
 
-  // protected override async cleanup(): Promise<void> {
-  //   await super.cleanup();
-  //   if (this.tempFolderUri) {
-  //     return Files.del(this.tempFolderUri);
-  //   }
-  // }
+  protected override async cleanup(): Promise<void> {
+    await super.cleanup();
+    if (this.tempFolderUri) {
+      return Files.del(this.tempFolderUri);
+    }
+  }
 }
