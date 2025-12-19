@@ -19,6 +19,15 @@ import {
 } from "@openforis/arena-core";
 import { ArenaMobileRecord } from "model/ArenaMobileRecord";
 
+type RowDataExtractorParams = {
+  survey: Survey;
+  cycle: string;
+  record: ArenaMobileRecord;
+  node: ArenaRecordNode | null | undefined;
+  nodeDef: NodeDef<any>;
+  options: DataExportOptions;
+};
+
 type RowDataExtractor = ({
   survey,
   cycle,
@@ -26,22 +35,40 @@ type RowDataExtractor = ({
   node,
   nodeDef,
   options,
-}: {
-  survey: Survey;
-  cycle: string;
-  record: any;
-  node: ArenaRecordNode | null | undefined;
-  nodeDef: NodeDef<any>;
-  options: DataExportOptions;
-}) => (string | null | undefined)[];
+}: RowDataExtractorParams) => (string | null | undefined)[];
 
-const extractCategoryItem = ({
-  survey,
-  node,
-}: {
-  survey: Survey;
-  node?: ArenaRecordNode | null | undefined;
-}) => {
+const totalFieldsCountCalculatorByNodeDefType: Partial<
+  Record<NodeDefType, (params: RowDataExtractorParams) => number>
+> = {
+  [NodeDefType.code]: ({ options }) => {
+    const { includeCategoryItemsLabels } = options;
+    return includeCategoryItemsLabels ? 2 : 1;
+  },
+  [NodeDefType.coordinate]: ({ nodeDef }) => {
+    const additionalFields = NodeDefs.getCoordinateAdditionalFields(
+      nodeDef as NodeDefCoordinate
+    );
+    return 3 + additionalFields.length;
+  },
+  [NodeDefType.file]: () => 2,
+  [NodeDefType.taxon]: ({ options }) => {
+    const { includeTaxonScientificName } = options;
+    return includeTaxonScientificName ? 3 : 1;
+  },
+};
+
+const generateEmptyFields = (
+  params: RowDataExtractorParams
+): (string | null | undefined)[] => {
+  const { nodeDef } = params;
+  const nodeDefType = NodeDefs.getType(nodeDef);
+  const totalFieldsCount =
+    totalFieldsCountCalculatorByNodeDefType[nodeDefType]?.(params) ?? 1;
+  return emptyFields(totalFieldsCount);
+};
+
+const extractCategoryItem = (params: RowDataExtractorParams) => {
+  const { survey, node } = params;
   if (Objects.isNotEmpty(node?.value)) {
     const itemUuid = NodeValues.getItemUuid(node!);
     if (itemUuid) {
@@ -51,13 +78,8 @@ const extractCategoryItem = ({
   return null;
 };
 
-const extractTaxon = ({
-  survey,
-  node,
-}: {
-  survey: Survey;
-  node?: ArenaRecordNode | null | undefined;
-}) => {
+const extractTaxon = (params: RowDataExtractorParams) => {
+  const { survey, node } = params;
   if (Objects.isNotEmpty(node?.value)) {
     const taxonUuid = NodeValues.getTaxonUuid(node!);
     if (taxonUuid) {
@@ -107,12 +129,12 @@ const emptyFields = (emptyFieldsCount: number = 1) =>
 const rowDataExtractorByNodeDefType: Partial<
   Record<NodeDefType, RowDataExtractor>
 > = {
-  [NodeDefType.code]: ({ survey, node, options }) => {
+  [NodeDefType.code]: (params) => {
+    const { survey, options } = params;
     const { includeCategoryItemsLabels } = options;
-    const totalFieldsCount = includeCategoryItemsLabels ? 2 : 1;
-    const item = extractCategoryItem({ survey, node });
+    const item = extractCategoryItem(params);
     if (!item) {
-      return emptyFields(totalFieldsCount);
+      return generateEmptyFields(params);
     }
     const result = [CategoryItems.getCode(item)];
     if (includeCategoryItemsLabels) {
@@ -122,23 +144,23 @@ const rowDataExtractorByNodeDefType: Partial<
     }
     return result;
   },
-  [NodeDefType.coordinate]: ({ node, nodeDef }) => {
+  [NodeDefType.coordinate]: (params) => {
+    const { node, nodeDef } = params;
     const additionalFields = NodeDefs.getCoordinateAdditionalFields(
       nodeDef as NodeDefCoordinate
     );
-    const totalFieldsCount = 4 + additionalFields.length;
     const value = node?.value;
     if (Objects.isEmpty(value)) {
-      return emptyFields(totalFieldsCount);
+      return generateEmptyFields(params);
     }
     const { x, y, srs } = value;
     const srsText = Strings.prependIfMissing("EPSG:")(srs);
     return [x, y, srsText, ...additionalFields.map((field) => value[field])];
   },
-  [NodeDefType.date]: ({ node: nodeParam }) => {
-    const totalFieldsCount = 1;
+  [NodeDefType.date]: (params) => {
+    const { node: nodeParam } = params;
     if (Objects.isEmpty(nodeParam?.value)) {
-      return emptyFields(totalFieldsCount);
+      return generateEmptyFields(params);
     }
     const node = nodeParam!;
     const [year, month, day] = [
@@ -148,12 +170,12 @@ const rowDataExtractorByNodeDefType: Partial<
     ];
     return Dates.isValidDate(year, month, day)
       ? [`${year}-${month}-${day}`]
-      : emptyFields(totalFieldsCount);
+      : generateEmptyFields(params);
   },
-  [NodeDefType.file]: ({ node: nodeParam, nodeDef }) => {
-    const totalFieldsCount = 2;
+  [NodeDefType.file]: (params) => {
+    const { node: nodeParam, nodeDef } = params;
     if (Objects.isEmpty(nodeParam?.value)) {
-      return emptyFields(totalFieldsCount);
+      return generateEmptyFields(params);
     }
     const node = nodeParam!;
     const fileNameExpression = NodeDefs.getFileNameExpression(nodeDef);
@@ -163,52 +185,37 @@ const rowDataExtractorByNodeDefType: Partial<
       : NodeValues.getFileName(node);
     return [fileUuid, fileName];
   },
-  [NodeDefType.taxon]: ({ survey, node, options }) => {
+  [NodeDefType.taxon]: (params) => {
+    const { node, options } = params;
     const { includeTaxonScientificName } = options;
-    const totalFieldsCount = includeTaxonScientificName ? 3 : 1;
-    const taxon = extractTaxon({ survey, node });
+    const taxon = extractTaxon(params);
     if (!taxon) {
-      return emptyFields(totalFieldsCount);
+      return generateEmptyFields(params);
     }
-    const code = Taxa.getCode(taxon);
+    const result: (string | null | undefined)[] = [Taxa.getCode(taxon)];
     if (includeTaxonScientificName) {
       const scientificName = extractScientificName({ taxon, node: node! });
       const vernacularName = extractVernacularName({ taxon, node: node! });
-      return [code, scientificName, vernacularName];
+      result.push(scientificName, vernacularName);
     }
-    return [code];
+    return result;
   },
-  [NodeDefType.time]: ({ node: nodeParam }) => {
-    const totalFieldsCount = 1;
+  [NodeDefType.time]: (params) => {
+    const { node: nodeParam } = params;
     if (Objects.isEmpty(nodeParam?.value)) {
-      return emptyFields(totalFieldsCount);
+      return generateEmptyFields(params);
     }
     const node = nodeParam!;
-    const [hour, minute] = [
-      NodeValues.getTimeHour(node),
-      NodeValues.getTimeMinute(node),
-    ];
+    const hour = NodeValues.getTimeHour(node);
+    const minute = NodeValues.getTimeMinute(node);
     return Dates.isValidTime(hour, minute)
       ? [`${hour}:${minute}:00`]
-      : emptyFields(totalFieldsCount);
+      : generateEmptyFields(params);
   },
 };
 
-export const extractRowNodeData = ({
-  survey,
-  cycle,
-  record,
-  node,
-  nodeDef,
-  options,
-}: {
-  survey: Survey;
-  cycle: string;
-  record: ArenaMobileRecord;
-  node: ArenaRecordNode | null | undefined;
-  nodeDef: NodeDef<any>;
-  options: DataExportOptions;
-}): any[] => {
+export const extractRowNodeData = (params: RowDataExtractorParams): any[] => {
+  const { survey, cycle, record, node, nodeDef, options } = params;
   const nodeValueExtractor =
     rowDataExtractorByNodeDefType[NodeDefs.getType(nodeDef)];
 
