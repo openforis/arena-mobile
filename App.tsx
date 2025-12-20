@@ -20,6 +20,8 @@ import styles from "./src/appStyles";
 
 const safeAreaEdges: Edges = ["right", "bottom", "left"];
 
+const topBarOffsetIOS = 50;
+
 const AppInnerContainer = () => {
   log.debug(`rendering AppInnerContainer`);
 
@@ -45,13 +47,13 @@ const AppInnerContainer = () => {
           FallbackComponent={ErrorFallbackComponent}
         >
           <StatusBar style={theme.dark ? "light" : "dark"} />
-          {Environment.isIOS ? (
-            <KeyboardAvoidingView behavior="height" style={BaseStyles.flexOne}>
-              {internalContainer}
-            </KeyboardAvoidingView>
-          ) : (
-            internalContainer
-          )}
+          <KeyboardAvoidingView
+            behavior={Environment.isIOS ? "padding" : "height"}
+            keyboardVerticalOffset={Environment.isIOS ? topBarOffsetIOS : 0}
+            style={BaseStyles.flexOne}
+          >
+            {internalContainer}
+          </KeyboardAvoidingView>
         </ErrorBoundary>
         <AppMessageDialog />
         <AppConfirmDialog />
