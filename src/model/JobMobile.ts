@@ -1,7 +1,12 @@
-import { JobBase, Logger } from "@openforis/arena-core";
+import { JobBase, JobContext, Logger } from "@openforis/arena-core";
 import { log } from "utils";
 
-export abstract class JobMobile extends JobBase<any, any> {
+export type JobMobileContext = JobContext;
+
+export abstract class JobMobile<C extends JobMobileContext> extends JobBase<
+  C,
+  any
+> {
   createLogger(): Logger {
     return {
       isDebugEnabled: () => true,

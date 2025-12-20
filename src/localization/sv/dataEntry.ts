@@ -1,3 +1,5 @@
+import { DataExportOption } from "@openforis/arena-core";
+
 export default {
   confirmGoToListOfRecords: `Gå till listan med poster?
   
@@ -150,28 +152,39 @@ Kontrollera inställningarna eller be undersökningsadministratören att ändra 
     resolution: "Upplösning",
   },
   dataExport: {
+    confirm: {
+      title: "Bekräfta dataexport",
+      message: `Poster att exportera:
+{{recordsCountSummary}}`,
+      selectOptions: `Välj exportalternativ:`,
+    },
+
     error: "Fel vid export av data. Detaljer: {{details}}",
+    exportedSuccessfullyButFilesMissing:
+      "Data exporterades framgångsrikt, men {{missingFiles}} filer/bilder saknas eller är skadade. Vänligen kontrollera dina register och även registren på servern.",
+    exportingData: "Exporterar data...",
+    exportToCsv: "Exportera till CSV",
+    mergeConflictingRecords: "Slå samman konflikterande poster (samma nycklar)",
+    noRecordsInDeviceToExport: "Inga poster i enheten att exportera",
+    onlyNewOrUpdatedRecords: "Exportera endast nya eller uppdaterade poster",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Endast poster som redan finns på fjärrservern eller poster som har uppdaterats på distans kan importeras",
+    option: {
+      [DataExportOption.addCycle]: "Lägg till cykel",
+      [DataExportOption.includeAncestorAttributes]: "Förfädersattribut",
+      [DataExportOption.includeCategoryItemsLabels]: "Kategoriartikeletiketter",
+      [DataExportOption.includeFileAttributeDefs]: "Filattribut",
+      [DataExportOption.includeTaxonScientificName]: "Vetenskapligt taxonnamn",
+    },
     selectTarget: "Välj exportmål",
     selectTargetMessage: `Välj exportens mål:`,
+    shareExportedFile: "Dela exporterad fil",
     target: {
       remote: "Fjärrserver",
       local: "Lokal mapp (Nedladdning)",
       share: "$t(common:shareFile)",
     },
-    shareExportedFile: "Dela exporterad fil",
     title: "Exportera data",
-    confirm: {
-      title: "Bekräfta dataexport",
-      message: `Poster att exportera:
-{{recordsCountSummary}}`,
-    },
-    noRecordsInDeviceToExport: "Inga poster i enheten att exportera",
-    onlyNewOrUpdatedRecords: "Exportera endast nya eller uppdaterade poster",
-    mergeConflictingRecords: "Slå samman konflikterande poster (samma nycklar)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Endast poster som redan finns på fjärrservern eller poster som har uppdaterats på distans kan importeras",
-    exportedSuccessfullyButFilesMissing:
-      "Data exporterades framgångsrikt, men {{missingFiles}} filer/bilder saknas eller är skadade. Vänligen kontrollera dina register och även registren på servern.",
   },
   location: {
     label: "Plats",

@@ -1,3 +1,5 @@
+import { DataExportOption } from "@openforis/arena-core";
+
 export default {
   confirmGoToListOfRecords: `Siirry tietueluetteloon?
   
@@ -149,32 +151,46 @@ Tarkista asetukset tai pyydä kyselyn järjestelmänvalvojaa muuttamaan tätä r
     resolution: "Resoluutio",
   },
   dataExport: {
+    confirm: {
+      title: "Vahvista tietojen vienti",
+      message: `Vietävät tietueet:
+{{recordsCountSummary}}`,
+      selectOptions: `Valitse vientivaihtoehdot:`,
+    },
+
     error: "Virhe tiedon viennissä. Tiedot: {{details}}",
+    exportedSuccessfullyButFilesMissing:
+      "Tiedot vietiin onnistuneesti, mutta {{missingFiles}} tiedostoa/kuvaa puuttuu tai on vioittunut. Tarkista tietueesi ja myös palvelimen tietueet.",
+    exportingData: "Viedään tietoja...",
+    exportToCsv: "Vie CSV-muotoon",
+    mergeConflictingRecords:
+      "Yhdistä ristiriitaiset tietueet (samalla avaimella)",
+    noRecordsInDeviceToExport: "Laitteessa ei ole vietäviä tietueita",
+    onlyNewOrUpdatedRecords: "Vie vain uudet tai päivitetyt tietueet",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Vain palvelimella jo olevat tai etänä päivitetyt tietueet voidaan tuoda",
+    option: {
+      [DataExportOption.addCycle]: "Lisää sykli",
+      [DataExportOption.includeAncestorAttributes]:
+        "Esivanhempien ominaisuudet",
+      [DataExportOption.includeCategoryItemsLabels]:
+        "Luokkien kohteiden tunnisteet",
+      [DataExportOption.includeFileAttributeDefs]: "Tiedosto-ominaisuudet",
+      [DataExportOption.includeTaxonScientificName]:
+        "Taksonin tieteellinen nimi",
+    },
     selectTarget: "Valitse vientikohde",
     selectTargetMessage: `Valitse viennin kohde:`,
+    shareExportedFile: "Jaa viety tiedosto",
     target: {
       remote: "Palvelin",
       local: "Paikallinen kansio (Lataukset)",
       share: "$t(common:shareFile)",
     },
-    shareExportedFile: "Jaa viety tiedosto",
     title: "Vie tiedot",
-    confirm: {
-      title: "Vahvista tietojen vienti",
-      message: `Vietävät tietueet:
-{{recordsCountSummary}}`,
-    },
-    noRecordsInDeviceToExport: "Laitteessa ei ole vietäviä tietueita",
-    onlyNewOrUpdatedRecords: "Vie vain uudet tai päivitetyt tietueet",
-    mergeConflictingRecords:
-      "Yhdistä ristiriitaiset tietueet (samalla avaimella)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Vain palvelimella jo olevat tai etänä päivitetyt tietueet voidaan tuoda",
-    exportedSuccessfullyButFilesMissing:
-      "Tiedot vietiin onnistuneesti, mutta {{missingFiles}} tiedostoa/kuvaa puuttuu tai on vioittunut. Tarkista tietueesi ja myös palvelimen tietueet.",
   },
   location: {
-    abel: "Sijainti",
+    label: "Sijainti",
     gettingCurrentLocation: "Haetaan nykyistä sijaintia",
     usingCurrentLocation: "Käytetään nykyistä sijaintia",
   },

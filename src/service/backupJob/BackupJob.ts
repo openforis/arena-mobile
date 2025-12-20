@@ -1,10 +1,14 @@
 import { DateFormats, Dates } from "@openforis/arena-core";
-import { JobMobile } from "model";
+import { JobMobile, JobMobileContext } from "model";
 import { Files } from "utils";
 
 const outputFileNamePrefix = `arena_mobile_full_backup_`;
 
-export class BackupJob extends JobMobile {
+type BackupJobContext = JobMobileContext & {
+  outputFileUri?: string;
+};
+
+export class BackupJob extends JobMobile<BackupJobContext> {
   async execute() {
     await super.onStart();
 

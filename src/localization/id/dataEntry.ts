@@ -1,3 +1,5 @@
+import { DataExportOption } from "@openforis/arena-core";
+
 export default {
   confirmGoToListOfRecords: `lanjut ke daftar isian?
   
@@ -151,30 +153,41 @@ Periksa pengaturan atau minta administrator survei untuk mengubah batas ini.`,
     resolution: "Resolusi",
   },
   dataExport: {
+    confirm: {
+      title: "Konfirmasi ekspor data",
+      message: `Data isian yang akan diekspor:
+{{recordsCountSummary}}`,
+      selectOptions: `Pilih opsi ekspor:`,
+    },
+
     error: "Kesalahan saat mengekspor data. Detail: {{details}}",
+    exportedSuccessfullyButFilesMissing:
+      "Data berhasil diekspor tetapi {{missingFiles}} file/gambar hilang atau rusak. Silakan periksa catatan Anda dan juga catatan di server.",
+    exportingData: "Mengekspor data...",
+    exportToCsv: "Ekspor ke CSV",
+    mergeConflictingRecords:
+      "Gabungkan data isian yang berkonflik (kunci yang sama)",
+    noRecordsInDeviceToExport: "Tidak ada data di perangkat untuk diekspor",
+    onlyNewOrUpdatedRecords:
+      "Ekspor hanya data isian baru atau yang diperbarui",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Hanya data isian yang sudah ada di server atau data isian yang telah diperbarui di server yang dapat diimpor",
+    option: {
+      [DataExportOption.addCycle]: "Tambahkan siklus",
+      [DataExportOption.includeAncestorAttributes]: "Atribut leluhur",
+      [DataExportOption.includeCategoryItemsLabels]: "Label item kategori",
+      [DataExportOption.includeFileAttributeDefs]: "Atribut file",
+      [DataExportOption.includeTaxonScientificName]: "Nama ilmiah takson",
+    },
     selectTarget: "Pilih target ekspor",
     selectTargetMessage: `Pilih target ekspor:`,
+    shareExportedFile: "Bagikan file yang diekspor",
     target: {
       remote: "Server jarak jauh",
       local: "Folder lokal (Unduhan)",
       share: "$t(common:shareFile)",
     },
-    shareExportedFile: "Bagikan file yang diekspor",
     title: "Ekspor data",
-    confirm: {
-      title: "Konfirmasi ekspor data",
-      message: `Data isian yang akan diekspor:
-{{recordsCountSummary}}`,
-    },
-    noRecordsInDeviceToExport: "Tidak ada data di perangkat untuk diekspor",
-    onlyNewOrUpdatedRecords:
-      "Ekspor hanya data isian baru atau yang diperbarui",
-    mergeConflictingRecords:
-      "Gabungkan data isian yang berkonflik (kunci yang sama)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Hanya data isian yang sudah ada di server atau data isian yang telah diperbarui di server yang dapat diimpor",
-    exportedSuccessfullyButFilesMissing:
-      "Data berhasil diekspor tetapi {{missingFiles}} file/gambar hilang atau rusak. Silakan periksa catatan Anda dan juga catatan di server.",
   },
   location: {
     label: "Lokasi",

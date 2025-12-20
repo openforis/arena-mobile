@@ -1,3 +1,5 @@
+import { DataExportOption } from "@openforis/arena-core";
+
 export default {
   checkStatus: "Проверить статус",
   closestSamplingPoint: {
@@ -143,30 +145,42 @@ export default {
     resolution: "Разрешение",
   },
   dataExport: {
+    confirm: {
+      title: "Подтвердить экспорт данных",
+      message: `Записи для экспорта:
+{{recordsCountSummary}}`,
+      selectOptions: `Выберите параметры экспорта:`,
+    },
+
     error: "Ошибка экспорта данных. Подробности: {{details}}",
+    exportedSuccessfullyButFilesMissing:
+      "Данные успешно экспортированы, но {{missingFiles}} файлов/изображений отсутствуют или повреждены. Пожалуйста, проверьте свои записи, а также записи на сервере.",
+    exportingData: "Экспорт данных...",
+    exportToCsv: "Экспортировать в CSV",
+    mergeConflictingRecords:
+      "Объединить конфликтующие записи (с одинаковыми ключами)",
+    noRecordsInDeviceToExport: "На устройстве нет записей для экспорта",
+    onlyNewOrUpdatedRecords:
+      "Экспортировать только новые или обновленные записи",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Могут быть импортированы только записи, находящиеся на удаленном сервере, или записи, обновленные удаленно",
+    option: {
+      [DataExportOption.addCycle]: "Добавить цикл",
+      [DataExportOption.includeAncestorAttributes]: "Атрибуты предков",
+      [DataExportOption.includeCategoryItemsLabels]:
+        "Метки элементов категории",
+      [DataExportOption.includeFileAttributeDefs]: "Атрибуты файлов",
+      [DataExportOption.includeTaxonScientificName]: "Научное название таксона",
+    },
     selectTarget: "Выберите место назначения для экспорта",
     selectTargetMessage: "Выберите место назначения для экспорта:",
+    shareExportedFile: "Поделиться экспортированным файлом",
     target: {
       remote: "Удаленный сервер",
       local: "Локальная папка (Загрузка)",
       share: "$t(common:shareFile)",
     },
-    shareExportedFile: "Поделиться экспортированным файлом",
     title: "Экспорт данных",
-    confirm: {
-      title: "Подтвердить экспорт данных",
-      message: `Записи для экспорта:
-{{recordsCountSummary}}`,
-    },
-    noRecordsInDeviceToExport: "На устройстве нет записей для экспорта",
-    onlyNewOrUpdatedRecords:
-      "Экспортировать только новые или обновленные записи",
-    mergeConflictingRecords:
-      "Объединить конфликтующие записи (с одинаковыми ключами)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Могут быть импортированы только записи, находящиеся на удаленном сервере, или записи, обновленные удаленно",
-    exportedSuccessfullyButFilesMissing:
-      "Данные успешно экспортированы, но {{missingFiles}} файлов/изображений отсутствуют или повреждены. Пожалуйста, проверьте свои записи, а также записи на сервере.",
   },
   location: {
     label: "Местоположение",
