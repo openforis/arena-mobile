@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import { StyleSheet } from "react-native";
 import { NavigationContext } from "@react-navigation/native";
 
@@ -42,24 +42,29 @@ export const UserSummary = ({
   const { serverUrl } = settings;
   const navigation = (useContext(NavigationContext) ?? navigationProp)!;
 
+  const onUserIconPress = useCallback(() => {
+    navigation.navigate(screenKeys.settingsRemoteConnection as never);
+    onButtonPress?.();
+  }, [navigation, onButtonPress]);
+
+  const onLogoutPress = useCallback(() => {
+    dispatch(RemoteConnectionActions.logout());
+    onButtonPress?.();
+  }, [dispatch, onButtonPress]);
+
   return (
     <HView style={[styles.container, style]} transparent>
-      <UserProfileIcon
-        onPress={() => {
-          navigation.navigate(screenKeys.settingsRemoteConnection as never);
-          onButtonPress?.();
-        }}
-        size={profileIconSize}
-      />
+      <UserProfileIcon onPress={onUserIconPress} size={profileIconSize} />
       <VView style={styles.innerContainer} transparent>
         {serverUrl != AMConstants.defaultServerUrl && (
-          <Text numberOfLines={1} style={styles.text}>
+          <Text numberOfLines={1} onPress={onUserIconPress} style={styles.text}>
             {serverUrl}
           </Text>
         )}
         {user && (
           <Text
             numberOfLines={1}
+            onPress={onUserIconPress}
             style={styles.text}
             textKey="loginInfo:welcomeMessage"
             textParams={{ name: user.name }}
@@ -69,10 +74,7 @@ export const UserSummary = ({
           <Button
             mode="text"
             textKey="loginInfo:logout"
-            onPress={() => {
-              dispatch(RemoteConnectionActions.logout());
-              onButtonPress?.();
-            }}
+            onPress={onLogoutPress}
           />
         )}
       </VView>
