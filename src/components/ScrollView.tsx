@@ -1,5 +1,6 @@
 import { forwardRef, Ref, useMemo } from "react";
 import { ScrollView as RNScrollView, StyleProp, ViewStyle } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { useTheme } from "react-native-paper";
 
 type Props = {
@@ -36,13 +37,13 @@ export const ScrollView = forwardRef(function ScrollView(
   );
 
   return (
-    <RNScrollView
+    <KeyboardAwareScrollView
       persistentScrollbar={persistentScrollbar}
       ref={ref}
       style={style}
       {...otherProps}
     >
       {children}
-    </RNScrollView>
+    </KeyboardAwareScrollView>
   );
 });

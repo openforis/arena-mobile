@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
-import { KeyboardAvoidingView } from "react-native";
+import { KeyboardProvider } from "react-native-keyboard-controller";
+import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import ErrorBoundary from "react-native-error-boundary";
 import { Provider as PaperProvider, ThemeProvider } from "react-native-paper";
 import { Edges, SafeAreaView } from "react-native-safe-area-context";
@@ -46,14 +47,16 @@ const AppInnerContainer = () => {
           onError={onError}
           FallbackComponent={ErrorFallbackComponent}
         >
-          <StatusBar style={theme.dark ? "light" : "dark"} />
-          <KeyboardAvoidingView
-            behavior={Environment.isIOS ? "padding" : "height"}
-            keyboardVerticalOffset={Environment.isIOS ? topBarOffsetIOS : 0}
-            style={BaseStyles.flexOne}
-          >
-            {internalContainer}
-          </KeyboardAvoidingView>
+          <KeyboardProvider>
+            <StatusBar style={theme.dark ? "light" : "dark"} />
+            <KeyboardAvoidingView
+              behavior={Environment.isIOS ? "padding" : "height"}
+              keyboardVerticalOffset={Environment.isIOS ? topBarOffsetIOS : 0}
+              style={BaseStyles.flexOne}
+            >
+              {internalContainer}
+            </KeyboardAvoidingView>
+          </KeyboardProvider>
         </ErrorBoundary>
         <AppMessageDialog />
         <AppConfirmDialog />
