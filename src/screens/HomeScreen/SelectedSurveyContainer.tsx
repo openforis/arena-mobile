@@ -100,11 +100,13 @@ export const SelectedSurveyContainer = () => {
           <Text style={styles.surveyTitle} variant="titleMedium">
             {surveyTitle}
           </Text>
-          <SurveyUpdateStatusIcon
-            onPress={determineStatus}
-            updateStatus={updateStatus}
-            errorKey={errorKey}
-          />
+          {SurveyService.demoSurveyUuid !== survey.uuid && (
+            <SurveyUpdateStatusIcon
+              onPress={determineStatus}
+              updateStatus={updateStatus}
+              errorKey={errorKey}
+            />
+          )}
         </HView>
         {surveyDescription && (
           <ViewMoreText numberOfLines={1}>

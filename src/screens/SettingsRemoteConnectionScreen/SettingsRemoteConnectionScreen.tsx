@@ -47,6 +47,7 @@ export const SettingsRemoteConnectionScreen = () => {
   const user = RemoteConnectionSelectors.useLoggedInUser();
 
   const [state, setState] = useState({
+    initialized: false,
     serverUrl: AMConstants.defaultServerUrl,
     serverUrlType: serverUrlTypes.default,
     serverUrlVerified: false,
@@ -54,8 +55,14 @@ export const SettingsRemoteConnectionScreen = () => {
     password: "",
   });
 
-  const { email, password, serverUrl, serverUrlType, serverUrlVerified } =
-    state;
+  const {
+    initialized,
+    email,
+    password,
+    serverUrl,
+    serverUrlType,
+    serverUrlVerified,
+  } = state;
 
   const initialize = useCallback(async () => {
     const settings = await SettingsService.fetchSettings();
@@ -70,6 +77,7 @@ export const SettingsRemoteConnectionScreen = () => {
 
     setState((statePrev) => ({
       ...statePrev,
+      initialized: true,
       serverUrl: serverUrlNext,
       serverUrlType: serverUrlTypeNext,
       email: settings.email ?? "",
@@ -157,12 +165,15 @@ export const SettingsRemoteConnectionScreen = () => {
     }
   }, [dispatch, networkAvailable]);
 
+  if (!initialized) {
+    return null;
+  }
   return (
     <ScreenView>
       <VView style={styles.container}>
         {!networkAvailable && <Text textKey="common:networkNotAvailable" />}
         <CollapsiblePanel
-          defaultOpen={serverUrlType === serverUrlTypes.custom}
+          defaultCollapsed={serverUrlType === serverUrlTypes.default}
           headerKey="settingsRemoteConnection:serverUrl"
         >
           <RadioButtonGroup
