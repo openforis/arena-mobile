@@ -1,7 +1,9 @@
 import { StatusBar } from "expo-status-bar";
-import { KeyboardProvider } from "react-native-keyboard-controller";
-import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import ErrorBoundary from "react-native-error-boundary";
+import {
+  KeyboardAvoidingView,
+  KeyboardProvider,
+} from "react-native-keyboard-controller";
 import { Provider as PaperProvider, ThemeProvider } from "react-native-paper";
 import { Edges, SafeAreaView } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
@@ -32,13 +34,7 @@ const AppInnerContainer = () => {
     log.error(stackTrace, error);
   };
 
-  const internalContainer = (
-    <AppInitializer>
-      <SafeAreaView edges={safeAreaEdges} style={styles.container}>
-        <AppStack />
-      </SafeAreaView>
-    </AppInitializer>
-  );
+  const keyboardVerticalOffset = Environment.isIOS ? topBarOffsetIOS : 0;
 
   return (
     <PaperProvider theme={theme}>
@@ -49,13 +45,17 @@ const AppInnerContainer = () => {
         >
           <KeyboardProvider>
             <StatusBar style={theme.dark ? "light" : "dark"} />
-            <KeyboardAvoidingView
-              behavior={Environment.isIOS ? "padding" : "height"}
-              keyboardVerticalOffset={Environment.isIOS ? topBarOffsetIOS : 0}
-              style={BaseStyles.flexOne}
-            >
-              {internalContainer}
-            </KeyboardAvoidingView>
+            <AppInitializer>
+              <SafeAreaView edges={safeAreaEdges} style={styles.container}>
+                <KeyboardAvoidingView
+                  behavior={Environment.isIOS ? "padding" : "height"}
+                  keyboardVerticalOffset={keyboardVerticalOffset}
+                  style={BaseStyles.flexOne}
+                >
+                  <AppStack />
+                </KeyboardAvoidingView>
+              </SafeAreaView>
+            </AppInitializer>
           </KeyboardProvider>
         </ErrorBoundary>
         <AppMessageDialog />
