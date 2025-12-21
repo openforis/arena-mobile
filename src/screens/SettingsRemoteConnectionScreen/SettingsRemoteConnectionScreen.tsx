@@ -3,6 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import {
   Button,
+  CollapsiblePanel,
   FieldSet,
   HView,
   Icon,
@@ -71,8 +72,8 @@ export const SettingsRemoteConnectionScreen = () => {
       ...statePrev,
       serverUrl: serverUrlNext,
       serverUrlType: serverUrlTypeNext,
-      email: settings.email || "",
-      password: settings.password || "",
+      email: settings.email ?? "",
+      password: settings.password ?? "",
     }));
   }, []);
 
@@ -160,7 +161,10 @@ export const SettingsRemoteConnectionScreen = () => {
     <ScreenView>
       <VView style={styles.container}>
         {!networkAvailable && <Text textKey="common:networkNotAvailable" />}
-        <FieldSet headerKey="settingsRemoteConnection:serverUrl">
+        <CollapsiblePanel
+          defaultOpen={serverUrlType === serverUrlTypes.custom}
+          headerKey="settingsRemoteConnection:serverUrl"
+        >
           <RadioButtonGroup
             onValueChange={onServerUrlTypeChange}
             value={serverUrlType}
@@ -195,7 +199,7 @@ export const SettingsRemoteConnectionScreen = () => {
               onPress={onTestUrlPress}
             />
           )}
-        </FieldSet>
+        </CollapsiblePanel>
         <TextInput
           autoCapitalize="none"
           disabled={!networkAvailable}

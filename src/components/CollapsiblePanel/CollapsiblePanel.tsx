@@ -13,6 +13,7 @@ type CollapsiblePanelProps = {
   children?: React.ReactNode;
   containerStyle?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
+  defaultOpen?: boolean;
   headerContent?: React.ReactNode;
   headerKey?: string;
   headerParams?: any;
@@ -23,6 +24,7 @@ export const CollapsiblePanel = (props: CollapsiblePanelProps) => {
     children,
     containerStyle = null,
     contentStyle = null,
+    defaultOpen = true,
     headerContent,
     headerKey,
     headerParams,
@@ -30,7 +32,7 @@ export const CollapsiblePanel = (props: CollapsiblePanelProps) => {
 
   const styles = useStyles();
 
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(defaultOpen);
 
   const onHeaderPress = useCallback(
     () => setCollapsed(!collapsed),
