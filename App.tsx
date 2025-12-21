@@ -23,6 +23,10 @@ import styles from "./src/appStyles";
 
 const safeAreaEdges: Edges = ["right", "bottom", "left"];
 
+/**
+ * Vertical offset for KeyboardAvoidingView on iOS to account for the top bar (status bar + app header).
+ * The value 50 was determined empirically to align input fields correctly beneath the top UI chrome on typical iOS devices.
+ */
 const topBarOffsetIOS = 50;
 
 const AppInnerContainer = () => {
