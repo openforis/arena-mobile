@@ -25,11 +25,12 @@ const Symbols = {
 };
 
 const { height, width } = Dimensions.get("window");
+const minDimension = Math.min(height, width);
 
-const compassImageSize = width - 40;
+const compassImageSize = minDimension - 40;
 const arrowToTargetHeight = compassImageSize * 0.7;
 const targetLocationBoxWidth = compassImageSize * 0.7;
-const targetLocationMarkerHeight = height / 26;
+const targetLocationMarkerHeight = minDimension / 16;
 
 const dynamicStyles = StyleSheet.create({
   compassWrapper: {
