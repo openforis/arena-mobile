@@ -21,6 +21,7 @@ type SettingsProperty = {
 
 export enum SettingKey {
   animationsEnabled = "animationsEnabled",
+  email = "email",
   fontScale = "fontScale",
   fullScreen = "fullScreen",
   imageSizeUnlimited = "imageSizeUnlimited",
@@ -31,6 +32,7 @@ export enum SettingKey {
   locationAccuracyWatchTimeout = "locationAccuracyWatchTimeout",
   locationAveragingEnabled = "locationAveragingEnabled",
   locationGpsLocked = "locationGpsLocked",
+  password = "password", // deprecated, here for backward compatibility
   serverUrlType = "serverUrlType",
   serverUrl = "serverUrl",
   showStatusBar = "showStatusBar",

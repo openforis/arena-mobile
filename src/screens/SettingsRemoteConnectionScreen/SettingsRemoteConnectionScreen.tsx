@@ -3,6 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import {
   Button,
+  CollapsiblePanel,
   FieldSet,
   HView,
   Icon,
@@ -46,6 +47,7 @@ export const SettingsRemoteConnectionScreen = () => {
   const user = RemoteConnectionSelectors.useLoggedInUser();
 
   const [state, setState] = useState({
+    initialized: false,
     serverUrl: AMConstants.defaultServerUrl,
     serverUrlType: serverUrlTypes.default,
     serverUrlVerified: false,
@@ -53,8 +55,14 @@ export const SettingsRemoteConnectionScreen = () => {
     password: "",
   });
 
-  const { email, password, serverUrl, serverUrlType, serverUrlVerified } =
-    state;
+  const {
+    initialized,
+    email,
+    password,
+    serverUrl,
+    serverUrlType,
+    serverUrlVerified,
+  } = state;
 
   const initialize = useCallback(async () => {
     const settings = await SettingsService.fetchSettings();
@@ -69,10 +77,11 @@ export const SettingsRemoteConnectionScreen = () => {
 
     setState((statePrev) => ({
       ...statePrev,
+      initialized: true,
       serverUrl: serverUrlNext,
       serverUrlType: serverUrlTypeNext,
-      email: settings.email || "",
-      password: settings.password || "",
+      email: settings.email ?? "",
+      password: settings.password ?? "",
     }));
   }, []);
 
@@ -156,11 +165,17 @@ export const SettingsRemoteConnectionScreen = () => {
     }
   }, [dispatch, networkAvailable]);
 
+  if (!initialized) {
+    return null;
+  }
   return (
     <ScreenView>
       <VView style={styles.container}>
         {!networkAvailable && <Text textKey="common:networkNotAvailable" />}
-        <FieldSet headerKey="settingsRemoteConnection:serverUrl">
+        <CollapsiblePanel
+          defaultCollapsed={serverUrlType === serverUrlTypes.default}
+          headerKey="settingsRemoteConnection:serverUrl"
+        >
           <RadioButtonGroup
             onValueChange={onServerUrlTypeChange}
             value={serverUrlType}
@@ -195,7 +210,7 @@ export const SettingsRemoteConnectionScreen = () => {
               onPress={onTestUrlPress}
             />
           )}
-        </FieldSet>
+        </CollapsiblePanel>
         <TextInput
           autoCapitalize="none"
           disabled={!networkAvailable}
