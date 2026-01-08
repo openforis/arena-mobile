@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- CSV data export
+- CSV data export;
+
+### Fixed
+
+- Compass layout issue (landscape display mode);
 
 ## [2.2.3] - 2025-12-11
 
