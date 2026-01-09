@@ -3,6 +3,7 @@ import {
   DataExportDefaultOptions,
   DataExportOptions,
   Dates,
+  Dictionary,
   FlatDataExportModel,
   FlatDataFiles,
   NodeDef,
@@ -34,12 +35,9 @@ export type FlatDataExportJobResult = {
 };
 
 export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
-  private readonly tempFolderUri?: string;
-  private readonly nodeDefsToExport?: NodeDef<any>[];
-  private readonly dataExportModelByNodeDefUuid: Record<
-    string,
-    FlatDataExportModel
-  > = {};
+  private tempFolderUri?: string;
+  private nodeDefsToExport?: NodeDef<any>[];
+  private dataExportModelByNodeDefUuid: Dictionary<FlatDataExportModel> = {};
   private readonly uniqueFileNameGenerator: UniqueFileNamesGenerator =
     new UniqueFileNamesGenerator();
 
@@ -102,6 +100,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
 
   private async createDataExportFiles() {
     const { survey, cycle, options } = this.context;
+    const { includeFiles } = options;
     let index = 0;
     for (const nodeDef of this.nodeDefsToExport!) {
       const dataExportModel = new FlatDataExportModel({
@@ -122,6 +121,15 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
       const tempFileUri = Files.path(this.tempFolderUri, fileName);
       await FlatDataWriter.writeCsvHeaders({ fileUri: tempFileUri, headers });
       index += 1;
+    }
+
+    if (includeFiles) {
+      // create attached files subfolder
+      const attachedFilesFolderUri = Files.path(
+        this.tempFolderUri!,
+        FlatDataFiles.attachedFilesSubfolderName
+      );
+      await Files.mkDir(attachedFilesFolderUri);
     }
   }
 
