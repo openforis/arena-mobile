@@ -128,6 +128,8 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     const { survey, options } = this.context;
     const { nullsToEmpty } = options;
 
+    this.logger.debug(`Exporting data for record: ${recordSummary.id}`);
+
     const record = await RecordService.fetchRecord({
       survey,
       recordId: recordSummary.id,
@@ -153,7 +155,9 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
         options: { nullsToEmpty },
       });
 
-      await this.exportRecordFiles({ fileValues });
+      if (fileValues.length > 0) {
+        await this.exportRecordFiles({ fileValues });
+      }
 
       nodeDefToExportIndex += 1;
     }
@@ -162,6 +166,10 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   private async exportRecordFiles({ fileValues }: { fileValues: any[] }) {
     const { survey } = this.context;
     const { id: surveyId } = survey;
+
+    this.logger.debug(
+      `Exporting ${fileValues.length} attached files for record`
+    );
 
     for (const fileValue of fileValues) {
       const { fileUuid } = fileValue;
@@ -175,10 +183,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
         surveyId,
         fileUuid,
       });
-      await Files.copyFile({
-        from: sourceFileUri,
-        to: exportedRecordFilePath,
-      });
+      await Files.copyFile({ from: sourceFileUri, to: exportedRecordFilePath });
     }
   }
 
