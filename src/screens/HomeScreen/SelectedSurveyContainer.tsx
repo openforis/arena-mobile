@@ -42,6 +42,7 @@ export const SelectedSurveyContainer = () => {
     : surveyName;
   const surveyDescription = Surveys.getDescription(lang)(survey);
   const fieldManualUrl = Surveys.getFieldManualLink(lang)(survey);
+  const isDemoSurvey = survey?.uuid === SurveyService.demoSurveyUuid;
 
   const [state, setState] = useState({
     updateStatus: UpdateStatus.loading,
@@ -100,11 +101,13 @@ export const SelectedSurveyContainer = () => {
           <Text style={styles.surveyTitle} variant="titleMedium">
             {surveyTitle}
           </Text>
-          <SurveyUpdateStatusIcon
-            onPress={determineStatus}
-            updateStatus={updateStatus}
-            errorKey={errorKey}
-          />
+          {!isDemoSurvey && (
+            <SurveyUpdateStatusIcon
+              onPress={determineStatus}
+              updateStatus={updateStatus}
+              errorKey={errorKey}
+            />
+          )}
         </HView>
         {surveyDescription && (
           <ViewMoreText numberOfLines={1}>

@@ -169,7 +169,7 @@ Verifique la configuración o pida al administrador de la encuesta que cambie es
       [DataExportOption.includeAncestorAttributes]: "Atributos ancestrales",
       [DataExportOption.includeCategoryItemsLabels]:
         "Etiquetas de elementos de categoría",
-      [DataExportOption.includeFileAttributeDefs]: "Atributos de archivo",
+      [DataExportOption.includeFiles]: "Atributos de archivo",
       [DataExportOption.includeTaxonScientificName]:
         "Nombre científico del taxón",
     },

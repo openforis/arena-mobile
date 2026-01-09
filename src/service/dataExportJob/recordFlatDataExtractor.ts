@@ -16,6 +16,7 @@ import {
   Surveys,
   Taxa,
   Taxon,
+  UniqueFileNamesGenerator,
 } from "@openforis/arena-core";
 import { ArenaMobileRecord } from "model/ArenaMobileRecord";
 
@@ -26,6 +27,7 @@ type RowDataExtractorParams = {
   node: ArenaRecordNode | null | undefined;
   nodeDef: NodeDef<any>;
   options: DataExportOptions;
+  uniqueFileNameGenerator: UniqueFileNamesGenerator;
 };
 
 type RowDataExtractor = ({
@@ -173,17 +175,21 @@ const rowDataExtractorByNodeDefType: Partial<
       : generateEmptyFields(params);
   },
   [NodeDefType.file]: (params) => {
-    const { node: nodeParam, nodeDef } = params;
+    const { node: nodeParam, nodeDef, uniqueFileNameGenerator } = params;
     if (Objects.isEmpty(nodeParam?.value)) {
       return generateEmptyFields(params);
     }
     const node = nodeParam!;
     const fileNameExpression = NodeDefs.getFileNameExpression(nodeDef);
-    const fileUuid = NodeValues.getFileUuid(node);
+    const fileUuid = NodeValues.getFileUuid(node)!;
     const fileName = fileNameExpression
       ? NodeValues.getFileNameCalculated(node)
       : NodeValues.getFileName(node);
-    return [fileUuid, fileName];
+    const uniqueFileName = uniqueFileNameGenerator.generateUniqueFileName(
+      fileName ?? fileUuid,
+      fileUuid
+    );
+    return [fileUuid, uniqueFileName];
   },
   [NodeDefType.taxon]: (params) => {
     const { node, options } = params;
@@ -215,19 +221,12 @@ const rowDataExtractorByNodeDefType: Partial<
 };
 
 export const extractRowNodeData = (params: RowDataExtractorParams): any[] => {
-  const { survey, cycle, record, node, nodeDef, options } = params;
+  const { survey, cycle, node, nodeDef } = params;
   const nodeValueExtractor =
     rowDataExtractorByNodeDefType[NodeDefs.getType(nodeDef)];
 
   if (nodeValueExtractor) {
-    return nodeValueExtractor({
-      survey,
-      cycle,
-      record,
-      node,
-      nodeDef,
-      options,
-    });
+    return nodeValueExtractor(params);
   }
   const value = node?.value;
   if (Objects.isEmpty(value)) {

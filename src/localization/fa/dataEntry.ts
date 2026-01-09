@@ -173,7 +173,7 @@ export default {
       [DataExportOption.includeAncestorAttributes]: "ویژگی‌های اجدادی",
       [DataExportOption.includeCategoryItemsLabels]:
         "برچسب‌های موارد دسته‌بندی",
-      [DataExportOption.includeFileAttributeDefs]: "ویژگی‌های فایل",
+      [DataExportOption.includeFiles]: "ویژگی‌های فایل",
       [DataExportOption.includeTaxonScientificName]: "نام علمی طبقه‌بندی",
     },
     selectTarget: "انتخاب  روش اکسپورت",

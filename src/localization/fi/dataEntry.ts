@@ -175,7 +175,7 @@ Tarkista asetukset tai pyydä kyselyn järjestelmänvalvojaa muuttamaan tätä r
         "Esivanhempien ominaisuudet",
       [DataExportOption.includeCategoryItemsLabels]:
         "Luokkien kohteiden tunnisteet",
-      [DataExportOption.includeFileAttributeDefs]: "Tiedosto-ominaisuudet",
+      [DataExportOption.includeFiles]: "Tiedosto-ominaisuudet",
       [DataExportOption.includeTaxonScientificName]:
         "Taksonin tieteellinen nimi",
     },

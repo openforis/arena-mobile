@@ -169,7 +169,7 @@ export default {
       [DataExportOption.includeAncestorAttributes]: "Атрибуты предков",
       [DataExportOption.includeCategoryItemsLabels]:
         "Метки элементов категории",
-      [DataExportOption.includeFileAttributeDefs]: "Атрибуты файлов",
+      [DataExportOption.includeFiles]: "Атрибуты файлов",
       [DataExportOption.includeTaxonScientificName]: "Научное название таксона",
     },
     selectTarget: "Выберите место назначения для экспорта",

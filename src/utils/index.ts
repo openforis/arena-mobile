@@ -4,6 +4,7 @@ export { BaseStyles } from "./BaseStyles";
 export { Environment } from "./Environment";
 export { ExifUtils } from "./ExifUtils";
 export { Files } from "./Files";
+export { FlatDataWriter } from "./FlatDataWriter";
 export { Functions } from "./Functions";
 export { ImageUtils } from "./ImageUtils";
 export { initializeLogger, log, logsPath, clear as clearLogs } from "./Logger";

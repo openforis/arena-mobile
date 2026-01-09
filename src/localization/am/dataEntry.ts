@@ -161,7 +161,7 @@ export default {
       [DataExportOption.addCycle]: "ዎመድ ይጨምሩ",
       [DataExportOption.includeAncestorAttributes]: "የአለፎች ባህሪያት",
       [DataExportOption.includeCategoryItemsLabels]: "የአጭመጃነት ዘርዝሮች",
-      [DataExportOption.includeFileAttributeDefs]: "የፋይል ባህሪዎች",
+      [DataExportOption.includeFiles]: "የፋይል ባህሪዎች",
       [DataExportOption.includeTaxonScientificName]: "የታክሰን ሳይንሲፊክ ስም",
     },
     selectTarget: "የመላኪያ ዒላማ ይምረጡ",
