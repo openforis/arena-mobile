@@ -7,9 +7,12 @@ import {
   FlatDataFiles,
   NodeDef,
   NodeDefs,
+  NodeDefType,
+  NodeValues,
   Records,
   Survey,
   Surveys,
+  UniqueFileNamesGenerator,
 } from "@openforis/arena-core";
 import { ArenaMobileRecord } from "model/ArenaMobileRecord";
 
@@ -18,6 +21,7 @@ import { RecordService } from "service/recordService";
 import { Files } from "utils/Files";
 import { FlatDataWriter } from "utils/FlatDataWriter";
 import { extractRowNodeData } from "./recordFlatDataExtractor";
+import { RecordFileService } from "service/recordFileService";
 
 type FlatDataExportJobContext = JobMobileContext & {
   survey: Survey;
@@ -35,6 +39,8 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   private nodeDefsToExport?: NodeDef<any>[];
   private dataExportModelByNodeDefUuid: Record<string, FlatDataExportModel> =
     {};
+  private uniqueFileNameGenerator: UniqueFileNamesGenerator =
+    new UniqueFileNamesGenerator();
 
   constructor(context: FlatDataExportJobContext) {
     super({
@@ -129,7 +135,10 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
 
     let nodeDefToExportIndex = 0;
     for (const nodeDef of this.nodeDefsToExport!) {
-      const csvRows = this.exportRecordNodes({ nodeDef, record });
+      const { rowsData, fileValues } = this.exportRecordNodes({
+        nodeDef,
+        record,
+      });
 
       const fileName = FlatDataFiles.getFileName({
         nodeDef,
@@ -140,10 +149,36 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
 
       await FlatDataWriter.appendCsvRows({
         fileUri: tempFileUri,
-        rows: csvRows,
+        rows: rowsData,
         options: { nullsToEmpty },
       });
+
+      await this.exportRecordFiles({ fileValues });
+
       nodeDefToExportIndex += 1;
+    }
+  }
+
+  private async exportRecordFiles({ fileValues }: { fileValues: any[] }) {
+    const { survey } = this.context;
+    const { id: surveyId } = survey;
+
+    for (const fileValue of fileValues) {
+      const { fileUuid } = fileValue;
+      const fileName = this.uniqueFileNameGenerator.fileNamesByKey[fileUuid];
+      const exportedRecordFilePath = Files.path(
+        this.tempFolderUri,
+        FlatDataFiles.attachedFilesSubfolderName,
+        fileName
+      );
+      const sourceFileUri = RecordFileService.getRecordFileUri({
+        surveyId,
+        fileUuid,
+      });
+      await Files.copyFile({
+        from: sourceFileUri,
+        to: exportedRecordFilePath,
+      });
     }
   }
 
@@ -165,11 +200,12 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   }: {
     nodeDef: NodeDef<any>;
     record: ArenaMobileRecord;
-  }): any[] {
+  }): { rowsData: any[][]; fileValues: any[] } {
     const { survey, cycle, options } = this.context;
     const { addCycle } = options;
 
-    const csvRowsData = [];
+    const rowsData = [];
+    const totalFileValues: any[] = [];
 
     const nodes = Records.getNodesByDefUuid(nodeDef.uuid)(record);
     for (const node of nodes) {
@@ -183,19 +219,21 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
         survey,
         nodeDef,
         visitor: (nodeDefAncestor) => {
-          const ancestorNodesRowValues = this.extractAncestorNodeRowData({
-            record,
-            nodeDef,
-            node,
-            nodeDefAncestor,
-          });
+          const { rowData: ancestorNodesRowValues, fileValues } =
+            this.extractAncestorNodeRowData({
+              record,
+              nodeDef,
+              node,
+              nodeDefAncestor,
+            });
           csvRowData.unshift(...ancestorNodesRowValues);
+          totalFileValues.push(...fileValues);
         },
       });
 
-      csvRowsData.push(csvRowData);
+      rowsData.push(csvRowData);
     }
-    return csvRowsData;
+    return { rowsData, fileValues: totalFileValues };
   }
 
   private extractAncestorNodeRowData({
@@ -208,12 +246,14 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     nodeDef: NodeDef<any>;
     node: ArenaRecordNode;
     nodeDefAncestor: NodeDef<any>;
-  }) {
-    const { survey, cycle, options } = this.context;
+  }): { rowData: any[]; fileValues: any[] } {
+    const { context, uniqueFileNameGenerator } = this;
+    const { survey, cycle, options } = context;
     const { includeAncestorAttributes } = options;
     const dataExportModel = this.dataExportModelByNodeDefUuid[nodeDef.uuid]!;
 
-    const ancestorNodeRowData = [];
+    const rowData: any[] = [];
+    const fileValues: any[] = [];
 
     const ancestorNode = Records.getAncestor({
       record,
@@ -223,11 +263,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     const ancestorAttributeDefs =
       includeAncestorAttributes || nodeDefAncestor === nodeDef
         ? dataExportModel.extractAncestorAttributeDefs(nodeDefAncestor)
-        : Surveys.getNodeDefKeys({
-            survey,
-            cycle,
-            nodeDef: nodeDefAncestor,
-          });
+        : Surveys.getNodeDefKeys({ survey, cycle, nodeDef: nodeDefAncestor });
     for (const ancestorAttrDef of ancestorAttributeDefs) {
       const ancestorAttributeNode = Records.getDescendant({
         record,
@@ -241,10 +277,21 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
         node: ancestorAttributeNode,
         nodeDef: ancestorAttrDef,
         options,
+        uniqueFileNameGenerator,
       });
-      ancestorNodeRowData.push(...ancestorAttributeRowData);
+      rowData.push(...ancestorAttributeRowData);
+
+      if (
+        ancestorAttributeNode &&
+        NodeDefs.getType(ancestorAttrDef) === NodeDefType.file
+      ) {
+        const value = ancestorAttributeNode.value;
+        if (value) {
+          fileValues.push(value);
+        }
+      }
     }
-    return ancestorNodeRowData;
+    return { rowData, fileValues };
   }
 
   protected override async prepareResult(): Promise<FlatDataExportJobResult> {

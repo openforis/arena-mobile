@@ -140,7 +140,7 @@ const determineAvailableDataExportOptions = ({
   const result = [
     DataExportOption.includeAncestorAttributes,
     DataExportOption.includeCategoryItemsLabels,
-    DataExportOption.includeFileAttributeDefs,
+    DataExportOption.includeFiles,
     DataExportOption.includeTaxonScientificName,
   ];
   if (Surveys.getCycleKeys(survey).length > 1) {
@@ -157,9 +157,12 @@ const selectedOptionsToDataExportOptions = ({
   selectedOptions: string[] | undefined;
 }) => {
   const options: DataExportOptions = {};
-  availableOptions.forEach((option) => {
+  for (const option of availableOptions) {
     options[option] = selectedOptions?.includes(option) ?? false;
-  });
+  }
+  if (selectedOptions?.includes(DataExportOption.includeFiles)) {
+    options[DataExportOption.includeFileAttributeDefs] = true;
+  }
   return options;
 };
 

@@ -173,7 +173,7 @@ Kontrollera inställningarna eller be undersökningsadministratören att ändra 
       [DataExportOption.addCycle]: "Lägg till cykel",
       [DataExportOption.includeAncestorAttributes]: "Förfädersattribut",
       [DataExportOption.includeCategoryItemsLabels]: "Kategoriartikeletiketter",
-      [DataExportOption.includeFileAttributeDefs]: "Filattribut",
+      [DataExportOption.includeFiles]: "Filattribut",
       [DataExportOption.includeTaxonScientificName]: "Vetenskapligt taxonnamn",
     },
     selectTarget: "Välj exportmål",
