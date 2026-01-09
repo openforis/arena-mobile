@@ -5,7 +5,16 @@ import { useTheme } from "react-native-paper";
 import { Objects, Points } from "@openforis/arena-core";
 
 import { useLocationWatch, useMagnetometerHeading } from "hooks";
-import { Button, FormItem, HView, Modal, Text, View, VView } from "components";
+import {
+  Button,
+  FlexWrapView,
+  FormItem,
+  HView,
+  Modal,
+  Text,
+  View,
+  VView,
+} from "components";
 import { LocationPoint } from "model";
 import { SurveySelectors } from "state";
 import { SystemUtils, log } from "utils";
@@ -156,11 +165,11 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
 
   useEffect(() => {
     startLocationWatch();
-    SystemUtils.lockOrientationToPortrait();
+    // SystemUtils.lockOrientationToPortrait();
 
     return () => {
       stopLocationWatch();
-      SystemUtils.unlockOrientation();
+      // SystemUtils.unlockOrientation();
     };
   }, [startLocationWatch, stopLocationWatch]);
 
@@ -174,14 +183,14 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
       onDismiss={onDismiss}
       titleKey="dataEntry:coordinate.navigateToTarget"
     >
-      <VView style={styles.container}>
+      <FlexWrapView style={styles.container}>
         {!magnetometerAvailable && (
           <Text
             textKey="dataEntry:coordinate.magnetometerNotAvailable"
             variant="labelMedium"
           />
         )}
-        <VView style={styles.compassContainer}>
+        <FlexWrapView style={styles.compassContainer}>
           {/* <Image
         source={compassPointer}
         style={{
@@ -235,34 +244,36 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
               </View>
             )}
           </View>
-          <HView style={styles.fieldsRow}>
-            <FormItem labelKey="dataEntry:coordinate.accuracy">
-              {formatNumber(accuracy, undefined, "m")}
+          <VView>
+            <HView style={styles.fieldsRow}>
+              <FormItem labelKey="dataEntry:coordinate.accuracy">
+                {formatNumber(accuracy, undefined, "m")}
+              </FormItem>
+              <FormItem labelKey="dataEntry:coordinate.distance">
+                {formatNumber(distance, undefined, "m")}
+              </FormItem>
+            </HView>
+            <HView style={styles.fieldsRow}>
+              <FormItem labelKey="dataEntry:coordinate.heading">
+                {formatNumber(heading, 1, Symbols.degree)}
+              </FormItem>
+              <FormItem labelKey="dataEntry:coordinate.angleToTargetLocation">
+                {formatNumber(angleToTarget, 0, Symbols.degree)}
+              </FormItem>
+            </HView>
+            <FormItem labelKey="dataEntry:coordinate.currentLocation">
+              {`${formatNumber(currentLocationX, 5)}, ${formatNumber(currentLocationY, 5)}`}
             </FormItem>
-            <FormItem labelKey="dataEntry:coordinate.distance">
-              {formatNumber(distance, undefined, "m")}
-            </FormItem>
-          </HView>
-          <HView style={styles.fieldsRow}>
-            <FormItem labelKey="dataEntry:coordinate.heading">
-              {formatNumber(heading, 1, Symbols.degree)}
-            </FormItem>
-            <FormItem labelKey="dataEntry:coordinate.angleToTargetLocation">
-              {formatNumber(angleToTarget, 0, Symbols.degree)}
-            </FormItem>
-          </HView>
-          <FormItem labelKey="dataEntry:coordinate.currentLocation">
-            {`${formatNumber(currentLocationX, 5)}, ${formatNumber(currentLocationY, 5)}`}
-          </FormItem>
-        </VView>
-        <HView style={styles.bottomBar}>
-          <Button
-            disabled={!currentLocation}
-            onPress={onUseCurrentLocationPress}
-            textKey="dataEntry:coordinate.useCurrentLocation"
-          />
-        </HView>
-      </VView>
+            <HView style={styles.bottomBar}>
+              <Button
+                disabled={!currentLocation}
+                onPress={onUseCurrentLocationPress}
+                textKey="dataEntry:coordinate.useCurrentLocation"
+              />
+            </HView>
+          </VView>
+        </FlexWrapView>
+      </FlexWrapView>
     </Modal>
   );
 };
