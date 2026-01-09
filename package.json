@@ -1,6 +1,6 @@
 {
   "name": "arena-mobile",
-  "version": "2.2.4",
+  "version": "2.2.5",
   "scripts": {
     "start": "expo start",
     "start-tunnel": "expo start --tunnel",
