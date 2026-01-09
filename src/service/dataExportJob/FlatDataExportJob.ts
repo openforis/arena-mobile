@@ -8,20 +8,19 @@ import {
   NodeDef,
   NodeDefs,
   NodeDefType,
-  NodeValues,
   Records,
   Survey,
   Surveys,
   UniqueFileNamesGenerator,
 } from "@openforis/arena-core";
-import { ArenaMobileRecord } from "model/ArenaMobileRecord";
 
-import { JobMobile, JobMobileContext } from "model/JobMobile";
-import { RecordService } from "service/recordService";
-import { Files } from "utils/Files";
-import { FlatDataWriter } from "utils/FlatDataWriter";
+import { ArenaMobileRecord, JobMobile, JobMobileContext } from "model";
+
+import { RecordFileService, RecordService } from "service";
+
+import { Files, FlatDataWriter } from "utils";
+
 import { extractRowNodeData } from "./recordFlatDataExtractor";
-import { RecordFileService } from "service/recordFileService";
 
 type FlatDataExportJobContext = JobMobileContext & {
   survey: Survey;
@@ -35,11 +34,13 @@ export type FlatDataExportJobResult = {
 };
 
 export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
-  private tempFolderUri?: string;
-  private nodeDefsToExport?: NodeDef<any>[];
-  private dataExportModelByNodeDefUuid: Record<string, FlatDataExportModel> =
-    {};
-  private uniqueFileNameGenerator: UniqueFileNamesGenerator =
+  private readonly tempFolderUri?: string;
+  private readonly nodeDefsToExport?: NodeDef<any>[];
+  private readonly dataExportModelByNodeDefUuid: Record<
+    string,
+    FlatDataExportModel
+  > = {};
+  private readonly uniqueFileNameGenerator: UniqueFileNamesGenerator =
     new UniqueFileNamesGenerator();
 
   constructor(context: FlatDataExportJobContext) {
