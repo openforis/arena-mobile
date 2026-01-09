@@ -21,7 +21,9 @@ type Props = {
 };
 
 export const UpdateStatusIcon = ({ loading, updateStatus, onPress }: Props) => {
-  const icon = loading ? "loading" : iconByUpdateStatus[updateStatus];
+  const icon = loading
+    ? "loading"
+    : (iconByUpdateStatus[updateStatus] ?? "alert");
 
   return (
     <IconButton
