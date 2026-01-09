@@ -181,13 +181,13 @@ const rowDataExtractorByNodeDefType: Partial<
     }
     const node = nodeParam!;
     const fileNameExpression = NodeDefs.getFileNameExpression(nodeDef);
-    const fileUuid = NodeValues.getFileUuid(node);
+    const fileUuid = NodeValues.getFileUuid(node)!;
     const fileName = fileNameExpression
       ? NodeValues.getFileNameCalculated(node)
       : NodeValues.getFileName(node);
     const uniqueFileName = uniqueFileNameGenerator.generateUniqueFileName(
-      fileName ?? fileUuid!,
-      fileUuid!
+      fileName ?? fileUuid,
+      fileUuid
     );
     return [fileUuid, uniqueFileName];
   },

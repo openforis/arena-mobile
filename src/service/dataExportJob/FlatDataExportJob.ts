@@ -127,7 +127,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
 
   private async exportRecord({ recordSummary }: { recordSummary: any }) {
     const { survey, options } = this.context;
-    const { nullsToEmpty } = options;
+    const { nullsToEmpty, includeFiles } = options;
 
     this.logger.debug(`Exporting data for record: ${recordSummary.id}`);
 
@@ -156,7 +156,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
         options: { nullsToEmpty },
       });
 
-      if (fileValues.length > 0) {
+      if (includeFiles && fileValues.length > 0) {
         await this.exportRecordFiles({ fileValues });
       }
 
@@ -174,11 +174,12 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
 
     for (const fileValue of fileValues) {
       const { fileUuid } = fileValue;
-      const fileName = this.uniqueFileNameGenerator.fileNamesByKey[fileUuid];
+      const mappedFileName =
+        this.uniqueFileNameGenerator.fileNamesByKey[fileUuid] ?? fileUuid;
       const exportedRecordFilePath = Files.path(
         this.tempFolderUri,
         FlatDataFiles.attachedFilesSubfolderName,
-        fileName
+        mappedFileName
       );
       const sourceFileUri = RecordFileService.getRecordFileUri({
         surveyId,
@@ -255,7 +256,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   }): { rowData: any[]; fileValues: any[] } {
     const { context, uniqueFileNameGenerator } = this;
     const { survey, cycle, options } = context;
-    const { includeAncestorAttributes } = options;
+    const { includeAncestorAttributes, includeFiles } = options;
     const dataExportModel = this.dataExportModelByNodeDefUuid[nodeDef.uuid]!;
 
     const rowData: any[] = [];
@@ -288,6 +289,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
       rowData.push(...ancestorAttributeRowData);
 
       if (
+        includeFiles &&
         ancestorAttributeNode &&
         NodeDefs.getType(ancestorAttrDef) === NodeDefType.file
       ) {
