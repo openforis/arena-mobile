@@ -40,6 +40,7 @@ export default {
     error: "Fel vid hämtning av enkätuppdateringsstatus",
     networkNotAvailable:
       "Kan inte verifiera enkätuppdateringsstatus: $t(networkNotAvailable)",
+    notUpToDate: "Enkätuppdatering tillgänglig",
     upToDate: "Enkäten är uppdaterad",
   },
   updateSurvey: "Uppdatera enkät",

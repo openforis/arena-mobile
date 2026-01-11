@@ -41,6 +41,7 @@ export default {
     error: "Error al recuperar el estado de actualización de la encuesta",
     networkNotAvailable:
       "No se puede verificar el estado de actualización de la encuesta: $t(networkNotAvailable)",
+    notUpToDate: "Actualización de encuesta disponible",
     upToDate: "Encuesta al día",
   },
   updateSurvey: "Actualizar encuesta",

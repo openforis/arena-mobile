@@ -40,6 +40,7 @@ export default {
     error: "Error retrieving survey update status",
     networkNotAvailable:
       "Cannot verify survey update status: $t(networkNotAvailable)",
+    notUpToDate: "Survey update available",
     upToDate: "Survey up-to-date",
   },
   updateSurvey: "Update survey",

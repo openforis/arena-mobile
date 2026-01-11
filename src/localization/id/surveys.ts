@@ -41,6 +41,7 @@ export default {
     error: "Kesalahan saat mengambil status pembaruan survei",
     networkNotAvailable:
       "Tidak dapat memverifikasi status pembaruan survei: $t(networkNotAvailable)",
+    notUpToDate: "Pembaruan survei tersedia",
     upToDate: "Survei terkini",
   },
   updateSurvey: "Perbarui survei",
