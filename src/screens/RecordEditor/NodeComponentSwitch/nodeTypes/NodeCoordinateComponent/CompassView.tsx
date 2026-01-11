@@ -27,11 +27,11 @@ const minDimension = Math.min(height, width);
 type CompassViewProps = {
   distance: number;
   heading: number;
-  angleToTargetDifference: number;
+  angleToTarget: number;
 };
 
 export const CompassView = (props: CompassViewProps) => {
-  const { angleToTargetDifference, distance, heading } = props;
+  const { angleToTarget, distance, heading } = props;
 
   const theme = useTheme();
   const landscapeOrientation = DeviceInfoSelectors.useOrientationIsLandscape();
@@ -91,7 +91,7 @@ export const CompassView = (props: CompassViewProps) => {
     targetLocationBoxMargin,
   } = sizes;
 
-  const arrowToTargetSource = getArrowImageByAngle(angleToTargetDifference);
+  const arrowToTargetSource = getArrowImageByAngle(angleToTarget);
 
   return (
     <View style={dynamicStyles.compassWrapper}>
@@ -114,7 +114,7 @@ export const CompassView = (props: CompassViewProps) => {
             position: "absolute",
             top: (compassImageSize - arrowToTargetHeight) / 2,
             height: arrowToTargetHeight,
-            transform: [{ rotate: angleToTargetDifference + "deg" }],
+            transform: [{ rotate: angleToTarget + "deg" }],
             resizeMode: "contain",
             alignSelf: "center",
           }}
@@ -129,7 +129,7 @@ export const CompassView = (props: CompassViewProps) => {
             position: "absolute",
             top: targetLocationBoxMargin,
             left: targetLocationBoxMargin,
-            transform: [{ rotate: angleToTargetDifference + "deg" }],
+            transform: [{ rotate: angleToTarget + "deg" }],
           }}
         >
           <Image

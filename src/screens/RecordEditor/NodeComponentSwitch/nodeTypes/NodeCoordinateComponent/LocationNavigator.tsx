@@ -74,7 +74,6 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
 
   const locationCallback = useCallback(
     ({ location, locationAccuracy, pointLatLong }: any) => {
-      log.debug(`LocationNavigator location callback`, location);
       if (!location) return;
       const angleToTargetNew = calculateAngleBetweenPoints(
         pointLatLong,
@@ -103,16 +102,11 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
   const { longitude: currentLocationX, latitude: currentLocationY } =
     currentLocation ?? {};
 
-  let angleToTargetDifference = angleToTarget - heading;
-  if (angleToTargetDifference < 0) angleToTargetDifference += 360;
-
   useEffect(() => {
     startLocationWatch();
-    // SystemUtils.lockOrientationToPortrait();
 
     return () => {
       stopLocationWatch();
-      // SystemUtils.unlockOrientation();
     };
   }, [startLocationWatch, stopLocationWatch]);
 
@@ -134,18 +128,10 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
           />
         )}
         <FlexWrapView style={styles.compassContainer}>
-          {/* <Image
-        source={compassPointer}
-        style={{
-          alignSelf: "center",
-          height: height / 26,
-          resizeMode: "contain",
-        }}
-      /> */}
           <CompassView
             distance={distance}
             heading={heading}
-            angleToTargetDifference={angleToTargetDifference}
+            angleToTarget={angleToTarget}
           />
           <VView>
             <HView style={styles.fieldsRow}>
