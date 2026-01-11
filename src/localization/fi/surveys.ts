@@ -42,6 +42,7 @@ export default {
     error: "Virhe haettaessa kyselylomakkeen päivitystilaa",
     networkNotAvailable:
       "Kyselylomakkeen päivitystä ei voida tarkistaa: $t(networkNotAvailable)",
+    notUpToDate: "Kyselylomakkeen päivitys saatavilla",
     upToDate: "Kyselylomake on ajan tasalla",
   },
   updateSurvey: "Päivitä kyselylomake",

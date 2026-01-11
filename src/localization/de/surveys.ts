@@ -42,6 +42,7 @@ export default {
     error: "Fehler beim Abrufen des Umfrage-Update-Status",
     networkNotAvailable:
       "Umfrage-Update-Status kann nicht überprüft werden: $t(networkNotAvailable)",
+    notUpToDate: "Umfrage-Update verfügbar",
     upToDate: "Umfrage auf dem neuesten Stand",
   },
   updateSurvey: "Umfrage aktualisieren",

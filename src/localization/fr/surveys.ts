@@ -43,6 +43,7 @@ export default {
       "Erreur lors de la récupération de l'état de mise à jour de l'enquête",
     networkNotAvailable:
       "Impossible de vérifier l'état de mise à jour de l'enquête: $t(networkNotAvailable)",
+    notUpToDate: "Mise à jour de l'enquête disponible",
     upToDate: "Enquête à jour",
   },
   updateSurvey: "Mettre à jour l'enquête",

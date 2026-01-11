@@ -41,6 +41,7 @@ export default {
     error: "Erro ao recuperar o estado de atualização do inquérito",
     networkNotAvailable:
       "Não é possível verificar o estado de atualização do inquérito: $t(networkNotAvailable)",
+    notUpToDate: "Atualização de inquérito disponível",
     upToDate: "Inquérito atualizado",
   },
   updateSurvey: "Atualizar inquérito",

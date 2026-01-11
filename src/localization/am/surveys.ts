@@ -39,6 +39,7 @@ export default {
   updateStatus: {
     error: "የዳሰሳ ዝማኔ ሁኔታን መልሶ በማግኘት ላይ ስህተት",
     networkNotAvailable: "የዳሰሳ ዝማኔ ሁኔታን ማረጋገጥ አልተቻለም፡ $t(networkNotAvailable)",
+    notUpToDate: "የዳሰሳ ዝማኔ ይገኛል",
     upToDate: "ዳሰሳው ወቅታዊ ነው",
   },
   updateSurvey: "ዳሰሳ አዘምን",
