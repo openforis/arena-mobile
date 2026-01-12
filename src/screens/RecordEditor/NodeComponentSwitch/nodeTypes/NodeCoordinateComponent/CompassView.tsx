@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import { Dimensions, Image, StyleSheet } from "react-native";
 import { useTheme } from "react-native-paper";
 
+import { Numbers } from "@openforis/arena-core";
+
 import { View } from "components";
 import { DeviceInfoSelectors } from "state";
 
@@ -16,8 +18,15 @@ const circleGreen = require(`${assetsPath}/circle_green.png`);
 const arrowToTargetVisibleDistanceThreshold = 30;
 
 const getArrowImageByAngle = (angle: number) => {
-  if (angle <= 20 || 360 - angle <= 20) return arrowUpGreen;
-  if (angle <= 45 || 360 - angle <= 45) return arrowUpOrange;
+  if (angle <= 20 || 360 - angle <= 20) {
+    // within 20 degrees: close to target
+    return arrowUpGreen;
+  }
+  if (angle <= 45 || 360 - angle <= 45) {
+    // within 45 degrees: somewhat close to target
+    return arrowUpOrange;
+  }
+  // far from target
   return arrowUpRed;
 };
 
@@ -40,6 +49,8 @@ export const CompassView = (props: CompassViewProps) => {
 
   const arrowToTargetVisible =
     distance >= arrowToTargetVisibleDistanceThreshold;
+
+  const arrowToTargetAngle = Numbers.absMod(360)(angleToTarget - heading);
 
   const dynamicStylesAndSizes = useMemo(() => {
     const compassImageSize = landscapeOrientation
@@ -114,7 +125,7 @@ export const CompassView = (props: CompassViewProps) => {
             position: "absolute",
             top: (compassImageSize - arrowToTargetHeight) / 2,
             height: arrowToTargetHeight,
-            transform: [{ rotate: angleToTarget + "deg" }],
+            transform: [{ rotate: arrowToTargetAngle + "deg" }],
             resizeMode: "contain",
             alignSelf: "center",
           }}
