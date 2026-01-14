@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Magnetometer } from "expo-sensors";
+import { Magnetometer, MagnetometerMeasurement } from "expo-sensors";
 
 import { Numbers, Objects } from "@openforis/arena-core";
 
 import { AverageAnglePicker } from "utils/AverageAnglePicker";
 import { Functions } from "utils/Functions";
+import { DeviceInfoSelectors } from "state/deviceInfo";
 
 const updateHeadingThrottleDelay = 200;
 const averageAnglePicker = new AverageAnglePicker();
@@ -12,15 +13,22 @@ const averageAnglePicker = new AverageAnglePicker();
 const radsToDegrees = (rads: any) =>
   (rads >= 0 ? rads : rads + 2 * Math.PI) * (180 / Math.PI);
 
-const magnetometerDataToAngle = (magnetometer: any) => {
+const magnetometerMeasurementToAngle = ({
+  magnetometerMeasurement,
+  orientationIsLandscape = false,
+}: {
+  magnetometerMeasurement: MagnetometerMeasurement;
+  orientationIsLandscape?: boolean;
+}) => {
   let angle = 0;
-  if (magnetometer) {
-    const { x, y } = magnetometer;
+  if (magnetometerMeasurement) {
+    const { x, y } = magnetometerMeasurement;
     const rads = Math.atan2(y, x);
     angle = radsToDegrees(rads);
   }
   // Match the device top with 0° degree angle (by default 0° starts from the right of the device)
-  let result = Numbers.roundToPrecision(angle, 1) - 90;
+  let result =
+    Numbers.roundToPrecision(angle, 1) + (orientationIsLandscape ? 0 : -90);
   result = Numbers.absMod(360)(result);
   return result;
 };
@@ -28,6 +36,8 @@ const magnetometerDataToAngle = (magnetometer: any) => {
 export const useMagnetometerHeading = () => {
   const magnetometerSubscriptionRef = useRef(null as any);
   const lastMagnetometerAngleRef = useRef(0);
+  const orientationIsLandscape =
+    DeviceInfoSelectors.useOrientationIsLandscape();
 
   const [magnetometerAvailable, setMagnetometerAvailable] = useState(true);
   const [heading, setHeading] = useState(0);
@@ -45,9 +55,12 @@ export const useMagnetometerHeading = () => {
   );
 
   const onMagnetometerData = useCallback(
-    (data: any) => {
+    (magnetometerMeasurement: MagnetometerMeasurement) => {
       const prevMagnetometerAngle = lastMagnetometerAngleRef.current;
-      const magnetometerAngle = magnetometerDataToAngle(data);
+      const magnetometerAngle = magnetometerMeasurementToAngle({
+        magnetometerMeasurement,
+        orientationIsLandscape,
+      });
       let avgAngle = averageAnglePicker.push(magnetometerAngle);
       avgAngle = Numbers.absMod(360)(avgAngle);
 
@@ -57,7 +70,7 @@ export const useMagnetometerHeading = () => {
         throttledUpdateHeading();
       }
     },
-    [throttledUpdateHeading]
+    [orientationIsLandscape, throttledUpdateHeading]
   );
 
   const subscribeToMagnetometerData = useCallback(async () => {

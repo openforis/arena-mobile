@@ -4,7 +4,7 @@ import {
   JobSummary,
 } from "@openforis/arena-core";
 
-import { JobCancelError } from "model";
+import { JobCancelError, JobMobile } from "model";
 import { WebSocketService } from "service";
 
 const JOB_MONITOR_START = "JOB_MONITOR_START";
@@ -56,6 +56,21 @@ const createOnCancelCallback = ({ job, onCancelProp }: any) => {
   };
 };
 
+type JobStartParams = {
+  jobUuid?: string | null;
+  job?: JobMobile<any> | null;
+  titleKey?: string;
+  cancelButtonTextKey?: string;
+  closeButtonTextKey?: string;
+  messageKey?: string;
+  messageParams?: any;
+  onJobComplete?: (jobSummary: JobSummary<any>) => void;
+  onJobEnd?: (jobSummary: JobSummary<any>) => void;
+  onCancel?: () => void;
+  onClose?: () => void;
+  autoDismiss?: boolean;
+};
+
 const start =
   ({
     // jobUuid must be provided when monitoring a remote job
@@ -74,7 +89,7 @@ const start =
     onCancel: onCancelProp = undefined,
     onClose = undefined,
     autoDismiss = false,
-  }: any) =>
+  }: JobStartParams) =>
   async (dispatch: any) => {
     dispatch({
       type: JOB_MONITOR_START,
@@ -101,9 +116,10 @@ const start =
 
     if (job) {
       // local job: listen to job update events
-      if (isJobStatusEnded(job.status)) {
+      if (isJobStatusEnded(job.summary.status)) {
         onJobUpdate(job.summary);
       } else {
+        // @ts-ignore
         job.on(JobMessageOutType.summaryUpdate, onJobUpdate);
       }
     } else {
@@ -116,7 +132,7 @@ const start =
 const startAsync = async ({
   dispatch,
   ...otherParams
-}: any): Promise<JobSummary<any> | undefined> =>
+}: JobStartParams & { dispatch: any }): Promise<JobSummary<any> | undefined> =>
   new Promise((resolve, reject) => {
     const { job } = otherParams;
     if (job) {

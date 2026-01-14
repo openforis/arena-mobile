@@ -1,15 +1,28 @@
-import { JobStatus, Objects, Surveys } from "@openforis/arena-core";
+import {
+  DataExportDefaultOptions,
+  DataExportOption,
+  DataExportOptions,
+  JobStatus,
+  JobSummary,
+  Objects,
+  Surveys,
+} from "@openforis/arena-core";
 
 import { RecordService, UserService } from "service";
 import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerationJob";
 
 import { i18n } from "localization";
 import { JobCancelError, ValidationUtils } from "model";
+import {
+  FlatDataExportJob,
+  FlatDataExportJobResult,
+} from "service/dataExportJob";
 import { RecordsUploadJob } from "service/recordsUploadJob";
 import { RemoteConnectionSelectors } from "state/remoteConnection";
-import { Files, Jobs } from "utils";
+import { RootState } from "state/store";
+import { Files, Jobs, log } from "utils";
 
-import { ConfirmActions, ConfirmUtils } from "../confirm";
+import { ConfirmActions, ConfirmUtils, OnConfirmParams } from "../confirm";
 import { JobMonitorActions } from "../jobMonitor";
 import { MessageActions } from "../message";
 import { SurveySelectors } from "../survey";
@@ -118,6 +131,121 @@ const startUploadDataToRemoteServer =
     );
   };
 
+const determineAvailableDataExportOptions = ({
+  state,
+}: {
+  state: RootState;
+}): DataExportOption[] => {
+  const survey = SurveySelectors.selectCurrentSurvey(state)!;
+  const result = [
+    DataExportOption.includeAncestorAttributes,
+    DataExportOption.includeCategoryItemsLabels,
+    DataExportOption.includeFiles,
+    DataExportOption.includeTaxonScientificName,
+  ];
+  if (Surveys.getCycleKeys(survey).length > 1) {
+    result.push(DataExportOption.addCycle);
+  }
+  return result;
+};
+
+const selectedOptionsToDataExportOptions = ({
+  availableOptions,
+  selectedOptions,
+}: {
+  availableOptions: DataExportOption[];
+  selectedOptions: string[] | undefined;
+}) => {
+  const options: DataExportOptions = {};
+  for (const option of availableOptions) {
+    options[option] = selectedOptions?.includes(option) ?? false;
+  }
+  if (selectedOptions?.includes(DataExportOption.includeFiles)) {
+    options[DataExportOption.includeFileAttributeDefs] = true;
+  }
+  return options;
+};
+
+export const startCsvDataExportJob =
+  () => async (dispatch: any, getState: any) => {
+    try {
+      const state = getState();
+
+      const availableDataExportOptions = determineAvailableDataExportOptions({
+        state,
+      });
+      const multipleChoiceOptions = availableDataExportOptions.map(
+        (option) => ({
+          value: option,
+          label: `dataEntry:dataExport.option.${option}`,
+        })
+      );
+
+      const onConfirm = async ({
+        selectedMultipleChoiceValues,
+      }: OnConfirmParams) => {
+        log.debug(
+          `starting CSV data export with options:`,
+          selectedMultipleChoiceValues
+        );
+
+        await dispatch(ConfirmActions.dismiss());
+
+        const user = RemoteConnectionSelectors.selectLoggedUser(state);
+        const survey = SurveySelectors.selectCurrentSurvey(state)!;
+        const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
+
+        const selectedDataExportOptions = {
+          ...DataExportDefaultOptions,
+          ...selectedOptionsToDataExportOptions({
+            availableOptions: availableDataExportOptions,
+            selectedOptions: selectedMultipleChoiceValues,
+          }),
+        };
+
+        log.debug("Initializing FlatDataExportJob");
+
+        const dataExportJob = new FlatDataExportJob({
+          type: "FlatDataExportJob",
+          user,
+          survey,
+          surveyId: survey.id!,
+          cycle,
+          options: selectedDataExportOptions,
+        });
+
+        await JobMonitorActions.startAsync({
+          autoDismiss: true,
+          dispatch,
+          job: dataExportJob,
+          titleKey: "dataEntry:dataExport.exportingData",
+          onJobComplete: (jobComplete: JobSummary<FlatDataExportJobResult>) => {
+            const { result } = jobComplete;
+            const { outputFileUri } = result || {};
+            if (outputFileUri) {
+              Files.shareFile({
+                url: outputFileUri,
+                mimeType: Files.MIME_TYPES.zip,
+                dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
+              });
+            }
+          },
+        });
+      };
+      dispatch(
+        ConfirmActions.show({
+          titleKey: "dataEntry:dataExport.confirm.title",
+          messageKey: "dataEntry:dataExport.confirm.selectOptions",
+          onConfirm,
+          multipleChoiceOptions,
+          confirmButtonTextKey: "common:export",
+        })
+      );
+    } catch (error) {
+      dispatch(handleError(error));
+    }
+  };
+
 const onExportConfirmed =
   ({
     selectedSingleChoiceValue,
@@ -183,7 +311,7 @@ const _onExportFileGenerationSucceeded = async ({
   if (!onlyRemote && (await Files.isSharingAvailable())) {
     availableExportTypes.push(exportType.share);
   }
-  const onConfirm = ({ selectedSingleChoiceValue }: any) => {
+  const onConfirm = async ({ selectedSingleChoiceValue }: OnConfirmParams) => {
     dispatch(
       onExportConfirmed({
         selectedSingleChoiceValue,

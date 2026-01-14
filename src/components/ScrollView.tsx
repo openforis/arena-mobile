@@ -1,4 +1,4 @@
-import { forwardRef, Ref } from "react";
+import { forwardRef, Ref, useMemo } from "react";
 import { ScrollView as RNScrollView, StyleProp, ViewStyle } from "react-native";
 import { useTheme } from "react-native-paper";
 
@@ -25,14 +25,18 @@ export const ScrollView = forwardRef(function ScrollView(
 
   const theme = useTheme();
 
-  const style = [
-    { backgroundColor: transparent ? "transparent" : theme.colors.background },
-    styleProp,
-  ];
+  const style = useMemo(
+    () => [
+      {
+        backgroundColor: transparent ? "transparent" : theme.colors.background,
+      },
+      styleProp,
+    ],
+    [transparent, theme.colors.background, styleProp]
+  );
 
   return (
     <RNScrollView
-      automaticallyAdjustKeyboardInsets
       persistentScrollbar={persistentScrollbar}
       ref={ref}
       style={style}

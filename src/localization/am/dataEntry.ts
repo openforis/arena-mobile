@@ -1,3 +1,5 @@
+import { DataExportOption } from "@openforis/arena-core";
+
 export default {
   confirmGoToListOfRecords: "ወደ መዝገቦች ዝርዝር ይሂዱ?\n\n(ሁሉም ለውጦች አስቀድመው ተቀምጠዋል)",
   checkStatus: "የማመሳሰል ሁኔታን ያረጋግጡ",
@@ -138,28 +140,39 @@ export default {
     resolution: "ጥራት",
   },
   dataExport: {
+    confirm: {
+      title: "ውሂብ መላክን አረጋግጥ",
+      message: `የሚላኩ መዝገቦች፡
+{{recordsCountSummary}}`,
+      selectOptions: `የመላክ አማራጮችን ይምረጡ፡`,
+    },
+
     error: "ውሂብ ወደ ውጭ በመላክ ላይ ስህተት። ዝርዝሮች፡ {{details}}",
+    exportedSuccessfullyButFilesMissing:
+      "ውሂብ በተሳካ ሁኔታ ወደ ውጭ ተልኳል ግን {{missingFiles}} ፋይሎች/ምስሎች ጠፍተዋል ወይም ተሰብረዋል። እባክዎ መዝገቦችዎን እና በአገልጋዩ ላይ ያሉትን መዝገቦች ያረጋግጡ።",
+    exportingData: "ውሂብ በማልክ ላይ...",
+    exportToCsv: "ወደ CSV ላክ",
+    mergeConflictingRecords: "የሚጋጩ መዝገቦችን አዋህድ (ተመሳሳይ ቁልፎች)",
+    noRecordsInDeviceToExport: "በመሣሪያው ውስጥ የሚላክ መዝገብ የለም",
+    onlyNewOrUpdatedRecords: "አዲስ ወይም የተሻሻሉ መዝገቦችን ብቻ ላክ",
+    onlyRecordsInRemoteServerCanBeImported:
+      "በሩቅ አገልጋይ ውስጥ ያሉ ወይም በርቀት የተሻሻሉ መዝገቦች ብቻ ማስገባት ይቻላል",
+    option: {
+      [DataExportOption.addCycle]: "ዎመድ ይጨምሩ",
+      [DataExportOption.includeAncestorAttributes]: "የአለፎች ባህሪያት",
+      [DataExportOption.includeCategoryItemsLabels]: "የአጭመጃነት ዘርዝሮች",
+      [DataExportOption.includeFiles]: "የፋይል ባህሪዎች",
+      [DataExportOption.includeTaxonScientificName]: "የታክሰን ሳይንሲፊክ ስም",
+    },
     selectTarget: "የመላኪያ ዒላማ ይምረጡ",
     selectTargetMessage: "የመላኪያውን ዒላማ ይምረጡ፡",
+    shareExportedFile: "የተላከውን ፋይል ያጋሩ",
     target: {
       remote: "የርቀት አገልጋይ",
       local: "የአካባቢ አቃፊ (ማውረድ)",
       share: "$t(common:shareFile)",
     },
-    shareExportedFile: "የተላከውን ፋይል ያጋሩ",
     title: "ውሂብ ላክ",
-    confirm: {
-      title: "ውሂብ መላክን አረጋግጥ",
-      message: `የሚላኩ መዝገቦች፡
-{{recordsCountSummary}}`,
-    },
-    noRecordsInDeviceToExport: "በመሣሪያው ውስጥ የሚላክ መዝገብ የለም",
-    onlyNewOrUpdatedRecords: "አዲስ ወይም የተሻሻሉ መዝገቦችን ብቻ ላክ",
-    mergeConflictingRecords: "የሚጋጩ መዝገቦችን አዋህድ (ተመሳሳይ ቁልፎች)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "በሩቅ አገልጋይ ውስጥ ያሉ ወይም በርቀት የተሻሻሉ መዝገቦች ብቻ ማስገባት ይቻላል",
-    exportedSuccessfullyButFilesMissing:
-      "ውሂብ በተሳካ ሁኔታ ወደ ውጭ ተልኳል ግን {{missingFiles}} ፋይሎች/ምስሎች ጠፍተዋል ወይም ተሰብረዋል። እባክዎ መዝገቦችዎን እና በአገልጋዩ ላይ ያሉትን መዝገቦች ያረጋግጡ።",
   },
   location: {
     label: "ቦታ",

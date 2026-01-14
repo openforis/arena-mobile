@@ -1,3 +1,5 @@
+import { DataExportOption } from "@openforis/arena-core";
+
 export default {
   confirmGoToListOfRecords: `Zur Datensatzliste wechseln?
   
@@ -153,30 +155,43 @@ Maximal zulässige Größe: {{maxSizeMB}}MB.
     resolution: "Auflösung",
   },
   dataExport: {
+    confirm: {
+      title: "Export von Daten bestätigen",
+      message: `Zu exportierende Datensätze:
+{{recordsCountSummary}}`,
+      selectOptions: `Exportoptionen auswählen:`,
+    },
+
     error: "Fehler beim Exportieren von Daten. Details: {{details}}",
+    exportedSuccessfullyButFilesMissing:
+      "Daten wurden erfolgreich exportiert, aber {{missingFiles}} Dateien/Bilder fehlen oder sind defekt. Bitte überprüfen Sie Ihre Aufzeichnungen und die Aufzeichnungen auf dem Server.",
+    exportingData: "Exportiere Daten...",
+    exportToCsv: "Nach CSV exportieren",
+    mergeConflictingRecords:
+      "In Konflikt stehende Datensätze zusammenführen (gleiche Schlüssel)",
+    noRecordsInDeviceToExport: "Keine Datensätze auf dem Gerät zum Exportieren",
+    onlyNewOrUpdatedRecords:
+      "Nur neue oder aktualisierte Datensätze exportieren",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Nur Datensätze, die bereits auf dem Remote-Server vorhanden sind oder die remote aktualisiert wurden, können importiert werden",
+    option: {
+      [DataExportOption.addCycle]: "Zyklus hinzufügen",
+      [DataExportOption.includeAncestorAttributes]: "Vorfahrenattribute",
+      [DataExportOption.includeCategoryItemsLabels]:
+        "Kategorie-Elementbeschriftungen",
+      [DataExportOption.includeFiles]: "Dateiattribute",
+      [DataExportOption.includeTaxonScientificName]:
+        "Wissenschaftlicher Name des Taxons",
+    },
     selectTarget: "Exportziel auswählen",
     selectTargetMessage: `Ziel des Exports auswählen:`,
+    shareExportedFile: "Exportierte Datei teilen",
     target: {
       remote: "Remote-Server",
       local: "Lokaler Ordner (Download)",
       share: "$t(common:shareFile)",
     },
-    shareExportedFile: "Exportierte Datei teilen",
     title: "Daten exportieren",
-    confirm: {
-      title: "Export von Daten bestätigen",
-      message: `Zu exportierende Datensätze:
-{{recordsCountSummary}}`,
-    },
-    noRecordsInDeviceToExport: "Keine Datensätze auf dem Gerät zum Exportieren",
-    onlyNewOrUpdatedRecords:
-      "Nur neue oder aktualisierte Datensätze exportieren",
-    mergeConflictingRecords:
-      "In Konflikt stehende Datensätze zusammenführen (gleiche Schlüssel)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Nur Datensätze, die bereits auf dem Remote-Server vorhanden sind oder die remote aktualisiert wurden, können importiert werden",
-    exportedSuccessfullyButFilesMissing:
-      "Daten wurden erfolgreich exportiert, aber {{missingFiles}} Dateien/Bilder fehlen oder sind defekt. Bitte überprüfen Sie Ihre Aufzeichnungen und die Aufzeichnungen auf dem Server.",
   },
   location: {
     label: "Standort",

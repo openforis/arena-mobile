@@ -91,16 +91,18 @@ const login =
       const settings = await SettingsService.fetchSettings();
       const settingsUpdated = { ...settings, serverUrl, email };
       await dispatch(SettingsActions.updateSettings(settingsUpdated));
+
       if (showBack) {
         dispatch(
           ConfirmActions.show({
             titleKey: "authService:loginSuccessful",
-            confirmButtonTextKey: "common:goBack",
+            confirmButtonTextKey: "common:continue",
             cancelButtonTextKey: "common:close",
             onConfirm: navigation.goBack,
           })
         );
       }
+
       dispatch({ type: USER_SET, user });
     } else if (message || error) {
       const errorKeySuffix = [

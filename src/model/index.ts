@@ -3,6 +3,7 @@ export { BatteryState } from "./BatteryState";
 export { Cycles } from "./Cycles";
 export { JobCancelError } from "./JobCancelError";
 export { JobMobile } from "./JobMobile";
+export type { JobMobileContext } from "./JobMobile";
 export {
   LanguageConstants,
   Languages,

@@ -13,6 +13,7 @@ import { Files } from "utils";
 
 import { RecordService } from "./recordService";
 import { RecordFileService } from "./recordFileService";
+import { JobMobileContext } from "model/JobMobile";
 
 const RECORDS_FOLDER_NAME = "records";
 const RECORDS_SUMMARY_JSON_FILENAME = "records.json";
@@ -21,7 +22,14 @@ const FILES_SUMMARY_JSON_FILENAME = "files.json";
 
 const recordsExportFileNamePrefix = "arena_mobile_data_";
 
-export class RecordsExportFileGenerationJob extends JobMobile {
+type RecordsExportFileGenerationJobContext = JobMobileContext & {
+  survey: Survey;
+  cycle: string;
+  recordUuids: string[];
+  user: any;
+};
+
+export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileGenerationJobContext> {
   outputFileUri: any;
 
   constructor({ survey, cycle, recordUuids, user }: any) {

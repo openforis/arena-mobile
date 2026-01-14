@@ -34,7 +34,7 @@ import { SurveySelectors } from "../survey";
 import { RemoteConnectionSelectors } from "../remoteConnection";
 import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntrySelectors } from "./selectors";
-import { exportRecords } from "./actionsDataExport";
+import { exportRecords, startCsvDataExportJob } from "./actionsDataExport";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
 import {
   importRecordsFromFile,
@@ -666,7 +666,9 @@ export const DataEntryActions = {
   toggleRecordEditLock,
 
   navigateToRecordsList,
+
   exportRecords,
+  startCsvDataExportJob,
 
   linkToRecordInPreviousCycle,
   unlinkFromRecordInPreviousCycle,

@@ -40,6 +40,7 @@ export default {
     error: "Ошибка получения статуса обновления опроса",
     networkNotAvailable:
       "Невозможно проверить статус обновления опроса: $t(networkNotAvailable)",
+    notUpToDate: "Доступно обновление опроса",
     upToDate: "Опрос актуален",
   },
   updateSurvey: "Обновить опрос",

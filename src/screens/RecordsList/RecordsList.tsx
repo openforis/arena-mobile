@@ -397,6 +397,10 @@ export const RecordsList = () => {
     );
   }, [cycle, dispatch, records, toaster]);
 
+  const onExportToCsvPress = useCallback(() => {
+    dispatch(DataEntryActions.startCsvDataExportJob());
+  }, [dispatch]);
+
   const onExportSelectedRecordUuids = useCallback(
     async (recordUuids: any) => {
       const selectedRecords = records!.filter((record) =>
@@ -612,15 +616,23 @@ export const RecordsList = () => {
         icon: "download",
         label: "dataEntry:localBackup",
         onPress: onExportAllRecordsPress,
+      },
+      {
+        key: "exportToCsv",
+        icon: "file-excel",
+        label: "dataEntry:dataExport.exportToCsv",
+        onPress: onExportToCsvPress,
       }
     );
     return items;
   }, [
-    networkAvailable,
+    isDemoSurvey,
     syncStatusFetched,
-    loadRecordsWithSyncStatus,
-    onExportAllRecordsPress,
     onExportNewOrUpdatedRecordsPress,
+    onExportAllRecordsPress,
+    onExportToCsvPress,
+    networkAvailable,
+    loadRecordsWithSyncStatus,
   ]);
 
   const recordsLength = records?.length ?? 0;

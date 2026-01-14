@@ -1,3 +1,5 @@
+import { DataExportOption } from "@openforis/arena-core";
+
 export default {
   confirmGoToListOfRecords:
     "¿Ir a la lista de registros?\n\n(todos los cambios ya están guardados)",
@@ -144,29 +146,42 @@ Verifique la configuración o pida al administrador de la encuesta que cambie es
     resolution: "Resolución",
   },
   dataExport: {
+    confirm: {
+      title: "Confirmar exportación de datos",
+      message: `Registros a exportar:
+{{recordsCountSummary}}`,
+      selectOptions: `Seleccionar opciones de exportación:`,
+    },
+
     error: "Error al exportar datos. Detalles: {{details}}",
+    exportedSuccessfullyButFilesMissing:
+      "Los datos se exportaron correctamente, pero faltan o están rotos {{missingFiles}} archivos/imágenes. Por favor, revise sus registros y también los registros en el servidor.",
+    exportingData: "Exportando datos...",
+    exportToCsv: "Exportar a CSV",
+    mergeConflictingRecords: "Fusionar registros conflictivos (mismas claves)",
+    noRecordsInDeviceToExport:
+      "No hay registros en el dispositivo para exportar",
+    onlyNewOrUpdatedRecords: "Exportar solo registros nuevos o actualizados",
+    onlyRecordsInRemoteServerCanBeImported:
+      "Solo se pueden importar registros que ya están en el servidor remoto o registros que se han actualizado remotamente",
+    option: {
+      [DataExportOption.addCycle]: "Añadir ciclo",
+      [DataExportOption.includeAncestorAttributes]: "Atributos ancestrales",
+      [DataExportOption.includeCategoryItemsLabels]:
+        "Etiquetas de elementos de categoría",
+      [DataExportOption.includeFiles]: "Atributos de archivo",
+      [DataExportOption.includeTaxonScientificName]:
+        "Nombre científico del taxón",
+    },
     selectTarget: "Seleccionar destino de exportación",
     selectTargetMessage: "Seleccionar el destino de la exportación:",
+    shareExportedFile: "Compartir archivo exportado",
     target: {
       remote: "Servidor remoto",
       local: "Carpeta local (Descarga)",
       share: "$t(common:shareFile)",
     },
-    shareExportedFile: "Compartir archivo exportado",
     title: "Exportar datos",
-    confirm: {
-      title: "Confirmar exportación de datos",
-      message: `Registros a exportar:
-{{recordsCountSummary}}`,
-    },
-    noRecordsInDeviceToExport:
-      "No hay registros en el dispositivo para exportar",
-    onlyNewOrUpdatedRecords: "Exportar solo registros nuevos o actualizados",
-    mergeConflictingRecords: "Fusionar registros conflictivos (mismas claves)",
-    onlyRecordsInRemoteServerCanBeImported:
-      "Solo se pueden importar registros que ya están en el servidor remoto o registros que se han actualizado remotamente",
-    exportedSuccessfullyButFilesMissing:
-      "Los datos se exportaron correctamente, pero faltan o están rotos {{missingFiles}} archivos/imágenes. Por favor, revise sus registros y también los registros en el servidor.",
   },
   location: {
     label: "Ubicación",

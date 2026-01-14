@@ -1,6 +1,9 @@
 import { StatusBar } from "expo-status-bar";
-import { KeyboardAvoidingView } from "react-native";
 import ErrorBoundary from "react-native-error-boundary";
+import {
+  KeyboardAvoidingView,
+  KeyboardProvider,
+} from "react-native-keyboard-controller";
 import { Provider as PaperProvider, ThemeProvider } from "react-native-paper";
 import { Edges, SafeAreaView } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
@@ -20,6 +23,12 @@ import styles from "./src/appStyles";
 
 const safeAreaEdges: Edges = ["right", "bottom", "left"];
 
+/**
+ * Vertical offset for KeyboardAvoidingView on iOS to account for the top bar (status bar + app header).
+ * The value 50 was determined empirically to align input fields correctly beneath the top UI chrome on typical iOS devices.
+ */
+const topBarOffsetIOS = 50;
+
 const AppInnerContainer = () => {
   log.debug(`rendering AppInnerContainer`);
 
@@ -29,13 +38,7 @@ const AppInnerContainer = () => {
     log.error(stackTrace, error);
   };
 
-  const internalContainer = (
-    <AppInitializer>
-      <SafeAreaView edges={safeAreaEdges} style={styles.container}>
-        <AppStack />
-      </SafeAreaView>
-    </AppInitializer>
-  );
+  const keyboardVerticalOffset = Environment.isIOS ? topBarOffsetIOS : 0;
 
   return (
     <PaperProvider theme={theme}>
@@ -44,14 +47,20 @@ const AppInnerContainer = () => {
           onError={onError}
           FallbackComponent={ErrorFallbackComponent}
         >
-          <StatusBar style={theme.dark ? "light" : "dark"} />
-          {Environment.isIOS ? (
-            <KeyboardAvoidingView behavior="height" style={BaseStyles.flexOne}>
-              {internalContainer}
-            </KeyboardAvoidingView>
-          ) : (
-            internalContainer
-          )}
+          <KeyboardProvider>
+            <StatusBar style={theme.dark ? "light" : "dark"} />
+            <AppInitializer>
+              <SafeAreaView edges={safeAreaEdges} style={styles.container}>
+                <KeyboardAvoidingView
+                  behavior={Environment.isIOS ? "padding" : "height"}
+                  keyboardVerticalOffset={keyboardVerticalOffset}
+                  style={BaseStyles.flexOne}
+                >
+                  <AppStack />
+                </KeyboardAvoidingView>
+              </SafeAreaView>
+            </AppInitializer>
+          </KeyboardProvider>
         </ErrorBoundary>
         <AppMessageDialog />
         <AppConfirmDialog />
