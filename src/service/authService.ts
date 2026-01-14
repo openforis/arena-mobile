@@ -38,9 +38,8 @@ const setAuthToken = (token: string | null) => {
   _authToken = token;
 };
 
-const generateAuthorizationHeaders = () => ({
-  Authorization: `Bearer ${_authToken}`,
-});
+const generateAuthorizationHeaders = () =>
+  _authToken ? { Authorization: `Bearer ${_authToken}` } : {};
 
 const getServerUrl = async () =>
   (await SettingsService.fetchSettings()).serverUrl;

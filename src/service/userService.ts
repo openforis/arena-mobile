@@ -6,7 +6,7 @@ const fetchUser = async () => {
   return data.user;
 };
 
-const fetchUserPicture = async (userUuid: any) => {
+const fetchUserPicture = async (userUuid: string) => {
   const fileUri = await RemoteService.getFile(
     `/api/user/${userUuid}/profilePicture`
   );
