@@ -44,7 +44,6 @@ const uploadRecords = ({
   startFromChunk,
   conflictResolutionStrategy,
   onUploadProgress,
-  requestTimeout = 20000,
 }: any) => {
   const surveyRemoteId = survey.remoteId;
   let fileProcessor: any = null;
