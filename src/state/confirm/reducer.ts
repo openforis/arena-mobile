@@ -59,7 +59,7 @@ export type ConfirmShowParams = {
   cancelButtonTextKey?: string;
   confirmButtonStyle?: any;
   confirmButtonTextKey?: string;
-  messageKey: string;
+  messageKey?: string;
   messageParams?: any;
   multipleChoiceOptions?: Array<{ label: string; value: string }>;
   onConfirm: (params: OnConfirmParams) => Promise<void> | void;
@@ -78,7 +78,7 @@ export const ConfirmActions = {
     cancelButtonTextKey = "common:cancel",
     confirmButtonStyle = undefined,
     confirmButtonTextKey = "common:confirm",
-    messageKey,
+    messageKey = undefined,
     messageParams = {},
     multipleChoiceOptions = [],
     onConfirm,

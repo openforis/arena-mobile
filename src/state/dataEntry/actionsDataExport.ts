@@ -8,7 +8,7 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
-import { AuthService, RecordService } from "service";
+import { RecordService, UserService } from "service";
 import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerationJob";
 
 import { i18n } from "localization";
@@ -373,7 +373,7 @@ export const exportRecords =
     };
 
     try {
-      const user = onlyLocally ? {} : await AuthService.fetchUser();
+      const user = onlyLocally ? {} : await UserService.fetchUser();
 
       const job = new RecordsExportFileGenerationJob({
         survey,

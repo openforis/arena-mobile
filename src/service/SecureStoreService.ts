@@ -1,16 +1,22 @@
 import * as SecureStore from "expo-secure-store";
 
+import { Objects } from "@openforis/arena-core";
+
 const keys = {
-  connectSIDCookie: "connectSIDCookie",
+  authRefreshToken: "authRefreshToken",
 };
 
 const getItem = async (key: any) => SecureStore.getItemAsync(key);
-const setItem = async (key: any, value: any) => SecureStore.setItemAsync(key, value);
+const setItem = async (key: any, value: any) =>
+  Objects.isEmpty(value)
+    ? SecureStore.deleteItemAsync(key)
+    : SecureStore.setItemAsync(key, value);
 
-const getConnectSIDCookie = async () => getItem(keys.connectSIDCookie);
-const setConnectSIDCookie = async (value: any) => setItem(keys.connectSIDCookie, value);
+const getAuthRefreshToken = async () => getItem(keys.authRefreshToken);
+const setAuthRefreshToken = async (value: any) =>
+  setItem(keys.authRefreshToken, value);
 
 export const SecureStoreService = {
-  getConnectSIDCookie,
-  setConnectSIDCookie,
+  getAuthRefreshToken,
+  setAuthRefreshToken,
 };

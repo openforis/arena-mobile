@@ -1,6 +1,6 @@
 import { Environment } from "utils/Environment";
 import { ThemesSettings } from "./Themes";
-import { LanguagesSettings } from "./LanguageSettings";
+import { LanguageConstants, LanguagesSettings } from "./LanguageSettings";
 
 enum PropertyType {
   boolean = "boolean",
@@ -36,8 +36,6 @@ export enum SettingKey {
   showStatusBar = "showStatusBar",
   theme = "theme",
 }
-
-export type SettingsObject = Record<SettingKey, any>;
 
 type SettingsProperties = Partial<Record<SettingKey, SettingsProperty>>;
 
@@ -98,6 +96,26 @@ const properties: SettingsProperties = {
     step: 0.5,
     isDisabled: ({ settings }: any) => settings.imageSizeUnlimited,
   },
+};
+
+export type SettingsObject = {
+  animationsEnabled: boolean;
+  email?: string;
+  fontScale: number;
+  fullScreen: boolean;
+  keepScreenAwake: boolean;
+  imageSizeUnlimited: boolean;
+  imageSizeLimit: number;
+  language: LanguageConstants;
+  locationAccuracyThreshold: number;
+  locationAccuracyWatchTimeout: number;
+  locationAveragingEnabled: boolean;
+  locationGpsLocked: boolean;
+  password?: string; // deprecated; not stored anymore;
+  serverUrlType: "default";
+  serverUrl: string;
+  showStatusBar: boolean;
+  theme: ThemesSettings;
 };
 
 export const SettingsModel = {

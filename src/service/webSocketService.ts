@@ -1,3 +1,4 @@
+import { AuthService } from "./authService";
 import { RemoteService } from "./remoteService";
 import { Environment } from "utils";
 
@@ -17,8 +18,14 @@ const open = async () => {
   close();
 
   const serverUrl = await RemoteService.getServerUrl();
-
-  webSocketInstance = io?.(serverUrl, { withCredentials: true });
+  const authToken = AuthService.getAuthToken();
+  const options = {
+    withCredentials: true,
+    auth: {
+      token: authToken,
+    },
+  };
+  webSocketInstance = io?.(serverUrl, options);
 
   return webSocketInstance;
 };

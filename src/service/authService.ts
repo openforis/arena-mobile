@@ -1,42 +1,64 @@
-import { ImageUtils } from "utils/ImageUtils";
+import { Dictionary } from "@openforis/arena-core";
+
 import { API } from "./api";
-import { RemoteService } from "./remoteService";
 import { SecureStoreService } from "./SecureStoreService";
+import { SettingsService } from "./settingsService";
 
-const sIdCookiePrefix = "connect.sid=";
+const refreshTokenCookieName = "refreshToken";
 
-const extractConnectSID = (headers: any) => {
+const authTokenRefreshUrl = "/auth/token/refresh";
+
+const extractCookieValue = (
+  headers: Dictionary<string>,
+  cookieName: string
+): string | undefined => {
   const cookies = headers?.["set-cookie"];
   const cookie = cookies?.[0];
-  return cookie?.substring(
-    sIdCookiePrefix.length,
-    cookie.indexOf(";", sIdCookiePrefix.length)
+  if (!cookie) return undefined;
+  // cookie string is in the format cookieName=cookieValue
+  const endIndex = cookie.indexOf(";", cookieName.length + 1);
+  return cookie.substring(
+    cookieName.length + 1,
+    endIndex > 0 ? endIndex : undefined
   );
 };
 
-const fetchUser = async () => {
-  const { data } = await RemoteService.get("/auth/user");
-  return data.user;
+const extractAuthTokens = (response: any) => {
+  const { data, headers } = response;
+  const { authToken } = data;
+  const refreshToken = extractCookieValue(headers, refreshTokenCookieName);
+  return { authToken, refreshToken };
 };
 
-const fetchUserPicture = async (userUuid: any) => {
-  const fileUri = await RemoteService.getFile(
-    `/api/user/${userUuid}/profilePicture`
-  );
-  return (await ImageUtils.isValid(fileUri)) ? fileUri : null;
+let _authToken: string | null = null;
+
+const getAuthToken = (): string | null => _authToken;
+
+const setAuthToken = (token: string | null) => {
+  _authToken = token;
 };
+
+const generateAuthorizationHeaders = () =>
+  _authToken ? { Authorization: `Bearer ${_authToken}` } : {};
+
+const getServerUrl = async () =>
+  (await SettingsService.fetchSettings()).serverUrl;
 
 const login = async ({ serverUrl: serverUrlParam, email, password }: any) => {
-  const serverUrl = serverUrlParam ?? (await RemoteService.getServerUrl());
+  const serverUrl = serverUrlParam ?? (await getServerUrl());
   try {
-    const { data, response } = await API.post(serverUrl, "/auth/login", {
-      email,
-      password,
+    const { data, response } = await API.post({
+      serverUrl,
+      uri: "/auth/login",
+      data: {
+        email,
+        password,
+      },
     });
-    const { headers } = response;
-    const connectSID = extractConnectSID(headers);
-    if (connectSID) {
-      await SecureStoreService.setConnectSIDCookie(connectSID);
+    const { authToken, refreshToken } = extractAuthTokens(response);
+    if (authToken && refreshToken) {
+      setAuthToken(authToken);
+      await SecureStoreService.setAuthRefreshToken(refreshToken);
       return data;
     }
     return { error: "authService:error.invalidCredentials" };
@@ -54,8 +76,11 @@ const login = async ({ serverUrl: serverUrlParam, email, password }: any) => {
 
 const logout = async () => {
   try {
-    const res = await RemoteService.post("/auth/logout");
-    return res?.data;
+    const { data } = await API.post({
+      serverUrl: await getServerUrl(),
+      uri: "/auth/logout",
+    });
+    return data;
   } catch (err: any) {
     if (!err.response) {
       return { error: "authService:error.invalidServerUrl" };
@@ -64,9 +89,36 @@ const logout = async () => {
   }
 };
 
+const refreshAuthTokens = async () => {
+  try {
+    const serverUrl = await getServerUrl();
+    const refreshTokenPrev = await SecureStoreService.getAuthRefreshToken();
+    if (!refreshTokenPrev) {
+      throw new Error("Error refreshing auth tokens; missing refresh token.");
+    }
+    const headers = { Cookie: `refreshToken=${refreshTokenPrev};` };
+    const { response } = await API.post({
+      serverUrl,
+      uri: authTokenRefreshUrl,
+      config: { headers },
+    });
+    const { authToken, refreshToken } = extractAuthTokens(response);
+    setAuthToken(authToken);
+    await SecureStoreService.setAuthRefreshToken(refreshToken);
+  } catch (error) {
+    // clear stored tokens
+    setAuthToken(null);
+    await SecureStoreService.setAuthRefreshToken(null);
+
+    throw error;
+  }
+};
+
 export const AuthService = {
-  fetchUser,
-  fetchUserPicture,
+  authTokenRefreshUrl,
+  getAuthToken,
+  generateAuthorizationHeaders,
   login,
   logout,
+  refreshAuthTokens,
 };

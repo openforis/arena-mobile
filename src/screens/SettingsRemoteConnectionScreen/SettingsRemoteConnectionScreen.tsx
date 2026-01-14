@@ -29,10 +29,6 @@ import { AMConstants } from "utils";
 
 import styles from "./styles";
 
-const forgotPasswordUrl =
-  "https://www.openforis-arena.org/guest/forgotPassword";
-const requestAccessUrl = "https://www.openforis-arena.org/guest/accessRequest";
-
 const serverUrlTypes = {
   default: "default",
   custom: "custom",
@@ -71,8 +67,8 @@ export const SettingsRemoteConnectionScreen = () => {
       ...statePrev,
       serverUrl: serverUrlNext,
       serverUrlType: serverUrlTypeNext,
-      email: settings.email || "",
-      password: settings.password || "",
+      email: settings.email ?? "",
+      password: settings.password ?? "",
     }));
   }, []);
 
@@ -144,6 +140,7 @@ export const SettingsRemoteConnectionScreen = () => {
         email: emailNew,
         password,
         navigation,
+        showBack: true,
       })
     );
   }, [dispatch, email, navigation, password, serverUrl]);
@@ -210,6 +207,7 @@ export const SettingsRemoteConnectionScreen = () => {
           onChange={onPasswordChange}
           value={password}
         />
+
         <HView fullWidth style={styles.loginButtonBar}>
           <HView fullFlex>
             <Button
@@ -244,11 +242,11 @@ export const SettingsRemoteConnectionScreen = () => {
         )}
         <Link
           labelKey="settingsRemoteConnection:forgotPassword"
-          url={forgotPasswordUrl}
+          url={AMConstants.forgotPasswordUrl}
         />
         <Link
           labelKey="settingsRemoteConnection:requestAccess"
-          url={requestAccessUrl}
+          url={AMConstants.requestAccessUrl}
         />
       </VView>
     </ScreenView>

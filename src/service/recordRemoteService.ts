@@ -5,10 +5,7 @@ import { RemoteService } from "./remoteService";
 
 const uploadChunkSize = 700 * 1024; // 700KB (post requests bigger than this are truncated, check why)
 
-const fetchRecordsSummaries = async ({
-  surveyRemoteId,
-  cycle
-}: any) => {
+const fetchRecordsSummaries = async ({ surveyRemoteId, cycle }: any) => {
   const { data } = await RemoteService.get(
     `api/survey/${surveyRemoteId}/records/summary`,
     { cycle }
@@ -17,11 +14,7 @@ const fetchRecordsSummaries = async ({
   return list;
 };
 
-const startExportRecords = async ({
-  survey,
-  cycle,
-  recordUuids
-}: any) => {
+const startExportRecords = async ({ survey, cycle, recordUuids }: any) => {
   const { remoteId: surveyRemoteId } = survey;
   const params = { cycle, recordUuids };
 
@@ -34,10 +27,7 @@ const startExportRecords = async ({
   return job;
 };
 
-const downloadExportedRecordsFile = async ({
-  survey,
-  fileName
-}: any) => {
+const downloadExportedRecordsFile = async ({ survey, fileName }: any) => {
   const { remoteId: surveyRemoteId } = survey;
   const fileUri = await RemoteService.getFile(
     `api/survey/${surveyRemoteId}/records/export/download`,
@@ -54,17 +44,16 @@ const uploadRecords = ({
   startFromChunk,
   conflictResolutionStrategy,
   onUploadProgress,
-  requestTimeout = 20000
 }: any) => {
   const surveyRemoteId = survey.remoteId;
   let fileProcessor: any = null;
 
-  const debouncedUploadProgress = Functions.throttle(({
-    total,
-    loaded
-  }: any) => {
-    onUploadProgress({ total, loaded });
-  }, 1000);
+  const debouncedUploadProgress = Functions.throttle(
+    ({ total, loaded }: any) => {
+      onUploadProgress({ total, loaded });
+    },
+    1000
+  );
 
   let lastRequestCancel: any = null;
   const promise = new Promise((resolve, reject) => {
@@ -94,8 +83,7 @@ const uploadRecords = ({
           await RemoteService.postCancelableMultipartData(
             `api/mobile/survey/${surveyRemoteId}`,
             params,
-            progressHandler,
-            { timeout: requestTimeout }
+            progressHandler
           );
         lastRequestCancel = cancel;
         const result = await promise;

@@ -3,11 +3,11 @@ import { Dates, JobStatus } from "@openforis/arena-core";
 import { dbClient } from "db";
 import { Files, logsPath } from "utils";
 
-import { AuthService } from "./authService";
 import { BackupJob } from "./backupJob/BackupJob";
 import { RecordFileRepository } from "./repository/recordFileRepository";
 import { SurveyFSRepository } from "./repository/surveyFSRepository";
 import { SettingsService } from "./settingsService";
+import { UserService } from "./userService";
 
 const getDbUri = () =>
   Files.path(Files.documentDirectory, "SQLite", dbClient?.name);
@@ -59,16 +59,15 @@ const exportLogsAndShareThem = async () => {
 
 const checkLoggedInUser = async () => {
   const settings = await SettingsService.fetchSettings();
-  const { serverUrl, email, password } = settings;
-  if (!serverUrl || !email || !password) return;
+  const { serverUrl, email } = settings;
+  if (!serverUrl || !email) return;
 
   try {
-    const user = await AuthService.fetchUser();
+    const user = await UserService.fetchUser();
     return user;
   } catch (error) {
     // session expired
-    const { user } = await AuthService.login({ serverUrl, email, password });
-    return user;
+    return null;
   }
 };
 

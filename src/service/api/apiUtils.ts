@@ -12,12 +12,12 @@ const getUrl = ({ serverUrl, uri }: any) =>
     "/"
   );
 
-const getUrlWithParams = ({ serverUrl, uri, params = {} }: any) => {
-  const requestParams = Object.entries(params).reduce((acc, [key, value]) => {
-    acc.append(key, String(value));
-    return acc;
-  }, new URLSearchParams());
-  const requestParamsString = requestParams.toString();
+const getUrlWithParams = ({ serverUrl, uri, data = {} }: any) => {
+  const searchParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(data)) {
+    searchParams.append(key, String(value));
+  }
+  const requestParamsString = searchParams.toString();
   return (
     getUrl({ serverUrl, uri }) +
     (requestParamsString ? "?" + requestParamsString : "")

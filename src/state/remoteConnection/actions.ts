@@ -1,6 +1,11 @@
 import { i18n } from "localization";
 import { UserLogoutOptions } from "model/UserLogoutOptions";
-import { AuthService, SecureStoreService, SettingsService } from "service";
+import {
+  AuthService,
+  SecureStoreService,
+  SettingsService,
+  UserService,
+} from "service";
 import { screenKeys } from "screens/screenKeys";
 import { log } from "utils";
 
@@ -17,19 +22,16 @@ const USER_LOADING = "USER_LOADING";
 const USER_SET = "USER_SET";
 const USER_PROFILE_ICON_INFO_SET = "USER_PROFILE_ICON_INFO_SET";
 
-const fetchUserOrLoginAgain = async ({ serverUrl, email, password }: any) => {
+const fetchUser = async () => {
   let user;
   try {
-    user = await AuthService.fetchUser();
+    user = await UserService.fetchUser();
+    return user;
   } catch (error) {
     // ignore it
+    log.error("Error fetching user", error);
+    return null;
   }
-  if (user) {
-    return user;
-  }
-  // session expired
-  const data = await AuthService.login({ serverUrl, email, password });
-  return data.user;
 };
 
 const loginAndSetUser =
@@ -45,7 +47,16 @@ const loginAndSetUser =
     }
     const deviceInfo = DeviceInfoSelectors.selectDeviceInfo(state);
     const { isNetworkConnected } = deviceInfo;
-    if (!isNetworkConnected) {
+    if (isNetworkConnected) {
+      const refreshToken = await SecureStoreService.getAuthRefreshToken();
+      if (!refreshToken) {
+        // missing information; user cannot be fetched;
+        return;
+      }
+      dispatch({ type: USER_LOADING });
+      const user = await fetchUser();
+      dispatch({ type: USER_SET, user });
+    } else {
       // retrieve user from async storage (if any)
       const userInAsyncStorage = await AsyncStorageUtils.getItem(
         asyncStorageKeys.loggedInUser
@@ -53,25 +64,7 @@ const loginAndSetUser =
       if (userInAsyncStorage) {
         dispatch({ type: USER_SET, user: userInAsyncStorage });
       }
-      return;
     }
-
-    const settings = await SettingsService.fetchSettings();
-    const { serverUrl, email, password } = settings;
-    if (!serverUrl || !email || !password) {
-      // missing information to perform login; user cannot be fetched;
-      return;
-    }
-    dispatch({ type: USER_LOADING });
-    const connectSID = await SecureStoreService.getConnectSIDCookie();
-    let user = null;
-    if (connectSID) {
-      user = await fetchUserOrLoginAgain({ serverUrl, email, password });
-    } else {
-      const loginRes = await AuthService.login({ serverUrl, email, password });
-      user = loginRes.user;
-    }
-    dispatch({ type: USER_SET, user });
   };
 
 const confirmGoToConnectionToRemoteServer =
@@ -96,16 +89,20 @@ const login =
     if (user) {
       await AsyncStorageUtils.setItem(asyncStorageKeys.loggedInUser, user);
       const settings = await SettingsService.fetchSettings();
-      const settingsUpdated = { ...settings, serverUrl, email, password };
+      const settingsUpdated = { ...settings, serverUrl, email };
       await dispatch(SettingsActions.updateSettings(settingsUpdated));
-      dispatch(
-        ConfirmActions.show({
-          titleKey: "authService:loginSuccessful",
-          confirmButtonTextKey: "common:continue",
-          cancelButtonTextKey: "common:close",
-          onConfirm: navigation.goBack,
-        })
-      );
+
+      if (showBack) {
+        dispatch(
+          ConfirmActions.show({
+            titleKey: "authService:loginSuccessful",
+            confirmButtonTextKey: "common:continue",
+            cancelButtonTextKey: "common:close",
+            onConfirm: navigation.goBack,
+          })
+        );
+      }
+
       dispatch({ type: USER_SET, user });
     } else if (message || error) {
       const errorKeySuffix = [
@@ -135,7 +132,7 @@ const fetchLoggedInUserProfileIcon = async (dispatch: any, getState: any) => {
     type: USER_PROFILE_ICON_INFO_SET,
     payload: { loaded: false, loading: true, uri: null },
   });
-  const uri = await AuthService.fetchUserPicture(user.uuid);
+  const uri = await UserService.fetchUserPicture(user.uuid);
   dispatch({
     type: USER_PROFILE_ICON_INFO_SET,
     payload: { loaded: true, loading: false, uri },
@@ -146,12 +143,14 @@ const _clearUserCredentialsInternal =
   ({ keepEmailAddress }: any = {}) =>
   async (dispatch: any) => {
     const settings = await SettingsService.fetchSettings();
+    const emailNext = keepEmailAddress ? settings.email : undefined;
     const settingsUpdated = {
       ...settings,
-      email: keepEmailAddress ? settings.email : null,
-      password: null,
+      email: emailNext,
+      password: undefined,
     };
     await dispatch(SettingsActions.updateSettings(settingsUpdated));
+    await SecureStoreService.setAuthRefreshToken(null);
     dispatch({ type: USER_PROFILE_ICON_INFO_SET, payload: null });
     dispatch({ type: USER_SET, user: null });
   };
