@@ -59,14 +59,13 @@ const get = async (uri: string, data?: Dictionary<any>, config = {}) => {
   return withRetry(sendRequest);
 };
 
-const getFile = async (uri: string, data?: Dictionary<any>, callback?: any) => {
+const getFile = async (uri: string, data?: Dictionary<any>) => {
   const serverUrl = await getServerUrl();
   const sendRequest = async () =>
     API.getFile({
       serverUrl,
       uri,
       data,
-      callback,
       config: attachAuthenticationHeaders(),
     });
   return withRetry(sendRequest);

@@ -7,7 +7,6 @@ import { APIUtils } from "./apiUtils";
 import { RequestOptions } from "./apiTypes";
 
 type FileRequestOptions = RequestOptions & {
-  callback: () => void;
   targetFileUri?: string;
   config?: FileSystem.DownloadOptions;
 };
