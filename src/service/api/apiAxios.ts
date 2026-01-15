@@ -81,9 +81,11 @@ const _prepareMultipartData = (options: RequestOptions): RequestOptions => {
 
   const formData = APIUtils.objectToFormData(data);
 
+  const headers = { ...multipartDataHeaders, ...configParam?.headers };
+
   const axiosRequestOptions: AxiosRequestConfig = {
-    headers: multipartDataHeaders,
     ...configParam,
+    headers,
   };
   return {
     ...options,
