@@ -5,10 +5,13 @@ export default {
   errorConnectingWithServer: "Ошибка подключения к серверу",
   forgotPassword: "Забыли пароль?",
   login: "Войти",
+  loginUsingQrCode: "Войти с помощью QR-кода",
   logout: "Выйти",
   logoutConfirmMessage: "Выйти и очистить учетные данные пользователя?",
   password: "Пароль",
+  qrCodeNotValid: "QR-код недействителен",
   requestAccess: "Вы впервые в Arena? Запросить доступ",
+  scanQrCode: "Сканировать QR-код",
   serverUrl: "URL сервера",
   serverUrlNotValid: "Неверный URL сервера",
   serverUrlType: {

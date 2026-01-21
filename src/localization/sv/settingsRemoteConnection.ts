@@ -5,10 +5,13 @@ export default {
   errorConnectingWithServer: "Fel vid anslutning till servern",
   forgotPassword: "Glömt lösenordet?",
   login: "Logga in",
+  loginUsingQrCode: "Logga in med QR-kod",
   logout: "Logga ut",
   logoutConfirmMessage: "Logga ut och rensa användarens inloggningsuppgifter?",
   password: "Lösenord",
+  qrCodeNotValid: "QR-koden är inte giltig",
   requestAccess: "Ny på Arena? Begär åtkomst",
+  scanQrCode: "Skanna QR-kod",
   serverUrl: "Server-URL",
   serverUrlNotValid: "Server-URL:en är inte giltig",
   serverUrlType: {

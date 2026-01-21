@@ -5,10 +5,13 @@ export default {
   errorConnectingWithServer: "ከአገልጋዩ ጋር በመገናኘት ላይ ስህተት",
   forgotPassword: "የይለፍ ቃል ረሱ?",
   login: "ግባ",
+  loginUsingQrCode: "የQR ኮድ በመጠቀም ይግቡ",
   logout: "ውጣ",
   logoutConfirmMessage: "ወጥተው የተጠቃሚ ማረጋገጫዎችን ያጽዱ?",
   password: "የይለፍ ቃል",
+  qrCodeNotValid: "የQR ኮድ ልክ አይደለም",
   requestAccess: "በአሬና አዲስ ነዎት? መዳረሻ ይጠይቁ",
+  scanQrCode: "QR ኮድ ይቃኙ",
   serverUrl: "የአገልጋይ አድራሻ",
   serverUrlNotValid: "የአገልጋይ አድራሻ ልክ አይደለም",
   serverUrlType: {

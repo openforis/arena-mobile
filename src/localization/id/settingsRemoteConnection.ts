@@ -5,10 +5,13 @@ export default {
   errorConnectingWithServer: "Kesalahan saat terhubung dengan server",
   forgotPassword: "Lupa kata sandi?",
   login: "Masuk",
+  loginUsingQrCode: "Masuk menggunakan kode QR",
   logout: "Keluar",
   logoutConfirmMessage: "Keluar dan hapus kredensial pengguna?",
   password: "Kata sandi",
+  qrCodeNotValid: "Kode QR tidak valid",
   requestAccess: "Baru di Arena? Minta akses",
+  scanQrCode: "Pindai kode QR",
   serverUrl: "URL Server",
   serverUrlNotValid: "URL Server tidak valid",
   serverUrlType: {

@@ -22,19 +22,19 @@ const styleSheet = StyleSheet.create({
 type QrScannerModalProps = {
   onData: (data: string) => Promise<void>;
   onDismiss: () => void;
+  titleKey: string;
 };
 
 export const QrScannerModal = (props: QrScannerModalProps) => {
-  const { onData, onDismiss } = props;
+  const { onData, onDismiss, titleKey } = props;
 
-  const cameraViewStyle = useMemo(
-    () =>
-      StyleSheet.compose(styleSheet.camStyle, {
-        height: minDimension,
-        width: minDimension,
-      }),
-    [],
-  );
+  const cameraViewStyle = useMemo(() => {
+    const size = Math.ceil(minDimension * 0.9);
+    return StyleSheet.compose(styleSheet.camStyle, {
+      height: size,
+      width: size,
+    });
+  }, []);
 
   const onBarcodeScanned = useCallback(
     async (result: BarcodeScanningResult) => {
@@ -45,10 +45,7 @@ export const QrScannerModal = (props: QrScannerModalProps) => {
   );
 
   return (
-    <Modal
-      onDismiss={onDismiss}
-      titleKey="dataEntry:coordinate.navigateToTarget"
-    >
+    <Modal onDismiss={onDismiss} titleKey={titleKey}>
       <View style={styleSheet.container}>
         <CameraView
           style={cameraViewStyle}

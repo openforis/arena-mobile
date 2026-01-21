@@ -181,7 +181,7 @@ export const SettingsRemoteConnectionScreen = () => {
             showBack: true,
           }),
         );
-      } catch (err) {
+      } catch {
         dispatch(
           MessageActions.setMessage({
             content: "settingsRemoteConnection:qrCodeNotValid",
@@ -214,6 +214,7 @@ export const SettingsRemoteConnectionScreen = () => {
     <ScreenView>
       <VView style={styles.container}>
         {!networkAvailable && <Text textKey="common:networkNotAvailable" />}
+
         <FieldSet headerKey="settingsRemoteConnection:serverUrl">
           <RadioButtonGroup
             onValueChange={onServerUrlTypeChange}
@@ -289,7 +290,7 @@ export const SettingsRemoteConnectionScreen = () => {
           <Button
             disabled={!networkAvailable}
             onPress={onScanQrCode}
-            textKey="settingsRemoteConnection:scanQrCode"
+            textKey="settingsRemoteConnection:loginUsingQrCode"
           />
         </HView>
         {user && (
@@ -317,6 +318,7 @@ export const SettingsRemoteConnectionScreen = () => {
         <QrScannerModal
           onData={onQrScannerData}
           onDismiss={onQrScannerDismiss}
+          titleKey="settingsRemoteConnection:scanQrCode"
         />
       )}
     </ScreenView>

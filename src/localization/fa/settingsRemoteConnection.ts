@@ -6,10 +6,13 @@ export default {
   errorConnectingWithServer: "خطا در اتصال به سرور",
   forgotPassword: "رمز عبور را فراموش کرده اید؟",
   login: "ورود",
+  loginUsingQrCode: "ورود با استفاده از کد QR",
   logout: "خروج",
   logoutConfirmMessage: "خروج و پاک کردن اعتبارنامه های کاربر؟",
   password: "رمز عبور",
+  qrCodeNotValid: "کد QR معتبر نیست",
   requestAccess: "در Arena جدید هستید؟ درخواست دسترسی",
+  scanQrCode: "اسکن کد QR",
   serverUrl: "آدرس سرور",
   serverUrlNotValid: "آدرس سرور معتبر نیست",
   serverUrlType: {

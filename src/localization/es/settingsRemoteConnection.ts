@@ -5,10 +5,13 @@ export default {
   errorConnectingWithServer: "Error al conectar con el servidor",
   forgotPassword: "¿Olvidó su contraseña?",
   login: "Iniciar sesión",
+  loginUsingQrCode: "Iniciar sesión usando código QR",
   logout: "Cerrar sesión",
   logoutConfirmMessage: "¿Cerrar sesión y borrar las credenciales del usuario?",
   password: "Contraseña",
+  qrCodeNotValid: "Código QR no válido",
   requestAccess: "¿Nuevo en Arena? Solicitar acceso",
+  scanQrCode: "Escanear código QR",
   serverUrl: "URL del servidor",
   serverUrlNotValid: "URL del servidor no válida",
   serverUrlType: {

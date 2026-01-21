@@ -5,10 +5,13 @@ export default {
   errorConnectingWithServer: "Virhe yhdistettäessä palvelimeen",
   forgotPassword: "Unohtuiko salasana?",
   login: "Kirjaudu sisään",
+  loginUsingQrCode: "Kirjaudu sisään QR-koodilla",
   logout: "Kirjaudu ulos",
   logoutConfirmMessage: "Kirjaudu ulos ja tyhjennä käyttäjän tunnistetiedot?",
   password: "Salasana",
+  qrCodeNotValid: "QR-koodi ei kelpaa",
   requestAccess: "Uusi Arena käyttäjä? Pyydä pääsyä",
+  scanQrCode: "Skannaa QR-koodi",
   serverUrl: "Palvelimen URL-osoite",
   serverUrlNotValid: "Palvelimen URL-osoite ei kelpaa",
   serverUrlType: {
