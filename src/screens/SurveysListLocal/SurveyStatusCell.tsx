@@ -45,13 +45,13 @@ export const SurveyStatusCell = (props: Props) => {
           source={statusIconByStatus[status]}
         />
       ),
-    [status]
+    [status],
   );
 
   if (!status) return null;
 
   const textKey = Object.keys(UpdateStatus).includes(status)
-    ? `app:updateStatus.${status}`
+    ? `surveys:updateStatus.${status}`
     : `surveys:status.${status}`;
 
   return viewMode === ScreenViewMode.list ? (
