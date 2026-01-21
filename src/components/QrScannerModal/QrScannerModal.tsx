@@ -1,24 +1,19 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Dimensions, StyleSheet } from "react-native";
-import { BarcodeScanningResult, CameraView } from "expo-camera";
+import { useCallback, useEffect, useState } from "react";
+import {
+  BarcodeScanningResult,
+  BarcodeSettings,
+  CameraView,
+} from "expo-camera";
 
-import { Modal, View } from "components";
+import { Markdown, Modal, View } from "components";
 import { useRequestCameraPermission } from "hooks/useRequestCameraPermission";
+import { i18n } from "localization";
 
-const { height, width } = Dimensions.get("window");
-const minDimension = Math.min(height, width);
+import styles from "./styles";
 
-const styleSheet = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  camStyle: {
-    width: "100%",
-    height: "100%",
-  },
-});
+const barcodeScannerSettings: BarcodeSettings = {
+  barcodeTypes: ["qr"],
+};
 
 type QrScannerModalProps = {
   onData: (data: string) => Promise<void>;
@@ -42,14 +37,6 @@ export const QrScannerModal = (props: QrScannerModalProps) => {
     checkPermissionAndEnable();
   }, [requestCameraPermission]);
 
-  const cameraViewStyle = useMemo(() => {
-    const size = Math.ceil(minDimension * 0.9);
-    return StyleSheet.compose(styleSheet.camStyle, {
-      height: size,
-      width: size,
-    });
-  }, []);
-
   const onBarcodeScanned = useCallback(
     async (result: BarcodeScanningResult) => {
       const { data } = result;
@@ -64,15 +51,32 @@ export const QrScannerModal = (props: QrScannerModalProps) => {
 
   return (
     <Modal onDismiss={onDismiss} titleKey={titleKey}>
-      <View style={styleSheet.container}>
+      <View style={styles.container}>
         <CameraView
-          style={cameraViewStyle}
+          style={styles.camera}
           facing="back"
-          barcodeScannerSettings={{
-            barcodeTypes: ["qr"],
-          }}
+          barcodeScannerSettings={barcodeScannerSettings}
           onBarcodeScanned={onBarcodeScanned}
         />
+        <View transparent style={styles.overlay}>
+          <View transparent style={styles.unfocusedContainer}></View>
+          <View transparent style={styles.middleContainer}>
+            {/* Left dark side */}
+            <View transparent style={styles.unfocusedContainer} />
+            {/* The Clear Square */}
+            <View transparent style={styles.focusedContainer} />
+            {/* Right dark side */}
+            <View transparent style={styles.unfocusedContainer} />
+          </View>
+          <View transparent style={styles.unfocusedContainer}>
+            <Markdown
+              content={i18n.t(
+                "settingsRemoteConnection:loginUsingQrCodeInstructions",
+              )}
+              style={styles.instructionText as any}
+            />
+          </View>
+        </View>
       </View>
     </Modal>
   );
