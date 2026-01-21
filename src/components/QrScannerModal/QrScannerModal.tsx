@@ -1,8 +1,9 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Dimensions, StyleSheet } from "react-native";
 import { BarcodeScanningResult, CameraView } from "expo-camera";
 
 import { Modal, View } from "components";
+import { useRequestCameraPermission } from "hooks/useRequestCameraPermission";
 
 const { height, width } = Dimensions.get("window");
 const minDimension = Math.min(height, width);
@@ -28,6 +29,19 @@ type QrScannerModalProps = {
 export const QrScannerModal = (props: QrScannerModalProps) => {
   const { onData, onDismiss, titleKey } = props;
 
+  const [enabled, setEnabled] = useState(false);
+
+  const { request: requestCameraPermission } = useRequestCameraPermission();
+
+  useEffect(() => {
+    const checkPermissionAndEnable = async () => {
+      if (await requestCameraPermission()) {
+        setEnabled(true);
+      }
+    };
+    checkPermissionAndEnable();
+  }, [requestCameraPermission]);
+
   const cameraViewStyle = useMemo(() => {
     const size = Math.ceil(minDimension * 0.9);
     return StyleSheet.compose(styleSheet.camStyle, {
@@ -43,6 +57,10 @@ export const QrScannerModal = (props: QrScannerModalProps) => {
     },
     [onData],
   );
+
+  if (!enabled) {
+    return null;
+  }
 
   return (
     <Modal onDismiss={onDismiss} titleKey={titleKey}>
