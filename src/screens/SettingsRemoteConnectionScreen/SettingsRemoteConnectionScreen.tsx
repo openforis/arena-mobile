@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
+import { Objects } from "@openforis/arena-core";
+
 import {
   Button,
   FieldSet,
@@ -34,6 +36,24 @@ import styles from "./styles";
 const serverUrlTypes = {
   default: "default",
   custom: "custom",
+};
+
+const parseLoginQrCodeData = (data: string) => {
+  try {
+    const parsedData = JSON.parse(data);
+    const { serverUrl, token } = parsedData;
+    if (
+      typeof serverUrl === "string" &&
+      typeof token === "string" &&
+      Objects.isNotEmpty(serverUrl) &&
+      Objects.isNotEmpty(token)
+    ) {
+      return { serverUrl, token };
+    }
+  } catch {
+    // ignore error
+  }
+  throw new Error("Invalid QR code data structure");
 };
 
 export const SettingsRemoteConnectionScreen = () => {
@@ -171,8 +191,8 @@ export const SettingsRemoteConnectionScreen = () => {
       await new Promise<void>((resolve) => setTimeout(resolve, 500)); // wait for modal to close
 
       try {
-        const parsedData = JSON.parse(data);
-        const { serverUrl: serverUrlScanned, token } = parsedData;
+        const { serverUrl: serverUrlScanned, token } =
+          parseLoginQrCodeData(data);
         await dispatch(
           RemoteConnectionActions.loginWithTempAuthToken({
             token,
