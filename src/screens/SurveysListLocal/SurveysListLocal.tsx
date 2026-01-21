@@ -115,7 +115,7 @@ export const SurveysListLocal = () => {
         await loadSurveys();
       }
     },
-    [confirm, dispatch, loadSurveys]
+    [confirm, dispatch, loadSurveys],
   );
 
   const onItemPress = useCallback(
@@ -133,7 +133,7 @@ export const SurveysListLocal = () => {
       const fetchAndSetSurvey = () => {
         setLoading();
         dispatch(
-          SurveyActions.fetchAndSetCurrentSurvey({ surveyId, navigation })
+          SurveyActions.fetchAndSetCurrentSurvey({ surveyId, navigation }),
         );
       };
 
@@ -149,13 +149,13 @@ export const SurveysListLocal = () => {
             onConfirm: setLoading,
             onComplete: fetchAndSetSurvey,
             onCancel: fetchAndSetSurvey,
-          })
+          }),
         );
       } else {
         fetchAndSetSurvey();
       }
     },
-    [dispatch, navigation, updateStatusChecked]
+    [dispatch, navigation, updateStatusChecked],
   );
 
   const onCheckUpdatesPress = useCallback(async () => {
@@ -169,7 +169,7 @@ export const SurveysListLocal = () => {
     const { surveys: remoteSurveySummaries } =
       (await SurveyService.fetchSurveySummariesRemote()) as any;
     const remoteSurveySummariesByUuid = ArrayUtils.indexByUuid(
-      remoteSurveySummaries
+      remoteSurveySummaries,
     );
     const surveysUpdated = surveys.map((survey) => {
       const remoteSurvey = remoteSurveySummariesByUuid[survey.uuid];
