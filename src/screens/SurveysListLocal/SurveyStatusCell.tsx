@@ -33,16 +33,6 @@ type Props = DataVisualizerCellProps & {
   viewMode?: string;
 };
 
-const determineStatusTextKey = (status: SurveyStatus | UpdateStatus) => {
-  if (Object.keys(UpdateStatus).includes(status)) {
-    return `app:updateStatus.${status}`;
-  }
-  if (Object.keys(SurveyStatus).includes(status)) {
-    return `surveys:status.${status}`;
-  }
-  return `surveys:updateStatus.${status}`;
-};
-
 export const SurveyStatusCell = (props: Props) => {
   const { item, viewMode } = props;
   const status: SurveyStatus | UpdateStatus = item.status;
@@ -60,7 +50,9 @@ export const SurveyStatusCell = (props: Props) => {
 
   if (!status) return null;
 
-  const textKey = determineStatusTextKey(status);
+  const textKey = Object.keys(UpdateStatus).includes(status)
+    ? `surveys:updateStatus.${status}`
+    : `surveys:status.${status}`;
 
   return viewMode === ScreenViewMode.list ? (
     <HView style={{ width: "100%" }}>
