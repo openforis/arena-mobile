@@ -11,6 +11,11 @@ export default {
   logoutConfirmMessage: "خروج و پاک کردن اعتبارنامه های کاربر؟",
   password: "رمز عبور",
   qrCodeNotValid: "کد QR معتبر نیست",
+  loginUsingQrCodeInstructions: `برای ورود با استفاده از کد QR:
+1. **Arena** را در مرورگر وب خود باز کنید
+2. دکمه گوشه بالا سمت راست را فشار دهید و منوی کاربر را باز کنید
+3. **ورود از Arena Mobile با استفاده از کد QR** را انتخاب کنید
+4. کد QR نمایش داده شده را اسکن کنید`,
   requestAccess: "در Arena جدید هستید؟ درخواست دسترسی",
   scanQrCode: "اسکن کد QR",
   serverUrl: "آدرس سرور",
