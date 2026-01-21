@@ -30,11 +30,11 @@ export default StyleSheet.create({
     borderColor: "#fff",
     borderRadius: 20,
   },
-  instructionText: {
+  instructionsMarkdown: {
     body: {
       color: "white",
       padding: 20,
       width: "100%",
     },
-  } as any,
+  } as StyleSheet.NamedStyles<any>,
 });

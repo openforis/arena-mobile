@@ -73,7 +73,7 @@ export const QrScannerModal = (props: QrScannerModalProps) => {
               content={i18n.t(
                 "settingsRemoteConnection:loginUsingQrCodeInstructions",
               )}
-              style={styles.instructionText as any}
+              style={styles.instructionsMarkdown}
             />
           </View>
         </View>
