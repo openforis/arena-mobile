@@ -1,8 +1,4 @@
-import { Dimensions, StyleSheet } from "react-native";
-
-const { width, height } = Dimensions.get("window");
-// We need a border large enough to cover the biggest screen dimension
-const overlaySize = Math.max(width, height);
+import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   container: {
