@@ -5,7 +5,7 @@ import { Objects } from "@openforis/arena-core";
 
 import {
   Button,
-  FieldSet,
+  CollapsiblePanel,
   HView,
   Icon,
   Link,
@@ -235,7 +235,10 @@ export const SettingsRemoteConnectionScreen = () => {
       <VView style={styles.container}>
         {!networkAvailable && <Text textKey="common:networkNotAvailable" />}
 
-        <FieldSet headerKey="settingsRemoteConnection:serverUrl">
+        <CollapsiblePanel
+          headerKey="settingsRemoteConnection:serverUrl"
+          initiallyCollapsed={serverUrlType === serverUrlTypes.default}
+        >
           <RadioButtonGroup
             onValueChange={onServerUrlTypeChange}
             value={serverUrlType}
@@ -270,7 +273,7 @@ export const SettingsRemoteConnectionScreen = () => {
               onPress={onTestUrlPress}
             />
           )}
-        </FieldSet>
+        </CollapsiblePanel>
         <TextInput
           autoCapitalize="none"
           disabled={!networkAvailable}

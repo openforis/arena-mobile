@@ -1,4 +1,4 @@
-import { DataExportOption } from "@openforis/arena-core";
+import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
   confirmGoToListOfRecords: "ወደ መዝገቦች ዝርዝር ይሂዱ?\n\n(ሁሉም ለውጦች አስቀድመው ተቀምጠዋል)",
@@ -158,11 +158,11 @@ export default {
     onlyRecordsInRemoteServerCanBeImported:
       "በሩቅ አገልጋይ ውስጥ ያሉ ወይም በርቀት የተሻሻሉ መዝገቦች ብቻ ማስገባት ይቻላል",
     option: {
-      [DataExportOption.addCycle]: "ዎመድ ይጨምሩ",
-      [DataExportOption.includeAncestorAttributes]: "የአለፎች ባህሪያት",
-      [DataExportOption.includeCategoryItemsLabels]: "የአጭመጃነት ዘርዝሮች",
-      [DataExportOption.includeFiles]: "የፋይል ባህሪዎች",
-      [DataExportOption.includeTaxonScientificName]: "የታክሰን ሳይንሲፊክ ስም",
+      [FlatDataExportOption.addCycle]: "ዎመድ ይጨምሩ",
+      [FlatDataExportOption.includeAncestorAttributes]: "የአለፎች ባህሪያት",
+      [FlatDataExportOption.includeCategoryItemsLabels]: "የአጭመጃነት ዘርዝሮች",
+      [FlatDataExportOption.includeFiles]: "የፋይል ባህሪዎች",
+      [FlatDataExportOption.includeTaxonScientificName]: "የታክሰን ሳይንሲፊክ ስም",
     },
     selectTarget: "የመላኪያ ዒላማ ይምረጡ",
     selectTargetMessage: "የመላኪያውን ዒላማ ይምረጡ፡",

@@ -1,4 +1,4 @@
-import { DataExportOption } from "@openforis/arena-core";
+import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
   confirmGoToListOfRecords:
@@ -170,12 +170,12 @@ Vérifiez les paramètres ou demandez à l'administrateur de l'enquête de modif
     onlyRecordsInRemoteServerCanBeImported:
       "Seuls les enregistrements déjà présents sur le serveur distant ou les enregistrements qui ont été mis à jour à distance peuvent être importés",
     option: {
-      [DataExportOption.addCycle]: "Ajouter le cycle",
-      [DataExportOption.includeAncestorAttributes]: "Attributs ancêtres",
-      [DataExportOption.includeCategoryItemsLabels]:
+      [FlatDataExportOption.addCycle]: "Ajouter le cycle",
+      [FlatDataExportOption.includeAncestorAttributes]: "Attributs ancêtres",
+      [FlatDataExportOption.includeCategoryItemsLabels]:
         "Étiquettes des éléments de catégorie",
-      [DataExportOption.includeFiles]: "Attributs de fichier",
-      [DataExportOption.includeTaxonScientificName]:
+      [FlatDataExportOption.includeFiles]: "Attributs de fichier",
+      [FlatDataExportOption.includeTaxonScientificName]:
         "Nom scientifique du taxon",
     },
     selectTarget: "Sélectionner la cible d'exportation",

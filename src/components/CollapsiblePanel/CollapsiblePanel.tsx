@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Collapsible from "react-native-collapsible";
 import { StyleProp, TouchableOpacity, ViewStyle } from "react-native";
 
@@ -16,6 +16,7 @@ type CollapsiblePanelProps = {
   headerContent?: React.ReactNode;
   headerKey?: string;
   headerParams?: any;
+  initiallyCollapsed?: boolean;
 };
 
 export const CollapsiblePanel = (props: CollapsiblePanelProps) => {
@@ -26,22 +27,32 @@ export const CollapsiblePanel = (props: CollapsiblePanelProps) => {
     headerContent,
     headerKey,
     headerParams,
+    initiallyCollapsed = true,
   } = props;
 
   const styles = useStyles();
 
   const [collapsed, setCollapsed] = useState(true);
 
-  const onHeaderPress = useCallback(
-    () => setCollapsed(!collapsed),
-    [collapsed]
+  const toggleCollapsed = useCallback(
+    () => setCollapsed((collapsedPrev) => !collapsedPrev),
+    [],
   );
+
+  // workaround to open the panel when initiallyCollapsed is false
+  useEffect(() => {
+    // delay to allow layout to be calculated
+    const initializationTimer = setTimeout(() => {
+      setCollapsed(initiallyCollapsed);
+    }, 100);
+    return () => clearTimeout(initializationTimer);
+  }, [initiallyCollapsed]);
 
   const headerCollapsingIconSource = collapsed ? "chevron-down" : "chevron-up";
 
   return (
     <VView style={[styles.container, containerStyle]}>
-      <TouchableOpacity onPress={onHeaderPress}>
+      <TouchableOpacity onPress={toggleCollapsed}>
         <HView style={styles.headerContainer}>
           {headerContent}
           {headerKey && (

@@ -1,4 +1,4 @@
-import { DataExportOption } from "@openforis/arena-core";
+import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
   confirmGoToListOfRecords: `Siirry tietueluetteloon?
@@ -170,13 +170,13 @@ Tarkista asetukset tai pyydä kyselyn järjestelmänvalvojaa muuttamaan tätä r
     onlyRecordsInRemoteServerCanBeImported:
       "Vain palvelimella jo olevat tai etänä päivitetyt tietueet voidaan tuoda",
     option: {
-      [DataExportOption.addCycle]: "Lisää sykli",
-      [DataExportOption.includeAncestorAttributes]:
+      [FlatDataExportOption.addCycle]: "Lisää sykli",
+      [FlatDataExportOption.includeAncestorAttributes]:
         "Esivanhempien ominaisuudet",
-      [DataExportOption.includeCategoryItemsLabels]:
+      [FlatDataExportOption.includeCategoryItemsLabels]:
         "Luokkien kohteiden tunnisteet",
-      [DataExportOption.includeFiles]: "Tiedosto-ominaisuudet",
-      [DataExportOption.includeTaxonScientificName]:
+      [FlatDataExportOption.includeFiles]: "Tiedosto-ominaisuudet",
+      [FlatDataExportOption.includeTaxonScientificName]:
         "Taksonin tieteellinen nimi",
     },
     selectTarget: "Valitse vientikohde",

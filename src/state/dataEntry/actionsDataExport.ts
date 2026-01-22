@@ -1,7 +1,7 @@
 import {
-  DataExportDefaultOptions,
-  DataExportOption,
-  DataExportOptions,
+  FlatDataExportDefaultOptions,
+  FlatDataExportOption,
+  FlatDataExportOptions,
   JobStatus,
   JobSummary,
   Objects,
@@ -53,7 +53,7 @@ const handleError = (error: any) => (dispatch: any) =>
     MessageActions.setMessage({
       content: "dataEntry:dataExport.error",
       contentParams: { details: errorOrJobToString(error) },
-    })
+    }),
   );
 
 /**
@@ -127,7 +127,7 @@ const startUploadDataToRemoteServer =
         jobUuid: remoteJob.uuid,
         titleKey: "dataEntry:dataExport.title",
         onJobComplete,
-      })
+      }),
     );
   };
 
@@ -135,16 +135,16 @@ const determineAvailableDataExportOptions = ({
   state,
 }: {
   state: RootState;
-}): DataExportOption[] => {
+}): FlatDataExportOption[] => {
   const survey = SurveySelectors.selectCurrentSurvey(state)!;
   const result = [
-    DataExportOption.includeAncestorAttributes,
-    DataExportOption.includeCategoryItemsLabels,
-    DataExportOption.includeFiles,
-    DataExportOption.includeTaxonScientificName,
+    FlatDataExportOption.includeAncestorAttributes,
+    FlatDataExportOption.includeCategoryItemsLabels,
+    FlatDataExportOption.includeFiles,
+    FlatDataExportOption.includeTaxonScientificName,
   ];
   if (Surveys.getCycleKeys(survey).length > 1) {
-    result.push(DataExportOption.addCycle);
+    result.push(FlatDataExportOption.addCycle);
   }
   return result;
 };
@@ -153,15 +153,15 @@ const selectedOptionsToDataExportOptions = ({
   availableOptions,
   selectedOptions,
 }: {
-  availableOptions: DataExportOption[];
+  availableOptions: FlatDataExportOption[];
   selectedOptions: string[] | undefined;
 }) => {
-  const options: DataExportOptions = {};
+  const options: FlatDataExportOptions = {};
   for (const option of availableOptions) {
     options[option] = selectedOptions?.includes(option) ?? false;
   }
-  if (selectedOptions?.includes(DataExportOption.includeFiles)) {
-    options[DataExportOption.includeFileAttributeDefs] = true;
+  if (selectedOptions?.includes(FlatDataExportOption.includeFiles)) {
+    options[FlatDataExportOption.includeFileAttributeDefs] = true;
   }
   return options;
 };
@@ -178,7 +178,7 @@ export const startCsvDataExportJob =
         (option) => ({
           value: option,
           label: `dataEntry:dataExport.option.${option}`,
-        })
+        }),
       );
 
       const onConfirm = async ({
@@ -186,7 +186,7 @@ export const startCsvDataExportJob =
       }: OnConfirmParams) => {
         log.debug(
           `starting CSV data export with options:`,
-          selectedMultipleChoiceValues
+          selectedMultipleChoiceValues,
         );
 
         await dispatch(ConfirmActions.dismiss());
@@ -196,7 +196,7 @@ export const startCsvDataExportJob =
         const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
 
         const selectedDataExportOptions = {
-          ...DataExportDefaultOptions,
+          ...FlatDataExportDefaultOptions,
           ...selectedOptionsToDataExportOptions({
             availableOptions: availableDataExportOptions,
             selectedOptions: selectedMultipleChoiceValues,
@@ -239,7 +239,7 @@ export const startCsvDataExportJob =
           onConfirm,
           multipleChoiceOptions,
           confirmButtonTextKey: "common:export",
-        })
+        }),
       );
     } catch (error) {
       dispatch(handleError(error));
@@ -262,7 +262,7 @@ const onExportConfirmed =
               outputFileUri,
               conflictResolutionStrategy,
               onJobComplete,
-            })
+            }),
           );
           break;
         default:
@@ -284,14 +284,14 @@ const _onExportFileGenerationError = ({ errors, dispatch }: any) => {
       ValidationUtils.getJointErrorText({
         validation: validationError,
         t,
-      })
+      }),
     )
     .join(";\n");
   dispatch(
     MessageActions.setMessage({
       content: "dataEntry:errorGeneratingRecordsExportFile",
       contentParams: { details },
-    })
+    }),
   );
 };
 
@@ -318,7 +318,7 @@ const _onExportFileGenerationSucceeded = async ({
         conflictResolutionStrategy,
         outputFileUri,
         onJobComplete,
-      })
+      }),
     );
   };
   if (availableExportTypes.length === 1) {
@@ -335,7 +335,7 @@ const _onExportFileGenerationSucceeded = async ({
         })),
         defaultSingleChoiceValue: availableExportTypes[0],
         confirmButtonTextKey: "common:export",
-      })
+      }),
     );
   }
 };
@@ -400,7 +400,7 @@ export const exportRecords =
         dispatch(
           MessageActions.setMessage({
             content: `Job status: ${status}`,
-          })
+          }),
         );
       }
     } catch (error) {
