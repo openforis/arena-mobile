@@ -32,16 +32,16 @@ export const CollapsiblePanel = (props: CollapsiblePanelProps) => {
 
   const [collapsed, setCollapsed] = useState(true);
 
-  const onHeaderPress = useCallback(
-    () => setCollapsed(!collapsed),
-    [collapsed]
+  const toggleCollapsed = useCallback(
+    () => setCollapsed((collapsedPrev) => !collapsedPrev),
+    [],
   );
 
   const headerCollapsingIconSource = collapsed ? "chevron-down" : "chevron-up";
 
   return (
     <VView style={[styles.container, containerStyle]}>
-      <TouchableOpacity onPress={onHeaderPress}>
+      <TouchableOpacity onPress={toggleCollapsed}>
         <HView style={styles.headerContainer}>
           {headerContent}
           {headerKey && (
