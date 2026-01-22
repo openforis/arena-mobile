@@ -14,5 +14,6 @@ export default {
   types: {
     accessMediaLocation: "Akses ke Lokasi Media",
     mediaLibrary: "Pustaka Media",
+    camera: "Akses ke Kamera",
   },
 };

@@ -13,5 +13,6 @@ export default {
   types: {
     accessMediaLocation: "ወደ ሚዲያ ሥፍራ መድረስ",
     mediaLibrary: "የሚዲያ ቤተ-መጽሐፍት",
+    camera: "ወደ ካሜራ መድረስ",
   },
 };
