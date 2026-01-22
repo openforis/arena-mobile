@@ -26,14 +26,14 @@ type QrScannerModalProps = {
 export const QrScannerModal = (props: QrScannerModalProps) => {
   const { onData, onDismiss, titleKey } = props;
 
-  const [enabled, setEnabled] = useState(false);
+  const [cameraAccessAllowed, setCameraAccessAllowed] = useState(false);
 
   const { request: requestCameraPermission } = useRequestCameraPermission();
 
   useEffect(() => {
     const init = async () => {
       if (await requestCameraPermission()) {
-        setEnabled(true);
+        setCameraAccessAllowed(true);
       }
       await SystemUtils.lockOrientationToPortrait();
     };
@@ -52,24 +52,22 @@ export const QrScannerModal = (props: QrScannerModalProps) => {
     [onData],
   );
 
-  let permissionDeniedMessage = "";
-  if (!enabled) {
-    const permissionLabel = i18n.t(`permissions:types.camera`);
-    permissionDeniedMessage = i18n.t("permissions:permissionDenied", {
-      permission: permissionLabel,
-    });
-  }
+  const permissionDeniedMessage = cameraAccessAllowed
+    ? ""
+    : i18n.t("permissions:permissionDenied", {
+        permission: i18n.t(`permissions:types.camera`),
+      });
 
   return (
     <Modal onDismiss={onDismiss} titleKey={titleKey}>
-      {enabled ? (
+      {cameraAccessAllowed ? (
         <View transparent style={styles.container}>
           {/* The Camera View Component */}
           <CameraView
-            style={styles.camera}
-            facing="back"
             barcodeScannerSettings={barcodeScannerSettings}
+            facing="back"
             onBarcodeScanned={onBarcodeScanned}
+            style={styles.camera}
           />
 
           {/* The SVG Mask Component */}
