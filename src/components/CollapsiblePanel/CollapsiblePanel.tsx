@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Collapsible from "react-native-collapsible";
 import { StyleProp, TouchableOpacity, ViewStyle } from "react-native";
 
@@ -16,6 +16,7 @@ type CollapsiblePanelProps = {
   headerContent?: React.ReactNode;
   headerKey?: string;
   headerParams?: any;
+  initiallyCollapsed?: boolean;
 };
 
 export const CollapsiblePanel = (props: CollapsiblePanelProps) => {
@@ -26,6 +27,7 @@ export const CollapsiblePanel = (props: CollapsiblePanelProps) => {
     headerContent,
     headerKey,
     headerParams,
+    initiallyCollapsed = true,
   } = props;
 
   const styles = useStyles();
@@ -36,6 +38,14 @@ export const CollapsiblePanel = (props: CollapsiblePanelProps) => {
     () => setCollapsed((collapsedPrev) => !collapsedPrev),
     [],
   );
+
+  // workaround to open the panel when initiallyCollapsed is false
+  useEffect(() => {
+    // delay to allow layout to be calculated
+    setTimeout(() => {
+      setCollapsed(initiallyCollapsed);
+    }, 100);
+  }, [initiallyCollapsed]);
 
   const headerCollapsingIconSource = collapsed ? "chevron-down" : "chevron-up";
 

@@ -235,7 +235,10 @@ export const SettingsRemoteConnectionScreen = () => {
       <VView style={styles.container}>
         {!networkAvailable && <Text textKey="common:networkNotAvailable" />}
 
-        <CollapsiblePanel headerKey="settingsRemoteConnection:serverUrl">
+        <CollapsiblePanel
+          headerKey="settingsRemoteConnection:serverUrl"
+          initiallyCollapsed={serverUrlType === serverUrlTypes.default}
+        >
           <RadioButtonGroup
             onValueChange={onServerUrlTypeChange}
             value={serverUrlType}
