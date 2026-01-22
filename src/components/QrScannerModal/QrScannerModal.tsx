@@ -5,7 +5,7 @@ import {
   CameraView,
 } from "expo-camera";
 
-import { Markdown, Modal, Text, View } from "components";
+import { Loader, Markdown, Modal, Text, View } from "components";
 import { useRequestCameraPermission } from "hooks/useRequestCameraPermission";
 import { i18n } from "localization";
 import { SystemUtils } from "utils/SystemUtils";
@@ -26,6 +26,7 @@ type QrScannerModalProps = {
 export const QrScannerModal = (props: QrScannerModalProps) => {
   const { onData, onDismiss, titleKey } = props;
 
+  const [loading, setLoading] = useState(true);
   const [cameraAccessAllowed, setCameraAccessAllowed] = useState(false);
 
   const { request: requestCameraPermission } = useRequestCameraPermission();
@@ -36,6 +37,7 @@ export const QrScannerModal = (props: QrScannerModalProps) => {
         setCameraAccessAllowed(true);
       }
       await SystemUtils.lockOrientationToPortrait();
+      setLoading(false);
     };
     init();
 
@@ -60,7 +62,8 @@ export const QrScannerModal = (props: QrScannerModalProps) => {
 
   return (
     <Modal onDismiss={onDismiss} titleKey={titleKey}>
-      {cameraAccessAllowed ? (
+      {loading && <Loader />}
+      {!loading && cameraAccessAllowed && (
         <View transparent style={styles.container}>
           {/* The Camera View Component */}
           <CameraView
@@ -83,7 +86,8 @@ export const QrScannerModal = (props: QrScannerModalProps) => {
             />
           </View>
         </View>
-      ) : (
+      )}
+      {!loading && !cameraAccessAllowed && (
         <Text>{permissionDeniedMessage}</Text>
       )}
     </Modal>
