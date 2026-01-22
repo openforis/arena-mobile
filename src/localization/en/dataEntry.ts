@@ -1,4 +1,4 @@
-import { DataExportOption } from "@openforis/arena-core";
+import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
   confirmGoToListOfRecords: `Go to list of records?
@@ -49,11 +49,13 @@ Please check your records and check also records on the server`,
     onlyRecordsInRemoteServerCanBeImported:
       "Only records already in remote server or records that have been updated remotely can be imported",
     option: {
-      [DataExportOption.addCycle]: "Add cycle",
-      [DataExportOption.includeAncestorAttributes]: "Ancestor attributes",
-      [DataExportOption.includeCategoryItemsLabels]: "Category items labels",
-      [DataExportOption.includeFiles]: "File attributes",
-      [DataExportOption.includeTaxonScientificName]: "Taxon scientific name",
+      [FlatDataExportOption.addCycle]: "Add cycle",
+      [FlatDataExportOption.includeAncestorAttributes]: "Ancestor attributes",
+      [FlatDataExportOption.includeCategoryItemsLabels]:
+        "Category items labels",
+      [FlatDataExportOption.includeFiles]: "File attributes",
+      [FlatDataExportOption.includeTaxonScientificName]:
+        "Taxon scientific name",
     },
     selectTarget: "Select export target",
     selectTargetMessage: `Select the target of the export:`,

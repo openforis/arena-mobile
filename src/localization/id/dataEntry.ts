@@ -1,4 +1,4 @@
-import { DataExportOption } from "@openforis/arena-core";
+import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
   confirmGoToListOfRecords: `lanjut ke daftar isian?
@@ -173,11 +173,11 @@ Periksa pengaturan atau minta administrator survei untuk mengubah batas ini.`,
     onlyRecordsInRemoteServerCanBeImported:
       "Hanya data isian yang sudah ada di server atau data isian yang telah diperbarui di server yang dapat diimpor",
     option: {
-      [DataExportOption.addCycle]: "Tambahkan siklus",
-      [DataExportOption.includeAncestorAttributes]: "Atribut leluhur",
-      [DataExportOption.includeCategoryItemsLabels]: "Label item kategori",
-      [DataExportOption.includeFiles]: "Atribut file",
-      [DataExportOption.includeTaxonScientificName]: "Nama ilmiah takson",
+      [FlatDataExportOption.addCycle]: "Tambahkan siklus",
+      [FlatDataExportOption.includeAncestorAttributes]: "Atribut leluhur",
+      [FlatDataExportOption.includeCategoryItemsLabels]: "Label item kategori",
+      [FlatDataExportOption.includeFiles]: "Atribut file",
+      [FlatDataExportOption.includeTaxonScientificName]: "Nama ilmiah takson",
     },
     selectTarget: "Pilih target ekspor",
     selectTargetMessage: `Pilih target ekspor:`,

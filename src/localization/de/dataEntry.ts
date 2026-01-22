@@ -1,4 +1,4 @@
-import { DataExportOption } from "@openforis/arena-core";
+import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
   confirmGoToListOfRecords: `Zur Datensatzliste wechseln?
@@ -175,12 +175,12 @@ Maximal zulässige Größe: {{maxSizeMB}}MB.
     onlyRecordsInRemoteServerCanBeImported:
       "Nur Datensätze, die bereits auf dem Remote-Server vorhanden sind oder die remote aktualisiert wurden, können importiert werden",
     option: {
-      [DataExportOption.addCycle]: "Zyklus hinzufügen",
-      [DataExportOption.includeAncestorAttributes]: "Vorfahrenattribute",
-      [DataExportOption.includeCategoryItemsLabels]:
+      [FlatDataExportOption.addCycle]: "Zyklus hinzufügen",
+      [FlatDataExportOption.includeAncestorAttributes]: "Vorfahrenattribute",
+      [FlatDataExportOption.includeCategoryItemsLabels]:
         "Kategorie-Elementbeschriftungen",
-      [DataExportOption.includeFiles]: "Dateiattribute",
-      [DataExportOption.includeTaxonScientificName]:
+      [FlatDataExportOption.includeFiles]: "Dateiattribute",
+      [FlatDataExportOption.includeTaxonScientificName]:
         "Wissenschaftlicher Name des Taxons",
     },
     selectTarget: "Exportziel auswählen",

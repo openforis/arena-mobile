@@ -1,4 +1,4 @@
-import { DataExportOption } from "@openforis/arena-core";
+import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
   checkStatus: "Проверить статус",
@@ -165,12 +165,13 @@ export default {
     onlyRecordsInRemoteServerCanBeImported:
       "Могут быть импортированы только записи, находящиеся на удаленном сервере, или записи, обновленные удаленно",
     option: {
-      [DataExportOption.addCycle]: "Добавить цикл",
-      [DataExportOption.includeAncestorAttributes]: "Атрибуты предков",
-      [DataExportOption.includeCategoryItemsLabels]:
+      [FlatDataExportOption.addCycle]: "Добавить цикл",
+      [FlatDataExportOption.includeAncestorAttributes]: "Атрибуты предков",
+      [FlatDataExportOption.includeCategoryItemsLabels]:
         "Метки элементов категории",
-      [DataExportOption.includeFiles]: "Атрибуты файлов",
-      [DataExportOption.includeTaxonScientificName]: "Научное название таксона",
+      [FlatDataExportOption.includeFiles]: "Атрибуты файлов",
+      [FlatDataExportOption.includeTaxonScientificName]:
+        "Научное название таксона",
     },
     selectTarget: "Выберите место назначения для экспорта",
     selectTargetMessage: "Выберите место назначения для экспорта:",

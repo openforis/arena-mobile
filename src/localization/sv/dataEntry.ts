@@ -1,4 +1,4 @@
-import { DataExportOption } from "@openforis/arena-core";
+import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
   confirmGoToListOfRecords: `Gå till listan med poster?
@@ -170,11 +170,13 @@ Kontrollera inställningarna eller be undersökningsadministratören att ändra 
     onlyRecordsInRemoteServerCanBeImported:
       "Endast poster som redan finns på fjärrservern eller poster som har uppdaterats på distans kan importeras",
     option: {
-      [DataExportOption.addCycle]: "Lägg till cykel",
-      [DataExportOption.includeAncestorAttributes]: "Förfädersattribut",
-      [DataExportOption.includeCategoryItemsLabels]: "Kategoriartikeletiketter",
-      [DataExportOption.includeFiles]: "Filattribut",
-      [DataExportOption.includeTaxonScientificName]: "Vetenskapligt taxonnamn",
+      [FlatDataExportOption.addCycle]: "Lägg till cykel",
+      [FlatDataExportOption.includeAncestorAttributes]: "Förfädersattribut",
+      [FlatDataExportOption.includeCategoryItemsLabels]:
+        "Kategoriartikeletiketter",
+      [FlatDataExportOption.includeFiles]: "Filattribut",
+      [FlatDataExportOption.includeTaxonScientificName]:
+        "Vetenskapligt taxonnamn",
     },
     selectTarget: "Välj exportmål",
     selectTargetMessage: `Välj exportens mål:`,

@@ -1,4 +1,4 @@
-import { DataExportOption } from "@openforis/arena-core";
+import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
   confirmGoToListOfRecords: `به لیست رکوردها بروید؟
@@ -169,12 +169,12 @@ export default {
     onlyRecordsInRemoteServerCanBeImported:
       "فقط رکوردهایی که قبلاً در سرور از راه دور وجود دارند یا رکوردهایی که از راه دور به روز شده اند قابل وارد کردن هستند",
     option: {
-      [DataExportOption.addCycle]: "افزودن چرخه",
-      [DataExportOption.includeAncestorAttributes]: "ویژگی‌های اجدادی",
-      [DataExportOption.includeCategoryItemsLabels]:
+      [FlatDataExportOption.addCycle]: "افزودن چرخه",
+      [FlatDataExportOption.includeAncestorAttributes]: "ویژگی‌های اجدادی",
+      [FlatDataExportOption.includeCategoryItemsLabels]:
         "برچسب‌های موارد دسته‌بندی",
-      [DataExportOption.includeFiles]: "ویژگی‌های فایل",
-      [DataExportOption.includeTaxonScientificName]: "نام علمی طبقه‌بندی",
+      [FlatDataExportOption.includeFiles]: "ویژگی‌های فایل",
+      [FlatDataExportOption.includeTaxonScientificName]: "نام علمی طبقه‌بندی",
     },
     selectTarget: "انتخاب  روش اکسپورت",
     selectTargetMessage: `روش اکسپورت را انتخاب کنید:`,

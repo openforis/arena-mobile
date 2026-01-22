@@ -1,7 +1,7 @@
 import {
   ArenaRecordNode,
-  DataExportDefaultOptions,
-  DataExportOptions,
+  FlatDataExportDefaultOptions,
+  FlatDataExportOptions,
   Dates,
   Dictionary,
   FlatDataExportModel,
@@ -26,7 +26,7 @@ import { extractRowNodeData } from "./recordFlatDataExtractor";
 type FlatDataExportJobContext = JobMobileContext & {
   survey: Survey;
   cycle: string;
-  options: DataExportOptions;
+  options: FlatDataExportOptions;
   outputFileUri?: string;
 };
 
@@ -44,7 +44,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   constructor(context: FlatDataExportJobContext) {
     super({
       ...context,
-      options: { ...DataExportDefaultOptions, ...context.options },
+      options: { ...FlatDataExportDefaultOptions, ...context.options },
     });
   }
 
@@ -127,7 +127,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
       // create attached files subfolder
       const attachedFilesFolderUri = Files.path(
         this.tempFolderUri!,
-        FlatDataFiles.attachedFilesSubfolderName
+        FlatDataFiles.attachedFilesSubfolderName,
       );
       await Files.mkDir(attachedFilesFolderUri);
     }
@@ -177,7 +177,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     const { id: surveyId } = survey;
 
     this.logger.debug(
-      `Exporting ${fileValues.length} attached files for record`
+      `Exporting ${fileValues.length} attached files for record`,
     );
 
     for (const fileValue of fileValues) {
@@ -187,7 +187,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
       const exportedRecordFilePath = Files.path(
         this.tempFolderUri,
         FlatDataFiles.attachedFilesSubfolderName,
-        mappedFileName
+        mappedFileName,
       );
       const sourceFileUri = RecordFileService.getRecordFileUri({
         surveyId,
