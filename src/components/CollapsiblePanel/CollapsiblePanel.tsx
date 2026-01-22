@@ -42,9 +42,10 @@ export const CollapsiblePanel = (props: CollapsiblePanelProps) => {
   // workaround to open the panel when initiallyCollapsed is false
   useEffect(() => {
     // delay to allow layout to be calculated
-    setTimeout(() => {
+    const initializationTimer = setTimeout(() => {
       setCollapsed(initiallyCollapsed);
     }, 100);
+    return () => clearTimeout(initializationTimer);
   }, [initiallyCollapsed]);
 
   const headerCollapsingIconSource = collapsed ? "chevron-down" : "chevron-up";
