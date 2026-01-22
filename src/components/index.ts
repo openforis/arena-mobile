@@ -34,6 +34,7 @@ export { MessageDialog } from "./MessageDialog";
 export { Modal } from "./Modal";
 export { OpenMapButton } from "./OpenMapButton";
 export { ProgressBar } from "./ProgressBar";
+export { QrScannerModal } from "./QrScannerModal";
 export { RadioButton } from "./RadioButton";
 export { RadioButtonGroup } from "./RadioButtonGroup";
 export { ScreenView } from "./ScreenView";

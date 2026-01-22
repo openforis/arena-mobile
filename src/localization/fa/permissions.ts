@@ -13,5 +13,6 @@ export default {
   types: {
     accessMediaLocation: "دسترسی به مکان رسانه",
     mediaLibrary: "کتابخانه رسانه",
+    camera: "دسترسی به دوربین",
   },
 };

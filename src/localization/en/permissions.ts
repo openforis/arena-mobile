@@ -13,5 +13,6 @@ export default {
   types: {
     accessMediaLocation: "Access to Media Location",
     mediaLibrary: "Media Library",
+    camera: "Access to Camera",
   },
 };

@@ -1,12 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
+import { Objects } from "@openforis/arena-core";
+
 import {
   Button,
   FieldSet,
   HView,
   Icon,
   Link,
+  Loader,
+  QrScannerModal,
   RadioButton,
   RadioButtonGroup,
   ScreenView,
@@ -25,13 +29,31 @@ import {
   useAppDispatch,
 } from "state";
 import { useIsNetworkConnected } from "hooks";
-import { AMConstants } from "utils";
+import { AMConstants, log } from "utils";
 
 import styles from "./styles";
 
 const serverUrlTypes = {
   default: "default",
   custom: "custom",
+};
+
+const parseLoginQrCodeData = (data: string) => {
+  try {
+    const parsedData = JSON.parse(data);
+    const { serverUrl, token } = parsedData;
+    if (
+      typeof serverUrl === "string" &&
+      typeof token === "string" &&
+      Objects.isNotEmpty(serverUrl) &&
+      Objects.isNotEmpty(token)
+    ) {
+      return { serverUrl, token };
+    }
+  } catch {
+    // ignore error
+  }
+  throw new Error("Invalid QR code data structure");
 };
 
 export const SettingsRemoteConnectionScreen = () => {
@@ -42,21 +64,28 @@ export const SettingsRemoteConnectionScreen = () => {
   const user = RemoteConnectionSelectors.useLoggedInUser();
 
   const [state, setState] = useState({
+    loading: false,
     serverUrl: AMConstants.defaultServerUrl,
     serverUrlType: serverUrlTypes.default,
     serverUrlVerified: false,
     email: "",
     password: "",
+    qrScannerVisible: false,
   });
 
-  const { email, password, serverUrl, serverUrlType, serverUrlVerified } =
-    state;
+  const {
+    loading,
+    email,
+    password,
+    serverUrl,
+    serverUrlType,
+    serverUrlVerified,
+    qrScannerVisible,
+  } = state;
 
   const initialize = useCallback(async () => {
     const settings = await SettingsService.fetchSettings();
-    const serverUrlNext = settings.serverUrl
-      ? settings.serverUrl
-      : AMConstants.defaultServerUrl;
+    const serverUrlNext = settings.serverUrl ?? AMConstants.defaultServerUrl;
 
     const serverUrlTypeNext =
       serverUrlNext === AMConstants.defaultServerUrl
@@ -88,7 +117,7 @@ export const SettingsRemoteConnectionScreen = () => {
             : serverUrl,
         serverUrlVerified: false,
       })),
-    [serverUrl]
+    [serverUrl],
   );
 
   const onServerUrlChange = useCallback(
@@ -98,7 +127,7 @@ export const SettingsRemoteConnectionScreen = () => {
         serverUrl: serverUrlUpdated.trim(),
         serverUrlVerified: false,
       })),
-    []
+    [],
   );
 
   const onTestUrlPress = useCallback(async () => {
@@ -108,7 +137,7 @@ export const SettingsRemoteConnectionScreen = () => {
       dispatch(
         MessageActions.setMessage({
           content: "settingsRemoteConnection:serverUrlNotValid",
-        })
+        }),
       );
     }
   }, [dispatch, serverUrl]);
@@ -119,31 +148,75 @@ export const SettingsRemoteConnectionScreen = () => {
         ...statePrev,
         email: text,
       })),
-    []
+    [],
   );
 
   const onPasswordChange = useCallback(
     (text: any) => setState((statePrev) => ({ ...statePrev, password: text })),
-    []
+    [],
   );
 
-  const onLogin = useCallback(() => {
+  const onLogin = useCallback(async () => {
     // normalize email
     const emailNew = email.trim().toLocaleLowerCase();
     setState((statePrev) => ({
       ...statePrev,
       email: emailNew,
+      loading: true,
     }));
-    dispatch(
+    await dispatch(
       RemoteConnectionActions.login({
         serverUrl,
         email: emailNew,
         password,
         navigation,
         showBack: true,
-      })
+      }),
     );
+    setState((statePrev) => ({ ...statePrev, loading: false }));
   }, [dispatch, email, navigation, password, serverUrl]);
+
+  const onScanQrCode = useCallback(() => {
+    setState((statePrev) => ({ ...statePrev, qrScannerVisible: true }));
+  }, []);
+
+  const onQrScannerData = useCallback(
+    async (data: string) => {
+      log.debug("QR code data scanned:", data);
+      setState((statePrev) => ({
+        ...statePrev,
+        qrScannerVisible: false,
+        loading: true,
+      }));
+      await new Promise<void>((resolve) => setTimeout(resolve, 500)); // wait for modal to close
+
+      try {
+        const { serverUrl: serverUrlScanned, token } =
+          parseLoginQrCodeData(data);
+        await dispatch(
+          RemoteConnectionActions.loginWithTempAuthToken({
+            token,
+            serverUrl: serverUrlScanned,
+            navigation,
+            showBack: true,
+          }),
+        );
+      } catch {
+        dispatch(
+          MessageActions.setMessage({
+            content: "settingsRemoteConnection:qrCodeNotValid",
+          }),
+        );
+      } finally {
+        setState((statePrev) => ({ ...statePrev, loading: false }));
+      }
+    },
+    [dispatch, navigation],
+  );
+
+  const onQrScannerDismiss = useCallback(() => {
+    setState((statePrev) => ({ ...statePrev, qrScannerVisible: false }));
+  }, []);
 
   const onLogout = useCallback(async () => {
     if (networkAvailable) {
@@ -153,10 +226,15 @@ export const SettingsRemoteConnectionScreen = () => {
     }
   }, [dispatch, networkAvailable]);
 
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <ScreenView>
       <VView style={styles.container}>
         {!networkAvailable && <Text textKey="common:networkNotAvailable" />}
+
         <FieldSet headerKey="settingsRemoteConnection:serverUrl">
           <RadioButtonGroup
             onValueChange={onServerUrlTypeChange}
@@ -228,6 +306,13 @@ export const SettingsRemoteConnectionScreen = () => {
           />
           <Spacer />
         </HView>
+        <HView>
+          <Button
+            disabled={!networkAvailable}
+            onPress={onScanQrCode}
+            textKey="settingsRemoteConnection:loginUsingQrCode"
+          />
+        </HView>
         {user && (
           <Button
             mode="text"
@@ -249,6 +334,13 @@ export const SettingsRemoteConnectionScreen = () => {
           url={AMConstants.requestAccessUrl}
         />
       </VView>
+      {qrScannerVisible && (
+        <QrScannerModal
+          onData={onQrScannerData}
+          onDismiss={onQrScannerDismiss}
+          titleKey="settingsRemoteConnection:scanQrCode"
+        />
+      )}
     </ScreenView>
   );
 };

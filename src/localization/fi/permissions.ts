@@ -14,5 +14,6 @@ export default {
   types: {
     accessMediaLocation: "Pääsy median sijaintiin",
     mediaLibrary: "Mediagalleria",
+    camera: "Pääsy kameraan",
   },
 };

@@ -14,5 +14,6 @@ export default {
   types: {
     accessMediaLocation: "Accès à l'emplacement des médias",
     mediaLibrary: "Médiathèque",
+    camera: "Accès à la caméra",
   },
 };

@@ -1,4 +1,4 @@
-import { Dictionary } from "@openforis/arena-core";
+import { Dictionary, User } from "@openforis/arena-core";
 
 import { API } from "./api";
 import { SecureStoreService } from "./SecureStoreService";
@@ -10,7 +10,7 @@ const authTokenRefreshUrl = "/auth/token/refresh";
 
 const extractCookieValue = (
   headers: Dictionary<string>,
-  cookieName: string
+  cookieName: string,
 ): string | undefined => {
   const cookies = headers?.["set-cookie"];
   const cookie = cookies?.[0];
@@ -19,7 +19,7 @@ const extractCookieValue = (
   const endIndex = cookie.indexOf(";", cookieName.length + 1);
   return cookie.substring(
     cookieName.length + 1,
-    endIndex > 0 ? endIndex : undefined
+    endIndex > 0 ? endIndex : undefined,
   );
 };
 
@@ -44,7 +44,48 @@ const generateAuthorizationHeaders = () =>
 const getServerUrl = async () =>
   (await SettingsService.fetchSettings()).serverUrl;
 
-const login = async ({ serverUrl: serverUrlParam, email, password }: any) => {
+const extractErrorMessageFromLoginError = (err: any): { error: string } => {
+  const { response } = err;
+  if (!response) {
+    return { error: "authService:error.invalidServerUrl" };
+  }
+  if (response.status === 401) {
+    return { error: "authService:error.invalidCredentials" };
+  }
+  return { error: err };
+};
+
+export type LoginResponse = {
+  user?: User;
+  error?: string;
+  message?: string;
+};
+
+const onLoginSuccess = async ({
+  data,
+  response,
+}: {
+  data: any;
+  response: any;
+}): Promise<LoginResponse> => {
+  const { authToken, refreshToken } = extractAuthTokens(response);
+  if (authToken && refreshToken) {
+    setAuthToken(authToken);
+    await SecureStoreService.setAuthRefreshToken(refreshToken);
+    return data;
+  }
+  return { error: "authService:error.invalidCredentials" };
+};
+
+const login = async ({
+  serverUrl: serverUrlParam,
+  email,
+  password,
+}: {
+  serverUrl?: string;
+  email: string;
+  password: string;
+}): Promise<LoginResponse> => {
   const serverUrl = serverUrlParam ?? (await getServerUrl());
   try {
     const { data, response } = await API.post({
@@ -55,22 +96,28 @@ const login = async ({ serverUrl: serverUrlParam, email, password }: any) => {
         password,
       },
     });
-    const { authToken, refreshToken } = extractAuthTokens(response);
-    if (authToken && refreshToken) {
-      setAuthToken(authToken);
-      await SecureStoreService.setAuthRefreshToken(refreshToken);
-      return data;
-    }
-    return { error: "authService:error.invalidCredentials" };
+    return onLoginSuccess({ data, response });
   } catch (err: any) {
-    const { response } = err;
-    if (!response) {
-      return { error: "authService:error.invalidServerUrl" };
-    }
-    if (response.status === 401) {
-      return { error: "authService:error.invalidCredentials" };
-    }
-    return { error: err };
+    return extractErrorMessageFromLoginError(err);
+  }
+};
+
+const loginWithTempAuthToken = async ({
+  serverUrl,
+  token,
+}: {
+  serverUrl: string;
+  token: string;
+}): Promise<LoginResponse> => {
+  try {
+    const { data, response } = await API.post({
+      serverUrl,
+      uri: "/auth/login/temp",
+      data: { token },
+    });
+    return onLoginSuccess({ data, response });
+  } catch (err: any) {
+    return extractErrorMessageFromLoginError(err);
   }
 };
 
@@ -119,6 +166,7 @@ export const AuthService = {
   getAuthToken,
   generateAuthorizationHeaders,
   login,
+  loginWithTempAuthToken,
   logout,
   refreshAuthTokens,
 };

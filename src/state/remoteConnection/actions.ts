@@ -16,6 +16,7 @@ import { RemoteConnectionSelectors } from "./selectors";
 import { DeviceInfoSelectors } from "state/deviceInfo";
 import { AsyncStorageUtils } from "service/asyncStorage/AsyncStorageUtils";
 import { asyncStorageKeys } from "service/asyncStorage/asyncStorageKeys";
+import { LoginResponse } from "service/authService";
 
 const LOGGED_OUT = "LOGGED_OUT";
 const USER_LOADING = "USER_LOADING";
@@ -59,7 +60,7 @@ const loginAndSetUser =
     } else {
       // retrieve user from async storage (if any)
       const userInAsyncStorage = await AsyncStorageUtils.getItem(
-        asyncStorageKeys.loggedInUser
+        asyncStorageKeys.loggedInUser,
       );
       if (userInAsyncStorage) {
         dispatch({ type: USER_SET, user: userInAsyncStorage });
@@ -77,50 +78,113 @@ const confirmGoToConnectionToRemoteServer =
         titleKey: "authService:loginRequired",
         onConfirm: () =>
           navigation.navigate(screenKeys.settingsRemoteConnection),
-      })
+      }),
     );
   };
 
-const login =
-  ({ serverUrl, email, password, navigation = null, showBack = false }: any) =>
-  async (dispatch: any) => {
-    const res = await AuthService.login({ serverUrl, email, password });
-    const { user, error, message } = res;
-    if (user) {
-      await AsyncStorageUtils.setItem(asyncStorageKeys.loggedInUser, user);
-      const settings = await SettingsService.fetchSettings();
-      const settingsUpdated = { ...settings, serverUrl, email };
-      await dispatch(SettingsActions.updateSettings(settingsUpdated));
+const onLoginResponse = async ({
+  dispatch,
+  navigation,
+  res,
+  serverUrl,
+  email,
+  showBack,
+}: {
+  dispatch: any;
+  navigation: any;
+  res: LoginResponse;
+  serverUrl: string;
+  email?: string;
+  showBack?: boolean;
+}) => {
+  const { user, error, message } = res;
+  if (user) {
+    const userEmail = user.email ?? email;
+    await AsyncStorageUtils.setItem(asyncStorageKeys.loggedInUser, user);
+    const settings = await SettingsService.fetchSettings();
+    const settingsUpdated = { ...settings, serverUrl, email: userEmail };
+    await dispatch(SettingsActions.updateSettings(settingsUpdated));
 
-      if (showBack) {
-        dispatch(
-          ConfirmActions.show({
-            titleKey: "authService:loginSuccessful",
-            confirmButtonTextKey: "common:continue",
-            cancelButtonTextKey: "common:close",
-            onConfirm: navigation.goBack,
-          })
-        );
-      }
+    if (showBack) {
+      dispatch(
+        ConfirmActions.show({
+          titleKey: "authService:loginSuccessful",
+          confirmButtonTextKey: "common:continue",
+          cancelButtonTextKey: "common:close",
+          onConfirm: navigation.goBack,
+        }),
+      );
+    }
 
-      dispatch({ type: USER_SET, user });
-    } else if (message || error) {
-      const errorKeySuffix = [
+    dispatch({ type: USER_SET, user });
+  } else if (message || error) {
+    const errorKeySuffix =
+      message &&
+      [
         "validationErrors.user.userNotFound",
         "validationErrors.user.emailInvalid",
       ].includes(message)
         ? "invalidCredentials"
         : "generic";
-      const errorKey = `authService:error.${errorKeySuffix}`;
-      const details = i18n.t(error ?? message);
+    const errorKey = `authService:error.${errorKeySuffix}`;
+    const details = i18n.t(error || message || "");
 
-      dispatch(
-        MessageActions.setMessage({
-          content: errorKey,
-          contentParams: { details },
-        })
-      );
-    }
+    dispatch(
+      MessageActions.setMessage({
+        content: errorKey,
+        contentParams: { details },
+      }),
+    );
+  }
+};
+
+const login =
+  ({
+    navigation,
+    serverUrl,
+    email,
+    password,
+    showBack = false,
+  }: {
+    navigation: any;
+    serverUrl: string;
+    email: string;
+    password: string;
+    showBack?: boolean;
+  }) =>
+  async (dispatch: any) => {
+    const res = await AuthService.login({ serverUrl, email, password });
+    await onLoginResponse({
+      res,
+      email,
+      serverUrl,
+      dispatch,
+      showBack,
+      navigation,
+    });
+  };
+
+const loginWithTempAuthToken =
+  ({
+    navigation,
+    serverUrl,
+    token,
+    showBack = false,
+  }: {
+    navigation: any;
+    serverUrl: string;
+    token: string;
+    showBack?: boolean;
+  }) =>
+  async (dispatch: any) => {
+    const res = await AuthService.loginWithTempAuthToken({ serverUrl, token });
+    await onLoginResponse({
+      res,
+      dispatch,
+      navigation,
+      serverUrl,
+      showBack,
+    });
   };
 
 const fetchLoggedInUserProfileIcon = async (dispatch: any, getState: any) => {
@@ -186,18 +250,18 @@ const logout = () => (dispatch: any) => {
         (logoutOption) => ({
           value: logoutOption,
           label: `authService:logoutOptions.${logoutOption}`,
-        })
+        }),
       ),
       titleKey: "authService:logout",
       onConfirm: ({ selectedMultipleChoiceValues }: any) =>
         dispatch(
           _doLogout({
             keepEmailAddress: selectedMultipleChoiceValues.includes(
-              UserLogoutOptions.keepEmailAddress
+              UserLogoutOptions.keepEmailAddress,
             ),
-          })
+          }),
         ),
-    })
+    }),
   );
 };
 
@@ -209,6 +273,7 @@ export const RemoteConnectionActions = {
   confirmGoToConnectionToRemoteServer,
   loginAndSetUser,
   login,
+  loginWithTempAuthToken,
   fetchLoggedInUserProfileIcon,
   clearUserCredentials,
   logout,
