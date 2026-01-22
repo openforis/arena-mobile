@@ -8,7 +8,9 @@ import {
 import { Markdown, Modal, View } from "components";
 import { useRequestCameraPermission } from "hooks/useRequestCameraPermission";
 import { i18n } from "localization";
+import { SystemUtils } from "utils/SystemUtils";
 
+import { QrScannerOverlay } from "./QrScannerOverlay";
 import styles from "./styles";
 
 const barcodeScannerSettings: BarcodeSettings = {
@@ -35,6 +37,12 @@ export const QrScannerModal = (props: QrScannerModalProps) => {
       }
     };
     checkPermissionAndEnable();
+
+    SystemUtils.lockOrientationToPortrait();
+
+    return () => {
+      SystemUtils.unlockOrientation();
+    };
   }, [requestCameraPermission]);
 
   const onBarcodeScanned = useCallback(
@@ -51,31 +59,26 @@ export const QrScannerModal = (props: QrScannerModalProps) => {
 
   return (
     <Modal onDismiss={onDismiss} titleKey={titleKey}>
-      <View style={styles.container}>
+      <View transparent style={styles.container}>
+        {/* The Camera View Component */}
         <CameraView
           style={styles.camera}
           facing="back"
           barcodeScannerSettings={barcodeScannerSettings}
           onBarcodeScanned={onBarcodeScanned}
         />
-        <View transparent style={styles.overlay}>
-          <View transparent style={styles.unfocusedContainer}></View>
-          <View transparent style={styles.middleContainer}>
-            {/* Left dark side */}
-            <View transparent style={styles.unfocusedContainer} />
-            {/* The Clear Square */}
-            <View transparent style={styles.focusedContainer} />
-            {/* Right dark side */}
-            <View transparent style={styles.unfocusedContainer} />
-          </View>
-          <View transparent style={styles.unfocusedContainer}>
-            <Markdown
-              content={i18n.t(
-                "settingsRemoteConnection:loginUsingQrCodeInstructions",
-              )}
-              style={styles.instructionsMarkdown}
-            />
-          </View>
+
+        {/* The SVG Mask Component */}
+        <QrScannerOverlay />
+
+        {/* Instructions at the bottom */}
+        <View transparent style={styles.instructionsContainer}>
+          <Markdown
+            content={i18n.t(
+              "settingsRemoteConnection:loginUsingQrCodeInstructions",
+            )}
+            style={styles.instructionsMarkdown}
+          />
         </View>
       </View>
     </Modal>

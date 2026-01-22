@@ -1,4 +1,8 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+
+const { width, height } = Dimensions.get("window");
+// We need a border large enough to cover the biggest screen dimension
+const overlaySize = Math.max(width, height);
 
 export default StyleSheet.create({
   container: {
@@ -10,25 +14,10 @@ export default StyleSheet.create({
   camera: {
     ...StyleSheet.absoluteFillObject,
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  unfocusedContainer: {
-    flex: 1,
+  instructionsContainer: {
+    position: "absolute",
+    bottom: 0,
     width: "100%",
-    backgroundColor: "rgba(0,0,0,0.4)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  middleContainer: { flexDirection: "row", height: 250 },
-  focusedContainer: {
-    width: 250,
-    height: 250,
-    borderWidth: 2,
-    borderColor: "#fff",
-    borderRadius: 20,
   },
   instructionsMarkdown: {
     body: {
