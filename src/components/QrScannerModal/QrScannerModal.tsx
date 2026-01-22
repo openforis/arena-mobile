@@ -5,7 +5,7 @@ import {
   CameraView,
 } from "expo-camera";
 
-import { Markdown, Modal, View } from "components";
+import { Markdown, Modal, Text, View } from "components";
 import { useRequestCameraPermission } from "hooks/useRequestCameraPermission";
 import { i18n } from "localization";
 import { SystemUtils } from "utils/SystemUtils";
@@ -31,14 +31,13 @@ export const QrScannerModal = (props: QrScannerModalProps) => {
   const { request: requestCameraPermission } = useRequestCameraPermission();
 
   useEffect(() => {
-    const checkPermissionAndEnable = async () => {
+    const init = async () => {
       if (await requestCameraPermission()) {
         setEnabled(true);
       }
+      await SystemUtils.lockOrientationToPortrait();
     };
-    checkPermissionAndEnable();
-
-    SystemUtils.lockOrientationToPortrait();
+    init();
 
     return () => {
       SystemUtils.unlockOrientation();
@@ -53,34 +52,42 @@ export const QrScannerModal = (props: QrScannerModalProps) => {
     [onData],
   );
 
+  let permissionDeniedMessage = "";
   if (!enabled) {
-    return null;
+    const permissionLabel = i18n.t(`permissions:types.camera`);
+    permissionDeniedMessage = i18n.t("permissions:permissionDenied", {
+      permission: permissionLabel,
+    });
   }
 
   return (
     <Modal onDismiss={onDismiss} titleKey={titleKey}>
-      <View transparent style={styles.container}>
-        {/* The Camera View Component */}
-        <CameraView
-          style={styles.camera}
-          facing="back"
-          barcodeScannerSettings={barcodeScannerSettings}
-          onBarcodeScanned={onBarcodeScanned}
-        />
-
-        {/* The SVG Mask Component */}
-        <QrScannerOverlay />
-
-        {/* Instructions at the bottom */}
-        <View transparent style={styles.instructionsContainer}>
-          <Markdown
-            content={i18n.t(
-              "settingsRemoteConnection:loginUsingQrCodeInstructions",
-            )}
-            style={styles.instructionsMarkdown}
+      {enabled ? (
+        <View transparent style={styles.container}>
+          {/* The Camera View Component */}
+          <CameraView
+            style={styles.camera}
+            facing="back"
+            barcodeScannerSettings={barcodeScannerSettings}
+            onBarcodeScanned={onBarcodeScanned}
           />
+
+          {/* The SVG Mask Component */}
+          <QrScannerOverlay />
+
+          {/* Instructions at the bottom */}
+          <View transparent style={styles.instructionsContainer}>
+            <Markdown
+              content={i18n.t(
+                "settingsRemoteConnection:loginUsingQrCodeInstructions",
+              )}
+              style={styles.instructionsMarkdown}
+            />
+          </View>
         </View>
-      </View>
+      ) : (
+        <Text>{permissionDeniedMessage}</Text>
+      )}
     </Modal>
   );
 };
