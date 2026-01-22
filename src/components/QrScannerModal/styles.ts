@@ -1,5 +1,7 @@
 import { StyleSheet } from "react-native";
 
+import { MarkdownStyle } from "components/Markdown";
+
 export default StyleSheet.create({
   container: {
     flex: 1,
@@ -21,5 +23,5 @@ export default StyleSheet.create({
       padding: 20,
       width: "100%",
     },
-  } as StyleSheet.NamedStyles<any>,
+  } as MarkdownStyle,
 });

@@ -127,7 +127,7 @@ const onLoginResponse = async ({
         ? "invalidCredentials"
         : "generic";
     const errorKey = `authService:error.${errorKeySuffix}`;
-    const details = i18n.t(error ?? message!);
+    const details = i18n.t(error || message || "");
 
     dispatch(
       MessageActions.setMessage({
