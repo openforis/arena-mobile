@@ -4,7 +4,7 @@
     "slug": "arena-mobile",
     "owner": "openforis",
     "version": "2.3.1",
-    "icon": "./assets/logo/icon.png",
+    "icon": "./assets/logo/icon_with_margin.png",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
@@ -17,7 +17,7 @@
     "assetBundlePatterns": ["**/*"],
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo/adaptive_icon.png",
+        "foregroundImage": "./assets/logo/adaptive_icon_with_margin.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "org.openforis.arena_mobile",
