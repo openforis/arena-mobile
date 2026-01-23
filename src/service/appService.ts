@@ -1,4 +1,4 @@
-import { Dates, JobStatus } from "@openforis/arena-core";
+import { Dates, JobStatus, User } from "@openforis/arena-core";
 
 import { dbClient } from "db";
 import { Files, logsPath } from "utils";
@@ -21,7 +21,7 @@ const estimateFullBackupSize = async () => {
 };
 
 const generateFullBackup = async () => {
-  const job = new BackupJob({ user: {} });
+  const job = new BackupJob({ user: {} as User });
   await job.start();
 
   const { status, result } = job.summary;

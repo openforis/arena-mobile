@@ -2,7 +2,7 @@ import {
   ArenaRecordNode,
   Arrays,
   CategoryItems,
-  DataExportOptions,
+  FlatDataExportOptions,
   Dates,
   NodeDef,
   NodeDefCoordinate,
@@ -26,7 +26,7 @@ type RowDataExtractorParams = {
   record: ArenaMobileRecord;
   node: ArenaRecordNode | null | undefined;
   nodeDef: NodeDef<any>;
-  options: DataExportOptions;
+  options: FlatDataExportOptions;
   uniqueFileNameGenerator: UniqueFileNamesGenerator;
 };
 
@@ -48,7 +48,7 @@ const totalFieldsCountCalculatorByNodeDefType: Partial<
   },
   [NodeDefType.coordinate]: ({ nodeDef }) => {
     const additionalFields = NodeDefs.getCoordinateAdditionalFields(
-      nodeDef as NodeDefCoordinate
+      nodeDef as NodeDefCoordinate,
     );
     return 3 + additionalFields.length;
   },
@@ -60,7 +60,7 @@ const totalFieldsCountCalculatorByNodeDefType: Partial<
 };
 
 const generateEmptyFields = (
-  params: RowDataExtractorParams
+  params: RowDataExtractorParams,
 ): (string | null | undefined)[] => {
   const { nodeDef } = params;
   const nodeDefType = NodeDefs.getType(nodeDef);
@@ -149,7 +149,7 @@ const rowDataExtractorByNodeDefType: Partial<
   [NodeDefType.coordinate]: (params) => {
     const { node, nodeDef } = params;
     const additionalFields = NodeDefs.getCoordinateAdditionalFields(
-      nodeDef as NodeDefCoordinate
+      nodeDef as NodeDefCoordinate,
     );
     const value = node?.value;
     if (Objects.isEmpty(value)) {
@@ -187,7 +187,7 @@ const rowDataExtractorByNodeDefType: Partial<
       : NodeValues.getFileName(node);
     const uniqueFileName = uniqueFileNameGenerator.generateUniqueFileName(
       fileName ?? fileUuid,
-      fileUuid
+      fileUuid,
     );
     return [fileUuid, uniqueFileName];
   },
