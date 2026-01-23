@@ -4,6 +4,7 @@ import { JobMobileContext } from "model/JobMobile";
 export type RecordsAndFilesImportJobContext = JobMobileContext & {
   survey: Survey;
   fileUri?: string;
-  overwriteExistingRecords: boolean;
+  overwriteExistingRecords?: boolean;
+  recordUuids?: string[];
   unzippedFolderUri?: string;
 };
