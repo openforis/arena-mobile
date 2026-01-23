@@ -54,6 +54,7 @@ const getApplicationInfo = async (): Promise<ArenaMobileAppInfo> => {
     appId,
     buildNumber,
     version,
+    platform: isAndroid ? "android" : "ios",
     lastUpdateTime: lastUpdateTime
       ? Dates.formatForStorage(lastUpdateTime)
       : null,
@@ -97,7 +98,7 @@ const addOrientationChangeListener = (handler: any) => {
 
 const lockOrientationToPortrait = async () => {
   await ExpoScreenOrientation.lockAsync(
-    ExpoScreenOrientation.OrientationLock.PORTRAIT_UP
+    ExpoScreenOrientation.OrientationLock.PORTRAIT_UP,
   );
 };
 
@@ -137,7 +138,7 @@ const openAppSettings = async () => {
   } else {
     await IntentLauncher.startActivityAsync(
       IntentLauncher.ActivityAction.APPLICATION_DETAILS_SETTINGS,
-      { data: "package:" + Environment.pkg }
+      { data: "package:" + Environment.pkg },
     );
   }
 };

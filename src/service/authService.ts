@@ -3,6 +3,7 @@ import { Dictionary, User } from "@openforis/arena-core";
 import { API } from "./api";
 import { SecureStoreService } from "./SecureStoreService";
 import { SettingsService } from "./settingsService";
+import { SystemUtils } from "utils/SystemUtils";
 
 const refreshTokenCookieName = "refreshToken";
 
@@ -87,6 +88,7 @@ const login = async ({
   password: string;
 }): Promise<LoginResponse> => {
   const serverUrl = serverUrlParam ?? (await getServerUrl());
+  const appInfo = await SystemUtils.getApplicationInfo();
   try {
     const { data, response } = await API.post({
       serverUrl,
@@ -94,6 +96,7 @@ const login = async ({
       data: {
         email,
         password,
+        appInfo,
       },
     });
     return onLoginSuccess({ data, response });
@@ -110,10 +113,11 @@ const loginWithTempAuthToken = async ({
   token: string;
 }): Promise<LoginResponse> => {
   try {
+    const appInfo = await SystemUtils.getApplicationInfo();
     const { data, response } = await API.post({
       serverUrl,
       uri: "/auth/login/temp",
-      data: { token },
+      data: { token, appInfo },
     });
     return onLoginSuccess({ data, response });
   } catch (err: any) {

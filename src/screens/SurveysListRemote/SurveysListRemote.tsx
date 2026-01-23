@@ -53,7 +53,7 @@ const DatePublishedCellRenderer = ({ item }: DataVisualizerCellProps) => (
 const StatusCell = ({ item }: DataVisualizerCellProps) => {
   const surveysLocal = SurveySelectors.useSurveysLocal();
   const localSurvey = surveysLocal.find(
-    (surveyLocal: any) => surveyLocal.uuid === item.uuid
+    (surveyLocal: any) => surveyLocal.uuid === item.uuid,
   );
   let messageKey = null;
   if (!localSurvey) {
@@ -101,7 +101,7 @@ export const SurveysListRemote = () => {
           key: "loadStatus",
           header: "surveys:loadStatus.label",
           cellRenderer: StatusCell,
-        }
+        },
       );
     }
     return fields;
@@ -124,8 +124,8 @@ export const SurveysListRemote = () => {
           messageKey: "surveys:loadSurveysErrorMessage",
           onConfirm: () =>
             navigation.navigate(screenKeys.settingsRemoteConnection as never),
-          onCancel: () => navigation.goBack(),
-        })
+          onCancel: async () => navigation.goBack(),
+        }),
       );
     }
     setState((statePrev) => ({
@@ -145,7 +145,7 @@ export const SurveysListRemote = () => {
     (surveySummary: any) => {
       const surveyName = surveySummary.props.name;
       const localSurveyWithSameUuid = surveysLocal.find(
-        (surveyLocal: any) => surveyLocal.uuid === surveySummary.uuid
+        (surveyLocal: any) => surveyLocal.uuid === surveySummary.uuid,
       );
 
       if (localSurveyWithSameUuid) {
@@ -158,7 +158,7 @@ export const SurveysListRemote = () => {
             navigation,
             onConfirm: () =>
               setState((statePrev) => ({ ...statePrev, loading: true })),
-          })
+          }),
         );
       } else {
         // import new survey
@@ -173,11 +173,11 @@ export const SurveysListRemote = () => {
             messageKey: "surveys:importSurveyConfirmMessage",
             messageParams: { surveyName },
             onConfirm: onNewSurveyImportConfirm,
-          })
+          }),
         );
       }
     },
-    [dispatch, navigation, surveysLocal]
+    [dispatch, navigation, surveysLocal],
   );
 
   if (loading) return <Loader />;

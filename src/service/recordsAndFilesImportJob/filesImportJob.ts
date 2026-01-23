@@ -14,7 +14,7 @@ export class FilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
 
     const filesSummaryJsonUri = Files.path(
       unzippedFolderUri,
-      RecordsExportFile.filesSummaryJsonPath
+      RecordsExportFile.filesSummaryJsonPath,
     );
     const filesSummaryObj = await Files.readJsonFromFile({
       fileUri: filesSummaryJsonUri,
@@ -30,7 +30,7 @@ export class FilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
 
       const sourceFileUri = Files.path(
         unzippedFolderUri,
-        RecordsExportFile.getFilePath(fileUuid)
+        RecordsExportFile.getFilePath(fileUuid),
       );
 
       await RecordFileService.saveRecordFile({
