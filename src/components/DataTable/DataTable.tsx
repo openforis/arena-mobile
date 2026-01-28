@@ -1,45 +1,20 @@
 import { useEffect, useRef } from "react";
-import { StyleProp, ViewStyle } from "react-native";
 import { DataTable as RNPDataTable } from "react-native-paper";
 
 import { Dictionary, Objects } from "@openforis/arena-core";
 
 import { useTranslation } from "localization";
-import { Sort, SortObject, SortUtils } from "model";
+import { Sort, SortUtils } from "model";
 import { DeviceInfoSelectors } from "state/deviceInfo";
 
 import { Checkbox } from "../Checkbox";
+import { DataVisualizerProps } from "../DataVisualizer/types";
 import { ScrollView } from "../ScrollView";
-import { VView } from "../VView";
 import { ItemSelectedBanner, useSelectableList } from "../SelectableList";
+import { VView } from "../VView";
 import { usePagination } from "./usePagination";
 
-export type DataTableField = {
-  key: string;
-  header: string;
-  style?: StyleProp<ViewStyle>;
-  cellRenderer?: ({ item }: { item: any }) => React.ReactElement;
-  optional?: boolean;
-  sortable?: boolean;
-};
-
-export type DataTableProps = {
-  canDelete?: boolean;
-  fields: DataTableField[];
-  items: any[];
-  onItemPress?: (item: any) => void;
-  onItemLongPress?: (item: any) => void;
-  onSelectionChange?: (selectedIds: string[]) => void;
-  onSortChange?: (sort: SortObject) => void;
-  onDeleteSelectedItemIds?: (ids: string[]) => void;
-  selectable?: boolean;
-  selectedItemIds?: string[];
-  selectedItemsCustomActions?: any[];
-  showPagination?: boolean;
-  sort?: SortObject;
-};
-
-export const DataTable = (props: DataTableProps) => {
+export const DataTable = (props: DataVisualizerProps) => {
   const {
     canDelete = true,
     fields,
@@ -93,7 +68,7 @@ export const DataTable = (props: DataTableProps) => {
 
   const visibleFields = fields.filter(
     ({ optional = false }) =>
-      !optional || fields.length <= 3 || isTablet || isLandscape
+      !optional || fields.length <= 3 || isTablet || isLandscape,
   );
 
   const visibleRows = showPagination ? visibleItems : items;
@@ -169,7 +144,7 @@ export const DataTable = (props: DataTableProps) => {
                       String(Objects.path(fKey.split("."))(item) ?? "")
                     )}
                   </RNPDataTable.Cell>
-                )
+                ),
               )}
               {selectionEnabled && (
                 <RNPDataTable.Cell style={{ maxWidth: 40, minWidth: 40 }}>

@@ -9,22 +9,13 @@ import { Checkbox } from "../Checkbox";
 import { FormItem } from "../FormItem";
 import { HView } from "../HView";
 import { VView } from "../VView";
+import { DataVisualizerProps } from "../DataVisualizer/types";
 import { ItemSelectedBanner, useSelectableList } from "../SelectableList";
 import { useStyles } from "./styles";
 
-export type DataListProps = {
-  fields: any[];
-  items: any[];
-  onItemPress?: (item: any) => void;
-  onItemLongPress?: (item: any) => void;
-  onDeleteSelectedItemIds?: (ids: string[]) => void;
-  onSelectionChange?: (selectedIds: string[]) => void;
-  selectable?: boolean;
-  selectedItemsCustomActions?: any[];
-};
-
-export const DataList = (props: DataListProps) => {
+export const DataList = (props: DataVisualizerProps) => {
   const {
+    canDelete = true,
     fields,
     items,
     onItemPress: onItemPressProp,
@@ -53,10 +44,7 @@ export const DataList = (props: DataListProps) => {
   });
 
   const renderItem = useCallback(
-    ({
-      item,
-      separators
-    }: any) => (
+    ({ item, separators }: any) => (
       <TouchableHighlight
         onPress={() => onItemPress(item)}
         onLongPress={() => onItemLongPress(item)}
@@ -111,12 +99,13 @@ export const DataList = (props: DataListProps) => {
       onItemPress,
       onItemLongPress,
       onItemSelect,
-    ]
+    ],
   );
 
   return (
     <VView>
       <ItemSelectedBanner
+        canDelete={canDelete}
         customActions={selectedItemsCustomActions}
         onDeleteSelected={onDeleteSelected}
         selectedItemIds={selectedItemIds}
