@@ -8,7 +8,7 @@ const uploadChunkSize = 700 * 1024; // 700KB (post requests bigger than this are
 const fetchRecordsSummaries = async ({ surveyRemoteId, cycle }: any) => {
   const { data } = await RemoteService.get(
     `api/survey/${surveyRemoteId}/records/summary`,
-    { cycle }
+    { cycle },
   );
   const { list } = data;
   return list;
@@ -22,7 +22,7 @@ const startExportRecords = async ({ survey, cycle, recordUuids }: any) => {
     data: { job },
   } = await RemoteService.post(
     `api/survey/${surveyRemoteId}/records/export`,
-    params
+    params,
   );
   return job;
 };
@@ -31,7 +31,7 @@ const downloadExportedRecordsFile = async ({ survey, fileName }: any) => {
   const { remoteId: surveyRemoteId } = survey;
   const fileUri = await RemoteService.getFile(
     `api/survey/${surveyRemoteId}/records/export/download`,
-    { fileName }
+    { fileName },
   );
   return fileUri;
 };
@@ -52,7 +52,7 @@ const uploadRecords = ({
     ({ total, loaded }: any) => {
       onUploadProgress({ total, loaded });
     },
-    1000
+    1000,
   );
 
   let lastRequestCancel: any = null;
@@ -60,8 +60,9 @@ const uploadRecords = ({
     fileProcessor = new RNFileProcessor({
       filePath: fileUri,
       chunkProcessor: async ({ chunk, totalChunks, content }) => {
+        const chunkBlob = new Blob([content as any]);
         const params = {
-          file: content,
+          file: chunkBlob,
           fileId,
           chunk,
           totalChunks,
@@ -83,7 +84,7 @@ const uploadRecords = ({
           await RemoteService.postCancelableMultipartData(
             `api/mobile/survey/${surveyRemoteId}`,
             params,
-            progressHandler
+            progressHandler,
           );
         lastRequestCancel = cancel;
         const result = await promise;

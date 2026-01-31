@@ -32,7 +32,7 @@ const attachAuthenticationHeaders = (config: Dictionary<any> = {}) => {
 
 const withRetry = async (
   callback: () => Promise<any>,
-  maxRetries = 1
+  maxRetries = 1,
 ): Promise<any> => {
   let attempt = 0;
   while (true) {
@@ -99,7 +99,7 @@ const post = async (uri: string, data?: Dictionary<any>) => {
 const postCancelableMultipartData = async (
   uri: string,
   data: Dictionary<any>,
-  onUploadProgress: any
+  onUploadProgress: any,
 ) => {
   const serverUrl = await getServerUrl();
   const config = { onUploadProgress };
@@ -116,7 +116,7 @@ const postCancelableMultipartData = async (
 const postMultipartData = async (
   uri: string,
   data: Dictionary<any>,
-  onUploadProgress: any
+  onUploadProgress: any,
 ) => {
   const serverUrl = await getServerUrl();
   const config = { onUploadProgress };
