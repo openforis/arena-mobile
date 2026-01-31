@@ -2,6 +2,7 @@ import { RNFileProcessor } from "utils/RNFileProcessor";
 
 import { Functions } from "utils/Functions";
 import { RemoteService } from "./remoteService";
+import { Files } from "utils/index";
 
 const uploadChunkSize = 700 * 1024; // 700KB (post requests bigger than this are truncated, check why)
 
@@ -58,11 +59,11 @@ const uploadRecords = ({
   let lastRequestCancel: any = null;
   const promise = new Promise((resolve, reject) => {
     fileProcessor = new RNFileProcessor({
+      fileId,
       filePath: fileUri,
       chunkProcessor: async ({ chunk, totalChunks, content }) => {
-        const chunkBlob = new Blob([content as any]);
         const params = {
-          file: chunkBlob,
+          file: content,
           fileId,
           chunk,
           totalChunks,
@@ -88,6 +89,12 @@ const uploadRecords = ({
           );
         lastRequestCancel = cancel;
         const result = await promise;
+
+        const tempChunkUri = (content as any).uri;
+        if (tempChunkUri) {
+          // delete temp chunk file
+          await Files.del(tempChunkUri);
+        }
 
         if (chunk === totalChunks) {
           resolve(result);

@@ -7,15 +7,19 @@ import {
 
 import { Files } from "./Files";
 
-export type RNFileProcessorArgs = FileProcessorConstructorArgs & {};
+export type RNFileProcessorArgs = FileProcessorConstructorArgs & {
+  fileId: string;
+};
 
 export class RNFileProcessor extends FileProcessor {
+  fileId: string;
   eFile: File;
   fileHandle: FileHandle;
 
   constructor(args: RNFileProcessorArgs) {
     super(args);
 
+    this.fileId = args.fileId;
     this.eFile = new File(args.filePath!);
     this.fileHandle = this.eFile.open();
   }
@@ -27,8 +31,25 @@ export class RNFileProcessor extends FileProcessor {
 
   override async extractCurrentFileChunk() {
     const { currentChunkNumber, chunkSize } = this as any;
-    this.fileHandle.offset = (currentChunkNumber - 1) * chunkSize;
-    const bytes = this.fileHandle.readBytes(chunkSize);
-    return bytes;
+
+    const fileName = `${this.fileId}_chunk_${currentChunkNumber}`;
+    const tempChunkUri = `${Files.cacheDirectory}${fileName}`;
+
+    const chunkString = await Files.readChunkAsString(
+      this.eFile.uri,
+      currentChunkNumber,
+      chunkSize,
+    );
+    await Files.writeStringToFile({
+      content: chunkString,
+      fileUri: tempChunkUri,
+      encoding: Files.EncodingType.Base64,
+    });
+
+    return {
+      uri: tempChunkUri,
+      name: fileName,
+      type: "application/octet-stream",
+    } as any;
   }
 }

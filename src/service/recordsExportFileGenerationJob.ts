@@ -138,12 +138,13 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
 
       // create output zip file
       const timestamp = Dates.format(new Date(), DateFormats.datetimeDefault);
-      const outputFileName = `${recordsExportFileNamePrefix}${timestamp}.zip`;
+      // const outputFileName = `${recordsExportFileNamePrefix}${timestamp}.zip`;
+      const outputFileName = `arena_backup_no_log_bio_occurrence_2025-10-16_23-19-52.zip`; // temporary fixed name for testing
 
       // store exported file in cache directory to allow sharing it later on
       this.outputFileUri = Files.path(Files.cacheDirectory, outputFileName);
 
-      await Files.zip(tempFolderUri, this.outputFileUri);
+      // await Files.zip(tempFolderUri, this.outputFileUri);
     } finally {
       await Files.del(tempFolderUri);
     }
