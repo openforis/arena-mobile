@@ -73,7 +73,7 @@ const visitDirFilesRecursively = async ({
 
 const getInfo = async (
   fileUri: any,
-  ignoreErrors = true
+  ignoreErrors = true,
 ): Promise<FileSystem.FileInfo | null> => {
   try {
     const info = await FileSystem.getInfoAsync(fileUri);
@@ -97,10 +97,10 @@ const getSizeBase64 = async (fileUri: any, ignoreErrors = true) => {
     let lastContentSize = 0;
     let chunk = 1;
     while (chunk === 1 || lastContentSize > 0) {
-      const chunkContent = await readChunk(fileUri, chunk);
+      const chunkContent = await readChunkAsString(fileUri, chunk);
       lastContentSize = Buffer.from(
         chunkContent,
-        FileSystem.EncodingType.Base64
+        FileSystem.EncodingType.Base64,
       ).length;
       size += lastContentSize;
       chunk += 1;
@@ -153,14 +153,14 @@ const getMimeTypeFromName = (fileName: any) => mime.getType(fileName);
 
 const readAsString = async (
   fileUri: string,
-  encoding?: FileSystem.EncodingType
+  encoding?: FileSystem.EncodingType,
 ) => FileSystem.readAsStringAsync(fileUri, encoding ? { encoding } : undefined);
 
-const readChunk = async (
+const readChunkAsString = async (
   fileUri: any,
   chunkNumber: any,
-  chunkSize = defaultChunkSize
-) =>
+  chunkSize = defaultChunkSize,
+): Promise<string> =>
   FileSystem.readAsStringAsync(fileUri, {
     encoding: FileSystem.EncodingType.Base64,
     position: (chunkNumber - 1) * chunkSize,
@@ -168,7 +168,7 @@ const readChunk = async (
   });
 
 const readAsBytes = async (
-  fileUri: any
+  fileUri: any,
 ): Promise<Uint8Array<ArrayBuffer> | null> => {
   const fileObj = new File(fileUri);
   const fileHandle = fileObj.open();
@@ -222,7 +222,7 @@ const writeStringToFile = async ({
   FileSystem.writeAsStringAsync(
     fileUri,
     content,
-    encoding ? { encoding } : undefined
+    encoding ? { encoding } : undefined,
   );
 
 const writeJsonToFile = async ({ content, fileUri }: any) =>
@@ -311,7 +311,7 @@ export const Files = {
   getSize,
   getSizeBase64,
   readAsString,
-  readChunk,
+  readChunkAsString,
   readAsBuffer,
   readAsBytes,
   readJsonFromFile,
