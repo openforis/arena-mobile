@@ -1,10 +1,7 @@
-import { RNFileProcessor } from "utils/RNFileProcessor";
-
-import { Functions } from "utils/Functions";
+import { Files, Functions, log, RNFileProcessor } from "utils";
 import { RemoteService } from "./remoteService";
-import { Files } from "utils/index";
 
-const uploadChunkSize = 700 * 1024; // 700KB (post requests bigger than this are truncated, check why)
+const uploadChunkSize = 2 * 1024 * 1024; // 2MB
 
 const fetchRecordsSummaries = async ({ surveyRemoteId, cycle }: any) => {
   const { data } = await RemoteService.get(
@@ -62,6 +59,9 @@ const uploadRecords = ({
       fileId,
       filePath: fileUri,
       chunkProcessor: async ({ chunk, totalChunks, content }) => {
+        log.debug(
+          `Uploading chunk ${chunk} / ${totalChunks} for fileId ${fileId}`,
+        );
         const params = {
           file: content,
           fileId,
@@ -97,6 +97,7 @@ const uploadRecords = ({
         }
 
         if (chunk === totalChunks) {
+          log.debug(`All chunks uploaded for fileId ${fileId}`);
           resolve(result);
         }
       },
