@@ -92,7 +92,7 @@ const uploadRecords = ({
 
         const tempChunkUri = (content as any).uri;
         if (tempChunkUri) {
-          // delete temp chunk file
+          log.debug(`Deleting temp chunk file ${tempChunkUri}`);
           await Files.del(tempChunkUri);
         }
 
