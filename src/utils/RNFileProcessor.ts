@@ -33,23 +33,9 @@ export class RNFileProcessor extends FileProcessor {
     const { currentChunkNumber, chunkSize } = this as any;
 
     const fileName = `${this.fileId}_chunk_${currentChunkNumber}`;
-    const tempChunkUri = `${Files.cacheDirectory}${fileName}`;
-
-    const chunkString = await Files.readChunkAsString(
-      this.eFile.uri,
-      currentChunkNumber,
-      chunkSize,
-    );
-    await Files.writeStringToFile({
-      content: chunkString,
-      fileUri: tempChunkUri,
-      encoding: Files.EncodingType.Base64,
-    });
-    // Return an object that Axios/Fetch recognizes as a "Blob/File"
-    return {
-      uri: tempChunkUri,
-      name: fileName,
-      type: "application/octet-stream",
-    } as any;
+    const start = (currentChunkNumber - 1) * chunkSize;
+    const end = start + chunkSize;
+    const chunkBlob = this.eFile.slice(start, end);
+    return chunkBlob;
   }
 }

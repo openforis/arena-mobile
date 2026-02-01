@@ -1,4 +1,4 @@
-import { Files, Functions, log, RNFileProcessor } from "utils";
+import { Functions, log, RNFileProcessor } from "utils";
 import { RemoteService } from "./remoteService";
 
 const uploadChunkSize = 2 * 1024 * 1024; // 2MB
@@ -89,12 +89,6 @@ const uploadRecords = ({
           );
         lastRequestCancel = cancel;
         const result = await promise;
-
-        const tempChunkUri = (content as any).uri;
-        if (tempChunkUri) {
-          log.debug(`Deleting temp chunk file ${tempChunkUri}`);
-          await Files.del(tempChunkUri);
-        }
 
         if (chunk === totalChunks) {
           log.debug(`All chunks uploaded for fileId ${fileId}`);
