@@ -45,7 +45,7 @@ export class RNFileProcessor extends FileProcessor {
       fileUri: tempChunkUri,
       encoding: Files.EncodingType.Base64,
     });
-
+    // Return an object that Axios/Fetch recognizes as a "Blob/File"
     return {
       uri: tempChunkUri,
       name: fileName,
