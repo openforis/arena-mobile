@@ -32,9 +32,17 @@ export class RNFileProcessor extends FileProcessor {
   override async extractCurrentFileChunk() {
     const { currentChunkNumber, chunkSize } = this as any;
 
+    if (!this.fileHandle || this.fileHandle.size == null) {
+      throw new Error(
+        "File handle is not initialized or file size is unavailable.",
+      );
+    }
+
     const tempFileName = `${this.fileId}_chunk_${currentChunkNumber}.tmp`;
     const start = (currentChunkNumber - 1) * chunkSize;
-    const length = Math.min(chunkSize, this.fileHandle.size! - start);
+
+    const remainingSize = this.fileHandle.size - start;
+    const length = Math.min(chunkSize, remainingSize);
 
     // Set the offset and read the chunk
     this.fileHandle.offset = start;
