@@ -19,14 +19,6 @@ const objectToFormData = (obj: any) =>
       return acc;
     }
 
-    if (value && typeof value === "object" && "blob" in value) {
-      const { blob } = value as any;
-      if (blob) {
-        acc.append(key, blob as any);
-        return acc;
-      }
-    }
-
     const formDataValue = Array.isArray(value) ? JSON.stringify(value) : value;
     acc.append(key, formDataValue);
     return acc;
