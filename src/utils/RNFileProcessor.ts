@@ -31,7 +31,7 @@ export class RNFileProcessor extends FileProcessor {
   override async extractCurrentFileChunk() {
     const { currentChunkNumber, chunkSize } = this as any;
 
-    if (!this.fileHandle || this.fileHandle.size == null) {
+    if (!this.fileHandle?.size) {
       throw new Error(
         "File handle is not initialized or file size is unavailable.",
       );
