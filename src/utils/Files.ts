@@ -228,6 +228,23 @@ const writeStringToFile = async ({
 const writeJsonToFile = async ({ content, fileUri }: any) =>
   writeStringToFile({ content: jsonToString(content), fileUri });
 
+const writeBytesToFile = ({
+  fileUri,
+  bytes,
+}: {
+  fileUri: string;
+  bytes: Uint8Array<ArrayBuffer>;
+}): void => {
+  let fileHandle;
+  try {
+    const file = new File(fileUri);
+    fileHandle = file.open();
+    fileHandle.writeBytes(bytes);
+  } finally {
+    fileHandle?.close();
+  }
+};
+
 const appendStringToFile = async ({
   content,
   fileUri,
@@ -323,6 +340,7 @@ export const Files = {
   download,
   writeJsonToFile,
   writeStringToFile,
+  writeBytesToFile,
   appendStringToFile,
   toHumanReadableFileSize,
   unzip,

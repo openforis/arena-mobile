@@ -7,6 +7,19 @@ const objectToFormData = (obj: any) =>
       return acc;
     }
 
+    // Handle React Native file objects (with uri, type, name)
+    if (
+      value &&
+      typeof value === "object" &&
+      "uri" in value &&
+      "type" in value &&
+      "name" in value
+    ) {
+      console.log("Appending RN file object to FormData for key:", key);
+      acc.append(key, value as any);
+      return acc;
+    }
+
     if (value && typeof value === "object" && "blob" in value) {
       const { blob } = value as any;
       if (blob) {

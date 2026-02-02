@@ -44,7 +44,7 @@ const uploadRecords = ({
   onUploadProgress,
 }: any) => {
   const surveyRemoteId = survey.remoteId;
-  let fileProcessor: any = null;
+  let fileProcessor: RNFileProcessor;
 
   const debouncedUploadProgress = Functions.throttle(
     ({ total, loaded }: any) => {
@@ -88,14 +88,26 @@ const uploadRecords = ({
             progressHandler,
           );
         lastRequestCancel = cancel;
-        const result = await promise;
+        try {
+          const result = await promise;
 
-        if (chunk === totalChunks) {
-          log.debug(`All chunks uploaded for fileId ${fileId}`);
-          resolve(result);
+          if (chunk === totalChunks) {
+            log.debug(`All chunks uploaded for fileId ${fileId}`);
+            await fileProcessor?.close();
+            resolve(result);
+          }
+        } finally {
+          const tempFileUri = (content as any).uri;
+          if (tempFileUri) {
+            log.debug(`Deleting temp file chunk: ${tempFileUri}`);
+            // await Files.deleteFile(tempFileUri);
+          }
         }
       },
-      onError: reject,
+      onError: async (error) => {
+        await fileProcessor?.close();
+        reject(error);
+      },
       chunkSize: uploadChunkSize,
       maxTryings: 2,
     });

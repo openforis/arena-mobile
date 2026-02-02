@@ -32,10 +32,27 @@ export class RNFileProcessor extends FileProcessor {
   override async extractCurrentFileChunk() {
     const { currentChunkNumber, chunkSize } = this as any;
 
-    const fileName = `${this.fileId}_chunk_${currentChunkNumber}`;
+    const tempFileName = `${this.fileId}_chunk_${currentChunkNumber}.tmp`;
     const start = (currentChunkNumber - 1) * chunkSize;
-    const end = start + chunkSize;
-    const chunkBlob = this.eFile.slice(start, end);
-    return chunkBlob;
+    const length = Math.min(chunkSize, this.fileHandle.size! - start);
+
+    // Set the offset and read the chunk
+    this.fileHandle.offset = start;
+    const chunkBytes = this.fileHandle.readBytes(length);
+
+    // Write bytes to temp file
+    const tempFileUri = Files.path(Files.cacheDirectory, tempFileName);
+    Files.writeBytesToFile({ fileUri: tempFileUri, bytes: chunkBytes });
+
+    // Return React Native FormData compatible object
+    return {
+      uri: tempFileUri,
+      type: "application/octet-stream",
+      name: tempFileName,
+    } as any;
+  }
+
+  async close() {
+    this.fileHandle?.close();
   }
 }
