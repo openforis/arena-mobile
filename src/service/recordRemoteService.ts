@@ -93,7 +93,6 @@ const uploadRecords = ({
 
           if (chunk === totalChunks) {
             log.debug(`All chunks uploaded for fileId ${fileId}`);
-            await fileProcessor?.close();
             resolve(result);
           }
         } finally {
@@ -107,6 +106,9 @@ const uploadRecords = ({
       onError: async (error) => {
         await fileProcessor?.close();
         reject(error);
+      },
+      onComplete: async () => {
+        await fileProcessor?.close();
       },
       chunkSize: uploadChunkSize,
       maxTryings: 2,
