@@ -13,15 +13,14 @@ export type RNFileProcessorArgs = FileProcessorConstructorArgs & {
 
 export class RNFileProcessor extends FileProcessor {
   fileId: string;
-  eFile: File;
   fileHandle: FileHandle;
 
   constructor(args: RNFileProcessorArgs) {
     super(args);
 
     this.fileId = args.fileId;
-    this.eFile = new File(args.filePath!);
-    this.fileHandle = this.eFile.open();
+    const eFile = new File(args.filePath!);
+    this.fileHandle = eFile.open();
   }
 
   override async calculateFileSize() {
