@@ -36,27 +36,35 @@ export class RNFileProcessor extends FileProcessor {
         "File handle is not initialized or file size is unavailable.",
       );
     }
+    let tempFileUri;
+    try {
+      const tempFileName = `${this.fileId}_chunk_${currentChunkNumber}.tmp`;
+      const start = (currentChunkNumber - 1) * chunkSize;
 
-    const tempFileName = `${this.fileId}_chunk_${currentChunkNumber}.tmp`;
-    const start = (currentChunkNumber - 1) * chunkSize;
+      const remainingSize = this.fileHandle.size - start;
+      const length = Math.min(chunkSize, remainingSize);
 
-    const remainingSize = this.fileHandle.size - start;
-    const length = Math.min(chunkSize, remainingSize);
+      // Set the offset and read the chunk
+      this.fileHandle.offset = start;
+      const chunkBytes = this.fileHandle.readBytes(length);
 
-    // Set the offset and read the chunk
-    this.fileHandle.offset = start;
-    const chunkBytes = this.fileHandle.readBytes(length);
+      // Write bytes to temp file
+      tempFileUri = Files.path(Files.cacheDirectory, tempFileName);
+      Files.writeBytesToFile({ fileUri: tempFileUri, bytes: chunkBytes });
 
-    // Write bytes to temp file
-    const tempFileUri = Files.path(Files.cacheDirectory, tempFileName);
-    Files.writeBytesToFile({ fileUri: tempFileUri, bytes: chunkBytes });
-
-    // Return React Native FormData compatible object
-    return {
-      uri: tempFileUri,
-      type: "application/octet-stream",
-      name: tempFileName,
-    } as any;
+      // Return React Native FormData compatible object
+      return {
+        uri: tempFileUri,
+        type: "application/octet-stream",
+        name: tempFileName,
+      } as any;
+    } catch (error) {
+      // Clean up temp file in case of error
+      if (await Files.exists(tempFileUri)) {
+        await Files.del(tempFileUri);
+      }
+      throw error;
+    }
   }
 
   async close() {
