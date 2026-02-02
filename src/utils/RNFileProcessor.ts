@@ -17,9 +17,12 @@ export class RNFileProcessor extends FileProcessor {
 
   constructor(args: RNFileProcessorArgs) {
     super(args);
-
-    this.fileId = args.fileId;
-    const eFile = new File(args.filePath!);
+    const { fileId, filePath } = args;
+    if (!filePath) {
+      throw new Error("filePath is required to initialize RNFileProcessor");
+    }
+    this.fileId = fileId;
+    const eFile = new File(filePath);
     this.fileHandle = eFile.open();
   }
 
