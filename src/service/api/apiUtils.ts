@@ -15,7 +15,6 @@ const objectToFormData = (obj: any) =>
       "type" in value &&
       "name" in value
     ) {
-      console.log("Appending RN file object to FormData for key:", key);
       acc.append(key, value as any);
       return acc;
     }
