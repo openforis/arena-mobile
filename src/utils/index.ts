@@ -12,6 +12,7 @@ export { Jobs } from "./Jobs";
 export { LanguageUtils } from "./LanguageUtils";
 export { Permissions } from "./Permissions";
 export { Refs } from "./Refs";
+export { RNFileProcessor } from "./RNFileProcessor";
 export { SystemUtils } from "./SystemUtils";
 export { TimeUtils } from "./TimeUtils";
 export { URLs } from "./URLs";

@@ -1,14 +1,12 @@
-import { RNFileProcessor } from "utils/RNFileProcessor";
-
-import { Functions } from "utils/Functions";
+import { Files, Functions, log, RNFileProcessor } from "utils";
 import { RemoteService } from "./remoteService";
 
-const uploadChunkSize = 700 * 1024; // 700KB (post requests bigger than this are truncated, check why)
+const uploadChunkSize = 2 * 1024 * 1024; // 2MB
 
 const fetchRecordsSummaries = async ({ surveyRemoteId, cycle }: any) => {
   const { data } = await RemoteService.get(
     `api/survey/${surveyRemoteId}/records/summary`,
-    { cycle }
+    { cycle },
   );
   const { list } = data;
   return list;
@@ -22,7 +20,7 @@ const startExportRecords = async ({ survey, cycle, recordUuids }: any) => {
     data: { job },
   } = await RemoteService.post(
     `api/survey/${surveyRemoteId}/records/export`,
-    params
+    params,
   );
   return job;
 };
@@ -31,7 +29,7 @@ const downloadExportedRecordsFile = async ({ survey, fileName }: any) => {
   const { remoteId: surveyRemoteId } = survey;
   const fileUri = await RemoteService.getFile(
     `api/survey/${surveyRemoteId}/records/export/download`,
-    { fileName }
+    { fileName },
   );
   return fileUri;
 };
@@ -46,20 +44,24 @@ const uploadRecords = ({
   onUploadProgress,
 }: any) => {
   const surveyRemoteId = survey.remoteId;
-  let fileProcessor: any = null;
+  let fileProcessor: RNFileProcessor;
 
   const debouncedUploadProgress = Functions.throttle(
     ({ total, loaded }: any) => {
       onUploadProgress({ total, loaded });
     },
-    1000
+    1000,
   );
 
   let lastRequestCancel: any = null;
   const promise = new Promise((resolve, reject) => {
     fileProcessor = new RNFileProcessor({
+      fileId,
       filePath: fileUri,
       chunkProcessor: async ({ chunk, totalChunks, content }) => {
+        log.debug(
+          `Uploading chunk ${chunk} / ${totalChunks} for fileId ${fileId}`,
+        );
         const params = {
           file: content,
           fileId,
@@ -83,16 +85,30 @@ const uploadRecords = ({
           await RemoteService.postCancelableMultipartData(
             `api/mobile/survey/${surveyRemoteId}`,
             params,
-            progressHandler
+            progressHandler,
           );
         lastRequestCancel = cancel;
-        const result = await promise;
+        try {
+          const result = await promise;
 
-        if (chunk === totalChunks) {
-          resolve(result);
+          if (chunk === totalChunks) {
+            log.debug(`All chunks uploaded for fileId ${fileId}`);
+            resolve(result);
+          }
+        } finally {
+          const tempFileUri = (content as any).uri;
+          if (tempFileUri) {
+            await Files.del(tempFileUri);
+          }
         }
       },
-      onError: reject,
+      onError: async (error) => {
+        await fileProcessor?.close();
+        reject(error);
+      },
+      onComplete: async () => {
+        await fileProcessor?.close();
+      },
       chunkSize: uploadChunkSize,
       maxTryings: 2,
     });

@@ -2,6 +2,23 @@ import { Strings } from "@openforis/arena-core";
 
 const objectToFormData = (obj: any) =>
   Object.entries(obj).reduce((acc, [key, value]) => {
+    if (value instanceof Blob) {
+      acc.append(key, value);
+      return acc;
+    }
+
+    // Handle React Native file objects (with uri, type, name)
+    if (
+      value &&
+      typeof value === "object" &&
+      "uri" in value &&
+      "type" in value &&
+      "name" in value
+    ) {
+      acc.append(key, value as any);
+      return acc;
+    }
+
     const formDataValue = Array.isArray(value) ? JSON.stringify(value) : value;
     acc.append(key, formDataValue);
     return acc;
@@ -9,7 +26,7 @@ const objectToFormData = (obj: any) =>
 
 const getUrl = ({ serverUrl, uri }: any) =>
   [Strings.removeSuffix("/")(serverUrl), Strings.removePrefix("/")(uri)].join(
-    "/"
+    "/",
   );
 
 const getUrlWithParams = ({ serverUrl, uri, data = {} }: any) => {

@@ -12,7 +12,7 @@ const multipartDataHeaders = { "Content-Type": "multipart/form-data" };
 
 const _prepareRequest = (
   url: string,
-  conf: AxiosRequestConfig = {}
+  conf: AxiosRequestConfig = {},
 ): { promise: Promise<AxiosResponse>; cancel: () => void } => {
   const controller = new AbortController();
   const config: AxiosRequestConfig = {
@@ -28,7 +28,7 @@ const _prepareRequest = (
 };
 
 const _prepareGet = (
-  options: RequestOptions
+  options: RequestOptions,
 ): { promise: Promise<AxiosResponse>; cancel: () => void } => {
   const url = APIUtils.getUrlWithParams(options);
   const { config } = options;
@@ -55,7 +55,7 @@ const test = async (options: RequestOptions): Promise<boolean> => {
 };
 
 const postCancelable = (
-  options: RequestOptions
+  options: RequestOptions,
 ): { promise: Promise<AxiosResponse>; cancel: () => void } => {
   const { serverUrl, uri, data, config } = options;
   const url = APIUtils.getUrl({ serverUrl, uri });
@@ -65,7 +65,7 @@ const postCancelable = (
 };
 
 const post = async (
-  options: RequestOptions
+  options: RequestOptions,
 ): Promise<{ data: any; response: AxiosResponse }> => {
   const { promise } = postCancelable(options);
 
@@ -76,7 +76,9 @@ const post = async (
   return { data, response };
 };
 
-const _prepareMultipartData = (options: RequestOptions): RequestOptions => {
+const _prepareMultipartDataOptions = (
+  options: RequestOptions,
+): RequestOptions => {
   const { data, config: configParam } = options;
 
   const formData = APIUtils.objectToFormData(data);
@@ -95,14 +97,14 @@ const _prepareMultipartData = (options: RequestOptions): RequestOptions => {
 };
 
 const postCancelableMultipartData = (
-  options: RequestOptions
+  options: RequestOptions,
 ): { promise: Promise<AxiosResponse>; cancel: () => void } =>
-  postCancelable(_prepareMultipartData(options));
+  postCancelable(_prepareMultipartDataOptions(options));
 
 const postMultipartData = async (
-  options: RequestOptions
+  options: RequestOptions,
 ): Promise<{ data: any; response: AxiosResponse }> =>
-  post(_prepareMultipartData(options));
+  post(_prepareMultipartDataOptions(options));
 
 export const APIAxios = {
   get,
