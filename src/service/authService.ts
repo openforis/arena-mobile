@@ -83,10 +83,12 @@ const login = async ({
   serverUrl: serverUrlParam,
   email,
   password,
+  twoFactorToken,
 }: {
   serverUrl?: string;
   email: string;
   password: string;
+  twoFactorToken?: string;
 }): Promise<LoginResponse> => {
   const serverUrl = serverUrlParam ?? (await getServerUrl());
   const appInfo = await SystemUtils.getApplicationInfo();
@@ -97,11 +99,18 @@ const login = async ({
       data: {
         email,
         password,
+        twoFactorToken,
         appInfo,
       },
     });
+    console.log("==== Login response", { data, response });
+    const { twoFactorRequired } = data;
+    if (twoFactorRequired) {
+      return { twoFactorRequired };
+    }
     return onLoginSuccess({ data, response });
   } catch (err: any) {
+    console.error("==== Login error", { err });
     return extractErrorMessageFromLoginError(err);
   }
 };

@@ -124,6 +124,7 @@ const onLoginResponse = async ({
   res,
   serverUrl,
   email,
+  password,
   showBack,
 }: {
   dispatch: any;
@@ -131,6 +132,7 @@ const onLoginResponse = async ({
   res: LoginResponse;
   serverUrl: string;
   email?: string;
+  password?: string;
   showBack?: boolean;
 }) => {
   const { user, error, message, twoFactorRequired } = res;
@@ -148,8 +150,21 @@ const onLoginResponse = async ({
       ConfirmActions.show({
         titleKey: "authService:twoFactorRequired",
         confirmButtonTextKey: "common:continue",
-        cancelButtonTextKey: "common:close",
-        onConfirm: navigation.goBack,
+        cancelButtonTextKey: "common:cancel",
+        onConfirm: ({ textInputValue }) => {
+          dispatch(
+            login({
+              navigation,
+              serverUrl,
+              email: email!,
+              password: password!,
+              twoFactorToken: textInputValue,
+              showBack,
+            }),
+          );
+        },
+        textInputToConfirm: true,
+        textInputToConfirmLabelKey: "authService:twoFactorCode",
       }),
     );
   } else if (message || error) {
@@ -179,6 +194,7 @@ const login =
     serverUrl,
     email,
     password,
+    twoFactorToken,
     showBack = false,
   }: {
     navigation: any;
@@ -186,12 +202,19 @@ const login =
     email: string;
     password: string;
     showBack?: boolean;
+    twoFactorToken?: string;
   }) =>
   async (dispatch: any) => {
-    const res = await AuthService.login({ serverUrl, email, password });
+    const res = await AuthService.login({
+      serverUrl,
+      email,
+      password,
+      twoFactorToken,
+    });
     await onLoginResponse({
       res,
       email,
+      password,
       serverUrl,
       dispatch,
       showBack,

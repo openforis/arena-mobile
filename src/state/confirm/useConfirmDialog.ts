@@ -3,25 +3,35 @@ import { useSelector } from "react-redux";
 
 import { Arrays } from "@openforis/arena-core";
 
-import { ConfirmActions } from "./reducer";
+import { ConfirmActions, ConfirmState } from "./reducer";
 import { useAppDispatch } from "state/store";
 
-type ConfirmDialogState = {
+type ConfirmDialogLocalState = {
   selectedMultipleChoiceValues: any[];
   selectedSingleChoiceValue: any;
   swipeConfirmed: boolean;
+  textInputValue: string;
 };
 
-const defaultLocalState: ConfirmDialogState = {
+const defaultLocalState: ConfirmDialogLocalState = {
   selectedMultipleChoiceValues: [],
   selectedSingleChoiceValue: null,
   swipeConfirmed: false,
+  textInputValue: "",
 };
 
-export const useConfirmDialog = () => {
+export const useConfirmDialog = (): ConfirmState &
+  ConfirmDialogLocalState & {
+    confirm: () => void;
+    cancel: () => void;
+    onMultipleChoiceOptionChange: (value: any) => void;
+    onSingleChoiceOptionChange: (value: any) => void;
+    onTextInputChange: (value: string) => void;
+    setSwipeConfirmed: () => void;
+  } => {
   const dispatch = useAppDispatch();
 
-  const confirmState = useSelector((state: any) => state.confirm);
+  const confirmState: ConfirmState = useSelector((state: any) => state.confirm);
 
   const [state, setState] = useState(defaultLocalState);
 
@@ -29,6 +39,7 @@ export const useConfirmDialog = () => {
     selectedMultipleChoiceValues,
     selectedSingleChoiceValue,
     swipeConfirmed,
+    textInputValue,
   } = state;
 
   useEffect(() => {
@@ -37,6 +48,7 @@ export const useConfirmDialog = () => {
       selectedMultipleChoiceValues:
         confirmState.defaultMultipleChoiceValues ?? [],
       selectedSingleChoiceValue: confirmState.defaultSingleChoiceValue,
+      textInputValue: confirmState.defaultTextInputValue ?? "",
     });
   }, [confirmState]);
 
@@ -45,9 +57,15 @@ export const useConfirmDialog = () => {
       ConfirmActions.confirm({
         selectedMultipleChoiceValues,
         selectedSingleChoiceValue,
-      })
+        textInputValue,
+      }),
     );
-  }, [dispatch, selectedMultipleChoiceValues, selectedSingleChoiceValue]);
+  }, [
+    dispatch,
+    selectedMultipleChoiceValues,
+    selectedSingleChoiceValue,
+    textInputValue,
+  ]);
 
   const cancel = useCallback(() => {
     dispatch(ConfirmActions.cancel());
@@ -74,6 +92,13 @@ export const useConfirmDialog = () => {
     }));
   }, []);
 
+  const onTextInputChange = useCallback((value: string) => {
+    setState((statePrev) => ({
+      ...statePrev,
+      textInputValue: value,
+    }));
+  }, []);
+
   const setSwipeConfirmed = useCallback(() => {
     setState((statePrev) => ({
       ...statePrev,
@@ -88,9 +113,11 @@ export const useConfirmDialog = () => {
 
     onMultipleChoiceOptionChange,
     onSingleChoiceOptionChange,
+    onTextInputChange,
     selectedMultipleChoiceValues,
     selectedSingleChoiceValue,
     setSwipeConfirmed,
     swipeConfirmed,
+    textInputValue,
   };
 };

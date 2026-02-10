@@ -10,6 +10,7 @@ import {
   RadioButton,
   RadioButtonGroup,
   Text,
+  TextInput,
   VView,
 } from "components";
 import { useTranslation } from "localization";
@@ -27,16 +28,20 @@ export const AppConfirmDialog = () => {
     confirmButtonTextKey,
     messageKey,
     messageParams,
+    multipleChoiceOptions,
     onMultipleChoiceOptionChange,
     onSingleChoiceOptionChange,
-    multipleChoiceOptions,
+    onTextInputChange,
     selectedMultipleChoiceValues,
     selectedSingleChoiceValue,
     setSwipeConfirmed,
+    textInputToConfirm,
+    textInputToConfirmLabelKey,
     singleChoiceOptions,
     swipeConfirmed,
     swipeToConfirm,
     swipeToConfirmTitleKey,
+    textInputValue,
     titleKey,
   } = useConfirmDialog();
 
@@ -48,9 +53,9 @@ export const AppConfirmDialog = () => {
         <Dialog.Title>{t(titleKey)}</Dialog.Title>
         <Dialog.Content>
           <Text textKey={messageKey} textParams={messageParams} />
-          {multipleChoiceOptions?.length > 0 && (
+          {(multipleChoiceOptions?.length ?? 0) > 0 && (
             <VView transparent>
-              {multipleChoiceOptions.map((option: any) => (
+              {multipleChoiceOptions!.map((option: any) => (
                 <Checkbox
                   key={option.value}
                   checked={
@@ -63,13 +68,13 @@ export const AppConfirmDialog = () => {
               ))}
             </VView>
           )}
-          {singleChoiceOptions?.length > 0 && (
+          {(singleChoiceOptions?.length ?? 0) > 0 && (
             <RadioButtonGroup
               onValueChange={onSingleChoiceOptionChange}
               value={selectedSingleChoiceValue}
             >
               <VView transparent>
-                {singleChoiceOptions.map((option: any) => (
+                {singleChoiceOptions!.map((option: any) => (
                   <RadioButton
                     key={option.value}
                     label={t(option.label, option.labelParams)}
@@ -93,6 +98,13 @@ export const AppConfirmDialog = () => {
               title={t(swipeToConfirmTitleKey)}
               titleColor={theme.colors.primary}
               titleFontSize={16}
+            />
+          )}
+          {textInputToConfirm && (
+            <TextInput
+              label={textInputToConfirmLabelKey}
+              onChange={onTextInputChange}
+              value={textInputValue}
             />
           )}
         </Dialog.Content>
