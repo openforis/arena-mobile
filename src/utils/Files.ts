@@ -228,16 +228,19 @@ const writeStringToFile = async ({
 const writeJsonToFile = async ({ content, fileUri }: any) =>
   writeStringToFile({ content: jsonToString(content), fileUri });
 
-const writeBytesToFile = ({
+const writeBytesToFile = async ({
   fileUri,
   bytes,
 }: {
   fileUri: string;
   bytes: Uint8Array<ArrayBuffer>;
-}): void => {
+}): Promise<void> => {
   let fileHandle;
   try {
     const file = new File(fileUri);
+    if (!(await Files.exists(fileUri))) {
+      file.create();
+    }
     fileHandle = file.open();
     fileHandle.writeBytes(bytes);
   } finally {

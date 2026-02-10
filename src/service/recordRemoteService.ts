@@ -1,3 +1,5 @@
+import { Survey } from "@openforis/arena-core";
+
 import { Files, Functions, log, RNFileProcessor } from "utils";
 import { RemoteService } from "./remoteService";
 
@@ -42,7 +44,15 @@ const uploadRecords = ({
   startFromChunk,
   conflictResolutionStrategy,
   onUploadProgress,
-}: any) => {
+}: {
+  survey: Survey & { remoteId?: number };
+  cycle: string;
+  fileUri: string;
+  fileId: string;
+  startFromChunk?: number;
+  conflictResolutionStrategy: string;
+  onUploadProgress: (progressEvent: any) => void;
+}): { promise: Promise<any>; cancel: () => void } => {
   const surveyRemoteId = survey.remoteId;
   let fileProcessor: RNFileProcessor;
 
