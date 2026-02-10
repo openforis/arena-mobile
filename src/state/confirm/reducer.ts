@@ -16,7 +16,7 @@ const confirm = createAsyncThunk(
       selectedMultipleChoiceValues,
       selectedSingleChoiceValue,
     });
-  }
+  },
 );
 
 const cancel = createAsyncThunk(
@@ -25,7 +25,7 @@ const cancel = createAsyncThunk(
     const state: any = getState();
     const { onCancel } = state.confirm;
     await onCancel?.();
-  }
+  },
 );
 
 const confirmSlice = createSlice({
@@ -53,6 +53,8 @@ export type OnConfirmParams = {
   selectedSingleChoiceValue?: string | null;
 };
 
+type ChoiceOption = { label: string; value: string };
+
 export type ConfirmShowParams = {
   titleKey?: string;
   cancelButtonStyle?: any;
@@ -61,11 +63,11 @@ export type ConfirmShowParams = {
   confirmButtonTextKey?: string;
   messageKey?: string;
   messageParams?: any;
-  multipleChoiceOptions?: Array<{ label: string; value: string }>;
+  multipleChoiceOptions?: ChoiceOption[];
+  defaultMultipleChoiceValues?: string[];
   onConfirm: (params: OnConfirmParams) => Promise<void> | void;
   onCancel?: () => Promise<void>;
-  singleChoiceOptions?: Array<{ label: string; value: string }>;
-  defaultMultipleChoiceValues?: string[];
+  singleChoiceOptions?: ChoiceOption[];
   defaultSingleChoiceValue?: string | null;
   swipeToConfirm?: boolean;
   swipeToConfirmTitleKey?: string;

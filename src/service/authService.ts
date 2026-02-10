@@ -60,6 +60,7 @@ export type LoginResponse = {
   user?: User;
   error?: string;
   message?: string;
+  twoFactorRequired?: boolean;
 };
 
 const onLoginSuccess = async ({

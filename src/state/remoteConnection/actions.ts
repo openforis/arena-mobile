@@ -17,6 +17,7 @@ import { DeviceInfoSelectors } from "state/deviceInfo";
 import { AsyncStorageUtils } from "service/asyncStorage/AsyncStorageUtils";
 import { asyncStorageKeys } from "service/asyncStorage/asyncStorageKeys";
 import { LoginResponse } from "service/authService";
+import { User } from "@openforis/arena-core";
 
 const LOGGED_OUT = "LOGGED_OUT";
 const USER_LOADING = "USER_LOADING";
@@ -82,6 +83,41 @@ const confirmGoToConnectionToRemoteServer =
     );
   };
 
+const onLoginResponseSuccessful = async ({
+  user,
+  email,
+  serverUrl,
+  showBack,
+  dispatch,
+  navigation,
+}: {
+  user: User;
+  email: string | undefined;
+  serverUrl: string;
+  showBack: boolean | undefined;
+  dispatch: any;
+  navigation: any;
+}) => {
+  const userEmail = user.email ?? email;
+  await AsyncStorageUtils.setItem(asyncStorageKeys.loggedInUser, user);
+  const settings = await SettingsService.fetchSettings();
+  const settingsUpdated = { ...settings, serverUrl, email: userEmail };
+  await dispatch(SettingsActions.updateSettings(settingsUpdated));
+
+  dispatch({ type: USER_SET, user });
+
+  if (showBack) {
+    dispatch(
+      ConfirmActions.show({
+        titleKey: "authService:loginSuccessful",
+        confirmButtonTextKey: "common:continue",
+        cancelButtonTextKey: "common:close",
+        onConfirm: navigation.goBack,
+      }),
+    );
+  }
+};
+
 const onLoginResponse = async ({
   dispatch,
   navigation,
@@ -97,26 +133,25 @@ const onLoginResponse = async ({
   email?: string;
   showBack?: boolean;
 }) => {
-  const { user, error, message } = res;
+  const { user, error, message, twoFactorRequired } = res;
   if (user) {
-    const userEmail = user.email ?? email;
-    await AsyncStorageUtils.setItem(asyncStorageKeys.loggedInUser, user);
-    const settings = await SettingsService.fetchSettings();
-    const settingsUpdated = { ...settings, serverUrl, email: userEmail };
-    await dispatch(SettingsActions.updateSettings(settingsUpdated));
-
-    if (showBack) {
-      dispatch(
-        ConfirmActions.show({
-          titleKey: "authService:loginSuccessful",
-          confirmButtonTextKey: "common:continue",
-          cancelButtonTextKey: "common:close",
-          onConfirm: navigation.goBack,
-        }),
-      );
-    }
-
-    dispatch({ type: USER_SET, user });
+    await onLoginResponseSuccessful({
+      user,
+      email,
+      serverUrl,
+      showBack,
+      dispatch,
+      navigation,
+    });
+  } else if (twoFactorRequired) {
+    dispatch(
+      ConfirmActions.show({
+        titleKey: "authService:twoFactorRequired",
+        confirmButtonTextKey: "common:continue",
+        cancelButtonTextKey: "common:close",
+        onConfirm: navigation.goBack,
+      }),
+    );
   } else if (message || error) {
     const errorKeySuffix =
       message &&
