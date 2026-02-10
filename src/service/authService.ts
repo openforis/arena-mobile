@@ -103,7 +103,6 @@ const login = async ({
         appInfo,
       },
     });
-    console.log("==== Login response", { data, response });
     const { twoFactorRequired } = data;
     if (twoFactorRequired) {
       return { twoFactorRequired };

@@ -55,14 +55,10 @@ const initialState: ConfirmState = {
 // confirm and cancel as async thunk to allow calling "dispatch" inside onConfirm and onCancel
 const confirm = createAsyncThunk(
   "confirm/show",
-  async (params: any, { getState }) => {
-    const { selectedMultipleChoiceValues, selectedSingleChoiceValue } = params;
+  async (params: OnConfirmParams, { getState }) => {
     const state: any = getState();
     const { onConfirm } = state.confirm;
-    await onConfirm?.({
-      selectedMultipleChoiceValues,
-      selectedSingleChoiceValue,
-    });
+    await onConfirm?.(params);
   },
 );
 
