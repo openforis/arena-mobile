@@ -12,6 +12,7 @@ import {
 
 import {
   DataVisualizer,
+  DataVisualizerCellProps,
   DataVisualizerField,
   Icon,
   LoadingIcon,
@@ -47,10 +48,6 @@ const formatDateToDateTimeDisplay = (date: any) =>
         formatTo: DateFormats.datetimeDisplay,
       })
     : Dates.format(date, DateFormats.datetimeDisplay);
-
-type DataVisualizerCellProps = {
-  item: any;
-};
 
 const recordOriginCellRendererByViewMode: Record<ScreenViewMode, any> = {
   [ScreenViewMode.list]: ({ item }: DataVisualizerCellProps) => (
