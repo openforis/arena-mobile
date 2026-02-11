@@ -1,5 +1,3 @@
-import { Survey } from "@openforis/arena-core";
-
 import { Files, Functions, log, RNFileProcessor } from "utils";
 import { RemoteService } from "./remoteService";
 import { SurveyMobile } from "model/SurveyMobile";

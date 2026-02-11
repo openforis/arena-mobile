@@ -223,7 +223,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
   );
 
   const fields = useMemo((): DataVisualizerField[] => {
-    const result = [];
+    const result: DataVisualizerField[] = [];
     result.push(
       ...rootKeyDefs.map((keyDef) => ({
         key: `keysObj.${NodeDefs.getName(keyDef)}`,
