@@ -67,7 +67,7 @@ export class RNFileProcessor extends FileProcessor {
     } catch (error) {
       // Clean up temp file in case of error
       if (await Files.exists(tempFileUri)) {
-        await Files.del(tempFileUri);
+        await Files.del(tempFileUri!, true);
       }
       throw error;
     }

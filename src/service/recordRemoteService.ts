@@ -2,6 +2,7 @@ import { Survey } from "@openforis/arena-core";
 
 import { Files, Functions, log, RNFileProcessor } from "utils";
 import { RemoteService } from "./remoteService";
+import { SurveyMobile } from "model/SurveyMobile";
 
 const uploadChunkSize = 2 * 1024 * 1024; // 2MB
 
@@ -45,7 +46,7 @@ const uploadRecords = ({
   conflictResolutionStrategy,
   onUploadProgress,
 }: {
-  survey: Survey & { remoteId?: number };
+  survey: SurveyMobile;
   cycle: string;
   fileUri: string;
   fileId: string;
@@ -108,7 +109,7 @@ const uploadRecords = ({
         } finally {
           const tempFileUri = (content as any).uri;
           if (tempFileUri) {
-            await Files.del(tempFileUri);
+            await Files.del(tempFileUri, true);
           }
         }
       },

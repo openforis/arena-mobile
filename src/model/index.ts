@@ -22,6 +22,7 @@ export { SettingsModel } from "./SettingsModel";
 export type { SettingsObject } from "./SettingsModel";
 export { Sort, SortUtils } from "./Sort";
 export type { SortObject } from "./Sort";
+export type { SurveyMobile } from "./SurveyMobile";
 export { SurveyStatus } from "./SurveyStatus";
 export { Taxa } from "./Taxa";
 export { Themes, ThemesSettings } from "./Themes";

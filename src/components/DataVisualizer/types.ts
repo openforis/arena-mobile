@@ -6,7 +6,7 @@ export type DataVisualizerField = {
   key: string;
   header: string;
   style?: StyleProp<ViewStyle>;
-  cellRenderer?: ({ item }: { item: any }) => React.ReactElement;
+  cellRenderer?: ({ item }: { item: any }) => React.ReactElement | null;
   optional?: boolean;
   sortable?: boolean;
 };

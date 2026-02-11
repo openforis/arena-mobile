@@ -10,7 +10,13 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { DataVisualizer, Icon, LoadingIcon, Text } from "components";
+import {
+  DataVisualizer,
+  DataVisualizerField,
+  Icon,
+  LoadingIcon,
+  Text,
+} from "components";
 import { useTranslation } from "localization";
 import {
   Cycles,
@@ -146,7 +152,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
           Validations.getWarningsCount(validation)
         );
       }),
-    [records]
+    [records],
   );
 
   const rootKeyDefs = useMemo(() => {
@@ -188,12 +194,12 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
         dateCreated: formatDateToDateTimeDisplay(recordSummary.dateCreated),
         dateModified: formatDateToDateTimeDisplay(recordSummary.dateModified),
         dateModifiedRemote: formatDateToDateTimeDisplay(
-          recordSummary.dateModifiedRemote
+          recordSummary.dateModifiedRemote,
         ),
         dateSynced: formatDateToDateTimeDisplay(recordSummary.dateSynced),
       };
     },
-    [lang, survey, t]
+    [lang, survey, t],
   );
 
   const recordItems = useMemo(() => {
@@ -210,13 +216,13 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
         DataEntryActions.fetchAndEditRecord({
           navigation,
           recordSummary,
-        })
+        }),
       );
     },
-    [dispatch, navigation]
+    [dispatch, navigation],
   );
 
-  const fields = useMemo(() => {
+  const fields = useMemo((): DataVisualizerField[] => {
     const result = [];
     result.push(
       ...rootKeyDefs.map((keyDef) => ({
@@ -232,7 +238,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
         headerLabelVariant: "titleMedium",
         sortable: true,
         textVariant: "titleLarge",
-      }))
+      })),
     );
     if (recordsHaveErrorsOrWarnings) {
       result.push({
@@ -264,7 +270,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
           key: "dateCreated",
           header: "common:createdOn",
           optional: true,
-        }
+        },
       );
     }
     if (showRemoteProps) {
@@ -280,7 +286,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
             key: "dateModifiedRemote",
             header: "recordsList:dateModifiedRemotely",
           },
-          { key: "ownerName", header: "recordsList:owner" }
+          { key: "ownerName", header: "recordsList:owner" },
         );
       }
       result.push({
@@ -308,14 +314,15 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     }
     return result;
   }, [
+    lang,
+    recordsHaveErrorsOrWarnings,
     rootKeyDefs,
     rootSummaryDefs,
-    recordsHaveErrorsOrWarnings,
-    viewAsList,
+    screenViewMode,
     showRemoteProps,
-    syncStatusLoading,
     syncStatusFetched,
-    lang,
+    syncStatusLoading,
+    viewAsList,
   ]);
 
   const onSelectionChange = useCallback((selection: any) => {
