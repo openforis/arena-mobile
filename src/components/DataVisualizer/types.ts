@@ -13,12 +13,14 @@ export type DataVisualizerCellRenderer = (
 
 export type DataVisualizerField = {
   key: string;
-  header: string;
-  headerWidth?: number;
-  style?: StyleProp<ViewStyle>;
   cellRenderer?: DataVisualizerCellRenderer;
+  header: string;
+  headerLabelVariant?: string;
+  headerWidth?: number;
   optional?: boolean;
   sortable?: boolean;
+  style?: StyleProp<ViewStyle>;
+  textVariant?: string;
 };
 
 export type DataVisualizerProps = {
