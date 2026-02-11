@@ -109,7 +109,6 @@ const login = async ({
     }
     return onLoginSuccess({ data, response });
   } catch (err: any) {
-    console.error("==== Login error", { err });
     return extractErrorMessageFromLoginError(err);
   }
 };
