@@ -7,7 +7,12 @@ export { CollapsiblePanel } from "./CollapsiblePanel";
 export { CopyToClipboardButton } from "./CopyToClipboardButton";
 export { DataTable } from "./DataTable";
 export { DataVisualizer } from "./DataVisualizer";
-export type { DataVisualizerCellProps } from "./DataVisualizer";
+export type {
+  DataVisualizerCellProps,
+  DataVisualizerCellRenderer,
+  DataVisualizerField,
+  DataVisualizerProps,
+} from "./DataVisualizer";
 export { DatePicker } from "./DatePicker";
 export { DateTimePicker } from "./DateTimePicker";
 export { DeleteIconButton } from "./DeleteIconButton";

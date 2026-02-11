@@ -1,4 +1,4 @@
-import { JobMobile, JobMobileContext } from "model";
+import { JobMobile, JobMobileContext, SurveyMobile } from "model";
 
 import { RecordService } from "./recordService";
 
@@ -30,7 +30,7 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadJobContext> {
       this.summary.processed > 0 ? Math.floor(this.summary.processed) : 1;
 
     const { promise, cancel } = RecordService.uploadRecordsToRemoteServer({
-      survey,
+      survey: survey as SurveyMobile,
       cycle,
       fileUri,
       fileId: this.summary.uuid,
@@ -44,7 +44,7 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadJobContext> {
       },
     });
     this.cancelUpload = cancel;
-    const { data } = (await promise) as any;
+    const { data } = await promise;
     const { job } = data;
     this.remoteJob = job;
   }

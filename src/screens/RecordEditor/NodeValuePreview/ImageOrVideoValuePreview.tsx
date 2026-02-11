@@ -34,7 +34,7 @@ export const ImageOrVideoValuePreview = (props: NodeValuePreviewProps) => {
 
   const onFileOpenPress = useCallback(async () => {
     const mimeType = Files.getMimeTypeFromName(fileName);
-    await Files.shareFile({ url: fileUri, mimeType });
+    await Files.shareFile({ url: fileUri!, mimeType });
   }, [fileName, fileUri]);
 
   const onImagePreviewPress = useCallback(() => {

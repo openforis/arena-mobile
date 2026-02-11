@@ -27,12 +27,12 @@ const styles = StyleSheet.create({
 });
 
 type ImageInfoState = {
-  width: number,
-  height: number,
-  size: string,
-  latitude: number,
-  longitude: number,
-} | null
+  width: number;
+  height: number;
+  size: string;
+  latitude: number;
+  longitude: number;
+} | null;
 
 type ImageInfoProps = {
   imageUri: string;

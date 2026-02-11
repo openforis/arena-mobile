@@ -1,10 +1,13 @@
 import LZString from "lz-string";
 
-import { DbUtils, dbClient } from "db";
-import { Objects, Surveys } from "@openforis/arena-core";
+import { Objects, Survey, Surveys } from "@openforis/arena-core";
 
-const insertSurvey = async (survey: any) => {
+import { DbUtils, dbClient } from "db";
+import { SurveyMobile } from "model";
+
+const insertSurvey = async (survey: Survey): Promise<SurveyMobile> => {
   const { id, uuid, dateCreated, datePublished, dateModified } = survey;
+  const surveyMobile = survey as SurveyMobile;
   const name = Surveys.getName(survey);
   const defaultLang = Surveys.getDefaultLanguage(survey);
   const label = Surveys.getLabel(defaultLang)(survey);
@@ -12,7 +15,7 @@ const insertSurvey = async (survey: any) => {
     `INSERT INTO survey (server_url, remote_id, uuid, name, label, content, date_created, date_modified)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     [
-      survey.serverUrl || "localhost",
+      surveyMobile.serverUrl || "localhost",
       id,
       uuid,
       name,
@@ -20,11 +23,11 @@ const insertSurvey = async (survey: any) => {
       "", // always save empty content (stored in FS)
       dateCreated,
       datePublished ?? dateModified,
-    ]
+    ],
   );
-  survey.remoteId = id;
-  survey.id = insertId;
-  return survey;
+  surveyMobile.remoteId = id!;
+  surveyMobile.id = insertId;
+  return surveyMobile;
 };
 
 const updateSurvey = async ({ id, survey }: any) => {
@@ -38,7 +41,7 @@ const updateSurvey = async ({ id, survey }: any) => {
       survey.dateCreated,
       survey.datePublished ?? survey.dateModified,
       id,
-    ]
+    ],
   );
   survey.remoteId = survey.id;
   survey.id = id;
@@ -48,7 +51,7 @@ const updateSurvey = async ({ id, survey }: any) => {
 const fetchSurveyById = async (id: any) => {
   const row: any = await dbClient.one(
     "SELECT remote_id, content FROM survey WHERE id = ?",
-    [id]
+    [id],
   );
   const { content, remote_id: remoteId } = row;
   const survey = Objects.isEmpty(content)
@@ -63,14 +66,14 @@ const fetchSurveySummaries = async () => {
   const surveys = await dbClient.many(
     `SELECT id, server_url, remote_id, uuid, name, label, date_modified
     FROM survey
-    ORDER BY name`
+    ORDER BY name`,
   );
   return surveys.map((survey: any) => Objects.camelize(survey));
 };
 
 const deleteSurveys = async (surveyIds: any) => {
   await dbClient.runSql(
-    `DELETE FROM survey WHERE id IN (${DbUtils.quoteValues(surveyIds)})`
+    `DELETE FROM survey WHERE id IN (${DbUtils.quoteValues(surveyIds)})`,
   );
 };
 

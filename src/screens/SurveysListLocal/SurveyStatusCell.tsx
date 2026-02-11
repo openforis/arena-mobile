@@ -29,11 +29,7 @@ const statusIconColorByStatus: Record<UpdateStatus | SurveyStatus, string> = {
   [SurveyStatus.notVisibleInMobile]: "red",
 };
 
-type Props = DataVisualizerCellProps & {
-  viewMode?: string;
-};
-
-export const SurveyStatusCell = (props: Props) => {
+export const SurveyStatusCell = (props: DataVisualizerCellProps) => {
   const { item, viewMode } = props;
   const status: SurveyStatus | UpdateStatus = item.status;
 

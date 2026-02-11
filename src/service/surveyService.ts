@@ -1,4 +1,4 @@
-import { Surveys } from "@openforis/arena-core";
+import { Survey, Surveys } from "@openforis/arena-core";
 
 import { SurveyRepository } from "./repository/surveyRepository";
 import { SurveyFSRepository } from "./repository/surveyFSRepository";
@@ -15,21 +15,28 @@ const demoSurveyUuid = "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3";
 
 const remoteSurveyFetchTimeout = 60000; // 1 min
 
-const _insertSurvey = async (survey: any) => {
+const _insertSurvey = async (survey: Survey): Promise<Survey> => {
   const surveyDb = await insertSurvey(survey);
   return SurveyFSRepository.saveSurveyFile(surveyDb);
 };
 
-const _updateSurvey = async ({ id, survey }: any) => {
+const _updateSurvey = async ({
+  id,
+  survey,
+}: {
+  id: number;
+  survey: Survey;
+}): Promise<Survey> => {
   const surveyDb = await updateSurvey({ id, survey });
   return SurveyFSRepository.saveSurveyFile(surveyDb);
 };
 
-const fetchSurveyById = async (surveyId: any) => {
+const fetchSurveyById = async (surveyId: number): Promise<Survey> => {
   const surveyDb = await SurveyRepository.fetchSurveyById(surveyId);
-  return surveyDb.props
+  const surveyLoaded = surveyDb.props
     ? surveyDb
-    : SurveyFSRepository.readSurveyFile({ surveyId: surveyDb.id });
+    : await SurveyFSRepository.readSurveyFile({ surveyId: surveyDb.id });
+  return surveyLoaded;
 };
 
 const fetchCategoryItems = ({
@@ -43,7 +50,7 @@ const fetchCategoryItems = ({
     parentItemUuid,
   });
   items.sort(
-    (itemA, itemB) => (itemA.props.index ?? -1) - (itemB.props.index ?? -1)
+    (itemA, itemB) => (itemA.props.index ?? -1) - (itemB.props.index ?? -1),
   );
   return items;
 };
@@ -74,11 +81,15 @@ const fetchSurveySummaryRemote = async ({ id, name }: any) => {
   }
 };
 
-const fetchSurveyRemoteById = async ({ id }: any) => {
+const fetchSurveyRemoteById = async ({
+  id,
+}: {
+  id: number;
+}): Promise<Survey> => {
   const { data } = await RemoteService.get(
     `api/mobile/survey/${id}`,
     {},
-    { timeout: remoteSurveyFetchTimeout }
+    { timeout: remoteSurveyFetchTimeout },
   );
   const { survey } = data;
   return survey;
@@ -86,7 +97,8 @@ const fetchSurveyRemoteById = async ({ id }: any) => {
 
 const getSurveysStorageSize = async () => SurveyFSRepository.getStorageSize();
 
-const importDemoSurvey = async () => _insertSurvey(demoSurvey);
+const importDemoSurvey = async () =>
+  _insertSurvey(demoSurvey as unknown as Survey);
 
 const importSurveyRemote = async ({ id }: any) => {
   const survey = await fetchSurveyRemoteById({ id });
@@ -102,8 +114,8 @@ const deleteSurveys = async (surveyIds: any) => {
   await SurveyRepository.deleteSurveys(surveyIds);
   await Promise.all(
     surveyIds.map((surveyId: any) =>
-      SurveyFSRepository.deleteSurveyFile({ surveyId })
-    )
+      SurveyFSRepository.deleteSurveyFile({ surveyId }),
+    ),
   );
 };
 
