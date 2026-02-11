@@ -1,5 +1,6 @@
 import { Files, Functions, log, RNFileProcessor } from "utils";
 import { RemoteService } from "./remoteService";
+import { SurveyMobile } from "model/SurveyMobile";
 
 const uploadChunkSize = 2 * 1024 * 1024; // 2MB
 
@@ -42,7 +43,15 @@ const uploadRecords = ({
   startFromChunk,
   conflictResolutionStrategy,
   onUploadProgress,
-}: any) => {
+}: {
+  survey: SurveyMobile;
+  cycle: string;
+  fileUri: string;
+  fileId: string;
+  startFromChunk?: number;
+  conflictResolutionStrategy: string;
+  onUploadProgress: (progressEvent: any) => void;
+}): { promise: Promise<any>; cancel: () => void } => {
   const surveyRemoteId = survey.remoteId;
   let fileProcessor: RNFileProcessor;
 
@@ -98,7 +107,7 @@ const uploadRecords = ({
         } finally {
           const tempFileUri = (content as any).uri;
           if (tempFileUri) {
-            await Files.del(tempFileUri);
+            await Files.del(tempFileUri, true);
           }
         }
       },

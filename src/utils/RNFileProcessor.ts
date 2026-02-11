@@ -53,7 +53,10 @@ export class RNFileProcessor extends FileProcessor {
 
       // Write bytes to temp file
       tempFileUri = Files.path(Files.cacheDirectory, tempFileName);
-      Files.writeBytesToFile({ fileUri: tempFileUri, bytes: chunkBytes });
+      if (await Files.exists(tempFileUri)) {
+        await Files.del(tempFileUri);
+      }
+      await Files.writeBytesToFile({ fileUri: tempFileUri, bytes: chunkBytes });
 
       // Return React Native FormData compatible object
       return {
@@ -64,7 +67,7 @@ export class RNFileProcessor extends FileProcessor {
     } catch (error) {
       // Clean up temp file in case of error
       if (await Files.exists(tempFileUri)) {
-        await Files.del(tempFileUri);
+        await Files.del(tempFileUri!, true);
       }
       throw error;
     }

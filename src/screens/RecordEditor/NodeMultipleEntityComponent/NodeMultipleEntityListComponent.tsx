@@ -2,8 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 
 import { NodeDefs, Objects, Records } from "@openforis/arena-core";
 
-import { DataTable, HView, ScrollView, Text, VView } from "components";
-import { DataTableField } from "components/DataTable/DataTable";
+import { DataTable, DataVisualizerField, HView, ScrollView, Text, VView } from "components";
 import { useTranslation } from "localization";
 import { SortObject } from "model";
 import { RecordNodes } from "model/utils/RecordNodes";
@@ -89,10 +88,10 @@ export const NodeMultipleEntityListComponent = (
     [entityDef, isLandscape, maxSummaryDefs, parentEntity, record, survey]
   );
 
-  const tableFields: DataTableField[] = useMemo(
+  const tableFields: DataVisualizerField[] = useMemo(
     () =>
       visibleNodeDefs.map(
-        (summaryDef): DataTableField => ({
+        (summaryDef): DataVisualizerField => ({
           key: NodeDefs.getName(summaryDef),
           header: NodeDefs.getLabelOrName(summaryDef, lang),
           style: { minWidth: isLandscape ? 150 : 100 },

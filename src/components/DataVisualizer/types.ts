@@ -1,14 +1,26 @@
 import { StyleProp, ViewStyle } from "react-native";
 
-import { SortObject } from "model";
+import { ScreenViewMode, SortObject } from "model";
+
+export type DataVisualizerCellProps = {
+  item: any;
+  viewMode?: ScreenViewMode;
+};
+
+export type DataVisualizerCellRenderer = (
+  props: DataVisualizerCellProps,
+) => React.ReactElement | null;
 
 export type DataVisualizerField = {
   key: string;
+  cellRenderer?: DataVisualizerCellRenderer;
   header: string;
-  style?: StyleProp<ViewStyle>;
-  cellRenderer?: ({ item }: { item: any }) => React.ReactElement;
+  headerLabelVariant?: string;
+  headerWidth?: number;
   optional?: boolean;
   sortable?: boolean;
+  style?: StyleProp<ViewStyle>;
+  textVariant?: string;
 };
 
 export type DataVisualizerProps = {

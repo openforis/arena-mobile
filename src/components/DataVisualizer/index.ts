@@ -1,2 +1,7 @@
 export { DataVisualizer } from "./DataVisualizer";
-export type { DataVisualizerCellProps } from "./DataVisualizerCellPropTypes";
+export type {
+  DataVisualizerCellProps,
+  DataVisualizerCellRenderer,
+  DataVisualizerField,
+  DataVisualizerProps,
+} from "./types";
