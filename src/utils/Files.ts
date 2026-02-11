@@ -317,7 +317,7 @@ const shareFile = async ({
   dialogTitle,
 }: {
   url: string;
-  mimeType?: string | null | undefined;
+  mimeType?: string | null;
   dialogTitle?: string;
 }): Promise<void> => {
   const mimeType = mimeTypeParam ?? getMimeTypeFromUri(url);

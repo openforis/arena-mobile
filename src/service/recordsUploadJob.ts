@@ -44,7 +44,7 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadJobContext> {
       },
     });
     this.cancelUpload = cancel;
-    const { data } = (await promise) as any;
+    const { data } = await promise;
     const { job } = data;
     this.remoteJob = job;
   }

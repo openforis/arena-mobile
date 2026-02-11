@@ -9,6 +9,7 @@ export { DataTable } from "./DataTable";
 export { DataVisualizer } from "./DataVisualizer";
 export type {
   DataVisualizerCellProps,
+  DataVisualizerCellRenderer,
   DataVisualizerField,
   DataVisualizerProps,
 } from "./DataVisualizer";
