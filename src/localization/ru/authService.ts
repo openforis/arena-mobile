@@ -11,4 +11,11 @@ export default {
   logoutOptions: {
     keepEmailAddress: "Сохранить адрес электронной почты",
   },
+  twoFactorCode: "Код 2FA",
+  twoFactorRequiredConfirm: {
+    title: "Требуется 2FA",
+    message:
+      "Пожалуйста, введите код, сгенерированный вашим приложением аутентификации.",
+    messageError: "Код 2FA неверен. Пожалуйста, попробуйте снова.",
+  },
 };

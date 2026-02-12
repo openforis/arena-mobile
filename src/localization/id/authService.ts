@@ -11,4 +11,11 @@ export default {
   logoutOptions: {
     keepEmailAddress: "Simpan alamat email",
   },
+  twoFactorCode: "Kode 2FA",
+  twoFactorRequiredConfirm: {
+    title: "2FA Diperlukan",
+    message:
+      "Silakan masukkan kode yang dihasilkan oleh aplikasi autentikator Anda.",
+    messageError: "Kode 2FA salah. Silakan coba lagi.",
+  },
 };

@@ -11,4 +11,10 @@ export default {
   logoutOptions: {
     keepEmailAddress: "Behåll e-postadress",
   },
+  twoFactorCode: "2FA-kod",
+  twoFactorRequiredConfirm: {
+    title: "2FA Krävs",
+    message: "Vänligen ange koden som genererats av din autentiseringsapp.",
+    messageError: "2FA-koden är felaktig. Vänligen försök igen.",
+  },
 };

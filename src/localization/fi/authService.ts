@@ -11,4 +11,10 @@ export default {
   logoutOptions: {
     keepEmailAddress: "Tallenna sähköpostiosoite",
   },
+  twoFactorCode: "2FA-koodi",
+  twoFactorRequiredConfirm: {
+    title: "2FA Vaaditaan",
+    message: "Syötä todentajasovelluksesi tuottama koodi.",
+    messageError: "2FA-koodi on virheellinen. Yritä uudelleen.",
+  },
 };
