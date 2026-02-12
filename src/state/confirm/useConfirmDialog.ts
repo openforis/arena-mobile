@@ -49,7 +49,7 @@ export const useConfirmDialog = (): ConfirmState &
 
   useEffect(() => {
     setState(() => {
-      const confirmParams = {
+      const defaultConfirmSelection = {
         selectedMultipleChoiceValues:
           confirmState.defaultMultipleChoiceValues ?? [],
         selectedSingleChoiceValue: confirmState.defaultSingleChoiceValue,
@@ -57,8 +57,7 @@ export const useConfirmDialog = (): ConfirmState &
       };
       return {
         ...defaultLocalState,
-        ...confirmParams,
-        confirmButtonEnabled: confirmButtonEnableFn?.(confirmParams) ?? true,
+        ...defaultConfirmSelection,
       };
     });
   }, [confirmButtonEnableFn, confirmState]);

@@ -23,7 +23,7 @@ export type ConfirmShowParams = {
   messageParams?: any;
   multipleChoiceOptions?: ChoiceOption[];
   onConfirm: (params: OnConfirmParams) => Promise<void> | void;
-  onCancel?: () => Promise<void>;
+  onCancel?: () => Promise<void> | void;
   singleChoiceOptions?: ChoiceOption[];
   swipeToConfirm?: boolean;
   swipeToConfirmTitleKey?: string;

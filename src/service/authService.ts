@@ -9,6 +9,9 @@ const refreshTokenCookieName = "refreshToken";
 
 const authTokenRefreshUrl = "/auth/token/refresh";
 
+export const invalidServerUrlError = "authService:error.invalidServerUrl";
+export const invalidCredentialsError = "authService:error.invalidCredentials";
+
 const extractCookieValue = (
   headers: Dictionary<string>,
   cookieName: string,
@@ -48,10 +51,10 @@ const getServerUrl = async () =>
 const extractErrorMessageFromLoginError = (err: any): { error: string } => {
   const { response } = err;
   if (!response) {
-    return { error: "authService:error.invalidServerUrl" };
+    return { error: invalidServerUrlError };
   }
   if (response.status === 401) {
-    return { error: "authService:error.invalidCredentials" };
+    return { error: invalidCredentialsError };
   }
   return { error: err };
 };
@@ -76,7 +79,7 @@ const onLoginSuccess = async ({
     await SecureStoreService.setAuthRefreshToken(refreshToken);
     return data;
   }
-  return { error: "authService:error.invalidCredentials" };
+  return { error: invalidCredentialsError };
 };
 
 const login = async ({
@@ -142,7 +145,7 @@ const logout = async () => {
     return data;
   } catch (err: any) {
     if (!err.response) {
-      return { error: "authService:error.invalidServerUrl" };
+      return { error: invalidServerUrlError };
     }
     return { error: err };
   }

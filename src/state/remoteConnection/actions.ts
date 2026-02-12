@@ -18,7 +18,7 @@ import { RemoteConnectionSelectors } from "./selectors";
 import { DeviceInfoSelectors } from "state/deviceInfo";
 import { AsyncStorageUtils } from "service/asyncStorage/AsyncStorageUtils";
 import { asyncStorageKeys } from "service/asyncStorage/asyncStorageKeys";
-import { LoginResponse } from "service/authService";
+import { invalidCredentialsError, LoginResponse } from "service/authService";
 
 const LOGGED_OUT = "LOGGED_OUT";
 const USER_LOADING = "USER_LOADING";
@@ -148,7 +148,10 @@ const onLoginResponse = async ({
       dispatch,
       navigation,
     });
-  } else if (twoFactorRequired || twoFactorToken) {
+  } else if (
+    twoFactorRequired ||
+    (twoFactorToken && error === invalidCredentialsError)
+  ) {
     dispatch(
       ConfirmActions.show({
         titleKey: "authService:twoFactorRequiredConfirm.title",
