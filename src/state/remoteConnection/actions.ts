@@ -1,3 +1,5 @@
+import { Objects, User } from "@openforis/arena-core";
+
 import { i18n } from "localization";
 import { UserLogoutOptions } from "model/UserLogoutOptions";
 import {
@@ -17,7 +19,6 @@ import { DeviceInfoSelectors } from "state/deviceInfo";
 import { AsyncStorageUtils } from "service/asyncStorage/AsyncStorageUtils";
 import { asyncStorageKeys } from "service/asyncStorage/asyncStorageKeys";
 import { LoginResponse } from "service/authService";
-import { User } from "@openforis/arena-core";
 
 const LOGGED_OUT = "LOGGED_OUT";
 const USER_LOADING = "USER_LOADING";
@@ -155,6 +156,8 @@ const onLoginResponse = async ({
           ? "authService:twoFactorRequiredConfirm.messageError"
           : "authService:twoFactorRequiredConfirm.message",
         confirmButtonTextKey: "common:continue",
+        confirmButtonEnableFn: ({ textInputValue }) =>
+          Objects.isNotEmpty(textInputValue),
         cancelButtonTextKey: "common:cancel",
         onConfirm: ({ textInputValue }) => {
           dispatch(

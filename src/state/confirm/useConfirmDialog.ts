@@ -3,10 +3,11 @@ import { useSelector } from "react-redux";
 
 import { Arrays } from "@openforis/arena-core";
 
-import { ConfirmActions, ConfirmState } from "./reducer";
+import { ConfirmActions, ConfirmState, OnConfirmParams } from "./reducer";
 import { useAppDispatch } from "state/store";
 
 type ConfirmDialogLocalState = {
+  confirmButtonEnabled: boolean;
   selectedMultipleChoiceValues: any[];
   selectedSingleChoiceValue: any;
   swipeConfirmed: boolean;
@@ -14,6 +15,7 @@ type ConfirmDialogLocalState = {
 };
 
 const defaultLocalState: ConfirmDialogLocalState = {
+  confirmButtonEnabled: true,
   selectedMultipleChoiceValues: [],
   selectedSingleChoiceValue: null,
   swipeConfirmed: false,
@@ -33,9 +35,12 @@ export const useConfirmDialog = (): ConfirmState &
 
   const confirmState: ConfirmState = useSelector((state: any) => state.confirm);
 
+  const { confirmButtonEnableFn, swipeToConfirm } = confirmState;
+
   const [state, setState] = useState(defaultLocalState);
 
   const {
+    confirmButtonEnabled,
     selectedMultipleChoiceValues,
     selectedSingleChoiceValue,
     swipeConfirmed,
@@ -43,29 +48,44 @@ export const useConfirmDialog = (): ConfirmState &
   } = state;
 
   useEffect(() => {
-    setState({
-      ...defaultLocalState,
-      selectedMultipleChoiceValues:
-        confirmState.defaultMultipleChoiceValues ?? [],
-      selectedSingleChoiceValue: confirmState.defaultSingleChoiceValue,
-      textInputValue: confirmState.defaultTextInputValue ?? "",
+    setState(() => {
+      const confirmParams = {
+        selectedMultipleChoiceValues:
+          confirmState.defaultMultipleChoiceValues ?? [],
+        selectedSingleChoiceValue: confirmState.defaultSingleChoiceValue,
+        textInputValue: confirmState.defaultTextInputValue ?? "",
+      };
+      return {
+        ...defaultLocalState,
+        ...confirmParams,
+        confirmButtonEnabled: confirmButtonEnableFn?.(confirmParams) ?? true,
+      };
     });
-  }, [confirmState]);
+  }, [confirmButtonEnableFn, confirmState]);
+
+  const getConfirmParams = useCallback(
+    (): OnConfirmParams => ({
+      selectedMultipleChoiceValues,
+      selectedSingleChoiceValue,
+      textInputValue,
+    }),
+    [selectedMultipleChoiceValues, selectedSingleChoiceValue, textInputValue],
+  );
+
+  useEffect(() => {
+    if (swipeToConfirm || confirmButtonEnableFn) {
+      setState((statePrev) => ({
+        ...statePrev,
+        confirmButtonEnabled:
+          (!swipeToConfirm || swipeConfirmed) &&
+          (confirmButtonEnableFn?.(getConfirmParams()) ?? true),
+      }));
+    }
+  }, [confirmButtonEnableFn, getConfirmParams, swipeConfirmed, swipeToConfirm]);
 
   const confirm = useCallback(() => {
-    dispatch(
-      ConfirmActions.confirm({
-        selectedMultipleChoiceValues,
-        selectedSingleChoiceValue,
-        textInputValue,
-      }),
-    );
-  }, [
-    dispatch,
-    selectedMultipleChoiceValues,
-    selectedSingleChoiceValue,
-    textInputValue,
-  ]);
+    dispatch(ConfirmActions.confirm(getConfirmParams()));
+  }, [dispatch, getConfirmParams]);
 
   const cancel = useCallback(() => {
     dispatch(ConfirmActions.cancel());
@@ -109,6 +129,7 @@ export const useConfirmDialog = (): ConfirmState &
   return {
     ...confirmState,
     confirm,
+    confirmButtonEnabled,
     cancel,
 
     onMultipleChoiceOptionChange,

@@ -15,6 +15,7 @@ export type ConfirmShowParams = {
   cancelButtonTextKey?: string;
   confirmButtonStyle?: any;
   confirmButtonTextKey?: string;
+  confirmButtonEnableFn?: (params: OnConfirmParams) => boolean;
   defaultMultipleChoiceValues?: string[];
   defaultSingleChoiceValue?: string | null;
   defaultTextInputValue?: string;

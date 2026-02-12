@@ -24,6 +24,7 @@ export const AppConfirmDialog = () => {
     cancelButtonStyle,
     cancelButtonTextKey,
     confirm,
+    confirmButtonEnabled,
     confirmButtonStyle,
     confirmButtonTextKey,
     messageKey,
@@ -38,7 +39,6 @@ export const AppConfirmDialog = () => {
     textInputToConfirm,
     textInputToConfirmLabelKey,
     singleChoiceOptions,
-    swipeConfirmed,
     swipeToConfirm,
     swipeToConfirmTitleKey,
     textInputValue,
@@ -117,7 +117,7 @@ export const AppConfirmDialog = () => {
             textKey={cancelButtonTextKey}
           />
           <Button
-            disabled={swipeToConfirm && !swipeConfirmed}
+            disabled={!confirmButtonEnabled}
             onPress={confirm}
             labelVariant="bodyLarge"
             textKey={confirmButtonTextKey}
