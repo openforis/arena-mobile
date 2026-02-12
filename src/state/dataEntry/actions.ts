@@ -59,7 +59,7 @@ const {
 
 const removeNodesFlags = (nodes: NodesMap) => {
   for (const node of Object.values(nodes)) {
-    Nodes.removeStatusFlags(node);
+    Nodes.removeStatusFlags({ node, sideEffect: true });
   }
 };
 
@@ -139,8 +139,8 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
   ) {
     dispatch(
       MessageActions.setWarning(
-        "dataEntry:node.cannotAddMoreItems.maxCountReached"
-      )
+        "dataEntry:node.cannotAddMoreItems.maxCountReached",
+      ),
     );
     return;
   }
@@ -157,7 +157,7 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
   removeNodesFlags(nodesCreated);
 
   const nodeCreated = Object.values(nodesCreated).find(
-    (nodeCreated) => nodeCreated.nodeDefUuid === nodeDef.uuid
+    (nodeCreated) => nodeCreated.nodeDefUuid === nodeDef.uuid,
   )!;
 
   await _updateRecord({ dispatch, survey, record: recordUpdated });
@@ -167,7 +167,7 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
       parentEntityUuid: parentNode.uuid,
       entityDefUuid: nodeDef.uuid,
       entityUuid: nodeCreated.uuid,
-    })
+    }),
   );
 };
 
@@ -238,7 +238,7 @@ const editRecord =
     const lastEditedPage =
       await PreferencesService.getSurveyRecordLastEditedPage(
         surveyId,
-        recordId
+        recordId,
       );
     const resumeLastEditedPage =
       lastEditedPage &&
@@ -312,10 +312,10 @@ const fetchAndEditRecord =
                     recordId,
                   });
                 },
-              })
+              }),
             );
           },
-        })
+        }),
       );
     } else {
       await _fetchAndEditRecordInternal({
@@ -458,7 +458,7 @@ const updateAttribute =
           content: "recordsList:duplicateKey.message",
           contentParams: { keyValues },
           title: "recordsList:duplicateKey.title",
-        })
+        }),
       );
     }
   };
@@ -516,7 +516,7 @@ const updateCoordinateValueSrs =
             dispatch(performCoordinateValueSrsConversion({ nodeUuid, srsTo })),
           onCancel: () =>
             dispatch(updateAttribute({ uuid: nodeUuid, value: nextValue })),
-        })
+        }),
       );
     }
   };
@@ -540,7 +540,7 @@ const addNewAttribute =
       });
 
     const nodeCreated = Object.values(nodesCreated).find(
-      (nodeCreated) => nodeCreated.nodeDefUuid === nodeDef.uuid
+      (nodeCreated) => nodeCreated.nodeDefUuid === nodeDef.uuid,
     )!;
 
     const { record: recordUpdated2 } = await RecordUpdater.updateAttributeValue(
@@ -550,7 +550,7 @@ const addNewAttribute =
         record: recordUpdated,
         attributeUuid: nodeCreated.uuid,
         value,
-      }
+      },
     );
 
     await _updateRecord({ dispatch, survey, record: recordUpdated2 });
@@ -599,7 +599,7 @@ const selectCurrentPageEntity =
     await PreferencesService.setSurveyRecordLastEditedPage(
       surveyId,
       recordId,
-      payload
+      payload,
     );
   };
 
@@ -648,7 +648,7 @@ const navigateToRecordsList =
           navigation.navigate({ name: screenKeys.recordsList, pop: true });
           dispatch({ type: DATA_ENTRY_RESET });
         },
-      })
+      }),
     );
 
 export const DataEntryActions = {
