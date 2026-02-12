@@ -1,44 +1,20 @@
-import { ConfirmActions } from "./reducer";
+import { ConfirmActions, ConfirmShowParams, OnConfirmParams } from "./reducer";
 
-export type ConfirmResult = {
-  selectedMultipleChoiceValues: any[];
-  selectedSingleChoiceValue: string;
-};
-
-const confirm = async ({
-  dispatch,
-  cancelButtonTextKey,
-  confirmButtonTextKey,
-  messageKey,
-  messageParams,
-  titleKey,
-  titleParams,
-  ...otherParams
-}: any): Promise<ConfirmResult | null> =>
+const confirm = async (
+  params: ConfirmShowParams & { dispatch: any },
+): Promise<OnConfirmParams | null> =>
   new Promise((resolve, reject) => {
     try {
+      const { dispatch, ...otherParams } = params;
       dispatch(
         ConfirmActions.show({
-          cancelButtonTextKey,
-          confirmButtonTextKey,
-          messageKey,
-          messageParams,
-          titleKey,
-          titleParams,
           ...otherParams,
-          onConfirm: ({
-            selectedMultipleChoiceValues,
-            selectedSingleChoiceValue,
-          }: any) => {
+          onConfirm: (confirmParams: OnConfirmParams) => {
             dispatch(ConfirmActions.dismiss());
-
-            resolve({
-              selectedMultipleChoiceValues,
-              selectedSingleChoiceValue,
-            });
+            resolve(confirmParams);
           },
-          onCancel: () => resolve(null),
-        })
+          onCancel: async () => resolve(null),
+        }),
       );
     } catch (error) {
       reject(error as Error);

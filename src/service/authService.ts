@@ -9,6 +9,9 @@ const refreshTokenCookieName = "refreshToken";
 
 const authTokenRefreshUrl = "/auth/token/refresh";
 
+export const invalidServerUrlError = "authService:error.invalidServerUrl";
+export const invalidCredentialsError = "authService:error.invalidCredentials";
+
 const extractCookieValue = (
   headers: Dictionary<string>,
   cookieName: string,
@@ -48,10 +51,10 @@ const getServerUrl = async () =>
 const extractErrorMessageFromLoginError = (err: any): { error: string } => {
   const { response } = err;
   if (!response) {
-    return { error: "authService:error.invalidServerUrl" };
+    return { error: invalidServerUrlError };
   }
   if (response.status === 401) {
-    return { error: "authService:error.invalidCredentials" };
+    return { error: invalidCredentialsError };
   }
   return { error: err };
 };
@@ -60,6 +63,7 @@ export type LoginResponse = {
   user?: User;
   error?: string;
   message?: string;
+  twoFactorRequired?: boolean;
 };
 
 const onLoginSuccess = async ({
@@ -75,17 +79,19 @@ const onLoginSuccess = async ({
     await SecureStoreService.setAuthRefreshToken(refreshToken);
     return data;
   }
-  return { error: "authService:error.invalidCredentials" };
+  return { error: invalidCredentialsError };
 };
 
 const login = async ({
   serverUrl: serverUrlParam,
   email,
   password,
+  twoFactorToken,
 }: {
   serverUrl?: string;
   email: string;
   password: string;
+  twoFactorToken?: string;
 }): Promise<LoginResponse> => {
   const serverUrl = serverUrlParam ?? (await getServerUrl());
   const appInfo = await SystemUtils.getApplicationInfo();
@@ -96,9 +102,14 @@ const login = async ({
       data: {
         email,
         password,
+        twoFactorToken,
         appInfo,
       },
     });
+    const { twoFactorRequired } = data;
+    if (twoFactorRequired) {
+      return { twoFactorRequired };
+    }
     return onLoginSuccess({ data, response });
   } catch (err: any) {
     return extractErrorMessageFromLoginError(err);
@@ -134,7 +145,7 @@ const logout = async () => {
     return data;
   } catch (err: any) {
     if (!err.response) {
-      return { error: "authService:error.invalidServerUrl" };
+      return { error: invalidServerUrlError };
     }
     return { error: err };
   }

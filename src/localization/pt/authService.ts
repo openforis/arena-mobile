@@ -11,4 +11,11 @@ export default {
   logoutOptions: {
     keepEmailAddress: "Manter endereço de email",
   },
+  twoFactorCode: "Código 2FA",
+  twoFactorRequiredConfirm: {
+    title: "2FA Obrigatório",
+    message:
+      "Por favor, insira o código gerado pelo seu aplicativo autenticador.",
+    messageError: "O código 2FA está incorreto. Por favor, tente novamente.",
+  },
 };

@@ -29,6 +29,7 @@ import {
   useAppDispatch,
   useConfirm,
 } from "state";
+import { OnConfirmParams } from "state/confirm";
 import { RemoteConnectionUtils } from "state/remoteConnection/remoteConnectionUtils";
 import { Files } from "utils";
 
@@ -38,7 +39,6 @@ import { RecordsListOptions } from "./RecordsListOptions";
 
 import styles from "./styles";
 import { RecordsListLegend } from "./RecordsListLegend";
-import { ConfirmResult } from "state/confirm/utils";
 
 const { checkLoggedInUser } = RemoteConnectionUtils;
 
@@ -183,7 +183,7 @@ export const RecordsList = () => {
           MessageActions.setMessage({
             content: "dataEntry:errorFetchingRecordsSyncStatus",
             contentParams: { details: String(error) },
-          })
+          }),
         );
       }
       setState((statePrev) => ({ ...statePrev, ...stateNext }));
@@ -193,7 +193,7 @@ export const RecordsList = () => {
   const onOnlyLocalChange = useCallback(
     (onlyLocalUpdated: any) =>
       setState((statePrev) => ({ ...statePrev, onlyLocal: onlyLocalUpdated })),
-    []
+    [],
   );
 
   const onSearchValueChange = useCallback(
@@ -202,7 +202,7 @@ export const RecordsList = () => {
         ...statePrev,
         searchValue: searchValueUpdated,
       })),
-    []
+    [],
   );
 
   const onRemoteSyncPress = useCallback(async () => {
@@ -241,7 +241,7 @@ export const RecordsList = () => {
     if (confirmResult) {
       const { selectedMultipleChoiceValues } = confirmResult;
       const overwriteExistingRecords = selectedMultipleChoiceValues.includes(
-        dataImportOptions.overwriteExistingRecords
+        dataImportOptions.overwriteExistingRecords,
       );
 
       dispatch(
@@ -249,7 +249,7 @@ export const RecordsList = () => {
           fileUri: uri,
           overwriteExistingRecords,
           onImportComplete: loadRecords,
-        })
+        }),
       );
     }
   }, [confirm, dispatch, loadRecords, toaster]);
@@ -266,7 +266,7 @@ export const RecordsList = () => {
       newRecords?: any[];
       updatedRecords?: any[];
       conflictingRecords?: any[];
-      confirmResult: ConfirmResult | boolean | null;
+      confirmResult: OnConfirmParams | boolean | null;
     }> => {
       const getRecordsByStatus = (status: any) =>
         records.filter((r: any) => r.syncStatus === status);
@@ -274,12 +274,12 @@ export const RecordsList = () => {
       const newRecordsCount = newRecords.length;
 
       const updatedRecords = getRecordsByStatus(
-        RecordSyncStatus.modifiedLocally
+        RecordSyncStatus.modifiedLocally,
       );
       const updatedRecordsCount = updatedRecords.length;
 
       const conflictingRecords = getRecordsByStatus(
-        RecordSyncStatus.conflictingKeys
+        RecordSyncStatus.conflictingKeys,
       );
       const conflictingRecordsCount = conflictingRecords.length;
 
@@ -294,7 +294,7 @@ export const RecordsList = () => {
         conflictingRecordsCount > 0 ? conflictingRecordsExportOptions : [];
 
       const recordsWithErrorsCount = records.filter(
-        (r: any) => r.errors > 0
+        (r: any) => r.errors > 0,
       ).length;
 
       const recordsCountSummary = {
@@ -317,7 +317,7 @@ export const RecordsList = () => {
       });
       return { newRecords, updatedRecords, conflictingRecords, confirmResult };
     },
-    [confirm, t, toaster]
+    [confirm, t, toaster],
   );
 
   const exportSelectedRecords = useCallback(
@@ -330,7 +330,7 @@ export const RecordsList = () => {
         let conflictResolutionStrategy =
           ConflictResolutionStrategy.overwriteIfUpdated;
         if (
-          (confirmResult as ConfirmResult).selectedSingleChoiceValue ===
+          (confirmResult as OnConfirmParams).selectedSingleChoiceValue ===
           ConflictResolutionStrategy.merge
         ) {
           recordsToExport.push(...conflictingRecords!);
@@ -352,7 +352,7 @@ export const RecordsList = () => {
           if (missingFiles > 0) {
             toaster(
               "dataEntry:dataExport.exportedSuccessfullyButFilesMissing",
-              { missingFiles }
+              { missingFiles },
             );
           }
         };
@@ -365,11 +365,11 @@ export const RecordsList = () => {
             onEnd: () =>
               setState((statePrev) => ({ ...statePrev, loading: false })),
             onlyRemote,
-          })
+          }),
         );
       }
     },
-    [confirmExportRecords, cycle, dispatch, loadRecordsWithSyncStatus, toaster]
+    [confirmExportRecords, cycle, dispatch, loadRecordsWithSyncStatus, toaster],
   );
 
   const onExportNewOrUpdatedRecordsPress = useCallback(async () => {
@@ -393,7 +393,7 @@ export const RecordsList = () => {
         onEnd: () => {
           setState((statePrev) => ({ ...statePrev, loading: false }));
         },
-      })
+      }),
     );
   }, [cycle, dispatch, records, toaster]);
 
@@ -404,11 +404,11 @@ export const RecordsList = () => {
   const onExportSelectedRecordUuids = useCallback(
     async (recordUuids: any) => {
       const selectedRecords = records!.filter((record) =>
-        recordUuids.includes(record.uuid)
+        recordUuids.includes(record.uuid),
       );
       await exportSelectedRecords({ selectedRecords });
     },
-    [exportSelectedRecords, records]
+    [exportSelectedRecords, records],
   );
 
   const onDeleteSelectedRecordUuids = useCallback(
@@ -424,13 +424,13 @@ export const RecordsList = () => {
         await loadRecords();
       }
     },
-    [confirm, dispatch, loadRecords]
+    [confirm, dispatch, loadRecords],
   );
 
   const checkRecordsCanBeImported = useCallback(
     (selectedRecords: any) => {
       const selectedLocalRecords = selectedRecords.filter(
-        (record: any) => record.origin === RecordOrigin.local
+        (record: any) => record.origin === RecordOrigin.local,
       );
       if (
         selectedLocalRecords.some((record: any) => {
@@ -445,13 +445,13 @@ export const RecordsList = () => {
       }
       return true;
     },
-    [toaster]
+    [toaster],
   );
 
   const onImportSelectedRecordUuids = useCallback(
     (selectedRecordUuids: any) => {
       const selectedRecords = records.filter((record) =>
-        selectedRecordUuids.includes(record.uuid)
+        selectedRecordUuids.includes(record.uuid),
       );
       if (!checkRecordsCanBeImported(selectedRecords)) {
         return;
@@ -460,36 +460,36 @@ export const RecordsList = () => {
         DataEntryActions.importRecordsFromServer({
           recordUuids: selectedRecordUuids,
           onImportComplete: loadRecords,
-        })
+        }),
       );
     },
-    [checkRecordsCanBeImported, dispatch, loadRecords, records]
+    [checkRecordsCanBeImported, dispatch, loadRecords, records],
   );
 
   const checkRecordsCanBeCloned = useCallback(
     (selectedRecords: any) => {
       const selectedRemoteRecords = selectedRecords.filter(
-        (record: any) => record.origin === RecordOrigin.remote
+        (record: any) => record.origin === RecordOrigin.remote,
       );
       if (
         selectedRemoteRecords.some(
-          (record: any) => record.loadStatus !== RecordLoadStatus.complete
+          (record: any) => record.loadStatus !== RecordLoadStatus.complete,
         )
       ) {
         toaster(
-          "recordsList:cloneRecords.onlyRecordsImportedInDeviceOrModifiedLocallyCanBeCloned"
+          "recordsList:cloneRecords.onlyRecordsImportedInDeviceOrModifiedLocallyCanBeCloned",
         );
         return false;
       }
       return true;
     },
-    [toaster]
+    [toaster],
   );
 
   const onCloneSelectedRecordUuids = useCallback(
     (selectedRecordUuids: any) => {
       const selectedRecords = records.filter((record) =>
-        selectedRecordUuids.includes(record.uuid)
+        selectedRecordUuids.includes(record.uuid),
       );
       if (!checkRecordsCanBeCloned(selectedRecords)) {
         return;
@@ -498,10 +498,10 @@ export const RecordsList = () => {
         DataEntryActions.cloneRecordsIntoDefaultCycle({
           recordSummaries: selectedRecords,
           callback: loadRecords,
-        })
+        }),
       );
     },
-    [checkRecordsCanBeCloned, dispatch, loadRecords, records]
+    [checkRecordsCanBeCloned, dispatch, loadRecords, records],
   );
 
   const checkCanSendData = useCallback(() => {
@@ -564,7 +564,7 @@ export const RecordsList = () => {
       return Object.values(valuesByKey).some(
         (value) =>
           !Objects.isEmpty(value) &&
-          String(value).toLocaleLowerCase().includes(searchValueLowerCase)
+          String(value).toLocaleLowerCase().includes(searchValueLowerCase),
       );
     });
   }, [searchValue, records, survey, lang, t]);
@@ -580,7 +580,7 @@ export const RecordsList = () => {
           textKey="dataEntry:newRecord"
         />
       ) : null,
-    [cycle, defaultCycleKey, onNewRecordPress]
+    [cycle, defaultCycleKey, onNewRecordPress],
   );
 
   const downloadMenuItems = useMemo(() => {
@@ -622,7 +622,7 @@ export const RecordsList = () => {
         icon: "file-excel",
         label: "dataEntry:dataExport.exportToCsv",
         onPress: onExportToCsvPress,
-      }
+      },
     );
     return items;
   }, [

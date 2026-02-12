@@ -1,22 +1,66 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Keyboard } from "react-native";
 
-const initialState = {
+export type OnConfirmParams = {
+  selectedMultipleChoiceValues?: string[];
+  selectedSingleChoiceValue?: string | null;
+  textInputValue?: string;
+};
+
+type ChoiceOption = { label: string; value: string };
+
+export type ConfirmShowParams = {
+  titleKey?: string;
+  cancelButtonStyle?: any;
+  cancelButtonTextKey?: string;
+  confirmButtonStyle?: any;
+  confirmButtonTextKey?: string;
+  confirmButtonEnableFn?: (params: OnConfirmParams) => boolean;
+  defaultMultipleChoiceValues?: string[];
+  defaultSingleChoiceValue?: string | null;
+  defaultTextInputValue?: string;
+  messageKey?: string;
+  messageParams?: any;
+  multipleChoiceOptions?: ChoiceOption[];
+  onConfirm: (params: OnConfirmParams) => Promise<void> | void;
+  onCancel?: () => Promise<void> | void;
+  singleChoiceOptions?: ChoiceOption[];
+  swipeToConfirm?: boolean;
+  swipeToConfirmTitleKey?: string;
+  textInputToConfirm?: boolean;
+  textInputToConfirmLabelKey?: string;
+};
+
+const confirmShowDefaultParams: Partial<ConfirmShowParams> = {
+  titleKey: "common:confirm",
+  cancelButtonTextKey: "common:cancel",
+  confirmButtonTextKey: "common:confirm",
+  messageParams: {},
+  multipleChoiceOptions: [],
+  singleChoiceOptions: [],
+  defaultMultipleChoiceValues: [],
+  swipeToConfirm: false,
+  swipeToConfirmTitleKey: "common:swipeToConfirm",
+  textInputToConfirm: false,
+  textInputToConfirmLabelKey: "common:textInputToConfirmLabel",
+};
+
+export type ConfirmState = Partial<ConfirmShowParams> & {
+  isOpen: boolean;
+};
+
+const initialState: ConfirmState = {
   isOpen: false,
 };
 
 // confirm and cancel as async thunk to allow calling "dispatch" inside onConfirm and onCancel
 const confirm = createAsyncThunk(
   "confirm/show",
-  async (params: any, { getState }) => {
-    const { selectedMultipleChoiceValues, selectedSingleChoiceValue } = params;
+  async (params: OnConfirmParams, { getState }) => {
     const state: any = getState();
     const { onConfirm } = state.confirm;
-    await onConfirm?.({
-      selectedMultipleChoiceValues,
-      selectedSingleChoiceValue,
-    });
-  }
+    await onConfirm?.(params);
+  },
 );
 
 const cancel = createAsyncThunk(
@@ -25,7 +69,7 @@ const cancel = createAsyncThunk(
     const state: any = getState();
     const { onCancel } = state.confirm;
     await onCancel?.();
-  }
+  },
 );
 
 const confirmSlice = createSlice({
@@ -48,72 +92,13 @@ const confirmSlice = createSlice({
 const { actions, reducer: ConfirmReducer } = confirmSlice;
 const { show, dismiss } = actions;
 
-export type OnConfirmParams = {
-  selectedMultipleChoiceValues?: string[];
-  selectedSingleChoiceValue?: string | null;
-};
-
-export type ConfirmShowParams = {
-  titleKey?: string;
-  cancelButtonStyle?: any;
-  cancelButtonTextKey?: string;
-  confirmButtonStyle?: any;
-  confirmButtonTextKey?: string;
-  messageKey?: string;
-  messageParams?: any;
-  multipleChoiceOptions?: Array<{ label: string; value: string }>;
-  onConfirm: (params: OnConfirmParams) => Promise<void> | void;
-  onCancel?: () => Promise<void>;
-  singleChoiceOptions?: Array<{ label: string; value: string }>;
-  defaultMultipleChoiceValues?: string[];
-  defaultSingleChoiceValue?: string | null;
-  swipeToConfirm?: boolean;
-  swipeToConfirmTitleKey?: string;
-};
-
 export const ConfirmActions = {
-  show: ({
-    titleKey = "common:confirm",
-    cancelButtonStyle = undefined,
-    cancelButtonTextKey = "common:cancel",
-    confirmButtonStyle = undefined,
-    confirmButtonTextKey = "common:confirm",
-    messageKey = undefined,
-    messageParams = {},
-    multipleChoiceOptions = [],
-    onConfirm,
-    onCancel = undefined,
-    singleChoiceOptions = [],
-    defaultMultipleChoiceValues = [],
-    defaultSingleChoiceValue = null,
-    swipeToConfirm = false,
-    swipeToConfirmTitleKey = "common:swipeToConfirm",
-  }: ConfirmShowParams) =>
-    show({
-      titleKey,
-      cancelButtonStyle,
-      cancelButtonTextKey,
-      confirmButtonStyle,
-      confirmButtonTextKey,
-      messageKey,
-      messageParams,
-      multipleChoiceOptions,
-      onConfirm,
-      onCancel,
-      singleChoiceOptions,
-      defaultMultipleChoiceValues,
-      defaultSingleChoiceValue,
-      swipeToConfirm,
-      swipeToConfirmTitleKey,
-    }),
+  show: (params: ConfirmShowParams) =>
+    show({ ...confirmShowDefaultParams, ...params }),
   dismiss,
 
   // internal (called from dialog component)
-  confirm: ({
-    selectedMultipleChoiceValues,
-    selectedSingleChoiceValue,
-  }: OnConfirmParams) =>
-    confirm({ selectedMultipleChoiceValues, selectedSingleChoiceValue }),
+  confirm: (params: OnConfirmParams) => confirm(params),
   cancel,
 };
 export { ConfirmReducer };

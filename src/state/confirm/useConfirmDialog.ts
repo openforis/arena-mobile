@@ -3,51 +3,88 @@ import { useSelector } from "react-redux";
 
 import { Arrays } from "@openforis/arena-core";
 
-import { ConfirmActions } from "./reducer";
+import { ConfirmActions, ConfirmState, OnConfirmParams } from "./reducer";
 import { useAppDispatch } from "state/store";
 
-type ConfirmDialogState = {
+type ConfirmDialogLocalState = {
+  confirmButtonEnabled: boolean;
   selectedMultipleChoiceValues: any[];
   selectedSingleChoiceValue: any;
   swipeConfirmed: boolean;
+  textInputValue: string;
 };
 
-const defaultLocalState: ConfirmDialogState = {
+const defaultLocalState: ConfirmDialogLocalState = {
+  confirmButtonEnabled: true,
   selectedMultipleChoiceValues: [],
   selectedSingleChoiceValue: null,
   swipeConfirmed: false,
+  textInputValue: "",
 };
 
-export const useConfirmDialog = () => {
+export const useConfirmDialog = (): ConfirmState &
+  ConfirmDialogLocalState & {
+    confirm: () => void;
+    cancel: () => void;
+    onMultipleChoiceOptionChange: (value: any) => void;
+    onSingleChoiceOptionChange: (value: any) => void;
+    onTextInputChange: (value: string) => void;
+    setSwipeConfirmed: () => void;
+  } => {
   const dispatch = useAppDispatch();
 
-  const confirmState = useSelector((state: any) => state.confirm);
+  const confirmState: ConfirmState = useSelector((state: any) => state.confirm);
+
+  const { confirmButtonEnableFn, swipeToConfirm } = confirmState;
 
   const [state, setState] = useState(defaultLocalState);
 
   const {
+    confirmButtonEnabled,
     selectedMultipleChoiceValues,
     selectedSingleChoiceValue,
     swipeConfirmed,
+    textInputValue,
   } = state;
 
   useEffect(() => {
-    setState({
-      ...defaultLocalState,
-      selectedMultipleChoiceValues:
-        confirmState.defaultMultipleChoiceValues ?? [],
-      selectedSingleChoiceValue: confirmState.defaultSingleChoiceValue,
+    setState(() => {
+      const defaultConfirmSelection = {
+        selectedMultipleChoiceValues:
+          confirmState.defaultMultipleChoiceValues ?? [],
+        selectedSingleChoiceValue: confirmState.defaultSingleChoiceValue,
+        textInputValue: confirmState.defaultTextInputValue ?? "",
+      };
+      return {
+        ...defaultLocalState,
+        ...defaultConfirmSelection,
+      };
     });
-  }, [confirmState]);
+  }, [confirmButtonEnableFn, confirmState]);
+
+  const getConfirmParams = useCallback(
+    (): OnConfirmParams => ({
+      selectedMultipleChoiceValues,
+      selectedSingleChoiceValue,
+      textInputValue,
+    }),
+    [selectedMultipleChoiceValues, selectedSingleChoiceValue, textInputValue],
+  );
+
+  useEffect(() => {
+    if (swipeToConfirm || confirmButtonEnableFn) {
+      setState((statePrev) => ({
+        ...statePrev,
+        confirmButtonEnabled:
+          (!swipeToConfirm || swipeConfirmed) &&
+          (confirmButtonEnableFn?.(getConfirmParams()) ?? true),
+      }));
+    }
+  }, [confirmButtonEnableFn, getConfirmParams, swipeConfirmed, swipeToConfirm]);
 
   const confirm = useCallback(() => {
-    dispatch(
-      ConfirmActions.confirm({
-        selectedMultipleChoiceValues,
-        selectedSingleChoiceValue,
-      })
-    );
-  }, [dispatch, selectedMultipleChoiceValues, selectedSingleChoiceValue]);
+    dispatch(ConfirmActions.confirm(getConfirmParams()));
+  }, [dispatch, getConfirmParams]);
 
   const cancel = useCallback(() => {
     dispatch(ConfirmActions.cancel());
@@ -74,6 +111,13 @@ export const useConfirmDialog = () => {
     }));
   }, []);
 
+  const onTextInputChange = useCallback((value: string) => {
+    setState((statePrev) => ({
+      ...statePrev,
+      textInputValue: value,
+    }));
+  }, []);
+
   const setSwipeConfirmed = useCallback(() => {
     setState((statePrev) => ({
       ...statePrev,
@@ -84,13 +128,16 @@ export const useConfirmDialog = () => {
   return {
     ...confirmState,
     confirm,
+    confirmButtonEnabled,
     cancel,
 
     onMultipleChoiceOptionChange,
     onSingleChoiceOptionChange,
+    onTextInputChange,
     selectedMultipleChoiceValues,
     selectedSingleChoiceValue,
     setSwipeConfirmed,
     swipeConfirmed,
+    textInputValue,
   };
 };

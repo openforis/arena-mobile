@@ -1,3 +1,5 @@
+import { Objects, User } from "@openforis/arena-core";
+
 import { i18n } from "localization";
 import { UserLogoutOptions } from "model/UserLogoutOptions";
 import {
@@ -16,7 +18,7 @@ import { RemoteConnectionSelectors } from "./selectors";
 import { DeviceInfoSelectors } from "state/deviceInfo";
 import { AsyncStorageUtils } from "service/asyncStorage/AsyncStorageUtils";
 import { asyncStorageKeys } from "service/asyncStorage/asyncStorageKeys";
-import { LoginResponse } from "service/authService";
+import { invalidCredentialsError, LoginResponse } from "service/authService";
 
 const LOGGED_OUT = "LOGGED_OUT";
 const USER_LOADING = "USER_LOADING";
@@ -82,12 +84,49 @@ const confirmGoToConnectionToRemoteServer =
     );
   };
 
+const onLoginResponseSuccessful = async ({
+  user,
+  email,
+  serverUrl,
+  showBack,
+  dispatch,
+  navigation,
+}: {
+  user: User;
+  email: string | undefined;
+  serverUrl: string;
+  showBack: boolean | undefined;
+  dispatch: any;
+  navigation: any;
+}) => {
+  const userEmail = user.email ?? email;
+  await AsyncStorageUtils.setItem(asyncStorageKeys.loggedInUser, user);
+  const settings = await SettingsService.fetchSettings();
+  const settingsUpdated = { ...settings, serverUrl, email: userEmail };
+  await dispatch(SettingsActions.updateSettings(settingsUpdated));
+
+  dispatch({ type: USER_SET, user });
+
+  if (showBack) {
+    dispatch(
+      ConfirmActions.show({
+        titleKey: "authService:loginSuccessful",
+        confirmButtonTextKey: "common:continue",
+        cancelButtonTextKey: "common:close",
+        onConfirm: navigation.goBack,
+      }),
+    );
+  }
+};
+
 const onLoginResponse = async ({
   dispatch,
   navigation,
   res,
   serverUrl,
   email,
+  password,
+  twoFactorToken,
   showBack,
 }: {
   dispatch: any;
@@ -95,28 +134,50 @@ const onLoginResponse = async ({
   res: LoginResponse;
   serverUrl: string;
   email?: string;
+  password?: string;
+  twoFactorToken?: string;
   showBack?: boolean;
 }) => {
-  const { user, error, message } = res;
+  const { user, error, message, twoFactorRequired } = res;
   if (user) {
-    const userEmail = user.email ?? email;
-    await AsyncStorageUtils.setItem(asyncStorageKeys.loggedInUser, user);
-    const settings = await SettingsService.fetchSettings();
-    const settingsUpdated = { ...settings, serverUrl, email: userEmail };
-    await dispatch(SettingsActions.updateSettings(settingsUpdated));
-
-    if (showBack) {
-      dispatch(
-        ConfirmActions.show({
-          titleKey: "authService:loginSuccessful",
-          confirmButtonTextKey: "common:continue",
-          cancelButtonTextKey: "common:close",
-          onConfirm: navigation.goBack,
-        }),
-      );
-    }
-
-    dispatch({ type: USER_SET, user });
+    await onLoginResponseSuccessful({
+      user,
+      email,
+      serverUrl,
+      showBack,
+      dispatch,
+      navigation,
+    });
+  } else if (
+    twoFactorRequired ||
+    (twoFactorToken && error === invalidCredentialsError)
+  ) {
+    dispatch(
+      ConfirmActions.show({
+        titleKey: "authService:twoFactorRequiredConfirm.title",
+        messageKey: twoFactorToken
+          ? "authService:twoFactorRequiredConfirm.messageError"
+          : "authService:twoFactorRequiredConfirm.message",
+        confirmButtonTextKey: "common:continue",
+        confirmButtonEnableFn: ({ textInputValue }) =>
+          Objects.isNotEmpty(textInputValue),
+        cancelButtonTextKey: "common:cancel",
+        onConfirm: ({ textInputValue }) => {
+          dispatch(
+            login({
+              navigation,
+              serverUrl,
+              email: email!,
+              password: password!,
+              twoFactorToken: textInputValue,
+              showBack,
+            }),
+          );
+        },
+        textInputToConfirm: true,
+        textInputToConfirmLabelKey: "authService:twoFactorCode",
+      }),
+    );
   } else if (message || error) {
     const errorKeySuffix =
       message &&
@@ -144,6 +205,7 @@ const login =
     serverUrl,
     email,
     password,
+    twoFactorToken,
     showBack = false,
   }: {
     navigation: any;
@@ -151,12 +213,20 @@ const login =
     email: string;
     password: string;
     showBack?: boolean;
+    twoFactorToken?: string;
   }) =>
   async (dispatch: any) => {
-    const res = await AuthService.login({ serverUrl, email, password });
+    const res = await AuthService.login({
+      serverUrl,
+      email,
+      password,
+      twoFactorToken,
+    });
     await onLoginResponse({
       res,
       email,
+      password,
+      twoFactorToken,
       serverUrl,
       dispatch,
       showBack,
