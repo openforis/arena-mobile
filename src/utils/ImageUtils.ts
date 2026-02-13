@@ -167,8 +167,7 @@ const rotate = async (
   const imageContext = ImageManipulator.manipulate(fileUri);
   imageContext.rotate(degrees);
   const rotatedImage = await imageContext.renderAsync();
-  // save the rotated image with the same compression ratio as the resized image (if it was resized) to avoid further reducing its quality
-  const savedImage = await rotatedImage.saveAsync({ compress: 1 });
+  const savedImage = await rotatedImage.saveAsync({ compress });
   // copy exif data to the rotated image
   await ExifUtils.copyData({
     sourceFileUri: fileUri,
