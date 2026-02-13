@@ -1,5 +1,5 @@
 import { Image } from "react-native";
-import { ImageManipulator } from "expo-image-manipulator";
+import { ImageManipulator, ImageResult } from "expo-image-manipulator";
 
 import { Files } from "./Files";
 import { ExifUtils } from "./ExifUtils";
@@ -143,32 +143,47 @@ const resizeToFitMaxSize = async ({
             .then((result) => resolve(result))
             .catch((error: Error) => reject(error));
         },
-        (error: Error) => reject(error)
+        (error: Error) => reject(error),
       );
-    }
+    },
   );
   if ("error" in resizeResult) {
     return resizeResult;
-  } else {
-    const { uri: resultUri } = resizeResult;
-    if (fileUri !== resultUri) {
-      await ExifUtils.copyData({
-        sourceFileUri: fileUri,
-        targetFileUri: resultUri,
-      });
-    }
-    return resizeResult;
   }
+  const { uri: resultUri } = resizeResult;
+  if (fileUri !== resultUri) {
+    await ExifUtils.copyData({
+      sourceFileUri: fileUri,
+      targetFileUri: resultUri,
+    });
+  }
+  return resizeResult;
+};
+
+const rotate = async (
+  fileUri: string,
+  { degrees = 90 }: { degrees?: number } = {},
+): Promise<ImageResult> => {
+  const imageContext = ImageManipulator.manipulate(fileUri);
+  imageContext.rotate(degrees);
+  const rotatedImage = await imageContext.renderAsync();
+  const savedImage = await rotatedImage.saveAsync({ compress });
+  // copy exif data to the rotated image
+  await ExifUtils.copyData({
+    sourceFileUri: fileUri,
+    targetFileUri: savedImage.uri,
+  });
+  return savedImage;
 };
 
 const getSize = async (
-  fileUri: any
+  fileUri: any,
 ): Promise<{ width: number; height: number }> =>
   new Promise((resolve, reject) => {
     Image.getSize(
       fileUri,
       (width, height) => resolve({ width, height }),
-      (error: Error) => reject(error)
+      (error: Error) => reject(error),
     );
   });
 
@@ -195,4 +210,5 @@ export const ImageUtils = {
   getGPSLocation,
   isValid,
   resizeToFitMaxSize,
+  rotate,
 };

@@ -149,6 +149,8 @@ export default {
 Suurin sallittu koko: {{maxSizeMB}}MB.
 Tarkista asetukset tai pyydä kyselyn järjestelmänvalvojaa muuttamaan tätä rajaa.`,
     resolution: "Resoluutio",
+    rotate: "Käännä",
+    rotationError: "Virhe kuvan kääntämisessä: {{error}}",
   },
   dataExport: {
     confirm: {

@@ -33,7 +33,7 @@ type NodeImageOrVideoComponentProps = {
 };
 
 export const NodeImageOrVideoComponent = (
-  props: NodeImageOrVideoComponentProps
+  props: NodeImageOrVideoComponentProps,
 ) => {
   const { nodeDef, nodeUuid } = props;
 
@@ -45,6 +45,7 @@ export const NodeImageOrVideoComponent = (
   const {
     nodeValue,
     onDeletePress,
+    onRotatePress,
     onOpenCameraPress,
     onFileChoosePress,
     resizing,
@@ -60,7 +61,16 @@ export const NodeImageOrVideoComponent = (
       </View>
       <VView style={styles.buttonsContainer}>
         {nodeValue && NodeDefs.isSingle(nodeDef) && (
-          <DeleteIconButton onPress={onDeletePress} />
+          <>
+            {fileType === NodeDefFileType.image && (
+              <Button
+                icon="rotate-right"
+                onPress={onRotatePress}
+                textKey="dataEntry:fileAttributeImage.rotate"
+              />
+            )}
+            <DeleteIconButton onPress={onDeletePress} />
+          </>
         )}
         {!nodeValue && (
           <>

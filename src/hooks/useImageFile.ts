@@ -6,25 +6,29 @@ const defaultImageExtension = "jpg";
 
 export const useImageFile = (
   uri: any,
-  defaultExtension = defaultImageExtension
+  defaultExtension = defaultImageExtension,
 ) => {
   const tempFileUriRef = useRef(null as any);
   const [finalUri, setFinalUri] = useState(uri);
 
   const copyToTempFileWithExtension = useCallback(
     async () => Files.copyUriToTempFile({ uri, defaultExtension }),
-    [defaultExtension, uri]
+    [defaultExtension, uri],
   );
 
   useEffect(() => {
     const fileName = Files.getNameFromUri(uri);
-    if (
-      !Environment.isIOS ||
-      !!Files.getExtension(fileName) ||
-      tempFileUriRef.current
-    )
+    if (!Environment.isIOS) {
+      if (finalUri !== uri) {
+        setFinalUri(uri);
+      }
       return;
+    }
+    if (!!Files.getExtension(fileName) || tempFileUriRef.current) {
+      return;
+    }
 
+    // copy file to temporary file with extension, to allow previewing it in image viewer
     copyToTempFileWithExtension()
       .then((tempFileUri) => {
         tempFileUriRef.current = tempFileUri;
@@ -48,7 +52,7 @@ export const useImageFile = (
           });
       }
     };
-  }, [copyToTempFileWithExtension, uri]);
+  }, [copyToTempFileWithExtension, finalUri, uri]);
 
   return finalUri;
 };

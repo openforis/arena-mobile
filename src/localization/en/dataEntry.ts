@@ -187,6 +187,8 @@ Fetch the list of records from the server and try again?`,
 Maximum size allowed: {{maxSizeMB}}MB.
 Check settings or ask the survey administrator to change this limit.`,
     resolution: "Resolution",
+    rotate: "Rotate",
+    rotationError: "Error rotating image: {{error}}",
   },
   location: {
     label: "Location",

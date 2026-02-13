@@ -14,9 +14,10 @@ export default StyleSheet.create({
     resizeMode: "contain",
   },
   buttonsContainer: {
-    flex: 0.5,
     alignItems: "center",
-    justifyContent: "center",
+    flex: 0.5,
+    gap: 20,
+    justifyContent: "space-evenly",
   },
   cameraButton: {
     width: 75,

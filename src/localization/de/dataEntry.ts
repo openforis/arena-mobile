@@ -153,6 +153,8 @@ export default {
 Maximal zulässige Größe: {{maxSizeMB}}MB.
 Überprüfen Sie die Einstellungen oder bitten Sie den Umfrageadministrator, dieses Limit zu ändern.`,
     resolution: "Auflösung",
+    rotate: "Drehen",
+    rotationError: "Fehler beim Drehen des Bildes: {{error}}",
   },
   dataExport: {
     confirm: {

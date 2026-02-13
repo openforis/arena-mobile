@@ -398,7 +398,15 @@ const checkAndConfirmUpdateNode = async ({
 };
 
 const updateAttribute =
-  ({ uuid, value, fileUri = null }: any) =>
+  ({
+    uuid,
+    value,
+    fileUri = null,
+  }: {
+    uuid: string;
+    value: any;
+    fileUri?: string | null;
+  }) =>
   async (dispatch: any, getState: any) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
