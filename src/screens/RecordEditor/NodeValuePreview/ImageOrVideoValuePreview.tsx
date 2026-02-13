@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { TouchableHighlight } from "react-native";
 
 import { NodeDefFileType, NodeDefs } from "@openforis/arena-core";
@@ -32,6 +32,14 @@ export const ImageOrVideoValuePreview = (props: NodeValuePreviewProps) => {
     setFileUri(fileUriUpdated);
   }, [fileUuid, surveyId]);
 
+  const imageSource = useMemo(
+    () =>
+      fileType === NodeDefFileType.image && fileUri
+        ? { uri: fileUri }
+        : undefined,
+    [fileType, fileUri],
+  );
+
   const onFileOpenPress = useCallback(async () => {
     const mimeType = Files.getMimeTypeFromName(fileName);
     await Files.shareFile({ url: fileUri!, mimeType });
@@ -51,7 +59,7 @@ export const ImageOrVideoValuePreview = (props: NodeValuePreviewProps) => {
     <>
       {fileType === NodeDefFileType.image ? (
         <TouchableHighlight onPress={onImagePreviewPress}>
-          <Image source={{ uri: fileUri }} style={styles.image} />
+          <Image source={imageSource} style={styles.image} />
         </TouchableHighlight>
       ) : (
         <VView>

@@ -1,4 +1,5 @@
 import { Image as RNImage, StyleProp, ImageStyle } from "react-native";
+import { useMemo } from "react";
 
 import { useImageFile } from "hooks";
 
@@ -15,6 +16,12 @@ export const Image = (props: Props) => {
 
   const sourceUri = useImageFile(sourcePropUri, defaultExtension);
 
+  const imageSource = useMemo(
+    () => (sourceUri ? { uri: sourceUri } : undefined),
+    [sourceUri],
+  );
+
   if (!sourceUri) return null;
-  return <RNImage source={{ uri: sourceUri }} style={style} />;
+
+  return <RNImage source={imageSource} style={style} />;
 };
