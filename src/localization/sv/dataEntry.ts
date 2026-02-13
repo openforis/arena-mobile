@@ -150,6 +150,8 @@ export default {
 Maximalt tillåten storlek: {{maxSizeMB}}MB.
 Kontrollera inställningarna eller be undersökningsadministratören att ändra denna gräns.`,
     resolution: "Upplösning",
+    rotate: "Rotera",
+    rotationError: "Fel vid rotering av bilden: {{error}}",
   },
   dataExport: {
     confirm: {

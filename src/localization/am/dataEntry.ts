@@ -138,6 +138,8 @@ export default {
 የተፈቀደው ከፍተኛ መጠን: {{maxSizeMB}}MB።
 ይህን ገደብ ለመቀየር ቅንብሮችን ያረጋግጡ ወይም የዳሰሳ ጥናቱ አስተዳዳሪን ይጠይቁ።`,
     resolution: "ጥራት",
+    rotate: "ማዞር",
+    rotationError: "ምስሉን ማዞር ላይ ስህተት፡ {{error}}",
   },
   dataExport: {
     confirm: {

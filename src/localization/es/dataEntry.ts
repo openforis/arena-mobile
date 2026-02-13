@@ -144,6 +144,8 @@ export default {
 Tamaño máximo permitido: {{maxSizeMB}}MB.
 Verifique la configuración o pida al administrador de la encuesta que cambie este límite.`,
     resolution: "Resolución",
+    rotate: "Rotar",
+    rotationError: "Error al rotar la imagen: {{error}}",
   },
   dataExport: {
     confirm: {

@@ -148,6 +148,8 @@ export default {
 Taille maximale autorisée : {{maxSizeMB}} Mo.
 Vérifiez les paramètres ou demandez à l'administrateur de l'enquête de modifier cette limite.`,
     resolution: "Résolution",
+    rotate: "Pivoter",
+    rotationError: "Erreur lors de la rotation de l'image : {{error}}",
   },
   dataExport: {
     confirm: {

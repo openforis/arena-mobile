@@ -151,6 +151,8 @@ export default {
 Ukuran maksimum yang diizinkan: {{maxSizeMB}}MB.
 Periksa pengaturan atau minta administrator survei untuk mengubah batas ini.`,
     resolution: "Resolusi",
+    rotate: "Putar",
+    rotationError: "Kesalahan saat memutar gambar: {{error}}",
   },
   dataExport: {
     confirm: {

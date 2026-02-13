@@ -144,6 +144,8 @@ export default {
 Tamanho máximo permitido: {{maxSizeMB}}MB.
 Verifique as configurações ou peça ao administrador da pesquisa para alterar este limite.`,
     resolution: "Resolução",
+    rotate: "Girar",
+    rotationError: "Erro ao girar a imagem: {{error}}",
   },
   dataExport: {
     confirm: {

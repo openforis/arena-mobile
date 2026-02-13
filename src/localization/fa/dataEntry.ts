@@ -149,6 +149,8 @@ export default {
 حداکثر اندازه مجاز: {{maxSizeMB}} مگابایت.
 تنظیمات را بررسی کنید یا از مدیر نظرسنجی بخواهید این محدودیت را تغییر دهد.`,
     resolution: "رزولوشن",
+    rotate: "چرخاندن",
+    rotationError: "خطا در چرخاندن تصویر: {{error}}",
   },
   dataExport: {
     confirm: {
