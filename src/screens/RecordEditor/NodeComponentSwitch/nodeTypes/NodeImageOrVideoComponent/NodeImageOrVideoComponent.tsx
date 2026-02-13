@@ -63,8 +63,9 @@ export const NodeImageOrVideoComponent = (
         {nodeValue && NodeDefs.isSingle(nodeDef) && (
           <>
             <Button
-              textKey="dataEntry:fileAttribute.rotate"
+              icon="rotate-right"
               onPress={onRotatePress}
+              textKey="dataEntry:fileAttributeImage.rotate"
             />
             <DeleteIconButton onPress={onDeletePress} />
           </>

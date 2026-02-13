@@ -231,7 +231,9 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
       const valueUpdated = { ...value, fileUuid: UUIDs.v4(), fileSize };
       await updateNodeValue({ value: valueUpdated, fileUri: rotatedFileUri });
     } catch (error) {
-      toaster("dataEntry:fileAttributeImage.rotationError");
+      toaster("dataEntry:fileAttributeImage.rotationError", {
+        error: String(error),
+      });
     }
   }, [surveyId, toaster, updateNodeValue, value]);
 
