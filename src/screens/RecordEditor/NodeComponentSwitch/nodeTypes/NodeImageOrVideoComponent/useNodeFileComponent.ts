@@ -222,6 +222,8 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
 
   const onRotatePress = useCallback(async () => {
     const { fileUuid } = value ?? {};
+    if (!fileUuid) return;
+
     const fileUri = RecordFileService.getRecordFileUri({ surveyId, fileUuid });
     if (!fileUri) return;
 

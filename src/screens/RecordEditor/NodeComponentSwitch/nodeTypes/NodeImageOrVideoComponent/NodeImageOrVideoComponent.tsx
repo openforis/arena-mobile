@@ -62,11 +62,13 @@ export const NodeImageOrVideoComponent = (
       <VView style={styles.buttonsContainer}>
         {nodeValue && NodeDefs.isSingle(nodeDef) && (
           <>
-            <Button
-              icon="rotate-right"
-              onPress={onRotatePress}
-              textKey="dataEntry:fileAttributeImage.rotate"
-            />
+            {fileType === NodeDefFileType.image && (
+              <Button
+                icon="rotate-right"
+                onPress={onRotatePress}
+                textKey="dataEntry:fileAttributeImage.rotate"
+              />
+            )}
             <DeleteIconButton onPress={onDeletePress} />
           </>
         )}
