@@ -86,15 +86,15 @@ const copyData = async ({
     return false;
   }
   const dataUpdated = { ...data };
-  if (targetFileWidth) {
+  if (Objects.isNotEmpty(targetFileWidth)) {
     dataUpdated.ImageWidth = targetFileWidth;
     dataUpdated.PixelXDimension = targetFileWidth;
   }
-  if (targetFileHeight) {
+  if (Objects.isNotEmpty(targetFileHeight)) {
     dataUpdated.ImageLength = targetFileHeight;
     dataUpdated.PixelYDimension = targetFileHeight;
   }
-  if (targetFileOrientation) {
+  if (Objects.isNotEmpty(targetFileOrientation)) {
     dataUpdated.Orientation = targetFileOrientation;
   }
   await writeData({ fileUri: targetFileUri, data: dataUpdated });
