@@ -61,18 +61,43 @@ const writeGpsData = async ({
       .slice(0, 10)
       .replaceAll("-", ":"),
 
+    // custom tags
+    Software: AMConstants.appNameCompactInternal,
     UserComment: `Geotagged from ${AMConstants.appNameFull} app`,
-    Make: AMConstants.appNameCompactInternal,
   };
   await writeData({ fileUri, data: { ...existingTags, ...newTags } });
 };
 
-const copyData = async ({ sourceFileUri, targetFileUri }: any) => {
+const copyData = async ({
+  sourceFileUri,
+  targetFileUri,
+  targetFileWidth,
+  targetFileHeight,
+  targetFileOrientation,
+}: {
+  sourceFileUri: string;
+  targetFileUri: string;
+  targetFileOrientation?: number;
+  targetFileWidth?: number;
+  targetFileHeight?: number;
+}) => {
   const data = await readData({ fileUri: sourceFileUri });
   if (!data) {
     return false;
   }
-  await writeData({ fileUri: targetFileUri, data });
+  const dataUpdated = { ...data };
+  if (targetFileWidth) {
+    dataUpdated.ImageWidth = targetFileWidth;
+    dataUpdated.PixelXDimension = targetFileWidth;
+  }
+  if (targetFileHeight) {
+    dataUpdated.ImageLength = targetFileHeight;
+    dataUpdated.PixelYDimension = targetFileHeight;
+  }
+  if (targetFileOrientation) {
+    dataUpdated.Orientation = targetFileOrientation;
+  }
+  await writeData({ fileUri: targetFileUri, data: dataUpdated });
   return true;
 };
 

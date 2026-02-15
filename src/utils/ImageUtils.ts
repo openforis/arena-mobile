@@ -150,11 +150,19 @@ const resizeToFitMaxSize = async ({
   if ("error" in resizeResult) {
     return resizeResult;
   }
-  const { uri: resultUri } = resizeResult;
+  const {
+    uri: resultUri,
+    width: resultWidth,
+    height: resultHeight,
+  } = resizeResult;
+
   if (fileUri !== resultUri) {
     await ExifUtils.copyData({
       sourceFileUri: fileUri,
       targetFileUri: resultUri,
+      targetFileWidth: resultWidth,
+      targetFileHeight: resultHeight,
+      targetFileOrientation: 1,
     });
   }
   return resizeResult;
@@ -172,6 +180,9 @@ const rotate = async (
   await ExifUtils.copyData({
     sourceFileUri: fileUri,
     targetFileUri: savedImage.uri,
+    targetFileWidth: rotatedImage.width,
+    targetFileHeight: rotatedImage.height,
+    targetFileOrientation: 1,
   });
   return savedImage;
 };
