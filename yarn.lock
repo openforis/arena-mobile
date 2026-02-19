@@ -4028,6 +4028,7 @@ __metadata:
     react-dom: "npm:19.1.0"
     react-i18next: "npm:^16.5.3"
     react-native: "npm:0.81.5"
+    react-native-ble-plx: "npm:^3.5.1"
     react-native-check-version: "npm:^1.4.0"
     react-native-collapsible: "npm:^1.6.2"
     react-native-device-info: "npm:^15.0.1"
@@ -10439,6 +10440,16 @@ __metadata:
   version: 19.2.0
   resolution: "react-is@npm:19.2.0"
   checksum: 10c0/a63cb346aeced8ac0e671b0f9b33720d2906de02a066ca067075d871a5d4c64cdb328f495baf9b5842d5868c0d5edd1ce18465a7358b52f4b6aa983479c9bfa2
+  languageName: node
+  linkType: hard
+
+"react-native-ble-plx@npm:^3.5.1":
+  version: 3.5.1
+  resolution: "react-native-ble-plx@npm:3.5.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/a49f50e0d76cede43836d82c422e022eb2f9f4895416c5a739eaecce122d50950e3f93030c02c4a9c10bd9962735e3927c19ec6b75f878296cc98937b56a31c1
   languageName: node
   linkType: hard
 

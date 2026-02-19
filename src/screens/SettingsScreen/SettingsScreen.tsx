@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Objects } from "@openforis/arena-core";
 
@@ -6,6 +6,7 @@ import { ConnectionToRemoteServerButton } from "appComponents/ConnectionToRemote
 import { FullBackupButton } from "appComponents/FullBackupButton";
 
 import { Button, Card, ScreenView, VView } from "components";
+import { useBLE } from "hooks";
 import { SettingsModel, SettingsObject } from "model";
 import { AppService } from "service/appService";
 import {
@@ -26,6 +27,33 @@ export const SettingsScreen = () => {
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
 
+  const {
+    disconnectBt,
+    isBtConnected,
+    isBtScanning,
+    scanBtAndConnect,
+    btError,
+  } = useBLE<any>({
+    // serviceUUID: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+    characteristicUUID: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
+    // deviceFilter: (device) => device.name?.includes("TruPulse") ?? false,
+    onRawData: (raw) => {
+      log.debug(`Received BLE data: ${raw}`);
+      // const parts = raw.split(',');
+      // return {
+      //   distance: parseFloat(parts[2]!),
+      //   angle: parseFloat(parts[4]!),
+      // };
+    },
+  });
+
+  useEffect(() => {
+    return () => {
+      // Ensure we disconnect BT when the screen unmounts
+      disconnectBt();
+    };
+  }, [disconnectBt]);
+
   const settingsStored = SettingsSelectors.useSettings();
 
   const [state, setState] = useState({ settings: settingsStored });
@@ -39,7 +67,7 @@ export const SettingsScreen = () => {
       if (value === oldValue) return;
       dispatch(SettingsActions.updateSetting({ key, value }));
       setState((statePrev) =>
-        Objects.assocPath({ obj: statePrev, path: ["settings", key], value })
+        Objects.assocPath({ obj: statePrev, path: ["settings", key], value }),
       );
     };
 
@@ -73,6 +101,23 @@ export const SettingsScreen = () => {
               />
             </VView>
           ))}
+        <Card titleKey="app:testBluetoothDevices.title">
+          {!isBtConnected && !isBtScanning && (
+            <Button
+              icon="bluetooth"
+              onPress={scanBtAndConnect}
+              textKey="app:testBluetoothDevices.scanAndConnect"
+            />
+          )}
+          {(isBtScanning || isBtConnected) && (
+            <Button
+              icon="bluetooth"
+              onPress={disconnectBt}
+              textKey="app:testBluetoothDevices.disconnect"
+            />
+          )}
+          {btError && <VView>{btError}</VView>}
+        </Card>
         <Card titleKey="app:backup">
           <FullBackupButton />
         </Card>
