@@ -149,8 +149,9 @@ export function useBLE<T>({
       // Search for the brand or model name
       if (device && device.name && deviceFilter(device)) {
         log.debug(`BLE - found device: ${device.name} (${device.id})`);
-        manager.stopDeviceScan();
-        setIsBtScanning(false);
+
+        // manager.stopDeviceScan();
+        // setIsBtScanning(false);
 
         try {
           log.debug(
@@ -186,11 +187,13 @@ export function useBLE<T>({
   const disconnectBt = useCallback(async () => {
     manager?.stopDeviceScan();
 
+    setIsBtConnected(false);
+    setIsBtScanning(false);
+    setBtData(null);
+
     if (deviceRef.current) {
       await deviceRef.current.cancelConnection();
       deviceRef.current = null;
-      setIsBtConnected(false);
-      setBtData(null);
     }
   }, []);
 
