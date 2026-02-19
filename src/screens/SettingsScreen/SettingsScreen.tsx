@@ -36,7 +36,10 @@ export const SettingsScreen = () => {
   } = useBLE<any>({
     // serviceUUID: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
     characteristicUUID: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
-    // deviceFilter: (device) => device.name?.includes("TruPulse") ?? false,
+    deviceFilter: (device) =>
+      ["TruPulse", "Garmin"].some(
+        (name) => device.name?.includes(name) ?? false,
+      ),
     onRawData: (raw) => {
       log.debug(`Received BLE data: ${raw}`);
       // const parts = raw.split(',');

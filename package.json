@@ -5,6 +5,7 @@
     "start": "expo start",
     "start-tunnel": "expo start --tunnel",
     "android": "expo run:android",
+    "run-android-local": "expo run:android --device",
     "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "eslint --fix --ext .js,.jsx .",

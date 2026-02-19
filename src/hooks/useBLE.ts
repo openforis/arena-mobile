@@ -146,8 +146,15 @@ export function useBLE<T>({
         return;
       }
 
+      if (!device || !device.isConnectable) return;
+
+      // log.debug(
+      //   `BLE - scanning... found device: ${device?.name} (${device?.id})
+      // RSSI: ${device?.rssi} ${device.localName} ${device.manufacturerData} ) ${device?.serviceUUIDs ? "with serviceUUIDs: " + device.serviceUUIDs.join(", ") : ""}`,
+      // );
+
       // Search for the brand or model name
-      if (device && device.name && deviceFilter(device)) {
+      if (device.name && deviceFilter(device)) {
         log.debug(`BLE - found device: ${device.name} (${device.id})`);
 
         // manager.stopDeviceScan();
