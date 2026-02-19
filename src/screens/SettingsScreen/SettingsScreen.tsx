@@ -5,7 +5,7 @@ import { Objects } from "@openforis/arena-core";
 import { ConnectionToRemoteServerButton } from "appComponents/ConnectionToRemoteServerButton";
 import { FullBackupButton } from "appComponents/FullBackupButton";
 
-import { Button, Card, ScreenView, VView } from "components";
+import { Button, Card, ScreenView, Text, VView } from "components";
 import { useBLE } from "hooks";
 import { SettingsModel, SettingsObject } from "model";
 import { AppService } from "service/appService";
@@ -30,9 +30,9 @@ export const SettingsScreen = () => {
   const {
     disconnectBt,
     isBtConnected,
-    isBtScanning,
     scanBtAndConnect,
     btError,
+    btConnectedDevices,
   } = useBLE<any>({
     // serviceUUID: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
     characteristicUUID: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
@@ -102,21 +102,26 @@ export const SettingsScreen = () => {
             </VView>
           ))}
         <Card titleKey="app:testBluetoothDevices.title">
-          {!isBtConnected && !isBtScanning && (
+          {!isBtConnected && (
             <Button
               icon="bluetooth"
               onPress={scanBtAndConnect}
               textKey="app:testBluetoothDevices.scanAndConnect"
             />
           )}
-          {(isBtScanning || isBtConnected) && (
+          {isBtConnected && (
             <Button
               icon="bluetooth"
               onPress={disconnectBt}
               textKey="app:testBluetoothDevices.disconnect"
             />
           )}
-          {btError && <VView>{btError}</VView>}
+          {btError && <Text>{btError}</Text>}
+          {btConnectedDevices.length > 0 && (
+            <Text>{`Connected devices: ${btConnectedDevices
+              .map((d) => d.device.name)
+              .join(", ")}`}</Text>
+          )}
         </Card>
         <Card titleKey="app:backup">
           <FullBackupButton />

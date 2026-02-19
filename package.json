@@ -4,8 +4,8 @@
   "scripts": {
     "start": "expo start",
     "start-tunnel": "expo start --tunnel",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "eslint --fix --ext .js,.jsx .",
     "test": "jest",
