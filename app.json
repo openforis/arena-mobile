@@ -21,16 +21,16 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "org.openforis.arena_mobile",
-      "versionCode": 70,
       "permissions": [
         "android.permission.ACCESS_MEDIA_LOCATION",
         "BLUETOOTH_SCAN",
         "BLUETOOTH_CONNECT",
         "ACCESS_FINE_LOCATION"
-      ]
+      ],
+      "versionCode": 71
     },
     "ios": {
-      "buildNumber": "70",
+      "buildNumber": "71",
       "bundleIdentifier": "org.openforis.arena-mobile",
       "config": {
         "usesNonExemptEncryption": false

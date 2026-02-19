@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Image file attribute: allow rotating image;
+- Image file attribute: allow image rotation;
 
 ## [2.3.6] - 2026-02-13
 
