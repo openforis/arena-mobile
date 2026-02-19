@@ -8,9 +8,9 @@ import {
 
 import { Buffer } from "buffer";
 
-import { log } from "utils";
+import { Environment, log } from "utils";
 
-const manager = new BleManager();
+const manager = Environment.isExpoGo ? null : new BleManager();
 
 // T is a generic type for the parsed data (e.g., a number, a string, or an object)
 interface BLEConfig<T> {
@@ -85,6 +85,8 @@ export function useBLE<T>({
   );
 
   const scanBtAndConnect = useCallback(() => {
+    if (!manager) return;
+
     setBtError(null);
     setIsBtScanning(true);
 
