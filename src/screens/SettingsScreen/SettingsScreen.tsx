@@ -102,6 +102,9 @@ export const SettingsScreen = () => {
             />
           )}
           {btError && <Text>{btError}</Text>}
+          {isBtConnected && (
+            <Text textKey="app:testBluetoothDevices.connected" />
+          )}
         </Card>
         <Card titleKey="app:backup">
           <FullBackupButton />

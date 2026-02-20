@@ -51,4 +51,13 @@ The size will be around {{size}}.`,
       "Cannot verify application update status: $t(networkNotAvailable)",
     upToDate: "Application up-to-date",
   },
+  testBluetoothDevices: {
+    title: "Bluetooth devices",
+    scanAndConnect: "Scan and connect",
+    disconnect: "Disconnect",
+    connected:
+      "Connected. You can now send test data from your Bluetooth device. Data received from the device will be logged and visible in the app logs.",
+    noDevicesFound: "No Bluetooth devices found",
+    scanResults: "Select a device to connect",
+  },
 };
