@@ -86,13 +86,7 @@ class BluetoothScanner {
         throw firstFailure.reason;
       }
 
-      const devices = Array.from(discoveredMap.values());
-      log.debug(
-        `Bluetooth scan finished. Discovered devices: ${devices
-          .map((d) => `${d.name ?? "Unnamed"} (${d.id}) - ${d.kind}`)
-          .join(", ")}`,
-      );
-      return devices;
+      return Array.from(discoveredMap.values());
     } finally {
       this.stopScan();
     }
@@ -189,14 +183,6 @@ class BluetoothScanner {
       (device) => discoveredIds.has(device.id) || connectedIds.has(device.id),
     );
 
-    log.debug(
-      `Classic bonded devices in range: ${
-        availableBondedDevices
-          .map((d) => `${d.name} - ${d.type} - ${JSON.stringify(d.extra)}`)
-          .join(", ") || "None"
-      }`,
-    );
-
     const allDevices = availableBondedDevices.filter(
       (device) => device.type === "CLASSIC" || device.type === "DUAL",
     );
@@ -210,8 +196,6 @@ class BluetoothScanner {
         kind: BluetoothDeviceKind.classic,
         classicDevice: device,
       };
-      log.debug(`Discovered classic device: ${name ?? "Unnamed"} (${id})`);
-
       if (!filterFn || filterFn(scannedDevice)) {
         discoveredMap.set(device.id, scannedDevice);
       }
