@@ -17,7 +17,7 @@ import {
 } from "state";
 import { log, clearLogs } from "utils";
 import { bluetoothClassicConnector } from "utils/BluetoothClassicConnector";
-import { bleScanner, BluetoothDeviceKind } from "utils/BlueToothScanner";
+import { bleScanner, BluetoothDeviceKind } from "utils/BluetoothScanner";
 
 import { SettingsItem } from "./SettingsItem";
 import styles from "./styles";
@@ -35,6 +35,10 @@ export const SettingsScreen = () => {
   >(null);
   const [classicBtError, setClassicBtError] = useState<string | null>(null);
 
+  const onBtRawData = useCallback((raw: string) => {
+    log.debug(`Received BT data: ${raw}`);
+  }, []);
+
   const { disconnectBt, isBtConnected, connectBt, btError } = useBLE<any>({
     // serviceUUID: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
     // characteristicUUID: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
@@ -43,7 +47,7 @@ export const SettingsScreen = () => {
     //     (name) => device.name?.includes(name) ?? false,
     //   ),
     onRawData: (raw) => {
-      log.debug(`Received BLE data: ${raw}`);
+      onBtRawData(raw);
       // const parts = raw.split(',');
       // return {
       //   distance: parseFloat(parts[2]!),
@@ -145,6 +149,7 @@ export const SettingsScreen = () => {
         await disconnectBt();
         const classicDevice = await bluetoothClassicConnector.connect({
           deviceId: selectedDevice.id,
+          onRawData: onBtRawData,
         });
         setConnectedClassicDeviceId(classicDevice.id);
       }
@@ -155,7 +160,7 @@ export const SettingsScreen = () => {
     } finally {
       setIsBtScanning(false);
     }
-  }, [confirm, connectBt, disconnectBt, toaster]);
+  }, [confirm, connectBt, disconnectBt, onBtRawData, toaster]);
 
   const disconnectSelectedBt = useCallback(async () => {
     if (connectedClassicDeviceId) {

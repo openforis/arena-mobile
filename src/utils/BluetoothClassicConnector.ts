@@ -1,4 +1,5 @@
 import RNBluetoothClassic, {
+  BluetoothEventSubscription,
   BluetoothDevice as ClassicDevice,
   StandardOptions as ClassicConnectionOptions,
 } from "react-native-bluetooth-classic";
@@ -6,14 +7,22 @@ import RNBluetoothClassic, {
 import { Permissions } from "./Permissions";
 
 class BluetoothClassicConnector {
-  private connectedClassicDeviceId: string | null = null;
+  private connectedDeviceId: string | null = null;
+  private dataSubscription: BluetoothEventSubscription | null = null;
+
+  private clearDataSubscription() {
+    this.dataSubscription?.remove();
+    this.dataSubscription = null;
+  }
 
   public async connect({
     deviceId,
     options,
+    onRawData,
   }: {
     deviceId: string;
     options?: ClassicConnectionOptions;
+    onRawData?: (raw: string) => void;
   }): Promise<ClassicDevice> {
     const permissionGranted = await Permissions.requestBluetoothPermissions();
     if (!permissionGranted) {
@@ -29,18 +38,28 @@ class BluetoothClassicConnector {
       deviceId,
       options,
     );
-    this.connectedClassicDeviceId = connectedDevice.id;
+
+    this.clearDataSubscription();
+    if (onRawData) {
+      this.dataSubscription = connectedDevice.onDataReceived(({ data }) => {
+        onRawData(data);
+      });
+    }
+
+    this.connectedDeviceId = connectedDevice.id;
     return connectedDevice;
   }
 
   public async disconnect(deviceId?: string): Promise<boolean> {
-    const resolvedDeviceId = deviceId ?? this.connectedClassicDeviceId;
+    this.clearDataSubscription();
+
+    const resolvedDeviceId = deviceId ?? this.connectedDeviceId;
     if (!resolvedDeviceId) return false;
 
     const disconnected =
       await RNBluetoothClassic.disconnectFromDevice(resolvedDeviceId);
-    if (disconnected && resolvedDeviceId === this.connectedClassicDeviceId) {
-      this.connectedClassicDeviceId = null;
+    if (disconnected && resolvedDeviceId === this.connectedDeviceId) {
+      this.connectedDeviceId = null;
     }
     return disconnected;
   }

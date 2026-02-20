@@ -21,7 +21,7 @@ export type ScannedBluetoothDevice = {
   classicDevice?: ClassicDevice;
 };
 
-class BlueToothScanner {
+class BluetoothScanner {
   private manager: BleManager | null;
   private isScanning: boolean = false;
 
@@ -166,19 +166,38 @@ class BlueToothScanner {
     if (!isBluetoothEnabled) {
       await RNBluetoothClassic.requestBluetoothEnabled();
     }
+    const [bondedDevices, discoveredDevices, connectedDevices] =
+      await Promise.all([
+        RNBluetoothClassic.getBondedDevices().catch((error) => {
+          log.error(`Classic bonded-devices fetch failed: ${String(error)}`);
+          return [] as ClassicDevice[];
+        }),
+        RNBluetoothClassic.startDiscovery().catch((error) => {
+          log.error(`Classic discovery failed: ${String(error)}`);
+          return [] as ClassicDevice[];
+        }),
+        RNBluetoothClassic.getConnectedDevices().catch((error) => {
+          log.error(`Classic connected-devices fetch failed: ${String(error)}`);
+          return [] as ClassicDevice[];
+        }),
+      ]);
 
-    const [discoveredDevices, connectedDevices] = await Promise.all([
-      RNBluetoothClassic.startDiscovery().catch((error) => {
-        log.error(`Classic discovery failed: ${String(error)}`);
-        return [] as ClassicDevice[];
-      }),
-      RNBluetoothClassic.getConnectedDevices().catch((error) => {
-        log.error(`Classic connected-devices fetch failed: ${String(error)}`);
-        return [] as ClassicDevice[];
-      }),
-    ]);
+    const discoveredIds = new Set(discoveredDevices.map((device) => device.id));
+    const connectedIds = new Set(connectedDevices.map((device) => device.id));
 
-    const allDevices = [...discoveredDevices, ...connectedDevices].filter(
+    const availableBondedDevices = bondedDevices.filter(
+      (device) => discoveredIds.has(device.id) || connectedIds.has(device.id),
+    );
+
+    log.debug(
+      `Classic bonded devices in range: ${
+        availableBondedDevices
+          .map((d) => `${d.name} - ${d.type} - ${JSON.stringify(d.extra)}`)
+          .join(", ") || "None"
+      }`,
+    );
+
+    const allDevices = availableBondedDevices.filter(
       (device) => device.type === "CLASSIC" || device.type === "DUAL",
     );
 
@@ -201,4 +220,4 @@ class BlueToothScanner {
 }
 
 // Export a singleton instance
-export const bleScanner = new BlueToothScanner();
+export const bleScanner = new BluetoothScanner();
