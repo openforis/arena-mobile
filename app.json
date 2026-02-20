@@ -21,8 +21,13 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "org.openforis.arena_mobile",
-      "versionCode": 71,
-      "permissions": ["android.permission.ACCESS_MEDIA_LOCATION"]
+      "permissions": [
+        "android.permission.ACCESS_MEDIA_LOCATION",
+        "BLUETOOTH_SCAN",
+        "BLUETOOTH_CONNECT",
+        "ACCESS_FINE_LOCATION"
+      ],
+      "versionCode": 71
     },
     "ios": {
       "buildNumber": "71",
@@ -83,7 +88,15 @@
       "expo-secure-store",
       "expo-sqlite",
       "expo-web-browser",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "react-native-ble-plx",
+        {
+          "isBackgroundEnabled": true,
+          "modes": ["peripheral", "central"],
+          "bluetoothAlwaysPermission": "Allow $(PRODUCT_NAME) to connect to bluetooth devices"
+        }
+      ]
     ]
   }
 }

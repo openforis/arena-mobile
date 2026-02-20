@@ -1,7 +1,14 @@
 import { ConfirmActions, ConfirmShowParams, OnConfirmParams } from "./reducer";
 
+export type ConfirmAsyncParams = Omit<
+  ConfirmShowParams,
+  "onConfirm" | "onCancel"
+> & {
+  dispatch: any;
+};
+
 const confirm = async (
-  params: Omit<ConfirmShowParams, "onConfirm"> & { dispatch: any },
+  params: ConfirmAsyncParams,
 ): Promise<OnConfirmParams | null> =>
   new Promise((resolve, reject) => {
     try {

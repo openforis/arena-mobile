@@ -1,16 +1,16 @@
-import { PermissionsAndroid } from "react-native";
+import { PermissionsAndroid, Platform } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 
 import { i18n } from "localization/i18n";
 import { Environment } from "./Environment";
 
-const isLocationServiceEnabled = async () => {
+const isLocationServiceEnabled = async (): Promise<boolean> => {
   const providerStatus = await Location.getProviderStatusAsync();
   return providerStatus.locationServicesEnabled;
 };
 
-const requestLocationForegroundPermission = async () => {
+const requestLocationForegroundPermission = async (): Promise<boolean> => {
   if (!(await isLocationServiceEnabled())) {
     return false;
   }
@@ -23,7 +23,7 @@ const requestLocationForegroundPermission = async () => {
   return foregroundPermission.granted;
 };
 
-const requestAccessMediaLocation = async () => {
+const requestAccessMediaLocation = async (): Promise<boolean> => {
   if (
     !Environment.isExpoGo &&
     Environment.isAndroid &&
@@ -39,17 +39,45 @@ const requestAccessMediaLocation = async () => {
         }),
         buttonNegative: i18n.t("common:cancel"),
         buttonPositive: i18n.t("common:ok"),
-      }
+      },
     );
     return status === PermissionsAndroid.RESULTS.GRANTED;
   }
   return true;
 };
 
-const requestImagePickerMediaLibraryPermissions = async () => {
-  const { granted } =
-    await ImagePicker.requestMediaLibraryPermissionsAsync(true);
-  return granted;
+const requestImagePickerMediaLibraryPermissions =
+  async (): Promise<boolean> => {
+    const { granted } =
+      await ImagePicker.requestMediaLibraryPermissionsAsync(true);
+    return granted;
+  };
+
+const requestBluetoothPermissions = async (): Promise<boolean> => {
+  if (Environment.isAndroid) {
+    if (Environment.androidApiLevel >= 31) {
+      // Android 12+ requires these specific ones
+      const result = await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      ]);
+
+      return (
+        result["android.permission.BLUETOOTH_SCAN"] ===
+          PermissionsAndroid.RESULTS.GRANTED &&
+        result["android.permission.BLUETOOTH_CONNECT"] ===
+          PermissionsAndroid.RESULTS.GRANTED
+      );
+    } else {
+      // Android 11 and below only needs Location
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    }
+  }
+  return true; // iOS handles this via the app.json config automatically
 };
 
 export const Permissions = {
@@ -57,4 +85,5 @@ export const Permissions = {
   requestLocationForegroundPermission,
   requestAccessMediaLocation,
   requestImagePickerMediaLibraryPermissions,
+  requestBluetoothPermissions,
 };
