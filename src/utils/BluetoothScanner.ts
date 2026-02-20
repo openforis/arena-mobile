@@ -159,6 +159,7 @@ class BluetoothScanner {
     discoveredMap: Map<string, ScannedBluetoothDevice>;
   }): Promise<void> {
     const isBluetoothEnabled = await RNBluetoothClassic.isBluetoothEnabled();
+
     if (!isBluetoothEnabled) {
       await RNBluetoothClassic.requestBluetoothEnabled();
     }

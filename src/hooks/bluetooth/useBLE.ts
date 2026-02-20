@@ -83,6 +83,13 @@ export const useBLE = <T>({
   const deviceRef = useRef<Device | null>(null);
   const monitoringSubscriptionRef = useRef<Subscription | null>(null);
 
+  const unsubscribeFromMonitoring = () => {
+    if (monitoringSubscriptionRef.current) {
+      monitoringSubscriptionRef.current.remove();
+      monitoringSubscriptionRef.current = null;
+    }
+  };
+
   const startMonitoring = useCallback(
     async ({
       device,
@@ -97,10 +104,8 @@ export const useBLE = <T>({
         // You must discover services before monitoring
         await device.discoverAllServicesAndCharacteristics();
 
-        if (monitoringSubscriptionRef.current) {
-          monitoringSubscriptionRef.current.remove();
-          monitoringSubscriptionRef.current = null;
-        }
+        unsubscribeFromMonitoring();
+
         monitoringSubscriptionRef.current =
           device.monitorCharacteristicForService(
             serviceUUID!,
@@ -173,10 +178,8 @@ export const useBLE = <T>({
     setIsBleConnected(false);
     setBleData(null);
 
-    if (monitoringSubscriptionRef.current) {
-      monitoringSubscriptionRef.current.remove();
-      monitoringSubscriptionRef.current = null;
-    }
+    unsubscribeFromMonitoring();
+
     if (deviceRef.current) {
       await deviceRef.current.cancelConnection();
       deviceRef.current = null;
