@@ -6,7 +6,7 @@ import { ConnectionToRemoteServerButton } from "appComponents/ConnectionToRemote
 import { FullBackupButton } from "appComponents/FullBackupButton";
 
 import { Button, Card, ScreenView, Text, VView } from "components";
-import { useBLE } from "hooks";
+import { useBLE, useToast } from "hooks";
 import { SettingsModel, SettingsObject } from "model";
 import { AppService } from "service/appService";
 import {
@@ -19,6 +19,7 @@ import { log, clearLogs } from "utils";
 
 import { SettingsItem } from "./SettingsItem";
 import styles from "./styles";
+import { bleScanner } from "utils/BLEScanner";
 
 const settingsPropertiesEntries = Object.entries(SettingsModel.properties);
 
@@ -26,20 +27,16 @@ export const SettingsScreen = () => {
   log.debug(`rendering SettingsScreen`);
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
+  const toaster = useToast();
+  const [isBtScanning, setIsBtScanning] = useState(false);
 
-  const {
-    disconnectBt,
-    isBtConnected,
-    scanBtAndConnect,
-    btError,
-    btConnectedDevices,
-  } = useBLE<any>({
+  const { disconnectBt, isBtConnected, connectBt, btError } = useBLE<any>({
     // serviceUUID: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-    characteristicUUID: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
-    deviceFilter: (device) =>
-      ["TruPulse", "Garmin"].some(
-        (name) => device.name?.includes(name) ?? false,
-      ),
+    // characteristicUUID: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
+    // deviceFilter: (device) =>
+    //   ["TruPulse", "Garmin"].some(
+    //     (name) => device.name?.includes(name) ?? false,
+    //   ),
     onRawData: (raw) => {
       log.debug(`Received BLE data: ${raw}`);
       // const parts = raw.split(',');
@@ -88,6 +85,34 @@ export const SettingsScreen = () => {
     }
   }, [confirm]);
 
+  const scanBt = useCallback(async () => {
+    setIsBtScanning(true);
+    const devices = await bleScanner.scanDevices({
+      filterFn: (device) => !!device.name,
+    });
+    setIsBtScanning(false);
+    log.debug(`Discovered devices: ${devices.map((d) => d.name).join(", ")}`);
+    if (devices.length === 0) {
+      toaster("app:testBluetoothDevices.noDevicesFound");
+    } else {
+      const confirmResult = await confirm({
+        titleKey: "app:testBluetoothDevices.scanResults",
+        singleChoiceOptions: devices.map((d) => ({
+          label: d.name ?? d.id,
+          value: d.id,
+        })),
+      });
+      if (confirmResult) {
+        const deviceId = confirmResult.selectedSingleChoiceValue!;
+        await connectBt({
+          deviceId,
+          serviceUUID: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+          characteristicUUID: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
+        });
+      }
+    }
+  }, [confirm, connectBt, toaster]);
+
   return (
     <ScreenView>
       <VView style={styles.settingsWrapper}>
@@ -105,10 +130,10 @@ export const SettingsScreen = () => {
             </VView>
           ))}
         <Card titleKey="app:testBluetoothDevices.title">
-          {!isBtConnected && (
+          {!isBtConnected && !isBtScanning && (
             <Button
               icon="bluetooth"
-              onPress={scanBtAndConnect}
+              onPress={scanBt}
               textKey="app:testBluetoothDevices.scanAndConnect"
             />
           )}
@@ -120,11 +145,6 @@ export const SettingsScreen = () => {
             />
           )}
           {btError && <Text>{btError}</Text>}
-          {btConnectedDevices.length > 0 && (
-            <Text>{`Connected devices: ${btConnectedDevices
-              .map((d) => d.device.name)
-              .join(", ")}`}</Text>
-          )}
         </Card>
         <Card titleKey="app:backup">
           <FullBackupButton />

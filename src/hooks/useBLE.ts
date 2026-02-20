@@ -1,10 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import {
-  BleManager,
-  Device,
-  Characteristic,
-  BleError,
-} from "react-native-ble-plx";
+import { BleManager, Device, Subscription } from "react-native-ble-plx";
 
 import { Buffer } from "buffer";
 
@@ -14,8 +9,6 @@ const manager = Environment.isExpoGo ? null : new BleManager();
 
 // T is a generic type for the parsed data (e.g., a number, a string, or an object)
 type BLEConfig<T> = {
-  serviceUUID?: string;
-  characteristicUUID: string;
   deviceFilter?: (device: Device) => boolean;
   onRawData?: (raw: string) => T;
 };
@@ -24,10 +17,13 @@ type BLEHookReturn<T> = {
   btData: T | null;
   isBtConnected: boolean;
   isBtScanning?: boolean;
-  scanBtAndConnect: () => void;
+  connectBt: (params: {
+    deviceId: string;
+    serviceUUID: string;
+    characteristicUUID: string;
+  }) => Promise<void>;
   disconnectBt: () => Promise<void>;
   btError: string | null;
-  btConnectedDevices: ConnectedDeviceInfo[];
 };
 
 type ConnectedDeviceInfo = {
@@ -79,125 +75,109 @@ const fetchConnectedDeviceDetails = async (): Promise<
 };
 
 export function useBLE<T>({
-  serviceUUID,
-  characteristicUUID,
-  deviceFilter = () => true,
   onRawData,
-}: BLEConfig<T>): BLEHookReturn<T> {
+}: Omit<BLEConfig<T>, "deviceFilter">): BLEHookReturn<T> {
   const [btData, setBtData] = useState<T | null>(null);
   const [isBtConnected, setIsBtConnected] = useState(false);
-  const [isBtScanning, setIsBtScanning] = useState(false);
   const [btError, setBtError] = useState<string | null>(null);
-  const [btConnectedDevices, setBtConnectedDetails] = useState<
-    ConnectedDeviceInfo[]
-  >([]);
 
   const deviceRef = useRef<Device | null>(null);
+  const monitoringSubscriptionRef = useRef<Subscription | null>(null);
 
   const startMonitoring = useCallback(
-    async (device: Device) => {
-      await device.discoverAllServicesAndCharacteristics();
+    async ({
+      device,
+      serviceUUID,
+      characteristicUUID,
+    }: {
+      device: Device;
+      serviceUUID: string;
+      characteristicUUID: string;
+    }) => {
+      try {
+        // You must discover services before monitoring
+        await device.discoverAllServicesAndCharacteristics();
 
-      const services = await device.services();
-      log.debug(
-        `BLE - discovered services: ${services.map((s) => s.uuid).join(", ")}`,
-      );
-      device.monitorCharacteristicForService(
-        serviceUUID!, // Assuming serviceUUID is provided if characteristic is
-        characteristicUUID,
-        (err: BleError | null, char: Characteristic | null) => {
-          if (err) {
-            setBtError(err.message);
-            setIsBtConnected(false);
-            return;
-          }
-
-          if (char?.value) {
-            const decoded = Buffer.from(char.value, "base64").toString("utf-8");
-            log.debug(`BLE - received data: ${decoded}`);
-            // If a parser exists, use it; otherwise cast string to T
-            const processedData = onRawData
-              ? onRawData(decoded)
-              : (decoded as unknown as T);
-            setBtData(processedData);
-          }
-        },
-      );
+        if (monitoringSubscriptionRef.current) {
+          monitoringSubscriptionRef.current.remove();
+          monitoringSubscriptionRef.current = null;
+        }
+        monitoringSubscriptionRef.current =
+          device.monitorCharacteristicForService(
+            serviceUUID!,
+            characteristicUUID,
+            (err, char) => {
+              if (err) {
+                setBtError(err.message);
+                setIsBtConnected(false);
+                return;
+              }
+              if (char?.value) {
+                const decoded = Buffer.from(char.value, "base64").toString(
+                  "utf-8",
+                );
+                const processedData = onRawData
+                  ? onRawData(decoded)
+                  : (decoded as unknown as T);
+                setBtData(processedData);
+              }
+            },
+          );
+      } catch (e: any) {
+        log.error(`BLE monitor error: ${e.message}`);
+      }
     },
-    [serviceUUID, characteristicUUID, onRawData],
+    [onRawData],
   );
 
-  const scanBtAndConnect = useCallback(async () => {
-    if (!manager) return;
+  const connectBt = useCallback(
+    async ({
+      deviceId,
+      serviceUUID,
+      characteristicUUID,
+    }: {
+      deviceId: string;
+      serviceUUID: string;
+      characteristicUUID: string;
+    }) => {
+      if (!manager) return;
 
-    const permissionGranted = await Permissions.requestBluetoothPermissions();
-
-    if (!permissionGranted) {
-      setBtError("Bluetooth permissions not granted");
-      return;
-    }
-    setBtError(null);
-    setIsBtScanning(true);
-
-    manager.startDeviceScan(null, null, async (err, device) => {
-      if (err) {
-        setBtError(err.message);
-        setIsBtScanning(false);
+      const permissionGranted = await Permissions.requestBluetoothPermissions();
+      if (!permissionGranted) {
+        setBtError("Bluetooth permissions not granted");
         return;
       }
 
-      if (!device || !device.isConnectable) return;
+      setBtError(null);
 
-      // log.debug(
-      //   `BLE - scanning... found device: ${device?.name} (${device?.id})
-      // RSSI: ${device?.rssi} ${device.localName} ${device.manufacturerData} ) ${device?.serviceUUIDs ? "with serviceUUIDs: " + device.serviceUUIDs.join(", ") : ""}`,
-      // );
+      try {
+        log.debug(`BLE - attempting direct connection to: ${deviceId}`);
 
-      // Search for the brand or model name
-      if (device.name && deviceFilter(device)) {
-        log.debug(`BLE - found device: ${device.name} (${device.id})`);
+        const device = await manager.connectToDevice(deviceId);
 
-        // manager.stopDeviceScan();
-        // setIsBtScanning(false);
+        log.debug(`BLE - connected to: ${device.id}`);
 
-        try {
-          log.debug(
-            `BLE - connecting to device: ${device.name} (${device.id})`,
-          );
-          let connectedDevice;
-          if (await device.isConnected()) {
-            connectedDevice = device;
-          } else {
-            connectedDevice = await device.connect();
-          }
-          log.debug(
-            `BLE - connected to device: ${connectedDevice.name} (${connectedDevice.id})`,
-          );
-          await connectedDevice.discoverAllServicesAndCharacteristics();
-          deviceRef.current = connectedDevice;
-          setIsBtConnected(true);
+        deviceRef.current = device;
+        setIsBtConnected(true);
 
-          startMonitoring(connectedDevice);
-
-          const details: ConnectedDeviceInfo[] =
-            await fetchConnectedDeviceDetails();
-
-          setBtConnectedDetails(details);
-        } catch (e: any) {
-          log.error(`BLE connection error: ${e.message}`);
-          setBtError(e.message || "Connection failed");
-        }
+        await startMonitoring({ device, serviceUUID, characteristicUUID });
+      } catch (e: any) {
+        log.error(`BLE connection error: ${e.message}`);
+        setBtError(e.message || "Direct connection failed");
+        setIsBtConnected(false);
       }
-    });
-  }, [deviceFilter, startMonitoring]);
+    },
+    [startMonitoring],
+  );
 
   const disconnectBt = useCallback(async () => {
-    manager?.stopDeviceScan();
-
     setIsBtConnected(false);
-    setIsBtScanning(false);
     setBtData(null);
 
+    if (monitoringSubscriptionRef.current) {
+      monitoringSubscriptionRef.current.remove();
+      monitoringSubscriptionRef.current = null;
+    }
     if (deviceRef.current) {
       await deviceRef.current.cancelConnection();
       deviceRef.current = null;
@@ -207,8 +187,7 @@ export function useBLE<T>({
   return {
     btData,
     isBtConnected,
-    scanBtAndConnect,
-    btConnectedDevices,
+    connectBt,
     disconnectBt,
     btError,
   };
