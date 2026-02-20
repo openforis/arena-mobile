@@ -21,6 +21,13 @@ export type ScannedBluetoothDevice = {
   classicDevice?: ClassicDevice;
 };
 
+export type BluetoothScanOptions = {
+  durationMs?: number;
+  filterFn?: (device: ScannedBluetoothDevice) => boolean;
+  scanBLE?: boolean;
+  scanClassic?: boolean;
+};
+
 class BluetoothScanner {
   private manager: BleManager | null;
   private isScanning: boolean = false;
@@ -39,12 +46,7 @@ class BluetoothScanner {
     filterFn,
     scanBLE = true,
     scanClassic = true,
-  }: {
-    durationMs?: number;
-    filterFn?: (device: ScannedBluetoothDevice) => boolean;
-    scanBLE?: boolean;
-    scanClassic?: boolean;
-  } = {}): Promise<ScannedBluetoothDevice[]> {
+  }: BluetoothScanOptions = {}): Promise<ScannedBluetoothDevice[]> {
     if (this.isScanning) {
       throw new Error("Scan already in progress");
     }
@@ -204,4 +206,4 @@ class BluetoothScanner {
 }
 
 // Export a singleton instance
-export const bleScanner = new BluetoothScanner();
+export const bluetoothScanner = new BluetoothScanner();

@@ -5,6 +5,7 @@ import RNBluetoothClassic, {
 } from "react-native-bluetooth-classic";
 
 import { Permissions } from "./Permissions";
+import { log } from "./Logger";
 
 class BluetoothClassicConnector {
   private connectedDeviceId: string | null = null;
@@ -51,6 +52,9 @@ class BluetoothClassicConnector {
   }
 
   public async disconnect(deviceId?: string): Promise<boolean> {
+    log.debug(
+      `BluetoothClassicConnector: disconnect called with deviceId=${deviceId}`,
+    );
     this.clearDataSubscription();
 
     const resolvedDeviceId = deviceId ?? this.connectedDeviceId;

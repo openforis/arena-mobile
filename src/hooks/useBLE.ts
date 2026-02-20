@@ -16,7 +16,6 @@ type BLEConfig<T> = {
 type BLEHookReturn<T> = {
   btData: T | null;
   isBtConnected: boolean;
-  isBtScanning?: boolean;
   connectBt: (params: {
     deviceId: string;
     serviceUUID: string;

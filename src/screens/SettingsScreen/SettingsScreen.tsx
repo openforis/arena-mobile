@@ -6,7 +6,8 @@ import { ConnectionToRemoteServerButton } from "appComponents/ConnectionToRemote
 import { FullBackupButton } from "appComponents/FullBackupButton";
 
 import { Button, Card, ScreenView, Text, VView } from "components";
-import { useBLE, useToast } from "hooks";
+import { useBluetoothDeviceLookup } from "hooks/useBluetoothDeviceLookup";
+import { useBLE } from "hooks";
 import { SettingsModel, SettingsObject } from "model";
 import { AppService } from "service/appService";
 import {
@@ -17,7 +18,7 @@ import {
 } from "state";
 import { log, clearLogs } from "utils";
 import { bluetoothClassicConnector } from "utils/BluetoothClassicConnector";
-import { bleScanner, BluetoothDeviceKind } from "utils/BluetoothScanner";
+import { BluetoothDeviceKind } from "utils/BluetoothScanner";
 
 import { SettingsItem } from "./SettingsItem";
 import styles from "./styles";
@@ -28,12 +29,11 @@ export const SettingsScreen = () => {
   log.debug(`rendering SettingsScreen`);
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
-  const toaster = useToast();
-  const [isBtScanning, setIsBtScanning] = useState(false);
   const [connectedClassicDeviceId, setConnectedClassicDeviceId] = useState<
     string | null
   >(null);
   const [classicBtError, setClassicBtError] = useState<string | null>(null);
+  const { error, scanning, lookupDevice } = useBluetoothDeviceLookup();
 
   const onBtRawData = useCallback((raw: string) => {
     log.debug(`Received BT data: ${raw}`);
@@ -98,71 +98,36 @@ export const SettingsScreen = () => {
   }, [confirm]);
 
   const scanBt = useCallback(async () => {
-    setClassicBtError(null);
-    setIsBtScanning(true);
-    try {
-      const devices = await bleScanner.scanDevices({
-        filterFn: (device) => !!device.name && device.name !== device.id,
+    const device = await lookupDevice({
+      filterFn: (device) => !!device.name && device.name !== device.id,
+    });
+    if (!device) return;
+
+    const { id: deviceId, kind } = device!;
+    if (kind === BluetoothDeviceKind.ble) {
+      await bluetoothClassicConnector.disconnect();
+      setConnectedClassicDeviceId(null);
+      await connectBt({
+        deviceId,
+        serviceUUID: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+        characteristicUUID: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
       });
-
-      log.debug(
-        `Discovered devices: ${devices.map((d) => `${d.name} [${d.kind}]`).join(", ")}`,
-      );
-
-      if (devices.length === 0) {
-        toaster("app:testBluetoothDevices.noDevicesFound");
-        return;
-      }
-
-      const confirmResult = await confirm({
-        titleKey: "app:testBluetoothDevices.scanResults",
-        singleChoiceOptions: devices.map((d) => ({
-          label: d.name ?? d.id,
-          value: d.id,
-        })),
+    } else {
+      log.debug(`Connecting to classic BT device ${deviceId}...`);
+      await disconnectBt();
+      const classicDevice = await bluetoothClassicConnector.connect({
+        deviceId,
+        onRawData: onBtRawData,
       });
-
-      if (!confirmResult) {
-        return;
-      }
-
-      const selectedDeviceId = confirmResult.selectedSingleChoiceValue!;
-      const selectedDevice = devices.find((d) => d.id === selectedDeviceId);
-
-      if (!selectedDevice) {
-        return;
-      }
-
-      log.debug(
-        `Selected device: ${selectedDevice.name} [${selectedDevice.kind}]`,
-      );
-
-      if (selectedDevice.kind === BluetoothDeviceKind.ble) {
-        await bluetoothClassicConnector.disconnect();
-        setConnectedClassicDeviceId(null);
-        await connectBt({
-          deviceId: selectedDevice.id,
-          serviceUUID: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-          characteristicUUID: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
-        });
-      } else {
-        await disconnectBt();
-        const classicDevice = await bluetoothClassicConnector.connect({
-          deviceId: selectedDevice.id,
-          onRawData: onBtRawData,
-        });
-        setConnectedClassicDeviceId(classicDevice.id);
-      }
-    } catch (error: any) {
-      const errorMessage = error?.message ?? String(error);
-      setClassicBtError(errorMessage);
-      log.error(`BT scan/connect error: ${errorMessage}`);
-    } finally {
-      setIsBtScanning(false);
+      setConnectedClassicDeviceId(classicDevice.id);
     }
-  }, [confirm, connectBt, disconnectBt, onBtRawData, toaster]);
+  }, [connectBt, disconnectBt, lookupDevice, onBtRawData]);
 
   const disconnectSelectedBt = useCallback(async () => {
+    log.debug(`Disconnecting from selected Bluetooth device...`);
+    log.debug(
+      `Currently connected classic device ID: ${connectedClassicDeviceId}`,
+    );
     if (connectedClassicDeviceId) {
       try {
         await bluetoothClassicConnector.disconnect(connectedClassicDeviceId);
@@ -196,14 +161,14 @@ export const SettingsScreen = () => {
             </VView>
           ))}
         <Card titleKey="app:testBluetoothDevices.title">
-          {!isBtConnected && !connectedClassicDeviceId && !isBtScanning && (
+          {!isBtConnected && !connectedClassicDeviceId && !scanning && (
             <Button
               icon="bluetooth"
               onPress={scanBt}
               textKey="app:testBluetoothDevices.scanAndConnect"
             />
           )}
-          {(isBtConnected || !!connectedClassicDeviceId) && (
+          {(scanning || isBtConnected || !!connectedClassicDeviceId) && (
             <Button
               icon="bluetooth"
               onPress={disconnectSelectedBt}
