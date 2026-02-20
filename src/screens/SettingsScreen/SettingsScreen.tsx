@@ -16,6 +16,7 @@ import {
   useConfirm,
 } from "state";
 import { log, clearLogs } from "utils";
+import { bluetoothClassicConnector } from "utils/BluetoothClassicConnector";
 import { bleScanner, BluetoothDeviceKind } from "utils/BlueToothScanner";
 
 import { SettingsItem } from "./SettingsItem";
@@ -55,7 +56,7 @@ export const SettingsScreen = () => {
     return () => {
       // Ensure we disconnect BT when the screen unmounts
       disconnectBt();
-      bleScanner.disconnectClassicDevice().catch((error: unknown) => {
+      bluetoothClassicConnector.disconnect().catch((error: unknown) => {
         log.error(`Classic BT disconnect error on unmount: ${String(error)}`);
       });
     };
@@ -128,8 +129,12 @@ export const SettingsScreen = () => {
         return;
       }
 
+      log.debug(
+        `Selected device: ${selectedDevice.name} [${selectedDevice.kind}]`,
+      );
+
       if (selectedDevice.kind === BluetoothDeviceKind.ble) {
-        await bleScanner.disconnectClassicDevice();
+        await bluetoothClassicConnector.disconnect();
         setConnectedClassicDeviceId(null);
         await connectBt({
           deviceId: selectedDevice.id,
@@ -138,7 +143,7 @@ export const SettingsScreen = () => {
         });
       } else {
         await disconnectBt();
-        const classicDevice = await bleScanner.connectClassicDevice({
+        const classicDevice = await bluetoothClassicConnector.connect({
           deviceId: selectedDevice.id,
         });
         setConnectedClassicDeviceId(classicDevice.id);
@@ -155,7 +160,7 @@ export const SettingsScreen = () => {
   const disconnectSelectedBt = useCallback(async () => {
     if (connectedClassicDeviceId) {
       try {
-        await bleScanner.disconnectClassicDevice(connectedClassicDeviceId);
+        await bluetoothClassicConnector.disconnect(connectedClassicDeviceId);
       } catch (error: any) {
         const errorMessage = error?.message ?? String(error);
         setClassicBtError(errorMessage);

@@ -1,7 +1,6 @@
 import { BleManager, Device, BleError } from "react-native-ble-plx";
 import RNBluetoothClassic, {
   BluetoothDevice as ClassicDevice,
-  StandardOptions as ClassicConnectionOptions,
 } from "react-native-bluetooth-classic";
 
 import { Environment } from "./Environment";
@@ -25,7 +24,6 @@ export type ScannedBluetoothDevice = {
 class BlueToothScanner {
   private manager: BleManager | null;
   private isScanning: boolean = false;
-  private connectedClassicDeviceId: string | null = null;
 
   constructor() {
     this.manager = Environment.isExpoGo ? null : new BleManager();
@@ -108,43 +106,6 @@ class BlueToothScanner {
   // Helper to get the manager instance if needed elsewhere
   public getManager(): BleManager | null {
     return this.manager;
-  }
-
-  public async connectClassicDevice({
-    deviceId,
-    options,
-  }: {
-    deviceId: string;
-    options?: ClassicConnectionOptions;
-  }): Promise<ClassicDevice> {
-    const permissionGranted = await Permissions.requestBluetoothPermissions();
-    if (!permissionGranted) {
-      throw new Error("Bluetooth permissions not granted");
-    }
-
-    const isEnabled = await RNBluetoothClassic.isBluetoothEnabled();
-    if (!isEnabled) {
-      await RNBluetoothClassic.requestBluetoothEnabled();
-    }
-
-    const connectedDevice = await RNBluetoothClassic.connectToDevice(
-      deviceId,
-      options,
-    );
-    this.connectedClassicDeviceId = connectedDevice.id;
-    return connectedDevice;
-  }
-
-  public async disconnectClassicDevice(deviceId?: string): Promise<boolean> {
-    const resolvedDeviceId = deviceId ?? this.connectedClassicDeviceId;
-    if (!resolvedDeviceId) return false;
-
-    const disconnected =
-      await RNBluetoothClassic.disconnectFromDevice(resolvedDeviceId);
-    if (disconnected && resolvedDeviceId === this.connectedClassicDeviceId) {
-      this.connectedClassicDeviceId = null;
-    }
-    return disconnected;
   }
 
   private scanBLEDevicesInternal({
