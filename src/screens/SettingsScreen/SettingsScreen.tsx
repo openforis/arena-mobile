@@ -16,10 +16,10 @@ import {
   useConfirm,
 } from "state";
 import { log, clearLogs } from "utils";
+import { bleScanner, BluetoothDeviceKind } from "utils/BlueToothScanner";
 
 import { SettingsItem } from "./SettingsItem";
 import styles from "./styles";
-import { bleScanner } from "utils/BLEScanner";
 
 const settingsPropertiesEntries = Object.entries(SettingsModel.properties);
 
@@ -29,6 +29,10 @@ export const SettingsScreen = () => {
   const confirm = useConfirm();
   const toaster = useToast();
   const [isBtScanning, setIsBtScanning] = useState(false);
+  const [connectedClassicDeviceId, setConnectedClassicDeviceId] = useState<
+    string | null
+  >(null);
+  const [classicBtError, setClassicBtError] = useState<string | null>(null);
 
   const { disconnectBt, isBtConnected, connectBt, btError } = useBLE<any>({
     // serviceUUID: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
@@ -51,6 +55,9 @@ export const SettingsScreen = () => {
     return () => {
       // Ensure we disconnect BT when the screen unmounts
       disconnectBt();
+      bleScanner.disconnectClassicDevice().catch((error: unknown) => {
+        log.error(`Classic BT disconnect error on unmount: ${String(error)}`);
+      });
     };
   }, [disconnectBt]);
 
@@ -86,15 +93,22 @@ export const SettingsScreen = () => {
   }, [confirm]);
 
   const scanBt = useCallback(async () => {
+    setClassicBtError(null);
     setIsBtScanning(true);
-    const devices = await bleScanner.scanDevices({
-      filterFn: (device) => !!device.name,
-    });
-    setIsBtScanning(false);
-    log.debug(`Discovered devices: ${devices.map((d) => d.name).join(", ")}`);
-    if (devices.length === 0) {
-      toaster("app:testBluetoothDevices.noDevicesFound");
-    } else {
+    try {
+      const devices = await bleScanner.scanDevices({
+        filterFn: (device) => !!device.name && device.name !== device.id,
+      });
+
+      log.debug(
+        `Discovered devices: ${devices.map((d) => `${d.name} [${d.kind}]`).join(", ")}`,
+      );
+
+      if (devices.length === 0) {
+        toaster("app:testBluetoothDevices.noDevicesFound");
+        return;
+      }
+
       const confirmResult = await confirm({
         titleKey: "app:testBluetoothDevices.scanResults",
         singleChoiceOptions: devices.map((d) => ({
@@ -102,16 +116,58 @@ export const SettingsScreen = () => {
           value: d.id,
         })),
       });
-      if (confirmResult) {
-        const deviceId = confirmResult.selectedSingleChoiceValue!;
+
+      if (!confirmResult) {
+        return;
+      }
+
+      const selectedDeviceId = confirmResult.selectedSingleChoiceValue!;
+      const selectedDevice = devices.find((d) => d.id === selectedDeviceId);
+
+      if (!selectedDevice) {
+        return;
+      }
+
+      if (selectedDevice.kind === BluetoothDeviceKind.ble) {
+        await bleScanner.disconnectClassicDevice();
+        setConnectedClassicDeviceId(null);
         await connectBt({
-          deviceId,
+          deviceId: selectedDevice.id,
           serviceUUID: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
           characteristicUUID: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
         });
+      } else {
+        await disconnectBt();
+        const classicDevice = await bleScanner.connectClassicDevice({
+          deviceId: selectedDevice.id,
+        });
+        setConnectedClassicDeviceId(classicDevice.id);
       }
+    } catch (error: any) {
+      const errorMessage = error?.message ?? String(error);
+      setClassicBtError(errorMessage);
+      log.error(`BT scan/connect error: ${errorMessage}`);
+    } finally {
+      setIsBtScanning(false);
     }
-  }, [confirm, connectBt, toaster]);
+  }, [confirm, connectBt, disconnectBt, toaster]);
+
+  const disconnectSelectedBt = useCallback(async () => {
+    if (connectedClassicDeviceId) {
+      try {
+        await bleScanner.disconnectClassicDevice(connectedClassicDeviceId);
+      } catch (error: any) {
+        const errorMessage = error?.message ?? String(error);
+        setClassicBtError(errorMessage);
+        log.error(`Classic BT disconnect error: ${errorMessage}`);
+      } finally {
+        setConnectedClassicDeviceId(null);
+      }
+      return;
+    }
+
+    await disconnectBt();
+  }, [connectedClassicDeviceId, disconnectBt]);
 
   return (
     <ScreenView>
@@ -130,21 +186,22 @@ export const SettingsScreen = () => {
             </VView>
           ))}
         <Card titleKey="app:testBluetoothDevices.title">
-          {!isBtConnected && !isBtScanning && (
+          {!isBtConnected && !connectedClassicDeviceId && !isBtScanning && (
             <Button
               icon="bluetooth"
               onPress={scanBt}
               textKey="app:testBluetoothDevices.scanAndConnect"
             />
           )}
-          {isBtConnected && (
+          {(isBtConnected || !!connectedClassicDeviceId) && (
             <Button
               icon="bluetooth"
-              onPress={disconnectBt}
+              onPress={disconnectSelectedBt}
               textKey="app:testBluetoothDevices.disconnect"
             />
           )}
           {btError && <Text>{btError}</Text>}
+          {classicBtError && <Text>{classicBtError}</Text>}
         </Card>
         <Card titleKey="app:backup">
           <FullBackupButton />
