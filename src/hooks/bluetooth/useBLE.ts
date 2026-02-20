@@ -14,15 +14,15 @@ type BLEConfig<T> = {
 };
 
 type BLEHookReturn<T> = {
-  btData: T | null;
-  isBtConnected: boolean;
-  connectBt: (params: {
+  bleData: T | null;
+  isBleConnected: boolean;
+  connectBle: (params: {
     deviceId: string;
     serviceUUID: string;
     characteristicUUID: string;
   }) => Promise<void>;
-  disconnectBt: () => Promise<void>;
-  btError: string | null;
+  disconnectBle: () => Promise<void>;
+  bleError: string | null;
 };
 
 type ConnectedDeviceInfo = {
@@ -73,12 +73,12 @@ const fetchConnectedDeviceDetails = async (): Promise<
   return details;
 };
 
-export function useBLE<T>({
+export const useBLE = <T>({
   onRawData,
-}: Omit<BLEConfig<T>, "deviceFilter">): BLEHookReturn<T> {
-  const [btData, setBtData] = useState<T | null>(null);
-  const [isBtConnected, setIsBtConnected] = useState(false);
-  const [btError, setBtError] = useState<string | null>(null);
+}: Omit<BLEConfig<T>, "deviceFilter">): BLEHookReturn<T> => {
+  const [bleData, setBleData] = useState<T | null>(null);
+  const [isBleConnected, setIsBleConnected] = useState(false);
+  const [bleError, setBleError] = useState<string | null>(null);
 
   const deviceRef = useRef<Device | null>(null);
   const monitoringSubscriptionRef = useRef<Subscription | null>(null);
@@ -107,8 +107,8 @@ export function useBLE<T>({
             characteristicUUID,
             (err, char) => {
               if (err) {
-                setBtError(err.message);
-                setIsBtConnected(false);
+                setBleError(err.message);
+                setIsBleConnected(false);
                 return;
               }
               if (char?.value) {
@@ -118,7 +118,7 @@ export function useBLE<T>({
                 const processedData = onRawData
                   ? onRawData(decoded)
                   : (decoded as unknown as T);
-                setBtData(processedData);
+                setBleData(processedData);
               }
             },
           );
@@ -129,7 +129,7 @@ export function useBLE<T>({
     [onRawData],
   );
 
-  const connectBt = useCallback(
+  const connectBle = useCallback(
     async ({
       deviceId,
       serviceUUID,
@@ -143,11 +143,11 @@ export function useBLE<T>({
 
       const permissionGranted = await Permissions.requestBluetoothPermissions();
       if (!permissionGranted) {
-        setBtError("Bluetooth permissions not granted");
+        setBleError("Bluetooth permissions not granted");
         return;
       }
 
-      setBtError(null);
+      setBleError(null);
 
       try {
         log.debug(`BLE - attempting direct connection to: ${deviceId}`);
@@ -157,21 +157,21 @@ export function useBLE<T>({
         log.debug(`BLE - connected to: ${device.id}`);
 
         deviceRef.current = device;
-        setIsBtConnected(true);
+        setIsBleConnected(true);
 
         await startMonitoring({ device, serviceUUID, characteristicUUID });
       } catch (e: any) {
         log.error(`BLE connection error: ${e.message}`);
-        setBtError(e.message || "Direct connection failed");
-        setIsBtConnected(false);
+        setBleError(e.message || "Direct connection failed");
+        setIsBleConnected(false);
       }
     },
     [startMonitoring],
   );
 
-  const disconnectBt = useCallback(async () => {
-    setIsBtConnected(false);
-    setBtData(null);
+  const disconnectBle = useCallback(async () => {
+    setIsBleConnected(false);
+    setBleData(null);
 
     if (monitoringSubscriptionRef.current) {
       monitoringSubscriptionRef.current.remove();
@@ -184,10 +184,10 @@ export function useBLE<T>({
   }, []);
 
   return {
-    btData,
-    isBtConnected,
-    connectBt,
-    disconnectBt,
-    btError,
+    bleData,
+    isBleConnected,
+    connectBle,
+    disconnectBle,
+    bleError,
   };
-}
+};

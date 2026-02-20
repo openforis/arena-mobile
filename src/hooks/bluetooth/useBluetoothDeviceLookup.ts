@@ -4,13 +4,13 @@ import {
   BluetoothScanOptions,
   ScannedBluetoothDevice,
 } from "utils/BluetoothScanner";
-import { useToast } from "./useToast";
+import { useToast } from "../useToast";
 import { useConfirm } from "state/confirm";
 import { log } from "utils/Logger";
 
 export type UseBluetoothDeviceLookupReturn = {
   error: string | null;
-  scanning: boolean;
+  isBtScanning: boolean;
   lookupDevice: (
     options?: BluetoothScanOptions,
   ) => Promise<ScannedBluetoothDevice | null>;
@@ -19,13 +19,13 @@ export type UseBluetoothDeviceLookupReturn = {
 export const useBluetoothDeviceLookup = (): UseBluetoothDeviceLookupReturn => {
   const toaster = useToast();
   const confirm = useConfirm();
-  const [scanning, setScanning] = useState(false);
+  const [isBtScanning, setIsBtScanning] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const lookupDevice = async (
     options?: BluetoothScanOptions,
   ): Promise<ScannedBluetoothDevice | null> => {
-    setScanning(true);
+    setIsBtScanning(true);
     setError(null);
 
     try {
@@ -61,9 +61,9 @@ export const useBluetoothDeviceLookup = (): UseBluetoothDeviceLookupReturn => {
       setError(String(err));
       return null;
     } finally {
-      setScanning(false);
+      setIsBtScanning(false);
     }
   };
 
-  return { error, scanning, lookupDevice };
+  return { error, isBtScanning, lookupDevice };
 };

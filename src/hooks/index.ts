@@ -1,6 +1,6 @@
 export { useAppInfo } from "./useAppInfo";
 export { useBackHandler } from "./useBackHandler";
-export { useBLE } from "./useBLE";
+export { useBluetoothDevice } from "./bluetooth/useBluetoothDevice";
 export { useEffectiveTheme } from "./useEffectiveTheme";
 export { useImageFile } from "./useImageFile";
 export { useIsMountedRef } from "./useIsMountedRef";
