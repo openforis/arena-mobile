@@ -20,7 +20,10 @@ export const useImageFile = (
     const uriChanged = uri !== finalUri;
     const fileName = Files.getNameFromUri(uri);
     if (!Environment.isIOS || !!Files.getExtension(fileName)) {
+      // on Android, we can preview the file without extension, so we don't need to copy it to a temporary file with extension.
+      // On iOS, if the file doesn't have an extension, we need to copy it to a temporary file with extension to allow previewing it in image viewer.
       if (uriChanged) {
+        // file uri changed, so we need to update the final uri in local state
         setFinalUri(uri);
       }
       return;
