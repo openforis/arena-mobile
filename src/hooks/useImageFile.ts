@@ -36,17 +36,7 @@ export const useImageFile = (
     let mounted = true;
 
     const updateFinalUri = async () => {
-      if (!uri) {
-        await deleteTempFile();
-        if (mounted) {
-          setFinalUri(uri);
-        }
-        return;
-      }
-      const fileName = Files.getNameFromUri(uri);
-      const hasExtension = !!Files.getExtension(fileName);
-
-      if (!Environment.isIOS || hasExtension) {
+      if (!Environment.isIOS || !uri || Files.hasExtension(uri)) {
         // on Android, we can preview the file without extension.
         // On iOS, if the file already has an extension, no temp file is needed.
         await deleteTempFile();
