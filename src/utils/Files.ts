@@ -162,7 +162,8 @@ const getExtension = (uri: string): string => {
     : uri.substring(indexOfDot + 1).toLocaleLowerCase();
 };
 
-const hasExtension = (uri: string): boolean => !!getExtension(uri);
+const hasExtension = (uri: string): boolean =>
+  !!getExtension(getNameFromUri(uri));
 
 const getMimeTypeFromUri = (uri: string): string | null => {
   const fileName = getNameFromUri(uri);
