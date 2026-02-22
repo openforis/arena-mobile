@@ -17,15 +17,12 @@ export const useImageFile = (
   );
 
   useEffect(() => {
-    if (!Environment.isIOS) {
-      if (uri !== finalUri) {
+    const uriChanged = uri !== finalUri;
+    const fileName = Files.getNameFromUri(uri);
+    if (!Environment.isIOS || !!Files.getExtension(fileName)) {
+      if (uriChanged) {
         setFinalUri(uri);
       }
-      return;
-    }
-    const fileName = Files.getNameFromUri(uri);
-    if (!!Files.getExtension(fileName)) {
-      // file already has extension, so we can use it directly
       return;
     }
     if (uri === finalUri && tempFileUriRef.current) {
