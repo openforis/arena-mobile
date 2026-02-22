@@ -17,17 +17,21 @@ export const useImageFile = (
   );
 
   useEffect(() => {
-    const fileName = Files.getNameFromUri(uri);
     if (!Environment.isIOS) {
-      if (finalUri !== uri) {
+      if (uri !== finalUri) {
         setFinalUri(uri);
       }
       return;
     }
-    if (!!Files.getExtension(fileName) || tempFileUriRef.current) {
+    const fileName = Files.getNameFromUri(uri);
+    if (!!Files.getExtension(fileName)) {
+      // file already has extension, so we can use it directly
       return;
     }
-
+    if (uri === finalUri && tempFileUriRef.current) {
+      // file already copied to temp file, so we can use it directly
+      return;
+    }
     // copy file to temporary file with extension, to allow previewing it in image viewer
     copyToTempFileWithExtension()
       .then((tempFileUri) => {
