@@ -9,6 +9,7 @@ export const useImageFile = (
   defaultExtension = defaultImageExtension,
 ) => {
   const tempFileUriRef = useRef(null as any);
+  const tempFileSourceUriRef = useRef(null as any);
   const [finalUri, setFinalUri] = useState(uri);
 
   const copyToTempFileWithExtension = useCallback(
@@ -16,47 +17,76 @@ export const useImageFile = (
     [defaultExtension, uri],
   );
 
-  useEffect(() => {
-    const uriChanged = uri !== finalUri;
-    const fileName = Files.getNameFromUri(uri);
-    if (!Environment.isIOS || !!Files.getExtension(fileName)) {
-      // on Android, we can preview the file without extension, so we don't need to copy it to a temporary file with extension.
-      // On iOS, if the file doesn't have an extension, we need to copy it to a temporary file with extension to allow previewing it in image viewer.
-      if (uriChanged) {
-        // file uri changed, so we need to update the final uri in local state
-        setFinalUri(uri);
-      }
+  const deleteTempFile = useCallback(async () => {
+    const tempFile = tempFileUriRef.current;
+    if (!tempFile) {
       return;
     }
-    if (uri === finalUri && tempFileUriRef.current) {
-      // file already copied to temp file, so we can use it directly
-      return;
-    }
-    // copy file to temporary file with extension, to allow previewing it in image viewer
-    copyToTempFileWithExtension()
-      .then((tempFileUri) => {
-        tempFileUriRef.current = tempFileUri;
-        setFinalUri(tempFileUri);
-      })
-      .catch(() => {
-        // ignore it
-      });
 
-    return () => {
-      // delete temporary file
-      const tempFile = tempFileUriRef.current;
-      if (tempFile) {
-        Files.del(tempFile)
-          .then(() => {})
-          .catch(() => {
+    tempFileUriRef.current = null;
+    tempFileSourceUriRef.current = null;
+    try {
+      await Files.del(tempFile);
+    } catch {
+      // ignore it
+    }
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const updateFinalUri = async () => {
+      const fileName = Files.getNameFromUri(uri);
+      const hasExtension = !!Files.getExtension(fileName);
+
+      if (!Environment.isIOS || hasExtension) {
+        // on Android, we can preview the file without extension.
+        // On iOS, if the file already has an extension, no temp file is needed.
+        await deleteTempFile();
+        if (mounted) {
+          setFinalUri(uri);
+        }
+        return;
+      }
+
+      if (tempFileUriRef.current && tempFileSourceUriRef.current === uri) {
+        if (mounted) {
+          setFinalUri(tempFileUriRef.current);
+        }
+        return;
+      }
+
+      await deleteTempFile();
+
+      try {
+        const tempFileUri = await copyToTempFileWithExtension();
+
+        if (!mounted) {
+          Files.del(tempFileUri).catch(() => {
             // ignore it
-          })
-          .finally(() => {
-            tempFileUriRef.current = null;
           });
+          return;
+        }
+
+        tempFileUriRef.current = tempFileUri;
+        tempFileSourceUriRef.current = uri;
+        setFinalUri(tempFileUri);
+      } catch {
+        if (mounted) {
+          setFinalUri(uri);
+        }
       }
     };
-  }, [copyToTempFileWithExtension, finalUri, uri]);
+
+    updateFinalUri();
+
+    return () => {
+      mounted = false;
+      deleteTempFile().catch(() => {
+        // ignore it
+      });
+    };
+  }, [copyToTempFileWithExtension, deleteTempFile, uri]);
 
   return finalUri;
 };
