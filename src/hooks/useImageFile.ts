@@ -36,6 +36,13 @@ export const useImageFile = (
     let mounted = true;
 
     const updateFinalUri = async () => {
+      if (!uri) {
+        await deleteTempFile();
+        if (mounted) {
+          setFinalUri(uri);
+        }
+        return;
+      }
       const fileName = Files.getNameFromUri(uri);
       const hasExtension = !!Files.getExtension(fileName);
 
