@@ -200,14 +200,13 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
         surveyId,
         fileUuid,
       });
-      const info = await Files.getInfo(fileUri);
-      if (info?.exists) {
-        const destUri = `${Files.path(
-          tempFolderUri,
-          FILES_FOLDER_NAME,
-          fileUuid,
-        )}.bin`;
+      if (await Files.exists(fileUri)) {
+        const destUri = `${Files.path(tempFolderUri, FILES_FOLDER_NAME, fileUuid)}.bin`;
         await Files.copyFile({ from: fileUri, to: destUri });
+      } else {
+        this.logger.error(
+          `File with uuid ${fileUuid} not found for record ${record.uuid}`,
+        );
       }
     }
 

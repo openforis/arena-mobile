@@ -165,19 +165,25 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
       });
 
       if (includeFiles && fileValues.length > 0) {
-        await this.exportRecordFiles({ fileValues });
+        await this.exportRecordFiles({ record, fileValues });
       }
 
       nodeDefToExportIndex += 1;
     }
   }
 
-  private async exportRecordFiles({ fileValues }: { fileValues: any[] }) {
+  private async exportRecordFiles({
+    record,
+    fileValues,
+  }: {
+    record: ArenaMobileRecord;
+    fileValues: any[];
+  }) {
     const { survey } = this.context;
     const { id: surveyId } = survey;
 
     this.logger.debug(
-      `Exporting ${fileValues.length} attached files for record`,
+      `Exporting ${fileValues.length} attached files for record ${record.uuid}`,
     );
 
     for (const fileValue of fileValues) {
@@ -193,7 +199,16 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
         surveyId,
         fileUuid,
       });
-      await Files.copyFile({ from: sourceFileUri, to: exportedRecordFilePath });
+      if (await Files.exists(sourceFileUri)) {
+        await Files.copyFile({
+          from: sourceFileUri,
+          to: exportedRecordFilePath,
+        });
+      } else {
+        this.logger.error(
+          `File with uuid ${fileUuid} not found for record ${record.uuid} file export`,
+        );
+      }
     }
   }
 

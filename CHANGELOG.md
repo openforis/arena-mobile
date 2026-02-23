@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- CSV data export: fixed error exporting missing files;
+
+## [2.3.8] - 2026-02-24
+
+### Fixed
+
 - Image preview not showing in iOS;
 
 ## [2.3.7] - 2026-02-17
