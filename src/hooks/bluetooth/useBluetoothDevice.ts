@@ -16,7 +16,13 @@ export const useBluetoothDevice = ({
     error: deviceLookupError,
   } = useBluetoothDeviceLookup();
 
-  const { connectBle, disconnectBle, bleError, isBleConnected } = useBLE<any>({
+  const {
+    connectBle,
+    disconnectBle,
+    listBleServicesAndCharacteristics,
+    bleError,
+    isBleConnected,
+  } = useBLE<any>({
     // serviceUUID: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
     // characteristicUUID: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
     // deviceFilter: (device) =>
@@ -50,9 +56,53 @@ export const useBluetoothDevice = ({
       setConnectedClassicDeviceId(null);
       await connectBle({
         deviceId,
-        serviceUUID: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-        characteristicUUID: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
       });
+
+      const services = await listBleServicesAndCharacteristics({ deviceId });
+      if (services.length > 0) {
+        const servicesSummary = services
+          .map(
+            (service) =>
+              `- Service ${service.uuid}: ${service.characteristics.join(", ") || "(no characteristics)"}`,
+          )
+          .join("\n");
+
+        log.debug(
+          `BLE device ${deviceId} services/characteristics:\n${servicesSummary}`,
+        );
+
+        const monitorDurationMs = 5_000;
+
+        for (const service of services) {
+          for (const characteristicUUID of service.characteristics) {
+            try {
+              log.debug(
+                `BLE monitoring start - device: ${deviceId}, service: ${service.uuid}, characteristic: ${characteristicUUID}, durationMs: ${monitorDurationMs}`,
+              );
+
+              await connectBle({
+                deviceId,
+                serviceUUID: service.uuid,
+                characteristicUUID,
+              });
+
+              await new Promise<void>((resolve) => {
+                setTimeout(() => resolve(), monitorDurationMs);
+              });
+
+              log.debug(
+                `BLE monitoring end - device: ${deviceId}, service: ${service.uuid}, characteristic: ${characteristicUUID}`,
+              );
+            } catch (error: any) {
+              log.error(
+                `BLE monitoring error - device: ${deviceId}, service: ${service.uuid}, characteristic: ${characteristicUUID}, error: ${error?.message ?? String(error)}`,
+              );
+            } finally {
+              await disconnectBle();
+            }
+          }
+        }
+      }
     } else {
       log.debug(`Connecting to classic BT device ${deviceId}...`);
       await disconnectBle();
@@ -62,7 +112,13 @@ export const useBluetoothDevice = ({
       });
       setConnectedClassicDeviceId(classicDevice.id);
     }
-  }, [connectBle, disconnectBle, lookupDevice, onRawData]);
+  }, [
+    connectBle,
+    disconnectBle,
+    listBleServicesAndCharacteristics,
+    lookupDevice,
+    onRawData,
+  ]);
 
   const btDeviceDisconnect = useCallback(async () => {
     if (connectedClassicDeviceId) {

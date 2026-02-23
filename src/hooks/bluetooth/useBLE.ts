@@ -18,10 +18,13 @@ type BLEHookReturn<T> = {
   isBleConnected: boolean;
   connectBle: (params: {
     deviceId: string;
-    serviceUUID: string;
-    characteristicUUID: string;
+    serviceUUID?: string;
+    characteristicUUID?: string;
   }) => Promise<void>;
   disconnectBle: () => Promise<void>;
+  listBleServicesAndCharacteristics: (params?: {
+    deviceId?: string;
+  }) => Promise<{ uuid: string; characteristics: string[] }[]>;
   bleError: string | null;
 };
 
@@ -141,8 +144,8 @@ export const useBLE = <T>({
       characteristicUUID,
     }: {
       deviceId: string;
-      serviceUUID: string;
-      characteristicUUID: string;
+      serviceUUID?: string;
+      characteristicUUID?: string;
     }) => {
       if (!manager) return;
 
@@ -155,6 +158,21 @@ export const useBLE = <T>({
       setBleError(null);
 
       try {
+        unsubscribeFromMonitoring();
+        if (deviceRef.current) {
+          try {
+            await deviceRef.current.cancelConnection();
+          } catch (e: any) {
+            log.debug(
+              `BLE - previous connection cleanup warning: ${e?.message ?? String(e)}`,
+            );
+          } finally {
+            deviceRef.current = null;
+            setIsBleConnected(false);
+            setBleData(null);
+          }
+        }
+
         log.debug(`BLE - attempting direct connection to: ${deviceId}`);
 
         const device = await manager.connectToDevice(deviceId);
@@ -164,7 +182,13 @@ export const useBLE = <T>({
         deviceRef.current = device;
         setIsBleConnected(true);
 
-        await startMonitoring({ device, serviceUUID, characteristicUUID });
+        if (serviceUUID && characteristicUUID) {
+          await startMonitoring({ device, serviceUUID, characteristicUUID });
+        } else {
+          log.debug(
+            `BLE - connected to ${device.id} without monitor UUIDs; discovery-only mode`,
+          );
+        }
       } catch (e: any) {
         log.error(`BLE connection error: ${e.message}`);
         setBleError(e.message || "Direct connection failed");
@@ -186,11 +210,50 @@ export const useBLE = <T>({
     }
   }, []);
 
+  const listBleServicesAndCharacteristics = useCallback(
+    async ({ deviceId }: { deviceId?: string } = {}) => {
+      const connectedDevice = deviceRef.current;
+
+      if (!connectedDevice) {
+        setBleError("No BLE device connected");
+        return [];
+      }
+
+      if (deviceId && connectedDevice.id !== deviceId) {
+        setBleError("Connected BLE device does not match selected device");
+        return [];
+      }
+
+      try {
+        const discoveredDevice =
+          await connectedDevice.discoverAllServicesAndCharacteristics();
+        const services = await discoveredDevice.services();
+
+        return await Promise.all(
+          services.map(async (service) => {
+            const characteristics = await service.characteristics();
+            return {
+              uuid: service.uuid,
+              characteristics: characteristics.map((char) => char.uuid),
+            };
+          }),
+        );
+      } catch (e: any) {
+        const errorMessage = e?.message ?? String(e);
+        log.error(`BLE services discovery error: ${errorMessage}`);
+        setBleError(errorMessage);
+        return [];
+      }
+    },
+    [],
+  );
+
   return {
     bleData,
     isBleConnected,
     connectBle,
     disconnectBle,
+    listBleServicesAndCharacteristics,
     bleError,
   };
 };
