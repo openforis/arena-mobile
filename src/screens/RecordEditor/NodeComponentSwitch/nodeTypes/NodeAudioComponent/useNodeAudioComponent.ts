@@ -163,6 +163,7 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
 
   return {
     audioMetering: audioRecorderState.metering ?? null,
+    audioRecordingDurationMillis: audioRecorderState.durationMillis ?? 0,
     audioRecording: audioRecorderState.isRecording,
     audioRecordingInProgress:
       audioRecorderState.isRecording || audioRecordingPaused,

@@ -25,6 +25,7 @@ export const NodeAudioComponent = (props: NodeComponentProps) => {
 
   const {
     audioMetering,
+    audioRecordingDurationMillis,
     audioRecording,
     audioRecordingInProgress,
     audioRecordingPaused,
@@ -134,6 +135,7 @@ export const NodeAudioComponent = (props: NodeComponentProps) => {
       <VView style={styles.previewContainer}>
         <NodeAudioEqualizer
           audioMetering={audioMetering}
+          audioRecordingDurationMillis={audioRecordingDurationMillis}
           audioRecording={audioRecording}
           audioRecordingInProgress={audioRecordingInProgress}
           audioRecordingPaused={audioRecordingPaused}
