@@ -2,6 +2,7 @@ import { NodeDefFileType } from "@openforis/arena-core";
 
 import { Text } from "components";
 import { log } from "utils";
+import { NodeAudioComponent } from "./NodeAudioComponent";
 import { NodeImageOrVideoComponent } from "./NodeImageOrVideoComponent";
 import { NodeComponentProps } from "./nodeComponentPropTypes";
 
@@ -17,6 +18,10 @@ export const NodeFileComponent = (props: NodeComponentProps) => {
   log.debug(`rendering NodeFileComponent for ${nodeDef.props.name}`);
 
   const { fileType = NodeDefFileType.other } = nodeDef.props;
+
+  if (fileType === NodeDefFileType.audio) {
+    return <NodeAudioComponent {...props} />;
+  }
 
   if (supportedFileTypes.has(fileType)) {
     return <NodeImageOrVideoComponent {...props} />;

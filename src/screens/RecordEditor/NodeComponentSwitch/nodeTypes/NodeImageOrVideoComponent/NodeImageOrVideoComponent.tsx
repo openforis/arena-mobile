@@ -16,7 +16,6 @@ import { useNodeFileComponent } from "./useNodeFileComponent";
 import styles from "./styles";
 
 const fileChooseTextKeySuffixByFileType: Record<string, string> = {
-  [NodeDefFileType.audio]: "Audio",
   [NodeDefFileType.image]: "Picture",
   [NodeDefFileType.video]: "Video",
   [NodeDefFileType.other]: "File",

@@ -79,6 +79,7 @@
         }
       ],
       "expo-asset",
+      "expo-audio",
       "expo-localization",
       "expo-secure-store",
       "expo-sqlite",
