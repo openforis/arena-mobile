@@ -20,10 +20,7 @@ import { Files } from "utils";
 const extractFileNameFromAsset = (
   asset: DocumentPicker.DocumentPickerAsset,
 ): string | null | undefined => {
-  if ("name" in asset) {
-    return asset.name;
-  }
-  return Files.getNameFromUri(asset.uri);
+  return asset.name ?? Files.getNameFromUri(asset.uri);
 };
 
 export const useNodeAudioComponent = ({ nodeUuid }: any) => {
@@ -35,10 +32,14 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
     nodeUuid,
   });
 
-  const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
+  const audioRecorder = useAudioRecorder({
+    ...RecordingPresets.HIGH_QUALITY,
+    isMeteringEnabled: true,
+  });
   const audioRecorderState = useAudioRecorderState(audioRecorder);
 
   const [fileUri, setFileUri] = useState(null as string | null);
+  const [audioRecordingPaused, setAudioRecordingPaused] = useState(false);
 
   const { fileName: valueFileName, fileNameCalculated, fileUuid } = value ?? {};
 
@@ -97,8 +98,27 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
 
       await audioRecorder.prepareToRecordAsync();
       audioRecorder.record();
+      setAudioRecordingPaused(false);
     } catch (error) {
       toaster(`Error starting audio recording: ${String(error)}`);
+    }
+  }, [audioRecorder, toaster]);
+
+  const onPauseAudioRecordingPress = useCallback(async () => {
+    try {
+      audioRecorder.pause();
+      setAudioRecordingPaused(true);
+    } catch (error) {
+      toaster(`Error pausing audio recording: ${String(error)}`);
+    }
+  }, [audioRecorder, toaster]);
+
+  const onResumeAudioRecordingPress = useCallback(async () => {
+    try {
+      audioRecorder.record();
+      setAudioRecordingPaused(false);
+    } catch (error) {
+      toaster(`Error resuming audio recording: ${String(error)}`);
     }
   }, [audioRecorder, toaster]);
 
@@ -124,6 +144,7 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
     } catch (error) {
       toaster(`Error stopping audio recording: ${String(error)}`);
     } finally {
+      setAudioRecordingPaused(false);
       await setAudioModeAsync({
         allowsRecording: false,
       });
@@ -141,12 +162,18 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
   }, [confirm, updateNodeValue]);
 
   return {
+    audioMetering: audioRecorderState.metering ?? null,
     audioRecording: audioRecorderState.isRecording,
+    audioRecordingInProgress:
+      audioRecorderState.isRecording || audioRecordingPaused,
+    audioRecordingPaused,
     fileName,
     fileUri,
     nodeValue: value,
     onDeletePress,
     onFileChoosePress,
+    onPauseAudioRecordingPress,
+    onResumeAudioRecordingPress,
     onStartAudioRecordingPress,
     onStopAudioRecordingPress,
   };

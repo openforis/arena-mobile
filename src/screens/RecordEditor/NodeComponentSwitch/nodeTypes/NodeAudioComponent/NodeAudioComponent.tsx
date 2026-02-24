@@ -1,20 +1,22 @@
 import { NodeDefs } from "@openforis/arena-core";
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 import {
   Button,
   DeleteIconButton,
   HView,
   IconButton,
+  ProgressBar,
   Text,
   VView,
 } from "components";
 import { NodeComponentProps } from "screens/RecordEditor/NodeComponentSwitch/nodeTypes/nodeComponentPropTypes";
-import { log } from "utils";
+import { Files, log } from "utils";
 
-import styles from "./styles";
 import { useNodeAudioComponent } from "./useNodeAudioComponent";
+import { NodeAudioEqualizer } from "./NodeAudioEqualizer";
+import styles from "./styles";
 
 export const NodeAudioComponent = (props: NodeComponentProps) => {
   const { nodeDef, nodeUuid } = props;
@@ -22,12 +24,16 @@ export const NodeAudioComponent = (props: NodeComponentProps) => {
   log.debug(`rendering NodeAudioComponent for ${nodeDef.props.name}`);
 
   const {
+    audioMetering,
     audioRecording,
-    fileName,
+    audioRecordingInProgress,
+    audioRecordingPaused,
     fileUri,
     nodeValue,
     onDeletePress,
     onFileChoosePress,
+    onPauseAudioRecordingPress,
+    onResumeAudioRecordingPress,
     onStartAudioRecordingPress,
     onStopAudioRecordingPress,
   } = useNodeAudioComponent({ nodeUuid });
@@ -58,9 +64,81 @@ export const NodeAudioComponent = (props: NodeComponentProps) => {
     playerStatus.playing,
   ]);
 
+  const formatDuration = useCallback((durationSeconds: number) => {
+    const totalSeconds = Math.round(durationSeconds);
+    if (totalSeconds <= 0) {
+      return null;
+    }
+
+    const seconds = totalSeconds % 60;
+    const minutesTotal = Math.floor(totalSeconds / 60);
+    const minutes = minutesTotal % 60;
+    const hours = Math.floor(minutesTotal / 60);
+
+    const secondsStr = String(seconds).padStart(2, "0");
+    const minutesStr = String(minutes).padStart(2, "0");
+
+    if (hours > 0) {
+      return `${hours}:${minutesStr}:${secondsStr}`;
+    }
+
+    return `${minutesStr}:${secondsStr}`;
+  }, []);
+
+  const audioDuration = useMemo(() => {
+    return formatDuration(playerStatus.duration ?? 0);
+  }, [formatDuration, playerStatus.duration]);
+
+  const elapsedDuration = useMemo(() => {
+    return formatDuration(playerStatus.currentTime ?? 0);
+  }, [formatDuration, playerStatus.currentTime]);
+
+  const fileSize = useMemo(
+    () =>
+      nodeValue?.fileSize
+        ? Files.toHumanReadableFileSize(nodeValue.fileSize)
+        : null,
+    [nodeValue],
+  );
+
+  const playbackProgress = useMemo(() => {
+    const duration = playerStatus.duration ?? 0;
+    const currentTime = playerStatus.currentTime ?? 0;
+
+    if (duration <= 0) {
+      return 0;
+    }
+
+    return Math.max(0, Math.min(1, currentTime / duration));
+  }, [playerStatus.currentTime, playerStatus.duration]);
+
+  const audioInfo = useMemo(() => {
+    const parts = [];
+    if (playerStatus.playing && elapsedDuration) {
+      parts.push(elapsedDuration);
+    }
+    if (audioDuration) {
+      if (parts.length > 0) {
+        parts.push("/");
+      }
+      parts.push(audioDuration);
+    }
+    if (fileSize) {
+      parts.push(`(${fileSize})`);
+    }
+    return parts.length > 0 ? parts.join(" ") : (audioDuration ?? fileSize);
+  }, [audioDuration, elapsedDuration, fileSize, playerStatus.playing]);
+
   return (
     <HView style={styles.container}>
       <VView style={styles.previewContainer}>
+        <NodeAudioEqualizer
+          audioMetering={audioMetering}
+          audioRecording={audioRecording}
+          audioRecordingInProgress={audioRecordingInProgress}
+          audioRecordingPaused={audioRecordingPaused}
+        />
+
         {!!nodeValue && (
           <>
             <IconButton
@@ -68,7 +146,13 @@ export const NodeAudioComponent = (props: NodeComponentProps) => {
               onPress={onPlaybackPress}
               size={40}
             />
-            {!!fileName && <Text>{fileName}</Text>}
+            {!!audioDuration && (
+              <ProgressBar
+                progress={playbackProgress}
+                style={styles.playbackProgressBar}
+              />
+            )}
+            {!!audioInfo && <Text>{audioInfo}</Text>}
           </>
         )}
       </VView>
@@ -78,15 +162,11 @@ export const NodeAudioComponent = (props: NodeComponentProps) => {
           <DeleteIconButton onPress={onDeletePress} />
         )}
 
-        {!nodeValue && (
+        {!nodeValue && !audioRecordingInProgress && (
           <>
             <IconButton
-              icon={audioRecording ? "stop-circle" : "microphone"}
-              onPress={
-                audioRecording
-                  ? onStopAudioRecordingPress
-                  : onStartAudioRecordingPress
-              }
+              icon="microphone"
+              onPress={onStartAudioRecordingPress}
               style={styles.audioRecorderButton}
               size={40}
             />
@@ -94,6 +174,27 @@ export const NodeAudioComponent = (props: NodeComponentProps) => {
               icon="view-gallery"
               onPress={onFileChoosePress}
               textKey="dataEntry:fileAttribute.chooseAudio"
+            />
+          </>
+        )}
+
+        {!nodeValue && audioRecordingInProgress && (
+          <>
+            <IconButton
+              icon={audioRecording ? "pause" : "record-circle-outline"}
+              onPress={
+                audioRecording
+                  ? onPauseAudioRecordingPress
+                  : onResumeAudioRecordingPress
+              }
+              style={styles.audioRecorderButton}
+              size={40}
+            />
+            <IconButton
+              icon="stop-circle"
+              onPress={onStopAudioRecordingPress}
+              style={styles.audioRecorderButton}
+              size={40}
             />
           </>
         )}
