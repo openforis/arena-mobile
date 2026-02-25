@@ -1,5 +1,5 @@
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
-import { memo, useCallback, useMemo, useRef } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Pressable } from "react-native";
 import type { GestureResponderEvent, LayoutChangeEvent } from "react-native";
 
@@ -12,14 +12,14 @@ import * as AudioUtils from "./AudioUtils";
 import styles from "./AudioPlaybackStyles";
 
 type AudioPlaybackProps = {
-  fileSize: string | null;
   fileUri: string | null;
 };
 
 export const AudioPlayback = memo((props: AudioPlaybackProps) => {
-  const { fileSize, fileUri } = props;
+  const { fileUri } = props;
   const toaster = useToast();
   const { t } = useTranslation();
+  const [fileSizeBytes, setFileSizeBytes] = useState<number | null>(null);
 
   const audioPlayer = useAudioPlayer(fileUri ?? null);
   const playerStatus = useAudioPlayerStatus(audioPlayer);
@@ -84,6 +84,42 @@ export const AudioPlayback = memo((props: AudioPlaybackProps) => {
   }, [currentTime, duration]);
 
   const canStopPlayback = playing || currentTime > 0;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchFileSize = async () => {
+      if (!fileUri) {
+        setFileSizeBytes(null);
+        return;
+      }
+
+      try {
+        const size = await Files.getSize(fileUri);
+        if (!cancelled) {
+          setFileSizeBytes(size);
+        }
+      } catch {
+        if (!cancelled) {
+          setFileSizeBytes(null);
+        }
+      }
+    };
+
+    void fetchFileSize();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [fileUri]);
+
+  const fileSize = useMemo(
+    () =>
+      typeof fileSizeBytes === "number" && fileSizeBytes > 0
+        ? Files.toHumanReadableFileSize(fileSizeBytes)
+        : null,
+    [fileSizeBytes],
+  );
 
   const hasPlaybackDuration = useMemo(() => {
     return (
