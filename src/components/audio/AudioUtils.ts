@@ -12,8 +12,7 @@ export const formatRecordingDuration = (durationMillis: number): string => {
   if (hours > 0) {
     parts.push(String(hours));
   }
-  parts.push(minutesStr);
-  parts.push(secondsStr);
+  parts.push(minutesStr, secondsStr);
 
   return parts.join(":");
 };
