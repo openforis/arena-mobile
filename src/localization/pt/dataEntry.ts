@@ -132,10 +132,10 @@ export default {
     taxonNotSelected: "--- Táxon não selecionado ---",
   },
   fileAttribute: {
-    chooseAudio: "Escolher um arquivo de áudio",
-    chooseFile: "Escolher um arquivo",
-    choosePicture: "Escolher uma imagem",
-    chooseVideo: "Escolher um vídeo",
+    selectAudio: "Selecionar áudio",
+    selectFile: "Selecionar ficheiro",
+    selectPicture: "Selecionar imagem",
+    selectVideo: "Selecionar vídeo",
     deleteConfirmMessage: "Excluir o arquivo existente?",
   },
   fileAttributeImage: {

@@ -139,10 +139,10 @@ export default {
     taxonNotSelected: "--- Takson tidak dipilih ---",
   },
   fileAttribute: {
-    chooseAudio: "Pilih file audio",
-    chooseFile: "Pilih file",
-    choosePicture: "Pilih gambar",
-    chooseVideo: "Pilih video",
+    selectAudio: "Pilih audio",
+    selectFile: "Pilih file",
+    selectPicture: "Pilih gambar",
+    selectVideo: "Pilih video",
     deleteConfirmMessage: "Hapus file yang ada?",
   },
   fileAttributeImage: {

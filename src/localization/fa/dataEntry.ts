@@ -137,10 +137,10 @@ export default {
     taxonNotSelected: "--- تاکسون انتخاب نشده است ---",
   },
   fileAttribute: {
-    chooseAudio: "انتخاب فایل صوتی",
-    chooseFile: "انتخاب فایل",
-    choosePicture: "انتخاب تصویر",
-    chooseVideo: "انتخاب ویدیو",
+    selectAudio: "انتخاب فایل صوتی",
+    selectFile: "انتخاب فایل",
+    selectPicture: "انتخاب تصویر",
+    selectVideo: "انتخاب ویدیو",
     deleteConfirmMessage: "آیا از حذف فایل موجود مطمئن هستید؟",
   },
   fileAttributeImage: {

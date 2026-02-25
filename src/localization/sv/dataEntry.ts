@@ -138,10 +138,10 @@ export default {
     taxonNotSelected: "--- Taxon inte valt ---",
   },
   fileAttribute: {
-    chooseAudio: "Välj en ljudfil",
-    chooseFile: "Välj en fil",
-    choosePicture: "Välj en bild",
-    chooseVideo: "Välj en video",
+    selectAudio: "Välj ljud",
+    selectFile: "Välj fil",
+    selectPicture: "Välj bild",
+    selectVideo: "Välj video",
     deleteConfirmMessage: "Ta bort befintlig fil?",
   },
   fileAttributeImage: {

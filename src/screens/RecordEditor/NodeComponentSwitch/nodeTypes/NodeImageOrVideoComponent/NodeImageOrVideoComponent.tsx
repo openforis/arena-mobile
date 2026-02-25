@@ -84,7 +84,7 @@ export const NodeImageOrVideoComponent = (
             <Button
               icon="view-gallery"
               onPress={onFileChoosePress}
-              textKey={`dataEntry:fileAttribute.choose${fileChooseTextKeySuffix}`}
+              textKey={`dataEntry:fileAttribute.select${fileChooseTextKeySuffix}`}
             />
           </>
         )}

@@ -125,10 +125,10 @@ export default {
     taxonNotSelected: "--- ታክሶን አልተመረጠም ---",
   },
   fileAttribute: {
-    chooseAudio: "የድምጽ ፋይል ይምረጡ",
-    chooseFile: "ፋይል ይምረጡ",
-    choosePicture: "ምስል ይምረጡ",
-    chooseVideo: "የቪዲዮ ፋይል ይምረጡ",
+    selectAudio: "የድምጽ ፋይል ይምረጡ",
+    selectFile: "ፋይል ይምረጡ",
+    selectPicture: "ምስል ይምረጡ",
+    selectVideo: "የቪዲዮ ፋይል ይምረጡ",
     deleteConfirmMessage: "ያለውን ፋይል ይሰርዙ?",
   },
 

@@ -66,7 +66,7 @@ export const NodeAudioComponent = (props: NodeComponentProps) => {
             <Button
               icon="view-gallery"
               onPress={onFileChoosePress}
-              textKey="dataEntry:fileAttribute.chooseAudio"
+              textKey="dataEntry:fileAttribute.selectAudio"
             />
           </>
         )}

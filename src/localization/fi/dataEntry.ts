@@ -137,10 +137,10 @@ export default {
     taxonNotSelected: "--- Lajia ei ole valittu ---",
   },
   fileAttribute: {
-    chooseAudio: "Valitse äänitiedosto",
-    chooseFile: "Valitse tiedosto",
-    choosePicture: "Valitse kuva",
-    chooseVideo: "Valitse video",
+    selectAudio: "Valitse ääni",
+    selectFile: "Valitse tiedosto",
+    selectPicture: "Valitse kuva",
+    selectVideo: "Valitse video",
     deleteConfirmMessage: "Poistetaanko olemassa oleva tiedosto?",
   },
   fileAttributeImage: {
