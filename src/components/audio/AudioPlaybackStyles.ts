@@ -16,4 +16,9 @@ export default StyleSheet.create({
     marginHorizontal: 0,
     marginVertical: 0,
   },
+  fileInfoContainer: {
+    alignItems: "center",
+    columnGap: 4,
+    justifyContent: "center",
+  },
 });

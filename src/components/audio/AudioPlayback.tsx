@@ -3,7 +3,10 @@ import { memo, useCallback, useMemo, useRef } from "react";
 import { Pressable } from "react-native";
 import type { GestureResponderEvent, LayoutChangeEvent } from "react-native";
 
+import { useToast } from "hooks";
+import { useTranslation } from "localization";
 import { HView, IconButton, ProgressBar, Text } from "components";
+import { Files } from "utils";
 
 import * as AudioUtils from "./AudioUtils";
 import styles from "./AudioPlaybackStyles";
@@ -15,6 +18,8 @@ type AudioPlaybackProps = {
 
 export const AudioPlayback = memo((props: AudioPlaybackProps) => {
   const { fileSize, fileUri } = props;
+  const toaster = useToast();
+  const { t } = useTranslation();
 
   const audioPlayer = useAudioPlayer(fileUri ?? null);
   const playerStatus = useAudioPlayerStatus(audioPlayer);
@@ -39,6 +44,27 @@ export const AudioPlayback = memo((props: AudioPlaybackProps) => {
     audioPlayer.pause();
     await audioPlayer.seekTo(0);
   }, [audioPlayer]);
+
+  const onSharePress = useCallback(async () => {
+    if (!fileUri) {
+      return;
+    }
+    const shareFileText = t("common:shareFile");
+
+    let errorMessage = null;
+    try {
+      if (!(await Files.isSharingAvailable())) {
+        errorMessage = shareFileText;
+      } else {
+        await Files.shareFile({ url: fileUri, dialogTitle: shareFileText });
+      }
+    } catch (error) {
+      errorMessage = String(error);
+    }
+    if (errorMessage) {
+      toaster("common:somethingWentWrong", { error: errorMessage });
+    }
+  }, [fileUri, t, toaster]);
 
   const audioDuration = useMemo(
     () => AudioUtils.formatRecordingDuration(duration * 1000),
@@ -103,24 +129,20 @@ export const AudioPlayback = memo((props: AudioPlaybackProps) => {
 
   return (
     <>
-      {playing || canStopPlayback ? (
-        <HView style={styles.playbackButtonsContainer} transparent>
+      <HView style={styles.playbackButtonsContainer} transparent>
+        <IconButton
+          icon={playing ? "pause" : "play"}
+          onPress={onPlaybackPress}
+          size={40}
+        />
+        {canStopPlayback && (
           <IconButton
-            icon={playing ? "pause" : "play"}
-            onPress={onPlaybackPress}
+            icon="stop-circle"
+            onPress={onStopPlaybackPress}
             size={40}
           />
-          {canStopPlayback && (
-            <IconButton
-              icon="stop-circle"
-              onPress={onStopPlaybackPress}
-              size={40}
-            />
-          )}
-        </HView>
-      ) : (
-        <IconButton icon="play" onPress={onPlaybackPress} size={40} />
-      )}
+        )}
+      </HView>
       <Pressable
         onLayout={onProgressBarLayout}
         onPress={onProgressBarPress}
@@ -133,7 +155,12 @@ export const AudioPlayback = memo((props: AudioPlaybackProps) => {
         />
       </Pressable>
       {!!audioInfo && <Text>{audioInfo}</Text>}
-      {!!fileSize && <Text>{fileSize}</Text>}
+      {!!fileSize && (
+        <HView style={styles.fileInfoContainer} transparent>
+          <Text>{fileSize}</Text>
+          <IconButton icon="share-variant" onPress={onSharePress} size={20} />
+        </HView>
+      )}
     </>
   );
 });
