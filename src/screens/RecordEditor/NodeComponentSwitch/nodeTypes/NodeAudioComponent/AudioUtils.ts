@@ -1,4 +1,9 @@
-export const formatRecordingDuration = (durationMillis: number): string => {
+export const formatRecordingDuration = (
+  durationMillis: number,
+): string | null => {
+  if (!Number.isFinite(durationMillis) || durationMillis < 0) {
+    return null;
+  }
   const totalSeconds = Math.max(0, Math.floor(durationMillis / 1000));
   const seconds = totalSeconds % 60;
   const minutesTotal = Math.floor(totalSeconds / 60);
