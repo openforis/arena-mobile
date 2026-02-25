@@ -11,15 +11,15 @@ export default StyleSheet.create({
   },
   equalizerContainer: {
     alignSelf: "stretch",
-    alignItems: "flex-end",
+    alignItems: "center",
     columnGap: 1,
     height: 52,
     justifyContent: "center",
   },
   equalizerBar: {
-    borderRadius: 1,
-    minHeight: 5,
-    width: 3,
+    borderRadius: 2,
+    minHeight: 4,
+    width: 2,
   },
   playhead: {
     borderRadius: 1,

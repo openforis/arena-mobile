@@ -24,8 +24,7 @@ export const NodeAudioComponent = (props: NodeComponentProps) => {
   log.debug(`rendering NodeAudioComponent for ${nodeDef.props.name}`);
 
   const {
-    audioMetering,
-    audioRecordingDurationMillis,
+    audioRecorder,
     audioRecording,
     audioRecordingInProgress,
     audioRecordingPaused,
@@ -124,9 +123,6 @@ export const NodeAudioComponent = (props: NodeComponentProps) => {
       }
       parts.push(audioDuration);
     }
-    if (fileSize) {
-      parts.push(`(${fileSize})`);
-    }
     return parts.length > 0 ? parts.join(" ") : (audioDuration ?? fileSize);
   }, [audioDuration, elapsedDuration, fileSize, playerStatus.playing]);
 
@@ -134,8 +130,7 @@ export const NodeAudioComponent = (props: NodeComponentProps) => {
     <HView style={styles.container}>
       <VView style={styles.previewContainer}>
         <NodeAudioEqualizer
-          audioMetering={audioMetering}
-          audioRecordingDurationMillis={audioRecordingDurationMillis}
+          audioRecorder={audioRecorder}
           audioRecording={audioRecording}
           audioRecordingInProgress={audioRecordingInProgress}
           audioRecordingPaused={audioRecordingPaused}
@@ -155,6 +150,7 @@ export const NodeAudioComponent = (props: NodeComponentProps) => {
               />
             )}
             {!!audioInfo && <Text>{audioInfo}</Text>}
+            {!!fileSize && <Text>{fileSize}</Text>}
           </>
         )}
       </VView>

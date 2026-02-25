@@ -4,7 +4,6 @@ import {
   requestRecordingPermissionsAsync,
   setAudioModeAsync,
   useAudioRecorder,
-  useAudioRecorderState,
 } from "expo-audio";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -36,9 +35,10 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
     ...RecordingPresets.HIGH_QUALITY,
     isMeteringEnabled: true,
   });
-  const audioRecorderState = useAudioRecorderState(audioRecorder);
 
   const [fileUri, setFileUri] = useState(null as string | null);
+  const [audioRecordingInProgress, setAudioRecordingInProgress] =
+    useState(false);
   const [audioRecordingPaused, setAudioRecordingPaused] = useState(false);
 
   const { fileName: valueFileName, fileNameCalculated, fileUuid } = value ?? {};
@@ -98,6 +98,7 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
 
       await audioRecorder.prepareToRecordAsync();
       audioRecorder.record();
+      setAudioRecordingInProgress(true);
       setAudioRecordingPaused(false);
     } catch (error) {
       toaster(`Error starting audio recording: ${String(error)}`);
@@ -144,6 +145,7 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
     } catch (error) {
       toaster(`Error stopping audio recording: ${String(error)}`);
     } finally {
+      setAudioRecordingInProgress(false);
       setAudioRecordingPaused(false);
       await setAudioModeAsync({
         allowsRecording: false,
@@ -162,11 +164,9 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
   }, [confirm, updateNodeValue]);
 
   return {
-    audioMetering: audioRecorderState.metering ?? null,
-    audioRecordingDurationMillis: audioRecorderState.durationMillis ?? 0,
-    audioRecording: audioRecorderState.isRecording,
-    audioRecordingInProgress:
-      audioRecorderState.isRecording || audioRecordingPaused,
+    audioRecorder,
+    audioRecording: audioRecordingInProgress && !audioRecordingPaused,
+    audioRecordingInProgress,
     audioRecordingPaused,
     fileName,
     fileUri,
