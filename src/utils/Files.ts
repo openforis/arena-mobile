@@ -258,12 +258,14 @@ const writeStringToFile = async ({
   content: string;
   fileUri: string;
   encoding?: FileSystem.EncodingType;
-}): Promise<void> =>
-  FileSystem.writeAsStringAsync(
+}): Promise<void> => {
+  await createIfNotExists(fileUri);
+  return FileSystem.writeAsStringAsync(
     fileUri,
     content,
     encoding ? { encoding } : undefined,
   );
+};
 
 const writeJsonToFile = async ({
   content,
@@ -274,6 +276,14 @@ const writeJsonToFile = async ({
 }): Promise<void> =>
   writeStringToFile({ content: jsonToString(content), fileUri });
 
+const createIfNotExists = async (fileUri: string) => {
+  const file = new File(fileUri);
+  if (!(await exists(fileUri))) {
+    file.create();
+  }
+  return file;
+};
+
 const writeBytesToFile = async ({
   fileUri,
   bytes,
@@ -283,10 +293,7 @@ const writeBytesToFile = async ({
 }): Promise<void> => {
   let fileHandle;
   try {
-    const file = new File(fileUri);
-    if (!(await Files.exists(fileUri))) {
-      file.create();
-    }
+    const file = await createIfNotExists(fileUri);
     fileHandle = file.open();
     fileHandle.writeBytes(bytes);
   } finally {
