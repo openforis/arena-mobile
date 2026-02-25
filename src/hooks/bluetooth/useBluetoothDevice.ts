@@ -23,19 +23,8 @@ export const useBluetoothDevice = ({
     bleError,
     isBleConnected,
   } = useBLE<any>({
-    // serviceUUID: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-    // characteristicUUID: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
-    // deviceFilter: (device) =>
-    //   ["TruPulse", "Garmin"].some(
-    //     (name) => device.name?.includes(name) ?? false,
-    //   ),
     onRawData: (raw) => {
       onRawData(raw);
-      // const parts = raw.split(',');
-      // return {
-      //   distance: parseFloat(parts[2]!),
-      //   angle: parseFloat(parts[4]!),
-      // };
     },
   });
 
@@ -71,7 +60,7 @@ export const useBluetoothDevice = ({
           `BLE device ${deviceId} services/characteristics:\n${servicesSummary}`,
         );
 
-        const monitorDurationMs = 5_000;
+        const monitorDurationMs = 10_000;
 
         for (const service of services) {
           for (const characteristicUUID of service.characteristics) {
