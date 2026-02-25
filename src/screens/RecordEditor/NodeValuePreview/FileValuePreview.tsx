@@ -20,7 +20,12 @@ export const FileValuePreview = (props: NodeValuePreviewProps) => {
 
   if (fileType === NodeDefFileType.audio) {
     const fileUuid = value?.fileUuid;
-    const fileUri = RecordFileService.getRecordFileUri({ surveyId, fileUuid });
+    const fileUri = fileUuid
+      ? RecordFileService.getRecordFileUri({ surveyId, fileUuid })
+      : null;
+    if (!fileUri) {
+      return null;
+    }
     return <AudioPlayback fileUri={fileUri} />;
   }
 
