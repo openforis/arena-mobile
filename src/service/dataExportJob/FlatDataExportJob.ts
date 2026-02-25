@@ -77,7 +77,9 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     this.tempFolderUri = await Files.createTempFolder();
 
     this.nodeDefsToExport = this.determineNodeDefsToExport();
-    const nodeDefsToExportNames = this.nodeDefsToExport.map(NodeDefs.getName);
+    const nodeDefsToExportNames = this.nodeDefsToExport.map((nodeDef) =>
+      NodeDefs.getName(nodeDef),
+    );
     this.logger.debug(`Determined nodeDefs to export:`, {
       nodeDefsToExport: nodeDefsToExportNames,
     });
