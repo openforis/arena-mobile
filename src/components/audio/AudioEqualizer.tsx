@@ -5,9 +5,9 @@ import { useTheme } from "react-native-paper";
 import { HView, Text, View } from "components";
 
 import { formatRecordingDuration } from "./AudioUtils";
-import styles from "./NodeAudioEqualizerStyles";
+import styles from "./AudioEqualizerStyles";
 
-type NodeAudioEqualizerProps = {
+type AudioEqualizerProps = {
   audioRecorder: ReturnType<typeof useAudioRecorder>;
   audioRecording: boolean;
   audioRecordingInProgress: boolean;
@@ -27,7 +27,7 @@ const toMeterLevel = (audioMetering: number | null): number => {
   return Math.max(0, Math.min(1, level));
 };
 
-export const NodeAudioEqualizer = (props: NodeAudioEqualizerProps) => {
+export const AudioEqualizer = (props: AudioEqualizerProps) => {
   const {
     audioRecorder,
     audioRecording,

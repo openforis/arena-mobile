@@ -11,21 +11,6 @@ export default StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 24,
   },
-  playbackProgressBarContainer: {
-    alignSelf: "stretch",
-    width: "100%",
-  },
-  playbackButtonsContainer: {
-    alignItems: "center",
-    columnGap: 8,
-    justifyContent: "center",
-  },
-  playbackProgressBar: {
-    alignSelf: "stretch",
-    height: 14,
-    marginHorizontal: 0,
-    marginVertical: 0,
-  },
   buttonsContainer: {
     alignItems: "center",
     flex: 0.5,

@@ -3,17 +3,17 @@ import { memo, useCallback, useMemo, useRef } from "react";
 import { Pressable } from "react-native";
 import type { GestureResponderEvent, LayoutChangeEvent } from "react-native";
 
-import { HView, IconButton, ProgressBar, Text, View } from "components";
+import { HView, IconButton, ProgressBar, Text } from "components";
 
 import * as AudioUtils from "./AudioUtils";
-import styles from "./styles";
+import styles from "./AudioPlaybackStyles";
 
-type NodeAudioPlaybackProps = {
+type AudioPlaybackProps = {
   fileSize: string | null;
   fileUri: string | null;
 };
 
-export const NodeAudioPlayback = memo((props: NodeAudioPlaybackProps) => {
+export const AudioPlayback = memo((props: AudioPlaybackProps) => {
   const { fileSize, fileUri } = props;
 
   const audioPlayer = useAudioPlayer(fileUri ?? null);
@@ -138,4 +138,4 @@ export const NodeAudioPlayback = memo((props: NodeAudioPlaybackProps) => {
   );
 });
 
-NodeAudioPlayback.displayName = "NodeAudioPlayback";
+AudioPlayback.displayName = "AudioPlayback";

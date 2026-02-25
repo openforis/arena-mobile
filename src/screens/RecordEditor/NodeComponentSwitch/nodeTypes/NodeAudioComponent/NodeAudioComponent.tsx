@@ -1,13 +1,12 @@
 import { NodeDefs } from "@openforis/arena-core";
 import { useMemo } from "react";
 
+import { AudioEqualizer, AudioPlayback } from "components/audio";
 import { Button, DeleteIconButton, HView, IconButton, VView } from "components";
 import { NodeComponentProps } from "screens/RecordEditor/NodeComponentSwitch/nodeTypes/nodeComponentPropTypes";
 import { Files, log } from "utils";
 
 import { useNodeAudioComponent } from "./useNodeAudioComponent";
-import { NodeAudioEqualizer } from "./NodeAudioEqualizer";
-import { NodeAudioPlayback } from "./NodeAudioPlayback";
 import styles from "./styles";
 
 export const NodeAudioComponent = (props: NodeComponentProps) => {
@@ -41,16 +40,14 @@ export const NodeAudioComponent = (props: NodeComponentProps) => {
   return (
     <HView style={styles.container}>
       <VView style={styles.previewContainer}>
-        <NodeAudioEqualizer
+        <AudioEqualizer
           audioRecorder={audioRecorder}
           audioRecording={audioRecording}
           audioRecordingInProgress={audioRecordingInProgress}
           audioRecordingPaused={audioRecordingPaused}
         />
 
-        {!!nodeValue && (
-          <NodeAudioPlayback fileSize={fileSize} fileUri={fileUri} />
-        )}
+        {!!nodeValue && <AudioPlayback fileSize={fileSize} fileUri={fileUri} />}
       </VView>
 
       <VView style={styles.buttonsContainer}>
