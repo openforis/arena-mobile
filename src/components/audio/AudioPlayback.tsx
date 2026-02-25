@@ -49,14 +49,14 @@ export const AudioPlayback = memo((props: AudioPlaybackProps) => {
     if (!fileUri) {
       return;
     }
-    const shareFileText = t("common:shareFile");
 
     let errorMessage = null;
     try {
-      if (!(await Files.isSharingAvailable())) {
-        errorMessage = shareFileText;
+      if (await Files.isSharingAvailable()) {
+        const dialogTitle = t("common:shareFile");
+        await Files.shareFile({ url: fileUri, dialogTitle });
       } else {
-        await Files.shareFile({ url: fileUri, dialogTitle: shareFileText });
+        errorMessage = "File sharing not available";
       }
     } catch (error) {
       errorMessage = String(error);
