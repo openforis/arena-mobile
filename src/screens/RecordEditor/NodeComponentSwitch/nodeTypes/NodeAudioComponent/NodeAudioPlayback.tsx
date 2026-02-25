@@ -101,7 +101,7 @@ export const NodeAudioPlayback = memo((props: NodeAudioPlaybackProps) => {
 
   const audioInfo = useMemo(() => {
     const parts = [];
-    if (playerStatus.playing && elapsedDuration) {
+    if (elapsedDuration) {
       parts.push(elapsedDuration);
     }
     if (audioDuration) {
@@ -111,7 +111,7 @@ export const NodeAudioPlayback = memo((props: NodeAudioPlaybackProps) => {
       parts.push(audioDuration);
     }
     return parts.length > 0 ? parts.join(" ") : (audioDuration ?? fileSize);
-  }, [audioDuration, elapsedDuration, fileSize, playerStatus.playing]);
+  }, [audioDuration, elapsedDuration, fileSize]);
 
   return (
     <>
