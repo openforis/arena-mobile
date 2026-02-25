@@ -1,4 +1,8 @@
 import { PermissionsAndroid } from "react-native";
+import {
+  getRecordingPermissionsAsync,
+  requestRecordingPermissionsAsync,
+} from "expo-audio";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 
@@ -39,7 +43,7 @@ const requestAccessMediaLocation = async () => {
         }),
         buttonNegative: i18n.t("common:cancel"),
         buttonPositive: i18n.t("common:ok"),
-      }
+      },
     );
     return status === PermissionsAndroid.RESULTS.GRANTED;
   }
@@ -52,9 +56,19 @@ const requestImagePickerMediaLibraryPermissions = async () => {
   return granted;
 };
 
+const requestMicrophonePermissions = async (): Promise<boolean> => {
+  const currentStatus = await getRecordingPermissionsAsync();
+  if (currentStatus.granted) {
+    return true;
+  }
+  const requestedStatus = await requestRecordingPermissionsAsync();
+  return requestedStatus.granted;
+};
+
 export const Permissions = {
   isLocationServiceEnabled,
   requestLocationForegroundPermission,
   requestAccessMediaLocation,
   requestImagePickerMediaLibraryPermissions,
+  requestMicrophonePermissions,
 };

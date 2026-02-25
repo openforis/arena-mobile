@@ -181,6 +181,15 @@ Fetch the list of records from the server and try again?`,
     selectVideo: "Select video",
     deleteConfirmMessage: "Delete the existing file?",
   },
+  fileAttributeAudio: {
+    error: {
+      startingRecording: "Error starting audio recording: {{error}}",
+      pausingRecording: "Error pausing audio recording: {{error}}",
+      resumingRecording: "Error resuming audio recording: {{error}}",
+      savingRecording: "Error saving audio recording",
+      stoppingRecording: "Error stopping audio recording: {{error}}",
+    },
+  },
   fileAttributeImage: {
     imagePreview: "Image preview",
     pictureResizedToSize: `Picture resized to {{size}}.

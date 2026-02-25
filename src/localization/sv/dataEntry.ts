@@ -144,6 +144,15 @@ export default {
     selectVideo: "Välj video",
     deleteConfirmMessage: "Ta bort befintlig fil?",
   },
+  fileAttributeAudio: {
+    error: {
+      startingRecording: "Fel vid start av ljudinspelning: {{error}}",
+      pausingRecording: "Fel vid paus av ljudinspelning: {{error}}",
+      resumingRecording: "Fel vid återupptagning av ljudinspelning: {{error}}",
+      savingRecording: "Fel vid sparande av ljudinspelning",
+      stoppingRecording: "Fel vid stopp av ljudinspelning: {{error}}",
+    },
+  },
   fileAttributeImage: {
     imagePreview: "Förhandsvisning av bild",
     pictureResizedToSize: `Bilden har ändrats till {{size}}.

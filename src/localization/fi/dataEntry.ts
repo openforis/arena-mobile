@@ -143,6 +143,15 @@ export default {
     selectVideo: "Valitse video",
     deleteConfirmMessage: "Poistetaanko olemassa oleva tiedosto?",
   },
+  fileAttributeAudio: {
+    error: {
+      startingRecording: "Virhe äänen tallennuksen käynnistyksessä: {{error}}",
+      pausingRecording: "Virhe äänen tallennuksen keskeytyksessä: {{error}}",
+      resumingRecording: "Virhe äänen tallennuksen jatkamisessa: {{error}}",
+      savingRecording: "Virhe äänen tallennuksen tallentamisessa",
+      stoppingRecording: "Virhe äänen tallennuksen pysäytyksessä: {{error}}",
+    },
+  },
   fileAttributeImage: {
     imagePreview: "Kuvan esikatselu",
     pictureResizedToSize: `Kuva pienennetty kokoon {{size}}.

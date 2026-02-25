@@ -145,6 +145,17 @@ export default {
     selectVideo: "Pilih video",
     deleteConfirmMessage: "Hapus file yang ada?",
   },
+  fileAttributeAudio: {
+    error: {
+      startingRecording: "Kesalahan saat memulai perekaman audio: {{error}}",
+      pausingRecording: "Kesalahan saat menjeda perekaman audio: {{error}}",
+      resumingRecording:
+        "Kesalahan saat melanjutkan perekaman audio: {{error}}",
+      savingRecording: "Kesalahan saat menyimpan rekaman audio",
+      stoppingRecording:
+        "Kesalahan saat menghentikan perekaman audio: {{error}}",
+    },
+  },
   fileAttributeImage: {
     imagePreview: "Pratinjau gambar",
     pictureResizedToSize: `Gambar diubah ukurannya menjadi {{size}}.

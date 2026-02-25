@@ -143,6 +143,15 @@ export default {
     selectVideo: "انتخاب ویدیو",
     deleteConfirmMessage: "آیا از حذف فایل موجود مطمئن هستید؟",
   },
+  fileAttributeAudio: {
+    error: {
+      startingRecording: "خطا در شروع ضبط صدا: {{error}}",
+      pausingRecording: "خطا در توقف موقت ضبط صدا: {{error}}",
+      resumingRecording: "خطا در ادامه ضبط صدا: {{error}}",
+      savingRecording: "خطا در ذخیره ضبط صدا",
+      stoppingRecording: "خطا در توقف ضبط صدا: {{error}}",
+    },
+  },
   fileAttributeImage: {
     imagePreview: "پیش نمایش تصویر",
     pictureResizedToSize: `اندازه تصویر به {{size}} تغییر یافت.

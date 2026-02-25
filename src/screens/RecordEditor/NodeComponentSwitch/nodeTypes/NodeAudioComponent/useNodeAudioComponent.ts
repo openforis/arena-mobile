@@ -1,7 +1,6 @@
 import * as DocumentPicker from "expo-document-picker";
 import {
   RecordingPresets,
-  requestRecordingPermissionsAsync,
   setAudioModeAsync,
   useAudioRecorder,
 } from "expo-audio";
@@ -10,11 +9,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { UUIDs } from "@openforis/arena-core";
 
 import { useToast } from "hooks";
+import { useTranslation } from "localization";
 import { useNodeComponentLocalState } from "screens/RecordEditor/useNodeComponentLocalState";
 import { RecordFileService } from "service/recordFileService";
 import { useConfirm } from "state/confirm";
 import { SurveySelectors } from "state/survey/selectors";
-import { Files } from "utils";
+import { Files, Permissions } from "utils";
 
 const extractFileNameFromAsset = (
   asset: DocumentPicker.DocumentPickerAsset,
@@ -23,6 +23,7 @@ const extractFileNameFromAsset = (
 };
 
 export const useNodeAudioComponent = ({ nodeUuid }: any) => {
+  const { t } = useTranslation();
   const toaster = useToast();
   const confirm = useConfirm();
   const surveyId = SurveySelectors.useCurrentSurveyId();
@@ -85,9 +86,11 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
 
   const onStartAudioRecordingPress = useCallback(async () => {
     try {
-      const permission = await requestRecordingPermissionsAsync();
-      if (!permission.granted) {
-        toaster("Microphone permission denied");
+      if (!(await Permissions.requestMicrophonePermissions())) {
+        const permissionDeniedMessage = t("permissions:permissionDenied", {
+          permission: t(`permissions:types.microphone`),
+        });
+        toaster(permissionDeniedMessage);
         return;
       }
 
@@ -101,27 +104,39 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
       setAudioRecordingInProgress(true);
       setAudioRecordingPaused(false);
     } catch (error) {
-      toaster(`Error starting audio recording: ${String(error)}`);
+      toaster(
+        t("dataEntry:fileAttributeAudio.error.startingRecording", {
+          error: String(error),
+        }),
+      );
     }
-  }, [audioRecorder, toaster]);
+  }, [audioRecorder, toaster, t]);
 
   const onPauseAudioRecordingPress = useCallback(async () => {
     try {
       audioRecorder.pause();
       setAudioRecordingPaused(true);
     } catch (error) {
-      toaster(`Error pausing audio recording: ${String(error)}`);
+      toaster(
+        t("dataEntry:fileAttributeAudio.error.pausingRecording", {
+          error: String(error),
+        }),
+      );
     }
-  }, [audioRecorder, toaster]);
+  }, [audioRecorder, t, toaster]);
 
   const onResumeAudioRecordingPress = useCallback(async () => {
     try {
       audioRecorder.record();
       setAudioRecordingPaused(false);
     } catch (error) {
-      toaster(`Error resuming audio recording: ${String(error)}`);
+      toaster(
+        t("dataEntry:fileAttributeAudio.error.resumingRecording", {
+          error: String(error),
+        }),
+      );
     }
-  }, [audioRecorder, toaster]);
+  }, [audioRecorder, t, toaster]);
 
   const onStopAudioRecordingPress = useCallback(async () => {
     try {
@@ -129,7 +144,7 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
       const recordedFileUri = audioRecorder.uri;
 
       if (!recordedFileUri) {
-        toaster("Error saving audio recording");
+        toaster(t("dataEntry:fileAttributeAudio.error.savingRecording"));
         return;
       }
 
@@ -143,7 +158,11 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
 
       await updateNodeValue({ value: valueUpdated, fileUri: recordedFileUri });
     } catch (error) {
-      toaster(`Error stopping audio recording: ${String(error)}`);
+      toaster(
+        t("dataEntry:fileAttributeAudio.error.stoppingRecording", {
+          error: String(error),
+        }),
+      );
     } finally {
       setAudioRecordingInProgress(false);
       setAudioRecordingPaused(false);
@@ -151,7 +170,7 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
         allowsRecording: false,
       });
     }
-  }, [audioRecorder, toaster, updateNodeValue]);
+  }, [audioRecorder, toaster, updateNodeValue, t]);
 
   const onDeletePress = useCallback(async () => {
     if (

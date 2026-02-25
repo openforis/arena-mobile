@@ -147,6 +147,15 @@ export default {
     selectVideo: "Video auswählen",
     deleteConfirmMessage: "Vorhandene Datei löschen?",
   },
+  fileAttributeAudio: {
+    error: {
+      startingRecording: "Fehler beim Starten der Audioaufnahme: {{error}}",
+      pausingRecording: "Fehler beim Pausieren der Audioaufnahme: {{error}}",
+      resumingRecording: "Fehler beim Fortsetzen der Audioaufnahme: {{error}}",
+      savingRecording: "Fehler beim Speichern der Audioaufnahme",
+      stoppingRecording: "Fehler beim Stoppen der Audioaufnahme: {{error}}",
+    },
+  },
   fileAttributeImage: {
     imagePreview: "Bildvorschau",
     pictureResizedToSize: `Bild auf {{size}} geändert.
