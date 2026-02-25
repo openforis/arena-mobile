@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bug fixes;
 
+### Added
+
+- Audio recording and playback support;
+
 ## [2.3.9] - 2026-02-23
 
 ### Fixed
