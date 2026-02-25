@@ -1,21 +1,13 @@
 import { NodeDefs } from "@openforis/arena-core";
-import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 
-import {
-  Button,
-  DeleteIconButton,
-  HView,
-  IconButton,
-  ProgressBar,
-  Text,
-  VView,
-} from "components";
+import { Button, DeleteIconButton, HView, IconButton, VView } from "components";
 import { NodeComponentProps } from "screens/RecordEditor/NodeComponentSwitch/nodeTypes/nodeComponentPropTypes";
 import { Files, log } from "utils";
 
 import { useNodeAudioComponent } from "./useNodeAudioComponent";
 import { NodeAudioEqualizer } from "./NodeAudioEqualizer";
+import { NodeAudioPlayback } from "./NodeAudioPlayback";
 import styles from "./styles";
 
 export const NodeAudioComponent = (props: NodeComponentProps) => {
@@ -38,61 +30,6 @@ export const NodeAudioComponent = (props: NodeComponentProps) => {
     onStopAudioRecordingPress,
   } = useNodeAudioComponent({ nodeUuid });
 
-  const audioPlayer = useAudioPlayer(fileUri ?? null);
-  const playerStatus = useAudioPlayerStatus(audioPlayer);
-
-  const onPlaybackPress = useCallback(async () => {
-    if (!fileUri) return;
-
-    if (playerStatus.playing) {
-      audioPlayer.pause();
-      return;
-    }
-
-    if (
-      playerStatus.duration > 0 &&
-      playerStatus.currentTime >= playerStatus.duration
-    ) {
-      await audioPlayer.seekTo(0);
-    }
-    audioPlayer.play();
-  }, [
-    audioPlayer,
-    fileUri,
-    playerStatus.currentTime,
-    playerStatus.duration,
-    playerStatus.playing,
-  ]);
-
-  const formatDuration = useCallback((durationSeconds: number) => {
-    const totalSeconds = Math.round(durationSeconds);
-    if (totalSeconds <= 0) {
-      return null;
-    }
-
-    const seconds = totalSeconds % 60;
-    const minutesTotal = Math.floor(totalSeconds / 60);
-    const minutes = minutesTotal % 60;
-    const hours = Math.floor(minutesTotal / 60);
-
-    const secondsStr = String(seconds).padStart(2, "0");
-    const minutesStr = String(minutes).padStart(2, "0");
-
-    if (hours > 0) {
-      return `${hours}:${minutesStr}:${secondsStr}`;
-    }
-
-    return `${minutesStr}:${secondsStr}`;
-  }, []);
-
-  const audioDuration = useMemo(() => {
-    return formatDuration(playerStatus.duration ?? 0);
-  }, [formatDuration, playerStatus.duration]);
-
-  const elapsedDuration = useMemo(() => {
-    return formatDuration(playerStatus.currentTime ?? 0);
-  }, [formatDuration, playerStatus.currentTime]);
-
   const fileSize = useMemo(
     () =>
       nodeValue?.fileSize
@@ -100,31 +37,6 @@ export const NodeAudioComponent = (props: NodeComponentProps) => {
         : null,
     [nodeValue],
   );
-
-  const playbackProgress = useMemo(() => {
-    const duration = playerStatus.duration ?? 0;
-    const currentTime = playerStatus.currentTime ?? 0;
-
-    if (duration <= 0) {
-      return 0;
-    }
-
-    return Math.max(0, Math.min(1, currentTime / duration));
-  }, [playerStatus.currentTime, playerStatus.duration]);
-
-  const audioInfo = useMemo(() => {
-    const parts = [];
-    if (playerStatus.playing && elapsedDuration) {
-      parts.push(elapsedDuration);
-    }
-    if (audioDuration) {
-      if (parts.length > 0) {
-        parts.push("/");
-      }
-      parts.push(audioDuration);
-    }
-    return parts.length > 0 ? parts.join(" ") : (audioDuration ?? fileSize);
-  }, [audioDuration, elapsedDuration, fileSize, playerStatus.playing]);
 
   return (
     <HView style={styles.container}>
@@ -137,21 +49,7 @@ export const NodeAudioComponent = (props: NodeComponentProps) => {
         />
 
         {!!nodeValue && (
-          <>
-            <IconButton
-              icon={playerStatus.playing ? "pause" : "play"}
-              onPress={onPlaybackPress}
-              size={40}
-            />
-            {!!audioDuration && (
-              <ProgressBar
-                progress={playbackProgress}
-                style={styles.playbackProgressBar}
-              />
-            )}
-            {!!audioInfo && <Text>{audioInfo}</Text>}
-            {!!fileSize && <Text>{fileSize}</Text>}
-          </>
+          <NodeAudioPlayback fileSize={fileSize} fileUri={fileUri} />
         )}
       </VView>
 

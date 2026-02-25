@@ -11,6 +11,10 @@ export default StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 24,
   },
+  playbackProgressBarContainer: {
+    alignSelf: "stretch",
+    width: "100%",
+  },
   playbackProgressBar: {
     alignSelf: "stretch",
     height: 8,
