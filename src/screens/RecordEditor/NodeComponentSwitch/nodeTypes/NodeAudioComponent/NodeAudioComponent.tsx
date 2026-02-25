@@ -37,8 +37,7 @@ export const NodeAudioComponent = (props: NodeComponentProps) => {
           audioRecordingInProgress={audioRecordingInProgress}
           audioRecordingPaused={audioRecordingPaused}
         />
-
-        {!!nodeValue && <AudioPlayback fileUri={fileUri} />}
+        {!!nodeValue && !!fileUri && <AudioPlayback fileUri={fileUri} />}
       </VView>
 
       <VView style={styles.buttonsContainer}>
