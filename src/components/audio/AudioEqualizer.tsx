@@ -17,7 +17,7 @@ type AudioEqualizerProps = {
 const BAR_COUNT = 72;
 const STEP_MILLIS = 120;
 const HALF_BAR_COUNT = Math.floor(BAR_COUNT / 2);
-const EMPTY_HISTORY = Array(HALF_BAR_COUNT).fill(0);
+const EMPTY_HISTORY = new Array(HALF_BAR_COUNT).fill(0);
 
 const toMeterLevel = (audioMetering: number | null): number => {
   if (audioMetering == null) {

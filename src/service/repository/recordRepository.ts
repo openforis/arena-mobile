@@ -29,12 +29,12 @@ const toColumnsSet = (columns: any) =>
 
 const generateColumnNamesWithPrefix = (prefix: any, count: any) =>
   Array.from(Arrays.fromNumberOfElements(count).keys()).map(
-    (idx) => `${prefix}${idx + 1}`
+    (idx) => `${prefix}${idx + 1}`,
   );
 const keyColumnNames = generateColumnNamesWithPrefix("key", SUPPORTED_KEYS);
 const summaryAttributesColumnNames = generateColumnNamesWithPrefix(
   "summary",
-  SUPPORTED_SUMMARY_ATTRIBUTES
+  SUPPORTED_SUMMARY_ATTRIBUTES,
 );
 
 const insertColumns = [
@@ -110,7 +110,7 @@ const extractSummaryAttributesValues = ({ survey, record }: any) => {
         nodeDefDescendant: nodeDef,
       });
       return toKeyOrSummaryColValue(summaryNode?.value);
-    }
+    },
   );
   return summaryAttributesColumnValues;
 };
@@ -149,13 +149,13 @@ const extractRemoteRecordSummarySummaryColumnsValues = ({
       const value =
         recordSummary.summaryAttributesObj?.[NodeDefs.getName(summaryDef)];
       return toKeyOrSummaryColValue(value);
-    }
+    },
   );
   return summaryColumnsValues;
 };
 
 const getPlaceholders = (count: any) =>
-  Array.from(Array(count).keys())
+  Array.from(new Array(count).keys())
     .map(() => "?")
     .join(", ");
 
@@ -169,7 +169,7 @@ const fetchRecord = async ({
     `SELECT ${summarySelectFieldsJointWithValidation}${includeContent ? ", content" : ""}
     FROM record
     WHERE survey_id = ? AND id = ?`,
-    [surveyId, recordId]
+    [surveyId, recordId],
   );
   return rowToRecord({ survey })(row);
 };
@@ -210,7 +210,7 @@ const getKeyColCondition = ({ keyCol, keyDef, val }: any) => {
   if (keyDef.type === NodeDefType.code) {
     // key value could be a text (code) or a json object with itemUuid
     conditions.push(
-      `(json_valid(${keyCol}) AND json(${keyCol}) ->> 'itemUuid' = ?)`
+      `(json_valid(${keyCol}) AND json(${keyCol}) ->> 'itemUuid' = ?)`,
     );
   }
   return `(${conditions.join(" OR ")})`;
@@ -265,7 +265,7 @@ const fetchRecordsWithEmptyCycle = async ({
     FROM record
     WHERE survey_id = ? AND cycle IS NULL"}
     ORDER BY date_modified DESC`,
-    [surveyId]
+    [surveyId],
   );
   return rows.map(rowToRecord({ survey }));
 };
@@ -301,7 +301,7 @@ const insertRecord = async ({
       RecordOrigin.local,
       ...keyColumnsValues,
       ...summaryAttributesColumnValues,
-    ]
+    ],
   );
   record.id = insertId;
   return record;
@@ -346,7 +346,7 @@ const insertRecordSummaries = async ({
           origin,
           ...keyColumnsValues,
           ...summaryAttributesColumnValues,
-        ]
+        ],
       );
       insertedIds.push(insertId);
     }
@@ -385,7 +385,7 @@ const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = async ({
       ...summaryColumnValues,
       survey.id,
       uuid,
-    ]
+    ],
   );
 };
 
@@ -423,7 +423,7 @@ const updateRecordKeysAndContent = async ({
       ...summaryAttributesValues,
       survey.id,
       record.uuid,
-    ]
+    ],
   );
 };
 
@@ -464,7 +464,7 @@ const updateRecordsMergedInto = async ({ surveyId, mergedRecordsMap }: any) => {
          SET merged_into_record_uuid = ? 
          WHERE survey_id =? 
            AND uuid = ?`,
-        [mergedIntoRecordUuid, surveyId, uuid]
+        [mergedIntoRecordUuid, surveyId, uuid],
       );
   });
 };
