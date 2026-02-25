@@ -2,8 +2,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useAudioRecorder, useAudioRecorderState } from "expo-audio";
 import { useTheme } from "react-native-paper";
 
-import { HView, View } from "components";
+import { HView, Text, View } from "components";
 
+import { formatRecordingDuration } from "./AudioUtils";
 import styles from "./NodeAudioEqualizerStyles";
 
 type NodeAudioEqualizerProps = {
@@ -127,16 +128,24 @@ export const NodeAudioEqualizer = (props: NodeAudioEqualizerProps) => {
     [primaryColor],
   );
 
+  const recordingElapsedTime = useMemo(
+    () => formatRecordingDuration(audioRecordingDurationMillis),
+    [audioRecordingDurationMillis],
+  );
+
   if (!audioRecordingInProgress) {
     return null;
   }
 
   return (
-    <View style={styles.equalizerWrapper} transparent>
-      <HView style={styles.equalizerContainer} transparent>
-        {equalizerBars}
-      </HView>
-      <View style={playheadStyle} transparent />
-    </View>
+    <>
+      <View style={styles.equalizerWrapper} transparent>
+        <HView style={styles.equalizerContainer} transparent>
+          {equalizerBars}
+        </HView>
+        <View style={playheadStyle} transparent />
+      </View>
+      <Text style={styles.recordingElapsedTime}>{recordingElapsedTime}</Text>
+    </>
   );
 };

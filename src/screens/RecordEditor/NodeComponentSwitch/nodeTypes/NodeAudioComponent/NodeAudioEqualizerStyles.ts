@@ -29,4 +29,9 @@ export default StyleSheet.create({
     position: "absolute",
     width: 2,
   },
+  recordingElapsedTime: {
+    alignSelf: "center",
+    fontVariant: ["tabular-nums"],
+    marginBottom: 8,
+  },
 });

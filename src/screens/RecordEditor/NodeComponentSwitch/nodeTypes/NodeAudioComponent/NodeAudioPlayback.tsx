@@ -5,6 +5,7 @@ import type { GestureResponderEvent, LayoutChangeEvent } from "react-native";
 
 import { IconButton, ProgressBar, Text, View } from "components";
 
+import * as AudioUtils from "./AudioUtils";
 import styles from "./styles";
 
 type NodeAudioPlaybackProps = {
@@ -41,34 +42,19 @@ export const NodeAudioPlayback = memo((props: NodeAudioPlaybackProps) => {
     playerStatus.playing,
   ]);
 
-  const formatDuration = useCallback((durationSeconds: number) => {
-    const totalSeconds = Math.round(durationSeconds);
-    if (totalSeconds <= 0) {
-      return null;
-    }
-
-    const seconds = totalSeconds % 60;
-    const minutesTotal = Math.floor(totalSeconds / 60);
-    const minutes = minutesTotal % 60;
-    const hours = Math.floor(minutesTotal / 60);
-
-    const secondsStr = String(seconds).padStart(2, "0");
-    const minutesStr = String(minutes).padStart(2, "0");
-
-    if (hours > 0) {
-      return `${hours}:${minutesStr}:${secondsStr}`;
-    }
-
-    return `${minutesStr}:${secondsStr}`;
-  }, []);
-
   const audioDuration = useMemo(() => {
-    return formatDuration(playerStatus.duration ?? 0);
-  }, [formatDuration, playerStatus.duration]);
+    const duration = playerStatus.duration ?? 0;
+    return duration > 0
+      ? AudioUtils.formatRecordingDuration(duration * 1000)
+      : null;
+  }, [playerStatus.duration]);
 
   const elapsedDuration = useMemo(() => {
-    return formatDuration(playerStatus.currentTime ?? 0);
-  }, [formatDuration, playerStatus.currentTime]);
+    const currentTime = playerStatus.currentTime ?? 0;
+    return currentTime > 0
+      ? AudioUtils.formatRecordingDuration(currentTime * 1000)
+      : null;
+  }, [playerStatus.currentTime]);
 
   const playbackProgress = useMemo(() => {
     const duration = playerStatus.duration ?? 0;
