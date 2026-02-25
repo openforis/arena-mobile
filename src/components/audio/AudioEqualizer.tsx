@@ -94,6 +94,7 @@ export const AudioEqualizer = (props: AudioEqualizerProps) => {
         index < HALF_BAR_COUNT
           ? HALF_BAR_COUNT - index - 1
           : index - HALF_BAR_COUNT;
+      const barSide = index < HALF_BAR_COUNT ? "left" : "right";
       const sample = meteringHistoryForRender[mirroredIndex] ?? 0;
       const wavePosition = phase - mirroredIndex * 0.65;
       const wavePrimary = Math.abs(Math.sin(wavePosition));
@@ -107,7 +108,7 @@ export const AudioEqualizer = (props: AudioEqualizerProps) => {
 
       return (
         <View
-          key={index}
+          key={`${barSide}-${mirroredIndex}`}
           style={[
             styles.equalizerBar,
             { backgroundColor: primaryColor, height, opacity },
