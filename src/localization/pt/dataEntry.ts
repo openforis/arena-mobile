@@ -132,11 +132,20 @@ export default {
     taxonNotSelected: "--- Táxon não selecionado ---",
   },
   fileAttribute: {
-    chooseAudio: "Escolher um arquivo de áudio",
-    chooseFile: "Escolher um arquivo",
-    choosePicture: "Escolher uma imagem",
-    chooseVideo: "Escolher um vídeo",
+    selectAudio: "Selecionar áudio",
+    selectFile: "Selecionar ficheiro",
+    selectPicture: "Selecionar imagem",
+    selectVideo: "Selecionar vídeo",
     deleteConfirmMessage: "Excluir o arquivo existente?",
+  },
+  fileAttributeAudio: {
+    error: {
+      startingRecording: "Erro ao iniciar a gravação de áudio: {{error}}",
+      pausingRecording: "Erro ao pausar a gravação de áudio: {{error}}",
+      resumingRecording: "Erro ao retomar a gravação de áudio: {{error}}",
+      savingRecording: "Erro ao guardar a gravação de áudio",
+      stoppingRecording: "Erro ao parar a gravação de áudio: {{error}}",
+    },
   },
   fileAttributeImage: {
     imagePreview: "Pré-visualização da imagem",

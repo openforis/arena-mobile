@@ -367,11 +367,13 @@ const toHumanReadableFileSize = (
 const copyUriToTempFile = async ({
   uri,
   defaultExtension = "tmp",
+  tempFileName = UUIDs.v4(),
 }: {
   uri: string;
   defaultExtension?: string;
+  tempFileName?: string;
 }): Promise<string> => {
-  const fileName = getNameFromUri(uri);
+  const fileName = tempFileName ?? getNameFromUri(uri);
   const tempFolderUri = getTempFolderParentUri();
   const fileNameWithExtension = `${fileName}.${defaultExtension}`;
   const tempFileUri = Files.path(tempFolderUri, fileNameWithExtension);

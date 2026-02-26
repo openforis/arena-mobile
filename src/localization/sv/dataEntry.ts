@@ -138,11 +138,20 @@ export default {
     taxonNotSelected: "--- Taxon inte valt ---",
   },
   fileAttribute: {
-    chooseAudio: "Välj en ljudfil",
-    chooseFile: "Välj en fil",
-    choosePicture: "Välj en bild",
-    chooseVideo: "Välj en video",
+    selectAudio: "Välj ljud",
+    selectFile: "Välj fil",
+    selectPicture: "Välj bild",
+    selectVideo: "Välj video",
     deleteConfirmMessage: "Ta bort befintlig fil?",
+  },
+  fileAttributeAudio: {
+    error: {
+      startingRecording: "Fel vid start av ljudinspelning: {{error}}",
+      pausingRecording: "Fel vid paus av ljudinspelning: {{error}}",
+      resumingRecording: "Fel vid återupptagning av ljudinspelning: {{error}}",
+      savingRecording: "Fel vid sparande av ljudinspelning",
+      stoppingRecording: "Fel vid stopp av ljudinspelning: {{error}}",
+    },
   },
   fileAttributeImage: {
     imagePreview: "Förhandsvisning av bild",

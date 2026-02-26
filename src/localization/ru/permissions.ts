@@ -15,5 +15,6 @@ export default {
     accessMediaLocation: "Доступ к местоположению медиа",
     mediaLibrary: "Медиатека",
     camera: "Доступ к камере",
+    microphone: "Доступ к микрофону",
   },
 };

@@ -15,5 +15,6 @@ export default {
     accessMediaLocation: "Akses ke Lokasi Media",
     mediaLibrary: "Pustaka Media",
     camera: "Akses ke Kamera",
+    microphone: "Akses ke Mikrofon",
   },
 };

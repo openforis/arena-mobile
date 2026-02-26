@@ -14,5 +14,6 @@ export default {
     accessMediaLocation: "ወደ ሚዲያ ሥፍራ መድረስ",
     mediaLibrary: "የሚዲያ ቤተ-መጽሐፍት",
     camera: "ወደ ካሜራ መድረስ",
+    microphone: "ወደ ማይክሮፎን መድረስ",
   },
 };

@@ -137,11 +137,20 @@ export default {
     taxonNotSelected: "--- Lajia ei ole valittu ---",
   },
   fileAttribute: {
-    chooseAudio: "Valitse äänitiedosto",
-    chooseFile: "Valitse tiedosto",
-    choosePicture: "Valitse kuva",
-    chooseVideo: "Valitse video",
+    selectAudio: "Valitse ääni",
+    selectFile: "Valitse tiedosto",
+    selectPicture: "Valitse kuva",
+    selectVideo: "Valitse video",
     deleteConfirmMessage: "Poistetaanko olemassa oleva tiedosto?",
+  },
+  fileAttributeAudio: {
+    error: {
+      startingRecording: "Virhe äänen tallennuksen käynnistyksessä: {{error}}",
+      pausingRecording: "Virhe äänen tallennuksen keskeytyksessä: {{error}}",
+      resumingRecording: "Virhe äänen tallennuksen jatkamisessa: {{error}}",
+      savingRecording: "Virhe äänen tallennuksen tallentamisessa",
+      stoppingRecording: "Virhe äänen tallennuksen pysäytyksessä: {{error}}",
+    },
   },
   fileAttributeImage: {
     imagePreview: "Kuvan esikatselu",

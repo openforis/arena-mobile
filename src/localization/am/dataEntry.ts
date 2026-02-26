@@ -125,13 +125,21 @@ export default {
     taxonNotSelected: "--- ታክሶን አልተመረጠም ---",
   },
   fileAttribute: {
-    chooseAudio: "የድምጽ ፋይል ይምረጡ",
-    chooseFile: "ፋይል ይምረጡ",
-    choosePicture: "ምስል ይምረጡ",
-    chooseVideo: "የቪዲዮ ፋይል ይምረጡ",
+    selectAudio: "የድምጽ ፋይል ይምረጡ",
+    selectFile: "ፋይል ይምረጡ",
+    selectPicture: "ምስል ይምረጡ",
+    selectVideo: "የቪዲዮ ፋይል ይምረጡ",
     deleteConfirmMessage: "ያለውን ፋይል ይሰርዙ?",
   },
-
+  fileAttributeAudio: {
+    error: {
+      startingRecording: "የድምጽ መቅጃ ማስጀመር ላይ ስህተት፡ {{error}}",
+      pausingRecording: "የድምጽ መቅጃ ማቆም ላይ ስህተት፡ {{error}}",
+      resumingRecording: "የድምጽ መቅጃ መቀጠል ላይ ስህተት፡ {{error}}",
+      savingRecording: "የተቀዳ ድምጽ ማስቀመጥ ላይ ስህተት",
+      stoppingRecording: "የድምጽ መቅጃ ማቆም ላይ ስህተት፡ {{error}}",
+    },
+  },
   fileAttributeImage: {
     imagePreview: "የምስል ቅድመ እይታ",
     pictureResizedToSize: `ስዕሉ ወደ {{size}} መጠን ተቀይሯል።

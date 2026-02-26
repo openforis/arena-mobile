@@ -15,5 +15,6 @@ export default {
     accessMediaLocation: "Pääsy median sijaintiin",
     mediaLibrary: "Mediagalleria",
     camera: "Pääsy kameraan",
+    microphone: "Pääsy mikrofoniin",
   },
 };

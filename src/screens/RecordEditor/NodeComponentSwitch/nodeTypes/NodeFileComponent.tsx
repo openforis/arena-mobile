@@ -1,7 +1,10 @@
-import { NodeDefFileType } from "@openforis/arena-core";
+import { NodeDefFileType, Users } from "@openforis/arena-core";
 
 import { Text } from "components";
+import { RemoteConnectionSelectors } from "state/remoteConnection";
 import { log } from "utils";
+
+import { NodeAudioComponent } from "./NodeAudioComponent";
 import { NodeImageOrVideoComponent } from "./NodeImageOrVideoComponent";
 import { NodeComponentProps } from "./nodeComponentPropTypes";
 
@@ -16,7 +19,13 @@ export const NodeFileComponent = (props: NodeComponentProps) => {
 
   log.debug(`rendering NodeFileComponent for ${nodeDef.props.name}`);
 
+  const user = RemoteConnectionSelectors.useLoggedInUser();
+
   const { fileType = NodeDefFileType.other } = nodeDef.props;
+
+  if (Users.isSystemAdmin(user) && fileType === NodeDefFileType.audio) {
+    return <NodeAudioComponent {...props} />;
+  }
 
   if (supportedFileTypes.has(fileType)) {
     return <NodeImageOrVideoComponent {...props} />;

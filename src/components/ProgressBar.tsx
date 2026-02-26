@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const ProgressBar = (props: Props) => {
-  const { color, indeterminate = false, progress = 100, style } = props;
+  const { color, indeterminate = false, progress = 0, style } = props;
 
   return (
     <RNPProgressBar
