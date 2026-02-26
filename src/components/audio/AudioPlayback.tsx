@@ -56,7 +56,7 @@ export const AudioPlayback = memo((props: AudioPlaybackProps) => {
         const dialogTitle = t("common:shareFile");
         await Files.shareFile({ url: fileUri, dialogTitle });
       } else {
-        errorMessage = "File sharing not available";
+        errorMessage = t("appErrors:fileSharingNotAvailable");
       }
     } catch (error) {
       errorMessage = String(error);
@@ -67,12 +67,12 @@ export const AudioPlayback = memo((props: AudioPlaybackProps) => {
   }, [fileUri, t, toaster]);
 
   const audioDuration = useMemo(
-    () => AudioUtils.formatRecordingDuration(duration * 1000),
+    () => AudioUtils.formatRecordingDuration(duration * 1000, null),
     [duration],
   );
 
   const elapsedDuration = useMemo(
-    () => AudioUtils.formatRecordingDuration(currentTime * 1000),
+    () => AudioUtils.formatRecordingDuration(currentTime * 1000, null),
     [currentTime],
   );
 

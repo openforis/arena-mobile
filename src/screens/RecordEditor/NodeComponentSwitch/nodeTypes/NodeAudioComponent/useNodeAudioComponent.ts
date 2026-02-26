@@ -87,10 +87,9 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
   const onStartAudioRecordingPress = useCallback(async () => {
     try {
       if (!(await Permissions.requestMicrophonePermissions())) {
-        const permissionDeniedMessage = t("permissions:permissionDenied", {
+        toaster("permissions:permissionDenied", {
           permission: t(`permissions:types.microphone`),
         });
-        toaster(permissionDeniedMessage);
         return;
       }
 

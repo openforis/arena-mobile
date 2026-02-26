@@ -14,5 +14,6 @@ export default {
     accessMediaLocation: "دسترسی به مکان رسانه",
     mediaLibrary: "کتابخانه رسانه",
     camera: "دسترسی به دوربین",
+    microphone: "دسترسی به میکروفون",
   },
 };

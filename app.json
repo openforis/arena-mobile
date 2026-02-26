@@ -22,7 +22,10 @@
       },
       "package": "org.openforis.arena_mobile",
       "versionCode": 75,
-      "permissions": ["android.permission.ACCESS_MEDIA_LOCATION"]
+      "permissions": [
+        "android.permission.ACCESS_MEDIA_LOCATION",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "ios": {
       "buildNumber": "75",
