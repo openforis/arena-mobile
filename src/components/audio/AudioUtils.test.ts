@@ -21,7 +21,7 @@ describe("AudioUtils", () => {
     });
 
     it("returns default value for NaN or negative durations", () => {
-      expect(formatRecordingDuration(NaN)).toBe("00:00");
+      expect(formatRecordingDuration(Number.NaN)).toBe("00:00");
       expect(formatRecordingDuration(null, null)).toBeNull();
       expect(formatRecordingDuration(-1_000, null)).toBeNull();
     });
