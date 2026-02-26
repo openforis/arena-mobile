@@ -3,6 +3,8 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Pressable } from "react-native";
 import type { GestureResponderEvent, LayoutChangeEvent } from "react-native";
 
+import { Dates } from "@openforis/arena-core";
+
 import { useToast } from "hooks";
 import { useTranslation } from "localization";
 import { HView, IconButton, ProgressBar, Text } from "components";
@@ -51,15 +53,28 @@ export const AudioPlayback = memo((props: AudioPlaybackProps) => {
     }
 
     let errorMessage = null;
+    let tempFileUri = null;
     try {
       if (await Files.isSharingAvailable()) {
         const dialogTitle = t("common:shareFile");
-        await Files.shareFile({ url: fileUri, dialogTitle });
+        // To ensure the shared file has a proper name and extension, we copy it to a temporary location with a generated name before sharing.
+        const tempFileName = `am_audio_${Dates.nowFormattedForExpression()}`;
+        tempFileUri = await Files.copyUriToTempFile({
+          uri: fileUri,
+          defaultExtension: "m4a",
+          tempFileName,
+        });
+        await Files.shareFile({ url: tempFileUri, dialogTitle });
       } else {
         errorMessage = t("appErrors:fileSharingNotAvailable");
       }
     } catch (error) {
       errorMessage = String(error);
+    } finally {
+      if (tempFileUri) {
+        // Ensure the temporary file is deleted in case of any error during sharing
+        await Files.del(tempFileUri, true);
+      }
     }
     if (errorMessage) {
       toaster("common:somethingWentWrong", { error: errorMessage });
