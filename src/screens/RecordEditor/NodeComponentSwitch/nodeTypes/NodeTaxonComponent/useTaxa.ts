@@ -8,24 +8,24 @@ import { LanguageUtils } from "utils/LanguageUtils";
 const calculateVernacularNamesCount = (taxon: Taxon) =>
   Object.values(taxon.vernacularNames ?? {}).reduce(
     (acc, vernacularNamesArray) => acc + vernacularNamesArray.length,
-    0
+    0,
   );
 
 const vernacularNameObjectToItem =
   (taxonItem: any) =>
   (vernacularNameObj: any): any => {
-    const { name: vernacularName, lang: vernacularNameLangCode } =
-      vernacularNameObj.props;
+    const { uuid: vernacularNameUuid, props } = vernacularNameObj;
+    const { name: vernacularName, lang: vernacularNameLangCode } = props;
     return {
       ...taxonItem,
       vernacularName,
       vernacularNameLangCode,
-      vernacularNameUuid: vernacularNameObj.uuid,
+      vernacularNameUuid,
     };
   };
 
 const getAllVernacularNameObjects = (
-  vernacularNamesArray: VernacularName[][]
+  vernacularNamesArray: VernacularName[][],
 ) => {
   const result: VernacularName[] = [];
   for (const vernacularNameObjects of vernacularNamesArray) {
@@ -40,9 +40,13 @@ const joinVernacularNameObjects = ({
   taxonItem,
 }: {
   taxonItem: Taxon;
-}): string => {
+}): {
+  vernacularNamesJoint: string;
+  singleVernacularNameUuid: string | undefined;
+} => {
   const parts = [];
   const vernacularNameEntries = Object.entries(taxonItem.vernacularNames ?? {});
+  let singleVernacularNameUuid: string | undefined;
   for (const [lang, vernacularNameObjects] of vernacularNameEntries) {
     const vernacularNamesInLangJoint = vernacularNameObjects
       .map((vernacularNameObj: any) => {
@@ -53,7 +57,15 @@ const joinVernacularNameObjects = ({
     const langText = LanguageUtils.getLanguageLabel(lang);
     parts.push(`${vernacularNamesInLangJoint} (${langText})`);
   }
-  return parts.join(" - ");
+  if (vernacularNameEntries.length === 1) {
+    // if there's only one vernacular name, we can keep its uuid for selection purposes
+    const firstVernacularNameEntry = vernacularNameEntries[0];
+    const vernacularNameObjects = firstVernacularNameEntry?.[1];
+    if (vernacularNameObjects?.length === 1) {
+      singleVernacularNameUuid = vernacularNameObjects[0]?.uuid;
+    }
+  }
+  return { vernacularNamesJoint: parts.join(" - "), singleVernacularNameUuid };
 };
 
 export const useTaxa = ({
@@ -61,9 +73,14 @@ export const useTaxa = ({
   taxonomyUuid,
   joinVernacularNames = false,
 }: any) => {
+  const taxonIndex = useMemo(
+    () => survey.refData?.taxonIndex ?? {},
+    [survey.refData?.taxonIndex],
+  );
+
   const { taxa, unknownTaxon, unlistedTaxon } = useMemo(() => {
     const taxaByCode: Record<string, Taxon> = {};
-    const allTaxa: Taxon[] = Object.values(survey.refData?.taxonIndex ?? {});
+    const allTaxa: Taxon[] = Object.values(taxonIndex);
     const taxaReduced = [];
     for (const taxon of allTaxa) {
       if (taxon.taxonomyUuid !== taxonomyUuid) {
@@ -79,18 +96,19 @@ export const useTaxa = ({
       taxaReduced.push(taxonItem);
       const vernacularNamesByLang = taxon.vernacularNames ?? {};
       const vernacularNamesArray: VernacularName[][] = Object.values(
-        vernacularNamesByLang
+        vernacularNamesByLang,
       );
       if (vernacularNamesArray.length > 0) {
         if (joinVernacularNames) {
-          taxonItem.vernacularNamesJoint = joinVernacularNameObjects({
-            taxonItem,
-          });
+          const { vernacularNamesJoint, singleVernacularNameUuid } =
+            joinVernacularNameObjects({ taxonItem });
+          taxonItem.vernacularNamesJoint = vernacularNamesJoint;
+          taxonItem.singleVernacularNameUuid = singleVernacularNameUuid;
         } else {
           const vernacularNames: VernacularName[] =
             getAllVernacularNameObjects(vernacularNamesArray);
           taxaReduced.push(
-            ...vernacularNames.map(vernacularNameObjectToItem(taxonItem))
+            ...vernacularNames.map(vernacularNameObjectToItem(taxonItem)),
           );
         }
       }
@@ -102,7 +120,7 @@ export const useTaxa = ({
       unknownTaxon: _unknownTaxon,
       unlistedTaxon: _unlistedTaxon,
     };
-  }, [survey, taxonomyUuid]);
+  }, [joinVernacularNames, taxonIndex, taxonomyUuid]);
 
   return { taxa, unknownTaxon, unlistedTaxon };
 };

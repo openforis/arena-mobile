@@ -7,13 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.3.10] - TO-BE-RELEASED
 
-### Fixed
-
-- Bug fixes;
-
 ### Added
 
-- Audio recording and playback support;
+- Taxon attribute: support "Vernacular name always included if only one" option;
 
 ## [2.3.9] - 2026-02-23
 
