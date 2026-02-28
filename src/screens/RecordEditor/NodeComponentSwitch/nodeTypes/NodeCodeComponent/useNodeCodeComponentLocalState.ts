@@ -125,15 +125,26 @@ export const useNodeCodeComponentLocalState = ({
     (itemUuid: any) => {
       if (NodeDefs.isSingle(nodeDef)) {
         const node = nodes[0];
-        dispatch(
-          DataEntryActions.updateAttribute({ uuid: node?.uuid!, value: null }),
-        );
+        if (node) {
+          dispatch(
+            DataEntryActions.updateAttribute({
+              uuid: node?.uuid!,
+              value: null,
+            }),
+          );
+        } else {
+          dispatch(
+            MessageActions.setWarning(
+              "dataEntry:node.cannotUpdateSingleAttributeValue.noNodeFound",
+            ),
+          );
+        }
       } else {
         const nodeToRemove = nodes.find(
           (node) => NodeValues.getItemUuid(node) === itemUuid,
         );
         if (nodeToRemove) {
-          dispatch(DataEntryActions.deleteNodes([nodeToRemove.uuid!]));
+          dispatch(DataEntryActions.deleteNodes([nodeToRemove.uuid]));
         } else {
           dispatch(
             MessageActions.setWarning(
