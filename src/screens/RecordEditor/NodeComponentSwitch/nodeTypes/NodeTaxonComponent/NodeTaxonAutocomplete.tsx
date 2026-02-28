@@ -93,7 +93,7 @@ const isTaxonMatchingFilter = ({ nodeDef, taxon, inputValueParts }: any) => {
   const matchingLabel = inputValueParts.every((inputValuePart: any) =>
     itemLabelParts.some((part: any) => part.startsWith(inputValuePart)),
   );
-  const matchingVernarcularName = inputValueParts.every(
+  const matchingVernacularName = inputValueParts.every(
     (inputValuePart: any) =>
       vernacularNameParts.some((part: any) =>
         part.startsWith(inputValuePart),
@@ -107,7 +107,7 @@ const isTaxonMatchingFilter = ({ nodeDef, taxon, inputValueParts }: any) => {
       (alwaysIncludeVernacularNames ||
         !vernacularName ||
         (alwaysIncludeSingleVernacularName && singleVernacularName))) ||
-    matchingVernarcularName
+    matchingVernacularName
   );
 };
 

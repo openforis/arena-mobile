@@ -46,7 +46,7 @@ const joinVernacularNameObjects = ({
 } => {
   const parts = [];
   const vernacularNameEntries = Object.entries(taxonItem.vernacularNames ?? {});
-  let singleVernacularNameUuid;
+  let singleVernacularNameUuid: string | undefined;
   for (const [lang, vernacularNameObjects] of vernacularNameEntries) {
     const vernacularNamesInLangJoint = vernacularNameObjects
       .map((vernacularNameObj: any) => {
