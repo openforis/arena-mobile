@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 
-import { NodeDefs } from "@openforis/arena-core";
+import { NodeDefs, NodeDefTaxon } from "@openforis/arena-core";
 
 import { SelectableListWithFilter } from "components";
 import { Taxa } from "model";
@@ -42,12 +42,25 @@ const itemDescriptionExtractor = (taxon: any) => {
   }
 };
 
-const createTaxonValue = ({ taxon, inputValue }: any) => {
+const createTaxonValue = ({
+  nodeDef,
+  taxon,
+  inputValue,
+}: {
+  nodeDef: NodeDefTaxon;
+  taxon: any;
+  inputValue: string;
+}) => {
   let value: any = null;
   if (taxon) {
     value = { taxonUuid: taxon.uuid };
-    if (taxon.vernacularNameUuid) {
-      value["vernacularNameUuid"] = taxon.vernacularNameUuid;
+    if (
+      taxon.vernacularNameUuid ||
+      (NodeDefs.isVernacularNameAlwaysIncludedIfSingle(nodeDef) &&
+        taxon.singleVernacularNameUuid)
+    ) {
+      value["vernacularNameUuid"] =
+        taxon.vernacularNameUuid ?? taxon.singleVernacularNameUuid;
     }
     if (
       inputValue &&
@@ -78,16 +91,16 @@ const isTaxonMatchingFilter = ({ nodeDef, taxon, inputValueParts }: any) => {
 
   const matchingCode = codeForSearch.startsWith(inputValueParts[0]);
   const matchingLabel = inputValueParts.every((inputValuePart: any) =>
-    itemLabelParts.some((part: any) => part.startsWith(inputValuePart))
+    itemLabelParts.some((part: any) => part.startsWith(inputValuePart)),
   );
   const matchingVernarcularName = inputValueParts.every(
     (inputValuePart: any) =>
       vernacularNameParts.some((part: any) =>
-        part.startsWith(inputValuePart)
+        part.startsWith(inputValuePart),
       ) ||
       vernacularNamesJointParts.some((part: any) =>
-        part.startsWith(inputValuePart)
-      )
+        part.startsWith(inputValuePart),
+      ),
   );
   return (
     ((matchingCode || matchingLabel) &&
@@ -137,21 +150,20 @@ export const NodeTaxonAutocomplete = (props: NodeTaxonAutocompleteProps) => {
   const { taxa, unlistedTaxon, unknownTaxon } = useTaxaFiltered({
     nodeDef,
     parentNodeUuid,
-    joinVernacularNames: !NodeDefs.isVernacularNameSelectionKept(nodeDef),
   });
 
   const onSelectedItemsChange = useCallback(
     (selection: any, inputValue: any) => {
       const taxon = selection[0];
-      const valueNext = createTaxonValue({ taxon, inputValue });
+      const valueNext = createTaxonValue({ nodeDef, taxon, inputValue });
       updateNodeValue({ value: valueNext });
     },
-    [updateNodeValue]
+    [nodeDef, updateNodeValue],
   );
 
   const filterItemsCallback = useMemo(
     () => filterItems({ nodeDef, unknownTaxon, unlistedTaxon }),
-    [nodeDef, unknownTaxon, unlistedTaxon]
+    [nodeDef, unknownTaxon, unlistedTaxon],
   );
 
   return (

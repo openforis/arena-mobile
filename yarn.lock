@@ -2921,9 +2921,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openforis/arena-core@npm:^1.0.89":
-  version: 1.0.89
-  resolution: "@openforis/arena-core@npm:1.0.89::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40openforis%2Farena-core%2F1.0.89%2Fddaaa5dd94009863a728b36a518e74540f2d3729"
+"@openforis/arena-core@npm:^1.0.90":
+  version: 1.0.90
+  resolution: "@openforis/arena-core@npm:1.0.90::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40openforis%2Farena-core%2F1.0.90%2F735689a4cd4fe0ba3e3a4827421a48b5fa7686f6"
   dependencies:
     "@jsep-plugin/regex": "npm:^1.0.4"
     "@turf/destination": "npm:^7.3.4"
@@ -2934,9 +2934,9 @@ __metadata:
     lodash.isequal: "npm:^4.5.0"
     lodash.topairs: "npm:^4.3.0"
     moment: "npm:^2.30.1"
-    proj4: "npm:^2.19.10"
-    uuid: "npm:^11.0.3"
-  checksum: 10c0/52fca45c36543423a2473f326bb12bb658bdf2a954a3d0658e37b86ced44ebe92b428eb2eed52c354bedb24ce13b1b3aac7a661889e7b818d0766b4bb1a15b07
+    proj4: "npm:^2.20.2"
+    uuid: "npm:^11.1.0"
+  checksum: 10c0/5e5284161bdeb0bda230fdd5c3c66b019c01cdfd57e58cf0ec56e19b09bf1bcccdb406f983cfe9a25592a4c8c99e81ca5b9e61ebbabcf2209095bf03d2a0816f
   languageName: node
   linkType: hard
 
@@ -4093,7 +4093,7 @@ __metadata:
     "@eslint/eslintrc": "npm:^3.3.3"
     "@eslint/js": "npm:^9.39.3"
     "@lodev09/react-native-exify": "npm:^0.2.7"
-    "@openforis/arena-core": "npm:^1.0.89"
+    "@openforis/arena-core": "npm:^1.0.90"
     "@react-native-async-storage/async-storage": "npm:2.2.0"
     "@react-native-clipboard/clipboard": "npm:^1.16.3"
     "@react-native-community/datetimepicker": "npm:8.4.4"
@@ -10368,13 +10368,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"proj4@npm:^2.19.10":
-  version: 2.19.10
-  resolution: "proj4@npm:2.19.10"
+"proj4@npm:^2.20.2":
+  version: 2.20.2
+  resolution: "proj4@npm:2.20.2"
   dependencies:
     mgrs: "npm:1.0.0"
     wkt-parser: "npm:^1.5.1"
-  checksum: 10c0/75891dc138f5c2d5647a963a5f6196280d56f7fd89a959870c69a0527580ffae2c37a02dcba0a67ba842af717adc6f5d6b75e1f778a81abdc016f472fc9c5f97
+  checksum: 10c0/7b65fcb12a896a110779f6a0e28e947c4c208ccb4a2e381052f1b7c8bad5306d4315a1dac7b4d6316687a48cfbce63d6ff6017c9946c5ef12f440cbf67d8f0e5
   languageName: node
   linkType: hard
 
@@ -12601,7 +12601,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^11.0.3":
+"uuid@npm:^11.1.0":
   version: 11.1.0
   resolution: "uuid@npm:11.1.0"
   bin:

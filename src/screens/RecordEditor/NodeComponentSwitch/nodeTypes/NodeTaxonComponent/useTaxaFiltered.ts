@@ -6,15 +6,13 @@ import { SurveySelectors } from "state";
 import { useItemsFilter } from "../useItemsFilter";
 import { useTaxa } from "./useTaxa";
 
-const alwaysIncludeTaxaFunction = (item: any) => [Taxa.unlistedCode, Taxa.unknownCode].includes(item.props.code);
+const alwaysIncludeTaxaFunction = (item: any) =>
+  [Taxa.unlistedCode, Taxa.unknownCode].includes(item.props.code);
 
-export const useTaxaFiltered = ({
-  nodeDef,
-  parentNodeUuid,
-  joinVernacularNames = false
-}: any) => {
+export const useTaxaFiltered = ({ nodeDef, parentNodeUuid }: any) => {
   const survey = SurveySelectors.useCurrentSurvey();
   const taxonomyUuid = NodeDefs.getTaxonomyUuid(nodeDef);
+  const joinVernacularNames = !NodeDefs.isVernacularNameSelectionKept(nodeDef);
   const { taxa, unknownTaxon, unlistedTaxon } = useTaxa({
     survey,
     taxonomyUuid,
