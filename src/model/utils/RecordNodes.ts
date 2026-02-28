@@ -190,14 +190,14 @@ const getSiblingNode = ({
   parentEntity,
   node,
   offset,
-}: any): { siblingNode: ArenaRecordNode; siblingIndex: number } => {
+}: any): { siblingNode: ArenaRecordNode | undefined; siblingIndex: number } => {
   const siblingNodes = Records.getChildren(
     parentEntity,
     node.nodeDefUuid,
   )(record);
   const nodeIndex = siblingNodes.indexOf(node);
   const siblingIndex = nodeIndex + offset;
-  const siblingNode = siblingNodes[siblingIndex]!;
+  const siblingNode = siblingNodes[siblingIndex];
   return { siblingNode, siblingIndex };
 };
 
