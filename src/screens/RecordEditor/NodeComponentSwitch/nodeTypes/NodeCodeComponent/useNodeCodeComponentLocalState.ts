@@ -94,10 +94,18 @@ export const useNodeCodeComponentLocalState = ({
     (itemUuid: any) => {
       const value = NodeValues.newCodeValue({ itemUuid });
       if (NodeDefs.isSingle(nodeDef)) {
-        const node = nodes[0]!;
-        dispatch(
-          DataEntryActions.updateAttribute({ uuid: node?.uuid!, value }),
-        );
+        const node = nodes[0];
+        if (node) {
+          dispatch(
+            DataEntryActions.updateAttribute({ uuid: node.uuid, value }),
+          );
+        } else {
+          dispatch(
+            MessageActions.setWarning(
+              "dataEntry:node.cannotUpdateSingleAttributeValue.noNodeFound",
+            ),
+          );
+        }
       } else if (maxCountReached) {
         dispatch(
           MessageActions.setInfo(
@@ -124,7 +132,15 @@ export const useNodeCodeComponentLocalState = ({
         const nodeToRemove = nodes.find(
           (node) => NodeValues.getItemUuid(node) === itemUuid,
         );
-        dispatch(DataEntryActions.deleteNodes([nodeToRemove?.uuid!]));
+        if (nodeToRemove) {
+          dispatch(DataEntryActions.deleteNodes([nodeToRemove.uuid!]));
+        } else {
+          dispatch(
+            MessageActions.setWarning(
+              "dataEntry:node.cannotDeleteNode.noNodeFound",
+            ),
+          );
+        }
       }
     },
     [dispatch, nodeDef, nodes],
