@@ -1,4 +1,3 @@
-import { RecordCurrentPageEntityPointer } from "model";
 import { SurveyActionTypes } from "state/survey";
 
 import { StoreUtils } from "../storeUtils";
