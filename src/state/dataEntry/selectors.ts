@@ -213,9 +213,9 @@ const selectCurrentPageEntity = (state: any): RecordCurrentPageEntity => {
       entityUuid: Records.getRoot(record)?.uuid!,
     };
   }
-  if (!entityDefUuid || !entityUuid) {
+  if (!entityDefUuid) {
     throw new Error(
-      "Invalid current page entity: missing entityDefUuid or entityUuid",
+      "Invalid current page entity pointer: missing entityDefUuid",
     );
   }
   const entityDef = Surveys.getNodeDefByUuid({

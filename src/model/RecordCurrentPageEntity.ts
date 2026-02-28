@@ -3,7 +3,7 @@ import { NodeDefEntity } from "@openforis/arena-core";
 export type RecordCurrentPageEntityPointer = {
   parentEntityUuid?: string | null;
   entityDefUuid: string;
-  entityUuid: string | null;
+  entityUuid?: string | null;
   previousCycleParentEntityUuid?: string;
   previousCycleEntityUuid?: string;
 };
