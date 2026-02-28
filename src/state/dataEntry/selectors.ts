@@ -227,7 +227,7 @@ const selectCurrentPageEntity = (state: any): RecordCurrentPageEntity => {
     parentEntityUuid,
     entityDef,
     entityDefUuid: entityDefUuid,
-    entityUuid: entityUuid!,
+    entityUuid,
     previousCycleParentEntityUuid,
     previousCycleEntityUuid,
   };
