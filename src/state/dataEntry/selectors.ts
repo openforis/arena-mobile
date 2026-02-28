@@ -15,7 +15,7 @@ import {
 import { RecordCurrentPageEntity, RecordNodes, SurveyDefs } from "model";
 
 import { SurveySelectors } from "../survey/selectors";
-import { DataEntryState } from "./types";
+import { DataEntryState, PreviousCycleRecordPageEntityPointer } from "./types";
 
 const getDataEntryState = (state: any): DataEntryState => state.dataEntry;
 
@@ -272,7 +272,9 @@ const selectPreviousCycleRecordLoading = (state: any) =>
 const selectIsLinkedToPreviousCycleRecord = (state: any) =>
   getDataEntryState(state).linkToPreviousCycleRecord;
 
-const selectPreviousCycleRecordPageEntity = (state: any) => {
+const selectPreviousCycleRecordPageEntity = (
+  state: any,
+): PreviousCycleRecordPageEntityPointer => {
   const { entityDef } = selectCurrentPageEntity(state);
   if (NodeDefs.isRoot(entityDef)) {
     const previousCycleRecord = selectPreviousCycleRecord(state);
@@ -460,7 +462,7 @@ export const DataEntrySelectors = {
 
   usePreviousCycleKey: () => useSelector(selectPreviousCycleKey),
 
-  usePreviousCycleRecordPageEntity: () =>
+  usePreviousCycleRecordPageEntity: (): PreviousCycleRecordPageEntityPointer =>
     useSelector(selectPreviousCycleRecordPageEntity, Objects.isEqual),
 
   useCanRecordBeLinkedToPreviousCycle: () =>

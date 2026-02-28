@@ -1,4 +1,4 @@
-import { RecordCurrentPageEntity } from "model";
+import { RecordCurrentPageEntityPointer } from "model";
 import { SurveyActionTypes } from "state/survey";
 
 import { StoreUtils } from "../storeUtils";
@@ -15,7 +15,7 @@ const initialState: DataEntryState = {
   linkToPreviousCycleRecord: false,
   previousCycleRecordLoading: false,
   previousCycleRecord: null,
-  previousCycleRecordPageEntity: {} as RecordCurrentPageEntity,
+  previousCycleRecordPageEntity: {},
 };
 
 const actionHandlers = {
