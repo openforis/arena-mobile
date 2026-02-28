@@ -41,7 +41,7 @@ export const useBreadcrumbItems = () => {
       }
       return nodeDefLabel;
     },
-    [lang, survey]
+    [lang, survey, t],
   );
 
   return useSelector((state) => {
