@@ -73,7 +73,7 @@ export const useNodeCodeComponentLocalState = ({
         if (item) acc.push(item);
         return acc;
       }, [] as CategoryItem[]),
-    [survey, nodes]
+    [survey, nodes],
   );
 
   const selectedItemUuid =
@@ -87,28 +87,30 @@ export const useNodeCodeComponentLocalState = ({
         ? CategoryItems.getLabelWithCode(item, lang)
         : CategoryItems.getLabel(item, lang, true);
     },
-    [cycle, lang, nodeDef]
+    [cycle, lang, nodeDef],
   );
 
   const onItemAdd = useCallback(
     (itemUuid: any) => {
       const value = NodeValues.newCodeValue({ itemUuid });
       if (NodeDefs.isSingle(nodeDef)) {
-        const node = nodes[0];
-        dispatch(DataEntryActions.updateAttribute({ uuid: node?.uuid, value }));
+        const node = nodes[0]!;
+        dispatch(
+          DataEntryActions.updateAttribute({ uuid: node?.uuid!, value }),
+        );
       } else if (maxCountReached) {
         dispatch(
           MessageActions.setInfo(
-            "dataEntry:node.cannotAddMoreItems.maxCountReached"
-          )
+            "dataEntry:node.cannotAddMoreItems.maxCountReached",
+          ),
         );
       } else {
         dispatch(
-          DataEntryActions.addNewAttribute({ nodeDef, parentNodeUuid, value })
+          DataEntryActions.addNewAttribute({ nodeDef, parentNodeUuid, value }),
         );
       }
     },
-    [dispatch, maxCountReached, nodeDef, nodes, parentNodeUuid]
+    [dispatch, maxCountReached, nodeDef, nodes, parentNodeUuid],
   );
 
   const onItemRemove = useCallback(
@@ -116,16 +118,16 @@ export const useNodeCodeComponentLocalState = ({
       if (NodeDefs.isSingle(nodeDef)) {
         const node = nodes[0];
         dispatch(
-          DataEntryActions.updateAttribute({ uuid: node?.uuid, value: null })
+          DataEntryActions.updateAttribute({ uuid: node?.uuid!, value: null }),
         );
       } else {
         const nodeToRemove = nodes.find(
-          (node) => NodeValues.getItemUuid(node) === itemUuid
+          (node) => NodeValues.getItemUuid(node) === itemUuid,
         );
-        dispatch(DataEntryActions.deleteNodes([nodeToRemove?.uuid]));
+        dispatch(DataEntryActions.deleteNodes([nodeToRemove?.uuid!]));
       }
     },
-    [dispatch, nodeDef, nodes]
+    [dispatch, nodeDef, nodes],
   );
 
   const onSingleValueChange = useCallback(
@@ -135,7 +137,7 @@ export const useNodeCodeComponentLocalState = ({
       const value = wasSelected ? null : NodeValues.newCodeValue({ itemUuid });
       dispatch(DataEntryActions.updateAttribute({ uuid: node.uuid, value }));
     },
-    [dispatch, nodes]
+    [dispatch, nodes],
   );
 
   const openEditDialog = useCallback(() => setEditDialogOpen(true), []);
@@ -143,11 +145,11 @@ export const useNodeCodeComponentLocalState = ({
 
   const openFindClosestSamplingPointDialog = useCallback(
     () => setFindClosestSamplingPointDialogOpen(true),
-    []
+    [],
   );
   const closeFindClosestSamplingPointDialog = useCallback(
     () => setFindClosestSamplingPointDialogOpen(false),
-    []
+    [],
   );
 
   return {

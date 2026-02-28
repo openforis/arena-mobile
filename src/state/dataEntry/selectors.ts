@@ -12,10 +12,12 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordNodes, SurveyDefs } from "model";
-import { SurveySelectors } from "../survey/selectors";
+import { RecordCurrentPageEntity, RecordNodes, SurveyDefs } from "model";
 
-const getDataEntryState = (state: any) => state.dataEntry;
+import { SurveySelectors } from "../survey/selectors";
+import { DataEntryState } from "./types";
+
+const getDataEntryState = (state: any): DataEntryState => state.dataEntry;
 
 const selectRecord = (state: any) => getDataEntryState(state).record;
 
@@ -129,7 +131,7 @@ const selectRecordAttributeInfo =
     }
     const value = extractAttibuteValue({ state, attribute });
     const validation = RecordValidations.getValidationNode({ nodeUuid })(
-      record.validation
+      record.validation,
     );
     const applicable = Records.isNodeApplicable({ record, node: attribute });
     return { applicable, value, validation };
@@ -190,15 +192,7 @@ const selectRecordHasErrors = (state: any) => {
   return validation && Validations.getErrorsCount(validation) > 0;
 };
 
-const selectCurrentPageEntity = (
-  state: any
-): {
-  parentEntityUuid?: string;
-  entityDef: NodeDefEntity;
-  entityUuid: string;
-  previousCycleParentEntityUuid?: string;
-  previousCycleEntityUuid?: string;
-} => {
+const selectCurrentPageEntity = (state: any): RecordCurrentPageEntity => {
   const survey = SurveySelectors.selectCurrentSurvey(state)!;
   const record = selectRecord(state);
 
@@ -208,14 +202,21 @@ const selectCurrentPageEntity = (
     entityUuid,
     previousCycleParentEntityUuid,
     previousCycleEntityUuid,
-  } = getDataEntryState(state).recordCurrentPageEntity || {};
+  } = getDataEntryState(state).recordCurrentPageEntity ?? {};
 
   if (!parentEntityUuid) {
+    const rootDef = Surveys.getNodeDefRoot({ survey });
     return {
       parentEntityUuid: undefined,
-      entityDef: Surveys.getNodeDefRoot({ survey }),
+      entityDef: rootDef,
+      entityDefUuid: rootDef.uuid,
       entityUuid: Records.getRoot(record)?.uuid!,
     };
+  }
+  if (!entityDefUuid || !entityUuid) {
+    throw new Error(
+      "Invalid current page entity: missing entityDefUuid or entityUuid",
+    );
   }
   const entityDef = Surveys.getNodeDefByUuid({
     survey,
@@ -225,7 +226,8 @@ const selectCurrentPageEntity = (
   return {
     parentEntityUuid,
     entityDef,
-    entityUuid,
+    entityDefUuid: entityDefUuid,
+    entityUuid: entityUuid!,
     previousCycleParentEntityUuid,
     previousCycleEntityUuid,
   };
@@ -241,7 +243,7 @@ const selectCurrentPageEntityRelevantChildDefs = (state: any) => {
   const parentEntity = Records.getNodeByUuid(actualEntityUuid)(record);
   if (!parentEntity) return [];
   return childDefs.filter((childDef) =>
-    Nodes.isChildApplicable(parentEntity, childDef.uuid)
+    Nodes.isChildApplicable(parentEntity, childDef.uuid),
   );
 };
 
@@ -392,7 +394,7 @@ export const DataEntrySelectors = {
           parentNodeUuid,
           nodeDefUuid,
         }),
-      Objects.isEqual
+      Objects.isEqual,
     ),
 
   useRecordNodePointerValidationChildrenCount: ({
@@ -404,12 +406,12 @@ export const DataEntrySelectors = {
         parentNodeUuid,
         nodeDefUuid,
       }),
-      Objects.isEqual
+      Objects.isEqual,
     ),
 
   useRecordNodePointerVisibility: ({ parentNodeUuid, nodeDefUuid }: any) =>
     useSelector(
-      selectRecordNodePointerVisibility({ parentNodeUuid, nodeDefUuid })
+      selectRecordNodePointerVisibility({ parentNodeUuid, nodeDefUuid }),
     ),
 
   useRecordAttributeInfo: ({ nodeUuid }: any) =>
@@ -418,13 +420,13 @@ export const DataEntrySelectors = {
   useRecordChildNodes: ({ parentEntityUuid, nodeDef }: any) =>
     useSelector(
       selectRecordChildNodes({ parentEntityUuid, nodeDef }),
-      Objects.isEqual
+      Objects.isEqual,
     ),
 
   useRecordEntitiesUuidsAndKeyValues: ({ parentNodeUuid, nodeDefUuid }: any) =>
     useSelector(
       selectRecordEntitiesUuidsAndKeyValues({ parentNodeUuid, nodeDefUuid }),
-      Objects.isEqual
+      Objects.isEqual,
     ),
 
   useRecordCodeParentItemUuid: ({ parentNodeUuid, nodeDef }: any) =>
@@ -473,6 +475,6 @@ export const DataEntrySelectors = {
   selectPreviousCycleRecordAttributeValue,
   usePreviousCycleRecordAttributeValue: ({ nodeDef, parentNodeUuid }: any) =>
     useSelector(
-      selectPreviousCycleRecordAttributeValue({ nodeDef, parentNodeUuid })
+      selectPreviousCycleRecordAttributeValue({ nodeDef, parentNodeUuid }),
     ),
 };
