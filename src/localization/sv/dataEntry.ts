@@ -53,6 +53,12 @@ export default {
       maxCountReached:
         "Kan inte lägga till fler objekt: maximalt antal har nåtts",
     },
+    cannotDeleteNode: {
+      noNodeFound: "Kan inte ta bort noden: ingen nod hittades",
+    },
+    cannotUpdateSingleAttributeValue: {
+      noNodeFound: "Kan inte uppdatera värdet: ingen nod hittades",
+    },
   },
   noRecordsFound: "Inga poster hittades",
   recordEditor: "Postredigerare",

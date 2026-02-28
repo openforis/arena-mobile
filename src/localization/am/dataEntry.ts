@@ -46,6 +46,12 @@ export default {
     cannotAddMoreItems: {
       maxCountReached: "ተጨማሪ እቃዎችን መጨመር አይቻልም: ከፍተኛው ቆጠራ ደርሷል",
     },
+    cannotDeleteNode: {
+      noNodeFound: "ኖድን መሰረዝ አይቻልም: ኖድ አልተገኘም",
+    },
+    cannotUpdateSingleAttributeValue: {
+      noNodeFound: "እሴቱን ማዘመን አይቻልም: ኖድ አልተገኘም",
+    },
   },
   noRecordsFound: "ምንም መዝገቦች አልተገኙም",
   recordEditor: "የመዝገብ አርታዒ",

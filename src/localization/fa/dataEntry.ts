@@ -52,6 +52,12 @@ export default {
       maxCountReached:
         "امکان افزودن موارد بیشتر وجود ندارد: حداکثر تعداد مجاز رسیده است",
     },
+    cannotDeleteNode: {
+      noNodeFound: "حذف گره ممکن نیست: گرهی یافت نشد",
+    },
+    cannotUpdateSingleAttributeValue: {
+      noNodeFound: "به‌روزرسانی مقدار ممکن نیست: گرهی یافت نشد",
+    },
   },
   noRecordsFound: "رکوردی یافت نشد",
   recordEditor: "ویرایشگر رکورد",
