@@ -49,6 +49,12 @@ export default {
       maxCountReached:
         "Невозможно добавить больше элементов: достигнуто максимальное количество",
     },
+    cannotDeleteNode: {
+      noNodeFound: "Невозможно удалить узел: узел не найден",
+    },
+    cannotUpdateSingleAttributeValue: {
+      noNodeFound: "Невозможно обновить значение: узел не найден",
+    },
   },
   noRecordsFound: "Записи не найдены",
   recordEditor: "Редактор записей",

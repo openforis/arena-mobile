@@ -54,6 +54,12 @@ export default {
       maxCountReached:
         "Es können keine weiteren Artikel hinzugefügt werden: maximale Anzahl erreicht",
     },
+    cannotDeleteNode: {
+      noNodeFound: "Knoten kann nicht gelöscht werden: kein Knoten gefunden",
+    },
+    cannotUpdateSingleAttributeValue: {
+      noNodeFound: "Wert kann nicht aktualisiert werden: kein Knoten gefunden",
+    },
   },
   noRecordsFound: "Keine Datensätze gefunden",
   recordEditor: "Datensatzbearbeitung",

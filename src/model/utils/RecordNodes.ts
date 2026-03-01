@@ -14,6 +14,7 @@ import {
   NodeValues,
   ArenaRecord,
   ArenaRecordNode,
+  Dictionary,
 } from "@openforis/arena-core";
 import { SurveyDefs } from "./SurveyDefs";
 
@@ -38,7 +39,7 @@ const yesNoValueByBooleanValue: Record<string, string> = {
   false: "no",
 };
 
-const getNodeName = ({ survey, record, nodeUuid }: any) => {
+const getNodeName = ({ survey, record, nodeUuid }: any): string | null => {
   const node = Records.getNodeByUuid(nodeUuid)(record);
   if (node) {
     const nodeDef = Surveys.getNodeDefByUuid({
@@ -57,7 +58,7 @@ const getEntityKeysFormatted = ({
   lang,
   showLabel = true,
   emptyValue = "",
-}: any) => {
+}: any): string[] => {
   const { cycle } = record;
   const entityDef = Surveys.getNodeDefByUuid({
     survey,
@@ -84,7 +85,7 @@ const getRootEntityKeysFormatted = ({
   record,
   lang,
   showLabel = true,
-}: any) =>
+}: any): string[] =>
   getEntityKeysFormatted({
     survey,
     record,
@@ -93,7 +94,7 @@ const getRootEntityKeysFormatted = ({
     showLabel,
   });
 
-const formatBooleanValue = ({ nodeDef, value, t }: any) => {
+const formatBooleanValue = ({ nodeDef, value, t }: any): string => {
   if (Objects.isEmpty(value)) return "";
   const booleanValueString = String(String(value) === "true");
   const labelValue = nodeDef.props.labelValue ?? "trueFalse";
@@ -113,7 +114,7 @@ const getEntitySummaryValuesByNameFormatted = ({
   summaryDefs: summaryDefsParam = null,
   emptyValue = EMPTY_VALUE,
   t,
-}: any) => {
+}: any): Dictionary<string> => {
   const { cycle } = record;
   const entityDef = Surveys.getNodeDefByUuid({
     survey,
@@ -128,7 +129,7 @@ const getEntitySummaryValuesByNameFormatted = ({
       onlyKeys,
     });
   return summaryDefs.reduce(
-    (acc: Record<string, string>, summaryDef: NodeDef<any, any>) => {
+    (acc: Dictionary<string>, summaryDef: NodeDef<any, any>) => {
       let formattedValue: string;
       try {
         const summaryNode = Records.getChild(entity, summaryDef.uuid)(record);
@@ -165,7 +166,7 @@ const getEntitySummaryValuesByNameFormatted = ({
 
       return acc;
     },
-    {}
+    {},
   );
 };
 
@@ -175,19 +176,24 @@ const getApplicableChildrenEntityDefs = ({
   parentEntity,
   cycle,
   onlyInOwnPage = false,
-}: any) =>
+}: any): NodeDefEntity[] =>
   SurveyDefs.getChildrenDefs({ survey, nodeDef, cycle }).filter(
     (childDef) =>
       NodeDefs.isEntity(childDef) &&
       Nodes.isChildApplicable(parentEntity, childDef.uuid) &&
       (!onlyInOwnPage ||
-        NodeDefs.isDisplayInOwnPage(cycle)(childDef as NodeDefEntity))
-  );
+        NodeDefs.isDisplayInOwnPage(cycle)(childDef as NodeDefEntity)),
+  ) as NodeDefEntity[];
 
-const getSiblingNode = ({ record, parentEntity, node, offset }: any) => {
+const getSiblingNode = ({
+  record,
+  parentEntity,
+  node,
+  offset,
+}: any): { siblingNode: ArenaRecordNode | undefined; siblingIndex: number } => {
   const siblingNodes = Records.getChildren(
     parentEntity,
-    node.nodeDefUuid
+    node.nodeDefUuid,
   )(record);
   const nodeIndex = siblingNodes.indexOf(node);
   const siblingIndex = nodeIndex + offset;
@@ -198,7 +204,7 @@ const getSiblingNode = ({ record, parentEntity, node, offset }: any) => {
 const functionCallExpression = (functionName: string): string =>
   `${functionName}\\s*\\((?:[^()]*|\\([^()]*\\))*\\)`;
 
-const possibleDistanceTargetExpressions = {
+const possibleDistanceTargetExpressions: Dictionary<string> = {
   simpleIdentifier: String.raw`\w+`,
   categoryItemProp: functionCallExpression("categoryItemProp"),
   parentFunction: functionCallExpression("parent"),
@@ -207,13 +213,13 @@ const possibleDistanceTargetExpressions = {
 const distanceFunctionRegExp = (firstArgument: any, secondArgument: any) =>
   `\\s*distance\\s*\\(\\s*(${firstArgument})\\s*,\\s*(${secondArgument})\\s*\\)`;
 
-const extractDistanceTargetExpression = ({ nodeDef }: any) => {
+const extractDistanceTargetExpression = ({ nodeDef }: any): string | null => {
   const validations = NodeDefs.getValidations(nodeDef);
   const distanceValidation = validations?.expressions?.find(
     (expression: NodeDefExpression) =>
       new RegExp(functionCallExpression("distance")).test(
-        expression.expression!
-      )
+        expression.expression!,
+      ),
   );
 
   if (!distanceValidation) {
@@ -227,7 +233,7 @@ const extractDistanceTargetExpression = ({ nodeDef }: any) => {
       const expression = distanceValidation.expression!;
       // this or attribute name as 1st argument
       let match = expression.match(
-        distanceFunctionRegExp(thisOrAttrName, possibleExpression)
+        distanceFunctionRegExp(thisOrAttrName, possibleExpression),
       );
       if (match) {
         distanceTargetExpression = match[2];
@@ -235,14 +241,14 @@ const extractDistanceTargetExpression = ({ nodeDef }: any) => {
       }
       // this or attribute name as 2nd argument
       match = expression.match(
-        distanceFunctionRegExp(possibleExpression, thisOrAttrName)
+        distanceFunctionRegExp(possibleExpression, thisOrAttrName),
       );
       if (match) {
         distanceTargetExpression = match[1];
         return true;
       }
       return false;
-    }
+    },
   );
   return distanceTargetExpression;
 };
@@ -262,7 +268,7 @@ const getCoordinateDistanceTarget = async ({
         record,
         node,
         query: distanceTargetExpression,
-      }
+      },
     );
     return distanceTarget;
   }
@@ -277,8 +283,8 @@ const findAncestor = ({
   record: ArenaRecord;
   node: ArenaRecordNode;
   predicate: (node: ArenaRecordNode) => boolean;
-}) => {
-  let result: any = null;
+}): ArenaRecordNode | null => {
+  let result: ArenaRecordNode | null = null;
   Records.visitAncestorsAndSelf(node, (visitedAncestor) => {
     if (!result && predicate(visitedAncestor)) {
       result = visitedAncestor;
@@ -294,7 +300,7 @@ const cleanupAttributeValue = ({ value, attributeDef }: any) => {
     const fieldsToRemove = Object.keys(value).filter(
       (field) =>
         !coordinateAttributeMandatoryFields.has(field) &&
-        !additionalFields.includes(field)
+        !additionalFields.includes(field),
     );
     for (const field of fieldsToRemove) {
       delete value[field];
@@ -313,7 +319,7 @@ const hasDescendantApplicableNodes = ({
   record,
   parentEntity,
   nodeDef,
-}: any) => {
+}: any): boolean => {
   const descendants = Records.getDescendantsOrSelf({
     record,
     node: parentEntity,
@@ -328,7 +334,7 @@ const getApplicableDescendantDefs = ({
   record,
   parentEntity,
   onlyAttributes = true,
-}: any) => {
+}: any): NodeDef<any>[] => {
   const { cycle } = record;
   const defs = Surveys.getDescendantsInSingleEntities({
     survey,
@@ -339,7 +345,7 @@ const getApplicableDescendantDefs = ({
     (nodeDef) =>
       (!onlyAttributes || NodeDefs.isAttribute(nodeDef)) &&
       (Objects.isEmpty(NodeDefs.getApplicable(nodeDef)) ||
-        hasDescendantApplicableNodes({ record, parentEntity, nodeDef }))
+        hasDescendantApplicableNodes({ record, parentEntity, nodeDef })),
   );
 };
 
@@ -350,7 +356,7 @@ const getApplicableSummaryDefs = ({
   parentEntity,
   onlyKeys = false,
   maxSummaryDefs = undefined,
-}: any) => {
+}: any): NodeDef<any>[] => {
   const { cycle } = record;
   const summaryDefs = SurveyDefs.getEntitySummaryDefs({
     survey,
@@ -362,7 +368,7 @@ const getApplicableSummaryDefs = ({
   return summaryDefs.filter(
     (nodeDef) =>
       Objects.isEmpty(NodeDefs.getApplicable(nodeDef)) ||
-      hasDescendantApplicableNodes({ record, parentEntity, nodeDef })
+      hasDescendantApplicableNodes({ record, parentEntity, nodeDef }),
   );
 };
 

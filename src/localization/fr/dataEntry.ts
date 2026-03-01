@@ -53,6 +53,12 @@ export default {
       maxCountReached:
         "Impossible d'ajouter plus d'éléments : nombre maximum atteint",
     },
+    cannotDeleteNode: {
+      noNodeFound: "Impossible de supprimer le nœud : aucun nœud trouvé",
+    },
+    cannotUpdateSingleAttributeValue: {
+      noNodeFound: "Impossible de mettre à jour la valeur : aucun nœud trouvé",
+    },
   },
   noRecordsFound: "Aucun enregistrement trouvé",
   recordEditor: "Éditeur d'enregistrements",

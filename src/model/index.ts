@@ -10,6 +10,10 @@ export {
   LanguagesSettings,
 } from "./LanguageSettings";
 export type { LocationPoint, AveragedLocation } from "./LocationPoint";
+export type {
+  RecordCurrentPageEntity,
+  RecordCurrentPageEntityPointer,
+} from "./RecordCurrentPageEntity";
 export { RecordEditViewMode } from "./RecordEditViewMode";
 export { RecordLoadStatus } from "./RecordLoadStatus";
 export { RecordOrigin } from "./RecordOrigin";

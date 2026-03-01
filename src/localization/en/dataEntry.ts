@@ -83,6 +83,12 @@ Details: {{details}}`,
       maxCountReached: `Cannot add more items: 
 max count reached`,
     },
+    cannotDeleteNode: {
+      noNodeFound: "Cannot delete node: no node found",
+    },
+    cannotUpdateSingleAttributeValue: {
+      noNodeFound: "Cannot update value: no node found",
+    },
   },
   noEntitiesDefined: "No entities defined",
   goToDataEntry: "Go to data entry",

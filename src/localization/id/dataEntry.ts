@@ -53,6 +53,12 @@ export default {
       maxCountReached:
         "Tidak dapat menambahkan lebih banyak item: jumlah maksimum tercapai",
     },
+    cannotDeleteNode: {
+      noNodeFound: "Tidak dapat menghapus node: node tidak ditemukan",
+    },
+    cannotUpdateSingleAttributeValue: {
+      noNodeFound: "Tidak dapat memperbarui nilai: node tidak ditemukan",
+    },
   },
   noRecordsFound: "Tidak ada data yang ditemukan",
   recordEditor: "Editor data isian",

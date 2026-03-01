@@ -50,6 +50,12 @@ export default {
       maxCountReached:
         "No se pueden agregar más elementos: se ha alcanzado el número máximo",
     },
+    cannotDeleteNode: {
+      noNodeFound: "No se puede eliminar el nodo: no se encontró el nodo",
+    },
+    cannotUpdateSingleAttributeValue: {
+      noNodeFound: "No se puede actualizar el valor: no se encontró el nodo",
+    },
   },
   noRecordsFound: "No se encontraron registros",
   recordEditor: "Editor de registros",

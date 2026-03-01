@@ -52,6 +52,12 @@ export default {
     cannotAddMoreItems: {
       maxCountReached: "Lisää kohteita ei voi: enimmäismäärä on saavutettu",
     },
+    cannotDeleteNode: {
+      noNodeFound: "Solmua ei voi poistaa: solmua ei löytynyt",
+    },
+    cannotUpdateSingleAttributeValue: {
+      noNodeFound: "Arvoa ei voi päivittää: solmua ei löytynyt",
+    },
   },
   noRecordsFound: "Tietueita ei löydy",
   recordEditor: "Tietueen muokkain",
