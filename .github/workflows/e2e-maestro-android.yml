@@ -37,4 +37,4 @@ jobs:
           profile: pixel_7
           script: |
             npx expo run:android --variant debug
-            APP_ID=org.openforis.arena_mobile maestro test e2e/maestro
+            maestro test e2e/maestro/smoke.yaml

@@ -21,3 +21,5 @@ yarn e2e:maestro:android
 # iOS
 yarn e2e:maestro:ios
 ```
+
+Note: Android E2E uses a native app build (not Expo Go). iOS E2E runs only on macOS.

@@ -1,4 +1,4 @@
-appId: org.openforis.arena_mobile
+appId: org.openforis.arena-mobile
 ---
 - launchApp
 - waitForAnimationToEnd

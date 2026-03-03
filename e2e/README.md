@@ -5,7 +5,7 @@ This project uses [Maestro](https://maestro.mobile.dev/) for end-to-end tests.
 ## Prerequisites
 
 - Android Studio emulator or iOS Simulator running
-- App installed on emulator/simulator (`yarn android` or `yarn ios`)
+- App installed on emulator/simulator (`npx expo run:android --variant debug` or `npx expo run:ios`)
 - Maestro CLI installed:
 
 ```bash
@@ -21,16 +21,30 @@ yarn e2e:maestro:android
 
 # iOS
 yarn e2e:maestro:ios
-
-# Generic (set APP_ID yourself)
-APP_ID=<your.app.id> yarn e2e:maestro
 ```
 
 ## Current suite
 
 - `e2e/maestro/smoke.yaml`: basic app-launch smoke test
+- `e2e/maestro/smoke.ios.yaml`: basic app-launch smoke test for iOS
 
 ## Notes
 
 - Maestro runs against an already installed app build.
-- For Expo managed workflow, use `yarn android` / `yarn ios` first.
+- `yarn android` starts Expo Go and is not suitable for launching `org.openforis.arena_mobile` in Maestro.
+- iOS E2E requires macOS (iOS Simulator is not available on Linux).
+
+## Troubleshooting Android
+
+If you still get `Unable to launch app org.openforis.arena_mobile`:
+
+```bash
+adb devices
+adb shell pm list packages | grep org.openforis
+```
+
+If no package is listed, run:
+
+```bash
+npx expo run:android --variant debug
+```
