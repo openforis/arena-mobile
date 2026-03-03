@@ -9,7 +9,10 @@
     "web": "expo start --web",
     "lint": "eslint --fix --ext .js,.jsx .",
     "test": "jest",
-    "test:types": "tsc"
+    "test:types": "tsc",
+    "e2e:maestro": "maestro test e2e/maestro",
+    "e2e:maestro:android": "APP_ID=org.openforis.arena_mobile maestro test e2e/maestro",
+    "e2e:maestro:ios": "APP_ID=org.openforis.arena-mobile maestro test e2e/maestro"
   },
   "dependencies": {
     "@lodev09/react-native-exify": "^0.2.7",
