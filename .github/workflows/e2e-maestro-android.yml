@@ -31,6 +31,10 @@ jobs:
 
       - name: Build app and run Maestro
         uses: reactivecircus/android-emulator-runner@v2
+        env:
+          ARENA_SERVER_URL: ${{secrets.ARENA_SERVER_URL}}
+          ARENA_SERVER_USERNAME: ${{secrets.ARENA_SERVER_USERNAME}}
+          ARENA_SERVER_PASSWORD: ${{secrets.ARENA_SERVER_PASSWORD}}
         with:
           api-level: 35
           arch: x86_64
@@ -38,3 +42,4 @@ jobs:
           script: |
             npx expo run:android --variant debug
             maestro test e2e/maestro/smoke.yaml
+            maestro test e2e/maestro/login.android.yaml

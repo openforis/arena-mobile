@@ -11,7 +11,7 @@
     "test": "jest",
     "test:types": "tsc",
     "e2e:maestro": "maestro test e2e/maestro/smoke.yaml",
-    "e2e:prepare:android": "npx expo run:android --variant debug",
+    "e2e:prepare:android": "expo run:android --variant debug",
     "e2e:maestro:android": "yarn e2e:prepare:android && maestro test e2e/maestro/smoke.yaml",
     "e2e:maestro:ios": "maestro test e2e/maestro/smoke.ios.yaml"
   },

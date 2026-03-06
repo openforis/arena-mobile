@@ -1,0 +1,25 @@
+appId: org.openforis.arena_mobile
+---
+- launchApp
+- waitForAnimationToEnd
+
+- tapOn: "Connection to server"
+- tapOn: "Server URL"
+- tapOn: "Custom"
+- tapOn: "Email"
+- eraseText
+- inputText: ${ARENA_SERVER_USERNAME}
+
+- tapOn: "https://www.openforis-arena.org"
+- eraseText
+- inputText: ${ARENA_SERVER_USERNAME}
+
+- tapOn: "Password"
+- eraseText
+- inputText: ${ARENA_SERVER_PASSWORD}
+
+- tapOn: "Login"
+
+- extendedWaitUntil:
+    visible: "Login successful!"
+    timeout: 20000
