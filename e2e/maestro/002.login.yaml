@@ -1,4 +1,4 @@
-appId: org.openforis.arena_mobile
+appId: ${APP_ID}
 ---
 - launchApp
 - waitForAnimationToEnd
@@ -6,20 +6,23 @@ appId: org.openforis.arena_mobile
 - tapOn: "Connection to server"
 - tapOn: "Server URL"
 - tapOn: "Custom"
-- tapOn: "Email"
+# workaround: clear the text field by double tapping and selecting the whole text
+- doubleTapOn: "https://www.openforis-arena.org"
 - eraseText
-- inputText: ${ARENA_SERVER_USERNAME}
+- inputText: ${ARENA_SERVER_URL}
 
-- tapOn: "https://www.openforis-arena.org"
-- eraseText
+- tapOn: "Email"
 - inputText: ${ARENA_SERVER_USERNAME}
 
 - tapOn: "Password"
-- eraseText
 - inputText: ${ARENA_SERVER_PASSWORD}
 
+## workaround: press the login button to hide the keyboard
+- tapOn: "Login"
 - tapOn: "Login"
 
 - extendedWaitUntil:
     visible: "Login successful!"
     timeout: 20000
+
+- tapOn: "Continue"

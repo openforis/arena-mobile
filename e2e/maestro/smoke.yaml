@@ -1,5 +1,0 @@
-appId: org.openforis.arena_mobile
----
-- launchApp
-- waitForAnimationToEnd
-- takeScreenshot: app-launched
