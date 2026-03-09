@@ -3,10 +3,11 @@ name: E2E Maestro Android
 on: [pull_request]
 
 jobs:
-  maestro-android:
+  e2e-tests-maestro-android:
     runs-on: ubuntu-latest
     timeout-minutes: 45
-
+    env:
+      NPM_TOKEN: ${{ secrets.ACCESS_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
