@@ -31,7 +31,7 @@ yarn e2e:maestro:ios
 ## Notes
 
 - Maestro runs against an already installed app build.
-- `yarn android` starts Expo Go and is not suitable for launching `org.openforis.arena_mobile` in Maestro.
+- `yarn start` starts Expo Go and is not suitable for launching `org.openforis.arena_mobile` in Maestro.
 - iOS E2E requires macOS (iOS Simulator is not available on Linux).
 
 ## Troubleshooting Android
