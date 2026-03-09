@@ -4,16 +4,17 @@
   "scripts": {
     "start": "expo start",
     "start-tunnel": "expo start --tunnel",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
+    "android": "expo android",
+    "ios": "expo ios",
+    "run:android": "expo run:android",
+    "run:ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "eslint --fix --ext .js,.jsx .",
     "test": "jest",
     "test:types": "tsc",
     "e2e:maestro": "maestro test e2e/maestro/",
     "e2e:prepare:android": "expo run:android --variant debug",
-    "e2e:maestro:android": "yarn e2e:prepare:android && maestro test e2e/maestro/",
-    "e2e:maestro:ios": "maestro test e2e/maestro/"
+    "e2e:maestro:android": "yarn e2e:prepare:android && maestro test e2e/maestro/"
   },
   "dependencies": {
     "@lodev09/react-native-exify": "^0.2.7",
