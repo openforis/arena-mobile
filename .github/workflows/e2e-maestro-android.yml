@@ -1,7 +1,6 @@
 name: E2E Maestro Android
 
-on:
-  workflow_dispatch:
+on: [pull_request]
 
 jobs:
   maestro-android:
