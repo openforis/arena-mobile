@@ -4,7 +4,7 @@ on: [pull_request]
 
 jobs:
   e2e-tests-maestro-android:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     env:
       NPM_TOKEN: ${{ secrets.ACCESS_TOKEN }}
     steps:
@@ -57,22 +57,25 @@ jobs:
           ARENA_SERVER_USERNAME: ${{secrets.ARENA_SERVER_USERNAME}}
           ARENA_SERVER_PASSWORD: ${{secrets.ARENA_SERVER_PASSWORD}}
         with:
-          api-level: 35
+          api-level: 31
+          target: google_apis
           arch: x86_64
           profile: pixel_7
+          disable-animations: true
+          # Increase timeout because software-rendering is slow
+          emulator-boot-timeout: 900
           script: |
             echo "Waiting for emulator to settle..."
             adb wait-for-device
 
-            # This loop checks if the 'package' service is actually responding
-            # It will retry every 2 seconds until successful or 10 attempts
-            for i in {1..10}; do
-              adb shell pm list packages > /dev/null && break || sleep 2
-            done
+            echo "Waiting for Package Manager..."
+            until adb shell pm list packages >/dev/null 2>&1; do sleep 5; done
 
             echo "Installing APK..."
             # Use -r to replace if exists, -t for test packages (Expo debug builds need this)
             adb install -r -t android/app/build/outputs/apk/debug/app-debug.apk
 
             echo "Running Maestro..."
+            # Give the OS 10 seconds to 'breathe' after installation
+            sleep 10
             yarn e2e:maestro:android -e ARENA_SERVER_URL=$ARENA_SERVER_URL -e ARENA_SERVER_USERNAME=$ARENA_SERVER_USERNAME -e ARENA_SERVER_PASSWORD=$ARENA_SERVER_PASSWORD
