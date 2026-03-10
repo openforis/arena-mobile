@@ -49,4 +49,15 @@ jobs:
           arch: x86_64
           profile: pixel_7
           script: |
-            yarn e2e:maestro:android e2e/maestro/ -e ARENA_SERVER_URL=$ARENA_SERVER_URL -e ARENA_SERVER_USERNAME=$ARENA_SERVER_USERNAME -e ARENA_SERVER_PASSWORD=$ARENA_SERVER_PASSWORD
+            # Build the app specifically for testing (if not done in a previous step)
+            # This creates a standalone binary so we don't need a Metro bundler
+            npx expo export:embed --platform android --dev false
+            cd android && ./gradlew assembleDebug
+
+            # Now run Maestro. Maestro will automatically install the APK 
+            # defined in your .yaml flow's 'appId' if it's already on the device path,
+            # but manually installing is safer:
+            adb install android/app/build/outputs/apk/debug/app-debug.apk
+
+            # Run your script
+            yarn e2e:maestro:android -e ARENA_SERVER_URL=$ARENA_SERVER_URL -e ARENA_SERVER_USERNAME=$ARENA_SERVER_USERNAME -e ARENA_SERVER_PASSWORD=$ARENA_SERVER_PASSWORD
