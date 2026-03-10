@@ -49,17 +49,15 @@ jobs:
           arch: x86_64
           profile: pixel_7
           script: |
-            script: |
-            # 1. Prebuild to ensure /android folder exists with latest config
+            echo "Starting Prebuild..."
             npx expo prebuild --platform android
 
-            # 2. Build the APK (Gradle handles the bundling automatically)
+            echo "Building APK..."
             cd android && ./gradlew assembleDebug
             cd ..
 
-            # 3. Install the freshly built APK onto the emulator
+            echo "Installing APK..."
             adb install android/app/build/outputs/apk/debug/app-debug.apk
 
-            # 4. Run your Maestro script
-            # Note: I removed the extra 'e2e/maestro/' since it's inside your yarn script
+            echo "Running Maestro..."
             yarn e2e:maestro:android -e ARENA_SERVER_URL=$ARENA_SERVER_URL -e ARENA_SERVER_USERNAME=$ARENA_SERVER_USERNAME -e ARENA_SERVER_PASSWORD=$ARENA_SERVER_PASSWORD
