@@ -2,4 +2,5 @@ appId: ${APP_ID}
 ---
 - launchApp
 - waitForAnimationToEnd
-- takeScreenshot: app-launched
+- assertVisible: "Arena Mobile"
+- assertVisible: "Not logged in"
