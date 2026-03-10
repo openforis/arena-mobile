@@ -57,19 +57,24 @@ jobs:
           ARENA_SERVER_USERNAME: ${{secrets.ARENA_SERVER_USERNAME}}
           ARENA_SERVER_PASSWORD: ${{secrets.ARENA_SERVER_PASSWORD}}
         with:
-          api-level: 31
+          api-level: 34
           target: google_apis
           arch: arm64-v8a
           profile: pixel_7
           disable-animations: true
+          emulator-options: -no-window -no-snapshot -no-audio -no-boot-anim
           # Increase timeout because software-rendering is slow
           emulator-boot-timeout: 900
           script: |
             echo "Waiting for emulator to settle..."
             adb wait-for-device
 
-            echo "Waiting for Package Manager..."
-            until adb shell pm list packages >/dev/null 2>&1; do sleep 5; done
+            echo "Waiting for system to stabilize..."
+            # Check for the package manager service specifically
+            until adb shell pm list packages >/dev/null 2>&1; do
+              echo "Waiting for Package Manager..."
+              sleep 5
+            done
 
             echo "Installing APK..."
             # Use -r to replace if exists, -t for test packages (Expo debug builds need this)
