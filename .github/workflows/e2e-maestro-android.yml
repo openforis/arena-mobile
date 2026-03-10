@@ -49,15 +49,17 @@ jobs:
           arch: x86_64
           profile: pixel_7
           script: |
-            # Build the app specifically for testing (if not done in a previous step)
-            # This creates a standalone binary so we don't need a Metro bundler
-            npx expo export:embed --platform android --dev false
-            cd android && ./gradlew assembleDebug
+            script: |
+            # 1. Prebuild to ensure /android folder exists with latest config
+            npx expo prebuild --platform android
 
-            # Now run Maestro. Maestro will automatically install the APK 
-            # defined in your .yaml flow's 'appId' if it's already on the device path,
-            # but manually installing is safer:
+            # 2. Build the APK (Gradle handles the bundling automatically)
+            cd android && ./gradlew assembleDebug
+            cd ..
+
+            # 3. Install the freshly built APK onto the emulator
             adb install android/app/build/outputs/apk/debug/app-debug.apk
 
-            # Run your script
+            # 4. Run your Maestro script
+            # Note: I removed the extra 'e2e/maestro/' since it's inside your yarn script
             yarn e2e:maestro:android -e ARENA_SERVER_URL=$ARENA_SERVER_URL -e ARENA_SERVER_USERNAME=$ARENA_SERVER_USERNAME -e ARENA_SERVER_PASSWORD=$ARENA_SERVER_PASSWORD
