@@ -37,7 +37,14 @@ jobs:
           curl -fsSL "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
-      - name: Build app and run Maestro
+      # Build the APK FIRST (No emulator yet)
+      - name: Build Android APK
+        run: |
+          npx expo prebuild --platform android
+          cd android && ./gradlew assembleDebug -Dorg.gradle.daemon=false
+
+      # Now start the Emulator and run Maestro
+      - name: Run Maestro Tests
         uses: reactivecircus/android-emulator-runner@v2
         env:
           ARENA_SERVER_URL: ${{secrets.ARENA_SERVER_URL}}
@@ -48,15 +55,6 @@ jobs:
           arch: x86_64
           profile: pixel_7
           script: |
-            echo "Starting Prebuild..."
-            npx expo prebuild --platform android
-
-            echo "Building APK..."
-            cd android && ./gradlew assembleDebug \
-              -Dorg.gradle.jvmargs="-Xmx2048m -XX:MaxMetaspaceSize=512m" \
-              -Dorg.gradle.daemon=false \
-              -Dorg.gradle.parallel=false            
-            cd ..
 
             echo "Installing APK..."
             adb install android/app/build/outputs/apk/debug/app-debug.apk
