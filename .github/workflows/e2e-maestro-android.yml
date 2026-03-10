@@ -38,6 +38,12 @@ jobs:
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
       # Build the APK FIRST (No emulator yet)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: "gradle"
       - name: Build Android APK
         run: |
           npx expo prebuild --platform android
