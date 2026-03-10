@@ -47,7 +47,7 @@ jobs:
       - name: Build Android APK
         run: |
           npx expo prebuild --platform android
-          cd android && ./gradlew assembleDebug -Dorg.gradle.daemon=false
+          cd android && ./gradlew assembleDebug --no-daemon
 
       # Now start the Emulator and run Maestro
       - name: Run Maestro Tests
@@ -59,7 +59,7 @@ jobs:
         with:
           api-level: 31
           target: google_apis
-          arch: x86_64
+          arch: arm64-v8a
           profile: pixel_7
           disable-animations: true
           # Increase timeout because software-rendering is slow
