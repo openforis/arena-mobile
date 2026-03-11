@@ -59,7 +59,7 @@ jobs:
         with:
           api-level: 34
           target: default
-          arch: x86_64
+          arch: arm64-v8a
           profile: pixel_7
           disable-animations: true
           emulator-options: -no-window -no-snapshot -no-audio -no-boot-anim
