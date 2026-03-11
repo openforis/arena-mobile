@@ -47,8 +47,12 @@ jobs:
       - name: Build Android APK
         run: |
           npx expo prebuild --platform android
-          cd android && ./gradlew assembleDebug --no-daemon
-
+          cd android
+          ./gradlew assembleDebug \
+            --no-daemon \
+            -Dhttp.keepAlive=false \
+            -Dmaven.wagon.http.pool=false \
+            -Dmaven.wagon.httpconnectionManager.ttlSeconds=120
       # Now start the Emulator and run Maestro
       - name: Run Maestro Tests
         uses: reactivecircus/android-emulator-runner@v2
