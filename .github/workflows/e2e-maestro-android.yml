@@ -4,7 +4,7 @@ on: [pull_request]
 
 jobs:
   e2e-tests-maestro-android:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     env:
       NPM_TOKEN: ${{ secrets.ACCESS_TOKEN }}
     steps:
