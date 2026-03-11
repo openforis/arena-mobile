@@ -61,9 +61,9 @@ jobs:
           ARENA_SERVER_USERNAME: ${{secrets.ARENA_SERVER_USERNAME}}
           ARENA_SERVER_PASSWORD: ${{secrets.ARENA_SERVER_PASSWORD}}
         with:
-          api-level: 34
-          target: default
-          arch: arm64-v8a
+          api-level: 35
+          target: google_apis
+          arch: x86_64
           profile: pixel_7
           disable-animations: true
           emulator-options: -no-window -no-snapshot -no-audio -no-boot-anim
