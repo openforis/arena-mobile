@@ -79,14 +79,14 @@ jobs:
             adb wait-for-device
 
             echo "Waiting for system to stabilize..."
-            sleep 30
+            sleep 60
 
             echo "Installing APK..."
             # Use -r to replace if exists, -t for test packages (Expo debug builds need this)
             adb install -r -t android/app/build/outputs/apk/debug/app-debug.apk
 
             echo "Running Maestro..."
-            # Give the OS 10 seconds to 'breathe' after installation
-            sleep 10
+            # Give the OS 30 seconds to 'breathe' after installation
+            sleep 30
 
             maestro test e2e/maestro/allTests.yaml -e APP_ID=org.openforis.arena_mobile -e ARENA_SERVER_URL=$ARENA_SERVER_URL -e ARENA_SERVER_USERNAME=$ARENA_SERVER_USERNAME -e ARENA_SERVER_PASSWORD=$ARENA_SERVER_PASSWORD
