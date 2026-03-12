@@ -88,4 +88,4 @@ jobs:
             echo "Running Maestro..."
             # Give the OS 10 seconds to 'breathe' after installation
             sleep 10
-            yarn e2e:maestro:android -e ARENA_SERVER_URL=$ARENA_SERVER_URL -e ARENA_SERVER_USERNAME=$ARENA_SERVER_USERNAME -e ARENA_SERVER_PASSWORD=$ARENA_SERVER_PASSWORD
+            maestro test e2e/maestro/ -e ARENA_SERVER_URL=$ARENA_SERVER_URL -e ARENA_SERVER_USERNAME=$ARENA_SERVER_USERNAME -e ARENA_SERVER_PASSWORD=$ARENA_SERVER_PASSWORD
