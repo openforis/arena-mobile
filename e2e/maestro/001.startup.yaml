@@ -2,6 +2,7 @@ appId: ${APP_ID}
 ---
 - launchApp
 - waitForAnimationToEnd
+- takeScreenshot: MainScreen
 - extendedWaitUntil:
     visible: "Arena Mobile"
     timeout: 30000 # Give it 30 seconds on CI
