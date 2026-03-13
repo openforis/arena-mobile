@@ -239,8 +239,8 @@ export const RecordsList = () => {
       ],
     });
     if (confirmResult) {
-      const { selectedMultipleChoiceValues } = confirmResult;
-      const overwriteExistingRecords = selectedMultipleChoiceValues?.includes(
+      const { selectedMultipleChoiceValues = [] } = confirmResult;
+      const overwriteExistingRecords = selectedMultipleChoiceValues.includes(
         dataImportOptions.overwriteExistingRecords,
       );
 
