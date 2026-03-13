@@ -1,9 +1,9 @@
 import { NodeDefEntity } from "@openforis/arena-core";
 
 export type RecordCurrentPageEntityPointer = {
-  parentEntityUuid?: string | null;
+  parentEntityUuid?: string;
   entityDefUuid: string;
-  entityUuid?: string | null;
+  entityUuid?: string;
   previousCycleParentEntityUuid?: string;
   previousCycleEntityUuid?: string;
 };

@@ -247,8 +247,8 @@ const selectCurrentPageEntityRelevantChildDefs = (state: any) => {
   );
 };
 
-const selectCurrentPageEntityActiveChildDefIndex = (state: any) =>
-  getDataEntryState(state).activeChildDefIndex;
+const selectCurrentPageEntityActiveChildDefIndex = (state: any): number =>
+  getDataEntryState(state).activeChildDefIndex ?? 0;
 
 // record page
 const selectRecordPageSelectorMenuOpen = (state: any) =>

@@ -2,7 +2,14 @@ import { useCallback, useMemo, useState } from "react";
 
 import { NodeDefs, Objects, Records } from "@openforis/arena-core";
 
-import { DataTable, DataVisualizerField, HView, ScrollView, Text, VView } from "components";
+import {
+  DataTable,
+  DataVisualizerField,
+  HView,
+  ScrollView,
+  Text,
+  VView,
+} from "components";
 import { useTranslation } from "localization";
 import { SortObject } from "model";
 import { RecordNodes } from "model/utils/RecordNodes";
@@ -37,7 +44,7 @@ type NodeMultipleEntityListComponentProps = {
 };
 
 export const NodeMultipleEntityListComponent = (
-  props: NodeMultipleEntityListComponentProps
+  props: NodeMultipleEntityListComponentProps,
 ) => {
   const { entityDef, parentEntityUuid } = props;
 
@@ -49,7 +56,7 @@ export const NodeMultipleEntityListComponent = (
 
   log.debug(
     "Rendering NodeMultipleEntityListComponent for " +
-      NodeDefs.getName(entityDef)
+      NodeDefs.getName(entityDef),
   );
 
   const entityDefUuid = entityDef.uuid;
@@ -85,7 +92,7 @@ export const NodeMultipleEntityListComponent = (
             onlyKeys: false,
             maxSummaryDefs,
           }),
-    [entityDef, isLandscape, maxSummaryDefs, parentEntity, record, survey]
+    [entityDef, isLandscape, maxSummaryDefs, parentEntity, record, survey],
   );
 
   const tableFields: DataVisualizerField[] = useMemo(
@@ -96,9 +103,9 @@ export const NodeMultipleEntityListComponent = (
           header: NodeDefs.getLabelOrName(summaryDef, lang),
           style: { minWidth: isLandscape ? 150 : 100 },
           sortable: true,
-        })
+        }),
       ),
-    [isLandscape, lang, visibleNodeDefs]
+    [isLandscape, lang, visibleNodeDefs],
   );
 
   const onNewPress = () => {
@@ -112,10 +119,10 @@ export const NodeMultipleEntityListComponent = (
           parentEntityUuid,
           entityDefUuid,
           entityUuid: uuid,
-        })
+        }),
       );
     },
-    [dispatch, parentEntityUuid, entityDefUuid]
+    [dispatch, parentEntityUuid, entityDefUuid],
   );
 
   const onDeleteSelectedNodeUuids = useCallback(
@@ -128,7 +135,7 @@ export const NodeMultipleEntityListComponent = (
         dispatch(DataEntryActions.deleteNodes(nodeUuids));
       }
     },
-    [confirm, dispatch]
+    [confirm, dispatch],
   );
 
   const onSortChange = useCallback((sortNext: SortObject) => {
@@ -150,7 +157,7 @@ export const NodeMultipleEntityListComponent = (
         t,
       }),
     }),
-    [survey, record, lang, t, visibleNodeDefs]
+    [survey, record, lang, t, visibleNodeDefs],
   );
 
   const rows = useMemo(() => {
@@ -162,29 +169,30 @@ export const NodeMultipleEntityListComponent = (
     return _rows;
   }, [entityDefUuid, entityToRow, parentEntity, record, sort]);
 
-  const canAddNew = canEditRecord && !NodeDefs.isEnumerate(entityDef);
+  const canAddOrDelete = canEditRecord && !NodeDefs.isEnumerate(entityDef);
 
   const dataTable = useMemo(
     () => (
       <DataTable
+        canDelete={canAddOrDelete}
         fields={tableFields}
         items={rows}
         onDeleteSelectedItemIds={onDeleteSelectedNodeUuids}
         onItemPress={onRowPress}
         onSortChange={onSortChange}
-        selectable={canEditRecord}
+        selectable={canAddOrDelete}
         sort={sort}
       />
     ),
     [
-      canEditRecord,
+      canAddOrDelete,
       onDeleteSelectedNodeUuids,
       onRowPress,
       onSortChange,
       rows,
       sort,
       tableFields,
-    ]
+    ],
   );
 
   return (
@@ -201,7 +209,7 @@ export const NodeMultipleEntityListComponent = (
           dataTable
         ))}
       <HView fullWidth style={styles.buttonBar}>
-        {canAddNew && (
+        {canAddOrDelete && (
           <NewNodeButton nodeDefLabel={nodeDefLabel} onPress={onNewPress} />
         )}
         <NodeValidationIcon

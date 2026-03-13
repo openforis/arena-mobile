@@ -65,7 +65,9 @@ export const RecordEditorDrawer = () => {
           <IconButton
             icon="help"
             mode="outlined"
-            onPress={() => WebBrowser.openBrowserAsync(fieldManualUrl)}
+            onPress={async () => {
+              await WebBrowser.openBrowserAsync(fieldManualUrl);
+            }}
           />
         )}
         <IconButton

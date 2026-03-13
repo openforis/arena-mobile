@@ -239,7 +239,7 @@ export const RecordsList = () => {
       ],
     });
     if (confirmResult) {
-      const { selectedMultipleChoiceValues } = confirmResult;
+      const { selectedMultipleChoiceValues = [] } = confirmResult;
       const overwriteExistingRecords = selectedMultipleChoiceValues.includes(
         dataImportOptions.overwriteExistingRecords,
       );
