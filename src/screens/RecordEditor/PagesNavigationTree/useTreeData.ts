@@ -30,7 +30,7 @@ const getChildEntity = ({ record, entity, currentEntity, childDef }: any) => {
   ]);
   const children = Records.getChildren(entity, childDef.uuid)(record);
   return children.find((child) =>
-    currentEntityAndAncestorUuids.has(child.uuid)
+    currentEntityAndAncestorUuids.has(child.uuid),
   );
 };
 
@@ -47,7 +47,7 @@ const processChildrenCountValidation = ({
 }) => {
   const notValidNodeDefUuid =
     RecordValidations.extractValidationChildrenCountKeyNodeDefUuid(
-      validationKey
+      validationKey,
     );
   const notValidNodedef = Surveys.getNodeDefByUuid({
     survey,
@@ -118,7 +118,7 @@ const findNotValidTreeItemIds = ({ survey, record, treeItemsById }: any) => {
     treeItemIdsWithWarnings: new Set<string>(),
   };
   for (const [validationKey, fieldValidation] of Object.entries(
-    fieldValidations
+    fieldValidations,
   )) {
     _processFieldValidation({
       survey,
@@ -134,8 +134,8 @@ const findNotValidTreeItemIds = ({ survey, record, treeItemsById }: any) => {
 
 type EntityPointer = {
   entityDefUuid: string;
-  parentEntityUuid: string;
-  entityUuid: string;
+  parentEntityUuid?: string;
+  entityUuid?: string;
 };
 
 type TreeItem = {
@@ -218,7 +218,11 @@ export const useTreeData = () => {
     nodeDef,
     parentEntityUuid,
     entityUuid,
-  }: any): TreeItem => ({
+  }: {
+    nodeDef: NodeDef<any>;
+    parentEntityUuid?: string;
+    entityUuid?: string;
+  }): TreeItem => ({
     id: nodeDef.uuid,
     label: NodeDefs.getLabelOrName(nodeDef, lang),
     isRoot: !parentEntityUuid,
@@ -236,7 +240,7 @@ export const useTreeData = () => {
 
   const rootTreeItem = createTreeItem({
     nodeDef: rootDef,
-    parentEntityUuid: null,
+    parentEntityUuid: undefined,
     entityUuid: rootNode?.uuid,
   });
 
