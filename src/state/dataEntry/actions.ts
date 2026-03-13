@@ -565,7 +565,7 @@ const addNewAttribute =
   };
 
 const selectCurrentPageEntity =
-  ({ parentEntityUuid, entityDefUuid, entityUuid = null }: any) =>
+  ({ parentEntityUuid, entityDefUuid, entityUuid = undefined }: any) =>
   async (dispatch: any, getState: any) => {
     const state = getState();
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
