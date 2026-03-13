@@ -57,7 +57,7 @@ export type ButtonProps = {
   loading?: boolean;
   mode?: ButtonMode;
   multiplePressAvoidanceTimeout?: number;
-  onPress?: (event: any) => Promise<any> | void;
+  onPress?: (event: any) => Promise<void> | void;
   style?: StyleProp<ViewStyle>;
   textColor?: string;
   textIsI18nKey?: boolean;
