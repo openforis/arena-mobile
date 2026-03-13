@@ -180,13 +180,12 @@ export const NodeMultipleEntityListComponent = (
         onDeleteSelectedItemIds={onDeleteSelectedNodeUuids}
         onItemPress={onRowPress}
         onSortChange={onSortChange}
-        selectable={canEditRecord}
+        selectable={canAddOrDelete}
         sort={sort}
       />
     ),
     [
       canAddOrDelete,
-      canEditRecord,
       onDeleteSelectedNodeUuids,
       onRowPress,
       onSortChange,
