@@ -2,6 +2,9 @@ appId: ${APP_ID}
 ---
 - launchApp
 - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "Arena Mobile"
+    timeout: 60000
 
 - tapOn: "Connection to server"
 - tapOn: "Server URL"
