@@ -44,6 +44,7 @@ jobs:
           java-version: "17"
           distribution: "temurin"
           cache: "gradle"
+
       - name: Build Android APK
         run: |
           npx expo prebuild --platform android
@@ -53,12 +54,13 @@ jobs:
             -Dhttp.keepAlive=false \
             -Dmaven.wagon.http.pool=false \
             -Dmaven.wagon.httpconnectionManager.ttlSeconds=120
+
       - name: Enable KVM group perms
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
-      # Now start the Emulator and run Maestro
+
       - name: Run Maestro Tests
         uses: reactivecircus/android-emulator-runner@v2
         env:
@@ -91,3 +93,17 @@ jobs:
             sleep 30
 
             maestro test e2e/maestro/allTests.yaml -e APP_ID=org.openforis.arena_mobile -e ARENA_SERVER_URL=$ARENA_SERVER_URL -e ARENA_SERVER_USERNAME=$ARENA_SERVER_USERNAME -e ARENA_SERVER_PASSWORD=$ARENA_SERVER_PASSWORD
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-logs
+          path: ~/.maestro/tests/**/*
+
+      - name: Store tests result
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e_android_report
+          path: |
+            report.xml
