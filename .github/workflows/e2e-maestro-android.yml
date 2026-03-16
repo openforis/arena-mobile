@@ -70,8 +70,9 @@ jobs:
           target: google_apis
           arch: x86_64
           profile: pixel_7
+          force-avd-creation: false
+          emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -accel on -cores 2 -memory 2048
           disable-animations: true
-          emulator-options: -no-window -no-snapshot -no-audio -no-boot-anim
           # Increase timeout because software-rendering is slow
           emulator-boot-timeout: 900
           script: |
