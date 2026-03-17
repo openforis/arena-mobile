@@ -95,12 +95,7 @@ jobs:
             # Give the OS 30 seconds to 'breathe' after installation
             sleep 30
 
-            maestro test e2e/maestro/allTests.yaml \
-              --format junit --output report.xml \
-              -e APP_ID=org.openforis.arena_mobile \
-              -e ARENA_SERVER_URL=$ARENA_SERVER_URL \
-              -e ARENA_SERVER_USERNAME=$ARENA_SERVER_USERNAME \
-              -e ARENA_SERVER_PASSWORD=$ARENA_SERVER_PASSWORD
+            maestro test e2e/maestro/allTests.yaml --format junit --output report.xml -e APP_ID=org.openforis.arena_mobile -e ARENA_SERVER_URL=$ARENA_SERVER_URL -e ARENA_SERVER_USERNAME=$ARENA_SERVER_USERNAME -e ARENA_SERVER_PASSWORD=$ARENA_SERVER_PASSWORD
 
       - name: Upload artifacts
         if: always()
