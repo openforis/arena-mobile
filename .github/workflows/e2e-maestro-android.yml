@@ -49,7 +49,7 @@ jobs:
         run: |
           npx expo prebuild --platform android
           cd android
-          ./gradlew assembleDebug \
+          ./gradlew assembleRelease \
             --no-daemon \
             -Dhttp.keepAlive=false \
             -Dmaven.wagon.http.pool=false \
@@ -78,6 +78,9 @@ jobs:
           # Increase timeout because software-rendering is slow
           emulator-boot-timeout: 900
           script: |
+            # 1. Ensure the ADB connection is bridged for the emulator
+            adb reverse tcp:8081 tcp:8081
+
             echo "Waiting for emulator to settle..."
             adb wait-for-device
 
@@ -92,7 +95,12 @@ jobs:
             # Give the OS 30 seconds to 'breathe' after installation
             sleep 30
 
-            maestro test e2e/maestro/allTests.yaml -e APP_ID=org.openforis.arena_mobile -e ARENA_SERVER_URL=$ARENA_SERVER_URL -e ARENA_SERVER_USERNAME=$ARENA_SERVER_USERNAME -e ARENA_SERVER_PASSWORD=$ARENA_SERVER_PASSWORD
+            maestro test e2e/maestro/allTests.yaml \
+              --format junit --output report.xml \
+              -e APP_ID=org.openforis.arena_mobile \
+              -e ARENA_SERVER_URL=$ARENA_SERVER_URL \
+              -e ARENA_SERVER_USERNAME=$ARENA_SERVER_USERNAME \
+              -e ARENA_SERVER_PASSWORD=$ARENA_SERVER_PASSWORD
 
       - name: Upload artifacts
         if: always()
