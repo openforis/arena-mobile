@@ -16,11 +16,7 @@ import {
   triggerSurveyUpdate,
 } from "./surveyUpdateUtils";
 
-type UseHomeScreenParams = {
-  navigation: any;
-};
-
-export const useHomeScreen = ({ navigation }: UseHomeScreenParams) => {
+export const useHomeScreen = () => {
   const dispatch = useAppDispatch();
   const networkAvailable = useIsNetworkConnected();
   const survey = SurveySelectors.useCurrentSurvey();
@@ -75,7 +71,6 @@ export const useHomeScreen = ({ navigation }: UseHomeScreenParams) => {
 
       await triggerSurveyUpdate({
         dispatch,
-        navigation,
         survey,
         skipConfirmation: true,
         onComplete: () => {
@@ -91,7 +86,7 @@ export const useHomeScreen = ({ navigation }: UseHomeScreenParams) => {
     return () => {
       cancelled = true;
     };
-  }, [dispatch, navigation, networkAvailable, survey, user]);
+  }, [dispatch, networkAvailable, survey, user]);
 
   return {
     surveySelected,

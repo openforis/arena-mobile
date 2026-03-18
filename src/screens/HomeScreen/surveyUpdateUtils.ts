@@ -19,7 +19,7 @@ type DetermineSurveyUpdateStatusResult = {
 type TriggerSurveyUpdateParams = {
   confirmMessageKey?: string;
   dispatch: any;
-  navigation: any;
+  navigation?: any;
   onCancel?: (() => void) | null;
   onComplete?: (() => void) | null;
   onConfirm?: (() => void) | null;
@@ -73,7 +73,7 @@ export const determineSurveyUpdateStatus = async ({
 export const triggerSurveyUpdate = ({
   confirmMessageKey = "surveys:updateSurveyConfirmMessage",
   dispatch,
-  navigation,
+  navigation = null,
   onCancel = null,
   onComplete = null,
   onConfirm = null,

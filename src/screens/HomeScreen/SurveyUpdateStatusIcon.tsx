@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 
 import { UpdateStatusIcon } from "components";
@@ -21,7 +20,6 @@ export const SurveyUpdateStatusIcon = ({
   updateStatus,
 }: Props) => {
   const dispatch = useAppDispatch();
-  const navigation = useNavigation();
   const toaster = useToast();
   const { t } = useTranslation();
   const survey = SurveySelectors.useCurrentSurvey()!;
@@ -51,7 +49,6 @@ export const SurveyUpdateStatusIcon = ({
       case UpdateStatus.notUpToDate:
         triggerSurveyUpdate({
           dispatch,
-          navigation,
           survey,
           confirmMessageKey: "surveys:updateSurveyWithNewVersionConfirmMessage",
           onConfirm: () => setLoading(true),
@@ -59,16 +56,7 @@ export const SurveyUpdateStatusIcon = ({
         });
         break;
     }
-  }, [
-    dispatch,
-    errorKey,
-    navigation,
-    onPressProp,
-    survey,
-    t,
-    toaster,
-    updateStatus,
-  ]);
+  }, [dispatch, errorKey, onPressProp, survey, t, toaster, updateStatus]);
 
   return (
     <UpdateStatusIcon

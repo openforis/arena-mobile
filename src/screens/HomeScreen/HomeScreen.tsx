@@ -16,7 +16,7 @@ import styles from "./styles";
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
-  const { surveySelected, surveyUpdateLoading } = useHomeScreen({ navigation });
+  const { surveySelected, surveyUpdateLoading } = useHomeScreen();
 
   return (
     <ScreenView>
