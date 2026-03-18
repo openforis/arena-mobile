@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { useCallback, useEffect, useState } from "react";
 
-import { Dates, Surveys } from "@openforis/arena-core";
+import { Surveys } from "@openforis/arena-core";
 
 import {
   Button,
@@ -19,6 +19,7 @@ import { RemoteConnectionSelectors, SurveySelectors } from "state";
 
 import { screenKeys } from "../screenKeys";
 import { SurveyUpdateStatusIcon } from "./SurveyUpdateStatusIcon";
+import { determineSurveyUpdateStatus } from "./surveyUpdateUtils";
 
 import styles from "./selectedSurveyContainerStyles";
 
@@ -54,42 +55,18 @@ export const SelectedSurveyContainer = () => {
     if (!survey) {
       return;
     }
-    if (!user) {
-      setState({ updateStatus: UpdateStatus.error });
-      return;
-    }
-    if (!networkAvailable) {
-      setState({ updateStatus: UpdateStatus.networkNotAvailable });
-      return;
-    }
-    const surveyRemote = await SurveyService.fetchSurveySummaryRemote({
-      id: survey.remoteId,
-      name: surveyName,
-    });
-    if (!surveyRemote) {
-      setState({ updateStatus: SurveyStatus.notInArenaServer });
-    } else if (surveyRemote.errorKey) {
-      setState({
-        updateStatus: UpdateStatus.error,
-        errorKey: surveyRemote.errorKey,
-      });
-    } else if (!Surveys.isVisibleInMobile(surveyRemote)) {
-      setState({ updateStatus: SurveyStatus.notVisibleInMobile });
-    } else if (
-      Dates.isAfter(
-        surveyRemote?.datePublished ?? surveyRemote?.dateModified,
-        // @ts-ignore
-        survey.datePublished ?? survey.dateModified
-      )
-    ) {
-      setState({ updateStatus: UpdateStatus.notUpToDate });
-    } else {
-      setState({ updateStatus: UpdateStatus.upToDate });
-    }
+    setState(
+      await determineSurveyUpdateStatus({
+        networkAvailable,
+        survey,
+        surveyName,
+        user,
+      }),
+    );
   }, [networkAvailable, survey, surveyName, user]);
 
   useEffect(() => {
-    determineStatus();
+    void Promise.resolve().then(determineStatus);
   }, [determineStatus]);
 
   if (!survey) return null;

@@ -47,7 +47,7 @@ const fetchAndSetCurrentSurvey =
       if (!Surveys.isVisibleInMobile(survey)) {
         const status = i18n.t("surveys:status.notVisibleInMobile");
         dispatch(
-          MessageActions.setWarning("surveys:statusMessage", { status })
+          MessageActions.setWarning("surveys:statusMessage", { status }),
         );
       }
       const preferredLanguage =
@@ -57,7 +57,7 @@ const fetchAndSetCurrentSurvey =
       dispatch(
         MessageActions.setMessage({
           content: "surveys:errorFetchingLocalSurvey",
-        })
+        }),
       );
     }
   };
@@ -91,8 +91,27 @@ const updateSurveyRemote =
     onConfirm = null,
     onCancel = null,
     onComplete = null,
+    skipConfirmation = false,
   }: any) =>
   async (dispatch: any) => {
+    const executeUpdate = async () => {
+      onConfirm?.();
+      try {
+        const survey = await SurveyService.updateSurveyRemote({
+          surveyId,
+          surveyRemoteId,
+        });
+        await dispatch(_onSurveyInsertOrUpdate({ survey, navigation }));
+      } finally {
+        onComplete?.();
+      }
+    };
+
+    if (skipConfirmation) {
+      await executeUpdate();
+      return;
+    }
+
     dispatch(
       ConfirmActions.show({
         confirmButtonTextKey: "surveys:updateSurvey",
@@ -100,16 +119,10 @@ const updateSurveyRemote =
         messageParams: { surveyName },
         onConfirm: async () => {
           dispatch(ConfirmActions.dismiss());
-          onConfirm?.();
-          const survey = await SurveyService.updateSurveyRemote({
-            surveyId,
-            surveyRemoteId,
-          });
-          dispatch(_onSurveyInsertOrUpdate({ survey, navigation }));
-          onComplete?.();
+          await executeUpdate();
         },
         onCancel,
-      })
+      }),
     );
   };
 

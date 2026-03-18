@@ -6,22 +6,23 @@ import { GpsLockingEnabledWarning } from "appComponents/GpsLockingEnabledWarning
 import { LoginInfo } from "appComponents/LoginInfo";
 import { VersionNumberInfoButton } from "appComponents/VersionNumberInfoButton";
 import { Button, ScreenView, VView } from "components";
-import { SurveySelectors } from "state";
 
 import { screenKeys } from "../screenKeys";
 import { SelectedSurveyContainer } from "./SelectedSurveyContainer";
+import { SurveyUpdateProgressDialog } from "./SurveyUpdateProgressDialog";
+import { useHomeScreen } from "./useHomeScreen";
 
 import styles from "./styles";
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
-  const survey = SurveySelectors.useCurrentSurvey();
-
-  const surveySelected = !!survey;
+  const { surveySelected, surveyUpdateLoading } = useHomeScreen({ navigation });
 
   return (
     <ScreenView>
       <VView style={styles.container}>
+        {surveyUpdateLoading && <SurveyUpdateProgressDialog />}
+
         <AppLogo />
 
         <VersionNumberInfoButton />
@@ -38,7 +39,9 @@ export const HomeScreen = () => {
             surveySelected ? "surveys:manageSurveys" : "surveys:selectSurvey"
           }
           style={styles.manageSurveysButton}
-          onPress={() => navigation.navigate(screenKeys.surveysListLocal as never)}
+          onPress={() =>
+            navigation.navigate(screenKeys.surveysListLocal as never)
+          }
         />
       </VView>
     </ScreenView>
