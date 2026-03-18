@@ -49,7 +49,7 @@ jobs:
         run: |
           npx expo prebuild --platform android
           cd android
-          ./gradlew assembleRelease \
+          NODE_ENV=production ./gradlew assembleDebug \
             --no-daemon \
             -Dhttp.keepAlive=false \
             -Dmaven.wagon.http.pool=false \
@@ -89,7 +89,7 @@ jobs:
 
             echo "Installing APK..."
             # Use -r to replace if exists, -t for test packages (Expo debug builds need this)
-            adb install -r -t android/app/build/outputs/apk/debug/app-debug.apk
+            adb install -r -t -g android/app/build/outputs/apk/debug/app-debug.apk
 
             echo "Running Maestro..."
             # Give the OS 30 seconds to 'breathe' after installation
