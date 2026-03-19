@@ -4,10 +4,10 @@ import { Surveys } from "@openforis/arena-core";
 
 import { useIsNetworkConnected, useNavigationIsFocused } from "hooks";
 import { UpdateStatus } from "model";
+import { useCurrentSurveyCoordinator } from "navigation/CurrentSurveyCoordinator";
 import { SurveyService } from "service";
 import {
   RemoteConnectionSelectors,
-  SurveyActions,
   SurveySelectors,
   useAppDispatch,
 } from "state";
@@ -23,38 +23,12 @@ export const useHomeScreen = () => {
   const networkAvailable = useIsNetworkConnected();
   const survey = SurveySelectors.useCurrentSurvey();
   const user = RemoteConnectionSelectors.useLoggedInUser();
+  const { singleSurveyFetchLoading } = useCurrentSurveyCoordinator();
 
-  const [singleSurveyFetchLoading, setSingleSurveyFetchLoading] =
-    useState(false);
   const [surveyUpdateLoading, setSurveyUpdateLoading] = useState(false);
   const processedSurveyVersionsRef = useRef<Record<string, boolean>>({});
-  const remoteSingleSurveyCheckTriggeredRef = useRef(false);
 
   const surveySelected = !!survey;
-
-  useEffect(() => {
-    if (
-      remoteSingleSurveyCheckTriggeredRef.current ||
-      !isFocused ||
-      !networkAvailable ||
-      !user ||
-      surveySelected
-    ) {
-      return;
-    }
-    remoteSingleSurveyCheckTriggeredRef.current = true;
-
-    const fetchAndSetSingleSurvey = async () => {
-      setSingleSurveyFetchLoading(true);
-      try {
-        await dispatch(SurveyActions.fetchAndSetRemoteSurveyIfOnlyOne());
-      } finally {
-        setSingleSurveyFetchLoading(false);
-      }
-    };
-
-    void fetchAndSetSingleSurvey();
-  }, [dispatch, isFocused, networkAvailable, surveySelected, user]);
 
   useEffect(() => {
     if (
