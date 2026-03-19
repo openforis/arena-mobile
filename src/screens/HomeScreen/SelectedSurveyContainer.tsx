@@ -95,6 +95,7 @@ export const SelectedSurveyContainer = () => {
           <Link labelKey="surveys:fieldManual" url={fieldManualUrl} />
         )}
         <Button
+          labelVariant="bodyLarge"
           style={styles.goToDataEntryButton}
           textKey="dataEntry:goToDataEntry"
           onPress={() => navigation.navigate(screenKeys.recordsList as never)}

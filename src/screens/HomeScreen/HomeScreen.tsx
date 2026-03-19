@@ -7,6 +7,7 @@ import { LoginInfo } from "appComponents/LoginInfo";
 import { VersionNumberInfoButton } from "appComponents/VersionNumberInfoButton";
 import { Button, ScreenView, VView } from "components";
 
+import { RemoteConnectionSelectors } from "state/remoteConnection";
 import { screenKeys } from "../screenKeys";
 import { SelectedSurveyContainer } from "./SelectedSurveyContainer";
 import { SurveyUpdateProgressDialog } from "./SurveyUpdateProgressDialog";
@@ -16,6 +17,8 @@ import styles from "./styles";
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
+  const user = RemoteConnectionSelectors.useLoggedInUser();
+
   const { surveySelected, surveyUpdateLoading } = useHomeScreen();
 
   return (
@@ -34,7 +37,7 @@ export const HomeScreen = () => {
         {surveySelected && <SelectedSurveyContainer />}
 
         <Button
-          color={surveySelected ? "secondary" : "primary"}
+          color={surveySelected || !user ? "secondary" : "primary"}
           textKey={
             surveySelected ? "surveys:manageSurveys" : "surveys:selectSurvey"
           }

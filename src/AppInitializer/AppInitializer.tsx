@@ -128,8 +128,6 @@ export const AppInitializer = (props: Props) => {
     setStep(steps.checkingLoggedIn);
     await dispatch(RemoteConnectionActions.loginAndSetUser());
 
-    await dispatch(SurveyActions.fetchAndSetRemoteSurveyIfOnlyOne());
-
     setStep(steps.complete);
   }, [dispatch]);
 

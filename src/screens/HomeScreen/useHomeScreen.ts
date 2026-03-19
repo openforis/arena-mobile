@@ -7,6 +7,7 @@ import { UpdateStatus } from "model";
 import { SurveyService } from "service";
 import {
   RemoteConnectionSelectors,
+  SurveyActions,
   SurveySelectors,
   useAppDispatch,
 } from "state";
@@ -24,8 +25,22 @@ export const useHomeScreen = () => {
 
   const [surveyUpdateLoading, setSurveyUpdateLoading] = useState(false);
   const processedSurveyVersionsRef = useRef<Record<string, boolean>>({});
+  const remoteSingleSurveyCheckTriggeredRef = useRef(false);
 
   const surveySelected = !!survey;
+
+  useEffect(() => {
+    if (
+      remoteSingleSurveyCheckTriggeredRef.current ||
+      !networkAvailable ||
+      !user ||
+      surveySelected
+    ) {
+      return;
+    }
+    remoteSingleSurveyCheckTriggeredRef.current = true;
+    void dispatch(SurveyActions.fetchAndSetRemoteSurveyIfOnlyOne());
+  }, [dispatch, networkAvailable, surveySelected, user]);
 
   useEffect(() => {
     if (
