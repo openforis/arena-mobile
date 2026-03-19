@@ -50,6 +50,7 @@ jobs:
           npx expo prebuild --platform android
           cd android
           NODE_ENV=production ./gradlew assembleDebug \
+            -PforceBundle=true \
             --no-daemon \
             -Dhttp.keepAlive=false \
             -Dmaven.wagon.http.pool=false \
