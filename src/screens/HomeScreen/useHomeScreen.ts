@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Surveys } from "@openforis/arena-core";
 
-import { useIsNetworkConnected } from "hooks";
+import { useIsNetworkConnected, useNavigationIsFocused } from "hooks";
 import { UpdateStatus } from "model";
 import { SurveyService } from "service";
 import {
@@ -19,6 +19,7 @@ import {
 
 export const useHomeScreen = () => {
   const dispatch = useAppDispatch();
+  const isFocused = useNavigationIsFocused();
   const networkAvailable = useIsNetworkConnected();
   const survey = SurveySelectors.useCurrentSurvey();
   const user = RemoteConnectionSelectors.useLoggedInUser();
@@ -34,6 +35,7 @@ export const useHomeScreen = () => {
   useEffect(() => {
     if (
       remoteSingleSurveyCheckTriggeredRef.current ||
+      !isFocused ||
       !networkAvailable ||
       !user ||
       surveySelected
@@ -52,7 +54,7 @@ export const useHomeScreen = () => {
     };
 
     void fetchAndSetSingleSurvey();
-  }, [dispatch, networkAvailable, surveySelected, user]);
+  }, [dispatch, isFocused, networkAvailable, surveySelected, user]);
 
   useEffect(() => {
     if (
@@ -117,7 +119,8 @@ export const useHomeScreen = () => {
 
   return {
     surveySelected,
-    surveyLoadingDialogVisible: surveyUpdateLoading || singleSurveyFetchLoading,
+    surveyLoadingDialogVisible:
+      isFocused && (surveyUpdateLoading || singleSurveyFetchLoading),
     surveyLoadingDialogTitleKey: surveyUpdateLoading
       ? "surveys:updateSurvey"
       : "surveys:selectSurvey",
