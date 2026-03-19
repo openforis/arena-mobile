@@ -6,6 +6,7 @@ import { PreferencesService, SurveyService } from "service";
 import { MessageActions } from "state/message";
 
 import { ConfirmActions } from "../confirm";
+import { RemoteConnectionSelectors } from "../remoteConnection";
 import { SurveyActionTypes } from "./actionTypes";
 import { SurveySelectors } from "./selectors";
 
@@ -66,6 +67,49 @@ const fetchAndSetLocalSurveys = () => async (dispatch: any) => {
   const surveys = await SurveyService.fetchSurveySummariesLocal();
   dispatch({ type: SURVEYS_LOCAL_SET, surveys });
 };
+
+const fetchAndSetRemoteSurveyIfOnlyOne =
+  () => async (dispatch: any, getState: any) => {
+    const state = getState();
+    const loggedUser = RemoteConnectionSelectors.selectLoggedUser(state);
+    if (!loggedUser) {
+      return;
+    }
+
+    const currentSurveyId =
+      SurveySelectors.selectCurrentSurveyId(state) ||
+      (await PreferencesService.getCurrentSurveyId());
+    if (currentSurveyId) {
+      return;
+    }
+
+    const { surveys: remoteSurveys = [] } =
+      (await SurveyService.fetchSurveySummariesRemote()) as any;
+    const remoteSurveysVisibleInMobile = remoteSurveys.filter(
+      Surveys.isVisibleInMobile,
+    );
+    if (remoteSurveysVisibleInMobile.length !== 1) {
+      return;
+    }
+
+    const remoteSurvey = remoteSurveysVisibleInMobile[0];
+    const surveysLocal = await SurveyService.fetchSurveySummariesLocal();
+    const localSurveyWithSameUuid = surveysLocal.find(
+      (surveyLocal: any) => surveyLocal.uuid === remoteSurvey.uuid,
+    );
+
+    if (localSurveyWithSameUuid) {
+      await dispatch(
+        updateSurveyRemote({
+          surveyId: localSurveyWithSameUuid.id,
+          surveyRemoteId: remoteSurvey.id,
+          skipConfirmation: true,
+        }),
+      );
+    } else {
+      await dispatch(importSurveyRemote({ surveyId: remoteSurvey.id }));
+    }
+  };
 
 const _onSurveyInsertOrUpdate =
   ({ survey, navigation }: any) =>
@@ -148,6 +192,7 @@ export const SurveyActions = {
   setCurrentSurveyCycle,
   fetchAndSetCurrentSurvey,
   fetchAndSetLocalSurveys,
+  fetchAndSetRemoteSurveyIfOnlyOne,
   importSurveyRemote,
   updateSurveyRemote,
   deleteSurveys,
