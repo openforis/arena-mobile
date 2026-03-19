@@ -19,12 +19,18 @@ export const HomeScreen = () => {
   const navigation = useNavigation();
   const user = RemoteConnectionSelectors.useLoggedInUser();
 
-  const { surveySelected, surveyUpdateLoading } = useHomeScreen();
+  const {
+    surveySelected,
+    surveyLoadingDialogTitleKey,
+    surveyLoadingDialogVisible,
+  } = useHomeScreen();
 
   return (
     <ScreenView>
       <VView style={styles.container}>
-        {surveyUpdateLoading && <SurveyUpdateProgressDialog />}
+        {surveyLoadingDialogVisible && (
+          <SurveyUpdateProgressDialog titleKey={surveyLoadingDialogTitleKey} />
+        )}
 
         <AppLogo />
 

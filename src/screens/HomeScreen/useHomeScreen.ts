@@ -23,6 +23,8 @@ export const useHomeScreen = () => {
   const survey = SurveySelectors.useCurrentSurvey();
   const user = RemoteConnectionSelectors.useLoggedInUser();
 
+  const [singleSurveyFetchLoading, setSingleSurveyFetchLoading] =
+    useState(false);
   const [surveyUpdateLoading, setSurveyUpdateLoading] = useState(false);
   const processedSurveyVersionsRef = useRef<Record<string, boolean>>({});
   const remoteSingleSurveyCheckTriggeredRef = useRef(false);
@@ -39,7 +41,17 @@ export const useHomeScreen = () => {
       return;
     }
     remoteSingleSurveyCheckTriggeredRef.current = true;
-    void dispatch(SurveyActions.fetchAndSetRemoteSurveyIfOnlyOne());
+
+    const fetchAndSetSingleSurvey = async () => {
+      setSingleSurveyFetchLoading(true);
+      try {
+        await dispatch(SurveyActions.fetchAndSetRemoteSurveyIfOnlyOne());
+      } finally {
+        setSingleSurveyFetchLoading(false);
+      }
+    };
+
+    void fetchAndSetSingleSurvey();
   }, [dispatch, networkAvailable, surveySelected, user]);
 
   useEffect(() => {
@@ -105,6 +117,9 @@ export const useHomeScreen = () => {
 
   return {
     surveySelected,
-    surveyUpdateLoading,
+    surveyLoadingDialogVisible: surveyUpdateLoading || singleSurveyFetchLoading,
+    surveyLoadingDialogTitleKey: surveyUpdateLoading
+      ? "surveys:updateSurvey"
+      : "surveys:selectSurvey",
   };
 };

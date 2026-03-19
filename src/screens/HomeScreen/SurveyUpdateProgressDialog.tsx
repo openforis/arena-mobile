@@ -1,8 +1,6 @@
 import { StyleSheet } from "react-native";
-import { ActivityIndicator, Dialog, Portal } from "react-native-paper";
 
-import { Text, VView } from "components";
-import { useTranslation } from "localization";
+import { Dialog, Loader, Text, VView } from "components";
 
 const styles = StyleSheet.create({
   content: {
@@ -12,20 +10,19 @@ const styles = StyleSheet.create({
   },
 });
 
-export const SurveyUpdateProgressDialog = () => {
-  const { t } = useTranslation();
+type Props = {
+  titleKey?: string;
+};
 
+export const SurveyUpdateProgressDialog = ({
+  titleKey = "surveys:updateSurvey",
+}: Props) => {
   return (
-    <Portal>
-      <Dialog dismissable={false} visible>
-        <Dialog.Title>{t("surveys:updateSurvey")}</Dialog.Title>
-        <Dialog.Content>
-          <VView style={styles.content} transparent>
-            <ActivityIndicator animating size="large" />
-            <Text variant="bodyLarge">{t("app:pleaseWaitMessage")}</Text>
-          </VView>
-        </Dialog.Content>
-      </Dialog>
-    </Portal>
+    <Dialog dismissable={false} showActions={false} title={titleKey}>
+      <VView style={styles.content} transparent>
+        <Loader />
+        <Text textKey="app:pleaseWaitMessage" variant="bodyLarge" />
+      </VView>
+    </Dialog>
   );
 };
