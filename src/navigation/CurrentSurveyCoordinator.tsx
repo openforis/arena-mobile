@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 
-import { useIsNetworkConnected } from "hooks";
+import { useIsMountedRef, useIsNetworkConnected } from "hooks";
 import {
   RemoteConnectionSelectors,
   SurveyActions,
@@ -32,6 +32,7 @@ export const CurrentSurveyCoordinator = ({ children }: Props) => {
   const networkAvailable = useIsNetworkConnected();
   const survey = SurveySelectors.useCurrentSurvey();
   const user = RemoteConnectionSelectors.useLoggedInUser();
+  const isMountedRef = useIsMountedRef();
 
   const [singleSurveyFetchLoading, setSingleSurveyFetchLoading] =
     useState(false);
@@ -49,8 +50,6 @@ export const CurrentSurveyCoordinator = ({ children }: Props) => {
       return;
     }
 
-    let cancelled = false;
-
     const fetchAndSetSingleSurvey = async () => {
       singleSurveyFetchInProgressRef.current = true;
       setSingleSurveyFetchLoading(true);
@@ -59,18 +58,14 @@ export const CurrentSurveyCoordinator = ({ children }: Props) => {
         await dispatch(SurveyActions.fetchAndSetRemoteSurveyIfOnlyOne());
       } finally {
         singleSurveyFetchInProgressRef.current = false;
-        if (!cancelled) {
+        if (isMountedRef.current) {
           setSingleSurveyFetchLoading(false);
         }
       }
     };
 
     void fetchAndSetSingleSurvey();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [dispatch, networkAvailable, surveySelected, user]);
+  }, [dispatch, isMountedRef, networkAvailable, surveySelected, user]);
 
   return (
     <CurrentSurveyCoordinatorContext.Provider

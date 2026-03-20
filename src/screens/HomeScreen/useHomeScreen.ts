@@ -97,6 +97,6 @@ export const useHomeScreen = () => {
       isFocused && (surveyUpdateLoading || singleSurveyFetchLoading),
     surveyLoadingDialogTitleKey: surveyUpdateLoading
       ? "surveys:updateSurvey"
-      : "surveys:selectSurvey",
+      : "surveys:importSurvey",
   };
 };
