@@ -1,0 +1,9 @@
+appId: ${APP_ID}
+---
+- launchApp
+- waitForAnimationToEnd
+- takeScreenshot: MainScreen
+- extendedWaitUntil:
+    visible: "Arena Mobile"
+    timeout: 60000
+- assertVisible: "Not logged in"
