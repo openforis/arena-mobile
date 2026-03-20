@@ -49,8 +49,8 @@ jobs:
         run: |
           npx expo prebuild --platform android
           cd android
-          BUNDLE_IN_DEBUG=true NODE_ENV=production ./gradlew assembleDebug \
-            -PforceBundle=true \
+          NODE_ENV=production ./gradlew assembleDebug \
+            -PreactNative.bundleInDebug=true \
             --no-daemon \
             -Dhttp.keepAlive=false \
             -Dmaven.wagon.http.pool=false \
