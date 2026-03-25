@@ -76,7 +76,7 @@ export const SelectedSurveyContainer = () => {
   useEffect(() => {
     let cancelled = false;
 
-    void fetchStatus()
+    fetchStatus()
       .then((nextState) => {
         if (!cancelled && nextState) {
           setState(nextState);
