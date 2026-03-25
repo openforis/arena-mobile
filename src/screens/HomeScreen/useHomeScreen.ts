@@ -56,32 +56,41 @@ export const useHomeScreen = () => {
     const syncSurvey = async () => {
       setSurveyUpdateLoading(true);
 
-      const { updateStatus } = await determineSurveyUpdateStatus({
-        networkAvailable,
-        survey,
-        surveyName: Surveys.getName(survey),
-        user,
-      });
+      try {
+        const { updateStatus } = await determineSurveyUpdateStatus({
+          networkAvailable,
+          survey,
+          surveyName: Surveys.getName(survey),
+          user,
+        });
 
-      if (cancelled) {
-        return;
+        if (cancelled) {
+          return;
+        }
+
+        if (updateStatus !== UpdateStatus.notUpToDate) {
+          setSurveyUpdateLoading(false);
+          return;
+        }
+
+        await triggerSurveyUpdate({
+          dispatch,
+          survey,
+          skipConfirmation: true,
+          onComplete: () => {
+            if (!cancelled) {
+              setSurveyUpdateLoading(false);
+            }
+          },
+        });
+      } catch {
+        // Errors are intentionally swallowed here to avoid unhandled promise rejections
+        // and will still result in loading state being cleared in the finally block.
+      } finally {
+        if (!cancelled) {
+          setSurveyUpdateLoading(false);
+        }
       }
-
-      if (updateStatus !== UpdateStatus.notUpToDate) {
-        setSurveyUpdateLoading(false);
-        return;
-      }
-
-      await triggerSurveyUpdate({
-        dispatch,
-        survey,
-        skipConfirmation: true,
-        onComplete: () => {
-          if (!cancelled) {
-            setSurveyUpdateLoading(false);
-          }
-        },
-      });
     };
 
     void syncSurvey();
