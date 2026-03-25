@@ -36,4 +36,5 @@ export { UserLogoutOptions } from "./UserLogoutOptions";
 export { RecordNodes } from "./utils/RecordNodes";
 export { RecordSummaries } from "./utils/RecordSummaries";
 export { SurveyDefs } from "./utils/SurveyDefs";
+export { SurveyUtils } from "./utils/SurveyUtils";
 export { ValidationUtils } from "./utils/ValidationUtils";
