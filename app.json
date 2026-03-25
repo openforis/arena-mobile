@@ -21,14 +21,14 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "org.openforis.arena_mobile",
-      "versionCode": 79,
+      "versionCode": 80,
       "permissions": [
         "android.permission.ACCESS_MEDIA_LOCATION",
         "android.permission.RECORD_AUDIO"
       ]
     },
     "ios": {
-      "buildNumber": "79",
+      "buildNumber": "80",
       "bundleIdentifier": "org.openforis.arena-mobile",
       "config": {
         "usesNonExemptEncryption": false
