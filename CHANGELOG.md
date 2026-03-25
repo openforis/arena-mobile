@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Auto fetch and select survey when there is only one available;
+- Auto fetch, update and select survey when there is only one available;
 
 ## [2.3.11] - 2026-03-14
 
