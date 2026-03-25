@@ -1,11 +1,13 @@
 import { Keyboard } from "react-native";
 
 import {
+  ArenaRecord,
   Dates,
   NodeDefs,
   NodeDefType,
   Nodes,
   NodesMap,
+  NodeValues,
   Numbers,
   Objects,
   PointFactory,
@@ -41,6 +43,7 @@ import {
   importRecordsFromServer,
 } from "./actionsRecordsImport";
 import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
+import { RecordsUtils } from "screens/RecordsList/RecordsUtils";
 
 const {
   DATA_ENTRY_RESET,
@@ -434,6 +437,38 @@ const updateAttribute =
         attributeUuid: uuid,
         value,
       });
+
+    const nodeDefUuidsOfNodesWithValueThatBecameNotRelevant =
+      RecordsUtils.findNotRelevantNodeDefsWithValue({
+        record: recordUpdated,
+        nodes: nodesUpdated,
+      });
+    if (nodeDefUuidsOfNodesWithValueThatBecameNotRelevant.size > 0) {
+      const attributeNames = Array.from(
+        nodeDefUuidsOfNodesWithValueThatBecameNotRelevant,
+      )
+        .map((nodeDefUuid) =>
+          NodeDefs.getLabelOrName(
+            Surveys.getNodeDefByUuid({ survey, uuid: nodeDefUuid }),
+            lang,
+          ),
+        )
+        .map((name) => `- ${name}`) // add bullet point to each attribute name
+        .join("\n");
+      if (
+        !(await ConfirmUtils.confirm({
+          dispatch,
+          titleKey: "dataEntry:confirmUpdateAttributesBecameNotRelevant.title",
+          messageKey:
+            "dataEntry:confirmUpdateAttributesBecameNotRelevant.message",
+          messageParams: { attributeNames },
+
+          swipeToConfirm: true,
+        }))
+      ) {
+        return;
+      }
+    }
 
     removeNodesFlags(nodesUpdated);
 

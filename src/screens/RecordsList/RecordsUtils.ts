@@ -1,11 +1,16 @@
 import {
+  ArenaRecord,
   LanguageCode,
   NodeDefs,
+  Nodes,
+  NodesMap,
   NodeValueFormatter,
   Objects,
+  Records,
   Survey,
   Surveys,
 } from "@openforis/arena-core";
+
 import { SurveyDefs } from "model";
 
 const getValuesByKeyOrSummaryAttributeFormatted = ({
@@ -17,11 +22,12 @@ const getValuesByKeyOrSummaryAttributeFormatted = ({
 }: {
   survey: Survey;
   lang: LanguageCode;
-  recordSummary: any;
+  recordSummary: ArenaRecord;
   valuesWrapperProp: string;
   t: any;
 }) => {
-  const { cycle } = recordSummary;
+  const { cycle: recordCycle } = recordSummary;
+  const cycle = recordCycle!;
   const rootDef = Surveys.getNodeDefRoot({ survey });
   const nodeDefs =
     valuesWrapperProp === "keysObj"
@@ -35,7 +41,7 @@ const getValuesByKeyOrSummaryAttributeFormatted = ({
     (acc, nodeDef) => {
       const nodeDefName = NodeDefs.getName(nodeDef);
       const value = Objects.path([valuesWrapperProp, nodeDefName])(
-        recordSummary
+        recordSummary,
       );
       let valueFormatted = NodeValueFormatter.format({
         survey,
@@ -53,7 +59,7 @@ const getValuesByKeyOrSummaryAttributeFormatted = ({
       acc[nodeDefName] = valueFormatted;
       return acc;
     },
-    {} as Record<string, string>
+    {} as Record<string, string>,
   );
 };
 
@@ -85,7 +91,34 @@ const getValuesBySummaryAttributeFormatted = ({
     t,
   });
 
+const findNotRelevantNodeDefsWithValue = ({
+  record,
+  nodes,
+}: {
+  record: ArenaRecord;
+  nodes: NodesMap;
+}) => {
+  const result = new Set<string>();
+  for (const node of Object.values(nodes)) {
+    const nodeDefUuid = node.nodeDefUuid;
+    if (!result.has(nodeDefUuid)) {
+      const parentNode = Records.getParent(node)(record);
+      if (parentNode) {
+        if (
+          !Nodes.isChildApplicable(parentNode, nodeDefUuid) &&
+          !Nodes.isValueBlank(node) &&
+          !Nodes.isDefaultValueApplied(node)
+        ) {
+          result.add(nodeDefUuid);
+        }
+      }
+    }
+  }
+  return result;
+};
+
 export const RecordsUtils = {
   getValuesByKeyFormatted,
   getValuesBySummaryAttributeFormatted,
+  findNotRelevantNodeDefsWithValue,
 };
