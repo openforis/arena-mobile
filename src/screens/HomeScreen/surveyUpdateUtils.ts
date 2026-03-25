@@ -39,12 +39,14 @@ export const determineSurveyUpdateStatus = async ({
   if (!networkAvailable) {
     return { updateStatus: UpdateStatus.networkNotAvailable };
   }
-
+  const remoteSurveyId = survey.remoteId;
+  if (!remoteSurveyId) {
+    return { updateStatus: SurveyStatus.notInArenaServer };
+  }
   const surveyRemote = await SurveyService.fetchSurveySummaryRemote({
-    id: survey.remoteId,
+    id: remoteSurveyId,
     name: surveyName,
   });
-
   if (!surveyRemote) {
     return { updateStatus: SurveyStatus.notInArenaServer };
   }
