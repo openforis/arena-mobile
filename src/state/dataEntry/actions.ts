@@ -1,13 +1,11 @@
 import { Keyboard } from "react-native";
 
 import {
-  ArenaRecord,
   Dates,
   NodeDefs,
   NodeDefType,
   Nodes,
   NodesMap,
-  NodeValues,
   Numbers,
   Objects,
   PointFactory,
@@ -19,10 +17,10 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordOrigin, RecordLoadStatus, SurveyDefs, RecordNodes } from "model";
+import { RecordLoadStatus, RecordNodes, RecordOrigin, SurveyDefs } from "model";
 import { PreferencesService } from "service/preferencesService";
-import { RecordService } from "service/recordService";
 import { RecordFileService } from "service/recordFileService";
+import { RecordService } from "service/recordService";
 
 import { screenKeys } from "screens/screenKeys";
 
@@ -33,17 +31,17 @@ import { DeviceInfoActions, DeviceInfoSelectors } from "../deviceInfo";
 import { MessageActions } from "../message";
 import { SurveySelectors } from "../survey";
 
+import { RecordsUtils } from "screens/RecordsList/RecordsUtils";
 import { RemoteConnectionSelectors } from "../remoteConnection";
-import { DataEntryActionTypes } from "./actionTypes";
-import { DataEntrySelectors } from "./selectors";
 import { exportRecords, startCsvDataExportJob } from "./actionsDataExport";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
+import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
 import {
   importRecordsFromFile,
   importRecordsFromServer,
 } from "./actionsRecordsImport";
-import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
-import { RecordsUtils } from "screens/RecordsList/RecordsUtils";
+import { DataEntryActionTypes } from "./actionTypes";
+import { DataEntrySelectors } from "./selectors";
 
 const {
   DATA_ENTRY_RESET,
@@ -447,12 +445,13 @@ const updateAttribute =
       const attributeNames = Array.from(
         nodeDefUuidsOfNodesWithValueThatBecameNotRelevant,
       )
-        .map((nodeDefUuid) =>
-          NodeDefs.getLabelOrName(
-            Surveys.getNodeDefByUuid({ survey, uuid: nodeDefUuid }),
-            lang,
-          ),
-        )
+        .map((nodeDefUuid) => {
+          const nodeDef = Surveys.getNodeDefByUuid({
+            survey,
+            uuid: nodeDefUuid,
+          });
+          return NodeDefs.getLabelOrName(nodeDef, lang);
+        })
         .map((name) => `- ${name}`) // add bullet point to each attribute name
         .join("\n");
       if (
@@ -462,7 +461,6 @@ const updateAttribute =
           messageKey:
             "dataEntry:confirmUpdateAttributesBecameNotRelevant.message",
           messageParams: { attributeNames },
-
           swipeToConfirm: true,
         }))
       ) {
