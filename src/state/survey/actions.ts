@@ -102,6 +102,7 @@ const fetchAndSetRemoteSurveyIfOnlyOne =
       );
 
       if (localSurveyWithSameUuid) {
+        const { id: localSurveyId } = localSurveyWithSameUuid;
         // Local survey with the same UUID exists, check if it has updates on the server
         if (
           SurveyUtils.hasUpdates({
@@ -111,16 +112,20 @@ const fetchAndSetRemoteSurveyIfOnlyOne =
         ) {
           await dispatch(
             updateSurveyRemote({
-              surveyId: localSurveyWithSameUuid.id,
+              surveyId: localSurveyId,
               surveyRemoteId: remoteSurvey.id,
               skipConfirmation: true,
             }),
           );
         } else {
-          // No updates, just set the current survey
-          await dispatch(
-            _onSurveyInsertOrUpdate({ survey: localSurveyWithSameUuid }),
-          );
+          // No updates, fetch the full local survey and set it as current
+          const fullLocalSurvey =
+            await SurveyService.fetchSurveyById(localSurveyId);
+          if (fullLocalSurvey) {
+            await dispatch(
+              _onSurveyInsertOrUpdate({ survey: fullLocalSurvey }),
+            );
+          }
         }
       } else {
         // No local survey with the same UUID, import the remote survey
