@@ -17,7 +17,13 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordLoadStatus, RecordNodes, RecordOrigin, SurveyDefs } from "model";
+import {
+  RecordLoadStatus,
+  RecordNodes,
+  RecordOrigin,
+  RecordsUtils,
+  SurveyDefs,
+} from "model";
 import { PreferencesService } from "service/preferencesService";
 import { RecordFileService } from "service/recordFileService";
 import { RecordService } from "service/recordService";
@@ -31,7 +37,6 @@ import { DeviceInfoActions, DeviceInfoSelectors } from "../deviceInfo";
 import { MessageActions } from "../message";
 import { SurveySelectors } from "../survey";
 
-import { RecordsUtils } from "screens/RecordsList/RecordsUtils";
 import { RemoteConnectionSelectors } from "../remoteConnection";
 import { exportRecords, startCsvDataExportJob } from "./actionsDataExport";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
