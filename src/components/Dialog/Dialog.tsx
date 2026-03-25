@@ -26,10 +26,10 @@ export const Dialog = (props: DialogProps) => {
     actions = [],
     children,
     closeButtonTextKey = "common:close",
-    dismissable = true,
+    dismissable: dismissableProp = true,
     onClose,
     showActions = true,
-    showCloseButton = true,
+    showCloseButton: showCloseButtonProp = true,
     style,
     title,
     visible = true,
@@ -37,6 +37,8 @@ export const Dialog = (props: DialogProps) => {
 
   const { t } = useTranslation();
   const handleClose = onClose || (() => undefined);
+  const dismissable = dismissableProp && !!onClose;
+  const showCloseButton = showCloseButtonProp && !!onClose;
 
   return (
     <Portal>
