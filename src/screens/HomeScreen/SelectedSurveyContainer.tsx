@@ -22,6 +22,7 @@ import { SurveyUpdateStatusIcon } from "./SurveyUpdateStatusIcon";
 import { determineSurveyUpdateStatus } from "./surveyUpdateUtils";
 
 import styles from "./selectedSurveyContainerStyles";
+import { log } from "utils/Logger";
 
 type SelectedSurveyContainerState = {
   updateStatus: UpdateStatus | SurveyStatus;
@@ -51,23 +52,43 @@ export const SelectedSurveyContainer = () => {
   } as SelectedSurveyContainerState);
   const { updateStatus, errorKey } = state;
 
-  const determineStatus = useCallback(async () => {
+  const fetchStatus = useCallback(async () => {
     if (!survey) {
       return;
     }
-    setState(
-      await determineSurveyUpdateStatus({
-        networkAvailable,
-        survey,
-        surveyName,
-        user,
-      }),
-    );
+
+    return determineSurveyUpdateStatus({
+      networkAvailable,
+      survey,
+      surveyName,
+      user,
+    });
   }, [networkAvailable, survey, surveyName, user]);
 
+  const determineStatus = useCallback(async () => {
+    const nextState = await fetchStatus();
+
+    if (nextState) {
+      setState(nextState);
+    }
+  }, [fetchStatus]);
+
   useEffect(() => {
-    void Promise.resolve().then(determineStatus);
-  }, [determineStatus]);
+    let cancelled = false;
+
+    void fetchStatus()
+      .then((nextState) => {
+        if (!cancelled && nextState) {
+          setState(nextState);
+        }
+      })
+      .catch((error) => {
+        log.error("Failed to determine survey update status:", error);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [fetchStatus]);
 
   if (!survey) return null;
 
