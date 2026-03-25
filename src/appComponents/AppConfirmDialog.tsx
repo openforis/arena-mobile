@@ -7,6 +7,7 @@ import { useConfirmDialog } from "state/confirm/useConfirmDialog";
 import {
   Button,
   Checkbox,
+  Markdown,
   RadioButton,
   RadioButtonGroup,
   Text,
@@ -27,6 +28,7 @@ export const AppConfirmDialog = () => {
     confirmButtonEnabled,
     confirmButtonStyle,
     confirmButtonTextKey,
+    messageIsMarkdown,
     messageKey,
     messageParams,
     multipleChoiceOptions,
@@ -52,7 +54,11 @@ export const AppConfirmDialog = () => {
       <Dialog visible={isOpen} onDismiss={cancel}>
         <Dialog.Title>{t(titleKey)}</Dialog.Title>
         <Dialog.Content>
-          <Text textKey={messageKey} textParams={messageParams} />
+          {messageIsMarkdown ? (
+            <Markdown content={t(messageKey, messageParams)} />
+          ) : (
+            <Text textKey={messageKey} textParams={messageParams} />
+          )}
           {(multipleChoiceOptions?.length ?? 0) > 0 && (
             <VView transparent>
               {multipleChoiceOptions!.map((option: any) => (

@@ -458,6 +458,7 @@ const updateAttribute =
         !(await ConfirmUtils.confirm({
           dispatch,
           titleKey: "dataEntry:confirmUpdateAttributesBecameNotRelevant.title",
+          messageIsMarkdown: true,
           messageKey:
             "dataEntry:confirmUpdateAttributesBecameNotRelevant.message",
           messageParams: { attributeNames },
