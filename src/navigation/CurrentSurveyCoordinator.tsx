@@ -2,6 +2,7 @@ import React, {
   createContext,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -67,10 +68,13 @@ export const CurrentSurveyCoordinator = ({ children }: Props) => {
     void fetchAndSetSingleSurvey();
   }, [dispatch, isMountedRef, networkAvailable, surveySelected, user]);
 
+  const contextValue = useMemo(
+    () => ({ singleSurveyFetchLoading }),
+    [singleSurveyFetchLoading],
+  );
+
   return (
-    <CurrentSurveyCoordinatorContext.Provider
-      value={{ singleSurveyFetchLoading }}
-    >
+    <CurrentSurveyCoordinatorContext.Provider value={contextValue}>
       {children}
     </CurrentSurveyCoordinatorContext.Provider>
   );
