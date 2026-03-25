@@ -18,6 +18,7 @@ import { useTranslation } from "localization";
 import {
   RecordOrigin,
   RecordSyncStatus,
+  RecordsUtils,
   RecordUpdateConflictResolutionStrategy as ConflictResolutionStrategy,
   RecordLoadStatus,
 } from "model";
@@ -34,7 +35,6 @@ import { RemoteConnectionUtils } from "state/remoteConnection/remoteConnectionUt
 import { Files } from "utils";
 
 import { RecordsDataVisualizer } from "./RecordsDataVisualizer";
-import { RecordsUtils } from "../../model/utils/RecordsUtils";
 import { RecordsListOptions } from "./RecordsListOptions";
 
 import styles from "./styles";
