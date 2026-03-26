@@ -1,3 +1,4 @@
+import { registerRootComponent } from "expo";
 import { StatusBar } from "expo-status-bar";
 import ErrorBoundary from "react-native-error-boundary";
 import {
@@ -79,5 +80,7 @@ const App = () => {
     </Provider>
   );
 };
+
+registerRootComponent(App);
 
 export default App;
