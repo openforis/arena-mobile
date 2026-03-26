@@ -10,6 +10,9 @@ appId: ${APP_ID}
 - tapOn: "Server URL"
 - tapOn: "Custom"
 # workaround: clear the text field by double tapping and selecting the whole text
+- tapOn:
+    text: "https://www.openforis-arena.org"
+    waitToSettleTimeoutMs: 1000
 - doubleTapOn: "https://www.openforis-arena.org"
 - eraseText
 - inputText: ${ARENA_SERVER_URL}
