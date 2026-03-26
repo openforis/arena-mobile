@@ -17,10 +17,16 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordOrigin, RecordLoadStatus, SurveyDefs, RecordNodes } from "model";
+import {
+  RecordLoadStatus,
+  RecordNodes,
+  RecordOrigin,
+  RecordsUtils,
+  SurveyDefs,
+} from "model";
 import { PreferencesService } from "service/preferencesService";
-import { RecordService } from "service/recordService";
 import { RecordFileService } from "service/recordFileService";
+import { RecordService } from "service/recordService";
 
 import { screenKeys } from "screens/screenKeys";
 
@@ -32,15 +38,15 @@ import { MessageActions } from "../message";
 import { SurveySelectors } from "../survey";
 
 import { RemoteConnectionSelectors } from "../remoteConnection";
-import { DataEntryActionTypes } from "./actionTypes";
-import { DataEntrySelectors } from "./selectors";
 import { exportRecords, startCsvDataExportJob } from "./actionsDataExport";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
+import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
 import {
   importRecordsFromFile,
   importRecordsFromServer,
 } from "./actionsRecordsImport";
-import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
+import { DataEntryActionTypes } from "./actionTypes";
+import { DataEntrySelectors } from "./selectors";
 
 const {
   DATA_ENTRY_RESET,
@@ -434,6 +440,39 @@ const updateAttribute =
         attributeUuid: uuid,
         value,
       });
+
+    const nodeDefUuidsOfNodesWithValueThatBecameNotRelevant =
+      RecordsUtils.findNotRelevantNodeDefsWithValue({
+        record: recordUpdated,
+        nodes: nodesUpdated,
+      });
+    if (nodeDefUuidsOfNodesWithValueThatBecameNotRelevant.size > 0) {
+      const attributeNames = Array.from(
+        nodeDefUuidsOfNodesWithValueThatBecameNotRelevant,
+      )
+        .map((nodeDefUuid) => {
+          const nodeDef = Surveys.getNodeDefByUuid({
+            survey,
+            uuid: nodeDefUuid,
+          });
+          return NodeDefs.getLabelOrName(nodeDef, lang);
+        })
+        .map((name) => `- ${name}`) // add bullet point to each attribute name
+        .join("\n");
+      if (
+        !(await ConfirmUtils.confirm({
+          dispatch,
+          titleKey: "dataEntry:confirmUpdateAttributesBecameNotRelevant.title",
+          messageIsMarkdown: true,
+          messageKey:
+            "dataEntry:confirmUpdateAttributesBecameNotRelevant.message",
+          messageParams: { attributeNames },
+          swipeToConfirm: true,
+        }))
+      ) {
+        return;
+      }
+    }
 
     removeNodesFlags(nodesUpdated);
 

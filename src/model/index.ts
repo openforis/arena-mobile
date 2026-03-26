@@ -34,6 +34,7 @@ export { UpdateStatus } from "./UpdateStatus";
 export { UserLogoutOptions } from "./UserLogoutOptions";
 
 export { RecordNodes } from "./utils/RecordNodes";
+export { RecordsUtils } from "./utils/RecordsUtils";
 export { RecordSummaries } from "./utils/RecordSummaries";
 export { SurveyDefs } from "./utils/SurveyDefs";
 export { ValidationUtils } from "./utils/ValidationUtils";

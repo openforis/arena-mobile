@@ -23,6 +23,7 @@ import {
   Cycles,
   RecordLoadStatus,
   RecordOrigin,
+  RecordsUtils,
   ScreenViewMode,
   Sort,
   SurveyDefs,
@@ -36,7 +37,6 @@ import {
 import { ArrayUtils } from "utils";
 
 import { RecordSyncStatusIcon } from "./RecordSyncStatusIcon";
-import { RecordsUtils } from "./RecordsUtils";
 import { RecordListConstants } from "./recordListConstants";
 import { RecordErrorIcon } from "./RecordErrorIcon";
 
