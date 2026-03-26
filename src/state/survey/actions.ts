@@ -6,8 +6,11 @@ import { PreferencesService, SurveyService } from "service";
 import { MessageActions } from "state/message";
 
 import { ConfirmActions } from "../confirm";
+import { RemoteConnectionSelectors } from "../remoteConnection";
 import { SurveyActionTypes } from "./actionTypes";
 import { SurveySelectors } from "./selectors";
+import { log } from "utils/Logger";
+import { SurveyUtils } from "model/index";
 
 const {
   CURRENT_SURVEY_SET,
@@ -47,7 +50,7 @@ const fetchAndSetCurrentSurvey =
       if (!Surveys.isVisibleInMobile(survey)) {
         const status = i18n.t("surveys:status.notVisibleInMobile");
         dispatch(
-          MessageActions.setWarning("surveys:statusMessage", { status })
+          MessageActions.setWarning("surveys:statusMessage", { status }),
         );
       }
       const preferredLanguage =
@@ -57,7 +60,7 @@ const fetchAndSetCurrentSurvey =
       dispatch(
         MessageActions.setMessage({
           content: "surveys:errorFetchingLocalSurvey",
-        })
+        }),
       );
     }
   };
@@ -66,6 +69,72 @@ const fetchAndSetLocalSurveys = () => async (dispatch: any) => {
   const surveys = await SurveyService.fetchSurveySummariesLocal();
   dispatch({ type: SURVEYS_LOCAL_SET, surveys });
 };
+
+const fetchAndSetRemoteSurveyIfOnlyOne =
+  () => async (dispatch: any, getState: any) => {
+    try {
+      const state = getState();
+      const loggedUser = RemoteConnectionSelectors.selectLoggedUser(state);
+      if (!loggedUser) {
+        return;
+      }
+
+      const currentSurveyId =
+        SurveySelectors.selectCurrentSurveyId(state) ||
+        (await PreferencesService.getCurrentSurveyId());
+      if (currentSurveyId) {
+        return;
+      }
+
+      const { surveys: remoteSurveys = [] } =
+        (await SurveyService.fetchSurveySummariesRemote()) as any;
+      const remoteSurveysVisibleInMobile = remoteSurveys.filter(
+        Surveys.isVisibleInMobile,
+      );
+      if (remoteSurveysVisibleInMobile.length !== 1) {
+        return;
+      }
+
+      const remoteSurvey = remoteSurveysVisibleInMobile[0];
+      const surveysLocal = await SurveyService.fetchSurveySummariesLocal();
+      const localSurveyWithSameUuid = surveysLocal.find(
+        (surveyLocal: any) => surveyLocal.uuid === remoteSurvey.uuid,
+      );
+
+      if (localSurveyWithSameUuid) {
+        const { id: localSurveyId } = localSurveyWithSameUuid;
+        // Local survey with the same UUID exists, check if it has updates on the server
+        if (
+          SurveyUtils.hasUpdates({
+            localSurvey: localSurveyWithSameUuid,
+            remoteSurvey,
+          })
+        ) {
+          await dispatch(
+            updateSurveyRemote({
+              surveyId: localSurveyId,
+              surveyRemoteId: remoteSurvey.id,
+              skipConfirmation: true,
+            }),
+          );
+        } else {
+          // No updates, fetch the full local survey and set it as current
+          const fullLocalSurvey =
+            await SurveyService.fetchSurveyById(localSurveyId);
+          if (fullLocalSurvey) {
+            await dispatch(
+              _onSurveyInsertOrUpdate({ survey: fullLocalSurvey }),
+            );
+          }
+        }
+      } else {
+        // No local survey with the same UUID, import the remote survey
+        await dispatch(importSurveyRemote({ surveyId: remoteSurvey.id }));
+      }
+    } catch (error) {
+      log.error("Failed to fetch and set remote survey:", error);
+    }
+  };
 
 const _onSurveyInsertOrUpdate =
   ({ survey, navigation }: any) =>
@@ -91,8 +160,27 @@ const updateSurveyRemote =
     onConfirm = null,
     onCancel = null,
     onComplete = null,
+    skipConfirmation = false,
   }: any) =>
   async (dispatch: any) => {
+    const executeUpdate = async () => {
+      onConfirm?.();
+      try {
+        const survey = await SurveyService.updateSurveyRemote({
+          surveyId,
+          surveyRemoteId,
+        });
+        await dispatch(_onSurveyInsertOrUpdate({ survey, navigation }));
+      } finally {
+        onComplete?.();
+      }
+    };
+
+    if (skipConfirmation) {
+      await executeUpdate();
+      return;
+    }
+
     dispatch(
       ConfirmActions.show({
         confirmButtonTextKey: "surveys:updateSurvey",
@@ -100,16 +188,10 @@ const updateSurveyRemote =
         messageParams: { surveyName },
         onConfirm: async () => {
           dispatch(ConfirmActions.dismiss());
-          onConfirm?.();
-          const survey = await SurveyService.updateSurveyRemote({
-            surveyId,
-            surveyRemoteId,
-          });
-          dispatch(_onSurveyInsertOrUpdate({ survey, navigation }));
-          onComplete?.();
+          await executeUpdate();
         },
         onCancel,
-      })
+      }),
     );
   };
 
@@ -135,6 +217,7 @@ export const SurveyActions = {
   setCurrentSurveyCycle,
   fetchAndSetCurrentSurvey,
   fetchAndSetLocalSurveys,
+  fetchAndSetRemoteSurveyIfOnlyOne,
   importSurveyRemote,
   updateSurveyRemote,
   deleteSurveys,

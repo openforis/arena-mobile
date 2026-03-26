@@ -12,9 +12,13 @@ type DialogProps = {
   children?: React.ReactNode;
   actions?: DialogAction[];
   closeButtonTextKey?: string;
-  onClose: () => void;
+  dismissable?: boolean;
+  onClose?: () => void;
+  showActions?: boolean;
+  showCloseButton?: boolean;
   style?: any;
   title: string;
+  visible?: boolean;
 };
 
 export const Dialog = (props: DialogProps) => {
@@ -22,26 +26,40 @@ export const Dialog = (props: DialogProps) => {
     actions = [],
     children,
     closeButtonTextKey = "common:close",
+    dismissable: dismissableProp = true,
     onClose,
+    showActions = true,
+    showCloseButton: showCloseButtonProp = true,
     style,
     title,
+    visible = true,
   } = props;
 
   const { t } = useTranslation();
+  const handleClose = onClose || (() => undefined);
+  const dismissable = dismissableProp && !!onClose;
+  const showCloseButton = showCloseButtonProp && !!onClose;
+
   return (
     <Portal>
-      <RNPDialog onDismiss={onClose} style={style} visible>
+      <RNPDialog
+        dismissable={dismissable}
+        onDismiss={handleClose}
+        style={style}
+        visible={visible}
+      >
         <RNPDialog.Title>{t(title)}</RNPDialog.Title>
         <RNPDialog.Content>{children}</RNPDialog.Content>
-        <RNPDialog.Actions>
-          {actions.map(({
-            onPress,
-            textKey
-          }: any) => (
-            <Button key={textKey} onPress={onPress} textKey={textKey} />
-          ))}
-          <Button onPress={onClose} textKey={closeButtonTextKey} />
-        </RNPDialog.Actions>
+        {showActions && (
+          <RNPDialog.Actions>
+            {actions.map(({ onPress, textKey }: any) => (
+              <Button key={textKey} onPress={onPress} textKey={textKey} />
+            ))}
+            {showCloseButton && (
+              <Button onPress={handleClose} textKey={closeButtonTextKey} />
+            )}
+          </RNPDialog.Actions>
+        )}
       </RNPDialog>
     </Portal>
   );

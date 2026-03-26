@@ -5,7 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.3.10] - TO-BE-RELEASED
+## [2.4.0] - TO-BE-RELEASED
+
+### Added
+
+- Auto fetch, update and select survey when there is only one available;
+
+## [2.3.11] - 2026-03-14
+
+### Fixed
+
+- Enumerated entities: do not allow deleting items;
+
+## [2.3.10] - 2026-03-01
 
 ### Added
 
