@@ -176,6 +176,10 @@ Fetch the list of records from the server and try again?`,
     x: "X",
     y: "Y",
   },
+  geo: {
+    drawPolygon: "Draw polygon",
+    editPolygon: "Edit polygon",
+  },
   taxon: {
     search: "Search taxon",
     taxonNotSelected: "--- Taxon not selected ---",

@@ -26,10 +26,9 @@ const getChildrenDefs = ({ survey, nodeDef, cycle }: any) =>
     includeAnalysis: false,
   }).filter(
     (childDef) =>
-      childDef.type !== NodeDefType.geo && // geo type not supported
       !NodeDefs.isHidden(childDef) &&
       !NodeDefs.isHiddenInMobile(cycle)(childDef) &&
-      NodeDefs.isInCycle(cycle)(childDef)
+      NodeDefs.isInCycle(cycle)(childDef),
   );
 
 const getEntitySummaryDefs = ({
@@ -63,14 +62,14 @@ const getEntitySummaryDefs = ({
       (childDef) =>
         !NodeDefs.isKey(childDef) &&
         !NodeDefs.isMultiple(childDef) &&
-        !NodeDefs.isIncludedInMultipleEntitySummary(cycle)(childDef)
+        !NodeDefs.isIncludedInMultipleEntitySummary(cycle)(childDef),
     );
     if (entityDefChildrenNotKeys.length > 0) {
       summaryDefs.push(
         ...entityDefChildrenNotKeys.slice(
           0,
-          Math.min(entityDefChildrenNotKeys.length, otherDefsToAddCount)
-        )
+          Math.min(entityDefChildrenNotKeys.length, otherDefsToAddCount),
+        ),
       );
     }
   }
