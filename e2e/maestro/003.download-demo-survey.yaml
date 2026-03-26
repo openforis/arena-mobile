@@ -6,7 +6,8 @@ appId: ${APP_ID}
     visible: "Arena Mobile"
     timeout: 60000
 
-- tapOn: "Select a survey"
+- tapOn:
+    text: "Select a survey|Manage surveys"
 - tapOn: "Import from cloud"
 - tapOn: "arena_demo"
 - tapOn: "Import survey"
