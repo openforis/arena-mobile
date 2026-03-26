@@ -14,6 +14,7 @@ export const ConnectionToRemoteServerButton = (props: Props) => {
 
   return (
     <Button
+      labelVariant="bodyLarge"
       onPress={() =>
         navigation.navigate(screenKeys.settingsRemoteConnection as never)
       }

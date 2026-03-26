@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { useCallback, useEffect, useState } from "react";
 
-import { Dates, Surveys } from "@openforis/arena-core";
+import { Surveys } from "@openforis/arena-core";
 
 import {
   Button,
@@ -19,8 +19,10 @@ import { RemoteConnectionSelectors, SurveySelectors } from "state";
 
 import { screenKeys } from "../screenKeys";
 import { SurveyUpdateStatusIcon } from "./SurveyUpdateStatusIcon";
+import { determineSurveyUpdateStatus } from "./surveyUpdateUtils";
 
 import styles from "./selectedSurveyContainerStyles";
+import { log } from "utils/Logger";
 
 type SelectedSurveyContainerState = {
   updateStatus: UpdateStatus | SurveyStatus;
@@ -50,47 +52,43 @@ export const SelectedSurveyContainer = () => {
   } as SelectedSurveyContainerState);
   const { updateStatus, errorKey } = state;
 
-  const determineStatus = useCallback(async () => {
+  const fetchStatus = useCallback(async () => {
     if (!survey) {
       return;
     }
-    if (!user) {
-      setState({ updateStatus: UpdateStatus.error });
-      return;
-    }
-    if (!networkAvailable) {
-      setState({ updateStatus: UpdateStatus.networkNotAvailable });
-      return;
-    }
-    const surveyRemote = await SurveyService.fetchSurveySummaryRemote({
-      id: survey.remoteId,
-      name: surveyName,
+
+    return determineSurveyUpdateStatus({
+      networkAvailable,
+      survey,
+      surveyName,
+      user,
     });
-    if (!surveyRemote) {
-      setState({ updateStatus: SurveyStatus.notInArenaServer });
-    } else if (surveyRemote.errorKey) {
-      setState({
-        updateStatus: UpdateStatus.error,
-        errorKey: surveyRemote.errorKey,
-      });
-    } else if (!Surveys.isVisibleInMobile(surveyRemote)) {
-      setState({ updateStatus: SurveyStatus.notVisibleInMobile });
-    } else if (
-      Dates.isAfter(
-        surveyRemote?.datePublished ?? surveyRemote?.dateModified,
-        // @ts-ignore
-        survey.datePublished ?? survey.dateModified
-      )
-    ) {
-      setState({ updateStatus: UpdateStatus.notUpToDate });
-    } else {
-      setState({ updateStatus: UpdateStatus.upToDate });
-    }
   }, [networkAvailable, survey, surveyName, user]);
 
+  const determineStatus = useCallback(async () => {
+    const nextState = await fetchStatus();
+
+    if (nextState) {
+      setState(nextState);
+    }
+  }, [fetchStatus]);
+
   useEffect(() => {
-    determineStatus();
-  }, [determineStatus]);
+    let cancelled = false;
+
+    fetchStatus()
+      .then((nextState) => {
+        if (!cancelled && nextState) {
+          setState(nextState);
+        }
+      })
+      .catch((error) => {
+        log.error("Failed to determine survey update status:", error);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [fetchStatus]);
 
   if (!survey) return null;
 
@@ -118,6 +116,7 @@ export const SelectedSurveyContainer = () => {
           <Link labelKey="surveys:fieldManual" url={fieldManualUrl} />
         )}
         <Button
+          labelVariant="bodyLarge"
           style={styles.goToDataEntryButton}
           textKey="dataEntry:goToDataEntry"
           onPress={() => navigation.navigate(screenKeys.recordsList as never)}

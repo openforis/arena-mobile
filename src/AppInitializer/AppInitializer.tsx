@@ -122,7 +122,7 @@ export const AppInitializer = (props: Props) => {
       dispatch(
         SurveyActions.fetchAndSetCurrentSurvey({
           surveyId: currentSurveyId,
-        }) as any
+        }),
       );
     }
     setStep(steps.checkingLoggedIn);
