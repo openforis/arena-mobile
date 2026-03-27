@@ -112,9 +112,9 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
           disabled={!editable}
         />
       </MapView>
-      {editable && (
+      {/* {editable && (
         <Text style={styles.helperText}>Tap on map to add polygon points</Text>
-      )}
+      )} */}
       <HView style={styles.toolbar}>
         <IconButton
           icon="crosshairs-gps"

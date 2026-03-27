@@ -9,7 +9,7 @@ import * as Location from "expo-location";
 import MapView, { LatLng, MapPressEvent } from "react-native-maps";
 
 import { DataEntryActions, useAppDispatch, useConfirm } from "state";
-import { Permissions } from "utils";
+import { GeoUtils, Permissions } from "utils";
 
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
@@ -41,40 +41,13 @@ const nodeValueToPolygon = (nodeValue: any): MapPolygonExtendedProps | null => {
   const [strokeColor, fillColor] = getRandomPolygonColors();
   return {
     key: GEO_POLYGON_KEY,
-    coordinates: coordinates.map(([lon, lat]) => ({
-      latitude: lat,
-      longitude: lon,
+    coordinates: coordinates.map(([longitude, latitude]) => ({
+      latitude,
+      longitude,
     })),
     strokeWidth: 2,
     strokeColor,
     fillColor,
-  };
-};
-
-const computeRegionFromPolygon = (
-  polygon: MapPolygonExtendedProps,
-): {
-  latitude: number;
-  longitude: number;
-  latitudeDelta: number;
-  longitudeDelta: number;
-} => {
-  const coords = polygon.coordinates;
-  const lats = coords.map((c) => c.latitude);
-  const lngs = coords.map((c) => c.longitude);
-  const midLat = (Math.min(...lats) + Math.max(...lats)) / 2;
-  const midLng = (Math.min(...lngs) + Math.max(...lngs)) / 2;
-  return {
-    latitude: midLat,
-    longitude: midLng,
-    latitudeDelta: Math.max(
-      (Math.max(...lats) - Math.min(...lats)) * 1.5,
-      0.01,
-    ),
-    longitudeDelta: Math.max(
-      (Math.max(...lngs) - Math.min(...lngs)) * 1.5,
-      0.01,
-    ),
   };
 };
 
@@ -119,9 +92,9 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
   const initialRegion = useMemo(() => {
     const polygon = nodeValueToPolygon(nodeValue);
     if (polygon && polygon.coordinates.length >= 3) {
-      return computeRegionFromPolygon(polygon);
+      return GeoUtils.computeRegionFromCoordinates(polygon.coordinates);
     }
-    return { latitude: 0, longitude: 0, latitudeDelta: 60, longitudeDelta: 60 };
+    return GeoUtils.defaultMapRegion;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // intentionally only on mount
 
@@ -168,10 +141,15 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
 
   const onStartDrawing = useCallback(() => {
     setDraftCoordinates([]);
-    setPolygons([]);
     setEditable(true);
+    if (polygons.length > 0) {
+      polygonEditorRef.current?.selectPolygonByIndex(0);
+      return;
+    }
+
+    setPolygons([]);
     polygonEditorRef.current?.startPolygon();
-  }, []);
+  }, [polygons.length]);
 
   const onCancelDrawing = useCallback(() => {
     setDraftCoordinates([]);
@@ -210,15 +188,18 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     });
   }, []);
 
-  const onMapPress = useCallback((event: MapPressEvent) => {
-    if (!editable) return;
-    if (polygons.length === 0) {
-      setDraftCoordinates((prev) =>
-        prev.length < 3 ? [...prev, event.nativeEvent.coordinate] : prev,
-      );
-    }
-    polygonEditorRef.current?.setCoordinate(event.nativeEvent.coordinate);
-  }, [editable, polygons.length]);
+  const onMapPress = useCallback(
+    (event: MapPressEvent) => {
+      if (!editable) return;
+      if (polygons.length === 0) {
+        setDraftCoordinates((prev) =>
+          prev.length < 3 ? [...prev, event.nativeEvent.coordinate] : prev,
+        );
+      }
+      polygonEditorRef.current?.setCoordinate(event.nativeEvent.coordinate);
+    },
+    [editable, polygons.length],
+  );
 
   return {
     draftCoordinates,
