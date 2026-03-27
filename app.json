@@ -87,13 +87,7 @@
       "expo-secure-store",
       "expo-sqlite",
       "expo-web-browser",
-      "@react-native-community/datetimepicker",
-      [
-        "react-native-maps",
-        {
-          "googleMapsApiKey": ""
-        }
-      ]
+      "@react-native-community/datetimepicker"
     ]
   }
 }

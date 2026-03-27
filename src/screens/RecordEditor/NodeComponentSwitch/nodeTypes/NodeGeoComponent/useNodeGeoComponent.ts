@@ -3,18 +3,36 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   MapPolygonExtendedProps,
   PolygonEditorRef,
-  getPolygonFromCoordinates,
   getRandomPolygonColors,
 } from "@siposdani87/expo-maps-polygon-editor";
 import * as Location from "expo-location";
-import MapView from "react-native-maps";
+import MapView, { LatLng, MapPressEvent } from "react-native-maps";
 
 import { DataEntryActions, useAppDispatch, useConfirm } from "state";
+import { Permissions } from "utils";
 
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 const GEO_POLYGON_KEY = "geo_polygon_0";
+
+const toGeoJsonPolygon = (coordinates: LatLng[]) => {
+  if (coordinates.length < 3) return null;
+
+  const linearRing = coordinates.map((c) => [c.longitude, c.latitude]);
+  const firstCoordinate = coordinates[0];
+  if (!firstCoordinate) return null;
+  linearRing.push([firstCoordinate.longitude, firstCoordinate.latitude]);
+
+  return {
+    type: "Feature",
+    properties: {},
+    geometry: {
+      type: "Polygon",
+      coordinates: [linearRing],
+    },
+  };
+};
 
 const nodeValueToPolygon = (nodeValue: any): MapPolygonExtendedProps | null => {
   const coordinates: [number, number][] | undefined =
@@ -66,10 +84,27 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
 
   const { value: nodeValue } = useNodeComponentLocalState({ nodeUuid });
 
+  const nodeValuePolygons = useMemo(() => {
+    const polygon = nodeValueToPolygon(nodeValue);
+    return polygon ? [polygon] : [];
+  }, [nodeValue]);
+
+  const newPolygon = useMemo<MapPolygonExtendedProps>(() => {
+    const [strokeColor, fillColor] = getRandomPolygonColors();
+    return {
+      key: GEO_POLYGON_KEY,
+      coordinates: [],
+      strokeWidth: 2,
+      strokeColor,
+      fillColor,
+    };
+  }, []);
+
   const polygonEditorRef = useRef<PolygonEditorRef>(null);
   const mapRef = useRef<MapView>(null);
 
   const [editable, setEditable] = useState(false);
+  const [draftCoordinates, setDraftCoordinates] = useState<LatLng[]>([]);
 
   const [polygons, setPolygons] = useState<MapPolygonExtendedProps[]>(() => {
     const polygon = nodeValueToPolygon(nodeValue);
@@ -78,9 +113,8 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
 
   useEffect(() => {
     if (editable) return;
-    const polygon = nodeValueToPolygon(nodeValue);
-    setPolygons(polygon ? [polygon] : []);
-  }, [editable, nodeValue]);
+    setPolygons(nodeValuePolygons);
+  }, [editable, nodeValuePolygons]);
 
   const initialRegion = useMemo(() => {
     const polygon = nodeValueToPolygon(nodeValue);
@@ -94,9 +128,7 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
   const savePolygon = useCallback(
     (polygon: MapPolygonExtendedProps | null) => {
       if (!nodeUuid) return;
-      const geoJson = polygon
-        ? getPolygonFromCoordinates(polygon.coordinates)
-        : null;
+      const geoJson = polygon ? toGeoJsonPolygon(polygon.coordinates) : null;
       dispatch(
         DataEntryActions.updateAttribute({ uuid: nodeUuid, value: geoJson }),
       );
@@ -107,6 +139,7 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
   const onPolygonCreate = useCallback(
     (polygon: MapPolygonExtendedProps) => {
       setPolygons([polygon]);
+      setDraftCoordinates([]);
       setEditable(false);
       savePolygon(polygon);
     },
@@ -134,17 +167,18 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
   );
 
   const onStartDrawing = useCallback(() => {
+    setDraftCoordinates([]);
     setPolygons([]);
     setEditable(true);
     polygonEditorRef.current?.startPolygon();
   }, []);
 
   const onCancelDrawing = useCallback(() => {
-    const polygon = nodeValueToPolygon(nodeValue);
-    setPolygons(polygon ? [polygon] : []);
+    setDraftCoordinates([]);
+    setPolygons(nodeValuePolygons);
     setEditable(false);
     polygonEditorRef.current?.resetAll();
-  }, [nodeValue]);
+  }, [nodeValuePolygons]);
 
   const onClearPress = useCallback(async () => {
     if (
@@ -152,6 +186,7 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
         messageKey: "dataEntry:confirmDeleteValue.message",
       })
     ) {
+      setDraftCoordinates([]);
       setPolygons([]);
       setEditable(false);
       polygonEditorRef.current?.resetAll();
@@ -164,8 +199,8 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
   }, [confirm, dispatch, nodeUuid]);
 
   const onCenterOnLocation = useCallback(async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") return;
+    if (!(await Permissions.requestLocationForegroundPermission())) return;
+
     const location = await Location.getCurrentPositionAsync({});
     mapRef.current?.animateToRegion({
       latitude: location.coords.latitude,
@@ -175,10 +210,23 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     });
   }, []);
 
+  const onMapPress = useCallback((event: MapPressEvent) => {
+    if (!editable) return;
+    if (polygons.length === 0) {
+      setDraftCoordinates((prev) =>
+        prev.length < 3 ? [...prev, event.nativeEvent.coordinate] : prev,
+      );
+    }
+    polygonEditorRef.current?.setCoordinate(event.nativeEvent.coordinate);
+  }, [editable, polygons.length]);
+
   return {
+    draftCoordinates,
     editable,
     initialRegion,
     mapRef,
+    newPolygon,
+    onMapPress,
     polygonEditorRef,
     polygons,
     onCancelDrawing,

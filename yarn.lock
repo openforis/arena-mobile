@@ -4234,7 +4234,7 @@ __metadata:
     react-native-keyboard-controller: "npm:1.18.5"
     react-native-keychain: "npm:^10.0.0"
     react-native-logs: "npm:^5.6.0"
-    react-native-maps: "npm:^1.27.2"
+    react-native-maps: "npm:1.20.1"
     react-native-markdown-display: "npm:^7.0.2"
     react-native-modal-datetime-picker: "npm:^18.0.0"
     react-native-open-maps: "npm:^0.4.3"
@@ -10777,19 +10777,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-maps@npm:^1.27.2":
-  version: 1.27.2
-  resolution: "react-native-maps@npm:1.27.2"
+"react-native-maps@npm:1.20.1":
+  version: 1.20.1
+  resolution: "react-native-maps@npm:1.20.1"
   dependencies:
     "@types/geojson": "npm:^7946.0.13"
   peerDependencies:
-    react: ">= 18.3.1"
-    react-native: ">= 0.76.0"
+    react: ">= 17.0.1"
+    react-native: ">= 0.64.3"
     react-native-web: ">= 0.11"
   peerDependenciesMeta:
     react-native-web:
       optional: true
-  checksum: 10c0/cde71f62c5cc1dee7f1a158d354ddb0a3295b1be589e98991510cbd4586b8eaa1ea6cfe68f6fbb25a87a4c9bb6be4a5aa93b410053f120bc34adfb526a4ca671
+  checksum: 10c0/59c8d5600feb907df179c675b7185ef3bf205bdc85391c7ef530bb17d56d44d03ffd9ab3ae08dcc00cfabe9b14e37041327c7446114104b141efb2c8d4c3e797
   languageName: node
   linkType: hard
 

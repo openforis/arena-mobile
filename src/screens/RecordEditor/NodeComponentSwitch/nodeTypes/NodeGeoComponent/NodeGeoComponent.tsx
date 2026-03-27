@@ -1,10 +1,14 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View as RNView } from "react-native";
 
 import { PolygonEditor } from "@siposdani87/expo-maps-polygon-editor";
-import MapView from "react-native-maps";
+import MapView, {
+  Marker,
+  Polygon as MapPolygon,
+  Polyline,
+} from "react-native-maps";
 
-import { Button, HView, IconButton, VView } from "components";
+import { Button, HView, IconButton, Text, VView } from "components";
 
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 import { useNodeGeoComponent } from "./useNodeGeoComponent";
@@ -18,6 +22,18 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: 250,
   },
+  helperText: {
+    textAlign: "center",
+    paddingHorizontal: 12,
+    paddingTop: 8,
+  },
+  draftPoint: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    borderWidth: 2,
+    backgroundColor: "#ffffff",
+  },
   toolbar: {
     alignItems: "center",
     justifyContent: "space-between",
@@ -28,9 +44,12 @@ const styles = StyleSheet.create({
 
 export const NodeGeoComponent = (props: NodeComponentProps) => {
   const {
+    draftCoordinates,
     editable,
     initialRegion,
     mapRef,
+    newPolygon,
+    onMapPress,
     polygonEditorRef,
     polygons,
     onCancelDrawing,
@@ -44,9 +63,48 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
 
   return (
     <VView style={styles.container}>
-      <MapView ref={mapRef} style={styles.map} initialRegion={initialRegion}>
+      <MapView
+        ref={mapRef}
+        style={styles.map}
+        initialRegion={initialRegion}
+        onPress={onMapPress}
+      >
+        {editable && polygons.length === 0 && draftCoordinates.length > 0 && (
+          <>
+            {draftCoordinates.length >= 3 ? (
+              <MapPolygon
+                coordinates={draftCoordinates}
+                strokeColor={newPolygon.strokeColor}
+                strokeWidth={newPolygon.strokeWidth}
+                fillColor={newPolygon.fillColor}
+              />
+            ) : (
+              <Polyline
+                coordinates={draftCoordinates}
+                strokeColor={newPolygon.strokeColor}
+                strokeWidth={newPolygon.strokeWidth}
+              />
+            )}
+            {draftCoordinates.map((coordinate, index) => (
+              <Marker
+                key={`draft-point-${index}`}
+                coordinate={coordinate}
+                anchor={{ x: 0.5, y: 0.5 }}
+                tracksViewChanges={false}
+              >
+                <RNView
+                  style={[
+                    styles.draftPoint,
+                    { borderColor: newPolygon.strokeColor },
+                  ]}
+                />
+              </Marker>
+            ))}
+          </>
+        )}
         <PolygonEditor
           ref={polygonEditorRef}
+          newPolygon={newPolygon}
           polygons={polygons}
           onPolygonCreate={onPolygonCreate}
           onPolygonChange={onPolygonChange}
@@ -54,6 +112,9 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
           disabled={!editable}
         />
       </MapView>
+      {editable && (
+        <Text style={styles.helperText}>Tap on map to add polygon points</Text>
+      )}
       <HView style={styles.toolbar}>
         <IconButton
           icon="crosshairs-gps"
