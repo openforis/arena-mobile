@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { View as RNView } from "react-native";
 
 import { PolygonEditor } from "@siposdani87/expo-maps-polygon-editor";
@@ -9,6 +9,7 @@ import {
   HView,
   IconButton,
   MapViewWithInitialFit,
+  Modal,
   Text,
   VView,
 } from "components";
@@ -42,92 +43,128 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
     [draftCoordinates, polygons],
   );
 
-  return (
-    <VView style={styles.container}>
-      <MapViewWithInitialFit
-        ref={mapRef}
-        style={styles.map}
-        initialRegion={initialRegion}
-        onPress={onMapPress}
-        fitToCoordinatesOnReady={visibleCoordinates}
-        fitOnlyOnce={true}
-      >
-        {editable && polygons.length === 0 && draftCoordinates.length > 0 && (
-          <>
-            {draftCoordinates.length >= 3 ? (
-              <MapPolygon
-                coordinates={draftCoordinates}
-                strokeColor={newPolygon.strokeColor}
-                strokeWidth={newPolygon.strokeWidth}
-                fillColor={newPolygon.fillColor}
+  const isEditingExistingPolygon = editable && polygons.length > 0;
+
+  useEffect(() => {
+    if (!isEditingExistingPolygon) return;
+
+    // The editor remounts inside the modal; reselect the polygon to enable
+    // vertex handles for drag editing.
+    const timeout = setTimeout(() => {
+      polygonEditorRef.current?.selectPolygonByIndex(0);
+    }, 0);
+
+    return () => clearTimeout(timeout);
+  }, [isEditingExistingPolygon, polygonEditorRef]);
+
+  const map = (
+    <MapViewWithInitialFit
+      ref={mapRef}
+      style={styles.map}
+      initialRegion={initialRegion}
+      onPress={onMapPress}
+      fitToCoordinatesOnReady={visibleCoordinates}
+      fitOnlyOnce={true}
+    >
+      {editable && polygons.length === 0 && draftCoordinates.length > 0 && (
+        <>
+          {draftCoordinates.length >= 3 ? (
+            <MapPolygon
+              coordinates={draftCoordinates}
+              strokeColor={newPolygon.strokeColor}
+              strokeWidth={newPolygon.strokeWidth}
+              fillColor={newPolygon.fillColor}
+            />
+          ) : (
+            <Polyline
+              coordinates={draftCoordinates}
+              strokeColor={newPolygon.strokeColor}
+              strokeWidth={newPolygon.strokeWidth}
+            />
+          )}
+          {draftCoordinates.map((coordinate, index) => (
+            <Marker
+              key={`draft-point-${index}`}
+              coordinate={coordinate}
+              anchor={{ x: 0.5, y: 0.5 }}
+              tracksViewChanges={false}
+            >
+              <RNView
+                style={[
+                  styles.draftPoint,
+                  { borderColor: newPolygon.strokeColor },
+                ]}
               />
-            ) : (
-              <Polyline
-                coordinates={draftCoordinates}
-                strokeColor={newPolygon.strokeColor}
-                strokeWidth={newPolygon.strokeWidth}
-              />
-            )}
-            {draftCoordinates.map((coordinate, index) => (
-              <Marker
-                key={`draft-point-${index}`}
-                coordinate={coordinate}
-                anchor={{ x: 0.5, y: 0.5 }}
-                tracksViewChanges={false}
-              >
-                <RNView
-                  style={[
-                    styles.draftPoint,
-                    { borderColor: newPolygon.strokeColor },
-                  ]}
-                />
-              </Marker>
-            ))}
-          </>
-        )}
-        <PolygonEditor
-          ref={polygonEditorRef}
-          newPolygon={newPolygon}
-          polygons={polygons}
-          onPolygonCreate={onPolygonCreate}
-          onPolygonChange={onPolygonChange}
-          onPolygonRemove={onPolygonRemove}
-          disabled={!editable}
-        />
-      </MapViewWithInitialFit>
-      {editable && (
-        <Text
-          style={styles.helperText}
+            </Marker>
+          ))}
+        </>
+      )}
+      <PolygonEditor
+        ref={polygonEditorRef}
+        newPolygon={newPolygon}
+        polygons={polygons}
+        onPolygonCreate={onPolygonCreate}
+        onPolygonChange={onPolygonChange}
+        onPolygonRemove={onPolygonRemove}
+        disabled={!editable}
+      />
+    </MapViewWithInitialFit>
+  );
+
+  const helperText = editable && (
+    <Text
+      style={styles.helperText}
+      textKey={
+        polygons.length > 0
+          ? "dataEntry:geo.editPolygonInstructions"
+          : "dataEntry:geo.tapToAddPoints"
+      }
+    />
+  );
+
+  const toolbar = (
+    <HView style={styles.toolbar}>
+      <IconButton
+        icon="crosshairs-gps"
+        onPress={onCenterOnLocation}
+        size={24}
+      />
+      {editable ? (
+        <Button textKey="common:cancel" onPress={onCancelDrawing} />
+      ) : (
+        <Button
+          icon={polygons.length > 0 ? "pencil" : "vector-polygon"}
           textKey={
             polygons.length > 0
-              ? "dataEntry:geo.editPolygonInstructions"
-              : "dataEntry:geo.tapToAddPoints"
+              ? "dataEntry:geo.editPolygon"
+              : "dataEntry:geo.drawPolygon"
           }
+          onPress={onStartDrawing}
         />
       )}
-      <HView style={styles.toolbar}>
-        <IconButton
-          icon="crosshairs-gps"
-          onPress={onCenterOnLocation}
-          size={24}
-        />
-        {editable ? (
-          <Button textKey="common:cancel" onPress={onCancelDrawing} />
-        ) : (
-          <Button
-            icon={polygons.length > 0 ? "pencil" : "vector-polygon"}
-            textKey={
-              polygons.length > 0
-                ? "dataEntry:geo.editPolygon"
-                : "dataEntry:geo.drawPolygon"
-            }
-            onPress={onStartDrawing}
-          />
-        )}
-        {polygons.length > 0 && !editable && (
-          <IconButton icon="trash-can-outline" onPress={onClearPress} />
-        )}
-      </HView>
+      {polygons.length > 0 && !editable && (
+        <IconButton icon="trash-can-outline" onPress={onClearPress} />
+      )}
+    </HView>
+  );
+
+  return (
+    <VView style={styles.container}>
+      {isEditingExistingPolygon ? (
+        <Modal onDismiss={onCancelDrawing} titleKey="dataEntry:geo.editPolygon">
+          <VView style={styles.modalContent}>
+            {map}
+            {helperText}
+            {toolbar}
+          </VView>
+        </Modal>
+      ) : (
+        <>
+          {map}
+          {helperText}
+          {toolbar}
+        </>
+      )}
     </VView>
   );
 };

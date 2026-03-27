@@ -27,4 +27,7 @@ export default StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
+  modalContent: {
+    flex: 1,
+  },
 });
