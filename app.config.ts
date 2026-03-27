@@ -1,9 +1,6 @@
-// Dynamic Expo config extending app.json.
-// Allows reading environment variables (e.g. GOOGLE_MAPS_API_KEY) at build time.
-// See: https://docs.expo.dev/workflow/configuration/#dynamic-configuration
+import { ExpoConfig, ConfigContext } from "expo/config";
 
-/** @type {import("@expo/config").ExpoConfig} */
-module.exports = ({ config }) => {
+export default ({ config }: ConfigContext): ExpoConfig => {
   const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY ?? "";
 
   return {
@@ -18,5 +15,5 @@ module.exports = ({ config }) => {
         },
       ],
     ],
-  };
+  } as ExpoConfig;
 };
