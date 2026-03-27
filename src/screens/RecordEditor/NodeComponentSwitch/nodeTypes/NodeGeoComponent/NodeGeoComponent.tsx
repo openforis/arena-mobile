@@ -1,46 +1,21 @@
-import React from "react";
-import { StyleSheet, View as RNView } from "react-native";
+import React, { useMemo } from "react";
+import { View as RNView } from "react-native";
 
 import { PolygonEditor } from "@siposdani87/expo-maps-polygon-editor";
-import MapView, {
-  Marker,
-  Polygon as MapPolygon,
-  Polyline,
-} from "react-native-maps";
+import { Marker, Polygon as MapPolygon, Polyline } from "react-native-maps";
 
-import { Button, HView, IconButton, Text, VView } from "components";
+import {
+  Button,
+  HView,
+  IconButton,
+  MapViewWithInitialFit,
+  Text,
+  VView,
+} from "components";
 
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 import { useNodeGeoComponent } from "./useNodeGeoComponent";
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    minHeight: 300,
-  },
-  map: {
-    flex: 1,
-    minHeight: 250,
-  },
-  helperText: {
-    textAlign: "center",
-    paddingHorizontal: 12,
-    paddingTop: 8,
-  },
-  draftPoint: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    borderWidth: 2,
-    backgroundColor: "#ffffff",
-  },
-  toolbar: {
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-});
+import styles from "./styles";
 
 export const NodeGeoComponent = (props: NodeComponentProps) => {
   const {
@@ -61,13 +36,21 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
     onStartDrawing,
   } = useNodeGeoComponent(props);
 
+  const visibleCoordinates = useMemo(
+    () =>
+      polygons.length > 0 ? (polygons[0]?.coordinates ?? []) : draftCoordinates,
+    [draftCoordinates, polygons],
+  );
+
   return (
     <VView style={styles.container}>
-      <MapView
+      <MapViewWithInitialFit
         ref={mapRef}
         style={styles.map}
         initialRegion={initialRegion}
         onPress={onMapPress}
+        fitToCoordinatesOnReady={visibleCoordinates}
+        fitOnlyOnce={true}
       >
         {editable && polygons.length === 0 && draftCoordinates.length > 0 && (
           <>
@@ -111,10 +94,17 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
           onPolygonRemove={onPolygonRemove}
           disabled={!editable}
         />
-      </MapView>
-      {/* {editable && (
-        <Text style={styles.helperText}>Tap on map to add polygon points</Text>
-      )} */}
+      </MapViewWithInitialFit>
+      {editable && (
+        <Text
+          style={styles.helperText}
+          textKey={
+            polygons.length > 0
+              ? "dataEntry:geo.editPolygonInstructions"
+              : "dataEntry:geo.tapToAddPoints"
+          }
+        />
+      )}
       <HView style={styles.toolbar}>
         <IconButton
           icon="crosshairs-gps"

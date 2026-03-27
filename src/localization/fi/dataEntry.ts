@@ -138,6 +138,13 @@ export default {
     x: "X",
     y: "Y",
   },
+  geo: {
+    drawPolygon: "Piirrä monikulmio",
+    editPolygon: "Muokkaa monikulmiota",
+    editPolygonInstructions: `Siirrä kärkeä vetämällä.
+Lisää uusi kärki vetämällä läpinäkyvää pistettä.`,
+    tapToAddPoints: "Napauta karttaa lisätäksesi pisteitä",
+  },
   taxon: {
     search: "Hae lajia",
     taxonNotSelected: "--- Lajia ei ole valittu ---",

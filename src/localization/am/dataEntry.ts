@@ -126,6 +126,13 @@ export default {
     x: "X",
     y: "Y",
   },
+  geo: {
+    drawPolygon: "ፖሊጎን ይሳሉ",
+    editPolygon: "ፖሊጎን ያርትዑ",
+    editPolygonInstructions: `እሱን ለመንቀሳቀስ ጫፍን ይጎትቱ።
+አዲስ ጫፍ ለመጨመር ግልጽ ነጥብ ይጎትቱ።`,
+    tapToAddPoints: "ነጥቦች ለመጨመር በካርታው ላይ ይንኩ።",
+  },
   taxon: {
     search: "ታክሶን ይፈልጉ",
     taxonNotSelected: "--- ታክሶን አልተመረጠም ---",

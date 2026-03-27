@@ -33,6 +33,7 @@ export { LocationWatchingMonitor } from "./LocationWatchingMonitor";
 export { Loader } from "./Loader";
 export { LoadingIcon } from "./LoadingIcon";
 export { Markdown } from "./Markdown";
+export { MapViewWithInitialFit } from "./MapViewWithInitialFit";
 export { MenuButton } from "./MenuButton";
 export { MenuItem } from "./MenuItem";
 export { MessageDialog } from "./MessageDialog";

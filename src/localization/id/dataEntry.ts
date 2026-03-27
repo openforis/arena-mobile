@@ -140,6 +140,13 @@ export default {
     x: "X",
     y: "Y",
   },
+  geo: {
+    drawPolygon: "Gambar poligon",
+    editPolygon: "Edit poligon",
+    editPolygonInstructions: `Seret simpul untuk memindahkannya.
+Seret titik transparan untuk menambahkan simpul baru.`,
+    tapToAddPoints: "Ketuk peta untuk menambahkan titik",
+  },
   taxon: {
     search: "Cari takson",
     taxonNotSelected: "--- Takson tidak dipilih ---",

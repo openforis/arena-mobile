@@ -139,6 +139,13 @@ export default {
     x: "X",
     y: "Y",
   },
+  geo: {
+    drawPolygon: "Rita polygon",
+    editPolygon: "Redigera polygon",
+    editPolygonInstructions: `Dra ett hörn för att flytta det.
+Dra en transparent punkt för att lägga till ett nytt hörn.`,
+    tapToAddPoints: "Tryck på kartan för att lägga till punkter",
+  },
   taxon: {
     search: "Sök taxon",
     taxonNotSelected: "--- Taxon inte valt ---",

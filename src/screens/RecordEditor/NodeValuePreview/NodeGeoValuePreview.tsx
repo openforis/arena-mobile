@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { StyleSheet } from "react-native";
 
-import MapView, { Polygon } from "react-native-maps";
+import { Polygon } from "react-native-maps";
 
-import { Text, VView } from "components";
+import { MapViewWithInitialFit, Text, VView } from "components";
 import { GeoUtils } from "utils";
 
 import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
@@ -67,14 +67,20 @@ export const NodeGeoValuePreview = (props: NodeValuePreviewProps) => {
 
   return (
     <VView style={styles.container}>
-      <MapView style={styles.map} initialRegion={region} toolbarEnabled={false}>
+      <MapViewWithInitialFit
+        style={styles.map}
+        initialRegion={region}
+        toolbarEnabled={false}
+        fitToCoordinatesOnReady={coordinates}
+        fitOnlyOnce={false}
+      >
         <Polygon
           coordinates={coordinates}
           strokeColor={polygonStrokeColor}
           strokeWidth={2}
           fillColor={polygonFillColor}
         />
-      </MapView>
+      </MapViewWithInitialFit>
     </VView>
   );
 };

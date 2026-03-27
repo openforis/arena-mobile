@@ -138,6 +138,13 @@ export default {
     x: "X",
     y: "Y",
   },
+  geo: {
+    drawPolygon: "رسم چندضلعی",
+    editPolygon: "ویرایش چندضلعی",
+    editPolygonInstructions: `برای جابه‌جایی یک رأس، آن را بکشید.
+برای افزودن یک رأس جدید، یک نقطه شفاف را بکشید.`,
+    tapToAddPoints: "برای افزودن نقاط، روی نقشه ضربه بزنید.",
+  },
   taxon: {
     search: "جستجوی تاکسون",
     taxonNotSelected: "--- تاکسون انتخاب نشده است ---",

@@ -133,6 +133,13 @@ export default {
     x: "X",
     y: "Y",
   },
+  geo: {
+    drawPolygon: "Dibujar polígono",
+    editPolygon: "Editar polígono",
+    editPolygonInstructions: `Arrastre un vértice para moverlo.
+Arrastre un punto transparente para añadir un nuevo vértice.`,
+    tapToAddPoints: "Toque el mapa para añadir puntos",
+  },
   taxon: {
     search: "Buscar taxón",
     taxonNotSelected: "--- Taxón no seleccionado ---",
