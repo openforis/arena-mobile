@@ -142,8 +142,8 @@ export default {
   geo: {
     drawPolygon: "Rita polygon",
     editPolygon: "Redigera polygon",
-    editPolygonInstructions: `Dra ett hörn för att flytta det.
-Dra en transparent punkt för att lägga till ett nytt hörn.`,
+    editPolygonInstructions: `Tryck länge och dra ett hörn för att flytta det.
+  Tryck länge och dra en transparent punkt för att lägga till ett nytt hörn.`,
     tapToAddPoints: "Tryck på kartan för att lägga till punkter",
   },
   taxon: {

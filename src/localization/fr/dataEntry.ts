@@ -140,8 +140,8 @@ export default {
   geo: {
     drawPolygon: "Dessiner un polygone",
     editPolygon: "Modifier le polygone",
-    editPolygonInstructions: `Faites glisser un sommet pour le déplacer.
-Faites glisser un point transparent pour ajouter un nouveau sommet.`,
+    editPolygonInstructions: `Appuyez longuement et faites glisser un sommet pour le déplacer.
+  Appuyez longuement et faites glisser un point transparent pour ajouter un nouveau sommet.`,
     tapToAddPoints: "Touchez la carte pour ajouter des points",
   },
   taxon: {

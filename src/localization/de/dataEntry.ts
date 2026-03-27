@@ -145,8 +145,8 @@ export default {
   geo: {
     drawPolygon: "Polygon zeichnen",
     editPolygon: "Polygon bearbeiten",
-    editPolygonInstructions: `Ziehen Sie einen Eckpunkt, um ihn zu verschieben.
-Ziehen Sie einen transparenten Punkt, um einen neuen Eckpunkt hinzuzufügen.`,
+    editPolygonInstructions: `Halten Sie einen Eckpunkt gedrückt und ziehen Sie ihn, um ihn zu verschieben.
+  Halten Sie einen transparenten Punkt gedrückt und ziehen Sie ihn, um einen neuen Eckpunkt hinzuzufügen.`,
     tapToAddPoints: "Tippen Sie auf die Karte, um Punkte hinzuzufügen",
   },
   taxon: {

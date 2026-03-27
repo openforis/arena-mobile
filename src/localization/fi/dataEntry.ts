@@ -141,8 +141,8 @@ export default {
   geo: {
     drawPolygon: "Piirrä monikulmio",
     editPolygon: "Muokkaa monikulmiota",
-    editPolygonInstructions: `Siirrä kärkeä vetämällä.
-Lisää uusi kärki vetämällä läpinäkyvää pistettä.`,
+    editPolygonInstructions: `Pidä kärkeä painettuna ja vedä sitä siirtääksesi sitä.
+  Pidä läpinäkyvää pistettä painettuna ja vedä lisätäksesi uuden kärjen.`,
     tapToAddPoints: "Napauta karttaa lisätäksesi pisteitä",
   },
   taxon: {
