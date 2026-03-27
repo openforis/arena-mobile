@@ -5,12 +5,12 @@ appId: ${APP_ID}
 - extendedWaitUntil:
     visible: "Arena Mobile"
     timeout: 60000
-
 - tapOn:
     text: "Select a survey|Manage surveys"
 - tapOn: "Import from cloud"
 - tapOn: "arena_demo"
-- tapOn: "Import survey"
+- tapOn:
+    text: "Import survey|Update survey"
 - extendedWaitUntil:
     visible: "Records"
     timeout: 20000
