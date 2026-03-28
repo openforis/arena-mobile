@@ -135,15 +135,11 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     [dispatch, nodeUuid],
   );
 
-  const onPolygonCreate = useCallback(
-    (polygon: MapPolygonExtendedProps) => {
-      setPolygons([polygon]);
-      setDraftCoordinates([]);
-      setEditable(false);
-      savePolygon(polygon);
-    },
-    [savePolygon],
-  );
+  const onPolygonCreate = useCallback((polygon: MapPolygonExtendedProps) => {
+    setPolygons([polygon]);
+    setDraftCoordinates([]);
+    setEditable(true);
+  }, []);
 
   const onPolygonChange = useCallback(
     (index: number, polygon: MapPolygonExtendedProps) => {
@@ -152,18 +148,14 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
         updated[index] = polygon;
         return updated;
       });
-      savePolygon(polygon);
     },
-    [savePolygon],
+    [],
   );
 
-  const onPolygonRemove = useCallback(
-    (_index: number) => {
-      setPolygons([]);
-      savePolygon(null);
-    },
-    [savePolygon],
-  );
+  const onPolygonRemove = useCallback((_index: number) => {
+    setPolygons([]);
+    setDraftCoordinates([]);
+  }, []);
 
   const onStartDrawing = useCallback(() => {
     setDraftCoordinates([]);
@@ -230,17 +222,25 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
   );
 
   const onSaveCurrentPolygon = useCallback(() => {
-    if (draftCoordinates.length < 3) return;
+    const polygonToSave = polygons[0]
+      ? polygons[0]
+      : draftCoordinates.length >= 3
+        ? {
+            key: GEO_POLYGON_KEY,
+            coordinates: draftCoordinates,
+            strokeWidth: newPolygon.strokeWidth ?? 2,
+            strokeColor: newPolygon.strokeColor,
+            fillColor: newPolygon.fillColor,
+          }
+        : null;
 
-    const polygon: MapPolygonExtendedProps = {
-      key: GEO_POLYGON_KEY,
-      coordinates: draftCoordinates,
-      strokeWidth: newPolygon.strokeWidth ?? 2,
-      strokeColor: newPolygon.strokeColor,
-      fillColor: newPolygon.fillColor,
-    };
-    onPolygonCreate(polygon);
-  }, [draftCoordinates, newPolygon, onPolygonCreate]);
+    if (!polygonToSave) return;
+
+    setPolygons([polygonToSave]);
+    setDraftCoordinates([]);
+    setEditable(false);
+    savePolygon(polygonToSave);
+  }, [draftCoordinates, newPolygon, polygons, savePolygon]);
 
   return {
     draftCoordinates,

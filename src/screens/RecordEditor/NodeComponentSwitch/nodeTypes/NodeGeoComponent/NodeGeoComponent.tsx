@@ -146,7 +146,7 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
       )}
       {editable ? (
         <>
-          {!hasValue && draftCoordinates.length >= 3 && (
+          {(hasValue || draftCoordinates.length >= 3) && (
             <Button onPress={onSaveCurrentPolygon} textKey="common:save" />
           )}
           <Button
