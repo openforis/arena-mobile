@@ -89,14 +89,40 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     setPolygons(nodeValuePolygons);
   }, [editable, nodeValuePolygons]);
 
-  const initialRegion = useMemo(() => {
+  const [initialRegion, setInitialRegion] = useState(() => {
     const polygon = nodeValueToPolygon(nodeValue);
     if (polygon && polygon.coordinates.length >= 3) {
       return GeoUtils.computeRegionFromCoordinates(polygon.coordinates);
     }
     return GeoUtils.defaultMapRegion;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // intentionally only on mount
+  });
+
+  useEffect(() => {
+    if (nodeValuePolygons.length > 0) return;
+
+    let active = true;
+
+    const setInitialRegionFromCurrentLocation = async () => {
+      if (!(await Permissions.requestLocationForegroundPermission())) return;
+
+      const location = await Location.getCurrentPositionAsync();
+      if (!active) return;
+
+      const { latitude, longitude } = location.coords;
+      setInitialRegion({
+        latitude,
+        longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
+    };
+
+    void setInitialRegionFromCurrentLocation();
+
+    return () => {
+      active = false;
+    };
+  }, [nodeValuePolygons.length]);
 
   const savePolygon = useCallback(
     (polygon: MapPolygonExtendedProps | null) => {
@@ -179,10 +205,11 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
   const onCenterOnLocation = useCallback(async () => {
     if (!(await Permissions.requestLocationForegroundPermission())) return;
 
-    const location = await Location.getCurrentPositionAsync({});
+    const location = await Location.getCurrentPositionAsync();
+    const { latitude, longitude } = location.coords;
     mapRef.current?.animateToRegion({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
+      latitude,
+      longitude,
       latitudeDelta: 0.01,
       longitudeDelta: 0.01,
     });
