@@ -3,11 +3,10 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   container: {
     flex: 1,
-    minHeight: 300,
   },
   map: {
     flex: 1,
-    minHeight: 250,
+    height: 250,
   },
   helperText: {
     textAlign: "center",

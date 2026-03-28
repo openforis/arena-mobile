@@ -191,12 +191,14 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
   const onMapPress = useCallback(
     (event: MapPressEvent) => {
       if (!editable) return;
+      const { coordinate } = event.nativeEvent ?? {};
+      if (!coordinate) return;
       if (polygons.length === 0) {
         setDraftCoordinates((prev) =>
-          prev.length < 3 ? [...prev, event.nativeEvent.coordinate] : prev,
+          prev.length < 3 ? [...prev, coordinate] : prev,
         );
       }
-      polygonEditorRef.current?.setCoordinate(event.nativeEvent.coordinate);
+      polygonEditorRef.current?.setCoordinate(coordinate);
     },
     [editable, polygons.length],
   );
