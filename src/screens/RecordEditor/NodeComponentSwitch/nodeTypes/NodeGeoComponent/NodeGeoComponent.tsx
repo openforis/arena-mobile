@@ -37,13 +37,15 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
     onStartDrawing,
   } = useNodeGeoComponent(props);
 
+  const hasValue = polygons.length > 0;
+
   const visibleCoordinates = useMemo(
-    () =>
-      polygons.length > 0 ? (polygons[0]?.coordinates ?? []) : draftCoordinates,
-    [draftCoordinates, polygons],
+    () => (hasValue ? (polygons[0]?.coordinates ?? []) : draftCoordinates),
+    [draftCoordinates, hasValue, polygons],
   );
 
-  const isEditingExistingPolygon = editable && polygons.length > 0;
+  const isDrawingPolygon = editable;
+  const isEditingExistingPolygon = editable && hasValue;
 
   useEffect(() => {
     if (!isEditingExistingPolygon) return;
@@ -115,7 +117,7 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
     <Text
       style={styles.helperText}
       textKey={
-        polygons.length > 0
+        hasValue
           ? "dataEntry:geo.editPolygonInstructions"
           : "dataEntry:geo.tapToAddPoints"
       }
@@ -124,25 +126,25 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
 
   const toolbar = (
     <HView style={styles.toolbar}>
-      <IconButton
-        icon="crosshairs-gps"
-        onPress={onCenterOnLocation}
-        size={24}
-      />
+      {(hasValue || editable) && (
+        <IconButton
+          icon="crosshairs-gps"
+          onPress={onCenterOnLocation}
+          size={24}
+        />
+      )}
       {editable ? (
         <Button textKey="common:cancel" onPress={onCancelDrawing} />
       ) : (
         <Button
-          icon={polygons.length > 0 ? "pencil" : "vector-polygon"}
+          icon={hasValue ? "pencil" : "vector-polygon"}
           textKey={
-            polygons.length > 0
-              ? "dataEntry:geo.editPolygon"
-              : "dataEntry:geo.drawPolygon"
+            hasValue ? "dataEntry:geo.editPolygon" : "dataEntry:geo.drawPolygon"
           }
           onPress={onStartDrawing}
         />
       )}
-      {polygons.length > 0 && !editable && (
+      {hasValue && !editable && (
         <IconButton icon="trash-can-outline" onPress={onClearPress} />
       )}
     </HView>
@@ -150,20 +152,27 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
 
   return (
     <VView style={styles.container}>
-      {isEditingExistingPolygon ? (
-        <Modal onDismiss={onCancelDrawing} titleKey="dataEntry:geo.editPolygon">
+      {isDrawingPolygon ? (
+        <Modal
+          onDismiss={onCancelDrawing}
+          titleKey={
+            hasValue ? "dataEntry:geo.editPolygon" : "dataEntry:geo.drawPolygon"
+          }
+        >
           <VView style={styles.modalContent}>
             {map}
             {helperText}
             {toolbar}
           </VView>
         </Modal>
-      ) : (
+      ) : hasValue ? (
         <>
           {map}
           {helperText}
           {toolbar}
         </>
+      ) : (
+        toolbar
       )}
     </VView>
   );
