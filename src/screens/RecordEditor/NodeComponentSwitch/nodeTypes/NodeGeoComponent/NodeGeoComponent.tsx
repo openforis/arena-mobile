@@ -14,11 +14,13 @@ import {
   VView,
 } from "components";
 
+import { log } from "utils";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 import { useNodeGeoComponent } from "./useNodeGeoComponent";
 import styles from "./styles";
 
 export const NodeGeoComponent = (props: NodeComponentProps) => {
+  const { nodeDef } = props;
   const {
     draftCoordinates,
     editable,
@@ -34,8 +36,11 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
     onPolygonChange,
     onPolygonCreate,
     onPolygonRemove,
+    onSaveCurrentPolygon,
     onStartDrawing,
   } = useNodeGeoComponent(props);
+
+  log.debug(`rendering NodeGeoComponent for ${nodeDef.props.name}`);
 
   const hasValue = polygons.length > 0;
 
@@ -140,7 +145,16 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
         />
       )}
       {editable ? (
-        <Button textKey="common:cancel" onPress={onCancelDrawing} />
+        <>
+          {!hasValue && draftCoordinates.length >= 3 && (
+            <Button onPress={onSaveCurrentPolygon} textKey="common:save" />
+          )}
+          <Button
+            color="secondary"
+            onPress={onCancelDrawing}
+            textKey="common:cancel"
+          />
+        </>
       ) : (
         <Button
           icon={hasValue ? "pencil" : "vector-polygon"}

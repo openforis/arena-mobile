@@ -38,6 +38,7 @@ export default {
   openSettings: "باز کردن تنظیمات",
   path: "مسیر",
   rowsPerPage: "ردیف در هر صفحه",
+  save: "ذخیره",
   search: "جستجو",
   selectAnItem: "یک مورد را انتخاب کنید",
   selectNewItems: "موارد جدید را انتخاب کنید",

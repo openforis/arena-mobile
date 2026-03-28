@@ -36,6 +36,7 @@ export default {
   openSettings: "ቅንብሮችን ክፈት",
   path: "መንገድ",
   rowsPerPage: "በገጽ ያሉ ረድፎች",
+  save: "አስቀምጥ",
   search: "ፈልግ",
   selectAnItem: "አንድ ንጥል ይምረጡ",
   selectNewItems: "አዲስ ንጥሎችን ይምረጡ",

@@ -221,14 +221,26 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
       const { coordinate } = event.nativeEvent ?? {};
       if (!coordinate) return;
       if (polygons.length === 0) {
-        setDraftCoordinates((prev) =>
-          prev.length < 3 ? [...prev, coordinate] : prev,
-        );
+        // Add point (allow unlimited points during drawing)
+        setDraftCoordinates((prev) => [...prev, coordinate]);
       }
       polygonEditorRef.current?.setCoordinate(coordinate);
     },
     [editable, polygons.length],
   );
+
+  const onSaveCurrentPolygon = useCallback(() => {
+    if (draftCoordinates.length < 3) return;
+
+    const polygon: MapPolygonExtendedProps = {
+      key: GEO_POLYGON_KEY,
+      coordinates: draftCoordinates,
+      strokeWidth: newPolygon.strokeWidth ?? 2,
+      strokeColor: newPolygon.strokeColor,
+      fillColor: newPolygon.fillColor,
+    };
+    onPolygonCreate(polygon);
+  }, [draftCoordinates, newPolygon, onPolygonCreate]);
 
   return {
     draftCoordinates,
@@ -245,6 +257,7 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     onPolygonChange,
     onPolygonCreate,
     onPolygonRemove,
+    onSaveCurrentPolygon,
     onStartDrawing,
   };
 };
