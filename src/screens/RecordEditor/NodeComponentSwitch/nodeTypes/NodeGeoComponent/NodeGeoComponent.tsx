@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import { View as RNView } from "react-native";
 
 import { PolygonEditor } from "@siposdani87/expo-maps-polygon-editor";
-import { Marker, Polygon as MapPolygon, Polyline } from "react-native-maps";
+import { Polygon as MapPolygon, Marker, Polyline } from "react-native-maps";
 
 import {
   Button,
@@ -74,29 +74,35 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
             <MapPolygon
               coordinates={draftCoordinates}
               strokeColor={newPolygon.strokeColor}
-              strokeWidth={newPolygon.strokeWidth}
+              strokeWidth={Math.max(newPolygon.strokeWidth ?? 2, 4)}
               fillColor={newPolygon.fillColor}
             />
           ) : (
             <Polyline
               coordinates={draftCoordinates}
               strokeColor={newPolygon.strokeColor}
-              strokeWidth={newPolygon.strokeWidth}
+              strokeWidth={Math.max(newPolygon.strokeWidth ?? 2, 4)}
             />
           )}
           {draftCoordinates.map((coordinate, index) => (
             <Marker
               key={`draft-point-${index}`}
               coordinate={coordinate}
-              anchor={{ x: 0.5, y: 0.5 }}
-              tracksViewChanges={false}
+              anchor={{ x: 0.3, y: 0.3 }}
             >
               <RNView
                 style={[
                   styles.draftPoint,
                   { borderColor: newPolygon.strokeColor },
                 ]}
-              />
+              >
+                <RNView
+                  style={[
+                    styles.draftPointInner,
+                    { backgroundColor: newPolygon.strokeColor },
+                  ]}
+                />
+              </RNView>
             </Marker>
           ))}
         </>

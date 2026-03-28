@@ -14,11 +14,18 @@ export default StyleSheet.create({
     paddingTop: 8,
   },
   draftPoint: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    borderWidth: 2,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    borderWidth: 3,
     backgroundColor: "#ffffff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  draftPointInner: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
   },
   toolbar: {
     alignItems: "center",
