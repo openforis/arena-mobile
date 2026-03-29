@@ -40,6 +40,9 @@ const yesNoValueByBooleanValue: Record<string, string> = {
   false: "no",
 };
 
+const isSameCoordinate = (coord1: LatLng, coord2: LatLng): boolean =>
+  coord1.latitude === coord2.latitude && coord1.longitude === coord2.longitude;
+
 const getPolygonCoordinatesFromNodeValue = (nodeValue: any): LatLng[] => {
   const ringCoordinates: [number, number][] | undefined =
     nodeValue?.geometry?.coordinates?.[0];
@@ -54,8 +57,10 @@ const getPolygonCoordinatesFromNodeValue = (nodeValue: any): LatLng[] => {
     coordinates.length > 1 &&
     firstCoordinate &&
     lastCoordinate &&
-    firstCoordinate[0] === lastCoordinate[0] &&
-    firstCoordinate[1] === lastCoordinate[1]
+    isSameCoordinate(
+      { latitude: firstCoordinate[1], longitude: firstCoordinate[0] },
+      { latitude: lastCoordinate[1], longitude: lastCoordinate[0] },
+    )
   ) {
     coordinates.pop();
   }

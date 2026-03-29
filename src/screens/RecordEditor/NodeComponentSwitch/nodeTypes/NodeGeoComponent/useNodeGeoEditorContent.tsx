@@ -16,14 +16,11 @@ import { GeoUtils } from "utils";
 import { Permissions } from "utils/Permissions";
 
 import { NodeGeoToolbar } from "./NodeGeoToolbar";
+import { PolygonMidpoint } from "./types";
 import { LocalState } from "./useNodeGeoComponent";
+import { UUIDs } from "@openforis/arena-core";
 
 const GEO_POLYGON_KEY = "geo_polygon_0";
-
-interface PolygonMidpoint {
-  coordinate: LatLng;
-  insertAtIndex: number;
-}
 
 export interface UseNodeGeoEditorContentProps {
   nodeUuid: string | undefined;
@@ -53,6 +50,31 @@ const toGeoJsonPolygon = (coordinates: LatLng[]) => {
       coordinates: [linearRing],
     },
   };
+};
+
+const determinePolygonsToSave = ({
+  polygons,
+  draftCoordinates,
+  newPolygon,
+}: {
+  polygons: MapPolygonExtendedProps[];
+  draftCoordinates: LatLng[];
+  newPolygon: MapPolygonExtendedProps;
+}) => {
+  const firstPolygon = polygons[0];
+  if (firstPolygon) {
+    return firstPolygon;
+  }
+  if (draftCoordinates.length >= 3) {
+    return {
+      key: GEO_POLYGON_KEY,
+      coordinates: draftCoordinates,
+      strokeWidth: newPolygon.strokeWidth ?? 2,
+      strokeColor: newPolygon.strokeColor,
+      fillColor: newPolygon.fillColor,
+    };
+  }
+  return null;
 };
 
 export const useNodeGeoEditorContent = ({
@@ -134,17 +156,11 @@ export const useNodeGeoEditorContent = ({
   }, [mapRef]);
 
   const onSaveCurrentPolygon = useCallback(() => {
-    const polygonToSave = polygons[0]
-      ? polygons[0]
-      : draftCoordinates.length >= 3
-        ? {
-            key: GEO_POLYGON_KEY,
-            coordinates: draftCoordinates,
-            strokeWidth: newPolygon.strokeWidth ?? 2,
-            strokeColor: newPolygon.strokeColor,
-            fillColor: newPolygon.fillColor,
-          }
-        : null;
+    const polygonToSave = determinePolygonsToSave({
+      polygons,
+      draftCoordinates,
+      newPolygon,
+    });
 
     if (!polygonToSave) return;
 
@@ -228,6 +244,7 @@ export const useNodeGeoEditorContent = ({
     return coordinates.map((current, index) => {
       const next = coordinates[(index + 1) % coordinates.length] ?? current;
       return {
+        uuid: UUIDs.v4(),
         coordinate: GeoUtils.computeMidpointCoordinate(current, next),
         insertAtIndex: index + 1,
       };

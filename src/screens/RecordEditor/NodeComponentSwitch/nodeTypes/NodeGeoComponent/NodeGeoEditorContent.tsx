@@ -6,11 +6,11 @@ import { MapViewWithInitialFit, Text } from "components";
 
 import { NodeGeoDraftLayer } from "./NodeGeoDraftLayer";
 import { NodeGeoMidpointsLayer } from "./NodeGeoMidpointsLayer";
-import styles from "./styles";
 import {
   UseNodeGeoEditorContentProps,
   useNodeGeoEditorContent,
 } from "./useNodeGeoEditorContent";
+import styles from "./styles";
 
 interface NodeGeoEditorContentProps extends UseNodeGeoEditorContentProps {
   initialRegion: {
@@ -22,6 +22,22 @@ interface NodeGeoEditorContentProps extends UseNodeGeoEditorContentProps {
   isPolygonSelected: boolean;
   shouldFitInitialPolygon: boolean;
 }
+
+const determineHelperTextKey = ({
+  hasValue,
+  isPolygonSelected,
+}: {
+  hasValue: boolean;
+  isPolygonSelected: boolean;
+}) => {
+  if (hasValue) {
+    if (isPolygonSelected) {
+      return "dataEntry:geo.editPolygonInstructions";
+    }
+    return "dataEntry:geo.selectPolygonInstructions";
+  }
+  return "dataEntry:geo.tapToAddPoints";
+};
 
 export const NodeGeoEditorContent = ({
   nodeUuid,
@@ -72,6 +88,8 @@ export const NodeGeoEditorContent = ({
     return toolbar;
   }
 
+  const helperTextKey = determineHelperTextKey({ hasValue, isPolygonSelected });
+
   return (
     <>
       <MapViewWithInitialFit
@@ -113,18 +131,7 @@ export const NodeGeoEditorContent = ({
           disabled={!editable}
         />
       </MapViewWithInitialFit>
-      {editable && (
-        <Text
-          style={styles.helperText}
-          textKey={
-            hasValue
-              ? isPolygonSelected
-                ? "dataEntry:geo.editPolygonInstructions"
-                : "dataEntry:geo.selectPolygonInstructions"
-              : "dataEntry:geo.tapToAddPoints"
-          }
-        />
-      )}
+      {editable && <Text style={styles.helperText} textKey={helperTextKey} />}
       {toolbar}
     </>
   );

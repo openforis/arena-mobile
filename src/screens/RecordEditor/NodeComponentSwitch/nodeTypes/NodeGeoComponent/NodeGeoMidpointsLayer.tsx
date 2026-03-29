@@ -1,15 +1,11 @@
 import React, { useMemo } from "react";
 
 import { MapPolygonExtendedProps } from "@siposdani87/expo-maps-polygon-editor";
-import { LatLng, MarkerPressEvent } from "react-native-maps";
+import { MarkerPressEvent } from "react-native-maps";
 
 import { NodeGeoMapMarker } from "./NodeGeoMapMarker";
+import { PolygonMidpoint } from "./types";
 import styles from "./styles";
-
-interface PolygonMidpoint {
-  coordinate: LatLng;
-  insertAtIndex: number;
-}
 
 interface NodeGeoMidpointsLayerProps {
   midpoints: PolygonMidpoint[];
@@ -28,10 +24,10 @@ export const NodeGeoMidpointsLayer = ({
   );
   return (
     <>
-      {midpoints.map(({ coordinate, insertAtIndex }, index) => (
+      {midpoints.map(({ uuid, coordinate, insertAtIndex }) => (
         <NodeGeoMapMarker
-          key={`polygon-midpoint-${index}`}
-          markerKey={`polygon-midpoint-${index}`}
+          key={`polygon-midpoint-${uuid}`}
+          markerKey={`polygon-midpoint-${uuid}`}
           coordinate={coordinate}
           style={style}
           onPress={onMidpointPress(insertAtIndex)}
