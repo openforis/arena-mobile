@@ -20,6 +20,7 @@ interface NodeGeoEditorContentProps extends UseNodeGeoEditorContentProps {
     longitudeDelta: number;
   };
   isPolygonSelected: boolean;
+  shouldFitInitialPolygon: boolean;
 }
 
 export const NodeGeoEditorContent = ({
@@ -33,6 +34,7 @@ export const NodeGeoEditorContent = ({
   polygonEditorRef,
   polygons,
   setLocalState,
+  shouldFitInitialPolygon,
   onCancelDrawing,
 }: NodeGeoEditorContentProps) => {
   const {
@@ -58,9 +60,12 @@ export const NodeGeoEditorContent = ({
     onCancelDrawing,
   });
 
-  const visibleCoordinates = useMemo(
-    () => (hasValue ? (polygons[0]?.coordinates ?? []) : draftCoordinates),
-    [draftCoordinates, hasValue, polygons],
+  const initialFitCoordinates = useMemo(
+    () =>
+      shouldFitInitialPolygon
+        ? (polygons[0]?.coordinates ?? undefined)
+        : undefined,
+    [polygons, shouldFitInitialPolygon],
   );
 
   if (!editable && !hasValue) {
@@ -74,8 +79,14 @@ export const NodeGeoEditorContent = ({
         style={styles.map}
         initialRegion={initialRegion}
         onPress={onMapPress}
-        fitToCoordinatesOnReady={visibleCoordinates}
+        fitToCoordinatesOnReady={initialFitCoordinates}
         fitOnlyOnce={true}
+        onInitialFitApplied={() => {
+          setLocalState((prev) => ({
+            ...prev,
+            shouldFitInitialPolygon: false,
+          }));
+        }}
       >
         {editable && polygons.length === 0 && (
           <NodeGeoDraftLayer

@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 
+import { LayoutChangeEvent } from "react-native";
 import MapView, { LatLng, MapViewProps } from "react-native-maps";
 
 type EdgePadding = {
@@ -25,6 +26,7 @@ type Props = MapViewProps & {
   fitToCoordinatesOnReady?: LatLng[];
   fitToCoordinatesOptions?: FitToCoordinatesOptions;
   fitOnlyOnce?: boolean;
+  onInitialFitApplied?: () => void;
 };
 
 const defaultEdgePadding: EdgePadding = {
@@ -40,6 +42,7 @@ export const MapViewWithInitialFit = forwardRef<MapView, Props>(
       fitOnlyOnce = true,
       fitToCoordinatesOnReady,
       fitToCoordinatesOptions,
+      onInitialFitApplied,
       onMapReady,
       ...mapViewProps
     },
@@ -47,6 +50,7 @@ export const MapViewWithInitialFit = forwardRef<MapView, Props>(
   ) => {
     const internalRef = useRef<MapView>(null);
     const [isMapReady, setIsMapReady] = useState(false);
+    const [hasLayout, setHasLayout] = useState(false);
     const hasAppliedFitRef = useRef(false);
 
     useImperativeHandle(ref, () => internalRef.current as MapView);
@@ -54,26 +58,38 @@ export const MapViewWithInitialFit = forwardRef<MapView, Props>(
     useEffect(() => {
       if (
         !isMapReady ||
+        !hasLayout ||
         (fitOnlyOnce && hasAppliedFitRef.current) ||
         !fitToCoordinatesOnReady ||
         fitToCoordinatesOnReady.length === 0
       )
         return;
 
-      internalRef.current?.fitToCoordinates(fitToCoordinatesOnReady, {
-        edgePadding: fitToCoordinatesOptions?.edgePadding ?? defaultEdgePadding,
-        animated: fitToCoordinatesOptions?.animated ?? false,
+      const frameId = requestAnimationFrame(() => {
+        internalRef.current?.fitToCoordinates(fitToCoordinatesOnReady, {
+          edgePadding:
+            fitToCoordinatesOptions?.edgePadding ?? defaultEdgePadding,
+          animated: fitToCoordinatesOptions?.animated ?? false,
+        });
+
+        onInitialFitApplied?.();
+
+        if (fitOnlyOnce) {
+          hasAppliedFitRef.current = true;
+        }
       });
 
-      if (fitOnlyOnce) {
-        hasAppliedFitRef.current = true;
-      }
+      return () => {
+        cancelAnimationFrame(frameId);
+      };
     }, [
       fitOnlyOnce,
       fitToCoordinatesOnReady,
       fitToCoordinatesOptions?.animated,
       fitToCoordinatesOptions?.edgePadding,
+      hasLayout,
       isMapReady,
+      onInitialFitApplied,
     ]);
 
     const onMapReadyCallback = useCallback(() => {
@@ -81,9 +97,18 @@ export const MapViewWithInitialFit = forwardRef<MapView, Props>(
       onMapReady?.();
     }, [onMapReady]);
 
+    const onLayoutCallback = useCallback(
+      (event: LayoutChangeEvent) => {
+        setHasLayout(true);
+        mapViewProps.onLayout?.(event);
+      },
+      [mapViewProps],
+    );
+
     return (
       <MapView
         ref={internalRef}
+        onLayout={onLayoutCallback}
         onMapReady={onMapReadyCallback}
         {...mapViewProps}
       />

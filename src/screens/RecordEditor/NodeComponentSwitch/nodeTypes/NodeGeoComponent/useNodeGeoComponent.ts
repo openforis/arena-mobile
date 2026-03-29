@@ -21,6 +21,7 @@ export interface LocalState {
   draftCoordinates: LatLng[];
   isPolygonSelected: boolean;
   polygons: MapPolygonExtendedProps[];
+  shouldFitInitialPolygon: boolean;
   initialRegion: LatLng & {
     latitudeDelta: number;
     longitudeDelta: number;
@@ -71,6 +72,7 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
       draftCoordinates: [],
       isPolygonSelected: false,
       polygons,
+      shouldFitInitialPolygon: polygons.length > 0,
       initialRegion:
         polygon && polygon.coordinates.length >= 3
           ? GeoUtils.computeRegionFromCoordinates(polygon.coordinates)
@@ -83,6 +85,7 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     draftCoordinates,
     isPolygonSelected,
     polygons: localPolygons,
+    shouldFitInitialPolygon,
     initialRegion,
   } = localState;
 
@@ -140,6 +143,7 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     polygonEditorRef,
     polygons,
     setLocalState,
+    shouldFitInitialPolygon,
     onCancelDrawing,
   };
 };
