@@ -49,64 +49,103 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
 
   const isDrawingPolygon = editable;
 
-  const map = (
-    <MapViewWithInitialFit
-      ref={mapRef}
-      style={styles.map}
-      initialRegion={initialRegion}
-      onPress={onMapPress}
-      fitToCoordinatesOnReady={visibleCoordinates}
-      fitOnlyOnce={true}
-    >
-      {editable && polygons.length === 0 && (
-        <NodeGeoDraftLayer
-          draftCoordinates={draftCoordinates}
+  const map = useMemo(
+    () => (
+      <MapViewWithInitialFit
+        ref={mapRef}
+        style={styles.map}
+        initialRegion={initialRegion}
+        onPress={onMapPress}
+        fitToCoordinatesOnReady={visibleCoordinates}
+        fitOnlyOnce={true}
+      >
+        {editable && polygons.length === 0 && (
+          <NodeGeoDraftLayer
+            draftCoordinates={draftCoordinates}
+            newPolygon={newPolygon}
+          />
+        )}
+        {editable && isPolygonSelected && polygons.length > 0 && (
+          <NodeGeoMidpointsLayer
+            midpoints={polygonMidpoints}
+            strokeColor={newPolygon.strokeColor}
+            onMidpointPress={onPolygonMidpointPress}
+          />
+        )}
+        <PolygonEditor
+          ref={polygonEditorRef}
           newPolygon={newPolygon}
+          polygons={polygons}
+          onPolygonCreate={onPolygonCreate}
+          onPolygonChange={onPolygonChange}
+          onPolygonRemove={onPolygonRemove}
+          onPolygonSelect={onPolygonSelect}
+          onPolygonUnselect={onPolygonUnselect}
+          disabled={!editable}
         />
-      )}
-      {editable && isPolygonSelected && polygons.length > 0 && (
-        <NodeGeoMidpointsLayer
-          midpoints={polygonMidpoints}
-          strokeColor={newPolygon.strokeColor}
-          onMidpointPress={onPolygonMidpointPress}
+      </MapViewWithInitialFit>
+    ),
+    [
+      mapRef,
+      initialRegion,
+      onMapPress,
+      visibleCoordinates,
+      editable,
+      polygons,
+      draftCoordinates,
+      newPolygon,
+      isPolygonSelected,
+      polygonMidpoints,
+      onPolygonMidpointPress,
+      polygonEditorRef,
+      onPolygonCreate,
+      onPolygonChange,
+      onPolygonRemove,
+      onPolygonSelect,
+      onPolygonUnselect,
+    ],
+  );
+
+  const helperText = useMemo(
+    () =>
+      editable && (
+        <Text
+          style={styles.helperText}
+          textKey={
+            hasValue
+              ? isPolygonSelected
+                ? "dataEntry:geo.editPolygonInstructions"
+                : "dataEntry:geo.selectPolygonInstructions"
+              : "dataEntry:geo.tapToAddPoints"
+          }
         />
-      )}
-      <PolygonEditor
-        ref={polygonEditorRef}
-        newPolygon={newPolygon}
-        polygons={polygons}
-        onPolygonCreate={onPolygonCreate}
-        onPolygonChange={onPolygonChange}
-        onPolygonRemove={onPolygonRemove}
-        onPolygonSelect={onPolygonSelect}
-        onPolygonUnselect={onPolygonUnselect}
-        disabled={!editable}
+      ),
+    [editable, hasValue, isPolygonSelected],
+  );
+
+  const toolbar = useMemo(
+    () => (
+      <NodeGeoToolbar
+        draftCoordinates={draftCoordinates}
+        editable={editable}
+        hasValue={hasValue}
+        onCancelDrawing={onCancelDrawing}
+        onCenterOnLocation={onCenterOnLocation}
+        onClearPress={onClearPress}
+        onSaveCurrentPolygon={onSaveCurrentPolygon}
+        onStartDrawing={onStartDrawing}
       />
-    </MapViewWithInitialFit>
-  );
-
-  const helperText = editable && (
-    <Text
-      style={styles.helperText}
-      textKey={
-        hasValue
-          ? "dataEntry:geo.editPolygonInstructions"
-          : "dataEntry:geo.tapToAddPoints"
-      }
-    />
-  );
-
-  const toolbar = (
-    <NodeGeoToolbar
-      draftCoordinates={draftCoordinates}
-      editable={editable}
-      hasValue={hasValue}
-      onCancelDrawing={onCancelDrawing}
-      onCenterOnLocation={onCenterOnLocation}
-      onClearPress={onClearPress}
-      onSaveCurrentPolygon={onSaveCurrentPolygon}
-      onStartDrawing={onStartDrawing}
-    />
+    ),
+    [
+      draftCoordinates,
+      editable,
+      hasValue,
+      onCancelDrawing,
+      onCenterOnLocation,
+      onClearPress,
+      onSaveCurrentPolygon,
+      onStartDrawing,
+    ],
   );
 
   return (

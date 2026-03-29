@@ -52,8 +52,12 @@ export const MapViewWithInitialFit = forwardRef<MapView, Props>(
     useImperativeHandle(ref, () => internalRef.current as MapView);
 
     useEffect(() => {
-      if (!isMapReady || (fitOnlyOnce && hasAppliedFitRef.current)) return;
-      if (!fitToCoordinatesOnReady || fitToCoordinatesOnReady.length === 0)
+      if (
+        !isMapReady ||
+        (fitOnlyOnce && hasAppliedFitRef.current) ||
+        !fitToCoordinatesOnReady ||
+        fitToCoordinatesOnReady.length === 0
+      )
         return;
 
       internalRef.current?.fitToCoordinates(fitToCoordinatesOnReady, {

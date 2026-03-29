@@ -141,9 +141,10 @@ export default {
   geo: {
     drawPolygon: "Piirrä monikulmio",
     editPolygon: "Muokkaa monikulmiota",
-    editPolygonInstructions: `Valitse monikulmio ensin napauttamalla sitä.
-  Pidä kärkeä painettuna ja vedä sitä siirtääksesi sitä.
-  Lisää uusi kärki napauttamalla keskipistettä ja vedä se sitten haluttuun kohtaan.`,
+    selectPolygonInstructions: "Napauta monikulmiota valitaksesi sen",
+    editPolygonInstructions: `Pidä kärkeä painettuna ja vedä sitä siirtääksesi sitä.
+  Lisää uusi kärki napauttamalla keskipistettä ja vedä se sitten haluttuun kohtaan.
+  Napauta kärkeä ja poista se painamalla punaista X:ää.`,
     tapToAddPoints: "Napauta karttaa lisätäksesi pisteitä",
   },
   taxon: {

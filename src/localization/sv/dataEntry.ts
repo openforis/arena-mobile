@@ -142,9 +142,10 @@ export default {
   geo: {
     drawPolygon: "Rita polygon",
     editPolygon: "Redigera polygon",
-    editPolygonInstructions: `Tryck först på en polygon för att markera den.
-  Tryck länge och dra ett hörn för att flytta det.
-  Tryck på en mittpunkt för att lägga till ett nytt hörn och dra det sedan till önskad position.`,
+    selectPolygonInstructions: "Tryck på en polygon för att markera den",
+    editPolygonInstructions: `Tryck länge och dra ett hörn för att flytta det.
+  Tryck på en mittpunkt för att lägga till ett nytt hörn och dra det sedan till önskad position.
+  Tryck på ett hörn och sedan på det röda X:et för att ta bort det.`,
     tapToAddPoints: "Tryck på kartan för att lägga till punkter",
   },
   taxon: {

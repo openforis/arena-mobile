@@ -179,9 +179,10 @@ Fetch the list of records from the server and try again?`,
   geo: {
     drawPolygon: "Draw polygon",
     editPolygon: "Edit polygon",
-    editPolygonInstructions: `Tap on a polygon to select it first.  
-Long-press and drag a vertex to move it.  
-Tap a midpoint to add a new vertex, then drag it to the desired position.`,
+    selectPolygonInstructions: "Tap on a polygon to select it",
+    editPolygonInstructions: `Long-press and drag a vertex to move it.  
+Tap a midpoint to add a new vertex, then drag it to the desired position.  
+Press on a vertex and press the red X to delete it.`,
     tapToAddPoints: "Tap on the map to add points",
   },
   taxon: {

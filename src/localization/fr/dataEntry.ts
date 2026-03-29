@@ -140,9 +140,10 @@ export default {
   geo: {
     drawPolygon: "Dessiner un polygone",
     editPolygon: "Modifier le polygone",
-    editPolygonInstructions: `Touchez d'abord un polygone pour le sélectionner.
-  Appuyez longuement et faites glisser un sommet pour le déplacer.
-  Touchez un point médian pour ajouter un nouveau sommet, puis faites-le glisser à l'emplacement souhaité.`,
+    selectPolygonInstructions: "Touchez un polygone pour le sélectionner",
+    editPolygonInstructions: `Appuyez longuement et faites glisser un sommet pour le déplacer.
+  Touchez un point médian pour ajouter un nouveau sommet, puis faites-le glisser à l'emplacement souhaité.
+  Touchez un sommet puis le X rouge pour le supprimer.`,
     tapToAddPoints: "Touchez la carte pour ajouter des points",
   },
   taxon: {
