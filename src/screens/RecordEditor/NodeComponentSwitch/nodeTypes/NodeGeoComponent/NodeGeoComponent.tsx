@@ -4,18 +4,11 @@ import { View as RNView } from "react-native";
 import { PolygonEditor } from "@siposdani87/expo-maps-polygon-editor";
 import { Polygon as MapPolygon, Marker, Polyline } from "react-native-maps";
 
-import {
-  Button,
-  HView,
-  IconButton,
-  MapViewWithInitialFit,
-  Modal,
-  Text,
-  VView,
-} from "components";
+import { MapViewWithInitialFit, Modal, Text, VView } from "components";
 
 import { log } from "utils";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
+import { NodeGeoToolbar } from "./NodeGeoToolbar";
 import { useNodeGeoComponent } from "./useNodeGeoComponent";
 import styles from "./styles";
 
@@ -136,38 +129,16 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
   );
 
   const toolbar = (
-    <HView style={styles.toolbar}>
-      {(hasValue || editable) && (
-        <IconButton
-          icon="crosshairs-gps"
-          onPress={onCenterOnLocation}
-          size={24}
-        />
-      )}
-      {editable ? (
-        <>
-          {(hasValue || draftCoordinates.length >= 3) && (
-            <Button onPress={onSaveCurrentPolygon} textKey="common:save" />
-          )}
-          <Button
-            color="secondary"
-            onPress={onCancelDrawing}
-            textKey="common:cancel"
-          />
-        </>
-      ) : (
-        <Button
-          icon={hasValue ? "pencil" : "vector-polygon"}
-          textKey={
-            hasValue ? "dataEntry:geo.editPolygon" : "dataEntry:geo.drawPolygon"
-          }
-          onPress={onStartDrawing}
-        />
-      )}
-      {hasValue && !editable && (
-        <IconButton icon="trash-can-outline" onPress={onClearPress} />
-      )}
-    </HView>
+    <NodeGeoToolbar
+      draftCoordinates={draftCoordinates}
+      editable={editable}
+      hasValue={hasValue}
+      onCancelDrawing={onCancelDrawing}
+      onCenterOnLocation={onCenterOnLocation}
+      onClearPress={onClearPress}
+      onSaveCurrentPolygon={onSaveCurrentPolygon}
+      onStartDrawing={onStartDrawing}
+    />
   );
 
   return (
