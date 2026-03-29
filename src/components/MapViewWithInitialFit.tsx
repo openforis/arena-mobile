@@ -53,7 +53,7 @@ export const MapViewWithInitialFit = forwardRef<MapView, Props>(
 
     useEffect(() => {
       if (!isMapReady || (fitOnlyOnce && hasAppliedFitRef.current)) return;
-      if (!fitToCoordinatesOnReady || fitToCoordinatesOnReady.length < 3)
+      if (!fitToCoordinatesOnReady || fitToCoordinatesOnReady.length === 0)
         return;
 
       internalRef.current?.fitToCoordinates(fitToCoordinatesOnReady, {

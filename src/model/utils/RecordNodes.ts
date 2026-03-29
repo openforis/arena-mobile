@@ -17,6 +17,7 @@ import {
   Dictionary,
 } from "@openforis/arena-core";
 import { SurveyDefs } from "./SurveyDefs";
+import { LatLng } from "react-native-maps";
 
 const EMPTY_VALUE = "---";
 
@@ -37,6 +38,32 @@ const coordinateAttributeNumericFields = [
 const yesNoValueByBooleanValue: Record<string, string> = {
   true: "yes",
   false: "no",
+};
+
+const getPolygonCoordinatesFromNodeValue = (nodeValue: any): LatLng[] => {
+  const ringCoordinates: [number, number][] | undefined =
+    nodeValue?.geometry?.coordinates?.[0];
+
+  if (!ringCoordinates?.length) return [];
+
+  const coordinates = [...ringCoordinates];
+  const firstCoordinate = coordinates[0];
+  const lastCoordinate = coordinates.at(-1);
+
+  if (
+    coordinates.length > 1 &&
+    firstCoordinate &&
+    lastCoordinate &&
+    firstCoordinate[0] === lastCoordinate[0] &&
+    firstCoordinate[1] === lastCoordinate[1]
+  ) {
+    coordinates.pop();
+  }
+
+  return coordinates.map(([longitude, latitude]) => ({
+    latitude,
+    longitude,
+  }));
 };
 
 const getNodeName = ({ survey, record, nodeUuid }: any): string | null => {
@@ -373,6 +400,7 @@ const getApplicableSummaryDefs = ({
 };
 
 export const RecordNodes = {
+  getPolygonCoordinatesFromNodeValue,
   getNodeName,
   formatBooleanValue,
   getEntityKeysFormatted,

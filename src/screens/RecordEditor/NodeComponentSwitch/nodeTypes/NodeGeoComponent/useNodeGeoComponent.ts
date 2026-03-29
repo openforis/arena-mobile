@@ -12,6 +12,7 @@ import MapView, {
   MarkerPressEvent,
 } from "react-native-maps";
 
+import { RecordNodes } from "model";
 import { DataEntryActions, useAppDispatch, useConfirm } from "state";
 import { GeoUtils, Permissions } from "utils";
 
@@ -55,16 +56,12 @@ const toGeoJsonPolygon = (coordinates: LatLng[]) => {
 };
 
 const nodeValueToPolygon = (nodeValue: any): MapPolygonExtendedProps | null => {
-  const coordinates: [number, number][] | undefined =
-    nodeValue?.geometry?.coordinates?.[0];
+  const coordinates = RecordNodes.getPolygonCoordinatesFromNodeValue(nodeValue);
   if (!coordinates?.length) return null;
   const [strokeColor, fillColor] = getRandomPolygonColors();
   return {
     key: GEO_POLYGON_KEY,
-    coordinates: coordinates.map(([longitude, latitude]) => ({
-      latitude,
-      longitude,
-    })),
+    coordinates,
     strokeWidth: 2,
     strokeColor,
     fillColor,
