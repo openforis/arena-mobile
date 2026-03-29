@@ -1,3 +1,4 @@
+import { LatLng } from "react-native-maps";
 import React from "react";
 
 import { Button, HView, IconButton } from "components";
@@ -5,7 +6,7 @@ import { Button, HView, IconButton } from "components";
 import styles from "./styles";
 
 interface NodeGeoToolbarProps {
-  draftCoordinates: { latitude: number; longitude: number }[];
+  draftCoordinates: LatLng[];
   editable: boolean;
   hasValue: boolean;
   onCancelDrawing: () => void;
@@ -26,17 +27,19 @@ export const NodeGeoToolbar = ({
   onStartDrawing,
 }: NodeGeoToolbarProps) => (
   <HView style={styles.toolbar}>
-    {(hasValue || editable) && (
-      <IconButton
-        icon="crosshairs-gps"
-        onPress={onCenterOnLocation}
-        size={24}
-      />
-    )}
     {editable ? (
       <>
+        <IconButton
+          icon="crosshairs-gps"
+          onPress={onCenterOnLocation}
+          size={24}
+        />
         {(hasValue || draftCoordinates.length >= 3) && (
-          <Button onPress={onSaveCurrentPolygon} textKey="common:save" />
+          <Button
+            icon="content-save"
+            onPress={onSaveCurrentPolygon}
+            textKey="common:save"
+          />
         )}
         <Button
           color="secondary"
@@ -45,16 +48,18 @@ export const NodeGeoToolbar = ({
         />
       </>
     ) : (
-      <Button
-        icon={hasValue ? "pencil" : "vector-polygon"}
-        textKey={
-          hasValue ? "dataEntry:geo.editPolygon" : "dataEntry:geo.drawPolygon"
-        }
-        onPress={onStartDrawing}
-      />
-    )}
-    {hasValue && !editable && (
-      <IconButton icon="trash-can-outline" onPress={onClearPress} />
+      <>
+        <Button
+          icon={hasValue ? "pencil" : "vector-polygon"}
+          textKey={
+            hasValue ? "dataEntry:geo.editPolygon" : "dataEntry:geo.drawPolygon"
+          }
+          onPress={onStartDrawing}
+        />
+        {hasValue && (
+          <IconButton icon="trash-can-outline" onPress={onClearPress} />
+        )}
+      </>
     )}
   </HView>
 );
