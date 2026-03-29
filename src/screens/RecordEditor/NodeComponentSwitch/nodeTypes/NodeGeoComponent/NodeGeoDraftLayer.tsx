@@ -31,6 +31,7 @@ export const NodeGeoDraftLayer = ({
   if (draftCoordinates.length === 0) return null;
 
   const lineStrokeWidth = Math.max(strokeWidth ?? 2, 4);
+  const coordinateOccurrences = new Map<string, number>();
 
   return (
     <>
@@ -48,16 +49,23 @@ export const NodeGeoDraftLayer = ({
           strokeWidth={lineStrokeWidth}
         />
       )}
-      {draftCoordinates.map((coordinate, index) => (
-        <NodeGeoMapMarker
-          key={`draft-point-${index}`}
-          markerKey={`draft-point-${index}`}
-          coordinate={coordinate}
-          style={markerStyle}
-        >
-          <RNView collapsable={false} style={markerInnerStyle} />
-        </NodeGeoMapMarker>
-      ))}
+      {draftCoordinates.map((coordinate) => {
+        const coordinateKey = `${coordinate.latitude}-${coordinate.longitude}`;
+        const occurrence = coordinateOccurrences.get(coordinateKey) ?? 0;
+        coordinateOccurrences.set(coordinateKey, occurrence + 1);
+        const markerKey = `draft-point-${coordinateKey}-${occurrence}`;
+
+        return (
+          <NodeGeoMapMarker
+            key={markerKey}
+            markerKey={markerKey}
+            coordinate={coordinate}
+            style={markerStyle}
+          >
+            <RNView collapsable={false} style={markerInnerStyle} />
+          </NodeGeoMapMarker>
+        );
+      })}
     </>
   );
 };
