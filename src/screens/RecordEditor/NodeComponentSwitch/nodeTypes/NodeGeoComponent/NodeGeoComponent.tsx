@@ -73,9 +73,11 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
             key={`polygon-midpoint-${index}`}
             coordinate={coordinate}
             anchor={{ x: 0.5, y: 0.5 }}
+            tracksViewChanges={true}
             onPress={onPolygonMidpointPress(insertAtIndex)}
           >
             <RNView
+              collapsable={false}
               style={[styles.midpoint, { borderColor: newPolygon.strokeColor }]}
             />
           </Marker>

@@ -31,9 +31,9 @@ export default StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 8,
-    borderWidth: 2,
-    borderStyle: "dotted",
+    borderWidth: 1,
     backgroundColor: "rgba(255, 255, 255, 0.35)",
+    elevation: 0,
   },
   toolbar: {
     alignItems: "center",

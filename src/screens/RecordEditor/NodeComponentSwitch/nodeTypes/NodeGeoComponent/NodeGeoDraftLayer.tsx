@@ -42,12 +42,15 @@ export const NodeGeoDraftLayer = ({
         <Marker
           key={`draft-point-${index}`}
           coordinate={coordinate}
-          anchor={{ x: 0.3, y: 0.3 }}
+          anchor={{ x: 0.5, y: 0.5 }}
+          tracksViewChanges={true}
         >
           <RNView
+            collapsable={false}
             style={[styles.draftPoint, { borderColor: newPolygon.strokeColor }]}
           >
             <RNView
+              collapsable={false}
               style={[
                 styles.draftPointInner,
                 { backgroundColor: newPolygon.strokeColor },
