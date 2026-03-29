@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { StyleSheet } from "react-native";
 
-import { Polygon } from "react-native-maps";
+import { LatLng, Polygon } from "react-native-maps";
 
 import { MapViewWithInitialFit, Text, VView } from "components";
 import { GeoUtils } from "utils";
@@ -21,10 +21,8 @@ const styles = StyleSheet.create({
 const polygonFillColor = "rgba(21, 101, 192, 0.2)";
 const polygonStrokeColor = "rgba(21, 101, 192, 0.95)";
 
-const sameCoordinate = (
-  first: { latitude: number; longitude: number },
-  second: { latitude: number; longitude: number },
-) => first.latitude === second.latitude && first.longitude === second.longitude;
+const sameCoordinate = (first: LatLng, second: LatLng) =>
+  first.latitude === second.latitude && first.longitude === second.longitude;
 
 export const NodeGeoValuePreview = (props: NodeValuePreviewProps) => {
   const { value, valueFormatted } = props;
