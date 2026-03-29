@@ -1,14 +1,13 @@
 import React, { useMemo } from "react";
-import { View as RNView } from "react-native";
 
 import { PolygonEditor } from "@siposdani87/expo-maps-polygon-editor";
-import { Marker } from "react-native-maps";
 
 import { MapViewWithInitialFit, Modal, Text, VView } from "components";
 
 import { log } from "utils";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 import { NodeGeoDraftLayer } from "./NodeGeoDraftLayer";
+import { NodeGeoMidpointsLayer } from "./NodeGeoMidpointsLayer";
 import { NodeGeoToolbar } from "./NodeGeoToolbar";
 import { useNodeGeoComponent } from "./useNodeGeoComponent";
 import styles from "./styles";
@@ -65,23 +64,13 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
           newPolygon={newPolygon}
         />
       )}
-      {editable &&
-        isPolygonSelected &&
-        polygons.length > 0 &&
-        polygonMidpoints.map(({ coordinate, insertAtIndex }, index) => (
-          <Marker
-            key={`polygon-midpoint-${index}`}
-            coordinate={coordinate}
-            anchor={{ x: 0.5, y: 0.5 }}
-            tracksViewChanges={true}
-            onPress={onPolygonMidpointPress(insertAtIndex)}
-          >
-            <RNView
-              collapsable={false}
-              style={[styles.midpoint, { borderColor: newPolygon.strokeColor }]}
-            />
-          </Marker>
-        ))}
+      {editable && isPolygonSelected && polygons.length > 0 && (
+        <NodeGeoMidpointsLayer
+          midpoints={polygonMidpoints}
+          strokeColor={newPolygon.strokeColor}
+          onMidpointPress={onPolygonMidpointPress}
+        />
+      )}
       <PolygonEditor
         ref={polygonEditorRef}
         newPolygon={newPolygon}
