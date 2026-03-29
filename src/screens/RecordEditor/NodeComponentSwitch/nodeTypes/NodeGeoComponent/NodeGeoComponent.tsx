@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { View as RNView } from "react-native";
 
 import { PolygonEditor } from "@siposdani87/expo-maps-polygon-editor";
@@ -18,10 +18,15 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
     draftCoordinates,
     editable,
     initialRegion,
+    isPolygonSelected,
     mapRef,
     newPolygon,
     onMapPress,
+    onPolygonMidpointPress,
+    onPolygonSelect,
+    onPolygonUnselect,
     polygonEditorRef,
+    polygonMidpoints,
     polygons,
     onCancelDrawing,
     onCenterOnLocation,
@@ -43,19 +48,6 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
   );
 
   const isDrawingPolygon = editable;
-  const isEditingExistingPolygon = editable && hasValue;
-
-  useEffect(() => {
-    if (!isEditingExistingPolygon) return;
-
-    // The editor remounts inside the modal; reselect the polygon to enable
-    // vertex handles for drag editing.
-    const timeout = setTimeout(() => {
-      polygonEditorRef.current?.selectPolygonByIndex(0);
-    }, 0);
-
-    return () => clearTimeout(timeout);
-  }, [isEditingExistingPolygon, polygonEditorRef]);
 
   const map = (
     <MapViewWithInitialFit
@@ -105,6 +97,21 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
           ))}
         </>
       )}
+      {editable &&
+        isPolygonSelected &&
+        polygons.length > 0 &&
+        polygonMidpoints.map(({ coordinate, insertAtIndex }, index) => (
+          <Marker
+            key={`polygon-midpoint-${index}`}
+            coordinate={coordinate}
+            anchor={{ x: 0.5, y: 0.5 }}
+            onPress={onPolygonMidpointPress(insertAtIndex)}
+          >
+            <RNView
+              style={[styles.midpoint, { borderColor: newPolygon.strokeColor }]}
+            />
+          </Marker>
+        ))}
       <PolygonEditor
         ref={polygonEditorRef}
         newPolygon={newPolygon}
@@ -112,6 +119,8 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
         onPolygonCreate={onPolygonCreate}
         onPolygonChange={onPolygonChange}
         onPolygonRemove={onPolygonRemove}
+        onPolygonSelect={onPolygonSelect}
+        onPolygonUnselect={onPolygonUnselect}
         disabled={!editable}
       />
     </MapViewWithInitialFit>

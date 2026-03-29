@@ -27,6 +27,14 @@ export default StyleSheet.create({
     height: 8,
     borderRadius: 4,
   },
+  midpoint: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderStyle: "dotted",
+    backgroundColor: "rgba(255, 255, 255, 0.35)",
+  },
   toolbar: {
     alignItems: "center",
     justifyContent: "space-between",

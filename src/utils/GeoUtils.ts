@@ -27,7 +27,13 @@ const computeRegionFromCoordinates = (coordinates: LatLng[]): Region => {
   };
 };
 
+const computeMidpointCoordinate = (a: LatLng, b: LatLng): LatLng => ({
+  latitude: (a.latitude + b.latitude) / 2,
+  longitude: (a.longitude + b.longitude) / 2,
+});
+
 export const GeoUtils = {
+  computeMidpointCoordinate,
   computeRegionFromCoordinates,
   defaultMapRegion,
 };
