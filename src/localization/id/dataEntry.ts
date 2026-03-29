@@ -143,8 +143,9 @@ export default {
   geo: {
     drawPolygon: "Gambar poligon",
     editPolygon: "Edit poligon",
-    editPolygonInstructions: `Tekan lama dan seret simpul untuk memindahkannya.
-  Tekan lama dan seret titik transparan untuk menambahkan simpul baru.`,
+    editPolygonInstructions: `Ketuk poligon terlebih dahulu untuk memilihnya.
+  Tekan lama dan seret simpul untuk memindahkannya.
+  Ketuk titik tengah untuk menambahkan simpul baru, lalu seret ke posisi yang diinginkan.`,
     tapToAddPoints: "Ketuk peta untuk menambahkan titik",
   },
   taxon: {

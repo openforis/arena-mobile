@@ -136,8 +136,9 @@ export default {
   geo: {
     drawPolygon: "Desenhar polígono",
     editPolygon: "Editar polígono",
-    editPolygonInstructions: `Pressione e arraste um vértice para movê-lo.
-  Pressione e arraste um ponto transparente para adicionar um novo vértice.`,
+    editPolygonInstructions: `Toque primeiro em um polígono para selecioná-lo.
+  Pressione e arraste um vértice para movê-lo.
+  Toque em um ponto médio para adicionar um novo vértice e depois arraste-o para a posição desejada.`,
     tapToAddPoints: "Toque no mapa para adicionar pontos",
   },
   taxon: {

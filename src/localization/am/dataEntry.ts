@@ -129,8 +129,9 @@ export default {
   geo: {
     drawPolygon: "ፖሊጎን ይሳሉ",
     editPolygon: "ፖሊጎን ያርትዑ",
-    editPolygonInstructions: `አንድ ጫፍን ረጅም ጊዜ ይጫኑ እና ለመንቀሳቀስ ይጎትቱት።
-  አዲስ ጫፍ ለመጨመር ግልጽ ነጥብን ረጅም ጊዜ ይጫኑ እና ይጎትቱት።`,
+    editPolygonInstructions: `ከመጀመሪያ ለመምረጥ በፖሊጎን ላይ ይንኩ።
+  አንድ ጫፍን ረጅም ጊዜ ይጫኑ እና ለመንቀሳቀስ ይጎትቱት።
+  አዲስ ጫፍ ለመጨመር በመካከለኛ ነጥብ ላይ ይንኩ፣ ከዚያም ይጎትቱት።`,
     tapToAddPoints: "ነጥቦች ለመጨመር በካርታው ላይ ይንኩ።",
   },
   taxon: {
