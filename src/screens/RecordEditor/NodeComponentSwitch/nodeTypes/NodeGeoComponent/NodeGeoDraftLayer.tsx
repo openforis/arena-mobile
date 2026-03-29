@@ -2,7 +2,12 @@ import React from "react";
 import { View as RNView } from "react-native";
 
 import { MapPolygonExtendedProps } from "@siposdani87/expo-maps-polygon-editor";
-import { Polygon as MapPolygon, Marker, Polyline, LatLng } from "react-native-maps";
+import {
+  Polygon as MapPolygon,
+  Marker,
+  Polyline,
+  LatLng,
+} from "react-native-maps";
 
 import styles from "./styles";
 
