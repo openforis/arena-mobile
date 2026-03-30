@@ -55,8 +55,7 @@ export const NodeMultipleEntityListComponent = (
   const [sort, setSort] = useState(undefined as SortObject | undefined);
 
   log.debug(
-    "Rendering NodeMultipleEntityListComponent for " +
-      NodeDefs.getName(entityDef),
+    `rendering NodeMultipleEntityListComponent for ${NodeDefs.getName(entityDef)}`,
   );
 
   const entityDefUuid = entityDef.uuid;

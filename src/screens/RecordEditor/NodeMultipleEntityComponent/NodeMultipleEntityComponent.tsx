@@ -14,12 +14,12 @@ type NodeMultipleEntityComponentProps = {
 };
 
 export const NodeMultipleEntityComponent = (
-  props: NodeMultipleEntityComponentProps
+  props: NodeMultipleEntityComponentProps,
 ) => {
   const { entityDef, parentEntityUuid, entityUuid } = props;
 
   log.debug(
-    "Rendering NodeMultipleEntityComponent for " + NodeDefs.getName(entityDef)
+    `rendering NodeMultipleEntityComponent for ${NodeDefs.getName(entityDef)}`,
   );
 
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
