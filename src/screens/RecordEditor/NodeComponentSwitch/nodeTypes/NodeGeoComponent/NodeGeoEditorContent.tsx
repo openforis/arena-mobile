@@ -86,8 +86,6 @@ export const NodeGeoEditorContent = ({
     [polygons, shouldFitInitialPolygon],
   );
 
-  const helperTextKey = determineHelperTextKey({ hasValue, isPolygonSelected });
-
   return (
     <>
       <MapViewWithInitialFit
@@ -126,7 +124,10 @@ export const NodeGeoEditorContent = ({
         />
       </MapViewWithInitialFit>
 
-      {<Text style={styles.helperText} textKey={helperTextKey} />}
+      <Text
+        style={styles.helperText}
+        textKey={determineHelperTextKey({ hasValue, isPolygonSelected })}
+      />
 
       <NodeGeoEditorContentToolbar
         draftCoordinates={draftCoordinates}
