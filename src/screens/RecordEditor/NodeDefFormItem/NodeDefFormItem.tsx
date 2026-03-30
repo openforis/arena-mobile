@@ -28,7 +28,8 @@ type NodeDefFormItemProps = {
 export const NodeDefFormItem = (props: NodeDefFormItemProps) => {
   const { nodeDef, parentNodeUuid, onFocus } = props;
 
-  log.debug(`Rendering form item ${nodeDef.props.name}`);
+  log.debug(`rendering form item ${NodeDefs.getName(nodeDef)}`);
+
   const styles = useStyles();
   const settings = SettingsSelectors.useSettings();
 

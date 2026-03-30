@@ -16,6 +16,7 @@ import { RecordCurrentPageEntity, RecordNodes, SurveyDefs } from "model";
 
 import { SurveySelectors } from "../survey/selectors";
 import { DataEntryState, PreviousCycleRecordPageEntityPointer } from "./types";
+import { log } from "utils/Logger";
 
 const getDataEntryState = (state: any): DataEntryState => state.dataEntry;
 
@@ -108,8 +109,16 @@ const selectRecordNodePointerVisibility =
   (state: any) => {
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = selectRecord(state);
-
-    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
+    const errorMessageSuffix = `checking visibility for nodeDef ${nodeDefUuid} with parent ${parentNodeUuid} in survey ${Surveys.getName(survey)}`;
+    if (!record) {
+      log.debug(`${errorMessageSuffix}: record not found`);
+      return false;
+    }
+    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
+    if (!parentNode) {
+      log.debug(`${errorMessageSuffix}: parent node not found`);
+      return false;
+    }
     const applicable = Nodes.isChildApplicable(parentNode, nodeDefUuid);
     const nodeDefChild = Surveys.getNodeDefByUuid({
       survey,
