@@ -11,6 +11,7 @@ interface NodeGeoEditorContentToolbarProps {
   onCancelDrawing: () => void;
   onCenterOnLocation: () => void;
   onSaveCurrentPolygon: () => void;
+  onUndoLastCoordinate: () => void;
 }
 
 export const NodeGeoEditorContentToolbar = ({
@@ -19,9 +20,13 @@ export const NodeGeoEditorContentToolbar = ({
   onCancelDrawing,
   onCenterOnLocation,
   onSaveCurrentPolygon,
+  onUndoLastCoordinate,
 }: NodeGeoEditorContentToolbarProps) => (
   <HView style={styles.toolbar}>
     <IconButton icon="crosshairs-gps" onPress={onCenterOnLocation} size={24} />
+    {!hasValue && draftCoordinates.length > 0 && (
+      <IconButton icon="undo" onPress={onUndoLastCoordinate} size={24} />
+    )}
     {(hasValue || draftCoordinates.length >= 3) && (
       <Button
         icon="content-save"

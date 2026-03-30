@@ -143,6 +143,21 @@ export const useNodeGeoEditorContent = ({
     setLocalState((prev) => ({ ...prev, isPolygonSelected: false }));
   }, [setLocalState]);
 
+  const onUndoLastCoordinate = useCallback(() => {
+    const newDraftCoordinates = draftCoordinates.slice(0, -1);
+    setLocalState((prev) => ({
+      ...prev,
+      draftCoordinates: newDraftCoordinates,
+    }));
+    const polygonEditor = polygonEditorRef.current;
+    if (!polygonEditor) return;
+    polygonEditor.resetAll();
+    polygonEditor.startPolygon();
+    for (const coord of newDraftCoordinates) {
+      polygonEditor.setCoordinate(coord);
+    }
+  }, [draftCoordinates, polygonEditorRef, setLocalState]);
+
   const onMapPress = useCallback(
     (event: MapPressEvent) => {
       if (!editable) return;
@@ -222,6 +237,7 @@ export const useNodeGeoEditorContent = ({
     polygonMidpoints,
     onCenterOnLocation,
     onSaveCurrentPolygon,
+    onUndoLastCoordinate,
     onPolygonCreate,
     onPolygonChange,
     onPolygonRemove,

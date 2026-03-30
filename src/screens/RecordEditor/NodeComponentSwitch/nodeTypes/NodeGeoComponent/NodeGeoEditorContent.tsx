@@ -65,6 +65,7 @@ export const NodeGeoEditorContent = ({
     polygonMidpoints,
     onCenterOnLocation,
     onSaveCurrentPolygon,
+    onUndoLastCoordinate,
     onPolygonCreate,
     onPolygonChange,
     onPolygonRemove,
@@ -140,6 +141,7 @@ export const NodeGeoEditorContent = ({
         onCancelDrawing={onCancelDrawing}
         onCenterOnLocation={onCenterOnLocation}
         onSaveCurrentPolygon={onSaveCurrentPolygon}
+        onUndoLastCoordinate={onUndoLastCoordinate}
       />
     </>
   );
