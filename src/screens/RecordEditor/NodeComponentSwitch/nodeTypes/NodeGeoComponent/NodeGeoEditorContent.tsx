@@ -44,7 +44,6 @@ const determineHelperTextKey = ({
 
 export const NodeGeoEditorContent = ({
   draftCoordinates,
-  editable,
   initialRegion,
   isPolygonSelected,
   mapRef,
@@ -71,7 +70,6 @@ export const NodeGeoEditorContent = ({
     onPolygonRemove,
   } = useNodeGeoEditorContent({
     draftCoordinates,
-    editable,
     mapRef,
     newPolygon,
     polygonEditorRef,
@@ -88,10 +86,6 @@ export const NodeGeoEditorContent = ({
     [polygons, shouldFitInitialPolygon],
   );
 
-  if (!editable && !hasValue) {
-    return null;
-  }
-
   const helperTextKey = determineHelperTextKey({ hasValue, isPolygonSelected });
 
   return (
@@ -104,21 +98,21 @@ export const NodeGeoEditorContent = ({
         fitToCoordinatesOnReady={initialFitCoordinates}
         fitOnlyOnce={true}
       >
-        {editable && polygons.length === 0 && (
+        {polygons.length === 0 && (
           <NodeGeoDraftLayer
             draftCoordinates={draftCoordinates}
             newPolygon={newPolygon}
           />
         )}
-        {editable && isPolygonSelected && polygons.length > 0 && (
-          <NodeGeoMidpointsLayer
-            midpoints={polygonMidpoints}
-            strokeColor={polygons[0]?.strokeColor ?? newPolygon.strokeColor}
-            onMidpointPress={onPolygonMidpointPress}
-          />
-        )}
-        {editable && isPolygonSelected && polygons[0] && (
-          <NodeGeoVerticesLayer polygon={polygons[0]} />
+        {isPolygonSelected && !!polygons[0] && (
+          <>
+            <NodeGeoMidpointsLayer
+              midpoints={polygonMidpoints}
+              strokeColor={polygons[0]?.strokeColor ?? newPolygon.strokeColor}
+              onMidpointPress={onPolygonMidpointPress}
+            />
+            <NodeGeoVerticesLayer polygon={polygons[0]} />
+          </>
         )}
         <PolygonEditor
           ref={polygonEditorRef}
@@ -129,11 +123,10 @@ export const NodeGeoEditorContent = ({
           onPolygonRemove={onPolygonRemove}
           onPolygonSelect={onPolygonSelect}
           onPolygonUnselect={onPolygonUnselect}
-          disabled={!editable}
         />
       </MapViewWithInitialFit>
 
-      {editable && <Text style={styles.helperText} textKey={helperTextKey} />}
+      {<Text style={styles.helperText} textKey={helperTextKey} />}
 
       <NodeGeoEditorContentToolbar
         draftCoordinates={draftCoordinates}

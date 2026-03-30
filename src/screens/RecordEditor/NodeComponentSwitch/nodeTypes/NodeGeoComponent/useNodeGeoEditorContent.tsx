@@ -11,18 +11,18 @@ import MapView, {
   MarkerPressEvent,
 } from "react-native-maps";
 
+import { UUIDs } from "@openforis/arena-core";
+
 import { GeoUtils } from "utils";
 import { Permissions } from "utils/Permissions";
 
 import { PolygonMidpoint } from "./types";
 import { LocalState } from "./useNodeGeoComponent";
-import { UUIDs } from "@openforis/arena-core";
 
 const GEO_POLYGON_KEY = "geo_polygon_0";
 
 export interface UseNodeGeoEditorContentProps {
   draftCoordinates: LatLng[];
-  editable: boolean;
   mapRef: React.RefObject<MapView | null>;
   newPolygon: MapPolygonExtendedProps;
   polygonEditorRef: React.RefObject<PolygonEditorRef | null>;
@@ -58,7 +58,6 @@ const determinePolygonsToSave = ({
 
 export const useNodeGeoEditorContent = ({
   draftCoordinates,
-  editable,
   mapRef,
   newPolygon,
   polygonEditorRef,
@@ -160,8 +159,6 @@ export const useNodeGeoEditorContent = ({
 
   const onMapPress = useCallback(
     (event: MapPressEvent) => {
-      if (!editable) return;
-
       const { coordinate } = event.nativeEvent ?? {};
       if (!coordinate) return;
 
@@ -175,7 +172,7 @@ export const useNodeGeoEditorContent = ({
 
       polygonEditorRef.current?.setCoordinate(coordinate);
     },
-    [editable, polygonEditorRef, polygons.length, setLocalState],
+    [polygonEditorRef, polygons.length, setLocalState],
   );
 
   const polygonMidpoints = useMemo<PolygonMidpoint[]>(() => {
@@ -195,7 +192,6 @@ export const useNodeGeoEditorContent = ({
   const onPolygonMidpointPress = useCallback(
     (insertAtIndex: number) => (event: MarkerPressEvent) => {
       event.stopPropagation();
-      if (!editable) return;
 
       setLocalState((prev) => {
         const polygon = prev.polygons[0];
@@ -225,7 +221,7 @@ export const useNodeGeoEditorContent = ({
         };
       });
     },
-    [editable, setLocalState],
+    [setLocalState],
   );
 
   return {
