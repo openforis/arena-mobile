@@ -42,6 +42,24 @@ const nodeValueToPolygon = (nodeValue: any): MapPolygonExtendedProps | null => {
   };
 };
 
+const toGeoJsonPolygon = (coordinates: LatLng[]) => {
+  if (coordinates.length < 3) return null;
+
+  const linearRing = coordinates.map((c) => [c.longitude, c.latitude]);
+  const firstCoordinate = coordinates[0];
+  if (!firstCoordinate) return null;
+  linearRing.push([firstCoordinate.longitude, firstCoordinate.latitude]);
+
+  return {
+    type: "Feature",
+    properties: {},
+    geometry: {
+      type: "Polygon",
+      coordinates: [linearRing],
+    },
+  };
+};
+
 export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
@@ -152,6 +170,17 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     polygonEditorRef.current?.startPolygon();
   }, [polygonEditorRef, polygons]);
 
+  const onSavePolygon = useCallback(
+    (polygon: MapPolygonExtendedProps | null) => {
+      if (!nodeUuid) return;
+      const geoJson = polygon ? toGeoJsonPolygon(polygon.coordinates) : null;
+      dispatch(
+        DataEntryActions.updateAttribute({ uuid: nodeUuid, value: geoJson }),
+      );
+    },
+    [dispatch, nodeUuid],
+  );
+
   const onClearPress = useCallback(async () => {
     if (
       await confirm({
@@ -166,13 +195,9 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
         isPolygonSelected: false,
       }));
       polygonEditorRef.current?.resetAll();
-      if (nodeUuid) {
-        dispatch(
-          DataEntryActions.updateAttribute({ uuid: nodeUuid, value: null }),
-        );
-      }
+      onSavePolygon(null);
     }
-  }, [confirm, dispatch, nodeUuid]);
+  }, [confirm, onSavePolygon]);
 
   return {
     nodeUuid,
@@ -190,5 +215,6 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     onCancelDrawing,
     onStartDrawing,
     onClearPress,
+    onSavePolygon,
   };
 };

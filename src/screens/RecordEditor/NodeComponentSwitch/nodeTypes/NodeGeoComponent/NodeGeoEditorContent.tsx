@@ -42,7 +42,6 @@ const determineHelperTextKey = ({
 };
 
 export const NodeGeoEditorContent = ({
-  nodeUuid,
   draftCoordinates,
   editable,
   initialRegion,
@@ -54,6 +53,7 @@ export const NodeGeoEditorContent = ({
   setLocalState,
   shouldFitInitialPolygon,
   onCancelDrawing,
+  onSavePolygon,
 }: NodeGeoEditorContentProps) => {
   const {
     hasValue,
@@ -68,7 +68,6 @@ export const NodeGeoEditorContent = ({
     onPolygonChange,
     onPolygonRemove,
   } = useNodeGeoEditorContent({
-    nodeUuid,
     draftCoordinates,
     editable,
     mapRef,
@@ -76,6 +75,7 @@ export const NodeGeoEditorContent = ({
     polygonEditorRef,
     polygons,
     setLocalState,
+    onSavePolygon,
   });
 
   const initialFitCoordinates = useMemo(

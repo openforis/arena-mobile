@@ -11,7 +11,6 @@ import MapView, {
   MarkerPressEvent,
 } from "react-native-maps";
 
-import { DataEntryActions, useAppDispatch } from "state";
 import { GeoUtils } from "utils";
 import { Permissions } from "utils/Permissions";
 
@@ -22,7 +21,6 @@ import { UUIDs } from "@openforis/arena-core";
 const GEO_POLYGON_KEY = "geo_polygon_0";
 
 export interface UseNodeGeoEditorContentProps {
-  nodeUuid: string | undefined;
   draftCoordinates: LatLng[];
   editable: boolean;
   mapRef: React.RefObject<MapView | null>;
@@ -30,25 +28,8 @@ export interface UseNodeGeoEditorContentProps {
   polygonEditorRef: React.RefObject<PolygonEditorRef | null>;
   polygons: MapPolygonExtendedProps[];
   setLocalState: React.Dispatch<React.SetStateAction<LocalState>>;
+  onSavePolygon: (polygon: MapPolygonExtendedProps | null) => void;
 }
-
-const toGeoJsonPolygon = (coordinates: LatLng[]) => {
-  if (coordinates.length < 3) return null;
-
-  const linearRing = coordinates.map((c) => [c.longitude, c.latitude]);
-  const firstCoordinate = coordinates[0];
-  if (!firstCoordinate) return null;
-  linearRing.push([firstCoordinate.longitude, firstCoordinate.latitude]);
-
-  return {
-    type: "Feature",
-    properties: {},
-    geometry: {
-      type: "Polygon",
-      coordinates: [linearRing],
-    },
-  };
-};
 
 const determinePolygonsToSave = ({
   polygons,
@@ -76,7 +57,6 @@ const determinePolygonsToSave = ({
 };
 
 export const useNodeGeoEditorContent = ({
-  nodeUuid,
   draftCoordinates,
   editable,
   mapRef,
@@ -84,20 +64,9 @@ export const useNodeGeoEditorContent = ({
   polygonEditorRef,
   polygons,
   setLocalState,
+  onSavePolygon,
 }: UseNodeGeoEditorContentProps) => {
-  const dispatch = useAppDispatch();
   const hasValue = polygons.length > 0;
-
-  const savePolygon = useCallback(
-    (polygon: MapPolygonExtendedProps | null) => {
-      if (!nodeUuid) return;
-      const geoJson = polygon ? toGeoJsonPolygon(polygon.coordinates) : null;
-      dispatch(
-        DataEntryActions.updateAttribute({ uuid: nodeUuid, value: geoJson }),
-      );
-    },
-    [dispatch, nodeUuid],
-  );
 
   const onCenterOnLocation = useCallback(async () => {
     if (!(await Permissions.requestLocationForegroundPermission())) return;
@@ -128,8 +97,8 @@ export const useNodeGeoEditorContent = ({
       editable: false,
       isPolygonSelected: false,
     }));
-    savePolygon(polygonToSave);
-  }, [draftCoordinates, newPolygon, polygons, savePolygon, setLocalState]);
+    onSavePolygon(polygonToSave);
+  }, [draftCoordinates, newPolygon, onSavePolygon, polygons, setLocalState]);
 
   const onPolygonCreate = useCallback(
     (polygon: MapPolygonExtendedProps) => {
