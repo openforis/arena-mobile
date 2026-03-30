@@ -3,7 +3,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   MapPolygonExtendedProps,
   PolygonEditorRef,
-  getRandomPolygonColors,
 } from "@siposdani87/expo-maps-polygon-editor";
 import * as Location from "expo-location";
 import MapView, { LatLng } from "react-native-maps";
@@ -16,6 +15,8 @@ import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState"
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 const GEO_POLYGON_KEY = "geo_polygon_0";
+const polygonStrokeColor = "rgb(21, 101, 192)";
+const polygonFillColor = "rgba(21, 101, 192, 0.2)";
 
 export interface LocalState {
   editable: boolean;
@@ -32,13 +33,13 @@ export interface LocalState {
 const nodeValueToPolygon = (nodeValue: any): MapPolygonExtendedProps | null => {
   const coordinates = RecordNodes.getPolygonCoordinatesFromNodeValue(nodeValue);
   if (!coordinates?.length) return null;
-  const [strokeColor, fillColor] = getRandomPolygonColors();
+
   return {
     key: GEO_POLYGON_KEY,
     coordinates,
     strokeWidth: 2,
-    strokeColor,
-    fillColor,
+    strokeColor: polygonStrokeColor,
+    fillColor: polygonFillColor,
   };
 };
 
@@ -71,13 +72,12 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
   }, [nodeValue]);
 
   const newPolygon = useMemo<MapPolygonExtendedProps>(() => {
-    const [strokeColor, fillColor] = getRandomPolygonColors();
     return {
       key: GEO_POLYGON_KEY,
       coordinates: [],
       strokeWidth: 2,
-      strokeColor,
-      fillColor,
+      strokeColor: polygonStrokeColor,
+      fillColor: polygonFillColor,
     };
   }, []);
 

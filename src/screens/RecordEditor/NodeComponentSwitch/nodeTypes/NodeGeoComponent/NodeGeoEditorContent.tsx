@@ -6,6 +6,7 @@ import { MapViewWithInitialFit, Text } from "components";
 
 import { NodeGeoDraftLayer } from "./NodeGeoDraftLayer";
 import { NodeGeoMidpointsLayer } from "./NodeGeoMidpointsLayer";
+import { NodeGeoVerticesLayer } from "./NodeGeoVerticesLayer";
 import { NodeGeoEditorContentToolbar } from "./NodeGeoEditorContentToolbar";
 import {
   UseNodeGeoEditorContentProps,
@@ -111,9 +112,12 @@ export const NodeGeoEditorContent = ({
         {editable && isPolygonSelected && polygons.length > 0 && (
           <NodeGeoMidpointsLayer
             midpoints={polygonMidpoints}
-            strokeColor={newPolygon.strokeColor}
+            strokeColor={polygons[0]?.strokeColor ?? newPolygon.strokeColor}
             onMidpointPress={onPolygonMidpointPress}
           />
+        )}
+        {editable && isPolygonSelected && polygons[0] && (
+          <NodeGeoVerticesLayer polygon={polygons[0]} />
         )}
         <PolygonEditor
           ref={polygonEditorRef}

@@ -6,9 +6,9 @@ import React, {
   useRef,
   useState,
 } from "react";
-
 import MapView, { LatLng, MapViewProps } from "react-native-maps";
-import { log } from "utils/Logger";
+
+import { log } from "utils";
 
 type EdgePadding = {
   top: number;
@@ -46,7 +46,7 @@ export const MapViewWithInitialFit = forwardRef<MapView, Props>(
     },
     ref,
   ) => {
-    log.debug("Rendering MapViewWithInitialFit");
+    log.debug("rendering MapViewWithInitialFit");
 
     const internalRef = useRef<MapView>(null);
     const [isMapReady, setIsMapReady] = useState(false);
