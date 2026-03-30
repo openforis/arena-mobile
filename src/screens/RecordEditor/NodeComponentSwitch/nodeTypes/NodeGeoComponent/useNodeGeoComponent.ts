@@ -9,6 +9,7 @@ import * as Location from "expo-location";
 import MapView, { LatLng } from "react-native-maps";
 
 import { RecordNodes } from "model";
+import { DataEntryActions, useAppDispatch, useConfirm } from "state";
 import { GeoUtils, Permissions } from "utils";
 
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
@@ -42,6 +43,8 @@ const nodeValueToPolygon = (nodeValue: any): MapPolygonExtendedProps | null => {
 };
 
 export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
+  const dispatch = useAppDispatch();
+  const confirm = useConfirm();
   const { value: nodeValue } = useNodeComponentLocalState({ nodeUuid });
 
   const nodeValuePolygons = useMemo(() => {
@@ -132,8 +135,48 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     polygonEditorRef.current?.resetAll();
   }, [nodeValuePolygons]);
 
+  const onStartDrawing = useCallback(() => {
+    setLocalState((prev) => ({
+      ...prev,
+      draftCoordinates: [],
+      isPolygonSelected: false,
+      editable: true,
+      polygons,
+    }));
+
+    if (polygons.length > 0) {
+      return;
+    }
+
+    setLocalState((prev) => ({ ...prev, polygons: [] }));
+    polygonEditorRef.current?.startPolygon();
+  }, [polygonEditorRef, polygons]);
+
+  const onClearPress = useCallback(async () => {
+    if (
+      await confirm({
+        messageKey: "dataEntry:confirmDeleteValue.message",
+      })
+    ) {
+      setLocalState((prev) => ({
+        ...prev,
+        draftCoordinates: [],
+        polygons: [],
+        editable: false,
+        isPolygonSelected: false,
+      }));
+      polygonEditorRef.current?.resetAll();
+      if (nodeUuid) {
+        dispatch(
+          DataEntryActions.updateAttribute({ uuid: nodeUuid, value: null }),
+        );
+      }
+    }
+  }, [confirm, dispatch, nodeUuid]);
+
   return {
     nodeUuid,
+    nodeValue,
     draftCoordinates,
     editable,
     initialRegion,
@@ -145,5 +188,7 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     setLocalState,
     shouldFitInitialPolygon,
     onCancelDrawing,
+    onStartDrawing,
+    onClearPress,
   };
 };

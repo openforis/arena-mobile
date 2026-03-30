@@ -6,6 +6,7 @@ import { MapViewWithInitialFit, Text } from "components";
 
 import { NodeGeoDraftLayer } from "./NodeGeoDraftLayer";
 import { NodeGeoMidpointsLayer } from "./NodeGeoMidpointsLayer";
+import { NodeGeoEditorContentToolbar } from "./NodeGeoEditorContentToolbar";
 import {
   UseNodeGeoEditorContentProps,
   useNodeGeoEditorContent,
@@ -21,6 +22,7 @@ interface NodeGeoEditorContentProps extends UseNodeGeoEditorContentProps {
   };
   isPolygonSelected: boolean;
   shouldFitInitialPolygon: boolean;
+  onCancelDrawing: () => void;
 }
 
 const determineHelperTextKey = ({
@@ -60,10 +62,11 @@ export const NodeGeoEditorContent = ({
     onPolygonSelect,
     onPolygonUnselect,
     polygonMidpoints,
+    onCenterOnLocation,
+    onSaveCurrentPolygon,
     onPolygonCreate,
     onPolygonChange,
     onPolygonRemove,
-    toolbar,
   } = useNodeGeoEditorContent({
     nodeUuid,
     draftCoordinates,
@@ -73,7 +76,6 @@ export const NodeGeoEditorContent = ({
     polygonEditorRef,
     polygons,
     setLocalState,
-    onCancelDrawing,
   });
 
   const initialFitCoordinates = useMemo(
@@ -85,7 +87,7 @@ export const NodeGeoEditorContent = ({
   );
 
   if (!editable && !hasValue) {
-    return toolbar;
+    return null;
   }
 
   const helperTextKey = determineHelperTextKey({ hasValue, isPolygonSelected });
@@ -99,12 +101,6 @@ export const NodeGeoEditorContent = ({
         onPress={onMapPress}
         fitToCoordinatesOnReady={initialFitCoordinates}
         fitOnlyOnce={true}
-        onInitialFitApplied={() => {
-          setLocalState((prev) => ({
-            ...prev,
-            shouldFitInitialPolygon: false,
-          }));
-        }}
       >
         {editable && polygons.length === 0 && (
           <NodeGeoDraftLayer
@@ -131,8 +127,16 @@ export const NodeGeoEditorContent = ({
           disabled={!editable}
         />
       </MapViewWithInitialFit>
+
       {editable && <Text style={styles.helperText} textKey={helperTextKey} />}
-      {toolbar}
+
+      <NodeGeoEditorContentToolbar
+        draftCoordinates={draftCoordinates}
+        hasValue={hasValue}
+        onCancelDrawing={onCancelDrawing}
+        onCenterOnLocation={onCenterOnLocation}
+        onSaveCurrentPolygon={onSaveCurrentPolygon}
+      />
     </>
   );
 };

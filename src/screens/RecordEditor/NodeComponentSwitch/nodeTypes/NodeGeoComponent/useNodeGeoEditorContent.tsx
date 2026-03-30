@@ -11,11 +11,10 @@ import MapView, {
   MarkerPressEvent,
 } from "react-native-maps";
 
-import { DataEntryActions, useAppDispatch, useConfirm } from "state";
+import { DataEntryActions, useAppDispatch } from "state";
 import { GeoUtils } from "utils";
 import { Permissions } from "utils/Permissions";
 
-import { NodeGeoToolbar } from "./NodeGeoToolbar";
 import { PolygonMidpoint } from "./types";
 import { LocalState } from "./useNodeGeoComponent";
 import { UUIDs } from "@openforis/arena-core";
@@ -31,7 +30,6 @@ export interface UseNodeGeoEditorContentProps {
   polygonEditorRef: React.RefObject<PolygonEditorRef | null>;
   polygons: MapPolygonExtendedProps[];
   setLocalState: React.Dispatch<React.SetStateAction<LocalState>>;
-  onCancelDrawing: () => void;
 }
 
 const toGeoJsonPolygon = (coordinates: LatLng[]) => {
@@ -86,10 +84,8 @@ export const useNodeGeoEditorContent = ({
   polygonEditorRef,
   polygons,
   setLocalState,
-  onCancelDrawing,
 }: UseNodeGeoEditorContentProps) => {
   const dispatch = useAppDispatch();
-  const confirm = useConfirm();
   const hasValue = polygons.length > 0;
 
   const savePolygon = useCallback(
@@ -102,45 +98,6 @@ export const useNodeGeoEditorContent = ({
     },
     [dispatch, nodeUuid],
   );
-
-  const onStartDrawing = useCallback(() => {
-    setLocalState((prev) => ({
-      ...prev,
-      draftCoordinates: [],
-      isPolygonSelected: false,
-      editable: true,
-      polygons,
-    }));
-
-    if (polygons.length > 0) {
-      return;
-    }
-
-    setLocalState((prev) => ({ ...prev, polygons: [] }));
-    polygonEditorRef.current?.startPolygon();
-  }, [polygonEditorRef, polygons, setLocalState]);
-
-  const onClearPress = useCallback(async () => {
-    if (
-      await confirm({
-        messageKey: "dataEntry:confirmDeleteValue.message",
-      })
-    ) {
-      setLocalState((prev) => ({
-        ...prev,
-        draftCoordinates: [],
-        polygons: [],
-        editable: false,
-        isPolygonSelected: false,
-      }));
-      polygonEditorRef.current?.resetAll();
-      if (nodeUuid) {
-        dispatch(
-          DataEntryActions.updateAttribute({ uuid: nodeUuid, value: null }),
-        );
-      }
-    }
-  }, [confirm, dispatch, nodeUuid, polygonEditorRef, setLocalState]);
 
   const onCenterOnLocation = useCallback(async () => {
     if (!(await Permissions.requestLocationForegroundPermission())) return;
@@ -287,31 +244,6 @@ export const useNodeGeoEditorContent = ({
     [editable, setLocalState],
   );
 
-  const toolbar = useMemo(
-    () => (
-      <NodeGeoToolbar
-        draftCoordinates={draftCoordinates}
-        editable={editable}
-        hasValue={hasValue}
-        onCancelDrawing={onCancelDrawing}
-        onCenterOnLocation={onCenterOnLocation}
-        onClearPress={onClearPress}
-        onSaveCurrentPolygon={onSaveCurrentPolygon}
-        onStartDrawing={onStartDrawing}
-      />
-    ),
-    [
-      draftCoordinates,
-      editable,
-      hasValue,
-      onCancelDrawing,
-      onCenterOnLocation,
-      onClearPress,
-      onSaveCurrentPolygon,
-      onStartDrawing,
-    ],
-  );
-
   return {
     hasValue,
     onMapPress,
@@ -319,9 +251,10 @@ export const useNodeGeoEditorContent = ({
     onPolygonSelect,
     onPolygonUnselect,
     polygonMidpoints,
+    onCenterOnLocation,
+    onSaveCurrentPolygon,
     onPolygonCreate,
     onPolygonChange,
     onPolygonRemove,
-    toolbar,
   };
 };

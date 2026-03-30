@@ -1,8 +1,10 @@
 import React from "react";
 
-import { Modal, VView } from "components";
+import { Button, HView, IconButton, Modal, VView } from "components";
 
+import { NodeGeoValuePreview } from "screens/RecordEditor/NodeValuePreview/NodeGeoValuePreview";
 import { log } from "utils";
+
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 import { NodeGeoEditorContent } from "./NodeGeoEditorContent";
 import { useNodeGeoComponent } from "./useNodeGeoComponent";
@@ -11,7 +13,14 @@ import styles from "./styles";
 export const NodeGeoComponent = (props: NodeComponentProps) => {
   const { nodeDef } = props;
   const geoState = useNodeGeoComponent(props);
-  const { editable, polygons, onCancelDrawing } = geoState;
+  const {
+    editable,
+    nodeValue,
+    polygons,
+    onCancelDrawing,
+    onClearPress,
+    onStartDrawing,
+  } = geoState;
   const hasValue = polygons.length > 0;
 
   log.debug(`rendering NodeGeoComponent for ${nodeDef.props.name}`);
@@ -30,7 +39,23 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
           </VView>
         </Modal>
       ) : (
-        <NodeGeoEditorContent {...geoState} />
+        <>
+          <NodeGeoValuePreview value={nodeValue} />
+          <HView style={styles.toolbar}>
+            <Button
+              icon={hasValue ? "pencil" : "vector-polygon"}
+              textKey={
+                hasValue
+                  ? "dataEntry:geo.editPolygon"
+                  : "dataEntry:geo.drawPolygon"
+              }
+              onPress={onStartDrawing}
+            />
+            {hasValue && (
+              <IconButton icon="trash-can-outline" onPress={onClearPress} />
+            )}
+          </HView>
+        </>
       )}
     </VView>
   );
