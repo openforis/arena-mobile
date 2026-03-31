@@ -13,6 +13,7 @@ import { GeoUtils, Permissions } from "utils";
 
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
+import { LocalState } from "./types";
 
 const GEO_POLYGON_KEY = "geo_polygon_0";
 
@@ -88,6 +89,25 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     if (editable) return;
     setPolygons(nodeValuePolygons);
   }, [editable, nodeValuePolygons]);
+
+  // When user has tapped 3 times (draft coordinates), create a polygon for editing
+  useEffect(() => {
+    if (!editable || draftCoordinates.length !== 3 || polygons.length > 0) return;
+
+    const [strokeColor, fillColor] = getRandomPolygonColors();
+    const newPoly: MapPolygonExtendedProps = {
+      key: GEO_POLYGON_KEY,
+      coordinates: draftCoordinates,
+      strokeWidth: 2,
+      strokeColor,
+      fillColor,
+    };
+
+    setPolygons([newPoly]);
+    // Keep draftCoordinates so undo can work - don't clear them yet
+    // Automatically select and prepare for editing in the polygon editor
+    polygonEditorRef.current?.selectPolygonByIndex(0);
+  }, [editable, draftCoordinates, polygons.length]);
 
   const initialRegion = useMemo(() => {
     const polygon = nodeValueToPolygon(nodeValue);
@@ -191,12 +211,14 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
   const onMapPress = useCallback(
     (event: MapPressEvent) => {
       if (!editable) return;
+      const nativeEvent = event.nativeEvent;
+      if (!nativeEvent) return;
       if (polygons.length === 0) {
         setDraftCoordinates((prev) =>
-          prev.length < 3 ? [...prev, event.nativeEvent.coordinate] : prev,
+          prev.length < 3 ? [...prev, nativeEvent.coordinate] : prev,
         );
       }
-      polygonEditorRef.current?.setCoordinate(event.nativeEvent.coordinate);
+      polygonEditorRef.current?.setCoordinate(nativeEvent.coordinate);
     },
     [editable, polygons.length],
   );
@@ -219,3 +241,5 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     onStartDrawing,
   };
 };
+
+export type { LocalState };
