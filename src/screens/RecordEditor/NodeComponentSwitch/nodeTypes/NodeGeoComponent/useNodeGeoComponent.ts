@@ -41,7 +41,7 @@ const nodeValueToPolygon = (nodeValue: any): MapPolygonExtendedProps | null => {
 
   // Remove closing coordinate if it equals the first one
   const firstCoord = coordinates[0];
-  const lastCoord = coordinates[coordinates.length - 1];
+  const lastCoord = coordinates.at(-1);
   if (
     firstCoord?.[0] === lastCoord?.[0] &&
     firstCoord?.[1] === lastCoord?.[1]

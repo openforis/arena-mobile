@@ -43,7 +43,7 @@ export const NodeGeoValuePreview = (props: NodeValuePreviewProps) => {
     if (mappedCoordinates.length < 3) return [];
 
     const firstCoordinate = mappedCoordinates[0];
-    const lastCoordinate = mappedCoordinates[mappedCoordinates.length - 1];
+    const lastCoordinate = mappedCoordinates.at(-1);
     if (
       firstCoordinate &&
       lastCoordinate &&
