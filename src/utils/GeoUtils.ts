@@ -34,8 +34,41 @@ const computeMidpointCoordinate = (coord1: LatLng, coord2: LatLng): LatLng => {
   };
 };
 
+const extractPolygonCoordinatesFromGeoJson = (
+  geoJsonValue: any,
+): LatLng[] | null => {
+  let coordinates: [number, number][] | undefined =
+    geoJsonValue?.geometry?.coordinates?.[0];
+  if (!coordinates?.length) return null;
+
+  // Map from [longitude, latitude] tuples to { latitude, longitude } objects
+  const mappedCoordinates = coordinates
+    .filter(
+      (coordinate: unknown): coordinate is [number, number] =>
+        Array.isArray(coordinate) && coordinate.length >= 2,
+    )
+    .map(([longitude, latitude]) => ({ latitude, longitude }));
+
+  if (mappedCoordinates.length < 3) return null;
+
+  // Remove closing coordinate if it matches the first one
+  const firstCoordinate = mappedCoordinates[0];
+  const lastCoordinate = mappedCoordinates.at(-1);
+  if (
+    firstCoordinate &&
+    lastCoordinate &&
+    firstCoordinate.latitude === lastCoordinate.latitude &&
+    firstCoordinate.longitude === lastCoordinate.longitude
+  ) {
+    return mappedCoordinates.slice(0, -1);
+  }
+
+  return mappedCoordinates;
+};
+
 export const GeoUtils = {
   computeRegionFromCoordinates,
   computeMidpointCoordinate,
+  extractPolygonCoordinatesFromGeoJson,
   defaultMapRegion,
 };

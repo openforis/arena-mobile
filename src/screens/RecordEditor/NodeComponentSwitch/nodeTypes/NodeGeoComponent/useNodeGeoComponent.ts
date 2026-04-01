@@ -35,27 +35,13 @@ const toGeoJsonPolygon = (coordinates: LatLng[]) => {
 };
 
 const nodeValueToPolygon = (nodeValue: any): MapPolygonExtendedProps | null => {
-  let coordinates: [number, number][] | undefined =
-    nodeValue?.geometry?.coordinates?.[0];
-  if (!coordinates?.length) return null;
-
-  // Remove closing coordinate if it equals the first one
-  const firstCoord = coordinates[0];
-  const lastCoord = coordinates.at(-1);
-  if (
-    firstCoord?.[0] === lastCoord?.[0] &&
-    firstCoord?.[1] === lastCoord?.[1]
-  ) {
-    coordinates = coordinates.slice(0, -1);
-  }
+  const coordinates = GeoUtils.extractPolygonCoordinatesFromGeoJson(nodeValue);
+  if (!coordinates) return null;
 
   const [strokeColor, fillColor] = getRandomPolygonColors();
   return {
     key: GEO_POLYGON_KEY,
-    coordinates: coordinates.map(([longitude, latitude]) => ({
-      latitude,
-      longitude,
-    })),
+    coordinates,
     strokeWidth: 2,
     strokeColor,
     fillColor,
