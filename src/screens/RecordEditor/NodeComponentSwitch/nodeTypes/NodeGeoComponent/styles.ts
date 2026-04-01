@@ -35,10 +35,19 @@ export default StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
-  midpointCore: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
+  vertexPoint: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    borderWidth: 2,
+    backgroundColor: "rgba(255, 255, 255, 0.75)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  vertexPointCore: {
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
   },
   toolbar: {
     alignItems: "center",

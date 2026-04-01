@@ -51,16 +51,7 @@ export const GeoPolygonMidpointsOverlay = ({
                 borderColor: strokeColor ?? "#ffffff",
               },
             ]}
-          >
-            <RNView
-              style={[
-                styles.midpointCore,
-                {
-                  backgroundColor: strokeColor ?? "#007aff",
-                },
-              ]}
-            />
-          </RNView>
+          />
         </Marker>
       ))}
     </>

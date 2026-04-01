@@ -20,9 +20,14 @@ import {
   GeoPolygonMidpoint,
   GeoPolygonMidpointsOverlay,
 } from "./GeoPolygonMidpointsOverlay";
+import { GeoPolygonVerticesOverlay } from "./GeoPolygonVerticesOverlay";
 import styles from "./styles";
 
 const GEO_POLYGON_KEY = "geo_polygon_0";
+const SELECTED_STROKE_COLOR = "#d32f2f";
+const SELECTED_FILL_COLOR = "rgba(211, 47, 47, 0.25)";
+const UNSELECTED_STROKE_COLOR = "#1976d2";
+const UNSELECTED_FILL_COLOR = "rgba(25, 118, 210, 0.25)";
 
 type UndoSnapshot = {
   draftCoordinates: LatLng[];
@@ -87,6 +92,7 @@ export const GeoPolygonEditorContent = ({
   onSaveDrawing,
 }: GeoPolygonEditorContentProps) => {
   const [undoStack, setUndoStack] = useState<UndoSnapshot[]>([]);
+  const [isPolygonSelected, setIsPolygonSelected] = useState(false);
 
   const clonePolygons = useCallback(
     (sourcePolygons: MapPolygonExtendedProps[]) =>
@@ -148,6 +154,7 @@ export const GeoPolygonEditorContent = ({
     (polygon: MapPolygonExtendedProps) => {
       setPolygons([polygon]);
       setDraftCoordinates(polygon.coordinates);
+      setIsPolygonSelected(true);
     },
     [setDraftCoordinates, setPolygons],
   );
@@ -168,7 +175,16 @@ export const GeoPolygonEditorContent = ({
     setPolygons([]);
     setDraftCoordinates([]);
     setUndoStack([]);
+    setIsPolygonSelected(false);
   }, [setDraftCoordinates, setPolygons]);
+
+  const onPolygonSelect = useCallback(() => {
+    setIsPolygonSelected(true);
+  }, []);
+
+  const onPolygonUnselect = useCallback(() => {
+    setIsPolygonSelected(false);
+  }, []);
 
   const onMapPress = useCallback(
     (event: MapPressEvent) => {
@@ -205,6 +221,11 @@ export const GeoPolygonEditorContent = ({
     });
   }, [polygons]);
 
+  const polygonVertices = useMemo(
+    () => polygons[0]?.coordinates ?? [],
+    [polygons],
+  );
+
   const onMidpointDragEnd = useCallback(
     (insertAtIndex: number, coordinate: LatLng) => {
       const polygon = polygons[0];
@@ -231,6 +252,7 @@ export const GeoPolygonEditorContent = ({
 
       setPolygons([updatedPolygon]);
       setDraftCoordinates(updatedCoordinates);
+      setIsPolygonSelected(true);
       polygonEditorRef.current?.selectPolygonByIndex(0);
     },
     [
@@ -291,6 +313,21 @@ export const GeoPolygonEditorContent = ({
   const visibleCoordinates = polygons[0]?.coordinates ?? draftCoordinates;
   const hasValue = polygons.length > 0;
   const canSave = Boolean(polygonToSave) || hadValueWhenOpened;
+  const strokeColor = isPolygonSelected
+    ? SELECTED_STROKE_COLOR
+    : UNSELECTED_STROKE_COLOR;
+  const fillColor = isPolygonSelected
+    ? SELECTED_FILL_COLOR
+    : UNSELECTED_FILL_COLOR;
+  const polygonsWithSelectionColor = useMemo(
+    () =>
+      polygons.map((polygon) => ({
+        ...polygon,
+        strokeColor,
+        fillColor,
+      })),
+    [fillColor, polygons, strokeColor],
+  );
 
   return (
     <VView style={styles.modalContent}>
@@ -304,23 +341,33 @@ export const GeoPolygonEditorContent = ({
       >
         <GeoDraftOverlay
           coordinates={draftCoordinates}
-          strokeColor={newPolygon.strokeColor}
+          strokeColor={strokeColor}
           strokeWidth={newPolygon.strokeWidth}
-          fillColor={newPolygon.fillColor}
+          fillColor={fillColor}
           showPoints={!hasValue}
         />
-        <GeoPolygonMidpointsOverlay
-          midpoints={polygonMidpoints}
-          strokeColor={newPolygon.strokeColor}
-          onMidpointDragEnd={onMidpointDragEnd}
-        />
+        {isPolygonSelected && (
+          <GeoPolygonVerticesOverlay
+            coordinates={polygonVertices}
+            strokeColor={strokeColor}
+          />
+        )}
+        {isPolygonSelected && (
+          <GeoPolygonMidpointsOverlay
+            midpoints={polygonMidpoints}
+            strokeColor={strokeColor}
+            onMidpointDragEnd={onMidpointDragEnd}
+          />
+        )}
         <PolygonEditor
           ref={polygonEditorRef}
-          newPolygon={newPolygon}
-          polygons={polygons}
+          newPolygon={{ ...newPolygon, strokeColor, fillColor }}
+          polygons={polygonsWithSelectionColor}
           onPolygonCreate={onPolygonCreate}
           onPolygonChange={onPolygonChange}
           onPolygonRemove={onPolygonRemove}
+          onPolygonSelect={onPolygonSelect}
+          onPolygonUnselect={onPolygonUnselect}
           disabled={false}
         />
       </MapViewWithInitialFit>
