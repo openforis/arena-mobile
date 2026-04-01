@@ -55,10 +55,8 @@ const extractPolygonCoordinatesFromGeoJson = (
   const firstCoordinate = mappedCoordinates[0];
   const lastCoordinate = mappedCoordinates.at(-1);
   if (
-    firstCoordinate &&
-    lastCoordinate &&
-    firstCoordinate.latitude === lastCoordinate.latitude &&
-    firstCoordinate.longitude === lastCoordinate.longitude
+    firstCoordinate?.latitude === lastCoordinate?.latitude &&
+    firstCoordinate?.longitude === lastCoordinate?.longitude
   ) {
     return mappedCoordinates.slice(0, -1);
   }
