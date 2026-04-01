@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { View as RNView } from "react-native";
 import { LatLng, Marker } from "react-native-maps";
 
@@ -9,10 +9,24 @@ type GeoPolygonVerticesOverlayProps = {
   strokeColor: string | undefined;
 };
 
+const markerAnchor = { x: 0.2, y: 0.2 };
+
 export const GeoPolygonVerticesOverlay = ({
   coordinates,
   strokeColor,
 }: GeoPolygonVerticesOverlayProps) => {
+  const markerColor = strokeColor ?? "#ffffff";
+
+  const markerStyle = useMemo(
+    () => [styles.vertexPoint, { borderColor: markerColor }],
+    [markerColor],
+  );
+
+  const markerCoreStyle = useMemo(
+    () => [styles.vertexPointCore, { backgroundColor: markerColor }],
+    [markerColor],
+  );
+
   if (coordinates.length === 0) return null;
 
   return (
@@ -21,26 +35,12 @@ export const GeoPolygonVerticesOverlay = ({
         <Marker
           key={`polygon-vertex-${index}`}
           coordinate={coordinate}
-          anchor={{ x: 0.2, y: 0.2 }}
+          anchor={markerAnchor}
           tracksViewChanges
           tappable={false}
         >
-          <RNView
-            style={[
-              styles.vertexPoint,
-              {
-                borderColor: strokeColor ?? "#ffffff",
-              },
-            ]}
-          >
-            <RNView
-              style={[
-                styles.vertexPointCore,
-                {
-                  backgroundColor: strokeColor ?? "#ffffff",
-                },
-              ]}
-            />
+          <RNView style={markerStyle}>
+            <RNView style={markerCoreStyle} />
           </RNView>
         </Marker>
       ))}

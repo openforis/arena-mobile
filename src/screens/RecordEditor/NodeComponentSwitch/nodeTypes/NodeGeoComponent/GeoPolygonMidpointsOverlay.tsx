@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { View as RNView } from "react-native";
 import { LatLng, Marker } from "react-native-maps";
 
@@ -16,11 +16,18 @@ type GeoPolygonMidpointsOverlayProps = {
   onMidpointDragEnd: (insertAtIndex: number, coordinate: LatLng) => void;
 };
 
+const markerAnchor = { x: 0.1, y: 0.1 };
+
 export const GeoPolygonMidpointsOverlay = ({
   midpoints,
   strokeColor,
   onMidpointDragEnd,
 }: GeoPolygonMidpointsOverlayProps) => {
+  const markerStyle = useMemo(
+    () => [styles.midpoint, { borderColor: strokeColor ?? "#ffffff" }],
+    [strokeColor],
+  );
+
   if (midpoints.length === 0) return null;
 
   return (
@@ -29,10 +36,9 @@ export const GeoPolygonMidpointsOverlay = ({
         <Marker
           key={key}
           coordinate={coordinate}
-          anchor={{ x: 0.1, y: 0.1 }}
+          anchor={markerAnchor}
           draggable
           tracksViewChanges
-          zIndex={1500}
           onPress={(event) => {
             // Keep map onPress from firing while interacting with midpoint marker.
             event.stopPropagation();
@@ -44,14 +50,7 @@ export const GeoPolygonMidpointsOverlay = ({
             onMidpointDragEnd(insertAtIndex, draggedCoordinate);
           }}
         >
-          <RNView
-            style={[
-              styles.midpoint,
-              {
-                borderColor: strokeColor ?? "#ffffff",
-              },
-            ]}
-          />
+          <RNView style={markerStyle} />
         </Marker>
       ))}
     </>
