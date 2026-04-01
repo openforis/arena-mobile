@@ -30,7 +30,7 @@ export const GeoPolygonMidpointsOverlay = ({
           key={key}
           coordinate={coordinate}
           anchor={{ x: 0.1, y: 0.1 }}
-          tracksViewChanges={true}
+          tracksViewChanges
           zIndex={1500}
           onPress={(event) => {
             event.stopPropagation();

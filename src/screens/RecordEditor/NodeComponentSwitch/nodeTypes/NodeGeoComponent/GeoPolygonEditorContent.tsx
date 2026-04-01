@@ -24,6 +24,11 @@ import styles from "./styles";
 
 const GEO_POLYGON_KEY = "geo_polygon_0";
 
+type UndoSnapshot = {
+  draftCoordinates: LatLng[];
+  polygons: MapPolygonExtendedProps[];
+};
+
 type GeoPolygonEditorContentProps = {
   draftCoordinates: LatLng[];
   initialRegion: {
@@ -81,6 +86,43 @@ export const GeoPolygonEditorContent = ({
   onCenterOnLocation,
   onSaveDrawing,
 }: GeoPolygonEditorContentProps) => {
+  const [undoStack, setUndoStack] = useState<UndoSnapshot[]>([]);
+
+  const clonePolygons = useCallback(
+    (sourcePolygons: MapPolygonExtendedProps[]) =>
+      sourcePolygons.map((polygon) => ({
+        ...polygon,
+        coordinates: [...polygon.coordinates],
+      })),
+    [],
+  );
+
+  const restoreDraftCoordinates = useCallback(
+    (coordinates: LatLng[]) => {
+      const polygonEditor = polygonEditorRef.current;
+      if (!polygonEditor) return;
+
+      polygonEditor.resetAll();
+      if (coordinates.length === 0) return;
+
+      polygonEditor.startPolygon();
+      for (const coordinate of coordinates) {
+        polygonEditor.setCoordinate(coordinate);
+      }
+    },
+    [polygonEditorRef],
+  );
+
+  const pushUndoSnapshot = useCallback(() => {
+    setUndoStack((prev) => [
+      ...prev,
+      {
+        draftCoordinates: [...draftCoordinates],
+        polygons: clonePolygons(polygons),
+      },
+    ]);
+  }, [clonePolygons, draftCoordinates, polygons]);
+
   useEffect(() => {
     if (draftCoordinates.length !== 3 || polygons.length > 0) return;
 
@@ -125,6 +167,7 @@ export const GeoPolygonEditorContent = ({
   const onPolygonRemove = useCallback(() => {
     setPolygons([]);
     setDraftCoordinates([]);
+    setUndoStack([]);
   }, [setDraftCoordinates, setPolygons]);
 
   const onMapPress = useCallback(
@@ -134,13 +177,15 @@ export const GeoPolygonEditorContent = ({
 
       if (polygons.length > 0) return;
 
+      pushUndoSnapshot();
+
       setDraftCoordinates((prev) =>
         prev.length < 3 ? [...prev, coordinate] : prev,
       );
 
       polygonEditorRef.current?.setCoordinate(coordinate);
     },
-    [polygonEditorRef, polygons.length, setDraftCoordinates],
+    [polygonEditorRef, polygons.length, pushUndoSnapshot, setDraftCoordinates],
   );
 
   const polygonMidpoints = useMemo<GeoPolygonMidpoint[]>(() => {
@@ -164,6 +209,8 @@ export const GeoPolygonEditorContent = ({
     (insertAtIndex: number) => {
       const polygon = polygons[0];
       if (!polygon) return;
+
+      pushUndoSnapshot();
 
       const clampedIndex = Math.max(
         1,
@@ -191,8 +238,38 @@ export const GeoPolygonEditorContent = ({
       setDraftCoordinates(updatedCoordinates);
       polygonEditorRef.current?.selectPolygonByIndex(0);
     },
-    [polygonEditorRef, polygons, setDraftCoordinates, setPolygons],
+    [
+      polygonEditorRef,
+      polygons,
+      pushUndoSnapshot,
+      setDraftCoordinates,
+      setPolygons,
+    ],
   );
+
+  const onUndoPress = useCallback(() => {
+    const previousState = undoStack[undoStack.length - 1];
+    if (!previousState) return;
+
+    const restoredPolygons = clonePolygons(previousState.polygons);
+    const restoredDraftCoordinates = [...previousState.draftCoordinates];
+
+    setUndoStack((prev) => prev.slice(0, -1));
+    setPolygons(restoredPolygons);
+    setDraftCoordinates(restoredDraftCoordinates);
+
+    if (restoredPolygons.length > 0) {
+      return;
+    }
+
+    restoreDraftCoordinates(restoredDraftCoordinates);
+  }, [
+    clonePolygons,
+    restoreDraftCoordinates,
+    setDraftCoordinates,
+    setPolygons,
+    undoStack,
+  ]);
 
   const polygonToSave = useMemo(
     () =>
@@ -207,8 +284,14 @@ export const GeoPolygonEditorContent = ({
   const [hadValueWhenOpened] = useState(() => polygons.length > 0);
 
   const onSavePress = useCallback(() => {
+    setUndoStack([]);
     onSaveDrawing(polygonToSave);
   }, [onSaveDrawing, polygonToSave]);
+
+  const onCancelPress = useCallback(() => {
+    setUndoStack([]);
+    onCancelDrawing();
+  }, [onCancelDrawing]);
 
   const visibleCoordinates = polygons[0]?.coordinates ?? draftCoordinates;
   const hasValue = polygons.length > 0;
@@ -260,6 +343,12 @@ export const GeoPolygonEditorContent = ({
           onPress={onCenterOnLocation}
           size={24}
         />
+        <IconButton
+          disabled={undoStack.length === 0}
+          icon="undo"
+          onPress={onUndoPress}
+          size={20}
+        />
         <Button
           disabled={!canSave}
           icon="content-save"
@@ -268,7 +357,7 @@ export const GeoPolygonEditorContent = ({
         />
         <Button
           color="secondary"
-          onPress={onCancelDrawing}
+          onPress={onCancelPress}
           textKey="common:cancel"
         />
       </HView>
