@@ -1,12 +1,18 @@
 import React, { useMemo } from "react";
 import { View as RNView } from "react-native";
 
-import { LatLng, Marker, Polyline } from "react-native-maps";
+import {
+  LatLng,
+  Marker,
+  Polygon as MapPolygon,
+  Polyline,
+} from "react-native-maps";
 
 import styles from "./styles";
 
 type GeoDraftOverlayProps = {
   coordinates: LatLng[];
+  fillColor?: string;
   strokeColor: string | undefined;
   strokeWidth: number | undefined;
   showPoints?: boolean;
@@ -16,6 +22,7 @@ const markerAnchor = { x: 0.2, y: 0.2 };
 
 export const GeoDraftOverlay = ({
   coordinates,
+  fillColor,
   strokeColor,
   strokeWidth,
   showPoints = true,
@@ -29,7 +36,14 @@ export const GeoDraftOverlay = ({
 
   return (
     <>
-      {coordinates.length < 3 && (
+      {coordinates.length >= 3 ? (
+        <MapPolygon
+          coordinates={coordinates}
+          strokeColor={strokeColor}
+          strokeWidth={strokeWidth}
+          fillColor={fillColor}
+        />
+      ) : (
         <Polyline
           coordinates={coordinates}
           strokeColor={strokeColor}

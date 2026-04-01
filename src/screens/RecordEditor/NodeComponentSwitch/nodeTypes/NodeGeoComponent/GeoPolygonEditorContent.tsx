@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   MapPolygonExtendedProps,
   PolygonEditor,
@@ -129,8 +129,10 @@ export const GeoPolygonEditorContent = ({
     ]);
   }, [clonePolygons, draftCoordinates, polygons]);
 
-  useEffect(() => {
-    if (draftCoordinates.length !== 3 || polygons.length > 0) return;
+  const closeDraftPolygon = useCallback(() => {
+    if (draftCoordinates.length < 3 || polygons.length > 0) return;
+
+    pushUndoSnapshot();
 
     const newPolygonToEdit: MapPolygonExtendedProps = {
       key: GEO_POLYGON_KEY,
@@ -141,12 +143,18 @@ export const GeoPolygonEditorContent = ({
     };
 
     setPolygons([newPolygonToEdit]);
-    polygonEditorRef.current?.selectPolygonByIndex(0);
+    setDraftCoordinates(newPolygonToEdit.coordinates);
+    setIsPolygonSelected(true);
+    setTimeout(() => {
+      polygonEditorRef.current?.selectPolygonByIndex(0);
+    }, 0);
   }, [
     draftCoordinates,
     newPolygon,
     polygonEditorRef,
     polygons.length,
+    pushUndoSnapshot,
+    setDraftCoordinates,
     setPolygons,
   ]);
 
@@ -195,13 +203,9 @@ export const GeoPolygonEditorContent = ({
 
       pushUndoSnapshot();
 
-      setDraftCoordinates((prev) =>
-        prev.length < 3 ? [...prev, coordinate] : prev,
-      );
-
-      polygonEditorRef.current?.setCoordinate(coordinate);
+      setDraftCoordinates((prev) => [...prev, coordinate]);
     },
-    [polygonEditorRef, polygons.length, pushUndoSnapshot, setDraftCoordinates],
+    [polygons.length, pushUndoSnapshot, setDraftCoordinates],
   );
 
   const polygonMidpoints = useMemo<GeoPolygonMidpoint[]>(() => {
@@ -348,6 +352,7 @@ export const GeoPolygonEditorContent = ({
       >
         <GeoDraftOverlay
           coordinates={draftCoordinates}
+          fillColor={fillColor}
           strokeColor={strokeColor}
           strokeWidth={newPolygon.strokeWidth}
           showPoints={!hasValue}
@@ -397,6 +402,14 @@ export const GeoPolygonEditorContent = ({
           onPress={onUndoPress}
           size={20}
         />
+        {!hasValue && (
+          <IconButton
+            disabled={draftCoordinates.length < 3}
+            icon="stop"
+            onPress={closeDraftPolygon}
+            size={20}
+          />
+        )}
         <Button
           disabled={!canSave}
           icon="content-save"
