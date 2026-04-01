@@ -402,20 +402,21 @@ export const GeoPolygonEditorContent = ({
           onPress={onUndoPress}
           size={20}
         />
-        {!hasValue && (
-          <IconButton
+        {hasValue ? (
+          <Button
+            disabled={!canSave}
+            icon="content-save"
+            onPress={onSavePress}
+            textKey="common:save"
+          />
+        ) : (
+          <Button
             disabled={draftCoordinates.length < 3}
             icon="stop"
             onPress={closeDraftPolygon}
-            size={20}
+            textKey="common:stop"
           />
         )}
-        <Button
-          disabled={!canSave}
-          icon="content-save"
-          onPress={onSavePress}
-          textKey="common:save"
-        />
         <Button
           color="secondary"
           onPress={onCancelPress}
