@@ -276,12 +276,19 @@ export const GeoPolygonEditorContent = ({
     setDraftCoordinates(restoredDraftCoordinates);
 
     if (restoredPolygons.length > 0) {
+      setIsPolygonSelected(true);
+      polygonEditorRef.current?.resetAll();
+      setTimeout(() => {
+        polygonEditorRef.current?.selectPolygonByIndex(0);
+      }, 0);
       return;
     }
 
+    setIsPolygonSelected(false);
     restoreDraftCoordinates(restoredDraftCoordinates);
   }, [
     clonePolygons,
+    polygonEditorRef,
     restoreDraftCoordinates,
     setDraftCoordinates,
     setPolygons,
@@ -343,7 +350,6 @@ export const GeoPolygonEditorContent = ({
           coordinates={draftCoordinates}
           strokeColor={strokeColor}
           strokeWidth={newPolygon.strokeWidth}
-          fillColor={fillColor}
           showPoints={!hasValue}
         />
         {isPolygonSelected && (

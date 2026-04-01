@@ -27,6 +27,7 @@ export default StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.5)",
     borderRadius: 5,
     borderWidth: 1.5,
+    borderColor: "rgba(255, 0, 0, 0.3)",
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000000",
