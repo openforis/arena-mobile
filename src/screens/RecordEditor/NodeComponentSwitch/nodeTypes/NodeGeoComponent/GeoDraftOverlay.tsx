@@ -15,6 +15,7 @@ type GeoDraftOverlayProps = {
   fillColor: string | undefined;
   strokeColor: string | undefined;
   strokeWidth: number | undefined;
+  showPoints?: boolean;
 };
 
 export const GeoDraftOverlay = ({
@@ -22,19 +23,13 @@ export const GeoDraftOverlay = ({
   fillColor,
   strokeColor,
   strokeWidth,
+  showPoints = true,
 }: GeoDraftOverlayProps) => {
   if (coordinates.length === 0) return null;
 
   return (
     <>
-      {coordinates.length >= 3 ? (
-        <MapPolygon
-          coordinates={coordinates}
-          strokeColor={strokeColor}
-          strokeWidth={strokeWidth}
-          fillColor={fillColor}
-        />
-      ) : (
+      {coordinates.length < 3 && (
         <Polyline
           coordinates={coordinates}
           strokeColor={strokeColor}
@@ -45,8 +40,8 @@ export const GeoDraftOverlay = ({
         <Marker
           key={`draft-point-${index}`}
           coordinate={coordinate}
-          anchor={{ x: 0.5, y: 0.5 }}
-          tracksViewChanges={true}
+          anchor={{ x: 0.1, y: 0.1 }}
+          tracksViewChanges
           zIndex={1000}
         >
           <RNView style={[styles.draftPoint, { borderColor: strokeColor }]} />

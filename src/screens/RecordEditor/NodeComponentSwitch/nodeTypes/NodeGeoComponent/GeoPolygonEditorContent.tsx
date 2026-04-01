@@ -16,6 +16,10 @@ import {
 } from "components";
 
 import { GeoDraftOverlay } from "./GeoDraftOverlay";
+import {
+  GeoPolygonMidpoint,
+  GeoPolygonMidpointsOverlay,
+} from "./GeoPolygonMidpointsOverlay";
 import styles from "./styles";
 
 const GEO_POLYGON_KEY = "geo_polygon_0";
@@ -128,15 +132,66 @@ export const GeoPolygonEditorContent = ({
       const coordinate = event.nativeEvent?.coordinate;
       if (!coordinate) return;
 
-      if (polygons.length === 0) {
-        setDraftCoordinates((prev) =>
-          prev.length < 3 ? [...prev, coordinate] : prev,
-        );
-      }
+      if (polygons.length > 0) return;
+
+      setDraftCoordinates((prev) =>
+        prev.length < 3 ? [...prev, coordinate] : prev,
+      );
 
       polygonEditorRef.current?.setCoordinate(coordinate);
     },
     [polygonEditorRef, polygons.length, setDraftCoordinates],
+  );
+
+  const polygonMidpoints = useMemo<GeoPolygonMidpoint[]>(() => {
+    const coordinates = polygons[0]?.coordinates ?? [];
+    if (coordinates.length < 2) return [];
+
+    return coordinates.map((current, index) => {
+      const next = coordinates[(index + 1) % coordinates.length] ?? current;
+      return {
+        key: `polygon-midpoint-${index}`,
+        coordinate: {
+          latitude: (current.latitude + next.latitude) / 2,
+          longitude: (current.longitude + next.longitude) / 2,
+        },
+        insertAtIndex: index + 1,
+      };
+    });
+  }, [polygons]);
+
+  const onMidpointPress = useCallback(
+    (insertAtIndex: number) => {
+      const polygon = polygons[0];
+      if (!polygon) return;
+
+      const clampedIndex = Math.max(
+        1,
+        Math.min(insertAtIndex, polygon.coordinates.length),
+      );
+      const before = polygon.coordinates[clampedIndex - 1];
+      const after =
+        polygon.coordinates[clampedIndex % polygon.coordinates.length];
+      if (!before || !after) return;
+
+      const midpoint: LatLng = {
+        latitude: (before.latitude + after.latitude) / 2,
+        longitude: (before.longitude + after.longitude) / 2,
+      };
+
+      const updatedCoordinates = [...polygon.coordinates];
+      updatedCoordinates.splice(clampedIndex, 0, midpoint);
+
+      const updatedPolygon: MapPolygonExtendedProps = {
+        ...polygon,
+        coordinates: updatedCoordinates,
+      };
+
+      setPolygons([updatedPolygon]);
+      setDraftCoordinates(updatedCoordinates);
+      polygonEditorRef.current?.selectPolygonByIndex(0);
+    },
+    [polygonEditorRef, polygons, setDraftCoordinates, setPolygons],
   );
 
   const polygonToSave = useMemo(
@@ -174,6 +229,12 @@ export const GeoPolygonEditorContent = ({
           strokeColor={newPolygon.strokeColor}
           strokeWidth={newPolygon.strokeWidth}
           fillColor={newPolygon.fillColor}
+          showPoints={!hasValue}
+        />
+        <GeoPolygonMidpointsOverlay
+          midpoints={polygonMidpoints}
+          strokeColor={newPolygon.strokeColor}
+          onMidpointPress={onMidpointPress}
         />
         <PolygonEditor
           ref={polygonEditorRef}
