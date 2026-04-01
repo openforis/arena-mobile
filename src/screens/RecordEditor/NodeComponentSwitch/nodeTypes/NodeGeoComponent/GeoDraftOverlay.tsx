@@ -46,7 +46,8 @@ export const GeoDraftOverlay = ({
           key={`draft-point-${index}`}
           coordinate={coordinate}
           anchor={{ x: 0.5, y: 0.5 }}
-          tracksViewChanges={false}
+          tracksViewChanges={true}
+          zIndex={1000}
         >
           <RNView style={[styles.draftPoint, { borderColor: strokeColor }]} />
         </Marker>

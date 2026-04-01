@@ -37,6 +37,7 @@ export default {
   openSettings: "Открыть настройки",
   path: "Путь доступа",
   rowsPerPage: "Строк на странице",
+  save: "Сохранить",
   search: "Поиск",
   selectAnItem: "Выберите элемент",
   selectNewItems: "Выберите новые элементы",

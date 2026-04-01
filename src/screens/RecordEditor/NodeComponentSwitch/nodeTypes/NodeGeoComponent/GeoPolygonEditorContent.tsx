@@ -199,13 +199,16 @@ export const GeoPolygonEditorContent = ({
           onPress={onCenterOnLocation}
           size={24}
         />
-        <Button textKey="common:cancel" onPress={onCancelDrawing} />
         <Button
-          icon="content-save"
-          textKey="Save"
-          textIsI18nKey={false}
           disabled={!canSave}
+          icon="content-save"
           onPress={onSavePress}
+          textKey="common:save"
+        />
+        <Button
+          color="secondary"
+          onPress={onCancelDrawing}
+          textKey="common:cancel"
         />
       </HView>
     </VView>

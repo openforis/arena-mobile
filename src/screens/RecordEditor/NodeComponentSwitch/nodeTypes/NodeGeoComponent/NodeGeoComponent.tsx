@@ -61,7 +61,7 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
   );
 
   return (
-    <VView style={styles.container}>
+    <VView style={hasValue ? styles.container : undefined}>
       {editable ? (
         <Modal
           onDismiss={onCancelDrawing}
