@@ -41,7 +41,6 @@ export const GeoPolygonMidpointsOverlay = ({
           coordinate={coordinate}
           anchor={markerAnchor}
           draggable
-          tracksViewChanges
           onPress={(event) => {
             // Keep map onPress from firing while interacting with midpoint marker.
             event.stopPropagation();

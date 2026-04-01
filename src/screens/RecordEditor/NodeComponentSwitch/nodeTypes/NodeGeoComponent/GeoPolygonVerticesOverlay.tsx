@@ -36,7 +36,6 @@ export const GeoPolygonVerticesOverlay = ({
           key={`polygon-vertex-${coordinate.latitude}-${coordinate.longitude}`}
           coordinate={coordinate}
           anchor={markerAnchor}
-          tracksViewChanges
           tappable={false}
         >
           <RNView style={markerStyle}>

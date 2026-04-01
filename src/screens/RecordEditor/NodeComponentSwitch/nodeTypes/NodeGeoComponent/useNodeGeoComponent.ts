@@ -186,6 +186,7 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     initialRegion,
     mapRef,
     newPolygon,
+    nodeValue,
     polygonEditorRef,
     polygons,
     setDraftCoordinates,

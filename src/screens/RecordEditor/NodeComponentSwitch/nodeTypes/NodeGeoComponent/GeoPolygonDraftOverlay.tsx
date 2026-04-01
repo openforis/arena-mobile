@@ -10,7 +10,7 @@ import {
 
 import styles from "./styles";
 
-type GeoDraftOverlayProps = {
+type GeoPolygonDraftOverlayProps = {
   coordinates: LatLng[];
   fillColor?: string;
   strokeColor: string | undefined;
@@ -20,13 +20,13 @@ type GeoDraftOverlayProps = {
 
 const markerAnchor = { x: 0.2, y: 0.2 };
 
-export const GeoDraftOverlay = ({
+export const GeoPolygonDraftOverlay = ({
   coordinates,
   fillColor,
   strokeColor,
   strokeWidth,
   showPoints = true,
-}: GeoDraftOverlayProps) => {
+}: GeoPolygonDraftOverlayProps) => {
   const markerStyle = useMemo(
     () => [styles.draftPoint, { borderColor: strokeColor }],
     [strokeColor],
@@ -56,8 +56,6 @@ export const GeoDraftOverlay = ({
             key={`draft-point-${coordinate.latitude}-${coordinate.longitude}`}
             coordinate={coordinate}
             anchor={markerAnchor}
-            tracksViewChanges
-            zIndex={2500}
           >
             <RNView style={markerStyle} />
           </Marker>

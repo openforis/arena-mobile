@@ -15,7 +15,7 @@ import {
   VView,
 } from "components";
 
-import { GeoDraftOverlay } from "./GeoDraftOverlay";
+import { GeoPolygonDraftOverlay } from "./GeoPolygonDraftOverlay";
 import {
   GeoPolygonMidpoint,
   GeoPolygonMidpointsOverlay,
@@ -350,7 +350,7 @@ export const GeoPolygonEditorContent = ({
         fitToCoordinatesOnReady={visibleCoordinates}
         fitOnlyOnce={true}
       >
-        <GeoDraftOverlay
+        <GeoPolygonDraftOverlay
           coordinates={draftCoordinates}
           fillColor={fillColor}
           strokeColor={strokeColor}

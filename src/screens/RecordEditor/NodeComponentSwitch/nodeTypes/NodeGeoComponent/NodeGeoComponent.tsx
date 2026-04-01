@@ -1,28 +1,22 @@
-import React, { useMemo } from "react";
+import React from "react";
 
-import { Polygon as MapPolygon } from "react-native-maps";
-
-import {
-  Button,
-  HView,
-  IconButton,
-  MapViewWithInitialFit,
-  Modal,
-  VView,
-} from "components";
+import { Button, HView, IconButton, Modal, VView } from "components";
 
 import { NodeComponentProps } from "../nodeComponentPropTypes";
+import { NodeGeoValuePreview } from "../../../NodeValuePreview/NodeGeoValuePreview";
 import { GeoPolygonEditorContent } from "./GeoPolygonEditorContent";
 import { useNodeGeoComponent } from "./useNodeGeoComponent";
 import styles from "./styles";
 
 export const NodeGeoComponent = (props: NodeComponentProps) => {
+  const { nodeDef } = props;
   const {
     draftCoordinates,
     editable,
     initialRegion,
     mapRef,
     newPolygon,
+    nodeValue,
     polygonEditorRef,
     polygons,
     setDraftCoordinates,
@@ -35,10 +29,6 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
   } = useNodeGeoComponent(props);
 
   const hasValue = polygons.length > 0;
-  const visibleCoordinates = useMemo(
-    () => polygons[0]?.coordinates ?? draftCoordinates,
-    [draftCoordinates, polygons],
-  );
 
   const toolbar = (
     <HView style={styles.toolbar}>
@@ -59,6 +49,16 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
       <IconButton icon="trash-can-outline" onPress={onClearPress} />
     </HView>
   );
+
+  if (!editable && !hasValue) {
+    return (
+      <Button
+        icon="vector-polygon"
+        textKey="dataEntry:geo.drawPolygon"
+        onPress={onStartDrawing}
+      />
+    );
+  }
 
   return (
     <VView style={hasValue ? styles.container : undefined}>
@@ -83,32 +83,14 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
             onSaveDrawing={onSaveDrawing}
           />
         </Modal>
-      ) : hasValue ? (
+      ) : (
         <>
-          <MapViewWithInitialFit
-            ref={mapRef}
-            style={styles.map}
-            initialRegion={initialRegion}
-            fitToCoordinatesOnReady={visibleCoordinates}
-            fitOnlyOnce={true}
-          >
-            {!!polygons[0] && (
-              <MapPolygon
-                coordinates={polygons[0].coordinates}
-                strokeColor={polygons[0].strokeColor}
-                strokeWidth={polygons[0].strokeWidth}
-                fillColor={polygons[0].fillColor}
-              />
-            )}
-          </MapViewWithInitialFit>
+          <NodeGeoValuePreview
+            nodeDef={nodeDef}
+            value={nodeValue}
+          />
           {toolbar}
         </>
-      ) : (
-        <Button
-          icon="vector-polygon"
-          textKey="dataEntry:geo.drawPolygon"
-          onPress={onStartDrawing}
-        />
       )}
     </VView>
   );
