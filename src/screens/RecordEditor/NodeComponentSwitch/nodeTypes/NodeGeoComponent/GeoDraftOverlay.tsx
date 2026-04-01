@@ -36,17 +36,18 @@ export const GeoDraftOverlay = ({
           strokeWidth={strokeWidth}
         />
       )}
-      {coordinates.map((coordinate, index) => (
-        <Marker
-          key={`draft-point-${index}`}
-          coordinate={coordinate}
-          anchor={{ x: 0.2, y: 0.2 }}
-          tracksViewChanges
-          zIndex={1500}
-        >
-          <RNView style={[styles.draftPoint, { borderColor: strokeColor }]} />
-        </Marker>
-      ))}
+      {showPoints &&
+        coordinates.map((coordinate, index) => (
+          <Marker
+            key={`draft-point-${index}`}
+            coordinate={coordinate}
+            anchor={{ x: 0.2, y: 0.2 }}
+            tracksViewChanges
+            zIndex={2500}
+          >
+            <RNView style={[styles.draftPoint, { borderColor: strokeColor }]} />
+          </Marker>
+        ))}
     </>
   );
 };

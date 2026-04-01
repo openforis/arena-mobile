@@ -13,13 +13,13 @@ export type GeoPolygonMidpoint = {
 type GeoPolygonMidpointsOverlayProps = {
   midpoints: GeoPolygonMidpoint[];
   strokeColor: string | undefined;
-  onMidpointPress: (insertAtIndex: number) => void;
+  onMidpointDragEnd: (insertAtIndex: number, coordinate: LatLng) => void;
 };
 
 export const GeoPolygonMidpointsOverlay = ({
   midpoints,
   strokeColor,
-  onMidpointPress,
+  onMidpointDragEnd,
 }: GeoPolygonMidpointsOverlayProps) => {
   if (midpoints.length === 0) return null;
 
@@ -30,11 +30,18 @@ export const GeoPolygonMidpointsOverlay = ({
           key={key}
           coordinate={coordinate}
           anchor={{ x: 0.1, y: 0.1 }}
+          draggable
           tracksViewChanges
           zIndex={1500}
           onPress={(event) => {
+            // Keep map onPress from firing while interacting with midpoint marker.
             event.stopPropagation();
-            onMidpointPress(insertAtIndex);
+          }}
+          onDragEnd={(event) => {
+            event.stopPropagation();
+            const draggedCoordinate = event.nativeEvent?.coordinate;
+            if (!draggedCoordinate) return;
+            onMidpointDragEnd(insertAtIndex, draggedCoordinate);
           }}
         >
           <RNView

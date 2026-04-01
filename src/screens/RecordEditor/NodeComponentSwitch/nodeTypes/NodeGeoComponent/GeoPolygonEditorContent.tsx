@@ -205,8 +205,8 @@ export const GeoPolygonEditorContent = ({
     });
   }, [polygons]);
 
-  const onMidpointPress = useCallback(
-    (insertAtIndex: number) => {
+  const onMidpointDragEnd = useCallback(
+    (insertAtIndex: number, coordinate: LatLng) => {
       const polygon = polygons[0];
       if (!polygon) return;
 
@@ -221,13 +221,8 @@ export const GeoPolygonEditorContent = ({
         polygon.coordinates[clampedIndex % polygon.coordinates.length];
       if (!before || !after) return;
 
-      const midpoint: LatLng = {
-        latitude: (before.latitude + after.latitude) / 2,
-        longitude: (before.longitude + after.longitude) / 2,
-      };
-
       const updatedCoordinates = [...polygon.coordinates];
-      updatedCoordinates.splice(clampedIndex, 0, midpoint);
+      updatedCoordinates.splice(clampedIndex, 0, coordinate);
 
       const updatedPolygon: MapPolygonExtendedProps = {
         ...polygon,
@@ -317,7 +312,7 @@ export const GeoPolygonEditorContent = ({
         <GeoPolygonMidpointsOverlay
           midpoints={polygonMidpoints}
           strokeColor={newPolygon.strokeColor}
-          onMidpointPress={onMidpointPress}
+          onMidpointDragEnd={onMidpointDragEnd}
         />
         <PolygonEditor
           ref={polygonEditorRef}
