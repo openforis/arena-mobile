@@ -6,14 +6,13 @@ import {
   getRandomPolygonColors,
 } from "@siposdani87/expo-maps-polygon-editor";
 import * as Location from "expo-location";
-import MapView, { LatLng, MapPressEvent } from "react-native-maps";
+import MapView, { LatLng } from "react-native-maps";
 
 import { DataEntryActions, useAppDispatch, useConfirm } from "state";
 import { GeoUtils, Permissions } from "utils";
 
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
-import { LocalState } from "./types";
 
 const GEO_POLYGON_KEY = "geo_polygon_0";
 
@@ -90,25 +89,6 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     setPolygons(nodeValuePolygons);
   }, [editable, nodeValuePolygons]);
 
-  // When user has tapped 3 times (draft coordinates), create a polygon for editing
-  useEffect(() => {
-    if (!editable || draftCoordinates.length !== 3 || polygons.length > 0) return;
-
-    const [strokeColor, fillColor] = getRandomPolygonColors();
-    const newPoly: MapPolygonExtendedProps = {
-      key: GEO_POLYGON_KEY,
-      coordinates: draftCoordinates,
-      strokeWidth: 2,
-      strokeColor,
-      fillColor,
-    };
-
-    setPolygons([newPoly]);
-    // Keep draftCoordinates so undo can work - don't clear them yet
-    // Automatically select and prepare for editing in the polygon editor
-    polygonEditorRef.current?.selectPolygonByIndex(0);
-  }, [editable, draftCoordinates, polygons.length]);
-
   const initialRegion = useMemo(() => {
     const polygon = nodeValueToPolygon(nodeValue);
     if (polygon && polygon.coordinates.length >= 3) {
@@ -129,32 +109,13 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     [dispatch, nodeUuid],
   );
 
-  const onPolygonCreate = useCallback(
-    (polygon: MapPolygonExtendedProps) => {
-      setPolygons([polygon]);
+  const onSaveDrawing = useCallback(
+    (polygon: MapPolygonExtendedProps | null) => {
+      setPolygons(polygon ? [polygon] : []);
       setDraftCoordinates([]);
       setEditable(false);
+      polygonEditorRef.current?.resetAll();
       savePolygon(polygon);
-    },
-    [savePolygon],
-  );
-
-  const onPolygonChange = useCallback(
-    (index: number, polygon: MapPolygonExtendedProps) => {
-      setPolygons((prev) => {
-        const updated = [...prev];
-        updated[index] = polygon;
-        return updated;
-      });
-      savePolygon(polygon);
-    },
-    [savePolygon],
-  );
-
-  const onPolygonRemove = useCallback(
-    (_index: number) => {
-      setPolygons([]);
-      savePolygon(null);
     },
     [savePolygon],
   );
@@ -208,38 +169,20 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     });
   }, []);
 
-  const onMapPress = useCallback(
-    (event: MapPressEvent) => {
-      if (!editable) return;
-      const nativeEvent = event.nativeEvent;
-      if (!nativeEvent) return;
-      if (polygons.length === 0) {
-        setDraftCoordinates((prev) =>
-          prev.length < 3 ? [...prev, nativeEvent.coordinate] : prev,
-        );
-      }
-      polygonEditorRef.current?.setCoordinate(nativeEvent.coordinate);
-    },
-    [editable, polygons.length],
-  );
-
   return {
     draftCoordinates,
     editable,
     initialRegion,
     mapRef,
     newPolygon,
-    onMapPress,
     polygonEditorRef,
     polygons,
+    setDraftCoordinates,
+    setPolygons,
     onCancelDrawing,
     onCenterOnLocation,
     onClearPress,
-    onPolygonChange,
-    onPolygonCreate,
-    onPolygonRemove,
+    onSaveDrawing,
     onStartDrawing,
   };
 };
-
-export type { LocalState };

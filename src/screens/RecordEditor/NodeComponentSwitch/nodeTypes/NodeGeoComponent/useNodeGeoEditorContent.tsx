@@ -16,8 +16,7 @@ import { UUIDs } from "@openforis/arena-core";
 import { GeoUtils } from "utils";
 import { Permissions } from "utils/Permissions";
 
-import { PolygonMidpoint } from "./types";
-import { LocalState } from "./useNodeGeoComponent";
+import { LocalState, PolygonMidpoint } from "./types";
 
 const GEO_POLYGON_KEY = "geo_polygon_0";
 
