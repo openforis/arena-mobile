@@ -51,9 +51,9 @@ export const GeoDraftOverlay = ({
         />
       )}
       {showPoints &&
-        coordinates.map((coordinate, index) => (
+        coordinates.map((coordinate) => (
           <Marker
-            key={`draft-point-${index}`}
+            key={`draft-point-${coordinate.latitude}-${coordinate.longitude}`}
             coordinate={coordinate}
             anchor={markerAnchor}
             tracksViewChanges

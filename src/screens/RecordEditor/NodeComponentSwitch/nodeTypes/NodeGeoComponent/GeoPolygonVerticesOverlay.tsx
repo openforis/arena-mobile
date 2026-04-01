@@ -31,9 +31,9 @@ export const GeoPolygonVerticesOverlay = ({
 
   return (
     <>
-      {coordinates.map((coordinate, index) => (
+      {coordinates.map((coordinate) => (
         <Marker
-          key={`polygon-vertex-${index}`}
+          key={`polygon-vertex-${coordinate.latitude}-${coordinate.longitude}`}
           coordinate={coordinate}
           anchor={markerAnchor}
           tracksViewChanges

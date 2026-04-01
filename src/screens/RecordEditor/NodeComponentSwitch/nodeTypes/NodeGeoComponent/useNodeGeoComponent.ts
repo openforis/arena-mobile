@@ -35,9 +35,20 @@ const toGeoJsonPolygon = (coordinates: LatLng[]) => {
 };
 
 const nodeValueToPolygon = (nodeValue: any): MapPolygonExtendedProps | null => {
-  const coordinates: [number, number][] | undefined =
+  let coordinates: [number, number][] | undefined =
     nodeValue?.geometry?.coordinates?.[0];
   if (!coordinates?.length) return null;
+
+  // Remove closing coordinate if it equals the first one
+  const firstCoord = coordinates[0];
+  const lastCoord = coordinates[coordinates.length - 1];
+  if (
+    firstCoord?.[0] === lastCoord?.[0] &&
+    firstCoord?.[1] === lastCoord?.[1]
+  ) {
+    coordinates = coordinates.slice(0, -1);
+  }
+
   const [strokeColor, fillColor] = getRandomPolygonColors();
   return {
     key: GEO_POLYGON_KEY,
