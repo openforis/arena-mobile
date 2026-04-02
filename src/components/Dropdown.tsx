@@ -54,7 +54,7 @@ export const Dropdown = (props: DropdownProps) => {
       value: itemKeyExtractor(item),
       label: t(itemLabelExtractor(item)),
     }),
-    [itemKeyExtractor, itemLabelExtractor, t]
+    [itemKeyExtractor, itemLabelExtractor, t],
   );
 
   const options = useMemo(() => items.map(itemToOption), [itemToOption, items]);
@@ -64,7 +64,7 @@ export const Dropdown = (props: DropdownProps) => {
       if (disabled) return;
       await onChange?.(val);
     },
-    [disabled, onChange]
+    [disabled, onChange],
   );
 
   const dropDownItemTextStyle = useMemo(() => {
@@ -78,7 +78,7 @@ export const Dropdown = (props: DropdownProps) => {
 
   const dropDownItemStyle = useMemo(
     () => ({ backgroundColor: theme.colors.surfaceVariant }),
-    [theme]
+    [theme],
   );
 
   return (
