@@ -93,6 +93,9 @@ export const GeoPolygonEditorContent = ({
 }: GeoPolygonEditorContentProps) => {
   const [undoStack, setUndoStack] = useState<UndoSnapshot[]>([]);
   const [isPolygonSelected, setIsPolygonSelected] = useState(false);
+  const [selectedVertexIndex, setSelectedVertexIndex] = useState<number | null>(
+    null,
+  );
 
   const clonePolygons = useCallback(
     (sourcePolygons: MapPolygonExtendedProps[]) =>
@@ -145,6 +148,7 @@ export const GeoPolygonEditorContent = ({
     setPolygons([newPolygonToEdit]);
     setDraftCoordinates(newPolygonToEdit.coordinates);
     setIsPolygonSelected(true);
+    setSelectedVertexIndex(null);
     setTimeout(() => {
       polygonEditorRef.current?.selectPolygonByIndex(0);
     }, 0);
@@ -163,6 +167,7 @@ export const GeoPolygonEditorContent = ({
       setPolygons([polygon]);
       setDraftCoordinates(polygon.coordinates);
       setIsPolygonSelected(true);
+      setSelectedVertexIndex(null);
     },
     [setDraftCoordinates, setPolygons],
   );
@@ -175,6 +180,10 @@ export const GeoPolygonEditorContent = ({
         return updated;
       });
       setDraftCoordinates(polygon.coordinates);
+      setSelectedVertexIndex((prev) => {
+        if (prev == null) return prev;
+        return prev < polygon.coordinates.length ? prev : null;
+      });
     },
     [setDraftCoordinates, setPolygons],
   );
@@ -184,6 +193,7 @@ export const GeoPolygonEditorContent = ({
     setDraftCoordinates([]);
     setUndoStack([]);
     setIsPolygonSelected(false);
+    setSelectedVertexIndex(null);
   }, [setDraftCoordinates, setPolygons]);
 
   const onPolygonSelect = useCallback(() => {
@@ -192,6 +202,7 @@ export const GeoPolygonEditorContent = ({
 
   const onPolygonUnselect = useCallback(() => {
     setIsPolygonSelected(false);
+    setSelectedVertexIndex(null);
   }, []);
 
   const onMapPress = useCallback(
@@ -202,6 +213,7 @@ export const GeoPolygonEditorContent = ({
       if (polygons.length > 0) return;
 
       pushUndoSnapshot();
+      setSelectedVertexIndex(null);
 
       setDraftCoordinates((prev) => [...prev, coordinate]);
     },
@@ -257,6 +269,7 @@ export const GeoPolygonEditorContent = ({
       setPolygons([updatedPolygon]);
       setDraftCoordinates(updatedCoordinates);
       setIsPolygonSelected(true);
+      setSelectedVertexIndex(null);
       polygonEditorRef.current?.selectPolygonByIndex(0);
     },
     [
@@ -265,8 +278,59 @@ export const GeoPolygonEditorContent = ({
       pushUndoSnapshot,
       setDraftCoordinates,
       setPolygons,
+      setSelectedVertexIndex,
     ],
   );
+
+  const onVertexPress = useCallback((index: number) => {
+    setSelectedVertexIndex(index);
+    setIsPolygonSelected(true);
+  }, []);
+
+  const onDeleteSelectedVertexPress = useCallback(() => {
+    const polygon = polygons[0];
+    if (!polygon || selectedVertexIndex == null) return;
+    if (
+      selectedVertexIndex < 0 ||
+      selectedVertexIndex >= polygon.coordinates.length
+    )
+      return;
+
+    pushUndoSnapshot();
+
+    const updatedCoordinates = polygon.coordinates.filter(
+      (_, index) => index !== selectedVertexIndex,
+    );
+
+    setSelectedVertexIndex(null);
+
+    if (updatedCoordinates.length >= 3) {
+      const updatedPolygon: MapPolygonExtendedProps = {
+        ...polygon,
+        coordinates: updatedCoordinates,
+      };
+      setPolygons([updatedPolygon]);
+      setDraftCoordinates(updatedCoordinates);
+      setIsPolygonSelected(true);
+      setTimeout(() => {
+        polygonEditorRef.current?.selectPolygonByIndex(0);
+      }, 0);
+      return;
+    }
+
+    setPolygons([]);
+    setDraftCoordinates(updatedCoordinates);
+    setIsPolygonSelected(false);
+    restoreDraftCoordinates(updatedCoordinates);
+  }, [
+    polygonEditorRef,
+    polygons,
+    pushUndoSnapshot,
+    restoreDraftCoordinates,
+    selectedVertexIndex,
+    setDraftCoordinates,
+    setPolygons,
+  ]);
 
   const onUndoPress = useCallback(() => {
     const previousState = undoStack[undoStack.length - 1];
@@ -281,6 +345,7 @@ export const GeoPolygonEditorContent = ({
 
     if (restoredPolygons.length > 0) {
       setIsPolygonSelected(true);
+      setSelectedVertexIndex(null);
       polygonEditorRef.current?.resetAll();
       setTimeout(() => {
         polygonEditorRef.current?.selectPolygonByIndex(0);
@@ -289,6 +354,7 @@ export const GeoPolygonEditorContent = ({
     }
 
     setIsPolygonSelected(false);
+    setSelectedVertexIndex(null);
     restoreDraftCoordinates(restoredDraftCoordinates);
   }, [
     clonePolygons,
@@ -296,6 +362,7 @@ export const GeoPolygonEditorContent = ({
     restoreDraftCoordinates,
     setDraftCoordinates,
     setPolygons,
+    setSelectedVertexIndex,
     undoStack,
   ]);
 
@@ -371,6 +438,8 @@ export const GeoPolygonEditorContent = ({
           <GeoPolygonVerticesOverlay
             coordinates={polygonVertices}
             strokeColor={strokeColor}
+            selectedVertexIndex={selectedVertexIndex}
+            onVertexPress={onVertexPress}
           />
         )}
         {isPolygonSelected && (
@@ -393,39 +462,51 @@ export const GeoPolygonEditorContent = ({
         />
       </MapViewWithInitialFit>
       <Text style={styles.helperText} textKey={helperTextKey} />
-      <HView style={styles.toolbar}>
-        <IconButton
-          icon="crosshairs-gps"
-          onPress={onCenterOnLocation}
-          size={24}
-        />
-        <IconButton
-          disabled={undoStack.length === 0}
-          icon="undo"
-          onPress={onUndoPress}
-          size={20}
-        />
-        {hasValue ? (
-          <Button
-            disabled={!canSave}
-            icon="content-save"
-            onPress={onSavePress}
-            textKey="common:save"
+      <VView style={styles.toolbar}>
+        <HView style={styles.toolbarTopRow}>
+          {hasValue && isPolygonSelected && selectedVertexIndex != null && (
+            <Button
+              color="secondary"
+              icon="delete"
+              onPress={onDeleteSelectedVertexPress}
+              textKey="dataEntry:geo.deleteSelectedPoint"
+            />
+          )}
+        </HView>
+        <HView style={styles.toolbarBottomRow}>
+          <IconButton
+            icon="crosshairs-gps"
+            onPress={onCenterOnLocation}
+            size={24}
           />
-        ) : (
-          <Button
-            disabled={draftCoordinates.length < 3}
-            icon="stop"
-            onPress={closeDraftPolygon}
-            textKey="common:stop"
+          <IconButton
+            disabled={undoStack.length === 0}
+            icon="undo"
+            onPress={onUndoPress}
+            size={20}
           />
-        )}
-        <Button
-          color="secondary"
-          onPress={onCancelPress}
-          textKey="common:cancel"
-        />
-      </HView>
+          {hasValue ? (
+            <Button
+              disabled={!canSave}
+              icon="content-save"
+              onPress={onSavePress}
+              textKey="common:save"
+            />
+          ) : (
+            <Button
+              disabled={draftCoordinates.length < 3}
+              icon="stop"
+              onPress={closeDraftPolygon}
+              textKey="common:stop"
+            />
+          )}
+          <Button
+            color="secondary"
+            onPress={onCancelPress}
+            textKey="common:cancel"
+          />
+        </HView>
+      </VView>
     </VView>
   );
 };

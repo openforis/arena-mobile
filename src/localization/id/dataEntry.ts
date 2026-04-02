@@ -148,6 +148,7 @@ export default {
   Tekan lama dan seret titik tengah (titik transparan) untuk menambahkan simpul baru.`,
     tapToAddPoints:
       "Ketuk peta untuk menambahkan titik. Tekan Berhenti ketika selesai",
+    deleteSelectedPoint: "Hapus titik yang dipilih",
   },
   taxon: {
     search: "Cari takson",

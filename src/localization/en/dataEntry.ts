@@ -183,6 +183,7 @@ Fetch the list of records from the server and try again?`,
     editPolygonInstructions: `Long-press and drag a vertex to move it.  
 Long-press and drag a midpoint (transparent point) to add a new vertex.`,
     tapToAddPoints: "Tap the map to add points. Press Stop when done",
+    deleteSelectedPoint: "Delete selected point",
   },
   taxon: {
     search: "Search taxon",

@@ -141,6 +141,7 @@ export default {
   Mantenga pulsado y arrastre un punto intermedio (punto transparente) para añadir un nuevo vértice.`,
     tapToAddPoints:
       "Toque el mapa para añadir puntos. Presione Detener cuando haya terminado",
+    deleteSelectedPoint: "Eliminar punto seleccionado",
   },
   taxon: {
     search: "Buscar taxón",

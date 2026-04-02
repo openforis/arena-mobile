@@ -145,6 +145,7 @@ export default {
   Appuyez longuement et faites glisser un point milieu (point transparent) pour ajouter un nouveau sommet.`,
     tapToAddPoints:
       "Touchez la carte pour ajouter des points. Appuyez sur Arrêter lorsque c'est fait",
+    deleteSelectedPoint: "Supprimer le point sélectionné",
   },
   taxon: {
     search: "Rechercher un taxon",

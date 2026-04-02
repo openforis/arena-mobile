@@ -150,6 +150,7 @@ export default {
   Halten Sie einen Mittelpunkt (transparenten Punkt) gedrückt und ziehen Sie ihn, um einen neuen Eckpunkt hinzuzufügen.`,
     tapToAddPoints:
       "Tippen Sie auf die Karte, um Punkte hinzuzufügen. Drücken Sie Stopp, wenn fertig",
+    deleteSelectedPoint: "Ausgewählten Punkt löschen",
   },
   taxon: {
     search: "Taxon suchen",
