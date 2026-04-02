@@ -25,16 +25,20 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
   const hasValue = initialPolygons.length > 0;
 
   const toolbar = (
-    <HView style={styles.toolbar}>
-      <Button
-        icon={hasValue ? "pencil" : "vector-polygon"}
-        textKey={
-          hasValue ? "dataEntry:geo.editPolygon" : "dataEntry:geo.drawPolygon"
-        }
-        onPress={onStartDrawing}
-      />
+    <HView style={styles.previewToolbar}>
+      <HView style={styles.previewToolbarCenter}>
+        <Button
+          icon={hasValue ? "pencil" : "vector-polygon"}
+          textKey={
+            hasValue ? "dataEntry:geo.editPolygon" : "dataEntry:geo.drawPolygon"
+          }
+          onPress={onStartDrawing}
+        />
+      </HView>
       {hasValue && (
-        <IconButton icon="trash-can-outline" onPress={onClearPress} />
+        <HView style={styles.previewToolbarRight}>
+          <IconButton icon="trash-can-outline" onPress={onClearPress} />
+        </HView>
       )}
     </HView>
   );
