@@ -2921,22 +2921,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openforis/arena-core@npm:^1.0.90":
-  version: 1.0.90
-  resolution: "@openforis/arena-core@npm:1.0.90::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40openforis%2Farena-core%2F1.0.90%2F735689a4cd4fe0ba3e3a4827421a48b5fa7686f6"
+"@openforis/arena-core@npm:^1.0.97":
+  version: 1.0.97
+  resolution: "@openforis/arena-core@npm:1.0.97::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40openforis%2Farena-core%2F1.0.97%2F9648b694c3d65c7471dc63faef3dd7f3c4424dd8"
   dependencies:
     "@jsep-plugin/regex": "npm:^1.0.4"
     "@turf/destination": "npm:^7.3.4"
-    bignumber.js: "npm:^9.3.1"
+    bignumber.js: "npm:^10.0.2"
+    change-case: "npm:^5.4.4"
     jsep: "npm:^1.4.0"
     lodash.differencewith: "npm:^4.5.0"
     lodash.frompairs: "npm:^4.0.1"
     lodash.isequal: "npm:^4.5.0"
     lodash.topairs: "npm:^4.3.0"
     moment: "npm:^2.30.1"
-    proj4: "npm:^2.20.2"
-    uuid: "npm:^11.1.0"
-  checksum: 10c0/5e5284161bdeb0bda230fdd5c3c66b019c01cdfd57e58cf0ec56e19b09bf1bcccdb406f983cfe9a25592a4c8c99e81ca5b9e61ebbabcf2209095bf03d2a0816f
+    proj4: "npm:^2.20.4"
+    uuid: "npm:^13.0.0"
+  checksum: 10c0/b979fceee06c4c5d1b869dc4ee92bf0c22e630f4158f39ac802ef83ac0f528256a703ced3c5d55b091f9175f3a5c80e46a047aee47ca5471591d28a6745e32a0
   languageName: node
   linkType: hard
 
@@ -4163,7 +4164,7 @@ __metadata:
     "@eslint/eslintrc": "npm:^3.3.3"
     "@eslint/js": "npm:^9.39.3"
     "@lodev09/react-native-exify": "npm:^0.2.7"
-    "@openforis/arena-core": "npm:^1.0.90"
+    "@openforis/arena-core": "npm:^1.0.97"
     "@react-native-async-storage/async-storage": "npm:2.2.0"
     "@react-native-clipboard/clipboard": "npm:^1.16.3"
     "@react-native-community/datetimepicker": "npm:8.4.4"
@@ -4684,10 +4685,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bignumber.js@npm:^9.3.1":
-  version: 9.3.1
-  resolution: "bignumber.js@npm:9.3.1"
-  checksum: 10c0/61342ba5fe1c10887f0ecf5be02ff6709271481aff48631f86b4d37d55a99b87ce441cfd54df3d16d10ee07ceab7e272fc0be430c657ffafbbbf7b7d631efb75
+"bignumber.js@npm:^10.0.2":
+  version: 10.0.2
+  resolution: "bignumber.js@npm:10.0.2"
+  checksum: 10c0/471a17d851d275e458156d090c028b8851c84389dc41db79b08dd584b4df1e4d24f70b1684705a5974aec6c59dc8511337007e01bd78d8ed8d93e1a541356a7f
   languageName: node
   linkType: hard
 
@@ -4927,6 +4928,13 @@ __metadata:
     ansi-styles: "npm:^4.1.0"
     supports-color: "npm:^7.1.0"
   checksum: 10c0/4a3fef5cc34975c898ffe77141450f679721df9dde00f6c304353fa9c8b571929123b26a0e4617bde5018977eb655b31970c297b91b63ee83bb82aeb04666880
+  languageName: node
+  linkType: hard
+
+"change-case@npm:^5.4.4":
+  version: 5.4.4
+  resolution: "change-case@npm:5.4.4"
+  checksum: 10c0/2a9c2b9c9ad6ab2491105aaf506db1a9acaf543a18967798dcce20926c6a173aa63266cb6189f3086e3c14bf7ae1f8ea4f96ecc466fcd582310efa00372f3734
   languageName: node
   linkType: hard
 
@@ -10449,13 +10457,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"proj4@npm:^2.20.2":
-  version: 2.20.2
-  resolution: "proj4@npm:2.20.2"
+"proj4@npm:^2.20.4":
+  version: 2.20.4
+  resolution: "proj4@npm:2.20.4"
   dependencies:
     mgrs: "npm:1.0.0"
-    wkt-parser: "npm:^1.5.1"
-  checksum: 10c0/7b65fcb12a896a110779f6a0e28e947c4c208ccb4a2e381052f1b7c8bad5306d4315a1dac7b4d6316687a48cfbce63d6ff6017c9946c5ef12f440cbf67d8f0e5
+    wkt-parser: "npm:^1.5.3"
+  checksum: 10c0/bb83915ae7973068f02ca440099faca7efd6b1add3cd2903fe8ce816f4d589bd72ac77c9a882d3d60c7beff2cb9d9fb38924590978a87a7165156cb120c8328c
   languageName: node
   linkType: hard
 
@@ -12705,12 +12713,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^11.1.0":
-  version: 11.1.0
-  resolution: "uuid@npm:11.1.0"
+"uuid@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "uuid@npm:13.0.0"
   bin:
-    uuid: dist/esm/bin/uuid
-  checksum: 10c0/34aa51b9874ae398c2b799c88a127701408cd581ee89ec3baa53509dd8728cbb25826f2a038f9465f8b7be446f0fbf11558862965b18d21c993684297628d4d3
+    uuid: dist-node/bin/uuid
+  checksum: 10c0/950e4c18d57fef6c69675344f5700a08af21e26b9eff2bf2180427564297368c538ea11ac9fb2e6528b17fc3966a9fd2c5049361b0b63c7d654f3c550c9b3d67
   languageName: node
   linkType: hard
 
@@ -12912,10 +12920,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wkt-parser@npm:^1.5.1":
-  version: 1.5.2
-  resolution: "wkt-parser@npm:1.5.2"
-  checksum: 10c0/0522173da6e4e2dddc735d7899a74847c6e448b5bdc1b7994d86e1d193e81c704d39629ed9be456cd1ded564a1d5ac7c2a5686c1838ff6dc4ef1e58ad768144b
+"wkt-parser@npm:^1.5.3":
+  version: 1.5.4
+  resolution: "wkt-parser@npm:1.5.4"
+  checksum: 10c0/70d85e2a4abea83c94021ffc5e11a8d25e9b70b0989d762c470a57600a4ee930d537366b608b26f3fba7f371c4e6d8d814a074831e7cc2914efa4e3cbddc8913
   languageName: node
   linkType: hard
 
