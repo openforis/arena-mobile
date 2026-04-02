@@ -12,7 +12,7 @@ type GeoPolygonVerticesOverlayProps = {
 };
 
 const markerAnchor = { x: 0.2, y: 0.2 };
-
+const selectedMarkerAnchor = { x: 0.5, y: 0.5 };
 export const GeoPolygonVerticesOverlay = ({
   coordinates,
   strokeColor,
@@ -47,7 +47,9 @@ export const GeoPolygonVerticesOverlay = ({
         <Marker
           key={`polygon-vertex-${index}-${coordinate.latitude}-${coordinate.longitude}`}
           coordinate={coordinate}
-          anchor={markerAnchor}
+          anchor={
+            index === selectedVertexIndex ? selectedMarkerAnchor : markerAnchor
+          }
           onPress={(event) => {
             event.stopPropagation();
             onVertexPress(index);
