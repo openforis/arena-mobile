@@ -2,7 +2,8 @@ import {
   MapPolygonExtendedProps,
   PolygonEditor,
 } from "@siposdani87/expo-maps-polygon-editor";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Animated } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
 import {
@@ -14,6 +15,7 @@ import {
   View,
   VView,
 } from "components";
+import { HeartbeatAnimation } from "components/HeartbeatAnimation";
 
 import { GeoPolygonDraftOverlay } from "./GeoPolygonDraftOverlay";
 import { GeoPolygonMidpointsOverlay } from "./GeoPolygonMidpointsOverlay";
@@ -83,6 +85,21 @@ export const GeoPolygonEditorContent = ({
     onCancelDrawing,
     onSaveDrawing,
   });
+
+  const [locationButtonOpacity] = useState(() => new Animated.Value(1));
+
+  useEffect(() => {
+    if (isFollowingCurrentLocation) {
+      HeartbeatAnimation({
+        value: locationButtonOpacity,
+        minValue: 0.25,
+        maxValue: 1,
+      }).start();
+    } else {
+      locationButtonOpacity.stopAnimation();
+      locationButtonOpacity.setValue(1);
+    }
+  }, [isFollowingCurrentLocation, locationButtonOpacity]);
 
   return (
     <VView style={styles.modalContent}>
@@ -154,11 +171,17 @@ export const GeoPolygonEditorContent = ({
           )}
         </HView>
         <HView style={styles.toolbarBottomRow}>
-          <IconButton
-            icon="crosshairs-gps"
-            onPress={onCenterOnLocation}
-            size={24}
-          />
+          <Animated.View style={{ opacity: locationButtonOpacity }}>
+            <IconButton
+              avoidMultiplePress={false}
+              icon="crosshairs-gps"
+              mode={
+                isFollowingCurrentLocation ? "contained" : "contained-tonal"
+              }
+              onPress={onCenterOnLocation}
+              size={24}
+            />
+          </Animated.View>
           <IconButton
             disabled={undoStack.length === 0}
             icon="undo"
