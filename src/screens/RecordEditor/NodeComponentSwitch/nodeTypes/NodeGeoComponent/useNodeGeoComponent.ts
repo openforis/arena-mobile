@@ -57,7 +57,7 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     return polygon ? [polygon] : [];
   }, [nodeValue]);
 
-  const mapRef = useRef<MapView>(null);
+  const mapRef = useRef<MapView | null>(null);
 
   const [editable, setEditable] = useState(false);
 

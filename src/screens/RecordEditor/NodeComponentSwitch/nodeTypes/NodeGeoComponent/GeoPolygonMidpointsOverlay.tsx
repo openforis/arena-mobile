@@ -26,7 +26,7 @@ export const GeoPolygonMidpointsOverlay = ({
   const style = useMemo(
     () => [
       styles.midpoint,
-      { borderColor: strokeColor ?? styles.midpoint.borderColor },
+      { borderColor: strokeColor ?? styles.midpoint.borderColor ?? "#FFFFFF" },
     ],
     [strokeColor],
   );
