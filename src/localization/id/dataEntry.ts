@@ -143,6 +143,7 @@ export default {
   geo: {
     drawPolygon: "Gambar poligon",
     editPolygon: "Edit poligon",
+    selectPolygonInstruction: "Tekan pada poligon untuk memilihnya",
     editPolygonInstructions: `Tekan lama dan seret simpul untuk memindahkannya.
   Tekan lama dan seret titik tengah (titik transparan) untuk menambahkan simpul baru.`,
     tapToAddPoints:

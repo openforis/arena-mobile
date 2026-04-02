@@ -129,6 +129,7 @@ export default {
   geo: {
     drawPolygon: "ፖሊጎን ይሳሉ",
     editPolygon: "ፖሊጎን ያርትዑ",
+    selectPolygonInstruction: "ፖሊጎን ለመንቀሳቀስ ላይ ይንኩ",
     editPolygonInstructions: `አንድ ጫፍን ረጅም ጊዜ ይጫኑ እና ለመንቀሳቀስ ይጎትቱት።
   አዲስ ጫፍ ለመጨመር መካከለኛ ነጥብ (ግልጽ ነጥብ) ረጅም ጊዜ ይጫኑ እና ይጎትቱት።`,
     tapToAddPoints: "ነጥቦች ለመጨመር በካርታው ላይ ይንኩ። ከተጠናቀቁ በኋላ ማቆም ይጫኑ",

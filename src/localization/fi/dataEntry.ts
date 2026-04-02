@@ -141,6 +141,7 @@ export default {
   geo: {
     drawPolygon: "Piirrä monikulmio",
     editPolygon: "Muokkaa monikulmiota",
+    selectPolygonInstruction: "Paina monikulmiota sen valitsemiseksi",
     editPolygonInstructions: `Pidä kärkeä painettuna ja vedä sitä siirtääksesi sitä.
   Pidä keskipisteen (läpinäkyvää pistettä) painettuna ja vedä lisätäksesi uuden kärjen.`,
     tapToAddPoints:

@@ -145,6 +145,7 @@ export default {
   geo: {
     drawPolygon: "Polygon zeichnen",
     editPolygon: "Polygon bearbeiten",
+    selectPolygonInstruction: "Drücken Sie auf ein Polygon, um es auszuwählen",
     editPolygonInstructions: `Halten Sie einen Eckpunkt gedrückt und ziehen Sie ihn, um ihn zu verschieben.
   Halten Sie einen Mittelpunkt (transparenten Punkt) gedrückt und ziehen Sie ihn, um einen neuen Eckpunkt hinzuzufügen.`,
     tapToAddPoints:

@@ -141,6 +141,7 @@ export default {
   geo: {
     drawPolygon: "رسم چندضلعی",
     editPolygon: "ویرایش چندضلعی",
+    selectPolygonInstruction: "بر یک چندضلعی لمس کنید تا آن را انتخاب کنید",
     editPolygonInstructions: `یک رأس را لمس طولانی کرده و بکشید تا جابه‌جا شود.
   یک نقطه میانی (نقطه شفاف) را لمس طولانی کرده و بکشید تا یک رأس جدید اضافه شود.`,
     tapToAddPoints:

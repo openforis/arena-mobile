@@ -136,6 +136,7 @@ export default {
   geo: {
     drawPolygon: "Dibujar polígono",
     editPolygon: "Editar polígono",
+    selectPolygonInstruction: "Presione en un polígono para seleccionarlo",
     editPolygonInstructions: `Mantenga pulsado y arrastre un vértice para moverlo.
   Mantenga pulsado y arrastre un punto intermedio (punto transparente) para añadir un nuevo vértice.`,
     tapToAddPoints:

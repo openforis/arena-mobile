@@ -340,6 +340,16 @@ export const GeoPolygonEditorContent = ({
     [fillColor, polygons, strokeColor],
   );
 
+  const helperTextKey = useMemo(() => {
+    if (!hasValue) {
+      return "dataEntry:geo.tapToAddPoints";
+    }
+    if (isPolygonSelected) {
+      return "dataEntry:geo.editPolygonInstructions";
+    }
+    return "dataEntry:geo.selectPolygonInstruction";
+  }, [hasValue, isPolygonSelected]);
+
   return (
     <VView style={styles.modalContent}>
       <MapViewWithInitialFit
@@ -382,14 +392,7 @@ export const GeoPolygonEditorContent = ({
           disabled={false}
         />
       </MapViewWithInitialFit>
-      <Text
-        style={styles.helperText}
-        textKey={
-          hasValue
-            ? "dataEntry:geo.editPolygonInstructions"
-            : "dataEntry:geo.tapToAddPoints"
-        }
-      />
+      <Text style={styles.helperText} textKey={helperTextKey} />
       <HView style={styles.toolbar}>
         <IconButton
           icon="crosshairs-gps"

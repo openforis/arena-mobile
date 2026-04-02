@@ -140,6 +140,7 @@ export default {
   geo: {
     drawPolygon: "Dessiner un polygone",
     editPolygon: "Modifier le polygone",
+    selectPolygonInstruction: "Appuyez sur un polygone pour le sélectionner",
     editPolygonInstructions: `Appuyez longuement et faites glisser un sommet pour le déplacer.
   Appuyez longuement et faites glisser un point milieu (point transparent) pour ajouter un nouveau sommet.`,
     tapToAddPoints:

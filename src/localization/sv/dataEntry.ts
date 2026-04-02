@@ -142,6 +142,7 @@ export default {
   geo: {
     drawPolygon: "Rita polygon",
     editPolygon: "Redigera polygon",
+    selectPolygonInstruction: "Tryck på en polygon för att välja den",
     editPolygonInstructions: `Tryck länge och dra ett hörn för att flytta det.
   Tryck länge och dra en mittpunkt (transparent punkt) för att lägga till ett nytt hörn.`,
     tapToAddPoints:
