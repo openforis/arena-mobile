@@ -8,6 +8,7 @@ import { useTranslation } from "localization";
 import { AMConstants } from "utils";
 
 import styles from "./styles";
+import { Objects } from "@openforis/arena-core";
 
 const supportEmailAddress = process.env.EXPO_PUBLIC_SUPPORT_EMAIL_ADDRESS;
 
@@ -34,15 +35,18 @@ export const AboutScreen = () => {
         <FormItem labelKey="about:developedBy">
           <Link
             labelKey={AMConstants.openForisInitiative}
+            labelIsI18nKey={false}
             style={styles.link}
             url={AMConstants.openForisInitiativeUrl}
           />
         </FormItem>
-        <FormItem labelKey="about:supportEmail">
-          <Button mode="text" onPress={onSupportPress}>
-            {supportEmailAddress}
-          </Button>
-        </FormItem>
+        {Objects.isNotEmpty(supportEmailAddress) && (
+          <FormItem labelKey="about:supportEmail">
+            <Button mode="text" onPress={onSupportPress}>
+              {supportEmailAddress}
+            </Button>
+          </FormItem>
+        )}
         <FormItem labelKey="about:supportForum">
           <Link style={styles.link} url={AMConstants.supportForumUrl} />
         </FormItem>
