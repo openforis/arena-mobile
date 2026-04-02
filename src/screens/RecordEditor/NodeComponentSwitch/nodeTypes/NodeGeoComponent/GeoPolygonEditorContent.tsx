@@ -1,8 +1,9 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
   MapPolygonExtendedProps,
   PolygonEditor,
   PolygonEditorRef,
+  getRandomPolygonColors,
 } from "@siposdani87/expo-maps-polygon-editor";
 import MapView, { LatLng, MapPressEvent } from "react-native-maps";
 
@@ -35,7 +36,6 @@ type UndoSnapshot = {
 };
 
 type GeoPolygonEditorContentProps = {
-  draftCoordinates: LatLng[];
   initialRegion: {
     latitude: number;
     longitude: number;
@@ -43,11 +43,7 @@ type GeoPolygonEditorContentProps = {
     longitudeDelta: number;
   };
   mapRef: React.RefObject<MapView | null>;
-  newPolygon: MapPolygonExtendedProps;
-  polygonEditorRef: React.RefObject<PolygonEditorRef | null>;
-  polygons: MapPolygonExtendedProps[];
-  setDraftCoordinates: React.Dispatch<React.SetStateAction<LatLng[]>>;
-  setPolygons: React.Dispatch<React.SetStateAction<MapPolygonExtendedProps[]>>;
+  initialPolygons: MapPolygonExtendedProps[];
   onCancelDrawing: () => void;
   onCenterOnLocation: () => Promise<void>;
   onSaveDrawing: (polygon: MapPolygonExtendedProps | null) => void;
@@ -79,23 +75,33 @@ const determinePolygonToSave = ({
 };
 
 export const GeoPolygonEditorContent = ({
-  draftCoordinates,
   initialRegion,
   mapRef,
-  newPolygon,
-  polygonEditorRef,
-  polygons,
-  setDraftCoordinates,
-  setPolygons,
+  initialPolygons,
   onCancelDrawing,
   onCenterOnLocation,
   onSaveDrawing,
 }: GeoPolygonEditorContentProps) => {
+  const polygonEditorRef = useRef<PolygonEditorRef>(null);
+  const [draftCoordinates, setDraftCoordinates] = useState<LatLng[]>([]);
+  const [polygons, setPolygons] =
+    useState<MapPolygonExtendedProps[]>(initialPolygons);
   const [undoStack, setUndoStack] = useState<UndoSnapshot[]>([]);
   const [isPolygonSelected, setIsPolygonSelected] = useState(false);
   const [selectedVertexIndex, setSelectedVertexIndex] = useState<number | null>(
     null,
   );
+
+  const newPolygon = useMemo<MapPolygonExtendedProps>(() => {
+    const [strokeColor, fillColor] = getRandomPolygonColors();
+    return {
+      key: GEO_POLYGON_KEY,
+      coordinates: [],
+      strokeWidth: 2,
+      strokeColor,
+      fillColor,
+    };
+  }, []);
 
   const clonePolygons = useCallback(
     (sourcePolygons: MapPolygonExtendedProps[]) =>
@@ -158,7 +164,6 @@ export const GeoPolygonEditorContent = ({
     polygonEditorRef,
     polygons.length,
     pushUndoSnapshot,
-    setDraftCoordinates,
     setPolygons,
   ]);
 
@@ -169,7 +174,7 @@ export const GeoPolygonEditorContent = ({
       setIsPolygonSelected(true);
       setSelectedVertexIndex(null);
     },
-    [setDraftCoordinates, setPolygons],
+    [setPolygons],
   );
 
   const onPolygonChange = useCallback(
@@ -185,7 +190,7 @@ export const GeoPolygonEditorContent = ({
         return prev < polygon.coordinates.length ? prev : null;
       });
     },
-    [setDraftCoordinates, setPolygons],
+    [setPolygons],
   );
 
   const onPolygonRemove = useCallback(() => {
@@ -194,7 +199,7 @@ export const GeoPolygonEditorContent = ({
     setUndoStack([]);
     setIsPolygonSelected(false);
     setSelectedVertexIndex(null);
-  }, [setDraftCoordinates, setPolygons]);
+  }, [setPolygons]);
 
   const onPolygonSelect = useCallback(() => {
     setIsPolygonSelected(true);
@@ -217,7 +222,7 @@ export const GeoPolygonEditorContent = ({
 
       setDraftCoordinates((prev) => [...prev, coordinate]);
     },
-    [polygons.length, pushUndoSnapshot, setDraftCoordinates],
+    [polygons.length, pushUndoSnapshot],
   );
 
   const polygonMidpoints = useMemo<GeoPolygonMidpoint[]>(() => {
@@ -276,7 +281,6 @@ export const GeoPolygonEditorContent = ({
       polygonEditorRef,
       polygons,
       pushUndoSnapshot,
-      setDraftCoordinates,
       setPolygons,
       setSelectedVertexIndex,
     ],
@@ -328,7 +332,6 @@ export const GeoPolygonEditorContent = ({
     pushUndoSnapshot,
     restoreDraftCoordinates,
     selectedVertexIndex,
-    setDraftCoordinates,
     setPolygons,
   ]);
 
@@ -360,7 +363,6 @@ export const GeoPolygonEditorContent = ({
     clonePolygons,
     polygonEditorRef,
     restoreDraftCoordinates,
-    setDraftCoordinates,
     setPolygons,
     setSelectedVertexIndex,
     undoStack,

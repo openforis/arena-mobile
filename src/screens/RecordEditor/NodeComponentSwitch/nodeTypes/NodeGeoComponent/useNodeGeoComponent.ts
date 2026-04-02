@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   MapPolygonExtendedProps,
-  PolygonEditorRef,
   getRandomPolygonColors,
 } from "@siposdani87/expo-maps-polygon-editor";
 import * as Location from "expo-location";
@@ -59,32 +58,9 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     return polygon ? [polygon] : [];
   }, [nodeValue]);
 
-  const newPolygon = useMemo<MapPolygonExtendedProps>(() => {
-    const [strokeColor, fillColor] = getRandomPolygonColors();
-    return {
-      key: GEO_POLYGON_KEY,
-      coordinates: [],
-      strokeWidth: 2,
-      strokeColor,
-      fillColor,
-    };
-  }, []);
-
-  const polygonEditorRef = useRef<PolygonEditorRef>(null);
   const mapRef = useRef<MapView>(null);
 
   const [editable, setEditable] = useState(false);
-  const [draftCoordinates, setDraftCoordinates] = useState<LatLng[]>([]);
-
-  const [polygons, setPolygons] = useState<MapPolygonExtendedProps[]>(() => {
-    const polygon = nodeValueToPolygon(nodeValue);
-    return polygon ? [polygon] : [];
-  });
-
-  useEffect(() => {
-    if (editable) return;
-    setPolygons(nodeValuePolygons);
-  }, [editable, nodeValuePolygons]);
 
   const initialRegion = useMemo(() => {
     const polygon = nodeValueToPolygon(nodeValue);
@@ -108,33 +84,19 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
 
   const onSaveDrawing = useCallback(
     (polygon: MapPolygonExtendedProps | null) => {
-      setPolygons(polygon ? [polygon] : []);
-      setDraftCoordinates([]);
       setEditable(false);
-      polygonEditorRef.current?.resetAll();
       savePolygon(polygon);
     },
     [savePolygon],
   );
 
   const onStartDrawing = useCallback(() => {
-    setDraftCoordinates([]);
     setEditable(true);
-    if (polygons.length > 0) {
-      polygonEditorRef.current?.selectPolygonByIndex(0);
-      return;
-    }
-
-    setPolygons([]);
-    polygonEditorRef.current?.startPolygon();
-  }, [polygons.length]);
+  }, []);
 
   const onCancelDrawing = useCallback(() => {
-    setDraftCoordinates([]);
-    setPolygons(nodeValuePolygons);
     setEditable(false);
-    polygonEditorRef.current?.resetAll();
-  }, [nodeValuePolygons]);
+  }, []);
 
   const onClearPress = useCallback(async () => {
     if (
@@ -142,10 +104,7 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
         messageKey: "dataEntry:confirmDeleteValue.message",
       })
     ) {
-      setDraftCoordinates([]);
-      setPolygons([]);
       setEditable(false);
-      polygonEditorRef.current?.resetAll();
       if (nodeUuid) {
         dispatch(
           DataEntryActions.updateAttribute({ uuid: nodeUuid, value: null }),
@@ -167,16 +126,11 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
   }, []);
 
   return {
-    draftCoordinates,
     editable,
     initialRegion,
+    initialPolygons: nodeValuePolygons,
     mapRef,
-    newPolygon,
     nodeValue,
-    polygonEditorRef,
-    polygons,
-    setDraftCoordinates,
-    setPolygons,
     onCancelDrawing,
     onCenterOnLocation,
     onClearPress,

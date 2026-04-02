@@ -11,16 +11,11 @@ import styles from "./styles";
 export const NodeGeoComponent = (props: NodeComponentProps) => {
   const { nodeDef } = props;
   const {
-    draftCoordinates,
     editable,
     initialRegion,
     mapRef,
-    newPolygon,
+    initialPolygons,
     nodeValue,
-    polygonEditorRef,
-    polygons,
-    setDraftCoordinates,
-    setPolygons,
     onCancelDrawing,
     onCenterOnLocation,
     onClearPress,
@@ -28,7 +23,7 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
     onStartDrawing,
   } = useNodeGeoComponent(props);
 
-  const hasValue = polygons.length > 0;
+  const hasValue = initialPolygons.length > 0;
 
   const toolbar = (
     <HView style={styles.toolbar}>
@@ -70,14 +65,9 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
           }
         >
           <GeoPolygonEditorContent
-            draftCoordinates={draftCoordinates}
             initialRegion={initialRegion}
             mapRef={mapRef}
-            newPolygon={newPolygon}
-            polygonEditorRef={polygonEditorRef}
-            polygons={polygons}
-            setDraftCoordinates={setDraftCoordinates}
-            setPolygons={setPolygons}
+            initialPolygons={initialPolygons}
             onCancelDrawing={onCancelDrawing}
             onCenterOnLocation={onCenterOnLocation}
             onSaveDrawing={onSaveDrawing}
@@ -85,10 +75,7 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
         </Modal>
       ) : (
         <>
-          <NodeGeoValuePreview
-            nodeDef={nodeDef}
-            value={nodeValue}
-          />
+          <NodeGeoValuePreview nodeDef={nodeDef} value={nodeValue} />
           {toolbar}
         </>
       )}
