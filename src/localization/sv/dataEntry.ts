@@ -143,8 +143,9 @@ export default {
     drawPolygon: "Rita polygon",
     editPolygon: "Redigera polygon",
     editPolygonInstructions: `Tryck länge och dra ett hörn för att flytta det.
-  Tryck länge och dra en transparent punkt för att lägga till ett nytt hörn.`,
-    tapToAddPoints: "Tryck på kartan för att lägga till punkter",
+  Tryck länge och dra en mittpunkt (transparent punkt) för att lägga till ett nytt hörn.`,
+    tapToAddPoints:
+      "Tryck på kartan för att lägga till punkter. Tryck Stopp när du är klar",
   },
   taxon: {
     search: "Sök taxon",

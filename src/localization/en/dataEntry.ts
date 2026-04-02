@@ -180,8 +180,8 @@ Fetch the list of records from the server and try again?`,
     drawPolygon: "Draw polygon",
     editPolygon: "Edit polygon",
     editPolygonInstructions: `Long-press and drag a vertex to move it.  
-Long-press and drag a transparent point to add a new vertex.`,
-    tapToAddPoints: "Tap on the map to add points",
+Long-press and drag a midpoint (transparent point) to add a new vertex.`,
+    tapToAddPoints: "Tap the map to add points. Press Stop when done",
   },
   taxon: {
     search: "Search taxon",

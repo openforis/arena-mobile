@@ -146,8 +146,9 @@ export default {
     drawPolygon: "Polygon zeichnen",
     editPolygon: "Polygon bearbeiten",
     editPolygonInstructions: `Halten Sie einen Eckpunkt gedrückt und ziehen Sie ihn, um ihn zu verschieben.
-  Halten Sie einen transparenten Punkt gedrückt und ziehen Sie ihn, um einen neuen Eckpunkt hinzuzufügen.`,
-    tapToAddPoints: "Tippen Sie auf die Karte, um Punkte hinzuzufügen",
+  Halten Sie einen Mittelpunkt (transparenten Punkt) gedrückt und ziehen Sie ihn, um einen neuen Eckpunkt hinzuzufügen.`,
+    tapToAddPoints:
+      "Tippen Sie auf die Karte, um Punkte hinzuzufügen. Drücken Sie Stopp, wenn fertig",
   },
   taxon: {
     search: "Taxon suchen",

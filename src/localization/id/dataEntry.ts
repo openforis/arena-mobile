@@ -144,8 +144,9 @@ export default {
     drawPolygon: "Gambar poligon",
     editPolygon: "Edit poligon",
     editPolygonInstructions: `Tekan lama dan seret simpul untuk memindahkannya.
-  Tekan lama dan seret titik transparan untuk menambahkan simpul baru.`,
-    tapToAddPoints: "Ketuk peta untuk menambahkan titik",
+  Tekan lama dan seret titik tengah (titik transparan) untuk menambahkan simpul baru.`,
+    tapToAddPoints:
+      "Ketuk peta untuk menambahkan titik. Tekan Berhenti ketika selesai",
   },
   taxon: {
     search: "Cari takson",

@@ -142,8 +142,9 @@ export default {
     drawPolygon: "Piirrä monikulmio",
     editPolygon: "Muokkaa monikulmiota",
     editPolygonInstructions: `Pidä kärkeä painettuna ja vedä sitä siirtääksesi sitä.
-  Pidä läpinäkyvää pistettä painettuna ja vedä lisätäksesi uuden kärjen.`,
-    tapToAddPoints: "Napauta karttaa lisätäksesi pisteitä",
+  Pidä keskipisteen (läpinäkyvää pistettä) painettuna ja vedä lisätäksesi uuden kärjen.`,
+    tapToAddPoints:
+      "Napauta karttaa lisätäksesi pisteitä. Paina Pysäytä kun olet valmis",
   },
   taxon: {
     search: "Hae lajia",

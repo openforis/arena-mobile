@@ -141,8 +141,9 @@ export default {
     drawPolygon: "Dessiner un polygone",
     editPolygon: "Modifier le polygone",
     editPolygonInstructions: `Appuyez longuement et faites glisser un sommet pour le déplacer.
-  Appuyez longuement et faites glisser un point transparent pour ajouter un nouveau sommet.`,
-    tapToAddPoints: "Touchez la carte pour ajouter des points",
+  Appuyez longuement et faites glisser un point milieu (point transparent) pour ajouter un nouveau sommet.`,
+    tapToAddPoints:
+      "Touchez la carte pour ajouter des points. Appuyez sur Arrêter lorsque c'est fait",
   },
   taxon: {
     search: "Rechercher un taxon",
