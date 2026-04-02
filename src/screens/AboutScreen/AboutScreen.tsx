@@ -3,12 +3,12 @@ import { Linking } from "react-native";
 
 import { ChangelogViewDialog } from "appComponents/ChangelogViewDialog";
 import { VersionNumberInfoButton } from "appComponents/VersionNumberInfoButton";
-import { Button, FormItem, ScreenView, Text, VView } from "components";
+import { Button, FormItem, Link, ScreenView, Text, VView } from "components";
 import { useTranslation } from "localization";
+import { AMConstants } from "utils";
 
 import styles from "./styles";
 
-const developedBy = "Open Foris Initiative";
 const supportEmailAddress = process.env.EXPO_PUBLIC_SUPPORT_EMAIL_ADDRESS;
 
 export const AboutScreen = () => {
@@ -25,21 +25,26 @@ export const AboutScreen = () => {
 
   const toggleChangelogDialogOpen = useCallback(
     () => setChangelogDialogOpen((oldValue) => !oldValue),
-    []
+    [],
   );
 
   return (
     <ScreenView>
       <VView style={styles.formWrapper}>
-        <FormItem labelKey="about:developedBy">{developedBy}</FormItem>
-        <FormItem labelKey="about:support">
-          <VView>
-            <Text
-              textKey="about:sendSupportEmailIntroduction"
-              variant="labelLarge"
-            />
-            <Button onPress={onSupportPress}>{supportEmailAddress}</Button>
-          </VView>
+        <FormItem labelKey="about:developedBy">
+          <Link
+            labelKey={AMConstants.openForisInitiative}
+            style={styles.link}
+            url={AMConstants.openForisInitiativeUrl}
+          />
+        </FormItem>
+        <FormItem labelKey="about:supportEmail">
+          <Button mode="text" onPress={onSupportPress}>
+            {supportEmailAddress}
+          </Button>
+        </FormItem>
+        <FormItem labelKey="about:supportForum">
+          <Link style={styles.link} url={AMConstants.supportForumUrl} />
         </FormItem>
         <FormItem labelKey="about:version">
           <VersionNumberInfoButton />
