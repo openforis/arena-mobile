@@ -149,8 +149,8 @@ export default {
     tapToAddPoints:
       "Ketuk peta untuk menambahkan titik. Tekan Berhenti ketika selesai",
     deleteSelectedPoint: "Hapus titik yang dipilih",
-    addCurrentLocationPoint: "Add GPS point",
-    addCurrentLocationPointInstructions: "Press Add GPS point to add current location to the polygon",
+    addCurrentLocationPoint: "Tambah titik GPS",
+    addCurrentLocationPointInstructions: "Tekan \"Tambah titik GPS\" untuk menambahkan lokasi saat ini ke poligon",
   },
   taxon: {
     search: "Cari takson",

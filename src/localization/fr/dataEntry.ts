@@ -146,8 +146,8 @@ export default {
     tapToAddPoints:
       "Touchez la carte pour ajouter des points. Appuyez sur Arrêter lorsque c'est fait",
     deleteSelectedPoint: "Supprimer le point sélectionné",
-    addCurrentLocationPoint: "Add GPS point",
-    addCurrentLocationPointInstructions: "Press Add GPS point to add current location to the polygon",
+    addCurrentLocationPoint: "Ajouter un point GPS",
+    addCurrentLocationPointInstructions: "Appuyez sur \"Ajouter un point GPS\" pour ajouter la position actuelle au polygone",
   },
   taxon: {
     search: "Rechercher un taxon",

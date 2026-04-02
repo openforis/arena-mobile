@@ -141,8 +141,8 @@ export default {
     tapToAddPoints:
     "Нажмите на карту, чтобы добавить точки. Нажмите Стоп когда закончите",
     deleteSelectedPoint: "Удалить выбранную точку",
-    addCurrentLocationPoint: "Add GPS point",
-    addCurrentLocationPointInstructions: "Press Add GPS point to add current location to the polygon",
+    addCurrentLocationPoint: "Добавить GPS-точку",
+    addCurrentLocationPointInstructions: "Нажмите \"Добавить GPS-точку\", чтобы добавить текущее местоположение в полигон",
   },
   taxon: {
     search: "Поиск таксона",

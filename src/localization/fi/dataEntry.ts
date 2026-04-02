@@ -147,8 +147,8 @@ export default {
     tapToAddPoints:
     "Napauta karttaa lisätäksesi pisteitä. Paina Pysäytä kun olet valmis",
     deleteSelectedPoint: "Poista valittu piste",
-    addCurrentLocationPoint: "Add GPS point",
-    addCurrentLocationPointInstructions: "Press Add GPS point to add current location to the polygon",
+    addCurrentLocationPoint: "Lisää GPS-piste",
+    addCurrentLocationPointInstructions: "Lisää nykyinen sijainti monikulmioon painamalla \"Lisää GPS-piste\"",
   },
   taxon: {
     search: "Hae lajia",

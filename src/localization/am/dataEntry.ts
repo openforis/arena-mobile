@@ -133,9 +133,9 @@ export default {
     editPolygonInstructions: `አንድ ጫፍን ረጅም ጊዜ ይጫኑ እና ለመንቀሳቀስ ይጎትቱት።
   አዲስ ጫፍ ለመጨመር መካከለኛ ነጥብ (ግልጽ ነጥብ) ረጅም ጊዜ ይጫኑ እና ይጎትቱት።`,
     tapToAddPoints: "ነጥቦች ለመጨመር በካርታው ላይ ይንኩ። ከተጠናቀቁ በኋላ ማቆም ይጫኑ",
-    deleteSelectedPoint: "Delete selected point",
-    addCurrentLocationPoint: "Add GPS point",
-    addCurrentLocationPointInstructions: "Press Add GPS point to add current location to the polygon",
+    deleteSelectedPoint: "የተመረጠውን ነጥብ ሰርዝ",
+    addCurrentLocationPoint: "የGPS ነጥብ ጨምር",
+    addCurrentLocationPointInstructions: "አሁን ያለውን አካባቢ ወደ ፖሊጎኑ ለመጨመር \"የGPS ነጥብ ጨምር\" ይጫኑ",
   },
   taxon: {
     search: "ታክሶን ይፈልጉ",

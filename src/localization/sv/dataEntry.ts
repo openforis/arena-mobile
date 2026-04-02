@@ -148,8 +148,8 @@ export default {
     tapToAddPoints:
       "Tryck på kartan för att lägga till punkter. Tryck Stopp när du är klar",
     deleteSelectedPoint: "Ta bort vald punkt",
-    addCurrentLocationPoint: "Add GPS point",
-    addCurrentLocationPointInstructions: "Press Add GPS point to add current location to the polygon",
+    addCurrentLocationPoint: "Lägg till GPS-punkt",
+    addCurrentLocationPointInstructions: "Tryck på \"Lägg till GPS-punkt\" för att lägga till aktuell plats i polygonen",
   },
   taxon: {
     search: "Sök taxon",

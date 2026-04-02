@@ -147,8 +147,8 @@ export default {
     tapToAddPoints:
       "برای افزودن نقاط، روی نقشه ضربه بزنید. وقتی تمام شد، دکمه متوقف کردن را فشار دهید",
     deleteSelectedPoint: "حذف نقطه انتخاب شده",
-    addCurrentLocationPoint: "Add GPS point",
-    addCurrentLocationPointInstructions: "Press Add GPS point to add current location to the polygon",
+    addCurrentLocationPoint: "افزودن نقطه GPS",
+    addCurrentLocationPointInstructions: "برای افزودن مکان فعلی به چندضلعی، \"افزودن نقطه GPS\" را فشار دهید",
   },
   taxon: {
     search: "جستجوی تاکسون",
