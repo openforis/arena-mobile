@@ -1,9 +1,9 @@
-import React from "react";
 import {
   MapPolygonExtendedProps,
   PolygonEditor,
 } from "@siposdani87/expo-maps-polygon-editor";
-import MapView from "react-native-maps";
+import React from "react";
+import MapView, { Marker } from "react-native-maps";
 
 import {
   Button,
@@ -11,6 +11,7 @@ import {
   IconButton,
   MapViewWithInitialFit,
   Text,
+  View,
   VView,
 } from "components";
 
@@ -33,6 +34,8 @@ type GeoPolygonEditorContentProps = {
   onSaveDrawing: (polygon: MapPolygonExtendedProps | null) => void;
 };
 
+const currentLocationMarkerAnchor = { x: 0.5, y: 0.5 };
+
 export const GeoPolygonEditorContent = ({
   initialRegion,
   mapRef,
@@ -53,6 +56,7 @@ export const GeoPolygonEditorContent = ({
     onCenterOnLocation,
     onDeleteSelectedVertexPress,
     onMapPress,
+    onMapPanDrag,
     onMidpointDragEnd,
     onPolygonChange,
     onPolygonCreate,
@@ -67,6 +71,8 @@ export const GeoPolygonEditorContent = ({
     polygonsWithSelectionColor,
     polygonVertices,
     selectedVertexIndex,
+    currentLocationCoordinate,
+    isFollowingCurrentLocation,
     shouldShowDeleteSelectedPoint,
     strokeColor,
     undoStack,
@@ -85,9 +91,22 @@ export const GeoPolygonEditorContent = ({
         style={styles.map}
         initialRegion={initialRegion}
         onPress={onMapPress}
+        onPanDrag={onMapPanDrag}
         fitToCoordinatesOnReady={visibleCoordinates}
         fitOnlyOnce={true}
       >
+        {isFollowingCurrentLocation && currentLocationCoordinate && (
+          <Marker
+            coordinate={currentLocationCoordinate}
+            anchor={currentLocationMarkerAnchor}
+            tappable={false}
+          >
+            <View style={styles.currentLocationMarker}>
+              <View style={styles.currentLocationMarkerHorizontal} />
+              <View style={styles.currentLocationMarkerVertical} />
+            </View>
+          </Marker>
+        )}
         <GeoPolygonDraftOverlay
           coordinates={draftCoordinates}
           fillColor={fillColor}

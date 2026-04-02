@@ -4,7 +4,9 @@ import {
   MapPolygonExtendedProps,
   getRandomPolygonColors,
 } from "@siposdani87/expo-maps-polygon-editor";
-import MapView, { LatLng } from "react-native-maps";
+import MapView from "react-native-maps";
+
+import { LatLng } from "model";
 
 import { DataEntryActions, useAppDispatch, useConfirm } from "state";
 import { GeoUtils } from "utils";

@@ -1,4 +1,6 @@
-import { LatLng, Region } from "react-native-maps";
+import { Region } from "react-native-maps";
+
+import { LatLng } from "model";
 
 const defaultMapRegion: Region = {
   latitude: 0,

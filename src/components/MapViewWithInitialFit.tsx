@@ -7,7 +7,9 @@ import React, {
   useState,
 } from "react";
 
-import MapView, { LatLng, MapViewProps } from "react-native-maps";
+import MapView, { MapViewProps } from "react-native-maps";
+
+import { LatLng } from "model";
 
 type EdgePadding = {
   top: number;

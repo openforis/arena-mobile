@@ -1,14 +1,14 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   MapPolygonExtendedProps,
   PolygonEditorRef,
   getRandomPolygonColors,
 } from "@siposdani87/expo-maps-polygon-editor";
-import * as Location from "expo-location";
-import MapView, { LatLng, MapPressEvent } from "react-native-maps";
+import MapView, { MapPressEvent } from "react-native-maps";
 
-import { Permissions } from "utils";
+import { useLocationWatch } from "hooks";
+import { LatLng } from "model";
 
 import { GeoPolygonMidpoint } from "./GeoPolygonMidpointsOverlay";
 
@@ -29,6 +29,8 @@ type LocalState = {
   undoStack: UndoSnapshot[];
   isPolygonSelected: boolean;
   selectedVertexIndex: number | null;
+  currentLocationCoordinate: LatLng | null;
+  isFollowingCurrentLocation: boolean;
 };
 
 type UseGeoPolygonEditorContentParams = {
@@ -76,6 +78,8 @@ export const useGeoPolygonEditorContent = ({
     undoStack: [],
     isPolygonSelected: false,
     selectedVertexIndex: null,
+    currentLocationCoordinate: null,
+    isFollowingCurrentLocation: false,
   }));
 
   const {
@@ -84,7 +88,11 @@ export const useGeoPolygonEditorContent = ({
     undoStack,
     isPolygonSelected,
     selectedVertexIndex,
+    currentLocationCoordinate,
+    isFollowingCurrentLocation,
   } = localState;
+
+  const isFollowingCurrentLocationRef = useRef(false);
 
   const newPolygon = useMemo<MapPolygonExtendedProps>(() => {
     const [strokeColor, fillColor] = getRandomPolygonColors();
@@ -236,6 +244,52 @@ export const useGeoPolygonEditorContent = ({
     },
     [clonePolygons, polygons.length],
   );
+
+  const onLocationWatchCallback = useCallback(
+    ({ location }: { location: LatLng | null }) => {
+      if (!location) return;
+
+      const { latitude, longitude } = location;
+
+      const coordinate: LatLng = { latitude, longitude };
+
+      setLocalState((prev) => ({
+        ...prev,
+        currentLocationCoordinate: coordinate,
+      }));
+
+      if (!isFollowingCurrentLocationRef.current) return;
+
+      mapRef.current?.animateToRegion({
+        latitude,
+        longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
+    },
+    [mapRef],
+  );
+
+  const { startLocationWatch, stopLocationWatch } = useLocationWatch({
+    locationCallback: onLocationWatchCallback,
+    stopOnAccuracyThreshold: false,
+    stopOnTimeout: false,
+  });
+
+  const stopFollowingCurrentLocation = useCallback(() => {
+    isFollowingCurrentLocationRef.current = false;
+    stopLocationWatch();
+    setLocalState((prev) => ({
+      ...prev,
+      isFollowingCurrentLocation: false,
+      currentLocationCoordinate: null,
+    }));
+  }, [stopLocationWatch]);
+
+  const onMapPanDrag = useCallback(() => {
+    if (!isFollowingCurrentLocationRef.current) return;
+    stopFollowingCurrentLocation();
+  }, [stopFollowingCurrentLocation]);
 
   const polygonMidpoints = useMemo<GeoPolygonMidpoint[]>(() => {
     const coordinates = polygons[0]?.coordinates ?? [];
@@ -393,26 +447,39 @@ export const useGeoPolygonEditorContent = ({
   const [hadValueWhenOpened] = useState(() => polygons.length > 0);
 
   const onSavePress = useCallback(() => {
+    stopFollowingCurrentLocation();
     setLocalState((prev) => ({ ...prev, undoStack: [] }));
     onSaveDrawing(polygonToSave);
-  }, [onSaveDrawing, polygonToSave]);
+  }, [onSaveDrawing, polygonToSave, stopFollowingCurrentLocation]);
 
   const onCenterOnLocation = useCallback(async () => {
-    if (!(await Permissions.requestLocationForegroundPermission())) return;
+    if (isFollowingCurrentLocationRef.current) {
+      stopFollowingCurrentLocation();
+      return;
+    }
 
-    const location = await Location.getCurrentPositionAsync({});
-    mapRef.current?.animateToRegion({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
-    });
-  }, [mapRef]);
+    isFollowingCurrentLocationRef.current = true;
+    setLocalState((prev) => ({
+      ...prev,
+      isFollowingCurrentLocation: true,
+    }));
+
+    await startLocationWatch();
+  }, [startLocationWatch, stopFollowingCurrentLocation]);
 
   const onCancelPress = useCallback(() => {
+    stopFollowingCurrentLocation();
     setLocalState((prev) => ({ ...prev, undoStack: [] }));
     onCancelDrawing();
-  }, [onCancelDrawing]);
+  }, [onCancelDrawing, stopFollowingCurrentLocation]);
+
+  useEffect(
+    () => () => {
+      isFollowingCurrentLocationRef.current = false;
+      stopLocationWatch();
+    },
+    [stopLocationWatch],
+  );
 
   const visibleCoordinates = polygons[0]?.coordinates ?? draftCoordinates;
   const hasValue = polygons.length > 0;
@@ -456,6 +523,7 @@ export const useGeoPolygonEditorContent = ({
     onCenterOnLocation,
     onDeleteSelectedVertexPress,
     onMapPress,
+    onMapPanDrag,
     onMidpointDragEnd,
     onPolygonChange,
     onPolygonCreate,
@@ -470,6 +538,8 @@ export const useGeoPolygonEditorContent = ({
     polygonsWithSelectionColor,
     polygonVertices,
     selectedVertexIndex,
+    currentLocationCoordinate,
+    isFollowingCurrentLocation,
     shouldShowDeleteSelectedPoint:
       hasValue && isPolygonSelected && selectedVertexIndex != null,
     strokeColor,

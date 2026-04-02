@@ -1,6 +1,8 @@
 import React, { useMemo } from "react";
 import { View as RNView } from "react-native";
-import { LatLng, Marker } from "react-native-maps";
+import { Marker } from "react-native-maps";
+
+import { LatLng } from "model";
 
 import styles from "./styles";
 

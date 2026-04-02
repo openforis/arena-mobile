@@ -1,12 +1,9 @@
 import React, { useMemo } from "react";
 import { View as RNView } from "react-native";
 
-import {
-  LatLng,
-  Marker,
-  Polygon as MapPolygon,
-  Polyline,
-} from "react-native-maps";
+import { Marker, Polygon as MapPolygon, Polyline } from "react-native-maps";
+
+import { LatLng } from "model";
 
 import styles from "./styles";
 

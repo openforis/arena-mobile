@@ -100,6 +100,26 @@ export default StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  currentLocationMarker: {
+    width: 16,
+    height: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+    backgroundColor: "transparent",
+  },
+  currentLocationMarkerHorizontal: {
+    position: "absolute",
+    width: 10,
+    height: 1,
+    backgroundColor: "#212121",
+  },
+  currentLocationMarkerVertical: {
+    position: "absolute",
+    width: 1,
+    height: 10,
+    backgroundColor: "#212121",
+  },
   modalContent: {
     flex: 1,
   },
