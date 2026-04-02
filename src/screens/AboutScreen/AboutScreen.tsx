@@ -3,7 +3,7 @@ import { Linking } from "react-native";
 
 import { ChangelogViewDialog } from "appComponents/ChangelogViewDialog";
 import { VersionNumberInfoButton } from "appComponents/VersionNumberInfoButton";
-import { Button, FormItem, Link, ScreenView, Text, VView } from "components";
+import { Button, FormItem, Link, ScreenView, VView } from "components";
 import { useTranslation } from "localization";
 import { AMConstants } from "utils";
 
