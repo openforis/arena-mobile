@@ -1,6 +1,8 @@
 import React, { useCallback, useState } from "react";
 import { Linking } from "react-native";
 
+import { Objects } from "@openforis/arena-core";
+
 import { ChangelogViewDialog } from "appComponents/ChangelogViewDialog";
 import { VersionNumberInfoButton } from "appComponents/VersionNumberInfoButton";
 import { Button, FormItem, Link, ScreenView, VView } from "components";
@@ -8,7 +10,6 @@ import { useTranslation } from "localization";
 import { AMConstants } from "utils";
 
 import styles from "./styles";
-import { Objects } from "@openforis/arena-core";
 
 const supportEmailAddress = process.env.EXPO_PUBLIC_SUPPORT_EMAIL_ADDRESS;
 
