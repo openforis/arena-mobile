@@ -202,13 +202,14 @@ export const GeoPolygonEditorContent = ({
       setLocalState((prev) => {
         const updatedPolygons = [...prev.polygons];
         updatedPolygons[index] = polygon;
-        const updatedSelectedVertexIndex =
-          prev.selectedVertexIndex == null
-            ? null
-            : prev.selectedVertexIndex < polygon.coordinates.length
-              ? prev.selectedVertexIndex
-              : null;
 
+        let updatedSelectedVertexIndex = null;
+        if (
+          prev.selectedVertexIndex != null &&
+          prev.selectedVertexIndex < polygon.coordinates.length
+        ) {
+          updatedSelectedVertexIndex = prev.selectedVertexIndex;
+        }
         return {
           ...prev,
           polygons: updatedPolygons,
