@@ -67,7 +67,12 @@ const uploadRecords = ({
     fileProcessor = new RNFileProcessor({
       fileId,
       filePath: fileUri,
-      chunkProcessor: async ({ chunk, totalChunks, content }) => {
+      chunkProcessor: async ({
+        chunk,
+        content,
+        totalChunks,
+        totalFileSize,
+      }) => {
         log.debug(
           `Uploading chunk ${chunk} / ${totalChunks} for fileId ${fileId}`,
         );
@@ -76,6 +81,7 @@ const uploadRecords = ({
           fileId,
           chunk,
           totalChunks,
+          totalFileSize,
           cycle,
           conflictResolutionStrategy,
         };
