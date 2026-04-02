@@ -74,8 +74,9 @@ const extractPolygonCoordinatesFromGeoJson = (
   const firstCoordinate = mappedCoordinates[0];
   const lastCoordinate = mappedCoordinates.at(-1);
   if (
-    firstCoordinate?.latitude === lastCoordinate?.latitude &&
-    firstCoordinate?.longitude === lastCoordinate?.longitude
+    firstCoordinate &&
+    lastCoordinate &&
+    isSameCoordinate(firstCoordinate, lastCoordinate, 0)
   ) {
     return mappedCoordinates.slice(0, -1);
   }
