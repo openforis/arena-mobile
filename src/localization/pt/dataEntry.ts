@@ -140,10 +140,11 @@ export default {
     editPolygonInstructions: `Pressione e arraste um vértice para movê-lo.
   Pressione e arraste um ponto médio (ponto transparente) para adicionar um novo vértice.`,
     tapToAddPoints:
-    "Toque no mapa para adicionar pontos. Pressione Parar quando concluído",
+      "Toque no mapa para adicionar pontos. Pressione Parar quando concluído",
     deleteSelectedPoint: "Excluir ponto selecionado",
     addCurrentLocationPoint: "Adicionar ponto GPS",
-    addCurrentLocationPointInstructions: "Pressione \"Adicionar ponto GPS\" para adicionar a localização atual ao polígono",
+    addCurrentLocationPointInstructions:
+      'Pressione "Adicionar ponto GPS" para adicionar a localização atual ao polígono',
   },
   taxon: {
     search: "Pesquisar táxon",

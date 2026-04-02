@@ -148,7 +148,8 @@ export default {
       "برای افزودن نقاط، روی نقشه ضربه بزنید. وقتی تمام شد، دکمه متوقف کردن را فشار دهید",
     deleteSelectedPoint: "حذف نقطه انتخاب شده",
     addCurrentLocationPoint: "افزودن نقطه GPS",
-    addCurrentLocationPointInstructions: "برای افزودن مکان فعلی به چندضلعی، \"افزودن نقطه GPS\" را فشار دهید",
+    addCurrentLocationPointInstructions:
+      'برای افزودن مکان فعلی به چندضلعی، "افزودن نقطه GPS" را فشار دهید',
   },
   taxon: {
     search: "جستجوی تاکسون",

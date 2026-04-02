@@ -145,10 +145,11 @@ export default {
     editPolygonInstructions: `Pidä kärkeä painettuna ja vedä sitä siirtääksesi sitä.
   Pidä keskipisteen (läpinäkyvää pistettä) painettuna ja vedä lisätäksesi uuden kärjen.`,
     tapToAddPoints:
-    "Napauta karttaa lisätäksesi pisteitä. Paina Pysäytä kun olet valmis",
+      "Napauta karttaa lisätäksesi pisteitä. Paina Pysäytä kun olet valmis",
     deleteSelectedPoint: "Poista valittu piste",
     addCurrentLocationPoint: "Lisää GPS-piste",
-    addCurrentLocationPointInstructions: "Lisää nykyinen sijainti monikulmioon painamalla \"Lisää GPS-piste\"",
+    addCurrentLocationPointInstructions:
+      'Lisää nykyinen sijainti monikulmioon painamalla "Lisää GPS-piste"',
   },
   taxon: {
     search: "Hae lajia",

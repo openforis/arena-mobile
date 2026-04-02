@@ -152,7 +152,8 @@ export default {
       "Tippen Sie auf die Karte, um Punkte hinzuzufügen. Drücken Sie Stopp, wenn fertig",
     deleteSelectedPoint: "Ausgewählten Punkt löschen",
     addCurrentLocationPoint: "GPS-Punkt hinzufügen",
-    addCurrentLocationPointInstructions: "Drücken Sie \"GPS-Punkt hinzufügen\", um die aktuelle Position zum Polygon hinzuzufügen",
+    addCurrentLocationPointInstructions:
+      'Drücken Sie "GPS-Punkt hinzufügen", um die aktuelle Position zum Polygon hinzuzufügen',
   },
   taxon: {
     search: "Taxon suchen",
