@@ -59,6 +59,7 @@ export const GeoPolygonEditorContent = ({
     onDeleteSelectedVertexPress,
     onMapPress,
     onMapPanDrag,
+    onAddCurrentLocationPointPress,
     onMidpointDragEnd,
     onPolygonChange,
     onPolygonCreate,
@@ -75,6 +76,7 @@ export const GeoPolygonEditorContent = ({
     selectedVertexIndex,
     currentLocationCoordinate,
     isFollowingCurrentLocation,
+    canAddCurrentLocationPoint,
     shouldShowDeleteSelectedPoint,
     strokeColor,
     undoStack,
@@ -161,6 +163,15 @@ export const GeoPolygonEditorContent = ({
       <Text style={styles.helperText} textKey={helperTextKey} />
       <VView style={styles.toolbar}>
         <HView style={styles.toolbarTopRow}>
+          {canAddCurrentLocationPoint && (
+            <Button
+              compact
+              icon="plus"
+              mode="contained-tonal"
+              onPress={onAddCurrentLocationPointPress}
+              textKey="dataEntry:geo.addCurrentLocationPoint"
+            />
+          )}
           {shouldShowDeleteSelectedPoint && (
             <Button
               color="secondary"

@@ -291,6 +291,23 @@ export const useGeoPolygonEditorContent = ({
     stopFollowingCurrentLocation();
   }, [stopFollowingCurrentLocation]);
 
+  const onAddCurrentLocationPointPress = useCallback(() => {
+    if (!currentLocationCoordinate || polygons.length > 0) return;
+
+    setLocalState((prev) => ({
+      ...prev,
+      undoStack: [
+        ...prev.undoStack,
+        {
+          draftCoordinates: [...prev.draftCoordinates],
+          polygons: clonePolygons(prev.polygons),
+        },
+      ],
+      selectedVertexIndex: null,
+      draftCoordinates: [...prev.draftCoordinates, currentLocationCoordinate],
+    }));
+  }, [clonePolygons, currentLocationCoordinate, polygons.length]);
+
   const polygonMidpoints = useMemo<GeoPolygonMidpoint[]>(() => {
     const coordinates = polygons[0]?.coordinates ?? [];
     if (coordinates.length < 2) return [];
@@ -484,6 +501,8 @@ export const useGeoPolygonEditorContent = ({
   const visibleCoordinates = polygons[0]?.coordinates ?? draftCoordinates;
   const hasValue = polygons.length > 0;
   const canSave = Boolean(polygonToSave) || hadValueWhenOpened;
+  const canAddCurrentLocationPoint =
+    isFollowingCurrentLocation && Boolean(currentLocationCoordinate) && !hasValue;
   const strokeColor = isPolygonSelected
     ? SELECTED_STROKE_COLOR
     : UNSELECTED_STROKE_COLOR;
@@ -524,6 +543,7 @@ export const useGeoPolygonEditorContent = ({
     onDeleteSelectedVertexPress,
     onMapPress,
     onMapPanDrag,
+    onAddCurrentLocationPointPress,
     onMidpointDragEnd,
     onPolygonChange,
     onPolygonCreate,
@@ -540,6 +560,7 @@ export const useGeoPolygonEditorContent = ({
     selectedVertexIndex,
     currentLocationCoordinate,
     isFollowingCurrentLocation,
+    canAddCurrentLocationPoint,
     shouldShowDeleteSelectedPoint:
       hasValue && isPolygonSelected && selectedVertexIndex != null,
     strokeColor,

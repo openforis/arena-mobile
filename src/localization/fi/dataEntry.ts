@@ -147,6 +147,7 @@ export default {
     tapToAddPoints:
     "Napauta karttaa lisätäksesi pisteitä. Paina Pysäytä kun olet valmis",
     deleteSelectedPoint: "Poista valittu piste",
+    addCurrentLocationPoint: "Add GPS point",
   },
   taxon: {
     search: "Hae lajia",

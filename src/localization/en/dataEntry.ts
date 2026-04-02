@@ -184,6 +184,7 @@ Fetch the list of records from the server and try again?`,
 Long-press and drag a midpoint (transparent point) to add a new vertex.`,
     tapToAddPoints: "Tap the map to add points. Press Stop when done",
     deleteSelectedPoint: "Delete selected point",
+    addCurrentLocationPoint: "Add GPS point",
   },
   taxon: {
     search: "Search taxon",

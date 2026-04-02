@@ -134,6 +134,7 @@ export default {
   አዲስ ጫፍ ለመጨመር መካከለኛ ነጥብ (ግልጽ ነጥብ) ረጅም ጊዜ ይጫኑ እና ይጎትቱት።`,
     tapToAddPoints: "ነጥቦች ለመጨመር በካርታው ላይ ይንኩ። ከተጠናቀቁ በኋላ ማቆም ይጫኑ",
     deleteSelectedPoint: "Delete selected point",
+    addCurrentLocationPoint: "Add GPS point",
   },
   taxon: {
     search: "ታክሶን ይፈልጉ",

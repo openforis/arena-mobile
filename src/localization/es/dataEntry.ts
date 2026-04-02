@@ -142,6 +142,7 @@ export default {
     tapToAddPoints:
       "Toque el mapa para añadir puntos. Presione Detener cuando haya terminado",
     deleteSelectedPoint: "Eliminar punto seleccionado",
+    addCurrentLocationPoint: "Add GPS point",
   },
   taxon: {
     search: "Buscar taxón",

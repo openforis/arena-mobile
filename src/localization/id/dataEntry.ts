@@ -149,6 +149,7 @@ export default {
     tapToAddPoints:
       "Ketuk peta untuk menambahkan titik. Tekan Berhenti ketika selesai",
     deleteSelectedPoint: "Hapus titik yang dipilih",
+    addCurrentLocationPoint: "Add GPS point",
   },
   taxon: {
     search: "Cari takson",
