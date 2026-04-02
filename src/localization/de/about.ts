@@ -1,6 +1,7 @@
 export default {
   developedBy: "Entwickelt von",
-  sendSupportEmailIntroduction: "Bitte senden Sie eine E-Mail an:",
+  supportEmail: "Support-E-Mail",
+  supportForum: "Support-Forum",
   support: "Support",
   version: "Version",
   viewChangelog: "Änderungsprotokoll anzeigen",

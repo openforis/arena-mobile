@@ -1,6 +1,7 @@
 export default {
   developedBy: "توسعه یافته توسط",
-  sendSupportEmailIntroduction: "لطفا به آدرس ایمیل زیر ایمیل ارسال کنید:",
+  supportEmail: "ایمیل پشتیبانی",
+  supportForum: "انجمن پشتیبانی",
   support: "پشتیبانی",
   version: "نسخه",
   viewChangelog: "مشاهده تغییرات",

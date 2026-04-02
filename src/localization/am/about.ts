@@ -1,6 +1,7 @@
 export default {
   developedBy: "የተገነባው በ",
-  sendSupportEmailIntroduction: "እባክዎን ኢሜይል ወደዚህ ይላኩ፦",
+  supportEmail: "የድጋፍ ኢሜይል",
+  supportForum: "የድጋፍ መድረክ",
   support: "ድጋፍ",
   version: "ቅጂ",
   viewChangelog: "የለውጥ መዝገብ ይመልከቱ",
