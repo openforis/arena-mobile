@@ -149,6 +149,7 @@ export default {
       "Tryck på kartan för att lägga till punkter. Tryck Stopp när du är klar",
     deleteSelectedPoint: "Ta bort vald punkt",
     addCurrentLocationPoint: "Add GPS point",
+    addCurrentLocationPointInstructions: "Press Add GPS point to add current location to the polygon",
   },
   taxon: {
     search: "Sök taxon",

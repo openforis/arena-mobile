@@ -185,6 +185,7 @@ Long-press and drag a midpoint (transparent point) to add a new vertex.`,
     tapToAddPoints: "Tap the map to add points. Press Stop when done",
     deleteSelectedPoint: "Delete selected point",
     addCurrentLocationPoint: "Add GPS point",
+    addCurrentLocationPointInstructions: "Press Add GPS point to add current location to the polygon",
   },
   taxon: {
     search: "Search taxon",

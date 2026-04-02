@@ -9,6 +9,7 @@ import MapView, { MapPressEvent } from "react-native-maps";
 
 import { useLocationWatch } from "hooks";
 import { LatLng } from "model";
+import { GeoUtils } from "utils";
 
 import { GeoPolygonMidpoint } from "./GeoPolygonMidpointsOverlay";
 
@@ -222,27 +223,50 @@ export const useGeoPolygonEditorContent = ({
     }));
   }, []);
 
+  const addCoordinateToDraft = useCallback(
+    (
+      coordinate: LatLng,
+      options?: {
+        skipIfAlreadyInserted?: boolean;
+      },
+    ) => {
+      setLocalState((prev) => {
+        if (prev.polygons.length > 0) return prev;
+
+        const skipIfAlreadyInserted = options?.skipIfAlreadyInserted ?? true;
+
+        if (
+          skipIfAlreadyInserted &&
+          GeoUtils.hasCoordinate(prev.draftCoordinates, coordinate)
+        ) {
+          return prev;
+        }
+
+        return {
+          ...prev,
+          undoStack: [
+            ...prev.undoStack,
+            {
+              draftCoordinates: [...prev.draftCoordinates],
+              polygons: clonePolygons(prev.polygons),
+            },
+          ],
+          selectedVertexIndex: null,
+          draftCoordinates: [...prev.draftCoordinates, coordinate],
+        };
+      });
+    },
+    [clonePolygons],
+  );
+
   const onMapPress = useCallback(
     (event: MapPressEvent) => {
       const coordinate = event.nativeEvent?.coordinate;
       if (!coordinate) return;
 
-      if (polygons.length > 0) return;
-
-      setLocalState((prev) => ({
-        ...prev,
-        undoStack: [
-          ...prev.undoStack,
-          {
-            draftCoordinates: [...prev.draftCoordinates],
-            polygons: clonePolygons(prev.polygons),
-          },
-        ],
-        selectedVertexIndex: null,
-        draftCoordinates: [...prev.draftCoordinates, coordinate],
-      }));
+      addCoordinateToDraft(coordinate);
     },
-    [clonePolygons, polygons.length],
+    [addCoordinateToDraft],
   );
 
   const onLocationWatchCallback = useCallback(
@@ -292,21 +316,12 @@ export const useGeoPolygonEditorContent = ({
   }, [stopFollowingCurrentLocation]);
 
   const onAddCurrentLocationPointPress = useCallback(() => {
-    if (!currentLocationCoordinate || polygons.length > 0) return;
+    if (!currentLocationCoordinate) return;
 
-    setLocalState((prev) => ({
-      ...prev,
-      undoStack: [
-        ...prev.undoStack,
-        {
-          draftCoordinates: [...prev.draftCoordinates],
-          polygons: clonePolygons(prev.polygons),
-        },
-      ],
-      selectedVertexIndex: null,
-      draftCoordinates: [...prev.draftCoordinates, currentLocationCoordinate],
-    }));
-  }, [clonePolygons, currentLocationCoordinate, polygons.length]);
+    addCoordinateToDraft(currentLocationCoordinate, {
+      skipIfAlreadyInserted: true,
+    });
+  }, [addCoordinateToDraft, currentLocationCoordinate]);
 
   const polygonMidpoints = useMemo<GeoPolygonMidpoint[]>(() => {
     const coordinates = polygons[0]?.coordinates ?? [];
@@ -502,7 +517,9 @@ export const useGeoPolygonEditorContent = ({
   const hasValue = polygons.length > 0;
   const canSave = Boolean(polygonToSave) || hadValueWhenOpened;
   const canAddCurrentLocationPoint =
-    isFollowingCurrentLocation && Boolean(currentLocationCoordinate) && !hasValue;
+    isFollowingCurrentLocation &&
+    Boolean(currentLocationCoordinate) &&
+    !hasValue;
   const strokeColor = isPolygonSelected
     ? SELECTED_STROKE_COLOR
     : UNSELECTED_STROKE_COLOR;
@@ -520,6 +537,9 @@ export const useGeoPolygonEditorContent = ({
   );
 
   const helperTextKey = useMemo(() => {
+    if (canAddCurrentLocationPoint) {
+      return "dataEntry:geo.addCurrentLocationPointInstructions";
+    }
     if (!hasValue) {
       return "dataEntry:geo.tapToAddPoints";
     }
@@ -527,7 +547,7 @@ export const useGeoPolygonEditorContent = ({
       return "dataEntry:geo.editPolygonInstructions";
     }
     return "dataEntry:geo.selectPolygonInstruction";
-  }, [hasValue, isPolygonSelected]);
+  }, [canAddCurrentLocationPoint, hasValue, isPolygonSelected]);
 
   return {
     canSave,

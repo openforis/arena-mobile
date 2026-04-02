@@ -143,6 +143,7 @@ export default {
     "Toque no mapa para adicionar pontos. Pressione Parar quando concluído",
     deleteSelectedPoint: "Excluir ponto selecionado",
     addCurrentLocationPoint: "Add GPS point",
+    addCurrentLocationPointInstructions: "Press Add GPS point to add current location to the polygon",
   },
   taxon: {
     search: "Pesquisar táxon",

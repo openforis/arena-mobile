@@ -2,6 +2,8 @@ import { Region } from "react-native-maps";
 
 import { LatLng } from "model";
 
+const defaultCoordinateEpsilon = 0.000001;
+
 const defaultMapRegion: Region = {
   latitude: 0,
   longitude: 0,
@@ -35,6 +37,21 @@ const computeMidpointCoordinate = (coord1: LatLng, coord2: LatLng): LatLng => {
     longitude: (coord1.longitude + coord2.longitude) / 2,
   };
 };
+
+const isSameCoordinate = (
+  coord1: LatLng,
+  coord2: LatLng,
+  epsilon: number = defaultCoordinateEpsilon,
+): boolean =>
+  Math.abs(coord1.latitude - coord2.latitude) <= epsilon &&
+  Math.abs(coord1.longitude - coord2.longitude) <= epsilon;
+
+const hasCoordinate = (
+  coordinates: LatLng[],
+  coordinate: LatLng,
+  epsilon?: number,
+): boolean =>
+  coordinates.some((item) => isSameCoordinate(item, coordinate, epsilon));
 
 const extractPolygonCoordinatesFromGeoJson = (
   geoJsonValue: any,
@@ -70,5 +87,7 @@ export const GeoUtils = {
   computeRegionFromCoordinates,
   computeMidpointCoordinate,
   extractPolygonCoordinatesFromGeoJson,
+  hasCoordinate,
+  isSameCoordinate,
   defaultMapRegion,
 };

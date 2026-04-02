@@ -148,6 +148,7 @@ export default {
     "Napauta karttaa lisätäksesi pisteitä. Paina Pysäytä kun olet valmis",
     deleteSelectedPoint: "Poista valittu piste",
     addCurrentLocationPoint: "Add GPS point",
+    addCurrentLocationPointInstructions: "Press Add GPS point to add current location to the polygon",
   },
   taxon: {
     search: "Hae lajia",

@@ -135,6 +135,7 @@ export default {
     tapToAddPoints: "ነጥቦች ለመጨመር በካርታው ላይ ይንኩ። ከተጠናቀቁ በኋላ ማቆም ይጫኑ",
     deleteSelectedPoint: "Delete selected point",
     addCurrentLocationPoint: "Add GPS point",
+    addCurrentLocationPointInstructions: "Press Add GPS point to add current location to the polygon",
   },
   taxon: {
     search: "ታክሶን ይፈልጉ",
