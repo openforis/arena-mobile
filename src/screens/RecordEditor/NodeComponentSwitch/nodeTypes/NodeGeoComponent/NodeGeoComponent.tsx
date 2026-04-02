@@ -17,7 +17,6 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
     initialPolygons,
     nodeValue,
     onCancelDrawing,
-    onCenterOnLocation,
     onClearPress,
     onSaveDrawing,
     onStartDrawing,
@@ -27,13 +26,6 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
 
   const toolbar = (
     <HView style={styles.toolbar}>
-      {hasValue && (
-        <IconButton
-          icon="crosshairs-gps"
-          onPress={onCenterOnLocation}
-          size={24}
-        />
-      )}
       <Button
         icon={hasValue ? "pencil" : "vector-polygon"}
         textKey={
@@ -41,18 +33,14 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
         }
         onPress={onStartDrawing}
       />
-      <IconButton icon="trash-can-outline" onPress={onClearPress} />
+      {hasValue && (
+        <IconButton icon="trash-can-outline" onPress={onClearPress} />
+      )}
     </HView>
   );
 
   if (!editable && !hasValue) {
-    return (
-      <Button
-        icon="vector-polygon"
-        textKey="dataEntry:geo.drawPolygon"
-        onPress={onStartDrawing}
-      />
-    );
+    return toolbar;
   }
 
   return (
@@ -69,7 +57,6 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
             mapRef={mapRef}
             initialPolygons={initialPolygons}
             onCancelDrawing={onCancelDrawing}
-            onCenterOnLocation={onCenterOnLocation}
             onSaveDrawing={onSaveDrawing}
           />
         </Modal>

@@ -4,11 +4,10 @@ import {
   MapPolygonExtendedProps,
   getRandomPolygonColors,
 } from "@siposdani87/expo-maps-polygon-editor";
-import * as Location from "expo-location";
 import MapView, { LatLng } from "react-native-maps";
 
 import { DataEntryActions, useAppDispatch, useConfirm } from "state";
-import { GeoUtils, Permissions } from "utils";
+import { GeoUtils } from "utils";
 
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
@@ -113,18 +112,6 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     }
   }, [confirm, dispatch, nodeUuid]);
 
-  const onCenterOnLocation = useCallback(async () => {
-    if (!(await Permissions.requestLocationForegroundPermission())) return;
-
-    const location = await Location.getCurrentPositionAsync({});
-    mapRef.current?.animateToRegion({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
-    });
-  }, []);
-
   return {
     editable,
     initialRegion,
@@ -132,7 +119,6 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     mapRef,
     nodeValue,
     onCancelDrawing,
-    onCenterOnLocation,
     onClearPress,
     onSaveDrawing,
     onStartDrawing,

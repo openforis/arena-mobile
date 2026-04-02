@@ -5,6 +5,7 @@ import {
   PolygonEditorRef,
   getRandomPolygonColors,
 } from "@siposdani87/expo-maps-polygon-editor";
+import * as Location from "expo-location";
 import MapView, { LatLng, MapPressEvent } from "react-native-maps";
 
 import {
@@ -15,6 +16,7 @@ import {
   Text,
   VView,
 } from "components";
+import { Permissions } from "utils";
 
 import { GeoPolygonDraftOverlay } from "./GeoPolygonDraftOverlay";
 import {
@@ -45,7 +47,6 @@ type GeoPolygonEditorContentProps = {
   mapRef: React.RefObject<MapView | null>;
   initialPolygons: MapPolygonExtendedProps[];
   onCancelDrawing: () => void;
-  onCenterOnLocation: () => Promise<void>;
   onSaveDrawing: (polygon: MapPolygonExtendedProps | null) => void;
 };
 
@@ -79,7 +80,6 @@ export const GeoPolygonEditorContent = ({
   mapRef,
   initialPolygons,
   onCancelDrawing,
-  onCenterOnLocation,
   onSaveDrawing,
 }: GeoPolygonEditorContentProps) => {
   const polygonEditorRef = useRef<PolygonEditorRef>(null);
@@ -384,6 +384,18 @@ export const GeoPolygonEditorContent = ({
     setUndoStack([]);
     onSaveDrawing(polygonToSave);
   }, [onSaveDrawing, polygonToSave]);
+
+  const onCenterOnLocation = useCallback(async () => {
+    if (!(await Permissions.requestLocationForegroundPermission())) return;
+
+    const location = await Location.getCurrentPositionAsync({});
+    mapRef.current?.animateToRegion({
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    });
+  }, [mapRef]);
 
   const onCancelPress = useCallback(() => {
     setUndoStack([]);
