@@ -34,7 +34,7 @@ const defaultEdgePadding: EdgePadding = {
   left: 24,
 };
 
-export const MapViewWithInitialFit = forwardRef<MapView, Props>(
+export const MapViewWithInitialFit = forwardRef<MapView | null, Props>(
   (
     {
       fitOnlyOnce = true,
@@ -45,11 +45,14 @@ export const MapViewWithInitialFit = forwardRef<MapView, Props>(
     },
     ref,
   ) => {
-    const internalRef = useRef<MapView>(null);
+    const internalRef = useRef<MapView | null>(null);
     const [isMapReady, setIsMapReady] = useState(false);
     const hasAppliedFitRef = useRef(false);
 
-    useImperativeHandle(ref, () => internalRef.current as MapView);
+    useImperativeHandle<MapView | null, MapView | null>(
+      ref,
+      () => internalRef.current,
+    );
 
     useEffect(() => {
       if (!isMapReady || (fitOnlyOnce && hasAppliedFitRef.current)) return;
