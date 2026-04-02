@@ -4,7 +4,7 @@ import { Marker } from "react-native-maps";
 
 import { LatLng } from "model";
 
-import styles from "./styles";
+import styles, { midpointDefaultBorderColor } from "./styles";
 
 export type GeoPolygonMidpoint = {
   key: string;
@@ -28,7 +28,7 @@ export const GeoPolygonMidpointsOverlay = ({
   const style = useMemo(
     () => [
       styles.midpoint,
-      { borderColor: strokeColor ?? styles.midpoint.borderColor ?? "#FFFFFF" },
+      { borderColor: strokeColor ?? midpointDefaultBorderColor },
     ],
     [strokeColor],
   );
