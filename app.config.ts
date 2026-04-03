@@ -1,6 +1,9 @@
+/// <reference types="node" />
 import { ExpoConfig } from "expo/config";
 
-const { expo } = require("./app.json") as { expo: ExpoConfig };
+import appJson from "./app.json";
+
+const { expo } = appJson as { expo: ExpoConfig };
 
 const upsertPlugin = (
   plugins: ExpoConfig["plugins"] = [],
