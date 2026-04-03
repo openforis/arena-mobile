@@ -646,7 +646,16 @@ export const useGeoPolygonEditor = ({
       isFollowingCurrentLocation: true,
     }));
 
-    await startLocationWatch();
+    try {
+      await startLocationWatch();
+    } catch (error) {
+      isFollowingCurrentLocationRef.current = false;
+      setLocalState((prev) => ({
+        ...prev,
+        isFollowingCurrentLocation: false,
+      }));
+      throw error;
+    }
   }, [startLocationWatch, stopFollowingCurrentLocation]);
 
   const onCancelPress = useCallback(() => {

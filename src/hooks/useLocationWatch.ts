@@ -65,8 +65,12 @@ export const useLocationWatch = ({
   const locationSubscriptionRef = useRef(
     null as Location.LocationSubscription | null,
   );
-  const locationAccuracyWatchTimeoutRef = useRef(null as number | null);
-  const locationWatchIntervalRef = useRef(null as number | null);
+  const locationAccuracyWatchTimeoutRef = useRef(
+    null as ReturnType<typeof setTimeout> | null,
+  );
+  const locationWatchIntervalRef = useRef(
+    null as ReturnType<typeof setInterval> | null,
+  );
   const locationAveragerRef = useRef(null as LocationAverager | null);
   const toaster = useToast();
 
@@ -185,8 +189,8 @@ export const useLocationWatch = ({
     if (!(await Permissions.requestLocationForegroundPermission())) {
       if (!(await Permissions.isLocationServiceEnabled())) {
         toaster("device:locationServiceDisabled.warning");
-        return;
       }
+      return;
     }
     _stopLocationWatch();
 

@@ -67,7 +67,7 @@ export const GeoPolygonVerticesOverlay = ({
 
         return (
           <GeoVertexMarker
-            key={`polygon-vertex-${coordinate.latitude}-${coordinate.longitude}`}
+            key={`polygon-vertex-${index}-${coordinate.latitude}-${coordinate.longitude}`}
             coordinate={coordinate}
             anchor={isSelected ? selectedMarkerAnchor : markerAnchor}
             outerStyle={getOuterStyle(styleGetterProps)}
