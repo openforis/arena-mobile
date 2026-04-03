@@ -12,12 +12,13 @@ import fa from "./fa";
 import fi from "./fi";
 import fr from "./fr";
 import id from "./id";
+import ja from "./ja";
 import pt from "./pt";
 import ru from "./ru";
 
 export { useTranslation } from "react-i18next";
 
-const resources = { de, en, es, fa, fi, fr, id, pt, ru };
+const resources = { de, en, es, fa, fi, fr, id, ja, pt, ru };
 const supportedLngs = Object.keys(resources);
 const fallbackLng = "en";
 const sysLng = SystemUtils.getLanguageCode();
