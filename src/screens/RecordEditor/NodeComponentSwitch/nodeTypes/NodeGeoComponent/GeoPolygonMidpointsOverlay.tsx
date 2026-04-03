@@ -1,9 +1,8 @@
 import React, { useMemo } from "react";
-import { View as RNView } from "react-native";
-import { Marker } from "react-native-maps";
 
 import { LatLng } from "model";
 
+import { GeoVertexMarker } from "./GeoVertexMarker";
 import styles, { midpointDefaultBorderColor } from "./styles";
 
 export type GeoPolygonMidpoint = {
@@ -34,66 +33,48 @@ export const GeoPolygonMidpointsOverlay = ({
 }: GeoPolygonMidpointsOverlayProps) => {
   const markerColor = strokeColor ?? midpointDefaultBorderColor;
 
-  const styleByInsertAtIndex = useMemo(
-    () => (insertAtIndex: number) => [
+  const getOuterStyle = useMemo(
+    () => (isDragging: boolean) => [
       styles.midpoint,
-      draggingMidpointInsertAtIndex === insertAtIndex &&
-        styles.midpointDragging,
+      isDragging && styles.midpointDragging,
       { borderColor: markerColor },
     ],
-    [draggingMidpointInsertAtIndex, markerColor],
+    [markerColor],
   );
 
-  const coreStyleByInsertAtIndex = useMemo(
-    () => (insertAtIndex: number) => [
+  const getCoreStyle = useMemo(
+    () => (isDragging: boolean) => [
       styles.vertexPointCore,
-      draggingMidpointInsertAtIndex === insertAtIndex &&
-        styles.vertexPointCoreDragging,
+      isDragging && styles.vertexPointCoreDragging,
       { backgroundColor: markerColor },
     ],
-    [draggingMidpointInsertAtIndex, markerColor],
+    [markerColor],
   );
 
   if (midpoints.length === 0) return null;
 
   return (
     <>
-      {midpoints.map(({ key, coordinate, insertAtIndex }) => (
-        <Marker
-          key={`polygon-midpoint-${key}`}
-          coordinate={coordinate}
-          anchor={
-            draggingMidpointInsertAtIndex === insertAtIndex
-              ? draggingMarkerAnchor
-              : markerAnchor
-          }
-          draggable
-          onPress={(event) => {
-            // Keep map onPress from firing while interacting with midpoint marker.
-            event.stopPropagation();
-          }}
-          onDragStart={(event) => {
-            event.stopPropagation();
-            onMidpointDragStart(insertAtIndex);
-          }}
-          onDrag={(event) => {
-            event.stopPropagation();
-            const draggedCoordinate = event.nativeEvent?.coordinate;
-            if (!draggedCoordinate) return;
-            onMidpointDrag(insertAtIndex, draggedCoordinate);
-          }}
-          onDragEnd={(event) => {
-            event.stopPropagation();
-            const draggedCoordinate = event.nativeEvent?.coordinate;
-            if (!draggedCoordinate) return;
-            onMidpointDragEnd(insertAtIndex, draggedCoordinate);
-          }}
-        >
-          <RNView style={styleByInsertAtIndex(insertAtIndex)}>
-            <RNView style={coreStyleByInsertAtIndex(insertAtIndex)} />
-          </RNView>
-        </Marker>
-      ))}
+      {midpoints.map(({ key, coordinate, insertAtIndex }) => {
+        const isDragging = draggingMidpointInsertAtIndex === insertAtIndex;
+
+        return (
+          <GeoVertexMarker
+            key={`polygon-midpoint-${key}`}
+            coordinate={coordinate}
+            anchor={isDragging ? draggingMarkerAnchor : markerAnchor}
+            outerStyle={getOuterStyle(isDragging)}
+            coreStyle={getCoreStyle(isDragging)}
+            onDragStart={() => onMidpointDragStart(insertAtIndex)}
+            onDrag={(draggedCoordinate) =>
+              onMidpointDrag(insertAtIndex, draggedCoordinate)
+            }
+            onDragEnd={(draggedCoordinate) =>
+              onMidpointDragEnd(insertAtIndex, draggedCoordinate)
+            }
+          />
+        );
+      })}
     </>
   );
 };

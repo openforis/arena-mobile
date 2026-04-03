@@ -1,9 +1,8 @@
 import React, { useCallback } from "react";
-import { View as RNView } from "react-native";
-import { Marker } from "react-native-maps";
 
 import { LatLng } from "model";
 
+import { GeoVertexMarker } from "./GeoVertexMarker";
 import styles from "./styles";
 
 type GeoPolygonVerticesOverlayProps = {
@@ -15,6 +14,11 @@ type GeoPolygonVerticesOverlayProps = {
   onVertexDragStart: (index: number) => void;
   onVertexDrag: (index: number, coordinate: LatLng) => void;
   onVertexDragEnd: (index: number, coordinate: LatLng) => void;
+};
+
+type StyleGetterProps = {
+  isSelected: boolean;
+  isDragging: boolean;
 };
 
 const markerAnchor = { x: 0.2, y: 0.2 };
@@ -32,64 +36,53 @@ export const GeoPolygonVerticesOverlay = ({
 }: GeoPolygonVerticesOverlayProps) => {
   const markerColor = strokeColor ?? "#ffffff";
 
-  const markerStyleByIndex = useCallback(
-    (index: number) => [
+  const getOuterStyle = useCallback(
+    ({ isSelected, isDragging }: StyleGetterProps) => [
       styles.vertexPoint,
-      selectedVertexIndex === index && styles.vertexPointSelected,
-      draggingVertexIndex === index && styles.vertexPointDragging,
+      isSelected && styles.vertexPointSelected,
+      isDragging && styles.vertexPointDragging,
       { borderColor: markerColor },
     ],
-    [draggingVertexIndex, markerColor, selectedVertexIndex],
+    [markerColor],
   );
 
-  const markerCoreStyleByIndex = useCallback(
-    (index: number) => [
+  const getCoreStyle = useCallback(
+    ({ isSelected, isDragging }: StyleGetterProps) => [
       styles.vertexPointCore,
-      selectedVertexIndex === index && styles.vertexPointCoreSelected,
-      draggingVertexIndex === index && styles.vertexPointCoreDragging,
+      isSelected && styles.vertexPointCoreSelected,
+      isDragging && styles.vertexPointCoreDragging,
       { backgroundColor: markerColor },
     ],
-    [draggingVertexIndex, markerColor, selectedVertexIndex],
+    [markerColor],
   );
 
   if (coordinates.length === 0) return null;
 
   return (
     <>
-      {coordinates.map((coordinate, index) => (
-        <Marker
-          key={`polygon-vertex-${coordinate.latitude}-${coordinate.longitude}`}
-          coordinate={coordinate}
-          anchor={
-            index === selectedVertexIndex ? selectedMarkerAnchor : markerAnchor
-          }
-          draggable
-          onPress={(event) => {
-            event.stopPropagation();
-            onVertexPress(index);
-          }}
-          onDragStart={(event) => {
-            event.stopPropagation();
-            onVertexDragStart(index);
-          }}
-          onDrag={(event) => {
-            event.stopPropagation();
-            const draggedCoordinate = event.nativeEvent?.coordinate;
-            if (!draggedCoordinate) return;
-            onVertexDrag(index, draggedCoordinate);
-          }}
-          onDragEnd={(event) => {
-            event.stopPropagation();
-            const draggedCoordinate = event.nativeEvent?.coordinate;
-            if (!draggedCoordinate) return;
-            onVertexDragEnd(index, draggedCoordinate);
-          }}
-        >
-          <RNView style={markerStyleByIndex(index)}>
-            <RNView style={markerCoreStyleByIndex(index)} />
-          </RNView>
-        </Marker>
-      ))}
+      {coordinates.map((coordinate, index) => {
+        const isSelected = selectedVertexIndex === index;
+        const isDragging = draggingVertexIndex === index;
+        const styleGetterProps: StyleGetterProps = { isSelected, isDragging };
+
+        return (
+          <GeoVertexMarker
+            key={`polygon-vertex-${coordinate.latitude}-${coordinate.longitude}`}
+            coordinate={coordinate}
+            anchor={isSelected ? selectedMarkerAnchor : markerAnchor}
+            outerStyle={getOuterStyle(styleGetterProps)}
+            coreStyle={getCoreStyle(styleGetterProps)}
+            onPress={() => onVertexPress(index)}
+            onDragStart={() => onVertexDragStart(index)}
+            onDrag={(draggedCoordinate) =>
+              onVertexDrag(index, draggedCoordinate)
+            }
+            onDragEnd={(draggedCoordinate) =>
+              onVertexDragEnd(index, draggedCoordinate)
+            }
+          />
+        );
+      })}
     </>
   );
 };
