@@ -24,6 +24,17 @@ export default StyleSheet.create({
     flex: 1,
     minHeight: 250,
   },
+  mapContainer: {
+    flex: 1,
+    minHeight: 250,
+    position: "relative",
+  },
+  mapTopRightControl: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    zIndex: 1,
+  },
   helperText: {
     textAlign: "center",
     paddingHorizontal: 12,
