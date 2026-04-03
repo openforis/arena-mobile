@@ -22,6 +22,7 @@ type GeoPolygonMidpointsOverlayProps = {
 };
 
 const markerAnchor = { x: 0.13, y: 0.13 };
+const draggingMarkerAnchor = { x: 0.35, y: 0.35 };
 
 export const GeoPolygonMidpointsOverlay = ({
   midpoints,
@@ -31,25 +32,41 @@ export const GeoPolygonMidpointsOverlay = ({
   onMidpointDrag,
   onMidpointDragEnd,
 }: GeoPolygonMidpointsOverlayProps) => {
+  const markerColor = strokeColor ?? midpointDefaultBorderColor;
+
   const styleByInsertAtIndex = useMemo(
     () => (insertAtIndex: number) => [
       styles.midpoint,
       draggingMidpointInsertAtIndex === insertAtIndex &&
         styles.midpointDragging,
-      { borderColor: strokeColor ?? midpointDefaultBorderColor },
+      { borderColor: markerColor },
     ],
-    [draggingMidpointInsertAtIndex, strokeColor],
+    [draggingMidpointInsertAtIndex, markerColor],
+  );
+
+  const coreStyleByInsertAtIndex = useMemo(
+    () => (insertAtIndex: number) => [
+      styles.vertexPointCore,
+      draggingMidpointInsertAtIndex === insertAtIndex &&
+        styles.vertexPointCoreDragging,
+      { backgroundColor: markerColor },
+    ],
+    [draggingMidpointInsertAtIndex, markerColor],
   );
 
   if (midpoints.length === 0) return null;
 
   return (
     <>
-      {midpoints.map(({ coordinate, insertAtIndex }) => (
+      {midpoints.map(({ key, coordinate, insertAtIndex }) => (
         <Marker
-          key={`polygon-midpoint-${insertAtIndex}`}
+          key={`polygon-midpoint-${key}`}
           coordinate={coordinate}
-          anchor={markerAnchor}
+          anchor={
+            draggingMidpointInsertAtIndex === insertAtIndex
+              ? draggingMarkerAnchor
+              : markerAnchor
+          }
           draggable
           onPress={(event) => {
             // Keep map onPress from firing while interacting with midpoint marker.
@@ -72,7 +89,9 @@ export const GeoPolygonMidpointsOverlay = ({
             onMidpointDragEnd(insertAtIndex, draggedCoordinate);
           }}
         >
-          <RNView style={styleByInsertAtIndex(insertAtIndex)} />
+          <RNView style={styleByInsertAtIndex(insertAtIndex)}>
+            <RNView style={coreStyleByInsertAtIndex(insertAtIndex)} />
+          </RNView>
         </Marker>
       ))}
     </>

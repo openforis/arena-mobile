@@ -58,7 +58,7 @@ export const GeoPolygonVerticesOverlay = ({
     <>
       {coordinates.map((coordinate, index) => (
         <Marker
-          key={`polygon-vertex-${index}`}
+          key={`polygon-vertex-${coordinate.latitude}-${coordinate.longitude}`}
           coordinate={coordinate}
           anchor={
             index === selectedVertexIndex ? selectedMarkerAnchor : markerAnchor
