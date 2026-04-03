@@ -3,7 +3,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import {
   MapPolygonExtendedProps,
   getRandomPolygonColors,
-} from "./polygonEditorUtils";
+} from "components/GeoPolygonEditor/polygonEditorUtils";
 import MapView from "react-native-maps";
 
 import { LatLng } from "model";

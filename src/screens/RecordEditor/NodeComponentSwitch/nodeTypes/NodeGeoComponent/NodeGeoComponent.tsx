@@ -1,12 +1,18 @@
 import React from "react";
 
-import { Button, HView, IconButton, Modal, VView } from "components";
+import {
+  Button,
+  GeoPolygonEditor,
+  HView,
+  IconButton,
+  Modal,
+  VView,
+} from "components";
 
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 import { NodeGeoValuePreview } from "../../../NodeValuePreview/NodeGeoValuePreview";
-import { GeoPolygonEditorContent } from "./GeoPolygonEditorContent";
 import { useNodeGeoComponent } from "./useNodeGeoComponent";
-import styles from "./styles";
+import styles from "components/GeoPolygonEditor/styles";
 
 export const NodeGeoComponent = (props: NodeComponentProps) => {
   const { nodeDef } = props;
@@ -56,7 +62,7 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
             hasValue ? "dataEntry:geo.editPolygon" : "dataEntry:geo.drawPolygon"
           }
         >
-          <GeoPolygonEditorContent
+          <GeoPolygonEditor
             initialRegion={initialRegion}
             mapRef={mapRef}
             initialPolygons={initialPolygons}

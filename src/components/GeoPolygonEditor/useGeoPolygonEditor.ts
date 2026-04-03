@@ -148,7 +148,7 @@ const getCoordinatesWithDraggedMidpoint = ({
   return updatedCoordinates;
 };
 
-export const useGeoPolygonEditorContent = ({
+export const useGeoPolygonEditor = ({
   mapRef,
   initialPolygons,
   onCancelDrawing,
@@ -380,11 +380,6 @@ export const useGeoPolygonEditorContent = ({
       };
     });
   }, [polygons]);
-
-  const polygonVertices = useMemo(
-    () => polygons[0]?.coordinates ?? [],
-    [polygons],
-  );
 
   const onMidpointDragEnd = useCallback(
     (insertAtIndex: number, coordinate: LatLng) => {

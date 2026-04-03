@@ -2,25 +2,23 @@ import React, { useEffect, useState } from "react";
 import { Animated } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
-import {
-  Button,
-  HView,
-  IconButton,
-  MapViewWithInitialFit,
-  Text,
-  View,
-  VView,
-} from "components";
+import { Button } from "components/Button";
+import { HView } from "components/HView";
+import { IconButton } from "components/IconButton";
+import { MapViewWithInitialFit } from "components/MapViewWithInitialFit";
+import { Text } from "components/Text";
+import { View } from "components/View";
+import { VView } from "components/VView";
 import { HeartbeatAnimation } from "components/HeartbeatAnimation";
 
 import { GeoPolygonDraftOverlay } from "./GeoPolygonDraftOverlay";
 import { GeoPolygonMidpointsOverlay } from "./GeoPolygonMidpointsOverlay";
 import { GeoPolygonVerticesOverlay } from "./GeoPolygonVerticesOverlay";
 import { MapPolygonExtendedProps } from "./polygonEditorUtils";
-import { useGeoPolygonEditorContent } from "./useGeoPolygonEditorContent";
+import { useGeoPolygonEditor } from "./useGeoPolygonEditor";
 import styles from "./styles";
 
-type GeoPolygonEditorContentProps = {
+type GeoPolygonEditorProps = {
   initialRegion: {
     latitude: number;
     longitude: number;
@@ -35,13 +33,13 @@ type GeoPolygonEditorContentProps = {
 
 const currentLocationMarkerAnchor = { x: 0.5, y: 0.5 };
 
-export const GeoPolygonEditorContent = ({
+export const GeoPolygonEditor = ({
   initialRegion,
   mapRef,
   initialPolygons,
   onCancelDrawing,
   onSaveDrawing,
-}: GeoPolygonEditorContentProps) => {
+}: GeoPolygonEditorProps) => {
   const {
     canSave,
     closeDraftPolygon,
@@ -79,7 +77,7 @@ export const GeoPolygonEditorContent = ({
     strokeColor,
     undoStack,
     visibleCoordinates,
-  } = useGeoPolygonEditorContent({
+  } = useGeoPolygonEditor({
     mapRef,
     initialPolygons,
     onCancelDrawing,
