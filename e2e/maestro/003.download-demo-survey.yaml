@@ -1,0 +1,19 @@
+appId: ${APP_ID}
+---
+- launchApp
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "Arena Mobile"
+    timeout: 60000
+- tapOn:
+    text: "Select a survey|Manage surveys"
+- tapOn: "Import from cloud"
+- tapOn: "arena_demo"
+- tapOn:
+    text: "Import survey|Update survey"
+- extendedWaitUntil:
+    visible: "Records"
+    timeout: 20000
+- extendedWaitUntil:
+    visible: "No records found"
+    timeout: 5000
