@@ -2,9 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   MapPolygonExtendedProps,
-  PolygonEditorRef,
   getRandomPolygonColors,
-} from "@siposdani87/expo-maps-polygon-editor";
+} from "./polygonEditorUtils";
 import MapView, { MapPressEvent } from "react-native-maps";
 
 import { useLocationWatch } from "hooks";
@@ -14,6 +13,7 @@ import { GeoUtils } from "utils";
 import { GeoPolygonMidpoint } from "./GeoPolygonMidpointsOverlay";
 
 const GEO_POLYGON_KEY = "geo_polygon_0";
+const VERTEX_SNAP_EPSILON = 0.00002;
 const SELECTED_STROKE_COLOR = "#d32f2f";
 const SELECTED_FILL_COLOR = "rgba(211, 47, 47, 0.25)";
 const UNSELECTED_STROKE_COLOR = "#1976d2";
@@ -30,6 +30,10 @@ type LocalState = {
   undoStack: UndoSnapshot[];
   isPolygonSelected: boolean;
   selectedVertexIndex: number | null;
+  draggingVertexIndex: number | null;
+  draggingVertexCoordinate: LatLng | null;
+  draggingMidpointInsertAtIndex: number | null;
+  draggingMidpointCoordinate: LatLng | null;
   currentLocationCoordinate: LatLng | null;
   isFollowingCurrentLocation: boolean;
 };
@@ -66,19 +70,100 @@ const determinePolygonToSave = ({
   return null;
 };
 
+const getSnappedVertexCoordinate = ({
+  coordinates,
+  movingVertexIndex,
+  draggedCoordinate,
+}: {
+  coordinates: LatLng[];
+  movingVertexIndex: number;
+  draggedCoordinate: LatLng;
+}): LatLng => {
+  for (let index = 0; index < coordinates.length; index += 1) {
+    if (index === movingVertexIndex) continue;
+
+    const candidate = coordinates[index];
+    if (!candidate) continue;
+
+    if (
+      GeoUtils.isSameCoordinate(
+        candidate,
+        draggedCoordinate,
+        VERTEX_SNAP_EPSILON,
+      )
+    ) {
+      return candidate;
+    }
+  }
+
+  return draggedCoordinate;
+};
+
+const getCoordinatesWithDraggedVertex = ({
+  coordinates,
+  draggingVertexIndex,
+  draggingVertexCoordinate,
+}: {
+  coordinates: LatLng[];
+  draggingVertexIndex: number | null;
+  draggingVertexCoordinate: LatLng | null;
+}): LatLng[] => {
+  if (draggingVertexIndex == null || !draggingVertexCoordinate) {
+    return coordinates;
+  }
+  if (draggingVertexIndex < 0 || draggingVertexIndex >= coordinates.length) {
+    return coordinates;
+  }
+
+  const snappedCoordinate = getSnappedVertexCoordinate({
+    coordinates,
+    movingVertexIndex: draggingVertexIndex,
+    draggedCoordinate: draggingVertexCoordinate,
+  });
+
+  const updatedCoordinates = [...coordinates];
+  updatedCoordinates[draggingVertexIndex] = snappedCoordinate;
+  return updatedCoordinates;
+};
+
+const getCoordinatesWithDraggedMidpoint = ({
+  coordinates,
+  draggingMidpointInsertAtIndex,
+  draggingMidpointCoordinate,
+}: {
+  coordinates: LatLng[];
+  draggingMidpointInsertAtIndex: number | null;
+  draggingMidpointCoordinate: LatLng | null;
+}): LatLng[] => {
+  if (draggingMidpointInsertAtIndex == null || !draggingMidpointCoordinate) {
+    return coordinates;
+  }
+
+  const clampedIndex = Math.max(
+    1,
+    Math.min(draggingMidpointInsertAtIndex, coordinates.length),
+  );
+  const updatedCoordinates = [...coordinates];
+  updatedCoordinates.splice(clampedIndex, 0, draggingMidpointCoordinate);
+  return updatedCoordinates;
+};
+
 export const useGeoPolygonEditorContent = ({
   mapRef,
   initialPolygons,
   onCancelDrawing,
   onSaveDrawing,
 }: UseGeoPolygonEditorContentParams) => {
-  const polygonEditorRef = useRef<PolygonEditorRef>(null);
   const [localState, setLocalState] = useState<LocalState>(() => ({
     draftCoordinates: [],
     polygons: initialPolygons,
     undoStack: [],
     isPolygonSelected: false,
     selectedVertexIndex: null,
+    draggingVertexIndex: null,
+    draggingVertexCoordinate: null,
+    draggingMidpointInsertAtIndex: null,
+    draggingMidpointCoordinate: null,
     currentLocationCoordinate: null,
     isFollowingCurrentLocation: false,
   }));
@@ -89,6 +174,10 @@ export const useGeoPolygonEditorContent = ({
     undoStack,
     isPolygonSelected,
     selectedVertexIndex,
+    draggingVertexIndex,
+    draggingVertexCoordinate,
+    draggingMidpointInsertAtIndex,
+    draggingMidpointCoordinate,
     currentLocationCoordinate,
     isFollowingCurrentLocation,
   } = localState;
@@ -114,19 +203,6 @@ export const useGeoPolygonEditorContent = ({
       })),
     [],
   );
-
-  const restoreDraftCoordinates = useCallback((coordinates: LatLng[]) => {
-    const polygonEditor = polygonEditorRef.current;
-    if (!polygonEditor) return;
-
-    polygonEditor.resetAll();
-    if (coordinates.length === 0) return;
-
-    polygonEditor.startPolygon();
-    for (const coordinate of coordinates) {
-      polygonEditor.setCoordinate(coordinate);
-    }
-  }, []);
 
   const pushUndoSnapshot = useCallback(() => {
     setLocalState((prev) => ({
@@ -161,57 +237,9 @@ export const useGeoPolygonEditorContent = ({
       isPolygonSelected: true,
       selectedVertexIndex: null,
     }));
-    setTimeout(() => {
-      polygonEditorRef.current?.selectPolygonByIndex(0);
-    }, 0);
   }, [draftCoordinates, newPolygon, polygons.length, pushUndoSnapshot]);
 
-  const onPolygonCreate = useCallback((polygon: MapPolygonExtendedProps) => {
-    setLocalState((prev) => ({
-      ...prev,
-      polygons: [polygon],
-      draftCoordinates: polygon.coordinates,
-      isPolygonSelected: true,
-      selectedVertexIndex: null,
-    }));
-  }, []);
-
-  const onPolygonChange = useCallback(
-    (index: number, polygon: MapPolygonExtendedProps) => {
-      setLocalState((prev) => {
-        const updatedPolygons = [...prev.polygons];
-        updatedPolygons[index] = polygon;
-
-        let updatedSelectedVertexIndex = null;
-        if (
-          prev.selectedVertexIndex != null &&
-          prev.selectedVertexIndex < polygon.coordinates.length
-        ) {
-          updatedSelectedVertexIndex = prev.selectedVertexIndex;
-        }
-        return {
-          ...prev,
-          polygons: updatedPolygons,
-          draftCoordinates: polygon.coordinates,
-          selectedVertexIndex: updatedSelectedVertexIndex,
-        };
-      });
-    },
-    [],
-  );
-
-  const onPolygonRemove = useCallback(() => {
-    setLocalState((prev) => ({
-      ...prev,
-      polygons: [],
-      draftCoordinates: [],
-      undoStack: [],
-      isPolygonSelected: false,
-      selectedVertexIndex: null,
-    }));
-  }, []);
-
-  const onPolygonSelect = useCallback(() => {
+  const onPolygonPress = useCallback(() => {
     setLocalState((prev) => ({ ...prev, isPolygonSelected: true }));
   }, []);
 
@@ -220,6 +248,10 @@ export const useGeoPolygonEditorContent = ({
       ...prev,
       isPolygonSelected: false,
       selectedVertexIndex: null,
+      draggingVertexIndex: null,
+      draggingVertexCoordinate: null,
+      draggingMidpointInsertAtIndex: null,
+      draggingMidpointCoordinate: null,
     }));
   }, []);
 
@@ -252,6 +284,10 @@ export const useGeoPolygonEditorContent = ({
             },
           ],
           selectedVertexIndex: null,
+          draggingVertexIndex: null,
+          draggingVertexCoordinate: null,
+          draggingMidpointInsertAtIndex: null,
+          draggingMidpointCoordinate: null,
           draftCoordinates: [...prev.draftCoordinates, coordinate],
         };
       });
@@ -261,12 +297,17 @@ export const useGeoPolygonEditorContent = ({
 
   const onMapPress = useCallback(
     (event: MapPressEvent) => {
+      if (polygons.length > 0) {
+        onPolygonUnselect();
+        return;
+      }
+
       const coordinate = event.nativeEvent?.coordinate;
       if (!coordinate) return;
 
       addCoordinateToDraft(coordinate);
     },
-    [addCoordinateToDraft],
+    [addCoordinateToDraft, onPolygonUnselect, polygons.length],
   );
 
   const onLocationWatchCallback = useCallback(
@@ -375,19 +416,110 @@ export const useGeoPolygonEditorContent = ({
         draftCoordinates: updatedCoordinates,
         isPolygonSelected: true,
         selectedVertexIndex: null,
+        draggingVertexIndex: null,
+        draggingVertexCoordinate: null,
+        draggingMidpointInsertAtIndex: null,
+        draggingMidpointCoordinate: null,
       }));
-      polygonEditorRef.current?.selectPolygonByIndex(0);
     },
     [polygons, pushUndoSnapshot],
+  );
+
+  const onMidpointDragStart = useCallback((insertAtIndex: number) => {
+    setLocalState((prev) => ({
+      ...prev,
+      selectedVertexIndex: null,
+      draggingVertexIndex: null,
+      draggingVertexCoordinate: null,
+      draggingMidpointInsertAtIndex: insertAtIndex,
+      draggingMidpointCoordinate: null,
+      isPolygonSelected: true,
+    }));
+  }, []);
+
+  const onMidpointDrag = useCallback(
+    (insertAtIndex: number, coordinate: LatLng) => {
+      setLocalState((prev) => ({
+        ...prev,
+        selectedVertexIndex: null,
+        draggingVertexIndex: null,
+        draggingVertexCoordinate: null,
+        draggingMidpointInsertAtIndex: insertAtIndex,
+        draggingMidpointCoordinate: coordinate,
+        isPolygonSelected: true,
+      }));
+    },
+    [],
   );
 
   const onVertexPress = useCallback((index: number) => {
     setLocalState((prev) => ({
       ...prev,
       selectedVertexIndex: index,
+      draggingMidpointInsertAtIndex: null,
+      draggingMidpointCoordinate: null,
       isPolygonSelected: true,
     }));
   }, []);
+
+  const onVertexDragStart = useCallback((index: number) => {
+    setLocalState((prev) => ({
+      ...prev,
+      selectedVertexIndex: index,
+      draggingVertexIndex: index,
+      draggingVertexCoordinate: null,
+      draggingMidpointInsertAtIndex: null,
+      draggingMidpointCoordinate: null,
+      isPolygonSelected: true,
+    }));
+  }, []);
+
+  const onVertexDrag = useCallback((index: number, coordinate: LatLng) => {
+    setLocalState((prev) => ({
+      ...prev,
+      selectedVertexIndex: index,
+      draggingVertexIndex: index,
+      draggingVertexCoordinate: coordinate,
+      draggingMidpointInsertAtIndex: null,
+      draggingMidpointCoordinate: null,
+      isPolygonSelected: true,
+    }));
+  }, []);
+
+  const onVertexDragEnd = useCallback(
+    (index: number, coordinate: LatLng) => {
+      const polygon = polygons[0];
+      if (!polygon) return;
+      if (index < 0 || index >= polygon.coordinates.length) return;
+
+      pushUndoSnapshot();
+
+      const snappedCoordinate = getSnappedVertexCoordinate({
+        coordinates: polygon.coordinates,
+        movingVertexIndex: index,
+        draggedCoordinate: coordinate,
+      });
+
+      const updatedCoordinates = [...polygon.coordinates];
+      updatedCoordinates[index] = snappedCoordinate;
+
+      const updatedPolygon: MapPolygonExtendedProps = {
+        ...polygon,
+        coordinates: updatedCoordinates,
+      };
+
+      setLocalState((prev) => ({
+        ...prev,
+        polygons: [updatedPolygon],
+        draftCoordinates: updatedCoordinates,
+        isPolygonSelected: true,
+        selectedVertexIndex: index,
+        draggingVertexIndex: null,
+        draggingVertexCoordinate: null,
+      }));
+    },
+    [polygons, pushUndoSnapshot],
+  );
 
   const onDeleteSelectedVertexPress = useCallback(() => {
     const polygon = polygons[0];
@@ -416,10 +548,9 @@ export const useGeoPolygonEditorContent = ({
         draftCoordinates: updatedCoordinates,
         isPolygonSelected: true,
         selectedVertexIndex: null,
+        draggingMidpointInsertAtIndex: null,
+        draggingMidpointCoordinate: null,
       }));
-      setTimeout(() => {
-        polygonEditorRef.current?.selectPolygonByIndex(0);
-      }, 0);
       return;
     }
 
@@ -429,14 +560,10 @@ export const useGeoPolygonEditorContent = ({
       draftCoordinates: updatedCoordinates,
       isPolygonSelected: false,
       selectedVertexIndex: null,
+      draggingMidpointInsertAtIndex: null,
+      draggingMidpointCoordinate: null,
     }));
-    restoreDraftCoordinates(updatedCoordinates);
-  }, [
-    polygons,
-    pushUndoSnapshot,
-    restoreDraftCoordinates,
-    selectedVertexIndex,
-  ]);
+  }, [polygons, pushUndoSnapshot, selectedVertexIndex]);
 
   const onUndoPress = useCallback(() => {
     const previousState = undoStack[undoStack.length - 1];
@@ -453,18 +580,46 @@ export const useGeoPolygonEditorContent = ({
       draftCoordinates: restoredDraftCoordinates,
       isPolygonSelected: restoredHasPolygons,
       selectedVertexIndex: null,
+      draggingVertexIndex: null,
+      draggingVertexCoordinate: null,
+      draggingMidpointInsertAtIndex: null,
+      draggingMidpointCoordinate: null,
     }));
+  }, [clonePolygons, undoStack]);
 
-    if (restoredHasPolygons) {
-      polygonEditorRef.current?.resetAll();
-      setTimeout(() => {
-        polygonEditorRef.current?.selectPolygonByIndex(0);
-      }, 0);
-      return;
-    }
+  const activePolygonCoordinates = useMemo(
+    () => polygons[0]?.coordinates ?? [],
+    [polygons],
+  );
 
-    restoreDraftCoordinates(restoredDraftCoordinates);
-  }, [clonePolygons, restoreDraftCoordinates, undoStack]);
+  const previewPolygonCoordinatesWithDraggedVertex = useMemo(
+    () =>
+      getCoordinatesWithDraggedVertex({
+        coordinates: activePolygonCoordinates,
+        draggingVertexIndex,
+        draggingVertexCoordinate,
+      }),
+    [activePolygonCoordinates, draggingVertexCoordinate, draggingVertexIndex],
+  );
+
+  const previewPolygonCoordinates = useMemo(
+    () =>
+      getCoordinatesWithDraggedMidpoint({
+        coordinates: previewPolygonCoordinatesWithDraggedVertex,
+        draggingMidpointInsertAtIndex,
+        draggingMidpointCoordinate,
+      }),
+    [
+      draggingMidpointCoordinate,
+      draggingMidpointInsertAtIndex,
+      previewPolygonCoordinatesWithDraggedVertex,
+    ],
+  );
+
+  const previewDraftCoordinates = useMemo(
+    () => (polygons.length > 0 ? previewPolygonCoordinates : draftCoordinates),
+    [draftCoordinates, polygons.length, previewPolygonCoordinates],
+  );
 
   const polygonToSave = useMemo(
     () =>
@@ -526,15 +681,11 @@ export const useGeoPolygonEditorContent = ({
   const fillColor = isPolygonSelected
     ? SELECTED_FILL_COLOR
     : UNSELECTED_FILL_COLOR;
-  const polygonsWithSelectionColor = useMemo(
-    () =>
-      polygons.map((polygon) => ({
-        ...polygon,
-        strokeColor,
-        fillColor,
-      })),
-    [fillColor, polygons, strokeColor],
-  );
+  const selectedPolygonCoordinates = activePolygonCoordinates;
+  const shouldShowDeleteSelectedPoint =
+    Boolean(selectedPolygonCoordinates) &&
+    isPolygonSelected &&
+    selectedVertexIndex != null;
 
   const helperTextKey = useMemo(() => {
     if (canAddCurrentLocationPoint) {
@@ -552,7 +703,7 @@ export const useGeoPolygonEditorContent = ({
   return {
     canSave,
     closeDraftPolygon,
-    draftCoordinates,
+    draftCoordinates: previewDraftCoordinates,
     fillColor,
     hasValue,
     helperTextKey,
@@ -564,25 +715,26 @@ export const useGeoPolygonEditorContent = ({
     onMapPress,
     onMapPanDrag,
     onAddCurrentLocationPointPress,
+    onMidpointDragStart,
+    onMidpointDrag,
     onMidpointDragEnd,
-    onPolygonChange,
-    onPolygonCreate,
-    onPolygonRemove,
-    onPolygonSelect,
+    onPolygonPress,
     onPolygonUnselect,
     onSavePress,
     onUndoPress,
     onVertexPress,
-    polygonEditorRef,
+    onVertexDragStart,
+    onVertexDrag,
+    onVertexDragEnd,
     polygonMidpoints,
-    polygonsWithSelectionColor,
-    polygonVertices,
+    polygonVertices: activePolygonCoordinates,
+    draggingVertexIndex,
+    draggingMidpointInsertAtIndex,
     selectedVertexIndex,
     currentLocationCoordinate,
     isFollowingCurrentLocation,
     canAddCurrentLocationPoint,
-    shouldShowDeleteSelectedPoint:
-      hasValue && isPolygonSelected && selectedVertexIndex != null,
+    shouldShowDeleteSelectedPoint,
     strokeColor,
     undoStack,
     visibleCoordinates,

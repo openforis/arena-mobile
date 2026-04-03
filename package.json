@@ -22,7 +22,6 @@
     "@react-navigation/native": "^7.1.28",
     "@react-navigation/native-stack": "^7.13.0",
     "@reduxjs/toolkit": "^2.11.2",
-    "@siposdani87/expo-maps-polygon-editor": "1.2.0",
     "@types/lodash": "^4.17.23",
     "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.throttle": "^4.1.9",

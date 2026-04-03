@@ -13,6 +13,7 @@ type GeoPolygonDraftOverlayProps = {
   strokeColor: string | undefined;
   strokeWidth: number | undefined;
   showPoints?: boolean;
+  onPolygonPress?: () => void;
 };
 
 const markerAnchor = { x: 0.2, y: 0.2 };
@@ -23,6 +24,7 @@ export const GeoPolygonDraftOverlay = ({
   strokeColor,
   strokeWidth,
   showPoints = true,
+  onPolygonPress,
 }: GeoPolygonDraftOverlayProps) => {
   const markerStyle = useMemo(
     () => [styles.draftPoint, { borderColor: strokeColor }],
@@ -39,6 +41,11 @@ export const GeoPolygonDraftOverlay = ({
           strokeColor={strokeColor}
           strokeWidth={strokeWidth}
           fillColor={fillColor}
+          tappable
+          onPress={(event) => {
+            event.stopPropagation();
+            onPolygonPress?.();
+          }}
         />
       ) : (
         <Polyline

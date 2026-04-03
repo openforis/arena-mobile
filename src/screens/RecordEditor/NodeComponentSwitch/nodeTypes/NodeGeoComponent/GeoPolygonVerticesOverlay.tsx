@@ -10,16 +10,25 @@ type GeoPolygonVerticesOverlayProps = {
   coordinates: LatLng[];
   strokeColor: string | undefined;
   selectedVertexIndex: number | null;
+  draggingVertexIndex: number | null;
   onVertexPress: (index: number) => void;
+  onVertexDragStart: (index: number) => void;
+  onVertexDrag: (index: number, coordinate: LatLng) => void;
+  onVertexDragEnd: (index: number, coordinate: LatLng) => void;
 };
 
 const markerAnchor = { x: 0.2, y: 0.2 };
-const selectedMarkerAnchor = { x: 0.5, y: 0.5 };
+const selectedMarkerAnchor = { x: 0.35, y: 0.35 };
+
 export const GeoPolygonVerticesOverlay = ({
   coordinates,
   strokeColor,
   selectedVertexIndex,
+  draggingVertexIndex,
   onVertexPress,
+  onVertexDragStart,
+  onVertexDrag,
+  onVertexDragEnd,
 }: GeoPolygonVerticesOverlayProps) => {
   const markerColor = strokeColor ?? "#ffffff";
 
@@ -27,18 +36,20 @@ export const GeoPolygonVerticesOverlay = ({
     (index: number) => [
       styles.vertexPoint,
       selectedVertexIndex === index && styles.vertexPointSelected,
+      draggingVertexIndex === index && styles.vertexPointDragging,
       { borderColor: markerColor },
     ],
-    [markerColor, selectedVertexIndex],
+    [draggingVertexIndex, markerColor, selectedVertexIndex],
   );
 
   const markerCoreStyleByIndex = useCallback(
     (index: number) => [
       styles.vertexPointCore,
       selectedVertexIndex === index && styles.vertexPointCoreSelected,
+      draggingVertexIndex === index && styles.vertexPointCoreDragging,
       { backgroundColor: markerColor },
     ],
-    [markerColor, selectedVertexIndex],
+    [draggingVertexIndex, markerColor, selectedVertexIndex],
   );
 
   if (coordinates.length === 0) return null;
@@ -47,14 +58,31 @@ export const GeoPolygonVerticesOverlay = ({
     <>
       {coordinates.map((coordinate, index) => (
         <Marker
-          key={`polygon-vertex-${index}-${coordinate.latitude}-${coordinate.longitude}`}
+          key={`polygon-vertex-${index}`}
           coordinate={coordinate}
           anchor={
             index === selectedVertexIndex ? selectedMarkerAnchor : markerAnchor
           }
+          draggable
           onPress={(event) => {
             event.stopPropagation();
             onVertexPress(index);
+          }}
+          onDragStart={(event) => {
+            event.stopPropagation();
+            onVertexDragStart(index);
+          }}
+          onDrag={(event) => {
+            event.stopPropagation();
+            const draggedCoordinate = event.nativeEvent?.coordinate;
+            if (!draggedCoordinate) return;
+            onVertexDrag(index, draggedCoordinate);
+          }}
+          onDragEnd={(event) => {
+            event.stopPropagation();
+            const draggedCoordinate = event.nativeEvent?.coordinate;
+            if (!draggedCoordinate) return;
+            onVertexDragEnd(index, draggedCoordinate);
           }}
         >
           <RNView style={markerStyleByIndex(index)}>
