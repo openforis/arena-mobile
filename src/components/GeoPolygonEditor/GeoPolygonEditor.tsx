@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Animated } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+
+import { useHeartbeatAnimation } from "hooks";
 
 import { Button } from "../Button";
 import { HView } from "../HView";
@@ -9,7 +11,6 @@ import { MapViewWithInitialFit } from "../MapViewWithInitialFit";
 import { Text } from "../Text";
 import { View } from "../View";
 import { VView } from "../VView";
-import { HeartbeatAnimation } from "../HeartbeatAnimation";
 
 import { GeoPolygonDraftOverlay } from "./GeoPolygonDraftOverlay";
 import { GeoPolygonMidpointsOverlay } from "./GeoPolygonMidpointsOverlay";
@@ -84,20 +85,11 @@ export const GeoPolygonEditor = ({
     onSaveDrawing,
   });
 
-  const [locationButtonOpacity] = useState(() => new Animated.Value(1));
-
-  useEffect(() => {
-    if (isFollowingCurrentLocation) {
-      HeartbeatAnimation({
-        value: locationButtonOpacity,
-        minValue: 0.25,
-        maxValue: 1,
-      }).start();
-    } else {
-      locationButtonOpacity.stopAnimation();
-      locationButtonOpacity.setValue(1);
-    }
-  }, [isFollowingCurrentLocation, locationButtonOpacity]);
+  const locationButtonOpacity = useHeartbeatAnimation({
+    isActive: isFollowingCurrentLocation,
+    minValue: 0.25,
+    maxValue: 1,
+  });
 
   return (
     <VView style={styles.modalContent}>
