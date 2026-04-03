@@ -26,6 +26,7 @@ type FitToCoordinatesOptions = {
 };
 
 type Props = MapViewProps & {
+  children?: React.ReactNode;
   fitToCoordinatesOnReady?: LatLng[];
   fitToCoordinatesOptions?: FitToCoordinatesOptions;
   fitOnlyOnce?: boolean;
@@ -44,6 +45,7 @@ const mapTypes: MapType[] = ["standard", "satellite", "hybrid"];
 export const MapViewWithInitialFit = forwardRef<MapView | null, Props>(
   (
     {
+      children,
       fitOnlyOnce = true,
       fitToCoordinatesOnReady,
       fitToCoordinatesOptions,
@@ -110,7 +112,9 @@ export const MapViewWithInitialFit = forwardRef<MapView | null, Props>(
           onPanDrag={onPanDrag}
           onMapReady={onMapReadyCallback}
           mapType={mapType}
-        />
+        >
+          {children}
+        </MapView>
         {showMapTypeSelector && (
           <View style={styles.mapTypeSelector}>
             <IconButton
