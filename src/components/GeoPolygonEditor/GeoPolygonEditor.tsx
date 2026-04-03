@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Animated } from "react-native";
-import MapView, { MapType, Marker } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 
-import { Button } from "components/Button";
-import { HView } from "components/HView";
-import { IconButton } from "components/IconButton";
-import { MapViewWithInitialFit } from "components/MapViewWithInitialFit";
-import { Text } from "components/Text";
-import { View } from "components/View";
-import { VView } from "components/VView";
-import { HeartbeatAnimation } from "components/HeartbeatAnimation";
+import { Button } from "../Button";
+import { HView } from "../HView";
+import { IconButton } from "../IconButton";
+import { MapViewWithInitialFit } from "../MapViewWithInitialFit";
+import { Text } from "../Text";
+import { View } from "../View";
+import { VView } from "../VView";
+import { HeartbeatAnimation } from "../HeartbeatAnimation";
 
 import { GeoPolygonDraftOverlay } from "./GeoPolygonDraftOverlay";
 import { GeoPolygonMidpointsOverlay } from "./GeoPolygonMidpointsOverlay";
@@ -32,7 +32,6 @@ type GeoPolygonEditorProps = {
 };
 
 const currentLocationMarkerAnchor = { x: 0.5, y: 0.5 };
-const mapTypes: MapType[] = ["standard", "satellite", "hybrid"];
 
 export const GeoPolygonEditor = ({
   initialRegion,
@@ -86,15 +85,6 @@ export const GeoPolygonEditor = ({
   });
 
   const [locationButtonOpacity] = useState(() => new Animated.Value(1));
-  const [mapType, setMapType] = useState<MapType>("standard");
-
-  const onMapTypeTogglePress = () => {
-    setMapType((prevMapType) => {
-      const currentIndex = mapTypes.indexOf(prevMapType);
-      const nextIndex = (currentIndex + 1) % mapTypes.length;
-      return mapTypes[nextIndex] ?? "standard";
-    });
-  };
 
   useEffect(() => {
     if (isFollowingCurrentLocation) {
@@ -111,75 +101,61 @@ export const GeoPolygonEditor = ({
 
   return (
     <VView style={styles.modalContent}>
-      <View style={styles.mapContainer}>
-        <MapViewWithInitialFit
-          ref={mapRef}
-          style={styles.map}
-          initialRegion={initialRegion}
-          onPress={onMapPress}
-          onPanDrag={onMapPanDrag}
-          mapType={mapType}
-          fitToCoordinatesOnReady={visibleCoordinates}
-          fitOnlyOnce={true}
-        >
-          {isFollowingCurrentLocation && currentLocationCoordinate && (
-            <Marker
-              coordinate={currentLocationCoordinate}
-              anchor={currentLocationMarkerAnchor}
-              tappable={false}
-            >
-              <View style={styles.currentLocationMarker}>
-                <View style={styles.currentLocationMarkerHorizontal} />
-                <View style={styles.currentLocationMarkerVertical} />
-              </View>
-            </Marker>
-          )}
-          <GeoPolygonDraftOverlay
-            coordinates={draftCoordinates}
-            fillColor={
-              draggingVertexIndex == null &&
-              draggingMidpointInsertAtIndex == null
-                ? fillColor
-                : "transparent"
-            }
+      <MapViewWithInitialFit
+        ref={mapRef}
+        style={styles.map}
+        initialRegion={initialRegion}
+        onPress={onMapPress}
+        onPanDrag={onMapPanDrag}
+        fitToCoordinatesOnReady={visibleCoordinates}
+      >
+        {isFollowingCurrentLocation && currentLocationCoordinate && (
+          <Marker
+            coordinate={currentLocationCoordinate}
+            anchor={currentLocationMarkerAnchor}
+            tappable={false}
+          >
+            <View style={styles.currentLocationMarker}>
+              <View style={styles.currentLocationMarkerHorizontal} />
+              <View style={styles.currentLocationMarkerVertical} />
+            </View>
+          </Marker>
+        )}
+        <GeoPolygonDraftOverlay
+          coordinates={draftCoordinates}
+          fillColor={
+            draggingVertexIndex == null && draggingMidpointInsertAtIndex == null
+              ? fillColor
+              : "transparent"
+          }
+          strokeColor={strokeColor}
+          strokeWidth={newPolygon.strokeWidth}
+          showPoints={!hasValue}
+          onPolygonPress={onPolygonPress}
+        />
+        {isPolygonSelected && (
+          <GeoPolygonVerticesOverlay
+            coordinates={polygonVertices}
             strokeColor={strokeColor}
-            strokeWidth={newPolygon.strokeWidth}
-            showPoints={!hasValue}
-            onPolygonPress={onPolygonPress}
+            selectedVertexIndex={selectedVertexIndex}
+            draggingVertexIndex={draggingVertexIndex}
+            onVertexPress={onVertexPress}
+            onVertexDragStart={onVertexDragStart}
+            onVertexDrag={onVertexDrag}
+            onVertexDragEnd={onVertexDragEnd}
           />
-          {isPolygonSelected && (
-            <GeoPolygonVerticesOverlay
-              coordinates={polygonVertices}
-              strokeColor={strokeColor}
-              selectedVertexIndex={selectedVertexIndex}
-              draggingVertexIndex={draggingVertexIndex}
-              onVertexPress={onVertexPress}
-              onVertexDragStart={onVertexDragStart}
-              onVertexDrag={onVertexDrag}
-              onVertexDragEnd={onVertexDragEnd}
-            />
-          )}
-          {isPolygonSelected && draggingVertexIndex == null && (
-            <GeoPolygonMidpointsOverlay
-              midpoints={polygonMidpoints}
-              strokeColor={strokeColor}
-              draggingMidpointInsertAtIndex={draggingMidpointInsertAtIndex}
-              onMidpointDragStart={onMidpointDragStart}
-              onMidpointDrag={onMidpointDrag}
-              onMidpointDragEnd={onMidpointDragEnd}
-            />
-          )}
-        </MapViewWithInitialFit>
-
-        <View style={styles.mapTopRightControl} transparent>
-          <IconButton
-            icon="layers-outline"
-            mode="contained"
-            onPress={onMapTypeTogglePress}
-            size={18}
+        )}
+        {isPolygonSelected && draggingVertexIndex == null && (
+          <GeoPolygonMidpointsOverlay
+            midpoints={polygonMidpoints}
+            strokeColor={strokeColor}
+            draggingMidpointInsertAtIndex={draggingMidpointInsertAtIndex}
+            onMidpointDragStart={onMidpointDragStart}
+            onMidpointDrag={onMidpointDrag}
+            onMidpointDragEnd={onMidpointDragEnd}
           />
-        </View>
-      </View>
+        )}
+      </MapViewWithInitialFit>
 
       <Text style={styles.helperText} textKey={helperTextKey} />
 
