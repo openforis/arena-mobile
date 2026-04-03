@@ -144,10 +144,10 @@ export default {
     drawPolygon: "Gambar poligon",
     editPolygon: "Edit poligon",
     selectPolygonInstruction: "Tekan pada poligon untuk memilihnya",
-    editPolygonInstructions: `Tekan lama dan seret simpul untuk memindahkannya.
-  Tekan lama dan seret titik tengah (titik transparan) untuk menambahkan simpul baru.`,
-    tapToAddPoints:
-      "Ketuk peta untuk menambahkan titik. Tekan Berhenti ketika selesai",
+    editPolygonInstructions: `- Tekan lama dan seret simpul untuk memindahkannya.  
+- Tekan simpul untuk memilihnya, lalu tekan Hapus untuk menghapusnya.`,
+    tapToAddPoints: `- Ketuk peta untuk menambahkan titik.  
+- Tekan Berhenti ketika selesai.`,
     deleteSelectedPoint: "Hapus titik yang dipilih",
     addCurrentLocationPoint: "Tambah titik GPS",
     addCurrentLocationPointInstructions:

@@ -142,10 +142,10 @@ export default {
     drawPolygon: "Piirrä monikulmio",
     editPolygon: "Muokkaa monikulmiota",
     selectPolygonInstruction: "Paina monikulmiota sen valitsemiseksi",
-    editPolygonInstructions: `Pidä kärkeä painettuna ja vedä sitä siirtääksesi sitä.
-  Pidä keskipisteen (läpinäkyvää pistettä) painettuna ja vedä lisätäksesi uuden kärjen.`,
-    tapToAddPoints:
-      "Napauta karttaa lisätäksesi pisteitä. Paina Pysäytä kun olet valmis",
+    editPolygonInstructions: `- Pidä kärkeä painettuna ja vedä sitä siirtääksesi sitä.  
+- Valitse kärki painamalla sitä ja poista se painamalla Poista.`,
+    tapToAddPoints: `- Napauta karttaa lisätäksesi pisteitä.  
+- Paina Pysäytä, kun olet valmis.`,
     deleteSelectedPoint: "Poista valittu piste",
     addCurrentLocationPoint: "Lisää GPS-piste",
     addCurrentLocationPointInstructions:

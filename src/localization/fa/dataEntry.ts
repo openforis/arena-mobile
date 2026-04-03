@@ -142,10 +142,10 @@ export default {
     drawPolygon: "رسم چندضلعی",
     editPolygon: "ویرایش چندضلعی",
     selectPolygonInstruction: "بر یک چندضلعی لمس کنید تا آن را انتخاب کنید",
-    editPolygonInstructions: `یک رأس را لمس طولانی کرده و بکشید تا جابه‌جا شود.
-  یک نقطه میانی (نقطه شفاف) را لمس طولانی کرده و بکشید تا یک رأس جدید اضافه شود.`,
-    tapToAddPoints:
-      "برای افزودن نقاط، روی نقشه ضربه بزنید. وقتی تمام شد، دکمه متوقف کردن را فشار دهید",
+    editPolygonInstructions: `- یک رأس را لمس طولانی کرده و بکشید تا جابه‌جا شود.  
+- یک رأس را لمس کنید تا انتخاب شود، سپس برای حذف آن دکمه حذف را فشار دهید.`,
+    tapToAddPoints: `- برای افزودن نقاط، روی نقشه ضربه بزنید.  
+- وقتی تمام شد، دکمه توقف را فشار دهید.`,
     deleteSelectedPoint: "حذف نقطه انتخاب شده",
     addCurrentLocationPoint: "افزودن نقطه GPS",
     addCurrentLocationPointInstructions:

@@ -178,10 +178,10 @@ export default {
     drawPolygon: "多角形を描く",
     editPolygon: "多角形を編集",
     selectPolygonInstruction: "多角形をタップして選択",
-    editPolygonInstructions: `頂点を長押ししてドラッグすると移動できます。  
-中間点（透明な点）を長押ししてドラッグすると新しい頂点を追加できます。`,
-    tapToAddPoints:
-      "地図をタップして点を追加します。完了したら停止を押してください",
+    editPolygonInstructions: `- 頂点を長押ししてドラッグすると移動できます。  
+- 頂点をタップして選択し、削除を押すと削除できます。`,
+    tapToAddPoints: `- 地図をタップして点を追加します。  
+- 完了したら停止を押してください。`,
     deleteSelectedPoint: "選択した点を削除",
     addCurrentLocationPoint: "現在地を追加",
     addCurrentLocationPointInstructions:
