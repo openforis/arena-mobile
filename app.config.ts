@@ -3,7 +3,8 @@ import { ExpoConfig } from "expo/config";
 const { expo } = require("./app.json") as { expo: ExpoConfig };
 
 const config = (): ExpoConfig => {
-  const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
+  const googleMapsApiKeyAndroid = process.env.GOOGLE_MAPS_API_KEY_ANDROID;
+  const googleMapsApiKeyIOS = process.env.GOOGLE_MAPS_API_KEY_IOS;
 
   return {
     ...expo,
@@ -13,7 +14,8 @@ const config = (): ExpoConfig => {
         ...expo.android?.config,
         googleMaps: {
           ...expo.android?.config?.googleMaps,
-          apiKey: googleMapsApiKey ?? expo.android?.config?.googleMaps?.apiKey,
+          apiKey:
+            googleMapsApiKeyAndroid ?? expo.android?.config?.googleMaps?.apiKey,
         },
       },
     },
@@ -22,7 +24,7 @@ const config = (): ExpoConfig => {
       config: {
         ...expo.ios?.config,
         googleMapsApiKey:
-          googleMapsApiKey ?? expo.ios?.config?.googleMapsApiKey,
+          googleMapsApiKeyIOS ?? expo.ios?.config?.googleMapsApiKey,
       },
     },
   };
