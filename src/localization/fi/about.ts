@@ -1,6 +1,7 @@
 export default {
   developedBy: "Kehittäjä",
-  sendSupportEmailIntroduction: "Lähetä sähköposti osoitteeseen:",
+  supportEmail: "Tukisähköposti",
+  supportForum: "Tukifoorumi",
   support: "Tuki",
   version: "Versio",
   viewChangelog: "Näytä muutosloki",

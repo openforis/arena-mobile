@@ -16,13 +16,13 @@ import { useIsNetworkConnected } from "hooks";
 import { SurveyStatus, UpdateStatus } from "model";
 import { SurveyService } from "service";
 import { RemoteConnectionSelectors, SurveySelectors } from "state";
+import { log } from "utils/Logger";
 
 import { screenKeys } from "../screenKeys";
 import { SurveyUpdateStatusIcon } from "./SurveyUpdateStatusIcon";
 import { determineSurveyUpdateStatus } from "./surveyUpdateUtils";
 
 import styles from "./selectedSurveyContainerStyles";
-import { log } from "utils/Logger";
 
 type SelectedSurveyContainerState = {
   updateStatus: UpdateStatus | SurveyStatus;
