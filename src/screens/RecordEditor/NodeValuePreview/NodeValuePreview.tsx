@@ -15,6 +15,7 @@ import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 import { CoordinateValuePreview } from "./CoordinateValuePreview";
 import { BooleanValuePreview } from "./BooleanValuePreview";
 import { FileValuePreview } from "./FileValuePreview";
+import { NodeGeoValuePreview } from "./NodeGeoValuePreview";
 import { TaxonValuePreview } from "./TaxonValuePreview";
 import { TextValuePreview } from "./TextValuePreview";
 
@@ -24,6 +25,7 @@ const componentByNodeDefType: Partial<
   [NodeDefType.boolean]: BooleanValuePreview,
   [NodeDefType.coordinate]: CoordinateValuePreview,
   [NodeDefType.file]: FileValuePreview,
+  [NodeDefType.geo]: NodeGeoValuePreview,
   [NodeDefType.taxon]: TaxonValuePreview,
   [NodeDefType.text]: TextValuePreview,
 };

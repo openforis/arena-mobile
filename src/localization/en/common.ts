@@ -38,6 +38,7 @@ export default {
   openSettings: "Open settings",
   path: "Path",
   rowsPerPage: "Rows per page",
+  save: "Save",
   search: "Search",
   selectAnItem: "Select an item",
   selectNewItems: "Select new items",

@@ -36,6 +36,7 @@ export default {
   openSettings: "Buka pengaturan",
   path: "Path",
   rowsPerPage: "Baris per halaman",
+  save: "Simpan",
   search: "Cari",
   selectAnItem: "Pilih item",
   selectNewItems: "Pilih item baru",

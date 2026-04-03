@@ -137,6 +137,19 @@ export default {
     x: "X",
     y: "Y",
   },
+  geo: {
+    drawPolygon: "Dessiner un polygone",
+    editPolygon: "Modifier le polygone",
+    selectPolygonInstruction: "Appuyez sur un polygone pour le sélectionner",
+    editPolygonInstructions: `- Appuyez longuement et faites glisser un sommet pour le déplacer.  
+- Appuyez sur un sommet pour le sélectionner, puis appuyez sur Supprimer pour l'effacer.`,
+    tapToAddPoints: `- Touchez la carte pour ajouter des points.  
+- Appuyez sur Arrêter lorsque c'est fait.`,
+    deleteSelectedPoint: "Supprimer le point sélectionné",
+    addCurrentLocationPoint: "Ajouter un point GPS",
+    addCurrentLocationPointInstructions:
+      'Appuyez sur "Ajouter un point GPS" pour ajouter la position actuelle au polygone',
+  },
   taxon: {
     search: "Rechercher un taxon",
     taxonNotSelected: "--- Taxon non sélectionné ---",

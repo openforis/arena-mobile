@@ -7,6 +7,8 @@ import {
 
 const samplingPointDataCategoryName = "sampling_point_data";
 
+const experimentalTypes = [NodeDefType.geo];
+
 const getRootKeyDefs = ({ survey, cycle }: any) => {
   const rootDef = Surveys.getNodeDefRoot({ survey });
   return Surveys.getNodeDefKeys({ survey, nodeDef: rootDef, cycle });
@@ -18,7 +20,12 @@ const isRootKeyDef = ({ survey, cycle, nodeDef }: any) => {
   return rootKeyDefs.includes(nodeDef);
 };
 
-const getChildrenDefs = ({ survey, nodeDef, cycle }: any) =>
+const getChildrenDefs = ({
+  survey,
+  nodeDef,
+  cycle,
+  allowExperimental = false,
+}: any) =>
   Surveys.getNodeDefChildrenSorted({
     survey,
     nodeDef,
@@ -26,10 +33,10 @@ const getChildrenDefs = ({ survey, nodeDef, cycle }: any) =>
     includeAnalysis: false,
   }).filter(
     (childDef) =>
-      childDef.type !== NodeDefType.geo && // geo type not supported
+      (allowExperimental || !experimentalTypes.includes(childDef.type)) &&
       !NodeDefs.isHidden(childDef) &&
       !NodeDefs.isHiddenInMobile(cycle)(childDef) &&
-      NodeDefs.isInCycle(cycle)(childDef)
+      NodeDefs.isInCycle(cycle)(childDef),
   );
 
 const getEntitySummaryDefs = ({
@@ -63,14 +70,14 @@ const getEntitySummaryDefs = ({
       (childDef) =>
         !NodeDefs.isKey(childDef) &&
         !NodeDefs.isMultiple(childDef) &&
-        !NodeDefs.isIncludedInMultipleEntitySummary(cycle)(childDef)
+        !NodeDefs.isIncludedInMultipleEntitySummary(cycle)(childDef),
     );
     if (entityDefChildrenNotKeys.length > 0) {
       summaryDefs.push(
         ...entityDefChildrenNotKeys.slice(
           0,
-          Math.min(entityDefChildrenNotKeys.length, otherDefsToAddCount)
-        )
+          Math.min(entityDefChildrenNotKeys.length, otherDefsToAddCount),
+        ),
       );
     }
   }

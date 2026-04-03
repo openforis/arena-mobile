@@ -132,6 +132,19 @@ export default {
     x: "X",
     y: "Y",
   },
+  geo: {
+    drawPolygon: "Нарисовать полигон",
+    editPolygon: "Редактировать полигон",
+    selectPolygonInstruction: "Нажмите на полигон, чтобы выбрать его",
+    editPolygonInstructions: `- Нажмите и удерживайте вершину, затем перетащите её, чтобы переместить.  
+- Нажмите на вершину, чтобы выбрать её, затем нажмите Удалить, чтобы удалить её.`,
+    tapToAddPoints: `- Нажмите на карту, чтобы добавить точки.  
+- Нажмите Стоп, когда закончите.`,
+    deleteSelectedPoint: "Удалить выбранную точку",
+    addCurrentLocationPoint: "Добавить GPS-точку",
+    addCurrentLocationPointInstructions:
+      'Нажмите "Добавить GPS-точку", чтобы добавить текущее местоположение в полигон',
+  },
   taxon: {
     search: "Поиск таксона",
     taxonNotSelected: "--- Таксон не выбран ---",

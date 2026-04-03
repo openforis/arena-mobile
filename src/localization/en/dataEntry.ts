@@ -176,6 +176,19 @@ Fetch the list of records from the server and try again?`,
     x: "X",
     y: "Y",
   },
+  geo: {
+    drawPolygon: "Draw polygon",
+    editPolygon: "Edit polygon",
+    selectPolygonInstruction: "Press on a polygon to select it",
+    editPolygonInstructions: `- Long-press and drag a vertex to move it.  
+- Press a vertex to select it, then press Delete to delete it.`,
+    tapToAddPoints: `- Tap the map to add points.  
+- Press Stop when done.`,
+    deleteSelectedPoint: "Delete selected point",
+    addCurrentLocationPoint: "Add GPS point",
+    addCurrentLocationPointInstructions:
+      "Press Add GPS point to add current location to the polygon",
+  },
   taxon: {
     search: "Search taxon",
     taxonNotSelected: "--- Taxon not selected ---",

@@ -133,6 +133,19 @@ export default {
     x: "X",
     y: "Y",
   },
+  geo: {
+    drawPolygon: "Desenhar polígono",
+    editPolygon: "Editar polígono",
+    selectPolygonInstruction: "Pressione em um polígono para selecioná-lo",
+    editPolygonInstructions: `- Pressione e arraste um vértice para movê-lo.  
+- Pressione um vértice para selecioná-lo e depois pressione Excluir para removê-lo.`,
+    tapToAddPoints: `- Toque no mapa para adicionar pontos.  
+- Pressione Parar quando concluído.`,
+    deleteSelectedPoint: "Excluir ponto selecionado",
+    addCurrentLocationPoint: "Adicionar ponto GPS",
+    addCurrentLocationPointInstructions:
+      'Pressione "Adicionar ponto GPS" para adicionar a localização atual ao polígono',
+  },
   taxon: {
     search: "Pesquisar táxon",
     taxonNotSelected: "--- Táxon não selecionado ---",
