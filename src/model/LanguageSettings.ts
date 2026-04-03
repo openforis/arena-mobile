@@ -8,6 +8,7 @@ export const Languages = [
   { key: "fr", label: "French" },
   { key: "de", label: "German" },
   { key: "id", label: "Indonesian" },
+  { key: "ja", label: "Japanese" },
   { key: "fa", label: "Persian" },
   { key: "pt", label: "Portuguese" },
   { key: "ru", label: "Russian" },
