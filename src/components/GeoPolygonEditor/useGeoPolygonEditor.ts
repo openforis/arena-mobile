@@ -15,9 +15,9 @@ import { GeoPolygonMidpoint } from "./GeoPolygonMidpointsOverlay";
 const GEO_POLYGON_KEY = "geo_polygon_0";
 const VERTEX_SNAP_EPSILON = 0.00002;
 const SELECTED_STROKE_COLOR = "#d32f2f";
-const SELECTED_FILL_COLOR = "rgba(211, 47, 47, 0.25)";
+const SELECTED_FILL_COLOR = "rgba(211, 47, 47, 0.1)";
 const UNSELECTED_STROKE_COLOR = "#1976d2";
-const UNSELECTED_FILL_COLOR = "rgba(25, 118, 210, 0.25)";
+const UNSELECTED_FILL_COLOR = "rgba(25, 118, 210, 0.1)";
 
 type UndoSnapshot = {
   draftCoordinates: LatLng[];
