@@ -127,8 +127,7 @@ export const GeoPolygonEditorContent = ({
         <GeoPolygonDraftOverlay
           coordinates={draftCoordinates}
           fillColor={
-            draggingVertexIndex == null &&
-            draggingMidpointInsertAtIndex == null
+            draggingVertexIndex == null && draggingMidpointInsertAtIndex == null
               ? fillColor
               : "transparent"
           }
