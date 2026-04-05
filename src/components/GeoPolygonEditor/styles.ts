@@ -2,6 +2,19 @@ import { StyleSheet } from "react-native";
 
 export const midpointDefaultBorderColor = "rgba(255, 0, 0, 0.3)";
 
+const vertexPointDraggingStyle = {
+  width: 32,
+  height: 32,
+  borderRadius: 16,
+  borderWidth: 3,
+  backgroundColor: "rgba(255, 255, 255, 1)",
+  shadowColor: "#000000",
+  shadowOffset: { width: 0, height: 3 },
+  shadowOpacity: 0.5,
+  shadowRadius: 6,
+  elevation: 8,
+} as const;
+
 export default StyleSheet.create({
   container: {
     flex: 1,
@@ -10,6 +23,17 @@ export default StyleSheet.create({
   map: {
     flex: 1,
     minHeight: 250,
+  },
+  mapContainer: {
+    flex: 1,
+    minHeight: 250,
+    position: "relative",
+  },
+  mapTopRightControl: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    zIndex: 1,
   },
   helperText: {
     textAlign: "center",
@@ -38,6 +62,9 @@ export default StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
+  midpointDragging: {
+    ...vertexPointDraggingStyle,
+  },
   vertexPoint: {
     width: 14,
     height: 14,
@@ -51,20 +78,27 @@ export default StyleSheet.create({
     width: 26,
     height: 26,
     borderRadius: 13,
-    borderWidth: 4,
-    backgroundColor: "rgba(255, 255, 255, 1)",
+    borderWidth: 2,
     shadowColor: "#000000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.45,
     shadowRadius: 4,
     elevation: 6,
   },
+  vertexPointDragging: {
+    ...vertexPointDraggingStyle,
+  },
   vertexPointCore: {
-    width: 5,
-    height: 5,
-    borderRadius: 2.5,
+    width: 2,
+    height: 2,
+    borderRadius: 1,
   },
   vertexPointCoreSelected: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  vertexPointCoreDragging: {
     width: 10,
     height: 10,
     borderRadius: 5,

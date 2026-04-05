@@ -137,10 +137,10 @@ export default {
     drawPolygon: "Desenhar polígono",
     editPolygon: "Editar polígono",
     selectPolygonInstruction: "Pressione em um polígono para selecioná-lo",
-    editPolygonInstructions: `Pressione e arraste um vértice para movê-lo.
-  Pressione e arraste um ponto médio (ponto transparente) para adicionar um novo vértice.`,
-    tapToAddPoints:
-      "Toque no mapa para adicionar pontos. Pressione Parar quando concluído",
+    editPolygonInstructions: `- Pressione e arraste um vértice para movê-lo.  
+- Pressione um vértice para selecioná-lo e depois pressione Excluir para removê-lo.`,
+    tapToAddPoints: `- Toque no mapa para adicionar pontos.  
+- Pressione Parar quando concluído.`,
     deleteSelectedPoint: "Excluir ponto selecionado",
     addCurrentLocationPoint: "Adicionar ponto GPS",
     addCurrentLocationPointInstructions:

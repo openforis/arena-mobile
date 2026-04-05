@@ -1,29 +1,25 @@
-import {
-  MapPolygonExtendedProps,
-  PolygonEditor,
-} from "@siposdani87/expo-maps-polygon-editor";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Animated } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
-import {
-  Button,
-  HView,
-  IconButton,
-  MapViewWithInitialFit,
-  Text,
-  View,
-  VView,
-} from "components";
-import { HeartbeatAnimation } from "components/HeartbeatAnimation";
+import { useHeartbeatAnimation } from "hooks";
+
+import { Button } from "../Button";
+import { HView } from "../HView";
+import { IconButton } from "../IconButton";
+import { MapViewWithInitialFit } from "../MapViewWithInitialFit";
+import { Text } from "../Text";
+import { View } from "../View";
+import { VView } from "../VView";
 
 import { GeoPolygonDraftOverlay } from "./GeoPolygonDraftOverlay";
 import { GeoPolygonMidpointsOverlay } from "./GeoPolygonMidpointsOverlay";
 import { GeoPolygonVerticesOverlay } from "./GeoPolygonVerticesOverlay";
-import { useGeoPolygonEditorContent } from "./useGeoPolygonEditorContent";
+import { MapPolygonExtendedProps } from "./polygonEditorUtils";
+import { useGeoPolygonEditor } from "./useGeoPolygonEditor";
 import styles from "./styles";
 
-type GeoPolygonEditorContentProps = {
+type GeoPolygonEditorProps = {
   initialRegion: {
     latitude: number;
     longitude: number;
@@ -38,13 +34,13 @@ type GeoPolygonEditorContentProps = {
 
 const currentLocationMarkerAnchor = { x: 0.5, y: 0.5 };
 
-export const GeoPolygonEditorContent = ({
+export const GeoPolygonEditor = ({
   initialRegion,
   mapRef,
   initialPolygons,
   onCancelDrawing,
   onSaveDrawing,
-}: GeoPolygonEditorContentProps) => {
+}: GeoPolygonEditorProps) => {
   const {
     canSave,
     closeDraftPolygon,
@@ -60,19 +56,20 @@ export const GeoPolygonEditorContent = ({
     onMapPress,
     onMapPanDrag,
     onAddCurrentLocationPointPress,
+    onMidpointDragStart,
+    onMidpointDrag,
     onMidpointDragEnd,
-    onPolygonChange,
-    onPolygonCreate,
-    onPolygonRemove,
-    onPolygonSelect,
-    onPolygonUnselect,
+    onPolygonPress,
     onSavePress,
     onUndoPress,
     onVertexPress,
-    polygonEditorRef,
+    onVertexDragStart,
+    onVertexDrag,
+    onVertexDragEnd,
     polygonMidpoints,
-    polygonsWithSelectionColor,
     polygonVertices,
+    draggingVertexIndex,
+    draggingMidpointInsertAtIndex,
     selectedVertexIndex,
     currentLocationCoordinate,
     isFollowingCurrentLocation,
@@ -81,27 +78,18 @@ export const GeoPolygonEditorContent = ({
     strokeColor,
     undoStack,
     visibleCoordinates,
-  } = useGeoPolygonEditorContent({
+  } = useGeoPolygonEditor({
     mapRef,
     initialPolygons,
     onCancelDrawing,
     onSaveDrawing,
   });
 
-  const [locationButtonOpacity] = useState(() => new Animated.Value(1));
-
-  useEffect(() => {
-    if (isFollowingCurrentLocation) {
-      HeartbeatAnimation({
-        value: locationButtonOpacity,
-        minValue: 0.25,
-        maxValue: 1,
-      }).start();
-    } else {
-      locationButtonOpacity.stopAnimation();
-      locationButtonOpacity.setValue(1);
-    }
-  }, [isFollowingCurrentLocation, locationButtonOpacity]);
+  const locationButtonOpacity = useHeartbeatAnimation({
+    isActive: isFollowingCurrentLocation,
+    minValue: 0.25,
+    maxValue: 1,
+  });
 
   return (
     <VView style={styles.modalContent}>
@@ -112,7 +100,6 @@ export const GeoPolygonEditorContent = ({
         onPress={onMapPress}
         onPanDrag={onMapPanDrag}
         fitToCoordinatesOnReady={visibleCoordinates}
-        fitOnlyOnce={true}
       >
         {isFollowingCurrentLocation && currentLocationCoordinate && (
           <Marker
@@ -128,39 +115,42 @@ export const GeoPolygonEditorContent = ({
         )}
         <GeoPolygonDraftOverlay
           coordinates={draftCoordinates}
-          fillColor={fillColor}
+          fillColor={
+            draggingVertexIndex == null && draggingMidpointInsertAtIndex == null
+              ? fillColor
+              : "transparent"
+          }
           strokeColor={strokeColor}
           strokeWidth={newPolygon.strokeWidth}
           showPoints={!hasValue}
+          onPolygonPress={onPolygonPress}
         />
         {isPolygonSelected && (
           <GeoPolygonVerticesOverlay
             coordinates={polygonVertices}
             strokeColor={strokeColor}
             selectedVertexIndex={selectedVertexIndex}
+            draggingVertexIndex={draggingVertexIndex}
             onVertexPress={onVertexPress}
+            onVertexDragStart={onVertexDragStart}
+            onVertexDrag={onVertexDrag}
+            onVertexDragEnd={onVertexDragEnd}
           />
         )}
-        {isPolygonSelected && (
+        {isPolygonSelected && draggingVertexIndex == null && (
           <GeoPolygonMidpointsOverlay
             midpoints={polygonMidpoints}
             strokeColor={strokeColor}
+            draggingMidpointInsertAtIndex={draggingMidpointInsertAtIndex}
+            onMidpointDragStart={onMidpointDragStart}
+            onMidpointDrag={onMidpointDrag}
             onMidpointDragEnd={onMidpointDragEnd}
           />
         )}
-        <PolygonEditor
-          ref={polygonEditorRef}
-          newPolygon={newPolygon}
-          polygons={polygonsWithSelectionColor}
-          onPolygonCreate={onPolygonCreate}
-          onPolygonChange={onPolygonChange}
-          onPolygonRemove={onPolygonRemove}
-          onPolygonSelect={onPolygonSelect}
-          onPolygonUnselect={onPolygonUnselect}
-          disabled={false}
-        />
       </MapViewWithInitialFit>
+
       <Text style={styles.helperText} textKey={helperTextKey} />
+
       <VView style={styles.toolbar}>
         <HView style={styles.toolbarTopRow}>
           {canAddCurrentLocationPoint && (

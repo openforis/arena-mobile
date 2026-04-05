@@ -51,11 +51,9 @@ export default {
     option: {
       [FlatDataExportOption.addCycle]: "サイクルを追加",
       [FlatDataExportOption.includeAncestorAttributes]: "上位階層の属性",
-      [FlatDataExportOption.includeCategoryItemsLabels]:
-        "カテゴリ項目のラベル",
+      [FlatDataExportOption.includeCategoryItemsLabels]: "カテゴリ項目のラベル",
       [FlatDataExportOption.includeFiles]: "ファイル属性",
-      [FlatDataExportOption.includeTaxonScientificName]:
-        "分類群の学名",
+      [FlatDataExportOption.includeTaxonScientificName]: "分類群の学名",
     },
     selectTarget: "エクスポート先を選択",
     selectTargetMessage: `エクスポート先を選択：`,
@@ -175,6 +173,19 @@ export default {
     useCurrentLocation: "現在地を使用",
     x: "X",
     y: "Y",
+  },
+  geo: {
+    drawPolygon: "多角形を描く",
+    editPolygon: "多角形を編集",
+    selectPolygonInstruction: "多角形をタップして選択",
+    editPolygonInstructions: `- 頂点を長押ししてドラッグすると移動できます。  
+- 頂点をタップして選択し、削除を押すと削除できます。`,
+    tapToAddPoints: `- 地図をタップして点を追加します。  
+- 完了したら停止を押してください。`,
+    deleteSelectedPoint: "選択した点を削除",
+    addCurrentLocationPoint: "現在地を追加",
+    addCurrentLocationPointInstructions:
+      "現在地を多角形に追加するには、現在地を追加を押してください",
   },
   taxon: {
     search: "分類群を検索",

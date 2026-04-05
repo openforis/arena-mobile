@@ -143,10 +143,10 @@ export default {
     drawPolygon: "Rita polygon",
     editPolygon: "Redigera polygon",
     selectPolygonInstruction: "Tryck på en polygon för att välja den",
-    editPolygonInstructions: `Tryck länge och dra ett hörn för att flytta det.
-  Tryck länge och dra en mittpunkt (transparent punkt) för att lägga till ett nytt hörn.`,
-    tapToAddPoints:
-      "Tryck på kartan för att lägga till punkter. Tryck Stopp när du är klar",
+    editPolygonInstructions: `- Tryck länge och dra ett hörn för att flytta det.  
+- Tryck på ett hörn för att välja det och tryck sedan på Ta bort för att ta bort det.`,
+    tapToAddPoints: `- Tryck på kartan för att lägga till punkter.  
+- Tryck Stopp när du är klar.`,
     deleteSelectedPoint: "Ta bort vald punkt",
     addCurrentLocationPoint: "Lägg till GPS-punkt",
     addCurrentLocationPointInstructions:

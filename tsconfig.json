@@ -27,7 +27,7 @@
     },
     "resolveJsonModule": true,
     "target": "esnext",
-    "types": ["react-native", "jest"],
+    "types": ["react-native", "jest", "node"],
     // Recommended Options
     "isolatedModules": true,
     "moduleDetection": "force",
@@ -43,5 +43,5 @@
     "jest.config.js"
   ],
   "extends": "expo/tsconfig.base",
-  "include": ["src/**/*", "App.tsx"],
+  "include": ["src/**/*", "App.tsx", "app.config.ts"],
 }

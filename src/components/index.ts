@@ -23,6 +23,7 @@ export { Fade } from "./Fade";
 export { FieldSet } from "./FieldSet";
 export { FlexWrapView } from "./FlexWrapView";
 export { FormItem } from "./FormItem";
+export { GeoPolygonEditor } from "./GeoPolygonEditor";
 export { HView } from "./HView";
 export { Icon } from "./Icon";
 export { Image } from "./Image";

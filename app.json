@@ -3,7 +3,7 @@
     "name": "Arena Mobile",
     "slug": "arena-mobile",
     "owner": "openforis",
-    "version": "2.4.1",
+    "version": "2.5.0",
     "icon": "./assets/logo/icon_with_margin.png",
     "userInterfaceStyle": "automatic",
     "splash": {

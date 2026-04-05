@@ -5,15 +5,20 @@ Serving as a companion to "Open Foris Arena", it offers seamless data handling w
 Arena Mobile enables efficient collection of field data in various sectors, including forest inventories and interviews, by implementing customisable validation rules to ensure high-quality data.  
 Supported by a robust community, it integrates with the Arena platform for analytics and reporting, making it an ideal choice for various data assessment needs.
 
-## Google Maps API key
+## Google Maps API keys
 
-The app reads the Google Maps API key from the `GOOGLE_MAPS_API_KEY` environment variable in `app.config.ts`.
+The app reads Google Maps API keys from environment variables in `app.config.ts`:
 
-Set it before running Expo commands, for example:
+- `GOOGLE_MAPS_API_KEY_ANDROID` for Android
+- `GOOGLE_MAPS_API_KEY_IOS` for iOS
+
+Set them before running Expo commands, for example:
 
 ```bash
-export GOOGLE_MAPS_API_KEY="your_google_maps_api_key"
+export GOOGLE_MAPS_API_KEY_ANDROID="your_android_google_maps_api_key"
+export GOOGLE_MAPS_API_KEY_IOS="your_ios_google_maps_api_key"
 yarn start
 ```
 
-For EAS builds, set the same variable as an EAS secret or environment variable for the build profile.
+For EAS builds, set these variables as EAS secrets or environment variables for the build profile.
+Alternatively, you can configure the API keys directly in `app.json` under `android.config.googleMaps.apiKey` and `ios.config.googleMapsApiKey`.

@@ -3394,25 +3394,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@siposdani87/expo-maps-polygon-editor@npm:^1.3.1":
-  version: 1.3.1
-  resolution: "@siposdani87/expo-maps-polygon-editor@npm:1.3.1"
-  dependencies:
-    "@turf/boolean-point-in-polygon": "npm:>=6.5.0"
-    "@turf/helpers": "npm:>=6.5.0"
-    "@turf/midpoint": "npm:>=6.5.0"
-  peerDependencies:
-    "@turf/boolean-point-in-polygon": ">=6.5.0"
-    "@turf/helpers": ">=6.5.0"
-    "@turf/midpoint": ">=6.5.0"
-    react: ">=19.0.0"
-    react-dom: ">=19.0.0"
-    react-native: ">=0.83.0"
-    react-native-maps: ">=1.23.6"
-  checksum: 10c0/41db807d81086d5532dc7afc1af77cf22454c246eed1086f51e863416a7236776ebc84f5bea49a29041d37d9d3ab4dc764dfd43051b7fac0806b065f0ff0dee2
-  languageName: node
-  linkType: hard
-
 "@socket.io/component-emitter@npm:~3.1.0":
   version: 3.1.2
   resolution: "@socket.io/component-emitter@npm:3.1.2"
@@ -3434,32 +3415,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/bearing@npm:7.3.4":
-  version: 7.3.4
-  resolution: "@turf/bearing@npm:7.3.4"
-  dependencies:
-    "@turf/helpers": "npm:7.3.4"
-    "@turf/invariant": "npm:7.3.4"
-    "@types/geojson": "npm:^7946.0.10"
-    tslib: "npm:^2.8.1"
-  checksum: 10c0/70d4dfde315e0f060bd971b47992886ad7caa2b655e4f0ea9e8d77e4f01a8d88178dd70b0902550bea7fe09f05cbbacc18ba6789911be76c4bbf0f48b6f3c4d3
-  languageName: node
-  linkType: hard
-
-"@turf/boolean-point-in-polygon@npm:>=6.5.0":
-  version: 7.3.4
-  resolution: "@turf/boolean-point-in-polygon@npm:7.3.4"
-  dependencies:
-    "@turf/helpers": "npm:7.3.4"
-    "@turf/invariant": "npm:7.3.4"
-    "@types/geojson": "npm:^7946.0.10"
-    point-in-polygon-hao: "npm:^1.1.0"
-    tslib: "npm:^2.8.1"
-  checksum: 10c0/047aba73768b0a837c3992955b52e98beba34cad86c2157e8a83fd10e47c80c35c75852cc2943fd54efa901d0eb7c0f6659c0a382a6dc497f2ca3c3f56bf4f0a
-  languageName: node
-  linkType: hard
-
-"@turf/destination@npm:7.3.4, @turf/destination@npm:^7.3.4":
+"@turf/destination@npm:^7.3.4":
   version: 7.3.4
   resolution: "@turf/destination@npm:7.3.4"
   dependencies:
@@ -3471,19 +3427,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/distance@npm:7.3.4":
-  version: 7.3.4
-  resolution: "@turf/distance@npm:7.3.4"
-  dependencies:
-    "@turf/helpers": "npm:7.3.4"
-    "@turf/invariant": "npm:7.3.4"
-    "@types/geojson": "npm:^7946.0.10"
-    tslib: "npm:^2.8.1"
-  checksum: 10c0/cb91c32ff6fb41b1e3487537dcade88c1366b7acdc6c9af19732fffb9a463d75be1576aa51783802a03bbb4a36f2d3ba2003cd01a418b74e2aee2ee1c7b49d21
-  languageName: node
-  linkType: hard
-
-"@turf/helpers@npm:7.3.4, @turf/helpers@npm:>=6.5.0":
+"@turf/helpers@npm:7.3.4":
   version: 7.3.4
   resolution: "@turf/helpers@npm:7.3.4"
   dependencies:
@@ -3501,20 +3445,6 @@ __metadata:
     "@types/geojson": "npm:^7946.0.10"
     tslib: "npm:^2.8.1"
   checksum: 10c0/8c5c420981d42304ebf32a984892b15150c6dcafabacefd165a5950eaf16024551272071426bfa23e5198b03c7c9495a2547ea9ee455ce3ff77d6449f51df1b3
-  languageName: node
-  linkType: hard
-
-"@turf/midpoint@npm:>=6.5.0":
-  version: 7.3.4
-  resolution: "@turf/midpoint@npm:7.3.4"
-  dependencies:
-    "@turf/bearing": "npm:7.3.4"
-    "@turf/destination": "npm:7.3.4"
-    "@turf/distance": "npm:7.3.4"
-    "@turf/helpers": "npm:7.3.4"
-    "@types/geojson": "npm:^7946.0.10"
-    tslib: "npm:^2.8.1"
-  checksum: 10c0/32b6719b20e1a3b31609a46c0e6b5b94fd2187a5f03603caa505fbb4f2ae3e529cb8a2e292e9ce46d4afca92da6c12726187a1eb5634b98804679a5754a885d1
   languageName: node
   linkType: hard
 
@@ -3695,10 +3625,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:^4.17.24":
-  version: 4.17.24
-  resolution: "@types/lodash@npm:4.17.24"
-  checksum: 10c0/b72f60d4daacdad1fa643edb3faba204c02a01eb1ac00a83ff73496a6d236fc55e459c06106e8ced42277dba932d087d8fc090f8de4ef590d3f91e6d6f7ce85a
+"@types/lodash@npm:^4.17.23":
+  version: 4.17.23
+  resolution: "@types/lodash@npm:4.17.23"
+  checksum: 10c0/9d9cbfb684e064a2b78aab9e220d398c9c2a7d36bc51a07b184ff382fa043a99b3d00c16c7f109b4eb8614118f4869678dbae7d5c6700ed16fb9340e26cc0bf6
   languageName: node
   linkType: hard
 
@@ -3711,12 +3641,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^25.5.0":
-  version: 25.5.0
-  resolution: "@types/node@npm:25.5.0"
+"@types/node@npm:^25.5.2":
+  version: 25.5.2
+  resolution: "@types/node@npm:25.5.2"
   dependencies:
     undici-types: "npm:~7.18.0"
-  checksum: 10c0/70c508165b6758c4f88d4f91abca526c3985eee1985503d4c2bd994dbaf588e52ac57e571160f18f117d76e963570ac82bd20e743c18987e82564312b3b62119
+  checksum: 10c0/11e41a85401724cd1a4de6fb7bd4264ec46db10c09fc8cf8d41de4ede0a7063db458348f859ead4ec0929906aa26aaf45a5fef3aa59742ca0521cda9cee52377
   languageName: node
   linkType: hard
 
@@ -4138,13 +4068,12 @@ __metadata:
     "@react-navigation/native": "npm:^7.2.2"
     "@react-navigation/native-stack": "npm:^7.14.10"
     "@reduxjs/toolkit": "npm:^2.11.2"
-    "@siposdani87/expo-maps-polygon-editor": "npm:^1.3.1"
     "@types/color": "npm:^4.2.1"
     "@types/jest": "npm:29.5.14"
-    "@types/lodash": "npm:^4.17.24"
+    "@types/lodash": "npm:^4.17.23"
     "@types/lodash.debounce": "npm:^4.0.9"
     "@types/lodash.throttle": "npm:^4.1.9"
-    "@types/node": "npm:^25.5.0"
+    "@types/node": "npm:^25.5.2"
     "@types/react": "npm:^19.2.14"
     "@types/react-native": "npm:^0.73.0"
     "@types/react-native-vector-icons": "npm:^6.4.18"
@@ -10315,15 +10244,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"point-in-polygon-hao@npm:^1.1.0":
-  version: 1.2.4
-  resolution: "point-in-polygon-hao@npm:1.2.4"
-  dependencies:
-    robust-predicates: "npm:^3.0.2"
-  checksum: 10c0/12badef8b15216acdae7d609a8aca1b916d6a9cac2f53ace2928e3b521bee57224489ea8fba41d001c0c05c50e64152c175e3d6583d8cad6fe7af929f082b49a
-  languageName: node
-  linkType: hard
-
 "possible-typed-array-names@npm:^1.0.0":
   version: 1.1.0
   resolution: "possible-typed-array-names@npm:1.1.0"
@@ -11374,13 +11294,6 @@ __metadata:
     react: ">=18.1.0"
     react-native: ">=0.70.0"
   checksum: 10c0/80a11466e1849635ff0457dcf2b1718b9917e2dc625ba1e04437dfbc5ffdac1d174892085e36c04cd46ee24e27dab38fbf7dcbb7ac1045075debb89ca70ad5b5
-  languageName: node
-  linkType: hard
-
-"robust-predicates@npm:^3.0.2":
-  version: 3.0.3
-  resolution: "robust-predicates@npm:3.0.3"
-  checksum: 10c0/ae23a0318be809545f091a076818747848f144495491e24e6df5d767f2bad0a1501bbeac34e78b74681d1437ecff0585f593ebfe6c8d49a50e79c5053b962693
   languageName: node
   linkType: hard
 
