@@ -104,7 +104,6 @@
     "@types/jest": "29.5.14",
     "@types/node": "^25.5.2",
     "@types/react": "^19.2.14",
-    "@types/react-native": "^0.73.0",
     "@types/react-native-vector-icons": "^6.4.18",
     "@types/react-test-renderer": "^19.1.0",
     "babel-plugin-module-resolver": "^5.0.3",
