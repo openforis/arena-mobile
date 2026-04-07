@@ -12,6 +12,12 @@ appId: ${APP_ID}
     text: "${Date.now()}"
     below:
       text: "Integer key"
+- scrollUntilVisible:
+    element: "Boolean"
+    direction: DOWN
+- scrollUntilVisible:
+    element: "True"
+    direction: DOWN
 - tapOn:
     text: "True"
     below:
