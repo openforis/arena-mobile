@@ -1,6 +1,6 @@
 import React from "react";
 import { Animated } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView from "react-native-maps";
 
 import { useHeartbeatAnimation } from "hooks";
 
@@ -9,8 +9,9 @@ import { HView } from "../HView";
 import { IconButton } from "../IconButton";
 import { MapViewWithInitialFit } from "../MapViewWithInitialFit";
 import { Text } from "../Text";
-import { View } from "../View";
 import { VView } from "../VView";
+
+import { CurrentLocationMarker } from "./CurrentLocationMarker";
 
 import { GeoPolygonDraftOverlay } from "./GeoPolygonDraftOverlay";
 import { GeoPolygonMidpointsOverlay } from "./GeoPolygonMidpointsOverlay";
@@ -31,8 +32,6 @@ type GeoPolygonEditorProps = {
   onCancelDrawing: () => void;
   onSaveDrawing: (polygon: MapPolygonExtendedProps | null) => void;
 };
-
-const currentLocationMarkerAnchor = { x: 0.4, y: 0.4 };
 
 export const GeoPolygonEditor = ({
   initialRegion,
@@ -99,16 +98,7 @@ export const GeoPolygonEditor = ({
         fitToCoordinatesOnReady={visibleCoordinates}
       >
         {isFollowingCurrentLocation && currentLocationCoordinate && (
-          <Marker
-            coordinate={currentLocationCoordinate}
-            anchor={currentLocationMarkerAnchor}
-            tappable={false}
-          >
-            <View style={styles.currentLocationMarker}>
-              <View style={styles.currentLocationMarkerHorizontal} />
-              <View style={styles.currentLocationMarkerVertical} />
-            </View>
-          </Marker>
+          <CurrentLocationMarker coordinate={currentLocationCoordinate} />
         )}
         <GeoPolygonDraftOverlay
           coordinates={draftCoordinates}
