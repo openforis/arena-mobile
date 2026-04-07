@@ -6,8 +6,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { View } from "react-native";
-import MapView, { MapViewProps, MapType } from "react-native-maps";
+import { StyleProp, View, ViewStyle } from "react-native";
+import MapView, {
+  MapPressEvent,
+  MapType,
+  PanDragEvent,
+  Region,
+} from "react-native-maps";
 
 import { LatLng } from "model";
 import { IconButton } from "../IconButton";
@@ -25,12 +30,17 @@ type FitToCoordinatesOptions = {
   animated?: boolean;
 };
 
-type Props = MapViewProps & {
+type Props = {
   children?: React.ReactNode;
   fitToCoordinatesOnReady?: LatLng[];
   fitToCoordinatesOptions?: FitToCoordinatesOptions;
   fitOnlyOnce?: boolean;
+  initialRegion: Region;
+  onMapReady?: () => void;
+  onPanDrag?: (event: PanDragEvent) => void;
+  onPress?: (event: MapPressEvent) => void;
   showMapTypeSelector?: boolean;
+  style?: StyleProp<ViewStyle>;
 };
 
 const defaultEdgePadding: EdgePadding = {
