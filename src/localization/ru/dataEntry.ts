@@ -136,14 +136,15 @@ export default {
     drawPolygon: "Нарисовать полигон",
     editPolygon: "Редактировать полигон",
     selectPolygonInstruction: "Нажмите на полигон, чтобы выбрать его",
-    editPolygonInstructions: `- Нажмите и удерживайте вершину, затем перетащите её, чтобы переместить.  
-- Нажмите на вершину, чтобы выбрать её, затем нажмите Удалить, чтобы удалить её.`,
-    tapToAddPoints: `- Нажмите на карту, чтобы добавить точки.  
-- Нажмите Стоп, когда закончите.`,
+    editPolygonInstructions: `Нажмите на вершину или среднюю точку, чтобы выбрать её, затем:
+- Нажмите и удерживайте, чтобы переместить вершину.  
+- Нажмите '$t(dataEntry:geo.deleteSelectedPoint)', чтобы удалить.`,
+    tapToAddPoints: `Нажмите на карту, чтобы добавить точки.  
+Нажмите '$t(dataEntry:geo.stopAddingPoints)', когда закончите.`,
     deleteSelectedPoint: "Удалить выбранную точку",
     addCurrentLocationPoint: "Добавить текущее местоположение",
     addCurrentLocationPointInstructions:
-      'Нажмите "Добавить текущее местоположение", чтобы добавить текущее местоположение в полигон',
+      "Нажмите '$t(dataEntry:geo.addCurrentLocationPoint)', чтобы добавить текущее местоположение в полигон",
   },
   taxon: {
     search: "Поиск таксона",
