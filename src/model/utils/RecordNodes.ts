@@ -416,7 +416,7 @@ const getAncestorsLabelAndKeysText = ({
         t,
       });
       const keyValuesText = Object.values(keyValuesByName)
-        .filter(Objects.isNotEmpty)
+        .filter((val) => Objects.isNotEmpty(val))
         .join(", ");
       const entityLabel = NodeDefs.getLabelOrName(entityDef, lang);
       nameParts.unshift(

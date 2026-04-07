@@ -153,7 +153,7 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
       ],
     };
 
-    const safeFileName = featureName.replace(/[/\\?%*:|"<>]/g, "_");
+    const safeFileName = featureName.replaceAll(/[/\\?%*:|"<>]/, "_");
     const tempFolder = await Files.createTempFolder();
     const fileUri = `${Files.path(tempFolder, safeFileName)}.geojson`;
     await Files.writeJsonToFile({ content: featureCollection, fileUri });
