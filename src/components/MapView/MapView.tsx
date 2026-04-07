@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 import { StyleProp, View, ViewStyle } from "react-native";
-import MapView, {
+import RNMapView, {
   MapPressEvent,
   MapType,
   PanDragEvent,
@@ -41,6 +41,7 @@ type Props = {
   onPress?: (event: MapPressEvent) => void;
   showMapTypeSelector?: boolean;
   style?: StyleProp<ViewStyle>;
+  toolbarEnabled?: boolean;
 };
 
 const defaultEdgePadding: EdgePadding = {
@@ -52,7 +53,7 @@ const defaultEdgePadding: EdgePadding = {
 
 const mapTypes: MapType[] = ["standard", "satellite", "hybrid"];
 
-export const MapViewWithInitialFit = forwardRef<MapView | null, Props>(
+export const MapView = forwardRef<RNMapView | null, Props>(
   (
     {
       children,
@@ -65,15 +66,16 @@ export const MapViewWithInitialFit = forwardRef<MapView | null, Props>(
       initialRegion,
       onPress,
       onPanDrag,
+      toolbarEnabled,
     },
     ref,
   ) => {
-    const internalRef = useRef<MapView | null>(null);
+    const internalRef = useRef<RNMapView | null>(null);
     const [isMapReady, setIsMapReady] = useState(false);
     const hasAppliedFitRef = useRef(false);
     const [mapType, setMapType] = useState<MapType>("standard");
 
-    useImperativeHandle<MapView | null, MapView | null>(
+    useImperativeHandle<RNMapView | null, RNMapView | null>(
       ref,
       () => internalRef.current,
     );
@@ -114,7 +116,7 @@ export const MapViewWithInitialFit = forwardRef<MapView | null, Props>(
 
     return (
       <View style={styles.container}>
-        <MapView
+        <RNMapView
           ref={internalRef}
           style={style}
           initialRegion={initialRegion}
@@ -122,9 +124,10 @@ export const MapViewWithInitialFit = forwardRef<MapView | null, Props>(
           onPanDrag={onPanDrag}
           onMapReady={onMapReadyCallback}
           mapType={mapType}
+          toolbarEnabled={toolbarEnabled}
         >
           {children}
-        </MapView>
+        </RNMapView>
         {showMapTypeSelector && (
           <View style={styles.mapTypeSelector}>
             <IconButton
@@ -140,4 +143,4 @@ export const MapViewWithInitialFit = forwardRef<MapView | null, Props>(
   },
 );
 
-MapViewWithInitialFit.displayName = "MapViewWithInitialFit";
+MapView.displayName = "MapViewWithInitialFit";

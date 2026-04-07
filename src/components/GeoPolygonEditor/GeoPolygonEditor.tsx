@@ -1,13 +1,14 @@
 import React from "react";
 import { Animated } from "react-native";
-import MapView from "react-native-maps";
+import RNMapView from "react-native-maps";
 
 import { useHeartbeatAnimation } from "hooks";
+import { log } from "utils";
 
 import { Button } from "../Button";
 import { HView } from "../HView";
 import { IconButton } from "../IconButton";
-import { MapViewWithInitialFit } from "../MapViewWithInitialFit";
+import { MapView } from "../MapView";
 import { Text } from "../Text";
 import { VView } from "../VView";
 
@@ -27,7 +28,7 @@ type GeoPolygonEditorProps = {
     latitudeDelta: number;
     longitudeDelta: number;
   };
-  mapRef: React.RefObject<MapView | null>;
+  mapRef: React.RefObject<RNMapView | null>;
   initialPolygons: MapPolygonExtendedProps[];
   onCancelDrawing: () => void;
   onSaveDrawing: (polygon: MapPolygonExtendedProps | null) => void;
@@ -40,6 +41,8 @@ export const GeoPolygonEditor = ({
   onCancelDrawing,
   onSaveDrawing,
 }: GeoPolygonEditorProps) => {
+  log.debug(`rendering GeoPolygonEditor`);
+
   const {
     canSave,
     closeDraftPolygon,
@@ -89,7 +92,7 @@ export const GeoPolygonEditor = ({
 
   return (
     <VView style={styles.modalContent}>
-      <MapViewWithInitialFit
+      <MapView
         ref={mapRef}
         style={styles.map}
         initialRegion={initialRegion}
@@ -127,7 +130,7 @@ export const GeoPolygonEditor = ({
             onMidpointPress={onMidpointPress}
           />
         )}
-      </MapViewWithInitialFit>
+      </MapView>
 
       <Text style={styles.helperText} textKey={helperTextKey} />
 

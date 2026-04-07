@@ -1,5 +1,7 @@
 import React from "react";
 
+import { NodeDefs } from "@openforis/arena-core";
+
 import {
   Button,
   GeoPolygonEditor,
@@ -8,14 +10,18 @@ import {
   Modal,
   VView,
 } from "components";
+import { log } from "utils";
 
-import { NodeComponentProps } from "../nodeComponentPropTypes";
 import { NodeGeoValuePreview } from "../../../NodeValuePreview/NodeGeoValuePreview";
+import { NodeComponentProps } from "../nodeComponentPropTypes";
 import { useNodeGeoComponent } from "./useNodeGeoComponent";
-import styles from "components/GeoPolygonEditor/styles";
+import styles from "./styles";
 
 export const NodeGeoComponent = (props: NodeComponentProps) => {
   const { nodeDef } = props;
+
+  log.debug(`rendering NodeGeoComponent for ${NodeDefs.getName(nodeDef)}`);
+
   const {
     editable,
     initialRegion,
