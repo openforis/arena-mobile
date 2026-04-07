@@ -36,6 +36,7 @@ export default {
   openSettings: "Avaa asetukset",
   path: "Polku",
   rowsPerPage: "Rivejä sivulla",
+  save: "Tallenna",
   search: "Haku",
   selectAnItem: "Valitse kohde",
   selectNewItems: "Valitse uusia kohteita",

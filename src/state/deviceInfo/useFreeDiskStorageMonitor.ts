@@ -7,7 +7,7 @@ const freeDiskSpaceUpdateDelay = 60000; // 60 sec
 
 export const useFreeDiskStorageMonitor = () => {
   const dispatch = useAppDispatch();
-  const intervalIdRef = useRef<number | null>(null);
+  const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     intervalIdRef.current = setInterval(() => {

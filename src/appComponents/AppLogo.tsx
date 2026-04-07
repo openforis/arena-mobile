@@ -1,8 +1,13 @@
-import { useEffect, useRef } from "react";
-import { Animated, Image, ImageSourcePropType, StyleProp, ImageStyle } from "react-native";
+import {
+  Animated,
+  Image,
+  ImageSourcePropType,
+  StyleProp,
+  ImageStyle,
+} from "react-native";
 import { useAssets } from "expo-asset";
 
-import { HeartbeatAnimation } from "components/HeartbeatAnimation";
+import { useHeartbeatAnimation } from "hooks";
 
 const defaultStyle = { width: 50, height: 50 };
 
@@ -17,20 +22,14 @@ type Props = {
 export const AppLogo = (props: Props) => {
   const { animated = false, style } = props;
 
-  const scaleValueRef = useRef(new Animated.Value(1));
-
-  useEffect(() => {
-    if (animated) {
-      HeartbeatAnimation({
-        value: scaleValueRef.current,
-        minValue: animMinScale,
-        maxValue: animMaxScale,
-      }).start();
-    }
-  }, [animated]);
+  const scaleValue = useHeartbeatAnimation({
+    isActive: animated,
+    minValue: animMinScale,
+    maxValue: animMaxScale,
+  });
 
   const [logoAssets] = useAssets(
-    require("../../assets/logo/icon_transparent.png")
+    require("../../assets/logo/icon_transparent.png"),
   );
   if (!logoAssets) return null;
 
@@ -43,7 +42,7 @@ export const AppLogo = (props: Props) => {
 
   if (animated) {
     return (
-      <Animated.View style={{ transform: [{ scale: scaleValueRef.current }] }}>
+      <Animated.View style={{ transform: [{ scale: scaleValue }] }}>
         {image}
       </Animated.View>
     );
