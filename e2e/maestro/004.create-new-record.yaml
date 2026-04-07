@@ -1,0 +1,24 @@
+appId: ${APP_ID}
+---
+- tapOn:
+    text: "New"
+- tapOn:
+    text: "Select item"
+    below:
+      text: "SPD key"
+- tapOn:
+    text: "1"
+- inputText:
+    text: "${Date.now()}"
+    below:
+      text: "Integer key"
+- tapOn:
+    text: "True"
+    below:
+      text: "Boolean"
+- tapOn:
+    text: "Records"
+- tapOn:
+    text: "Go to list of records"
+- assertNotVisible: "No records found"
+- assertVisible: "Send data"

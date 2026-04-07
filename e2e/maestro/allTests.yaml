@@ -3,3 +3,4 @@ appId: ${APP_ID}
 - runFlow: 001.startup.yaml
 - runFlow: 002.login.yaml
 - runFlow: 003.download-demo-survey.yaml
+- runFlow: 004.create-new-record.yaml
