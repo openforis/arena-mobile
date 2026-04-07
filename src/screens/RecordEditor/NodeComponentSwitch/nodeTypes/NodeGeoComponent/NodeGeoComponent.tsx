@@ -39,6 +39,11 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
 
   const toolbar = (
     <HView style={styles.previewToolbar}>
+      {hasValue && (
+        <HView style={styles.previewToolbarLeft}>
+          <IconButton icon="download" onPress={onDownloadGeoJsonPress} />
+        </HView>
+      )}
       <HView style={styles.previewToolbarCenter}>
         <Button
           icon={hasValue ? "pencil" : "vector-polygon"}
@@ -50,7 +55,6 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
       </HView>
       {hasValue && (
         <HView style={styles.previewToolbarRight}>
-          <IconButton icon="download" onPress={onDownloadGeoJsonPress} />
           <IconButton icon="trash-can-outline" onPress={onClearPress} />
         </HView>
       )}

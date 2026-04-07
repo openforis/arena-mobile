@@ -11,6 +11,14 @@ export default StyleSheet.create({
     minHeight: 48,
     position: "relative",
   },
+  previewToolbarLeft: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   previewToolbarCenter: {
     alignItems: "center",
     justifyContent: "center",

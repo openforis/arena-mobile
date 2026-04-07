@@ -152,14 +152,15 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
         },
       ],
     };
-
-    const safeFileName = featureName.replaceAll(/[/\\?%*:|"<>]/, "_");
-    const tempFolder = await Files.createTempFolder();
-    const fileUri = `${Files.path(tempFolder, safeFileName)}.geojson`;
+    const fileUri = await Files.createTempFileInTempFolder(
+      featureName,
+      "geojson",
+    );
     await Files.writeJsonToFile({ content: featureCollection, fileUri });
+
     await Files.shareFile({
       url: fileUri,
-      mimeType: "application/geo+json",
+      mimeType: Files.MIME_TYPES.geoJson,
       dialogTitle: featureName,
     });
   }, [lang, nodeUuid, nodeValue, survey, t]);
