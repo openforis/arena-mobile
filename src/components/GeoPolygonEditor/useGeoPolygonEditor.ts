@@ -8,7 +8,7 @@ import MapView, { MapPressEvent } from "react-native-maps";
 
 import { useLocationWatch } from "hooks";
 import { LatLng } from "model";
-import { GeoUtils } from "utils";
+import { GeoUtils, log } from "utils";
 
 import { GeoPolygonMidpoint } from "./GeoPolygonMidpointsOverlay";
 
@@ -549,7 +549,7 @@ export const useGeoPolygonEditor = ({
         ...prev,
         isFollowingCurrentLocation: false,
       }));
-      throw error;
+      log.error("Error starting location watch", error);
     }
   }, [startLocationWatch, stopFollowingCurrentLocation]);
 
