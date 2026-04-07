@@ -185,7 +185,7 @@ Fetch the list of records from the server and try again?`,
     tapToAddPoints: `- Tap the map to add points.  
 - Press Stop when done.`,
     deleteSelectedPoint: "Delete selected point",
-    addCurrentLocationPoint: "Add GPS point",
+    addCurrentLocationPoint: "Add current location",
     addCurrentLocationPointInstructions:
       "Press Add GPS point to add current location to the polygon",
   },

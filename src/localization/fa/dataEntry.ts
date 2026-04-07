@@ -147,9 +147,9 @@ export default {
     tapToAddPoints: `- برای افزودن نقاط، روی نقشه ضربه بزنید.  
 - وقتی تمام شد، دکمه توقف را فشار دهید.`,
     deleteSelectedPoint: "حذف نقطه انتخاب شده",
-    addCurrentLocationPoint: "افزودن نقطه GPS",
+    addCurrentLocationPoint: "افزودن مکان فعلی",
     addCurrentLocationPointInstructions:
-      'برای افزودن مکان فعلی به چندضلعی، "افزودن نقطه GPS" را فشار دهید',
+      'برای افزودن مکان فعلی به چندضلعی، "افزودن مکان فعلی" را فشار دهید',
   },
   taxon: {
     search: "جستجوی تاکسون",

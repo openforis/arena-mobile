@@ -135,9 +135,9 @@ export default {
     tapToAddPoints: `- ነጥቦች ለመጨመር በካርታው ላይ ይንኩ።  
 - ከጨረሱ በኋላ ማቆም ይጫኑ።`,
     deleteSelectedPoint: "የተመረጠውን ነጥብ ሰርዝ",
-    addCurrentLocationPoint: "የGPS ነጥብ ጨምር",
+    addCurrentLocationPoint: "የአሁን ቦታ ጨምር",
     addCurrentLocationPointInstructions:
-      'አሁን ያለውን አካባቢ ወደ ፖሊጎኑ ለመጨመር "የGPS ነጥብ ጨምር" ይጫኑ',
+      'አሁን ያለውን አካባቢ ወደ ፖሊጎኑ ለመጨመር "የአሁን ቦታ ጨምር" ይጫኑ',
   },
   taxon: {
     search: "ታክሶን ይፈልጉ",
