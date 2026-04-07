@@ -17,7 +17,7 @@ const TEMP_FOLDER_NAME = "am_temp";
 
 const MIME_TYPES = {
   geoJson: "application/geo+json",
-  zip: "application/zip ",
+  zip: "application/zip",
 };
 
 const defaultChunkSize = 1024 * 1024 * 10; // 10 MB
