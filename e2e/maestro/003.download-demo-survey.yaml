@@ -1,10 +1,5 @@
 appId: ${APP_ID}
 ---
-- launchApp
-- waitForAnimationToEnd
-- extendedWaitUntil:
-    visible: "Arena Mobile"
-    timeout: 60000
 - tapOn:
     text: "Select a survey|Manage surveys"
 - tapOn: "Import from cloud"
