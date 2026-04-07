@@ -12,3 +12,8 @@ export type AveragedLocation = LocationPoint & {
   accuracy: number; // The average accuracy of the filtered readings
   count: number; // Number of readings used in the final average
 };
+
+export type LatLng = {
+  latitude: number;
+  longitude: number;
+};

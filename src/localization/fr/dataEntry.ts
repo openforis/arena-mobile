@@ -137,6 +137,20 @@ export default {
     x: "X",
     y: "Y",
   },
+  geo: {
+    drawPolygon: "Dessiner un polygone",
+    editPolygon: "Modifier le polygone",
+    selectPolygonInstruction: "Appuyez sur un polygone pour le sélectionner",
+    editPolygonInstructions: `Appuyez sur un sommet ou un point médian pour le sélectionner, puis :
+- Appuyez longuement pour faire glisser un sommet et le déplacer.  
+- Appuyez sur '$t(dataEntry:geo.deleteSelectedPoint)' pour le supprimer.`,
+    tapToAddPoints: `Touchez la carte pour ajouter des points.  
+Appuyez sur '$t(dataEntry:geo.stopAddingPoints)' lorsque c'est fait.`,
+    deleteSelectedPoint: "Supprimer le point sélectionné",
+    addCurrentLocationPoint: "Ajouter la position actuelle",
+    addCurrentLocationPointInstructions:
+      "Appuyez sur '$t(dataEntry:geo.addCurrentLocationPoint)' pour ajouter la position actuelle au polygone",
+  },
   taxon: {
     search: "Rechercher un taxon",
     taxonNotSelected: "--- Taxon non sélectionné ---",

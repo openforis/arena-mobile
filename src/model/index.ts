@@ -9,7 +9,7 @@ export {
   Languages,
   LanguagesSettings,
 } from "./LanguageSettings";
-export type { LocationPoint, AveragedLocation } from "./LocationPoint";
+export type { LocationPoint, AveragedLocation, LatLng } from "./LocationPoint";
 export type {
   RecordCurrentPageEntity,
   RecordCurrentPageEntityPointer,

@@ -38,6 +38,7 @@ export default {
   openSettings: "設定を開く",
   path: "ファイルパス",
   rowsPerPage: "1ページあたりの行数",
+  save: "保存",
   search: "検索",
   selectAnItem: "項目を選択",
   selectNewItems: "新しい項目を選択",
@@ -69,8 +70,7 @@ export default {
     second_plural: "秒",
   },
   remainingTime: {
-    canLastHoursAndMinutes:
-      "約{{hours}}時間{{minutes}}分続く可能性があります",
+    canLastHoursAndMinutes: "約{{hours}}時間{{minutes}}分続く可能性があります",
     canLastTimePart: "約{{count}} {{timePart}}続く可能性があります",
     hoursAndMinutesShort: "{{hours}}時間{{minutes}}分",
     lessThanOneTimePart: "残り１{{timePart}}未満",

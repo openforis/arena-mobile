@@ -16,13 +16,17 @@ const PATH_SEPARATOR = "/";
 const TEMP_FOLDER_NAME = "am_temp";
 
 const MIME_TYPES = {
-  zip: "application/zip ",
+  geoJson: "application/geo+json",
+  zip: "application/zip",
 };
 
 const defaultChunkSize = 1024 * 1024 * 10; // 10 MB
 
 const { documentDirectory, readDirectoryAsync } = FileSystem;
 const cacheDirectory = FileSystem.cacheDirectory!;
+
+const toSafeFileName = (name: string): string =>
+  name.replaceAll(/[^\w\s-]/g, "_");
 
 const path = (...parts: (string | null | undefined)[]): string => {
   const result: string[] = [];
@@ -41,6 +45,17 @@ const createTempFolder = async (): Promise<string> => {
   const uri = path(getTempFolderParentUri(), UUIDs.v4());
   await mkDir(uri);
   return uri;
+};
+
+const createTempFileInTempFolder = async (
+  fileName = UUIDs.v4(),
+  extension = "tmp",
+): Promise<string> => {
+  const tempFolderUri = await createTempFolder();
+  const safeFileName = toSafeFileName(fileName);
+  const safeExtension = toSafeFileName(extension);
+  const fileNameWithExtension = `${safeFileName}.${safeExtension}`;
+  return path(tempFolderUri, fileNameWithExtension);
 };
 
 const mkDir = async (dirUri: string): Promise<void> =>
@@ -389,6 +404,7 @@ export const Files = {
   path,
   getTempFolderParentUri,
   createTempFolder,
+  createTempFileInTempFolder,
   copyUriToTempFile,
   mkDir,
   del,

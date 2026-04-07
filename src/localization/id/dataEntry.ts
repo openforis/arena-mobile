@@ -140,6 +140,20 @@ export default {
     x: "X",
     y: "Y",
   },
+  geo: {
+    drawPolygon: "Gambar poligon",
+    editPolygon: "Edit poligon",
+    selectPolygonInstruction: "Tekan pada poligon untuk memilihnya",
+    editPolygonInstructions: `Tekan simpul atau titik tengah untuk memilihnya, lalu:
+- Tekan lama untuk menyeret simpul dan memindahkannya.  
+- Tekan '$t(dataEntry:geo.deleteSelectedPoint)' untuk menghapusnya.`,
+    tapToAddPoints: `Ketuk peta untuk menambahkan titik.  
+Tekan '$t(dataEntry:geo.stopAddingPoints)' ketika selesai.`,
+    deleteSelectedPoint: "Hapus titik yang dipilih",
+    addCurrentLocationPoint: "Tambah lokasi saat ini",
+    addCurrentLocationPointInstructions:
+      "Tekan '$t(dataEntry:geo.addCurrentLocationPoint)' untuk menambahkan lokasi saat ini ke poligon",
+  },
   taxon: {
     search: "Cari takson",
     taxonNotSelected: "--- Takson tidak dipilih ---",

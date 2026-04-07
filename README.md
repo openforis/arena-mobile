@@ -23,3 +23,21 @@ yarn e2e:maestro:ios
 ```
 
 Note: Android E2E uses a native app build (not Expo Go). iOS E2E runs only on macOS.
+
+## Google Maps API keys
+
+The app reads Google Maps API keys from environment variables in `app.config.ts`:
+
+- `GOOGLE_MAPS_API_KEY_ANDROID` for Android
+- `GOOGLE_MAPS_API_KEY_IOS` for iOS
+
+Set them before running Expo commands, for example:
+
+```bash
+export GOOGLE_MAPS_API_KEY_ANDROID="your_android_google_maps_api_key"
+export GOOGLE_MAPS_API_KEY_IOS="your_ios_google_maps_api_key"
+yarn start
+```
+
+For EAS builds, set these variables as EAS secrets or environment variables for the build profile.
+Alternatively, you can configure the API keys directly in `app.json` under `android.config.googleMaps.apiKey` and `ios.config.googleMapsApiKey`.

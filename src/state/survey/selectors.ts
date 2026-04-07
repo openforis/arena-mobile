@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 
 import {
+  LanguageCode,
   NodeDefEntity,
   Objects,
   SRSIndex,
@@ -15,7 +16,7 @@ import { determinePreferredSurveyLanguage } from "./surveyStateUtils";
 const getSurveyState = (state: any) => state.survey;
 
 const selectCurrentSurvey = (
-  state: any
+  state: any,
 ): (Survey & { remoteId?: number }) | undefined =>
   getSurveyState(state).currentSurvey;
 
@@ -46,11 +47,11 @@ const selectIsNodeDefRootKey = (nodeDef: any) => (state: any) => {
 
 const selectSurveysLocal = (state: any) => getSurveyState(state).surveysLocal;
 
-const selectCurrentSurveyPreferredLang = (state: any) => {
+const selectCurrentSurveyPreferredLang = (state: any): LanguageCode => {
   const preferredLang = getSurveyState(state).currentSurveyPreferredLanguage;
   if (preferredLang) return preferredLang;
   const survey = selectCurrentSurvey(state);
-  return determinePreferredSurveyLanguage(survey);
+  return determinePreferredSurveyLanguage(survey)!;
 };
 
 const selectCurrentSurveyCycle = (state: any) =>
