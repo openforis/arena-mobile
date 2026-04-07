@@ -15,7 +15,12 @@ import {
   ArenaRecord,
   ArenaRecordNode,
   Dictionary,
+  Survey,
+  LanguageCode,
 } from "@openforis/arena-core";
+
+import { TranslateFunction } from "localization";
+
 import { SurveyDefs } from "./SurveyDefs";
 
 const EMPTY_VALUE = "---";
@@ -372,12 +377,65 @@ const getApplicableSummaryDefs = ({
   );
 };
 
+const getAncestorsLabelAndKeysText = ({
+  survey,
+  record,
+  node,
+  lang,
+  t,
+}: {
+  survey: Survey;
+  record: ArenaRecord;
+  node: ArenaRecordNode;
+  lang: LanguageCode;
+  t: TranslateFunction;
+}): string => {
+  const nodeDef = Surveys.getNodeDefByUuid({
+    survey,
+    uuid: node.nodeDefUuid,
+  });
+  const leafLabel = NodeDefs.getLabelOrName(nodeDef, lang);
+  const nameParts: string[] = [];
+  let entity = Records.getParent(node)(record);
+  while (entity) {
+    const parentEntity = Records.getParent(entity)(record);
+    const entityDef = Surveys.getNodeDefByUuid({
+      survey,
+      uuid: entity.nodeDefUuid,
+    });
+    if (
+      NodeDefs.isRoot(entityDef) ||
+      (NodeDefs.isMultiple(entityDef) && parentEntity)
+    ) {
+      const keyValuesByName = getEntitySummaryValuesByNameFormatted({
+        survey,
+        record,
+        entity,
+        lang,
+        emptyValue: null,
+        t,
+      });
+      const keyValuesText = Object.values(keyValuesByName)
+        .filter(Objects.isNotEmpty)
+        .join(", ");
+      const entityLabel = NodeDefs.getLabelOrName(entityDef, lang);
+      nameParts.unshift(
+        keyValuesText ? `${entityLabel}[${keyValuesText}]` : entityLabel,
+      );
+    }
+    entity = parentEntity ?? undefined;
+  }
+  nameParts.push(leafLabel);
+  return nameParts.join(" - ");
+};
+
 export const RecordNodes = {
   getNodeName,
   formatBooleanValue,
   getEntityKeysFormatted,
   getRootEntityKeysFormatted,
   getEntitySummaryValuesByNameFormatted,
+  getAncestorsLabelAndKeysText,
   getApplicableChildrenEntityDefs,
   getSiblingNode,
   getCoordinateDistanceTarget,

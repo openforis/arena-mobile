@@ -24,6 +24,7 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
     nodeValue,
     onCancelDrawing,
     onClearPress,
+    onDownloadGeoJsonPress,
     onSaveDrawing,
     onStartDrawing,
   } = useNodeGeoComponent(props);
@@ -43,6 +44,7 @@ export const NodeGeoComponent = (props: NodeComponentProps) => {
       </HView>
       {hasValue && (
         <HView style={styles.previewToolbarRight}>
+          <IconButton icon="download" onPress={onDownloadGeoJsonPress} />
           <IconButton icon="trash-can-outline" onPress={onClearPress} />
         </HView>
       )}

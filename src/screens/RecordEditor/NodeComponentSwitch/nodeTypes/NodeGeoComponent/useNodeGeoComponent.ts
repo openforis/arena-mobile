@@ -6,10 +6,20 @@ import {
 } from "components/GeoPolygonEditor/polygonEditorUtils";
 import MapView from "react-native-maps";
 
-import { LatLng } from "model";
+import { Records } from "@openforis/arena-core";
 
-import { DataEntryActions, useAppDispatch, useConfirm } from "state";
-import { GeoUtils } from "utils";
+import { useTranslation } from "localization";
+import { LatLng, RecordNodes } from "model";
+
+import {
+  DataEntryActions,
+  DataEntrySelectors,
+  SurveySelectors,
+  store,
+  useAppDispatch,
+  useConfirm,
+} from "state";
+import { Files, GeoUtils } from "utils";
 
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
@@ -51,6 +61,9 @@ const nodeValueToPolygon = (nodeValue: any): MapPolygonExtendedProps | null => {
 export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
+  const { t } = useTranslation();
+  const survey = SurveySelectors.useCurrentSurvey();
+  const lang = SurveySelectors.useCurrentSurveyPreferredLang();
 
   const { value: nodeValue } = useNodeComponentLocalState({ nodeUuid });
 
@@ -114,6 +127,43 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     }
   }, [confirm, dispatch, nodeUuid]);
 
+  const onDownloadGeoJsonPress = useCallback(async () => {
+    if (!nodeUuid || !nodeValue || !survey) return;
+
+    const record = DataEntrySelectors.selectRecord(store.getState());
+
+    const node = Records.getNodeByUuid(nodeUuid)(record);
+    if (!node) return;
+
+    const featureName = RecordNodes.getAncestorsLabelAndKeysText({
+      survey,
+      record,
+      node,
+      lang,
+      t,
+    });
+
+    const featureCollection = {
+      type: "FeatureCollection",
+      features: [
+        {
+          ...nodeValue,
+          properties: { name: featureName },
+        },
+      ],
+    };
+
+    const safeFileName = featureName.replace(/[/\\?%*:|"<>]/g, "_");
+    const tempFolder = await Files.createTempFolder();
+    const fileUri = `${Files.path(tempFolder, safeFileName)}.geojson`;
+    await Files.writeJsonToFile({ content: featureCollection, fileUri });
+    await Files.shareFile({
+      url: fileUri,
+      mimeType: "application/geo+json",
+      dialogTitle: featureName,
+    });
+  }, [lang, nodeUuid, nodeValue, survey, t]);
+
   return {
     editable,
     initialRegion,
@@ -122,6 +172,7 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     nodeValue,
     onCancelDrawing,
     onClearPress,
+    onDownloadGeoJsonPress,
     onSaveDrawing,
     onStartDrawing,
   };
