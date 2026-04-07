@@ -56,9 +56,7 @@ export const GeoPolygonEditor = ({
     onMapPress,
     onMapPanDrag,
     onAddCurrentLocationPointPress,
-    onMidpointDragStart,
-    onMidpointDrag,
-    onMidpointDragEnd,
+    onMidpointPress,
     onPolygonPress,
     onSavePress,
     onUndoPress,
@@ -69,7 +67,6 @@ export const GeoPolygonEditor = ({
     polygonMidpoints,
     polygonVertices,
     draggingVertexIndex,
-    draggingMidpointInsertAtIndex,
     selectedVertexIndex,
     currentLocationCoordinate,
     isFollowingCurrentLocation,
@@ -115,11 +112,7 @@ export const GeoPolygonEditor = ({
         )}
         <GeoPolygonDraftOverlay
           coordinates={draftCoordinates}
-          fillColor={
-            draggingVertexIndex == null && draggingMidpointInsertAtIndex == null
-              ? fillColor
-              : "transparent"
-          }
+          fillColor={draggingVertexIndex == null ? fillColor : "transparent"}
           strokeColor={strokeColor}
           strokeWidth={newPolygon.strokeWidth}
           showPoints={!hasValue}
@@ -141,10 +134,7 @@ export const GeoPolygonEditor = ({
           <GeoPolygonMidpointsOverlay
             midpoints={polygonMidpoints}
             strokeColor={strokeColor}
-            draggingMidpointInsertAtIndex={draggingMidpointInsertAtIndex}
-            onMidpointDragStart={onMidpointDragStart}
-            onMidpointDrag={onMidpointDrag}
-            onMidpointDragEnd={onMidpointDragEnd}
+            onMidpointPress={onMidpointPress}
           />
         )}
       </MapViewWithInitialFit>
