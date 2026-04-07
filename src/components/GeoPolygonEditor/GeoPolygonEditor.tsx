@@ -32,7 +32,7 @@ type GeoPolygonEditorProps = {
   onSaveDrawing: (polygon: MapPolygonExtendedProps | null) => void;
 };
 
-const currentLocationMarkerAnchor = { x: 0.5, y: 0.5 };
+const currentLocationMarkerAnchor = { x: 0.4, y: 0.4 };
 
 export const GeoPolygonEditor = ({
   initialRegion,
