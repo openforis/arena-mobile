@@ -14,11 +14,11 @@
     "test:types": "tsc",
     "e2e:maestro": "maestro test e2e/maestro/allTests.yaml",
     "e2e:prepare:android": "expo run:android --variant debug",
-    "e2e:maestro:android": "yarn e2e:maestro -e APP_ID=org.openforis.arena_mobile"
+    "e2e:maestro:android": "yarn e2e:prepare:android && yarn e2e:maestro -e APP_ID=org.openforis.arena_mobile"
   },
   "dependencies": {
     "@lodev09/react-native-exify": "^0.2.7",
-    "@openforis/arena-core": "^1.0.97",
+    "@openforis/arena-core": "^1.0.99",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-clipboard/clipboard": "^1.16.3",
     "@react-native-community/datetimepicker": "8.4.4",

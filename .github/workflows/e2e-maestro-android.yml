@@ -24,13 +24,10 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
-      - name: Yarn
-        run: yarn
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-
       - name: Install dependencies
         run: yarn install --immutable
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Install Maestro CLI
         run: |
@@ -112,6 +109,7 @@ jobs:
           path: ~/.maestro/tests/**/*
 
       - name: Store tests result
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: e2e_android_report
