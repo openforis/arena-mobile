@@ -182,8 +182,8 @@ const onLoginResponse = async ({
     const errorKeySuffix =
       message &&
       [
-        "validationErrors.user.userNotFound",
-        "validationErrors.user.emailInvalid",
+        "validationErrors:user.userNotFound",
+        "validationErrors:user.emailInvalid",
       ].includes(message)
         ? "invalidCredentials"
         : "generic";

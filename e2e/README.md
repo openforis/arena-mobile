@@ -46,6 +46,7 @@ yarn e2e:maestro:android
 - `e2e/maestro/001.startup.yaml`: app launch smoke test
 - `e2e/maestro/002.login.yaml`: login against Arena server
 - `e2e/maestro/003.download-demo-survey.yaml`: import demo survey from cloud
+- `e2e/maestro/004.create-new-record.yaml`: create a new record
 
 ## Notes
 

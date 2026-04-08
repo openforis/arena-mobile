@@ -19,7 +19,8 @@ Quick run commands:
 yarn e2e:maestro:android
 
 # iOS
-yarn e2e:maestro:ios
+# No dedicated `yarn e2e:maestro:ios` script is available.
+# Follow the instructions in e2e/README.md to run iOS Maestro tests.
 ```
 
 Note: Android E2E uses a native app build (not Expo Go). iOS E2E runs only on macOS.
