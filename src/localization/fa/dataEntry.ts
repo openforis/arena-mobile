@@ -138,6 +138,20 @@ export default {
     x: "X",
     y: "Y",
   },
+  geo: {
+    drawPolygon: "رسم چندضلعی",
+    editPolygon: "ویرایش چندضلعی",
+    selectPolygonInstruction: "بر یک چندضلعی لمس کنید تا آن را انتخاب کنید",
+    editPolygonInstructions: `یک رأس یا نقطه میانی را لمس کنید تا انتخاب شود، سپس:
+- برای جابه‌جایی، رأس را لمس طولانی کرده و بکشید.  
+- برای حذف، '$t(dataEntry:geo.deleteSelectedPoint)' را فشار دهید.`,
+    tapToAddPoints: `برای افزودن نقاط روی نقشه ضربه بزنید.  
+وقتی تمام شد، '$t(dataEntry:geo.stopAddingPoints)' را فشار دهید.`,
+    deleteSelectedPoint: "حذف نقطه انتخاب شده",
+    addCurrentLocationPoint: "افزودن مکان فعلی",
+    addCurrentLocationPointInstructions:
+      "برای افزودن مکان فعلی به چندضلعی، '$t(dataEntry:geo.addCurrentLocationPoint)' را فشار دهید",
+  },
   taxon: {
     search: "جستجوی تاکسون",
     taxonNotSelected: "--- تاکسون انتخاب نشده است ---",

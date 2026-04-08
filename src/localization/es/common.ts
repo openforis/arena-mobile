@@ -36,6 +36,7 @@ export default {
   openSettings: "Abrir configuración",
   path: "Ruta",
   rowsPerPage: "Filas por página",
+  save: "Guardar",
   search: "Buscar",
   selectAnItem: "Seleccionar un elemento",
   selectNewItems: "Seleccionar nuevos elementos",

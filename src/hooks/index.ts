@@ -1,6 +1,7 @@
 export { useAppInfo } from "./useAppInfo";
 export { useBackHandler } from "./useBackHandler";
 export { useEffectiveTheme } from "./useEffectiveTheme";
+export { useHeartbeatAnimation } from "./useHeartbeatAnimation";
 export { useImageFile } from "./useImageFile";
 export { useIsMountedRef } from "./useIsMountedRef";
 export { useIsNetworkConnected } from "./useIsNetworkConnected";

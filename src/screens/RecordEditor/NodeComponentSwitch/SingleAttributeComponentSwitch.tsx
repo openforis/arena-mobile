@@ -11,6 +11,7 @@ import { NodeCodeComponent } from "./nodeTypes/NodeCodeComponent";
 import { NodeCoordinateComponent } from "./nodeTypes/NodeCoordinateComponent";
 import { NodeDateComponent } from "./nodeTypes/NodeDateComponent";
 import { NodeFileComponent } from "./nodeTypes/NodeFileComponent";
+import { NodeGeoComponent } from "./nodeTypes/NodeGeoComponent";
 import { NodeTaxonComponent } from "./nodeTypes/NodeTaxonComponent";
 import { NodeTextComponent } from "./nodeTypes/NodeTextComponent";
 import { NodeTimeComponent } from "./nodeTypes/NodeTimeComponent";
@@ -22,6 +23,7 @@ const nodeDefComponentByType: Record<string, any> = {
   [NodeDefType.date]: NodeDateComponent,
   [NodeDefType.decimal]: NodeTextComponent,
   [NodeDefType.file]: NodeFileComponent,
+  [NodeDefType.geo]: NodeGeoComponent,
   [NodeDefType.integer]: NodeTextComponent,
   [NodeDefType.taxon]: NodeTaxonComponent,
   [NodeDefType.text]: NodeTextComponent,

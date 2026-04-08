@@ -126,6 +126,20 @@ export default {
     x: "X",
     y: "Y",
   },
+  geo: {
+    drawPolygon: "ፖሊጎን ይሳሉ",
+    editPolygon: "ፖሊጎን ያርትዑ",
+    selectPolygonInstruction: "ፖሊጎን ለመንቀሳቀስ ላይ ይንኩ",
+    editPolygonInstructions: `ጫፍ ወይም መካከለኛ ነጥብ ይምረጡ፣ ከዚያ:
+- ለመንቀሳቀስ ጫፉን ረጅም ጊዜ ተጭነው ይጎትቱት።  
+- ለማጥፋት '$t(dataEntry:geo.deleteSelectedPoint)' ይጫኑ።`,
+    tapToAddPoints: `ነጥቦች ለመጨመር በካርታው ላይ ይንኩ።  
+ከጨረሱ '$t(dataEntry:geo.stopAddingPoints)' ይጫኑ።`,
+    deleteSelectedPoint: "የተመረጠውን ነጥብ ሰርዝ",
+    addCurrentLocationPoint: "የአሁን ቦታ ጨምር",
+    addCurrentLocationPointInstructions:
+      "አሁን ያለውን አካባቢ ወደ ፖሊጎኑ ለመጨመር '$t(dataEntry:geo.addCurrentLocationPoint)' ይጫኑ",
+  },
   taxon: {
     search: "ታክሶን ይፈልጉ",
     taxonNotSelected: "--- ታክሶን አልተመረጠም ---",

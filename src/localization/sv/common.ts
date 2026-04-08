@@ -36,6 +36,7 @@ export default {
   openSettings: "Öppna inställningar",
   path: "Sökväg",
   rowsPerPage: "Rader per sida",
+  save: "Spara",
   search: "Sök",
   selectAnItem: "Välj ett objekt",
   selectNewItems: "Välj nya objekt",

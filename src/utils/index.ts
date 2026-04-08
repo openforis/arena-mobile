@@ -6,6 +6,7 @@ export { ExifUtils } from "./ExifUtils";
 export { Files } from "./Files";
 export { FlatDataWriter } from "./FlatDataWriter";
 export { Functions } from "./Functions";
+export { GeoUtils } from "./GeoUtils";
 export { ImageUtils } from "./ImageUtils";
 export { initializeLogger, log, logsPath, clear as clearLogs } from "./Logger";
 export { Jobs } from "./Jobs";

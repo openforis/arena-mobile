@@ -6,22 +6,32 @@ import { GpsLockingEnabledWarning } from "appComponents/GpsLockingEnabledWarning
 import { LoginInfo } from "appComponents/LoginInfo";
 import { VersionNumberInfoButton } from "appComponents/VersionNumberInfoButton";
 import { Button, ScreenView, VView } from "components";
-import { SurveySelectors } from "state";
 
+import { RemoteConnectionSelectors } from "state/remoteConnection";
 import { screenKeys } from "../screenKeys";
 import { SelectedSurveyContainer } from "./SelectedSurveyContainer";
+import { SurveyUpdateProgressDialog } from "./SurveyUpdateProgressDialog";
+import { useHomeScreen } from "./useHomeScreen";
 
 import styles from "./styles";
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
-  const survey = SurveySelectors.useCurrentSurvey();
+  const user = RemoteConnectionSelectors.useLoggedInUser();
 
-  const surveySelected = !!survey;
+  const {
+    surveySelected,
+    surveyLoadingDialogTitleKey,
+    surveyLoadingDialogVisible,
+  } = useHomeScreen();
 
   return (
     <ScreenView>
       <VView style={styles.container}>
+        {surveyLoadingDialogVisible && (
+          <SurveyUpdateProgressDialog titleKey={surveyLoadingDialogTitleKey} />
+        )}
+
         <AppLogo />
 
         <VersionNumberInfoButton />
@@ -33,12 +43,14 @@ export const HomeScreen = () => {
         {surveySelected && <SelectedSurveyContainer />}
 
         <Button
-          color={surveySelected ? "secondary" : "primary"}
+          color={surveySelected || !user ? "secondary" : "primary"}
           textKey={
             surveySelected ? "surveys:manageSurveys" : "surveys:selectSurvey"
           }
           style={styles.manageSurveysButton}
-          onPress={() => navigation.navigate(screenKeys.surveysListLocal as never)}
+          onPress={() =>
+            navigation.navigate(screenKeys.surveysListLocal as never)
+          }
         />
       </VView>
     </ScreenView>

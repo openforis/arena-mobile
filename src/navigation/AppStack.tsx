@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { log } from "utils";
 import { screens } from "screens/screens";
+import { CurrentSurveyCoordinator } from "./CurrentSurveyCoordinator";
 import { AppBar } from "./AppBar";
 import { screenKeys } from "screens/screenKeys";
 
@@ -23,7 +24,7 @@ const RootStack = createNativeStackNavigator({
       };
       return acc;
     },
-    {} as Record<string, any>
+    {} as Record<string, any>,
   ),
 });
 
@@ -31,5 +32,9 @@ const Navigation = createStaticNavigation(RootStack);
 
 export const AppStack = () => {
   log.debug(`rendering AppStack`);
-  return <Navigation />;
+  return (
+    <CurrentSurveyCoordinator>
+      <Navigation />
+    </CurrentSurveyCoordinator>
+  );
 };

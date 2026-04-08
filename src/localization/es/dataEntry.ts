@@ -133,6 +133,20 @@ export default {
     x: "X",
     y: "Y",
   },
+  geo: {
+    drawPolygon: "Dibujar polígono",
+    editPolygon: "Editar polígono",
+    selectPolygonInstruction: "Presione en un polígono para seleccionarlo",
+    editPolygonInstructions: `Pulsa un vértice o punto medio para seleccionarlo, luego:
+- Mantén pulsado para arrastrar un vértice y moverlo.  
+- Pulsa '$t(dataEntry:geo.deleteSelectedPoint)' para eliminarlo.`,
+    tapToAddPoints: `Toca el mapa para añadir puntos.  
+Presiona '$t(dataEntry:geo.stopAddingPoints)' cuando hayas terminado.`,
+    deleteSelectedPoint: "Eliminar punto seleccionado",
+    addCurrentLocationPoint: "Agregar ubicación actual",
+    addCurrentLocationPointInstructions:
+      "Pulsa '$t(dataEntry:geo.addCurrentLocationPoint)' para agregar la ubicación actual al polígono",
+  },
   taxon: {
     search: "Buscar taxón",
     taxonNotSelected: "--- Taxón no seleccionado ---",

@@ -1,6 +1,7 @@
 export default {
   developedBy: "Dikembangkan oleh",
-  sendSupportEmailIntroduction: "Silakan kirim email ke:",
+  supportEmail: "Email dukungan",
+  supportForum: "Forum dukungan",
   support: "Dukungan",
   version: "Versi",
   viewChangelog: "Lihat catatan perubahan",

@@ -1,13 +1,12 @@
-import { useNavigation } from "@react-navigation/native";
 import { useCallback, useState } from "react";
-
-import { Surveys } from "@openforis/arena-core";
 
 import { UpdateStatusIcon } from "components";
 import { useToast } from "hooks";
 import { useTranslation } from "localization";
 import { SurveyStatus, UpdateStatus } from "model";
-import { SurveyActions, SurveySelectors, useAppDispatch } from "state";
+import { SurveySelectors, useAppDispatch } from "state";
+
+import { triggerSurveyUpdate } from "./surveyUpdateUtils";
 
 type Props = {
   errorKey?: string | null;
@@ -21,7 +20,6 @@ export const SurveyUpdateStatusIcon = ({
   updateStatus,
 }: Props) => {
   const dispatch = useAppDispatch();
-  const navigation = useNavigation();
   const toaster = useToast();
   const { t } = useTranslation();
   const survey = SurveySelectors.useCurrentSurvey()!;
@@ -49,30 +47,16 @@ export const SurveyUpdateStatusIcon = ({
         toaster("surveys:updateStatus.upToDate");
         break;
       case UpdateStatus.notUpToDate:
-        dispatch(
-          SurveyActions.updateSurveyRemote({
-            surveyId: survey.id,
-            surveyName: Surveys.getName(survey),
-            surveyRemoteId: survey.remoteId,
-            navigation,
-            confirmMessageKey:
-              "surveys:updateSurveyWithNewVersionConfirmMessage",
-            onConfirm: () => setLoading(true),
-            onComplete: () => setLoading(false),
-          })
-        );
+        triggerSurveyUpdate({
+          dispatch,
+          survey,
+          confirmMessageKey: "surveys:updateSurveyWithNewVersionConfirmMessage",
+          onConfirm: () => setLoading(true),
+          onComplete: () => setLoading(false),
+        });
         break;
     }
-  }, [
-    dispatch,
-    errorKey,
-    navigation,
-    onPressProp,
-    survey,
-    t,
-    toaster,
-    updateStatus,
-  ]);
+  }, [dispatch, errorKey, onPressProp, survey, t, toaster, updateStatus]);
 
   return (
     <UpdateStatusIcon

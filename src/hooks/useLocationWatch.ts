@@ -26,7 +26,7 @@ const locationPointToPoint = (locationPoint: LocationPoint): Point | null => {
 };
 
 const locationToLocationPoint = (
-  location: Location.LocationObject
+  location: Location.LocationObject,
 ): LocationPoint => {
   const { coords } = location;
   return { ...coords, accuracy: coords.accuracy };
@@ -63,10 +63,14 @@ export const useLocationWatch = ({
   const isMountedRef = useIsMountedRef();
   const lastLocationRef = useRef(null as LocationPoint | null);
   const locationSubscriptionRef = useRef(
-    null as Location.LocationSubscription | null
+    null as Location.LocationSubscription | null,
   );
-  const locationAccuracyWatchTimeoutRef = useRef(null as number | null);
-  const locationWatchIntervalRef = useRef(null as number | null);
+  const locationAccuracyWatchTimeoutRef = useRef(
+    null as ReturnType<typeof setTimeout> | null,
+  );
+  const locationWatchIntervalRef = useRef(
+    null as ReturnType<typeof setInterval> | null,
+  );
   const locationAveragerRef = useRef(null as LocationAverager | null);
   const toaster = useToast();
 
@@ -93,10 +97,10 @@ export const useLocationWatch = ({
   }, []);
 
   const _stopLocationWatch = useCallback(() => {
-    log.debug("Stopping location watch");
     const subscription = locationSubscriptionRef.current;
     const wasActive = !!subscription;
     if (wasActive) {
+      log.debug("Stopping location watch");
       subscription.remove();
       locationSubscriptionRef.current = null;
 
@@ -167,10 +171,11 @@ export const useLocationWatch = ({
       stopOnTimeout,
       locationCallbackProp,
       _stopLocationWatch,
-    ]
+    ],
   );
 
   const stopLocationWatch = useCallback(() => {
+    log.debug("Stopping location watch (stopLocationWatch)");
     if (_stopLocationWatch() && isMountedRef.current) {
       locationCallback(lastLocationRef.current);
     }
@@ -184,14 +189,14 @@ export const useLocationWatch = ({
     if (!(await Permissions.requestLocationForegroundPermission())) {
       if (!(await Permissions.isLocationServiceEnabled())) {
         toaster("device:locationServiceDisabled.warning");
-        return;
       }
+      return;
     }
     _stopLocationWatch();
 
     locationSubscriptionRef.current = await Location.watchPositionAsync(
       { accuracy, distanceInterval },
-      (location) => locationCallback(locationToLocationPoint(location))
+      (location) => locationCallback(locationToLocationPoint(location)),
     );
     if (locationAveragingEnabled) {
       locationAveragerRef.current = new LocationAverager();
@@ -212,6 +217,7 @@ export const useLocationWatch = ({
       }, locationWatchElapsedTimeIntervalDelay);
 
       locationAccuracyWatchTimeoutRef.current = setTimeout(() => {
+        log.debug("Location watch timeout reached");
         stopLocationWatch();
       }, locationWatchTimeout);
     }

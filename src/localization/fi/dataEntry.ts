@@ -138,6 +138,20 @@ export default {
     x: "X",
     y: "Y",
   },
+  geo: {
+    drawPolygon: "Piirrä monikulmio",
+    editPolygon: "Muokkaa monikulmiota",
+    selectPolygonInstruction: "Paina monikulmiota sen valitsemiseksi",
+    editPolygonInstructions: `Paina kärkeä tai keskipistettä valitaksesi sen, sitten:
+- Pidä painettuna vetääksesi kärkeä ja siirtääksesi sitä.  
+- Paina '$t(dataEntry:geo.deleteSelectedPoint)' poistaaksesi sen.`,
+    tapToAddPoints: `Napauta karttaa lisätäksesi pisteitä.  
+Paina '$t(dataEntry:geo.stopAddingPoints)', kun olet valmis.`,
+    deleteSelectedPoint: "Poista valittu piste",
+    addCurrentLocationPoint: "Lisää nykyinen sijainti",
+    addCurrentLocationPointInstructions:
+      "Lisää nykyinen sijainti monikulmioon painamalla '$t(dataEntry:geo.addCurrentLocationPoint)'",
+  },
   taxon: {
     search: "Hae lajia",
     taxonNotSelected: "--- Lajia ei ole valittu ---",

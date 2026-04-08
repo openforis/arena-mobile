@@ -9,7 +9,7 @@ export {
   Languages,
   LanguagesSettings,
 } from "./LanguageSettings";
-export type { LocationPoint, AveragedLocation } from "./LocationPoint";
+export type { LocationPoint, AveragedLocation, LatLng } from "./LocationPoint";
 export type {
   RecordCurrentPageEntity,
   RecordCurrentPageEntityPointer,
@@ -37,4 +37,5 @@ export { RecordNodes } from "./utils/RecordNodes";
 export { RecordsUtils } from "./utils/RecordsUtils";
 export { RecordSummaries } from "./utils/RecordSummaries";
 export { SurveyDefs } from "./utils/SurveyDefs";
+export { SurveyUtils } from "./utils/SurveyUtils";
 export { ValidationUtils } from "./utils/ValidationUtils";

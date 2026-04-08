@@ -9,12 +9,14 @@ import {
   Records,
   RecordValidations,
   Surveys,
+  Users,
   Validations,
 } from "@openforis/arena-core";
 
 import { RecordCurrentPageEntity, RecordNodes, SurveyDefs } from "model";
 
 import { SurveySelectors } from "../survey/selectors";
+import { RemoteConnectionSelectors } from "../remoteConnection/selectors";
 import { DataEntryState, PreviousCycleRecordPageEntityPointer } from "./types";
 
 const getDataEntryState = (state: any): DataEntryState => state.dataEntry;
@@ -149,12 +151,14 @@ const selectRecordChildNodes =
 const selectChildDefs =
   ({ nodeDef }: any) =>
   (state: any) => {
+    const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const cycle = selectRecordCycle(state);
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const childDefs = SurveyDefs.getChildrenDefs({
       survey,
       nodeDef,
       cycle,
+      allowExperimental: Users.isSystemAdmin(user),
     }).filter((childDef) => {
       // only child defs not hidden in mobile and in same page
       const layoutProps = NodeDefs.getLayoutProps(cycle)(childDef);
