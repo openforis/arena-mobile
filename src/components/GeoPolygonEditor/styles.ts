@@ -2,6 +2,12 @@ import { StyleSheet } from "react-native";
 
 export const midpointDefaultBorderColor = "rgba(255, 0, 0, 0.3)";
 
+const currentLocationMarkerBarStyle = {
+  position: "absolute",
+  borderRadius: 1,
+  backgroundColor: "#212121",
+} as const;
+
 const vertexPointDraggingStyle = {
   width: 32,
   height: 32,
@@ -118,43 +124,25 @@ export default StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  previewToolbar: {
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: 48,
-    position: "relative",
-  },
-  previewToolbarCenter: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  previewToolbarRight: {
-    position: "absolute",
-    right: 0,
-    top: 0,
-    bottom: 0,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   currentLocationMarker: {
-    width: 16,
-    height: 16,
+    width: 28,
+    height: 28,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 8,
+    borderRadius: 14,
+    borderWidth: 2,
+    borderColor: "#212121",
     backgroundColor: "transparent",
   },
   currentLocationMarkerHorizontal: {
-    position: "absolute",
-    width: 10,
-    height: 1,
-    backgroundColor: "#212121",
+    ...currentLocationMarkerBarStyle,
+    width: 16,
+    height: 2,
   },
   currentLocationMarkerVertical: {
-    position: "absolute",
-    width: 1,
-    height: 10,
-    backgroundColor: "#212121",
+    ...currentLocationMarkerBarStyle,
+    width: 2,
+    height: 16,
   },
   modalContent: {
     flex: 1,

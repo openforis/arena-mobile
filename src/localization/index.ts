@@ -8,10 +8,12 @@ export {
   useTextDirection,
 } from "./useTextDirection";
 
+export type TranslateFunction = (key?: string | null, params?: any) => string;
+
 const useTranslation = () => {
   const { t } = useI18nTranslation();
   return {
-    t: (key?: string | null, params?: any) =>
+    t: (key?: string | null, params?: any): string =>
       (key?.length ?? 0) > 0 ? (t(key!, params) as string) : "",
   };
 };

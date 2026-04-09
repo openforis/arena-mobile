@@ -1,0 +1,28 @@
+appId: ${APP_ID}
+---
+- tapOn: "Connection to server"
+- tapOn: "Server URL"
+- tapOn: "Custom"
+# workaround: clear the text field by double tapping and selecting the whole text
+- tapOn:
+    text: "https://www.openforis-arena.org"
+    waitToSettleTimeoutMs: 1000
+- doubleTapOn: "https://www.openforis-arena.org"
+- eraseText
+- inputText: ${ARENA_SERVER_URL}
+
+- tapOn: "Email"
+- inputText: ${ARENA_SERVER_USERNAME}
+
+- tapOn: "Password"
+- inputText: ${ARENA_SERVER_PASSWORD}
+
+## workaround: press the login button to hide the keyboard
+- tapOn: "Login"
+- tapOn: "Login"
+
+- extendedWaitUntil:
+    visible: "Login successful!"
+    timeout: 20000
+
+- tapOn: "Continue"

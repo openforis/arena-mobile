@@ -143,14 +143,15 @@ export default {
     drawPolygon: "Rita polygon",
     editPolygon: "Redigera polygon",
     selectPolygonInstruction: "Tryck på en polygon för att välja den",
-    editPolygonInstructions: `- Tryck länge och dra ett hörn för att flytta det.  
-- Tryck på ett hörn för att välja det och tryck sedan på Ta bort för att ta bort det.`,
-    tapToAddPoints: `- Tryck på kartan för att lägga till punkter.  
-- Tryck Stopp när du är klar.`,
+    editPolygonInstructions: `Tryck på ett hörn eller mittpunkt för att välja det, sedan:
+- Tryck länge för att dra ett hörn och flytta det.  
+- Tryck på '$t(dataEntry:geo.deleteSelectedPoint)' för att ta bort det.`,
+    tapToAddPoints: `Tryck på kartan för att lägga till punkter.  
+Tryck '$t(dataEntry:geo.stopAddingPoints)' när du är klar.`,
     deleteSelectedPoint: "Ta bort vald punkt",
-    addCurrentLocationPoint: "Lägg till GPS-punkt",
+    addCurrentLocationPoint: "Lägg till aktuell plats",
     addCurrentLocationPointInstructions:
-      'Tryck på "Lägg till GPS-punkt" för att lägga till aktuell plats i polygonen',
+      "Tryck på '$t(dataEntry:geo.addCurrentLocationPoint)' för att lägga till aktuell plats i polygonen",
   },
   taxon: {
     search: "Sök taxon",

@@ -5,6 +5,26 @@ Serving as a companion to "Open Foris Arena", it offers seamless data handling w
 Arena Mobile enables efficient collection of field data in various sectors, including forest inventories and interviews, by implementing customisable validation rules to ensure high-quality data.  
 Supported by a robust community, it integrates with the Arena platform for analytics and reporting, making it an ideal choice for various data assessment needs.
 
+## End-to-end tests
+
+E2E tests are set up with Maestro.
+
+- Test flows: [e2e/maestro](e2e/maestro)
+- Setup and usage: [e2e/README.md](e2e/README.md)
+
+Quick run commands:
+
+```bash
+# Android
+yarn e2e:maestro:android
+
+# iOS
+# No dedicated `yarn e2e:maestro:ios` script is available.
+# Follow the instructions in e2e/README.md to run iOS Maestro tests.
+```
+
+Note: Android E2E uses a native app build (not Expo Go). iOS E2E runs only on macOS.
+
 ## Google Maps API keys
 
 The app reads Google Maps API keys from environment variables in `app.config.ts`:

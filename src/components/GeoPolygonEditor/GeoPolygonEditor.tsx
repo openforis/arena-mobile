@@ -1,16 +1,18 @@
 import React from "react";
 import { Animated } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import RNMapView from "react-native-maps";
 
 import { useHeartbeatAnimation } from "hooks";
+import { log } from "utils";
 
 import { Button } from "../Button";
 import { HView } from "../HView";
 import { IconButton } from "../IconButton";
-import { MapViewWithInitialFit } from "../MapViewWithInitialFit";
+import { MapView } from "../MapView";
 import { Text } from "../Text";
-import { View } from "../View";
 import { VView } from "../VView";
+
+import { CurrentLocationMarker } from "./CurrentLocationMarker";
 
 import { GeoPolygonDraftOverlay } from "./GeoPolygonDraftOverlay";
 import { GeoPolygonMidpointsOverlay } from "./GeoPolygonMidpointsOverlay";
@@ -26,13 +28,11 @@ type GeoPolygonEditorProps = {
     latitudeDelta: number;
     longitudeDelta: number;
   };
-  mapRef: React.RefObject<MapView | null>;
+  mapRef: React.RefObject<RNMapView | null>;
   initialPolygons: MapPolygonExtendedProps[];
   onCancelDrawing: () => void;
   onSaveDrawing: (polygon: MapPolygonExtendedProps | null) => void;
 };
-
-const currentLocationMarkerAnchor = { x: 0.5, y: 0.5 };
 
 export const GeoPolygonEditor = ({
   initialRegion,
@@ -41,6 +41,8 @@ export const GeoPolygonEditor = ({
   onCancelDrawing,
   onSaveDrawing,
 }: GeoPolygonEditorProps) => {
+  log.debug(`rendering GeoPolygonEditor`);
+
   const {
     canSave,
     closeDraftPolygon,
@@ -56,9 +58,7 @@ export const GeoPolygonEditor = ({
     onMapPress,
     onMapPanDrag,
     onAddCurrentLocationPointPress,
-    onMidpointDragStart,
-    onMidpointDrag,
-    onMidpointDragEnd,
+    onMidpointPress,
     onPolygonPress,
     onSavePress,
     onUndoPress,
@@ -69,7 +69,6 @@ export const GeoPolygonEditor = ({
     polygonMidpoints,
     polygonVertices,
     draggingVertexIndex,
-    draggingMidpointInsertAtIndex,
     selectedVertexIndex,
     currentLocationCoordinate,
     isFollowingCurrentLocation,
@@ -93,7 +92,7 @@ export const GeoPolygonEditor = ({
 
   return (
     <VView style={styles.modalContent}>
-      <MapViewWithInitialFit
+      <MapView
         ref={mapRef}
         style={styles.map}
         initialRegion={initialRegion}
@@ -102,24 +101,11 @@ export const GeoPolygonEditor = ({
         fitToCoordinatesOnReady={visibleCoordinates}
       >
         {isFollowingCurrentLocation && currentLocationCoordinate && (
-          <Marker
-            coordinate={currentLocationCoordinate}
-            anchor={currentLocationMarkerAnchor}
-            tappable={false}
-          >
-            <View style={styles.currentLocationMarker}>
-              <View style={styles.currentLocationMarkerHorizontal} />
-              <View style={styles.currentLocationMarkerVertical} />
-            </View>
-          </Marker>
+          <CurrentLocationMarker coordinate={currentLocationCoordinate} />
         )}
         <GeoPolygonDraftOverlay
           coordinates={draftCoordinates}
-          fillColor={
-            draggingVertexIndex == null && draggingMidpointInsertAtIndex == null
-              ? fillColor
-              : "transparent"
-          }
+          fillColor={draggingVertexIndex == null ? fillColor : "transparent"}
           strokeColor={strokeColor}
           strokeWidth={newPolygon.strokeWidth}
           showPoints={!hasValue}
@@ -141,13 +127,10 @@ export const GeoPolygonEditor = ({
           <GeoPolygonMidpointsOverlay
             midpoints={polygonMidpoints}
             strokeColor={strokeColor}
-            draggingMidpointInsertAtIndex={draggingMidpointInsertAtIndex}
-            onMidpointDragStart={onMidpointDragStart}
-            onMidpointDrag={onMidpointDrag}
-            onMidpointDragEnd={onMidpointDragEnd}
+            onMidpointPress={onMidpointPress}
           />
         )}
-      </MapViewWithInitialFit>
+      </MapView>
 
       <Text style={styles.helperText} textKey={helperTextKey} />
 

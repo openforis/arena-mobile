@@ -17,7 +17,7 @@ export const SurveyLanguageSelector = () => {
 
   const langLabelFn = useCallback(
     (langCode: LanguageCode) => Languages[langCode]?.[LanguageCode.en],
-    []
+    [],
   );
 
   const items = useMemo(
@@ -26,16 +26,18 @@ export const SurveyLanguageSelector = () => {
         value: langCode,
         label: langLabelFn(langCode),
       })),
-    [languages]
+    [langLabelFn, languages],
   );
 
-  const selectedValue = singleLanguage ? languages[0] : preferredLang;
+  const selectedValue: LanguageCode = singleLanguage
+    ? languages[0]!
+    : preferredLang;
 
   const onChange = useCallback(
-    async (lang: any) => {
+    async (lang: LanguageCode) => {
       dispatch(SurveyActions.setCurrentSurveyPreferredLanguage({ lang }));
     },
-    [dispatch]
+    [dispatch],
   );
 
   return (

@@ -146,14 +146,15 @@ export default {
     drawPolygon: "Polygon zeichnen",
     editPolygon: "Polygon bearbeiten",
     selectPolygonInstruction: "Drücken Sie auf ein Polygon, um es auszuwählen",
-    editPolygonInstructions: `- Halten Sie einen Eckpunkt gedrückt und ziehen Sie ihn, um ihn zu verschieben.  
-- Drücken Sie auf einen Eckpunkt, um ihn auszuwählen, und dann auf Löschen, um ihn zu entfernen.`,
-    tapToAddPoints: `- Tippen Sie auf die Karte, um Punkte hinzuzufügen.  
-- Drücken Sie Stopp, wenn Sie fertig sind.`,
+    editPolygonInstructions: `Tippen Sie auf einen Eckpunkt oder Mittelpunkt, um ihn auszuwählen, dann:
+- Halten Sie gedrückt, um einen Eckpunkt zu ziehen und zu verschieben.  
+- Drücken Sie '$t(dataEntry:geo.deleteSelectedPoint)', um ihn zu entfernen.`,
+    tapToAddPoints: `Tippen Sie auf die Karte, um Punkte hinzuzufügen.  
+Drücken Sie '$t(dataEntry:geo.stopAddingPoints)', wenn Sie fertig sind.`,
     deleteSelectedPoint: "Ausgewählten Punkt löschen",
-    addCurrentLocationPoint: "GPS-Punkt hinzufügen",
+    addCurrentLocationPoint: "Aktuellen Standort hinzufügen",
     addCurrentLocationPointInstructions:
-      'Drücken Sie "GPS-Punkt hinzufügen", um die aktuelle Position zum Polygon hinzuzufügen',
+      "Drücken Sie '$t(dataEntry:geo.addCurrentLocationPoint)', um die aktuelle Position zum Polygon hinzuzufügen",
   },
   taxon: {
     search: "Taxon suchen",

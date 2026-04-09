@@ -14,40 +14,25 @@ export type GeoPolygonMidpoint = {
 type GeoPolygonMidpointsOverlayProps = {
   midpoints: GeoPolygonMidpoint[];
   strokeColor: string | undefined;
-  draggingMidpointInsertAtIndex: number | null;
-  onMidpointDragStart: (insertAtIndex: number) => void;
-  onMidpointDrag: (insertAtIndex: number, coordinate: LatLng) => void;
-  onMidpointDragEnd: (insertAtIndex: number, coordinate: LatLng) => void;
+  onMidpointPress: (insertAtIndex: number, coordinate: LatLng) => void;
 };
 
 const markerAnchor = { x: 0.13, y: 0.13 };
-const draggingMarkerAnchor = { x: 0.35, y: 0.35 };
 
 export const GeoPolygonMidpointsOverlay = ({
   midpoints,
   strokeColor,
-  draggingMidpointInsertAtIndex,
-  onMidpointDragStart,
-  onMidpointDrag,
-  onMidpointDragEnd,
+  onMidpointPress,
 }: GeoPolygonMidpointsOverlayProps) => {
   const markerColor = strokeColor ?? midpointDefaultBorderColor;
 
-  const getOuterStyle = useMemo(
-    () => (isDragging: boolean) => [
-      styles.midpoint,
-      isDragging && styles.midpointDragging,
-      { borderColor: markerColor },
-    ],
+  const outerStyle = useMemo(
+    () => [styles.midpoint, { borderColor: markerColor }],
     [markerColor],
   );
 
-  const getCoreStyle = useMemo(
-    () => (isDragging: boolean) => [
-      styles.vertexPointCore,
-      isDragging && styles.vertexPointCoreDragging,
-      { backgroundColor: markerColor },
-    ],
+  const coreStyle = useMemo(
+    () => [styles.vertexPointCore, { backgroundColor: markerColor }],
     [markerColor],
   );
 
@@ -55,26 +40,16 @@ export const GeoPolygonMidpointsOverlay = ({
 
   return (
     <>
-      {midpoints.map(({ key, coordinate, insertAtIndex }) => {
-        const isDragging = draggingMidpointInsertAtIndex === insertAtIndex;
-
-        return (
-          <GeoVertexMarker
-            key={`polygon-midpoint-${key}`}
-            coordinate={coordinate}
-            anchor={isDragging ? draggingMarkerAnchor : markerAnchor}
-            outerStyle={getOuterStyle(isDragging)}
-            coreStyle={getCoreStyle(isDragging)}
-            onDragStart={() => onMidpointDragStart(insertAtIndex)}
-            onDrag={(draggedCoordinate) =>
-              onMidpointDrag(insertAtIndex, draggedCoordinate)
-            }
-            onDragEnd={(draggedCoordinate) =>
-              onMidpointDragEnd(insertAtIndex, draggedCoordinate)
-            }
-          />
-        );
-      })}
+      {midpoints.map(({ key, coordinate, insertAtIndex }) => (
+        <GeoVertexMarker
+          key={`polygon-midpoint-${key}`}
+          coordinate={coordinate}
+          anchor={markerAnchor}
+          outerStyle={outerStyle}
+          coreStyle={coreStyle}
+          onPress={() => onMidpointPress(insertAtIndex, coordinate)}
+        />
+      ))}
     </>
   );
 };

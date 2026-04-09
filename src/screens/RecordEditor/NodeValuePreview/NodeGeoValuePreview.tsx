@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 
 import { Polygon } from "react-native-maps";
 
-import { MapViewWithInitialFit, Text, VView } from "components";
+import { MapView, Text, VView } from "components";
 import { GeoUtils } from "utils";
 
 import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
@@ -40,12 +40,12 @@ export const NodeGeoValuePreview = (props: NodeValuePreviewProps) => {
 
   return (
     <VView style={styles.container}>
-      <MapViewWithInitialFit
-        style={styles.map}
-        initialRegion={region}
-        toolbarEnabled={false}
+      <MapView
         fitToCoordinatesOnReady={coordinates}
         fitOnlyOnce={false}
+        initialRegion={region}
+        style={styles.map}
+        toolbarEnabled={false}
       >
         <Polygon
           coordinates={coordinates}
@@ -53,7 +53,7 @@ export const NodeGeoValuePreview = (props: NodeValuePreviewProps) => {
           strokeWidth={2}
           fillColor={polygonFillColor}
         />
-      </MapViewWithInitialFit>
+      </MapView>
     </VView>
   );
 };

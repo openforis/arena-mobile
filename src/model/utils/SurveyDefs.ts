@@ -7,7 +7,7 @@ import {
 
 const samplingPointDataCategoryName = "sampling_point_data";
 
-const experimentalTypes = [NodeDefType.geo];
+const experimentalTypes = new Set([NodeDefType.geo]);
 
 const getRootKeyDefs = ({ survey, cycle }: any) => {
   const rootDef = Surveys.getNodeDefRoot({ survey });
@@ -33,7 +33,7 @@ const getChildrenDefs = ({
     includeAnalysis: false,
   }).filter(
     (childDef) =>
-      (allowExperimental || !experimentalTypes.includes(childDef.type)) &&
+      (allowExperimental || !experimentalTypes.has(childDef.type)) &&
       !NodeDefs.isHidden(childDef) &&
       !NodeDefs.isHiddenInMobile(cycle)(childDef) &&
       NodeDefs.isInCycle(cycle)(childDef),

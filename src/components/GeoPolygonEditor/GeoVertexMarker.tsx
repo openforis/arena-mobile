@@ -7,17 +7,19 @@ import { LatLng } from "model";
 type GeoVertexMarkerProps = {
   coordinate: LatLng;
   anchor: { x: number; y: number };
+  draggable?: boolean;
   outerStyle: StyleProp<ViewStyle>;
   coreStyle: StyleProp<ViewStyle>;
   onPress?: () => void;
-  onDragStart: () => void;
-  onDrag: (coordinate: LatLng) => void;
-  onDragEnd: (coordinate: LatLng) => void;
+  onDragStart?: () => void;
+  onDrag?: (coordinate: LatLng) => void;
+  onDragEnd?: (coordinate: LatLng) => void;
 };
 
 export const GeoVertexMarker = ({
   coordinate,
   anchor,
+  draggable = false,
   outerStyle,
   coreStyle,
   onPress,
@@ -28,26 +30,26 @@ export const GeoVertexMarker = ({
   <Marker
     coordinate={coordinate}
     anchor={anchor}
-    draggable
+    draggable={draggable}
     onPress={(event) => {
       event.stopPropagation();
       onPress?.();
     }}
     onDragStart={(event) => {
       event.stopPropagation();
-      onDragStart();
+      onDragStart?.();
     }}
     onDrag={(event) => {
       event.stopPropagation();
       const draggedCoordinate = event.nativeEvent?.coordinate;
       if (!draggedCoordinate) return;
-      onDrag(draggedCoordinate);
+      onDrag?.(draggedCoordinate);
     }}
     onDragEnd={(event) => {
       event.stopPropagation();
       const draggedCoordinate = event.nativeEvent?.coordinate;
       if (!draggedCoordinate) return;
-      onDragEnd(draggedCoordinate);
+      onDragEnd?.(draggedCoordinate);
     }}
   >
     <RNView style={outerStyle}>
