@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 
 import {
+  NodeDefCode,
   NodeDefEntity,
   NodeDefs,
   Nodes,
@@ -140,7 +141,13 @@ const selectRecordAttributeInfo =
   };
 
 const selectRecordChildNodes =
-  ({ parentEntityUuid, nodeDef }: any) =>
+  ({
+    parentEntityUuid,
+    nodeDef,
+  }: {
+    parentEntityUuid: string;
+    nodeDef: NodeDefEntity;
+  }) =>
   (state: any) => {
     const record = selectRecord(state);
     const parentEntity = Records.getNodeByUuid(parentEntityUuid)(record)!;
@@ -149,11 +156,11 @@ const selectRecordChildNodes =
   };
 
 const selectChildDefs =
-  ({ nodeDef }: any) =>
+  ({ nodeDef }: { nodeDef: NodeDefEntity }) =>
   (state: any) => {
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const cycle = selectRecordCycle(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const childDefs = SurveyDefs.getChildrenDefs({
       survey,
       nodeDef,
@@ -168,7 +175,13 @@ const selectChildDefs =
   };
 
 const selectRecordCodeParentItemUuid =
-  ({ nodeDef, parentNodeUuid }: any) =>
+  ({
+    nodeDef,
+    parentNodeUuid,
+  }: {
+    nodeDef: NodeDefCode;
+    parentNodeUuid: string;
+  }) =>
   (state: any) => {
     const parentCodeDefUuid = NodeDefs.getParentCodeDefUuid(nodeDef);
     if (!parentCodeDefUuid) return null;

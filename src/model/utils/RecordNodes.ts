@@ -124,7 +124,7 @@ const getEntitySummaryValuesByNameFormatted = ({
   const entityDef = Surveys.getNodeDefByUuid({
     survey,
     uuid: entity.nodeDefUuid,
-  });
+  }) as NodeDefEntity;
   const summaryDefs =
     summaryDefsParam ??
     SurveyDefs.getEntitySummaryDefs({
