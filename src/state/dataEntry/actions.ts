@@ -30,7 +30,8 @@ import { RecordService } from "service/recordService";
 
 import { screenKeys } from "screens/screenKeys";
 
-import { SystemUtils } from "utils";
+import { StringUtils, SystemUtils } from "utils";
+import { i18n } from "localization";
 
 import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { DeviceInfoActions, DeviceInfoSelectors } from "../deviceInfo";
@@ -403,6 +404,50 @@ const checkAndConfirmUpdateNode = async ({
   return true;
 };
 
+const confirmClearNewlyInapplicableValues = async ({
+  dispatch,
+  survey,
+  lang,
+  record,
+  recordUpdated,
+  nodesUpdated,
+}: any): Promise<boolean> => {
+  const newlyInapplicableDefUuidsWithValue =
+    RecordsUtils.findNewlyInapplicableDefUuidsWithValue({
+      recordPrev: record,
+      recordNext: recordUpdated,
+      nodes: nodesUpdated,
+    });
+
+  const count = newlyInapplicableDefUuidsWithValue.size;
+  if (count === 0) return true;
+
+  const maxToShow = 10;
+  const overflow = count - maxToShow;
+  const nodeDefUuidsToShow = Array.from(
+    newlyInapplicableDefUuidsWithValue,
+  ).slice(0, maxToShow);
+  const attributeNames = SurveyDefs.getNodeDefsLabelsOrNames({
+    survey,
+    nodeDefUuids: nodeDefUuidsToShow,
+    lang,
+  }).map((name) => `- ${StringUtils.truncateWithEllipsis(name, 40)}`);
+
+  const attributeNamesToShow = [
+    ...attributeNames,
+    ...(overflow > 0 ? [i18n.t("common:andMore", { count: overflow })] : []),
+  ];
+
+  return !!(await ConfirmUtils.confirm({
+    dispatch,
+    titleKey: "dataEntry:confirmUpdateAttributesBecameNotRelevant.title",
+    messageIsMarkdown: true,
+    messageKey: "dataEntry:confirmUpdateAttributesBecameNotRelevant.message",
+    messageParams: { attributeNames: attributeNamesToShow.join("\n") },
+    swipeToConfirm: true,
+  }));
+};
+
 const updateAttribute =
   ({
     uuid,
@@ -439,39 +484,20 @@ const updateAttribute =
         record,
         attributeUuid: uuid,
         value,
+        clearNonApplicableValues: true,
       });
 
-    const nodeDefUuidsOfNodesWithValueThatBecameNotRelevant =
-      RecordsUtils.findNotRelevantNodeDefsWithValue({
-        record: recordUpdated,
-        nodes: nodesUpdated,
-      });
-    if (nodeDefUuidsOfNodesWithValueThatBecameNotRelevant.size > 0) {
-      const attributeNames = Array.from(
-        nodeDefUuidsOfNodesWithValueThatBecameNotRelevant,
-      )
-        .map((nodeDefUuid) => {
-          const nodeDef = Surveys.getNodeDefByUuid({
-            survey,
-            uuid: nodeDefUuid,
-          });
-          return NodeDefs.getLabelOrName(nodeDef, lang);
-        })
-        .map((name) => `- ${name}`) // add bullet point to each attribute name
-        .join("\n");
-      if (
-        !(await ConfirmUtils.confirm({
-          dispatch,
-          titleKey: "dataEntry:confirmUpdateAttributesBecameNotRelevant.title",
-          messageIsMarkdown: true,
-          messageKey:
-            "dataEntry:confirmUpdateAttributesBecameNotRelevant.message",
-          messageParams: { attributeNames },
-          swipeToConfirm: true,
-        }))
-      ) {
-        return;
-      }
+    if (
+      !(await confirmClearNewlyInapplicableValues({
+        dispatch,
+        survey,
+        lang,
+        record,
+        recordUpdated,
+        nodesUpdated,
+      }))
+    ) {
+      return;
     }
 
     removeNodesFlags(nodesUpdated);
