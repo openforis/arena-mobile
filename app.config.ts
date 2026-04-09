@@ -93,7 +93,7 @@ const config = (): ExpoConfig => {
         backgroundColor: "#FFFFFF",
       },
       package: "org.openforis.arena_mobile",
-      versionCode: 82,
+      versionCode: 83,
       permissions: [
         "android.permission.ACCESS_MEDIA_LOCATION",
         "android.permission.RECORD_AUDIO",
@@ -105,7 +105,7 @@ const config = (): ExpoConfig => {
       },
     },
     ios: {
-      buildNumber: "82",
+      buildNumber: "83",
       bundleIdentifier: "org.openforis.arena-mobile",
       config: {
         usesNonExemptEncryption: false,
