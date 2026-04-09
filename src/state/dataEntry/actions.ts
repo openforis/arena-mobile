@@ -419,11 +419,12 @@ const confirmClearNewlyInapplicableValues = async ({
       nodes: nodesUpdated,
     });
 
-  const count = newlyInapplicableDefUuidsWithValue.size;
-  if (count === 0) return true;
+  const newlyInapplicableNodeDefsCount =
+    newlyInapplicableDefUuidsWithValue.size;
+  if (newlyInapplicableNodeDefsCount === 0) return true;
 
   const maxToShow = 10;
-  const overflow = count - maxToShow;
+  const overflow = newlyInapplicableNodeDefsCount - maxToShow;
   const nodeDefUuidsToShow = Array.from(
     newlyInapplicableDefUuidsWithValue,
   ).slice(0, maxToShow);

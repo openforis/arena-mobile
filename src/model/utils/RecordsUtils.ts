@@ -102,7 +102,7 @@ const findNewlyInapplicableDefUuidsWithValue = ({
 }) => {
   const result = new Set<string>();
   for (const node of Object.values(nodes)) {
-    const nodeDefUuid = node.nodeDefUuid;
+    const { nodeDefUuid } = node;
     if (result.has(nodeDefUuid)) {
       continue;
     }
@@ -111,18 +111,15 @@ const findNewlyInapplicableDefUuidsWithValue = ({
       continue;
     }
     const nodePrev = Records.getNodeByUuid(node.uuid)(recordPrev);
-    const hadValue = nodePrev && Nodes.isValueNotBlank(nodePrev);
-    const parentNodePrev = Records.getNodeByUuid(parentNode.uuid)(recordPrev);
-    const applicablePrev = parentNodePrev
-      ? Nodes.isChildApplicable(parentNodePrev, nodeDefUuid)
+    const hadUserInputValue = nodePrev && Nodes.hasUserInputValue(nodePrev);
+    const applicablePrev = nodePrev
+      ? Records.isNodeApplicable({ record: recordPrev, node: nodePrev })
       : true;
-    const applicableNext = Nodes.isChildApplicable(parentNode, nodeDefUuid);
-    if (
-      !applicableNext &&
-      applicablePrev &&
-      !Nodes.isDefaultValueApplied(node) &&
-      hadValue
-    ) {
+    const applicableNext = Records.isNodeApplicable({
+      record: recordNext,
+      node,
+    });
+    if (applicablePrev && !applicableNext && hadUserInputValue) {
       result.add(nodeDefUuid);
     }
   }
