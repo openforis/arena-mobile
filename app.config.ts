@@ -49,7 +49,6 @@ const basePlugins: ExpoConfig["plugins"] = [
       },
     },
   ],
-  "expo-asset",
   "expo-audio",
   "expo-localization",
   "expo-secure-store",
@@ -120,7 +119,7 @@ const config = (): ExpoConfig => {
         NSMicrophoneUsageDescription:
           "Microphone is used only when recording audio or video in file attributes (if defined in your survey).",
         NSMotionUsageDescription:
-          "Devices's acceleraometer is used only when using the 'navigator' in coordinate attributes (if defined in your survey).",
+          "Device's acceleraometer is used only when using the 'navigator' in coordinate attributes (if defined in your survey).",
         NSPhotoLibraryUsageDescription:
           "Access to the photo library is required only when selecting images to be used in file attributes (if defined in your survey).",
       },
