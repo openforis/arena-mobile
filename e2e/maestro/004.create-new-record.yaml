@@ -34,6 +34,9 @@ appId: ${APP_ID}
 - tapOn:
     id: "root_relevant_if_bool"
 - inputText: "123"
+- scrollUntilVisible:
+    element: "Boolean"
+    direction: UP
 - tapOn:
     text: "False"
     below:
