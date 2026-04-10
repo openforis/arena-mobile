@@ -27,6 +27,9 @@ appId: ${APP_ID}
     text: "True"
     below:
       text: "Boolean"
+- scrollUntilVisible:
+    element: "Relevant if Boolean = True"
+    direction: DOWN
 - assertVisible: "Relevant if Boolean = True"
 - inputText:
     text: "123"
@@ -44,6 +47,7 @@ appId: ${APP_ID}
     duration: 1000
 - tapOn: "Confirm"
 - assertNotVisible: "Nodes will no longer apply"
+- assertNotVisible: "Relevant if Boolean = True"
 - tapOn:
     text: "Records"
 - tapOn:
