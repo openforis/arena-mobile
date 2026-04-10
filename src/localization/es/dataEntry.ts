@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateAttributesBecameNotRelevant: {
+    title: "Attributes will no longer be relevant",
+    message: `The following nodes will no longer apply:  
+  
+{{attributeNames}}  
+  
+Their values will be cleared.  
+Continue?`,
+  },
   confirmGoToListOfRecords:
     "¿Ir a la lista de registros?\n\n(todos los cambios ya están guardados)",
   checkStatus: "Comprobar sincronización",

@@ -508,6 +508,47 @@ const getRecordSummaryValuesBySummaryAttributeFormatted = ({
     t,
   });
 
+const findTopmostNewlyInapplicableAncestorDefUuid = ({
+  node,
+  recordPrev,
+  recordNext,
+}: {
+  node: ArenaRecordNode;
+  recordPrev: ArenaRecord;
+  recordNext: ArenaRecord;
+}) => {
+  let topmostInapplicableAncestorDefUuid: string | null = null;
+
+  Records.visitAncestorsAndSelf(
+    node,
+    (visitedAncestor) => {
+      if (visitedAncestor.uuid === node.uuid) {
+        // skip the node itself, we are looking for ancestors only
+        return;
+      }
+      const ancestorPrev = Records.getNodeByUuid(visitedAncestor.uuid)(
+        recordPrev,
+      );
+      if (ancestorPrev) {
+        const ancestorApplicablePrev = Records.isNodeApplicable({
+          record: recordPrev,
+          node: ancestorPrev,
+        });
+        const ancestorApplicableNext = Records.isNodeApplicable({
+          record: recordNext,
+          node: visitedAncestor,
+        });
+        if (ancestorApplicablePrev && !ancestorApplicableNext) {
+          topmostInapplicableAncestorDefUuid = visitedAncestor.nodeDefUuid;
+        }
+      }
+    },
+    () => !!topmostInapplicableAncestorDefUuid,
+  )(recordNext);
+
+  return topmostInapplicableAncestorDefUuid;
+};
+
 const findNewlyInapplicableDefUuidsWithValue = ({
   recordPrev,
   recordNext,
@@ -520,9 +561,6 @@ const findNewlyInapplicableDefUuidsWithValue = ({
   const result = new Set<string>();
   for (const node of Object.values(nodes)) {
     const { nodeDefUuid } = node;
-    if (result.has(nodeDefUuid)) {
-      continue;
-    }
     const parentNode = Records.getParent(node)(recordNext);
     if (!parentNode) {
       continue;
@@ -536,8 +574,15 @@ const findNewlyInapplicableDefUuidsWithValue = ({
       record: recordNext,
       node,
     });
+
     if (applicablePrev && !applicableNext && hadUserInputValue) {
-      result.add(nodeDefUuid);
+      const topmostInapplicableAncestorDefUuid: string | null =
+        findTopmostNewlyInapplicableAncestorDefUuid({
+          node,
+          recordNext,
+          recordPrev,
+        });
+      result.add(topmostInapplicableAncestorDefUuid ?? nodeDefUuid);
     }
   }
   return result;

@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateAttributesBecameNotRelevant: {
+    title: "Attributes will no longer be relevant",
+    message: `The following nodes will no longer apply:  
+  
+{{attributeNames}}  
+  
+Their values will be cleared.  
+Continue?`,
+  },
   checkStatus: "Проверить статус",
   closestSamplingPoint: {
     findClosestSamplingPoint: "Найти ближайшую точку сбора данных",
