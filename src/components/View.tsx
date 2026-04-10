@@ -18,6 +18,7 @@ export type ViewProps = {
   pointerEvents?: "box-none" | "none" | "box-only" | "auto";
   style?: StyleProp<ViewStyle>;
   transparent?: boolean;
+  testID?: string;
 };
 
 export const View = (props: ViewProps) => {
@@ -25,16 +26,17 @@ export const View = (props: ViewProps) => {
     children,
     fullFlex = false,
     fullWidth = false,
+    pointerEvents = undefined,
     style: styleProp,
     transparent = false,
-    ...otherProps
+    testID = undefined,
   } = props;
 
   const theme = useTheme();
 
   const backgroundColor = useMemo(
     () => (transparent ? "transparent" : theme.colors.background),
-    [theme, transparent]
+    [theme, transparent],
   );
 
   const style = useMemo(() => {
@@ -46,7 +48,7 @@ export const View = (props: ViewProps) => {
   }, [backgroundColor, fullFlex, fullWidth, styleProp]);
 
   return (
-    <RNView style={style} {...otherProps}>
+    <RNView style={style} testID={testID} pointerEvents={pointerEvents}>
       {children}
     </RNView>
   );

@@ -33,6 +33,18 @@ appId: ${APP_ID}
     below:
       text: "Relevant if Boolean = True"
 - tapOn:
+    text: "False"
+    below:
+      text: "Boolean"
+- assertVisible: "Nodes will no longer apply"
+- swipe:
+    direction: RIGHT
+    from:
+      id: "confirm-swipe-button"
+    duration: 1000
+- tapOn: "Confirm"
+- assertNotVisible: "Nodes will no longer apply"
+- tapOn:
     text: "Records"
 - tapOn:
     text: "Go to list of records"

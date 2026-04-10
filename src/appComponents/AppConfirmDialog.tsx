@@ -12,6 +12,7 @@ import {
   RadioButtonGroup,
   Text,
   TextInput,
+  View,
   VView,
 } from "components";
 import { useTranslation } from "localization";
@@ -92,20 +93,22 @@ export const AppConfirmDialog = () => {
             </RadioButtonGroup>
           )}
           {swipeToConfirm && (
-            <SwipeButton
-              disableResetOnTap
-              onSwipeSuccess={setSwipeConfirmed}
-              railBackgroundColor={theme.colors.tertiaryContainer}
-              railStyles={{
-                backgroundColor: theme.colors.tertiaryContainer,
-                opacity: 0.7,
-                borderColor: theme.colors.tertiaryContainer,
-              }}
-              thumbIconBackgroundColor={theme.colors.primary}
-              title={t(swipeToConfirmTitleKey)}
-              titleColor={theme.colors.primary}
-              titleFontSize={16}
-            />
+            <View testID="confirm-swipe-button" transparent>
+              <SwipeButton
+                disableResetOnTap
+                onSwipeSuccess={setSwipeConfirmed}
+                railBackgroundColor={theme.colors.tertiaryContainer}
+                railStyles={{
+                  backgroundColor: theme.colors.tertiaryContainer,
+                  opacity: 0.7,
+                  borderColor: theme.colors.tertiaryContainer,
+                }}
+                thumbIconBackgroundColor={theme.colors.primary}
+                title={t(swipeToConfirmTitleKey)}
+                titleColor={theme.colors.primary}
+                titleFontSize={16}
+              />
+            </View>
           )}
           {textInputToConfirm && (
             <TextInput

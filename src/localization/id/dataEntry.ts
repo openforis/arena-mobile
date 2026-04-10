@@ -2,7 +2,7 @@ import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
   confirmUpdateAttributesBecameNotRelevant: {
-    title: "Attributes will no longer be relevant",
+    title: "Nodes will no longer apply",
     message: `The following nodes will no longer apply:  
   
 {{attributeNames}}  
