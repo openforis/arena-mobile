@@ -54,11 +54,12 @@ export const AppConfirmDialog = () => {
       <Dialog visible={isOpen} onDismiss={cancel}>
         <Dialog.Title>{t(titleKey)}</Dialog.Title>
         <Dialog.Content>
-          {messageIsMarkdown ? (
-            <Markdown content={t(messageKey, messageParams)} />
-          ) : (
-            <Text textKey={messageKey} textParams={messageParams} />
-          )}
+          {messageKey &&
+            (messageIsMarkdown ? (
+              <Markdown content={t(messageKey, messageParams)} />
+            ) : (
+              <Text textKey={messageKey} textParams={messageParams} />
+            ))}
           {(multipleChoiceOptions?.length ?? 0) > 0 && (
             <VView transparent>
               {multipleChoiceOptions!.map((option: any) => (
