@@ -31,10 +31,9 @@ appId: ${APP_ID}
     element: "Relevant if Boolean = True"
     direction: DOWN
 - assertVisible: "Relevant if Boolean = True"
-- inputText:
-    text: "123"
-    below:
-      text: "Relevant if Boolean = True"
+- tapOn:
+    id: "root_relevant_if_bool"
+- inputText: "123"
 - tapOn:
     text: "False"
     below:
