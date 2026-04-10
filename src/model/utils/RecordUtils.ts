@@ -158,8 +158,8 @@ const getEntitySummaryValuesByNameFormatted = ({
             lang,
           });
         }
-      } catch (error) {
-        //ignore it
+      } catch {
+        // ignore it
         formattedValue = "";
       }
       if (typeof formattedValue === "object") {
@@ -208,7 +208,7 @@ const getSiblingNode = ({
 };
 
 const functionCallExpression = (functionName: string): string =>
-  `${functionName}\\s*\\((?:[^()]*|\\([^()]*\\))*\\)`;
+  String.raw`${functionName}\s*\((?:[^()]*|\([^()]*\))*\)`;
 
 const possibleDistanceTargetExpressions: Dictionary<string> = {
   simpleIdentifier: String.raw`\w+`,
@@ -217,7 +217,7 @@ const possibleDistanceTargetExpressions: Dictionary<string> = {
 };
 
 const distanceFunctionRegExp = (firstArgument: any, secondArgument: any) =>
-  `\\s*distance\\s*\\(\\s*(${firstArgument})\\s*,\\s*(${secondArgument})\\s*\\)`;
+  String.raw`\s*distance\s*\(\s*(${firstArgument})\s*,\s*(${secondArgument})\s*\)`;
 
 const extractDistanceTargetExpression = ({ nodeDef }: any): string | null => {
   const validations = NodeDefs.getValidations(nodeDef);
