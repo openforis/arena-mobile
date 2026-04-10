@@ -2,13 +2,13 @@ import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
   confirmUpdateAttributesBecameNotRelevant: {
-    title: "Nodes will no longer apply",
-    message: `The following nodes will no longer apply:  
+    title: "Les nœuds ne s'appliqueront plus",
+    message: `Les nœuds suivants ne s'appliqueront plus :  
   
 {{attributeNames}}  
   
-Their values will be cleared.  
-Continue?`,
+Leurs valeurs seront effacées.  
+Continuer ?`,
   },
   confirmGoToListOfRecords:
     "Aller à la liste des enregistrements?\n\n(toutes les modifications sont déjà enregistrées)",

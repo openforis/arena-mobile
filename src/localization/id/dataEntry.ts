@@ -2,13 +2,13 @@ import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
   confirmUpdateAttributesBecameNotRelevant: {
-    title: "Nodes will no longer apply",
-    message: `The following nodes will no longer apply:  
+    title: "Node tidak akan berlaku lagi",
+    message: `Node berikut tidak akan berlaku lagi:  
   
 {{attributeNames}}  
   
-Their values will be cleared.  
-Continue?`,
+Nilainya akan dihapus.  
+Lanjutkan?`,
   },
   confirmGoToListOfRecords: `lanjut ke daftar isian?
   

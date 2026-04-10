@@ -2,13 +2,13 @@ import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
   confirmUpdateAttributesBecameNotRelevant: {
-    title: "Nodes will no longer apply",
-    message: `The following nodes will no longer apply:  
+    title: "گره‌ها دیگر اعمال نخواهند شد",
+    message: `گره‌های زیر دیگر اعمال نخواهند شد:  
   
 {{attributeNames}}  
   
-Their values will be cleared.  
-Continue?`,
+مقادیر آن‌ها پاک خواهند شد.  
+ادامه می‌دهید؟`,
   },
   confirmGoToListOfRecords: `به لیست رکوردها بروید؟
   

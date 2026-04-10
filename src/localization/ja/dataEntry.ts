@@ -2,13 +2,13 @@ import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
   confirmUpdateAttributesBecameNotRelevant: {
-    title: "Nodes will no longer apply",
-    message: `The following nodes will no longer apply:  
+    title: "ノードは適用されなくなります",
+    message: `以下のノードは適用されなくなります：  
   
 {{attributeNames}}  
   
-Their values will be cleared.  
-Continue?`,
+それらの値は削除されます。  
+続行しますか？`,
   },
   confirmGoToListOfRecords: `記録一覧に移動しますか？
 

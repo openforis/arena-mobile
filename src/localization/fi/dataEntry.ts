@@ -2,13 +2,13 @@ import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
   confirmUpdateAttributesBecameNotRelevant: {
-    title: "Nodes will no longer apply",
-    message: `The following nodes will no longer apply:  
+    title: "Solmut eivät enää koske",
+    message: `Seuraavat solmut eivät enää koske:  
   
 {{attributeNames}}  
   
-Their values will be cleared.  
-Continue?`,
+Niiden arvot tyhjennetään.  
+Jatketaanko?`,
   },
   confirmGoToListOfRecords: `Siirry tietueluetteloon?
   

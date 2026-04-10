@@ -2,13 +2,13 @@ import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
   confirmUpdateAttributesBecameNotRelevant: {
-    title: "Nodes will no longer apply",
-    message: `The following nodes will no longer apply:  
+    title: "ኖዶቹ ዳግም አይተገበሩም",
+    message: `የሚከተሉት ኖዶች ዳግም አይተገበሩም:  
   
 {{attributeNames}}  
   
-Their values will be cleared.  
-Continue?`,
+እሴቶቻቸው ይጸዳሉ.  
+መቀጠል?`,
   },
   confirmGoToListOfRecords: "ወደ መዝገቦች ዝርዝር ይሂዱ?\n\n(ሁሉም ለውጦች አስቀድመው ተቀምጠዋል)",
   checkStatus: "የማመሳሰል ሁኔታን ያረጋግጡ",
