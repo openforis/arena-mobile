@@ -99,6 +99,7 @@ jobs:
 
             echo "Suppressing ANR dialogs (e.g. 'Pixel launcher isn't responding')..."
             adb shell settings put global anr_show_background 0
+            adb shell settings put global hide_error_dialogs 1
 
             echo "Waiting for system to stabilize..."
             sleep 60
