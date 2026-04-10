@@ -17,13 +17,7 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import {
-  RecordLoadStatus,
-  RecordNodes,
-  RecordOrigin,
-  RecordsUtils,
-  SurveyDefs,
-} from "model";
+import { RecordLoadStatus, RecordUtils, RecordOrigin, SurveyDefs } from "model";
 import { PreferencesService } from "service/preferencesService";
 import { RecordFileService } from "service/recordFileService";
 import { RecordService } from "service/recordService";
@@ -413,7 +407,7 @@ const confirmClearNewlyInapplicableValues = async ({
   nodesUpdated,
 }: any): Promise<boolean> => {
   const newlyInapplicableDefUuidsWithValue =
-    RecordsUtils.findNewlyInapplicableDefUuidsWithValue({
+    RecordUtils.findNewlyInapplicableDefUuidsWithValue({
       recordPrev: record,
       recordNext: recordUpdated,
       nodes: nodesUpdated,
@@ -521,7 +515,7 @@ const updateAttribute =
       isRootKeyDef &&
       (await _isRootKeyDuplicate({ survey, record: recordUpdated, lang }))
     ) {
-      const keyValues = RecordNodes.getRootEntityKeysFormatted({
+      const keyValues = RecordUtils.getRootEntityKeysFormatted({
         survey,
         record: recordUpdated,
         lang,

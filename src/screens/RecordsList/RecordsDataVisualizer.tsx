@@ -22,8 +22,8 @@ import { useTranslation } from "localization";
 import {
   Cycles,
   RecordLoadStatus,
+  RecordUtils,
   RecordOrigin,
-  RecordsUtils,
   ScreenViewMode,
   Sort,
   SurveyDefs,
@@ -170,14 +170,14 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
 
   const recordToItem = useCallback(
     (recordSummary: any) => {
-      const valuesByKey = RecordsUtils.getValuesByKeyFormatted({
+      const valuesByKey = RecordUtils.getRecordSummaryValuesByKeyFormatted({
         survey,
         lang,
         recordSummary,
         t,
       });
       const valuesBySummaryAttribute =
-        RecordsUtils.getValuesBySummaryAttributeFormatted({
+        RecordUtils.getRecordSummaryValuesBySummaryAttributeFormatted({
           survey,
           lang,
           recordSummary,

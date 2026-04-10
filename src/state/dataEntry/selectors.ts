@@ -14,7 +14,7 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordCurrentPageEntity, RecordNodes, SurveyDefs } from "model";
+import { RecordCurrentPageEntity, RecordUtils, SurveyDefs } from "model";
 
 import { SurveySelectors } from "../survey/selectors";
 import { RemoteConnectionSelectors } from "../remoteConnection/selectors";
@@ -313,7 +313,7 @@ const extractAttibuteValue = ({ state, attribute }: any) => {
   if (!value) return value;
   const survey = SurveySelectors.selectCurrentSurvey(state)!;
   const attributeDef = Surveys.getNodeDefByUuid({ survey, uuid: nodeDefUuid });
-  return RecordNodes.cleanupAttributeValue({ value, attributeDef });
+  return RecordUtils.cleanupAttributeValue({ value, attributeDef });
 };
 
 const selectPreviousCycleRecordAttributeValue =

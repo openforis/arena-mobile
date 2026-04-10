@@ -3,6 +3,7 @@ import {
   NodeDefType,
   NodeValueFormatter,
   Nodes,
+  NodesMap,
   Numbers,
   Objects,
   RecordExpressionEvaluator,
@@ -429,13 +430,129 @@ const getAncestorsLabelAndKeysText = ({
   return nameParts.join(" - ");
 };
 
-export const RecordNodes = {
+const getRecordSummaryValuesByKeyOrSummaryAttributeFormatted = ({
+  survey,
+  lang,
+  recordSummary,
+  valuesWrapperProp,
+  t = null,
+}: {
+  survey: Survey;
+  lang: LanguageCode;
+  recordSummary: ArenaRecord;
+  valuesWrapperProp: string;
+  t?: any;
+}): Record<string, string> => {
+  const { cycle: recordCycle } = recordSummary;
+  const cycle = recordCycle!;
+  const rootDef = Surveys.getNodeDefRoot({ survey });
+  const defs =
+    valuesWrapperProp === "keysObj"
+      ? SurveyDefs.getRootKeyDefs({ survey, cycle })
+      : Surveys.getNodeDefsIncludedInMultipleEntitySummary({
+          survey,
+          cycle,
+          nodeDef: rootDef,
+        });
+  return defs.reduce(
+    (acc, nodeDef) => {
+      const nodeDefName = NodeDefs.getName(nodeDef);
+      const value = Objects.path([valuesWrapperProp, nodeDefName])(
+        recordSummary,
+      );
+      let valueFormatted: string = NodeValueFormatter.format({
+        survey,
+        cycle,
+        nodeDef,
+        value,
+        showLabel: true,
+        lang,
+      });
+      if (Objects.isEmpty(valueFormatted)) {
+        valueFormatted = Objects.isEmpty(value)
+          ? t?.("common:empty")
+          : String(value);
+      }
+      acc[nodeDefName] = valueFormatted;
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
+};
+
+const getRecordSummaryValuesByKeyFormatted = ({
+  survey,
+  lang,
+  recordSummary,
+  t = null,
+}: any): Record<string, string> =>
+  getRecordSummaryValuesByKeyOrSummaryAttributeFormatted({
+    survey,
+    lang,
+    recordSummary,
+    valuesWrapperProp: "keysObj",
+    t,
+  });
+
+const getRecordSummaryValuesBySummaryAttributeFormatted = ({
+  survey,
+  lang,
+  recordSummary,
+  t = null,
+}: any): Record<string, string> =>
+  getRecordSummaryValuesByKeyOrSummaryAttributeFormatted({
+    survey,
+    lang,
+    recordSummary,
+    valuesWrapperProp: "summaryAttributesObj",
+    t,
+  });
+
+const findNewlyInapplicableDefUuidsWithValue = ({
+  recordPrev,
+  recordNext,
+  nodes,
+}: {
+  recordPrev: ArenaRecord;
+  recordNext: ArenaRecord;
+  nodes: NodesMap;
+}): Set<string> => {
+  const result = new Set<string>();
+  for (const node of Object.values(nodes)) {
+    const { nodeDefUuid } = node;
+    if (result.has(nodeDefUuid)) {
+      continue;
+    }
+    const parentNode = Records.getParent(node)(recordNext);
+    if (!parentNode) {
+      continue;
+    }
+    const nodePrev = Records.getNodeByUuid(node.uuid)(recordPrev);
+    const hadUserInputValue = nodePrev && Nodes.hasUserInputValue(nodePrev);
+    const applicablePrev = nodePrev
+      ? Records.isNodeApplicable({ record: recordPrev, node: nodePrev })
+      : true;
+    const applicableNext = Records.isNodeApplicable({
+      record: recordNext,
+      node,
+    });
+    if (applicablePrev && !applicableNext && hadUserInputValue) {
+      result.add(nodeDefUuid);
+    }
+  }
+  return result;
+};
+
+export const RecordUtils = {
   getNodeName,
   formatBooleanValue,
   getEntityKeysFormatted,
   getRootEntityKeysFormatted,
   getEntitySummaryValuesByNameFormatted,
   getAncestorsLabelAndKeysText,
+  getRecordSummaryValuesByKeyFormatted,
+  getRecordSummaryValuesBySummaryAttributeFormatted,
+  findNewlyInapplicableDefUuidsWithValue,
   getApplicableChildrenEntityDefs,
   getSiblingNode,
   getCoordinateDistanceTarget,

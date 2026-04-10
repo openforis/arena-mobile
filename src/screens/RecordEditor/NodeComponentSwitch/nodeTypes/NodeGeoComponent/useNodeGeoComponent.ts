@@ -9,7 +9,7 @@ import MapView from "react-native-maps";
 import { Records } from "@openforis/arena-core";
 
 import { useTranslation } from "localization";
-import { LatLng, RecordNodes } from "model";
+import { LatLng, RecordUtils } from "model";
 
 import {
   DataEntryActions,
@@ -135,7 +135,7 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
     const node = Records.getNodeByUuid(nodeUuid)(record);
     if (!node) return;
 
-    const featureName = RecordNodes.getAncestorsLabelAndKeysText({
+    const featureName = RecordUtils.getAncestorsLabelAndKeysText({
       survey,
       record,
       node,
