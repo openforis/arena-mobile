@@ -529,18 +529,19 @@ const findTopmostNewlyInapplicableAncestorDefUuid = ({
       const ancestorPrev = Records.getNodeByUuid(visitedAncestor.uuid)(
         recordPrev,
       );
-      if (ancestorPrev) {
-        const ancestorApplicablePrev = Records.isNodeApplicable({
-          record: recordPrev,
-          node: ancestorPrev,
-        });
-        const ancestorApplicableNext = Records.isNodeApplicable({
-          record: recordNext,
-          node: visitedAncestor,
-        });
-        if (ancestorApplicablePrev && !ancestorApplicableNext) {
-          topmostInapplicableAncestorDefUuid = visitedAncestor.nodeDefUuid;
-        }
+      if (!ancestorPrev) {
+        return;
+      }
+      const applicablePrev = Records.isNodeApplicable({
+        record: recordPrev,
+        node: ancestorPrev,
+      });
+      const applicableNext = Records.isNodeApplicable({
+        record: recordNext,
+        node: visitedAncestor,
+      });
+      if (applicablePrev && !applicableNext) {
+        topmostInapplicableAncestorDefUuid = visitedAncestor.nodeDefUuid;
       }
     },
     () => !!topmostInapplicableAncestorDefUuid,
