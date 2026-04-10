@@ -42,9 +42,18 @@ jobs:
           distribution: "temurin"
           cache: "gradle"
 
+      - name: Cache Expo prebuild output
+        uses: actions/cache@v4
+        id: cache-android-prebuild
+        with:
+          path: android/
+          key: android-prebuild-${{ hashFiles('package.json', 'yarn.lock', 'app.json', 'app.config.ts') }}
+
       - name: Build Android APK
         run: |
-          npx expo prebuild --platform android
+          if [ "${{ steps.cache-android-prebuild.outputs.cache-hit }}" != "true" ]; then
+            npx expo prebuild --platform android
+          fi
 
           # Manually create the bundle and assets folder
           mkdir -p android/app/src/main/assets
@@ -58,7 +67,7 @@ jobs:
             --assets-dest android/app/src/main/res
 
           cd android
-          ./gradlew assembleDebug --no-daemon
+          ./gradlew assembleDebug --no-daemon --build-cache --parallel
       - name: Enable KVM group perms
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
