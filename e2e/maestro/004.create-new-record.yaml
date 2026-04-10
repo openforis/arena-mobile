@@ -19,9 +19,19 @@ appId: ${APP_ID}
     element: "True"
     direction: DOWN
 - tapOn:
+    text: "False"
+    below:
+      text: "Boolean"
+- assertNotVisible: "Relevant if Boolean = True"
+- tapOn:
     text: "True"
     below:
       text: "Boolean"
+- assertVisible: "Relevant if Boolean = True"
+- inputText:
+    text: "123"
+    below:
+      text: "Relevant if Boolean = True"
 - tapOn:
     text: "Records"
 - tapOn:
