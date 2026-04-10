@@ -88,6 +88,9 @@ jobs:
             echo "Waiting for emulator to settle..."
             adb wait-for-device
 
+            echo "Suppressing ANR dialogs (e.g. 'Pixel launcher isn't responding')..."
+            adb shell settings put global anr_show_background 0
+
             echo "Waiting for system to stabilize..."
             sleep 60
 
