@@ -22,15 +22,18 @@ appId: ${APP_ID}
     text: "False"
     below:
       text: "Boolean"
-- assertNotVisible: "Relevant if Boolean = True"
+- assertNotVisible:
+    id: "root_relevant_if_bool"
 - tapOn:
     text: "True"
     below:
       text: "Boolean"
 - scrollUntilVisible:
-    element: "Relevant if Boolean = True"
+    element:
+      id: "root_relevant_if_bool"
     direction: DOWN
-- assertVisible: "Relevant if Boolean = True"
+- assertVisible:
+    id: "root_relevant_if_bool"
 - tapOn:
     id: "root_relevant_if_bool"
 - inputText: "123"
@@ -42,8 +45,10 @@ appId: ${APP_ID}
     text: "False"
     below:
       text: "Boolean"
-- assertVisible:
-    id: "confirm-dialog-title"
+- extendedWaitUntil:
+    visible:
+      id: "confirm-dialog-title"
+    timeout: 10000
 - swipe:
     direction: RIGHT
     from:
@@ -52,7 +57,8 @@ appId: ${APP_ID}
 - tapOn: "Confirm"
 - assertNotVisible:
     id: "confirm-dialog-title"
-- assertNotVisible: "Relevant if Boolean = True"
+- assertNotVisible:
+    id: "root_relevant_if_bool"
 - tapOn:
     text: "Records"
 - tapOn:
