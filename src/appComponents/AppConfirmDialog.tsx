@@ -53,7 +53,7 @@ export const AppConfirmDialog = () => {
   return (
     <Portal>
       <Dialog visible={isOpen} onDismiss={cancel}>
-        <Dialog.Title>{t(titleKey)}</Dialog.Title>
+        <Dialog.Title testID="confirm-dialog-title">{t(titleKey)}</Dialog.Title>
         <Dialog.Content>
           {messageKey &&
             (messageIsMarkdown ? (

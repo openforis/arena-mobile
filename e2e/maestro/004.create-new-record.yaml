@@ -42,14 +42,16 @@ appId: ${APP_ID}
     text: "False"
     below:
       text: "Boolean"
-- assertVisible: "Nodes will no longer apply"
+- assertVisible:
+    id: "confirm-dialog-title"
 - swipe:
     direction: RIGHT
     from:
       id: "confirm-swipe-button"
     duration: 1000
 - tapOn: "Confirm"
-- assertNotVisible: "Nodes will no longer apply"
+- assertNotVisible:
+    id: "confirm-dialog-title"
 - assertNotVisible: "Relevant if Boolean = True"
 - tapOn:
     text: "Records"
