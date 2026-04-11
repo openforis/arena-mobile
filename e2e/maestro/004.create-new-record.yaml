@@ -54,7 +54,11 @@ appId: ${APP_ID}
     from:
       id: "confirm-swipe-button"
     duration: 1000
-- tapOn: "Confirm"
+- assertVisible:
+    id: "confirm-dialog-confirm-button"
+    enabled: true
+- tapOn:
+    id: "confirm-dialog-confirm-button"
 - assertNotVisible:
     id: "confirm-dialog-title"
 - assertNotVisible:

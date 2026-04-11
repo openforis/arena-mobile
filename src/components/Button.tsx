@@ -59,6 +59,7 @@ export type ButtonProps = {
   multiplePressAvoidanceTimeout?: number;
   onPress?: (event: any) => Promise<void> | void;
   style?: StyleProp<ViewStyle>;
+  testID?: string;
   textColor?: string;
   textIsI18nKey?: boolean;
   textKey?: string;
@@ -76,6 +77,7 @@ export const Button = (props: ButtonProps) => {
     mode: modeProp = "contained",
     multiplePressAvoidanceTimeout,
     onPress: onPressProp,
+    testID,
     textKey,
     textParams,
     textIsI18nKey = true,
@@ -116,6 +118,7 @@ export const Button = (props: ButtonProps) => {
       loading={actualLoading}
       mode={mode}
       onPress={onPress}
+      testID={testID}
       {...otherProps}
     >
       {text}

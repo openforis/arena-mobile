@@ -124,14 +124,16 @@ export const AppConfirmDialog = () => {
             labelVariant="bodyLarge"
             onPress={cancel}
             style={cancelButtonStyle}
+            testID="confirm-dialog-cancel-button"
             textKey={cancelButtonTextKey}
           />
           <Button
             disabled={!confirmButtonEnabled}
             onPress={confirm}
             labelVariant="bodyLarge"
-            textKey={confirmButtonTextKey}
             style={confirmButtonStyle}
+            testID="confirm-dialog-confirm-button"
+            textKey={confirmButtonTextKey}
           />
         </Dialog.Actions>
       </Dialog>
