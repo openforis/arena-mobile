@@ -15,7 +15,7 @@ import {
 
 import { useLocationWatch } from "hooks";
 import { LocationPoint } from "model";
-import { RecordNodes } from "model/utils/RecordNodes";
+import { RecordUtils } from "model/utils/RecordUtils";
 import {
   DataEntryActions,
   DataEntrySelectors,
@@ -98,11 +98,11 @@ export const useNodeCoordinateComponent = (props: any) => {
   const defaultSrsCode = srss[0]!.code;
   const includedExtraFields = useMemo(
     () => NodeDefs.getCoordinateAdditionalFields(nodeDef),
-    [nodeDef]
+    [nodeDef],
   );
   const includedFields = useMemo(
     () => new Set(["x", "y", "srs", ...includedExtraFields]),
-    [includedExtraFields]
+    [includedExtraFields],
   );
 
   const [state, setState] = useState({
@@ -122,7 +122,7 @@ export const useNodeCoordinateComponent = (props: any) => {
       }
       return result;
     },
-    [includedExtraFields, defaultSrsCode]
+    [includedExtraFields, defaultSrsCode],
   );
 
   const uiValueToNodeValue = useCallback(
@@ -142,7 +142,7 @@ export const useNodeCoordinateComponent = (props: any) => {
       }
       return result;
     },
-    [includedExtraFields]
+    [includedExtraFields],
   );
 
   const isNodeValueEqual = useCallback(
@@ -150,7 +150,7 @@ export const useNodeCoordinateComponent = (props: any) => {
       const transformCoordinateValue = (coordVal: NodeValueCoordinate) => {
         if (!coordVal) return null;
         const coordValCleaned: NodeValueCoordinate = Object.entries(
-          coordVal
+          coordVal,
         ).reduce((acc, [key, value]) => {
           if (includedFields.has(key)) {
             // @ts-ignore
@@ -174,7 +174,7 @@ export const useNodeCoordinateComponent = (props: any) => {
         (Objects.isEmpty(coordValA) && Objects.isEmpty(coordValB))
       );
     },
-    [defaultSrsCode, includedFields]
+    [defaultSrsCode, includedFields],
   );
 
   const { applicable, uiValue, updateNodeValue, onClearPress } =
@@ -207,7 +207,7 @@ export const useNodeCoordinateComponent = (props: any) => {
       }
       updateNodeValue({ value: valueNext, ignoreDelay });
     },
-    [defaultSrsCode, singleSrs, updateNodeValue]
+    [defaultSrsCode, singleSrs, updateNodeValue],
   );
 
   const onChangeValueField = useCallback(
@@ -215,7 +215,7 @@ export const useNodeCoordinateComponent = (props: any) => {
       const valueNext = { ...uiValue, [fieldKey]: val };
       onValueChange({ value: valueNext });
     },
-    [onValueChange, uiValue]
+    [onValueChange, uiValue],
   );
 
   const locationCallback = useCallback(
@@ -230,7 +230,7 @@ export const useNodeCoordinateComponent = (props: any) => {
       });
       onValueChange({ value: valueNext });
     },
-    [nodeDef, onValueChange, srs, srsIndex]
+    [nodeDef, onValueChange, srs, srsIndex],
   );
 
   const {
@@ -248,7 +248,7 @@ export const useNodeCoordinateComponent = (props: any) => {
   useSelector((state) => {
     const record = DataEntrySelectors.selectRecord(state);
     const node = Records.getNodeByUuid(nodeUuid)(record);
-    RecordNodes.getCoordinateDistanceTarget({
+    RecordUtils.getCoordinateDistanceTarget({
       survey,
       nodeDef,
       record,
@@ -268,7 +268,7 @@ export const useNodeCoordinateComponent = (props: any) => {
     async (srsTo: any) => {
       dispatch(DataEntryActions.updateCoordinateValueSrs({ nodeUuid, srsTo }));
     },
-    [dispatch, nodeUuid]
+    [dispatch, nodeUuid],
   );
 
   const onStartGpsPress = useCallback(async () => {
@@ -300,16 +300,16 @@ export const useNodeCoordinateComponent = (props: any) => {
         ...statePrev,
         compassNavigatorVisible: visible,
       })),
-    []
+    [],
   );
 
   const showCompassNavigator = useCallback(
     () => setCompassNavigatorVisible(true),
-    [setCompassNavigatorVisible]
+    [setCompassNavigatorVisible],
   );
   const hideCompassNavigator = useCallback(
     () => setCompassNavigatorVisible(false),
-    [setCompassNavigatorVisible]
+    [setCompassNavigatorVisible],
   );
 
   const onCompassNavigatorUseCurrentLocation = useCallback(
@@ -322,7 +322,7 @@ export const useNodeCoordinateComponent = (props: any) => {
       });
       onValueChange({ value: valueNext, ignoreDelay: true });
     },
-    [nodeDef, srs, srsIndex, onValueChange]
+    [nodeDef, srs, srsIndex, onValueChange],
   );
 
   const editable = !NodeDefs.isReadOnly(nodeDef);

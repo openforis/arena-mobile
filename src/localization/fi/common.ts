@@ -1,5 +1,6 @@
 export default {
   about: "Tietoja",
+  andMore: "...ja {{count}} lisää",
   cancel: "Kumoa",
   clear: "Tyhjennä",
   close: "Sulje",

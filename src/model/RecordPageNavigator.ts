@@ -1,6 +1,6 @@
 import { Surveys, Records, NodeDefs, Nodes } from "@openforis/arena-core";
 
-import { RecordNodes } from "model/utils/RecordNodes";
+import { RecordUtils } from "model/utils/RecordUtils";
 
 const getSingleChildNodeUuid = ({ record, entityDef, parentEntity }: any) =>
   NodeDefs.isMultiple(entityDef)
@@ -40,7 +40,7 @@ const getNextOrPreviousMultipleEntityPointer = ({
     survey,
     uuid: entityDefUuid,
   });
-  const { siblingNode, siblingIndex } = RecordNodes.getSiblingNode({
+  const { siblingNode, siblingIndex } = RecordUtils.getSiblingNode({
     record,
     parentEntity,
     node: entity,
@@ -85,7 +85,7 @@ const findSiblingEntityPointer = ({
 
   while (visitedEntityDef != null && !NodeDefs.isRoot(visitedEntityDef)) {
     visitedParentEntityDef = getVisitedParentEntityDef();
-    const siblingEntityDefs = RecordNodes.getApplicableChildrenEntityDefs({
+    const siblingEntityDefs = RecordUtils.getApplicableChildrenEntityDefs({
       survey,
       nodeDef: visitedParentEntityDef,
       parentEntity: visitedParentEntity,
@@ -173,7 +173,7 @@ const getFirstChildEntityPointer = ({
   actualEntity,
 }: any) => {
   const { cycle } = record;
-  const childrenEntityDefs = RecordNodes.getApplicableChildrenEntityDefs({
+  const childrenEntityDefs = RecordUtils.getApplicableChildrenEntityDefs({
     survey,
     nodeDef: entityDef,
     parentEntity: actualEntity,

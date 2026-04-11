@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 
 import {
+  NodeDefCode,
   NodeDefEntity,
   NodeDefs,
   Nodes,
@@ -13,7 +14,7 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordCurrentPageEntity, RecordNodes, SurveyDefs } from "model";
+import { RecordCurrentPageEntity, RecordUtils, SurveyDefs } from "model";
 
 import { SurveySelectors } from "../survey/selectors";
 import { RemoteConnectionSelectors } from "../remoteConnection/selectors";
@@ -140,7 +141,13 @@ const selectRecordAttributeInfo =
   };
 
 const selectRecordChildNodes =
-  ({ parentEntityUuid, nodeDef }: any) =>
+  ({
+    parentEntityUuid,
+    nodeDef,
+  }: {
+    parentEntityUuid: string;
+    nodeDef: NodeDefEntity;
+  }) =>
   (state: any) => {
     const record = selectRecord(state);
     const parentEntity = Records.getNodeByUuid(parentEntityUuid)(record)!;
@@ -149,11 +156,11 @@ const selectRecordChildNodes =
   };
 
 const selectChildDefs =
-  ({ nodeDef }: any) =>
+  ({ nodeDef }: { nodeDef: NodeDefEntity }) =>
   (state: any) => {
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const cycle = selectRecordCycle(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const childDefs = SurveyDefs.getChildrenDefs({
       survey,
       nodeDef,
@@ -168,7 +175,13 @@ const selectChildDefs =
   };
 
 const selectRecordCodeParentItemUuid =
-  ({ nodeDef, parentNodeUuid }: any) =>
+  ({
+    nodeDef,
+    parentNodeUuid,
+  }: {
+    nodeDef: NodeDefCode;
+    parentNodeUuid: string;
+  }) =>
   (state: any) => {
     const parentCodeDefUuid = NodeDefs.getParentCodeDefUuid(nodeDef);
     if (!parentCodeDefUuid) return null;
@@ -300,7 +313,7 @@ const extractAttibuteValue = ({ state, attribute }: any) => {
   if (!value) return value;
   const survey = SurveySelectors.selectCurrentSurvey(state)!;
   const attributeDef = Surveys.getNodeDefByUuid({ survey, uuid: nodeDefUuid });
-  return RecordNodes.cleanupAttributeValue({ value, attributeDef });
+  return RecordUtils.cleanupAttributeValue({ value, attributeDef });
 };
 
 const selectPreviousCycleRecordAttributeValue =

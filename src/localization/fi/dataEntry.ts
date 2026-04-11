@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateAttributesBecameNotRelevant: {
+    title: "Solmut eivät enää koske",
+    message: `Seuraavat solmut eivät enää koske:  
+  
+{{attributeNames}}  
+  
+Niiden arvot tyhjennetään.  
+Jatketaanko?`,
+  },
   confirmGoToListOfRecords: `Siirry tietueluetteloon?
   
   (kaikki muutokset on jo tallennettu)`,

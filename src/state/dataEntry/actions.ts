@@ -17,14 +17,15 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordOrigin, RecordLoadStatus, SurveyDefs, RecordNodes } from "model";
+import { RecordLoadStatus, RecordUtils, RecordOrigin, SurveyDefs } from "model";
 import { PreferencesService } from "service/preferencesService";
-import { RecordService } from "service/recordService";
 import { RecordFileService } from "service/recordFileService";
+import { RecordService } from "service/recordService";
 
 import { screenKeys } from "screens/screenKeys";
 
-import { SystemUtils } from "utils";
+import { StringUtils, SystemUtils } from "utils";
+import { i18n } from "localization";
 
 import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { DeviceInfoActions, DeviceInfoSelectors } from "../deviceInfo";
@@ -32,15 +33,15 @@ import { MessageActions } from "../message";
 import { SurveySelectors } from "../survey";
 
 import { RemoteConnectionSelectors } from "../remoteConnection";
-import { DataEntryActionTypes } from "./actionTypes";
-import { DataEntrySelectors } from "./selectors";
 import { exportRecords, startCsvDataExportJob } from "./actionsDataExport";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
+import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
 import {
   importRecordsFromFile,
   importRecordsFromServer,
 } from "./actionsRecordsImport";
-import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
+import { DataEntryActionTypes } from "./actionTypes";
+import { DataEntrySelectors } from "./selectors";
 
 const {
   DATA_ENTRY_RESET,
@@ -397,6 +398,51 @@ const checkAndConfirmUpdateNode = async ({
   return true;
 };
 
+const confirmClearNewlyInapplicableValues = async ({
+  dispatch,
+  survey,
+  lang,
+  record,
+  recordUpdated,
+  nodesUpdated,
+}: any): Promise<boolean> => {
+  const newlyInapplicableDefUuidsWithValue =
+    RecordUtils.findNewlyInapplicableDefUuidsWithValue({
+      recordPrev: record,
+      recordNext: recordUpdated,
+      nodes: nodesUpdated,
+    });
+
+  const newlyInapplicableNodeDefsCount =
+    newlyInapplicableDefUuidsWithValue.size;
+  if (newlyInapplicableNodeDefsCount === 0) return true;
+
+  const maxToShow = 10;
+  const overflow = newlyInapplicableNodeDefsCount - maxToShow;
+  const nodeDefUuidsToShow = Array.from(
+    newlyInapplicableDefUuidsWithValue,
+  ).slice(0, maxToShow);
+  const attributeNames = SurveyDefs.getNodeDefsLabelsOrNames({
+    survey,
+    nodeDefUuids: nodeDefUuidsToShow,
+    lang,
+  }).map((name) => `- ${StringUtils.truncateWithEllipsis(name, 40)}`);
+
+  const attributeNamesToShow = [
+    ...attributeNames,
+    ...(overflow > 0 ? [i18n.t("common:andMore", { count: overflow })] : []),
+  ];
+
+  return !!(await ConfirmUtils.confirm({
+    dispatch,
+    titleKey: "dataEntry:confirmUpdateAttributesBecameNotRelevant.title",
+    messageIsMarkdown: true,
+    messageKey: "dataEntry:confirmUpdateAttributesBecameNotRelevant.message",
+    messageParams: { attributeNames: attributeNamesToShow.join("\n") },
+    swipeToConfirm: true,
+  }));
+};
+
 const updateAttribute =
   ({
     uuid,
@@ -433,7 +479,21 @@ const updateAttribute =
         record,
         attributeUuid: uuid,
         value,
+        clearNonApplicableValues: true,
       });
+
+    if (
+      !(await confirmClearNewlyInapplicableValues({
+        dispatch,
+        survey,
+        lang,
+        record,
+        recordUpdated,
+        nodesUpdated,
+      }))
+    ) {
+      return;
+    }
 
     removeNodesFlags(nodesUpdated);
 
@@ -455,7 +515,7 @@ const updateAttribute =
       isRootKeyDef &&
       (await _isRootKeyDuplicate({ survey, record: recordUpdated, lang }))
     ) {
-      const keyValues = RecordNodes.getRootEntityKeysFormatted({
+      const keyValues = RecordUtils.getRootEntityKeysFormatted({
         survey,
         record: recordUpdated,
         lang,

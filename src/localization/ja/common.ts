@@ -1,5 +1,6 @@
 export default {
   about: "このアプリについて",
+  andMore: "...他{{count}}件",
   appTitle: "Arena Mobile",
   cancel: "キャンセル",
   clear: "クリア",

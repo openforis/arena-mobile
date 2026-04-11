@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateAttributesBecameNotRelevant: {
+    title: "Node tidak akan berlaku lagi",
+    message: `Node berikut tidak akan berlaku lagi:  
+  
+{{attributeNames}}  
+  
+Nilainya akan dihapus.  
+Lanjutkan?`,
+  },
   confirmGoToListOfRecords: `lanjut ke daftar isian?
   
   (semua perubahan sudah disimpan)`,

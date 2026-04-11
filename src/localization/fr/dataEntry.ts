@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateAttributesBecameNotRelevant: {
+    title: "Les nœuds ne s'appliqueront plus",
+    message: `Les nœuds suivants ne s'appliqueront plus :  
+  
+{{attributeNames}}  
+  
+Leurs valeurs seront effacées.  
+Continuer ?`,
+  },
   confirmGoToListOfRecords:
     "Aller à la liste des enregistrements?\n\n(toutes les modifications sont déjà enregistrées)",
   checkStatus: "Vérifier synchronisation",

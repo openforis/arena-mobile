@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateAttributesBecameNotRelevant: {
+    title: "ኖዶቹ ዳግም አይተገበሩም",
+    message: `የሚከተሉት ኖዶች ዳግም አይተገበሩም:  
+  
+{{attributeNames}}  
+  
+እሴቶቻቸው ይጸዳሉ.  
+መቀጠል?`,
+  },
   confirmGoToListOfRecords: "ወደ መዝገቦች ዝርዝር ይሂዱ?\n\n(ሁሉም ለውጦች አስቀድመው ተቀምጠዋል)",
   checkStatus: "የማመሳሰል ሁኔታን ያረጋግጡ",
   closestSamplingPoint: {
