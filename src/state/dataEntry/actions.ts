@@ -2,6 +2,7 @@ import { Keyboard } from "react-native";
 
 import {
   Dates,
+  LanguageCode,
   NodeDefs,
   NodeDefType,
   Nodes,
@@ -13,6 +14,7 @@ import {
   RecordFactory,
   Records,
   RecordUpdater,
+  Survey,
   Surveys,
   Validations,
 } from "@openforis/arena-core";
@@ -402,26 +404,28 @@ const confirmClearNewlyInapplicableValues = async ({
   dispatch,
   survey,
   lang,
-  record,
-  recordUpdated,
-  nodesUpdated,
-}: any): Promise<boolean> => {
-  const newlyInapplicableDefUuidsWithValue =
-    RecordUtils.findNewlyInapplicableDefUuidsWithValue({
-      recordPrev: record,
-      recordNext: recordUpdated,
-      nodes: nodesUpdated,
-    });
-
-  const newlyInapplicableNodeDefsCount =
-    newlyInapplicableDefUuidsWithValue.size;
-  if (newlyInapplicableNodeDefsCount === 0) return true;
+  clearedNotApplicableDefUuids,
+  clearedDependentCodeAttributeDefUuids,
+}: {
+  dispatch: any;
+  survey: Survey;
+  lang: LanguageCode;
+  clearedNotApplicableDefUuids: Set<string>;
+  clearedDependentCodeAttributeDefUuids: Set<string>;
+}): Promise<boolean> => {
+  const totalClearedDefUuids = new Set([
+    ...clearedNotApplicableDefUuids,
+    ...clearedDependentCodeAttributeDefUuids,
+  ]);
+  const totalInapplicableDefsCount = totalClearedDefUuids.size;
+  if (totalInapplicableDefsCount === 0) return true;
 
   const maxToShow = 10;
-  const overflow = newlyInapplicableNodeDefsCount - maxToShow;
-  const nodeDefUuidsToShow = Array.from(
-    newlyInapplicableDefUuidsWithValue,
-  ).slice(0, maxToShow);
+  const overflow = totalInapplicableDefsCount - maxToShow;
+  const nodeDefUuidsToShow = Array.from(totalClearedDefUuids).slice(
+    0,
+    maxToShow,
+  );
   const attributeNames = SurveyDefs.getNodeDefsLabelsOrNames({
     survey,
     nodeDefUuids: nodeDefUuidsToShow,
@@ -472,24 +476,27 @@ const updateAttribute =
     )
       return;
 
-    let { record: recordUpdated, nodes: nodesUpdated } =
-      await RecordUpdater.updateAttributeValue({
-        user,
-        survey,
-        record,
-        attributeUuid: uuid,
-        value,
-        clearNonApplicableValues: true,
-      });
+    let {
+      record: recordUpdated,
+      nodes: nodesUpdated,
+      clearedNotApplicableDefUuids,
+      clearedDependentCodeAttributeDefUuids,
+    } = await RecordUpdater.updateAttributeValue({
+      user,
+      survey,
+      record,
+      attributeUuid: uuid,
+      value,
+      clearNonApplicableValues: true,
+    });
 
     if (
       !(await confirmClearNewlyInapplicableValues({
         dispatch,
         survey,
         lang,
-        record,
-        recordUpdated,
-        nodesUpdated,
+        clearedNotApplicableDefUuids,
+        clearedDependentCodeAttributeDefUuids,
       }))
     ) {
       return;
