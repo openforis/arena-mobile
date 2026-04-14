@@ -26,7 +26,7 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
     onClose,
     onUpdate = null,
     showCurrentVersionNumber = true,
-    title = "app:changelog",
+    title = undefined,
   } = props;
 
   const theme = useTheme();
@@ -60,6 +60,7 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
       actions={onUpdate ? [{ onPress: onUpdate, textKey: "app:update" }] : []}
       onClose={onClose}
       style={styles.dialog}
+      title={title}
     >
       <VView style={styles.content}>
         {showCurrentVersionNumber && (
