@@ -1,7 +1,7 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
-  confirmUpdateAttributesBecameNotRelevant: {
+  confirmUpdateNodesBecameNotApplicable: {
     title: "ኖዶቹ ዳግም አይተገበሩም",
     message: `የሚከተሉት ኖዶች ዳግም አይተገበሩም:  
   

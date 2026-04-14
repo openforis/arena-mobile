@@ -1,7 +1,7 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
-  confirmUpdateAttributesBecameNotRelevant: {
+  confirmUpdateNodesBecameNotApplicable: {
     title: "Узлы больше не будут применяться",
     message: `Следующие узлы больше не будут применяться:  
   

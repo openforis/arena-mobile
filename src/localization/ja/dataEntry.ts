@@ -1,7 +1,7 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
-  confirmUpdateAttributesBecameNotRelevant: {
+  confirmUpdateNodesBecameNotApplicable: {
     title: "ノードは適用されなくなります",
     message: `以下のノードは適用されなくなります：  
   

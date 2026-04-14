@@ -1,7 +1,7 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
-  confirmUpdateAttributesBecameNotRelevant: {
+  confirmUpdateNodesBecameNotApplicable: {
     title: "گره‌ها دیگر اعمال نخواهند شد",
     message: `گره‌های زیر دیگر اعمال نخواهند شد:  
   

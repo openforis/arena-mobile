@@ -1,7 +1,7 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
-  confirmUpdateAttributesBecameNotRelevant: {
+  confirmUpdateNodesBecameNotApplicable: {
     title: "Les nœuds ne s'appliqueront plus",
     message: `Les nœuds suivants ne s'appliqueront plus :  
   

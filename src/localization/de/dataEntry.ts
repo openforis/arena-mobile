@@ -1,7 +1,7 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
-  confirmUpdateAttributesBecameNotRelevant: {
+  confirmUpdateNodesBecameNotApplicable: {
     title: "Knoten werden nicht mehr gelten",
     message: `Die folgenden Knoten werden nicht mehr gelten:  
   

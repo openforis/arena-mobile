@@ -400,48 +400,91 @@ const checkAndConfirmUpdateNode = async ({
   return true;
 };
 
-const confirmClearNewlyInapplicableValues = async ({
-  dispatch,
+const findNewlyInapplicableNodeDefNames = ({
   survey,
   lang,
   clearedNotApplicableDefUuids,
-  clearedDependentCodeAttributeDefUuids,
 }: {
-  dispatch: any;
   survey: Survey;
   lang: LanguageCode;
   clearedNotApplicableDefUuids: Set<string>;
-  clearedDependentCodeAttributeDefUuids: Set<string>;
-}): Promise<boolean> => {
-  const totalClearedDefUuids = new Set([
-    ...clearedNotApplicableDefUuids,
-    ...clearedDependentCodeAttributeDefUuids,
-  ]);
-  const totalInapplicableDefsCount = totalClearedDefUuids.size;
-  if (totalInapplicableDefsCount === 0) return true;
+}): string[] => {
+  if (clearedNotApplicableDefUuids.size === 0) return [];
+
+  // Separate deleted multiple entity defs from individual attribute defs
+  const deletedMultipleEntityDefUuids = new Set<string>();
+  const otherDefUuids: string[] = [];
+
+  for (const defUuid of clearedNotApplicableDefUuids) {
+    const nodeDef = Surveys.getNodeDefByUuid({ survey, uuid: defUuid });
+    if (nodeDef && NodeDefs.isMultipleEntity(nodeDef)) {
+      deletedMultipleEntityDefUuids.add(defUuid);
+    } else {
+      otherDefUuids.push(defUuid);
+    }
+  }
+
+  // Keep only attributes not inside a multiple entity that is being deleted
+  const standaloneDefUuids = otherDefUuids.filter((defUuid) => {
+    const nodeDef = Surveys.getNodeDefByUuid({ survey, uuid: defUuid });
+    if (!nodeDef) return false;
+    const ancestorMultipleEntity = Surveys.getNodeDefAncestorMultipleEntity({
+      survey,
+      nodeDef,
+    });
+    return (
+      !ancestorMultipleEntity ||
+      !deletedMultipleEntityDefUuids.has(ancestorMultipleEntity.uuid)
+    );
+  });
+
+  // Entity names first, then standalone attribute names
+  const defsToShow = [
+    ...Array.from(deletedMultipleEntityDefUuids),
+    ...standaloneDefUuids,
+  ];
+
+  if (defsToShow.length === 0) return [];
 
   const maxToShow = 10;
-  const overflow = totalInapplicableDefsCount - maxToShow;
-  const nodeDefUuidsToShow = Array.from(totalClearedDefUuids).slice(
-    0,
-    maxToShow,
-  );
+  const overflow = defsToShow.length - maxToShow;
+  const nodeDefUuidsToShow = defsToShow.slice(0, maxToShow);
   const attributeNames = SurveyDefs.getNodeDefsLabelsOrNames({
     survey,
     nodeDefUuids: nodeDefUuidsToShow,
     lang,
   }).map((name) => `- ${StringUtils.truncateWithEllipsis(name, 40)}`);
 
-  const attributeNamesToShow = [
+  return [
     ...attributeNames,
     ...(overflow > 0 ? [i18n.t("common:andMore", { count: overflow })] : []),
   ];
+};
 
+const confirmClearNewlyInapplicableValues = async ({
+  dispatch,
+  survey,
+  lang,
+  clearedNotApplicableDefUuids,
+}: {
+  dispatch: any;
+  survey: Survey;
+  lang: LanguageCode;
+  clearedNotApplicableDefUuids: Set<string>;
+}): Promise<boolean> => {
+  const attributeNamesToShow = findNewlyInapplicableNodeDefNames({
+    survey,
+    lang,
+    clearedNotApplicableDefUuids,
+  });
+  if (attributeNamesToShow.length === 0) {
+    return true;
+  }
   return !!(await ConfirmUtils.confirm({
     dispatch,
-    titleKey: "dataEntry:confirmUpdateAttributesBecameNotRelevant.title",
+    titleKey: "dataEntry:confirmUpdateNodesBecameNotApplicable.title",
     messageIsMarkdown: true,
-    messageKey: "dataEntry:confirmUpdateAttributesBecameNotRelevant.message",
+    messageKey: "dataEntry:confirmUpdateNodesBecameNotApplicable.message",
     messageParams: { attributeNames: attributeNamesToShow.join("\n") },
     swipeToConfirm: true,
   }));
@@ -480,7 +523,6 @@ const updateAttribute =
       record: recordUpdated,
       nodes: nodesUpdated,
       clearedNotApplicableDefUuids,
-      clearedDependentCodeAttributeDefUuids,
     } = await RecordUpdater.updateAttributeValue({
       user,
       survey,
@@ -496,7 +538,6 @@ const updateAttribute =
         survey,
         lang,
         clearedNotApplicableDefUuids,
-        clearedDependentCodeAttributeDefUuids,
       }))
     ) {
       return;
