@@ -403,19 +403,19 @@ const checkAndConfirmUpdateNode = async ({
 const findNewlyInapplicableNodeDefNames = ({
   survey,
   lang,
-  clearedNotApplicableDefUuids,
+  clearedDefUuids,
 }: {
   survey: Survey;
   lang: LanguageCode;
-  clearedNotApplicableDefUuids: Set<string>;
+  clearedDefUuids: Set<string>;
 }): string[] => {
-  if (clearedNotApplicableDefUuids.size === 0) return [];
+  if (clearedDefUuids.size === 0) return [];
 
   // Separate deleted multiple entity defs from individual attribute defs
   const deletedMultipleEntityDefUuids = new Set<string>();
   const otherDefUuids: string[] = [];
 
-  for (const defUuid of clearedNotApplicableDefUuids) {
+  for (const defUuid of clearedDefUuids) {
     const nodeDef = Surveys.getNodeDefByUuid({ survey, uuid: defUuid });
     if (nodeDef && NodeDefs.isMultipleEntity(nodeDef)) {
       deletedMultipleEntityDefUuids.add(defUuid);
@@ -465,17 +465,17 @@ const confirmClearNewlyInapplicableValues = async ({
   dispatch,
   survey,
   lang,
-  clearedNotApplicableDefUuids,
+  clearedDefUuids,
 }: {
   dispatch: any;
   survey: Survey;
   lang: LanguageCode;
-  clearedNotApplicableDefUuids: Set<string>;
+  clearedDefUuids: Set<string>;
 }): Promise<boolean> => {
   const attributeNamesToShow = findNewlyInapplicableNodeDefNames({
     survey,
     lang,
-    clearedNotApplicableDefUuids,
+    clearedDefUuids,
   });
   if (attributeNamesToShow.length === 0) {
     return true;
@@ -522,7 +522,7 @@ const updateAttribute =
     let {
       record: recordUpdated,
       nodes: nodesUpdated,
-      clearedNotApplicableDefUuids,
+      clearedDefUuids,
     } = await RecordUpdater.updateAttributeValue({
       user,
       survey,
@@ -537,7 +537,7 @@ const updateAttribute =
         dispatch,
         survey,
         lang,
-        clearedNotApplicableDefUuids,
+        clearedDefUuids,
       }))
     ) {
       return;
