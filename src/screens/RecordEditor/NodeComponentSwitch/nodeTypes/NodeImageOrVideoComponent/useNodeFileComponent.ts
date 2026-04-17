@@ -155,7 +155,6 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
         return;
       }
       const { uri: sourceFileUri } = asset;
-      log.debug(`${logPrefix} source file uri: ${sourceFileUri}`);
 
       const fileName = extractFileNameFromAsset(asset);
 
@@ -186,7 +185,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
           toaster,
         ));
       }
-      log.debug(`${logPrefix} final file: uri ${fileUri} size ${fileSize}`);
+      log.debug(`${logPrefix} image resized: final size ${fileSize}`);
       if (
         fromCamera &&
         geotagInfoShown &&
@@ -215,7 +214,9 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
 
       await onFileSelected(result);
     } catch (error) {
-      const errorMessage = `Error selecting file: ` + error;
+      const errorMessage =
+        `Error selecting file: ` +
+        (error instanceof Error ? error.message : String(error));
       log.error(`${logPrefix} ${errorMessage}`);
       toaster(errorMessage);
     }
@@ -239,7 +240,9 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
       const result = await ImagePicker.launchCameraAsync(imagePickerOptions);
       await onFileSelected(result, true);
     } catch (error) {
-      const errorMessage = `Error opening camera: ` + error;
+      const errorMessage =
+        `Error opening camera: ` +
+        (error instanceof Error ? error.message : String(error));
       log.error(`${logPrefix} ${errorMessage}`);
       toaster(errorMessage);
     }
