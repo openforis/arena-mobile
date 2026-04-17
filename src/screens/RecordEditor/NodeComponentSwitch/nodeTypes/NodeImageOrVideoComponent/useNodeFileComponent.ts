@@ -17,6 +17,10 @@ import { useCheckCanAccessMediaLibrary } from "./useCheckCanAccessMediaLibrary";
 
 const logPrefix = "NodeFileComponent:";
 
+const logDebug = (message: string) => {
+  log.debug(`${logPrefix} ${message}`);
+};
+
 const mediaTypeByFileType: Record<string, ImagePicker.MediaType> = {
   [NodeDefFileType.image]: "images",
   [NodeDefFileType.video]: "videos",
@@ -141,28 +145,28 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
         | DocumentPicker.DocumentPickerResult,
       fromCamera = false,
     ) => {
-      log.debug(
-        `${logPrefix} file selected; from camera: ${fromCamera} max size: ${maxSizeMB} MB`,
+      logDebug(
+        `file selected; from camera: ${fromCamera} max size: ${maxSizeMB} MB`,
       );
       const { assets, canceled } = result;
       if (canceled) {
-        log.debug(`${logPrefix} file selection canceled`);
+        logDebug("file selection canceled");
         return;
       }
       const asset = assets?.[0];
       if (!asset) {
-        log.debug(`${logPrefix} no assets found`);
+        logDebug("no assets found");
         return;
       }
       const { uri: sourceFileUri } = asset;
 
       const fileName = extractFileNameFromAsset(asset);
 
-      log.debug(`${logPrefix} extracted file name: ${fileName}`);
+      logDebug(`extracted file name: ${fileName}`);
 
       const sourceFileSize = await Files.getSize(sourceFileUri);
 
-      log.debug(`${logPrefix} source file size: ${sourceFileSize}`);
+      logDebug(`source file size: ${sourceFileSize}`);
 
       let fileUri = sourceFileUri;
       let fileSize = sourceFileSize;
@@ -172,8 +176,8 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
         maxSize &&
         sourceFileSize > maxSize
       ) {
-        log.debug(
-          `${logPrefix} resizing image, source file size exceeds max size (${sourceFileSize} > ${maxSize})`,
+        logDebug(
+          `resizing image, source file size exceeds max size (${sourceFileSize} > ${maxSize})`,
         );
 
         ({ fileUri, fileSize } = await resizeImage(
@@ -185,19 +189,19 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
           toaster,
         ));
       }
-      log.debug(`${logPrefix} image resized: final size ${fileSize}`);
+      logDebug(`image resized: final size ${fileSize}`);
       if (
         fromCamera &&
         geotagInfoShown &&
         !(await ExifUtils.hasGpsData({ fileUri }))
       ) {
-        log.debug(`${logPrefix} setting location in file`);
+        logDebug("setting location in file");
         await setLocationInFile(fileUri);
       }
-      log.debug(`${logPrefix} updating node value`);
+      logDebug("updating node value");
       const valueUpdated = { fileUuid: UUIDs.v4(), fileName, fileSize };
       await updateNodeValue({ value: valueUpdated, fileUri });
-      log.debug(`${logPrefix} node value updated`);
+      logDebug("node value updated");
     },
     [fileType, geotagInfoShown, maxSize, maxSizeMB, toaster, updateNodeValue],
   );
