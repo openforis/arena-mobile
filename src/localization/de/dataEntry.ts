@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateNodesBecameNotApplicable: {
+    title: "Knoten werden nicht mehr gelten",
+    message: `Die folgenden Knoten werden nicht mehr gelten:  
+  
+{{attributeNames}}  
+  
+Ihre Werte werden gelöscht.  
+Fortfahren?`,
+  },
   confirmGoToListOfRecords: `Zur Datensatzliste wechseln?
   
   (Alle Änderungen bereits gespeichert)`,

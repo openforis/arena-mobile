@@ -3,6 +3,7 @@ import {
   NodeDefType,
   NodeValueFormatter,
   Nodes,
+  NodesMap,
   Numbers,
   Objects,
   RecordExpressionEvaluator,
@@ -124,7 +125,7 @@ const getEntitySummaryValuesByNameFormatted = ({
   const entityDef = Surveys.getNodeDefByUuid({
     survey,
     uuid: entity.nodeDefUuid,
-  });
+  }) as NodeDefEntity;
   const summaryDefs =
     summaryDefsParam ??
     SurveyDefs.getEntitySummaryDefs({
@@ -157,8 +158,8 @@ const getEntitySummaryValuesByNameFormatted = ({
             lang,
           });
         }
-      } catch (error) {
-        //ignore it
+      } catch {
+        // ignore it
         formattedValue = "";
       }
       if (typeof formattedValue === "object") {
@@ -207,7 +208,7 @@ const getSiblingNode = ({
 };
 
 const functionCallExpression = (functionName: string): string =>
-  `${functionName}\\s*\\((?:[^()]*|\\([^()]*\\))*\\)`;
+  String.raw`${functionName}\s*\((?:[^()]*|\([^()]*\))*\)`;
 
 const possibleDistanceTargetExpressions: Dictionary<string> = {
   simpleIdentifier: String.raw`\w+`,
@@ -216,7 +217,7 @@ const possibleDistanceTargetExpressions: Dictionary<string> = {
 };
 
 const distanceFunctionRegExp = (firstArgument: any, secondArgument: any) =>
-  `\\s*distance\\s*\\(\\s*(${firstArgument})\\s*,\\s*(${secondArgument})\\s*\\)`;
+  String.raw`\s*distance\s*\(\s*(${firstArgument})\s*,\s*(${secondArgument})\s*\)`;
 
 const extractDistanceTargetExpression = ({ nodeDef }: any): string | null => {
   const validations = NodeDefs.getValidations(nodeDef);
@@ -429,13 +430,175 @@ const getAncestorsLabelAndKeysText = ({
   return nameParts.join(" - ");
 };
 
-export const RecordNodes = {
+const getRecordSummaryValuesByKeyOrSummaryAttributeFormatted = ({
+  survey,
+  lang,
+  recordSummary,
+  valuesWrapperProp,
+  t = null,
+}: {
+  survey: Survey;
+  lang: LanguageCode;
+  recordSummary: ArenaRecord;
+  valuesWrapperProp: string;
+  t?: any;
+}): Record<string, string> => {
+  const { cycle: recordCycle } = recordSummary;
+  const cycle = recordCycle!;
+  const rootDef = Surveys.getNodeDefRoot({ survey });
+  const defs =
+    valuesWrapperProp === "keysObj"
+      ? SurveyDefs.getRootKeyDefs({ survey, cycle })
+      : Surveys.getNodeDefsIncludedInMultipleEntitySummary({
+          survey,
+          cycle,
+          nodeDef: rootDef,
+        });
+  return defs.reduce(
+    (acc, nodeDef) => {
+      const nodeDefName = NodeDefs.getName(nodeDef);
+      const value = Objects.path([valuesWrapperProp, nodeDefName])(
+        recordSummary,
+      );
+      let valueFormatted: string = NodeValueFormatter.format({
+        survey,
+        cycle,
+        nodeDef,
+        value,
+        showLabel: true,
+        lang,
+      });
+      if (Objects.isEmpty(valueFormatted)) {
+        valueFormatted = Objects.isEmpty(value)
+          ? t?.("common:empty")
+          : String(value);
+      }
+      acc[nodeDefName] = valueFormatted;
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
+};
+
+const getRecordSummaryValuesByKeyFormatted = ({
+  survey,
+  lang,
+  recordSummary,
+  t = null,
+}: any): Record<string, string> =>
+  getRecordSummaryValuesByKeyOrSummaryAttributeFormatted({
+    survey,
+    lang,
+    recordSummary,
+    valuesWrapperProp: "keysObj",
+    t,
+  });
+
+const getRecordSummaryValuesBySummaryAttributeFormatted = ({
+  survey,
+  lang,
+  recordSummary,
+  t = null,
+}: any): Record<string, string> =>
+  getRecordSummaryValuesByKeyOrSummaryAttributeFormatted({
+    survey,
+    lang,
+    recordSummary,
+    valuesWrapperProp: "summaryAttributesObj",
+    t,
+  });
+
+const findTopmostNewlyInapplicableAncestorDefUuid = ({
+  node,
+  recordPrev,
+  recordNext,
+}: {
+  node: ArenaRecordNode;
+  recordPrev: ArenaRecord;
+  recordNext: ArenaRecord;
+}) => {
+  let topmostInapplicableAncestorDefUuid: string | null = null;
+
+  Records.visitAncestorsAndSelf(
+    node,
+    (visitedAncestor) => {
+      if (visitedAncestor.uuid === node.uuid) {
+        // skip the node itself, we are looking for ancestors only
+        return;
+      }
+      const ancestorPrev = Records.getNodeByUuid(visitedAncestor.uuid)(
+        recordPrev,
+      );
+      if (!ancestorPrev) {
+        return;
+      }
+      const applicablePrev = Records.isNodeApplicable({
+        record: recordPrev,
+        node: ancestorPrev,
+      });
+      const applicableNext = Records.isNodeApplicable({
+        record: recordNext,
+        node: visitedAncestor,
+      });
+      if (applicablePrev && !applicableNext) {
+        topmostInapplicableAncestorDefUuid = visitedAncestor.nodeDefUuid;
+      }
+    },
+    () => !!topmostInapplicableAncestorDefUuid,
+  )(recordNext);
+
+  return topmostInapplicableAncestorDefUuid;
+};
+
+const findNewlyInapplicableDefUuidsWithValue = ({
+  recordPrev,
+  recordNext,
+  nodes,
+}: {
+  recordPrev: ArenaRecord;
+  recordNext: ArenaRecord;
+  nodes: NodesMap;
+}): Set<string> => {
+  const result = new Set<string>();
+  for (const node of Object.values(nodes)) {
+    const { nodeDefUuid } = node;
+    const parentNode = Records.getParent(node)(recordNext);
+    if (!parentNode) {
+      continue;
+    }
+    const nodePrev = Records.getNodeByUuid(node.uuid)(recordPrev);
+    const hadUserInputValue = nodePrev && Nodes.hasUserInputValue(nodePrev);
+    const applicablePrev = nodePrev
+      ? Records.isNodeApplicable({ record: recordPrev, node: nodePrev })
+      : true;
+    const applicableNext = Records.isNodeApplicable({
+      record: recordNext,
+      node,
+    });
+
+    if (applicablePrev && !applicableNext && hadUserInputValue) {
+      const topmostInapplicableAncestorDefUuid: string | null =
+        findTopmostNewlyInapplicableAncestorDefUuid({
+          node,
+          recordNext,
+          recordPrev,
+        });
+      result.add(topmostInapplicableAncestorDefUuid ?? nodeDefUuid);
+    }
+  }
+  return result;
+};
+
+export const RecordUtils = {
   getNodeName,
   formatBooleanValue,
   getEntityKeysFormatted,
   getRootEntityKeysFormatted,
   getEntitySummaryValuesByNameFormatted,
   getAncestorsLabelAndKeysText,
+  getRecordSummaryValuesByKeyFormatted,
+  getRecordSummaryValuesBySummaryAttributeFormatted,
+  findNewlyInapplicableDefUuidsWithValue,
   getApplicableChildrenEntityDefs,
   getSiblingNode,
   getCoordinateDistanceTarget,

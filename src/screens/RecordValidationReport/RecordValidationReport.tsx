@@ -11,7 +11,7 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordNodes } from "model";
+import { RecordUtils } from "model";
 import { ValidationUtils } from "model/utils/ValidationUtils";
 import { useTranslation } from "localization";
 
@@ -44,7 +44,7 @@ const getNodePath = ({ survey, record, nodeUuid, lang }: any) => {
     const labelOrName = NodeDefs.getLabelOrName(nodeDef, lang);
     let part = labelOrName;
     if (NodeDefs.isMultiple(nodeDef)) {
-      const keys = RecordNodes.getEntityKeysFormatted({
+      const keys = RecordUtils.getEntityKeysFormatted({
         survey,
         record,
         entity: visitedAncestor,

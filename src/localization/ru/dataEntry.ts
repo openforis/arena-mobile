@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateNodesBecameNotApplicable: {
+    title: "Узлы больше не будут применяться",
+    message: `Следующие узлы больше не будут применяться:  
+  
+{{attributeNames}}  
+  
+Их значения будут удалены.  
+Продолжить?`,
+  },
   checkStatus: "Проверить статус",
   closestSamplingPoint: {
     findClosestSamplingPoint: "Найти ближайшую точку сбора данных",

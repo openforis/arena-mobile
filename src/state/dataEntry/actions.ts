@@ -2,6 +2,7 @@ import { Keyboard } from "react-native";
 
 import {
   Dates,
+  LanguageCode,
   NodeDefs,
   NodeDefType,
   Nodes,
@@ -13,18 +14,20 @@ import {
   RecordFactory,
   Records,
   RecordUpdater,
+  Survey,
   Surveys,
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordOrigin, RecordLoadStatus, SurveyDefs, RecordNodes } from "model";
+import { RecordLoadStatus, RecordUtils, RecordOrigin, SurveyDefs } from "model";
 import { PreferencesService } from "service/preferencesService";
-import { RecordService } from "service/recordService";
 import { RecordFileService } from "service/recordFileService";
+import { RecordService } from "service/recordService";
 
 import { screenKeys } from "screens/screenKeys";
 
-import { SystemUtils } from "utils";
+import { StringUtils, SystemUtils } from "utils";
+import { i18n } from "localization";
 
 import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { DeviceInfoActions, DeviceInfoSelectors } from "../deviceInfo";
@@ -32,15 +35,15 @@ import { MessageActions } from "../message";
 import { SurveySelectors } from "../survey";
 
 import { RemoteConnectionSelectors } from "../remoteConnection";
-import { DataEntryActionTypes } from "./actionTypes";
-import { DataEntrySelectors } from "./selectors";
 import { exportRecords, startCsvDataExportJob } from "./actionsDataExport";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
+import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
 import {
   importRecordsFromFile,
   importRecordsFromServer,
 } from "./actionsRecordsImport";
-import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
+import { DataEntryActionTypes } from "./actionTypes";
+import { DataEntrySelectors } from "./selectors";
 
 const {
   DATA_ENTRY_RESET,
@@ -397,6 +400,96 @@ const checkAndConfirmUpdateNode = async ({
   return true;
 };
 
+const findNewlyInapplicableNodeDefNames = ({
+  survey,
+  lang,
+  clearedDefUuids,
+}: {
+  survey: Survey;
+  lang: LanguageCode;
+  clearedDefUuids: Set<string>;
+}): string[] => {
+  if (clearedDefUuids.size === 0) return [];
+
+  // Separate deleted multiple entity defs from individual attribute defs
+  const deletedMultipleEntityDefUuids = new Set<string>();
+  const otherDefUuids: string[] = [];
+
+  for (const defUuid of clearedDefUuids) {
+    const nodeDef = Surveys.getNodeDefByUuid({ survey, uuid: defUuid });
+    if (nodeDef && NodeDefs.isMultipleEntity(nodeDef)) {
+      deletedMultipleEntityDefUuids.add(defUuid);
+    } else {
+      otherDefUuids.push(defUuid);
+    }
+  }
+
+  // Keep only attributes not inside a multiple entity that is being deleted
+  const standaloneDefUuids = otherDefUuids.filter((defUuid) => {
+    const nodeDef = Surveys.getNodeDefByUuid({ survey, uuid: defUuid });
+    if (!nodeDef) return false;
+    const ancestorMultipleEntity = Surveys.getNodeDefAncestorMultipleEntity({
+      survey,
+      nodeDef,
+    });
+    return (
+      !ancestorMultipleEntity ||
+      !deletedMultipleEntityDefUuids.has(ancestorMultipleEntity.uuid)
+    );
+  });
+
+  // Entity names first, then standalone attribute names
+  const defsToShow = [
+    ...Array.from(deletedMultipleEntityDefUuids),
+    ...standaloneDefUuids,
+  ];
+
+  if (defsToShow.length === 0) return [];
+
+  const maxToShow = 10;
+  const overflow = defsToShow.length - maxToShow;
+  const nodeDefUuidsToShow = defsToShow.slice(0, maxToShow);
+  const attributeNames = SurveyDefs.getNodeDefsLabelsOrNames({
+    survey,
+    nodeDefUuids: nodeDefUuidsToShow,
+    lang,
+  }).map((name) => `- ${StringUtils.truncateWithEllipsis(name, 40)}`);
+
+  return [
+    ...attributeNames,
+    ...(overflow > 0 ? [i18n.t("common:andMore", { count: overflow })] : []),
+  ];
+};
+
+const confirmClearNewlyInapplicableValues = async ({
+  dispatch,
+  survey,
+  lang,
+  clearedDefUuids,
+}: {
+  dispatch: any;
+  survey: Survey;
+  lang: LanguageCode;
+  clearedDefUuids: Set<string>;
+}): Promise<boolean> => {
+  const attributeNamesToShow = findNewlyInapplicableNodeDefNames({
+    survey,
+    lang,
+    clearedDefUuids,
+  });
+  if (attributeNamesToShow.length === 0) {
+    return true;
+  }
+  return !!(await ConfirmUtils.confirm({
+    dispatch,
+    titleKey: "dataEntry:confirmUpdateNodesBecameNotApplicable.title",
+    messageIsMarkdown: true,
+    messageKey: "dataEntry:confirmUpdateNodesBecameNotApplicable.message",
+    messageParams: { attributeNames: attributeNamesToShow.join("\n") },
+    swipeToConfirm: true,
+  }));
+};
+
 const updateAttribute =
   ({
     uuid,
@@ -426,14 +519,29 @@ const updateAttribute =
     )
       return;
 
-    let { record: recordUpdated, nodes: nodesUpdated } =
-      await RecordUpdater.updateAttributeValue({
-        user,
+    let {
+      record: recordUpdated,
+      nodes: nodesUpdated,
+      clearedDefUuids,
+    } = await RecordUpdater.updateAttributeValue({
+      user,
+      survey,
+      record,
+      attributeUuid: uuid,
+      value,
+      clearNonApplicableValues: true,
+    });
+
+    if (
+      !(await confirmClearNewlyInapplicableValues({
+        dispatch,
         survey,
-        record,
-        attributeUuid: uuid,
-        value,
-      });
+        lang,
+        clearedDefUuids,
+      }))
+    ) {
+      return;
+    }
 
     removeNodesFlags(nodesUpdated);
 
@@ -455,7 +563,7 @@ const updateAttribute =
       isRootKeyDef &&
       (await _isRootKeyDuplicate({ survey, record: recordUpdated, lang }))
     ) {
-      const keyValues = RecordNodes.getRootEntityKeysFormatted({
+      const keyValues = RecordUtils.getRootEntityKeysFormatted({
         survey,
         record: recordUpdated,
         lang,

@@ -18,10 +18,10 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordCurrentPageEntity, RecordNodes, SurveyDefs } from "model";
+import { RecordCurrentPageEntity, RecordUtils, SurveyDefs } from "model";
 
-import { SurveySelectors } from "../survey/selectors";
 import { RemoteConnectionSelectors } from "../remoteConnection/selectors";
+import { SurveySelectors } from "../survey/selectors";
 import { DataEntryState, PreviousCycleRecordPageEntityPointer } from "./types";
 
 type ParentNodeUuidNodeDefParams = {
@@ -65,9 +65,9 @@ const selectRecordRootNodeUuid = (state: any): string | undefined => {
   return record && Records.getRoot(record)?.uuid;
 };
 
-const selectRecordCycle = (state: any): string | undefined => {
+const selectRecordCycle = (state: any): string => {
   const record = selectRecordUnsafe(state);
-  return record?.cycle;
+  return record ? Records.getCycle(record) : "0";
 };
 
 const selectRecordSingleNodeUuid =
@@ -244,11 +244,11 @@ const selectIsRecordAttributeFilled =
   };
 
 const selectChildDefs =
-  ({ nodeDef }: { nodeDef: NodeDef<any> }) =>
+  ({ nodeDef }: { nodeDef: NodeDefEntity }) =>
   (state: any): NodeDef<any>[] => {
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const cycle = selectRecordCycle(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const childDefs = SurveyDefs.getChildrenDefs({
       survey,
       nodeDef,
@@ -410,7 +410,7 @@ const extractAttibuteValue = ({ state, attribute }: any) => {
   if (!value) return value;
   const survey = SurveySelectors.selectCurrentSurvey(state)!;
   const attributeDef = Surveys.getNodeDefByUuid({ survey, uuid: nodeDefUuid });
-  return RecordNodes.cleanupAttributeValue({ value, attributeDef });
+  return RecordUtils.cleanupAttributeValue({ value, attributeDef });
 };
 
 const selectPreviousCycleRecordAttributeValue =

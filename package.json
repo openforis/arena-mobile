@@ -1,6 +1,6 @@
 {
   "name": "arena-mobile",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "scripts": {
     "start": "expo start",
     "start-tunnel": "expo start --tunnel",
@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@lodev09/react-native-exify": "^0.2.7",
-    "@openforis/arena-core": "^1.0.99",
+    "@openforis/arena-core": "^1.1.1",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-clipboard/clipboard": "^1.16.3",
     "@react-native-community/datetimepicker": "8.4.4",

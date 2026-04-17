@@ -19,9 +19,50 @@ appId: ${APP_ID}
     element: "True"
     direction: DOWN
 - tapOn:
+    text: "False"
+    below:
+      text: "Boolean"
+- assertNotVisible:
+    id: "root_relevant_if_bool"
+- tapOn:
     text: "True"
     below:
       text: "Boolean"
+- scrollUntilVisible:
+    element:
+      id: "root_relevant_if_bool"
+    direction: DOWN
+- assertVisible:
+    id: "root_relevant_if_bool"
+- tapOn:
+    id: "root_relevant_if_bool"
+- inputText: "123"
+- hideKeyboard
+# - scrollUntilVisible:
+#     element: "Boolean"
+#     direction: UP
+# - tapOn:
+#     text: "False"
+#     below:
+#       text: "Boolean"
+# - extendedWaitUntil:
+#     visible:
+#       id: "confirm-dialog-title"
+#     timeout: 10000
+# - swipe:
+#     direction: RIGHT
+#     from:
+#       id: "confirm-swipe-button"
+#     duration: 1000
+# - assertVisible:
+#     id: "confirm-dialog-confirm-button"
+#     enabled: true
+# - tapOn:
+#     id: "confirm-dialog-confirm-button"
+# - assertNotVisible:
+#     id: "confirm-dialog-title"
+# - assertNotVisible:
+#     id: "root_relevant_if_bool"
 - tapOn:
     text: "Records"
 - tapOn:

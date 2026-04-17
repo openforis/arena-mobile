@@ -11,7 +11,7 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { ArenaMobileRecord, RecordNodes } from "model";
+import { ArenaMobileRecord, RecordUtils } from "model";
 
 import { DataEntrySelectors, SurveySelectors } from "state";
 
@@ -92,7 +92,7 @@ const _processFieldValidation = ({
     const node = Records.getNodeByUuid(validationKey)(record);
     if (!node) return acc;
 
-    const notValidNodeInTree = RecordNodes.findAncestor({
+    const notValidNodeInTree = RecordUtils.findAncestor({
       record,
       node,
       predicate: (visitedAncestor) =>
@@ -259,7 +259,7 @@ export const useTreeData = () => {
     } = stack.pop()!;
 
     const applicableChildrenEntityDefs =
-      RecordNodes.getApplicableChildrenEntityDefs({
+      RecordUtils.getApplicableChildrenEntityDefs({
         survey,
         nodeDef: visitedEntityDef,
         parentEntity: visitedEntity,

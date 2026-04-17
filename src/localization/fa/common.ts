@@ -1,5 +1,6 @@
 export default {
   about: "درباره",
+  andMore: "...و {{count}} مورد دیگر",
   appTitle: "آرنا موبایل",
   cancel: "لغو",
   clear: "پاک کردن",

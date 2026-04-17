@@ -33,7 +33,7 @@ export { Themes, ThemesSettings } from "./Themes";
 export { UpdateStatus } from "./UpdateStatus";
 export { UserLogoutOptions } from "./UserLogoutOptions";
 
-export { RecordNodes } from "./utils/RecordNodes";
+export { RecordUtils } from "./utils/RecordUtils";
 export { RecordSummaries } from "./utils/RecordSummaries";
 export { SurveyDefs } from "./utils/SurveyDefs";
 export { SurveyUtils } from "./utils/SurveyUtils";

@@ -1,5 +1,6 @@
 export default {
   about: "About",
+  andMore: "...and {{count}} more",
   appTitle: "Arena Mobile",
   cancel: "Cancel",
   clear: "Clear",

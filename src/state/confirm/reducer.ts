@@ -19,6 +19,7 @@ export type ConfirmShowParams = {
   defaultMultipleChoiceValues?: string[];
   defaultSingleChoiceValue?: string | null;
   defaultTextInputValue?: string;
+  messageIsMarkdown?: boolean;
   messageKey?: string;
   messageParams?: any;
   multipleChoiceOptions?: ChoiceOption[];
@@ -36,6 +37,7 @@ const confirmShowDefaultParams: Partial<ConfirmShowParams> = {
   cancelButtonTextKey: "common:cancel",
   confirmButtonTextKey: "common:confirm",
   messageParams: {},
+  messageIsMarkdown: false,
   multipleChoiceOptions: [],
   singleChoiceOptions: [],
   defaultMultipleChoiceValues: [],

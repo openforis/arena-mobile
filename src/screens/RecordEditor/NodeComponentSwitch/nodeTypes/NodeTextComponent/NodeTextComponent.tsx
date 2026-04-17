@@ -34,7 +34,8 @@ const nodeValueToUiValue = (value: any) =>
 export const NodeTextComponent = (props: NodeComponentProps) => {
   const { nodeDef, nodeUuid, style: styleProp, wrapperStyle } = props;
 
-  log.debug(`rendering NodeTextComponent for ${nodeDef.props.name}`);
+  const nodeDefName = NodeDefs.getName(nodeDef);
+  log.debug(`rendering NodeTextComponent for ${nodeDefName}`);
 
   const survey = SurveySelectors.useCurrentSurvey()!;
   const cycle = SurveySelectors.useCurrentSurveyCycle();
@@ -125,6 +126,7 @@ export const NodeTextComponent = (props: NodeComponentProps) => {
           multiline={multiline}
           numberOfLines={multiline ? multilineNumberOfLines : 1}
           onChange={onChange}
+          testID={nodeDefName}
           value={uiValue}
         />
       )}
