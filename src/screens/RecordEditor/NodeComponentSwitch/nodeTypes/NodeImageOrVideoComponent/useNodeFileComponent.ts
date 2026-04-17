@@ -188,17 +188,18 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
           setResizing,
           toaster,
         ));
+        logDebug(`image resized: final size ${fileSize}`);
       }
-      logDebug(`image resized: final size ${fileSize}`);
       if (
         fromCamera &&
         geotagInfoShown &&
         !(await ExifUtils.hasGpsData({ fileUri }))
       ) {
-        logDebug("setting location in file");
+        logDebug("setting location in file...");
         await setLocationInFile(fileUri);
+        logDebug("location in file set");
       }
-      logDebug("updating node value");
+      logDebug("updating node value...");
       const valueUpdated = { fileUuid: UUIDs.v4(), fileName, fileSize };
       await updateNodeValue({ value: valueUpdated, fileUri });
       logDebug("node value updated");
