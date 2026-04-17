@@ -3,18 +3,19 @@ import { NodeDefs, Objects } from "@openforis/arena-core";
 import { SurveySelectors } from "state/survey";
 
 import { useIsTextDirectionRtl } from "localization";
-import { HView, Text, ViewMoreText } from "components";
+import { HView, Icon, Text, View, ViewMoreText } from "components";
 
 import { NodeValidationIcon } from "../NodeValidationIcon";
 import { useStyles } from "./styles";
 
 type NodeDefFormItemHeaderProps = {
+  startAccessory?: React.ReactNode;
   nodeDef: any;
   parentNodeUuid?: string;
 };
 
 export const NodeDefFormItemHeader = (props: NodeDefFormItemHeaderProps) => {
-  const { nodeDef, parentNodeUuid } = props;
+  const { startAccessory, nodeDef, parentNodeUuid } = props;
 
   const isRtl = useIsTextDirectionRtl();
   const styles = useStyles();
@@ -22,10 +23,21 @@ export const NodeDefFormItemHeader = (props: NodeDefFormItemHeaderProps) => {
 
   const labelOrName = NodeDefs.getLabelOrName(nodeDef, lang);
   const description = NodeDefs.getDescription(nodeDef, lang);
+  const showKeyIcon = NodeDefs.isKey(nodeDef);
 
   return (
     <>
-      <HView style={styles.nodeDefLabelContainer}>
+      <HView
+        fullWidth
+        style={styles.nodeDefLabelContainer}
+        textDirectionAware={false}
+      >
+        {showKeyIcon && (
+          <View style={styles.keyIcon}>
+            <Icon size={18} source="key" />
+          </View>
+        )}
+        {startAccessory}
         <Text style={styles.nodeDefLabel} variant="titleLarge">
           {labelOrName}
         </Text>

@@ -75,11 +75,11 @@ const extractValidationItem = ({
   if (RecordValidations.isValidationChildrenCountKey(validationFieldKey)) {
     invalidNodeDefUuid =
       RecordValidations.extractValidationChildrenCountKeyNodeDefUuid(
-        validationFieldKey
+        validationFieldKey,
       );
     invalidParentNodeUuid =
       RecordValidations.extractValidationChildrenCountKeyParentUuid(
-        validationFieldKey
+        validationFieldKey,
       );
   } else {
     const node = Records.getNodeByUuid(validationFieldKey)(record);
@@ -149,7 +149,10 @@ export const RecordValidationReport = () => {
   const { editDialogOpen, dialogNodeDef, dialogParentNodeUuid } = state;
 
   const { validation } = record;
-  const validationFields = Validations.getFieldValidations(validation);
+  const validationFields = useMemo(
+    () => (validation ? Validations.getFieldValidations(validation) : []),
+    [validation],
+  );
 
   const items: any[] = useMemo(
     () =>
@@ -168,9 +171,9 @@ export const RecordValidationReport = () => {
           }
           return acc;
         },
-        [] as any[]
+        [] as any[],
       ),
-    [lang, record, survey, t, validationFields]
+    [lang, record, survey, t, validationFields],
   );
 
   const onRowPress = (item: any) => {
