@@ -1,16 +1,15 @@
 import { useCallback } from "react";
 
-import { DateFormats, Dates, Objects } from "@openforis/arena-core";
+import { DateFormats, Dates, NodeDefs, Objects } from "@openforis/arena-core";
 
 import { DateTimePicker } from "components";
 import { log } from "utils";
 
 import { useNodeComponentLocalState } from "../../useNodeComponentLocalState";
+import { NodeComponentProps } from "./nodeComponentPropTypes";
 
-type NodeDateTimeComponentProps = {
+type NodeDateTimeComponentProps = NodeComponentProps & {
   mode?: "date" | "time";
-  nodeDef: any;
-  nodeUuid?: string;
 };
 
 export const NodeDateTimeComponent = (props: NodeDateTimeComponentProps) => {
@@ -29,10 +28,10 @@ export const NodeDateTimeComponent = (props: NodeDateTimeComponentProps) => {
       const dateNodeValue = Dates.format(date, formatStorage);
       updateNodeValue({ value: dateNodeValue });
     },
-    [formatStorage, updateNodeValue]
+    [formatStorage, updateNodeValue],
   );
 
-  const editable = !nodeDef.props.readOnly;
+  const editable = !NodeDefs.isReadOnly(nodeDef);
 
   const dateValue = Objects.isEmpty(value)
     ? null
