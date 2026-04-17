@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Confirm clearing attributes and entities becoming not relevant;
+- Key attributes edit locking;
 
 ## [2.5.0] - 2026-04-07
 
