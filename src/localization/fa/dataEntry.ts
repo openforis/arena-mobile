@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateNodesBecameNotApplicable: {
+    title: "گره‌ها دیگر اعمال نخواهند شد",
+    message: `گره‌های زیر دیگر اعمال نخواهند شد:  
+  
+{{attributeNames}}  
+  
+مقادیر آن‌ها پاک خواهند شد.  
+ادامه می‌دهید؟`,
+  },
   confirmGoToListOfRecords: `به لیست رکوردها بروید؟
   
   (همه تغییرات قبلاً ذخیره شده اند)`,

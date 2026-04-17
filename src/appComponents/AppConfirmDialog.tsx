@@ -7,10 +7,12 @@ import { useConfirmDialog } from "state/confirm/useConfirmDialog";
 import {
   Button,
   Checkbox,
+  Markdown,
   RadioButton,
   RadioButtonGroup,
   Text,
   TextInput,
+  View,
   VView,
 } from "components";
 import { useTranslation } from "localization";
@@ -27,6 +29,7 @@ export const AppConfirmDialog = () => {
     confirmButtonEnabled,
     confirmButtonStyle,
     confirmButtonTextKey,
+    messageIsMarkdown,
     messageKey,
     messageParams,
     multipleChoiceOptions,
@@ -50,9 +53,14 @@ export const AppConfirmDialog = () => {
   return (
     <Portal>
       <Dialog visible={isOpen} onDismiss={cancel}>
-        <Dialog.Title>{t(titleKey)}</Dialog.Title>
+        <Dialog.Title testID="confirm-dialog-title">{t(titleKey)}</Dialog.Title>
         <Dialog.Content>
-          <Text textKey={messageKey} textParams={messageParams} />
+          {messageKey &&
+            (messageIsMarkdown ? (
+              <Markdown content={t(messageKey, messageParams)} />
+            ) : (
+              <Text textKey={messageKey} textParams={messageParams} />
+            ))}
           {(multipleChoiceOptions?.length ?? 0) > 0 && (
             <VView transparent>
               {multipleChoiceOptions!.map((option: any) => (
@@ -85,20 +93,22 @@ export const AppConfirmDialog = () => {
             </RadioButtonGroup>
           )}
           {swipeToConfirm && (
-            <SwipeButton
-              disableResetOnTap
-              onSwipeSuccess={setSwipeConfirmed}
-              railBackgroundColor={theme.colors.tertiaryContainer}
-              railStyles={{
-                backgroundColor: theme.colors.tertiaryContainer,
-                opacity: 0.7,
-                borderColor: theme.colors.tertiaryContainer,
-              }}
-              thumbIconBackgroundColor={theme.colors.primary}
-              title={t(swipeToConfirmTitleKey)}
-              titleColor={theme.colors.primary}
-              titleFontSize={16}
-            />
+            <View testID="confirm-swipe-button" transparent>
+              <SwipeButton
+                disableResetOnTap
+                onSwipeSuccess={setSwipeConfirmed}
+                railBackgroundColor={theme.colors.tertiaryContainer}
+                railStyles={{
+                  backgroundColor: theme.colors.tertiaryContainer,
+                  opacity: 0.7,
+                  borderColor: theme.colors.tertiaryContainer,
+                }}
+                thumbIconBackgroundColor={theme.colors.primary}
+                title={t(swipeToConfirmTitleKey)}
+                titleColor={theme.colors.primary}
+                titleFontSize={16}
+              />
+            </View>
           )}
           {textInputToConfirm && (
             <TextInput
@@ -114,14 +124,16 @@ export const AppConfirmDialog = () => {
             labelVariant="bodyLarge"
             onPress={cancel}
             style={cancelButtonStyle}
+            testID="confirm-dialog-cancel-button"
             textKey={cancelButtonTextKey}
           />
           <Button
             disabled={!confirmButtonEnabled}
             onPress={confirm}
             labelVariant="bodyLarge"
-            textKey={confirmButtonTextKey}
             style={confirmButtonStyle}
+            testID="confirm-dialog-confirm-button"
+            textKey={confirmButtonTextKey}
           />
         </Dialog.Actions>
       </Dialog>

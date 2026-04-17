@@ -1,5 +1,6 @@
 export default {
   about: "Tentang",
+  andMore: "...dan {{count}} lagi",
   cancel: "Batal",
   clear: "Bersihkan",
   close: "Tutup",

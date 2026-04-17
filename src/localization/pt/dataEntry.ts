@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateNodesBecameNotApplicable: {
+    title: "Os nós deixarão de se aplicar",
+    message: `Os seguintes nós deixarão de se aplicar:  
+  
+{{attributeNames}}  
+  
+Os seus valores serão eliminados.  
+Continuar?`,
+  },
   confirmGoToListOfRecords:
     "Ir para a lista de registos?\n\n(todas as alterações já foram gravadas)",
   checkStatus: "Verificar sincronização",
