@@ -7,6 +7,7 @@ import {
   Records,
   RecordValidations,
   Surveys,
+  ValidationFields,
   Validations,
 } from "@openforis/arena-core";
 
@@ -149,8 +150,8 @@ export const RecordValidationReport = () => {
   const { editDialogOpen, dialogNodeDef, dialogParentNodeUuid } = state;
 
   const { validation } = record;
-  const validationFields = useMemo(
-    () => (validation ? Validations.getFieldValidations(validation) : []),
+  const validationFields: ValidationFields = useMemo(
+    () => (validation ? Validations.getFieldValidations(validation) : {}),
     [validation],
   );
 

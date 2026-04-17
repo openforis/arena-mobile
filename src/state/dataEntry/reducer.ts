@@ -6,14 +6,14 @@ import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntryState } from "./types";
 
 const initialState: DataEntryState = {
-  record: null,
+  record: undefined,
   recordEditLockAvailable: false,
   recordEditLocked: false,
-  recordCurrentPageEntity: null,
+  recordCurrentPageEntity: undefined,
   recordPageSelectorMenuOpen: false,
   linkToPreviousCycleRecord: false,
   previousCycleRecordLoading: false,
-  previousCycleRecord: null,
+  previousCycleRecord: undefined,
   previousCycleRecordPageEntity: {},
 };
 
