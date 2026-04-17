@@ -15,6 +15,8 @@ import { ExifUtils, Files, ImageUtils, log, Permissions } from "utils";
 
 import { useCheckCanAccessMediaLibrary } from "./useCheckCanAccessMediaLibrary";
 
+const logPrefix = "NodeFileComponent:";
+
 const mediaTypeByFileType: Record<string, ImagePicker.MediaType> = {
   [NodeDefFileType.image]: "images",
   [NodeDefFileType.video]: "videos",
@@ -139,17 +141,29 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
         | DocumentPicker.DocumentPickerResult,
       fromCamera = false,
     ) => {
+      log.debug(
+        `${logPrefix} file selected; from camera: ${fromCamera} max size: ${maxSizeMB} MB`,
+      );
       const { assets, canceled } = result;
-      if (canceled) return;
-
+      if (canceled) {
+        log.debug(`${logPrefix} file selection canceled`);
+        return;
+      }
       const asset = assets?.[0];
-      if (!asset) return;
-
+      if (!asset) {
+        log.debug(`${logPrefix} no assets found`);
+        return;
+      }
       const { uri: sourceFileUri } = asset;
+      log.debug(`${logPrefix} source file uri: ${sourceFileUri}`);
 
       const fileName = extractFileNameFromAsset(asset);
 
+      log.debug(`${logPrefix} extracted file name: ${fileName}`);
+
       const sourceFileSize = await Files.getSize(sourceFileUri);
+
+      log.debug(`${logPrefix} source file size: ${sourceFileSize}`);
 
       let fileUri = sourceFileUri;
       let fileSize = sourceFileSize;
@@ -159,6 +173,10 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
         maxSize &&
         sourceFileSize > maxSize
       ) {
+        log.debug(
+          `${logPrefix} resizing image, source file size exceeds max size (${sourceFileSize} > ${maxSize})`,
+        );
+
         ({ fileUri, fileSize } = await resizeImage(
           sourceFileUri,
           sourceFileSize,
@@ -168,15 +186,19 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
           toaster,
         ));
       }
+      log.debug(`${logPrefix} final file: uri ${fileUri} size ${fileSize}`);
       if (
         fromCamera &&
         geotagInfoShown &&
         !(await ExifUtils.hasGpsData({ fileUri }))
       ) {
+        log.debug(`${logPrefix} setting location in file`);
         await setLocationInFile(fileUri);
       }
+      log.debug(`${logPrefix} updating node value`);
       const valueUpdated = { fileUuid: UUIDs.v4(), fileName, fileSize };
       await updateNodeValue({ value: valueUpdated, fileUri });
+      log.debug(`${logPrefix} node value updated`);
     },
     [fileType, geotagInfoShown, maxSize, maxSizeMB, toaster, updateNodeValue],
   );
@@ -185,18 +207,25 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
     if (!(await canAccessMediaLibrary({ geotagInfoShown }))) {
       return;
     }
-    const result =
-      fileType === NodeDefFileType.other
-        ? await DocumentPicker.getDocumentAsync()
-        : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
+    try {
+      const result =
+        fileType === NodeDefFileType.other
+          ? await DocumentPicker.getDocumentAsync()
+          : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
 
-    await onFileSelected(result);
+      await onFileSelected(result);
+    } catch (error) {
+      const errorMessage = `Error selecting file: ` + error;
+      log.error(`${logPrefix} ${errorMessage}`);
+      toaster(errorMessage);
+    }
   }, [
     canAccessMediaLibrary,
     fileType,
     geotagInfoShown,
     imagePickerOptions,
     onFileSelected,
+    toaster,
   ]);
 
   const onOpenCameraPress = useCallback(async () => {
@@ -210,7 +239,9 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
       const result = await ImagePicker.launchCameraAsync(imagePickerOptions);
       await onFileSelected(result, true);
     } catch (error) {
-      toaster(`Error opening camera: ` + error);
+      const errorMessage = `Error opening camera: ` + error;
+      log.error(`${logPrefix} ${errorMessage}`);
+      toaster(errorMessage);
     }
   }, [
     geotagInfoShown,
