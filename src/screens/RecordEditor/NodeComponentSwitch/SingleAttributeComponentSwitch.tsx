@@ -15,6 +15,7 @@ import { NodeGeoComponent } from "./nodeTypes/NodeGeoComponent";
 import { NodeTaxonComponent } from "./nodeTypes/NodeTaxonComponent";
 import { NodeTextComponent } from "./nodeTypes/NodeTextComponent";
 import { NodeTimeComponent } from "./nodeTypes/NodeTimeComponent";
+import { NodeComponentProps } from "./nodeTypes/nodeComponentPropTypes";
 
 const nodeDefComponentByType: Record<string, any> = {
   [NodeDefType.boolean]: NodeBooleanComponent,
@@ -61,12 +62,13 @@ export const SingleAttributeComponentSwitch = (props: Props) => {
   if (!component)
     return <Text textKey={`Type not supported (${nodeDef.type})`} />;
 
-  return React.createElement(component, {
+  const componentProps: NodeComponentProps = {
     nodeDef,
     nodeUuid,
     onFocus,
     parentNodeUuid,
     style,
     wrapperStyle,
-  });
+  };
+  return React.createElement(component, componentProps);
 };

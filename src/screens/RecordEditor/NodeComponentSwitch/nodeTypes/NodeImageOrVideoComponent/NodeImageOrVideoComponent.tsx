@@ -11,8 +11,9 @@ import {
 } from "components";
 import { ImageOrVideoValuePreview } from "screens/RecordEditor/NodeValuePreview/ImageOrVideoValuePreview";
 import { log } from "utils";
-import { useNodeFileComponent } from "./useNodeFileComponent";
 
+import { NodeComponentProps } from "../nodeComponentPropTypes";
+import { useNodeFileComponent } from "./useNodeFileComponent";
 import styles from "./styles";
 
 const fileChooseTextKeySuffixByFileType: Record<string, string> = {
@@ -26,14 +27,7 @@ const cameraButtonAvailableByFileType: Record<string, boolean> = {
   [NodeDefFileType.video]: true,
 };
 
-type NodeImageOrVideoComponentProps = {
-  nodeDef: any;
-  nodeUuid?: string;
-};
-
-export const NodeImageOrVideoComponent = (
-  props: NodeImageOrVideoComponentProps,
-) => {
+export const NodeImageOrVideoComponent = (props: NodeComponentProps) => {
   const { nodeDef, nodeUuid } = props;
 
   log.debug(`rendering NodeImageOrVideoComponent for ${nodeDef.props.name}`);

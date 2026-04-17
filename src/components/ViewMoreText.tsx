@@ -1,5 +1,5 @@
 import RNViewMoreText from "react-native-view-more-text";
-import { StyleProp, ViewStyle, TextStyle } from "react-native";
+import type { StyleProp, ViewStyle, TextStyle } from "react-native";
 
 type Props = {
   children?: React.ReactNode;

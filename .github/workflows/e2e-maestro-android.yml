@@ -82,11 +82,10 @@ jobs:
           ARENA_SERVER_PASSWORD: ${{secrets.ARENA_SERVER_PASSWORD}}
         with:
           api-level: 35
-          target: google_apis
+          target: google_atd
           arch: x86_64
-          profile: pixel_7
           force-avd-creation: false
-          emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -accel on -cores 2 -memory 2048
+          emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -accel on -cores 2 -memory 3072
           disable-animations: true
           # Increase timeout because software-rendering is slow
           emulator-boot-timeout: 900
@@ -94,23 +93,31 @@ jobs:
             # 1. Ensure the ADB connection is bridged for the emulator
             adb reverse tcp:8081 tcp:8081
 
-            echo "Waiting for emulator to settle..."
+            echo "Waiting for emulator to boot completely..."
             adb wait-for-device
+            adb shell 'while [[ "$(getprop sys.boot_completed | tr -d "\r")" != "1" ]]; do sleep 2; done'
+            adb shell 'while [[ "$(getprop init.svc.bootanim | tr -d "\r")" != "stopped" ]]; do sleep 2; done'
+
+            echo "Dismissing keyguard and opening Home once so the launcher can settle..."
+            adb shell wm dismiss-keyguard || true
+            adb shell input keyevent KEYCODE_HOME || true
 
             echo "Suppressing ANR dialogs (e.g. 'Pixel launcher isn't responding')..."
             adb shell settings put global anr_show_background 0
             adb shell settings put global hide_error_dialogs 1
+            adb shell settings put global show_first_crash_dialog 0 || true
+            adb shell settings put global show_restart_in_crash_dialog 0 || true
 
-            echo "Waiting for system to stabilize..."
-            sleep 60
+            echo "Waiting for system services to stabilize..."
+            sleep 15
 
             echo "Installing APK..."
             # Use -r to replace if exists, -t for test packages (Expo debug builds need this)
             adb install -r -t -g android/app/build/outputs/apk/debug/app-debug.apk
 
             echo "Running Maestro..."
-            # Give the OS 30 seconds to 'breathe' after installation
-            sleep 30
+            # Give the OS a short window after installation to settle
+            sleep 10
 
             maestro test e2e/maestro/allTests.yaml --format junit --output report.xml -e APP_ID=org.openforis.arena_mobile -e ARENA_SERVER_URL=$ARENA_SERVER_URL -e ARENA_SERVER_USERNAME=$ARENA_SERVER_USERNAME -e ARENA_SERVER_PASSWORD=$ARENA_SERVER_PASSWORD
 

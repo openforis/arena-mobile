@@ -7,17 +7,11 @@ import { DataEntrySelectors } from "state";
 import { log } from "utils";
 
 import { NodeDefFormItem } from "../../../NodeDefFormItem";
+import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 import styles from "./styles";
 
-type NodeEntityFormComponentProps = {
-  nodeDef: any;
-  parentNodeUuid?: string;
-};
-
-export const NodeEntityFormComponent = (
-  props: NodeEntityFormComponentProps
-) => {
+export const NodeEntityFormComponent = (props: NodeComponentProps) => {
   const { nodeDef, parentNodeUuid } = props;
 
   log.debug(`rendering NodeDefEntityForm for ${NodeDefs.getName(nodeDef)}`);

@@ -19,6 +19,12 @@ export const useStyles = () => {
     nodeDefLabelContainer: {
       alignItems: "center",
     },
+    headerIconButton: {
+      margin: 0,
+    },
+    keyIcon: {
+      marginRight: 4,
+    },
     nodeDefLabel: {
       flex: 1,
     },
