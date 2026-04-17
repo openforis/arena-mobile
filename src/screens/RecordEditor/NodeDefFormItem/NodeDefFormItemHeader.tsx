@@ -1,16 +1,18 @@
-import { NodeDefs, Objects } from "@openforis/arena-core";
+import React, { ReactNode } from "react";
 
+import { NodeDef, NodeDefs, Objects } from "@openforis/arena-core";
+
+import { HView, Icon, Text, View, ViewMoreText } from "components";
+import { useIsTextDirectionRtl } from "localization";
 import { SurveySelectors } from "state/survey";
 
-import { useIsTextDirectionRtl } from "localization";
-import { HView, Icon, Text, View, ViewMoreText } from "components";
-
 import { NodeValidationIcon } from "../NodeValidationIcon";
+
 import { useStyles } from "./styles";
 
 type NodeDefFormItemHeaderProps = {
-  startAccessory?: React.ReactNode;
-  nodeDef: any;
+  startAccessory?: ReactNode;
+  nodeDef: NodeDef<any>;
   parentNodeUuid?: string;
 };
 

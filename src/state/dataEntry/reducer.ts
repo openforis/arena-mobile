@@ -75,7 +75,7 @@ const actionHandlers = {
   }) => ({
     ...state,
     linkToPreviousCycleRecord: false,
-    previousCycleRecord: null,
+    previousCycleRecord: undefined,
     previousCycleRecordPageEntity: {},
   }),
   [DataEntryActionTypes.PAGE_ENTITY_SET]: ({
