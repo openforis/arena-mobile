@@ -165,6 +165,7 @@ export default {
     selectPicture: "Выберите изображение",
     selectVideo: "Выберите видео",
     deleteConfirmMessage: "Удалить существующий файл?",
+    fileSelectError: "Ошибка при выборе файла: {{error}}",
   },
   fileAttributeAudio: {
     error: {
@@ -182,6 +183,7 @@ export default {
 Проверьте настройки или попросите администратора опроса изменить это ограничение.`,
     resolution: "Разрешение",
     rotate: "Повернуть",
+    cameraOpenError: "Ошибка при открытии камеры: {{error}}",
     rotationError: "Ошибка при повороте изображения: {{error}}",
   },
   dataExport: {

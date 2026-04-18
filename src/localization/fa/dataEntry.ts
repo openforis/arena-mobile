@@ -171,6 +171,7 @@ export default {
     selectPicture: "انتخاب تصویر",
     selectVideo: "انتخاب ویدیو",
     deleteConfirmMessage: "آیا از حذف فایل موجود مطمئن هستید؟",
+    fileSelectError: "خطا در انتخاب فایل: {{error}}",
   },
   fileAttributeAudio: {
     error: {
@@ -188,6 +189,7 @@ export default {
 تنظیمات را بررسی کنید یا از مدیر نظرسنجی بخواهید این محدودیت را تغییر دهد.`,
     resolution: "رزولوشن",
     rotate: "چرخاندن",
+    cameraOpenError: "خطا در باز کردن دوربین: {{error}}",
     rotationError: "خطا در چرخاندن تصویر: {{error}}",
   },
   dataExport: {

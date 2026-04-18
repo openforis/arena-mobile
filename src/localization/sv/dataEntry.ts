@@ -172,6 +172,7 @@ Tryck '$t(dataEntry:geo.stopAddingPoints)' när du är klar.`,
     selectPicture: "Välj bild",
     selectVideo: "Välj video",
     deleteConfirmMessage: "Ta bort befintlig fil?",
+    fileSelectError: "Fel vid val av fil: {{error}}",
   },
   fileAttributeAudio: {
     error: {
@@ -189,6 +190,7 @@ Maximalt tillåten storlek: {{maxSizeMB}}MB.
 Kontrollera inställningarna eller be undersökningsadministratören att ändra denna gräns.`,
     resolution: "Upplösning",
     rotate: "Rotera",
+    cameraOpenError: "Fel vid öppning av kameran: {{error}}",
     rotationError: "Fel vid rotering av bilden: {{error}}",
   },
   dataExport: {

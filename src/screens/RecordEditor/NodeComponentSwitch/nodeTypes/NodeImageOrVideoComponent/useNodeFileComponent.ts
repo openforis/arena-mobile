@@ -220,10 +220,11 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
       await onFileSelected(result);
     } catch (error) {
       const errorMessage =
-        `Error selecting file: ` +
-        (error instanceof Error ? error.message : String(error));
-      log.error(`${logPrefix} ${errorMessage}`);
-      toaster(errorMessage);
+        error instanceof Error ? error.message : String(error);
+      log.error(`${logPrefix} Error selecting file: ${errorMessage}`);
+      toaster("dataEntry:fileAttribute.fileSelectError", {
+        error: errorMessage,
+      });
     }
   }, [
     canAccessMediaLibrary,
@@ -246,10 +247,11 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
       await onFileSelected(result, true);
     } catch (error) {
       const errorMessage =
-        `Error opening camera: ` +
-        (error instanceof Error ? error.message : String(error));
-      log.error(`${logPrefix} ${errorMessage}`);
-      toaster(errorMessage);
+        error instanceof Error ? error.message : String(error);
+      log.error(`${logPrefix} Error opening camera: ${errorMessage}`);
+      toaster("dataEntry:fileAttributeImage.cameraOpenError", {
+        error: errorMessage,
+      });
     }
   }, [
     geotagInfoShown,
