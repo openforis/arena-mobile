@@ -30,7 +30,9 @@ const cameraButtonAvailableByFileType: Record<string, boolean> = {
 export const NodeImageOrVideoComponent = (props: NodeComponentProps) => {
   const { nodeDef, nodeUuid } = props;
 
-  log.debug(`rendering NodeImageOrVideoComponent for ${nodeDef.props.name}`);
+  log.debug(
+    `rendering NodeImageOrVideoComponent for ${NodeDefs.getName(nodeDef)}`,
+  );
 
   const { fileType = NodeDefFileType.other } = nodeDef.props;
   const fileChooseTextKeySuffix = fileChooseTextKeySuffixByFileType[fileType];

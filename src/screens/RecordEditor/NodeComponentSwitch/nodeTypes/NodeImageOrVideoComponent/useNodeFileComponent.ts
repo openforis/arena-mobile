@@ -15,6 +15,12 @@ import { ExifUtils, Files, ImageUtils, log, Permissions } from "utils";
 
 import { useCheckCanAccessMediaLibrary } from "./useCheckCanAccessMediaLibrary";
 
+const logPrefix = "NodeFileComponent:";
+
+const logDebug = (message: string) => {
+  log.debug(`${logPrefix} ${message}`);
+};
+
 const mediaTypeByFileType: Record<string, ImagePicker.MediaType> = {
   [NodeDefFileType.image]: "images",
   [NodeDefFileType.video]: "videos",
@@ -139,17 +145,28 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
         | DocumentPicker.DocumentPickerResult,
       fromCamera = false,
     ) => {
+      logDebug(
+        `file selected; from camera: ${fromCamera} max size: ${maxSizeMB} MB`,
+      );
       const { assets, canceled } = result;
-      if (canceled) return;
-
+      if (canceled) {
+        logDebug("file selection canceled");
+        return;
+      }
       const asset = assets?.[0];
-      if (!asset) return;
-
+      if (!asset) {
+        logDebug("no assets found");
+        return;
+      }
       const { uri: sourceFileUri } = asset;
 
       const fileName = extractFileNameFromAsset(asset);
 
+      logDebug(`extracted file name: ${fileName}`);
+
       const sourceFileSize = await Files.getSize(sourceFileUri);
+
+      logDebug(`source file size: ${sourceFileSize}`);
 
       let fileUri = sourceFileUri;
       let fileSize = sourceFileSize;
@@ -159,6 +176,10 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
         maxSize &&
         sourceFileSize > maxSize
       ) {
+        logDebug(
+          `resizing image, source file size exceeds max size (${sourceFileSize} > ${maxSize})`,
+        );
+
         ({ fileUri, fileSize } = await resizeImage(
           sourceFileUri,
           sourceFileSize,
@@ -167,16 +188,21 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
           setResizing,
           toaster,
         ));
+        logDebug(`image resized: final size ${fileSize}`);
       }
       if (
         fromCamera &&
         geotagInfoShown &&
         !(await ExifUtils.hasGpsData({ fileUri }))
       ) {
+        logDebug("setting location in file...");
         await setLocationInFile(fileUri);
+        logDebug("location in file set");
       }
+      logDebug("updating node value...");
       const valueUpdated = { fileUuid: UUIDs.v4(), fileName, fileSize };
       await updateNodeValue({ value: valueUpdated, fileUri });
+      logDebug("node value updated");
     },
     [fileType, geotagInfoShown, maxSize, maxSizeMB, toaster, updateNodeValue],
   );
@@ -185,18 +211,28 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
     if (!(await canAccessMediaLibrary({ geotagInfoShown }))) {
       return;
     }
-    const result =
-      fileType === NodeDefFileType.other
-        ? await DocumentPicker.getDocumentAsync()
-        : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
+    try {
+      const result =
+        fileType === NodeDefFileType.other
+          ? await DocumentPicker.getDocumentAsync()
+          : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
 
-    await onFileSelected(result);
+      await onFileSelected(result);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      log.error(`${logPrefix} Error selecting file: ${errorMessage}`);
+      toaster("dataEntry:fileAttribute.fileSelectError", {
+        error: errorMessage,
+      });
+    }
   }, [
     canAccessMediaLibrary,
     fileType,
     geotagInfoShown,
     imagePickerOptions,
     onFileSelected,
+    toaster,
   ]);
 
   const onOpenCameraPress = useCallback(async () => {
@@ -210,7 +246,12 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
       const result = await ImagePicker.launchCameraAsync(imagePickerOptions);
       await onFileSelected(result, true);
     } catch (error) {
-      toaster(`Error opening camera: ` + error);
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      log.error(`${logPrefix} Error opening camera: ${errorMessage}`);
+      toaster("dataEntry:fileAttributeImage.cameraOpenError", {
+        error: errorMessage,
+      });
     }
   }, [
     geotagInfoShown,

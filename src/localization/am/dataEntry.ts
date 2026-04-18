@@ -159,6 +159,7 @@ export default {
     selectPicture: "ምስል ይምረጡ",
     selectVideo: "የቪዲዮ ፋይል ይምረጡ",
     deleteConfirmMessage: "ያለውን ፋይል ይሰርዙ?",
+    fileSelectError: "ፋይል በመምረጥ ላይ ስህተት፡ {{error}}",
   },
   fileAttributeAudio: {
     error: {
@@ -176,6 +177,7 @@ export default {
 ይህን ገደብ ለመቀየር ቅንብሮችን ያረጋግጡ ወይም የዳሰሳ ጥናቱ አስተዳዳሪን ይጠይቁ።`,
     resolution: "ጥራት",
     rotate: "ማዞር",
+    cameraOpenError: "ካሜራን በመክፈት ላይ ስህተት፡ {{error}}",
     rotationError: "ምስሉን ማዞር ላይ ስህተት፡ {{error}}",
   },
   dataExport: {

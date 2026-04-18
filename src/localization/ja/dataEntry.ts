@@ -207,6 +207,7 @@ export default {
     selectPicture: "写真を選択",
     selectVideo: "動画を選択",
     deleteConfirmMessage: "既存のファイルを削除しますか？",
+    fileSelectError: "ファイル選択時にエラーが発生しました: {{error}}",
   },
   fileAttributeAudio: {
     error: {
@@ -224,6 +225,7 @@ export default {
 設定を確認するか、調査管理者にこの制限の変更を依頼してください。`,
     resolution: "解像度",
     rotate: "回転",
+    cameraOpenError: "カメラを開く際にエラーが発生しました: {{error}}",
     rotationError: "画像の回転エラー：{{error}}",
   },
   location: {

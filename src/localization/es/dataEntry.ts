@@ -166,6 +166,7 @@ Presiona '$t(dataEntry:geo.stopAddingPoints)' cuando hayas terminado.`,
     selectPicture: "Seleccionar imagen",
     selectVideo: "Seleccionar video",
     deleteConfirmMessage: "¿Eliminar el archivo existente?",
+    fileSelectError: "Error al seleccionar el archivo: {{error}}",
   },
   fileAttributeAudio: {
     error: {
@@ -183,6 +184,7 @@ Tamaño máximo permitido: {{maxSizeMB}}MB.
 Verifique la configuración o pida al administrador de la encuesta que cambie este límite.`,
     resolution: "Resolución",
     rotate: "Rotar",
+    cameraOpenError: "Error al abrir la cámara: {{error}}",
     rotationError: "Error al rotar la imagen: {{error}}",
   },
   dataExport: {

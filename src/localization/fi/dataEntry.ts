@@ -171,6 +171,7 @@ Paina '$t(dataEntry:geo.stopAddingPoints)', kun olet valmis.`,
     selectPicture: "Valitse kuva",
     selectVideo: "Valitse video",
     deleteConfirmMessage: "Poistetaanko olemassa oleva tiedosto?",
+    fileSelectError: "Virhe tiedoston valinnassa: {{error}}",
   },
   fileAttributeAudio: {
     error: {
@@ -188,6 +189,7 @@ Suurin sallittu koko: {{maxSizeMB}}MB.
 Tarkista asetukset tai pyydä kyselyn järjestelmänvalvojaa muuttamaan tätä rajaa.`,
     resolution: "Resoluutio",
     rotate: "Käännä",
+    cameraOpenError: "Virhe kameran avaamisessa: {{error}}",
     rotationError: "Virhe kuvan kääntämisessä: {{error}}",
   },
   dataExport: {
