@@ -1,73 +1,27 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 
 import { NodeDefs, Objects } from "@openforis/arena-core";
 
+import { Fade, VView } from "components";
+import { RecordEditViewMode } from "model";
 import {
   DataEntrySelectors,
   SettingsSelectors,
-  SurveySelectors,
   SurveyOptionsSelectors,
+  SurveySelectors,
 } from "state";
 import { log } from "utils";
 
-import { Fade, VView } from "components";
-import { RecordEditViewMode } from "model";
-
 import { CurrentRecordNodeValuePreview } from "../CurrentRecordNodeValuePreview";
 import { NodeComponentSwitch } from "../NodeComponentSwitch/NodeComponentSwitch";
+import { NodeComponentProps } from "../NodeComponentSwitch/nodeTypes/nodeComponentPropTypes";
 import { PreviousCycleNodeValuePreview } from "../PreviousCycleNodeValuePreview";
+
 import { KeyAttributeLockButton } from "./KeyAttributeLockButton";
 import { NodeDefFormItemHeader } from "./NodeDefFormItemHeader";
+import { useKeyAttributeLock } from "./useKeyAttributeLock";
 
-import { NodeComponentProps } from "../NodeComponentSwitch/nodeTypes/nodeComponentPropTypes";
 import { useStyles } from "./styles";
-
-const useKeyAttributeLock = ({
-  canEditRecord,
-  contentKey,
-  keyAttributeFilled,
-  keyAttributeLockAvailable,
-}: {
-  canEditRecord: boolean;
-  contentKey: string;
-  keyAttributeFilled: boolean;
-  keyAttributeLockAvailable: boolean;
-}) => {
-  const [keyAttributeLockState, setKeyAttributeLockState] = useState({
-    contentKey,
-    locked: keyAttributeFilled,
-  });
-
-  const keyAttributeLocked =
-    keyAttributeLockState.contentKey === contentKey
-      ? keyAttributeLockState.locked
-      : keyAttributeFilled;
-
-  const canDisplayKeyLockButton =
-    keyAttributeLockAvailable && canEditRecord && keyAttributeFilled;
-
-  const onKeyLockButtonPress = useCallback(
-    () =>
-      setKeyAttributeLockState((statePrev) => {
-        const lockedPrev =
-          statePrev.contentKey === contentKey
-            ? statePrev.locked
-            : keyAttributeFilled;
-
-        return {
-          contentKey,
-          locked: !lockedPrev,
-        };
-      }),
-    [contentKey, keyAttributeFilled],
-  );
-
-  return {
-    canDisplayKeyLockButton,
-    keyAttributeLocked,
-    onKeyLockButtonPress,
-  };
-};
 
 export const NodeDefFormItem = (props: NodeComponentProps) => {
   const { nodeDef, parentNodeUuid, onFocus } = props;
