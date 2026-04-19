@@ -33,6 +33,7 @@ export default {
       "ከተወሰኑ አካላት ({{entityDefs}}) ጋር የተያያዙ የተዘረዘሩ አካላት ካሉ ይቀጥሉ፣ ቀደም ሲል የገቡ እሴቶችን (ካለ) በመሰረዝ እንደገና ይዘረዘራሉ።\n\nየተዘረዘሩትን አካላት ማዘመን ይፈልጋሉ?",
     title: "የተዘረዘሩ አካላትን ያዘምኑ",
   },
+  updateAttributeError: "እሴቱን ማዘመን ላይ ስህተት፡ {{error}}",
   cycle: "ዙር",
   cycleForNewRecords: "ለአዲስ መዝገቦች ዙር፡",
   options: "አማራጮች",

@@ -26,7 +26,7 @@ import { useStyles } from "./styles";
 export const NodeDefFormItem = (props: NodeComponentProps) => {
   const { nodeDef, parentNodeUuid, onFocus } = props;
 
-  log.debug(`Rendering form item ${NodeDefs.getName(nodeDef)}`);
+  log.debug(`rendering NodeDefFormItem for ${NodeDefs.getName(nodeDef)}`);
 
   const { uuid: nodeDefUuid } = nodeDef;
 

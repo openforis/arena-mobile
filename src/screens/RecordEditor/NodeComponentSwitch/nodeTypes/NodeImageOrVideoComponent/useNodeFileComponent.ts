@@ -160,6 +160,8 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
       }
       const { uri: sourceFileUri } = asset;
 
+      logDebug(`source file uri: ${sourceFileUri}`);
+
       const fileName = extractFileNameFromAsset(asset);
 
       logDebug(`extracted file name: ${fileName}`);
@@ -201,7 +203,11 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
       }
       logDebug("updating node value...");
       const valueUpdated = { fileUuid: UUIDs.v4(), fileName, fileSize };
-      await updateNodeValue({ value: valueUpdated, fileUri });
+      updateNodeValue({
+        value: valueUpdated,
+        fileUri,
+        ignoreDelay: true,
+      });
       logDebug("node value updated");
     },
     [fileType, geotagInfoShown, maxSize, maxSizeMB, toaster, updateNodeValue],
@@ -272,7 +278,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
       const { uri: rotatedFileUri } = await ImageUtils.rotate(fileUri);
       const fileSize = await Files.getSize(rotatedFileUri);
       const valueUpdated = { ...value, fileUuid: UUIDs.v4(), fileSize };
-      await updateNodeValue({ value: valueUpdated, fileUri: rotatedFileUri });
+      updateNodeValue({ value: valueUpdated, fileUri: rotatedFileUri });
     } catch (error) {
       toaster("dataEntry:fileAttributeImage.rotationError", {
         error: String(error),
@@ -286,7 +292,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
         messageKey: "dataEntry:fileAttribute.deleteConfirmMessage",
       })
     ) {
-      await updateNodeValue({ value: null });
+      updateNodeValue({ value: null });
     }
   }, [confirm, updateNodeValue]);
 

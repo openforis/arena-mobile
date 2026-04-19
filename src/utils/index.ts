@@ -2,6 +2,7 @@ export { AMConstants } from "./AMConstants";
 export { ArrayUtils } from "./ArrayUtils";
 export { BaseStyles } from "./BaseStyles";
 export { Environment } from "./Environment";
+export { Errors } from "./Errors";
 export { ExifUtils } from "./ExifUtils";
 export { Files } from "./Files";
 export { FlatDataWriter } from "./FlatDataWriter";
