@@ -74,7 +74,7 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
         fileSize,
       };
 
-      await updateNodeValue({ value: valueUpdated, fileUri: sourceFileUri });
+      updateNodeValue({ value: valueUpdated, fileUri: sourceFileUri });
     },
     [updateNodeValue],
   );
@@ -155,7 +155,7 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
         fileSize: recordedFileSize,
       };
 
-      await updateNodeValue({ value: valueUpdated, fileUri: recordedFileUri });
+      updateNodeValue({ value: valueUpdated, fileUri: recordedFileUri });
     } catch (error) {
       toaster(
         t("dataEntry:fileAttributeAudio.error.stoppingRecording", {
