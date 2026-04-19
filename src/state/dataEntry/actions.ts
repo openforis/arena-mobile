@@ -26,7 +26,7 @@ import { RecordService } from "service/recordService";
 
 import { screenKeys } from "screens/screenKeys";
 
-import { StringUtils, SystemUtils } from "utils";
+import { log, StringUtils, SystemUtils } from "utils";
 import { i18n } from "localization";
 
 import { ConfirmActions, ConfirmUtils } from "../confirm";
@@ -347,6 +347,9 @@ const updateRecordNodeFile = async ({
   node,
   dispatch,
 }: any) => {
+  log.debug(
+    `Updating record node file with value ${JSON.stringify(value)} and fileUri ${fileUri}`,
+  );
   const surveyId = survey.id;
 
   if (fileUri) {
@@ -362,11 +365,13 @@ const updateRecordNodeFile = async ({
   const { value: valuePrev } = node;
   const { fileUuid: fileUuidPrev } = valuePrev || {};
   if (fileUuidPrev) {
+    log.debug(`Deleting previous file with uuid ${fileUuidPrev}`);
     await RecordFileService.deleteRecordFile({
       surveyId,
       fileUuid: fileUuidPrev,
     });
   }
+  log.debug(`Record node file updated successfully.`);
   dispatch(DeviceInfoActions.updateFreeDiskStorage());
 };
 
@@ -501,81 +506,95 @@ const updateAttribute =
     fileUri?: string | null;
   }) =>
   async (dispatch: any, getState: any) => {
-    const state = getState();
-    const user = RemoteConnectionSelectors.selectLoggedUser(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
-    const record = DataEntrySelectors.selectRecord(state);
+    try {
+      const state = getState();
+      const user = RemoteConnectionSelectors.selectLoggedUser(state);
+      const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
+      const record = DataEntrySelectors.selectRecord(state);
 
-    const cycle = Records.getCycle(record);
-    const node = Records.getNodeByUuid(uuid)(record)!;
-    const nodeDef = Surveys.getNodeDefByUuid({
-      survey,
-      uuid: node.nodeDefUuid,
-    });
-
-    if (
-      !(await checkAndConfirmUpdateNode({ dispatch, getState, node, nodeDef }))
-    )
-      return;
-
-    let {
-      record: recordUpdated,
-      nodes: nodesUpdated,
-      clearedDefUuids,
-    } = await RecordUpdater.updateAttributeValue({
-      user,
-      survey,
-      record,
-      attributeUuid: uuid,
-      value,
-      clearNonApplicableValues: true,
-    });
-
-    if (
-      !(await confirmClearNewlyInapplicableValues({
-        dispatch,
+      const cycle = Records.getCycle(record);
+      const node = Records.getNodeByUuid(uuid)(record)!;
+      const nodeDef = Surveys.getNodeDefByUuid({
         survey,
-        lang,
-        clearedDefUuids,
-      }))
-    ) {
-      return;
-    }
+        uuid: node.nodeDefUuid,
+      });
 
-    removeNodesFlags(nodesUpdated);
+      if (
+        !(await checkAndConfirmUpdateNode({
+          dispatch,
+          getState,
+          node,
+          nodeDef,
+        }))
+      )
+        return;
 
-    if (NodeDefs.getType(nodeDef) === NodeDefType.file) {
-      await updateRecordNodeFile({ survey, node, fileUri, value, dispatch });
-    }
-
-    const isRootKeyDef = SurveyDefs.isRootKeyDef({ survey, cycle, nodeDef });
-
-    await _updateRecord({ dispatch, survey, record: recordUpdated });
-    if (
-      DataEntrySelectors.selectIsLinkedToPreviousCycleRecord(state) &&
-      isRootKeyDef
-    ) {
-      dispatch(unlinkFromRecordInPreviousCycle());
-    }
-
-    if (
-      isRootKeyDef &&
-      (await _isRootKeyDuplicate({ survey, record: recordUpdated, lang }))
-    ) {
-      const keyValues = RecordUtils.getRootEntityKeysFormatted({
-        survey,
-        record: recordUpdated,
-        lang,
-      }).join(", ");
-
-      dispatch(
-        MessageActions.setMessage({
-          content: "recordsList:duplicateKey.message",
-          contentParams: { keyValues },
-          title: "recordsList:duplicateKey.title",
-        }),
+      log.debug(
+        `Updating node ${NodeDefs.getName(nodeDef)} (${node.uuid}) with value ${value}`,
       );
+      let {
+        record: recordUpdated,
+        nodes: nodesUpdated,
+        clearedDefUuids,
+      } = await RecordUpdater.updateAttributeValue({
+        user,
+        survey,
+        record,
+        attributeUuid: uuid,
+        value,
+        clearNonApplicableValues: true,
+      });
+
+      if (
+        !(await confirmClearNewlyInapplicableValues({
+          dispatch,
+          survey,
+          lang,
+          clearedDefUuids,
+        }))
+      ) {
+        log.debug(`Newly inapplicable values not confirmed. Reverting update.`);
+        return;
+      }
+
+      removeNodesFlags(nodesUpdated);
+
+      if (NodeDefs.getType(nodeDef) === NodeDefType.file) {
+        await updateRecordNodeFile({ survey, node, fileUri, value, dispatch });
+      }
+
+      const isRootKeyDef = SurveyDefs.isRootKeyDef({ survey, cycle, nodeDef });
+
+      await _updateRecord({ dispatch, survey, record: recordUpdated });
+      if (
+        DataEntrySelectors.selectIsLinkedToPreviousCycleRecord(state) &&
+        isRootKeyDef
+      ) {
+        dispatch(unlinkFromRecordInPreviousCycle());
+      }
+
+      if (
+        isRootKeyDef &&
+        (await _isRootKeyDuplicate({ survey, record: recordUpdated, lang }))
+      ) {
+        const keyValues = RecordUtils.getRootEntityKeysFormatted({
+          survey,
+          record: recordUpdated,
+          lang,
+        }).join(", ");
+
+        dispatch(
+          MessageActions.setMessage({
+            content: "recordsList:duplicateKey.message",
+            contentParams: { keyValues },
+            title: "recordsList:duplicateKey.title",
+          }),
+        );
+      }
+      log.debug(`Node updated successfully.`);
+    } catch (error) {
+      log.error("Error updating attribute value: " + error);
     }
   };
 
