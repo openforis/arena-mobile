@@ -37,6 +37,7 @@ Continue?`,
 Update the enumerated entities?`,
     title: "Update enumerated entities",
   },
+  updateAttributeError: "Error updating value: {{error}}",
   cycle: "Cycle",
   cycleForNewRecords: "Cycle for new records:",
   dataExport: {

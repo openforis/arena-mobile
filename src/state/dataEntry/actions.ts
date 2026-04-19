@@ -26,7 +26,7 @@ import { RecordService } from "service/recordService";
 
 import { screenKeys } from "screens/screenKeys";
 
-import { log, StringUtils, SystemUtils } from "utils";
+import { Errors, log, StringUtils, SystemUtils } from "utils";
 import { i18n } from "localization";
 
 import { ConfirmActions, ConfirmUtils } from "../confirm";
@@ -44,6 +44,7 @@ import {
 } from "./actionsRecordsImport";
 import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntrySelectors } from "./selectors";
+import { ToastActions } from "state/toast";
 
 const {
   DATA_ENTRY_RESET,
@@ -594,7 +595,13 @@ const updateAttribute =
       }
       log.debug(`Node updated successfully.`);
     } catch (error) {
-      log.error("Error updating attribute value: " + error);
+      const errorMessage = Errors.getErrorMessage(error);
+      log.error("Error updating attribute value: " + errorMessage);
+      dispatch(
+        ToastActions.show("dataEntry:updateAttributeError", {
+          error: errorMessage,
+        }),
+      );
     }
   };
 

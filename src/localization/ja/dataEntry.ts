@@ -37,6 +37,7 @@ export default {
 項目の更新を続けますか？`,
     title: "項目の構成を更新",
   },
+  updateAttributeError: "値の更新中にエラーが発生しました: {{error}}",
   cycle: "サイクル",
   cycleForNewRecords: "新規記録のサイクル：",
   dataExport: {
