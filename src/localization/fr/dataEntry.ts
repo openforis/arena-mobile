@@ -37,6 +37,8 @@ Continuer ?`,
       "Si vous continuez, certaines entités énumérées dépendantes ({{entityDefs}}) seront ré-énumérées, supprimant les valeurs existantes qui y ont été insérées (le cas échéant).\n\nMettre à jour les entités énumérées ?",
     title: "Mettre à jour les entités énumérées",
   },
+  updateAttributeError:
+    "Erreur lors de la mise à jour de la valeur : {{error}}",
   cycle: "Cycle",
   cycleForNewRecords: "Cycle pour les nouveaux enregistrements:",
   options: "Options",

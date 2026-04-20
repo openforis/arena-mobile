@@ -281,7 +281,7 @@ export const useNodeCoordinateComponent = (props: any) => {
       ) {
         // clear existing value before starting GPS
         log.debug("Clearing existing coordinate value before starting GPS");
-        await updateNodeValue({ value: null, ignoreDelay: true });
+        updateNodeValue({ value: null, ignoreDelay: true });
       } else {
         // value exists and user did not confirm overwrite; do not start GPS
         return;

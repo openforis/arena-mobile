@@ -36,6 +36,7 @@ Sus valores serán borrados.
       "Si continúa, algunas entidades enumeradas dependientes ({{entityDefs}}) se volverán a enumerar, eliminando los valores existentes insertados en ellas (si los hay).\n\n¿Actualizar las entidades enumeradas?",
     title: "Actualizar entidades enumeradas",
   },
+  updateAttributeError: "Error al actualizar el valor: {{error}}",
   cycle: "Ciclo",
   cycleForNewRecords: "Ciclo para nuevos registros:",
   options: "Opciones",
