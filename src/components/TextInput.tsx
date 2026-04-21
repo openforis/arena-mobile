@@ -23,12 +23,13 @@ type Props = {
   right?: React.ReactNode;
   secureTextEntry?: boolean;
   style?: StyleProp<ViewStyle>;
+  testID?: string;
   value?: string;
 };
 
 export const TextInput = forwardRef(function TextInput(
   props: Props,
-  ref: Ref<any>
+  ref: Ref<any>,
 ) {
   const {
     autoCapitalize = "none",
@@ -46,6 +47,7 @@ export const TextInput = forwardRef(function TextInput(
     right,
     secureTextEntry,
     style: styleProp = {},
+    testID,
     value,
     ...otherProps
   } = props;
@@ -89,6 +91,7 @@ export const TextInput = forwardRef(function TextInput(
       secureTextEntry={secureTextEntry}
       style={style}
       textColor={textColor}
+      testID={testID}
       theme={theme}
       value={value}
       {...otherProps}

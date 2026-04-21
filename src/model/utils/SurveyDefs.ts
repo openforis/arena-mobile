@@ -3,6 +3,11 @@ import {
   NodeDefs,
   NodeDefType,
   Categories,
+  Survey,
+  NodeDef,
+  NodeDefEntity,
+  LanguageCode,
+  NodeDefCode,
 } from "@openforis/arena-core";
 
 const samplingPointDataCategoryName = "sampling_point_data";
@@ -25,7 +30,12 @@ const getChildrenDefs = ({
   nodeDef,
   cycle,
   allowExperimental = false,
-}: any) =>
+}: {
+  survey: Survey;
+  nodeDef: NodeDef<any>;
+  cycle: string;
+  allowExperimental?: boolean;
+}) =>
   Surveys.getNodeDefChildrenSorted({
     survey,
     nodeDef,
@@ -45,7 +55,13 @@ const getEntitySummaryDefs = ({
   cycle,
   onlyKeys = true,
   maxSummaryDefs = 3,
-}: any) => {
+}: {
+  survey: Survey;
+  entityDef: NodeDefEntity;
+  cycle: string;
+  onlyKeys?: boolean;
+  maxSummaryDefs?: number;
+}) => {
   const keyDefs = Surveys.getNodeDefKeys({ survey, cycle, nodeDef: entityDef });
 
   if (onlyKeys) {
@@ -84,7 +100,7 @@ const getEntitySummaryDefs = ({
   return summaryDefs;
 };
 
-const hasSamplingPointDataLocation = (survey: any) => {
+const hasSamplingPointDataLocation = (survey: Survey) => {
   const samplingPointDataCategory = Surveys.getCategoryByName({
     survey,
     categoryName: samplingPointDataCategoryName,
@@ -95,7 +111,13 @@ const hasSamplingPointDataLocation = (survey: any) => {
   );
 };
 
-const isCodeAttributeFromSamplingPointData = ({ survey, nodeDef }: any) => {
+const isCodeAttributeFromSamplingPointData = ({
+  survey,
+  nodeDef,
+}: {
+  survey: Survey;
+  nodeDef: NodeDefCode;
+}) => {
   if (nodeDef.type !== NodeDefType.code) return false;
 
   const category = Surveys.getCategoryByUuid({
@@ -107,6 +129,20 @@ const isCodeAttributeFromSamplingPointData = ({ survey, nodeDef }: any) => {
   return samplingPointDataCategoryName === category.props?.name;
 };
 
+const getNodeDefsLabelsOrNames = ({
+  survey,
+  nodeDefUuids,
+  lang,
+}: {
+  survey: Survey;
+  nodeDefUuids: string[];
+  lang: LanguageCode;
+}) =>
+  nodeDefUuids.map((nodeDefUuid) => {
+    const nodeDef = Surveys.getNodeDefByUuid({ survey, uuid: nodeDefUuid });
+    return NodeDefs.getLabelOrName(nodeDef, lang);
+  });
+
 export const SurveyDefs = {
   getRootKeyDefs,
   isRootKeyDef,
@@ -114,4 +150,5 @@ export const SurveyDefs = {
   getEntitySummaryDefs,
   hasSamplingPointDataLocation,
   isCodeAttributeFromSamplingPointData,
+  getNodeDefsLabelsOrNames,
 };

@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateNodesBecameNotApplicable: {
+    title: "Node tidak akan berlaku lagi",
+    message: `Node berikut tidak akan berlaku lagi:  
+  
+{{attributeNames}}  
+  
+Nilainya akan dihapus.  
+Lanjutkan?`,
+  },
   confirmGoToListOfRecords: `lanjut ke daftar isian?
   
   (semua perubahan sudah disimpan)`,
@@ -27,6 +36,7 @@ export default {
       "Jika Anda melanjutkan, beberapa entitas terenumerasi dependen ({{entityDefs}}) akan di-enumerasi ulang, menghapus nilai-nilai yang ada yang dimasukkan ke dalamnya (jika ada).\n\nPerbarui entitas terenumerasi?",
     title: "Perbarui entitas terenumerasi",
   },
+  updateAttributeError: "Kesalahan saat memperbarui nilai: {{error}}",
   cycle: "Siklus",
   cycleForNewRecords: "Siklus untuk data isian baru:",
   options: "Opsi",
@@ -164,6 +174,7 @@ Tekan '$t(dataEntry:geo.stopAddingPoints)' ketika selesai.`,
     selectPicture: "Pilih gambar",
     selectVideo: "Pilih video",
     deleteConfirmMessage: "Hapus file yang ada?",
+    fileSelectError: "Kesalahan saat memilih file: {{error}}",
   },
   fileAttributeAudio: {
     error: {
@@ -183,6 +194,7 @@ Ukuran maksimum yang diizinkan: {{maxSizeMB}}MB.
 Periksa pengaturan atau minta administrator survei untuk mengubah batas ini.`,
     resolution: "Resolusi",
     rotate: "Putar",
+    cameraOpenError: "Kesalahan saat membuka kamera: {{error}}",
     rotationError: "Kesalahan saat memutar gambar: {{error}}",
   },
   dataExport: {

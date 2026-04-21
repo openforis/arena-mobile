@@ -588,28 +588,22 @@ const rowToRecord =
         // re-create nodes index
         Records.addNodes(Records.getNodes(result), { sideEffect })(result);
       }
-      // fix node dates format
       if (hasToBeFixed) {
         for (const node of Records.getNodesArray(result)) {
           node.dateCreated = fixDatetime(node.dateCreated);
           node.dateModified = fixDatetime(node.dateModified);
         }
-        RecordFixer.insertMissingSingleNodes({
-          survey,
-          record: result,
-          sideEffect,
-        });
+        RecordFixer.fixRecord({ survey, record: result, sideEffect });
       }
     }
     fixRowKeyAttributesColumns({ survey, cycle, result, row });
     fixRowSummaryAttributesColumns({ survey, cycle, result, row });
 
     if (!result.info?.createdWith) {
-      result.info = {
-        createdWith: SystemUtils.getRecordAppInfo(),
-      };
+      result.info = { createdWith: SystemUtils.getRecordAppInfo() };
     }
     fixRowValidation({ result });
+
     return result;
   };
 

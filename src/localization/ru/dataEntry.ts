@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateNodesBecameNotApplicable: {
+    title: "Узлы больше не будут применяться",
+    message: `Следующие узлы больше не будут применяться:  
+  
+{{attributeNames}}  
+  
+Их значения будут удалены.  
+Продолжить?`,
+  },
   checkStatus: "Проверить статус",
   closestSamplingPoint: {
     findClosestSamplingPoint: "Найти ближайшую точку сбора данных",
@@ -26,6 +35,7 @@ export default {
       "Если вы продолжите, некоторые зависимые перечислимые сущности ({{entityDefs}}) будут перенумерованы, при этом существующие введенные в них значения (если таковые имеются) будут удалены.\n\nОбновить перечислимые сущности?",
     title: "Обновить перечислимые сущности",
   },
+  updateAttributeError: "Ошибка при обновлении значения: {{error}}",
   cycle: "Цикл",
   cycleForNewRecords: "Цикл новых записей:",
   options: "Параметры",
@@ -156,6 +166,7 @@ export default {
     selectPicture: "Выберите изображение",
     selectVideo: "Выберите видео",
     deleteConfirmMessage: "Удалить существующий файл?",
+    fileSelectError: "Ошибка при выборе файла: {{error}}",
   },
   fileAttributeAudio: {
     error: {
@@ -173,6 +184,7 @@ export default {
 Проверьте настройки или попросите администратора опроса изменить это ограничение.`,
     resolution: "Разрешение",
     rotate: "Повернуть",
+    cameraOpenError: "Ошибка при открытии камеры: {{error}}",
     rotationError: "Ошибка при повороте изображения: {{error}}",
   },
   dataExport: {

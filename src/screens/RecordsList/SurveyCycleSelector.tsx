@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { StyleProp, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
 
 import { Surveys } from "@openforis/arena-core";
 
@@ -35,10 +35,10 @@ export const SurveyCycleSelector = (props: SurveyCycleSelectorProps) => {
   const onChange = useCallback(
     async (selectedCycleKey: any) => {
       dispatch(
-        SurveyActions.setCurrentSurveyCycle({ cycleKey: selectedCycleKey })
+        SurveyActions.setCurrentSurveyCycle({ cycleKey: selectedCycleKey }),
       );
     },
-    [dispatch]
+    [dispatch],
   );
 
   return (

@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateNodesBecameNotApplicable: {
+    title: "Knoten werden nicht mehr gelten",
+    message: `Die folgenden Knoten werden nicht mehr gelten:  
+  
+{{attributeNames}}  
+  
+Ihre Werte werden gelöscht.  
+Fortfahren?`,
+  },
   confirmGoToListOfRecords: `Zur Datensatzliste wechseln?
   
   (Alle Änderungen bereits gespeichert)`,
@@ -28,6 +37,7 @@ export default {
       "Wenn Sie fortfahren, werden einige abhängige, aufgezählte Entitäten ({{entityDefs}}) neu nummeriert, wodurch die bestehenden, eingegebenen Werte (falls vorhanden) gelöscht werden.\n\nMöchten Sie die aufgezählten Entitäten aktualisieren?",
     title: "Aufgezählte Entitäten aktualisieren",
   },
+  updateAttributeError: "Fehler beim Aktualisieren des Werts: {{error}}",
   cycle: "Zyklus",
   cycleForNewRecords: "Zyklus für neue Datensätze:",
   options: "Optionen",
@@ -166,6 +176,7 @@ Drücken Sie '$t(dataEntry:geo.stopAddingPoints)', wenn Sie fertig sind.`,
     selectPicture: "Bild auswählen",
     selectVideo: "Video auswählen",
     deleteConfirmMessage: "Vorhandene Datei löschen?",
+    fileSelectError: "Fehler beim Auswählen der Datei: {{error}}",
   },
   fileAttributeAudio: {
     error: {
@@ -183,6 +194,7 @@ Maximal zulässige Größe: {{maxSizeMB}}MB.
 Überprüfen Sie die Einstellungen oder bitten Sie den Umfrageadministrator, dieses Limit zu ändern.`,
     resolution: "Auflösung",
     rotate: "Drehen",
+    cameraOpenError: "Fehler beim Öffnen der Kamera: {{error}}",
     rotationError: "Fehler beim Drehen des Bildes: {{error}}",
   },
   dataExport: {

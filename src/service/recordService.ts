@@ -8,7 +8,7 @@ import {
 
 import {
   RecordLoadStatus,
-  RecordNodes,
+  RecordUtils,
   RecordOrigin,
   RecordSummaries,
   RecordSyncStatus,
@@ -93,7 +93,7 @@ const determineRecordSyncStatus = ({
   } else if (recordSummaryLocal.loadStatus !== RecordLoadStatus.summary) {
     const dateSynced = toDate(recordSummaryLocal.dateSynced);
     const dateModifiedRemote = Dates.parseISO(
-      recordSummaryRemote?.dateModified
+      recordSummaryRemote?.dateModified,
     );
     if (
       dateSynced &&
@@ -117,23 +117,23 @@ const identifyAndDeleteRecordsNotInRemoteServer = async ({
 }) => {
   const recordsSummariesLocalToDelete = allRecordsSummariesInDevice.filter(
     (
-      recordSummaryLocal: ArenaMobileRecord // record summary is not locally modified and is no more in server
+      recordSummaryLocal: ArenaMobileRecord, // record summary is not locally modified and is no more in server
     ) =>
       recordSummaryLocal.origin === RecordOrigin.remote &&
       recordSummaryLocal.loadStatus === RecordLoadStatus.summary &&
-      !ArrayUtils.findByUuid(recordSummaryLocal.uuid)(recordsSummariesRemote)
+      !ArrayUtils.findByUuid(recordSummaryLocal.uuid)(recordsSummariesRemote),
   );
   if (recordsSummariesLocalToDelete.length > 0) {
     try {
       await deleteRecords({
         surveyId,
         recordUuids: recordsSummariesLocalToDelete.map(
-          (record: any) => record.uuid
+          (record: any) => record.uuid,
         ),
       });
     } catch (error) {
       throw new Error(
-        `error deleting local record summaries. Details: ${error}`
+        `error deleting local record summaries. Details: ${error}`,
       );
     }
   }
@@ -154,8 +154,8 @@ const findAndInsertNewRecordSummariesLocally = async ({
   const recordSummariesToAdd = recordsSummariesRemote.filter(
     (recordSummaryRemote) =>
       !ArrayUtils.findByUuid(recordSummaryRemote.uuid)(
-        allRecordsSummariesInDevice
-      )
+        allRecordsSummariesInDevice,
+      ),
   );
   if (recordSummariesToAdd.length === 0) {
     return;
@@ -183,7 +183,7 @@ const updateLocalRecordsWithRemoteInfo = async ({
   for (const recordSummaryLocal of allRecordsSummariesInDevice) {
     const { origin, loadStatus, uuid } = recordSummaryLocal;
     const recordSummaryRemote = ArrayUtils.findByUuid(uuid)(
-      recordsSummariesRemote
+      recordsSummariesRemote,
     );
     if (
       origin === RecordOrigin.remote &&
@@ -192,11 +192,11 @@ const updateLocalRecordsWithRemoteInfo = async ({
     ) {
       try {
         await RecordRepository.updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely(
-          { survey, recordSummary: recordSummaryRemote }
+          { survey, recordSummary: recordSummaryRemote },
         );
       } catch (error) {
         throw new Error(
-          `error updating local record keys for record ${uuid}. Details: ${error}`
+          `error updating local record keys for record ${uuid}. Details: ${error}`,
         );
       }
     }
@@ -215,7 +215,7 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
     });
   } catch (error) {
     throw new Error(
-      `error fetching full local records list. Details: ${error}`
+      `error fetching full local records list. Details: ${error}`,
     );
   }
 
@@ -227,7 +227,7 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
     });
   } catch (error) {
     throw new Error(
-      `error fetching remote records summaries. Details: ${error}`
+      `error fetching remote records summaries. Details: ${error}`,
     );
   }
 
@@ -299,7 +299,7 @@ const findRecordSummariesByKeys = async ({
       keyValues,
     });
   const recordSummariesForKeyValuesByUuid = ArrayUtils.indexByUuid(
-    recordSummariesForKeyValues
+    recordSummariesForKeyValues,
   );
   // try to fetch records using formatted keys
   const recordSummariesForKeyValuesFormatted =
@@ -331,7 +331,7 @@ const findRecordSummariesWithSameKeys = async ({
     cycle,
     entity: rootEntity,
   });
-  const keyValuesFormatted = RecordNodes.getRootEntityKeysFormatted({
+  const keyValuesFormatted = RecordUtils.getRootEntityKeysFormatted({
     survey,
     record,
     lang,
@@ -370,7 +370,7 @@ const cloneRecordsIntoDefaultCycle = async ({
 
     // clone files
     for (const [oldFileUuid, fileUuid] of Object.entries(
-      newFileUuidsByOldUuid
+      newFileUuidsByOldUuid,
     )) {
       const sourceFileUri = RecordFileService.getRecordFileUri({
         surveyId,

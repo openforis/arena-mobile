@@ -17,7 +17,7 @@ type DialogProps = {
   showActions?: boolean;
   showCloseButton?: boolean;
   style?: any;
-  title: string;
+  title?: string;
   visible?: boolean;
 };
 
@@ -48,7 +48,7 @@ export const Dialog = (props: DialogProps) => {
         style={style}
         visible={visible}
       >
-        <RNPDialog.Title>{t(title)}</RNPDialog.Title>
+        {title && <RNPDialog.Title>{t(title)}</RNPDialog.Title>}
         <RNPDialog.Content>{children}</RNPDialog.Content>
         {showActions && (
           <RNPDialog.Actions>

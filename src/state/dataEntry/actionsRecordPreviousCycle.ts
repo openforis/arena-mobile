@@ -1,6 +1,6 @@
 import { Objects } from "@openforis/arena-core";
 
-import { Cycles, RecordLoadStatus, RecordNodes, RecordOrigin } from "model";
+import { Cycles, RecordLoadStatus, RecordUtils, RecordOrigin } from "model";
 import { log } from "utils";
 import { RecordService } from "service";
 import { ToastActions } from "../toast";
@@ -58,7 +58,7 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
 
     const prevCycleString = Cycles.labelFunction(prevCycle);
 
-    const keyValuesString = RecordNodes.getRootEntityKeysFormatted({
+    const keyValuesString = RecordUtils.getRootEntityKeysFormatted({
       survey,
       record,
       lang,
@@ -78,7 +78,7 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
         ToastActions.show("dataEntry:recordInPreviousCycle.notFoundMessage", {
           cycle: prevCycleString,
           keyValues: keyValuesString,
-        })
+        }),
       );
     } else if (prevCycleRecordSummaries.length === 1) {
       const prevCycleRecordSummary = prevCycleRecordSummaries[0]!;
@@ -107,7 +107,7 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
             importRecordsFromServer({
               recordUuids: [prevCycleRecordUuid],
               onImportComplete: doFetch,
-            })
+            }),
           );
         }
       }
@@ -118,15 +118,15 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
           {
             cycle: prevCycleString,
             keyValues: keyValuesString,
-          }
-        )
+          },
+        ),
       );
     }
 
     return {
       keyValues: keyValuesString,
       prevCycleRecordIds: prevCycleRecordSummaries.map(
-        (recordSummary) => recordSummary.id!
+        (recordSummary) => recordSummary.id!,
       ),
     };
   } catch (error) {

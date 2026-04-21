@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import { StyleProp, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
 import TreeView from "react-native-final-tree-view";
 
 import { HView, ScrollView } from "components";
@@ -32,7 +32,7 @@ const TreeNode = ({
       marginLeft: isRoot ? 0 : 20 * (level - 1),
       marginBottom: 6,
     }),
-    [isRoot, level]
+    [isRoot, level],
   );
 
   return (
@@ -57,7 +57,7 @@ export const PagesNavigationTree = () => {
       const { entityPointer } = node;
       dispatch(DataEntryActions.selectCurrentPageEntity(entityPointer));
     },
-    [dispatch]
+    [dispatch],
   );
 
   return (

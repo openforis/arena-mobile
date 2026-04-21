@@ -1,5 +1,6 @@
 export default {
   about: "Om",
+  andMore: "...och {{count}} till",
   cancel: "Avbryt",
   clear: "Rensa",
   close: "Stäng",

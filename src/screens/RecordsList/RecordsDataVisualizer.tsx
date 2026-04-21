@@ -22,6 +22,7 @@ import { useTranslation } from "localization";
 import {
   Cycles,
   RecordLoadStatus,
+  RecordUtils,
   RecordOrigin,
   ScreenViewMode,
   Sort,
@@ -36,7 +37,6 @@ import {
 import { ArrayUtils } from "utils";
 
 import { RecordSyncStatusIcon } from "./RecordSyncStatusIcon";
-import { RecordsUtils } from "./RecordsUtils";
 import { RecordListConstants } from "./recordListConstants";
 import { RecordErrorIcon } from "./RecordErrorIcon";
 
@@ -170,14 +170,14 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
 
   const recordToItem = useCallback(
     (recordSummary: any) => {
-      const valuesByKey = RecordsUtils.getValuesByKeyFormatted({
+      const valuesByKey = RecordUtils.getRecordSummaryValuesByKeyFormatted({
         survey,
         lang,
         recordSummary,
         t,
       });
       const valuesBySummaryAttribute =
-        RecordsUtils.getValuesBySummaryAttributeFormatted({
+        RecordUtils.getRecordSummaryValuesBySummaryAttributeFormatted({
           survey,
           lang,
           recordSummary,

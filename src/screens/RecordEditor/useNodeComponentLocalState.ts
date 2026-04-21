@@ -81,11 +81,15 @@ export const useNodeComponentLocalState = ({
   ]);
 
   const updateNodeValue = useCallback(
-    async ({
+    ({
       value: uiValueUpdated,
       fileUri = null,
       ignoreDelay = false,
-    }: any) => {
+    }: {
+      value: any;
+      fileUri?: string | null;
+      ignoreDelay?: boolean;
+    }): void => {
       const nodeValueUpdated = uiValueToNodeValue(uiValueUpdated);
 
       if (
@@ -121,7 +125,7 @@ export const useNodeComponentLocalState = ({
         debouncedUpdateRef.current = StoreUtils.debounceAction(
           action,
           getNodeUpdateActionKey({ nodeUuid }),
-          updateDelay
+          updateDelay,
         );
 
         dispatch(debouncedUpdateRef.current);
@@ -129,7 +133,7 @@ export const useNodeComponentLocalState = ({
         dispatch(action);
       }
     },
-    [uiValueToNodeValue, updateDelay, nodeUuid, dispatch]
+    [uiValueToNodeValue, updateDelay, nodeUuid, dispatch],
   );
 
   const onClearPress = useCallback(async () => {

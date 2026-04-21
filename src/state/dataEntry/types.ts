@@ -1,3 +1,4 @@
+import { ArenaRecord } from "@openforis/arena-core";
 import { RecordCurrentPageEntityPointer } from "model/RecordCurrentPageEntity";
 
 export type PreviousCycleRecordPageEntityPointer = {
@@ -6,14 +7,14 @@ export type PreviousCycleRecordPageEntityPointer = {
 };
 
 export type DataEntryState = {
-  record: any;
+  record?: ArenaRecord;
   recordEditLockAvailable: boolean;
   recordEditLocked: boolean;
-  recordCurrentPageEntity: RecordCurrentPageEntityPointer | null;
+  recordCurrentPageEntity?: RecordCurrentPageEntityPointer;
   activeChildDefIndex?: number;
   recordPageSelectorMenuOpen: boolean;
   linkToPreviousCycleRecord: boolean;
   previousCycleRecordLoading: boolean;
-  previousCycleRecord: any;
+  previousCycleRecord?: ArenaRecord;
   previousCycleRecordPageEntity: PreviousCycleRecordPageEntityPointer;
 };

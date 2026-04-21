@@ -56,5 +56,5 @@ export const NodeValuePreview = (props: NodeValuePreviewProps) => {
   if (component) {
     return React.createElement(component, { nodeDef, value, valueFormatted });
   }
-  return <Text>{valueFormatted}</Text>;
+  return <Text variant="bodyLarge">{valueFormatted}</Text>;
 };

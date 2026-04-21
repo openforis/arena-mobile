@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import { StyleProp, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
 
 import { NodeDefs, Objects } from "@openforis/arena-core";
 
@@ -32,9 +32,9 @@ export const NodePageNavigationButton = (props: Props) => {
           parentEntityUuid,
           entityDefUuid: entityDef.uuid,
           entityUuid,
-        })
+        }),
       ),
-    [dispatch, entityDef.uuid, entityUuid, parentEntityUuid]
+    [dispatch, entityDef.uuid, entityUuid, parentEntityUuid],
   );
 
   const style = useMemo(() => [buttonStyles.button, styleProp], [styleProp]);

@@ -2,6 +2,7 @@ import { Keyboard } from "react-native";
 
 import {
   Dates,
+  LanguageCode,
   NodeDefs,
   NodeDefType,
   Nodes,
@@ -13,18 +14,20 @@ import {
   RecordFactory,
   Records,
   RecordUpdater,
+  Survey,
   Surveys,
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordOrigin, RecordLoadStatus, SurveyDefs, RecordNodes } from "model";
+import { RecordLoadStatus, RecordUtils, RecordOrigin, SurveyDefs } from "model";
 import { PreferencesService } from "service/preferencesService";
-import { RecordService } from "service/recordService";
 import { RecordFileService } from "service/recordFileService";
+import { RecordService } from "service/recordService";
 
 import { screenKeys } from "screens/screenKeys";
 
-import { SystemUtils } from "utils";
+import { Errors, log, StringUtils, SystemUtils } from "utils";
+import { i18n } from "localization";
 
 import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { DeviceInfoActions, DeviceInfoSelectors } from "../deviceInfo";
@@ -32,15 +35,16 @@ import { MessageActions } from "../message";
 import { SurveySelectors } from "../survey";
 
 import { RemoteConnectionSelectors } from "../remoteConnection";
-import { DataEntryActionTypes } from "./actionTypes";
-import { DataEntrySelectors } from "./selectors";
 import { exportRecords, startCsvDataExportJob } from "./actionsDataExport";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
+import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
 import {
   importRecordsFromFile,
   importRecordsFromServer,
 } from "./actionsRecordsImport";
-import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
+import { DataEntryActionTypes } from "./actionTypes";
+import { DataEntrySelectors } from "./selectors";
+import { ToastActions } from "state/toast";
 
 const {
   DATA_ENTRY_RESET,
@@ -344,6 +348,9 @@ const updateRecordNodeFile = async ({
   node,
   dispatch,
 }: any) => {
+  log.debug(
+    `Updating record node file with value ${JSON.stringify(value)} and fileUri ${fileUri}`,
+  );
   const surveyId = survey.id;
 
   if (fileUri) {
@@ -359,11 +366,13 @@ const updateRecordNodeFile = async ({
   const { value: valuePrev } = node;
   const { fileUuid: fileUuidPrev } = valuePrev || {};
   if (fileUuidPrev) {
+    log.debug(`Deleting previous file with uuid ${fileUuidPrev}`);
     await RecordFileService.deleteRecordFile({
       surveyId,
       fileUuid: fileUuidPrev,
     });
   }
+  log.debug(`Record node file updated successfully.`);
   dispatch(DeviceInfoActions.updateFreeDiskStorage());
 };
 
@@ -397,6 +406,96 @@ const checkAndConfirmUpdateNode = async ({
   return true;
 };
 
+const findNewlyInapplicableNodeDefNames = ({
+  survey,
+  lang,
+  clearedDefUuids,
+}: {
+  survey: Survey;
+  lang: LanguageCode;
+  clearedDefUuids: Set<string>;
+}): string[] => {
+  if (clearedDefUuids.size === 0) return [];
+
+  // Separate deleted multiple entity defs from individual attribute defs
+  const deletedMultipleEntityDefUuids = new Set<string>();
+  const otherDefUuids: string[] = [];
+
+  for (const defUuid of clearedDefUuids) {
+    const nodeDef = Surveys.getNodeDefByUuid({ survey, uuid: defUuid });
+    if (nodeDef && NodeDefs.isMultipleEntity(nodeDef)) {
+      deletedMultipleEntityDefUuids.add(defUuid);
+    } else {
+      otherDefUuids.push(defUuid);
+    }
+  }
+
+  // Keep only attributes not inside a multiple entity that is being deleted
+  const standaloneDefUuids = otherDefUuids.filter((defUuid) => {
+    const nodeDef = Surveys.getNodeDefByUuid({ survey, uuid: defUuid });
+    if (!nodeDef) return false;
+    const ancestorMultipleEntity = Surveys.getNodeDefAncestorMultipleEntity({
+      survey,
+      nodeDef,
+    });
+    return (
+      !ancestorMultipleEntity ||
+      !deletedMultipleEntityDefUuids.has(ancestorMultipleEntity.uuid)
+    );
+  });
+
+  // Entity names first, then standalone attribute names
+  const defsToShow = [
+    ...Array.from(deletedMultipleEntityDefUuids),
+    ...standaloneDefUuids,
+  ];
+
+  if (defsToShow.length === 0) return [];
+
+  const maxToShow = 10;
+  const overflow = defsToShow.length - maxToShow;
+  const nodeDefUuidsToShow = defsToShow.slice(0, maxToShow);
+  const attributeNames = SurveyDefs.getNodeDefsLabelsOrNames({
+    survey,
+    nodeDefUuids: nodeDefUuidsToShow,
+    lang,
+  }).map((name) => `- ${StringUtils.truncateWithEllipsis(name, 40)}`);
+
+  return [
+    ...attributeNames,
+    ...(overflow > 0 ? [i18n.t("common:andMore", { count: overflow })] : []),
+  ];
+};
+
+const confirmClearNewlyInapplicableValues = async ({
+  dispatch,
+  survey,
+  lang,
+  clearedDefUuids,
+}: {
+  dispatch: any;
+  survey: Survey;
+  lang: LanguageCode;
+  clearedDefUuids: Set<string>;
+}): Promise<boolean> => {
+  const attributeNamesToShow = findNewlyInapplicableNodeDefNames({
+    survey,
+    lang,
+    clearedDefUuids,
+  });
+  if (attributeNamesToShow.length === 0) {
+    return true;
+  }
+  return !!(await ConfirmUtils.confirm({
+    dispatch,
+    titleKey: "dataEntry:confirmUpdateNodesBecameNotApplicable.title",
+    messageIsMarkdown: true,
+    messageKey: "dataEntry:confirmUpdateNodesBecameNotApplicable.message",
+    messageParams: { attributeNames: attributeNamesToShow.join("\n") },
+    swipeToConfirm: true,
+  }));
+};
+
 const updateAttribute =
   ({
     uuid,
@@ -408,64 +507,99 @@ const updateAttribute =
     fileUri?: string | null;
   }) =>
   async (dispatch: any, getState: any) => {
-    const state = getState();
-    const user = RemoteConnectionSelectors.selectLoggedUser(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
-    const record = DataEntrySelectors.selectRecord(state);
+    try {
+      const state = getState();
+      const user = RemoteConnectionSelectors.selectLoggedUser(state);
+      const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
+      const record = DataEntrySelectors.selectRecord(state);
 
-    const cycle = Records.getCycle(record);
-    const node = Records.getNodeByUuid(uuid)(record)!;
-    const nodeDef = Surveys.getNodeDefByUuid({
-      survey,
-      uuid: node.nodeDefUuid,
-    });
+      const cycle = Records.getCycle(record);
+      const node = Records.getNodeByUuid(uuid)(record)!;
+      const nodeDef = Surveys.getNodeDefByUuid({
+        survey,
+        uuid: node.nodeDefUuid,
+      });
 
-    if (
-      !(await checkAndConfirmUpdateNode({ dispatch, getState, node, nodeDef }))
-    )
-      return;
+      if (
+        !(await checkAndConfirmUpdateNode({
+          dispatch,
+          getState,
+          node,
+          nodeDef,
+        }))
+      )
+        return;
 
-    let { record: recordUpdated, nodes: nodesUpdated } =
-      await RecordUpdater.updateAttributeValue({
+      log.debug(
+        `Updating node ${NodeDefs.getName(nodeDef)} (${node.uuid}) with value ${value}`,
+      );
+      let {
+        record: recordUpdated,
+        nodes: nodesUpdated,
+        clearedDefUuids,
+      } = await RecordUpdater.updateAttributeValue({
         user,
         survey,
         record,
         attributeUuid: uuid,
         value,
+        clearNonApplicableValues: true,
       });
 
-    removeNodesFlags(nodesUpdated);
+      if (
+        !(await confirmClearNewlyInapplicableValues({
+          dispatch,
+          survey,
+          lang,
+          clearedDefUuids,
+        }))
+      ) {
+        log.debug(`Newly inapplicable values not confirmed. Reverting update.`);
+        return;
+      }
 
-    if (NodeDefs.getType(nodeDef) === NodeDefType.file) {
-      await updateRecordNodeFile({ survey, node, fileUri, value, dispatch });
-    }
+      removeNodesFlags(nodesUpdated);
 
-    const isRootKeyDef = SurveyDefs.isRootKeyDef({ survey, cycle, nodeDef });
+      if (NodeDefs.getType(nodeDef) === NodeDefType.file) {
+        await updateRecordNodeFile({ survey, node, fileUri, value, dispatch });
+      }
 
-    await _updateRecord({ dispatch, survey, record: recordUpdated });
-    if (
-      DataEntrySelectors.selectIsLinkedToPreviousCycleRecord(state) &&
-      isRootKeyDef
-    ) {
-      dispatch(unlinkFromRecordInPreviousCycle());
-    }
+      const isRootKeyDef = SurveyDefs.isRootKeyDef({ survey, cycle, nodeDef });
 
-    if (
-      isRootKeyDef &&
-      (await _isRootKeyDuplicate({ survey, record: recordUpdated, lang }))
-    ) {
-      const keyValues = RecordNodes.getRootEntityKeysFormatted({
-        survey,
-        record: recordUpdated,
-        lang,
-      }).join(", ");
+      await _updateRecord({ dispatch, survey, record: recordUpdated });
+      if (
+        DataEntrySelectors.selectIsLinkedToPreviousCycleRecord(state) &&
+        isRootKeyDef
+      ) {
+        dispatch(unlinkFromRecordInPreviousCycle());
+      }
 
+      if (
+        isRootKeyDef &&
+        (await _isRootKeyDuplicate({ survey, record: recordUpdated, lang }))
+      ) {
+        const keyValues = RecordUtils.getRootEntityKeysFormatted({
+          survey,
+          record: recordUpdated,
+          lang,
+        }).join(", ");
+
+        dispatch(
+          MessageActions.setMessage({
+            content: "recordsList:duplicateKey.message",
+            contentParams: { keyValues },
+            title: "recordsList:duplicateKey.title",
+          }),
+        );
+      }
+      log.debug(`Node updated successfully.`);
+    } catch (error) {
+      const errorMessage = Errors.getErrorMessage(error);
+      log.error("Error updating attribute value: " + errorMessage);
       dispatch(
-        MessageActions.setMessage({
-          content: "recordsList:duplicateKey.message",
-          contentParams: { keyValues },
-          title: "recordsList:duplicateKey.title",
+        ToastActions.show("dataEntry:updateAttributeError", {
+          error: errorMessage,
         }),
       );
     }

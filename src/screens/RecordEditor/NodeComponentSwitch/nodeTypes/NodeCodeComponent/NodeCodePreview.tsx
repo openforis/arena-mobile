@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useTheme } from "react-native-paper";
 
-import { NodeDefs } from "@openforis/arena-core";
+import { NodeDefCode, NodeDefs } from "@openforis/arena-core";
 
 import { Button, HView } from "components";
 import { useIsTextDirectionRtl } from "localization";
@@ -70,7 +70,7 @@ const OpenDropdownButton = (props: OpenDropdownButtonProps) => {
 
 type NodeCodePreviewProps = {
   itemLabelFunction: (item: any) => string;
-  nodeDef: any;
+  nodeDef: NodeDefCode;
   openEditDialog: () => void;
   openFindClosestSamplingPointDialog: () => void;
   selectedItems?: any[];
@@ -85,7 +85,7 @@ export const NodeCodePreview = (props: NodeCodePreviewProps) => {
     selectedItems = [],
   } = props;
 
-  const survey = SurveySelectors.useCurrentSurvey();
+  const survey = SurveySelectors.useCurrentSurvey()!;
 
   const multiple = NodeDefs.isMultiple(nodeDef);
   const canFindClosestSamplingPointData =

@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateNodesBecameNotApplicable: {
+    title: "Noder kommer inte längre att gälla",
+    message: `Följande noder kommer inte längre att gälla:  
+  
+{{attributeNames}}  
+  
+Deras värden kommer att rensas.  
+Fortsätta?`,
+  },
   confirmGoToListOfRecords: `Gå till listan med poster?
   
   (alla ändringar är redan sparade)`,
@@ -27,6 +36,7 @@ export default {
       "Om du fortsätter kommer vissa beroende, uppräknade entiteter ({{entityDefs}}) att räknas om, vilket raderar befintliga värden som har infogats i dem (om några).\n\nVill du uppdatera de uppräknade entiteterna?",
     title: "Uppdatera uppräknade entiteter",
   },
+  updateAttributeError: "Fel vid uppdatering av värde: {{error}}",
   cycle: "Cykel",
   cycleForNewRecords: "Cykel för nya poster:",
   options: "Alternativ",
@@ -163,6 +173,7 @@ Tryck '$t(dataEntry:geo.stopAddingPoints)' när du är klar.`,
     selectPicture: "Välj bild",
     selectVideo: "Välj video",
     deleteConfirmMessage: "Ta bort befintlig fil?",
+    fileSelectError: "Fel vid val av fil: {{error}}",
   },
   fileAttributeAudio: {
     error: {
@@ -180,6 +191,7 @@ Maximalt tillåten storlek: {{maxSizeMB}}MB.
 Kontrollera inställningarna eller be undersökningsadministratören att ändra denna gräns.`,
     resolution: "Upplösning",
     rotate: "Rotera",
+    cameraOpenError: "Fel vid öppning av kameran: {{error}}",
     rotationError: "Fel vid rotering av bilden: {{error}}",
   },
   dataExport: {

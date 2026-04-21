@@ -1,5 +1,6 @@
 export default {
   about: "Sobre",
+  andMore: "...e mais {{count}}",
   cancel: "Cancelar",
   clear: "Limpar",
   close: "Fechar",

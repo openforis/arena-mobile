@@ -1,5 +1,6 @@
 export default {
   about: "ስለ",
+  andMore: "...እና ሌሎች {{count}}",
   appTitle: "የአረና ሞባይል",
   cancel: "ይቅር",
   clear: "አጽዳ",

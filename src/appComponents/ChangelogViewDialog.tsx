@@ -26,7 +26,7 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
     onClose,
     onUpdate = null,
     showCurrentVersionNumber = true,
-    title = "app:changelog",
+    title = undefined,
   } = props;
 
   const theme = useTheme();
@@ -36,29 +36,22 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
     () =>
       StyleSheet.create({
         formItem: { backgroundColor: "transparent" },
-        markdown: {
-          body: {
-            color: theme.colors.onBackground,
-            backgroundColor: theme.colors.surfaceVariant,
-          },
-        },
         dialog: { display: "flex", height: "90%", padding: 5 },
         content: {
           display: "flex",
-          height: "80%",
-          gap: 20,
+          height: "90%",
           backgroundColor: theme.colors.surfaceVariant,
         },
         changelogContent: { flex: 1 as const },
       } as any),
-    [theme]
+    [theme],
   );
 
   useEffect(() => {
     API.getFileAsText({ serverUrl: changelogUrl, uri: changelogUri }).then(
       (text) => {
         setContent(text);
-      }
+      },
     );
   }, []);
 
@@ -77,8 +70,12 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
         )}
         {!content && <LoadingIcon />}
         {content && (
-          <ScrollView style={styles.changelogContent} persistentScrollbar>
-            <Markdown content={content} style={styles.markdown} />
+          <ScrollView
+            style={styles.changelogContent}
+            persistentScrollbar
+            transparent
+          >
+            <Markdown content={content} />
           </ScrollView>
         )}
       </VView>

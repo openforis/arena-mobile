@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateNodesBecameNotApplicable: {
+    title: "Los nodos ya no se aplicarán",
+    message: `Los siguientes nodos ya no se aplicarán:  
+  
+{{attributeNames}}  
+  
+Sus valores serán borrados.  
+¿Continuar?`,
+  },
   confirmGoToListOfRecords:
     "¿Ir a la lista de registros?\n\n(todos los cambios ya están guardados)",
   checkStatus: "Comprobar sincronización",
@@ -27,6 +36,7 @@ export default {
       "Si continúa, algunas entidades enumeradas dependientes ({{entityDefs}}) se volverán a enumerar, eliminando los valores existentes insertados en ellas (si los hay).\n\n¿Actualizar las entidades enumeradas?",
     title: "Actualizar entidades enumeradas",
   },
+  updateAttributeError: "Error al actualizar el valor: {{error}}",
   cycle: "Ciclo",
   cycleForNewRecords: "Ciclo para nuevos registros:",
   options: "Opciones",
@@ -157,6 +167,7 @@ Presiona '$t(dataEntry:geo.stopAddingPoints)' cuando hayas terminado.`,
     selectPicture: "Seleccionar imagen",
     selectVideo: "Seleccionar video",
     deleteConfirmMessage: "¿Eliminar el archivo existente?",
+    fileSelectError: "Error al seleccionar el archivo: {{error}}",
   },
   fileAttributeAudio: {
     error: {
@@ -174,6 +185,7 @@ Tamaño máximo permitido: {{maxSizeMB}}MB.
 Verifique la configuración o pida al administrador de la encuesta que cambie este límite.`,
     resolution: "Resolución",
     rotate: "Rotar",
+    cameraOpenError: "Error al abrir la cámara: {{error}}",
     rotationError: "Error al rotar la imagen: {{error}}",
   },
   dataExport: {

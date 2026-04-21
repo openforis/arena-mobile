@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateNodesBecameNotApplicable: {
+    title: "Solmut eivät enää koske",
+    message: `Seuraavat solmut eivät enää koske:  
+  
+{{attributeNames}}  
+  
+Niiden arvot tyhjennetään.  
+Jatketaanko?`,
+  },
   confirmGoToListOfRecords: `Siirry tietueluetteloon?
   
   (kaikki muutokset on jo tallennettu)`,
@@ -27,6 +36,7 @@ export default {
       "Jos jatkat, jotkin riippuvaiset luetteloidut entiteetit ({{entityDefs}}) luetteloidaan uudelleen, jolloin niihin mahdollisesti lisätyt aiemmat arvot poistetaan.\n\nHaluatko päivittää luetteloidut entiteetit?",
     title: "Päivitä luetteloidut entiteetit",
   },
+  updateAttributeError: "Virhe arvoa päivitettäessä: {{error}}",
   cycle: "Jakso",
   cycleForNewRecords: "Jakso uusille tietueille:",
   options: "Valinnat",
@@ -162,6 +172,7 @@ Paina '$t(dataEntry:geo.stopAddingPoints)', kun olet valmis.`,
     selectPicture: "Valitse kuva",
     selectVideo: "Valitse video",
     deleteConfirmMessage: "Poistetaanko olemassa oleva tiedosto?",
+    fileSelectError: "Virhe tiedoston valinnassa: {{error}}",
   },
   fileAttributeAudio: {
     error: {
@@ -179,6 +190,7 @@ Suurin sallittu koko: {{maxSizeMB}}MB.
 Tarkista asetukset tai pyydä kyselyn järjestelmänvalvojaa muuttamaan tätä rajaa.`,
     resolution: "Resoluutio",
     rotate: "Käännä",
+    cameraOpenError: "Virhe kameran avaamisessa: {{error}}",
     rotationError: "Virhe kuvan kääntämisessä: {{error}}",
   },
   dataExport: {

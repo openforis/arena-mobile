@@ -12,7 +12,7 @@ import {
 } from "components";
 import { useTranslation } from "localization";
 import { SortObject } from "model";
-import { RecordNodes } from "model/utils/RecordNodes";
+import { RecordUtils } from "model/utils/RecordUtils";
 import { log } from "utils";
 import {
   DataEntryActions,
@@ -55,7 +55,7 @@ export const NodeMultipleEntityListComponent = (
   const [sort, setSort] = useState(undefined as SortObject | undefined);
 
   log.debug(
-    "Rendering NodeMultipleEntityListComponent for " +
+    "rendering NodeMultipleEntityListComponent for " +
       NodeDefs.getName(entityDef),
   );
 
@@ -78,13 +78,13 @@ export const NodeMultipleEntityListComponent = (
   const visibleNodeDefs = useMemo(
     () =>
       isLandscape
-        ? RecordNodes.getApplicableDescendantDefs({
+        ? RecordUtils.getApplicableDescendantDefs({
             survey,
             entityDef,
             record,
             parentEntity,
           })
-        : RecordNodes.getApplicableSummaryDefs({
+        : RecordUtils.getApplicableSummaryDefs({
             survey,
             entityDef,
             record,
@@ -147,7 +147,7 @@ export const NodeMultipleEntityListComponent = (
       key: entity.uuid,
       uuid: entity.uuid,
 
-      ...RecordNodes.getEntitySummaryValuesByNameFormatted({
+      ...RecordUtils.getEntitySummaryValuesByNameFormatted({
         survey,
         record,
         entity,

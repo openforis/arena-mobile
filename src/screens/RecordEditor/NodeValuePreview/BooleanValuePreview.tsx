@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import { Text } from "components";
 import { useTranslation } from "localization";
-import { RecordNodes } from "model";
+import { RecordUtils } from "model";
 
 import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 
@@ -12,8 +12,8 @@ export const BooleanValuePreview = (props: NodeValuePreviewProps) => {
   const { t } = useTranslation();
 
   const valueFormatted = useMemo(
-    () => RecordNodes.formatBooleanValue({ nodeDef, value, t }),
-    [nodeDef, value, t]
+    () => RecordUtils.formatBooleanValue({ nodeDef, value, t }),
+    [nodeDef, value, t],
   );
 
   return <Text>{valueFormatted}</Text>;

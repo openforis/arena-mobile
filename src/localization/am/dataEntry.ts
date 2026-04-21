@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateNodesBecameNotApplicable: {
+    title: "ኖዶቹ ዳግም አይተገበሩም",
+    message: `የሚከተሉት ኖዶች ዳግም አይተገበሩም:  
+  
+{{attributeNames}}  
+  
+እሴቶቻቸው ይጸዳሉ.  
+መቀጠል?`,
+  },
   confirmGoToListOfRecords: "ወደ መዝገቦች ዝርዝር ይሂዱ?\n\n(ሁሉም ለውጦች አስቀድመው ተቀምጠዋል)",
   checkStatus: "የማመሳሰል ሁኔታን ያረጋግጡ",
   closestSamplingPoint: {
@@ -24,6 +33,7 @@ export default {
       "ከተወሰኑ አካላት ({{entityDefs}}) ጋር የተያያዙ የተዘረዘሩ አካላት ካሉ ይቀጥሉ፣ ቀደም ሲል የገቡ እሴቶችን (ካለ) በመሰረዝ እንደገና ይዘረዘራሉ።\n\nየተዘረዘሩትን አካላት ማዘመን ይፈልጋሉ?",
     title: "የተዘረዘሩ አካላትን ያዘምኑ",
   },
+  updateAttributeError: "እሴቱን ማዘመን ላይ ስህተት፡ {{error}}",
   cycle: "ዙር",
   cycleForNewRecords: "ለአዲስ መዝገቦች ዙር፡",
   options: "አማራጮች",
@@ -150,6 +160,7 @@ export default {
     selectPicture: "ምስል ይምረጡ",
     selectVideo: "የቪዲዮ ፋይል ይምረጡ",
     deleteConfirmMessage: "ያለውን ፋይል ይሰርዙ?",
+    fileSelectError: "ፋይል በመምረጥ ላይ ስህተት፡ {{error}}",
   },
   fileAttributeAudio: {
     error: {
@@ -167,6 +178,7 @@ export default {
 ይህን ገደብ ለመቀየር ቅንብሮችን ያረጋግጡ ወይም የዳሰሳ ጥናቱ አስተዳዳሪን ይጠይቁ።`,
     resolution: "ጥራት",
     rotate: "ማዞር",
+    cameraOpenError: "ካሜራን በመክፈት ላይ ስህተት፡ {{error}}",
     rotationError: "ምስሉን ማዞር ላይ ስህተት፡ {{error}}",
   },
   dataExport: {

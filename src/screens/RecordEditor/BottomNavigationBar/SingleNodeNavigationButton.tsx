@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import { StyleProp, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
 
 import { NodeDefs } from "@openforis/arena-core";
 
@@ -32,9 +32,9 @@ export const SingleNodeNavigationButton = (props: Props) => {
   const onPress = useCallback(
     () =>
       dispatch(
-        DataEntryActions.selectCurrentPageEntityActiveChildIndex(childDefIndex)
+        DataEntryActions.selectCurrentPageEntityActiveChildIndex(childDefIndex),
       ),
-    [childDefIndex, dispatch]
+    [childDefIndex, dispatch],
   );
 
   const style = useMemo(() => [buttonStyles.button, styleProp], [styleProp]);

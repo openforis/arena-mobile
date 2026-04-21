@@ -13,15 +13,10 @@ import { NodeTaxonAutocomplete } from "./NodeTaxonAutocomplete";
 import { TaxonValuePreview } from "../../../NodeValuePreview/TaxonValuePreview";
 import { useTaxonByNodeValue } from "../../../NodeValuePreview/useTaxonByNodeValue";
 import { useDynamicStyles } from "./useDynamicStyles";
+import { NodeComponentProps } from "../nodeComponentPropTypes";
 import styles from "./styles";
 
-type NodeTaxonComponentProps = {
-  nodeDef: any;
-  nodeUuid?: string;
-  parentNodeUuid?: string;
-};
-
-export const NodeTaxonComponent = (props: NodeTaxonComponentProps) => {
+export const NodeTaxonComponent = (props: NodeComponentProps) => {
   const { nodeDef, nodeUuid, parentNodeUuid } = props;
 
   log.debug(`rendering NodeTaxonComponent for ${NodeDefs.getName(nodeDef)}`);

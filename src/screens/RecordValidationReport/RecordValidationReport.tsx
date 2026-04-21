@@ -7,10 +7,11 @@ import {
   Records,
   RecordValidations,
   Surveys,
+  ValidationFields,
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordNodes } from "model";
+import { RecordUtils } from "model";
 import { ValidationUtils } from "model/utils/ValidationUtils";
 import { useTranslation } from "localization";
 
@@ -43,7 +44,7 @@ const getNodePath = ({ survey, record, nodeUuid, lang }: any) => {
     const labelOrName = NodeDefs.getLabelOrName(nodeDef, lang);
     let part = labelOrName;
     if (NodeDefs.isMultiple(nodeDef)) {
-      const keys = RecordNodes.getEntityKeysFormatted({
+      const keys = RecordUtils.getEntityKeysFormatted({
         survey,
         record,
         entity: visitedAncestor,
@@ -75,11 +76,11 @@ const extractValidationItem = ({
   if (RecordValidations.isValidationChildrenCountKey(validationFieldKey)) {
     invalidNodeDefUuid =
       RecordValidations.extractValidationChildrenCountKeyNodeDefUuid(
-        validationFieldKey
+        validationFieldKey,
       );
     invalidParentNodeUuid =
       RecordValidations.extractValidationChildrenCountKeyParentUuid(
-        validationFieldKey
+        validationFieldKey,
       );
   } else {
     const node = Records.getNodeByUuid(validationFieldKey)(record);
@@ -149,7 +150,10 @@ export const RecordValidationReport = () => {
   const { editDialogOpen, dialogNodeDef, dialogParentNodeUuid } = state;
 
   const { validation } = record;
-  const validationFields = Validations.getFieldValidations(validation);
+  const validationFields: ValidationFields = useMemo(
+    () => (validation ? Validations.getFieldValidations(validation) : {}),
+    [validation],
+  );
 
   const items: any[] = useMemo(
     () =>
@@ -168,9 +172,9 @@ export const RecordValidationReport = () => {
           }
           return acc;
         },
-        [] as any[]
+        [] as any[],
       ),
-    [lang, record, survey, t, validationFields]
+    [lang, record, survey, t, validationFields],
   );
 
   const onRowPress = (item: any) => {

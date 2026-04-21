@@ -29,7 +29,7 @@ export const NodeBooleanComponent = (props: NodeComponentProps) => {
     (val: any) => {
       updateNodeValue({ value: val === value ? null : val });
     },
-    [updateNodeValue, value]
+    [updateNodeValue, value],
   );
 
   const labelValue = nodeDef.props.labelValue ?? "trueFalse";
@@ -39,7 +39,7 @@ export const NodeBooleanComponent = (props: NodeComponentProps) => {
       labelValue === "trueFalse"
         ? booleanValue
         : yesNoValueByBooleanValue[booleanValue],
-    [labelValue]
+    [labelValue],
   );
 
   const style = useMemo(() => {

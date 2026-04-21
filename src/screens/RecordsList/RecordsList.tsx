@@ -16,6 +16,7 @@ import {
 import { useIsNetworkConnected, useNavigationFocus, useToast } from "hooks";
 import { useTranslation } from "localization";
 import {
+  RecordUtils,
   RecordOrigin,
   RecordSyncStatus,
   RecordUpdateConflictResolutionStrategy as ConflictResolutionStrategy,
@@ -34,7 +35,6 @@ import { RemoteConnectionUtils } from "state/remoteConnection/remoteConnectionUt
 import { Files } from "utils";
 
 import { RecordsDataVisualizer } from "./RecordsDataVisualizer";
-import { RecordsUtils } from "./RecordsUtils";
 import { RecordsListOptions } from "./RecordsListOptions";
 
 import styles from "./styles";
@@ -554,7 +554,7 @@ export const RecordsList = () => {
     if (Objects.isEmpty(searchValue)) return records;
 
     return records.filter((recordSummary) => {
-      const valuesByKey = RecordsUtils.getValuesByKeyFormatted({
+      const valuesByKey = RecordUtils.getRecordSummaryValuesByKeyFormatted({
         survey,
         lang,
         recordSummary,

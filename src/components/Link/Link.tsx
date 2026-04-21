@@ -1,7 +1,7 @@
 import { Objects } from "@openforis/arena-core";
 import * as WebBrowser from "expo-web-browser";
 import { useCallback, useMemo } from "react";
-import { StyleProp, TextStyle } from "react-native";
+import type { StyleProp, TextStyle } from "react-native";
 
 import { Text } from "components/Text";
 import { useTranslation } from "localization";

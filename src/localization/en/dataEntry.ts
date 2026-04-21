@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateNodesBecameNotApplicable: {
+    title: "Nodes will no longer apply",
+    message: `The following nodes will no longer apply:  
+  
+{{attributeNames}}  
+  
+Their values will be cleared.  
+Continue?`,
+  },
   confirmGoToListOfRecords: `Go to list of records?
 
 (all changes already saved)`,
@@ -28,6 +37,7 @@ export default {
 Update the enumerated entities?`,
     title: "Update enumerated entities",
   },
+  updateAttributeError: "Error updating value: {{error}}",
   cycle: "Cycle",
   cycleForNewRecords: "Cycle for new records:",
   dataExport: {
@@ -200,6 +210,7 @@ Press '$t(dataEntry:geo.stopAddingPoints)' when done.`,
     selectPicture: "Select picture",
     selectVideo: "Select video",
     deleteConfirmMessage: "Delete the existing file?",
+    fileSelectError: "Error selecting file: {{error}}",
   },
   fileAttributeAudio: {
     error: {
@@ -217,6 +228,7 @@ Maximum size allowed: {{maxSizeMB}}MB.
 Check settings or ask the survey administrator to change this limit.`,
     resolution: "Resolution",
     rotate: "Rotate",
+    cameraOpenError: "Error opening camera: {{error}}",
     rotationError: "Error rotating image: {{error}}",
   },
   location: {

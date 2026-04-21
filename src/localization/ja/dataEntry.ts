@@ -1,6 +1,15 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  confirmUpdateNodesBecameNotApplicable: {
+    title: "ノードは適用されなくなります",
+    message: `以下のノードは適用されなくなります：  
+  
+{{attributeNames}}  
+  
+それらの値は削除されます。  
+続行しますか？`,
+  },
   confirmGoToListOfRecords: `記録一覧に移動しますか？
 
 （すべての変更はすでに保存されています）`,
@@ -28,6 +37,7 @@ export default {
 項目の更新を続けますか？`,
     title: "項目の構成を更新",
   },
+  updateAttributeError: "値の更新中にエラーが発生しました: {{error}}",
   cycle: "サイクル",
   cycleForNewRecords: "新規記録のサイクル：",
   dataExport: {
@@ -198,6 +208,7 @@ export default {
     selectPicture: "写真を選択",
     selectVideo: "動画を選択",
     deleteConfirmMessage: "既存のファイルを削除しますか？",
+    fileSelectError: "ファイル選択時にエラーが発生しました: {{error}}",
   },
   fileAttributeAudio: {
     error: {
@@ -215,6 +226,7 @@ export default {
 設定を確認するか、調査管理者にこの制限の変更を依頼してください。`,
     resolution: "解像度",
     rotate: "回転",
+    cameraOpenError: "カメラを開く際にエラーが発生しました: {{error}}",
     rotationError: "画像の回転エラー：{{error}}",
   },
   location: {

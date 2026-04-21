@@ -18,6 +18,7 @@ import {
 } from "state";
 import { log } from "utils";
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
+import { NodeComponentProps } from "../nodeComponentPropTypes";
 import { useStyles } from "./styles";
 
 const isNumericByType: Record<string, boolean> = {
@@ -27,20 +28,14 @@ const isNumericByType: Record<string, boolean> = {
 
 const multilineNumberOfLines = 5;
 
-type NodeTextComponentProps = {
-  nodeDef: any;
-  nodeUuid?: string;
-  style?: any;
-  wrapperStyle?: any;
-};
-
 const nodeValueToUiValue = (value: any) =>
   Objects.isEmpty(value) ? "" : String(value);
 
-export const NodeTextComponent = (props: NodeTextComponentProps) => {
+export const NodeTextComponent = (props: NodeComponentProps) => {
   const { nodeDef, nodeUuid, style: styleProp, wrapperStyle } = props;
 
-  log.debug(`rendering NodeTextComponent for ${nodeDef.props.name}`);
+  const nodeDefName = NodeDefs.getName(nodeDef);
+  log.debug(`rendering NodeTextComponent for ${nodeDefName}`);
 
   const survey = SurveySelectors.useCurrentSurvey()!;
   const cycle = SurveySelectors.useCurrentSurveyCycle();
@@ -68,7 +63,7 @@ export const NodeTextComponent = (props: NodeTextComponentProps) => {
       }
       return uiValue;
     },
-    [isNumeric]
+    [isNumeric],
   );
 
   const { applicable, invalidValue, value, uiValue, updateNodeValue } =
@@ -83,7 +78,7 @@ export const NodeTextComponent = (props: NodeTextComponentProps) => {
     (value: any) => {
       updateNodeValue({ value });
     },
-    [updateNodeValue]
+    [updateNodeValue],
   );
 
   // focus on text input when in single-node view mode and this is the active item
@@ -131,6 +126,7 @@ export const NodeTextComponent = (props: NodeTextComponentProps) => {
           multiline={multiline}
           numberOfLines={multiline ? multilineNumberOfLines : 1}
           onChange={onChange}
+          testID={nodeDefName}
           value={uiValue}
         />
       )}

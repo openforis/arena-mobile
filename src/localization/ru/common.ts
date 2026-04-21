@@ -1,5 +1,6 @@
 export default {
   about: "О программе",
+  andMore: "...и ещё {{count}}",
   appTitle: "Мобильные Arena",
   cancel: "Отмена",
   clear: "Очистить",

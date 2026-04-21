@@ -1,4 +1,4 @@
-import { StyleProp, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
 
 import { ScreenViewMode, SortObject } from "model";
 

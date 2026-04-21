@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { NodeDefs, Objects, Records, Surveys } from "@openforis/arena-core";
 
 import { useTranslation } from "localization";
-import { RecordNodes } from "model";
+import { RecordUtils } from "model";
 import { DataEntrySelectors, SurveySelectors } from "state";
 
 export const useBreadcrumbItems = () => {
@@ -25,7 +25,7 @@ export const useBreadcrumbItems = () => {
         (NodeDefs.isMultiple(nodeDef) && parentEntity)
       ) {
         const keyValuesByName =
-          RecordNodes.getEntitySummaryValuesByNameFormatted({
+          RecordUtils.getEntitySummaryValuesByNameFormatted({
             survey,
             record,
             entity,
