@@ -1,11 +1,11 @@
 import { ExpoConfig } from "expo/config";
 
 const upsertPlugin = (
-  plugins: ExpoConfig["plugins"] = [],
+  plugins: ExpoConfig["plugins"],
   pluginName: string,
   pluginConfig: Record<string, unknown>,
 ): ExpoConfig["plugins"] => {
-  const nextPlugins = [...plugins];
+  const nextPlugins: ExpoConfig["plugins"] = [...(plugins as any[])];
   const index = nextPlugins.findIndex((plugin) =>
     Array.isArray(plugin) ? plugin[0] === pluginName : plugin === pluginName,
   );
@@ -51,7 +51,6 @@ const basePlugins: ExpoConfig["plugins"] = [
   "expo-audio",
   "expo-localization",
   "expo-secure-store",
-  "expo-sharing",
   "expo-sqlite",
   "expo-web-browser",
   "@react-native-community/datetimepicker",
