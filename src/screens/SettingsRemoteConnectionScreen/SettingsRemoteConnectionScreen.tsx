@@ -230,6 +230,9 @@ export const SettingsRemoteConnectionScreen = () => {
     return <Loader />;
   }
 
+  const loginDisabled =
+    !networkAvailable || Objects.isEmpty(email) || Objects.isEmpty(password);
+
   return (
     <ScreenView>
       <VView style={styles.container}>
@@ -301,7 +304,7 @@ export const SettingsRemoteConnectionScreen = () => {
             />
           </HView>
           <Button
-            disabled={!networkAvailable}
+            disabled={loginDisabled}
             labelStyle={styles.loginButtonLabel}
             onPress={onLogin}
             style={styles.loginButton}
