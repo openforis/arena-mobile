@@ -121,5 +121,5 @@
     "typescript": "^5.9.3"
   },
   "private": true,
-  "packageManager": "yarn@4.13.0"
+  "packageManager": "yarn@4.14.1"
 }
