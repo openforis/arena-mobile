@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { ExpoConfig } from "expo/config";
 
 const upsertPlugin = (
