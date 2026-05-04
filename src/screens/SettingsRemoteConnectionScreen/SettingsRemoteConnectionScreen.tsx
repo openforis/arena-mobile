@@ -231,7 +231,9 @@ export const SettingsRemoteConnectionScreen = () => {
   }
 
   const loginDisabled =
-    !networkAvailable || Objects.isEmpty(email) || Objects.isEmpty(password);
+    !networkAvailable ||
+    Objects.isEmpty(email?.trim()) ||
+    Objects.isEmpty(password);
 
   return (
     <ScreenView>
