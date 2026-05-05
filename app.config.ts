@@ -51,10 +51,7 @@ const basePlugins: ExpoConfig["plugins"] = [
   "expo-audio",
   "expo-localization",
   "expo-secure-store",
-<<<<<<< HEAD
   "expo-sharing",
-=======
->>>>>>> ede6e6d8910a3b119fd4f7adbaef6ef1220681af
   "expo-sqlite",
   "expo-web-browser",
   "@react-native-community/datetimepicker",
@@ -76,11 +73,7 @@ const config = (): ExpoConfig => {
     name: "Arena Mobile",
     slug: "arena-mobile",
     owner: "openforis",
-<<<<<<< HEAD
-    version: "2.5.2",
-=======
     version: "2.5.3",
->>>>>>> ede6e6d8910a3b119fd4f7adbaef6ef1220681af
     icon: "./assets/logo/icon_with_margin.png",
     userInterfaceStyle: "automatic",
     splash: {
@@ -98,11 +91,7 @@ const config = (): ExpoConfig => {
         backgroundColor: "#FFFFFF",
       },
       package: "org.openforis.arena_mobile",
-<<<<<<< HEAD
-      versionCode: 90,
-=======
       versionCode: 91,
->>>>>>> ede6e6d8910a3b119fd4f7adbaef6ef1220681af
       permissions: [
         "android.permission.ACCESS_MEDIA_LOCATION",
         "android.permission.RECORD_AUDIO",
@@ -114,11 +103,7 @@ const config = (): ExpoConfig => {
       },
     },
     ios: {
-<<<<<<< HEAD
-      buildNumber: "90",
-=======
       buildNumber: "91",
->>>>>>> ede6e6d8910a3b119fd4f7adbaef6ef1220681af
       bundleIdentifier: "org.openforis.arena-mobile",
       config: {
         usesNonExemptEncryption: false,
