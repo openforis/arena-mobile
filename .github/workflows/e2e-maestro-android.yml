@@ -35,10 +35,10 @@ jobs:
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
       # Build the APK FIRST (No emulator yet)
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: "17"
+          java-version: "21"
           distribution: "temurin"
           cache: "gradle"
 
