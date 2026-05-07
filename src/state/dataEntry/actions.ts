@@ -61,6 +61,18 @@ const {
   updatePreviousCyclePageEntity,
 } = DataEntryActionsRecordPreviousCycle;
 
+const handleError = (
+  dispatch: any,
+  error: any,
+  messageKey: string,
+  messageParams = {},
+) => {
+  const errorMessage = Errors.getErrorMessage(error);
+  const params = { ...messageParams, error: errorMessage };
+  log.error(i18n.t(messageKey, params));
+  dispatch(ToastActions.show(messageKey, params));
+};
+
 const removeNodesFlags = (nodes: NodesMap) => {
   for (const node of Object.values(nodes)) {
     Nodes.removeStatusFlags({ node, sideEffect: true });
@@ -121,18 +133,7 @@ const createNewRecord =
 
       dispatch(editRecord({ navigation, record, locked: false }));
     } catch (error: any) {
-      const errorMessage = Errors.getErrorMessage(error);
-      log.error(
-        "Error creating new record: " +
-          errorMessage +
-          " details: " +
-          error.stack,
-      );
-      dispatch(
-        ToastActions.show("dataEntry:createRecordError", {
-          error: errorMessage,
-        }),
-      );
+      handleError(dispatch, error, "dataEntry:createRecordError");
     }
   };
 
@@ -610,13 +611,7 @@ const updateAttribute =
       }
       log.debug(`Node updated successfully.`);
     } catch (error) {
-      const errorMessage = Errors.getErrorMessage(error);
-      log.error("Error updating attribute value: " + errorMessage);
-      dispatch(
-        ToastActions.show("dataEntry:updateAttributeError", {
-          error: errorMessage,
-        }),
-      );
+      handleError(dispatch, error, "dataEntry:updateAttributeError");
     }
   };
 
