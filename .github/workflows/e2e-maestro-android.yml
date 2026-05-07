@@ -47,7 +47,7 @@ jobs:
         id: cache-android-prebuild
         with:
           path: android/
-          key: android-prebuild-${{ hashFiles('package.json', 'yarn.lock', 'app.json', 'app.config.ts') }}
+          key: android-prebuild-${{ hashFiles('package.json', 'yarn.lock', 'app.config.ts') }}
 
       - name: Build Android APK
         run: |
