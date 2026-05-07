@@ -61,6 +61,18 @@ const {
   updatePreviousCyclePageEntity,
 } = DataEntryActionsRecordPreviousCycle;
 
+const handleError = (
+  dispatch: any,
+  error: any,
+  messageKey: string,
+  messageParams = {},
+) => {
+  const errorMessage = Errors.getErrorMessage(error);
+  const params = { ...messageParams, error: errorMessage };
+  log.error(i18n.t(messageKey, params));
+  dispatch(ToastActions.show(messageKey, params));
+};
+
 const removeNodesFlags = (nodes: NodesMap) => {
   for (const node of Object.values(nodes)) {
     Nodes.removeStatusFlags({ node, sideEffect: true });
@@ -88,37 +100,41 @@ const prepareRecordForStorage = ({ record }: any) => {
 const createNewRecord =
   ({ navigation }: any) =>
   async (dispatch: any, getState: any) => {
-    const state = getState();
-    const user = RemoteConnectionSelectors.selectLoggedUser(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const cycle = Surveys.getDefaultCycleKey(survey);
-    // to always use the selected cycle, use this: const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
-    const appInfo = SystemUtils.getRecordAppInfo();
-    const now = Dates.nowFormattedForStorage();
-    const recordEmpty = {
-      ...RecordFactory.createInstance({
-        surveyUuid: survey.uuid,
-        cycle,
-        user: user ?? {},
-        appInfo,
-      }),
-      dateCreated: now,
-      dateModified: now,
-    };
-    let { record, nodes } = await RecordUpdater.createRootEntity({
-      user,
-      survey,
-      record: recordEmpty,
-    });
+    try {
+      const state = getState();
+      const user = RemoteConnectionSelectors.selectLoggedUser(state);
+      const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const cycle = Surveys.getDefaultCycleKey(survey);
+      // to always use the selected cycle, use this: const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
+      const appInfo = SystemUtils.getRecordAppInfo();
+      const now = Dates.nowFormattedForStorage();
+      const recordEmpty = {
+        ...RecordFactory.createInstance({
+          surveyUuid: survey.uuid,
+          cycle,
+          user: user ?? {},
+          appInfo,
+        }),
+        dateCreated: now,
+        dateModified: now,
+      };
+      let { record, nodes } = await RecordUpdater.createRootEntity({
+        user,
+        survey,
+        record: recordEmpty,
+      });
 
-    record.surveyId = survey.id;
-    removeNodesFlags(nodes);
+      record.surveyId = survey.id;
+      removeNodesFlags(nodes);
 
-    record = prepareRecordForStorage({ record });
+      record = prepareRecordForStorage({ record });
 
-    record = await RecordService.insertRecord({ survey, record });
+      record = await RecordService.insertRecord({ survey, record });
 
-    dispatch(editRecord({ navigation, record, locked: false }));
+      dispatch(editRecord({ navigation, record, locked: false }));
+    } catch (error: any) {
+      handleError(dispatch, error, "dataEntry:createRecordError");
+    }
   };
 
 const _performAddEntity = async (dispatch: any, getState: any) => {
@@ -595,13 +611,7 @@ const updateAttribute =
       }
       log.debug(`Node updated successfully.`);
     } catch (error) {
-      const errorMessage = Errors.getErrorMessage(error);
-      log.error("Error updating attribute value: " + errorMessage);
-      dispatch(
-        ToastActions.show("dataEntry:updateAttributeError", {
-          error: errorMessage,
-        }),
-      );
+      handleError(dispatch, error, "dataEntry:updateAttributeError");
     }
   };
 

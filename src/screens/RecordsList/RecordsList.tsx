@@ -254,9 +254,10 @@ export const RecordsList = () => {
     }
   }, [confirm, dispatch, loadRecords, toaster]);
 
-  const onNewRecordPress = useCallback(() => {
+  const onNewRecordPress = useCallback(async () => {
     setState((statePrev) => ({ ...statePrev, loading: true }));
-    dispatch(DataEntryActions.createNewRecord({ navigation }));
+    await dispatch(DataEntryActions.createNewRecord({ navigation }));
+    setState((statePrev) => ({ ...statePrev, loading: false }));
   }, [dispatch, navigation]);
 
   const confirmExportRecords = useCallback(
