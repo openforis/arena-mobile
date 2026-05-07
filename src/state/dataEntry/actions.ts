@@ -88,37 +88,52 @@ const prepareRecordForStorage = ({ record }: any) => {
 const createNewRecord =
   ({ navigation }: any) =>
   async (dispatch: any, getState: any) => {
-    const state = getState();
-    const user = RemoteConnectionSelectors.selectLoggedUser(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const cycle = Surveys.getDefaultCycleKey(survey);
-    // to always use the selected cycle, use this: const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
-    const appInfo = SystemUtils.getRecordAppInfo();
-    const now = Dates.nowFormattedForStorage();
-    const recordEmpty = {
-      ...RecordFactory.createInstance({
-        surveyUuid: survey.uuid,
-        cycle,
-        user: user ?? {},
-        appInfo,
-      }),
-      dateCreated: now,
-      dateModified: now,
-    };
-    let { record, nodes } = await RecordUpdater.createRootEntity({
-      user,
-      survey,
-      record: recordEmpty,
-    });
+    try {
+      const state = getState();
+      const user = RemoteConnectionSelectors.selectLoggedUser(state);
+      const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const cycle = Surveys.getDefaultCycleKey(survey);
+      // to always use the selected cycle, use this: const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
+      const appInfo = SystemUtils.getRecordAppInfo();
+      const now = Dates.nowFormattedForStorage();
+      const recordEmpty = {
+        ...RecordFactory.createInstance({
+          surveyUuid: survey.uuid,
+          cycle,
+          user: user ?? {},
+          appInfo,
+        }),
+        dateCreated: now,
+        dateModified: now,
+      };
+      let { record, nodes } = await RecordUpdater.createRootEntity({
+        user,
+        survey,
+        record: recordEmpty,
+      });
 
-    record.surveyId = survey.id;
-    removeNodesFlags(nodes);
+      record.surveyId = survey.id;
+      removeNodesFlags(nodes);
 
-    record = prepareRecordForStorage({ record });
+      record = prepareRecordForStorage({ record });
 
-    record = await RecordService.insertRecord({ survey, record });
+      record = await RecordService.insertRecord({ survey, record });
 
-    dispatch(editRecord({ navigation, record, locked: false }));
+      dispatch(editRecord({ navigation, record, locked: false }));
+    } catch (error: any) {
+      const errorMessage = Errors.getErrorMessage(error);
+      log.error(
+        "Error creating new record: " +
+          errorMessage +
+          " details: " +
+          error.stack,
+      );
+      dispatch(
+        ToastActions.show("dataEntry:createRecordError", {
+          error: errorMessage,
+        }),
+      );
+    }
   };
 
 const _performAddEntity = async (dispatch: any, getState: any) => {
