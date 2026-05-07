@@ -51,6 +51,7 @@ const basePlugins: ExpoConfig["plugins"] = [
   "expo-audio",
   "expo-localization",
   "expo-secure-store",
+  "expo-sharing",
   "expo-sqlite",
   "expo-web-browser",
   "@react-native-community/datetimepicker",
