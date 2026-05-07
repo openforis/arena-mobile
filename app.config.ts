@@ -1,29 +1,5 @@
 import { ExpoConfig } from "expo/config";
 
-const upsertPlugin = (
-  plugins: ExpoConfig["plugins"],
-  pluginName: string,
-  pluginConfig: Record<string, unknown>,
-): ExpoConfig["plugins"] => {
-  const nextPlugins: ExpoConfig["plugins"] = [...(plugins as any[])];
-  const index = nextPlugins.findIndex((plugin) =>
-    Array.isArray(plugin) ? plugin[0] === pluginName : plugin === pluginName,
-  );
-
-  const nextPluginEntry: NonNullable<ExpoConfig["plugins"]>[number] = [
-    pluginName,
-    pluginConfig,
-  ];
-
-  if (index >= 0) {
-    nextPlugins[index] = nextPluginEntry;
-  } else {
-    nextPlugins.push(nextPluginEntry);
-  }
-
-  return nextPlugins;
-};
-
 const basePlugins: ExpoConfig["plugins"] = [
   ["expo-asset", { assets: ["assets"] }],
   [
@@ -60,13 +36,7 @@ const config = (): ExpoConfig => {
   const androidGoogleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY_ANDROID;
   const iosGoogleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY_IOS;
 
-  const plugins =
-    androidGoogleMapsApiKey && iosGoogleMapsApiKey
-      ? upsertPlugin(basePlugins, "react-native-maps", {
-          androidGoogleMapsApiKey,
-          iosGoogleMapsApiKey,
-        })
-      : basePlugins;
+  const plugins = basePlugins;
 
   return {
     name: "Arena Mobile",
