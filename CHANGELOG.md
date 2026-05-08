@@ -5,7 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.5.1] - TO-BE-RELEASED
+## [2.5.3] - 2026-05-08
+
+### Fixed
+
+- Bug fixes (handle record creation errors);
+
+## [2.5.2] - 2026-04-27
+
+### Fixed
+
+- Bug fixes (key attribute locked when editing new records);
+
+## [2.5.1] - 2026-04-25
 
 ### Added
 
