@@ -3,7 +3,12 @@ import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 import { useCallback, useMemo, useState } from "react";
 
-import { NodeDefFileType, NodeDefs, UUIDs } from "@openforis/arena-core";
+import {
+  NodeDefFileType,
+  NodeDefs,
+  Objects,
+  UUIDs,
+} from "@openforis/arena-core";
 
 import { useRequestCameraPermission, useToast } from "hooks";
 import { useNodeComponentLocalState } from "screens/RecordEditor/useNodeComponentLocalState";
@@ -38,13 +43,15 @@ const determineFileMaxSize = ({ nodeDef, settings }: any) => {
 const extractFileNameFromAsset = (
   asset: ImagePicker.ImagePickerAsset | DocumentPicker.DocumentPickerAsset,
 ): string | null | undefined => {
+  let fileName: string | null | undefined;
   if ("fileName" in asset) {
-    return asset.fileName;
+    fileName = asset.fileName;
+  } else if ("name" in asset) {
+    fileName = asset.name;
   }
-  if ("name" in asset) {
-    return asset.name;
-  }
-  return Files.getNameFromUri(asset.uri);
+  return Objects.isNotEmpty(fileName)
+    ? fileName
+    : Files.getNameFromUri(asset.uri);
 };
 
 const setLocationInFile = async (fileUri: any) => {
