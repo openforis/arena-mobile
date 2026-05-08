@@ -43,7 +43,7 @@ const determineFileMaxSize = ({ nodeDef, settings }: any) => {
 const extractFileNameFromAsset = (
   asset: ImagePicker.ImagePickerAsset | DocumentPicker.DocumentPickerAsset,
 ): string | null | undefined => {
-  let fileName;
+  let fileName: string | null | undefined;
   if ("fileName" in asset) {
     fileName = asset.fileName;
   } else if ("name" in asset) {
