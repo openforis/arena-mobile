@@ -97,6 +97,7 @@ export const useHomeScreen = () => {
 
     return () => {
       cancelled = true;
+      setSurveyUpdateLoading(false);
     };
   }, [dispatch, networkAvailable, survey, user]);
 
