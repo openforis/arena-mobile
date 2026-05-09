@@ -2,6 +2,7 @@ import { useEffect } from "react";
 
 import { MessageActions } from "state/message";
 import { useAppDispatch } from "state/store";
+import { log } from "utils/Logger";
 
 type Props = {
   error: any;
@@ -14,6 +15,11 @@ export const ErrorFallbackComponent = (props: Props) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    log.error(
+      "ErrorFallbackComponent caught an error:",
+      String(error),
+      error.stack,
+    );
     dispatch(
       MessageActions.setMessage({
         content: "common:somethingWentWrong",
@@ -21,7 +27,7 @@ export const ErrorFallbackComponent = (props: Props) => {
         details: error.stack,
         onDismiss: resetError,
         title: "common:error",
-      })
+      }),
     );
   }, [dispatch, error, resetError]);
 
