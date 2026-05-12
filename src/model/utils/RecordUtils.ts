@@ -72,7 +72,11 @@ const getEntityKeysFormatted = ({
   });
   const keyDefs = Surveys.getNodeDefKeys({ survey, nodeDef: entityDef, cycle });
   return keyDefs.map((keyDef) => {
-    const keyNode = Records.getChild(entity, keyDef.uuid)(record);
+    const keyNode = Records.getDescendant({
+      record,
+      node: entity,
+      nodeDefDescendant: keyDef,
+    });
     if (!keyNode) return emptyValue;
     return NodeValueFormatter.format({
       survey,

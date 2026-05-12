@@ -43,6 +43,7 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
   const keyAttributeLockAvailable =
     NodeDefs.isKey(nodeDef) &&
     !NodeDefs.isEntity(nodeDef) &&
+    !NodeDefs.isReadOnly(nodeDef) &&
     !isNodeDefEnumerator;
   const isRecordAttributeFilled = DataEntrySelectors.useIsRecordAttributeFilled(
     {
