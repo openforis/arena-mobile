@@ -57,7 +57,7 @@ export const RecordsListOptions = (props: RecordsListOptionsProps) => {
           <Text textKey={defaultCycleText} />
         </HView>
       )}
-      <FlexWrapView>
+      <FlexWrapView style={styles.buttonsContainer}>
         {cycles.length > 1 && (
           <SurveyCycleSelector style={styles.cyclesSelector} />
         )}

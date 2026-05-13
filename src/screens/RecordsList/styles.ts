@@ -7,6 +7,9 @@ export default StyleSheet.create({
   container: {
     flex: 1,
   },
+  buttonsContainer: {
+    gap: 10,
+  },
   formItem: { alignItems: "center" },
   formItemLabel: { fontSize: 16, width: 170 },
   innerContainer: {
