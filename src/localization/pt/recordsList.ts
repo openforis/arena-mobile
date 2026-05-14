@@ -61,6 +61,10 @@ export default {
     R: "Remoto",
   },
   owner: "Proprietário",
+  recordType: {
+    all: "Todos os registos",
+    local: "Apenas registos no dispositivo",
+  },
   sendData: {
     error: {
       generic: "Não é possível enviar dados para o servidor: {{details}}",

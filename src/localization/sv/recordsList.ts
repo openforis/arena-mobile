@@ -59,6 +59,10 @@ export default {
   },
   origin: { title: "Ursprung", L: "Lokal", R: "Fjärr" },
   owner: "Ägare",
+  recordType: {
+    all: "Alla poster",
+    local: "Endast poster på enheten",
+  },
   sendData: {
     error: {
       generic: "Kan inte skicka data till servern: {{details}}",

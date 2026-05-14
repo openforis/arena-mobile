@@ -58,6 +58,10 @@ export default {
   },
   origin: { title: "منشاء", L: "محلی", R: "از راه دور" },
   owner: "مالک",
+  recordType: {
+    all: "همه رکوردها",
+    local: "فقط رکوردهای موجود در دستگاه",
+  },
   sendData: {
     error: {
       generic: "ارسال داده‌ها به سرور امکان‌پذیر نیست: {{details}}",

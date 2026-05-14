@@ -58,6 +58,10 @@ export default {
     R: "የርቀት",
   },
   owner: "ባለቤት",
+  recordType: {
+    all: "ሁሉም መዝገቦች",
+    local: "በመሣሪያው ላይ ያሉ መዝገቦች ብቻ",
+  },
   sendData: {
     error: {
       generic: "መረጃውን ወደ አገልጋዩ መላክ አይቻልም: {{details}}",

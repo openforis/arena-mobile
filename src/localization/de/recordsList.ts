@@ -60,6 +60,10 @@ export default {
   },
   origin: { title: "Herkunft", L: "Lokal", R: "Remote" },
   owner: "Eigentümer",
+  recordType: {
+    all: "Alle Datensätze",
+    local: "Nur Datensätze im Gerät",
+  },
   sendData: {
     error: {
       generic: "Daten können nicht an den Server gesendet werden: {{details}}",

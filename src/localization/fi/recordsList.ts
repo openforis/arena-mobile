@@ -59,6 +59,10 @@ export default {
   },
   origin: { title: "Alkuperäinen", L: "Paikallinen", R: "Palvelin" },
   owner: "Omistaja",
+  recordType: {
+    all: "Kaikki tietueet",
+    local: "Vain laitteessa olevat tietueet",
+  },
   sendData: {
     error: {
       generic: "Tietoja ei voi lähettää palvelimelle: {{details}}",

@@ -63,6 +63,10 @@ export default {
     R: "Distant",
   },
   owner: "Propriétaire",
+  recordType: {
+    all: "Tous les enregistrements",
+    local: "Seulement les enregistrements sur l'appareil",
+  },
   sendData: {
     error: {
       generic: "Impossible d'envoyer les données au serveur : {{details}}",

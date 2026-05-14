@@ -60,6 +60,10 @@ export default {
   },
   origin: { title: "Asal", L: "Lokal", R: "Jarak Jauh" },
   owner: "Pemilik",
+  recordType: {
+    all: "Semua data isian",
+    local: "Hanya data isian di perangkat",
+  },
   sendData: {
     error: {
       generic: "Tidak dapat mengirim data ke server: {{details}}",

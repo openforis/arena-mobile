@@ -59,13 +59,19 @@ export default {
   },
   origin: { title: "保存元", L: "ローカル", R: "リモート" },
   owner: "所有者",
-  recordHasErrorsOrWarningsTooltip: "記録に{{count}}件の{{itemsTypeText}}があります",
+  recordHasErrorsOrWarningsTooltip:
+    "記録に{{count}}件の{{itemsTypeText}}があります",
+  recordType: {
+    all: "すべての記録",
+    local: "デバイス内の記録のみ",
+  },
   sendData: {
     error: {
       generic: "サーバーにデータを送信できません：{{details}}",
       surveyNotVisibleInMobile:
         "現在の調査はArena Mobileに表示されるべきではありません",
-      recordsUploadNotAllowed: "サーバーへの記録のアップロードは許可されていません",
+      recordsUploadNotAllowed:
+        "サーバーへの記録のアップロードは許可されていません",
       recordsWithErrorsUploadNotAllowed: `検証エラーのある記録のアップロードは許可されていません`,
     },
   },

@@ -59,6 +59,10 @@ export default {
     R: "Удаленный",
   },
   owner: "Владелец",
+  recordType: {
+    all: "Все записи",
+    local: "Только записи на устройстве",
+  },
   sendData: {
     error: {
       generic: "Невозможно отправить данные на сервер: {{details}}",
