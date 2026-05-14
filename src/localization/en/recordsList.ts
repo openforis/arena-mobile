@@ -60,6 +60,10 @@ export default {
   origin: { title: "Origin", L: "Local", R: "Remote" },
   owner: "Owner",
   recordHasErrorsOrWarningsTooltip: "Record has {{count}} {{itemsTypeText}}",
+  recordType: {
+    all: "All records",
+    local: "Only records in device",
+  },
   sendData: {
     error: {
       generic: "Cannot send data to the server: {{details}}",
