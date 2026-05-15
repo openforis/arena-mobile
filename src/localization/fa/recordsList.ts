@@ -29,12 +29,12 @@ export default {
     title: "اکسپورت",
   },
   fetchRecord: "واکشی رکورد",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "وارد کردن رکوردها امکان‌پذیر نیست: این نظرسنجی نباید در آرنا موبایل قابل مشاهده باشد",
-      recordsDownloadNotAllowed: "وارد کردن رکوردها از سرور آرنا مجاز نیست",
+        "واکشی رکوردها امکان‌پذیر نیست: این نظرسنجی نباید در آرنا موبایل قابل مشاهده باشد",
+      recordsDownloadNotAllowed: "واکشی رکوردها از سرور آرنا مجاز نیست",
     },
   },
   importRecordsFromFile: {

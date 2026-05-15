@@ -20,6 +20,7 @@ export default {
   exit: "終了",
   export: "エクスポート",
   false: "誤",
+  fetch: "取得",
   filter: "フィルター",
   fromToOf: `{{from}}-{{to}} / {{of}}`,
   goBack: "戻る",

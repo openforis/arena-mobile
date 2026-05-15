@@ -29,12 +29,13 @@ export default {
     title: "Экспорт",
   },
   fetchRecord: "Получить запись",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "Невозможно импортировать записи: этот опрос не должен быть виден в Arena Mobile",
-      recordsDownloadNotAllowed: "Импорт записей с сервера Arena не разрешен",
+        "Невозможно получить записи: этот опрос не должен быть виден в Arena Mobile",
+      recordsDownloadNotAllowed:
+        "Получение записей с сервера Arena не разрешено",
     },
   },
   importRecordsFromFile: {

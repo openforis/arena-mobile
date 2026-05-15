@@ -30,13 +30,13 @@ export default {
     title: "Exportar",
   },
   fetchRecord: "Obter registo",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "Não é possível importar registros: esta pesquisa não deve ser visível no Arena Mobile",
+        "Não é possível obter registos: esta pesquisa não deve ser visível no Arena Mobile",
       recordsDownloadNotAllowed:
-        "A importação de registros do servidor Arena não é permitida",
+        "A obtenção de registos do servidor Arena não é permitida",
     },
   },
   importRecordsFromFile: {

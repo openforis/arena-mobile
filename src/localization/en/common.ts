@@ -20,6 +20,7 @@ export default {
   exit: "Exit",
   export: "Export",
   false: "False",
+  fetch: "Fetch",
   filter: "Filter",
   fromToOf: `{{from}}-{{to}} of {{of}}`,
   goBack: "Go back",

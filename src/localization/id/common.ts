@@ -18,6 +18,7 @@ export default {
   exit: "Keluar",
   export: "Ekspor",
   false: "Salah",
+  fetch: "Ambil",
   filter: "Saring",
   fromToOf: `{{from}}-{{to}} dari {{of}}`,
   goBack: "Kembali",

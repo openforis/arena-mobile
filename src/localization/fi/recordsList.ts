@@ -29,13 +29,13 @@ export default {
     title: "Vie",
   },
   fetchRecord: "Hae tietue",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "Tietueita ei voi tuoda: tämän kyselyn ei pitäisi näkyä Arena Mobile -sovelluksessa",
+        "Tietueita ei voi hakea: tämän kyselyn ei pitäisi näkyä Arena Mobile -sovelluksessa",
       recordsDownloadNotAllowed:
-        "Tietueiden tuonti Arena-palvelimelta ei ole sallittua",
+        "Tietueiden haku Arena-palvelimelta ei ole sallittua",
     },
   },
   importRecordsFromFile: {

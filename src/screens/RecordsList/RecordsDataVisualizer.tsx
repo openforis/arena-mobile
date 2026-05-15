@@ -355,7 +355,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     actions.push({
       key: "importSelectedItems",
       icon: "import",
-      labelKey: "recordsList:importRecords.title",
+      labelKey: "recordsList:fetchRecords.title",
       onPress: onImportSelectedItems,
     });
     if (syncStatusFetched) {

@@ -30,13 +30,13 @@ export default {
     title: "Exportieren",
   },
   fetchRecord: "Datensatz abrufen",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "Datensätze können nicht importiert werden: Diese Umfrage sollte in Arena Mobile nicht sichtbar sein",
+        "Datensätze können nicht abgerufen werden: Diese Umfrage sollte in Arena Mobile nicht sichtbar sein",
       recordsDownloadNotAllowed:
-        "Das Importieren von Datensätzen vom Arena-Server ist nicht erlaubt",
+        "Das Abrufen von Datensätzen vom Arena-Server ist nicht erlaubt",
     },
   },
   importRecordsFromFile: {

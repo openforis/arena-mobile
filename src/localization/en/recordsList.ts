@@ -29,13 +29,13 @@ export default {
     title: "Export",
   },
   fetchRecord: "Fetch record",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "Cannot import records: this survey should not be visible in Arena Mobile",
+        "Cannot fetch records: this survey should not be visible in Arena Mobile",
       recordsDownloadNotAllowed:
-        "Importing records from Arena server not allowed",
+        "Fetching records from Arena server not allowed",
     },
   },
   importRecordsFromFile: {

@@ -19,6 +19,7 @@ export default {
   exit: "ውጣ",
   export: "ላክ",
   false: "ሐሰት",
+  fetch: "አውርድ",
   filter: "አጣራ",
   fromToOf: "{{from}}-{{to}} ከ {{of}}",
   goBack: "ተመለስ",

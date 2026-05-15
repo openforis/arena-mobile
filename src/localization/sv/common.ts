@@ -18,6 +18,7 @@ export default {
   exit: "Avsluta",
   export: "Exportera",
   false: "Falskt",
+  fetch: "Hämta",
   filter: "Filtrera",
   fromToOf: `{{from}}-{{to}} av {{of}}`,
   goBack: "Gå tillbaka",

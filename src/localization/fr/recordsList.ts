@@ -32,13 +32,13 @@ export default {
     title: "Exporter",
   },
   fetchRecord: "Récupérer l'enregistrement",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "Impossible d'importer les enregistrements : cette enquête ne devrait pas être visible dans Arena Mobile",
+        "Impossible de récupérer les enregistrements : cette enquête ne devrait pas être visible dans Arena Mobile",
       recordsDownloadNotAllowed:
-        "L'importation des enregistrements depuis le serveur Arena n'est pas autorisée",
+        "La récupération des enregistrements depuis le serveur Arena n'est pas autorisée",
     },
   },
   importRecordsFromFile: {

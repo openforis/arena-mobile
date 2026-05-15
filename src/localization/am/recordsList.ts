@@ -28,12 +28,12 @@ export default {
     title: "ላክ",
   },
   fetchRecord: "መዝገብ አውርድ",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "መረጃዎችን ማስገባት አይቻልም: ይህ ዳሰሳ በአሬና ሞባይል ላይ መታየት የለበትም",
-      recordsDownloadNotAllowed: "መረጃዎችን ከአሬና አገልጋይ ማስገባት አይፈቀድም",
+        "መዝገቦችን ማውረድ አይቻልም: ይህ ዳሰሳ በአሬና ሞባይል ላይ መታየት የለበትም",
+      recordsDownloadNotAllowed: "መዝገቦችን ከአሬና አገልጋይ ማውረድ አይፈቀድም",
     },
   },
   importRecordsFromFile: {

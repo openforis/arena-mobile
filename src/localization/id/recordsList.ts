@@ -30,13 +30,13 @@ export default {
     title: "Ekspor",
   },
   fetchRecord: "Ambil data isian",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "Tidak dapat mengimpor catatan: survei ini seharusnya tidak terlihat di Arena Mobile",
+        "Tidak dapat mengambil data isian: survei ini seharusnya tidak terlihat di Arena Mobile",
       recordsDownloadNotAllowed:
-        "Mengimpor catatan dari server Arena tidak diizinkan",
+        "Pengambilan data isian dari server Arena tidak diizinkan",
     },
   },
   importRecordsFromFile: {

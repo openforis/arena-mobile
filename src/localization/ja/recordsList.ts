@@ -29,13 +29,13 @@ export default {
     title: "エクスポート",
   },
   fetchRecord: "記録を取得",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "記録をインポートできません：この調査はArena Mobileに表示されるべきではありません",
+        "記録を取得できません：この調査はArena Mobileに表示されるべきではありません",
       recordsDownloadNotAllowed:
-        "Arenaサーバーからの記録のインポートは許可されていません",
+        "Arenaサーバーからの記録の取得は許可されていません",
     },
   },
   importRecordsFromFile: {

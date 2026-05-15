@@ -29,13 +29,13 @@ export default {
     title: "Exportera",
   },
   fetchRecord: "Hämta post",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "Kan inte importera poster: denna undersökning ska inte vara synlig i Arena Mobile",
+        "Kan inte hämta poster: denna undersökning ska inte vara synlig i Arena Mobile",
       recordsDownloadNotAllowed:
-        "Att importera poster från Arena-servern är inte tillåtet",
+        "Att hämta poster från Arena-servern är inte tillåtet",
     },
   },
   importRecordsFromFile: {
