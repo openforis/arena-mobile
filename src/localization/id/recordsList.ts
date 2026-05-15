@@ -10,7 +10,7 @@ export default {
     completeSuccessfully:
       "Data isian telah berhasil diklon ke dalam siklus {{cycle}}!",
   },
-  confirmImportRecordFromServer: "Impor data dari server?",
+  confirmFetchRecordFromServer: "Ambil data dari server?",
   continueEditing: {
     title: "Lanjutkan pengeditan",
     confirm: {
@@ -29,7 +29,7 @@ export default {
   exportRecords: {
     title: "Ekspor",
   },
-  importRecord: "Impor data isian",
+  fetchRecord: "Ambil data isian",
   importRecords: {
     title: "$t(common:import)",
     error: {

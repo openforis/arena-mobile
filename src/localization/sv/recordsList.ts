@@ -9,7 +9,7 @@ export default {
       "Endast poster som importerats till enheten eller ändrats lokalt kan klonas till nästa cykel",
     completeSuccessfully: "Poster har klonats till cykel {{cycle}}!",
   },
-  confirmImportRecordFromServer: "Importera post från servern?",
+  confirmFetchRecordFromServer: "Hämta post från servern?",
   continueEditing: {
     title: "Fortsätt redigera",
     confirm: {
@@ -28,7 +28,7 @@ export default {
   exportRecords: {
     title: "Exportera",
   },
-  importRecord: "Importera post",
+  fetchRecord: "Hämta post",
   importRecords: {
     title: "$t(common:import)",
     error: {

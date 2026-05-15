@@ -318,8 +318,8 @@ const fetchAndEditRecord =
     ) {
       dispatch(
         ConfirmActions.show({
-          confirmButtonTextKey: "recordsList:importRecord",
-          messageKey: "recordsList:confirmImportRecordFromServer",
+          confirmButtonTextKey: "recordsList:fetchRecord",
+          messageKey: "recordsList:confirmFetchRecordFromServer",
           onConfirm: () => {
             dispatch(
               importRecordsFromServer({

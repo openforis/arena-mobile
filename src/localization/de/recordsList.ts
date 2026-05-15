@@ -10,7 +10,7 @@ export default {
     completeSuccessfully:
       "Datensätze erfolgreich in den Zyklus {{cycle}} geklont!",
   },
-  confirmImportRecordFromServer: "Datensatz vom Server importieren?",
+  confirmFetchRecordFromServer: "Datensatz vom Server abrufen?",
   continueEditing: {
     title: "Bearbeitung fortsetzen",
     confirm: {
@@ -29,7 +29,7 @@ export default {
   exportRecords: {
     title: "Exportieren",
   },
-  importRecord: "Datensatz importieren",
+  fetchRecord: "Datensatz abrufen",
   importRecords: {
     title: "$t(common:import)",
     error: {

@@ -9,7 +9,7 @@ export default {
       "Only records imported in device or modified locally can be cloned into next cycle",
     completeSuccessfully: "Records cloned successfully into cycle {{cycle}}!",
   },
-  confirmImportRecordFromServer: "Import record from server?",
+  confirmFetchRecordFromServer: "Fetch record from server?",
   continueEditing: {
     title: "Continue editing",
     confirm: {
@@ -28,7 +28,7 @@ export default {
   exportRecords: {
     title: "Export",
   },
-  importRecord: "Import record",
+  fetchRecord: "Fetch record",
   importRecords: {
     title: "$t(common:import)",
     error: {

@@ -9,7 +9,7 @@ export default {
       "فقط رکوردهای وارد شده در دستگاه یا تغییر یافته در محلی را می توان به چرخه بعدی کلون کرد",
     completeSuccessfully: "رکوردها با موفقیت به چرخه {{cycle}} کلون شدند!",
   },
-  confirmImportRecordFromServer: "رکورد را از سرور وارد کنید؟",
+  confirmFetchRecordFromServer: "رکورد را از سرور واکشی کنید؟",
   continueEditing: {
     title: "ادامه ویرایش",
     confirm: {
@@ -28,7 +28,7 @@ export default {
   exportRecords: {
     title: "اکسپورت",
   },
-  importRecord: "وارد کردن رکورد",
+  fetchRecord: "واکشی رکورد",
   importRecords: {
     title: "$t(common:import)",
     error: {

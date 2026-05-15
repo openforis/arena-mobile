@@ -9,7 +9,7 @@ export default {
       "Vain laitteeseen tuodut tai paikallisesti muokatut tietueet voidaan kloonata seuraavaan sykliin",
     completeSuccessfully: "Tietueet kloonattu onnistuneesti jaksoon {{cycle}}!",
   },
-  confirmImportRecordFromServer: "Tuodaanko tietue palvelimelta?",
+  confirmFetchRecordFromServer: "Haetaanko tietue palvelimelta?",
   continueEditing: {
     title: "Jatka muokkausta",
     confirm: {
@@ -28,7 +28,7 @@ export default {
   exportRecords: {
     title: "Vie",
   },
-  importRecord: "Tuo tietue",
+  fetchRecord: "Hae tietue",
   importRecords: {
     title: "$t(common:import)",
     error: {

@@ -10,7 +10,7 @@ export default {
     completeSuccessfully:
       "¡Registros clonados correctamente al ciclo {{cycle}}!",
   },
-  confirmImportRecordFromServer: "¿Importar registro del servidor?",
+  confirmFetchRecordFromServer: "¿Obtener registro del servidor?",
   continueEditing: {
     title: "Continuar editando",
     confirm: {
@@ -29,7 +29,7 @@ export default {
   exportRecords: {
     title: "Exportar",
   },
-  importRecord: "Importar registro",
+  fetchRecord: "Obtener registro",
   importRecords: {
     title: "$t(common:import)",
     error: {

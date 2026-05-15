@@ -9,7 +9,7 @@ export default {
       "Только записи, загруженные на устройство или измененные локально, могут быть клонированы в следующий цикл",
     completeSuccessfully: "Записи успешно клонированы в цикл {{cycle}}!",
   },
-  confirmImportRecordFromServer: "Загрузать запись с сервера?",
+  confirmFetchRecordFromServer: "Получить запись с сервера?",
   continueEditing: {
     title: "Продолжить редактирование",
     confirm: {
@@ -28,7 +28,7 @@ export default {
   exportRecords: {
     title: "Экспорт",
   },
-  importRecord: "Загрузить запись",
+  fetchRecord: "Получить запись",
   importRecords: {
     title: "$t(common:import)",
     error: {

@@ -9,7 +9,7 @@ export default {
       "デバイスにインポートされた記録またはローカルで変更された記録のみ次のサイクルに複製できます",
     completeSuccessfully: "記録をサイクル{{cycle}}に複製しました！",
   },
-  confirmImportRecordFromServer: "サーバーから記録をインポートしますか？",
+  confirmFetchRecordFromServer: "サーバーから記録を取得しますか？",
   continueEditing: {
     title: "編集を続ける",
     confirm: {
@@ -28,7 +28,7 @@ export default {
   exportRecords: {
     title: "エクスポート",
   },
-  importRecord: "記録をインポート",
+  fetchRecord: "記録を取得",
   importRecords: {
     title: "$t(common:import)",
     error: {

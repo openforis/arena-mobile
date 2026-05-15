@@ -8,7 +8,7 @@ export default {
       "በመሣሪያው ላይ የገቡ ወይም በአካባቢው የተሻሻሉ መዝገቦች ብቻ ወደ ቀጣዩ ዑደት ሊቀዱ ይችላሉ",
     completeSuccessfully: "መዝገቦቹ በተሳካ ሁኔታ ወደ ዑደት {{cycle}} ተቀድተዋል!",
   },
-  confirmImportRecordFromServer: "መዝገብ ከአገልጋዩ ያስገቡ?",
+  confirmFetchRecordFromServer: "መዝገብን ከአገልጋዩ ያውርዱ?",
   continueEditing: {
     title: "አርትዖት ይቀጥሉ",
     confirm: {
@@ -27,7 +27,7 @@ export default {
   exportRecords: {
     title: "ላክ",
   },
-  importRecord: "መዝገብ አስገባ",
+  fetchRecord: "መዝገብ አውርድ",
   importRecords: {
     title: "$t(common:import)",
     error: {

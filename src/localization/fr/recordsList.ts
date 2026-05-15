@@ -10,7 +10,8 @@ export default {
     completeSuccessfully:
       "Enregistrements clonés avec succès dans le cycle {{cycle}}!",
   },
-  confirmImportRecordFromServer: "Importer l'enregistrement depuis le serveur?",
+  confirmFetchRecordFromServer:
+    "Récupérer l'enregistrement depuis le serveur ?",
   continueEditing: {
     title: "Continuer l'édition",
     confirm: {
@@ -30,7 +31,7 @@ export default {
   exportRecords: {
     title: "Exporter",
   },
-  importRecord: "Importer l'enregistrement",
+  fetchRecord: "Récupérer l'enregistrement",
   importRecords: {
     title: "$t(common:import)",
     error: {
