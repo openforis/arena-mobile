@@ -93,7 +93,7 @@ const checkCanImportRecords = ({ dispatch, survey }: any) => {
   return true;
 };
 
-export const importRecordsFromServer =
+export const fetchRecordsFromServer =
   ({ recordUuids, onImportComplete }: any) =>
   async (dispatch: any, getState: any) => {
     try {

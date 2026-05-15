@@ -40,7 +40,7 @@ import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycl
 import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
 import {
   importRecordsFromFile,
-  importRecordsFromServer,
+  fetchRecordsFromServer,
 } from "./actionsRecordsImport";
 import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntrySelectors } from "./selectors";
@@ -322,7 +322,7 @@ const fetchAndEditRecord =
           messageKey: "recordsList:confirmFetchRecordFromServer",
           onConfirm: () => {
             dispatch(
-              importRecordsFromServer({
+              fetchRecordsFromServer({
                 recordUuids: [recordUuid],
                 onImportComplete: async () => {
                   await _fetchAndEditRecordInternal({
@@ -826,6 +826,6 @@ export const DataEntryActions = {
   unlinkFromRecordInPreviousCycle,
 
   importRecordsFromFile,
-  importRecordsFromServer,
+  fetchRecordsFromServer,
   cloneRecordsIntoDefaultCycle,
 };

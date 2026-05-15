@@ -9,7 +9,7 @@ import { SurveySelectors } from "../survey";
 
 import { DataEntrySelectors } from "./selectors";
 import { DataEntryActionTypes } from "./actionTypes";
-import { importRecordsFromServer } from "./actionsRecordsImport";
+import { fetchRecordsFromServer } from "./actionsRecordsImport";
 
 const {
   PREVIOUS_CYCLE_PAGE_ENTITY_SET,
@@ -104,7 +104,7 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
           })
         ) {
           dispatch(
-            importRecordsFromServer({
+            fetchRecordsFromServer({
               recordUuids: [prevCycleRecordUuid],
               onImportComplete: doFetch,
             }),
