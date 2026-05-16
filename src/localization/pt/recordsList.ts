@@ -10,7 +10,7 @@ export default {
     completeSuccessfully:
       "Registos clonados com sucesso para o ciclo {{cycle}}!",
   },
-  confirmImportRecordFromServer: "Importar registo do servidor?",
+  confirmFetchRecordFromServer: "Obter registo do servidor?",
   continueEditing: {
     title: "Continuar a editar",
     commands: {
@@ -29,14 +29,14 @@ export default {
   exportRecords: {
     title: "Exportar",
   },
-  importRecord: "Importar registo",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecord: "Obter registo",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "Não é possível importar registros: esta pesquisa não deve ser visível no Arena Mobile",
+        "Não é possível obter registos: esta pesquisa não deve ser visível no Arena Mobile",
       recordsDownloadNotAllowed:
-        "A importação de registros do servidor Arena não é permitida",
+        "A obtenção de registos do servidor Arena não é permitida",
     },
   },
   importRecordsFromFile: {
@@ -61,6 +61,10 @@ export default {
     R: "Remoto",
   },
   owner: "Proprietário",
+  recordType: {
+    all: "Todos os registos",
+    local: "Apenas registos no dispositivo",
+  },
   sendData: {
     error: {
       generic: "Não é possível enviar dados para o servidor: {{details}}",

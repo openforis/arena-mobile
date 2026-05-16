@@ -4,9 +4,8 @@ import {
   Button,
   CollapsiblePanel,
   FlexWrapView,
-  FormItem,
   HView,
-  Switch,
+  SegmentedButtons,
   Text,
 } from "components";
 import { useIsNetworkConnected } from "hooks";
@@ -17,6 +16,7 @@ import { SurveyCycleSelector } from "./SurveyCycleSelector";
 import { SurveyLanguageSelector } from "./SurveyLanguageSelector";
 
 import styles from "./styles";
+import { useCallback } from "react";
 
 type RecordsListOptionsProps = {
   onlyLocal?: boolean;
@@ -25,6 +25,16 @@ type RecordsListOptionsProps = {
   onRemoteSyncPress: () => void;
   onImportRecordsFromFilePress: () => void;
 };
+
+enum RecordsType {
+  local = "local",
+  all = "all",
+}
+
+const recordTypeButtons = Object.values(RecordsType).map((recordType) => ({
+  value: recordType,
+  label: `recordsList:recordType.${recordType}`,
+}));
 
 export const RecordsListOptions = (props: RecordsListOptionsProps) => {
   const {
@@ -42,6 +52,15 @@ export const RecordsListOptions = (props: RecordsListOptionsProps) => {
   const defaultCycleText = Cycles.labelFunction(defaultCycleKey);
   const cycles = Surveys.getCycleKeys(survey);
 
+  const recordsType = onlyLocal ? RecordsType.local : RecordsType.all;
+
+  const onRecordsTypeChange = useCallback(
+    (value: string) => {
+      onOnlyLocalChange(value === RecordsType.local);
+    },
+    [onOnlyLocalChange],
+  );
+
   return (
     <CollapsiblePanel
       contentStyle={styles.optionsContainer}
@@ -57,16 +76,16 @@ export const RecordsListOptions = (props: RecordsListOptionsProps) => {
           <Text textKey={defaultCycleText} />
         </HView>
       )}
-      <FlexWrapView>
+      <FlexWrapView style={styles.buttonsContainer}>
         {cycles.length > 1 && (
           <SurveyCycleSelector style={styles.cyclesSelector} />
         )}
-        <FormItem
-          labelKey="dataEntry:showOnlyLocalRecords"
-          style={styles.formItem}
-        >
-          <Switch value={onlyLocal} onChange={onOnlyLocalChange} />
-        </FormItem>
+
+        <SegmentedButtons
+          buttons={recordTypeButtons}
+          onChange={onRecordsTypeChange}
+          value={recordsType}
+        />
         <Button
           color="secondary"
           disabled={!networkAvailable}

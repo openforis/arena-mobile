@@ -449,7 +449,7 @@ export const RecordsList = () => {
     [toaster],
   );
 
-  const onImportSelectedRecordUuids = useCallback(
+  const onFetchSelectedRecordUuids = useCallback(
     (selectedRecordUuids: any) => {
       const selectedRecords = records.filter((record) =>
         selectedRecordUuids.includes(record.uuid),
@@ -458,7 +458,7 @@ export const RecordsList = () => {
         return;
       }
       dispatch(
-        DataEntryActions.importRecordsFromServer({
+        DataEntryActions.fetchRecordsFromServer({
           recordUuids: selectedRecordUuids,
           onImportComplete: loadRecords,
         }),
@@ -669,7 +669,7 @@ export const RecordsList = () => {
                 onCloneSelectedRecordUuids={onCloneSelectedRecordUuids}
                 onDeleteSelectedRecordUuids={onDeleteSelectedRecordUuids}
                 onExportSelectedRecordUuids={onExportSelectedRecordUuids}
-                onImportSelectedRecordUuids={onImportSelectedRecordUuids}
+                onFetchSelectedRecordUuids={onFetchSelectedRecordUuids}
                 records={recordsFiltered}
                 showRemoteProps={!onlyLocal}
                 syncStatusFetched={syncStatusFetched}

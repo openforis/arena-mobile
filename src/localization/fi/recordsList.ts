@@ -9,7 +9,7 @@ export default {
       "Vain laitteeseen tuodut tai paikallisesti muokatut tietueet voidaan kloonata seuraavaan sykliin",
     completeSuccessfully: "Tietueet kloonattu onnistuneesti jaksoon {{cycle}}!",
   },
-  confirmImportRecordFromServer: "Tuodaanko tietue palvelimelta?",
+  confirmFetchRecordFromServer: "Haetaanko tietue palvelimelta?",
   continueEditing: {
     title: "Jatka muokkausta",
     confirm: {
@@ -28,14 +28,14 @@ export default {
   exportRecords: {
     title: "Vie",
   },
-  importRecord: "Tuo tietue",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecord: "Hae tietue",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "Tietueita ei voi tuoda: tämän kyselyn ei pitäisi näkyä Arena Mobile -sovelluksessa",
+        "Tietueita ei voi hakea: tämän kyselyn ei pitäisi näkyä Arena Mobile -sovelluksessa",
       recordsDownloadNotAllowed:
-        "Tietueiden tuonti Arena-palvelimelta ei ole sallittua",
+        "Tietueiden haku Arena-palvelimelta ei ole sallittua",
     },
   },
   importRecordsFromFile: {
@@ -59,6 +59,10 @@ export default {
   },
   origin: { title: "Alkuperäinen", L: "Paikallinen", R: "Palvelin" },
   owner: "Omistaja",
+  recordType: {
+    all: "Kaikki tietueet",
+    local: "Vain laitteessa olevat tietueet",
+  },
   sendData: {
     error: {
       generic: "Tietoja ei voi lähettää palvelimelle: {{details}}",

@@ -9,7 +9,7 @@ export default {
       "Only records imported in device or modified locally can be cloned into next cycle",
     completeSuccessfully: "Records cloned successfully into cycle {{cycle}}!",
   },
-  confirmImportRecordFromServer: "Import record from server?",
+  confirmFetchRecordFromServer: "Fetch record from server?",
   continueEditing: {
     title: "Continue editing",
     confirm: {
@@ -28,14 +28,14 @@ export default {
   exportRecords: {
     title: "Export",
   },
-  importRecord: "Import record",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecord: "Fetch record",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "Cannot import records: this survey should not be visible in Arena Mobile",
+        "Cannot fetch records: this survey should not be visible in Arena Mobile",
       recordsDownloadNotAllowed:
-        "Importing records from Arena server not allowed",
+        "Fetching records from Arena server not allowed",
     },
   },
   importRecordsFromFile: {
@@ -60,6 +60,10 @@ export default {
   origin: { title: "Origin", L: "Local", R: "Remote" },
   owner: "Owner",
   recordHasErrorsOrWarningsTooltip: "Record has {{count}} {{itemsTypeText}}",
+  recordType: {
+    all: "All records",
+    local: "Only records in device",
+  },
   sendData: {
     error: {
       generic: "Cannot send data to the server: {{details}}",

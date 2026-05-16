@@ -10,7 +10,8 @@ export default {
     completeSuccessfully:
       "Enregistrements clonés avec succès dans le cycle {{cycle}}!",
   },
-  confirmImportRecordFromServer: "Importer l'enregistrement depuis le serveur?",
+  confirmFetchRecordFromServer:
+    "Récupérer l'enregistrement depuis le serveur ?",
   continueEditing: {
     title: "Continuer l'édition",
     confirm: {
@@ -30,14 +31,14 @@ export default {
   exportRecords: {
     title: "Exporter",
   },
-  importRecord: "Importer l'enregistrement",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecord: "Récupérer l'enregistrement",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "Impossible d'importer les enregistrements : cette enquête ne devrait pas être visible dans Arena Mobile",
+        "Impossible de récupérer les enregistrements : cette enquête ne devrait pas être visible dans Arena Mobile",
       recordsDownloadNotAllowed:
-        "L'importation des enregistrements depuis le serveur Arena n'est pas autorisée",
+        "La récupération des enregistrements depuis le serveur Arena n'est pas autorisée",
     },
   },
   importRecordsFromFile: {
@@ -63,6 +64,10 @@ export default {
     R: "Distant",
   },
   owner: "Propriétaire",
+  recordType: {
+    all: "Tous les enregistrements",
+    local: "Seulement les enregistrements sur l'appareil",
+  },
   sendData: {
     error: {
       generic: "Impossible d'envoyer les données au serveur : {{details}}",

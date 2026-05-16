@@ -9,7 +9,7 @@ export default {
       "デバイスにインポートされた記録またはローカルで変更された記録のみ次のサイクルに複製できます",
     completeSuccessfully: "記録をサイクル{{cycle}}に複製しました！",
   },
-  confirmImportRecordFromServer: "サーバーから記録をインポートしますか？",
+  confirmFetchRecordFromServer: "サーバーから記録を取得しますか？",
   continueEditing: {
     title: "編集を続ける",
     confirm: {
@@ -28,14 +28,14 @@ export default {
   exportRecords: {
     title: "エクスポート",
   },
-  importRecord: "記録をインポート",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecord: "記録を取得",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "記録をインポートできません：この調査はArena Mobileに表示されるべきではありません",
+        "記録を取得できません：この調査はArena Mobileに表示されるべきではありません",
       recordsDownloadNotAllowed:
-        "Arenaサーバーからの記録のインポートは許可されていません",
+        "Arenaサーバーからの記録の取得は許可されていません",
     },
   },
   importRecordsFromFile: {
@@ -59,13 +59,19 @@ export default {
   },
   origin: { title: "保存元", L: "ローカル", R: "リモート" },
   owner: "所有者",
-  recordHasErrorsOrWarningsTooltip: "記録に{{count}}件の{{itemsTypeText}}があります",
+  recordHasErrorsOrWarningsTooltip:
+    "記録に{{count}}件の{{itemsTypeText}}があります",
+  recordType: {
+    all: "すべての記録",
+    local: "デバイス内の記録のみ",
+  },
   sendData: {
     error: {
       generic: "サーバーにデータを送信できません：{{details}}",
       surveyNotVisibleInMobile:
         "現在の調査はArena Mobileに表示されるべきではありません",
-      recordsUploadNotAllowed: "サーバーへの記録のアップロードは許可されていません",
+      recordsUploadNotAllowed:
+        "サーバーへの記録のアップロードは許可されていません",
       recordsWithErrorsUploadNotAllowed: `検証エラーのある記録のアップロードは許可されていません`,
     },
   },

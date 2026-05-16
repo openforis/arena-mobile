@@ -19,6 +19,7 @@ export default {
   exit: "Выход",
   export: "Экспорт",
   false: "Ложное значение",
+  fetch: "Получить",
   filter: "Фильтр",
   fromToOf: "{{from}}-{{to}} из {{of}}",
   goBack: "Назад",

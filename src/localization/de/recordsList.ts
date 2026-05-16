@@ -10,7 +10,7 @@ export default {
     completeSuccessfully:
       "Datensätze erfolgreich in den Zyklus {{cycle}} geklont!",
   },
-  confirmImportRecordFromServer: "Datensatz vom Server importieren?",
+  confirmFetchRecordFromServer: "Datensatz vom Server abrufen?",
   continueEditing: {
     title: "Bearbeitung fortsetzen",
     confirm: {
@@ -29,14 +29,14 @@ export default {
   exportRecords: {
     title: "Exportieren",
   },
-  importRecord: "Datensatz importieren",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecord: "Datensatz abrufen",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "Datensätze können nicht importiert werden: Diese Umfrage sollte in Arena Mobile nicht sichtbar sein",
+        "Datensätze können nicht abgerufen werden: Diese Umfrage sollte in Arena Mobile nicht sichtbar sein",
       recordsDownloadNotAllowed:
-        "Das Importieren von Datensätzen vom Arena-Server ist nicht erlaubt",
+        "Das Abrufen von Datensätzen vom Arena-Server ist nicht erlaubt",
     },
   },
   importRecordsFromFile: {
@@ -60,6 +60,10 @@ export default {
   },
   origin: { title: "Herkunft", L: "Lokal", R: "Remote" },
   owner: "Eigentümer",
+  recordType: {
+    all: "Alle Datensätze",
+    local: "Nur Datensätze im Gerät",
+  },
   sendData: {
     error: {
       generic: "Daten können nicht an den Server gesendet werden: {{details}}",

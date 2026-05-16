@@ -20,6 +20,7 @@ export default {
   exit: "خروج",
   export: "اکسپورت",
   false: "خیر",
+  fetch: "واکشی",
   filter: "فیلتر",
   fromToOf: `{{from}} به {{to}} از {{of}}`,
   goBack: "بازگشت",

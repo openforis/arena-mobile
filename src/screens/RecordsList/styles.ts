@@ -2,10 +2,13 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   optionsContainer: {
-    gap: 10,
+    gap: 20,
   },
   container: {
     flex: 1,
+  },
+  buttonsContainer: {
+    gap: 20,
   },
   formItem: { alignItems: "center" },
   formItemLabel: { fontSize: 16, width: 170 },

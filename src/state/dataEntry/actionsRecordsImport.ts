@@ -43,7 +43,7 @@ export const importRecordsFromFile =
               insertedRecords,
               updatedRecords,
             },
-          })
+          }),
         );
         await onImportComplete();
       } else {
@@ -82,9 +82,9 @@ const _onExportFromServerJobComplete = async ({
 const checkCanImportRecords = ({ dispatch, survey }: any) => {
   let errorKey;
   if (!Surveys.isVisibleInMobile(survey)) {
-    errorKey = "recordsList:importRecords.error.surveyNotVisibleInMobile";
+    errorKey = "recordsList:fetchRecords.error.surveyNotVisibleInMobile";
   } else if (!Surveys.isRecordsDownloadInMobileAllowed(survey)) {
-    errorKey = "recordsList:importRecords.error.recordsDownloadNotAllowed";
+    errorKey = "recordsList:fetchRecords.error.recordsDownloadNotAllowed";
   }
   if (errorKey) {
     dispatch(ToastActions.show(errorKey));
@@ -93,7 +93,7 @@ const checkCanImportRecords = ({ dispatch, survey }: any) => {
   return true;
 };
 
-export const importRecordsFromServer =
+export const fetchRecordsFromServer =
   ({ recordUuids, onImportComplete }: any) =>
   async (dispatch: any, getState: any) => {
     try {
@@ -111,7 +111,7 @@ export const importRecordsFromServer =
       const jobComplete = await JobMonitorActions.startAsync({
         dispatch,
         jobUuid: job.uuid,
-        titleKey: "recordsList:importRecords.title",
+        titleKey: "recordsList:fetchRecords.title",
       });
       await _onExportFromServerJobComplete({
         dispatch,
