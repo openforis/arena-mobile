@@ -62,7 +62,7 @@ export default {
   recordHasErrorsOrWarningsTooltip: "Record has {{count}} {{itemsTypeText}}",
   recordType: {
     all: "All records",
-    local: "Only records in device",
+    local: "Records in device",
   },
   sendData: {
     error: {

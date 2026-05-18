@@ -62,7 +62,7 @@ export default {
   owner: "Pemilik",
   recordType: {
     all: "Semua data isian",
-    local: "Hanya data isian di perangkat",
+    local: "Data isian di perangkat",
   },
   sendData: {
     error: {
