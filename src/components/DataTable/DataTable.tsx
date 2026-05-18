@@ -94,6 +94,85 @@ export const DataTable = (props: DataVisualizerProps) => {
     rowsScrollViewEl?.scrollTo({ x: 0, y: 0, animated: false });
   }, [visibleRows]);
 
+  const table = (
+    <RNPDataTable style={styles.table}>
+      <RNPDataTable.Header>
+        {visibleFields.map((field: DataVisualizerField) => (
+          <RNPDataTable.Title
+            key={field.key}
+            onPress={() =>
+              field.sortable ? onHeaderPress(field.key) : undefined
+            }
+            sortDirection={sort?.[field.key]}
+            style={[{ flex: 1 }, field.style]}
+            textStyle={styles.tableTitleText}
+          >
+            {t(field.header)}
+          </RNPDataTable.Title>
+        ))}
+        {selectionEnabled && (
+          <RNPDataTable.Title style={styles.tableTitleTextSelected}>
+            <>{/* spacer */}</>
+          </RNPDataTable.Title>
+        )}
+      </RNPDataTable.Header>
+      <ScrollView persistentScrollbar ref={rowsScrollViewRef}>
+        {visibleRows.map((item: any) => (
+          <RNPDataTable.Row
+            key={item.key}
+            onPress={() => onItemPress(item)}
+            onLongPress={() => onItemLongPress(item)}
+          >
+            {visibleFields.map(
+              ({
+                key: fKey,
+                style,
+                cellRenderer: CellRenderer,
+              }: DataVisualizerField) => (
+                <RNPDataTable.Cell
+                  key={fKey}
+                  style={style}
+                  textStyle={styles.tableTitleCellText}
+                >
+                  {CellRenderer ? (
+                    <CellRenderer item={item} />
+                  ) : (
+                    String(Objects.path(fKey.split("."))(item) ?? "")
+                  )}
+                </RNPDataTable.Cell>
+              ),
+            )}
+            {selectionEnabled && (
+              <RNPDataTable.Cell style={styles.tableTitleTextSelected}>
+                <Checkbox
+                  checked={selectedItemIds.includes(item.key)}
+                  onPress={() => onItemSelect(item)}
+                />
+              </RNPDataTable.Cell>
+            )}
+          </RNPDataTable.Row>
+        ))}
+      </ScrollView>
+      {showPagination && (
+        <RNPDataTable.Pagination
+          page={page}
+          numberOfPages={numberOfPages}
+          onPageChange={onPageChange}
+          label={t("common:fromToOf", {
+            from: itemFrom + 1,
+            to: itemTo,
+            of: items.length,
+          })}
+          numberOfItemsPerPageList={itemsPerPageOptions}
+          numberOfItemsPerPage={itemsPerPage}
+          onItemsPerPageChange={onItemsPerPageChange}
+          showFastPaginationControls
+          selectPageDropdownLabel={t("common:rowsPerPage")}
+        />
+      )}
+    </RNPDataTable>
+  );
+
   return (
     <VView style={styles.container}>
       <ItemSelectedBanner
@@ -102,87 +181,13 @@ export const DataTable = (props: DataVisualizerProps) => {
         onDeleteSelected={onDeleteSelected}
         selectedItemIds={selectedItemIds}
       />
-      <ScrollView
-        horizontal={horizontalScroll}
-        persistentScrollbar={horizontalScroll}
-      >
-        <RNPDataTable style={styles.table}>
-          <RNPDataTable.Header>
-            {visibleFields.map((field: DataVisualizerField) => (
-              <RNPDataTable.Title
-                key={field.key}
-                onPress={() =>
-                  field.sortable ? onHeaderPress(field.key) : undefined
-                }
-                sortDirection={sort?.[field.key]}
-                style={[{ flex: 1 }, field.style]}
-                textStyle={styles.tableTitleText}
-              >
-                {t(field.header)}
-              </RNPDataTable.Title>
-            ))}
-            {selectionEnabled && (
-              <RNPDataTable.Title style={styles.tableTitleTextSelected}>
-                <>{/* spacer */}</>
-              </RNPDataTable.Title>
-            )}
-          </RNPDataTable.Header>
-          <ScrollView persistentScrollbar ref={rowsScrollViewRef}>
-            {visibleRows.map((item: any) => (
-              <RNPDataTable.Row
-                key={item.key}
-                onPress={() => onItemPress(item)}
-                onLongPress={() => onItemLongPress(item)}
-              >
-                {visibleFields.map(
-                  ({
-                    key: fKey,
-                    style,
-                    cellRenderer: CellRenderer,
-                  }: DataVisualizerField) => (
-                    <RNPDataTable.Cell
-                      key={fKey}
-                      style={style}
-                      textStyle={styles.tableTitleCellText}
-                    >
-                      {CellRenderer ? (
-                        <CellRenderer item={item} />
-                      ) : (
-                        String(Objects.path(fKey.split("."))(item) ?? "")
-                      )}
-                    </RNPDataTable.Cell>
-                  ),
-                )}
-                {selectionEnabled && (
-                  <RNPDataTable.Cell style={styles.tableTitleTextSelected}>
-                    <Checkbox
-                      checked={selectedItemIds.includes(item.key)}
-                      onPress={() => onItemSelect(item)}
-                    />
-                  </RNPDataTable.Cell>
-                )}
-              </RNPDataTable.Row>
-            ))}
-          </ScrollView>
-          {showPagination && (
-            <RNPDataTable.Pagination
-              page={page}
-              numberOfPages={numberOfPages}
-              onPageChange={onPageChange}
-              label={t("common:fromToOf", {
-                from: itemFrom + 1,
-                to: itemTo,
-                of: items.length,
-              })}
-              numberOfItemsPerPageList={itemsPerPageOptions}
-              numberOfItemsPerPage={itemsPerPage}
-              onItemsPerPageChange={onItemsPerPageChange}
-              showFastPaginationControls
-              selectPageDropdownLabel={t("common:rowsPerPage")}
-            />
-          )}
-        </RNPDataTable>
-      </ScrollView>
+      {horizontalScroll ? (
+        <ScrollView horizontal persistentScrollbar>
+          {table}
+        </ScrollView>
+      ) : (
+        table
+      )}
     </VView>
   );
 };

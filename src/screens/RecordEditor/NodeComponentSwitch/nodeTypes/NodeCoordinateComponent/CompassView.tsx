@@ -92,7 +92,7 @@ export const CompassView = (props: CompassViewProps) => {
         },
       }),
     };
-  }, [arrowToTargetVisible, distance, landscapeOrientation]);
+  }, [arrowToTargetVisible, distance, landscapeOrientation, minDimension]);
 
   const { dynamicStyles, sizes } = dynamicStylesAndSizes;
   const {
