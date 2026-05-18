@@ -62,7 +62,7 @@ export default {
   owner: "Владелец",
   recordType: {
     all: "Все записи",
-    local: "Только записи на устройстве",
+    local: "Записи на устройстве",
   },
   sendData: {
     error: {

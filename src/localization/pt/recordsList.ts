@@ -63,7 +63,7 @@ export default {
   owner: "Proprietário",
   recordType: {
     all: "Todos os registos",
-    local: "Apenas registos no dispositivo",
+    local: "Registos no dispositivo",
   },
   sendData: {
     error: {

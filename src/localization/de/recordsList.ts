@@ -62,7 +62,7 @@ export default {
   owner: "Eigentümer",
   recordType: {
     all: "Alle Datensätze",
-    local: "Nur Datensätze im Gerät",
+    local: "Datensätze auf dem Gerät",
   },
   sendData: {
     error: {

@@ -61,7 +61,7 @@ export default {
   owner: "Ägare",
   recordType: {
     all: "Alla poster",
-    local: "Endast poster på enheten",
+    local: "Poster på enheten",
   },
   sendData: {
     error: {
