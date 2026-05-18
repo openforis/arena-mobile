@@ -61,6 +61,21 @@ const getChildrenDefs = ({
     includeAnalysis: false,
   }).filter(mobileNodeDefFilter({ allowExperimental, cycle }));
 
+const getDescendantsInSingleEntities = ({
+  survey,
+  cycle,
+  entityDef,
+}: {
+  survey: Survey;
+  cycle: string;
+  entityDef: NodeDefEntity;
+}) =>
+  Surveys.getDescendantsInSingleEntities({
+    survey,
+    cycle,
+    nodeDef: entityDef,
+  }).filter(mobileNodeDefFilter({ cycle }));
+
 const getEntitySummaryDefs = ({
   survey,
   entityDef,
@@ -102,8 +117,7 @@ const getEntitySummaryDefs = ({
       (childDef) =>
         !NodeDefs.isKey(childDef) &&
         !NodeDefs.isMultiple(childDef) &&
-        !NodeDefs.isIncludedInMultipleEntitySummary(cycle)(childDef) &&
-        mobileNodeDefFilter({ cycle })(childDef),
+        !NodeDefs.isIncludedInMultipleEntitySummary(cycle)(childDef),
     );
     if (entityDefChildrenNotKeys.length > 0) {
       summaryDefs.push(
@@ -164,6 +178,7 @@ export const SurveyDefs = {
   getRootKeyDefs,
   isRootKeyDef,
   getChildrenDefs,
+  getDescendantsInSingleEntities,
   getEntitySummaryDefs,
   hasSamplingPointDataLocation,
   isCodeAttributeFromSamplingPointData,
