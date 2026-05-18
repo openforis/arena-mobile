@@ -2,14 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 
 import { NodeDefs, Objects, Records } from "@openforis/arena-core";
 
-import {
-  DataTable,
-  DataVisualizerField,
-  HView,
-  ScrollView,
-  Text,
-  VView,
-} from "components";
+import { DataTable, DataVisualizerField, HView, Text, VView } from "components";
 import { useTranslation } from "localization";
 import { SortObject } from "model";
 import { RecordUtils } from "model/utils/RecordUtils";
@@ -176,6 +169,7 @@ export const NodeMultipleEntityListComponent = (
       <DataTable
         canDelete={canAddOrDelete}
         fields={tableFields}
+        horizontalScroll={isLandscape}
         items={rows}
         onDeleteSelectedItemIds={onDeleteSelectedNodeUuids}
         onItemPress={onRowPress}
@@ -186,6 +180,7 @@ export const NodeMultipleEntityListComponent = (
     ),
     [
       canAddOrDelete,
+      isLandscape,
       onDeleteSelectedNodeUuids,
       onRowPress,
       onSortChange,
@@ -200,14 +195,7 @@ export const NodeMultipleEntityListComponent = (
       {rows.length === 0 && (
         <Text textKey="dataEntry:noEntitiesDefined" variant="titleMedium" />
       )}
-      {rows.length > 0 &&
-        (isLandscape ? (
-          <ScrollView horizontal persistentScrollbar>
-            {dataTable}
-          </ScrollView>
-        ) : (
-          dataTable
-        ))}
+      {rows.length > 0 && dataTable}
       <HView fullWidth style={styles.buttonBar}>
         {canAddOrDelete && (
           <NewNodeButton nodeDefLabel={nodeDefLabel} onPress={onNewPress} />
