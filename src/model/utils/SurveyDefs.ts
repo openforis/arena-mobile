@@ -14,6 +14,24 @@ const samplingPointDataCategoryName = "sampling_point_data";
 
 const experimentalTypes = new Set([NodeDefType.geo]);
 
+const mobileNodeDefFilter =
+  ({
+    cycle,
+    allowExperimental,
+  }: {
+    cycle: string;
+    allowExperimental?: boolean;
+  }): ((
+    value: NodeDef<any>,
+    index?: number,
+    array?: NodeDef<any>[],
+  ) => boolean) =>
+  (childDef) =>
+    (allowExperimental || !experimentalTypes.has(childDef.type)) &&
+    !NodeDefs.isHidden(childDef) &&
+    !NodeDefs.isHiddenInMobile(cycle)(childDef) &&
+    NodeDefs.isInCycle(cycle)(childDef);
+
 const getRootKeyDefs = ({ survey, cycle }: any) => {
   const rootDef = Surveys.getNodeDefRoot({ survey });
   return Surveys.getNodeDefKeys({ survey, nodeDef: rootDef, cycle });
@@ -41,13 +59,7 @@ const getChildrenDefs = ({
     nodeDef,
     cycle,
     includeAnalysis: false,
-  }).filter(
-    (childDef) =>
-      (allowExperimental || !experimentalTypes.has(childDef.type)) &&
-      !NodeDefs.isHidden(childDef) &&
-      !NodeDefs.isHiddenInMobile(cycle)(childDef) &&
-      NodeDefs.isInCycle(cycle)(childDef),
-  );
+  }).filter(mobileNodeDefFilter({ allowExperimental, cycle }));
 
 const getEntitySummaryDefs = ({
   survey,
@@ -62,7 +74,11 @@ const getEntitySummaryDefs = ({
   onlyKeys?: boolean;
   maxSummaryDefs?: number;
 }) => {
-  const keyDefs = Surveys.getNodeDefKeys({ survey, cycle, nodeDef: entityDef });
+  const keyDefs = Surveys.getNodeDefKeys({
+    survey,
+    cycle,
+    nodeDef: entityDef,
+  }).filter(mobileNodeDefFilter({ cycle }));
 
   if (onlyKeys) {
     return keyDefs;
@@ -72,7 +88,7 @@ const getEntitySummaryDefs = ({
       survey,
       cycle,
       nodeDef: entityDef,
-    });
+    }).filter(mobileNodeDefFilter({ cycle }));
   const summaryDefs = [...keyDefs, ...defsIncludedInSummary];
 
   const otherDefsToAddCount = maxSummaryDefs - summaryDefs.length;
@@ -86,7 +102,8 @@ const getEntitySummaryDefs = ({
       (childDef) =>
         !NodeDefs.isKey(childDef) &&
         !NodeDefs.isMultiple(childDef) &&
-        !NodeDefs.isIncludedInMultipleEntitySummary(cycle)(childDef),
+        !NodeDefs.isIncludedInMultipleEntitySummary(cycle)(childDef) &&
+        mobileNodeDefFilter({ cycle })(childDef),
     );
     if (entityDefChildrenNotKeys.length > 0) {
       summaryDefs.push(
