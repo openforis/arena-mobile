@@ -60,7 +60,7 @@ export default {
   owner: "مالک",
   recordType: {
     all: "همه رکوردها",
-    local: "فقط رکوردهای موجود در دستگاه",
+    local: "رکوردهای موجود در دستگاه",
   },
   sendData: {
     error: {

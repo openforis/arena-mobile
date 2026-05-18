@@ -60,7 +60,7 @@ export default {
   owner: "ባለቤት",
   recordType: {
     all: "ሁሉም መዝገቦች",
-    local: "በመሣሪያው ላይ ያሉ መዝገቦች ብቻ",
+    local: "በመሣሪያው ላይ ያሉ መዝገቦች",
   },
   sendData: {
     error: {

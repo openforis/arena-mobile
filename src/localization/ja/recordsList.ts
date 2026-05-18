@@ -63,7 +63,7 @@ export default {
     "記録に{{count}}件の{{itemsTypeText}}があります",
   recordType: {
     all: "すべての記録",
-    local: "デバイス内の記録のみ",
+    local: "デバイス内の記録",
   },
   sendData: {
     error: {
