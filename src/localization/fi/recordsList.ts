@@ -61,7 +61,7 @@ export default {
   owner: "Omistaja",
   recordType: {
     all: "Kaikki tietueet",
-    local: "Vain laitteessa olevat tietueet",
+    local: "Laitteessa olevat tietueet",
   },
   sendData: {
     error: {
