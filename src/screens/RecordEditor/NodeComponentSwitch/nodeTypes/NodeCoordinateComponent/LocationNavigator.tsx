@@ -129,23 +129,34 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
             angleToTarget={angleToTarget}
           />
           <VView>
-            <FormItem labelKey="dataEntry:coordinate.heading">
+            <FormItem
+              labelKey="dataEntry:coordinate.heading"
+              labelVariant="titleMedium"
+              textVariant="titleMedium"
+            >
               {formatNumber(heading, 1, Symbols.degree)}
             </FormItem>
+            <HView style={styles.fieldsRow}>
+              <FormItem
+                labelKey="dataEntry:coordinate.angleToTargetLocation"
+                labelVariant="titleMedium"
+                textVariant="titleMedium"
+              >
+                {formatNumber(angleToTarget, 0, Symbols.degree)}
+              </FormItem>
+              <FormItem
+                labelKey="dataEntry:coordinate.distance"
+                labelVariant="titleMedium"
+                textVariant="titleMedium"
+              >
+                {formatNumber(distance, undefined, "m")}
+              </FormItem>
+            </HView>
             {targetPointLatLong && (
               <FormItem labelKey="dataEntry:coordinate.targetLocation">
                 {`${formatNumber(targetPointLatLong.x, 5)}, ${formatNumber(targetPointLatLong.y, 5)}`}
               </FormItem>
             )}
-            <HView style={styles.fieldsRow}>
-              <FormItem labelKey="dataEntry:coordinate.angleToTargetLocation">
-                {formatNumber(angleToTarget, 0, Symbols.degree)}
-              </FormItem>
-              <FormItem labelKey="dataEntry:coordinate.distance">
-                {formatNumber(distance, undefined, "m")}
-              </FormItem>
-            </HView>
-
             <FormItem labelKey="dataEntry:coordinate.currentLocation">
               {`${formatNumber(currentLocationX, 5)}, ${formatNumber(currentLocationY, 5)}`}
             </FormItem>
