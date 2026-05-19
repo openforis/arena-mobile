@@ -6,6 +6,7 @@ import { Numbers } from "@openforis/arena-core";
 
 import { View } from "components";
 import { DeviceInfoSelectors } from "state";
+import { ColorUtils } from "utils";
 
 const assetsPath = "../../../../../../assets";
 const compassBgBlack = require(`${assetsPath}/compass_bg_black.png`);
@@ -46,6 +47,10 @@ export const CompassView = (props: CompassViewProps) => {
   const landscapeOrientation = DeviceInfoSelectors.useOrientationIsLandscape();
 
   const compassBg = theme.dark ? compassBgWhite : compassBgBlack;
+  const bearingTriangleColor = ColorUtils.withOpacity(
+    theme.colors.primary,
+    0.6,
+  );
 
   const arrowToTargetVisible =
     distance >= arrowToTargetVisibleDistanceThreshold;
@@ -56,6 +61,8 @@ export const CompassView = (props: CompassViewProps) => {
     const compassImageSize = landscapeOrientation
       ? minDimension - 110
       : minDimension - 40;
+    const bearingTriangleSize = compassImageSize * 0.042;
+    const bearingTriangleInset = compassImageSize * 0.014;
 
     const targetLocationMarkerHeight = compassImageSize / 16;
 
@@ -71,6 +78,8 @@ export const CompassView = (props: CompassViewProps) => {
       sizes: {
         compassImageSize,
         arrowToTargetHeight: compassImageSize * 0.7,
+        bearingTriangleInset,
+        bearingTriangleSize,
         targetLocationBoxWidth,
         targetLocationMarkerHeight,
         targetLocationBoxMargin:
@@ -85,6 +94,27 @@ export const CompassView = (props: CompassViewProps) => {
           height: compassImageSize,
           width: compassImageSize,
         },
+        bearingTriangle: {
+          position: "absolute",
+          alignSelf: "center",
+          width: 0,
+          height: 0,
+          backgroundColor: "transparent",
+          borderLeftWidth: bearingTriangleSize,
+          borderRightWidth: bearingTriangleSize,
+          borderLeftColor: "transparent",
+          borderRightColor: "transparent",
+        },
+        bearingTriangleTop: {
+          top: bearingTriangleInset,
+          borderBottomWidth: bearingTriangleSize * 1.2,
+          borderBottomColor: bearingTriangleColor,
+        },
+        bearingTriangleBottom: {
+          bottom: bearingTriangleInset,
+          borderTopWidth: bearingTriangleSize * 1.2,
+          borderTopColor: bearingTriangleColor,
+        },
         targetLocationMarker: {
           alignSelf: "center",
           height: targetLocationMarkerHeight,
@@ -92,7 +122,12 @@ export const CompassView = (props: CompassViewProps) => {
         },
       }),
     };
-  }, [arrowToTargetVisible, distance, landscapeOrientation]);
+  }, [
+    arrowToTargetVisible,
+    distance,
+    landscapeOrientation,
+    bearingTriangleColor,
+  ]);
 
   const { dynamicStyles, sizes } = dynamicStylesAndSizes;
   const {
@@ -117,6 +152,18 @@ export const CompassView = (props: CompassViewProps) => {
           resizeMode: "contain",
           transform: [{ rotate: `${360 - heading} deg` }],
         }}
+      />
+      <View
+        style={[
+          dynamicStyles.bearingTriangle,
+          dynamicStyles.bearingTriangleTop,
+        ]}
+      />
+      <View
+        style={[
+          dynamicStyles.bearingTriangle,
+          dynamicStyles.bearingTriangleBottom,
+        ]}
       />
       {arrowToTargetVisible && (
         <Image
