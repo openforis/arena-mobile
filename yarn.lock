@@ -4113,7 +4113,6 @@ __metadata:
     expo-location: "npm:~19.0.8"
     expo-screen-orientation: "npm:~9.0.9"
     expo-secure-store: "npm:~15.0.8"
-    expo-sensors: "npm:~15.0.8"
     expo-sharing: "npm:~14.0.8"
     expo-sqlite: "npm:~16.0.10"
     expo-status-bar: "npm:~3.0.9"
@@ -6481,18 +6480,6 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: 10c0/c3a581aae66990c442e566c677cd884f623e33ab43015e7c1be9c6fe46fbf0dfc57c6213ec12984c86455485d0b22524e37b8d24e19acfa8b7d0d83be914496b
-  languageName: node
-  linkType: hard
-
-"expo-sensors@npm:~15.0.8":
-  version: 15.0.8
-  resolution: "expo-sensors@npm:15.0.8"
-  dependencies:
-    invariant: "npm:^2.2.4"
-  peerDependencies:
-    expo: "*"
-    react-native: "*"
-  checksum: 10c0/d7e88f6f94b9396a4e0c292d5d9df04ac607d85b1f67ceb426522497cd62346c245a6fd13ade66fec475252c25124e86c11282cd5190749897cbdf2e49097c65
   languageName: node
   linkType: hard
 
