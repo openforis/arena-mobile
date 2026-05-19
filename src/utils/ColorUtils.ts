@@ -1,3 +1,5 @@
+const rgbOrRgbaRegExp = /^rgba?\(([^)]+)\)$/i;
+
 const withOpacity = (color: string, opacity: number) => {
   if (color.startsWith("#")) {
     const hex = color.slice(1);
@@ -17,7 +19,7 @@ const withOpacity = (color: string, opacity: number) => {
     }
   }
 
-  const rgbMatch = color.match(/^rgba?\(([^)]+)\)$/i);
+  const rgbMatch = rgbOrRgbaRegExp.exec(color);
   const rgbValues = rgbMatch?.[1];
   if (rgbValues) {
     const [red, green, blue] = rgbValues
