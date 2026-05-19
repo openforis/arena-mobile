@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Magnetometer, MagnetometerMeasurement } from "expo-sensors";
 import * as Location from "expo-location";
 
 import { Numbers, Objects } from "@openforis/arena-core";
@@ -43,7 +42,7 @@ export const useMagnetometerHeading = () => {
     [updateHeading],
   );
 
-  const subscribeToMagnetometerData = useCallback(async () => {
+  const watchHeading = useCallback(async () => {
     const onError: Location.LocationErrorCallback = (error: any) => {
       log.error("Error receiving magnetometer data", error);
       setMagnetometerAvailable(false);
@@ -61,7 +60,6 @@ export const useMagnetometerHeading = () => {
 
       headingWatchSubscriptionRef.current = await Location.watchHeadingAsync(
         (headingData) => {
-          log.debug("====Received new magnetometer data", { headingData });
           const { trueHeading, magHeading } = headingData;
 
           const prevMagnetometerAngle = lastMagnetometerAngleRef.current;
@@ -87,11 +85,11 @@ export const useMagnetometerHeading = () => {
   }, [orientationIsLandscape, throttledUpdateHeading]);
 
   useEffect(() => {
-    subscribeToMagnetometerData();
+    watchHeading();
     return () => {
       headingWatchSubscriptionRef.current?.remove();
     };
-  }, [subscribeToMagnetometerData]);
+  }, [watchHeading]);
 
   return { magnetometerAvailable, heading };
 };
