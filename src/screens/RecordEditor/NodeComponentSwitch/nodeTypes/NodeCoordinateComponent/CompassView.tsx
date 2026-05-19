@@ -1,10 +1,11 @@
 import { useMemo } from "react";
-import { Dimensions, Image, StyleSheet } from "react-native";
+import { Image, StyleSheet } from "react-native";
 import { useTheme } from "react-native-paper";
 
 import { Numbers } from "@openforis/arena-core";
 
 import { View } from "components";
+import { useMinScreenDimension } from "hooks";
 import { DeviceInfoSelectors } from "state";
 
 const assetsPath = "../../../../../../assets";
@@ -30,9 +31,6 @@ const getArrowImageByAngle = (angle: number) => {
   return arrowUpRed;
 };
 
-const { height, width } = Dimensions.get("window");
-const minDimension = Math.min(height, width);
-
 type CompassViewProps = {
   distance: number;
   heading: number;
@@ -51,6 +49,8 @@ export const CompassView = (props: CompassViewProps) => {
     distance >= arrowToTargetVisibleDistanceThreshold;
 
   const arrowToTargetAngle = Numbers.absMod(360)(angleToTarget - heading);
+
+  const minDimension = useMinScreenDimension();
 
   const dynamicStylesAndSizes = useMemo(() => {
     const compassImageSize = landscapeOrientation
@@ -92,7 +92,7 @@ export const CompassView = (props: CompassViewProps) => {
         },
       }),
     };
-  }, [arrowToTargetVisible, distance, landscapeOrientation]);
+  }, [arrowToTargetVisible, distance, landscapeOrientation, minDimension]);
 
   const { dynamicStyles, sizes } = dynamicStylesAndSizes;
   const {

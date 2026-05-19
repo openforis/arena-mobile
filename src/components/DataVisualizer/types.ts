@@ -26,6 +26,7 @@ export type DataVisualizerField = {
 export type DataVisualizerProps = {
   canDelete?: boolean;
   fields: DataVisualizerField[];
+  horizontalScroll?: boolean;
   items: any[];
   onItemPress?: (item: any) => void;
   onItemLongPress?: (item: any) => void;

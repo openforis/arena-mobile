@@ -42,7 +42,7 @@ const config = (): ExpoConfig => {
     name: "Arena Mobile",
     slug: "arena-mobile",
     owner: "openforis",
-    version: "2.5.6",
+    version: "2.5.7",
     icon: "./assets/logo/icon_with_margin.png",
     userInterfaceStyle: "automatic",
     splash: {
@@ -60,7 +60,7 @@ const config = (): ExpoConfig => {
         backgroundColor: "#FFFFFF",
       },
       package: "org.openforis.arena_mobile",
-      versionCode: 94,
+      versionCode: 95,
       permissions: [
         "android.permission.ACCESS_MEDIA_LOCATION",
         "android.permission.RECORD_AUDIO",
@@ -72,7 +72,7 @@ const config = (): ExpoConfig => {
       },
     },
     ios: {
-      buildNumber: "94",
+      buildNumber: "95",
       bundleIdentifier: "org.openforis.arena-mobile",
       config: {
         usesNonExemptEncryption: false,
