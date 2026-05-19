@@ -346,10 +346,10 @@ const getApplicableDescendantDefs = ({
   onlyAttributes = true,
 }: any): NodeDef<any>[] => {
   const { cycle } = record;
-  const defs = Surveys.getDescendantsInSingleEntities({
+  const defs = SurveyDefs.getDescendantsInSingleEntities({
     survey,
     cycle,
-    nodeDef: entityDef,
+    entityDef,
   });
   return defs.filter(
     (nodeDef) =>

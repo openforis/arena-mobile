@@ -1,4 +1,4 @@
-import { Linking } from "react-native";
+import { Dimensions, Linking } from "react-native";
 import * as Application from "expo-application";
 import * as IntentLauncher from "expo-intent-launcher";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
@@ -143,6 +143,13 @@ const openAppSettings = async () => {
   }
 };
 
+const getScreenWidth = () => Dimensions.get("window").width;
+
+const getMinScreenDimension = () => {
+  const { height, width } = Dimensions.get("window");
+  return Math.min(height, width);
+};
+
 export const SystemUtils = {
   addOrientationChangeListener,
   copyValueToClipboard,
@@ -157,4 +164,6 @@ export const SystemUtils = {
   getLanguageCode,
   cleanupTempFiles,
   openAppSettings,
+  getMinScreenDimension,
+  getScreenWidth,
 };

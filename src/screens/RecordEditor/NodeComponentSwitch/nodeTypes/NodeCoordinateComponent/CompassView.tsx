@@ -1,10 +1,11 @@
 import { useMemo } from "react";
-import { Dimensions, Image, StyleSheet } from "react-native";
+import { Image, StyleSheet } from "react-native";
 import { useTheme } from "react-native-paper";
 
 import { Numbers } from "@openforis/arena-core";
 
 import { View } from "components";
+import { useMinScreenDimension } from "hooks";
 import { DeviceInfoSelectors } from "state";
 import { ColorUtils } from "utils";
 
@@ -31,9 +32,6 @@ const getArrowImageByAngle = (angle: number) => {
   return arrowUpRed;
 };
 
-const { height, width } = Dimensions.get("window");
-const minDimension = Math.min(height, width);
-
 type CompassViewProps = {
   distance: number;
   heading: number;
@@ -57,6 +55,8 @@ export const CompassView = (props: CompassViewProps) => {
     distance >= arrowToTargetVisibleDistanceThreshold;
 
   const arrowToTargetAngle = Numbers.absMod(360)(angleToTarget - heading);
+
+  const minDimension = useMinScreenDimension();
 
   const dynamicStylesAndSizes = useMemo(() => {
     const compassImageSize = landscapeOrientation
@@ -148,10 +148,11 @@ export const CompassView = (props: CompassViewProps) => {
     };
   }, [
     arrowToTargetVisible,
-    distance,
-    landscapeOrientation,
     bearingTriangleColor,
     centerCrossColor,
+    distance,
+    landscapeOrientation,
+    minDimension,
   ]);
 
   const { dynamicStyles, sizes } = dynamicStylesAndSizes;
@@ -166,6 +167,7 @@ export const CompassView = (props: CompassViewProps) => {
 
   return (
     <View style={dynamicStyles.compassWrapper}>
+      {/* compass background, rotated according to device heading */}
       <Image
         source={compassBg}
         style={{
@@ -178,6 +180,7 @@ export const CompassView = (props: CompassViewProps) => {
           transform: [{ rotate: `${360 - heading} deg` }],
         }}
       />
+      {/* bearing triangles */}
       <View
         style={[
           dynamicStyles.bearingTriangle,
@@ -191,7 +194,7 @@ export const CompassView = (props: CompassViewProps) => {
         ]}
       />
       {arrowToTargetVisible && (
-        // arrow pointing to target location
+        // arrow pointing to target location (rotated according to angle to target and device heading)
         <Image
           source={arrowToTargetSource}
           style={{
