@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Objects, Points } from "@openforis/arena-core";
 
@@ -21,18 +21,6 @@ import styles from "./locationNavigatorStyles";
 
 const Symbols = {
   degree: "\u00b0",
-};
-
-const radsToDegrees = (rads: any) => {
-  let degrees = rads * (180 / Math.PI);
-  degrees = -(degrees + 90);
-  while (degrees < 0) degrees += 360;
-  return degrees;
-};
-
-const calculateAngleBetweenPoints = (point1: any, point2: any) => {
-  const angleRads = Math.atan2(point1.y - point2.y, point1.x - point2.x);
-  return radsToDegrees(angleRads);
 };
 
 const formatNumber = (num: any, decimals = 2, unit = "") =>
@@ -63,9 +51,15 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
 
   log.debug(`rendering LocationNavigator`);
 
-  const [state, setState] = useState(initialState);
-
   const srsIndex = SurveySelectors.useCurrentSurveySrsIndex();
+
+  const targetPointLatLong = useMemo(
+    () =>
+      targetPoint && srsIndex ? Points.toLatLong(targetPoint, srsIndex) : null,
+    [targetPoint, srsIndex],
+  );
+
+  const [state, setState] = useState(initialState);
 
   const updateState = useCallback((params: any) => {
     log.debug("LocationNavigator: updateState");
@@ -75,9 +69,10 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
   const locationCallback = useCallback(
     ({ location, locationAccuracy, pointLatLong }: any) => {
       if (!location) return;
-      const angleToTargetNew = calculateAngleBetweenPoints(
+      const angleToTargetNew = Points.bearing(
         pointLatLong,
-        targetPoint
+        targetPoint,
+        srsIndex,
       );
       const distanceNew = Points.distance(pointLatLong, targetPoint, srsIndex);
       updateState({
@@ -87,7 +82,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
         distance: distanceNew,
       });
     },
-    [srsIndex, targetPoint, updateState]
+    [srsIndex, targetPoint, updateState],
   );
 
   const { startLocationWatch, stopLocationWatch } = useLocationWatch({
@@ -134,25 +129,30 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
             angleToTarget={angleToTarget}
           />
           <VView>
+            <FormItem labelKey="dataEntry:coordinate.heading">
+              {formatNumber(heading, 1, Symbols.degree)}
+            </FormItem>
+            {targetPointLatLong && (
+              <FormItem labelKey="dataEntry:coordinate.targetLocation">
+                {`${formatNumber(targetPointLatLong.x, 5)}, ${formatNumber(targetPointLatLong.y, 5)}`}
+              </FormItem>
+            )}
             <HView style={styles.fieldsRow}>
-              <FormItem labelKey="dataEntry:coordinate.accuracy">
-                {formatNumber(accuracy, undefined, "m")}
+              <FormItem labelKey="dataEntry:coordinate.angleToTargetLocation">
+                {formatNumber(angleToTarget, 0, Symbols.degree)}
               </FormItem>
               <FormItem labelKey="dataEntry:coordinate.distance">
                 {formatNumber(distance, undefined, "m")}
               </FormItem>
             </HView>
-            <HView style={styles.fieldsRow}>
-              <FormItem labelKey="dataEntry:coordinate.heading">
-                {formatNumber(heading, 1, Symbols.degree)}
-              </FormItem>
-              <FormItem labelKey="dataEntry:coordinate.angleToTargetLocation">
-                {formatNumber(angleToTarget, 0, Symbols.degree)}
-              </FormItem>
-            </HView>
+
             <FormItem labelKey="dataEntry:coordinate.currentLocation">
               {`${formatNumber(currentLocationX, 5)}, ${formatNumber(currentLocationY, 5)}`}
             </FormItem>
+            <FormItem labelKey="dataEntry:coordinate.accuracy">
+              {formatNumber(accuracy, undefined, "m")}
+            </FormItem>
+
             <HView style={styles.bottomBar}>
               <Button
                 disabled={!currentLocation}

@@ -51,6 +51,7 @@ export const CompassView = (props: CompassViewProps) => {
     theme.colors.primary,
     0.6,
   );
+  const centerCrossColor = ColorUtils.withOpacity(theme.colors.onSurface, 0.7);
 
   const arrowToTargetVisible =
     distance >= arrowToTargetVisibleDistanceThreshold;
@@ -94,6 +95,29 @@ export const CompassView = (props: CompassViewProps) => {
           height: compassImageSize,
           width: compassImageSize,
         },
+        centerCross: {
+          position: "absolute",
+          top: (compassImageSize - 10) / 2,
+          left: (compassImageSize - 10) / 2,
+          width: 10,
+          height: 10,
+          alignItems: "center",
+          justifyContent: "center",
+        },
+        centerCrossHorizontal: {
+          position: "absolute",
+          width: 10,
+          height: 1.5,
+          borderRadius: 1,
+          backgroundColor: centerCrossColor,
+        },
+        centerCrossVertical: {
+          position: "absolute",
+          width: 1.5,
+          height: 10,
+          borderRadius: 1,
+          backgroundColor: centerCrossColor,
+        },
         bearingTriangle: {
           position: "absolute",
           alignSelf: "center",
@@ -127,6 +151,7 @@ export const CompassView = (props: CompassViewProps) => {
     distance,
     landscapeOrientation,
     bearingTriangleColor,
+    centerCrossColor,
   ]);
 
   const { dynamicStyles, sizes } = dynamicStylesAndSizes;
@@ -166,6 +191,7 @@ export const CompassView = (props: CompassViewProps) => {
         ]}
       />
       {arrowToTargetVisible && (
+        // arrow pointing to target location
         <Image
           source={arrowToTargetSource}
           style={{
@@ -179,6 +205,7 @@ export const CompassView = (props: CompassViewProps) => {
         />
       )}
       {!arrowToTargetVisible && (
+        // target location indicator (green circle)
         <View
           style={{
             backgroundColor: "transparent",
@@ -194,6 +221,13 @@ export const CompassView = (props: CompassViewProps) => {
             source={circleGreen}
             style={dynamicStyles.targetLocationMarker}
           />
+        </View>
+      )}
+      {!arrowToTargetVisible && distance > 5 && (
+        // center cross
+        <View style={dynamicStyles.centerCross}>
+          <View style={dynamicStyles.centerCrossHorizontal} />
+          <View style={dynamicStyles.centerCrossVertical} />
         </View>
       )}
     </View>
