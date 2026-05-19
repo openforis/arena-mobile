@@ -184,6 +184,7 @@ const selectRecordNodePointerVisibility =
 
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
     const applicable = Nodes.isChildApplicable(parentNode, nodeDefUuid);
+    const visible = Nodes.isChildVisible(parentNode, nodeDefUuid);
     const nodeDefChild = Surveys.getNodeDefByUuid({
       survey,
       uuid: nodeDefUuid,
@@ -191,7 +192,7 @@ const selectRecordNodePointerVisibility =
     const cycle = record.cycle;
     const hiddenWhenNotRelevant =
       NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDefChild);
-    return applicable || !hiddenWhenNotRelevant;
+    return visible && (applicable || !hiddenWhenNotRelevant);
   };
 
 const selectRecordAttributeInfo =
@@ -356,8 +357,10 @@ const selectCurrentPageEntityRelevantChildDefs = (state: any) => {
   }
   const parentEntity = Records.getNodeByUuid(actualEntityUuid)(record);
   if (!parentEntity) return [];
-  return childDefs.filter((childDef) =>
-    Nodes.isChildApplicable(parentEntity, childDef.uuid),
+  return childDefs.filter(
+    (childDef) =>
+      Nodes.isChildApplicable(parentEntity, childDef.uuid) &&
+      Nodes.isChildVisible(parentEntity, childDef.uuid),
   );
 };
 

@@ -191,6 +191,7 @@ const getApplicableChildrenEntityDefs = ({
     (childDef) =>
       NodeDefs.isEntity(childDef) &&
       Nodes.isChildApplicable(parentEntity, childDef.uuid) &&
+      Nodes.isChildVisible(parentEntity, childDef.uuid) &&
       (!onlyInOwnPage ||
         NodeDefs.isDisplayInOwnPage(cycle)(childDef as NodeDefEntity)),
   ) as NodeDefEntity[];

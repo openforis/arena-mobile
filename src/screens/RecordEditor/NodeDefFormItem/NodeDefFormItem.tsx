@@ -57,7 +57,7 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
   const isLinkedToPreviousCycleRecord =
     DataEntrySelectors.useIsLinkedToPreviousCycleRecord();
   const canEditRecord = DataEntrySelectors.useCanEditRecord();
-  const alwaysVisible = Objects.isEmpty(NodeDefs.getApplicable(nodeDef));
+  const hasRelevantIf = Objects.isNotEmpty(NodeDefs.getApplicable(nodeDef));
 
   const includedInPreviousCycleLink =
     !NodeDefs.isKey(nodeDef) &&
@@ -139,13 +139,17 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
     ],
   );
 
-  if (alwaysVisible) {
-    return formItemComponent;
+  if (!visible) {
+    return null;
   }
 
-  if (settings.animationsEnabled && viewMode !== RecordEditViewMode.oneNode) {
+  if (
+    hasRelevantIf &&
+    settings.animationsEnabled &&
+    viewMode !== RecordEditViewMode.oneNode
+  ) {
     return <Fade visible={visible}>{formItemComponent}</Fade>;
   }
 
-  return visible ? formItemComponent : null;
+  return formItemComponent;
 };
