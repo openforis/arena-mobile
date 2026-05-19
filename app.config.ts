@@ -1,5 +1,8 @@
 import { ExpoConfig } from "expo/config";
 
+const appVersion = "2.5.8";
+const buildNumber = 95;
+
 const basePlugins: ExpoConfig["plugins"] = [
   ["expo-asset", { assets: ["assets"] }],
   [
@@ -42,7 +45,7 @@ const config = (): ExpoConfig => {
     name: "Arena Mobile",
     slug: "arena-mobile",
     owner: "openforis",
-    version: "2.5.7",
+    version: appVersion,
     icon: "./assets/logo/icon_with_margin.png",
     userInterfaceStyle: "automatic",
     splash: {
@@ -60,7 +63,7 @@ const config = (): ExpoConfig => {
         backgroundColor: "#FFFFFF",
       },
       package: "org.openforis.arena_mobile",
-      versionCode: 95,
+      versionCode: buildNumber,
       permissions: [
         "android.permission.ACCESS_MEDIA_LOCATION",
         "android.permission.RECORD_AUDIO",
@@ -72,7 +75,7 @@ const config = (): ExpoConfig => {
       },
     },
     ios: {
-      buildNumber: "95",
+      buildNumber: buildNumber.toString(),
       bundleIdentifier: "org.openforis.arena-mobile",
       config: {
         usesNonExemptEncryption: false,
