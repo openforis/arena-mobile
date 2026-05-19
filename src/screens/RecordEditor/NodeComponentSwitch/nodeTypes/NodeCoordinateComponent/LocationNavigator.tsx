@@ -128,7 +128,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
             heading={heading}
             angleToTarget={angleToTarget}
           />
-          <VView>
+          <VView fullFlex>
             <FormItem labelKey="dataEntry:coordinate.heading">
               {formatNumber(heading, 1, Symbols.degree)}
             </FormItem>
