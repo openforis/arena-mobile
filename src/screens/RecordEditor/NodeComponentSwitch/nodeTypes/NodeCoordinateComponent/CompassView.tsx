@@ -163,7 +163,7 @@ export const CompassView = (props: CompassViewProps) => {
     targetLocationBoxMargin,
   } = sizes;
 
-  const arrowToTargetSource = getArrowImageByAngle(angleToTarget);
+  const arrowToTargetSource = getArrowImageByAngle(arrowToTargetAngle);
 
   return (
     <View style={dynamicStyles.compassWrapper}>
