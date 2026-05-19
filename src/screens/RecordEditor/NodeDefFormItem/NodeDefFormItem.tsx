@@ -40,6 +40,10 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
     parentNodeUuid,
     nodeDefUuid,
   });
+  const editable = DataEntrySelectors.useRecordNodePointerEditable({
+    parentNodeUuid,
+    nodeDefUuid,
+  });
   const keyAttributeLockAvailable =
     NodeDefs.isKey(nodeDef) &&
     !NodeDefs.isEntity(nodeDef) &&
@@ -110,7 +114,7 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
           {isLinkedToPreviousCycleRecord && includedInPreviousCycleLink && (
             <PreviousCycleNodeValuePreview nodeDef={nodeDef} />
           )}
-          {canEditRecord && !keyAttributeLocked ? (
+          {canEditRecord && editable && !keyAttributeLocked ? (
             <NodeComponentSwitch
               nodeDef={nodeDef}
               parentNodeUuid={parentNodeUuid}
@@ -127,6 +131,7 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
     ),
     [
       canEditRecord,
+      editable,
       formItemComponentStyle,
       includedInPreviousCycleLink,
       internalContainerStyle,

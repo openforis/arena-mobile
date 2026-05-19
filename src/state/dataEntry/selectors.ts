@@ -164,6 +164,31 @@ const selectRecordNodePointerValidationChildrenCount =
     return validationChildrenCount;
   };
 
+const selectRecordNodePointerEditable =
+  ({
+    parentNodeUuid,
+    nodeDefUuid,
+  }: {
+    parentNodeUuid: string | undefined;
+    nodeDefUuid: string;
+  }) =>
+  (state: any): boolean => {
+    if (!parentNodeUuid) {
+      return true;
+    }
+    const record = selectRecordUnsafe(state);
+    if (!record) {
+      return true;
+    }
+
+    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
+    if (!parentNode) {
+      return true;
+    }
+
+    return Nodes.isChildEditable(parentNode, nodeDefUuid);
+  };
+
 const selectRecordNodePointerVisibility =
   ({
     parentNodeUuid,
@@ -546,6 +571,17 @@ export const DataEntrySelectors = {
   }) =>
     useSelector(
       selectRecordNodePointerVisibility({ parentNodeUuid, nodeDefUuid }),
+    ),
+
+  useRecordNodePointerEditable: ({
+    parentNodeUuid,
+    nodeDefUuid,
+  }: {
+    parentNodeUuid: string | undefined;
+    nodeDefUuid: string;
+  }) =>
+    useSelector(
+      selectRecordNodePointerEditable({ parentNodeUuid, nodeDefUuid }),
     ),
 
   useRecordAttributeInfo: ({ nodeUuid }: any) =>

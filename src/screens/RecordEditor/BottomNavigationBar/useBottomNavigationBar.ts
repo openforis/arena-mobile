@@ -117,8 +117,15 @@ export const useBottomNavigationBar = () =>
       activeChildIndex >= 0 &&
       !activeChildIsLastChild;
 
+    const parentEntity = parentEntityUuid
+      ? Records.getNodeByUuid(parentEntityUuid)(record)
+      : null;
+    const entityEditable =
+      !parentEntity || Nodes.isChildEditable(parentEntity, entityDef.uuid);
+
     const newButtonVisible =
       canEditRecord &&
+      entityEditable &&
       pageButtonsVisible &&
       prevEntityPointer &&
       !!entityUuid &&
