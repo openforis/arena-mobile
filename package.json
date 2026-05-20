@@ -1,6 +1,6 @@
 {
   "name": "arena-mobile",
-  "version": "2.5.7",
+  "version": "2.5.8",
   "scripts": {
     "start": "expo start",
     "start-tunnel": "expo start --tunnel",
@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@lodev09/react-native-exify": "^0.2.7",
-    "@openforis/arena-core": "^1.2.1",
+    "@openforis/arena-core": "^1.2.4",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-clipboard/clipboard": "^1.16.3",
     "@react-native-community/datetimepicker": "8.4.4",
@@ -27,6 +27,8 @@
     "@react-navigation/native": "^7.1.28",
     "@react-navigation/native-stack": "^7.13.0",
     "@reduxjs/toolkit": "^2.11.2",
+    "@turf/bearing": "^7.3.5",
+    "@turf/helpers": "^7.3.5",
     "@types/lodash": "^4.17.23",
     "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.throttle": "^4.1.9",
@@ -51,7 +53,6 @@
     "expo-location": "~19.0.8",
     "expo-screen-orientation": "~9.0.9",
     "expo-secure-store": "~15.0.8",
-    "expo-sensors": "~15.0.8",
     "expo-sharing": "~14.0.8",
     "expo-sqlite": "~16.0.10",
     "expo-status-bar": "~3.0.9",
