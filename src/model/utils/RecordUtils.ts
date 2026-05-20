@@ -304,26 +304,31 @@ const findAncestor = ({
   return result;
 };
 
-const cleanupAttributeValue = ({ value, attributeDef }: any) => {
+const cleanupAttributeValue = ({
+  value,
+  attributeDef,
+  sideEffect = false,
+}: any) => {
+  const valueUpdated = sideEffect ? value : { ...value };
   if (NodeDefs.getType(attributeDef) === NodeDefType.coordinate) {
     const additionalFields =
       NodeDefs.getCoordinateAdditionalFields(attributeDef);
-    const fieldsToRemove = Object.keys(value).filter(
+    const fieldsToRemove = Object.keys(valueUpdated).filter(
       (field) =>
         !coordinateAttributeMandatoryFields.has(field) &&
         !additionalFields.includes(field),
     );
     for (const field of fieldsToRemove) {
-      delete value[field];
+      delete valueUpdated[field];
     }
     for (const field of coordinateAttributeNumericFields) {
-      const fieldValue = value[field];
+      const fieldValue = valueUpdated[field];
       if (!Objects.isNil(fieldValue) && typeof fieldValue === "string") {
-        value[field] = Numbers.toNumber(fieldValue);
+        valueUpdated[field] = Numbers.toNumber(fieldValue);
       }
     }
   }
-  return value;
+  return valueUpdated;
 };
 
 const hasDescendantApplicableNodes = ({
