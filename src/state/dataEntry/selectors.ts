@@ -621,6 +621,7 @@ export const DataEntrySelectors = {
   useIsLinkedToPreviousCycleRecord: () =>
     useSelector(selectIsLinkedToPreviousCycleRecord),
 
+  selectPreviousCycleRecord,
   selectPreviousCycleEntityWithSameKeys,
 
   usePreviousCycleRecordAttributeValues: ({
