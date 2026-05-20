@@ -32,8 +32,8 @@ const PreviousCycleNodeValuePreviewInnerComponent = (
   } else {
     return (
       <VView>
-        {previousCycleValues.map((value, index) => (
-          <NodeValuePreview key={index} nodeDef={nodeDef} value={value} />
+        {previousCycleValues.map(({ uuid, value }) => (
+          <NodeValuePreview key={uuid} nodeDef={nodeDef} value={value} />
         ))}
       </VView>
     );
