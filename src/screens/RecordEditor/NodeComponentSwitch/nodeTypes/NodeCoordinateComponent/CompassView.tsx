@@ -1,22 +1,23 @@
 import { useMemo } from "react";
-import { Image, StyleSheet } from "react-native";
-import { useTheme } from "react-native-paper";
+import { Image } from "react-native";
 
 import { Numbers } from "@openforis/arena-core";
 
 import { View } from "components";
 import { useMinScreenDimension } from "hooks";
 import { DeviceInfoSelectors } from "state";
+import {
+  arrowToTargetVisibleDistanceThreshold,
+  useCompassColors,
+  useCompassStylesAndSizes,
+} from "./useCompassStylesAndSizes";
 
 const assetsPath = "../../../../../../assets";
-const compassBgBlack = require(`${assetsPath}/compass_bg_black.png`);
-const compassBgWhite = require(`${assetsPath}/compass_bg_white.png`);
+
 const arrowUpGreen = require(`${assetsPath}/arrow_up_green.png`);
 const arrowUpOrange = require(`${assetsPath}/arrow_up_orange.png`);
 const arrowUpRed = require(`${assetsPath}/arrow_up_red.png`);
 const circleGreen = require(`${assetsPath}/circle_green.png`);
-
-const arrowToTargetVisibleDistanceThreshold = 30;
 
 const getArrowImageByAngle = (angle: number) => {
   if (angle <= 20 || 360 - angle <= 20) {
@@ -40,85 +41,55 @@ type CompassViewProps = {
 export const CompassView = (props: CompassViewProps) => {
   const { angleToTarget, distance, heading } = props;
 
-  const theme = useTheme();
+  const minDimension = useMinScreenDimension();
   const landscapeOrientation = DeviceInfoSelectors.useOrientationIsLandscape();
 
-  const compassBg = theme.dark ? compassBgWhite : compassBgBlack;
+  const { compassBg, bearingTriangleColor, centerCrossColor } =
+    useCompassColors();
 
   const arrowToTargetVisible =
     distance >= arrowToTargetVisibleDistanceThreshold;
 
-  const arrowToTargetAngle = Numbers.absMod(360)(angleToTarget - heading);
+  const arrowToTargetAngle = useMemo(
+    () => Numbers.absMod(360)(angleToTarget - heading),
+    [angleToTarget, heading],
+  );
 
-  const minDimension = useMinScreenDimension();
-
-  const dynamicStylesAndSizes = useMemo(() => {
-    const compassImageSize = landscapeOrientation
-      ? minDimension - 110
-      : minDimension - 40;
-
-    const targetLocationMarkerHeight = compassImageSize / 16;
-
-    const targetLocationBoxWidth = compassImageSize * 0.7;
-
-    const targetLocationBoxWidthAdjusted =
-      targetLocationBoxWidth *
-      (arrowToTargetVisible
-        ? 1
-        : distance / arrowToTargetVisibleDistanceThreshold);
-
-    return {
-      sizes: {
-        compassImageSize,
-        arrowToTargetHeight: compassImageSize * 0.7,
-        targetLocationBoxWidth,
-        targetLocationMarkerHeight,
-        targetLocationBoxMargin:
-          (compassImageSize -
-            targetLocationBoxWidth +
-            (targetLocationBoxWidth - targetLocationBoxWidthAdjusted)) /
-          2,
-        targetLocationBoxWidthAdjusted,
-      },
-      dynamicStyles: StyleSheet.create({
-        compassWrapper: {
-          height: compassImageSize,
-          width: compassImageSize,
-        },
-        targetLocationMarker: {
-          alignSelf: "center",
-          height: targetLocationMarkerHeight,
-          resizeMode: "contain",
-        },
-      }),
-    };
-  }, [arrowToTargetVisible, distance, landscapeOrientation, minDimension]);
+  const dynamicStylesAndSizes = useCompassStylesAndSizes({
+    angleToTarget,
+    arrowToTargetVisible,
+    bearingTriangleColor,
+    centerCrossColor,
+    distance,
+    heading,
+    landscapeOrientation,
+    minDimension,
+  });
 
   const { dynamicStyles, sizes } = dynamicStylesAndSizes;
-  const {
-    compassImageSize,
-    arrowToTargetHeight,
-    targetLocationBoxWidthAdjusted,
-    targetLocationBoxMargin,
-  } = sizes;
+  const { compassImageSize, arrowToTargetHeight } = sizes;
 
-  const arrowToTargetSource = getArrowImageByAngle(angleToTarget);
+  const arrowToTargetSource = getArrowImageByAngle(arrowToTargetAngle);
 
   return (
     <View style={dynamicStyles.compassWrapper}>
-      <Image
-        source={compassBg}
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          height: compassImageSize,
-          width: compassImageSize,
-          resizeMode: "contain",
-          transform: [{ rotate: `${360 - heading} deg` }],
-        }}
+      {/* compass background, rotated according to device heading */}
+      <Image source={compassBg} style={dynamicStyles.compassBackground} />
+      {/* bearing triangles */}
+      <View
+        style={[
+          dynamicStyles.bearingTriangle,
+          dynamicStyles.bearingTriangleTop,
+        ]}
+      />
+      <View
+        style={[
+          dynamicStyles.bearingTriangle,
+          dynamicStyles.bearingTriangleBottom,
+        ]}
       />
       {arrowToTargetVisible && (
+        // arrow pointing to target location (rotated according to angle to target and device heading)
         <Image
           source={arrowToTargetSource}
           style={{
@@ -132,21 +103,19 @@ export const CompassView = (props: CompassViewProps) => {
         />
       )}
       {!arrowToTargetVisible && (
-        <View
-          style={{
-            backgroundColor: "transparent",
-            width: targetLocationBoxWidthAdjusted,
-            height: targetLocationBoxWidthAdjusted,
-            position: "absolute",
-            top: targetLocationBoxMargin,
-            left: targetLocationBoxMargin,
-            transform: [{ rotate: angleToTarget + "deg" }],
-          }}
-        >
+        // target location indicator (green circle)
+        <View style={dynamicStyles.targetLocationMarkerWrapper}>
           <Image
             source={circleGreen}
             style={dynamicStyles.targetLocationMarker}
           />
+        </View>
+      )}
+      {!arrowToTargetVisible && distance > 5 && (
+        // center cross
+        <View style={dynamicStyles.centerCross}>
+          <View style={dynamicStyles.centerCrossHorizontal} />
+          <View style={dynamicStyles.centerCrossVertical} />
         </View>
       )}
     </View>
