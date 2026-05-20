@@ -1,4 +1,6 @@
-import { CollapsiblePanel } from "components";
+import { NodeDefs, Objects } from "@openforis/arena-core";
+
+import { CollapsiblePanel, Text, VView } from "components";
 import { Cycles } from "model";
 import { DataEntrySelectors, SurveySelectors } from "state";
 import { log } from "utils";
@@ -7,20 +9,35 @@ import { NodeValuePreview } from "./NodeValuePreview";
 import { NodeValuePreviewProps } from "./NodeValuePreview/NodeValuePreviewPropTypes";
 
 const PreviousCycleNodeValuePreviewInnerComponent = (
-  props: NodeValuePreviewProps
+  props: NodeValuePreviewProps,
 ) => {
   const { nodeDef } = props;
 
   const { previousCycleEntityUuid } =
     DataEntrySelectors.usePreviousCycleRecordPageEntity();
 
-  const previousCycleValue =
-    DataEntrySelectors.usePreviousCycleRecordAttributeValue({
+  const previousCycleValues =
+    DataEntrySelectors.usePreviousCycleRecordAttributeValues({
       nodeDef,
       parentNodeUuid: previousCycleEntityUuid,
     });
 
-  return <NodeValuePreview nodeDef={nodeDef} value={previousCycleValue} />;
+  if (!previousCycleValues || Objects.isEmpty(previousCycleValues)) {
+    return <Text>---</Text>;
+  }
+  if (NodeDefs.isSingle(nodeDef)) {
+    return (
+      <NodeValuePreview nodeDef={nodeDef} value={previousCycleValues[0]} />
+    );
+  } else {
+    return (
+      <VView>
+        {previousCycleValues.map((value, index) => (
+          <NodeValuePreview key={index} nodeDef={nodeDef} value={value} />
+        ))}
+      </VView>
+    );
+  }
 };
 
 export const PreviousCycleNodeValuePreview = (props: NodeValuePreviewProps) => {

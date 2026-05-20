@@ -413,9 +413,9 @@ const extractAttibuteValue = ({ state, attribute }: any) => {
   return RecordUtils.cleanupAttributeValue({ value, attributeDef });
 };
 
-const selectPreviousCycleRecordAttributeValue =
+const selectPreviousCycleRecordAttributeValues =
   ({ nodeDef, parentNodeUuid }: any) =>
-  (state: any): any => {
+  (state: any): any[] | null => {
     if (!parentNodeUuid) {
       return null;
     }
@@ -425,8 +425,9 @@ const selectPreviousCycleRecordAttributeValue =
     }
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
     const attributes = Records.getChildren(parentNode, nodeDef.uuid)(record);
-    const attribute = attributes[0];
-    return extractAttibuteValue({ state, attribute });
+    return attributes.map((attribute) =>
+      extractAttibuteValue({ state, attribute }),
+    );
   };
 
 const selectPreviousCycleEntityWithSameKeys =
@@ -621,9 +622,8 @@ export const DataEntrySelectors = {
 
   selectPreviousCycleEntityWithSameKeys,
 
-  selectPreviousCycleRecordAttributeValue,
-  usePreviousCycleRecordAttributeValue: ({ nodeDef, parentNodeUuid }: any) =>
+  usePreviousCycleRecordAttributeValues: ({ nodeDef, parentNodeUuid }: any) =>
     useSelector(
-      selectPreviousCycleRecordAttributeValue({ nodeDef, parentNodeUuid }),
+      selectPreviousCycleRecordAttributeValues({ nodeDef, parentNodeUuid }),
     ),
 };
