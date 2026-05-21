@@ -105,6 +105,8 @@ const createNewRecord =
       const user = RemoteConnectionSelectors.selectLoggedUser(state);
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
       const cycle = Surveys.getDefaultCycleKey(survey);
+      const prevCycleRecord =
+        DataEntrySelectors.selectPreviousCycleRecord(state);
       // to always use the selected cycle, use this: const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
       const appInfo = SystemUtils.getRecordAppInfo();
       const now = Dates.nowFormattedForStorage();
@@ -122,6 +124,7 @@ const createNewRecord =
         user,
         survey,
         record: recordEmpty,
+        prevCycleRecord,
       });
 
       record.surveyId = survey.id;
@@ -142,6 +145,7 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
   const user = RemoteConnectionSelectors.selectLoggedUser(state);
   const survey = SurveySelectors.selectCurrentSurvey(state)!;
   const record = DataEntrySelectors.selectRecord(state);
+  const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);
   const { parentEntityUuid: currentParentNodeUuid, entityDef: nodeDef } =
     DataEntrySelectors.selectCurrentPageEntity(state);
 
@@ -170,6 +174,7 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
       user,
       survey,
       record,
+      prevCycleRecord,
       parentNode,
       nodeDef,
     });
@@ -209,11 +214,13 @@ const deleteNodes =
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
+    const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);
 
     const { record: recordUpdated, nodes } = await RecordUpdater.deleteNodes({
       user,
       survey,
       record,
+      prevCycleRecord,
       nodeUuids,
     });
 
@@ -529,6 +536,8 @@ const updateAttribute =
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
       const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
       const record = DataEntrySelectors.selectRecord(state);
+      const prevCycleRecord =
+        DataEntrySelectors.selectPreviousCycleRecord(state);
 
       const cycle = Records.getCycle(record);
       const node = Records.getNodeByUuid(uuid)(record)!;
@@ -558,6 +567,7 @@ const updateAttribute =
         user,
         survey,
         record,
+        prevCycleRecord,
         attributeUuid: uuid,
         value,
         clearNonApplicableValues: true,
@@ -680,6 +690,7 @@ const addNewAttribute =
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
+    const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
 
     const { record: recordUpdated, nodes: nodesCreated } =
@@ -687,6 +698,7 @@ const addNewAttribute =
         user,
         survey,
         record,
+        prevCycleRecord,
         parentNode,
         nodeDef,
       });
@@ -700,6 +712,7 @@ const addNewAttribute =
         user,
         survey,
         record: recordUpdated,
+        prevCycleRecord,
         attributeUuid: nodeCreated.uuid,
         value,
       },

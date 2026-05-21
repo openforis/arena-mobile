@@ -1,15 +1,32 @@
-import { Objects } from "@openforis/arena-core";
+import {
+  ArenaRecord,
+  ArenaRecordNode,
+  Dictionary,
+  Objects,
+  RecordNodesUpdater,
+  Records,
+  Survey,
+  User,
+} from "@openforis/arena-core";
 
-import { Cycles, RecordLoadStatus, RecordUtils, RecordOrigin } from "model";
-import { log } from "utils";
+import {
+  ArenaMobileRecord,
+  Cycles,
+  RecordLoadStatus,
+  RecordOrigin,
+  RecordUtils,
+  SurveyDefs,
+} from "model";
 import { RecordService } from "service";
-import { ToastActions } from "../toast";
+import { log } from "utils";
 import { ConfirmUtils } from "../confirm";
 import { SurveySelectors } from "../survey";
+import { ToastActions } from "../toast";
 
-import { DataEntrySelectors } from "./selectors";
+import { RemoteConnectionSelectors } from "state/remoteConnection";
 import { DataEntryActionTypes } from "./actionTypes";
 import { fetchRecordsFromServer } from "./actionsRecordsImport";
+import { DataEntrySelectors } from "./selectors";
 
 const {
   PREVIOUS_CYCLE_PAGE_ENTITY_SET,
@@ -18,11 +35,56 @@ const {
   RECORD_PREVIOUS_CYCLE_RESET,
 } = DataEntryActionTypes;
 
+const updateCurrentRecordWithPrevCycleValues = async ({
+  dispatch,
+  user,
+  survey,
+  currentCycleRecord,
+  nodeDefUuidsUsingPrevCycleValueFunctions,
+  prevCycleRecord,
+}: {
+  dispatch: any;
+  user: User;
+  survey: Survey;
+  currentCycleRecord: ArenaRecord;
+  nodeDefUuidsUsingPrevCycleValueFunctions: string[];
+  prevCycleRecord: ArenaMobileRecord;
+}): Promise<void> => {
+  const nodesToUpdateByUuid: Dictionary<ArenaRecordNode> = {};
+  for (const nodeDefUuid of nodeDefUuidsUsingPrevCycleValueFunctions) {
+    const nodes = Records.getNodesByDefUuid(nodeDefUuid)(currentCycleRecord);
+    for (const node of nodes) {
+      nodesToUpdateByUuid[node.uuid] = node;
+    }
+  }
+  const { record: currentCycleRecordUpdated } =
+    await RecordNodesUpdater.updateNodesDependents({
+      survey,
+      record: currentCycleRecord,
+      nodes: nodesToUpdateByUuid,
+      user,
+      prevCycleRecord,
+      sideEffect: false,
+    });
+  await dispatch({
+    type: DataEntryActionTypes.RECORD_SET,
+    record: currentCycleRecordUpdated,
+  });
+};
+
 const _fetchRecordFromPreviousCycleAndLinkItInternal = async ({
   dispatch,
+  user,
   survey,
+  currentCycleRecord,
   recordId,
-}: any) => {
+}: {
+  dispatch: any;
+  user: User;
+  survey: Survey;
+  currentCycleRecord: ArenaRecord;
+  recordId: number;
+}) => {
   dispatch({ type: RECORD_PREVIOUS_CYCLE_LOAD, loading: true });
 
   const recordSummary = await RecordService.fetchRecordSummary({
@@ -34,8 +96,30 @@ const _fetchRecordFromPreviousCycleAndLinkItInternal = async ({
     origin !== RecordOrigin.remote || loadStatus === RecordLoadStatus.complete;
 
   if (loaded) {
-    const record = await RecordService.fetchRecord({ survey, recordId });
-    await dispatch({ type: RECORD_PREVIOUS_CYCLE_SET, record });
+    const prevCycleRecord = await RecordService.fetchRecord({
+      survey,
+      recordId,
+    });
+    const nodeDefUuidsUsingPrevCycleValueFunctions =
+      SurveyDefs.findNodeDefUuidsUsingPrevCycleValueFunctions(survey);
+
+    if (nodeDefUuidsUsingPrevCycleValueFunctions.length > 0) {
+      log.debug(
+        "record in current cycle has nodeDefs with prevCycleValue functions, recalculating values",
+      );
+      await updateCurrentRecordWithPrevCycleValues({
+        dispatch,
+        user,
+        survey,
+        currentCycleRecord,
+        nodeDefUuidsUsingPrevCycleValueFunctions,
+        prevCycleRecord,
+      });
+    }
+    await dispatch({
+      type: RECORD_PREVIOUS_CYCLE_SET,
+      record: prevCycleRecord,
+    });
     dispatch(ToastActions.show("dataEntry:recordInPreviousCycle.foundMessage"));
     dispatch(updatePreviousCyclePageEntity);
   }
@@ -45,11 +129,19 @@ const _fetchRecordFromPreviousCycleAndLinkItInternal = async ({
 
 const _fetchRecordFromPreviousCycleAndLinkIt = async ({
   dispatch,
+  user,
   survey,
   record,
   prevCycle,
   lang,
-}: any): Promise<{
+}: {
+  dispatch: any;
+  user: User;
+  survey: Survey;
+  record: ArenaRecord;
+  prevCycle: string;
+  lang: string;
+}): Promise<{
   keyValues: string;
   prevCycleRecordIds: number[];
 } | null> => {
@@ -89,7 +181,9 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
         _fetchRecordFromPreviousCycleAndLinkItInternal({
           dispatch,
           survey,
-          recordId: prevCycleRecordId,
+          user,
+          currentCycleRecord: record,
+          recordId: prevCycleRecordId!,
         });
       if (!(await doFetch())) {
         if (
@@ -176,16 +270,18 @@ const linkToRecordInPreviousCycle =
       });
       if (Objects.isEmpty(selectedCycleKey)) return;
 
-      const survey = SurveySelectors.selectCurrentSurvey(state);
+      const user = RemoteConnectionSelectors.selectLoggedUser(state);
+      const survey = SurveySelectors.selectCurrentSurvey(state)!;
       const record = DataEntrySelectors.selectRecord(state);
 
       const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
       const fetchRecordFromPreviousCycleInternal = async () =>
         _fetchRecordFromPreviousCycleAndLinkIt({
           dispatch,
+          user,
           survey,
           record,
-          prevCycle: selectedCycleKey,
+          prevCycle: selectedCycleKey!,
           lang,
         });
       const { keyValues, prevCycleRecordIds } =
