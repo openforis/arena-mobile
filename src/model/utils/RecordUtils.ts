@@ -308,8 +308,8 @@ const cleanupAttributeValue = ({
   attributeDef,
   sideEffect = false,
 }: any) => {
-  const valueUpdated = sideEffect ? value : { ...value };
   if (NodeDefs.getType(attributeDef) === NodeDefType.coordinate) {
+    const valueUpdated = sideEffect ? value : { ...value };
     const additionalFields =
       NodeDefs.getCoordinateAdditionalFields(attributeDef);
     const fieldsToRemove = Object.keys(valueUpdated).filter(
@@ -326,8 +326,9 @@ const cleanupAttributeValue = ({
         valueUpdated[field] = Numbers.toNumber(fieldValue);
       }
     }
+    return valueUpdated;
   }
-  return valueUpdated;
+  return value;
 };
 
 const hasDescendantApplicableNodes = ({
