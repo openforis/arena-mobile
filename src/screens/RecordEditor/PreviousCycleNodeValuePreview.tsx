@@ -16,23 +16,29 @@ const PreviousCycleNodeValuePreviewInnerComponent = (
   const { previousCycleEntityUuid } =
     DataEntrySelectors.usePreviousCycleRecordPageEntity();
 
-  const previousCycleValues =
+  const previousCycleUuidsAndValues =
     DataEntrySelectors.usePreviousCycleRecordAttributeValues({
       nodeDef,
       parentNodeUuid: previousCycleEntityUuid,
     });
 
-  if (!previousCycleValues || Objects.isEmpty(previousCycleValues)) {
+  if (
+    !previousCycleUuidsAndValues ||
+    Objects.isEmpty(previousCycleUuidsAndValues)
+  ) {
     return <Text>---</Text>;
   }
   if (NodeDefs.isSingle(nodeDef)) {
     return (
-      <NodeValuePreview nodeDef={nodeDef} value={previousCycleValues[0]} />
+      <NodeValuePreview
+        nodeDef={nodeDef}
+        value={previousCycleUuidsAndValues[0]?.value}
+      />
     );
   } else {
     return (
       <VView>
-        {previousCycleValues.map(({ uuid, value }) => (
+        {previousCycleUuidsAndValues.map(({ uuid, value }) => (
           <NodeValuePreview key={uuid} nodeDef={nodeDef} value={value} />
         ))}
       </VView>
