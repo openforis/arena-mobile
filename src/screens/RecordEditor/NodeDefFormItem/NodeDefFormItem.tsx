@@ -104,6 +104,12 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
     [viewMode, styles.internalContainer],
   );
 
+  const editableFinal =
+    canEditRecord &&
+    !NodeDefs.isReadOnly(nodeDef) &&
+    editable &&
+    !keyAttributeLocked;
+
   const formItemComponent = useMemo(
     () => (
       <VView style={formItemComponentStyle}>
@@ -116,7 +122,7 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
           {isLinkedToPreviousCycleRecord && includedInPreviousCycleLink && (
             <PreviousCycleNodeValuePreview nodeDef={nodeDef} />
           )}
-          {canEditRecord && editable && !keyAttributeLocked ? (
+          {editableFinal ? (
             <NodeComponentSwitch
               nodeDef={nodeDef}
               parentNodeUuid={parentNodeUuid}
@@ -132,14 +138,12 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
       </VView>
     ),
     [
-      canEditRecord,
-      editable,
+      editableFinal,
       formItemComponentStyle,
       includedInPreviousCycleLink,
       internalContainerStyle,
       isLinkedToPreviousCycleRecord,
       keyAttributeLockButton,
-      keyAttributeLocked,
       nodeDef,
       onFocus,
       parentNodeUuid,
