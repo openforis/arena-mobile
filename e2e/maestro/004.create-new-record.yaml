@@ -13,8 +13,7 @@ appId: ${APP_ID}
     below:
       text: "Integer key"
 - scrollUntilVisible:
-    element:
-      id: "root_bool"
+    element: "Boolean"
     direction: DOWN
 - scrollUntilVisible:
     element: "True"
@@ -47,31 +46,28 @@ appId: ${APP_ID}
     direction: DOWN
 - assertVisible:
     id: "root_visible_if_bool"
-# - scrollUntilVisible:
-#     element: "Boolean"
-#     direction: UP
-# - tapOn:
-#     text: "False"
-#     below:
-#       text: "Boolean"
-# - extendedWaitUntil:
-#     visible:
-#       id: "confirm-dialog-title"
-#     timeout: 10000
-# - swipe:
-#     direction: RIGHT
-#     from:
-#       id: "confirm-swipe-button"
-#     duration: 1000
-# - assertVisible:
-#     id: "confirm-dialog-confirm-button"
-#     enabled: true
-# - tapOn:
-#     id: "confirm-dialog-confirm-button"
-# - assertNotVisible:
-#     id: "confirm-dialog-title"
-# - assertNotVisible:
-#     id: "root_relevant_if_bool"
+- scrollUntilVisible:
+    element: "Boolean"
+    direction: UP
+- tapOn:
+    text: "False"
+    below:
+      text: "Boolean"
+- extendedWaitUntil:
+    visible:
+      id: "confirm-dialog-title"
+    timeout: 10000
+- swipe:
+    direction: RIGHT
+    from:
+      id: "SwipeThumb"
+    duration: 1000
+- tapOn:
+    id: "confirm-dialog-confirm-button"
+- assertNotVisible:
+    id: "confirm-dialog-title"
+- assertNotVisible:
+    id: "root_relevant_if_bool"
 - tapOn:
     text: "Records"
 - tapOn:
