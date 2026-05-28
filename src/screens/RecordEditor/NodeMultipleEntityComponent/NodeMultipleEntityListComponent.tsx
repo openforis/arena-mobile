@@ -164,6 +164,7 @@ export const NodeMultipleEntityListComponent = (
 
   const canAddOrDelete =
     canEditRecord &&
+    Records.isNodeEditable({ record, node: parentEntity }) &&
     Nodes.isChildEditable(parentEntity, entityDefUuid) &&
     !NodeDefs.isEnumerate(entityDef);
 

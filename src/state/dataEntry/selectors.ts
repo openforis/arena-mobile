@@ -185,8 +185,10 @@ const selectRecordNodePointerEditable =
     if (!parentNode) {
       return true;
     }
-
-    return Nodes.isChildEditable(parentNode, nodeDefUuid);
+    return (
+      Records.isNodeEditable({ record, node: parentNode }) &&
+      Nodes.isChildEditable(parentNode, nodeDefUuid)
+    );
   };
 
 const selectRecordNodePointerVisibility =
