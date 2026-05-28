@@ -45,6 +45,7 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
     nodeDefUuid,
   });
   const keyAttributeLockAvailable =
+    editable &&
     NodeDefs.isKey(nodeDef) &&
     !NodeDefs.isEntity(nodeDef) &&
     !NodeDefs.isReadOnly(nodeDef) &&
