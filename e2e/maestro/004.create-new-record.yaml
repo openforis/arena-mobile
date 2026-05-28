@@ -13,7 +13,8 @@ appId: ${APP_ID}
     below:
       text: "Integer key"
 - scrollUntilVisible:
-    element: "Boolean"
+    element:
+      id: "root_bool"
     direction: DOWN
 - scrollUntilVisible:
     element: "True"
@@ -24,6 +25,8 @@ appId: ${APP_ID}
       text: "Boolean"
 - assertNotVisible:
     id: "root_relevant_if_bool"
+- assertNotVisible:
+    id: "root_visible_if_bool"
 - tapOn:
     text: "True"
     below:
@@ -38,6 +41,12 @@ appId: ${APP_ID}
     id: "root_relevant_if_bool"
 - inputText: "123"
 - hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: "root_visible_if_bool"
+    direction: DOWN
+- assertVisible:
+    id: "root_visible_if_bool"
 # - scrollUntilVisible:
 #     element: "Boolean"
 #     direction: UP
