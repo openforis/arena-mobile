@@ -148,7 +148,6 @@ type TreeItem = {
   entityPointer: EntityPointer;
   hasErrors?: boolean;
   hasWarnings?: boolean;
-  isLastAtLevel: boolean[];
 };
 
 const createChildTreeItem = ({
@@ -243,7 +242,6 @@ export const useTreeData = () => {
       parentEntityUuid,
       entityUuid,
     },
-    isLastAtLevel: [],
   });
 
   const rootDef = Surveys.getNodeDefRoot({ survey });
@@ -299,16 +297,6 @@ export const useTreeData = () => {
       }
     }
   }
-
-  const assignIsLastAtLevel = (items: TreeItem[], parentPath: boolean[]) => {
-    items.forEach((item, index) => {
-      item.isLastAtLevel = [...parentPath, index === items.length - 1];
-      if (item.children.length > 0) {
-        assignIsLastAtLevel(item.children, item.isLastAtLevel);
-      }
-    });
-  };
-  assignIsLastAtLevel(rootTreeItem.children, []);
 
   const { treeItemIdsWithErrors, treeItemIdsWithWarnings } =
     findNotValidTreeItemIds({ survey, record, treeItemsById });
