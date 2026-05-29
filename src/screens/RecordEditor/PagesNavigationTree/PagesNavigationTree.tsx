@@ -1,47 +1,34 @@
-import { useCallback, useMemo } from "react";
-import type { StyleProp, ViewStyle } from "react-native";
-import TreeView from "react-native-final-tree-view";
+import { useEffect, useRef } from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import {
+  TreeView,
+  type NodeRowProps,
+  type TreeViewRef,
+} from "react-native-tree-multi-select";
 
-import { HView, ScrollView } from "components";
-import { DataEntryActions, useAppDispatch } from "state";
+import { HView } from "components";
 
 import { EntityButton } from "./EntityButton";
 import { Indicator } from "./Indicator";
+import { TreeLines } from "./TreeLines";
 import { useTreeData } from "./useTreeData";
 
-type TreeNodeProps = {
-  node: any;
-  level: number;
-  isExpanded?: boolean;
-  hasChildrenNodes?: boolean;
-};
-
-const TreeNode = ({
+const TreeNodeRow = ({
   node: treeNode,
   level,
   isExpanded,
-  hasChildrenNodes,
-}: TreeNodeProps) => {
-  const { isCurrentEntity, isRoot } = treeNode;
-  const style: StyleProp<ViewStyle> = useMemo(
-    () => ({
-      alignItems: "center",
-      backgroundColor: "transparent",
-      fontSize: 18,
-      gap: 2,
-      marginLeft: isRoot ? 0 : 20 * (level - 1),
-      marginBottom: 6,
-    }),
-    [isRoot, level],
-  );
+  onExpand,
+}: NodeRowProps) => {
+  const { isCurrentEntity, isRoot, children } = treeNode;
+  const hasChildrenNodes = (children?.length ?? 0) > 0;
 
   return (
-    <HView style={style}>
+    <HView style={styles.row}>
+      <TreeLines level={level} />
       {!isRoot && (
-        <Indicator
-          isExpanded={isExpanded}
-          hasChildrenNodes={hasChildrenNodes}
-        />
+        <TouchableOpacity onPress={onExpand} disabled={!hasChildrenNodes}>
+          <Indicator isExpanded={isExpanded} hasChildrenNodes={hasChildrenNodes} />
+        </TouchableOpacity>
       )}
       <EntityButton treeNode={treeNode} isCurrentEntity={isCurrentEntity} />
     </HView>
@@ -50,27 +37,28 @@ const TreeNode = ({
 
 export const PagesNavigationTree = () => {
   const data = useTreeData();
-  const dispatch = useAppDispatch();
+  const treeRef = useRef<TreeViewRef>(null);
 
-  const onNodePress = useCallback(
-    ({ node }: any) => {
-      const { entityPointer } = node;
-      dispatch(DataEntryActions.selectCurrentPageEntity(entityPointer));
-    },
-    [dispatch],
-  );
+  useEffect(() => {
+    treeRef.current?.expandAll();
+  }, []);
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator
-      style={{ flex: 1, backgroundColor: "transparent" }}
-    >
-      <TreeView
-        data={data}
-        initialExpanded
-        onNodePress={onNodePress}
-        renderNode={TreeNode}
-      />
-    </ScrollView>
+    <TreeView
+      ref={treeRef}
+      data={data}
+      CustomNodeRowComponent={TreeNodeRow}
+      selectionPropagation={{ toChildren: false, toParents: false }}
+      treeFlashListProps={{ style: { flex: 1 } }}
+    />
   );
 };
+
+const styles = StyleSheet.create({
+  row: {
+    alignItems: "center",
+    backgroundColor: "transparent",
+    gap: 0,
+    marginBottom: 6,
+  },
+});

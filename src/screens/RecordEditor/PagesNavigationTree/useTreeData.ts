@@ -140,13 +140,15 @@ type EntityPointer = {
 
 type TreeItem = {
   id: string;
-  label: string;
+  name: string;
+  iconName: string;
   isRoot: boolean;
   children: TreeItem[];
   isCurrentEntity: boolean;
   entityPointer: EntityPointer;
   hasErrors?: boolean;
   hasWarnings?: boolean;
+  isLastAtLevel: boolean[];
 };
 
 const createChildTreeItem = ({
@@ -214,6 +216,13 @@ export const useTreeData = () => {
   const currentEntity = Records.getNodeByUuid(currentEntityUuid)(record);
   const { cycle } = record;
 
+  const getIconName = (nodeDef: NodeDef<any>): string => {
+    if (NodeDefs.isSingle(nodeDef)) return "file-outline";
+    if (NodeDefs.isLayoutRenderTypeTable(cycle)(nodeDef as NodeDefEntity))
+      return "table";
+    return "content-copy";
+  };
+
   const createTreeItem = ({
     nodeDef,
     parentEntityUuid,
@@ -224,7 +233,8 @@ export const useTreeData = () => {
     entityUuid?: string;
   }): TreeItem => ({
     id: nodeDef.uuid,
-    label: NodeDefs.getLabelOrName(nodeDef, lang),
+    name: NodeDefs.getLabelOrName(nodeDef, lang),
+    iconName: getIconName(nodeDef),
     isRoot: !parentEntityUuid,
     children: [],
     isCurrentEntity: nodeDef.uuid === currentEntityDef.uuid,
@@ -233,6 +243,7 @@ export const useTreeData = () => {
       parentEntityUuid,
       entityUuid,
     },
+    isLastAtLevel: [],
   });
 
   const rootDef = Surveys.getNodeDefRoot({ survey });
@@ -288,6 +299,16 @@ export const useTreeData = () => {
       }
     }
   }
+
+  const assignIsLastAtLevel = (items: TreeItem[], parentPath: boolean[]) => {
+    items.forEach((item, index) => {
+      item.isLastAtLevel = [...parentPath, index === items.length - 1];
+      if (item.children.length > 0) {
+        assignIsLastAtLevel(item.children, item.isLastAtLevel);
+      }
+    });
+  };
+  assignIsLastAtLevel(rootTreeItem.children, []);
 
   const { treeItemIdsWithErrors, treeItemIdsWithWarnings } =
     findNotValidTreeItemIds({ survey, record, treeItemsById });

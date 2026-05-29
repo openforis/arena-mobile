@@ -2338,6 +2338,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@futurejj/react-native-checkbox@npm:^1.0.5":
+  version: 1.0.7
+  resolution: "@futurejj/react-native-checkbox@npm:1.0.7"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-vector-icons: "*"
+  peerDependenciesMeta:
+    react-native-vector-icons:
+      optional: true
+  checksum: 10c0/3ad2eaa88d961fa3b108ff9b4c2d918b75530e3b54017e8fb77fd8e39d85fd1f9f9bb411ce1b448787db7044596676da56d82aafd228ef6cef4a08cb836a9f96
+  languageName: node
+  linkType: hard
+
 "@humanfs/core@npm:^0.19.1":
   version: 0.19.1
   resolution: "@humanfs/core@npm:0.19.1"
@@ -3387,6 +3401,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@shopify/flash-list@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "@shopify/flash-list@npm:2.3.1"
+  peerDependencies:
+    "@babel/runtime": "*"
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/abe921b93aeb6bf35efb4cd16163ca0126eec1513a40f1b88e370eb646e8bece5daa245e889300aa7ace2a4a81a9ffbd765c1ce2c3f2346611e94cc66c97c6e3
+  languageName: node
+  linkType: hard
+
 "@sinclair/typebox@npm:^0.27.8":
   version: 0.27.8
   resolution: "@sinclair/typebox@npm:0.27.8"
@@ -4075,6 +4100,7 @@ __metadata:
     "@react-navigation/native": "npm:^7.1.28"
     "@react-navigation/native-stack": "npm:^7.13.0"
     "@reduxjs/toolkit": "npm:^2.11.2"
+    "@shopify/flash-list": "npm:^2.3.1"
     "@turf/bearing": "npm:^7.3.5"
     "@turf/helpers": "npm:^7.3.5"
     "@types/jest": "npm:29.5.14"
@@ -4133,7 +4159,6 @@ __metadata:
     react-native-dots-pagination: "npm:^0.3.1"
     react-native-dropdown-picker: "npm:^5.4.6"
     react-native-error-boundary: "npm:^3.1.0"
-    react-native-final-tree-view: "npm:^3.0.0"
     react-native-keyboard-controller: "npm:1.18.5"
     react-native-keychain: "npm:^10.0.0"
     react-native-logs: "npm:^5.6.0"
@@ -4150,6 +4175,7 @@ __metadata:
     react-native-side-drawer: "npm:^2.1.0"
     react-native-svg: "npm:15.12.1"
     react-native-system-navigation-bar: "npm:^2.8.0"
+    react-native-tree-multi-select: "npm:^2.0.20"
     react-native-version-number: "npm:^0.3.6"
     react-native-view-more-text: "npm:^2.2.0"
     react-native-web: "npm:^0.21.2"
@@ -6607,6 +6633,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fast-is-equal@npm:^1.2.4":
+  version: 1.2.7
+  resolution: "fast-is-equal@npm:1.2.7"
+  checksum: 10c0/b827963c1da30f22b61c67a00095ff58478f2c5fa97748060ca09447b86e8693215bb2e70716eb5d562737fb243ace926e3b1d38e3c2082b9bb2bcfb7a08e68f
+  languageName: node
+  linkType: hard
+
 "fast-json-stable-stringify@npm:^2.0.0, fast-json-stable-stringify@npm:^2.1.0":
   version: 2.1.0
   resolution: "fast-json-stable-stringify@npm:2.1.0"
@@ -8696,13 +8729,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.get@npm:^4.4.2":
-  version: 4.4.2
-  resolution: "lodash.get@npm:4.4.2"
-  checksum: 10c0/48f40d471a1654397ed41685495acb31498d5ed696185ac8973daef424a749ca0c7871bf7b665d5c14f5cc479394479e0307e781f61d5573831769593411be6e
-  languageName: node
-  linkType: hard
-
 "lodash.isequal@npm:^4.5.0":
   version: 4.5.0
   resolution: "lodash.isequal@npm:4.5.0"
@@ -10613,18 +10639,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-final-tree-view@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "react-native-final-tree-view@npm:3.0.0"
-  dependencies:
-    lodash.get: "npm:^4.4.2"
-  peerDependencies:
-    react: ^16.0
-    react-native: ^0.51
-  checksum: 10c0/03b7a1ac605ae390f364fcba1d1c781e89b2859f3af5a41b2dc79c73395b86e21acdd088b10c2e2423070168640df6f53386eb966d77915986e4b85845c66502
-  languageName: node
-  linkType: hard
-
 "react-native-fit-image@npm:^1.5.5":
   version: 1.5.5
   resolution: "react-native-fit-image@npm:1.5.5"
@@ -10834,6 +10848,25 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/82c31cef1e36df6f759444f9597d8636c88d361e1295a7b482430cf7f7404b253b10c78ffdd2611054ae5eef879cde7ccc1b1980496cc9f635b47f4571747f1c
+  languageName: node
+  linkType: hard
+
+"react-native-tree-multi-select@npm:^2.0.20":
+  version: 2.0.20
+  resolution: "react-native-tree-multi-select@npm:2.0.20"
+  dependencies:
+    "@futurejj/react-native-checkbox": "npm:^1.0.5"
+    fast-is-equal: "npm:^1.2.4"
+    zustand: "npm:^5.0.11"
+  peerDependencies:
+    "@shopify/flash-list": 1.x.x || 2.x.x
+    react: ">=18.0.0"
+    react-native: "*"
+    react-native-vector-icons: "*"
+  peerDependenciesMeta:
+    react-native-vector-icons:
+      optional: true
+  checksum: 10c0/6686b7955b979755f7c5cf7f87c3475b0620080a48b39c7b3926b60f54c5767407afa8cf898ab382d7b199a841adeb13acd25956fff939eeb744fbcbd3c9677a
   languageName: node
   linkType: hard
 
@@ -13040,5 +13073,26 @@ __metadata:
   version: 4.3.5
   resolution: "zod@npm:4.3.5"
   checksum: 10c0/5a2db7e59177a3d7e202543f5136cb87b97b047b77c8a3d824098d3fa8b80d3aa40a0a5f296965c3b82dfdccdd05dbbfacce91347f16a39c675680fd7b1ab109
+  languageName: node
+  linkType: hard
+
+"zustand@npm:^5.0.11":
+  version: 5.0.14
+  resolution: "zustand@npm:5.0.14"
+  peerDependencies:
+    "@types/react": ">=18.0.0"
+    immer: ">=9.0.6"
+    react: ">=18.0.0"
+    use-sync-external-store: ">=1.2.0"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    immer:
+      optional: true
+    react:
+      optional: true
+    use-sync-external-store:
+      optional: true
+  checksum: 10c0/89de0c8119f1e0861b2f896a0b4df0d67994a373ecee02628d4e7b97cee1885207f646917d3ede395c3a5083316d48846855cfbc84aced7cd23a6db3238930a8
   languageName: node
   linkType: hard
