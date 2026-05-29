@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import {
   TreeView,
   type NodeRowProps,
@@ -10,6 +10,7 @@ import { HView } from "components";
 
 import { EntityButton } from "./EntityButton";
 import { Indicator } from "./Indicator";
+import styles from "./PagesNavigationTreeStyles";
 import { TreeLines } from "./TreeLines";
 import { useTreeData } from "./useTreeData";
 
@@ -27,13 +28,19 @@ const TreeNodeRow = ({
       <TreeLines level={level} />
       {!isRoot && (
         <TouchableOpacity onPress={onExpand} disabled={!hasChildrenNodes}>
-          <Indicator isExpanded={isExpanded} hasChildrenNodes={hasChildrenNodes} />
+          <Indicator
+            isExpanded={isExpanded}
+            hasChildrenNodes={hasChildrenNodes}
+          />
         </TouchableOpacity>
       )}
       <EntityButton treeNode={treeNode} isCurrentEntity={isCurrentEntity} />
     </HView>
   );
 };
+
+const treeSelectionPropagation = { toChildren: false, toParents: false };
+const treeFlashListProps = { style: { flex: 1 } };
 
 export const PagesNavigationTree = () => {
   const data = useTreeData();
@@ -48,17 +55,8 @@ export const PagesNavigationTree = () => {
       ref={treeRef}
       data={data}
       CustomNodeRowComponent={TreeNodeRow}
-      selectionPropagation={{ toChildren: false, toParents: false }}
-      treeFlashListProps={{ style: { flex: 1 } }}
+      selectionPropagation={treeSelectionPropagation}
+      treeFlashListProps={treeFlashListProps}
     />
   );
 };
-
-const styles = StyleSheet.create({
-  row: {
-    alignItems: "center",
-    backgroundColor: "transparent",
-    gap: 0,
-    marginBottom: 6,
-  },
-});
