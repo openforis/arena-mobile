@@ -142,7 +142,10 @@ const getEntitySummaryValuesByNameFormatted = ({
     (acc: Dictionary<string>, summaryDef: NodeDef<any, any>) => {
       let formattedValue: string;
       try {
-        const summaryNode = Records.getChild(entity, summaryDef.uuid)(record);
+        const summaryNode = Records.getChildren(
+          entity,
+          summaryDef.uuid,
+        )(record)[0];
         if (!summaryNode) {
           formattedValue = "";
         } else if (NodeDefs.getType(summaryDef) === NodeDefType.boolean) {

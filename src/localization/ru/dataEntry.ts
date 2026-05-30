@@ -41,6 +41,7 @@ export default {
   cycleForNewRecords: "Цикл новых записей:",
   options: "Параметры",
   editNodeDef: "Редактировать {{nodeDef}}",
+  viewNodeDef: "Просмотр {{nodeDef}}",
   errorFetchingRecordsSyncStatus:
     "Ошибка получения записей с сервера.\n\nПроверьте настройки соединения.\n\nПодробности: {{details}}",
   errorGeneratingRecordsExportFile:

@@ -1,9 +1,14 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
-import { NodeDefs } from "@openforis/arena-core";
+import { NodeDefs, Nodes, Records } from "@openforis/arena-core";
 
 import { Button, VView } from "components";
-import { DataEntryActions, SurveySelectors, useAppDispatch } from "state";
+import {
+  DataEntryActions,
+  DataEntrySelectors,
+  SurveySelectors,
+  useAppDispatch,
+} from "state";
 import { log } from "utils";
 
 import { NodeComponentProps } from "./nodeComponentPropTypes";
@@ -14,7 +19,7 @@ const styles = StyleSheet.create({
 });
 
 export const NodeMultipleEntityPreviewComponent = (
-  props: NodeComponentProps
+  props: NodeComponentProps,
 ) => {
   const { nodeDef, parentNodeUuid } = props;
 
@@ -22,7 +27,22 @@ export const NodeMultipleEntityPreviewComponent = (
 
   const dispatch = useAppDispatch();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
+  const record = DataEntrySelectors.useRecord();
   const entityDefUuid = nodeDef.uuid;
+
+  const editable = useMemo(() => {
+    if (!parentNodeUuid) {
+      return true;
+    }
+    const parentEntity = Records.getNodeByUuid(parentNodeUuid)(record);
+    if (!parentEntity) {
+      return true;
+    }
+    return (
+      Records.isNodeEditable({ record, node: parentEntity }) &&
+      Nodes.isChildEditable(parentEntity, entityDefUuid)
+    );
+  }, [entityDefUuid, parentNodeUuid, record]);
 
   const onEditPress = useCallback(
     () =>
@@ -30,9 +50,9 @@ export const NodeMultipleEntityPreviewComponent = (
         DataEntryActions.selectCurrentPageEntity({
           parentEntityUuid: parentNodeUuid,
           entityDefUuid,
-        })
+        }),
       ),
-    [dispatch, entityDefUuid, parentNodeUuid]
+    [dispatch, entityDefUuid, parentNodeUuid],
   );
 
   return (
@@ -40,7 +60,7 @@ export const NodeMultipleEntityPreviewComponent = (
       <Button
         onPress={onEditPress}
         style={styles.editButton}
-        textKey="dataEntry:editNodeDef"
+        textKey={editable ? "dataEntry:editNodeDef" : "dataEntry:viewNodeDef"}
         textParams={{ nodeDef: NodeDefs.getLabelOrName(nodeDef, lang) }}
       />
     </VView>

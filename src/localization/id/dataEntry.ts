@@ -42,6 +42,7 @@ Lanjutkan?`,
   cycleForNewRecords: "Siklus untuk data isian baru:",
   options: "Opsi",
   editNodeDef: "Edit {{nodeDef}}",
+  viewNodeDef: "View {{nodeDef}}",
   errorFetchingRecordsSyncStatus: `Kesalahan saat mengambil data isian dari server.
   
   Periksa pengaturan koneksi.

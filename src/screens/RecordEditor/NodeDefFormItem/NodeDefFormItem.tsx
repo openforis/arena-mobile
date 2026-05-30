@@ -111,6 +111,9 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
     editable &&
     !keyAttributeLocked;
 
+  const showNodeComponentSwitch =
+    NodeDefs.isEntity(nodeDef) || editableFinal;
+
   const formItemComponent = useMemo(
     () => (
       <VView style={formItemComponentStyle}>
@@ -123,7 +126,7 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
           {isLinkedToPreviousCycleRecord && includedInPreviousCycleLink && (
             <PreviousCycleNodeValuePreview nodeDef={nodeDef} />
           )}
-          {editableFinal ? (
+          {showNodeComponentSwitch ? (
             <NodeComponentSwitch
               nodeDef={nodeDef}
               parentNodeUuid={parentNodeUuid}
@@ -139,7 +142,7 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
       </VView>
     ),
     [
-      editableFinal,
+      showNodeComponentSwitch,
       formItemComponentStyle,
       includedInPreviousCycleLink,
       internalContainerStyle,

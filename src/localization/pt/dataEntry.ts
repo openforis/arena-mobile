@@ -42,6 +42,7 @@ Continuar?`,
   cycleForNewRecords: "Ciclo para novos registos:",
   options: "Opções",
   editNodeDef: "Editar {{nodeDef}}",
+  viewNodeDef: "Ver {{nodeDef}}",
   errorFetchingRecordsSyncStatus:
     "Erro ao obter registos do servidor.\n\nVerificar definições de ligação.\n\nDetalhes: {{details}}",
   errorGeneratingRecordsExportFile:
