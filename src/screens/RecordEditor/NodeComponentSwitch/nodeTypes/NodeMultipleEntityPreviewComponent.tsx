@@ -1,28 +1,40 @@
 import { useCallback } from "react";
+import { StyleSheet } from "react-native";
 
 import { NodeDefs } from "@openforis/arena-core";
 
 import { Button, VView } from "components";
-import { DataEntryActions, SurveySelectors, useAppDispatch } from "state";
+import {
+  DataEntryActions,
+  DataEntrySelectors,
+  SurveySelectors,
+  useAppDispatch,
+} from "state";
 import { log } from "utils";
 
 import { NodeComponentProps } from "./nodeComponentPropTypes";
-import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   editButton: { alignSelf: "center" },
 });
 
 export const NodeMultipleEntityPreviewComponent = (
-  props: NodeComponentProps
+  props: NodeComponentProps,
 ) => {
   const { nodeDef, parentNodeUuid } = props;
 
-  log.debug("rendering NodeMultipleEntityPreviewComponent");
+  log.debug(
+    `rendering NodeMultipleEntityPreviewComponent for ${NodeDefs.getName(nodeDef)}`,
+  );
+
+  const entityDefUuid = nodeDef.uuid;
 
   const dispatch = useAppDispatch();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
-  const entityDefUuid = nodeDef.uuid;
+  const editable = DataEntrySelectors.useRecordNodePointerEditable({
+    parentNodeUuid,
+    nodeDefUuid: entityDefUuid,
+  });
 
   const onEditPress = useCallback(
     () =>
@@ -30,9 +42,9 @@ export const NodeMultipleEntityPreviewComponent = (
         DataEntryActions.selectCurrentPageEntity({
           parentEntityUuid: parentNodeUuid,
           entityDefUuid,
-        })
+        }),
       ),
-    [dispatch, entityDefUuid, parentNodeUuid]
+    [dispatch, entityDefUuid, parentNodeUuid],
   );
 
   return (
@@ -40,7 +52,7 @@ export const NodeMultipleEntityPreviewComponent = (
       <Button
         onPress={onEditPress}
         style={styles.editButton}
-        textKey="dataEntry:editNodeDef"
+        textKey={editable ? "dataEntry:editNodeDef" : "dataEntry:viewNodeDef"}
         textParams={{ nodeDef: NodeDefs.getLabelOrName(nodeDef, lang) }}
       />
     </VView>

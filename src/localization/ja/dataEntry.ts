@@ -77,6 +77,7 @@ export default {
     title: "データをエクスポート",
   },
   editNodeDef: "{{nodeDef}}を編集",
+  viewNodeDef: "{{nodeDef}}を表示",
   errorFetchingRecordsSyncStatus: `サーバーからの記録取得エラー。
 
 接続設定を確認してください。

@@ -43,6 +43,7 @@ Fortfahren?`,
   cycleForNewRecords: "Zyklus für neue Datensätze:",
   options: "Optionen",
   editNodeDef: "{{nodeDef}} bearbeiten",
+  viewNodeDef: "{{nodeDef}} anzeigen",
   errorFetchingRecordsSyncStatus: `Fehler beim Abrufen von Datensätzen vom Server.
   
   Verbindungseinstellungen prüfen.

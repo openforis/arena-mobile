@@ -42,6 +42,7 @@ Jatketaanko?`,
   cycleForNewRecords: "Jakso uusille tietueille:",
   options: "Valinnat",
   editNodeDef: "Muokkaa {{nodeDef}}",
+  viewNodeDef: "Näytä {{nodeDef}}",
   errorFetchingRecordsSyncStatus: `Virhe tietueiden noudossa palvelimelta.
   
   Tarkista yhteysasetukset.

@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
-import { NodeDefs, Objects, Records } from "@openforis/arena-core";
+import { NodeDefs, Nodes, Objects, Records } from "@openforis/arena-core";
 
 import { DataTable, DataVisualizerField, HView, Text, VView } from "components";
 import { useTranslation } from "localization";
@@ -162,7 +162,11 @@ export const NodeMultipleEntityListComponent = (
     return _rows;
   }, [entityDefUuid, entityToRow, parentEntity, record, sort]);
 
-  const canAddOrDelete = canEditRecord && !NodeDefs.isEnumerate(entityDef);
+  const canAddOrDelete =
+    canEditRecord &&
+    Records.isNodeEditable({ record, node: parentEntity }) &&
+    Nodes.isChildEditable(parentEntity, entityDefUuid) &&
+    !NodeDefs.isEnumerate(entityDef);
 
   const dataTable = useMemo(
     () => (

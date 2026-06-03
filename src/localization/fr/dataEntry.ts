@@ -45,6 +45,7 @@ Continuer ?`,
   cycleForNewRecords: "Cycle pour les nouveaux enregistrements:",
   options: "Options",
   editNodeDef: "Modifier {{nodeDef}}",
+  viewNodeDef: "Voir {{nodeDef}}",
   errorFetchingRecordsSyncStatus:
     "Erreur lors de la récupération des enregistrements depuis le serveur.\n\nVérifier les paramètres de connexion.\n\nDétails: {{details}}",
   errorGeneratingRecordsExportFile:

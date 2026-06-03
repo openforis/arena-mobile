@@ -41,6 +41,7 @@ export default {
   cycleForNewRecords: "چرخه برای رکوردهای جدید:",
   options: "گزینه ها",
   editNodeDef: "ویرایش {{nodeDef}}",
+  viewNodeDef: "مشاهده {{nodeDef}}",
   errorFetchingRecordsSyncStatus: `خطا در دریافت رکوردها از سرور.
   
   تنظیمات اتصال را بررسی کنید.

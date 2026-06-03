@@ -42,6 +42,7 @@ Fortsätta?`,
   cycleForNewRecords: "Cykel för nya poster:",
   options: "Alternativ",
   editNodeDef: "Redigera {{nodeDef}}",
+  viewNodeDef: "Visa {{nodeDef}}",
   errorFetchingRecordsSyncStatus: `Fel vid hämtning av poster från servern.
   
   Kontrollera anslutningsinställningarna.

@@ -42,6 +42,7 @@ Sus valores serán borrados.
   cycleForNewRecords: "Ciclo para nuevos registros:",
   options: "Opciones",
   editNodeDef: "Editar {{nodeDef}}",
+  viewNodeDef: "Ver {{nodeDef}}",
   errorFetchingRecordsSyncStatus:
     "Error al obtener registros del servidor.\n\nComprobar configuración de conexión.\n\nDetalles: {{details}}",
   errorGeneratingRecordsExportFile:

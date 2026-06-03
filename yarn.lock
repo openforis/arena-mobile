@@ -2,7 +2,7 @@
 # Manual changes might be lost - proceed with caution!
 
 __metadata:
-  version: 9
+  version: 10
   cacheKey: 10c0
 
 "@0no-co/graphql.web@npm:^1.0.5, @0no-co/graphql.web@npm:^1.0.8":
@@ -2902,9 +2902,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openforis/arena-core@npm:^1.2.6":
-  version: 1.2.6
-  resolution: "@openforis/arena-core@npm:1.2.6::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40openforis%2Farena-core%2F1.2.6%2F2a3e352080e6f0ef21f71d99dbd1e4c5db475b78"
+"@openforis/arena-core@npm:^1.2.7":
+  version: 1.2.7
+  resolution: "@openforis/arena-core@npm:1.2.7::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40openforis%2Farena-core%2F1.2.7%2F9c255fb87826b39389c7adc42ee89d5f7bf33e3e"
   dependencies:
     "@jsep-plugin/regex": "npm:^1.0.4"
     "@turf/bearing": "npm:^7.3.5"
@@ -2920,7 +2920,7 @@ __metadata:
     moment: "npm:^2.30.1"
     proj4: "npm:^2.20.8"
     uuid: "npm:^14.0.0"
-  checksum: 10c0/4234f9a813c24fcabff1c1fea4eb02acfae8aa58b3f196fc67e37f2df7e68f987377fb2c9c73937018f152c71f59079d8fb2f36793f271b32367100ac19ad425
+  checksum: 10c0/17b67cae692ae93c60c850092c9ce527fc8db8f81e047fe7309eeed8f56718fd1e2ccbbf29bfb709b11f8295388538ee59e7cc85c6d0b1a9ef0f3f37750dc027
   languageName: node
   linkType: hard
 
@@ -4116,7 +4116,7 @@ __metadata:
     "@eslint/eslintrc": "npm:^3.3.3"
     "@eslint/js": "npm:^9.39.3"
     "@lodev09/react-native-exify": "npm:^0.2.7"
-    "@openforis/arena-core": "npm:^1.2.6"
+    "@openforis/arena-core": "npm:^1.2.7"
     "@react-native-async-storage/async-storage": "npm:2.2.0"
     "@react-native-clipboard/clipboard": "npm:^1.16.3"
     "@react-native-community/datetimepicker": "npm:8.4.4"

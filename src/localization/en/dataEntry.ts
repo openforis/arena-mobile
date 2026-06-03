@@ -79,6 +79,7 @@ Please check your records and check also records on the server`,
     title: "Export data",
   },
   editNodeDef: "Edit {{nodeDef}}",
+  viewNodeDef: "View {{nodeDef}}",
   errorFetchingRecordsSyncStatus: `Error fetching records from server.
 
 Check connection settings.

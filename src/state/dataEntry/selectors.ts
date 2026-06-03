@@ -164,6 +164,33 @@ const selectRecordNodePointerValidationChildrenCount =
     return validationChildrenCount;
   };
 
+const selectRecordNodePointerEditable =
+  ({
+    parentNodeUuid,
+    nodeDefUuid,
+  }: {
+    parentNodeUuid: string | undefined;
+    nodeDefUuid: string;
+  }) =>
+  (state: any): boolean => {
+    if (!parentNodeUuid) {
+      return true;
+    }
+    const record = selectRecordUnsafe(state);
+    if (!record) {
+      return true;
+    }
+
+    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
+    if (!parentNode) {
+      return true;
+    }
+    return (
+      Records.isNodeEditable({ record, node: parentNode }) &&
+      Nodes.isChildEditable(parentNode, nodeDefUuid)
+    );
+  };
+
 const selectRecordNodePointerVisibility =
   ({
     parentNodeUuid,
@@ -184,6 +211,7 @@ const selectRecordNodePointerVisibility =
 
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
     const applicable = Nodes.isChildApplicable(parentNode, nodeDefUuid);
+    const visible = Nodes.isChildVisible(parentNode, nodeDefUuid);
     const nodeDefChild = Surveys.getNodeDefByUuid({
       survey,
       uuid: nodeDefUuid,
@@ -191,7 +219,7 @@ const selectRecordNodePointerVisibility =
     const cycle = record.cycle;
     const hiddenWhenNotRelevant =
       NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDefChild);
-    return applicable || !hiddenWhenNotRelevant;
+    return visible && (applicable || !hiddenWhenNotRelevant);
   };
 
 const selectRecordAttributeInfo =
@@ -356,8 +384,10 @@ const selectCurrentPageEntityRelevantChildDefs = (state: any) => {
   }
   const parentEntity = Records.getNodeByUuid(actualEntityUuid)(record);
   if (!parentEntity) return [];
-  return childDefs.filter((childDef) =>
-    Nodes.isChildApplicable(parentEntity, childDef.uuid),
+  return childDefs.filter(
+    (childDef) =>
+      Nodes.isChildApplicable(parentEntity, childDef.uuid) &&
+      Nodes.isChildVisible(parentEntity, childDef.uuid),
   );
 };
 
@@ -545,6 +575,17 @@ export const DataEntrySelectors = {
   }) =>
     useSelector(
       selectRecordNodePointerVisibility({ parentNodeUuid, nodeDefUuid }),
+    ),
+
+  useRecordNodePointerEditable: ({
+    parentNodeUuid,
+    nodeDefUuid,
+  }: {
+    parentNodeUuid: string | undefined;
+    nodeDefUuid: string;
+  }) =>
+    useSelector(
+      selectRecordNodePointerEditable({ parentNodeUuid, nodeDefUuid }),
     ),
 
   useRecordAttributeInfo: ({ nodeUuid }: any) =>

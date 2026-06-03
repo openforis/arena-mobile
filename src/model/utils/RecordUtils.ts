@@ -142,7 +142,10 @@ const getEntitySummaryValuesByNameFormatted = ({
     (acc: Dictionary<string>, summaryDef: NodeDef<any, any>) => {
       let formattedValue: string;
       try {
-        const summaryNode = Records.getChild(entity, summaryDef.uuid)(record);
+        const summaryNode = Records.getChildren(
+          entity,
+          summaryDef.uuid,
+        )(record)[0];
         if (!summaryNode) {
           formattedValue = "";
         } else if (NodeDefs.getType(summaryDef) === NodeDefType.boolean) {
@@ -191,6 +194,7 @@ const getApplicableChildrenEntityDefs = ({
     (childDef) =>
       NodeDefs.isEntity(childDef) &&
       Nodes.isChildApplicable(parentEntity, childDef.uuid) &&
+      Nodes.isChildVisible(parentEntity, childDef.uuid) &&
       (!onlyInOwnPage ||
         NodeDefs.isDisplayInOwnPage(cycle)(childDef as NodeDefEntity)),
   ) as NodeDefEntity[];

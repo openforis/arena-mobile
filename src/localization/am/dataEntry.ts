@@ -39,6 +39,7 @@ export default {
   cycleForNewRecords: "ለአዲስ መዝገቦች ዙር፡",
   options: "አማራጮች",
   editNodeDef: "{{nodeDef}} ያርትዑ",
+  viewNodeDef: "{{nodeDef}} ይመልከቱ",
   errorFetchingRecordsSyncStatus:
     "መዝገቦችን ከአገልጋዩ በማግኘት ላይ ስህተት።\n\nየግንኙነት ቅንብሮችን ያረጋግጡ።\n\nዝርዝሮች፡ {{details}}",
   errorGeneratingRecordsExportFile:
