@@ -31,10 +31,12 @@ export const NodeMultipleEntityPreviewComponent = (
 
   const dispatch = useAppDispatch();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
-  const editable = DataEntrySelectors.useRecordNodePointerEditable({
+  const nodeEditable = DataEntrySelectors.useRecordNodePointerEditable({
     parentNodeUuid,
     nodeDefUuid: entityDefUuid,
   });
+  const canEditRecord = DataEntrySelectors.useCanEditRecord();
+  const editable = canEditRecord && nodeEditable;
 
   const onEditPress = useCallback(
     () =>
