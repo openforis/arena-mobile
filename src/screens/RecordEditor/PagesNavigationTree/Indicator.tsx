@@ -4,7 +4,7 @@ const CollapseIcon = () => <Icon source="chevron-down" />;
 
 const ExpandIcon = () => <Icon source="chevron-up" />;
 
-const LeafNodeIcon = () => <Spacer width={22} />;
+const LeafNodeIcon = () => <Spacer width={8} />;
 
 type IndicatorProps = {
   isExpanded?: boolean;
