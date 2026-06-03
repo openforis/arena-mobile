@@ -65,6 +65,10 @@ export const useBottomNavigationBar = () =>
 
     const viewMode = SurveyOptionsSelectors.selectRecordEditViewMode(state);
     const canEditRecord = DataEntrySelectors.selectCanEditRecord(state);
+    const entityEditable = DataEntrySelectors.selectRecordNodePointerEditable({
+      parentNodeUuid: parentEntityUuid,
+      nodeDefUuid: entityDef.uuid,
+    })(state);
 
     const prevEntityPointer = RecordPageNavigator.getPrevEntityPointer({
       survey,
@@ -116,14 +120,6 @@ export const useBottomNavigationBar = () =>
       singleNodesButtonsVisible &&
       activeChildIndex >= 0 &&
       !activeChildIsLastChild;
-
-    const parentEntity = parentEntityUuid
-      ? Records.getNodeByUuid(parentEntityUuid)(record)
-      : null;
-    const entityEditable =
-      !parentEntity ||
-      (Records.isNodeEditable({ record, node: parentEntity }) &&
-        Nodes.isChildEditable(parentEntity, entityDef.uuid));
 
     const newButtonVisible =
       canEditRecord &&

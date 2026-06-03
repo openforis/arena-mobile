@@ -35,9 +35,9 @@ export const EntityButton = (props: EntityButtonProps) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.entityButtonWrapper}>
       <HView style={styles.entityButtonContent} transparent>
-        <AlertIcon hasErrors={hasErrors} hasWarnings={hasWarnings} />
         {!isRoot && <Icon source={iconName} size={16} />}
         <Text style={textStyle} textKey={name} />
+        <AlertIcon hasErrors={hasErrors} hasWarnings={hasWarnings} />
       </HView>
     </TouchableOpacity>
   );

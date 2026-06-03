@@ -523,6 +523,7 @@ export const DataEntrySelectors = {
   selectCurrentPageEntityRelevantChildDefs,
   selectRecordEditLocked,
   selectCanEditRecord,
+  selectRecordNodePointerEditable,
 
   useRecord: () => useSelector(selectRecord),
 
