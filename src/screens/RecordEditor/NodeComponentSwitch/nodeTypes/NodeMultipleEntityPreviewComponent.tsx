@@ -1,6 +1,7 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
+import { StyleSheet } from "react-native";
 
-import { NodeDefs, Nodes, Records } from "@openforis/arena-core";
+import { NodeDefs } from "@openforis/arena-core";
 
 import { Button, VView } from "components";
 import {
@@ -12,7 +13,6 @@ import {
 import { log } from "utils";
 
 import { NodeComponentProps } from "./nodeComponentPropTypes";
-import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   editButton: { alignSelf: "center" },
@@ -23,26 +23,18 @@ export const NodeMultipleEntityPreviewComponent = (
 ) => {
   const { nodeDef, parentNodeUuid } = props;
 
-  log.debug("rendering NodeMultipleEntityPreviewComponent");
+  log.debug(
+    `rendering NodeMultipleEntityPreviewComponent for ${NodeDefs.getName(nodeDef)}`,
+  );
+
+  const entityDefUuid = nodeDef.uuid;
 
   const dispatch = useAppDispatch();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
-  const record = DataEntrySelectors.useRecord();
-  const entityDefUuid = nodeDef.uuid;
-
-  const editable = useMemo(() => {
-    if (!parentNodeUuid) {
-      return true;
-    }
-    const parentEntity = Records.getNodeByUuid(parentNodeUuid)(record);
-    if (!parentEntity) {
-      return true;
-    }
-    return (
-      Records.isNodeEditable({ record, node: parentEntity }) &&
-      Nodes.isChildEditable(parentEntity, entityDefUuid)
-    );
-  }, [entityDefUuid, parentNodeUuid, record]);
+  const editable = DataEntrySelectors.useRecordNodePointerEditable({
+    parentNodeUuid,
+    nodeDefUuid: entityDefUuid,
+  });
 
   const onEditPress = useCallback(
     () =>
