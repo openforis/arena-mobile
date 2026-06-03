@@ -13,7 +13,8 @@ type EntityButtonProps = {
 
 export const EntityButton = (props: EntityButtonProps) => {
   const { treeNode, isCurrentEntity } = props;
-  const { name, iconName, isRoot, entityPointer, hasErrors, hasWarnings } = treeNode;
+  const { name, iconName, isRoot, entityPointer, hasErrors, hasWarnings } =
+    treeNode;
 
   const dispatch = useAppDispatch();
 
@@ -28,15 +29,15 @@ export const EntityButton = (props: EntityButtonProps) => {
         ? styles.entityButtonCurrentEntityText
         : styles.entityButtonNonCurrentEntityText,
     ],
-    [isCurrentEntity]
+    [isCurrentEntity],
   );
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.entityButtonWrapper}>
       <HView style={styles.entityButtonContent} transparent>
-        {!isRoot && <Icon source={iconName} size={18} />}
-        <Text style={textStyle} textKey={name} />
         <AlertIcon hasErrors={hasErrors} hasWarnings={hasWarnings} />
+        {!isRoot && <Icon source={iconName} size={16} />}
+        <Text style={textStyle} textKey={name} />
       </HView>
     </TouchableOpacity>
   );

@@ -1,6 +1,7 @@
 import { StyleSheet, View } from "react-native";
 
-const INDENT_SIZE = 8;
+const INITIAL_INDENT = 0;
+const INDENT_SIZE = 20;
 
 type TreeLinesProps = {
   level: number;
@@ -11,7 +12,8 @@ export const TreeLines = ({ level }: TreeLinesProps) => {
 
   return (
     <>
-      {Array.from({ length: level }, (_, i) => (
+      <View style={styles.initialIndent} />
+      {Array.from({ length: level - 1 }, (_, i) => (
         <View key={i} style={styles.block} />
       ))}
     </>
@@ -19,6 +21,9 @@ export const TreeLines = ({ level }: TreeLinesProps) => {
 };
 
 const styles = StyleSheet.create({
+  initialIndent: {
+    width: INITIAL_INDENT,
+  },
   block: {
     width: INDENT_SIZE,
   },
