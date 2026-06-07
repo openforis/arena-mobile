@@ -153,13 +153,13 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
     </HView>
   );
 
-  const warning = !magnetometerAvailable ? (
+  const warning = magnetometerAvailable ? null : (
     <Text
       textKey="dataEntry:coordinate.magnetometerNotAvailable"
       variant="labelMedium"
       style={styles.warning}
     />
-  ) : null;
+  );
 
   if (isLandscape) {
     return (
