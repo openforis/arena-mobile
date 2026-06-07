@@ -22,20 +22,32 @@ type CompassRoseProps = {
 
 const toRad = (deg: number) => (deg * Math.PI) / 180;
 
-const getTickLen = (isCardinalDeg: boolean, isInterCardinal: boolean, isMajor: boolean, R: number): number => {
+const getTickLen = (
+  isCardinalDeg: boolean,
+  isInterCardinal: boolean,
+  isMajor: boolean,
+  R: number,
+): number => {
   if (isCardinalDeg) return R * TICK.cardinalLen;
   if (isInterCardinal) return R * TICK.interCardinalLen;
   if (isMajor) return R * TICK.majorLen;
   return R * TICK.minorLen;
 };
 
-const getTickStrokeWidth = (isCardinalDeg: boolean, isInterCardinal: boolean): number => {
+const getTickStrokeWidth = (
+  isCardinalDeg: boolean,
+  isInterCardinal: boolean,
+): number => {
   if (isCardinalDeg) return TICK.cardinalStroke;
   if (isInterCardinal) return TICK.interCardinalStroke;
   return TICK.minorStroke;
 };
 
-const getCardinalFontSize = (isNorth: boolean, isCardinalOnly: boolean, size: number): number => {
+const getCardinalFontSize = (
+  isNorth: boolean,
+  isCardinalOnly: boolean,
+  size: number,
+): number => {
   if (isNorth) return size * FONT_SIZE.north;
   if (isCardinalOnly) return size * FONT_SIZE.cardinal;
   return size * FONT_SIZE.interCardinal;
@@ -46,7 +58,13 @@ const getCardinalLabelR = (isCardinalOnly: boolean, R: number): number => {
   return R - R * LABEL_RADIUS.interCardinal;
 };
 
-const getCardinalFill = (isNorth: boolean, isCardinalOnly: boolean, primaryColor: string, cardinalColor: string, degreeColor: string): string => {
+const getCardinalFill = (
+  isNorth: boolean,
+  isCardinalOnly: boolean,
+  primaryColor: string,
+  cardinalColor: string,
+  degreeColor: string,
+): string => {
   if (isNorth) return primaryColor;
   if (isCardinalOnly) return cardinalColor;
   return degreeColor;
@@ -164,7 +182,9 @@ export const CompassRose = (props: CompassRoseProps) => {
         y1={cy - R * cosA}
         x2={cx + innerR * sinA}
         y2={cy - innerR * cosA}
-        stroke={isCardinalDeg || isInterCardinal ? majorTickColor : minorTickColor}
+        stroke={
+          isCardinalDeg || isInterCardinal ? majorTickColor : minorTickColor
+        }
         strokeWidth={tickStrokeWidth}
       />
     );
@@ -192,25 +212,11 @@ export const CompassRose = (props: CompassRoseProps) => {
   return (
     <View style={{ width: size, height: size }}>
       {/* ── Layer 0: Static background ──────────────────────────────────── */}
-      <Svg
-        width={size}
-        height={size}
-        style={absoluteFill}
-      >
+      <Svg width={size} height={size} style={absoluteFill}>
         {/* Bezel ring */}
-        <Circle
-          cx={cx}
-          cy={cy}
-          r={R + 2}
-          fill={bezzelColor}
-        />
+        <Circle cx={cx} cy={cy} r={R + 2} fill={bezzelColor} />
         {/* Face background */}
-        <Circle
-          cx={cx}
-          cy={cy}
-          r={R}
-          fill={surfaceColor}
-        />
+        <Circle cx={cx} cy={cy} r={R} fill={surfaceColor} />
         {/* Inner face ring (subtle) */}
         <Circle
           cx={cx}
@@ -241,14 +247,21 @@ export const CompassRose = (props: CompassRoseProps) => {
           {cardinals.map(({ label, deg }) => {
             const isNorth = deg === 0;
             const isCardinalOnly = deg % 90 === 0;
-
             const labelR = getCardinalLabelR(isCardinalOnly, R);
-
-            const cardinalFontSize = getCardinalFontSize(isNorth, isCardinalOnly, size);
-
-            const cardinalFill = getCardinalFill(isNorth, isCardinalOnly, primaryColor, cardinalColor, degreeColor);
-
-            const cardinalFontWeight = isNorth || isCardinalOnly ? "bold" : "normal";
+            const cardinalFontSize = getCardinalFontSize(
+              isNorth,
+              isCardinalOnly,
+              size,
+            );
+            const cardinalFill = getCardinalFill(
+              isNorth,
+              isCardinalOnly,
+              primaryColor,
+              cardinalColor,
+              degreeColor,
+            );
+            const cardinalFontWeight =
+              isNorth || isCardinalOnly ? "bold" : "normal";
             const rad = toRad(deg);
 
             return (
@@ -305,10 +318,7 @@ export const CompassRose = (props: CompassRoseProps) => {
       <Animated.View style={[layerStyle, arrowRotStyle]}>
         <Svg width={size} height={size}>
           {/* Arrow head */}
-          <Polygon
-            points={arrowHeadPoints}
-            fill={arrowColor}
-          />
+          <Polygon points={arrowHeadPoints} fill={arrowColor} />
           {/* Arrow shaft */}
           <Rect
             x={cx - stemHalfW}
