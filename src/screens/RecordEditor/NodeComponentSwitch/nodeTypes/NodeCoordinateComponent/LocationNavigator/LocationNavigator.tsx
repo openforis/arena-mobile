@@ -14,9 +14,11 @@ import {
 import { useMinScreenDimension } from "hooks";
 import { DeviceInfoSelectors } from "state";
 
-import { CompassRoseV2 } from "./CompassRoseV2";
+import { CompassRose } from "./CompassRose";
+import { ProximityDot } from "./ProximityDot";
 import styles from "./styles";
-import { useLocationNavigatorV2 } from "./useLocationNavigatorV2";
+import { useCompassAnimation } from "./useCompassAnimation";
+import { useLocationNavigator } from "./useLocationNavigator";
 
 const DEG = "°";
 
@@ -56,13 +58,13 @@ const InfoCard = ({ labelKey, value }: InfoCardProps) => {
   );
 };
 
-type LocationNavigatorV2Props = {
+type LocationNavigatorProps = {
   targetPoint: any;
   onDismiss: () => void;
   onUseCurrentLocation: (location: any) => void;
 };
 
-export const LocationNavigatorV2 = (props: LocationNavigatorV2Props) => {
+export const LocationNavigator = (props: LocationNavigatorProps) => {
   const { targetPoint, onDismiss, onUseCurrentLocation } = props;
 
   const minDimension = useMinScreenDimension();
@@ -82,17 +84,29 @@ export const LocationNavigatorV2 = (props: LocationNavigatorV2Props) => {
     onUseCurrentLocationPress,
     relativeAngle,
     targetCoordDisplay,
-  } = useLocationNavigatorV2({ targetPoint, onDismiss, onUseCurrentLocation });
+  } = useLocationNavigator({ targetPoint, onDismiss, onUseCurrentLocation });
+
+  const { compassRotStyle, arrowRotStyle } = useCompassAnimation({
+    heading,
+    relativeAngle,
+  });
 
   const compass = (
-    <CompassRoseV2
-      heading={heading}
-      relativeAngle={relativeAngle}
-      arrowColor={arrowColor}
-      isProximity={isProximity}
-      proximityDotAngle={angleToTarget}
-      size={size}
-    />
+    <VView style={{ width: size, height: size }}>
+      <CompassRose
+        compassRotStyle={compassRotStyle}
+        arrowRotStyle={arrowRotStyle}
+        arrowColor={arrowColor}
+        size={size}
+      />
+      {isProximity && (
+        <ProximityDot
+          size={size}
+          angle={angleToTarget}
+          compassRotStyle={compassRotStyle}
+        />
+      )}
+    </VView>
   );
 
   const infoCards = (

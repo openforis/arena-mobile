@@ -22,17 +22,17 @@ const initialState: NavigatorState = {
   distance: Infinity,
 };
 
-type UseLocationNavigatorV2Props = {
+type UseLocationNavigatorProps = {
   targetPoint: any;
   onDismiss: () => void;
   onUseCurrentLocation: (location: any) => void;
 };
 
-export const useLocationNavigatorV2 = ({
+export const useLocationNavigator = ({
   targetPoint,
   onDismiss,
   onUseCurrentLocation,
-}: UseLocationNavigatorV2Props) => {
+}: UseLocationNavigatorProps) => {
   const srsIndex = SurveySelectors.useCurrentSurveySrsIndex();
 
   const targetPointLatLong = useMemo(

@@ -14,7 +14,7 @@ import { LocationWatchingMonitor } from "components/LocationWatchingMonitor";
 import { log } from "utils";
 import { SrsDropdown } from "../../../SrsDropdown";
 import { useNodeCoordinateComponent } from "./useNodeCoordinateComponent";
-import { LocationNavigatorV2 as LocationNavigator } from "./LocationNavigatorV2";
+import { LocationNavigator } from "./LocationNavigator";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 import styles from "./styles";

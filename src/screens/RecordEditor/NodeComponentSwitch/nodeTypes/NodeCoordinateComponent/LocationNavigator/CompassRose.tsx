@@ -1,10 +1,5 @@
-import { useEffect, useRef } from "react";
-import { StyleSheet } from "react-native";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import { StyleSheet, ViewStyle } from "react-native";
+import Animated, { type AnimatedStyle } from "react-native-reanimated";
 import {
   Circle,
   Line,
@@ -18,19 +13,11 @@ import { useTheme } from "react-native-paper";
 import { View } from "components";
 import { ColorUtils } from "utils";
 
-type CompassRoseV2Props = {
-  heading: number;
-  relativeAngle: number;
+type CompassRoseProps = {
+  compassRotStyle: AnimatedStyle<ViewStyle>;
+  arrowRotStyle: AnimatedStyle<ViewStyle>;
   arrowColor: string;
-  isProximity: boolean;
-  proximityDotAngle: number;
   size: number;
-};
-
-const shortestAngleDelta = (from: number, to: number): number => {
-  let d = ((to - from) % 360 + 360) % 360;
-  if (d > 180) d -= 360;
-  return d;
 };
 
 const toRad = (deg: number) => (deg * Math.PI) / 180;
@@ -48,15 +35,67 @@ const cardinals = [
 
 const degreeLabels = [30, 60, 120, 150, 210, 240, 300, 330];
 
-export const CompassRoseV2 = (props: CompassRoseV2Props) => {
-  const {
-    heading,
-    relativeAngle,
-    arrowColor,
-    isProximity,
-    proximityDotAngle,
-    size,
-  } = props;
+const OPACITY = {
+  majorTick: 0.8,
+  minorTick: 0.25,
+  degreeLabel: 0.55,
+  bezel: 0.15,
+  accentRing: 0.12,
+  bottomTriangle: 0.4,
+  tailFin: 0.45,
+  arrowShaft: 0.75,
+  bearingIndicator: 0.75,
+} as const;
+
+// Ratios relative to compass radius R
+const TICK = {
+  cardinalLen: 0.16,
+  interCardinalLen: 0.12,
+  majorLen: 0.09,
+  minorLen: 0.05,
+  cardinalStroke: 2,
+  interCardinalStroke: 1.5,
+  minorStroke: 1,
+  majorStep: 10,
+  minorStep: 5,
+} as const;
+
+const ARROW = {
+  tipY: 0.68,
+  shoulderY: 0.32,
+  headHalfW: 0.08,
+  stemHalfW: 0.04,
+  tailY: 0.28,
+  tailHalfW: 0.055,
+  tailTopY: 0.08,
+  shaftGap: 0.05,
+  centerDotR: 0.05,
+} as const;
+
+const LABEL_RADIUS = {
+  cardinal: 0.22,
+  interCardinal: 0.18,
+  degree: 0.30,
+  accentRing: 0.18,
+} as const;
+
+// Ratios relative to compass size
+const FONT_SIZE = {
+  north: 0.065,
+  cardinal: 0.055,
+  interCardinal: 0.038,
+  degree: 0.028,
+} as const;
+
+// Fixed pixel values for the bearing indicator triangles
+const BEARING = {
+  triHalfW: 7,
+  triHeight: 16,
+  triPad: 6,
+} as const;
+
+export const CompassRose = (props: CompassRoseProps) => {
+  const { compassRotStyle, arrowRotStyle, arrowColor, size } = props;
 
   const theme = useTheme();
 
@@ -68,55 +107,26 @@ export const CompassRoseV2 = (props: CompassRoseV2Props) => {
   const primaryColor = theme.colors.primary;
   const onSurface = theme.colors.onSurface;
   const surfaceColor = theme.colors.surface;
-  const majorTickColor = ColorUtils.withOpacity(onSurface, 0.8);
-  const minorTickColor = ColorUtils.withOpacity(onSurface, 0.25);
+  const majorTickColor = ColorUtils.withOpacity(onSurface, OPACITY.majorTick);
+  const minorTickColor = ColorUtils.withOpacity(onSurface, OPACITY.minorTick);
   const cardinalColor = onSurface;
-  const degreeColor = ColorUtils.withOpacity(onSurface, 0.55);
-  const bezzelColor = ColorUtils.withOpacity(onSurface, 0.15);
-
-  // ── Reanimated shared values (accumulated, never wraps) ─────────────────
-  const compassRotSv = useSharedValue(0);
-  const arrowRotSv = useSharedValue(0);
-
-  const prevHeadingRef = useRef(heading);
-  const prevRelAngleRef = useRef(relativeAngle);
-
-  useEffect(() => {
-    const delta = shortestAngleDelta(prevHeadingRef.current, heading);
-    prevHeadingRef.current = heading;
-    compassRotSv.value = withTiming(compassRotSv.value - delta, {
-      duration: 150,
-    });
-  }, [heading, compassRotSv]);
-
-  useEffect(() => {
-    const delta = shortestAngleDelta(prevRelAngleRef.current, relativeAngle);
-    prevRelAngleRef.current = relativeAngle;
-    arrowRotSv.value = withTiming(arrowRotSv.value + delta, { duration: 150 });
-  }, [relativeAngle, arrowRotSv]);
-
-  const compassRotStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${compassRotSv.value}deg` }],
-  }));
-
-  const arrowRotStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${arrowRotSv.value}deg` }],
-  }));
+  const degreeColor = ColorUtils.withOpacity(onSurface, OPACITY.degreeLabel);
+  const bezzelColor = ColorUtils.withOpacity(onSurface, OPACITY.bezel);
 
   // ── Tick marks ──────────────────────────────────────────────────────────
   const ticks = Array.from({ length: 360 }, (_, i) => {
     const isCardinalDeg = i % 90 === 0;
     const isInterCardinal = i % 45 === 0 && !isCardinalDeg;
-    const isMajor = i % 10 === 0;
-    if (!isMajor && i % 5 !== 0) return null;
+    const isMajor = i % TICK.majorStep === 0;
+    if (!isMajor && i % TICK.minorStep !== 0) return null;
 
     const tickLen = isCardinalDeg
-      ? R * 0.16
+      ? R * TICK.cardinalLen
       : isInterCardinal
-        ? R * 0.12
+        ? R * TICK.interCardinalLen
         : isMajor
-          ? R * 0.09
-          : R * 0.05;
+          ? R * TICK.majorLen
+          : R * TICK.minorLen;
 
     const innerR = R - tickLen;
     const rad = toRad(i);
@@ -131,33 +141,26 @@ export const CompassRoseV2 = (props: CompassRoseV2Props) => {
         x2={cx + innerR * sinA}
         y2={cy - innerR * cosA}
         stroke={isCardinalDeg || isInterCardinal ? majorTickColor : minorTickColor}
-        strokeWidth={isCardinalDeg ? 2 : isInterCardinal ? 1.5 : 1}
+        strokeWidth={isCardinalDeg ? TICK.cardinalStroke : isInterCardinal ? TICK.interCardinalStroke : TICK.minorStroke}
       />
     );
   });
 
-  // ── Proximity dot ───────────────────────────────────────────────────────
-  const proximityRad = toRad(proximityDotAngle);
-  const dotR = R - 10;
-  const dotX = cx + dotR * Math.sin(proximityRad);
-  const dotY = cy - dotR * Math.cos(proximityRad);
-
   // ── Arrow geometry (all relative to compass center) ─────────────────────
-  const arrowTipY = cy - R * 0.68;
-  const arrowShoulderY = cy - R * 0.32;
-  const arrowHeadHalfW = R * 0.08;
-  const stemHalfW = R * 0.04;
-  const tailY = cy + R * 0.28;
-  const tailHalfW = R * 0.055;
+  const arrowTipY = cy - R * ARROW.tipY;
+  const arrowShoulderY = cy - R * ARROW.shoulderY;
+  const arrowHeadHalfW = R * ARROW.headHalfW;
+  const stemHalfW = R * ARROW.stemHalfW;
+  const tailY = cy + R * ARROW.tailY;
+  const tailHalfW = R * ARROW.tailHalfW;
 
   const arrowHeadPoints = `${cx},${arrowTipY} ${cx - arrowHeadHalfW},${arrowShoulderY} ${cx + arrowHeadHalfW},${arrowShoulderY}`;
-  const tailPoints = `${cx},${tailY} ${cx - tailHalfW},${cy + R * 0.08} ${cx + tailHalfW},${cy + R * 0.08}`;
+  const tailPoints = `${cx},${tailY} ${cx - tailHalfW},${cy + R * ARROW.tailTopY} ${cx + tailHalfW},${cy + R * ARROW.tailTopY}`;
 
   // ── Bearing indicator triangles (fixed, not rotating) ───────────────────
-  const triHalfW = 7;
-  const triHeight = 16;
-  const topTriPoints = `${cx - triHalfW},${6} ${cx + triHalfW},${6} ${cx},${6 + triHeight}`;
-  const botTriPoints = `${cx - triHalfW},${size - 6} ${cx + triHalfW},${size - 6} ${cx},${size - 6 - triHeight}`;
+  const { triHalfW, triHeight, triPad } = BEARING;
+  const topTriPoints = `${cx - triHalfW},${triPad} ${cx + triHalfW},${triPad} ${cx},${triPad + triHeight}`;
+  const botTriPoints = `${cx - triHalfW},${size - triPad} ${cx + triHalfW},${size - triPad} ${cx},${size - triPad - triHeight}`;
 
   const absoluteFill = StyleSheet.absoluteFillObject;
   const layerStyle = [absoluteFill, { width: size, height: size }];
@@ -197,8 +200,8 @@ export const CompassRoseV2 = (props: CompassRoseV2Props) => {
         <Circle
           cx={cx}
           cy={cy}
-          r={R * 0.18}
-          stroke={ColorUtils.withOpacity(onSurface, 0.12)}
+          r={R * LABEL_RADIUS.accentRing}
+          stroke={ColorUtils.withOpacity(onSurface, OPACITY.accentRing)}
           strokeWidth={1}
           fill="none"
         />
@@ -214,7 +217,7 @@ export const CompassRoseV2 = (props: CompassRoseV2Props) => {
           {cardinals.map(({ label, deg }) => {
             const isNorth = deg === 0;
             const isCardinalOnly = deg % 90 === 0;
-            const labelR = isCardinalOnly ? R - R * 0.22 : R - R * 0.18;
+            const labelR = isCardinalOnly ? R - R * LABEL_RADIUS.cardinal : R - R * LABEL_RADIUS.interCardinal;
             const rad = toRad(deg);
             return (
               <SvgText
@@ -223,7 +226,7 @@ export const CompassRoseV2 = (props: CompassRoseV2Props) => {
                 y={cy - labelR * Math.cos(rad)}
                 textAnchor="middle"
                 alignmentBaseline="central"
-                fontSize={isNorth ? size * 0.065 : isCardinalOnly ? size * 0.055 : size * 0.038}
+                fontSize={isNorth ? size * FONT_SIZE.north : isCardinalOnly ? size * FONT_SIZE.cardinal : size * FONT_SIZE.interCardinal}
                 fontWeight={isNorth || isCardinalOnly ? "bold" : "normal"}
                 fill={isNorth ? primaryColor : isCardinalOnly ? cardinalColor : degreeColor}
               >
@@ -235,7 +238,7 @@ export const CompassRoseV2 = (props: CompassRoseV2Props) => {
           {/* Degree labels every 30° (non-cardinal/intercardinal) */}
           {degreeLabels.map((deg) => {
             const rad = toRad(deg);
-            const labelR = R - R * 0.30;
+            const labelR = R - R * LABEL_RADIUS.degree;
             return (
               <SvgText
                 key={`deg-${deg}`}
@@ -243,18 +246,13 @@ export const CompassRoseV2 = (props: CompassRoseV2Props) => {
                 y={cy - labelR * Math.cos(rad)}
                 textAnchor="middle"
                 alignmentBaseline="central"
-                fontSize={size * 0.028}
+                fontSize={size * FONT_SIZE.degree}
                 fill={degreeColor}
               >
                 {deg}
               </SvgText>
             );
           })}
-
-          {/* Proximity dot at the target bearing on the compass edge */}
-          {isProximity && (
-            <Circle cx={dotX} cy={dotY} r={9} fill="#4caf50" />
-          )}
         </Svg>
       </Animated.View>
 
@@ -263,15 +261,15 @@ export const CompassRoseV2 = (props: CompassRoseV2Props) => {
         <Polygon
           points={topTriPoints}
           fill={primaryColor}
-          opacity={0.75}
+          opacity={OPACITY.bearingIndicator}
         />
         <Polygon
           points={botTriPoints}
-          fill={ColorUtils.withOpacity(primaryColor, 0.4)}
+          fill={ColorUtils.withOpacity(primaryColor, OPACITY.bottomTriangle)}
         />
       </Svg>
 
-      {/* ── Layer 3: Rotating arrow (+ proximity dot) ────────────────────── */}
+      {/* ── Layer 3: Rotating arrow ──────────────────────────────────────── */}
       <Animated.View style={[layerStyle, arrowRotStyle]}>
         <Svg width={size} height={size}>
           {/* Arrow head */}
@@ -284,17 +282,17 @@ export const CompassRoseV2 = (props: CompassRoseV2Props) => {
             x={cx - stemHalfW}
             y={arrowShoulderY}
             width={stemHalfW * 2}
-            height={tailY - arrowShoulderY - R * 0.05}
+            height={tailY - arrowShoulderY - R * ARROW.shaftGap}
             fill={arrowColor}
-            opacity={0.75}
+            opacity={OPACITY.arrowShaft}
           />
           {/* Tail fin */}
           <Polygon
             points={tailPoints}
-            fill={ColorUtils.withOpacity(arrowColor, 0.45)}
+            fill={ColorUtils.withOpacity(arrowColor, OPACITY.tailFin)}
           />
           {/* Center dot */}
-          <Circle cx={cx} cy={cy} r={R * 0.05} fill={arrowColor} />
+          <Circle cx={cx} cy={cy} r={R * ARROW.centerDotR} fill={arrowColor} />
         </Svg>
       </Animated.View>
     </View>
