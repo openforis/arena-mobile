@@ -5,28 +5,19 @@ import { Numbers, Objects } from "@openforis/arena-core";
 
 import { AverageAnglePicker } from "utils/AverageAnglePicker";
 import { Functions } from "utils/Functions";
-import { DeviceInfoSelectors } from "state/deviceInfo";
 import { Permissions } from "utils/Permissions";
 import { log } from "utils/Logger";
 
 const updateHeadingThrottleDelay = 200;
 const averageAnglePicker = new AverageAnglePicker();
 
-const locationHeadingToAngle = (
-  angle: number,
-  orientationIsLandscape: boolean,
-): number => {
-  const result =
-    Numbers.roundToPrecision(angle, 1) + (orientationIsLandscape ? 0 : -90);
-  return Numbers.absMod(360)(result);
+const locationHeadingToAngle = (angle: number): number => {
+  return Numbers.absMod(360)(Numbers.roundToPrecision(angle, 1));
 };
 
 export const useMagnetometerHeading = () => {
   const headingWatchSubscriptionRef = useRef(null as any);
   const lastMagnetometerAngleRef = useRef(0);
-  const orientationIsLandscape =
-    DeviceInfoSelectors.useOrientationIsLandscape();
-
   const [heading, setHeading] = useState(0);
   const [magnetometerAvailable, setMagnetometerAvailable] = useState(true);
 
@@ -66,10 +57,7 @@ export const useMagnetometerHeading = () => {
 
           // Prefer trueHeading (geographic north), fallback to magneticHeading
           const currentHeading = trueHeading >= 0 ? trueHeading : magHeading;
-          const adjustedHeading = locationHeadingToAngle(
-            currentHeading,
-            orientationIsLandscape,
-          );
+          const adjustedHeading = locationHeadingToAngle(currentHeading);
           let avgAngle = averageAnglePicker.push(adjustedHeading);
           avgAngle = Numbers.absMod(360)(avgAngle);
           lastMagnetometerAngleRef.current = avgAngle;
@@ -82,7 +70,7 @@ export const useMagnetometerHeading = () => {
     } catch (error: any) {
       onError(error?.message || String(error));
     }
-  }, [orientationIsLandscape, throttledUpdateHeading]);
+  }, [throttledUpdateHeading]);
 
   useEffect(() => {
     watchHeading();
