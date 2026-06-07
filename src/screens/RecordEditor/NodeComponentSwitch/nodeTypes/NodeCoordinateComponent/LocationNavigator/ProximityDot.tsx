@@ -1,5 +1,4 @@
-import { StyleSheet } from "react-native";
-import { ViewStyle } from "react-native";
+import { StyleSheet, ViewStyle } from "react-native";
 import Animated, { type AnimatedStyle } from "react-native-reanimated";
 import { Circle, Svg } from "react-native-svg";
 

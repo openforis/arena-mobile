@@ -23,12 +23,12 @@ import { useLocationNavigator } from "./useLocationNavigator";
 const DEG = "°";
 
 const formatAngle = (v: number | null | undefined): string => {
-  if (v == null || !isFinite(v)) return "-";
+  if (v == null || !Number.isFinite(v)) return "-";
   return `${v.toFixed(1)}${DEG}`;
 };
 
 const formatDistance = (v: number | null | undefined): string => {
-  if (v == null || !isFinite(v) || v === Infinity) return "-";
+  if (v == null || !Number.isFinite(v) || v === Infinity) return "-";
   return `${v.toFixed(1)} m`;
 };
 

@@ -22,6 +22,13 @@ type CompassRoseProps = {
 
 const toRad = (deg: number) => (deg * Math.PI) / 180;
 
+const getTickLen = (isCardinalDeg: boolean, isInterCardinal: boolean, isMajor: boolean, R: number): number => {
+  if (isCardinalDeg) return R * TICK.cardinalLen;
+  if (isInterCardinal) return R * TICK.interCardinalLen;
+  if (isMajor) return R * TICK.majorLen;
+  return R * TICK.minorLen;
+};
+
 const cardinals = [
   { label: "N", deg: 0 },
   { label: "NE", deg: 45 },
@@ -75,7 +82,7 @@ const ARROW = {
 const LABEL_RADIUS = {
   cardinal: 0.22,
   interCardinal: 0.18,
-  degree: 0.30,
+  degree: 0.3,
   accentRing: 0.18,
 } as const;
 
@@ -120,18 +127,16 @@ export const CompassRose = (props: CompassRoseProps) => {
     const isMajor = i % TICK.majorStep === 0;
     if (!isMajor && i % TICK.minorStep !== 0) return null;
 
-    const tickLen = isCardinalDeg
-      ? R * TICK.cardinalLen
-      : isInterCardinal
-        ? R * TICK.interCardinalLen
-        : isMajor
-          ? R * TICK.majorLen
-          : R * TICK.minorLen;
-
+    const tickLen = getTickLen(isCardinalDeg, isInterCardinal, isMajor, R);
     const innerR = R - tickLen;
     const rad = toRad(i);
     const sinA = Math.sin(rad);
     const cosA = Math.cos(rad);
+    const tickStrokeWidth = isCardinalDeg
+      ? TICK.cardinalStroke
+      : isInterCardinal
+        ? TICK.interCardinalStroke
+        : TICK.minorStroke;
 
     return (
       <Line
@@ -141,7 +146,7 @@ export const CompassRose = (props: CompassRoseProps) => {
         x2={cx + innerR * sinA}
         y2={cy - innerR * cosA}
         stroke={isCardinalDeg || isInterCardinal ? majorTickColor : minorTickColor}
-        strokeWidth={isCardinalDeg ? TICK.cardinalStroke : isInterCardinal ? TICK.interCardinalStroke : TICK.minorStroke}
+        strokeWidth={tickStrokeWidth}
       />
     );
   });
@@ -219,6 +224,12 @@ export const CompassRose = (props: CompassRoseProps) => {
             const isCardinalOnly = deg % 90 === 0;
             const labelR = isCardinalOnly ? R - R * LABEL_RADIUS.cardinal : R - R * LABEL_RADIUS.interCardinal;
             const rad = toRad(deg);
+            const cardinalFontSize = isNorth
+              ? size * FONT_SIZE.north
+              : isCardinalOnly
+                ? size * FONT_SIZE.cardinal
+                : size * FONT_SIZE.interCardinal;
+            const cardinalFill = isNorth ? primaryColor : isCardinalOnly ? cardinalColor : degreeColor;
             return (
               <SvgText
                 key={label}
@@ -226,9 +237,9 @@ export const CompassRose = (props: CompassRoseProps) => {
                 y={cy - labelR * Math.cos(rad)}
                 textAnchor="middle"
                 alignmentBaseline="central"
-                fontSize={isNorth ? size * FONT_SIZE.north : isCardinalOnly ? size * FONT_SIZE.cardinal : size * FONT_SIZE.interCardinal}
+                fontSize={cardinalFontSize}
                 fontWeight={isNorth || isCardinalOnly ? "bold" : "normal"}
-                fill={isNorth ? primaryColor : isCardinalOnly ? cardinalColor : degreeColor}
+                fill={cardinalFill}
               >
                 {label}
               </SvgText>
