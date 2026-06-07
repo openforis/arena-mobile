@@ -1,0 +1,190 @@
+import { useMemo } from "react";
+import { useTheme } from "react-native-paper";
+
+import {
+  Button,
+  FlexWrapView,
+  FormItem,
+  HView,
+  Modal,
+  ScrollView,
+  Text,
+  VView,
+} from "components";
+import { useMinScreenDimension } from "hooks";
+import { DeviceInfoSelectors } from "state";
+
+import { CompassRoseV2 } from "./CompassRoseV2";
+import styles from "./styles";
+import { useLocationNavigatorV2 } from "./useLocationNavigatorV2";
+
+const DEG = "°";
+
+const formatAngle = (v: number | null | undefined): string => {
+  if (v == null || !isFinite(v)) return "-";
+  return `${v.toFixed(1)}${DEG}`;
+};
+
+const formatDistance = (v: number | null | undefined): string => {
+  if (v == null || !isFinite(v) || v === Infinity) return "-";
+  return `${v.toFixed(1)} m`;
+};
+
+type InfoCardProps = {
+  labelKey: string;
+  value: string;
+};
+
+const InfoCard = ({ labelKey, value }: InfoCardProps) => {
+  const theme = useTheme();
+  const containerStyle = useMemo(
+    () => [styles.infoCard, { backgroundColor: theme.colors.surfaceVariant }],
+    [theme],
+  );
+
+  return (
+    <VView style={containerStyle}>
+      <Text
+        textKey={labelKey}
+        variant="labelSmall"
+        style={styles.infoCardLabel}
+      />
+      <Text variant="titleMedium" style={styles.infoCardValue}>
+        {value}
+      </Text>
+    </VView>
+  );
+};
+
+type LocationNavigatorV2Props = {
+  targetPoint: any;
+  onDismiss: () => void;
+  onUseCurrentLocation: (location: any) => void;
+};
+
+export const LocationNavigatorV2 = (props: LocationNavigatorV2Props) => {
+  const { targetPoint, onDismiss, onUseCurrentLocation } = props;
+
+  const minDimension = useMinScreenDimension();
+  const isLandscape = DeviceInfoSelectors.useOrientationIsLandscape();
+  const size = isLandscape ? minDimension - 110 : minDimension - 60;
+
+  const {
+    accuracy,
+    angleToTarget,
+    arrowColor,
+    currentCoordDisplay,
+    currentLocation,
+    distance,
+    heading,
+    isProximity,
+    magnetometerAvailable,
+    onUseCurrentLocationPress,
+    relativeAngle,
+    targetCoordDisplay,
+  } = useLocationNavigatorV2({ targetPoint, onDismiss, onUseCurrentLocation });
+
+  const compass = (
+    <CompassRoseV2
+      heading={heading}
+      relativeAngle={relativeAngle}
+      arrowColor={arrowColor}
+      isProximity={isProximity}
+      proximityDotAngle={angleToTarget}
+      size={size}
+    />
+  );
+
+  const infoCards = (
+    <FlexWrapView style={styles.cardsRow}>
+      <InfoCard
+        labelKey="dataEntry:coordinate.distance"
+        value={formatDistance(distance)}
+      />
+      <InfoCard
+        labelKey="dataEntry:coordinate.heading"
+        value={formatAngle(heading)}
+      />
+      <InfoCard
+        labelKey="dataEntry:coordinate.angleToTargetLocation"
+        value={formatAngle(angleToTarget)}
+      />
+      <InfoCard
+        labelKey="dataEntry:coordinate.accuracy"
+        value={formatDistance(accuracy)}
+      />
+    </FlexWrapView>
+  );
+
+  const coords = (
+    <VView style={styles.coordsSection}>
+      {targetCoordDisplay && (
+        <FormItem labelKey="dataEntry:coordinate.targetLocation">
+          {targetCoordDisplay}
+        </FormItem>
+      )}
+      <FormItem labelKey="dataEntry:coordinate.currentLocation">
+        {currentCoordDisplay}
+      </FormItem>
+    </VView>
+  );
+
+  const actionButton = (
+    <HView style={styles.buttonRow}>
+      <Button
+        disabled={!currentLocation}
+        onPress={onUseCurrentLocationPress}
+        textKey="dataEntry:coordinate.useCurrentLocation"
+      />
+    </HView>
+  );
+
+  const warning = !magnetometerAvailable ? (
+    <Text
+      textKey="dataEntry:coordinate.magnetometerNotAvailable"
+      variant="labelMedium"
+      style={styles.warning}
+    />
+  ) : null;
+
+  if (isLandscape) {
+    return (
+      <Modal
+        onDismiss={onDismiss}
+        titleKey="dataEntry:coordinate.navigateToTarget"
+      >
+        <HView style={styles.containerLandscape}>
+          {/* Left column: compass */}
+          <VView style={styles.compassColumnLandscape}>{compass}</VView>
+
+          {/* Right column: info panel */}
+          <ScrollView style={styles.infoColumnLandscape}>
+            <VView style={styles.infoColumnContent}>
+              {warning}
+              {infoCards}
+              {coords}
+              {actionButton}
+            </VView>
+          </ScrollView>
+        </HView>
+      </Modal>
+    );
+  }
+
+  return (
+    <Modal
+      onDismiss={onDismiss}
+      titleKey="dataEntry:coordinate.navigateToTarget"
+    >
+      <ScrollView>
+        <VView style={styles.container}>
+          {warning}
+          <VView style={styles.compassWrapper}>{compass}</VView>
+          {infoCards}
+          {coords}
+          {actionButton}
+        </VView>
+      </ScrollView>
+    </Modal>
+  );
+};
