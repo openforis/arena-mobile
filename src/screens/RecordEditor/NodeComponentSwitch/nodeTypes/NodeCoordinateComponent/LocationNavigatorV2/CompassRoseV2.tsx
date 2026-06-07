@@ -250,6 +250,11 @@ export const CompassRoseV2 = (props: CompassRoseV2Props) => {
               </SvgText>
             );
           })}
+
+          {/* Proximity dot at the target bearing on the compass edge */}
+          {isProximity && (
+            <Circle cx={dotX} cy={dotY} r={9} fill="#4caf50" />
+          )}
         </Svg>
       </Animated.View>
 
@@ -290,11 +295,6 @@ export const CompassRoseV2 = (props: CompassRoseV2Props) => {
           />
           {/* Center dot */}
           <Circle cx={cx} cy={cy} r={R * 0.05} fill={arrowColor} />
-
-          {/* Proximity dot on compass edge */}
-          {isProximity && (
-            <Circle cx={dotX} cy={dotY} r={9} fill="#4caf50" />
-          )}
         </Svg>
       </Animated.View>
     </View>
