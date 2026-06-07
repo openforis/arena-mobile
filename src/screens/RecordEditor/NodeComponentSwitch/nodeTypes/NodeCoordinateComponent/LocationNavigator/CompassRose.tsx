@@ -29,6 +29,29 @@ const getTickLen = (isCardinalDeg: boolean, isInterCardinal: boolean, isMajor: b
   return R * TICK.minorLen;
 };
 
+const getTickStrokeWidth = (isCardinalDeg: boolean, isInterCardinal: boolean): number => {
+  if (isCardinalDeg) return TICK.cardinalStroke;
+  if (isInterCardinal) return TICK.interCardinalStroke;
+  return TICK.minorStroke;
+};
+
+const getCardinalFontSize = (isNorth: boolean, isCardinalOnly: boolean, size: number): number => {
+  if (isNorth) return size * FONT_SIZE.north;
+  if (isCardinalOnly) return size * FONT_SIZE.cardinal;
+  return size * FONT_SIZE.interCardinal;
+};
+
+const getCardinalLabelR = (isCardinalOnly: boolean, R: number): number => {
+  if (isCardinalOnly) return R - R * LABEL_RADIUS.cardinal;
+  return R - R * LABEL_RADIUS.interCardinal;
+};
+
+const getCardinalFill = (isNorth: boolean, isCardinalOnly: boolean, primaryColor: string, cardinalColor: string, degreeColor: string): string => {
+  if (isNorth) return primaryColor;
+  if (isCardinalOnly) return cardinalColor;
+  return degreeColor;
+};
+
 const cardinals = [
   { label: "N", deg: 0 },
   { label: "NE", deg: 45 },
@@ -132,11 +155,7 @@ export const CompassRose = (props: CompassRoseProps) => {
     const rad = toRad(i);
     const sinA = Math.sin(rad);
     const cosA = Math.cos(rad);
-    const tickStrokeWidth = isCardinalDeg
-      ? TICK.cardinalStroke
-      : isInterCardinal
-        ? TICK.interCardinalStroke
-        : TICK.minorStroke;
+    const tickStrokeWidth = getTickStrokeWidth(isCardinalDeg, isInterCardinal);
 
     return (
       <Line
@@ -222,14 +241,16 @@ export const CompassRose = (props: CompassRoseProps) => {
           {cardinals.map(({ label, deg }) => {
             const isNorth = deg === 0;
             const isCardinalOnly = deg % 90 === 0;
-            const labelR = isCardinalOnly ? R - R * LABEL_RADIUS.cardinal : R - R * LABEL_RADIUS.interCardinal;
+
+            const labelR = getCardinalLabelR(isCardinalOnly, R);
+
+            const cardinalFontSize = getCardinalFontSize(isNorth, isCardinalOnly, size);
+
+            const cardinalFill = getCardinalFill(isNorth, isCardinalOnly, primaryColor, cardinalColor, degreeColor);
+
+            const cardinalFontWeight = isNorth || isCardinalOnly ? "bold" : "normal";
             const rad = toRad(deg);
-            const cardinalFontSize = isNorth
-              ? size * FONT_SIZE.north
-              : isCardinalOnly
-                ? size * FONT_SIZE.cardinal
-                : size * FONT_SIZE.interCardinal;
-            const cardinalFill = isNorth ? primaryColor : isCardinalOnly ? cardinalColor : degreeColor;
+
             return (
               <SvgText
                 key={label}
@@ -238,7 +259,7 @@ export const CompassRose = (props: CompassRoseProps) => {
                 textAnchor="middle"
                 alignmentBaseline="central"
                 fontSize={cardinalFontSize}
-                fontWeight={isNorth || isCardinalOnly ? "bold" : "normal"}
+                fontWeight={cardinalFontWeight}
                 fill={cardinalFill}
               >
                 {label}
