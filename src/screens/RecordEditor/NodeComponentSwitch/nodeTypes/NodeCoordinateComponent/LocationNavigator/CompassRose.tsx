@@ -4,7 +4,6 @@ import {
   Circle,
   Line,
   Polygon,
-  Rect,
   Svg,
   Text as SvgText,
 } from "react-native-svg";
@@ -15,8 +14,6 @@ import { ColorUtils } from "utils";
 
 type CompassRoseProps = {
   compassRotStyle: AnimatedStyle<ViewStyle>;
-  arrowRotStyle: AnimatedStyle<ViewStyle>;
-  arrowColor: string;
   size: number;
 };
 
@@ -90,8 +87,6 @@ const OPACITY = {
   bezel: 0.15,
   accentRing: 0.12,
   bottomTriangle: 0.4,
-  tailFin: 0.45,
-  arrowShaft: 0.75,
   bearingIndicator: 0.75,
 } as const;
 
@@ -106,18 +101,6 @@ const TICK = {
   minorStroke: 1,
   majorStep: 10,
   minorStep: 5,
-} as const;
-
-const ARROW = {
-  tipY: 0.68,
-  shoulderY: 0.32,
-  headHalfW: 0.08,
-  stemHalfW: 0.04,
-  tailY: 0.28,
-  tailHalfW: 0.055,
-  tailTopY: 0.08,
-  shaftGap: 0.05,
-  centerDotR: 0.05,
 } as const;
 
 const LABEL_RADIUS = {
@@ -143,7 +126,7 @@ const BEARING = {
 } as const;
 
 export const CompassRose = (props: CompassRoseProps) => {
-  const { compassRotStyle, arrowRotStyle, arrowColor, size } = props;
+  const { compassRotStyle, size } = props;
 
   const theme = useTheme();
 
@@ -189,17 +172,6 @@ export const CompassRose = (props: CompassRoseProps) => {
       />
     );
   });
-
-  // ── Arrow geometry (all relative to compass center) ─────────────────────
-  const arrowTipY = cy - R * ARROW.tipY;
-  const arrowShoulderY = cy - R * ARROW.shoulderY;
-  const arrowHeadHalfW = R * ARROW.headHalfW;
-  const stemHalfW = R * ARROW.stemHalfW;
-  const tailY = cy + R * ARROW.tailY;
-  const tailHalfW = R * ARROW.tailHalfW;
-
-  const arrowHeadPoints = `${cx},${arrowTipY} ${cx - arrowHeadHalfW},${arrowShoulderY} ${cx + arrowHeadHalfW},${arrowShoulderY}`;
-  const tailPoints = `${cx},${tailY} ${cx - tailHalfW},${cy + R * ARROW.tailTopY} ${cx + tailHalfW},${cy + R * ARROW.tailTopY}`;
 
   // ── Bearing indicator triangles (fixed, not rotating) ───────────────────
   const { triHalfW, triHeight, triPad } = BEARING;
@@ -314,29 +286,6 @@ export const CompassRose = (props: CompassRoseProps) => {
         />
       </Svg>
 
-      {/* ── Layer 3: Rotating arrow ──────────────────────────────────────── */}
-      <Animated.View style={[layerStyle, arrowRotStyle]}>
-        <Svg width={size} height={size}>
-          {/* Arrow head */}
-          <Polygon points={arrowHeadPoints} fill={arrowColor} />
-          {/* Arrow shaft */}
-          <Rect
-            x={cx - stemHalfW}
-            y={arrowShoulderY}
-            width={stemHalfW * 2}
-            height={tailY - arrowShoulderY - R * ARROW.shaftGap}
-            fill={arrowColor}
-            opacity={OPACITY.arrowShaft}
-          />
-          {/* Tail fin */}
-          <Polygon
-            points={tailPoints}
-            fill={ColorUtils.withOpacity(arrowColor, OPACITY.tailFin)}
-          />
-          {/* Center dot */}
-          <Circle cx={cx} cy={cy} r={R * ARROW.centerDotR} fill={arrowColor} />
-        </Svg>
-      </Animated.View>
     </View>
   );
 };
