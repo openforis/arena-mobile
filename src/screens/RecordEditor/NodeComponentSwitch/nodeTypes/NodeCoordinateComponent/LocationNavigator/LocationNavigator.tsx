@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import { useTheme } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, useTheme } from "react-native-paper";
 
 import {
   Button,
@@ -95,16 +96,24 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
   const compass = (
     <VView style={{ width: size, height: size }}>
       <CompassRose compassRotStyle={compassRotStyle} size={size} />
-      <NavigatorArrow
-        arrowRotStyle={arrowRotStyle}
-        arrowColor={arrowColor}
-        size={size}
-      />
-      {isProximity && (
+      {!currentLocation && (
+        <View style={[StyleSheet.absoluteFillObject, styles.loadingOverlay]}>
+          <ActivityIndicator size="large" />
+        </View>
+      )}
+      {currentLocation && !isProximity && (
+        <NavigatorArrow
+          arrowRotStyle={arrowRotStyle}
+          arrowColor={arrowColor}
+          size={size}
+        />
+      )}
+      {currentLocation && isProximity && (
         <ProximityDot
           size={size}
           angle={angleToTarget}
-          compassRotStyle={compassRotStyle}
+          distance={distance}
+          accuracy={accuracy}
         />
       )}
     </VView>

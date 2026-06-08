@@ -33,6 +33,10 @@ export default StyleSheet.create({
   },
 
   // ── Shared ─────────────────────────────────────────────────────────────
+  loadingOverlay: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
   warning: {
     color: "#f44336",
     marginBottom: 4,
