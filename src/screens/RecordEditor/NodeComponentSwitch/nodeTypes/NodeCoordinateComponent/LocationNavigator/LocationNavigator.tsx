@@ -15,6 +15,7 @@ import { useMinScreenDimension } from "hooks";
 import { DeviceInfoSelectors } from "state";
 
 import { CompassRose } from "./CompassRose";
+import { NavigatorArrow } from "./NavigatorArrow";
 import { ProximityDot } from "./ProximityDot";
 import styles from "./styles";
 import { useCompassAnimation } from "./useCompassAnimation";
@@ -93,8 +94,8 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
 
   const compass = (
     <VView style={{ width: size, height: size }}>
-      <CompassRose
-        compassRotStyle={compassRotStyle}
+      <CompassRose compassRotStyle={compassRotStyle} size={size} />
+      <NavigatorArrow
         arrowRotStyle={arrowRotStyle}
         arrowColor={arrowColor}
         size={size}
