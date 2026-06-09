@@ -45,14 +45,11 @@ const toPortraitFrame = (v: Vector3, orientation: number): Vector3 => {
 //   East  = mx·cos θ − mz·sin θ
 //   North = my·cos φ + (mx·sin θ + mz·cos θ)·sin φ
 //   Heading (CW from North) = atan2(−East, North)
-const computeTiltCompensatedHeading = (
-  mag: Vector3,
-  acc: Vector3,
-): number => {
+const computeTiltCompensatedHeading = (mag: Vector3, acc: Vector3): number => {
   const { x: mx, y: my, z: mz } = mag;
   const { x: ax, y: ay, z: az } = acc;
 
-  const aNorm = Math.hypot(ax * ax + ay * ay + az * az);
+  const aNorm = Math.hypot(ax, ay, az);
   if (aNorm < 0.001) return 0;
 
   const axN = ax / aNorm;
@@ -60,7 +57,7 @@ const computeTiltCompensatedHeading = (
   const azN = az / aNorm;
 
   // ay = -g·sinφ  →  φ = atan2(-ay, √(ax²+az²))
-  const roll = Math.atan2(-ayN, Math.hypot(axN * axN + azN * azN));
+  const roll = Math.atan2(-ayN, Math.hypot(axN, azN));
   // ax = g·cosφ·sinθ, az = g·cosφ·cosθ  →  θ = atan2(ax, az)
   const pitch = Math.atan2(axN, azN);
 
@@ -70,8 +67,7 @@ const computeTiltCompensatedHeading = (
   const sinPitch = Math.sin(pitch);
 
   const east = mx * cosPitch - mz * sinPitch;
-  const north =
-    my * cosRoll + (mx * sinPitch + mz * cosPitch) * sinRoll;
+  const north = my * cosRoll + (mx * sinPitch + mz * cosPitch) * sinRoll;
 
   return Numbers.absMod(360)(Math.atan2(-east, north) * (180 / Math.PI));
 };
@@ -80,7 +76,7 @@ const computeTiltCompensatedHeading = (
 const circularEma = (prev: number, next: number, alpha: number): number => {
   const diff = next - prev;
   // Wrap difference to [-180, 180]
-  const wrappedDiff = ((diff % 360) + 540) % 360 - 180;
+  const wrappedDiff = (((diff % 360) + 540) % 360) - 180;
   return Numbers.absMod(360)(prev + alpha * wrappedDiff);
 };
 
@@ -111,8 +107,7 @@ export const useMagnetometerHeading = () => {
 
     const raw = computeTiltCompensatedHeading(magP, accP);
     const prev = filteredHeadingRef.current;
-    const filtered =
-      prev === null ? raw : circularEma(prev, raw, EMA_ALPHA);
+    const filtered = prev === null ? raw : circularEma(prev, raw, EMA_ALPHA);
     filteredHeadingRef.current = filtered;
     setHeading(Numbers.roundToPrecision(filtered, 1));
   }, []);
