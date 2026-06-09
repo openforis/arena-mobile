@@ -20,16 +20,16 @@ const EMA_ALPHA = 0.25;
 // Rotation conventions match expo-screen-orientation Orientation values:
 //   PORTRAIT_UP (1)    → identity
 //   PORTRAIT_DOWN (2)  → 180° around z
-//   LANDSCAPE_LEFT (3) → device rotated 90° CCW, top points left: x'=-y, y'=x
-//   LANDSCAPE_RIGHT(4) → device rotated 90° CW,  top points right: x'=y, y'=-x
+//   LANDSCAPE_LEFT (3) → device rotated 90° CW,  top points right: x'=y,  y'=-x
+//   LANDSCAPE_RIGHT(4) → device rotated 90° CCW, top points left:  x'=-y, y'=x
 const toPortraitFrame = (v: Vector3, orientation: number): Vector3 => {
   switch (orientation) {
     case ScreenOrientation.keys.PORTRAIT_DOWN:
       return { x: -v.x, y: -v.y, z: v.z };
     case ScreenOrientation.keys.LANDCAPE_LEFT:
-      return { x: -v.y, y: v.x, z: v.z };
-    case ScreenOrientation.keys.LANDSCAPE_RIGHT:
       return { x: v.y, y: -v.x, z: v.z };
+    case ScreenOrientation.keys.LANDSCAPE_RIGHT:
+      return { x: -v.y, y: v.x, z: v.z };
     default: // PORTRAIT_UP or unknown
       return v;
   }
@@ -44,7 +44,7 @@ const toPortraitFrame = (v: Vector3, orientation: number): Vector3 => {
 // Derivation: B_world = Rx(-φ)·Ry(-θ)·B_device
 //   East  = mx·cos θ − mz·sin θ
 //   North = my·cos φ + (mx·sin θ + mz·cos θ)·sin φ
-//   Heading (CW from North) = atan2(East, North)
+//   Heading (CW from North) = atan2(−East, North)
 const computeTiltCompensatedHeading = (
   mag: Vector3,
   acc: Vector3,
@@ -73,7 +73,7 @@ const computeTiltCompensatedHeading = (
   const north =
     my * cosRoll + (mx * sinPitch + mz * cosPitch) * sinRoll;
 
-  return Numbers.absMod(360)(Math.atan2(east, north) * (180 / Math.PI));
+  return Numbers.absMod(360)(Math.atan2(-east, north) * (180 / Math.PI));
 };
 
 // Circular EMA that handles 0/360 wrap-around
