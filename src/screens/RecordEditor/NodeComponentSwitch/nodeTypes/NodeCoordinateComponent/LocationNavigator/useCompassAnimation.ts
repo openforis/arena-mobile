@@ -25,11 +25,14 @@ export const useCompassAnimation = ({
 
   const prevHeadingRef = useRef(heading);
   const prevRelAngleRef = useRef(relativeAngle);
+  const compassTargetRef = useRef(0);
+  const arrowTargetRef = useRef(0);
 
   useEffect(() => {
     const delta = shortestAngleDelta(prevHeadingRef.current, heading);
     prevHeadingRef.current = heading;
-    compassRotSv.value = withTiming(compassRotSv.value - delta, {
+    compassTargetRef.current -= delta;
+    compassRotSv.value = withTiming(compassTargetRef.current, {
       duration: 150,
     });
   }, [heading, compassRotSv]);
@@ -37,7 +40,8 @@ export const useCompassAnimation = ({
   useEffect(() => {
     const delta = shortestAngleDelta(prevRelAngleRef.current, relativeAngle);
     prevRelAngleRef.current = relativeAngle;
-    arrowRotSv.value = withTiming(arrowRotSv.value + delta, { duration: 150 });
+    arrowTargetRef.current += delta;
+    arrowRotSv.value = withTiming(arrowTargetRef.current, { duration: 150 });
   }, [relativeAngle, arrowRotSv]);
 
   const compassRotStyle = useAnimatedStyle(() => ({
