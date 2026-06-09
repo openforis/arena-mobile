@@ -1,11 +1,12 @@
-import { memo, useMemo } from "react";
-import { ActivityIndicator, useTheme } from "react-native-paper";
+import { useMemo } from "react";
+import { useTheme } from "react-native-paper";
 
 import {
   Button,
   FlexWrapView,
   FormItem,
   HView,
+  LoadingIcon,
   Modal,
   ScrollView,
   Text,
@@ -23,9 +24,9 @@ import styles, { loadingOverlayAbsoluteStyle } from "./styles";
 import { useCompassAnimation } from "./useCompassAnimation";
 import { useLocationNavigator } from "./useLocationNavigator";
 
-const LoadingOverlay = memo(() => (
-  <ActivityIndicator size="large" style={loadingOverlayAbsoluteStyle} />
-));
+const loadingOverlay = (
+  <LoadingIcon size="large" style={loadingOverlayAbsoluteStyle} />
+);
 
 const DEG = "°";
 
@@ -106,7 +107,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
   const compass = (
     <VView style={compassContainerStyle}>
       <CompassRose compassRotStyle={compassRotStyle} size={size} />
-      {!currentLocation && <LoadingOverlay />}
+      {!currentLocation && loadingOverlay}
       {currentLocation && !isProximity && (
         <NavigatorArrow
           arrowRotStyle={arrowRotStyle}
@@ -118,7 +119,11 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
         <>
           <AccuracyCircle size={size} accuracy={accuracy} />
           <CenterCross size={size} />
-          <TargetPointDot size={size} angle={relativeAngle} distance={distance} />
+          <TargetPointDot
+            size={size}
+            angle={relativeAngle}
+            distance={distance}
+          />
         </>
       )}
     </VView>
