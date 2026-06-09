@@ -72,7 +72,7 @@ export const ProximityDot = ({
           strokeWidth={2.5}
           strokeLinecap="round"
         />
-        {/* Target dot — absolute bearing, moves toward center as you close in */}
+        {/* Target dot — moves toward center as you close in */}
         <Circle cx={dotX} cy={dotY} r={9} fill="#4caf50" />
       </Svg>
     </View>

@@ -115,7 +115,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
       {currentLocation && isProximity && (
         <ProximityDot
           size={size}
-          angle={angleToTarget}
+          angle={relativeAngle}
           distance={distance}
           accuracy={accuracy}
         />
