@@ -14,9 +14,11 @@ import {
 import { useMinScreenDimension } from "hooks";
 import { DeviceInfoSelectors } from "state";
 
+import { AccuracyCircle } from "./AccuracyCircle";
+import { CenterCross } from "./CenterCross";
 import { CompassRose } from "./CompassRose";
 import { NavigatorArrow } from "./NavigatorArrow";
-import { ProximityDot } from "./ProximityDot";
+import { TargetPointDot } from "./TargetPointDot";
 import styles, { loadingOverlayAbsoluteStyle } from "./styles";
 import { useCompassAnimation } from "./useCompassAnimation";
 import { useLocationNavigator } from "./useLocationNavigator";
@@ -113,12 +115,11 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
         />
       )}
       {currentLocation && isProximity && (
-        <ProximityDot
-          size={size}
-          angle={relativeAngle}
-          distance={distance}
-          accuracy={accuracy}
-        />
+        <>
+          <AccuracyCircle size={size} accuracy={accuracy} />
+          <CenterCross size={size} />
+          <TargetPointDot size={size} angle={relativeAngle} distance={distance} />
+        </>
       )}
     </VView>
   );
