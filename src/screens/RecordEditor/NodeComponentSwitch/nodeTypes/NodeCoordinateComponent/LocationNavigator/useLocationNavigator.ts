@@ -2,7 +2,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Numbers, Objects, Points } from "@openforis/arena-core";
 
-import { useLocationWatch, useMagnetometerHeading } from "hooks";
+import {
+  useLocationHeading,
+  useLocationWatch,
+  useMagnetometerHeading,
+} from "hooks";
+import { HeadingSource } from "hooks/headingUtils";
 import { LocationPoint } from "model";
 import { SurveySelectors } from "state";
 
@@ -69,7 +74,18 @@ export const useLocationNavigator = ({
     stopOnTimeout: false,
   });
 
-  const { heading, magnetometerAvailable } = useMagnetometerHeading();
+  const [headingSource, setHeadingSource] = useState<HeadingSource>("magnetometer");
+
+  const { heading: magHeading, magnetometerAvailable } = useMagnetometerHeading({
+    enabled: headingSource === "magnetometer",
+  });
+  const { heading: locHeading, locationHeadingAvailable } = useLocationHeading({
+    enabled: headingSource === "location",
+  });
+
+  const heading = headingSource === "magnetometer" ? magHeading : locHeading;
+  const headingSourceAvailable =
+    headingSource === "magnetometer" ? magnetometerAvailable : locationHeadingAvailable;
 
   useEffect(() => {
     startLocationWatch();
@@ -120,10 +136,12 @@ export const useLocationNavigator = ({
     currentLocation,
     distance,
     heading,
+    headingSource,
+    headingSourceAvailable,
     isProximity,
-    magnetometerAvailable,
     onUseCurrentLocationPress,
     relativeAngle,
+    setHeadingSource,
     targetCoordDisplay,
   };
 };
