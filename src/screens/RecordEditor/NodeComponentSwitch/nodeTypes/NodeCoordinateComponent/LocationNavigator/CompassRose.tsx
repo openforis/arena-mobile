@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { useMemo } from "react";
 import { StyleSheet, ViewStyle } from "react-native";
 import Animated, { type AnimatedStyle } from "react-native-reanimated";
 import { Circle, Line, Polygon, Svg, Text as SvgText } from "react-native-svg";

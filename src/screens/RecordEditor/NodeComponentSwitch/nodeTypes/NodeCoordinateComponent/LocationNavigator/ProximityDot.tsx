@@ -1,9 +1,9 @@
 import { StyleSheet, View } from "react-native";
 import { Circle, Line, Svg } from "react-native-svg";
 
-const toRad = (deg: number) => (deg * Math.PI) / 180;
+import { PROXIMITY_THRESHOLD_METRES } from "./locationNavigatorConstants";
 
-const PROXIMITY_THRESHOLD = 30; // metres — must match useLocationNavigator
+const toRad = (deg: number) => (deg * Math.PI) / 180;
 
 type ProximityDotProps = {
   size: number;
@@ -24,7 +24,7 @@ export const ProximityDot = ({
   const maxDotRadius = R * 0.85;
 
   // Dot moves from near the edge toward the center as distance approaches 0
-  const distRatio = Math.min(1, Math.max(0, distance / PROXIMITY_THRESHOLD));
+  const distRatio = Math.min(1, Math.max(0, distance / PROXIMITY_THRESHOLD_METRES));
   const dotRadius = maxDotRadius * distRatio;
   const rad = toRad(angle);
   const dotX = cx + dotRadius * Math.sin(rad);
@@ -34,7 +34,7 @@ export const ProximityDot = ({
   const accuracyRpx =
     accuracy == null
       ? null
-      : Math.min(R, Math.max(6, (R * accuracy) / PROXIMITY_THRESHOLD));
+      : Math.min(R, Math.max(6, (R * accuracy) / PROXIMITY_THRESHOLD_METRES));
   const crossHalf = R * 0.07;
 
   return (

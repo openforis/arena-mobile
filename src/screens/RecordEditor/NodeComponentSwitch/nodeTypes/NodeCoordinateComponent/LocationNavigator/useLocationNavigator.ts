@@ -6,7 +6,9 @@ import { useLocationWatch, useMagnetometerHeading } from "hooks";
 import { LocationPoint } from "model";
 import { SurveySelectors } from "state";
 
-const arrowToTargetVisibleDistanceThreshold = 30;
+import { PROXIMITY_THRESHOLD_METRES } from "./locationNavigatorConstants";
+
+const arrowToTargetVisibleDistanceThreshold = PROXIMITY_THRESHOLD_METRES;
 
 type NavigatorState = {
   currentLocation: LocationPoint | null;
