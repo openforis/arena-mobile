@@ -80,6 +80,18 @@ const headingSourceButtons = [
   },
 ];
 
+const determineWarningKey = (
+  headingSourceAvailable: boolean,
+  headingSource: string,
+) => {
+  if (headingSourceAvailable) {
+    return null;
+  }
+  return headingSource === "magnetometer"
+    ? "dataEntry:coordinate.magnetometerNotAvailable"
+    : "dataEntry:coordinate.locationHeadingNotAvailable";
+};
+
 type LocationNavigatorProps = {
   targetPoint: any;
   onDismiss: () => void;
@@ -197,11 +209,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
     />
   );
 
-  const warningKey = headingSourceAvailable
-    ? null
-    : headingSource === "magnetometer"
-      ? "dataEntry:coordinate.magnetometerNotAvailable"
-      : "dataEntry:coordinate.locationHeadingNotAvailable";
+  const warningKey = determineWarningKey(headingSourceAvailable, headingSource);
 
   const warning = warningKey ? (
     <Text textKey={warningKey} variant="labelMedium" style={styles.warning} />
