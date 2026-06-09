@@ -1,12 +1,7 @@
+import { memo, useMemo } from "react";
 import { StyleSheet, ViewStyle } from "react-native";
 import Animated, { type AnimatedStyle } from "react-native-reanimated";
-import {
-  Circle,
-  Line,
-  Polygon,
-  Svg,
-  Text as SvgText,
-} from "react-native-svg";
+import { Circle, Line, Polygon, Svg, Text as SvgText } from "react-native-svg";
 import { useTheme } from "react-native-paper";
 
 import { View } from "components";
@@ -130,9 +125,9 @@ export const CompassRose = (props: CompassRoseProps) => {
 
   const theme = useTheme();
 
-  const cx = size / 2;
-  const cy = size / 2;
-  const R = size / 2 - 4;
+  const cx = size / 2; // Center x-coordinate
+  const cy = size / 2; // Center y-coordinate
+  const R = size / 2 - 4; // Compass radius with some padding for bezel
 
   // ── Derived colors ──────────────────────────────────────────────────────
   const primaryColor = theme.colors.primary;
@@ -145,33 +140,104 @@ export const CompassRose = (props: CompassRoseProps) => {
   const bezzelColor = ColorUtils.withOpacity(onSurface, OPACITY.bezel);
 
   // ── Tick marks ──────────────────────────────────────────────────────────
-  const ticks = Array.from({ length: 360 }, (_, i) => {
-    const isCardinalDeg = i % 90 === 0;
-    const isInterCardinal = i % 45 === 0 && !isCardinalDeg;
-    const isMajor = i % TICK.majorStep === 0;
-    if (!isMajor && i % TICK.minorStep !== 0) return null;
+  const ticks = useMemo(
+    () =>
+      Array.from({ length: 360 }, (_, i) => {
+        const isCardinalDeg = i % 90 === 0;
+        const isInterCardinal = i % 45 === 0 && !isCardinalDeg;
+        const isMajor = i % TICK.majorStep === 0;
+        if (!isMajor && i % TICK.minorStep !== 0) return null;
 
-    const tickLen = getTickLen(isCardinalDeg, isInterCardinal, isMajor, R);
-    const innerR = R - tickLen;
-    const rad = toRad(i);
-    const sinA = Math.sin(rad);
-    const cosA = Math.cos(rad);
-    const tickStrokeWidth = getTickStrokeWidth(isCardinalDeg, isInterCardinal);
+        const tickLen = getTickLen(isCardinalDeg, isInterCardinal, isMajor, R);
+        const innerR = R - tickLen;
+        const rad = toRad(i);
+        const sinA = Math.sin(rad);
+        const cosA = Math.cos(rad);
+        const tickStrokeWidth = getTickStrokeWidth(
+          isCardinalDeg,
+          isInterCardinal,
+        );
 
-    return (
-      <Line
-        key={i}
-        x1={cx + R * sinA}
-        y1={cy - R * cosA}
-        x2={cx + innerR * sinA}
-        y2={cy - innerR * cosA}
-        stroke={
-          isCardinalDeg || isInterCardinal ? majorTickColor : minorTickColor
-        }
-        strokeWidth={tickStrokeWidth}
-      />
-    );
-  });
+        return (
+          <Line
+            key={i}
+            x1={cx + R * sinA}
+            y1={cy - R * cosA}
+            x2={cx + innerR * sinA}
+            y2={cy - innerR * cosA}
+            stroke={
+              isCardinalDeg || isInterCardinal ? majorTickColor : minorTickColor
+            }
+            strokeWidth={tickStrokeWidth}
+          />
+        );
+      }),
+    [cx, cy, R, majorTickColor, minorTickColor],
+  );
+
+  // ── Cardinal + inter-cardinal labels ────────────────────────────────────
+  const cardinalLabels = useMemo(
+    () =>
+      cardinals.map(({ label, deg }) => {
+        const isNorth = deg === 0;
+        const isCardinalOnly = deg % 90 === 0;
+        const labelR = getCardinalLabelR(isCardinalOnly, R);
+        const cardinalFontSize = getCardinalFontSize(
+          isNorth,
+          isCardinalOnly,
+          size,
+        );
+        const cardinalFill = getCardinalFill(
+          isNorth,
+          isCardinalOnly,
+          primaryColor,
+          cardinalColor,
+          degreeColor,
+        );
+        const cardinalFontWeight =
+          isNorth || isCardinalOnly ? "bold" : "normal";
+        const rad = toRad(deg);
+
+        return (
+          <SvgText
+            key={label}
+            x={cx + labelR * Math.sin(rad)}
+            y={cy - labelR * Math.cos(rad)}
+            textAnchor="middle"
+            alignmentBaseline="central"
+            fontSize={cardinalFontSize}
+            fontWeight={cardinalFontWeight}
+            fill={cardinalFill}
+          >
+            {label}
+          </SvgText>
+        );
+      }),
+    [cx, cy, R, size, primaryColor, cardinalColor, degreeColor],
+  );
+
+  // ── Degree labels every 30° (non-cardinal/intercardinal) ────────────────
+  const degreeLabelsElements = useMemo(
+    () =>
+      degreeLabels.map((deg) => {
+        const rad = toRad(deg);
+        const labelR = R - R * LABEL_RADIUS.degree;
+        return (
+          <SvgText
+            key={`deg-${deg}`}
+            x={cx + labelR * Math.sin(rad)}
+            y={cy - labelR * Math.cos(rad)}
+            textAnchor="middle"
+            alignmentBaseline="central"
+            fontSize={size * FONT_SIZE.degree}
+            fill={degreeColor}
+          >
+            {deg}
+          </SvgText>
+        );
+      }),
+    [cx, cy, R, size, degreeColor],
+  );
 
   // ── Bearing indicator triangles (fixed, not rotating) ───────────────────
   const { triHalfW, triHeight, triPad } = BEARING;
@@ -212,64 +278,9 @@ export const CompassRose = (props: CompassRoseProps) => {
       {/* ── Layer 1: Rotating compass rose ──────────────────────────────── */}
       <Animated.View style={[layerStyle, compassRotStyle]}>
         <Svg width={size} height={size}>
-          {/* Tick marks */}
           {ticks}
-
-          {/* Cardinal + inter-cardinal labels */}
-          {cardinals.map(({ label, deg }) => {
-            const isNorth = deg === 0;
-            const isCardinalOnly = deg % 90 === 0;
-            const labelR = getCardinalLabelR(isCardinalOnly, R);
-            const cardinalFontSize = getCardinalFontSize(
-              isNorth,
-              isCardinalOnly,
-              size,
-            );
-            const cardinalFill = getCardinalFill(
-              isNorth,
-              isCardinalOnly,
-              primaryColor,
-              cardinalColor,
-              degreeColor,
-            );
-            const cardinalFontWeight =
-              isNorth || isCardinalOnly ? "bold" : "normal";
-            const rad = toRad(deg);
-
-            return (
-              <SvgText
-                key={label}
-                x={cx + labelR * Math.sin(rad)}
-                y={cy - labelR * Math.cos(rad)}
-                textAnchor="middle"
-                alignmentBaseline="central"
-                fontSize={cardinalFontSize}
-                fontWeight={cardinalFontWeight}
-                fill={cardinalFill}
-              >
-                {label}
-              </SvgText>
-            );
-          })}
-
-          {/* Degree labels every 30° (non-cardinal/intercardinal) */}
-          {degreeLabels.map((deg) => {
-            const rad = toRad(deg);
-            const labelR = R - R * LABEL_RADIUS.degree;
-            return (
-              <SvgText
-                key={`deg-${deg}`}
-                x={cx + labelR * Math.sin(rad)}
-                y={cy - labelR * Math.cos(rad)}
-                textAnchor="middle"
-                alignmentBaseline="central"
-                fontSize={size * FONT_SIZE.degree}
-                fill={degreeColor}
-              >
-                {deg}
-              </SvgText>
-            );
-          })}
+          {cardinalLabels}
+          {degreeLabelsElements}
         </Svg>
       </Animated.View>
 
@@ -285,7 +296,6 @@ export const CompassRose = (props: CompassRoseProps) => {
           fill={ColorUtils.withOpacity(primaryColor, OPACITY.bottomTriangle)}
         />
       </Svg>
-
     </View>
   );
 };
