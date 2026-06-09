@@ -15,6 +15,25 @@ const THROTTLE_DELAY_MS = 50;
 // Low-pass filter factor: higher = more responsive, lower = smoother
 const EMA_ALPHA = 0.25;
 
+// Some devices don't report LANDSCAPE_RIGHT (4) when rotating 180° within
+// landscape — the expo key stays at LANDSCAPE_LEFT (3). Use normalized acc.x
+// to detect the actual sub-orientation regardless of whether the accelerometer
+// returns m/s² or G-units: in LANDSCAPE_LEFT the visual top is -x (normalised
+// acc.x < 0 when tilted up), in LANDSCAPE_RIGHT the visual top is +x (> 0).
+// Threshold 0.05 ≈ 3° tilt; below that the expo key is the fallback.
+const adjustOrientationForLandscape = (o: any, acc: Vector3): any => {
+  if (!ScreenOrientation.isLandscape(o)) return o;
+  const accNorm = Math.hypot(acc.x, acc.y, acc.z);
+  if (accNorm < 0.001) return o;
+  const normalizedAccX = acc.x / accNorm;
+  if (Math.abs(normalizedAccX) > 0.05) {
+    return normalizedAccX > 0
+      ? ScreenOrientation.keys.LANDSCAPE_RIGHT
+      : ScreenOrientation.keys.LANDSCAPE_LEFT;
+  }
+  return o;
+};
+
 // Rotate sensor vectors from device frame to portrait-equivalent frame so the
 // heading formula always operates on portrait-oriented coordinates.
 // Rotation conventions match expo-screen-orientation Orientation values:
@@ -26,7 +45,7 @@ const toPortraitFrame = (v: Vector3, orientation: number): Vector3 => {
   switch (orientation) {
     case ScreenOrientation.keys.PORTRAIT_DOWN:
       return { x: -v.x, y: -v.y, z: v.z };
-    case ScreenOrientation.keys.LANDCAPE_LEFT:
+    case ScreenOrientation.keys.LANDSCAPE_LEFT:
       return { x: v.y, y: -v.x, z: v.z };
     case ScreenOrientation.keys.LANDSCAPE_RIGHT:
       return { x: -v.y, y: v.x, z: v.z };
@@ -101,7 +120,8 @@ export const useMagnetometerHeading = () => {
     const acc = accRef.current;
     if (!mag || !acc) return;
 
-    const o = orientationRef.current;
+    const o = adjustOrientationForLandscape(orientationRef.current, acc);
+
     const magP = toPortraitFrame(mag, o);
     const accP = toPortraitFrame(acc, o);
 
@@ -121,9 +141,12 @@ export const useMagnetometerHeading = () => {
     let magSub: ReturnType<typeof Magnetometer.addListener> | undefined;
     let accSub: ReturnType<typeof Accelerometer.addListener> | undefined;
 
-    Magnetometer.isAvailableAsync()
-      .then((available) => {
-        if (!available) {
+    Promise.all([
+      Magnetometer.isAvailableAsync(),
+      Accelerometer.isAvailableAsync(),
+    ])
+      .then(([magAvailable, accAvailable]) => {
+        if (!magAvailable || !accAvailable) {
           setMagnetometerAvailable(false);
           return;
         }
