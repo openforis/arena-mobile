@@ -1,0 +1,1 @@
+export const PROXIMITY_THRESHOLD_METRES = 30;

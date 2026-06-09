@@ -1,6 +1,6 @@
 {
   "name": "arena-mobile",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "scripts": {
     "start": "expo start",
     "start-tunnel": "expo start --tunnel",
@@ -51,6 +51,7 @@
     "expo-location": "~19.0.8",
     "expo-screen-orientation": "~9.0.9",
     "expo-secure-store": "~15.0.8",
+    "expo-sensors": "~15.0.8",
     "expo-sharing": "~14.0.8",
     "expo-sqlite": "~16.0.10",
     "expo-status-bar": "~3.0.9",
