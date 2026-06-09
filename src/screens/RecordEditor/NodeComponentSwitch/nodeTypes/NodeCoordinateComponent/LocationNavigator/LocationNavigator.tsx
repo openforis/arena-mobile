@@ -1,5 +1,4 @@
-import { useMemo } from "react";
-import { StyleSheet, View } from "react-native";
+import { memo, useMemo } from "react";
 import { ActivityIndicator, useTheme } from "react-native-paper";
 
 import {
@@ -18,9 +17,13 @@ import { DeviceInfoSelectors } from "state";
 import { CompassRose } from "./CompassRose";
 import { NavigatorArrow } from "./NavigatorArrow";
 import { ProximityDot } from "./ProximityDot";
-import styles from "./styles";
+import styles, { loadingOverlayAbsoluteStyle } from "./styles";
 import { useCompassAnimation } from "./useCompassAnimation";
 import { useLocationNavigator } from "./useLocationNavigator";
+
+const LoadingOverlay = memo(() => (
+  <ActivityIndicator size="large" style={loadingOverlayAbsoluteStyle} />
+));
 
 const DEG = "°";
 
@@ -93,14 +96,15 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
     relativeAngle,
   });
 
+  const compassContainerStyle = useMemo(
+    () => ({ width: size, height: size }),
+    [size],
+  );
+
   const compass = (
-    <VView style={{ width: size, height: size }}>
+    <VView style={compassContainerStyle}>
       <CompassRose compassRotStyle={compassRotStyle} size={size} />
-      {!currentLocation && (
-        <View style={[StyleSheet.absoluteFillObject, styles.loadingOverlay]}>
-          <ActivityIndicator size="large" />
-        </View>
-      )}
+      {!currentLocation && <LoadingOverlay />}
       {currentLocation && !isProximity && (
         <NavigatorArrow
           arrowRotStyle={arrowRotStyle}

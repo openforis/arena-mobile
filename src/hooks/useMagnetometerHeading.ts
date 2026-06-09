@@ -52,7 +52,7 @@ const computeTiltCompensatedHeading = (
   const { x: mx, y: my, z: mz } = mag;
   const { x: ax, y: ay, z: az } = acc;
 
-  const aNorm = Math.sqrt(ax * ax + ay * ay + az * az);
+  const aNorm = Math.hypot(ax * ax + ay * ay + az * az);
   if (aNorm < 0.001) return 0;
 
   const axN = ax / aNorm;
@@ -60,7 +60,7 @@ const computeTiltCompensatedHeading = (
   const azN = az / aNorm;
 
   // ay = -g·sinφ  →  φ = atan2(-ay, √(ax²+az²))
-  const roll = Math.atan2(-ayN, Math.sqrt(axN * axN + azN * azN));
+  const roll = Math.atan2(-ayN, Math.hypot(axN * axN + azN * azN));
   // ax = g·cosφ·sinθ, az = g·cosφ·cosθ  →  θ = atan2(ax, az)
   const pitch = Math.atan2(axN, azN);
 

@@ -66,7 +66,7 @@ const _resizeToFitMaxSize = async ({
     return lastResizeResult;
   }
 
-  const initialScale = 1 / Math.sqrt(sizeRatio);
+  const initialScale = 1 / Math.hypot(sizeRatio);
   let scale: any;
   let bestScaleSizeRatio;
   let bestScaleResizeResult;

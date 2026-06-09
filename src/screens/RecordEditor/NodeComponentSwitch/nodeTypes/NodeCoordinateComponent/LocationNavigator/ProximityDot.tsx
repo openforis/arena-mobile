@@ -32,14 +32,15 @@ export const ProximityDot = ({
 
   // Accuracy circle: radius in pixels scales linearly with GPS accuracy
   const accuracyRpx =
-    accuracy != null
-      ? Math.min(R, Math.max(6, (R * accuracy) / PROXIMITY_THRESHOLD))
-      : null;
-
+    accuracy == null
+      ? null
+      : Math.min(R, Math.max(6, (R * accuracy) / PROXIMITY_THRESHOLD));
   const crossHalf = R * 0.07;
 
   return (
-    <View style={[StyleSheet.absoluteFillObject, { width: size, height: size }]}>
+    <View
+      style={[StyleSheet.absoluteFillObject, { width: size, height: size }]}
+    >
       <Svg width={size} height={size}>
         {/* Accuracy circle (GPS uncertainty) */}
         {accuracyRpx != null && (

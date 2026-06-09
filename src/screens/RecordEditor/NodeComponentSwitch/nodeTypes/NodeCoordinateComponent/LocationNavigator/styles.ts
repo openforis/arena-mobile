@@ -1,5 +1,10 @@
 import { StyleSheet } from "react-native";
 
+export const loadingOverlayAbsoluteStyle = StyleSheet.flatten([
+  StyleSheet.absoluteFillObject,
+  { justifyContent: "center" as const, alignItems: "center" as const },
+]);
+
 export default StyleSheet.create({
   // ── Portrait layout ────────────────────────────────────────────────────
   container: {
