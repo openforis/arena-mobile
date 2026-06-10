@@ -64,7 +64,7 @@ const RadarGrid = ({
       const off = i * gridStepPx;
       const isAxis = i === 0;
       const stroke = isAxis ? axisStroke : gridStroke;
-      const sw = isAxis ? 1.2 : 0.65;
+      const strokeWidth = isAxis ? 3 : 1.5;
       result.push(
         <Line
           key={`v${i}`}
@@ -73,7 +73,7 @@ const RadarGrid = ({
           x2={cx + off}
           y2={cy + R}
           stroke={stroke}
-          strokeWidth={sw}
+          strokeWidth={strokeWidth}
         />,
         <Line
           key={`h${i}`}
@@ -82,7 +82,7 @@ const RadarGrid = ({
           x2={cx + R}
           y2={cy + off}
           stroke={stroke}
-          strokeWidth={sw}
+          strokeWidth={strokeWidth}
         />,
       );
     }
@@ -96,7 +96,7 @@ const RadarGrid = ({
         <SvgText
           x={cx + gridStepPx + 4}
           y={cy - 5}
-          fontSize={size * 0.03}
+          fontSize={size * 0.05}
           fill={ColorUtils.withOpacity(onSurface, 0.38)}
           clipPath="url(#radarClip)"
         >
@@ -154,22 +154,25 @@ type CenterCrossProps = {
   primaryColor: string;
 };
 
+const centerCrossHalfSize = 11;
+const centerCrossStroke = 4;
+
 const CenterCross = ({ cx, cy, primaryColor }: CenterCrossProps) => (
   <>
     <Line
-      x1={cx - 11}
+      x1={cx - centerCrossHalfSize}
       y1={cy}
-      x2={cx + 11}
+      x2={cx + centerCrossHalfSize}
       y2={cy}
       stroke={primaryColor}
-      strokeWidth={2.5}
+      strokeWidth={centerCrossStroke}
       strokeLinecap="round"
     />
     <Line
       x1={cx}
-      y1={cy - 11}
+      y1={cy - centerCrossHalfSize}
       x2={cx}
-      y2={cy + 11}
+      y2={cy + centerCrossHalfSize}
       stroke={primaryColor}
       strokeWidth={2.5}
       strokeLinecap="round"
@@ -228,8 +231,18 @@ const CompassNeedle = ({
         stroke={ColorUtils.withOpacity(onSurface, 0.22)}
         strokeWidth={1}
       />
-      <Polygon points={northPts} fill="rgba(229,57,53,0.65)" stroke="rgba(183,28,28,0.8)" strokeWidth={0.8} />
-      <Polygon points={southPts} fill="rgba(55,71,79,0.55)" stroke="rgba(38,50,56,0.7)" strokeWidth={0.8} />
+      <Polygon
+        points={northPts}
+        fill="rgba(229,57,53,0.65)"
+        stroke="rgba(183,28,28,0.8)"
+        strokeWidth={0.8}
+      />
+      <Polygon
+        points={southPts}
+        fill="rgba(55,71,79,0.55)"
+        stroke="rgba(38,50,56,0.7)"
+        strokeWidth={0.8}
+      />
     </>
   );
 };
@@ -300,6 +313,8 @@ export const RadarView = ({
   const compCx = size - compMargin;
   const compCy = size - compMargin;
 
+  const borderLineWidth = 3;
+
   return (
     <View style={{ width: size, height: size }}>
       <Svg width={size} height={size}>
@@ -316,7 +331,7 @@ export const RadarView = ({
           cy={cy}
           r={R}
           stroke={ColorUtils.withOpacity(onSurface, 0.18)}
-          strokeWidth={1}
+          strokeWidth={borderLineWidth}
           fill="none"
         />
 
