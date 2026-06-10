@@ -55,14 +55,14 @@ export default StyleSheet.create({
     marginVertical: 4,
   },
   infoCard: {
-    width: 136,
+    width: 140,
     paddingVertical: 10,
-    paddingHorizontal: 8,
+    paddingHorizontal: 4,
     borderRadius: 10,
     alignItems: "center",
   },
   infoCardLabel: {
-    opacity: 0.65,
+    width: "100%",
     textAlign: "center",
     marginBottom: 2,
   },
