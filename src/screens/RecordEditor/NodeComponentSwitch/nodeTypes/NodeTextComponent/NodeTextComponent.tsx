@@ -57,7 +57,7 @@ export const NodeTextComponent = (props: NodeComponentProps) => {
     [isNumeric],
   );
 
-  const { applicable, invalidValue, value, uiValue, updateNodeValue } =
+  const { applicable, invalidValue, uiValue, updateNodeValue } =
     useNodeComponentLocalState({
       nodeUuid,
       updateDelay: 500,
