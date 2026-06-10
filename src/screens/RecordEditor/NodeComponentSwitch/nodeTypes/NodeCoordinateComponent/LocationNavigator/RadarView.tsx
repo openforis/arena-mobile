@@ -139,14 +139,16 @@ export const RadarView = ({
       : null;
 
   // ── Compass widget (bottom-right quadrant) ──────────────────────────────
-  // Place it along the SE diagonal at 72 % of R to keep it inside the circle.
+  // Place center so the compass background circle just kisses the radar border.
   const SQRT2_INV = 1 / Math.SQRT2;
   const compassWidgetR = size * 0.065;
-  const compassOffset = R * 0.72;
+  const compassOffset = R - compassWidgetR - 2; // far edge == radar border
   const compCx = cx + compassOffset * SQRT2_INV;
   const compCy = cy + compassOffset * SQRT2_INV;
-  const needleR = compassWidgetR * 0.72;
-  const halfW = compassWidgetR * 0.3;
+
+  // Classic elongated diamond compass needle — tips extend beyond the background circle
+  const needleLen = compassWidgetR * 1.1;
+  const halfW = compassWidgetR * 0.28;
 
   // North direction in heading-up frame: screen-up = heading, so North = -heading from up
   const northRad = toRad(-heading);
@@ -154,22 +156,17 @@ export const RadarView = ({
   const nDy = -Math.cos(northRad);
   const nPerp = northRad + Math.PI / 2;
 
-  const nTipX = compCx + needleR * nDx;
-  const nTipY = compCy + needleR * nDy;
-  const nBaseX = compCx - needleR * 0.45 * nDx;
-  const nBaseY = compCy - needleR * 0.45 * nDy;
-  const nL = `${nBaseX - halfW * Math.cos(nPerp)},${nBaseY - halfW * Math.sin(nPerp)}`;
-  const nR = `${nBaseX + halfW * Math.cos(nPerp)},${nBaseY + halfW * Math.sin(nPerp)}`;
-  const northArrowPts = `${nTipX},${nTipY} ${nL} ${nR}`;
+  const nTipX = compCx + needleLen * nDx;
+  const nTipY = compCy + needleLen * nDy;
+  const sTipX = compCx - needleLen * nDx;
+  const sTipY = compCy - needleLen * nDy;
+  const midLX = compCx - halfW * Math.cos(nPerp);
+  const midLY = compCy - halfW * Math.sin(nPerp);
+  const midRX = compCx + halfW * Math.cos(nPerp);
+  const midRY = compCy + halfW * Math.sin(nPerp);
 
-  const sTipX = compCx - needleR * 0.7 * nDx;
-  const sTipY = compCy - needleR * 0.7 * nDy;
-  const southArrowPts = `${sTipX},${sTipY} ${nL} ${nR}`;
-
-  // "N" label positioned at the North tip (text stays screen-aligned and readable)
-  const nLabelDist = needleR * 0.58;
-  const nLabelX = compCx + nLabelDist * nDx;
-  const nLabelY = compCy + nLabelDist * nDy;
+  const northNeedlePts = `${nTipX},${nTipY} ${midLX},${midLY} ${midRX},${midRY}`;
+  const southNeedlePts = `${sTipX},${sTipY} ${midLX},${midLY} ${midRX},${midRY}`;
 
   return (
     <View style={{ width: size, height: size }}>
@@ -259,24 +256,12 @@ export const RadarView = ({
           strokeWidth={1}
         />
         {/* North half (primary colour) */}
-        <Polygon points={northArrowPts} fill={primaryColor} />
+        <Polygon points={northNeedlePts} fill={primaryColor} />
         {/* South half (dimmed) */}
         <Polygon
-          points={southArrowPts}
+          points={southNeedlePts}
           fill={ColorUtils.withOpacity(onSurface, 0.28)}
         />
-        {/* "N" label at North needle tip */}
-        <SvgText
-          x={nLabelX}
-          y={nLabelY}
-          fontSize={compassWidgetR * 0.52}
-          fontWeight="bold"
-          fill={primaryColor}
-          textAnchor="middle"
-          alignmentBaseline="central"
-        >
-          N
-        </SvgText>
       </Svg>
     </View>
   );
