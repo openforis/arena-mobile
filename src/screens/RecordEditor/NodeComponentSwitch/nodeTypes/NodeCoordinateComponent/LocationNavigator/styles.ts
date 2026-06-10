@@ -78,4 +78,26 @@ export default StyleSheet.create({
     justifyContent: "center",
     marginTop: 8,
   },
+  headingSourceRow: {
+    alignItems: "center",
+  },
+  headingSourceButtons: {
+    flex: 1,
+  },
+  infoDialogScroll: {
+    maxHeight: 400,
+  },
+  infoDialogSectionTitle: {
+    marginBottom: 4,
+  },
+  infoDialogSectionTitleSpaced: {
+    marginTop: 12,
+  },
+  infoDialogItemTitle: {
+    marginTop: 6,
+    marginBottom: 2,
+  },
+  infoDialogItemDesc: {
+    opacity: 0.8,
+  },
 });

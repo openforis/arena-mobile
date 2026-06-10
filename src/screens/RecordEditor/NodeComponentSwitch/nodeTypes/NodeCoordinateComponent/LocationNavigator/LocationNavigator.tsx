@@ -6,6 +6,7 @@ import {
   FlexWrapView,
   FormItem,
   HView,
+  IconButton,
   LoadingIcon,
   Modal,
   ScrollView,
@@ -16,6 +17,7 @@ import {
 import { useMinScreenDimension } from "hooks";
 import { DeviceInfoSelectors } from "state";
 
+import { LocationNavigatorInfoDialog } from "./LocationNavigatorInfoDialog";
 import { AccuracyCircle } from "./AccuracyCircle";
 import { CenterCross } from "./CenterCross";
 import { CompassRose } from "./CompassRose";
@@ -120,6 +122,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
   const size = isLandscape ? minDimension - 110 : minDimension - 60;
 
   const [viewMode, setViewMode] = useState<"compass" | "radar">("compass");
+  const [infoDialogVisible, setInfoDialogVisible] = useState(false);
 
   const {
     accuracy,
@@ -230,11 +233,20 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
   );
 
   const headingSourceSwitch = (
-    <SegmentedButtons
-      buttons={headingSourceButtons}
-      value={headingSource}
-      onChange={(v) => setHeadingSource(v as typeof headingSource)}
-    />
+    <HView style={styles.headingSourceRow}>
+      <SegmentedButtons
+        style={styles.headingSourceButtons}
+        buttons={headingSourceButtons}
+        value={headingSource}
+        onChange={(v) => setHeadingSource(v as typeof headingSource)}
+      />
+      <IconButton
+        icon="information-outline"
+        mode="contained-tonal"
+        size={16}
+        onPress={() => setInfoDialogVisible(true)}
+      />
+    </HView>
   );
 
   const viewModeSwitch = (
@@ -251,12 +263,17 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
     <Text textKey={warningKey} variant="labelMedium" style={styles.warning} />
   ) : null;
 
+  const infoDialog = infoDialogVisible ? (
+    <LocationNavigatorInfoDialog onClose={() => setInfoDialogVisible(false)} />
+  ) : null;
+
   if (isLandscape) {
     return (
       <Modal
         onDismiss={onDismiss}
         titleKey="dataEntry:coordinate.navigateToTarget"
       >
+        {infoDialog}
         <HView style={styles.containerLandscape}>
           {/* Left column: compass */}
           <VView style={styles.compassColumnLandscape}>{compass}</VView>
@@ -282,6 +299,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
       onDismiss={onDismiss}
       titleKey="dataEntry:coordinate.navigateToTarget"
     >
+      {infoDialog}
       <ScrollView>
         <VView style={styles.container}>
           {viewModeSwitch}
