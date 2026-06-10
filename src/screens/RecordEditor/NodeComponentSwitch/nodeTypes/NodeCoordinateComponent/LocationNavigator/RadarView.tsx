@@ -16,12 +16,10 @@ import { ColorUtils } from "utils";
 
 const toRad = (deg: number) => (deg * Math.PI) / 180;
 
-// Nice round grid step candidates in metres
 const GRID_STEPS_M = [
   0.5, 1, 2, 5, 10, 25, 50, 100, 250, 500, 1000, 2000, 5000, 10000, 50000,
 ];
 
-// Pick the smallest step that is ≥ viewRadius/3 so we get ~3 lines per half
 function pickGridStep(viewRadiusMetres: number): number {
   const target = viewRadiusMetres / 3;
   for (const step of GRID_STEPS_M) {
@@ -35,15 +33,214 @@ function formatGridLabel(metres: number): string {
   return `${metres} m`;
 }
 
+// ── Sub-components (SVG primitives, rendered inside <Svg>) ───────────────────
+
+type GridProps = {
+  cx: number;
+  cy: number;
+  R: number;
+  size: number;
+  gridStepPx: number;
+  gridStepM: number;
+  onSurface: string;
+};
+
+const RadarGrid = ({
+  cx,
+  cy,
+  R,
+  size,
+  gridStepPx,
+  gridStepM,
+  onSurface,
+}: GridProps) => {
+  const lines = useMemo(() => {
+    if (gridStepPx < 5) return [];
+    const gridStroke = ColorUtils.withOpacity(onSurface, 0.1);
+    const axisStroke = ColorUtils.withOpacity(onSurface, 0.2);
+    const n = Math.ceil(R / gridStepPx) + 1;
+    const result: React.ReactElement[] = [];
+    for (let i = -n; i <= n; i++) {
+      const off = i * gridStepPx;
+      const isAxis = i === 0;
+      const stroke = isAxis ? axisStroke : gridStroke;
+      const sw = isAxis ? 1.2 : 0.65;
+      result.push(
+        <Line
+          key={`v${i}`}
+          x1={cx + off}
+          y1={cy - R}
+          x2={cx + off}
+          y2={cy + R}
+          stroke={stroke}
+          strokeWidth={sw}
+        />,
+        <Line
+          key={`h${i}`}
+          x1={cx - R}
+          y1={cy + off}
+          x2={cx + R}
+          y2={cy + off}
+          stroke={stroke}
+          strokeWidth={sw}
+        />,
+      );
+    }
+    return result;
+  }, [cx, cy, R, gridStepPx, onSurface]);
+
+  return (
+    <>
+      <G clipPath="url(#radarClip)">{lines}</G>
+      {gridStepPx >= 5 && (
+        <SvgText
+          x={cx + gridStepPx + 4}
+          y={cy - 5}
+          fontSize={size * 0.03}
+          fill={ColorUtils.withOpacity(onSurface, 0.38)}
+          clipPath="url(#radarClip)"
+        >
+          {formatGridLabel(gridStepM)}
+        </SvgText>
+      )}
+    </>
+  );
+};
+
+type AccuracyCircleProps = {
+  cx: number;
+  cy: number;
+  accuracyRpx: number | null;
+};
+
+const AccuracyCircle = ({ cx, cy, accuracyRpx }: AccuracyCircleProps) => {
+  if (accuracyRpx == null) return null;
+  return (
+    <Circle
+      cx={cx}
+      cy={cy}
+      r={accuracyRpx}
+      fill="rgba(100,180,255,0.10)"
+      stroke="rgba(100,180,255,0.42)"
+      strokeWidth={1.5}
+      clipPath="url(#radarClip)"
+    />
+  );
+};
+
+type TargetMarkerProps = {
+  isFiniteDistance: boolean;
+  isOffScreen: boolean;
+  targetX: number;
+  targetY: number;
+  edgeArrowPts: string;
+};
+
+const TargetMarker = ({
+  isFiniteDistance,
+  isOffScreen,
+  targetX,
+  targetY,
+  edgeArrowPts,
+}: TargetMarkerProps) => {
+  if (!isFiniteDistance) return null;
+  if (isOffScreen) return <Polygon points={edgeArrowPts} fill="#4caf50" />;
+  return <Circle cx={targetX} cy={targetY} r={9} fill="#4caf50" />;
+};
+
+type CenterCrossProps = {
+  cx: number;
+  cy: number;
+  primaryColor: string;
+};
+
+const CenterCross = ({ cx, cy, primaryColor }: CenterCrossProps) => (
+  <>
+    <Line
+      x1={cx - 11}
+      y1={cy}
+      x2={cx + 11}
+      y2={cy}
+      stroke={primaryColor}
+      strokeWidth={2.5}
+      strokeLinecap="round"
+    />
+    <Line
+      x1={cx}
+      y1={cy - 11}
+      x2={cx}
+      y2={cy + 11}
+      stroke={primaryColor}
+      strokeWidth={2.5}
+      strokeLinecap="round"
+    />
+    <Circle cx={cx} cy={cy} r={3.5} fill={primaryColor} />
+  </>
+);
+
+type CompassNeedleProps = {
+  cx: number;
+  cy: number;
+  widgetR: number;
+  heading: number;
+  surfaceColor: string;
+  onSurface: string;
+};
+
+const CompassNeedle = ({
+  cx,
+  cy,
+  widgetR,
+  heading,
+  surfaceColor,
+  onSurface,
+}: CompassNeedleProps) => {
+  const needleLen = widgetR * 1;
+  const halfW = widgetR * 0.32;
+
+  // North direction in heading-up frame: screen-up = current heading, so North = -heading from up
+  const northRad = toRad(-heading);
+  const nDx = Math.sin(northRad);
+  const nDy = -Math.cos(northRad);
+  // Correct perpendicular to (sin θ, -cos θ) is (cos θ, sin θ)
+  const perpX = Math.cos(northRad);
+  const perpY = Math.sin(northRad);
+
+  const nTipX = cx + needleLen * nDx;
+  const nTipY = cy + needleLen * nDy;
+  const sTipX = cx - needleLen * nDx;
+  const sTipY = cy - needleLen * nDy;
+  const midLX = cx - halfW * perpX;
+  const midLY = cy - halfW * perpY;
+  const midRX = cx + halfW * perpX;
+  const midRY = cy + halfW * perpY;
+
+  const northPts = `${nTipX},${nTipY} ${midLX},${midLY} ${midRX},${midRY}`;
+  const southPts = `${sTipX},${sTipY} ${midLX},${midLY} ${midRX},${midRY}`;
+
+  return (
+    <>
+      <Circle
+        cx={cx}
+        cy={cy}
+        r={widgetR * 1.2}
+        fill={ColorUtils.withOpacity(surfaceColor, 0.9)}
+        stroke={ColorUtils.withOpacity(onSurface, 0.22)}
+        strokeWidth={1}
+      />
+      <Polygon points={northPts} fill="rgba(229,57,53,0.65)" stroke="rgba(183,28,28,0.8)" strokeWidth={0.8} />
+      <Polygon points={southPts} fill="rgba(55,71,79,0.55)" stroke="rgba(38,50,56,0.7)" strokeWidth={0.8} />
+    </>
+  );
+};
+
+// ── Main component ───────────────────────────────────────────────────────────
+
 type RadarViewProps = {
   size: number;
-  // Angle from current heading to target (0 = straight ahead / screen-up)
   relativeAngle: number;
-  // Distance to target in metres
   distance: number;
-  // Device heading in degrees (North = 0, clockwise)
   heading: number;
-  // GPS accuracy in metres (or null)
   accuracy: number | null;
 };
 
@@ -65,108 +262,43 @@ export const RadarView = ({
   const primaryColor = colors.primary;
 
   const isFiniteDistance = isFinite(distance) && distance > 0;
-  // Keep target at ~70 % of visible radius so there is margin around it
   const viewRadiusM = isFiniteDistance ? distance * 1.45 : 50;
   const pixelsPerMetre = R / viewRadiusM;
 
   const gridStepM = useMemo(() => pickGridStep(viewRadiusM), [viewRadiusM]);
   const gridStepPx = gridStepM * pixelsPerMetre;
 
-  // ── Grid lines (axis-aligned = heading-up frame) ────────────────────────
-  const gridElements = useMemo(() => {
-    if (gridStepPx < 5) return [];
-    const gridStroke = ColorUtils.withOpacity(onSurface, 0.1);
-    const axisStroke = ColorUtils.withOpacity(onSurface, 0.2);
-    const n = Math.ceil(R / gridStepPx) + 1;
-    const elements: React.ReactElement[] = [];
-
-    for (let i = -n; i <= n; i++) {
-      const off = i * gridStepPx;
-      const isAxis = i === 0;
-      const stroke = isAxis ? axisStroke : gridStroke;
-      const sw = isAxis ? 1.2 : 0.65;
-      elements.push(
-        <Line
-          key={`v${i}`}
-          x1={cx + off}
-          y1={cy - R}
-          x2={cx + off}
-          y2={cy + R}
-          stroke={stroke}
-          strokeWidth={sw}
-        />,
-        <Line
-          key={`h${i}`}
-          x1={cx - R}
-          y1={cy + off}
-          x2={cx + R}
-          y2={cy + off}
-          stroke={stroke}
-          strokeWidth={sw}
-        />,
-      );
-    }
-    return elements;
-  }, [cx, cy, R, gridStepPx, onSurface]);
-
-  // ── Target dot / off-screen edge arrow ─────────────────────────────────
   const rad = toRad(relativeAngle);
-  const dx = Math.sin(rad); // forward unit vector x in SVG coords
-  const dy = -Math.cos(rad); //                     y
+  const dx = Math.sin(rad);
+  const dy = -Math.cos(rad);
   const rawDistPx = isFiniteDistance ? distance * pixelsPerMetre : 0;
   const isOffScreen = rawDistPx > R - 14;
   const clampedDistPx = Math.min(rawDistPx, R - 14);
   const targetX = cx + clampedDistPx * dx;
   const targetY = cy + clampedDistPx * dy;
 
-  // Arrow tip pointing outward toward the target, positioned near circle edge
   const arrowSz = 9;
   const arrowCentreR = R - arrowSz - 2;
   const aCx = cx + arrowCentreR * dx;
   const aCy = cy + arrowCentreR * dy;
-  const px = Math.cos(rad); // perpendicular unit vector x
-  const py = Math.sin(rad); //                           y
+  const px = Math.cos(rad);
+  const py = Math.sin(rad);
   const edgeArrowPts = [
     `${aCx + arrowSz * dx},${aCy + arrowSz * dy}`,
     `${aCx - arrowSz * 0.45 * dx - arrowSz * 0.48 * px},${aCy - arrowSz * 0.45 * dy - arrowSz * 0.48 * py}`,
     `${aCx - arrowSz * 0.45 * dx + arrowSz * 0.48 * px},${aCy - arrowSz * 0.45 * dy + arrowSz * 0.48 * py}`,
   ].join(" ");
 
-  // ── Accuracy circle ─────────────────────────────────────────────────────
   const accuracyRpx =
     accuracy != null
       ? Math.min(R - 2, Math.max(3, accuracy * pixelsPerMetre))
       : null;
 
-  // ── Compass widget (bottom-right quadrant) ──────────────────────────────
-  // Place center so the compass background circle just kisses the radar border.
-  const SQRT2_INV = 1 / Math.SQRT2;
-  const compassWidgetR = size * 0.065;
-  const compassOffset = R - compassWidgetR - 2; // far edge == radar border
-  const compCx = cx + compassOffset * SQRT2_INV;
-  const compCy = cy + compassOffset * SQRT2_INV;
-
-  // Classic elongated diamond compass needle — tips extend beyond the background circle
-  const needleLen = compassWidgetR * 1.1;
-  const halfW = compassWidgetR * 0.28;
-
-  // North direction in heading-up frame: screen-up = heading, so North = -heading from up
-  const northRad = toRad(-heading);
-  const nDx = Math.sin(northRad);
-  const nDy = -Math.cos(northRad);
-  const nPerp = northRad + Math.PI / 2;
-
-  const nTipX = compCx + needleLen * nDx;
-  const nTipY = compCy + needleLen * nDy;
-  const sTipX = compCx - needleLen * nDx;
-  const sTipY = compCy - needleLen * nDy;
-  const midLX = compCx - halfW * Math.cos(nPerp);
-  const midLY = compCy - halfW * Math.sin(nPerp);
-  const midRX = compCx + halfW * Math.cos(nPerp);
-  const midRY = compCy + halfW * Math.sin(nPerp);
-
-  const northNeedlePts = `${nTipX},${nTipY} ${midLX},${midLY} ${midRX},${midRY}`;
-  const southNeedlePts = `${sTipX},${sTipY} ${midLX},${midLY} ${midRX},${midRY}`;
+  // Compass anchored to the bottom-right corner of the SVG
+  const compassWidgetR = size * 0.045;
+  const compMargin = compassWidgetR * 1.3;
+  const compCx = size - compMargin;
+  const compCy = size - compMargin;
 
   return (
     <View style={{ width: size, height: size }}>
@@ -177,7 +309,7 @@ export const RadarView = ({
           </ClipPath>
         </Defs>
 
-        {/* Radar background circle */}
+        {/* Background */}
         <Circle cx={cx} cy={cy} r={R} fill={surfaceColor} />
         <Circle
           cx={cx}
@@ -188,79 +320,32 @@ export const RadarView = ({
           fill="none"
         />
 
-        {/* Grid (clipped to circle) */}
-        <G clipPath="url(#radarClip)">{gridElements}</G>
-
-        {/* Grid scale label – just right of the first positive vertical line */}
-        {gridStepPx >= 5 && (
-          <SvgText
-            x={cx + gridStepPx + 4}
-            y={cy - 5}
-            fontSize={size * 0.03}
-            fill={ColorUtils.withOpacity(onSurface, 0.38)}
-            clipPath="url(#radarClip)"
-          >
-            {formatGridLabel(gridStepM)}
-          </SvgText>
-        )}
-
-        {/* Accuracy circle */}
-        {accuracyRpx != null && (
-          <Circle
-            cx={cx}
-            cy={cy}
-            r={accuracyRpx}
-            fill="rgba(100,180,255,0.10)"
-            stroke="rgba(100,180,255,0.42)"
-            strokeWidth={1.5}
-            clipPath="url(#radarClip)"
-          />
-        )}
-
-        {/* Target: dot when visible, arrowhead at edge when off-screen */}
-        {isFiniteDistance &&
-          (isOffScreen ? (
-            <Polygon points={edgeArrowPts} fill="#4caf50" />
-          ) : (
-            <Circle cx={targetX} cy={targetY} r={9} fill="#4caf50" />
-          ))}
-
-        {/* Center cross – current location */}
-        <Line
-          x1={cx - 11}
-          y1={cy}
-          x2={cx + 11}
-          y2={cy}
-          stroke={primaryColor}
-          strokeWidth={2.5}
-          strokeLinecap="round"
+        <RadarGrid
+          cx={cx}
+          cy={cy}
+          R={R}
+          size={size}
+          gridStepPx={gridStepPx}
+          gridStepM={gridStepM}
+          onSurface={onSurface}
         />
-        <Line
-          x1={cx}
-          y1={cy - 11}
-          x2={cx}
-          y2={cy + 11}
-          stroke={primaryColor}
-          strokeWidth={2.5}
-          strokeLinecap="round"
+        <AccuracyCircle cx={cx} cy={cy} accuracyRpx={accuracyRpx} />
+        <TargetMarker
+          isFiniteDistance={isFiniteDistance}
+          isOffScreen={isOffScreen}
+          targetX={targetX}
+          targetY={targetY}
+          edgeArrowPts={edgeArrowPts}
         />
-        <Circle cx={cx} cy={cy} r={3.5} fill={primaryColor} />
+        <CenterCross cx={cx} cy={cy} primaryColor={primaryColor} />
 
-        {/* ── Compass widget ─────────────────────────────────────────────── */}
-        <Circle
+        <CompassNeedle
           cx={compCx}
           cy={compCy}
-          r={compassWidgetR + 2}
-          fill={ColorUtils.withOpacity(surfaceColor, 0.9)}
-          stroke={ColorUtils.withOpacity(onSurface, 0.22)}
-          strokeWidth={1}
-        />
-        {/* North half (primary colour) */}
-        <Polygon points={northNeedlePts} fill={primaryColor} />
-        {/* South half (dimmed) */}
-        <Polygon
-          points={southNeedlePts}
-          fill={ColorUtils.withOpacity(onSurface, 0.28)}
+          widgetR={compassWidgetR}
+          heading={heading}
+          surfaceColor={surfaceColor}
+          onSurface={onSurface}
         />
       </Svg>
     </View>
