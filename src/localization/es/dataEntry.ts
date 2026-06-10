@@ -144,6 +144,8 @@ Sus valores serán borrados.
     useCurrentLocation: "Usar ubicación actual",
     x: "X",
     y: "Y",
+    viewModeCompass: "Brújula",
+    viewModeRadar: "Radar",
   },
   geo: {
     drawPolygon: "Dibujar polígono",

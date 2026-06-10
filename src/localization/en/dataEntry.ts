@@ -192,6 +192,8 @@ Fetch the list of records from the server and try again?`,
     useCurrentLocation: "Use current location",
     x: "X",
     y: "Y",
+    viewModeCompass: "Compass",
+    viewModeRadar: "Radar",
   },
   geo: {
     drawPolygon: "Draw polygon",

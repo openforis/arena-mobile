@@ -143,6 +143,8 @@ export default {
     useCurrentLocation: "Использовать текущее местоположение",
     x: "X",
     y: "Y",
+    viewModeCompass: "Компас",
+    viewModeRadar: "Радар",
   },
   geo: {
     drawPolygon: "Нарисовать полигон",

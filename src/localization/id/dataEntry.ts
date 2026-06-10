@@ -151,6 +151,8 @@ Lanjutkan?`,
     useCurrentLocation: "Gunakan lokasi saat ini",
     x: "X",
     y: "Y",
+    viewModeCompass: "Kompas",
+    viewModeRadar: "Radar",
   },
   geo: {
     drawPolygon: "Gambar poligon",

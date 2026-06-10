@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useTheme } from "react-native-paper";
 
 import {
@@ -19,6 +19,7 @@ import { DeviceInfoSelectors } from "state";
 import { AccuracyCircle } from "./AccuracyCircle";
 import { CenterCross } from "./CenterCross";
 import { CompassRose } from "./CompassRose";
+import { RadarView } from "./RadarView";
 import { NavigatorArrow } from "./NavigatorArrow";
 import { TargetPointDot } from "./TargetPointDot";
 import styles, { loadingOverlayAbsoluteStyle } from "./styles";
@@ -80,6 +81,19 @@ const headingSourceButtons = [
   },
 ];
 
+const viewModeButtons = [
+  {
+    value: "compass",
+    label: "dataEntry:coordinate.viewModeCompass",
+    icon: "compass-outline",
+  },
+  {
+    value: "radar",
+    label: "dataEntry:coordinate.viewModeRadar",
+    icon: "radar",
+  },
+];
+
 const determineWarningKey = (
   headingSourceAvailable: boolean,
   headingSource: string,
@@ -104,6 +118,8 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
   const minDimension = useMinScreenDimension();
   const isLandscape = DeviceInfoSelectors.useOrientationIsLandscape();
   const size = isLandscape ? minDimension - 110 : minDimension - 60;
+
+  const [viewMode, setViewMode] = useState<"compass" | "radar">("compass");
 
   const {
     accuracy,
@@ -132,7 +148,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
     [size],
   );
 
-  const compass = (
+  const compassView = (
     <VView style={compassContainerStyle}>
       <CompassRose compassRotStyle={compassRotStyle} size={size} />
       {!currentLocation && loadingOverlay}
@@ -156,6 +172,18 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
       )}
     </VView>
   );
+
+  const radarView = (
+    <RadarView
+      size={size}
+      relativeAngle={relativeAngle}
+      distance={distance}
+      heading={heading}
+      accuracy={accuracy}
+    />
+  );
+
+  const compass = viewMode === "compass" ? compassView : radarView;
 
   const infoCards = (
     <FlexWrapView style={styles.cardsRow}>
@@ -209,6 +237,14 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
     />
   );
 
+  const viewModeSwitch = (
+    <SegmentedButtons
+      buttons={viewModeButtons}
+      value={viewMode}
+      onChange={(v) => setViewMode(v as typeof viewMode)}
+    />
+  );
+
   const warningKey = determineWarningKey(headingSourceAvailable, headingSource);
 
   const warning = warningKey ? (
@@ -228,6 +264,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
           {/* Right column: info panel */}
           <ScrollView style={styles.infoColumnLandscape}>
             <VView style={styles.infoColumnContent}>
+              {viewModeSwitch}
               {headingSourceSwitch}
               {warning}
               {infoCards}
@@ -247,6 +284,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
     >
       <ScrollView>
         <VView style={styles.container}>
+          {viewModeSwitch}
           {headingSourceSwitch}
           {warning}
           <VView style={styles.compassWrapper}>{compass}</VView>

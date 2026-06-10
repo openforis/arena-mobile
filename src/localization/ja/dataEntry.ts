@@ -185,6 +185,8 @@ export default {
     useCurrentLocation: "現在地を使用",
     x: "X",
     y: "Y",
+    viewModeCompass: "コンパス",
+    viewModeRadar: "レーダー",
   },
   geo: {
     drawPolygon: "多角形を描く",

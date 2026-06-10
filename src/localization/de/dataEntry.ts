@@ -153,6 +153,8 @@ Fortfahren?`,
     useCurrentLocation: "Aktuellen Standort verwenden",
     x: "X",
     y: "Y",
+    viewModeCompass: "Kompass",
+    viewModeRadar: "Radar",
   },
   geo: {
     drawPolygon: "Polygon zeichnen",

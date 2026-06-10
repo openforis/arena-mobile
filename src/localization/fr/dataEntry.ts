@@ -150,6 +150,8 @@ Continuer ?`,
     useCurrentLocation: "Utiliser la position actuelle",
     x: "X",
     y: "Y",
+    viewModeCompass: "Boussole",
+    viewModeRadar: "Radar",
   },
   geo: {
     drawPolygon: "Dessiner un polygone",

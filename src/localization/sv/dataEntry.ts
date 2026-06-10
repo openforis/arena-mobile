@@ -150,6 +150,8 @@ Fortsätta?`,
     useCurrentLocation: "Använd aktuell plats",
     x: "X",
     y: "Y",
+    viewModeCompass: "Kompass",
+    viewModeRadar: "Radar",
   },
   geo: {
     drawPolygon: "Rita polygon",

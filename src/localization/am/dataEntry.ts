@@ -137,6 +137,8 @@ export default {
     useCurrentLocation: "የአሁኑን ሥፍራ ይጠቀሙ",
     x: "X",
     y: "Y",
+    viewModeCompass: "Compass",
+    viewModeRadar: "Radar",
   },
   geo: {
     drawPolygon: "ፖሊጎን ይሳሉ",

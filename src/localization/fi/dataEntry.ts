@@ -149,6 +149,8 @@ Jatketaanko?`,
     useCurrentLocation: "Käytä nykyistä sijaintia",
     x: "X",
     y: "Y",
+    viewModeCompass: "Kompassi",
+    viewModeRadar: "Tutka",
   },
   geo: {
     drawPolygon: "Piirrä monikulmio",

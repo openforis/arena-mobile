@@ -149,6 +149,8 @@ export default {
     useCurrentLocation: "استفاده از موقعیت فعلی",
     x: "X",
     y: "Y",
+    viewModeCompass: "Compass",
+    viewModeRadar: "Radar",
   },
   geo: {
     drawPolygon: "رسم چندضلعی",

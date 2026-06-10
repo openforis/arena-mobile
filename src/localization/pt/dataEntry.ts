@@ -144,6 +144,8 @@ Continuar?`,
     useCurrentLocation: "Usar localização atual",
     x: "X",
     y: "Y",
+    viewModeCompass: "Bússola",
+    viewModeRadar: "Radar",
   },
   geo: {
     drawPolygon: "Desenhar polígono",
