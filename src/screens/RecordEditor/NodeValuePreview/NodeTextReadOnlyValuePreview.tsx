@@ -1,12 +1,30 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { StyleSheet } from "react-native";
 
 import { NodeDefs, NodeDefText } from "@openforis/arena-core";
 
-import { Link, Markdown, Text } from "components";
+import {
+  CopyToClipboardButton,
+  HView,
+  Link,
+  Markdown,
+  Text,
+  View,
+} from "components";
 import { DataEntrySelectors } from "state/dataEntry";
 import { URLs } from "utils";
 
 import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    alignItems: "center",
+  },
+  content: {
+    flex: 1,
+  },
+});
 
 export const NodeTextReadOnlyValuePreview = (props: NodeValuePreviewProps) => {
   const { nodeDef, value, valueFormatted } = props;
@@ -29,11 +47,20 @@ export const NodeTextReadOnlyValuePreview = (props: NodeValuePreviewProps) => {
     }
   }, [isHyperlink, value]);
 
-  if (isMarkdown) {
-    return <Markdown content={value} />;
-  }
-  if (isHyperlink && normalizedUrl) {
-    return <Link url={normalizedUrl} />;
-  }
-  return <Text>{valueFormatted}</Text>;
+  const internalComponent = useMemo(() => {
+    if (isMarkdown) {
+      return <Markdown content={value} />;
+    }
+    if (isHyperlink && normalizedUrl) {
+      return <Link url={normalizedUrl} />;
+    }
+    return <Text>{valueFormatted}</Text>;
+  }, [isMarkdown, isHyperlink, normalizedUrl, valueFormatted, value]);
+
+  return (
+    <HView style={styles.wrapper}>
+      <View style={styles.content}>{internalComponent}</View>
+      <CopyToClipboardButton value={valueFormatted} />
+    </HView>
+  );
 };

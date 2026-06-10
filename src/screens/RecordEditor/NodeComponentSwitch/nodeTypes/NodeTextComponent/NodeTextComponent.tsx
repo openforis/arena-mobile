@@ -4,18 +4,12 @@ import {
   NodeDefTextInputType,
   NodeDefType,
   NodeDefs,
-  NodeValueFormatter,
   Objects,
 } from "@openforis/arena-core";
 
-import { CopyToClipboardButton, HView, TextInput } from "components";
+import { TextInput } from "components";
 import { RecordEditViewMode } from "model";
-import { NodeTextReadOnlyValuePreview } from "screens/RecordEditor/NodeValuePreview/NodeTextReadOnlyValuePreview";
-import {
-  DataEntrySelectors,
-  SurveyOptionsSelectors,
-  SurveySelectors,
-} from "state";
+import { DataEntrySelectors, SurveyOptionsSelectors } from "state";
 import { log } from "utils";
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
@@ -32,20 +26,17 @@ const nodeValueToUiValue = (value: any) =>
   Objects.isEmpty(value) ? "" : String(value);
 
 export const NodeTextComponent = (props: NodeComponentProps) => {
-  const { nodeDef, nodeUuid, style: styleProp, wrapperStyle } = props;
+  const { nodeDef, nodeUuid, style: styleProp } = props;
 
   const nodeDefName = NodeDefs.getName(nodeDef);
   log.debug(`rendering NodeTextComponent for ${nodeDefName}`);
 
-  const survey = SurveySelectors.useCurrentSurvey()!;
-  const cycle = SurveySelectors.useCurrentSurveyCycle();
-  const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
   const isActiveChild =
     DataEntrySelectors.useIsNodeDefCurrentActiveChild(nodeDef);
   const inputRef = useRef(null as any);
 
-  const styles = useStyles({ wrapperStyle });
+  const styles = useStyles();
 
   const isNumeric = !!isNumericByType[nodeDef.type];
 
@@ -66,7 +57,7 @@ export const NodeTextComponent = (props: NodeComponentProps) => {
     [isNumeric],
   );
 
-  const { applicable, invalidValue, value, uiValue, updateNodeValue } =
+  const { applicable, invalidValue, uiValue, updateNodeValue } =
     useNodeComponentLocalState({
       nodeUuid,
       updateDelay: 500,
@@ -102,35 +93,17 @@ export const NodeTextComponent = (props: NodeComponentProps) => {
   }, [applicable, styleProp, styles.notApplicable, styles.textInput]);
 
   return (
-    <HView style={styles.wrapper}>
-      {isReadOnly ? (
-        <NodeTextReadOnlyValuePreview
-          nodeDef={nodeDef}
-          value={value}
-          valueFormatted={NodeValueFormatter.format({
-            survey,
-            cycle,
-            nodeDef,
-            value,
-            showLabel: true,
-            lang,
-          })}
-        />
-      ) : (
-        <TextInput
-          editable={editable}
-          error={invalidValue}
-          keyboardType={isNumeric ? "numeric" : undefined}
-          ref={inputRef}
-          style={style}
-          multiline={multiline}
-          numberOfLines={multiline ? multilineNumberOfLines : 1}
-          onChange={onChange}
-          testID={nodeDefName}
-          value={uiValue}
-        />
-      )}
-      {!editable && <CopyToClipboardButton value={uiValue} />}
-    </HView>
+    <TextInput
+      editable={editable}
+      error={invalidValue}
+      keyboardType={isNumeric ? "numeric" : undefined}
+      ref={inputRef}
+      style={style}
+      multiline={multiline}
+      numberOfLines={multiline ? multilineNumberOfLines : 1}
+      onChange={onChange}
+      testID={nodeDefName}
+      value={uiValue}
+    />
   );
 };
