@@ -2,7 +2,7 @@ import { StyleProp, ViewStyle } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 
 type LoadingIconProps = {
-  size: "small" | "large" | number;
+  size?: "small" | "large" | number;
   style?: StyleProp<ViewStyle>;
 };
 

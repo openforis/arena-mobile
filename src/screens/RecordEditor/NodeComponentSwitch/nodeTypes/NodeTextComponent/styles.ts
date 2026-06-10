@@ -2,16 +2,12 @@ import { useMemo } from "react";
 import { StyleSheet } from "react-native";
 import { useTheme } from "react-native-paper";
 
-export const useStyles = ({ wrapperStyle }: any) => {
+export const useStyles = () => {
   const theme = useTheme();
 
   return useMemo(
     () =>
       StyleSheet.create({
-        wrapper: {
-          width: "100%",
-          ...wrapperStyle,
-        },
         textInput: {
           display: "flex",
           flex: 1,
@@ -22,6 +18,6 @@ export const useStyles = ({ wrapperStyle }: any) => {
           color: theme.colors.onSurfaceVariant,
         },
       }),
-    [theme, wrapperStyle]
+    [theme],
   );
 };
