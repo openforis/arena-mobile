@@ -39,9 +39,9 @@ const formatAngle = (v: number | null | undefined): string => {
   return `${v.toFixed(1)}${DEG}`;
 };
 
-const formatDistance = (v: number | null | undefined): string => {
+const formatDistance = (v: number | null | undefined, decimals = 1): string => {
   if (v == null || !Number.isFinite(v) || v === Infinity) return "-";
-  return `${v.toFixed(1)} m`;
+  return v.toFixed(decimals);
 };
 
 type InfoCardProps = {
@@ -146,13 +146,13 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
     relativeAngle,
   });
 
-  const compassContainerStyle = useMemo(
+  const navigatorContainerStyle = useMemo(
     () => ({ width: size, height: size }),
     [size],
   );
 
   const compassView = (
-    <VView style={compassContainerStyle}>
+    <VView style={navigatorContainerStyle}>
       <CompassRose compassRotStyle={compassRotStyle} size={size} />
       {!currentLocation && loadingOverlay}
       {currentLocation && !isProximity && (
@@ -177,13 +177,16 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
   );
 
   const radarView = (
-    <RadarView
-      size={size}
-      relativeAngle={relativeAngle}
-      distance={distance}
-      heading={heading}
-      accuracy={accuracy}
-    />
+    <VView style={navigatorContainerStyle}>
+      <RadarView
+        size={size}
+        relativeAngle={relativeAngle}
+        distance={distance}
+        heading={heading}
+        accuracy={accuracy}
+      />
+      {!currentLocation && loadingOverlay}
+    </VView>
   );
 
   const compass = viewMode === "compass" ? compassView : radarView;
@@ -192,7 +195,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
     <FlexWrapView style={styles.cardsRow}>
       <InfoCard
         labelKey="dataEntry:coordinate.distance"
-        value={formatDistance(distance)}
+        value={formatDistance(distance, 0)}
       />
       <InfoCard
         labelKey="dataEntry:coordinate.heading"
