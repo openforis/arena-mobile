@@ -178,6 +178,7 @@ export default {
     distance: "距離 (m)",
     getLocation: "位置を取得",
     heading: "方位 (度)",
+    headingOffset: "方位ずれ",
     keepXAndY: "XとYを保持",
     magnetometerNotAvailable: "方位センサーが利用できません！",
     navigateToTarget: "目標に向かってナビゲート",

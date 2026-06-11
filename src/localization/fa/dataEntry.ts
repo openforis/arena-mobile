@@ -142,6 +142,7 @@ export default {
     distance: "فاصله (متر)",
     getLocation: "دریافت موقعیت مکانی",
     heading: "جهت (درجه)",
+    headingOffset: "انحراف جهت",
     keepXAndY: "نگه داشتن X و Y",
     magnetometerNotAvailable: "مگنتومتر در دسترس نیست!",
     navigateToTarget: "هدایت به هدف",

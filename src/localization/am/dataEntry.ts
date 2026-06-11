@@ -130,6 +130,7 @@ export default {
     distance: "ርቀት (ሜ)",
     getLocation: "ቦታ ያግኙ",
     heading: "አቅጣጫ (ዲግሪ)",
+    headingOffset: "የአቅጣጫ ልዩነት",
     keepXAndY: "X እና Y ን ያቆዩ",
     magnetometerNotAvailable: "ማግኔቶሜትር የለም!",
     navigateToTarget: "ወደ መድረሻ ይሂዱ",

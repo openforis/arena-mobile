@@ -137,6 +137,7 @@ Sus valores serán borrados.
     distance: "Distancia (m)",
     getLocation: "Obtener ubicación",
     heading: "Orientación (grados)",
+    headingOffset: "Desviación de rumbo",
     keepXAndY: "Mantener X e Y",
     magnetometerNotAvailable: "¡Magnetómetro no disponible!",
     navigateToTarget: "Navegar al objetivo",

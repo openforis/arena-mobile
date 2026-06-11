@@ -15,7 +15,7 @@ import {
   VView,
 } from "components";
 import { useMinScreenDimension } from "hooks";
-import { DeviceInfoSelectors } from "state";
+import { DeviceInfoSelectors, SettingsSelectors } from "state";
 
 import { LocationNavigatorInfoDialog } from "./LocationNavigatorInfoDialog";
 import { AccuracyCircle } from "./AccuracyCircle";
@@ -26,6 +26,13 @@ import { RadarView } from "./RadarView";
 import { NavigatorArrow } from "./NavigatorArrow";
 import { TargetLocationIcon } from "./TargetLocationIcon";
 import { TargetPointDot } from "./TargetPointDot";
+import {
+  cardStyleGreen,
+  cardStyleOrange,
+  cardStyleRed,
+  getAccuracyCardStyle,
+  getRelativeAngleCardStyle,
+} from "./locationNavigatorConstants";
 import styles, { loadingOverlayAbsoluteStyle } from "./styles";
 import { useCompassAnimation } from "./useCompassAnimation";
 import { useLocationNavigator } from "./useLocationNavigator";
@@ -41,21 +48,50 @@ const formatAngle = (v: number | null | undefined): string => {
   return `${v.toFixed(1)}${DEG}`;
 };
 
+const formatSignedAngle = (v: number | null | undefined): string => {
+  if (v == null || !Number.isFinite(v)) return "-";
+  const sign = v >= 0 ? "+" : "";
+  return `${sign}${v.toFixed(1)}${DEG}`;
+};
+
 const formatDistance = (v: number | null | undefined, decimals = 1): string => {
   if (v == null || !Number.isFinite(v) || v === Infinity) return "-";
   return v.toFixed(decimals);
 };
 
+const getDistanceCardStyle = (
+  distance: number | null | undefined,
+): { backgroundColor: string; textColor: string } | null => {
+  if (distance == null || !Number.isFinite(distance) || distance === Infinity)
+    return null;
+  if (distance < 5) return cardStyleGreen;
+  if (distance < 30) return cardStyleOrange;
+  return cardStyleRed;
+};
+
 type InfoCardProps = {
   labelKey: string;
   value: string;
+  backgroundColor?: string;
+  textColor?: string;
 };
 
-const InfoCard = ({ labelKey, value }: InfoCardProps) => {
+const InfoCard = ({ labelKey, value, backgroundColor, textColor }: InfoCardProps) => {
   const theme = useTheme();
   const containerStyle = useMemo(
-    () => [styles.infoCard, { backgroundColor: theme.colors.surfaceVariant }],
-    [theme],
+    () => [
+      styles.infoCard,
+      { backgroundColor: backgroundColor ?? theme.colors.surfaceVariant },
+    ],
+    [theme, backgroundColor],
+  );
+  const labelStyle = useMemo(
+    () => [styles.infoCardLabel, textColor ? { color: textColor } : undefined],
+    [textColor],
+  );
+  const valueStyle = useMemo(
+    () => [styles.infoCardValue, textColor ? { color: textColor } : undefined],
+    [textColor],
   );
 
   return (
@@ -63,9 +99,9 @@ const InfoCard = ({ labelKey, value }: InfoCardProps) => {
       <Text
         textKey={labelKey}
         variant="labelSmall"
-        style={styles.infoCardLabel}
+        style={labelStyle}
       />
-      <Text variant="titleMedium" style={styles.infoCardValue}>
+      <Text variant="titleMedium" style={valueStyle}>
         {value}
       </Text>
     </VView>
@@ -128,7 +164,6 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
 
   const {
     accuracy,
-    angleToTarget,
     arrowColor,
     currentCoordDisplay,
     currentLocation,
@@ -197,23 +232,41 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
 
   const compass = viewMode === "compass" ? compassView : radarView;
 
+  const signedRelativeAngle = currentLocation
+    ? relativeAngle > 180
+      ? relativeAngle - 360
+      : relativeAngle
+    : null;
+  const { locationAccuracyThreshold } = SettingsSelectors.useSettings();
+  const angleCardStyle = currentLocation ? getRelativeAngleCardStyle(relativeAngle) : null;
+  const distanceCardStyle = currentLocation ? getDistanceCardStyle(distance) : null;
+  const accuracyCardStyle = currentLocation
+    ? getAccuracyCardStyle(accuracy, locationAccuracyThreshold)
+    : null;
+
   const infoCards = (
     <FlexWrapView style={styles.cardsRow}>
       <InfoCard
         labelKey="dataEntry:coordinate.distance"
         value={formatDistance(distance, 0)}
+        backgroundColor={distanceCardStyle?.backgroundColor}
+        textColor={distanceCardStyle?.textColor}
       />
       <InfoCard
         labelKey="dataEntry:coordinate.heading"
         value={formatAngle(heading)}
       />
       <InfoCard
-        labelKey="dataEntry:coordinate.angleToTargetLocation"
-        value={formatAngle(angleToTarget)}
+        labelKey="dataEntry:coordinate.headingOffset"
+        value={formatSignedAngle(signedRelativeAngle)}
+        backgroundColor={angleCardStyle?.backgroundColor}
+        textColor={angleCardStyle?.textColor}
       />
       <InfoCard
         labelKey="dataEntry:coordinate.accuracy"
         value={formatDistance(accuracy)}
+        backgroundColor={accuracyCardStyle?.backgroundColor}
+        textColor={accuracyCardStyle?.textColor}
       />
     </FlexWrapView>
   );

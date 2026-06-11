@@ -136,6 +136,7 @@ export default {
     distance: "Расстояние (м)",
     getLocation: "Получить местоположение",
     heading: "Курс (град)",
+    headingOffset: "Отклонение курса",
     keepXAndY: "Сохранить X и Y",
     magnetometerNotAvailable: "Магнитометр недоступен!",
     navigateToTarget: "Перейти к местоположению",
