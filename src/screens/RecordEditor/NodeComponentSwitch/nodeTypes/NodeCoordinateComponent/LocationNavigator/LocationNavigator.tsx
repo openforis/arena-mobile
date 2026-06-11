@@ -247,29 +247,29 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
     </HView>
   );
 
-  const headingSourceSwitch = (
-    <HView style={styles.headingSourceRow}>
-      <SegmentedButtons
-        style={styles.headingSourceButtons}
-        buttons={headingSourceButtons}
-        value={headingSource}
-        onChange={(v) => setHeadingSource(v as typeof headingSource)}
-      />
-      <IconButton
-        icon="information-outline"
-        mode="contained-tonal"
-        size={16}
-        onPress={() => setInfoDialogVisible(true)}
-      />
+  const switches = (
+    <HView style={styles.switchesSection}>
+      <VView style={styles.switchesInfoButton}>
+        <IconButton
+          icon="information-outline"
+          mode="contained-tonal"
+          size={28}
+          onPress={() => setInfoDialogVisible(true)}
+        />
+      </VView>
+      <VView style={styles.switchesStack}>
+        <SegmentedButtons
+          buttons={viewModeButtons}
+          value={viewMode}
+          onChange={(v) => setViewMode(v as typeof viewMode)}
+        />
+        <SegmentedButtons
+          buttons={headingSourceButtons}
+          value={headingSource}
+          onChange={(v) => setHeadingSource(v as typeof headingSource)}
+        />
+      </VView>
     </HView>
-  );
-
-  const viewModeSwitch = (
-    <SegmentedButtons
-      buttons={viewModeButtons}
-      value={viewMode}
-      onChange={(v) => setViewMode(v as typeof viewMode)}
-    />
   );
 
   const warningKey = determineWarningKey(headingSourceAvailable, headingSource);
@@ -296,8 +296,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
           {/* Right column: info panel */}
           <ScrollView style={styles.infoColumnLandscape}>
             <VView style={styles.infoColumnContent}>
-              {viewModeSwitch}
-              {headingSourceSwitch}
+              {switches}
               {warning}
               {infoCards}
               {coords}
@@ -317,8 +316,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
       {infoDialog}
       <ScrollView>
         <VView style={styles.container}>
-          {viewModeSwitch}
-          {headingSourceSwitch}
+          {switches}
           {warning}
           <VView style={styles.compassWrapper}>{compass}</VView>
           {infoCards}

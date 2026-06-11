@@ -78,11 +78,18 @@ export default StyleSheet.create({
     justifyContent: "center",
     marginTop: 8,
   },
-  headingSourceRow: {
+  switchesSection: {
+    flexDirection: "row",
+    alignItems: "stretch",
+    width: "100%",
+  },
+  switchesInfoButton: {
+    justifyContent: "center",
     alignItems: "center",
   },
-  headingSourceButtons: {
+  switchesStack: {
     flex: 1,
+    gap: 8,
   },
   infoDialogScroll: {
     maxHeight: 400,
