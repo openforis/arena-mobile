@@ -10,6 +10,8 @@ import {
   Svg,
   Text as SvgText,
 } from "react-native-svg";
+
+import { TARGET_COLOR, TargetLocationIcon } from "./TargetLocationIcon";
 import { useTheme } from "react-native-paper";
 
 import { ColorUtils } from "utils";
@@ -128,58 +130,9 @@ const AccuracyCircle = ({ cx, cy, accuracyRpx }: AccuracyCircleProps) => {
   );
 };
 
-type TargetMarkerProps = {
-  isFiniteDistance: boolean;
-  isOffScreen: boolean;
-  targetX: number;
-  targetY: number;
-  edgeArrowPts: string;
-};
+const TARGET_ICON_SIZE = 18;
+const TARGET_ICON_HALF = TARGET_ICON_SIZE / 2;
 
-const TargetMarker = ({
-  isFiniteDistance,
-  isOffScreen,
-  targetX,
-  targetY,
-  edgeArrowPts,
-}: TargetMarkerProps) => {
-  if (!isFiniteDistance) return null;
-  if (isOffScreen) return <Polygon points={edgeArrowPts} fill="#4caf50" />;
-  return <Circle cx={targetX} cy={targetY} r={9} fill="#4caf50" />;
-};
-
-type CenterCrossProps = {
-  cx: number;
-  cy: number;
-  primaryColor: string;
-};
-
-const centerCrossHalfSize = 11;
-const centerCrossStroke = 4;
-
-const CenterCross = ({ cx, cy, primaryColor }: CenterCrossProps) => (
-  <>
-    <Line
-      x1={cx - centerCrossHalfSize}
-      y1={cy}
-      x2={cx + centerCrossHalfSize}
-      y2={cy}
-      stroke={primaryColor}
-      strokeWidth={centerCrossStroke}
-      strokeLinecap="round"
-    />
-    <Line
-      x1={cx}
-      y1={cy - centerCrossHalfSize}
-      x2={cx}
-      y2={cy + centerCrossHalfSize}
-      stroke={primaryColor}
-      strokeWidth={2.5}
-      strokeLinecap="round"
-    />
-    <Circle cx={cx} cy={cy} r={3.5} fill={primaryColor} />
-  </>
-);
 
 type CompassNeedleProps = {
   cx: number;
@@ -228,8 +181,8 @@ const CompassNeedle = ({
         cy={cy}
         r={widgetR * 1.2}
         fill={ColorUtils.withOpacity(surfaceColor, 0.9)}
-        stroke={ColorUtils.withOpacity(onSurface, 0.22)}
-        strokeWidth={1}
+        stroke={ColorUtils.withOpacity(onSurface, 0.4)}
+        strokeWidth={2}
       />
       <Polygon
         points={northPts}
@@ -272,7 +225,6 @@ export const RadarView = ({
   const { colors } = theme;
   const onSurface = colors.onSurface;
   const surfaceColor = colors.surface;
-  const primaryColor = colors.primary;
 
   const isFiniteDistance = isFinite(distance) && distance > 0;
   const viewRadiusM = isFiniteDistance ? distance * 1.45 : 50;
@@ -345,15 +297,9 @@ export const RadarView = ({
           onSurface={onSurface}
         />
         <AccuracyCircle cx={cx} cy={cy} accuracyRpx={accuracyRpx} />
-        <TargetMarker
-          isFiniteDistance={isFiniteDistance}
-          isOffScreen={isOffScreen}
-          targetX={targetX}
-          targetY={targetY}
-          edgeArrowPts={edgeArrowPts}
-        />
-        <CenterCross cx={cx} cy={cy} primaryColor={primaryColor} />
-
+        {isFiniteDistance && isOffScreen && (
+          <Polygon points={edgeArrowPts} fill={TARGET_COLOR} />
+        )}
         <CompassNeedle
           cx={compCx}
           cy={compCy}
@@ -363,6 +309,17 @@ export const RadarView = ({
           onSurface={onSurface}
         />
       </Svg>
+      {isFiniteDistance && !isOffScreen && (
+        <View
+          style={{
+            position: "absolute",
+            left: targetX - TARGET_ICON_HALF,
+            top: targetY - TARGET_ICON_HALF,
+          }}
+        >
+          <TargetLocationIcon size={TARGET_ICON_SIZE} />
+        </View>
+      )}
     </View>
   );
 };

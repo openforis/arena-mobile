@@ -1,9 +1,12 @@
 import { StyleSheet, View } from "react-native";
-import { Circle, Svg } from "react-native-svg";
 
 import { PROXIMITY_THRESHOLD_METRES } from "./locationNavigatorConstants";
+import { TargetLocationIcon } from "./TargetLocationIcon";
 
 const toRad = (deg: number) => (deg * Math.PI) / 180;
+
+const ICON_SIZE = 18;
+const ICON_HALF = ICON_SIZE / 2;
 
 type TargetPointDotProps = {
   size: number;
@@ -28,12 +31,16 @@ export const TargetPointDot = ({
   const dotY = cy - dotRadius * Math.cos(rad);
 
   return (
-    <View
-      style={[StyleSheet.absoluteFillObject, { width: size, height: size }]}
-    >
-      <Svg width={size} height={size}>
-        <Circle cx={dotX} cy={dotY} r={9} fill="#4caf50" />
-      </Svg>
+    <View style={[StyleSheet.absoluteFillObject, { width: size, height: size }]}>
+      <View
+        style={{
+          position: "absolute",
+          left: dotX - ICON_HALF,
+          top: dotY - ICON_HALF,
+        }}
+      >
+        <TargetLocationIcon size={ICON_SIZE} />
+      </View>
     </View>
   );
 };

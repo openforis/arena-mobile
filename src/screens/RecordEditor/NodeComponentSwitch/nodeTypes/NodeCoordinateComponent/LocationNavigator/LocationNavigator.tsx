@@ -21,8 +21,10 @@ import { LocationNavigatorInfoDialog } from "./LocationNavigatorInfoDialog";
 import { AccuracyCircle } from "./AccuracyCircle";
 import { CenterCross } from "./CenterCross";
 import { CompassRose } from "./CompassRose";
+import { CurrentLocationIcon } from "./CurrentLocationIcon";
 import { RadarView } from "./RadarView";
 import { NavigatorArrow } from "./NavigatorArrow";
+import { TargetLocationIcon } from "./TargetLocationIcon";
 import { TargetPointDot } from "./TargetPointDot";
 import styles, { loadingOverlayAbsoluteStyle } from "./styles";
 import { useCompassAnimation } from "./useCompassAnimation";
@@ -156,11 +158,14 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
       <CompassRose compassRotStyle={compassRotStyle} size={size} />
       {!currentLocation && loadingOverlay}
       {currentLocation && !isProximity && (
-        <NavigatorArrow
-          arrowRotStyle={arrowRotStyle}
-          arrowColor={arrowColor}
-          size={size}
-        />
+        <>
+          <NavigatorArrow
+            arrowRotStyle={arrowRotStyle}
+            arrowColor={arrowColor}
+            size={size}
+          />
+          <CenterCross size={size} />
+        </>
       )}
       {currentLocation && isProximity && (
         <>
@@ -186,6 +191,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
         accuracy={accuracy}
       />
       {!currentLocation && loadingOverlay}
+      {currentLocation && <CenterCross size={size} />}
     </VView>
   );
 
@@ -215,11 +221,17 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
   const coords = (
     <VView style={styles.coordsSection}>
       {targetCoordDisplay && (
-        <FormItem labelKey="dataEntry:coordinate.targetLocation">
+        <FormItem
+          labelKey="dataEntry:coordinate.targetLocation"
+          labelIcon={<TargetLocationIcon size={18} />}
+        >
           {targetCoordDisplay}
         </FormItem>
       )}
-      <FormItem labelKey="dataEntry:coordinate.currentLocation">
+      <FormItem
+        labelKey="dataEntry:coordinate.currentLocation"
+        labelIcon={<CurrentLocationIcon size={18} />}
+      >
         {currentCoordDisplay}
       </FormItem>
     </VView>
