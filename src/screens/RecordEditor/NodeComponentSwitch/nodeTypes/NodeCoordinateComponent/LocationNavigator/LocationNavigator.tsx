@@ -76,7 +76,12 @@ type InfoCardProps = {
   textColor?: string;
 };
 
-const InfoCard = ({ labelKey, value, backgroundColor, textColor }: InfoCardProps) => {
+const InfoCard = ({
+  labelKey,
+  value,
+  backgroundColor,
+  textColor,
+}: InfoCardProps) => {
   const theme = useTheme();
   const containerStyle = useMemo(
     () => [
@@ -96,11 +101,7 @@ const InfoCard = ({ labelKey, value, backgroundColor, textColor }: InfoCardProps
 
   return (
     <VView style={containerStyle}>
-      <Text
-        textKey={labelKey}
-        variant="labelSmall"
-        style={labelStyle}
-      />
+      <Text textKey={labelKey} variant="labelSmall" style={labelStyle} />
       <Text variant="titleMedium" style={valueStyle}>
         {value}
       </Text>
@@ -157,7 +158,9 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
 
   const minDimension = useMinScreenDimension();
   const isLandscape = DeviceInfoSelectors.useOrientationIsLandscape();
-  const size = isLandscape ? minDimension - 110 : minDimension - 60;
+  const size = isLandscape ? minDimension - 110 : minDimension - 90;
+
+  const { locationAccuracyThreshold } = SettingsSelectors.useSettings();
 
   const [viewMode, setViewMode] = useState<"compass" | "radar">("compass");
   const [infoDialogVisible, setInfoDialogVisible] = useState(false);
@@ -237,9 +240,12 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
       ? relativeAngle - 360
       : relativeAngle
     : null;
-  const { locationAccuracyThreshold } = SettingsSelectors.useSettings();
-  const angleCardStyle = currentLocation ? getRelativeAngleCardStyle(relativeAngle) : null;
-  const distanceCardStyle = currentLocation ? getDistanceCardStyle(distance) : null;
+  const angleCardStyle = currentLocation
+    ? getRelativeAngleCardStyle(relativeAngle)
+    : null;
+  const distanceCardStyle = currentLocation
+    ? getDistanceCardStyle(distance)
+    : null;
   const accuracyCardStyle = currentLocation
     ? getAccuracyCardStyle(accuracy, locationAccuracyThreshold)
     : null;
