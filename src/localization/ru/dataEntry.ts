@@ -148,7 +148,7 @@ export default {
     locationNavigatorInfo: {
       title: "Location Navigator",
       description:
-        "Guides you toward a target coordinate using your device's GPS and sensors. It shows your current position relative to the target and lets you navigate to it in the field.",
+        "Guides you toward a target coordinate using your device's GPS and sensors. It shows a target location relative to your current position and lets you navigate to it in the field.",
       viewModesTitle: "View Modes",
       compassTitle: "Compass",
       compassDesc:
