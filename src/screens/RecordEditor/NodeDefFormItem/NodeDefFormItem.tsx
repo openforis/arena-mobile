@@ -40,9 +40,15 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
     parentNodeUuid,
     nodeDefUuid,
   });
+  const editable = DataEntrySelectors.useRecordNodePointerEditable({
+    parentNodeUuid,
+    nodeDefUuid,
+  });
   const keyAttributeLockAvailable =
+    editable &&
     NodeDefs.isKey(nodeDef) &&
     !NodeDefs.isEntity(nodeDef) &&
+    !NodeDefs.isReadOnly(nodeDef) &&
     !isNodeDefEnumerator;
   const isRecordAttributeFilled = DataEntrySelectors.useIsRecordAttributeFilled(
     {
@@ -56,7 +62,9 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
   const isLinkedToPreviousCycleRecord =
     DataEntrySelectors.useIsLinkedToPreviousCycleRecord();
   const canEditRecord = DataEntrySelectors.useCanEditRecord();
-  const alwaysVisible = Objects.isEmpty(NodeDefs.getApplicable(nodeDef));
+  const hasRelevantIf = Objects.isNotEmpty(NodeDefs.getApplicable(nodeDef));
+  const hasVisibleIf = Objects.isNotEmpty(NodeDefs.getVisibleIf(nodeDef));
+  const canDisappear = hasRelevantIf || hasVisibleIf;
 
   const includedInPreviousCycleLink =
     !NodeDefs.isKey(nodeDef) &&
@@ -97,6 +105,15 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
     [viewMode, styles.internalContainer],
   );
 
+  const editableFinal =
+    canEditRecord &&
+    !NodeDefs.isReadOnly(nodeDef) &&
+    editable &&
+    !keyAttributeLocked;
+
+  const showNodeComponentSwitch =
+    NodeDefs.isEntity(nodeDef) || editableFinal;
+
   const formItemComponent = useMemo(
     () => (
       <VView style={formItemComponentStyle}>
@@ -109,7 +126,7 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
           {isLinkedToPreviousCycleRecord && includedInPreviousCycleLink && (
             <PreviousCycleNodeValuePreview nodeDef={nodeDef} />
           )}
-          {canEditRecord && !keyAttributeLocked ? (
+          {showNodeComponentSwitch ? (
             <NodeComponentSwitch
               nodeDef={nodeDef}
               parentNodeUuid={parentNodeUuid}
@@ -125,26 +142,29 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
       </VView>
     ),
     [
-      canEditRecord,
+      showNodeComponentSwitch,
       formItemComponentStyle,
       includedInPreviousCycleLink,
       internalContainerStyle,
       isLinkedToPreviousCycleRecord,
       keyAttributeLockButton,
-      keyAttributeLocked,
       nodeDef,
       onFocus,
       parentNodeUuid,
     ],
   );
 
-  if (alwaysVisible) {
-    return formItemComponent;
+  if (!visible) {
+    return null;
   }
 
-  if (settings.animationsEnabled && viewMode !== RecordEditViewMode.oneNode) {
+  if (
+    canDisappear &&
+    settings.animationsEnabled &&
+    viewMode !== RecordEditViewMode.oneNode
+  ) {
     return <Fade visible={visible}>{formItemComponent}</Fade>;
   }
 
-  return visible ? formItemComponent : null;
+  return formItemComponent;
 };

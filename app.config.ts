@@ -1,28 +1,7 @@
 import { ExpoConfig } from "expo/config";
 
-const upsertPlugin = (
-  plugins: ExpoConfig["plugins"],
-  pluginName: string,
-  pluginConfig: Record<string, unknown>,
-): ExpoConfig["plugins"] => {
-  const nextPlugins: ExpoConfig["plugins"] = [...(plugins as any[])];
-  const index = nextPlugins.findIndex((plugin) =>
-    Array.isArray(plugin) ? plugin[0] === pluginName : plugin === pluginName,
-  );
-
-  const nextPluginEntry: NonNullable<ExpoConfig["plugins"]>[number] = [
-    pluginName,
-    pluginConfig,
-  ];
-
-  if (index >= 0) {
-    nextPlugins[index] = nextPluginEntry;
-  } else {
-    nextPlugins.push(nextPluginEntry);
-  }
-
-  return nextPlugins;
-};
+const appVersion = "2.6.2";
+const buildNumber = 101;
 
 const basePlugins: ExpoConfig["plugins"] = [
   ["expo-asset", { assets: ["assets"] }],
@@ -61,19 +40,13 @@ const config = (): ExpoConfig => {
   const androidGoogleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY_ANDROID;
   const iosGoogleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY_IOS;
 
-  const plugins =
-    androidGoogleMapsApiKey && iosGoogleMapsApiKey
-      ? upsertPlugin(basePlugins, "react-native-maps", {
-          androidGoogleMapsApiKey,
-          iosGoogleMapsApiKey,
-        })
-      : basePlugins;
+  const plugins = basePlugins;
 
   return {
     name: "Arena Mobile",
     slug: "arena-mobile",
     owner: "openforis",
-    version: "2.5.3",
+    version: appVersion,
     icon: "./assets/logo/icon_with_margin.png",
     userInterfaceStyle: "automatic",
     splash: {
@@ -91,7 +64,7 @@ const config = (): ExpoConfig => {
         backgroundColor: "#FFFFFF",
       },
       package: "org.openforis.arena_mobile",
-      versionCode: 91,
+      versionCode: buildNumber,
       permissions: [
         "android.permission.ACCESS_MEDIA_LOCATION",
         "android.permission.RECORD_AUDIO",
@@ -103,7 +76,7 @@ const config = (): ExpoConfig => {
       },
     },
     ios: {
-      buildNumber: "91",
+      buildNumber: buildNumber.toString(),
       bundleIdentifier: "org.openforis.arena-mobile",
       config: {
         usesNonExemptEncryption: false,

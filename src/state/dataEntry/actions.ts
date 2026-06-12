@@ -40,7 +40,7 @@ import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycl
 import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
 import {
   importRecordsFromFile,
-  importRecordsFromServer,
+  fetchRecordsFromServer,
 } from "./actionsRecordsImport";
 import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntrySelectors } from "./selectors";
@@ -60,6 +60,18 @@ const {
   unlinkFromRecordInPreviousCycle,
   updatePreviousCyclePageEntity,
 } = DataEntryActionsRecordPreviousCycle;
+
+const handleError = (
+  dispatch: any,
+  error: any,
+  messageKey: string,
+  messageParams = {},
+) => {
+  const errorMessage = Errors.getErrorMessage(error);
+  const params = { ...messageParams, error: errorMessage };
+  log.error(i18n.t(messageKey, params));
+  dispatch(ToastActions.show(messageKey, params));
+};
 
 const removeNodesFlags = (nodes: NodesMap) => {
   for (const node of Object.values(nodes)) {
@@ -88,37 +100,44 @@ const prepareRecordForStorage = ({ record }: any) => {
 const createNewRecord =
   ({ navigation }: any) =>
   async (dispatch: any, getState: any) => {
-    const state = getState();
-    const user = RemoteConnectionSelectors.selectLoggedUser(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const cycle = Surveys.getDefaultCycleKey(survey);
-    // to always use the selected cycle, use this: const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
-    const appInfo = SystemUtils.getRecordAppInfo();
-    const now = Dates.nowFormattedForStorage();
-    const recordEmpty = {
-      ...RecordFactory.createInstance({
-        surveyUuid: survey.uuid,
-        cycle,
-        user: user ?? {},
-        appInfo,
-      }),
-      dateCreated: now,
-      dateModified: now,
-    };
-    let { record, nodes } = await RecordUpdater.createRootEntity({
-      user,
-      survey,
-      record: recordEmpty,
-    });
+    try {
+      const state = getState();
+      const user = RemoteConnectionSelectors.selectLoggedUser(state);
+      const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const cycle = Surveys.getDefaultCycleKey(survey);
+      const prevCycleRecord =
+        DataEntrySelectors.selectPreviousCycleRecord(state);
+      // to always use the selected cycle, use this: const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
+      const appInfo = SystemUtils.getRecordAppInfo();
+      const now = Dates.nowFormattedForStorage();
+      const recordEmpty = {
+        ...RecordFactory.createInstance({
+          surveyUuid: survey.uuid,
+          cycle,
+          user: user ?? {},
+          appInfo,
+        }),
+        dateCreated: now,
+        dateModified: now,
+      };
+      let { record, nodes } = await RecordUpdater.createRootEntity({
+        user,
+        survey,
+        record: recordEmpty,
+        prevCycleRecord,
+      });
 
-    record.surveyId = survey.id;
-    removeNodesFlags(nodes);
+      record.surveyId = survey.id;
+      removeNodesFlags(nodes);
 
-    record = prepareRecordForStorage({ record });
+      record = prepareRecordForStorage({ record });
 
-    record = await RecordService.insertRecord({ survey, record });
+      record = await RecordService.insertRecord({ survey, record });
 
-    dispatch(editRecord({ navigation, record, locked: false }));
+      dispatch(editRecord({ navigation, record, locked: false }));
+    } catch (error: any) {
+      handleError(dispatch, error, "dataEntry:createRecordError");
+    }
   };
 
 const _performAddEntity = async (dispatch: any, getState: any) => {
@@ -126,6 +145,7 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
   const user = RemoteConnectionSelectors.selectLoggedUser(state);
   const survey = SurveySelectors.selectCurrentSurvey(state)!;
   const record = DataEntrySelectors.selectRecord(state);
+  const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);
   const { parentEntityUuid: currentParentNodeUuid, entityDef: nodeDef } =
     DataEntrySelectors.selectCurrentPageEntity(state);
 
@@ -154,6 +174,7 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
       user,
       survey,
       record,
+      prevCycleRecord,
       parentNode,
       nodeDef,
     });
@@ -193,11 +214,13 @@ const deleteNodes =
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
+    const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);
 
     const { record: recordUpdated, nodes } = await RecordUpdater.deleteNodes({
       user,
       survey,
       record,
+      prevCycleRecord,
       nodeUuids,
     });
 
@@ -302,11 +325,11 @@ const fetchAndEditRecord =
     ) {
       dispatch(
         ConfirmActions.show({
-          confirmButtonTextKey: "recordsList:importRecord",
-          messageKey: "recordsList:confirmImportRecordFromServer",
+          confirmButtonTextKey: "recordsList:fetchRecord",
+          messageKey: "recordsList:confirmFetchRecordFromServer",
           onConfirm: () => {
             dispatch(
-              importRecordsFromServer({
+              fetchRecordsFromServer({
                 recordUuids: [recordUuid],
                 onImportComplete: async () => {
                   await _fetchAndEditRecordInternal({
@@ -513,6 +536,8 @@ const updateAttribute =
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
       const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
       const record = DataEntrySelectors.selectRecord(state);
+      const prevCycleRecord =
+        DataEntrySelectors.selectPreviousCycleRecord(state);
 
       const cycle = Records.getCycle(record);
       const node = Records.getNodeByUuid(uuid)(record)!;
@@ -542,6 +567,7 @@ const updateAttribute =
         user,
         survey,
         record,
+        prevCycleRecord,
         attributeUuid: uuid,
         value,
         clearNonApplicableValues: true,
@@ -595,13 +621,7 @@ const updateAttribute =
       }
       log.debug(`Node updated successfully.`);
     } catch (error) {
-      const errorMessage = Errors.getErrorMessage(error);
-      log.error("Error updating attribute value: " + errorMessage);
-      dispatch(
-        ToastActions.show("dataEntry:updateAttributeError", {
-          error: errorMessage,
-        }),
-      );
+      handleError(dispatch, error, "dataEntry:updateAttributeError");
     }
   };
 
@@ -670,6 +690,7 @@ const addNewAttribute =
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
+    const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
 
     const { record: recordUpdated, nodes: nodesCreated } =
@@ -677,6 +698,7 @@ const addNewAttribute =
         user,
         survey,
         record,
+        prevCycleRecord,
         parentNode,
         nodeDef,
       });
@@ -690,6 +712,7 @@ const addNewAttribute =
         user,
         survey,
         record: recordUpdated,
+        prevCycleRecord,
         attributeUuid: nodeCreated.uuid,
         value,
       },
@@ -816,6 +839,6 @@ export const DataEntryActions = {
   unlinkFromRecordInPreviousCycle,
 
   importRecordsFromFile,
-  importRecordsFromServer,
+  fetchRecordsFromServer,
   cloneRecordsIntoDefaultCycle,
 };

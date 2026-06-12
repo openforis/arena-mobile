@@ -36,6 +36,7 @@ export const useItemsFilter = ({
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
+    const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
     const expressionEvaluator = new RecordExpressionEvaluator();
     Promise.all(
@@ -47,6 +48,7 @@ export const useItemsFilter = ({
             user,
             survey,
             record,
+            prevCycleRecord,
             node: parentNode!,
             query: itemsFilter!,
             item,
@@ -54,10 +56,10 @@ export const useItemsFilter = ({
         } catch (error) {
           return false;
         }
-      })
+      }),
     ).then((_itemsFilterResults) => {
       const _filteredItems = items.filter(
-        (_: any, index: any) => !!_itemsFilterResults[index]
+        (_: any, index: any) => !!_itemsFilterResults[index],
       );
       if (!Objects.isEqual(_filteredItems, filteredItems)) {
         setFilteredItems(_filteredItems);

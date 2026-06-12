@@ -36,11 +36,13 @@ Lanjutkan?`,
       "Jika Anda melanjutkan, beberapa entitas terenumerasi dependen ({{entityDefs}}) akan di-enumerasi ulang, menghapus nilai-nilai yang ada yang dimasukkan ke dalamnya (jika ada).\n\nPerbarui entitas terenumerasi?",
     title: "Perbarui entitas terenumerasi",
   },
+  createRecordError: "Kesalahan saat membuat catatan baru: {{error}}",
   updateAttributeError: "Kesalahan saat memperbarui nilai: {{error}}",
   cycle: "Siklus",
   cycleForNewRecords: "Siklus untuk data isian baru:",
   options: "Opsi",
   editNodeDef: "Edit {{nodeDef}}",
+  viewNodeDef: "View {{nodeDef}}",
   errorFetchingRecordsSyncStatus: `Kesalahan saat mengambil data isian dari server.
   
   Periksa pengaturan koneksi.
@@ -142,6 +144,7 @@ Lanjutkan?`,
     distance: "Jarak (m)",
     getLocation: "Dapatkan lokasi",
     heading: "Arah (derajat)",
+    headingOffset: "Penyimpangan arah",
     keepXAndY: "Pertahankan X dan Y",
     magnetometerNotAvailable: "Magnetometer tidak tersedia!",
     navigateToTarget: "Navigasi ke target",
@@ -149,6 +152,27 @@ Lanjutkan?`,
     useCurrentLocation: "Gunakan lokasi saat ini",
     x: "X",
     y: "Y",
+    viewModeCompass: "Kompas",
+    viewModeRadar: "Radar",
+    locationNavigatorInfo: {
+      title: "Location Navigator",
+      description:
+        "Guides you toward a target coordinate using your device's GPS and sensors. It shows a target location relative to your current position and lets you navigate to it in the field.",
+      viewModesTitle: "View Modes",
+      compassTitle: "Compass",
+      compassDesc:
+        "Displays a rotating compass rose aligned to North. An arrow points toward the target. When very close to the target (proximity mode), the arrow is replaced with a dot on the accuracy circle showing the target's relative position.",
+      radarTitle: "Radar",
+      radarDesc:
+        "Shows a top-down radar view with your position fixed at the center. The target dot moves around you in real time to reflect its actual direction and distance.",
+      headingSourcesTitle: "Heading Sources",
+      sensorTitle: "Sensor (Magnetometer)",
+      sensorDesc:
+        "Uses the device's built-in magnetometer (compass chip). Works while standing still, but can be affected by nearby metal objects or magnetic interference.",
+      gpsTitle: "GPS",
+      gpsDesc:
+        "Derives heading from GPS movement. More accurate in open spaces, but requires you to be walking and may not be available on all devices.",
+    },
   },
   geo: {
     drawPolygon: "Gambar poligon",

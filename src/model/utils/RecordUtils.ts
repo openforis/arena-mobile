@@ -72,7 +72,11 @@ const getEntityKeysFormatted = ({
   });
   const keyDefs = Surveys.getNodeDefKeys({ survey, nodeDef: entityDef, cycle });
   return keyDefs.map((keyDef) => {
-    const keyNode = Records.getChild(entity, keyDef.uuid)(record);
+    const keyNode = Records.getDescendant({
+      record,
+      node: entity,
+      nodeDefDescendant: keyDef,
+    });
     if (!keyNode) return emptyValue;
     return NodeValueFormatter.format({
       survey,
@@ -138,7 +142,10 @@ const getEntitySummaryValuesByNameFormatted = ({
     (acc: Dictionary<string>, summaryDef: NodeDef<any, any>) => {
       let formattedValue: string;
       try {
-        const summaryNode = Records.getChild(entity, summaryDef.uuid)(record);
+        const summaryNode = Records.getChildren(
+          entity,
+          summaryDef.uuid,
+        )(record)[0];
         if (!summaryNode) {
           formattedValue = "";
         } else if (NodeDefs.getType(summaryDef) === NodeDefType.boolean) {
@@ -187,6 +194,7 @@ const getApplicableChildrenEntityDefs = ({
     (childDef) =>
       NodeDefs.isEntity(childDef) &&
       Nodes.isChildApplicable(parentEntity, childDef.uuid) &&
+      Nodes.isChildVisible(parentEntity, childDef.uuid) &&
       (!onlyInOwnPage ||
         NodeDefs.isDisplayInOwnPage(cycle)(childDef as NodeDefEntity)),
   ) as NodeDefEntity[];
@@ -299,24 +307,30 @@ const findAncestor = ({
   return result;
 };
 
-const cleanupAttributeValue = ({ value, attributeDef }: any) => {
+const cleanupAttributeValue = ({
+  value,
+  attributeDef,
+  sideEffect = false,
+}: any) => {
   if (NodeDefs.getType(attributeDef) === NodeDefType.coordinate) {
+    const valueUpdated = sideEffect ? value : { ...value };
     const additionalFields =
       NodeDefs.getCoordinateAdditionalFields(attributeDef);
-    const fieldsToRemove = Object.keys(value).filter(
+    const fieldsToRemove = Object.keys(valueUpdated).filter(
       (field) =>
         !coordinateAttributeMandatoryFields.has(field) &&
         !additionalFields.includes(field),
     );
     for (const field of fieldsToRemove) {
-      delete value[field];
+      delete valueUpdated[field];
     }
     for (const field of coordinateAttributeNumericFields) {
-      const fieldValue = value[field];
+      const fieldValue = valueUpdated[field];
       if (!Objects.isNil(fieldValue) && typeof fieldValue === "string") {
-        value[field] = Numbers.toNumber(fieldValue);
+        valueUpdated[field] = Numbers.toNumber(fieldValue);
       }
     }
+    return valueUpdated;
   }
   return value;
 };
@@ -342,10 +356,10 @@ const getApplicableDescendantDefs = ({
   onlyAttributes = true,
 }: any): NodeDef<any>[] => {
   const { cycle } = record;
-  const defs = Surveys.getDescendantsInSingleEntities({
+  const defs = SurveyDefs.getDescendantsInSingleEntities({
     survey,
     cycle,
-    nodeDef: entityDef,
+    entityDef,
   });
   return defs.filter(
     (nodeDef) =>

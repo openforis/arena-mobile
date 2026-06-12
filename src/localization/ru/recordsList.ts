@@ -9,7 +9,7 @@ export default {
       "Только записи, загруженные на устройство или измененные локально, могут быть клонированы в следующий цикл",
     completeSuccessfully: "Записи успешно клонированы в цикл {{cycle}}!",
   },
-  confirmImportRecordFromServer: "Загрузать запись с сервера?",
+  confirmFetchRecordFromServer: "Получить запись с сервера?",
   continueEditing: {
     title: "Продолжить редактирование",
     confirm: {
@@ -28,13 +28,14 @@ export default {
   exportRecords: {
     title: "Экспорт",
   },
-  importRecord: "Загрузить запись",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecord: "Получить запись",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "Невозможно импортировать записи: этот опрос не должен быть виден в Arena Mobile",
-      recordsDownloadNotAllowed: "Импорт записей с сервера Arena не разрешен",
+        "Невозможно получить записи: этот опрос не должен быть виден в Arena Mobile",
+      recordsDownloadNotAllowed:
+        "Получение записей с сервера Arena не разрешено",
     },
   },
   importRecordsFromFile: {
@@ -59,6 +60,10 @@ export default {
     R: "Удаленный",
   },
   owner: "Владелец",
+  recordType: {
+    all: "Все записи",
+    local: "Записи на устройстве",
+  },
   sendData: {
     error: {
       generic: "Невозможно отправить данные на сервер: {{details}}",

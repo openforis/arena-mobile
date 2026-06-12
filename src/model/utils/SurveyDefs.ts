@@ -8,11 +8,32 @@ import {
   NodeDefEntity,
   LanguageCode,
   NodeDefCode,
+  Objects,
+  NodeDefFile,
+  NodeDefExpression,
 } from "@openforis/arena-core";
 
 const samplingPointDataCategoryName = "sampling_point_data";
 
 const experimentalTypes = new Set([NodeDefType.geo]);
+
+const mobileNodeDefFilter =
+  ({
+    cycle,
+    allowExperimental,
+  }: {
+    cycle: string;
+    allowExperimental?: boolean;
+  }): ((
+    value: NodeDef<any>,
+    index?: number,
+    array?: NodeDef<any>[],
+  ) => boolean) =>
+  (childDef) =>
+    (allowExperimental || !experimentalTypes.has(childDef.type)) &&
+    !NodeDefs.isHidden(childDef) &&
+    !NodeDefs.isHiddenInMobile(cycle)(childDef) &&
+    NodeDefs.isInCycle(cycle)(childDef);
 
 const getRootKeyDefs = ({ survey, cycle }: any) => {
   const rootDef = Surveys.getNodeDefRoot({ survey });
@@ -41,13 +62,22 @@ const getChildrenDefs = ({
     nodeDef,
     cycle,
     includeAnalysis: false,
-  }).filter(
-    (childDef) =>
-      (allowExperimental || !experimentalTypes.has(childDef.type)) &&
-      !NodeDefs.isHidden(childDef) &&
-      !NodeDefs.isHiddenInMobile(cycle)(childDef) &&
-      NodeDefs.isInCycle(cycle)(childDef),
-  );
+  }).filter(mobileNodeDefFilter({ allowExperimental, cycle }));
+
+const getDescendantsInSingleEntities = ({
+  survey,
+  cycle,
+  entityDef,
+}: {
+  survey: Survey;
+  cycle: string;
+  entityDef: NodeDefEntity;
+}) =>
+  Surveys.getDescendantsInSingleEntities({
+    survey,
+    cycle,
+    nodeDef: entityDef,
+  }).filter(mobileNodeDefFilter({ cycle }));
 
 const getEntitySummaryDefs = ({
   survey,
@@ -62,7 +92,11 @@ const getEntitySummaryDefs = ({
   onlyKeys?: boolean;
   maxSummaryDefs?: number;
 }) => {
-  const keyDefs = Surveys.getNodeDefKeys({ survey, cycle, nodeDef: entityDef });
+  const keyDefs = Surveys.getNodeDefKeys({
+    survey,
+    cycle,
+    nodeDef: entityDef,
+  }).filter(mobileNodeDefFilter({ cycle }));
 
   if (onlyKeys) {
     return keyDefs;
@@ -72,7 +106,7 @@ const getEntitySummaryDefs = ({
       survey,
       cycle,
       nodeDef: entityDef,
-    });
+    }).filter(mobileNodeDefFilter({ cycle }));
   const summaryDefs = [...keyDefs, ...defsIncludedInSummary];
 
   const otherDefsToAddCount = maxSummaryDefs - summaryDefs.length;
@@ -143,12 +177,48 @@ const getNodeDefsLabelsOrNames = ({
     return NodeDefs.getLabelOrName(nodeDef, lang);
   });
 
+const findNodeDefUuidsUsingPrevCycleValueFunctions = (
+  survey: Survey,
+): string[] => {
+  const nodeeDefsWithPrevCycleValueFunctions = [];
+  for (const nodeDef of Object.values(survey.nodeDefs ?? {})) {
+    const nodeDefExpressions: NodeDefExpression[] = [
+      ...NodeDefs.getApplicable(nodeDef),
+      ...NodeDefs.getDefaultValues(nodeDef),
+      ...NodeDefs.getVisibleIf(nodeDef),
+      ...NodeDefs.getEditableIf(nodeDef),
+      ...NodeDefs.getValidationsExpressions(nodeDef),
+    ];
+    if (nodeDef.type === NodeDefType.file) {
+      const fnExpr = NodeDefs.getFileNameExpression(nodeDef as NodeDefFile);
+      if (fnExpr) {
+        nodeDefExpressions.push({ expression: fnExpr } as NodeDefExpression);
+      }
+    }
+    if (
+      nodeDefExpressions.some((nodeDefExpression) =>
+        [nodeDefExpression.expression, nodeDefExpression.applyIf].some(
+          (expression) =>
+            Objects.isNotEmpty(expression) &&
+            (expression!.includes("prevCycleValue") ||
+              expression!.includes("prevCycleValues")),
+        ),
+      )
+    ) {
+      nodeeDefsWithPrevCycleValueFunctions.push(nodeDef.uuid);
+    }
+  }
+  return nodeeDefsWithPrevCycleValueFunctions;
+};
+
 export const SurveyDefs = {
   getRootKeyDefs,
   isRootKeyDef,
   getChildrenDefs,
+  getDescendantsInSingleEntities,
   getEntitySummaryDefs,
   hasSamplingPointDataLocation,
   isCodeAttributeFromSamplingPointData,
   getNodeDefsLabelsOrNames,
+  findNodeDefUuidsUsingPrevCycleValueFunctions,
 };

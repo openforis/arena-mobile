@@ -9,7 +9,7 @@ export default {
       "Endast poster som importerats till enheten eller ändrats lokalt kan klonas till nästa cykel",
     completeSuccessfully: "Poster har klonats till cykel {{cycle}}!",
   },
-  confirmImportRecordFromServer: "Importera post från servern?",
+  confirmFetchRecordFromServer: "Hämta post från servern?",
   continueEditing: {
     title: "Fortsätt redigera",
     confirm: {
@@ -28,14 +28,14 @@ export default {
   exportRecords: {
     title: "Exportera",
   },
-  importRecord: "Importera post",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecord: "Hämta post",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "Kan inte importera poster: denna undersökning ska inte vara synlig i Arena Mobile",
+        "Kan inte hämta poster: denna undersökning ska inte vara synlig i Arena Mobile",
       recordsDownloadNotAllowed:
-        "Att importera poster från Arena-servern är inte tillåtet",
+        "Att hämta poster från Arena-servern är inte tillåtet",
     },
   },
   importRecordsFromFile: {
@@ -59,6 +59,10 @@ export default {
   },
   origin: { title: "Ursprung", L: "Lokal", R: "Fjärr" },
   owner: "Ägare",
+  recordType: {
+    all: "Alla poster",
+    local: "Poster på enheten",
+  },
   sendData: {
     error: {
       generic: "Kan inte skicka data till servern: {{details}}",

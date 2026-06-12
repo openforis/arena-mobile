@@ -5,7 +5,71 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.5.1] - TO-BE-RELEASED
+## [2.6.1] - TO-BE-RELEASED
+
+### Fixed
+
+- Navigate to location: improved layout;
+
+### Added
+
+## [2.6.0] - 2026-06-08
+
+### Added
+
+- Support "editable if" and "visible if"
+- Left side drawer: layout improvements;
+
+## [2.5.9] - 2026-05-23
+
+### Fixed
+
+- Read-only attributes appearing as editable;
+
+## [2.5.8] - 2026-05-20
+
+### Fixed
+
+- Navigate to location: improved layout;
+
+## [2.5.7] - 2026-05-19
+
+### Fixed
+
+- Entity list: do not show "hidden" attributes;
+
+## [2.5.6] - 2026-05-16
+
+### Fixed
+
+- Record list / options menu: layout adjustments;
+
+## [2.5.5] - 2026-05-12
+
+### Fixed
+
+- Fixed error opening validation report with survey having key attributes inside single entities;
+- Hide key attribute locking for read-only attributes;
+
+## [2.5.4] - 2026-05-10
+
+### Fixed
+
+- Do not show "Update survey" dialog after unexpected errors;
+
+## [2.5.3] - 2026-05-08
+
+### Fixed
+
+- Bug fixes (handle record creation errors);
+
+## [2.5.2] - 2026-04-27
+
+### Fixed
+
+- Bug fixes (key attribute locked when editing new records);
+
+## [2.5.1] - 2026-04-25
 
 ### Added
 

@@ -18,6 +18,7 @@ export default {
   exit: "Poistu",
   export: "Vie",
   false: "Epätosi",
+  fetch: "Hae",
   filter: "Suodata",
   fromToOf: `{{from}}-{{to}} / {{of}}`,
   goBack: "Palaa takaisin",

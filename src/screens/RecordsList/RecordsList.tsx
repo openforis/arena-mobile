@@ -254,9 +254,10 @@ export const RecordsList = () => {
     }
   }, [confirm, dispatch, loadRecords, toaster]);
 
-  const onNewRecordPress = useCallback(() => {
+  const onNewRecordPress = useCallback(async () => {
     setState((statePrev) => ({ ...statePrev, loading: true }));
-    dispatch(DataEntryActions.createNewRecord({ navigation }));
+    await dispatch(DataEntryActions.createNewRecord({ navigation }));
+    setState((statePrev) => ({ ...statePrev, loading: false }));
   }, [dispatch, navigation]);
 
   const confirmExportRecords = useCallback(
@@ -448,7 +449,7 @@ export const RecordsList = () => {
     [toaster],
   );
 
-  const onImportSelectedRecordUuids = useCallback(
+  const onFetchSelectedRecordUuids = useCallback(
     (selectedRecordUuids: any) => {
       const selectedRecords = records.filter((record) =>
         selectedRecordUuids.includes(record.uuid),
@@ -457,7 +458,7 @@ export const RecordsList = () => {
         return;
       }
       dispatch(
-        DataEntryActions.importRecordsFromServer({
+        DataEntryActions.fetchRecordsFromServer({
           recordUuids: selectedRecordUuids,
           onImportComplete: loadRecords,
         }),
@@ -668,7 +669,7 @@ export const RecordsList = () => {
                 onCloneSelectedRecordUuids={onCloneSelectedRecordUuids}
                 onDeleteSelectedRecordUuids={onDeleteSelectedRecordUuids}
                 onExportSelectedRecordUuids={onExportSelectedRecordUuids}
-                onImportSelectedRecordUuids={onImportSelectedRecordUuids}
+                onFetchSelectedRecordUuids={onFetchSelectedRecordUuids}
                 records={recordsFiltered}
                 showRemoteProps={!onlyLocal}
                 syncStatusFetched={syncStatusFetched}

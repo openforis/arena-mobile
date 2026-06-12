@@ -8,7 +8,7 @@ export default {
       "በመሣሪያው ላይ የገቡ ወይም በአካባቢው የተሻሻሉ መዝገቦች ብቻ ወደ ቀጣዩ ዑደት ሊቀዱ ይችላሉ",
     completeSuccessfully: "መዝገቦቹ በተሳካ ሁኔታ ወደ ዑደት {{cycle}} ተቀድተዋል!",
   },
-  confirmImportRecordFromServer: "መዝገብ ከአገልጋዩ ያስገቡ?",
+  confirmFetchRecordFromServer: "መዝገብን ከአገልጋዩ ያውርዱ?",
   continueEditing: {
     title: "አርትዖት ይቀጥሉ",
     confirm: {
@@ -27,13 +27,13 @@ export default {
   exportRecords: {
     title: "ላክ",
   },
-  importRecord: "መዝገብ አስገባ",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecord: "መዝገብ አውርድ",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "መረጃዎችን ማስገባት አይቻልም: ይህ ዳሰሳ በአሬና ሞባይል ላይ መታየት የለበትም",
-      recordsDownloadNotAllowed: "መረጃዎችን ከአሬና አገልጋይ ማስገባት አይፈቀድም",
+        "መዝገቦችን ማውረድ አይቻልም: ይህ ዳሰሳ በአሬና ሞባይል ላይ መታየት የለበትም",
+      recordsDownloadNotAllowed: "መዝገቦችን ከአሬና አገልጋይ ማውረድ አይፈቀድም",
     },
   },
   importRecordsFromFile: {
@@ -58,6 +58,10 @@ export default {
     R: "የርቀት",
   },
   owner: "ባለቤት",
+  recordType: {
+    all: "ሁሉም መዝገቦች",
+    local: "በመሣሪያው ላይ ያሉ መዝገቦች",
+  },
   sendData: {
     error: {
       generic: "መረጃውን ወደ አገልጋዩ መላክ አይቻልም: {{details}}",

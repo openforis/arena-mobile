@@ -18,6 +18,7 @@ export default {
   exit: "Beenden",
   export: "Exportieren",
   false: "Falsch",
+  fetch: "Abrufen",
   filter: "Filtern",
   fromToOf: `{{from}}-{{to}} von {{of}}`,
   goBack: "Zurück",

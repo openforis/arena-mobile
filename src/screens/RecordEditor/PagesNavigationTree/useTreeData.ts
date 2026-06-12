@@ -140,7 +140,8 @@ type EntityPointer = {
 
 type TreeItem = {
   id: string;
-  label: string;
+  name: string;
+  iconName: string;
   isRoot: boolean;
   children: TreeItem[];
   isCurrentEntity: boolean;
@@ -214,6 +215,13 @@ export const useTreeData = () => {
   const currentEntity = Records.getNodeByUuid(currentEntityUuid)(record);
   const { cycle } = record;
 
+  const getIconName = (nodeDef: NodeDef<any>): string => {
+    if (NodeDefs.isSingle(nodeDef)) return "file-outline";
+    if (NodeDefs.isLayoutRenderTypeTable(cycle)(nodeDef as NodeDefEntity))
+      return "table";
+    return "content-copy";
+  };
+
   const createTreeItem = ({
     nodeDef,
     parentEntityUuid,
@@ -224,7 +232,8 @@ export const useTreeData = () => {
     entityUuid?: string;
   }): TreeItem => ({
     id: nodeDef.uuid,
-    label: NodeDefs.getLabelOrName(nodeDef, lang),
+    name: NodeDefs.getLabelOrName(nodeDef, lang),
+    iconName: getIconName(nodeDef),
     isRoot: !parentEntityUuid,
     children: [],
     isCurrentEntity: nodeDef.uuid === currentEntityDef.uuid,

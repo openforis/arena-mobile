@@ -37,11 +37,13 @@ Fortfahren?`,
       "Wenn Sie fortfahren, werden einige abhängige, aufgezählte Entitäten ({{entityDefs}}) neu nummeriert, wodurch die bestehenden, eingegebenen Werte (falls vorhanden) gelöscht werden.\n\nMöchten Sie die aufgezählten Entitäten aktualisieren?",
     title: "Aufgezählte Entitäten aktualisieren",
   },
+  createRecordError: "Fehler beim Erstellen eines neuen Datensatzes: {{error}}",
   updateAttributeError: "Fehler beim Aktualisieren des Werts: {{error}}",
   cycle: "Zyklus",
   cycleForNewRecords: "Zyklus für neue Datensätze:",
   options: "Optionen",
   editNodeDef: "{{nodeDef}} bearbeiten",
+  viewNodeDef: "{{nodeDef}} anzeigen",
   errorFetchingRecordsSyncStatus: `Fehler beim Abrufen von Datensätzen vom Server.
   
   Verbindungseinstellungen prüfen.
@@ -144,6 +146,7 @@ Fortfahren?`,
     distance: "Entfernung (m)",
     getLocation: "Standort abrufen",
     heading: "Richtung (Grad)",
+    headingOffset: "Kursabweichung",
     keepXAndY: "X und Y behalten",
     magnetometerNotAvailable: "Magnetometer nicht verfügbar!",
     navigateToTarget: "Zum Ziel navigieren",
@@ -151,6 +154,27 @@ Fortfahren?`,
     useCurrentLocation: "Aktuellen Standort verwenden",
     x: "X",
     y: "Y",
+    viewModeCompass: "Kompass",
+    viewModeRadar: "Radar",
+    locationNavigatorInfo: {
+      title: "Location Navigator",
+      description:
+        "Guides you toward a target coordinate using your device's GPS and sensors. It shows a target location relative to your current position and lets you navigate to it in the field.",
+      viewModesTitle: "View Modes",
+      compassTitle: "Compass",
+      compassDesc:
+        "Displays a rotating compass rose aligned to North. An arrow points toward the target. When very close to the target (proximity mode), the arrow is replaced with a dot on the accuracy circle showing the target's relative position.",
+      radarTitle: "Radar",
+      radarDesc:
+        "Shows a top-down radar view with your position fixed at the center. The target dot moves around you in real time to reflect its actual direction and distance.",
+      headingSourcesTitle: "Heading Sources",
+      sensorTitle: "Sensor (Magnetometer)",
+      sensorDesc:
+        "Uses the device's built-in magnetometer (compass chip). Works while standing still, but can be affected by nearby metal objects or magnetic interference.",
+      gpsTitle: "GPS",
+      gpsDesc:
+        "Derives heading from GPS movement. More accurate in open spaces, but requires you to be walking and may not be available on all devices.",
+    },
   },
   geo: {
     drawPolygon: "Polygon zeichnen",

@@ -98,7 +98,7 @@ type RecordsDataVisualizerProps = {
   onCloneSelectedRecordUuids: (uuids: string[]) => void;
   onDeleteSelectedRecordUuids: (uuids: string[]) => void;
   onExportSelectedRecordUuids: (uuids: string[]) => void;
-  onImportSelectedRecordUuids: (uuids: string[]) => void;
+  onFetchSelectedRecordUuids: (uuids: string[]) => void;
   records: any[];
   showRemoteProps?: boolean;
   syncStatusFetched?: boolean;
@@ -110,7 +110,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     onCloneSelectedRecordUuids,
     onDeleteSelectedRecordUuids,
     onExportSelectedRecordUuids,
-    onImportSelectedRecordUuids,
+    onFetchSelectedRecordUuids,
     records,
     showRemoteProps,
     syncStatusFetched,
@@ -326,9 +326,9 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     setSelectedRecordUuids(selection);
   }, []);
 
-  const onImportSelectedItems = useCallback(() => {
-    onImportSelectedRecordUuids(selectedRecordUuids);
-  }, [selectedRecordUuids, onImportSelectedRecordUuids]);
+  const onFetchSelectedItems = useCallback(() => {
+    onFetchSelectedRecordUuids(selectedRecordUuids);
+  }, [selectedRecordUuids, onFetchSelectedRecordUuids]);
 
   const onCloneSelectedItems = useCallback(() => {
     onCloneSelectedRecordUuids(selectedRecordUuids);
@@ -353,10 +353,10 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
       });
     }
     actions.push({
-      key: "importSelectedItems",
+      key: "fetchSelectedItems",
       icon: "import",
-      labelKey: "recordsList:importRecords.title",
-      onPress: onImportSelectedItems,
+      labelKey: "recordsList:fetchRecords.title",
+      onPress: onFetchSelectedItems,
     });
     if (syncStatusFetched) {
       actions.push({
@@ -371,7 +371,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     isPrevCycle,
     onCloneSelectedItems,
     onExportSelectedItems,
-    onImportSelectedItems,
+    onFetchSelectedItems,
     syncStatusFetched,
   ]);
 

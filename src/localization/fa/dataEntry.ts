@@ -35,11 +35,13 @@ export default {
       "اگر ادامه دهید، برخی از موجودیت‌های شمارشی وابسته ({{entityDefs}}) دوباره شمارش می‌شوند و مقادیر موجود وارد شده در آن‌ها (در صورت وجود) حذف می‌شوند.\n\nآیا موجودیت‌های شمارشی را به‌روزرسانی می‌کنید؟",
     title: "به‌روزرسانی موجودیت‌های شمارشی",
   },
+  createRecordError: "خطا در ایجاد رکورد جدید: {{error}}",
   updateAttributeError: "خطا در به‌روزرسانی مقدار: {{error}}",
   cycle: "چرخه",
   cycleForNewRecords: "چرخه برای رکوردهای جدید:",
   options: "گزینه ها",
   editNodeDef: "ویرایش {{nodeDef}}",
+  viewNodeDef: "مشاهده {{nodeDef}}",
   errorFetchingRecordsSyncStatus: `خطا در دریافت رکوردها از سرور.
   
   تنظیمات اتصال را بررسی کنید.
@@ -140,6 +142,7 @@ export default {
     distance: "فاصله (متر)",
     getLocation: "دریافت موقعیت مکانی",
     heading: "جهت (درجه)",
+    headingOffset: "انحراف جهت",
     keepXAndY: "نگه داشتن X و Y",
     magnetometerNotAvailable: "مگنتومتر در دسترس نیست!",
     navigateToTarget: "هدایت به هدف",
@@ -147,6 +150,27 @@ export default {
     useCurrentLocation: "استفاده از موقعیت فعلی",
     x: "X",
     y: "Y",
+    viewModeCompass: "Compass",
+    viewModeRadar: "Radar",
+    locationNavigatorInfo: {
+      title: "Location Navigator",
+      description:
+        "Guides you toward a target coordinate using your device's GPS and sensors. It shows a target location relative to your current position and lets you navigate to it in the field.",
+      viewModesTitle: "View Modes",
+      compassTitle: "Compass",
+      compassDesc:
+        "Displays a rotating compass rose aligned to North. An arrow points toward the target. When very close to the target (proximity mode), the arrow is replaced with a dot on the accuracy circle showing the target's relative position.",
+      radarTitle: "Radar",
+      radarDesc:
+        "Shows a top-down radar view with your position fixed at the center. The target dot moves around you in real time to reflect its actual direction and distance.",
+      headingSourcesTitle: "Heading Sources",
+      sensorTitle: "Sensor (Magnetometer)",
+      sensorDesc:
+        "Uses the device's built-in magnetometer (compass chip). Works while standing still, but can be affected by nearby metal objects or magnetic interference.",
+      gpsTitle: "GPS",
+      gpsDesc:
+        "Derives heading from GPS movement. More accurate in open spaces, but requires you to be walking and may not be available on all devices.",
+    },
   },
   geo: {
     drawPolygon: "رسم چندضلعی",

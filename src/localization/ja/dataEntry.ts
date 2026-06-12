@@ -37,6 +37,7 @@ export default {
 項目の更新を続けますか？`,
     title: "項目の構成を更新",
   },
+  createRecordError: "新しいレコードの作成中にエラーが発生しました: {{error}}",
   updateAttributeError: "値の更新中にエラーが発生しました: {{error}}",
   cycle: "サイクル",
   cycleForNewRecords: "新規記録のサイクル：",
@@ -76,6 +77,7 @@ export default {
     title: "データをエクスポート",
   },
   editNodeDef: "{{nodeDef}}を編集",
+  viewNodeDef: "{{nodeDef}}を表示",
   errorFetchingRecordsSyncStatus: `サーバーからの記録取得エラー。
 
 接続設定を確認してください。
@@ -176,6 +178,7 @@ export default {
     distance: "距離 (m)",
     getLocation: "位置を取得",
     heading: "方位 (度)",
+    headingOffset: "方位ずれ",
     keepXAndY: "XとYを保持",
     magnetometerNotAvailable: "方位センサーが利用できません！",
     navigateToTarget: "目標に向かってナビゲート",
@@ -183,6 +186,27 @@ export default {
     useCurrentLocation: "現在地を使用",
     x: "X",
     y: "Y",
+    viewModeCompass: "コンパス",
+    viewModeRadar: "レーダー",
+    locationNavigatorInfo: {
+      title: "Location Navigator",
+      description:
+        "Guides you toward a target coordinate using your device's GPS and sensors. It shows a target location relative to your current position and lets you navigate to it in the field.",
+      viewModesTitle: "View Modes",
+      compassTitle: "Compass",
+      compassDesc:
+        "Displays a rotating compass rose aligned to North. An arrow points toward the target. When very close to the target (proximity mode), the arrow is replaced with a dot on the accuracy circle showing the target's relative position.",
+      radarTitle: "Radar",
+      radarDesc:
+        "Shows a top-down radar view with your position fixed at the center. The target dot moves around you in real time to reflect its actual direction and distance.",
+      headingSourcesTitle: "Heading Sources",
+      sensorTitle: "Sensor (Magnetometer)",
+      sensorDesc:
+        "Uses the device's built-in magnetometer (compass chip). Works while standing still, but can be affected by nearby metal objects or magnetic interference.",
+      gpsTitle: "GPS",
+      gpsDesc:
+        "Derives heading from GPS movement. More accurate in open spaces, but requires you to be walking and may not be available on all devices.",
+    },
   },
   geo: {
     drawPolygon: "多角形を描く",

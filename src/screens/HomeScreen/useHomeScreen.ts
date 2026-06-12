@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Surveys } from "@openforis/arena-core";
 
@@ -27,6 +27,20 @@ export const useHomeScreen = () => {
 
   const [surveyUpdateLoading, setSurveyUpdateLoading] = useState(false);
   const processedSurveyVersionsRef = useRef<Record<string, boolean>>({});
+  const mountedRef = useRef(true);
+
+  const setSurveyUpdateLoadingSafe = useCallback((value: boolean) => {
+    if (mountedRef.current) {
+      setSurveyUpdateLoading(value);
+    }
+  }, []);
+
+  useEffect(
+    () => () => {
+      mountedRef.current = false;
+    },
+    [],
+  );
 
   const surveySelected = !!survey;
 
@@ -37,6 +51,7 @@ export const useHomeScreen = () => {
       !user ||
       survey.uuid === SurveyService.demoSurveyUuid
     ) {
+      setSurveyUpdateLoadingSafe(false);
       return;
     }
 
@@ -47,6 +62,7 @@ export const useHomeScreen = () => {
     const surveyKey = `${survey.id}:${surveyVersion}`;
 
     if (processedSurveyVersionsRef.current[surveyKey]) {
+      setSurveyUpdateLoadingSafe(false);
       return;
     }
     processedSurveyVersionsRef.current[surveyKey] = true;
@@ -54,7 +70,7 @@ export const useHomeScreen = () => {
     let cancelled = false;
 
     const syncSurvey = async () => {
-      setSurveyUpdateLoading(true);
+      setSurveyUpdateLoadingSafe(true);
 
       try {
         const { updateStatus } = await determineSurveyUpdateStatus({
@@ -69,7 +85,7 @@ export const useHomeScreen = () => {
         }
 
         if (updateStatus !== UpdateStatus.notUpToDate) {
-          setSurveyUpdateLoading(false);
+          setSurveyUpdateLoadingSafe(false);
           return;
         }
 
@@ -79,7 +95,7 @@ export const useHomeScreen = () => {
           skipConfirmation: true,
           onComplete: () => {
             if (!cancelled) {
-              setSurveyUpdateLoading(false);
+              setSurveyUpdateLoadingSafe(false);
             }
           },
         });
@@ -88,7 +104,7 @@ export const useHomeScreen = () => {
         // and will still result in loading state being cleared in the finally block.
       } finally {
         if (!cancelled) {
-          setSurveyUpdateLoading(false);
+          setSurveyUpdateLoadingSafe(false);
         }
       }
     };
@@ -98,7 +114,7 @@ export const useHomeScreen = () => {
     return () => {
       cancelled = true;
     };
-  }, [dispatch, networkAvailable, survey, user]);
+  }, [dispatch, networkAvailable, setSurveyUpdateLoadingSafe, survey, user]);
 
   return {
     surveySelected,

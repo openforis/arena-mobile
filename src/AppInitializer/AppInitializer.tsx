@@ -119,7 +119,7 @@ export const AppInitializer = (props: Props) => {
     const currentSurveyId = await PreferencesService.getCurrentSurveyId();
     if (currentSurveyId) {
       setStep(steps.fetchingAndSettingSurvey);
-      dispatch(
+      await dispatch(
         SurveyActions.fetchAndSetCurrentSurvey({
           surveyId: currentSurveyId,
         }),

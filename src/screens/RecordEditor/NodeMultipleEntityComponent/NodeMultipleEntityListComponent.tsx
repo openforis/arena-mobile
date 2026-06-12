@@ -2,18 +2,10 @@ import { useCallback, useMemo, useState } from "react";
 
 import { NodeDefs, Objects, Records } from "@openforis/arena-core";
 
-import {
-  DataTable,
-  DataVisualizerField,
-  HView,
-  ScrollView,
-  Text,
-  VView,
-} from "components";
+import { DataTable, DataVisualizerField, HView, Text, VView } from "components";
 import { useTranslation } from "localization";
 import { SortObject } from "model";
 import { RecordUtils } from "model/utils/RecordUtils";
-import { log } from "utils";
 import {
   DataEntryActions,
   DataEntrySelectors,
@@ -22,7 +14,7 @@ import {
   useAppDispatch,
   useConfirm,
 } from "state";
-import { ArrayUtils } from "utils/ArrayUtils";
+import { ArrayUtils, log } from "utils";
 
 import { NewNodeButton } from "../NewNodeButton";
 import { NodeValidationIcon } from "../NodeValidationIcon";
@@ -169,13 +161,20 @@ export const NodeMultipleEntityListComponent = (
     return _rows;
   }, [entityDefUuid, entityToRow, parentEntity, record, sort]);
 
-  const canAddOrDelete = canEditRecord && !NodeDefs.isEnumerate(entityDef);
+  const editable = DataEntrySelectors.useRecordNodePointerEditable({
+    parentNodeUuid: parentEntityUuid,
+    nodeDefUuid: entityDefUuid,
+  });
+
+  const canAddOrDelete =
+    canEditRecord && editable && !NodeDefs.isEnumerate(entityDef);
 
   const dataTable = useMemo(
     () => (
       <DataTable
         canDelete={canAddOrDelete}
         fields={tableFields}
+        horizontalScroll={isLandscape}
         items={rows}
         onDeleteSelectedItemIds={onDeleteSelectedNodeUuids}
         onItemPress={onRowPress}
@@ -186,6 +185,7 @@ export const NodeMultipleEntityListComponent = (
     ),
     [
       canAddOrDelete,
+      isLandscape,
       onDeleteSelectedNodeUuids,
       onRowPress,
       onSortChange,
@@ -200,14 +200,7 @@ export const NodeMultipleEntityListComponent = (
       {rows.length === 0 && (
         <Text textKey="dataEntry:noEntitiesDefined" variant="titleMedium" />
       )}
-      {rows.length > 0 &&
-        (isLandscape ? (
-          <ScrollView horizontal persistentScrollbar>
-            {dataTable}
-          </ScrollView>
-        ) : (
-          dataTable
-        ))}
+      {rows.length > 0 && dataTable}
       <HView fullWidth style={styles.buttonBar}>
         {canAddOrDelete && (
           <NewNodeButton nodeDefLabel={nodeDefLabel} onPress={onNewPress} />

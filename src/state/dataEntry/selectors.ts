@@ -164,6 +164,33 @@ const selectRecordNodePointerValidationChildrenCount =
     return validationChildrenCount;
   };
 
+const selectRecordNodePointerEditable =
+  ({
+    parentNodeUuid,
+    nodeDefUuid,
+  }: {
+    parentNodeUuid: string | undefined;
+    nodeDefUuid: string;
+  }) =>
+  (state: any): boolean => {
+    if (!parentNodeUuid) {
+      return true;
+    }
+    const record = selectRecordUnsafe(state);
+    if (!record) {
+      return true;
+    }
+
+    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
+    if (!parentNode) {
+      return true;
+    }
+    return (
+      Records.isNodeEditable({ record, node: parentNode }) &&
+      Nodes.isChildEditable(parentNode, nodeDefUuid)
+    );
+  };
+
 const selectRecordNodePointerVisibility =
   ({
     parentNodeUuid,
@@ -184,6 +211,7 @@ const selectRecordNodePointerVisibility =
 
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
     const applicable = Nodes.isChildApplicable(parentNode, nodeDefUuid);
+    const visible = Nodes.isChildVisible(parentNode, nodeDefUuid);
     const nodeDefChild = Surveys.getNodeDefByUuid({
       survey,
       uuid: nodeDefUuid,
@@ -191,7 +219,7 @@ const selectRecordNodePointerVisibility =
     const cycle = record.cycle;
     const hiddenWhenNotRelevant =
       NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDefChild);
-    return applicable || !hiddenWhenNotRelevant;
+    return visible && (applicable || !hiddenWhenNotRelevant);
   };
 
 const selectRecordAttributeInfo =
@@ -356,8 +384,10 @@ const selectCurrentPageEntityRelevantChildDefs = (state: any) => {
   }
   const parentEntity = Records.getNodeByUuid(actualEntityUuid)(record);
   if (!parentEntity) return [];
-  return childDefs.filter((childDef) =>
-    Nodes.isChildApplicable(parentEntity, childDef.uuid),
+  return childDefs.filter(
+    (childDef) =>
+      Nodes.isChildApplicable(parentEntity, childDef.uuid) &&
+      Nodes.isChildVisible(parentEntity, childDef.uuid),
   );
 };
 
@@ -413,9 +443,9 @@ const extractAttibuteValue = ({ state, attribute }: any) => {
   return RecordUtils.cleanupAttributeValue({ value, attributeDef });
 };
 
-const selectPreviousCycleRecordAttributeValue =
+const selectPreviousCycleRecordAttributeValues =
   ({ nodeDef, parentNodeUuid }: any) =>
-  (state: any): any => {
+  (state: any): { uuid: string; value: any }[] | null => {
     if (!parentNodeUuid) {
       return null;
     }
@@ -425,8 +455,10 @@ const selectPreviousCycleRecordAttributeValue =
     }
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
     const attributes = Records.getChildren(parentNode, nodeDef.uuid)(record);
-    const attribute = attributes[0];
-    return extractAttibuteValue({ state, attribute });
+    return attributes.map((attribute) => ({
+      uuid: attribute.uuid,
+      value: extractAttibuteValue({ state, attribute }),
+    }));
   };
 
 const selectPreviousCycleEntityWithSameKeys =
@@ -491,6 +523,7 @@ export const DataEntrySelectors = {
   selectCurrentPageEntityRelevantChildDefs,
   selectRecordEditLocked,
   selectCanEditRecord,
+  selectRecordNodePointerEditable,
 
   useRecord: () => useSelector(selectRecord),
 
@@ -543,6 +576,17 @@ export const DataEntrySelectors = {
   }) =>
     useSelector(
       selectRecordNodePointerVisibility({ parentNodeUuid, nodeDefUuid }),
+    ),
+
+  useRecordNodePointerEditable: ({
+    parentNodeUuid,
+    nodeDefUuid,
+  }: {
+    parentNodeUuid: string | undefined;
+    nodeDefUuid: string;
+  }) =>
+    useSelector(
+      selectRecordNodePointerEditable({ parentNodeUuid, nodeDefUuid }),
     ),
 
   useRecordAttributeInfo: ({ nodeUuid }: any) =>
@@ -619,11 +663,15 @@ export const DataEntrySelectors = {
   useIsLinkedToPreviousCycleRecord: () =>
     useSelector(selectIsLinkedToPreviousCycleRecord),
 
+  selectPreviousCycleRecord,
   selectPreviousCycleEntityWithSameKeys,
 
-  selectPreviousCycleRecordAttributeValue,
-  usePreviousCycleRecordAttributeValue: ({ nodeDef, parentNodeUuid }: any) =>
+  usePreviousCycleRecordAttributeValues: ({
+    nodeDef,
+    parentNodeUuid,
+  }: any): { uuid: string; value: any }[] | null =>
     useSelector(
-      selectPreviousCycleRecordAttributeValue({ nodeDef, parentNodeUuid }),
+      selectPreviousCycleRecordAttributeValues({ nodeDef, parentNodeUuid }),
+      Objects.isEqual,
     ),
 };

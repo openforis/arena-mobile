@@ -33,11 +33,13 @@ export default {
       "ከተወሰኑ አካላት ({{entityDefs}}) ጋር የተያያዙ የተዘረዘሩ አካላት ካሉ ይቀጥሉ፣ ቀደም ሲል የገቡ እሴቶችን (ካለ) በመሰረዝ እንደገና ይዘረዘራሉ።\n\nየተዘረዘሩትን አካላት ማዘመን ይፈልጋሉ?",
     title: "የተዘረዘሩ አካላትን ያዘምኑ",
   },
+  createRecordError: "አዲስ መዝገብ መፍጠር ላይ ስህተት፡ {{error}}",
   updateAttributeError: "እሴቱን ማዘመን ላይ ስህተት፡ {{error}}",
   cycle: "ዙር",
   cycleForNewRecords: "ለአዲስ መዝገቦች ዙር፡",
   options: "አማራጮች",
   editNodeDef: "{{nodeDef}} ያርትዑ",
+  viewNodeDef: "{{nodeDef}} ይመልከቱ",
   errorFetchingRecordsSyncStatus:
     "መዝገቦችን ከአገልጋዩ በማግኘት ላይ ስህተት።\n\nየግንኙነት ቅንብሮችን ያረጋግጡ።\n\nዝርዝሮች፡ {{details}}",
   errorGeneratingRecordsExportFile:
@@ -128,6 +130,7 @@ export default {
     distance: "ርቀት (ሜ)",
     getLocation: "ቦታ ያግኙ",
     heading: "አቅጣጫ (ዲግሪ)",
+    headingOffset: "የአቅጣጫ ልዩነት",
     keepXAndY: "X እና Y ን ያቆዩ",
     magnetometerNotAvailable: "ማግኔቶሜትር የለም!",
     navigateToTarget: "ወደ መድረሻ ይሂዱ",
@@ -135,6 +138,27 @@ export default {
     useCurrentLocation: "የአሁኑን ሥፍራ ይጠቀሙ",
     x: "X",
     y: "Y",
+    viewModeCompass: "Compass",
+    viewModeRadar: "Radar",
+    locationNavigatorInfo: {
+      title: "Location Navigator",
+      description:
+        "Guides you toward a target coordinate using your device's GPS and sensors. It shows a target location relative to your current position and lets you navigate to it in the field.",
+      viewModesTitle: "View Modes",
+      compassTitle: "Compass",
+      compassDesc:
+        "Displays a rotating compass rose aligned to North. An arrow points toward the target. When very close to the target (proximity mode), the arrow is replaced with a dot on the accuracy circle showing the target's relative position.",
+      radarTitle: "Radar",
+      radarDesc:
+        "Shows a top-down radar view with your position fixed at the center. The target dot moves around you in real time to reflect its actual direction and distance.",
+      headingSourcesTitle: "Heading Sources",
+      sensorTitle: "Sensor (Magnetometer)",
+      sensorDesc:
+        "Uses the device's built-in magnetometer (compass chip). Works while standing still, but can be affected by nearby metal objects or magnetic interference.",
+      gpsTitle: "GPS",
+      gpsDesc:
+        "Derives heading from GPS movement. More accurate in open spaces, but requires you to be walking and may not be available on all devices.",
+    },
   },
   geo: {
     drawPolygon: "ፖሊጎን ይሳሉ",

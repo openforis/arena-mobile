@@ -18,7 +18,7 @@ import {
 const calculateIsMaxCountReached = ({
   entityDef,
   parentEntityUuid,
-  record
+  record,
 }: any) => {
   const parentNode = parentEntityUuid
     ? Records.getNodeByUuid(parentEntityUuid)(record)
@@ -39,7 +39,7 @@ const calculateHasCurrentEntityKeysSpecified = ({
   survey,
   entityDef,
   record,
-  entityUuid
+  entityUuid,
 }: any) => {
   const keyDefs = Surveys.getNodeDefKeys({ survey, nodeDef: entityDef });
   if (Objects.isEmpty(keyDefs)) return false;
@@ -65,6 +65,10 @@ export const useBottomNavigationBar = () =>
 
     const viewMode = SurveyOptionsSelectors.selectRecordEditViewMode(state);
     const canEditRecord = DataEntrySelectors.selectCanEditRecord(state);
+    const entityEditable = DataEntrySelectors.selectRecordNodePointerEditable({
+      parentNodeUuid: parentEntityUuid,
+      nodeDefUuid: entityDef.uuid,
+    })(state);
 
     const prevEntityPointer = RecordPageNavigator.getPrevEntityPointer({
       survey,
@@ -119,6 +123,7 @@ export const useBottomNavigationBar = () =>
 
     const newButtonVisible =
       canEditRecord &&
+      entityEditable &&
       pageButtonsVisible &&
       prevEntityPointer &&
       !!entityUuid &&

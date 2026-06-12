@@ -10,7 +10,7 @@ export default {
     completeSuccessfully:
       "Data isian telah berhasil diklon ke dalam siklus {{cycle}}!",
   },
-  confirmImportRecordFromServer: "Impor data dari server?",
+  confirmFetchRecordFromServer: "Ambil data dari server?",
   continueEditing: {
     title: "Lanjutkan pengeditan",
     confirm: {
@@ -29,14 +29,14 @@ export default {
   exportRecords: {
     title: "Ekspor",
   },
-  importRecord: "Impor data isian",
-  importRecords: {
-    title: "$t(common:import)",
+  fetchRecord: "Ambil data isian",
+  fetchRecords: {
+    title: "$t(common:fetch)",
     error: {
       surveyNotVisibleInMobile:
-        "Tidak dapat mengimpor catatan: survei ini seharusnya tidak terlihat di Arena Mobile",
+        "Tidak dapat mengambil data isian: survei ini seharusnya tidak terlihat di Arena Mobile",
       recordsDownloadNotAllowed:
-        "Mengimpor catatan dari server Arena tidak diizinkan",
+        "Pengambilan data isian dari server Arena tidak diizinkan",
     },
   },
   importRecordsFromFile: {
@@ -60,6 +60,10 @@ export default {
   },
   origin: { title: "Asal", L: "Lokal", R: "Jarak Jauh" },
   owner: "Pemilik",
+  recordType: {
+    all: "Semua data isian",
+    local: "Data isian di perangkat",
+  },
   sendData: {
     error: {
       generic: "Tidak dapat mengirim data ke server: {{details}}",
