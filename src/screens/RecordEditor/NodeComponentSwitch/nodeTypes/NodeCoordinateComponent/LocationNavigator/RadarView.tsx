@@ -27,7 +27,7 @@ function pickGridStep(viewRadiusMetres: number, minStepM = 0): number {
   for (const step of GRID_STEPS_M) {
     if (step >= target) return step;
   }
-  return GRID_STEPS_M[GRID_STEPS_M.length - 1]!;
+  return GRID_STEPS_M.at(-1)!;
 }
 
 function formatGridLabel(metres: number): string {
@@ -133,7 +133,6 @@ const AccuracyCircle = ({ cx, cy, accuracyRpx }: AccuracyCircleProps) => {
 const TARGET_ICON_SIZE = 18;
 const TARGET_ICON_HALF = TARGET_ICON_SIZE / 2;
 
-
 type CompassNeedleProps = {
   cx: number;
   cy: number;
@@ -226,7 +225,7 @@ export const RadarView = ({
   const onSurface = colors.onSurface;
   const surfaceColor = colors.surface;
 
-  const isFiniteDistance = isFinite(distance) && distance > 0;
+  const isFiniteDistance = Number.isFinite(distance) && distance > 0;
   const viewRadiusM = isFiniteDistance ? distance * 1.45 : 50;
   const pixelsPerMetre = R / viewRadiusM;
 
@@ -258,9 +257,9 @@ export const RadarView = ({
   ].join(" ");
 
   const accuracyRpx =
-    accuracy != null
-      ? Math.min(R - 2, Math.max(3, accuracy * pixelsPerMetre))
-      : null;
+    accuracy == null
+      ? null
+      : Math.min(R - 2, Math.max(3, accuracy * pixelsPerMetre));
 
   // Compass anchored to the bottom-right corner of the SVG
   const compassWidgetR = size * 0.045;

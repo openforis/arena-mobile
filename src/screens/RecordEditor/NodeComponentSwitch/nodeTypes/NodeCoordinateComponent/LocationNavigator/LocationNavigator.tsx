@@ -36,6 +36,7 @@ import {
 import styles, { loadingOverlayAbsoluteStyle } from "./styles";
 import { useCompassAnimation } from "./useCompassAnimation";
 import { useLocationNavigator } from "./useLocationNavigator";
+import { LocationPoint } from "model/LocationPoint";
 
 const loadingOverlay = (
   <LoadingIcon size="large" style={loadingOverlayAbsoluteStyle} />
@@ -153,6 +154,9 @@ type LocationNavigatorProps = {
   onUseCurrentLocation: (location: any) => void;
 };
 
+const normalizeRelativeAngle = (relativeAngle: number) =>
+  relativeAngle > 180 ? relativeAngle - 360 : relativeAngle;
+
 export const LocationNavigator = (props: LocationNavigatorProps) => {
   const { targetPoint, onDismiss, onUseCurrentLocation } = props;
 
@@ -236,9 +240,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
   const compass = viewMode === "compass" ? compassView : radarView;
 
   const signedRelativeAngle = currentLocation
-    ? relativeAngle > 180
-      ? relativeAngle - 360
-      : relativeAngle
+    ? normalizeRelativeAngle(relativeAngle)
     : null;
   const angleCardStyle = currentLocation
     ? getRelativeAngleCardStyle(relativeAngle)
