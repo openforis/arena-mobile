@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 export const loadingOverlayAbsoluteStyle = StyleSheet.flatten([
-  StyleSheet.absoluteFillObject,
+  StyleSheet.absoluteFill,
   { justifyContent: "center" as const, alignItems: "center" as const },
 ]);
 

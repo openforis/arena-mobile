@@ -10,7 +10,7 @@ export default StyleSheet.create({
     justifyContent: "center",
   },
   camera: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   instructionsContainer: {
     position: "absolute",

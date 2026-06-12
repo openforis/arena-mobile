@@ -75,11 +75,15 @@ const recordLoadStatusCellRendererByViewMode: Record<ScreenViewMode, any> = {
   ),
 };
 
+const LoadingIconCellRenderer = (_props: DataVisualizerCellProps) => (
+  <LoadingIcon />
+);
+
 const getSyncStatusCellRenderer = ({
   syncStatusLoading,
 }: {
   syncStatusLoading?: boolean;
-}) => (syncStatusLoading ? LoadingIcon : RecordSyncStatusIcon);
+}) => (syncStatusLoading ? LoadingIconCellRenderer : RecordSyncStatusIcon);
 
 const RecordErrorsListCellRenderer = ({ item }: DataVisualizerCellProps) => (
   <Text>{Validations.getErrorsCount(item.validation)}</Text>

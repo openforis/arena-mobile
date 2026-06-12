@@ -49,7 +49,7 @@ export const NavigatorArrow = ({
   return (
     <Animated.View
       style={[
-        StyleSheet.absoluteFillObject,
+        StyleSheet.absoluteFill,
         { width: size, height: size },
         arrowRotStyle,
       ]}
