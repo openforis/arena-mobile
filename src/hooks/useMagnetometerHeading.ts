@@ -98,6 +98,14 @@ export const useMagnetometerHeading = ({ enabled = true }: { enabled?: boolean }
 
   const [heading, setHeading] = useState(0);
   const [magnetometerAvailable, setMagnetometerAvailable] = useState(true);
+  const [prevEnabled, setPrevEnabled] = useState(enabled);
+
+  if (prevEnabled !== enabled) {
+    setPrevEnabled(enabled);
+    if (enabled && !magnetometerAvailable) {
+      setMagnetometerAvailable(true);
+    }
+  }
 
   const orientation = DeviceInfoSelectors.useOrientation();
   // Keep a ref so the sensor callback always reads the latest orientation

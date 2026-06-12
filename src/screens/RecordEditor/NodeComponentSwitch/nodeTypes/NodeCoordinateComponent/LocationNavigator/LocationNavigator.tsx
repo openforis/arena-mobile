@@ -36,7 +36,6 @@ import {
 import styles, { loadingOverlayAbsoluteStyle } from "./styles";
 import { useCompassAnimation } from "./useCompassAnimation";
 import { useLocationNavigator } from "./useLocationNavigator";
-import { LocationPoint } from "model/LocationPoint";
 
 const loadingOverlay = (
   <LoadingIcon size="large" style={loadingOverlayAbsoluteStyle} />

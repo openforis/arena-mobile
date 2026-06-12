@@ -5,10 +5,23 @@ import { Numbers } from "@openforis/arena-core";
 
 import { circularEma, EMA_ALPHA } from "./headingUtils";
 
-export const useLocationHeading = ({ enabled = true }: { enabled?: boolean } = {}) => {
+export const useLocationHeading = ({
+  enabled = true,
+}: { enabled?: boolean } = {}) => {
   const filteredHeadingRef = useRef<number | null>(null);
   const [heading, setHeading] = useState(0);
-  const [locationHeadingAvailable, setLocationHeadingAvailable] = useState(true);
+  const [locationHeadingAvailable, setLocationHeadingAvailable] =
+    useState(true);
+  const [prevEnabled, setPrevEnabled] = useState(enabled);
+
+  // Reset availability optimistically during render when re-enabled, avoiding
+  // a synchronous setState inside an effect body (which causes cascading renders).
+  if (prevEnabled !== enabled) {
+    setPrevEnabled(enabled);
+    if (enabled && !locationHeadingAvailable) {
+      setLocationHeadingAvailable(true);
+    }
+  }
 
   useEffect(() => {
     if (!enabled) {
@@ -26,10 +39,9 @@ export const useLocationHeading = ({ enabled = true }: { enabled?: boolean } = {
         headingData.trueHeading >= 0
           ? headingData.trueHeading
           : headingData.magHeading;
-      if (raw < 0) return;
+      if (!Number.isFinite(raw) || raw < 0) return;
       const prev = filteredHeadingRef.current;
-      const filtered =
-        prev === null ? raw : circularEma(prev, raw, EMA_ALPHA);
+      const filtered = prev === null ? raw : circularEma(prev, raw, EMA_ALPHA);
       filteredHeadingRef.current = filtered;
       setHeading(Numbers.roundToPrecision(filtered, 1));
     })
