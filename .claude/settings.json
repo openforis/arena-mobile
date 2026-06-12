@@ -8,7 +8,8 @@
       "Bash(python3 -c \"import sys,json; v=json.load\\(sys.stdin\\); print\\([x for x in v if x.startswith\\('10.'\\)][-5:]\\)\")",
       "Bash(python3 -c \"import sys,json; v=json.load\\(sys.stdin\\); print\\(v[-5:]\\)\")",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('version'\\)\\)\")",
-      "Bash(node -e \"const s = require\\('/home/stefano/dev/projects/openforis/arena-mobile/node_modules/eslint/node_modules/eslint-scope/lib/scope-manager.js'\\); const sm = s.create\\({scopeToGenerate: []}\\); console.log\\(typeof sm.addGlobals\\)\")"
+      "Bash(node -e \"const s = require\\('/home/stefano/dev/projects/openforis/arena-mobile/node_modules/eslint/node_modules/eslint-scope/lib/scope-manager.js'\\); const sm = s.create\\({scopeToGenerate: []}\\); console.log\\(typeof sm.addGlobals\\)\")",
+      "Bash(node -e \"const { MD3DarkTheme, DefaultTheme } = require\\('/home/stefano/dev/projects/openforis/arena-mobile/node_modules/react-native-paper'\\); console.log\\('Dark surface:', MD3DarkTheme.colors.surface\\); console.log\\('Light surface:', DefaultTheme.colors.surface\\);\")"
     ]
   }
 }

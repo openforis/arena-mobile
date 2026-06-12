@@ -1,4 +1,5 @@
-import { StatusBar } from "expo-status-bar";
+import { Platform, StatusBar, View } from "react-native";
+import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import ErrorBoundary from "react-native-error-boundary";
 import {
   KeyboardAvoidingView,
@@ -48,7 +49,21 @@ const AppInnerContainer = () => {
           FallbackComponent={ErrorFallbackComponent}
         >
           <KeyboardProvider>
-            <StatusBar style={theme.dark ? "light" : "dark"} />
+            <ExpoStatusBar style={theme.dark ? "light" : "dark"} />
+            {Platform.OS === "android" && (
+              <View
+                pointerEvents="none"
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: StatusBar.currentHeight ?? 0,
+                  backgroundColor: theme.colors.surface,
+                  zIndex: 1000,
+                }}
+              />
+            )}
             <AppInitializer>
               <SafeAreaView edges={safeAreaEdges} style={styles.container}>
                 <KeyboardAvoidingView
