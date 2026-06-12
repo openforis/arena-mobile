@@ -22,8 +22,8 @@ const GRID_STEPS_M = [
   0.5, 1, 2, 5, 10, 25, 50, 100, 250, 500, 1000, 2000, 5000, 10000, 50000,
 ];
 
-function pickGridStep(viewRadiusMetres: number): number {
-  const target = viewRadiusMetres / 3;
+function pickGridStep(viewRadiusMetres: number, minStepM = 0): number {
+  const target = Math.max(viewRadiusMetres / 3, minStepM);
   for (const step of GRID_STEPS_M) {
     if (step >= target) return step;
   }
@@ -230,7 +230,10 @@ export const RadarView = ({
   const viewRadiusM = isFiniteDistance ? distance * 1.45 : 50;
   const pixelsPerMetre = R / viewRadiusM;
 
-  const gridStepM = useMemo(() => pickGridStep(viewRadiusM), [viewRadiusM]);
+  const gridStepM = useMemo(
+    () => pickGridStep(viewRadiusM, accuracy ?? 0),
+    [viewRadiusM, accuracy],
+  );
   const gridStepPx = gridStepM * pixelsPerMetre;
 
   const rad = toRad(relativeAngle);
