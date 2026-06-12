@@ -53,7 +53,9 @@ export const useLocationHeading = ({
         }
       })
       .catch(() => {
-        setLocationHeadingAvailable(false);
+        if (!cancelled) {
+          setLocationHeadingAvailable(false);
+        }
       });
 
     return () => {

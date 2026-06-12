@@ -91,20 +91,4 @@ export default StyleSheet.create({
     flex: 1,
     gap: 4,
   },
-  infoDialogScroll: {
-    maxHeight: 400,
-  },
-  infoDialogSectionTitle: {
-    marginBottom: 4,
-  },
-  infoDialogSectionTitleSpaced: {
-    marginTop: 12,
-  },
-  infoDialogItemTitle: {
-    marginTop: 6,
-    marginBottom: 2,
-  },
-  infoDialogItemDesc: {
-    opacity: 0.8,
-  },
 });

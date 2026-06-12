@@ -225,8 +225,8 @@ export const RadarView = ({
   const onSurface = colors.onSurface;
   const surfaceColor = colors.surface;
 
-  const isFiniteDistance = Number.isFinite(distance) && distance > 0;
-  const viewRadiusM = isFiniteDistance ? distance * 1.45 : 50;
+  const isFiniteDistance = Number.isFinite(distance) && distance >= 0;
+  const viewRadiusM = isFiniteDistance ? Math.max(distance * 1.45, 50) : 50;
   const pixelsPerMetre = R / viewRadiusM;
 
   const gridStepM = useMemo(

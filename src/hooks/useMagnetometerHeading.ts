@@ -91,7 +91,9 @@ const computeTiltCompensatedHeading = (mag: Vector3, acc: Vector3): number => {
   return Numbers.absMod(360)(Math.atan2(-east, north) * (180 / Math.PI));
 };
 
-export const useMagnetometerHeading = ({ enabled = true }: { enabled?: boolean } = {}) => {
+export const useMagnetometerHeading = ({
+  enabled = true,
+}: { enabled?: boolean } = {}) => {
   const magRef = useRef<Vector3 | null>(null);
   const accRef = useRef<Vector3 | null>(null);
   const filteredHeadingRef = useRef<number | null>(null);
@@ -143,6 +145,7 @@ export const useMagnetometerHeading = ({ enabled = true }: { enabled?: boolean }
       return;
     }
 
+    let cancelled = false;
     let magSub: ReturnType<typeof Magnetometer.addListener> | undefined;
     let accSub: ReturnType<typeof Accelerometer.addListener> | undefined;
 
@@ -151,6 +154,7 @@ export const useMagnetometerHeading = ({ enabled = true }: { enabled?: boolean }
       Accelerometer.isAvailableAsync(),
     ])
       .then(([magAvailable, accAvailable]) => {
+        if (cancelled) return;
         if (!magAvailable || !accAvailable) {
           setMagnetometerAvailable(false);
           return;
@@ -169,11 +173,13 @@ export const useMagnetometerHeading = ({ enabled = true }: { enabled?: boolean }
         });
       })
       .catch((error: any) => {
+        if (cancelled) return;
         log.error("Error initializing magnetometer", error);
         setMagnetometerAvailable(false);
       });
 
     return () => {
+      cancelled = true;
       magSub?.remove();
       accSub?.remove();
     };
