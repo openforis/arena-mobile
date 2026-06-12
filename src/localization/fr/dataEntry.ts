@@ -143,6 +143,7 @@ Continuer ?`,
     distance: "Distance (m)",
     getLocation: "Obtenir la position",
     heading: "Cap (deg)",
+    headingOffset: "Décalage de cap",
     keepXAndY: "Conserver X et Y",
     magnetometerNotAvailable: "Magnétomètre non disponible!",
     navigateToTarget: "Naviguer vers la cible",
@@ -150,6 +151,27 @@ Continuer ?`,
     useCurrentLocation: "Utiliser la position actuelle",
     x: "X",
     y: "Y",
+    viewModeCompass: "Boussole",
+    viewModeRadar: "Radar",
+    locationNavigatorInfo: {
+      title: "Location Navigator",
+      description:
+        "Guides you toward a target coordinate using your device's GPS and sensors. It shows a target location relative to your current position and lets you navigate to it in the field.",
+      viewModesTitle: "View Modes",
+      compassTitle: "Compass",
+      compassDesc:
+        "Displays a rotating compass rose aligned to North. An arrow points toward the target. When very close to the target (proximity mode), the arrow is replaced with a dot on the accuracy circle showing the target's relative position.",
+      radarTitle: "Radar",
+      radarDesc:
+        "Shows a top-down radar view with your position fixed at the center. The target dot moves around you in real time to reflect its actual direction and distance.",
+      headingSourcesTitle: "Heading Sources",
+      sensorTitle: "Sensor (Magnetometer)",
+      sensorDesc:
+        "Uses the device's built-in magnetometer (compass chip). Works while standing still, but can be affected by nearby metal objects or magnetic interference.",
+      gpsTitle: "GPS",
+      gpsDesc:
+        "Derives heading from GPS movement. More accurate in open spaces, but requires you to be walking and may not be available on all devices.",
+    },
   },
   geo: {
     drawPolygon: "Dessiner un polygone",

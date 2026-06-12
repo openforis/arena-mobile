@@ -2,11 +2,19 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Numbers, Objects, Points } from "@openforis/arena-core";
 
-import { useLocationWatch, useMagnetometerHeading } from "hooks";
+import {
+  useLocationHeading,
+  useLocationWatch,
+  useMagnetometerHeading,
+} from "hooks";
+import { HeadingSource } from "hooks/headingUtils";
 import { LocationPoint } from "model";
 import { SurveySelectors } from "state";
 
-import { PROXIMITY_THRESHOLD_METRES } from "./locationNavigatorConstants";
+import {
+  getRelativeAngleColor,
+  PROXIMITY_THRESHOLD_METRES,
+} from "./locationNavigatorConstants";
 
 const arrowToTargetVisibleDistanceThreshold = PROXIMITY_THRESHOLD_METRES;
 
@@ -69,7 +77,18 @@ export const useLocationNavigator = ({
     stopOnTimeout: false,
   });
 
-  const { heading, magnetometerAvailable } = useMagnetometerHeading();
+  const [headingSource, setHeadingSource] = useState<HeadingSource>("magnetometer");
+
+  const { heading: magHeading, magnetometerAvailable } = useMagnetometerHeading({
+    enabled: headingSource === "magnetometer",
+  });
+  const { heading: locHeading, locationHeadingAvailable } = useLocationHeading({
+    enabled: headingSource === "location",
+  });
+
+  const heading = headingSource === "magnetometer" ? magHeading : locHeading;
+  const headingSourceAvailable =
+    headingSource === "magnetometer" ? magnetometerAvailable : locationHeadingAvailable;
 
   useEffect(() => {
     startLocationWatch();
@@ -87,11 +106,10 @@ export const useLocationNavigator = ({
 
   const isProximity = distance < arrowToTargetVisibleDistanceThreshold;
 
-  const arrowColor = useMemo(() => {
-    if (relativeAngle <= 20 || relativeAngle >= 340) return "#4caf50";
-    if (relativeAngle <= 45 || relativeAngle >= 315) return "#ff9800";
-    return "#f44336";
-  }, [relativeAngle]);
+  const arrowColor = useMemo(
+    () => getRelativeAngleColor(relativeAngle),
+    [relativeAngle],
+  );
 
   const targetCoordDisplay = useMemo(() => {
     if (!targetPointLatLong) return null;
@@ -120,10 +138,12 @@ export const useLocationNavigator = ({
     currentLocation,
     distance,
     heading,
+    headingSource,
+    headingSourceAvailable,
     isProximity,
-    magnetometerAvailable,
     onUseCurrentLocationPress,
     relativeAngle,
+    setHeadingSource,
     targetCoordDisplay,
   };
 };

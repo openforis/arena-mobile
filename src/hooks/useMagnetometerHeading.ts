@@ -8,12 +8,12 @@ import { log } from "utils/Logger";
 import { ScreenOrientation } from "model";
 import { DeviceInfoSelectors } from "state";
 
+import { circularEma, EMA_ALPHA } from "./headingUtils";
+
 type Vector3 = { x: number; y: number; z: number };
 
 const SENSOR_UPDATE_INTERVAL_MS = 50; // 20 Hz
 const THROTTLE_DELAY_MS = 50;
-// Low-pass filter factor: higher = more responsive, lower = smoother
-const EMA_ALPHA = 0.25;
 
 // Some devices don't report LANDSCAPE_RIGHT (4) when rotating 180° within
 // landscape — the expo key stays at LANDSCAPE_LEFT (3). Use normalized acc.x
@@ -91,21 +91,23 @@ const computeTiltCompensatedHeading = (mag: Vector3, acc: Vector3): number => {
   return Numbers.absMod(360)(Math.atan2(-east, north) * (180 / Math.PI));
 };
 
-// Circular EMA that handles 0/360 wrap-around
-const circularEma = (prev: number, next: number, alpha: number): number => {
-  const diff = next - prev;
-  // Wrap difference to [-180, 180]
-  const wrappedDiff = (((diff % 360) + 540) % 360) - 180;
-  return Numbers.absMod(360)(prev + alpha * wrappedDiff);
-};
-
-export const useMagnetometerHeading = () => {
+export const useMagnetometerHeading = ({
+  enabled = true,
+}: { enabled?: boolean } = {}) => {
   const magRef = useRef<Vector3 | null>(null);
   const accRef = useRef<Vector3 | null>(null);
   const filteredHeadingRef = useRef<number | null>(null);
 
   const [heading, setHeading] = useState(0);
   const [magnetometerAvailable, setMagnetometerAvailable] = useState(true);
+  const [prevEnabled, setPrevEnabled] = useState(enabled);
+
+  if (prevEnabled !== enabled) {
+    setPrevEnabled(enabled);
+    if (enabled && !magnetometerAvailable) {
+      setMagnetometerAvailable(true);
+    }
+  }
 
   const orientation = DeviceInfoSelectors.useOrientation();
   // Keep a ref so the sensor callback always reads the latest orientation
@@ -138,6 +140,12 @@ export const useMagnetometerHeading = () => {
   );
 
   useEffect(() => {
+    if (!enabled) {
+      filteredHeadingRef.current = null;
+      return;
+    }
+
+    let cancelled = false;
     let magSub: ReturnType<typeof Magnetometer.addListener> | undefined;
     let accSub: ReturnType<typeof Accelerometer.addListener> | undefined;
 
@@ -146,6 +154,7 @@ export const useMagnetometerHeading = () => {
       Accelerometer.isAvailableAsync(),
     ])
       .then(([magAvailable, accAvailable]) => {
+        if (cancelled) return;
         if (!magAvailable || !accAvailable) {
           setMagnetometerAvailable(false);
           return;
@@ -164,15 +173,17 @@ export const useMagnetometerHeading = () => {
         });
       })
       .catch((error: any) => {
+        if (cancelled) return;
         log.error("Error initializing magnetometer", error);
         setMagnetometerAvailable(false);
       });
 
     return () => {
+      cancelled = true;
       magSub?.remove();
       accSub?.remove();
     };
-  }, [throttledUpdateHeading]);
+  }, [enabled, throttledUpdateHeading]);
 
   return { magnetometerAvailable, heading };
 };

@@ -1,4 +1,4 @@
-import { StyleProp, TextStyle } from "react-native";
+import { StyleProp, StyleSheet, TextStyle, View } from "react-native";
 
 import { useTranslation } from "localization";
 
@@ -7,6 +7,7 @@ import { Text } from "./Text";
 
 type Props = {
   children?: React.ReactNode;
+  labelIcon?: React.ReactNode;
   labelKey: string;
   labelNumberOfLines?: number;
   labelStyle?: StyleProp<TextStyle>;
@@ -15,8 +16,13 @@ type Props = {
   textVariant?: string;
 };
 
+const styles = StyleSheet.create({
+  labelIconWrapper: { alignSelf: "center", marginRight: 4 },
+});
+
 export const FormItem = ({
   children,
+  labelIcon,
   labelKey,
   labelNumberOfLines = undefined,
   labelStyle = undefined,
@@ -31,6 +37,7 @@ export const FormItem = ({
 
   return (
     <HView style={[{ alignItems: "baseline" }, style]}>
+      {labelIcon && <View style={styles.labelIconWrapper}>{labelIcon}</View>}
       <Text
         numberOfLines={labelNumberOfLines}
         style={labelStyle}

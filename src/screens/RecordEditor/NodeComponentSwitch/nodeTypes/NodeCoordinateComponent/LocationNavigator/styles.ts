@@ -10,11 +10,11 @@ export default StyleSheet.create({
   container: {
     alignItems: "center",
     paddingHorizontal: 8,
-    paddingBottom: 16,
+    paddingBottom: 8,
   },
   compassWrapper: {
     alignItems: "center",
-    marginVertical: 12,
+    marginVertical: 6,
   },
 
   // ── Landscape layout ───────────────────────────────────────────────────
@@ -51,18 +51,18 @@ export default StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    gap: 8,
-    marginVertical: 4,
+    gap: 6,
+    marginVertical: 2,
   },
   infoCard: {
-    width: 136,
-    paddingVertical: 10,
-    paddingHorizontal: 8,
+    width: 140,
+    paddingVertical: 6,
+    paddingHorizontal: 4,
     borderRadius: 10,
     alignItems: "center",
   },
   infoCardLabel: {
-    opacity: 0.65,
+    width: "100%",
     textAlign: "center",
     marginBottom: 2,
   },
@@ -71,11 +71,24 @@ export default StyleSheet.create({
   },
   coordsSection: {
     width: "100%",
-    gap: 4,
-    marginVertical: 4,
+    gap: 2,
+    marginVertical: 2,
   },
   buttonRow: {
     justifyContent: "center",
-    marginTop: 8,
+    marginTop: 4,
+  },
+  switchesSection: {
+    flexDirection: "row",
+    alignItems: "stretch",
+    width: "100%",
+  },
+  switchesInfoButton: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  switchesStack: {
+    flex: 1,
+    gap: 4,
   },
 });
