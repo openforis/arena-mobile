@@ -31,7 +31,7 @@ export const TargetPointDot = ({
   const dotY = cy - dotRadius * Math.cos(rad);
 
   return (
-    <View style={[StyleSheet.absoluteFillObject, { width: size, height: size }]}>
+    <View style={[StyleSheet.absoluteFill, { width: size, height: size }]}>
       <View
         style={{
           position: "absolute",

@@ -8,7 +8,15 @@ const basePlugins: ExpoConfig["plugins"] = [
   [
     "expo-build-properties",
     {
-      ios: { deploymentTarget: "15.5" },
+      ios: { deploymentTarget: "16.4" },
+    },
+  ],
+  [
+    "expo-splash-screen",
+    {
+      image: "./assets/splash.png",
+      resizeMode: "contain",
+      backgroundColor: "#ffffff",
     },
   ],
   [
@@ -30,6 +38,7 @@ const basePlugins: ExpoConfig["plugins"] = [
   "expo-audio",
   "expo-localization",
   "expo-secure-store",
+  "expo-sharing",
   "expo-sqlite",
   "expo-web-browser",
   "@react-native-community/datetimepicker",
@@ -48,11 +57,6 @@ const config = (): ExpoConfig => {
     version: appVersion,
     icon: "./assets/logo/icon_with_margin.png",
     userInterfaceStyle: "automatic",
-    splash: {
-      image: "./assets/splash.png",
-      resizeMode: "contain",
-      backgroundColor: "#ffffff",
-    },
     updates: {
       fallbackToCacheTimeout: 0,
     },

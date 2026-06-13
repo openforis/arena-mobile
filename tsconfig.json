@@ -3,6 +3,7 @@
     "allowUnreachableCode": false,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./src",
+    "ignoreDeprecations": "6.0",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-native",

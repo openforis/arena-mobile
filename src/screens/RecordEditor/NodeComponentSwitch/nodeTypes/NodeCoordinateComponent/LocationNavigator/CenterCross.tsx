@@ -9,7 +9,7 @@ type CenterCrossProps = {
 export const CenterCross = ({ size }: CenterCrossProps) => (
   <View
     style={[
-      StyleSheet.absoluteFillObject,
+      StyleSheet.absoluteFill,
       styles.container,
     ]}
   >
