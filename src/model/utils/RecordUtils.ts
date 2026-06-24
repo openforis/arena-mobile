@@ -224,16 +224,21 @@ const possibleDistanceTargetExpressions: Dictionary<string> = {
   parentFunction: functionCallExpression("parent"),
 };
 
+const distanceFunctionNames = ["distance", "geoDistance"];
+
+const distanceFunctionNamesAlternation = distanceFunctionNames.join("|");
+
+const distanceFunctionCallPattern = String.raw`\b(?:${distanceFunctionNamesAlternation})\b\s*\(`;
+
 const distanceFunctionRegExp = (firstArgument: any, secondArgument: any) =>
-  String.raw`\s*distance\s*\(\s*(${firstArgument})\s*,\s*(${secondArgument})\s*\)`;
+  String.raw`\s*${distanceFunctionCallPattern}\s*(${firstArgument})\s*,\s*(${secondArgument})\s*\)`;
 
 const extractDistanceTargetExpression = ({ nodeDef }: any): string | null => {
   const validations = NodeDefs.getValidations(nodeDef);
+  const distanceCallRegExp = new RegExp(distanceFunctionCallPattern);
   const distanceValidation = validations?.expressions?.find(
     (expression: NodeDefExpression) =>
-      new RegExp(functionCallExpression("distance")).test(
-        expression.expression!,
-      ),
+      distanceCallRegExp.test(expression.expression!),
   );
 
   if (!distanceValidation) {
