@@ -12,9 +12,9 @@ const applyReducerFunction = ({
 const exportReducer =
   ({
     actionHandlers,
-    intialState
+    initialState
   }: any) =>
-  (state = intialState, action: any) =>
+  (state = initialState, action: any) =>
     applyReducerFunction({ actionHandlers, action, state });
 
 export const debounceAction = (action: any, key: any, time = 500) => {
