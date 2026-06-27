@@ -4,7 +4,7 @@ import { JobStatus } from "@openforis/arena-core";
 
 import { useJobMonitor } from "state/jobMonitor/useJobMonitor";
 
-import { Button, Dialog, ProgressBar, Text } from "components";
+import { Dialog, ProgressBar, Text } from "components";
 import { useTranslation } from "localization";
 import { Jobs } from "utils";
 

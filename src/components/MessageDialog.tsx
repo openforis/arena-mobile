@@ -2,7 +2,6 @@ import * as React from "react";
 
 import { useTranslation } from "localization";
 
-import { Button } from "./Button";
 import { CollapsiblePanel } from "./CollapsiblePanel";
 import { Dialog } from "./Dialog";
 import { ScrollView } from "./ScrollView";
@@ -34,7 +33,10 @@ export const MessageDialog = (props: MessageDialogProps) => {
   const { t } = useTranslation();
 
   const actions = [
-    { onPress: onDone ?? onDismiss ?? (() => undefined), textKey: doneButtonLabel },
+    {
+      onPress: onDone ?? onDismiss ?? (() => undefined),
+      textKey: doneButtonLabel,
+    },
   ];
 
   return (
