@@ -190,6 +190,7 @@ export default {
     selectPicture: "Выберите изображение",
     selectVideo: "Выберите видео",
     deleteConfirmMessage: "Удалить существующий файл?",
+    fileMissing: "Файл не найден в локальном хранилище",
     fileSelectError: "Ошибка при выборе файла: {{error}}",
   },
   fileAttributeAudio: {

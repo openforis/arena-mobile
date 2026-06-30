@@ -197,6 +197,7 @@ Tryck '$t(dataEntry:geo.stopAddingPoints)' när du är klar.`,
     selectPicture: "Välj bild",
     selectVideo: "Välj video",
     deleteConfirmMessage: "Ta bort befintlig fil?",
+    fileMissing: "Filen hittades inte i lokal lagring",
     fileSelectError: "Fel vid val av fil: {{error}}",
   },
   fileAttributeAudio: {

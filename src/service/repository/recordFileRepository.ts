@@ -9,29 +9,18 @@ const getRecordFilesParentDirectoryUri = () =>
 const getRecordFilesParentDirectorySize = async () =>
   Files.getDirSize(getRecordFilesParentDirectoryUri());
 
-const getRecordFileDirectoryUri = ({
-  surveyId
-}: any) =>
+const getRecordFileDirectoryUri = ({ surveyId }: any) =>
   `${getRecordFilesParentDirectoryUri()}/${surveyId}`;
 
-const getRecordFilesDirectorySize = async ({
-  surveyId
-}: any) =>
+const getRecordFilesDirectorySize = async ({ surveyId }: any) =>
   Files.getDirSize(getRecordFileDirectoryUri({ surveyId }));
 
-const getRecordFileUri = ({
-  surveyId,
-  fileUuid
-}: any) =>
+const getRecordFileUri = ({ surveyId, fileUuid }: any) =>
   `${getRecordFileDirectoryUri({ surveyId })}/${fileUuid}`;
 
-const saveRecordFile = async ({
-  surveyId,
-  fileUuid,
-  sourceFileUri
-}: any) => {
+const saveRecordFile = async ({ surveyId, fileUuid, sourceFileUri }: any) => {
   await GenericFileRepository.makeDirIfNotExists(
-    getRecordFileDirectoryUri({ surveyId })
+    getRecordFileDirectoryUri({ surveyId }),
   );
 
   const fileUriTarget = getRecordFileUri({ surveyId, fileUuid });
@@ -42,10 +31,14 @@ const saveRecordFile = async ({
   });
 };
 
-const deleteRecordFile = async ({
-  surveyId,
-  fileUuid
-}: any) => {
+const recordFileMissing = async ({ surveyId, fileUuid }: any) =>
+  !!fileUuid &&
+  !(await (async ({ surveyId, fileUuid }: any) => {
+    const fileUri = getRecordFileUri({ surveyId, fileUuid });
+    return Files.exists(fileUri);
+  })({ surveyId, fileUuid }));
+
+const deleteRecordFile = async ({ surveyId, fileUuid }: any) => {
   const fileUri = getRecordFileUri({ surveyId, fileUuid });
   await GenericFileRepository.deleteFile(fileUri);
 };
@@ -55,6 +48,7 @@ export const RecordFileRepository = {
   getRecordFilesParentDirectorySize,
   getRecordFilesDirectorySize,
   getRecordFileUri,
+  recordFileMissing,
   saveRecordFile,
   deleteRecordFile,
 };

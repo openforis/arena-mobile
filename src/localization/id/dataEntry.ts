@@ -198,6 +198,7 @@ Tekan '$t(dataEntry:geo.stopAddingPoints)' ketika selesai.`,
     selectPicture: "Pilih gambar",
     selectVideo: "Pilih video",
     deleteConfirmMessage: "Hapus file yang ada?",
+    fileMissing: "File tidak ditemukan di penyimpanan lokal",
     fileSelectError: "Kesalahan saat memilih file: {{error}}",
   },
   fileAttributeAudio: {

@@ -1,11 +1,13 @@
 import { NodeDefFileType, NodeDefs } from "@openforis/arena-core";
 
 import {
+  AlertIcon,
   Button,
   DeleteIconButton,
   HView,
   IconButton,
   Loader,
+  Text,
   VView,
   View,
 } from "components";
@@ -39,6 +41,7 @@ export const NodeImageOrVideoComponent = (props: NodeComponentProps) => {
 
   const {
     nodeValue,
+    fileMissing,
     onDeletePress,
     onRotatePress,
     onOpenCameraPress,
@@ -50,14 +53,23 @@ export const NodeImageOrVideoComponent = (props: NodeComponentProps) => {
     <HView style={styles.container}>
       <View style={styles.previewContainer}>
         {resizing && <Loader />}
-        {!resizing && nodeValue && (
+        {!resizing && nodeValue && !fileMissing && (
           <ImageOrVideoValuePreview nodeDef={nodeDef} value={nodeValue} />
+        )}
+        {!resizing && nodeValue && fileMissing && (
+          <HView style={styles.fileMissingContainer}>
+            <AlertIcon hasErrors />
+            <Text
+              textKey="dataEntry:fileAttribute.fileMissing"
+              style={styles.fileMissingText}
+            />
+          </HView>
         )}
       </View>
       <VView style={styles.buttonsContainer}>
         {nodeValue && NodeDefs.isSingle(nodeDef) && (
           <>
-            {fileType === NodeDefFileType.image && (
+            {fileType === NodeDefFileType.image && !fileMissing && (
               <Button
                 icon="rotate-right"
                 onPress={onRotatePress}

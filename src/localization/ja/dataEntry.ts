@@ -232,6 +232,7 @@ export default {
     selectPicture: "写真を選択",
     selectVideo: "動画を選択",
     deleteConfirmMessage: "既存のファイルを削除しますか？",
+    fileMissing: "ローカルストレージにファイルが見つかりません",
     fileSelectError: "ファイル選択時にエラーが発生しました: {{error}}",
   },
   fileAttributeAudio: {

@@ -13,7 +13,7 @@ const copyFile = async ({ from, to }: any) => Files.copyFile({ from, to });
 
 const moveFile = async ({ from, to }: any) => Files.moveFile({ from, to });
 
-const deleteFile = async (fileUri: any) => Files.del(fileUri);
+const deleteFile = async (fileUri: any) => Files.del(fileUri, true);
 
 export const GenericFileRepository = {
   getDirUri,

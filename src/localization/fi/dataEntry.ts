@@ -196,6 +196,7 @@ Paina '$t(dataEntry:geo.stopAddingPoints)', kun olet valmis.`,
     selectPicture: "Valitse kuva",
     selectVideo: "Valitse video",
     deleteConfirmMessage: "Poistetaanko olemassa oleva tiedosto?",
+    fileMissing: "Tiedostoa ei löydy paikallisesta tallennustilasta",
     fileSelectError: "Virhe tiedoston valinnassa: {{error}}",
   },
   fileAttributeAudio: {

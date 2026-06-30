@@ -191,6 +191,7 @@ Pressione '$t(dataEntry:geo.stopAddingPoints)' quando concluído.`,
     selectPicture: "Selecionar imagem",
     selectVideo: "Selecionar vídeo",
     deleteConfirmMessage: "Excluir o arquivo existente?",
+    fileMissing: "Ficheiro não encontrado no armazenamento local",
     fileSelectError: "Erro ao selecionar o ficheiro: {{error}}",
   },
   fileAttributeAudio: {

@@ -184,6 +184,7 @@ export default {
     selectPicture: "ምስል ይምረጡ",
     selectVideo: "የቪዲዮ ፋይል ይምረጡ",
     deleteConfirmMessage: "ያለውን ፋይል ይሰርዙ?",
+    fileMissing: "File not found in local storage",
     fileSelectError: "ፋይል በመምረጥ ላይ ስህተት፡ {{error}}",
   },
   fileAttributeAudio: {

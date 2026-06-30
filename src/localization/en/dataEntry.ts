@@ -239,6 +239,7 @@ Press '$t(dataEntry:geo.stopAddingPoints)' when done.`,
     selectPicture: "Select picture",
     selectVideo: "Select video",
     deleteConfirmMessage: "Delete the existing file?",
+    fileMissing: "File not found in local storage",
     fileSelectError: "Error selecting file: {{error}}",
   },
   fileAttributeAudio: {

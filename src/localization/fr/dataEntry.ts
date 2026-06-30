@@ -197,6 +197,7 @@ Appuyez sur '$t(dataEntry:geo.stopAddingPoints)' lorsque c'est fait.`,
     selectPicture: "Sélectionner image",
     selectVideo: "Sélectionner vidéo",
     deleteConfirmMessage: "Supprimer le fichier existant?",
+    fileMissing: "Fichier introuvable dans le stockage local",
     fileSelectError: "Erreur lors de la sélection du fichier : {{error}}",
   },
   fileAttributeAudio: {

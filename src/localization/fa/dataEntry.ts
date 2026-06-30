@@ -196,6 +196,7 @@ export default {
     selectPicture: "انتخاب تصویر",
     selectVideo: "انتخاب ویدیو",
     deleteConfirmMessage: "آیا از حذف فایل موجود مطمئن هستید؟",
+    fileMissing: "فایل در حافظه محلی یافت نشد",
     fileSelectError: "خطا در انتخاب فایل: {{error}}",
   },
   fileAttributeAudio: {

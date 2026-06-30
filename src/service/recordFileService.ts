@@ -5,6 +5,7 @@ const {
   getRecordFilesParentDirectorySize,
   getRecordFilesDirectorySize,
   getRecordFileUri,
+  recordFileMissing,
   saveRecordFile,
   deleteRecordFile,
 } = RecordFileRepository;
@@ -14,6 +15,7 @@ export const RecordFileService = {
   getRecordFilesParentDirectorySize,
   getRecordFilesDirectorySize,
   getRecordFileUri,
+  recordFileMissing,
   saveRecordFile,
   deleteRecordFile,
 };

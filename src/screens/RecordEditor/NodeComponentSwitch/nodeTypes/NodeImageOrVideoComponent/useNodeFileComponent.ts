@@ -1,7 +1,7 @@
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   NodeDefFileType,
@@ -144,6 +144,14 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
     nodeUuid,
   });
   const [resizing, setResizing] = useState(false);
+  const [fileMissing, setFileMissing] = useState(false);
+
+  useEffect(() => {
+    const { fileUuid } = value ?? {};
+    RecordFileService.recordFileMissing({ surveyId, fileUuid }).then(
+      setFileMissing,
+    );
+  }, [surveyId, value]);
 
   const onFileSelected = useCallback(
     async (
@@ -305,6 +313,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
 
   return {
     nodeValue: value,
+    fileMissing,
     onDeletePress,
     onFileChoosePress,
     onOpenCameraPress,
