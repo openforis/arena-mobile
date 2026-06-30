@@ -77,6 +77,7 @@ Please check your records and check also records on the server`,
       share: "$t(common:shareFile)",
     },
     recordsWithMissingFilesConfirm: {
+      confirmButton: "Export without missing files",
       title: "Missing files",
       message: `The following records have missing files and will be exported without them:\n{{recordsList}}\n\nDo you want to proceed anyway?`,
     },

@@ -259,6 +259,11 @@ Maximal zulässige Größe: {{maxSizeMB}}MB.
       local: "Lokaler Ordner (Download)",
       share: "$t(common:shareFile)",
     },
+    recordsWithMissingFilesConfirm: {
+      confirmButton: "Exportieren ohne fehlende Dateien",
+      title: "Fehlende Dateien",
+      message: `Die folgenden Datensätze haben fehlende Dateien und werden ohne diese exportiert:\n{{recordsList}}\n\nMöchten Sie trotzdem fortfahren?`,
+    },
     title: "Daten exportieren",
   },
   location: {

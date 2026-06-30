@@ -239,6 +239,11 @@ export default {
       local: "የአካባቢ አቃፊ (ማውረድ)",
       share: "$t(common:shareFile)",
     },
+    recordsWithMissingFilesConfirm: {
+      confirmButton: "ያጡ ፋይሎች ሳይጨምሩ ወደ ውጭ ላክ",
+      title: "ያጡ ፋይሎች",
+      message: `የሚከተሉ መዝገቦች ያጡ ፋይሎች አሏቸው እና ያለ እነርሱ ወደ ውጭ ይላካሉ:\n{{recordsList}}\n\nሆኖም ቀጠል ትፈልጋለህ?`,
+    },
     title: "ውሂብ ላክ",
   },
   location: {

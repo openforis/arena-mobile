@@ -252,6 +252,11 @@ export default {
       local: "پوشه محلی (دانلود)",
       share: "$t(common:shareFile)",
     },
+    recordsWithMissingFilesConfirm: {
+      confirmButton: "اکسپورت بدون فایل‌های گم‌شده",
+      title: "فایل‌های گم‌شده",
+      message: `رکوردهای زیر فایل‌های گم‌شده دارند و بدون آن‌ها اکسپورت می‌شوند:\n{{recordsList}}\n\nآیا می‌خواهید ادامه دهید؟`,
+    },
     title: "اکسپورت داده ها",
   },
   location: {

@@ -319,7 +319,8 @@ const _onExportFileGenerationSucceeded = async ({
       messageKey: "dataEntry:dataExport.recordsWithMissingFilesConfirm.message",
       messageParams: { recordsList },
       messageIsMarkdown: true,
-      confirmButtonTextKey: "common:yes",
+      confirmButtonTextKey:
+        "dataEntry:dataExport.recordsWithMissingFilesConfirm.confirmButton",
     });
 
     if (!confirmed) return;

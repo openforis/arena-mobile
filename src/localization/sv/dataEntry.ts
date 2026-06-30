@@ -254,6 +254,11 @@ Kontrollera inställningarna eller be undersökningsadministratören att ändra 
       local: "Lokal mapp (Nedladdning)",
       share: "$t(common:shareFile)",
     },
+    recordsWithMissingFilesConfirm: {
+      confirmButton: "Exportera utan saknade filer",
+      title: "Saknade filer",
+      message: `Följande poster har saknade filer och kommer att exporteras utan dem:\n{{recordsList}}\n\nVill du fortsätta ändå?`,
+    },
     title: "Exportera data",
   },
   location: {

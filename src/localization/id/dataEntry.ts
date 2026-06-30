@@ -257,6 +257,11 @@ Periksa pengaturan atau minta administrator survei untuk mengubah batas ini.`,
       local: "Folder lokal (Unduhan)",
       share: "$t(common:shareFile)",
     },
+    recordsWithMissingFilesConfirm: {
+      confirmButton: "Ekspor tanpa file yang hilang",
+      title: "File yang hilang",
+      message: `Data isian berikut memiliki file yang hilang dan akan diekspor tanpanya:\n{{recordsList}}\n\nApakah Anda ingin melanjutkan?`,
+    },
     title: "Ekspor data",
   },
   location: {

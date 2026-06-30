@@ -249,6 +249,11 @@ export default {
       local: "Локальная папка (Загрузка)",
       share: "$t(common:shareFile)",
     },
+    recordsWithMissingFilesConfirm: {
+      confirmButton: "Экспортировать без отсутствующих файлов",
+      title: "Отсутствующие файлы",
+      message: `Следующие записи имеют отсутствующие файлы и будут экспортированы без них:\n{{recordsList}}\n\nВы хотите продолжить?`,
+    },
     title: "Экспорт данных",
   },
   location: {

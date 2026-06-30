@@ -74,6 +74,11 @@ export default {
       local: "ローカルフォルダ（ダウンロード）",
       share: "$t(common:shareFile)",
     },
+    recordsWithMissingFilesConfirm: {
+      confirmButton: "欠損ファイルなしでエクスポート",
+      title: "ファイルが見つかりません",
+      message: `次の記録には欠損ファイルがあり、それらなしでエクスポートされます：\n{{recordsList}}\n\n続行しますか？`,
+    },
     title: "データをエクスポート",
   },
   editNodeDef: "{{nodeDef}}を編集",

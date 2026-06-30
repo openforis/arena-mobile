@@ -12,6 +12,7 @@ import {
 } from "@openforis/arena-core";
 
 import { JobMobile } from "model";
+import { RecordUtils } from "model/utils/RecordUtils";
 import { Files, SystemUtils } from "utils";
 
 import { RecordService } from "./recordService";
@@ -100,14 +101,12 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
           record.ownerUuid = user.uuid;
         }
 
-        const recordCycle = Records.getCycle(record) || cycle;
-        const keyValues = Records.getEntityKeyValues({
+        const keysText = RecordUtils.getRootEntityKeysFormatted({
           survey,
-          cycle: recordCycle,
           record,
-          entity: Records.getRoot(record)!,
-        });
-        const keysText = (keyValues as any[]).filter(Boolean).join(" - ");
+        })
+          .filter(Boolean)
+          .join(" - ");
 
         const tempRecordFileUri = `${Files.path(
           tempRecordsFolderUri,
@@ -181,7 +180,11 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     });
   }
 
-  async writeRecordFiles({ tempFolderUri, nodeDefsFile, record }: any): Promise<{ recordFiles: any[]; hasMissingFiles: boolean }> {
+  async writeRecordFiles({
+    tempFolderUri,
+    nodeDefsFile,
+    record,
+  }: any): Promise<{ recordFiles: any[]; hasMissingFiles: boolean }> {
     const { survey } = this.context;
     const surveyId = survey.id;
 

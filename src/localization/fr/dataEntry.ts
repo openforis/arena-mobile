@@ -260,6 +260,11 @@ Vérifiez les paramètres ou demandez à l'administrateur de l'enquête de modif
       local: "Dossier local (Téléchargement)",
       share: "$t(common:shareFile)",
     },
+    recordsWithMissingFilesConfirm: {
+      confirmButton: "Exporter sans fichiers manquants",
+      title: "Fichiers manquants",
+      message: `Les enregistrements suivants ont des fichiers manquants et seront exportés sans eux:\n{{recordsList}}\n\nVoulez-vous continuer quand même?`,
+    },
     title: "Exporter les données",
   },
   location: {

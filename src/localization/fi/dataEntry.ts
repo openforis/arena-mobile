@@ -255,6 +255,11 @@ Tarkista asetukset tai pyydä kyselyn järjestelmänvalvojaa muuttamaan tätä r
       local: "Paikallinen kansio (Lataukset)",
       share: "$t(common:shareFile)",
     },
+    recordsWithMissingFilesConfirm: {
+      confirmButton: "Vie ilman puuttuvia tiedostoja",
+      title: "Puuttuvat tiedostot",
+      message: `Seuraavilla tietueilla on puuttuvia tiedostoja ja ne viedään ilman niitä:\n{{recordsList}}\n\nHaluatko jatkaa?`,
+    },
     title: "Vie tiedot",
   },
   location: {

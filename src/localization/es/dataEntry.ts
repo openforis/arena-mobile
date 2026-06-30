@@ -249,6 +249,11 @@ Verifique la configuración o pida al administrador de la encuesta que cambie es
       local: "Carpeta local (Descarga)",
       share: "$t(common:shareFile)",
     },
+    recordsWithMissingFilesConfirm: {
+      confirmButton: "Exportar sin archivos faltantes",
+      title: "Archivos faltantes",
+      message: `Los siguientes registros tienen archivos faltantes y se exportarán sin ellos:\n{{recordsList}}\n\n¿Desea continuar de todos modos?`,
+    },
     title: "Exportar datos",
   },
   location: {

@@ -249,6 +249,11 @@ Verifique as configurações ou peça ao administrador da pesquisa para alterar 
       local: "Pasta local (Download)",
       share: "$t(common:shareFile)",
     },
+    recordsWithMissingFilesConfirm: {
+      confirmButton: "Exportar sem arquivos ausentes",
+      title: "Arquivos ausentes",
+      message: `Os seguintes registros têm arquivos ausentes e serão exportados sem eles:\n{{recordsList}}\n\nDeseja continuar mesmo assim?`,
+    },
     title: "Exportar dados",
   },
   location: {
