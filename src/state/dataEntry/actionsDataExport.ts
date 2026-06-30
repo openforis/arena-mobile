@@ -88,7 +88,7 @@ const handleUploadJobError = async ({
 };
 
 const startUploadDataToRemoteServer =
-  ({ outputFileUri, conflictResolutionStrategy, onJobComplete = null }: any) =>
+  ({ outputFileUri, conflictResolutionStrategy, skipMissingFiles = false, onJobComplete = null }: any) =>
   async (dispatch: any, getState: any) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
@@ -101,6 +101,7 @@ const startUploadDataToRemoteServer =
       cycle,
       fileUri: outputFileUri,
       conflictResolutionStrategy,
+      skipMissingFiles,
     });
 
     let shouldRetryUpload = true;
@@ -251,6 +252,7 @@ const onExportConfirmed =
     selectedSingleChoiceValue,
     conflictResolutionStrategy,
     outputFileUri,
+    skipMissingFiles = false,
     onJobComplete,
   }: any) =>
   async (dispatch: any) => {
@@ -261,6 +263,7 @@ const onExportConfirmed =
             startUploadDataToRemoteServer({
               outputFileUri,
               conflictResolutionStrategy,
+              skipMissingFiles,
               onJobComplete,
             }),
           );
@@ -303,7 +306,27 @@ const _onExportFileGenerationSucceeded = async ({
   onJobComplete,
   dispatch,
 }: any) => {
-  const { outputFileUri } = result || {};
+  const { outputFileUri, recordsWithMissingFiles = [] } = result || {};
+
+  if (recordsWithMissingFiles.length > 0) {
+    const recordsList = recordsWithMissingFiles
+      .map(({ keysText }: { keysText: string }) => `- ${keysText}`)
+      .join("\n");
+
+    const confirmed = await ConfirmUtils.confirm({
+      dispatch,
+      titleKey: "dataEntry:dataExport.recordsWithMissingFilesConfirm.title",
+      messageKey: "dataEntry:dataExport.recordsWithMissingFilesConfirm.message",
+      messageParams: { recordsList },
+      messageIsMarkdown: true,
+      confirmButtonTextKey: "common:yes",
+    });
+
+    if (!confirmed) return;
+  }
+
+  const skipMissingFiles = recordsWithMissingFiles.length > 0;
+
   const availableExportTypes = [];
   if (!onlyLocally) {
     availableExportTypes.push(exportType.remote);
@@ -317,6 +340,7 @@ const _onExportFileGenerationSucceeded = async ({
         selectedSingleChoiceValue,
         conflictResolutionStrategy,
         outputFileUri,
+        skipMissingFiles,
         onJobComplete,
       }),
     );
