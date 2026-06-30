@@ -42,6 +42,7 @@ const uploadRecords = ({
   fileId,
   startFromChunk,
   conflictResolutionStrategy,
+  skipMissingFiles = false,
   onUploadProgress,
 }: {
   survey: SurveyMobile;
@@ -50,6 +51,7 @@ const uploadRecords = ({
   fileId: string;
   startFromChunk?: number;
   conflictResolutionStrategy: string;
+  skipMissingFiles?: boolean;
   onUploadProgress: (progressEvent: any) => void;
 }): { promise: Promise<any>; cancel: () => void } => {
   const surveyRemoteId = survey.remoteId;
@@ -84,6 +86,7 @@ const uploadRecords = ({
           totalFileSize,
           cycle,
           conflictResolutionStrategy,
+          skipMissingFiles,
         };
         const progressHandler = (progressEvent: any) => {
           const { progress: uploadedChunkPercent } = progressEvent;
