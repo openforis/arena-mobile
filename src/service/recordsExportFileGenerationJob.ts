@@ -35,6 +35,7 @@ type RecordsExportFileGenerationJobContext = JobMobileContext & {
 
 export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileGenerationJobContext> {
   outputFileUri: any;
+  recordsWithMissingFiles: Array<{ uuid: string; keysText: string }> = [];
 
   constructor({ survey, cycle, recordUuids, user }: any) {
     super({ survey, cycle, recordUuids, user });
@@ -99,6 +100,15 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
           record.ownerUuid = user.uuid;
         }
 
+        const recordCycle = Records.getCycle(record) || cycle;
+        const keyValues = Records.getEntityKeyValues({
+          survey,
+          cycle: recordCycle,
+          record,
+          entity: Records.getRoot(record)!,
+        });
+        const keysText = (keyValues as any[]).filter(Boolean).join(" - ");
+
         const tempRecordFileUri = `${Files.path(
           tempRecordsFolderUri,
           uuid,
@@ -109,11 +119,15 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
         });
 
         if (!Objects.isEmpty(nodeDefsFile)) {
-          const { recordFiles } = await this.writeRecordFiles({
+          const { recordFiles, hasMissingFiles } = await this.writeRecordFiles({
             tempFolderUri,
             nodeDefsFile,
             record,
           });
+
+          if (hasMissingFiles) {
+            this.recordsWithMissingFiles.push({ uuid, keysText });
+          }
 
           files.push(...recordFiles);
         }
@@ -167,7 +181,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     });
   }
 
-  async writeRecordFiles({ tempFolderUri, nodeDefsFile, record }: any) {
+  async writeRecordFiles({ tempFolderUri, nodeDefsFile, record }: any): Promise<{ recordFiles: any[]; hasMissingFiles: boolean }> {
     const { survey } = this.context;
     const surveyId = survey.id;
 
@@ -194,6 +208,8 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       return acc;
     }, []);
 
+    let hasMissingFiles = false;
+
     for (const recordFile of recordFiles) {
       const { uuid: fileUuid } = recordFile;
       const fileUri = RecordFileService.getRecordFileUri({
@@ -204,19 +220,18 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
         const destUri = `${Files.path(tempFolderUri, FILES_FOLDER_NAME, fileUuid)}.bin`;
         await Files.copyFile({ from: fileUri, to: destUri });
       } else {
+        hasMissingFiles = true;
         this.logger.error(
           `File with uuid ${fileUuid} not found for record ${record.uuid}`,
         );
       }
     }
 
-    return {
-      recordFiles,
-    };
+    return { recordFiles, hasMissingFiles };
   }
 
   override async prepareResult() {
-    const { outputFileUri } = this;
-    return { outputFileUri };
+    const { outputFileUri, recordsWithMissingFiles } = this;
+    return { outputFileUri, recordsWithMissingFiles };
   }
 }
