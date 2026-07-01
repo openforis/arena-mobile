@@ -27,7 +27,4 @@ export default StyleSheet.create({
     alignItems: "center",
     gap: 8,
   },
-  fileMissingText: {
-    color: "red",
-  },
 });

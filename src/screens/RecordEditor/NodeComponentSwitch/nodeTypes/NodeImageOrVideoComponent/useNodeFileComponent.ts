@@ -146,12 +146,20 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
   const [resizing, setResizing] = useState(false);
   const [fileMissing, setFileMissing] = useState(false);
 
+  const { fileUuid } = value ?? {};
+
   useEffect(() => {
-    const { fileUuid } = value ?? {};
+    let cancelled = false;
+    setFileMissing(false);
     RecordFileService.recordFileMissing({ surveyId, fileUuid }).then(
-      setFileMissing,
+      (missing) => {
+        if (!cancelled) setFileMissing(missing);
+      },
     );
-  }, [surveyId, value]);
+    return () => {
+      cancelled = true;
+    };
+  }, [surveyId, fileUuid]);
 
   const onFileSelected = useCallback(
     async (
@@ -283,7 +291,6 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
   ]);
 
   const onRotatePress = useCallback(async () => {
-    const { fileUuid } = value ?? {};
     if (!fileUuid) return;
 
     const fileUri = RecordFileService.getRecordFileUri({ surveyId, fileUuid });
@@ -299,7 +306,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
         error: String(error),
       });
     }
-  }, [surveyId, toaster, updateNodeValue, value]);
+  }, [surveyId, toaster, updateNodeValue, fileUuid, value]);
 
   const onDeletePress = useCallback(async () => {
     if (

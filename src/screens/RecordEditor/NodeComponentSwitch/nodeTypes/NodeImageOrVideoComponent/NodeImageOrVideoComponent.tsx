@@ -14,6 +14,8 @@ import {
 import { ImageOrVideoValuePreview } from "screens/RecordEditor/NodeValuePreview/ImageOrVideoValuePreview";
 import { log } from "utils";
 
+import { useEffectiveTheme } from "hooks";
+
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 import { useNodeFileComponent } from "./useNodeFileComponent";
 import styles from "./styles";
@@ -39,6 +41,8 @@ export const NodeImageOrVideoComponent = (props: NodeComponentProps) => {
   const { fileType = NodeDefFileType.other } = nodeDef.props;
   const fileChooseTextKeySuffix = fileChooseTextKeySuffixByFileType[fileType];
 
+  const theme = useEffectiveTheme();
+
   const {
     nodeValue,
     fileMissing,
@@ -61,7 +65,7 @@ export const NodeImageOrVideoComponent = (props: NodeComponentProps) => {
             <AlertIcon hasErrors />
             <Text
               textKey="dataEntry:fileAttribute.fileMissing"
-              style={styles.fileMissingText}
+              style={{ color: theme.colors.error }}
             />
           </HView>
         )}
