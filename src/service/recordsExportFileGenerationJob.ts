@@ -212,6 +212,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     }, []);
 
     let hasMissingFiles = false;
+    const exportedRecordFiles: any[] = [];
 
     for (const recordFile of recordFiles) {
       const { uuid: fileUuid } = recordFile;
@@ -222,6 +223,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       if (await Files.exists(fileUri)) {
         const destUri = `${Files.path(tempFolderUri, FILES_FOLDER_NAME, fileUuid)}.bin`;
         await Files.copyFile({ from: fileUri, to: destUri });
+        exportedRecordFiles.push(recordFile);
       } else {
         hasMissingFiles = true;
         this.logger.error(
@@ -230,7 +232,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       }
     }
 
-    return { recordFiles, hasMissingFiles };
+    return { recordFiles: exportedRecordFiles, hasMissingFiles };
   }
 
   override async prepareResult() {
