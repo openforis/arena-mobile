@@ -45,8 +45,7 @@ export const Dialog = (props: DialogProps) => {
 
   const flatStyle = StyleSheet.flatten(style);
   const hasExplicitHeight =
-    flatStyle != null &&
-    (flatStyle.height != null || flatStyle.flex != null);
+    flatStyle != null && (flatStyle.height != null || flatStyle.flex != null);
 
   return (
     <Modal

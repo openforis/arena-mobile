@@ -1,10 +1,10 @@
 import { Modal as RNModal } from "react-native";
 import { useTheme } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { CloseIconButton } from "../CloseIconButton";
 import { HView } from "../HView";
 import { Text } from "../Text";
-import { VView } from "../VView";
 
 import styles from "./styles";
 
@@ -35,7 +35,7 @@ export const Modal = (props: ModalProps) => {
       animationType="fade"
       onRequestClose={onDismiss}
     >
-      <VView
+      <SafeAreaView
         style={[styles.container, { backgroundColor: theme.colors.background }]}
       >
         <HView style={styles.header}>
@@ -50,7 +50,7 @@ export const Modal = (props: ModalProps) => {
           {showCloseButton && <CloseIconButton onPress={onDismiss} />}
         </HView>
         {children}
-      </VView>
+      </SafeAreaView>
     </RNModal>
   );
 };
