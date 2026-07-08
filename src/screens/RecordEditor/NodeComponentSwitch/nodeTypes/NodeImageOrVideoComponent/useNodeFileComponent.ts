@@ -151,12 +151,27 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
 
   useEffect(() => {
     let cancelled = false;
-    setFileMissing(false);
-    RecordFileService.recordFileMissing({ surveyId, fileUuid }).then(
-      (missing) => {
+
+    const checkFileMissing = async () => {
+      setFileMissing(false);
+      if (!fileUuid) return;
+
+      try {
+        const missing = await RecordFileService.recordFileMissing({
+          surveyId,
+          fileUuid,
+        });
         if (!cancelled) setFileMissing(missing);
-      },
-    );
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        log.error(`${logPrefix} Error checking if file is missing: ${errorMessage}`);
+        if (!cancelled) setFileMissing(false);
+      }
+    };
+
+    void checkFileMissing();
+
     return () => {
       cancelled = true;
     };
