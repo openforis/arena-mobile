@@ -12,6 +12,8 @@ export class FilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
   async execute() {
     const { survey, unzippedFolderUri } = this.context;
 
+    const surveyId = survey.id!;
+
     const filesSummaryJsonUri = Files.path(
       unzippedFolderUri,
       RecordsExportFile.filesSummaryJsonPath,
@@ -34,7 +36,7 @@ export class FilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
       );
 
       await RecordFileService.saveRecordFile({
-        surveyId: survey.id,
+        surveyId,
         fileUuid,
         sourceFileUri,
       });

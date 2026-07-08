@@ -8,7 +8,7 @@ export type DataVisualizerCellProps = {
 };
 
 export type DataVisualizerCellRenderer = (
-  props: DataVisualizerCellProps,
+  props: DataVisualizerCellProps | undefined,
 ) => React.ReactElement | null;
 
 export type DataVisualizerField = {

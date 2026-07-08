@@ -186,7 +186,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     record,
   }: any): Promise<{ recordFiles: any[]; hasMissingFiles: boolean }> {
     const { survey } = this.context;
-    const surveyId = survey.id;
+    const surveyId = survey.id!;
 
     const nodesFile = nodeDefsFile.reduce((acc: any, nodeDefFile: any) => {
       const nodeDefFileUuid = nodeDefFile.uuid;

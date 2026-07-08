@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   DateFormats,
@@ -22,8 +22,8 @@ import { useTranslation } from "localization";
 import {
   Cycles,
   RecordLoadStatus,
-  RecordUtils,
   RecordOrigin,
+  RecordUtils,
   ScreenViewMode,
   Sort,
   SurveyDefs,
@@ -36,9 +36,9 @@ import {
 } from "state";
 import { ArrayUtils } from "utils";
 
+import { RecordErrorIcon } from "./RecordErrorIcon";
 import { RecordSyncStatusIcon } from "./RecordSyncStatusIcon";
 import { RecordListConstants } from "./recordListConstants";
-import { RecordErrorIcon } from "./RecordErrorIcon";
 
 const formatDateToDateTimeDisplay = (date: any) =>
   typeof date === "string"
