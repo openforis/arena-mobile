@@ -55,7 +55,7 @@ export const QrScannerOverlay = () => {
 
 const styles = StyleSheet.create({
   cornerLayer: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     justifyContent: "center",
     alignItems: "center",
     // Ensure the corners don't block touch events if you add buttons later

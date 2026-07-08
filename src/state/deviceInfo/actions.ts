@@ -15,6 +15,7 @@ const batteryStatusFromExpoBatteryState = {
   [Battery.BatteryState.FULL]: BatteryState.full,
   [Battery.BatteryState.UNPLUGGED]: BatteryState.unplugged,
   [Battery.BatteryState.UNKNOWN]: BatteryState.unknown,
+  [Battery.BatteryState.NOT_CHARGING]: BatteryState.full,
 };
 
 const setDeviceInfo = (deviceInfo: any) => (dispatch: any) => {

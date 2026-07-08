@@ -1,11 +1,10 @@
 import React from "react";
-import { Dialog, Portal } from "react-native-paper";
 
 import { JobStatus } from "@openforis/arena-core";
 
 import { useJobMonitor } from "state/jobMonitor/useJobMonitor";
 
-import { Button, ProgressBar, Text } from "components";
+import { Dialog, ProgressBar, Text } from "components";
 import { useTranslation } from "localization";
 import { Jobs } from "utils";
 
@@ -46,40 +45,31 @@ export const JobMonitorDialog = () => {
 
   const errorsText = errors ? Jobs.extractErrorMessage({ errors, t }) : null;
 
-  return (
-    <Portal>
-      <Dialog visible={isOpen} onDismiss={cancel}>
-        <Dialog.Title>{t(titleKey)}</Dialog.Title>
-        <Dialog.Content>
-          <Text
-            variant="bodyMedium"
-            textKey={messageKey}
-            textParams={messageParams}
-          />
-          <Text variant="bodyMedium" textKey={`job:status.${status}`} />
-          <ProgressBar progress={progress} color={progressColor} />
-          {status === JobStatus.failed && (
-            <Text variant="bodyMedium">{errorsText}</Text>
-          )}
-        </Dialog.Content>
-        <Dialog.Actions>
-          {canCancelJob && (
-            <Button
-              color="secondary"
-              onPress={cancel}
-              textKey={cancelButtonTextKey}
-            />
-          )}
+  const actions = [
+    ...(canCancelJob
+      ? [{ onPress: cancel, textKey: cancelButtonTextKey }]
+      : []),
+    ...(jobEnded ? [{ onPress: close, textKey: closeButtonTextKey }] : []),
+  ];
 
-          {jobEnded && (
-            <Button
-              color="secondary"
-              onPress={close}
-              textKey={closeButtonTextKey}
-            />
-          )}
-        </Dialog.Actions>
-      </Dialog>
-    </Portal>
+  return (
+    <Dialog
+      actions={actions}
+      dismissable={false}
+      showCloseButton={false}
+      title={titleKey}
+      visible={!!isOpen}
+    >
+      <Text
+        variant="bodyMedium"
+        textKey={messageKey}
+        textParams={messageParams}
+      />
+      <Text variant="bodyMedium" textKey={`job:status.${status}`} />
+      <ProgressBar progress={progress} color={progressColor} />
+      {status === JobStatus.failed && (
+        <Text variant="bodyMedium">{errorsText}</Text>
+      )}
+    </Dialog>
   );
 };

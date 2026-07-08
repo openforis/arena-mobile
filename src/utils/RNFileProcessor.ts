@@ -1,4 +1,4 @@
-import { File, FileHandle } from "expo-file-system/next";
+import { File, FileHandle } from "expo-file-system";
 
 import {
   FileProcessor,

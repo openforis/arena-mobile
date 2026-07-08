@@ -1,5 +1,6 @@
 import React from "react";
-import { Dialog, Portal, useTheme } from "react-native-paper";
+import { Modal, Pressable, StyleSheet, View } from "react-native";
+import { Dialog, Surface, useTheme } from "react-native-paper";
 import SwipeButton from "rn-swipe-button";
 
 import { useConfirmDialog } from "state/confirm/useConfirmDialog";
@@ -12,7 +13,7 @@ import {
   RadioButtonGroup,
   Text,
   TextInput,
-  View,
+  View as OFView,
   VView,
 } from "components";
 import { useTranslation } from "localization";
@@ -51,92 +52,135 @@ export const AppConfirmDialog = () => {
   const theme = useTheme();
 
   return (
-    <Portal>
-      <Dialog visible={isOpen} onDismiss={cancel}>
-        <Dialog.Title testID="confirm-dialog-title">{t(titleKey)}</Dialog.Title>
-        <Dialog.Content>
-          {messageKey &&
-            (messageIsMarkdown ? (
-              <Markdown content={t(messageKey, messageParams)} />
-            ) : (
-              <Text textKey={messageKey} textParams={messageParams} />
-            ))}
-          {(multipleChoiceOptions?.length ?? 0) > 0 && (
-            <VView transparent>
-              {multipleChoiceOptions!.map((option: any) => (
-                <Checkbox
-                  key={option.value}
-                  checked={
-                    selectedMultipleChoiceValues?.includes(option.value) ??
-                    false
-                  }
-                  label={t(option.label)}
-                  onPress={() => onMultipleChoiceOptionChange(option.value)}
-                />
-              ))}
-            </VView>
-          )}
-          {(singleChoiceOptions?.length ?? 0) > 0 && (
-            <RadioButtonGroup
-              onValueChange={onSingleChoiceOptionChange}
-              value={selectedSingleChoiceValue}
-            >
-              <VView transparent>
-                {singleChoiceOptions!.map((option: any) => (
-                  <RadioButton
-                    key={option.value}
-                    label={t(option.label, option.labelParams)}
-                    value={option.value}
-                  />
+    <Modal
+      visible={isOpen}
+      transparent
+      statusBarTranslucent
+      animationType="fade"
+      onRequestClose={cancel}
+    >
+      <Pressable
+        style={[styles.overlay, { backgroundColor: theme.colors.backdrop }]}
+        onPress={cancel}
+      >
+        <View
+          style={styles.dialogContainer}
+          onStartShouldSetResponder={() => true}
+        >
+          <Surface
+            style={[
+              styles.surface,
+              { backgroundColor: theme.colors.elevation.level3 },
+            ]}
+            elevation={3}
+          >
+            <Dialog.Title testID="confirm-dialog-title" style={styles.title}>
+              {t(titleKey)}
+            </Dialog.Title>
+            <Dialog.Content>
+              {messageKey &&
+                (messageIsMarkdown ? (
+                  <Markdown content={t(messageKey, messageParams)} />
+                ) : (
+                  <Text textKey={messageKey} textParams={messageParams} />
                 ))}
-              </VView>
-            </RadioButtonGroup>
-          )}
-          {swipeToConfirm && (
-            <View testID="confirm-swipe-button" transparent>
-              <SwipeButton
-                disableResetOnTap
-                onSwipeSuccess={setSwipeConfirmed}
-                railBackgroundColor={theme.colors.tertiaryContainer}
-                railStyles={{
-                  backgroundColor: theme.colors.tertiaryContainer,
-                  opacity: 0.7,
-                  borderColor: theme.colors.tertiaryContainer,
-                }}
-                thumbIconBackgroundColor={theme.colors.primary}
-                title={t(swipeToConfirmTitleKey)}
-                titleColor={theme.colors.primary}
-                titleFontSize={16}
+              {(multipleChoiceOptions?.length ?? 0) > 0 && (
+                <VView transparent>
+                  {multipleChoiceOptions!.map((option: any) => (
+                    <Checkbox
+                      key={option.value}
+                      checked={
+                        selectedMultipleChoiceValues?.includes(option.value) ??
+                        false
+                      }
+                      label={t(option.label)}
+                      onPress={() => onMultipleChoiceOptionChange(option.value)}
+                    />
+                  ))}
+                </VView>
+              )}
+              {(singleChoiceOptions?.length ?? 0) > 0 && (
+                <RadioButtonGroup
+                  onValueChange={onSingleChoiceOptionChange}
+                  value={selectedSingleChoiceValue}
+                >
+                  <VView transparent>
+                    {singleChoiceOptions!.map((option: any) => (
+                      <RadioButton
+                        key={option.value}
+                        label={t(option.label, option.labelParams)}
+                        value={option.value}
+                      />
+                    ))}
+                  </VView>
+                </RadioButtonGroup>
+              )}
+              {swipeToConfirm && (
+                <OFView testID="confirm-swipe-button" transparent>
+                  <SwipeButton
+                    disableResetOnTap
+                    onSwipeSuccess={setSwipeConfirmed}
+                    railBackgroundColor={theme.colors.tertiaryContainer}
+                    railStyles={{
+                      backgroundColor: theme.colors.tertiaryContainer,
+                      opacity: 0.7,
+                      borderColor: theme.colors.tertiaryContainer,
+                    }}
+                    thumbIconBackgroundColor={theme.colors.primary}
+                    title={t(swipeToConfirmTitleKey)}
+                    titleColor={theme.colors.primary}
+                    titleFontSize={16}
+                  />
+                </OFView>
+              )}
+              {textInputToConfirm && (
+                <TextInput
+                  label={textInputToConfirmLabelKey}
+                  onChange={onTextInputChange}
+                  value={textInputValue}
+                />
+              )}
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button
+                color="secondary"
+                labelVariant="bodyLarge"
+                onPress={cancel}
+                style={cancelButtonStyle}
+                testID="confirm-dialog-cancel-button"
+                textKey={cancelButtonTextKey}
               />
-            </View>
-          )}
-          {textInputToConfirm && (
-            <TextInput
-              label={textInputToConfirmLabelKey}
-              onChange={onTextInputChange}
-              value={textInputValue}
-            />
-          )}
-        </Dialog.Content>
-        <Dialog.Actions>
-          <Button
-            color="secondary"
-            labelVariant="bodyLarge"
-            onPress={cancel}
-            style={cancelButtonStyle}
-            testID="confirm-dialog-cancel-button"
-            textKey={cancelButtonTextKey}
-          />
-          <Button
-            disabled={!confirmButtonEnabled}
-            onPress={confirm}
-            labelVariant="bodyLarge"
-            style={confirmButtonStyle}
-            testID="confirm-dialog-confirm-button"
-            textKey={confirmButtonTextKey}
-          />
-        </Dialog.Actions>
-      </Dialog>
-    </Portal>
+              <Button
+                disabled={!confirmButtonEnabled}
+                onPress={confirm}
+                labelVariant="bodyLarge"
+                style={confirmButtonStyle}
+                testID="confirm-dialog-confirm-button"
+                textKey={confirmButtonTextKey}
+              />
+            </Dialog.Actions>
+          </Surface>
+        </View>
+      </Pressable>
+    </Modal>
   );
 };
+
+const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 28,
+  },
+  dialogContainer: {
+    width: "100%",
+    maxWidth: 480,
+  },
+  surface: {
+    borderRadius: 28,
+  },
+  title: {
+    marginTop: 24,
+  },
+});

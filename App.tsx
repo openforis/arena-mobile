@@ -5,7 +5,11 @@ import {
   KeyboardProvider,
 } from "react-native-keyboard-controller";
 import { Provider as PaperProvider, ThemeProvider } from "react-native-paper";
-import { Edges, SafeAreaView } from "react-native-safe-area-context";
+import {
+  Edges,
+  SafeAreaProvider,
+  SafeAreaView,
+} from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 
 import { AppConfirmDialog } from "appComponents/AppConfirmDialog";
@@ -74,9 +78,11 @@ const AppInnerContainer = () => {
 const App = () => {
   log.debug(`rendering App`);
   return (
-    <Provider store={store}>
-      <AppInnerContainer />
-    </Provider>
+    <SafeAreaProvider>
+      <Provider store={store}>
+        <AppInnerContainer />
+      </Provider>
+    </SafeAreaProvider>
   );
 };
 

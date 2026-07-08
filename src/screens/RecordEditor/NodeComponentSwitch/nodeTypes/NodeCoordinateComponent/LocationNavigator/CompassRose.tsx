@@ -244,7 +244,7 @@ export const CompassRose = (props: CompassRoseProps) => {
   const topTriPoints = `${cx - triHalfW},${triPad} ${cx + triHalfW},${triPad} ${cx},${triPad + triHeight}`;
   const botTriPoints = `${cx - triHalfW},${size - triPad} ${cx + triHalfW},${size - triPad} ${cx},${size - triPad - triHeight}`;
 
-  const absoluteFill = StyleSheet.absoluteFillObject;
+  const absoluteFill = StyleSheet.absoluteFill;
   const layerStyle = [absoluteFill, { width: size, height: size }];
 
   return (
