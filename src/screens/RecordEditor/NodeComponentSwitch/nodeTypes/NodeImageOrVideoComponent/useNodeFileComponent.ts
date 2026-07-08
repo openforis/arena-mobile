@@ -144,6 +144,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
     nodeUuid,
   });
   const [resizing, setResizing] = useState(false);
+  const [rotating, setRotating] = useState(false);
   const [fileMissing, setFileMissing] = useState(false);
 
   const { fileUuid } = value ?? {};
@@ -291,22 +292,29 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
   ]);
 
   const onRotatePress = useCallback(async () => {
-    if (!fileUuid) return;
+    if (rotating || !fileUuid) return;
 
-    const fileUri = RecordFileService.getRecordFileUri({ surveyId, fileUuid });
-    if (!fileUri) return;
+    setRotating(true);
 
     try {
+      const fileUri = RecordFileService.getRecordFileUri({ surveyId, fileUuid });
+      if (!fileUri) return;
+      if (!(await Files.exists(fileUri))) {
+        throw new Error("file not found");
+      }
+
       const { uri: rotatedFileUri } = await ImageUtils.rotate(fileUri);
       const fileSize = await Files.getSize(rotatedFileUri);
       const valueUpdated = { ...value, fileUuid: UUIDs.v4(), fileSize };
-      updateNodeValue({ value: valueUpdated, fileUri: rotatedFileUri });
+      await updateNodeValue({ value: valueUpdated, fileUri: rotatedFileUri });
     } catch (error) {
       toaster("dataEntry:fileAttributeImage.rotationError", {
         error: String(error),
       });
+    } finally {
+      setRotating(false);
     }
-  }, [surveyId, toaster, updateNodeValue, fileUuid, value]);
+  }, [surveyId, toaster, updateNodeValue, fileUuid, value, rotating]);
 
   const onDeletePress = useCallback(async () => {
     if (
@@ -325,6 +333,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
     onFileChoosePress,
     onOpenCameraPress,
     onRotatePress,
+    rotating,
     resizing,
   };
 };

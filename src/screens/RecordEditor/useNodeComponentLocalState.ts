@@ -89,7 +89,7 @@ export const useNodeComponentLocalState = ({
       value: any;
       fileUri?: string | null;
       ignoreDelay?: boolean;
-    }): void => {
+    }): Promise<void> => {
       const nodeValueUpdated = uiValueToNodeValue(uiValueUpdated);
 
       if (
@@ -102,7 +102,7 @@ export const useNodeComponentLocalState = ({
           invalidValue: true,
           uiValue: uiValueUpdated,
         }));
-        return;
+        return Promise.resolve();
       }
       const action = DataEntryActions.updateAttribute({
         uuid: nodeUuid,
@@ -129,8 +129,9 @@ export const useNodeComponentLocalState = ({
         );
 
         dispatch(debouncedUpdateRef.current);
+        return Promise.resolve();
       } else {
-        dispatch(action);
+        return dispatch(action);
       }
     },
     [uiValueToNodeValue, updateDelay, nodeUuid, dispatch],

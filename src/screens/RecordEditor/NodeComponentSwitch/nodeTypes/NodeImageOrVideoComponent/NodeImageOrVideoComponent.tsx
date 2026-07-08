@@ -50,6 +50,7 @@ export const NodeImageOrVideoComponent = (props: NodeComponentProps) => {
     onRotatePress,
     onOpenCameraPress,
     onFileChoosePress,
+    rotating,
     resizing,
   } = useNodeFileComponent({ nodeDef, nodeUuid });
 
@@ -75,7 +76,9 @@ export const NodeImageOrVideoComponent = (props: NodeComponentProps) => {
           <>
             {fileType === NodeDefFileType.image && !fileMissing && (
               <Button
+                disabled={rotating}
                 icon="rotate-right"
+                loading={rotating}
                 onPress={onRotatePress}
                 textKey="dataEntry:fileAttributeImage.rotate"
               />
