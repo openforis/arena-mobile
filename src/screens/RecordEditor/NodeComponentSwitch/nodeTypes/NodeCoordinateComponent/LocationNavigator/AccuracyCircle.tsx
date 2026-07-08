@@ -26,7 +26,7 @@ export const AccuracyCircle = ({ size, accuracy }: AccuracyCircleProps) => {
 
   return (
     <View
-      style={[StyleSheet.absoluteFillObject, { width: size, height: size }]}
+      style={[StyleSheet.absoluteFill, { width: size, height: size }]}
     >
       <Svg width={size} height={size}>
         <Circle

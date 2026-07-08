@@ -1,7 +1,6 @@
-import { Buffer } from "buffer";
 import * as Sharing from "expo-sharing";
 import * as FileSystem from "expo-file-system/legacy";
-import { File } from "expo-file-system/next";
+import { File } from "expo-file-system";
 import mime from "mime";
 
 import { Objects, Strings, UUIDs } from "@openforis/arena-core";
@@ -119,32 +118,6 @@ const getSize = async (fileUri: any, ignoreErrors = true): Promise<number> => {
   return info?.exists ? info.size : 0;
 };
 
-const getSizeBase64 = async (
-  fileUri: any,
-  ignoreErrors = true,
-): Promise<number> => {
-  try {
-    let size = 0; // result
-    let lastContentSize = 0;
-    let chunk = 1;
-    while (chunk === 1 || lastContentSize > 0) {
-      const chunkContent = await readChunkAsString(fileUri, chunk);
-      lastContentSize = Buffer.from(
-        chunkContent,
-        FileSystem.EncodingType.Base64,
-      ).length;
-      size += lastContentSize;
-      chunk += 1;
-    }
-    return size;
-  } catch (error) {
-    if (ignoreErrors) {
-      return 0;
-    }
-    throw error;
-  }
-};
-
 const getDirSize = async (dirUri: any): Promise<number> => {
   let total = 0;
   await visitDirFilesRecursively({
@@ -212,11 +185,6 @@ const readAsBytes = async (
   const fileHandle = fileObj.open();
   const fileSize = fileHandle.size;
   return fileSize ? fileHandle.readBytes(fileSize) : null;
-};
-
-const readAsBuffer = async (fileUri: any): Promise<Buffer | null> => {
-  const bytes = await readAsBytes(fileUri);
-  return bytes ? Buffer.from(bytes) : null;
 };
 
 const readJsonFromFile = async ({ fileUri }: any): Promise<Object | null> => {
@@ -419,10 +387,8 @@ export const Files = {
   getExtension,
   hasExtension,
   getSize,
-  getSizeBase64,
   readAsString,
   readChunkAsString,
-  readAsBuffer,
   readAsBytes,
   readJsonFromFile,
   listDirectory,

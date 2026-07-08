@@ -10,10 +10,10 @@ if (!Environment.isExpoGo) {
   Exify = require("@lodev09/react-native-exify");
 }
 
-const readData = async ({ fileUri }: any) => Exify?.readAsync(fileUri);
+const readData = async ({ fileUri }: any) => Exify?.read(fileUri);
 
 const writeData = async ({ fileUri, data }: any) =>
-  Exify?.writeAsync(fileUri, data);
+  Exify?.write(fileUri, data);
 
 const hasGpsData = async ({ fileUri }: any) => {
   const data = await readData({ fileUri });

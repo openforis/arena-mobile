@@ -1,9 +1,10 @@
-import { Portal, Modal as RNPModal } from "react-native-paper";
+import { Modal as RNModal } from "react-native";
+import { useTheme } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { CloseIconButton } from "../CloseIconButton";
 import { HView } from "../HView";
 import { Text } from "../Text";
-import { VView } from "../VView";
 
 import styles from "./styles";
 
@@ -23,24 +24,33 @@ export const Modal = (props: ModalProps) => {
     titleKey,
     titleParams,
   } = props;
+
+  const theme = useTheme();
+
   return (
-    <Portal>
-      <RNPModal visible onDismiss={onDismiss}>
-        <VView style={styles.container}>
-          <HView style={styles.header}>
-            {titleKey && (
-              <Text
-                style={styles.headerText}
-                textKey={titleKey}
-                textParams={titleParams}
-                variant="titleLarge"
-              />
-            )}
-            {showCloseButton && <CloseIconButton onPress={onDismiss} />}
-          </HView>
-          {children}
-        </VView>
-      </RNPModal>
-    </Portal>
+    <RNModal
+      visible
+      transparent={false}
+      statusBarTranslucent
+      animationType="fade"
+      onRequestClose={onDismiss}
+    >
+      <SafeAreaView
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
+      >
+        <HView style={styles.header}>
+          {titleKey && (
+            <Text
+              style={styles.headerText}
+              textKey={titleKey}
+              textParams={titleParams}
+              variant="titleLarge"
+            />
+          )}
+          {showCloseButton && <CloseIconButton onPress={onDismiss} />}
+        </HView>
+        {children}
+      </SafeAreaView>
+    </RNModal>
   );
 };
