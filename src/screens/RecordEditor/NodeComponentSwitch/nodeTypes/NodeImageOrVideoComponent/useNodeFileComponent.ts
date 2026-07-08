@@ -297,7 +297,10 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
     setRotating(true);
 
     try {
-      const fileUri = RecordFileService.getRecordFileUri({ surveyId, fileUuid });
+      const fileUri = RecordFileService.getRecordFileUri({
+        surveyId,
+        fileUuid,
+      });
       if (!fileUri) return;
       if (!(await Files.exists(fileUri))) {
         throw new Error("file not found");
