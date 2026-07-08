@@ -9,16 +9,32 @@ const getRecordFilesParentDirectoryUri = () =>
 const getRecordFilesParentDirectorySize = async () =>
   Files.getDirSize(getRecordFilesParentDirectoryUri());
 
-const getRecordFileDirectoryUri = ({ surveyId }: any) =>
+const getRecordFileDirectoryUri = ({ surveyId }: { surveyId: number }) =>
   `${getRecordFilesParentDirectoryUri()}/${surveyId}`;
 
-const getRecordFilesDirectorySize = async ({ surveyId }: any) =>
-  Files.getDirSize(getRecordFileDirectoryUri({ surveyId }));
+const getRecordFilesDirectorySize = async ({
+  surveyId,
+}: {
+  surveyId: number;
+}) => Files.getDirSize(getRecordFileDirectoryUri({ surveyId }));
 
-const getRecordFileUri = ({ surveyId, fileUuid }: any) =>
-  `${getRecordFileDirectoryUri({ surveyId })}/${fileUuid}`;
+const getRecordFileUri = ({
+  surveyId,
+  fileUuid,
+}: {
+  surveyId: number;
+  fileUuid: string;
+}) => `${getRecordFileDirectoryUri({ surveyId })}/${fileUuid}`;
 
-const saveRecordFile = async ({ surveyId, fileUuid, sourceFileUri }: any) => {
+const saveRecordFile = async ({
+  surveyId,
+  fileUuid,
+  sourceFileUri,
+}: {
+  surveyId: number;
+  fileUuid: string;
+  sourceFileUri: string;
+}) => {
   await GenericFileRepository.makeDirIfNotExists(
     getRecordFileDirectoryUri({ surveyId }),
   );
@@ -31,14 +47,27 @@ const saveRecordFile = async ({ surveyId, fileUuid, sourceFileUri }: any) => {
   });
 };
 
-const recordFileMissing = async ({ surveyId, fileUuid }: any) =>
-  !!fileUuid &&
-  !(await (async ({ surveyId, fileUuid }: any) => {
-    const fileUri = getRecordFileUri({ surveyId, fileUuid });
-    return Files.exists(fileUri);
-  })({ surveyId, fileUuid }));
+const recordFileMissing = async ({
+  surveyId,
+  fileUuid,
+}: {
+  surveyId: number;
+  fileUuid: string;
+}) => {
+  if (!fileUuid) {
+    return false;
+  }
+  const fileUri = getRecordFileUri({ surveyId, fileUuid });
+  return !(await Files.exists(fileUri));
+};
 
-const deleteRecordFile = async ({ surveyId, fileUuid }: any) => {
+const deleteRecordFile = async ({
+  surveyId,
+  fileUuid,
+}: {
+  surveyId: number;
+  fileUuid: string;
+}) => {
   const fileUri = getRecordFileUri({ surveyId, fileUuid });
   await GenericFileRepository.deleteFile(fileUri);
 };

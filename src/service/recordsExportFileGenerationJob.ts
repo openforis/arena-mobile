@@ -36,7 +36,7 @@ type RecordsExportFileGenerationJobContext = JobMobileContext & {
 
 export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileGenerationJobContext> {
   outputFileUri: any;
-  recordsWithMissingFiles: Array<{ uuid: string; keysText: string }> = [];
+  recordsWithMissingFiles: { uuid: string; keysText: string }[] = [];
 
   constructor({ survey, cycle, recordUuids, user }: any) {
     super({ survey, cycle, recordUuids, user });
