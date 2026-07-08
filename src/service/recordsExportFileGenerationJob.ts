@@ -101,12 +101,13 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
           record.ownerUuid = user.uuid;
         }
 
-        const keysText = RecordUtils.getRootEntityKeysFormatted({
-          survey,
-          record,
-        })
-          .filter(Boolean)
-          .join(" - ");
+        const keysText =
+          RecordUtils.getRootEntityKeysFormatted({
+            survey,
+            record,
+          })
+            .filter(Boolean)
+            .join(" - ") || uuid;
 
         const tempRecordFileUri = `${Files.path(
           tempRecordsFolderUri,

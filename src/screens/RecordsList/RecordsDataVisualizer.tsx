@@ -13,6 +13,7 @@ import {
 import {
   DataVisualizer,
   DataVisualizerCellProps,
+  DataVisualizerCellRenderer,
   DataVisualizerField,
   Icon,
   LoadingIcon,
@@ -83,7 +84,8 @@ const getSyncStatusCellRenderer = ({
   syncStatusLoading,
 }: {
   syncStatusLoading?: boolean;
-}) => (syncStatusLoading ? LoadingIconCellRenderer : RecordSyncStatusIcon);
+}): DataVisualizerCellRenderer =>
+  syncStatusLoading ? LoadingIconCellRenderer : RecordSyncStatusIcon;
 
 const RecordErrorsListCellRenderer = ({ item }: DataVisualizerCellProps) => (
   <Text>{Validations.getErrorsCount(item.validation)}</Text>
