@@ -6,6 +6,7 @@ type RecordsUploadJobContext = JobMobileContext & {
   cycle: string;
   fileUri: string;
   conflictResolutionStrategy: string;
+  skipMissingFiles: boolean;
 };
 
 export class RecordsUploadJob extends JobMobile<RecordsUploadJobContext> {
@@ -17,14 +18,15 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadJobContext> {
     cycle,
     fileUri,
     conflictResolutionStrategy,
+    skipMissingFiles = false,
   }: any) {
-    super({ user, survey, cycle, fileUri, conflictResolutionStrategy });
+    super({ user, survey, cycle, fileUri, conflictResolutionStrategy, skipMissingFiles });
     this.cancelUpload = null; // cancels upload request
     this.remoteJob = null; // job started on remote server after file upload
   }
 
   async execute() {
-    const { survey, cycle, fileUri, conflictResolutionStrategy } = this.context;
+    const { survey, cycle, fileUri, conflictResolutionStrategy, skipMissingFiles } = this.context;
 
     const startFromChunk =
       this.summary.processed > 0 ? Math.floor(this.summary.processed) : 1;
@@ -35,6 +37,7 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadJobContext> {
       fileUri,
       fileId: this.summary.uuid,
       conflictResolutionStrategy,
+      skipMissingFiles,
       startFromChunk,
       onUploadProgress: (progressEvent: any) => {
         const { loaded, total } = progressEvent;

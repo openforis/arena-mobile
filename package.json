@@ -11,7 +11,7 @@
     "web": "expo start --web",
     "lint": "eslint --fix --ext .js,.jsx .",
     "test": "jest",
-    "test:types": "tsc",
+    "test:types": "node ./node_modules/typescript/bin/tsc",
     "e2e:maestro": "maestro test e2e/maestro/allTests.yaml",
     "e2e:prepare:android": "expo run:android --variant debug",
     "e2e:maestro:android": "yarn e2e:prepare:android && yarn e2e:maestro -e APP_ID=org.openforis.arena_mobile"

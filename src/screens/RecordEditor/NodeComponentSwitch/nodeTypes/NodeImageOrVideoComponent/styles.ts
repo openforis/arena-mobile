@@ -23,4 +23,8 @@ export default StyleSheet.create({
     width: 75,
     height: 75,
   },
+  fileMissingContainer: {
+    alignItems: "center",
+    gap: 8,
+  },
 });

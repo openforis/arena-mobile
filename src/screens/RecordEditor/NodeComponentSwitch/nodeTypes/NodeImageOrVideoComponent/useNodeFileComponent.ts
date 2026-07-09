@@ -1,7 +1,7 @@
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   NodeDefFileType,
@@ -144,6 +144,38 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
     nodeUuid,
   });
   const [resizing, setResizing] = useState(false);
+  const [rotating, setRotating] = useState(false);
+  const [fileMissing, setFileMissing] = useState(false);
+
+  const { fileUuid } = value ?? {};
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const checkFileMissing = async () => {
+      setFileMissing(false);
+      if (!fileUuid) return;
+
+      try {
+        const missing = await RecordFileService.recordFileMissing({
+          surveyId,
+          fileUuid,
+        });
+        if (!cancelled) setFileMissing(missing);
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        log.error(`${logPrefix} Error checking if file is missing: ${errorMessage}`);
+        if (!cancelled) setFileMissing(false);
+      }
+    };
+
+    void checkFileMissing();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [surveyId, fileUuid]);
 
   const onFileSelected = useCallback(
     async (
@@ -275,23 +307,32 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
   ]);
 
   const onRotatePress = useCallback(async () => {
-    const { fileUuid } = value ?? {};
-    if (!fileUuid) return;
+    if (rotating || !fileUuid) return;
 
-    const fileUri = RecordFileService.getRecordFileUri({ surveyId, fileUuid });
-    if (!fileUri) return;
+    setRotating(true);
 
     try {
+      const fileUri = RecordFileService.getRecordFileUri({
+        surveyId,
+        fileUuid,
+      });
+      if (!fileUri) return;
+      if (!(await Files.exists(fileUri))) {
+        throw new Error("file not found");
+      }
+
       const { uri: rotatedFileUri } = await ImageUtils.rotate(fileUri);
       const fileSize = await Files.getSize(rotatedFileUri);
       const valueUpdated = { ...value, fileUuid: UUIDs.v4(), fileSize };
-      updateNodeValue({ value: valueUpdated, fileUri: rotatedFileUri });
+      await updateNodeValue({ value: valueUpdated, fileUri: rotatedFileUri });
     } catch (error) {
       toaster("dataEntry:fileAttributeImage.rotationError", {
         error: String(error),
       });
+    } finally {
+      setRotating(false);
     }
-  }, [surveyId, toaster, updateNodeValue, value]);
+  }, [surveyId, toaster, updateNodeValue, fileUuid, value, rotating]);
 
   const onDeletePress = useCallback(async () => {
     if (
@@ -305,10 +346,12 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
 
   return {
     nodeValue: value,
+    fileMissing,
     onDeletePress,
     onFileChoosePress,
     onOpenCameraPress,
     onRotatePress,
+    rotating,
     resizing,
   };
 };

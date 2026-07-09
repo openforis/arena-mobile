@@ -183,7 +183,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     fileValues: any[];
   }) {
     const { survey } = this.context;
-    const { id: surveyId } = survey;
+    const surveyId = survey.id!;
 
     this.logger.debug(
       `Exporting ${fileValues.length} attached files for record ${record.uuid}`,

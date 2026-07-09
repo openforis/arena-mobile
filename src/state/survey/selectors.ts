@@ -20,7 +20,11 @@ const selectCurrentSurvey = (
 ): (Survey & { remoteId?: number }) | undefined =>
   getSurveyState(state).currentSurvey;
 
-const selectCurrentSurveyId = (state: any) => selectCurrentSurvey(state)?.id;
+const selectCurrentSurveyIdUnsafe = (state: any): number | undefined =>
+  selectCurrentSurvey(state)?.id;
+
+const selectCurrentSurveyId = (state: any): number =>
+  selectCurrentSurveyIdUnsafe(state) ?? 0;
 
 const selectCurrentSurveySrsIndex = (state: any): SRSIndex | undefined => {
   const survey = selectCurrentSurvey(state);

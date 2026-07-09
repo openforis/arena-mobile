@@ -184,6 +184,7 @@ export default {
     selectPicture: "ምስል ይምረጡ",
     selectVideo: "የቪዲዮ ፋይል ይምረጡ",
     deleteConfirmMessage: "ያለውን ፋይል ይሰርዙ?",
+    fileMissing: "ፋይል በአካባቢ ማከማቻ ውስጥ አልተገኘም",
     fileSelectError: "ፋይል በመምረጥ ላይ ስህተት፡ {{error}}",
   },
   fileAttributeAudio: {
@@ -237,6 +238,11 @@ export default {
       remote: "የርቀት አገልጋይ",
       local: "የአካባቢ አቃፊ (ማውረድ)",
       share: "$t(common:shareFile)",
+    },
+    recordsWithMissingFilesConfirm: {
+      confirmButton: "ያጡ ፋይሎች ሳይጨምሩ ወደ ውጭ ላክ",
+      title: "ያጡ ፋይሎች",
+      message: `የሚከተሉ መዝገቦች ያጡ ፋይሎች አሏቸው እና ያለ እነርሱ ወደ ውጭ ይላካሉ:\n{{recordsList}}\n\nሆኖም ቀጠል ትፈልጋለህ?`,
     },
     title: "ውሂብ ላክ",
   },

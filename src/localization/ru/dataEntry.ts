@@ -190,6 +190,7 @@ export default {
     selectPicture: "Выберите изображение",
     selectVideo: "Выберите видео",
     deleteConfirmMessage: "Удалить существующий файл?",
+    fileMissing: "Файл не найден в локальном хранилище",
     fileSelectError: "Ошибка при выборе файла: {{error}}",
   },
   fileAttributeAudio: {
@@ -247,6 +248,11 @@ export default {
       remote: "Удаленный сервер",
       local: "Локальная папка (Загрузка)",
       share: "$t(common:shareFile)",
+    },
+    recordsWithMissingFilesConfirm: {
+      confirmButton: "Экспортировать без отсутствующих файлов",
+      title: "Отсутствующие файлы",
+      message: `Следующие записи имеют отсутствующие файлы и будут экспортированы без них:\n{{recordsList}}\n\nВы хотите продолжить?`,
     },
     title: "Экспорт данных",
   },

@@ -196,6 +196,7 @@ export default {
     selectPicture: "انتخاب تصویر",
     selectVideo: "انتخاب ویدیو",
     deleteConfirmMessage: "آیا از حذف فایل موجود مطمئن هستید؟",
+    fileMissing: "فایل در حافظه محلی یافت نشد",
     fileSelectError: "خطا در انتخاب فایل: {{error}}",
   },
   fileAttributeAudio: {
@@ -250,6 +251,11 @@ export default {
       remote: "سرور راه دور",
       local: "پوشه محلی (دانلود)",
       share: "$t(common:shareFile)",
+    },
+    recordsWithMissingFilesConfirm: {
+      confirmButton: "اکسپورت بدون فایل‌های گم‌شده",
+      title: "فایل‌های گم‌شده",
+      message: `رکوردهای زیر فایل‌های گم‌شده دارند و بدون آن‌ها اکسپورت می‌شوند:\n{{recordsList}}\n\nآیا می‌خواهید ادامه دهید؟`,
     },
     title: "اکسپورت داده ها",
   },

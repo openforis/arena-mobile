@@ -12,6 +12,7 @@ import {
 } from "@openforis/arena-core";
 
 import { JobMobile } from "model";
+import { RecordUtils } from "model/utils/RecordUtils";
 import { Files, SystemUtils } from "utils";
 
 import { RecordService } from "./recordService";
@@ -35,6 +36,7 @@ type RecordsExportFileGenerationJobContext = JobMobileContext & {
 
 export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileGenerationJobContext> {
   outputFileUri: any;
+  recordsWithMissingFiles: { uuid: string; keysText: string }[] = [];
 
   constructor({ survey, cycle, recordUuids, user }: any) {
     super({ survey, cycle, recordUuids, user });
@@ -99,6 +101,14 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
           record.ownerUuid = user.uuid;
         }
 
+        const keysText =
+          RecordUtils.getRootEntityKeysFormatted({
+            survey,
+            record,
+          })
+            .filter(Boolean)
+            .join(" - ") || uuid;
+
         const tempRecordFileUri = `${Files.path(
           tempRecordsFolderUri,
           uuid,
@@ -109,11 +119,15 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
         });
 
         if (!Objects.isEmpty(nodeDefsFile)) {
-          const { recordFiles } = await this.writeRecordFiles({
+          const { recordFiles, hasMissingFiles } = await this.writeRecordFiles({
             tempFolderUri,
             nodeDefsFile,
             record,
           });
+
+          if (hasMissingFiles) {
+            this.recordsWithMissingFiles.push({ uuid, keysText });
+          }
 
           files.push(...recordFiles);
         }
@@ -167,9 +181,13 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     });
   }
 
-  async writeRecordFiles({ tempFolderUri, nodeDefsFile, record }: any) {
+  async writeRecordFiles({
+    tempFolderUri,
+    nodeDefsFile,
+    record,
+  }: any): Promise<{ recordFiles: any[]; hasMissingFiles: boolean }> {
     const { survey } = this.context;
-    const surveyId = survey.id;
+    const surveyId = survey.id!;
 
     const nodesFile = nodeDefsFile.reduce((acc: any, nodeDefFile: any) => {
       const nodeDefFileUuid = nodeDefFile.uuid;
@@ -194,6 +212,9 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       return acc;
     }, []);
 
+    let hasMissingFiles = false;
+    const exportedRecordFiles: any[] = [];
+
     for (const recordFile of recordFiles) {
       const { uuid: fileUuid } = recordFile;
       const fileUri = RecordFileService.getRecordFileUri({
@@ -203,20 +224,20 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       if (await Files.exists(fileUri)) {
         const destUri = `${Files.path(tempFolderUri, FILES_FOLDER_NAME, fileUuid)}.bin`;
         await Files.copyFile({ from: fileUri, to: destUri });
+        exportedRecordFiles.push(recordFile);
       } else {
+        hasMissingFiles = true;
         this.logger.error(
           `File with uuid ${fileUuid} not found for record ${record.uuid}`,
         );
       }
     }
 
-    return {
-      recordFiles,
-    };
+    return { recordFiles: exportedRecordFiles, hasMissingFiles };
   }
 
   override async prepareResult() {
-    const { outputFileUri } = this;
-    return { outputFileUri };
+    const { outputFileUri, recordsWithMissingFiles } = this;
+    return { outputFileUri, recordsWithMissingFiles };
   }
 }

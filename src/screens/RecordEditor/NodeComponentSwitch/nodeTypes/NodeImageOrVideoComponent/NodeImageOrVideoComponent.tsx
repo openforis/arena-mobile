@@ -1,16 +1,20 @@
 import { NodeDefFileType, NodeDefs } from "@openforis/arena-core";
 
 import {
+  AlertIcon,
   Button,
   DeleteIconButton,
   HView,
   IconButton,
   Loader,
+  Text,
   VView,
   View,
 } from "components";
 import { ImageOrVideoValuePreview } from "screens/RecordEditor/NodeValuePreview/ImageOrVideoValuePreview";
 import { log } from "utils";
+
+import { useEffectiveTheme } from "hooks";
 
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 import { useNodeFileComponent } from "./useNodeFileComponent";
@@ -37,12 +41,16 @@ export const NodeImageOrVideoComponent = (props: NodeComponentProps) => {
   const { fileType = NodeDefFileType.other } = nodeDef.props;
   const fileChooseTextKeySuffix = fileChooseTextKeySuffixByFileType[fileType];
 
+  const theme = useEffectiveTheme();
+
   const {
     nodeValue,
+    fileMissing,
     onDeletePress,
     onRotatePress,
     onOpenCameraPress,
     onFileChoosePress,
+    rotating,
     resizing,
   } = useNodeFileComponent({ nodeDef, nodeUuid });
 
@@ -50,16 +58,27 @@ export const NodeImageOrVideoComponent = (props: NodeComponentProps) => {
     <HView style={styles.container}>
       <View style={styles.previewContainer}>
         {resizing && <Loader />}
-        {!resizing && nodeValue && (
+        {!resizing && nodeValue && !fileMissing && (
           <ImageOrVideoValuePreview nodeDef={nodeDef} value={nodeValue} />
+        )}
+        {!resizing && nodeValue && fileMissing && (
+          <HView style={styles.fileMissingContainer}>
+            <AlertIcon hasErrors />
+            <Text
+              textKey="dataEntry:fileAttribute.fileMissing"
+              style={{ color: theme.colors.error }}
+            />
+          </HView>
         )}
       </View>
       <VView style={styles.buttonsContainer}>
         {nodeValue && NodeDefs.isSingle(nodeDef) && (
           <>
-            {fileType === NodeDefFileType.image && (
+            {fileType === NodeDefFileType.image && !fileMissing && (
               <Button
+                disabled={rotating}
                 icon="rotate-right"
+                loading={rotating}
                 onPress={onRotatePress}
                 textKey="dataEntry:fileAttributeImage.rotate"
               />
