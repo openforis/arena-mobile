@@ -3,7 +3,7 @@ import React, { useCallback } from "react";
 import { NodeDefs } from "@openforis/arena-core";
 
 import { NavigateToRecordsListButton } from "appComponents/NavigateToRecordsListButton";
-import { HView, IconButton, View } from "components";
+import { ButtonIconPosition, HView, IconButton, View } from "components";
 import { TextDirection, useTextDirection } from "localization";
 import { DataEntryActions, DataEntrySelectors, useAppDispatch } from "state";
 import { log } from "utils";
@@ -13,7 +13,6 @@ import { SingleNodeNavigationButton } from "./SingleNodeNavigationButton";
 import { useBottomNavigationBar } from "./useBottomNavigationBar";
 
 import { useStyles } from "./styles";
-import { ButtonIconPosition } from "components/Button";
 
 const { ltr, rtl } = TextDirection;
 
