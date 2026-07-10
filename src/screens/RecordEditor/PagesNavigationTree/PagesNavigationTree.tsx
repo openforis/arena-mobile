@@ -48,7 +48,7 @@ export const PagesNavigationTree = () => {
 
   useEffect(() => {
     treeRef.current?.expandAll();
-  }, []);
+  }, [data]);
 
   return (
     <TreeView
