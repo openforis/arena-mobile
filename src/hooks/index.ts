@@ -1,4 +1,5 @@
 export { useAppInfo } from "./useAppInfo";
+export { useAvailableGpsSources } from "./useAvailableGpsSources";
 export { useBackHandler } from "./useBackHandler";
 export { useEffectiveTheme } from "./useEffectiveTheme";
 export { useHeartbeatAnimation } from "./useHeartbeatAnimation";

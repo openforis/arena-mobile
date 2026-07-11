@@ -20,6 +20,12 @@ export default {
     warning:
       "Location service disabled; please enable it in the device settings.",
   },
+  externalGps: {
+    unavailable: {
+      warning:
+        "External GPS device unavailable; using the internal GPS for this session.",
+    },
+  },
   network: {
     title: "Network",
     statusLabel: "Network status",

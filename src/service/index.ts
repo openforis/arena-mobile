@@ -1,6 +1,7 @@
 export { AppService } from "./appService";
 export { AuthService } from "./authService";
 export { DataMigrationService } from "./dataMigrationService";
+export { ExternalGpsService } from "./externalGps/ExternalGpsService";
 export { PreferencesService } from "./preferencesService";
 export { RecordFileService } from "./recordFileService";
 export { RecordService } from "./recordService";

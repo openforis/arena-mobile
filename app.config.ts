@@ -71,6 +71,15 @@ const config = (): ExpoConfig => {
       permissions: [
         "android.permission.ACCESS_MEDIA_LOCATION",
         "android.permission.RECORD_AUDIO",
+        // For connecting to an already-paired (OS-level) external Bluetooth GPS
+        // receiver over Classic SPP. BLUETOOTH/BLUETOOTH_ADMIN cover API < 31;
+        // BLUETOOTH_CONNECT is the API 31+ runtime permission (requested via
+        // Permissions.requestBluetoothPermissions()). BLUETOOTH_SCAN is
+        // intentionally omitted - the app only lists bonded devices, it never
+        // scans/pairs.
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_CONNECT",
       ],
       config: {
         googleMaps: {
@@ -97,6 +106,14 @@ const config = (): ExpoConfig => {
           "Device's acceleraometer is used only when using the 'navigator' in coordinate attributes (if defined in your survey).",
         NSPhotoLibraryUsageDescription:
           "Access to the photo library is required only when selecting images to be used in file attributes (if defined in your survey).",
+        NSBluetoothAlwaysUsageDescription:
+          "Bluetooth is used to connect to an external GPS receiver (if paired in the device's Bluetooth settings) for higher-accuracy coordinate attributes.",
+        // MFi External Accessory protocol strings, one per supported external GPS
+        // vendor - must match the accessory's own advertised protocol exactly (see
+        // service/externalGps/transport/vendorProtocolRegistry.ts).
+        // TODO: "com.bad-elf.gps" is unconfirmed - verify against real hardware or
+        // Bad Elf's iOS SDK docs before relying on it.
+        UISupportedExternalAccessoryProtocols: ["com.bad-elf.gps"],
       },
       supportsTablet: true,
     },

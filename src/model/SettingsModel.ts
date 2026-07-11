@@ -1,4 +1,5 @@
 import { Environment } from "utils/Environment";
+import { GpsSourceSetting } from "./GpsSourceSettings";
 import { ThemesSettings } from "./Themes";
 import { LanguageConstants, LanguagesSettings } from "./LanguageSettings";
 
@@ -31,6 +32,7 @@ export enum SettingKey {
   locationAccuracyWatchTimeout = "locationAccuracyWatchTimeout",
   locationAveragingEnabled = "locationAveragingEnabled",
   locationGpsLocked = "locationGpsLocked",
+  preferredGpsSourceId = "preferredGpsSourceId",
   serverUrlType = "serverUrlType",
   serverUrl = "serverUrl",
   showStatusBar = "showStatusBar",
@@ -111,6 +113,13 @@ export type SettingsObject = {
   locationAccuracyWatchTimeout: number;
   locationAveragingEnabled: boolean;
   locationGpsLocked: boolean;
+  // GpsSourceSetting.auto/.internal, or `external:${deviceAddress}` for a
+  // recognized bonded device (see service/externalGps) - the latter can't be part
+  // of the enum since it's dynamic. Not exposed via the generic `properties`
+  // schema/dropdown above because the available options are dynamic (depend on
+  // what's currently bonded), unlike language/theme; rendered by a bespoke
+  // GpsSourceSettingsField instead.
+  preferredGpsSourceId: GpsSourceSetting | string;
   password?: string; // deprecated; not stored anymore;
   serverUrlType: "default";
   serverUrl: string;

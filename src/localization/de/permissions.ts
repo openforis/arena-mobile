@@ -13,6 +13,7 @@ export default {
   },
   types: {
     accessMediaLocation: "Zugriff auf Medienstandort",
+    bluetoothConnect: "Bluetooth-Verbindung",
     mediaLibrary: "Medienbibliothek",
     camera: "Zugriff auf Kamera",
     microphone: "Zugriff auf Mikrofon",

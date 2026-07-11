@@ -3,6 +3,7 @@ import * as Keychain from "react-native-keychain";
 import { AsyncStorageUtils } from "./asyncStorage/AsyncStorageUtils";
 import { asyncStorageKeys } from "./asyncStorage/asyncStorageKeys";
 import { API } from "./api";
+import { GpsSourceSetting } from "model/GpsSourceSettings";
 import { ThemesSettings } from "model/Themes";
 import { LanguageConstants } from "model/LanguageSettings";
 import { SettingKey, SettingsObject } from "model/SettingsModel";
@@ -17,6 +18,7 @@ const defaultSettings: Partial<SettingsObject> = {
   locationAccuracyThreshold: 3,
   locationAccuracyWatchTimeout: 120,
   locationAveragingEnabled: true,
+  preferredGpsSourceId: GpsSourceSetting.auto,
   serverUrlType: "default",
   serverUrl: AMConstants.defaultServerUrl,
   showStatusBar: false,

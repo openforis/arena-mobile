@@ -2,9 +2,10 @@ import { useCallback, useRef, useState } from "react";
 import * as Location from "expo-location";
 import { Point, PointFactory } from "@openforis/arena-core";
 
-import { AveragedLocation, LocationPoint } from "model";
+import { AveragedLocation, GpsSourceSetting, LocationPoint } from "model";
 import { log, Permissions, Refs } from "utils";
 import { LocationAverager } from "utils/LocationAverageCalculator";
+import { ExternalGpsService } from "service/externalGps/ExternalGpsService";
 import { SettingsSelectors } from "../state/settings";
 import { useIsMountedRef } from "./useIsMountedRef";
 import { useToast } from "./useToast";
@@ -13,6 +14,9 @@ const locationWatchElapsedTimeIntervalDelay = 1000;
 const defaultLocationAccuracyThreshold = 4;
 const defaultLocationAccuracyWatchTimeout = 120000; // 2 mins
 const minLocationReadingsForAccuracyThreshold = 5;
+const { internalGpsSourceId } = ExternalGpsService;
+
+type LocationSubscription = { remove: () => void };
 
 const locationPointToPoint = (locationPoint: LocationPoint): Point | null => {
   if (!locationPoint) return null;
@@ -62,9 +66,7 @@ export const useLocationWatch = ({
 }) => {
   const isMountedRef = useIsMountedRef();
   const lastLocationRef = useRef(null as LocationPoint | null);
-  const locationSubscriptionRef = useRef(
-    null as Location.LocationSubscription | null,
-  );
+  const locationSubscriptionRef = useRef(null as LocationSubscription | null);
   const locationAccuracyWatchTimeoutRef = useRef(
     null as ReturnType<typeof setTimeout> | null,
   );
@@ -78,6 +80,7 @@ export const useLocationWatch = ({
   const {
     locationAccuracyThreshold = defaultLocationAccuracyThreshold,
     locationAveragingEnabled,
+    preferredGpsSourceId = GpsSourceSetting.auto,
   } = settings;
 
   const locationWatchTimeout = getLocationWatchTimeout({ settings });
@@ -86,10 +89,17 @@ export const useLocationWatch = ({
     watchingLocation: false,
     locationWatchElapsedTime: 0,
     locationWatchProgress: 0,
+    activeLocationSourceId: internalGpsSourceId,
+    locationSourceUnavailable: false,
   });
 
-  const { locationWatchElapsedTime, locationWatchProgress, watchingLocation } =
-    state;
+  const {
+    locationWatchElapsedTime,
+    locationWatchProgress,
+    watchingLocation,
+    activeLocationSourceId,
+    locationSourceUnavailable,
+  } = state;
 
   const clearLocationWatchTimeout = useCallback(() => {
     Refs.clearIntervalRef(locationWatchIntervalRef);
@@ -186,18 +196,69 @@ export const useLocationWatch = ({
   const startLocationWatch = useCallback(async () => {
     log.debug("Starting location watch");
 
-    if (!(await Permissions.requestLocationForegroundPermission())) {
-      if (!(await Permissions.isLocationServiceEnabled())) {
-        toaster("device:locationServiceDisabled.warning");
+    // Starts watching with the phone's internal GPS. Used both as the default
+    // provider and as the same-session fallback when an external source fails.
+    const startInternalGpsWatch = async (): Promise<boolean> => {
+      if (!(await Permissions.requestLocationForegroundPermission())) {
+        if (!(await Permissions.isLocationServiceEnabled())) {
+          toaster("device:locationServiceDisabled.warning");
+        }
+        return false;
       }
+      locationSubscriptionRef.current = await Location.watchPositionAsync(
+        { accuracy, distanceInterval },
+        (location) => locationCallback(locationToLocationPoint(location)),
+      );
+      return true;
+    };
+
+    // "auto" resolves to the first recognized connected external GPS device if one
+    // is available, else internal GPS - so a paired Bad Elf (or similar) is used
+    // automatically without a manual settings trip.
+    const resolvedSourceId =
+      preferredGpsSourceId === GpsSourceSetting.auto
+        ? await ExternalGpsService.resolveAutoSourceId()
+        : preferredGpsSourceId;
+
+    const useExternalSource = resolvedSourceId !== internalGpsSourceId;
+
+    if (useExternalSource && !(await Permissions.requestBluetoothPermissions())) {
       return;
     }
+
     _stopLocationWatch();
 
-    locationSubscriptionRef.current = await Location.watchPositionAsync(
-      { accuracy, distanceInterval },
-      (location) => locationCallback(locationToLocationPoint(location)),
-    );
+    let activeSourceId = resolvedSourceId;
+    let sourceUnavailable = false;
+    let started: boolean;
+
+    if (useExternalSource) {
+      try {
+        log.info(
+          `Location watch: starting with external GPS source ${resolvedSourceId}`,
+        );
+        locationSubscriptionRef.current = await ExternalGpsService.watchPosition(
+          { sourceId: resolvedSourceId },
+          (locationPoint) => locationCallback(locationPoint),
+        );
+        started = true;
+      } catch (error) {
+        log.warn(
+          `Location watch: external GPS source ${resolvedSourceId} unavailable, falling back to internal GPS for this session`,
+          error,
+        );
+        toaster("device:externalGps.unavailable.warning");
+        sourceUnavailable = true;
+        activeSourceId = internalGpsSourceId;
+        started = await startInternalGpsWatch();
+      }
+    } else {
+      log.debug("Location watch: starting with internal GPS");
+      started = await startInternalGpsWatch();
+    }
+
+    if (!started) return;
+
     if (locationAveragingEnabled) {
       locationAveragerRef.current = new LocationAverager();
     }
@@ -221,12 +282,18 @@ export const useLocationWatch = ({
         stopLocationWatch();
       }, locationWatchTimeout);
     }
-    setState((statePrev) => ({ ...statePrev, watchingLocation: true }));
+    setState((statePrev) => ({
+      ...statePrev,
+      watchingLocation: true,
+      activeLocationSourceId: activeSourceId,
+      locationSourceUnavailable: sourceUnavailable,
+    }));
   }, [
     _stopLocationWatch,
     accuracy,
     distanceInterval,
     locationAveragingEnabled,
+    preferredGpsSourceId,
     stopOnTimeout,
     toaster,
     locationCallback,
@@ -235,7 +302,9 @@ export const useLocationWatch = ({
   ]);
 
   return {
+    activeLocationSourceId,
     locationAccuracyThreshold,
+    locationSourceUnavailable,
     locationWatchElapsedTime,
     locationWatchProgress,
     locationWatchTimeout,

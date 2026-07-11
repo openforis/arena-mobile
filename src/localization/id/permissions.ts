@@ -13,6 +13,7 @@ export default {
   },
   types: {
     accessMediaLocation: "Akses ke Lokasi Media",
+    bluetoothConnect: "Koneksi Bluetooth",
     mediaLibrary: "Pustaka Media",
     camera: "Akses ke Kamera",
     microphone: "Akses ke Mikrofon",

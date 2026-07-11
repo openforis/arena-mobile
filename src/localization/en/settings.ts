@@ -24,11 +24,18 @@ export default {
   },
   locationGpsLocked: {
     label: "GPS locked",
-    description: `Warning: battery consumption will increase! 
-GPS signal will be locked when the application is running. 
+    description: `Warning: battery consumption will increase!
+GPS signal will be locked when the application is running.
 It will help to get a better accuracy in coordinate attributes.`,
     error:
       "Cannot start GPS locking: location provider not available or access to location not granted",
+  },
+  preferredGpsSourceId: {
+    label: "GPS source",
+    description:
+      "Choose which GPS is used to record coordinates: the phone's internal GPS, or a paired external GPS receiver (e.g. Bad Elf).",
+    auto: "Auto (external if available)",
+    internal: "Internal GPS",
   },
 
   showStatusBar: "Show status bar",

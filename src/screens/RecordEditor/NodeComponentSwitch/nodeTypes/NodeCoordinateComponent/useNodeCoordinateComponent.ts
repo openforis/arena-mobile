@@ -13,12 +13,14 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
-import { useLocationWatch } from "hooks";
-import { LocationPoint } from "model";
+import { useAvailableGpsSources, useLocationWatch } from "hooks";
+import { LocationPoint, SettingsModel } from "model";
 import { RecordUtils } from "model/utils/RecordUtils";
 import {
   DataEntryActions,
   DataEntrySelectors,
+  SettingsActions,
+  SettingsSelectors,
   SurveySelectors,
   useAppDispatch,
   useConfirm,
@@ -234,6 +236,7 @@ export const useNodeCoordinateComponent = (props: any) => {
   );
 
   const {
+    activeLocationSourceId,
     locationAccuracyThreshold,
     locationWatchElapsedTime,
     locationWatchProgress,
@@ -242,6 +245,21 @@ export const useNodeCoordinateComponent = (props: any) => {
     stopLocationWatch,
     watchingLocation,
   } = useLocationWatch({ locationCallback });
+
+  const { preferredGpsSourceId } = SettingsSelectors.useSettings();
+  const { availableGpsSources } = useAvailableGpsSources();
+
+  const onSelectGpsSource = useCallback(
+    (sourceId: string) => {
+      dispatch(
+        SettingsActions.updateSetting({
+          key: SettingsModel.SettingKey.preferredGpsSourceId,
+          value: sourceId,
+        }),
+      );
+    },
+    [dispatch],
+  );
 
   // Get the distance target for the coordinate node
   const [distanceTarget, setDistanceTarget] = useState(null);
@@ -337,7 +355,9 @@ export const useNodeCoordinateComponent = (props: any) => {
 
   return {
     accuracy,
+    activeLocationSourceId,
     applicable,
+    availableGpsSources,
     compassNavigatorVisible,
     deleteButtonVisible,
     distanceTarget,
@@ -353,8 +373,10 @@ export const useNodeCoordinateComponent = (props: any) => {
     onChangeValueField,
     onClearPress,
     onCompassNavigatorUseCurrentLocation,
+    onSelectGpsSource,
     onStartGpsPress,
     onStopGpsPress,
+    preferredGpsSourceId,
     showCompassNavigator,
     srs,
     srsIndex,
