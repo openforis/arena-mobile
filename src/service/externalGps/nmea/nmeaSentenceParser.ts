@@ -9,9 +9,9 @@ const isChecksumValid = (sentence: string): boolean => {
   const [, body = "", checksumHex = ""] = match;
   let checksum = 0;
   for (let i = 0; i < body.length; i++) {
-    checksum ^= body.charCodeAt(i);
+    checksum ^= body.codePointAt(i)!;
   }
-  return checksum === parseInt(checksumHex, 16);
+  return checksum === Number.parseInt(checksumHex, 16);
 };
 
 const stripChecksum = (sentence: string): string =>
@@ -42,7 +42,7 @@ export const parseGGA = (sentence: string): NmeaFix | null => {
   if (!isChecksumValid(sentence)) return null;
   const fields = stripChecksum(sentence).split(",");
   // $--GGA,time,lat,N/S,lon,E/W,fixQuality,numSatellites,hdop,altitude,M,...
-  if (fields.length < 10 || !/GGA$/.test(fields[0] ?? "")) return null;
+  if (fields.length < 10 || !(fields[0] ?? "").endsWith("GGA")) return null;
 
   const fixQuality = Number(fields[6]);
   if (!fixQuality) return null; // 0 = invalid/no fix
@@ -69,7 +69,7 @@ export const parseRMC = (sentence: string): NmeaTrack | null => {
   if (!isChecksumValid(sentence)) return null;
   const fields = stripChecksum(sentence).split(",");
   // $--RMC,time,status,lat,N/S,lon,E/W,speedKnots,course,date,...
-  if (fields.length < 10 || !/RMC$/.test(fields[0] ?? "")) return null;
+  if (fields.length < 10 || !(fields[0] ?? "").endsWith("RMC")) return null;
 
   return {
     valid: fields[2] === "A",
