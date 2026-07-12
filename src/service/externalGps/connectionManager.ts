@@ -44,7 +44,10 @@ const acquire = (
   if (!entry) {
     log.debug("ExternalGps: opening connection to", sourceId);
     entry = {
-      connectionPromise: transport.connect(sourceId),
+      connectionPromise: transport.connect(sourceId).catch((error) => {
+        pool.delete(sourceId);
+        throw error;
+      }),
       listenerCount: 0,
       idleTimeout: null,
     };

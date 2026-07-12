@@ -222,7 +222,14 @@ export const useLocationWatch = ({
 
     const useExternalSource = resolvedSourceId !== internalGpsSourceId;
 
-    if (useExternalSource && !(await Permissions.requestBluetoothPermissions())) {
+    if (useExternalSource) {
+      if (!(await Permissions.requestBluetoothPermissions())) {
+        return;
+      }
+    } else if (!(await Permissions.requestLocationForegroundPermission())) {
+      if (!(await Permissions.isLocationServiceEnabled())) {
+        toaster("device:locationServiceDisabled.warning");
+      }
       return;
     }
 
