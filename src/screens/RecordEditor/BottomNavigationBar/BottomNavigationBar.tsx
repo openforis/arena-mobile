@@ -3,7 +3,7 @@ import React, { useCallback } from "react";
 import { NodeDefs } from "@openforis/arena-core";
 
 import { NavigateToRecordsListButton } from "appComponents/NavigateToRecordsListButton";
-import { ButtonIconPosition, HView, IconButton, View } from "components";
+import { type ButtonIconPosition, HView, IconButton, View } from "components";
 import { TextDirection, useTextDirection } from "localization";
 import { DataEntryActions, DataEntrySelectors, useAppDispatch } from "state";
 import { log } from "utils";
