@@ -11,7 +11,7 @@ const externalSourceId = (address: string) => `external:${address}`;
 const toSourceDescriptor = (device: BluetoothDevice): GpsSourceDescriptor => ({
   id: externalSourceId(device.address),
   type: "external",
-  label: device.name || device.address,
+  label: (device.name || device.address).replace(/:/g, "-"),
   vendor: recognizeVendor(device.name || ""),
 });
 
