@@ -26,6 +26,13 @@ export default {
     error:
       "No se puede iniciar el bloqueo del GPS: proveedor de ubicación no disponible o acceso a la ubicación no concedido",
   },
+  preferredGpsSourceId: {
+    label: "Fuente GPS",
+    description:
+      "Elija qué GPS se utiliza para registrar coordenadas: el GPS interno del teléfono o un receptor GPS externo emparejado (por ejemplo, Bad Elf).",
+    auto: "Automático (externo si está disponible)",
+    internal: "GPS interno",
+  },
   showStatusBar: "Mostrar barra de estado",
   theme: {
     label: "Tema",

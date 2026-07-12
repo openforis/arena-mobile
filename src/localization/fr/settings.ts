@@ -26,6 +26,13 @@ export default {
     error:
       "Impossible de démarrer le verrouillage GPS: fournisseur de localisation non disponible ou accès à la localisation non accordé",
   },
+  preferredGpsSourceId: {
+    label: "Source GPS",
+    description:
+      "Choisissez le GPS utilisé pour enregistrer les coordonnées : le GPS interne du téléphone ou un récepteur GPS externe apparié (par exemple, Bad Elf).",
+    auto: "Auto (externe si disponible)",
+    internal: "GPS interne",
+  },
   showStatusBar: "Afficher la barre d'état",
   theme: {
     label: "Thème",

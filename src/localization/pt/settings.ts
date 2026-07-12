@@ -26,6 +26,13 @@ export default {
     error:
       "Não é possível iniciar o bloqueio de GPS: fornecedor de localização não disponível ou acesso à localização não concedido",
   },
+  preferredGpsSourceId: {
+    label: "Fonte GPS",
+    description:
+      "Escolha qual GPS é usado para registar coordenadas: o GPS interno do telemóvel ou um recetor GPS externo emparelhado (por exemplo, Bad Elf).",
+    auto: "Automático (externo se disponível)",
+    internal: "GPS interno",
+  },
   showStatusBar: "Mostrar barra de estado",
   theme: {
     label: "Tema",

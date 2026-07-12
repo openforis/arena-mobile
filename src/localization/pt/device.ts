@@ -20,6 +20,12 @@ export default {
     warning:
       "Serviço de localização desativado; por favor, ative-o nas configurações do dispositivo.",
   },
+  externalGps: {
+    unavailable: {
+      warning:
+        "Dispositivo GPS externo indisponível; a usar o GPS interno para esta sessão.",
+    },
+  },
   network: {
     title: "Rede",
     statusLabel: "Estado da rede",

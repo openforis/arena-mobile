@@ -30,6 +30,13 @@ Se auttaa saamaan paremman tarkkuuden koordinaattiattribuuteissa.`,
     error:
       "GPS-lukitusta ei voi käynnistää: sijaintipalvelu ei ole käytettävissä tai sijaintiin ei ole myönnetty käyttöoikeutta",
   },
+  preferredGpsSourceId: {
+    label: "GPS-lähde",
+    description:
+      "Valitse, mitä GPS:ää käytetään koordinaattien tallentamiseen: puhelimen sisäistä GPS:ää vai pariutettua ulkoista GPS-vastaanotinta (esim. Bad Elf).",
+    auto: "Automaattinen (ulkoinen, jos saatavilla)",
+    internal: "Sisäinen GPS",
+  },
   showStatusBar: "Näytä tilarivi",
   theme: {
     label: "Teema",

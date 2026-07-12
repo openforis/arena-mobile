@@ -20,6 +20,12 @@ export default {
     warning:
       "Service de localisation désactivé; veuillez l'activer dans les paramètres de l'appareil.",
   },
+  externalGps: {
+    unavailable: {
+      warning:
+        "Périphérique GPS externe indisponible; utilisation du GPS interne pour cette session.",
+    },
+  },
   network: {
     title: "Réseau",
     statusLabel: "État du réseau",

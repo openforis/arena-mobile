@@ -19,6 +19,11 @@ export default {
   locationServiceDisabled: {
     warning: "የአካባቢ አገልግሎት ተሰናክሏል፤ እባክዎ በመሳሪያው መቼቶች ውስጥ ያንቁት።",
   },
+  externalGps: {
+    unavailable: {
+      warning: "የውጫዊ ጂፒኤስ መሣሪያ አይገኝም፤ ለዚህ ክፍለ ጊዜ ውስጣዊውን ጂፒኤስ በመጠቀም ላይ።",
+    },
+  },
   network: {
     title: "አውታረ መረብ",
     statusLabel: "የአውታረ መረብ ሁኔታ",
