@@ -26,6 +26,14 @@ export type NmeaTrack = {
   time?: string; // UTC time, "HHmmss(.sss)"
 };
 
+// $--GST: receiver-reported standard deviation of the position error, in meters.
+// Only emitted by some receivers (mainly survey-grade units); absent from most consumer ones.
+export type NmeaGst = {
+  latitudeErrorMeters: number | null;
+  longitudeErrorMeters: number | null;
+  time?: string; // UTC time, "HHmmss(.sss)"
+};
+
 export type ExternalGpsDataListener = (chunk: string) => void;
 
 export type ExternalGpsConnection = {

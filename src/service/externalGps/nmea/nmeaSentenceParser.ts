@@ -1,4 +1,4 @@
-import { NmeaFix, NmeaTrack } from "../types";
+import { NmeaFix, NmeaGst, NmeaTrack } from "../types";
 
 /**
  * Validates the trailing "*XX" checksum: XOR of every character between "$" and "*".
@@ -76,6 +76,24 @@ export const parseRMC = (sentence: string): NmeaTrack | null => {
     speedKnots: toNumberOrNull(fields[7] ?? ""),
     courseDegrees: toNumberOrNull(fields[8] ?? ""),
     date: fields[9] || undefined,
+    time: fields[1] || undefined,
+  };
+};
+
+/**
+ * Parses a $--GST sentence (pseudorange noise statistics): the receiver's own
+ * standard deviation of the lat/lon position error, in meters. Only emitted by
+ * some receivers (mainly survey-grade units); most consumer devices omit it.
+ */
+export const parseGST = (sentence: string): NmeaGst | null => {
+  if (!isChecksumValid(sentence)) return null;
+  const fields = stripChecksum(sentence).split(",");
+  // $--GST,time,rmsValue,semiMajorStdDev,semiMinorStdDev,semiMajorOrientation,latErrorStdDev,lonErrorStdDev,heightErrorStdDev
+  if (fields.length < 9 || !(fields[0] ?? "").endsWith("GST")) return null;
+
+  return {
+    latitudeErrorMeters: toNumberOrNull(fields[6] ?? ""),
+    longitudeErrorMeters: toNumberOrNull(fields[7] ?? ""),
     time: fields[1] || undefined,
   };
 };

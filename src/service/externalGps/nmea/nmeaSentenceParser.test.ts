@@ -1,4 +1,4 @@
-import { parseGGA, parseRMC } from "./nmeaSentenceParser";
+import { parseGGA, parseGST, parseRMC } from "./nmeaSentenceParser";
 
 describe("nmeaSentenceParser", () => {
   describe("parseGGA", () => {
@@ -109,6 +109,49 @@ describe("nmeaSentenceParser", () => {
       const track = parseRMC("$GPRMC,123519,A,4807.038,N*7F");
 
       expect(track).toBeNull();
+    });
+  });
+
+  describe("parseGST", () => {
+    it("parses a valid GST sentence", () => {
+      const gst = parseGST(
+        "$GPGST,024603.00,3.4,2.5,2.0,120.0,1.8,1.6,3.4*5C",
+      );
+
+      expect(gst).not.toBeNull();
+      expect(gst!.latitudeErrorMeters).toBe(1.8);
+      expect(gst!.longitudeErrorMeters).toBe(1.6);
+      expect(gst!.time).toBe("024603.00");
+    });
+
+    it("returns null lat/lon errors when the fields are empty", () => {
+      const gst = parseGST("$GPGST,024603.00,,,,,,,*7A");
+
+      expect(gst).not.toBeNull();
+      expect(gst!.latitudeErrorMeters).toBeNull();
+      expect(gst!.longitudeErrorMeters).toBeNull();
+    });
+
+    it("returns null when the checksum is invalid", () => {
+      const gst = parseGST(
+        "$GPGST,024603.00,3.4,2.5,2.0,120.0,1.8,1.6,3.4*00",
+      );
+
+      expect(gst).toBeNull();
+    });
+
+    it("returns null for a sentence that is not a GST sentence", () => {
+      const gst = parseGST(
+        "$GPGGA,024603.00,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*67",
+      );
+
+      expect(gst).toBeNull();
+    });
+
+    it("returns null when there are too few fields", () => {
+      const gst = parseGST("$GPGST,024603.00,3.4*53");
+
+      expect(gst).toBeNull();
     });
   });
 });
