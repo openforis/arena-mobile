@@ -31,8 +31,11 @@ const parseCoordinate = (
   return hemisphere === "S" || hemisphere === "W" ? -decimal : decimal;
 };
 
-const toNumberOrNull = (value: string): number | null =>
-  value === "" || value === undefined ? null : Number(value);
+const toNumberOrNull = (value?: string): number | null => {
+  if (!value) return null;
+  const num = Number(value);
+  return Number.isNaN(num) ? null : num;
+};
 
 /**
  * Parses a $--GGA sentence (fix data): lat/long, altitude, HDOP, fix quality.
