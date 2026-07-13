@@ -7,6 +7,7 @@ import {
 } from "react-native-tree-multi-select";
 
 import { HView } from "components";
+import { DataEntrySelectors } from "state";
 
 import { EntityButton } from "./EntityButton";
 import { Indicator } from "./Indicator";
@@ -45,10 +46,13 @@ const treeFlashListProps = { style: { flex: 1 } };
 export const PagesNavigationTree = () => {
   const data = useTreeData();
   const treeRef = useRef<TreeViewRef>(null);
+  const { entityUuid, parentEntityUuid } =
+    DataEntrySelectors.useCurrentPageEntity();
+  const currentEntityUuid = entityUuid ?? parentEntityUuid;
 
   useEffect(() => {
     treeRef.current?.expandAll();
-  }, []);
+  }, [currentEntityUuid]);
 
   return (
     <TreeView

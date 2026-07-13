@@ -1,5 +1,6 @@
 export { AlertIcon } from "./AlertIcon";
 export { Button } from "./Button";
+export type { ButtonIconPosition, ButtonMode } from "./Button";
 export { Card } from "./Card";
 export { Checkbox } from "./Checkbox";
 export { CloseIconButton } from "./CloseIconButton";
