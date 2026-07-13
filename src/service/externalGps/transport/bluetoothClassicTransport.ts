@@ -1,5 +1,6 @@
 import RNBluetoothClassic, {
   BluetoothDevice,
+  BluetoothDeviceEvent,
 } from "react-native-bluetooth-classic";
 
 import { log, Permissions } from "utils";
@@ -77,6 +78,22 @@ const listSources = async (): Promise<GpsSourceDescriptor[]> => {
   }
 };
 
+const isConnected = async (sourceId: string): Promise<boolean> => {
+  if (!isModuleAvailable()) return false;
+  try {
+    return await RNBluetoothClassic.isDeviceConnected(
+      addressFromSourceId(sourceId),
+    );
+  } catch (error) {
+    log.warn(
+      "ExternalGps: failed to check connection status for",
+      sourceId,
+      error,
+    );
+    return false;
+  }
+};
+
 const connect = async (sourceId: string): Promise<ExternalGpsConnection> => {
   if (!isModuleAvailable()) {
     throw new Error(unavailableModuleErrorMessage);
@@ -101,6 +118,30 @@ const connect = async (sourceId: string): Promise<ExternalGpsConnection> => {
       );
       return { remove: () => subscription.remove() };
     },
+    // The native side catches read/socket errors internally and surfaces them as
+    // DEVICE_DISCONNECTED/ERROR events (e.g. device powered off mid-read) rather than
+    // throwing back through the bridge, so this is the only way to learn a
+    // previously-good connection has gone dead.
+    onDisconnected: (listener) => {
+      const matchesDevice = (event: BluetoothDeviceEvent) =>
+        event.device?.address === address;
+      const disconnectedSubscription = RNBluetoothClassic.onDeviceDisconnected(
+        (event: BluetoothDeviceEvent) => {
+          if (matchesDevice(event)) listener();
+        },
+      );
+      const errorSubscription = RNBluetoothClassic.onError(
+        (event: BluetoothDeviceEvent) => {
+          if (matchesDevice(event)) listener();
+        },
+      );
+      return {
+        remove: () => {
+          disconnectedSubscription.remove();
+          errorSubscription.remove();
+        },
+      };
+    },
     disconnect: async () => {
       log.debug("ExternalGps: disconnecting from", device.name || address);
       await device.disconnect();
@@ -111,4 +152,5 @@ const connect = async (sourceId: string): Promise<ExternalGpsConnection> => {
 export const bluetoothClassicTransport: ExternalGpsTransport = {
   listSources,
   connect,
+  isConnected,
 };
