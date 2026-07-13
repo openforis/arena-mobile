@@ -2,7 +2,7 @@ import RNBluetoothClassic, {
   BluetoothDevice,
 } from "react-native-bluetooth-classic";
 
-import { log } from "utils";
+import { log, Permissions } from "utils";
 import { ExternalGpsConnection, ExternalGpsTransport, GpsSourceDescriptor } from "../types";
 import { recognizeVendor } from "./vendorProtocolRegistry";
 
@@ -18,6 +18,25 @@ const toSourceDescriptor = (device: BluetoothDevice): GpsSourceDescriptor => ({
 const addressFromSourceId = (sourceId: string): string =>
   sourceId.replace(/^external:/, "");
 
+const isModuleAvailable = (): boolean =>
+  Boolean(
+    RNBluetoothClassic &&
+      typeof RNBluetoothClassic.getBondedDevices === "function" &&
+      typeof RNBluetoothClassic.isDeviceConnected === "function" &&
+      typeof RNBluetoothClassic.connectToDevice === "function",
+  );
+
+const unavailableModuleErrorMessage =
+  "ExternalGps: Bluetooth Classic native module is unavailable in this runtime (Expo Go does not include react-native-bluetooth-classic). Use a custom dev build to enable external GPS over Bluetooth.";
+
+let didLogUnavailableModuleWarning = false;
+
+const logUnavailableModuleWarningOnce = () => {
+  if (didLogUnavailableModuleWarning) return;
+  didLogUnavailableModuleWarning = true;
+  log.warn(unavailableModuleErrorMessage);
+};
+
 /**
  * Lists bonded devices (Android) / connected MFi accessories (iOS) - both surfaced
  * through the same RNBluetoothClassic.getBondedDevices() call, since device pairing
@@ -26,6 +45,16 @@ const addressFromSourceId = (sourceId: string): string =>
  * devices (headphones, printers, etc) aren't GPS receivers.
  */
 const listSources = async (): Promise<GpsSourceDescriptor[]> => {
+  if (!isModuleAvailable()) {
+    logUnavailableModuleWarningOnce();
+    return [];
+  }
+
+  if (!(await Permissions.requestBluetoothPermissions())) {
+    log.debug("ExternalGps: Bluetooth permission not granted, skipping bonded devices list");
+    return [];
+  }
+
   try {
     const devices = await RNBluetoothClassic.getBondedDevices();
     const gpsDevices = devices.filter((device) =>
@@ -37,6 +66,8 @@ const listSources = async (): Promise<GpsSourceDescriptor[]> => {
       "recognized GPS device(s) out of",
       devices.length,
       "bonded",
+      "- bonded device names:",
+      devices.map((device) => device.name || device.address),
     );
     return gpsDevices.map(toSourceDescriptor);
   } catch (error) {
@@ -46,6 +77,10 @@ const listSources = async (): Promise<GpsSourceDescriptor[]> => {
 };
 
 const connect = async (sourceId: string): Promise<ExternalGpsConnection> => {
+  if (!isModuleAvailable()) {
+    throw new Error(unavailableModuleErrorMessage);
+  }
+
   const address = addressFromSourceId(sourceId);
 
   const alreadyConnected = await RNBluetoothClassic.isDeviceConnected(address);

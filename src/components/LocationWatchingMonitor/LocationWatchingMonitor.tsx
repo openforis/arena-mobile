@@ -98,7 +98,7 @@ export const LocationWatchingMonitor = (
         </>
       )}
       {!watchingLocation && (
-        <HView>
+        <HView fullWidth style={styles.startRow}>
           <Button
             icon="play"
             onPress={onStart}
@@ -106,7 +106,12 @@ export const LocationWatchingMonitor = (
             textKey="dataEntry:coordinate.getLocation"
           />
           {gpsSourceMenuVisible && (
-            <MenuButton icon="crosshairs-gps" items={gpsSourceMenuItems} />
+            <MenuButton
+              icon="crosshairs-gps"
+              items={gpsSourceMenuItems}
+              label="settings:preferredGpsSourceId.label"
+              mode="text"
+            />
           )}
         </HView>
       )}
