@@ -48,8 +48,8 @@ const accuracyFromGst = (gst: NmeaGst | null): number | null => {
  * objects, mirroring what expo-location's watchPositionAsync callback provides.
  *
  * GGA carries a complete fix on its own, so each valid GGA sentence produces one
- * LocationPoint; RMC and GST only fill in speed/heading/accuracy when available
- * and reasonably recent.
+ * LocationPoint; RMC is only used to fill in speed/heading when available
+ * (using the most recently seen RMC sentence).
  */
 export const createNmeaLocationPointAssembler = () => {
   let lastTrack: { speedKnots?: number | null; courseDegrees?: number | null } =
