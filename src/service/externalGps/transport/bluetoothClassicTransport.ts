@@ -23,6 +23,7 @@ const isModuleAvailable = (): boolean =>
     RNBluetoothClassic &&
       typeof RNBluetoothClassic.getBondedDevices === "function" &&
       typeof RNBluetoothClassic.isDeviceConnected === "function" &&
+      typeof RNBluetoothClassic.getConnectedDevice === "function" &&
       typeof RNBluetoothClassic.connectToDevice === "function",
   );
 
