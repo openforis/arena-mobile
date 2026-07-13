@@ -26,7 +26,7 @@ const vendorRegistry: VendorRegistryEntry[] = [
     vendor: "Garmin GLO",
     // Covers both the original GLO ("Glo") and the GLO 2 ("Glo2", no space); accept an
     // optional space/dash between "glo" and "2" in case other firmware revisions differ.
-    matchesName: (name) => /\bglo\s*-?\s*2?\b/i.test(name),
+    matchesName: (name) => /\bglo[\s-]*2?\b/i.test(name),
     // iosProtocolString intentionally omitted: no confirmed value from Garmin's docs or
     // a real device's EAAccessory.protocolStrings yet - do not guess (see file header).
   },
