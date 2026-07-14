@@ -13,6 +13,9 @@ export default {
   confirmFetchRecordFromServer: "Obter registo do servidor?",
   continueEditing: {
     title: "Continuar a editar",
+    confirm: {
+      message: "Continuar a editar de onde parou?",
+    },
     commands: {
       message: "Continuar a editar de onde parou?",
     },
@@ -61,6 +64,7 @@ export default {
     R: "Remoto",
   },
   owner: "Proprietário",
+  recordHasErrorsOrWarningsTooltip: "O registo tem {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Todos os registos",
     local: "Registos no dispositivo",

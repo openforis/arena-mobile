@@ -11,6 +11,9 @@ export default {
     description:
       "As imagens serão armazenadas na resolução máxima fornecida pelo dispositivo, a menos que um limite seja definido no designer do formulário da pesquisa.",
   },
+  language: {
+    label: "Idioma da aplicação",
+  },
   locationAccuracyThreshold: "Limite de precisão da localização (metros)",
   locationAccuracyWatchTimeout:
     "Tempo limite de verificação da precisão da localização: {{value}} segundos",

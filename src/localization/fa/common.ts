@@ -17,6 +17,7 @@ export default {
   done: "انجام شد",
   empty: "--- خالی کردن ---",
   error: "خطا",
+  error_other: "خطاها",
   exit: "خروج",
   export: "اکسپورت",
   false: "خیر",
@@ -80,4 +81,5 @@ export default {
   },
   tryAgain: "دوباره تلاش کنید",
   warning: "هشدار",
+  warning_other: "هشدارها",
 };

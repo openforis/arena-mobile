@@ -11,6 +11,9 @@ export default {
     description:
       "Les images seront stockées dans la résolution maximale fournie par l'appareil, à moins qu'une limite ne soit définie dans le concepteur du formulaire d'enquête.",
   },
+  language: {
+    label: "Langue de l'application",
+  },
   locationAccuracyThreshold: "Seuil de précision de la localisation (mètres)",
   locationAccuracyWatchTimeout:
     "Délai de surveillance de la précision de la localisation: {{value}} secondes",

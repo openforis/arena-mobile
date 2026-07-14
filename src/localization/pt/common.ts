@@ -1,4 +1,5 @@
 export default {
+  appTitle: "Arena Mobile",
   about: "Sobre",
   andMore: "...e mais {{count}}",
   cancel: "Cancelar",
@@ -15,6 +16,7 @@ export default {
   done: "Concluído",
   empty: "--- VAZIO ---",
   error: "Erro",
+  error_other: "Erros",
   exit: "Sair",
   export: "Exportar",
   false: "Falso",
@@ -76,4 +78,5 @@ export default {
   },
   tryAgain: "Tentar novamente",
   warning: "Aviso",
+  warning_other: "Avisos",
 };

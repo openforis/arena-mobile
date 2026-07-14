@@ -1,4 +1,5 @@
 export default {
+  appTitle: "Arena Mobile",
   about: "Om",
   andMore: "...och {{count}} till",
   cancel: "Avbryt",
@@ -15,6 +16,7 @@ export default {
   done: "Klar",
   empty: "--- TOM ---",
   error: "Fel",
+  error_other: "Fel",
   exit: "Avsluta",
   export: "Exportera",
   false: "Falskt",
@@ -77,4 +79,5 @@ export default {
   },
   tryAgain: "Försök igen",
   warning: "Varning",
+  warning_other: "Varningar",
 };

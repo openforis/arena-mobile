@@ -11,6 +11,9 @@ export default {
     description:
       "Las imágenes se almacenarán con la máxima resolución proporcionada por el dispositivo, a menos que se establezca un límite en el diseñador del formulario de encuesta.",
   },
+  language: {
+    label: "Idioma de la aplicación",
+  },
   locationAccuracyThreshold: "Precisión de la ubicación (metros)",
   locationAccuracyWatchTimeout:
     "Tiempo de espera de la precisión de la ubicación: {{value}} segundos",

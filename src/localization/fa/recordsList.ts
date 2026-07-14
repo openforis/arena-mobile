@@ -58,6 +58,7 @@ export default {
   },
   origin: { title: "منشاء", L: "محلی", R: "از راه دور" },
   owner: "مالک",
+  recordHasErrorsOrWarningsTooltip: "این رکورد {{count}} {{itemsTypeText}} دارد",
   recordType: {
     all: "همه رکوردها",
     local: "رکوردهای موجود در دستگاه",

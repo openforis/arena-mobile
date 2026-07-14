@@ -16,6 +16,7 @@ export default {
   done: "ተከናውኗል",
   empty: "--- ባዶ ---",
   error: "ስህተት",
+  error_other: "ስህተቶች",
   exit: "ውጣ",
   export: "ላክ",
   false: "ሐሰት",
@@ -77,4 +78,5 @@ export default {
   },
   tryAgain: "እንደገና ይሞክሩ",
   warning: "Warning",
+  warning_other: "ማስጠንቀቂያዎች",
 };

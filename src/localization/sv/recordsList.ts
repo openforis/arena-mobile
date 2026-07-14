@@ -59,6 +59,7 @@ export default {
   },
   origin: { title: "Ursprung", L: "Lokal", R: "Fjärr" },
   owner: "Ägare",
+  recordHasErrorsOrWarningsTooltip: "Posten har {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Alla poster",
     local: "Poster på enheten",
