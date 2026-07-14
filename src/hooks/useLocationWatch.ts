@@ -221,6 +221,13 @@ export const useLocationWatch = ({
     }));
   }, []);
 
+  const markLocationSourceUnavailable = useCallback(() => {
+    setState((statePrev) => ({
+      ...statePrev,
+      locationSourceUnavailable: true,
+    }));
+  }, []);
+
   const startInternalGpsWatch = useCallback(async (): Promise<boolean> => {
     if (!(await Permissions.requestLocationForegroundPermission())) {
       if (!(await Permissions.isLocationServiceEnabled())) {
@@ -311,6 +318,22 @@ export const useLocationWatch = ({
     [setIdleLocationWatchStatus],
   );
 
+  const handleExternalGpsSourceDisconnected = useCallback(() => {
+    void handleExternalGpsDisconnect({
+      isWatching: !!locationSubscriptionRef.current,
+      shouldFallbackToInternal: shouldFallbackToInternalRef.current,
+      stopLocationWatch,
+      startInternalGpsWatch,
+      activateWatchingState,
+      markSourceUnavailable: markLocationSourceUnavailable,
+    });
+  }, [
+    activateWatchingState,
+    markLocationSourceUnavailable,
+    startInternalGpsWatch,
+    stopLocationWatch,
+  ]);
+
   const startWatchForResolvedSource = useCallback(
     async ({
       useExternalSource,
@@ -335,23 +358,9 @@ export const useLocationWatch = ({
         );
         const subscription = await ExternalGpsService.watchPosition(
           { sourceId: resolvedSourceId },
-          (locationPoint) => locationCallback(locationPoint),
+          locationCallback,
           {
-            onDisconnected: () => {
-              void handleExternalGpsDisconnect({
-                isWatching: !!locationSubscriptionRef.current,
-                shouldFallbackToInternal: shouldFallbackToInternalRef.current,
-                stopLocationWatch,
-                startInternalGpsWatch,
-                activateWatchingState,
-                markSourceUnavailable: () => {
-                  setState((statePrev) => ({
-                    ...statePrev,
-                    locationSourceUnavailable: true,
-                  }));
-                },
-              });
-            },
+            onDisconnected: handleExternalGpsSourceDisconnected,
           },
         );
         if (cancelRequestedRef.current) {
@@ -395,10 +404,9 @@ export const useLocationWatch = ({
       }
     },
     [
-      activateWatchingState,
+      handleExternalGpsSourceDisconnected,
       locationCallback,
       startInternalGpsWatch,
-      stopLocationWatch,
     ],
   );
 
