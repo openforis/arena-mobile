@@ -1,9 +1,12 @@
 import { log } from "utils";
+import { useTranslation } from "localization";
+import type { LocationWatchStatus } from "hooks";
 import { GpsSourceSetting } from "model";
 import { GpsSourceDescriptor } from "service/externalGps/types";
 import { FieldSet } from "../FieldSet";
 import { Button } from "../Button";
 import { HView } from "../HView";
+import { LoadingIcon } from "../LoadingIcon";
 import { MenuButton } from "../MenuButton";
 import { Text } from "../Text";
 import { View } from "../View";
@@ -14,49 +17,74 @@ import { ElapsedTimeProgressBar } from "./ElapsedTimeProgressBar";
 import styles from "./styles";
 
 type LocationWatchingMonitorProps = {
+  activeLocationSourceId?: string;
   availableGpsSources?: GpsSourceDescriptor[];
+  connectingSourceId?: string | null;
+  gpsSourcesLoading?: boolean;
   locationAccuracy?: number | string | null;
   locationAccuracyThreshold: number;
+  locationSourceUnavailable?: boolean;
   locationWatchElapsedTime: number;
+  locationWatchStatus: LocationWatchStatus;
   locationWatchTimeout: number;
+  onCancelConnecting?: () => void;
   onSelectGpsSource?: (sourceId: string) => void;
   onStart: () => void;
   onStop: () => void;
   preferredGpsSourceId?: string;
-  watchingLocation: boolean;
 };
 
 export const LocationWatchingMonitor = (
   props: LocationWatchingMonitorProps
 ) => {
   const {
+    activeLocationSourceId,
     availableGpsSources = [],
+    connectingSourceId,
+    gpsSourcesLoading = false,
     locationAccuracy,
     locationAccuracyThreshold,
+    locationSourceUnavailable,
     locationWatchElapsedTime,
+    locationWatchStatus,
     locationWatchTimeout,
+    onCancelConnecting,
     onSelectGpsSource,
     onStart,
     onStop,
     preferredGpsSourceId,
-    watchingLocation,
   } = props;
 
   log.debug(`rendering LocationWatchingMonitor`);
 
+  const { t } = useTranslation();
+
+  const isIdle = locationWatchStatus === "idle";
+  const isConnecting = locationWatchStatus === "connecting";
+  const isWatching = locationWatchStatus === "watching";
+
+  const getSourceLabel = (sourceId?: string | null) => {
+    if (!sourceId) return "";
+    const source = availableGpsSources.find((item) => item.id === sourceId);
+    return source?.label ?? t("dataEntry:coordinate.externalGpsGenericLabel");
+  };
+
   // Only worth showing a source picker once there's an actual choice - i.e. at
   // least one recognized external GPS device is bonded, in addition to internal.
-  // Hidden while watching to avoid swapping source mid-capture (would confuse
-  // in-flight location averaging).
+  // Hidden while connecting/watching to avoid swapping source mid-capture (would
+  // confuse in-flight location averaging).
   const gpsSourceMenuVisible =
-    !watchingLocation && !!onSelectGpsSource && availableGpsSources.length > 1;
+    isIdle && !!onSelectGpsSource && availableGpsSources.length > 1;
 
   const gpsSourceMenuItems = gpsSourceMenuVisible
     ? [
         {
           key: GpsSourceSetting.auto,
           label: "settings:preferredGpsSourceId.auto",
-          icon: preferredGpsSourceId === GpsSourceSetting.auto ? "check" : undefined,
+          icon:
+            preferredGpsSourceId === GpsSourceSetting.auto
+              ? "check"
+              : undefined,
           onPress: () => onSelectGpsSource!(GpsSourceSetting.auto),
         },
         ...availableGpsSources.map((source) => ({
@@ -76,9 +104,24 @@ export const LocationWatchingMonitor = (
       ? locationAccuracy
       : locationAccuracy?.toFixed?.(2);
 
+  // Shown only when an external device is actually relevant this session - either
+  // it's the active source, or we fell back from it to internal GPS. The plain
+  // "internal GPS only, no external device involved" case stays unchanged.
+  const activeSourceIsExternal =
+    !!activeLocationSourceId &&
+    activeLocationSourceId !== GpsSourceSetting.internal;
+  const showActiveSourceLine =
+    isWatching && (activeSourceIsExternal || !!locationSourceUnavailable);
+
   return (
     <VView style={styles.outerContainer}>
-      {watchingLocation && (
+      {isConnecting && (
+        <Text
+          textKey="dataEntry:coordinate.connectingToSource"
+          textParams={{ label: getSourceLabel(connectingSourceId) }}
+        />
+      )}
+      {isWatching && (
         <>
           <FieldSet headerKey="dataEntry:coordinate.accuracy">
             <HView>
@@ -95,9 +138,24 @@ export const LocationWatchingMonitor = (
             elapsedTime={locationWatchElapsedTime}
             elapsedTimeThreshold={locationWatchTimeout}
           />
+          {showActiveSourceLine && (
+            <Text
+              style={styles.sourceStatusText}
+              textKey={
+                locationSourceUnavailable
+                  ? "dataEntry:coordinate.usingInternalFallback"
+                  : "dataEntry:coordinate.usingSource"
+              }
+              textParams={{
+                label: locationSourceUnavailable
+                  ? getSourceLabel(connectingSourceId)
+                  : getSourceLabel(activeLocationSourceId),
+              }}
+            />
+          )}
         </>
       )}
-      {!watchingLocation && (
+      {isIdle && (
         <HView fullWidth style={styles.startRow}>
           <Button
             icon="play"
@@ -105,17 +163,29 @@ export const LocationWatchingMonitor = (
             style={styles.button}
             textKey="dataEntry:coordinate.getLocation"
           />
-          {gpsSourceMenuVisible && (
-            <MenuButton
-              icon="crosshairs-gps"
-              items={gpsSourceMenuItems}
-              label="settings:preferredGpsSourceId.label"
-              mode="text"
-            />
+          {gpsSourcesLoading ? (
+            <LoadingIcon size={24} style={styles.gpsSourceLoadingIcon} />
+          ) : (
+            gpsSourceMenuVisible && (
+              <MenuButton
+                icon="crosshairs-gps"
+                items={gpsSourceMenuItems}
+                label="settings:preferredGpsSourceId.label"
+                mode="text"
+              />
+            )
           )}
         </HView>
       )}
-      {watchingLocation && (
+      {isConnecting && (
+        <Button
+          icon="close"
+          onPress={onCancelConnecting}
+          style={styles.button}
+          textKey="common:cancel"
+        />
+      )}
+      {isWatching && (
         <Button
           icon="stop"
           onPress={onStop}

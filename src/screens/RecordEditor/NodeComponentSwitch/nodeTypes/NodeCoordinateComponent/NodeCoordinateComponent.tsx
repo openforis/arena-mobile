@@ -26,18 +26,24 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
 
   const {
     accuracy,
+    activeLocationSourceId,
     applicable,
     availableGpsSources,
     compassNavigatorVisible,
+    connectingSourceId,
     deleteButtonVisible,
     distanceTarget,
     editable,
+    gpsSourcesLoading,
     hideCompassNavigator,
     includedExtraFields,
     inputFieldsEditable,
     locationAccuracyThreshold,
+    locationSourceUnavailable,
     locationWatchElapsedTime,
+    locationWatchStatus,
     locationWatchTimeout,
+    onCancelGpsConnectPress,
     onChangeSrs,
     onChangeValueField,
     onClearPress,
@@ -129,16 +135,21 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
       }
       {editable && (
         <LocationWatchingMonitor
+          activeLocationSourceId={activeLocationSourceId}
           availableGpsSources={availableGpsSources}
+          connectingSourceId={connectingSourceId}
+          gpsSourcesLoading={gpsSourcesLoading}
           locationAccuracy={accuracy}
           locationAccuracyThreshold={locationAccuracyThreshold}
+          locationSourceUnavailable={locationSourceUnavailable}
           locationWatchElapsedTime={locationWatchElapsedTime}
+          locationWatchStatus={locationWatchStatus}
           locationWatchTimeout={locationWatchTimeout}
+          onCancelConnecting={onCancelGpsConnectPress}
           onSelectGpsSource={onSelectGpsSource}
           onStart={onStartGpsPress}
           onStop={onStopGpsPress}
           preferredGpsSourceId={preferredGpsSourceId}
-          watchingLocation={watchingLocation}
         />
       )}
       {compassNavigatorVisible && (

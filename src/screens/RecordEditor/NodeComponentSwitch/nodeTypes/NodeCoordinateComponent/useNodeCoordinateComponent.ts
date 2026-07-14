@@ -237,9 +237,13 @@ export const useNodeCoordinateComponent = (props: any) => {
 
   const {
     activeLocationSourceId,
+    cancelConnecting,
+    connectingSourceId,
     locationAccuracyThreshold,
+    locationSourceUnavailable,
     locationWatchElapsedTime,
     locationWatchProgress,
+    locationWatchStatus,
     locationWatchTimeout,
     startLocationWatch,
     stopLocationWatch,
@@ -247,7 +251,8 @@ export const useNodeCoordinateComponent = (props: any) => {
   } = useLocationWatch({ locationCallback });
 
   const { preferredGpsSourceId } = SettingsSelectors.useSettings();
-  const { availableGpsSources } = useAvailableGpsSources();
+  const { availableGpsSources, loading: gpsSourcesLoading } =
+    useAvailableGpsSources();
 
   const onSelectGpsSource = useCallback(
     (sourceId: string) => {
@@ -312,6 +317,10 @@ export const useNodeCoordinateComponent = (props: any) => {
     stopLocationWatch();
   }, [stopLocationWatch]);
 
+  const onCancelGpsConnectPress = useCallback(() => {
+    cancelConnecting();
+  }, [cancelConnecting]);
+
   const setCompassNavigatorVisible = useCallback(
     (visible: any) =>
       setState((statePrev) => ({
@@ -359,16 +368,21 @@ export const useNodeCoordinateComponent = (props: any) => {
     applicable,
     availableGpsSources,
     compassNavigatorVisible,
+    connectingSourceId,
     deleteButtonVisible,
     distanceTarget,
     editable,
+    gpsSourcesLoading,
     hideCompassNavigator,
     includedExtraFields,
     inputFieldsEditable,
     locationAccuracyThreshold,
+    locationSourceUnavailable,
     locationWatchElapsedTime,
     locationWatchProgress,
+    locationWatchStatus,
     locationWatchTimeout,
+    onCancelGpsConnectPress,
     onChangeSrs,
     onChangeValueField,
     onClearPress,
