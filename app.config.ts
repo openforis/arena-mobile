@@ -111,8 +111,6 @@ const config = (): ExpoConfig => {
         // MFi External Accessory protocol strings, one per supported external GPS
         // vendor - must match the accessory's own advertised protocol exactly (see
         // service/externalGps/transport/vendorProtocolRegistry.ts).
-        // TODO: "com.bad-elf.gps" is unconfirmed - verify against real hardware or
-        // Bad Elf's iOS SDK docs before relying on it.
         UISupportedExternalAccessoryProtocols: ["com.bad-elf.gps"],
       },
       supportsTablet: true,

@@ -7,8 +7,6 @@
  * declared in app.config.ts's `ios.infoPlist.UISupportedExternalAccessoryProtocols` -
  * that string must come from the vendor's own documentation or be read off the
  * device's `EAAccessory.protocolStrings` at runtime; it must never be guessed.
- * TODO: verify the Bad Elf protocol string against real hardware/Bad Elf's iOS SDK
- * docs before relying on it - "com.bad-elf.gps" below is unconfirmed.
  */
 export type VendorRegistryEntry = {
   vendor: string;
@@ -20,7 +18,7 @@ const vendorRegistry: VendorRegistryEntry[] = [
   {
     vendor: "Bad Elf",
     matchesName: (name) => /bad\s*elf/i.test(name),
-    iosProtocolString: "com.bad-elf.gps", // TODO: verify
+    iosProtocolString: "com.bad-elf.gps",
   },
   {
     vendor: "Garmin GLO",
