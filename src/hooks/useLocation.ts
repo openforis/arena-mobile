@@ -53,7 +53,7 @@ export const useLocation = (): {
         }));
       }
     },
-    []
+    [],
   );
 
   const {

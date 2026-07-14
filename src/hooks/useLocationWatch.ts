@@ -273,13 +273,20 @@ export const useLocationWatch = ({
         locationSourceUnavailable: sourceUnavailable,
       }));
     },
-    [locationAveragingEnabled, locationWatchTimeout, stopLocationWatch, stopOnTimeout],
+    [
+      locationAveragingEnabled,
+      locationWatchTimeout,
+      stopLocationWatch,
+      stopOnTimeout,
+    ],
   );
 
   const handleExternalGpsDisconnect = useCallback(async () => {
     if (!locationSubscriptionRef.current) return;
 
-    log.warn("Location watch: external GPS connection disconnected mid-session");
+    log.warn(
+      "Location watch: external GPS connection disconnected mid-session",
+    );
     stopLocationWatch();
 
     if (!shouldFallbackToInternalRef.current) {
