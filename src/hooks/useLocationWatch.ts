@@ -77,7 +77,8 @@ export const useLocationWatch = ({
     null as ReturnType<typeof setInterval> | null,
   );
   const locationAveragerRef = useRef(null as LocationAverager | null);
-  const cancelRequestedRef = useRef(false);
+  const startAttemptIdRef = useRef(0);
+  const cancelledAttemptIdRef = useRef(0);
   const shouldFallbackToInternalRef = useRef(false);
   const toaster = useToast();
 
@@ -205,7 +206,10 @@ export const useLocationWatch = ({
   const cancelConnecting = useCallback(() => {
     if (status !== "connecting") return;
     log.debug("Cancelling GPS connection attempt");
-    cancelRequestedRef.current = true;
+    cancelledAttemptIdRef.current = Math.max(
+      cancelledAttemptIdRef.current,
+      startAttemptIdRef.current,
+    );
     setState((statePrev) => ({
       ...statePrev,
       status: "idle",
@@ -228,19 +232,26 @@ export const useLocationWatch = ({
     }));
   }, []);
 
-  const startInternalGpsWatch = useCallback(async (): Promise<boolean> => {
+  const createInternalGpsSubscription = useCallback(async () => {
     if (!(await Permissions.requestLocationForegroundPermission())) {
       if (!(await Permissions.isLocationServiceEnabled())) {
         toaster("device:locationServiceDisabled.warning");
       }
-      return false;
+      return null;
     }
-    locationSubscriptionRef.current = await Location.watchPositionAsync(
+
+    return Location.watchPositionAsync(
       { accuracy, distanceInterval },
       (location) => locationCallback(locationToLocationPoint(location)),
     );
-    return true;
   }, [accuracy, distanceInterval, locationCallback, toaster]);
+
+  const startInternalGpsWatch = useCallback(async (): Promise<boolean> => {
+    const subscription = await createInternalGpsSubscription();
+    if (!subscription) return false;
+    locationSubscriptionRef.current = subscription;
+    return true;
+  }, [createInternalGpsSubscription]);
 
   const activateWatchingState = useCallback(
     ({
@@ -293,12 +304,15 @@ export const useLocationWatch = ({
     async ({
       useExternalSource,
       resolvedSourceId,
+      isAttemptCurrent,
     }: {
       useExternalSource: boolean;
       resolvedSourceId: string;
+      isAttemptCurrent: () => boolean;
     }) => {
       if (!useExternalSource) {
-        return Permissions.requestLocationForegroundPermission();
+        const granted = await Permissions.requestLocationForegroundPermission();
+        return isAttemptCurrent() ? granted : false;
       }
 
       // Surface "connecting" feedback immediately - before the permission prompt -
@@ -310,6 +324,7 @@ export const useLocationWatch = ({
       }));
 
       const bluetoothGranted = await Permissions.requestBluetoothPermissions();
+      if (!isAttemptCurrent()) return false;
       if (bluetoothGranted) return true;
 
       setIdleLocationWatchStatus();
@@ -338,17 +353,41 @@ export const useLocationWatch = ({
     async ({
       useExternalSource,
       resolvedSourceId,
+      isAttemptCurrent,
     }: {
       useExternalSource: boolean;
       resolvedSourceId: string;
+      isAttemptCurrent: () => boolean;
     }) => {
+      const staleAttemptResult = () => ({
+        activeSourceId: resolvedSourceId,
+        sourceUnavailable: false,
+        started: false,
+      });
+
+      const unavailableInternalResult = () => ({
+        activeSourceId: internalGpsSourceId,
+        sourceUnavailable: true,
+        started: false,
+      });
+
+      const releaseStaleSubscription = (subscription: LocationSubscription) => {
+        subscription.remove();
+        return staleAttemptResult();
+      };
+
       if (!useExternalSource) {
         log.debug("Location watch: starting with internal GPS");
-        const started = await startInternalGpsWatch();
+        const subscription = await createInternalGpsSubscription();
+        if (!subscription) return staleAttemptResult();
+        if (!isAttemptCurrent()) {
+          return releaseStaleSubscription(subscription);
+        }
+        locationSubscriptionRef.current = subscription;
         return {
           activeSourceId: resolvedSourceId,
           sourceUnavailable: false,
-          started,
+          started: true,
         };
       }
 
@@ -363,17 +402,11 @@ export const useLocationWatch = ({
             onDisconnected: handleExternalGpsSourceDisconnected,
           },
         );
-        if (cancelRequestedRef.current) {
+        if (!isAttemptCurrent()) {
           log.debug(
-            "Location watch: connect succeeded after cancel, releasing immediately",
+            "Location watch: connect succeeded for stale attempt, releasing immediately",
           );
-          subscription.remove();
-          cancelRequestedRef.current = false;
-          return {
-            activeSourceId: resolvedSourceId,
-            sourceUnavailable: false,
-            started: false,
-          };
+          return releaseStaleSubscription(subscription);
         }
         locationSubscriptionRef.current = subscription;
         return {
@@ -386,33 +419,36 @@ export const useLocationWatch = ({
           `Location watch: external GPS source ${resolvedSourceId} unavailable, falling back to internal GPS for this session`,
           error,
         );
-        if (cancelRequestedRef.current) {
-          cancelRequestedRef.current = false;
-          return {
-            activeSourceId: resolvedSourceId,
-            sourceUnavailable: false,
-            started: false,
-          };
-        }
+        if (!isAttemptCurrent()) return staleAttemptResult();
 
-        const started = await startInternalGpsWatch();
+        const subscription = await createInternalGpsSubscription();
+        if (!subscription) return unavailableInternalResult();
+        if (!isAttemptCurrent()) {
+          return releaseStaleSubscription(subscription);
+        }
+        locationSubscriptionRef.current = subscription;
         return {
           activeSourceId: internalGpsSourceId,
           sourceUnavailable: true,
-          started,
+          started: true,
         };
       }
     },
     [
+      createInternalGpsSubscription,
       handleExternalGpsSourceDisconnected,
       locationCallback,
-      startInternalGpsWatch,
     ],
   );
 
   const startLocationWatch = useCallback(async () => {
     log.debug("Starting location watch");
-    cancelRequestedRef.current = false;
+    const attemptId = startAttemptIdRef.current + 1;
+    startAttemptIdRef.current = attemptId;
+
+    const isAttemptCurrent = () =>
+      attemptId === startAttemptIdRef.current &&
+      attemptId > cancelledAttemptIdRef.current;
 
     // "auto" resolves to the first recognized connected external GPS device if one
     // is available, else internal GPS - so a paired Bad Elf (or similar) is used
@@ -429,32 +465,31 @@ export const useLocationWatch = ({
     const permissionsGranted = await requestGpsPermissions({
       useExternalSource,
       resolvedSourceId,
+      isAttemptCurrent,
     });
-    if (!permissionsGranted) {
-      return;
-    }
-
-    if (cancelRequestedRef.current) {
-      cancelRequestedRef.current = false;
+    if (!permissionsGranted || !isAttemptCurrent()) {
       return;
     }
 
     _stopLocationWatch();
 
+    if (!isAttemptCurrent()) {
+      return;
+    }
+
     const { activeSourceId, sourceUnavailable, started } =
       await startWatchForResolvedSource({
         useExternalSource,
         resolvedSourceId,
+        isAttemptCurrent,
       });
 
-    if (!started) {
-      setIdleLocationWatchStatus();
+    if (!isAttemptCurrent()) {
       return;
     }
 
-    if (cancelRequestedRef.current) {
-      cancelRequestedRef.current = false;
-      _stopLocationWatch();
+    if (!started) {
+      setIdleLocationWatchStatus();
       return;
     }
 
