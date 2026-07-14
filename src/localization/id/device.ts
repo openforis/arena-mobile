@@ -20,12 +20,6 @@ export default {
     warning:
       "Layanan lokasi dinonaktifkan; mohon aktifkan di pengaturan perangkat.",
   },
-  externalGps: {
-    unavailable: {
-      warning:
-        "Perangkat GPS eksternal tidak tersedia; menggunakan GPS internal untuk sesi ini.",
-    },
-  },
   network: {
     title: "Jaringan",
     statusLabel: "Status jaringan",

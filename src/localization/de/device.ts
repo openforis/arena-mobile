@@ -20,12 +20,6 @@ export default {
     warning:
       "Standortdienst deaktiviert; bitte aktivieren Sie ihn in den Geräteeinstellungen.",
   },
-  externalGps: {
-    unavailable: {
-      warning:
-        "Externes GPS-Gerät nicht verfügbar; für diese Sitzung wird das interne GPS verwendet.",
-    },
-  },
   network: {
     title: "Netzwerk",
     statusLabel: "Netzwerkstatus",

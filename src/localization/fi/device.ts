@@ -20,12 +20,6 @@ export default {
     warning:
       "Sijaintipalvelu on pois käytöstä; ota se käyttöön laitteen asetuksissa.",
   },
-  externalGps: {
-    unavailable: {
-      warning:
-        "Ulkoinen GPS-laite ei ole käytettävissä; käytetään sisäistä GPS:ää tämän istunnon ajan.",
-    },
-  },
   network: {
     title: "Verkko",
     statusLabel: "Verkon tila",

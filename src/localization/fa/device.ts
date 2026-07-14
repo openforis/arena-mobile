@@ -16,12 +16,6 @@ export default {
     recordFilesSize: "اندازه فایل های رکورد",
     tempFilesSize: "اندازه فایل های موقت",
   },
-  externalGps: {
-    unavailable: {
-      warning:
-        "دستگاه GPS خارجی در دسترس نیست؛ برای این جلسه از GPS داخلی استفاده می‌شود.",
-    },
-  },
   network: {
     title: "شبکه",
     statusLabel: "وضعیت شبکه",

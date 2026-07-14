@@ -20,12 +20,6 @@ export default {
     warning:
       "位置情報サービスが無効です。デバイスの設定で有効にしてください。",
   },
-  externalGps: {
-    unavailable: {
-      warning:
-        "外部GPSデバイスが使用できません。このセッションでは内蔵GPSを使用します。",
-    },
-  },
   network: {
     title: "ネットワーク",
     statusLabel: "ネットワーク状態",

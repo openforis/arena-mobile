@@ -20,12 +20,6 @@ export default {
     warning:
       "Platstjänsten är inaktiverad; vänligen aktivera den i enhetens inställningar.",
   },
-  externalGps: {
-    unavailable: {
-      warning:
-        "Extern GPS-enhet ej tillgänglig; använder den interna GPS:en för denna session.",
-    },
-  },
   network: {
     title: "Nätverk",
     statusLabel: "Nätverksstatus",
