@@ -16,6 +16,8 @@ const defaultLocationAccuracyWatchTimeout = 120000; // 2 mins
 const minLocationReadingsForAccuracyThreshold = 5;
 const { internalGpsSourceId } = ExternalGpsService;
 
+export type LocationWatchStatus = "idle" | "connecting" | "watching";
+
 type LocationSubscription = { remove: () => void };
 
 const locationPointToPoint = (locationPoint: LocationPoint): Point | null => {
@@ -74,6 +76,7 @@ export const useLocationWatch = ({
     null as ReturnType<typeof setInterval> | null,
   );
   const locationAveragerRef = useRef(null as LocationAverager | null);
+  const cancelRequestedRef = useRef(false);
   const toaster = useToast();
 
   const settings = SettingsSelectors.useSettings();
@@ -86,20 +89,24 @@ export const useLocationWatch = ({
   const locationWatchTimeout = getLocationWatchTimeout({ settings });
 
   const [state, setState] = useState({
-    watchingLocation: false,
+    status: "idle" as LocationWatchStatus,
     locationWatchElapsedTime: 0,
     locationWatchProgress: 0,
     activeLocationSourceId: internalGpsSourceId,
+    connectingSourceId: null as string | null,
     locationSourceUnavailable: false,
   });
 
   const {
+    status,
     locationWatchElapsedTime,
     locationWatchProgress,
-    watchingLocation,
     activeLocationSourceId,
+    connectingSourceId,
     locationSourceUnavailable,
   } = state;
+
+  const watchingLocation = status !== "idle";
 
   const clearLocationWatchTimeout = useCallback(() => {
     Refs.clearIntervalRef(locationWatchIntervalRef);
@@ -119,7 +126,7 @@ export const useLocationWatch = ({
       setState((statePrev) => ({
         ...statePrev,
         locationWatchElapsedTime: 0,
-        watchingLocation: false,
+        status: "idle",
       }));
     }
     return wasActive;
@@ -193,8 +200,20 @@ export const useLocationWatch = ({
     locationAveragerRef.current = null;
   }, [_stopLocationWatch, isMountedRef, locationCallback]);
 
+  const cancelConnecting = useCallback(() => {
+    if (status !== "connecting") return;
+    log.debug("Cancelling GPS connection attempt");
+    cancelRequestedRef.current = true;
+    setState((statePrev) => ({
+      ...statePrev,
+      status: "idle",
+      connectingSourceId: null,
+    }));
+  }, [status]);
+
   const startLocationWatch = useCallback(async () => {
     log.debug("Starting location watch");
+    cancelRequestedRef.current = false;
 
     // Starts watching with the phone's internal GPS. Used both as the default
     // provider and as the same-session fallback when an external source fails.
@@ -223,13 +242,31 @@ export const useLocationWatch = ({
     const useExternalSource = resolvedSourceId !== internalGpsSourceId;
 
     if (useExternalSource) {
+      // Surface "connecting" feedback immediately - before the permission prompt -
+      // since that prompt (or the Bluetooth handshake after it) is what's slow.
+      setState((statePrev) => ({
+        ...statePrev,
+        status: "connecting",
+        connectingSourceId: resolvedSourceId,
+      }));
+
       if (!(await Permissions.requestBluetoothPermissions())) {
+        setState((statePrev) => ({
+          ...statePrev,
+          status: "idle",
+          connectingSourceId: null,
+        }));
         return;
       }
     } else if (!(await Permissions.requestLocationForegroundPermission())) {
       if (!(await Permissions.isLocationServiceEnabled())) {
         toaster("device:locationServiceDisabled.warning");
       }
+      return;
+    }
+
+    if (cancelRequestedRef.current) {
+      cancelRequestedRef.current = false;
       return;
     }
 
@@ -244,17 +281,29 @@ export const useLocationWatch = ({
         log.info(
           `Location watch: starting with external GPS source ${resolvedSourceId}`,
         );
-        locationSubscriptionRef.current = await ExternalGpsService.watchPosition(
+        const subscription = await ExternalGpsService.watchPosition(
           { sourceId: resolvedSourceId },
           (locationPoint) => locationCallback(locationPoint),
         );
+        if (cancelRequestedRef.current) {
+          log.debug(
+            "Location watch: connect succeeded after cancel, releasing immediately",
+          );
+          subscription.remove();
+          cancelRequestedRef.current = false;
+          return;
+        }
+        locationSubscriptionRef.current = subscription;
         started = true;
       } catch (error) {
         log.warn(
           `Location watch: external GPS source ${resolvedSourceId} unavailable, falling back to internal GPS for this session`,
           error,
         );
-        toaster("device:externalGps.unavailable.warning");
+        if (cancelRequestedRef.current) {
+          cancelRequestedRef.current = false;
+          return;
+        }
         sourceUnavailable = true;
         activeSourceId = internalGpsSourceId;
         started = await startInternalGpsWatch();
@@ -264,7 +313,20 @@ export const useLocationWatch = ({
       started = await startInternalGpsWatch();
     }
 
-    if (!started) return;
+    if (!started) {
+      setState((statePrev) => ({
+        ...statePrev,
+        status: "idle",
+        connectingSourceId: null,
+      }));
+      return;
+    }
+
+    if (cancelRequestedRef.current) {
+      cancelRequestedRef.current = false;
+      _stopLocationWatch();
+      return;
+    }
 
     if (locationAveragingEnabled) {
       locationAveragerRef.current = new LocationAverager();
@@ -291,7 +353,7 @@ export const useLocationWatch = ({
     }
     setState((statePrev) => ({
       ...statePrev,
-      watchingLocation: true,
+      status: "watching",
       activeLocationSourceId: activeSourceId,
       locationSourceUnavailable: sourceUnavailable,
     }));
@@ -310,10 +372,13 @@ export const useLocationWatch = ({
 
   return {
     activeLocationSourceId,
+    cancelConnecting,
+    connectingSourceId,
     locationAccuracyThreshold,
     locationSourceUnavailable,
     locationWatchElapsedTime,
     locationWatchProgress,
+    locationWatchStatus: status,
     locationWatchTimeout,
     startLocationWatch,
     stopLocationWatch,

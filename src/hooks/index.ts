@@ -10,6 +10,7 @@ export { useKeyboardIsVisible } from "./useKeyboardIsVisible";
 export { useLocation } from "./useLocation";
 export { useLocationHeading } from "./useLocationHeading";
 export { useLocationWatch } from "./useLocationWatch";
+export type { LocationWatchStatus } from "./useLocationWatch";
 export { useMagnetometerHeading } from "./useMagnetometerHeading";
 export { useMinScreenDimension } from "./useMinScreenDimension";
 export { useNavigationFocus } from "./useNavigationFocus";
