@@ -17,11 +17,19 @@ export const useAvailableGpsSources = () => {
   const [availableGpsSources, setAvailableGpsSources] = useState<
     GpsSourceDescriptor[]
   >([]);
+  const [loading, setLoading] = useState(true);
 
   const refreshAvailableGpsSources = useCallback(async () => {
-    const sources = await ExternalGpsService.listAvailableSources();
-    if (isMountedRef.current) {
-      setAvailableGpsSources(sources);
+    setLoading(true);
+    try {
+      const sources = await ExternalGpsService.listAvailableSources();
+      if (isMountedRef.current) {
+        setAvailableGpsSources(sources);
+      }
+    } finally {
+      if (isMountedRef.current) {
+        setLoading(false);
+      }
     }
   }, [isMountedRef]);
 
@@ -31,5 +39,5 @@ export const useAvailableGpsSources = () => {
 
   useNavigationFocus(refreshAvailableGpsSources);
 
-  return { availableGpsSources, refreshAvailableGpsSources };
+  return { availableGpsSources, loading, refreshAvailableGpsSources };
 };
