@@ -50,7 +50,11 @@ New fields returned by the hook:
 - `locationWatchStatus: LocationWatchStatus`
 - `connectingSourceId?: string` — set as soon as the hook decides to attempt
   an external connect (before the Bluetooth permission prompt and before the
-  actual handshake), cleared once the attempt settles.
+  actual handshake). Deliberately **not** cleared when the attempt settles
+  (success or fallback) — while `watching` with `locationSourceUnavailable`,
+  it still holds the external source id that failed, which the UI needs to
+  render "Using internal GPS (`<device>` unavailable)". It's only reset by
+  `cancelConnecting()` or overwritten by the next `startLocationWatch()` call.
 - `activeLocationSourceId` (existing) — which source is live while `watching`.
 - `locationSourceUnavailable` (existing) — true when this session's `watching`
   state is the result of a fallback from external to internal GPS.
