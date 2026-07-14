@@ -211,37 +211,40 @@ export const useLocationWatch = ({
     }));
   }, [status]);
 
-  const startLocationWatch = useCallback(async () => {
-    log.debug("Starting location watch");
-    cancelRequestedRef.current = false;
+  const setIdleLocationWatchStatus = useCallback(() => {
+    setState((statePrev) => ({
+      ...statePrev,
+      status: "idle",
+      connectingSourceId: null,
+    }));
+  }, []);
 
-    // Starts watching with the phone's internal GPS. Used both as the default
-    // provider and as the same-session fallback when an external source fails.
-    const startInternalGpsWatch = async (): Promise<boolean> => {
-      if (!(await Permissions.requestLocationForegroundPermission())) {
-        if (!(await Permissions.isLocationServiceEnabled())) {
-          toaster("device:locationServiceDisabled.warning");
-        }
-        return false;
+  const startInternalGpsWatch = useCallback(async (): Promise<boolean> => {
+    if (!(await Permissions.requestLocationForegroundPermission())) {
+      if (!(await Permissions.isLocationServiceEnabled())) {
+        toaster("device:locationServiceDisabled.warning");
       }
-      locationSubscriptionRef.current = await Location.watchPositionAsync(
-        { accuracy, distanceInterval },
-        (location) => locationCallback(locationToLocationPoint(location)),
-      );
-      return true;
-    };
+      return false;
+    }
+    locationSubscriptionRef.current = await Location.watchPositionAsync(
+      { accuracy, distanceInterval },
+      (location) => locationCallback(locationToLocationPoint(location)),
+    );
+    return true;
+  }, [accuracy, distanceInterval, locationCallback, toaster]);
 
-    // "auto" resolves to the first recognized connected external GPS device if one
-    // is available, else internal GPS - so a paired Bad Elf (or similar) is used
-    // automatically without a manual settings trip.
-    const resolvedSourceId =
-      preferredGpsSourceId === GpsSourceSetting.auto
-        ? await ExternalGpsService.resolveAutoSourceId()
-        : preferredGpsSourceId;
+  const requestGpsPermissions = useCallback(
+    async ({
+      useExternalSource,
+      resolvedSourceId,
+    }: {
+      useExternalSource: boolean;
+      resolvedSourceId: string;
+    }) => {
+      if (!useExternalSource) {
+        return Permissions.requestLocationForegroundPermission();
+      }
 
-    const useExternalSource = resolvedSourceId !== internalGpsSourceId;
-
-    if (useExternalSource) {
       // Surface "connecting" feedback immediately - before the permission prompt -
       // since that prompt (or the Bluetooth handshake after it) is what's slow.
       setState((statePrev) => ({
@@ -250,33 +253,33 @@ export const useLocationWatch = ({
         connectingSourceId: resolvedSourceId,
       }));
 
-      if (!(await Permissions.requestBluetoothPermissions())) {
-        setState((statePrev) => ({
-          ...statePrev,
-          status: "idle",
-          connectingSourceId: null,
-        }));
-        return;
+      const bluetoothGranted = await Permissions.requestBluetoothPermissions();
+      if (bluetoothGranted) return true;
+
+      setIdleLocationWatchStatus();
+      return false;
+    },
+    [setIdleLocationWatchStatus],
+  );
+
+  const startWatchForResolvedSource = useCallback(
+    async ({
+      useExternalSource,
+      resolvedSourceId,
+    }: {
+      useExternalSource: boolean;
+      resolvedSourceId: string;
+    }) => {
+      if (!useExternalSource) {
+        log.debug("Location watch: starting with internal GPS");
+        const started = await startInternalGpsWatch();
+        return {
+          activeSourceId: resolvedSourceId,
+          sourceUnavailable: false,
+          started,
+        };
       }
-    } else if (!(await Permissions.requestLocationForegroundPermission())) {
-      if (!(await Permissions.isLocationServiceEnabled())) {
-        toaster("device:locationServiceDisabled.warning");
-      }
-      return;
-    }
 
-    if (cancelRequestedRef.current) {
-      cancelRequestedRef.current = false;
-      return;
-    }
-
-    _stopLocationWatch();
-
-    let activeSourceId = resolvedSourceId;
-    let sourceUnavailable = false;
-    let started: boolean;
-
-    if (useExternalSource) {
       try {
         log.info(
           `Location watch: starting with external GPS source ${resolvedSourceId}`,
@@ -291,10 +294,18 @@ export const useLocationWatch = ({
           );
           subscription.remove();
           cancelRequestedRef.current = false;
-          return;
+          return {
+            activeSourceId: resolvedSourceId,
+            sourceUnavailable: false,
+            started: false,
+          };
         }
         locationSubscriptionRef.current = subscription;
-        started = true;
+        return {
+          activeSourceId: resolvedSourceId,
+          sourceUnavailable: false,
+          started: true,
+        };
       } catch (error) {
         log.warn(
           `Location watch: external GPS source ${resolvedSourceId} unavailable, falling back to internal GPS for this session`,
@@ -302,23 +313,61 @@ export const useLocationWatch = ({
         );
         if (cancelRequestedRef.current) {
           cancelRequestedRef.current = false;
-          return;
+          return {
+            activeSourceId: resolvedSourceId,
+            sourceUnavailable: false,
+            started: false,
+          };
         }
-        sourceUnavailable = true;
-        activeSourceId = internalGpsSourceId;
-        started = await startInternalGpsWatch();
+
+        const started = await startInternalGpsWatch();
+        return {
+          activeSourceId: internalGpsSourceId,
+          sourceUnavailable: true,
+          started,
+        };
       }
-    } else {
-      log.debug("Location watch: starting with internal GPS");
-      started = await startInternalGpsWatch();
+    },
+    [locationCallback, startInternalGpsWatch],
+  );
+
+  const startLocationWatch = useCallback(async () => {
+    log.debug("Starting location watch");
+    cancelRequestedRef.current = false;
+
+    // "auto" resolves to the first recognized connected external GPS device if one
+    // is available, else internal GPS - so a paired Bad Elf (or similar) is used
+    // automatically without a manual settings trip.
+    const resolvedSourceId =
+      preferredGpsSourceId === GpsSourceSetting.auto
+        ? await ExternalGpsService.resolveAutoSourceId()
+        : preferredGpsSourceId;
+
+    const useExternalSource = resolvedSourceId !== internalGpsSourceId;
+
+    const permissionsGranted = await requestGpsPermissions({
+      useExternalSource,
+      resolvedSourceId,
+    });
+    if (!permissionsGranted) {
+      return;
     }
 
+    if (cancelRequestedRef.current) {
+      cancelRequestedRef.current = false;
+      return;
+    }
+
+    _stopLocationWatch();
+
+    const { activeSourceId, sourceUnavailable, started } =
+      await startWatchForResolvedSource({
+        useExternalSource,
+        resolvedSourceId,
+      });
+
     if (!started) {
-      setState((statePrev) => ({
-        ...statePrev,
-        status: "idle",
-        connectingSourceId: null,
-      }));
+      setIdleLocationWatchStatus();
       return;
     }
 
@@ -363,9 +412,10 @@ export const useLocationWatch = ({
     distanceInterval,
     locationAveragingEnabled,
     preferredGpsSourceId,
+    requestGpsPermissions,
+    setIdleLocationWatchStatus,
+    startWatchForResolvedSource,
     stopOnTimeout,
-    toaster,
-    locationCallback,
     locationWatchTimeout,
     stopLocationWatch,
   ]);
