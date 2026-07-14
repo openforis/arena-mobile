@@ -6,7 +6,11 @@ import { GpsSourceSetting, SettingsModel } from "model";
 import { ExternalGpsService } from "service/externalGps/ExternalGpsService";
 import { SettingsActions, useAppDispatch } from "state";
 
-type GpsSourceOption = { key: string; label: string };
+type GpsSourceOption = {
+  key: string;
+  label: string;
+  labelIsI18nKey?: boolean;
+};
 
 /**
  * Custom (non-generic-schema) settings field for choosing the preferred GPS
@@ -21,13 +25,17 @@ export const GpsSourceSettingsField = (props: { value: string }) => {
 
   const items = useMemo<GpsSourceOption[]>(
     () => [
-      { key: GpsSourceSetting.auto, label: "settings:preferredGpsSourceId.auto" },
+      {
+        key: GpsSourceSetting.auto,
+        label: "settings:preferredGpsSourceId.auto",
+      },
       ...availableGpsSources.map((source) => ({
         key: source.id,
         label:
           source.id === ExternalGpsService.internalGpsSourceId
             ? "settings:preferredGpsSourceId.internal"
             : source.label,
+        labelIsI18nKey: source.id === ExternalGpsService.internalGpsSourceId,
       })),
     ],
     [availableGpsSources],

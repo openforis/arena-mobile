@@ -7,10 +7,12 @@ import { useTranslation } from "localization";
 type DropdownProps = {
   disabled?: boolean;
   itemKeyExtractor?: (item: any) => any;
+  itemLabelIsI18nKeyExtractor?: (item: any) => boolean;
   itemLabelExtractor?: (item: any) => string;
   label?: string;
   items: any[];
   onChange?: (value: any) => Promise<void>;
+  translateItemLabels?: boolean;
   showLabel?: boolean;
   value?: any;
 };
@@ -19,10 +21,12 @@ export const Dropdown = (props: DropdownProps) => {
   const {
     disabled,
     itemKeyExtractor = (item: any) => item.value,
+    itemLabelIsI18nKeyExtractor = (item: any) => item.labelIsI18nKey ?? true,
     itemLabelExtractor = (item: any) => item.label,
     label: labelProp = "common:selectAnItem",
     items,
     onChange,
+    translateItemLabels = true,
     showLabel = true,
     value,
   } = props;
@@ -52,9 +56,18 @@ export const Dropdown = (props: DropdownProps) => {
   const itemToOption = useCallback(
     (item: any) => ({
       value: itemKeyExtractor(item),
-      label: t(itemLabelExtractor(item)),
+      label:
+        translateItemLabels && itemLabelIsI18nKeyExtractor(item)
+          ? t(itemLabelExtractor(item))
+          : itemLabelExtractor(item),
     }),
-    [itemKeyExtractor, itemLabelExtractor, t],
+    [
+      itemKeyExtractor,
+      itemLabelExtractor,
+      itemLabelIsI18nKeyExtractor,
+      t,
+      translateItemLabels,
+    ],
   );
 
   const options = useMemo(() => items.map(itemToOption), [itemToOption, items]);

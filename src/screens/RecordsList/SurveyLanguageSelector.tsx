@@ -50,6 +50,7 @@ export const SurveyLanguageSelector = () => {
           disabled={singleLanguage}
           items={items}
           onChange={onChange}
+          translateItemLabels={false}
           showLabel={false}
           value={selectedValue}
         />

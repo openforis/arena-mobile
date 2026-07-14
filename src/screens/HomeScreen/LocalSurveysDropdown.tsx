@@ -14,10 +14,10 @@ export const LocalSurveysDropdown = () => {
   const onChange = useCallback(
     async (surveyId: any) => {
       dispatch(
-        SurveyActions.fetchAndSetCurrentSurvey({ surveyId, navigation })
+        SurveyActions.fetchAndSetCurrentSurvey({ surveyId, navigation }),
       );
     },
-    [dispatch, navigation]
+    [dispatch, navigation],
   );
 
   return (
@@ -27,6 +27,7 @@ export const LocalSurveysDropdown = () => {
       itemLabelExtractor={(item: any) => item.name}
       label={t("surveys:selectSurvey")}
       onChange={onChange}
+      translateItemLabels={false}
       value={null}
     />
   );

@@ -28,10 +28,17 @@ type SettingsItemProps = {
   onPropValueChange: (params: {
     key: keyof SettingsObject;
   }) => (value: any) => Promise<void>;
+  translateItemLabels?: boolean;
 };
 
 export const SettingsItem = (props: SettingsItemProps) => {
-  const { settings, settingKey, prop, onPropValueChange } = props;
+  const {
+    settings,
+    settingKey,
+    prop,
+    onPropValueChange,
+    translateItemLabels = true,
+  } = props;
 
   const {
     type,
@@ -48,18 +55,18 @@ export const SettingsItem = (props: SettingsItemProps) => {
     (val: any) => {
       onPropValueChange({ key: settingKey })(val);
     },
-    [onPropValueChange, settingKey]
+    [onPropValueChange, settingKey],
   );
 
   const labelKey = determineTextKey(
     labelKeyProp,
     `settings:${settingKey}.label`,
-    `settings:${settingKey}`
+    `settings:${settingKey}`,
   );
 
   const descriptionKey = determineTextKey(
     descriptionKeyProp,
-    `settings:${settingKey}.description`
+    `settings:${settingKey}.description`,
   );
 
   switch (type) {
@@ -81,6 +88,7 @@ export const SettingsItem = (props: SettingsItemProps) => {
           itemKeyExtractor={(item: any) => item.key}
           label={labelKey}
           onChange={onPropValueChange({ key: settingKey })}
+          translateItemLabels={translateItemLabels}
           value={value}
         />
       );

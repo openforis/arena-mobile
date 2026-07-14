@@ -40,7 +40,7 @@ export const MenuButton = (props: Props) => {
       ) : (
         <IconButton avoidMultiplePress={false} icon={icon} onPress={openMenu} />
       ),
-    [icon, label, mode, openMenu]
+    [icon, label, mode, openMenu],
   );
 
   if (!menuVisible) {
@@ -55,13 +55,15 @@ export const MenuButton = (props: Props) => {
           disabled,
           icon,
           label,
+          labelIsI18nKey,
           onPress,
-          keepMenuOpenOnPress = false
+          keepMenuOpenOnPress = false,
         }: any) => (
           <MenuItem
             key={key}
             disabled={disabled}
             icon={icon}
+            titleIsI18nKey={labelIsI18nKey}
             onPress={() => {
               if (!keepMenuOpenOnPress) {
                 closeMenu();
@@ -70,7 +72,7 @@ export const MenuButton = (props: Props) => {
             }}
             title={label}
           />
-        )
+        ),
       )}
     </Menu>
   );

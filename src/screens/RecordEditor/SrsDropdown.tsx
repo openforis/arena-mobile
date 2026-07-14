@@ -22,7 +22,7 @@ export const SrsDropdown = (props: SrsDropdownProps) => {
         value: srs.code,
         label: srs.name,
       })),
-    [srss]
+    [srss],
   );
 
   if (singleSrs) {
@@ -34,6 +34,7 @@ export const SrsDropdown = (props: SrsDropdownProps) => {
       disabled={!editable}
       items={items}
       onChange={onChange}
+      translateItemLabels={false}
       value={value}
     />
   );

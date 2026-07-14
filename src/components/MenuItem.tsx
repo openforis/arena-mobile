@@ -10,11 +10,19 @@ type Props = {
   icon?: string;
   onPress: () => void;
   title: string;
+  titleIsI18nKey?: boolean;
   toggleMenu?: () => void;
 };
 
 export const MenuItem = (props: Props) => {
-  const { disabled, icon, onPress, title, toggleMenu = undefined } = props;
+  const {
+    disabled,
+    icon,
+    onPress,
+    title,
+    titleIsI18nKey = true,
+    toggleMenu = undefined,
+  } = props;
 
   const { t } = useTranslation();
   const isRtl = useIsTextDirectionRtl();
@@ -29,7 +37,7 @@ export const MenuItem = (props: Props) => {
       }}
       style={isRtl ? styleRtl : undefined}
       titleStyle={isRtl ? textStyleRtl : undefined}
-      title={t(title)}
+      title={titleIsI18nKey ? t(title) : title}
       trailingIcon={isRtl ? icon : undefined}
     />
   );
