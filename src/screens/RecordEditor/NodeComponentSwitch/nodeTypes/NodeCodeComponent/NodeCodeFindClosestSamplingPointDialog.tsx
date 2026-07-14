@@ -35,6 +35,7 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
     locationAccuracy,
     locationAccuracyThreshold,
     locationFetched,
+    locationWatchStatus,
     locationWatchElapsedTime,
     locationWatchTimeout,
     pointLatLong,
@@ -125,7 +126,7 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
             locationAccuracy={locationAccuracy}
             locationAccuracyThreshold={locationAccuracyThreshold}
             locationWatchElapsedTime={locationWatchElapsedTime}
-            locationWatchStatus={watchingLocation ? "watching" : "idle"}
+            locationWatchStatus={locationWatchStatus}
             locationWatchTimeout={locationWatchTimeout}
             onStart={startLocationWatch}
             onStop={stopLocationWatch}

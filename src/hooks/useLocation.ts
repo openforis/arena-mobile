@@ -3,6 +3,7 @@ import { Point } from "@openforis/arena-core";
 
 import { LocationPoint } from "model";
 import { useLocationWatch } from "./useLocationWatch";
+import type { LocationWatchStatus } from "./useLocationWatch";
 
 const defaultState = {
   location: null,
@@ -17,6 +18,7 @@ export const useLocation = (): {
   locationAccuracy: number | null;
   locationAccuracyThreshold: number;
   locationFetched: boolean;
+  locationWatchStatus: LocationWatchStatus;
   locationWatchElapsedTime: number;
   locationWatchProgress: number;
   locationWatchTimeout: number;
@@ -97,6 +99,7 @@ export const useLocation = (): {
     locationAccuracy,
     locationAccuracyThreshold,
     locationFetched,
+    locationWatchStatus,
     locationWatchElapsedTime,
     locationWatchProgress,
     locationWatchTimeout,
