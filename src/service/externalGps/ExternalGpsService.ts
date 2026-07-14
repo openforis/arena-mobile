@@ -47,6 +47,9 @@ const resolveAutoSourceId = async (): Promise<string> => {
 const watchPosition = async (
   { sourceId }: { sourceId: string },
   callback: (locationPoint: LocationPoint) => void,
+  listeners?: {
+    onDisconnected?: () => void;
+  },
 ): Promise<{ remove: () => void }> => {
   const connection = await ExternalGpsConnectionManager.acquire(
     sourceId,
@@ -62,10 +65,14 @@ const watchPosition = async (
       log.warn("ExternalGps: failed to parse NMEA sentence", error);
     }
   });
+  const disconnectSubscription = connection.onDisconnected(() => {
+    listeners?.onDisconnected?.();
+  });
 
   return {
     remove: () => {
       subscription.remove();
+      disconnectSubscription.remove();
       ExternalGpsConnectionManager.release(sourceId);
     },
   };

@@ -77,6 +77,7 @@ export const useLocationWatch = ({
   );
   const locationAveragerRef = useRef(null as LocationAverager | null);
   const cancelRequestedRef = useRef(false);
+  const shouldFallbackToInternalRef = useRef(false);
   const toaster = useToast();
 
   const settings = SettingsSelectors.useSettings();
@@ -233,6 +234,77 @@ export const useLocationWatch = ({
     return true;
   }, [accuracy, distanceInterval, locationCallback, toaster]);
 
+  const activateWatchingState = useCallback(
+    ({
+      activeSourceId,
+      sourceUnavailable,
+    }: {
+      activeSourceId: string;
+      sourceUnavailable: boolean;
+    }) => {
+      if (locationAveragingEnabled) {
+        locationAveragerRef.current = new LocationAverager();
+      }
+
+      if (stopOnTimeout) {
+        locationWatchIntervalRef.current = setInterval(() => {
+          setState((statePrev) => {
+            const elapsedTimeNext =
+              statePrev.locationWatchElapsedTime +
+              locationWatchElapsedTimeIntervalDelay;
+            return {
+              ...statePrev,
+              locationWatchElapsedTime: elapsedTimeNext,
+              locationWatchProgress: elapsedTimeNext / locationWatchTimeout,
+            };
+          });
+        }, locationWatchElapsedTimeIntervalDelay);
+
+        locationAccuracyWatchTimeoutRef.current = setTimeout(() => {
+          log.debug("Location watch timeout reached");
+          stopLocationWatch();
+        }, locationWatchTimeout);
+      }
+
+      setState((statePrev) => ({
+        ...statePrev,
+        status: "watching",
+        activeLocationSourceId: activeSourceId,
+        locationSourceUnavailable: sourceUnavailable,
+      }));
+    },
+    [locationAveragingEnabled, locationWatchTimeout, stopLocationWatch, stopOnTimeout],
+  );
+
+  const handleExternalGpsDisconnect = useCallback(async () => {
+    if (!locationSubscriptionRef.current) return;
+
+    log.warn("Location watch: external GPS connection disconnected mid-session");
+    stopLocationWatch();
+
+    if (!shouldFallbackToInternalRef.current) {
+      setState((statePrev) => ({
+        ...statePrev,
+        locationSourceUnavailable: true,
+      }));
+      return;
+    }
+
+    const started = await startInternalGpsWatch();
+    if (!started) {
+      setState((statePrev) => ({
+        ...statePrev,
+        locationSourceUnavailable: true,
+      }));
+      return;
+    }
+
+    activateWatchingState({
+      activeSourceId: internalGpsSourceId,
+      sourceUnavailable: true,
+    });
+  }, [activateWatchingState, startInternalGpsWatch, stopLocationWatch]);
+
   const requestGpsPermissions = useCallback(
     async ({
       useExternalSource,
@@ -287,6 +359,11 @@ export const useLocationWatch = ({
         const subscription = await ExternalGpsService.watchPosition(
           { sourceId: resolvedSourceId },
           (locationPoint) => locationCallback(locationPoint),
+          {
+            onDisconnected: () => {
+              void handleExternalGpsDisconnect();
+            },
+          },
         );
         if (cancelRequestedRef.current) {
           log.debug(
@@ -328,7 +405,7 @@ export const useLocationWatch = ({
         };
       }
     },
-    [locationCallback, startInternalGpsWatch],
+    [handleExternalGpsDisconnect, locationCallback, startInternalGpsWatch],
   );
 
   const startLocationWatch = useCallback(async () => {
@@ -344,6 +421,8 @@ export const useLocationWatch = ({
         : preferredGpsSourceId;
 
     const useExternalSource = resolvedSourceId !== internalGpsSourceId;
+    shouldFallbackToInternalRef.current =
+      useExternalSource && preferredGpsSourceId === GpsSourceSetting.auto;
 
     const permissionsGranted = await requestGpsPermissions({
       useExternalSource,
@@ -377,36 +456,12 @@ export const useLocationWatch = ({
       return;
     }
 
-    if (locationAveragingEnabled) {
-      locationAveragerRef.current = new LocationAverager();
-    }
-
-    if (stopOnTimeout) {
-      locationWatchIntervalRef.current = setInterval(() => {
-        setState((statePrev) => {
-          const elapsedTimeNext =
-            statePrev.locationWatchElapsedTime +
-            locationWatchElapsedTimeIntervalDelay;
-          return {
-            ...statePrev,
-            locationWatchElapsedTime: elapsedTimeNext,
-            locationWatchProgress: elapsedTimeNext / locationWatchTimeout,
-          };
-        });
-      }, locationWatchElapsedTimeIntervalDelay);
-
-      locationAccuracyWatchTimeoutRef.current = setTimeout(() => {
-        log.debug("Location watch timeout reached");
-        stopLocationWatch();
-      }, locationWatchTimeout);
-    }
-    setState((statePrev) => ({
-      ...statePrev,
-      status: "watching",
-      activeLocationSourceId: activeSourceId,
-      locationSourceUnavailable: sourceUnavailable,
-    }));
+    activateWatchingState({
+      activeSourceId,
+      sourceUnavailable,
+    });
   }, [
+    activateWatchingState,
     _stopLocationWatch,
     accuracy,
     distanceInterval,

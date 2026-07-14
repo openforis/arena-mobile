@@ -61,6 +61,7 @@ export const useLocation = (): {
     locationWatchElapsedTime,
     locationWatchProgress,
     locationWatchTimeout,
+    locationWatchStatus,
     startLocationWatch,
     stopLocationWatch,
   } = useLocationWatch({ locationCallback });
@@ -77,6 +78,19 @@ export const useLocation = (): {
       stopLocationWatch();
     };
   }, [startLocationWatch, stopLocationWatch]);
+
+  useEffect(() => {
+    if (locationWatchStatus !== "idle") return;
+
+    setState((statePrev) =>
+      statePrev.watchingLocation
+        ? {
+            ...statePrev,
+            watchingLocation: false,
+          }
+        : statePrev,
+    );
+  }, [locationWatchStatus]);
 
   return {
     location,
