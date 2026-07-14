@@ -19,7 +19,7 @@ describe("nmeaSentenceParser", () => {
 
     it("parses southern/western hemisphere coordinates as negative", () => {
       const fix = parseGGA(
-        "$GPGGA,123519,4807.038,S,01131.000,W,1,08,0.9,545.4,M,46.9,M,,*5C",
+        "$GPGGA,123519,4807.038,S,01131.000,W,1,08,0.9,545.4,M,46.9,M,,*48",
       );
 
       expect(fix).not.toBeNull();
@@ -114,9 +114,7 @@ describe("nmeaSentenceParser", () => {
 
   describe("parseGST", () => {
     it("parses a valid GST sentence", () => {
-      const gst = parseGST(
-        "$GPGST,024603.00,3.4,2.5,2.0,120.0,1.8,1.6,3.4*5C",
-      );
+      const gst = parseGST("$GPGST,024603.00,3.4,2.5,2.0,120.0,1.8,1.6,3.4*5C");
 
       expect(gst).not.toBeNull();
       expect(gst!.latitudeErrorMeters).toBe(1.8);
@@ -133,9 +131,7 @@ describe("nmeaSentenceParser", () => {
     });
 
     it("returns null when the checksum is invalid", () => {
-      const gst = parseGST(
-        "$GPGST,024603.00,3.4,2.5,2.0,120.0,1.8,1.6,3.4*00",
-      );
+      const gst = parseGST("$GPGST,024603.00,3.4,2.5,2.0,120.0,1.8,1.6,3.4*00");
 
       expect(gst).toBeNull();
     });
