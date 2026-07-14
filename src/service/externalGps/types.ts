@@ -38,10 +38,12 @@ export type ExternalGpsDataListener = (chunk: string) => void;
 
 export type ExternalGpsConnection = {
   onData: (listener: ExternalGpsDataListener) => { remove: () => void };
+  onDisconnected: (listener: () => void) => { remove: () => void };
   disconnect: () => Promise<void>;
 };
 
 export type ExternalGpsTransport = {
   listSources: () => Promise<GpsSourceDescriptor[]>;
   connect: (sourceId: string) => Promise<ExternalGpsConnection>;
+  isConnected: (sourceId: string) => Promise<boolean>;
 };
