@@ -22,12 +22,9 @@ const {
 const setCurrentSurvey =
   ({ survey, preferredLanguage = null, navigation = null }: any) =>
   async (dispatch: any) => {
-    // Build and associate the dependency graph; it could be not up to date if the survey was just imported or updated from remote;
-    const surveyUpdated = await Surveys.buildAndAssocDependencyGraph(survey);
-
     dispatch({
       type: CURRENT_SURVEY_SET,
-      survey: surveyUpdated,
+      survey,
       preferredLanguage,
     });
     await PreferencesService.setCurrentSurveyId(survey.id);
