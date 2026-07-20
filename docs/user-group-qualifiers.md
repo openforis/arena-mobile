@@ -66,7 +66,7 @@ when the requesting user belongs to a `UserGroup` with qualifiers for that surve
 records whose qualifier-attribute values don't match every qualifier value the group specifies.
 
 This is the only correct enforcement point. Arena Mobile never sees a record's attribute values
-until *after* the server has already produced and served the full export zip
+until _after_ the server has already produced and served the full export zip
 (`RecordRemoteService.startExportRecords` / `downloadExportedRecordsFile`) — by that point the data
 has already left the server, so any client-side check can only be a UX nicety, never a real
 security boundary.
@@ -80,7 +80,7 @@ user's `UserGroup` (if any) equals the corresponding qualifier attribute's value
 
 Not required for the initial change, but useful later: extend the record-summary response with a
 `qualifiersObj` (mirroring the existing `keysObj` / `summaryAttributesObj` fields already returned
-today), so Arena Mobile could grey out non-matching records in the UI *before* attempting a fetch,
+today), so Arena Mobile could grey out non-matching records in the UI _before_ attempting a fetch,
 instead of only finding out after starting an export. This would require corresponding changes in
 `arena-mobile/src/service/repository/recordRepository.ts` (new columns, mirroring
 `SUPPORTED_KEYS` / `SUPPORTED_SUMMARY_ATTRIBUTES`) — left out of the current mobile change since
