@@ -7,6 +7,7 @@ import {
   SRSIndex,
   Survey,
   Surveys,
+  UserGroup,
 } from "@openforis/arena-core";
 
 import { SurveyDefs } from "model";
@@ -61,11 +62,15 @@ const selectCurrentSurveyPreferredLang = (state: any): LanguageCode => {
 const selectCurrentSurveyCycle = (state: any) =>
   getSurveyState(state).currentSurveyCycle;
 
+const selectCurrentSurveyUserGroup = (state: any): UserGroup | null =>
+  getSurveyState(state).currentSurveyUserGroup ?? null;
+
 export const SurveySelectors = {
   selectCurrentSurvey,
   selectCurrentSurveyId,
   selectCurrentSurveyCycle,
   selectCurrentSurveyPreferredLang,
+  selectCurrentSurveyUserGroup,
 
   useCurrentSurvey: () => useSelector(selectCurrentSurvey),
   useCurrentSurveyId: () => useSelector(selectCurrentSurveyId),
@@ -74,6 +79,7 @@ export const SurveySelectors = {
   useCurrentSurveyPreferredLang: () =>
     useSelector(selectCurrentSurveyPreferredLang),
   useCurrentSurveyCycle: () => useSelector(selectCurrentSurveyCycle),
+  useCurrentSurveyUserGroup: () => useSelector(selectCurrentSurveyUserGroup),
   useCurrentSurveyRootDef: () => useSelector(selectCurrentSurveyRootDef),
   useIsNodeDefEnumerator: (nodeDef: any) =>
     useSelector(selectIsNodeDefEnumerator(nodeDef)),

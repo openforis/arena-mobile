@@ -19,7 +19,13 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordLoadStatus, RecordUtils, RecordOrigin, SurveyDefs } from "model";
+import {
+  RecordLoadStatus,
+  RecordUtils,
+  RecordOrigin,
+  SurveyDefs,
+  UserGroupQualifiers,
+} from "model";
 import { PreferencesService } from "service/preferencesService";
 import { RecordFileService } from "service/recordFileService";
 import { RecordService } from "service/recordService";
@@ -104,6 +110,7 @@ const createNewRecord =
       const state = getState();
       const user = RemoteConnectionSelectors.selectLoggedUser(state);
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const userGroup = SurveySelectors.selectCurrentSurveyUserGroup(state);
       const cycle = Surveys.getDefaultCycleKey(survey);
       const prevCycleRecord =
         DataEntrySelectors.selectPreviousCycleRecord(state);
@@ -126,6 +133,33 @@ const createNewRecord =
         record: recordEmpty,
         prevCycleRecord,
       });
+
+      const qualifierValueByNodeDefUuid =
+        UserGroupQualifiers.getQualifierValueByNodeDefUuid({
+          survey,
+          userGroup,
+        });
+      for (const qualifierDef of Surveys.getQualifierDefs({ survey })) {
+        const qualifierValue = qualifierValueByNodeDefUuid[qualifierDef.uuid];
+        if (qualifierValue === undefined) continue;
+        const value = UserGroupQualifiers.resolveQualifierNodeValue({
+          survey,
+          nodeDef: qualifierDef,
+          qualifierValue,
+        });
+        if (value === undefined) continue;
+        const [qualifierNode] = Records.getNodesByDefUuid(qualifierDef.uuid)(
+          record,
+        );
+        if (!qualifierNode) continue;
+        ({ record } = await RecordUpdater.updateAttributeValue({
+          user,
+          survey,
+          record,
+          attributeUuid: qualifierNode.uuid,
+          value,
+        }));
+      }
 
       record.surveyId = survey.id;
       removeNodesFlags(nodes);

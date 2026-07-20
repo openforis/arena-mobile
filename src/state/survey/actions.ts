@@ -16,8 +16,20 @@ const {
   CURRENT_SURVEY_SET,
   CURRENT_SURVEY_PREFERRED_LANG_SET,
   CURRENT_SURVEY_CYCLE_SET,
+  CURRENT_SURVEY_USER_GROUP_SET,
   SURVEYS_LOCAL_SET,
 } = SurveyActionTypes;
+
+// Best-effort: fetches the current user's UserGroup for the given survey (if any) and stores it;
+// failures (e.g. offline, or the server doesn't support this yet) leave the group as null.
+const fetchCurrentSurveyUserGroup =
+  ({ survey }: any) =>
+  async (dispatch: any) => {
+    const userGroup = await SurveyService.fetchCurrentUserGroupRemote({
+      survey,
+    });
+    dispatch({ type: CURRENT_SURVEY_USER_GROUP_SET, userGroup });
+  };
 
 const setCurrentSurvey =
   ({ survey, preferredLanguage = null, navigation = null }: any) =>
@@ -28,6 +40,7 @@ const setCurrentSurvey =
       preferredLanguage,
     });
     await PreferencesService.setCurrentSurveyId(survey.id);
+    dispatch(fetchCurrentSurveyUserGroup({ survey }));
     navigation?.navigate(screenKeys.recordsList);
   };
 
@@ -217,6 +230,7 @@ const deleteSurveys =
 
 export const SurveyActions = {
   setCurrentSurvey,
+  fetchCurrentSurveyUserGroup,
   setCurrentSurveyPreferredLanguage,
   setCurrentSurveyCycle,
   fetchAndSetCurrentSurvey,

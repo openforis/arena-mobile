@@ -18,6 +18,8 @@ const actionHandlers = {
       currentSurveyPreferredLanguage:
         preferredLanguage ?? determinePreferredSurveyLanguage(survey),
       currentSurveyCycle: survey ? Surveys.getDefaultCycleKey(survey) : null,
+      // switching survey invalidates the previously fetched user group; refetched by fetchCurrentSurveyUserGroup
+      currentSurveyUserGroup: null,
     };
   },
   [SurveyActionTypes.CURRENT_SURVEY_PREFERRED_LANG_SET]: ({
@@ -26,6 +28,13 @@ const actionHandlers = {
   }: any) => ({
     ...state,
     currentSurveyPreferredLanguage: action.lang,
+  }),
+  [SurveyActionTypes.CURRENT_SURVEY_USER_GROUP_SET]: ({
+    state,
+    action
+  }: any) => ({
+    ...state,
+    currentSurveyUserGroup: action.userGroup,
   }),
   [SurveyActionTypes.CURRENT_SURVEY_CYCLE_SET]: ({
     state,
