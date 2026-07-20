@@ -60,6 +60,7 @@ export default {
     R: "Удаленный",
   },
   owner: "Владелец",
+  recordHasErrorsOrWarningsTooltip: "Запись содержит {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Все записи",
     local: "Записи на устройстве",

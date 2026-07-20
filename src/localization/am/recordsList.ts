@@ -58,6 +58,7 @@ export default {
     R: "የርቀት",
   },
   owner: "ባለቤት",
+  recordHasErrorsOrWarningsTooltip: "መዝገቡ {{count}} {{itemsTypeText}} አለው",
   recordType: {
     all: "ሁሉም መዝገቦች",
     local: "በመሣሪያው ላይ ያሉ መዝገቦች",

@@ -16,6 +16,7 @@ export default {
   done: "Готово",
   empty: "--- ПУСТО ---",
   error: "Ошибка",
+  error_other: "Ошибки",
   exit: "Выход",
   export: "Экспорт",
   false: "Ложное значение",
@@ -77,4 +78,5 @@ export default {
   },
   tryAgain: "Попробовать снова",
   warning: "Предупреждение",
+  warning_other: "Предупреждения",
 };

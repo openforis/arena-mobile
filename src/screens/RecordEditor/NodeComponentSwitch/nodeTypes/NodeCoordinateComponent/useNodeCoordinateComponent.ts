@@ -13,12 +13,14 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
-import { useLocationWatch } from "hooks";
-import { LocationPoint } from "model";
+import { useAvailableGpsSources, useLocationWatch } from "hooks";
+import { LocationPoint, SettingsModel } from "model";
 import { RecordUtils } from "model/utils/RecordUtils";
 import {
   DataEntryActions,
   DataEntrySelectors,
+  SettingsActions,
+  SettingsSelectors,
   SurveySelectors,
   useAppDispatch,
   useConfirm,
@@ -234,14 +236,35 @@ export const useNodeCoordinateComponent = (props: any) => {
   );
 
   const {
+    activeLocationSourceId,
+    cancelConnecting,
+    connectingSourceId,
     locationAccuracyThreshold,
+    locationSourceUnavailable,
     locationWatchElapsedTime,
     locationWatchProgress,
+    locationWatchStatus,
     locationWatchTimeout,
     startLocationWatch,
     stopLocationWatch,
     watchingLocation,
   } = useLocationWatch({ locationCallback });
+
+  const { preferredGpsSourceId } = SettingsSelectors.useSettings();
+  const { availableGpsSources, loading: gpsSourcesLoading } =
+    useAvailableGpsSources();
+
+  const onSelectGpsSource = useCallback(
+    (sourceId: string) => {
+      dispatch(
+        SettingsActions.updateSetting({
+          key: SettingsModel.SettingKey.preferredGpsSourceId,
+          value: sourceId,
+        }),
+      );
+    },
+    [dispatch],
+  );
 
   // Get the distance target for the coordinate node
   const [distanceTarget, setDistanceTarget] = useState(null);
@@ -294,6 +317,10 @@ export const useNodeCoordinateComponent = (props: any) => {
     stopLocationWatch();
   }, [stopLocationWatch]);
 
+  const onCancelGpsConnectPress = useCallback(() => {
+    cancelConnecting();
+  }, [cancelConnecting]);
+
   const setCompassNavigatorVisible = useCallback(
     (visible: any) =>
       setState((statePrev) => ({
@@ -337,24 +364,33 @@ export const useNodeCoordinateComponent = (props: any) => {
 
   return {
     accuracy,
+    activeLocationSourceId,
     applicable,
+    availableGpsSources,
     compassNavigatorVisible,
+    connectingSourceId,
     deleteButtonVisible,
     distanceTarget,
     editable,
+    gpsSourcesLoading,
     hideCompassNavigator,
     includedExtraFields,
     inputFieldsEditable,
     locationAccuracyThreshold,
+    locationSourceUnavailable,
     locationWatchElapsedTime,
     locationWatchProgress,
+    locationWatchStatus,
     locationWatchTimeout,
+    onCancelGpsConnectPress,
     onChangeSrs,
     onChangeValueField,
     onClearPress,
     onCompassNavigatorUseCurrentLocation,
+    onSelectGpsSource,
     onStartGpsPress,
     onStopGpsPress,
+    preferredGpsSourceId,
     showCompassNavigator,
     srs,
     srsIndex,

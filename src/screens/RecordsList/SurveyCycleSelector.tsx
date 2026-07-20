@@ -52,7 +52,12 @@ export const SurveyCycleSelector = (props: SurveyCycleSelectorProps) => {
           value={selectedValue}
         />
       ) : (
-        <Dropdown items={items} onChange={onChange} value={selectedValue} />
+        <Dropdown
+          items={items}
+          onChange={onChange}
+          translateItemLabels={false}
+          value={selectedValue}
+        />
       )}
     </HView>
   );

@@ -1,4 +1,5 @@
 export { useAppInfo } from "./useAppInfo";
+export { useAvailableGpsSources } from "./useAvailableGpsSources";
 export { useBackHandler } from "./useBackHandler";
 export { useEffectiveTheme } from "./useEffectiveTheme";
 export { useHeartbeatAnimation } from "./useHeartbeatAnimation";
@@ -9,6 +10,7 @@ export { useKeyboardIsVisible } from "./useKeyboardIsVisible";
 export { useLocation } from "./useLocation";
 export { useLocationHeading } from "./useLocationHeading";
 export { useLocationWatch } from "./useLocationWatch";
+export type { LocationWatchStatus } from "./useLocationWatch";
 export { useMagnetometerHeading } from "./useMagnetometerHeading";
 export { useMinScreenDimension } from "./useMinScreenDimension";
 export { useNavigationFocus } from "./useNavigationFocus";

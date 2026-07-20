@@ -30,6 +30,13 @@ Ini akan membantu mendapatkan akurasi yang lebih baik pada atribut koordinat.`,
     error:
       "Tidak dapat memulai penguncian GPS: penyedia lokasi tidak tersedia atau akses ke lokasi tidak diberikan",
   },
+  preferredGpsSourceId: {
+    label: "Sumber GPS",
+    description:
+      "Pilih GPS mana yang digunakan untuk merekam koordinat: GPS internal ponsel, atau penerima GPS eksternal yang dipasangkan (misalnya Bad Elf).",
+    auto: "Otomatis (eksternal jika tersedia)",
+    internal: "GPS internal",
+  },
   showStatusBar: "Tampilkan status",
   theme: {
     label: "Tema",

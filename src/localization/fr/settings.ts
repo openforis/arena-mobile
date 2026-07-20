@@ -11,6 +11,9 @@ export default {
     description:
       "Les images seront stockées dans la résolution maximale fournie par l'appareil, à moins qu'une limite ne soit définie dans le concepteur du formulaire d'enquête.",
   },
+  language: {
+    label: "Langue de l'application",
+  },
   locationAccuracyThreshold: "Seuil de précision de la localisation (mètres)",
   locationAccuracyWatchTimeout:
     "Délai de surveillance de la précision de la localisation: {{value}} secondes",
@@ -25,6 +28,13 @@ export default {
       "Avertissement: la consommation de la batterie augmentera!\nLe signal GPS sera verrouillé lorsque l'application est en cours d'exécution.\nCela aidera à obtenir une meilleure précision dans les attributs de coordonnées.",
     error:
       "Impossible de démarrer le verrouillage GPS: fournisseur de localisation non disponible ou accès à la localisation non accordé",
+  },
+  preferredGpsSourceId: {
+    label: "Source GPS",
+    description:
+      "Choisissez le GPS utilisé pour enregistrer les coordonnées : le GPS interne du téléphone ou un récepteur GPS externe apparié (par exemple, Bad Elf).",
+    auto: "Auto (externe si disponible)",
+    internal: "GPS interne",
   },
   showStatusBar: "Afficher la barre d'état",
   theme: {

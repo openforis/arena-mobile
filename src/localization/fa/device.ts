@@ -16,6 +16,9 @@ export default {
     recordFilesSize: "اندازه فایل های رکورد",
     tempFilesSize: "اندازه فایل های موقت",
   },
+  locationServiceDisabled: {
+    warning: "سرویس مکان غیرفعال است؛ لطفا آن را در تنظیمات دستگاه فعال کنید.",
+  },
   network: {
     title: "شبکه",
     statusLabel: "وضعیت شبکه",

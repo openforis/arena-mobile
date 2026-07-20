@@ -1,4 +1,5 @@
 export default {
+  appTitle: "Arena Mobile",
   about: "Tietoja",
   andMore: "...ja {{count}} lisää",
   cancel: "Kumoa",
@@ -15,6 +16,7 @@ export default {
   done: "Valmis",
   empty: "--- TYHJÄ ---",
   error: "Virhe",
+  error_other: "Virheet",
   exit: "Poistu",
   export: "Vie",
   false: "Epätosi",
@@ -77,4 +79,5 @@ export default {
   },
   tryAgain: "Yritä uudelleen",
   warning: "Varoitus",
+  warning_other: "Varoitukset",
 };

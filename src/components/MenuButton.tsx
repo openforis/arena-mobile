@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { Menu } from "react-native-paper";
 import { StyleProp, ViewStyle } from "react-native";
 
-import { Button } from "./Button";
+import { Button, ButtonMode } from "./Button";
 import { IconButton } from "./IconButton";
 import { MenuItem } from "./MenuItem";
 
@@ -10,11 +10,12 @@ type Props = {
   icon?: string;
   items: any[];
   label?: string;
+  mode?: ButtonMode;
   style?: StyleProp<ViewStyle>;
 };
 
 export const MenuButton = (props: Props) => {
-  const { icon, items, label, style } = props;
+  const { icon, items, label, mode, style } = props;
 
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -32,13 +33,14 @@ export const MenuButton = (props: Props) => {
         <Button
           avoidMultiplePress={false}
           icon={icon}
+          mode={mode}
           onPress={openMenu}
           textKey={label}
         />
       ) : (
         <IconButton avoidMultiplePress={false} icon={icon} onPress={openMenu} />
       ),
-    [icon, label, openMenu]
+    [icon, label, mode, openMenu],
   );
 
   if (!menuVisible) {
@@ -53,13 +55,15 @@ export const MenuButton = (props: Props) => {
           disabled,
           icon,
           label,
+          labelIsI18nKey,
           onPress,
-          keepMenuOpenOnPress = false
+          keepMenuOpenOnPress = false,
         }: any) => (
           <MenuItem
             key={key}
             disabled={disabled}
             icon={icon}
+            titleIsI18nKey={labelIsI18nKey}
             onPress={() => {
               if (!keepMenuOpenOnPress) {
                 closeMenu();
@@ -68,7 +72,7 @@ export const MenuButton = (props: Props) => {
             }}
             title={label}
           />
-        )
+        ),
       )}
     </Menu>
   );

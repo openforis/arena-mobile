@@ -1,4 +1,5 @@
 export default {
+  appTitle: "Arena Mobile",
   about: "Tentang",
   andMore: "...dan {{count}} lagi",
   cancel: "Batal",
@@ -15,6 +16,7 @@ export default {
   done: "Selesai",
   empty: "--- KOSONG ---",
   error: "Kesalahan",
+  error_other: "Kesalahan",
   exit: "Keluar",
   export: "Ekspor",
   false: "Salah",
@@ -78,4 +80,5 @@ export default {
   },
   tryAgain: "Coba lagi",
   warning: "Peringatan",
+  warning_other: "Peringatan",
 };

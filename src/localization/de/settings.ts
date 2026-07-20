@@ -31,6 +31,13 @@ export default {
     error:
       "GPS-Sperrung kann nicht gestartet werden: Standortanbieter nicht verfügbar oder Zugriff auf den Standort nicht gewährt",
   },
+  preferredGpsSourceId: {
+    label: "GPS-Quelle",
+    description:
+      "Wählen Sie, welches GPS zur Aufzeichnung von Koordinaten verwendet wird: das interne GPS des Telefons oder ein gekoppelter externer GPS-Empfänger (z. B. Bad Elf).",
+    auto: "Automatisch (extern, falls verfügbar)",
+    internal: "Internes GPS",
+  },
 
   showStatusBar: "Statusleiste anzeigen",
   theme: {

@@ -60,6 +60,7 @@ export default {
   },
   origin: { title: "Herkunft", L: "Lokal", R: "Remote" },
   owner: "Eigentümer",
+  recordHasErrorsOrWarningsTooltip: "Datensatz hat {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Alle Datensätze",
     local: "Datensätze auf dem Gerät",

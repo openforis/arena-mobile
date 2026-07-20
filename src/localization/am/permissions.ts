@@ -12,6 +12,7 @@ export default {
   },
   types: {
     accessMediaLocation: "ወደ ሚዲያ ሥፍራ መድረስ",
+    bluetoothConnect: "የብሉቱዝ ግንኙነት",
     mediaLibrary: "የሚዲያ ቤተ-መጽሐፍት",
     camera: "ወደ ካሜራ መድረስ",
     microphone: "ወደ ማይክሮፎን መድረስ",

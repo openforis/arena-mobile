@@ -16,6 +16,7 @@ import {
 } from "state";
 import { log, clearLogs } from "utils";
 
+import { GpsSourceSettingsField } from "./GpsSourceSettingsField";
 import { SettingsItem } from "./SettingsItem";
 import styles from "./styles";
 
@@ -73,6 +74,9 @@ export const SettingsScreen = () => {
               />
             </VView>
           ))}
+        <VView style={styles.settingsItemWrapper}>
+          <GpsSourceSettingsField value={settings.preferredGpsSourceId} />
+        </VView>
         <Card titleKey="app:backup">
           <FullBackupButton />
         </Card>

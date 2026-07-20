@@ -22,7 +22,11 @@ const {
 const setCurrentSurvey =
   ({ survey, preferredLanguage = null, navigation = null }: any) =>
   async (dispatch: any) => {
-    dispatch({ type: CURRENT_SURVEY_SET, survey, preferredLanguage });
+    dispatch({
+      type: CURRENT_SURVEY_SET,
+      survey,
+      preferredLanguage,
+    });
     await PreferencesService.setCurrentSurveyId(survey.id);
     navigation?.navigate(screenKeys.recordsList);
   };

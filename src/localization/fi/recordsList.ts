@@ -59,6 +59,7 @@ export default {
   },
   origin: { title: "Alkuperäinen", L: "Paikallinen", R: "Palvelin" },
   owner: "Omistaja",
+  recordHasErrorsOrWarningsTooltip: "Tietueessa on {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Kaikki tietueet",
     local: "Laitteessa olevat tietueet",

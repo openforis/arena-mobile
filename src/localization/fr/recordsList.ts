@@ -64,6 +64,7 @@ export default {
     R: "Distant",
   },
   owner: "Propriétaire",
+  recordHasErrorsOrWarningsTooltip: "L'enregistrement a {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Tous les enregistrements",
     local: "Enregistrements sur l'appareil",

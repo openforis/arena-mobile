@@ -30,6 +30,13 @@ export default {
     error:
       "GPSロックを開始できません：位置情報サービスが利用できないか、位置情報へのアクセスが許可されていません",
   },
+  preferredGpsSourceId: {
+    label: "GPSソース",
+    description:
+      "座標の記録に使用するGPSを選択してください：スマートフォンの内蔵GPS、またはペアリングされた外部GPS受信機（例：Bad Elf）。",
+    auto: "自動（利用可能な場合は外部）",
+    internal: "内蔵GPS",
+  },
 
   showStatusBar: "ステータスバーを表示",
   theme: {

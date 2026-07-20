@@ -11,6 +11,9 @@ export default {
     description:
       "Las imágenes se almacenarán con la máxima resolución proporcionada por el dispositivo, a menos que se establezca un límite en el diseñador del formulario de encuesta.",
   },
+  language: {
+    label: "Idioma de la aplicación",
+  },
   locationAccuracyThreshold: "Precisión de la ubicación (metros)",
   locationAccuracyWatchTimeout:
     "Tiempo de espera de la precisión de la ubicación: {{value}} segundos",
@@ -25,6 +28,13 @@ export default {
       "Advertencia: ¡el consumo de batería aumentará!\nLa señal GPS se bloqueará cuando la aplicación esté en ejecución.\nAyudará a obtener una mejor precisión en los atributos de coordenadas.",
     error:
       "No se puede iniciar el bloqueo del GPS: proveedor de ubicación no disponible o acceso a la ubicación no concedido",
+  },
+  preferredGpsSourceId: {
+    label: "Fuente GPS",
+    description:
+      "Elija qué GPS se utiliza para registrar coordenadas: el GPS interno del teléfono o un receptor GPS externo emparejado (por ejemplo, Bad Elf).",
+    auto: "Automático (externo si está disponible)",
+    internal: "GPS interno",
   },
   showStatusBar: "Mostrar barra de estado",
   theme: {

@@ -1,6 +1,6 @@
 {
   "name": "arena-mobile",
-  "version": "2.6.4",
+  "version": "2.6.5",
   "scripts": {
     "start": "expo start",
     "start-tunnel": "expo start --tunnel",
@@ -66,6 +66,7 @@
     "react-dom": "19.2.3",
     "react-i18next": "^17.0.8",
     "react-native": "0.85.3",
+    "react-native-bluetooth-classic": "^1.73.0-rc.17",
     "react-native-check-version": "^1.4.0",
     "react-native-collapsible": "^1.6.2",
     "react-native-device-info": "^15.0.2",

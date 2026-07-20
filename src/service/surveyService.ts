@@ -15,9 +15,18 @@ const demoSurveyUuid = "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3";
 
 const remoteSurveyFetchTimeout = 60000; // 1 min
 
+// Dependency graph is derived from the survey's node defs; rebuild it here,
+// the single point where the survey content is persisted to file system,
+// so it's cached on disk and doesn't need to be rebuilt on every load.
+const storeSurveyInFileSystem = async (survey: Survey): Promise<Survey> => {
+  const surveyWithDependencyGraph =
+    await Surveys.buildAndAssocDependencyGraph(survey);
+  return SurveyFSRepository.saveSurveyFile(surveyWithDependencyGraph);
+};
+
 const _insertSurvey = async (survey: Survey): Promise<Survey> => {
   const surveyDb = await insertSurvey(survey);
-  return SurveyFSRepository.saveSurveyFile(surveyDb);
+  return storeSurveyInFileSystem(surveyDb);
 };
 
 const _updateSurvey = async ({
@@ -28,7 +37,7 @@ const _updateSurvey = async ({
   survey: Survey;
 }): Promise<Survey> => {
   const surveyDb = await updateSurvey({ id, survey });
-  return SurveyFSRepository.saveSurveyFile(surveyDb);
+  return storeSurveyInFileSystem(surveyDb);
 };
 
 const fetchSurveyById = async (surveyId: number): Promise<Survey> => {

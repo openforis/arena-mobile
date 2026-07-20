@@ -25,7 +25,7 @@ export const Slider = (props: Props) => {
         onValueChange?.(val);
       }
     },
-    [onValueChange, value]
+    [onValueChange, value],
   );
 
   if (Environment.isAndroid && Environment.androidApiLevel <= 27) {
@@ -49,6 +49,7 @@ export const Slider = (props: Props) => {
       <Dropdown
         items={options}
         onChange={async (val) => onChange(val)}
+        translateItemLabels={false}
         value={String(value)}
       />
     );

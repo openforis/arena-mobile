@@ -60,6 +60,7 @@ export default {
   },
   origin: { title: "Asal", L: "Lokal", R: "Jarak Jauh" },
   owner: "Pemilik",
+  recordHasErrorsOrWarningsTooltip: "Data isian memiliki {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Semua data isian",
     local: "Data isian di perangkat",

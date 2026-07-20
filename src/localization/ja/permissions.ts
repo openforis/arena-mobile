@@ -12,6 +12,7 @@ export default {
   },
   types: {
     accessMediaLocation: "メディアの位置情報へのアクセス",
+    bluetoothConnect: "Bluetooth接続",
     camera: "カメラへのアクセス",
     mediaLibrary: "メディアライブラリ",
     microphone: "マイクへのアクセス",

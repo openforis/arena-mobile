@@ -30,6 +30,13 @@ Det kommer att hjälpa till att få bättre noggrannhet i en koordinatattribut.`
     error:
       "Kan inte starta GPS-låsning: platsleverantören är inte tillgänglig eller åtkomst till platsen inte beviljad",
   },
+  preferredGpsSourceId: {
+    label: "GPS-källa",
+    description:
+      "Välj vilken GPS som används för att registrera koordinater: telefonens interna GPS eller en parkopplad extern GPS-mottagare (t.ex. Bad Elf).",
+    auto: "Auto (extern om tillgänglig)",
+    internal: "Intern GPS",
+  },
   showStatusBar: "Visa statusfältet",
   theme: {
     label: "Tema",

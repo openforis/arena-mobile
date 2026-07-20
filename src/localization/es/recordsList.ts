@@ -62,6 +62,7 @@ export default {
     R: "Remoto",
   },
   owner: "Propietario",
+  recordHasErrorsOrWarningsTooltip: "El registro tiene {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Todos los registros",
     local: "Registros en el dispositivo",

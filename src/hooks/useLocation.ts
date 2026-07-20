@@ -3,6 +3,7 @@ import { Point } from "@openforis/arena-core";
 
 import { LocationPoint } from "model";
 import { useLocationWatch } from "./useLocationWatch";
+import type { LocationWatchStatus } from "./useLocationWatch";
 
 const defaultState = {
   location: null,
@@ -17,6 +18,7 @@ export const useLocation = (): {
   locationAccuracy: number | null;
   locationAccuracyThreshold: number;
   locationFetched: boolean;
+  locationWatchStatus: LocationWatchStatus;
   locationWatchElapsedTime: number;
   locationWatchProgress: number;
   locationWatchTimeout: number;
@@ -53,7 +55,7 @@ export const useLocation = (): {
         }));
       }
     },
-    []
+    [],
   );
 
   const {
@@ -61,6 +63,7 @@ export const useLocation = (): {
     locationWatchElapsedTime,
     locationWatchProgress,
     locationWatchTimeout,
+    locationWatchStatus,
     startLocationWatch,
     stopLocationWatch,
   } = useLocationWatch({ locationCallback });
@@ -78,11 +81,25 @@ export const useLocation = (): {
     };
   }, [startLocationWatch, stopLocationWatch]);
 
+  useEffect(() => {
+    if (locationWatchStatus !== "idle") return;
+
+    setState((statePrev) =>
+      statePrev.watchingLocation
+        ? {
+            ...statePrev,
+            watchingLocation: false,
+          }
+        : statePrev,
+    );
+  }, [locationWatchStatus]);
+
   return {
     location,
     locationAccuracy,
     locationAccuracyThreshold,
     locationFetched,
+    locationWatchStatus,
     locationWatchElapsedTime,
     locationWatchProgress,
     locationWatchTimeout,
