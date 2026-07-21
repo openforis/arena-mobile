@@ -40,20 +40,20 @@ guard" below) and has no mobile-side implementation.
 
 ### 1. Arena server: expose the current user's UserGroup for a survey
 
-Add an endpoint returning the single `UserGroup` (or nothing) that the requesting user belongs to
-for a given survey, e.g.:
+**Implemented.** The server exposes the single `UserGroup` (or nothing) that a given user belongs
+to for a given survey:
 
 ```
-GET /api/survey/{surveyId}/user-group
-→ { "userGroup": UserGroup | null }
+GET /api/survey/{surveyId}/user/group
+→ { "user": User, "userGroup": UserGroup | null }
 ```
 
-This is deliberately **not** part of the `/auth/login` / `/auth/user` response — membership is
-per-survey, and the mobile app only needs it once a survey is selected, not for every survey the
-user could ever open. Arena Mobile calls this when the current survey changes (see mobile-side
-notes below), using the survey's `remoteId` and the existing auth token, mirroring how
-`recordRemoteService.ts` calls survey-scoped endpoints like `api/survey/{remoteId}/records/summary`
-today.
+The requesting user is identified via the auth token (not a path param) — this is deliberately
+**not** part of the `/auth/login` / `/auth/user` response, since membership is per-survey and the
+mobile app only needs it once a survey is selected, not for every survey the user could ever open.
+Arena Mobile calls this when the current survey changes (see mobile-side notes below), using the
+survey's `remoteId` and the existing auth token, mirroring how `recordRemoteService.ts` calls
+survey-scoped endpoints like `api/survey/{remoteId}/records/summary` today.
 
 Arena web / arena-core would need the underlying data model to actually resolve this (e.g. an
 Arena-side table/relation associating a user with at most one `UserGroup` per survey) — out of
@@ -88,10 +88,10 @@ there's no server data to build or test it against yet.
 
 ## Mobile-side implementation (this repo)
 
-- `SurveyService.fetchCurrentUserGroupRemote({ survey })` (`src/service/surveyService.ts`) calls the
-  proposed `GET api/survey/{remoteId}/user-group` endpoint. Best-effort: no `remoteId`, a network
-  error, or a 404 (endpoint not deployed yet) all resolve to `null` rather than throwing, so this
-  never blocks survey selection.
+- `SurveyService.fetchCurrentUserGroupRemote({ survey })` (`src/service/surveyService.ts`) calls
+  `GET api/survey/{remoteId}/user/group` and returns `data.userGroup`. Best-effort: no `remoteId`, a
+  network error, or a 404 (endpoint not deployed yet) all resolve to `null` rather than throwing, so
+  this never blocks survey selection.
 - `SurveyActions.fetchCurrentSurveyUserGroup` (`src/state/survey/actions.ts`) dispatches the fetch
   and stores the result; it's called from `setCurrentSurvey` every time the current survey changes,
   and the group is reset to `null` whenever `CURRENT_SURVEY_SET` fires (switching survey invalidates

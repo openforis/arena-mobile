@@ -104,7 +104,7 @@ const fetchSurveyRemoteById = async ({
   return survey;
 };
 
-// Each user belongs to at most one UserGroup per survey (server proposal: docs/user-group-qualifiers.md).
+// Each user belongs to at most one UserGroup per survey (see docs/user-group-qualifiers.md).
 // Best-effort: the endpoint may not exist yet, or the survey may not be linked to a remote server;
 // any failure is treated as "no group" rather than blocking survey selection.
 const fetchCurrentUserGroupRemote = async ({
@@ -116,7 +116,7 @@ const fetchCurrentUserGroupRemote = async ({
   if (!remoteId) return null;
   try {
     const { data } = await RemoteService.get(
-      `api/survey/${remoteId}/user-group`,
+      `api/survey/${remoteId}/user/group`,
     );
     return data?.userGroup ?? null;
   } catch {
