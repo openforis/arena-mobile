@@ -25,6 +25,25 @@ type GpsDevicePairingModalProps = {
 
 const deviceLabel = (device: DiscoveredGpsDevice) => device.name || device.address;
 
+type DevicePairButtonProps = {
+  pairing: boolean;
+  onPress: () => void;
+};
+
+const DevicePairButton = (props: DevicePairButtonProps) => {
+  const { pairing, onPress } = props;
+  return (
+    <Button
+      compact
+      disabled={pairing}
+      loading={pairing}
+      mode="outlined"
+      onPress={onPress}
+      textKey="settings:gpsDevicePairing.pairButton"
+    />
+  );
+};
+
 export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
   const { onDevicePaired, onDismiss } = props;
 
@@ -86,13 +105,9 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
         key={device.address}
         description={device.vendor}
         right={() => (
-          <Button
-            compact
-            disabled={pairingAddress === device.address}
-            loading={pairingAddress === device.address}
-            mode="outlined"
+          <DevicePairButton
+            pairing={pairingAddress === device.address}
             onPress={() => onPairPress(device)}
-            textKey="settings:gpsDevicePairing.pairButton"
           />
         )}
         title={deviceLabel(device)}
