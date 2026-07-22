@@ -33,8 +33,10 @@ list). This isn't a property of the user in general — it's survey-scoped, so i
 once a specific survey is selected. Arena Mobile's mobile-side implementation of point 1 (prefill +
 lock) fetches this single group from the server whenever the current survey changes, and is written
 defensively (missing endpoint / offline / no group ⇒ simply no prefill/lock happens) so it activates
-automatically once the change below ships. Point 2 requires server enforcement (see "Download
-guard" below) and has no mobile-side implementation.
+automatically once the change below ships. Point 2 is implemented server-side (see "Download guard"
+below) and has no mobile-side implementation — non-matching records are simply absent from the
+`records/summary` and `records/export` responses, which Arena Mobile already treats as the
+authoritative record set.
 
 ## Proposed changes
 
@@ -61,20 +63,16 @@ scope for this document to design, since it lives entirely server-side.
 
 ### 2. Arena server: download/export guard
 
-In `GET /api/survey/{surveyId}/records/summary` and `POST /api/survey/{surveyId}/records/export`,
-when the requesting user belongs to a `UserGroup` with qualifiers for that survey, exclude/reject
-records whose qualifier-attribute values don't match every qualifier value the group specifies.
+**Implemented.** In `GET /api/survey/{surveyId}/records/summary` and
+`POST /api/survey/{surveyId}/records/export`, when the requesting user belongs to a `UserGroup`
+with qualifiers for that survey, the server excludes/rejects records whose qualifier-attribute
+values don't match every qualifier value the group specifies.
 
 This is the only correct enforcement point. Arena Mobile never sees a record's attribute values
 until _after_ the server has already produced and served the full export zip
 (`RecordRemoteService.startExportRecords` / `downloadExportedRecordsFile`) — by that point the data
 has already left the server, so any client-side check can only be a UX nicety, never a real
 security boundary.
-
-Suggested implementation shape, mirroring how `Authorizer` already gates record access
-(`canViewRecord`, `canExportRecordsList`, `canViewNotOwnedRecords` in `auth/authorizer.js`): add a
-qualifier-aware check that, for a given user/survey/record, confirms every qualifier value in the
-user's `UserGroup` (if any) equals the corresponding qualifier attribute's value in the record.
 
 ### 3. Optional follow-up: expose qualifier values in the record summary
 
