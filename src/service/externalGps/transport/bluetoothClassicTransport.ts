@@ -1,10 +1,18 @@
 import RNBluetoothClassic, {
   BluetoothDevice,
   BluetoothDeviceEvent,
+  BluetoothNativeDevice,
 } from "react-native-bluetooth-classic";
 
 import { log, Permissions } from "utils";
-import { ExternalGpsConnection, ExternalGpsTransport, GpsSourceDescriptor } from "../types";
+import {
+  BluetoothDisabledError,
+  BluetoothScanPermissionDeniedError,
+  DiscoveredGpsDevice,
+  ExternalGpsConnection,
+  ExternalGpsTransport,
+  GpsSourceDescriptor,
+} from "../types";
 import { recognizeVendor } from "./vendorProtocolRegistry";
 
 const externalSourceId = (address: string) => `external:${address}`;
@@ -13,6 +21,14 @@ const toSourceDescriptor = (device: BluetoothDevice): GpsSourceDescriptor => ({
   id: externalSourceId(device.address),
   type: "external",
   label: (device.name || device.address).replaceAll(":", "-"),
+  vendor: recognizeVendor(device.name || ""),
+});
+
+const toDiscoveredDevice = (
+  device: BluetoothNativeDevice,
+): DiscoveredGpsDevice => ({
+  address: device.address,
+  name: device.name || "",
   vendor: recognizeVendor(device.name || ""),
 });
 
@@ -25,7 +41,10 @@ const isModuleAvailable = (): boolean =>
       typeof RNBluetoothClassic.getBondedDevices === "function" &&
       typeof RNBluetoothClassic.isDeviceConnected === "function" &&
       typeof RNBluetoothClassic.getConnectedDevice === "function" &&
-      typeof RNBluetoothClassic.connectToDevice === "function",
+      typeof RNBluetoothClassic.connectToDevice === "function" &&
+      typeof RNBluetoothClassic.startDiscovery === "function" &&
+      typeof RNBluetoothClassic.pairDevice === "function" &&
+      typeof RNBluetoothClassic.onDeviceDiscovered === "function",
   );
 
 const unavailableModuleErrorMessage =
@@ -149,8 +168,77 @@ const connect = async (sourceId: string): Promise<ExternalGpsConnection> => {
   };
 };
 
+const isBluetoothEnabled = async (): Promise<boolean> => {
+  if (!isModuleAvailable()) return false;
+  return RNBluetoothClassic.isBluetoothEnabled();
+};
+
+const requestBluetoothEnabled = async (): Promise<boolean> => {
+  if (!isModuleAvailable()) return false;
+  return RNBluetoothClassic.requestBluetoothEnabled();
+};
+
+const startDiscovery = async (
+  onDeviceDiscovered: (device: DiscoveredGpsDevice) => void,
+  onFinished?: () => void,
+): Promise<{ stop: () => Promise<void> }> => {
+  if (!isModuleAvailable()) {
+    throw new Error(unavailableModuleErrorMessage);
+  }
+
+  if (!(await Permissions.requestBluetoothScanPermissions())) {
+    throw new BluetoothScanPermissionDeniedError();
+  }
+
+  if (!(await isBluetoothEnabled()) && !(await requestBluetoothEnabled())) {
+    throw new BluetoothDisabledError();
+  }
+
+  const subscription = RNBluetoothClassic.onDeviceDiscovered(
+    (event: BluetoothDeviceEvent) => {
+      if (event.device) onDeviceDiscovered(toDiscoveredDevice(event.device));
+    },
+  );
+
+  try {
+    // Not awaited: the native promise only resolves once the whole scan finishes
+    // (~12s, or earlier via cancelDiscovery), while results are delivered live via
+    // onDeviceDiscovered above; onFinished lets callers know that moment happened
+    // without polling or guessing a timeout.
+    RNBluetoothClassic.startDiscovery()
+      .then(() => onFinished?.())
+      .catch((error) => {
+        log.warn("ExternalGps: discovery failed", error);
+        onFinished?.();
+      });
+  } catch (error) {
+    subscription.remove();
+    throw error;
+  }
+
+  return {
+    stop: async () => {
+      subscription.remove();
+      await RNBluetoothClassic.cancelDiscovery();
+    },
+  };
+};
+
+const pairDevice = async (address: string): Promise<GpsSourceDescriptor> => {
+  if (!isModuleAvailable()) {
+    throw new Error(unavailableModuleErrorMessage);
+  }
+  const device = await RNBluetoothClassic.pairDevice(address);
+  log.info("ExternalGps: paired with", device.name || address);
+  return toSourceDescriptor(device);
+};
+
 export const bluetoothClassicTransport: ExternalGpsTransport = {
   listSources,
   connect,
   isConnected,
+  isBluetoothEnabled,
+  requestBluetoothEnabled,
+  startDiscovery,
+  pairDevice,
 };

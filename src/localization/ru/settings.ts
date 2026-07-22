@@ -30,12 +30,31 @@ export default {
     error:
       "Невозможно запустить блокировку GPS: приемник GPS недоступен или доступ к местоположению не предоставлен",
   },
+  gpsDevicePairing: {
+    title: "Подключить GPS-устройство",
+    scanButton: "Поиск устройств",
+    scanningLabel: "Поиск устройств поблизости…",
+    scanAgainButton: "Повторить поиск",
+    emptyResult:
+      "Устройства не найдены. Убедитесь, что ваш GPS-приемник включен и находится в режиме сопряжения.",
+    scanFailed: "Во время поиска произошла ошибка. Попробуйте снова.",
+    showAllDevices: "Показать все устройства поблизости",
+    pairButton: "Подключить",
+    pairing: "Подключение…",
+    pairingSucceeded: "Подключено к {{name}}",
+    pairingFailed: "Не удалось подключиться к {{name}}",
+    bluetoothDisabled: "Bluetooth выключен.",
+    enableBluetoothButton: "Включить Bluetooth",
+    permissionDenied: "Для поиска устройств требуется разрешение Bluetooth.",
+    openSettingsButton: "Открыть настройки приложения",
+  },
   preferredGpsSourceId: {
     label: "Источник GPS",
     description:
       "Выберите, какой GPS использовать для записи координат: встроенный GPS телефона или подключенный внешний GPS-приемник (например, Bad Elf).",
     auto: "Авто (внешний, если доступен)",
     internal: "Встроенный GPS",
+    pairNewDevice: "Подключить новое устройство…",
   },
   showStatusBar: "Показать строку состояния",
   theme: {

@@ -29,12 +29,32 @@ export default {
     error:
       "No se puede iniciar el bloqueo del GPS: proveedor de ubicación no disponible o acceso a la ubicación no concedido",
   },
+  gpsDevicePairing: {
+    title: "Emparejar un dispositivo GPS",
+    scanButton: "Buscar dispositivos",
+    scanningLabel: "Buscando dispositivos cercanos…",
+    scanAgainButton: "Buscar de nuevo",
+    emptyResult:
+      "No se encontraron dispositivos. Asegúrese de que su receptor GPS esté encendido y en modo de emparejamiento.",
+    scanFailed: "Algo salió mal durante la búsqueda. Inténtelo de nuevo.",
+    showAllDevices: "Mostrar todos los dispositivos cercanos",
+    pairButton: "Emparejar",
+    pairing: "Emparejando…",
+    pairingSucceeded: "Emparejado con {{name}}",
+    pairingFailed: "No se pudo emparejar con {{name}}",
+    bluetoothDisabled: "El Bluetooth está desactivado.",
+    enableBluetoothButton: "Activar Bluetooth",
+    permissionDenied:
+      "Se requiere permiso de Bluetooth para buscar dispositivos.",
+    openSettingsButton: "Abrir configuración de la aplicación",
+  },
   preferredGpsSourceId: {
     label: "Fuente GPS",
     description:
       "Elija qué GPS se utiliza para registrar coordenadas: el GPS interno del teléfono o un receptor GPS externo emparejado (por ejemplo, Bad Elf).",
     auto: "Automático (externo si está disponible)",
     internal: "GPS interno",
+    pairNewDevice: "Emparejar un nuevo dispositivo…",
   },
   showStatusBar: "Mostrar barra de estado",
   theme: {

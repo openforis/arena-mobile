@@ -30,12 +30,31 @@ Se auttaa saamaan paremman tarkkuuden koordinaattiattribuuteissa.`,
     error:
       "GPS-lukitusta ei voi käynnistää: sijaintipalvelu ei ole käytettävissä tai sijaintiin ei ole myönnetty käyttöoikeutta",
   },
+  gpsDevicePairing: {
+    title: "Pariuta GPS-laite",
+    scanButton: "Etsi laitteita",
+    scanningLabel: "Etsitään lähellä olevia laitteita…",
+    scanAgainButton: "Etsi uudelleen",
+    emptyResult:
+      "Laitteita ei löytynyt. Varmista, että GPS-vastaanottimesi on päällä ja pariutustilassa.",
+    scanFailed: "Haussa tapahtui virhe. Yritä uudelleen.",
+    showAllDevices: "Näytä kaikki lähellä olevat laitteet",
+    pairButton: "Pariuta",
+    pairing: "Pariutetaan…",
+    pairingSucceeded: "Pariutettu laitteen {{name}} kanssa",
+    pairingFailed: "Pariutus laitteen {{name}} kanssa epäonnistui",
+    bluetoothDisabled: "Bluetooth on pois päältä.",
+    enableBluetoothButton: "Ota Bluetooth käyttöön",
+    permissionDenied: "Laitteiden etsimiseen tarvitaan Bluetooth-lupa.",
+    openSettingsButton: "Avaa sovelluksen asetukset",
+  },
   preferredGpsSourceId: {
     label: "GPS-lähde",
     description:
       "Valitse, mitä GPS:ää käytetään koordinaattien tallentamiseen: puhelimen sisäistä GPS:ää vai pariutettua ulkoista GPS-vastaanotinta (esim. Bad Elf).",
     auto: "Automaattinen (ulkoinen, jos saatavilla)",
     internal: "Sisäinen GPS",
+    pairNewDevice: "Pariuta uusi laite…",
   },
   showStatusBar: "Näytä tilarivi",
   theme: {

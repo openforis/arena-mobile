@@ -1,16 +1,30 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { StyleSheet } from "react-native";
 
-import { Dropdown } from "components";
+import {
+  Dropdown,
+  GpsDevicePairingModal,
+  HView,
+  IconButton,
+  Tooltip,
+  View,
+} from "components";
 import { useAvailableGpsSources } from "hooks";
 import { GpsSourceSetting, SettingsModel } from "model";
 import { ExternalGpsService } from "service/externalGps/ExternalGpsService";
+import { GpsSourceDescriptor } from "service/externalGps/types";
 import { SettingsActions, useAppDispatch } from "state";
+import { Environment } from "utils";
 
 type GpsSourceOption = {
   key: string;
   label: string;
   labelIsI18nKey?: boolean;
 };
+
+const styles = StyleSheet.create({
+  dropdownWrapper: { flex: 1 },
+});
 
 /**
  * Custom (non-generic-schema) settings field for choosing the preferred GPS
@@ -21,7 +35,10 @@ type GpsSourceOption = {
 export const GpsSourceSettingsField = (props: { value: string }) => {
   const { value } = props;
   const dispatch = useAppDispatch();
-  const { availableGpsSources } = useAvailableGpsSources();
+  const { availableGpsSources, refreshAvailableGpsSources } =
+    useAvailableGpsSources();
+
+  const [pairingModalVisible, setPairingModalVisible] = useState(false);
 
   const items = useMemo<GpsSourceOption[]>(
     () => [
@@ -53,14 +70,42 @@ export const GpsSourceSettingsField = (props: { value: string }) => {
     [dispatch],
   );
 
+  const onDevicePaired = useCallback(
+    async (source: GpsSourceDescriptor) => {
+      await refreshAvailableGpsSources();
+      await onChange(source.id);
+      setPairingModalVisible(false);
+    },
+    [onChange, refreshAvailableGpsSources],
+  );
+
   return (
-    <Dropdown
-      items={items}
-      itemKeyExtractor={(item: GpsSourceOption) => item.key}
-      itemLabelExtractor={(item: GpsSourceOption) => item.label}
-      label="settings:preferredGpsSourceId.label"
-      onChange={onChange}
-      value={value}
-    />
+    <HView>
+      <View style={styles.dropdownWrapper}>
+        <Dropdown
+          items={items}
+          itemKeyExtractor={(item: GpsSourceOption) => item.key}
+          itemLabelExtractor={(item: GpsSourceOption) => item.label}
+          label="settings:preferredGpsSourceId.label"
+          onChange={onChange}
+          value={value}
+        />
+      </View>
+      {Environment.isAndroid && (
+        <Tooltip titleKey="settings:preferredGpsSourceId.pairNewDevice">
+          <IconButton
+            icon="bluetooth-connect"
+            mode="outlined"
+            onPress={() => setPairingModalVisible(true)}
+          />
+        </Tooltip>
+      )}
+      {pairingModalVisible && (
+        <GpsDevicePairingModal
+          onDevicePaired={onDevicePaired}
+          onDismiss={() => setPairingModalVisible(false)}
+        />
+      )}
+    </HView>
   );
 };

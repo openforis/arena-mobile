@@ -30,12 +30,31 @@ It will help to get a better accuracy in coordinate attributes.`,
     error:
       "Cannot start GPS locking: location provider not available or access to location not granted",
   },
+  gpsDevicePairing: {
+    title: "Pair a GPS device",
+    scanButton: "Scan for devices",
+    scanningLabel: "Scanning for nearby devices…",
+    scanAgainButton: "Scan again",
+    emptyResult:
+      "No devices found. Make sure your GPS receiver is powered on and in pairing mode.",
+    scanFailed: "Something went wrong while scanning. Please try again.",
+    showAllDevices: "Show all nearby devices",
+    pairButton: "Pair",
+    pairing: "Pairing…",
+    pairingSucceeded: "Paired with {{name}}",
+    pairingFailed: "Could not pair with {{name}}",
+    bluetoothDisabled: "Bluetooth is turned off.",
+    enableBluetoothButton: "Enable Bluetooth",
+    permissionDenied: "Bluetooth permission is required to scan for devices.",
+    openSettingsButton: "Open app settings",
+  },
   preferredGpsSourceId: {
     label: "GPS source",
     description:
       "Choose which GPS is used to record coordinates: the phone's internal GPS, or a paired external GPS receiver (e.g. Bad Elf).",
     auto: "Auto (external if available)",
     internal: "Internal GPS",
+    pairNewDevice: "Pair a new device…",
   },
 
   showStatusBar: "Show status bar",

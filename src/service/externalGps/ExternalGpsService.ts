@@ -3,7 +3,7 @@ import { log } from "utils";
 import { ExternalGpsConnectionManager } from "./connectionManager";
 import { createNmeaLocationPointAssembler } from "./nmea/nmeaToLocationPoint";
 import { bluetoothClassicTransport } from "./transport/bluetoothClassicTransport";
-import { GpsSourceDescriptor } from "./types";
+import { DiscoveredGpsDevice, GpsSourceDescriptor } from "./types";
 
 export const internalGpsSourceId: string = GpsSourceSetting.internal;
 
@@ -84,10 +84,40 @@ const watchPosition = async (
  */
 const disconnectAll = () => ExternalGpsConnectionManager.closeAll();
 
+const isBluetoothEnabled = (): Promise<boolean> =>
+  bluetoothClassicTransport.isBluetoothEnabled();
+
+const requestBluetoothEnabled = (): Promise<boolean> =>
+  bluetoothClassicTransport.requestBluetoothEnabled();
+
+/**
+ * Starts scanning for nearby Bluetooth devices for on-demand pairing (Android only -
+ * see ExternalGps plan doc; iOS MFi accessory pairing works entirely differently and
+ * isn't triggerable this way). Streams results via onDeviceDiscovered as the OS finds
+ * them rather than waiting for the whole scan to finish.
+ */
+const startGpsDeviceDiscovery = (
+  onDeviceDiscovered: (device: DiscoveredGpsDevice) => void,
+  onFinished?: () => void,
+) => bluetoothClassicTransport.startDiscovery(onDeviceDiscovered, onFinished);
+
+/**
+ * Pairs (OS-level bonds) the device at the given address and returns it as a
+ * ready-to-use GpsSourceDescriptor. This has no side effect on any cached source list
+ * - callers should follow up with listAvailableSources()/useAvailableGpsSources's
+ * refresh so the newly paired device shows up wherever sources are listed.
+ */
+const pairGpsDevice = (address: string): Promise<GpsSourceDescriptor> =>
+  bluetoothClassicTransport.pairDevice(address);
+
 export const ExternalGpsService = {
   internalGpsSourceId,
   listAvailableSources,
   resolveAutoSourceId,
   watchPosition,
   disconnectAll,
+  isBluetoothEnabled,
+  requestBluetoothEnabled,
+  startGpsDeviceDiscovery,
+  pairGpsDevice,
 };
