@@ -4,6 +4,7 @@ import { SurveyRepository } from "./repository/surveyRepository";
 import { SurveyFSRepository } from "./repository/surveyFSRepository";
 import { RemoteService } from "./remoteService";
 import demoSurvey from "./demoSurvey.json";
+import { log } from "utils/Logger";
 
 const {
   fetchSurveySummaries: fetchSurveySummariesLocal,
@@ -116,7 +117,7 @@ const fetchCurrentUserGroupRemote = async ({
   if (!remoteId) return null;
   try {
     const { data } = await RemoteService.get(
-      `api/survey/${remoteId}/user/group`,
+      `api/survey/${remoteId}/current-user-group`,
     );
     return data?.userGroup ?? null;
   } catch {
