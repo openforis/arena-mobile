@@ -4,7 +4,6 @@ import { SurveyRepository } from "./repository/surveyRepository";
 import { SurveyFSRepository } from "./repository/surveyFSRepository";
 import { RemoteService } from "./remoteService";
 import demoSurvey from "./demoSurvey.json";
-import { log } from "utils/Logger";
 
 const {
   fetchSurveySummaries: fetchSurveySummariesLocal,
