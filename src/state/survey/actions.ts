@@ -24,7 +24,17 @@ const {
 // failures (e.g. offline, or the server doesn't support this yet) leave the group as null.
 const fetchCurrentSurveyUserGroup =
   ({ survey }: any) =>
-  async (dispatch: any) => {
+  async (dispatch: any, getState: any) => {
+    const surveyId = survey?.id;
+    const userGroup = await SurveyService.fetchCurrentUserGroupRemote({
+      survey,
+    });
+    // Avoid race conditions when the user switches surveys quickly: only apply the result
+    // if the fetched survey is still the current one.
+    const currentSurveyId = SurveySelectors.selectCurrentSurveyId(getState());
+    if (surveyId && currentSurveyId !== surveyId) return;
+    dispatch({ type: CURRENT_SURVEY_USER_GROUP_SET, userGroup });
+  };
     const userGroup = await SurveyService.fetchCurrentUserGroupRemote({
       survey,
     });
