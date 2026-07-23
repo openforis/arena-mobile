@@ -56,6 +56,10 @@ const resolveQualifierNodeValue = ({
     if (!itemUuid) return undefined;
     return NodeValues.newCodeValue({ itemUuid });
   }
+  if (nodeDef.type === NodeDefType.integer || nodeDef.type === NodeDefType.decimal) {
+    const numeric = Number(String(qualifierValue).replaceAll(",", "."));
+    return Number.isNaN(numeric) ? undefined : numeric;
+  }
   return qualifierValue;
 };
 
