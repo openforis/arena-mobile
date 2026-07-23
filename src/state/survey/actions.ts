@@ -6,7 +6,8 @@ import { PreferencesService, SurveyService } from "service";
 import { MessageActions } from "state/message";
 
 import { ConfirmActions } from "../confirm";
-import { RemoteConnectionSelectors } from "../remoteConnection";
+import { DeviceInfoSelectors } from "../deviceInfo";
+import { RemoteConnectionActions, RemoteConnectionSelectors } from "../remoteConnection";
 import { SurveyActionTypes } from "./actionTypes";
 import { SurveySelectors } from "./selectors";
 import { log } from "utils/Logger";
@@ -17,11 +18,15 @@ const {
   CURRENT_SURVEY_PREFERRED_LANG_SET,
   CURRENT_SURVEY_CYCLE_SET,
   CURRENT_SURVEY_USER_GROUP_SET,
+  CURRENT_SURVEY_USER_GROUP_LOADING,
   SURVEYS_LOCAL_SET,
 } = SurveyActionTypes;
 
 // Best-effort: fetches the current user's UserGroup for the given survey (if any) and stores it;
-// failures (e.g. offline, or the server doesn't support this yet) leave the group as null.
+// mirrors the offline handling of RemoteConnectionActions.loginAndSetUser: when the fetch isn't
+// possible (offline) or fails (server error, endpoint not supported yet), falls back to the
+// last group fetched successfully for this survey, cached locally via PreferencesService.
+// currentSurveyUserGroupReady is set to true once a value (remote or cached) is settled on.
 const fetchCurrentSurveyUserGroup =
   ({ survey }: any) =>
     async (dispatch: any, getState: any) => {
@@ -32,7 +37,28 @@ const fetchCurrentSurveyUserGroup =
       if (surveyId && currentSurveyId !== surveyId) {
         return;
       }
-      const userGroup = await SurveyService.fetchCurrentUserGroupRemote({ survey, });
+      // Make sure the logged in user is fetched first (e.g. this can be called before
+      // RemoteConnectionActions.loginAndSetUser() has completed during app startup),
+      // otherwise the current-user-group request may be attempted without a valid session.
+      await dispatch(RemoteConnectionActions.loginAndSetUser({ onlyIfNotSet: true }));
+
+      dispatch({ type: CURRENT_SURVEY_USER_GROUP_LOADING });
+
+      const { isNetworkConnected } = DeviceInfoSelectors.selectDeviceInfo(
+        getState(),
+      );
+      let userGroup = null;
+      if (isNetworkConnected) {
+        try {
+          userGroup = await SurveyService.fetchCurrentUserGroupRemote({ survey });
+          await PreferencesService.setSurveyUserGroup(surveyId, userGroup);
+        } catch (error) {
+          log.error("Error fetching current survey user group remotely; falling back to cached value", error);
+          userGroup = await PreferencesService.getSurveyUserGroup(surveyId);
+        }
+      } else {
+        userGroup = await PreferencesService.getSurveyUserGroup(surveyId);
+      }
       dispatch({ type: CURRENT_SURVEY_USER_GROUP_SET, userGroup });
     };
 

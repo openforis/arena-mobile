@@ -39,6 +39,15 @@ Continuer ?`,
   },
   createRecordError:
     "Erreur lors de la création d'un nouvel enregistrement : {{error}}",
+  userGroupNotReady: {
+    title: "Informations utilisateur non prêtes",
+    message: `Les informations de votre groupe d'utilisateurs n'ont pas encore été récupérées depuis le serveur. Cette enquête comporte des attributs pré-remplis en fonction de votre groupe d'utilisateurs. Créer l'enregistrement maintenant pourrait donc les laisser vides ou incorrects.
+
+Voulez-vous les récupérer à nouveau depuis le serveur ?`,
+    fetchAgain: "Récupérer à nouveau",
+    stillNotReady:
+      "Impossible de récupérer les informations de votre groupe d'utilisateurs depuis le serveur. Enregistrement non créé.",
+  },
   updateAttributeError:
     "Erreur lors de la mise à jour de la valeur : {{error}}",
   cycle: "Cycle",

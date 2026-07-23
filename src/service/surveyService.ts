@@ -105,8 +105,9 @@ const fetchSurveyRemoteById = async ({
 };
 
 // Each user belongs to at most one UserGroup per survey (see docs/user-group-qualifiers.md).
-// Best-effort: the endpoint may not exist yet, or the survey may not be linked to a remote server;
-// any failure is treated as "no group" rather than blocking survey selection.
+// The survey may not be linked to a remote server, in which case there's no group to fetch.
+// Any other failure (offline, server error, endpoint not supported yet) is thrown, letting the
+// caller fall back to a locally cached value rather than silently treating it as "no group".
 const fetchCurrentUserGroupRemote = async ({
   survey,
 }: {
@@ -114,14 +115,10 @@ const fetchCurrentUserGroupRemote = async ({
 }): Promise<UserGroup | null> => {
   const { remoteId } = survey;
   if (!remoteId) return null;
-  try {
-    const { data } = await RemoteService.get(
-      `api/survey/${remoteId}/current-user-group`,
-    );
-    return data?.userGroup ?? null;
-  } catch {
-    return null;
-  }
+  const { data } = await RemoteService.get(
+    `api/survey/${remoteId}/current-user-group`,
+  );
+  return data?.userGroup ?? null;
 };
 
 const getSurveysStorageSize = async () => SurveyFSRepository.getStorageSize();

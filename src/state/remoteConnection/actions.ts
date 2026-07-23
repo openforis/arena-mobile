@@ -4,8 +4,10 @@ import { i18n } from "localization";
 import { UserLogoutOptions } from "model/UserLogoutOptions";
 import {
   AuthService,
+  PreferencesService,
   SecureStoreService,
   SettingsService,
+  SurveyService,
   UserService,
 } from "service";
 import { screenKeys } from "screens/screenKeys";
@@ -308,6 +310,12 @@ const _doLogout =
   async (dispatch: any) => {
     await AuthService.logout();
     await AsyncStorageUtils.removeItem(asyncStorageKeys.loggedInUser);
+    // Clear locally cached user groups too, so a different user logging in on the same
+    // device doesn't get the previous user's group/qualifiers as an offline fallback.
+    const surveySummaries = await SurveyService.fetchSurveySummariesLocal();
+    await PreferencesService.clearSurveyUserGroups(
+      surveySummaries.map((surveySummary: any) => surveySummary.id),
+    );
     dispatch(_clearUserCredentialsInternal({ keepEmailAddress }));
   };
 

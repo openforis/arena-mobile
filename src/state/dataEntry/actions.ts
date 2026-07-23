@@ -38,9 +38,9 @@ import { i18n } from "localization";
 import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { DeviceInfoActions, DeviceInfoSelectors } from "../deviceInfo";
 import { MessageActions } from "../message";
-import { SurveySelectors } from "../survey";
+import { SurveyActions, SurveySelectors } from "../survey";
 
-import { RemoteConnectionSelectors } from "../remoteConnection";
+import { RemoteConnectionActions, RemoteConnectionSelectors } from "../remoteConnection";
 import { exportRecords, startCsvDataExportJob } from "./actionsDataExport";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
 import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
@@ -146,13 +146,54 @@ const _prefillQualifierAttributes = async ({
   return { record, nodes };
 };
 
+// Qualifier attributes are prefilled from the user's UserGroup (see _prefillQualifierAttributes).
+// If the group hasn't been fetched yet (e.g. right after app startup or login, before the
+// best-effort background fetch resolves), we can't tell whether the user genuinely has no
+// group or whether we just haven't asked the server yet. Offer to fetch again rather than
+// silently creating a record with missing/incorrect prefilled values.
+const _ensureUserGroupReadyForNewRecord = async ({
+  dispatch,
+  getState,
+  survey,
+}: any): Promise<boolean> => {
+  if (Surveys.getQualifierDefs({ survey }).length === 0) return true;
+
+  const isReady = () =>
+    SurveySelectors.selectCurrentSurveyUserGroupReady(getState());
+
+  if (isReady()) return true;
+
+  const confirmed = await ConfirmUtils.confirm({
+    dispatch,
+    titleKey: "dataEntry:userGroupNotReady.title",
+    messageKey: "dataEntry:userGroupNotReady.message",
+    confirmButtonTextKey: "dataEntry:userGroupNotReady.fetchAgain",
+  });
+  if (!confirmed) return false;
+
+  await dispatch(RemoteConnectionActions.loginAndSetUser({ onlyIfNotSet: false }));
+  await dispatch(SurveyActions.fetchCurrentSurveyUserGroup({ survey }));
+
+  if (!isReady()) {
+    dispatch(ToastActions.show("dataEntry:userGroupNotReady.stillNotReady"));
+    return false;
+  }
+  return true;
+};
+
 const createNewRecord =
   ({ navigation }: any) =>
     async (dispatch: any, getState: any) => {
       try {
-        const state = getState();
-        const user = RemoteConnectionSelectors.selectLoggedUser(state);
+        let state = getState();
         const survey = SurveySelectors.selectCurrentSurvey(state)!;
+
+        if (!(await _ensureUserGroupReadyForNewRecord({ dispatch, getState, survey }))) {
+          return;
+        }
+        state = getState();
+
+        const user = RemoteConnectionSelectors.selectLoggedUser(state);
         const userGroup = SurveySelectors.selectCurrentSurveyUserGroup(state);
         const cycle = Surveys.getDefaultCycleKey(survey);
         const prevCycleRecord =

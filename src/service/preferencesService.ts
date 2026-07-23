@@ -10,6 +10,7 @@ const keys = {
 const surveyPreferencesKeys = {
   language: "language",
   lastEditedPageByRecordId: "lastEditedPageByRecordId",
+  userGroup: "userGroup",
 };
 
 const preferencesStoredObjectManager = new StoredObjectManager(
@@ -36,6 +37,11 @@ const getPrereferencesBySurveyId = async (surveyId: any) => {
 const getSurveyPreferredLanguage = async (surveyId: any) => {
   const surveyPreferences = await getPrereferencesBySurveyId(surveyId);
   return surveyPreferences[surveyPreferencesKeys.language];
+};
+
+const getSurveyUserGroup = async (surveyId: any) => {
+  const surveyPreferences = await getPrereferencesBySurveyId(surveyId);
+  return surveyPreferences[surveyPreferencesKeys.userGroup] ?? null;
 };
 
 const getSurveyRecordLastEditedPage = async (surveyId: any, recordId: any) => {
@@ -79,6 +85,9 @@ const updateSurveyPreference = async (surveyId: any, key: any, value: any) =>
 const setSurveyPreferredLanguage = async (surveyId: any, lang: any) =>
   updateSurveyPreference(surveyId, surveyPreferencesKeys.language, lang);
 
+const setSurveyUserGroup = async (surveyId: any, userGroup: any) =>
+  updateSurveyPreference(surveyId, surveyPreferencesKeys.userGroup, userGroup);
+
 const setSurveyRecordLastEditedPage = async (surveyId: any, recordId: any, page: any) =>
   updateSurveyPreferences(surveyId, (surveyPreferences: any) => Objects.assocPath({
     obj: surveyPreferences,
@@ -93,6 +102,22 @@ const clearSurveyRecordLastEditedPage = async (surveyId: any, recordId: any) =>
     path: [surveyPreferencesKeys.lastEditedPageByRecordId, recordId],
   })
   );
+
+// Cleared on logout (see RemoteConnectionActions logout), so the next user logging in on the
+// same device doesn't get the previous user's group/qualifiers as an offline fallback.
+const clearSurveyUserGroup = async (surveyId: any) =>
+  updateSurveyPreferences(surveyId, (surveyPreferences: any) =>
+    Objects.dissocPath({
+      obj: surveyPreferences,
+      path: [surveyPreferencesKeys.userGroup],
+    }),
+  );
+
+const clearSurveyUserGroups = async (surveyIds: any) => {
+  for (const surveyId of surveyIds) {
+    await clearSurveyUserGroup(surveyId);
+  }
+};
 
 const clearPreferencesBySurveyId = async (surveyId: any) => {
   await updateSurveyPreferences(surveyId, () => ({}));
@@ -109,10 +134,13 @@ export const PreferencesService = {
   setCurrentSurveyId,
   getSurveyPreferredLanguage,
   getSurveyRecordLastEditedPage,
+  getSurveyUserGroup,
   clearCurrentSurveyId,
   setSurveyPreferredLanguage,
   setSurveyRecordLastEditedPage,
+  setSurveyUserGroup,
   clearSurveyRecordLastEditedPage,
+  clearSurveyUserGroups,
   clearPreferencesBySurveyId,
   clearPreferencesBySurveyIds,
 };

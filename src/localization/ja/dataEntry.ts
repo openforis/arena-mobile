@@ -38,6 +38,15 @@ export default {
     title: "項目の構成を更新",
   },
   createRecordError: "新しいレコードの作成中にエラーが発生しました: {{error}}",
+  userGroupNotReady: {
+    title: "ユーザー情報の準備ができていません",
+    message: `ユーザーグループの情報がまだサーバーから取得されていません。このアンケートには、ユーザーグループに基づいて事前入力される属性があるため、今すぐ記録を作成すると、それらが空欄または不正確になる可能性があります。
+
+サーバーから再度取得しますか？`,
+    fetchAgain: "再取得",
+    stillNotReady:
+      "サーバーからユーザーグループの情報を取得できませんでした。記録は作成されませんでした。",
+  },
   updateAttributeError: "値の更新中にエラーが発生しました: {{error}}",
   cycle: "サイクル",
   cycleForNewRecords: "新規記録のサイクル：",
