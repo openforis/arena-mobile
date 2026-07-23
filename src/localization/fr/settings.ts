@@ -37,7 +37,8 @@ export default {
     emptyResult:
       "Aucun appareil trouvé. Assurez-vous que votre récepteur GPS est allumé et en mode d'appairage.",
     scanFailed: "Une erreur s'est produite pendant la recherche. Veuillez réessayer.",
-    showAllDevices: "Afficher tous les appareils à proximité",
+    recognizedDevicesNotice:
+      "Seuls les appareils reconnus comme récepteurs GPS sont affichés.",
     pairButton: "Associer",
     pairing: "Association en cours…",
     pairingSucceeded: "Associé avec {{name}}",

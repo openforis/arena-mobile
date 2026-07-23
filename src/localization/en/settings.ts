@@ -38,7 +38,7 @@ It will help to get a better accuracy in coordinate attributes.`,
     emptyResult:
       "No devices found. Make sure your GPS receiver is powered on and in pairing mode.",
     scanFailed: "Something went wrong while scanning. Please try again.",
-    showAllDevices: "Show all nearby devices",
+    recognizedDevicesNotice: "Only devices recognized as GPS receivers are shown.",
     pairButton: "Pair",
     pairing: "Pairing…",
     pairingSucceeded: "Paired with {{name}}",

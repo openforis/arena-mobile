@@ -38,7 +38,7 @@ Se auttaa saamaan paremman tarkkuuden koordinaattiattribuuteissa.`,
     emptyResult:
       "Laitteita ei löytynyt. Varmista, että GPS-vastaanottimesi on päällä ja pariutustilassa.",
     scanFailed: "Haussa tapahtui virhe. Yritä uudelleen.",
-    showAllDevices: "Näytä kaikki lähellä olevat laitteet",
+    recognizedDevicesNotice: "Vain GPS-vastaanottimiksi tunnistetut laitteet näytetään.",
     pairButton: "Pariuta",
     pairing: "Pariutetaan…",
     pairingSucceeded: "Pariutettu laitteen {{name}} kanssa",

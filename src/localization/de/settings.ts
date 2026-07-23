@@ -39,7 +39,8 @@ export default {
     emptyResult:
       "Keine Geräte gefunden. Stellen Sie sicher, dass Ihr GPS-Empfänger eingeschaltet und im Kopplungsmodus ist.",
     scanFailed: "Bei der Suche ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
-    showAllDevices: "Alle Geräte in der Nähe anzeigen",
+    recognizedDevicesNotice:
+      "Es werden nur Geräte angezeigt, die als GPS-Empfänger erkannt wurden.",
     pairButton: "Koppeln",
     pairing: "Wird gekoppelt…",
     pairingSucceeded: "Mit {{name}} gekoppelt",

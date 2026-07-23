@@ -17,4 +17,7 @@ export default StyleSheet.create({
     alignItems: "center",
     gap: 8,
   },
+  recognizedDevicesNotice: {
+    opacity: 0.8,
+  },
 });

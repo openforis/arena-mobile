@@ -38,7 +38,7 @@ Det kommer att hjälpa till att få bättre noggrannhet i en koordinatattribut.`
     emptyResult:
       "Inga enheter hittades. Se till att din GPS-mottagare är påslagen och i parkopplingsläge.",
     scanFailed: "Något gick fel under sökningen. Försök igen.",
-    showAllDevices: "Visa alla enheter i närheten",
+    recognizedDevicesNotice: "Endast enheter som identifierats som GPS-mottagare visas.",
     pairButton: "Parkoppla",
     pairing: "Parkopplar…",
     pairingSucceeded: "Parkopplad med {{name}}",

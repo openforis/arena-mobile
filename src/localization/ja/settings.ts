@@ -38,7 +38,7 @@ export default {
     emptyResult:
       "デバイスが見つかりませんでした。GPS受信機の電源が入っており、ペアリングモードになっていることを確認してください。",
     scanFailed: "スキャン中に問題が発生しました。もう一度お試しください。",
-    showAllDevices: "近くのすべてのデバイスを表示",
+    recognizedDevicesNotice: "GPS受信機として認識されたデバイスのみが表示されます。",
     pairButton: "ペアリング",
     pairing: "ペアリング中…",
     pairingSucceeded: "{{name}}とペアリングしました",

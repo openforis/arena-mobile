@@ -38,7 +38,8 @@ Ini akan membantu mendapatkan akurasi yang lebih baik pada atribut koordinat.`,
     emptyResult:
       "Tidak ada perangkat ditemukan. Pastikan penerima GPS Anda menyala dan dalam mode pemasangan.",
     scanFailed: "Terjadi kesalahan saat memindai. Silakan coba lagi.",
-    showAllDevices: "Tampilkan semua perangkat di sekitar",
+    recognizedDevicesNotice:
+      "Hanya perangkat yang dikenali sebagai penerima GPS yang ditampilkan.",
     pairButton: "Sambungkan",
     pairing: "Menyambungkan…",
     pairingSucceeded: "Tersambung dengan {{name}}",

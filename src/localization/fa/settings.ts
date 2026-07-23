@@ -37,7 +37,8 @@ export default {
     emptyResult:
       "هیچ دستگاهی یافت نشد. مطمئن شوید گیرنده GPS شما روشن و در حالت جفت‌سازی است.",
     scanFailed: "هنگام جستجو مشکلی پیش آمد. لطفاً دوباره امتحان کنید.",
-    showAllDevices: "نمایش همه دستگاه‌های اطراف",
+    recognizedDevicesNotice:
+      "فقط دستگاه‌های شناسایی‌شده به‌عنوان گیرنده GPS نمایش داده می‌شوند.",
     pairButton: "جفت کردن",
     pairing: "در حال جفت کردن…",
     pairingSucceeded: "با {{name}} جفت شد",

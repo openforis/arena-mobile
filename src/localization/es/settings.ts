@@ -37,7 +37,8 @@ export default {
     emptyResult:
       "No se encontraron dispositivos. Asegúrese de que su receptor GPS esté encendido y en modo de emparejamiento.",
     scanFailed: "Algo salió mal durante la búsqueda. Inténtelo de nuevo.",
-    showAllDevices: "Mostrar todos los dispositivos cercanos",
+    recognizedDevicesNotice:
+      "Solo se muestran los dispositivos reconocidos como receptores GPS.",
     pairButton: "Emparejar",
     pairing: "Emparejando…",
     pairingSucceeded: "Emparejado con {{name}}",

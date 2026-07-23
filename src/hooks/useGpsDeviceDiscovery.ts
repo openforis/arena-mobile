@@ -48,6 +48,8 @@ export const useGpsDeviceDiscovery = () => {
     await stop();
     if (!isMountedRef.current) return;
 
+    log.debug("useGpsDeviceDiscovery: starting discovery");
+
     setDevices([]);
     setError(null);
     setScanning(true);
@@ -56,8 +58,11 @@ export const useGpsDeviceDiscovery = () => {
       const { stop: stopDiscovery } =
         await ExternalGpsService.startGpsDeviceDiscovery(
           (device) => {
+            log.debug("useGpsDeviceDiscovery: discovered device", device.name);
             if (!isMountedRef.current) return;
-            setDevices((devicesPrev) => mergeDiscoveredDevice(devicesPrev, device));
+            setDevices((devicesPrev) =>
+              mergeDiscoveredDevice(devicesPrev, device),
+            );
           },
           () => {
             // The OS's own ~12s scan window elapsed naturally (as opposed to the user

@@ -2,14 +2,7 @@ import { useCallback, useState } from "react";
 import { FlatList } from "react-native";
 import { List as RNPList } from "react-native-paper";
 
-import {
-  Button,
-  CollapsiblePanel,
-  LoadingIcon,
-  Modal,
-  Text,
-  VView,
-} from "components";
+import { Button, LoadingIcon, Modal, Text, VView } from "components";
 import { useGpsDeviceDiscovery, useToast } from "hooks";
 import { ExternalGpsService } from "service/externalGps/ExternalGpsService";
 import { DiscoveredGpsDevice, GpsSourceDescriptor } from "service/externalGps/types";
@@ -78,7 +71,6 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
   );
 
   const recognizedDevices = devices.filter((device) => !!device.vendor);
-  const unrecognizedDevices = devices.filter((device) => !device.vendor);
 
   const renderDeviceRow = useCallback(
     (device: DiscoveredGpsDevice) => (
@@ -150,6 +142,12 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
 
         {!error && hasScanned && (
           <>
+            <Text
+              style={styles.recognizedDevicesNotice}
+              textKey="settings:gpsDevicePairing.recognizedDevicesNotice"
+              variant="bodySmall"
+            />
+
             {scanning && (
               <VView style={styles.scanningRow}>
                 <LoadingIcon size={20} />
@@ -157,7 +155,7 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
               </VView>
             )}
 
-            {!scanning && devices.length === 0 && (
+            {!scanning && recognizedDevices.length === 0 && (
               <VView style={styles.messageContainer}>
                 <Text textKey="settings:gpsDevicePairing.emptyResult" />
                 <Button
@@ -174,12 +172,6 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
                 keyExtractor={(device) => device.address}
                 renderItem={({ item }) => renderDeviceRow(item)}
               />
-            )}
-
-            {unrecognizedDevices.length > 0 && (
-              <CollapsiblePanel headerKey="settings:gpsDevicePairing.showAllDevices">
-                {unrecognizedDevices.map((device) => renderDeviceRow(device))}
-              </CollapsiblePanel>
             )}
           </>
         )}
