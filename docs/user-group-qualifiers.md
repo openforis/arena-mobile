@@ -46,7 +46,7 @@ authoritative record set.
 to for a given survey:
 
 ```
-GET /api/survey/{surveyId}/user/group
+GET /api/survey/{surveyId}/current-user-group
 → { "user": User, "userGroup": UserGroup | null }
 ```
 
@@ -87,7 +87,7 @@ there's no server data to build or test it against yet.
 ## Mobile-side implementation (this repo)
 
 - `SurveyService.fetchCurrentUserGroupRemote({ survey })` (`src/service/surveyService.ts`) calls
-  `GET api/survey/{remoteId}/user/group` and returns `data.userGroup`. Best-effort: no `remoteId`, a
+  `GET api/survey/{remoteId}/current-user-group` and returns `data.userGroup`. Best-effort: no `remoteId`, a
   network error, or a 404 (endpoint not deployed yet) all resolve to `null` rather than throwing, so
   this never blocks survey selection.
 - `SurveyActions.fetchCurrentSurveyUserGroup` (`src/state/survey/actions.ts`) dispatches the fetch

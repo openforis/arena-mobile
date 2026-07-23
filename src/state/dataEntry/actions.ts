@@ -196,8 +196,6 @@ const createNewRecord =
 
         const user = RemoteConnectionSelectors.selectLoggedUser(state);
         const userGroup = SurveySelectors.selectCurrentSurveyUserGroup(state);
-        console.log('=== userGroup', userGroup)
-
         const cycle = Surveys.getDefaultCycleKey(survey);
         const prevCycleRecord =
           DataEntrySelectors.selectPreviousCycleRecord(state);
