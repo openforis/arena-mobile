@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { useCallback, useEffect, useState } from "react";
 
-import { Surveys } from "@openforis/arena-core";
+import { Surveys, UserGroup } from "@openforis/arena-core";
 
 import {
   Button,
@@ -30,6 +30,16 @@ type SelectedSurveyContainerState = {
   updateStatus: UpdateStatus | SurveyStatus;
   errorKey?: string | null;
 };
+
+const determineUserGroupStatusKey = ({ userGroupReady, userGroup }: { userGroupReady: boolean; userGroup: UserGroup | null }) => {
+  if (userGroupReady) {
+    if (userGroup) {
+      return "surveys:userGroup.label";
+    }
+    return "surveys:userGroup.none";
+  }
+  return "surveys:userGroup.fetching";
+}
 
 export const SelectedSurveyContainer = () => {
   const navigation = useNavigation();
@@ -98,6 +108,8 @@ export const SelectedSurveyContainer = () => {
 
   if (!survey) return null;
 
+  let userGroupTextKey = determineUserGroupStatusKey({ userGroupReady, userGroup });
+
   return (
     <Card style={styles.container}>
       <VView style={styles.internalContainer} transparent>
@@ -129,13 +141,7 @@ export const SelectedSurveyContainer = () => {
               <LoadingIcon />
             )}
             <Text
-              textKey={
-                userGroupReady
-                  ? userGroup
-                    ? "surveys:userGroup.label"
-                    : "surveys:userGroup.none"
-                  : "surveys:userGroup.fetching"
-              }
+              textKey={userGroupTextKey}
               textParams={
                 userGroupReady && userGroup
                   ? { name: userGroup.props.name }
