@@ -7,6 +7,8 @@ import {
   Button,
   Card,
   HView,
+  Icon,
+  LoadingIcon,
   Link,
   Text,
   ViewMoreText,
@@ -45,6 +47,10 @@ export const SelectedSurveyContainer = () => {
   const surveyDescription = Surveys.getDescription(lang)(survey);
   const fieldManualUrl = Surveys.getFieldManualLink(lang)(survey);
   const isDemoSurvey = survey?.uuid === SurveyService.demoSurveyUuid;
+
+  const hasQualifierDefs = Surveys.getQualifierDefs({ survey }).length > 0;
+  const userGroup = SurveySelectors.useCurrentSurveyUserGroup();
+  const userGroupReady = SurveySelectors.useCurrentSurveyUserGroupReady();
 
   const [state, setState] = useState({
     updateStatus: UpdateStatus.loading,
@@ -114,6 +120,29 @@ export const SelectedSurveyContainer = () => {
         )}
         {fieldManualUrl && (
           <Link labelKey="surveys:fieldManual" url={fieldManualUrl} />
+        )}
+        {hasQualifierDefs && (
+          <HView style={styles.userGroupContainer} transparent>
+            {userGroupReady ? (
+              <Icon source={userGroup ? "account-group" : "account-off"} />
+            ) : (
+              <LoadingIcon />
+            )}
+            <Text
+              textKey={
+                userGroupReady
+                  ? userGroup
+                    ? "surveys:userGroup.label"
+                    : "surveys:userGroup.none"
+                  : "surveys:userGroup.fetching"
+              }
+              textParams={
+                userGroupReady && userGroup
+                  ? { name: userGroup.props.name }
+                  : undefined
+              }
+            />
+          </HView>
         )}
         <Button
           labelVariant="bodyLarge"

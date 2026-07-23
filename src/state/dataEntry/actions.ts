@@ -119,6 +119,7 @@ const _prefillQualifierAttributes = async ({
       survey,
       userGroup,
     });
+
   for (const qualifierDef of qualifierDefs) {
     const qualifierValue = qualifierValueByNodeDefUuid[qualifierDef.uuid];
     if (qualifierValue === undefined) continue;
@@ -195,6 +196,8 @@ const createNewRecord =
 
         const user = RemoteConnectionSelectors.selectLoggedUser(state);
         const userGroup = SurveySelectors.selectCurrentSurveyUserGroup(state);
+        console.log('=== userGroup', userGroup)
+
         const cycle = Surveys.getDefaultCycleKey(survey);
         const prevCycleRecord =
           DataEntrySelectors.selectPreviousCycleRecord(state);

@@ -51,4 +51,9 @@ export default {
     "L'enquête «{{surveyName}}» a une nouvelle version; la mettre à jour?",
   updateSurveyConfirmMessage:
     "L'enquête «{{surveyName}}» est déjà sur cet appareil; la mettre à jour?",
+  userGroup: {
+    fetching: "Récupération du groupe d'utilisateurs...",
+    label: "Groupe d'utilisateurs : {{name}}",
+    none: "Aucun groupe d'utilisateurs assigné",
+  },
 };
