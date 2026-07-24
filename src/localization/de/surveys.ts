@@ -50,4 +50,9 @@ export default {
     'Für die Umfrage "{{surveyName}}" ist eine neue Version verfügbar; aktualisieren?',
   updateSurveyConfirmMessage:
     'Die Umfrage "{{surveyName}}" ist bereits auf diesem Gerät vorhanden; aktualisieren?',
+  userGroup: {
+    fetching: "Benutzergruppe wird abgerufen...",
+    label: "Benutzergruppe: {{name}}",
+    none: "Keine Benutzergruppe zugewiesen",
+  },
 };

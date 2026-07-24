@@ -38,4 +38,5 @@ export { RecordUtils } from "./utils/RecordUtils";
 export { RecordSummaries } from "./utils/RecordSummaries";
 export { SurveyDefs } from "./utils/SurveyDefs";
 export { SurveyUtils } from "./utils/SurveyUtils";
+export { UserGroupQualifiers } from "./utils/UserGroupQualifiers";
 export { ValidationUtils } from "./utils/ValidationUtils";

@@ -19,7 +19,13 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordLoadStatus, RecordUtils, RecordOrigin, SurveyDefs } from "model";
+import {
+  RecordLoadStatus,
+  RecordUtils,
+  RecordOrigin,
+  SurveyDefs,
+  UserGroupQualifiers,
+} from "model";
 import { PreferencesService } from "service/preferencesService";
 import { RecordFileService } from "service/recordFileService";
 import { RecordService } from "service/recordService";
@@ -32,9 +38,9 @@ import { i18n } from "localization";
 import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { DeviceInfoActions, DeviceInfoSelectors } from "../deviceInfo";
 import { MessageActions } from "../message";
-import { SurveySelectors } from "../survey";
+import { SurveyActions, SurveySelectors } from "../survey";
 
-import { RemoteConnectionSelectors } from "../remoteConnection";
+import { RemoteConnectionActions, RemoteConnectionSelectors } from "../remoteConnection";
 import { exportRecords, startCsvDataExportJob } from "./actionsDataExport";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
 import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
@@ -97,48 +103,142 @@ const prepareRecordForStorage = ({ record }: any) => {
   return { ...record, validation: validationUpdated };
 };
 
-const createNewRecord =
-  ({ navigation }: any) =>
-  async (dispatch: any, getState: any) => {
-    try {
-      const state = getState();
-      const user = RemoteConnectionSelectors.selectLoggedUser(state);
-      const survey = SurveySelectors.selectCurrentSurvey(state)!;
-      const cycle = Surveys.getDefaultCycleKey(survey);
-      const prevCycleRecord =
-        DataEntrySelectors.selectPreviousCycleRecord(state);
-      // to always use the selected cycle, use this: const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
-      const appInfo = SystemUtils.getRecordAppInfo();
-      const now = Dates.nowFormattedForStorage();
-      const recordEmpty = {
-        ...RecordFactory.createInstance({
-          surveyUuid: survey.uuid,
-          cycle,
-          user: user ?? {},
-          appInfo,
-        }),
-        dateCreated: now,
-        dateModified: now,
-      };
-      let { record, nodes } = await RecordUpdater.createRootEntity({
+const _prefillQualifierAttributes = async ({
+  user,
+  survey,
+  userGroup,
+  record,
+  nodes,
+}: any) => {
+  const qualifierDefs = Surveys.getQualifierDefs({ survey });
+  if (qualifierDefs.length === 0) {
+    return { record, nodes }
+  };
+  const qualifierValueByNodeDefUuid =
+    UserGroupQualifiers.getQualifierValueByNodeDefUuid({
+      survey,
+      userGroup,
+    });
+
+  for (const qualifierDef of qualifierDefs) {
+    const qualifierValue = qualifierValueByNodeDefUuid[qualifierDef.uuid];
+    if (qualifierValue === undefined) continue;
+    const value = UserGroupQualifiers.resolveQualifierNodeValue({
+      survey,
+      nodeDef: qualifierDef,
+      qualifierValue,
+    });
+    if (value === undefined) continue;
+    const [qualifierNode] = Records.getNodesByDefUuid(qualifierDef.uuid)(
+      record,
+    );
+    if (!qualifierNode) continue;
+    const { record: recordUpdated, nodes: nodesUpdated } =
+      await RecordUpdater.updateAttributeValue({
         user,
         survey,
-        record: recordEmpty,
-        prevCycleRecord,
+        record,
+        attributeUuid: qualifierNode.uuid,
+        value,
       });
+    record = recordUpdated;
+    nodes = { ...nodes, ...nodesUpdated };
+  }
+  return { record, nodes };
+};
 
-      record.surveyId = survey.id;
-      removeNodesFlags(nodes);
+// Qualifier attributes are prefilled from the user's UserGroup (see _prefillQualifierAttributes).
+// If the group hasn't been fetched yet (e.g. right after app startup or login, before the
+// best-effort background fetch resolves), we can't tell whether the user genuinely has no
+// group or whether we just haven't asked the server yet. Offer to fetch again rather than
+// silently creating a record with missing/incorrect prefilled values.
+const _ensureUserGroupReadyForNewRecord = async ({
+  dispatch,
+  getState,
+  survey,
+}: any): Promise<boolean> => {
+  if (Surveys.getQualifierDefs({ survey }).length === 0) return true;
 
-      record = prepareRecordForStorage({ record });
+  const isReady = () =>
+    SurveySelectors.selectCurrentSurveyUserGroupReady(getState());
 
-      record = await RecordService.insertRecord({ survey, record });
+  if (isReady()) return true;
 
-      dispatch(editRecord({ navigation, record, locked: false }));
-    } catch (error: any) {
-      handleError(dispatch, error, "dataEntry:createRecordError");
-    }
-  };
+  const confirmed = await ConfirmUtils.confirm({
+    dispatch,
+    titleKey: "dataEntry:userGroupNotReady.title",
+    messageKey: "dataEntry:userGroupNotReady.message",
+    confirmButtonTextKey: "dataEntry:userGroupNotReady.fetchAgain",
+  });
+  if (!confirmed) return false;
+
+  await dispatch(RemoteConnectionActions.loginAndSetUser({ onlyIfNotSet: false }));
+  await dispatch(SurveyActions.fetchCurrentSurveyUserGroup({ survey }));
+
+  if (!isReady()) {
+    dispatch(ToastActions.show("dataEntry:userGroupNotReady.stillNotReady"));
+    return false;
+  }
+  return true;
+};
+
+const createNewRecord =
+  ({ navigation }: any) =>
+    async (dispatch: any, getState: any) => {
+      try {
+        let state = getState();
+        const survey = SurveySelectors.selectCurrentSurvey(state)!;
+
+        if (!(await _ensureUserGroupReadyForNewRecord({ dispatch, getState, survey }))) {
+          return;
+        }
+        state = getState();
+
+        const user = RemoteConnectionSelectors.selectLoggedUser(state);
+        const userGroup = SurveySelectors.selectCurrentSurveyUserGroup(state);
+        const cycle = Surveys.getDefaultCycleKey(survey);
+        const prevCycleRecord =
+          DataEntrySelectors.selectPreviousCycleRecord(state);
+        // to always use the selected cycle, use this: const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
+        const appInfo = SystemUtils.getRecordAppInfo();
+        const now = Dates.nowFormattedForStorage();
+        const recordEmpty = {
+          ...RecordFactory.createInstance({
+            surveyUuid: survey.uuid,
+            cycle,
+            user: user ?? {},
+            appInfo,
+          }),
+          dateCreated: now,
+          dateModified: now,
+        };
+        let { record, nodes } = await RecordUpdater.createRootEntity({
+          user,
+          survey,
+          record: recordEmpty,
+          prevCycleRecord,
+        });
+
+        ({ record, nodes } = await _prefillQualifierAttributes({
+          user,
+          survey,
+          userGroup,
+          record,
+          nodes,
+        }));
+
+        record.surveyId = survey.id;
+        removeNodesFlags(nodes);
+
+        record = prepareRecordForStorage({ record });
+
+        record = await RecordService.insertRecord({ survey, record });
+
+        dispatch(editRecord({ navigation, record, locked: false }));
+      } catch (error: any) {
+        handleError(dispatch, error, "dataEntry:createRecordError");
+      }
+    };
 
 const _performAddEntity = async (dispatch: any, getState: any) => {
   const state = getState();
@@ -198,15 +298,15 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
 
 const addNewEntity =
   (options = {} as any) =>
-  async (dispatch: any) => {
-    const { delay = null } = options;
-    Keyboard.dismiss();
-    if (delay) {
-      setTimeout(() => dispatch(_performAddEntity), delay);
-    } else {
-      dispatch(_performAddEntity);
-    }
-  };
+    async (dispatch: any) => {
+      const { delay = null } = options;
+      Keyboard.dismiss();
+      if (delay) {
+        setTimeout(() => dispatch(_performAddEntity), delay);
+      } else {
+        dispatch(_performAddEntity);
+      }
+    };
 
 const deleteNodes =
   (nodeUuids: any) => async (dispatch: any, getState: any) => {
@@ -257,46 +357,46 @@ const checkEntityPageIsValidAndNotRoot = ({
 
 const editRecord =
   ({ navigation, record, locked = true }: any) =>
-  async (dispatch: any, getState: any) => {
-    const state = getState();
-    const survey = SurveySelectors.selectCurrentSurvey(state);
-    const surveyId = SurveySelectors.selectCurrentSurveyId(state);
-    const { id: recordId } = record;
-    const lastEditedPage =
-      await PreferencesService.getSurveyRecordLastEditedPage(
-        surveyId,
-        recordId,
-      );
-    const resumeLastEditedPage =
-      lastEditedPage &&
-      checkEntityPageIsValidAndNotRoot({
-        survey,
-        entityPage: lastEditedPage,
+    async (dispatch: any, getState: any) => {
+      const state = getState();
+      const survey = SurveySelectors.selectCurrentSurvey(state);
+      const surveyId = SurveySelectors.selectCurrentSurveyId(state);
+      const { id: recordId } = record;
+      const lastEditedPage =
+        await PreferencesService.getSurveyRecordLastEditedPage(
+          surveyId,
+          recordId,
+        );
+      const resumeLastEditedPage =
+        lastEditedPage &&
+        checkEntityPageIsValidAndNotRoot({
+          survey,
+          entityPage: lastEditedPage,
+          record,
+        }) &&
+        (await ConfirmUtils.confirm({
+          dispatch,
+          confirmButtonTextKey: "common:continue",
+          cancelButtonTextKey: "common:no",
+          messageKey: "recordsList:continueEditing.confirm.message",
+          titleKey: "recordsList:continueEditing.title",
+        }));
+
+      await dispatch({
+        type: RECORD_SET,
         record,
-      }) &&
-      (await ConfirmUtils.confirm({
-        dispatch,
-        confirmButtonTextKey: "common:continue",
-        cancelButtonTextKey: "common:no",
-        messageKey: "recordsList:continueEditing.confirm.message",
-        titleKey: "recordsList:continueEditing.title",
-      }));
+        recordEditLockAvailable: locked,
+        recordEditLocked:
+          locked && (!resumeLastEditedPage || lastEditedPage.locked),
+        recordPageSelectorMenuOpen: false,
+      });
 
-    await dispatch({
-      type: RECORD_SET,
-      record,
-      recordEditLockAvailable: locked,
-      recordEditLocked:
-        locked && (!resumeLastEditedPage || lastEditedPage.locked),
-      recordPageSelectorMenuOpen: false,
-    });
+      navigation.navigate(screenKeys.recordEditor);
 
-    navigation.navigate(screenKeys.recordEditor);
-
-    if (resumeLastEditedPage) {
-      await dispatch(selectCurrentPageEntity(lastEditedPage));
-    }
-  };
+      if (resumeLastEditedPage) {
+        await dispatch(selectCurrentPageEntity(lastEditedPage));
+      }
+    };
 
 const _fetchAndEditRecordInternal = async ({
   dispatch,
@@ -310,49 +410,49 @@ const _fetchAndEditRecordInternal = async ({
 
 const fetchAndEditRecord =
   ({ navigation, recordSummary }: any) =>
-  async (dispatch: any, getState: any) => {
-    const state = getState();
-    const survey = SurveySelectors.selectCurrentSurvey(state);
-    const {
-      id: recordId,
-      uuid: recordUuid,
-      origin,
-      loadStatus,
-    } = recordSummary;
-    if (
-      origin === RecordOrigin.remote &&
-      loadStatus !== RecordLoadStatus.complete
-    ) {
-      dispatch(
-        ConfirmActions.show({
-          confirmButtonTextKey: "recordsList:fetchRecord",
-          messageKey: "recordsList:confirmFetchRecordFromServer",
-          onConfirm: () => {
-            dispatch(
-              fetchRecordsFromServer({
-                recordUuids: [recordUuid],
-                onImportComplete: async () => {
-                  await _fetchAndEditRecordInternal({
-                    dispatch,
-                    navigation,
-                    survey,
-                    recordId,
-                  });
-                },
-              }),
-            );
-          },
-        }),
-      );
-    } else {
-      await _fetchAndEditRecordInternal({
-        dispatch,
-        navigation,
-        survey,
-        recordId,
-      });
-    }
-  };
+    async (dispatch: any, getState: any) => {
+      const state = getState();
+      const survey = SurveySelectors.selectCurrentSurvey(state);
+      const {
+        id: recordId,
+        uuid: recordUuid,
+        origin,
+        loadStatus,
+      } = recordSummary;
+      if (
+        origin === RecordOrigin.remote &&
+        loadStatus !== RecordLoadStatus.complete
+      ) {
+        dispatch(
+          ConfirmActions.show({
+            confirmButtonTextKey: "recordsList:fetchRecord",
+            messageKey: "recordsList:confirmFetchRecordFromServer",
+            onConfirm: () => {
+              dispatch(
+                fetchRecordsFromServer({
+                  recordUuids: [recordUuid],
+                  onImportComplete: async () => {
+                    await _fetchAndEditRecordInternal({
+                      dispatch,
+                      navigation,
+                      survey,
+                      recordId,
+                    });
+                  },
+                }),
+              );
+            },
+          }),
+        );
+      } else {
+        await _fetchAndEditRecordInternal({
+          dispatch,
+          navigation,
+          survey,
+          recordId,
+        });
+      }
+    };
 
 const _updateRecord = async ({ dispatch, survey, record }: any) => {
   const recordUpdated = prepareRecordForStorage({ record });
@@ -529,244 +629,244 @@ const updateAttribute =
     value: any;
     fileUri?: string | null;
   }) =>
-  async (dispatch: any, getState: any) => {
-    try {
-      const state = getState();
-      const user = RemoteConnectionSelectors.selectLoggedUser(state);
-      const survey = SurveySelectors.selectCurrentSurvey(state)!;
-      const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
-      const record = DataEntrySelectors.selectRecord(state);
-      const prevCycleRecord =
-        DataEntrySelectors.selectPreviousCycleRecord(state);
+    async (dispatch: any, getState: any) => {
+      try {
+        const state = getState();
+        const user = RemoteConnectionSelectors.selectLoggedUser(state);
+        const survey = SurveySelectors.selectCurrentSurvey(state)!;
+        const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
+        const record = DataEntrySelectors.selectRecord(state);
+        const prevCycleRecord =
+          DataEntrySelectors.selectPreviousCycleRecord(state);
 
-      const cycle = Records.getCycle(record);
-      const node = Records.getNodeByUuid(uuid)(record)!;
-      const nodeDef = Surveys.getNodeDefByUuid({
-        survey,
-        uuid: node.nodeDefUuid,
-      });
-
-      if (
-        !(await checkAndConfirmUpdateNode({
-          dispatch,
-          getState,
-          node,
-          nodeDef,
-        }))
-      )
-        return;
-
-      log.debug(
-        `Updating node ${NodeDefs.getName(nodeDef)} (${node.uuid}) with value ${value}`,
-      );
-      let {
-        record: recordUpdated,
-        nodes: nodesUpdated,
-        clearedDefUuids,
-      } = await RecordUpdater.updateAttributeValue({
-        user,
-        survey,
-        record,
-        prevCycleRecord,
-        attributeUuid: uuid,
-        value,
-        clearNonApplicableValues: true,
-      });
-
-      if (
-        !(await confirmClearNewlyInapplicableValues({
-          dispatch,
+        const cycle = Records.getCycle(record);
+        const node = Records.getNodeByUuid(uuid)(record)!;
+        const nodeDef = Surveys.getNodeDefByUuid({
           survey,
-          lang,
-          clearedDefUuids,
-        }))
-      ) {
-        log.debug(`Newly inapplicable values not confirmed. Reverting update.`);
-        return;
-      }
+          uuid: node.nodeDefUuid,
+        });
 
-      removeNodesFlags(nodesUpdated);
+        if (
+          !(await checkAndConfirmUpdateNode({
+            dispatch,
+            getState,
+            node,
+            nodeDef,
+          }))
+        )
+          return;
 
-      if (NodeDefs.getType(nodeDef) === NodeDefType.file) {
-        await updateRecordNodeFile({ survey, node, fileUri, value, dispatch });
-      }
-
-      const isRootKeyDef = SurveyDefs.isRootKeyDef({ survey, cycle, nodeDef });
-
-      await _updateRecord({ dispatch, survey, record: recordUpdated });
-      if (
-        DataEntrySelectors.selectIsLinkedToPreviousCycleRecord(state) &&
-        isRootKeyDef
-      ) {
-        dispatch(unlinkFromRecordInPreviousCycle());
-      }
-
-      if (
-        isRootKeyDef &&
-        (await _isRootKeyDuplicate({ survey, record: recordUpdated, lang }))
-      ) {
-        const keyValues = RecordUtils.getRootEntityKeysFormatted({
-          survey,
-          record: recordUpdated,
-          lang,
-        }).join(", ");
-
-        dispatch(
-          MessageActions.setMessage({
-            content: "recordsList:duplicateKey.message",
-            contentParams: { keyValues },
-            title: "recordsList:duplicateKey.title",
-          }),
+        log.debug(
+          `Updating node ${NodeDefs.getName(nodeDef)} (${node.uuid}) with value ${value}`,
         );
+        let {
+          record: recordUpdated,
+          nodes: nodesUpdated,
+          clearedDefUuids,
+        } = await RecordUpdater.updateAttributeValue({
+          user,
+          survey,
+          record,
+          prevCycleRecord,
+          attributeUuid: uuid,
+          value,
+          clearNonApplicableValues: true,
+        });
+
+        if (
+          !(await confirmClearNewlyInapplicableValues({
+            dispatch,
+            survey,
+            lang,
+            clearedDefUuids,
+          }))
+        ) {
+          log.debug(`Newly inapplicable values not confirmed. Reverting update.`);
+          return;
+        }
+
+        removeNodesFlags(nodesUpdated);
+
+        if (NodeDefs.getType(nodeDef) === NodeDefType.file) {
+          await updateRecordNodeFile({ survey, node, fileUri, value, dispatch });
+        }
+
+        const isRootKeyDef = SurveyDefs.isRootKeyDef({ survey, cycle, nodeDef });
+
+        await _updateRecord({ dispatch, survey, record: recordUpdated });
+        if (
+          DataEntrySelectors.selectIsLinkedToPreviousCycleRecord(state) &&
+          isRootKeyDef
+        ) {
+          dispatch(unlinkFromRecordInPreviousCycle());
+        }
+
+        if (
+          isRootKeyDef &&
+          (await _isRootKeyDuplicate({ survey, record: recordUpdated, lang }))
+        ) {
+          const keyValues = RecordUtils.getRootEntityKeysFormatted({
+            survey,
+            record: recordUpdated,
+            lang,
+          }).join(", ");
+
+          dispatch(
+            MessageActions.setMessage({
+              content: "recordsList:duplicateKey.message",
+              contentParams: { keyValues },
+              title: "recordsList:duplicateKey.title",
+            }),
+          );
+        }
+        log.debug(`Node updated successfully.`);
+      } catch (error) {
+        handleError(dispatch, error, "dataEntry:updateAttributeError");
       }
-      log.debug(`Node updated successfully.`);
-    } catch (error) {
-      handleError(dispatch, error, "dataEntry:updateAttributeError");
-    }
-  };
+    };
 
 const performCoordinateValueSrsConversion =
   ({ nodeUuid, srsTo }: any) =>
-  async (dispatch: any, getState: any) => {
-    const state = getState();
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const record = DataEntrySelectors.selectRecord(state);
-    const srsIndex = Surveys.getSRSIndex(survey);
+    async (dispatch: any, getState: any) => {
+      const state = getState();
+      const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const record = DataEntrySelectors.selectRecord(state);
+      const srsIndex = Surveys.getSRSIndex(survey);
 
-    const node = Records.getNodeByUuid(nodeUuid)(record);
-    const prevValue = node?.value ?? {};
-    const { x, y, srs } = prevValue;
-    const pointFrom = PointFactory.createInstance({ x, y, srs })!;
-    const pointTo = Points.transform(pointFrom, srsTo, srsIndex)!;
-    const nextValue = {
-      ...prevValue,
-      x: Numbers.roundToPrecision(pointTo.x, 6),
-      y: Numbers.roundToPrecision(pointTo.y, 6),
-      srs: srsTo,
+      const node = Records.getNodeByUuid(nodeUuid)(record);
+      const prevValue = node?.value ?? {};
+      const { x, y, srs } = prevValue;
+      const pointFrom = PointFactory.createInstance({ x, y, srs })!;
+      const pointTo = Points.transform(pointFrom, srsTo, srsIndex)!;
+      const nextValue = {
+        ...prevValue,
+        x: Numbers.roundToPrecision(pointTo.x, 6),
+        y: Numbers.roundToPrecision(pointTo.y, 6),
+        srs: srsTo,
+      };
+      dispatch(updateAttribute({ uuid: nodeUuid, value: nextValue }));
     };
-    dispatch(updateAttribute({ uuid: nodeUuid, value: nextValue }));
-  };
 
 const updateCoordinateValueSrs =
   ({ nodeUuid, srsTo }: any) =>
-  async (dispatch: any, getState: any) => {
-    const state = getState();
-    const record = DataEntrySelectors.selectRecord(state);
+    async (dispatch: any, getState: any) => {
+      const state = getState();
+      const record = DataEntrySelectors.selectRecord(state);
 
-    const node = Records.getNodeByUuid(nodeUuid)(record);
-    const prevValue = node?.value ?? {};
-    const { x, y, srs } = prevValue;
+      const node = Records.getNodeByUuid(nodeUuid)(record);
+      const prevValue = node?.value ?? {};
+      const { x, y, srs } = prevValue;
 
-    if (srsTo === srs) return;
+      if (srsTo === srs) return;
 
-    const nextValue = {
-      ...prevValue,
-      x: Objects.isEmpty(x) ? 0 : x,
-      y: Objects.isEmpty(y) ? 0 : y,
-      srs: srsTo,
+      const nextValue = {
+        ...prevValue,
+        x: Objects.isEmpty(x) ? 0 : x,
+        y: Objects.isEmpty(y) ? 0 : y,
+        srs: srsTo,
+      };
+      if (Objects.isEmpty(x) || Objects.isEmpty(y)) {
+        dispatch(updateAttribute({ uuid: nodeUuid, value: nextValue }));
+      } else {
+        dispatch(
+          ConfirmActions.show({
+            messageKey: "dataEntry:coordinate.confirmConvertCoordinate",
+            messageParams: { srsFrom: srs, srsTo },
+            confirmButtonTextKey: "dataEntry:coordinate.convert",
+            cancelButtonTextKey: "dataEntry:coordinate.keepXAndY",
+            onConfirm: () =>
+              dispatch(performCoordinateValueSrsConversion({ nodeUuid, srsTo })),
+            onCancel: () =>
+              dispatch(updateAttribute({ uuid: nodeUuid, value: nextValue })),
+          }),
+        );
+      }
     };
-    if (Objects.isEmpty(x) || Objects.isEmpty(y)) {
-      dispatch(updateAttribute({ uuid: nodeUuid, value: nextValue }));
-    } else {
-      dispatch(
-        ConfirmActions.show({
-          messageKey: "dataEntry:coordinate.confirmConvertCoordinate",
-          messageParams: { srsFrom: srs, srsTo },
-          confirmButtonTextKey: "dataEntry:coordinate.convert",
-          cancelButtonTextKey: "dataEntry:coordinate.keepXAndY",
-          onConfirm: () =>
-            dispatch(performCoordinateValueSrsConversion({ nodeUuid, srsTo })),
-          onCancel: () =>
-            dispatch(updateAttribute({ uuid: nodeUuid, value: nextValue })),
-        }),
-      );
-    }
-  };
 
 const addNewAttribute =
   ({ nodeDef, parentNodeUuid, value = null }: any) =>
-  async (dispatch: any, getState: any) => {
-    const state = getState();
-    const user = RemoteConnectionSelectors.selectLoggedUser(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const record = DataEntrySelectors.selectRecord(state);
-    const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);
-    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
+    async (dispatch: any, getState: any) => {
+      const state = getState();
+      const user = RemoteConnectionSelectors.selectLoggedUser(state);
+      const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const record = DataEntrySelectors.selectRecord(state);
+      const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);
+      const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
 
-    const { record: recordUpdated, nodes: nodesCreated } =
-      await RecordUpdater.createNodeAndDescendants({
-        user,
-        survey,
-        record,
-        prevCycleRecord,
-        parentNode,
-        nodeDef,
-      });
+      const { record: recordUpdated, nodes: nodesCreated } =
+        await RecordUpdater.createNodeAndDescendants({
+          user,
+          survey,
+          record,
+          prevCycleRecord,
+          parentNode,
+          nodeDef,
+        });
 
-    const nodeCreated = Object.values(nodesCreated).find(
-      (nodeCreated) => nodeCreated.nodeDefUuid === nodeDef.uuid,
-    )!;
+      const nodeCreated = Object.values(nodesCreated).find(
+        (nodeCreated) => nodeCreated.nodeDefUuid === nodeDef.uuid,
+      )!;
 
-    const { record: recordUpdated2 } = await RecordUpdater.updateAttributeValue(
-      {
-        user,
-        survey,
-        record: recordUpdated,
-        prevCycleRecord,
-        attributeUuid: nodeCreated.uuid,
-        value,
-      },
-    );
+      const { record: recordUpdated2 } = await RecordUpdater.updateAttributeValue(
+        {
+          user,
+          survey,
+          record: recordUpdated,
+          prevCycleRecord,
+          attributeUuid: nodeCreated.uuid,
+          value,
+        },
+      );
 
-    await _updateRecord({ dispatch, survey, record: recordUpdated2 });
-  };
+      await _updateRecord({ dispatch, survey, record: recordUpdated2 });
+    };
 
 const selectCurrentPageEntity =
   ({ parentEntityUuid, entityDefUuid, entityUuid = undefined }: any) =>
-  async (dispatch: any, getState: any) => {
-    const state = getState();
-    const surveyId = SurveySelectors.selectCurrentSurveyId(state);
-    const record = DataEntrySelectors.selectRecord(state);
-    const { id: recordId } = record;
-    const { entityDef: prevEntityDef, entityUuid: prevEntityUuid } =
-      DataEntrySelectors.selectCurrentPageEntity(state);
-    const isPhone = DeviceInfoSelectors.selectIsPhone(state);
-    const locked = DataEntrySelectors.selectRecordEditLocked(state);
+    async (dispatch: any, getState: any) => {
+      const state = getState();
+      const surveyId = SurveySelectors.selectCurrentSurveyId(state);
+      const record = DataEntrySelectors.selectRecord(state);
+      const { id: recordId } = record;
+      const { entityDef: prevEntityDef, entityUuid: prevEntityUuid } =
+        DataEntrySelectors.selectCurrentPageEntity(state);
+      const isPhone = DeviceInfoSelectors.selectIsPhone(state);
+      const locked = DataEntrySelectors.selectRecordEditLocked(state);
 
-    const nextEntityUuid =
-      entityDefUuid === prevEntityDef.uuid &&
-      entityUuid === prevEntityUuid &&
-      NodeDefs.isMultiple(prevEntityDef)
-        ? null // set pointer to list of entities
-        : entityUuid;
+      const nextEntityUuid =
+        entityDefUuid === prevEntityDef.uuid &&
+          entityUuid === prevEntityUuid &&
+          NodeDefs.isMultiple(prevEntityDef)
+          ? null // set pointer to list of entities
+          : entityUuid;
 
-    if (!!nextEntityUuid && nextEntityUuid === prevEntityUuid) {
-      // same entity selected (e.g. single entity from breadcrumb): do nothing
-      return;
-    }
+      if (!!nextEntityUuid && nextEntityUuid === prevEntityUuid) {
+        // same entity selected (e.g. single entity from breadcrumb): do nothing
+        return;
+      }
 
-    const payload = {
-      parentEntityUuid,
-      entityDefUuid,
-      entityUuid: nextEntityUuid,
-      locked,
+      const payload = {
+        parentEntityUuid,
+        entityDefUuid,
+        entityUuid: nextEntityUuid,
+        locked,
+      };
+
+      dispatch({ type: PAGE_ENTITY_SET, payload });
+
+      if (DataEntrySelectors.selectIsLinkedToPreviousCycleRecord(state)) {
+        dispatch(updatePreviousCyclePageEntity);
+      }
+
+      if (isPhone) {
+        dispatch(closeRecordPageMenu);
+      }
+      await PreferencesService.setSurveyRecordLastEditedPage(
+        surveyId,
+        recordId,
+        payload,
+      );
     };
-
-    dispatch({ type: PAGE_ENTITY_SET, payload });
-
-    if (DataEntrySelectors.selectIsLinkedToPreviousCycleRecord(state)) {
-      dispatch(updatePreviousCyclePageEntity);
-    }
-
-    if (isPhone) {
-      dispatch(closeRecordPageMenu);
-    }
-    await PreferencesService.setSurveyRecordLastEditedPage(
-      surveyId,
-      recordId,
-      payload,
-    );
-  };
 
 const selectCurrentPageEntityActiveChildIndex =
   (index: any) => (dispatch: any, getState: any) => {
@@ -803,18 +903,18 @@ const toggleRecordEditLock = (dispatch: any, getState: any) => {
 
 const navigateToRecordsList =
   ({ navigation }: any) =>
-  (dispatch: any) =>
-    dispatch(
-      ConfirmActions.show({
-        confirmButtonTextKey: "dataEntry:goToListOfRecords",
-        messageKey: "dataEntry:confirmGoToListOfRecords",
-        onConfirm: () => {
-          // pop=true pops the current screen from the stack and avoids going back to it (unmounts the RecordEditor component)
-          navigation.navigate({ name: screenKeys.recordsList, pop: true });
-          dispatch({ type: DATA_ENTRY_RESET });
-        },
-      }),
-    );
+    (dispatch: any) =>
+      dispatch(
+        ConfirmActions.show({
+          confirmButtonTextKey: "dataEntry:goToListOfRecords",
+          messageKey: "dataEntry:confirmGoToListOfRecords",
+          onConfirm: () => {
+            // pop=true pops the current screen from the stack and avoids going back to it (unmounts the RecordEditor component)
+            navigation.navigate({ name: screenKeys.recordsList, pop: true });
+            dispatch({ type: DATA_ENTRY_RESET });
+          },
+        }),
+      );
 
 export const DataEntryActions = {
   createNewRecord,

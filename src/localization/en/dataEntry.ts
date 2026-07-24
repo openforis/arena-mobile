@@ -38,6 +38,15 @@ Update the enumerated entities?`,
     title: "Update enumerated entities",
   },
   createRecordError: "Error creating new record: {{error}}",
+  userGroupNotReady: {
+    title: "User information not ready",
+    message: `Your user group information hasn't been fetched from the server yet. This survey has attributes that are pre-filled based on your user group, so creating the record now could leave them empty or incorrect.
+
+Do you want to fetch it again from the server?`,
+    fetchAgain: "Fetch again",
+    stillNotReady:
+      "Could not fetch your user group information from the server. Record not created.",
+  },
   updateAttributeError: "Error updating value: {{error}}",
   cycle: "Cycle",
   cycleForNewRecords: "Cycle for new records:",

@@ -48,4 +48,9 @@ export default {
     '調査「{{surveyName}}」に新しいバージョンがあります。更新しますか？',
   updateSurveyConfirmMessage:
     '調査「{{surveyName}}」はすでにこのデバイスにあります。更新しますか？',
+  userGroup: {
+    fetching: "ユーザーグループを取得中...",
+    label: "ユーザーグループ: {{name}}",
+    none: "ユーザーグループが割り当てられていません",
+  },
 };
