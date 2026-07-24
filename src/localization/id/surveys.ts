@@ -49,4 +49,9 @@ export default {
     'Survei "{{surveyName}}" memiliki versi baru; perbarui?',
   updateSurveyConfirmMessage:
     'Survei "{{surveyName}}" sudah ada di perangkat ini; perbarui?',
+  userGroup: {
+    fetching: "Mengambil grup pengguna...",
+    label: "Grup pengguna: {{name}}",
+    none: "Tidak ada grup pengguna yang ditetapkan",
+  },
 };

@@ -20,6 +20,7 @@ import { PreviousCycleNodeValuePreview } from "../PreviousCycleNodeValuePreview"
 import { KeyAttributeLockButton } from "./KeyAttributeLockButton";
 import { NodeDefFormItemHeader } from "./NodeDefFormItemHeader";
 import { useKeyAttributeLock } from "./useKeyAttributeLock";
+import { useQualifierAttributeLocked } from "./useQualifierAttributeLock";
 
 import { useStyles } from "./styles";
 
@@ -105,11 +106,14 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
     [viewMode, styles.internalContainer],
   );
 
+  const qualifierAttributeLocked = useQualifierAttributeLocked({ nodeDef });
+
   const editableFinal =
     canEditRecord &&
     !NodeDefs.isReadOnly(nodeDef) &&
     editable &&
-    !keyAttributeLocked;
+    !keyAttributeLocked &&
+    !qualifierAttributeLocked;
 
   const showNodeComponentSwitch =
     NodeDefs.isEntity(nodeDef) || editableFinal;

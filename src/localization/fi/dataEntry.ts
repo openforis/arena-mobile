@@ -37,6 +37,15 @@ Jatketaanko?`,
     title: "Päivitä luetteloidut entiteetit",
   },
   createRecordError: "Virhe uutta tietuetta luotaessa: {{error}}",
+  userGroupNotReady: {
+    title: "Käyttäjätiedot eivät ole valmiina",
+    message: `Käyttäjäryhmäsi tietoja ei ole vielä haettu palvelimelta. Tässä kyselyssä on attribuutteja, jotka täytetään automaattisesti käyttäjäryhmäsi perusteella, joten tietueen luominen nyt saattaa jättää ne tyhjiksi tai virheellisiksi.
+
+Haluatko hakea sen uudelleen palvelimelta?`,
+    fetchAgain: "Hae uudelleen",
+    stillNotReady:
+      "Käyttäjäryhmätietojasi ei voitu hakea palvelimelta. Tietuetta ei luotu.",
+  },
   updateAttributeError: "Virhe arvoa päivitettäessä: {{error}}",
   cycle: "Jakso",
   cycleForNewRecords: "Jakso uusille tietueille:",

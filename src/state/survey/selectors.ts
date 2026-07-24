@@ -7,6 +7,7 @@ import {
   SRSIndex,
   Survey,
   Surveys,
+  UserGroup,
 } from "@openforis/arena-core";
 
 import { SurveyDefs } from "model";
@@ -61,11 +62,22 @@ const selectCurrentSurveyPreferredLang = (state: any): LanguageCode => {
 const selectCurrentSurveyCycle = (state: any) =>
   getSurveyState(state).currentSurveyCycle;
 
+const selectCurrentSurveyUserGroup = (state: any): UserGroup | null =>
+  getSurveyState(state).currentSurveyUserGroup ?? null;
+
+// True once fetchCurrentSurveyUserGroup has resolved (successfully or not) for the current survey.
+// False right after switching survey, while the fetch is still pending: at that point
+// currentSurveyUserGroup being null is ambiguous (not yet fetched vs. genuinely no group).
+const selectCurrentSurveyUserGroupReady = (state: any): boolean =>
+  getSurveyState(state).currentSurveyUserGroupReady ?? false;
+
 export const SurveySelectors = {
   selectCurrentSurvey,
   selectCurrentSurveyId,
   selectCurrentSurveyCycle,
   selectCurrentSurveyPreferredLang,
+  selectCurrentSurveyUserGroup,
+  selectCurrentSurveyUserGroupReady,
 
   useCurrentSurvey: () => useSelector(selectCurrentSurvey),
   useCurrentSurveyId: () => useSelector(selectCurrentSurveyId),
@@ -74,6 +86,9 @@ export const SurveySelectors = {
   useCurrentSurveyPreferredLang: () =>
     useSelector(selectCurrentSurveyPreferredLang),
   useCurrentSurveyCycle: () => useSelector(selectCurrentSurveyCycle),
+  useCurrentSurveyUserGroup: () => useSelector(selectCurrentSurveyUserGroup),
+  useCurrentSurveyUserGroupReady: () =>
+    useSelector(selectCurrentSurveyUserGroupReady),
   useCurrentSurveyRootDef: () => useSelector(selectCurrentSurveyRootDef),
   useIsNodeDefEnumerator: (nodeDef: any) =>
     useSelector(selectIsNodeDefEnumerator(nodeDef)),

@@ -37,6 +37,15 @@ Sus valores serán borrados.
     title: "Actualizar entidades enumeradas",
   },
   createRecordError: "Error al crear un nuevo registro: {{error}}",
+  userGroupNotReady: {
+    title: "Información de usuario no disponible",
+    message: `La información de su grupo de usuario aún no se ha obtenido del servidor. Esta encuesta tiene atributos que se rellenan previamente según su grupo de usuario, por lo que crear el registro ahora podría dejarlos vacíos o incorrectos.
+
+¿Desea obtenerla nuevamente del servidor?`,
+    fetchAgain: "Obtener de nuevo",
+    stillNotReady:
+      "No se pudo obtener la información de su grupo de usuario del servidor. Registro no creado.",
+  },
   updateAttributeError: "Error al actualizar el valor: {{error}}",
   cycle: "Ciclo",
   cycleForNewRecords: "Ciclo para nuevos registros:",
