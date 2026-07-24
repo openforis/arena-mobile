@@ -18,6 +18,37 @@ type GpsDevicePairingModalProps = {
 
 const deviceLabel = (device: DiscoveredGpsDevice) => device.name || device.address;
 
+type MessageActionProps = {
+  textKey: string;
+  onPress: () => void;
+  mode?: "outlined";
+  loading?: boolean;
+};
+
+type MessageWithActionsProps = {
+  messageKey: string;
+  actions: MessageActionProps[];
+};
+
+const MessageWithActions = (props: MessageWithActionsProps) => {
+  const { messageKey, actions } = props;
+  return (
+    <VView style={styles.messageContainer}>
+      <Text textKey={messageKey} />
+      {actions.map((action) => (
+        <Button
+          key={action.textKey}
+          loading={action.loading}
+          mode={action.mode}
+          onPress={action.onPress}
+          style={styles.actionButton}
+          textKey={action.textKey}
+        />
+      ))}
+    </VView>
+  );
+};
+
 export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
   const { onDevicePaired, onDismiss } = props;
 
@@ -73,23 +104,20 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
   const recognizedDevices = devices.filter((device) => !!device.vendor);
 
   const renderDeviceRow = useCallback(
-    (device: DiscoveredGpsDevice) => (
-      <RNPList.Item
-        key={device.address}
-        description={device.vendor}
-        right={() => (
-          <Button
-            compact
-            disabled={pairingAddress === device.address}
-            loading={pairingAddress === device.address}
-            mode="outlined"
-            onPress={() => onPairPress(device)}
-            textKey="settings:gpsDevicePairing.pairButton"
-          />
-        )}
-        title={deviceLabel(device)}
-      />
-    ),
+    (device: DiscoveredGpsDevice) => {
+      const pairing = pairingAddress === device.address;
+      return (
+        <RNPList.Item
+          key={device.address}
+          description={device.vendor}
+          disabled={pairing}
+          left={(iconProps) => <RNPList.Icon {...iconProps} icon="bluetooth-connect" />}
+          onPress={() => onPairPress(device)}
+          right={pairing ? (iconProps) => <LoadingIcon size={20} style={iconProps.style} /> : undefined}
+          title={deviceLabel(device)}
+        />
+      );
+    },
     [onPairPress, pairingAddress],
   );
 
@@ -97,47 +125,37 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
     <Modal onDismiss={onDismiss} titleKey="settings:gpsDevicePairing.title">
       <VView style={styles.container}>
         {error === "bluetooth_disabled" && (
-          <VView style={styles.messageContainer}>
-            <Text textKey="settings:gpsDevicePairing.bluetoothDisabled" />
-            <Button
-              loading={enablingBluetooth}
-              onPress={onEnableBluetoothPress}
-              style={styles.actionButton}
-              textKey="settings:gpsDevicePairing.enableBluetoothButton"
-            />
-          </VView>
+          <MessageWithActions
+            actions={[
+              {
+                textKey: "settings:gpsDevicePairing.enableBluetoothButton",
+                onPress: onEnableBluetoothPress,
+                loading: enablingBluetooth,
+              },
+            ]}
+            messageKey="settings:gpsDevicePairing.bluetoothDisabled"
+          />
         )}
 
         {error === "permission_denied" && (
-          <VView style={styles.messageContainer}>
-            <Text textKey="settings:gpsDevicePairing.permissionDenied" />
-            <Button
-              onPress={onOpenSettingsPress}
-              style={styles.actionButton}
-              textKey="settings:gpsDevicePairing.openSettingsButton"
-            />
-            <Button
-              mode="outlined"
-              onPress={onScanPress}
-              style={styles.actionButton}
-              textKey="settings:gpsDevicePairing.scanAgainButton"
-            />
-          </VView>
+          <MessageWithActions
+            actions={[
+              { textKey: "settings:gpsDevicePairing.openSettingsButton", onPress: onOpenSettingsPress },
+              { textKey: "settings:gpsDevicePairing.scanAgainButton", onPress: onScanPress, mode: "outlined" },
+            ]}
+            messageKey="settings:gpsDevicePairing.permissionDenied"
+          />
         )}
 
         {error === "unknown" && (
-          <VView style={styles.messageContainer}>
-            <Text textKey="settings:gpsDevicePairing.scanFailed" />
-            <Button
-              onPress={onScanPress}
-              style={styles.actionButton}
-              textKey="settings:gpsDevicePairing.scanAgainButton"
-            />
-          </VView>
+          <MessageWithActions
+            actions={[{ textKey: "settings:gpsDevicePairing.scanAgainButton", onPress: onScanPress }]}
+            messageKey="settings:gpsDevicePairing.scanFailed"
+          />
         )}
 
         {!error && !hasScanned && (
-          <Button onPress={onScanPress} textKey="settings:gpsDevicePairing.scanButton" />
+          <Button onPress={onScanPress} style={styles.scanForDevicesButton} textKey="settings:gpsDevicePairing.scanButton" />
         )}
 
         {!error && hasScanned && (
@@ -156,14 +174,10 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
             )}
 
             {!scanning && recognizedDevices.length === 0 && (
-              <VView style={styles.messageContainer}>
-                <Text textKey="settings:gpsDevicePairing.emptyResult" />
-                <Button
-                  onPress={onScanPress}
-                  style={styles.actionButton}
-                  textKey="settings:gpsDevicePairing.scanAgainButton"
-                />
-              </VView>
+              <MessageWithActions
+                actions={[{ textKey: "settings:gpsDevicePairing.scanAgainButton", onPress: onScanPress }]}
+                messageKey="settings:gpsDevicePairing.emptyResult"
+              />
             )}
 
             {recognizedDevices.length > 0 && (

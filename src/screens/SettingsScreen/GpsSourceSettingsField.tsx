@@ -2,12 +2,11 @@ import { useCallback, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
 
 import {
+  Button,
   Dropdown,
   GpsDevicePairingModal,
   HView,
-  IconButton,
-  Tooltip,
-  View,
+  VView,
 } from "components";
 import { useAvailableGpsSources } from "hooks";
 import { GpsSourceSetting, SettingsModel } from "model";
@@ -23,7 +22,8 @@ type GpsSourceOption = {
 };
 
 const styles = StyleSheet.create({
-  dropdownWrapper: { flex: 1 },
+  dropdownWrapper: { gap: 10 },
+  pairNewDeviceButton: { alignSelf: "center" },
 });
 
 /**
@@ -81,7 +81,7 @@ export const GpsSourceSettingsField = (props: { value: string }) => {
 
   return (
     <HView>
-      <View style={styles.dropdownWrapper}>
+      <VView fullFlex style={styles.dropdownWrapper}>
         <Dropdown
           items={items}
           itemKeyExtractor={(item: GpsSourceOption) => item.key}
@@ -90,16 +90,15 @@ export const GpsSourceSettingsField = (props: { value: string }) => {
           onChange={onChange}
           value={value}
         />
-      </View>
-      {Environment.isAndroid && (
-        <Tooltip titleKey="settings:preferredGpsSourceId.pairNewDevice">
-          <IconButton
+        {Environment.isAndroid && (
+          <Button
             icon="bluetooth-connect"
-            mode="outlined"
             onPress={() => setPairingModalVisible(true)}
+            style={styles.pairNewDeviceButton}
+            textKey="settings:preferredGpsSourceId.pairNewDevice"
           />
-        </Tooltip>
-      )}
+        )}
+      </VView>
       {pairingModalVisible && (
         <GpsDevicePairingModal
           onDevicePaired={onDevicePaired}

@@ -6,6 +6,9 @@ export default StyleSheet.create({
     padding: 16,
     gap: 16,
   },
+  scanForDevicesButton: {
+    alignSelf: "center",
+  },
   messageContainer: {
     gap: 12,
   },
