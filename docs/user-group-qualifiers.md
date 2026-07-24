@@ -88,8 +88,8 @@ there's no server data to build or test it against yet.
 
 - `SurveyService.fetchCurrentUserGroupRemote({ survey })` (`src/service/surveyService.ts`) calls
   `GET api/survey/{remoteId}/current-user-group` and returns `data.userGroup`. Best-effort: no `remoteId`, a
-  network error, or a 404 (endpoint not deployed yet) all resolve to `null` rather than throwing, so
-  this never blocks survey selection.
+  remote error (e.g. offline / server error / endpoint not deployed yet) is handled by the caller
+  (`SurveyActions.fetchCurrentSurveyUserGroup`), which falls back to the last successfully cached value in `PreferencesService` (or `null` if none was cached), so this never blocks survey selection.
 - `SurveyActions.fetchCurrentSurveyUserGroup` (`src/state/survey/actions.ts`) dispatches the fetch
   and stores the result; it's called from `setCurrentSurvey` every time the current survey changes,
   and the group is reset to `null` whenever `CURRENT_SURVEY_SET` fires (switching survey invalidates
