@@ -40,6 +40,8 @@ export default {
     scanFailed: "Во время поиска произошла ошибка. Попробуйте снова.",
     recognizedDevicesNotice:
       "Отображаются только устройства, распознанные как GPS-приемники.",
+    pairedDevicesTitle: "Сопряженные устройства",
+    newDevicesTitle: "Новые устройства",
     pairButton: "Подключить",
     pairing: "Подключение…",
     pairingSucceeded: "Подключено к {{name}}",

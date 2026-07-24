@@ -40,6 +40,8 @@ Ini akan membantu mendapatkan akurasi yang lebih baik pada atribut koordinat.`,
     scanFailed: "Terjadi kesalahan saat memindai. Silakan coba lagi.",
     recognizedDevicesNotice:
       "Hanya perangkat yang dikenali sebagai penerima GPS yang ditampilkan.",
+    pairedDevicesTitle: "Perangkat berpasangan",
+    newDevicesTitle: "Perangkat baru",
     pairButton: "Sambungkan",
     pairing: "Menyambungkan…",
     pairingSucceeded: "Tersambung dengan {{name}}",

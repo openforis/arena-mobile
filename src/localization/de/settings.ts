@@ -41,6 +41,8 @@ export default {
     scanFailed: "Bei der Suche ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
     recognizedDevicesNotice:
       "Es werden nur Geräte angezeigt, die als GPS-Empfänger erkannt wurden.",
+    pairedDevicesTitle: "Gekoppelte Geräte",
+    newDevicesTitle: "Neue Geräte",
     pairButton: "Koppeln",
     pairing: "Wird gekoppelt…",
     pairingSucceeded: "Mit {{name}} gekoppelt",

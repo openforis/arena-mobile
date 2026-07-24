@@ -35,6 +35,8 @@ export default {
       "ምንም መሣሪያ አልተገኘም። የጂፒኤስ መቀበያዎ በርቶ እና በማጣመሪያ ሁነታ ላይ መሆኑን ያረጋግጡ።",
     scanFailed: "በፍለጋ ወቅት ችግር ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።",
     recognizedDevicesNotice: "እንደ ጂፒኤስ መቀበያ የታወቁ መሣሪያዎች ብቻ ይታያሉ።",
+    pairedDevicesTitle: "የተጣመሩ መሣሪያዎች",
+    newDevicesTitle: "አዲስ መሣሪያዎች",
     pairButton: "አጣምር",
     pairing: "በማጣመር ላይ…",
     pairingSucceeded: "ከ{{name}} ጋር ተጣምሯል",

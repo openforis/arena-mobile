@@ -23,4 +23,7 @@ export default StyleSheet.create({
   recognizedDevicesNotice: {
     opacity: 0.8,
   },
+  pairedDevicesSection: {
+    gap: 4,
+  },
 });

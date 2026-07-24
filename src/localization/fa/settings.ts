@@ -39,6 +39,8 @@ export default {
     scanFailed: "هنگام جستجو مشکلی پیش آمد. لطفاً دوباره امتحان کنید.",
     recognizedDevicesNotice:
       "فقط دستگاه‌های شناسایی‌شده به‌عنوان گیرنده GPS نمایش داده می‌شوند.",
+    pairedDevicesTitle: "دستگاه‌های جفت‌شده",
+    newDevicesTitle: "دستگاه‌های جدید",
     pairButton: "جفت کردن",
     pairing: "در حال جفت کردن…",
     pairingSucceeded: "با {{name}} جفت شد",

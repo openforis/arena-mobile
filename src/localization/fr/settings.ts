@@ -39,6 +39,8 @@ export default {
     scanFailed: "Une erreur s'est produite pendant la recherche. Veuillez réessayer.",
     recognizedDevicesNotice:
       "Seuls les appareils reconnus comme récepteurs GPS sont affichés.",
+    pairedDevicesTitle: "Appareils associés",
+    newDevicesTitle: "Nouveaux appareils",
     pairButton: "Associer",
     pairing: "Association en cours…",
     pairingSucceeded: "Associé avec {{name}}",

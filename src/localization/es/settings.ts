@@ -39,6 +39,8 @@ export default {
     scanFailed: "Algo salió mal durante la búsqueda. Inténtelo de nuevo.",
     recognizedDevicesNotice:
       "Solo se muestran los dispositivos reconocidos como receptores GPS.",
+    pairedDevicesTitle: "Dispositivos emparejados",
+    newDevicesTitle: "Nuevos dispositivos",
     pairButton: "Emparejar",
     pairing: "Emparejando…",
     pairingSucceeded: "Emparejado con {{name}}",

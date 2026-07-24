@@ -3,7 +3,7 @@ import { FlatList } from "react-native";
 import { List as RNPList } from "react-native-paper";
 
 import { Button, LoadingIcon, Modal, Text, VView } from "components";
-import { useGpsDeviceDiscovery, useToast } from "hooks";
+import { useAvailableGpsSources, useGpsDeviceDiscovery, useToast } from "hooks";
 import { ExternalGpsService } from "service/externalGps/ExternalGpsService";
 import { DiscoveredGpsDevice, GpsSourceDescriptor } from "service/externalGps/types";
 import { log } from "utils";
@@ -17,6 +17,12 @@ type GpsDevicePairingModalProps = {
 };
 
 const deviceLabel = (device: DiscoveredGpsDevice) => device.name || device.address;
+
+// GpsSourceDescriptor.id is "internal" or `external:${deviceAddress}` (see
+// service/externalGps/types.ts) - used to match already-paired sources against
+// devices found by a discovery scan.
+const addressFromSourceId = (sourceId: string): string =>
+  sourceId.replace(/^external:/, "");
 
 type MessageActionProps = {
   textKey: string;
@@ -53,6 +59,7 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
   const { onDevicePaired, onDismiss } = props;
 
   const { devices, scanning, error, start, stop } = useGpsDeviceDiscovery();
+  const { availableGpsSources, refreshAvailableGpsSources } = useAvailableGpsSources();
   const showToast = useToast();
 
   const [hasScanned, setHasScanned] = useState(false);
@@ -85,6 +92,7 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
       try {
         const source = await ExternalGpsService.pairGpsDevice(device.address);
         await stop();
+        await refreshAvailableGpsSources();
         showToast("settings:gpsDevicePairing.pairingSucceeded", {
           name: deviceLabel(device),
         });
@@ -98,10 +106,15 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
         setPairingAddress(null);
       }
     },
-    [onDevicePaired, showToast, stop],
+    [onDevicePaired, refreshAvailableGpsSources, showToast, stop],
   );
 
-  const recognizedDevices = devices.filter((device) => !!device.vendor);
+  const pairedSources = availableGpsSources.filter((source) => source.type === "external");
+  const pairedAddresses = new Set(pairedSources.map((source) => addressFromSourceId(source.id)));
+
+  const recognizedDevices = devices.filter(
+    (device) => !!device.vendor && !pairedAddresses.has(device.address),
+  );
 
   const renderDeviceRow = useCallback(
     (device: DiscoveredGpsDevice) => {
@@ -124,6 +137,22 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
   return (
     <Modal onDismiss={onDismiss} titleKey="settings:gpsDevicePairing.title">
       <VView style={styles.container}>
+        {pairedSources.length > 0 && (
+          <VView style={styles.pairedDevicesSection}>
+            <Text
+              textKey="settings:gpsDevicePairing.pairedDevicesTitle"
+              variant="titleSmall"
+            />
+            {pairedSources.map((source) => (
+              <RNPList.Item
+                key={source.id}
+                left={(iconProps) => <RNPList.Icon {...iconProps} icon="bluetooth-connect" />}
+                title={source.label}
+              />
+            ))}
+          </VView>
+        )}
+
         {error === "bluetooth_disabled" && (
           <MessageWithActions
             actions={[
@@ -160,6 +189,13 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
 
         {!error && hasScanned && (
           <>
+            {pairedSources.length > 0 && (
+              <Text
+                textKey="settings:gpsDevicePairing.newDevicesTitle"
+                variant="titleSmall"
+              />
+            )}
+
             <Text
               style={styles.recognizedDevicesNotice}
               textKey="settings:gpsDevicePairing.recognizedDevicesNotice"
