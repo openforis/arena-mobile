@@ -48,6 +48,7 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
     onChangeValueField,
     onClearPress,
     onCompassNavigatorUseCurrentLocation,
+    onGpsDevicePaired,
     onSelectGpsSource,
     onStartGpsPress,
     onStopGpsPress,
@@ -146,6 +147,7 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
           locationWatchStatus={locationWatchStatus}
           locationWatchTimeout={locationWatchTimeout}
           onCancelConnecting={onCancelGpsConnectPress}
+          onGpsDevicePaired={onGpsDevicePaired}
           onSelectGpsSource={onSelectGpsSource}
           onStart={onStartGpsPress}
           onStop={onStopGpsPress}

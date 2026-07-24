@@ -13,7 +13,7 @@ export default StyleSheet.create({
     gap: 12,
   },
   actionButton: {
-    alignSelf: "flex-start",
+    alignSelf: "center",
   },
   scanningRow: {
     flexDirection: "row",
