@@ -133,7 +133,7 @@ export const SelectedSurveyContainer = () => {
         {fieldManualUrl && (
           <Link labelKey="surveys:fieldManual" url={fieldManualUrl} />
         )}
-        {hasQualifierDefs && (
+        {hasQualifierDefs && user && (
           <HView style={styles.userGroupContainer} transparent>
             {userGroupReady ? (
               <Icon source={userGroup ? "account-group" : "account-off"} />

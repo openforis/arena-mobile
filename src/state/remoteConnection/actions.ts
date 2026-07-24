@@ -16,6 +16,7 @@ import { log } from "utils";
 import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { MessageActions } from "../message";
 import { SettingsActions } from "../settings";
+import { SurveyActions } from "../survey";
 import { RemoteConnectionSelectors } from "./selectors";
 import { DeviceInfoSelectors } from "state/deviceInfo";
 import { AsyncStorageUtils } from "service/asyncStorage/AsyncStorageUtils";
@@ -108,6 +109,9 @@ const onLoginResponseSuccessful = async ({
   await dispatch(SettingsActions.updateSettings(settingsUpdated));
 
   dispatch({ type: USER_SET, user });
+  // Refresh the survey user group for the newly logged in user, in case a different
+  // user just logged in for the same survey selection (the previous value would be stale).
+  dispatch(SurveyActions.fetchCurrentSurveyUserGroupIfSurveySelected());
 
   if (showBack) {
     dispatch(
@@ -316,6 +320,9 @@ const _doLogout =
     await PreferencesService.clearSurveyUserGroups(
       surveySummaries.map((surveySummary: any) => surveySummary.id),
     );
+    // Clear the in-memory survey user group too, so it doesn't keep showing the previous
+    // user's group until a new one logs in and it gets refetched.
+    dispatch(SurveyActions.resetCurrentSurveyUserGroup());
     dispatch(_clearUserCredentialsInternal({ keepEmailAddress }));
   };
 

@@ -19,6 +19,7 @@ const {
   CURRENT_SURVEY_CYCLE_SET,
   CURRENT_SURVEY_USER_GROUP_SET,
   CURRENT_SURVEY_USER_GROUP_LOADING,
+  CURRENT_SURVEY_USER_GROUP_RESET,
   SURVEYS_LOCAL_SET,
 } = SurveyActionTypes;
 
@@ -61,6 +62,22 @@ const fetchCurrentSurveyUserGroup =
       }
       dispatch({ type: CURRENT_SURVEY_USER_GROUP_SET, userGroup });
     };
+
+// Refetches the current survey user group, if a survey is currently selected.
+// Used on login, since a different user may now be logged in for the same survey selection.
+const fetchCurrentSurveyUserGroupIfSurveySelected =
+  () => async (dispatch: any, getState: any) => {
+    const survey = SurveySelectors.selectCurrentSurvey(getState());
+    if (survey) {
+      dispatch(fetchCurrentSurveyUserGroup({ survey }));
+    }
+  };
+
+// Clears the current survey user group, so a stale value from the previous session
+// isn't shown until it's refetched after the next login.
+const resetCurrentSurveyUserGroup = () => ({
+  type: CURRENT_SURVEY_USER_GROUP_RESET,
+});
 
 const setCurrentSurvey =
   ({ survey, preferredLanguage = null, navigation = null }: any) =>
@@ -262,6 +279,8 @@ const deleteSurveys =
 export const SurveyActions = {
   setCurrentSurvey,
   fetchCurrentSurveyUserGroup,
+  fetchCurrentSurveyUserGroupIfSurveySelected,
+  resetCurrentSurveyUserGroup,
   setCurrentSurveyPreferredLanguage,
   setCurrentSurveyCycle,
   fetchAndSetCurrentSurvey,

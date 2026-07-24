@@ -45,6 +45,13 @@ const actionHandlers = {
     currentSurveyUserGroup: action.userGroup,
     currentSurveyUserGroupReady: true,
   }),
+  [SurveyActionTypes.CURRENT_SURVEY_USER_GROUP_RESET]: ({
+    state,
+  }: any) => ({
+    ...state,
+    currentSurveyUserGroup: null,
+    currentSurveyUserGroupReady: false,
+  }),
   [SurveyActionTypes.CURRENT_SURVEY_CYCLE_SET]: ({
     state,
     action
