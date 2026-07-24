@@ -90,7 +90,30 @@ jobs:
           # Increase timeout because software-rendering is slow
           emulator-boot-timeout: 900
           script: |
+            ensure_adb_device_ready() {
+              local serial="emulator-5554"
+              local max_retries=10
+
+              for _ in $(seq 1 "$max_retries"); do
+                local adb_state
+                adb_state="$(adb -s "$serial" get-state 2>/dev/null || true)"
+                if [ "$adb_state" = "device" ]; then
+                  return 0
+                fi
+
+                echo "ADB state is '$adb_state' (expected 'device'). Recovering connection..."
+                adb reconnect offline || true
+                adb -s "$serial" wait-for-device || true
+                sleep 2
+              done
+
+              echo "Emulator ADB never stabilized"
+              adb devices -l || true
+              return 1
+            }
+
             # 1. Ensure the ADB connection is bridged for the emulator
+            ensure_adb_device_ready
             adb reverse tcp:8081 tcp:8081
 
             echo "Waiting for emulator to boot completely..."
@@ -113,11 +136,13 @@ jobs:
 
             echo "Installing APK..."
             # Use -r to replace if exists, -t for test packages (Expo debug builds need this)
+            ensure_adb_device_ready
             adb install -r -t -g android/app/build/outputs/apk/debug/app-debug.apk
 
             echo "Running Maestro..."
             # Give the OS a short window after installation to settle
             sleep 10
+            ensure_adb_device_ready
 
             maestro test e2e/maestro/allTests.yaml --format junit --output report.xml -e APP_ID=org.openforis.arena_mobile -e ARENA_SERVER_URL=$ARENA_SERVER_URL -e ARENA_SERVER_USERNAME=$ARENA_SERVER_USERNAME -e ARENA_SERVER_PASSWORD=$ARENA_SERVER_PASSWORD
 
