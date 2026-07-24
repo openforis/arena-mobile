@@ -200,16 +200,24 @@ const startDiscovery = async (
     },
   );
 
+  let stopped = false;
+
   try {
     // Not awaited: the native promise only resolves once the whole scan finishes
     // (~12s, or earlier via cancelDiscovery), while results are delivered live via
     // onDeviceDiscovered above; onFinished lets callers know that moment happened
     // without polling or guessing a timeout.
     RNBluetoothClassic.startDiscovery()
-      .then(() => onFinished?.())
+      .then(() => {
+        subscription.remove();
+        if (!stopped) onFinished?.();
+      })
       .catch((error) => {
-        log.warn("ExternalGps: discovery failed", error);
-        onFinished?.();
+        subscription.remove();
+        if (!stopped) {
+          log.warn("ExternalGps: discovery failed", error);
+          onFinished?.();
+        }
       });
   } catch (error) {
     subscription.remove();
@@ -218,6 +226,7 @@ const startDiscovery = async (
 
   return {
     stop: async () => {
+      stopped = true;
       subscription.remove();
       await RNBluetoothClassic.cancelDiscovery();
     },
