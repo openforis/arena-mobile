@@ -118,6 +118,9 @@ Sus valores serán borrados.
     notInEntryStepAnymore:
       "Ya no está en la fase de entrada (la fase de limpieza o análisis)",
   },
+  processingData: {
+    title: "Procesando datos",
+  },
   uploadingData: {
     title: "Cargando datos",
   },

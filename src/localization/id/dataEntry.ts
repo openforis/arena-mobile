@@ -123,6 +123,9 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
     notInEntryStepAnymore:
       "Tidak lagi dalam tahap entri (dalam tahap pembersihan atau analisis)",
   },
+  processingData: {
+    title: "Memproses data",
+  },
   uploadingData: {
     title: "Mengunggah data",
   },
