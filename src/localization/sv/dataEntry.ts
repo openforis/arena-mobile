@@ -122,6 +122,9 @@ Vill du hämta den igen från servern?`,
     notInEntryStepAnymore:
       "Inte längre i inmatningssteget (i rensnings- eller analyssteget)",
   },
+  processingData: {
+    title: "Bearbetar data",
+  },
   uploadingData: {
     title: "Laddar upp data",
   },

@@ -162,6 +162,9 @@ export default {
     notInEntryStepAnymore:
       "入力段階ではなくなりました（修正または分析ステップ）",
   },
+  processingData: {
+    title: "データを処理中",
+  },
   uploadingData: {
     title: "データをアップロード中",
   },

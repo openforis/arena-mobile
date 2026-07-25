@@ -118,6 +118,9 @@ Deseja obtê-las novamente do servidor?`,
     notInEntryStepAnymore:
       "Já não está na etapa de introdução (na etapa de limpeza ou análise)",
   },
+  processingData: {
+    title: "Processando dados",
+  },
   uploadingData: {
     title: "Enviando dados",
   },

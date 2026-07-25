@@ -111,6 +111,9 @@ export default {
     modifiedRemotely: "በሩቅ አገልጋይ የተሻሻለ",
     notInEntryStepAnymore: "ከእንግዲህ በማስገቢያ ደረጃ የለም (በማጽዳት ወይም ትንተና ደረጃ)",
   },
+  processingData: {
+    title: "Տվյալների մշակում",
+  },
   uploadingData: {
     title: "Տվյալների վերբեռնում",
   },

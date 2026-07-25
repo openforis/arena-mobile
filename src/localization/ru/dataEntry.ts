@@ -117,6 +117,9 @@ export default {
     notInEntryStepAnymore:
       "Этап ввода завершен (запись на этапе очистки или анализа)",
   },
+  processingData: {
+    title: "Обработка данных",
+  },
   uploadingData: {
     title: "Загрузка данных",
   },

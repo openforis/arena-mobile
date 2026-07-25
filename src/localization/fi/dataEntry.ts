@@ -121,6 +121,9 @@ Haluatko hakea sen uudelleen palvelimelta?`,
     notInEntryStepAnymore:
       "Ei enää syöttövaiheessa (puhdistus- tai analyysivaiheessa)",
   },
+  processingData: {
+    title: "Käsitellään tietoja",
+  },
   uploadingData: {
     title: "Ladataan tietoja",
   },

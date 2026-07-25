@@ -125,6 +125,9 @@ Möchten Sie sie erneut vom Server abrufen?`,
     notInEntryStepAnymore:
       "Nicht mehr im Eingabeschritt (im Bereinigungs- oder Analyseschritt)",
   },
+  processingData: {
+    title: "Daten werden verarbeitet",
+  },
   uploadingData: {
     title: "Daten werden hochgeladen",
   },
