@@ -31,12 +31,35 @@ export default {
     error:
       "GPS-Sperrung kann nicht gestartet werden: Standortanbieter nicht verfügbar oder Zugriff auf den Standort nicht gewährt",
   },
+  gpsDevicePairing: {
+    title: "GPS-Gerät koppeln",
+    scanButton: "Nach Geräten suchen",
+    scanningLabel: "Suche nach Geräten in der Nähe…",
+    scanAgainButton: "Erneut suchen",
+    emptyResult:
+      "Keine Geräte gefunden. Stellen Sie sicher, dass Ihr GPS-Empfänger eingeschaltet und im Kopplungsmodus ist.",
+    scanFailed: "Bei der Suche ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    recognizedDevicesNotice:
+      "Es werden nur Geräte angezeigt, die als GPS-Empfänger erkannt wurden.",
+    pairedDevicesTitle: "Gekoppelte Geräte",
+    newDevicesTitle: "Neue Geräte",
+    pairButton: "Koppeln",
+    pairing: "Wird gekoppelt…",
+    pairingSucceeded: "Mit {{name}} gekoppelt",
+    pairingFailed: "Koppeln mit {{name}} fehlgeschlagen",
+    bluetoothDisabled: "Bluetooth ist ausgeschaltet.",
+    enableBluetoothButton: "Bluetooth aktivieren",
+    permissionDenied:
+      "Für die Gerätesuche ist die Bluetooth-Berechtigung erforderlich.",
+    openSettingsButton: "App-Einstellungen öffnen",
+  },
   preferredGpsSourceId: {
     label: "GPS-Quelle",
     description:
       "Wählen Sie, welches GPS zur Aufzeichnung von Koordinaten verwendet wird: das interne GPS des Telefons oder ein gekoppelter externer GPS-Empfänger (z. B. Bad Elf).",
     auto: "Automatisch (extern, falls verfügbar)",
     internal: "Internes GPS",
+    pairNewDevice: "Neues Gerät koppeln…",
   },
 
   showStatusBar: "Statusleiste anzeigen",

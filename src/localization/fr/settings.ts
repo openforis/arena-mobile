@@ -29,12 +29,35 @@ export default {
     error:
       "Impossible de démarrer le verrouillage GPS: fournisseur de localisation non disponible ou accès à la localisation non accordé",
   },
+  gpsDevicePairing: {
+    title: "Associer un appareil GPS",
+    scanButton: "Rechercher des appareils",
+    scanningLabel: "Recherche d'appareils à proximité…",
+    scanAgainButton: "Rechercher à nouveau",
+    emptyResult:
+      "Aucun appareil trouvé. Assurez-vous que votre récepteur GPS est allumé et en mode d'appairage.",
+    scanFailed: "Une erreur s'est produite pendant la recherche. Veuillez réessayer.",
+    recognizedDevicesNotice:
+      "Seuls les appareils reconnus comme récepteurs GPS sont affichés.",
+    pairedDevicesTitle: "Appareils associés",
+    newDevicesTitle: "Nouveaux appareils",
+    pairButton: "Associer",
+    pairing: "Association en cours…",
+    pairingSucceeded: "Associé avec {{name}}",
+    pairingFailed: "Impossible de s'associer avec {{name}}",
+    bluetoothDisabled: "Le Bluetooth est désactivé.",
+    enableBluetoothButton: "Activer le Bluetooth",
+    permissionDenied:
+      "L'autorisation Bluetooth est requise pour rechercher des appareils.",
+    openSettingsButton: "Ouvrir les paramètres de l'application",
+  },
   preferredGpsSourceId: {
     label: "Source GPS",
     description:
       "Choisissez le GPS utilisé pour enregistrer les coordonnées : le GPS interne du téléphone ou un récepteur GPS externe apparié (par exemple, Bad Elf).",
     auto: "Auto (externe si disponible)",
     internal: "GPS interne",
+    pairNewDevice: "Associer un nouvel appareil…",
   },
   showStatusBar: "Afficher la barre d'état",
   theme: {

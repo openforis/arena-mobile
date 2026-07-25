@@ -13,6 +13,7 @@ export default {
   types: {
     accessMediaLocation: "دسترسی به مکان رسانه",
     bluetoothConnect: "اتصال بلوتوث",
+    bluetoothScan: "اسکن بلوتوث",
     mediaLibrary: "کتابخانه رسانه",
     camera: "دسترسی به دوربین",
     microphone: "دسترسی به میکروفون",

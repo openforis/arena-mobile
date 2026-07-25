@@ -29,12 +29,34 @@ export default {
     error:
       "امکان شروع قفل GPS وجود ندارد: ارائه دهنده موقعیت مکانی در دسترس نیست یا دسترسی به موقعیت مکانی روشن نشده است",
   },
+  gpsDevicePairing: {
+    title: "جفت کردن یک دستگاه GPS",
+    scanButton: "جستجوی دستگاه‌ها",
+    scanningLabel: "در حال جستجوی دستگاه‌های اطراف…",
+    scanAgainButton: "جستجوی دوباره",
+    emptyResult:
+      "هیچ دستگاهی یافت نشد. مطمئن شوید گیرنده GPS شما روشن و در حالت جفت‌سازی است.",
+    scanFailed: "هنگام جستجو مشکلی پیش آمد. لطفاً دوباره امتحان کنید.",
+    recognizedDevicesNotice:
+      "فقط دستگاه‌های شناسایی‌شده به‌عنوان گیرنده GPS نمایش داده می‌شوند.",
+    pairedDevicesTitle: "دستگاه‌های جفت‌شده",
+    newDevicesTitle: "دستگاه‌های جدید",
+    pairButton: "جفت کردن",
+    pairing: "در حال جفت کردن…",
+    pairingSucceeded: "با {{name}} جفت شد",
+    pairingFailed: "جفت کردن با {{name}} ممکن نشد",
+    bluetoothDisabled: "بلوتوث خاموش است.",
+    enableBluetoothButton: "روشن کردن بلوتوث",
+    permissionDenied: "برای جستجوی دستگاه‌ها به مجوز بلوتوث نیاز است.",
+    openSettingsButton: "باز کردن تنظیمات برنامه",
+  },
   preferredGpsSourceId: {
     label: "منبع GPS",
     description:
       "انتخاب کنید کدام GPS برای ثبت مختصات استفاده شود: GPS داخلی گوشی یا گیرنده GPS خارجی جفت‌شده (مثلاً Bad Elf).",
     auto: "خودکار (خارجی در صورت وجود)",
     internal: "GPS داخلی",
+    pairNewDevice: "جفت کردن دستگاه جدید…",
   },
   showStatusBar: "نمایش نوار وضعیت",
   theme: {

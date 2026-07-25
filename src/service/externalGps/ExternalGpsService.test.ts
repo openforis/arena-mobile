@@ -31,6 +31,10 @@ jest.mock("./nmea/nmeaToLocationPoint", () => ({
 jest.mock("./transport/bluetoothClassicTransport", () => ({
   bluetoothClassicTransport: {
     listSources: jest.fn(),
+    isBluetoothEnabled: jest.fn(),
+    requestBluetoothEnabled: jest.fn(),
+    startDiscovery: jest.fn(),
+    pairDevice: jest.fn(),
   },
 }));
 
@@ -99,5 +103,44 @@ describe("ExternalGpsService.watchPosition", () => {
     expect(ExternalGpsConnectionManager.release).toHaveBeenCalledWith(
       "external:test",
     );
+  });
+});
+
+describe("ExternalGpsService discovery/pairing delegation", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("startGpsDeviceDiscovery delegates to the transport with both callbacks", async () => {
+    const stopHandle = { stop: jest.fn() };
+    (bluetoothClassicTransport.startDiscovery as jest.Mock).mockResolvedValue(
+      stopHandle,
+    );
+
+    const onDeviceDiscovered = jest.fn();
+    const onFinished = jest.fn();
+
+    const result = await ExternalGpsService.startGpsDeviceDiscovery(
+      onDeviceDiscovered,
+      onFinished,
+    );
+
+    expect(bluetoothClassicTransport.startDiscovery).toHaveBeenCalledWith(
+      onDeviceDiscovered,
+      onFinished,
+    );
+    expect(result).toBe(stopHandle);
+  });
+
+  it("pairGpsDevice delegates to the transport", async () => {
+    const source = { id: "external:00:11:22", type: "external", label: "Bad Elf" };
+    (bluetoothClassicTransport.pairDevice as jest.Mock).mockResolvedValue(source);
+
+    const result = await ExternalGpsService.pairGpsDevice("00:11:22");
+
+    expect(bluetoothClassicTransport.pairDevice).toHaveBeenCalledWith(
+      "00:11:22",
+    );
+    expect(result).toBe(source);
   });
 });

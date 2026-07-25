@@ -4,10 +4,9 @@
   "scripts": {
     "start": "expo start",
     "start-tunnel": "expo start --tunnel",
-    "android": "expo android",
-    "ios": "expo ios",
     "run:android": "expo run:android",
     "run:ios": "expo run:ios",
+    "prebuild:android": "expo prebuild --platform android",
     "web": "expo start --web",
     "lint": "eslint --fix --ext .js,.jsx .",
     "test": "jest",

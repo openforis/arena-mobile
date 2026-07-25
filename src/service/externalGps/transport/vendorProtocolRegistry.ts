@@ -1,7 +1,10 @@
 /**
  * Recognizes known external GPS device vendors by the name Bluetooth reports for
  * them, so the source-selector UI can show a friendly label ("Bad Elf Flex") and so
- * discovery can filter out unrelated bonded devices (headphones, printers, etc).
+ * discovery can filter out unrelated bonded devices (headphones, printers, etc). Also
+ * used to categorize (not filter - see bluetoothClassicTransport.startDiscovery) live
+ * on-demand pairing scan results, since a device's advertised name is the same before
+ * and after bonding.
  *
  * On iOS, MFi accessories additionally require their exact protocol string to be
  * declared in app.config.ts's `ios.infoPlist.UISupportedExternalAccessoryProtocols` -
