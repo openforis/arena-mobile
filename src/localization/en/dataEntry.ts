@@ -164,6 +164,9 @@ Fetch the list of records from the server and try again?`,
     notInEntryStepAnymore:
       "Not in entry step anymore (in cleansing or analysis step)",
   },
+  processingData: {
+    title: "Processing data",
+  },
   uploadingData: {
     title: "Uploading data",
   },

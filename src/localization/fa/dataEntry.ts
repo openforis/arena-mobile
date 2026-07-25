@@ -121,6 +121,9 @@ export default {
     notInEntryStepAnymore:
       "دیگر در مرحله ورود نیست (در مرحله پاکسازی یا تجزیه و تحلیل است)",
   },
+  processingData: {
+    title: "در حال پردازش داده",
+  },
   uploadingData: {
     title: "در حال بارگذاری داده",
   },

@@ -124,6 +124,9 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
     notInEntryStepAnymore:
       "Plus à l'étape de saisie (à l'étape de nettoyage ou d'analyse)",
   },
+  processingData: {
+    title: "Traitement des données",
+  },
   uploadingData: {
     title: "Téléchargement des données",
   },
