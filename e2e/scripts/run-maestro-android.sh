@@ -8,7 +8,7 @@ ensure_adb_device_ready() {
   for _ in $(seq 1 "$max_retries"); do
     local adb_state
     adb_state="$(adb -s "$serial" get-state 2>/dev/null || true)"
-    if [ "$adb_state" = "device" ]; then
+    if [[ "$adb_state" = "device" ]]; then
       return 0
     fi
 
