@@ -692,13 +692,19 @@ const updateAttribute =
         }
 
         const isRootKeyDef = SurveyDefs.isRootKeyDef({ survey, cycle, nodeDef });
+        const isKeyDef = NodeDefs.isKey(nodeDef);
 
         await _updateRecord({ dispatch, survey, record: recordUpdated });
         if (
           DataEntrySelectors.selectIsLinkedToPreviousCycleRecord(state) &&
-          isRootKeyDef
+          isKeyDef
         ) {
-          dispatch(unlinkFromRecordInPreviousCycle());
+          if (isRootKeyDef) {
+            dispatch(unlinkFromRecordInPreviousCycle());
+          } else {
+            // key of a nested entity changed: refresh the matching previous-cycle entity
+            dispatch(updatePreviousCyclePageEntity);
+          }
         }
 
         if (
