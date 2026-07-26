@@ -42,15 +42,17 @@ describe("ExternalGpsService.watchPosition", () => {
   it("forwards disconnects and removes both subscriptions when stopped", async () => {
     const dataRemove = jest.fn();
     const disconnectRemove = jest.fn();
-    let onDataListener: ((chunk: string) => void) | null = null;
-    let onDisconnectedListener: (() => void) | null = null;
+    type ChunkCallback = (chunk: string) => void;
+    type VoidFn = () => void;
+    let onDataListener: ChunkCallback | null = null;
+    let onDisconnectedListener: VoidFn | null = null;
 
     const connection = {
-      onData: jest.fn((listener: (chunk: string) => void) => {
+      onData: jest.fn((listener: ChunkCallback) => {
         onDataListener = listener;
         return { remove: dataRemove };
       }),
-      onDisconnected: jest.fn((listener: () => void) => {
+      onDisconnected: jest.fn((listener: VoidFn) => {
         onDisconnectedListener = listener;
         return { remove: disconnectRemove };
       }),
@@ -86,7 +88,9 @@ describe("ExternalGpsService.watchPosition", () => {
     expect(connection.onData).toHaveBeenCalledTimes(1);
     expect(connection.onDisconnected).toHaveBeenCalledTimes(1);
 
-    onDataListener?.("$GPGGA,example");
+    if (onDataListener) {
+      (onDataListener as ChunkCallback)("$GPGGA,example");
+    }
     expect(assembler.ingest).toHaveBeenCalledWith("$GPGGA,example");
     expect(locationCallback).toHaveBeenCalledWith({
       latitude: 40,
@@ -94,7 +98,9 @@ describe("ExternalGpsService.watchPosition", () => {
       accuracy: 5,
     });
 
-    onDisconnectedListener?.();
+    if (onDisconnectedListener) {
+      (onDisconnectedListener as VoidFn)();
+    }
     expect(disconnectedCallback).toHaveBeenCalledTimes(1);
 
     subscription.remove();
@@ -133,8 +139,14 @@ describe("ExternalGpsService discovery/pairing delegation", () => {
   });
 
   it("pairGpsDevice delegates to the transport", async () => {
-    const source = { id: "external:00:11:22", type: "external", label: "Bad Elf" };
-    (bluetoothClassicTransport.pairDevice as jest.Mock).mockResolvedValue(source);
+    const source = {
+      id: "external:00:11:22",
+      type: "external",
+      label: "Bad Elf",
+    };
+    (bluetoothClassicTransport.pairDevice as jest.Mock).mockResolvedValue(
+      source,
+    );
 
     const result = await ExternalGpsService.pairGpsDevice("00:11:22");
 
