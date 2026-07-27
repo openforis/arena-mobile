@@ -20,10 +20,20 @@ import { JobMonitorDialog } from "appComponents/JobMonitorDialog";
 import { useEffectiveTheme } from "hooks";
 import { AppStack } from "navigation/AppStack";
 import { store } from "state/store";
-import { BaseStyles, Environment, log } from "utils";
+import {
+  BaseStyles,
+  Environment,
+  initializeGlobalErrorHandler,
+  log,
+} from "utils";
 
 import { AppInitializer } from "./src/AppInitializer";
 import styles from "./src/appStyles";
+
+// registered as early as possible, before any rendering, to catch errors
+// outside React's render phase (event handlers, timers, unhandled promise
+// rejections) that the ErrorBoundary below cannot see
+initializeGlobalErrorHandler();
 
 const safeAreaEdges: Edges = ["right", "bottom", "left"];
 
