@@ -42,7 +42,7 @@ export const VersionNumberInfoButton = () => {
               updateStatus: needsUpdate
                 ? UpdateStatus.notUpToDate
                 : UpdateStatus.upToDate,
-              updateUrl: url,
+              updateUrl: url ?? undefined,
             });
           }
         })
