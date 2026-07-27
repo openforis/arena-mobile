@@ -205,7 +205,7 @@ Möchten Sie sie erneut vom Server abrufen?`,
 - Halten Sie gedrückt, um einen Eckpunkt zu ziehen und zu verschieben.  
 - Drücken Sie '$t(dataEntry:geo.deleteSelectedPoint)', um ihn zu entfernen.`,
     tapToAddPoints: `Tippen Sie auf die Karte, um Punkte hinzuzufügen.  
-Drücken Sie '$t(dataEntry:geo.stopAddingPoints)', wenn Sie fertig sind.`,
+Drücken Sie '$t(common:stop)', wenn Sie fertig sind.`,
     deleteSelectedPoint: "Ausgewählten Punkt löschen",
     addCurrentLocationPoint: "Aktuellen Standort hinzufügen",
     addCurrentLocationPointInstructions:

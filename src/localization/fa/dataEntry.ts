@@ -201,7 +201,7 @@ export default {
 - برای جابه‌جایی، رأس را لمس طولانی کرده و بکشید.  
 - برای حذف، '$t(dataEntry:geo.deleteSelectedPoint)' را فشار دهید.`,
     tapToAddPoints: `برای افزودن نقاط روی نقشه ضربه بزنید.  
-وقتی تمام شد، '$t(dataEntry:geo.stopAddingPoints)' را فشار دهید.`,
+وقتی تمام شد، '$t(common:stop)' را فشار دهید.`,
     deleteSelectedPoint: "حذف نقطه انتخاب شده",
     addCurrentLocationPoint: "افزودن مکان فعلی",
     addCurrentLocationPointInstructions:

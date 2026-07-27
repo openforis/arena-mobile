@@ -242,7 +242,7 @@ export default {
 - 長押ししてドラッグすると頂点を移動できます。  
 - '$t(dataEntry:geo.deleteSelectedPoint)' を押すと削除できます。`,
     tapToAddPoints: `地図をタップして点を追加します。  
-完了したら '$t(dataEntry:geo.stopAddingPoints)' を押してください。`,
+完了したら '$t(common:stop)' を押してください。`,
     deleteSelectedPoint: "選択した点を削除",
     addCurrentLocationPoint: "現在地を追加",
     addCurrentLocationPointInstructions:

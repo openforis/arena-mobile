@@ -202,7 +202,7 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
 - Appuyez longuement pour faire glisser un sommet et le déplacer.  
 - Appuyez sur '$t(dataEntry:geo.deleteSelectedPoint)' pour le supprimer.`,
     tapToAddPoints: `Touchez la carte pour ajouter des points.  
-Appuyez sur '$t(dataEntry:geo.stopAddingPoints)' lorsque c'est fait.`,
+Appuyez sur '$t(common:stop)' lorsque c'est fait.`,
     deleteSelectedPoint: "Supprimer le point sélectionné",
     addCurrentLocationPoint: "Ajouter la position actuelle",
     addCurrentLocationPointInstructions:

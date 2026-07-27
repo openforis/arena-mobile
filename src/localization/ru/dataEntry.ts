@@ -195,7 +195,7 @@ export default {
 - Нажмите и удерживайте, чтобы переместить вершину.  
 - Нажмите '$t(dataEntry:geo.deleteSelectedPoint)', чтобы удалить.`,
     tapToAddPoints: `Нажмите на карту, чтобы добавить точки.  
-Нажмите '$t(dataEntry:geo.stopAddingPoints)', когда закончите.`,
+Нажмите '$t(common:stop)', когда закончите.`,
     deleteSelectedPoint: "Удалить выбранную точку",
     addCurrentLocationPoint: "Добавить текущее местоположение",
     addCurrentLocationPointInstructions:

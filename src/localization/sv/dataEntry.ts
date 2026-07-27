@@ -202,7 +202,7 @@ Vill du hämta den igen från servern?`,
 - Tryck länge för att dra ett hörn och flytta det.  
 - Tryck på '$t(dataEntry:geo.deleteSelectedPoint)' för att ta bort det.`,
     tapToAddPoints: `Tryck på kartan för att lägga till punkter.  
-Tryck '$t(dataEntry:geo.stopAddingPoints)' när du är klar.`,
+Tryck '$t(common:stop)' när du är klar.`,
     deleteSelectedPoint: "Ta bort vald punkt",
     addCurrentLocationPoint: "Lägg till aktuell plats",
     addCurrentLocationPointInstructions:

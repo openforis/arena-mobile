@@ -188,7 +188,7 @@ export default {
 - ለመንቀሳቀስ ጫፉን ረጅም ጊዜ ተጭነው ይጎትቱት።  
 - ለማጥፋት '$t(dataEntry:geo.deleteSelectedPoint)' ይጫኑ።`,
     tapToAddPoints: `ነጥቦች ለመጨመር በካርታው ላይ ይንኩ።  
-ከጨረሱ '$t(dataEntry:geo.stopAddingPoints)' ይጫኑ።`,
+ከጨረሱ '$t(common:stop)' ይጫኑ።`,
     deleteSelectedPoint: "የተመረጠውን ነጥብ ሰርዝ",
     addCurrentLocationPoint: "የአሁን ቦታ ጨምር",
     addCurrentLocationPointInstructions:

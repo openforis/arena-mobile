@@ -203,7 +203,7 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
 - Tekan lama untuk menyeret simpul dan memindahkannya.  
 - Tekan '$t(dataEntry:geo.deleteSelectedPoint)' untuk menghapusnya.`,
     tapToAddPoints: `Ketuk peta untuk menambahkan titik.  
-Tekan '$t(dataEntry:geo.stopAddingPoints)' ketika selesai.`,
+Tekan '$t(common:stop)' ketika selesai.`,
     deleteSelectedPoint: "Hapus titik yang dipilih",
     addCurrentLocationPoint: "Tambah lokasi saat ini",
     addCurrentLocationPointInstructions:

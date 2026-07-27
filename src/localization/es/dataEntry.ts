@@ -196,7 +196,7 @@ Sus valores serán borrados.
 - Mantén pulsado para arrastrar un vértice y moverlo.  
 - Pulsa '$t(dataEntry:geo.deleteSelectedPoint)' para eliminarlo.`,
     tapToAddPoints: `Toca el mapa para añadir puntos.  
-Presiona '$t(dataEntry:geo.stopAddingPoints)' cuando hayas terminado.`,
+Presiona '$t(common:stop)' cuando hayas terminado.`,
     deleteSelectedPoint: "Eliminar punto seleccionado",
     addCurrentLocationPoint: "Agregar ubicación actual",
     addCurrentLocationPointInstructions:
