@@ -19,7 +19,13 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordLoadStatus, RecordUtils, RecordOrigin, SurveyDefs } from "model";
+import {
+  RecordLoadStatus,
+  RecordUtils,
+  RecordOrigin,
+  SurveyDefs,
+  UserGroupQualifiers,
+} from "model";
 import { PreferencesService } from "service/preferencesService";
 import { RecordFileService } from "service/recordFileService";
 import { RecordService } from "service/recordService";
@@ -32,9 +38,12 @@ import { i18n } from "localization";
 import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { DeviceInfoActions, DeviceInfoSelectors } from "../deviceInfo";
 import { MessageActions } from "../message";
-import { SurveySelectors } from "../survey";
+import { SurveyActions, SurveySelectors } from "../survey";
 
-import { RemoteConnectionSelectors } from "../remoteConnection";
+import {
+  RemoteConnectionActions,
+  RemoteConnectionSelectors,
+} from "../remoteConnection";
 import { exportRecords, startCsvDataExportJob } from "./actionsDataExport";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
 import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
@@ -97,13 +106,107 @@ const prepareRecordForStorage = ({ record }: any) => {
   return { ...record, validation: validationUpdated };
 };
 
+const _prefillQualifierAttributes = async ({
+  user,
+  survey,
+  userGroup,
+  record,
+  nodes,
+}: any) => {
+  const qualifierDefs = Surveys.getQualifierDefs({ survey });
+  if (qualifierDefs.length === 0) {
+    return { record, nodes };
+  }
+  const qualifierValueByNodeDefUuid =
+    UserGroupQualifiers.getQualifierValueByNodeDefUuid({
+      survey,
+      userGroup,
+    });
+
+  for (const qualifierDef of qualifierDefs) {
+    const qualifierValue = qualifierValueByNodeDefUuid[qualifierDef.uuid];
+    if (qualifierValue === undefined) continue;
+    const value = UserGroupQualifiers.resolveQualifierNodeValue({
+      survey,
+      nodeDef: qualifierDef,
+      qualifierValue,
+    });
+    if (value === undefined) continue;
+    const [qualifierNode] = Records.getNodesByDefUuid(qualifierDef.uuid)(
+      record,
+    );
+    if (!qualifierNode) continue;
+    const { record: recordUpdated, nodes: nodesUpdated } =
+      await RecordUpdater.updateAttributeValue({
+        user,
+        survey,
+        record,
+        attributeUuid: qualifierNode.uuid,
+        value,
+      });
+    record = recordUpdated;
+    nodes = { ...nodes, ...nodesUpdated };
+  }
+  return { record, nodes };
+};
+
+// Qualifier attributes are prefilled from the user's UserGroup (see _prefillQualifierAttributes).
+// If the group hasn't been fetched yet (e.g. right after app startup or login, before the
+// best-effort background fetch resolves), we can't tell whether the user genuinely has no
+// group or whether we just haven't asked the server yet. Offer to fetch again rather than
+// silently creating a record with missing/incorrect prefilled values.
+const _ensureUserGroupReadyForNewRecord = async ({
+  dispatch,
+  getState,
+  survey,
+}: any): Promise<boolean> => {
+  if (Surveys.getQualifierDefs({ survey }).length === 0) return true;
+
+  const isReady = () =>
+    SurveySelectors.selectCurrentSurveyUserGroupReady(getState());
+
+  if (isReady()) return true;
+
+  const confirmed = await ConfirmUtils.confirm({
+    dispatch,
+    titleKey: "dataEntry:userGroupNotReady.title",
+    messageKey: "dataEntry:userGroupNotReady.message",
+    confirmButtonTextKey: "dataEntry:userGroupNotReady.fetchAgain",
+  });
+  if (!confirmed) return false;
+
+  await dispatch(
+    RemoteConnectionActions.loginAndSetUser({ onlyIfNotSet: false }),
+  );
+  await dispatch(SurveyActions.fetchCurrentSurveyUserGroup({ survey }));
+
+  if (!isReady()) {
+    dispatch(ToastActions.show("dataEntry:userGroupNotReady.stillNotReady"));
+    return false;
+  }
+  return true;
+};
+
 const createNewRecord =
   ({ navigation }: any) =>
   async (dispatch: any, getState: any) => {
     try {
-      const state = getState();
-      const user = RemoteConnectionSelectors.selectLoggedUser(state);
+      let state = getState();
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
+
+      if (
+        !(await _ensureUserGroupReadyForNewRecord({
+          dispatch,
+          getState,
+          survey,
+        }))
+      ) {
+        return;
+      }
+      state = getState();
+
+      const user = RemoteConnectionSelectors.selectLoggedUser(state);
+      const userGroup = SurveySelectors.selectCurrentSurveyUserGroup(state);
       const cycle = Surveys.getDefaultCycleKey(survey);
       const prevCycleRecord =
         DataEntrySelectors.selectPreviousCycleRecord(state);
@@ -126,6 +229,14 @@ const createNewRecord =
         record: recordEmpty,
         prevCycleRecord,
       });
+
+      ({ record, nodes } = await _prefillQualifierAttributes({
+        user,
+        survey,
+        userGroup,
+        record,
+        nodes,
+      }));
 
       record.surveyId = survey.id;
       removeNodesFlags(nodes);
@@ -556,9 +667,6 @@ const updateAttribute =
       )
         return;
 
-      log.debug(
-        `Updating node ${NodeDefs.getName(nodeDef)} (${node.uuid}) with value ${value}`,
-      );
       let {
         record: recordUpdated,
         nodes: nodesUpdated,
@@ -592,13 +700,19 @@ const updateAttribute =
       }
 
       const isRootKeyDef = SurveyDefs.isRootKeyDef({ survey, cycle, nodeDef });
+      const isKeyDef = NodeDefs.isKey(nodeDef);
 
       await _updateRecord({ dispatch, survey, record: recordUpdated });
       if (
         DataEntrySelectors.selectIsLinkedToPreviousCycleRecord(state) &&
-        isRootKeyDef
+        isKeyDef
       ) {
-        dispatch(unlinkFromRecordInPreviousCycle());
+        if (isRootKeyDef) {
+          dispatch(unlinkFromRecordInPreviousCycle());
+        } else {
+          // key of a nested entity changed: refresh the matching previous-cycle entity
+          dispatch(updatePreviousCyclePageEntity);
+        }
       }
 
       if (

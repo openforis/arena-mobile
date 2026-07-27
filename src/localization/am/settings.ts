@@ -26,12 +26,33 @@ export default {
       "ማስጠንቀቂያ፡ የባትሪ ፍጆታ ይጨምራል!\nመተግበሪያው በሚሠራበት ጊዜ የጂፒኤስ ምልክት ይቆለፋል።\nይህም በተቀናጀ ባህሪያት ውስጥ የተሻለ ትክክለኛነት ለማግኘት ይረዳል።",
     error: "የጂፒኤስ መቆለፊያን መጀመር አልተቻለም፡ የአካባቢ አቅራቢ የለም ወይም ወደ አካባቢው መዳረሻ አልተሰጠም",
   },
+  gpsDevicePairing: {
+    title: "የጂፒኤስ መሣሪያ ማጣመር",
+    scanButton: "መሣሪያዎችን ፈልግ",
+    scanningLabel: "በአቅራቢያ ያሉ መሣሪያዎችን በመፈለግ ላይ…",
+    scanAgainButton: "እንደገና ፈልግ",
+    emptyResult:
+      "ምንም መሣሪያ አልተገኘም። የጂፒኤስ መቀበያዎ በርቶ እና በማጣመሪያ ሁነታ ላይ መሆኑን ያረጋግጡ።",
+    scanFailed: "በፍለጋ ወቅት ችግር ተፈጥሯል። እባክዎ እንደገና ይሞክሩ።",
+    recognizedDevicesNotice: "እንደ ጂፒኤስ መቀበያ የታወቁ መሣሪያዎች ብቻ ይታያሉ።",
+    pairedDevicesTitle: "የተጣመሩ መሣሪያዎች",
+    newDevicesTitle: "አዲስ መሣሪያዎች",
+    pairButton: "አጣምር",
+    pairing: "በማጣመር ላይ…",
+    pairingSucceeded: "ከ{{name}} ጋር ተጣምሯል",
+    pairingFailed: "ከ{{name}} ጋር ማጣመር አልተቻለም",
+    bluetoothDisabled: "ብሉቱዝ ጠፍቷል።",
+    enableBluetoothButton: "ብሉቱዝን አብራ",
+    permissionDenied: "መሣሪያዎችን ለመፈለግ የብሉቱዝ ፈቃድ ያስፈልጋል።",
+    openSettingsButton: "የመተግበሪያ ቅንብሮችን ክፈት",
+  },
   preferredGpsSourceId: {
     label: "የጂፒኤስ ምንጭ",
     description:
       "መጋጠሚያዎችን ለመመዝገብ የትኛው ጂፒኤስ ጥቅም ላይ እንደሚውል ይምረጡ፡ የስልኩ ውስጣዊ ጂፒኤስ ወይም የተጣመረ ውጫዊ ጂፒኤስ መቀበያ (ለምሳሌ Bad Elf)።",
     auto: "ራስ-ሰር (ካለ ውጫዊ)",
     internal: "ውስጣዊ ጂፒኤስ",
+    pairNewDevice: "አዲስ መሣሪያ አጣምር…",
   },
 
   showStatusBar: "የሁኔታ አሞሌን አሳይ",

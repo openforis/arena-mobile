@@ -48,4 +48,9 @@ export default {
     'Survey "{{surveyName}}" has a new version; update it?',
   updateSurveyConfirmMessage:
     'Survey "{{surveyName}}" already in this device; update it?',
+  userGroup: {
+    fetching: "Fetching user group...",
+    label: "User group: {{name}}",
+    none: "No user group assigned",
+  },
 };

@@ -96,6 +96,52 @@ const requestBluetoothPermissions = async (): Promise<boolean> => {
   return true;
 };
 
+/**
+ * Requests whatever runtime permission is needed to run Bluetooth Classic device
+ * discovery (RNBluetoothClassic.startDiscovery()) for on-demand external GPS pairing.
+ *
+ * - API 31+ (Android 12+): only the BLUETOOTH_SCAN runtime permission is needed.
+ *   react-native-bluetooth-classic declares it with usesPermissionFlags="neverForLocation"
+ *   in its own AndroidManifest.xml, so no location permission or "Location services on"
+ *   check applies here.
+ * - API 23-30: BluetoothAdapter.startDiscovery() is gated by the *location* runtime
+ *   permission plus the device's system Location toggle being on instead - both already
+ *   requested for internal GPS via requestLocationForegroundPermission()/
+ *   isLocationServiceEnabled(), so they're reused here rather than duplicated. Getting
+ *   either of these wrong makes startDiscovery() silently resolve with zero devices.
+ * - Below API 23: no runtime permission model, nothing to request.
+ */
+const requestBluetoothScanPermissions = async (): Promise<boolean> => {
+  if (Environment.isExpoGo || !Environment.isAndroid) {
+    return true;
+  }
+
+  if (Environment.androidApiLevel >= 31) {
+    const permission = i18n.t("permissions:types.bluetoothScan");
+    const status = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+      {
+        title: i18n.t("permissions:permissionRequest.title", { permission }),
+        message: i18n.t("permissions:permissionRequest.message", {
+          permission,
+        }),
+        buttonNegative: i18n.t("common:cancel"),
+        buttonPositive: i18n.t("common:ok"),
+      },
+    );
+    return status === PermissionsAndroid.RESULTS.GRANTED;
+  }
+
+  if (Environment.androidApiLevel >= 23) {
+    if (!(await isLocationServiceEnabled())) {
+      return false;
+    }
+    return requestLocationForegroundPermission();
+  }
+
+  return true;
+};
+
 export const Permissions = {
   isLocationServiceEnabled,
   requestLocationForegroundPermission,
@@ -103,4 +149,5 @@ export const Permissions = {
   requestImagePickerMediaLibraryPermissions,
   requestMicrophonePermissions,
   requestBluetoothPermissions,
+  requestBluetoothScanPermissions,
 };

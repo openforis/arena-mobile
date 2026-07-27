@@ -26,10 +26,13 @@ yarn start
 # Start with tunnel (for testing on external devices)
 yarn start-tunnel
 
-# Platform-specific starts
-yarn android
-yarn ios
+# Platform-specific starts (native builds)
+yarn run:android
+yarn run:ios
 yarn web
+
+# Regenerate native android project (config plugins, etc.)
+yarn prebuild:android
 ```
 
 ### Code Quality
@@ -39,9 +42,21 @@ yarn lint
 
 # Type check TypeScript files
 yarn test:types
+
+# Run unit tests (Jest)
+yarn test
 ```
 
-**Note:** This project does not have automated unit tests. Testing is done manually on devices.
+### End-to-End Tests
+```bash
+# Run Maestro e2e test suite (requires a running/connected app)
+yarn e2e:maestro
+
+# Build a debug Android app and run the Maestro suite against it
+yarn e2e:maestro:android
+```
+
+**Note:** Unit tests use Jest (`jest.config.js`, colocated `*.test.ts` files, e.g. in `src/utils/`, `src/hooks/`, `src/service/`). End-to-end tests use Maestro (`e2e/maestro/`). Manual testing on devices is still expected for UI/UX changes.
 
 ### Building & Deployment
 ```bash

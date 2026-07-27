@@ -14,6 +14,7 @@ export default {
   types: {
     accessMediaLocation: "Pääsy median sijaintiin",
     bluetoothConnect: "Bluetooth-yhteys",
+    bluetoothScan: "Bluetooth-haku",
     mediaLibrary: "Mediagalleria",
     camera: "Pääsy kameraan",
     microphone: "Pääsy mikrofoniin",

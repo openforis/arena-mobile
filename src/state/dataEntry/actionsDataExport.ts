@@ -126,7 +126,7 @@ const startUploadDataToRemoteServer =
     dispatch(
       JobMonitorActions.start({
         jobUuid: remoteJob.uuid,
-        titleKey: "dataEntry:dataExport.title",
+        titleKey: "dataEntry:processingData.title",
         onJobComplete,
       }),
     );

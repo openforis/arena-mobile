@@ -38,6 +38,15 @@ Fortfahren?`,
     title: "Aufgezählte Entitäten aktualisieren",
   },
   createRecordError: "Fehler beim Erstellen eines neuen Datensatzes: {{error}}",
+  userGroupNotReady: {
+    title: "Benutzerinformationen noch nicht bereit",
+    message: `Ihre Benutzergruppeninformationen wurden noch nicht vom Server abgerufen. Diese Umfrage enthält Attribute, die basierend auf Ihrer Benutzergruppe vorausgefüllt werden. Wenn Sie den Datensatz jetzt erstellen, könnten diese leer oder falsch bleiben.
+
+Möchten Sie sie erneut vom Server abrufen?`,
+    fetchAgain: "Erneut abrufen",
+    stillNotReady:
+      "Ihre Benutzergruppeninformationen konnten nicht vom Server abgerufen werden. Datensatz nicht erstellt.",
+  },
   updateAttributeError: "Fehler beim Aktualisieren des Werts: {{error}}",
   cycle: "Zyklus",
   cycleForNewRecords: "Zyklus für neue Datensätze:",
@@ -115,6 +124,9 @@ Fortfahren?`,
     modifiedRemotely: "Auf dem Remote-Server geändert",
     notInEntryStepAnymore:
       "Nicht mehr im Eingabeschritt (im Bereinigungs- oder Analyseschritt)",
+  },
+  processingData: {
+    title: "Daten werden verarbeitet",
   },
   uploadingData: {
     title: "Daten werden hochgeladen",

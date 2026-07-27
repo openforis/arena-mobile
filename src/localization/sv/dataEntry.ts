@@ -37,6 +37,15 @@ Fortsätta?`,
     title: "Uppdatera uppräknade entiteter",
   },
   createRecordError: "Fel vid skapande av ny post: {{error}}",
+  userGroupNotReady: {
+    title: "Användarinformation inte redo",
+    message: `Din användargruppsinformation har ännu inte hämtats från servern. Denna undersökning har attribut som förifylls baserat på din användargrupp, så att skapa posten nu kan lämna dem tomma eller felaktiga.
+
+Vill du hämta den igen från servern?`,
+    fetchAgain: "Hämta igen",
+    stillNotReady:
+      "Det gick inte att hämta din användargruppsinformation från servern. Posten skapades inte.",
+  },
   updateAttributeError: "Fel vid uppdatering av värde: {{error}}",
   cycle: "Cykel",
   cycleForNewRecords: "Cykel för nya poster:",
@@ -112,6 +121,9 @@ Fortsätta?`,
     modifiedRemotely: "Ändrad på fjärrservern",
     notInEntryStepAnymore:
       "Inte längre i inmatningssteget (i rensnings- eller analyssteget)",
+  },
+  processingData: {
+    title: "Bearbetar data",
   },
   uploadingData: {
     title: "Laddar upp data",

@@ -49,4 +49,9 @@ export default {
     'O inquérito "{{surveyName}}" tem uma nova versão; atualizá-lo?',
   updateSurveyConfirmMessage:
     'O inquérito "{{surveyName}}" já está neste dispositivo; atualizá-lo?',
+  userGroup: {
+    fetching: "A obter grupo de utilizador...",
+    label: "Grupo de utilizador: {{name}}",
+    none: "Nenhum grupo de utilizador atribuído",
+  },
 };

@@ -1,4 +1,4 @@
-import { Survey, Surveys } from "@openforis/arena-core";
+import { Survey, Surveys, UserGroup } from "@openforis/arena-core";
 
 import { SurveyRepository } from "./repository/surveyRepository";
 import { SurveyFSRepository } from "./repository/surveyFSRepository";
@@ -104,6 +104,23 @@ const fetchSurveyRemoteById = async ({
   return survey;
 };
 
+// Each user belongs to at most one UserGroup per survey (see docs/user-group-qualifiers.md).
+// The survey may not be linked to a remote server, in which case there's no group to fetch.
+// Any other failure (offline, server error, endpoint not supported yet) is thrown, letting the
+// caller fall back to a locally cached value rather than silently treating it as "no group".
+const fetchCurrentUserGroupRemote = async ({
+  survey,
+}: {
+  survey: Survey & { remoteId?: number };
+}): Promise<UserGroup | null> => {
+  const { remoteId } = survey;
+  if (!remoteId) return null;
+  const { data } = await RemoteService.get(
+    `api/survey/${remoteId}/current-user-group`,
+  );
+  return data?.userGroup ?? null;
+};
+
 const getSurveysStorageSize = async () => SurveyFSRepository.getStorageSize();
 
 const importDemoSurvey = async () =>
@@ -135,6 +152,7 @@ export const SurveyService = {
   fetchSurveySummariesRemote,
   fetchSurveySummaryRemote,
   fetchSurveyById,
+  fetchCurrentUserGroupRemote,
   getSurveysStorageSize,
   importDemoSurvey,
   importSurveyRemote,

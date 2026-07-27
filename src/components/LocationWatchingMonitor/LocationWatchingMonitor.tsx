@@ -1,11 +1,15 @@
-import { log } from "utils";
+import { useState } from "react";
+
+import { log, Environment } from "utils";
 import { useTranslation } from "localization";
 import type { LocationWatchStatus } from "hooks";
 import { GpsSourceSetting } from "model";
 import { GpsSourceDescriptor } from "service/externalGps/types";
 import { FieldSet } from "../FieldSet";
 import { Button } from "../Button";
+import { GpsDevicePairingModal } from "../GpsDevicePairingModal";
 import { HView } from "../HView";
+import { IconButton } from "../IconButton";
 import { LoadingIcon } from "../LoadingIcon";
 import { MenuButton } from "../MenuButton";
 import { Text } from "../Text";
@@ -28,6 +32,7 @@ type LocationWatchingMonitorProps = {
   locationWatchStatus: LocationWatchStatus;
   locationWatchTimeout: number;
   onCancelConnecting?: () => void;
+  onGpsDevicePaired?: (source: GpsSourceDescriptor) => void;
   onSelectGpsSource?: (sourceId: string) => void;
   onStart: () => void;
   onStop: () => void;
@@ -49,6 +54,7 @@ export const LocationWatchingMonitor = (
     locationWatchStatus,
     locationWatchTimeout,
     onCancelConnecting,
+    onGpsDevicePaired,
     onSelectGpsSource,
     onStart,
     onStop,
@@ -58,6 +64,9 @@ export const LocationWatchingMonitor = (
   log.debug(`rendering LocationWatchingMonitor`);
 
   const { t } = useTranslation();
+
+  const [devicePairingModalVisible, setDevicePairingModalVisible] =
+    useState(false);
 
   const isIdle = locationWatchStatus === "idle";
   const isConnecting = locationWatchStatus === "connecting";
@@ -75,6 +84,11 @@ export const LocationWatchingMonitor = (
   // confuse in-flight location averaging).
   const gpsSourceMenuVisible =
     isIdle && !!onSelectGpsSource && availableGpsSources.length > 1;
+
+  // Bluetooth Classic pairing (bluetoothClassicTransport) is Android-only; see the
+  // same gating in GpsSourceSettingsField.
+  const pairDeviceButtonVisible =
+    isIdle && !!onGpsDevicePaired && Environment.isAndroid;
 
   const gpsSourceMenuItems = gpsSourceMenuVisible
     ? [
@@ -175,6 +189,12 @@ export const LocationWatchingMonitor = (
               />
             )
           )}
+          {pairDeviceButtonVisible && (
+            <IconButton
+              icon="bluetooth"
+              onPress={() => setDevicePairingModalVisible(true)}
+            />
+          )}
         </HView>
       )}
       {isConnecting && (
@@ -191,6 +211,15 @@ export const LocationWatchingMonitor = (
           onPress={onStop}
           style={styles.button}
           textKey="common:stop"
+        />
+      )}
+      {devicePairingModalVisible && (
+        <GpsDevicePairingModal
+          onDevicePaired={(source) => {
+            setDevicePairingModalVisible(false);
+            onGpsDevicePaired!(source);
+          }}
+          onDismiss={() => setDevicePairingModalVisible(false)}
         />
       )}
     </VView>

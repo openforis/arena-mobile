@@ -29,12 +29,35 @@ export default {
     error:
       "Não é possível iniciar o bloqueio de GPS: fornecedor de localização não disponível ou acesso à localização não concedido",
   },
+  gpsDevicePairing: {
+    title: "Emparelhar um dispositivo GPS",
+    scanButton: "Procurar dispositivos",
+    scanningLabel: "A procurar dispositivos próximos…",
+    scanAgainButton: "Procurar novamente",
+    emptyResult:
+      "Nenhum dispositivo encontrado. Certifique-se de que o seu recetor GPS está ligado e em modo de emparelhamento.",
+    scanFailed: "Ocorreu um erro durante a pesquisa. Tente novamente.",
+    recognizedDevicesNotice:
+      "Apenas os dispositivos reconhecidos como recetores GPS são apresentados.",
+    pairedDevicesTitle: "Dispositivos emparelhados",
+    newDevicesTitle: "Novos dispositivos",
+    pairButton: "Emparelhar",
+    pairing: "A emparelhar…",
+    pairingSucceeded: "Emparelhado com {{name}}",
+    pairingFailed: "Não foi possível emparelhar com {{name}}",
+    bluetoothDisabled: "O Bluetooth está desativado.",
+    enableBluetoothButton: "Ativar Bluetooth",
+    permissionDenied:
+      "É necessária a permissão de Bluetooth para procurar dispositivos.",
+    openSettingsButton: "Abrir definições da aplicação",
+  },
   preferredGpsSourceId: {
     label: "Fonte GPS",
     description:
       "Escolha qual GPS é usado para registar coordenadas: o GPS interno do telemóvel ou um recetor GPS externo emparelhado (por exemplo, Bad Elf).",
     auto: "Automático (externo se disponível)",
     internal: "GPS interno",
+    pairNewDevice: "Emparelhar um novo dispositivo…",
   },
   showStatusBar: "Mostrar barra de estado",
   theme: {
