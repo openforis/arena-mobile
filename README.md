@@ -41,4 +41,4 @@ yarn start
 ```
 
 For EAS builds, set these variables as EAS secrets or environment variables for the build profile.
-Alternatively, you can configure the API keys directly in `app.json` under `android.config.googleMaps.apiKey` and `ios.config.googleMapsApiKey`.
+Alternatively, you can hardcode the keys directly in `app.config.ts`, where they are passed to the `react-native-maps` config plugin as `androidGoogleMapsApiKey` and `iosGoogleMapsApiKey`.
