@@ -22,4 +22,8 @@ export default StyleSheet.create({
   updateStatusIconButton: {
     alignSelf: "flex-end",
   },
+  userGroupContainer: {
+    alignItems: "center",
+    gap: 6,
+  },
 });

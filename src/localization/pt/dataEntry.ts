@@ -37,6 +37,15 @@ Continuar?`,
     title: "Atualizar entidades enumeradas",
   },
   createRecordError: "Erro ao criar novo registro: {{error}}",
+  userGroupNotReady: {
+    title: "Informações do usuário não prontas",
+    message: `As informações do seu grupo de usuário ainda não foram obtidas do servidor. Este inquérito tem atributos que são preenchidos previamente com base no seu grupo de usuário, portanto, criar o registro agora pode deixá-los vazios ou incorretos.
+
+Deseja obtê-las novamente do servidor?`,
+    fetchAgain: "Obter novamente",
+    stillNotReady:
+      "Não foi possível obter as informações do seu grupo de usuário do servidor. Registro não criado.",
+  },
   updateAttributeError: "Erro ao atualizar o valor: {{error}}",
   cycle: "Ciclo",
   cycleForNewRecords: "Ciclo para novos registos:",
@@ -108,6 +117,9 @@ Continuar?`,
     modifiedRemotely: "Modificado no servidor remoto",
     notInEntryStepAnymore:
       "Já não está na etapa de introdução (na etapa de limpeza ou análise)",
+  },
+  processingData: {
+    title: "Processando dados",
   },
   uploadingData: {
     title: "Enviando dados",

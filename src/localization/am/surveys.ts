@@ -46,4 +46,9 @@ export default {
   updateSurveyWithNewVersionConfirmMessage:
     'ዳሰሳው "{{surveyName}}" አዲስ ስሪት አለው; ያዘምኑት?',
   updateSurveyConfirmMessage: 'ዳሰሳው "{{surveyName}}" በዚህ መሣሪያ ውስጥ አለ; ያዘምኑት?',
+  userGroup: {
+    fetching: "የተጠቃሚ ቡድን በማምጣት ላይ...",
+    label: "የተጠቃሚ ቡድን፡ {{name}}",
+    none: "የተመደበ የተጠቃሚ ቡድን የለም",
+  },
 };

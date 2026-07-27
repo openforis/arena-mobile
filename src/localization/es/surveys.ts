@@ -49,4 +49,9 @@ export default {
     '¿La encuesta "{{surveyName}}" tiene una nueva versión; actualizarla?',
   updateSurveyConfirmMessage:
     '¿La encuesta "{{surveyName}}" ya está en este dispositivo; actualizarla?',
+  userGroup: {
+    fetching: "Obteniendo grupo de usuario...",
+    label: "Grupo de usuario: {{name}}",
+    none: "Ningún grupo de usuario asignado",
+  },
 };

@@ -13,6 +13,7 @@ export default {
   types: {
     accessMediaLocation: "Access to Media Location",
     bluetoothConnect: "Bluetooth Connect",
+    bluetoothScan: "Bluetooth Scan",
     camera: "Access to Camera",
     mediaLibrary: "Media Library",
     microphone: "Access to Microphone",

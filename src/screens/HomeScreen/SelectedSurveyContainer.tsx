@@ -1,12 +1,14 @@
 import { useNavigation } from "@react-navigation/native";
 import { useCallback, useEffect, useState } from "react";
 
-import { Surveys } from "@openforis/arena-core";
+import { Surveys, UserGroup } from "@openforis/arena-core";
 
 import {
   Button,
   Card,
   HView,
+  Icon,
+  LoadingIcon,
   Link,
   Text,
   ViewMoreText,
@@ -29,6 +31,16 @@ type SelectedSurveyContainerState = {
   errorKey?: string | null;
 };
 
+const determineUserGroupStatusKey = ({ userGroupReady, userGroup }: { userGroupReady: boolean; userGroup: UserGroup | null }) => {
+  if (userGroupReady) {
+    if (userGroup) {
+      return "surveys:userGroup.label";
+    }
+    return "surveys:userGroup.none";
+  }
+  return "surveys:userGroup.fetching";
+}
+
 export const SelectedSurveyContainer = () => {
   const navigation = useNavigation();
   const networkAvailable = useIsNetworkConnected();
@@ -45,6 +57,10 @@ export const SelectedSurveyContainer = () => {
   const surveyDescription = Surveys.getDescription(lang)(survey);
   const fieldManualUrl = Surveys.getFieldManualLink(lang)(survey);
   const isDemoSurvey = survey?.uuid === SurveyService.demoSurveyUuid;
+
+  const hasQualifierDefs = Surveys.getQualifierDefs({ survey }).length > 0;
+  const userGroup = SurveySelectors.useCurrentSurveyUserGroup();
+  const userGroupReady = SurveySelectors.useCurrentSurveyUserGroupReady();
 
   const [state, setState] = useState({
     updateStatus: UpdateStatus.loading,
@@ -92,6 +108,8 @@ export const SelectedSurveyContainer = () => {
 
   if (!survey) return null;
 
+  let userGroupTextKey = determineUserGroupStatusKey({ userGroupReady, userGroup });
+
   return (
     <Card style={styles.container}>
       <VView style={styles.internalContainer} transparent>
@@ -114,6 +132,23 @@ export const SelectedSurveyContainer = () => {
         )}
         {fieldManualUrl && (
           <Link labelKey="surveys:fieldManual" url={fieldManualUrl} />
+        )}
+        {hasQualifierDefs && user && (
+          <HView style={styles.userGroupContainer} transparent>
+            {userGroupReady ? (
+              <Icon source={userGroup ? "account-group" : "account-off"} />
+            ) : (
+              <LoadingIcon />
+            )}
+            <Text
+              textKey={userGroupTextKey}
+              textParams={
+                userGroupReady && userGroup
+                  ? { name: userGroup.props.name }
+                  : undefined
+              }
+            />
+          </HView>
         )}
         <Button
           labelVariant="bodyLarge"

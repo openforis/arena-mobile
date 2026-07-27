@@ -37,6 +37,15 @@ Lanjutkan?`,
     title: "Perbarui entitas terenumerasi",
   },
   createRecordError: "Kesalahan saat membuat catatan baru: {{error}}",
+  userGroupNotReady: {
+    title: "Informasi pengguna belum siap",
+    message: `Informasi grup pengguna Anda belum diambil dari server. Survei ini memiliki atribut yang diisi otomatis berdasarkan grup pengguna Anda, sehingga membuat catatan sekarang dapat membuat atribut tersebut kosong atau tidak benar.
+
+Apakah Anda ingin mengambilnya lagi dari server?`,
+    fetchAgain: "Ambil lagi",
+    stillNotReady:
+      "Tidak dapat mengambil informasi grup pengguna Anda dari server. Catatan tidak dibuat.",
+  },
   updateAttributeError: "Kesalahan saat memperbarui nilai: {{error}}",
   cycle: "Siklus",
   cycleForNewRecords: "Siklus untuk data isian baru:",
@@ -113,6 +122,9 @@ Lanjutkan?`,
     modifiedRemotely: "Dimodifikasi di server jarak jauh",
     notInEntryStepAnymore:
       "Tidak lagi dalam tahap entri (dalam tahap pembersihan atau analisis)",
+  },
+  processingData: {
+    title: "Memproses data",
   },
   uploadingData: {
     title: "Mengunggah data",

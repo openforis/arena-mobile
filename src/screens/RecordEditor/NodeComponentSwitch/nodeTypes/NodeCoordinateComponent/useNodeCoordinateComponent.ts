@@ -16,6 +16,7 @@ import {
 import { useAvailableGpsSources, useLocationWatch } from "hooks";
 import { LocationPoint, SettingsModel } from "model";
 import { RecordUtils } from "model/utils/RecordUtils";
+import { GpsSourceDescriptor } from "service/externalGps/types";
 import {
   DataEntryActions,
   DataEntrySelectors,
@@ -251,8 +252,11 @@ export const useNodeCoordinateComponent = (props: any) => {
   } = useLocationWatch({ locationCallback });
 
   const { preferredGpsSourceId } = SettingsSelectors.useSettings();
-  const { availableGpsSources, loading: gpsSourcesLoading } =
-    useAvailableGpsSources();
+  const {
+    availableGpsSources,
+    loading: gpsSourcesLoading,
+    refreshAvailableGpsSources,
+  } = useAvailableGpsSources();
 
   const onSelectGpsSource = useCallback(
     (sourceId: string) => {
@@ -264,6 +268,14 @@ export const useNodeCoordinateComponent = (props: any) => {
       );
     },
     [dispatch],
+  );
+
+  const onGpsDevicePaired = useCallback(
+    async (source: GpsSourceDescriptor) => {
+      await refreshAvailableGpsSources();
+      onSelectGpsSource(source.id);
+    },
+    [onSelectGpsSource, refreshAvailableGpsSources],
   );
 
   // Get the distance target for the coordinate node
@@ -387,6 +399,7 @@ export const useNodeCoordinateComponent = (props: any) => {
     onChangeValueField,
     onClearPress,
     onCompassNavigatorUseCurrentLocation,
+    onGpsDevicePaired,
     onSelectGpsSource,
     onStartGpsPress,
     onStopGpsPress,

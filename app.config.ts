@@ -1,7 +1,7 @@
 import { ExpoConfig } from "expo/config";
 
-const appVersion = "2.6.6";
-const buildNumber = 110;
+const appVersion = "2.7.0";
+const buildNumber = 111;
 
 const basePlugins: ExpoConfig["plugins"] = [
   ["expo-asset", { assets: ["assets"] }],
@@ -40,6 +40,7 @@ const basePlugins: ExpoConfig["plugins"] = [
   "expo-secure-store",
   "expo-sharing",
   "expo-sqlite",
+  "expo-status-bar",
   "expo-web-browser",
   "@react-native-community/datetimepicker",
 ];
@@ -71,15 +72,18 @@ const config = (): ExpoConfig => {
       permissions: [
         "android.permission.ACCESS_MEDIA_LOCATION",
         "android.permission.RECORD_AUDIO",
-        // For connecting to an already-paired (OS-level) external Bluetooth GPS
-        // receiver over Classic SPP. BLUETOOTH/BLUETOOTH_ADMIN cover API < 31;
-        // BLUETOOTH_CONNECT is the API 31+ runtime permission (requested via
-        // Permissions.requestBluetoothPermissions()). BLUETOOTH_SCAN is
-        // intentionally omitted - the app only lists bonded devices, it never
-        // scans/pairs.
+        // For scanning, pairing, and connecting to an external Bluetooth GPS receiver
+        // over Classic SPP. BLUETOOTH/BLUETOOTH_ADMIN cover API < 31; BLUETOOTH_CONNECT
+        // and BLUETOOTH_SCAN are the API 31+ runtime permissions (requested via
+        // Permissions.requestBluetoothPermissions()/requestBluetoothScanPermissions()).
+        // Location permission for pre-API-31 discovery is NOT declared here separately -
+        // ACCESS_FINE_LOCATION/ACCESS_COARSE_LOCATION are already pulled in transitively
+        // by expo-location (used for internal GPS); requestBluetoothScanPermissions()
+        // reuses the app's existing foreground-location request for that runtime check.
         "android.permission.BLUETOOTH",
         "android.permission.BLUETOOTH_ADMIN",
         "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.BLUETOOTH_SCAN",
       ],
       config: {
         googleMaps: {

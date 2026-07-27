@@ -2,6 +2,8 @@ export { useAppInfo } from "./useAppInfo";
 export { useAvailableGpsSources } from "./useAvailableGpsSources";
 export { useBackHandler } from "./useBackHandler";
 export { useEffectiveTheme } from "./useEffectiveTheme";
+export { useGpsDeviceDiscovery } from "./useGpsDeviceDiscovery";
+export type { GpsDeviceDiscoveryError } from "./useGpsDeviceDiscovery";
 export { useHeartbeatAnimation } from "./useHeartbeatAnimation";
 export { useImageFile } from "./useImageFile";
 export { useIsMountedRef } from "./useIsMountedRef";

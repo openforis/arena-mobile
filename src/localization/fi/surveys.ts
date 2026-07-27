@@ -50,4 +50,9 @@ export default {
     'Kyselylomakkeella "{{surveyName}}" on uusi versio; päivitetäänkö se?',
   updateSurveyConfirmMessage:
     'Kyselylomake "{{surveyName}}" on jo tässä laitteessa; päivitetäänkö se?',
+  userGroup: {
+    fetching: "Haetaan käyttäjäryhmää...",
+    label: "Käyttäjäryhmä: {{name}}",
+    none: "Ei käyttäjäryhmää määritetty",
+  },
 };

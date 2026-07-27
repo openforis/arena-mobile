@@ -48,4 +48,9 @@ export default {
     'Enkäten "{{surveyName}}" har en ny version; uppdatera den?',
   updateSurveyConfirmMessage:
     'Enkäten "{{surveyName}}" finns redan i den här enheten; uppdatera den?',
+  userGroup: {
+    fetching: "Hämtar användargrupp...",
+    label: "Användargrupp: {{name}}",
+    none: "Ingen användargrupp tilldelad",
+  },
 };
