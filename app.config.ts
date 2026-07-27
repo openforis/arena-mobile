@@ -49,7 +49,16 @@ const config = (): ExpoConfig => {
   const androidGoogleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY_ANDROID;
   const iosGoogleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY_IOS;
 
-  const plugins = basePlugins;
+  const plugins: ExpoConfig["plugins"] = [
+    ...basePlugins,
+    [
+      "react-native-maps",
+      {
+        androidGoogleMapsApiKey,
+        iosGoogleMapsApiKey,
+      },
+    ],
+  ];
 
   return {
     name: "Arena Mobile",
@@ -85,18 +94,12 @@ const config = (): ExpoConfig => {
         "android.permission.BLUETOOTH_CONNECT",
         "android.permission.BLUETOOTH_SCAN",
       ],
-      config: {
-        googleMaps: {
-          apiKey: androidGoogleMapsApiKey,
-        },
-      },
     },
     ios: {
       buildNumber: buildNumber.toString(),
       bundleIdentifier: "org.openforis.arena-mobile",
       config: {
         usesNonExemptEncryption: false,
-        googleMapsApiKey: iosGoogleMapsApiKey,
       },
       infoPlist: {
         LSMinimumSystemVersion: "13.0",
