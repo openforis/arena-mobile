@@ -10,6 +10,12 @@ const globalErrorUtils = (global as any).ErrorUtils as
   | ErrorUtilsType
   | undefined;
 
+// tracked on the actual JS global (not module-local state), since a module-local
+// flag would be reset if this module gets re-evaluated by Fast Refresh; without
+// this, every dev hot reload would wrap another layer around the previous
+// handler, duplicating dialogs/log entries for every subsequent error
+const initializedFlagKey = "__arenaMobileGlobalErrorHandlerInitialized__";
+
 const showErrorMessage = (error: unknown) => {
   store.dispatch(
     MessageActions.setMessage({
@@ -54,6 +60,11 @@ const handleUnhandledRejection = (id: number, rejection: unknown) => {
  * this, unhandled rejections would fail silently.
  */
 export const initializeGlobalErrorHandler = () => {
+  if ((global as any)[initializedFlagKey]) {
+    return;
+  }
+  (global as any)[initializedFlagKey] = true;
+
   if (globalErrorUtils) {
     const previousHandler = globalErrorUtils.getGlobalHandler();
     globalErrorUtils.setGlobalHandler((error: unknown, isFatal?: boolean) => {

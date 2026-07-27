@@ -20,12 +20,8 @@ import { JobMonitorDialog } from "appComponents/JobMonitorDialog";
 import { useEffectiveTheme } from "hooks";
 import { AppStack } from "navigation/AppStack";
 import { store } from "state/store";
-import {
-  BaseStyles,
-  Environment,
-  initializeGlobalErrorHandler,
-  log,
-} from "utils";
+import { BaseStyles, Environment, log } from "utils";
+import { initializeGlobalErrorHandler } from "utils/GlobalErrorHandler";
 
 import { AppInitializer } from "./src/AppInitializer";
 import styles from "./src/appStyles";
