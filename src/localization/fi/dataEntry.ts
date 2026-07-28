@@ -201,7 +201,7 @@ Haluatko hakea sen uudelleen palvelimelta?`,
 - Pidä painettuna vetääksesi kärkeä ja siirtääksesi sitä.  
 - Paina '$t(dataEntry:geo.deleteSelectedPoint)' poistaaksesi sen.`,
     tapToAddPoints: `Napauta karttaa lisätäksesi pisteitä.  
-Paina '$t(dataEntry:geo.stopAddingPoints)', kun olet valmis.`,
+Paina '$t(common:stop)', kun olet valmis.`,
     deleteSelectedPoint: "Poista valittu piste",
     addCurrentLocationPoint: "Lisää nykyinen sijainti",
     addCurrentLocationPointInstructions:

@@ -244,7 +244,7 @@ Fetch the list of records from the server and try again?`,
 - Long-press to drag a vertex and move it.  
 - Press '$t(dataEntry:geo.deleteSelectedPoint)' to delete it.`,
     tapToAddPoints: `Tap the map to add points.  
-Press '$t(dataEntry:geo.stopAddingPoints)' when done.`,
+Press '$t(common:stop)' when done.`,
     deleteSelectedPoint: "Delete selected point",
     addCurrentLocationPoint: "Add current location",
     addCurrentLocationPointInstructions:
