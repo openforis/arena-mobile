@@ -32,7 +32,13 @@ type SelectedSurveyContainerState = {
   errorKey?: string | null;
 };
 
-const determineUserGroupStatusKey = ({ userGroupReady, userGroup }: { userGroupReady: boolean; userGroup: UserGroup | null }) => {
+const determineUserGroupStatusKey = ({
+  userGroupReady,
+  userGroup,
+}: {
+  userGroupReady: boolean;
+  userGroup: UserGroup | null;
+}) => {
   if (userGroupReady) {
     if (userGroup) {
       return "surveys:userGroup.label";
@@ -40,7 +46,7 @@ const determineUserGroupStatusKey = ({ userGroupReady, userGroup }: { userGroupR
     return "surveys:userGroup.none";
   }
   return "surveys:userGroup.fetching";
-}
+};
 
 export const SelectedSurveyContainer = () => {
   const navigation = useNavigation();
@@ -115,7 +121,10 @@ export const SelectedSurveyContainer = () => {
 
   if (!survey) return null;
 
-  let userGroupTextKey = determineUserGroupStatusKey({ userGroupReady, userGroup });
+  let userGroupTextKey = determineUserGroupStatusKey({
+    userGroupReady,
+    userGroup,
+  });
 
   return (
     <Card style={styles.container}>
