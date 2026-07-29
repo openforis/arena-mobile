@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { TouchableOpacity } from "react-native";
 
-import { AlertIcon, CompletionIndicator, HView, Icon, Text } from "components";
+import { EntityStatusIndicators, HView, Icon, Text } from "components";
 import { DataEntryActions, useAppDispatch } from "state";
 
 import styles from "./EntityButtonStyles";
@@ -44,8 +44,11 @@ export const EntityButton = (props: EntityButtonProps) => {
       <HView style={styles.entityButtonContent} transparent>
         {!isRoot && <Icon source={iconName} size={16} />}
         <Text style={textStyle} textKey={name} />
-        <CompletionIndicator completionPercent={completionPercent} />
-        <AlertIcon hasErrors={hasErrors} hasWarnings={hasWarnings} />
+        <EntityStatusIndicators
+          completionPercent={completionPercent}
+          hasErrors={hasErrors}
+          hasWarnings={hasWarnings}
+        />
       </HView>
     </TouchableOpacity>
   );

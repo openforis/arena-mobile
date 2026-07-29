@@ -7,8 +7,10 @@ import {
   Numbers,
   Objects,
   RecordExpressionEvaluator,
+  RecordValidations,
   Records,
   Surveys,
+  Validations,
   NodeDefEntity,
   NodeDef,
   NodeDefExpression,
@@ -340,6 +342,63 @@ const findAncestor = ({
   return result;
 };
 
+const findEntityNodesWithValidationIssues = ({
+  record,
+  entityNodeUuids,
+}: {
+  record: ArenaRecord;
+  entityNodeUuids: Set<string>;
+}): { nodeUuidsWithErrors: Set<string>; nodeUuidsWithWarnings: Set<string> } => {
+  const nodeUuidsWithErrors = new Set<string>();
+  const nodeUuidsWithWarnings = new Set<string>();
+
+  const validation = Validations.getValidation(record);
+  const fieldValidations = Validations.getFieldValidations(validation);
+
+  for (const [validationKey, fieldValidation] of Object.entries(
+    fieldValidations,
+  )) {
+    if (fieldValidation.valid) continue;
+
+    let matchingEntityUuid: string | undefined;
+
+    if (RecordValidations.isValidationChildrenCountKey(validationKey)) {
+      // children count validation key directly references the parent entity
+      const parentUuid =
+        RecordValidations.extractValidationChildrenCountKeyParentUuid(
+          validationKey,
+        );
+      matchingEntityUuid =
+        parentUuid && entityNodeUuids.has(parentUuid) ? parentUuid : undefined;
+    } else {
+      const node = Records.getNodeByUuid(validationKey)(record);
+      if (!node) continue;
+
+      if (entityNodeUuids.has(node.uuid)) {
+        // validation issue on the entity itself (e.g. duplicate key)
+        matchingEntityUuid = node.uuid;
+      } else {
+        // validation issue on a direct attribute of the entity: do not bubble
+        // up errors/warnings belonging to nested (descendant) entities
+        const parentEntity = Records.getParent(node)(record);
+        matchingEntityUuid =
+          parentEntity && entityNodeUuids.has(parentEntity.uuid)
+            ? parentEntity.uuid
+            : undefined;
+      }
+    }
+
+    if (!matchingEntityUuid) continue;
+
+    if (Validations.calculateHasNestedErrors(fieldValidation)) {
+      nodeUuidsWithErrors.add(matchingEntityUuid);
+    } else {
+      nodeUuidsWithWarnings.add(matchingEntityUuid);
+    }
+  }
+  return { nodeUuidsWithErrors, nodeUuidsWithWarnings };
+};
+
 const cleanupAttributeValue = ({
   value,
   attributeDef,
@@ -651,6 +710,7 @@ export const RecordUtils = {
   getSiblingNode,
   getCoordinateDistanceTarget,
   findAncestor,
+  findEntityNodesWithValidationIssues,
   cleanupAttributeValue,
   hasDescendantApplicableNodes,
   getApplicableDescendantDefs,

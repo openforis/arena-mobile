@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 
-import { Button, CompletionIndicator, HView, Icon } from "components";
+import { Button, EntityStatusIndicators, HView, Icon } from "components";
 import { useIsTextDirectionRtl } from "localization";
 
 import styles from "./styles";
@@ -41,8 +41,10 @@ export const BreadcrumbItem = (props: Props) => {
         color={isLastItem ? "primary" : "secondary"}
         compact
         icon={() => (
-          <CompletionIndicator
+          <EntityStatusIndicators
             completionPercent={item.completionPercent}
+            hasErrors={item.hasErrors}
+            hasWarnings={item.hasWarnings}
             size={14}
           />
         )}

@@ -21,6 +21,7 @@ export { DeleteIconButton } from "./DeleteIconButton";
 export { Dialog } from "./Dialog";
 export { Divider } from "./Divider";
 export { Dropdown } from "./Dropdown";
+export { EntityStatusIndicators } from "./EntityStatusIndicators";
 export { Fade } from "./Fade";
 export { FieldSet } from "./FieldSet";
 export { FlexWrapView } from "./FlexWrapView";

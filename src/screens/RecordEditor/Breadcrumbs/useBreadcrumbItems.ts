@@ -77,7 +77,7 @@ export const useBreadcrumbItems = () => {
         parentEntity,
         entity: currentEntity,
       });
-      const completionPercent = Records.getEntityCompletionPercent({
+      const completionPercent = Records.getEntityOwnCompletionPercent({
         survey,
         record,
         entity: currentEntity,
@@ -93,6 +93,26 @@ export const useBreadcrumbItems = () => {
 
       currentEntity = parentEntity;
     }
+
+    const entityNodeUuids = new Set(
+      _items
+        .map((item) => item.entityUuid)
+        .filter((entityUuid): entityUuid is string => !!entityUuid),
+    );
+    const { nodeUuidsWithErrors, nodeUuidsWithWarnings } =
+      RecordUtils.findEntityNodesWithValidationIssues({
+        record,
+        entityNodeUuids,
+      });
+    for (const item of _items) {
+      if (!item.entityUuid) continue;
+      if (nodeUuidsWithErrors.has(item.entityUuid)) {
+        (item as any).hasErrors = true;
+      } else if (nodeUuidsWithWarnings.has(item.entityUuid)) {
+        (item as any).hasWarnings = true;
+      }
+    }
+
     return _items;
   }, Objects.isEqual);
 };
