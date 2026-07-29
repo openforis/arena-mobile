@@ -47,6 +47,7 @@ export const BreadcrumbItem = (props: Props) => {
           />
         )}
         iconPosition="right"
+        labelStyle={styles.itemButtonLabel}
         onPress={onItemPress}
         style={styles.itemButton}
         textIsI18nKey={false}
