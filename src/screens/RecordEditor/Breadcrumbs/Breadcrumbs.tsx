@@ -8,7 +8,10 @@ import { useAppDispatch } from "state/store";
 import { log } from "utils";
 
 import { BreadcrumbItem } from "./BreadcrumbItem";
-import { useBreadcrumbItems } from "./useBreadcrumbItems";
+import {
+  BreadcrumbItemData,
+  useBreadcrumbItems,
+} from "./useBreadcrumbItems";
 
 import styles from "./styles";
 
@@ -30,7 +33,7 @@ export const Breadcrumbs = () => {
   const items = useBreadcrumbItems();
 
   const onItemPress = useCallback(
-    (pageEntityItem: any) => {
+    (pageEntityItem: BreadcrumbItemData) => {
       dispatch(DataEntryActions.selectCurrentPageEntity(pageEntityItem));
     },
     [dispatch]

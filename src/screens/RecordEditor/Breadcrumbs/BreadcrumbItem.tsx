@@ -3,6 +3,8 @@ import { useCallback, useMemo } from "react";
 import { Button, EntityStatusIndicators, HView, Icon } from "components";
 import { useIsTextDirectionRtl } from "localization";
 
+import { BreadcrumbItemData } from "./useBreadcrumbItems";
+
 import styles from "./styles";
 
 const Separator = () => {
@@ -13,8 +15,8 @@ const Separator = () => {
 
 type Props = {
   isLastItem?: boolean;
-  item: any;
-  onItemPress: (item: any) => void;
+  item: BreadcrumbItemData;
+  onItemPress: (item: BreadcrumbItemData) => void;
 };
 
 export const BreadcrumbItem = (props: Props) => {

@@ -7,6 +7,16 @@ import { useTranslation } from "localization";
 import { RecordUtils } from "model";
 import { DataEntrySelectors, SurveySelectors } from "state";
 
+export type BreadcrumbItemData = {
+  parentEntityUuid?: string;
+  entityDefUuid: string;
+  entityUuid: string | null;
+  name: string;
+  completionPercent: number;
+  hasErrors?: boolean;
+  hasWarnings?: boolean;
+};
+
 export const useBreadcrumbItems = () => {
   const { t } = useTranslation();
   const survey = SurveySelectors.useCurrentSurvey();
@@ -50,7 +60,7 @@ export const useBreadcrumbItems = () => {
     const record = DataEntrySelectors.selectRecord(state);
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
 
-    const _items = [];
+    const _items: BreadcrumbItemData[] = [];
 
     if (parentEntityUuid && !entityUuid) {
       _items.push({
@@ -107,9 +117,9 @@ export const useBreadcrumbItems = () => {
     for (const item of _items) {
       if (!item.entityUuid) continue;
       if (nodeUuidsWithErrors.has(item.entityUuid)) {
-        (item as any).hasErrors = true;
+        item.hasErrors = true;
       } else if (nodeUuidsWithWarnings.has(item.entityUuid)) {
-        (item as any).hasWarnings = true;
+        item.hasWarnings = true;
       }
     }
 
