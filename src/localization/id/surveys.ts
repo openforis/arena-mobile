@@ -1,4 +1,14 @@
 export default {
+  authGroupName: {
+    systemAdmin: "Admin sistem",
+    surveyAdmin: "Admin survei",
+    surveyEditor: "Editor survei",
+    surveyManager: "Manajer survei",
+    surveyGuest: "Tamu survei",
+    dataEditor: "Editor data",
+    dataCleanser: "Pembersih data",
+    dataAnalyst: "Analis data",
+  },
   checkUpdates: "Periksa pembaruan",
   confirmDeleteSurvey: {
     title: "Hapus survei",
@@ -28,6 +38,9 @@ export default {
   noSurveysMatchingYourSearch:
     "Tidak ada survei yang sesuai dengan pencarian Anda",
   publishedOn: "Diterbitkan pada",
+  role: {
+    label: "Peran: {{role}}",
+  },
   selectSurvey: "Pilih survei",
   status: {
     notInArenaServer: "Tidak ada di server Arena",

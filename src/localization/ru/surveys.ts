@@ -1,4 +1,14 @@
 export default {
+  authGroupName: {
+    systemAdmin: "Системный администратор",
+    surveyAdmin: "Администратор опроса",
+    surveyEditor: "Редактор опроса",
+    surveyManager: "Менеджер опроса",
+    surveyGuest: "Гость опроса",
+    dataEditor: "Редактор данных",
+    dataCleanser: "Специалист по очистке данных",
+    dataAnalyst: "Аналитик данных",
+  },
   checkUpdates: "Обновить",
   confirmDeleteSurvey: {
     title: "Удалить опрос",
@@ -27,6 +37,9 @@ export default {
   noAvailableSurveysFound: "Доступные опросы не найдены",
   noSurveysMatchingYourSearch: "По вашему поиску нет опросов",
   publishedOn: "Опубликовано",
+  role: {
+    label: "Роль: {{role}}",
+  },
   selectSurvey: "Выберите опрос",
   status: {
     notInArenaServer: "Нет на сервере Arena",

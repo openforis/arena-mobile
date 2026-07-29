@@ -1,4 +1,14 @@
 export default {
+  authGroupName: {
+    systemAdmin: "Administrador del sistema",
+    surveyAdmin: "Administrador de la encuesta",
+    surveyEditor: "Editor de la encuesta",
+    surveyManager: "Gestor de la encuesta",
+    surveyGuest: "Invitado de la encuesta",
+    dataEditor: "Editor de datos",
+    dataCleanser: "Depurador de datos",
+    dataAnalyst: "Analista de datos",
+  },
   checkUpdates: "Buscar actualizaciones",
   confirmDeleteSurvey: {
     title: "Eliminar encuesta",
@@ -28,6 +38,9 @@ export default {
   noAvailableSurveysFound: "No se encontraron encuestas disponibles",
   noSurveysMatchingYourSearch: "Ninguna encuesta coincide con su búsqueda",
   publishedOn: "Publicado el",
+  role: {
+    label: "Rol: {{role}}",
+  },
   selectSurvey: "Seleccionar una encuesta",
   status: {
     notInArenaServer: "No está en el servidor de Arena",

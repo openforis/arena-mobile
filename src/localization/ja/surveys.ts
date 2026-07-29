@@ -1,4 +1,14 @@
 export default {
+  authGroupName: {
+    systemAdmin: "システム管理者",
+    surveyAdmin: "調査管理者",
+    surveyEditor: "調査編集者",
+    surveyManager: "調査マネージャー",
+    surveyGuest: "調査ゲスト",
+    dataEditor: "データ編集者",
+    dataCleanser: "データクレンザー",
+    dataAnalyst: "データアナリスト",
+  },
   checkUpdates: "更新を確認",
   confirmDeleteSurvey: {
     title: "調査を削除",
@@ -27,6 +37,9 @@ export default {
   noAvailableSurveysFound: "利用可能な調査が見つかりません",
   noSurveysMatchingYourSearch: "検索に一致する調査がありません",
   publishedOn: "公開日",
+  role: {
+    label: "役割：{{role}}",
+  },
   selectSurvey: "調査を選択",
   status: {
     notInArenaServer: "Arenaサーバーにありません",
