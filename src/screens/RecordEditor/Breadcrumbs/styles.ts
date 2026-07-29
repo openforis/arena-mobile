@@ -7,5 +7,5 @@ export default StyleSheet.create({
   scrollViewContent: { flexDirection: "row" },
   item: { alignItems: "center", width: "auto" },
   itemRtl: BaseStyles.mirrorX,
-  itemButton: { maxWidth: 230 },
+  itemButton: { maxWidth: 230, paddingHorizontal: 6 },
 });

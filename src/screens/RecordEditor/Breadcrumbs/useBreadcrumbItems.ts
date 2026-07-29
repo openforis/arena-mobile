@@ -58,6 +58,7 @@ export const useBreadcrumbItems = () => {
         entityDefUuid,
         entityUuid: null,
         name: itemLabelFunction({ nodeDef: entityDef }),
+        completionPercent: 0,
       });
     }
 
@@ -76,12 +77,18 @@ export const useBreadcrumbItems = () => {
         parentEntity,
         entity: currentEntity,
       });
+      const completionPercent = Records.getEntityCompletionPercent({
+        survey,
+        record,
+        entity: currentEntity,
+      });
 
       _items.unshift({
         parentEntityUuid: parentEntity?.uuid,
         entityDefUuid: currentEntityDef.uuid,
         entityUuid: currentEntity.uuid,
         name: itemName,
+        completionPercent,
       });
 
       currentEntity = parentEntity;

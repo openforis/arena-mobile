@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 
-import { Button, HView, Icon } from "components";
+import { Button, CompletionIndicator, HView, Icon } from "components";
 import { useIsTextDirectionRtl } from "localization";
 
 import styles from "./styles";
@@ -40,6 +40,13 @@ export const BreadcrumbItem = (props: Props) => {
       <Button
         color={isLastItem ? "primary" : "secondary"}
         compact
+        icon={() => (
+          <CompletionIndicator
+            completionPercent={item.completionPercent}
+            size={14}
+          />
+        )}
+        iconPosition="right"
         onPress={onItemPress}
         style={styles.itemButton}
         textIsI18nKey={false}

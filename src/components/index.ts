@@ -3,6 +3,7 @@ export { Button } from "./Button";
 export type { ButtonIconPosition, ButtonMode } from "./Button";
 export { Card } from "./Card";
 export { Checkbox } from "./Checkbox";
+export { CompletionIndicator } from "./CompletionIndicator";
 export { CloseIconButton } from "./CloseIconButton";
 export { CollapsiblePanel } from "./CollapsiblePanel";
 export { CopyToClipboardButton } from "./CopyToClipboardButton";

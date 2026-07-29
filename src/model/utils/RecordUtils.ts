@@ -199,6 +199,34 @@ const getApplicableChildrenEntityDefs = ({
         NodeDefs.isDisplayInOwnPage(cycle)(childDef as NodeDefEntity)),
   ) as NodeDefEntity[];
 
+const getChildEntityCompletionPercent = ({
+  survey,
+  record,
+  parentEntity,
+  childDef,
+  childEntity,
+}: {
+  survey: Survey;
+  record: ArenaRecord;
+  parentEntity: any;
+  childDef: NodeDef<any>;
+  childEntity: any;
+}): number => {
+  if (NodeDefs.isSingle(childDef)) {
+    return childEntity
+      ? Records.getEntityCompletionPercent({ survey, record, entity: childEntity })
+      : 0;
+  }
+  const entities = Records.getChildren(parentEntity, childDef.uuid)(record);
+  if (entities.length === 0) return 0;
+  const totalPercent = entities.reduce(
+    (sum: number, entity: any) =>
+      sum + Records.getEntityCompletionPercent({ survey, record, entity }),
+    0,
+  );
+  return Math.round(totalPercent / entities.length);
+};
+
 const getSiblingNode = ({
   record,
   parentEntity,
@@ -619,6 +647,7 @@ export const RecordUtils = {
   getRecordSummaryValuesBySummaryAttributeFormatted,
   findNewlyInapplicableDefUuidsWithValue,
   getApplicableChildrenEntityDefs,
+  getChildEntityCompletionPercent,
   getSiblingNode,
   getCoordinateDistanceTarget,
   findAncestor,
