@@ -1,9 +1,10 @@
 import React from "react";
-import { Modal, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { Dialog as RNPDialog, Surface, useTheme } from "react-native-paper";
 
 import { useTranslation } from "localization";
 import { Button } from "../Button";
+import { BaseModal } from "../Modal/BaseModal";
 
 type DialogAction = {
   onPress: () => void;
@@ -48,12 +49,11 @@ export const Dialog = (props: DialogProps) => {
     flatStyle != null && (flatStyle.height != null || flatStyle.flex != null);
 
   return (
-    <Modal
+    <BaseModal
       visible={visible}
       transparent
-      statusBarTranslucent
-      animationType="fade"
-      onRequestClose={dismissable ? handleClose : undefined}
+      safeAreaStyle={styles.safeArea}
+      onDismiss={dismissable ? handleClose : undefined}
     >
       <Pressable
         style={[styles.overlay, { backgroundColor: theme.colors.backdrop }]}
@@ -88,11 +88,14 @@ export const Dialog = (props: DialogProps) => {
           </Surface>
         </View>
       </Pressable>
-    </Modal>
+    </BaseModal>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   overlay: {
     flex: 1,
     justifyContent: "center",
