@@ -1,4 +1,14 @@
 export default {
+  authGroupName: {
+    systemAdmin: "Järjestelmänvalvoja",
+    surveyAdmin: "Kyselyn ylläpitäjä",
+    surveyEditor: "Kyselyn muokkaaja",
+    surveyManager: "Kyselyn hallinnoija",
+    surveyGuest: "Kyselyn vieras",
+    dataEditor: "Datan muokkaaja",
+    dataCleanser: "Datan puhdistaja",
+    dataAnalyst: "Data-analyytikko",
+  },
   checkUpdates: "Tarkista ohjelmistopäivitykset",
   confirmDeleteSurvey: {
     title: "Poista kyselylomake",
@@ -29,6 +39,9 @@ export default {
   noSurveysMatchingYourSearch:
     "Hakuehtojasi vastaavia kyselylomakkeita ei löydy",
   publishedOn: "Julkaistu",
+  role: {
+    label: "Rooli: {{role}}",
+  },
   selectSurvey: "Valitse kyselylomake",
   status: {
     notInArenaServer: "Ei Arena-palvelimella",

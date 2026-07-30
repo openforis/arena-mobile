@@ -1,4 +1,14 @@
 export default {
+  authGroupName: {
+    systemAdmin: "የስርዓት አስተዳዳሪ",
+    surveyAdmin: "የዳሰሳ አስተዳዳሪ",
+    surveyEditor: "የዳሰሳ አርታዒ",
+    surveyManager: "የዳሰሳ አስተባባሪ",
+    surveyGuest: "የዳሰሳ እንግዳ",
+    dataEditor: "የመረጃ አርታዒ",
+    dataCleanser: "የመረጃ አጣሪ",
+    dataAnalyst: "የመረጃ ተንታኝ",
+  },
   checkUpdates: "ዝማኔዎችን ፈትሽ",
   confirmDeleteSurvey: {
     title: "ዳሰሳ ሰርዝ",
@@ -27,6 +37,9 @@ export default {
   noAvailableSurveysFound: "የሚገኙ ዳሰሳዎች አልተገኙም",
   noSurveysMatchingYourSearch: "ከፍለጋዎ ጋር የሚዛመዱ ዳሰሳዎች የሉም",
   publishedOn: "የታተመው በ",
+  role: {
+    label: "ሚና፡ {{role}}",
+  },
   selectSurvey: "ዳሰሳ ይምረጡ",
   status: {
     notInArenaServer: "በአሬና አገልጋይ ውስጥ የለም",

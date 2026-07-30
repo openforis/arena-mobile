@@ -1,4 +1,14 @@
 export default {
+  authGroupName: {
+    systemAdmin: "Administrador do sistema",
+    surveyAdmin: "Administrador do inquérito",
+    surveyEditor: "Editor do inquérito",
+    surveyManager: "Gestor do inquérito",
+    surveyGuest: "Convidado do inquérito",
+    dataEditor: "Editor de dados",
+    dataCleanser: "Depurador de dados",
+    dataAnalyst: "Analista de dados",
+  },
   checkUpdates: "Verificar atualizações",
   confirmDeleteSurvey: {
     title: "Eliminar inquérito",
@@ -28,6 +38,9 @@ export default {
   noAvailableSurveysFound: "Nenhum inquérito disponível encontrado",
   noSurveysMatchingYourSearch: "Nenhum inquérito corresponde à sua pesquisa",
   publishedOn: "Publicado em",
+  role: {
+    label: "Função: {{role}}",
+  },
   selectSurvey: "Selecionar um inquérito",
   status: {
     notInArenaServer: "Não está no servidor Arena",
