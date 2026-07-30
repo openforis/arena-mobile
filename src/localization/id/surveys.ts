@@ -1,7 +1,7 @@
 export default {
   authGroupName: {
-    systemAdmin: "Admin sistem",
-    surveyAdmin: "Admin survei",
+    systemAdmin: "Administrator sistem",
+    surveyAdmin: "Administrator survei",
     surveyEditor: "Editor survei",
     surveyManager: "Manajer survei",
     surveyGuest: "Tamu survei",
