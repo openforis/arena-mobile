@@ -40,7 +40,7 @@ export { MapView } from "./MapView";
 export { MenuButton } from "./MenuButton";
 export { MenuItem } from "./MenuItem";
 export { MessageDialog } from "./MessageDialog";
-export { Modal } from "./Modal";
+export { BaseModal, Modal, ModalSafeAreaView } from "./Modal";
 export { OpenMapButton } from "./OpenMapButton";
 export { ProgressBar } from "./ProgressBar";
 export { QrScannerModal } from "./QrScannerModal";
