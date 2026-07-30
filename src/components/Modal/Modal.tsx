@@ -1,11 +1,10 @@
-import { Modal as RNModal } from "react-native";
 import { useTheme } from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 import { CloseIconButton } from "../CloseIconButton";
 import { HView } from "../HView";
 import { Text } from "../Text";
 
+import { BaseModal } from "./BaseModal";
 import styles from "./styles";
 
 type ModalProps = {
@@ -28,29 +27,25 @@ export const Modal = (props: ModalProps) => {
   const theme = useTheme();
 
   return (
-    <RNModal
-      visible
-      transparent={false}
-      statusBarTranslucent
-      animationType="fade"
-      onRequestClose={onDismiss}
+    <BaseModal
+      onDismiss={onDismiss}
+      safeAreaStyle={[
+        styles.container,
+        { backgroundColor: theme.colors.background },
+      ]}
     >
-      <SafeAreaView
-        style={[styles.container, { backgroundColor: theme.colors.background }]}
-      >
-        <HView style={styles.header}>
-          {titleKey && (
-            <Text
-              style={styles.headerText}
-              textKey={titleKey}
-              textParams={titleParams}
-              variant="titleLarge"
-            />
-          )}
-          {showCloseButton && <CloseIconButton onPress={onDismiss} />}
-        </HView>
-        {children}
-      </SafeAreaView>
-    </RNModal>
+      <HView style={styles.header}>
+        {titleKey && (
+          <Text
+            style={styles.headerText}
+            textKey={titleKey}
+            textParams={titleParams}
+            variant="titleLarge"
+          />
+        )}
+        {showCloseButton && <CloseIconButton onPress={onDismiss} />}
+      </HView>
+      {children}
+    </BaseModal>
   );
 };

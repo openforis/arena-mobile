@@ -1,11 +1,12 @@
 import React from "react";
-import { Modal, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { Dialog, Surface, useTheme } from "react-native-paper";
 import SwipeButton from "rn-swipe-button";
 
 import { useConfirmDialog } from "state/confirm/useConfirmDialog";
 
 import {
+  BaseModal,
   Button,
   Checkbox,
   Markdown,
@@ -52,12 +53,11 @@ export const AppConfirmDialog = () => {
   const theme = useTheme();
 
   return (
-    <Modal
+    <BaseModal
       visible={isOpen}
       transparent
-      statusBarTranslucent
-      animationType="fade"
-      onRequestClose={cancel}
+      safeAreaStyle={styles.safeArea}
+      onDismiss={cancel}
     >
       <Pressable
         style={[styles.overlay, { backgroundColor: theme.colors.backdrop }]}
@@ -162,11 +162,14 @@ export const AppConfirmDialog = () => {
           </Surface>
         </View>
       </Pressable>
-    </Modal>
+    </BaseModal>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   overlay: {
     flex: 1,
     justifyContent: "center",
