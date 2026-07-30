@@ -1,4 +1,14 @@
 export default {
+  authGroupName: {
+    systemAdmin: "مدیر سیستم",
+    surveyAdmin: "مدیر نظرسنجی",
+    surveyEditor: "ویرایشگر نظرسنجی",
+    surveyManager: "سرپرست نظرسنجی",
+    surveyGuest: "مهمان نظرسنجی",
+    dataEditor: "ویرایشگر داده",
+    dataCleanser: "پاکسازی‌کننده داده",
+    dataAnalyst: "تحلیل‌گر داده",
+  },
   checkUpdates: "بررسی به‌روزرسانی‌ها",
   confirmDeleteSurvey: {
     title: "حذف فرم‌های آماربرداری",
@@ -28,6 +38,9 @@ export default {
   noAvailableSurveysFound: "هیچ فرمی در دسترس یافت نشد",
   noSurveysMatchingYourSearch: "هیچ فرمی مطابق با جستجوی شما یافت نشد",
   publishedOn: "منتشر شده در",
+  role: {
+    label: "نقش: {{role}}",
+  },
   selectSurvey: "یک فرم آماربرداری انتخاب کنید",
   status: {
     notInArenaServer: "در سرور آرنا موجود نیست",

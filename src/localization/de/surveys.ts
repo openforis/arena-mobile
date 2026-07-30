@@ -1,4 +1,14 @@
 export default {
+  authGroupName: {
+    systemAdmin: "Systemadministrator",
+    surveyAdmin: "Umfrageadministrator",
+    surveyEditor: "Umfrage-Editor",
+    surveyManager: "Umfragemanager",
+    surveyGuest: "Umfragegast",
+    dataEditor: "Datenbearbeiter",
+    dataCleanser: "Datenbereiniger",
+    dataAnalyst: "Datenanalyst",
+  },
   checkUpdates: "Updates prüfen",
   confirmDeleteSurvey: {
     title: "Umfrage löschen",
@@ -29,6 +39,9 @@ export default {
   noSurveysMatchingYourSearch:
     "Keine Umfragen gefunden, die Ihrer Suche entsprechen",
   publishedOn: "Veröffentlicht am",
+  role: {
+    label: "Rolle: {{role}}",
+  },
   selectSurvey: "Eine Umfrage auswählen",
   status: {
     notInArenaServer: "Nicht auf dem Arena-Server",
