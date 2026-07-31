@@ -8,7 +8,12 @@ import { DataEntrySelectors, SurveySelectors } from "state";
 
 import styles from "./styles";
 
-export const RecordCompletionProgressBar = () => {
+type Props = {
+  compact?: boolean;
+};
+
+export const RecordCompletionProgressBar = (props: Props) => {
+  const { compact = false } = props;
   const theme = useTheme();
   const survey = SurveySelectors.useCurrentSurvey();
   const record = DataEntrySelectors.useRecord();
@@ -27,8 +32,11 @@ export const RecordCompletionProgressBar = () => {
     <VView
       style={[
         styles.completionContainer,
-        { backgroundColor: theme.colors.elevation.level2 },
+        compact
+          ? styles.completionContainerCompact
+          : { backgroundColor: theme.colors.elevation.level2 },
       ]}
+      transparent
     >
       <ProgressBar
         color={color}
@@ -37,7 +45,11 @@ export const RecordCompletionProgressBar = () => {
       />
       <Text
         style={styles.completionText}
-        textKey="dataEntry:recordCompletion.description"
+        textKey={
+          compact
+            ? "dataEntry:recordCompletion.shortDescription"
+            : "dataEntry:recordCompletion.description"
+        }
         textParams={{ percent: completionPercent }}
         variant="bodySmall"
       />

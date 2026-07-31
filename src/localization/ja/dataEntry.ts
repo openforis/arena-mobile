@@ -126,6 +126,7 @@ export default {
   recordEditor: "記録エディタ",
   recordCompletion: {
     description: "必須項目のうち{{percent}}%が入力されています",
+    shortDescription: "{{percent}}%完了",
   },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {

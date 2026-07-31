@@ -77,6 +77,7 @@ export default {
   recordEditor: "የመዝገብ አርታዒ",
   recordCompletion: {
     description: "ከአስፈላጊ መስኮች ውስጥ {{percent}}% ተሞልቷል",
+    shortDescription: "{{percent}}% ተጠናቋል",
   },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {

@@ -19,6 +19,7 @@ import {
 
 import { PagesNavigationTree } from "../PagesNavigationTree";
 import { PageNodesList } from "../PageNodesList";
+import { RecordCompletionProgressBar } from "../RecordCompletionProgressBar";
 
 import { useStyles } from "./styles";
 
@@ -50,6 +51,8 @@ export const RecordEditorDrawer = () => {
           size={26}
         />
       </HView>
+
+      <RecordCompletionProgressBar compact />
 
       {viewMode === RecordEditViewMode.oneNode ? (
         <PageNodesList />

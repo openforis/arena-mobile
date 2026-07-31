@@ -82,6 +82,7 @@ Sus valores serán borrados.
   recordEditor: "Editor de registros",
   recordCompletion: {
     description: "Se ha completado el {{percent}}% de los campos obligatorios",
+    shortDescription: "{{percent}}% completado",
   },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {

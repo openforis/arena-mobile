@@ -82,6 +82,7 @@ Deseja obtê-las novamente do servidor?`,
   recordEditor: "Editor de registos",
   recordCompletion: {
     description: "{{percent}}% dos campos obrigatórios foram preenchidos",
+    shortDescription: "{{percent}}% concluído",
   },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {

@@ -85,6 +85,7 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
   recordEditor: "Editor data isian",
   recordCompletion: {
     description: "{{percent}}% dari bidang yang wajib diisi telah diisi",
+    shortDescription: "{{percent}}% selesai",
   },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {

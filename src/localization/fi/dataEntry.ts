@@ -84,6 +84,7 @@ Haluatko hakea sen uudelleen palvelimelta?`,
   recordEditor: "Tietueen muokkain",
   recordCompletion: {
     description: "Pakollisista kentistä {{percent}} % on täytetty",
+    shortDescription: "{{percent}} % valmis",
   },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {

@@ -86,6 +86,7 @@ Möchten Sie sie erneut vom Server abrufen?`,
   recordEditor: "Datensatzbearbeitung",
   recordCompletion: {
     description: "{{percent}} % der Pflichtfelder wurden ausgefüllt",
+    shortDescription: "{{percent}} % abgeschlossen",
   },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {

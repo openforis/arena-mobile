@@ -9,10 +9,8 @@ import { RecordEditViewMode, ScreenViewMode } from "model";
 import { useIsTextDirectionRtl, useTranslation } from "localization";
 import { log } from "utils";
 import { screenKeys } from "screens";
-import {
-  Breadcrumbs,
-  RecordCompletionProgressBar,
-} from "screens/RecordEditor/Breadcrumbs";
+import { Breadcrumbs } from "screens/RecordEditor/Breadcrumbs";
+import { RecordCompletionProgressBar } from "screens/RecordEditor/RecordCompletionProgressBar";
 import {
   DataEntryActions,
   DataEntrySelectors,

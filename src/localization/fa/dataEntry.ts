@@ -84,6 +84,7 @@ export default {
   recordEditor: "ویرایشگر رکورد",
   recordCompletion: {
     description: "{{percent}}٪ از فیلدهای الزامی پر شده است",
+    shortDescription: "{{percent}}٪ تکمیل شده",
   },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {

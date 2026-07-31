@@ -85,6 +85,7 @@ Vill du hämta den igen från servern?`,
   recordEditor: "Postredigerare",
   recordCompletion: {
     description: "{{percent}} % av de obligatoriska fälten har fyllts i",
+    shortDescription: "{{percent}} % klart",
   },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {

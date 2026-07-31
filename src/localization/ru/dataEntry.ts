@@ -81,6 +81,7 @@ export default {
   recordEditor: "Редактор записей",
   recordCompletion: {
     description: "Заполнено {{percent}}% обязательных полей",
+    shortDescription: "Заполнено {{percent}}%",
   },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {
