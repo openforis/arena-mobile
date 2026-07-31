@@ -126,6 +126,9 @@ max count reached`,
   noRecordsFound: "No records found",
   options: "Options",
   recordEditor: "Record editor",
+  recordCompletion: {
+    description: "{{percent}}% of the required fields have been filled in",
+  },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {
       title: "Show values from previous cycle",

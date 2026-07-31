@@ -83,6 +83,9 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
   },
   noRecordsFound: "Tidak ada data yang ditemukan",
   recordEditor: "Editor data isian",
+  recordCompletion: {
+    description: "{{percent}}% dari bidang yang wajib diisi telah diisi",
+  },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {
       title: "Tampilkan nilai dari siklus sebelumnya",

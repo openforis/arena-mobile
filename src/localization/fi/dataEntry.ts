@@ -82,6 +82,9 @@ Haluatko hakea sen uudelleen palvelimelta?`,
   },
   noRecordsFound: "Tietueita ei löydy",
   recordEditor: "Tietueen muokkain",
+  recordCompletion: {
+    description: "Pakollisista kentistä {{percent}} % on täytetty",
+  },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {
       title: "Näytä arvot edellisestä jaksosta",

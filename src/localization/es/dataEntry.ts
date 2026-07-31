@@ -80,6 +80,9 @@ Sus valores serán borrados.
   },
   noRecordsFound: "No se encontraron registros",
   recordEditor: "Editor de registros",
+  recordCompletion: {
+    description: "Se ha completado el {{percent}}% de los campos obligatorios",
+  },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {
       title: "Mostrar valores del ciclo anterior",
