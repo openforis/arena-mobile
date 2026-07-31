@@ -8,4 +8,7 @@ export default StyleSheet.create({
     flex: 1,
     alignSelf: "center",
   },
+  breadcrumbsContent: {
+    paddingBottom: 4,
+  },
 });

@@ -11,7 +11,7 @@ export default StyleSheet.create({
   itemButtonLabel: { flexShrink: 1 },
   completionContainer: {
     paddingHorizontal: 12,
-    paddingTop: 6,
+    paddingTop: 0,
     paddingBottom: 6,
     width: "100%",
   },

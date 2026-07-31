@@ -223,7 +223,10 @@ export const AppBar = (props: Props) => {
           )}
         </HView>
         {isInTwoRows && (
-          <RNPAppbar.Content title={<Breadcrumbs />}></RNPAppbar.Content>
+          <RNPAppbar.Content
+            style={styles.breadcrumbsContent}
+            title={<Breadcrumbs />}
+          ></RNPAppbar.Content>
         )}
       </RNPAppbar.Header>
       {editingRecord && <RecordCompletionProgressBar />}
