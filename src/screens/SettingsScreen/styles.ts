@@ -9,6 +9,10 @@ export default StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
   },
+  settingsGroupHeader: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
   settingsItemDescription: {
     opacity: 0.7,
     marginTop: 2,

@@ -81,7 +81,11 @@ export const SettingsScreen = () => {
           const isLocationGroup = group === SettingsModel.SettingGroup.location;
           if (visibleEntries.length === 0 && !isLocationGroup) return null;
           return (
-            <FieldSet key={group} headerKey={`settings:group.${group}`}>
+            <FieldSet
+              key={group}
+              headerKey={`settings:group.${group}`}
+              headerStyle={styles.settingsGroupHeader}
+            >
               {visibleEntries.map(([key, prop]) => (
                 <VView key={key} style={styles.settingsItemWrapper}>
                   <SettingsItem
