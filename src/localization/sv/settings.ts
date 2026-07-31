@@ -1,5 +1,11 @@
 export default {
   title: "Inställningar",
+  group: {
+    appearance: "Utseende",
+    dataEntry: "Datainmatning",
+    location: "Plats & GPS",
+    images: "Bilder",
+  },
   animationsEnabled: {
     label: "Animationer aktiverade",
     description:

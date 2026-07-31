@@ -1,5 +1,11 @@
 export default {
   title: "設定",
+  group: {
+    appearance: "外観",
+    dataEntry: "データ入力",
+    location: "位置情報とGPS",
+    images: "画像",
+  },
   animationsEnabled: {
     label: "アニメーションを有効にする",
     description:

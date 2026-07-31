@@ -1,5 +1,11 @@
 export default {
   title: "Настройки",
+  group: {
+    appearance: "Внешний вид",
+    dataEntry: "Ввод данных",
+    location: "Местоположение и GPS",
+    images: "Изображения",
+  },
   animationsEnabled: {
     label: "Анимации включены",
     description:

@@ -1,5 +1,11 @@
 export default {
   title: "تنظیمات",
+  group: {
+    appearance: "ظاهر",
+    dataEntry: "ورود داده",
+    location: "موقعیت مکانی و GPS",
+    images: "تصاویر",
+  },
   animationsEnabled: {
     label: "انیمیشن ها فعال",
     description:

@@ -11,8 +11,16 @@ enum PropertyType {
   slider = "slider",
 }
 
+export enum SettingGroup {
+  appearance = "appearance",
+  dataEntry = "dataEntry",
+  location = "location",
+  images = "images",
+}
+
 type SettingsProperty = {
   type: PropertyType;
+  group: SettingGroup;
   options?: any[];
   isDisabled?: ({ settings }: any) => boolean;
   minValue?: number;
@@ -45,58 +53,72 @@ type SettingsProperties = Partial<Record<SettingKey, SettingsProperty>>;
 const properties: SettingsProperties = {
   language: {
     type: PropertyType.dropdown,
+    group: SettingGroup.appearance,
     options: LanguagesSettings,
   },
   theme: {
     type: PropertyType.dropdown,
+    group: SettingGroup.appearance,
     options: Object.values(ThemesSettings).map((theme) => ({
       key: theme,
       label: `settings:theme.${theme}`,
     })),
   },
-  fullScreen: {
-    type: PropertyType.boolean,
-    isDisabled: () => Environment.isIOS,
-  },
-  keepScreenAwake: {
-    type: PropertyType.boolean,
-  },
-  animationsEnabled: {
-    type: PropertyType.boolean,
-  },
-  showRecordCompletion: {
-    type: PropertyType.boolean,
-  },
-  showStatusBar: {
-    type: PropertyType.boolean,
-  },
   fontScale: {
     type: PropertyType.slider,
+    group: SettingGroup.appearance,
     minValue: 0.6,
     maxValue: 1.6,
     step: 0.2,
   },
+  animationsEnabled: {
+    type: PropertyType.boolean,
+    group: SettingGroup.appearance,
+  },
+  fullScreen: {
+    type: PropertyType.boolean,
+    group: SettingGroup.dataEntry,
+    isDisabled: () => Environment.isIOS,
+  },
+  keepScreenAwake: {
+    type: PropertyType.boolean,
+    group: SettingGroup.dataEntry,
+  },
+  showRecordCompletion: {
+    type: PropertyType.boolean,
+    group: SettingGroup.dataEntry,
+  },
+  showStatusBar: {
+    type: PropertyType.boolean,
+    group: SettingGroup.dataEntry,
+  },
   locationAccuracyThreshold: {
     type: PropertyType.numeric,
+    group: SettingGroup.location,
   },
   locationAccuracyWatchTimeout: {
     type: PropertyType.slider,
+    group: SettingGroup.location,
     minValue: 30,
     maxValue: 300,
     step: 30,
   },
   locationAveragingEnabled: {
     type: PropertyType.boolean,
+    group: SettingGroup.location,
   },
   locationGpsLocked: {
     type: PropertyType.boolean,
+    group: SettingGroup.location,
   },
   // image resolution
   imageSizeUnlimited: {
     type: PropertyType.boolean,
+    group: SettingGroup.images,
   },
   imageSizeLimit: {
     type: PropertyType.slider,
+    group: SettingGroup.images,
     minValue: 0.5,
     maxValue: 10,
     step: 0.5,
@@ -134,6 +156,7 @@ export type SettingsObject = {
 
 export const SettingsModel = {
   PropertyType,
+  SettingGroup,
   SettingKey,
   properties,
 };

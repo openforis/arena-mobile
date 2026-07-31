@@ -1,5 +1,11 @@
 export default {
   title: "Asetukset",
+  group: {
+    appearance: "Ulkoasu",
+    dataEntry: "Tiedonkeruu",
+    location: "Sijainti ja GPS",
+    images: "Kuvat",
+  },
   animationsEnabled: {
     label: "Animaatiot käytössä",
     description:

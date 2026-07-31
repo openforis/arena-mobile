@@ -1,5 +1,11 @@
 export default {
   title: "Pengaturan",
+  group: {
+    appearance: "Tampilan",
+    dataEntry: "Pengisian data",
+    location: "Lokasi & GPS",
+    images: "Gambar",
+  },
   animationsEnabled: {
     label: "Animasi diaktifkan",
     description:

@@ -22,6 +22,18 @@ import styles from "./styles";
 
 const settingsPropertiesEntries = Object.entries(SettingsModel.properties);
 
+const settingGroupsOrder = [
+  SettingsModel.SettingGroup.appearance,
+  SettingsModel.SettingGroup.dataEntry,
+  SettingsModel.SettingGroup.location,
+  SettingsModel.SettingGroup.images,
+];
+
+const settingsEntriesByGroup = settingGroupsOrder.map((group) => ({
+  group,
+  entries: settingsPropertiesEntries.filter(([, prop]) => prop.group === group),
+}));
+
 export const SettingsScreen = () => {
   log.debug(`rendering SettingsScreen`);
   const dispatch = useAppDispatch();
@@ -35,14 +47,14 @@ export const SettingsScreen = () => {
 
   const onPropValueChange =
     ({ key }: { key: keyof SettingsObject }) =>
-    async (value: any) => {
-      const oldValue = settings[key];
-      if (value === oldValue) return;
-      dispatch(SettingsActions.updateSetting({ key, value }));
-      setState((statePrev) =>
-        Objects.assocPath({ obj: statePrev, path: ["settings", key], value })
-      );
-    };
+      async (value: any) => {
+        const oldValue = settings[key];
+        if (value === oldValue) return;
+        dispatch(SettingsActions.updateSetting({ key, value }));
+        setState((statePrev) =>
+          Objects.assocPath({ obj: statePrev, path: ["settings", key], value })
+        );
+      };
 
   const onExportLogsPress = useCallback(async () => {
     await AppService.exportLogsAndShareThem();
@@ -62,21 +74,34 @@ export const SettingsScreen = () => {
     <ScreenView>
       <VView style={styles.settingsWrapper}>
         <ConnectionToRemoteServerButton style={styles.button} />
-        {settingsPropertiesEntries
-          .filter(([, prop]) => !prop.isDisabled?.({ settings }))
-          .map(([key, prop]) => (
-            <VView key={key} style={styles.settingsItemWrapper}>
-              <SettingsItem
-                settings={settings}
-                settingKey={key as keyof SettingsObject}
-                prop={prop}
-                onPropValueChange={onPropValueChange}
-              />
-            </VView>
-          ))}
-        <VView style={styles.settingsItemWrapper}>
-          <GpsSourceSettingsField value={settings.preferredGpsSourceId} />
-        </VView>
+        {settingsEntriesByGroup.map(({ group, entries }) => {
+          const visibleEntries = entries.filter(
+            ([, prop]) => !prop.isDisabled?.({ settings })
+          );
+          const isLocationGroup = group === SettingsModel.SettingGroup.location;
+          if (visibleEntries.length === 0 && !isLocationGroup) return null;
+          return (
+            <Card key={group} titleKey={`settings:group.${group}`}>
+              {visibleEntries.map(([key, prop]) => (
+                <VView key={key} style={styles.settingsItemWrapper}>
+                  <SettingsItem
+                    settings={settings}
+                    settingKey={key as keyof SettingsObject}
+                    prop={prop}
+                    onPropValueChange={onPropValueChange}
+                  />
+                </VView>
+              ))}
+              {isLocationGroup && (
+                <VView style={styles.settingsItemWrapper}>
+                  <GpsSourceSettingsField
+                    value={settings.preferredGpsSourceId}
+                  />
+                </VView>
+              )}
+            </Card>
+          );
+        })}
         <Card titleKey="app:backup">
           <FullBackupButton />
         </Card>

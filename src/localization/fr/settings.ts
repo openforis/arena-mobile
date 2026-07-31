@@ -1,5 +1,11 @@
 export default {
   title: "Paramètres",
+  group: {
+    appearance: "Apparence",
+    dataEntry: "Saisie de données",
+    location: "Localisation et GPS",
+    images: "Images",
+  },
   animationsEnabled: {
     label: "Animations activées",
     description:

@@ -1,5 +1,11 @@
 export default {
   title: "ቅንብሮች",
+  group: {
+    appearance: "መልክ",
+    dataEntry: "ውሂብ ማስገባት",
+    location: "አካባቢ እና ጂፒኤስ",
+    images: "ምስሎች",
+  },
   animationsEnabled: {
     label: "አኒሜሽኖች ነቅተዋል",
     description:
