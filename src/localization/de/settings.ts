@@ -1,11 +1,30 @@
 export default {
   title: "Einstellungen",
-  animationsEnabled: "Animationen aktiviert",
+  animationsEnabled: {
+    label: "Animationen aktiviert",
+    description:
+      "Aktiviert Übergangs- und Oberflächenanimationen in der gesamten App. Deaktivieren, um die Leistung auf langsameren Geräten zu verbessern",
+  },
   connectionToServer: "Verbindung zum Server",
-  fontScale: "Schriftgröße: {{value}}",
-  keepScreenAwake: "Bildschirm wach halten",
-  fullScreen: "Vollbild",
-  imageSizeLimit: "Bildgröße beschränkt auf: {{value}}MB",
+  fontScale: {
+    label: "Schriftgröße: {{value}}",
+    description: "Passt die in der gesamten App verwendete Textgröße an",
+  },
+  keepScreenAwake: {
+    label: "Bildschirm wach halten",
+    description:
+      "Verhindert, dass sich der Bildschirm automatisch ausschaltet, während die App geöffnet ist",
+  },
+  fullScreen: {
+    label: "Vollbild",
+    description:
+      "Blendet die System-Status- und Navigationsleisten aus, um den vollen Bildschirm für die Dateneingabe zu nutzen",
+  },
+  imageSizeLimit: {
+    label: "Bildgröße beschränkt auf: {{value}}MB",
+    description:
+      "Maximale Größe, auf die Bilder vor dem Speichern verkleinert werden, sofern die Umfrage kein kleineres Limit für ein bestimmtes Attribut festlegt",
+  },
   imageSizeUnlimited: {
     label: "Bildgröße unbegrenzt",
     description:
@@ -13,11 +32,19 @@ export default {
   },
   language: {
     label: "Sprache der Anwendung",
+    description: "Legt die in der App-Oberfläche verwendete Sprache fest",
   },
-  locationAccuracyThreshold:
-    "Schwellenwert für die Standortgenauigkeit (Meter)",
-  locationAccuracyWatchTimeout:
-    "Timeout für die Überwachung der Standortgenauigkeit: {{value}} Sekunden",
+  locationAccuracyThreshold: {
+    label: "Schwellenwert für die Standortgenauigkeit (Meter)",
+    description:
+      "Mindest-GPS-Genauigkeit in Metern, die erforderlich ist, bevor eine Standortmessung für ein Koordinatenattribut akzeptiert wird",
+  },
+  locationAccuracyWatchTimeout: {
+    label:
+      "Timeout für die Überwachung der Standortgenauigkeit: {{value}} Sekunden",
+    description:
+      "Maximale Wartezeit auf eine Standortmessung, die den Genauigkeitsschwellenwert erfüllt, bevor abgebrochen wird",
+  },
   locationAveragingEnabled: {
     label: "Standortmittelung aktiviert",
     description:
@@ -62,9 +89,19 @@ export default {
     pairNewDevice: "Neues Gerät koppeln…",
   },
 
-  showStatusBar: "Statusleiste anzeigen",
+  showRecordCompletion: {
+    label: "Fortschritt der Datensatzvervollständigung anzeigen",
+    description:
+      "Zeigt einen Fortschrittsbalken mit dem Prozentsatz der ausgefüllten Pflichtfelder des aktuellen Datensatzes an",
+  },
+  showStatusBar: {
+    label: "Statusleiste anzeigen",
+    description:
+      "Zeigt Akku-, Speicher- und Netzwerkstatus während der Bearbeitung eines Datensatzes an",
+  },
   theme: {
     label: "Design",
+    description: "Legt das in der App-Oberfläche verwendete Farbdesign fest",
     auto: "Automatisch",
     dark: "Dunkel",
     dark2: "Dunkel 2",

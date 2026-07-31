@@ -35,6 +35,7 @@ export enum SettingKey {
   preferredGpsSourceId = "preferredGpsSourceId",
   serverUrlType = "serverUrlType",
   serverUrl = "serverUrl",
+  showRecordCompletion = "showRecordCompletion",
   showStatusBar = "showStatusBar",
   theme = "theme",
 }
@@ -61,6 +62,9 @@ const properties: SettingsProperties = {
     type: PropertyType.boolean,
   },
   animationsEnabled: {
+    type: PropertyType.boolean,
+  },
+  showRecordCompletion: {
     type: PropertyType.boolean,
   },
   showStatusBar: {
@@ -123,6 +127,7 @@ export type SettingsObject = {
   password?: string; // deprecated; not stored anymore;
   serverUrlType: "default";
   serverUrl: string;
+  showRecordCompletion: boolean;
   showStatusBar: boolean;
   theme: ThemesSettings;
 };

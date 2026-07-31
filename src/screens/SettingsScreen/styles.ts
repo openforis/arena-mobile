@@ -10,7 +10,8 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
   },
   settingsItemDescription: {
-    fontStyle: "italic",
+    opacity: 0.7,
+    marginTop: 2,
   },
   settingsFormItemVertical: {
     flexDirection: "column",

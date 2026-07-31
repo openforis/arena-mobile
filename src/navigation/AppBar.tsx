@@ -17,6 +17,7 @@ import {
   DeviceInfoSelectors,
   ScreenOptionsActions,
   ScreenOptionsSelectors,
+  SettingsSelectors,
   SurveyOptionsActions,
   SurveyOptionsSelectors,
   SurveySelectors,
@@ -73,6 +74,7 @@ export const AppBar = (props: Props) => {
   const isLoadingPreviousCycleRecord =
     DataEntrySelectors.usePreviousCycleRecordLoading();
   const isInTwoRows = editingRecord && !isLandscape;
+  const { showRecordCompletion } = SettingsSelectors.useSettings();
 
   const [state, setState] = useState({ menuVisible: false });
 
@@ -227,7 +229,7 @@ export const AppBar = (props: Props) => {
           ></RNPAppbar.Content>
         )}
       </RNPAppbar.Header>
-      {editingRecord && <RecordCompletionProgressBar />}
+      {editingRecord && showRecordCompletion && <RecordCompletionProgressBar />}
     </>
   );
 };

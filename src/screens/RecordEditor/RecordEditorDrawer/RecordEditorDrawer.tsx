@@ -12,6 +12,7 @@ import { log } from "utils";
 import {
   DataEntryActions,
   DataEntrySelectors,
+  SettingsSelectors,
   SurveyOptionsSelectors,
   SurveySelectors,
   useAppDispatch,
@@ -31,6 +32,7 @@ export const RecordEditorDrawer = () => {
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const pageSelectorOpen = DataEntrySelectors.useIsRecordPageSelectorMenuOpen();
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
+  const { showRecordCompletion } = SettingsSelectors.useSettings();
   const styles = useStyles();
   const fieldManualUrl = Surveys.getFieldManualLink(lang)(survey);
 
@@ -52,7 +54,7 @@ export const RecordEditorDrawer = () => {
         />
       </HView>
 
-      <RecordCompletionProgressBar compact />
+      {showRecordCompletion && <RecordCompletionProgressBar compact />}
 
       {viewMode === RecordEditViewMode.oneNode ? (
         <PageNodesList />
