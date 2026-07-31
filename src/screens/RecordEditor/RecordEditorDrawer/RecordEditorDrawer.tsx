@@ -12,6 +12,7 @@ import { log } from "utils";
 import {
   DataEntryActions,
   DataEntrySelectors,
+  SettingsSelectors,
   SurveyOptionsSelectors,
   SurveySelectors,
   useAppDispatch,
@@ -19,6 +20,7 @@ import {
 
 import { PagesNavigationTree } from "../PagesNavigationTree";
 import { PageNodesList } from "../PageNodesList";
+import { RecordCompletionProgressBar } from "../RecordCompletionProgressBar";
 
 import { useStyles } from "./styles";
 
@@ -30,6 +32,7 @@ export const RecordEditorDrawer = () => {
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const pageSelectorOpen = DataEntrySelectors.useIsRecordPageSelectorMenuOpen();
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
+  const { showRecordCompletion } = SettingsSelectors.useSettings();
   const styles = useStyles();
   const fieldManualUrl = Surveys.getFieldManualLink(lang)(survey);
 
@@ -50,6 +53,8 @@ export const RecordEditorDrawer = () => {
           size={26}
         />
       </HView>
+
+      {showRecordCompletion && <RecordCompletionProgressBar compact />}
 
       {viewMode === RecordEditViewMode.oneNode ? (
         <PageNodesList />

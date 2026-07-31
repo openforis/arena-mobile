@@ -83,6 +83,10 @@ Vill du hämta den igen från servern?`,
   },
   noRecordsFound: "Inga poster hittades",
   recordEditor: "Postredigerare",
+  recordCompletion: {
+    description: "{{percent}} % av de obligatoriska fälten har fyllts i",
+    shortDescription: "{{percent}} % klart",
+  },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {
       title: "Visa värden från föregående cykel",

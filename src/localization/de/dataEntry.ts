@@ -84,6 +84,10 @@ Möchten Sie sie erneut vom Server abrufen?`,
   },
   noRecordsFound: "Keine Datensätze gefunden",
   recordEditor: "Datensatzbearbeitung",
+  recordCompletion: {
+    description: "{{percent}} % der Pflichtfelder wurden ausgefüllt",
+    shortDescription: "{{percent}} % abgeschlossen",
+  },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {
       title: "Werte aus dem vorherigen Zyklus anzeigen",

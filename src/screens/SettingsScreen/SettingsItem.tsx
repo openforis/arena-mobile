@@ -7,11 +7,14 @@ import {
   SegmentedButtons,
   Slider,
   Switch,
+  Text,
   TextInput,
+  VView,
 } from "components";
 import { i18n } from "localization";
 import { SettingsModel, SettingsObject } from "model";
 import { SettingsFormItem } from "./SettingsFormItem";
+import styles from "./styles";
 
 const numberToString = (value: any) =>
   Objects.isEmpty(value) ? "" : String(value);
@@ -83,14 +86,23 @@ export const SettingsItem = (props: SettingsItemProps) => {
       );
     case SettingsModel.PropertyType.dropdown:
       return (
-        <Dropdown
-          items={options}
-          itemKeyExtractor={(item: any) => item.key}
-          label={labelKey}
-          onChange={onPropValueChange({ key: settingKey })}
-          translateItemLabels={translateItemLabels}
-          value={value}
-        />
+        <VView>
+          <Dropdown
+            items={options}
+            itemKeyExtractor={(item: any) => item.key}
+            label={labelKey}
+            onChange={onPropValueChange({ key: settingKey })}
+            translateItemLabels={translateItemLabels}
+            value={value}
+          />
+          {descriptionKey && (
+            <Text
+              style={styles.settingsItemDescription}
+              textKey={descriptionKey}
+              variant="bodySmall"
+            />
+          )}
+        </VView>
       );
     case SettingsModel.PropertyType.numeric:
       return (
@@ -113,7 +125,11 @@ export const SettingsItem = (props: SettingsItemProps) => {
       );
     case SettingsModel.PropertyType.options:
       return (
-        <SettingsFormItem settingKey={settingKey} labelKey={labelKey}>
+        <SettingsFormItem
+          settingKey={settingKey}
+          labelKey={labelKey}
+          descriptionKey={descriptionKey}
+        >
           <SegmentedButtons
             buttons={options}
             onChange={onValueChange}
@@ -128,6 +144,7 @@ export const SettingsItem = (props: SettingsItemProps) => {
           settingKey={settingKey}
           labelKey={labelKey}
           labelParams={{ value }}
+          descriptionKey={descriptionKey}
         >
           <Slider
             minValue={minValue}

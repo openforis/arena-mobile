@@ -79,6 +79,10 @@ export default {
   },
   noRecordsFound: "Записи не найдены",
   recordEditor: "Редактор записей",
+  recordCompletion: {
+    description: "Заполнено {{percent}}% обязательных полей",
+    shortDescription: "Заполнено {{percent}}%",
+  },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {
       title: "Показать значения из предыдущего цикла",

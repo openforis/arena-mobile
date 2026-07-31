@@ -1,11 +1,37 @@
 export default {
   title: "Paramètres",
-  animationsEnabled: "Animations activées",
+  group: {
+    appearance: "Apparence",
+    dataEntry: "Saisie de données",
+    location: "Localisation et GPS",
+    images: "Images",
+  },
+  animationsEnabled: {
+    label: "Animations activées",
+    description:
+      "Active les animations de transition et d'interface dans toute l'application. Désactivez pour améliorer les performances sur les appareils plus lents",
+  },
   connectionToServer: "Connexion au serveur",
-  fontScale: "Échelle de la police: {{value}}",
-  keepScreenAwake: "Maintenir l'écran allumé",
-  fullScreen: "Plein écran",
-  imageSizeLimit: "Taille des images limitée à: {{value}}MB",
+  fontScale: {
+    label: "Échelle de la police: {{value}}",
+    description:
+      "Ajuste la taille du texte utilisé dans toute l'application",
+  },
+  keepScreenAwake: {
+    label: "Maintenir l'écran allumé",
+    description:
+      "Empêche l'écran de s'éteindre automatiquement tant que l'application est ouverte",
+  },
+  fullScreen: {
+    label: "Plein écran",
+    description:
+      "Masque les barres d'état et de navigation du système pour utiliser tout l'écran pour la saisie de données",
+  },
+  imageSizeLimit: {
+    label: "Taille des images limitée à: {{value}}MB",
+    description:
+      "Taille maximale à laquelle les images sont redimensionnées avant d'être enregistrées, sauf si l'enquête définit une limite plus petite pour un attribut spécifique",
+  },
   imageSizeUnlimited: {
     label: "Taille des images illimitée",
     description:
@@ -13,10 +39,19 @@ export default {
   },
   language: {
     label: "Langue de l'application",
+    description: "Définit la langue utilisée dans l'interface de l'application",
   },
-  locationAccuracyThreshold: "Seuil de précision de la localisation (mètres)",
-  locationAccuracyWatchTimeout:
-    "Délai de surveillance de la précision de la localisation: {{value}} secondes",
+  locationAccuracyThreshold: {
+    label: "Seuil de précision de la localisation (mètres)",
+    description:
+      "Précision GPS minimale, en mètres, requise avant qu'une lecture de localisation soit acceptée pour un attribut de coordonnées",
+  },
+  locationAccuracyWatchTimeout: {
+    label:
+      "Délai de surveillance de la précision de la localisation: {{value}} secondes",
+    description:
+      "Durée maximale d'attente d'une lecture de localisation atteignant le seuil de précision avant d'abandonner",
+  },
   locationAveragingEnabled: {
     label: "Moyenne de localisation activée",
     description:
@@ -59,9 +94,19 @@ export default {
     internal: "GPS interne",
     pairNewDevice: "Associer un nouvel appareil…",
   },
-  showStatusBar: "Afficher la barre d'état",
+  showRecordCompletion: {
+    label: "Afficher la progression de l'enregistrement",
+    description:
+      "Affiche une barre de progression indiquant le pourcentage de champs obligatoires remplis pour l'enregistrement en cours",
+  },
+  showStatusBar: {
+    label: "Afficher la barre d'état",
+    description:
+      "Affiche l'état de la batterie, du stockage et du réseau pendant la modification d'un enregistrement",
+  },
   theme: {
     label: "Thème",
+    description: "Définit le thème de couleur utilisé dans l'interface de l'application",
     auto: "Automatique",
     dark: "Sombre",
     dark2: "Sombre 2",

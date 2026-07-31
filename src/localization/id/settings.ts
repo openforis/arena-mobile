@@ -1,11 +1,36 @@
 export default {
   title: "Pengaturan",
-  animationsEnabled: "Animasi diaktifkan",
+  group: {
+    appearance: "Tampilan",
+    dataEntry: "Pengisian data",
+    location: "Lokasi & GPS",
+    images: "Gambar",
+  },
+  animationsEnabled: {
+    label: "Animasi diaktifkan",
+    description:
+      "Mengaktifkan animasi transisi dan antarmuka di seluruh aplikasi. Nonaktifkan untuk meningkatkan performa pada perangkat yang lebih lambat",
+  },
   connectionToServer: "Koneksi ke server",
-  fontScale: "Skala font: {{value}}",
-  keepScreenAwake: "Layar tetap terjaga",
-  fullScreen: "Layar penuh",
-  imageSizeLimit: "Ukuran gambar terbatas hingga: {{value}}MB",
+  fontScale: {
+    label: "Skala font: {{value}}",
+    description: "Menyesuaikan ukuran teks yang digunakan di seluruh aplikasi",
+  },
+  keepScreenAwake: {
+    label: "Layar tetap terjaga",
+    description:
+      "Mencegah layar mati secara otomatis selama aplikasi terbuka",
+  },
+  fullScreen: {
+    label: "Layar penuh",
+    description:
+      "Menyembunyikan bilah status dan navigasi sistem untuk menggunakan seluruh layar saat pengisian data",
+  },
+  imageSizeLimit: {
+    label: "Ukuran gambar terbatas hingga: {{value}}MB",
+    description:
+      "Ukuran maksimum gambar diubah sebelum disimpan, kecuali survei menetapkan batas yang lebih kecil untuk atribut tertentu",
+  },
   imageSizeUnlimited: {
     label: "Ukuran gambar tidak terbatas",
     description:
@@ -13,10 +38,18 @@ export default {
   },
   language: {
     label: "Bahasa aplikasi",
+    description: "Mengatur bahasa yang digunakan pada antarmuka aplikasi",
   },
-  locationAccuracyThreshold: "Ambang akurasi lokasi (meter)",
-  locationAccuracyWatchTimeout:
-    "Batas waktu pengawasan akurasi lokasi: {{value}} detik",
+  locationAccuracyThreshold: {
+    label: "Ambang akurasi lokasi (meter)",
+    description:
+      "Akurasi GPS minimum, dalam meter, yang diperlukan sebelum pembacaan lokasi diterima untuk atribut koordinat",
+  },
+  locationAccuracyWatchTimeout: {
+    label: "Batas waktu pengawasan akurasi lokasi: {{value}} detik",
+    description:
+      "Waktu maksimum untuk menunggu pembacaan lokasi yang memenuhi ambang akurasi sebelum menyerah",
+  },
   locationAveragingEnabled: {
     label: "Rata-rata lokasi diaktifkan",
     description:
@@ -59,9 +92,19 @@ Ini akan membantu mendapatkan akurasi yang lebih baik pada atribut koordinat.`,
     internal: "GPS internal",
     pairNewDevice: "Sambungkan perangkat baru…",
   },
-  showStatusBar: "Tampilkan status",
+  showRecordCompletion: {
+    label: "Tampilkan progres kelengkapan data isian",
+    description:
+      "Menampilkan bilah progres dengan persentase bidang wajib yang telah diisi untuk data isian saat ini",
+  },
+  showStatusBar: {
+    label: "Tampilkan status",
+    description:
+      "Menampilkan status baterai, penyimpanan, dan jaringan saat mengedit data isian",
+  },
   theme: {
     label: "Tema",
+    description: "Mengatur tema warna yang digunakan pada antarmuka aplikasi",
     auto: "Otomatis",
     dark: "Gelap",
     dark2: "Gelap 2",

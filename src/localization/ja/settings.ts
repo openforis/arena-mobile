@@ -1,11 +1,35 @@
 export default {
   title: "設定",
-  animationsEnabled: "アニメーションを有効にする",
+  group: {
+    appearance: "外観",
+    dataEntry: "データ入力",
+    location: "位置情報とGPS",
+    images: "画像",
+  },
+  animationsEnabled: {
+    label: "アニメーションを有効にする",
+    description:
+      "アプリ全体の画面遷移やインターフェースのアニメーションを有効にします。動作が遅い端末ではパフォーマンス向上のため無効にしてください",
+  },
   connectionToServer: "サーバーへの接続",
-  fontScale: "フォントの大きさ：{{value}}",
-  keepScreenAwake: "画面を常に表示",
-  fullScreen: "全画面表示",
-  imageSizeLimit: "画像サイズの上限：{{value}}MB",
+  fontScale: {
+    label: "フォントの大きさ：{{value}}",
+    description: "アプリ全体で使用する文字の大きさを調整します",
+  },
+  keepScreenAwake: {
+    label: "画面を常に表示",
+    description: "アプリを開いている間、画面が自動的に消灯しないようにします",
+  },
+  fullScreen: {
+    label: "全画面表示",
+    description:
+      "データ入力のためにシステムのステータスバーとナビゲーションバーを非表示にし、画面全体を使用します",
+  },
+  imageSizeLimit: {
+    label: "画像サイズの上限：{{value}}MB",
+    description:
+      "調査票で特定の項目により小さい上限が設定されていない限り、画像が保存前に縮小される最大サイズです",
+  },
   imageSizeUnlimited: {
     label: "画像サイズは無制限",
     description:
@@ -13,10 +37,18 @@ export default {
   },
   language: {
     label: "アプリケーション言語",
+    description: "アプリのインターフェースで使用する言語を設定します",
   },
-  locationAccuracyThreshold: "位置精度の基準値（メートル）",
-  locationAccuracyWatchTimeout:
-    "位置精度の監視タイムアウト：{{value}}秒",
+  locationAccuracyThreshold: {
+    label: "位置精度の基準値（メートル）",
+    description:
+      "座標項目の位置情報を採用するために必要な、最低限のGPS精度（メートル単位）です",
+  },
+  locationAccuracyWatchTimeout: {
+    label: "位置精度の監視タイムアウト：{{value}}秒",
+    description:
+      "精度基準を満たす位置情報が得られるまで待機する最大時間です。これを過ぎると取得を諦めます",
+  },
   locationAveragingEnabled: {
     label: "位置の平均化を有効にする",
     description:
@@ -59,9 +91,17 @@ export default {
     pairNewDevice: "新しいデバイスをペアリング…",
   },
 
-  showStatusBar: "ステータスバーを表示",
+  showRecordCompletion: {
+    label: "レコードの入力進捗を表示",
+    description: "現在のレコードの必須項目のうち入力済みの割合を示す進捗バーを表示します",
+  },
+  showStatusBar: {
+    label: "ステータスバーを表示",
+    description: "記録の編集中にバッテリー、ストレージ、ネットワークの状態を表示します",
+  },
   theme: {
     label: "テーマ",
+    description: "アプリのインターフェースで使用する配色テーマを設定します",
     auto: "自動",
     dark: "ダーク",
     dark2: "ダーク2",

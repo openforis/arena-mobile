@@ -1,11 +1,36 @@
 export default {
   title: "Settings",
-  animationsEnabled: "Animations enabled",
+  group: {
+    appearance: "Appearance",
+    dataEntry: "Data entry",
+    location: "Location & GPS",
+    images: "Images",
+  },
+  animationsEnabled: {
+    label: "Animations enabled",
+    description:
+      "Enables transition and interface animations throughout the app. Disable to improve performance on slower devices",
+  },
   connectionToServer: "Connection to server",
-  fontScale: "Font scale: {{value}}",
-  keepScreenAwake: "Keep screen awake",
-  fullScreen: "Full screen",
-  imageSizeLimit: "Images size limited to: {{value}}MB",
+  fontScale: {
+    label: "Font scale: {{value}}",
+    description: "Adjusts the size of the text used throughout the app",
+  },
+  keepScreenAwake: {
+    label: "Keep screen awake",
+    description:
+      "Prevents the screen from turning off automatically while the app is open",
+  },
+  fullScreen: {
+    label: "Full screen",
+    description:
+      "Hides the system status and navigation bars to use the full screen for data entry",
+  },
+  imageSizeLimit: {
+    label: "Images size limited to: {{value}}MB",
+    description:
+      "Maximum size images are resized to before being saved, unless the survey defines a smaller limit for a specific attribute",
+  },
   imageSizeUnlimited: {
     label: "Images size not limited",
     description:
@@ -13,10 +38,18 @@ export default {
   },
   language: {
     label: "Application language",
+    description: "Sets the language used throughout the app interface",
   },
-  locationAccuracyThreshold: "Location accuracy threshold (meters)",
-  locationAccuracyWatchTimeout:
-    "Location accuracy watch timeout: {{value}} seconds",
+  locationAccuracyThreshold: {
+    label: "Location accuracy threshold (meters)",
+    description:
+      "Minimum GPS accuracy, in meters, required before a location reading is accepted for a coordinate attribute",
+  },
+  locationAccuracyWatchTimeout: {
+    label: "Location accuracy watch timeout: {{value}} seconds",
+    description:
+      "Maximum time to wait for a location reading that meets the accuracy threshold before giving up",
+  },
   locationAveragingEnabled: {
     label: "Location averaging enabled",
     description:
@@ -59,9 +92,19 @@ It will help to get a better accuracy in coordinate attributes.`,
     pairNewDevice: "Pair a new device…",
   },
 
-  showStatusBar: "Show status bar",
+  showRecordCompletion: {
+    label: "Show record completion progress",
+    description:
+      "Shows a progress bar with the percentage of required fields filled in for the current record",
+  },
+  showStatusBar: {
+    label: "Show status bar",
+    description:
+      "Shows battery, storage and network status while editing a record",
+  },
   theme: {
     label: "Theme",
+    description: "Sets the color theme used throughout the app interface",
     auto: "Auto",
     dark: "Dark",
     dark2: "Dark 2",

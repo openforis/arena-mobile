@@ -1,11 +1,36 @@
 export default {
   title: "Definições",
-  animationsEnabled: "Animações ativadas",
+  group: {
+    appearance: "Aparência",
+    dataEntry: "Introdução de dados",
+    location: "Localização e GPS",
+    images: "Imagens",
+  },
+  animationsEnabled: {
+    label: "Animações ativadas",
+    description:
+      "Ativa as animações de transição e de interface em toda a aplicação. Desative para melhorar o desempenho em dispositivos mais lentos",
+  },
   connectionToServer: "Ligação ao servidor",
-  fontScale: "Escala de fonte: {{value}}",
-  keepScreenAwake: "Manter ecrã ativo",
-  fullScreen: "Ecrã completo",
-  imageSizeLimit: "Tamanho das imagens limitado a: {{value}}MB",
+  fontScale: {
+    label: "Escala de fonte: {{value}}",
+    description: "Ajusta o tamanho do texto utilizado em toda a aplicação",
+  },
+  keepScreenAwake: {
+    label: "Manter ecrã ativo",
+    description:
+      "Impede que o ecrã se desligue automaticamente enquanto a aplicação estiver aberta",
+  },
+  fullScreen: {
+    label: "Ecrã completo",
+    description:
+      "Oculta as barras de estado e navegação do sistema para usar todo o ecrã na introdução de dados",
+  },
+  imageSizeLimit: {
+    label: "Tamanho das imagens limitado a: {{value}}MB",
+    description:
+      "Tamanho máximo a que as imagens são redimensionadas antes de serem guardadas, a menos que o inquérito defina um limite menor para um atributo específico",
+  },
   imageSizeUnlimited: {
     label: "Tamanho das imagens ilimitado",
     description:
@@ -13,10 +38,19 @@ export default {
   },
   language: {
     label: "Idioma da aplicação",
+    description: "Define o idioma utilizado na interface da aplicação",
   },
-  locationAccuracyThreshold: "Limite de precisão da localização (metros)",
-  locationAccuracyWatchTimeout:
-    "Tempo limite de verificação da precisão da localização: {{value}} segundos",
+  locationAccuracyThreshold: {
+    label: "Limite de precisão da localização (metros)",
+    description:
+      "Precisão mínima do GPS, em metros, necessária antes de uma leitura de localização ser aceite para um atributo de coordenadas",
+  },
+  locationAccuracyWatchTimeout: {
+    label:
+      "Tempo limite de verificação da precisão da localização: {{value}} segundos",
+    description:
+      "Tempo máximo de espera por uma leitura de localização que satisfaça o limite de precisão antes de desistir",
+  },
   locationAveragingEnabled: {
     label: "Média de localização ativada",
     description:
@@ -59,9 +93,19 @@ export default {
     internal: "GPS interno",
     pairNewDevice: "Emparelhar um novo dispositivo…",
   },
-  showStatusBar: "Mostrar barra de estado",
+  showRecordCompletion: {
+    label: "Mostrar progresso de conclusão do registo",
+    description:
+      "Mostra uma barra de progresso com a percentagem de campos obrigatórios preenchidos no registo atual",
+  },
+  showStatusBar: {
+    label: "Mostrar barra de estado",
+    description:
+      "Mostra o estado da bateria, do armazenamento e da rede durante a edição de um registo",
+  },
   theme: {
     label: "Tema",
+    description: "Define o tema de cores utilizado na interface da aplicação",
     auto: "Automático",
     dark: "Escuro",
     dark2: "Escuro 2",

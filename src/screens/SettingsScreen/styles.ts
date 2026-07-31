@@ -9,8 +9,13 @@ export default StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
   },
+  settingsGroupHeader: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
   settingsItemDescription: {
-    fontStyle: "italic",
+    opacity: 0.7,
+    marginTop: 2,
   },
   settingsFormItemVertical: {
     flexDirection: "column",

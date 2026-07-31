@@ -75,6 +75,10 @@ export default {
   },
   noRecordsFound: "ምንም መዝገቦች አልተገኙም",
   recordEditor: "የመዝገብ አርታዒ",
+  recordCompletion: {
+    description: "ከአስፈላጊ መስኮች ውስጥ {{percent}}% ተሞልቷል",
+    shortDescription: "{{percent}}% ተጠናቋል",
+  },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {
       title: "ከቀድሞው ዙር እሴቶችን አሳይ",

@@ -85,6 +85,10 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
   },
   noRecordsFound: "Aucun enregistrement trouvé",
   recordEditor: "Éditeur d'enregistrements",
+  recordCompletion: {
+    description: "{{percent}} % des champs obligatoires ont été remplis",
+    shortDescription: "{{percent}} % terminé",
+  },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {
       title: "Afficher les valeurs du cycle précédent",

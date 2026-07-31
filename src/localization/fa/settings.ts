@@ -1,11 +1,35 @@
 export default {
   title: "تنظیمات",
-  animationsEnabled: "انیمیشن ها فعال",
+  group: {
+    appearance: "ظاهر",
+    dataEntry: "ورود داده",
+    location: "موقعیت مکانی و GPS",
+    images: "تصاویر",
+  },
+  animationsEnabled: {
+    label: "انیمیشن ها فعال",
+    description:
+      "انیمیشن‌های انتقال و رابط کاربری را در سراسر برنامه فعال می‌کند. برای بهبود عملکرد در دستگاه‌های کندتر آن را غیرفعال کنید",
+  },
   connectionToServer: "اتصال به سرور",
-  fontScale: "مقیاس فونت: {{value}}",
-  keepScreenAwake: "روشن نگه داشتن صفحه",
-  fullScreen: "تمام صفحه",
-  imageSizeLimit: "حجم تصاویر محدود به: {{value}}MB",
+  fontScale: {
+    label: "مقیاس فونت: {{value}}",
+    description: "اندازه متن استفاده‌شده در سراسر برنامه را تنظیم می‌کند",
+  },
+  keepScreenAwake: {
+    label: "روشن نگه داشتن صفحه",
+    description: "از خاموش شدن خودکار صفحه در زمانی که برنامه باز است جلوگیری می‌کند",
+  },
+  fullScreen: {
+    label: "تمام صفحه",
+    description:
+      "نوارهای وضعیت و ناوبری سیستم را برای استفاده از تمام صفحه در ورود داده پنهان می‌کند",
+  },
+  imageSizeLimit: {
+    label: "حجم تصاویر محدود به: {{value}}MB",
+    description:
+      "حداکثر اندازه‌ای که تصاویر پیش از ذخیره‌سازی به آن تغییر اندازه داده می‌شوند، مگر اینکه نظرسنجی محدودیت کوچک‌تری برای یک ویژگی خاص تعیین کرده باشد",
+  },
   imageSizeUnlimited: {
     label: "حجم تصاویر نامحدود",
     description:
@@ -13,9 +37,18 @@ export default {
   },
   language: {
     label: "زبان برنامه",
+    description: "زبان مورد استفاده در رابط کاربری برنامه را تنظیم می‌کند",
   },
-  locationAccuracyThreshold: "آستانه دقت موقعیت مکانی (متر)",
-  locationAccuracyWatchTimeout: "زمان انتظار دقت موقعیت مکانی: {{value}} ثانیه",
+  locationAccuracyThreshold: {
+    label: "آستانه دقت موقعیت مکانی (متر)",
+    description:
+      "حداقل دقت GPS، بر حسب متر، که پیش از پذیرفته شدن یک خوانش موقعیت مکانی برای یک ویژگی مختصات لازم است",
+  },
+  locationAccuracyWatchTimeout: {
+    label: "زمان انتظار دقت موقعیت مکانی: {{value}} ثانیه",
+    description:
+      "حداکثر زمان انتظار برای خوانشی از موقعیت مکانی که آستانه دقت را برآورده کند، پیش از انصراف",
+  },
   locationAveragingEnabled: {
     label: "میانگین گیری موقعیت مکانی فعال",
     description:
@@ -58,9 +91,18 @@ export default {
     internal: "GPS داخلی",
     pairNewDevice: "جفت کردن دستگاه جدید…",
   },
-  showStatusBar: "نمایش نوار وضعیت",
+  showRecordCompletion: {
+    label: "نمایش پیشرفت تکمیل رکورد",
+    description:
+      "نواری از پیشرفت را نمایش می‌دهد که درصد فیلدهای الزامی پر شده در رکورد فعلی را نشان می‌دهد",
+  },
+  showStatusBar: {
+    label: "نمایش نوار وضعیت",
+    description: "وضعیت باتری، حافظه و شبکه را هنگام ویرایش یک رکورد نمایش می‌دهد",
+  },
   theme: {
     label: "انتخاب تم",
+    description: "تم رنگی مورد استفاده در رابط کاربری برنامه را تنظیم می‌کند",
     auto: "انتخاب خودکار",
     dark: "تم تیره",
     dark2: "2 تم تیره",
