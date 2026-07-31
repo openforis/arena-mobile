@@ -1,4 +1,14 @@
 export default {
+  authGroupName: {
+    systemAdmin: "System administrator",
+    surveyAdmin: "Survey administrator",
+    surveyEditor: "Survey editor",
+    surveyManager: "Survey manager",
+    surveyGuest: "Survey guest",
+    dataEditor: "Data editor",
+    dataCleanser: "Data cleanser",
+    dataAnalyst: "Data analyst",
+  },
   checkUpdates: "Check updates",
   confirmDeleteSurvey: {
     title: "Delete survey",
@@ -27,6 +37,9 @@ export default {
   noAvailableSurveysFound: "No available surveys found",
   noSurveysMatchingYourSearch: "No surveys matching your search",
   publishedOn: "Published on",
+  role: {
+    label: "Role: {{role}}",
+  },
   selectSurvey: "Select a survey",
   status: {
     notInArenaServer: "Not in Arena server",

@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { useCallback, useEffect, useState } from "react";
 
-import { Surveys, UserGroup } from "@openforis/arena-core";
+import { Surveys, UserGroup, Users } from "@openforis/arena-core";
 
 import {
   Button,
@@ -15,6 +15,7 @@ import {
   VView,
 } from "components";
 import { useIsNetworkConnected } from "hooks";
+import { useTranslation } from "localization";
 import { SurveyStatus, UpdateStatus } from "model";
 import { SurveyService } from "service";
 import { RemoteConnectionSelectors, SurveySelectors } from "state";
@@ -31,7 +32,13 @@ type SelectedSurveyContainerState = {
   errorKey?: string | null;
 };
 
-const determineUserGroupStatusKey = ({ userGroupReady, userGroup }: { userGroupReady: boolean; userGroup: UserGroup | null }) => {
+const determineUserGroupStatusKey = ({
+  userGroupReady,
+  userGroup,
+}: {
+  userGroupReady: boolean;
+  userGroup: UserGroup | null;
+}) => {
   if (userGroupReady) {
     if (userGroup) {
       return "surveys:userGroup.label";
@@ -39,15 +46,21 @@ const determineUserGroupStatusKey = ({ userGroupReady, userGroup }: { userGroupR
     return "surveys:userGroup.none";
   }
   return "surveys:userGroup.fetching";
-}
+};
 
 export const SelectedSurveyContainer = () => {
   const navigation = useNavigation();
   const networkAvailable = useIsNetworkConnected();
   const user = RemoteConnectionSelectors.useLoggedInUser();
+  const { t } = useTranslation();
 
   const survey = SurveySelectors.useCurrentSurvey()!;
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
+
+  const userAuthGroup = user
+    ? Users.getAuthGroupBySurveyUuid(survey?.uuid, true)(user)
+    : undefined;
+  const userRoleName = userAuthGroup?.name;
 
   const surveyName = Surveys.getName(survey);
   const surveyLabelInDefaultLanguage = Surveys.getLabel(lang)(survey);
@@ -108,7 +121,10 @@ export const SelectedSurveyContainer = () => {
 
   if (!survey) return null;
 
-  let userGroupTextKey = determineUserGroupStatusKey({ userGroupReady, userGroup });
+  let userGroupTextKey = determineUserGroupStatusKey({
+    userGroupReady,
+    userGroup,
+  });
 
   return (
     <Card style={styles.container}>
@@ -132,6 +148,15 @@ export const SelectedSurveyContainer = () => {
         )}
         {fieldManualUrl && (
           <Link labelKey="surveys:fieldManual" url={fieldManualUrl} />
+        )}
+        {user && userRoleName && (
+          <HView style={styles.userGroupContainer} transparent>
+            <Icon source="account-key" />
+            <Text
+              textKey="surveys:role.label"
+              textParams={{ role: t(`surveys:authGroupName.${userRoleName}`) }}
+            />
+          </HView>
         )}
         {hasQualifierDefs && user && (
           <HView style={styles.userGroupContainer} transparent>

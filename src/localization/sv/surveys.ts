@@ -1,4 +1,14 @@
 export default {
+  authGroupName: {
+    systemAdmin: "Systemadministratör",
+    surveyAdmin: "Enkätadministratör",
+    surveyEditor: "Enkätredigerare",
+    surveyManager: "Enkätansvarig",
+    surveyGuest: "Enkätgäst",
+    dataEditor: "Dataredigerare",
+    dataCleanser: "Datarensare",
+    dataAnalyst: "Dataanalytiker",
+  },
   checkUpdates: "Kontrollera uppdateringar",
   confirmDeleteSurvey: {
     title: "Ta bort enkät",
@@ -27,6 +37,9 @@ export default {
   noAvailableSurveysFound: "Inga tillgängliga enkäter hittades",
   noSurveysMatchingYourSearch: "Inga enkäter matchar din sökning",
   publishedOn: "Publicerad den",
+  role: {
+    label: "Roll: {{role}}",
+  },
   selectSurvey: "Välj en enkät",
   status: {
     notInArenaServer: "Inte på Arena-servern",

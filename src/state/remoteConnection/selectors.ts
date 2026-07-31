@@ -1,12 +1,18 @@
 import { useSelector } from "react-redux";
 
-import { Objects } from "@openforis/arena-core";
+import { Objects, User } from "@openforis/arena-core";
 
-const getRemoteConnectionState = (state: any) => state.remoteConnection;
+import { RemoteConnectionState, UserProfileIconInfo } from "./types";
 
-const selectLoggedUser = (state: any) => getRemoteConnectionState(state).user;
-const selectLoggedUserIsLoading = (state: any) => !!getRemoteConnectionState(state).userLoading;
-const selectLoggedUserProfileIconInfo = (state: any) => getRemoteConnectionState(state).userProfileIconInfo;
+const getRemoteConnectionState = (state: any): RemoteConnectionState =>
+  state.remoteConnection;
+
+const selectLoggedUser = (state: any): User | null =>
+  getRemoteConnectionState(state).user;
+const selectLoggedUserIsLoading = (state: any): boolean =>
+  !!getRemoteConnectionState(state).userLoading;
+const selectLoggedUserProfileIconInfo = (state: any): UserProfileIconInfo =>
+  getRemoteConnectionState(state).userProfileIconInfo;
 
 export const RemoteConnectionSelectors = {
   selectLoggedUser,

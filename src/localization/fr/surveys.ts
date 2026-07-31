@@ -1,4 +1,14 @@
 export default {
+  authGroupName: {
+    systemAdmin: "Administrateur système",
+    surveyAdmin: "Administrateur de l'enquête",
+    surveyEditor: "Éditeur de l'enquête",
+    surveyManager: "Gestionnaire de l'enquête",
+    surveyGuest: "Invité de l'enquête",
+    dataEditor: "Éditeur de données",
+    dataCleanser: "Nettoyeur de données",
+    dataAnalyst: "Analyste de données",
+  },
   checkUpdates: "Vérifier les mises à jour",
   confirmDeleteSurvey: {
     title: "Supprimer l'enquête",
@@ -29,6 +39,9 @@ export default {
   noAvailableSurveysFound: "Aucune enquête disponible trouvée",
   noSurveysMatchingYourSearch: "Aucune enquête ne correspond à votre recherche",
   publishedOn: "Publié le",
+  role: {
+    label: "Rôle : {{role}}",
+  },
   selectSurvey: "Sélectionner une enquête",
   status: {
     notInArenaServer: "Pas sur le serveur Arena",
