@@ -5,7 +5,7 @@ import { Objects } from "@openforis/arena-core";
 import { ConnectionToRemoteServerButton } from "appComponents/ConnectionToRemoteServerButton";
 import { FullBackupButton } from "appComponents/FullBackupButton";
 
-import { Button, Card, ScreenView, VView } from "components";
+import { Button, Card, FieldSet, ScreenView, VView } from "components";
 import { SettingsModel, SettingsObject } from "model";
 import { AppService } from "service/appService";
 import {
@@ -81,7 +81,7 @@ export const SettingsScreen = () => {
           const isLocationGroup = group === SettingsModel.SettingGroup.location;
           if (visibleEntries.length === 0 && !isLocationGroup) return null;
           return (
-            <Card key={group} titleKey={`settings:group.${group}`}>
+            <FieldSet key={group} headerKey={`settings:group.${group}`}>
               {visibleEntries.map(([key, prop]) => (
                 <VView key={key} style={styles.settingsItemWrapper}>
                   <SettingsItem
@@ -99,7 +99,7 @@ export const SettingsScreen = () => {
                   />
                 </VView>
               )}
-            </Card>
+            </FieldSet>
           );
         })}
         <Card titleKey="app:backup">
