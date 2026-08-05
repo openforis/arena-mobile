@@ -1,7 +1,7 @@
 import { ExpoConfig } from "expo/config";
 
-const appVersion = "2.7.0";
-const buildNumber = 113;
+const appVersion = "2.7.1";
+const buildNumber = 114;
 
 const basePlugins: ExpoConfig["plugins"] = [
   ["expo-asset", { assets: ["assets"] }],
@@ -35,7 +35,16 @@ const basePlugins: ExpoConfig["plugins"] = [
       },
     },
   ],
-  "expo-audio",
+  [
+    "expo-audio",
+    {
+      // The app only records/plays audio file attributes while the record
+      // editor screen is open - it has no persistent background-audio
+      // feature, so the default UIBackgroundModes "audio" entry (and the
+      // Android foreground media-playback service) must stay disabled.
+      enableBackgroundPlayback: false,
+    },
+  ],
   "expo-localization",
   "expo-secure-store",
   "expo-sharing",
