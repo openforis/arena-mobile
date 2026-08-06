@@ -35,9 +35,7 @@ const basePlugins: ExpoConfig["plugins"] = [
       },
     },
   ],
-  [
-    "expo-audio",
-  ],
+  "expo-audio",
   "expo-localization",
   "expo-secure-store",
   "expo-sharing",
