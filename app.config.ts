@@ -1,7 +1,7 @@
 import { ExpoConfig } from "expo/config";
 
-const appVersion = "2.7.0";
-const buildNumber = 113;
+const appVersion = "2.7.1";
+const buildNumber = 115;
 
 const basePlugins: ExpoConfig["plugins"] = [
   ["expo-asset", { assets: ["assets"] }],
