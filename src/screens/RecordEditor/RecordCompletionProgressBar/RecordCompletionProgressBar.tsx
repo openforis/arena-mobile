@@ -4,6 +4,7 @@ import { useTheme } from "react-native-paper";
 import { Records } from "@openforis/arena-core";
 
 import { getCompletionColor, ProgressBar, Text, VView } from "components";
+import { RecordUtils } from "model";
 import { DataEntrySelectors, SurveySelectors } from "state";
 
 import styles from "./styles";
@@ -18,13 +19,17 @@ export const RecordCompletionProgressBar = (props: Props) => {
   const survey = SurveySelectors.useCurrentSurvey();
   const record = DataEntrySelectors.useRecord();
 
-  const completionPercent = useMemo(
-    () =>
-      survey && record
-        ? Records.getRecordCompletionPercent({ survey, record })
-        : 0,
-    [survey, record]
-  );
+  const completionPercent = useMemo(() => {
+    if (!survey || !record) return 0;
+    const rootEntity = Records.getRoot(record);
+    if (!rootEntity) return 0;
+    const completionStats = Records.getEntityCompletionStats({
+      survey,
+      record,
+      entity: rootEntity,
+    });
+    return RecordUtils.toCompletionPercent(completionStats);
+  }, [survey, record]);
 
   const color = getCompletionColor(completionPercent);
 

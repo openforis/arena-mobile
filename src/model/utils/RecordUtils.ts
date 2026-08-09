@@ -201,7 +201,15 @@ const getApplicableChildrenEntityDefs = ({
         NodeDefs.isDisplayInOwnPage(cycle)(childDef as NodeDefEntity)),
   ) as NodeDefEntity[];
 
-const getChildEntityCompletionPercent = ({
+type CompletionStats = { total: number; filled: number };
+
+const toCompletionPercent = (stats: CompletionStats): number => {
+  const { total, filled } = stats;
+  if (total <= 0) return 100;
+  return Math.round((filled / total) * 100);
+};
+
+const getChildEntityCompletionStats = ({
   survey,
   record,
   parentEntity,
@@ -213,21 +221,30 @@ const getChildEntityCompletionPercent = ({
   parentEntity: any;
   childDef: NodeDef<any>;
   childEntity: any;
-}): number => {
+}): CompletionStats => {
   if (NodeDefs.isSingle(childDef)) {
     return childEntity
-      ? Records.getEntityCompletionPercent({ survey, record, entity: childEntity })
-      : 0;
+      ? Records.getEntityCompletionStats({ survey, record, entity: childEntity })
+      : { total: 1, filled: 0 };
   }
   const entities = Records.getChildren(parentEntity, childDef.uuid)(record);
-  if (entities.length === 0) return 0;
-  const totalPercent = entities.reduce(
-    (sum: number, entity: any) =>
-      sum + Records.getEntityCompletionPercent({ survey, record, entity }),
-    0,
+  if (entities.length === 0) return { total: 1, filled: 0 };
+  return entities.reduce(
+    (acc: CompletionStats, entity: any) => {
+      const stats = Records.getEntityCompletionStats({ survey, record, entity });
+      return { total: acc.total + stats.total, filled: acc.filled + stats.filled };
+    },
+    { total: 0, filled: 0 },
   );
-  return Math.round(totalPercent / entities.length);
 };
+
+const getChildEntityCompletionPercent = (params: {
+  survey: Survey;
+  record: ArenaRecord;
+  parentEntity: any;
+  childDef: NodeDef<any>;
+  childEntity: any;
+}): number => toCompletionPercent(getChildEntityCompletionStats(params));
 
 const getSiblingNode = ({
   record,
@@ -732,6 +749,7 @@ export const RecordUtils = {
   findNewlyInapplicableDefUuidsWithValue,
   getApplicableChildrenEntityDefs,
   getChildEntityCompletionPercent,
+  toCompletionPercent,
   getSiblingNode,
   getCoordinateDistanceTarget,
   findAncestor,

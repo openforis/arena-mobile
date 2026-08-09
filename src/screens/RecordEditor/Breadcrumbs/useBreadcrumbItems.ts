@@ -87,11 +87,13 @@ export const useBreadcrumbItems = () => {
         parentEntity,
         entity: currentEntity,
       });
-      const completionPercent = Records.getEntityOwnCompletionPercent({
+      const completionStats = Records.getEntityCompletionStats({
         survey,
         record,
         entity: currentEntity,
+        includeNestedEntities: false,
       });
+      const completionPercent = RecordUtils.toCompletionPercent(completionStats);
 
       _items.unshift({
         parentEntityUuid: parentEntity?.uuid,

@@ -265,11 +265,14 @@ export const useTreeData = () => {
     entityUuid: rootNode?.uuid,
   });
   if (rootNode) {
-    rootTreeItem.completionPercent = Records.getEntityCompletionPercent({
+    const rootCompletionStats = Records.getEntityCompletionStats({
       survey,
       record,
       entity: rootNode,
     });
+    rootTreeItem.completionPercent = RecordUtils.toCompletionPercent(
+      rootCompletionStats,
+    );
   }
 
   const stack = [
