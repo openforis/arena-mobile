@@ -95,7 +95,7 @@ Ini akan membantu mendapatkan akurasi yang lebih baik pada atribut koordinat.`,
   showRecordCompletion: {
     label: "Tampilkan progres kelengkapan data isian",
     description:
-      "Menampilkan bilah progres dengan persentase bidang wajib yang telah diisi untuk data isian saat ini",
+      "Menampilkan bilah progres dengan persentase persyaratan yang telah terpenuhi untuk data isian saat ini",
   },
   showStatusBar: {
     label: "Tampilkan status",

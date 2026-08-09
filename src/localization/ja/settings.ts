@@ -93,7 +93,7 @@ export default {
 
   showRecordCompletion: {
     label: "レコードの入力進捗を表示",
-    description: "現在のレコードの必須項目のうち入力済みの割合を示す進捗バーを表示します",
+    description: "現在のレコードの要件のうち満たされている割合を示す進捗バーを表示します",
   },
   showStatusBar: {
     label: "ステータスバーを表示",

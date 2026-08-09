@@ -94,7 +94,7 @@ Se auttaa saamaan paremman tarkkuuden koordinaattiattribuuteissa.`,
   showRecordCompletion: {
     label: "Näytä tietueen täyttöaste",
     description:
-      "Näyttää edistymispalkin, joka kertoo nykyisen tietueen pakollisten kenttien täyttöprosentin",
+      "Näyttää edistymispalkin, joka kertoo nykyisen tietueen täytettyjen vaatimusten prosenttiosuuden",
   },
   showStatusBar: {
     label: "Näytä tilarivi",

@@ -96,7 +96,7 @@ export default {
   showRecordCompletion: {
     label: "Mostrar progreso de finalización del registro",
     description:
-      "Muestra una barra de progreso con el porcentaje de campos obligatorios completados en el registro actual",
+      "Muestra una barra de progreso con el porcentaje de los requisitos cumplidos en el registro actual",
   },
   showStatusBar: {
     label: "Mostrar barra de estado",

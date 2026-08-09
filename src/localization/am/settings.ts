@@ -88,7 +88,7 @@ export default {
 
   showRecordCompletion: {
     label: "የመዝገብ ማጠናቀቅ እድገትን አሳይ",
-    description: "ለአሁኑ መዝገብ የተሞሉ አስፈላጊ መስኮች መቶኛን የሚያሳይ የእድገት አሞሌ ያሳያል",
+    description: "ለአሁኑ መዝገብ የተሟሉ መስፈርቶች መቶኛን የሚያሳይ የእድገት አሞሌ ያሳያል",
   },
   showStatusBar: {
     label: "የሁኔታ አሞሌን አሳይ",

@@ -95,7 +95,7 @@ It will help to get a better accuracy in coordinate attributes.`,
   showRecordCompletion: {
     label: "Show record completion progress",
     description:
-      "Shows a progress bar with the percentage of required fields filled in for the current record",
+      "Shows a progress bar with the percentage of the current record's requirements that have been met",
   },
   showStatusBar: {
     label: "Show status bar",

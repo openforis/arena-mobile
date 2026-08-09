@@ -83,7 +83,7 @@ Haluatko hakea sen uudelleen palvelimelta?`,
   noRecordsFound: "Tietueita ei löydy",
   recordEditor: "Tietueen muokkain",
   recordCompletion: {
-    description: "Pakollisista kentistä {{percent}} % on täytetty",
+    description: "Tietueen vaatimuksista {{percent}} % on täyttynyt",
     shortDescription: "{{percent}} % valmis",
   },
   recordInPreviousCycle: {

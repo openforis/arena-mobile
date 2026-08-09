@@ -95,7 +95,7 @@ Det kommer att hjälpa till att få bättre noggrannhet i en koordinatattribut.`
   showRecordCompletion: {
     label: "Visa postens ifyllnadsgrad",
     description:
-      "Visar en förloppsindikator med andelen obligatoriska fält som fyllts i för den aktuella posten",
+      "Visar en förloppsindikator med andelen uppfyllda krav för den aktuella posten",
   },
   showStatusBar: {
     label: "Visa statusfältet",

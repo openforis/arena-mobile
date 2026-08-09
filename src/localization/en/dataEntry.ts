@@ -127,7 +127,7 @@ max count reached`,
   options: "Options",
   recordEditor: "Record editor",
   recordCompletion: {
-    description: "{{percent}}% of the required fields have been filled in",
+    description: "{{percent}}% of the record's requirements are met",
     shortDescription: "{{percent}}% completed",
   },
   recordInPreviousCycle: {

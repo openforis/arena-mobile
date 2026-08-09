@@ -98,7 +98,7 @@ export default {
   showRecordCompletion: {
     label: "Fortschritt der Datensatzvervollständigung anzeigen",
     description:
-      "Zeigt einen Fortschrittsbalken mit dem Prozentsatz der ausgefüllten Pflichtfelder des aktuellen Datensatzes an",
+      "Zeigt einen Fortschrittsbalken mit dem Prozentsatz der erfüllten Anforderungen des aktuellen Datensatzes an",
   },
   showStatusBar: {
     label: "Statusleiste anzeigen",

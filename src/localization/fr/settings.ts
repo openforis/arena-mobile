@@ -97,7 +97,7 @@ export default {
   showRecordCompletion: {
     label: "Afficher la progression de l'enregistrement",
     description:
-      "Affiche une barre de progression indiquant le pourcentage de champs obligatoires remplis pour l'enregistrement en cours",
+      "Affiche une barre de progression indiquant le pourcentage des exigences remplies pour l'enregistrement en cours",
   },
   showStatusBar: {
     label: "Afficher la barre d'état",
