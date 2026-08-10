@@ -21,6 +21,7 @@ const defaultSettings: Partial<SettingsObject> = {
   preferredGpsSourceId: GpsSourceSetting.auto,
   serverUrlType: "default",
   serverUrl: AMConstants.defaultServerUrl,
+  showRecordCompletion: true,
   showStatusBar: false,
   theme: ThemesSettings.auto,
 };

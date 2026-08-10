@@ -5,10 +5,11 @@ import { Icon } from "./Icon";
 type Props = {
   hasErrors?: boolean;
   hasWarnings?: boolean;
+  size?: number;
 };
 
 export const AlertIcon = (props: Props) => {
-  const { hasErrors, hasWarnings } = props;
+  const { hasErrors, hasWarnings, size } = props;
 
   const iconColor = useMemo(() => {
     if (hasErrors) return "red";
@@ -16,5 +17,7 @@ export const AlertIcon = (props: Props) => {
     return undefined;
   }, [hasErrors, hasWarnings]);
 
-  return iconColor ? <Icon color={iconColor} source="alert" /> : null;
+  return iconColor ? (
+    <Icon color={iconColor} size={size} source="alert" />
+  ) : null;
 };

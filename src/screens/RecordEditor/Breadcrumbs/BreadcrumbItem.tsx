@@ -1,7 +1,9 @@
 import { useCallback, useMemo } from "react";
 
-import { Button, HView, Icon } from "components";
+import { Button, EntityStatusIndicators, HView, Icon } from "components";
 import { useIsTextDirectionRtl } from "localization";
+
+import { BreadcrumbItemData } from "./useBreadcrumbItems";
 
 import styles from "./styles";
 
@@ -13,8 +15,8 @@ const Separator = () => {
 
 type Props = {
   isLastItem?: boolean;
-  item: any;
-  onItemPress: (item: any) => void;
+  item: BreadcrumbItemData;
+  onItemPress: (item: BreadcrumbItemData) => void;
 };
 
 export const BreadcrumbItem = (props: Props) => {
@@ -40,6 +42,16 @@ export const BreadcrumbItem = (props: Props) => {
       <Button
         color={isLastItem ? "primary" : "secondary"}
         compact
+        icon={() => (
+          <EntityStatusIndicators
+            completionPercent={item.completionPercent}
+            hasErrors={item.hasErrors}
+            hasWarnings={item.hasWarnings}
+            size={14}
+          />
+        )}
+        iconPosition="right"
+        labelStyle={styles.itemButtonLabel}
         onPress={onItemPress}
         style={styles.itemButton}
         textIsI18nKey={false}

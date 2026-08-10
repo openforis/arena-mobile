@@ -124,6 +124,10 @@ export default {
   noRecordsFound: "記録が見つかりません",
   options: "オプション",
   recordEditor: "記録エディタ",
+  recordCompletion: {
+    description: "レコードの要件のうち{{percent}}%が満たされています",
+    shortDescription: "{{percent}}%完了",
+  },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {
       title: "前のサイクルの値を表示",

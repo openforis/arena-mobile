@@ -10,12 +10,14 @@ import { useIsTextDirectionRtl, useTranslation } from "localization";
 import { log } from "utils";
 import { screenKeys } from "screens";
 import { Breadcrumbs } from "screens/RecordEditor/Breadcrumbs";
+import { RecordCompletionProgressBar } from "screens/RecordEditor/RecordCompletionProgressBar";
 import {
   DataEntryActions,
   DataEntrySelectors,
   DeviceInfoSelectors,
   ScreenOptionsActions,
   ScreenOptionsSelectors,
+  SettingsSelectors,
   SurveyOptionsActions,
   SurveyOptionsSelectors,
   SurveySelectors,
@@ -72,6 +74,7 @@ export const AppBar = (props: Props) => {
   const isLoadingPreviousCycleRecord =
     DataEntrySelectors.usePreviousCycleRecordLoading();
   const isInTwoRows = editingRecord && !isLandscape;
+  const { showRecordCompletion } = SettingsSelectors.useSettings();
 
   const [state, setState] = useState({ menuVisible: false });
 
@@ -132,93 +135,101 @@ export const AppBar = (props: Props) => {
   }, [dispatch, isLinkedToPreviousCycleRecord]);
 
   return (
-    <RNPAppbar.Header elevated mode={isInTwoRows ? "medium" : "small"}>
-      <HView style={styles.topBarContainer} fullWidth transparent>
-        {editingRecord && (
-          <RNPAppbar.Action
-            icon="menu"
-            onPress={onToggleDrawerPress}
-            size={36}
-          />
-        )}
+    <>
+      <RNPAppbar.Header elevated mode={isInTwoRows ? "medium" : "small"}>
+        <HView style={styles.topBarContainer} fullWidth transparent>
+          {editingRecord && (
+            <RNPAppbar.Action
+              icon="menu"
+              onPress={onToggleDrawerPress}
+              size={36}
+            />
+          )}
 
-        {hasBack && back && (
-          <RNPAppbar.BackAction
-            onPress={navigation.goBack}
-            size={36}
-            style={isRtl ? BaseStyles.mirrorX : undefined}
-          />
-        )}
+          {hasBack && back && (
+            <RNPAppbar.BackAction
+              onPress={navigation.goBack}
+              size={36}
+              style={isRtl ? BaseStyles.mirrorX : undefined}
+            />
+          )}
 
-        {(!editingRecord || isTablet) && (
-          <Text
-            numberOfLines={editingRecord ? 1 : undefined}
-            style={styles.title}
-            variant="titleLarge"
-          >
-            {title}
-          </Text>
-        )}
+          {(!editingRecord || isTablet) && (
+            <Text
+              numberOfLines={editingRecord ? 1 : undefined}
+              style={styles.title}
+              variant="titleLarge"
+            >
+              {title}
+            </Text>
+          )}
 
-        {editingRecord && (
-          <>
-            {!isInTwoRows && <Breadcrumbs />}
-            {!isTablet && isInTwoRows && <Spacer fullFlex fullWidth={false} />}
-            {recordEditLockAvailable && (
+          {editingRecord && (
+            <>
+              {!isInTwoRows && <Breadcrumbs />}
+              {!isTablet && isInTwoRows && (
+                <Spacer fullFlex fullWidth={false} />
+              )}
+              {recordEditLockAvailable && (
+                <RNPAppbar.Action
+                  icon={
+                    recordEditLocked
+                      ? "lock-outline"
+                      : "lock-open-variant-outline"
+                  }
+                  onPress={toggleRecordLock}
+                />
+              )}
+              {recordIsNotValid && (
+                <RNPAppbar.Action
+                  icon="alert"
+                  color={recordHasErrors ? "red" : "orange"}
+                  onPress={onValidationIconPress}
+                />
+              )}
+              {canRecordBeLinkedToPreviousCycle && (
+                <RNPAppbar.Action
+                  icon={isLinkedToPreviousCycleRecord ? "link" : "link-off"}
+                  loading={isLoadingPreviousCycleRecord}
+                  onPress={onLinkToPreviousCyclePress}
+                />
+              )}
               <RNPAppbar.Action
                 icon={
-                  recordEditLocked
-                    ? "lock-outline"
-                    : "lock-open-variant-outline"
+                  recordEditViewMode === RecordEditViewMode.form
+                    ? "numeric-1-box-outline"
+                    : "format-list-bulleted"
                 }
-                onPress={toggleRecordLock}
+                onPress={toggleRecordEditViewMode}
               />
-            )}
-            {recordIsNotValid && (
-              <RNPAppbar.Action
-                icon="alert"
-                color={recordHasErrors ? "red" : "orange"}
-                onPress={onValidationIconPress}
-              />
-            )}
-            {canRecordBeLinkedToPreviousCycle && (
-              <RNPAppbar.Action
-                icon={isLinkedToPreviousCycleRecord ? "link" : "link-off"}
-                loading={isLoadingPreviousCycleRecord}
-                onPress={onLinkToPreviousCyclePress}
-              />
-            )}
+            </>
+          )}
+
+          {!editingRecord && hasToggleScreenView && (
             <RNPAppbar.Action
               icon={
-                recordEditViewMode === RecordEditViewMode.form
-                  ? "numeric-1-box-outline"
-                  : "format-list-bulleted"
+                screenViewMode === ScreenViewMode.list ? "table" : "view-list"
               }
-              onPress={toggleRecordEditViewMode}
+              onPress={onToggleScreenViewModePress}
             />
-          </>
-        )}
+          )}
 
-        {!editingRecord && hasToggleScreenView && (
-          <RNPAppbar.Action
-            icon={
-              screenViewMode === ScreenViewMode.list ? "table" : "view-list"
-            }
-            onPress={onToggleScreenViewModePress}
-          />
+          {hasOptionsMenuVisible && (
+            <OptionsMenu
+              onDismiss={onMenuDismiss}
+              toggleMenu={toggleMenu}
+              visible={menuVisible}
+            />
+          )}
+        </HView>
+        {isInTwoRows && (
+          <RNPAppbar.Content
+            style={styles.breadcrumbsContent}
+            title={<Breadcrumbs />}
+          ></RNPAppbar.Content>
         )}
-
-        {hasOptionsMenuVisible && (
-          <OptionsMenu
-            onDismiss={onMenuDismiss}
-            toggleMenu={toggleMenu}
-            visible={menuVisible}
-          />
-        )}
-      </HView>
-      {isInTwoRows && (
-        <RNPAppbar.Content title={<Breadcrumbs />}></RNPAppbar.Content>
-      )}
-    </RNPAppbar.Header>
+      </RNPAppbar.Header>
+      {editingRecord && showRecordCompletion && <RecordCompletionProgressBar />}
+    </>
   );
 };

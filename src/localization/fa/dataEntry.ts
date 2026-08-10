@@ -82,6 +82,10 @@ export default {
   },
   noRecordsFound: "رکوردی یافت نشد",
   recordEditor: "ویرایشگر رکورد",
+  recordCompletion: {
+    description: "{{percent}}٪ از الزامات رکورد برآورده شده است",
+    shortDescription: "{{percent}}٪ تکمیل شده",
+  },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {
       title: "نمایش مقادیر از چرخه قبلی",

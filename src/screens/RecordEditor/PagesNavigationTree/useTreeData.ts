@@ -148,15 +148,18 @@ type TreeItem = {
   entityPointer: EntityPointer;
   hasErrors?: boolean;
   hasWarnings?: boolean;
+  completionPercent?: number;
 };
 
 const createChildTreeItem = ({
+  survey,
   record,
   visitedEntity,
   childDef,
   currentEntity,
   createTreeItem,
 }: {
+  survey: Survey;
   record: ArenaMobileRecord;
   visitedEntity: any;
   childDef: NodeDef<any>;
@@ -175,6 +178,15 @@ const createChildTreeItem = ({
     parentEntityUuid: visitedEntity.uuid,
     entityUuid: childEntity?.uuid,
   });
+
+  treeItem.completionPercent = RecordUtils.getChildEntityCompletionPercent({
+    survey,
+    record,
+    parentEntity: visitedEntity,
+    childDef,
+    childEntity,
+  });
+
   return { treeItem, childEntity };
 };
 
@@ -252,6 +264,16 @@ export const useTreeData = () => {
     parentEntityUuid: undefined,
     entityUuid: rootNode?.uuid,
   });
+  if (rootNode) {
+    const rootCompletionStats = Records.getEntityCompletionStats({
+      survey,
+      record,
+      entity: rootNode,
+    });
+    rootTreeItem.completionPercent = RecordUtils.toCompletionPercent(
+      rootCompletionStats,
+    );
+  }
 
   const stack = [
     { treeItem: rootTreeItem, entityDef: rootDef, entity: rootNode },
@@ -277,6 +299,7 @@ export const useTreeData = () => {
 
     for (const childDef of applicableChildrenEntityDefs) {
       const { treeItem, childEntity } = createChildTreeItem({
+        survey,
         record,
         visitedEntity,
         childDef,

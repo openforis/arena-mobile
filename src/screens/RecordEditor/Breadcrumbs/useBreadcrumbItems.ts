@@ -7,6 +7,16 @@ import { useTranslation } from "localization";
 import { RecordUtils } from "model";
 import { DataEntrySelectors, SurveySelectors } from "state";
 
+export type BreadcrumbItemData = {
+  parentEntityUuid?: string;
+  entityDefUuid: string;
+  entityUuid: string | null;
+  name: string;
+  completionPercent: number;
+  hasErrors?: boolean;
+  hasWarnings?: boolean;
+};
+
 export const useBreadcrumbItems = () => {
   const { t } = useTranslation();
   const survey = SurveySelectors.useCurrentSurvey();
@@ -50,7 +60,7 @@ export const useBreadcrumbItems = () => {
     const record = DataEntrySelectors.selectRecord(state);
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
 
-    const _items = [];
+    const _items: BreadcrumbItemData[] = [];
 
     if (parentEntityUuid && !entityUuid) {
       _items.push({
@@ -58,6 +68,7 @@ export const useBreadcrumbItems = () => {
         entityDefUuid,
         entityUuid: null,
         name: itemLabelFunction({ nodeDef: entityDef }),
+        completionPercent: 0,
       });
     }
 
@@ -76,16 +87,44 @@ export const useBreadcrumbItems = () => {
         parentEntity,
         entity: currentEntity,
       });
+      const completionStats = Records.getEntityCompletionStats({
+        survey,
+        record,
+        entity: currentEntity,
+        includeNestedEntities: false,
+      });
+      const completionPercent = RecordUtils.toCompletionPercent(completionStats);
 
       _items.unshift({
         parentEntityUuid: parentEntity?.uuid,
         entityDefUuid: currentEntityDef.uuid,
         entityUuid: currentEntity.uuid,
         name: itemName,
+        completionPercent,
       });
 
       currentEntity = parentEntity;
     }
+
+    const entityNodeUuids = new Set(
+      _items
+        .map((item) => item.entityUuid)
+        .filter((entityUuid): entityUuid is string => !!entityUuid),
+    );
+    const { nodeUuidsWithErrors, nodeUuidsWithWarnings } =
+      RecordUtils.findEntityNodesWithValidationIssues({
+        record,
+        entityNodeUuids,
+      });
+    for (const item of _items) {
+      if (!item.entityUuid) continue;
+      if (nodeUuidsWithErrors.has(item.entityUuid)) {
+        item.hasErrors = true;
+      } else if (nodeUuidsWithWarnings.has(item.entityUuid)) {
+        item.hasWarnings = true;
+      }
+    }
+
     return _items;
   }, Objects.isEqual);
 };

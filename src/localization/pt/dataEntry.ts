@@ -80,6 +80,10 @@ Deseja obtê-las novamente do servidor?`,
   },
   noRecordsFound: "Nenhum registo encontrado",
   recordEditor: "Editor de registos",
+  recordCompletion: {
+    description: "{{percent}}% dos requisitos do registo foram cumpridos",
+    shortDescription: "{{percent}}% concluído",
+  },
   recordInPreviousCycle: {
     confirmShowValuesPreviousCycle: {
       title: "Mostrar valores do ciclo anterior",

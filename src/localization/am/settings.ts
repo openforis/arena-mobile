@@ -1,11 +1,34 @@
 export default {
   title: "ቅንብሮች",
-  animationsEnabled: "አኒሜሽኖች ነቅተዋል",
+  group: {
+    appearance: "መልክ",
+    dataEntry: "ውሂብ ማስገባት",
+    location: "አካባቢ እና ጂፒኤስ",
+    images: "ምስሎች",
+  },
+  animationsEnabled: {
+    label: "አኒሜሽኖች ነቅተዋል",
+    description:
+      "በመተግበሪያው ውስጥ የሽግግር እና የገጽታ አኒሜሽኖችን ያነቃል። በዝግተኛ መሣሪያዎች ላይ አፈጻጸምን ለማሻሻል ያሰናክሉት",
+  },
   connectionToServer: "ከአገልጋይ ጋር ግንኙነት",
-  fontScale: "የቅርጸ ቁምፊ መጠን (ቤታ)፡ {{value}}",
-  keepScreenAwake: "ማያ ገጹን ነቅቶ ያቆዩት",
-  fullScreen: "ሙሉ ማያ ገጽ",
-  imageSizeLimit: "የምስሎች መጠን እስከ: {{value}}MB የተገደበ ነው።",
+  fontScale: {
+    label: "የቅርጸ ቁምፊ መጠን (ቤታ)፡ {{value}}",
+    description: "በመተግበሪያው ውስጥ የሚያገለግለውን የጽሑፍ መጠን ያስተካክላል",
+  },
+  keepScreenAwake: {
+    label: "ማያ ገጹን ነቅቶ ያቆዩት",
+    description: "መተግበሪያው ክፍት እያለ ማያ ገጹ በራስ-ሰር እንዳይጠፋ ይከላከላል",
+  },
+  fullScreen: {
+    label: "ሙሉ ማያ ገጽ",
+    description: "ውሂብ ለማስገባት ሙሉውን ማያ ገጽ ለመጠቀም የስርዓት ሁኔታ እና የአሰሳ አሞሌዎችን ይደብቃል",
+  },
+  imageSizeLimit: {
+    label: "የምስሎች መጠን እስከ: {{value}}MB የተገደበ ነው።",
+    description:
+      "ጥናቱ ለተወሰነ ባህሪ ትንሽ ገደብ ካላስቀመጠ በስተቀር፣ ምስሎች ከመቀመጣቸው በፊት የሚቀነሱበት ከፍተኛ መጠን",
+  },
   imageSizeUnlimited: {
     label: "የምስሎች መጠን ያልተገደበ",
     description:
@@ -13,9 +36,17 @@ export default {
   },
   language: {
     label: "የመተግበሪያ ቋንቋ",
+    description: "በመተግበሪያው በይነገጽ ውስጥ የሚያገለግለውን ቋንቋ ያዘጋጃል",
   },
-  locationAccuracyThreshold: "የቦታ ትክክለኛነት ገደብ (ሜትሮች)",
-  locationAccuracyWatchTimeout: "የቦታ ትክክለኛነት ክትትል ጊዜ ማብቂያ፡ {{value}} ሰከንዶች",
+  locationAccuracyThreshold: {
+    label: "የቦታ ትክክለኛነት ገደብ (ሜትሮች)",
+    description:
+      "ለተቀናጀ ባህሪ የቦታ ንባብ ተቀባይነት ከማግኘቱ በፊት የሚያስፈልገው ዝቅተኛ የጂፒኤስ ትክክለኛነት (በሜትር)",
+  },
+  locationAccuracyWatchTimeout: {
+    label: "የቦታ ትክክለኛነት ክትትል ጊዜ ማብቂያ፡ {{value}} ሰከንዶች",
+    description: "ትክክለኛነት ገደቡን የሚያሟላ የቦታ ንባብ ከመተው በፊት ለመጠበቅ ከፍተኛ ጊዜ",
+  },
   locationAveragingEnabled: {
     label: "የቦታ አማካይ ተንቀሳቅሷል",
     description: "ሲነቃ የተመዘገበው ቦታ ከብዙ የቦታ ንባቦች አማካይ ይሆናል፣ ይህም ትክክለኛነትን ያሻሽላል",
@@ -55,9 +86,17 @@ export default {
     pairNewDevice: "አዲስ መሣሪያ አጣምር…",
   },
 
-  showStatusBar: "የሁኔታ አሞሌን አሳይ",
+  showRecordCompletion: {
+    label: "የመዝገብ ማጠናቀቅ እድገትን አሳይ",
+    description: "ለአሁኑ መዝገብ የተሟሉ መስፈርቶች መቶኛን የሚያሳይ የእድገት አሞሌ ያሳያል",
+  },
+  showStatusBar: {
+    label: "የሁኔታ አሞሌን አሳይ",
+    description: "መዝገብ በሚስተካከልበት ጊዜ የባትሪ፣ የማከማቻ እና የአውታረ መረብ ሁኔታን ያሳያል",
+  },
   theme: {
     label: "ገጽታ",
+    description: "በመተግበሪያው በይነገጽ ውስጥ የሚያገለግለውን የቀለም ገጽታ ያዘጋጃል",
     auto: "ራስ-ሰር",
     dark: "ጨለማ",
     dark2: "ጨለማ 2",

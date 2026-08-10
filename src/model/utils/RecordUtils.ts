@@ -7,8 +7,10 @@ import {
   Numbers,
   Objects,
   RecordExpressionEvaluator,
+  RecordValidations,
   Records,
   Surveys,
+  Validations,
   NodeDefEntity,
   NodeDef,
   NodeDefExpression,
@@ -199,6 +201,51 @@ const getApplicableChildrenEntityDefs = ({
         NodeDefs.isDisplayInOwnPage(cycle)(childDef as NodeDefEntity)),
   ) as NodeDefEntity[];
 
+type CompletionStats = { total: number; filled: number };
+
+const toCompletionPercent = (stats: CompletionStats): number => {
+  const { total, filled } = stats;
+  if (total <= 0) return 100;
+  return Math.round((filled / total) * 100);
+};
+
+const getChildEntityCompletionStats = ({
+  survey,
+  record,
+  parentEntity,
+  childDef,
+  childEntity,
+}: {
+  survey: Survey;
+  record: ArenaRecord;
+  parentEntity: any;
+  childDef: NodeDef<any>;
+  childEntity: any;
+}): CompletionStats => {
+  if (NodeDefs.isSingle(childDef)) {
+    return childEntity
+      ? Records.getEntityCompletionStats({ survey, record, entity: childEntity })
+      : { total: 1, filled: 0 };
+  }
+  const entities = Records.getChildren(parentEntity, childDef.uuid)(record);
+  if (entities.length === 0) return { total: 1, filled: 0 };
+  return entities.reduce(
+    (acc: CompletionStats, entity: any) => {
+      const stats = Records.getEntityCompletionStats({ survey, record, entity });
+      return { total: acc.total + stats.total, filled: acc.filled + stats.filled };
+    },
+    { total: 0, filled: 0 },
+  );
+};
+
+const getChildEntityCompletionPercent = (params: {
+  survey: Survey;
+  record: ArenaRecord;
+  parentEntity: any;
+  childDef: NodeDef<any>;
+  childEntity: any;
+}): number => toCompletionPercent(getChildEntityCompletionStats(params));
+
 const getSiblingNode = ({
   record,
   parentEntity,
@@ -294,22 +341,104 @@ const getCoordinateDistanceTarget = async ({
   return null;
 };
 
-const findAncestor = ({
-  record,
-  node,
-  predicate,
-}: {
+const findAncestor = (params: {
   record: ArenaRecord;
   node: ArenaRecordNode;
   predicate: (node: ArenaRecordNode) => boolean;
 }): ArenaRecordNode | null => {
   let result: ArenaRecordNode | null = null;
+  const { record, node, predicate } = params;
   Records.visitAncestorsAndSelf(node, (visitedAncestor) => {
     if (!result && predicate(visitedAncestor)) {
       result = visitedAncestor;
     }
   })(record);
   return result;
+};
+
+const findMatchingEntityUuidForChildrenCountValidation = (params: {
+  validationKey: string;
+  entityNodeUuids: Set<string>;
+}): string | undefined => {
+  const { validationKey, entityNodeUuids } = params
+  // children count validation key directly references the parent entity
+  const parentUuid =
+    RecordValidations.extractValidationChildrenCountKeyParentUuid(
+      validationKey,
+    );
+  return parentUuid && entityNodeUuids.has(parentUuid)
+    ? parentUuid
+    : undefined;
+};
+
+const findMatchingEntityUuidForNodeValidation = (params: {
+  record: ArenaRecord;
+  validationKey: string;
+  entityNodeUuids: Set<string>;
+}): string | undefined => {
+  const { record, validationKey, entityNodeUuids } = params
+  const node = Records.getNodeByUuid(validationKey)(record);
+  if (!node) return undefined;
+
+  if (entityNodeUuids.has(node.uuid)) {
+    // validation issue on the entity itself (e.g. duplicate key)
+    return node.uuid;
+  }
+  // validation issue on a direct attribute of the entity: do not bubble
+  // up errors/warnings belonging to nested (descendant) entities
+  const parentEntity = Records.getParent(node)(record);
+  return parentEntity && entityNodeUuids.has(parentEntity.uuid)
+    ? parentEntity.uuid
+    : undefined;
+};
+
+const findMatchingEntityUuid = (params: {
+  record: ArenaRecord;
+  validationKey: string;
+  entityNodeUuids: Set<string>;
+}): string | undefined => {
+  const { record, validationKey, entityNodeUuids } = params
+  return RecordValidations.isValidationChildrenCountKey(validationKey)
+    ? findMatchingEntityUuidForChildrenCountValidation({
+      validationKey,
+      entityNodeUuids,
+    })
+    : findMatchingEntityUuidForNodeValidation({
+      record,
+      validationKey,
+      entityNodeUuids,
+    });
+};
+
+const findEntityNodesWithValidationIssues = (params: {
+  record: ArenaRecord;
+  entityNodeUuids: Set<string>;
+}): { nodeUuidsWithErrors: Set<string>; nodeUuidsWithWarnings: Set<string> } => {
+  const { record, entityNodeUuids } = params
+  const nodeUuidsWithErrors = new Set<string>();
+  const nodeUuidsWithWarnings = new Set<string>();
+
+  const validation = Validations.getValidation(record);
+  const fieldValidations = Validations.getFieldValidations(validation);
+
+  for (const [validationKey, fieldValidation] of Object.entries(
+    fieldValidations,
+  )) {
+    if (fieldValidation.valid) continue;
+
+    const matchingEntityUuid = findMatchingEntityUuid({
+      record,
+      validationKey,
+      entityNodeUuids,
+    });
+    if (!matchingEntityUuid) continue;
+
+    const targetSet = Validations.calculateHasNestedErrors(fieldValidation)
+      ? nodeUuidsWithErrors
+      : nodeUuidsWithWarnings;
+    targetSet.add(matchingEntityUuid);
+  }
+  return { nodeUuidsWithErrors, nodeUuidsWithWarnings };
 };
 
 const cleanupAttributeValue = ({
@@ -469,10 +598,10 @@ const getRecordSummaryValuesByKeyOrSummaryAttributeFormatted = ({
     valuesWrapperProp === "keysObj"
       ? SurveyDefs.getRootKeyDefs({ survey, cycle })
       : Surveys.getNodeDefsIncludedInMultipleEntitySummary({
-          survey,
-          cycle,
-          nodeDef: rootDef,
-        });
+        survey,
+        cycle,
+        nodeDef: rootDef,
+      });
   return defs.reduce(
     (acc, nodeDef) => {
       const nodeDefName = NodeDefs.getName(nodeDef);
@@ -619,9 +748,12 @@ export const RecordUtils = {
   getRecordSummaryValuesBySummaryAttributeFormatted,
   findNewlyInapplicableDefUuidsWithValue,
   getApplicableChildrenEntityDefs,
+  getChildEntityCompletionPercent,
+  toCompletionPercent,
   getSiblingNode,
   getCoordinateDistanceTarget,
   findAncestor,
+  findEntityNodesWithValidationIssues,
   cleanupAttributeValue,
   hasDescendantApplicableNodes,
   getApplicableDescendantDefs,
