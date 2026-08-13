@@ -27,6 +27,7 @@ export const FieldSet = (props: Props) => {
       ]}
     >
       <Text
+        numberOfLines={1}
         style={[
           styles.legend,
           { backgroundColor: theme.colors.surface },
