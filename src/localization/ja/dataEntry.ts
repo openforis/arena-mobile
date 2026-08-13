@@ -125,7 +125,6 @@ export default {
   options: "オプション",
   recordEditor: "記録エディタ",
   recordCompletion: {
-    description: "レコードの要件のうち{{percent}}%が満たされています",
     shortDescription: "{{percent}}%完了",
   },
   recordInPreviousCycle: {

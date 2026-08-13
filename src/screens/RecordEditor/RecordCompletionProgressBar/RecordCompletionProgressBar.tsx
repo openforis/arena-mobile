@@ -50,11 +50,7 @@ export const RecordCompletionProgressBar = (props: Props) => {
       />
       <Text
         style={styles.completionText}
-        textKey={
-          compact
-            ? "dataEntry:recordCompletion.shortDescription"
-            : "dataEntry:recordCompletion.description"
-        }
+        textKey="dataEntry:recordCompletion.shortDescription"
         textParams={{ percent: completionPercent }}
         variant="bodySmall"
       />
