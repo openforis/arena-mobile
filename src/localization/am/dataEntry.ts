@@ -76,7 +76,6 @@ export default {
   noRecordsFound: "ምንም መዝገቦች አልተገኙም",
   recordEditor: "የመዝገብ አርታዒ",
   recordCompletion: {
-    description: "የመዝገቡ መስፈርቶች {{percent}}% ተሟልተዋል",
     shortDescription: "{{percent}}% ተጠናቋል",
   },
   recordInPreviousCycle: {

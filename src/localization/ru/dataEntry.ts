@@ -80,7 +80,6 @@ export default {
   noRecordsFound: "Записи не найдены",
   recordEditor: "Редактор записей",
   recordCompletion: {
-    description: "Выполнено {{percent}}% требований записи",
     shortDescription: "Заполнено {{percent}}%",
   },
   recordInPreviousCycle: {

@@ -86,7 +86,6 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
   noRecordsFound: "Aucun enregistrement trouvé",
   recordEditor: "Éditeur d'enregistrements",
   recordCompletion: {
-    description: "{{percent}} % des exigences de l'enregistrement sont remplies",
     shortDescription: "{{percent}} % terminé",
   },
   recordInPreviousCycle: {

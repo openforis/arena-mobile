@@ -84,7 +84,6 @@ Vill du hämta den igen från servern?`,
   noRecordsFound: "Inga poster hittades",
   recordEditor: "Postredigerare",
   recordCompletion: {
-    description: "{{percent}} % av postens krav är uppfyllda",
     shortDescription: "{{percent}} % klart",
   },
   recordInPreviousCycle: {

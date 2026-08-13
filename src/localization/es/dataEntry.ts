@@ -81,7 +81,6 @@ Sus valores serán borrados.
   noRecordsFound: "No se encontraron registros",
   recordEditor: "Editor de registros",
   recordCompletion: {
-    description: "Se ha cumplido el {{percent}}% de los requisitos del registro",
     shortDescription: "{{percent}}% completado",
   },
   recordInPreviousCycle: {
