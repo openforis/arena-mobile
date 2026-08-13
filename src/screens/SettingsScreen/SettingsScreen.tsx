@@ -5,7 +5,7 @@ import { Objects } from "@openforis/arena-core";
 import { ConnectionToRemoteServerButton } from "appComponents/ConnectionToRemoteServerButton";
 import { FullBackupButton } from "appComponents/FullBackupButton";
 
-import { Button, Card, FieldSet, ScreenView, VView } from "components";
+import { Button, FieldSet, HView, ScreenView, Text, VView } from "components";
 import { SettingsModel, SettingsObject } from "model";
 import { AppService } from "service/appService";
 import {
@@ -106,25 +106,30 @@ export const SettingsScreen = () => {
             </FieldSet>
           );
         })}
-        <Card titleKey="app:backup">
+        <FieldSet headerKey="app:backup" headerStyle={styles.settingsGroupHeader}>
           <FullBackupButton />
-        </Card>
-        <Card
-          contentStyle={styles.logsCardContent}
-          titleKey="app:logs.title"
-          subtitleKey="app:logs.subtitle"
+        </FieldSet>
+        <FieldSet
+          headerKey="app:logs.title"
+          headerStyle={styles.settingsGroupHeader}
         >
-          <Button
-            icon="download"
-            onPress={onExportLogsPress}
-            textKey="app:logs.exportLabel"
+          <Text
+            style={styles.settingsItemDescription}
+            textKey="app:logs.subtitle"
           />
-          <Button
-            icon="trash-can-outline"
-            onPress={onClearLogsPress}
-            textKey="app:logs.clear.label"
-          />
-        </Card>
+          <HView style={styles.logsCardContent}>
+            <Button
+              icon="download"
+              onPress={onExportLogsPress}
+              textKey="app:logs.exportLabel"
+            />
+            <Button
+              icon="trash-can-outline"
+              onPress={onClearLogsPress}
+              textKey="app:logs.clear.label"
+            />
+          </HView>
+        </FieldSet>
       </VView>
     </ScreenView>
   );

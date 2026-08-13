@@ -10,7 +10,7 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
   },
   settingsGroupHeader: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "bold",
   },
   settingsItemDescription: {
