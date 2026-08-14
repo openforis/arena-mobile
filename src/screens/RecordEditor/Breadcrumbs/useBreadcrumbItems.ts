@@ -5,14 +5,14 @@ import { NodeDefs, Objects, Records, Surveys } from "@openforis/arena-core";
 
 import { useTranslation } from "localization";
 import { RecordUtils } from "model";
-import { DataEntrySelectors, SurveySelectors } from "state";
+import { DataEntrySelectors, SettingsSelectors, SurveySelectors } from "state";
 
 export type BreadcrumbItemData = {
   parentEntityUuid?: string;
   entityDefUuid: string;
   entityUuid: string | null;
   name: string;
-  completionPercent: number;
+  completionPercent?: number;
   hasErrors?: boolean;
   hasWarnings?: boolean;
 };
@@ -22,6 +22,7 @@ export const useBreadcrumbItems = () => {
   const survey = SurveySelectors.useCurrentSurvey();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const currentPageEntity = DataEntrySelectors.useCurrentPageEntity();
+  const { showRecordCompletion } = SettingsSelectors.useSettings();
   const { entityUuid, parentEntityUuid, entityDef } = currentPageEntity;
   const actualEntityUuid = entityUuid ?? parentEntityUuid;
   const entityDefUuid = entityDef.uuid;
@@ -68,7 +69,7 @@ export const useBreadcrumbItems = () => {
         entityDefUuid,
         entityUuid: null,
         name: itemLabelFunction({ nodeDef: entityDef }),
-        completionPercent: 0,
+        completionPercent: showRecordCompletion ? 0 : undefined,
       });
     }
 
@@ -87,13 +88,16 @@ export const useBreadcrumbItems = () => {
         parentEntity,
         entity: currentEntity,
       });
-      const completionStats = Records.getEntityCompletionStats({
-        survey,
-        record,
-        entity: currentEntity,
-        includeNestedEntities: false,
-      });
-      const completionPercent = RecordUtils.toCompletionPercent(completionStats);
+      let completionPercent: number | undefined;
+      if (showRecordCompletion) {
+        const completionStats = Records.getEntityCompletionStats({
+          survey,
+          record,
+          entity: currentEntity,
+          includeNestedEntities: false,
+        });
+        completionPercent = RecordUtils.toCompletionPercent(completionStats);
+      }
 
       _items.unshift({
         parentEntityUuid: parentEntity?.uuid,

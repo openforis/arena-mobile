@@ -13,7 +13,7 @@ import {
 
 import { ArenaMobileRecord, RecordUtils } from "model";
 
-import { DataEntrySelectors, SurveySelectors } from "state";
+import { DataEntrySelectors, SettingsSelectors, SurveySelectors } from "state";
 
 type TreeValidationAccumulator = {
   treeItemIdsWithErrors: Set<string>;
@@ -158,6 +158,7 @@ const createChildTreeItem = ({
   childDef,
   currentEntity,
   createTreeItem,
+  showRecordCompletion,
 }: {
   survey: Survey;
   record: ArenaMobileRecord;
@@ -165,6 +166,7 @@ const createChildTreeItem = ({
   childDef: NodeDef<any>;
   currentEntity: any;
   createTreeItem: ({ nodeDef, parentEntityUuid, entityUuid }: any) => TreeItem;
+  showRecordCompletion: boolean;
 }) => {
   const childEntity = getChildEntity({
     record,
@@ -179,13 +181,15 @@ const createChildTreeItem = ({
     entityUuid: childEntity?.uuid,
   });
 
-  treeItem.completionPercent = RecordUtils.getChildEntityCompletionPercent({
-    survey,
-    record,
-    parentEntity: visitedEntity,
-    childDef,
-    childEntity,
-  });
+  if (showRecordCompletion) {
+    treeItem.completionPercent = RecordUtils.getChildEntityCompletionPercent({
+      survey,
+      record,
+      parentEntity: visitedEntity,
+      childDef,
+      childEntity,
+    });
+  }
 
   return { treeItem, childEntity };
 };
@@ -215,6 +219,7 @@ export const useTreeData = () => {
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const record = DataEntrySelectors.useRecord();
   const currentPageEntity = DataEntrySelectors.useCurrentPageEntity();
+  const { showRecordCompletion } = SettingsSelectors.useSettings();
   const {
     entityDef: currentEntityDef,
     entityUuid,
@@ -264,7 +269,7 @@ export const useTreeData = () => {
     parentEntityUuid: undefined,
     entityUuid: rootNode?.uuid,
   });
-  if (rootNode) {
+  if (rootNode && showRecordCompletion) {
     const rootCompletionStats = Records.getEntityCompletionStats({
       survey,
       record,
@@ -305,6 +310,7 @@ export const useTreeData = () => {
         childDef,
         currentEntity,
         createTreeItem,
+        showRecordCompletion,
       });
 
       parentTreeItem.children.push(treeItem);
