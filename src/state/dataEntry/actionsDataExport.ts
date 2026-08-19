@@ -2,8 +2,8 @@ import {
   FlatDataExportDefaultOptions,
   FlatDataExportOption,
   FlatDataExportOptions,
+  JobSerialized,
   JobStatus,
-  JobSummary,
   Objects,
   Surveys,
 } from "@openforis/arena-core";
@@ -220,7 +220,7 @@ export const startCsvDataExportJob =
           dispatch,
           job: dataExportJob,
           titleKey: "dataEntry:dataExport.exportingData",
-          onJobComplete: (jobComplete: JobSummary<FlatDataExportJobResult>) => {
+          onJobComplete: (jobComplete: JobSerialized<FlatDataExportJobResult>) => {
             const { result } = jobComplete;
             const { outputFileUri } = result || {};
             if (outputFileUri) {
@@ -407,8 +407,7 @@ export const exportRecords =
         user,
       });
       await job.start();
-      const { summary } = job;
-      const { errors, result, status } = summary;
+      const { errors, result, status } = job;
 
       if (status === JobStatus.failed) {
         _onExportFileGenerationError({ errors, dispatch });

@@ -31,7 +31,7 @@ export const importRecordsFromFile =
     try {
       await importJob.start();
 
-      const { status, errors, result } = importJob.summary;
+      const { status, errors, result } = importJob;
 
       if (status === JobStatus.succeeded) {
         const { processedRecords, insertedRecords, updatedRecords } = result;
