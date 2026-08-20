@@ -25,7 +25,7 @@ export class FilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
 
     const filesSummary = filesSummaryObj as any[];
 
-    this.summary.total = filesSummary.length;
+    this.total = filesSummary.length;
 
     for (const fileSummary of filesSummary) {
       const { uuid: fileUuid } = fileSummary;

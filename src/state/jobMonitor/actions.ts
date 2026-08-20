@@ -1,8 +1,4 @@
-import {
-  JobMessageOutType,
-  JobStatus,
-  JobSummary,
-} from "@openforis/arena-core";
+import { JobSerialized, JobStatus } from "@openforis/arena-core";
 
 import { JobCancelError, JobMobile } from "model";
 import { WebSocketService } from "service";
@@ -64,8 +60,8 @@ type JobStartParams = {
   closeButtonTextKey?: string;
   messageKey?: string;
   messageParams?: any;
-  onJobComplete?: (jobSummary: JobSummary<any>) => void;
-  onJobEnd?: (jobSummary: JobSummary<any>) => void;
+  onJobComplete?: (jobSummary: JobSerialized<any>) => void;
+  onJobEnd?: (jobSummary: JobSerialized<any>) => void;
   onCancel?: () => void;
   onClose?: () => void;
   autoDismiss?: boolean;
@@ -116,11 +112,10 @@ const start =
 
     if (job) {
       // local job: listen to job update events
-      if (isJobStatusEnded(job.summary.status)) {
-        onJobUpdate(job.summary);
+      if (job.isEnded()) {
+        onJobUpdate(job.toJSON());
       } else {
-        // @ts-ignore
-        job.on(JobMessageOutType.summaryUpdate, onJobUpdate);
+        job.onEvent(() => onJobUpdate(job.toJSON()));
       }
     } else {
       // remote job; open Web Socket and listen to job update events
@@ -132,7 +127,7 @@ const start =
 const startAsync = async ({
   dispatch,
   ...otherParams
-}: JobStartParams & { dispatch: any }): Promise<JobSummary<any> | undefined> =>
+}: JobStartParams & { dispatch: any }): Promise<JobSerialized<any> | undefined> =>
   new Promise((resolve, reject) => {
     const { job } = otherParams;
     if (job) {
@@ -143,7 +138,7 @@ const startAsync = async ({
     dispatch(
       start({
         ...otherParams,
-        onJobEnd: (jobEnd: JobSummary<any>) => {
+        onJobEnd: (jobEnd: JobSerialized<any>) => {
           const { status } = jobEnd;
           if (status === JobStatus.succeeded) {
             resolve(jobEnd);

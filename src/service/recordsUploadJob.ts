@@ -29,21 +29,20 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadJobContext> {
     const { survey, cycle, fileUri, conflictResolutionStrategy, skipMissingFiles } = this.context;
 
     const startFromChunk =
-      this.summary.processed > 0 ? Math.floor(this.summary.processed) : 1;
+      this.processed > 0 ? Math.floor(this.processed) : 1;
 
     const { promise, cancel } = RecordService.uploadRecordsToRemoteServer({
       survey: survey as SurveyMobile,
       cycle,
       fileUri,
-      fileId: this.summary.uuid,
+      fileId: this.uuid,
       conflictResolutionStrategy,
       skipMissingFiles,
       startFromChunk,
       onUploadProgress: (progressEvent: any) => {
         const { loaded, total } = progressEvent;
-        this.summary.total = total;
-        this.summary.processed = loaded;
-        this.emitSummaryUpdateEvent();
+        this.total = total;
+        this.processed = loaded;
       },
     });
     this.cancelUpload = cancel;

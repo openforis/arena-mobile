@@ -27,8 +27,7 @@ export class RecordsAndFilesImportJob extends JobMobile<RecordsAndFilesImportJob
 
   override async prepareResult() {
     const recordsImportJob = this.jobs?.[0];
-    const recordsImportJobSummary: any = recordsImportJob?.summary ?? {};
-    const { result = {}, processed } = recordsImportJobSummary;
+    const { result = {}, processed = 0 } = recordsImportJob ?? {};
     return { ...result, processedRecords: processed };
   }
 

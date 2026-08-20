@@ -71,7 +71,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       );
 
       // set total
-      this.summary.total = recordsToExport.length;
+      this.total = recordsToExport.length;
 
       const tempRecordsSummaryJsonFileUri = Files.path(
         tempRecordsFolderUri,

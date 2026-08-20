@@ -28,7 +28,7 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
 
     const fileRecordsSummary = fileRecordsSummaryObj as any[];
 
-    this.summary.total = fileRecordsSummary.length;
+    this.total = fileRecordsSummary.length;
     this.insertedRecords = 0;
     this.updatedRecords = 0;
 

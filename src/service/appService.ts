@@ -24,12 +24,12 @@ const generateFullBackup = async () => {
   const job = new BackupJob({ user: {} as User });
   await job.start();
 
-  const { status, result } = job.summary;
+  const { status, result, errors } = job;
   switch (status) {
     case JobStatus.succeeded:
       return result.outputFileUri;
     case JobStatus.failed:
-      throw new Error(JSON.stringify(job.summary.errors));
+      throw new Error(JSON.stringify(errors));
     default:
       return null;
   }
