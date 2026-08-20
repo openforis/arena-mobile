@@ -270,7 +270,7 @@ const linkToRecordInPreviousCycle =
       });
       if (Objects.isEmpty(selectedCycleKey)) return;
 
-      const user = RemoteConnectionSelectors.selectLoggedUser(state);
+      const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
       const record = DataEntrySelectors.selectRecord(state);
 

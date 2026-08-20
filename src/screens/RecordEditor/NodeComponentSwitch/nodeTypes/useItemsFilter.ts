@@ -33,7 +33,7 @@ export const useItemsFilter = ({
     if (items.length === 0 || Objects.isEmpty(itemsFilter) || !parentNodeUuid)
       return items;
 
-    const user = RemoteConnectionSelectors.selectLoggedUser(state);
+    const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
     const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);

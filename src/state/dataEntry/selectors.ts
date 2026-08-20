@@ -78,15 +78,15 @@ const selectRecordSingleNodeUuid =
     parentNodeUuid: string | undefined;
     nodeDefUuid: string;
   }) =>
-  (state: any): string | null => {
-    const record = selectRecordUnsafe(state);
-    if (!parentNodeUuid || !record) {
-      return null;
-    }
-    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
-    const node = Records.getChild(parentNode, nodeDefUuid)(record);
-    return node?.uuid;
-  };
+    (state: any): string | null => {
+      const record = selectRecordUnsafe(state);
+      if (!parentNodeUuid || !record) {
+        return null;
+      }
+      const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
+      const node = Records.getChild(parentNode, nodeDefUuid)(record);
+      return node?.uuid;
+    };
 
 const selectRecordEntitiesUuidsAndKeyValues =
   ({
@@ -96,49 +96,49 @@ const selectRecordEntitiesUuidsAndKeyValues =
     parentNodeUuid: string | undefined;
     nodeDefUuid: string;
   }) =>
-  (state: any): { uuid: string; keyValues: any }[] => {
-    if (!parentNodeUuid) {
-      return [];
-    }
-    const record = selectRecordUnsafe(state);
-    if (!record) {
-      return [];
-    }
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
-    const entities = Records.getChildren(parentNode, nodeDefUuid)(record);
-    return entities.map((entity) => ({
-      uuid: entity.uuid,
-      keyValues: Records.getEntityKeyValues({ survey, record, entity }),
-    }));
-  };
+    (state: any): { uuid: string; keyValues: any }[] => {
+      if (!parentNodeUuid) {
+        return [];
+      }
+      const record = selectRecordUnsafe(state);
+      if (!record) {
+        return [];
+      }
+      const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
+      const entities = Records.getChildren(parentNode, nodeDefUuid)(record);
+      return entities.map((entity) => ({
+        uuid: entity.uuid,
+        keyValues: Records.getEntityKeyValues({ survey, record, entity }),
+      }));
+    };
 
 const selectRecordNodePointerValidation =
   (state: any) =>
-  ({
-    parentNodeUuid,
-    nodeDefUuid,
-  }: {
-    parentNodeUuid: string | undefined;
-    nodeDefUuid: string;
-  }): Validation | undefined => {
-    if (!parentNodeUuid) {
-      return undefined;
-    }
-    const record = selectRecordUnsafe(state);
-    if (!record) {
-      return undefined;
-    }
-    const nodeParent = Records.getNodeByUuid(parentNodeUuid)(record)!;
-    const nodes = Records.getChildren(nodeParent, nodeDefUuid)(record);
-    if (nodes.length === 0) return undefined;
+    ({
+      parentNodeUuid,
+      nodeDefUuid,
+    }: {
+      parentNodeUuid: string | undefined;
+      nodeDefUuid: string;
+    }): Validation | undefined => {
+      if (!parentNodeUuid) {
+        return undefined;
+      }
+      const record = selectRecordUnsafe(state);
+      if (!record) {
+        return undefined;
+      }
+      const nodeParent = Records.getNodeByUuid(parentNodeUuid)(record)!;
+      const nodes = Records.getChildren(nodeParent, nodeDefUuid)(record);
+      if (nodes.length === 0) return undefined;
 
-    const node = nodes[0]!;
-    const validation = RecordValidations.getValidationNode({
-      nodeUuid: node.uuid,
-    })(record.validation!);
-    return validation;
-  };
+      const node = nodes[0]!;
+      const validation = RecordValidations.getValidationNode({
+        nodeUuid: node.uuid,
+      })(record.validation!);
+      return validation;
+    };
 
 const selectRecordNodePointerValidationChildrenCount =
   ({
@@ -148,21 +148,21 @@ const selectRecordNodePointerValidationChildrenCount =
     parentNodeUuid: string | undefined;
     nodeDefUuid: string;
   }) =>
-  (state: any): Validation | undefined => {
-    if (!parentNodeUuid) {
-      return undefined;
-    }
-    const record = selectRecordUnsafe(state);
-    if (!record) {
-      return undefined;
-    }
-    const validationChildrenCount =
-      RecordValidations.getValidationChildrenCount({
-        nodeParentUuid: parentNodeUuid,
-        nodeDefChildUuid: nodeDefUuid,
-      })(record.validation!);
-    return validationChildrenCount;
-  };
+    (state: any): Validation | undefined => {
+      if (!parentNodeUuid) {
+        return undefined;
+      }
+      const record = selectRecordUnsafe(state);
+      if (!record) {
+        return undefined;
+      }
+      const validationChildrenCount =
+        RecordValidations.getValidationChildrenCount({
+          nodeParentUuid: parentNodeUuid,
+          nodeDefChildUuid: nodeDefUuid,
+        })(record.validation!);
+      return validationChildrenCount;
+    };
 
 const selectRecordNodePointerEditable =
   ({
@@ -172,24 +172,24 @@ const selectRecordNodePointerEditable =
     parentNodeUuid: string | undefined;
     nodeDefUuid: string;
   }) =>
-  (state: any): boolean => {
-    if (!parentNodeUuid) {
-      return true;
-    }
-    const record = selectRecordUnsafe(state);
-    if (!record) {
-      return true;
-    }
+    (state: any): boolean => {
+      if (!parentNodeUuid) {
+        return true;
+      }
+      const record = selectRecordUnsafe(state);
+      if (!record) {
+        return true;
+      }
 
-    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
-    if (!parentNode) {
-      return true;
-    }
-    return (
-      Records.isNodeEditable({ record, node: parentNode }) &&
-      Nodes.isChildEditable(parentNode, nodeDefUuid)
-    );
-  };
+      const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
+      if (!parentNode) {
+        return true;
+      }
+      return (
+        Records.isNodeEditable({ record, node: parentNode }) &&
+        Nodes.isChildEditable(parentNode, nodeDefUuid)
+      );
+    };
 
 const selectRecordNodePointerVisibility =
   ({
@@ -199,96 +199,96 @@ const selectRecordNodePointerVisibility =
     parentNodeUuid: string | undefined;
     nodeDefUuid: string;
   }) =>
-  (state: any): boolean => {
-    if (!parentNodeUuid) {
-      return false;
-    }
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const record = selectRecordUnsafe(state);
-    if (!record) {
-      return false;
-    }
+    (state: any): boolean => {
+      if (!parentNodeUuid) {
+        return false;
+      }
+      const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const record = selectRecordUnsafe(state);
+      if (!record) {
+        return false;
+      }
 
-    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
-    const applicable = Nodes.isChildApplicable(parentNode, nodeDefUuid);
-    const visible = Nodes.isChildVisible(parentNode, nodeDefUuid);
-    const nodeDefChild = Surveys.getNodeDefByUuid({
-      survey,
-      uuid: nodeDefUuid,
-    });
-    const cycle = record.cycle;
-    const hiddenWhenNotRelevant =
-      NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDefChild);
-    return visible && (applicable || !hiddenWhenNotRelevant);
-  };
+      const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
+      const applicable = Nodes.isChildApplicable(parentNode, nodeDefUuid);
+      const visible = Nodes.isChildVisible(parentNode, nodeDefUuid);
+      const nodeDefChild = Surveys.getNodeDefByUuid({
+        survey,
+        uuid: nodeDefUuid,
+      });
+      const cycle = record.cycle;
+      const hiddenWhenNotRelevant =
+        NodeDefs.isHiddenWhenNotRelevant(cycle)(nodeDefChild);
+      return visible && (applicable || !hiddenWhenNotRelevant);
+    };
 
 const selectRecordAttributeInfo =
   ({ nodeUuid }: { nodeUuid: string }) =>
-  (
-    state: any,
-  ): { applicable: boolean; value: any; validation: Validation | null } => {
-    const record = selectRecordUnsafe(state);
-    const defaultAttributeState = {
-      applicable: false,
-      value: null,
-      validation: null,
+    (
+      state: any,
+    ): { applicable: boolean; value: any; validation: Validation | null } => {
+      const record = selectRecordUnsafe(state);
+      const defaultAttributeState = {
+        applicable: false,
+        value: null,
+        validation: null,
+      };
+      if (!record) {
+        return defaultAttributeState;
+      }
+      const attribute = Records.getNodeByUuid(nodeUuid)(record);
+      if (!attribute) {
+        return defaultAttributeState;
+      }
+      const value = extractAttibuteValue({ state, attribute });
+      const validation = RecordValidations.getValidationNode({ nodeUuid })(
+        record.validation!,
+      );
+      const applicable = Records.isNodeApplicable({ record, node: attribute });
+      return { applicable, value, validation };
     };
-    if (!record) {
-      return defaultAttributeState;
-    }
-    const attribute = Records.getNodeByUuid(nodeUuid)(record);
-    if (!attribute) {
-      return defaultAttributeState;
-    }
-    const value = extractAttibuteValue({ state, attribute });
-    const validation = RecordValidations.getValidationNode({ nodeUuid })(
-      record.validation!,
-    );
-    const applicable = Records.isNodeApplicable({ record, node: attribute });
-    return { applicable, value, validation };
-  };
 
 const selectRecordChildNodes =
   ({ parentNodeUuid, nodeDef }: ParentNodeUuidNodeDefParams) =>
-  (state: any): { nodes: ArenaRecordNode[] } => {
-    const record = selectRecordUnsafe(state);
-    if (!parentNodeUuid || !record) {
-      return { nodes: [] };
-    }
-    const parentEntity = Records.getNodeByUuid(parentNodeUuid)(record)!;
-    const nodes = Records.getChildren(parentEntity, nodeDef.uuid)(record);
-    return { nodes };
-  };
+    (state: any): { nodes: ArenaRecordNode[] } => {
+      const record = selectRecordUnsafe(state);
+      if (!parentNodeUuid || !record) {
+        return { nodes: [] };
+      }
+      const parentEntity = Records.getNodeByUuid(parentNodeUuid)(record)!;
+      const nodes = Records.getChildren(parentEntity, nodeDef.uuid)(record);
+      return { nodes };
+    };
 
 const selectIsRecordAttributeFilled =
   ({ parentNodeUuid, nodeDef }: ParentNodeUuidNodeDefParams) =>
-  (state: any): boolean => {
-    const { nodes } = selectRecordChildNodes({ parentNodeUuid, nodeDef })(
-      state,
-    );
-    return (
-      nodes.length > 0 && nodes.every((node) => Nodes.isValueNotBlank(node))
-    );
-  };
+    (state: any): boolean => {
+      const { nodes } = selectRecordChildNodes({ parentNodeUuid, nodeDef })(
+        state,
+      );
+      return (
+        nodes.length > 0 && nodes.every((node) => Nodes.isValueNotBlank(node))
+      );
+    };
 
 const selectChildDefs =
   ({ nodeDef }: { nodeDef: NodeDefEntity }) =>
-  (state: any): NodeDef<any>[] => {
-    const user = RemoteConnectionSelectors.selectLoggedUser(state);
-    const cycle = selectRecordCycle(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const childDefs = SurveyDefs.getChildrenDefs({
-      survey,
-      nodeDef,
-      cycle,
-      allowExperimental: Users.isSystemAdmin(user),
-    }).filter((childDef) => {
-      // only child defs not hidden in mobile and in same page
-      const layoutProps = NodeDefs.getLayoutProps(cycle)(childDef);
-      return !layoutProps.pageUuid;
-    });
-    return childDefs;
-  };
+    (state: any): NodeDef<any>[] => {
+      const user = RemoteConnectionSelectors.selectLoggedUser(state);
+      const cycle = selectRecordCycle(state);
+      const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const childDefs = SurveyDefs.getChildrenDefs({
+        survey,
+        nodeDef,
+        cycle,
+        allowExperimental: user ? Users.isSystemAdmin(user) : false,
+      }).filter((childDef) => {
+        // only child defs not hidden in mobile and in same page
+        const layoutProps = NodeDefs.getLayoutProps(cycle)(childDef);
+        return !layoutProps.pageUuid;
+      });
+      return childDefs;
+    };
 
 const selectRecordCodeParentItemUuid =
   ({
@@ -298,24 +298,24 @@ const selectRecordCodeParentItemUuid =
     nodeDef: NodeDefCode;
     parentNodeUuid: string | undefined;
   }) =>
-  (state: any): string | undefined => {
-    const parentCodeDefUuid = NodeDefs.getParentCodeDefUuid(nodeDef);
-    if (!parentNodeUuid || !parentCodeDefUuid) {
-      return undefined;
-    }
-    const record = selectRecordUnsafe(state);
-    if (!record) {
-      return undefined;
-    }
-    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
-    const parentCodeAttribute = Records.getParentCodeAttribute({
-      parentNode,
-      nodeDef,
-    })(record);
-    return parentCodeAttribute
-      ? NodeValues.getItemUuid(parentCodeAttribute)
-      : undefined;
-  };
+    (state: any): string | undefined => {
+      const parentCodeDefUuid = NodeDefs.getParentCodeDefUuid(nodeDef);
+      if (!parentNodeUuid || !parentCodeDefUuid) {
+        return undefined;
+      }
+      const record = selectRecordUnsafe(state);
+      if (!record) {
+        return undefined;
+      }
+      const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
+      const parentCodeAttribute = Records.getParentCodeAttribute({
+        parentNode,
+        nodeDef,
+      })(record);
+      return parentCodeAttribute
+        ? NodeValues.getItemUuid(parentCodeAttribute)
+        : undefined;
+    };
 
 const selectRecordIsNotValid = (state: any): boolean => {
   const record = selectRecordUnsafe(state);
@@ -445,39 +445,39 @@ const extractAttibuteValue = ({ state, attribute }: any) => {
 
 const selectPreviousCycleRecordAttributeValues =
   ({ nodeDef, parentNodeUuid }: any) =>
-  (state: any): { uuid: string; value: any }[] | null => {
-    if (!parentNodeUuid) {
-      return null;
-    }
-    const record = selectPreviousCycleRecord(state);
-    if (!record) {
-      return null;
-    }
-    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
-    const attributes = Records.getChildren(parentNode, nodeDef.uuid)(record);
-    return attributes.map((attribute) => ({
-      uuid: attribute.uuid,
-      value: extractAttibuteValue({ state, attribute }),
-    }));
-  };
+    (state: any): { uuid: string; value: any }[] | null => {
+      if (!parentNodeUuid) {
+        return null;
+      }
+      const record = selectPreviousCycleRecord(state);
+      if (!record) {
+        return null;
+      }
+      const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
+      const attributes = Records.getChildren(parentNode, nodeDef.uuid)(record);
+      return attributes.map((attribute) => ({
+        uuid: attribute.uuid,
+        value: extractAttibuteValue({ state, attribute }),
+      }));
+    };
 
 const selectPreviousCycleEntityWithSameKeys =
   ({ entityUuid }: any) =>
-  (state: any): any => {
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const record = selectRecordUnsafe(state);
-    const previousCycleRecord = selectPreviousCycleRecord(state);
+    (state: any): any => {
+      const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const record = selectRecordUnsafe(state);
+      const previousCycleRecord = selectPreviousCycleRecord(state);
 
-    if (!record || !previousCycleRecord) return null;
+      if (!record || !previousCycleRecord) return null;
 
-    return Records.findEntityWithSameKeysInAnotherRecord({
-      survey,
-      cycle: record.cycle!,
-      entityUuid,
-      record,
-      recordOther: previousCycleRecord,
-    });
-  };
+      return Records.findEntityWithSameKeysInAnotherRecord({
+        survey,
+        cycle: record.cycle!,
+        entityUuid,
+        record,
+        recordOther: previousCycleRecord,
+      });
+    };
 
 const useIsNodeDefCurrentActiveChild = (nodeDef: NodeDef<any>): boolean =>
   useSelector((state) => {
@@ -490,25 +490,25 @@ const useIsNodeDefCurrentActiveChild = (nodeDef: NodeDef<any>): boolean =>
 
 const selectIsMaxCountReached =
   ({ parentNodeUuid, nodeDef }: ParentNodeUuidNodeDefParams) =>
-  (state: any): boolean => {
-    const record = selectRecordUnsafe(state);
-    if (!record) {
-      return false;
-    }
-    const parentNode = parentNodeUuid
-      ? Records.getNodeByUuid(parentNodeUuid)(record)
-      : null;
-    if (!parentNode) return false;
+    (state: any): boolean => {
+      const record = selectRecordUnsafe(state);
+      if (!record) {
+        return false;
+      }
+      const parentNode = parentNodeUuid
+        ? Records.getNodeByUuid(parentNodeUuid)(record)
+        : null;
+      if (!parentNode) return false;
 
-    const maxCount = Nodes.getChildrenMaxCount({
-      parentNode,
-      nodeDef,
-    });
-    if (Objects.isEmpty(maxCount)) return false;
+      const maxCount = Nodes.getChildrenMaxCount({
+        parentNode,
+        nodeDef,
+      });
+      if (Objects.isEmpty(maxCount)) return false;
 
-    const siblings = Records.getChildren(parentNode, nodeDef.uuid)(record);
-    return siblings.length >= maxCount;
-  };
+      const siblings = Records.getChildren(parentNode, nodeDef.uuid)(record);
+      return siblings.length >= maxCount;
+    };
 
 const useIsNodeMaxCountReached = ({
   parentNodeUuid,
