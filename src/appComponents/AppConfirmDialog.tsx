@@ -31,6 +31,7 @@ export const AppConfirmDialog = () => {
     confirmButtonEnabled,
     confirmButtonStyle,
     confirmButtonTextKey,
+    confirmInProgress,
     messageIsMarkdown,
     messageKey,
     messageParams,
@@ -144,6 +145,7 @@ export const AppConfirmDialog = () => {
             <Dialog.Actions>
               <Button
                 color="secondary"
+                disabled={confirmInProgress}
                 labelVariant="bodyLarge"
                 onPress={cancel}
                 style={cancelButtonStyle}
@@ -151,7 +153,8 @@ export const AppConfirmDialog = () => {
                 textKey={cancelButtonTextKey}
               />
               <Button
-                disabled={!confirmButtonEnabled}
+                disabled={!confirmButtonEnabled || confirmInProgress}
+                loading={confirmInProgress}
                 onPress={confirm}
                 labelVariant="bodyLarge"
                 style={confirmButtonStyle}
