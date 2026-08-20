@@ -8,6 +8,7 @@ import { useAppDispatch } from "state/store";
 
 type ConfirmDialogLocalState = {
   confirmButtonEnabled: boolean;
+  confirmInProgress: boolean;
   selectedMultipleChoiceValues: any[];
   selectedSingleChoiceValue: any;
   swipeConfirmed: boolean;
@@ -16,6 +17,7 @@ type ConfirmDialogLocalState = {
 
 const defaultLocalState: ConfirmDialogLocalState = {
   confirmButtonEnabled: true,
+  confirmInProgress: false,
   selectedMultipleChoiceValues: [],
   selectedSingleChoiceValue: null,
   swipeConfirmed: false,
@@ -41,6 +43,7 @@ export const useConfirmDialog = (): ConfirmState &
 
   const {
     confirmButtonEnabled,
+    confirmInProgress,
     selectedMultipleChoiceValues,
     selectedSingleChoiceValue,
     swipeConfirmed,
@@ -82,8 +85,19 @@ export const useConfirmDialog = (): ConfirmState &
     }
   }, [confirmButtonEnableFn, getConfirmParams, swipeConfirmed, swipeToConfirm]);
 
-  const confirm = useCallback(() => {
-    dispatch(ConfirmActions.confirm(getConfirmParams()));
+  const confirm = useCallback(async () => {
+    setState((statePrev) => ({
+      ...statePrev,
+      confirmInProgress: true,
+    }));
+    try {
+      await dispatch(ConfirmActions.confirm(getConfirmParams()));
+    } finally {
+      setState((statePrev) => ({
+        ...statePrev,
+        confirmInProgress: false,
+      }));
+    }
   }, [dispatch, getConfirmParams]);
 
   const cancel = useCallback(() => {
@@ -129,6 +143,7 @@ export const useConfirmDialog = (): ConfirmState &
     ...confirmState,
     confirm,
     confirmButtonEnabled,
+    confirmInProgress,
     cancel,
 
     onMultipleChoiceOptionChange,
