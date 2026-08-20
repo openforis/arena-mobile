@@ -84,12 +84,14 @@ const buildUploadStats = ({
   const processedDiff = Math.max(0, processedNumber - previousSample.processed);
   const instantSpeed = processedDiff / elapsedSeconds;
 
-  const speed =
-    processedDiff > 0
-      ? previousSample.speed
-        ? previousSample.speed * 0.7 + instantSpeed * 0.3
-        : instantSpeed
-      : previousSample.speed;
+  let speed = previousSample.speed;
+  if (processedDiff > 0) {
+    if (previousSample.speed > 0) {
+      speed = previousSample.speed * 0.7 + instantSpeed * 0.3;
+    } else {
+      speed = instantSpeed;
+    }
+  }
 
   const remainingBytes = Math.max(0, totalNumber - processedNumber);
   const etaSeconds = speed > 0 ? Math.ceil(remainingBytes / speed) : null;

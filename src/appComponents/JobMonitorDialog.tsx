@@ -54,11 +54,13 @@ export const JobMonitorDialog = () => {
         decimalPlaces: 1,
       })
       : null;
-  const etaText =
-    showUploadStats && etaSeconds != null
-      ? etaSeconds === 0
-        ? t("common:timePart.second", { count: 0 })
-        : TimeUtils.formatRemainingTimeIfLessThan1Day({
+  let etaText = null;
+  if (showUploadStats && etaSeconds != null) {
+    if (etaSeconds === 0) {
+      etaText = t("common:timePart.second", { count: 0 });
+    } else {
+      etaText =
+        TimeUtils.formatRemainingTimeIfLessThan1Day({
           time: etaSeconds * 1000,
           t,
           formatMode: TimeUtils.formatModes.short,
@@ -67,8 +69,9 @@ export const JobMonitorDialog = () => {
           time: etaSeconds * 1000,
           t,
           upToTimePart: "day",
-        })
-      : null;
+        });
+    }
+  }
 
   const actions = [
     ...(canCancelJob
