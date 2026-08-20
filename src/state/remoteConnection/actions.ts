@@ -114,6 +114,7 @@ const onLoginResponseSuccessful = async ({
   dispatch(SurveyActions.fetchCurrentSurveyUserGroupIfSurveySelected());
 
   if (showBack) {
+    // use setTimeout to ensure that the confirm dialog is shown after the previous dialog is closed.
     setTimeout(() => {
       dispatch(
         ConfirmActions.show({
