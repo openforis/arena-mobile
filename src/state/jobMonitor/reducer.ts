@@ -9,7 +9,10 @@ const initialState = {
   cancelButtonTextKey: "common:cancel",
   closeButtonTextKey: "common:close",
   progressPercent: 0,
-  status: JobStatus.pending
+  status: JobStatus.pending,
+  showUploadStats: false,
+  uploadSpeedBytesPerSec: null,
+  etaSeconds: null,
 };
 
 const actionHandlers = {

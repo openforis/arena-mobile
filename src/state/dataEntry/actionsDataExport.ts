@@ -113,6 +113,7 @@ const startUploadDataToRemoteServer =
             dispatch,
             job: uploadJob,
             titleKey: "dataEntry:uploadingData.title",
+            showUploadStats: true,
           });
           shouldRetryUpload = !uploadJobComplete;
         } catch (error: any) {
