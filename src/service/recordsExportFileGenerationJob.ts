@@ -50,6 +50,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       user,
     }: { survey: Survey; cycle: string; recordUuids: string[]; user: any } =
       this.context;
+    const recordUuidsSet = new Set(recordUuids);
 
     const tempFolderUri = await Files.createTempFolder();
 
@@ -67,7 +68,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       });
 
       const recordsToExport = recordsSummary.filter((recordSummary: any) =>
-        recordUuids.includes(recordSummary.uuid),
+        recordUuidsSet.has(recordSummary.uuid),
       );
 
       // set total
@@ -123,6 +124,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
             tempFolderUri,
             nodeDefsFile,
             record,
+            recordUuidsSet,
           });
 
           if (hasMissingFiles) {
@@ -185,6 +187,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     tempFolderUri,
     nodeDefsFile,
     record,
+    recordUuidsSet,
   }: any): Promise<{ recordFiles: any[]; hasMissingFiles: boolean }> {
     const { survey } = this.context;
     const surveyId = survey.id!;
@@ -212,10 +215,20 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       return acc;
     }, []);
 
+    const recordFilesFiltered = recordFiles.filter((recordFile: any) => {
+      const selected = recordUuidsSet.has(recordFile.props.recordUuid);
+      if (!selected) {
+        this.logger.warn(
+          `Skipping file ${recordFile.uuid}: record ${recordFile.props.recordUuid} not selected for upload`,
+        );
+      }
+      return selected;
+    });
+
     let hasMissingFiles = false;
     const exportedRecordFiles: any[] = [];
 
-    for (const recordFile of recordFiles) {
+    for (const recordFile of recordFilesFiltered) {
       const { uuid: fileUuid } = recordFile;
       const fileUri = RecordFileService.getRecordFileUri({
         surveyId,
