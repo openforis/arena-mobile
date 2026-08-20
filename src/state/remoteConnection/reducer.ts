@@ -5,7 +5,7 @@ import { RemoteConnectionState } from "./types";
 const initialState: RemoteConnectionState = {
   user: null,
   userLoading: false,
-  userProfileIconInfo: { loaded: false, loading: false, uri: null },
+  userProfileIconInfo: { loaded: false, loading: false },
 };
 
 const actionHandlers = {

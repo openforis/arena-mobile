@@ -89,48 +89,48 @@ const handleUploadJobError = async ({
 
 const startUploadDataToRemoteServer =
   ({ outputFileUri, conflictResolutionStrategy, skipMissingFiles = false, onJobComplete = null }: any) =>
-  async (dispatch: any, getState: any) => {
-    const state = getState();
-    const user = RemoteConnectionSelectors.selectLoggedUser(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const cycle = Surveys.getDefaultCycleKey(survey);
+    async (dispatch: any, getState: any) => {
+      const state = getState();
+      const user = RemoteConnectionSelectors.selectLoggedUser(state);
+      const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const cycle = Surveys.getDefaultCycleKey(survey);
 
-    const uploadJob = new RecordsUploadJob({
-      user,
-      survey,
-      cycle,
-      fileUri: outputFileUri,
-      conflictResolutionStrategy,
-      skipMissingFiles,
-    });
+      const uploadJob = new RecordsUploadJob({
+        user,
+        survey,
+        cycle,
+        fileUri: outputFileUri,
+        conflictResolutionStrategy,
+        skipMissingFiles,
+      });
 
-    let shouldRetryUpload = true;
-    let uploadJobComplete = null;
+      let shouldRetryUpload = true;
+      let uploadJobComplete = null;
 
-    while (shouldRetryUpload) {
-      try {
-        uploadJobComplete = await JobMonitorActions.startAsync({
-          dispatch,
-          job: uploadJob,
-          titleKey: "dataEntry:uploadingData.title",
-        });
-        shouldRetryUpload = !uploadJobComplete;
-      } catch (error: any) {
-        shouldRetryUpload = await handleUploadJobError({ dispatch, error });
+      while (shouldRetryUpload) {
+        try {
+          uploadJobComplete = await JobMonitorActions.startAsync({
+            dispatch,
+            job: uploadJob,
+            titleKey: "dataEntry:uploadingData.title",
+          });
+          shouldRetryUpload = !uploadJobComplete;
+        } catch (error: any) {
+          shouldRetryUpload = await handleUploadJobError({ dispatch, error });
+        }
       }
-    }
-    if (!uploadJobComplete) return;
+      if (!uploadJobComplete) return;
 
-    const { remoteJob } = uploadJobComplete.result;
+      const { remoteJob } = uploadJobComplete.result;
 
-    dispatch(
-      JobMonitorActions.start({
-        jobUuid: remoteJob.uuid,
-        titleKey: "dataEntry:processingData.title",
-        onJobComplete,
-      }),
-    );
-  };
+      dispatch(
+        JobMonitorActions.start({
+          jobUuid: remoteJob.uuid,
+          titleKey: "dataEntry:processingData.title",
+          onJobComplete,
+        }),
+      );
+    };
 
 const determineAvailableDataExportOptions = ({
   state,
@@ -192,7 +192,7 @@ export const startCsvDataExportJob =
 
         await dispatch(ConfirmActions.dismiss());
 
-        const user = RemoteConnectionSelectors.selectLoggedUser(state);
+        const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
         const survey = SurveySelectors.selectCurrentSurvey(state)!;
         const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
 
@@ -255,30 +255,30 @@ const onExportConfirmed =
     skipMissingFiles = false,
     onJobComplete,
   }: any) =>
-  async (dispatch: any) => {
-    try {
-      switch (selectedSingleChoiceValue) {
-        case exportType.remote:
-          dispatch(
-            startUploadDataToRemoteServer({
-              outputFileUri,
-              conflictResolutionStrategy,
-              skipMissingFiles,
-              onJobComplete,
-            }),
-          );
-          break;
-        default:
-          await Files.shareFile({
-            url: outputFileUri,
-            mimeType: Files.MIME_TYPES.zip,
-            dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
-          });
+    async (dispatch: any) => {
+      try {
+        switch (selectedSingleChoiceValue) {
+          case exportType.remote:
+            dispatch(
+              startUploadDataToRemoteServer({
+                outputFileUri,
+                conflictResolutionStrategy,
+                skipMissingFiles,
+                onJobComplete,
+              }),
+            );
+            break;
+          default:
+            await Files.shareFile({
+              url: outputFileUri,
+              mimeType: Files.MIME_TYPES.zip,
+              dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
+            });
+        }
+      } catch (error) {
+        dispatch(handleError(error));
       }
-    } catch (error) {
-      dispatch(handleError(error));
-    }
-  };
+    };
 
 const _onExportFileGenerationError = ({ errors, dispatch }: any) => {
   const validationErrors = Object.values(errors).map((item: any) => item.error);
@@ -375,60 +375,60 @@ export const exportRecords =
     onJobComplete: onJobCompleteParam = null,
     onEnd = null,
   }: any) =>
-  async (dispatch: any, getState: any) => {
-    const state = getState();
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const surveyId = survey.id;
+    async (dispatch: any, getState: any) => {
+      const state = getState();
+      const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const surveyId = survey.id;
 
-    const onJobComplete = async (jobComplete: any) => {
-      const { result } = jobComplete;
-      const { mergedRecordsMap } = result;
+      const onJobComplete = async (jobComplete: any) => {
+        const { result } = jobComplete;
+        const { mergedRecordsMap } = result;
 
-      await RecordService.updateRecordsDateSync({
-        surveyId,
-        recordUuids,
-      });
-      if (!Objects.isEmpty(mergedRecordsMap)) {
-        await RecordService.updateRecordsMergedInto({
+        await RecordService.updateRecordsDateSync({
           surveyId,
-          mergedRecordsMap,
+          recordUuids,
         });
+        if (!Objects.isEmpty(mergedRecordsMap)) {
+          await RecordService.updateRecordsMergedInto({
+            surveyId,
+            mergedRecordsMap,
+          });
+        }
+        await onJobCompleteParam?.(jobComplete);
+      };
+
+      try {
+        const user = onlyLocally ? {} : await UserService.fetchUser();
+
+        const job = new RecordsExportFileGenerationJob({
+          survey,
+          cycle,
+          recordUuids,
+          user,
+        });
+        await job.start();
+        const { errors, result, status } = job;
+
+        if (status === JobStatus.failed) {
+          _onExportFileGenerationError({ errors, dispatch });
+        } else if (status === JobStatus.succeeded) {
+          await _onExportFileGenerationSucceeded({
+            result,
+            onlyLocally,
+            onlyRemote,
+            conflictResolutionStrategy,
+            onJobComplete,
+            dispatch,
+          });
+        } else {
+          dispatch(
+            MessageActions.setMessage({
+              content: `Job status: ${status}`,
+            }),
+          );
+        }
+      } catch (error) {
+        dispatch(handleError(error));
       }
-      await onJobCompleteParam?.(jobComplete);
+      await onEnd?.();
     };
-
-    try {
-      const user = onlyLocally ? {} : await UserService.fetchUser();
-
-      const job = new RecordsExportFileGenerationJob({
-        survey,
-        cycle,
-        recordUuids,
-        user,
-      });
-      await job.start();
-      const { errors, result, status } = job;
-
-      if (status === JobStatus.failed) {
-        _onExportFileGenerationError({ errors, dispatch });
-      } else if (status === JobStatus.succeeded) {
-        await _onExportFileGenerationSucceeded({
-          result,
-          onlyLocally,
-          onlyRemote,
-          conflictResolutionStrategy,
-          onJobComplete,
-          dispatch,
-        });
-      } else {
-        dispatch(
-          MessageActions.setMessage({
-            content: `Job status: ${status}`,
-          }),
-        );
-      }
-    } catch (error) {
-      dispatch(handleError(error));
-    }
-    await onEnd?.();
-  };

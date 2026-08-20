@@ -16,43 +16,43 @@ const handleImportErrors = ({ dispatch, error = null, errors = null }: any) => {
 
 export const importRecordsFromFile =
   ({ fileUri, onImportComplete, overwriteExistingRecords = true }: any) =>
-  async (dispatch: any, getState: any) => {
-    const state = getState();
-    const user = RemoteConnectionSelectors.selectLoggedUser(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    async (dispatch: any, getState: any) => {
+      const state = getState();
+      const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
+      const survey = SurveySelectors.selectCurrentSurvey(state);
 
-    const importJob = new RecordsAndFilesImportJob({
-      survey,
-      user,
-      fileUri,
-      overwriteExistingRecords,
-    });
+      const importJob = new RecordsAndFilesImportJob({
+        survey,
+        user,
+        fileUri,
+        overwriteExistingRecords,
+      });
 
-    try {
-      await importJob.start();
+      try {
+        await importJob.start();
 
-      const { status, errors, result } = importJob;
+        const { status, errors, result } = importJob;
 
-      if (status === JobStatus.succeeded) {
-        const { processedRecords, insertedRecords, updatedRecords } = result;
-        dispatch(
-          MessageActions.setMessage({
-            content: "recordsList:importCompleteSuccessfully",
-            contentParams: {
-              processedRecords,
-              insertedRecords,
-              updatedRecords,
-            },
-          }),
-        );
-        await onImportComplete();
-      } else {
-        handleImportErrors({ dispatch, errors });
+        if (status === JobStatus.succeeded) {
+          const { processedRecords, insertedRecords, updatedRecords } = result;
+          dispatch(
+            MessageActions.setMessage({
+              content: "recordsList:importCompleteSuccessfully",
+              contentParams: {
+                processedRecords,
+                insertedRecords,
+                updatedRecords,
+              },
+            }),
+          );
+          await onImportComplete();
+        } else {
+          handleImportErrors({ dispatch, errors });
+        }
+      } catch (error) {
+        handleImportErrors({ dispatch, error });
       }
-    } catch (error) {
-      handleImportErrors({ dispatch, error });
-    }
-  };
+    };
 
 const _onExportFromServerJobComplete = async ({
   dispatch,
@@ -95,35 +95,35 @@ const checkCanImportRecords = ({ dispatch, survey }: any) => {
 
 export const fetchRecordsFromServer =
   ({ recordUuids, onImportComplete }: any) =>
-  async (dispatch: any, getState: any) => {
-    try {
-      const state = getState();
-      const survey = SurveySelectors.selectCurrentSurvey(state);
-      const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
+    async (dispatch: any, getState: any) => {
+      try {
+        const state = getState();
+        const survey = SurveySelectors.selectCurrentSurvey(state);
+        const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
 
-      if (!checkCanImportRecords({ dispatch, survey })) return;
+        if (!checkCanImportRecords({ dispatch, survey })) return;
 
-      const job = await RecordService.startExportRecordsFromRemoteServer({
-        survey,
-        cycle,
-        recordUuids,
-      });
-      const jobComplete = await JobMonitorActions.startAsync({
-        dispatch,
-        jobUuid: job.uuid,
-        titleKey: "recordsList:fetchRecords.title",
-      });
-      await _onExportFromServerJobComplete({
-        dispatch,
-        state,
-        job: jobComplete,
-        onImportComplete,
-      });
-    } catch (error) {
-      if (error instanceof JobCancelError) {
-        // job canceled, do nothing
-      } else {
-        handleImportErrors({ dispatch, error });
+        const job = await RecordService.startExportRecordsFromRemoteServer({
+          survey,
+          cycle,
+          recordUuids,
+        });
+        const jobComplete = await JobMonitorActions.startAsync({
+          dispatch,
+          jobUuid: job.uuid,
+          titleKey: "recordsList:fetchRecords.title",
+        });
+        await _onExportFromServerJobComplete({
+          dispatch,
+          state,
+          job: jobComplete,
+          onImportComplete,
+        });
+      } catch (error) {
+        if (error instanceof JobCancelError) {
+          // job canceled, do nothing
+        } else {
+          handleImportErrors({ dispatch, error });
+        }
       }
-    }
-  };
+    };

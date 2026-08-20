@@ -9,6 +9,8 @@ const getRemoteConnectionState = (state: any): RemoteConnectionState =>
 
 const selectLoggedUser = (state: any): User | null =>
   getRemoteConnectionState(state).user;
+const selectLoggedUserSafe = (state: any): User =>
+  selectLoggedUser(state) ?? {} as User;
 const selectLoggedUserIsLoading = (state: any): boolean =>
   !!getRemoteConnectionState(state).userLoading;
 const selectLoggedUserProfileIconInfo = (state: any): UserProfileIconInfo =>
@@ -16,6 +18,7 @@ const selectLoggedUserProfileIconInfo = (state: any): UserProfileIconInfo =>
 
 export const RemoteConnectionSelectors = {
   selectLoggedUser,
+  selectLoggedUserSafe,
   selectLoggedUserIsLoading,
 
   useLoggedInUser: () => useSelector(selectLoggedUser),
