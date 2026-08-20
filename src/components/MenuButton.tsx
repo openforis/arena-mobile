@@ -7,15 +7,17 @@ import { IconButton } from "./IconButton";
 import { MenuItem } from "./MenuItem";
 
 type Props = {
+  anchorPosition?: "top" | "bottom";
   icon?: string;
   items: any[];
   label?: string;
+  menuStyle?: StyleProp<ViewStyle>;
   mode?: ButtonMode;
-  style?: StyleProp<ViewStyle>;
 };
 
 export const MenuButton = (props: Props) => {
-  const { icon, items, label, mode, style } = props;
+  const { anchorPosition = "bottom", icon, items, label, menuStyle, mode } =
+    props;
 
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -48,7 +50,13 @@ export const MenuButton = (props: Props) => {
   }
 
   return (
-    <Menu style={style} visible onDismiss={closeMenu} anchor={anchor}>
+    <Menu
+      anchor={anchor}
+      anchorPosition={anchorPosition}
+      onDismiss={closeMenu}
+      style={menuStyle}
+      visible
+    >
       {items.map(
         ({
           key,

@@ -691,9 +691,10 @@ export const RecordsList = () => {
             />
           )}
           <MenuButton
+            anchorPosition="top"
             icon="download"
             items={downloadMenuItems}
-            style={styles.exportDataMenuButton}
+            menuStyle={styles.exportDataButtonMenu}
           />
         </HView>
       )}

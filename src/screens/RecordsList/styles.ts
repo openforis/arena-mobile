@@ -27,7 +27,8 @@ export default StyleSheet.create({
   newRecordButton: {
     alignSelf: "center",
   },
-  exportDataMenuButton: {
+  exportDataButtonMenu: {
     alignSelf: "flex-end",
+    transform: [{ translateY: -40 }],
   },
 });
