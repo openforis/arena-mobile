@@ -50,6 +50,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       user,
     }: { survey: Survey; cycle: string; recordUuids: string[]; user: any } =
       this.context;
+    const recordUuidsSet = new Set(recordUuids);
 
     const tempFolderUri = await Files.createTempFolder();
 
@@ -67,7 +68,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       });
 
       const recordsToExport = recordsSummary.filter((recordSummary: any) =>
-        recordUuids.includes(recordSummary.uuid),
+        recordUuidsSet.has(recordSummary.uuid),
       );
 
       // set total
