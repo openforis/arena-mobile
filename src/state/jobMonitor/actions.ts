@@ -12,11 +12,22 @@ const getJobMonitorState = (state: any) => state.jobMonitor;
 const isJobStatusEnded = (status: any) =>
   [JobStatus.canceled, JobStatus.failed, JobStatus.succeeded].includes(status);
 
-const calculateJobProgressPercent = ({ jobSummary }: any) => {
+const calculateJobProgressPercent = ({
+  jobSummary,
+}: {
+  jobSummary: JobSerialized<any>;
+}) => {
   const { total, processed, progressPercent } = jobSummary;
-  return (
-    progressPercent ?? (total ? Math.floor((processed / total) * 100) : -1)
-  );
+  if (progressPercent != null) {
+    return progressPercent;
+  }
+
+  const totalNumber = Number(total);
+  const processedNumber = Number(processed);
+  if (!Number.isFinite(totalNumber) || totalNumber <= 0 || !Number.isFinite(processedNumber)) {
+    return -1;
+  }
+  return Math.floor((processedNumber / totalNumber) * 100);
 };
 
 const buildUploadStats = ({
@@ -28,8 +39,8 @@ const buildUploadStats = ({
 }: {
   showUploadStats: boolean;
   status: JobStatus;
-  processed: any;
-  total: any;
+  processed: number;
+  total: number;
   previousSample: {
     processed: number;
     timestamp: number;
@@ -102,14 +113,14 @@ const createOnJobUpdateCallback =
     onJobComplete,
     onJobEnd,
     showUploadStats = false,
-  }: any) => {
+  }: any): (jobSummary: JobSerialized<any>) => void => {
     let previousSample: {
       processed: number;
       timestamp: number;
       speed: number;
     } | null = null;
 
-    return (jobSummary: any) => {
+    return (jobSummary: JobSerialized<any>) => {
       const { status, errors, processed, total } = jobSummary;
       const progressPercent = calculateJobProgressPercent({ jobSummary });
 

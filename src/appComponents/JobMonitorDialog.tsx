@@ -55,17 +55,19 @@ export const JobMonitorDialog = () => {
       })
       : null;
   const etaText =
-    showUploadStats && etaSeconds
-      ? TimeUtils.formatRemainingTimeIfLessThan1Day({
-        time: etaSeconds * 1000,
-        t,
-        formatMode: TimeUtils.formatModes.short,
-      }) ||
-      TimeUtils.formatRemainingTime({
-        time: etaSeconds * 1000,
-        t,
-        upToTimePart: "day",
-      })
+    showUploadStats && etaSeconds != null
+      ? etaSeconds === 0
+        ? t("common:timePart.second", { count: 0 })
+        : TimeUtils.formatRemainingTimeIfLessThan1Day({
+          time: etaSeconds * 1000,
+          t,
+          formatMode: TimeUtils.formatModes.short,
+        }) ||
+        TimeUtils.formatRemainingTime({
+          time: etaSeconds * 1000,
+          t,
+          upToTimePart: "day",
+        })
       : null;
 
   const actions = [

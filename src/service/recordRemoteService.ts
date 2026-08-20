@@ -8,16 +8,16 @@ const calculateUploadedBytes = ({
   chunk,
   uploadedChunkPercent,
   totalFileSize,
-  totalChunks,
 }: {
   chunk: number;
   uploadedChunkPercent: number;
   totalFileSize: number;
-  totalChunks: number;
 }): number => {
-  const averageChunkSize = totalChunks ? totalFileSize / totalChunks : 0;
+  const offset = Math.max(0, (chunk - 1) * uploadChunkSize);
+  const remainingBytes = Math.max(0, totalFileSize - offset);
+  const currentChunkSize = Math.min(uploadChunkSize, remainingBytes);
   const uploadedBytes =
-    ((chunk - 1) + uploadedChunkPercent) * averageChunkSize;
+    offset + uploadedChunkPercent * currentChunkSize;
   return Math.min(totalFileSize, uploadedBytes);
 };
 
@@ -111,7 +111,6 @@ const uploadRecords = ({
             chunk,
             uploadedChunkPercent,
             totalFileSize,
-            totalChunks,
           });
           debouncedUploadProgress({
             total: totalFileSize,
