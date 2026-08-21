@@ -4,6 +4,23 @@ import { SurveyMobile } from "model/SurveyMobile";
 
 const uploadChunkSize = 2 * 1024 * 1024; // 2MB
 
+const calculateUploadedBytes = ({
+  chunk,
+  uploadedChunkPercent,
+  totalFileSize,
+}: {
+  chunk: number;
+  uploadedChunkPercent: number;
+  totalFileSize: number;
+}): number => {
+  const offset = Math.max(0, (chunk - 1) * uploadChunkSize);
+  const remainingBytes = Math.max(0, totalFileSize - offset);
+  const currentChunkSize = Math.min(uploadChunkSize, remainingBytes);
+  const uploadedBytes =
+    offset + uploadedChunkPercent * currentChunkSize;
+  return Math.min(totalFileSize, uploadedBytes);
+};
+
 const fetchRecordsSummaries = async ({ surveyRemoteId, cycle }: any) => {
   const { data } = await RemoteService.get(
     `api/survey/${surveyRemoteId}/records/summary`,
@@ -90,12 +107,14 @@ const uploadRecords = ({
         };
         const progressHandler = (progressEvent: any) => {
           const { progress: uploadedChunkPercent } = progressEvent;
-          const previouslyUploadedChunks = chunk - 1;
-          const uploadedChunks =
-            previouslyUploadedChunks + uploadedChunkPercent;
+          const uploadedBytes = calculateUploadedBytes({
+            chunk,
+            uploadedChunkPercent,
+            totalFileSize,
+          });
           debouncedUploadProgress({
-            total: totalChunks,
-            loaded: uploadedChunks,
+            total: totalFileSize,
+            loaded: uploadedBytes,
           });
         };
 

@@ -2,14 +2,22 @@ import { JobStatus } from "@openforis/arena-core";
 
 import { StoreUtils } from "../storeUtils";
 import { JobMonitorActions } from "./actions";
+import type { JobMonitorState } from "./types";
 
-const initialState = {
+const initialState: JobMonitorState = {
   isOpen: false,
   titleKey: "common:processing",
   cancelButtonTextKey: "common:cancel",
   closeButtonTextKey: "common:close",
   progressPercent: 0,
-  status: JobStatus.pending
+  status: JobStatus.pending,
+  showTransferStats: false,
+  transferTotalBytes: null,
+  transferSpeedBytesPerSec: null,
+  transferSizeTextKey: null,
+  transferSpeedTextKey: null,
+  transferEtaTextKey: null,
+  etaSeconds: null,
 };
 
 const actionHandlers = {

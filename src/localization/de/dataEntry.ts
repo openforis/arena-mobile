@@ -133,6 +133,7 @@ Möchten Sie sie erneut vom Server abrufen?`,
   },
   uploadingData: {
     title: "Daten werden hochgeladen",
+    size: "Dateigroesse: {{size}}",
   },
   validationReport: {
     title: "Validierungsbericht",

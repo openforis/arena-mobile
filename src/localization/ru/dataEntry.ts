@@ -125,6 +125,7 @@ export default {
   },
   uploadingData: {
     title: "Загрузка данных",
+    size: "Размер файла: {{size}}",
   },
   validationReport: {
     title: "Отчет о проверке правильности",

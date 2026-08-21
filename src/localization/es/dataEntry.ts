@@ -126,6 +126,7 @@ Sus valores serán borrados.
   },
   uploadingData: {
     title: "Cargando datos",
+    size: "Tamano del archivo: {{size}}",
   },
   validationReport: {
     title: "Informe de validación",

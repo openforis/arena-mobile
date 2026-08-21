@@ -12,36 +12,158 @@ const getJobMonitorState = (state: any) => state.jobMonitor;
 const isJobStatusEnded = (status: any) =>
   [JobStatus.canceled, JobStatus.failed, JobStatus.succeeded].includes(status);
 
-const calculateJobProgressPercent = ({ jobSummary }: any) => {
+const calculateJobProgressPercent = ({
+  jobSummary,
+}: {
+  jobSummary: JobSerialized<any>;
+}) => {
   const { total, processed, progressPercent } = jobSummary;
-  return (
-    progressPercent ?? (total ? Math.floor((processed / total) * 100) : -1)
-  );
+  if (progressPercent != null) {
+    return progressPercent;
+  }
+
+  const totalNumber = Number(total);
+  const processedNumber = Number(processed);
+  if (!Number.isFinite(totalNumber) || totalNumber <= 0 || !Number.isFinite(processedNumber)) {
+    return -1;
+  }
+  return Math.floor((processedNumber / totalNumber) * 100);
+};
+
+const buildUploadStats = ({
+  showTransferStats,
+  status,
+  processed,
+  total,
+  previousSample,
+}: {
+  showTransferStats: boolean;
+  status: JobStatus;
+  processed: number;
+  total: number;
+  previousSample: {
+    processed: number;
+    timestamp: number;
+    speed: number;
+  } | null;
+}) => {
+  if (!showTransferStats || status !== JobStatus.running) {
+    return {
+      previousSample,
+      transferTotalBytes: null,
+      transferSpeedBytesPerSec: null,
+      etaSeconds: null,
+    };
+  }
+
+  const processedNumber = Number(processed);
+  const totalNumber = Number(total);
+
+  if (!Number.isFinite(processedNumber) || !Number.isFinite(totalNumber)) {
+    return {
+      previousSample,
+      transferTotalBytes: null,
+      transferSpeedBytesPerSec: null,
+      etaSeconds: null,
+    };
+  }
+
+  const now = Date.now();
+
+  if (!previousSample) {
+    return {
+      previousSample: {
+        processed: processedNumber,
+        timestamp: now,
+        speed: 0,
+      },
+      transferTotalBytes: totalNumber,
+      transferSpeedBytesPerSec: null,
+      etaSeconds: null,
+    };
+  }
+
+  const elapsedSeconds = Math.max((now - previousSample.timestamp) / 1000, 0.001);
+  const processedDiff = Math.max(0, processedNumber - previousSample.processed);
+  const instantSpeed = processedDiff / elapsedSeconds;
+
+  let speed = previousSample.speed;
+  if (processedDiff > 0) {
+    if (previousSample.speed > 0) {
+      speed = previousSample.speed * 0.7 + instantSpeed * 0.3;
+    } else {
+      speed = instantSpeed;
+    }
+  }
+
+  const remainingBytes = Math.max(0, totalNumber - processedNumber);
+  const etaSeconds = speed > 0 ? Math.ceil(remainingBytes / speed) : null;
+
+  return {
+    previousSample: {
+      processed: processedNumber,
+      timestamp: now,
+      speed,
+    },
+    transferTotalBytes: totalNumber,
+    transferSpeedBytesPerSec: speed > 0 ? speed : null,
+    etaSeconds,
+  };
 };
 
 const createOnJobUpdateCallback =
-  ({ dispatch, job, autoDismiss, onJobComplete, onJobEnd }: any) =>
-  (jobSummary: any) => {
-    const { status, errors } = jobSummary;
-    const progressPercent = calculateJobProgressPercent({ jobSummary });
+  ({
+    dispatch,
+    job,
+    autoDismiss,
+    onJobComplete,
+    onJobEnd,
+    showTransferStats = false,
+  }: any): (jobSummary: JobSerialized<any>) => void => {
+    let previousSample: {
+      processed: number;
+      timestamp: number;
+      speed: number;
+    } | null = null;
 
-    dispatch({
-      type: JOB_MONITOR_UPDATE,
-      payload: { progressPercent, status, errors },
-    });
-    if (isJobStatusEnded(status)) {
-      if (!job) {
-        // remote job
-        WebSocketService.close();
-      }
-      if (status === JobStatus.succeeded) {
-        if (autoDismiss) {
-          dispatch(close());
+    return (jobSummary: JobSerialized<any>) => {
+      const { status, errors, processed, total } = jobSummary;
+      const progressPercent = calculateJobProgressPercent({ jobSummary });
+
+      const uploadStats = buildUploadStats({
+        showTransferStats,
+        status,
+        processed,
+        total,
+        previousSample,
+      });
+      previousSample = uploadStats.previousSample;
+
+      dispatch({
+        type: JOB_MONITOR_UPDATE,
+        payload: {
+          progressPercent,
+          status,
+          errors,
+          transferTotalBytes: uploadStats.transferTotalBytes,
+          transferSpeedBytesPerSec: uploadStats.transferSpeedBytesPerSec,
+          etaSeconds: uploadStats.etaSeconds,
+        },
+      });
+      if (isJobStatusEnded(status)) {
+        if (!job) {
+          // remote job
+          WebSocketService.close();
         }
-        onJobComplete?.(jobSummary);
+        if (status === JobStatus.succeeded) {
+          if (autoDismiss) {
+            dispatch(close());
+          }
+          onJobComplete?.(jobSummary);
+        }
+        onJobEnd?.(jobSummary);
       }
-      onJobEnd?.(jobSummary);
-    }
+    };
   };
 
 const createOnCancelCallback = ({ job, onCancelProp }: any) => {
@@ -65,6 +187,10 @@ type JobStartParams = {
   onCancel?: () => void;
   onClose?: () => void;
   autoDismiss?: boolean;
+  showTransferStats?: boolean;
+  transferSizeTextKey?: string | null;
+  transferSpeedTextKey?: string | null;
+  transferEtaTextKey?: string | null;
 };
 
 const start =
@@ -85,44 +211,56 @@ const start =
     onCancel: onCancelProp = undefined,
     onClose = undefined,
     autoDismiss = false,
+    showTransferStats = false,
+    transferSizeTextKey = null,
+    transferSpeedTextKey = null,
+    transferEtaTextKey = null,
   }: JobStartParams) =>
-  async (dispatch: any) => {
-    dispatch({
-      type: JOB_MONITOR_START,
-      payload: {
-        jobUuid,
-        titleKey,
-        cancelButtonTextKey,
-        closeButtonTextKey,
-        messageKey,
-        messageParams,
-        onCancel: createOnCancelCallback({ job, onCancelProp }),
-        onClose,
+    async (dispatch: any) => {
+      dispatch({
+        type: JOB_MONITOR_START,
+        payload: {
+          jobUuid,
+          titleKey,
+          cancelButtonTextKey,
+          closeButtonTextKey,
+          messageKey,
+          messageParams,
+          onCancel: createOnCancelCallback({ job, onCancelProp }),
+          onClose,
+          autoDismiss,
+          showTransferStats,
+          transferTotalBytes: null,
+          transferSpeedBytesPerSec: null,
+          transferSizeTextKey,
+          transferSpeedTextKey,
+          transferEtaTextKey,
+          etaSeconds: null,
+        },
+      });
+
+      const onJobUpdate = createOnJobUpdateCallback({
+        dispatch,
+        job,
         autoDismiss,
-      },
-    });
+        onJobComplete,
+        onJobEnd,
+        showTransferStats,
+      });
 
-    const onJobUpdate = createOnJobUpdateCallback({
-      dispatch,
-      job,
-      autoDismiss,
-      onJobComplete,
-      onJobEnd,
-    });
-
-    if (job) {
-      // local job: listen to job update events
-      if (job.isEnded()) {
-        onJobUpdate(job.toJSON());
+      if (job) {
+        // local job: listen to job update events
+        if (job.isEnded()) {
+          onJobUpdate(job.toJSON());
+        } else {
+          job.onEvent(() => onJobUpdate(job.toJSON()));
+        }
       } else {
-        job.onEvent(() => onJobUpdate(job.toJSON()));
+        // remote job; open Web Socket and listen to job update events
+        const ws = await WebSocketService.open();
+        ws.on(WebSocketService.EVENTS.jobUpdate, onJobUpdate);
       }
-    } else {
-      // remote job; open Web Socket and listen to job update events
-      const ws = await WebSocketService.open();
-      ws.on(WebSocketService.EVENTS.jobUpdate, onJobUpdate);
-    }
-  };
+    };
 
 const startAsync = async ({
   dispatch,

@@ -129,6 +129,7 @@ export default {
   },
   uploadingData: {
     title: "در حال بارگذاری داده",
+    size: "اندازه فایل: {{size}}",
   },
   validationReport: {
     title: "گزارش اعتبارسنجی",

@@ -170,6 +170,7 @@ export default {
   },
   uploadingData: {
     title: "データをアップロード中",
+    size: "ファイルサイズ: {{size}}",
   },
   validationReport: {
     title: "検証レポート",

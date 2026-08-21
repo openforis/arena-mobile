@@ -119,6 +119,7 @@ export default {
   },
   uploadingData: {
     title: "Տվյալների վերբեռնում",
+    size: "የፋይል መጠን: {{size}}",
   },
   validationReport: {
     title: "የማረጋገጫ ሪፖርት",

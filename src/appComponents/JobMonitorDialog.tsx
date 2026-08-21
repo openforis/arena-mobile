@@ -1,6 +1,7 @@
 import React from "react";
 
 import { JobStatus } from "@openforis/arena-core";
+import { JobMonitorTransferStats } from "./JobMonitorTransferStats";
 
 import { useJobMonitor } from "state/jobMonitor/useJobMonitor";
 
@@ -31,6 +32,13 @@ export const JobMonitorDialog = () => {
     progressPercent,
     status,
     titleKey,
+    showTransferStats,
+    transferTotalBytes,
+    transferSpeedBytesPerSec,
+    transferSizeTextKey,
+    transferSpeedTextKey,
+    transferEtaTextKey,
+    etaSeconds,
   } = useJobMonitor();
 
   const progress = progressPercent / 100;
@@ -65,8 +73,21 @@ export const JobMonitorDialog = () => {
         textKey={messageKey}
         textParams={messageParams}
       />
+
       <Text variant="bodyMedium" textKey={`job:status.${status}`} />
+
       <ProgressBar progress={progress} color={progressColor} />
+
+      <JobMonitorTransferStats
+        status={status}
+        showTransferStats={showTransferStats}
+        transferTotalBytes={transferTotalBytes}
+        transferSpeedBytesPerSec={transferSpeedBytesPerSec}
+        transferSizeTextKey={transferSizeTextKey}
+        transferSpeedTextKey={transferSpeedTextKey}
+        transferEtaTextKey={transferEtaTextKey}
+        etaSeconds={etaSeconds}
+      />
       {status === JobStatus.failed && (
         <Text variant="bodyMedium">{errorsText}</Text>
       )}

@@ -126,6 +126,7 @@ Deseja obtê-las novamente do servidor?`,
   },
   uploadingData: {
     title: "Enviando dados",
+    size: "Tamanho do ficheiro: {{size}}",
   },
   validationReport: {
     title: "Relatório de validação",

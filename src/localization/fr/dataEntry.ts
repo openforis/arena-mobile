@@ -132,6 +132,7 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
   },
   uploadingData: {
     title: "Téléchargement des données",
+    size: "Taille du fichier: {{size}}",
   },
   validationReport: {
     title: "Rapport de validation",

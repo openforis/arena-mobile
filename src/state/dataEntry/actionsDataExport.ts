@@ -113,6 +113,10 @@ const startUploadDataToRemoteServer =
             dispatch,
             job: uploadJob,
             titleKey: "dataEntry:uploadingData.title",
+            showTransferStats: true,
+            transferSizeTextKey: "dataEntry:uploadingData.size",
+            transferSpeedTextKey: "dataEntry:uploadingData.speed",
+            transferEtaTextKey: "dataEntry:uploadingData.eta",
           });
           shouldRetryUpload = !uploadJobComplete;
         } catch (error: any) {
