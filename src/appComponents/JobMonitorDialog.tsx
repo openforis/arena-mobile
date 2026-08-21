@@ -1,12 +1,13 @@
 import React from "react";
 
 import { JobStatus } from "@openforis/arena-core";
+import { JobMonitorTransferStats } from "./JobMonitorTransferStats";
 
 import { useJobMonitor } from "state/jobMonitor/useJobMonitor";
 
 import { Dialog, ProgressBar, Text } from "components";
-import { TranslateFunction, useTranslation } from "localization";
-import { Files, Jobs, TimeUtils } from "utils";
+import { useTranslation } from "localization";
+import { Jobs } from "utils";
 
 const progressColorByStatus = {
   [JobStatus.pending]: "yellow",
@@ -15,22 +16,6 @@ const progressColorByStatus = {
   [JobStatus.running]: "blue",
   [JobStatus.succeeded]: "green",
 };
-
-const generateEtaText = (etaSeconds: any, t: TranslateFunction) => {
-  if (etaSeconds === 0) {
-    return t("common:timePart.second", { count: 0 });
-  }
-  return TimeUtils.formatRemainingTimeIfLessThan1Day({
-    time: etaSeconds * 1000,
-    t,
-    formatMode: TimeUtils.formatModes.short,
-  }) ||
-    TimeUtils.formatRemainingTime({
-      time: etaSeconds * 1000,
-      t,
-      upToTimePart: "day",
-    });
-}
 
 export const JobMonitorDialog = () => {
   const { t } = useTranslation();
@@ -68,22 +53,6 @@ export const JobMonitorDialog = () => {
 
   const errorsText = errors ? Jobs.extractErrorMessage({ errors, t }) : null;
 
-  const transferSpeedText =
-    showTransferStats && transferSpeedBytesPerSec
-      ? Files.toHumanReadableFileSize(transferSpeedBytesPerSec, {
-        decimalPlaces: 1,
-      })
-      : null;
-
-  const transferSizeText =
-    showTransferStats && transferTotalBytes != null
-      ? Files.toHumanReadableFileSize(transferTotalBytes, {
-        decimalPlaces: 1,
-      })
-      : null;
-
-  const etaText = showTransferStats && etaSeconds != null ? generateEtaText(etaSeconds, t) : null
-
   const actions = [
     ...(canCancelJob
       ? [{ onPress: cancel, textKey: cancelButtonTextKey }]
@@ -104,33 +73,21 @@ export const JobMonitorDialog = () => {
         textKey={messageKey}
         textParams={messageParams}
       />
+
       <Text variant="bodyMedium" textKey={`job:status.${status}`} />
+
       <ProgressBar progress={progress} color={progressColor} />
-      {showTransferStats && status === JobStatus.running && (
-        <>
-          {!!transferSizeText && !!transferSizeTextKey && (
-            <Text
-              variant="bodySmall"
-              textKey={transferSizeTextKey}
-              textParams={{ size: transferSizeText }}
-            />
-          )}
-          {!!transferSpeedText && !!transferSpeedTextKey && (
-            <Text
-              variant="bodySmall"
-              textKey={transferSpeedTextKey}
-              textParams={{ speed: transferSpeedText }}
-            />
-          )}
-          {!!etaText && !!transferEtaTextKey && (
-            <Text
-              variant="bodySmall"
-              textKey={transferEtaTextKey}
-              textParams={{ eta: etaText }}
-            />
-          )}
-        </>
-      )}
+
+      <JobMonitorTransferStats
+        status={status}
+        showTransferStats={showTransferStats}
+        transferTotalBytes={transferTotalBytes}
+        transferSpeedBytesPerSec={transferSpeedBytesPerSec}
+        transferSizeTextKey={transferSizeTextKey}
+        transferSpeedTextKey={transferSpeedTextKey}
+        transferEtaTextKey={transferEtaTextKey}
+        etaSeconds={etaSeconds}
+      />
       {status === JobStatus.failed && (
         <Text variant="bodyMedium">{errorsText}</Text>
       )}
