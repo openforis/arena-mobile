@@ -5,7 +5,7 @@ import { JobStatus } from "@openforis/arena-core";
 import { useJobMonitor } from "state/jobMonitor/useJobMonitor";
 
 import { Dialog, ProgressBar, Text } from "components";
-import { useTranslation } from "localization";
+import { TranslateFunction, useTranslation } from "localization";
 import { Files, Jobs, TimeUtils } from "utils";
 
 const progressColorByStatus = {
@@ -15,6 +15,22 @@ const progressColorByStatus = {
   [JobStatus.running]: "blue",
   [JobStatus.succeeded]: "green",
 };
+
+const generateEtaText = (etaSeconds: any, t: TranslateFunction) => {
+  if (etaSeconds === 0) {
+    return t("common:timePart.second", { count: 0 });
+  }
+  return TimeUtils.formatRemainingTimeIfLessThan1Day({
+    time: etaSeconds * 1000,
+    t,
+    formatMode: TimeUtils.formatModes.short,
+  }) ||
+    TimeUtils.formatRemainingTime({
+      time: etaSeconds * 1000,
+      t,
+      upToTimePart: "day",
+    });
+}
 
 export const JobMonitorDialog = () => {
   const { t } = useTranslation();
@@ -54,24 +70,8 @@ export const JobMonitorDialog = () => {
         decimalPlaces: 1,
       })
       : null;
-  let etaText = null;
-  if (showUploadStats && etaSeconds != null) {
-    if (etaSeconds === 0) {
-      etaText = t("common:timePart.second", { count: 0 });
-    } else {
-      etaText =
-        TimeUtils.formatRemainingTimeIfLessThan1Day({
-          time: etaSeconds * 1000,
-          t,
-          formatMode: TimeUtils.formatModes.short,
-        }) ||
-        TimeUtils.formatRemainingTime({
-          time: etaSeconds * 1000,
-          t,
-          upToTimePart: "day",
-        });
-    }
-  }
+
+  const etaText = showUploadStats && etaSeconds != null ? generateEtaText(etaSeconds, t) : null
 
   const actions = [
     ...(canCancelJob
