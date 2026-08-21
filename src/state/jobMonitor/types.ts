@@ -11,6 +11,10 @@ export type JobMonitorState = {
     messageParams?: any;
     progressPercent: number;
     status: JobStatus;
-    showUploadStats: boolean;
-    uploadSpeedBytesPerSec: number | null;
-}
+    showTransferStats: boolean;
+    transferTotalBytes: number | null;
+    transferSpeedBytesPerSec: number | null;
+    transferSizeTextKey?: string | null;
+    transferSpeedTextKey?: string | null;
+    transferEtaTextKey?: string | null;
+};

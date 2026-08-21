@@ -31,13 +31,13 @@ const calculateJobProgressPercent = ({
 };
 
 const buildUploadStats = ({
-  showUploadStats,
+  showTransferStats,
   status,
   processed,
   total,
   previousSample,
 }: {
-  showUploadStats: boolean;
+  showTransferStats: boolean;
   status: JobStatus;
   processed: number;
   total: number;
@@ -47,10 +47,11 @@ const buildUploadStats = ({
     speed: number;
   } | null;
 }) => {
-  if (!showUploadStats || status !== JobStatus.running) {
+  if (!showTransferStats || status !== JobStatus.running) {
     return {
       previousSample,
-      uploadSpeedBytesPerSec: null,
+      transferTotalBytes: null,
+      transferSpeedBytesPerSec: null,
       etaSeconds: null,
     };
   }
@@ -61,7 +62,8 @@ const buildUploadStats = ({
   if (!Number.isFinite(processedNumber) || !Number.isFinite(totalNumber)) {
     return {
       previousSample,
-      uploadSpeedBytesPerSec: null,
+      transferTotalBytes: null,
+      transferSpeedBytesPerSec: null,
       etaSeconds: null,
     };
   }
@@ -75,7 +77,8 @@ const buildUploadStats = ({
         timestamp: now,
         speed: 0,
       },
-      uploadSpeedBytesPerSec: null,
+      transferTotalBytes: totalNumber,
+      transferSpeedBytesPerSec: null,
       etaSeconds: null,
     };
   }
@@ -102,7 +105,8 @@ const buildUploadStats = ({
       timestamp: now,
       speed,
     },
-    uploadSpeedBytesPerSec: speed > 0 ? speed : null,
+    transferTotalBytes: totalNumber,
+    transferSpeedBytesPerSec: speed > 0 ? speed : null,
     etaSeconds,
   };
 };
@@ -114,7 +118,7 @@ const createOnJobUpdateCallback =
     autoDismiss,
     onJobComplete,
     onJobEnd,
-    showUploadStats = false,
+    showTransferStats = false,
   }: any): (jobSummary: JobSerialized<any>) => void => {
     let previousSample: {
       processed: number;
@@ -127,7 +131,7 @@ const createOnJobUpdateCallback =
       const progressPercent = calculateJobProgressPercent({ jobSummary });
 
       const uploadStats = buildUploadStats({
-        showUploadStats,
+        showTransferStats,
         status,
         processed,
         total,
@@ -141,7 +145,8 @@ const createOnJobUpdateCallback =
           progressPercent,
           status,
           errors,
-          uploadSpeedBytesPerSec: uploadStats.uploadSpeedBytesPerSec,
+          transferTotalBytes: uploadStats.transferTotalBytes,
+          transferSpeedBytesPerSec: uploadStats.transferSpeedBytesPerSec,
           etaSeconds: uploadStats.etaSeconds,
         },
       });
@@ -182,7 +187,10 @@ type JobStartParams = {
   onCancel?: () => void;
   onClose?: () => void;
   autoDismiss?: boolean;
-  showUploadStats?: boolean;
+  showTransferStats?: boolean;
+  transferSizeTextKey?: string | null;
+  transferSpeedTextKey?: string | null;
+  transferEtaTextKey?: string | null;
 };
 
 const start =
@@ -203,7 +211,10 @@ const start =
     onCancel: onCancelProp = undefined,
     onClose = undefined,
     autoDismiss = false,
-    showUploadStats = false,
+    showTransferStats = false,
+    transferSizeTextKey = null,
+    transferSpeedTextKey = null,
+    transferEtaTextKey = null,
   }: JobStartParams) =>
     async (dispatch: any) => {
       dispatch({
@@ -218,8 +229,12 @@ const start =
           onCancel: createOnCancelCallback({ job, onCancelProp }),
           onClose,
           autoDismiss,
-          showUploadStats,
-          uploadSpeedBytesPerSec: null,
+          showTransferStats,
+          transferTotalBytes: null,
+          transferSpeedBytesPerSec: null,
+          transferSizeTextKey,
+          transferSpeedTextKey,
+          transferEtaTextKey,
           etaSeconds: null,
         },
       });
@@ -230,7 +245,7 @@ const start =
         autoDismiss,
         onJobComplete,
         onJobEnd,
-        showUploadStats,
+        showTransferStats,
       });
 
       if (job) {

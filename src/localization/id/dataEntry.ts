@@ -131,6 +131,7 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
   },
   uploadingData: {
     title: "Mengunggah data",
+    size: "Ukuran file: {{size}}",
   },
   validationReport: {
     title: "Laporan validasi",

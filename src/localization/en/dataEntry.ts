@@ -172,6 +172,7 @@ Fetch the list of records from the server and try again?`,
   },
   uploadingData: {
     title: "Uploading data",
+    size: "File size: {{size}}",
     speed: "Upload speed: {{speed}}/s",
     eta: "Estimated time left: {{eta}}",
   },

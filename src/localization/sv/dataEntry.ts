@@ -130,6 +130,7 @@ Vill du hämta den igen från servern?`,
   },
   uploadingData: {
     title: "Laddar upp data",
+    size: "Filstorlek: {{size}}",
   },
   validationReport: {
     title: "Valideringsrapport",

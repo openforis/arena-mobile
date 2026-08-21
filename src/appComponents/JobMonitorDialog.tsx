@@ -47,8 +47,12 @@ export const JobMonitorDialog = () => {
     progressPercent,
     status,
     titleKey,
-    showUploadStats,
-    uploadSpeedBytesPerSec,
+    showTransferStats,
+    transferTotalBytes,
+    transferSpeedBytesPerSec,
+    transferSizeTextKey,
+    transferSpeedTextKey,
+    transferEtaTextKey,
     etaSeconds,
   } = useJobMonitor();
 
@@ -64,14 +68,21 @@ export const JobMonitorDialog = () => {
 
   const errorsText = errors ? Jobs.extractErrorMessage({ errors, t }) : null;
 
-  const uploadSpeedText =
-    showUploadStats && uploadSpeedBytesPerSec
-      ? Files.toHumanReadableFileSize(uploadSpeedBytesPerSec, {
+  const transferSpeedText =
+    showTransferStats && transferSpeedBytesPerSec
+      ? Files.toHumanReadableFileSize(transferSpeedBytesPerSec, {
         decimalPlaces: 1,
       })
       : null;
 
-  const etaText = showUploadStats && etaSeconds != null ? generateEtaText(etaSeconds, t) : null
+  const transferSizeText =
+    showTransferStats && transferTotalBytes != null
+      ? Files.toHumanReadableFileSize(transferTotalBytes, {
+        decimalPlaces: 1,
+      })
+      : null;
+
+  const etaText = showTransferStats && etaSeconds != null ? generateEtaText(etaSeconds, t) : null
 
   const actions = [
     ...(canCancelJob
@@ -95,19 +106,26 @@ export const JobMonitorDialog = () => {
       />
       <Text variant="bodyMedium" textKey={`job:status.${status}`} />
       <ProgressBar progress={progress} color={progressColor} />
-      {showUploadStats && status === JobStatus.running && (
+      {showTransferStats && status === JobStatus.running && (
         <>
-          {!!uploadSpeedText && (
+          {!!transferSizeText && !!transferSizeTextKey && (
             <Text
               variant="bodySmall"
-              textKey="dataEntry:uploadingData.speed"
-              textParams={{ speed: uploadSpeedText }}
+              textKey={transferSizeTextKey}
+              textParams={{ size: transferSizeText }}
             />
           )}
-          {!!etaText && (
+          {!!transferSpeedText && !!transferSpeedTextKey && (
             <Text
               variant="bodySmall"
-              textKey="dataEntry:uploadingData.eta"
+              textKey={transferSpeedTextKey}
+              textParams={{ speed: transferSpeedText }}
+            />
+          )}
+          {!!etaText && !!transferEtaTextKey && (
+            <Text
+              variant="bodySmall"
+              textKey={transferEtaTextKey}
               textParams={{ eta: etaText }}
             />
           )}

@@ -11,8 +11,12 @@ const initialState: JobMonitorState = {
   closeButtonTextKey: "common:close",
   progressPercent: 0,
   status: JobStatus.pending,
-  showUploadStats: false,
-  uploadSpeedBytesPerSec: null,
+  showTransferStats: false,
+  transferTotalBytes: null,
+  transferSpeedBytesPerSec: null,
+  transferSizeTextKey: null,
+  transferSpeedTextKey: null,
+  transferEtaTextKey: null,
   etaSeconds: null,
 };
 

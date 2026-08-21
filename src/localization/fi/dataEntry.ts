@@ -129,6 +129,7 @@ Haluatko hakea sen uudelleen palvelimelta?`,
   },
   uploadingData: {
     title: "Ladataan tietoja",
+    size: "Tiedoston koko: {{size}}",
   },
   validationReport: {
     title: "Validointiraportti",
