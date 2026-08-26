@@ -63,9 +63,19 @@ export default {
 記録とサーバー上の記録を確認してください`,
     exportingData: "データをエクスポート中...",
     exportToCsv: "CSVにエクスポート",
-    mergeConflictingRecords: "重複する記録を統合（同じ地点）",
+    mergeConflictingRecords: "競合する記録を統合",
+    mergeSameRecordConflictConfirm: {
+      title: "両方のデバイスで編集された記録を統合",
+      message: `{{count}}件の記録は、このデバイスが最後に同期した後、サーバー上でも変更されています。
+
+統合すると、あなたの変更内容とサーバーの変更内容が結合されます。各項目については最後に編集された値が保持され、いずれかのデバイスで追加された新しいセクションも保持されます。
+
+この操作は事前にプレビューできません。スワイプして確定し、続行してください。`,
+    },
     noRecordsInDeviceToExport: "エクスポートする記録がデバイスにありません",
     onlyNewOrUpdatedRecords: "新規または更新された記録のみエクスポート",
+    recordsMerged:
+      "{{count}}件の記録がサーバーの変更内容と統合されました。ローカルコピーを更新しています...",
     onlyRecordsInRemoteServerCanBeImported:
       "リモートサーバーにある記録またはリモートで更新された記録のみインポートできます",
     option: {
@@ -149,6 +159,7 @@ export default {
     new: "新規",
     updated: "更新済み",
     conflicting: "重複",
+    conflictingModifiedRemotely: "デバイスとサーバーの両方で変更済み",
     withValidationErrors: "検証エラーあり",
   },
   sendData: "データを送信",

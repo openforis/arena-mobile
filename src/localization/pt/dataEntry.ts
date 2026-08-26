@@ -105,6 +105,7 @@ Deseja obtê-las novamente do servidor?`,
     new: "novo",
     updated: "atualizado",
     conflicting: "conflitante",
+    conflictingModifiedRemotely: "modificado no dispositivo e no servidor",
     withValidationErrors: "com erros de validação",
   },
   sendData: "Enviar dados",
@@ -251,10 +252,20 @@ Verifique as configurações ou peça ao administrador da pesquisa para alterar 
       "Dados exportados com sucesso, mas {{missingFiles}} arquivos/imagens estão faltando ou corrompidos. Verifique seus registros e também os registros no servidor.",
     exportingData: "Exportando dados...",
     exportToCsv: "Exportar para CSV",
-    mergeConflictingRecords: "Unir registos com conflitos (mesmas chaves)",
+    mergeConflictingRecords: "Unir registos com conflitos",
+    mergeSameRecordConflictConfirm: {
+      title: "Unir registos editados em ambos os dispositivos",
+      message: `{{count}} registo(s) também foram modificados no servidor desde a última sincronização deste dispositivo.
+
+A união irá combinar as suas alterações com as alterações do servidor: para cada campo, será mantido o valor editado mais recentemente, e quaisquer novas secções adicionadas em qualquer um dos dispositivos serão mantidas.
+
+Isto não pode ser pré-visualizado antecipadamente. Deslize para confirmar e continuar.`,
+    },
     noRecordsInDeviceToExport:
       "Não existem registos no dispositivo para exportar",
     onlyNewOrUpdatedRecords: "Exportar apenas registos novos ou atualizados",
+    recordsMerged:
+      "{{count}} registo(s) unidos com as alterações do servidor; a atualizar a cópia local...",
     onlyRecordsInRemoteServerCanBeImported:
       "Apenas registos já presentes no servidor remoto ou registos que foram atualizados remotamente podem ser importados",
     option: {

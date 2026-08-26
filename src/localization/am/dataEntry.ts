@@ -99,6 +99,7 @@ export default {
     new: "አዲስ",
     updated: "የዘመነ",
     conflicting: "የሚጋጭ",
+    conflictingModifiedRemotely: "በመሣሪያውና በአገልጋዩ ላይ ተስተካክሏል",
     withValidationErrors: "ከማረጋገጫ ስህተቶች ጋር",
   },
   sendData: "ውሂብ ላክ",
@@ -243,9 +244,19 @@ export default {
       "ውሂብ በተሳካ ሁኔታ ወደ ውጭ ተልኳል ግን {{missingFiles}} ፋይሎች/ምስሎች ጠፍተዋል ወይም ተሰብረዋል። እባክዎ መዝገቦችዎን እና በአገልጋዩ ላይ ያሉትን መዝገቦች ያረጋግጡ።",
     exportingData: "ውሂብ በማልክ ላይ...",
     exportToCsv: "ወደ CSV ላክ",
-    mergeConflictingRecords: "የሚጋጩ መዝገቦችን አዋህድ (ተመሳሳይ ቁልፎች)",
+    mergeConflictingRecords: "የሚጋጩ መዝገቦችን አዋህድ",
+    mergeSameRecordConflictConfirm: {
+      title: "በሁለቱም መሣሪያዎች ላይ የተስተካከሉ መዝገቦችን አዋህድ",
+      message: `{{count}} መዝገብ(ዎች) ይህ መሣሪያ ለመጨረሻ ጊዜ ካመሳሰለ በኋላ በአገልጋዩ ላይም ተስተካክለዋል።
+
+ማዋሃድ ለውጦችዎን ከአገልጋዩ ለውጦች ጋር ያዋህዳል፦ ለእያንዳንዱ መስክ፣ በመጨረሻ የተስተካከለው ዋጋ ይቀመጣል፣ እና በማንኛውም መሣሪያ ላይ የተጨመሩ አዲስ ክፍሎች ይቀመጣሉ።
+
+ይህ አስቀድሞ ሊታይ አይችልም። ለማረጋገጥ እና ለመቀጠል ይጥረጉ።`,
+    },
     noRecordsInDeviceToExport: "በመሣሪያው ውስጥ የሚላክ መዝገብ የለም",
     onlyNewOrUpdatedRecords: "አዲስ ወይም የተሻሻሉ መዝገቦችን ብቻ ላክ",
+    recordsMerged:
+      "{{count}} መዝገብ(ዎች) ከአገልጋዩ ለውጦች ጋር ተዋህደዋል፤ የአካባቢውን ቅጂ በማዘመን ላይ...",
     onlyRecordsInRemoteServerCanBeImported:
       "በሩቅ አገልጋይ ውስጥ ያሉ ወይም በርቀት የተሻሻሉ መዝገቦች ብቻ ማስገባት ይቻላል",
     option: {

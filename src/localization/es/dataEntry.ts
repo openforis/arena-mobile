@@ -105,6 +105,7 @@ Sus valores serán borrados.
     new: "nuevo",
     updated: "actualizado",
     conflicting: "en conflicto",
+    conflictingModifiedRemotely: "modificado en el dispositivo y en el servidor",
     withValidationErrors: "con errores de validación",
   },
   sendData: "Enviar datos",
@@ -251,10 +252,20 @@ Verifique la configuración o pida al administrador de la encuesta que cambie es
       "Los datos se exportaron correctamente, pero faltan o están rotos {{missingFiles}} archivos/imágenes. Por favor, revise sus registros y también los registros en el servidor.",
     exportingData: "Exportando datos...",
     exportToCsv: "Exportar a CSV",
-    mergeConflictingRecords: "Fusionar registros conflictivos (mismas claves)",
+    mergeConflictingRecords: "Fusionar registros conflictivos",
+    mergeSameRecordConflictConfirm: {
+      title: "Fusionar registros editados en ambos dispositivos",
+      message: `{{count}} registro(s) también se modificaron en el servidor desde la última sincronización de este dispositivo.
+
+Al fusionar se combinarán sus cambios con los cambios del servidor: para cada campo, se mantendrá el valor editado más recientemente, y se conservará cualquier sección nueva añadida en cualquiera de los dos dispositivos.
+
+Esto no se puede previsualizar de antemano. Deslice para confirmar y continuar.`,
+    },
     noRecordsInDeviceToExport:
       "No hay registros en el dispositivo para exportar",
     onlyNewOrUpdatedRecords: "Exportar solo registros nuevos o actualizados",
+    recordsMerged:
+      "{{count}} registro(s) fusionados con los cambios del servidor; actualizando la copia local...",
     onlyRecordsInRemoteServerCanBeImported:
       "Solo se pueden importar registros que ya están en el servidor remoto o registros que se han actualizado remotamente",
     option: {

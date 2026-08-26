@@ -110,6 +110,7 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
     new: "baru",
     updated: "diperbarui",
     conflicting: "bertentangan",
+    conflictingModifiedRemotely: "diubah di perangkat dan di server",
     withValidationErrors: "dengan kesalahan validasi",
   },
   sendData: "Kirim data",
@@ -260,11 +261,20 @@ Periksa pengaturan atau minta administrator survei untuk mengubah batas ini.`,
       "Data berhasil diekspor tetapi {{missingFiles}} file/gambar hilang atau rusak. Silakan periksa catatan Anda dan juga catatan di server.",
     exportingData: "Mengekspor data...",
     exportToCsv: "Ekspor ke CSV",
-    mergeConflictingRecords:
-      "Gabungkan data isian yang berkonflik (kunci yang sama)",
+    mergeConflictingRecords: "Gabungkan data isian yang berkonflik",
+    mergeSameRecordConflictConfirm: {
+      title: "Gabungkan data isian yang diedit di kedua perangkat",
+      message: `{{count}} data isian juga telah diperbarui di server sejak perangkat ini terakhir menyinkronkannya.
+
+Menggabungkan akan menyatukan perubahan Anda dengan perubahan di server: untuk setiap kolom, nilai yang paling terakhir diedit akan disimpan, dan setiap bagian baru yang ditambahkan di salah satu perangkat akan disimpan.
+
+Ini tidak dapat dilihat pratinjaunya terlebih dahulu. Geser untuk mengonfirmasi dan melanjutkan.`,
+    },
     noRecordsInDeviceToExport: "Tidak ada data di perangkat untuk diekspor",
     onlyNewOrUpdatedRecords:
       "Ekspor hanya data isian baru atau yang diperbarui",
+    recordsMerged:
+      "{{count}} data isian digabungkan dengan perubahan dari server; memperbarui salinan lokal...",
     onlyRecordsInRemoteServerCanBeImported:
       "Hanya data isian yang sudah ada di server atau data isian yang telah diperbarui di server yang dapat diimpor",
     option: {

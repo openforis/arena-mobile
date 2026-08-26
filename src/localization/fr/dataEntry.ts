@@ -111,6 +111,7 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
     new: "nouveau",
     updated: "mis à jour",
     conflicting: "conflictuel",
+    conflictingModifiedRemotely: "modifié sur l'appareil et sur le serveur",
     withValidationErrors: "avec des erreurs de validation",
   },
   sendData: "Envoyer données",
@@ -261,11 +262,20 @@ Vérifiez les paramètres ou demandez à l'administrateur de l'enquête de modif
       "Données exportées avec succès, mais {{missingFiles}} fichiers/images sont manquants ou corrompus. Veuillez vérifier vos enregistrements et également les enregistrements sur le serveur.",
     exportingData: "Exportation des données...",
     exportToCsv: "Exporter en CSV",
-    mergeConflictingRecords:
-      "Fusionner les enregistrements conflictuels (mêmes clés)",
+    mergeConflictingRecords: "Fusionner les enregistrements conflictuels",
+    mergeSameRecordConflictConfirm: {
+      title: "Fusionner les enregistrements modifiés sur les deux appareils",
+      message: `{{count}} enregistrement(s) ont également été modifiés sur le serveur depuis la dernière synchronisation de cet appareil.
+
+La fusion combinera vos modifications avec celles du serveur : pour chaque champ, la valeur modifiée le plus récemment sera conservée, et toute nouvelle section ajoutée sur l'un ou l'autre appareil sera conservée.
+
+Cela ne peut pas être prévisualisé au préalable. Balayez pour confirmer et continuer.`,
+    },
     noRecordsInDeviceToExport: "Aucun enregistrement à exporter sur l'appareil",
     onlyNewOrUpdatedRecords:
       "Exporter uniquement les enregistrements nouveaux ou mis à jour",
+    recordsMerged:
+      "{{count}} enregistrement(s) fusionné(s) avec les modifications du serveur ; actualisation de la copie locale...",
     onlyRecordsInRemoteServerCanBeImported:
       "Seuls les enregistrements déjà présents sur le serveur distant ou les enregistrements qui ont été mis à jour à distance peuvent être importés",
     option: {
