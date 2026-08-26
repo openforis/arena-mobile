@@ -22,10 +22,12 @@ import { RemoteConnectionSelectors } from "state/remoteConnection";
 import { RootState } from "state/store";
 import { Files, Jobs, log } from "utils";
 
+import { fetchRecordsFromServer } from "./actionsRecordsImport";
 import { ConfirmActions, ConfirmUtils, OnConfirmParams } from "../confirm";
 import { JobMonitorActions } from "../jobMonitor";
 import { MessageActions } from "../message";
 import { SurveySelectors } from "../survey";
+import { ToastActions } from "../toast";
 
 const { t } = i18n;
 
@@ -386,7 +388,7 @@ export const exportRecords =
 
       const onJobComplete = async (jobComplete: any) => {
         const { result } = jobComplete;
-        const { mergedRecordsMap } = result;
+        const { mergedRecordsMap, mergedSameRecordUuids } = result;
 
         await RecordService.updateRecordsDateSync({
           surveyId,
@@ -397,6 +399,18 @@ export const exportRecords =
             surveyId,
             mergedRecordsMap,
           });
+        }
+        if (mergedSameRecordUuids?.length > 0) {
+          // the server combined this device's edits with newer edits already on the server: refresh the
+          // local copy so it reflects the merged content, not this device's pre-merge version
+          dispatch(
+            fetchRecordsFromServer({ recordUuids: mergedSameRecordUuids }),
+          );
+          dispatch(
+            ToastActions.show("dataEntry:dataExport.recordsMerged", {
+              count: mergedSameRecordUuids.length,
+            }),
+          );
         }
         await onJobCompleteParam?.(jobComplete);
       };
