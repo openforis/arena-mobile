@@ -3199,9 +3199,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openforis/arena-core@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "@openforis/arena-core@npm:2.1.1::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40openforis%2Farena-core%2F2.1.1%2F299f3875319599f29e4d843261684beb48dbd742"
+"@openforis/arena-core@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "@openforis/arena-core@npm:2.1.2::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40openforis%2Farena-core%2F2.1.2%2F15b52b1957c9acf1e050177ace9f617841e3eebe"
   dependencies:
     "@jsep-plugin/regex": "npm:^1.0.4"
     "@turf/bearing": "npm:^7.3.5"
@@ -3217,7 +3217,7 @@ __metadata:
     moment: "npm:^2.30.1"
     proj4: "npm:^2.20.9"
     uuid: "npm:^14.0.1"
-  checksum: 10c0/cf1425c772e2abb27dd32b3c62dc8edee625b518144d6952e9197f0d781dac80cfde6a3de2c31f5451afc878a8a6d0e4b82173fc16da3020363fd60a73561cc0
+  checksum: 10c0/8fc2ddac5cf6bb07f483d743dadf3b2f3c845218a7b8ad98b4ed65183f93acc95ed6a921de28746b7e17a5350df3a9cb6739258433d28eba6af8aca78fc14bf4
   languageName: node
   linkType: hard
 
@@ -4433,7 +4433,7 @@ __metadata:
     "@eslint/eslintrc": "npm:^3.3.6"
     "@eslint/js": "npm:^10.0.1"
     "@lodev09/react-native-exify": "npm:^1.0.3"
-    "@openforis/arena-core": "npm:^2.1.1"
+    "@openforis/arena-core": "npm:^2.1.2"
     "@react-native-async-storage/async-storage": "npm:2.2.0"
     "@react-native-clipboard/clipboard": "npm:^1.16.3"
     "@react-native-community/datetimepicker": "npm:^9.1.0"

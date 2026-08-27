@@ -18,7 +18,7 @@ class SurveyDownloadJob extends JobMobile<SurveyImportJobContext> {
 export class SurveyImportJob extends JobMobile<SurveyImportJobContext> {
   constructor({ id, user }: any) {
     super({ id, user });
-    this.jobs = [new SurveyDownloadJob({ id, user })];
+    this.innerJobs = [new SurveyDownloadJob({ id, user })];
   }
 
   protected override execute(): Promise<void> {
