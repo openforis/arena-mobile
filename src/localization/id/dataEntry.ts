@@ -273,8 +273,10 @@ Ini tidak dapat dilihat pratinjaunya terlebih dahulu. Geser untuk mengonfirmasi 
     noRecordsInDeviceToExport: "Tidak ada data di perangkat untuk diekspor",
     onlyNewOrUpdatedRecords:
       "Ekspor hanya data isian baru atau yang diperbarui",
-    recordsMerged:
-      "{{count}} data isian digabungkan dengan perubahan dari server; memperbarui salinan lokal...",
+    recordsMergedMessage: `Data isian berikut telah digabungkan dengan versi yang lebih baru yang sudah ada di server:
+{{recordsList}}
+
+Versi gabungan dari data isian tersebut telah diambil secara otomatis.`,
     onlyRecordsInRemoteServerCanBeImported:
       "Hanya data isian yang sudah ada di server atau data isian yang telah diperbarui di server yang dapat diimpor",
     option: {

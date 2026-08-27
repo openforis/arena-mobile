@@ -264,8 +264,10 @@ Esto no se puede previsualizar de antemano. Deslice para confirmar y continuar.`
     noRecordsInDeviceToExport:
       "No hay registros en el dispositivo para exportar",
     onlyNewOrUpdatedRecords: "Exportar solo registros nuevos o actualizados",
-    recordsMerged:
-      "{{count}} registro(s) fusionados con los cambios del servidor; actualizando la copia local...",
+    recordsMergedMessage: `Los siguientes registros se han fusionado con la versión más reciente que ya existía en el servidor:
+{{recordsList}}
+
+La versión fusionada de esos registros se ha descargado automáticamente.`,
     onlyRecordsInRemoteServerCanBeImported:
       "Solo se pueden importar registros que ya están en el servidor remoto o registros que se han actualizado remotamente",
     option: {

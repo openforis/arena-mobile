@@ -273,8 +273,10 @@ Dies kann vorher nicht angezeigt werden. Zum Bestätigen wischen, um fortzufahre
     noRecordsInDeviceToExport: "Keine Datensätze auf dem Gerät zum Exportieren",
     onlyNewOrUpdatedRecords:
       "Nur neue oder aktualisierte Datensätze exportieren",
-    recordsMerged:
-      "{{count}} Datensatz/Datensätze mit Änderungen vom Server zusammengeführt; lokale Kopie wird aktualisiert...",
+    recordsMergedMessage: `Die folgenden Datensätze wurden mit der bereits auf dem Server vorhandenen neueren Version zusammengeführt:
+{{recordsList}}
+
+Die zusammengeführte Version dieser Datensätze wurde automatisch abgerufen.`,
     onlyRecordsInRemoteServerCanBeImported:
       "Nur Datensätze, die bereits auf dem Remote-Server vorhanden sind oder die remote aktualisiert wurden, können importiert werden",
     option: {

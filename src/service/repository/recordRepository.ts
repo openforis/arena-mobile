@@ -446,7 +446,12 @@ const updateRecordWithContentFetchedRemotely = async ({
   survey,
   record,
 }: any) =>
-  updateRecordKeysAndContent({ survey, record, origin: RecordOrigin.remote });
+  updateRecordKeysAndContent({
+    survey,
+    record,
+    updateOrigin: true,
+    origin: RecordOrigin.remote,
+  });
 
 const updateRecordsDateSync = async ({ surveyId, recordUuids }: any) => {
   const sql = `UPDATE record 

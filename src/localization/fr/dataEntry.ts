@@ -274,8 +274,10 @@ Cela ne peut pas être prévisualisé au préalable. Balayez pour confirmer et c
     noRecordsInDeviceToExport: "Aucun enregistrement à exporter sur l'appareil",
     onlyNewOrUpdatedRecords:
       "Exporter uniquement les enregistrements nouveaux ou mis à jour",
-    recordsMerged:
-      "{{count}} enregistrement(s) fusionné(s) avec les modifications du serveur ; actualisation de la copie locale...",
+    recordsMergedMessage: `Les enregistrements suivants ont été fusionnés avec la version plus récente déjà présente sur le serveur :
+{{recordsList}}
+
+La version fusionnée de ces enregistrements a été récupérée automatiquement.`,
     onlyRecordsInRemoteServerCanBeImported:
       "Seuls les enregistrements déjà présents sur le serveur distant ou les enregistrements qui ont été mis à jour à distance peuvent être importés",
     option: {

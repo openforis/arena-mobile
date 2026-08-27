@@ -74,8 +74,10 @@ This cannot be previewed beforehand. Swipe to confirm and continue.`,
     },
     noRecordsInDeviceToExport: "No records in the device to export",
     onlyNewOrUpdatedRecords: "Export only new or updated records",
-    recordsMerged:
-      "{{count}} record(s) merged with changes from the server; refreshing local copy...",
+    recordsMergedMessage: `The following records have been merged with the newer version already on the server:
+{{recordsList}}
+
+The merged version of those records has been fetched automatically.`,
     onlyRecordsInRemoteServerCanBeImported:
       "Only records already in remote server or records that have been updated remotely can be imported",
     option: {

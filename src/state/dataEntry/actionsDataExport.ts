@@ -12,7 +12,7 @@ import { RecordService, UserService } from "service";
 import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerationJob";
 
 import { i18n } from "localization";
-import { JobCancelError, ValidationUtils } from "model";
+import { JobCancelError, RecordUtils, ValidationUtils } from "model";
 import {
   FlatDataExportJob,
   FlatDataExportJobResult,
@@ -27,7 +27,6 @@ import { ConfirmActions, ConfirmUtils, OnConfirmParams } from "../confirm";
 import { JobMonitorActions } from "../jobMonitor";
 import { MessageActions } from "../message";
 import { SurveySelectors } from "../survey";
-import { ToastActions } from "../toast";
 
 const { t } = i18n;
 
@@ -371,6 +370,38 @@ const _onExportFileGenerationSucceeded = async ({
   }
 };
 
+const showMergedRecordsMessage = async ({
+  dispatch,
+  survey,
+  lang,
+  cycle,
+  recordUuids,
+}: any) => {
+  const recordsSummary = await RecordService.fetchRecords({
+    survey,
+    cycle,
+    onlyLocal: false,
+  });
+  const recordsList = recordsSummary
+    .filter((recordSummary: any) => recordUuids.includes(recordSummary.uuid))
+    .map((recordSummary: any) => {
+      const keyValuesByName = RecordUtils.getRecordSummaryValuesByKeyFormatted(
+        { survey, lang, recordSummary, t },
+      );
+      const keysText =
+        Object.values(keyValuesByName).join(" - ") || recordSummary.uuid;
+      return `- ${keysText}`;
+    })
+    .join("\n");
+
+  dispatch(
+    MessageActions.setMessage({
+      content: "dataEntry:dataExport.recordsMergedMessage",
+      contentParams: { recordsList },
+    }),
+  );
+};
+
 export const exportRecords =
   ({
     cycle,
@@ -402,13 +433,21 @@ export const exportRecords =
         }
         if (mergedSameRecordUuids?.length > 0) {
           // the server combined this device's edits with newer edits already on the server: refresh the
-          // local copy so it reflects the merged content, not this device's pre-merge version
+          // local copy so it reflects the merged content, not this device's pre-merge version, then let
+          // the user know which records were merged
           dispatch(
-            fetchRecordsFromServer({ recordUuids: mergedSameRecordUuids }),
-          );
-          dispatch(
-            ToastActions.show("dataEntry:dataExport.recordsMerged", {
-              count: mergedSameRecordUuids.length,
+            fetchRecordsFromServer({
+              recordUuids: mergedSameRecordUuids,
+              onImportComplete: () =>
+                showMergedRecordsMessage({
+                  dispatch,
+                  survey,
+                  lang: SurveySelectors.selectCurrentSurveyPreferredLang(
+                    state,
+                  ),
+                  cycle,
+                  recordUuids: mergedSameRecordUuids,
+                }),
             }),
           );
         }

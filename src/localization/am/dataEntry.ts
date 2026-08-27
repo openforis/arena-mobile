@@ -255,8 +255,10 @@ export default {
     },
     noRecordsInDeviceToExport: "በመሣሪያው ውስጥ የሚላክ መዝገብ የለም",
     onlyNewOrUpdatedRecords: "አዲስ ወይም የተሻሻሉ መዝገቦችን ብቻ ላክ",
-    recordsMerged:
-      "{{count}} መዝገብ(ዎች) ከአገልጋዩ ለውጦች ጋር ተዋህደዋል፤ የአካባቢውን ቅጂ በማዘመን ላይ...",
+    recordsMergedMessage: `የሚከተሉት መዝገቦች በአገልጋዩ ላይ ቀድሞውኑ ካለው አዲሱ ስሪት ጋር ተዋህደዋል፦
+{{recordsList}}
+
+የእነዚያ መዝገቦች የተዋሃደ ስሪት በራስ-ሰር ተገኝቷል።`,
     onlyRecordsInRemoteServerCanBeImported:
       "በሩቅ አገልጋይ ውስጥ ያሉ ወይም በርቀት የተሻሻሉ መዝገቦች ብቻ ማስገባት ይቻላል",
     option: {

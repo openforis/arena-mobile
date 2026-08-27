@@ -268,8 +268,10 @@ Tätä ei voi esikatsella etukäteen. Pyyhkäise vahvistaaksesi ja jatkaaksesi.`
     },
     noRecordsInDeviceToExport: "Laitteessa ei ole vietäviä tietueita",
     onlyNewOrUpdatedRecords: "Vie vain uudet tai päivitetyt tietueet",
-    recordsMerged:
-      "{{count}} tietuetta yhdistetty palvelimen muutoksiin; päivitetään paikallista kopiota...",
+    recordsMergedMessage: `Seuraavat tietueet on yhdistetty palvelimella jo olevaan uudempaan versioon:
+{{recordsList}}
+
+Näiden tietueiden yhdistetty versio on noudettu automaattisesti.`,
     onlyRecordsInRemoteServerCanBeImported:
       "Vain palvelimella jo olevat tai etänä päivitetyt tietueet voidaan tuoda",
     option: {

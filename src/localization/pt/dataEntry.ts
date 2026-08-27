@@ -264,8 +264,10 @@ Isto não pode ser pré-visualizado antecipadamente. Deslize para confirmar e co
     noRecordsInDeviceToExport:
       "Não existem registos no dispositivo para exportar",
     onlyNewOrUpdatedRecords: "Exportar apenas registos novos ou atualizados",
-    recordsMerged:
-      "{{count}} registo(s) unidos com as alterações do servidor; a atualizar a cópia local...",
+    recordsMergedMessage: `Os seguintes registos foram unidos com a versão mais recente já existente no servidor:
+{{recordsList}}
+
+A versão unida desses registos foi transferida automaticamente.`,
     onlyRecordsInRemoteServerCanBeImported:
       "Apenas registos já presentes no servidor remoto ou registos que foram atualizados remotamente podem ser importados",
     option: {

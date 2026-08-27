@@ -269,8 +269,10 @@ Detta kan inte förhandsgranskas i förväg. Svep för att bekräfta och fortsä
     },
     noRecordsInDeviceToExport: "Inga poster i enheten att exportera",
     onlyNewOrUpdatedRecords: "Exportera endast nya eller uppdaterade poster",
-    recordsMerged:
-      "{{count}} post(er) sammanslagna med ändringar från servern; uppdaterar lokal kopia...",
+    recordsMergedMessage: `Följande poster har slagits samman med den nyare versionen som redan finns på servern:
+{{recordsList}}
+
+Den sammanslagna versionen av dessa poster har hämtats automatiskt.`,
     onlyRecordsInRemoteServerCanBeImported:
       "Endast poster som redan finns på fjärrservern eller poster som har uppdaterats på distans kan importeras",
     option: {

@@ -74,8 +74,10 @@ export default {
     },
     noRecordsInDeviceToExport: "エクスポートする記録がデバイスにありません",
     onlyNewOrUpdatedRecords: "新規または更新された記録のみエクスポート",
-    recordsMerged:
-      "{{count}}件の記録がサーバーの変更内容と統合されました。ローカルコピーを更新しています...",
+    recordsMergedMessage: `次の記録は、サーバー上に既に存在するより新しいバージョンと統合されました。
+{{recordsList}}
+
+統合後のバージョンは自動的に取得されています。`,
     onlyRecordsInRemoteServerCanBeImported:
       "リモートサーバーにある記録またはリモートで更新された記録のみインポートできます",
     option: {
