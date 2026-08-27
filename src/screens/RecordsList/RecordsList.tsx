@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import * as DocumentPicker from "expo-document-picker";
 
-import { Dates, Objects, Surveys } from "@openforis/arena-core";
+import { Objects, Surveys } from "@openforis/arena-core";
 
 import {
   Button,
@@ -482,12 +482,10 @@ export const RecordsList = () => {
         (record: any) => record.origin === RecordOrigin.local,
       );
       if (
-        selectedLocalRecords.some((record: any) => {
-          const { dateModified, dateModifiedRemote, dateSynced } = record;
-          return (
-            !dateSynced || !Dates.isAfter(dateModifiedRemote, dateModified)
-          );
-        })
+        selectedLocalRecords.some(
+          (record: any) =>
+            record.syncStatus !== RecordSyncStatus.modifiedRemotely,
+        )
       ) {
         toaster("dataEntry:dataExport.onlyRecordsInRemoteServerCanBeImported");
         return false;
