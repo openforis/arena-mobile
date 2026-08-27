@@ -56,7 +56,7 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadJobContext> {
     await super.cancel();
   }
 
-  override async prepareResult() {
+  override async generateResult() {
     const { remoteJob } = this;
     return { remoteJob };
   }
