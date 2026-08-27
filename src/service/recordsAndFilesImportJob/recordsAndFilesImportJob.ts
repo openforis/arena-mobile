@@ -25,8 +25,8 @@ export class RecordsAndFilesImportJob extends JobMobile<RecordsAndFilesImportJob
     this.context.unzippedFolderUri = unzippedFolderUri;
   }
 
-  override async prepareResult() {
-    const recordsImportJob = this.jobs?.[0];
+  override async generateResult() {
+    const recordsImportJob = this.innerJobs?.[0];
     const { result = {}, processed = 0 } = recordsImportJob ?? {};
     return { ...result, processedRecords: processed };
   }

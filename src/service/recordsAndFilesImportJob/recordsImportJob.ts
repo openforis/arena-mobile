@@ -68,7 +68,7 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
     }
   }
 
-  override async prepareResult() {
+  override async generateResult() {
     const { insertedRecords, updatedRecords } = this;
     return { insertedRecords, updatedRecords };
   }

@@ -22,7 +22,7 @@ export class BackupJob extends JobMobile<BackupJobContext> {
     this.context.outputFileUri = outputFileUri;
   }
 
-  override async prepareResult() {
+  override async generateResult() {
     const { outputFileUri } = this.context;
     return { outputFileUri };
   }

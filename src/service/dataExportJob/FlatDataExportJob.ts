@@ -328,14 +328,14 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     return { rowData, fileValues };
   }
 
-  protected override async prepareResult(): Promise<FlatDataExportJobResult> {
+  protected override async generateResult(): Promise<FlatDataExportJobResult> {
     const { outputFileUri } = this.context;
     // at this point, outputFileUri must be defined
     return { outputFileUri: outputFileUri! };
   }
 
-  protected override async cleanup(): Promise<void> {
-    await super.cleanup();
+  protected override async beforeEnd(): Promise<void> {
+    await super.beforeEnd();
     if (this.tempFolderUri) {
       return Files.del(this.tempFolderUri);
     }
