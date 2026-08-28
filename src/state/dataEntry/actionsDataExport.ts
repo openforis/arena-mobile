@@ -402,6 +402,25 @@ const showMergedRecordsMessage = async ({
   );
 };
 
+// re-downloads the given records (their content on the server is now the merged version,
+// whether merged with newer edits on the same uuid or merged into a pre-existing uuid with the
+// same key(s)) so the local copy reflects it, then lets the user know which records were merged
+const fetchMergedRecordsAndNotify = ({
+  dispatch,
+  survey,
+  lang,
+  cycle,
+  recordUuids,
+}: any) => {
+  dispatch(
+    fetchRecordsFromServer({
+      recordUuids,
+      onImportComplete: () =>
+        showMergedRecordsMessage({ dispatch, survey, lang, cycle, recordUuids }),
+    }),
+  );
+};
+
 export const exportRecords =
   ({
     cycle,
@@ -415,14 +434,16 @@ export const exportRecords =
     async (dispatch: any, getState: any) => {
       const state = getState();
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
       const surveyId = survey.id;
 
       const onJobComplete = async (jobComplete: any) => {
         const { result } = jobComplete;
         const { mergedRecordsMap, mergedSameRecordUuids } = result;
 
-        await RecordService.updateRecordsDateSync({
-          surveyId,
+        await RecordService.confirmRecordsSyncedWithRemote({
+          survey,
+          cycle,
           recordUuids,
         });
         if (!Objects.isEmpty(mergedRecordsMap)) {
@@ -430,26 +451,33 @@ export const exportRecords =
             surveyId,
             mergedRecordsMap,
           });
+
+          // the local record(s) got merged into a different, already existing record on the
+          // server (same key(s), different uuid). The local rows are now excluded from the
+          // records list (merged_into_record_uuid is set), so without fetching the record they
+          // were merged into, the user's data would just seem to disappear: fetch it so it shows
+          // up in its place, then let the user know what happened.
+          const mergedIntoRecordUuids = [
+            ...new Set(Object.values(mergedRecordsMap) as string[]),
+          ];
+          fetchMergedRecordsAndNotify({
+            dispatch,
+            survey,
+            lang,
+            cycle,
+            recordUuids: mergedIntoRecordUuids,
+          });
         }
         if (mergedSameRecordUuids?.length > 0) {
           // the server combined this device's edits with newer edits already on the server: refresh the
-          // local copy so it reflects the merged content, not this device's pre-merge version, then let
-          // the user know which records were merged
-          dispatch(
-            fetchRecordsFromServer({
-              recordUuids: mergedSameRecordUuids,
-              onImportComplete: () =>
-                showMergedRecordsMessage({
-                  dispatch,
-                  survey,
-                  lang: SurveySelectors.selectCurrentSurveyPreferredLang(
-                    state,
-                  ),
-                  cycle,
-                  recordUuids: mergedSameRecordUuids,
-                }),
-            }),
-          );
+          // local copy so it reflects the merged content, not this device's pre-merge version
+          fetchMergedRecordsAndNotify({
+            dispatch,
+            survey,
+            lang,
+            cycle,
+            recordUuids: mergedSameRecordUuids,
+          });
         }
         await onJobCompleteParam?.(jobComplete);
       };

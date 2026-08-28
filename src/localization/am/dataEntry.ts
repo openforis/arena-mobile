@@ -112,6 +112,7 @@ export default {
     new: "አዲስ (ገና አልተሰቀለም)",
     notModified: "ያልተሻሻለ (የሚሰቀል ምንም ለውጥ የለም)",
     modifiedLocally: "በአካባቢው የተሻሻለ",
+    modifiedLocallyAndRemotely: "በአካባቢው እና በሩቅ አገልጋይ ላይ የተሻሻለ (ግጭት)",
     modifiedRemotely: "በሩቅ አገልጋይ የተሻሻለ",
     notInEntryStepAnymore: "ከእንግዲህ በማስገቢያ ደረጃ የለም (በማጽዳት ወይም ትንተና ደረጃ)",
   },

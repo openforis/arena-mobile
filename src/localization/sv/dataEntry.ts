@@ -122,6 +122,8 @@ Vill du hämta den igen från servern?`,
     new: "Ny (inte uppladdad än)",
     notModified: "Inte ändrad (inga ändringar att ladda upp)",
     modifiedLocally: "Ändrad lokalt",
+    modifiedLocallyAndRemotely:
+      "Ändrad både lokalt och på fjärrservern (konflikt)",
     modifiedRemotely: "Ändrad på fjärrservern",
     notInEntryStepAnymore:
       "Inte längre i inmatningssteget (i rensnings- eller analyssteget)",

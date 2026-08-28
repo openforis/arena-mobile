@@ -118,6 +118,8 @@ Deseja obtê-las novamente do servidor?`,
     new: "Novo (ainda não carregado)",
     notModified: "Não modificado (sem alterações para carregar)",
     modifiedLocally: "Modificado localmente",
+    modifiedLocallyAndRemotely:
+      "Modificado localmente e no servidor remoto (conflito)",
     modifiedRemotely: "Modificado no servidor remoto",
     notInEntryStepAnymore:
       "Já não está na etapa de introdução (na etapa de limpeza ou análise)",

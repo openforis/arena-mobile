@@ -174,6 +174,8 @@ export default {
     new: "新規（まだアップロードされていません）",
     notModified: "変更なし（アップロードする変更がありません）",
     modifiedLocally: "ローカルで変更済み",
+    modifiedLocallyAndRemotely:
+      "ローカルとリモートサーバーの両方で変更済み(競合)",
     modifiedRemotely: "リモートサーバーで変更済み",
     notInEntryStepAnymore:
       "入力段階ではなくなりました（修正または分析ステップ）",

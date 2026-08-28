@@ -118,6 +118,8 @@ Sus valores serán borrados.
     new: "Nuevo (sin subir aún)",
     notModified: "Sin modificar (sin cambios para subir)",
     modifiedLocally: "Modificado localmente",
+    modifiedLocallyAndRemotely:
+      "Modificado localmente y en el servidor remoto (conflicto)",
     modifiedRemotely: "Modificado en el servidor remoto",
     notInEntryStepAnymore:
       "Ya no está en la fase de entrada (la fase de limpieza o análisis)",

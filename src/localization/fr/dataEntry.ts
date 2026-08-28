@@ -124,6 +124,8 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
     new: "Nouveau (pas encore téléchargé)",
     notModified: "Non modifié (aucune modification à télécharger)",
     modifiedLocally: "Modifié localement",
+    modifiedLocallyAndRemotely:
+      "Modifié localement et sur le serveur distant (conflit)",
     modifiedRemotely: "Modifié sur le serveur distant",
     notInEntryStepAnymore:
       "Plus à l'étape de saisie (à l'étape de nettoyage ou d'analyse)",

@@ -117,6 +117,8 @@ export default {
     new: "Новая (еще не загружена)",
     notModified: "Не изменена (нет изменений для загрузки)",
     modifiedLocally: "Изменена локально",
+    modifiedLocallyAndRemotely:
+      "Изменена локально и на удаленном сервере (конфликт)",
     modifiedRemotely: "Изменена на удаленном сервере",
     notInEntryStepAnymore:
       "Этап ввода завершен (запись на этапе очистки или анализа)",

@@ -123,6 +123,8 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
     new: "Baru (belum diunggah)",
     notModified: "Tidak dimodifikasi (tidak ada perubahan untuk diunggah)",
     modifiedLocally: "Dimodifikasi secara lokal",
+    modifiedLocallyAndRemotely:
+      "Dimodifikasi secara lokal dan di server jarak jauh (konflik)",
     modifiedRemotely: "Dimodifikasi di server jarak jauh",
     notInEntryStepAnymore:
       "Tidak lagi dalam tahap entri (dalam tahap pembersihan atau analisis)",

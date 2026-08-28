@@ -454,11 +454,33 @@ const updateRecordWithContentFetchedRemotely = async ({
   });
 
 const updateRecordsDateSync = async ({ surveyId, recordUuids }: any) => {
-  const sql = `UPDATE record 
+  const sql = `UPDATE record
   SET date_synced = ?
-  WHERE survey_id = ? 
+  WHERE survey_id = ?
     AND uuid IN (${DbUtils.quoteValues(recordUuids)})`;
   return dbClient.runSql(sql, [Dates.nowFormattedForStorage(), surveyId]);
+};
+
+/**
+ * Persists, for each given record uuid, the server's dateModified as last observed
+ * by this device right after a successful upload. This is the baseline later used
+ * to tell apart "safe to overwrite" (nothing changed on the server since) from a
+ * true concurrent-edit conflict (server and device diverged from the same baseline).
+ */
+const updateRecordsDateModifiedRemote = async ({
+  surveyId,
+  dateModifiedRemoteByUuid,
+}: any) => {
+  await dbClient.transaction(async () => {
+    for (const [uuid, dateModifiedRemote] of Object.entries(
+      dateModifiedRemoteByUuid,
+    )) {
+      await dbClient.runSql(
+        `UPDATE record SET date_modified_remote = ? WHERE survey_id = ? AND uuid = ?`,
+        [fixDatetime(dateModifiedRemote), surveyId, uuid],
+      );
+    }
+  });
 };
 
 const updateRecordsMergedInto = async ({ surveyId, mergedRecordsMap }: any) => {
@@ -624,6 +646,7 @@ export const RecordRepository = {
   updateRecordWithContentFetchedRemotely,
   updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely,
   updateRecordsDateSync,
+  updateRecordsDateModifiedRemote,
   updateRecordsMergedInto,
   fixRecordCycle,
   deleteRecords,

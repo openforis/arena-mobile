@@ -121,6 +121,8 @@ Haluatko hakea sen uudelleen palvelimelta?`,
     new: "Uusi (ei vielä ladattu)",
     notModified: "Ei muokattu (ei muutoksia ladattavaksi)",
     modifiedLocally: "Muokattu paikallisesti",
+    modifiedLocallyAndRemotely:
+      "Muokattu sekä paikallisesti että palvelimella (ristiriita)",
     modifiedRemotely: "Muokattu palvelimella",
     notInEntryStepAnymore:
       "Ei enää syöttövaiheessa (puhdistus- tai analyysivaiheessa)",

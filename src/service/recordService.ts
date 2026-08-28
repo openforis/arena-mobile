@@ -30,6 +30,7 @@ const {
   updateRecord,
   updateRecordWithContentFetchedRemotely,
   updateRecordsDateSync,
+  updateRecordsDateModifiedRemote,
   updateRecordsMergedInto,
   deleteRecords,
   fixRecordCycle,
@@ -67,14 +68,46 @@ const determineLocalRecordSyncStatus = ({
     return RecordSyncStatus.conflictingKeys;
   }
   const dateModifiedLocal = toDate(recordSummaryLocal.dateModified);
-  const dateModifiedRemote = Dates.parseISO(recordSummaryRemote.dateModified);
-  if (dateModifiedLocal && dateModifiedRemote) {
-    if (Dates.isAfter(dateModifiedLocal, dateModifiedRemote)) {
+  const dateModifiedRemoteLive = Dates.parseISO(recordSummaryRemote.dateModified);
+  if (!dateModifiedLocal || !dateModifiedRemoteLive) {
+    return RecordSyncStatus.notModified;
+  }
+
+  // dateModifiedRemote is the server's dateModified as last observed by this
+  // device (persisted after a successful upload); it's the baseline that lets us
+  // tell "safe to overwrite" apart from a true concurrent-edit conflict, instead
+  // of just comparing local vs the live remote value.
+  const dateModifiedRemoteBaseline = toDate(recordSummaryLocal.dateModifiedRemote);
+
+  if (!dateModifiedRemoteBaseline) {
+    // no baseline captured yet (record never round-tripped under this logic):
+    // fall back to a plain last-modified comparison
+    if (Dates.isAfter(dateModifiedLocal, dateModifiedRemoteLive)) {
       return RecordSyncStatus.modifiedLocally;
     }
-    if (Dates.isBefore(dateModifiedLocal, dateModifiedRemote)) {
+    if (Dates.isBefore(dateModifiedLocal, dateModifiedRemoteLive)) {
       return RecordSyncStatus.modifiedRemotely;
     }
+    return RecordSyncStatus.notModified;
+  }
+
+  const remoteChangedSinceBaseline = Dates.isAfter(
+    dateModifiedRemoteLive,
+    dateModifiedRemoteBaseline,
+  );
+  const localChangedSinceBaseline = Dates.isAfter(
+    dateModifiedLocal,
+    dateModifiedRemoteBaseline,
+  );
+
+  if (remoteChangedSinceBaseline && localChangedSinceBaseline) {
+    return RecordSyncStatus.modifiedLocallyAndRemotely;
+  }
+  if (remoteChangedSinceBaseline) {
+    return RecordSyncStatus.modifiedRemotely;
+  }
+  if (localChangedSinceBaseline) {
+    return RecordSyncStatus.modifiedLocally;
   }
   return RecordSyncStatus.notModified;
 };
@@ -286,6 +319,51 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
   });
 };
 
+/**
+ * Called right after a successful upload of the given records: fetches their
+ * current remote summaries and stamps date_synced and date_modified_remote
+ * (the "last known server state" baseline) so that the next sync-status check
+ * can distinguish a safe overwrite from a real concurrent-edit conflict.
+ */
+const confirmRecordsSyncedWithRemote = async ({
+  survey,
+  cycle,
+  recordUuids,
+}: any) => {
+  const { id: surveyId } = survey;
+
+  let recordsSummariesRemote: any[] = [];
+  try {
+    recordsSummariesRemote = await fetchRecordsSummariesRemoteServer({
+      surveyRemoteId: survey.remoteId,
+      cycle,
+    });
+  } catch (error) {
+    throw new Error(
+      `error fetching remote records summaries after upload. Details: ${error}`,
+    );
+  }
+
+  const dateModifiedRemoteByUuid: Record<string, string> = {};
+  for (const uuid of recordUuids) {
+    const recordSummaryRemote = ArrayUtils.findByUuid(uuid)(
+      recordsSummariesRemote,
+    );
+    if (recordSummaryRemote?.dateModified) {
+      dateModifiedRemoteByUuid[uuid] = recordSummaryRemote.dateModified;
+    }
+  }
+
+  await updateRecordsDateSync({ surveyId, recordUuids });
+
+  if (Object.keys(dateModifiedRemoteByUuid).length > 0) {
+    await updateRecordsDateModifiedRemote({
+      surveyId,
+      dateModifiedRemoteByUuid,
+    });
+  }
+};
+
 const findRecordSummariesByKeys = async ({
   survey,
   cycle,
@@ -397,6 +475,7 @@ export const RecordService = {
   updateRecord,
   updateRecordWithContentFetchedRemotely,
   updateRecordsDateSync,
+  confirmRecordsSyncedWithRemote,
   updateRecordsMergedInto,
   deleteRecords,
   fixRecordCycle,

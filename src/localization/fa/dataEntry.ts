@@ -121,6 +121,7 @@ export default {
     new: "جدید (هنوز آپلود نشده)",
     notModified: "تغییر نکرده (هیچ تغییری برای آپلود وجود ندارد)",
     modifiedLocally: "در دستگاه تغییر کرده است",
+    modifiedLocallyAndRemotely: "در دستگاه و در سرور تغییر کرده است (تعارض)",
     modifiedRemotely: "در سرور تغییر کرده است",
     notInEntryStepAnymore:
       "دیگر در مرحله ورود نیست (در مرحله پاکسازی یا تجزیه و تحلیل است)",

@@ -125,6 +125,8 @@ Möchten Sie sie erneut vom Server abrufen?`,
     new: "Neu (noch nicht hochgeladen)",
     notModified: "Nicht geändert (keine Änderungen zum Hochladen)",
     modifiedLocally: "Lokal geändert",
+    modifiedLocallyAndRemotely:
+      "Lokal und auf dem Remote-Server geändert (Konflikt)",
     modifiedRemotely: "Auf dem Remote-Server geändert",
     notInEntryStepAnymore:
       "Nicht mehr im Eingabeschritt (im Bereinigungs- oder Analyseschritt)",

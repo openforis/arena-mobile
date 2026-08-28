@@ -286,9 +286,15 @@ export const RecordsList = () => {
       const conflictingRecordsCount = conflictingRecords.length;
 
       // records also modified on the server since this device last synced them: currently blocked from
-      // export entirely unless the user opts into merging them with the server's changes
-      const sameRecordConflicts = getRecordsByStatus(
-        RecordSyncStatus.modifiedRemotely,
+      // export entirely unless the user opts into merging them with the server's changes.
+      // modifiedLocallyAndRemotely means both sides actually diverged since the last known baseline
+      // (a real risk of the merge silently dropping one side's edit); modifiedRemotely is kept here too
+      // since, before a baseline is captured for a record, it's the only signal we have that the server moved.
+      const sameRecordConflicts = records.filter((r: any) =>
+        [
+          RecordSyncStatus.modifiedRemotely,
+          RecordSyncStatus.modifiedLocallyAndRemotely,
+        ].includes(r.syncStatus),
       );
       const sameRecordConflictsCount = sameRecordConflicts.length;
 

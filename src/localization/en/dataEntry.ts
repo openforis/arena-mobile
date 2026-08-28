@@ -176,6 +176,8 @@ Fetch the list of records from the server and try again?`,
     new: "New (not uploaded yet)",
     notModified: "Not modified (no changes to upload)",
     modifiedLocally: "Modified locally",
+    modifiedLocallyAndRemotely:
+      "Modified both locally and in remote server (conflict)",
     modifiedRemotely: "Modified in remote server",
     notInEntryStepAnymore:
       "Not in entry step anymore (in cleansing or analysis step)",
