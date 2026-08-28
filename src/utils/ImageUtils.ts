@@ -6,6 +6,12 @@ import { ExifUtils } from "./ExifUtils";
 
 const compress = 0.95; // default compression ratio for resized images
 
+// which side of the resize scale bisection bracket was last narrowed
+enum ScaleBracketSide {
+  lo = "lo",
+  hi = "hi",
+}
+
 export type ImageScaleResult = {
   uri: string;
   height: number;
@@ -71,9 +77,36 @@ const _resizeToFitMaxSize = async ({
   let bestScaleSizeRatio;
   let bestScaleResizeResult;
 
-  const calculateNextScale = () =>
-    // max scale always 1 (cannot scale up)
-    Math.min(1, scale * (sizeRatio > 1 ? 0.75 : 1.25));
+  // Bisection bracket on the resize scale: `loScale` is the largest scale
+  // known to produce an acceptable-or-smaller file, `hiScale` is the
+  // smallest scale known to still be oversized. File size is monotonically
+  // increasing in scale, so bisecting this bracket is guaranteed to
+  // converge no matter how the actual size-vs-scale curve looks (unlike a
+  // pure size ~ scale^2 model guess, which can stall approaching the
+  // target from one side when real compression doesn't follow that curve).
+  let loScale = 0;
+  let hiScale = 1;
+
+  // If the same side of the bracket keeps narrowing two attempts in a row,
+  // the model guess is repeatedly under/over-correcting from the same
+  // direction instead of bracketing the target - the classic stall case for
+  // this kind of guess-based bisection. When that happens, force a plain
+  // bisection step, which is guaranteed to make steady progress regardless.
+  let lastNarrowedSide: ScaleBracketSide | null = null;
+  let sameSideStreak = 0;
+
+  const calculateNextScale = () => {
+    // size ~ scale^2 model guess, same approximation used for the initial
+    // guess; used as long as it stays inside the known-safe bracket and
+    // isn't stalling, so the common case (compression roughly follows the
+    // model) still converges in very few attempts.
+    const modelScale = scale / Math.sqrt(sizeRatio);
+    const withinBracket = modelScale > loScale && modelScale < hiScale;
+    if (withinBracket && sameSideStreak < 1) {
+      return modelScale;
+    }
+    return (loScale + hiScale) / 2;
+  };
 
   const stack = [initialScale];
 
@@ -98,6 +131,16 @@ const _resizeToFitMaxSize = async ({
       ) {
         return lastResizeResult;
       }
+      const narrowedSide =
+        sizeRatio > 1 ? ScaleBracketSide.hi : ScaleBracketSide.lo;
+      sameSideStreak =
+        narrowedSide === lastNarrowedSide ? sameSideStreak + 1 : 0;
+      lastNarrowedSide = narrowedSide;
+      if (narrowedSide === ScaleBracketSide.hi) {
+        hiScale = scale;
+      } else {
+        loScale = scale;
+      }
       if (
         sizeRatio <= 1 &&
         (!bestScaleSizeRatio || sizeRatio > bestScaleSizeRatio)
@@ -105,8 +148,9 @@ const _resizeToFitMaxSize = async ({
         bestScaleSizeRatio = sizeRatio;
         bestScaleResizeResult = lastResizeResult;
       } else {
-        // delete temporary resized image file
-        await Files.del(lastResizeResult.uri);
+        // delete temporary resized image file; no need to wait for it
+        // before starting the next resize attempt
+        Files.del(lastResizeResult.uri).catch(() => {});
       }
       if (
         tryings < maxTryings ||
