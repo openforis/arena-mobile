@@ -404,17 +404,21 @@ const showMergedRecordsMessage = async ({
 
 // re-downloads the given records (their content on the server is now the merged version,
 // whether merged with newer edits on the same uuid or merged into a pre-existing uuid with the
-// same key(s)) so the local copy reflects it, then lets the user know which records were merged
-const fetchMergedRecordsAndNotify = ({
+// same key(s)) so the local copy reflects it, then lets the user know which records were merged.
+// Awaited by the caller so the fetch (nodes + files) has actually finished, and the local copy is
+// marked as fully downloaded, before anything reloads the records list.
+const fetchMergedRecordsAndNotify = async ({
   dispatch,
   survey,
   lang,
   cycle,
   recordUuids,
+  mergeKeepLocalOriginRecordUuids,
 }: any) => {
-  dispatch(
+  await dispatch(
     fetchRecordsFromServer({
       recordUuids,
+      mergeKeepLocalOriginRecordUuids,
       onImportComplete: () =>
         showMergedRecordsMessage({ dispatch, survey, lang, cycle, recordUuids }),
     }),
@@ -460,7 +464,7 @@ export const exportRecords =
           const mergedIntoRecordUuids = [
             ...new Set(Object.values(mergedRecordsMap) as string[]),
           ];
-          fetchMergedRecordsAndNotify({
+          await fetchMergedRecordsAndNotify({
             dispatch,
             survey,
             lang,
@@ -470,13 +474,16 @@ export const exportRecords =
         }
         if (mergedSameRecordUuids?.length > 0) {
           // the server combined this device's edits with newer edits already on the server: refresh the
-          // local copy so it reflects the merged content, not this device's pre-merge version
-          fetchMergedRecordsAndNotify({
+          // local copy so it reflects the merged content, not this device's pre-merge version. The record
+          // uuid didn't change, so keep it tagged as "local" (still shows up under "records in device")
+          // instead of flipping it to "remote" like a regular fetch of someone else's record would.
+          await fetchMergedRecordsAndNotify({
             dispatch,
             survey,
             lang,
             cycle,
             recordUuids: mergedSameRecordUuids,
+            mergeKeepLocalOriginRecordUuids: mergedSameRecordUuids,
           });
         }
         await onJobCompleteParam?.(jobComplete);

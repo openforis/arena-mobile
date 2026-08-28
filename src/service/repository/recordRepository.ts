@@ -453,6 +453,26 @@ const updateRecordWithContentFetchedRemotely = async ({
     origin: RecordOrigin.remote,
   });
 
+// used after a merge combined this device's edits with newer edits under the same record uuid
+// on the server: the fetched content now mirrors the server, but it still carries this device's
+// own contribution, so origin is kept as "local" (the record stays visible under "records in
+// device") and the sync baseline is stamped so the next status check doesn't see it as modified
+const updateRecordWithContentMergedFromRemote = async ({
+  survey,
+  record,
+}: any) => {
+  await updateRecordKeysAndContent({
+    survey,
+    record,
+    updateOrigin: true,
+    origin: RecordOrigin.local,
+  });
+  await updateRecordsDateModifiedRemote({
+    surveyId: survey.id,
+    dateModifiedRemoteByUuid: { [record.uuid]: record.dateModified },
+  });
+};
+
 const updateRecordsDateSync = async ({ surveyId, recordUuids }: any) => {
   const sql = `UPDATE record
   SET date_synced = ?
@@ -644,6 +664,7 @@ export const RecordRepository = {
   insertRecordSummaries,
   updateRecord,
   updateRecordWithContentFetchedRemotely,
+  updateRecordWithContentMergedFromRemote,
   updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely,
   updateRecordsDateSync,
   updateRecordsDateModifiedRemote,
