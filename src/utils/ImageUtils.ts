@@ -37,6 +37,57 @@ const _scaleImage = async ({
   return { uri, height, width, size };
 };
 
+type BisectionBracket = {
+  loScale: number;
+  hiScale: number;
+  lastNarrowedSide: ScaleBracketSide | null;
+  sameSideStreak: number;
+};
+
+// Narrows the bisection bracket after an out-of-range attempt and tracks
+// whether the same side keeps narrowing two attempts in a row - the classic
+// stall case for guess-based bisection (see comment on calculateNextScale).
+const _narrowBracket = (
+  bracket: BisectionBracket,
+  scale: number,
+  sizeRatio: number,
+): void => {
+  const narrowedSide =
+    sizeRatio > 1 ? ScaleBracketSide.hi : ScaleBracketSide.lo;
+  bracket.sameSideStreak =
+    narrowedSide === bracket.lastNarrowedSide ? bracket.sameSideStreak + 1 : 0;
+  bracket.lastNarrowedSide = narrowedSide;
+  if (narrowedSide === ScaleBracketSide.hi) {
+    bracket.hiScale = scale;
+  } else {
+    bracket.loScale = scale;
+  }
+};
+
+type BestResult = {
+  sizeRatio?: number;
+  result?: ImageScaleResult;
+};
+
+// Keeps the best (largest not-oversized) resize result seen so far; the
+// temporary file of any attempt that isn't kept is deleted.
+const _trackBestResult = (
+  best: BestResult,
+  sizeRatio: number,
+  result: ImageScaleResult,
+): void => {
+  const isNewBest =
+    sizeRatio <= 1 && (!best.sizeRatio || sizeRatio > best.sizeRatio);
+  if (isNewBest) {
+    best.sizeRatio = sizeRatio;
+    best.result = result;
+  } else {
+    // delete temporary resized image file; no need to wait for it
+    // before starting the next resize attempt
+    Files.del(result.uri).catch(() => {});
+  }
+};
+
 const _resizeToFitMaxSize = async ({
   fileUri: sourceFileUri,
   width: sourceWidth,
@@ -74,8 +125,6 @@ const _resizeToFitMaxSize = async ({
 
   const initialScale = 1 / Math.sqrt(sizeRatio);
   let scale: any;
-  let bestScaleSizeRatio;
-  let bestScaleResizeResult;
 
   // Bisection bracket on the resize scale: `loScale` is the largest scale
   // known to produce an acceptable-or-smaller file, `hiScale` is the
@@ -84,16 +133,14 @@ const _resizeToFitMaxSize = async ({
   // converge no matter how the actual size-vs-scale curve looks (unlike a
   // pure size ~ scale^2 model guess, which can stall approaching the
   // target from one side when real compression doesn't follow that curve).
-  let loScale = 0;
-  let hiScale = 1;
+  const bracket: BisectionBracket = {
+    loScale: 0,
+    hiScale: 1,
+    lastNarrowedSide: null,
+    sameSideStreak: 0,
+  };
 
-  // If the same side of the bracket keeps narrowing two attempts in a row,
-  // the model guess is repeatedly under/over-correcting from the same
-  // direction instead of bracketing the target - the classic stall case for
-  // this kind of guess-based bisection. When that happens, force a plain
-  // bisection step, which is guaranteed to make steady progress regardless.
-  let lastNarrowedSide: ScaleBracketSide | null = null;
-  let sameSideStreak = 0;
+  const best: BestResult = {};
 
   const calculateNextScale = () => {
     // size ~ scale^2 model guess, same approximation used for the initial
@@ -101,11 +148,12 @@ const _resizeToFitMaxSize = async ({
     // isn't stalling, so the common case (compression roughly follows the
     // model) still converges in very few attempts.
     const modelScale = scale / Math.sqrt(sizeRatio);
-    const withinBracket = modelScale > loScale && modelScale < hiScale;
-    if (withinBracket && sameSideStreak < 1) {
+    const withinBracket =
+      modelScale > bracket.loScale && modelScale < bracket.hiScale;
+    if (withinBracket && bracket.sameSideStreak < 1) {
       return modelScale;
     }
-    return (loScale + hiScale) / 2;
+    return (bracket.loScale + bracket.hiScale) / 2;
   };
 
   const stack = [initialScale];
@@ -124,42 +172,20 @@ const _resizeToFitMaxSize = async ({
 
       sizeRatio = calculateSizeRatio();
 
-      if (
-        isSizeAcceptable() ||
-        (currentMaxWidth === sourceWidth &&
-          sizeRatio <= maxSuccessfullSizeRatio)
-      ) {
+      const fitsSourceWidthExactly =
+        currentMaxWidth === sourceWidth &&
+        sizeRatio <= maxSuccessfullSizeRatio;
+      if (isSizeAcceptable() || fitsSourceWidthExactly) {
         return lastResizeResult;
       }
-      const narrowedSide =
-        sizeRatio > 1 ? ScaleBracketSide.hi : ScaleBracketSide.lo;
-      sameSideStreak =
-        narrowedSide === lastNarrowedSide ? sameSideStreak + 1 : 0;
-      lastNarrowedSide = narrowedSide;
-      if (narrowedSide === ScaleBracketSide.hi) {
-        hiScale = scale;
-      } else {
-        loScale = scale;
-      }
-      if (
-        sizeRatio <= 1 &&
-        (!bestScaleSizeRatio || sizeRatio > bestScaleSizeRatio)
-      ) {
-        bestScaleSizeRatio = sizeRatio;
-        bestScaleResizeResult = lastResizeResult;
-      } else {
-        // delete temporary resized image file; no need to wait for it
-        // before starting the next resize attempt
-        Files.del(lastResizeResult.uri).catch(() => {});
-      }
-      if (
-        tryings < maxTryings ||
-        // always try to resize to fit max size
-        sizeRatio > 1
-      ) {
+
+      _narrowBracket(bracket, scale, sizeRatio);
+      _trackBestResult(best, sizeRatio, lastResizeResult);
+
+      // always try to resize to fit max size, even past maxTryings
+      const shouldTryAgain = tryings < maxTryings || sizeRatio > 1;
+      if (shouldTryAgain) {
         stack.push(calculateNextScale());
-      } else {
-        // stop if max tryings reached and current size is less than maxSize
       }
     } catch (error) {
       // Oops, something went wrong. Check that the filename is correct and
@@ -168,7 +194,7 @@ const _resizeToFitMaxSize = async ({
     }
     tryings += 1;
   }
-  return bestScaleResizeResult ?? lastResizeResult;
+  return best.result ?? lastResizeResult;
 };
 
 const resizeToFitMaxSize = async ({
