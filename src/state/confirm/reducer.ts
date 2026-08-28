@@ -49,6 +49,7 @@ const confirmShowDefaultParams: Partial<ConfirmShowParams> = {
 
 export type ConfirmState = Partial<ConfirmShowParams> & {
   isOpen: boolean;
+  showId?: number;
 };
 
 const initialState: ConfirmState = {
@@ -56,12 +57,16 @@ const initialState: ConfirmState = {
 };
 
 // confirm and cancel as async thunk to allow calling "dispatch" inside onConfirm and onCancel
+// each returns the showId of the dialog it was resolving, so a delayed fulfilled action (arriving
+// after a new dialog has already been shown, e.g. a confirm() chained right after another) doesn't
+// clobber that newer dialog's state
 const confirm = createAsyncThunk(
   "confirm/show",
   async (params: OnConfirmParams, { getState }) => {
     const state: any = getState();
-    const { onConfirm } = state.confirm;
+    const { onConfirm, showId } = state.confirm;
     await onConfirm?.(params);
+    return showId;
   },
 );
 
@@ -69,8 +74,9 @@ const cancel = createAsyncThunk(
   "confirm/cancel",
   async (_params, { getState }) => {
     const state: any = getState();
-    const { onCancel } = state.confirm;
+    const { onCancel, showId } = state.confirm;
     await onCancel?.();
+    return showId;
   },
 );
 
@@ -78,16 +84,20 @@ const confirmSlice = createSlice({
   name: "confirm",
   initialState,
   reducers: {
-    show: (_state, action) => {
+    show: (state, action) => {
       Keyboard.dismiss();
-      return { ...action.payload, isOpen: true };
+      return { ...action.payload, isOpen: true, showId: (state.showId ?? 0) + 1 };
     },
-    dismiss: () => initialState,
+    dismiss: (state) => ({ ...initialState, showId: state.showId }),
   },
   extraReducers: (builder) => {
     builder
-      .addCase(confirm.fulfilled, () => initialState)
-      .addCase(cancel.fulfilled, () => initialState);
+      .addCase(confirm.fulfilled, (state, action) =>
+        state.showId === action.payload ? initialState : state,
+      )
+      .addCase(cancel.fulfilled, (state, action) =>
+        state.showId === action.payload ? initialState : state,
+      );
   },
 });
 

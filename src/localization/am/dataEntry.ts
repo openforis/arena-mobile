@@ -99,6 +99,7 @@ export default {
     new: "አዲስ",
     updated: "የዘመነ",
     conflicting: "የሚጋጭ",
+    conflictingModifiedRemotely: "በመሣሪያውና በአገልጋዩ ላይ ተስተካክሏል",
     withValidationErrors: "ከማረጋገጫ ስህተቶች ጋር",
   },
   sendData: "ውሂብ ላክ",
@@ -111,6 +112,7 @@ export default {
     new: "አዲስ (ገና አልተሰቀለም)",
     notModified: "ያልተሻሻለ (የሚሰቀል ምንም ለውጥ የለም)",
     modifiedLocally: "በአካባቢው የተሻሻለ",
+    modifiedLocallyAndRemotely: "በአካባቢው እና በሩቅ አገልጋይ ላይ የተሻሻለ (ግጭት)",
     modifiedRemotely: "በሩቅ አገልጋይ የተሻሻለ",
     notInEntryStepAnymore: "ከእንግዲህ በማስገቢያ ደረጃ የለም (በማጽዳት ወይም ትንተና ደረጃ)",
   },
@@ -243,9 +245,21 @@ export default {
       "ውሂብ በተሳካ ሁኔታ ወደ ውጭ ተልኳል ግን {{missingFiles}} ፋይሎች/ምስሎች ጠፍተዋል ወይም ተሰብረዋል። እባክዎ መዝገቦችዎን እና በአገልጋዩ ላይ ያሉትን መዝገቦች ያረጋግጡ።",
     exportingData: "ውሂብ በማልክ ላይ...",
     exportToCsv: "ወደ CSV ላክ",
-    mergeConflictingRecords: "የሚጋጩ መዝገቦችን አዋህድ (ተመሳሳይ ቁልፎች)",
+    mergeConflictingRecords: "የሚጋጩ መዝገቦችን አዋህድ",
+    mergeSameRecordConflictConfirm: {
+      title: "በሁለቱም መሣሪያዎች ላይ የተስተካከሉ መዝገቦችን አዋህድ",
+      message: `{{count}} መዝገብ(ዎች) ይህ መሣሪያ ለመጨረሻ ጊዜ ካመሳሰለ በኋላ በአገልጋዩ ላይም ተስተካክለዋል።
+
+ማዋሃድ ለውጦችዎን ከአገልጋዩ ለውጦች ጋር ያዋህዳል፦ ለእያንዳንዱ መስክ፣ በመጨረሻ የተስተካከለው ዋጋ ይቀመጣል፣ እና በማንኛውም መሣሪያ ላይ የተጨመሩ አዲስ ክፍሎች ይቀመጣሉ።
+
+ይህ አስቀድሞ ሊታይ አይችልም። ለማረጋገጥ እና ለመቀጠል ይጥረጉ።`,
+    },
     noRecordsInDeviceToExport: "በመሣሪያው ውስጥ የሚላክ መዝገብ የለም",
     onlyNewOrUpdatedRecords: "አዲስ ወይም የተሻሻሉ መዝገቦችን ብቻ ላክ",
+    recordsMergedMessage: `የሚከተሉት መዝገቦች በአገልጋዩ ላይ ቀድሞውኑ ካለው አዲሱ ስሪት ጋር ተዋህደዋል፦
+{{recordsList}}
+
+የእነዚያ መዝገቦች የተዋሃደ ስሪት በራስ-ሰር ተገኝቷል።`,
     onlyRecordsInRemoteServerCanBeImported:
       "በሩቅ አገልጋይ ውስጥ ያሉ ወይም በርቀት የተሻሻሉ መዝገቦች ብቻ ማስገባት ይቻላል",
     option: {

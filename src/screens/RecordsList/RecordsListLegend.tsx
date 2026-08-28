@@ -29,6 +29,7 @@ const visibleSyncStatus = [
   RecordSyncStatus.notModified,
   RecordSyncStatus.keysNotSpecified,
   RecordSyncStatus.modifiedRemotely,
+  RecordSyncStatus.modifiedLocallyAndRemotely,
   RecordSyncStatus.notInEntryStepAnymore,
 ];
 

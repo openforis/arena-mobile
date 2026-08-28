@@ -110,6 +110,7 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
     new: "baru",
     updated: "diperbarui",
     conflicting: "bertentangan",
+    conflictingModifiedRemotely: "diubah di perangkat dan di server",
     withValidationErrors: "dengan kesalahan validasi",
   },
   sendData: "Kirim data",
@@ -122,6 +123,8 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
     new: "Baru (belum diunggah)",
     notModified: "Tidak dimodifikasi (tidak ada perubahan untuk diunggah)",
     modifiedLocally: "Dimodifikasi secara lokal",
+    modifiedLocallyAndRemotely:
+      "Dimodifikasi secara lokal dan di server jarak jauh (konflik)",
     modifiedRemotely: "Dimodifikasi di server jarak jauh",
     notInEntryStepAnymore:
       "Tidak lagi dalam tahap entri (dalam tahap pembersihan atau analisis)",
@@ -260,11 +263,22 @@ Periksa pengaturan atau minta administrator survei untuk mengubah batas ini.`,
       "Data berhasil diekspor tetapi {{missingFiles}} file/gambar hilang atau rusak. Silakan periksa catatan Anda dan juga catatan di server.",
     exportingData: "Mengekspor data...",
     exportToCsv: "Ekspor ke CSV",
-    mergeConflictingRecords:
-      "Gabungkan data isian yang berkonflik (kunci yang sama)",
+    mergeConflictingRecords: "Gabungkan data isian yang berkonflik",
+    mergeSameRecordConflictConfirm: {
+      title: "Gabungkan data isian yang diedit di kedua perangkat",
+      message: `{{count}} data isian juga telah diperbarui di server sejak perangkat ini terakhir menyinkronkannya.
+
+Menggabungkan akan menyatukan perubahan Anda dengan perubahan di server: untuk setiap kolom, nilai yang paling terakhir diedit akan disimpan, dan setiap bagian baru yang ditambahkan di salah satu perangkat akan disimpan.
+
+Ini tidak dapat dilihat pratinjaunya terlebih dahulu. Geser untuk mengonfirmasi dan melanjutkan.`,
+    },
     noRecordsInDeviceToExport: "Tidak ada data di perangkat untuk diekspor",
     onlyNewOrUpdatedRecords:
       "Ekspor hanya data isian baru atau yang diperbarui",
+    recordsMergedMessage: `Data isian berikut telah digabungkan dengan versi yang lebih baru yang sudah ada di server:
+{{recordsList}}
+
+Versi gabungan dari data isian tersebut telah diambil secara otomatis.`,
     onlyRecordsInRemoteServerCanBeImported:
       "Hanya data isian yang sudah ada di server atau data isian yang telah diperbarui di server yang dapat diimpor",
     option: {

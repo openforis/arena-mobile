@@ -22,6 +22,7 @@ const colorBySyncStatus = {
   [RecordSyncStatus.conflictingKeys]: colors.red,
   [RecordSyncStatus.new]: colors.darkgrey,
   [RecordSyncStatus.modifiedLocally]: colors.yellow,
+  [RecordSyncStatus.modifiedLocallyAndRemotely]: colors.red,
   [RecordSyncStatus.modifiedRemotely]: colors.red,
   [RecordSyncStatus.notInEntryStepAnymore]: colors.red,
   [RecordSyncStatus.notModified]: colors.green,

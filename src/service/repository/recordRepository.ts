@@ -446,14 +446,61 @@ const updateRecordWithContentFetchedRemotely = async ({
   survey,
   record,
 }: any) =>
-  updateRecordKeysAndContent({ survey, record, origin: RecordOrigin.remote });
+  updateRecordKeysAndContent({
+    survey,
+    record,
+    updateOrigin: true,
+    origin: RecordOrigin.remote,
+  });
+
+// used after a merge combined this device's edits with newer edits under the same record uuid
+// on the server: the fetched content now mirrors the server, but it still carries this device's
+// own contribution, so origin is kept as "local" (the record stays visible under "records in
+// device") and the sync baseline is stamped so the next status check doesn't see it as modified
+const updateRecordWithContentMergedFromRemote = async ({
+  survey,
+  record,
+}: any) => {
+  await updateRecordKeysAndContent({
+    survey,
+    record,
+    updateOrigin: true,
+    origin: RecordOrigin.local,
+  });
+  await updateRecordsDateModifiedRemote({
+    surveyId: survey.id,
+    dateModifiedRemoteByUuid: { [record.uuid]: record.dateModified },
+  });
+};
 
 const updateRecordsDateSync = async ({ surveyId, recordUuids }: any) => {
-  const sql = `UPDATE record 
+  const sql = `UPDATE record
   SET date_synced = ?
-  WHERE survey_id = ? 
+  WHERE survey_id = ?
     AND uuid IN (${DbUtils.quoteValues(recordUuids)})`;
   return dbClient.runSql(sql, [Dates.nowFormattedForStorage(), surveyId]);
+};
+
+/**
+ * Persists, for each given record uuid, the server's dateModified as last observed
+ * by this device right after a successful upload. This is the baseline later used
+ * to tell apart "safe to overwrite" (nothing changed on the server since) from a
+ * true concurrent-edit conflict (server and device diverged from the same baseline).
+ */
+const updateRecordsDateModifiedRemote = async ({
+  surveyId,
+  dateModifiedRemoteByUuid,
+}: any) => {
+  await dbClient.transaction(async () => {
+    for (const [uuid, dateModifiedRemote] of Object.entries(
+      dateModifiedRemoteByUuid,
+    )) {
+      await dbClient.runSql(
+        `UPDATE record SET date_modified_remote = ? WHERE survey_id = ? AND uuid = ?`,
+        [fixDatetime(dateModifiedRemote), surveyId, uuid],
+      );
+    }
+  });
 };
 
 const updateRecordsMergedInto = async ({ surveyId, mergedRecordsMap }: any) => {
@@ -617,8 +664,10 @@ export const RecordRepository = {
   insertRecordSummaries,
   updateRecord,
   updateRecordWithContentFetchedRemotely,
+  updateRecordWithContentMergedFromRemote,
   updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely,
   updateRecordsDateSync,
+  updateRecordsDateModifiedRemote,
   updateRecordsMergedInto,
   fixRecordCycle,
   deleteRecords,

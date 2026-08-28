@@ -63,9 +63,21 @@ Do you want to fetch it again from the server?`,
 Please check your records and check also records on the server`,
     exportingData: "Exporting data...",
     exportToCsv: "Export to CSV",
-    mergeConflictingRecords: "Merge conflicting records (same keys)",
+    mergeConflictingRecords: "Merge conflicting records",
+    mergeSameRecordConflictConfirm: {
+      title: "Merge records edited on both devices",
+      message: `{{count}} record(s) were also modified on the server since this device last synced them.
+
+Merging will combine your changes with the server's changes: for each field, the most recently edited value will be kept, and any new sections added on either device will be kept.
+
+This cannot be previewed beforehand. Swipe to confirm and continue.`,
+    },
     noRecordsInDeviceToExport: "No records in the device to export",
     onlyNewOrUpdatedRecords: "Export only new or updated records",
+    recordsMergedMessage: `The following records have been merged with the newer version already on the server:
+{{recordsList}}
+
+The merged version of those records has been fetched automatically.`,
     onlyRecordsInRemoteServerCanBeImported:
       "Only records already in remote server or records that have been updated remotely can be imported",
     option: {
@@ -151,6 +163,7 @@ Fetch the list of records from the server and try again?`,
     new: "new",
     updated: "updated",
     conflicting: "conflicting",
+    conflictingModifiedRemotely: "modified on both device and server",
     withValidationErrors: "with validation errors",
   },
   sendData: "Send data",
@@ -163,6 +176,8 @@ Fetch the list of records from the server and try again?`,
     new: "New (not uploaded yet)",
     notModified: "Not modified (no changes to upload)",
     modifiedLocally: "Modified locally",
+    modifiedLocallyAndRemotely:
+      "Modified both locally and in remote server (conflict)",
     modifiedRemotely: "Modified in remote server",
     notInEntryStepAnymore:
       "Not in entry step anymore (in cleansing or analysis step)",
