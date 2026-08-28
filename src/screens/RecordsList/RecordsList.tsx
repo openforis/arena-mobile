@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import * as DocumentPicker from "expo-document-picker";
 
-import { Dates, Objects, Surveys } from "@openforis/arena-core";
+import { Objects, Surveys } from "@openforis/arena-core";
 
 import {
   Button,
@@ -267,6 +267,7 @@ export const RecordsList = () => {
       newRecords?: any[];
       updatedRecords?: any[];
       conflictingRecords?: any[];
+      sameRecordConflicts?: any[];
       confirmResult: OnConfirmParams | boolean | null;
     }> => {
       const getRecordsByStatus = (status: any) =>
@@ -284,15 +285,33 @@ export const RecordsList = () => {
       );
       const conflictingRecordsCount = conflictingRecords.length;
 
+      // records also modified on the server since this device last synced them: currently blocked from
+      // export entirely unless the user opts into merging them with the server's changes.
+      // modifiedLocallyAndRemotely means both sides actually diverged since the last known baseline
+      // (a real risk of the merge silently dropping one side's edit); modifiedRemotely is kept here too
+      // since, before a baseline is captured for a record, it's the only signal we have that the server moved.
+      const sameRecordConflicts = records.filter((r: any) =>
+        [
+          RecordSyncStatus.modifiedRemotely,
+          RecordSyncStatus.modifiedLocallyAndRemotely,
+        ].includes(r.syncStatus),
+      );
+      const sameRecordConflictsCount = sameRecordConflicts.length;
+
       if (
-        newRecordsCount + updatedRecordsCount + conflictingRecordsCount ===
+        newRecordsCount +
+          updatedRecordsCount +
+          conflictingRecordsCount +
+          sameRecordConflictsCount ===
         0
       ) {
         toaster(noRecordsToExportTextKey);
         return { confirmResult: false };
       }
       const confirmSingleChoiceOptions =
-        conflictingRecordsCount > 0 ? conflictingRecordsExportOptions : [];
+        conflictingRecordsCount + sameRecordConflictsCount > 0
+          ? conflictingRecordsExportOptions
+          : [];
 
       const recordsWithErrorsCount = records.filter(
         (r: any) => r.errors > 0,
@@ -302,6 +321,7 @@ export const RecordsList = () => {
         new: newRecordsCount,
         updated: updatedRecordsCount,
         conflicting: conflictingRecordsCount,
+        conflictingModifiedRemotely: sameRecordConflictsCount,
         withValidationErrors: recordsWithErrorsCount,
       };
       const recordsCountSummaryText = generateRecordsCountSummaryText({
@@ -316,25 +336,36 @@ export const RecordsList = () => {
         singleChoiceOptions: confirmSingleChoiceOptions,
         defaultSingleChoiceValue: confirmSingleChoiceOptions[0]?.value,
       });
-      return { newRecords, updatedRecords, conflictingRecords, confirmResult };
+      return {
+        newRecords,
+        updatedRecords,
+        conflictingRecords,
+        sameRecordConflicts,
+        confirmResult,
+      };
     },
     [confirm, t, toaster],
   );
 
   const exportSelectedRecords = useCallback(
     async ({ selectedRecords, onlyRemote = false }: any) => {
-      const { newRecords, updatedRecords, conflictingRecords, confirmResult } =
-        await confirmExportRecords({ records: selectedRecords });
+      const {
+        newRecords,
+        updatedRecords,
+        conflictingRecords,
+        sameRecordConflicts,
+        confirmResult,
+      } = await confirmExportRecords({ records: selectedRecords });
       if (confirmResult) {
         const recordsToExport = [...newRecords!, ...updatedRecords!];
 
         let conflictResolutionStrategy =
           ConflictResolutionStrategy.overwriteIfUpdated;
-        if (
+        const mergeSelected =
           (confirmResult as OnConfirmParams).selectedSingleChoiceValue ===
-          ConflictResolutionStrategy.merge
-        ) {
-          recordsToExport.push(...conflictingRecords!);
+          ConflictResolutionStrategy.merge;
+        if (mergeSelected) {
+          recordsToExport.push(...conflictingRecords!, ...sameRecordConflicts!);
           conflictResolutionStrategy = ConflictResolutionStrategy.merge;
         }
         const recordUuids = recordsToExport.map((r) => r.uuid);
@@ -342,6 +373,22 @@ export const RecordsList = () => {
           toaster(noRecordsToExportTextKey);
           return;
         }
+
+        // merging records edited on both this device and the server can silently pick one side's edit
+        // over the other's per field, so ask for an extra explicit confirmation before proceeding
+        if (mergeSelected && sameRecordConflicts!.length > 0) {
+          const strongConfirmResult = await confirm({
+            titleKey: "dataEntry:dataExport.mergeSameRecordConflictConfirm.title",
+            messageKey:
+              "dataEntry:dataExport.mergeSameRecordConflictConfirm.message",
+            messageParams: { count: sameRecordConflicts!.length },
+            swipeToConfirm: true,
+          });
+          if (!strongConfirmResult) {
+            return;
+          }
+        }
+
         setState((statePrev) => ({ ...statePrev, loading: true }));
 
         const onJobComplete = async (jobCompleted: any) => {
@@ -370,7 +417,14 @@ export const RecordsList = () => {
         );
       }
     },
-    [confirmExportRecords, cycle, dispatch, loadRecordsWithSyncStatus, toaster],
+    [
+      confirm,
+      confirmExportRecords,
+      cycle,
+      dispatch,
+      loadRecordsWithSyncStatus,
+      toaster,
+    ],
   );
 
   const onExportNewOrUpdatedRecordsPress = useCallback(async () => {
@@ -434,12 +488,10 @@ export const RecordsList = () => {
         (record: any) => record.origin === RecordOrigin.local,
       );
       if (
-        selectedLocalRecords.some((record: any) => {
-          const { dateModified, dateModifiedRemote, dateSynced } = record;
-          return (
-            !dateSynced || !Dates.isAfter(dateModifiedRemote, dateModified)
-          );
-        })
+        selectedLocalRecords.some(
+          (record: any) =>
+            record.syncStatus !== RecordSyncStatus.modifiedRemotely,
+        )
       ) {
         toaster("dataEntry:dataExport.onlyRecordsInRemoteServerCanBeImported");
         return false;

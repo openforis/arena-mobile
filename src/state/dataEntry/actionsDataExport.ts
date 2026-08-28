@@ -12,7 +12,7 @@ import { RecordService, UserService } from "service";
 import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerationJob";
 
 import { i18n } from "localization";
-import { JobCancelError, ValidationUtils } from "model";
+import { JobCancelError, RecordUtils, ValidationUtils } from "model";
 import {
   FlatDataExportJob,
   FlatDataExportJobResult,
@@ -22,6 +22,7 @@ import { RemoteConnectionSelectors } from "state/remoteConnection";
 import { RootState } from "state/store";
 import { Files, Jobs, log } from "utils";
 
+import { fetchRecordsFromServer } from "./actionsRecordsImport";
 import { ConfirmActions, ConfirmUtils, OnConfirmParams } from "../confirm";
 import { JobMonitorActions } from "../jobMonitor";
 import { MessageActions } from "../message";
@@ -369,6 +370,61 @@ const _onExportFileGenerationSucceeded = async ({
   }
 };
 
+const showMergedRecordsMessage = async ({
+  dispatch,
+  survey,
+  lang,
+  cycle,
+  recordUuids,
+}: any) => {
+  const recordsSummary = await RecordService.fetchRecords({
+    survey,
+    cycle,
+    onlyLocal: false,
+  });
+  const recordsList = recordsSummary
+    .filter((recordSummary: any) => recordUuids.includes(recordSummary.uuid))
+    .map((recordSummary: any) => {
+      const keyValuesByName = RecordUtils.getRecordSummaryValuesByKeyFormatted(
+        { survey, lang, recordSummary, t },
+      );
+      const keysText =
+        Object.values(keyValuesByName).join(" - ") || recordSummary.uuid;
+      return `- ${keysText}`;
+    })
+    .join("\n");
+
+  dispatch(
+    MessageActions.setMessage({
+      content: "dataEntry:dataExport.recordsMergedMessage",
+      contentParams: { recordsList },
+    }),
+  );
+};
+
+// re-downloads the given records (their content on the server is now the merged version,
+// whether merged with newer edits on the same uuid or merged into a pre-existing uuid with the
+// same key(s)) so the local copy reflects it, then lets the user know which records were merged.
+// Awaited by the caller so the fetch (nodes + files) has actually finished, and the local copy is
+// marked as fully downloaded, before anything reloads the records list.
+const fetchMergedRecordsAndNotify = async ({
+  dispatch,
+  survey,
+  lang,
+  cycle,
+  recordUuids,
+  mergeKeepLocalOriginRecordUuids,
+}: any) => {
+  await dispatch(
+    fetchRecordsFromServer({
+      recordUuids,
+      mergeKeepLocalOriginRecordUuids,
+      onImportComplete: () =>
+        showMergedRecordsMessage({ dispatch, survey, lang, cycle, recordUuids }),
+    }),
+  );
+};
+
 export const exportRecords =
   ({
     cycle,
@@ -382,20 +438,52 @@ export const exportRecords =
     async (dispatch: any, getState: any) => {
       const state = getState();
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
       const surveyId = survey.id;
 
       const onJobComplete = async (jobComplete: any) => {
         const { result } = jobComplete;
-        const { mergedRecordsMap } = result;
+        const { mergedRecordsMap, mergedSameRecordUuids } = result;
 
-        await RecordService.updateRecordsDateSync({
-          surveyId,
+        await RecordService.confirmRecordsSyncedWithRemote({
+          survey,
+          cycle,
           recordUuids,
         });
         if (!Objects.isEmpty(mergedRecordsMap)) {
           await RecordService.updateRecordsMergedInto({
             surveyId,
             mergedRecordsMap,
+          });
+
+          // the local record(s) got merged into a different, already existing record on the
+          // server (same key(s), different uuid). The local rows are now excluded from the
+          // records list (merged_into_record_uuid is set), so without fetching the record they
+          // were merged into, the user's data would just seem to disappear: fetch it so it shows
+          // up in its place, then let the user know what happened.
+          const mergedIntoRecordUuids = [
+            ...new Set(Object.values(mergedRecordsMap) as string[]),
+          ];
+          await fetchMergedRecordsAndNotify({
+            dispatch,
+            survey,
+            lang,
+            cycle,
+            recordUuids: mergedIntoRecordUuids,
+          });
+        }
+        if (mergedSameRecordUuids?.length > 0) {
+          // the server combined this device's edits with newer edits already on the server: refresh the
+          // local copy so it reflects the merged content, not this device's pre-merge version. The record
+          // uuid didn't change, so keep it tagged as "local" (still shows up under "records in device")
+          // instead of flipping it to "remote" like a regular fetch of someone else's record would.
+          await fetchMergedRecordsAndNotify({
+            dispatch,
+            survey,
+            lang,
+            cycle,
+            recordUuids: mergedSameRecordUuids,
+            mergeKeepLocalOriginRecordUuids: mergedSameRecordUuids,
           });
         }
         await onJobCompleteParam?.(jobComplete);

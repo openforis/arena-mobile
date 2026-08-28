@@ -111,6 +111,7 @@ Möchten Sie sie erneut vom Server abrufen?`,
     new: "neu",
     updated: "aktualisiert",
     conflicting: "konfliktbehaftet",
+    conflictingModifiedRemotely: "auf Gerät und Server geändert",
     withValidationErrors: "mit Validierungsfehlern",
   },
   sendData: "Daten senden",
@@ -124,6 +125,8 @@ Möchten Sie sie erneut vom Server abrufen?`,
     new: "Neu (noch nicht hochgeladen)",
     notModified: "Nicht geändert (keine Änderungen zum Hochladen)",
     modifiedLocally: "Lokal geändert",
+    modifiedLocallyAndRemotely:
+      "Lokal und auf dem Remote-Server geändert (Konflikt)",
     modifiedRemotely: "Auf dem Remote-Server geändert",
     notInEntryStepAnymore:
       "Nicht mehr im Eingabeschritt (im Bereinigungs- oder Analyseschritt)",
@@ -260,11 +263,22 @@ Maximal zulässige Größe: {{maxSizeMB}}MB.
       "Daten wurden erfolgreich exportiert, aber {{missingFiles}} Dateien/Bilder fehlen oder sind defekt. Bitte überprüfen Sie Ihre Aufzeichnungen und die Aufzeichnungen auf dem Server.",
     exportingData: "Exportiere Daten...",
     exportToCsv: "Nach CSV exportieren",
-    mergeConflictingRecords:
-      "In Konflikt stehende Datensätze zusammenführen (gleiche Schlüssel)",
+    mergeConflictingRecords: "Widersprüchliche Datensätze zusammenführen",
+    mergeSameRecordConflictConfirm: {
+      title: "Auf beiden Geräten bearbeitete Datensätze zusammenführen",
+      message: `{{count}} Datensatz/Datensätze wurden auch auf dem Server geändert, seit dieses Gerät sie zuletzt synchronisiert hat.
+
+Beim Zusammenführen werden Ihre Änderungen mit den Änderungen des Servers kombiniert: Für jedes Feld wird der zuletzt bearbeitete Wert beibehalten, und alle auf einem der beiden Geräte hinzugefügten neuen Abschnitte werden beibehalten.
+
+Dies kann vorher nicht angezeigt werden. Zum Bestätigen wischen, um fortzufahren.`,
+    },
     noRecordsInDeviceToExport: "Keine Datensätze auf dem Gerät zum Exportieren",
     onlyNewOrUpdatedRecords:
       "Nur neue oder aktualisierte Datensätze exportieren",
+    recordsMergedMessage: `Die folgenden Datensätze wurden mit der bereits auf dem Server vorhandenen neueren Version zusammengeführt:
+{{recordsList}}
+
+Die zusammengeführte Version dieser Datensätze wurde automatisch abgerufen.`,
     onlyRecordsInRemoteServerCanBeImported:
       "Nur Datensätze, die bereits auf dem Remote-Server vorhanden sind oder die remote aktualisiert wurden, können importiert werden",
     option: {

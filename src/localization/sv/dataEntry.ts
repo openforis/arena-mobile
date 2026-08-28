@@ -109,6 +109,7 @@ Vill du hämta den igen från servern?`,
     new: "ny",
     updated: "uppdaterad",
     conflicting: "konfliktfylld",
+    conflictingModifiedRemotely: "ändrad på både enhet och server",
     withValidationErrors: "med valideringsfel",
   },
   sendData: "Skicka data",
@@ -121,6 +122,8 @@ Vill du hämta den igen från servern?`,
     new: "Ny (inte uppladdad än)",
     notModified: "Inte ändrad (inga ändringar att ladda upp)",
     modifiedLocally: "Ändrad lokalt",
+    modifiedLocallyAndRemotely:
+      "Ändrad både lokalt och på fjärrservern (konflikt)",
     modifiedRemotely: "Ändrad på fjärrservern",
     notInEntryStepAnymore:
       "Inte längre i inmatningssteget (i rensnings- eller analyssteget)",
@@ -257,9 +260,21 @@ Kontrollera inställningarna eller be undersökningsadministratören att ändra 
       "Data exporterades framgångsrikt, men {{missingFiles}} filer/bilder saknas eller är skadade. Vänligen kontrollera dina register och även registren på servern.",
     exportingData: "Exporterar data...",
     exportToCsv: "Exportera till CSV",
-    mergeConflictingRecords: "Slå samman konflikterande poster (samma nycklar)",
+    mergeConflictingRecords: "Slå samman konflikterande poster",
+    mergeSameRecordConflictConfirm: {
+      title: "Slå samman poster som redigerats på båda enheterna",
+      message: `{{count}} post(er) har också ändrats på servern sedan den här enheten senast synkroniserade dem.
+
+Sammanslagning kombinerar dina ändringar med serverns ändringar: för varje fält behålls det senast redigerade värdet, och alla nya avsnitt som lagts till på endera enheten behålls.
+
+Detta kan inte förhandsgranskas i förväg. Svep för att bekräfta och fortsätta.`,
+    },
     noRecordsInDeviceToExport: "Inga poster i enheten att exportera",
     onlyNewOrUpdatedRecords: "Exportera endast nya eller uppdaterade poster",
+    recordsMergedMessage: `Följande poster har slagits samman med den nyare versionen som redan finns på servern:
+{{recordsList}}
+
+Den sammanslagna versionen av dessa poster har hämtats automatiskt.`,
     onlyRecordsInRemoteServerCanBeImported:
       "Endast poster som redan finns på fjärrservern eller poster som har uppdaterats på distans kan importeras",
     option: {

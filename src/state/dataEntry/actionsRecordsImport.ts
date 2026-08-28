@@ -15,7 +15,12 @@ const handleImportErrors = ({ dispatch, error = null, errors = null }: any) => {
 };
 
 export const importRecordsFromFile =
-  ({ fileUri, onImportComplete, overwriteExistingRecords = true }: any) =>
+  ({
+    fileUri,
+    onImportComplete,
+    overwriteExistingRecords = true,
+    mergeKeepLocalOriginRecordUuids,
+  }: any) =>
     async (dispatch: any, getState: any) => {
       const state = getState();
       const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
@@ -26,6 +31,7 @@ export const importRecordsFromFile =
         user,
         fileUri,
         overwriteExistingRecords,
+        mergeKeepLocalOriginRecordUuids,
       });
 
       try {
@@ -59,6 +65,7 @@ const _onExportFromServerJobComplete = async ({
   state,
   job,
   onImportComplete,
+  mergeKeepLocalOriginRecordUuids,
 }: any) => {
   try {
     const { outputFileName: fileName } = job.result;
@@ -73,7 +80,13 @@ const _onExportFromServerJobComplete = async ({
         fileName,
       });
 
-    dispatch(importRecordsFromFile({ fileUri, onImportComplete }));
+    await dispatch(
+      importRecordsFromFile({
+        fileUri,
+        onImportComplete,
+        mergeKeepLocalOriginRecordUuids,
+      }),
+    );
   } catch (error) {
     handleImportErrors({ dispatch, error });
   }
@@ -94,7 +107,7 @@ const checkCanImportRecords = ({ dispatch, survey }: any) => {
 };
 
 export const fetchRecordsFromServer =
-  ({ recordUuids, onImportComplete }: any) =>
+  ({ recordUuids, onImportComplete, mergeKeepLocalOriginRecordUuids }: any) =>
     async (dispatch: any, getState: any) => {
       try {
         const state = getState();
@@ -118,6 +131,7 @@ export const fetchRecordsFromServer =
           state,
           job: jobComplete,
           onImportComplete,
+          mergeKeepLocalOriginRecordUuids,
         });
       } catch (error) {
         if (error instanceof JobCancelError) {

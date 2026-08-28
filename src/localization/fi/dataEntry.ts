@@ -108,6 +108,7 @@ Haluatko hakea sen uudelleen palvelimelta?`,
     new: "uusi",
     updated: "päivitetty",
     conflicting: "ristiriitainen",
+    conflictingModifiedRemotely: "muokattu sekä laitteella että palvelimella",
     withValidationErrors: "validointivirheillä",
   },
   sendData: "Lähetä tiedot",
@@ -120,6 +121,8 @@ Haluatko hakea sen uudelleen palvelimelta?`,
     new: "Uusi (ei vielä ladattu)",
     notModified: "Ei muokattu (ei muutoksia ladattavaksi)",
     modifiedLocally: "Muokattu paikallisesti",
+    modifiedLocallyAndRemotely:
+      "Muokattu sekä paikallisesti että palvelimella (ristiriita)",
     modifiedRemotely: "Muokattu palvelimella",
     notInEntryStepAnymore:
       "Ei enää syöttövaiheessa (puhdistus- tai analyysivaiheessa)",
@@ -256,10 +259,21 @@ Tarkista asetukset tai pyydä kyselyn järjestelmänvalvojaa muuttamaan tätä r
       "Tiedot vietiin onnistuneesti, mutta {{missingFiles}} tiedostoa/kuvaa puuttuu tai on vioittunut. Tarkista tietueesi ja myös palvelimen tietueet.",
     exportingData: "Viedään tietoja...",
     exportToCsv: "Vie CSV-muotoon",
-    mergeConflictingRecords:
-      "Yhdistä ristiriitaiset tietueet (samalla avaimella)",
+    mergeConflictingRecords: "Yhdistä ristiriitaiset tietueet",
+    mergeSameRecordConflictConfirm: {
+      title: "Yhdistä molemmilla laitteilla muokatut tietueet",
+      message: `{{count}} tietuetta on muokattu myös palvelimella sen jälkeen, kun tämä laite viimeksi synkronoi ne.
+
+Yhdistäminen yhdistää muutoksesi palvelimen muutoksiin: jokaisen kentän kohdalla säilytetään viimeksi muokattu arvo, ja kummallakin laitteella lisätyt uudet osiot säilytetään.
+
+Tätä ei voi esikatsella etukäteen. Pyyhkäise vahvistaaksesi ja jatkaaksesi.`,
+    },
     noRecordsInDeviceToExport: "Laitteessa ei ole vietäviä tietueita",
     onlyNewOrUpdatedRecords: "Vie vain uudet tai päivitetyt tietueet",
+    recordsMergedMessage: `Seuraavat tietueet on yhdistetty palvelimella jo olevaan uudempaan versioon:
+{{recordsList}}
+
+Näiden tietueiden yhdistetty versio on noudettu automaattisesti.`,
     onlyRecordsInRemoteServerCanBeImported:
       "Vain palvelimella jo olevat tai etänä päivitetyt tietueet voidaan tuoda",
     option: {

@@ -11,8 +11,12 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
   insertedRecords: any;
   updatedRecords: any;
   async execute() {
-    const { survey, unzippedFolderUri, overwriteExistingRecords } =
-      this.context;
+    const {
+      survey,
+      unzippedFolderUri,
+      overwriteExistingRecords,
+      mergeKeepLocalOriginRecordUuids = [],
+    } = this.context;
 
     const fileRecordsSummaryJsonUri = Files.path(
       unzippedFolderUri,
@@ -58,10 +62,17 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
         await RecordService.insertRecord({ survey, record });
         this.insertedRecords++;
       } else if (overwriteExistingRecords) {
-        await RecordService.updateRecordWithContentFetchedRemotely({
-          survey,
-          record,
-        });
+        if (mergeKeepLocalOriginRecordUuids.includes(recordUuid)) {
+          await RecordService.updateRecordWithContentMergedFromRemote({
+            survey,
+            record,
+          });
+        } else {
+          await RecordService.updateRecordWithContentFetchedRemotely({
+            survey,
+            record,
+          });
+        }
         this.updatedRecords++;
       }
       this.incrementProcessedItems();
