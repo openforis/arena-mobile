@@ -88,7 +88,7 @@ const confirmSlice = createSlice({
       Keyboard.dismiss();
       return { ...action.payload, isOpen: true, showId: (state.showId ?? 0) + 1 };
     },
-    dismiss: () => initialState,
+    dismiss: (state) => ({ ...initialState, showId: state.showId }),
   },
   extraReducers: (builder) => {
     builder
