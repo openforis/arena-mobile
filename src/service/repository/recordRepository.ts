@@ -631,6 +631,18 @@ const rowToRecord =
     result.dateSynced = fixDatetime(result.dateSynced);
 
     if (hasContent) {
+      if (RecordFixer.isLegacyNodeFormat(result)) {
+        // record content saved by an arena-mobile build from before the node internal-id
+        // migration still links nodes by uuid/parentUuid; migrate it to iId/pIId here, once, before
+        // the nodes index below (and everything downstream) touches the node tree. The migrated
+        // content isn't written back to SQLite immediately - it converges naturally the next time
+        // the record is saved (which happens on every edit), same as the server-side migration in
+        // ArenaSurveyFileZip.getRecord doesn't persist back to the zip it read from.
+        RecordFixer.initInternalIds({
+          record: result,
+          nodes: Object.values(Records.getNodes(result)),
+        });
+      }
       if (!result._nodesIndex) {
         // re-create nodes index
         Records.addNodes(Records.getNodes(result), { sideEffect })(result);
