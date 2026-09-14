@@ -105,6 +105,7 @@ type RecordsDataVisualizerProps = {
   onDeleteSelectedRecordUuids: (uuids: string[]) => void;
   onExportSelectedRecordUuids: (uuids: string[]) => void;
   onFetchSelectedRecordUuids: (uuids: string[]) => void;
+  onRevalidateSelectedRecordUuids: (uuids: string[]) => void;
   records: any[];
   showRemoteProps?: boolean;
   syncStatusFetched?: boolean;
@@ -117,6 +118,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     onDeleteSelectedRecordUuids,
     onExportSelectedRecordUuids,
     onFetchSelectedRecordUuids,
+    onRevalidateSelectedRecordUuids,
     records,
     showRemoteProps,
     syncStatusFetched,
@@ -344,6 +346,10 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     onExportSelectedRecordUuids(selectedRecordUuids);
   }, [selectedRecordUuids, onExportSelectedRecordUuids]);
 
+  const onRevalidateSelectedItems = useCallback(() => {
+    onRevalidateSelectedRecordUuids(selectedRecordUuids);
+  }, [selectedRecordUuids, onRevalidateSelectedRecordUuids]);
+
   const onSortChange = useCallback((sortNext: any) => {
     setSort(sortNext);
   }, []);
@@ -372,12 +378,19 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
         onPress: onExportSelectedItems,
       });
     }
+    actions.push({
+      key: "revalidateSelectedItems",
+      icon: "clipboard-check-outline",
+      labelKey: "recordsList:revalidateRecords.title",
+      onPress: onRevalidateSelectedItems,
+    });
     return actions;
   }, [
     isPrevCycle,
     onCloneSelectedItems,
     onExportSelectedItems,
     onFetchSelectedItems,
+    onRevalidateSelectedItems,
     syncStatusFetched,
   ]);
 

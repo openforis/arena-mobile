@@ -442,6 +442,20 @@ const updateRecord = async ({ survey, record }: any) => {
   return recordUpdated;
 };
 
+// Persists only the "validation" field of the record content: revalidation reconciles
+// a stale cached validation with the record's actual current state, it's not a content
+// edit, so origin, sync status and modified dates must not change.
+const updateRecordValidation = async ({
+  surveyId,
+  recordUuid,
+  validation,
+}: any) =>
+  dbClient.runSql(
+    `UPDATE record SET content = json_set(content, '$.validation', json(?))
+     WHERE survey_id = ? AND uuid = ?`,
+    [JSON.stringify(validation), surveyId, recordUuid],
+  );
+
 const updateRecordWithContentFetchedRemotely = async ({
   survey,
   record,
@@ -663,6 +677,7 @@ export const RecordRepository = {
   insertRecord,
   insertRecordSummaries,
   updateRecord,
+  updateRecordValidation,
   updateRecordWithContentFetchedRemotely,
   updateRecordWithContentMergedFromRemote,
   updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely,

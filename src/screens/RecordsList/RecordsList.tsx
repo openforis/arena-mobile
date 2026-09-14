@@ -35,6 +35,8 @@ export const RecordsList = () => {
     onNewRecordPress,
     onOnlyLocalChange,
     onRemoteSyncPress,
+    onRevalidateAllRecordsPress,
+    onRevalidateSelectedRecordUuids,
     onSearchValueChange,
     records,
     recordsFiltered,
@@ -81,6 +83,7 @@ export const RecordsList = () => {
           onlyLocal={onlyLocal}
           onOnlyLocalChange={onOnlyLocalChange}
           onRemoteSyncPress={onRemoteSyncPress}
+          onRevalidateAllRecordsPress={onRevalidateAllRecordsPress}
           syncStatusLoading={syncStatusLoading}
         />
         {loading ? (
@@ -105,6 +108,9 @@ export const RecordsList = () => {
                 onDeleteSelectedRecordUuids={onDeleteSelectedRecordUuids}
                 onExportSelectedRecordUuids={onExportSelectedRecordUuids}
                 onFetchSelectedRecordUuids={onFetchSelectedRecordUuids}
+                onRevalidateSelectedRecordUuids={
+                  onRevalidateSelectedRecordUuids
+                }
                 records={recordsFiltered}
                 showRemoteProps={!onlyLocal}
                 syncStatusFetched={syncStatusFetched}

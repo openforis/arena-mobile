@@ -306,6 +306,30 @@ export const useRecordsList = () => {
     [checkRecordsCanBeCloned, dispatch, loadRecords, records],
   );
 
+  const onRevalidateSelectedRecordUuids = useCallback(
+    (selectedRecordUuids: any) => {
+      const recordIds = records
+        .filter((record) => selectedRecordUuids.includes(record.uuid))
+        .map((record) => record.id);
+      dispatch(
+        DataEntryActions.revalidateRecords({
+          recordIds,
+          callback: loadRecords,
+        }),
+      );
+    },
+    [dispatch, loadRecords, records],
+  );
+
+  const onRevalidateAllRecordsPress = useCallback(() => {
+    dispatch(
+      DataEntryActions.revalidateRecords({
+        recordIds: records.map((record) => record.id),
+        callback: loadRecords,
+      }),
+    );
+  }, [dispatch, loadRecords, records]);
+
   const recordsFiltered = useMemo(() => {
     if (Objects.isEmpty(searchValue)) return records;
 
@@ -342,6 +366,8 @@ export const useRecordsList = () => {
     onNewRecordPress,
     onOnlyLocalChange,
     onRemoteSyncPress,
+    onRevalidateAllRecordsPress,
+    onRevalidateSelectedRecordUuids,
     onSearchValueChange,
     records,
     recordsFiltered,

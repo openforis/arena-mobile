@@ -51,6 +51,7 @@ import {
   importRecordsFromFile,
   fetchRecordsFromServer,
 } from "./actionsRecordsImport";
+import { revalidateRecords } from "./actionsRecordsRevalidate";
 import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntrySelectors } from "./selectors";
 import { ToastActions } from "state/toast";
@@ -955,4 +956,5 @@ export const DataEntryActions = {
   importRecordsFromFile,
   fetchRecordsFromServer,
   cloneRecordsIntoDefaultCycle,
+  revalidateRecords,
 };
