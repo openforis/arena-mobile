@@ -21,7 +21,7 @@ const AUTO_SYNC_IDLE_THRESHOLD_MS = 60_000; // 1 minute
 // manual "Send data" flow uses). Anything else (conflicting keys, modified on the server too)
 // is deliberately left out here - those need the explicit merge confirmation the manual flow
 // already has.
-const autoSyncSafeStatuses = [RecordSyncStatus.new, RecordSyncStatus.modifiedLocally];
+const autoSyncSafeStatuses = new Set([RecordSyncStatus.new, RecordSyncStatus.modifiedLocally]);
 
 // guards against overlapping ticks (e.g. a slow network making one tick outlive the interval)
 let tickInProgress = false;
@@ -31,7 +31,7 @@ const selectAutoSyncCandidates = ({ records, survey, currentlyEditedRecordUuid }
   const now = Date.now();
 
   return records.filter((record: any) => {
-    if (!autoSyncSafeStatuses.includes(record.syncStatus)) return false;
+    if (!autoSyncSafeStatuses.has(record.syncStatus)) return false;
     if (record.uuid === currentlyEditedRecordUuid) return false;
     if (!errorsAllowed && record.errors > 0) return false;
 
