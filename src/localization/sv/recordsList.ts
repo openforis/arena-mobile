@@ -64,6 +64,15 @@ export default {
     all: "Alla poster",
     local: "Poster på enheten",
   },
+  revalidateRecords: {
+    title: "Validera om",
+    allRecordsTitle: "Validera om alla poster",
+    confirm: {
+      message:
+        "Beräkna om valideringen för de valda {{recordsCount}} posterna? Använd detta om en post visar fel eller varningar som du inte kan hitta när du redigerar den.",
+    },
+    completeSuccessfully: "Poster har validerats om!",
+  },
   sendData: {
     error: {
       generic: "Kan inte skicka data till servern: {{details}}",

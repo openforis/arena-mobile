@@ -69,6 +69,15 @@ export default {
     all: "Todos os registos",
     local: "Registos no dispositivo",
   },
+  revalidateRecords: {
+    title: "Revalidar",
+    allRecordsTitle: "Revalidar todos os registos",
+    confirm: {
+      message:
+        "Recalcular a validação dos {{recordsCount}} registos selecionados? Utilize esta opção se um registo apresentar erros ou avisos que não consegue encontrar ao editá-lo.",
+    },
+    completeSuccessfully: "Registos revalidados com sucesso!",
+  },
   sendData: {
     error: {
       generic: "Não é possível enviar dados para o servidor: {{details}}",

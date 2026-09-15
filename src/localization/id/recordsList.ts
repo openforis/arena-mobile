@@ -65,6 +65,15 @@ export default {
     all: "Semua data isian",
     local: "Data isian di perangkat",
   },
+  revalidateRecords: {
+    title: "Validasi ulang",
+    allRecordsTitle: "Validasi ulang semua data isian",
+    confirm: {
+      message:
+        "Hitung ulang validasi untuk {{recordsCount}} data isian yang dipilih? Gunakan ini jika data isian menampilkan kesalahan atau peringatan yang tidak dapat Anda temukan saat mengeditnya.",
+    },
+    completeSuccessfully: "Data isian berhasil divalidasi ulang!",
+  },
   sendData: {
     error: {
       generic: "Tidak dapat mengirim data ke server: {{details}}",

@@ -65,6 +65,15 @@ export default {
     all: "すべての記録",
     local: "デバイス内の記録",
   },
+  revalidateRecords: {
+    title: "再検証",
+    allRecordsTitle: "すべての記録を再検証",
+    confirm: {
+      message:
+        "選択した{{recordsCount}}件の記録の検証を再計算しますか？編集時に見つからないエラーや警告が記録に表示されている場合に使用してください。",
+    },
+    completeSuccessfully: "記録の再検証が完了しました！",
+  },
   sendData: {
     error: {
       generic: "サーバーにデータを送信できません：{{details}}",
