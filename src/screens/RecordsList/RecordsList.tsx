@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 
+import { AutoSyncStatusIcon } from "appComponents/AutoSyncStatus";
 import {
   Button,
   HView,
@@ -10,7 +11,6 @@ import {
   VView,
 } from "components";
 
-import { AutoSyncStatusIcon } from "./AutoSyncStatusIcon";
 import { RecordsDataVisualizer } from "./RecordsDataVisualizer";
 import { RecordsListLegend } from "./RecordsListLegend";
 import { RecordsListOptions } from "./RecordsListOptions";
