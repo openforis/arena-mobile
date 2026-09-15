@@ -88,12 +88,10 @@ export const RecordsList = () => {
           onRevalidateAllRecordsPress={onRevalidateAllRecordsPress}
           syncStatusLoading={syncStatusLoading}
         />
-        {autoSyncEnabled && (
-          <HView style={styles.autoSyncStatusRow}>
-            <Text textKey="dataEntry:autoSync.statusLabel" />
-            <AutoSyncStatusIcon />
-          </HView>
-        )}
+        <HView style={styles.autoSyncStatusRow}>
+          <Text textKey="dataEntry:autoSync.statusLabel" />
+          <AutoSyncStatusIcon />
+        </HView>
         {loading ? (
           <Loader />
         ) : (
