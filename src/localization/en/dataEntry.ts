@@ -1,6 +1,11 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Auto sync",
+    synced: "Auto-synced {{count}} record",
+    synced_plural: "Auto-synced {{count}} records",
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Nodes will no longer apply",
     message: `The following nodes will no longer apply:  

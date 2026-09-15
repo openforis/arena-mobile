@@ -30,6 +30,7 @@ export const JobMonitorDialog = () => {
     messageKey,
     messageParams,
     progressPercent,
+    silent,
     status,
     titleKey,
     showTransferStats,
@@ -66,7 +67,7 @@ export const JobMonitorDialog = () => {
       dismissable={false}
       showCloseButton={false}
       title={titleKey}
-      visible={!!isOpen}
+      visible={!!isOpen && !silent}
     >
       <Text
         variant="bodyMedium"

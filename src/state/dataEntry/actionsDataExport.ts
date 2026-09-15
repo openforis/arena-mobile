@@ -49,13 +49,21 @@ const errorOrJobToString = (errorOrJob: any) => {
   return JSON.stringify(errorOrJob);
 };
 
-const handleError = (error: any) => (dispatch: any) =>
-  dispatch(
-    MessageActions.setMessage({
-      content: "dataEntry:dataExport.error",
-      contentParams: { details: errorOrJobToString(error) },
-    }),
-  );
+const handleError =
+  (error: any, silent = false) =>
+  (dispatch: any) => {
+    if (silent) {
+      // an unattended tick must never surface a blocking error dialog; next tick retries
+      log.warn(`auto-sync: export/upload failed: ${errorOrJobToString(error)}`);
+      return;
+    }
+    dispatch(
+      MessageActions.setMessage({
+        content: "dataEntry:dataExport.error",
+        contentParams: { details: errorOrJobToString(error) },
+      }),
+    );
+  };
 
 /**
  * Helper to handle a job error and prompt the user for a retry.
@@ -89,7 +97,13 @@ const handleUploadJobError = async ({
 };
 
 const startUploadDataToRemoteServer =
-  ({ outputFileUri, conflictResolutionStrategy, skipMissingFiles = false, onJobComplete = null }: any) =>
+  ({
+    outputFileUri,
+    conflictResolutionStrategy,
+    skipMissingFiles = false,
+    onJobComplete = null,
+    silent = false,
+  }: any) =>
     async (dispatch: any, getState: any) => {
       const state = getState();
       const user = RemoteConnectionSelectors.selectLoggedUser(state);
@@ -118,9 +132,15 @@ const startUploadDataToRemoteServer =
             transferSizeTextKey: "dataEntry:uploadingData.size",
             transferSpeedTextKey: "dataEntry:uploadingData.speed",
             transferEtaTextKey: "dataEntry:uploadingData.eta",
+            silent,
           });
           shouldRetryUpload = !uploadJobComplete;
         } catch (error: any) {
+          if (silent) {
+            // an unattended tick must never block on a retry confirmation; give up, next tick retries
+            log.warn(`auto-sync: upload failed: ${errorOrJobToString(error)}`);
+            return;
+          }
           shouldRetryUpload = await handleUploadJobError({ dispatch, error });
         }
       }
@@ -133,6 +153,7 @@ const startUploadDataToRemoteServer =
           jobUuid: remoteJob.uuid,
           titleKey: "dataEntry:processingData.title",
           onJobComplete,
+          silent,
         }),
       );
     };
@@ -259,6 +280,7 @@ const onExportConfirmed =
     outputFileUri,
     skipMissingFiles = false,
     onJobComplete,
+    silent = false,
   }: any) =>
     async (dispatch: any) => {
       try {
@@ -270,6 +292,7 @@ const onExportConfirmed =
                 conflictResolutionStrategy,
                 skipMissingFiles,
                 onJobComplete,
+                silent,
               }),
             );
             break;
@@ -285,7 +308,11 @@ const onExportConfirmed =
       }
     };
 
-const _onExportFileGenerationError = ({ errors, dispatch }: any) => {
+const _onExportFileGenerationError = ({
+  errors,
+  dispatch,
+  silent = false,
+}: any) => {
   const validationErrors = Object.values(errors).map((item: any) => item.error);
   const details = validationErrors
     .map((validationError) =>
@@ -295,6 +322,10 @@ const _onExportFileGenerationError = ({ errors, dispatch }: any) => {
       }),
     )
     .join(";\n");
+  if (silent) {
+    log.warn(`auto-sync: error generating records export file: ${details}`);
+    return;
+  }
   dispatch(
     MessageActions.setMessage({
       content: "dataEntry:errorGeneratingRecordsExportFile",
@@ -310,10 +341,11 @@ const _onExportFileGenerationSucceeded = async ({
   conflictResolutionStrategy,
   onJobComplete,
   dispatch,
+  silent = false,
 }: any) => {
   const { outputFileUri, recordsWithMissingFiles = [] } = result || {};
 
-  if (recordsWithMissingFiles.length > 0) {
+  if (recordsWithMissingFiles.length > 0 && !silent) {
     const recordsList = recordsWithMissingFiles
       .map(({ keysText }: { keysText: string }) => `- ${keysText}`)
       .join("\n");
@@ -330,6 +362,8 @@ const _onExportFileGenerationSucceeded = async ({
 
     if (!confirmed) return;
   }
+  // when silent (auto-sync), never block on the missing-files confirmation above:
+  // proceed straight to uploading what's available, same outcome as the user confirming it
 
   const skipMissingFiles = recordsWithMissingFiles.length > 0;
 
@@ -348,6 +382,7 @@ const _onExportFileGenerationSucceeded = async ({
         outputFileUri,
         skipMissingFiles,
         onJobComplete,
+        silent,
       }),
     );
   };
@@ -434,6 +469,7 @@ export const exportRecords =
     onlyRemote = false,
     onJobComplete: onJobCompleteParam = null,
     onEnd = null,
+    silent = false,
   }: any) =>
     async (dispatch: any, getState: any) => {
       const state = getState();
@@ -497,12 +533,13 @@ export const exportRecords =
           cycle,
           recordUuids,
           user,
+          onlyRemote,
         });
         await job.start();
         const { errors, result, status } = job;
 
         if (status === JobStatus.failed) {
-          _onExportFileGenerationError({ errors, dispatch });
+          _onExportFileGenerationError({ errors, dispatch, silent });
         } else if (status === JobStatus.succeeded) {
           await _onExportFileGenerationSucceeded({
             result,
@@ -511,7 +548,10 @@ export const exportRecords =
             conflictResolutionStrategy,
             onJobComplete,
             dispatch,
+            silent,
           });
+        } else if (silent) {
+          log.warn(`auto-sync: unexpected job status: ${status}`);
         } else {
           dispatch(
             MessageActions.setMessage({
@@ -520,7 +560,7 @@ export const exportRecords =
           );
         }
       } catch (error) {
-        dispatch(handleError(error));
+        dispatch(handleError(error, silent));
       }
       await onEnd?.();
     };

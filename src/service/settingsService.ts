@@ -11,6 +11,7 @@ import { AMConstants, SystemUtils } from "utils";
 
 const defaultSettings: Partial<SettingsObject> = {
   animationsEnabled: true,
+  autoSyncEnabled: false,
   fontScale: 1,
   imageSizeUnlimited: false,
   imageSizeLimit: 4, // MB

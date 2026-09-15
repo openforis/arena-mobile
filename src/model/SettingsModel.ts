@@ -30,6 +30,7 @@ type SettingsProperty = {
 
 export enum SettingKey {
   animationsEnabled = "animationsEnabled",
+  autoSyncEnabled = "autoSyncEnabled",
   fontScale = "fontScale",
   fullScreen = "fullScreen",
   imageSizeUnlimited = "imageSizeUnlimited",
@@ -128,6 +129,7 @@ const properties: SettingsProperties = {
 
 export type SettingsObject = {
   animationsEnabled: boolean;
+  autoSyncEnabled: boolean;
   email?: string;
   fontScale: number;
   fullScreen: boolean;

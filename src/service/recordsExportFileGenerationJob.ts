@@ -17,6 +17,7 @@ import { Files, SystemUtils } from "utils";
 
 import { RecordService } from "./recordService";
 import { RecordFileService } from "./recordFileService";
+import { RecordRemoteService } from "./recordRemoteService";
 import { JobMobileContext } from "model/JobMobile";
 
 const INFO_JSON_FILENAME = "info.json";
@@ -32,14 +33,19 @@ type RecordsExportFileGenerationJobContext = JobMobileContext & {
   cycle: string;
   recordUuids: string[];
   user: any;
+  // true only when this export is guaranteed to go straight to the remote server (e.g. the
+  // "Send data" button, or an auto-sync upload) - see the already-uploaded-files skip below.
+  // A locally exported/shared zip must always be self-contained, so it must always include
+  // every file, regardless of what the server already has.
+  onlyRemote?: boolean;
 };
 
 export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileGenerationJobContext> {
   outputFileUri: any;
   recordsWithMissingFiles: { uuid: string; keysText: string }[] = [];
 
-  constructor({ survey, cycle, recordUuids, user }: any) {
-    super({ survey, cycle, recordUuids, user });
+  constructor({ survey, cycle, recordUuids, user, onlyRemote = false }: any) {
+    super({ survey, cycle, recordUuids, user, onlyRemote });
   }
 
   async execute() {
@@ -48,8 +54,14 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       cycle,
       recordUuids,
       user,
-    }: { survey: Survey; cycle: string; recordUuids: string[]; user: any } =
-      this.context;
+      onlyRemote,
+    }: {
+      survey: Survey;
+      cycle: string;
+      recordUuids: string[];
+      user: any;
+      onlyRemote?: boolean;
+    } = this.context;
     const recordUuidsSet = new Set(recordUuids);
 
     const tempFolderUri = await Files.createTempFolder();
@@ -93,6 +105,19 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       const tempFilesDirUri = Files.path(tempFolderUri, FILES_FOLDER_NAME);
       await Files.mkDir(tempFilesDirUri);
 
+      // uuids of files the server already has for each record, so their content can be left
+      // out of the zip (the record's own json still references them) - saves re-uploading
+      // file bytes that haven't changed since the last sync. Only done when this export is
+      // guaranteed to go straight to that same remote server: a zip that might instead be
+      // shared or kept as a local backup must always be self-contained.
+      const filesAlreadyOnServerByRecordUuid: Record<string, string[]> =
+        onlyRemote && !Objects.isEmpty(nodeDefsFile) && (survey as any).remoteId
+          ? await RecordRemoteService.fetchFileUuidsByRecordUuid({
+              surveyRemoteId: (survey as any).remoteId,
+              recordUuids: recordsToExport.map((r: any) => r.uuid),
+            })
+          : {};
+
       const files = [];
 
       for (const recordSummary of recordsToExport) {
@@ -120,10 +145,14 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
         });
 
         if (!Objects.isEmpty(nodeDefsFile)) {
+          const alreadyUploadedFileUuids = new Set(
+            filesAlreadyOnServerByRecordUuid[uuid] ?? [],
+          );
           const { recordFiles, hasMissingFiles } = await this.writeRecordFiles({
             tempFolderUri,
             nodeDefsFile,
             record,
+            alreadyUploadedFileUuids,
           });
 
           if (hasMissingFiles) {
@@ -186,6 +215,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     tempFolderUri,
     nodeDefsFile,
     record,
+    alreadyUploadedFileUuids = new Set<string>(),
   }: any): Promise<{ recordFiles: any[]; hasMissingFiles: boolean }> {
     const { survey } = this.context;
     const surveyId = survey.id!;
@@ -218,6 +248,11 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
 
     for (const recordFile of recordFiles) {
       const { uuid: fileUuid } = recordFile;
+
+      // the server already has this exact file uuid stored: leave it out of the zip entirely
+      // (record.json still references it) to save re-uploading unchanged file content
+      if (alreadyUploadedFileUuids.has(fileUuid)) continue;
+
       const fileUri = RecordFileService.getRecordFileUri({
         surveyId,
         fileUuid,

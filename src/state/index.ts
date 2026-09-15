@@ -4,6 +4,7 @@ export {
   DataEntryActions,
   DataEntryReducer,
   DataEntrySelectors,
+  useAutoSyncMonitor,
 } from "./dataEntry";
 
 export {
