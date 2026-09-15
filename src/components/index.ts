@@ -53,6 +53,7 @@ export { ScrollView } from "./ScrollView";
 export { SegmentedButtons } from "./SegmentedButtons";
 export { Searchbar } from "./Searchbar";
 export { SelectableList } from "./SelectableList";
+export type { SelectedItemsAction } from "./SelectableList";
 export { SelectableListWithFilter } from "./SelectableListWithFilter";
 export { Slider } from "./Slider";
 export { Snackbar } from "./Snackbar";

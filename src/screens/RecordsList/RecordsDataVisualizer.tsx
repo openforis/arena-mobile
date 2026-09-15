@@ -17,6 +17,7 @@ import {
   DataVisualizerField,
   Icon,
   LoadingIcon,
+  SelectedItemsAction,
   Text,
 } from "components";
 import { useTranslation } from "localization";
@@ -355,7 +356,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
   }, []);
 
   const customActions = useMemo(() => {
-    const actions = [];
+    const actions: SelectedItemsAction[] = [];
     if (isPrevCycle) {
       actions.push({
         key: "cloneSelectedItems",

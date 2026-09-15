@@ -1,5 +1,6 @@
 import type { StyleProp, ViewStyle } from "react-native";
 
+import type { SelectedItemsAction } from "../SelectableList";
 import { ScreenViewMode, SortObject } from "model";
 
 export type DataVisualizerCellProps = {
@@ -35,7 +36,7 @@ export type DataVisualizerProps = {
   onDeleteSelectedItemIds?: (ids: string[]) => void;
   selectable?: boolean;
   selectedItemIds?: string[];
-  selectedItemsCustomActions?: any[];
+  selectedItemsCustomActions?: SelectedItemsAction[];
   showPagination?: boolean;
   sort?: SortObject;
 };

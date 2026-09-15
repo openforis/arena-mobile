@@ -4,20 +4,30 @@ import { Surface } from "react-native-paper";
 import { useEffectiveTheme } from "hooks";
 import { useTranslation } from "localization";
 
-import { Button } from "../Button";
+import { Button, ButtonProps } from "../Button";
 import { FlexWrapView } from "../FlexWrapView";
 
 import styles from "./styles";
 
-const customActionToButtonProps = ({ t, customAction }: any) => {
-  const {
-    key,
-    labelKey,
-    labelParams,
-    mode = "text",
-    onPress,
-    ...otherProps
-  } = customAction;
+export type SelectedItemsAction = {
+  key: string;
+  icon?: string;
+  labelKey: string;
+  labelParams?: Record<string, any>;
+  mode?: ButtonProps["mode"];
+  onPress: () => void;
+  textColor?: string;
+};
+
+const customActionToButtonProps = ({
+  t,
+  customAction,
+}: {
+  t: (key?: string | null, params?: any) => string;
+  customAction: SelectedItemsAction;
+}): ButtonProps & { key: string } => {
+  const { key, labelKey, labelParams, mode = "text", onPress, ...otherProps } =
+    customAction;
   return {
     key,
     children: t(labelKey, labelParams),
@@ -29,7 +39,7 @@ const customActionToButtonProps = ({ t, customAction }: any) => {
 
 type Props = {
   canDelete?: boolean;
-  customActions?: any[];
+  customActions?: SelectedItemsAction[];
   onDeleteSelected: () => void;
   selectedItemIds: any[];
 };
@@ -66,8 +76,8 @@ export const ItemSelectedBanner = (props: Props) => {
   return (
     <Surface elevation={1} style={styles.selectedItemsBanner}>
       <FlexWrapView style={styles.selectedItemsBannerActions}>
-        {actions.map((action, index) => (
-          <Button key={index} compact {...action} />
+        {actions.map(({ key, ...action }) => (
+          <Button key={key} compact {...action} />
         ))}
       </FlexWrapView>
     </Surface>
