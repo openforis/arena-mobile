@@ -1,6 +1,24 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "ራስ-ሰር ማመሳሰል",
+    synced: "{{count}} መዝገብ በራስ-ሰር ተመሳስሏል",
+    synced_plural: "{{count}} መዝገቦች በራስ-ሰር ተመሳስለዋል",
+    statusLabel: "የማመሳሰል ሁኔታ:",
+    syncInProgressToast:
+      "ራስ-ሰር ማመሳሰል በሂደት ላይ ነው። ውሂብ በእጅ ከመላክዎ በፊት እስኪጠናቀቅ ድረስ እባክዎ ይጠብቁ።",
+    status: {
+      syncedTooltip: "ሁሉም መዝገቦች ከአገልጋዩ ጋር ተመሳስለዋል",
+      pendingTooltip: "አንዳንድ መዝገቦች አሁንም መመሳሰል ያስፈልጋቸዋል። በራስ-ሰር ይላካሉ",
+      errorTooltip:
+        "አንዳንድ መዝገቦች የማመሳሰል ስህተቶች አሏቸው እና ትኩረትዎን ይፈልጋሉ። ለመፍታት 'ውሂብ ላክ'ን ይክፈቱ",
+      syncingTooltip: "መዝገቦችን በማመሳሰል ላይ...",
+      syncingTooltipWithProgress: "መዝገቦችን በማመሳሰል ላይ... {{progressPercent}}%",
+      uncheckedTooltip:
+        "የማመሳሰል ሁኔታ እስካሁን አልተረጋገጠም። ለማረጋገጥ 'የማመሳሰል ሁኔታን ያረጋግጡ'ን ይጠቀሙ",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "ኖዶቹ ዳግም አይተገበሩም",
     message: `የሚከተሉት ኖዶች ዳግም አይተገበሩም:  

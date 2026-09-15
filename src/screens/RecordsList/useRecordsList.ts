@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import * as DocumentPicker from "expo-document-picker";
 
@@ -14,12 +14,16 @@ import {
 } from "model";
 import { RecordService, SurveyService } from "service";
 import {
+  AutoSyncActions,
   DataEntryActions,
   MessageActions,
+  RemoteConnectionSelectors,
+  SettingsSelectors,
   SurveySelectors,
   useAppDispatch,
   useConfirm,
 } from "state";
+import { useJobMonitor } from "state/jobMonitor/useJobMonitor";
 import { RemoteConnectionUtils } from "state/remoteConnection/remoteConnectionUtils";
 import { Files } from "utils";
 
@@ -56,6 +60,15 @@ export const useRecordsList = () => {
 
   const defaultCycleKey = survey ? Surveys.getDefaultCycleKey(survey) : null;
   const isDemoSurvey = survey?.uuid === SurveyService.demoSurveyUuid;
+
+  const { autoSyncEnabled } = SettingsSelectors.useSettings();
+  const loggedInUser = RemoteConnectionSelectors.useLoggedInUser();
+  // the only job that runs silently in this app is the background auto-sync upload (see
+  // actionsAutoSync.ts); used here just to know when to refresh this screen's own per-record
+  // list after a tick uploads something - the shared aggregate status lives in the autoSync
+  // redux slice instead (AutoSyncSelectors), so other screens don't need this at all
+  const { isOpen: jobIsOpen, silent: jobIsSilent } = useJobMonitor();
+  const autoSyncUploadRunning = jobIsOpen && jobIsSilent;
 
   const [state, setState] = useState<RecordsListState>(initialState);
   const {
@@ -105,9 +118,6 @@ export const useRecordsList = () => {
     loadRecords();
   }, [cycle, loadRecords, onlyLocal]);
 
-  // refresh records list on navigation focus (e.g. going back to records list screen)
-  useNavigationFocus(loadRecords);
-
   const loadRecordsWithSyncStatus =
     useCallback(async (): Promise<RecordsListState> => {
       setState((statePrev) => ({
@@ -115,6 +125,7 @@ export const useRecordsList = () => {
         syncStatusLoading: true,
         syncStatusFetched: false,
       }));
+      dispatch(AutoSyncActions.checkStart());
       const stateNext = {
         records,
         loading: false,
@@ -127,13 +138,17 @@ export const useRecordsList = () => {
             cycle,
             onlyLocal,
           });
+          dispatch(AutoSyncActions.checkEnd(_records));
           Object.assign(stateNext, {
             loading: false,
             records: _records,
             syncStatusFetched: true,
           });
+        } else {
+          dispatch(AutoSyncActions.checkAborted());
         }
       } catch (error) {
+        dispatch(AutoSyncActions.checkAborted());
         dispatch(
           MessageActions.setMessage({
             content: "dataEntry:errorFetchingRecordsSyncStatus",
@@ -144,6 +159,46 @@ export const useRecordsList = () => {
       setState((statePrev) => ({ ...statePrev, ...stateNext }));
       return stateNext as RecordsListState;
     }, [dispatch, navigation, survey, cycle, records, onlyLocal]);
+
+  // when auto sync is on, keep the sync status visible in the list without requiring the
+  // user to press "check status" manually; skip it if auto-sync itself couldn't run anyway
+  // (no network/no logged in user), to avoid popping the "connect to remote server" dialog
+  const canCheckAutoSyncStatus =
+    autoSyncEnabled && networkAvailable && !!loggedInUser && !isDemoSurvey;
+
+  const checkAutoSyncStatusIfNeeded = useCallback(() => {
+    if (canCheckAutoSyncStatus) {
+      loadRecordsWithSyncStatus();
+    }
+  }, [canCheckAutoSyncStatus, loadRecordsWithSyncStatus]);
+
+  useEffect(() => {
+    checkAutoSyncStatusIfNeeded();
+  }, [checkAutoSyncStatusIfNeeded, cycle, onlyLocal]);
+
+  // refresh the sync status right after a background auto-sync tick finishes, while this
+  // screen is mounted (it stays mounted, just unfocused, while the user is on another screen,
+  // e.g. editing a record - see the focus handler below for the case where a tick finished
+  // while the screen was unfocused instead)
+  const autoSyncUploadRunningPrevRef = useRef(false);
+  useEffect(() => {
+    if (autoSyncUploadRunningPrevRef.current && !autoSyncUploadRunning) {
+      checkAutoSyncStatusIfNeeded();
+    }
+    autoSyncUploadRunningPrevRef.current = autoSyncUploadRunning;
+  }, [autoSyncUploadRunning, checkAutoSyncStatusIfNeeded]);
+
+  // refresh records list (and, if eligible, sync status) whenever this screen regains focus,
+  // e.g. coming back from editing a record: `loadRecords` alone would otherwise reset
+  // syncStatusFetched to false and leave the auto-sync status icon showing a stale/unchecked
+  // state until the next background tick happens to start and end while focused again.
+  // Sequenced (not two independent focus listeners) so the network-based sync status refresh
+  // always applies after, and is not overwritten by, the local-only reload.
+  const onFocus = useCallback(async () => {
+    await loadRecords();
+    checkAutoSyncStatusIfNeeded();
+  }, [loadRecords, checkAutoSyncStatusIfNeeded]);
+  useNavigationFocus(onFocus);
 
   const onOnlyLocalChange = useCallback(
     (onlyLocalUpdated: boolean) =>
@@ -352,6 +407,7 @@ export const useRecordsList = () => {
   }, [searchValue, records, survey, lang, t]);
 
   return {
+    autoSyncEnabled,
     cycle,
     defaultCycleKey,
     isDemoSurvey,

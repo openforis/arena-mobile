@@ -10,6 +10,7 @@ import {
   VView,
 } from "components";
 
+import { AutoSyncStatusIcon } from "./AutoSyncStatusIcon";
 import { RecordsDataVisualizer } from "./RecordsDataVisualizer";
 import { RecordsListLegend } from "./RecordsListLegend";
 import { RecordsListOptions } from "./RecordsListOptions";
@@ -21,6 +22,7 @@ import styles from "./styles";
 
 export const RecordsList = () => {
   const {
+    autoSyncEnabled,
     cycle,
     defaultCycleKey,
     isDemoSurvey,
@@ -86,6 +88,12 @@ export const RecordsList = () => {
           onRevalidateAllRecordsPress={onRevalidateAllRecordsPress}
           syncStatusLoading={syncStatusLoading}
         />
+        {autoSyncEnabled && (
+          <HView style={styles.autoSyncStatusRow}>
+            <Text textKey="dataEntry:autoSync.statusLabel" />
+            <AutoSyncStatusIcon />
+          </HView>
+        )}
         {loading ? (
           <Loader />
         ) : (
@@ -124,7 +132,7 @@ export const RecordsList = () => {
       {recordsLength > 0 && (
         <HView style={styles.bottomActionBar}>
           {newRecordButton}
-          {!isDemoSurvey && (
+          {!isDemoSurvey && !autoSyncEnabled && (
             <Button
               icon="cloud-refresh"
               onPress={onSendDataPress}

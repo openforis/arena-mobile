@@ -1,6 +1,26 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Synchronisation automatique",
+    synced: "{{count}} enregistrement synchronisé automatiquement",
+    synced_plural: "{{count}} enregistrements synchronisés automatiquement",
+    statusLabel: "État de synchronisation :",
+    syncInProgressToast:
+      "La synchronisation automatique est en cours. Veuillez attendre qu'elle se termine avant d'envoyer des données manuellement.",
+    status: {
+      syncedTooltip: "Tous les enregistrements sont synchronisés avec le serveur",
+      pendingTooltip:
+        "Certains enregistrements doivent encore être synchronisés. Ils seront envoyés automatiquement",
+      errorTooltip:
+        "Certains enregistrements présentent des erreurs de synchronisation et nécessitent votre attention. Ouvrez « Envoyer données » pour les résoudre",
+      syncingTooltip: "Synchronisation des enregistrements...",
+      syncingTooltipWithProgress:
+        "Synchronisation des enregistrements... {{progressPercent}} %",
+      uncheckedTooltip:
+        "État de synchronisation non encore vérifié. Utilisez « Vérifier synchronisation » pour le vérifier",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Les nœuds ne s'appliqueront plus",
     message: `Les nœuds suivants ne s'appliqueront plus :  

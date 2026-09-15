@@ -7,6 +7,7 @@ import {
 import { RecordService } from "service";
 import { log } from "utils";
 
+import { AutoSyncActions } from "../autoSync";
 import { SurveySelectors } from "../survey";
 import { ToastActions } from "../toast";
 import { exportRecords } from "./actionsDataExport";
@@ -58,12 +59,14 @@ const runAutoSync = () => async (dispatch: any, getState: any) => {
   if (!survey || !Surveys.isRecordsUploadFromMobileAllowed(survey)) return;
 
   tickInProgress = true;
+  dispatch(AutoSyncActions.checkStart());
   try {
     const records = await RecordService.syncRecordSummaries({
       survey,
       cycle,
       onlyLocal: false,
     });
+    dispatch(AutoSyncActions.checkEnd(records));
 
     const currentlyEditedRecordUuid = DataEntrySelectors.selectRecord(getState())?.uuid;
 
@@ -96,6 +99,7 @@ const runAutoSync = () => async (dispatch: any, getState: any) => {
   } catch (error) {
     // best-effort background operation: log and let the next tick retry
     log.warn(`auto-sync tick failed: ${error}`);
+    dispatch(AutoSyncActions.checkAborted());
   } finally {
     tickInProgress = false;
   }
