@@ -4,7 +4,7 @@ import { Surface } from "react-native-paper";
 import { useEffectiveTheme } from "hooks";
 import { useTranslation } from "localization";
 
-import { Button, ButtonProps } from "../Button";
+import { Button, ButtonMode, ButtonProps } from "../Button";
 import { FlexWrapView } from "../FlexWrapView";
 
 import styles from "./styles";
@@ -14,7 +14,7 @@ export type SelectedItemsAction = {
   icon?: string;
   labelKey: string;
   labelParams?: Record<string, any>;
-  mode?: ButtonProps["mode"];
+  mode?: ButtonMode;
   onPress: () => void;
   textColor?: string;
 };
