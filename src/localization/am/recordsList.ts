@@ -63,6 +63,15 @@ export default {
     all: "ሁሉም መዝገቦች",
     local: "በመሣሪያው ላይ ያሉ መዝገቦች",
   },
+  revalidateRecords: {
+    title: "እንደገና አረጋግጥ",
+    allRecordsTitle: "ሁሉንም መዝገቦች እንደገና አረጋግጥ",
+    confirm: {
+      message:
+        "ለተመረጡት {{recordsCount}} መዝገቦች ማረጋገጫን እንደገና ያስሉ? መዝገብን ሲያርትዑ ማግኘት የማይችሏቸው ስህተቶች ወይም ማስጠንቀቂያዎች ካሳየ ይህን ይጠቀሙ።",
+    },
+    completeSuccessfully: "መዝገቦቹ በተሳካ ሁኔታ እንደገና ተረጋግጠዋል!",
+  },
   sendData: {
     error: {
       generic: "መረጃውን ወደ አገልጋዩ መላክ አይቻልም: {{details}}",

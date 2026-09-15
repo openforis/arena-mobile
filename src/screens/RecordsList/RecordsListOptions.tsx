@@ -24,6 +24,7 @@ type RecordsListOptionsProps = {
   syncStatusLoading?: boolean;
   onRemoteSyncPress: () => void;
   onImportRecordsFromFilePress: () => void;
+  onRevalidateAllRecordsPress: () => void;
 };
 
 enum RecordsType {
@@ -43,6 +44,7 @@ export const RecordsListOptions = (props: RecordsListOptionsProps) => {
     syncStatusLoading,
     onRemoteSyncPress,
     onImportRecordsFromFilePress,
+    onRevalidateAllRecordsPress,
   } = props;
 
   const networkAvailable = useIsNetworkConnected();
@@ -99,6 +101,12 @@ export const RecordsListOptions = (props: RecordsListOptionsProps) => {
           icon="file-import-outline"
           onPress={onImportRecordsFromFilePress}
           textKey="recordsList:importRecordsFromFile.title"
+        />
+        <Button
+          color="secondary"
+          icon="clipboard-check-outline"
+          onPress={onRevalidateAllRecordsPress}
+          textKey="recordsList:revalidateRecords.allRecordsTitle"
         />
       </FlexWrapView>
     </CollapsiblePanel>

@@ -1,5 +1,6 @@
 import type { StyleProp, ViewStyle } from "react-native";
 
+import type { SelectedItemsAction } from "../SelectableList";
 import { ScreenViewMode, SortObject } from "model";
 
 export type DataVisualizerCellProps = {
@@ -32,10 +33,15 @@ export type DataVisualizerProps = {
   onItemLongPress?: (item: any) => void;
   onSelectionChange?: (selectedIds: string[]) => void;
   onSortChange?: (sort: SortObject) => void;
-  onDeleteSelectedItemIds?: (ids: string[]) => void;
+  // Resolving to `false` means nothing was deleted (e.g. the user canceled a confirm
+  // dialog) and the current selection is kept; any other result (including void, for
+  // handlers that don't report cancellation) clears it.
+  onDeleteSelectedItemIds?: (
+    ids: string[],
+  ) => Promise<boolean | void> | boolean | void;
   selectable?: boolean;
   selectedItemIds?: string[];
-  selectedItemsCustomActions?: any[];
+  selectedItemsCustomActions?: SelectedItemsAction[];
   showPagination?: boolean;
   sort?: SortObject;
 };
