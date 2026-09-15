@@ -40,10 +40,10 @@ const fetchFileUuidsByRecordUuid = async ({
 }: any): Promise<Record<string, string[]>> => {
   try {
     const { data } = await RemoteService.post(
-      `api/mobile/survey/${surveyRemoteId}/records/files-summary`,
+      `api/mobile/survey/${surveyRemoteId}/records/file-uuids`,
       { recordUuids },
     );
-    return data?.files ?? {};
+    return data?.fileUuids ?? {};
   } catch (error) {
     log.warn(`error fetching file uuids by record uuid: ${error}`);
     return {};
