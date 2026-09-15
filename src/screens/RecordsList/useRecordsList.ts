@@ -226,7 +226,9 @@ export const useRecordsList = () => {
       ) {
         await dispatch(DataEntryActions.deleteRecords(recordUuids));
         await loadRecords();
+        return true;
       }
+      return false;
     },
     [confirm, dispatch, loadRecords],
   );

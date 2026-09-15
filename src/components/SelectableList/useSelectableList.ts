@@ -74,8 +74,13 @@ export const useSelectableList = (props: any) => {
       setState((statePrev) => ({ ...statePrev, ...initialState }));
     };
     if (onDeleteSelectedItemIds) {
+      // onDeleteSelectedItemIds resolves to false (e.g. user canceled the confirm dialog)
+      // when nothing was actually deleted: keep the selection in that case, so the user
+      // can still choose another action for the items they selected.
       onDeleteSelectedItemIds(selectedItemIds)
-        ?.then(performDelete)
+        ?.then((deleted: boolean) => {
+          if (deleted) performDelete();
+        })
         ?.catch(() => {
           // ignore it
         });

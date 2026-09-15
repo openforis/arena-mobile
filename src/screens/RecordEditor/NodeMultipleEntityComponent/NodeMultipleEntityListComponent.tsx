@@ -125,7 +125,9 @@ export const NodeMultipleEntityListComponent = (
         })
       ) {
         dispatch(DataEntryActions.deleteNodes(nodeUuids));
+        return true;
       }
+      return false;
     },
     [confirm, dispatch],
   );
