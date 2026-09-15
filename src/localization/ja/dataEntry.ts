@@ -1,6 +1,24 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "自動同期",
+    synced: "{{count}}件のレコードを自動同期しました",
+    synced_plural: "{{count}}件のレコードを自動同期しました",
+    statusLabel: "同期状態:",
+    syncInProgressToast:
+      "自動同期を実行中です。手動でデータを送信する前に完了をお待ちください。",
+    status: {
+      syncedTooltip: "すべてのレコードがサーバーと同期しています",
+      pendingTooltip: "同期が必要なレコードがあります。自動的に送信されます",
+      errorTooltip:
+        "同期エラーのあるレコードがあり、対応が必要です。「データを送信」を開いて解決してください",
+      syncingTooltip: "レコードを同期しています...",
+      syncingTooltipWithProgress: "レコードを同期しています... {{progressPercent}}%",
+      uncheckedTooltip:
+        "同期状態はまだ確認されていません。「状態を確認」で確認してください",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "ノードは適用されなくなります",
     message: `以下のノードは適用されなくなります：  

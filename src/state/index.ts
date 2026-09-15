@@ -1,9 +1,18 @@
+export {
+  AutoSyncActions,
+  AutoSyncReducer,
+  AutoSyncSelectors,
+  AutoSyncStatus,
+} from "./autoSync";
+export type { AutoSyncState } from "./autoSync";
+
 export { ConfirmActions, ConfirmReducer, useConfirm } from "./confirm";
 
 export {
   DataEntryActions,
   DataEntryReducer,
   DataEntrySelectors,
+  useAutoSyncMonitor,
 } from "./dataEntry";
 
 export {

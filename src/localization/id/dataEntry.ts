@@ -1,6 +1,26 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Sinkronisasi otomatis",
+    synced: "{{count}} catatan disinkronkan otomatis",
+    synced_plural: "{{count}} catatan disinkronkan otomatis",
+    statusLabel: "Status sinkronisasi:",
+    syncInProgressToast:
+      "Sinkronisasi otomatis sedang berlangsung. Harap tunggu hingga selesai sebelum mengirim data secara manual.",
+    status: {
+      syncedTooltip: "Semua catatan telah disinkronkan dengan server",
+      pendingTooltip:
+        "Beberapa catatan masih perlu disinkronkan. Catatan akan dikirim secara otomatis",
+      errorTooltip:
+        "Beberapa catatan memiliki kesalahan sinkronisasi dan memerlukan perhatian Anda. Buka 'Kirim data' untuk menyelesaikannya",
+      syncingTooltip: "Menyinkronkan catatan...",
+      syncingTooltipWithProgress:
+        "Menyinkronkan catatan... {{progressPercent}}%",
+      uncheckedTooltip:
+        "Status sinkronisasi belum diperiksa. Gunakan 'Periksa status' untuk memeriksanya",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Node tidak akan berlaku lagi",
     message: `Node berikut tidak akan berlaku lagi:  

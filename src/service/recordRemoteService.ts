@@ -30,6 +30,26 @@ const fetchRecordsSummaries = async ({ surveyRemoteId, cycle }: any) => {
   return list;
 };
 
+// For each given record uuid, the uuids of the files the server already has stored for it -
+// used to skip re-uploading file content that hasn't changed. Returns an empty result (i.e.
+// nothing gets skipped, every file is uploaded as before) if the server doesn't support this
+// endpoint yet, so this stays compatible with older Arena servers.
+const fetchFileUuidsByRecordUuid = async ({
+  surveyRemoteId,
+  recordUuids,
+}: any): Promise<Record<string, string[]>> => {
+  try {
+    const { data } = await RemoteService.post(
+      `api/mobile/survey/${surveyRemoteId}/records/file-uuids`,
+      { recordUuids },
+    );
+    return data?.fileUuids ?? {};
+  } catch (error) {
+    log.warn(`error fetching file uuids by record uuid: ${error}`);
+    return {};
+  }
+};
+
 const startExportRecords = async ({ survey, cycle, recordUuids }: any) => {
   const { remoteId: surveyRemoteId } = survey;
   const params = { cycle, recordUuids };
@@ -162,6 +182,7 @@ const uploadRecords = ({
 
 export const RecordRemoteService = {
   fetchRecordsSummaries,
+  fetchFileUuidsByRecordUuid,
   startExportRecords,
   downloadExportedRecordsFile,
   uploadRecords,

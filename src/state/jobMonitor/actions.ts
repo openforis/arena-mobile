@@ -187,6 +187,7 @@ type JobStartParams = {
   onCancel?: () => void;
   onClose?: () => void;
   autoDismiss?: boolean;
+  silent?: boolean;
   showTransferStats?: boolean;
   transferSizeTextKey?: string | null;
   transferSpeedTextKey?: string | null;
@@ -211,6 +212,7 @@ const start =
     onCancel: onCancelProp = undefined,
     onClose = undefined,
     autoDismiss = false,
+    silent = false,
     showTransferStats = false,
     transferSizeTextKey = null,
     transferSpeedTextKey = null,
@@ -229,6 +231,7 @@ const start =
           onCancel: createOnCancelCallback({ job, onCancelProp }),
           onClose,
           autoDismiss,
+          silent,
           showTransferStats,
           transferTotalBytes: null,
           transferSpeedBytesPerSec: null,

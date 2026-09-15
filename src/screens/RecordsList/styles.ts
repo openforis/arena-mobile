@@ -11,6 +11,7 @@ export default StyleSheet.create({
     gap: 20,
   },
   formItem: { alignItems: "center" },
+  autoSyncStatusRow: { alignItems: "center", gap: 8 },
   formItemLabel: { fontSize: 16, width: 170 },
   innerContainer: {
     flex: 1,

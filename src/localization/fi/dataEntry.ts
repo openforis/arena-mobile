@@ -1,6 +1,26 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Automaattinen synkronointi",
+    synced: "{{count}} tietue synkronoitu automaattisesti",
+    synced_plural: "{{count}} tietuetta synkronoitu automaattisesti",
+    statusLabel: "Synkronoinnin tila:",
+    syncInProgressToast:
+      "Automaattinen synkronointi on käynnissä. Odota, että se valmistuu, ennen kuin lähetät tietoja manuaalisesti.",
+    status: {
+      syncedTooltip: "Kaikki tietueet on synkronoitu palvelimen kanssa",
+      pendingTooltip:
+        "Joitakin tietueita ei ole vielä synkronoitu. Ne lähetetään automaattisesti",
+      errorTooltip:
+        "Joissakin tietueissa on synkronointivirheitä, jotka vaativat huomiotasi. Avaa 'Lähetä tiedot' ratkaistaksesi ne",
+      syncingTooltip: "Synkronoidaan tietueita...",
+      syncingTooltipWithProgress:
+        "Synkronoidaan tietueita... {{progressPercent}} %",
+      uncheckedTooltip:
+        "Synkronoinnin tilaa ei ole vielä tarkistettu. Tarkista se kohdasta 'Tarkista tila'",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Solmut eivät enää koske",
     message: `Seuraavat solmut eivät enää koske:  

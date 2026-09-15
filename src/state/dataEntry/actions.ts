@@ -45,6 +45,7 @@ import {
   RemoteConnectionSelectors,
 } from "../remoteConnection";
 import { exportRecords, startCsvDataExportJob } from "./actionsDataExport";
+import { runAutoSync } from "./actionsAutoSync";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
 import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
 import {
@@ -957,4 +958,5 @@ export const DataEntryActions = {
   fetchRecordsFromServer,
   cloneRecordsIntoDefaultCycle,
   revalidateRecords,
+  runAutoSync,
 };

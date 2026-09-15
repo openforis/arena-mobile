@@ -13,6 +13,7 @@ import {
   SurveyActions,
   SurveySelectors,
   useAppDispatch,
+  useAutoSyncMonitor,
 } from "state";
 
 type CurrentSurveyCoordinatorContextValue = {
@@ -40,6 +41,8 @@ export const CurrentSurveyCoordinator = ({ children }: Props) => {
   const singleSurveyFetchInProgressRef = useRef(false);
 
   const surveySelected = !!survey;
+
+  useAutoSyncMonitor();
 
   useEffect(() => {
     if (

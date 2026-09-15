@@ -10,6 +10,7 @@ const initialState: JobMonitorState = {
   cancelButtonTextKey: "common:cancel",
   closeButtonTextKey: "common:close",
   progressPercent: 0,
+  silent: false,
   status: JobStatus.pending,
   showTransferStats: false,
   transferTotalBytes: null,

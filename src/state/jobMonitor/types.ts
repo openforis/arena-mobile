@@ -10,6 +10,7 @@ export type JobMonitorState = {
     messageKey?: string;
     messageParams?: any;
     progressPercent: number;
+    silent: boolean;
     status: JobStatus;
     showTransferStats: boolean;
     transferTotalBytes: number | null;

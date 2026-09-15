@@ -9,7 +9,7 @@ import {
   RecordSyncStatus,
   RecordUpdateConflictResolutionStrategy as ConflictResolutionStrategy,
 } from "model";
-import { DataEntryActions, useAppDispatch, useConfirm } from "state";
+import { AutoSyncSelectors, DataEntryActions, useAppDispatch, useConfirm } from "state";
 import { OnConfirmParams } from "state/confirm";
 
 import {
@@ -44,6 +44,15 @@ export const useRecordsExport = ({
   const { t } = useTranslation();
   const toaster = useToast();
   const confirm = useConfirm();
+  // reactive, for greying out UI (the download menu item below) - fine if a render behind
+  const autoSyncRunning = AutoSyncSelectors.useAutoSyncRunning();
+  // live re-check via getState(), for the actual guard right before starting a manual export:
+  // a useCallback closure over the reactive value above can go stale mid-flight, e.g. when the
+  // callback's own call to loadRecordsWithSyncStatus() is what flips "checking" on and off
+  const isAutoSyncRunningNow = useCallback(
+    () => dispatch((_dispatch: any, getState: any) => AutoSyncSelectors.selectAutoSyncRunning(getState())),
+    [dispatch],
+  );
 
   const confirmExportRecords = useCallback(
     async ({
@@ -134,6 +143,10 @@ export const useRecordsExport = ({
 
   const exportSelectedRecords = useCallback(
     async ({ selectedRecords, onlyRemote = false }: any) => {
+      if (isAutoSyncRunningNow()) {
+        toaster("dataEntry:autoSync.syncInProgressToast");
+        return;
+      }
       const {
         newRecords,
         updatedRecords,
@@ -202,6 +215,7 @@ export const useRecordsExport = ({
       }
     },
     [
+      isAutoSyncRunningNow,
       confirm,
       confirmExportRecords,
       cycle,
@@ -320,7 +334,7 @@ export const useRecordsExport = ({
         key: "exportNewOrUpdatedRecords",
         icon: "upload",
         label: "dataEntry:exportNewOrUpdatedRecords",
-        disabled: !syncStatusFetched,
+        disabled: !syncStatusFetched || autoSyncRunning,
         onPress: onExportNewOrUpdatedRecordsPress,
       },
       {
@@ -338,6 +352,7 @@ export const useRecordsExport = ({
     );
     return items;
   }, [
+    autoSyncRunning,
     isDemoSurvey,
     syncStatusFetched,
     onExportNewOrUpdatedRecordsPress,

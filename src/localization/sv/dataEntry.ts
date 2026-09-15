@@ -1,6 +1,25 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Automatisk synkronisering",
+    synced: "{{count}} post synkroniserad automatiskt",
+    synced_plural: "{{count}} poster synkroniserade automatiskt",
+    statusLabel: "Synkroniseringsstatus:",
+    syncInProgressToast:
+      "Automatisk synkronisering pågår. Vänta tills den är klar innan du skickar data manuellt.",
+    status: {
+      syncedTooltip: "Alla poster är synkroniserade med servern",
+      pendingTooltip:
+        "Vissa poster behöver fortfarande synkroniseras. De skickas automatiskt",
+      errorTooltip:
+        "Vissa poster har synkroniseringsfel och behöver din uppmärksamhet. Öppna 'Skicka data' för att åtgärda dem",
+      syncingTooltip: "Synkroniserar poster...",
+      syncingTooltipWithProgress: "Synkroniserar poster... {{progressPercent}}%",
+      uncheckedTooltip:
+        "Synkroniseringsstatus har inte kontrollerats än. Använd 'Kontrollera status' för att kontrollera den",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Noder kommer inte längre att gälla",
     message: `Följande noder kommer inte längre att gälla:  

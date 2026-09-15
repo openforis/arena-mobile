@@ -1,6 +1,26 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Sincronização automática",
+    synced: "{{count}} registro sincronizado automaticamente",
+    synced_plural: "{{count}} registros sincronizados automaticamente",
+    statusLabel: "Status de sincronização:",
+    syncInProgressToast:
+      "A sincronização automática está em andamento. Aguarde a conclusão antes de enviar dados manualmente.",
+    status: {
+      syncedTooltip: "Todos os registros estão sincronizados com o servidor",
+      pendingTooltip:
+        "Alguns registros ainda precisam ser sincronizados. Eles serão enviados automaticamente",
+      errorTooltip:
+        "Alguns registros têm erros de sincronização e precisam da sua atenção. Abra 'Enviar dados' para resolvê-los",
+      syncingTooltip: "Sincronizando registros...",
+      syncingTooltipWithProgress:
+        "Sincronizando registros... {{progressPercent}}%",
+      uncheckedTooltip:
+        "Status de sincronização ainda não verificado. Use 'Verificar sincronização' para verificar",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Os nós deixarão de se aplicar",
     message: `Os seguintes nós deixarão de se aplicar:  
