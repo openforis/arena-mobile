@@ -12,12 +12,14 @@ import { useAutoSyncStatus } from "./useAutoSyncStatus";
 export const AutoSyncStatusIcon = () => {
   const {
     autoSyncEnabled,
+    canCancel,
     closeDialog,
     color,
     dialogVisible,
     hasProgress,
     icon,
     onAutoSyncEnabledChange,
+    onCancel,
     openDialog,
     progressPercent,
     status,
@@ -34,8 +36,10 @@ export const AutoSyncStatusIcon = () => {
       <IconButton icon={iconOrSpinner} iconColor={color} onPress={openDialog} />
       <AutoSyncStatusDialog
         autoSyncEnabled={autoSyncEnabled}
+        canCancel={canCancel}
         hasProgress={hasProgress}
         onAutoSyncEnabledChange={onAutoSyncEnabledChange}
+        onCancel={onCancel}
         onClose={closeDialog}
         progressPercent={progressPercent}
         status={status}

@@ -1,5 +1,7 @@
 import { useCallback, useState } from "react";
 
+import { JobStatus } from "@openforis/arena-core";
+
 import { SettingsModel } from "model";
 import {
   AutoSyncSelectors,
@@ -27,11 +29,21 @@ export const useAutoSyncStatus = () => {
   const dispatch = useAppDispatch();
   const { autoSyncEnabled } = SettingsSelectors.useSettings();
   const { checking, status } = AutoSyncSelectors.useAutoSyncState();
-  const { isOpen, silent, progressPercent } = useJobMonitor();
+  const {
+    isOpen,
+    silent,
+    progressPercent,
+    status: jobStatus,
+    cancel,
+  } = useJobMonitor();
   const uploading = isOpen && silent;
   const syncing = checking || uploading;
   const hasProgress =
     uploading && typeof progressPercent === "number" && progressPercent >= 0;
+  // the zip preparation and upload/processing phases are all backed by a cancelable job; the
+  // initial local "check what's out of sync" phase (checking, no job yet) is not
+  const canCancel =
+    uploading && [JobStatus.pending, JobStatus.running].includes(jobStatus);
 
   const [dialogVisible, setDialogVisible] = useState(false);
   const openDialog = useCallback(() => setDialogVisible(true), []);
@@ -57,12 +69,14 @@ export const useAutoSyncStatus = () => {
 
   return {
     autoSyncEnabled,
+    canCancel,
     closeDialog,
     color,
     dialogVisible,
     hasProgress,
     icon,
     onAutoSyncEnabledChange,
+    onCancel: cancel,
     openDialog,
     progressPercent,
     status,

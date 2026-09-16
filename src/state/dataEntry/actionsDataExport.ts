@@ -8,7 +8,7 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
-import { RecordService, UserService } from "service";
+import { RecordService, RemoteJobService, UserService } from "service";
 import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerationJob";
 
 import { i18n } from "localization";
@@ -153,6 +153,15 @@ const startUploadDataToRemoteServer =
           jobUuid: remoteJob.uuid,
           titleKey: "dataEntry:processingData.title",
           onJobComplete,
+          onCancel: async () => {
+            // best-effort: the data restore is already running server-side by this point, so
+            // cancellation isn't guaranteed to take effect (or to take effect immediately)
+            try {
+              await RemoteJobService.cancelActiveJob();
+            } catch (error) {
+              log.warn(`auto-sync: failed to cancel remote job: ${error}`);
+            }
+          },
           silent,
         }),
       );
@@ -535,32 +544,35 @@ export const exportRecords =
           user,
           onlyRemote,
         });
-        await job.start();
-        const { errors, result, status } = job;
 
-        if (status === JobStatus.failed) {
-          _onExportFileGenerationError({ errors, dispatch, silent });
-        } else if (status === JobStatus.succeeded) {
-          await _onExportFileGenerationSucceeded({
-            result,
-            onlyLocally,
-            onlyRemote,
-            conflictResolutionStrategy,
-            onJobComplete,
-            dispatch,
-            silent,
-          });
-        } else if (silent) {
-          log.warn(`auto-sync: unexpected job status: ${status}`);
+        // wired through the job monitor (rather than a plain job.start()) so the zip
+        // preparation phase is observable and cancelable, same as the upload phase below
+        // a job is always passed in, so this always resolves with a real result (or rejects)
+        const jobComplete = (await JobMonitorActions.startAsync({
+          dispatch,
+          job,
+          titleKey: "dataEntry:dataExport.exportingData",
+          autoDismiss: true,
+          silent,
+        }))!;
+
+        await _onExportFileGenerationSucceeded({
+          result: jobComplete.result,
+          onlyLocally,
+          onlyRemote,
+          conflictResolutionStrategy,
+          onJobComplete,
+          dispatch,
+          silent,
+        });
+      } catch (error: any) {
+        if (error instanceof JobCancelError) {
+          // canceled by the user while preparing the export: nothing more to do
+        } else if (error?.status === JobStatus.failed) {
+          _onExportFileGenerationError({ errors: error.errors, dispatch, silent });
         } else {
-          dispatch(
-            MessageActions.setMessage({
-              content: `Job status: ${status}`,
-            }),
-          );
+          dispatch(handleError(error, silent));
         }
-      } catch (error) {
-        dispatch(handleError(error, silent));
       }
       await onEnd?.();
     };

@@ -21,8 +21,10 @@ const statusTextKeyByStatus: Record<AutoSyncStatus, string> = {
 
 type Props = {
   autoSyncEnabled: boolean;
+  canCancel: boolean;
   hasProgress: boolean;
   onAutoSyncEnabledChange: () => void;
+  onCancel: () => void;
   onClose: () => void;
   progressPercent: number;
   status: AutoSyncStatus;
@@ -35,8 +37,10 @@ type Props = {
 export const AutoSyncStatusDialog = (props: Props) => {
   const {
     autoSyncEnabled,
+    canCancel,
     hasProgress,
     onAutoSyncEnabledChange,
+    onCancel,
     onClose,
     progressPercent,
     status,
@@ -46,8 +50,10 @@ export const AutoSyncStatusDialog = (props: Props) => {
 
   return (
     <Dialog
+      actions={canCancel ? [{ onPress: onCancel, textKey: "common:cancel" }] : []}
       onClose={onClose}
-      showActions={false}
+      showActions={canCancel}
+      showCloseButton
       title="dataEntry:autoSync.checkbox"
       visible={visible}
     >

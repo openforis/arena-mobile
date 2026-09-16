@@ -121,6 +121,8 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       const files = [];
 
       for (const recordSummary of recordsToExport) {
+        if (this.isCanceled()) return;
+
         const { id: recordId, uuid } = recordSummary;
         const record = await RecordService.fetchRecord({ survey, recordId });
         if (!record.ownerUuid && user) {
@@ -177,8 +179,12 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
         });
       }
 
+      if (this.isCanceled()) return;
+
       // info file
       await this.writeInfoFile({ tempFolderUri });
+
+      if (this.isCanceled()) return;
 
       // create output zip file
       const timestamp = Dates.format(new Date(), DateFormats.datetimeDefault);

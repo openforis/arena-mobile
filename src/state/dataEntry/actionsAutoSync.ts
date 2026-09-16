@@ -1,3 +1,5 @@
+import NetInfo from "@react-native-community/netinfo";
+
 import { Surveys } from "@openforis/arena-core";
 
 import {
@@ -53,6 +55,12 @@ const runAutoSync = () => async (dispatch: any, getState: any) => {
 
   const state = getState();
   if (state.jobMonitor.isOpen) return; // an export/import/upload is already running
+
+  // useAutoSyncMonitor only schedules ticks while the network is up, but that check can be
+  // stale by the time this tick actually runs (e.g. connectivity dropped right as the interval
+  // fired) - re-check right before starting so a tick never kicks off offline
+  const netInfoState = await NetInfo.fetch();
+  if (!netInfoState.isConnected) return;
 
   const survey = SurveySelectors.selectCurrentSurvey(state);
   const cycle = SurveySelectors.selectCurrentSurveyCycle(state);

@@ -96,6 +96,17 @@ const post = async (uri: string, data?: Dictionary<any>) => {
   return withRetry(sendRequest);
 };
 
+const del = async (uri: string) => {
+  const serverUrl = await getServerUrl();
+  const sendRequest = async () =>
+    API.del({
+      serverUrl,
+      uri,
+      config: attachAuthenticationHeaders(),
+    });
+  return withRetry(sendRequest);
+};
+
 const postCancelableMultipartData = async (
   uri: string,
   data: Dictionary<any>,
@@ -133,6 +144,7 @@ const postMultipartData = async (
 export const RemoteService = {
   getServerUrl,
 
+  del,
   get,
   getFile,
   post,

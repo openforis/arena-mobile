@@ -10,12 +10,14 @@ import { useAutoSyncStatus } from "./useAutoSyncStatus";
 export const AutoSyncStatusAppBarAction = () => {
   const {
     autoSyncEnabled,
+    canCancel,
     closeDialog,
     color,
     dialogVisible,
     hasProgress,
     icon,
     onAutoSyncEnabledChange,
+    onCancel,
     openDialog,
     progressPercent,
     status,
@@ -32,8 +34,10 @@ export const AutoSyncStatusAppBarAction = () => {
       />
       <AutoSyncStatusDialog
         autoSyncEnabled={autoSyncEnabled}
+        canCancel={canCancel}
         hasProgress={hasProgress}
         onAutoSyncEnabledChange={onAutoSyncEnabledChange}
+        onCancel={onCancel}
         onClose={closeDialog}
         progressPercent={progressPercent}
         status={status}
