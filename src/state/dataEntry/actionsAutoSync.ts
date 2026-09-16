@@ -57,34 +57,56 @@ const selectAutoSyncCandidates = ({ records, survey, currentlyEditedRecordUuid }
  * user to review/send manually. See the "Auto sync" checkbox in RecordsListOptions.
  */
 const runAutoSync = () => async (dispatch: any, getState: any) => {
-  if (tickInProgress) return;
+  if (tickInProgress) {
+    log.debug("auto-sync: tick already in progress, skipping");
+    return;
+  }
 
   const state = getState();
-  if (state.jobMonitor.isOpen) return; // an export/import/upload is already running
+  if (state.jobMonitor.isOpen) {
+    log.debug("auto-sync: an export/import/upload is already running, skipping");
+    return;
+  }
 
-  // a previous tick already found the stored credentials invalid: don't hammer the server with
-  // more failing attempts, wait for the user to log in again (see AutoSyncReducer's
-  // RemoteConnectionActions.USER_SET handler, which clears this)
-  if (state.autoSync.status === AutoSyncStatus.authError) return;
+  // a previous tick already found the stored credentials invalid, or a check already failed
+  // for some other reason: don't hammer the server with more failing attempts, wait for the
+  // user to act (log in again, or retry manually - see the sync status icon). Cleared by a
+  // fresh login (RemoteConnectionActions' login/loginAndSetUser, see AutoSyncActions.reset) or
+  // by a manual retry that succeeds (AutoSyncActions.checkEnd)
+  if (
+    state.autoSync.status === AutoSyncStatus.authError ||
+    state.autoSync.status === AutoSyncStatus.checkError
+  ) {
+    log.debug(`auto-sync: last check ended in ${state.autoSync.status}, skipping until the user retries`);
+    return;
+  }
 
   // useAutoSyncMonitor only schedules ticks while the network is up, but that check can be
   // stale by the time this tick actually runs (e.g. connectivity dropped right as the interval
   // fired) - re-check right before starting so a tick never kicks off offline
   const netInfoState = await NetInfo.fetch();
-  if (!netInfoState.isConnected) return;
+  if (!netInfoState.isConnected) {
+    log.debug("auto-sync: no network connection, skipping");
+    return;
+  }
 
   const survey = SurveySelectors.selectCurrentSurvey(state);
   const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
-  if (!survey || !Surveys.isRecordsUploadFromMobileAllowed(survey)) return;
+  if (!survey || !Surveys.isRecordsUploadFromMobileAllowed(survey)) {
+    log.debug("auto-sync: no survey selected, or uploads not allowed for it, skipping");
+    return;
+  }
 
   tickInProgress = true;
   dispatch(AutoSyncActions.checkStart());
+  log.debug(`auto-sync: tick starting (survey=${survey.uuid}, cycle=${cycle})`);
   try {
     const records = await RecordService.syncRecordSummaries({
       survey,
       cycle,
       onlyLocal: false,
     });
+    log.debug(`auto-sync: fetched ${records.length} record summary(ies)`);
     dispatch(AutoSyncActions.checkEnd(records));
 
     const currentlyEditedRecordUuid = DataEntrySelectors.selectRecord(getState())?.uuid;
@@ -94,11 +116,20 @@ const runAutoSync = () => async (dispatch: any, getState: any) => {
       survey,
       currentlyEditedRecordUuid,
     });
-    if (candidates.length === 0) return;
+    if (candidates.length === 0) {
+      log.debug("auto-sync: no record is a safe upload candidate, nothing to do");
+      dispatch(
+        AutoSyncActions.setStatusMessage("dataEntry:autoSync.status.noCandidatesMessage"),
+      );
+      return;
+    }
 
-    log.debug(`auto-sync: uploading ${candidates.length} record(s)`);
+    log.debug(
+      `auto-sync: uploading ${candidates.length} record(s): ${candidates.map((r: any) => r.uuid).join(", ")}`,
+    );
 
     const onJobComplete = () => {
+      log.debug(`auto-sync: upload of ${candidates.length} record(s) completed`);
       dispatch(ToastActions.show("dataEntry:autoSync.synced", { count: candidates.length }));
     };
 
@@ -115,14 +146,16 @@ const runAutoSync = () => async (dispatch: any, getState: any) => {
         silent: true,
       }),
     );
+    log.debug("auto-sync: exportRecords handed off (zip preparation/upload continue in the job monitor)");
   } catch (error) {
-    log.warn(`auto-sync tick failed: ${error}`);
+    log.warn(`auto-sync: tick failed: ${error}`);
     if (isAuthError(error)) {
       // stop retrying until the user logs in again - see the guard at the top of this function
       dispatch(AutoSyncActions.authError());
     } else {
-      // best-effort background operation: log and let the next tick retry
-      dispatch(AutoSyncActions.checkAborted());
+      // shown through the sync status icon; stops further ticks until the user retries
+      // manually - see the guard at the top of this function
+      dispatch(AutoSyncActions.checkError());
     }
   } finally {
     tickInProgress = false;

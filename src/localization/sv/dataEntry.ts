@@ -8,6 +8,8 @@ export default {
     statusLabel: "Synkroniseringsstatus:",
     syncInProgressToast:
       "Automatisk synkronisering pågår. Vänta tills den är klar innan du skickar data manuellt.",
+    batteryDataWarning:
+      "Kan öka batteri- och dataanvändningen när du inte är ansluten till Wi-Fi",
     status: {
       syncedTooltip: "Alla poster är synkroniserade med servern",
       pendingTooltip:
@@ -18,6 +20,13 @@ export default {
       syncingTooltipWithProgress: "Synkroniserar poster... {{progressPercent}}%",
       uncheckedTooltip:
         "Synkroniseringsstatus har inte kontrollerats än. Använd 'Kontrollera status' för att kontrollera den",
+      offlineTooltip:
+        "Ingen internetanslutning. Automatisk synkronisering återupptas när du är online igen",
+      authErrorTooltip:
+        "Din session med servern har gått ut. Logga in igen för att återuppta automatisk synkronisering",
+      checkErrorTooltip:
+        "Det gick inte att kontrollera synkroniseringsstatus på grund av ett serverfel. Försök igen",
+      noCandidatesMessage: "Inget att skicka just nu",
     },
   },
   confirmUpdateNodesBecameNotApplicable: {

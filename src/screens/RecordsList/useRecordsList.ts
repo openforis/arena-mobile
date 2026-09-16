@@ -80,6 +80,10 @@ export const useRecordsList = () => {
     syncStatusLoading,
     syncStatusFetched,
   } = state;
+  // mirrors state.records without needing to be a useCallback dependency itself - see
+  // loadRecordsWithSyncStatus below for why that matters
+  const recordsRef = useRef(records);
+  recordsRef.current = records;
 
   const setLoading = useCallback(
     (loadingUpdated: boolean) =>
@@ -121,14 +125,22 @@ export const useRecordsList = () => {
 
   const loadRecordsWithSyncStatus =
     useCallback(async (): Promise<RecordsListState> => {
+      log.debug(
+        `loadRecordsWithSyncStatus: starting (survey=${survey?.uuid}, cycle=${cycle}, onlyLocal=${onlyLocal})`,
+      );
       setState((statePrev) => ({
         ...statePrev,
         syncStatusLoading: true,
         syncStatusFetched: false,
       }));
       dispatch(AutoSyncActions.checkStart());
-      const stateNext = {
-        records,
+      // only set on success below; left out entirely on failure/abort, so the setState merge
+      // further down falls back to whatever the current state's `records` already is, instead
+      // of this callback needing its own `records` closure (which - being replaced with a new
+      // array reference on every successful check - would otherwise make this callback's
+      // identity, and so checkAutoSyncStatusIfNeeded's below, change on every successful check,
+      // re-triggering the effects that call it and looping forever)
+      const stateNext: Partial<RecordsListState> = {
         loading: false,
         syncStatusLoading: false,
       };
@@ -139,13 +151,16 @@ export const useRecordsList = () => {
             cycle,
             onlyLocal,
           });
+          log.debug(
+            `loadRecordsWithSyncStatus: fetched ${_records.length} record summary(ies)`,
+          );
           dispatch(AutoSyncActions.checkEnd(_records));
           Object.assign(stateNext, {
-            loading: false,
             records: _records,
             syncStatusFetched: true,
           });
         } else {
+          log.debug("loadRecordsWithSyncStatus: user not logged in, aborting");
           dispatch(AutoSyncActions.checkAborted());
         }
       } catch (error) {
@@ -153,12 +168,15 @@ export const useRecordsList = () => {
         // blocking popup: a popup would otherwise reappear every time an automatic re-check is
         // triggered (screen focus, cycle change, ...) for as long as the underlying problem
         // (e.g. a server error) persists
-        log.warn(`error fetching records sync status: ${error}`);
+        log.warn(`loadRecordsWithSyncStatus: error fetching records sync status: ${error}`);
         dispatch(AutoSyncActions.checkError());
       }
       setState((statePrev) => ({ ...statePrev, ...stateNext }));
-      return stateNext as RecordsListState;
-    }, [dispatch, navigation, survey, cycle, records, onlyLocal]);
+      return {
+        ...stateNext,
+        records: stateNext.records ?? recordsRef.current,
+      } as RecordsListState;
+    }, [dispatch, navigation, survey, cycle, onlyLocal]);
 
   const { status: autoSyncStatus } = AutoSyncSelectors.useAutoSyncState();
 

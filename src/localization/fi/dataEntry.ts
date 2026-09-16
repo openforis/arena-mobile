@@ -8,6 +8,8 @@ export default {
     statusLabel: "Synkronoinnin tila:",
     syncInProgressToast:
       "Automaattinen synkronointi on käynnissä. Odota, että se valmistuu, ennen kuin lähetät tietoja manuaalisesti.",
+    batteryDataWarning:
+      "Voi lisätä akun- ja datankulutusta, kun ei olla Wi-Fi-yhteydessä",
     status: {
       syncedTooltip: "Kaikki tietueet on synkronoitu palvelimen kanssa",
       pendingTooltip:
@@ -19,6 +21,13 @@ export default {
         "Synkronoidaan tietueita... {{progressPercent}} %",
       uncheckedTooltip:
         "Synkronoinnin tilaa ei ole vielä tarkistettu. Tarkista se kohdasta 'Tarkista tila'",
+      offlineTooltip:
+        "Ei internetyhteyttä. Automaattinen synkronointi jatkuu, kun yhteys palautuu",
+      authErrorTooltip:
+        "Istuntosi palvelimen kanssa on vanhentunut. Kirjaudu uudelleen sisään jatkaaksesi automaattista synkronointia",
+      checkErrorTooltip:
+        "Synkronoinnin tilaa ei voitu tarkistaa palvelinvirheen vuoksi. Yritä uudelleen",
+      noCandidatesMessage: "Ei juuri nyt mitään lähetettävää",
     },
   },
   confirmUpdateNodesBecameNotApplicable: {

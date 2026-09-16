@@ -38,7 +38,7 @@ export type AutoSyncConnectionIssue = "offline" | "authError" | null;
 export const useAutoSyncStatus = () => {
   const dispatch = useAppDispatch();
   const { autoSyncEnabled } = SettingsSelectors.useSettings();
-  const { checking, status } = AutoSyncSelectors.useAutoSyncState();
+  const { checking, status, message } = AutoSyncSelectors.useAutoSyncState();
   const {
     isOpen,
     silent,
@@ -73,8 +73,9 @@ export const useAutoSyncStatus = () => {
 
   // a failed check stops retrying on its own (see useRecordsList.checkAutoSyncStatusIfNeeded and
   // runAutoSync's own guard for authError) - offer an explicit way to try again from here, the
-  // one place every screen that shows this status also lets the user act on it
-  const canRetry = status === AutoSyncStatus.checkError;
+  // one place every screen that shows this status also lets the user act on it. Meaningless
+  // while auto-sync itself is off, same as the error text it goes with (see AutoSyncStatusDialog)
+  const canRetry = autoSyncEnabled && status === AutoSyncStatus.checkError;
   const onRetry = useCallback(() => {
     dispatch(DataEntryActions.runAutoSync());
   }, [dispatch]);
@@ -117,6 +118,7 @@ export const useAutoSyncStatus = () => {
     dialogVisible,
     hasProgress,
     icon,
+    message,
     onAutoSyncEnabledChange,
     onCancel: cancel,
     onRetry,

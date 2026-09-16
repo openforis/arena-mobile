@@ -11,6 +11,10 @@ export default {
     description:
       "アプリ全体の画面遷移やインターフェースのアニメーションを有効にします。動作が遅い端末ではパフォーマンス向上のため無効にしてください",
   },
+  autoSyncEnabled: {
+    label: "自動同期",
+    description: "$t(dataEntry:autoSync.batteryDataWarning)",
+  },
   connectionToServer: "サーバーへの接続",
   fontScale: {
     label: "フォントの大きさ：{{value}}",

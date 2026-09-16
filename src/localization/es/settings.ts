@@ -11,6 +11,10 @@ export default {
     description:
       "Activa las animaciones de transición e interfaz en toda la aplicación. Desactívela para mejorar el rendimiento en dispositivos más lentos",
   },
+  autoSyncEnabled: {
+    label: "Sincronización automática",
+    description: "$t(dataEntry:autoSync.batteryDataWarning)",
+  },
   connectionToServer: "Conexión al servidor",
   fontScale: {
     label: "Escala de fuente: {{value}}",

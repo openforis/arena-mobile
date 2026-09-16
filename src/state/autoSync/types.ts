@@ -11,8 +11,16 @@ export enum AutoSyncStatus {
   checkError = "checkError",
 }
 
+export type AutoSyncMessage = {
+  textKey: string;
+  textParams?: Record<string, any>;
+} | null;
+
 export type AutoSyncState = {
   checking: boolean;
   lastCheckedAt: string | null;
   status: AutoSyncStatus;
+  // a short, more specific note about the last completed tick/check than `status` alone
+  // conveys (e.g. "nothing to send right now") - see AutoSyncActions.setMessage
+  message: AutoSyncMessage;
 };

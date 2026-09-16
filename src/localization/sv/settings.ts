@@ -11,6 +11,10 @@ export default {
     description:
       "Aktiverar övergångs- och gränssnittsanimationer i hela appen. Inaktivera för att förbättra prestandan på långsammare enheter",
   },
+  autoSyncEnabled: {
+    label: "Automatisk synkronisering",
+    description: "$t(dataEntry:autoSync.batteryDataWarning)",
+  },
   connectionToServer: "Anslutning till servern",
   fontScale: {
     label: "Fontskala: {{value}}",

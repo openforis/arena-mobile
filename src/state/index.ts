@@ -4,7 +4,7 @@ export {
   AutoSyncSelectors,
   AutoSyncStatus,
 } from "./autoSync";
-export type { AutoSyncState } from "./autoSync";
+export type { AutoSyncMessage, AutoSyncState } from "./autoSync";
 
 export { ConfirmActions, ConfirmReducer, useConfirm } from "./confirm";
 

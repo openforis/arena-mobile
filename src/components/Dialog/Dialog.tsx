@@ -4,6 +4,7 @@ import { Dialog as RNPDialog, Surface, useTheme } from "react-native-paper";
 
 import { useTranslation } from "localization";
 import { Button } from "../Button";
+import { CloseIconButton } from "../CloseIconButton";
 import { BaseModal } from "../Modal/BaseModal";
 
 type DialogAction = {
@@ -14,10 +15,10 @@ type DialogAction = {
 type DialogProps = {
   children?: React.ReactNode;
   actions?: DialogAction[];
-  closeButtonTextKey?: string;
   dismissable?: boolean;
   onClose?: () => void;
   showActions?: boolean;
+  // renders a close (x) icon button in the top right corner, next to the title
   showCloseButton?: boolean;
   style?: any;
   title?: string;
@@ -28,7 +29,6 @@ export const Dialog = (props: DialogProps) => {
   const {
     actions = [],
     children,
-    closeButtonTextKey = "common:close",
     dismissable: dismissableProp = true,
     onClose,
     showActions = true,
@@ -71,8 +71,17 @@ export const Dialog = (props: DialogProps) => {
             ]}
             elevation={3}
           >
-            {title && (
-              <RNPDialog.Title style={styles.title}>{t(title)}</RNPDialog.Title>
+            {(title || showCloseButton) && (
+              <View style={styles.titleRow}>
+                <View style={styles.titleTextWrapper}>
+                  {title && (
+                    <RNPDialog.Title style={styles.title}>
+                      {t(title)}
+                    </RNPDialog.Title>
+                  )}
+                </View>
+                {showCloseButton && <CloseIconButton onPress={handleClose} />}
+              </View>
             )}
             <RNPDialog.Content>{children}</RNPDialog.Content>
             {showActions && (
@@ -80,9 +89,6 @@ export const Dialog = (props: DialogProps) => {
                 {actions.map(({ onPress, textKey }: DialogAction) => (
                   <Button key={textKey} onPress={onPress} textKey={textKey} />
                 ))}
-                {showCloseButton && (
-                  <Button onPress={handleClose} textKey={closeButtonTextKey} />
-                )}
               </RNPDialog.Actions>
             )}
           </Surface>
@@ -110,6 +116,14 @@ const styles = StyleSheet.create({
     borderRadius: 28,
   },
   surfaceFlex: {
+    flex: 1,
+  },
+  titleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingRight: 8,
+  },
+  titleTextWrapper: {
     flex: 1,
   },
   title: {

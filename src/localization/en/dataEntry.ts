@@ -8,6 +8,8 @@ export default {
     statusLabel: "Sync status:",
     syncInProgressToast:
       "Auto-sync is in progress. Please wait for it to finish before sending data manually.",
+    batteryDataWarning:
+      "May increase battery and data usage when not on Wi-Fi",
     status: {
       syncedTooltip: "All records are synchronized with the server",
       pendingTooltip:
@@ -24,6 +26,7 @@ export default {
         "Your session with the server has expired. Log in again to resume auto-sync",
       checkErrorTooltip:
         "Couldn't check the sync status due to a server error. Try again",
+      noCandidatesMessage: "Nothing to send right now",
     },
   },
   confirmUpdateNodesBecameNotApplicable: {

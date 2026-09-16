@@ -11,7 +11,6 @@ export default StyleSheet.create({
     gap: 20,
   },
   formItem: { alignItems: "center" },
-  autoSyncStatusRow: { alignItems: "center", gap: 8 },
   formItemLabel: { fontSize: 16, width: 170 },
   innerContainer: {
     flex: 1,
@@ -28,6 +27,7 @@ export default StyleSheet.create({
   newRecordButton: {
     alignSelf: "center",
   },
+  autoSyncStatusItem: { alignItems: "center", gap: 8 },
   exportDataButtonMenu: {
     alignSelf: "flex-end",
     transform: [{ translateY: -40 }],

@@ -76,6 +76,10 @@ const properties: SettingsProperties = {
     type: PropertyType.boolean,
     group: SettingGroup.appearance,
   },
+  autoSyncEnabled: {
+    type: PropertyType.boolean,
+    group: SettingGroup.dataEntry,
+  },
   fullScreen: {
     type: PropertyType.boolean,
     group: SettingGroup.dataEntry,

@@ -8,6 +8,8 @@ export default {
     statusLabel: "Synchronisierungsstatus:",
     syncInProgressToast:
       "Die automatische Synchronisierung läuft. Bitte warten Sie, bis sie abgeschlossen ist, bevor Sie Daten manuell senden.",
+    batteryDataWarning:
+      "Kann Akku- und Datenverbrauch erhöhen, wenn kein WLAN genutzt wird",
     status: {
       syncedTooltip: "Alle Datensätze sind mit dem Server synchronisiert",
       pendingTooltip:
@@ -19,6 +21,13 @@ export default {
         "Datensätze werden synchronisiert... {{progressPercent}}%",
       uncheckedTooltip:
         "Synchronisierungsstatus noch nicht geprüft. Verwenden Sie 'Status prüfen', um ihn zu überprüfen",
+      offlineTooltip:
+        "Keine Internetverbindung. Die automatische Synchronisierung wird fortgesetzt, sobald Sie wieder online sind",
+      authErrorTooltip:
+        "Ihre Sitzung mit dem Server ist abgelaufen. Melden Sie sich erneut an, um die automatische Synchronisierung fortzusetzen",
+      checkErrorTooltip:
+        "Der Synchronisierungsstatus konnte aufgrund eines Serverfehlers nicht geprüft werden. Erneut versuchen",
+      noCandidatesMessage: "Derzeit nichts zu senden",
     },
   },
   confirmUpdateNodesBecameNotApplicable: {

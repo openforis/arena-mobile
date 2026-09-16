@@ -64,7 +64,12 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     } = this.context;
     const recordUuidsSet = new Set(recordUuids);
 
+    this.logger.debug(
+      `RecordsExportFileGenerationJob: starting (recordUuids=${recordUuids.length}, onlyRemote=${onlyRemote})`,
+    );
+
     const tempFolderUri = await Files.createTempFolder();
+    this.logger.debug(`RecordsExportFileGenerationJob: temp folder created at ${tempFolderUri}`);
 
     try {
       const tempRecordsFolderUri = Files.path(
@@ -81,6 +86,10 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
 
       const recordsToExport = recordsSummary.filter((recordSummary: any) =>
         recordUuidsSet.has(recordSummary.uuid),
+      );
+
+      this.logger.debug(
+        `RecordsExportFileGenerationJob: ${recordsToExport.length} of ${recordsSummary.length} local record(s) match the requested uuids`,
       );
 
       // set total
@@ -118,10 +127,17 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
             })
           : {};
 
+      this.logger.debug(
+        `RecordsExportFileGenerationJob: ${nodeDefsFile.length} file node def(s), already-on-server lookup done for ${Object.keys(filesAlreadyOnServerByRecordUuid).length} record(s)`,
+      );
+
       const files = [];
 
       for (const recordSummary of recordsToExport) {
-        if (this.isCanceled()) return;
+        if (this.isCanceled()) {
+          this.logger.debug("RecordsExportFileGenerationJob: canceled before/during record export loop");
+          return;
+        }
 
         const recordFiles = await this.exportRecord({
           recordSummary,
@@ -149,12 +165,18 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
         });
       }
 
-      if (this.isCanceled()) return;
+      if (this.isCanceled()) {
+        this.logger.debug("RecordsExportFileGenerationJob: canceled before writing info file");
+        return;
+      }
 
       // info file
       await this.writeInfoFile({ tempFolderUri });
 
-      if (this.isCanceled()) return;
+      if (this.isCanceled()) {
+        this.logger.debug("RecordsExportFileGenerationJob: canceled before zipping");
+        return;
+      }
 
       // create output zip file
       const timestamp = Dates.format(new Date(), DateFormats.datetimeDefault);
@@ -163,7 +185,14 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       // store exported file in cache directory to allow sharing it later on
       this.outputFileUri = Files.path(Files.cacheDirectory, outputFileName);
 
+      this.logger.debug(
+        `RecordsExportFileGenerationJob: zipping ${tempFolderUri} to ${this.outputFileUri} (${files.length} file(s), ${recordsToExport.length} record(s))`,
+      );
       await Files.zip(tempFolderUri, this.outputFileUri);
+      this.logger.debug("RecordsExportFileGenerationJob: zip created successfully");
+    } catch (error) {
+      this.logger.error(`RecordsExportFileGenerationJob: failed: ${error}`);
+      throw error;
     } finally {
       await Files.del(tempFolderUri);
     }

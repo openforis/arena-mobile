@@ -11,6 +11,10 @@ export default {
     description:
       "Включает анимации переходов и интерфейса во всём приложении. Отключите для повышения производительности на медленных устройствах",
   },
+  autoSyncEnabled: {
+    label: "Автосинхронизация",
+    description: "$t(dataEntry:autoSync.batteryDataWarning)",
+  },
   connectionToServer: "Подключение к серверу",
   fontScale: {
     label: "Размер шрифта: {{value}}",

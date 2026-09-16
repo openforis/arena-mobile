@@ -8,6 +8,8 @@ export default {
     statusLabel: "同期状態:",
     syncInProgressToast:
       "自動同期を実行中です。手動でデータを送信する前に完了をお待ちください。",
+    batteryDataWarning:
+      "Wi-Fi以外の接続ではバッテリーとデータ使用量が増える場合があります",
     status: {
       syncedTooltip: "すべてのレコードがサーバーと同期しています",
       pendingTooltip: "同期が必要なレコードがあります。自動的に送信されます",
@@ -17,6 +19,13 @@ export default {
       syncingTooltipWithProgress: "レコードを同期しています... {{progressPercent}}%",
       uncheckedTooltip:
         "同期状態はまだ確認されていません。「状態を確認」で確認してください",
+      offlineTooltip:
+        "インターネット接続がありません。オンラインに戻ると自動同期が再開します",
+      authErrorTooltip:
+        "サーバーとのセッションの有効期限が切れました。自動同期を再開するには再度ログインしてください",
+      checkErrorTooltip:
+        "サーバーエラーのため同期状態を確認できませんでした。再試行してください",
+      noCandidatesMessage: "現在送信するものはありません",
     },
   },
   confirmUpdateNodesBecameNotApplicable: {

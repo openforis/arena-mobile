@@ -65,11 +65,10 @@ const handleError =
   (error: any, silent = false) =>
   (dispatch: any) => {
     if (silent) {
-      // an unattended tick must never surface a blocking error dialog; next tick retries
+      // an unattended tick must never surface a blocking error dialog; shown through the sync
+      // status icon instead, which also stops further automatic ticks until the user retries
       log.warn(`auto-sync: export/upload failed: ${errorOrJobToString(error)}`);
-      if (isAuthError(error)) {
-        dispatch(AutoSyncActions.authError());
-      }
+      dispatch(isAuthError(error) ? AutoSyncActions.authError() : AutoSyncActions.checkError());
       return;
     }
     dispatch(
@@ -125,6 +124,10 @@ const startUploadDataToRemoteServer =
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
       const cycle = Surveys.getDefaultCycleKey(survey);
 
+      log.debug(
+        `startUploadDataToRemoteServer: starting upload of ${outputFileUri} (survey=${survey.uuid}, cycle=${cycle})`,
+      );
+
       const uploadJob = new RecordsUploadJob({
         user,
         survey,
@@ -152,21 +155,27 @@ const startUploadDataToRemoteServer =
           shouldRetryUpload = !uploadJobComplete;
         } catch (error: any) {
           if (silent) {
-            // an unattended tick must never block on a retry confirmation; give up, next tick retries
+            // an unattended tick must never block on a retry confirmation; shown through the
+            // sync status icon instead, which also stops further automatic ticks until the
+            // user retries
             log.warn(`auto-sync: upload failed: ${errorOrJobToString(error)}`);
-            if (isAuthError(error)) {
-              // the session has expired: let the user know (via the auto-sync status icon)
-              // rather than keep retrying a login-required upload every tick
-              dispatch(AutoSyncActions.authError());
-            }
+            dispatch(
+              isAuthError(error) ? AutoSyncActions.authError() : AutoSyncActions.checkError(),
+            );
             return;
           }
           shouldRetryUpload = await handleUploadJobError({ dispatch, error });
         }
       }
-      if (!uploadJobComplete) return;
+      if (!uploadJobComplete) {
+        log.debug("startUploadDataToRemoteServer: upload canceled");
+        return;
+      }
 
       const { remoteJob } = uploadJobComplete.result;
+      log.debug(
+        `startUploadDataToRemoteServer: upload complete, server-side processing job=${remoteJob.uuid}`,
+      );
 
       dispatch(
         JobMonitorActions.start({
@@ -352,10 +361,14 @@ const _onExportFileGenerationError = ({
     )
     .join(";\n");
   if (silent) {
+    // shown through the sync status icon instead, which also stops further automatic ticks
+    // until the user retries
     log.warn(`auto-sync: error generating records export file: ${details}`);
-    if (errorTextLooksLikeAuthError(details)) {
-      dispatch(AutoSyncActions.authError());
-    }
+    dispatch(
+      errorTextLooksLikeAuthError(details)
+        ? AutoSyncActions.authError()
+        : AutoSyncActions.checkError(),
+    );
     return;
   }
   dispatch(
@@ -557,6 +570,9 @@ export const exportRecords =
         await onJobCompleteParam?.(jobComplete);
       };
 
+      log.debug(
+        `exportRecords: starting (recordUuids=${recordUuids?.length ?? 0}, onlyLocally=${onlyLocally}, onlyRemote=${onlyRemote}, silent=${silent})`,
+      );
       try {
         const user = onlyLocally ? {} : await UserService.fetchUser();
 
@@ -579,6 +595,10 @@ export const exportRecords =
           silent,
         }))!;
 
+        log.debug(
+          `exportRecords: zip preparation succeeded, outputFileUri=${jobComplete.result?.outputFileUri}`,
+        );
+
         await _onExportFileGenerationSucceeded({
           result: jobComplete.result,
           onlyLocally,
@@ -591,9 +611,12 @@ export const exportRecords =
       } catch (error: any) {
         if (error instanceof JobCancelError) {
           // canceled by the user while preparing the export: nothing more to do
+          log.debug("exportRecords: zip preparation canceled by the user");
         } else if (error?.status === JobStatus.failed) {
+          log.warn(`exportRecords: zip preparation failed: ${JSON.stringify(error.errors)}`);
           _onExportFileGenerationError({ errors: error.errors, dispatch, silent });
         } else {
+          log.warn(`exportRecords: unexpected error: ${error}`);
           dispatch(handleError(error, silent));
         }
       }

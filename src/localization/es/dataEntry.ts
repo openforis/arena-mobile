@@ -8,6 +8,8 @@ export default {
     statusLabel: "Estado de sincronización:",
     syncInProgressToast:
       "La sincronización automática está en curso. Espere a que finalice antes de enviar datos manualmente.",
+    batteryDataWarning:
+      "Puede aumentar el consumo de batería y datos si no está en Wi-Fi",
     status: {
       syncedTooltip: "Todos los registros están sincronizados con el servidor",
       pendingTooltip:
@@ -19,6 +21,13 @@ export default {
         "Sincronizando registros... {{progressPercent}}%",
       uncheckedTooltip:
         "Estado de sincronización aún no verificado. Use 'Comprobar sincronización' para verificarlo",
+      offlineTooltip:
+        "Sin conexión a internet. La sincronización automática se reanudará al recuperar la conexión",
+      authErrorTooltip:
+        "Su sesión con el servidor ha expirado. Inicie sesión de nuevo para reanudar la sincronización automática",
+      checkErrorTooltip:
+        "No se pudo comprobar el estado de sincronización debido a un error del servidor. Inténtelo de nuevo",
+      noCandidatesMessage: "Nada que enviar por ahora",
     },
   },
   confirmUpdateNodesBecameNotApplicable: {

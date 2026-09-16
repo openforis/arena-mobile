@@ -88,10 +88,6 @@ export const RecordsList = () => {
           onRevalidateAllRecordsPress={onRevalidateAllRecordsPress}
           syncStatusLoading={syncStatusLoading}
         />
-        <HView style={styles.autoSyncStatusRow}>
-          <Text textKey="dataEntry:autoSync.statusLabel" />
-          <AutoSyncStatusIcon />
-        </HView>
         {loading ? (
           <Loader />
         ) : (
@@ -130,6 +126,10 @@ export const RecordsList = () => {
       {recordsLength > 0 && (
         <HView style={styles.bottomActionBar}>
           {newRecordButton}
+          <HView style={styles.autoSyncStatusItem}>
+            <Text textKey="dataEntry:autoSync.statusLabel" />
+            <AutoSyncStatusIcon />
+          </HView>
           {!isDemoSurvey && !autoSyncEnabled && (
             <Button
               icon="cloud-refresh"

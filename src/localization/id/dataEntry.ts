@@ -8,6 +8,8 @@ export default {
     statusLabel: "Status sinkronisasi:",
     syncInProgressToast:
       "Sinkronisasi otomatis sedang berlangsung. Harap tunggu hingga selesai sebelum mengirim data secara manual.",
+    batteryDataWarning:
+      "Dapat meningkatkan penggunaan baterai dan data saat tidak menggunakan Wi-Fi",
     status: {
       syncedTooltip: "Semua catatan telah disinkronkan dengan server",
       pendingTooltip:
@@ -19,6 +21,13 @@ export default {
         "Menyinkronkan catatan... {{progressPercent}}%",
       uncheckedTooltip:
         "Status sinkronisasi belum diperiksa. Gunakan 'Periksa status' untuk memeriksanya",
+      offlineTooltip:
+        "Tidak ada koneksi internet. Sinkronisasi otomatis akan dilanjutkan setelah kembali online",
+      authErrorTooltip:
+        "Sesi Anda dengan server telah berakhir. Masuk kembali untuk melanjutkan sinkronisasi otomatis",
+      checkErrorTooltip:
+        "Tidak dapat memeriksa status sinkronisasi karena kesalahan server. Coba lagi",
+      noCandidatesMessage: "Tidak ada yang perlu dikirim saat ini",
     },
   },
   confirmUpdateNodesBecameNotApplicable: {

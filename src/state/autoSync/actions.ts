@@ -7,9 +7,11 @@ const AUTO_SYNC_CHECK_ABORTED = "AUTO_SYNC_CHECK_ABORTED";
 const AUTO_SYNC_AUTH_ERROR = "AUTO_SYNC_AUTH_ERROR";
 const AUTO_SYNC_CHECK_ERROR = "AUTO_SYNC_CHECK_ERROR";
 const AUTO_SYNC_RESET = "AUTO_SYNC_RESET";
+const AUTO_SYNC_STATUS_MESSAGE_SET = "AUTO_SYNC_STATUS_MESSAGE_SET";
 
 // dispatched whenever records are about to be checked against the server (a manual "check
-// status"/"send data" or a background auto-sync tick), so any screen can show a "checking..." state
+// status"/"send data" or a background auto-sync tick), so any screen can show a "checking..."
+// state; also clears any message left over from the previous check (see setStatusMessage)
 const checkStart = () => ({ type: AUTO_SYNC_CHECK_START });
 
 // dispatched once fresh sync statuses have been fetched, so any screen can show an up to date
@@ -53,6 +55,14 @@ const checkError = () => ({
 // skipped forever (see runAutoSync)
 const reset = () => ({ type: AUTO_SYNC_RESET });
 
+// a short, supplementary note about the outcome of the last completed tick/check - shown
+// alongside (not instead of) the main status text, e.g. "nothing to send right now" after a
+// check that found no record safe to auto-upload. Cleared by the next checkStart.
+const setStatusMessage = (textKey: string, textParams?: Record<string, any>) => ({
+  type: AUTO_SYNC_STATUS_MESSAGE_SET,
+  payload: { message: { textKey, textParams } },
+});
+
 export const AutoSyncActions = {
   AUTO_SYNC_CHECK_START,
   AUTO_SYNC_CHECK_END,
@@ -60,6 +70,7 @@ export const AutoSyncActions = {
   AUTO_SYNC_AUTH_ERROR,
   AUTO_SYNC_CHECK_ERROR,
   AUTO_SYNC_RESET,
+  AUTO_SYNC_STATUS_MESSAGE_SET,
 
   checkStart,
   checkEnd,
@@ -67,4 +78,5 @@ export const AutoSyncActions = {
   authError,
   checkError,
   reset,
+  setStatusMessage,
 };

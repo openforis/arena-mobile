@@ -11,6 +11,10 @@ export default {
     description:
       "በመተግበሪያው ውስጥ የሽግግር እና የገጽታ አኒሜሽኖችን ያነቃል። በዝግተኛ መሣሪያዎች ላይ አፈጻጸምን ለማሻሻል ያሰናክሉት",
   },
+  autoSyncEnabled: {
+    label: "ራስ-ሰር ማመሳሰል",
+    description: "$t(dataEntry:autoSync.batteryDataWarning)",
+  },
   connectionToServer: "ከአገልጋይ ጋር ግንኙነት",
   fontScale: {
     label: "የቅርጸ ቁምፊ መጠን (ቤታ)፡ {{value}}",

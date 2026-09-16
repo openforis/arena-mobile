@@ -11,6 +11,10 @@ export default {
     description:
       "انیمیشن‌های انتقال و رابط کاربری را در سراسر برنامه فعال می‌کند. برای بهبود عملکرد در دستگاه‌های کندتر آن را غیرفعال کنید",
   },
+  autoSyncEnabled: {
+    label: "همگام‌سازی خودکار",
+    description: "$t(dataEntry:autoSync.batteryDataWarning)",
+  },
   connectionToServer: "اتصال به سرور",
   fontScale: {
     label: "مقیاس فونت: {{value}}",

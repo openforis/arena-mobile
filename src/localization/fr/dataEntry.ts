@@ -8,6 +8,8 @@ export default {
     statusLabel: "État de synchronisation :",
     syncInProgressToast:
       "La synchronisation automatique est en cours. Veuillez attendre qu'elle se termine avant d'envoyer des données manuellement.",
+    batteryDataWarning:
+      "Peut augmenter la consommation de batterie et de données hors Wi-Fi",
     status: {
       syncedTooltip: "Tous les enregistrements sont synchronisés avec le serveur",
       pendingTooltip:
@@ -19,6 +21,13 @@ export default {
         "Synchronisation des enregistrements... {{progressPercent}} %",
       uncheckedTooltip:
         "État de synchronisation non encore vérifié. Utilisez « Vérifier synchronisation » pour le vérifier",
+      offlineTooltip:
+        "Aucune connexion internet. La synchronisation automatique reprendra une fois la connexion rétablie",
+      authErrorTooltip:
+        "Votre session avec le serveur a expiré. Reconnectez-vous pour reprendre la synchronisation automatique",
+      checkErrorTooltip:
+        "Impossible de vérifier l'état de synchronisation en raison d'une erreur serveur. Réessayez",
+      noCandidatesMessage: "Rien à envoyer pour le moment",
     },
   },
   confirmUpdateNodesBecameNotApplicable: {

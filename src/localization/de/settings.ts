@@ -11,6 +11,10 @@ export default {
     description:
       "Aktiviert Übergangs- und Oberflächenanimationen in der gesamten App. Deaktivieren, um die Leistung auf langsameren Geräten zu verbessern",
   },
+  autoSyncEnabled: {
+    label: "Automatische Synchronisierung",
+    description: "$t(dataEntry:autoSync.batteryDataWarning)",
+  },
   connectionToServer: "Verbindung zum Server",
   fontScale: {
     label: "Schriftgröße: {{value}}",

@@ -11,6 +11,10 @@ export default {
     description:
       "Ottaa käyttöön siirtymä- ja käyttöliittymäanimaatiot koko sovelluksessa. Poista käytöstä parantaaksesi suorituskykyä hitaammilla laitteilla",
   },
+  autoSyncEnabled: {
+    label: "Automaattinen synkronointi",
+    description: "$t(dataEntry:autoSync.batteryDataWarning)",
+  },
   connectionToServer: "Yhteys palvelimeen",
   fontScale: {
     label: "Fonttikoko: {{value}}",

@@ -11,6 +11,10 @@ export default {
     description:
       "Mengaktifkan animasi transisi dan antarmuka di seluruh aplikasi. Nonaktifkan untuk meningkatkan performa pada perangkat yang lebih lambat",
   },
+  autoSyncEnabled: {
+    label: "Sinkronisasi otomatis",
+    description: "$t(dataEntry:autoSync.batteryDataWarning)",
+  },
   connectionToServer: "Koneksi ke server",
   fontScale: {
     label: "Skala font: {{value}}",

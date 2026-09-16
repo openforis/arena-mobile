@@ -20,6 +20,7 @@ export const AutoSyncStatusIcon = () => {
     dialogVisible,
     hasProgress,
     icon,
+    message,
     onAutoSyncEnabledChange,
     onCancel,
     onRetry,
@@ -43,6 +44,7 @@ export const AutoSyncStatusIcon = () => {
         canRetry={canRetry}
         connectionIssue={connectionIssue}
         hasProgress={hasProgress}
+        message={message}
         onAutoSyncEnabledChange={onAutoSyncEnabledChange}
         onCancel={onCancel}
         onClose={closeDialog}

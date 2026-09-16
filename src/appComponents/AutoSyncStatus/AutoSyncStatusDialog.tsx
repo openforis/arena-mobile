@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 import { Checkbox, Dialog, ProgressBar, Text, VView } from "components";
-import { AutoSyncStatus } from "state";
+import { AutoSyncMessage, AutoSyncStatus } from "state";
 import { AutoSyncConnectionIssue } from "./useAutoSyncStatus";
 
 const styles = StyleSheet.create({
@@ -10,6 +10,9 @@ const styles = StyleSheet.create({
   },
   progress: {
     gap: 4,
+  },
+  note: {
+    opacity: 0.7,
   },
 });
 
@@ -38,6 +41,7 @@ type Props = {
   canRetry: boolean;
   connectionIssue: AutoSyncConnectionIssue;
   hasProgress: boolean;
+  message: AutoSyncMessage;
   onAutoSyncEnabledChange: () => void;
   onCancel: () => void;
   onClose: () => void;
@@ -57,6 +61,7 @@ export const AutoSyncStatusDialog = (props: Props) => {
     canRetry,
     connectionIssue,
     hasProgress,
+    message,
     onAutoSyncEnabledChange,
     onCancel,
     onClose,
@@ -67,9 +72,20 @@ export const AutoSyncStatusDialog = (props: Props) => {
     visible,
   } = props;
 
+  // checkError/authError describe a background check that failed - once auto-sync is off,
+  // nothing is retrying in the background any more, so keeping that error (and its "Try again"
+  // action, see canRetry) on screen would be stale and actionable for no reason
+  const isStaleErrorStatus =
+    !autoSyncEnabled &&
+    (status === AutoSyncStatus.checkError || status === AutoSyncStatus.authError);
+  const showStatusText = !isStaleErrorStatus;
   const statusTextKey = connectionIssue
     ? textKeyByConnectionIssue[connectionIssue]
     : statusTextKeyByStatus[status];
+  // stale otherwise: message is set as a specific outcome of a check that already completed, so
+  // it doesn't apply once a live connection issue is overriding the status, or a new check/sync
+  // is already underway
+  const showMessage = showStatusText && !!message && !connectionIssue && !syncing;
 
   const actions = [
     ...(canCancel ? [{ onPress: onCancel, textKey: "common:cancel" }] : []),
@@ -88,10 +104,24 @@ export const AutoSyncStatusDialog = (props: Props) => {
       <VView style={styles.content} transparent>
         <Checkbox
           checked={autoSyncEnabled}
+          disabled={syncing}
           label="dataEntry:autoSync.checkbox"
           onPress={onAutoSyncEnabledChange}
         />
-        <Text textKey={statusTextKey} />
+        <Text
+          style={styles.note}
+          textKey="dataEntry:autoSync.batteryDataWarning"
+          variant="bodySmall"
+        />
+        {showStatusText && <Text textKey={statusTextKey} />}
+        {showMessage && (
+          <Text
+            style={styles.note}
+            textKey={message!.textKey}
+            textParams={message!.textParams}
+            variant="bodySmall"
+          />
+        )}
         {syncing && (
           <VView style={styles.progress} transparent>
             <Text

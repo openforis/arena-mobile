@@ -8,6 +8,8 @@ export default {
     statusLabel: "የማመሳሰል ሁኔታ:",
     syncInProgressToast:
       "ራስ-ሰር ማመሳሰል በሂደት ላይ ነው። ውሂብ በእጅ ከመላክዎ በፊት እስኪጠናቀቅ ድረስ እባክዎ ይጠብቁ።",
+    batteryDataWarning:
+      "ከWi-Fi ውጭ ሲሆን የባትሪ እና የውሂብ አጠቃቀምን ሊጨምር ይችላል",
     status: {
       syncedTooltip: "ሁሉም መዝገቦች ከአገልጋዩ ጋር ተመሳስለዋል",
       pendingTooltip: "አንዳንድ መዝገቦች አሁንም መመሳሰል ያስፈልጋቸዋል። በራስ-ሰር ይላካሉ",
@@ -17,6 +19,13 @@ export default {
       syncingTooltipWithProgress: "መዝገቦችን በማመሳሰል ላይ... {{progressPercent}}%",
       uncheckedTooltip:
         "የማመሳሰል ሁኔታ እስካሁን አልተረጋገጠም። ለማረጋገጥ 'የማመሳሰል ሁኔታን ያረጋግጡ'ን ይጠቀሙ",
+      offlineTooltip:
+        "የበይነመረብ ግንኙነት የለም። ግንኙነት ሲመለስ ራስ-ሰር ማመሳሰል ይቀጥላል",
+      authErrorTooltip:
+        "ከአገልጋዩ ጋር የነበረው ክፍለ ጊዜ አልቋል። ራስ-ሰር ማመሳሰልን ለመቀጠል እንደገና ይግቡ",
+      checkErrorTooltip:
+        "በአገልጋይ ስህተት ምክንያት የማመሳሰል ሁኔታን ማረጋገጥ አልተቻለም። እንደገና ይሞክሩ",
+      noCandidatesMessage: "አሁን የሚላክ ምንም ነገር የለም",
     },
   },
   confirmUpdateNodesBecameNotApplicable: {
