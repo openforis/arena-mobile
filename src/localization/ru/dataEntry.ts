@@ -92,7 +92,7 @@ export default {
   gpsLockingEnabledWarning: "Внимание: блокировка GPS включена!",
   listOfRecords: "Список записей",
   localBackup: "Локальная резервная копия",
-  newRecord: "Новая",
+  newRecord: "Новая запись",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

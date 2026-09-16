@@ -97,7 +97,7 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
   gpsLockingEnabledWarning: "Peringatan: Penguncian GPS diaktifkan!",
   listOfRecords: "Data",
   localBackup: "Cadangan lokal",
-  newRecord: "Baru",
+  newRecord: "Catatan baru",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

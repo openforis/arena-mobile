@@ -119,6 +119,7 @@ const createOnJobUpdateCallback =
     onJobComplete,
     onJobEnd,
     showTransferStats = false,
+    silent = false,
   }: any): (jobSummary: JobSerialized<any>) => void => {
     let previousSample: {
       processed: number;
@@ -156,10 +157,18 @@ const createOnJobUpdateCallback =
           WebSocketService.close();
         }
         if (status === JobStatus.succeeded) {
-          if (autoDismiss) {
+          // close before notifying: existing behavior for autoDismiss, extended to silent jobs
+          // too - an unattended job has no dialog for the user to dismiss themselves (see
+          // JobMonitorDialog's `visible={isOpen && !silent}`), so isOpen must reset on its own
+          // or it gets stuck forever - and with it, anything derived from it (e.g. the
+          // auto-sync icon's spinner, or RecordsList's post-tick refresh)
+          if (autoDismiss || silent) {
             dispatch(close());
           }
           onJobComplete?.(jobSummary);
+        } else if (silent) {
+          // same reasoning, for a job that failed or was canceled instead
+          dispatch(close());
         }
         onJobEnd?.(jobSummary);
       }
@@ -249,6 +258,7 @@ const start =
         onJobComplete,
         onJobEnd,
         showTransferStats,
+        silent,
       });
 
       if (job) {

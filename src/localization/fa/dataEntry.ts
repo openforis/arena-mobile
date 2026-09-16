@@ -96,7 +96,7 @@ export default {
   gpsLockingEnabledWarning: "هشدار: قفل GPS فعال است!",
   listOfRecords: "رکوردها",
   localBackup: "پشتیبان گیری محلی",
-  newRecord: "جدید",
+  newRecord: "رکورد جدید",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

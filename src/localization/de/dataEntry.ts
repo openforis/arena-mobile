@@ -98,7 +98,7 @@ Möchten Sie sie erneut vom Server abrufen?`,
   gpsLockingEnabledWarning: "Warnung: GPS-Ortung aktiviert!",
   listOfRecords: "Datensatzliste",
   localBackup: "Lokale Sicherung",
-  newRecord: "Neu",
+  newRecord: "Neuer Datensatz",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

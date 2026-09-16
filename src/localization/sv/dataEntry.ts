@@ -96,7 +96,7 @@ Vill du hämta den igen från servern?`,
   gpsLockingEnabledWarning: "Varning: GPS-låsning aktiverad!",
   listOfRecords: "Poster",
   localBackup: "Lokal säkerhetskopia",
-  newRecord: "Ny",
+  newRecord: "Ny post",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

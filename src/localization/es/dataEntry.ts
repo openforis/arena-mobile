@@ -94,7 +94,7 @@ Sus valores serán borrados.
   gpsLockingEnabledWarning: "Advertencia: ¡Bloqueo del GPS activado!",
   listOfRecords: "Registros",
   localBackup: "Copia de seguridad local",
-  newRecord: "Nuevo",
+  newRecord: "Nuevo registro",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

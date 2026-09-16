@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { AutoSyncStatusIcon } from "appComponents/AutoSyncStatus";
 import {
   Button,
+  FlexWrapView,
   HView,
   Loader,
   MenuButton,
@@ -124,12 +125,11 @@ export const RecordsList = () => {
       </VView>
       {syncStatusFetched && <RecordsListLegend />}
       {recordsLength > 0 && (
-        <HView style={styles.bottomActionBar}>
+        // wraps onto multiple lines on a narrow screen instead of squeezing/overlapping;
+        // stays a single row once there's enough width - same pattern as RecordsListOptions'
+        // own button row above
+        <FlexWrapView style={styles.bottomActionBar}>
           {newRecordButton}
-          <HView style={styles.autoSyncStatusItem}>
-            <Text textKey="dataEntry:autoSync.statusLabel" />
-            <AutoSyncStatusIcon />
-          </HView>
           {!isDemoSurvey && !autoSyncEnabled && (
             <Button
               icon="cloud-refresh"
@@ -137,13 +137,17 @@ export const RecordsList = () => {
               textKey="dataEntry:sendData"
             />
           )}
+          <HView style={styles.autoSyncStatusItem}>
+            <Text textKey="dataEntry:autoSync.statusLabel" />
+            <AutoSyncStatusIcon />
+          </HView>
           <MenuButton
             anchorPosition="top"
             icon="download"
             items={downloadMenuItems}
             menuStyle={styles.exportDataButtonMenu}
           />
-        </HView>
+        </FlexWrapView>
       )}
     </VView>
   );

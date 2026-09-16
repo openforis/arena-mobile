@@ -159,7 +159,7 @@ export default {
   gpsLockingEnabledWarning: "警告：GPSロックが有効です！",
   listOfRecords: "記録",
   localBackup: "ローカルバックアップ",
-  newRecord: "新規",
+  newRecord: "新規レコード",
   noRecordsFound: "記録が見つかりません",
   options: "オプション",
   recordEditor: "記録エディタ",

@@ -94,7 +94,7 @@ Deseja obtê-las novamente do servidor?`,
   gpsLockingEnabledWarning: "Aviso: Bloqueio de GPS ativado!",
   listOfRecords: "Registos",
   localBackup: "Cópia de segurança local",
-  newRecord: "Novo",
+  newRecord: "Novo registro",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

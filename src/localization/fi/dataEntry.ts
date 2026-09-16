@@ -97,7 +97,7 @@ Haluatko hakea sen uudelleen palvelimelta?`,
   gpsLockingEnabledWarning: "Varoitus: GPS-lukitus käytössä!",
   listOfRecords: "Tietueet",
   localBackup: "Paikallinen varmuuskopio",
-  newRecord: "Uusi",
+  newRecord: "Uusi tietue",
   node: {
     cannotAddMoreItems: {
       maxCountReached: "Lisää kohteita ei voi: enimmäismäärä on saavutettu",

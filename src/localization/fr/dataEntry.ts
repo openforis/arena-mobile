@@ -99,7 +99,7 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
   gpsLockingEnabledWarning: "Avertissement: Verrouillage GPS activé!",
   listOfRecords: "Enregistrements",
   localBackup: "Sauvegarde locale",
-  newRecord: "Nouvel",
+  newRecord: "Nouvel enregistrement",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

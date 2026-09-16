@@ -88,7 +88,7 @@ export default {
   gpsLockingEnabledWarning: "ማስጠንቀቂያ፡ የጂፒኤስ መቆለፊያ ነቅቷል!",
   listOfRecords: "የመዝገቦች",
   localBackup: "የአካባቢ ምትኬ",
-  newRecord: "አዲስ",
+  newRecord: "አዲስ መዝገብ",
   node: {
     cannotAddMoreItems: {
       maxCountReached: "ተጨማሪ እቃዎችን መጨመር አይቻልም: ከፍተኛው ቆጠራ ደርሷል",

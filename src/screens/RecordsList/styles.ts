@@ -21,8 +21,8 @@ export default StyleSheet.create({
   bottomActionBar: {
     borderTopWidth: 1,
     padding: 4,
-    alignItems: "center",
     justifyContent: "space-between",
+    rowGap: 8,
   },
   newRecordButton: {
     alignSelf: "center",
