@@ -52,7 +52,7 @@ const runAutoSync = () => async (dispatch: any, getState: any) => {
   if (tickInProgress) return;
 
   const state = getState();
-  if (state.jobMonitor.isOpen) return; // a manual export/import/upload is already running
+  if (state.jobMonitor.isOpen) return; // an export/import/upload is already running
 
   const survey = SurveySelectors.selectCurrentSurvey(state);
   const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
