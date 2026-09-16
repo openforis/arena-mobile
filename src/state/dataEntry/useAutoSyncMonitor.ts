@@ -12,9 +12,9 @@ import { DataEntryActions } from "./actions";
 const AUTO_SYNC_INTERVAL_MS = 90_000; // 90 sec
 
 /**
- * Periodically (while the app is in the foreground) attempts to upload
- * records that are safe to sync automatically, as long as the "auto sync"
- * setting is enabled. See DataEntryActions.runAutoSync for the actual logic.
+ * Periodically attempts to upload records that are safe to sync automatically,
+ * as long as the "auto sync" setting is enabled. (Depending on platform/runtime,
+ * JS timers may pause while the app is backgrounded.) See DataEntryActions.runAutoSync.
  */
 export const useAutoSyncMonitor = () => {
   const dispatch = useAppDispatch();
