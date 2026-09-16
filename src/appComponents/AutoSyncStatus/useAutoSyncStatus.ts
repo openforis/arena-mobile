@@ -15,11 +15,15 @@ import {
 } from "state";
 import { useJobMonitor } from "state/jobMonitor/useJobMonitor";
 
+// deliberately avoids the plain "alert" (triangle) and "alert-circle" glyphs used by
+// NodeValidationIcon for record validation errors/warnings - this icon sits right next to those
+// in the record editor app bar, so reusing that glyph here read as another validation warning
+// rather than a sync status
 const iconByStatus: Record<AutoSyncStatus, { color: string; source: string }> = {
   [AutoSyncStatus.unchecked]: { color: "darkgrey", source: "cloud-question" },
   [AutoSyncStatus.synced]: { color: "green", source: "check-circle" },
-  [AutoSyncStatus.pending]: { color: "orange", source: "alert" },
-  [AutoSyncStatus.error]: { color: "red", source: "alert-circle" },
+  [AutoSyncStatus.pending]: { color: "orange", source: "cloud-upload-outline" },
+  [AutoSyncStatus.error]: { color: "red", source: "sync-alert" },
   // not normally read (the authProblem override below takes over first) - kept for type safety
   // and as a defensive fallback
   [AutoSyncStatus.authError]: { color: "red", source: "account-alert" },
