@@ -43,7 +43,7 @@ const fetchFileUuidsByRecordUuid = async ({
       `api/mobile/survey/${surveyRemoteId}/records/file-uuids`,
       { recordUuids },
     );
-    return data?.fileUuids ?? {};
+    return data?.fileUuidsByRecordUuid ?? {};
   } catch (error) {
     log.warn(`error fetching file uuids by record uuid: ${error}`);
     return {};
