@@ -8,25 +8,8 @@ import { useAutoSyncStatus } from "./useAutoSyncStatus";
  * a screen's top app bar (e.g. the RecordEditor header) rather than a plain icon button.
  */
 export const AutoSyncStatusAppBarAction = () => {
-  const {
-    autoSyncEnabled,
-    canCancel,
-    canRetry,
-    closeDialog,
-    color,
-    connectionIssue,
-    dialogVisible,
-    hasProgress,
-    icon,
-    message,
-    onAutoSyncEnabledChange,
-    onCancel,
-    onRetry,
-    openDialog,
-    progressPercent,
-    status,
-    syncing,
-  } = useAutoSyncStatus();
+  const { closeDialog, color, dialogVisible, icon, openDialog, syncing } =
+    useAutoSyncStatus();
 
   return (
     <>
@@ -36,22 +19,7 @@ export const AutoSyncStatusAppBarAction = () => {
         loading={syncing}
         onPress={openDialog}
       />
-      <AutoSyncStatusDialog
-        autoSyncEnabled={autoSyncEnabled}
-        canCancel={canCancel}
-        canRetry={canRetry}
-        connectionIssue={connectionIssue}
-        hasProgress={hasProgress}
-        message={message}
-        onAutoSyncEnabledChange={onAutoSyncEnabledChange}
-        onCancel={onCancel}
-        onClose={closeDialog}
-        onRetry={onRetry}
-        progressPercent={progressPercent}
-        status={status}
-        syncing={syncing}
-        visible={dialogVisible}
-      />
+      <AutoSyncStatusDialog onClose={closeDialog} visible={dialogVisible} />
     </>
   );
 };

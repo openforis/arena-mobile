@@ -1,8 +1,8 @@
 import { StyleSheet } from "react-native";
 
 import { Checkbox, Dialog, ProgressBar, Text, VView } from "components";
-import { AutoSyncMessage, AutoSyncStatus } from "state";
-import { AutoSyncConnectionIssue } from "./useAutoSyncStatus";
+import { AutoSyncStatus } from "state";
+import { AutoSyncConnectionIssue, useAutoSyncStatus } from "./useAutoSyncStatus";
 
 const styles = StyleSheet.create({
   content: {
@@ -36,25 +36,18 @@ const textKeyByConnectionIssue: Record<
 };
 
 type Props = {
-  autoSyncEnabled: boolean;
-  canCancel: boolean;
-  canRetry: boolean;
-  connectionIssue: AutoSyncConnectionIssue;
-  hasProgress: boolean;
-  message: AutoSyncMessage;
-  onAutoSyncEnabledChange: () => void;
-  onCancel: () => void;
+  // open/close state is owned by whichever trigger (RecordsList icon, RecordEditor app bar
+  // action, ...) renders this dialog, since each one keeps its own - everything else about
+  // what's inside is fetched here directly from useAutoSyncStatus
   onClose: () => void;
-  onRetry: () => void;
-  progressPercent: number;
-  status: AutoSyncStatus;
-  syncing: boolean;
   visible: boolean;
 };
 
 // shared by every auto-sync status trigger (RecordsList icon, RecordEditor app bar action, ...)
 // - see useAutoSyncStatus for the state/logic feeding this
 export const AutoSyncStatusDialog = (props: Props) => {
+  const { onClose, visible } = props;
+
   const {
     autoSyncEnabled,
     canCancel,
@@ -64,13 +57,11 @@ export const AutoSyncStatusDialog = (props: Props) => {
     message,
     onAutoSyncEnabledChange,
     onCancel,
-    onClose,
     onRetry,
     progressPercent,
     status,
     syncing,
-    visible,
-  } = props;
+  } = useAutoSyncStatus();
 
   // checkError/authError describe a background check that failed - once auto-sync is off,
   // nothing is retrying in the background any more, so keeping that error (and its "Try again"
