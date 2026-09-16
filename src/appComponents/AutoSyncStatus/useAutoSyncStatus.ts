@@ -2,10 +2,13 @@ import { useCallback, useState } from "react";
 
 import { JobStatus } from "@openforis/arena-core";
 
+import { useIsNetworkConnected } from "hooks";
 import { SettingsModel } from "model";
 import {
   AutoSyncSelectors,
   AutoSyncStatus,
+  DataEntryActions,
+  RemoteConnectionSelectors,
   SettingsActions,
   SettingsSelectors,
   useAppDispatch,
@@ -17,7 +20,14 @@ const iconByStatus: Record<AutoSyncStatus, { color: string; source: string }> = 
   [AutoSyncStatus.synced]: { color: "green", source: "check-circle" },
   [AutoSyncStatus.pending]: { color: "orange", source: "alert" },
   [AutoSyncStatus.error]: { color: "red", source: "alert-circle" },
+  // not normally read (the authProblem override below takes over first) - kept for type safety
+  // and as a defensive fallback
+  [AutoSyncStatus.authError]: { color: "red", source: "account-alert" },
+  // a check ran but failed (e.g. a server error) - see AutoSyncActions.checkError
+  [AutoSyncStatus.checkError]: { color: "red", source: "cloud-alert" },
 };
+
+export type AutoSyncConnectionIssue = "offline" | "authError" | null;
 
 /**
  * Shared logic behind every auto-sync status trigger (RecordsList icon, RecordEditor app bar
@@ -36,6 +46,8 @@ export const useAutoSyncStatus = () => {
     status: jobStatus,
     cancel,
   } = useJobMonitor();
+  const networkConnected = useIsNetworkConnected();
+  const user = RemoteConnectionSelectors.useLoggedInUser();
   const uploading = isOpen && silent;
   const syncing = checking || uploading;
   const hasProgress =
@@ -44,6 +56,28 @@ export const useAutoSyncStatus = () => {
   // initial local "check what's out of sync" phase (checking, no job yet) is not
   const canCancel =
     uploading && [JobStatus.pending, JobStatus.running].includes(jobStatus);
+
+  // reasons auto-sync can't even attempt to run right now (see useAutoSyncMonitor's canAutoSync
+  // and runAutoSync's own guards) - shown instead of the regular status so the user knows to fix
+  // the connection/session rather than wait for something that isn't going to happen on its own.
+  // !user covers "never logged in" proactively; status === authError covers a session that was
+  // still considered valid locally but got rejected by the server on the last attempt.
+  // Meaningless while auto-sync itself is off (see the "disabled always wins" note below).
+  const connectionIssue: AutoSyncConnectionIssue = !autoSyncEnabled
+    ? null
+    : !networkConnected
+      ? "offline"
+      : !user || status === AutoSyncStatus.authError
+        ? "authError"
+        : null;
+
+  // a failed check stops retrying on its own (see useRecordsList.checkAutoSyncStatusIfNeeded and
+  // runAutoSync's own guard for authError) - offer an explicit way to try again from here, the
+  // one place every screen that shows this status also lets the user act on it
+  const canRetry = status === AutoSyncStatus.checkError;
+  const onRetry = useCallback(() => {
+    dispatch(DataEntryActions.runAutoSync());
+  }, [dispatch]);
 
   const [dialogVisible, setDialogVisible] = useState(false);
   const openDialog = useCallback(() => setDialogVisible(true), []);
@@ -60,23 +94,32 @@ export const useAutoSyncStatus = () => {
 
   // "disabled" always wins: a manual check/send can still happen while auto-sync is off, but
   // the icon's job here is to reflect the auto-sync setting itself, not that unrelated activity.
+  // Next, a connection issue (see above) wins over the regular per-record status, since it's
+  // what's actually blocking any sync attempt right now.
   // Only the non-syncing appearance is decided here - each trigger component renders its own
   // spinner for `syncing`, since how to do that without blocking its own onPress differs: our
   // app IconButton's `loading` prop disables press, react-native-paper's Appbar.Action doesn't.
   const { source: icon, color } = !autoSyncEnabled
     ? { source: "sync-off", color: "darkgrey" }
-    : iconByStatus[status];
+    : connectionIssue === "offline"
+      ? { source: "cloud-off-outline", color: "darkgrey" }
+      : connectionIssue === "authError"
+        ? { source: "account-alert", color: "red" }
+        : iconByStatus[status];
 
   return {
     autoSyncEnabled,
     canCancel,
+    canRetry,
     closeDialog,
     color,
+    connectionIssue,
     dialogVisible,
     hasProgress,
     icon,
     onAutoSyncEnabledChange,
     onCancel: cancel,
+    onRetry,
     openDialog,
     progressPercent,
     status,

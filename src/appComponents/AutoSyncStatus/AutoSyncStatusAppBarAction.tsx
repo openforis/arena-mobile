@@ -11,13 +11,16 @@ export const AutoSyncStatusAppBarAction = () => {
   const {
     autoSyncEnabled,
     canCancel,
+    canRetry,
     closeDialog,
     color,
+    connectionIssue,
     dialogVisible,
     hasProgress,
     icon,
     onAutoSyncEnabledChange,
     onCancel,
+    onRetry,
     openDialog,
     progressPercent,
     status,
@@ -35,10 +38,13 @@ export const AutoSyncStatusAppBarAction = () => {
       <AutoSyncStatusDialog
         autoSyncEnabled={autoSyncEnabled}
         canCancel={canCancel}
+        canRetry={canRetry}
+        connectionIssue={connectionIssue}
         hasProgress={hasProgress}
         onAutoSyncEnabledChange={onAutoSyncEnabledChange}
         onCancel={onCancel}
         onClose={closeDialog}
+        onRetry={onRetry}
         progressPercent={progressPercent}
         status={status}
         syncing={syncing}

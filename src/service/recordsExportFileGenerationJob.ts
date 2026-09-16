@@ -123,46 +123,16 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       for (const recordSummary of recordsToExport) {
         if (this.isCanceled()) return;
 
-        const { id: recordId, uuid } = recordSummary;
-        const record = await RecordService.fetchRecord({ survey, recordId });
-        if (!record.ownerUuid && user) {
-          record.ownerUuid = user.uuid;
-        }
-
-        const keysText =
-          RecordUtils.getRootEntityKeysFormatted({
-            survey,
-            record,
-          })
-            .filter(Boolean)
-            .join(" - ") || uuid;
-
-        const tempRecordFileUri = `${Files.path(
+        const recordFiles = await this.exportRecord({
+          recordSummary,
+          survey,
+          user,
+          tempFolderUri,
           tempRecordsFolderUri,
-          uuid,
-        )}.json`;
-        await Files.writeJsonToFile({
-          content: record,
-          fileUri: tempRecordFileUri,
+          nodeDefsFile,
+          filesAlreadyOnServerByRecordUuid,
         });
-
-        if (!Objects.isEmpty(nodeDefsFile)) {
-          const alreadyUploadedFileUuids = new Set(
-            filesAlreadyOnServerByRecordUuid[uuid] ?? [],
-          );
-          const { recordFiles, hasMissingFiles } = await this.writeRecordFiles({
-            tempFolderUri,
-            nodeDefsFile,
-            record,
-            alreadyUploadedFileUuids,
-          });
-
-          if (hasMissingFiles) {
-            this.recordsWithMissingFiles.push({ uuid, keysText });
-          }
-
-          files.push(...recordFiles);
-        }
+        files.push(...recordFiles);
 
         this.incrementProcessedItems();
       }
@@ -197,6 +167,49 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     } finally {
       await Files.del(tempFolderUri);
     }
+  }
+
+  // writes one record's json (and, if the survey has file attributes, its files) into the
+  // temp export folder; returns the record files to include in the export's files summary
+  private async exportRecord({
+    recordSummary,
+    survey,
+    user,
+    tempFolderUri,
+    tempRecordsFolderUri,
+    nodeDefsFile,
+    filesAlreadyOnServerByRecordUuid,
+  }: any): Promise<any[]> {
+    const { id: recordId, uuid } = recordSummary;
+    const record = await RecordService.fetchRecord({ survey, recordId });
+    if (!record.ownerUuid && user) {
+      record.ownerUuid = user.uuid;
+    }
+
+    const tempRecordFileUri = `${Files.path(tempRecordsFolderUri, uuid)}.json`;
+    await Files.writeJsonToFile({ content: record, fileUri: tempRecordFileUri });
+
+    if (Objects.isEmpty(nodeDefsFile)) return [];
+
+    const alreadyUploadedFileUuids = new Set(
+      filesAlreadyOnServerByRecordUuid[uuid] ?? [],
+    );
+    const { recordFiles, hasMissingFiles } = await this.writeRecordFiles({
+      tempFolderUri,
+      nodeDefsFile,
+      record,
+      alreadyUploadedFileUuids,
+    });
+
+    if (hasMissingFiles) {
+      const keysText =
+        RecordUtils.getRootEntityKeysFormatted({ survey, record })
+          .filter(Boolean)
+          .join(" - ") || uuid;
+      this.recordsWithMissingFiles.push({ uuid, keysText });
+    }
+
+    return recordFiles;
   }
 
   private async writeInfoFile({ tempFolderUri }: { tempFolderUri: string }) {

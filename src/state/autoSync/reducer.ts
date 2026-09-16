@@ -23,6 +23,19 @@ const actionHandlers = {
     ...state,
     checking: false,
   }),
+  [AutoSyncActions.AUTO_SYNC_AUTH_ERROR]: ({ state, action }: any) => ({
+    ...state,
+    ...action.payload,
+    checking: false,
+  }),
+  [AutoSyncActions.AUTO_SYNC_CHECK_ERROR]: ({ state, action }: any) => ({
+    ...state,
+    ...action.payload,
+    checking: false,
+  }),
+  [AutoSyncActions.AUTO_SYNC_RESET]: () => ({
+    ...initialState,
+  }),
 };
 
 export const AutoSyncReducer = StoreUtils.exportReducer({

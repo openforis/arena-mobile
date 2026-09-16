@@ -15,8 +15,9 @@ import {
 import { RecordService, SurveyService } from "service";
 import {
   AutoSyncActions,
+  AutoSyncSelectors,
+  AutoSyncStatus,
   DataEntryActions,
-  MessageActions,
   RemoteConnectionSelectors,
   SettingsSelectors,
   SurveySelectors,
@@ -25,7 +26,7 @@ import {
 } from "state";
 import { useJobMonitor } from "state/jobMonitor/useJobMonitor";
 import { RemoteConnectionUtils } from "state/remoteConnection/remoteConnectionUtils";
-import { Files } from "utils";
+import { Files, log } from "utils";
 
 import { dataImportOptions, importFileExtension } from "./recordsListUtils";
 
@@ -148,23 +149,32 @@ export const useRecordsList = () => {
           dispatch(AutoSyncActions.checkAborted());
         }
       } catch (error) {
-        dispatch(AutoSyncActions.checkAborted());
-        dispatch(
-          MessageActions.setMessage({
-            content: "dataEntry:errorFetchingRecordsSyncStatus",
-            contentParams: { details: String(error) },
-          }),
-        );
+        // shown through the sync status icon (see AutoSyncActions.checkError) instead of a
+        // blocking popup: a popup would otherwise reappear every time an automatic re-check is
+        // triggered (screen focus, cycle change, ...) for as long as the underlying problem
+        // (e.g. a server error) persists
+        log.warn(`error fetching records sync status: ${error}`);
+        dispatch(AutoSyncActions.checkError());
       }
       setState((statePrev) => ({ ...statePrev, ...stateNext }));
       return stateNext as RecordsListState;
     }, [dispatch, navigation, survey, cycle, records, onlyLocal]);
 
+  const { status: autoSyncStatus } = AutoSyncSelectors.useAutoSyncState();
+
   // when auto sync is on, keep the sync status visible in the list without requiring the
   // user to press "check status" manually; skip it if auto-sync itself couldn't run anyway
-  // (no network/no logged in user), to avoid popping the "connect to remote server" dialog
+  // (no network/no logged in user), to avoid popping the "connect to remote server" dialog.
+  // Also skip it once a check has failed (AutoSyncActions.checkError/authError): from here on,
+  // only an explicit "check status"/"send data" action (calling loadRecordsWithSyncStatus
+  // directly, bypassing this) retries - see the sync status icon.
   const canCheckAutoSyncStatus =
-    autoSyncEnabled && networkAvailable && !!loggedInUser && !isDemoSurvey;
+    autoSyncEnabled &&
+    networkAvailable &&
+    !!loggedInUser &&
+    !isDemoSurvey &&
+    autoSyncStatus !== AutoSyncStatus.checkError &&
+    autoSyncStatus !== AutoSyncStatus.authError;
 
   const checkAutoSyncStatusIfNeeded = useCallback(() => {
     if (canCheckAutoSyncStatus) {

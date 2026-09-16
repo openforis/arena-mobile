@@ -18,6 +18,12 @@ export default {
       syncingTooltipWithProgress: "Synchronizing records... {{progressPercent}}%",
       uncheckedTooltip:
         "Sync status not checked yet. Use 'Check status' to verify it",
+      offlineTooltip:
+        "No internet connection. Auto-sync will resume once you're back online",
+      authErrorTooltip:
+        "Your session with the server has expired. Log in again to resume auto-sync",
+      checkErrorTooltip:
+        "Couldn't check the sync status due to a server error. Try again",
     },
   },
   confirmUpdateNodesBecameNotApplicable: {

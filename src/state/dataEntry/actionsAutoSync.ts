@@ -9,7 +9,7 @@ import {
 import { RecordService } from "service";
 import { log } from "utils";
 
-import { AutoSyncActions } from "../autoSync";
+import { AutoSyncActions, AutoSyncStatus } from "../autoSync";
 import { SurveySelectors } from "../survey";
 import { ToastActions } from "../toast";
 import { exportRecords } from "./actionsDataExport";
@@ -28,6 +28,12 @@ const autoSyncSafeStatuses = new Set([RecordSyncStatus.new, RecordSyncStatus.mod
 
 // guards against overlapping ticks (e.g. a slow network making one tick outlive the interval)
 let tickInProgress = false;
+
+// RecordService.syncRecordSummaries and RecordsUploadJob both surface the original HTTP status
+// this way (see recordService.ts and remoteService.ts's withRetry) after a token refresh has
+// already been attempted and failed
+const isAuthError = (error: any) =>
+  error?.status === 401 || error?.response?.status === 401;
 
 const selectAutoSyncCandidates = ({ records, survey, currentlyEditedRecordUuid }: any) => {
   const errorsAllowed = Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey);
@@ -55,6 +61,11 @@ const runAutoSync = () => async (dispatch: any, getState: any) => {
 
   const state = getState();
   if (state.jobMonitor.isOpen) return; // an export/import/upload is already running
+
+  // a previous tick already found the stored credentials invalid: don't hammer the server with
+  // more failing attempts, wait for the user to log in again (see AutoSyncReducer's
+  // RemoteConnectionActions.USER_SET handler, which clears this)
+  if (state.autoSync.status === AutoSyncStatus.authError) return;
 
   // useAutoSyncMonitor only schedules ticks while the network is up, but that check can be
   // stale by the time this tick actually runs (e.g. connectivity dropped right as the interval
@@ -105,9 +116,14 @@ const runAutoSync = () => async (dispatch: any, getState: any) => {
       }),
     );
   } catch (error) {
-    // best-effort background operation: log and let the next tick retry
     log.warn(`auto-sync tick failed: ${error}`);
-    dispatch(AutoSyncActions.checkAborted());
+    if (isAuthError(error)) {
+      // stop retrying until the user logs in again - see the guard at the top of this function
+      dispatch(AutoSyncActions.authError());
+    } else {
+      // best-effort background operation: log and let the next tick retry
+      dispatch(AutoSyncActions.checkAborted());
+    }
   } finally {
     tickInProgress = false;
   }

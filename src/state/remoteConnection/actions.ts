@@ -13,6 +13,7 @@ import {
 import { screenKeys } from "screens/screenKeys";
 import { log } from "utils";
 
+import { AutoSyncActions } from "../autoSync";
 import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { MessageActions } from "../message";
 import { SettingsActions } from "../settings";
@@ -62,6 +63,11 @@ const loginAndSetUser =
         dispatch({ type: USER_LOADING });
         const user = await fetchUser();
         dispatch({ type: USER_SET, user });
+        if (user) {
+          // credentials just proved valid again: drop any auto-sync auth error remembered from
+          // before (see AutoSyncActions.reset)
+          dispatch(AutoSyncActions.reset());
+        }
       } else {
         // retrieve user from async storage (if any)
         const userInAsyncStorage = await AsyncStorageUtils.getItem(
@@ -109,6 +115,9 @@ const onLoginResponseSuccessful = async ({
   await dispatch(SettingsActions.updateSettings(settingsUpdated));
 
   dispatch({ type: USER_SET, user });
+  // credentials just proved valid again: drop any auto-sync auth error remembered from before
+  // (see AutoSyncActions.reset)
+  dispatch(AutoSyncActions.reset());
   // Refresh the survey user group for the newly logged in user, in case a different
   // user just logged in for the same survey selection (the previous value would be stale).
   dispatch(SurveyActions.fetchCurrentSurveyUserGroupIfSurveySelected());

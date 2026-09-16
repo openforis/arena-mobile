@@ -23,6 +23,7 @@ import { RootState } from "state/store";
 import { Files, Jobs, log } from "utils";
 
 import { fetchRecordsFromServer } from "./actionsRecordsImport";
+import { AutoSyncActions } from "../autoSync";
 import { ConfirmActions, ConfirmUtils, OnConfirmParams } from "../confirm";
 import { JobMonitorActions } from "../jobMonitor";
 import { MessageActions } from "../message";
@@ -49,12 +50,26 @@ const errorOrJobToString = (errorOrJob: any) => {
   return JSON.stringify(errorOrJob);
 };
 
+// a failed job's error has already been collapsed into a {key, params: {text}} shape by the
+// time it gets here (see JobBase.getErrorInfo), losing the original HTTP status - fall back to
+// sniffing it out of the stringified error text
+const errorTextLooksLikeAuthError = (text: string) => /\bstatus code 401\b/.test(text);
+
+// a raw axios error still has response.status
+const isAuthError = (error: any) =>
+  error?.response?.status === 401 ||
+  error?.status === 401 ||
+  errorTextLooksLikeAuthError(errorOrJobToString(error));
+
 const handleError =
   (error: any, silent = false) =>
   (dispatch: any) => {
     if (silent) {
       // an unattended tick must never surface a blocking error dialog; next tick retries
       log.warn(`auto-sync: export/upload failed: ${errorOrJobToString(error)}`);
+      if (isAuthError(error)) {
+        dispatch(AutoSyncActions.authError());
+      }
       return;
     }
     dispatch(
@@ -139,6 +154,11 @@ const startUploadDataToRemoteServer =
           if (silent) {
             // an unattended tick must never block on a retry confirmation; give up, next tick retries
             log.warn(`auto-sync: upload failed: ${errorOrJobToString(error)}`);
+            if (isAuthError(error)) {
+              // the session has expired: let the user know (via the auto-sync status icon)
+              // rather than keep retrying a login-required upload every tick
+              dispatch(AutoSyncActions.authError());
+            }
             return;
           }
           shouldRetryUpload = await handleUploadJobError({ dispatch, error });
@@ -333,6 +353,9 @@ const _onExportFileGenerationError = ({
     .join(";\n");
   if (silent) {
     log.warn(`auto-sync: error generating records export file: ${details}`);
+    if (errorTextLooksLikeAuthError(details)) {
+      dispatch(AutoSyncActions.authError());
+    }
     return;
   }
   dispatch(

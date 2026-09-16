@@ -261,10 +261,14 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
       surveyRemoteId: survey.remoteId,
       cycle,
     });
-  } catch (error) {
-    throw new Error(
+  } catch (error: any) {
+    const wrappedError: any = new Error(
       `error fetching remote records summaries. Details: ${error}`,
     );
+    // preserve the original HTTP status (e.g. 401), lost otherwise by wrapping - callers use
+    // it to tell an expired session apart from any other failure (see auto-sync)
+    wrappedError.status = error?.response?.status;
+    throw wrappedError;
   }
 
   await identifyAndDeleteRecordsNotInRemoteServer({
