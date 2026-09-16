@@ -29,6 +29,49 @@ const iconByStatus: Record<AutoSyncStatus, { color: string; source: string }> = 
 
 export type AutoSyncConnectionIssue = "offline" | "authError" | null;
 
+// reasons auto-sync can't even attempt to run right now (see useAutoSyncMonitor's canAutoSync
+// and runAutoSync's own guards) - shown instead of the regular status so the user knows to fix
+// the connection/session rather than wait for something that isn't going to happen on its own.
+// !user covers "never logged in" proactively; status === authError covers a session that was
+// still considered valid locally but got rejected by the server on the last attempt.
+// Meaningless while auto-sync itself is off (see computeIconAndColor's own "disabled always
+// wins" note).
+const computeConnectionIssue = ({
+  autoSyncEnabled,
+  networkConnected,
+  user,
+  status,
+}: {
+  autoSyncEnabled: boolean;
+  networkConnected: boolean;
+  user: any;
+  status: AutoSyncStatus;
+}): AutoSyncConnectionIssue => {
+  if (!autoSyncEnabled) return null;
+  if (!networkConnected) return "offline";
+  if (!user || status === AutoSyncStatus.authError) return "authError";
+  return null;
+};
+
+// "disabled" always wins: a manual check/send can still happen while auto-sync is off, but the
+// icon's job here is to reflect the auto-sync setting itself, not that unrelated activity. Next,
+// a connection issue (see computeConnectionIssue) wins over the regular per-record status, since
+// it's what's actually blocking any sync attempt right now.
+const computeIconAndColor = ({
+  autoSyncEnabled,
+  connectionIssue,
+  status,
+}: {
+  autoSyncEnabled: boolean;
+  connectionIssue: AutoSyncConnectionIssue;
+  status: AutoSyncStatus;
+}): { source: string; color: string } => {
+  if (!autoSyncEnabled) return { source: "sync-off", color: "darkgrey" };
+  if (connectionIssue === "offline") return { source: "cloud-off-outline", color: "darkgrey" };
+  if (connectionIssue === "authError") return { source: "account-alert", color: "red" };
+  return iconByStatus[status];
+};
+
 /**
  * Shared logic behind every auto-sync status trigger (RecordsList icon, RecordEditor app bar
  * action, ...): the icon/color to show, whether a check/upload is in flight (and its progress,
@@ -57,19 +100,12 @@ export const useAutoSyncStatus = () => {
   const canCancel =
     uploading && [JobStatus.pending, JobStatus.running].includes(jobStatus);
 
-  // reasons auto-sync can't even attempt to run right now (see useAutoSyncMonitor's canAutoSync
-  // and runAutoSync's own guards) - shown instead of the regular status so the user knows to fix
-  // the connection/session rather than wait for something that isn't going to happen on its own.
-  // !user covers "never logged in" proactively; status === authError covers a session that was
-  // still considered valid locally but got rejected by the server on the last attempt.
-  // Meaningless while auto-sync itself is off (see the "disabled always wins" note below).
-  const connectionIssue: AutoSyncConnectionIssue = !autoSyncEnabled
-    ? null
-    : !networkConnected
-      ? "offline"
-      : !user || status === AutoSyncStatus.authError
-        ? "authError"
-        : null;
+  const connectionIssue = computeConnectionIssue({
+    autoSyncEnabled,
+    networkConnected,
+    user,
+    status,
+  });
 
   // a failed check stops retrying on its own (see useRecordsList.checkAutoSyncStatusIfNeeded and
   // runAutoSync's own guard for authError) - offer an explicit way to try again from here, the
@@ -93,20 +129,14 @@ export const useAutoSyncStatus = () => {
     );
   }, [dispatch, autoSyncEnabled]);
 
-  // "disabled" always wins: a manual check/send can still happen while auto-sync is off, but
-  // the icon's job here is to reflect the auto-sync setting itself, not that unrelated activity.
-  // Next, a connection issue (see above) wins over the regular per-record status, since it's
-  // what's actually blocking any sync attempt right now.
-  // Only the non-syncing appearance is decided here - each trigger component renders its own
+  // only the non-syncing appearance is decided here - each trigger component renders its own
   // spinner for `syncing`, since how to do that without blocking its own onPress differs: our
   // app IconButton's `loading` prop disables press, react-native-paper's Appbar.Action doesn't.
-  const { source: icon, color } = !autoSyncEnabled
-    ? { source: "sync-off", color: "darkgrey" }
-    : connectionIssue === "offline"
-      ? { source: "cloud-off-outline", color: "darkgrey" }
-      : connectionIssue === "authError"
-        ? { source: "account-alert", color: "red" }
-        : iconByStatus[status];
+  const { source: icon, color } = computeIconAndColor({
+    autoSyncEnabled,
+    connectionIssue,
+    status,
+  });
 
   return {
     autoSyncEnabled,
