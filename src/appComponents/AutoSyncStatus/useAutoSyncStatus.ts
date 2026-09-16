@@ -111,14 +111,25 @@ export const useAutoSyncStatus = () => {
     status,
   });
 
+  // one tick of the same background check+upload logic, triggered on demand instead of waiting
+  // for the next scheduled tick (or for auto-sync to even be on) - shared by "Try again" (a
+  // failed check) and "Sync now" (records are known to be pending) below
+  const triggerSync = useCallback(() => {
+    dispatch(DataEntryActions.runAutoSync());
+  }, [dispatch]);
+
   // a failed check stops retrying on its own (see useRecordsList.checkAutoSyncStatusIfNeeded and
   // runAutoSync's own guard for authError) - offer an explicit way to try again from here, the
   // one place every screen that shows this status also lets the user act on it. Meaningless
   // while auto-sync itself is off, same as the error text it goes with (see AutoSyncStatusDialog)
   const canRetry = autoSyncEnabled && status === AutoSyncStatus.checkError;
-  const onRetry = useCallback(() => {
-    dispatch(DataEntryActions.runAutoSync());
-  }, [dispatch]);
+  const onRetry = triggerSync;
+
+  // records are known to be waiting (a prior check found some), and nothing is running right
+  // now - let the user send them immediately rather than wait for the next scheduled tick (or
+  // for auto-sync to even be on: same as "Send data" elsewhere, this doesn't require it)
+  const canSyncNow = !syncing && status === AutoSyncStatus.pending;
+  const onSyncNow = triggerSync;
 
   const [dialogVisible, setDialogVisible] = useState(false);
   const openDialog = useCallback(() => setDialogVisible(true), []);
@@ -146,6 +157,7 @@ export const useAutoSyncStatus = () => {
     autoSyncEnabled,
     canCancel,
     canRetry,
+    canSyncNow,
     closeDialog,
     color,
     connectionIssue,
@@ -156,6 +168,7 @@ export const useAutoSyncStatus = () => {
     onAutoSyncEnabledChange,
     onCancel: cancel,
     onRetry,
+    onSyncNow,
     openDialog,
     progressPercent,
     status,

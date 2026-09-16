@@ -10,6 +10,7 @@ export default {
       "Auto-sync is in progress. Please wait for it to finish before sending data manually.",
     batteryDataWarning:
       "May increase battery and data usage when not on Wi-Fi",
+    syncNow: "Sync now",
     status: {
       syncedTooltip: "All records are synchronized with the server",
       pendingTooltip:

@@ -10,6 +10,7 @@ export default {
       "Automaattinen synkronointi on käynnissä. Odota, että se valmistuu, ennen kuin lähetät tietoja manuaalisesti.",
     batteryDataWarning:
       "Voi lisätä akun- ja datankulutusta, kun ei olla Wi-Fi-yhteydessä",
+    syncNow: "Synkronoi nyt",
     status: {
       syncedTooltip: "Kaikki tietueet on synkronoitu palvelimen kanssa",
       pendingTooltip:

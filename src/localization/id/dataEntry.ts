@@ -10,6 +10,7 @@ export default {
       "Sinkronisasi otomatis sedang berlangsung. Harap tunggu hingga selesai sebelum mengirim data secara manual.",
     batteryDataWarning:
       "Dapat meningkatkan penggunaan baterai dan data saat tidak menggunakan Wi-Fi",
+    syncNow: "Sinkronkan sekarang",
     status: {
       syncedTooltip: "Semua catatan telah disinkronkan dengan server",
       pendingTooltip:

@@ -10,6 +10,7 @@ export default {
       "自動同期を実行中です。手動でデータを送信する前に完了をお待ちください。",
     batteryDataWarning:
       "Wi-Fi以外の接続ではバッテリーとデータ使用量が増える場合があります",
+    syncNow: "今すぐ同期",
     status: {
       syncedTooltip: "すべてのレコードがサーバーと同期しています",
       pendingTooltip: "同期が必要なレコードがあります。自動的に送信されます",

@@ -10,6 +10,7 @@ export default {
       "A sincronização automática está em andamento. Aguarde a conclusão antes de enviar dados manualmente.",
     batteryDataWarning:
       "Pode aumentar o consumo de bateria e dados fora do Wi-Fi",
+    syncNow: "Sincronizar agora",
     status: {
       syncedTooltip: "Todos os registros estão sincronizados com o servidor",
       pendingTooltip:

@@ -52,12 +52,14 @@ export const AutoSyncStatusDialog = (props: Props) => {
     autoSyncEnabled,
     canCancel,
     canRetry,
+    canSyncNow,
     connectionIssue,
     hasProgress,
     message,
     onAutoSyncEnabledChange,
     onCancel,
     onRetry,
+    onSyncNow,
     progressPercent,
     status,
     syncing,
@@ -81,6 +83,7 @@ export const AutoSyncStatusDialog = (props: Props) => {
   const actions = [
     ...(canCancel ? [{ onPress: onCancel, textKey: "common:cancel" }] : []),
     ...(canRetry ? [{ onPress: onRetry, textKey: "common:tryAgain" }] : []),
+    ...(canSyncNow ? [{ onPress: onSyncNow, textKey: "dataEntry:autoSync.syncNow" }] : []),
   ];
 
   return (

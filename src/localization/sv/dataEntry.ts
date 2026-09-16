@@ -10,6 +10,7 @@ export default {
       "Automatisk synkronisering pågår. Vänta tills den är klar innan du skickar data manuellt.",
     batteryDataWarning:
       "Kan öka batteri- och dataanvändningen när du inte är ansluten till Wi-Fi",
+    syncNow: "Synkronisera nu",
     status: {
       syncedTooltip: "Alla poster är synkroniserade med servern",
       pendingTooltip:
