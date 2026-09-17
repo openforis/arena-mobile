@@ -15,6 +15,21 @@ export default {
     label: "Sincronización automática",
     description: "$t(dataEntry:autoSync.batteryDataWarning)",
   },
+  autoSyncOpenRecordIntervalMinutes: {
+    label: "Intervalo de sincronización automática mientras se edita: {{value}} min",
+    description:
+      "Cuánto tiempo debe permanecer sin cambios el registro actualmente abierto en el editor antes de que la sincronización automática lo suba",
+  },
+  autoSyncSlowCheckIntervalMinutes: {
+    label: "Intervalo de sincronización automática (comprobación lenta): {{value}} min",
+    description:
+      "Una vez que todos los registros ya están sincronizados, con qué frecuencia la sincronización automática vuelve a comprobar el servidor en busca de cambios (por ejemplo, desde otro dispositivo). Las comprobaciones ocurren con más frecuencia cuando hay algo nuevo que subir",
+  },
+  dataUploadChunkSizeKB: {
+    label: "Tamaño de fragmento para la subida de datos",
+    description:
+      "Tamaño de cada fragmento en el que se divide un registro al subirlo al servidor. Los valores más bajos son más fiables en conexiones lentas o inestables, pero requieren más solicitudes para enviar la misma cantidad de datos",
+  },
   connectionToServer: "Conexión al servidor",
   fontScale: {
     label: "Escala de fuente: {{value}}",

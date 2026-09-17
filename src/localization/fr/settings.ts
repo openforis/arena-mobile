@@ -15,6 +15,21 @@ export default {
     label: "Synchronisation automatique",
     description: "$t(dataEntry:autoSync.batteryDataWarning)",
   },
+  autoSyncOpenRecordIntervalMinutes: {
+    label: "Intervalle de synchronisation automatique pendant l'édition : {{value}} min",
+    description:
+      "Durée pendant laquelle l'enregistrement actuellement ouvert dans l'éditeur doit rester inchangé avant que la synchronisation automatique ne le téléverse",
+  },
+  autoSyncSlowCheckIntervalMinutes: {
+    label: "Intervalle de synchronisation automatique (vérification lente) : {{value}} min",
+    description:
+      "Une fois que tous les enregistrements sont déjà synchronisés, fréquence à laquelle la synchronisation automatique revérifie le serveur pour détecter des changements (par exemple depuis un autre appareil). Les vérifications sont plus fréquentes dès qu'il y a quelque chose de nouveau à envoyer",
+  },
+  dataUploadChunkSizeKB: {
+    label: "Taille des blocs de téléversement des données",
+    description:
+      "Taille de chaque partie dans laquelle un enregistrement est découpé lors du téléversement vers le serveur. Des valeurs plus faibles sont plus fiables sur des connexions lentes ou instables, mais nécessitent davantage de requêtes pour envoyer la même quantité de données",
+  },
   connectionToServer: "Connexion au serveur",
   fontScale: {
     label: "Échelle de la police: {{value}}",

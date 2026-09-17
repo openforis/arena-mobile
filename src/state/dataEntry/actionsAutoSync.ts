@@ -21,8 +21,10 @@ const AUTO_SYNC_IDLE_THRESHOLD_MS = 60_000; // 1 minute
 
 // the record currently open in the editor gets a longer idle threshold instead of being
 // excluded outright: otherwise a record edited slowly (a field every minute or two) would
-// never leave "pending", however long it stays open - see selectAutoSyncCandidates
-const AUTO_SYNC_OPEN_RECORD_IDLE_THRESHOLD_MS = 5 * 60_000; // 5 minutes
+// never leave "pending", however long it stays open - see selectAutoSyncCandidates. The
+// actual value is user-configurable (settings:autoSyncOpenRecordIntervalMinutes), this is
+// only the fallback used if the setting is somehow missing.
+const AUTO_SYNC_OPEN_RECORD_IDLE_THRESHOLD_MS_DEFAULT = 5 * 60_000; // 5 minutes
 
 // a tick's real cost is RecordService.syncRecordSummaries, which asks the server about every
 // local+remote record in the cycle (bandwidth/battery that scales with record count - can be a
@@ -32,8 +34,10 @@ const AUTO_SYNC_OPEN_RECORD_IDLE_THRESHOLD_MS = 5 * 60_000; // 5 minutes
 // this much longer interval - just often enough to notice a record changed server-side (e.g.
 // from another device) - instead of re-running that full check every AUTO_SYNC_INTERVAL_MS
 // (see useAutoSyncMonitor) for nothing. A local edit breaks out of this immediately, since
-// markPending flips the status away from "synced" as soon as it happens.
-const AUTO_SYNC_SLOW_CHECK_INTERVAL_MS = 10 * 60_000; // 10 minutes
+// markPending flips the status away from "synced" as soon as it happens. The actual value is
+// user-configurable (settings:autoSyncSlowCheckIntervalMinutes), this is only the fallback
+// used if the setting is somehow missing.
+const AUTO_SYNC_SLOW_CHECK_INTERVAL_MS_DEFAULT = 30 * 60_000; // 30 minutes
 
 // syncStatus values that are safe to upload without any user confirmation: no merge, no
 // overwrite of someone else's edit (mirrors the default "overwriteIfUpdated" bucket the
@@ -51,7 +55,12 @@ let tickInProgress = false;
 const isAuthError = (error: any) =>
   error?.status === 401 || error?.response?.status === 401;
 
-const selectAutoSyncCandidates = ({ records, survey, currentlyEditedRecordUuid }: any) => {
+const selectAutoSyncCandidates = ({
+  records,
+  survey,
+  currentlyEditedRecordUuid,
+  openRecordIdleThresholdMs,
+}: any) => {
   const errorsAllowed = Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey);
   const now = Date.now();
 
@@ -64,7 +73,7 @@ const selectAutoSyncCandidates = ({ records, survey, currentlyEditedRecordUuid }
 
     const isCurrentlyEdited = record.uuid === currentlyEditedRecordUuid;
     const idleThreshold = isCurrentlyEdited
-      ? AUTO_SYNC_OPEN_RECORD_IDLE_THRESHOLD_MS
+      ? openRecordIdleThresholdMs
       : AUTO_SYNC_IDLE_THRESHOLD_MS;
     return now - dateModified.getTime() > idleThreshold;
   });
@@ -72,12 +81,12 @@ const selectAutoSyncCandidates = ({ records, survey, currentlyEditedRecordUuid }
 
 /**
  * One auto-sync tick: uploads, without any user interaction, the local records that have
- * been idle for a while (AUTO_SYNC_IDLE_THRESHOLD_MS, or the longer
- * AUTO_SYNC_OPEN_RECORD_IDLE_THRESHOLD_MS for the record currently open in the editor) and
+ * been idle for a while (AUTO_SYNC_IDLE_THRESHOLD_MS, or the longer, user-configurable
+ * settings:autoSyncOpenRecordIntervalMinutes for the record currently open in the editor) and
  * free of any conflict with the server. Records that need a merge decision are left untouched
  * for the user to review/send manually. See the "Auto sync" checkbox in RecordsListOptions.
  * Ticks are a no-op most of the time once everything's caught up - see
- * AUTO_SYNC_SLOW_CHECK_INTERVAL_MS.
+ * settings:autoSyncSlowCheckIntervalMinutes.
  */
 const runAutoSync = () => async (dispatch: any, getState: any) => {
   if (tickInProgress) {
@@ -120,13 +129,22 @@ const runAutoSync = () => async (dispatch: any, getState: any) => {
     return;
   }
 
+  const { autoSyncOpenRecordIntervalMinutes, autoSyncSlowCheckIntervalMinutes } =
+    state.settings ?? {};
+  const openRecordIdleThresholdMs = autoSyncOpenRecordIntervalMinutes
+    ? autoSyncOpenRecordIntervalMinutes * 60_000
+    : AUTO_SYNC_OPEN_RECORD_IDLE_THRESHOLD_MS_DEFAULT;
+  const slowCheckIntervalMs = autoSyncSlowCheckIntervalMinutes
+    ? autoSyncSlowCheckIntervalMinutes * 60_000
+    : AUTO_SYNC_SLOW_CHECK_INTERVAL_MS_DEFAULT;
+
   // nothing is known to be pending, and the last check was recent enough: skip the expensive
-  // full status check (see AUTO_SYNC_SLOW_CHECK_INTERVAL_MS above)
+  // full status check (see slowCheckIntervalMs above)
   if (state.autoSync.status === AutoSyncStatus.synced) {
     const lastCheckedAtMs = state.autoSync.lastCheckedAt
       ? new Date(state.autoSync.lastCheckedAt).getTime()
       : 0;
-    if (Date.now() - lastCheckedAtMs < AUTO_SYNC_SLOW_CHECK_INTERVAL_MS) {
+    if (Date.now() - lastCheckedAtMs < slowCheckIntervalMs) {
       log.debug("auto-sync: already up to date, skipping check until the next slow check");
       return;
     }
@@ -150,6 +168,7 @@ const runAutoSync = () => async (dispatch: any, getState: any) => {
       records,
       survey,
       currentlyEditedRecordUuid,
+      openRecordIdleThresholdMs,
     });
     if (candidates.length === 0) {
       log.debug("auto-sync: no record is a safe upload candidate, nothing to do");

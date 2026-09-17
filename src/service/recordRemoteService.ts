@@ -2,20 +2,23 @@ import { Files, Functions, log, RNFileProcessor } from "utils";
 import { RemoteService } from "./remoteService";
 import { SurveyMobile } from "model/SurveyMobile";
 
-const uploadChunkSize = 2 * 1024 * 1024; // 2MB
+// fallback used if no chunk size is provided - see settings:dataUploadChunkSizeKB
+const DEFAULT_UPLOAD_CHUNK_SIZE = 2 * 1024 * 1024; // 2MB
 
 const calculateUploadedBytes = ({
   chunk,
   uploadedChunkPercent,
   totalFileSize,
+  chunkSize,
 }: {
   chunk: number;
   uploadedChunkPercent: number;
   totalFileSize: number;
+  chunkSize: number;
 }): number => {
-  const offset = Math.max(0, (chunk - 1) * uploadChunkSize);
+  const offset = Math.max(0, (chunk - 1) * chunkSize);
   const remainingBytes = Math.max(0, totalFileSize - offset);
-  const currentChunkSize = Math.min(uploadChunkSize, remainingBytes);
+  const currentChunkSize = Math.min(chunkSize, remainingBytes);
   const uploadedBytes =
     offset + uploadedChunkPercent * currentChunkSize;
   return Math.min(totalFileSize, uploadedBytes);
@@ -80,6 +83,7 @@ const uploadRecords = ({
   startFromChunk,
   conflictResolutionStrategy,
   skipMissingFiles = false,
+  chunkSize = DEFAULT_UPLOAD_CHUNK_SIZE,
   onUploadProgress,
 }: {
   survey: SurveyMobile;
@@ -89,6 +93,7 @@ const uploadRecords = ({
   startFromChunk?: number;
   conflictResolutionStrategy: string;
   skipMissingFiles?: boolean;
+  chunkSize?: number;
   onUploadProgress: (progressEvent: any) => void;
 }): { promise: Promise<any>; cancel: () => void } => {
   const surveyRemoteId = survey.remoteId;
@@ -131,6 +136,7 @@ const uploadRecords = ({
             chunk,
             uploadedChunkPercent,
             totalFileSize,
+            chunkSize,
           });
           debouncedUploadProgress({
             total: totalFileSize,
@@ -166,7 +172,7 @@ const uploadRecords = ({
       onComplete: async () => {
         await fileProcessor?.close();
       },
-      chunkSize: uploadChunkSize,
+      chunkSize,
       maxTryings: 2,
     });
     fileProcessor.start(startFromChunk);

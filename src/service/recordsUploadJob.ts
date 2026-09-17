@@ -1,6 +1,7 @@
 import { JobMobile, JobMobileContext, SurveyMobile } from "model";
 
 import { RecordService } from "./recordService";
+import { SettingsService } from "./settingsService";
 
 type RecordsUploadJobContext = JobMobileContext & {
   cycle: string;
@@ -31,8 +32,11 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadJobContext> {
     const startFromChunk =
       this.processed > 0 ? Math.floor(this.processed) : 1;
 
+    const { dataUploadChunkSizeKB } = await SettingsService.fetchSettings();
+    const chunkSize = dataUploadChunkSizeKB * 1024;
+
     this.logger.debug(
-      `RecordsUploadJob: uploading ${fileUri} (startFromChunk=${startFromChunk})`,
+      `RecordsUploadJob: uploading ${fileUri} (startFromChunk=${startFromChunk}, chunkSize=${chunkSize})`,
     );
 
     const { promise, cancel } = RecordService.uploadRecordsToRemoteServer({
@@ -43,6 +47,7 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadJobContext> {
       conflictResolutionStrategy,
       skipMissingFiles,
       startFromChunk,
+      chunkSize,
       onUploadProgress: (progressEvent: any) => {
         const { loaded, total } = progressEvent;
         this.total = total;

@@ -15,6 +15,21 @@ export default {
     label: "Sinkronisasi otomatis",
     description: "$t(dataEntry:autoSync.batteryDataWarning)",
   },
+  autoSyncOpenRecordIntervalMinutes: {
+    label: "Interval sinkronisasi otomatis saat mengedit: {{value}} mnt",
+    description:
+      "Berapa lama data isian yang sedang dibuka di editor harus dibiarkan tanpa perubahan sebelum sinkronisasi otomatis mengunggahnya",
+  },
+  autoSyncSlowCheckIntervalMinutes: {
+    label: "Interval sinkronisasi otomatis (pemeriksaan lambat): {{value}} mnt",
+    description:
+      "Setelah semua data isian tersinkronisasi, seberapa sering sinkronisasi otomatis memeriksa ulang server untuk perubahan (misalnya dari perangkat lain). Pemeriksaan terjadi lebih sering ketika ada sesuatu yang baru untuk diunggah",
+  },
+  dataUploadChunkSizeKB: {
+    label: "Ukuran bagian unggah data",
+    description:
+      "Ukuran setiap bagian tempat data isian dipecah saat diunggah ke server. Nilai yang lebih rendah lebih andal pada koneksi yang lambat atau tidak stabil, tetapi memerlukan lebih banyak permintaan untuk mengirim jumlah data yang sama",
+  },
   connectionToServer: "Koneksi ke server",
   fontScale: {
     label: "Skala font: {{value}}",

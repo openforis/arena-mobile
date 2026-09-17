@@ -15,6 +15,21 @@ export default {
     label: "Automaattinen synkronointi",
     description: "$t(dataEntry:autoSync.batteryDataWarning)",
   },
+  autoSyncOpenRecordIntervalMinutes: {
+    label: "Automaattisen synkronoinnin aikaväli muokattaessa: {{value}} min",
+    description:
+      "Kuinka kauan editorissa parhaillaan avoinna olevan tietueen on pysyttävä koskemattomana, ennen kuin automaattinen synkronointi lataa sen",
+  },
+  autoSyncSlowCheckIntervalMinutes: {
+    label: "Automaattisen synkronoinnin aikaväli (hidas tarkistus): {{value}} min",
+    description:
+      "Kun kaikki tietueet on jo synkronoitu, kuinka usein automaattinen synkronointi tarkistaa palvelimelta muutoksia uudelleen (esim. toiselta laitteelta). Tarkistuksia tehdään useammin, kun jotain uutta on ladattavana",
+  },
+  dataUploadChunkSizeKB: {
+    label: "Datan latauksen osan koko",
+    description:
+      "Kunkin osan koko, johon tietue jaetaan palvelimelle ladattaessa. Pienemmät arvot ovat luotettavampia hitailla tai epävakailla yhteyksillä, mutta vaativat enemmän pyyntöjä saman datamäärän lähettämiseen",
+  },
   connectionToServer: "Yhteys palvelimeen",
   fontScale: {
     label: "Fonttikoko: {{value}}",
