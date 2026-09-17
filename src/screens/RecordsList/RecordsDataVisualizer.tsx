@@ -241,6 +241,7 @@ type RecordsDataVisualizerProps = {
   onExportSelectedRecordUuids: (uuids: string[]) => void;
   onFetchSelectedRecordUuids: (uuids: string[]) => void;
   onRevalidateSelectedRecordUuids: (uuids: string[]) => void;
+  onSelectedRecordUuidsChange?: (uuids: string[]) => void;
   records: any[];
   showRemoteProps?: boolean;
   syncStatusFetched?: boolean;
@@ -254,6 +255,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     onExportSelectedRecordUuids,
     onFetchSelectedRecordUuids,
     onRevalidateSelectedRecordUuids,
+    onSelectedRecordUuidsChange,
     records,
     showRemoteProps,
     syncStatusFetched,
@@ -281,7 +283,8 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
   // reset selected record uuids on records change
   useEffect(() => {
     setSelectedRecordUuids([]);
-  }, [records]);
+    onSelectedRecordUuidsChange?.([]);
+  }, [records, onSelectedRecordUuidsChange]);
 
   const recordsHaveErrorsOrWarnings = useMemo(
     () =>
@@ -383,9 +386,13 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     ],
   );
 
-  const onSelectionChange = useCallback((selection: any) => {
-    setSelectedRecordUuids(selection);
-  }, []);
+  const onSelectionChange = useCallback(
+    (selection: any) => {
+      setSelectedRecordUuids(selection);
+      onSelectedRecordUuidsChange?.(selection);
+    },
+    [onSelectedRecordUuidsChange],
+  );
 
   const onFetchSelectedItems = useCallback(() => {
     onFetchSelectedRecordUuids(selectedRecordUuids);

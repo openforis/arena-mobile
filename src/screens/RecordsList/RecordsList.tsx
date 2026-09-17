@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { AutoSyncStatusIcon } from "appComponents/AutoSyncStatus";
 import {
@@ -62,6 +62,15 @@ export const RecordsList = () => {
       syncStatusFetched,
     });
 
+  const [selectedRecordUuids, setSelectedRecordUuids] = useState<string[]>(
+    [],
+  );
+
+  const onSendDataButtonPress = useCallback(
+    () => onSendDataPress(selectedRecordUuids),
+    [onSendDataPress, selectedRecordUuids],
+  );
+
   const newRecordButton = useMemo(
     () =>
       defaultCycleKey === cycle ? (
@@ -114,6 +123,7 @@ export const RecordsList = () => {
                 onRevalidateSelectedRecordUuids={
                   onRevalidateSelectedRecordUuids
                 }
+                onSelectedRecordUuidsChange={setSelectedRecordUuids}
                 records={recordsFiltered}
                 showRemoteProps={!onlyLocal}
                 syncStatusFetched={syncStatusFetched}
@@ -133,7 +143,7 @@ export const RecordsList = () => {
           {!isDemoSurvey && !autoSyncEnabled && (
             <Button
               icon="cloud-refresh"
-              onPress={onSendDataPress}
+              onPress={onSendDataButtonPress}
               textKey="dataEntry:sendData"
             />
           )}

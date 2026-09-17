@@ -287,27 +287,34 @@ export const useRecordsExport = ({
     return {};
   }, [records, survey]);
 
-  const onSendDataPress = useCallback(async () => {
-    const { errorKey } = checkCanSendData();
-    if (errorKey) {
-      toaster("recordsList:sendData.error.generic", { details: t(errorKey) });
-    } else {
-      const { syncStatusFetched: syncStatusFetchedNext, records: recordsNext } =
-        await loadRecordsWithSyncStatus();
-      if (syncStatusFetchedNext) {
-        await exportSelectedRecords({
-          selectedRecords: recordsNext,
-          onlyRemote: true,
+  const onSendDataPress = useCallback(
+    async (selectedRecordUuids?: string[]) => {
+      const { errorKey } = checkCanSendData();
+      if (errorKey) {
+        toaster("recordsList:sendData.error.generic", {
+          details: t(errorKey),
         });
+      } else {
+        const {
+          syncStatusFetched: syncStatusFetchedNext,
+          records: recordsNext,
+        } = await loadRecordsWithSyncStatus();
+        if (syncStatusFetchedNext) {
+          const recordsToSend =
+            selectedRecordUuids && selectedRecordUuids.length > 0
+              ? recordsNext.filter((record) =>
+                  selectedRecordUuids.includes(record.uuid),
+                )
+              : recordsNext;
+          await exportSelectedRecords({
+            selectedRecords: recordsToSend,
+            onlyRemote: true,
+          });
+        }
       }
-    }
-  }, [
-    checkCanSendData,
-    exportSelectedRecords,
-    loadRecordsWithSyncStatus,
-    t,
-    toaster,
-  ]);
+    },
+    [checkCanSendData, exportSelectedRecords, loadRecordsWithSyncStatus, t, toaster],
+  );
 
   const downloadMenuItems = useMemo(() => {
     const items = [];
