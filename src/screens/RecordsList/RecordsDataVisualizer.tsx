@@ -45,10 +45,10 @@ import { RecordListConstants } from "./recordListConstants";
 const formatDateToDateTimeDisplay = (date: any) =>
   typeof date === "string"
     ? Dates.convertDate({
-        dateStr: date,
-        formatFrom: DateFormats.datetimeStorage,
-        formatTo: DateFormats.datetimeDisplay,
-      })
+      dateStr: date,
+      formatFrom: DateFormats.datetimeStorage,
+      formatTo: DateFormats.datetimeDisplay,
+    })
     : Dates.format(date, DateFormats.datetimeDisplay);
 
 const recordOriginCellRendererByViewMode: Record<ScreenViewMode, any> = {
@@ -70,7 +70,7 @@ const recordLoadStatusCellRendererByViewMode: Record<ScreenViewMode, any> = {
     <Icon
       source={
         RecordListConstants.iconByLoadStatus[
-          item.loadStatus as RecordLoadStatus
+        item.loadStatus as RecordLoadStatus
         ]
       }
     />
@@ -306,8 +306,9 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
       result.push({
         key: "syncStatus",
         header: "common:status",
+        headerIcon: viewAsList ? undefined : "sync",
         cellRenderer: getSyncStatusCellRenderer({ syncStatusLoading }),
-        style: viewAsList ? undefined : { maxWidth: 50 },
+        style: viewAsList ? undefined : { maxWidth: 24 },
       });
     }
     if (syncStatusFetched && viewAsList) {

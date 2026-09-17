@@ -16,6 +16,10 @@ export type DataVisualizerField = {
   key: string;
   cellRenderer?: DataVisualizerCellRenderer;
   header: string;
+  // shown instead of the (translated) header text in the table header, to save horizontal
+  // space on columns whose meaning is already clear from an icon (e.g. sync status); `header`
+  // is still used as the field's label in list/card view, where space isn't as tight
+  headerIcon?: string;
   headerLabelVariant?: string;
   headerWidth?: number;
   optional?: boolean;
