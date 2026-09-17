@@ -19,6 +19,22 @@ import { DataEntrySelectors } from "./selectors";
 // upload them, so a record that's still actively being edited is never touched
 const AUTO_SYNC_IDLE_THRESHOLD_MS = 60_000; // 1 minute
 
+// the record currently open in the editor gets a longer idle threshold instead of being
+// excluded outright: otherwise a record edited slowly (a field every minute or two) would
+// never leave "pending", however long it stays open - see selectAutoSyncCandidates
+const AUTO_SYNC_OPEN_RECORD_IDLE_THRESHOLD_MS = 5 * 60_000; // 5 minutes
+
+// a tick's real cost is RecordService.syncRecordSummaries, which asks the server about every
+// local+remote record in the cycle (bandwidth/battery that scales with record count - can be a
+// few thousand records for some surveys). Once nothing is known to be pending (status ===
+// synced - kept fresh the instant something changes by AutoSyncActions.markPending, dispatched
+// on every record create/edit), there's nothing new to upload, so ticks are throttled down to
+// this much longer interval - just often enough to notice a record changed server-side (e.g.
+// from another device) - instead of re-running that full check every AUTO_SYNC_INTERVAL_MS
+// (see useAutoSyncMonitor) for nothing. A local edit breaks out of this immediately, since
+// markPending flips the status away from "synced" as soon as it happens.
+const AUTO_SYNC_SLOW_CHECK_INTERVAL_MS = 10 * 60_000; // 10 minutes
+
 // syncStatus values that are safe to upload without any user confirmation: no merge, no
 // overwrite of someone else's edit (mirrors the default "overwriteIfUpdated" bucket the
 // manual "Send data" flow uses). Anything else (conflicting keys, modified on the server too)
@@ -41,20 +57,27 @@ const selectAutoSyncCandidates = ({ records, survey, currentlyEditedRecordUuid }
 
   return records.filter((record: any) => {
     if (!autoSyncSafeStatuses.has(record.syncStatus)) return false;
-    if (record.uuid === currentlyEditedRecordUuid) return false;
     if (!errorsAllowed && record.errors > 0) return false;
 
     const dateModified = record.dateModified ? new Date(record.dateModified) : null;
     if (!dateModified) return false;
-    return now - dateModified.getTime() > AUTO_SYNC_IDLE_THRESHOLD_MS;
+
+    const isCurrentlyEdited = record.uuid === currentlyEditedRecordUuid;
+    const idleThreshold = isCurrentlyEdited
+      ? AUTO_SYNC_OPEN_RECORD_IDLE_THRESHOLD_MS
+      : AUTO_SYNC_IDLE_THRESHOLD_MS;
+    return now - dateModified.getTime() > idleThreshold;
   });
 };
 
 /**
- * One auto-sync tick: uploads, without any user interaction, the local records that are
- * both idle (not being edited right now) and free of any conflict with the server. Records
- * that need a merge decision, or that are still being edited, are left untouched for the
- * user to review/send manually. See the "Auto sync" checkbox in RecordsListOptions.
+ * One auto-sync tick: uploads, without any user interaction, the local records that have
+ * been idle for a while (AUTO_SYNC_IDLE_THRESHOLD_MS, or the longer
+ * AUTO_SYNC_OPEN_RECORD_IDLE_THRESHOLD_MS for the record currently open in the editor) and
+ * free of any conflict with the server. Records that need a merge decision are left untouched
+ * for the user to review/send manually. See the "Auto sync" checkbox in RecordsListOptions.
+ * Ticks are a no-op most of the time once everything's caught up - see
+ * AUTO_SYNC_SLOW_CHECK_INTERVAL_MS.
  */
 const runAutoSync = () => async (dispatch: any, getState: any) => {
   if (tickInProgress) {
@@ -95,6 +118,18 @@ const runAutoSync = () => async (dispatch: any, getState: any) => {
   if (!survey || !Surveys.isRecordsUploadFromMobileAllowed(survey)) {
     log.debug("auto-sync: no survey selected, or uploads not allowed for it, skipping");
     return;
+  }
+
+  // nothing is known to be pending, and the last check was recent enough: skip the expensive
+  // full status check (see AUTO_SYNC_SLOW_CHECK_INTERVAL_MS above)
+  if (state.autoSync.status === AutoSyncStatus.synced) {
+    const lastCheckedAtMs = state.autoSync.lastCheckedAt
+      ? new Date(state.autoSync.lastCheckedAt).getTime()
+      : 0;
+    if (Date.now() - lastCheckedAtMs < AUTO_SYNC_SLOW_CHECK_INTERVAL_MS) {
+      log.debug("auto-sync: already up to date, skipping check until the next slow check");
+      return;
+    }
   }
 
   tickInProgress = true;

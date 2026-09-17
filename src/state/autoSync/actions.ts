@@ -8,6 +8,7 @@ const AUTO_SYNC_AUTH_ERROR = "AUTO_SYNC_AUTH_ERROR";
 const AUTO_SYNC_CHECK_ERROR = "AUTO_SYNC_CHECK_ERROR";
 const AUTO_SYNC_RESET = "AUTO_SYNC_RESET";
 const AUTO_SYNC_STATUS_MESSAGE_SET = "AUTO_SYNC_STATUS_MESSAGE_SET";
+const AUTO_SYNC_STATUS_MARKED_PENDING = "AUTO_SYNC_STATUS_MARKED_PENDING";
 
 // dispatched whenever records are about to be checked against the server (a manual "check
 // status"/"send data" or a background auto-sync tick), so any screen can show a "checking..."
@@ -63,6 +64,25 @@ const setStatusMessage = (textKey: string, textParams?: Record<string, any>) => 
   payload: { message: { textKey, textParams } },
 });
 
+// dispatched right after a record is created or its content changes locally, so the status
+// icon stops claiming "synced" the instant there's something new to upload, instead of only
+// finding out at the next check (a background tick, up to AUTO_SYNC_INTERVAL_MS away, or a
+// screen focus/refresh - see useAutoSyncMonitor and useRecordsList). This is optimistic: it
+// doesn't know yet whether the record is actually a valid upload candidate (e.g. its key
+// attributes may still be missing), only that it's no longer known to be in sync with the
+// server; the next real check (checkEnd) reconciles it either way. An existing error is left
+// alone since it still needs the user's attention and is more specific than "pending".
+const markPending = () => (dispatch: any, getState: any) => {
+  const { status } = getState().autoSync;
+  if (status === AutoSyncStatus.authError || status === AutoSyncStatus.checkError) {
+    return;
+  }
+  dispatch({
+    type: AUTO_SYNC_STATUS_MARKED_PENDING,
+    payload: { status: AutoSyncStatus.pending },
+  });
+};
+
 export const AutoSyncActions = {
   AUTO_SYNC_CHECK_START,
   AUTO_SYNC_CHECK_END,
@@ -71,6 +91,7 @@ export const AutoSyncActions = {
   AUTO_SYNC_CHECK_ERROR,
   AUTO_SYNC_RESET,
   AUTO_SYNC_STATUS_MESSAGE_SET,
+  AUTO_SYNC_STATUS_MARKED_PENDING,
 
   checkStart,
   checkEnd,
@@ -79,4 +100,5 @@ export const AutoSyncActions = {
   checkError,
   reset,
   setStatusMessage,
+  markPending,
 };

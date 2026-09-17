@@ -42,6 +42,10 @@ const actionHandlers = {
     ...state,
     ...action.payload,
   }),
+  [AutoSyncActions.AUTO_SYNC_STATUS_MARKED_PENDING]: ({ state, action }: any) => ({
+    ...state,
+    ...action.payload,
+  }),
 };
 
 export const AutoSyncReducer = StoreUtils.exportReducer({
