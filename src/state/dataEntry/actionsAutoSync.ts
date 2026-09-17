@@ -55,6 +55,78 @@ let tickInProgress = false;
 const isAuthError = (error: any) =>
   error?.status === 401 || error?.response?.status === 401;
 
+// a previous tick already found the stored credentials invalid, or a check already failed for
+// some other reason: don't hammer the server with more failing attempts, wait for the user to
+// act (log in again, or retry manually - see the sync status icon). Cleared by a fresh login
+// (RemoteConnectionActions' login/loginAndSetUser, see AutoSyncActions.reset) or by a manual
+// retry that succeeds (AutoSyncActions.checkEnd)
+const isTickBlockedByPreviousError = (autoSyncStatus: AutoSyncStatus) =>
+  autoSyncStatus === AutoSyncStatus.authError ||
+  autoSyncStatus === AutoSyncStatus.checkError;
+
+const isUploadAllowedForSurvey = (survey: any) =>
+  Surveys.isRecordsUploadFromMobileAllowed(survey);
+
+const getAutoSyncIntervalsMs = (settings: any = {}) => {
+  const { autoSyncOpenRecordIntervalMinutes, autoSyncSlowCheckIntervalMinutes } = settings;
+  return {
+    openRecordIdleThresholdMs: autoSyncOpenRecordIntervalMinutes
+      ? autoSyncOpenRecordIntervalMinutes * 60_000
+      : AUTO_SYNC_OPEN_RECORD_IDLE_THRESHOLD_MS_DEFAULT,
+    slowCheckIntervalMs: autoSyncSlowCheckIntervalMinutes
+      ? autoSyncSlowCheckIntervalMinutes * 60_000
+      : AUTO_SYNC_SLOW_CHECK_INTERVAL_MS_DEFAULT,
+  };
+};
+
+// nothing is known to be pending, and the last check was recent enough: the expensive full
+// status check (RecordService.syncRecordSummaries) can be skipped - see slowCheckIntervalMs
+const isAlreadyUpToDate = ({ autoSyncState, slowCheckIntervalMs }: any) => {
+  if (autoSyncState.status !== AutoSyncStatus.synced) return false;
+  const lastCheckedAtMs = autoSyncState.lastCheckedAt
+    ? new Date(autoSyncState.lastCheckedAt).getTime()
+    : 0;
+  return Date.now() - lastCheckedAtMs < slowCheckIntervalMs;
+};
+
+const uploadAutoSyncCandidates = async ({ dispatch, cycle, candidates }: any) => {
+  log.debug(
+    `auto-sync: uploading ${candidates.length} record(s): ${candidates.map((r: any) => r.uuid).join(", ")}`,
+  );
+
+  const onJobComplete = () => {
+    log.debug(`auto-sync: upload of ${candidates.length} record(s) completed`);
+    dispatch(ToastActions.show("dataEntry:autoSync.synced", { count: candidates.length }));
+  };
+
+  // fire-and-forget, like the manual "Send data" flow: exportRecords resolves once the upload
+  // has been handed off (it drives its own progress/completion internally via onJobComplete),
+  // it does not await the remote upload finishing
+  await dispatch(
+    exportRecords({
+      cycle,
+      recordUuids: candidates.map((record: any) => record.uuid),
+      conflictResolutionStrategy: ConflictResolutionStrategy.overwriteIfUpdated,
+      onlyRemote: true,
+      onJobComplete,
+      silent: true,
+    }),
+  );
+  log.debug("auto-sync: exportRecords handed off (zip preparation/upload continue in the job monitor)");
+};
+
+const handleAutoSyncTickError = ({ dispatch, error }: any) => {
+  log.warn(`auto-sync: tick failed: ${error}`);
+  if (isAuthError(error)) {
+    // stop retrying until the user logs in again - see the guard at the top of runAutoSync
+    dispatch(AutoSyncActions.authError());
+  } else {
+    // shown through the sync status icon; stops further ticks until the user retries manually
+    // - see the guard at the top of runAutoSync
+    dispatch(AutoSyncActions.checkError());
+  }
+};
+
 const selectAutoSyncCandidates = ({
   records,
   survey,
@@ -100,15 +172,7 @@ const runAutoSync = () => async (dispatch: any, getState: any) => {
     return;
   }
 
-  // a previous tick already found the stored credentials invalid, or a check already failed
-  // for some other reason: don't hammer the server with more failing attempts, wait for the
-  // user to act (log in again, or retry manually - see the sync status icon). Cleared by a
-  // fresh login (RemoteConnectionActions' login/loginAndSetUser, see AutoSyncActions.reset) or
-  // by a manual retry that succeeds (AutoSyncActions.checkEnd)
-  if (
-    state.autoSync.status === AutoSyncStatus.authError ||
-    state.autoSync.status === AutoSyncStatus.checkError
-  ) {
+  if (isTickBlockedByPreviousError(state.autoSync.status)) {
     log.debug(`auto-sync: last check ended in ${state.autoSync.status}, skipping until the user retries`);
     return;
   }
@@ -124,30 +188,18 @@ const runAutoSync = () => async (dispatch: any, getState: any) => {
 
   const survey = SurveySelectors.selectCurrentSurvey(state);
   const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
-  if (!survey || !Surveys.isRecordsUploadFromMobileAllowed(survey)) {
+  if (!survey || !isUploadAllowedForSurvey(survey)) {
     log.debug("auto-sync: no survey selected, or uploads not allowed for it, skipping");
     return;
   }
 
-  const { autoSyncOpenRecordIntervalMinutes, autoSyncSlowCheckIntervalMinutes } =
-    state.settings ?? {};
-  const openRecordIdleThresholdMs = autoSyncOpenRecordIntervalMinutes
-    ? autoSyncOpenRecordIntervalMinutes * 60_000
-    : AUTO_SYNC_OPEN_RECORD_IDLE_THRESHOLD_MS_DEFAULT;
-  const slowCheckIntervalMs = autoSyncSlowCheckIntervalMinutes
-    ? autoSyncSlowCheckIntervalMinutes * 60_000
-    : AUTO_SYNC_SLOW_CHECK_INTERVAL_MS_DEFAULT;
+  const { openRecordIdleThresholdMs, slowCheckIntervalMs } = getAutoSyncIntervalsMs(
+    state.settings,
+  );
 
-  // nothing is known to be pending, and the last check was recent enough: skip the expensive
-  // full status check (see slowCheckIntervalMs above)
-  if (state.autoSync.status === AutoSyncStatus.synced) {
-    const lastCheckedAtMs = state.autoSync.lastCheckedAt
-      ? new Date(state.autoSync.lastCheckedAt).getTime()
-      : 0;
-    if (Date.now() - lastCheckedAtMs < slowCheckIntervalMs) {
-      log.debug("auto-sync: already up to date, skipping check until the next slow check");
-      return;
-    }
+  if (isAlreadyUpToDate({ autoSyncState: state.autoSync, slowCheckIntervalMs })) {
+    log.debug("auto-sync: already up to date, skipping check until the next slow check");
+    return;
   }
 
   tickInProgress = true;
@@ -178,39 +230,9 @@ const runAutoSync = () => async (dispatch: any, getState: any) => {
       return;
     }
 
-    log.debug(
-      `auto-sync: uploading ${candidates.length} record(s): ${candidates.map((r: any) => r.uuid).join(", ")}`,
-    );
-
-    const onJobComplete = () => {
-      log.debug(`auto-sync: upload of ${candidates.length} record(s) completed`);
-      dispatch(ToastActions.show("dataEntry:autoSync.synced", { count: candidates.length }));
-    };
-
-    // fire-and-forget, like the manual "Send data" flow: exportRecords resolves once the
-    // upload has been handed off (it drives its own progress/completion internally via
-    // onJobComplete), it does not await the remote upload finishing
-    await dispatch(
-      exportRecords({
-        cycle,
-        recordUuids: candidates.map((record: any) => record.uuid),
-        conflictResolutionStrategy: ConflictResolutionStrategy.overwriteIfUpdated,
-        onlyRemote: true,
-        onJobComplete,
-        silent: true,
-      }),
-    );
-    log.debug("auto-sync: exportRecords handed off (zip preparation/upload continue in the job monitor)");
+    await uploadAutoSyncCandidates({ dispatch, cycle, candidates });
   } catch (error) {
-    log.warn(`auto-sync: tick failed: ${error}`);
-    if (isAuthError(error)) {
-      // stop retrying until the user logs in again - see the guard at the top of this function
-      dispatch(AutoSyncActions.authError());
-    } else {
-      // shown through the sync status icon; stops further ticks until the user retries
-      // manually - see the guard at the top of this function
-      dispatch(AutoSyncActions.checkError());
-    }
+    handleAutoSyncTickError({ dispatch, error });
   } finally {
     tickInProgress = false;
   }

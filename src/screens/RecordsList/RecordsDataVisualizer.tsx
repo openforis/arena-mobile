@@ -101,6 +101,140 @@ const RecordWarningsListCellRenderer = ({ item }: DataVisualizerCellProps) => (
   <Text>{Validations.getWarningsCount(item.validation)}</Text>
 );
 
+const buildKeySummaryFields = ({
+  rootKeyDefs,
+  rootSummaryDefs,
+  lang,
+}: any): DataVisualizerField[] => [
+  ...rootKeyDefs.map((keyDef: any) => ({
+    key: `keysObj.${NodeDefs.getName(keyDef)}`,
+    header: NodeDefs.getLabelOrName(keyDef, lang),
+    headerLabelVariant: "titleMedium",
+    sortable: true,
+    textVariant: "titleLarge",
+  })),
+  ...rootSummaryDefs.map((keyDef: any) => ({
+    key: `summaryAttributesObj.${NodeDefs.getName(keyDef)}`,
+    header: NodeDefs.getLabelOrName(keyDef, lang),
+    headerLabelVariant: "titleMedium",
+    sortable: true,
+    textVariant: "titleLarge",
+  })),
+];
+
+const buildErrorsField = ({
+  recordsHaveErrorsOrWarnings,
+  viewAsList,
+  screenViewMode,
+}: {
+  recordsHaveErrorsOrWarnings: boolean;
+  viewAsList: boolean;
+  screenViewMode: ScreenViewMode;
+}): DataVisualizerField[] =>
+  recordsHaveErrorsOrWarnings
+    ? [
+      {
+        key: "errors",
+        header: "common:error_other",
+        sortable: true,
+        style: viewAsList ? undefined : { maxWidth: 54 },
+        cellRenderer: recordErrorsCellRendererByScrenMode[screenViewMode],
+      },
+    ]
+    : [];
+
+// warnings count, and the modified/created dates, are only shown in list view - table view is
+// too narrow for them
+const buildListOnlyFields = ({
+  viewAsList,
+  recordsHaveErrorsOrWarnings,
+}: any): DataVisualizerField[] => {
+  if (!viewAsList) return [];
+  const result: DataVisualizerField[] = [];
+  if (recordsHaveErrorsOrWarnings) {
+    result.push({
+      key: "warnings",
+      header: "common:warning_other",
+      optional: true,
+      cellRenderer: RecordWarningsListCellRenderer,
+    });
+  }
+  result.push(
+    {
+      key: "dateModified",
+      header: "common:modifiedOn",
+      optional: true,
+      sortable: true,
+      style: { minWidth: 50 },
+    },
+    {
+      key: "dateCreated",
+      header: "common:createdOn",
+      optional: true,
+    },
+  );
+  return result;
+};
+
+const buildRemoteFields = ({
+  showRemoteProps,
+  viewAsList,
+  screenViewMode,
+}: {
+  showRemoteProps?: boolean;
+  viewAsList: boolean;
+  screenViewMode: ScreenViewMode;
+}): DataVisualizerField[] => {
+  if (!showRemoteProps) return [];
+  const result: DataVisualizerField[] = [
+    {
+      key: "origin",
+      header: "recordsList:origin.title",
+      style: { minWidth: 10 },
+      cellRenderer: recordOriginCellRendererByViewMode[screenViewMode],
+    },
+  ];
+  if (viewAsList) {
+    result.push(
+      { key: "dateModifiedRemote", header: "recordsList:dateModifiedRemotely" },
+      { key: "ownerName", header: "recordsList:owner" },
+    );
+  }
+  result.push({
+    key: "loadStatus",
+    header: "recordsList:loadStatus.title",
+    style: { minWidth: 10 },
+    cellRenderer: recordLoadStatusCellRendererByViewMode[screenViewMode],
+  });
+  return result;
+};
+
+const buildSyncStatusFields = ({
+  syncStatusLoading,
+  syncStatusFetched,
+  viewAsList,
+}: any): DataVisualizerField[] => {
+  const result: DataVisualizerField[] = [];
+  if (syncStatusLoading || syncStatusFetched) {
+    result.push({
+      key: "syncStatus",
+      header: "common:status",
+      headerIcon: viewAsList ? undefined : "sync",
+      cellRenderer: getSyncStatusCellRenderer({ syncStatusLoading }),
+      style: viewAsList ? undefined : { maxWidth: 24 },
+    });
+  }
+  if (syncStatusFetched && viewAsList) {
+    result.push({
+      key: "dateSynced",
+      header: "dataEntry:syncedOn",
+      headerWidth: 80,
+      style: { minWidth: 50 },
+    });
+  }
+  return result;
+};
+
 type RecordsDataVisualizerProps = {
   onCloneSelectedRecordUuids: (uuids: string[]) => void;
   onDeleteSelectedRecordUuids: (uuids: string[]) => void;
@@ -228,109 +362,26 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     [dispatch, navigation],
   );
 
-  const fields = useMemo((): DataVisualizerField[] => {
-    const result: DataVisualizerField[] = [];
-    result.push(
-      ...rootKeyDefs.map((keyDef) => ({
-        key: `keysObj.${NodeDefs.getName(keyDef)}`,
-        header: NodeDefs.getLabelOrName(keyDef, lang),
-        headerLabelVariant: "titleMedium",
-        sortable: true,
-        textVariant: "titleLarge",
-      })),
-      ...rootSummaryDefs.map((keyDef) => ({
-        key: `summaryAttributesObj.${NodeDefs.getName(keyDef)}`,
-        header: NodeDefs.getLabelOrName(keyDef, lang),
-        headerLabelVariant: "titleMedium",
-        sortable: true,
-        textVariant: "titleLarge",
-      })),
-    );
-    if (recordsHaveErrorsOrWarnings) {
-      result.push({
-        key: "errors",
-        header: "common:error_other",
-        sortable: true,
-        style: viewAsList ? undefined : { maxWidth: 54 },
-        cellRenderer: recordErrorsCellRendererByScrenMode[screenViewMode],
-      });
-    }
-    if (viewAsList) {
-      if (recordsHaveErrorsOrWarnings) {
-        result.push({
-          key: "warnings",
-          header: "common:warning_other",
-          optional: true,
-          cellRenderer: RecordWarningsListCellRenderer,
-        });
-      }
-      result.push(
-        {
-          key: "dateModified",
-          header: "common:modifiedOn",
-          optional: true,
-          sortable: true,
-          style: { minWidth: 50 },
-        },
-        {
-          key: "dateCreated",
-          header: "common:createdOn",
-          optional: true,
-        },
-      );
-    }
-    if (showRemoteProps) {
-      result.push({
-        key: "origin",
-        header: "recordsList:origin.title",
-        style: { minWidth: 10 },
-        cellRenderer: recordOriginCellRendererByViewMode[screenViewMode],
-      });
-      if (viewAsList) {
-        result.push(
-          {
-            key: "dateModifiedRemote",
-            header: "recordsList:dateModifiedRemotely",
-          },
-          { key: "ownerName", header: "recordsList:owner" },
-        );
-      }
-      result.push({
-        key: "loadStatus",
-        header: "recordsList:loadStatus.title",
-        style: { minWidth: 10 },
-        cellRenderer: recordLoadStatusCellRendererByViewMode[screenViewMode],
-      });
-    }
-    if (syncStatusLoading || syncStatusFetched) {
-      result.push({
-        key: "syncStatus",
-        header: "common:status",
-        headerIcon: viewAsList ? undefined : "sync",
-        cellRenderer: getSyncStatusCellRenderer({ syncStatusLoading }),
-        style: viewAsList ? undefined : { maxWidth: 24 },
-      });
-    }
-    if (syncStatusFetched && viewAsList) {
-      result.push({
-        key: "dateSynced",
-        header: "dataEntry:syncedOn",
-        headerWidth: 80,
-        style: { minWidth: 50 },
-      });
-    }
-    return result;
-  }, [
-    lang,
-    recordsHaveErrorsOrWarnings,
-    rootKeyDefs,
-    rootSummaryDefs,
-    screenViewMode,
-    showRemoteProps,
-    syncStatusFetched,
-    syncStatusLoading,
-    viewAsList,
-  ]);
+  const fields = useMemo(
+    (): DataVisualizerField[] => [
+      ...buildKeySummaryFields({ rootKeyDefs, rootSummaryDefs, lang }),
+      ...buildErrorsField({ recordsHaveErrorsOrWarnings, viewAsList, screenViewMode }),
+      ...buildListOnlyFields({ viewAsList, recordsHaveErrorsOrWarnings }),
+      ...buildRemoteFields({ showRemoteProps, viewAsList, screenViewMode }),
+      ...buildSyncStatusFields({ syncStatusLoading, syncStatusFetched, viewAsList }),
+    ],
+    [
+      lang,
+      recordsHaveErrorsOrWarnings,
+      rootKeyDefs,
+      rootSummaryDefs,
+      screenViewMode,
+      showRemoteProps,
+      syncStatusFetched,
+      syncStatusLoading,
+      viewAsList,
+    ],
+  );
 
   const onSelectionChange = useCallback((selection: any) => {
     setSelectedRecordUuids(selection);
