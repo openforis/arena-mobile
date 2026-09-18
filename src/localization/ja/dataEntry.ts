@@ -17,7 +17,7 @@ export default {
       errorTooltip:
         "同期エラーのあるレコードがあり、対応が必要です。「データを送信」を開いて解決してください",
       syncingTooltip: "レコードを同期しています...",
-      syncingTooltipWithProgress: "レコードを同期しています... {{progressPercent}}%",
+      progressPercent: "{{progressPercent}}%",
       uncheckedTooltip:
         "同期状態はまだ確認されていません。「状態を確認」で確認してください",
       offlineTooltip:

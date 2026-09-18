@@ -18,8 +18,7 @@ export default {
       errorTooltip:
         "Beberapa catatan memiliki kesalahan sinkronisasi dan memerlukan perhatian Anda. Buka 'Kirim data' untuk menyelesaikannya",
       syncingTooltip: "Menyinkronkan catatan...",
-      syncingTooltipWithProgress:
-        "Menyinkronkan catatan... {{progressPercent}}%",
+      progressPercent: "{{progressPercent}}%",
       uncheckedTooltip:
         "Status sinkronisasi belum diperiksa. Gunakan 'Periksa status' untuk memeriksanya",
       offlineTooltip:

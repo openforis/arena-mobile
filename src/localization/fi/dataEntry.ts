@@ -18,8 +18,7 @@ export default {
       errorTooltip:
         "Joissakin tietueissa on synkronointivirheitä, jotka vaativat huomiotasi. Avaa 'Lähetä tiedot' ratkaistaksesi ne",
       syncingTooltip: "Synkronoidaan tietueita...",
-      syncingTooltipWithProgress:
-        "Synkronoidaan tietueita... {{progressPercent}} %",
+      progressPercent: "{{progressPercent}} %",
       uncheckedTooltip:
         "Synkronoinnin tilaa ei ole vielä tarkistettu. Tarkista se kohdasta 'Tarkista tila'",
       offlineTooltip:

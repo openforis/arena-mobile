@@ -1,16 +1,15 @@
-import { JobMobile, JobMobileContext, SurveyMobile } from "model";
+import { JobMobile, SurveyMobile } from "model";
 
+import { RecordsUploadAndProcessJobContext } from "./RecordsUploadAndProcessJobContext";
 import { RecordService } from "./recordService";
 import { SettingsService } from "./settingsService";
 
-type RecordsUploadJobContext = JobMobileContext & {
-  cycle: string;
-  fileUri: string;
-  conflictResolutionStrategy: string;
-  skipMissingFiles: boolean;
-};
+// a stable identifier for this job class, independent of `this.constructor.name` (which a
+// minified production build isn't guaranteed to preserve) - read by RecordsUploadAndProcessJob's
+// caller (see actionsDataExport.ts) to tell which of its inner jobs is currently active/failed
+export const RECORDS_UPLOAD_JOB_TYPE = "RecordsUploadJob";
 
-export class RecordsUploadJob extends JobMobile<RecordsUploadJobContext> {
+export class RecordsUploadJob extends JobMobile<RecordsUploadAndProcessJobContext> {
   cancelUpload: any;
   remoteJob: any;
   constructor({
@@ -21,13 +20,29 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadJobContext> {
     conflictResolutionStrategy,
     skipMissingFiles = false,
   }: any) {
-    super({ user, survey, cycle, fileUri, conflictResolutionStrategy, skipMissingFiles });
+    super({
+      user,
+      survey,
+      cycle,
+      fileUri,
+      conflictResolutionStrategy,
+      skipMissingFiles,
+      type: RECORDS_UPLOAD_JOB_TYPE,
+    });
     this.cancelUpload = null; // cancels upload request
     this.remoteJob = null; // job started on remote server after file upload
   }
 
   async execute() {
-    const { survey, cycle, fileUri, conflictResolutionStrategy, skipMissingFiles } = this.context;
+    // always provided by the constructor (see RecordsUploadAndProcessJobContext for why they're
+    // typed as optional there)
+    const {
+      survey,
+      cycle,
+      fileUri,
+      conflictResolutionStrategy,
+      skipMissingFiles,
+    } = this.context as Required<typeof this.context>;
 
     const startFromChunk =
       this.processed > 0 ? Math.floor(this.processed) : 1;
@@ -59,6 +74,7 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadJobContext> {
       const { data } = await promise;
       const { job } = data;
       this.remoteJob = job;
+      this.setContext({ remoteJobUuid: job?.uuid });
       this.logger.debug(`RecordsUploadJob: upload complete, server-side job=${job?.uuid}`);
     } catch (error) {
       this.logger.error(`RecordsUploadJob: upload failed: ${error}`);

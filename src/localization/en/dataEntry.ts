@@ -18,7 +18,7 @@ export default {
       errorTooltip:
         "Some records have synchronization errors and need your attention. Open 'Send data' to resolve them",
       syncingTooltip: "Synchronizing records...",
-      syncingTooltipWithProgress: "Synchronizing records... {{progressPercent}}%",
+      progressPercent: "{{progressPercent}}%",
       uncheckedTooltip:
         "Sync status not checked yet. Use 'Check status' to verify it",
       offlineTooltip:

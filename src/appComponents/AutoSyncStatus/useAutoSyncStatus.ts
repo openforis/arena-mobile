@@ -89,8 +89,10 @@ export const useAutoSyncStatus = () => {
   const {
     isOpen,
     silent,
-    progressPercent,
+    progressPercent: jobProgressPercent,
+    combinedProgressPercent,
     status: jobStatus,
+    titleKey: jobTitleKey,
     cancel,
   } = useJobMonitor();
   const networkConnected = useIsNetworkConnected();
@@ -98,7 +100,12 @@ export const useAutoSyncStatus = () => {
   const uploading = isOpen && silent;
   const syncing = checking || uploading;
   const hasProgress =
-    uploading && typeof progressPercent === "number" && progressPercent >= 0;
+    uploading && typeof jobProgressPercent === "number" && jobProgressPercent >= 0;
+  // the zip preparation, upload and server-side processing phases are chained into one
+  // continuous 0-100% bar (see REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES in actionsDataExport.ts and
+  // JobMonitorState.progressRangeStart/End) instead of each phase's own progress, which would
+  // otherwise restart the bar from 0% up to three times in a row
+  const progressPercent = combinedProgressPercent;
   // the zip preparation and upload/processing phases are all backed by a cancelable job; the
   // initial local "check what's out of sync" phase (checking, no job yet) is not
   const canCancel =
@@ -164,6 +171,7 @@ export const useAutoSyncStatus = () => {
     dialogVisible,
     hasProgress,
     icon,
+    jobTitleKey,
     message,
     onAutoSyncEnabledChange,
     onCancel: cancel,

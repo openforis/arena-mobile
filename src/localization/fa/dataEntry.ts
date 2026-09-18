@@ -18,8 +18,7 @@ export default {
       errorTooltip:
         "برخی رکوردها دارای خطای همگام‌سازی هستند و نیاز به توجه شما دارند. برای رفع آن‌ها 'ارسال داده' را باز کنید",
       syncingTooltip: "در حال همگام‌سازی رکوردها...",
-      syncingTooltipWithProgress:
-        "در حال همگام‌سازی رکوردها... {{progressPercent}}%",
+      progressPercent: "{{progressPercent}}%",
       uncheckedTooltip:
         "وضعیت همگام‌سازی هنوز بررسی نشده است. برای بررسی آن از 'بررسی وضعیت همگام سازی' استفاده کنید",
       offlineTooltip:

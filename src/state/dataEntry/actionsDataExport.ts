@@ -8,7 +8,7 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
-import { RecordService, RemoteJobService, UserService } from "service";
+import { RecordService, UserService } from "service";
 import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerationJob";
 
 import { i18n } from "localization";
@@ -17,7 +17,9 @@ import {
   FlatDataExportJob,
   FlatDataExportJobResult,
 } from "service/dataExportJob";
-import { RecordsUploadJob } from "service/recordsUploadJob";
+import { RecordsUploadAndProcessJob } from "service/recordsUploadAndProcessJob";
+import { RECORDS_UPLOAD_JOB_TYPE } from "service/recordsUploadJob";
+import { REMOTE_JOB_WATCHER_JOB_TYPE } from "service/remoteJobWatcherJob";
 import { RemoteConnectionSelectors } from "state/remoteConnection";
 import { RootState } from "state/store";
 import { Files, Jobs, log } from "utils";
@@ -34,6 +36,21 @@ const { t } = i18n;
 const exportType = {
   remote: "remote",
   share: "share",
+};
+
+// zip preparation and upload+processing (see RecordsUploadAndProcessJob) are two separate
+// job-monitor calls (see JobMonitorActions.startAsync calls below), each with its own 0-100%
+// progress - without this, the bar would restart from 0% between them instead of climbing
+// smoothly through one continuous operation (see JobMonitorState.progressRangeStart/End). Only
+// applied when going straight to the remote server (onlyRemote): a plain "export" only knows
+// whether it'll continue into an upload after the zip is ready and the user picks a target, so
+// its zip-preparation phase can't be pre-allocated a slice of a chain that might not happen.
+// Upload and server-side processing don't need their own synthetic split the way zip-generation
+// does here: they're composed into one job (RecordsUploadAndProcessJob), so JobBase's own
+// inner-job progress weighting already makes that half continuous natively.
+const REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES = {
+  zipGeneration: { progressRangeStart: 0, progressRangeEnd: 33 },
+  uploadAndProcess: { progressRangeStart: 33, progressRangeEnd: 100 },
 };
 
 const errorOrJobToString = (errorOrJob: any) => {
@@ -110,6 +127,13 @@ const handleUploadJobError = async ({
   return !!retryConfirmed;
 };
 
+// which of RecordsUploadAndProcessJob's two inner jobs the given (rejected) job summary/error
+// was current on - see JobBase's own `innerJobs`/`currentInnerJobIndex` (both part of
+// toJSON(), which is what startAsync rejects with on failure). A JobCancelError (the user
+// canceled either phase) never has these fields, so this correctly returns undefined for it too.
+const getFailedInnerJobType = (error: any): string | undefined =>
+  error?.innerJobs?.[error?.currentInnerJobIndex]?.type;
+
 const startUploadDataToRemoteServer =
   ({
     outputFileUri,
@@ -117,6 +141,10 @@ const startUploadDataToRemoteServer =
     skipMissingFiles = false,
     onJobComplete = null,
     silent = false,
+    // true when the whole zip-generation -> upload+processing chain was known upfront (see
+    // REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES) - so this phase can keep filling the same overall
+    // progress bar the zip-generation phase already started, instead of resetting it back to 0%
+    chained = false,
   }: any) =>
     async (dispatch: any, getState: any) => {
       const state = getState();
@@ -125,10 +153,12 @@ const startUploadDataToRemoteServer =
       const cycle = Surveys.getDefaultCycleKey(survey);
 
       log.debug(
-        `startUploadDataToRemoteServer: starting upload of ${outputFileUri} (survey=${survey.uuid}, cycle=${cycle})`,
+        `startUploadDataToRemoteServer: starting upload+processing of ${outputFileUri} (survey=${survey.uuid}, cycle=${cycle})`,
       );
 
-      const uploadJob = new RecordsUploadJob({
+      // uploads the zip, then watches the server-side job it kicks off, as ONE job - see
+      // RecordsUploadAndProcessJob for why (and why only these two, not zip-generation too)
+      const uploadAndProcessJob = new RecordsUploadAndProcessJob({
         user,
         survey,
         cycle,
@@ -137,63 +167,60 @@ const startUploadDataToRemoteServer =
         skipMissingFiles,
       });
 
-      let shouldRetryUpload = true;
-      let uploadJobComplete = null;
+      let shouldRetry = true;
+      let jobComplete: any = null;
 
-      while (shouldRetryUpload) {
+      while (shouldRetry) {
         try {
-          uploadJobComplete = await JobMonitorActions.startAsync({
+          jobComplete = await JobMonitorActions.startAsync({
             dispatch,
-            job: uploadJob,
+            job: uploadAndProcessJob,
+            // initial values, matching the upload phase (the first inner job to run) - see
+            // innerJobUiConfigByType for how these switch once processing takes over
             titleKey: "dataEntry:uploadingData.title",
             showTransferStats: true,
             transferSizeTextKey: "dataEntry:uploadingData.size",
             transferSpeedTextKey: "dataEntry:uploadingData.speed",
             transferEtaTextKey: "dataEntry:uploadingData.eta",
+            innerJobUiConfigByType: {
+              [RECORDS_UPLOAD_JOB_TYPE]: {
+                titleKey: "dataEntry:uploadingData.title",
+                showTransferStats: true,
+              },
+              [REMOTE_JOB_WATCHER_JOB_TYPE]: {
+                titleKey: "dataEntry:processingData.title",
+                showTransferStats: false,
+              },
+            },
+            onJobComplete,
             silent,
+            ...(chained ? REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES.uploadAndProcess : {}),
           });
-          shouldRetryUpload = !uploadJobComplete;
+          shouldRetry = !jobComplete;
         } catch (error: any) {
           if (silent) {
             // an unattended tick must never block on a retry confirmation; shown through the
-            // sync status icon instead, which also stops further automatic ticks until the
-            // user retries
-            log.warn(`auto-sync: upload failed: ${errorOrJobToString(error)}`);
+            // sync status icon instead, which also stops further automatic ticks until the user
+            // retries - covers a failure in either phase (upload or server-side processing)
+            log.warn(`auto-sync: upload/processing failed: ${errorOrJobToString(error)}`);
             dispatch(
               isAuthError(error) ? AutoSyncActions.authError() : AutoSyncActions.checkError(),
             );
             return;
           }
-          shouldRetryUpload = await handleUploadJobError({ dispatch, error });
+          // only the upload phase is worth silently retrying (e.g. a network hiccup) - a
+          // processing failure already happened server-side after a successful upload, so
+          // re-uploading the whole file again wouldn't help; it's left to surface through the
+          // job monitor dialog's own failed state instead, same as before this job existed
+          shouldRetry =
+            getFailedInnerJobType(error) === RECORDS_UPLOAD_JOB_TYPE
+              ? await handleUploadJobError({ dispatch, error })
+              : false;
         }
       }
-      if (!uploadJobComplete) {
-        log.debug("startUploadDataToRemoteServer: upload canceled");
-        return;
+      if (!jobComplete) {
+        log.debug("startUploadDataToRemoteServer: upload/processing canceled or failed");
       }
-
-      const { remoteJob } = uploadJobComplete.result;
-      log.debug(
-        `startUploadDataToRemoteServer: upload complete, server-side processing job=${remoteJob.uuid}`,
-      );
-
-      dispatch(
-        JobMonitorActions.start({
-          jobUuid: remoteJob.uuid,
-          titleKey: "dataEntry:processingData.title",
-          onJobComplete,
-          onCancel: async () => {
-            // best-effort: the data restore is already running server-side by this point, so
-            // cancellation isn't guaranteed to take effect (or to take effect immediately)
-            try {
-              await RemoteJobService.cancelActiveJob();
-            } catch (error) {
-              log.warn(`auto-sync: failed to cancel remote job: ${error}`);
-            }
-          },
-          silent,
-        }),
-      );
     };
 
 const determineAvailableDataExportOptions = ({
@@ -319,6 +346,8 @@ const onExportConfirmed =
     skipMissingFiles = false,
     onJobComplete,
     silent = false,
+    // see startUploadDataToRemoteServer's `chained` param
+    chained = false,
   }: any) =>
     async (dispatch: any) => {
       try {
@@ -331,6 +360,7 @@ const onExportConfirmed =
                 skipMissingFiles,
                 onJobComplete,
                 silent,
+                chained,
               }),
             );
             break;
@@ -428,6 +458,10 @@ const _onExportFileGenerationSucceeded = async ({
         skipMissingFiles,
         onJobComplete,
         silent,
+        // onlyRemote means "remote" was the only option offered above, so the zip-generation
+        // phase already reserved this chain a slice of the overall progress - see
+        // REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES
+        chained: onlyRemote,
       }),
     );
   };
@@ -593,6 +627,7 @@ export const exportRecords =
           titleKey: "dataEntry:dataExport.exportingData",
           autoDismiss: true,
           silent,
+          ...(onlyRemote ? REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES.zipGeneration : {}),
         }))!;
 
         log.debug(

@@ -18,8 +18,7 @@ export default {
       errorTooltip:
         "Einige Datensätze weisen Synchronisierungsfehler auf und benötigen Ihre Aufmerksamkeit. Öffnen Sie 'Daten senden', um sie zu beheben",
       syncingTooltip: "Datensätze werden synchronisiert...",
-      syncingTooltipWithProgress:
-        "Datensätze werden synchronisiert... {{progressPercent}}%",
+      progressPercent: "{{progressPercent}}%",
       uncheckedTooltip:
         "Synchronisierungsstatus noch nicht geprüft. Verwenden Sie 'Status prüfen', um ihn zu überprüfen",
       offlineTooltip:

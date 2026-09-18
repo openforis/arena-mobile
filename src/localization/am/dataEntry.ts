@@ -17,7 +17,7 @@ export default {
       errorTooltip:
         "አንዳንድ መዝገቦች የማመሳሰል ስህተቶች አሏቸው እና ትኩረትዎን ይፈልጋሉ። ለመፍታት 'ውሂብ ላክ'ን ይክፈቱ",
       syncingTooltip: "መዝገቦችን በማመሳሰል ላይ...",
-      syncingTooltipWithProgress: "መዝገቦችን በማመሳሰል ላይ... {{progressPercent}}%",
+      progressPercent: "{{progressPercent}}%",
       uncheckedTooltip:
         "የማመሳሰል ሁኔታ እስካሁን አልተረጋገጠም። ለማረጋገጥ 'የማመሳሰል ሁኔታን ያረጋግጡ'ን ይጠቀሙ",
       offlineTooltip:

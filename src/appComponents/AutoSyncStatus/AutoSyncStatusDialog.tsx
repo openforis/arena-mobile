@@ -55,6 +55,7 @@ export const AutoSyncStatusDialog = (props: Props) => {
     canSyncNow,
     connectionIssue,
     hasProgress,
+    jobTitleKey,
     message,
     onAutoSyncEnabledChange,
     onCancel,
@@ -128,12 +129,24 @@ export const AutoSyncStatusDialog = (props: Props) => {
           <VView style={styles.progress} transparent>
             <Text
               textKey={
-                hasProgress
-                  ? "dataEntry:autoSync.status.syncingTooltipWithProgress"
+                // while a job backs the progress (zip preparation, upload, then server-side
+                // processing - see useAutoSyncStatus), each phase's own title replaces the
+                // generic "synchronizing" text: they're separate jobs, but chained into one
+                // continuous progress bar below (see REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES), so the
+                // changing title is what tells the user a new step started, not a bar reset
+                hasProgress && jobTitleKey
+                  ? jobTitleKey
                   : "dataEntry:autoSync.status.syncingTooltip"
               }
-              textParams={hasProgress ? { progressPercent } : undefined}
             />
+            {hasProgress && (
+              <Text
+                style={styles.note}
+                textKey="dataEntry:autoSync.status.progressPercent"
+                textParams={{ progressPercent: Math.round(progressPercent) }}
+                variant="bodySmall"
+              />
+            )}
             <ProgressBar
               indeterminate={!hasProgress}
               progress={hasProgress ? progressPercent / 100 : undefined}

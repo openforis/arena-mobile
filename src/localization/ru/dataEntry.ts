@@ -18,7 +18,7 @@ export default {
       errorTooltip:
         "В некоторых записях есть ошибки синхронизации, требующие внимания. Откройте «Отправить данные», чтобы устранить их",
       syncingTooltip: "Синхронизация записей...",
-      syncingTooltipWithProgress: "Синхронизация записей... {{progressPercent}}%",
+      progressPercent: "{{progressPercent}}%",
       uncheckedTooltip:
         "Статус синхронизации ещё не проверен. Используйте «Проверить статус», чтобы проверить его",
       offlineTooltip:

@@ -18,8 +18,7 @@ export default {
       errorTooltip:
         "Alguns registros têm erros de sincronização e precisam da sua atenção. Abra 'Enviar dados' para resolvê-los",
       syncingTooltip: "Sincronizando registros...",
-      syncingTooltipWithProgress:
-        "Sincronizando registros... {{progressPercent}}%",
+      progressPercent: "{{progressPercent}}%",
       uncheckedTooltip:
         "Status de sincronização ainda não verificado. Use 'Verificar sincronização' para verificar",
       offlineTooltip:

@@ -18,7 +18,7 @@ export default {
       errorTooltip:
         "Vissa poster har synkroniseringsfel och behöver din uppmärksamhet. Öppna 'Skicka data' för att åtgärda dem",
       syncingTooltip: "Synkroniserar poster...",
-      syncingTooltipWithProgress: "Synkroniserar poster... {{progressPercent}}%",
+      progressPercent: "{{progressPercent}}%",
       uncheckedTooltip:
         "Synkroniseringsstatus har inte kontrollerats än. Använd 'Kontrollera status' för att kontrollera den",
       offlineTooltip:

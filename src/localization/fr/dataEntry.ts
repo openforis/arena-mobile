@@ -18,8 +18,7 @@ export default {
       errorTooltip:
         "Certains enregistrements présentent des erreurs de synchronisation et nécessitent votre attention. Ouvrez « Envoyer données » pour les résoudre",
       syncingTooltip: "Synchronisation des enregistrements...",
-      syncingTooltipWithProgress:
-        "Synchronisation des enregistrements... {{progressPercent}} %",
+      progressPercent: "{{progressPercent}} %",
       uncheckedTooltip:
         "État de synchronisation non encore vérifié. Utilisez « Vérifier synchronisation » pour le vérifier",
       offlineTooltip:
