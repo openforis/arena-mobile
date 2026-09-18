@@ -44,11 +44,14 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadAndProcessJobContex
       skipMissingFiles,
     } = this.context as Required<typeof this.context>;
 
-    const startFromChunk =
-      this.processed > 0 ? Math.floor(this.processed) : 1;
-
     const { dataUploadChunkSizeKB } = await SettingsService.fetchSettings();
     const chunkSize = dataUploadChunkSizeKB * 1024;
+
+    // this.processed is a byte offset (see onUploadProgress below), but RNFileProcessor.start
+    // expects a 1-indexed chunk number - convert so a retry actually resumes from the right
+    // chunk instead of requesting one identified by a raw byte count
+    const startFromChunk =
+      this.processed > 0 ? Math.floor(this.processed / chunkSize) + 1 : 1;
 
     this.logger.debug(
       `RecordsUploadJob: uploading ${fileUri} (startFromChunk=${startFromChunk}, chunkSize=${chunkSize})`,
