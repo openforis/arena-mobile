@@ -76,6 +76,21 @@ const post = async (
   return { data, response };
 };
 
+const del = async (
+  options: RequestOptions,
+): Promise<{ data: any; response: AxiosResponse }> => {
+  const { serverUrl, uri, config } = options;
+  const url = APIUtils.getUrl({ serverUrl, uri });
+  const newConfig: AxiosRequestConfig = { ...config, method: "delete" };
+  const { promise } = _prepareRequest(url, newConfig);
+
+  const response = await promise;
+
+  const { data } = response;
+
+  return { data, response };
+};
+
 const _prepareMultipartDataOptions = (
   options: RequestOptions,
 ): RequestOptions => {
@@ -107,6 +122,7 @@ const postMultipartData = async (
   post(_prepareMultipartDataOptions(options));
 
 export const APIAxios = {
+  del,
   get,
   getFileAsText,
   post,

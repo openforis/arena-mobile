@@ -1,6 +1,35 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Automatische Synchronisierung",
+    synced: "{{count}} Datensatz automatisch synchronisiert",
+    synced_plural: "{{count}} Datensätze automatisch synchronisiert",
+    statusLabel: "Synchronisierungsstatus:",
+    syncInProgressToast:
+      "Die automatische Synchronisierung läuft. Bitte warten Sie, bis sie abgeschlossen ist, bevor Sie Daten manuell senden.",
+    batteryDataWarning:
+      "Kann Akku- und Datenverbrauch erhöhen, wenn kein WLAN genutzt wird",
+    syncNow: "Jetzt synchronisieren",
+    status: {
+      syncedTooltip: "Alle Datensätze sind mit dem Server synchronisiert",
+      pendingTooltip:
+        "Einige Datensätze müssen noch synchronisiert werden. Sie werden automatisch gesendet",
+      errorTooltip:
+        "Einige Datensätze weisen Synchronisierungsfehler auf und benötigen Ihre Aufmerksamkeit. Öffnen Sie 'Daten senden', um sie zu beheben",
+      syncingTooltip: "Datensätze werden synchronisiert...",
+      progressPercent: "{{progressPercent}}%",
+      uncheckedTooltip:
+        "Synchronisierungsstatus noch nicht geprüft. Verwenden Sie 'Status prüfen', um ihn zu überprüfen",
+      offlineTooltip:
+        "Keine Internetverbindung. Die automatische Synchronisierung wird fortgesetzt, sobald Sie wieder online sind",
+      authErrorTooltip:
+        "Ihre Sitzung mit dem Server ist abgelaufen. Melden Sie sich erneut an, um die automatische Synchronisierung fortzusetzen",
+      checkErrorTooltip:
+        "Der Synchronisierungsstatus konnte aufgrund eines Serverfehlers nicht geprüft werden. Erneut versuchen",
+      noCandidatesMessage: "Derzeit nichts zu senden",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Knoten werden nicht mehr gelten",
     message: `Die folgenden Knoten werden nicht mehr gelten:  
@@ -69,7 +98,7 @@ Möchten Sie sie erneut vom Server abrufen?`,
   gpsLockingEnabledWarning: "Warnung: GPS-Ortung aktiviert!",
   listOfRecords: "Datensatzliste",
   localBackup: "Lokale Sicherung",
-  newRecord: "Neu",
+  newRecord: "Neuer Datensatz",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

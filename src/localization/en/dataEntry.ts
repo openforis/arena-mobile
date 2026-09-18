@@ -1,6 +1,35 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Auto sync",
+    synced: "Auto-synced {{count}} record",
+    synced_plural: "Auto-synced {{count}} records",
+    statusLabel: "Sync status:",
+    syncInProgressToast:
+      "Auto-sync is in progress. Please wait for it to finish before sending data manually.",
+    batteryDataWarning:
+      "May increase battery and data usage when not on Wi-Fi",
+    syncNow: "Sync now",
+    status: {
+      syncedTooltip: "All records are synchronized with the server",
+      pendingTooltip:
+        "Some records still need to be synchronized. They will be sent automatically",
+      errorTooltip:
+        "Some records have synchronization errors and need your attention. Open 'Send data' to resolve them",
+      syncingTooltip: "Synchronizing records...",
+      progressPercent: "{{progressPercent}}%",
+      uncheckedTooltip:
+        "Sync status not checked yet. Use 'Check status' to verify it",
+      offlineTooltip:
+        "No internet connection. Auto-sync will resume once you're back online",
+      authErrorTooltip:
+        "Your session with the server has expired. Log in again to resume auto-sync",
+      checkErrorTooltip:
+        "Couldn't check the sync status due to a server error. Try again",
+      noCandidatesMessage: "Nothing to send right now",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Nodes will no longer apply",
     message: `The following nodes will no longer apply:  
@@ -134,7 +163,7 @@ max count reached`,
   gpsLockingEnabledWarning: "Warning: GPS locking enabled!",
   listOfRecords: "Records",
   localBackup: "Local backup",
-  newRecord: "New",
+  newRecord: "New record",
   noRecordsFound: "No records found",
   options: "Options",
   recordEditor: "Record editor",

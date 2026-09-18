@@ -1,6 +1,35 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Automatisk synkronisering",
+    synced: "{{count}} post synkroniserad automatiskt",
+    synced_plural: "{{count}} poster synkroniserade automatiskt",
+    statusLabel: "Synkroniseringsstatus:",
+    syncInProgressToast:
+      "Automatisk synkronisering pågår. Vänta tills den är klar innan du skickar data manuellt.",
+    batteryDataWarning:
+      "Kan öka batteri- och dataanvändningen när du inte är ansluten till Wi-Fi",
+    syncNow: "Synkronisera nu",
+    status: {
+      syncedTooltip: "Alla poster är synkroniserade med servern",
+      pendingTooltip:
+        "Vissa poster behöver fortfarande synkroniseras. De skickas automatiskt",
+      errorTooltip:
+        "Vissa poster har synkroniseringsfel och behöver din uppmärksamhet. Öppna 'Skicka data' för att åtgärda dem",
+      syncingTooltip: "Synkroniserar poster...",
+      progressPercent: "{{progressPercent}}%",
+      uncheckedTooltip:
+        "Synkroniseringsstatus har inte kontrollerats än. Använd 'Kontrollera status' för att kontrollera den",
+      offlineTooltip:
+        "Ingen internetanslutning. Automatisk synkronisering återupptas när du är online igen",
+      authErrorTooltip:
+        "Din session med servern har gått ut. Logga in igen för att återuppta automatisk synkronisering",
+      checkErrorTooltip:
+        "Det gick inte att kontrollera synkroniseringsstatus på grund av ett serverfel. Försök igen",
+      noCandidatesMessage: "Inget att skicka just nu",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Noder kommer inte längre att gälla",
     message: `Följande noder kommer inte längre att gälla:  
@@ -68,7 +97,7 @@ Vill du hämta den igen från servern?`,
   gpsLockingEnabledWarning: "Varning: GPS-låsning aktiverad!",
   listOfRecords: "Poster",
   localBackup: "Lokal säkerhetskopia",
-  newRecord: "Ny",
+  newRecord: "Ny post",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

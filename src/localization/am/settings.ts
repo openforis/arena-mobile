@@ -11,6 +11,25 @@ export default {
     description:
       "በመተግበሪያው ውስጥ የሽግግር እና የገጽታ አኒሜሽኖችን ያነቃል። በዝግተኛ መሣሪያዎች ላይ አፈጻጸምን ለማሻሻል ያሰናክሉት",
   },
+  autoSyncEnabled: {
+    label: "ራስ-ሰር ማመሳሰል",
+    description: "$t(dataEntry:autoSync.batteryDataWarning)",
+  },
+  autoSyncOpenRecordIntervalMinutes: {
+    label: "በአርትዖት ላይ በሚሆንበት ጊዜ የራስ-ሰር ማመሳሰል ልዩነት፡ {{value}} ደቂቃ",
+    description:
+      "በአርታኢው ውስጥ በአሁኑ ጊዜ ክፍት የሆነው መዝገብ ራስ-ሰር ማመሳሰል ከመስቀሉ በፊት ምን ያህል ጊዜ ሳይነካ መቆየት እንዳለበት",
+  },
+  autoSyncSlowCheckIntervalMinutes: {
+    label: "የራስ-ሰር ማመሳሰል ልዩነት (ዝግተኛ ማጣሪያ)፡ {{value}} ደቂቃ",
+    description:
+      "ሁሉም መዝገቦች አስቀድመው ከተመሳሰሉ በኋላ፣ ራስ-ሰር ማመሳሰል ለውጦችን (ለምሳሌ ከሌላ መሣሪያ) በአገልጋዩ ላይ በድጋሚ የሚያረጋግጠው ምን ያህል ጊዜ ነው። ለመስቀል አዲስ ነገር ሲኖር ማረጋገጫዎች በብዛት ይከሰታሉ",
+  },
+  dataUploadChunkSizeKB: {
+    label: "የውሂብ መስቀያ ቁራጭ መጠን",
+    description:
+      "ወደ አገልጋዩ በሚሰቀልበት ጊዜ መዝገብ የሚከፋፈልበት የእያንዳንዱ ቁራጭ መጠን። ዝቅተኛ እሴቶች በዝግተኛ ወይም ያልተረጋጋ ግንኙነቶች ላይ የበለጠ አስተማማኝ ናቸው፣ ነገር ግን ተመሳሳይ የውሂብ መጠን ለመላክ ተጨማሪ ጥያቄዎችን ይፈልጋሉ",
+  },
   connectionToServer: "ከአገልጋይ ጋር ግንኙነት",
   fontScale: {
     label: "የቅርጸ ቁምፊ መጠን (ቤታ)፡ {{value}}",

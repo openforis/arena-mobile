@@ -3,6 +3,7 @@ import { Appbar as RNPAppbar } from "react-native-paper";
 
 import { Surveys } from "@openforis/arena-core";
 
+import { AutoSyncStatusAppBarAction } from "appComponents/AutoSyncStatus";
 import { HView, Spacer, Text } from "components";
 import { useScreenKey } from "hooks";
 import { RecordEditViewMode, ScreenViewMode } from "model";
@@ -202,6 +203,7 @@ export const AppBar = (props: Props) => {
                 }
                 onPress={toggleRecordEditViewMode}
               />
+              <AutoSyncStatusAppBarAction />
             </>
           )}
 

@@ -1,6 +1,35 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Sincronización automática",
+    synced: "{{count}} registro sincronizado automáticamente",
+    synced_plural: "{{count}} registros sincronizados automáticamente",
+    statusLabel: "Estado de sincronización:",
+    syncInProgressToast:
+      "La sincronización automática está en curso. Espere a que finalice antes de enviar datos manualmente.",
+    batteryDataWarning:
+      "Puede aumentar el consumo de batería y datos si no está en Wi-Fi",
+    syncNow: "Sincronizar ahora",
+    status: {
+      syncedTooltip: "Todos los registros están sincronizados con el servidor",
+      pendingTooltip:
+        "Algunos registros aún deben sincronizarse. Se enviarán automáticamente",
+      errorTooltip:
+        "Algunos registros tienen errores de sincronización y requieren su atención. Abra 'Enviar datos' para resolverlos",
+      syncingTooltip: "Sincronizando registros...",
+      progressPercent: "{{progressPercent}}%",
+      uncheckedTooltip:
+        "Estado de sincronización aún no verificado. Use 'Comprobar sincronización' para verificarlo",
+      offlineTooltip:
+        "Sin conexión a internet. La sincronización automática se reanudará al recuperar la conexión",
+      authErrorTooltip:
+        "Su sesión con el servidor ha expirado. Inicie sesión de nuevo para reanudar la sincronización automática",
+      checkErrorTooltip:
+        "No se pudo comprobar el estado de sincronización debido a un error del servidor. Inténtelo de nuevo",
+      noCandidatesMessage: "Nada que enviar por ahora",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Los nodos ya no se aplicarán",
     message: `Los siguientes nodos ya no se aplicarán:  
@@ -65,7 +94,7 @@ Sus valores serán borrados.
   gpsLockingEnabledWarning: "Advertencia: ¡Bloqueo del GPS activado!",
   listOfRecords: "Registros",
   localBackup: "Copia de seguridad local",
-  newRecord: "Nuevo",
+  newRecord: "Nuevo registro",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

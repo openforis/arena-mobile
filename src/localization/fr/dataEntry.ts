@@ -1,6 +1,35 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Synchronisation automatique",
+    synced: "{{count}} enregistrement synchronisé automatiquement",
+    synced_plural: "{{count}} enregistrements synchronisés automatiquement",
+    statusLabel: "État de synchronisation :",
+    syncInProgressToast:
+      "La synchronisation automatique est en cours. Veuillez attendre qu'elle se termine avant d'envoyer des données manuellement.",
+    batteryDataWarning:
+      "Peut augmenter la consommation de batterie et de données hors Wi-Fi",
+    syncNow: "Synchroniser maintenant",
+    status: {
+      syncedTooltip: "Tous les enregistrements sont synchronisés avec le serveur",
+      pendingTooltip:
+        "Certains enregistrements doivent encore être synchronisés. Ils seront envoyés automatiquement",
+      errorTooltip:
+        "Certains enregistrements présentent des erreurs de synchronisation et nécessitent votre attention. Ouvrez « Envoyer données » pour les résoudre",
+      syncingTooltip: "Synchronisation des enregistrements...",
+      progressPercent: "{{progressPercent}} %",
+      uncheckedTooltip:
+        "État de synchronisation non encore vérifié. Utilisez « Vérifier synchronisation » pour le vérifier",
+      offlineTooltip:
+        "Aucune connexion internet. La synchronisation automatique reprendra une fois la connexion rétablie",
+      authErrorTooltip:
+        "Votre session avec le serveur a expiré. Reconnectez-vous pour reprendre la synchronisation automatique",
+      checkErrorTooltip:
+        "Impossible de vérifier l'état de synchronisation en raison d'une erreur serveur. Réessayez",
+      noCandidatesMessage: "Rien à envoyer pour le moment",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Les nœuds ne s'appliqueront plus",
     message: `Les nœuds suivants ne s'appliqueront plus :  
@@ -70,7 +99,7 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
   gpsLockingEnabledWarning: "Avertissement: Verrouillage GPS activé!",
   listOfRecords: "Enregistrements",
   localBackup: "Sauvegarde locale",
-  newRecord: "Nouvel",
+  newRecord: "Nouvel enregistrement",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

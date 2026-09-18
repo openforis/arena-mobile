@@ -1,7 +1,9 @@
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 
+import { AutoSyncStatusIcon } from "appComponents/AutoSyncStatus";
 import {
   Button,
+  FlexWrapView,
   HView,
   Loader,
   MenuButton,
@@ -21,6 +23,7 @@ import styles from "./styles";
 
 export const RecordsList = () => {
   const {
+    autoSyncEnabled,
     cycle,
     defaultCycleKey,
     isDemoSurvey,
@@ -58,6 +61,15 @@ export const RecordsList = () => {
       survey,
       syncStatusFetched,
     });
+
+  const [selectedRecordUuids, setSelectedRecordUuids] = useState<string[]>(
+    [],
+  );
+
+  const onSendDataButtonPress = useCallback(
+    () => onSendDataPress(selectedRecordUuids),
+    [onSendDataPress, selectedRecordUuids],
+  );
 
   const newRecordButton = useMemo(
     () =>
@@ -111,6 +123,7 @@ export const RecordsList = () => {
                 onRevalidateSelectedRecordUuids={
                   onRevalidateSelectedRecordUuids
                 }
+                onSelectedRecordUuidsChange={setSelectedRecordUuids}
                 records={recordsFiltered}
                 showRemoteProps={!onlyLocal}
                 syncStatusFetched={syncStatusFetched}
@@ -122,22 +135,29 @@ export const RecordsList = () => {
       </VView>
       {syncStatusFetched && <RecordsListLegend />}
       {recordsLength > 0 && (
-        <HView style={styles.bottomActionBar}>
+        // wraps onto multiple lines on a narrow screen instead of squeezing/overlapping;
+        // stays a single row once there's enough width - same pattern as RecordsListOptions'
+        // own button row above
+        <FlexWrapView style={styles.bottomActionBar}>
           {newRecordButton}
-          {!isDemoSurvey && (
+          {!isDemoSurvey && !autoSyncEnabled && (
             <Button
               icon="cloud-refresh"
-              onPress={onSendDataPress}
+              onPress={onSendDataButtonPress}
               textKey="dataEntry:sendData"
             />
           )}
+          <HView style={styles.autoSyncStatusItem}>
+            <Text textKey="dataEntry:autoSync.statusLabel" />
+            <AutoSyncStatusIcon />
+          </HView>
           <MenuButton
             anchorPosition="top"
             icon="download"
             items={downloadMenuItems}
             menuStyle={styles.exportDataButtonMenu}
           />
-        </HView>
+        </FlexWrapView>
       )}
     </VView>
   );

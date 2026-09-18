@@ -17,6 +17,7 @@ import { Files, SystemUtils } from "utils";
 
 import { RecordService } from "./recordService";
 import { RecordFileService } from "./recordFileService";
+import { RecordRemoteService } from "./recordRemoteService";
 import { JobMobileContext } from "model/JobMobile";
 
 const INFO_JSON_FILENAME = "info.json";
@@ -32,14 +33,19 @@ type RecordsExportFileGenerationJobContext = JobMobileContext & {
   cycle: string;
   recordUuids: string[];
   user: any;
+  // true only when this export is guaranteed to go straight to the remote server (e.g. the
+  // "Send data" button, or an auto-sync upload) - see the already-uploaded-files skip below.
+  // A locally exported/shared zip must always be self-contained, so it must always include
+  // every file, regardless of what the server already has.
+  onlyRemote?: boolean;
 };
 
 export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileGenerationJobContext> {
   outputFileUri: any;
   recordsWithMissingFiles: { uuid: string; keysText: string }[] = [];
 
-  constructor({ survey, cycle, recordUuids, user }: any) {
-    super({ survey, cycle, recordUuids, user });
+  constructor({ survey, cycle, recordUuids, user, onlyRemote = false }: any) {
+    super({ survey, cycle, recordUuids, user, onlyRemote });
   }
 
   async execute() {
@@ -48,11 +54,22 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       cycle,
       recordUuids,
       user,
-    }: { survey: Survey; cycle: string; recordUuids: string[]; user: any } =
-      this.context;
+      onlyRemote,
+    }: {
+      survey: Survey;
+      cycle: string;
+      recordUuids: string[];
+      user: any;
+      onlyRemote?: boolean;
+    } = this.context;
     const recordUuidsSet = new Set(recordUuids);
 
+    this.logger.debug(
+      `RecordsExportFileGenerationJob: starting (recordUuids=${recordUuids.length}, onlyRemote=${onlyRemote})`,
+    );
+
     const tempFolderUri = await Files.createTempFolder();
+    this.logger.debug(`RecordsExportFileGenerationJob: temp folder created at ${tempFolderUri}`);
 
     try {
       const tempRecordsFolderUri = Files.path(
@@ -69,6 +86,10 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
 
       const recordsToExport = recordsSummary.filter((recordSummary: any) =>
         recordUuidsSet.has(recordSummary.uuid),
+      );
+
+      this.logger.debug(
+        `RecordsExportFileGenerationJob: ${recordsToExport.length} of ${recordsSummary.length} local record(s) match the requested uuids`,
       );
 
       // set total
@@ -93,45 +114,41 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       const tempFilesDirUri = Files.path(tempFolderUri, FILES_FOLDER_NAME);
       await Files.mkDir(tempFilesDirUri);
 
+      // uuids of files the server already has for each record, so their content can be left
+      // out of the zip (the record's own json still references them) - saves re-uploading
+      // file bytes that haven't changed since the last sync. Only done when this export is
+      // guaranteed to go straight to that same remote server: a zip that might instead be
+      // shared or kept as a local backup must always be self-contained.
+      const filesAlreadyOnServerByRecordUuid: Record<string, string[]> =
+        onlyRemote && !Objects.isEmpty(nodeDefsFile) && (survey as any).remoteId
+          ? await RecordRemoteService.fetchFileUuidsByRecordUuid({
+              surveyRemoteId: (survey as any).remoteId,
+              recordUuids: recordsToExport.map((r: any) => r.uuid),
+            })
+          : {};
+
+      this.logger.debug(
+        `RecordsExportFileGenerationJob: ${nodeDefsFile.length} file node def(s), already-on-server lookup done for ${Object.keys(filesAlreadyOnServerByRecordUuid).length} record(s)`,
+      );
+
       const files = [];
 
       for (const recordSummary of recordsToExport) {
-        const { id: recordId, uuid } = recordSummary;
-        const record = await RecordService.fetchRecord({ survey, recordId });
-        if (!record.ownerUuid && user) {
-          record.ownerUuid = user.uuid;
+        if (this.isCanceled()) {
+          this.logger.debug("RecordsExportFileGenerationJob: canceled before/during record export loop");
+          return;
         }
 
-        const keysText =
-          RecordUtils.getRootEntityKeysFormatted({
-            survey,
-            record,
-          })
-            .filter(Boolean)
-            .join(" - ") || uuid;
-
-        const tempRecordFileUri = `${Files.path(
+        const recordFiles = await this.exportRecord({
+          recordSummary,
+          survey,
+          user,
+          tempFolderUri,
           tempRecordsFolderUri,
-          uuid,
-        )}.json`;
-        await Files.writeJsonToFile({
-          content: record,
-          fileUri: tempRecordFileUri,
+          nodeDefsFile,
+          filesAlreadyOnServerByRecordUuid,
         });
-
-        if (!Objects.isEmpty(nodeDefsFile)) {
-          const { recordFiles, hasMissingFiles } = await this.writeRecordFiles({
-            tempFolderUri,
-            nodeDefsFile,
-            record,
-          });
-
-          if (hasMissingFiles) {
-            this.recordsWithMissingFiles.push({ uuid, keysText });
-          }
-
-          files.push(...recordFiles);
-        }
+        files.push(...recordFiles);
 
         this.incrementProcessedItems();
       }
@@ -148,8 +165,18 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
         });
       }
 
+      if (this.isCanceled()) {
+        this.logger.debug("RecordsExportFileGenerationJob: canceled before writing info file");
+        return;
+      }
+
       // info file
       await this.writeInfoFile({ tempFolderUri });
+
+      if (this.isCanceled()) {
+        this.logger.debug("RecordsExportFileGenerationJob: canceled before zipping");
+        return;
+      }
 
       // create output zip file
       const timestamp = Dates.format(new Date(), DateFormats.datetimeDefault);
@@ -158,10 +185,60 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       // store exported file in cache directory to allow sharing it later on
       this.outputFileUri = Files.path(Files.cacheDirectory, outputFileName);
 
+      this.logger.debug(
+        `RecordsExportFileGenerationJob: zipping ${tempFolderUri} to ${this.outputFileUri} (${files.length} file(s), ${recordsToExport.length} record(s))`,
+      );
       await Files.zip(tempFolderUri, this.outputFileUri);
+      this.logger.debug("RecordsExportFileGenerationJob: zip created successfully");
+    } catch (error) {
+      this.logger.error(`RecordsExportFileGenerationJob: failed: ${error}`);
+      throw error;
     } finally {
       await Files.del(tempFolderUri);
     }
+  }
+
+  // writes one record's json (and, if the survey has file attributes, its files) into the
+  // temp export folder; returns the record files to include in the export's files summary
+  private async exportRecord({
+    recordSummary,
+    survey,
+    user,
+    tempFolderUri,
+    tempRecordsFolderUri,
+    nodeDefsFile,
+    filesAlreadyOnServerByRecordUuid,
+  }: any): Promise<any[]> {
+    const { id: recordId, uuid } = recordSummary;
+    const record = await RecordService.fetchRecord({ survey, recordId });
+    if (!record.ownerUuid && user) {
+      record.ownerUuid = user.uuid;
+    }
+
+    const tempRecordFileUri = `${Files.path(tempRecordsFolderUri, uuid)}.json`;
+    await Files.writeJsonToFile({ content: record, fileUri: tempRecordFileUri });
+
+    if (Objects.isEmpty(nodeDefsFile)) return [];
+
+    const alreadyUploadedFileUuids = new Set(
+      filesAlreadyOnServerByRecordUuid[uuid] ?? [],
+    );
+    const { recordFiles, hasMissingFiles } = await this.writeRecordFiles({
+      tempFolderUri,
+      nodeDefsFile,
+      record,
+      alreadyUploadedFileUuids,
+    });
+
+    if (hasMissingFiles) {
+      const keysText =
+        RecordUtils.getRootEntityKeysFormatted({ survey, record })
+          .filter(Boolean)
+          .join(" - ") || uuid;
+      this.recordsWithMissingFiles.push({ uuid, keysText });
+    }
+
+    return recordFiles;
   }
 
   private async writeInfoFile({ tempFolderUri }: { tempFolderUri: string }) {
@@ -186,6 +263,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     tempFolderUri,
     nodeDefsFile,
     record,
+    alreadyUploadedFileUuids = new Set<string>(),
   }: any): Promise<{ recordFiles: any[]; hasMissingFiles: boolean }> {
     const { survey } = this.context;
     const surveyId = survey.id!;
@@ -218,6 +296,11 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
 
     for (const recordFile of recordFiles) {
       const { uuid: fileUuid } = recordFile;
+
+      // the server already has this exact file uuid stored: leave it out of the zip entirely
+      // (record.json still references it) to save re-uploading unchanged file content
+      if (alreadyUploadedFileUuids.has(fileUuid)) continue;
+
       const fileUri = RecordFileService.getRecordFileUri({
         surveyId,
         fileUuid,

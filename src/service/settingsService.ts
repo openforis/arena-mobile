@@ -11,6 +11,10 @@ import { AMConstants, SystemUtils } from "utils";
 
 const defaultSettings: Partial<SettingsObject> = {
   animationsEnabled: true,
+  autoSyncEnabled: false,
+  autoSyncOpenRecordIntervalMinutes: 5,
+  autoSyncSlowCheckIntervalMinutes: 30,
+  dataUploadChunkSizeKB: 2048, // 2MB
   fontScale: 1,
   imageSizeUnlimited: false,
   imageSizeLimit: 4, // MB

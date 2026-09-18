@@ -2,6 +2,7 @@ import { Surveys } from "@openforis/arena-core";
 
 import {
   Button,
+  Checkbox,
   CollapsiblePanel,
   FlexWrapView,
   HView,
@@ -9,8 +10,13 @@ import {
   Text,
 } from "components";
 import { useIsNetworkConnected } from "hooks";
-import { Cycles } from "model";
-import { SurveySelectors } from "state";
+import { Cycles, SettingsModel } from "model";
+import {
+  SettingsActions,
+  SettingsSelectors,
+  SurveySelectors,
+  useAppDispatch,
+} from "state";
 
 import { SurveyCycleSelector } from "./SurveyCycleSelector";
 import { SurveyLanguageSelector } from "./SurveyLanguageSelector";
@@ -47,8 +53,10 @@ export const RecordsListOptions = (props: RecordsListOptionsProps) => {
     onRevalidateAllRecordsPress,
   } = props;
 
+  const dispatch = useAppDispatch();
   const networkAvailable = useIsNetworkConnected();
   const survey = SurveySelectors.useCurrentSurvey()!;
+  const { autoSyncEnabled } = SettingsSelectors.useSettings();
 
   const defaultCycleKey = Surveys.getDefaultCycleKey(survey);
   const defaultCycleText = Cycles.labelFunction(defaultCycleKey);
@@ -62,6 +70,15 @@ export const RecordsListOptions = (props: RecordsListOptionsProps) => {
     },
     [onOnlyLocalChange],
   );
+
+  const onAutoSyncEnabledChange = useCallback(() => {
+    dispatch(
+      SettingsActions.updateSetting({
+        key: SettingsModel.SettingKey.autoSyncEnabled,
+        value: !autoSyncEnabled,
+      }),
+    );
+  }, [dispatch, autoSyncEnabled]);
 
   return (
     <CollapsiblePanel
@@ -107,6 +124,11 @@ export const RecordsListOptions = (props: RecordsListOptionsProps) => {
           icon="clipboard-check-outline"
           onPress={onRevalidateAllRecordsPress}
           textKey="recordsList:revalidateRecords.allRecordsTitle"
+        />
+        <Checkbox
+          checked={autoSyncEnabled}
+          label="dataEntry:autoSync.checkbox"
+          onPress={onAutoSyncEnabledChange}
         />
       </FlexWrapView>
     </CollapsiblePanel>

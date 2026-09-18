@@ -1,6 +1,35 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Sinkronisasi otomatis",
+    synced: "{{count}} catatan disinkronkan otomatis",
+    synced_plural: "{{count}} catatan disinkronkan otomatis",
+    statusLabel: "Status sinkronisasi:",
+    syncInProgressToast:
+      "Sinkronisasi otomatis sedang berlangsung. Harap tunggu hingga selesai sebelum mengirim data secara manual.",
+    batteryDataWarning:
+      "Dapat meningkatkan penggunaan baterai dan data saat tidak menggunakan Wi-Fi",
+    syncNow: "Sinkronkan sekarang",
+    status: {
+      syncedTooltip: "Semua catatan telah disinkronkan dengan server",
+      pendingTooltip:
+        "Beberapa catatan masih perlu disinkronkan. Catatan akan dikirim secara otomatis",
+      errorTooltip:
+        "Beberapa catatan memiliki kesalahan sinkronisasi dan memerlukan perhatian Anda. Buka 'Kirim data' untuk menyelesaikannya",
+      syncingTooltip: "Menyinkronkan catatan...",
+      progressPercent: "{{progressPercent}}%",
+      uncheckedTooltip:
+        "Status sinkronisasi belum diperiksa. Gunakan 'Periksa status' untuk memeriksanya",
+      offlineTooltip:
+        "Tidak ada koneksi internet. Sinkronisasi otomatis akan dilanjutkan setelah kembali online",
+      authErrorTooltip:
+        "Sesi Anda dengan server telah berakhir. Masuk kembali untuk melanjutkan sinkronisasi otomatis",
+      checkErrorTooltip:
+        "Tidak dapat memeriksa status sinkronisasi karena kesalahan server. Coba lagi",
+      noCandidatesMessage: "Tidak ada yang perlu dikirim saat ini",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Node tidak akan berlaku lagi",
     message: `Node berikut tidak akan berlaku lagi:  
@@ -68,7 +97,7 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
   gpsLockingEnabledWarning: "Peringatan: Penguncian GPS diaktifkan!",
   listOfRecords: "Data",
   localBackup: "Cadangan lokal",
-  newRecord: "Baru",
+  newRecord: "Catatan baru",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

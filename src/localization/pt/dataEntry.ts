@@ -1,6 +1,35 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Sincronização automática",
+    synced: "{{count}} registro sincronizado automaticamente",
+    synced_plural: "{{count}} registros sincronizados automaticamente",
+    statusLabel: "Status de sincronização:",
+    syncInProgressToast:
+      "A sincronização automática está em andamento. Aguarde a conclusão antes de enviar dados manualmente.",
+    batteryDataWarning:
+      "Pode aumentar o consumo de bateria e dados fora do Wi-Fi",
+    syncNow: "Sincronizar agora",
+    status: {
+      syncedTooltip: "Todos os registros estão sincronizados com o servidor",
+      pendingTooltip:
+        "Alguns registros ainda precisam ser sincronizados. Eles serão enviados automaticamente",
+      errorTooltip:
+        "Alguns registros têm erros de sincronização e precisam da sua atenção. Abra 'Enviar dados' para resolvê-los",
+      syncingTooltip: "Sincronizando registros...",
+      progressPercent: "{{progressPercent}}%",
+      uncheckedTooltip:
+        "Status de sincronização ainda não verificado. Use 'Verificar sincronização' para verificar",
+      offlineTooltip:
+        "Sem conexão com a internet. A sincronização automática será retomada ao voltar a ficar online",
+      authErrorTooltip:
+        "Sua sessão com o servidor expirou. Faça login novamente para retomar a sincronização automática",
+      checkErrorTooltip:
+        "Não foi possível verificar o status de sincronização devido a um erro do servidor. Tente novamente",
+      noCandidatesMessage: "Nada para enviar no momento",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Os nós deixarão de se aplicar",
     message: `Os seguintes nós deixarão de se aplicar:  
@@ -65,7 +94,7 @@ Deseja obtê-las novamente do servidor?`,
   gpsLockingEnabledWarning: "Aviso: Bloqueio de GPS ativado!",
   listOfRecords: "Registos",
   localBackup: "Cópia de segurança local",
-  newRecord: "Novo",
+  newRecord: "Novo registro",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

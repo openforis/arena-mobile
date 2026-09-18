@@ -2,20 +2,23 @@ import { Files, Functions, log, RNFileProcessor } from "utils";
 import { RemoteService } from "./remoteService";
 import { SurveyMobile } from "model/SurveyMobile";
 
-const uploadChunkSize = 2 * 1024 * 1024; // 2MB
+// fallback used if no chunk size is provided - see settings:dataUploadChunkSizeKB
+const DEFAULT_UPLOAD_CHUNK_SIZE = 2 * 1024 * 1024; // 2MB
 
 const calculateUploadedBytes = ({
   chunk,
   uploadedChunkPercent,
   totalFileSize,
+  chunkSize,
 }: {
   chunk: number;
   uploadedChunkPercent: number;
   totalFileSize: number;
+  chunkSize: number;
 }): number => {
-  const offset = Math.max(0, (chunk - 1) * uploadChunkSize);
+  const offset = Math.max(0, (chunk - 1) * chunkSize);
   const remainingBytes = Math.max(0, totalFileSize - offset);
-  const currentChunkSize = Math.min(uploadChunkSize, remainingBytes);
+  const currentChunkSize = Math.min(chunkSize, remainingBytes);
   const uploadedBytes =
     offset + uploadedChunkPercent * currentChunkSize;
   return Math.min(totalFileSize, uploadedBytes);
@@ -28,6 +31,26 @@ const fetchRecordsSummaries = async ({ surveyRemoteId, cycle }: any) => {
   );
   const { list } = data;
   return list;
+};
+
+// For each given record uuid, the uuids of the files the server already has stored for it -
+// used to skip re-uploading file content that hasn't changed. Returns an empty result (i.e.
+// nothing gets skipped, every file is uploaded as before) if the server doesn't support this
+// endpoint yet, so this stays compatible with older Arena servers.
+const fetchFileUuidsByRecordUuid = async ({
+  surveyRemoteId,
+  recordUuids,
+}: any): Promise<Record<string, string[]>> => {
+  try {
+    const { data } = await RemoteService.post(
+      `api/mobile/survey/${surveyRemoteId}/records/file-uuids`,
+      { recordUuids },
+    );
+    return data?.fileUuidsByRecordUuid ?? {};
+  } catch (error) {
+    log.warn(`error fetching file uuids by record uuid: ${error}`);
+    return {};
+  }
 };
 
 const startExportRecords = async ({ survey, cycle, recordUuids }: any) => {
@@ -60,6 +83,7 @@ const uploadRecords = ({
   startFromChunk,
   conflictResolutionStrategy,
   skipMissingFiles = false,
+  chunkSize = DEFAULT_UPLOAD_CHUNK_SIZE,
   onUploadProgress,
 }: {
   survey: SurveyMobile;
@@ -69,6 +93,7 @@ const uploadRecords = ({
   startFromChunk?: number;
   conflictResolutionStrategy: string;
   skipMissingFiles?: boolean;
+  chunkSize?: number;
   onUploadProgress: (progressEvent: any) => void;
 }): { promise: Promise<any>; cancel: () => void } => {
   const surveyRemoteId = survey.remoteId;
@@ -111,6 +136,7 @@ const uploadRecords = ({
             chunk,
             uploadedChunkPercent,
             totalFileSize,
+            chunkSize,
           });
           debouncedUploadProgress({
             total: totalFileSize,
@@ -146,7 +172,7 @@ const uploadRecords = ({
       onComplete: async () => {
         await fileProcessor?.close();
       },
-      chunkSize: uploadChunkSize,
+      chunkSize,
       maxTryings: 2,
     });
     fileProcessor.start(startFromChunk);
@@ -162,6 +188,7 @@ const uploadRecords = ({
 
 export const RecordRemoteService = {
   fetchRecordsSummaries,
+  fetchFileUuidsByRecordUuid,
   startExportRecords,
   downloadExportedRecordsFile,
   uploadRecords,

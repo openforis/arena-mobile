@@ -1,6 +1,35 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "همگام‌سازی خودکار",
+    synced: "{{count}} رکورد به‌طور خودکار همگام‌سازی شد",
+    synced_plural: "{{count}} رکورد به‌طور خودکار همگام‌سازی شدند",
+    statusLabel: "وضعیت همگام‌سازی:",
+    syncInProgressToast:
+      "همگام‌سازی خودکار در حال انجام است. لطفاً پیش از ارسال دستی داده‌ها منتظر پایان آن بمانید.",
+    batteryDataWarning:
+      "در صورت عدم اتصال به Wi-Fi ممکن است مصرف باتری و داده افزایش یابد",
+    syncNow: "همگام‌سازی اکنون",
+    status: {
+      syncedTooltip: "همه رکوردها با سرور همگام‌سازی شده‌اند",
+      pendingTooltip:
+        "برخی رکوردها هنوز باید همگام‌سازی شوند. آن‌ها به‌طور خودکار ارسال خواهند شد",
+      errorTooltip:
+        "برخی رکوردها دارای خطای همگام‌سازی هستند و نیاز به توجه شما دارند. برای رفع آن‌ها 'ارسال داده' را باز کنید",
+      syncingTooltip: "در حال همگام‌سازی رکوردها...",
+      progressPercent: "{{progressPercent}}%",
+      uncheckedTooltip:
+        "وضعیت همگام‌سازی هنوز بررسی نشده است. برای بررسی آن از 'بررسی وضعیت همگام سازی' استفاده کنید",
+      offlineTooltip:
+        "اتصال اینترنت وجود ندارد. همگام‌سازی خودکار پس از اتصال دوباره از سر گرفته می‌شود",
+      authErrorTooltip:
+        "نشست شما با سرور منقضی شده است. برای ازسرگیری همگام‌سازی خودکار دوباره وارد شوید",
+      checkErrorTooltip:
+        "به دلیل خطای سرور، بررسی وضعیت همگام‌سازی ممکن نشد. دوباره تلاش کنید",
+      noCandidatesMessage: "در حال حاضر چیزی برای ارسال نیست",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "گره‌ها دیگر اعمال نخواهند شد",
     message: `گره‌های زیر دیگر اعمال نخواهند شد:  
@@ -67,7 +96,7 @@ export default {
   gpsLockingEnabledWarning: "هشدار: قفل GPS فعال است!",
   listOfRecords: "رکوردها",
   localBackup: "پشتیبان گیری محلی",
-  newRecord: "جدید",
+  newRecord: "رکورد جدید",
   node: {
     cannotAddMoreItems: {
       maxCountReached:
