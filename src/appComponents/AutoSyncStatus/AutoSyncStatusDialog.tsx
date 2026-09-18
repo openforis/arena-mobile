@@ -16,17 +16,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const statusTextKeyByStatus: Record<AutoSyncStatus, string> = {
-  [AutoSyncStatus.unchecked]: "dataEntry:autoSync.status.uncheckedTooltip",
-  [AutoSyncStatus.synced]: "dataEntry:autoSync.status.syncedTooltip",
-  [AutoSyncStatus.pending]: "dataEntry:autoSync.status.pendingTooltip",
-  [AutoSyncStatus.error]: "dataEntry:autoSync.status.errorTooltip",
-  // not normally read (a connectionIssue takes over first when this status is set) - kept for
-  // type safety and as a defensive fallback
-  [AutoSyncStatus.authError]: "dataEntry:autoSync.status.authErrorTooltip",
-  [AutoSyncStatus.checkError]: "dataEntry:autoSync.status.checkErrorTooltip",
-};
-
 const textKeyByConnectionIssue: Record<
   Exclude<AutoSyncConnectionIssue, null>,
   string
@@ -75,7 +64,7 @@ export const AutoSyncStatusDialog = (props: Props) => {
   const showStatusText = !isStaleErrorStatus;
   const statusTextKey = connectionIssue
     ? textKeyByConnectionIssue[connectionIssue]
-    : statusTextKeyByStatus[status];
+    : `dataEntry:autoSync.status.${status}Tooltip`;
   // stale/contradictory otherwise: message is set as a specific outcome of a check that already
   // completed, so it doesn't apply once a live connection issue is overriding the status, a new
   // check/sync is already underway, or the status itself already says records are pending/erroring
