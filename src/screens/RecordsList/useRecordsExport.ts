@@ -30,6 +30,12 @@ export type UseRecordsExportParams = {
   syncStatusFetched?: boolean;
 };
 
+const filterRecordsByUuids = (records: any[], recordUuids: string[] | undefined) =>
+  recordUuids && recordUuids.length > 0
+    ? records.filter((record) => recordUuids.includes(record.uuid)
+    )
+    : records;
+
 export const useRecordsExport = ({
   cycle,
   isDemoSurvey,
@@ -94,9 +100,9 @@ export const useRecordsExport = ({
 
       if (
         newRecordsCount +
-          updatedRecordsCount +
-          conflictingRecordsCount +
-          sameRecordConflictsCount ===
+        updatedRecordsCount +
+        conflictingRecordsCount +
+        sameRecordConflictsCount ===
         0
       ) {
         toaster(noRecordsToExportTextKey);
@@ -301,11 +307,7 @@ export const useRecordsExport = ({
         } = await loadRecordsWithSyncStatus();
         if (syncStatusFetchedNext) {
           const recordsToSend =
-            selectedRecordUuids && selectedRecordUuids.length > 0
-              ? recordsNext.filter((record) =>
-                  selectedRecordUuids.includes(record.uuid),
-                )
-              : recordsNext;
+            filterRecordsByUuids(recordsNext, selectedRecordUuids);
           await exportSelectedRecords({
             selectedRecords: recordsToSend,
             onlyRemote: true,
@@ -375,3 +377,5 @@ export const useRecordsExport = ({
     onSendDataPress,
   };
 };
+
+

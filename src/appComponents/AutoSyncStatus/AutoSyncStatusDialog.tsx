@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 import { Checkbox, Dialog, ProgressBar, Text, VView } from "components";
 import { AutoSyncStatus } from "state";
-import { AutoSyncConnectionIssue, useAutoSyncStatus } from "./useAutoSyncStatus";
+import { useAutoSyncStatus } from "./useAutoSyncStatus";
 
 const styles = StyleSheet.create({
   content: {
@@ -15,14 +15,6 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
 });
-
-const textKeyByConnectionIssue: Record<
-  Exclude<AutoSyncConnectionIssue, null>,
-  string
-> = {
-  offline: "dataEntry:autoSync.status.offlineTooltip",
-  authError: "dataEntry:autoSync.status.authErrorTooltip",
-};
 
 type Props = {
   // open/close state is owned by whichever trigger (RecordsList icon, RecordEditor app bar
@@ -62,9 +54,7 @@ export const AutoSyncStatusDialog = (props: Props) => {
     !autoSyncEnabled &&
     (status === AutoSyncStatus.checkError || status === AutoSyncStatus.authError);
   const showStatusText = !isStaleErrorStatus;
-  const statusTextKey = connectionIssue
-    ? textKeyByConnectionIssue[connectionIssue]
-    : `dataEntry:autoSync.status.${status}Tooltip`;
+  const statusTextKey = `dataEntry:autoSync.status.${connectionIssue ?? status}Tooltip`;
   // stale/contradictory otherwise: message is set as a specific outcome of a check that already
   // completed, so it doesn't apply once a live connection issue is overriding the status, a new
   // check/sync is already underway, or the status itself already says records are pending/erroring
