@@ -53,7 +53,7 @@ export const AutoSyncStatusDialog = (props: Props) => {
   const isStaleErrorStatus =
     !autoSyncEnabled &&
     (status === AutoSyncStatus.checkError || status === AutoSyncStatus.authError);
-  const showStatusText = !isStaleErrorStatus;
+  const showStatusText = autoSyncEnabled && !isStaleErrorStatus;
   const statusTextKey = `dataEntry:autoSync.status.${connectionIssue ?? status}Tooltip`;
   // stale/contradictory otherwise: message is set as a specific outcome of a check that already
   // completed, so it doesn't apply once a live connection issue is overriding the status, a new
