@@ -134,6 +134,50 @@ const handleUploadJobError = async ({
 const getFailedInnerJobType = (error: any): string | undefined =>
   error?.innerJobs?.[error?.currentInnerJobIndex]?.type;
 
+// static: doesn't depend on any per-call value, so it's built once instead of on every retry
+// attempt - see JobMonitorActions.startAsync's innerJobUiConfigByType
+const UPLOAD_AND_PROCESS_INNER_JOB_UI_CONFIG = {
+  [RECORDS_UPLOAD_JOB_TYPE]: {
+    titleKey: "dataEntry:uploadingData.title",
+    showTransferStats: true,
+  },
+  [REMOTE_JOB_WATCHER_JOB_TYPE]: {
+    titleKey: "dataEntry:processingData.title",
+    showTransferStats: false,
+  },
+};
+
+// decides what a failed upload+processing attempt should do next: false to stop (the failure
+// is already fully handled, or isn't worth retrying), true to try again. Kept separate from
+// startUploadDataToRemoteServer's own retry loop to keep that loop's own cognitive complexity
+// down to something SonarQube is happy with.
+const handleUploadAndProcessError = async ({
+  dispatch,
+  error,
+  silent,
+}: {
+  dispatch: any;
+  error: any;
+  silent: boolean;
+}): Promise<boolean> => {
+  if (silent) {
+    // an unattended tick must never block on a retry confirmation; shown through the sync status
+    // icon instead, which also stops further automatic ticks until the user retries - covers a
+    // failure in either phase (upload or server-side processing)
+    log.warn(`auto-sync: upload/processing failed: ${errorOrJobToString(error)}`);
+    dispatch(isAuthError(error) ? AutoSyncActions.authError() : AutoSyncActions.checkError());
+    return false;
+  }
+  // only the upload phase is worth silently retrying (e.g. a network hiccup) - a processing
+  // failure already happened server-side after a successful upload, so re-uploading the whole
+  // file again wouldn't help; it's left to surface through the job monitor dialog's own failed
+  // state instead, same as before this job existed
+  if (getFailedInnerJobType(error) !== RECORDS_UPLOAD_JOB_TYPE) {
+    return false;
+  }
+  return handleUploadJobError({ dispatch, error });
+};
+
 const startUploadDataToRemoteServer =
   ({
     outputFileUri,
@@ -166,6 +210,7 @@ const startUploadDataToRemoteServer =
         conflictResolutionStrategy,
         skipMissingFiles,
       });
+      const progressRange = chained ? REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES.uploadAndProcess : {};
 
       let shouldRetry = true;
       let jobComplete: any = null;
@@ -182,40 +227,14 @@ const startUploadDataToRemoteServer =
             transferSizeTextKey: "dataEntry:uploadingData.size",
             transferSpeedTextKey: "dataEntry:uploadingData.speed",
             transferEtaTextKey: "dataEntry:uploadingData.eta",
-            innerJobUiConfigByType: {
-              [RECORDS_UPLOAD_JOB_TYPE]: {
-                titleKey: "dataEntry:uploadingData.title",
-                showTransferStats: true,
-              },
-              [REMOTE_JOB_WATCHER_JOB_TYPE]: {
-                titleKey: "dataEntry:processingData.title",
-                showTransferStats: false,
-              },
-            },
+            innerJobUiConfigByType: UPLOAD_AND_PROCESS_INNER_JOB_UI_CONFIG,
             onJobComplete,
             silent,
-            ...(chained ? REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES.uploadAndProcess : {}),
+            ...progressRange,
           });
           shouldRetry = !jobComplete;
         } catch (error: any) {
-          if (silent) {
-            // an unattended tick must never block on a retry confirmation; shown through the
-            // sync status icon instead, which also stops further automatic ticks until the user
-            // retries - covers a failure in either phase (upload or server-side processing)
-            log.warn(`auto-sync: upload/processing failed: ${errorOrJobToString(error)}`);
-            dispatch(
-              isAuthError(error) ? AutoSyncActions.authError() : AutoSyncActions.checkError(),
-            );
-            return;
-          }
-          // only the upload phase is worth silently retrying (e.g. a network hiccup) - a
-          // processing failure already happened server-side after a successful upload, so
-          // re-uploading the whole file again wouldn't help; it's left to surface through the
-          // job monitor dialog's own failed state instead, same as before this job existed
-          shouldRetry =
-            getFailedInnerJobType(error) === RECORDS_UPLOAD_JOB_TYPE
-              ? await handleUploadJobError({ dispatch, error })
-              : false;
+          shouldRetry = await handleUploadAndProcessError({ dispatch, error, silent });
         }
       }
       if (!jobComplete) {
