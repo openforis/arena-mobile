@@ -15,15 +15,13 @@ import { ToastActions } from "../toast";
 import { exportRecords } from "./actionsDataExport";
 import { DataEntrySelectors } from "./selectors";
 
-// records must have been idle (untouched) for at least this long before auto-sync will
-// upload them, so a record that's still actively being edited is never touched
-const AUTO_SYNC_IDLE_THRESHOLD_MS = 60_000; // 1 minute
-
-// the record currently open in the editor gets a longer idle threshold instead of being
-// excluded outright: otherwise a record edited slowly (a field every minute or two) would
-// never leave "pending", however long it stays open - see selectAutoSyncCandidates. The
-// actual value is user-configurable (settings:autoSyncOpenRecordIntervalMinutes), this is
-// only the fallback used if the setting is somehow missing.
+// the record currently open in the editor gets an idle threshold instead of being excluded
+// outright: otherwise a record edited slowly (a field every minute or two) would never leave
+// "pending", however long it stays open - see selectAutoSyncCandidates. Any other record isn't
+// being actively edited (whether it never was, or the user has since navigated away from it),
+// so it's a candidate as soon as it's otherwise eligible - no extra waiting period. The actual
+// value is user-configurable (settings:autoSyncOpenRecordIntervalMinutes), this is only the
+// fallback used if the setting is somehow missing.
 const AUTO_SYNC_OPEN_RECORD_IDLE_THRESHOLD_MS_DEFAULT = 5 * 60_000; // 5 minutes
 
 // a tick's real cost is RecordService.syncRecordSummaries, which asks the server about every
@@ -140,24 +138,25 @@ const selectAutoSyncCandidates = ({
     if (!autoSyncSafeStatuses.has(record.syncStatus)) return false;
     if (!errorsAllowed && record.errors > 0) return false;
 
+    // only the record currently open in the editor needs an idle grace period (it may still be
+    // mid-edit); any other record isn't being actively edited right now, so it's a candidate
+    // regardless of how recently it was last modified
+    if (record.uuid !== currentlyEditedRecordUuid) return true;
+
     const dateModified = record.dateModified ? new Date(record.dateModified) : null;
     if (!dateModified) return false;
 
-    const isCurrentlyEdited = record.uuid === currentlyEditedRecordUuid;
-    const idleThreshold = isCurrentlyEdited
-      ? openRecordIdleThresholdMs
-      : AUTO_SYNC_IDLE_THRESHOLD_MS;
-    return now - dateModified.getTime() > idleThreshold;
+    return now - dateModified.getTime() > openRecordIdleThresholdMs;
   });
 };
 
 /**
- * One auto-sync tick: uploads, without any user interaction, the local records that have
- * been idle for a while (AUTO_SYNC_IDLE_THRESHOLD_MS, or the longer, user-configurable
- * settings:autoSyncOpenRecordIntervalMinutes for the record currently open in the editor) and
- * free of any conflict with the server. Records that need a merge decision are left untouched
- * for the user to review/send manually. See the "Auto sync" checkbox in RecordsListOptions.
- * Ticks are a no-op most of the time once everything's caught up - see
+ * One auto-sync tick: uploads, without any user interaction, the local records that aren't
+ * currently open in the editor (or, for the one that is, has been idle for a while - the
+ * longer, user-configurable settings:autoSyncOpenRecordIntervalMinutes) and free of any
+ * conflict with the server. Records that need a merge decision are left untouched for the user
+ * to review/send manually. See the "Auto sync" checkbox in RecordsListOptions. Ticks are a
+ * no-op most of the time once everything's caught up - see
  * settings:autoSyncSlowCheckIntervalMinutes.
  */
 const runAutoSync = () => async (dispatch: any, getState: any) => {

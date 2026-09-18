@@ -23,6 +23,7 @@ import {
   SurveySelectors,
   useAppDispatch,
   useConfirm,
+  wasRecentlyCheckedWithNoNewLocalChanges,
 } from "state";
 import { useJobMonitor } from "state/jobMonitor/useJobMonitor";
 import { RemoteConnectionUtils } from "state/remoteConnection/remoteConnectionUtils";
@@ -178,7 +179,11 @@ export const useRecordsList = () => {
       } as RecordsListState;
     }, [dispatch, navigation, survey, cycle, onlyLocal]);
 
-  const { status: autoSyncStatus } = AutoSyncSelectors.useAutoSyncState();
+  const {
+    status: autoSyncStatus,
+    lastCheckedAt: autoSyncLastCheckedAt,
+    lastLocalChangeAt: autoSyncLastLocalChangeAt,
+  } = AutoSyncSelectors.useAutoSyncState();
 
   // when auto sync is on, keep the sync status visible in the list without requiring the
   // user to press "check status" manually; skip it if auto-sync itself couldn't run anyway
@@ -195,10 +200,29 @@ export const useRecordsList = () => {
     autoSyncStatus !== AutoSyncStatus.authError;
 
   const checkAutoSyncStatusIfNeeded = useCallback(() => {
-    if (canCheckAutoSyncStatus) {
-      loadRecordsWithSyncStatus();
+    if (!canCheckAutoSyncStatus) return;
+
+    loadRecordsWithSyncStatus();
+
+    // also attempt the actual sync (not just a status refresh) whenever the records list comes
+    // into focus, instead of leaving pending records waiting for the next periodic background
+    // tick (up to AUTO_SYNC_INTERVAL_MS away) - unless a check already ran very recently and
+    // nothing local has changed since, e.g. the user quickly bouncing in and out of this screen
+    if (
+      !wasRecentlyCheckedWithNoNewLocalChanges({
+        lastCheckedAt: autoSyncLastCheckedAt,
+        lastLocalChangeAt: autoSyncLastLocalChangeAt,
+      })
+    ) {
+      dispatch(DataEntryActions.runAutoSync());
     }
-  }, [canCheckAutoSyncStatus, loadRecordsWithSyncStatus]);
+  }, [
+    canCheckAutoSyncStatus,
+    loadRecordsWithSyncStatus,
+    autoSyncLastCheckedAt,
+    autoSyncLastLocalChangeAt,
+    dispatch,
+  ]);
 
   useEffect(() => {
     checkAutoSyncStatusIfNeeded();

@@ -3,6 +3,7 @@ export {
   AutoSyncReducer,
   AutoSyncSelectors,
   AutoSyncStatus,
+  wasRecentlyCheckedWithNoNewLocalChanges,
 } from "./autoSync";
 export type { AutoSyncMessage, AutoSyncState } from "./autoSync";
 

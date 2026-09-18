@@ -8,6 +8,7 @@ const initialState: AutoSyncState = {
   lastCheckedAt: null,
   status: AutoSyncStatus.unchecked,
   message: null,
+  lastLocalChangeAt: null,
 };
 
 const actionHandlers = {

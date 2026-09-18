@@ -79,7 +79,10 @@ const markPending = () => (dispatch: any, getState: any) => {
   }
   dispatch({
     type: AUTO_SYNC_STATUS_MARKED_PENDING,
-    payload: { status: AutoSyncStatus.pending },
+    payload: {
+      status: AutoSyncStatus.pending,
+      lastLocalChangeAt: new Date().toISOString(),
+    },
   });
 };
 

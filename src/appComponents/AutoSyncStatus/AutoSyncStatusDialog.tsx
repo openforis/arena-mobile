@@ -75,10 +75,18 @@ export const AutoSyncStatusDialog = (props: Props) => {
   const statusTextKey = connectionIssue
     ? textKeyByConnectionIssue[connectionIssue]
     : statusTextKeyByStatus[status];
-  // stale otherwise: message is set as a specific outcome of a check that already completed, so
-  // it doesn't apply once a live connection issue is overriding the status, or a new check/sync
-  // is already underway
-  const showMessage = showStatusText && !!message && !connectionIssue && !syncing;
+  // stale/contradictory otherwise: message is set as a specific outcome of a check that already
+  // completed, so it doesn't apply once a live connection issue is overriding the status, a new
+  // check/sync is already underway, or the status itself already says records are pending/erroring
+  // (e.g. a record created less than a minute ago is "pending" but not yet an upload candidate,
+  // which would otherwise show this "nothing to send" note right next to "records need syncing")
+  const showMessage =
+    showStatusText &&
+    !!message &&
+    !connectionIssue &&
+    !syncing &&
+    status !== AutoSyncStatus.pending &&
+    status !== AutoSyncStatus.error;
 
   const actions = [
     ...(canCancel ? [{ onPress: onCancel, textKey: "common:cancel" }] : []),

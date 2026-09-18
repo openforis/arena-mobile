@@ -23,4 +23,9 @@ export type AutoSyncState = {
   // a short, more specific note about the last completed tick/check than `status` alone
   // conveys (e.g. "nothing to send right now") - see AutoSyncActions.setMessage
   message: AutoSyncMessage;
+  // when a record was last created/edited locally (see AutoSyncActions.markPending) - compared
+  // against lastCheckedAt to tell whether a completed check is still up to date, or something
+  // new has happened since that a focus-triggered re-check shouldn't skip - see
+  // useRecordsList.checkAutoSyncStatusIfNeeded
+  lastLocalChangeAt: string | null;
 };
