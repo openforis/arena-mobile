@@ -185,6 +185,20 @@ export const useRecordsList = () => {
     lastLocalChangeAt: autoSyncLastLocalChangeAt,
   } = AutoSyncSelectors.useAutoSyncState();
 
+  // read via a ref (not a checkAutoSyncStatusIfNeeded dependency) so that callback's identity
+  // stays stable across checks - lastCheckedAt changes every time loadRecordsWithSyncStatus
+  // below completes one, so depending on it directly would recreate the callback, which would
+  // re-trigger the effect that calls it (see below), which would complete another check,
+  // forever: an infinite loop of "checking" that never settles
+  const autoSyncThrottleStateRef = useRef({
+    lastCheckedAt: autoSyncLastCheckedAt,
+    lastLocalChangeAt: autoSyncLastLocalChangeAt,
+  });
+  autoSyncThrottleStateRef.current = {
+    lastCheckedAt: autoSyncLastCheckedAt,
+    lastLocalChangeAt: autoSyncLastLocalChangeAt,
+  };
+
   // when auto sync is on, keep the sync status visible in the list without requiring the
   // user to press "check status" manually; skip it if auto-sync itself couldn't run anyway
   // (no network/no logged in user), to avoid popping the "connect to remote server" dialog.
@@ -208,21 +222,10 @@ export const useRecordsList = () => {
     // into focus, instead of leaving pending records waiting for the next periodic background
     // tick (up to AUTO_SYNC_INTERVAL_MS away) - unless a check already ran very recently and
     // nothing local has changed since, e.g. the user quickly bouncing in and out of this screen
-    if (
-      !wasRecentlyCheckedWithNoNewLocalChanges({
-        lastCheckedAt: autoSyncLastCheckedAt,
-        lastLocalChangeAt: autoSyncLastLocalChangeAt,
-      })
-    ) {
+    if (!wasRecentlyCheckedWithNoNewLocalChanges(autoSyncThrottleStateRef.current)) {
       dispatch(DataEntryActions.runAutoSync());
     }
-  }, [
-    canCheckAutoSyncStatus,
-    loadRecordsWithSyncStatus,
-    autoSyncLastCheckedAt,
-    autoSyncLastLocalChangeAt,
-    dispatch,
-  ]);
+  }, [canCheckAutoSyncStatus, loadRecordsWithSyncStatus, dispatch]);
 
   useEffect(() => {
     checkAutoSyncStatusIfNeeded();
