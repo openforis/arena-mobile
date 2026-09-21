@@ -6,6 +6,11 @@ import { AutoSyncActions, AutoSyncStatus, useAppDispatch } from "state";
 import { useAutoSyncStatus } from "./useAutoSyncStatus";
 
 const styles = StyleSheet.create({
+  // fixed height: the content (status text, message, progress) changes often while syncing,
+  // which would otherwise resize the dialog continuously
+  dialog: {
+    height: 420,
+  },
   content: {
     gap: 8,
   },
@@ -91,6 +96,7 @@ export const AutoSyncStatusDialog = (props: Props) => {
       onClose={onClose}
       showActions={actions.length > 0}
       showCloseButton
+      style={styles.dialog}
       title="dataEntry:autoSync.checkbox"
       visible={visible}
     >
