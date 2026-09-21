@@ -122,7 +122,7 @@ export const useAutoSyncStatus = () => {
   // for the next scheduled tick (or for auto-sync to even be on) - shared by "Try again" (a
   // failed check) and "Sync now" (records are known to be pending) below
   const triggerSync = useCallback(() => {
-    dispatch(DataEntryActions.runAutoSync());
+    dispatch(DataEntryActions.runAutoSync({ ignoreOpenRecordIdleThreshold: true }));
   }, [dispatch]);
 
   // a failed check stops retrying on its own (see useRecordsList.checkAutoSyncStatusIfNeeded and

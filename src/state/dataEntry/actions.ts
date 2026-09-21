@@ -657,6 +657,13 @@ const updateAttribute =
 
         const cycle = Records.getCycle(record);
         const node = Records.getNodeByUuid(uuid)(record)!;
+
+        // nothing actually changed (e.g. a field was focused and left as is): don't touch the
+        // record, otherwise it would look modified and the auto-sync status would turn pending
+        if (!fileUri && Objects.isEqual(node.value ?? null, value ?? null)) {
+          return;
+        }
+
         const nodeDef = Surveys.getNodeDefByUuid({
           survey,
           uuid: node.nodeDefUuid,

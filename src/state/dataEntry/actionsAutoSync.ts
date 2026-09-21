@@ -87,7 +87,20 @@ const isAlreadyUpToDate = ({ autoSyncState, slowCheckIntervalMs }: any) => {
   return Date.now() - lastCheckedAtMs < slowCheckIntervalMs;
 };
 
-const uploadAutoSyncCandidates = async ({ dispatch, cycle, candidates }: any) => {
+const refreshAutoSyncStatus = async ({ dispatch, getState }: any) => {
+  try {
+    const state = getState();
+    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
+    if (!survey) return;
+    const records = await RecordService.syncRecordSummaries({ survey, cycle, onlyLocal: false });
+    dispatch(AutoSyncActions.checkEnd(records));
+  } catch (error) {
+    log.warn(`auto-sync: status refresh after upload failed: ${error}`);
+  }
+};
+
+const uploadAutoSyncCandidates = async ({ dispatch, getState, cycle, candidates }: any) => {
   log.debug(
     `auto-sync: uploading ${candidates.length} record(s): ${candidates.map((r: any) => r.uuid).join(", ")}`,
   );
@@ -95,6 +108,8 @@ const uploadAutoSyncCandidates = async ({ dispatch, cycle, candidates }: any) =>
   const onJobComplete = () => {
     log.debug(`auto-sync: upload of ${candidates.length} record(s) completed`);
     dispatch(ToastActions.show("dataEntry:autoSync.synced", { count: candidates.length }));
+    // refresh the status icon right away (e.g. pending -> synced) instead of waiting for the next tick
+    refreshAutoSyncStatus({ dispatch, getState });
   };
 
   // fire-and-forget, like the manual "Send data" flow: exportRecords resolves once the upload
@@ -144,7 +159,7 @@ const selectAutoSyncCandidates = ({
     if (record.uuid !== currentlyEditedRecordUuid) return true;
 
     const dateModified = record.dateModified ? new Date(record.dateModified) : null;
-    if (!dateModified) return false;
+    if (!dateModified) return openRecordIdleThresholdMs < 0;
 
     return now - dateModified.getTime() > openRecordIdleThresholdMs;
   });
@@ -159,7 +174,9 @@ const selectAutoSyncCandidates = ({
  * no-op most of the time once everything's caught up - see
  * settings:autoSyncSlowCheckIntervalMinutes.
  */
-const runAutoSync = () => async (dispatch: any, getState: any) => {
+const runAutoSync =
+  ({ ignoreOpenRecordIdleThreshold = false } = {}) =>
+  async (dispatch: any, getState: any) => {
   if (tickInProgress) {
     log.debug("auto-sync: tick already in progress, skipping");
     return;
@@ -192,9 +209,10 @@ const runAutoSync = () => async (dispatch: any, getState: any) => {
     return;
   }
 
-  const { openRecordIdleThresholdMs, slowCheckIntervalMs } = getAutoSyncIntervalsMs(
-    state.settings,
-  );
+  const { openRecordIdleThresholdMs: configuredIdleThresholdMs, slowCheckIntervalMs } =
+    getAutoSyncIntervalsMs(state.settings);
+  // an explicit "Sync now" shouldn't wait for the record open in the editor to become idle
+  const openRecordIdleThresholdMs = ignoreOpenRecordIdleThreshold ? -1 : configuredIdleThresholdMs;
 
   if (isAlreadyUpToDate({ autoSyncState: state.autoSync, slowCheckIntervalMs })) {
     log.debug("auto-sync: already up to date, skipping check until the next slow check");
@@ -229,7 +247,7 @@ const runAutoSync = () => async (dispatch: any, getState: any) => {
       return;
     }
 
-    await uploadAutoSyncCandidates({ dispatch, cycle, candidates });
+    await uploadAutoSyncCandidates({ dispatch, getState, cycle, candidates });
   } catch (error) {
     handleAutoSyncTickError({ dispatch, error });
   } finally {
