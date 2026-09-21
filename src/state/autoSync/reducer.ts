@@ -9,6 +9,7 @@ const initialState: AutoSyncState = {
   status: AutoSyncStatus.unchecked,
   message: null,
   lastLocalChangeAt: null,
+  dialogOpen: false,
 };
 
 const actionHandlers = {
@@ -36,8 +37,13 @@ const actionHandlers = {
     ...action.payload,
     checking: false,
   }),
-  [AutoSyncActions.AUTO_SYNC_RESET]: () => ({
+  [AutoSyncActions.AUTO_SYNC_RESET]: ({ state }: any) => ({
     ...initialState,
+    dialogOpen: state.dialogOpen,
+  }),
+  [AutoSyncActions.AUTO_SYNC_DIALOG_OPEN_SET]: ({ state, action }: any) => ({
+    ...state,
+    ...action.payload,
   }),
   [AutoSyncActions.AUTO_SYNC_STATUS_MESSAGE_SET]: ({ state, action }: any) => ({
     ...state,

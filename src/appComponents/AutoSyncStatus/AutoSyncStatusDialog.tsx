@@ -1,7 +1,8 @@
+import { useEffect } from "react";
 import { StyleSheet } from "react-native";
 
 import { Checkbox, Dialog, ProgressBar, Text, VView } from "components";
-import { AutoSyncStatus } from "state";
+import { AutoSyncActions, AutoSyncStatus, useAppDispatch } from "state";
 import { useAutoSyncStatus } from "./useAutoSyncStatus";
 
 const styles = StyleSheet.create({
@@ -28,6 +29,16 @@ type Props = {
 // - see useAutoSyncStatus for the state/logic feeding this
 export const AutoSyncStatusDialog = (props: Props) => {
   const { onClose, visible } = props;
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (!visible) return undefined;
+    dispatch(AutoSyncActions.setDialogOpen(true));
+    return () => {
+      dispatch(AutoSyncActions.setDialogOpen(false));
+    };
+  }, [dispatch, visible]);
 
   const {
     autoSyncEnabled,

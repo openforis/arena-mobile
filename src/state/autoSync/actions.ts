@@ -9,6 +9,7 @@ const AUTO_SYNC_CHECK_ERROR = "AUTO_SYNC_CHECK_ERROR";
 const AUTO_SYNC_RESET = "AUTO_SYNC_RESET";
 const AUTO_SYNC_STATUS_MESSAGE_SET = "AUTO_SYNC_STATUS_MESSAGE_SET";
 const AUTO_SYNC_STATUS_MARKED_PENDING = "AUTO_SYNC_STATUS_MARKED_PENDING";
+const AUTO_SYNC_DIALOG_OPEN_SET = "AUTO_SYNC_DIALOG_OPEN_SET";
 
 // dispatched whenever records are about to be checked against the server (a manual "check
 // status"/"send data" or a background auto-sync tick), so any screen can show a "checking..."
@@ -86,6 +87,11 @@ const markPending = () => (dispatch: any, getState: any) => {
   });
 };
 
+const setDialogOpen = (dialogOpen: boolean) => ({
+  type: AUTO_SYNC_DIALOG_OPEN_SET,
+  payload: { dialogOpen },
+});
+
 export const AutoSyncActions = {
   AUTO_SYNC_CHECK_START,
   AUTO_SYNC_CHECK_END,
@@ -95,6 +101,7 @@ export const AutoSyncActions = {
   AUTO_SYNC_RESET,
   AUTO_SYNC_STATUS_MESSAGE_SET,
   AUTO_SYNC_STATUS_MARKED_PENDING,
+  AUTO_SYNC_DIALOG_OPEN_SET,
 
   checkStart,
   checkEnd,
@@ -104,4 +111,5 @@ export const AutoSyncActions = {
   reset,
   setStatusMessage,
   markPending,
+  setDialogOpen,
 };

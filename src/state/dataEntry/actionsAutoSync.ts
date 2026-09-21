@@ -107,7 +107,11 @@ const uploadAutoSyncCandidates = async ({ dispatch, getState, cycle, candidates 
 
   const onJobComplete = () => {
     log.debug(`auto-sync: upload of ${candidates.length} record(s) completed`);
-    dispatch(ToastActions.show("dataEntry:autoSync.synced", { count: candidates.length }));
+    // the toast would only be shown behind/over the dialog, dimming it: the dialog already
+    // reports the outcome
+    if (!getState().autoSync.dialogOpen) {
+      dispatch(ToastActions.show("dataEntry:autoSync.synced", { count: candidates.length }));
+    }
     // refresh the status icon right away (e.g. pending -> synced) instead of waiting for the next tick
     refreshAutoSyncStatus({ dispatch, getState });
   };

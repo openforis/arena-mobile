@@ -28,4 +28,6 @@ export type AutoSyncState = {
   // new has happened since that a focus-triggered re-check shouldn't skip - see
   // useRecordsList.checkAutoSyncStatusIfNeeded
   lastLocalChangeAt: string | null;
+  // true while the auto-sync status dialog is open - see AutoSyncStatusDialog
+  dialogOpen: boolean;
 };
