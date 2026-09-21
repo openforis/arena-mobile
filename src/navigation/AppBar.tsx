@@ -138,7 +138,14 @@ export const AppBar = (props: Props) => {
   return (
     <>
       <RNPAppbar.Header elevated mode={isInTwoRows ? "medium" : "small"}>
-        <HView style={styles.topBarContainer} fullWidth transparent>
+        <HView
+          style={[
+            styles.topBarContainer,
+            !isTablet && styles.topBarContainerCompact,
+          ]}
+          fullWidth
+          transparent
+        >
           {editingRecord && (
             <RNPAppbar.Action
               icon="menu"
