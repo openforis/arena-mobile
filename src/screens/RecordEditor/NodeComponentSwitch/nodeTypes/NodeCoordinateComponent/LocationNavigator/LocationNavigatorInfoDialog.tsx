@@ -13,7 +13,7 @@ export const LocationNavigatorInfoDialog = ({ onClose }: Props) => {
     <Dialog
       title="dataEntry:coordinate.locationNavigatorInfo.title"
       onClose={onClose}
-      style={{ height: windowHeight * 0.9 }}
+      style={{ maxHeight: windowHeight * 0.9 }}
     >
       <VView style={styles.content}>
         <ScrollView style={styles.scroll} persistentScrollbar>
