@@ -87,7 +87,7 @@ export const Dialog = (props: DialogProps) => {
           >
             {title &&
               (showHeaderClose ? (
-                <HView style={styles.titleRow}>
+                <HView style={styles.titleRow} transparent>
                   <RNPDialog.Title style={styles.titleFlex}>
                     {t(title)}
                   </RNPDialog.Title>
