@@ -45,11 +45,16 @@ export const Dialog = (props: DialogProps) => {
   const showCloseButton = showCloseButtonProp && !!onClose;
 
   const flatStyle = StyleSheet.flatten(style);
-  const hasExplicitHeight =
-    flatStyle != null &&
-    (flatStyle.height != null ||
-      flatStyle.flex != null ||
-      flatStyle.maxHeight != null);
+  // A definite height (height/flex) means the dialog should fill it, so the
+  // content area needs flexGrow (flex: 1) to stretch and fill the remaining
+  // space. A maxHeight only caps the dialog: it should shrink-wrap to its
+  // content and merely be allowed to shrink (not grow) once that content
+  // exceeds the cap - using flex: 1 (flexBasis: 0%) there would make the
+  // content area collapse to zero height whenever content is shorter than
+  // the cap, since flexGrow only distributes space within a definite parent.
+  const hasDefiniteHeight =
+    flatStyle != null && (flatStyle.height != null || flatStyle.flex != null);
+  const hasMaxHeight = flatStyle != null && flatStyle.maxHeight != null;
 
   return (
     <BaseModal
@@ -70,7 +75,8 @@ export const Dialog = (props: DialogProps) => {
             style={[
               styles.surface,
               { backgroundColor: theme.colors.elevation.level3 },
-              hasExplicitHeight && styles.surfaceFlex,
+              hasDefiniteHeight && styles.surfaceFlex,
+              hasMaxHeight && styles.surfaceShrink,
             ]}
             elevation={3}
           >
@@ -78,7 +84,10 @@ export const Dialog = (props: DialogProps) => {
               <RNPDialog.Title style={styles.title}>{t(title)}</RNPDialog.Title>
             )}
             <RNPDialog.Content
-              style={hasExplicitHeight && styles.contentFlex}
+              style={[
+                hasDefiniteHeight && styles.contentFlex,
+                hasMaxHeight && styles.contentShrink,
+              ]}
             >
               {children}
             </RNPDialog.Content>
@@ -119,8 +128,14 @@ const styles = StyleSheet.create({
   surfaceFlex: {
     flex: 1,
   },
+  surfaceShrink: {
+    flexShrink: 1,
+  },
   contentFlex: {
     flex: 1,
+  },
+  contentShrink: {
+    flexShrink: 1,
   },
   title: {
     marginTop: 24,

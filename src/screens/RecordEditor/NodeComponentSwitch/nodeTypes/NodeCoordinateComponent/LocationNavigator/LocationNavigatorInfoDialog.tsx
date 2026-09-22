@@ -82,10 +82,10 @@ export const LocationNavigatorInfoDialog = ({ onClose }: Props) => {
 
 const styles = StyleSheet.create({
   content: {
-    flex: 1,
+    flexShrink: 1,
   },
   scroll: {
-    flex: 1,
+    flexShrink: 1,
   },
   description: {
     opacity: 0.8,
