@@ -9,7 +9,7 @@ export class FilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
     super({ survey, recordUuids, user, fileUri });
   }
 
-  async execute() {
+  override async execute() {
     const { survey, unzippedFolderUri } = this.context;
 
     const surveyId = survey.id!;
