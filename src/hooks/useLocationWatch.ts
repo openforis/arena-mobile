@@ -312,6 +312,9 @@ export const useLocationWatch = ({
     }) => {
       if (!useExternalSource) {
         const granted = await Permissions.requestLocationForegroundPermission();
+        if (!granted && !(await Permissions.isLocationServiceEnabled())) {
+          toaster("device:locationServiceDisabled.warning");
+        }
         return isAttemptCurrent() ? granted : false;
       }
 
@@ -330,7 +333,7 @@ export const useLocationWatch = ({
       setIdleLocationWatchStatus();
       return false;
     },
-    [setIdleLocationWatchStatus],
+    [setIdleLocationWatchStatus, toaster],
   );
 
   const handleExternalGpsSourceDisconnected = useCallback(() => {
