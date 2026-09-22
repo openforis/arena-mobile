@@ -16,12 +16,11 @@ type DialogAction = {
 type DialogProps = {
   children?: React.ReactNode;
   actions?: DialogAction[];
-  closeButtonTextKey?: string;
   dismissable?: boolean;
   onClose?: () => void;
   showActions?: boolean;
+  // renders a close (x) icon button in the header, next to the title
   showCloseButton?: boolean;
-  showHeaderCloseButton?: boolean;
   style?: any;
   title?: string;
   visible?: boolean;
@@ -31,12 +30,10 @@ export const Dialog = (props: DialogProps) => {
   const {
     actions = [],
     children,
-    closeButtonTextKey = "common:close",
     dismissable: dismissableProp = true,
     onClose,
     showActions = true,
     showCloseButton: showCloseButtonProp = true,
-    showHeaderCloseButton = false,
     style,
     title,
     visible = true,
@@ -46,8 +43,7 @@ export const Dialog = (props: DialogProps) => {
   const theme = useTheme();
   const handleClose = onClose || (() => undefined);
   const dismissable = dismissableProp && !!onClose;
-  const showHeaderClose = showHeaderCloseButton && !!onClose;
-  const showCloseButton = showCloseButtonProp && !!onClose && !showHeaderClose;
+  const showCloseButton = showCloseButtonProp && !!onClose;
 
   const flatStyle = StyleSheet.flatten(style);
   // A definite height (height/flex) means the dialog should fill it, so the
@@ -85,11 +81,11 @@ export const Dialog = (props: DialogProps) => {
             ]}
             elevation={3}
           >
-            {title &&
-              (showHeaderClose ? (
+            {(title || showCloseButton) &&
+              (showCloseButton ? (
                 <HView style={styles.titleRow} transparent>
                   <RNPDialog.Title style={styles.titleFlex}>
-                    {t(title)}
+                    {title && t(title)}
                   </RNPDialog.Title>
                   <CloseIconButton onPress={handleClose} />
                 </HView>
@@ -106,14 +102,11 @@ export const Dialog = (props: DialogProps) => {
             >
               {children}
             </RNPDialog.Content>
-            {showActions && (
+            {showActions && actions.length > 0 && (
               <RNPDialog.Actions>
                 {actions.map(({ onPress, textKey }: DialogAction) => (
                   <Button key={textKey} onPress={onPress} textKey={textKey} />
                 ))}
-                {showCloseButton && (
-                  <Button onPress={handleClose} textKey={closeButtonTextKey} />
-                )}
               </RNPDialog.Actions>
             )}
           </Surface>
