@@ -13,6 +13,8 @@ export const LocationNavigatorInfoDialog = ({ onClose }: Props) => {
     <Dialog
       title="dataEntry:coordinate.locationNavigatorInfo.title"
       onClose={onClose}
+      showActions={false}
+      showHeaderCloseButton
       style={{ maxHeight: windowHeight * 0.9 }}
     >
       <VView style={styles.content}>

@@ -4,6 +4,8 @@ import { Dialog as RNPDialog, Surface, useTheme } from "react-native-paper";
 
 import { useTranslation } from "localization";
 import { Button } from "../Button";
+import { CloseIconButton } from "../CloseIconButton";
+import { HView } from "../HView";
 import { BaseModal } from "../Modal/BaseModal";
 
 type DialogAction = {
@@ -19,6 +21,7 @@ type DialogProps = {
   onClose?: () => void;
   showActions?: boolean;
   showCloseButton?: boolean;
+  showHeaderCloseButton?: boolean;
   style?: any;
   title?: string;
   visible?: boolean;
@@ -33,6 +36,7 @@ export const Dialog = (props: DialogProps) => {
     onClose,
     showActions = true,
     showCloseButton: showCloseButtonProp = true,
+    showHeaderCloseButton = false,
     style,
     title,
     visible = true,
@@ -42,7 +46,8 @@ export const Dialog = (props: DialogProps) => {
   const theme = useTheme();
   const handleClose = onClose || (() => undefined);
   const dismissable = dismissableProp && !!onClose;
-  const showCloseButton = showCloseButtonProp && !!onClose;
+  const showHeaderClose = showHeaderCloseButton && !!onClose;
+  const showCloseButton = showCloseButtonProp && !!onClose && !showHeaderClose;
 
   const flatStyle = StyleSheet.flatten(style);
   // A definite height (height/flex) means the dialog should fill it, so the
@@ -80,9 +85,19 @@ export const Dialog = (props: DialogProps) => {
             ]}
             elevation={3}
           >
-            {title && (
-              <RNPDialog.Title style={styles.title}>{t(title)}</RNPDialog.Title>
-            )}
+            {title &&
+              (showHeaderClose ? (
+                <HView style={styles.titleRow}>
+                  <RNPDialog.Title style={styles.titleFlex}>
+                    {t(title)}
+                  </RNPDialog.Title>
+                  <CloseIconButton onPress={handleClose} />
+                </HView>
+              ) : (
+                <RNPDialog.Title style={styles.title}>
+                  {t(title)}
+                </RNPDialog.Title>
+              ))}
             <RNPDialog.Content
               style={[
                 hasDefiniteHeight && styles.contentFlex,
@@ -139,5 +154,17 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 24,
+  },
+  titleRow: {
+    alignItems: "center",
+    marginTop: 24,
+    marginBottom: 12,
+    paddingHorizontal: 24,
+  },
+  titleFlex: {
+    flex: 1,
+    marginHorizontal: 0,
+    marginTop: 0,
+    marginBottom: 0,
   },
 });
