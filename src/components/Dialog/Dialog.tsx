@@ -59,7 +59,7 @@ export const Dialog = (props: DialogProps) => {
   // the cap, since flexGrow only distributes space within a definite parent.
   const hasDefiniteHeight =
     flatStyle != null && (flatStyle.height != null || flatStyle.flex != null);
-  const hasMaxHeight = flatStyle != null && flatStyle.maxHeight != null;
+  const hasMaxHeight = flatStyle?.maxHeight != null;
 
   return (
     <BaseModal
