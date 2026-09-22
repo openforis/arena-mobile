@@ -95,7 +95,7 @@ export const AutoSyncStatusDialog = (props: Props) => {
       actions={actions}
       onClose={onClose}
       showActions={actions.length > 0}
-      showCloseButton
+      showHeaderCloseButton
       style={styles.dialog}
       title="dataEntry:autoSync.checkbox"
       visible={visible}
