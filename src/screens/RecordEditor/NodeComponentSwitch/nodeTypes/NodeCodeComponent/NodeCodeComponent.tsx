@@ -97,7 +97,7 @@ export const NodeCodeComponent = (props: NodeComponentProps) => {
               items={items}
               onDismiss={closeFindClosestSamplingPointDialog}
               onItemSelected={(selectedMinDistanceItem) => {
-                onSingleValueChange(selectedMinDistanceItem.uuid);
+                onItemAdd(selectedMinDistanceItem.uuid);
                 closeFindClosestSamplingPointDialog();
               }}
             />
