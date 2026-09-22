@@ -5,8 +5,6 @@ on: [pull_request]
 jobs:
   e2e-tests-maestro-android:
     runs-on: ubuntu-latest
-    env:
-      NPM_TOKEN: ${{ secrets.ACCESS_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -16,18 +14,12 @@ jobs:
         with:
           node-version: 24
           cache: yarn
-          always-auth: true
-          auth-token: ${{secrets.ACCESS_TOKEN}}
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@openforis"
 
       - name: Enable Corepack
         run: corepack enable
 
       - name: Install dependencies
         run: yarn install --immutable
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Install Maestro CLI
         run: |

@@ -22,7 +22,7 @@ export class RemoteJobWatcherJob extends JobMobile<RecordsUploadAndProcessJobCon
     super({ user, survey, type: REMOTE_JOB_WATCHER_JOB_TYPE });
   }
 
-  async execute() {
+  override async execute() {
     const { remoteJobUuid } = this.context;
     if (!remoteJobUuid) {
       throw new Error("RemoteJobWatcherJob: missing remoteJobUuid in context");

@@ -48,7 +48,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     super({ survey, cycle, recordUuids, user, onlyRemote });
   }
 
-  async execute() {
+  override async execute() {
     const {
       survey,
       cycle,

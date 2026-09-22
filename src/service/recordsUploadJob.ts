@@ -33,7 +33,7 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadAndProcessJobContex
     this.remoteJob = null; // job started on remote server after file upload
   }
 
-  async execute() {
+  override async execute() {
     // always provided by the constructor (see RecordsUploadAndProcessJobContext for why they're
     // typed as optional there)
     const {

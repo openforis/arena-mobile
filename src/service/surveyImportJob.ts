@@ -9,7 +9,7 @@ type SurveyImportJobContext = {
 };
 
 class SurveyDownloadJob extends JobMobile<SurveyImportJobContext> {
-  async execute() {
+  override async execute() {
     const { id } = this.context;
     await SurveyService.fetchSurveyRemoteById({ id });
   }
