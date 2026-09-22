@@ -74,7 +74,11 @@ export const Dialog = (props: DialogProps) => {
             {title && (
               <RNPDialog.Title style={styles.title}>{t(title)}</RNPDialog.Title>
             )}
-            <RNPDialog.Content>{children}</RNPDialog.Content>
+            <RNPDialog.Content
+              style={hasExplicitHeight && styles.contentFlex}
+            >
+              {children}
+            </RNPDialog.Content>
             {showActions && (
               <RNPDialog.Actions>
                 {actions.map(({ onPress, textKey }: DialogAction) => (
@@ -110,6 +114,9 @@ const styles = StyleSheet.create({
     borderRadius: 28,
   },
   surfaceFlex: {
+    flex: 1,
+  },
+  contentFlex: {
     flex: 1,
   },
   title: {
