@@ -25,7 +25,7 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadJobContext> {
     this.remoteJob = null; // job started on remote server after file upload
   }
 
-  async execute() {
+  override async execute() {
     const { survey, cycle, fileUri, conflictResolutionStrategy, skipMissingFiles } = this.context;
 
     const startFromChunk =

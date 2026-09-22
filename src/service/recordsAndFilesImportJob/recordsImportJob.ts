@@ -10,7 +10,7 @@ import { RecordsAndFilesImportJobContext } from "./RecordsAndFilesImportJobConte
 export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
   insertedRecords: any;
   updatedRecords: any;
-  async execute() {
+  override async execute() {
     const {
       survey,
       unzippedFolderUri,

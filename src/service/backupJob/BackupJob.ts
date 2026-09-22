@@ -9,7 +9,7 @@ type BackupJobContext = JobMobileContext & {
 };
 
 export class BackupJob extends JobMobile<BackupJobContext> {
-  async execute() {
+  override async execute() {
     await super.onStart();
 
     const timestamp = Dates.format(new Date(), DateFormats.datetimeDefault);
