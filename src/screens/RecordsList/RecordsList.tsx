@@ -147,10 +147,12 @@ export const RecordsList = () => {
               textKey="dataEntry:sendData"
             />
           )}
-          <HView style={styles.autoSyncStatusItem}>
-            <Text textKey="dataEntry:autoSync.statusLabel" />
-            <AutoSyncStatusIcon />
-          </HView>
+          {autoSyncEnabled && (
+            <HView style={styles.autoSyncStatusItem}>
+              <Text textKey="dataEntry:autoSync.statusLabel" />
+              <AutoSyncStatusIcon />
+            </HView>
+          )}
           <MenuButton
             anchorPosition="top"
             icon="download"
