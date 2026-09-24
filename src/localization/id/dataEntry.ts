@@ -6,6 +6,7 @@ export default {
     synced: "{{count}} catatan disinkronkan otomatis",
     synced_plural: "{{count}} catatan disinkronkan otomatis",
     statusLabel: "Status sinkronisasi:",
+    statusTitle: "Status sinkronisasi",
     syncInProgressToast:
       "Sinkronisasi otomatis sedang berlangsung. Harap tunggu hingga selesai sebelum mengirim data secara manual.",
     batteryDataWarning:

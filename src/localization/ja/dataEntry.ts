@@ -6,6 +6,7 @@ export default {
     synced: "{{count}}件のレコードを自動同期しました",
     synced_plural: "{{count}}件のレコードを自動同期しました",
     statusLabel: "同期状態:",
+    statusTitle: "同期状態",
     syncInProgressToast:
       "自動同期を実行中です。手動でデータを送信する前に完了をお待ちください。",
     batteryDataWarning:

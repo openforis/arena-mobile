@@ -6,6 +6,7 @@ export default {
     synced: "{{count}} tietue synkronoitu automaattisesti",
     synced_plural: "{{count}} tietuetta synkronoitu automaattisesti",
     statusLabel: "Synkronoinnin tila:",
+    statusTitle: "Synkronoinnin tila",
     syncInProgressToast:
       "Automaattinen synkronointi on käynnissä. Odota, että se valmistuu, ennen kuin lähetät tietoja manuaalisesti.",
     batteryDataWarning:

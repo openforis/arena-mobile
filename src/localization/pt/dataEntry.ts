@@ -6,6 +6,7 @@ export default {
     synced: "{{count}} registro sincronizado automaticamente",
     synced_plural: "{{count}} registros sincronizados automaticamente",
     statusLabel: "Status de sincronização:",
+    statusTitle: "Status de sincronização",
     syncInProgressToast:
       "A sincronização automática está em andamento. Aguarde a conclusão antes de enviar dados manualmente.",
     batteryDataWarning:

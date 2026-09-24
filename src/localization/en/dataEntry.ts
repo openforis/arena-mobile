@@ -6,6 +6,7 @@ export default {
     synced: "Auto-synced {{count}} record",
     synced_plural: "Auto-synced {{count}} records",
     statusLabel: "Sync status:",
+    statusTitle: "Sync status",
     syncInProgressToast:
       "Auto-sync is in progress. Please wait for it to finish before sending data manually.",
     batteryDataWarning:

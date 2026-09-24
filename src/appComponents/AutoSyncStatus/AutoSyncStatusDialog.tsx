@@ -97,7 +97,7 @@ export const AutoSyncStatusDialog = (props: Props) => {
       showActions={actions.length > 0}
       showCloseButton
       style={styles.dialog}
-      title="dataEntry:autoSync.checkbox"
+      title="dataEntry:autoSync.statusTitle"
       visible={visible}
     >
       <VView style={styles.content} transparent>

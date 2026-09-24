@@ -6,6 +6,7 @@ export default {
     synced: "{{count}} رکورد به‌طور خودکار همگام‌سازی شد",
     synced_plural: "{{count}} رکورد به‌طور خودکار همگام‌سازی شدند",
     statusLabel: "وضعیت همگام‌سازی:",
+    statusTitle: "وضعیت همگام‌سازی",
     syncInProgressToast:
       "همگام‌سازی خودکار در حال انجام است. لطفاً پیش از ارسال دستی داده‌ها منتظر پایان آن بمانید.",
     batteryDataWarning:

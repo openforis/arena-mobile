@@ -6,6 +6,7 @@ export default {
     synced: "{{count}} post synkroniserad automatiskt",
     synced_plural: "{{count}} poster synkroniserade automatiskt",
     statusLabel: "Synkroniseringsstatus:",
+    statusTitle: "Synkroniseringsstatus",
     syncInProgressToast:
       "Automatisk synkronisering pågår. Vänta tills den är klar innan du skickar data manuellt.",
     batteryDataWarning:

@@ -6,6 +6,7 @@ export default {
     synced: "{{count}} መዝገብ በራስ-ሰር ተመሳስሏል",
     synced_plural: "{{count}} መዝገቦች በራስ-ሰር ተመሳስለዋል",
     statusLabel: "የማመሳሰል ሁኔታ:",
+    statusTitle: "የማመሳሰል ሁኔታ",
     syncInProgressToast:
       "ራስ-ሰር ማመሳሰል በሂደት ላይ ነው። ውሂብ በእጅ ከመላክዎ በፊት እስኪጠናቀቅ ድረስ እባክዎ ይጠብቁ።",
     batteryDataWarning:
