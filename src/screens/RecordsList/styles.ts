@@ -27,6 +27,8 @@ export default StyleSheet.create({
   newRecordButton: {
     alignSelf: "center",
   },
+  // avoid label truncation: the checkbox item inside a wrapping row has no fixed width
+  autoSyncCheckboxLabel: { flexShrink: 0 },
   autoSyncStatusItem: { alignItems: "center", gap: 8 },
   exportDataButtonMenu: {
     alignSelf: "flex-end",

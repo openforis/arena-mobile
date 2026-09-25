@@ -128,6 +128,7 @@ export const RecordsListOptions = (props: RecordsListOptionsProps) => {
         <Checkbox
           checked={autoSyncEnabled}
           label="dataEntry:autoSync.checkbox"
+          labelStyle={styles.autoSyncCheckboxLabel}
           onPress={onAutoSyncEnabledChange}
         />
       </FlexWrapView>
