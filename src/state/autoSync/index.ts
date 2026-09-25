@@ -1,6 +1,7 @@
 export { AutoSyncActions } from "./actions";
 export {
   computeAutoSyncStatus,
+  isAuthError,
   wasRecentlyCheckedWithNoNewLocalChanges,
 } from "./autoSyncStatusUtils";
 export { AutoSyncReducer } from "./reducer";

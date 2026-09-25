@@ -47,8 +47,14 @@ const fetchFileUuidsByRecordUuid = async ({
       { recordUuids },
     );
     return data?.fileUuidsByRecordUuid ?? {};
-  } catch (error) {
-    log.warn(`error fetching file uuids by record uuid: ${error}`);
+  } catch (error: any) {
+    const status = Number(error?.response?.status);
+    if (status === 404 || status === 501) {
+      // expected with older servers - not worth a warning on every (auto-)sync
+      log.debug("file uuids by record uuid endpoint not supported by the server");
+    } else {
+      log.warn(`error fetching file uuids by record uuid: ${error}`);
+    }
     return {};
   }
 };

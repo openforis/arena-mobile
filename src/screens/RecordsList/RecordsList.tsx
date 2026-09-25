@@ -11,6 +11,7 @@ import {
   Text,
   VView,
 } from "components";
+import { AutoSyncStatus } from "state";
 
 import { RecordsDataVisualizer } from "./RecordsDataVisualizer";
 import { RecordsListLegend } from "./RecordsListLegend";
@@ -24,6 +25,7 @@ import styles from "./styles";
 export const RecordsList = () => {
   const {
     autoSyncEnabled,
+    autoSyncStatus,
     cycle,
     defaultCycleKey,
     isDemoSurvey,
@@ -87,6 +89,12 @@ export const RecordsList = () => {
 
   const recordsLength = records?.length ?? 0;
 
+  // with auto-sync on, records needing a manual merge/overwrite decision (conflicts, modified
+  // on the server too, ...) are never uploaded automatically: keep "Send data" available only
+  // for them, so they can be resolved without having to turn auto-sync off first
+  const showSendDataButton =
+    !autoSyncEnabled || autoSyncStatus === AutoSyncStatus.error;
+
   return (
     <VView style={styles.container}>
       <VView style={styles.innerContainer}>
@@ -140,7 +148,7 @@ export const RecordsList = () => {
         // own button row above
         <FlexWrapView style={styles.bottomActionBar}>
           {newRecordButton}
-          {!isDemoSurvey && !autoSyncEnabled && (
+          {!isDemoSurvey && showSendDataButton && (
             <Button
               icon="cloud-refresh"
               onPress={onSendDataButtonPress}

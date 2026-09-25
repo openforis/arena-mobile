@@ -9,7 +9,7 @@ import {
 import { RecordService } from "service";
 import { log } from "utils";
 
-import { AutoSyncActions, AutoSyncStatus } from "../autoSync";
+import { AutoSyncActions, AutoSyncStatus, isAuthError } from "../autoSync";
 import { SurveySelectors } from "../survey";
 import { ToastActions } from "../toast";
 import { exportRecords } from "./actionsDataExport";
@@ -46,12 +46,6 @@ const autoSyncSafeStatuses = new Set([RecordSyncStatus.new, RecordSyncStatus.mod
 
 // guards against overlapping ticks (e.g. a slow network making one tick outlive the interval)
 let tickInProgress = false;
-
-// RecordService.syncRecordSummaries and RecordsUploadJob both surface the original HTTP status
-// this way (see recordService.ts and remoteService.ts's withRetry) after a token refresh has
-// already been attempted and failed
-const isAuthError = (error: any) =>
-  error?.status === 401 || error?.response?.status === 401;
 
 // a previous tick already found the stored credentials invalid, or a check already failed for
 // some other reason: don't hammer the server with more failing attempts, wait for the user to
@@ -177,9 +171,15 @@ const selectAutoSyncCandidates = ({
  * to review/send manually. See the "Auto sync" checkbox in RecordsListOptions. Ticks are a
  * no-op most of the time once everything's caught up - see
  * settings:autoSyncSlowCheckIntervalMinutes.
+ * `prefetchedRecords`: record summaries (with sync status) the caller has just fetched and
+ * already dispatched through AutoSyncActions.checkEnd (e.g. the records list refreshing on
+ * focus) - reused as-is instead of fetching them again right away.
  */
 const runAutoSync =
-  ({ ignoreOpenRecordIdleThreshold = false } = {}) =>
+  ({
+    ignoreOpenRecordIdleThreshold = false,
+    prefetchedRecords,
+  }: { ignoreOpenRecordIdleThreshold?: boolean; prefetchedRecords?: any[] } = {}) =>
   async (dispatch: any, getState: any) => {
   if (tickInProgress) {
     log.debug("auto-sync: tick already in progress, skipping");
@@ -218,22 +218,28 @@ const runAutoSync =
   // an explicit "Sync now" shouldn't wait for the record open in the editor to become idle
   const openRecordIdleThresholdMs = ignoreOpenRecordIdleThreshold ? -1 : configuredIdleThresholdMs;
 
-  if (isAlreadyUpToDate({ autoSyncState: state.autoSync, slowCheckIntervalMs })) {
+  if (
+    !prefetchedRecords &&
+    isAlreadyUpToDate({ autoSyncState: state.autoSync, slowCheckIntervalMs })
+  ) {
     log.debug("auto-sync: already up to date, skipping check until the next slow check");
     return;
   }
 
   tickInProgress = true;
-  dispatch(AutoSyncActions.checkStart());
   log.debug(`auto-sync: tick starting (survey=${survey.uuid}, cycle=${cycle})`);
   try {
-    const records = await RecordService.syncRecordSummaries({
-      survey,
-      cycle,
-      onlyLocal: false,
-    });
-    log.debug(`auto-sync: fetched ${records.length} record summary(ies)`);
-    dispatch(AutoSyncActions.checkEnd(records));
+    let records = prefetchedRecords;
+    if (!records) {
+      dispatch(AutoSyncActions.checkStart());
+      records = await RecordService.syncRecordSummaries({
+        survey,
+        cycle,
+        onlyLocal: false,
+      });
+      log.debug(`auto-sync: fetched ${records.length} record summary(ies)`);
+      dispatch(AutoSyncActions.checkEnd(records));
+    }
 
     const currentlyEditedRecordUuid = DataEntrySelectors.selectRecord(getState())?.uuid;
 

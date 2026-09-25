@@ -25,6 +25,7 @@ import {
   useConfirm,
   wasRecentlyCheckedWithNoNewLocalChanges,
 } from "state";
+import { isAuthError } from "state/autoSync";
 import { useJobMonitor } from "state/jobMonitor/useJobMonitor";
 import { RemoteConnectionUtils } from "state/remoteConnection/remoteConnectionUtils";
 import { Files, log } from "utils";
@@ -170,7 +171,11 @@ export const useRecordsList = () => {
         // triggered (screen focus, cycle change, ...) for as long as the underlying problem
         // (e.g. a server error) persists
         log.warn(`loadRecordsWithSyncStatus: error fetching records sync status: ${error}`);
-        dispatch(AutoSyncActions.checkError());
+        // same distinction as the background tick (see handleAutoSyncTickError): an expired
+        // session gets its own "log in again" status instead of a generic server error
+        dispatch(
+          isAuthError(error) ? AutoSyncActions.authError() : AutoSyncActions.checkError(),
+        );
       }
       setState((statePrev) => ({ ...statePrev, ...stateNext }));
       return {
@@ -213,17 +218,24 @@ export const useRecordsList = () => {
     autoSyncStatus !== AutoSyncStatus.checkError &&
     autoSyncStatus !== AutoSyncStatus.authError;
 
-  const checkAutoSyncStatusIfNeeded = useCallback(() => {
+  const checkAutoSyncStatusIfNeeded = useCallback(async () => {
     if (!canCheckAutoSyncStatus) return;
-
-    loadRecordsWithSyncStatus();
 
     // also attempt the actual sync (not just a status refresh) whenever the records list comes
     // into focus, instead of leaving pending records waiting for the next periodic background
     // tick (up to AUTO_SYNC_INTERVAL_MS away) - unless a check already ran very recently and
-    // nothing local has changed since, e.g. the user quickly bouncing in and out of this screen
-    if (!wasRecentlyCheckedWithNoNewLocalChanges(autoSyncThrottleStateRef.current)) {
-      dispatch(DataEntryActions.runAutoSync());
+    // nothing local has changed since, e.g. the user quickly bouncing in and out of this screen.
+    // Evaluated before the status refresh below, which itself updates lastCheckedAt
+    const shouldRunAutoSync = !wasRecentlyCheckedWithNoNewLocalChanges(
+      autoSyncThrottleStateRef.current,
+    );
+
+    const { records: fetchedRecords, syncStatusFetched: fetched } =
+      await loadRecordsWithSyncStatus();
+
+    // the tick reuses the summaries just fetched, instead of fetching them again concurrently
+    if (shouldRunAutoSync && fetched) {
+      dispatch(DataEntryActions.runAutoSync({ prefetchedRecords: fetchedRecords }));
     }
   }, [canCheckAutoSyncStatus, loadRecordsWithSyncStatus, dispatch]);
 
@@ -463,6 +475,7 @@ export const useRecordsList = () => {
 
   return {
     autoSyncEnabled,
+    autoSyncStatus,
     cycle,
     defaultCycleKey,
     isDemoSurvey,
