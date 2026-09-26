@@ -18,6 +18,10 @@ export default {
         "Vissa poster behöver fortfarande synkroniseras. De skickas automatiskt",
       errorTooltip:
         "Vissa poster har synkroniseringsfel och behöver din uppmärksamhet. Öppna 'Skicka data' för att åtgärda dem",
+      needsManualFixTooltip:
+        "Vissa poster kan inte synkroniseras förrän du åtgärdar dem (t.ex. saknade nyckelvärden, samma nycklar som en post som redan finns på servern när sammanslagning inte är tillåten, eller inte längre i inmatningssteget). Kontrollera deras synkroniseringsstatus i postlistan",
+      mergeWithSameKeysNotAllowedNote:
+        "Vissa poster har samma nyckel/nycklar som en post som redan finns på servern, och sammanslagning av dem är inte tillåten för denna undersökning. Om det är olika poster, ändra deras nyckelvärden; om det är samma post, kontakta undersökningens administratör.",
       syncingTooltip: "Synkroniserar poster...",
       progressPercent: "{{progressPercent}}%",
       uncheckedTooltip:
@@ -291,6 +295,8 @@ Kontrollera inställningarna eller be undersökningsadministratören att ändra 
     exportingData: "Exporterar data...",
     exportToCsv: "Exportera till CSV",
     mergeConflictingRecords: "Slå samman konflikterande poster",
+    mergeWithSameKeysNotAllowed:
+      "Sammanslagning av poster med samma nyckel/nycklar är inte tillåten för denna undersökning, så poster med konflikterande nycklar skickas inte. Om det är olika poster, ändra deras nyckelvärden; om det är samma post, kontakta undersökningens administratör.",
     mergeSameRecordConflictConfirm: {
       title: "Slå samman poster som redigerats på båda enheterna",
       message: `{{count}} post(er) har också ändrats på servern sedan den här enheten senast synkroniserade dem.

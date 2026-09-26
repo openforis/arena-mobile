@@ -18,6 +18,10 @@ export default {
         "Beberapa catatan masih perlu disinkronkan. Catatan akan dikirim secara otomatis",
       errorTooltip:
         "Beberapa catatan memiliki kesalahan sinkronisasi dan memerlukan perhatian Anda. Buka 'Kirim data' untuk menyelesaikannya",
+      needsManualFixTooltip:
+        "Beberapa catatan tidak dapat disinkronkan sampai Anda memperbaikinya (mis. nilai kunci kosong, kunci sama dengan catatan yang sudah ada di server saat penggabungan tidak diizinkan, atau tidak lagi dalam tahap entri). Periksa status sinkronisasinya di daftar catatan",
+      mergeWithSameKeysNotAllowedNote:
+        "Beberapa data isian memiliki kunci yang sama dengan data isian yang sudah ada di server, dan penggabungannya tidak diizinkan untuk survei ini. Jika merupakan data isian yang berbeda, ubah nilai kuncinya; jika merupakan data isian yang sama, hubungi administrator survei.",
       syncingTooltip: "Menyinkronkan catatan...",
       progressPercent: "{{progressPercent}}%",
       uncheckedTooltip:
@@ -294,6 +298,8 @@ Periksa pengaturan atau minta administrator survei untuk mengubah batas ini.`,
     exportingData: "Mengekspor data...",
     exportToCsv: "Ekspor ke CSV",
     mergeConflictingRecords: "Gabungkan data isian yang berkonflik",
+    mergeWithSameKeysNotAllowed:
+      "Penggabungan data isian dengan kunci yang sama tidak diizinkan untuk survei ini, sehingga data isian dengan kunci yang berkonflik tidak akan dikirim. Jika merupakan data isian yang berbeda, ubah nilai kuncinya; jika merupakan data isian yang sama, hubungi administrator survei.",
     mergeSameRecordConflictConfirm: {
       title: "Gabungkan data isian yang diedit di kedua perangkat",
       message: `{{count}} data isian juga telah diperbarui di server sejak perangkat ini terakhir menyinkronkannya.

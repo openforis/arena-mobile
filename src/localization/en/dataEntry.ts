@@ -18,6 +18,10 @@ export default {
         "Some records still need to be synchronized. They will be sent automatically",
       errorTooltip:
         "Some records have synchronization errors and need your attention. Open 'Send data' to resolve them",
+      needsManualFixTooltip:
+        "Some records can't be synchronized until you fix them (e.g. missing key values, same keys as a record already on the server when merging isn't allowed, or no longer in the entry step). Check their sync status in the records list",
+      mergeWithSameKeysNotAllowedNote:
+        "Some records have the same key(s) as a record already on the server, and merging them is not allowed for this survey. If they are different records, change their key values; if they are the same record, contact the survey administrator.",
       syncingTooltip: "Synchronizing records...",
       progressPercent: "{{progressPercent}}%",
       uncheckedTooltip:
@@ -94,6 +98,8 @@ Please check your records and check also records on the server`,
     exportingData: "Exporting data...",
     exportToCsv: "Export to CSV",
     mergeConflictingRecords: "Merge conflicting records",
+    mergeWithSameKeysNotAllowed:
+      "Merging records with the same key(s) is not allowed for this survey, so records with conflicting keys won't be sent. If they are different records, change their key values; if they are the same record, contact the survey administrator.",
     mergeSameRecordConflictConfirm: {
       title: "Merge records edited on both devices",
       message: `{{count}} record(s) were also modified on the server since this device last synced them.

@@ -27,12 +27,13 @@ const AUTO_SYNC_OPEN_RECORD_IDLE_THRESHOLD_MS_DEFAULT = 5 * 60_000; // 5 minutes
 // a tick's real cost is RecordService.syncRecordSummaries, which asks the server about every
 // local+remote record in the cycle (bandwidth/battery that scales with record count - can be a
 // few thousand records for some surveys). Once nothing is known to be pending (status ===
-// synced - kept fresh the instant something changes by AutoSyncActions.markPending, dispatched
-// on every record create/edit), there's nothing new to upload, so ticks are throttled down to
+// synced, or needsManualFix: only records no sync can resolve are left - kept fresh the
+// instant something changes by AutoSyncActions.markPending, dispatched on every record
+// create/edit), there's nothing new to upload, so ticks are throttled down to
 // this much longer interval - just often enough to notice a record changed server-side (e.g.
 // from another device) - instead of re-running that full check every AUTO_SYNC_INTERVAL_MS
 // (see useAutoSyncMonitor) for nothing. A local edit breaks out of this immediately, since
-// markPending flips the status away from "synced" as soon as it happens. The actual value is
+// markPending flips the status away from "synced"/"needsManualFix" as soon as it happens. The actual value is
 // user-configurable (settings:autoSyncSlowCheckIntervalMinutes), this is only the fallback
 // used if the setting is somehow missing.
 const AUTO_SYNC_SLOW_CHECK_INTERVAL_MS_DEFAULT = 30 * 60_000; // 30 minutes
@@ -73,8 +74,13 @@ const getAutoSyncIntervalsMs = (settings: any = {}) => {
 
 // nothing is known to be pending, and the last check was recent enough: the expensive full
 // status check (RecordService.syncRecordSummaries) can be skipped - see slowCheckIntervalMs
+// needsManualFix counts as up to date too: the records behind it can't be uploaded until the
+// user edits them (which dispatches markPending, breaking out of this right away), so a full
+// check every tick would only find the same unresolvable records again
+const upToDateStatuses = new Set([AutoSyncStatus.synced, AutoSyncStatus.needsManualFix]);
+
 const isAlreadyUpToDate = ({ autoSyncState, slowCheckIntervalMs }: any) => {
-  if (autoSyncState.status !== AutoSyncStatus.synced) return false;
+  if (!upToDateStatuses.has(autoSyncState.status)) return false;
   const lastCheckedAtMs = autoSyncState.lastCheckedAt
     ? new Date(autoSyncState.lastCheckedAt).getTime()
     : 0;
@@ -88,7 +94,7 @@ const refreshAutoSyncStatus = async ({ dispatch, getState }: any) => {
     const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
     if (!survey) return;
     const records = await RecordService.syncRecordSummaries({ survey, cycle, onlyLocal: false });
-    dispatch(AutoSyncActions.checkEnd(records));
+    dispatch(AutoSyncActions.checkEnd({ records, survey }));
   } catch (error) {
     log.warn(`auto-sync: status refresh after upload failed: ${error}`);
   }
@@ -238,7 +244,7 @@ const runAutoSync =
         onlyLocal: false,
       });
       log.debug(`auto-sync: fetched ${records.length} record summary(ies)`);
-      dispatch(AutoSyncActions.checkEnd(records));
+      dispatch(AutoSyncActions.checkEnd({ records, survey }));
     }
 
     const currentlyEditedRecordUuid = DataEntrySelectors.selectRecord(getState())?.uuid;

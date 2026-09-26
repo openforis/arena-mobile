@@ -18,6 +18,10 @@ export default {
         "Einige Datensätze müssen noch synchronisiert werden. Sie werden automatisch gesendet",
       errorTooltip:
         "Einige Datensätze weisen Synchronisierungsfehler auf und benötigen Ihre Aufmerksamkeit. Öffnen Sie 'Daten senden', um sie zu beheben",
+      needsManualFixTooltip:
+        "Einige Datensätze können erst synchronisiert werden, wenn Sie sie korrigieren (z. B. fehlende Schlüsselwerte, gleiche Schlüssel wie ein Datensatz auf dem Server, wenn Zusammenführen nicht erlaubt ist, oder nicht mehr im Erfassungsschritt). Prüfen Sie ihren Synchronisierungsstatus in der Datensatzliste",
+      mergeWithSameKeysNotAllowedNote:
+        "Einige Datensätze haben dieselben Schlüssel wie ein bereits auf dem Server vorhandener Datensatz, und das Zusammenführen ist für diese Erhebung nicht erlaubt. Handelt es sich um verschiedene Datensätze, ändern Sie ihre Schlüsselwerte; handelt es sich um denselben Datensatz, wenden Sie sich an den Administrator der Erhebung.",
       syncingTooltip: "Datensätze werden synchronisiert...",
       progressPercent: "{{progressPercent}}%",
       uncheckedTooltip:
@@ -294,6 +298,8 @@ Maximal zulässige Größe: {{maxSizeMB}}MB.
     exportingData: "Exportiere Daten...",
     exportToCsv: "Nach CSV exportieren",
     mergeConflictingRecords: "Widersprüchliche Datensätze zusammenführen",
+    mergeWithSameKeysNotAllowed:
+      "Das Zusammenführen von Datensätzen mit gleichen Schlüsseln ist für diese Erhebung nicht erlaubt, daher werden Datensätze mit widersprüchlichen Schlüsseln nicht gesendet. Handelt es sich um verschiedene Datensätze, ändern Sie ihre Schlüsselwerte; handelt es sich um denselben Datensatz, wenden Sie sich an den Administrator der Erhebung.",
     mergeSameRecordConflictConfirm: {
       title: "Auf beiden Geräten bearbeitete Datensätze zusammenführen",
       message: `{{count}} Datensatz/Datensätze wurden auch auf dem Server geändert, seit dieses Gerät sie zuletzt synchronisiert hat.

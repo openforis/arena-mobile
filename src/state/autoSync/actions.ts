@@ -1,4 +1,7 @@
-import { computeAutoSyncStatus } from "./autoSyncStatusUtils";
+import {
+  computeAutoSyncStatus,
+  hasConflictingKeysWithMergeNotAllowed,
+} from "./autoSyncStatusUtils";
 import { AutoSyncStatus } from "./types";
 
 const AUTO_SYNC_CHECK_START = "AUTO_SYNC_CHECK_START";
@@ -17,11 +20,16 @@ const AUTO_SYNC_DIALOG_OPEN_SET = "AUTO_SYNC_DIALOG_OPEN_SET";
 const checkStart = () => ({ type: AUTO_SYNC_CHECK_START });
 
 // dispatched once fresh sync statuses have been fetched, so any screen can show an up to date
-// synced/pending/error summary without re-fetching it itself
-const checkEnd = (records: any[]) => ({
+// synced/pending/error summary without re-fetching it itself; the survey is needed to tell
+// whether records with conflicting keys can be merged (see computeAutoSyncStatus)
+const checkEnd = ({ records, survey }: { records: any[]; survey: any }) => ({
   type: AUTO_SYNC_CHECK_END,
   payload: {
-    status: computeAutoSyncStatus(records),
+    status: computeAutoSyncStatus({ records, survey }),
+    conflictingKeysWithMergeNotAllowed: hasConflictingKeysWithMergeNotAllowed({
+      records,
+      survey,
+    }),
     lastCheckedAt: new Date().toISOString(),
   },
 });

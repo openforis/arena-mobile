@@ -18,6 +18,10 @@ export default {
         "Joitakin tietueita ei ole vielä synkronoitu. Ne lähetetään automaattisesti",
       errorTooltip:
         "Joissakin tietueissa on synkronointivirheitä, jotka vaativat huomiotasi. Avaa 'Lähetä tiedot' ratkaistaksesi ne",
+      needsManualFixTooltip:
+        "Joitakin tietueita ei voi synkronoida ennen kuin korjaat ne (esim. puuttuvat avainarvot, samat avaimet kuin palvelimella jo olevalla tietueella, kun yhdistäminen ei ole sallittua, tai ei enää syöttövaiheessa). Tarkista niiden synkronointitila tietueluettelosta",
+      mergeWithSameKeysNotAllowedNote:
+        "Joillakin tietueilla on samat avaimet kuin palvelimella jo olevalla tietueella, eikä niiden yhdistäminen ole sallittua tässä kyselyssä. Jos ne ovat eri tietueita, muuta niiden avainarvoja; jos ne ovat sama tietue, ota yhteyttä kyselyn ylläpitäjään.",
       syncingTooltip: "Synkronoidaan tietueita...",
       progressPercent: "{{progressPercent}} %",
       uncheckedTooltip:
@@ -290,6 +294,8 @@ Tarkista asetukset tai pyydä kyselyn järjestelmänvalvojaa muuttamaan tätä r
     exportingData: "Viedään tietoja...",
     exportToCsv: "Vie CSV-muotoon",
     mergeConflictingRecords: "Yhdistä ristiriitaiset tietueet",
+    mergeWithSameKeysNotAllowed:
+      "Samojen avainten tietueiden yhdistäminen ei ole sallittua tässä kyselyssä, joten tietueita, joiden avaimet ovat ristiriidassa, ei lähetetä. Jos ne ovat eri tietueita, muuta niiden avainarvoja; jos ne ovat sama tietue, ota yhteyttä kyselyn ylläpitäjään.",
     mergeSameRecordConflictConfirm: {
       title: "Yhdistä molemmilla laitteilla muokatut tietueet",
       message: `{{count}} tietuetta on muokattu myös palvelimella sen jälkeen, kun tämä laite viimeksi synkronoi ne.

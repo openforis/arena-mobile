@@ -50,6 +50,7 @@ export const AutoSyncStatusDialog = (props: Props) => {
     canCancel,
     canRetry,
     canSyncNow,
+    conflictingKeysWithMergeNotAllowed,
     connectionIssue,
     hasProgress,
     jobTitleKey,
@@ -82,7 +83,17 @@ export const AutoSyncStatusDialog = (props: Props) => {
     !connectionIssue &&
     !syncing &&
     status !== AutoSyncStatus.pending &&
-    status !== AutoSyncStatus.error;
+    status !== AutoSyncStatus.error &&
+    status !== AutoSyncStatus.needsManualFix;
+
+  // the generic needsManualFix text can't tell whether the user can fix the records themselves:
+  // records with the same key(s) as one on the server may really be the same record, which only
+  // the survey administrator can let them merge
+  const showMergeNotAllowedNote =
+    showStatusText &&
+    !connectionIssue &&
+    status === AutoSyncStatus.needsManualFix &&
+    conflictingKeysWithMergeNotAllowed;
 
   const actions = [
     ...(canCancel ? [{ onPress: onCancel, textKey: "common:cancel" }] : []),
@@ -113,6 +124,13 @@ export const AutoSyncStatusDialog = (props: Props) => {
           variant="bodySmall"
         />
         {showStatusText && <Text textKey={statusTextKey} />}
+        {showMergeNotAllowedNote && (
+          <Text
+            style={styles.note}
+            textKey="dataEntry:autoSync.status.mergeWithSameKeysNotAllowedNote"
+            variant="bodySmall"
+          />
+        )}
         {showMessage && (
           <Text
             style={styles.note}

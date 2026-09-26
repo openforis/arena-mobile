@@ -24,6 +24,8 @@ const iconByStatus: Record<AutoSyncStatus, { color: string; source: string }> = 
   [AutoSyncStatus.synced]: { color: "green", source: "check-circle" },
   [AutoSyncStatus.pending]: { color: "orange", source: "cloud-upload-outline" },
   [AutoSyncStatus.error]: { color: "red", source: "sync-alert" },
+  // not an error auto-sync (or a merge) can get past: the user has to fix the records themselves
+  [AutoSyncStatus.needsManualFix]: { color: "orange", source: "sync-alert" },
   // not normally read (the authProblem override below takes over first) - kept for type safety
   // and as a defensive fallback
   [AutoSyncStatus.authError]: { color: "red", source: "account-alert" },
@@ -85,7 +87,8 @@ const computeIconAndColor = ({
 export const useAutoSyncStatus = () => {
   const dispatch = useAppDispatch();
   const { autoSyncEnabled } = SettingsSelectors.useSettings();
-  const { checking, status, message } = AutoSyncSelectors.useAutoSyncState();
+  const { checking, status, message, conflictingKeysWithMergeNotAllowed } =
+    AutoSyncSelectors.useAutoSyncState();
   const {
     isOpen,
     silent,
@@ -167,6 +170,7 @@ export const useAutoSyncStatus = () => {
     canSyncNow,
     closeDialog,
     color,
+    conflictingKeysWithMergeNotAllowed,
     connectionIssue,
     dialogVisible,
     hasProgress,

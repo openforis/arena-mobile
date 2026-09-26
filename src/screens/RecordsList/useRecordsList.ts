@@ -156,7 +156,7 @@ export const useRecordsList = () => {
           log.debug(
             `loadRecordsWithSyncStatus: fetched ${_records.length} record summary(ies)`,
           );
-          dispatch(AutoSyncActions.checkEnd(_records));
+          dispatch(AutoSyncActions.checkEnd({ records: _records, survey }));
           Object.assign(stateNext, {
             records: _records,
             syncStatusFetched: true,

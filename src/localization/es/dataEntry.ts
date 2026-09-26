@@ -18,6 +18,10 @@ export default {
         "Algunos registros aún deben sincronizarse. Se enviarán automáticamente",
       errorTooltip:
         "Algunos registros tienen errores de sincronización y requieren su atención. Abra 'Enviar datos' para resolverlos",
+      needsManualFixTooltip:
+        "Algunos registros no se pueden sincronizar hasta que los corrija (p. ej. valores clave faltantes, mismas claves que un registro ya existente en el servidor cuando no se permite fusionar, o ya no en la fase de ingreso). Verifique su estado de sincronización en la lista de registros",
+      mergeWithSameKeysNotAllowedNote:
+        "Algunos registros tienen la(s) misma(s) clave(s) que un registro ya existente en el servidor, y no se permite fusionarlos en esta encuesta. Si son registros diferentes, cambie sus valores clave; si son el mismo registro, contacte al administrador de la encuesta.",
       syncingTooltip: "Sincronizando registros...",
       progressPercent: "{{progressPercent}}%",
       uncheckedTooltip:
@@ -285,6 +289,8 @@ Verifique la configuración o pida al administrador de la encuesta que cambie es
     exportingData: "Exportando datos...",
     exportToCsv: "Exportar a CSV",
     mergeConflictingRecords: "Fusionar registros conflictivos",
+    mergeWithSameKeysNotAllowed:
+      "No se permite fusionar registros con la(s) misma(s) clave(s) en esta encuesta, por lo que los registros con claves conflictivas no se enviarán. Si son registros diferentes, cambie sus valores clave; si son el mismo registro, contacte al administrador de la encuesta.",
     mergeSameRecordConflictConfirm: {
       title: "Fusionar registros editados en ambos dispositivos",
       message: `{{count}} registro(s) también se modificaron en el servidor desde la última sincronización de este dispositivo.

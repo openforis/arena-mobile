@@ -18,6 +18,10 @@ export default {
         "Alguns registros ainda precisam ser sincronizados. Eles serão enviados automaticamente",
       errorTooltip:
         "Alguns registros têm erros de sincronização e precisam da sua atenção. Abra 'Enviar dados' para resolvê-los",
+      needsManualFixTooltip:
+        "Alguns registros não podem ser sincronizados até que você os corrija (ex.: valores-chave ausentes, mesmas chaves de um registro já existente no servidor quando a união não é permitida, ou não mais na etapa de entrada). Verifique o estado de sincronização na lista de registros",
+      mergeWithSameKeysNotAllowedNote:
+        "Alguns registos têm a(s) mesma(s) chave(s) de um registo já existente no servidor, e não é permitido uni-los neste inquérito. Se forem registos diferentes, altere os seus valores-chave; se forem o mesmo registo, contacte o administrador do inquérito.",
       syncingTooltip: "Sincronizando registros...",
       progressPercent: "{{progressPercent}}%",
       uncheckedTooltip:
@@ -285,6 +289,8 @@ Verifique as configurações ou peça ao administrador da pesquisa para alterar 
     exportingData: "Exportando dados...",
     exportToCsv: "Exportar para CSV",
     mergeConflictingRecords: "Unir registos com conflitos",
+    mergeWithSameKeysNotAllowed:
+      "Não é permitido unir registos com a(s) mesma(s) chave(s) neste inquérito, pelo que os registos com chaves em conflito não serão enviados. Se forem registos diferentes, altere os seus valores-chave; se forem o mesmo registo, contacte o administrador do inquérito.",
     mergeSameRecordConflictConfirm: {
       title: "Unir registos editados em ambos os dispositivos",
       message: `{{count}} registo(s) também foram modificados no servidor desde a última sincronização deste dispositivo.

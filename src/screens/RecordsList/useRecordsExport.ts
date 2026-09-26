@@ -84,6 +84,13 @@ export const useRecordsExport = ({
         RecordSyncStatus.conflictingKeys,
       );
       const conflictingRecordsCount = conflictingRecords.length;
+      // the survey may not allow merging records with the same key(s) (survey security option):
+      // those records then can't be sent at all, the user has to change their key values first
+      const mergeWithSameKeysAllowed =
+        Surveys.isRecordsMergeWithSameKeysAllowed(survey);
+      const mergeableConflictingRecordsCount = mergeWithSameKeysAllowed
+        ? conflictingRecordsCount
+        : 0;
 
       // records also modified on the server since this device last synced them: currently blocked from
       // export entirely unless the user opts into merging them with the server's changes.
@@ -109,7 +116,7 @@ export const useRecordsExport = ({
         return { confirmResult: false };
       }
       const confirmSingleChoiceOptions =
-        conflictingRecordsCount + sameRecordConflictsCount > 0
+        mergeableConflictingRecordsCount + sameRecordConflictsCount > 0
           ? conflictingRecordsExportOptions
           : [];
 
@@ -124,10 +131,12 @@ export const useRecordsExport = ({
         conflictingModifiedRemotely: sameRecordConflictsCount,
         withValidationErrors: recordsWithErrorsCount,
       };
-      const recordsCountSummaryText = generateRecordsCountSummaryText({
-        recordsCountSummary,
-        t,
-      });
+      const recordsCountSummaryText = [
+        generateRecordsCountSummaryText({ recordsCountSummary, t }),
+        ...(conflictingRecordsCount > 0 && !mergeWithSameKeysAllowed
+          ? ["", t("dataEntry:dataExport.mergeWithSameKeysNotAllowed")]
+          : []),
+      ].join("\n");
       const confirmResult = await confirm({
         titleKey: "dataEntry:dataExport.confirm.title",
         messageKey: "dataEntry:dataExport.confirm.message",
@@ -144,7 +153,7 @@ export const useRecordsExport = ({
         confirmResult,
       };
     },
-    [confirm, t, toaster],
+    [confirm, survey, t, toaster],
   );
 
   const exportSelectedRecords = useCallback(
@@ -169,7 +178,10 @@ export const useRecordsExport = ({
           (confirmResult as OnConfirmParams).selectedSingleChoiceValue ===
           ConflictResolutionStrategy.merge;
         if (mergeSelected) {
-          recordsToExport.push(...conflictingRecords!, ...sameRecordConflicts!);
+          if (Surveys.isRecordsMergeWithSameKeysAllowed(survey)) {
+            recordsToExport.push(...conflictingRecords!);
+          }
+          recordsToExport.push(...sameRecordConflicts!);
           conflictResolutionStrategy = ConflictResolutionStrategy.merge;
         }
         const recordUuids = recordsToExport.map((r) => r.uuid);
@@ -228,6 +240,7 @@ export const useRecordsExport = ({
       dispatch,
       loadRecordsWithSyncStatus,
       setLoading,
+      survey,
       toaster,
     ],
   );

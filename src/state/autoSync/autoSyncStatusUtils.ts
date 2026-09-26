@@ -1,3 +1,5 @@
+import { Surveys } from "@openforis/arena-core";
+
 import { RecordSyncStatus } from "model";
 
 import { AutoSyncState, AutoSyncStatus } from "./types";
@@ -15,15 +17,22 @@ type RecordWithSyncStatus = {
   syncStatus?: (typeof RecordSyncStatus)[keyof typeof RecordSyncStatus];
 };
 
-// statuses that need a manual merge/overwrite decision from the user (auto-sync never
-// uploads these on its own - see selectAutoSyncCandidates in state/dataEntry/actionsAutoSync.ts)
-const errorStatuses = new Set([
-  RecordSyncStatus.conflictingKeys,
-  RecordSyncStatus.keysNotSpecified,
+// statuses auto-sync never uploads on its own (see selectAutoSyncCandidates in
+// state/dataEntry/actionsAutoSync.ts) but that the user can resolve from this device with an
+// explicit merge through "Send data" (see useRecordsExport)
+const mergeableStatuses = new Set([
   RecordSyncStatus.modifiedLocallyAndRemotely,
   RecordSyncStatus.modifiedRemotely,
-  RecordSyncStatus.notInEntryStepAnymore,
 ]);
+
+// statuses no upload/merge can resolve: the record itself needs fixing (e.g. its key values
+// filled in or changed), deleting, or leaving alone (e.g. it's already past the entry step on
+// the server). conflictingKeys belongs here too when the survey doesn't allow merging records
+// with the same key(s) (see getNeedsManualFixStatuses)
+const alwaysNeedsManualFixStatuses = [
+  RecordSyncStatus.keysNotSpecified,
+  RecordSyncStatus.notInEntryStepAnymore,
+];
 
 // statuses that are safe to auto-sync but haven't been uploaded yet
 const pendingStatuses = new Set([
@@ -32,26 +41,74 @@ const pendingStatuses = new Set([
   RecordSyncStatus.notUpToDate,
 ]);
 
-export const computeAutoSyncStatus = (
+const getMergeableStatuses = ({
+  mergeWithSameKeysAllowed,
+}: {
+  mergeWithSameKeysAllowed: boolean;
+}) =>
+  mergeWithSameKeysAllowed
+    ? new Set([...mergeableStatuses, RecordSyncStatus.conflictingKeys])
+    : mergeableStatuses;
+
+const getNeedsManualFixStatuses = ({
+  mergeWithSameKeysAllowed,
+}: {
+  mergeWithSameKeysAllowed: boolean;
+}) =>
+  new Set(
+    mergeWithSameKeysAllowed
+      ? alwaysNeedsManualFixStatuses
+      : [...alwaysNeedsManualFixStatuses, RecordSyncStatus.conflictingKeys],
+  );
+
+const someRecordHasStatus = (
   records: RecordWithSyncStatus[],
-): AutoSyncStatus => {
+  statuses: Set<string>,
+) =>
+  records.some(
+    (record) => !!record.syncStatus && statuses.has(record.syncStatus),
+  );
+
+// precedence: records resolvable right away through "Send data" (error) first, then records
+// that will be sent automatically (pending - transient), then records that only the user can
+// fix outside of any sync (needsManualFix), which would otherwise hide behind "synced"
+export const computeAutoSyncStatus = ({
+  records,
+  survey,
+}: {
+  records: RecordWithSyncStatus[];
+  survey: any;
+}): AutoSyncStatus => {
+  const mergeWithSameKeysAllowed =
+    Surveys.isRecordsMergeWithSameKeysAllowed(survey);
   if (
-    records.some(
-      (record) => !!record.syncStatus && errorStatuses.has(record.syncStatus),
-    )
+    someRecordHasStatus(records, getMergeableStatuses({ mergeWithSameKeysAllowed }))
   ) {
     return AutoSyncStatus.error;
   }
-  if (
-    records.some(
-      (record) =>
-        !!record.syncStatus && pendingStatuses.has(record.syncStatus),
-    )
-  ) {
+  if (someRecordHasStatus(records, pendingStatuses)) {
     return AutoSyncStatus.pending;
+  }
+  if (
+    someRecordHasStatus(records, getNeedsManualFixStatuses({ mergeWithSameKeysAllowed }))
+  ) {
+    return AutoSyncStatus.needsManualFix;
   }
   return AutoSyncStatus.synced;
 };
+
+// true if some records can't be sent only because they have the same key(s) as a record already
+// on the server and the survey doesn't allow merging them: unlike the other needsManualFix cases,
+// the user may need the survey administrator (to allow merging) rather than a local fix
+export const hasConflictingKeysWithMergeNotAllowed = ({
+  records,
+  survey,
+}: {
+  records: RecordWithSyncStatus[];
+  survey: any;
+}): boolean =>
+  !Surveys.isRecordsMergeWithSameKeysAllowed(survey) &&
+  records.some((record) => record.syncStatus === RecordSyncStatus.conflictingKeys);
 
 // true if a check already completed recently enough (AUTO_SYNC_FOCUS_RECHECK_MIN_INTERVAL_MS)
 // and nothing local has changed since - see useRecordsList.checkAutoSyncStatusIfNeeded, the only

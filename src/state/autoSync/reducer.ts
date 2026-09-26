@@ -9,6 +9,7 @@ const initialState: AutoSyncState = {
   status: AutoSyncStatus.unchecked,
   message: null,
   lastLocalChangeAt: null,
+  conflictingKeysWithMergeNotAllowed: false,
   dialogOpen: false,
 };
 
