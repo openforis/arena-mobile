@@ -2,85 +2,34 @@ import { Surveys } from "@openforis/arena-core";
 
 import {
   Button,
-  Checkbox,
   CollapsiblePanel,
   FlexWrapView,
   HView,
-  SegmentedButtons,
   Text,
 } from "components";
-import { useIsNetworkConnected } from "hooks";
-import { Cycles, SettingsModel } from "model";
-import {
-  SettingsActions,
-  SettingsSelectors,
-  SurveySelectors,
-  useAppDispatch,
-} from "state";
+import { Cycles } from "model";
+import { SurveySelectors } from "state";
 
 import { SurveyCycleSelector } from "./SurveyCycleSelector";
 import { SurveyLanguageSelector } from "./SurveyLanguageSelector";
 
 import styles from "./styles";
-import { useCallback } from "react";
 
 type RecordsListOptionsProps = {
-  onlyLocal?: boolean;
-  onOnlyLocalChange: (value: boolean) => void;
-  syncStatusLoading?: boolean;
-  onRemoteSyncPress: () => void;
   onImportRecordsFromFilePress: () => void;
   onRevalidateAllRecordsPress: () => void;
 };
 
-enum RecordsType {
-  local = "local",
-  all = "all",
-}
-
-const recordTypeButtons = Object.values(RecordsType).map((recordType) => ({
-  value: recordType,
-  label: `recordsList:recordType.${recordType}`,
-}));
-
+// less frequently used settings/actions, collapsed by default; the records type selector,
+// "Check status" and auto-sync are always visible instead - see RecordsListToolbar
 export const RecordsListOptions = (props: RecordsListOptionsProps) => {
-  const {
-    onlyLocal,
-    onOnlyLocalChange,
-    syncStatusLoading,
-    onRemoteSyncPress,
-    onImportRecordsFromFilePress,
-    onRevalidateAllRecordsPress,
-  } = props;
+  const { onImportRecordsFromFilePress, onRevalidateAllRecordsPress } = props;
 
-  const dispatch = useAppDispatch();
-  const networkAvailable = useIsNetworkConnected();
   const survey = SurveySelectors.useCurrentSurvey()!;
-  const { autoSyncEnabled } = SettingsSelectors.useSettings();
-  // records of the demo survey can't be sent to any server (see useAutoSyncMonitor)
-  const isDemoSurvey = SurveySelectors.useIsCurrentSurveyDemo();
 
   const defaultCycleKey = Surveys.getDefaultCycleKey(survey);
   const defaultCycleText = Cycles.labelFunction(defaultCycleKey);
   const cycles = Surveys.getCycleKeys(survey);
-
-  const recordsType = onlyLocal ? RecordsType.local : RecordsType.all;
-
-  const onRecordsTypeChange = useCallback(
-    (value: string) => {
-      onOnlyLocalChange(value === RecordsType.local);
-    },
-    [onOnlyLocalChange],
-  );
-
-  const onAutoSyncEnabledChange = useCallback(() => {
-    dispatch(
-      SettingsActions.updateSetting({
-        key: SettingsModel.SettingKey.autoSyncEnabled,
-        value: !autoSyncEnabled,
-      }),
-    );
-  }, [dispatch, autoSyncEnabled]);
 
   return (
     <CollapsiblePanel
@@ -101,20 +50,6 @@ export const RecordsListOptions = (props: RecordsListOptionsProps) => {
         {cycles.length > 1 && (
           <SurveyCycleSelector style={styles.cyclesSelector} />
         )}
-
-        <SegmentedButtons
-          buttons={recordTypeButtons}
-          onChange={onRecordsTypeChange}
-          value={recordsType}
-        />
-        <Button
-          color="secondary"
-          disabled={!networkAvailable}
-          icon="cloud-refresh"
-          loading={syncStatusLoading}
-          onPress={onRemoteSyncPress}
-          textKey="dataEntry:checkStatus"
-        />
         <Button
           color="secondary"
           icon="file-import-outline"
@@ -127,14 +62,6 @@ export const RecordsListOptions = (props: RecordsListOptionsProps) => {
           onPress={onRevalidateAllRecordsPress}
           textKey="recordsList:revalidateRecords.allRecordsTitle"
         />
-        {!isDemoSurvey && (
-          <Checkbox
-            checked={autoSyncEnabled}
-            label="dataEntry:autoSync.checkbox"
-            labelStyle={styles.autoSyncCheckboxLabel}
-            onPress={onAutoSyncEnabledChange}
-          />
-        )}
       </FlexWrapView>
     </CollapsiblePanel>
   );

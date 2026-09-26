@@ -16,6 +16,7 @@ import { AutoSyncStatus } from "state";
 import { RecordsDataVisualizer } from "./RecordsDataVisualizer";
 import { RecordsListLegend } from "./RecordsListLegend";
 import { RecordsListOptions } from "./RecordsListOptions";
+import { RecordsListToolbar } from "./RecordsListToolbar";
 import { minRecordsToShowSearchBar } from "./recordsListUtils";
 import { useRecordsExport } from "./useRecordsExport";
 import { useRecordsList } from "./useRecordsList";
@@ -100,10 +101,12 @@ export const RecordsList = () => {
       <VView style={styles.innerContainer}>
         <RecordsListOptions
           onImportRecordsFromFilePress={onImportRecordsFromFilePress}
+          onRevalidateAllRecordsPress={onRevalidateAllRecordsPress}
+        />
+        <RecordsListToolbar
           onlyLocal={onlyLocal}
           onOnlyLocalChange={onOnlyLocalChange}
           onRemoteSyncPress={onRemoteSyncPress}
-          onRevalidateAllRecordsPress={onRevalidateAllRecordsPress}
           syncStatusLoading={syncStatusLoading}
         />
         {loading ? (
@@ -144,8 +147,8 @@ export const RecordsList = () => {
       {syncStatusFetched && <RecordsListLegend />}
       {recordsLength > 0 && (
         // wraps onto multiple lines on a narrow screen instead of squeezing/overlapping;
-        // stays a single row once there's enough width - same pattern as RecordsListOptions'
-        // own button row above
+        // stays a single row once there's enough width - same pattern as RecordsListToolbar
+        // above
         <FlexWrapView style={styles.bottomActionBar}>
           {newRecordButton}
           {!isDemoSurvey && (
