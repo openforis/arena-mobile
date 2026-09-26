@@ -1,6 +1,40 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Automatisk synkronisering",
+    synced: "{{count}} post synkroniserad automatiskt",
+    synced_plural: "{{count}} poster synkroniserade automatiskt",
+    statusLabel: "Synkroniseringsstatus:",
+    statusTitle: "Synkroniseringsstatus",
+    syncInProgressToast:
+      "Automatisk synkronisering pågår. Vänta tills den är klar innan du skickar data manuellt.",
+    batteryDataWarning:
+      "Kan öka batteri- och dataanvändningen när du inte är ansluten till Wi-Fi",
+    syncNow: "Synkronisera nu",
+    status: {
+      syncedTooltip: "Alla poster är synkroniserade med servern",
+      pendingTooltip:
+        "Vissa poster behöver fortfarande synkroniseras. De skickas automatiskt",
+      errorTooltip:
+        "Vissa poster har synkroniseringsfel och behöver din uppmärksamhet. Öppna 'Skicka data' för att åtgärda dem",
+      needsManualFixTooltip:
+        "Vissa poster kan inte synkroniseras förrän du åtgärdar dem (t.ex. saknade nyckelvärden, samma nycklar som en post som redan finns på servern när sammanslagning inte är tillåten, eller inte längre i inmatningssteget). Kontrollera deras synkroniseringsstatus i postlistan",
+      mergeWithSameKeysNotAllowedNote:
+        "Vissa poster har samma nyckel/nycklar som en post som redan finns på servern, och sammanslagning av dem är inte tillåten för denna undersökning. Om det är olika poster, ändra deras nyckelvärden; om det är samma post, kontakta undersökningens administratör.",
+      syncingTooltip: "Synkroniserar poster...",
+      progressPercent: "{{progressPercent}}%",
+      uncheckedTooltip:
+        "Synkroniseringsstatus har inte kontrollerats än. Använd 'Kontrollera status' för att kontrollera den",
+      offlineTooltip:
+        "Ingen internetanslutning. Automatisk synkronisering återupptas när du är online igen",
+      authErrorTooltip:
+        "Din session med servern har gått ut. Logga in igen för att återuppta automatisk synkronisering",
+      checkErrorTooltip:
+        "Det gick inte att kontrollera synkroniseringsstatus på grund av ett serverfel. Försök igen",
+      noCandidatesMessage: "Inget att skicka just nu",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Noder kommer inte längre att gälla",
     message: `Följande noder kommer inte längre att gälla:  
@@ -68,7 +102,7 @@ Vill du hämta den igen från servern?`,
   gpsLockingEnabledWarning: "Varning: GPS-låsning aktiverad!",
   listOfRecords: "Poster",
   localBackup: "Lokal säkerhetskopia",
-  newRecord: "Ny",
+  newRecord: "Ny post",
   node: {
     cannotAddMoreItems: {
       maxCountReached:
@@ -261,6 +295,8 @@ Kontrollera inställningarna eller be undersökningsadministratören att ändra 
     exportingData: "Exporterar data...",
     exportToCsv: "Exportera till CSV",
     mergeConflictingRecords: "Slå samman konflikterande poster",
+    mergeWithSameKeysNotAllowed:
+      "Sammanslagning av poster med samma nyckel/nycklar är inte tillåten för denna undersökning, så poster med konflikterande nycklar skickas inte. Om det är olika poster, ändra deras nyckelvärden; om det är samma post, kontakta undersökningens administratör.",
     mergeSameRecordConflictConfirm: {
       title: "Slå samman poster som redigerats på båda enheterna",
       message: `{{count}} post(er) har också ändrats på servern sedan den här enheten senast synkroniserade dem.

@@ -1,6 +1,40 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Auto sync",
+    synced: "Auto-synced {{count}} record",
+    synced_plural: "Auto-synced {{count}} records",
+    statusLabel: "Sync status:",
+    statusTitle: "Sync status",
+    syncInProgressToast:
+      "Auto-sync is in progress. Please wait for it to finish before sending data manually.",
+    batteryDataWarning:
+      "May increase battery and data usage when not on Wi-Fi",
+    syncNow: "Sync now",
+    status: {
+      syncedTooltip: "All records are synchronized with the server",
+      pendingTooltip:
+        "Some records still need to be synchronized. They will be sent automatically",
+      errorTooltip:
+        "Some records have synchronization errors and need your attention. Open 'Send data' to resolve them",
+      needsManualFixTooltip:
+        "Some records can't be synchronized until you fix them (e.g. missing key values, same keys as a record already on the server when merging isn't allowed, or no longer in the entry step). Check their sync status in the records list",
+      mergeWithSameKeysNotAllowedNote:
+        "Some records have the same key(s) as a record already on the server, and merging them is not allowed for this survey. If they are different records, change their key values; if they are the same record, contact the survey administrator.",
+      syncingTooltip: "Synchronizing records...",
+      progressPercent: "{{progressPercent}}%",
+      uncheckedTooltip:
+        "Sync status not checked yet. Use 'Check status' to verify it",
+      offlineTooltip:
+        "No internet connection. Auto-sync will resume once you're back online",
+      authErrorTooltip:
+        "Your session with the server has expired. Log in again to resume auto-sync",
+      checkErrorTooltip:
+        "Couldn't check the sync status due to a server error. Try again",
+      noCandidatesMessage: "Nothing to send right now",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Nodes will no longer apply",
     message: `The following nodes will no longer apply:  
@@ -64,6 +98,8 @@ Please check your records and check also records on the server`,
     exportingData: "Exporting data...",
     exportToCsv: "Export to CSV",
     mergeConflictingRecords: "Merge conflicting records",
+    mergeWithSameKeysNotAllowed:
+      "Merging records with the same key(s) is not allowed for this survey, so records with conflicting keys won't be sent. If they are different records, change their key values; if they are the same record, contact the survey administrator.",
     mergeSameRecordConflictConfirm: {
       title: "Merge records edited on both devices",
       message: `{{count}} record(s) were also modified on the server since this device last synced them.
@@ -134,7 +170,7 @@ max count reached`,
   gpsLockingEnabledWarning: "Warning: GPS locking enabled!",
   listOfRecords: "Records",
   localBackup: "Local backup",
-  newRecord: "New",
+  newRecord: "New record",
   noRecordsFound: "No records found",
   options: "Options",
   recordEditor: "Record editor",

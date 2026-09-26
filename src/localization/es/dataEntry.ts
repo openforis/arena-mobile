@@ -1,6 +1,40 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Sincronización automática",
+    synced: "{{count}} registro sincronizado automáticamente",
+    synced_plural: "{{count}} registros sincronizados automáticamente",
+    statusLabel: "Estado de sincronización:",
+    statusTitle: "Estado de sincronización",
+    syncInProgressToast:
+      "La sincronización automática está en curso. Espere a que finalice antes de enviar datos manualmente.",
+    batteryDataWarning:
+      "Puede aumentar el consumo de batería y datos si no está en Wi-Fi",
+    syncNow: "Sincronizar ahora",
+    status: {
+      syncedTooltip: "Todos los registros están sincronizados con el servidor",
+      pendingTooltip:
+        "Algunos registros aún deben sincronizarse. Se enviarán automáticamente",
+      errorTooltip:
+        "Algunos registros tienen errores de sincronización y requieren su atención. Abra 'Enviar datos' para resolverlos",
+      needsManualFixTooltip:
+        "Algunos registros no se pueden sincronizar hasta que los corrija (p. ej. valores clave faltantes, mismas claves que un registro ya existente en el servidor cuando no se permite fusionar, o ya no en la fase de ingreso). Verifique su estado de sincronización en la lista de registros",
+      mergeWithSameKeysNotAllowedNote:
+        "Algunos registros tienen la(s) misma(s) clave(s) que un registro ya existente en el servidor, y no se permite fusionarlos en esta encuesta. Si son registros diferentes, cambie sus valores clave; si son el mismo registro, contacte al administrador de la encuesta.",
+      syncingTooltip: "Sincronizando registros...",
+      progressPercent: "{{progressPercent}}%",
+      uncheckedTooltip:
+        "Estado de sincronización aún no verificado. Use 'Comprobar sincronización' para verificarlo",
+      offlineTooltip:
+        "Sin conexión a internet. La sincronización automática se reanudará al recuperar la conexión",
+      authErrorTooltip:
+        "Su sesión con el servidor ha expirado. Inicie sesión de nuevo para reanudar la sincronización automática",
+      checkErrorTooltip:
+        "No se pudo comprobar el estado de sincronización debido a un error del servidor. Inténtelo de nuevo",
+      noCandidatesMessage: "Nada que enviar por ahora",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Los nodos ya no se aplicarán",
     message: `Los siguientes nodos ya no se aplicarán:  
@@ -65,7 +99,7 @@ Sus valores serán borrados.
   gpsLockingEnabledWarning: "Advertencia: ¡Bloqueo del GPS activado!",
   listOfRecords: "Registros",
   localBackup: "Copia de seguridad local",
-  newRecord: "Nuevo",
+  newRecord: "Nuevo registro",
   node: {
     cannotAddMoreItems: {
       maxCountReached:
@@ -255,6 +289,8 @@ Verifique la configuración o pida al administrador de la encuesta que cambie es
     exportingData: "Exportando datos...",
     exportToCsv: "Exportar a CSV",
     mergeConflictingRecords: "Fusionar registros conflictivos",
+    mergeWithSameKeysNotAllowed:
+      "No se permite fusionar registros con la(s) misma(s) clave(s) en esta encuesta, por lo que los registros con claves conflictivas no se enviarán. Si son registros diferentes, cambie sus valores clave; si son el mismo registro, contacte al administrador de la encuesta.",
     mergeSameRecordConflictConfirm: {
       title: "Fusionar registros editados en ambos dispositivos",
       message: `{{count}} registro(s) también se modificaron en el servidor desde la última sincronización de este dispositivo.

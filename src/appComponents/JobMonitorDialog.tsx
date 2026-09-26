@@ -26,10 +26,11 @@ export const JobMonitorDialog = () => {
     cancelButtonTextKey,
     close,
     closeButtonTextKey,
+    combinedProgressPercent,
     errors,
     messageKey,
     messageParams,
-    progressPercent,
+    silent,
     status,
     titleKey,
     showTransferStats,
@@ -41,7 +42,13 @@ export const JobMonitorDialog = () => {
     etaSeconds,
   } = useJobMonitor();
 
-  const progress = progressPercent / 100;
+  // combinedProgressPercent folds a multi-phase chain's separate jobs (e.g. exportRecords' zip
+  // preparation -> upload -> server-side processing) into one continuous bar - see
+  // JobMonitorState.progressRangeStart/End; equal to the current job's own progress otherwise
+  // -1 means unknown progress: show an indeterminate bar instead of passing a negative value
+  const progressUnknown =
+    typeof combinedProgressPercent !== "number" || combinedProgressPercent < 0;
+  const progress = progressUnknown ? 0 : combinedProgressPercent / 100;
   const progressColor = progressColorByStatus[status as JobStatus];
 
   const canCancelJob = [JobStatus.pending, JobStatus.running].includes(status);
@@ -66,7 +73,7 @@ export const JobMonitorDialog = () => {
       dismissable={false}
       showCloseButton={false}
       title={titleKey}
-      visible={!!isOpen}
+      visible={!!isOpen && !silent}
     >
       <Text
         variant="bodyMedium"
@@ -76,7 +83,11 @@ export const JobMonitorDialog = () => {
 
       <Text variant="bodyMedium" textKey={`job:status.${status}`} />
 
-      <ProgressBar progress={progress} color={progressColor} />
+      <ProgressBar
+        color={progressColor}
+        indeterminate={progressUnknown && !jobEnded}
+        progress={progress}
+      />
 
       <JobMonitorTransferStats
         status={status}

@@ -35,6 +35,7 @@ import { screenKeys } from "screens/screenKeys";
 import { Errors, log, StringUtils, SystemUtils } from "utils";
 import { i18n } from "localization";
 
+import { AutoSyncActions } from "../autoSync";
 import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { DeviceInfoActions, DeviceInfoSelectors } from "../deviceInfo";
 import { MessageActions } from "../message";
@@ -45,6 +46,7 @@ import {
   RemoteConnectionSelectors,
 } from "../remoteConnection";
 import { exportRecords, startCsvDataExportJob } from "./actionsDataExport";
+import { runAutoSync } from "./actionsAutoSync";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
 import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
 import {
@@ -245,6 +247,7 @@ const createNewRecord =
         record = prepareRecordForStorage({ record });
 
         record = await RecordService.insertRecord({ survey, record });
+        dispatch(AutoSyncActions.markPending());
 
         dispatch(editRecord({ navigation, record, locked: false }));
       } catch (error: any) {
@@ -472,6 +475,7 @@ const _updateRecord = async ({ dispatch, survey, record }: any) => {
     survey,
     record: recordUpdated,
   });
+  dispatch(AutoSyncActions.markPending());
   await dispatch({ type: RECORD_SET, record: recordStored });
   return recordStored;
 };
@@ -653,6 +657,13 @@ const updateAttribute =
 
         const cycle = Records.getCycle(record);
         const node = Records.getNodeByUuid(uuid)(record)!;
+
+        // nothing actually changed (e.g. a field was focused and left as is): don't touch the
+        // record, otherwise it would look modified and the auto-sync status would turn pending
+        if (!fileUri && Objects.isEqual(node.value ?? null, value ?? null)) {
+          return;
+        }
+
         const nodeDef = Surveys.getNodeDefByUuid({
           survey,
           uuid: node.nodeDefUuid,
@@ -957,4 +968,5 @@ export const DataEntryActions = {
   fetchRecordsFromServer,
   cloneRecordsIntoDefaultCycle,
   revalidateRecords,
+  runAutoSync,
 };

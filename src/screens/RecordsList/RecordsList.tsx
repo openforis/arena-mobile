@@ -1,7 +1,9 @@
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 
+import { AutoSyncStatusIcon } from "appComponents/AutoSyncStatus";
 import {
   Button,
+  FlexWrapView,
   HView,
   Loader,
   MenuButton,
@@ -9,10 +11,12 @@ import {
   Text,
   VView,
 } from "components";
+import { AutoSyncStatus } from "state";
 
 import { RecordsDataVisualizer } from "./RecordsDataVisualizer";
 import { RecordsListLegend } from "./RecordsListLegend";
 import { RecordsListOptions } from "./RecordsListOptions";
+import { RecordsListToolbar } from "./RecordsListToolbar";
 import { minRecordsToShowSearchBar } from "./recordsListUtils";
 import { useRecordsExport } from "./useRecordsExport";
 import { useRecordsList } from "./useRecordsList";
@@ -21,6 +25,8 @@ import styles from "./styles";
 
 export const RecordsList = () => {
   const {
+    autoSyncEnabled,
+    autoSyncStatus,
     cycle,
     defaultCycleKey,
     isDemoSurvey,
@@ -59,6 +65,15 @@ export const RecordsList = () => {
       syncStatusFetched,
     });
 
+  const [selectedRecordUuids, setSelectedRecordUuids] = useState<string[]>(
+    [],
+  );
+
+  const onSendDataButtonPress = useCallback(
+    () => onSendDataPress(selectedRecordUuids),
+    [onSendDataPress, selectedRecordUuids],
+  );
+
   const newRecordButton = useMemo(
     () =>
       defaultCycleKey === cycle ? (
@@ -75,15 +90,23 @@ export const RecordsList = () => {
 
   const recordsLength = records?.length ?? 0;
 
+  // with auto-sync on, records needing a manual merge/overwrite decision (conflicts, modified
+  // on the server too, ...) are never uploaded automatically: keep "Send data" available only
+  // for them, so they can be resolved without having to turn auto-sync off first
+  const showSendDataButton =
+    !autoSyncEnabled || autoSyncStatus === AutoSyncStatus.error;
+
   return (
     <VView style={styles.container}>
       <VView style={styles.innerContainer}>
         <RecordsListOptions
           onImportRecordsFromFilePress={onImportRecordsFromFilePress}
+          onRevalidateAllRecordsPress={onRevalidateAllRecordsPress}
+        />
+        <RecordsListToolbar
           onlyLocal={onlyLocal}
           onOnlyLocalChange={onOnlyLocalChange}
           onRemoteSyncPress={onRemoteSyncPress}
-          onRevalidateAllRecordsPress={onRevalidateAllRecordsPress}
           syncStatusLoading={syncStatusLoading}
         />
         {loading ? (
@@ -111,6 +134,7 @@ export const RecordsList = () => {
                 onRevalidateSelectedRecordUuids={
                   onRevalidateSelectedRecordUuids
                 }
+                onSelectedRecordUuidsChange={setSelectedRecordUuids}
                 records={recordsFiltered}
                 showRemoteProps={!onlyLocal}
                 syncStatusFetched={syncStatusFetched}
@@ -122,14 +146,27 @@ export const RecordsList = () => {
       </VView>
       {syncStatusFetched && <RecordsListLegend />}
       {recordsLength > 0 && (
-        <HView style={styles.bottomActionBar}>
+        // wraps onto multiple lines on a narrow screen instead of squeezing/overlapping;
+        // stays a single row once there's enough width - same pattern as RecordsListToolbar
+        // above
+        <FlexWrapView style={styles.bottomActionBar}>
           {newRecordButton}
           {!isDemoSurvey && (
-            <Button
-              icon="cloud-refresh"
-              onPress={onSendDataPress}
-              textKey="dataEntry:sendData"
-            />
+            <>
+              {showSendDataButton && (
+                <Button
+                  icon="cloud-refresh"
+                  onPress={onSendDataButtonPress}
+                  textKey="dataEntry:sendData"
+                />
+              )}
+              {autoSyncEnabled && (
+                <HView style={styles.autoSyncStatusItem}>
+                  <Text textKey="dataEntry:autoSync.statusLabel" />
+                  <AutoSyncStatusIcon />
+                </HView>
+              )}
+            </>
           )}
           <MenuButton
             anchorPosition="top"
@@ -137,7 +174,7 @@ export const RecordsList = () => {
             items={downloadMenuItems}
             menuStyle={styles.exportDataButtonMenu}
           />
-        </HView>
+        </FlexWrapView>
       )}
     </VView>
   );

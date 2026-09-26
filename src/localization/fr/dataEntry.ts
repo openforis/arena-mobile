@@ -1,6 +1,40 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Synchronisation automatique",
+    synced: "{{count}} enregistrement synchronisé automatiquement",
+    synced_plural: "{{count}} enregistrements synchronisés automatiquement",
+    statusLabel: "État de synchronisation :",
+    statusTitle: "État de synchronisation",
+    syncInProgressToast:
+      "La synchronisation automatique est en cours. Veuillez attendre qu'elle se termine avant d'envoyer des données manuellement.",
+    batteryDataWarning:
+      "Peut augmenter la consommation de batterie et de données hors Wi-Fi",
+    syncNow: "Synchroniser maintenant",
+    status: {
+      syncedTooltip: "Tous les enregistrements sont synchronisés avec le serveur",
+      pendingTooltip:
+        "Certains enregistrements doivent encore être synchronisés. Ils seront envoyés automatiquement",
+      errorTooltip:
+        "Certains enregistrements présentent des erreurs de synchronisation et nécessitent votre attention. Ouvrez « Envoyer données » pour les résoudre",
+      needsManualFixTooltip:
+        "Certains enregistrements ne peuvent pas être synchronisés tant que vous ne les avez pas corrigés (p. ex. valeurs clés manquantes, mêmes clés qu'un enregistrement déjà présent sur le serveur lorsque la fusion n'est pas autorisée, ou plus à l'étape de saisie). Vérifiez leur statut de synchronisation dans la liste des enregistrements",
+      mergeWithSameKeysNotAllowedNote:
+        "Certains enregistrements ont la ou les mêmes clés qu'un enregistrement déjà présent sur le serveur, et leur fusion n'est pas autorisée pour cette enquête. S'il s'agit d'enregistrements différents, modifiez leurs valeurs clés ; s'il s'agit du même enregistrement, contactez l'administrateur de l'enquête.",
+      syncingTooltip: "Synchronisation des enregistrements...",
+      progressPercent: "{{progressPercent}} %",
+      uncheckedTooltip:
+        "État de synchronisation non encore vérifié. Utilisez « Vérifier synchronisation » pour le vérifier",
+      offlineTooltip:
+        "Aucune connexion internet. La synchronisation automatique reprendra une fois la connexion rétablie",
+      authErrorTooltip:
+        "Votre session avec le serveur a expiré. Reconnectez-vous pour reprendre la synchronisation automatique",
+      checkErrorTooltip:
+        "Impossible de vérifier l'état de synchronisation en raison d'une erreur serveur. Réessayez",
+      noCandidatesMessage: "Rien à envoyer pour le moment",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Les nœuds ne s'appliqueront plus",
     message: `Les nœuds suivants ne s'appliqueront plus :  
@@ -70,7 +104,7 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
   gpsLockingEnabledWarning: "Avertissement: Verrouillage GPS activé!",
   listOfRecords: "Enregistrements",
   localBackup: "Sauvegarde locale",
-  newRecord: "Nouvel",
+  newRecord: "Nouvel enregistrement",
   node: {
     cannotAddMoreItems: {
       maxCountReached:
@@ -265,6 +299,8 @@ Vérifiez les paramètres ou demandez à l'administrateur de l'enquête de modif
     exportingData: "Exportation des données...",
     exportToCsv: "Exporter en CSV",
     mergeConflictingRecords: "Fusionner les enregistrements conflictuels",
+    mergeWithSameKeysNotAllowed:
+      "La fusion d'enregistrements ayant la ou les mêmes clés n'est pas autorisée pour cette enquête : les enregistrements aux clés conflictuelles ne seront donc pas envoyés. S'il s'agit d'enregistrements différents, modifiez leurs valeurs clés ; s'il s'agit du même enregistrement, contactez l'administrateur de l'enquête.",
     mergeSameRecordConflictConfirm: {
       title: "Fusionner les enregistrements modifiés sur les deux appareils",
       message: `{{count}} enregistrement(s) ont également été modifiés sur le serveur depuis la dernière synchronisation de cet appareil.

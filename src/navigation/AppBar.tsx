@@ -3,6 +3,7 @@ import { Appbar as RNPAppbar } from "react-native-paper";
 
 import { Surveys } from "@openforis/arena-core";
 
+import { AutoSyncStatusAppBarAction } from "appComponents/AutoSyncStatus";
 import { HView, Spacer, Text } from "components";
 import { useScreenKey } from "hooks";
 import { RecordEditViewMode, ScreenViewMode } from "model";
@@ -137,7 +138,14 @@ export const AppBar = (props: Props) => {
   return (
     <>
       <RNPAppbar.Header elevated mode={isInTwoRows ? "medium" : "small"}>
-        <HView style={styles.topBarContainer} fullWidth transparent>
+        <HView
+          style={[
+            styles.topBarContainer,
+            !isTablet && styles.topBarContainerCompact,
+          ]}
+          fullWidth
+          transparent
+        >
           {editingRecord && (
             <RNPAppbar.Action
               icon="menu"
@@ -202,6 +210,7 @@ export const AppBar = (props: Props) => {
                 }
                 onPress={toggleRecordEditViewMode}
               />
+              <AutoSyncStatusAppBarAction />
             </>
           )}
 

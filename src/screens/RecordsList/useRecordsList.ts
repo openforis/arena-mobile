@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import * as DocumentPicker from "expo-document-picker";
 
@@ -12,16 +12,23 @@ import {
   RecordSyncStatus,
   RecordLoadStatus,
 } from "model";
-import { RecordService, SurveyService } from "service";
+import { RecordService } from "service";
 import {
+  AutoSyncActions,
+  AutoSyncSelectors,
+  AutoSyncStatus,
   DataEntryActions,
-  MessageActions,
+  RemoteConnectionSelectors,
+  SettingsSelectors,
   SurveySelectors,
   useAppDispatch,
   useConfirm,
+  wasRecentlyCheckedWithNoNewLocalChanges,
 } from "state";
+import { isAuthError } from "state/autoSync";
+import { useJobMonitor } from "state/jobMonitor/useJobMonitor";
 import { RemoteConnectionUtils } from "state/remoteConnection/remoteConnectionUtils";
-import { Files } from "utils";
+import { Files, log } from "utils";
 
 import { dataImportOptions, importFileExtension } from "./recordsListUtils";
 
@@ -55,7 +62,16 @@ export const useRecordsList = () => {
   const confirm = useConfirm();
 
   const defaultCycleKey = survey ? Surveys.getDefaultCycleKey(survey) : null;
-  const isDemoSurvey = survey?.uuid === SurveyService.demoSurveyUuid;
+  const isDemoSurvey = SurveySelectors.useIsCurrentSurveyDemo();
+
+  const { autoSyncEnabled } = SettingsSelectors.useSettings();
+  const loggedInUser = RemoteConnectionSelectors.useLoggedInUser();
+  // the only job that runs silently in this app is the background auto-sync upload (see
+  // actionsAutoSync.ts); used here just to know when to refresh this screen's own per-record
+  // list after a tick uploads something - the shared aggregate status lives in the autoSync
+  // redux slice instead (AutoSyncSelectors), so other screens don't need this at all
+  const { isOpen: jobIsOpen, silent: jobIsSilent } = useJobMonitor();
+  const autoSyncUploadRunning = jobIsOpen && jobIsSilent;
 
   const [state, setState] = useState<RecordsListState>(initialState);
   const {
@@ -66,6 +82,10 @@ export const useRecordsList = () => {
     syncStatusLoading,
     syncStatusFetched,
   } = state;
+  // mirrors state.records without needing to be a useCallback dependency itself - see
+  // loadRecordsWithSyncStatus below for why that matters
+  const recordsRef = useRef(records);
+  recordsRef.current = records;
 
   const setLoading = useCallback(
     (loadingUpdated: boolean) =>
@@ -105,18 +125,24 @@ export const useRecordsList = () => {
     loadRecords();
   }, [cycle, loadRecords, onlyLocal]);
 
-  // refresh records list on navigation focus (e.g. going back to records list screen)
-  useNavigationFocus(loadRecords);
-
   const loadRecordsWithSyncStatus =
     useCallback(async (): Promise<RecordsListState> => {
+      log.debug(
+        `loadRecordsWithSyncStatus: starting (survey=${survey?.uuid}, cycle=${cycle}, onlyLocal=${onlyLocal})`,
+      );
       setState((statePrev) => ({
         ...statePrev,
         syncStatusLoading: true,
         syncStatusFetched: false,
       }));
-      const stateNext = {
-        records,
+      dispatch(AutoSyncActions.checkStart());
+      // only set on success below; left out entirely on failure/abort, so the setState merge
+      // further down falls back to whatever the current state's `records` already is, instead
+      // of this callback needing its own `records` closure (which - being replaced with a new
+      // array reference on every successful check - would otherwise make this callback's
+      // identity, and so checkAutoSyncStatusIfNeeded's below, change on every successful check,
+      // re-triggering the effects that call it and looping forever)
+      const stateNext: Partial<RecordsListState> = {
         loading: false,
         syncStatusLoading: false,
       };
@@ -127,23 +153,119 @@ export const useRecordsList = () => {
             cycle,
             onlyLocal,
           });
+          log.debug(
+            `loadRecordsWithSyncStatus: fetched ${_records.length} record summary(ies)`,
+          );
+          dispatch(AutoSyncActions.checkEnd({ records: _records, survey }));
           Object.assign(stateNext, {
-            loading: false,
             records: _records,
             syncStatusFetched: true,
           });
+        } else {
+          log.debug("loadRecordsWithSyncStatus: user not logged in, aborting");
+          dispatch(AutoSyncActions.checkAborted());
         }
       } catch (error) {
+        // shown through the sync status icon (see AutoSyncActions.checkError) instead of a
+        // blocking popup: a popup would otherwise reappear every time an automatic re-check is
+        // triggered (screen focus, cycle change, ...) for as long as the underlying problem
+        // (e.g. a server error) persists
+        log.warn(`loadRecordsWithSyncStatus: error fetching records sync status: ${error}`);
+        // same distinction as the background tick (see handleAutoSyncTickError): an expired
+        // session gets its own "log in again" status instead of a generic server error
         dispatch(
-          MessageActions.setMessage({
-            content: "dataEntry:errorFetchingRecordsSyncStatus",
-            contentParams: { details: String(error) },
-          }),
+          isAuthError(error) ? AutoSyncActions.authError() : AutoSyncActions.checkError(),
         );
       }
       setState((statePrev) => ({ ...statePrev, ...stateNext }));
-      return stateNext as RecordsListState;
-    }, [dispatch, navigation, survey, cycle, records, onlyLocal]);
+      return {
+        ...stateNext,
+        records: stateNext.records ?? recordsRef.current,
+      } as RecordsListState;
+    }, [dispatch, navigation, survey, cycle, onlyLocal]);
+
+  const {
+    status: autoSyncStatus,
+    lastCheckedAt: autoSyncLastCheckedAt,
+    lastLocalChangeAt: autoSyncLastLocalChangeAt,
+  } = AutoSyncSelectors.useAutoSyncState();
+
+  // read via a ref (not a checkAutoSyncStatusIfNeeded dependency) so that callback's identity
+  // stays stable across checks - lastCheckedAt changes every time loadRecordsWithSyncStatus
+  // below completes one, so depending on it directly would recreate the callback, which would
+  // re-trigger the effect that calls it (see below), which would complete another check,
+  // forever: an infinite loop of "checking" that never settles
+  const autoSyncThrottleStateRef = useRef({
+    lastCheckedAt: autoSyncLastCheckedAt,
+    lastLocalChangeAt: autoSyncLastLocalChangeAt,
+  });
+  autoSyncThrottleStateRef.current = {
+    lastCheckedAt: autoSyncLastCheckedAt,
+    lastLocalChangeAt: autoSyncLastLocalChangeAt,
+  };
+
+  // when auto sync is on, keep the sync status visible in the list without requiring the
+  // user to press "check status" manually; skip it if auto-sync itself couldn't run anyway
+  // (no network/no logged in user), to avoid popping the "connect to remote server" dialog.
+  // Also skip it once a check has failed (AutoSyncActions.checkError/authError): from here on,
+  // only an explicit "check status"/"send data" action (calling loadRecordsWithSyncStatus
+  // directly, bypassing this) retries - see the sync status icon.
+  const canCheckAutoSyncStatus =
+    autoSyncEnabled &&
+    networkAvailable &&
+    !!loggedInUser &&
+    !isDemoSurvey &&
+    autoSyncStatus !== AutoSyncStatus.checkError &&
+    autoSyncStatus !== AutoSyncStatus.authError;
+
+  const checkAutoSyncStatusIfNeeded = useCallback(async () => {
+    if (!canCheckAutoSyncStatus) return;
+
+    // also attempt the actual sync (not just a status refresh) whenever the records list comes
+    // into focus, instead of leaving pending records waiting for the next periodic background
+    // tick (up to AUTO_SYNC_INTERVAL_MS away) - unless a check already ran very recently and
+    // nothing local has changed since, e.g. the user quickly bouncing in and out of this screen.
+    // Evaluated before the status refresh below, which itself updates lastCheckedAt
+    const shouldRunAutoSync = !wasRecentlyCheckedWithNoNewLocalChanges(
+      autoSyncThrottleStateRef.current,
+    );
+
+    const { records: fetchedRecords, syncStatusFetched: fetched } =
+      await loadRecordsWithSyncStatus();
+
+    // the tick reuses the summaries just fetched, instead of fetching them again concurrently
+    if (shouldRunAutoSync && fetched) {
+      dispatch(DataEntryActions.runAutoSync({ prefetchedRecords: fetchedRecords }));
+    }
+  }, [canCheckAutoSyncStatus, loadRecordsWithSyncStatus, dispatch]);
+
+  useEffect(() => {
+    checkAutoSyncStatusIfNeeded();
+  }, [checkAutoSyncStatusIfNeeded, cycle, onlyLocal]);
+
+  // refresh the sync status right after a background auto-sync tick finishes, while this
+  // screen is mounted (it stays mounted, just unfocused, while the user is on another screen,
+  // e.g. editing a record - see the focus handler below for the case where a tick finished
+  // while the screen was unfocused instead)
+  const autoSyncUploadRunningPrevRef = useRef(false);
+  useEffect(() => {
+    if (autoSyncUploadRunningPrevRef.current && !autoSyncUploadRunning) {
+      checkAutoSyncStatusIfNeeded();
+    }
+    autoSyncUploadRunningPrevRef.current = autoSyncUploadRunning;
+  }, [autoSyncUploadRunning, checkAutoSyncStatusIfNeeded]);
+
+  // refresh records list (and, if eligible, sync status) whenever this screen regains focus,
+  // e.g. coming back from editing a record: `loadRecords` alone would otherwise reset
+  // syncStatusFetched to false and leave the auto-sync status icon showing a stale/unchecked
+  // state until the next background tick happens to start and end while focused again.
+  // Sequenced (not two independent focus listeners) so the network-based sync status refresh
+  // always applies after, and is not overwritten by, the local-only reload.
+  const onFocus = useCallback(async () => {
+    await loadRecords();
+    checkAutoSyncStatusIfNeeded();
+  }, [loadRecords, checkAutoSyncStatusIfNeeded]);
+  useNavigationFocus(onFocus);
 
   const onOnlyLocalChange = useCallback(
     (onlyLocalUpdated: boolean) =>
@@ -352,6 +474,8 @@ export const useRecordsList = () => {
   }, [searchValue, records, survey, lang, t]);
 
   return {
+    autoSyncEnabled,
+    autoSyncStatus,
     cycle,
     defaultCycleKey,
     isDemoSurvey,

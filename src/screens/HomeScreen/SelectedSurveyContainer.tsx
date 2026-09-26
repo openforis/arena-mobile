@@ -17,7 +17,6 @@ import {
 import { useIsNetworkConnected } from "hooks";
 import { useTranslation } from "localization";
 import { SurveyStatus, UpdateStatus } from "model";
-import { SurveyService } from "service";
 import { RemoteConnectionSelectors, SurveySelectors } from "state";
 import { log } from "utils/Logger";
 
@@ -69,7 +68,7 @@ export const SelectedSurveyContainer = () => {
     : surveyName;
   const surveyDescription = Surveys.getDescription(lang)(survey);
   const fieldManualUrl = Surveys.getFieldManualLink(lang)(survey);
-  const isDemoSurvey = survey?.uuid === SurveyService.demoSurveyUuid;
+  const isDemoSurvey = SurveySelectors.useIsCurrentSurveyDemo();
 
   const hasQualifierDefs = Surveys.getQualifierDefs({ survey }).length > 0;
   const userGroup = SurveySelectors.useCurrentSurveyUserGroup();
