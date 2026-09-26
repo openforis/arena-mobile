@@ -15,7 +15,6 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
       survey,
       unzippedFolderUri,
       overwriteExistingRecords,
-      mergeKeepLocalOriginRecordUuids = [],
     } = this.context;
 
     const fileRecordsSummaryJsonUri = Files.path(
@@ -44,46 +43,66 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
 
     for (const recordUuidAndCycle of fileRecordsSummary) {
       const { uuid: recordUuid } = recordUuidAndCycle;
-      const contentPath = Files.path(
-        unzippedFolderUri,
-        RecordsExportFile.getRecordContentJsonPath(recordUuid)
-      );
-      const recordObj = await Files.readJsonFromFile({ fileUri: contentPath });
-      if (!recordObj)
-        throw new Error(`missing file in archive for record ${recordUuid}`);
-      const record = recordObj as ArenaRecord;
-      if (record.surveyUuid && record.surveyUuid !== survey.uuid)
-        throw new Error(
-          `this record cannot be imported in the current survey; it has been created with another one;`
-        );
-
+      const record = await this.readRecord(recordUuid);
       const existingRecordSummary = recordsSummaryByUuid[recordUuid];
       if (!existingRecordSummary) {
-        await RecordService.insertRecord({ survey, record });
-        if (mergeKeepLocalOriginRecordUuids.includes(recordUuid)) {
-          // stamp the sync baseline, so the next status check doesn't see it as modified locally
-          await RecordService.updateRecordsDateModifiedRemote({
-            surveyId: survey.id,
-            dateModifiedRemoteByUuid: { [recordUuid]: record.dateModified },
-          });
-        }
-        this.insertedRecords++;
+        await this.insertRecord(record);
       } else if (overwriteExistingRecords) {
-        if (mergeKeepLocalOriginRecordUuids.includes(recordUuid)) {
-          await RecordService.updateRecordWithContentMergedFromRemote({
-            survey,
-            record,
-          });
-        } else {
-          await RecordService.updateRecordWithContentFetchedRemotely({
-            survey,
-            record,
-          });
-        }
-        this.updatedRecords++;
+        await this.updateRecord(record);
       }
       this.incrementProcessedItems();
     }
+  }
+
+  private async readRecord(recordUuid: string): Promise<ArenaRecord> {
+    const { survey, unzippedFolderUri } = this.context;
+    const contentPath = Files.path(
+      unzippedFolderUri,
+      RecordsExportFile.getRecordContentJsonPath(recordUuid)
+    );
+    const recordObj = await Files.readJsonFromFile({ fileUri: contentPath });
+    if (!recordObj)
+      throw new Error(`missing file in archive for record ${recordUuid}`);
+    const record = recordObj as ArenaRecord;
+    if (record.surveyUuid && record.surveyUuid !== survey.uuid)
+      throw new Error(
+        `this record cannot be imported in the current survey; it has been created with another one;`
+      );
+    return record;
+  }
+
+  private shouldKeepLocalOrigin(recordUuid: string): boolean {
+    const { mergeKeepLocalOriginRecordUuids = [] } = this.context;
+    return mergeKeepLocalOriginRecordUuids.includes(recordUuid);
+  }
+
+  private async insertRecord(record: ArenaRecord) {
+    const { survey } = this.context;
+    await RecordService.insertRecord({ survey, record });
+    if (this.shouldKeepLocalOrigin(record.uuid)) {
+      // stamp the sync baseline, so the next status check doesn't see it as modified locally
+      await RecordService.updateRecordsDateModifiedRemote({
+        surveyId: survey.id,
+        dateModifiedRemoteByUuid: { [record.uuid]: record.dateModified },
+      });
+    }
+    this.insertedRecords++;
+  }
+
+  private async updateRecord(record: ArenaRecord) {
+    const { survey } = this.context;
+    if (this.shouldKeepLocalOrigin(record.uuid)) {
+      await RecordService.updateRecordWithContentMergedFromRemote({
+        survey,
+        record,
+      });
+    } else {
+      await RecordService.updateRecordWithContentFetchedRemotely({
+        survey,
+        record,
+      });
+    }
+    this.updatedRecords++;
   }
 
   override async generateResult() {
