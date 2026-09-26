@@ -148,18 +148,22 @@ export const RecordsList = () => {
         // own button row above
         <FlexWrapView style={styles.bottomActionBar}>
           {newRecordButton}
-          {!isDemoSurvey && showSendDataButton && (
-            <Button
-              icon="cloud-refresh"
-              onPress={onSendDataButtonPress}
-              textKey="dataEntry:sendData"
-            />
-          )}
-          {autoSyncEnabled && (
-            <HView style={styles.autoSyncStatusItem}>
-              <Text textKey="dataEntry:autoSync.statusLabel" />
-              <AutoSyncStatusIcon />
-            </HView>
+          {!isDemoSurvey && (
+            <>
+              {showSendDataButton && (
+                <Button
+                  icon="cloud-refresh"
+                  onPress={onSendDataButtonPress}
+                  textKey="dataEntry:sendData"
+                />
+              )}
+              {autoSyncEnabled && (
+                <HView style={styles.autoSyncStatusItem}>
+                  <Text textKey="dataEntry:autoSync.statusLabel" />
+                  <AutoSyncStatusIcon />
+                </HView>
+              )}
+            </>
           )}
           <MenuButton
             anchorPosition="top"

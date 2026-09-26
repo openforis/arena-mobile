@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 
 import { useIsNetworkConnected } from "hooks";
-import { SurveyService } from "service";
 import { RemoteConnectionSelectors } from "state/remoteConnection";
 import { SettingsSelectors } from "state/settings";
 import { SurveySelectors } from "state/survey";
@@ -23,7 +22,7 @@ export const useAutoSyncMonitor = () => {
   const user = RemoteConnectionSelectors.useLoggedInUser();
   const { autoSyncEnabled } = SettingsSelectors.useSettings();
 
-  const isDemoSurvey = survey?.uuid === SurveyService.demoSurveyUuid;
+  const isDemoSurvey = SurveySelectors.useIsCurrentSurveyDemo();
 
   const canAutoSync =
     autoSyncEnabled && networkAvailable && !!survey && !!user && !isDemoSurvey;

@@ -1,5 +1,7 @@
 import { Appbar as RNPAppbar } from "react-native-paper";
 
+import { SurveySelectors } from "state";
+
 import { AutoSyncStatusDialog } from "./AutoSyncStatusDialog";
 import { useAutoSyncStatus } from "./useAutoSyncStatus";
 
@@ -10,6 +12,10 @@ import { useAutoSyncStatus } from "./useAutoSyncStatus";
 export const AutoSyncStatusAppBarAction = () => {
   const { closeDialog, color, dialogVisible, icon, openDialog, syncing } =
     useAutoSyncStatus();
+  const isDemoSurvey = SurveySelectors.useIsCurrentSurveyDemo();
+
+  // auto-sync never runs for the demo survey (see useAutoSyncMonitor)
+  if (isDemoSurvey) return null;
 
   return (
     <>

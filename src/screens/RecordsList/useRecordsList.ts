@@ -12,7 +12,7 @@ import {
   RecordSyncStatus,
   RecordLoadStatus,
 } from "model";
-import { RecordService, SurveyService } from "service";
+import { RecordService } from "service";
 import {
   AutoSyncActions,
   AutoSyncSelectors,
@@ -62,7 +62,7 @@ export const useRecordsList = () => {
   const confirm = useConfirm();
 
   const defaultCycleKey = survey ? Surveys.getDefaultCycleKey(survey) : null;
-  const isDemoSurvey = survey?.uuid === SurveyService.demoSurveyUuid;
+  const isDemoSurvey = SurveySelectors.useIsCurrentSurveyDemo();
 
   const { autoSyncEnabled } = SettingsSelectors.useSettings();
   const loggedInUser = RemoteConnectionSelectors.useLoggedInUser();

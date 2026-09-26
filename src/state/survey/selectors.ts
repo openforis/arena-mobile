@@ -11,6 +11,7 @@ import {
 } from "@openforis/arena-core";
 
 import { SurveyDefs } from "model";
+import { SurveyService } from "service";
 
 import { determinePreferredSurveyLanguage } from "./surveyStateUtils";
 
@@ -20,6 +21,9 @@ const selectCurrentSurvey = (
   state: any,
 ): (Survey & { remoteId?: number }) | undefined =>
   getSurveyState(state).currentSurvey;
+
+const selectIsCurrentSurveyDemo = (state: any): boolean =>
+  selectCurrentSurvey(state)?.uuid === SurveyService.demoSurveyUuid;
 
 const selectCurrentSurveyIdUnsafe = (state: any): number | undefined =>
   selectCurrentSurvey(state)?.id;
@@ -78,8 +82,10 @@ export const SurveySelectors = {
   selectCurrentSurveyPreferredLang,
   selectCurrentSurveyUserGroup,
   selectCurrentSurveyUserGroupReady,
+  selectIsCurrentSurveyDemo,
 
   useCurrentSurvey: () => useSelector(selectCurrentSurvey),
+  useIsCurrentSurveyDemo: () => useSelector(selectIsCurrentSurveyDemo),
   useCurrentSurveyId: () => useSelector(selectCurrentSurveyId),
   useCurrentSurveySrsIndex: () =>
     useSelector(selectCurrentSurveySrsIndex, Objects.isEqual),

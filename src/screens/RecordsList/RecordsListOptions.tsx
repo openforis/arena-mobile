@@ -57,6 +57,8 @@ export const RecordsListOptions = (props: RecordsListOptionsProps) => {
   const networkAvailable = useIsNetworkConnected();
   const survey = SurveySelectors.useCurrentSurvey()!;
   const { autoSyncEnabled } = SettingsSelectors.useSettings();
+  // records of the demo survey can't be sent to any server (see useAutoSyncMonitor)
+  const isDemoSurvey = SurveySelectors.useIsCurrentSurveyDemo();
 
   const defaultCycleKey = Surveys.getDefaultCycleKey(survey);
   const defaultCycleText = Cycles.labelFunction(defaultCycleKey);
@@ -125,12 +127,14 @@ export const RecordsListOptions = (props: RecordsListOptionsProps) => {
           onPress={onRevalidateAllRecordsPress}
           textKey="recordsList:revalidateRecords.allRecordsTitle"
         />
-        <Checkbox
-          checked={autoSyncEnabled}
-          label="dataEntry:autoSync.checkbox"
-          labelStyle={styles.autoSyncCheckboxLabel}
-          onPress={onAutoSyncEnabledChange}
-        />
+        {!isDemoSurvey && (
+          <Checkbox
+            checked={autoSyncEnabled}
+            label="dataEntry:autoSync.checkbox"
+            labelStyle={styles.autoSyncCheckboxLabel}
+            onPress={onAutoSyncEnabledChange}
+          />
+        )}
       </FlexWrapView>
     </CollapsiblePanel>
   );
