@@ -60,6 +60,13 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
       const existingRecordSummary = recordsSummaryByUuid[recordUuid];
       if (!existingRecordSummary) {
         await RecordService.insertRecord({ survey, record });
+        if (mergeKeepLocalOriginRecordUuids.includes(recordUuid)) {
+          // stamp the sync baseline, so the next status check doesn't see it as modified locally
+          await RecordService.updateRecordsDateModifiedRemote({
+            surveyId: survey.id,
+            dateModifiedRemoteByUuid: { [recordUuid]: record.dateModified },
+          });
+        }
         this.insertedRecords++;
       } else if (overwriteExistingRecords) {
         if (mergeKeepLocalOriginRecordUuids.includes(recordUuid)) {

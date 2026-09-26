@@ -504,6 +504,7 @@ export const RecordService = {
   updateRecordWithContentFetchedRemotely,
   updateRecordWithContentMergedFromRemote,
   updateRecordsDateSync,
+  updateRecordsDateModifiedRemote,
   confirmRecordsSyncedWithRemote,
   updateRecordsMergedInto,
   deleteRecords,

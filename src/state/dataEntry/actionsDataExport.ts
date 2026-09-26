@@ -594,7 +594,9 @@ export const exportRecords =
           // server (same key(s), different uuid). The local rows are now excluded from the
           // records list (merged_into_record_uuid is set), so without fetching the record they
           // were merged into, the user's data would just seem to disappear: fetch it so it shows
-          // up in its place, then let the user know what happened.
+          // up in its place, then let the user know what happened. It carries this device's
+          // contribution, so keep it tagged as "local" (visible under "records in device")
+          // instead of "remote", otherwise it would only be visible under "all records".
           const mergedIntoRecordUuids = [
             ...new Set(Object.values(mergedRecordsMap) as string[]),
           ];
@@ -604,6 +606,7 @@ export const exportRecords =
             lang,
             cycle,
             recordUuids: mergedIntoRecordUuids,
+            mergeKeepLocalOriginRecordUuids: mergedIntoRecordUuids,
           });
         }
         if (mergedSameRecordUuids?.length > 0) {
