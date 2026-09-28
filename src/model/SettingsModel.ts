@@ -30,6 +30,10 @@ type SettingsProperty = {
 
 export enum SettingKey {
   animationsEnabled = "animationsEnabled",
+  autoSyncEnabled = "autoSyncEnabled",
+  autoSyncOpenRecordIntervalMinutes = "autoSyncOpenRecordIntervalMinutes",
+  autoSyncSlowCheckIntervalMinutes = "autoSyncSlowCheckIntervalMinutes",
+  dataUploadChunkSizeKB = "dataUploadChunkSizeKB",
   fontScale = "fontScale",
   fullScreen = "fullScreen",
   imageSizeUnlimited = "imageSizeUnlimited",
@@ -74,6 +78,39 @@ const properties: SettingsProperties = {
   animationsEnabled: {
     type: PropertyType.boolean,
     group: SettingGroup.appearance,
+  },
+  autoSyncEnabled: {
+    type: PropertyType.boolean,
+    group: SettingGroup.dataEntry,
+  },
+  autoSyncOpenRecordIntervalMinutes: {
+    type: PropertyType.slider,
+    group: SettingGroup.dataEntry,
+    minValue: 1,
+    maxValue: 15,
+    step: 1,
+    isDisabled: ({ settings }: any) => !settings.autoSyncEnabled,
+  },
+  autoSyncSlowCheckIntervalMinutes: {
+    type: PropertyType.slider,
+    group: SettingGroup.dataEntry,
+    minValue: 2,
+    maxValue: 60,
+    step: 1,
+    isDisabled: ({ settings }: any) => !settings.autoSyncEnabled,
+  },
+  dataUploadChunkSizeKB: {
+    type: PropertyType.dropdown,
+    group: SettingGroup.dataEntry,
+    options: [
+      { key: 500, label: "500 KB", labelIsI18nKey: false },
+      { key: 1024, label: "1 MB", labelIsI18nKey: false },
+      { key: 2048, label: "2 MB", labelIsI18nKey: false },
+      { key: 5120, label: "5 MB", labelIsI18nKey: false },
+      { key: 10240, label: "10 MB", labelIsI18nKey: false },
+      { key: 20480, label: "20 MB", labelIsI18nKey: false },
+      { key: 51200, label: "50 MB", labelIsI18nKey: false },
+    ],
   },
   fullScreen: {
     type: PropertyType.boolean,
@@ -128,6 +165,16 @@ const properties: SettingsProperties = {
 
 export type SettingsObject = {
   animationsEnabled: boolean;
+  autoSyncEnabled: boolean;
+  // how long (in minutes) the record currently open in the editor must stay idle before
+  // auto-sync uploads it - see AUTO_SYNC_OPEN_RECORD_IDLE_THRESHOLD_MS in actionsAutoSync.ts
+  autoSyncOpenRecordIntervalMinutes: number;
+  // once everything is already synced, how long (in minutes) auto-sync waits before checking
+  // the server again - see AUTO_SYNC_SLOW_CHECK_INTERVAL_MS in actionsAutoSync.ts
+  autoSyncSlowCheckIntervalMinutes: number;
+  // size, in KB, of each piece a record zip is split into while uploading - see
+  // recordRemoteService.ts
+  dataUploadChunkSizeKB: number;
   email?: string;
   fontScale: number;
   fullScreen: boolean;

@@ -1,6 +1,39 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "自動同期",
+    synced: "{{count}}件のレコードを自動同期しました",
+    synced_plural: "{{count}}件のレコードを自動同期しました",
+    statusLabel: "同期状態:",
+    statusTitle: "同期状態",
+    syncInProgressToast:
+      "自動同期を実行中です。手動でデータを送信する前に完了をお待ちください。",
+    batteryDataWarning:
+      "Wi-Fi以外の接続ではバッテリーとデータ使用量が増える場合があります",
+    syncNow: "今すぐ同期",
+    status: {
+      syncedTooltip: "すべてのレコードがサーバーと同期しています",
+      pendingTooltip: "同期が必要なレコードがあります。自動的に送信されます",
+      errorTooltip:
+        "同期エラーのあるレコードがあり、対応が必要です。「データを送信」を開いて解決してください",
+      needsManualFixTooltip:
+        "修正するまで同期できないレコードがあります(例:キー値の未入力、統合が許可されていない場合にサーバー上の既存レコードと同じキー、または入力ステップではなくなった)。レコード一覧で同期状態を確認してください",
+      mergeWithSameKeysNotAllowedNote:
+        "一部の記録はサーバー上の既存の記録と同じキーを持っており、この調査ではそれらの統合は許可されていません。別の記録である場合はキー値を変更してください。同じ記録である場合は調査の管理者に連絡してください。",
+      syncingTooltip: "レコードを同期しています...",
+      progressPercent: "{{progressPercent}}%",
+      uncheckedTooltip:
+        "同期状態はまだ確認されていません。「状態を確認」で確認してください",
+      offlineTooltip:
+        "インターネット接続がありません。オンラインに戻ると自動同期が再開します",
+      authErrorTooltip:
+        "サーバーとのセッションの有効期限が切れました。自動同期を再開するには再度ログインしてください",
+      checkErrorTooltip:
+        "サーバーエラーのため同期状態を確認できませんでした。再試行してください",
+      noCandidatesMessage: "現在送信するものはありません",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "ノードは適用されなくなります",
     message: `以下のノードは適用されなくなります：  
@@ -64,6 +97,8 @@ export default {
     exportingData: "データをエクスポート中...",
     exportToCsv: "CSVにエクスポート",
     mergeConflictingRecords: "競合する記録を統合",
+    mergeWithSameKeysNotAllowed:
+      "この調査では同じキーを持つ記録の統合は許可されていないため、キーが競合する記録は送信されません。別の記録である場合はキー値を変更してください。同じ記録である場合は調査の管理者に連絡してください。",
     mergeSameRecordConflictConfirm: {
       title: "両方のデバイスで編集された記録を統合",
       message: `{{count}}件の記録は、このデバイスが最後に同期した後、サーバー上でも変更されています。
@@ -132,7 +167,7 @@ export default {
   gpsLockingEnabledWarning: "警告：GPSロックが有効です！",
   listOfRecords: "記録",
   localBackup: "ローカルバックアップ",
-  newRecord: "新規",
+  newRecord: "新規レコード",
   noRecordsFound: "記録が見つかりません",
   options: "オプション",
   recordEditor: "記録エディタ",

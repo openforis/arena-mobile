@@ -21,12 +21,17 @@ export default StyleSheet.create({
   bottomActionBar: {
     borderTopWidth: 1,
     padding: 4,
-    alignItems: "center",
     justifyContent: "space-between",
+    rowGap: 8,
   },
   newRecordButton: {
     alignSelf: "center",
   },
+  toolbar: {
+    rowGap: 8,
+  },
+  autoSyncCheckbox: { alignItems: "center" },
+  autoSyncStatusItem: { alignItems: "center", gap: 8 },
   exportDataButtonMenu: {
     alignSelf: "flex-end",
     transform: [{ translateY: -40 }],

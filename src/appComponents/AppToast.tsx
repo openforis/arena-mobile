@@ -16,7 +16,7 @@ export const AppToast = () => {
   };
 
   return (
-    <Snackbar onDismiss={onDismiss} visible={!!textKey}>
+    <Snackbar onDismiss={onDismiss} onIconPress={onDismiss} visible={!!textKey}>
       {t(textKey, textParams)}
     </Snackbar>
   );

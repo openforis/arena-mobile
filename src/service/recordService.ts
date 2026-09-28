@@ -3,7 +3,9 @@ import {
   Objects,
   RecordCloner,
   Records,
+  RecordValidator,
   Surveys,
+  Validations,
 } from "@openforis/arena-core";
 
 import {
@@ -259,10 +261,14 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
       surveyRemoteId: survey.remoteId,
       cycle,
     });
-  } catch (error) {
-    throw new Error(
+  } catch (error: any) {
+    const wrappedError: any = new Error(
       `error fetching remote records summaries. Details: ${error}`,
     );
+    // preserve the original HTTP status (e.g. 401), lost otherwise by wrapping - callers use
+    // it to tell an expired session apart from any other failure (see auto-sync)
+    wrappedError.status = error?.response?.status;
+    throw wrappedError;
   }
 
   await identifyAndDeleteRecordsNotInRemoteServer({
@@ -464,6 +470,27 @@ const cloneRecordsIntoDefaultCycle = async ({
   }
 };
 
+// Recomputes validation from scratch (full node tree walk, ignoring the possibly stale
+// cached validation) for each given record and persists it. Used to reconcile records
+// whose displayed error/warning counts no longer match their actual content.
+const revalidateRecords = async ({ user, survey, recordIds }: any) => {
+  for (const recordId of recordIds) {
+    const record = await RecordRepository.fetchRecord({
+      survey,
+      recordId,
+      includeContent: true,
+    });
+    const validation = Validations.updateCounts(
+      await RecordValidator.validateRecord({ user, survey, record }),
+    );
+    await RecordRepository.updateRecordValidation({
+      surveyId: survey.id,
+      recordUuid: record.uuid,
+      validation,
+    });
+  }
+};
+
 export const RecordService = {
   fetchRecord,
   fetchRecordSummary,
@@ -477,11 +504,13 @@ export const RecordService = {
   updateRecordWithContentFetchedRemotely,
   updateRecordWithContentMergedFromRemote,
   updateRecordsDateSync,
+  updateRecordsDateModifiedRemote,
   confirmRecordsSyncedWithRemote,
   updateRecordsMergedInto,
   deleteRecords,
   fixRecordCycle,
   cloneRecordsIntoDefaultCycle,
+  revalidateRecords,
   // remote server
   startExportRecordsFromRemoteServer,
   downloadExportedRecordsFileFromRemoteServer,

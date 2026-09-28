@@ -1,5 +1,6 @@
 import { combineReducers } from "redux";
 
+import { AutoSyncReducer } from "./autoSync/reducer";
 import { ConfirmReducer } from "./confirm/reducer";
 import { DataEntryReducer } from "./dataEntry/reducer";
 import { DeviceInfoReducer } from "./deviceInfo/reducer";
@@ -13,6 +14,7 @@ import { SurveyOptionsReducer } from "./surveyOptions/reducer";
 import { ToastReducer } from "./toast/reducer";
 
 export const rootReducer = combineReducers({
+  autoSync: AutoSyncReducer,
   confirm: ConfirmReducer,
   dataEntry: DataEntryReducer,
   deviceInfo: DeviceInfoReducer,

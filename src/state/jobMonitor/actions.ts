@@ -111,6 +111,31 @@ const buildUploadStats = ({
   };
 };
 
+type InnerJobUiConfig = {
+  titleKey: string;
+  showTransferStats?: boolean;
+};
+
+// picks per-phase title/transfer-stats config for a job composed of several inner jobs (e.g.
+// RecordsUploadAndProcessJob's upload -> server-side processing), keyed by the current inner
+// job's own "type" (its class name - see JobBase's `type` field). Without this, a composite
+// job's dialog would be stuck on whatever titleKey/showTransferStats were passed once at
+// JobMonitorActions.start, even as it moves through phases that need different ones (e.g.
+// transfer stats only make sense while the upload phase, not the server-side one, is current)
+const resolveInnerJobUi = ({
+  jobSummary,
+  innerJobUiConfigByType,
+}: {
+  jobSummary: JobSerialized<any>;
+  innerJobUiConfigByType?: Record<string, InnerJobUiConfig>;
+}): { config: InnerJobUiConfig; currentInnerJobSummary: JobSerialized<any> } | null => {
+  if (!innerJobUiConfigByType) return null;
+  const { innerJobs, currentInnerJobIndex } = jobSummary as any;
+  const currentInnerJobSummary = innerJobs?.[currentInnerJobIndex];
+  const config = currentInnerJobSummary && innerJobUiConfigByType[currentInnerJobSummary.type];
+  return config ? { config, currentInnerJobSummary } : null;
+};
+
 const createOnJobUpdateCallback =
   ({
     dispatch,
@@ -119,6 +144,8 @@ const createOnJobUpdateCallback =
     onJobComplete,
     onJobEnd,
     showTransferStats = false,
+    innerJobUiConfigByType,
+    silent = false,
   }: any): (jobSummary: JobSerialized<any>) => void => {
     let previousSample: {
       processed: number;
@@ -130,11 +157,19 @@ const createOnJobUpdateCallback =
       const { status, errors, processed, total } = jobSummary;
       const progressPercent = calculateJobProgressPercent({ jobSummary });
 
+      const innerJobUi = resolveInnerJobUi({ jobSummary, innerJobUiConfigByType });
+      const currentShowTransferStats = innerJobUi
+        ? !!innerJobUi.config.showTransferStats
+        : showTransferStats;
+      // a composite job's own processed/total just count finished inner jobs (e.g. 1 of 2), not
+      // bytes - use the current inner job's own numbers for transfer stats instead
+      const statsSource = innerJobUi?.currentInnerJobSummary ?? { processed, total };
+
       const uploadStats = buildUploadStats({
-        showTransferStats,
+        showTransferStats: currentShowTransferStats,
         status,
-        processed,
-        total,
+        processed: statsSource.processed,
+        total: statsSource.total,
         previousSample,
       });
       previousSample = uploadStats.previousSample;
@@ -145,6 +180,9 @@ const createOnJobUpdateCallback =
           progressPercent,
           status,
           errors,
+          ...(innerJobUi
+            ? { titleKey: innerJobUi.config.titleKey, showTransferStats: currentShowTransferStats }
+            : {}),
           transferTotalBytes: uploadStats.transferTotalBytes,
           transferSpeedBytesPerSec: uploadStats.transferSpeedBytesPerSec,
           etaSeconds: uploadStats.etaSeconds,
@@ -152,14 +190,24 @@ const createOnJobUpdateCallback =
       });
       if (isJobStatusEnded(status)) {
         if (!job) {
-          // remote job
+          // remote job, no local job instance (see JobStartParams.jobUuid) - only this callback
+          // knows the websocket subscription is done with, since the caller never gets a job
+          // instance of its own to clean up
           WebSocketService.close();
         }
         if (status === JobStatus.succeeded) {
-          if (autoDismiss) {
+          // close before notifying: existing behavior for autoDismiss, extended to silent jobs
+          // too - an unattended job has no dialog for the user to dismiss themselves (see
+          // JobMonitorDialog's `visible={isOpen && !silent}`), so isOpen must reset on its own
+          // or it gets stuck forever - and with it, anything derived from it (e.g. the
+          // auto-sync icon's spinner, or RecordsList's post-tick refresh)
+          if (autoDismiss || silent) {
             dispatch(close());
           }
           onJobComplete?.(jobSummary);
+        } else if (silent) {
+          // same reasoning, for a job that failed or was canceled instead
+          dispatch(close());
         }
         onJobEnd?.(jobSummary);
       }
@@ -175,8 +223,11 @@ const createOnCancelCallback = ({ job, onCancelProp }: any) => {
 };
 
 type JobStartParams = {
-  jobUuid?: string | null;
+  // job must be provided when monitoring a local job
   job?: JobMobile<any> | null;
+  // jobUuid must be provided when monitoring a remote-only job (no local job instance) - see
+  // actionsRecordsImport.ts's fetchRecordsFromServer for the one caller that needs this
+  jobUuid?: string | null;
   titleKey?: string;
   cancelButtonTextKey?: string;
   closeButtonTextKey?: string;
@@ -187,20 +238,25 @@ type JobStartParams = {
   onCancel?: () => void;
   onClose?: () => void;
   autoDismiss?: boolean;
+  silent?: boolean;
+  // see JobMonitorState.progressRangeStart/End - lets a caller running a chain of jobs (e.g.
+  // exportRecords's zip preparation -> upload -> server-side processing) place each one's own
+  // 0-100% progress within its slice of the chain's overall progress
+  progressRangeStart?: number;
+  progressRangeEnd?: number;
   showTransferStats?: boolean;
   transferSizeTextKey?: string | null;
   transferSpeedTextKey?: string | null;
   transferEtaTextKey?: string | null;
+  // see resolveInnerJobUi - only meaningful when `job` is composed of inner jobs (e.g.
+  // RecordsUploadAndProcessJob)
+  innerJobUiConfigByType?: Record<string, InnerJobUiConfig>;
 };
 
 const start =
   ({
-    // jobUuid must be provided when monitoring a remote job
-    jobUuid = null,
-
-    // job must be provided when monitoring a local job
     job = null,
-
+    jobUuid = null,
     titleKey = "common:processing",
     cancelButtonTextKey = "common:cancel",
     closeButtonTextKey = "common:close",
@@ -211,10 +267,14 @@ const start =
     onCancel: onCancelProp = undefined,
     onClose = undefined,
     autoDismiss = false,
+    silent = false,
+    progressRangeStart = 0,
+    progressRangeEnd = 100,
     showTransferStats = false,
     transferSizeTextKey = null,
     transferSpeedTextKey = null,
     transferEtaTextKey = null,
+    innerJobUiConfigByType = undefined,
   }: JobStartParams) =>
     async (dispatch: any) => {
       dispatch({
@@ -229,6 +289,9 @@ const start =
           onCancel: createOnCancelCallback({ job, onCancelProp }),
           onClose,
           autoDismiss,
+          silent,
+          progressRangeStart,
+          progressRangeEnd,
           showTransferStats,
           transferTotalBytes: null,
           transferSpeedBytesPerSec: null,
@@ -246,6 +309,8 @@ const start =
         onJobComplete,
         onJobEnd,
         showTransferStats,
+        innerJobUiConfigByType,
+        silent,
       });
 
       if (job) {

@@ -1,6 +1,40 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Sinkronisasi otomatis",
+    synced: "{{count}} catatan disinkronkan otomatis",
+    synced_plural: "{{count}} catatan disinkronkan otomatis",
+    statusLabel: "Status sinkronisasi:",
+    statusTitle: "Status sinkronisasi",
+    syncInProgressToast:
+      "Sinkronisasi otomatis sedang berlangsung. Harap tunggu hingga selesai sebelum mengirim data secara manual.",
+    batteryDataWarning:
+      "Dapat meningkatkan penggunaan baterai dan data saat tidak menggunakan Wi-Fi",
+    syncNow: "Sinkronkan sekarang",
+    status: {
+      syncedTooltip: "Semua catatan telah disinkronkan dengan server",
+      pendingTooltip:
+        "Beberapa catatan masih perlu disinkronkan. Catatan akan dikirim secara otomatis",
+      errorTooltip:
+        "Beberapa catatan memiliki kesalahan sinkronisasi dan memerlukan perhatian Anda. Buka 'Kirim data' untuk menyelesaikannya",
+      needsManualFixTooltip:
+        "Beberapa catatan tidak dapat disinkronkan sampai Anda memperbaikinya (mis. nilai kunci kosong, kunci sama dengan catatan yang sudah ada di server saat penggabungan tidak diizinkan, atau tidak lagi dalam tahap entri). Periksa status sinkronisasinya di daftar catatan",
+      mergeWithSameKeysNotAllowedNote:
+        "Beberapa data isian memiliki kunci yang sama dengan data isian yang sudah ada di server, dan penggabungannya tidak diizinkan untuk survei ini. Jika merupakan data isian yang berbeda, ubah nilai kuncinya; jika merupakan data isian yang sama, hubungi administrator survei.",
+      syncingTooltip: "Menyinkronkan catatan...",
+      progressPercent: "{{progressPercent}}%",
+      uncheckedTooltip:
+        "Status sinkronisasi belum diperiksa. Gunakan 'Periksa status' untuk memeriksanya",
+      offlineTooltip:
+        "Tidak ada koneksi internet. Sinkronisasi otomatis akan dilanjutkan setelah kembali online",
+      authErrorTooltip:
+        "Sesi Anda dengan server telah berakhir. Masuk kembali untuk melanjutkan sinkronisasi otomatis",
+      checkErrorTooltip:
+        "Tidak dapat memeriksa status sinkronisasi karena kesalahan server. Coba lagi",
+      noCandidatesMessage: "Tidak ada yang perlu dikirim saat ini",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Node tidak akan berlaku lagi",
     message: `Node berikut tidak akan berlaku lagi:  
@@ -68,7 +102,7 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
   gpsLockingEnabledWarning: "Peringatan: Penguncian GPS diaktifkan!",
   listOfRecords: "Data",
   localBackup: "Cadangan lokal",
-  newRecord: "Baru",
+  newRecord: "Catatan baru",
   node: {
     cannotAddMoreItems: {
       maxCountReached:
@@ -264,6 +298,8 @@ Periksa pengaturan atau minta administrator survei untuk mengubah batas ini.`,
     exportingData: "Mengekspor data...",
     exportToCsv: "Ekspor ke CSV",
     mergeConflictingRecords: "Gabungkan data isian yang berkonflik",
+    mergeWithSameKeysNotAllowed:
+      "Penggabungan data isian dengan kunci yang sama tidak diizinkan untuk survei ini, sehingga data isian dengan kunci yang berkonflik tidak akan dikirim. Jika merupakan data isian yang berbeda, ubah nilai kuncinya; jika merupakan data isian yang sama, hubungi administrator survei.",
     mergeSameRecordConflictConfirm: {
       title: "Gabungkan data isian yang diedit di kedua perangkat",
       message: `{{count}} data isian juga telah diperbarui di server sejak perangkat ini terakhir menyinkronkannya.

@@ -11,6 +11,25 @@ export default {
     description:
       "Aktiverar övergångs- och gränssnittsanimationer i hela appen. Inaktivera för att förbättra prestandan på långsammare enheter",
   },
+  autoSyncEnabled: {
+    label: "Automatisk synkronisering",
+    description: "$t(dataEntry:autoSync.batteryDataWarning)",
+  },
+  autoSyncOpenRecordIntervalMinutes: {
+    label: "Intervall för automatisk synkronisering under redigering: {{value}} min",
+    description:
+      "Hur länge posten som för närvarande är öppen i redigeraren måste lämnas orörd innan automatisk synkronisering laddar upp den",
+  },
+  autoSyncSlowCheckIntervalMinutes: {
+    label: "Intervall för automatisk synkronisering (långsam kontroll): {{value}} min",
+    description:
+      "När alla poster redan är synkroniserade, hur ofta automatisk synkronisering kontrollerar servern igen efter ändringar (t.ex. från en annan enhet). Kontroller sker oftare när det finns något nytt att ladda upp",
+  },
+  dataUploadChunkSizeKB: {
+    label: "Blockstorlek för datauppladdning",
+    description:
+      "Storleken på varje del som en post delas upp i vid uppladdning till servern. Lägre värden är mer tillförlitliga på långsamma eller instabila anslutningar, men kräver fler förfrågningar för att skicka samma mängd data",
+  },
   connectionToServer: "Anslutning till servern",
   fontScale: {
     label: "Fontskala: {{value}}",

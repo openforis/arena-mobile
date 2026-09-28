@@ -113,7 +113,9 @@ export const SurveysListLocal = () => {
       ) {
         await dispatch(SurveyActions.deleteSurveys(surveyIds));
         await loadSurveys();
+        return true;
       }
+      return false;
     },
     [confirm, dispatch, loadSurveys],
   );

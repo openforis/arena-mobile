@@ -65,6 +65,15 @@ export default {
     all: "Alle Datensätze",
     local: "Datensätze auf dem Gerät",
   },
+  revalidateRecords: {
+    title: "Neu validieren",
+    allRecordsTitle: "Alle Datensätze neu validieren",
+    confirm: {
+      message:
+        "Validierung für die ausgewählten {{recordsCount}} Datensätze neu berechnen? Verwenden Sie dies, wenn ein Datensatz Fehler oder Warnungen anzeigt, die Sie beim Bearbeiten nicht finden können.",
+    },
+    completeSuccessfully: "Datensätze erfolgreich neu validiert!",
+  },
   sendData: {
     error: {
       generic: "Daten können nicht an den Server gesendet werden: {{details}}",

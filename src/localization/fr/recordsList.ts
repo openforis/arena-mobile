@@ -69,6 +69,15 @@ export default {
     all: "Tous les enregistrements",
     local: "Enregistrements sur l'appareil",
   },
+  revalidateRecords: {
+    title: "Revalider",
+    allRecordsTitle: "Revalider tous les enregistrements",
+    confirm: {
+      message:
+        "Recalculer la validation pour les {{recordsCount}} enregistrements sélectionnés ? Utilisez cette option si un enregistrement affiche des erreurs ou des avertissements que vous ne trouvez pas en le modifiant.",
+    },
+    completeSuccessfully: "Enregistrements revalidés avec succès !",
+  },
   sendData: {
     error: {
       generic: "Impossible d'envoyer les données au serveur : {{details}}",

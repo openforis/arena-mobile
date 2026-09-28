@@ -11,6 +11,25 @@ export default {
     description:
       "アプリ全体の画面遷移やインターフェースのアニメーションを有効にします。動作が遅い端末ではパフォーマンス向上のため無効にしてください",
   },
+  autoSyncEnabled: {
+    label: "自動同期",
+    description: "$t(dataEntry:autoSync.batteryDataWarning)",
+  },
+  autoSyncOpenRecordIntervalMinutes: {
+    label: "編集中の自動同期の間隔：{{value}}分",
+    description:
+      "エディタで現在開いているレコードが変更されない状態を何分間維持したら、自動同期がアップロードするかを設定します",
+  },
+  autoSyncSlowCheckIntervalMinutes: {
+    label: "自動同期の間隔（低頻度チェック）：{{value}}分",
+    description:
+      "すべてのレコードが同期済みの場合、自動同期がサーバー側の変更（例：他のデバイスからの変更）を再確認する頻度です。アップロードする新しい内容がある場合は、より頻繁にチェックが行われます",
+  },
+  dataUploadChunkSizeKB: {
+    label: "データアップロードのチャンクサイズ",
+    description:
+      "サーバーへのアップロード時にレコードを分割する各チャンクのサイズです。低い値は低速または不安定な接続でより信頼性が高くなりますが、同じ量のデータを送信するためにより多くのリクエストが必要になります",
+  },
   connectionToServer: "サーバーへの接続",
   fontScale: {
     label: "フォントの大きさ：{{value}}",

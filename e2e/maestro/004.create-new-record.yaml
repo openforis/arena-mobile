@@ -1,7 +1,7 @@
 appId: ${APP_ID}
 ---
 - tapOn:
-    text: "New"
+    text: "New record"
 - tapOn:
     text: "Select item"
     below:

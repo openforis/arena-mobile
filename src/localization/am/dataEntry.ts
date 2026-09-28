@@ -1,6 +1,39 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "ራስ-ሰር ማመሳሰል",
+    synced: "{{count}} መዝገብ በራስ-ሰር ተመሳስሏል",
+    synced_plural: "{{count}} መዝገቦች በራስ-ሰር ተመሳስለዋል",
+    statusLabel: "የማመሳሰል ሁኔታ:",
+    statusTitle: "የማመሳሰል ሁኔታ",
+    syncInProgressToast:
+      "ራስ-ሰር ማመሳሰል በሂደት ላይ ነው። ውሂብ በእጅ ከመላክዎ በፊት እስኪጠናቀቅ ድረስ እባክዎ ይጠብቁ።",
+    batteryDataWarning:
+      "ከWi-Fi ውጭ ሲሆን የባትሪ እና የውሂብ አጠቃቀምን ሊጨምር ይችላል",
+    syncNow: "አሁኑኑ ያመሳስሉ",
+    status: {
+      syncedTooltip: "ሁሉም መዝገቦች ከአገልጋዩ ጋር ተመሳስለዋል",
+      pendingTooltip: "አንዳንድ መዝገቦች አሁንም መመሳሰል ያስፈልጋቸዋል። በራስ-ሰር ይላካሉ",
+      errorTooltip:
+        "አንዳንድ መዝገቦች የማመሳሰል ስህተቶች አሏቸው እና ትኩረትዎን ይፈልጋሉ። ለመፍታት 'ውሂብ ላክ'ን ይክፈቱ",
+      needsManualFixTooltip:
+        "አንዳንድ መዝገቦች እስኪያስተካክሏቸው ድረስ ሊመሳሰሉ አይችሉም (ለምሳሌ የጎደሉ ቁልፍ እሴቶች፣ ማዋሃድ በማይፈቀድበት ጊዜ በአገልጋዩ ላይ ካለ መዝገብ ጋር ተመሳሳይ ቁልፎች፣ ወይም ከአሁን በኋላ በመግቢያ ደረጃ ላይ ያልሆኑ)። በመዝገቦች ዝርዝር ውስጥ የማመሳሰል ሁኔታቸውን ያረጋግጡ",
+      mergeWithSameKeysNotAllowedNote:
+        "አንዳንድ መዝገቦች በአገልጋዩ ላይ ካለ መዝገብ ጋር ተመሳሳይ ቁልፍ አላቸው፣ እና ለዚህ ቅኝት እነሱን ማዋሃድ አይፈቀድም። የተለያዩ መዝገቦች ከሆኑ የቁልፍ እሴቶቻቸውን ይቀይሩ፤ ተመሳሳይ መዝገብ ከሆኑ የቅኝቱን አስተዳዳሪ ያነጋግሩ።",
+      syncingTooltip: "መዝገቦችን በማመሳሰል ላይ...",
+      progressPercent: "{{progressPercent}}%",
+      uncheckedTooltip:
+        "የማመሳሰል ሁኔታ እስካሁን አልተረጋገጠም። ለማረጋገጥ 'የማመሳሰል ሁኔታን ያረጋግጡ'ን ይጠቀሙ",
+      offlineTooltip:
+        "የበይነመረብ ግንኙነት የለም። ግንኙነት ሲመለስ ራስ-ሰር ማመሳሰል ይቀጥላል",
+      authErrorTooltip:
+        "ከአገልጋዩ ጋር የነበረው ክፍለ ጊዜ አልቋል። ራስ-ሰር ማመሳሰልን ለመቀጠል እንደገና ይግቡ",
+      checkErrorTooltip:
+        "በአገልጋይ ስህተት ምክንያት የማመሳሰል ሁኔታን ማረጋገጥ አልተቻለም። እንደገና ይሞክሩ",
+      noCandidatesMessage: "አሁን የሚላክ ምንም ነገር የለም",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "ኖዶቹ ዳግም አይተገበሩም",
     message: `የሚከተሉት ኖዶች ዳግም አይተገበሩም:  
@@ -61,7 +94,7 @@ export default {
   gpsLockingEnabledWarning: "ማስጠንቀቂያ፡ የጂፒኤስ መቆለፊያ ነቅቷል!",
   listOfRecords: "የመዝገቦች",
   localBackup: "የአካባቢ ምትኬ",
-  newRecord: "አዲስ",
+  newRecord: "አዲስ መዝገብ",
   node: {
     cannotAddMoreItems: {
       maxCountReached: "ተጨማሪ እቃዎችን መጨመር አይቻልም: ከፍተኛው ቆጠራ ደርሷል",
@@ -246,6 +279,8 @@ export default {
     exportingData: "ውሂብ በማልክ ላይ...",
     exportToCsv: "ወደ CSV ላክ",
     mergeConflictingRecords: "የሚጋጩ መዝገቦችን አዋህድ",
+    mergeWithSameKeysNotAllowed:
+      "ለዚህ ቅኝት ተመሳሳይ ቁልፍ ያላቸውን መዝገቦች ማዋሃድ አይፈቀድም፣ ስለዚህ የሚጋጩ ቁልፎች ያላቸው መዝገቦች አይላኩም። የተለያዩ መዝገቦች ከሆኑ የቁልፍ እሴቶቻቸውን ይቀይሩ፤ ተመሳሳይ መዝገብ ከሆኑ የቅኝቱን አስተዳዳሪ ያነጋግሩ።",
     mergeSameRecordConflictConfirm: {
       title: "በሁለቱም መሣሪያዎች ላይ የተስተካከሉ መዝገቦችን አዋህድ",
       message: `{{count}} መዝገብ(ዎች) ይህ መሣሪያ ለመጨረሻ ጊዜ ካመሳሰለ በኋላ በአገልጋዩ ላይም ተስተካክለዋል።

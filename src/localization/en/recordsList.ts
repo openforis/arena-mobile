@@ -64,6 +64,16 @@ export default {
     all: "All records",
     local: "Records in device",
   },
+  revalidateRecords: {
+    title: "Revalidate",
+    allRecordsTitle: "Revalidate all records",
+    confirm: {
+      message:
+        `Recompute validation for the selected {{recordsCount}} records?  
+Use this if a record shows errors or warnings that you can't find when editing it.`,
+    },
+    completeSuccessfully: "Records revalidated successfully!",
+  },
   sendData: {
     error: {
       generic: "Cannot send data to the server: {{details}}",

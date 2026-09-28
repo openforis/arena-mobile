@@ -11,6 +11,25 @@ export default {
     description:
       "Aktiviert Übergangs- und Oberflächenanimationen in der gesamten App. Deaktivieren, um die Leistung auf langsameren Geräten zu verbessern",
   },
+  autoSyncEnabled: {
+    label: "Automatische Synchronisierung",
+    description: "$t(dataEntry:autoSync.batteryDataWarning)",
+  },
+  autoSyncOpenRecordIntervalMinutes: {
+    label: "Intervall für automatische Synchronisierung während der Bearbeitung: {{value}} Min.",
+    description:
+      "Wie lange der aktuell im Editor geöffnete Datensatz unverändert bleiben muss, bevor die automatische Synchronisierung ihn hochlädt",
+  },
+  autoSyncSlowCheckIntervalMinutes: {
+    label: "Intervall für automatische Synchronisierung (langsame Prüfung): {{value}} Min.",
+    description:
+      "Sobald alle Datensätze bereits synchronisiert sind, wie oft die automatische Synchronisierung erneut beim Server nach Änderungen sucht (z. B. von einem anderen Gerät). Die Prüfungen erfolgen häufiger, sobald es etwas Neues hochzuladen gibt",
+  },
+  dataUploadChunkSizeKB: {
+    label: "Größe der Daten-Upload-Blöcke",
+    description:
+      "Größe der einzelnen Teile, in die ein Datensatz beim Hochladen auf den Server aufgeteilt wird. Niedrigere Werte sind bei langsamen oder instabilen Verbindungen zuverlässiger, erfordern aber mehr Anfragen, um dieselbe Datenmenge zu senden",
+  },
   connectionToServer: "Verbindung zum Server",
   fontScale: {
     label: "Schriftgröße: {{value}}",

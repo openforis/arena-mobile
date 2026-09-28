@@ -11,6 +11,25 @@ export default {
     description:
       "Ativa as animações de transição e de interface em toda a aplicação. Desative para melhorar o desempenho em dispositivos mais lentos",
   },
+  autoSyncEnabled: {
+    label: "Sincronização automática",
+    description: "$t(dataEntry:autoSync.batteryDataWarning)",
+  },
+  autoSyncOpenRecordIntervalMinutes: {
+    label: "Intervalo de sincronização automática durante a edição: {{value}} min",
+    description:
+      "Durante quanto tempo o registo atualmente aberto no editor deve permanecer sem alterações antes de a sincronização automática o carregar",
+  },
+  autoSyncSlowCheckIntervalMinutes: {
+    label: "Intervalo de sincronização automática (verificação lenta): {{value}} min",
+    description:
+      "Depois de todos os registos estarem sincronizados, com que frequência a sincronização automática volta a verificar o servidor em busca de alterações (por exemplo, de outro dispositivo). As verificações ocorrem com mais frequência sempre que há algo novo para carregar",
+  },
+  dataUploadChunkSizeKB: {
+    label: "Tamanho do fragmento de envio de dados",
+    description:
+      "Tamanho de cada parte em que um registo é dividido ao ser enviado para o servidor. Valores mais baixos são mais fiáveis em ligações lentas ou instáveis, mas exigem mais pedidos para enviar a mesma quantidade de dados",
+  },
   connectionToServer: "Ligação ao servidor",
   fontScale: {
     label: "Escala de fonte: {{value}}",

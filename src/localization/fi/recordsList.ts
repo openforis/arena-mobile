@@ -64,6 +64,15 @@ export default {
     all: "Kaikki tietueet",
     local: "Laitteessa olevat tietueet",
   },
+  revalidateRecords: {
+    title: "Validoi uudelleen",
+    allRecordsTitle: "Validoi kaikki tietueet uudelleen",
+    confirm: {
+      message:
+        "Lasketaanko validointi uudelleen valituille {{recordsCount}} tietueelle? Käytä tätä, jos tietue näyttää virheitä tai varoituksia, joita et löydä sitä muokatessasi.",
+    },
+    completeSuccessfully: "Tietueet validoitu uudelleen onnistuneesti!",
+  },
   sendData: {
     error: {
       generic: "Tietoja ei voi lähettää palvelimelle: {{details}}",

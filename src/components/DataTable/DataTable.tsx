@@ -12,8 +12,10 @@ import {
   DataVisualizerField,
   DataVisualizerProps,
 } from "../DataVisualizer/types";
+import { Icon } from "../Icon";
 import { ScrollView } from "../ScrollView";
 import { ItemSelectedBanner, useSelectableList } from "../SelectableList";
+import { Tooltip } from "../Tooltip";
 import { VView } from "../VView";
 import { usePagination } from "./usePagination";
 import styles from "./styles";
@@ -107,7 +109,13 @@ export const DataTable = (props: DataVisualizerProps) => {
             style={[{ flex: 1 }, field.style]}
             textStyle={styles.tableTitleText}
           >
-            {t(field.header)}
+            {field.headerIcon ? (
+              <Tooltip titleKey={field.header}>
+                <Icon source={field.headerIcon} />
+              </Tooltip>
+            ) : (
+              t(field.header)
+            )}
           </RNPDataTable.Title>
         ))}
         {selectionEnabled && (

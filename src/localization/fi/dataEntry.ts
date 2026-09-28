@@ -1,6 +1,40 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  autoSync: {
+    checkbox: "Automaattinen synkronointi",
+    synced: "{{count}} tietue synkronoitu automaattisesti",
+    synced_plural: "{{count}} tietuetta synkronoitu automaattisesti",
+    statusLabel: "Synkronoinnin tila:",
+    statusTitle: "Synkronoinnin tila",
+    syncInProgressToast:
+      "Automaattinen synkronointi on käynnissä. Odota, että se valmistuu, ennen kuin lähetät tietoja manuaalisesti.",
+    batteryDataWarning:
+      "Voi lisätä akun- ja datankulutusta, kun ei olla Wi-Fi-yhteydessä",
+    syncNow: "Synkronoi nyt",
+    status: {
+      syncedTooltip: "Kaikki tietueet on synkronoitu palvelimen kanssa",
+      pendingTooltip:
+        "Joitakin tietueita ei ole vielä synkronoitu. Ne lähetetään automaattisesti",
+      errorTooltip:
+        "Joissakin tietueissa on synkronointivirheitä, jotka vaativat huomiotasi. Avaa 'Lähetä tiedot' ratkaistaksesi ne",
+      needsManualFixTooltip:
+        "Joitakin tietueita ei voi synkronoida ennen kuin korjaat ne (esim. puuttuvat avainarvot, samat avaimet kuin palvelimella jo olevalla tietueella, kun yhdistäminen ei ole sallittua, tai ei enää syöttövaiheessa). Tarkista niiden synkronointitila tietueluettelosta",
+      mergeWithSameKeysNotAllowedNote:
+        "Joillakin tietueilla on samat avaimet kuin palvelimella jo olevalla tietueella, eikä niiden yhdistäminen ole sallittua tässä kyselyssä. Jos ne ovat eri tietueita, muuta niiden avainarvoja; jos ne ovat sama tietue, ota yhteyttä kyselyn ylläpitäjään.",
+      syncingTooltip: "Synkronoidaan tietueita...",
+      progressPercent: "{{progressPercent}} %",
+      uncheckedTooltip:
+        "Synkronoinnin tilaa ei ole vielä tarkistettu. Tarkista se kohdasta 'Tarkista tila'",
+      offlineTooltip:
+        "Ei internetyhteyttä. Automaattinen synkronointi jatkuu, kun yhteys palautuu",
+      authErrorTooltip:
+        "Istuntosi palvelimen kanssa on vanhentunut. Kirjaudu uudelleen sisään jatkaaksesi automaattista synkronointia",
+      checkErrorTooltip:
+        "Synkronoinnin tilaa ei voitu tarkistaa palvelinvirheen vuoksi. Yritä uudelleen",
+      noCandidatesMessage: "Ei juuri nyt mitään lähetettävää",
+    },
+  },
   confirmUpdateNodesBecameNotApplicable: {
     title: "Solmut eivät enää koske",
     message: `Seuraavat solmut eivät enää koske:  
@@ -68,7 +102,7 @@ Haluatko hakea sen uudelleen palvelimelta?`,
   gpsLockingEnabledWarning: "Varoitus: GPS-lukitus käytössä!",
   listOfRecords: "Tietueet",
   localBackup: "Paikallinen varmuuskopio",
-  newRecord: "Uusi",
+  newRecord: "Uusi tietue",
   node: {
     cannotAddMoreItems: {
       maxCountReached: "Lisää kohteita ei voi: enimmäismäärä on saavutettu",
@@ -260,6 +294,8 @@ Tarkista asetukset tai pyydä kyselyn järjestelmänvalvojaa muuttamaan tätä r
     exportingData: "Viedään tietoja...",
     exportToCsv: "Vie CSV-muotoon",
     mergeConflictingRecords: "Yhdistä ristiriitaiset tietueet",
+    mergeWithSameKeysNotAllowed:
+      "Samojen avainten tietueiden yhdistäminen ei ole sallittua tässä kyselyssä, joten tietueita, joiden avaimet ovat ristiriidassa, ei lähetetä. Jos ne ovat eri tietueita, muuta niiden avainarvoja; jos ne ovat sama tietue, ota yhteyttä kyselyn ylläpitäjään.",
     mergeSameRecordConflictConfirm: {
       title: "Yhdistä molemmilla laitteilla muokatut tietueet",
       message: `{{count}} tietuetta on muokattu myös palvelimella sen jälkeen, kun tämä laite viimeksi synkronoi ne.

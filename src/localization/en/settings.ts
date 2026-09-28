@@ -11,6 +11,25 @@ export default {
     description:
       "Enables transition and interface animations throughout the app. Disable to improve performance on slower devices",
   },
+  autoSyncEnabled: {
+    label: "Auto sync",
+    description: "$t(dataEntry:autoSync.batteryDataWarning)",
+  },
+  autoSyncOpenRecordIntervalMinutes: {
+    label: "Auto-sync interval while editing: {{value}} min",
+    description:
+      "How long the record currently open in the editor must be left untouched before auto-sync uploads it",
+  },
+  autoSyncSlowCheckIntervalMinutes: {
+    label: "Auto-sync interval (slow check): {{value}} min",
+    description:
+      "Once every record is already synced, how often auto-sync checks the server again for changes (e.g. from another device). Checks happen more often whenever there's something new to upload",
+  },
+  dataUploadChunkSizeKB: {
+    label: "Data upload chunk size",
+    description:
+      "Size of each piece a record is split into while uploading to the server. Lower values are more reliable on slow or unstable connections, but require more requests to send the same amount of data",
+  },
   connectionToServer: "Connection to server",
   fontScale: {
     label: "Font scale: {{value}}",
