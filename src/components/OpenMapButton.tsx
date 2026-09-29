@@ -1,9 +1,10 @@
 import React, { useCallback, useMemo } from "react";
-import openMap from "react-native-open-maps";
+import { Linking } from "react-native";
 
 import { Points } from "@openforis/arena-core";
 
 import { IconButton } from "components/IconButton";
+import { Environment } from "utils";
 
 type Props = {
   point?: any;
@@ -21,15 +22,16 @@ export const OpenMapButton = (props: Props) => {
 
   const { y: latitude, x: longitude } = pointLatLng ?? {};
 
-  const onPress = useCallback(
-    () =>
-      openMap({
-        // latitude: Number(latitude),
-        // longitude: Number(longitude),
-        query: `${latitude},${longitude}`, // this way generates an unnamed marker on the map,
-      }),
-    [latitude, longitude]
-  );
+  const onPress = useCallback(() => {
+    // using a query generates an unnamed marker on the map
+    const query = `${latitude},${longitude}`;
+    const url = Environment.isIOS
+      ? `maps://?q=${query}`
+      : `https://www.google.com/maps/search/?api=1&query=${query}`;
+    Linking.openURL(url).catch((error) =>
+      console.error("Error opening map", error)
+    );
+  }, [latitude, longitude]);
 
   if (!pointLatLng) return null;
 

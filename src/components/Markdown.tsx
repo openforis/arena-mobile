@@ -1,9 +1,10 @@
 import { useMemo } from "react";
-import { StyleSheet } from "react-native";
-import RNMarkdown from "react-native-markdown-display";
+import RNMarkdown, {
+  MarkdownStyleMap,
+} from "@ronradtke/react-native-markdown-display";
 import { useTheme } from "react-native-paper";
 
-export type MarkdownStyle = StyleSheet.NamedStyles<any>;
+export type MarkdownStyle = MarkdownStyleMap;
 
 type MarkdownProps = {
   content: string;
