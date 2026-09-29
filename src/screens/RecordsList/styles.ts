@@ -18,20 +18,36 @@ export default StyleSheet.create({
     gap: 8,
   },
   cyclesSelector: { width: 300 },
-  bottomActionBar: {
-    borderTopWidth: 1,
-    padding: 4,
-    justifyContent: "space-between",
-    rowGap: 8,
+  dock: {
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    gap: 4,
+  },
+  dockRow: {
+    alignItems: "center",
+  },
+  // grow equally to keep the center centered, but never shrink below their content (the "New"
+  // button, the menu button): the center shrinks (wrapping its content) instead
+  dockSide: {
+    flexBasis: "auto",
+    flexGrow: 1,
+    flexShrink: 0,
+  },
+  dockCenter: {
+    flexShrink: 1,
+    justifyContent: "center",
+    rowGap: 4,
+  },
+  dockSideEnd: {
+    justifyContent: "flex-end",
   },
   newRecordButton: {
-    alignSelf: "center",
+    minWidth: 100,
   },
-  toolbar: {
-    rowGap: 8,
-  },
-  autoSyncCheckbox: { alignItems: "center" },
-  autoSyncStatusItem: { alignItems: "center", gap: 8 },
+  autoSyncGroup: { alignItems: "center", flexShrink: 1, gap: 4 },
+  autoSyncLabel: { flexShrink: 1 },
   exportDataButtonMenu: {
     alignSelf: "flex-end",
     transform: [{ translateY: -40 }],

@@ -17,6 +17,7 @@ const baseStyle = {
 type Props = {
   children?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
+  transparent?: boolean;
 };
 
 export const FlexWrapView = (props: Props) => {

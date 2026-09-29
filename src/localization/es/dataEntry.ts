@@ -100,6 +100,7 @@ Sus valores serán borrados.
   listOfRecords: "Registros",
   localBackup: "Copia de seguridad local",
   newRecord: "Nuevo registro",
+  newRecordShort: "Nuevo",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

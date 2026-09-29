@@ -103,6 +103,7 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
   listOfRecords: "Data",
   localBackup: "Cadangan lokal",
   newRecord: "Catatan baru",
+  newRecordShort: "Baru",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

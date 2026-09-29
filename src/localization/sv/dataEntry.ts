@@ -103,6 +103,7 @@ Vill du hämta den igen från servern?`,
   listOfRecords: "Poster",
   localBackup: "Lokal säkerhetskopia",
   newRecord: "Ny post",
+  newRecordShort: "Ny",
   node: {
     cannotAddMoreItems: {
       maxCountReached:
