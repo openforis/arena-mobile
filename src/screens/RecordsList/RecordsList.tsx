@@ -1,22 +1,12 @@
 import { useCallback, useMemo, useState } from "react";
 
-import { AutoSyncStatusIcon } from "appComponents/AutoSyncStatus";
-import {
-  Button,
-  FlexWrapView,
-  HView,
-  Loader,
-  MenuButton,
-  Searchbar,
-  Text,
-  VView,
-} from "components";
+import { Button, Loader, Searchbar, Text, VView } from "components";
 import { AutoSyncStatus } from "state";
 
 import { RecordsDataVisualizer } from "./RecordsDataVisualizer";
 import { RecordsListLegend } from "./RecordsListLegend";
 import { RecordsListOptions } from "./RecordsListOptions";
-import { RecordsListToolbar } from "./RecordsListToolbar";
+import { RecordsListDock } from "./RecordsListDock";
 import { minRecordsToShowSearchBar } from "./recordsListUtils";
 import { useRecordsExport } from "./useRecordsExport";
 import { useRecordsList } from "./useRecordsList";
@@ -40,7 +30,6 @@ export const RecordsList = () => {
     onlyLocal,
     onNewRecordPress,
     onOnlyLocalChange,
-    onRemoteSyncPress,
     onRevalidateAllRecordsPress,
     onRevalidateSelectedRecordUuids,
     onSearchValueChange,
@@ -74,9 +63,11 @@ export const RecordsList = () => {
     [onSendDataPress, selectedRecordUuids],
   );
 
+  const canCreateNewRecord = defaultCycleKey === cycle;
+
   const newRecordButton = useMemo(
     () =>
-      defaultCycleKey === cycle ? (
+      canCreateNewRecord ? (
         <Button
           icon="plus"
           onPress={onNewRecordPress}
@@ -85,7 +76,7 @@ export const RecordsList = () => {
           textKey="dataEntry:newRecord"
         />
       ) : null,
-    [cycle, defaultCycleKey, onNewRecordPress],
+    [canCreateNewRecord, onNewRecordPress],
   );
 
   const recordsLength = records?.length ?? 0;
@@ -101,13 +92,9 @@ export const RecordsList = () => {
       <VView style={styles.innerContainer}>
         <RecordsListOptions
           onImportRecordsFromFilePress={onImportRecordsFromFilePress}
-          onRevalidateAllRecordsPress={onRevalidateAllRecordsPress}
-        />
-        <RecordsListToolbar
           onlyLocal={onlyLocal}
           onOnlyLocalChange={onOnlyLocalChange}
-          onRemoteSyncPress={onRemoteSyncPress}
-          syncStatusLoading={syncStatusLoading}
+          onRevalidateAllRecordsPress={onRevalidateAllRecordsPress}
         />
         {loading ? (
           <Loader />
@@ -145,37 +132,13 @@ export const RecordsList = () => {
         )}
       </VView>
       {syncStatusFetched && <RecordsListLegend />}
-      {recordsLength > 0 && (
-        // wraps onto multiple lines on a narrow screen instead of squeezing/overlapping;
-        // stays a single row once there's enough width - same pattern as RecordsListToolbar
-        // above
-        <FlexWrapView style={styles.bottomActionBar}>
-          {newRecordButton}
-          {!isDemoSurvey && (
-            <>
-              {showSendDataButton && (
-                <Button
-                  icon="cloud-refresh"
-                  onPress={onSendDataButtonPress}
-                  textKey="dataEntry:sendData"
-                />
-              )}
-              {autoSyncEnabled && (
-                <HView style={styles.autoSyncStatusItem}>
-                  <Text textKey="dataEntry:autoSync.statusLabel" />
-                  <AutoSyncStatusIcon />
-                </HView>
-              )}
-            </>
-          )}
-          <MenuButton
-            anchorPosition="top"
-            icon="download"
-            items={downloadMenuItems}
-            menuStyle={styles.exportDataButtonMenu}
-          />
-        </FlexWrapView>
-      )}
+      <RecordsListDock
+        downloadMenuItems={downloadMenuItems}
+        onNewRecordPress={canCreateNewRecord ? onNewRecordPress : undefined}
+        onSendDataPress={onSendDataButtonPress}
+        showRecordActions={recordsLength > 0}
+        showSendDataButton={showSendDataButton}
+      />
     </VView>
   );
 };

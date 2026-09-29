@@ -1,4 +1,6 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse, isCancel } from "axios";
+
+import { log } from "utils/Logger";
 
 import { RequestOptions } from "./apiTypes";
 import { APIUtils } from "./apiUtils";
@@ -9,6 +11,28 @@ const defaultConfig: AxiosRequestConfig = {
 };
 
 const multipartDataHeaders = { "Content-Type": "multipart/form-data" };
+
+// logged here, where the request details are still available: callers often wrap or stringify
+// the error (e.g. "AxiosError: Network Error"), losing the url and the error code - which are
+// what tell apart a request that never reached the server (no response: ERR_NETWORK,
+// ECONNABORTED/timeout, ...) from one the server rejected (response status)
+const _logRequestError = (config: AxiosRequestConfig, error: any) => {
+  if (isCancel(error)) {
+    log.debug(`API request canceled: ${config.method ?? "get"} ${config.url}`);
+    return;
+  }
+  const { code, message, response } = error ?? {};
+  const details = [
+    `code: ${code ?? "-"}`,
+    `message: ${message ?? error}`,
+    response
+      ? `response status: ${response.status}`
+      : "no response received from the server",
+  ];
+  log.warn(
+    `API request failed: ${config.method ?? "get"} ${config.url} (${details.join(", ")})`,
+  );
+};
 
 const _prepareRequest = (
   url: string,
@@ -22,7 +46,10 @@ const _prepareRequest = (
     signal: controller.signal,
   };
   return {
-    promise: axios.request(config),
+    promise: axios.request(config).catch((error) => {
+      _logRequestError(config, error);
+      throw error;
+    }),
     cancel: () => controller.abort(),
   };
 };

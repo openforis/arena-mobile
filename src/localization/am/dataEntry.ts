@@ -95,6 +95,7 @@ export default {
   listOfRecords: "የመዝገቦች",
   localBackup: "የአካባቢ ምትኬ",
   newRecord: "አዲስ መዝገብ",
+  newRecordShort: "አዲስ",
   node: {
     cannotAddMoreItems: {
       maxCountReached: "ተጨማሪ እቃዎችን መጨመር አይቻልም: ከፍተኛው ቆጠራ ደርሷል",

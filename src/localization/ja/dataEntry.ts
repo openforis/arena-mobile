@@ -168,6 +168,7 @@ export default {
   listOfRecords: "記録",
   localBackup: "ローカルバックアップ",
   newRecord: "新規レコード",
+  newRecordShort: "新規",
   noRecordsFound: "記録が見つかりません",
   options: "オプション",
   recordEditor: "記録エディタ",

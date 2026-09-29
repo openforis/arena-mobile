@@ -99,6 +99,7 @@ export default {
   listOfRecords: "Список записей",
   localBackup: "Локальная резервная копия",
   newRecord: "Новая запись",
+  newRecordShort: "Новая",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

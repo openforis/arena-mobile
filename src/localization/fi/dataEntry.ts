@@ -103,6 +103,7 @@ Haluatko hakea sen uudelleen palvelimelta?`,
   listOfRecords: "Tietueet",
   localBackup: "Paikallinen varmuuskopio",
   newRecord: "Uusi tietue",
+  newRecordShort: "Uusi",
   node: {
     cannotAddMoreItems: {
       maxCountReached: "Lisää kohteita ei voi: enimmäismäärä on saavutettu",

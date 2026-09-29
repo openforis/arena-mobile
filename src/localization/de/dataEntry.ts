@@ -104,6 +104,7 @@ Möchten Sie sie erneut vom Server abrufen?`,
   listOfRecords: "Datensatzliste",
   localBackup: "Lokale Sicherung",
   newRecord: "Neuer Datensatz",
+  newRecordShort: "Neu",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

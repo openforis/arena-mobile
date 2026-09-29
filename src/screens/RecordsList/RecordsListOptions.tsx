@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 import { Surveys } from "@openforis/arena-core";
 
 import {
@@ -5,6 +7,7 @@ import {
   CollapsiblePanel,
   FlexWrapView,
   HView,
+  SegmentedButtons,
   Text,
 } from "components";
 import { Cycles } from "model";
@@ -15,15 +18,41 @@ import { SurveyLanguageSelector } from "./SurveyLanguageSelector";
 
 import styles from "./styles";
 
+enum RecordsType {
+  local = "local",
+  all = "all",
+}
+
+const recordTypeButtons = Object.values(RecordsType).map((recordType) => ({
+  value: recordType,
+  label: `recordsList:recordType.${recordType}`,
+}));
+
 type RecordsListOptionsProps = {
   onImportRecordsFromFilePress: () => void;
+  onlyLocal?: boolean;
+  onOnlyLocalChange: (value: boolean) => void;
   onRevalidateAllRecordsPress: () => void;
 };
 
-// less frequently used settings/actions, collapsed by default; the records type selector,
-// "Check status" and auto-sync are always visible instead - see RecordsListToolbar
+// less frequently used settings/actions, collapsed by default; "Check status" and auto-sync
+// are always visible instead - see RecordsListDock
 export const RecordsListOptions = (props: RecordsListOptionsProps) => {
-  const { onImportRecordsFromFilePress, onRevalidateAllRecordsPress } = props;
+  const {
+    onImportRecordsFromFilePress,
+    onlyLocal,
+    onOnlyLocalChange,
+    onRevalidateAllRecordsPress,
+  } = props;
+
+  const recordsType = onlyLocal ? RecordsType.local : RecordsType.all;
+
+  const onRecordsTypeChange = useCallback(
+    (value: string) => {
+      onOnlyLocalChange(value === RecordsType.local);
+    },
+    [onOnlyLocalChange],
+  );
 
   const survey = SurveySelectors.useCurrentSurvey()!;
 
@@ -36,6 +65,11 @@ export const RecordsListOptions = (props: RecordsListOptionsProps) => {
       contentStyle={styles.optionsContainer}
       headerKey="dataEntry:options"
     >
+      <SegmentedButtons
+        buttons={recordTypeButtons}
+        onChange={onRecordsTypeChange}
+        value={recordsType}
+      />
       <SurveyLanguageSelector />
       {cycles.length > 1 && (
         <HView style={styles.formItem}>
