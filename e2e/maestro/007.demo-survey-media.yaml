@@ -24,19 +24,24 @@ appId: ${APP_ID}
     visible: "Rotate"
     timeout: 20000
 
+- scrollUntilVisible:
+    element: "Select video"
+    direction: DOWN
 - assertVisible: "Site video"
-- assertVisible: "Select video"
 
 # audio file attribute applicable only when consent is given
 - scrollUntilVisible:
-    element: "Supporting document"
+    element: "Yes"
     direction: DOWN
 - assertNotVisible: "Interview audio recording"
 - tapOn: "Yes"
 - scrollUntilVisible:
-    element: "Interview audio recording"
+    element: "Select audio"
     direction: DOWN
-- assertVisible: "Select audio"
+- assertVisible: "Interview audio recording"
+- scrollUntilVisible:
+    element: "No"
+    direction: UP
 - tapOn: "No"
 - assertNotVisible: "Interview audio recording"
 

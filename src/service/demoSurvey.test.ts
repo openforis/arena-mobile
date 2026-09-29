@@ -225,8 +225,10 @@ describe("Demo survey", () => {
       const { categoryItemIndex = {} } = (survey.refData ?? {}) as any;
       for (const item of Object.values<any>(categoryItemIndex)) {
         const category = survey.categories?.[item.categoryUuid];
-        expect(category).toBeDefined();
-        const levelUuids = Object.values(category!.levels ?? {}).map(
+        if (!category) {
+          throw new Error(`category not found: ${item.categoryUuid}`);
+        }
+        const levelUuids = Object.values(category.levels ?? {}).map(
           (level: any) => level.uuid,
         );
         expect(levelUuids).toContain(item.levelUuid);

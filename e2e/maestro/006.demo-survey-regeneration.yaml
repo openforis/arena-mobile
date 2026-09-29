@@ -15,6 +15,9 @@ appId: ${APP_ID}
 - assertVisible: "1"
 
 # taxon attribute: search by scientific name
+- scrollUntilVisible:
+    element: "Search taxon"
+    direction: DOWN
 - tapOn: "Search taxon"
 - tapOn:
     id: "search-bar"
@@ -28,8 +31,15 @@ appId: ${APP_ID}
 - assertVisible: "Ziziphus mauritiana \\(ZIZ_MAU\\)"
 
 # code attribute rendered as radio buttons
+- scrollUntilVisible:
+    element: "Pole.*"
+    direction: DOWN
 - tapOn: "Pole.*"
 
+- scrollUntilVisible:
+    element:
+      id: "regeneration_count"
+    direction: DOWN
 - tapOn:
     id: "regeneration_count"
 - inputText: "3"
@@ -40,9 +50,13 @@ appId: ${APP_ID}
     element: "Browsing damage\\?"
     direction: DOWN
 - assertNotVisible: "Browsed individuals \\[%\\]"
+- scrollUntilVisible:
+    element: "True"
+    direction: DOWN
 - tapOn: "True"
 - scrollUntilVisible:
-    element: "Browsed individuals \\[%\\]"
+    element:
+      id: "regeneration_browsed_percent"
     direction: DOWN
 - tapOn:
     id: "regeneration_browsed_percent"

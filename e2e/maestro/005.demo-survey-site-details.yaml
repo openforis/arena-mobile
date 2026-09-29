@@ -27,13 +27,18 @@ appId: ${APP_ID}
 - setLocation:
     latitude: 3.9768
     longitude: 42.10738
-- tapOn: "Get location"
-- extendedWaitUntil:
-    visible: "3\\.9768"
-    timeout: 20000
-# calculated attribute: distance(unit_location_given, site_location)
 - scrollUntilVisible:
-    element: "Distance from provided location \\[m\\]"
+    element: "Get location"
+    direction: DOWN
+- tapOn: "Get location"
+- scrollUntilVisible:
+    element: "3\\.9768"
+    direction: UP
+    timeout: 30000
+# calculated attribute: distance(unit_location_given, site_location)
+# (scroll to the next field so that the value below the label is visible)
+- scrollUntilVisible:
+    element: "Elevation \\[m\\]"
     direction: DOWN
 - assertVisible: "10[0-9](\\.[0-9]+)?"
 
@@ -64,13 +69,20 @@ appId: ${APP_ID}
 - inputText: "ann"
 - tapOn: "Observers"
 - tapOn: "New Observers"
+- scrollUntilVisible:
+    element: "New Observers"
+    direction: DOWN
 - tapOn:
     id: "site_observers"
     index: 1
 - inputText: "bob"
 - tapOn: "Observers"
-- assertVisible: "Ann"
-- assertVisible: "Bob"
+- scrollUntilVisible:
+    element: "Ann"
+    direction: UP
+- scrollUntilVisible:
+    element: "Bob"
+    direction: DOWN
 
 # enumerated entity: one row for each ground cover class is created automatically
 - scrollUntilVisible:
@@ -79,7 +91,9 @@ appId: ${APP_ID}
 - tapOn: "Edit Ground cover"
 - assertVisible: "Trees"
 - assertVisible: "Shrubs"
-- assertVisible: "Litter"
+- scrollUntilVisible:
+    element: "Litter"
+    direction: DOWN
 - assertNotVisible: "New Ground cover"
 - tapOn: "Trees"
 - tapOn:
@@ -95,7 +109,9 @@ appId: ${APP_ID}
 - tapOn: "Cover \\[%\\]"
 # back to Site Details (breadcrumb): the total is calculated with sum(ground_cover.ground_cover_percent)
 - tapOn: "Site Details"
+# (scroll to the next field so that the value below the label is visible)
 - scrollUntilVisible:
-    element: "Total ground cover \\[%\\]"
+    element: "Site description"
     direction: DOWN
+- assertVisible: "Total ground cover \\[%\\]"
 - assertVisible: "100"
