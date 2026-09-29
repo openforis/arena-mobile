@@ -102,6 +102,7 @@ export default {
   listOfRecords: "رکوردها",
   localBackup: "پشتیبان گیری محلی",
   newRecord: "رکورد جدید",
+  newRecordShort: "جدید",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

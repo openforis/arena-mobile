@@ -105,6 +105,7 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
   listOfRecords: "Enregistrements",
   localBackup: "Sauvegarde locale",
   newRecord: "Nouvel enregistrement",
+  newRecordShort: "Nouveau",
   node: {
     cannotAddMoreItems: {
       maxCountReached:

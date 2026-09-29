@@ -100,6 +100,7 @@ Deseja obtê-las novamente do servidor?`,
   listOfRecords: "Registos",
   localBackup: "Cópia de segurança local",
   newRecord: "Novo registro",
+  newRecordShort: "Novo",
   node: {
     cannotAddMoreItems: {
       maxCountReached:
