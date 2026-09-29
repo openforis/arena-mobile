@@ -1,9 +1,7 @@
 appId: ${APP_ID}
 ---
+# Flows using the demo survey bundled with the app: no Arena server or login required
 - runFlow: 001.startup.yaml
-- runFlow: 002.login.yaml
-- runFlow: 003.download-demo-survey.yaml
-- runFlow: 004.create-new-record.yaml
 - runFlow: 005.demo-survey-site-details.yaml
 - runFlow: 006.demo-survey-regeneration.yaml
 - runFlow: 007.demo-survey-media.yaml

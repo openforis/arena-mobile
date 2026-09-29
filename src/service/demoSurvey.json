@@ -2560,8 +2560,7 @@
         "cycles": ["0"],
         "key": true,
         "autoIncrementalKey": true,
-        "labels": { "en": "Regeneration no." },
-        "layout": { "0": { "includedInMultipleEntitySummary": true } }
+        "labels": { "en": "Regeneration no." }
       },
       "meta": {
         "h": [

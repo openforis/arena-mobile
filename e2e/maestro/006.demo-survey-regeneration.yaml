@@ -1,0 +1,75 @@
+appId: ${APP_ID}
+---
+# Demo survey (bundled, no login): multiple entity rendered as form, taxon attribute,
+# conditional attributes and nested multiple entity (table)
+- runFlow: common/demo-survey-new-record.yaml
+- runFlow:
+    file: common/open-page.yaml
+    env:
+      PAGE: "Regeneration"
+- assertVisible: "No entities defined"
+- tapOn: "New Regeneration"
+
+# auto-incremental key
+- assertVisible: "Regeneration no\\."
+- assertVisible: "1"
+
+# taxon attribute: search by scientific name
+- tapOn: "Search taxon"
+- tapOn:
+    id: "search-bar"
+- inputText: "zizi"
+- extendedWaitUntil:
+    visible: ".*Ziziphus mauritiana"
+    timeout: 10000
+# close the keyboard first (otherwise the next tap only hides it)
+- tapOn: "Select an item"
+- tapOn: ".*Ziziphus mauritiana"
+- assertVisible: "Ziziphus mauritiana \\(ZIZ_MAU\\)"
+
+# code attribute rendered as radio buttons
+- tapOn: "Pole.*"
+
+- tapOn:
+    id: "regeneration_count"
+- inputText: "3"
+- tapOn: "Number of individuals"
+
+# attribute applicable only when browsing damage is true
+- scrollUntilVisible:
+    element: "Browsing damage\\?"
+    direction: DOWN
+- assertNotVisible: "Browsed individuals \\[%\\]"
+- tapOn: "True"
+- scrollUntilVisible:
+    element: "Browsed individuals \\[%\\]"
+    direction: DOWN
+- tapOn:
+    id: "regeneration_browsed_percent"
+- inputText: "30"
+- tapOn: "Browsed individuals \\[%\\]"
+
+# nested multiple entity, applicable only to poles
+- scrollUntilVisible:
+    element: "Edit Stems"
+    direction: DOWN
+- tapOn: "Edit Stems"
+- assertVisible: "No entities defined"
+- tapOn: "New Stems"
+- assertVisible: "Stem no\\."
+- tapOn:
+    id: "stem_diameter"
+- inputText: "4.5"
+- tapOn: "Diameter \\[cm\\]"
+
+# back to the list of regeneration entities (bottom bar button): summary columns are shown
+- runFlow:
+    file: common/open-page.yaml
+    env:
+      PAGE: "Regeneration"
+- assertVisible: "Regeneration\\[1\\]"
+- tapOn: "Regeneration"
+- assertVisible: "Ziziphus mauritiana"
+- assertVisible: "3"
+- tapOn: "New Regeneration"
+- assertVisible: "2"
