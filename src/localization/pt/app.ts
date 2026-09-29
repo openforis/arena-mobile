@@ -26,6 +26,7 @@ export default {
     startingDbMigrations: "A iniciar migrações de BD",
     fetchingSurveys: "A obter inquéritos",
     importingDemoSurvey: "A importar inquérito de demonstração",
+    updatingDemoSurvey: "A atualizar inquérito de demonstração",
     fetchingAndSettingLocalSurveys: "A obter e definir inquéritos locais",
     fetchingAndSettingSurvey: "A obter e definir inquérito",
     checkingLoggedIn: "A verificar início de sessão",

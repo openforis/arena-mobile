@@ -1,4 +1,4 @@
-import { Survey, Surveys, UserGroup } from "@openforis/arena-core";
+import { Dates, Survey, Surveys, UserGroup } from "@openforis/arena-core";
 
 import { SurveyRepository } from "./repository/surveyRepository";
 import { SurveyFSRepository } from "./repository/surveyFSRepository";
@@ -123,8 +123,33 @@ const fetchCurrentUserGroupRemote = async ({
 
 const getSurveysStorageSize = async () => SurveyFSRepository.getStorageSize();
 
-const importDemoSurvey = async () =>
-  _insertSurvey(demoSurvey as unknown as Survey);
+// insert/update mutate the survey object (id, remoteId): always pass a copy of the bundled one
+const cloneDemoSurvey = (): Survey =>
+  JSON.parse(JSON.stringify(demoSurvey)) as Survey;
+
+const importDemoSurvey = async () => _insertSurvey(cloneDemoSurvey());
+
+// The demo survey is imported only when no surveys exist locally, so a newer version bundled
+// with the app must be applied in place to the already imported one (same local id, so its
+// records are kept; they are fixed against the new survey structure when loaded, see RecordFixer).
+// The local date_modified column stores datePublished (see SurveyRepository.insertSurvey).
+const findOutdatedDemoSurveySummary = <
+  T extends { uuid: string; dateModified: string },
+>(
+  surveySummaries: T[],
+): T | undefined => {
+  const demoSurveySummary = surveySummaries.find(
+    (surveySummary) => surveySummary.uuid === demoSurveyUuid,
+  );
+  if (!demoSurveySummary) return undefined;
+  const demoSurveyDate = demoSurvey.datePublished ?? demoSurvey.dateModified;
+  return Dates.isAfter(demoSurveyDate, demoSurveySummary.dateModified)
+    ? demoSurveySummary
+    : undefined;
+};
+
+const updateDemoSurvey = async ({ surveyId }: { surveyId: number }) =>
+  _updateSurvey({ id: surveyId, survey: cloneDemoSurvey() });
 
 const importSurveyRemote = async ({ id }: any) => {
   const survey = await fetchSurveyRemoteById({ id });
@@ -155,6 +180,8 @@ export const SurveyService = {
   fetchCurrentUserGroupRemote,
   getSurveysStorageSize,
   importDemoSurvey,
+  findOutdatedDemoSurveySummary,
+  updateDemoSurvey,
   importSurveyRemote,
   fetchCategoryItems,
   insertSurvey,

@@ -38,6 +38,7 @@ const steps = {
   startingDbMigrations: "startingDbMigrations",
   fetchingSurveys: "fetchingSurveys",
   importingDemoSurvey: "importingDemoSurvey",
+  updatingDemoSurvey: "updatingDemoSurvey",
   fetchingAndSettingLocalSurveys: "fetchingAndSettingLocalSurveys",
   fetchingAndSettingSurvey: "fetchingAndSettingSurvey",
   checkingLoggedIn: "checkingLoggedIn",
@@ -112,6 +113,15 @@ export const AppInitializer = (props: Props) => {
     if (surveySummaries.length === 0) {
       setStep(steps.importingDemoSurvey);
       await SurveyService.importDemoSurvey();
+    } else {
+      const outdatedDemoSurvey =
+        SurveyService.findOutdatedDemoSurveySummary(surveySummaries);
+      if (outdatedDemoSurvey) {
+        setStep(steps.updatingDemoSurvey);
+        await SurveyService.updateDemoSurvey({
+          surveyId: outdatedDemoSurvey.id,
+        });
+      }
     }
     setStep(steps.fetchingAndSettingLocalSurveys);
     await dispatch(SurveyActions.fetchAndSetLocalSurveys());

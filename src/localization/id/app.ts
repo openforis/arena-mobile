@@ -27,6 +27,7 @@ export default {
     startingDbMigrations: "Memulai migrasi Basisdata",
     fetchingSurveys: "Mengambil survei",
     importingDemoSurvey: "Mengimpor survei Demo",
+    updatingDemoSurvey: "Memperbarui survei Demo",
     fetchingAndSettingLocalSurveys: "Mengambil dan mengatur survei lokal",
     fetchingAndSettingSurvey: "Mengambil dan mengatur survei",
     checkingLoggedIn: "Memeriksa status login",

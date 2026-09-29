@@ -27,6 +27,7 @@ export default {
     startingDbMigrations: "データベースの移行を開始中",
     fetchingSurveys: "調査を取得中",
     importingDemoSurvey: "デモ調査をインポート中",
+    updatingDemoSurvey: "デモ調査を更新中",
     fetchingAndSettingLocalSurveys: "ローカルの調査を取得・設定中",
     fetchingAndSettingSurvey: "調査を取得・設定中",
     checkingLoggedIn: "ログイン状態を確認中",

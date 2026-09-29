@@ -33,8 +33,8 @@
   },
   "template": false,
   "dateCreated": "2025-11-25T10:57:14.948Z",
-  "dateModified": "2025-11-26T09:43:33.800Z",
-  "datePublished": "2025-11-26T09:43:38.169Z",
+  "dateModified": "2026-09-29T12:00:00.000Z",
+  "datePublished": "2026-09-29T12:00:00.000Z",
   "validation": null,
   "nodeDefs": {
     "db99782b-5d68-4e51-a698-ab18574c4295": {
@@ -54,7 +54,12 @@
             "pageUuid": "e4e38de3-6779-413b-84b5-066981630b4f",
             "columnsNo": 2,
             "renderType": "form",
-            "indexChildren": ["509c42c8-8fe9-4bb6-94b6-b4b57b1bba2e"],
+            "indexChildren": [
+              "509c42c8-8fe9-4bb6-94b6-b4b57b1bba2e",
+              "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+              "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3",
+              "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86"
+            ],
             "layoutChildren": [
               {
                 "h": 1,
@@ -729,7 +734,9 @@
               "73d63b44-49c1-4a8c-a783-82bb52c919c4",
               "2965682d-b66f-4b8c-be1f-60be75f42a17",
               "26aa1be3-e775-460b-a021-16d774c194cb",
-              "0b31b953-eefb-4dba-ab6a-6af8fd2da1bd"
+              "0b31b953-eefb-4dba-ab6a-6af8fd2da1bd",
+              "7bca11f9-06d3-42db-a600-148cbf6a3a3f",
+              "30764110-ecba-445f-a92d-a2279ed2afed"
             ],
             "hiddenWhenNotRelevant": true
           }
@@ -1084,10 +1091,7 @@
       "parentUuid": "d1a04f35-0c3b-4692-96a7-280cb83e2aa5",
       "dateCreated": "2025-11-25T10:57:14.879Z",
       "dateModified": "2025-11-25T10:57:14.879Z",
-      "propsAdvanced": {
-        "applicable": [],
-        "validations": { "required": true }
-      }
+      "propsAdvanced": { "applicable": [], "validations": { "required": true } }
     },
     "b7322b31-db75-4d49-8e15-7da1bfe0506e": {
       "id": "22",
@@ -1281,11 +1285,7 @@
       "deleted": false,
       "analysis": true,
       "virtual": false,
-      "props": {
-        "name": "tree_plot_area_",
-        "cycles": ["0"],
-        "propsDraft": {}
-      },
+      "props": { "name": "tree_plot_area_", "cycles": ["0"], "propsDraft": {} },
       "meta": {
         "h": [
           "db99782b-5d68-4e51-a698-ab18574c4295",
@@ -1677,10 +1677,7 @@
       "parentUuid": "d1a04f35-0c3b-4692-96a7-280cb83e2aa5",
       "dateCreated": "2025-11-25T10:57:14.879Z",
       "dateModified": "2025-11-25T10:57:14.879Z",
-      "propsAdvanced": {
-        "applicable": [],
-        "validations": { "required": true }
-      }
+      "propsAdvanced": { "applicable": [], "validations": { "required": true } }
     },
     "489dace9-1e89-42dc-8c5b-0a366c57ebc2": {
       "id": "40",
@@ -1708,10 +1705,1545 @@
       "parentUuid": "d1a04f35-0c3b-4692-96a7-280cb83e2aa5",
       "dateCreated": "2025-11-25T10:57:14.879Z",
       "dateModified": "2025-11-25T10:57:14.879Z",
+      "propsAdvanced": { "applicable": [], "validations": { "required": true } }
+    },
+    "7bca11f9-06d3-42db-a600-148cbf6a3a3f": {
+      "id": "41",
+      "uuid": "7bca11f9-06d3-42db-a600-148cbf6a3a3f",
+      "type": "decimal",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "tree_basal_area",
+        "cycles": ["0"],
+        "labels": { "en": "Basal area [m²]" },
+        "descriptions": { "en": "Calculated from the diameter" },
+        "readOnly": true,
+        "maxNumberDecimalDigits": 4
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "509c42c8-8fe9-4bb6-94b6-b4b57b1bba2e",
+          "c2953af5-3ee7-43e8-a32b-3ecfdd4c8e62"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "c2953af5-3ee7-43e8-a32b-3ecfdd4c8e62",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
       "propsAdvanced": {
-        "applicable": [],
+        "defaultValues": [
+          {
+            "uuid": "ddeb2cfe-ae64-48e3-a605-dcf9b96659eb",
+            "expression": "Math.PI * Math.pow(tree_dbh / 200, 2)"
+          }
+        ]
+      }
+    },
+    "30764110-ecba-445f-a92d-a2279ed2afed": {
+      "id": "42",
+      "uuid": "30764110-ecba-445f-a92d-a2279ed2afed",
+      "type": "decimal",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "tree_wood_density",
+        "cycles": ["0"],
+        "labels": { "en": "Wood density [g/cm³]" },
+        "descriptions": {
+          "en": "Read from the species list (taxonomy extra property)"
+        },
+        "readOnly": true
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "509c42c8-8fe9-4bb6-94b6-b4b57b1bba2e",
+          "c2953af5-3ee7-43e8-a32b-3ecfdd4c8e62"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "c2953af5-3ee7-43e8-a32b-3ecfdd4c8e62",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "defaultValues": [
+          {
+            "uuid": "e95801d3-bdb6-4436-a132-4485048fd2ad",
+            "expression": "taxonProp('trees', 'wood_density', tree_species)"
+          }
+        ]
+      }
+    },
+    "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b": {
+      "id": "43",
+      "uuid": "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+      "type": "entity",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "site_details",
+        "cycles": ["0"],
+        "labels": { "en": "Site Details" },
+        "descriptions": {
+          "en": "Showcase of hierarchical codes, calculated attributes, validation warnings, multiple attributes and enumerated entities."
+        },
+        "multiple": false,
+        "layout": {
+          "0": {
+            "pageUuid": "a8cde1f1-306a-4c87-ada2-0b7563bbd3da",
+            "renderType": "form",
+            "columnsNo": 1,
+            "indexChildren": [],
+            "layoutChildren": [
+              {
+                "h": 1,
+                "i": "9ccee412-fe3c-40e0-abac-4d45626f3bf8",
+                "w": 1,
+                "x": 0,
+                "y": 0,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "75c670ac-3d07-4417-a9e2-64622b0e726a",
+                "w": 1,
+                "x": 0,
+                "y": 1,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "e260e571-4493-446a-a613-669c7959b204",
+                "w": 1,
+                "x": 0,
+                "y": 2,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "b323a545-21d4-4c4a-a1fa-ea97f781e811",
+                "w": 1,
+                "x": 0,
+                "y": 3,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "a28818e3-d6b0-4f29-a8c8-ac8de8aa8664",
+                "w": 1,
+                "x": 0,
+                "y": 4,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "bb7106a4-523b-42a3-aaf0-173c33851d94",
+                "w": 1,
+                "x": 0,
+                "y": 5,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "970423bd-0017-43cc-addb-b886d31b9277",
+                "w": 1,
+                "x": 0,
+                "y": 6,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "d9ae987c-872f-4652-a21b-c1c83b214994",
+                "w": 1,
+                "x": 0,
+                "y": 7,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "03502b15-447d-40df-afe9-2c922e85a4dd",
+                "w": 1,
+                "x": 0,
+                "y": 8,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "2054a36a-2382-41a8-a9ea-e40effc42be5",
+                "w": 1,
+                "x": 0,
+                "y": 9,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "b0688598-1205-4da6-a216-faba27997ce8",
+                "w": 1,
+                "x": 0,
+                "y": 10,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "973901ea-39f7-4cfc-a9d9-b67432575daf",
+                "w": 1,
+                "x": 0,
+                "y": 11,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "072c15b7-ed15-44fb-a9bd-e806f4a97906",
+                "w": 1,
+                "x": 0,
+                "y": 12,
+                "minH": 1
+              }
+            ]
+          }
+        }
+      },
+      "meta": { "h": ["db99782b-5d68-4e51-a698-ab18574c4295"] },
+      "published": true,
+      "draft": false,
+      "parentUuid": "db99782b-5d68-4e51-a698-ab18574c4295",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {}
+    },
+    "9ccee412-fe3c-40e0-abac-4d45626f3bf8": {
+      "id": "44",
+      "uuid": "9ccee412-fe3c-40e0-abac-4d45626f3bf8",
+      "type": "code",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "region",
+        "cycles": ["0"],
+        "labels": { "en": "Region" },
+        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
+        "layout": { "0": { "renderType": "dropdown", "codeShown": true } }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": { "validations": { "required": true } }
+    },
+    "75c670ac-3d07-4417-a9e2-64622b0e726a": {
+      "id": "45",
+      "uuid": "75c670ac-3d07-4417-a9e2-64622b0e726a",
+      "type": "code",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "district",
+        "cycles": ["0"],
+        "labels": { "en": "District" },
+        "descriptions": { "en": "Items depend on the selected region" },
+        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
+        "parentCodeDefUuid": "9ccee412-fe3c-40e0-abac-4d45626f3bf8",
+        "layout": { "0": { "renderType": "dropdown", "codeShown": true } }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": { "validations": { "required": true } }
+    },
+    "e260e571-4493-446a-a613-669c7959b204": {
+      "id": "46",
+      "uuid": "e260e571-4493-446a-a613-669c7959b204",
+      "type": "coordinate",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "site_location",
+        "cycles": ["0"],
+        "labels": { "en": "Site location" },
+        "descriptions": { "en": "Record the location with the device GPS" },
+        "includeAccuracy": true,
+        "includeAltitude": true
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {}
+    },
+    "b323a545-21d4-4c4a-a1fa-ea97f781e811": {
+      "id": "47",
+      "uuid": "b323a545-21d4-4c4a-a1fa-ea97f781e811",
+      "type": "decimal",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "site_distance_from_given_location",
+        "cycles": ["0"],
+        "labels": { "en": "Distance from provided location [m]" },
+        "readOnly": true,
+        "maxNumberDecimalDigits": 1
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "defaultValues": [
+          {
+            "uuid": "ace5e269-429a-4607-ad0b-17e2cc2cb92f",
+            "expression": "distance(unit_location_given, site_location)"
+          }
+        ],
+        "validations": {
+          "expressions": [
+            {
+              "uuid": "1ceb511b-b6ed-4629-abcc-dffb0304069f",
+              "expression": "this <= 100",
+              "severity": "warning",
+              "messages": {
+                "en": "The site is more than 100 m away from the provided location"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "a28818e3-d6b0-4f29-a8c8-ac8de8aa8664": {
+      "id": "48",
+      "uuid": "a28818e3-d6b0-4f29-a8c8-ac8de8aa8664",
+      "type": "integer",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "site_elevation",
+        "cycles": ["0"],
+        "labels": { "en": "Elevation [m]" }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "validations": {
+          "expressions": [
+            {
+              "uuid": "2e9c17a3-c970-49ac-adbf-f330ddb2b1bf",
+              "expression": "this >= -500 && this <= 8848",
+              "severity": "error",
+              "messages": { "en": "Elevation must be between -500 and 8848 m" }
+            }
+          ]
+        }
+      }
+    },
+    "bb7106a4-523b-42a3-aaf0-173c33851d94": {
+      "id": "49",
+      "uuid": "bb7106a4-523b-42a3-aaf0-173c33851d94",
+      "type": "integer",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "site_slope",
+        "cycles": ["0"],
+        "labels": { "en": "Slope [%]" }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "validations": {
+          "expressions": [
+            {
+              "uuid": "8ed6177d-d7e3-44d9-af34-cbe298b76dae",
+              "expression": "this >= 0 && this <= 100",
+              "severity": "error",
+              "messages": { "en": "Slope must be between 0 and 100%" }
+            },
+            {
+              "uuid": "9d421d51-087c-4691-aedd-8eee1c20e220",
+              "expression": "this <= 60",
+              "severity": "warning",
+              "messages": {
+                "en": "Very steep slope: please double check the value"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "970423bd-0017-43cc-addb-b886d31b9277": {
+      "id": "50",
+      "uuid": "970423bd-0017-43cc-addb-b886d31b9277",
+      "type": "code",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "site_aspect",
+        "cycles": ["0"],
+        "labels": { "en": "Aspect" },
+        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
+        "layout": { "0": { "renderType": "checkbox", "codeShown": true } }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "applicable": [
+          {
+            "uuid": "7cea37da-6b7d-40bd-a5ae-a8c576049dc0",
+            "expression": "site_slope > 0"
+          }
+        ]
+      }
+    },
+    "d9ae987c-872f-4652-a21b-c1c83b214994": {
+      "id": "51",
+      "uuid": "d9ae987c-872f-4652-a21b-c1c83b214994",
+      "type": "text",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "site_observers",
+        "cycles": ["0"],
+        "labels": { "en": "Observers" },
+        "descriptions": {
+          "en": "Add one value for each member of the field team"
+        },
+        "multiple": true,
+        "textTransform": "capitalize"
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "validations": { "count": { "min": "1", "max": "5" } }
+      }
+    },
+    "03502b15-447d-40df-afe9-2c922e85a4dd": {
+      "id": "52",
+      "uuid": "03502b15-447d-40df-afe9-2c922e85a4dd",
+      "type": "date",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "site_last_visit_date",
+        "cycles": ["0"],
+        "labels": { "en": "Date of previous visit" }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "validations": {
+          "expressions": [
+            {
+              "uuid": "3715d5ee-3584-4333-a41d-edb8d4c5527a",
+              "expression": "this <= survey_date",
+              "severity": "error",
+              "messages": {
+                "en": "The previous visit must be before the survey date"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "2054a36a-2382-41a8-a9ea-e40effc42be5": {
+      "id": "53",
+      "uuid": "2054a36a-2382-41a8-a9ea-e40effc42be5",
+      "type": "time",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "site_end_time",
+        "cycles": ["0"],
+        "labels": { "en": "End time" }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {}
+    },
+    "b0688598-1205-4da6-a216-faba27997ce8": {
+      "id": "54",
+      "uuid": "b0688598-1205-4da6-a216-faba27997ce8",
+      "type": "entity",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "ground_cover",
+        "cycles": ["0"],
+        "labels": { "en": "Ground cover" },
+        "descriptions": {
+          "en": "Enumerated entity: one row is created automatically for each ground cover class"
+        },
+        "multiple": true,
+        "layout": {
+          "0": {
+            "renderType": "table",
+            "columnsNo": 1,
+            "indexChildren": [],
+            "layoutChildren": [
+              "c4ef36b5-7ebb-499a-aaa2-ed58b4c8c9ee",
+              "5a018510-6132-4694-acac-741c8c5b5dbf"
+            ]
+          }
+        },
+        "enumerate": true
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {}
+    },
+    "c4ef36b5-7ebb-499a-aaa2-ed58b4c8c9ee": {
+      "id": "55",
+      "uuid": "c4ef36b5-7ebb-499a-aaa2-ed58b4c8c9ee",
+      "type": "code",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "ground_cover_class",
+        "cycles": ["0"],
+        "key": true,
+        "readOnly": true,
+        "labels": { "en": "Cover class" },
+        "categoryUuid": "278c4b10-94d7-4de3-ad89-17cbad8cad96",
+        "layout": { "0": { "renderType": "dropdown", "codeShown": false } }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+          "b0688598-1205-4da6-a216-faba27997ce8"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "b0688598-1205-4da6-a216-faba27997ce8",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {}
+    },
+    "5a018510-6132-4694-acac-741c8c5b5dbf": {
+      "id": "56",
+      "uuid": "5a018510-6132-4694-acac-741c8c5b5dbf",
+      "type": "integer",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "ground_cover_percent",
+        "cycles": ["0"],
+        "labels": { "en": "Cover [%]" }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+          "b0688598-1205-4da6-a216-faba27997ce8"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "b0688598-1205-4da6-a216-faba27997ce8",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "validations": {
+          "expressions": [
+            {
+              "uuid": "620c6ae7-a682-4a5e-a584-66d5be12f7d3",
+              "expression": "this >= 0 && this <= 100",
+              "severity": "error",
+              "messages": { "en": "Cover must be between 0 and 100%" }
+            }
+          ]
+        }
+      }
+    },
+    "973901ea-39f7-4cfc-a9d9-b67432575daf": {
+      "id": "57",
+      "uuid": "973901ea-39f7-4cfc-a9d9-b67432575daf",
+      "type": "integer",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "ground_cover_total",
+        "cycles": ["0"],
+        "labels": { "en": "Total ground cover [%]" },
+        "readOnly": true
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "defaultValues": [
+          {
+            "uuid": "cd7b865c-8277-443e-a3e9-53b5d90ccc37",
+            "expression": "sum(ground_cover.ground_cover_percent)"
+          }
+        ],
+        "validations": {
+          "expressions": [
+            {
+              "uuid": "70b8f3f3-33a6-41cd-af66-f4452e98d851",
+              "expression": "this == 100",
+              "severity": "warning",
+              "messages": { "en": "The total ground cover should be 100%" }
+            }
+          ]
+        }
+      }
+    },
+    "072c15b7-ed15-44fb-a9bd-e806f4a97906": {
+      "id": "58",
+      "uuid": "072c15b7-ed15-44fb-a9bd-e806f4a97906",
+      "type": "text",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "site_description",
+        "cycles": ["0"],
+        "labels": { "en": "Site description" },
+        "textInputType": "multiLine"
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {}
+    },
+    "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3": {
+      "id": "59",
+      "uuid": "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3",
+      "type": "entity",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "regeneration",
+        "cycles": ["0"],
+        "labels": { "en": "Regeneration" },
+        "descriptions": {
+          "en": "Multiple entity rendered as a form, with a nested table (stems)."
+        },
+        "multiple": true,
+        "layout": {
+          "0": {
+            "pageUuid": "fd429369-a567-43bf-a7e1-ff7c3e493664",
+            "renderType": "form",
+            "columnsNo": 1,
+            "indexChildren": [],
+            "layoutChildren": [
+              {
+                "h": 1,
+                "i": "f24046cb-29ed-442d-a7e9-d56b58283ad6",
+                "w": 1,
+                "x": 0,
+                "y": 0,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "02060347-4b44-4e0e-a4e0-a71b0b692a14",
+                "w": 1,
+                "x": 0,
+                "y": 1,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "bbb1c4ef-3fbc-4315-ac45-0e40eb5d4f5f",
+                "w": 1,
+                "x": 0,
+                "y": 2,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "b6de99b5-9f87-434f-a233-2fc877addbb7",
+                "w": 1,
+                "x": 0,
+                "y": 3,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "8b71c6be-87ff-45dd-a381-a47a6d36ffb7",
+                "w": 1,
+                "x": 0,
+                "y": 4,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "98f00ed4-8819-4e84-a7ca-5bb973c4f47b",
+                "w": 1,
+                "x": 0,
+                "y": 5,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "4f758c4d-f40e-4b90-aa2c-12d5b03c78c0",
+                "w": 1,
+                "x": 0,
+                "y": 6,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "96a1830b-3fe3-4b31-a440-935d3d1b297a",
+                "w": 1,
+                "x": 0,
+                "y": 7,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "de85622d-9db6-4b76-ae47-15a745720584",
+                "w": 1,
+                "x": 0,
+                "y": 8,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "155b5973-b2ca-456f-a6cb-5ec7bb77ec00",
+                "w": 1,
+                "x": 0,
+                "y": 9,
+                "minH": 1
+              }
+            ]
+          }
+        }
+      },
+      "meta": { "h": ["db99782b-5d68-4e51-a698-ab18574c4295"] },
+      "published": true,
+      "draft": false,
+      "parentUuid": "db99782b-5d68-4e51-a698-ab18574c4295",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {}
+    },
+    "f24046cb-29ed-442d-a7e9-d56b58283ad6": {
+      "id": "60",
+      "uuid": "f24046cb-29ed-442d-a7e9-d56b58283ad6",
+      "type": "integer",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "regeneration_no",
+        "cycles": ["0"],
+        "key": true,
+        "autoIncrementalKey": true,
+        "labels": { "en": "Regeneration no." },
+        "layout": { "0": { "includedInMultipleEntitySummary": true } }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "defaultValueEvaluatedOneTime": true,
+        "defaultValues": [
+          {
+            "uuid": "d2fe81eb-1b20-4f6e-a48a-1283dfcf53e7",
+            "expression": "1",
+            "applyIf": "index($context) == 0"
+          },
+          {
+            "uuid": "216aedbb-6d35-4eb8-a195-445d6f09ba9c",
+            "expression": "Math.max(parent($context).regeneration.regeneration_no) + 1"
+          }
+        ],
+        "validations": {
+          "required": true,
+          "expressions": [
+            {
+              "uuid": "b2b8d1e7-f4df-4620-a5de-cca3e22eaa16",
+              "expression": "this >= 1",
+              "severity": "error",
+              "messages": { "en": "Must be >= 1" }
+            }
+          ]
+        }
+      }
+    },
+    "02060347-4b44-4e0e-a4e0-a71b0b692a14": {
+      "id": "61",
+      "uuid": "02060347-4b44-4e0e-a4e0-a71b0b692a14",
+      "type": "taxon",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "regeneration_species",
+        "cycles": ["0"],
+        "labels": { "en": "Species" },
+        "taxonomyUuid": "9f6906f4-948f-4eb9-9a81-1ebdc3345ce0",
+        "visibleFields": ["code", "scientificName", "vernacularName"],
+        "layout": { "0": { "includedInMultipleEntitySummary": true } }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": { "validations": { "required": true } }
+    },
+    "bbb1c4ef-3fbc-4315-ac45-0e40eb5d4f5f": {
+      "id": "62",
+      "uuid": "bbb1c4ef-3fbc-4315-ac45-0e40eb5d4f5f",
+      "type": "code",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "regeneration_growth_form",
+        "cycles": ["0"],
+        "labels": { "en": "Growth form" },
+        "categoryUuid": "9e023da7-4de0-47d4-a023-cb5a4a3943cf",
+        "layout": { "0": { "renderType": "checkbox", "codeShown": false } }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": { "validations": { "required": true } }
+    },
+    "b6de99b5-9f87-434f-a233-2fc877addbb7": {
+      "id": "63",
+      "uuid": "b6de99b5-9f87-434f-a233-2fc877addbb7",
+      "type": "integer",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "regeneration_count",
+        "cycles": ["0"],
+        "labels": { "en": "Number of individuals" },
+        "layout": { "0": { "includedInMultipleEntitySummary": true } }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "validations": {
+          "required": true,
+          "expressions": [
+            {
+              "uuid": "12ba44a5-409e-4deb-a162-22396d88b0c4",
+              "expression": "this >= 1",
+              "severity": "error",
+              "messages": { "en": "Must be >= 1" }
+            }
+          ]
+        }
+      }
+    },
+    "8b71c6be-87ff-45dd-a381-a47a6d36ffb7": {
+      "id": "64",
+      "uuid": "8b71c6be-87ff-45dd-a381-a47a6d36ffb7",
+      "type": "decimal",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "regeneration_avg_height",
+        "cycles": ["0"],
+        "labels": { "en": "Average height [m]" },
+        "maxNumberDecimalDigits": 2
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "validations": {
+          "expressions": [
+            {
+              "uuid": "c83548ee-031b-4b08-a630-26b735b02f17",
+              "expression": "this > 0 && this <= 10",
+              "severity": "error",
+              "messages": { "en": "Height must be between 0 and 10 m" }
+            }
+          ]
+        }
+      }
+    },
+    "98f00ed4-8819-4e84-a7ca-5bb973c4f47b": {
+      "id": "65",
+      "uuid": "98f00ed4-8819-4e84-a7ca-5bb973c4f47b",
+      "type": "boolean",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "regeneration_browsed",
+        "cycles": ["0"],
+        "labels": { "en": "Browsing damage?" },
+        "labelValue": "trueFalse"
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {}
+    },
+    "4f758c4d-f40e-4b90-aa2c-12d5b03c78c0": {
+      "id": "66",
+      "uuid": "4f758c4d-f40e-4b90-aa2c-12d5b03c78c0",
+      "type": "integer",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "regeneration_browsed_percent",
+        "cycles": ["0"],
+        "labels": { "en": "Browsed individuals [%]" },
+        "layout": { "0": { "hiddenWhenNotRelevant": true } }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "applicable": [
+          {
+            "uuid": "340851a4-6064-4234-aaf2-d569d021b4e1",
+            "expression": "regeneration_browsed == true"
+          }
+        ],
+        "validations": {
+          "expressions": [
+            {
+              "uuid": "95b01ea8-796d-4e1e-a70f-ce260d922bb1",
+              "expression": "this >= 0 && this <= 100",
+              "severity": "error",
+              "messages": { "en": "Must be between 0 and 100%" }
+            }
+          ]
+        }
+      }
+    },
+    "96a1830b-3fe3-4b31-a440-935d3d1b297a": {
+      "id": "67",
+      "uuid": "96a1830b-3fe3-4b31-a440-935d3d1b297a",
+      "type": "date",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "regeneration_observation_date",
+        "cycles": ["0"],
+        "labels": { "en": "Observation date" }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "defaultValues": [
+          {
+            "uuid": "a3ae71ba-d5d4-4085-a7c6-e8f1c07dac7d",
+            "expression": "now()"
+          }
+        ],
+        "defaultValueEvaluatedOneTime": true
+      }
+    },
+    "de85622d-9db6-4b76-ae47-15a745720584": {
+      "id": "68",
+      "uuid": "de85622d-9db6-4b76-ae47-15a745720584",
+      "type": "file",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "regeneration_photo",
+        "cycles": ["0"],
+        "labels": { "en": "Photo" },
+        "fileType": "image",
+        "maxFileSize": 5,
+        "geotagInformationShown": true
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {}
+    },
+    "155b5973-b2ca-456f-a6cb-5ec7bb77ec00": {
+      "id": "69",
+      "uuid": "155b5973-b2ca-456f-a6cb-5ec7bb77ec00",
+      "type": "entity",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "regeneration_stem",
+        "cycles": ["0"],
+        "labels": { "en": "Stems" },
+        "descriptions": {
+          "en": "Nested multiple entity (table) inside a multiple entity"
+        },
+        "multiple": true,
+        "layout": {
+          "0": {
+            "renderType": "table",
+            "columnsNo": 1,
+            "indexChildren": [],
+            "layoutChildren": [
+              "62b49887-197c-4b51-a0be-312f00671bee",
+              "dd35be17-2100-4451-a723-75229228d8dd"
+            ],
+            "hiddenWhenNotRelevant": true
+          }
+        }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "applicable": [
+          {
+            "uuid": "a717fe4d-c66b-4e71-ad5e-1ba5a6c6c3e5",
+            "expression": "regeneration_growth_form == \"3\""
+          }
+        ]
+      }
+    },
+    "62b49887-197c-4b51-a0be-312f00671bee": {
+      "id": "70",
+      "uuid": "62b49887-197c-4b51-a0be-312f00671bee",
+      "type": "integer",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "stem_no",
+        "cycles": ["0"],
+        "key": true,
+        "autoIncrementalKey": true,
+        "labels": { "en": "Stem no." }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3",
+          "155b5973-b2ca-456f-a6cb-5ec7bb77ec00"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "155b5973-b2ca-456f-a6cb-5ec7bb77ec00",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "defaultValueEvaluatedOneTime": true,
+        "defaultValues": [
+          {
+            "uuid": "ce7a9d69-77bd-4989-a21a-c66b1f8dfc78",
+            "expression": "1",
+            "applyIf": "index($context) == 0"
+          },
+          {
+            "uuid": "29546a3b-380e-4630-add8-aef89e3f8641",
+            "expression": "Math.max(parent($context).regeneration_stem.stem_no) + 1"
+          }
+        ],
         "validations": { "required": true }
       }
+    },
+    "dd35be17-2100-4451-a723-75229228d8dd": {
+      "id": "71",
+      "uuid": "dd35be17-2100-4451-a723-75229228d8dd",
+      "type": "decimal",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "stem_diameter",
+        "cycles": ["0"],
+        "labels": { "en": "Diameter [cm]" },
+        "maxNumberDecimalDigits": 1
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3",
+          "155b5973-b2ca-456f-a6cb-5ec7bb77ec00"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "155b5973-b2ca-456f-a6cb-5ec7bb77ec00",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "validations": {
+          "required": true,
+          "expressions": [
+            {
+              "uuid": "5513c618-2a21-4fd0-a4f5-cf8563836c26",
+              "expression": "this > 0 && this < 10",
+              "severity": "error",
+              "messages": {
+                "en": "Pole stems must have a diameter between 0 and 10 cm"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86": {
+      "id": "72",
+      "uuid": "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86",
+      "type": "entity",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "media",
+        "cycles": ["0"],
+        "labels": { "en": "Media and Documents" },
+        "descriptions": { "en": "Showcase of all file attribute types" },
+        "multiple": false,
+        "layout": {
+          "0": {
+            "pageUuid": "6d0c56d7-b158-44ed-aa61-304507fa56ed",
+            "renderType": "form",
+            "columnsNo": 1,
+            "indexChildren": [],
+            "layoutChildren": [
+              {
+                "h": 1,
+                "i": "23f20312-d557-47f8-afbe-e119dc2c440e",
+                "w": 1,
+                "x": 0,
+                "y": 0,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "320dd88a-888c-456a-a72b-26e435ddd15e",
+                "w": 1,
+                "x": 0,
+                "y": 1,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "10250381-7a3d-4c23-ac6c-ee3da13c413e",
+                "w": 1,
+                "x": 0,
+                "y": 2,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "49638255-9409-4d84-a3ce-4135cd8fd03c",
+                "w": 1,
+                "x": 0,
+                "y": 3,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "913ffead-8a74-493c-a740-6335f5bbecfc",
+                "w": 1,
+                "x": 0,
+                "y": 4,
+                "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "0b2c929d-5344-4f51-aa51-0891c1a19953",
+                "w": 1,
+                "x": 0,
+                "y": 5,
+                "minH": 1
+              }
+            ]
+          }
+        }
+      },
+      "meta": { "h": ["db99782b-5d68-4e51-a698-ab18574c4295"] },
+      "published": true,
+      "draft": false,
+      "parentUuid": "db99782b-5d68-4e51-a698-ab18574c4295",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {}
+    },
+    "23f20312-d557-47f8-afbe-e119dc2c440e": {
+      "id": "73",
+      "uuid": "23f20312-d557-47f8-afbe-e119dc2c440e",
+      "type": "file",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "media_site_photo",
+        "cycles": ["0"],
+        "labels": { "en": "Site photo" },
+        "descriptions": {
+          "en": "Take a photo of the site (location stored in EXIF)"
+        },
+        "fileType": "image",
+        "maxFileSize": 5,
+        "geotagInformationShown": true
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {}
+    },
+    "320dd88a-888c-456a-a72b-26e435ddd15e": {
+      "id": "74",
+      "uuid": "320dd88a-888c-456a-a72b-26e435ddd15e",
+      "type": "file",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "media_site_video",
+        "cycles": ["0"],
+        "labels": { "en": "Site video" },
+        "descriptions": { "en": "Record a short video (max 20 MB)" },
+        "fileType": "video",
+        "maxFileSize": 20
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {}
+    },
+    "10250381-7a3d-4c23-ac6c-ee3da13c413e": {
+      "id": "75",
+      "uuid": "10250381-7a3d-4c23-ac6c-ee3da13c413e",
+      "type": "boolean",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "media_interview_consent",
+        "cycles": ["0"],
+        "labels": { "en": "Interviewee gave consent to be recorded?" },
+        "labelValue": "yesNo"
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {}
+    },
+    "49638255-9409-4d84-a3ce-4135cd8fd03c": {
+      "id": "76",
+      "uuid": "49638255-9409-4d84-a3ce-4135cd8fd03c",
+      "type": "file",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "media_interview_audio",
+        "cycles": ["0"],
+        "labels": { "en": "Interview audio recording" },
+        "fileType": "audio",
+        "maxFileSize": 10,
+        "layout": { "0": { "hiddenWhenNotRelevant": true } }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {
+        "applicable": [
+          {
+            "uuid": "83f64c6e-3cd2-47a8-af71-17c7970c8d02",
+            "expression": "media_interview_consent == true"
+          }
+        ]
+      }
+    },
+    "913ffead-8a74-493c-a740-6335f5bbecfc": {
+      "id": "77",
+      "uuid": "913ffead-8a74-493c-a740-6335f5bbecfc",
+      "type": "file",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "media_document",
+        "cycles": ["0"],
+        "labels": { "en": "Supporting document" },
+        "descriptions": { "en": "Attach any file (e.g. a PDF permit)" },
+        "fileType": "other",
+        "maxFileSize": 10
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {}
+    },
+    "0b2c929d-5344-4f51-aa51-0891c1a19953": {
+      "id": "78",
+      "uuid": "0b2c929d-5344-4f51-aa51-0891c1a19953",
+      "type": "text",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "media_final_remarks",
+        "cycles": ["0"],
+        "labels": { "en": "Final remarks" },
+        "textInputType": "multiLine"
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86",
+      "dateCreated": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-09-29T12:00:00.000Z",
+      "propsAdvanced": {}
     }
   },
   "nodeDefsIndex": {
@@ -1725,7 +3257,10 @@
         "19519143-d1f1-4f89-a407-ddff9ffa57b9": true,
         "3900a3bc-aac1-441d-b5db-1811cbad01ac": true,
         "2c6b8d7b-6a1b-471e-b4ee-cbd18e98420b": true,
-        "509c42c8-8fe9-4bb6-94b6-b4b57b1bba2e": true
+        "509c42c8-8fe9-4bb6-94b6-b4b57b1bba2e": true,
+        "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b": true,
+        "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3": true,
+        "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86": true
       },
       "509c42c8-8fe9-4bb6-94b6-b4b57b1bba2e": {
         "4cfec062-03c9-4473-b780-d83dcfbd015d": true,
@@ -1763,9 +3298,55 @@
         "26aa1be3-e775-460b-a021-16d774c194cb": true,
         "0b31b953-eefb-4dba-ab6a-6af8fd2da1bd": true,
         "713a1109-c7be-4bca-89ef-c7fdfa7e31fd": true,
-        "d49d3c04-a8b2-4893-b839-c5924b850e61": true
+        "d49d3c04-a8b2-4893-b839-c5924b850e61": true,
+        "7bca11f9-06d3-42db-a600-148cbf6a3a3f": true,
+        "30764110-ecba-445f-a92d-a2279ed2afed": true
+      },
+      "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b": {
+        "9ccee412-fe3c-40e0-abac-4d45626f3bf8": true,
+        "75c670ac-3d07-4417-a9e2-64622b0e726a": true,
+        "e260e571-4493-446a-a613-669c7959b204": true,
+        "b323a545-21d4-4c4a-a1fa-ea97f781e811": true,
+        "a28818e3-d6b0-4f29-a8c8-ac8de8aa8664": true,
+        "bb7106a4-523b-42a3-aaf0-173c33851d94": true,
+        "970423bd-0017-43cc-addb-b886d31b9277": true,
+        "d9ae987c-872f-4652-a21b-c1c83b214994": true,
+        "03502b15-447d-40df-afe9-2c922e85a4dd": true,
+        "2054a36a-2382-41a8-a9ea-e40effc42be5": true,
+        "b0688598-1205-4da6-a216-faba27997ce8": true,
+        "973901ea-39f7-4cfc-a9d9-b67432575daf": true,
+        "072c15b7-ed15-44fb-a9bd-e806f4a97906": true
+      },
+      "b0688598-1205-4da6-a216-faba27997ce8": {
+        "c4ef36b5-7ebb-499a-aaa2-ed58b4c8c9ee": true,
+        "5a018510-6132-4694-acac-741c8c5b5dbf": true
+      },
+      "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3": {
+        "f24046cb-29ed-442d-a7e9-d56b58283ad6": true,
+        "02060347-4b44-4e0e-a4e0-a71b0b692a14": true,
+        "bbb1c4ef-3fbc-4315-ac45-0e40eb5d4f5f": true,
+        "b6de99b5-9f87-434f-a233-2fc877addbb7": true,
+        "8b71c6be-87ff-45dd-a381-a47a6d36ffb7": true,
+        "98f00ed4-8819-4e84-a7ca-5bb973c4f47b": true,
+        "4f758c4d-f40e-4b90-aa2c-12d5b03c78c0": true,
+        "96a1830b-3fe3-4b31-a440-935d3d1b297a": true,
+        "de85622d-9db6-4b76-ae47-15a745720584": true,
+        "155b5973-b2ca-456f-a6cb-5ec7bb77ec00": true
+      },
+      "155b5973-b2ca-456f-a6cb-5ec7bb77ec00": {
+        "62b49887-197c-4b51-a0be-312f00671bee": true,
+        "dd35be17-2100-4451-a723-75229228d8dd": true
+      },
+      "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86": {
+        "23f20312-d557-47f8-afbe-e119dc2c440e": true,
+        "320dd88a-888c-456a-a72b-26e435ddd15e": true,
+        "10250381-7a3d-4c23-ac6c-ee3da13c413e": true,
+        "49638255-9409-4d84-a3ce-4135cd8fd03c": true,
+        "913ffead-8a74-493c-a740-6335f5bbecfc": true,
+        "0b2c929d-5344-4f51-aa51-0891c1a19953": true
       }
     },
+    "qualifierPresenceByUuid": {},
     "nodeDefUuidByName": {
       "unit_level_1": "db99782b-5d68-4e51-a698-ab18574c4295",
       "survey_date": "0513cb0d-a117-4d39-8aa5-47d47ed89e43",
@@ -1806,7 +3387,45 @@
       "second_level_unit_access": "1265b16e-a46f-4606-8407-b1899fe5d05e",
       "soil_disturbance": "b52dd04b-001d-4d61-8f4b-91760325cf6f",
       "home_garden": "d34d91b5-99fa-4572-9872-5285d1d7da73",
-      "plantation": "489dace9-1e89-42dc-8c5b-0a366c57ebc2"
+      "plantation": "489dace9-1e89-42dc-8c5b-0a366c57ebc2",
+      "tree_basal_area": "7bca11f9-06d3-42db-a600-148cbf6a3a3f",
+      "tree_wood_density": "30764110-ecba-445f-a92d-a2279ed2afed",
+      "site_details": "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
+      "region": "9ccee412-fe3c-40e0-abac-4d45626f3bf8",
+      "district": "75c670ac-3d07-4417-a9e2-64622b0e726a",
+      "site_location": "e260e571-4493-446a-a613-669c7959b204",
+      "site_distance_from_given_location": "b323a545-21d4-4c4a-a1fa-ea97f781e811",
+      "site_elevation": "a28818e3-d6b0-4f29-a8c8-ac8de8aa8664",
+      "site_slope": "bb7106a4-523b-42a3-aaf0-173c33851d94",
+      "site_aspect": "970423bd-0017-43cc-addb-b886d31b9277",
+      "site_observers": "d9ae987c-872f-4652-a21b-c1c83b214994",
+      "site_last_visit_date": "03502b15-447d-40df-afe9-2c922e85a4dd",
+      "site_end_time": "2054a36a-2382-41a8-a9ea-e40effc42be5",
+      "ground_cover": "b0688598-1205-4da6-a216-faba27997ce8",
+      "ground_cover_class": "c4ef36b5-7ebb-499a-aaa2-ed58b4c8c9ee",
+      "ground_cover_percent": "5a018510-6132-4694-acac-741c8c5b5dbf",
+      "ground_cover_total": "973901ea-39f7-4cfc-a9d9-b67432575daf",
+      "site_description": "072c15b7-ed15-44fb-a9bd-e806f4a97906",
+      "regeneration": "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3",
+      "regeneration_no": "f24046cb-29ed-442d-a7e9-d56b58283ad6",
+      "regeneration_species": "02060347-4b44-4e0e-a4e0-a71b0b692a14",
+      "regeneration_growth_form": "bbb1c4ef-3fbc-4315-ac45-0e40eb5d4f5f",
+      "regeneration_count": "b6de99b5-9f87-434f-a233-2fc877addbb7",
+      "regeneration_avg_height": "8b71c6be-87ff-45dd-a381-a47a6d36ffb7",
+      "regeneration_browsed": "98f00ed4-8819-4e84-a7ca-5bb973c4f47b",
+      "regeneration_browsed_percent": "4f758c4d-f40e-4b90-aa2c-12d5b03c78c0",
+      "regeneration_observation_date": "96a1830b-3fe3-4b31-a440-935d3d1b297a",
+      "regeneration_photo": "de85622d-9db6-4b76-ae47-15a745720584",
+      "regeneration_stem": "155b5973-b2ca-456f-a6cb-5ec7bb77ec00",
+      "stem_no": "62b49887-197c-4b51-a0be-312f00671bee",
+      "stem_diameter": "dd35be17-2100-4451-a723-75229228d8dd",
+      "media": "9b486ca7-e1a7-41c5-a7c9-338fa0e3db86",
+      "media_site_photo": "23f20312-d557-47f8-afbe-e119dc2c440e",
+      "media_site_video": "320dd88a-888c-456a-a72b-26e435ddd15e",
+      "media_interview_consent": "10250381-7a3d-4c23-ac6c-ee3da13c413e",
+      "media_interview_audio": "49638255-9409-4d84-a3ce-4135cd8fd03c",
+      "media_document": "913ffead-8a74-493c-a740-6335f5bbecfc",
+      "media_final_remarks": "0b2c929d-5344-4f51-aa51-0891c1a19953"
     },
     "rootDefUuid": "db99782b-5d68-4e51-a698-ab18574c4295"
   },
@@ -2109,6 +3728,87 @@
           "draft": false
         }
       }
+    },
+    "fe3414d6-5d8d-4493-a2a2-388beb7154e4": {
+      "id": 16,
+      "uuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
+      "props": { "name": "admin_units" },
+      "published": true,
+      "draft": false,
+      "levels": {
+        "0": {
+          "id": 16,
+          "uuid": "cd3d3edd-2f51-4198-acd4-f20c2c36d920",
+          "index": 0,
+          "itemsCount": 3,
+          "props": { "name": "region" },
+          "published": true,
+          "draft": false
+        },
+        "1": {
+          "id": 17,
+          "uuid": "37979be5-5151-4584-aafa-d8b1f96233a1",
+          "index": 1,
+          "itemsCount": 7,
+          "props": { "name": "district" },
+          "published": true,
+          "draft": false
+        }
+      }
+    },
+    "4b45478f-7ee9-470d-a3db-8b16392278e0": {
+      "id": 17,
+      "uuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
+      "props": { "name": "slope_aspect" },
+      "published": true,
+      "draft": false,
+      "levels": {
+        "0": {
+          "id": 18,
+          "uuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e",
+          "index": 0,
+          "itemsCount": 9,
+          "props": { "name": "level_1" },
+          "published": true,
+          "draft": false
+        }
+      }
+    },
+    "278c4b10-94d7-4de3-ad89-17cbad8cad96": {
+      "id": 18,
+      "uuid": "278c4b10-94d7-4de3-ad89-17cbad8cad96",
+      "props": { "name": "ground_cover_class" },
+      "published": true,
+      "draft": false,
+      "levels": {
+        "0": {
+          "id": 19,
+          "uuid": "e18376d7-28b2-4ae2-ac0f-2665a29e4cef",
+          "index": 0,
+          "itemsCount": 6,
+          "props": { "name": "level_1" },
+          "published": true,
+          "draft": false
+        }
+      }
+    },
+    "9e023da7-4de0-47d4-a023-cb5a4a3943cf": {
+      "id": 19,
+      "uuid": "9e023da7-4de0-47d4-a023-cb5a4a3943cf",
+      "props": { "name": "growth_form" },
+      "published": true,
+      "draft": false,
+      "levels": {
+        "0": {
+          "id": 20,
+          "uuid": "37487b3a-8db1-45b5-ae03-a9d30957f947",
+          "index": 0,
+          "itemsCount": 3,
+          "props": { "name": "level_1" },
+          "published": true,
+          "draft": false
+        }
+      }
     }
   },
   "taxonomies": {
@@ -2117,7 +3817,13 @@
       "uuid": "9f6906f4-948f-4eb9-9a81-1ebdc3345ce0",
       "props": {
         "name": "trees",
-        "extraPropsDefs": {},
+        "extraPropsDefs": {
+          "wood_density": {
+            "key": "wood_density",
+            "dataType": "number",
+            "index": 0
+          }
+        },
         "vernacularLanguageCodes": ["lat"]
       },
       "published": true,
@@ -2126,22 +3832,7 @@
     }
   },
   "dependencyGraph": {
-    "formula": {},
-    "fileName": {},
-    "maxCount": {},
-    "minCount": {},
-    "onUpdate": {},
     "applicable": {
-      "1265b16e-a46f-4606-8407-b1899fe5d05e": [
-        "c2953af5-3ee7-43e8-a32b-3ecfdd4c8e62"
-      ],
-      "23caf4b6-4008-4774-a01e-999469b23992": [
-        "19519143-d1f1-4f89-a407-ddff9ffa57b9",
-        "509c42c8-8fe9-4bb6-94b6-b4b57b1bba2e"
-      ],
-      "73d63b44-49c1-4a8c-a783-82bb52c919c4": [
-        "2965682d-b66f-4b8c-be1f-60be75f42a17"
-      ],
       "b53609be-9a1a-4076-a782-c8093daf5d04": [
         "a2366cac-4fe4-4a37-94cf-9d1e570b9a6f",
         "6e30ca9d-d1ea-4e93-b3a6-a23d23356b58",
@@ -2150,20 +3841,89 @@
       ],
       "bf0dd9f3-887d-4ff5-9b2d-c51d0a902707": [
         "b7f5aa35-32c3-4753-b071-cf905c09b244"
+      ],
+      "1265b16e-a46f-4606-8407-b1899fe5d05e": [
+        "c2953af5-3ee7-43e8-a32b-3ecfdd4c8e62"
+      ],
+      "73d63b44-49c1-4a8c-a783-82bb52c919c4": [
+        "2965682d-b66f-4b8c-be1f-60be75f42a17"
+      ],
+      "23caf4b6-4008-4774-a01e-999469b23992": [
+        "19519143-d1f1-4f89-a407-ddff9ffa57b9",
+        "509c42c8-8fe9-4bb6-94b6-b4b57b1bba2e"
+      ],
+      "bb7106a4-523b-42a3-aaf0-173c33851d94": [
+        "970423bd-0017-43cc-addb-b886d31b9277"
+      ],
+      "98f00ed4-8819-4e84-a7ca-5bb973c4f47b": [
+        "4f758c4d-f40e-4b90-aa2c-12d5b03c78c0"
+      ],
+      "bbb1c4ef-3fbc-4315-ac45-0e40eb5d4f5f": [
+        "155b5973-b2ca-456f-a6cb-5ec7bb77ec00"
+      ],
+      "10250381-7a3d-4c23-ac6c-ee3da13c413e": [
+        "49638255-9409-4d84-a3ce-4135cd8fd03c"
       ]
     },
-    "validations": {},
     "defaultValues": {
-      "3900a3bc-aac1-441d-b5db-1811cbad01ac": [
-        "b7322b31-db75-4d49-8e15-7da1bfe0506e"
-      ],
       "c2953af5-3ee7-43e8-a32b-3ecfdd4c8e62": [
         "e465c449-1e6f-4caf-947c-d312c2c246e6"
       ],
       "e465c449-1e6f-4caf-947c-d312c2c246e6": [
         "e465c449-1e6f-4caf-947c-d312c2c246e6"
+      ],
+      "3900a3bc-aac1-441d-b5db-1811cbad01ac": [
+        "b7322b31-db75-4d49-8e15-7da1bfe0506e"
+      ],
+      "dc1f559f-1a28-4668-93c9-0cf337d42986": [
+        "7bca11f9-06d3-42db-a600-148cbf6a3a3f"
+      ],
+      "4116e7bb-5100-4ca5-ac64-ed0274afc7f1": [
+        "30764110-ecba-445f-a92d-a2279ed2afed"
+      ],
+      "b7322b31-db75-4d49-8e15-7da1bfe0506e": [
+        "b323a545-21d4-4c4a-a1fa-ea97f781e811"
+      ],
+      "e260e571-4493-446a-a613-669c7959b204": [
+        "b323a545-21d4-4c4a-a1fa-ea97f781e811"
+      ],
+      "b0688598-1205-4da6-a216-faba27997ce8": [
+        "973901ea-39f7-4cfc-a9d9-b67432575daf"
+      ],
+      "5a018510-6132-4694-acac-741c8c5b5dbf": [
+        "973901ea-39f7-4cfc-a9d9-b67432575daf"
+      ],
+      "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3": [
+        "f24046cb-29ed-442d-a7e9-d56b58283ad6"
+      ],
+      "f24046cb-29ed-442d-a7e9-d56b58283ad6": [
+        "f24046cb-29ed-442d-a7e9-d56b58283ad6"
+      ],
+      "155b5973-b2ca-456f-a6cb-5ec7bb77ec00": [
+        "62b49887-197c-4b51-a0be-312f00671bee"
+      ],
+      "62b49887-197c-4b51-a0be-312f00671bee": [
+        "62b49887-197c-4b51-a0be-312f00671bee"
       ]
-    }
+    },
+    "editable": {},
+    "enumeratingItems": {},
+    "fileName": {},
+    "formula": {},
+    "maxCount": {},
+    "minCount": {},
+    "onUpdate": {},
+    "parentCode": {
+      "9ccee412-fe3c-40e0-abac-4d45626f3bf8": [
+        "75c670ac-3d07-4417-a9e2-64622b0e726a"
+      ]
+    },
+    "validations": {
+      "0513cb0d-a117-4d39-8aa5-47d47ed89e43": [
+        "03502b15-447d-40df-afe9-2c922e85a4dd"
+      ]
+    },
+    "visible": {}
   },
   "refData": {
     "categoryItemUuidIndex": {
@@ -2298,6 +4058,56 @@
           "2": "eecafb4e-4d88-4d03-b032-c85a895ba4e7",
           "3": "6225b8a6-6c76-44b8-92b6-b4386c90cd6e"
         }
+      },
+      "fe3414d6-5d8d-4493-a2a2-388beb7154e4": {
+        "null": {
+          "1": "0060b6e5-f9a5-45ca-a322-b644c0a8a49c",
+          "2": "1331d2ad-8482-4959-a917-cbd52cd5139d",
+          "3": "5445d145-7a5b-4c0e-ad6f-4984b7c83658"
+        },
+        "0060b6e5-f9a5-45ca-a322-b644c0a8a49c": {
+          "1": "605d79e5-fe43-4554-ab31-1f88b652ddf0",
+          "2": "0079eead-a600-485f-a0f7-577b0fef7659"
+        },
+        "1331d2ad-8482-4959-a917-cbd52cd5139d": {
+          "1": "fad6da2e-876e-4848-abc4-adc10f7e8c48",
+          "2": "c285abbb-eeb1-457b-a98e-40e40e154641",
+          "3": "fb1f3270-3837-4830-a7ed-9fe329b50fe0"
+        },
+        "5445d145-7a5b-4c0e-ad6f-4984b7c83658": {
+          "1": "19f8eb7d-2c9b-415e-ab3d-59935323df15",
+          "2": "27071bf3-ec99-4b97-aedd-f123ff62db63"
+        }
+      },
+      "4b45478f-7ee9-470d-a3db-8b16392278e0": {
+        "null": {
+          "N": "aa7421fa-ca70-4260-a81e-fc355491fa9d",
+          "NE": "46f763c7-a0c6-4ee4-ab0f-0b7dd85f5b88",
+          "E": "3e260d04-633b-4300-a103-b63f5cfcda10",
+          "SE": "3159c90f-9741-4b65-a65f-d033d29c93ed",
+          "S": "6ec36b9b-9cb5-4b69-a274-b2cc3c84988b",
+          "SW": "2e4b6438-4d4e-407b-a7ac-8ffbc3c7de25",
+          "W": "b4494b91-6a2b-4b9c-a1a7-e2e87f002a89",
+          "NW": "9e4a5ead-71e6-4dd2-a344-9d097c2db16d",
+          "FLAT": "b7940aad-1122-4d2b-ac6e-e392f231dea8"
+        }
+      },
+      "278c4b10-94d7-4de3-ad89-17cbad8cad96": {
+        "null": {
+          "1": "7f58a920-0fb4-4fbb-a9af-f5e507b59d42",
+          "2": "01d8bb5b-8091-4328-adf9-931ad9d413e3",
+          "3": "6fdac472-5f0f-4360-a073-bb4119b8e44f",
+          "4": "5e3c7583-58d5-4c01-af56-3f7b359c1710",
+          "5": "68ddb74b-6dc6-4d13-a125-6dc09d848177",
+          "6": "a9312a88-4a43-4bf6-a930-352f8d54293c"
+        }
+      },
+      "9e023da7-4de0-47d4-a023-cb5a4a3943cf": {
+        "null": {
+          "1": "228dfc4d-eb6d-4b07-a2cc-d0d121ba9961",
+          "2": "6ee10908-067b-4083-a042-5b34da666916",
+          "3": "3af15ebd-e965-4835-a74f-8749f8d79441"
+        }
       }
     },
     "categoryItemIndex": {
@@ -2402,11 +4212,7 @@
         "levelUuid": "9ab9f4c4-d7b1-4618-a771-71b0bbd2e026"
       },
       "7062efb3-6888-46ed-8476-385862ab1416": {
-        "props": {
-          "code": "2",
-          "index": 16,
-          "labels": { "en": "Unhealthy" }
-        },
+        "props": { "code": "2", "index": 16, "labels": { "en": "Unhealthy" } },
         "uuid": "7062efb3-6888-46ed-8476-385862ab1416",
         "published": true,
         "draft": false,
@@ -2415,11 +4221,7 @@
         "levelUuid": "9ab9f4c4-d7b1-4618-a771-71b0bbd2e026"
       },
       "918807ac-9183-4b47-b112-d89b2833fc5f": {
-        "props": {
-          "code": "3",
-          "index": 17,
-          "labels": { "en": "Dead tree" }
-        },
+        "props": { "code": "3", "index": 17, "labels": { "en": "Dead tree" } },
         "uuid": "918807ac-9183-4b47-b112-d89b2833fc5f",
         "published": true,
         "draft": false,
@@ -2515,11 +4317,7 @@
         "levelUuid": "d15ba208-db3c-4662-8e3f-0801da01953d"
       },
       "da462f2b-a789-427d-8987-ac256d1775e4": {
-        "props": {
-          "code": "1",
-          "index": 0,
-          "labels": { "en": "Sub-unit 1" }
-        },
+        "props": { "code": "1", "index": 0, "labels": { "en": "Sub-unit 1" } },
         "uuid": "da462f2b-a789-427d-8987-ac256d1775e4",
         "published": true,
         "draft": false,
@@ -2528,11 +4326,7 @@
         "levelUuid": "ec66b667-780c-43ec-aa26-0652acdae50a"
       },
       "9128eaeb-7ab9-4495-a39f-f37fbf4772e3": {
-        "props": {
-          "code": "2",
-          "index": 1,
-          "labels": { "en": "Sub-unit 2" }
-        },
+        "props": { "code": "2", "index": 1, "labels": { "en": "Sub-unit 2" } },
         "uuid": "9128eaeb-7ab9-4495-a39f-f37fbf4772e3",
         "published": true,
         "draft": false,
@@ -2541,11 +4335,7 @@
         "levelUuid": "ec66b667-780c-43ec-aa26-0652acdae50a"
       },
       "a6248f25-c565-4af2-bdf5-c9dab65d7fb3": {
-        "props": {
-          "code": "3",
-          "index": 2,
-          "labels": { "en": "Sub-unit 3" }
-        },
+        "props": { "code": "3", "index": 2, "labels": { "en": "Sub-unit 3" } },
         "uuid": "a6248f25-c565-4af2-bdf5-c9dab65d7fb3",
         "published": true,
         "draft": false,
@@ -2554,11 +4344,7 @@
         "levelUuid": "ec66b667-780c-43ec-aa26-0652acdae50a"
       },
       "a6e2b94a-803b-4347-bb2c-99a8e3f7f728": {
-        "props": {
-          "code": "4",
-          "index": 3,
-          "labels": { "en": "Sub-unit 4" }
-        },
+        "props": { "code": "4", "index": 3, "labels": { "en": "Sub-unit 4" } },
         "uuid": "a6e2b94a-803b-4347-bb2c-99a8e3f7f728",
         "published": true,
         "draft": false,
@@ -2567,11 +4353,7 @@
         "levelUuid": "ec66b667-780c-43ec-aa26-0652acdae50a"
       },
       "123cb833-7b4a-4095-972a-46b55db61fae": {
-        "props": {
-          "code": "5",
-          "index": 4,
-          "labels": { "en": "Sub-unit 5" }
-        },
+        "props": { "code": "5", "index": 4, "labels": { "en": "Sub-unit 5" } },
         "uuid": "123cb833-7b4a-4095-972a-46b55db61fae",
         "published": true,
         "draft": false,
@@ -2646,11 +4428,7 @@
         "levelUuid": "b21f09e1-1c43-410c-af62-cef24236177a"
       },
       "f0f1a89c-8e9a-4b1a-b7d5-5945977294cc": {
-        "props": {
-          "code": "2",
-          "index": 48,
-          "labels": { "en": "Water body" }
-        },
+        "props": { "code": "2", "index": 48, "labels": { "en": "Water body" } },
         "uuid": "f0f1a89c-8e9a-4b1a-b7d5-5945977294cc",
         "published": true,
         "draft": false,
@@ -2716,11 +4494,7 @@
         "levelUuid": "035de7f7-4db5-4db2-9257-db6da12e9296"
       },
       "f46bfeb0-37f7-4138-ad42-e067abb3c05f": {
-        "props": {
-          "code": "4",
-          "index": 40,
-          "labels": { "en": "Shrubland" }
-        },
+        "props": { "code": "4", "index": 40, "labels": { "en": "Shrubland" } },
         "uuid": "f46bfeb0-37f7-4138-ad42-e067abb3c05f",
         "published": true,
         "draft": false,
@@ -2982,11 +4756,7 @@
         "levelUuid": "b8a7f462-3258-48aa-b65a-b07040472231"
       },
       "e96fded5-e786-4535-8af9-ac018dcb0f4c": {
-        "props": {
-          "code": "1",
-          "index": 28,
-          "labels": { "en": "District 1" }
-        },
+        "props": { "code": "1", "index": 28, "labels": { "en": "District 1" } },
         "uuid": "e96fded5-e786-4535-8af9-ac018dcb0f4c",
         "published": true,
         "draft": false,
@@ -2995,11 +4765,7 @@
         "levelUuid": "c27ed04e-2bab-4dbf-83ca-922868bfebef"
       },
       "29e56737-a34e-4f57-95a4-72cbc4a6d7a9": {
-        "props": {
-          "code": "2",
-          "index": 29,
-          "labels": { "en": "District 2" }
-        },
+        "props": { "code": "2", "index": 29, "labels": { "en": "District 2" } },
         "uuid": "29e56737-a34e-4f57-95a4-72cbc4a6d7a9",
         "published": true,
         "draft": false,
@@ -3084,11 +4850,7 @@
         "levelUuid": "604bbb77-7206-4b3d-b727-13fb280658d6"
       },
       "88932198-f5d6-4fe9-9991-5f186ec8365d": {
-        "props": {
-          "code": "1",
-          "index": 33,
-          "labels": { "en": "No grazing" }
-        },
+        "props": { "code": "1", "index": 33, "labels": { "en": "No grazing" } },
         "uuid": "88932198-f5d6-4fe9-9991-5f186ec8365d",
         "published": true,
         "draft": false,
@@ -3132,11 +4894,7 @@
         "levelUuid": "1a546355-0fab-4280-8b9f-ba6de3d5206d"
       },
       "9a3ac9fa-60fc-476d-a839-077645db6c84": {
-        "props": {
-          "code": "0",
-          "index": 1,
-          "labels": { "en": "Accessible" }
-        },
+        "props": { "code": "0", "index": 1, "labels": { "en": "Accessible" } },
         "uuid": "9a3ac9fa-60fc-476d-a839-077645db6c84",
         "published": true,
         "draft": false,
@@ -3228,17 +4986,321 @@
         "levelUuid": "afbd4ef0-015d-4c60-be99-daa04a7be26f"
       },
       "6225b8a6-6c76-44b8-92b6-b4386c90cd6e": {
-        "props": {
-          "code": "3",
-          "index": 202,
-          "labels": { "en": "Flowering" }
-        },
+        "props": { "code": "3", "index": 202, "labels": { "en": "Flowering" } },
         "uuid": "6225b8a6-6c76-44b8-92b6-b4386c90cd6e",
         "published": true,
         "draft": false,
         "categoryUuid": "ff7deb93-4362-4f3d-b1d1-1f13e3f614f0",
         "parentUuid": null,
         "levelUuid": "afbd4ef0-015d-4c60-be99-daa04a7be26f"
+      },
+      "0060b6e5-f9a5-45ca-a322-b644c0a8a49c": {
+        "props": {
+          "code": "1",
+          "index": 0,
+          "labels": { "en": "Northern Region" }
+        },
+        "uuid": "0060b6e5-f9a5-45ca-a322-b644c0a8a49c",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
+        "parentUuid": null,
+        "levelUuid": "cd3d3edd-2f51-4198-acd4-f20c2c36d920"
+      },
+      "605d79e5-fe43-4554-ab31-1f88b652ddf0": {
+        "props": {
+          "code": "1",
+          "index": 0,
+          "labels": { "en": "Highlands District" }
+        },
+        "uuid": "605d79e5-fe43-4554-ab31-1f88b652ddf0",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
+        "parentUuid": "0060b6e5-f9a5-45ca-a322-b644c0a8a49c",
+        "levelUuid": "37979be5-5151-4584-aafa-d8b1f96233a1"
+      },
+      "0079eead-a600-485f-a0f7-577b0fef7659": {
+        "props": {
+          "code": "2",
+          "index": 1,
+          "labels": { "en": "River Valley District" }
+        },
+        "uuid": "0079eead-a600-485f-a0f7-577b0fef7659",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
+        "parentUuid": "0060b6e5-f9a5-45ca-a322-b644c0a8a49c",
+        "levelUuid": "37979be5-5151-4584-aafa-d8b1f96233a1"
+      },
+      "1331d2ad-8482-4959-a917-cbd52cd5139d": {
+        "props": {
+          "code": "2",
+          "index": 1,
+          "labels": { "en": "Central Region" }
+        },
+        "uuid": "1331d2ad-8482-4959-a917-cbd52cd5139d",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
+        "parentUuid": null,
+        "levelUuid": "cd3d3edd-2f51-4198-acd4-f20c2c36d920"
+      },
+      "fad6da2e-876e-4848-abc4-adc10f7e8c48": {
+        "props": {
+          "code": "1",
+          "index": 0,
+          "labels": { "en": "Capital District" }
+        },
+        "uuid": "fad6da2e-876e-4848-abc4-adc10f7e8c48",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
+        "parentUuid": "1331d2ad-8482-4959-a917-cbd52cd5139d",
+        "levelUuid": "37979be5-5151-4584-aafa-d8b1f96233a1"
+      },
+      "c285abbb-eeb1-457b-a98e-40e40e154641": {
+        "props": {
+          "code": "2",
+          "index": 1,
+          "labels": { "en": "Lakeside District" }
+        },
+        "uuid": "c285abbb-eeb1-457b-a98e-40e40e154641",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
+        "parentUuid": "1331d2ad-8482-4959-a917-cbd52cd5139d",
+        "levelUuid": "37979be5-5151-4584-aafa-d8b1f96233a1"
+      },
+      "fb1f3270-3837-4830-a7ed-9fe329b50fe0": {
+        "props": {
+          "code": "3",
+          "index": 2,
+          "labels": { "en": "Plateau District" }
+        },
+        "uuid": "fb1f3270-3837-4830-a7ed-9fe329b50fe0",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
+        "parentUuid": "1331d2ad-8482-4959-a917-cbd52cd5139d",
+        "levelUuid": "37979be5-5151-4584-aafa-d8b1f96233a1"
+      },
+      "5445d145-7a5b-4c0e-ad6f-4984b7c83658": {
+        "props": {
+          "code": "3",
+          "index": 2,
+          "labels": { "en": "Southern Region" }
+        },
+        "uuid": "5445d145-7a5b-4c0e-ad6f-4984b7c83658",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
+        "parentUuid": null,
+        "levelUuid": "cd3d3edd-2f51-4198-acd4-f20c2c36d920"
+      },
+      "19f8eb7d-2c9b-415e-ab3d-59935323df15": {
+        "props": {
+          "code": "1",
+          "index": 0,
+          "labels": { "en": "Coastal District" }
+        },
+        "uuid": "19f8eb7d-2c9b-415e-ab3d-59935323df15",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
+        "parentUuid": "5445d145-7a5b-4c0e-ad6f-4984b7c83658",
+        "levelUuid": "37979be5-5151-4584-aafa-d8b1f96233a1"
+      },
+      "27071bf3-ec99-4b97-aedd-f123ff62db63": {
+        "props": {
+          "code": "2",
+          "index": 1,
+          "labels": { "en": "Savanna District" }
+        },
+        "uuid": "27071bf3-ec99-4b97-aedd-f123ff62db63",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
+        "parentUuid": "5445d145-7a5b-4c0e-ad6f-4984b7c83658",
+        "levelUuid": "37979be5-5151-4584-aafa-d8b1f96233a1"
+      },
+      "aa7421fa-ca70-4260-a81e-fc355491fa9d": {
+        "props": { "code": "N", "index": 0, "labels": { "en": "North" } },
+        "uuid": "aa7421fa-ca70-4260-a81e-fc355491fa9d",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
+        "parentUuid": null,
+        "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
+      },
+      "46f763c7-a0c6-4ee4-ab0f-0b7dd85f5b88": {
+        "props": { "code": "NE", "index": 1, "labels": { "en": "North-East" } },
+        "uuid": "46f763c7-a0c6-4ee4-ab0f-0b7dd85f5b88",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
+        "parentUuid": null,
+        "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
+      },
+      "3e260d04-633b-4300-a103-b63f5cfcda10": {
+        "props": { "code": "E", "index": 2, "labels": { "en": "East" } },
+        "uuid": "3e260d04-633b-4300-a103-b63f5cfcda10",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
+        "parentUuid": null,
+        "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
+      },
+      "3159c90f-9741-4b65-a65f-d033d29c93ed": {
+        "props": { "code": "SE", "index": 3, "labels": { "en": "South-East" } },
+        "uuid": "3159c90f-9741-4b65-a65f-d033d29c93ed",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
+        "parentUuid": null,
+        "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
+      },
+      "6ec36b9b-9cb5-4b69-a274-b2cc3c84988b": {
+        "props": { "code": "S", "index": 4, "labels": { "en": "South" } },
+        "uuid": "6ec36b9b-9cb5-4b69-a274-b2cc3c84988b",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
+        "parentUuid": null,
+        "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
+      },
+      "2e4b6438-4d4e-407b-a7ac-8ffbc3c7de25": {
+        "props": { "code": "SW", "index": 5, "labels": { "en": "South-West" } },
+        "uuid": "2e4b6438-4d4e-407b-a7ac-8ffbc3c7de25",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
+        "parentUuid": null,
+        "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
+      },
+      "b4494b91-6a2b-4b9c-a1a7-e2e87f002a89": {
+        "props": { "code": "W", "index": 6, "labels": { "en": "West" } },
+        "uuid": "b4494b91-6a2b-4b9c-a1a7-e2e87f002a89",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
+        "parentUuid": null,
+        "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
+      },
+      "9e4a5ead-71e6-4dd2-a344-9d097c2db16d": {
+        "props": { "code": "NW", "index": 7, "labels": { "en": "North-West" } },
+        "uuid": "9e4a5ead-71e6-4dd2-a344-9d097c2db16d",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
+        "parentUuid": null,
+        "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
+      },
+      "b7940aad-1122-4d2b-ac6e-e392f231dea8": {
+        "props": { "code": "FLAT", "index": 8, "labels": { "en": "Flat" } },
+        "uuid": "b7940aad-1122-4d2b-ac6e-e392f231dea8",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
+        "parentUuid": null,
+        "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
+      },
+      "7f58a920-0fb4-4fbb-a9af-f5e507b59d42": {
+        "props": { "code": "1", "index": 0, "labels": { "en": "Trees" } },
+        "uuid": "7f58a920-0fb4-4fbb-a9af-f5e507b59d42",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "278c4b10-94d7-4de3-ad89-17cbad8cad96",
+        "parentUuid": null,
+        "levelUuid": "e18376d7-28b2-4ae2-ac0f-2665a29e4cef"
+      },
+      "01d8bb5b-8091-4328-adf9-931ad9d413e3": {
+        "props": { "code": "2", "index": 1, "labels": { "en": "Shrubs" } },
+        "uuid": "01d8bb5b-8091-4328-adf9-931ad9d413e3",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "278c4b10-94d7-4de3-ad89-17cbad8cad96",
+        "parentUuid": null,
+        "levelUuid": "e18376d7-28b2-4ae2-ac0f-2665a29e4cef"
+      },
+      "6fdac472-5f0f-4360-a073-bb4119b8e44f": {
+        "props": {
+          "code": "3",
+          "index": 2,
+          "labels": { "en": "Herbs and grasses" }
+        },
+        "uuid": "6fdac472-5f0f-4360-a073-bb4119b8e44f",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "278c4b10-94d7-4de3-ad89-17cbad8cad96",
+        "parentUuid": null,
+        "levelUuid": "e18376d7-28b2-4ae2-ac0f-2665a29e4cef"
+      },
+      "5e3c7583-58d5-4c01-af56-3f7b359c1710": {
+        "props": { "code": "4", "index": 3, "labels": { "en": "Bare soil" } },
+        "uuid": "5e3c7583-58d5-4c01-af56-3f7b359c1710",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "278c4b10-94d7-4de3-ad89-17cbad8cad96",
+        "parentUuid": null,
+        "levelUuid": "e18376d7-28b2-4ae2-ac0f-2665a29e4cef"
+      },
+      "68ddb74b-6dc6-4d13-a125-6dc09d848177": {
+        "props": { "code": "5", "index": 4, "labels": { "en": "Rock" } },
+        "uuid": "68ddb74b-6dc6-4d13-a125-6dc09d848177",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "278c4b10-94d7-4de3-ad89-17cbad8cad96",
+        "parentUuid": null,
+        "levelUuid": "e18376d7-28b2-4ae2-ac0f-2665a29e4cef"
+      },
+      "a9312a88-4a43-4bf6-a930-352f8d54293c": {
+        "props": { "code": "6", "index": 5, "labels": { "en": "Litter" } },
+        "uuid": "a9312a88-4a43-4bf6-a930-352f8d54293c",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "278c4b10-94d7-4de3-ad89-17cbad8cad96",
+        "parentUuid": null,
+        "levelUuid": "e18376d7-28b2-4ae2-ac0f-2665a29e4cef"
+      },
+      "228dfc4d-eb6d-4b07-a2cc-d0d121ba9961": {
+        "props": {
+          "code": "1",
+          "index": 0,
+          "labels": { "en": "Seedling (< 30 cm)" }
+        },
+        "uuid": "228dfc4d-eb6d-4b07-a2cc-d0d121ba9961",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "9e023da7-4de0-47d4-a023-cb5a4a3943cf",
+        "parentUuid": null,
+        "levelUuid": "37487b3a-8db1-45b5-ae03-a9d30957f947"
+      },
+      "6ee10908-067b-4083-a042-5b34da666916": {
+        "props": {
+          "code": "2",
+          "index": 1,
+          "labels": { "en": "Sapling (30 cm - 1.3 m)" }
+        },
+        "uuid": "6ee10908-067b-4083-a042-5b34da666916",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "9e023da7-4de0-47d4-a023-cb5a4a3943cf",
+        "parentUuid": null,
+        "levelUuid": "37487b3a-8db1-45b5-ae03-a9d30957f947"
+      },
+      "3af15ebd-e965-4835-a74f-8749f8d79441": {
+        "props": {
+          "code": "3",
+          "index": 2,
+          "labels": { "en": "Pole (> 1.3 m, DBH < 10 cm)" }
+        },
+        "uuid": "3af15ebd-e965-4835-a74f-8749f8d79441",
+        "published": true,
+        "draft": false,
+        "categoryUuid": "9e023da7-4de0-47d4-a023-cb5a4a3943cf",
+        "parentUuid": null,
+        "levelUuid": "37487b3a-8db1-45b5-ae03-a9d30957f947"
       }
     },
     "taxonUuidIndex": {
@@ -3300,7 +5362,7 @@
         "uuid": "fa7797c6-3974-4387-95a9-18244bae4db6",
         "props": {
           "code": "ACA_ELA",
-          "extra": {},
+          "extra": { "wood_density": "0.82" },
           "genus": "Acacia",
           "index": 1,
           "family": "Fabaceae",
@@ -3323,7 +5385,7 @@
         "uuid": "61754547-78b9-4bd6-a4dd-9aa3fefc75f4",
         "props": {
           "code": "ACA_HOR",
-          "extra": {},
+          "extra": { "wood_density": "0.82" },
           "genus": "Acacia",
           "index": 2,
           "family": "Fabaceae",
@@ -3346,7 +5408,7 @@
         "uuid": "8a86d205-6435-4b24-9302-885e3d6977f5",
         "props": {
           "code": "ACA_MEL",
-          "extra": {},
+          "extra": { "wood_density": "0.82" },
           "genus": "Acacia",
           "index": 3,
           "family": "Fabaceae",
@@ -3369,7 +5431,7 @@
         "uuid": "44838ecb-7add-4680-8097-1667bb4dafd8",
         "props": {
           "code": "ACA_NUB",
-          "extra": {},
+          "extra": { "wood_density": "0.82" },
           "genus": "Acacia",
           "index": 4,
           "family": "Fabaceae",
@@ -3392,7 +5454,7 @@
         "uuid": "8e0dac58-26cb-45ef-b99b-142635f90c95",
         "props": {
           "code": "ACA_REF",
-          "extra": {},
+          "extra": { "wood_density": "0.82" },
           "genus": "Acacia",
           "index": 5,
           "family": "Fabaceae",
@@ -3415,7 +5477,7 @@
         "uuid": "76ead256-68e1-4af1-b3bf-ee3b28dd095d",
         "props": {
           "code": "ACA_SEN",
-          "extra": {},
+          "extra": { "wood_density": "0.82" },
           "genus": "Acacia",
           "index": 6,
           "family": "Fabaceae",
@@ -3438,7 +5500,7 @@
         "uuid": "96a4276b-ddcc-456f-a2ca-1fffb3507056",
         "props": {
           "code": "ACA_TOR",
-          "extra": {},
+          "extra": { "wood_density": "0.82" },
           "genus": "Acacia",
           "index": 7,
           "family": "Fabaceae",
@@ -3461,7 +5523,7 @@
         "uuid": "4024f52c-81d3-4c05-856a-32ce34b61313",
         "props": {
           "code": "FAI_ALB",
-          "extra": {},
+          "extra": { "wood_density": "0.6" },
           "genus": "Faidherbia",
           "index": 8,
           "family": "Fabaceae",
@@ -3477,7 +5539,7 @@
         "uuid": "3aff7aff-8a57-4b02-b5bf-d05d89ea7230",
         "props": {
           "code": "PRO_JUL",
-          "extra": {},
+          "extra": { "wood_density": "0.8" },
           "genus": "Prosopis",
           "index": 9,
           "family": "Fabaceae",
@@ -3493,7 +5555,7 @@
         "uuid": "b42d0b42-1bb3-49cc-baa4-2b14a2cc94ef",
         "props": {
           "code": "TAM_IND",
-          "extra": {},
+          "extra": { "wood_density": "0.85" },
           "genus": "Tamarindus",
           "index": 10,
           "family": "Fabaceae",
@@ -3509,7 +5571,7 @@
         "uuid": "fcf91f46-9dfb-479f-a337-46e99617551a",
         "props": {
           "code": "ADE_ELL",
-          "extra": {},
+          "extra": { "wood_density": "0.4" },
           "genus": "Adenia",
           "index": 11,
           "family": "Passifloraceae",
@@ -3525,7 +5587,7 @@
         "uuid": "ac4f81ac-97dd-4c2a-b4c5-1e5246f41029",
         "props": {
           "code": "BAL_AEG",
-          "extra": {},
+          "extra": { "wood_density": "0.76" },
           "genus": "Balanites",
           "index": 12,
           "family": "Zygophyllaceae",
@@ -3541,7 +5603,7 @@
         "uuid": "6a3b559e-f0a2-4d6b-ae6c-cf81e35913b8",
         "props": {
           "code": "BAL_ORB",
-          "extra": {},
+          "extra": { "wood_density": "0.76" },
           "genus": "Balanites",
           "index": 13,
           "family": "Zygophyllaceae",
@@ -3564,7 +5626,7 @@
         "uuid": "85ea1b92-6b01-4e36-8ec6-fd24eb3e4c26",
         "props": {
           "code": "BER_DIS",
-          "extra": {},
+          "extra": { "wood_density": "0.9" },
           "genus": "Berchemia",
           "index": 14,
           "family": "Rhamnaceae",
@@ -3587,7 +5649,7 @@
         "uuid": "b9dd8877-991d-4994-a445-f368d9cc8ad6",
         "props": {
           "code": "ZIZ_MAU",
-          "extra": {},
+          "extra": { "wood_density": "0.8" },
           "genus": "Ziziphus",
           "index": 15,
           "family": "Rhamnaceae",
@@ -3603,7 +5665,7 @@
         "uuid": "098a3f19-c7bb-44cd-b54e-e223ade1913b",
         "props": {
           "code": "ZIZ_MUC",
-          "extra": {},
+          "extra": { "wood_density": "0.8" },
           "genus": "Ziziphus",
           "index": 16,
           "family": "Rhamnaceae",
@@ -3619,7 +5681,7 @@
         "uuid": "c8f8ea17-b29a-4335-8095-0d98899e55f3",
         "props": {
           "code": "BOS_COR",
-          "extra": {},
+          "extra": { "wood_density": "0.7" },
           "genus": "Boscia",
           "index": 17,
           "family": "Capparaceae",
@@ -3635,7 +5697,7 @@
         "uuid": "7b05f2b1-3970-469a-b8fd-e4946cc7b058",
         "props": {
           "code": "CAD_FAR",
-          "extra": {},
+          "extra": { "wood_density": "0.7" },
           "genus": "Cadaba",
           "index": 18,
           "family": "Capparaceae",
@@ -3651,7 +5713,7 @@
         "uuid": "b3f8fa72-f3a9-43fc-809b-50caf00911df",
         "props": {
           "code": "CAD_MIR",
-          "extra": {},
+          "extra": { "wood_density": "0.7" },
           "genus": "Cadaba",
           "index": 19,
           "family": "Capparaceae",
@@ -3667,7 +5729,7 @@
         "uuid": "cd488fb4-a238-4eb4-a2b6-311478ee0981",
         "props": {
           "code": "CAD_ROT",
-          "extra": {},
+          "extra": { "wood_density": "0.7" },
           "genus": "Cadaba",
           "index": 20,
           "family": "Capparaceae",
@@ -3683,7 +5745,7 @@
         "uuid": "172199d5-4c68-4e46-be73-22c3da92aebc",
         "props": {
           "code": "CAP_FAS",
-          "extra": {},
+          "extra": { "wood_density": "0.72" },
           "genus": "Capparis",
           "index": 21,
           "family": "Capparaceae",
@@ -3699,7 +5761,7 @@
         "uuid": "2bb341e5-2a60-4287-95ca-2dc5aa3e5d72",
         "props": {
           "code": "MAE_ANG",
-          "extra": {},
+          "extra": { "wood_density": "0.68" },
           "genus": "Maerua",
           "index": 22,
           "family": "Capparaceae",
@@ -3715,7 +5777,7 @@
         "uuid": "8b501b8d-2196-4181-8b82-8921556c81ab",
         "props": {
           "code": "MAE_CRA",
-          "extra": {},
+          "extra": { "wood_density": "0.68" },
           "genus": "Maerua",
           "index": 23,
           "family": "Capparaceae",
@@ -3731,7 +5793,7 @@
         "uuid": "e73dd56a-a63d-4a28-af53-f13a2c74fb47",
         "props": {
           "code": "MAE_OBL",
-          "extra": {},
+          "extra": { "wood_density": "0.68" },
           "genus": "Maerua",
           "index": 24,
           "family": "Capparaceae",
@@ -3747,7 +5809,7 @@
         "uuid": "3ec520a9-50b1-4b00-9a95-885d9f28a015",
         "props": {
           "code": "MAE_SUB",
-          "extra": {},
+          "extra": { "wood_density": "0.68" },
           "genus": "Maerua",
           "index": 25,
           "family": "Capparaceae",
@@ -3763,7 +5825,7 @@
         "uuid": "eb70987a-bb0a-4bde-a923-1b2df7418a1d",
         "props": {
           "code": "BOS_HIL",
-          "extra": {},
+          "extra": { "wood_density": "0.5" },
           "genus": "Boswellia",
           "index": 26,
           "family": "Burseraceae",
@@ -3786,7 +5848,7 @@
         "uuid": "99056c18-9e85-4d9f-9695-caba9eb0ae91",
         "props": {
           "code": "COM_AFR",
-          "extra": {},
+          "extra": { "wood_density": "0.45" },
           "genus": "Commiphora",
           "index": 27,
           "family": "Burseraceae",
@@ -3802,7 +5864,7 @@
         "uuid": "af79ca2e-b54a-4bfa-929d-82a85f52506f",
         "props": {
           "code": "COM_BOL",
-          "extra": {},
+          "extra": { "wood_density": "0.45" },
           "genus": "Commiphora",
           "index": 28,
           "family": "Burseraceae",
@@ -3825,7 +5887,7 @@
         "uuid": "ddba50da-0495-4120-8b0f-7d835dd2b040",
         "props": {
           "code": "CAL_PRO",
-          "extra": {},
+          "extra": { "wood_density": "0.35" },
           "genus": "Calotropis",
           "index": 29,
           "family": "Apocynaceae",
@@ -3841,7 +5903,7 @@
         "uuid": "8c505a26-4a19-45ec-9240-9d2eedbcf755",
         "props": {
           "code": "COM_ACU",
-          "extra": {},
+          "extra": { "wood_density": "0.78" },
           "genus": "Combretum",
           "index": 30,
           "family": "Combretaceae",
@@ -3857,7 +5919,7 @@
         "uuid": "e700070b-42d5-438f-b62d-383f7dd099ec",
         "props": {
           "code": "COR_SIN",
-          "extra": {},
+          "extra": { "wood_density": "0.55" },
           "genus": "Cordia",
           "index": 31,
           "family": "Cordiaceae",
@@ -3873,7 +5935,7 @@
         "uuid": "4c311c3b-2994-456c-a4bd-4c0130bc7cf1",
         "props": {
           "code": "CIS_QUA",
-          "extra": {},
+          "extra": { "wood_density": "0.4" },
           "genus": "Cissus",
           "index": 32,
           "family": "Vitaceae",
@@ -3889,7 +5951,7 @@
         "uuid": "aee6d7c0-93b6-4873-ab41-3eb40e1909a0",
         "props": {
           "code": "DEL_ERE",
-          "extra": {},
+          "extra": { "wood_density": "0.3" },
           "genus": "Delosperma",
           "index": 33,
           "family": "Aizoaceae",
@@ -3905,7 +5967,7 @@
         "uuid": "d3bff342-e509-4420-91b9-c968ea0f3db9",
         "props": {
           "code": "DOB_GLA",
-          "extra": {},
+          "extra": { "wood_density": "0.7" },
           "genus": "Dobera",
           "index": 34,
           "family": "Salvadoraceae",
@@ -3921,7 +5983,7 @@
         "uuid": "02af3891-522d-4736-998e-90af72844aa0",
         "props": {
           "code": "SAL_PER",
-          "extra": {},
+          "extra": { "wood_density": "0.6" },
           "genus": "Salvadora",
           "index": 35,
           "family": "Salvadoraceae",
@@ -3937,7 +5999,7 @@
         "uuid": "3558de58-02d2-4808-aea4-11e476780a2a",
         "props": {
           "code": "EUP_CUN",
-          "extra": {},
+          "extra": { "wood_density": "0.45" },
           "genus": "Euphorbia",
           "index": 36,
           "family": "Euphorbiaceae",
@@ -3953,7 +6015,7 @@
         "uuid": "b7f96048-bb4b-4b99-8e26-d4957c3ac385",
         "props": {
           "code": "FIC_SYC",
-          "extra": {},
+          "extra": { "wood_density": "0.45" },
           "genus": "Ficus",
           "index": 37,
           "family": "Moraceae",
@@ -3969,7 +6031,7 @@
         "uuid": "7932e2c7-6100-40e4-8a4c-80c40a8977c1",
         "props": {
           "code": "GRE_BIC",
-          "extra": {},
+          "extra": { "wood_density": "0.7" },
           "genus": "Grewia",
           "index": 38,
           "family": "Malvaceae",
@@ -3985,7 +6047,7 @@
         "uuid": "6d18202a-a724-4890-84e8-118d2550c1fd",
         "props": {
           "code": "GRE_TEN",
-          "extra": {},
+          "extra": { "wood_density": "0.7" },
           "genus": "Grewia",
           "index": 39,
           "family": "Malvaceae",
@@ -4001,7 +6063,7 @@
         "uuid": "cb2d9388-92d1-42df-8646-b69580b498c3",
         "props": {
           "code": "HYP_COM",
-          "extra": {},
+          "extra": { "wood_density": "0.6" },
           "genus": "Hyphaene",
           "index": 40,
           "family": "Arecaceae",
@@ -4017,7 +6079,7 @@
         "uuid": "01828fbb-d674-422e-8906-229579ddf879",
         "props": {
           "code": "IND_CLI",
-          "extra": {},
+          "extra": { "wood_density": "0.6" },
           "genus": "Indigofera",
           "index": 41,
           "family": "Fabaceae",
@@ -4033,7 +6095,7 @@
         "uuid": "0b517a78-418c-414b-9cb4-209689b9e95b",
         "props": {
           "code": "IND_SPI",
-          "extra": {},
+          "extra": { "wood_density": "0.6" },
           "genus": "Indigofera",
           "index": 42,
           "family": "Fabaceae",
@@ -4049,7 +6111,7 @@
         "uuid": "16d6df7b-458a-402d-8855-4cbf887ebf9e",
         "props": {
           "code": "LAN_VIR",
-          "extra": {},
+          "extra": { "wood_density": "0.6" },
           "genus": "Lantana",
           "index": 43,
           "family": "Verbenaceae",
@@ -4065,7 +6127,7 @@
         "uuid": "e52d956e-e3be-4f18-880a-5069b6264993",
         "props": {
           "code": "LAW_INE",
-          "extra": {},
+          "extra": { "wood_density": "0.75" },
           "genus": "Lawsonia",
           "index": 44,
           "family": "Lythraceae",
@@ -4081,7 +6143,7 @@
         "uuid": "0c0811bd-3f12-4167-9cd8-5d34ccf73d33",
         "props": {
           "code": "OSY_LAN",
-          "extra": {},
+          "extra": { "wood_density": "0.8" },
           "genus": "Osyris",
           "index": 45,
           "family": "Santalaceae",
@@ -4097,7 +6159,7 @@
         "uuid": "851b7921-e59a-4ec6-90f1-567204bba365",
         "props": {
           "code": "SAN_EHR",
-          "extra": {},
+          "extra": { "wood_density": "0.3" },
           "genus": "Sansevieria",
           "index": 46,
           "family": "Asparagaceae",
@@ -4120,7 +6182,7 @@
         "uuid": "19f27649-2a99-488a-91cb-2414cdac51c5",
         "props": {
           "code": "STR_HEN",
-          "extra": {},
+          "extra": { "wood_density": "0.75" },
           "genus": "Strychnos",
           "index": 47,
           "family": "Loganiaceae",
@@ -4136,7 +6198,7 @@
         "uuid": "2ae52ff5-ccb6-4942-9bf0-5716a6e033c8",
         "props": {
           "code": "UNK",
-          "extra": {},
+          "extra": { "wood_density": "0.6" },
           "genus": "Unknown",
           "index": 48,
           "family": "Unknown",
@@ -4152,7 +6214,7 @@
         "uuid": "7238d190-e039-4c88-a12f-5f3f64e8dde9",
         "props": {
           "code": "UNL",
-          "extra": {},
+          "extra": { "wood_density": "0.6" },
           "genus": "Unlisted",
           "index": 49,
           "family": "Unlisted",
