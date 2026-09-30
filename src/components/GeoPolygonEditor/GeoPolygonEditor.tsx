@@ -32,7 +32,9 @@ type GeoPolygonEditorProps = {
   mapRef: React.RefObject<RNMapView | null>;
   initialPolygons: MapPolygonExtendedProps[];
   onCancelDrawing: () => void;
-  onSaveDrawing: (polygon: MapPolygonExtendedProps | null) => void;
+  onSaveDrawing: (
+    polygon: MapPolygonExtendedProps | null,
+  ) => Promise<void> | void;
   // called every time the polygon (or the draft being drawn) changes
   onCoordinatesChange?: (coordinates: LatLng[]) => void;
   // content rendered above the map (e.g. extra form fields)

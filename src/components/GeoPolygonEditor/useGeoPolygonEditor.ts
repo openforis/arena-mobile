@@ -40,7 +40,9 @@ type UseGeoPolygonEditorContentParams = {
   mapRef: React.RefObject<MapView | null>;
   initialPolygons: MapPolygonExtendedProps[];
   onCancelDrawing: () => void;
-  onSaveDrawing: (polygon: MapPolygonExtendedProps | null) => void;
+  onSaveDrawing: (
+    polygon: MapPolygonExtendedProps | null,
+  ) => Promise<void> | void;
 };
 
 const determinePolygonToSave = ({
@@ -523,10 +525,10 @@ export const useGeoPolygonEditor = ({
 
   const [hadValueWhenOpened] = useState(() => polygons.length > 0);
 
-  const onSavePress = useCallback(() => {
+  const onSavePress = useCallback(async () => {
     stopFollowingCurrentLocation();
     setLocalState((prev) => ({ ...prev, undoStack: [] }));
-    onSaveDrawing(polygonToSave);
+    await onSaveDrawing(polygonToSave);
   }, [onSaveDrawing, polygonToSave, stopFollowingCurrentLocation]);
 
   const onCenterOnLocation = useCallback(async () => {

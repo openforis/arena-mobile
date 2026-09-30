@@ -44,11 +44,11 @@ const OfflineMapAreaItem = ({
   area,
   onDeletePress,
   onResumePress,
-}: {
+}: Readonly<{
   area: OfflineMapArea;
-  onDeletePress: (area: OfflineMapArea) => void;
-  onResumePress: (area: OfflineMapArea) => void;
-}) => {
+  onDeletePress: (area: OfflineMapArea) => Promise<void>;
+  onResumePress: (area: OfflineMapArea) => Promise<void>;
+}>) => {
   const { t } = useTranslation();
   const layer = MapLayers.getLayer(area.layerId);
   const missingTiles = area.tilesCount - area.downloadedTilesCount;
