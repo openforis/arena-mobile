@@ -32,14 +32,19 @@ jobs:
         with:
           java-version: "21"
           distribution: "temurin"
-          cache: "gradle"
+
+      # Gradle caches (dependencies, build cache): saved from the default branch, restored in PRs.
+      # (setup-java's "cache: gradle" is keyed on **/*.gradle* files, but android/ doesn't exist yet at
+      # that point, so its key never changes and the cache is never updated)
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Cache Expo prebuild output
         uses: actions/cache@v4
         id: cache-android-prebuild
         with:
           path: android/
-          key: android-prebuild-${{ hashFiles('package.json', 'yarn.lock', 'app.config.ts') }}
+          key: android-prebuild-${{ hashFiles('package.json', 'yarn.lock', 'app.config.ts', 'plugins/**') }}
 
       - name: Build Android APK
         run: |
@@ -59,7 +64,9 @@ jobs:
             --assets-dest android/app/src/main/res
 
           cd android
-          ./gradlew assembleDebug --no-daemon --build-cache --parallel
+          # build native code only for the emulator architecture (default: 4 architectures)
+          ./gradlew assembleDebug --no-daemon --build-cache --parallel \
+            -PreactNativeArchitectures=x86_64
       - name: Enable KVM group perms
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
