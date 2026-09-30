@@ -68,18 +68,13 @@ const layers: MapLayer[] = [
   },
 ];
 
-const layersById = layers.reduce(
-  (acc, layer) => {
-    acc[layer.id] = layer;
-    return acc;
-  },
-  {} as Record<MapLayerId, MapLayer>,
-);
-
 const defaultLayerId = MapLayerId.esriWorldImagery;
 
+const defaultLayer = layers.find((layer) => layer.id === defaultLayerId)!;
+
+// falls back to the default layer when the layer id is not specified or not valid
 const getLayer = (layerId: MapLayerId | string | null | undefined): MapLayer =>
-  layersById[layerId as MapLayerId] ?? layersById[defaultLayerId];
+  layers.find((layer) => layer.id === layerId) ?? defaultLayer;
 
 const prefetchableLayers = layers.filter((layer) => layer.prefetchAllowed);
 

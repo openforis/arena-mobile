@@ -100,7 +100,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
     const useFreeLayers =
       !!layerIdProp || settings.mapProvider === MapProvider.freeLayers;
     const [selectedLayerId, setSelectedLayerId] = useState<MapLayerId>(
-      () => layerIdProp ?? settings.mapLayer ?? MapLayers.defaultLayerId,
+      () => layerIdProp ?? settings.mapLayer,
     );
     const layer = MapLayers.getLayer(layerIdProp ?? selectedLayerId);
     const networkConnected = useIsNetworkConnected();
