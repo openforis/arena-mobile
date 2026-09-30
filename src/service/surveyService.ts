@@ -1,4 +1,4 @@
-import { Survey, Surveys, UserGroup } from "@openforis/arena-core";
+import { Dates, Survey, Surveys, UserGroup } from "@openforis/arena-core";
 
 import { SurveyRepository } from "./repository/surveyRepository";
 import { SurveyFSRepository } from "./repository/surveyFSRepository";
@@ -123,8 +123,58 @@ const fetchCurrentUserGroupRemote = async ({
 
 const getSurveysStorageSize = async () => SurveyFSRepository.getStorageSize();
 
-const importDemoSurvey = async () =>
-  _insertSurvey(demoSurvey as unknown as Survey);
+// insert/update and dependency graph building set top-level props (id, remoteId, dependencyGraph)
+// of the survey object: always pass a (shallow) copy of the bundled one
+const cloneDemoSurvey = (): Survey => ({
+  ...(demoSurvey as unknown as Survey),
+});
+
+const importDemoSurvey = async () => _insertSurvey(cloneDemoSurvey());
+
+// The demo survey is imported only when no surveys exist locally, so a newer version bundled
+// with the app must be applied in place to the already imported one (same local id, so its
+// records are kept; they are fixed against the new survey structure when loaded, see RecordFixer).
+// The local date_modified column stores datePublished (see SurveyRepository.insertSurvey).
+const findOutdatedDemoSurveySummary = <
+  T extends { uuid: string; dateModified: string },
+>(
+  surveySummaries: T[],
+): T | undefined => {
+  const demoSurveySummary = surveySummaries.find(
+    (surveySummary) => surveySummary.uuid === demoSurveyUuid,
+  );
+  if (!demoSurveySummary) return undefined;
+  const demoSurveyDate = demoSurvey.datePublished ?? demoSurvey.dateModified;
+  return Dates.isAfter(demoSurveyDate, demoSurveySummary.dateModified)
+    ? demoSurveySummary
+    : undefined;
+};
+
+const updateDemoSurvey = async ({ surveyId }: { surveyId: number }) =>
+  _updateSurvey({ id: surveyId, survey: cloneDemoSurvey() });
+
+export type DemoSurveyAction = "import" | "update";
+
+// Imports the demo survey if no surveys exist locally, or updates the local one if outdated.
+// onStart is called (e.g. to show progress) only when an action is actually performed.
+const importOrUpdateDemoSurvey = async ({
+  onStart,
+}: {
+  onStart?: (action: DemoSurveyAction) => void;
+} = {}): Promise<DemoSurveyAction | null> => {
+  const surveySummaries = await fetchSurveySummariesLocal();
+  if (surveySummaries.length === 0) {
+    onStart?.("import");
+    await importDemoSurvey();
+    return "import";
+  }
+  const outdatedDemoSurvey = findOutdatedDemoSurveySummary(surveySummaries);
+  if (!outdatedDemoSurvey) return null;
+
+  onStart?.("update");
+  await updateDemoSurvey({ surveyId: outdatedDemoSurvey.id });
+  return "update";
+};
 
 const importSurveyRemote = async ({ id }: any) => {
   const survey = await fetchSurveyRemoteById({ id });
@@ -154,7 +204,7 @@ export const SurveyService = {
   fetchSurveyById,
   fetchCurrentUserGroupRemote,
   getSurveysStorageSize,
-  importDemoSurvey,
+  importOrUpdateDemoSurvey,
   importSurveyRemote,
   fetchCategoryItems,
   insertSurvey,

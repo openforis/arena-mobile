@@ -1,0 +1,117 @@
+appId: ${APP_ID}
+---
+# Demo survey (bundled, no login): hierarchical code attributes, GPS coordinate,
+# calculated attributes, multiple attribute and enumerated entity
+- runFlow: common/demo-survey-new-record.yaml
+- runFlow:
+    file: common/open-page.yaml
+    env:
+      PAGE: "Site Details"
+
+# hierarchical code attributes: district items depend on the selected region
+- tapOn:
+    text: "Select item"
+    below: "Region"
+    index: 0
+- tapOn: "Central Region.*"
+- tapOn:
+    text: "Select item"
+    below: "District"
+    index: 0
+- assertVisible: "Plateau District.*"
+- assertNotVisible: "Coastal District.*"
+- tapOn: "Plateau District.*"
+- assertVisible: "Plateau District \\(3\\)"
+
+# coordinate from device GPS (~106 m north of the provided location of Test Point 1)
+- setLocation:
+    latitude: 3.9768
+    longitude: 42.10738
+- scrollUntilVisible:
+    element: "Get location"
+    direction: DOWN
+- tapOn: "Get location"
+- scrollUntilVisible:
+    element: "3\\.9768"
+    direction: UP
+    timeout: 30000
+# calculated attribute: distance(unit_location_given, site_location)
+# (scroll to the next field so that the value below the label is visible)
+- scrollUntilVisible:
+    element: "Elevation \\[m\\]"
+    direction: DOWN
+- assertVisible: "10[0-9](\\.[0-9]+)?"
+
+# integer attribute with validation (error range + warning when > 60)
+- scrollUntilVisible:
+    element:
+      id: "site_slope"
+    direction: DOWN
+- tapOn:
+    id: "site_slope"
+- inputText: "75"
+- tapOn: "Slope \\[%\\]"
+- assertVisible: "75"
+
+# code attribute rendered as radio buttons (applicable only if slope > 0)
+- scrollUntilVisible:
+    element: "North-East \\(NE\\)"
+    direction: DOWN
+- tapOn: "North-East \\(NE\\)"
+
+# multiple text attribute (capitalized)
+- scrollUntilVisible:
+    element: "New Observers"
+    direction: DOWN
+- tapOn:
+    id: "site_observers"
+    index: 0
+- inputText: "ann"
+- tapOn: "Observers"
+- tapOn: "New Observers"
+- scrollUntilVisible:
+    element: "New Observers"
+    direction: DOWN
+- tapOn:
+    id: "site_observers"
+    index: 1
+- inputText: "bob"
+- tapOn: "Observers"
+- scrollUntilVisible:
+    element: "Ann"
+    direction: UP
+- scrollUntilVisible:
+    element: "Bob"
+    direction: DOWN
+
+# enumerated entity: one row for each ground cover class is created automatically
+- scrollUntilVisible:
+    element: "Edit Ground cover"
+    direction: DOWN
+- tapOn: "Edit Ground cover"
+- assertVisible: "Trees"
+- assertVisible: "Shrubs"
+- scrollUntilVisible:
+    element: "Litter"
+    direction: DOWN
+- assertNotVisible: "New Ground cover"
+- tapOn: "Trees"
+- tapOn:
+    id: "ground_cover_percent"
+- inputText: "40"
+- tapOn: "Cover \\[%\\]"
+- runFlow: common/dismiss-dev-notifications.yaml
+- tapOn: "Ground cover\\[2\\]"
+- assertVisible: "Shrubs"
+- tapOn:
+    id: "ground_cover_percent"
+- inputText: "60"
+- tapOn: "Cover \\[%\\]"
+# back to Site Details (breadcrumb): the total is calculated with sum(ground_cover.ground_cover_percent)
+- tapOn: "Site Details"
+# (scroll to the next field so that the value below the label is visible)
+- scrollUntilVisible:
+    element: "Site description"
+    direction: DOWN
+- assertVisible: "Total ground cover \\[%\\]"
+- assertVisible: "100"

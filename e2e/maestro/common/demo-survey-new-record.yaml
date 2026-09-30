@@ -1,0 +1,27 @@
+appId: ${APP_ID}
+---
+# Fresh install: the bundled demo survey is imported at startup (no login required).
+# Selects it and creates a new record with "Test Point 1" as Level 1 Unit no.
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Select a survey|Manage surveys"
+    timeout: 60000
+- tapOn: "Select a survey|Manage surveys"
+- tapOn: "Demo Survey"
+- extendedWaitUntil:
+    visible: "No records found"
+    timeout: 20000
+- tapOn: "New record"
+- extendedWaitUntil:
+    visible: "Level 1 Unit no"
+    timeout: 20000
+- runFlow: dismiss-dev-notifications.yaml
+- tapOn:
+    text: "Select item"
+    below: "Level 1 Unit no"
+    index: 0
+- tapOn: "Test Point 1"
+- extendedWaitUntil:
+    visible: "First Level Unit \\[Test Point 1.*"
+    timeout: 10000

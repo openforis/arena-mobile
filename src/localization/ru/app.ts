@@ -26,6 +26,7 @@ export default {
     startingDbMigrations: "Запуск миграции БД",
     fetchingSurveys: "Загрузка опросов",
     importingDemoSurvey: "Загрузка демонстрационного опроса",
+    updatingDemoSurvey: "Обновление демонстрационного опроса",
     fetchingAndSettingLocalSurveys: "Получение и установка локальных опросов",
     fetchingAndSettingSurvey: "Получение и установка опроса",
     checkingLoggedIn: "Проверка авторизации",
