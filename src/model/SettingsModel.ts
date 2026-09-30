@@ -8,6 +8,8 @@ enum PropertyType {
   boolean = "boolean",
   numeric = "numeric",
   options = "options",
+  // radio buttons: one per option, with labels that are not truncated
+  radio = "radio",
   dropdown = "dropdown",
   slider = "slider",
 }
@@ -153,7 +155,7 @@ const properties: SettingsProperties = {
     group: SettingGroup.location,
   },
   mapProvider: {
-    type: PropertyType.dropdown,
+    type: PropertyType.radio,
     group: SettingGroup.maps,
     options: Object.values(MapProvider).map((provider) => ({
       key: provider,
@@ -161,7 +163,7 @@ const properties: SettingsProperties = {
     })),
   },
   mapLayer: {
-    type: PropertyType.dropdown,
+    type: PropertyType.radio,
     group: SettingGroup.maps,
     options: MapLayers.layers.map((layer) => ({
       key: layer.id,
