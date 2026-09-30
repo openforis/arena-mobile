@@ -95,6 +95,14 @@ export const OptionsMenu = (props: Props) => {
       )}
       <Divider />
       <MenuItem
+        icon="map-marker-down"
+        onPress={() => {
+          navigation.navigate(screenKeys.offlineMaps as never);
+        }}
+        title="offlineMaps:title"
+        toggleMenu={toggleMenu}
+      />
+      <MenuItem
         icon="cog"
         onPress={() => {
           navigation.navigate(screenKeys.settings as never);

@@ -1,8 +1,9 @@
-import React from "react";
-import { Animated } from "react-native";
+import React, { useEffect } from "react";
+import { Animated, StyleProp, ViewStyle } from "react-native";
 import RNMapView from "react-native-maps";
 
 import { useHeartbeatAnimation } from "hooks";
+import { LatLng, MapLayerId } from "model";
 import { log } from "utils";
 
 import { Button } from "../Button";
@@ -32,6 +33,17 @@ type GeoPolygonEditorProps = {
   initialPolygons: MapPolygonExtendedProps[];
   onCancelDrawing: () => void;
   onSaveDrawing: (polygon: MapPolygonExtendedProps | null) => void;
+  // called every time the polygon (or the draft being drawn) changes
+  onCoordinatesChange?: (coordinates: LatLng[]) => void;
+  // content rendered above the map (e.g. extra form fields)
+  headerContent?: React.ReactNode;
+  // extra map overlays (e.g. reference polygons)
+  extraOverlays?: React.ReactNode;
+  // when specified, the given free map layer is used instead of the one in the settings
+  layerId?: MapLayerId;
+  saveButtonIcon?: string;
+  saveButtonTextKey?: string;
+  style?: StyleProp<ViewStyle>;
 };
 
 export const GeoPolygonEditor = ({
@@ -40,6 +52,13 @@ export const GeoPolygonEditor = ({
   initialPolygons,
   onCancelDrawing,
   onSaveDrawing,
+  onCoordinatesChange,
+  headerContent,
+  extraOverlays,
+  layerId,
+  saveButtonIcon = "content-save",
+  saveButtonTextKey = "common:save",
+  style,
 }: GeoPolygonEditorProps) => {
   log.debug(`rendering GeoPolygonEditor`);
 
@@ -84,6 +103,10 @@ export const GeoPolygonEditor = ({
     onSaveDrawing,
   });
 
+  useEffect(() => {
+    onCoordinatesChange?.(draftCoordinates);
+  }, [draftCoordinates, onCoordinatesChange]);
+
   const locationButtonOpacity = useHeartbeatAnimation({
     isActive: isFollowingCurrentLocation,
     minValue: 0.25,
@@ -91,15 +114,18 @@ export const GeoPolygonEditor = ({
   });
 
   return (
-    <VView style={styles.modalContent}>
+    <VView style={[styles.modalContent, style]}>
+      {headerContent}
       <MapView
         ref={mapRef}
         style={styles.map}
         initialRegion={initialRegion}
+        layerId={layerId}
         onPress={onMapPress}
         onPanDrag={onMapPanDrag}
         fitToCoordinatesOnReady={visibleCoordinates}
       >
+        {extraOverlays}
         {isFollowingCurrentLocation && currentLocationCoordinate && (
           <CurrentLocationMarker coordinate={currentLocationCoordinate} />
         )}
@@ -175,9 +201,9 @@ export const GeoPolygonEditor = ({
           {hasValue ? (
             <Button
               disabled={!canSave}
-              icon="content-save"
+              icon={saveButtonIcon}
               onPress={onSavePress}
-              textKey="common:save"
+              textKey={saveButtonTextKey}
             />
           ) : (
             <Button

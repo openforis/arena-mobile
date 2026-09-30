@@ -1,0 +1,118 @@
+import * as Application from "expo-application";
+
+import { JobMobile, JobMobileContext } from "model/JobMobile";
+import { MapLayers } from "model/MapLayers";
+import { OfflineMapArea } from "model/OfflineMapArea";
+import { Files } from "utils/Files";
+import { log } from "utils/Logger";
+import { MapTileUtils, TileCoordinate } from "utils/MapTileUtils";
+
+import { OfflineMapAreaRepository } from "./offlineMapAreaRepository";
+import { OfflineMapTilesStorage } from "./offlineMapTilesStorage";
+
+// keep it low: free tile servers must not be overloaded
+const MAX_CONCURRENT_DOWNLOADS = 4;
+
+const HTTP_STATUS_OK = 200;
+
+export type OfflineMapAreaDownloadJobContext = JobMobileContext & {
+  area: OfflineMapArea;
+};
+
+export type OfflineMapAreaDownloadJobResult = {
+  area: OfflineMapArea;
+};
+
+const userAgent = `OpenForisArenaMobile/${Application.nativeApplicationVersion ?? "2"} (+https://www.openforis.org)`;
+
+export class OfflineMapAreaDownloadJob extends JobMobile<OfflineMapAreaDownloadJobContext> {
+  private downloadedTilesCount = 0;
+  private sizeBytes = 0;
+  private createdDirUris = new Set<string>();
+
+  override async execute() {
+    const { area } = this.context;
+    const { coordinates, minZoom, maxZoom } = area;
+
+    const tiles = MapTileUtils.computeTilesForPolygon({
+      coordinates,
+      minZoom,
+      maxZoom,
+    });
+    this.total = tiles.length;
+
+    let nextTileIndex = 0;
+    const worker = async () => {
+      while (nextTileIndex < tiles.length && !this.isCanceled()) {
+        const tile = tiles[nextTileIndex]!;
+        nextTileIndex += 1;
+        await this.processTile(tile);
+        this.incrementProcessedItems();
+      }
+    };
+    const workers = Array.from({ length: MAX_CONCURRENT_DOWNLOADS }, worker);
+    await Promise.all(workers);
+
+    await this.saveArea(tiles.length);
+  }
+
+  private async processTile(tile: TileCoordinate): Promise<void> {
+    const { layerId } = this.context.area;
+    const fileUri = OfflineMapTilesStorage.getTileFileUri(layerId, tile);
+
+    const existingSize = await Files.getSize(fileUri);
+    if (existingSize > 0) {
+      this.downloadedTilesCount += 1;
+      this.sizeBytes += existingSize;
+      return;
+    }
+    try {
+      await this.createTileDirIfNeeded(tile);
+      const layer = MapLayers.getLayer(layerId);
+      const url = MapTileUtils.formatTileUrl(layer.urlTemplate, tile);
+      const { status } = await Files.download(url, fileUri, {
+        headers: { "User-Agent": userAgent },
+      });
+      if (status === HTTP_STATUS_OK) {
+        this.downloadedTilesCount += 1;
+        this.sizeBytes += await Files.getSize(fileUri);
+      } else {
+        await Files.del(fileUri, true);
+      }
+    } catch (error) {
+      log.debug(
+        `offline map tile download failed (${MapTileUtils.getTileKey(tile)}): ${String(error)}`,
+      );
+      await Files.del(fileUri, true);
+    }
+  }
+
+  private async createTileDirIfNeeded(tile: TileCoordinate): Promise<void> {
+    const dirUri = OfflineMapTilesStorage.getTileDirUri(
+      this.context.area.layerId,
+      tile,
+    );
+    if (this.createdDirUris.has(dirUri)) return;
+    await Files.mkDir(dirUri);
+    this.createdDirUris.add(dirUri);
+  }
+
+  private async saveArea(tilesCount: number): Promise<void> {
+    const { area } = this.context;
+    const areaUpdated: OfflineMapArea = {
+      ...area,
+      tilesCount,
+      downloadedTilesCount: this.downloadedTilesCount,
+      // tiles not processed because of cancel are considered as failed (missing)
+      failedTilesCount: tilesCount - this.downloadedTilesCount,
+      sizeBytes: this.sizeBytes,
+      dateModified: new Date().toISOString(),
+    };
+    await OfflineMapAreaRepository.saveArea(areaUpdated);
+    this.context.area = areaUpdated;
+  }
+
+  override async generateResult(): Promise<OfflineMapAreaDownloadJobResult> {
+    return { area: this.context.area };
+  }
+}

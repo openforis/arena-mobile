@@ -13,6 +13,8 @@ export { ImageUtils } from "./ImageUtils";
 export { initializeLogger, log, logsPath, clear as clearLogs } from "./Logger";
 export { Jobs } from "./Jobs";
 export { LanguageUtils } from "./LanguageUtils";
+export { MapTileUtils } from "./MapTileUtils";
+export type { TileCoordinate } from "./MapTileUtils";
 export { Permissions } from "./Permissions";
 export { Refs } from "./Refs";
 export { RNFileProcessor } from "./RNFileProcessor";

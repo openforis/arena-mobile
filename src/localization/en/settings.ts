@@ -4,6 +4,7 @@ export default {
     appearance: "Appearance",
     dataEntry: "Data entry",
     location: "Location & GPS",
+    maps: "Maps",
     images: "Images",
   },
   animationsEnabled: {
@@ -111,6 +112,20 @@ It will help to get a better accuracy in coordinate attributes.`,
     pairNewDevice: "Pair a new device…",
   },
 
+  mapLayer: {
+    label: "Map layer",
+    description:
+      "Layer shown by default on the maps (it can be changed on the map using the layers button)",
+  },
+  mapProvider: {
+    label: "Map provider",
+    description:
+      "Map used when drawing or viewing geographic attributes. Free map layers can be pre-fetched for offline use (see Offline maps)",
+    options: {
+      default: "Google Maps (Apple Maps on iOS)",
+      freeLayers: "Free map layers (satellite, topographic) - offline capable",
+    },
+  },
   showRecordCompletion: {
     label: "Show record completion progress",
     description:

@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 import { Objects } from "@openforis/arena-core";
 
@@ -7,6 +8,7 @@ import { FullBackupButton } from "appComponents/FullBackupButton";
 
 import { Button, FieldSet, HView, ScreenView, Text, VView } from "components";
 import { SettingsModel, SettingsObject } from "model";
+import { screenKeys } from "screens/screenKeys";
 import { AppService } from "service/appService";
 import {
   SettingsActions,
@@ -26,6 +28,7 @@ const settingGroupsOrder = [
   SettingsModel.SettingGroup.appearance,
   SettingsModel.SettingGroup.dataEntry,
   SettingsModel.SettingGroup.location,
+  SettingsModel.SettingGroup.maps,
   SettingsModel.SettingGroup.images,
 ];
 
@@ -38,6 +41,7 @@ export const SettingsScreen = () => {
   log.debug(`rendering SettingsScreen`);
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
+  const navigation = useNavigation();
 
   const settingsStored = SettingsSelectors.useSettings();
 
@@ -79,7 +83,9 @@ export const SettingsScreen = () => {
             ([, prop]) => !prop.isDisabled?.({ settings })
           );
           const isLocationGroup = group === SettingsModel.SettingGroup.location;
-          if (visibleEntries.length === 0 && !isLocationGroup) return null;
+          const isMapsGroup = group === SettingsModel.SettingGroup.maps;
+          if (visibleEntries.length === 0 && !isLocationGroup && !isMapsGroup)
+            return null;
           return (
             <FieldSet
               key={group}
@@ -102,6 +108,17 @@ export const SettingsScreen = () => {
                     value={settings.preferredGpsSourceId}
                   />
                 </VView>
+              )}
+              {isMapsGroup && (
+                <Button
+                  icon="map-marker-down"
+                  mode="text"
+                  onPress={() =>
+                    navigation.navigate(screenKeys.offlineMaps as never)
+                  }
+                  style={styles.button}
+                  textKey="offlineMaps:title"
+                />
               )}
             </FieldSet>
           );

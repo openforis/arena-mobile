@@ -156,3 +156,18 @@ languages fall back to English.
 - Optional MapLibre engine behind the same `MapView` API (vector tiles).
 - Show downloaded areas' outlines while drawing a `geo` attribute.
 - Pre-fetch the area of a survey automatically from the survey extent.
+
+## Implementation status
+
+Implemented in this branch:
+
+- [x] `MapLayers` / `OfflineMapArea` model, `mapProvider` + `mapLayer` settings (new *Maps* group).
+- [x] `MapTileUtils` (tile math, polygon coverage, count/estimate) with Jest tests.
+- [x] `MapView`: free layers through `UrlTile` + tile cache + offline mode, attribution, offline badge, layer switching.
+- [x] `GeoPolygonEditor`: `onCoordinatesChange`, `headerContent`, `extraOverlays`, `layerId`, custom save button.
+- [x] Offline areas repository, download job (throttled, resumable, cancelable), service (estimate, delete, delete all, storage size).
+- [x] *Offline maps* screen (settings + options menu) and *area editor* screen with live estimate.
+- [x] Full backup excludes the map tiles folder.
+- [x] English strings (other languages fall back to English).
+
+Still to do: manual testing on Android/iOS devices, translations.
