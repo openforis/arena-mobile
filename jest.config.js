@@ -15,11 +15,11 @@ module.exports = {
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   transform: {
     // .babelrc doesn't apply to node_modules, so pass the preset explicitly
-    [`/node_modules/(${esModules})/.+\\.m?js$`]: [
+    [String.raw`/node_modules/(${esModules})/.+\.m?js$`]: [
       "babel-jest",
       { presets: ["babel-preset-expo"] },
     ],
-    "\\.[jt]sx?$": "babel-jest",
+    [String.raw`\.[jt]sx?$`]: "babel-jest",
   },
   transformIgnorePatterns: [`/node_modules/(?!(${esModules})/)`],
 };
