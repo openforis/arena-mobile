@@ -131,6 +131,8 @@ export const OfflineMapsScreen = () => {
       OfflineMapsService.fetchAreas(),
       Files.getFreeDiskStorage(),
     ]);
+    // default area names are "Area YYYY-MM-DD HH:mm": sorting by name also sorts them chronologically
+    areasLoaded.sort((areaA, areaB) => areaA.name.localeCompare(areaB.name));
     setState((prev) => ({
       ...prev,
       areas: areasLoaded,

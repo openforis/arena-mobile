@@ -33,6 +33,7 @@ export default {
   areaEditor: {
     title: "New offline map area",
     name: "Name",
+    layer: "Layer",
     maxZoom: "Max zoom: {{value}}",
     drawAreaToEstimate:
       "Draw the area of interest on the map to see the space it will occupy",

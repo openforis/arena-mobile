@@ -2,12 +2,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import RNMapView, { Polygon } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
 
-import { DateFormats, Dates } from "@openforis/arena-core";
+import { Dates } from "@openforis/arena-core";
 
 import {
+  Dropdown,
   GeoPolygonEditor,
   HView,
-  SegmentedButtons,
   Slider,
   Text,
   TextInput,
@@ -26,7 +26,7 @@ import styles from "./styles";
 const existingAreaStrokeColor = "rgba(96, 96, 96, 0.9)";
 const existingAreaFillColor = "rgba(96, 96, 96, 0.15)";
 
-const layerButtons = MapLayers.prefetchableLayers.map((layer) => ({
+const layerItems = MapLayers.prefetchableLayers.map((layer) => ({
   value: layer.id,
   label: `offlineMaps:layers.${layer.id}`,
 }));
@@ -36,8 +36,11 @@ const determineInitialLayerId = (settingsLayerId: MapLayerId): MapLayerId =>
     ? settingsLayerId
     : MapLayers.defaultLayerId;
 
+// year first, so that default names sort alphabetically in chronological order
+const DEFAULT_AREA_NAME_DATE_FORMAT = "YYYY-MM-DD HH:mm";
+
 const generateDefaultAreaName = (): string =>
-  Dates.format(new Date(), DateFormats.datetimeDisplay);
+  `Area ${Dates.format(new Date(), DEFAULT_AREA_NAME_DATE_FORMAT)}`;
 
 export const OfflineMapAreaEditorScreen = () => {
   log.debug("rendering OfflineMapAreaEditorScreen");
@@ -102,7 +105,7 @@ export const OfflineMapAreaEditorScreen = () => {
       : GeoUtils.defaultMapRegion;
   }, [existingAreas]);
 
-  const onLayerChange = useCallback((value: string) => {
+  const onLayerChange = useCallback(async (value: string) => {
     setLayerId(value as MapLayerId);
   }, []);
 
@@ -166,8 +169,9 @@ export const OfflineMapAreaEditorScreen = () => {
         onChange={setName}
         value={name}
       />
-      <SegmentedButtons
-        buttons={layerButtons}
+      <Dropdown
+        items={layerItems}
+        label="offlineMaps:areaEditor.layer"
         onChange={onLayerChange}
         value={layerId}
       />
