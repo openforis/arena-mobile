@@ -38,7 +38,7 @@ jobs:
       # that point, so its key never changes and the cache is never updated)
       - name: Set up Gradle
         # v5: v6 moved caching to a proprietary component (see https://blog.gradle.org/github-actions-for-gradle-v6)
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
 
       - name: Cache Expo prebuild output
         uses: actions/cache@v4
