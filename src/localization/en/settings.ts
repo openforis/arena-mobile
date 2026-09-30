@@ -113,9 +113,9 @@ It will help to get a better accuracy in coordinate attributes.`,
   },
 
   mapLayer: {
-    label: "Map layer",
+    label: "Default map layer",
     description:
-      "Layer shown by default on the maps (it can be changed on the map using the layers button)",
+      "Layer shown when a map is opened (it can still be changed on the map using the layers button)",
   },
   mapProvider: {
     label: "Map provider",
