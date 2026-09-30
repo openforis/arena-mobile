@@ -28,6 +28,7 @@ export default {
     startingDbMigrations: "Démarrage des migrations de la base de données",
     fetchingSurveys: "Récupération des enquêtes",
     importingDemoSurvey: "Importation de l'enquête de démonstration",
+    updatingDemoSurvey: "Mise à jour de l'enquête de démonstration",
     fetchingAndSettingLocalSurveys:
       "Récupération et configuration des enquêtes locales",
     fetchingAndSettingSurvey: "Récupération et configuration de l'enquête",

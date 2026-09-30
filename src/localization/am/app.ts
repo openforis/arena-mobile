@@ -25,6 +25,7 @@ export default {
     startingDbMigrations: "የ DB ፍልሰቶችን በመጀመር ላይ",
     fetchingSurveys: "ዳሰሳዎችን በመሰብሰብ ላይ",
     importingDemoSurvey: "የማሳያ ዳሰሳን በማስመጣት ላይ",
+    updatingDemoSurvey: "የማሳያ ዳሰሳን በማዘመን ላይ",
     fetchingAndSettingLocalSurveys: "የአካባቢ ዳሰሳዎችን በመሰብሰብ እና በማዘጋጀት ላይ",
     fetchingAndSettingSurvey: "ዳሰሳን በመሰብሰብ እና በማዘጋጀት ላይ",
     checkingLoggedIn: "የተጠቃሚውን መግቢያ በመፈተሽ ላይ",

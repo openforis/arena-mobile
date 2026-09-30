@@ -195,7 +195,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
   );
 
   const compassView = (
-    <VView style={navigatorContainerStyle}>
+    <VView style={navigatorContainerStyle} testID="location-navigator-compass">
       <CompassRose compassRotStyle={compassRotStyle} size={size} />
       {!currentLocation && loadingOverlay}
       {currentLocation && !isProximity && (
@@ -223,7 +223,7 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
   );
 
   const radarView = (
-    <VView style={navigatorContainerStyle}>
+    <VView style={navigatorContainerStyle} testID="location-navigator-radar">
       <RadarView
         size={size}
         relativeAngle={relativeAngle}

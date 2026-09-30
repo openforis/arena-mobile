@@ -27,6 +27,7 @@ export default {
     startingDbMigrations: "DB-Migrationen starten",
     fetchingSurveys: "Umfragen abrufen",
     importingDemoSurvey: "Demo-Umfrage importieren",
+    updatingDemoSurvey: "Demo-Umfrage aktualisieren",
     fetchingAndSettingLocalSurveys: "Lokale Umfragen abrufen und einstellen",
     fetchingAndSettingSurvey: "Umfrage abrufen und einstellen",
     checkingLoggedIn: "Angemeldet prüfen",

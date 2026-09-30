@@ -27,6 +27,7 @@ export default {
     startingDbMigrations: "Tietokannan migraatioiden aloitus",
     fetchingSurveys: "Kyselylomakkeiden haku",
     importingDemoSurvey: "Demo-kyselyn tuonti",
+    updatingDemoSurvey: "Demo-kyselyn päivitys",
     fetchingAndSettingLocalSurveys: "Laitteen kyselylomakkeiden haku ja asetus",
     fetchingAndSettingSurvey: "Kyselylomakkeen haku ja asetus",
     checkingLoggedIn: "Kirjautumisen tarkistus",

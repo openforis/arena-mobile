@@ -106,7 +106,11 @@ const getEntitySummaryDefs = ({
       survey,
       cycle,
       nodeDef: entityDef,
-    }).filter(mobileNodeDefFilter({ cycle }));
+    }).filter(
+      (nodeDef) =>
+        // key defs can be marked as included in summary too: avoid duplicates
+        !keyDefs.includes(nodeDef) && mobileNodeDefFilter({ cycle })(nodeDef),
+    );
   const summaryDefs = [...keyDefs, ...defsIncludedInSummary];
 
   const otherDefsToAddCount = maxSummaryDefs - summaryDefs.length;

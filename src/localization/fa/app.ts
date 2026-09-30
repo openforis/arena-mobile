@@ -27,6 +27,7 @@ export default {
     startingDbMigrations: "شروع مهاجرت های دیتابیس",
     fetchingSurveys: "در حال دریافت فرم‌های آماربرداری",
     importingDemoSurvey: "در حال وارد کردن اطلاعات فرم آماربرداری آزمایشی",
+    updatingDemoSurvey: "در حال به‌روزرسانی فرم آماربرداری آزمایشی",
     fetchingAndSettingLocalSurveys:
       "در حال دریافت و تنظیم اطلاعات فرم آماربرداری محلی",
     fetchingAndSettingSurvey: "در حال دریافت و تنظیم فرم آماربرداری",

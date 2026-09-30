@@ -1,0 +1,52 @@
+appId: ${APP_ID}
+---
+# Demo survey (bundled, no login): file attributes (image, video, audio, other)
+- addMedia:
+    - assets/sample-photo.jpg
+- runFlow: common/demo-survey-new-record.yaml
+- runFlow:
+    file: common/open-page.yaml
+    env:
+      PAGE: "Media and Documents"
+
+# image file attribute: pick the sample photo from the system photo picker
+- assertVisible: "Site photo"
+- tapOn:
+    text: "Select picture"
+    index: 0
+- extendedWaitUntil:
+    visible: "Photo taken on.*"
+    timeout: 20000
+- tapOn:
+    text: "Photo taken on.*"
+    index: 0
+- extendedWaitUntil:
+    visible: "Rotate"
+    timeout: 20000
+
+- scrollUntilVisible:
+    element: "Select video"
+    direction: DOWN
+- assertVisible: "Site video"
+
+# audio file attribute applicable only when consent is given
+- scrollUntilVisible:
+    element: "Yes"
+    direction: DOWN
+- assertNotVisible: "Interview audio recording"
+- tapOn: "Yes"
+- scrollUntilVisible:
+    element: "Select audio"
+    direction: DOWN
+- assertVisible: "Interview audio recording"
+- scrollUntilVisible:
+    element: "No"
+    direction: UP
+- tapOn: "No"
+- assertNotVisible: "Interview audio recording"
+
+# other file type
+- scrollUntilVisible:
+    element: "Select file"
+    direction: DOWN
+- assertVisible: "Supporting document"
