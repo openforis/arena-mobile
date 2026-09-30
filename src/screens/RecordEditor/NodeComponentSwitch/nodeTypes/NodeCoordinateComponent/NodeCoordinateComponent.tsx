@@ -102,6 +102,7 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
                   onPress={showCompassNavigator}
                   size={30}
                   style={styles.showCompassButton}
+                  testID="coordinate-navigate-to-target-button"
                 />
               )}
             </HView>

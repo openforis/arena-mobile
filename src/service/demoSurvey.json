@@ -33,8 +33,8 @@
   },
   "template": false,
   "dateCreated": "2025-11-25T10:57:14.948Z",
-  "dateModified": "2026-09-29T12:00:00.000Z",
-  "datePublished": "2026-09-29T12:00:00.000Z",
+  "dateModified": "2026-09-30T12:00:00.000Z",
+  "datePublished": "2026-09-30T12:00:00.000Z",
   "validation": null,
   "nodeDefs": {
     "db99782b-5d68-4e51-a698-ab18574c4295": {
@@ -1985,7 +1985,9 @@
         "name": "site_location",
         "cycles": ["0"],
         "labels": { "en": "Site location" },
-        "descriptions": { "en": "Record the location with the device GPS" },
+        "descriptions": {
+          "en": "Record the location with the device GPS. Use the compass button to navigate to the provided location of the unit."
+        },
         "includeAccuracy": true,
         "includeAltitude": true
       },
@@ -2000,7 +2002,20 @@
       "parentUuid": "b7e18814-7b5f-4e44-a9b9-b2d10cfd6d2b",
       "dateCreated": "2026-09-29T12:00:00.000Z",
       "dateModified": "2026-09-29T12:00:00.000Z",
-      "propsAdvanced": {}
+      "propsAdvanced": {
+        "validations": {
+          "expressions": [
+            {
+              "uuid": "49ced7c3-249e-4b53-aecc-1de01ae402f4",
+              "expression": "distance(this, unit_location_given) <= 100",
+              "severity": "warning",
+              "messages": {
+                "en": "The site is more than 100 m away from the provided location"
+              }
+            }
+          ]
+        }
+      }
     },
     "b323a545-21d4-4c4a-a1fa-ea97f781e811": {
       "id": "47",
@@ -2033,19 +2048,7 @@
             "uuid": "ace5e269-429a-4607-ad0b-17e2cc2cb92f",
             "expression": "distance(unit_location_given, site_location)"
           }
-        ],
-        "validations": {
-          "expressions": [
-            {
-              "uuid": "1ceb511b-b6ed-4629-abcc-dffb0304069f",
-              "expression": "this <= 100",
-              "severity": "warning",
-              "messages": {
-                "en": "The site is more than 100 m away from the provided location"
-              }
-            }
-          ]
-        }
+        ]
       }
     },
     "a28818e3-d6b0-4f29-a8c8-ac8de8aa8664": {
@@ -3918,6 +3921,9 @@
       ]
     },
     "validations": {
+      "b7322b31-db75-4d49-8e15-7da1bfe0506e": [
+        "e260e571-4493-446a-a613-669c7959b204"
+      ],
       "0513cb0d-a117-4d39-8aa5-47d47ed89e43": [
         "03502b15-447d-40df-afe9-2c922e85a4dd"
       ]

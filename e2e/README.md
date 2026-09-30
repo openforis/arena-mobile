@@ -54,7 +54,9 @@ yarn e2e:maestro:android
 - `e2e/maestro/006.demo-survey-regeneration.yaml`: bundled demo survey – multiple entity form, taxon, conditional attributes, nested table
 - `e2e/maestro/007.demo-survey-media.yaml`: bundled demo survey – file attributes (image picked from the gallery, video, audio, other)
 
-Flows 005-007 start from a clean app state (`launchApp: clearState: true`) and don't need a server login;
+- `e2e/maestro/008.demo-survey-navigate-to-target.yaml`: bundled demo survey – "Navigate to target" compass dialog (coordinate with a `distance()` validation)
+
+Flows 005-008 start from a clean app state (`launchApp: clearState: true`) and don't need a server login;
 `e2e/maestro/demoSurveyTests.yaml` runs only them (plus the startup check).
 Shared steps are in `e2e/maestro/common/`; `e2e/maestro/assets/` contains the files added to the device gallery.
 

@@ -1,0 +1,66 @@
+appId: ${APP_ID}
+---
+# Demo survey (bundled, no login): "Navigate to target" compass dialog.
+# The button is shown on coordinate attributes with a validation using distance(this, <target>):
+# in the demo survey, site_location has "distance(this, unit_location_given) <= 100",
+# so the target is the provided location of the selected Level 1 Unit (Test Point 1).
+- runFlow: common/demo-survey-new-record.yaml
+- runFlow:
+    file: common/open-page.yaml
+    env:
+      PAGE: "Site Details"
+
+# device location ~106 m north of the provided location of Test Point 1
+- setLocation:
+    latitude: 3.9768
+    longitude: 42.10738
+
+- scrollUntilVisible:
+    element:
+      id: "coordinate-navigate-to-target-button"
+    direction: DOWN
+- tapOn:
+    id: "coordinate-navigate-to-target-button"
+
+# dialog with compass, distance/heading info and target location
+- extendedWaitUntil:
+    visible: "Navigate to target"
+    timeout: 10000
+- assertVisible:
+    id: "location-navigator-compass"
+- assertVisible: "Distance \\(m\\)"
+# ~106 m from the target
+- assertVisible: "10[0-9]"
+- scrollUntilVisible:
+    element: "Target location.*"
+    direction: DOWN
+# target = provided location of Test Point 1 (POINT(42.10738042 3.97584922))
+- assertVisible: "42\\.10738, 3\\.97585"
+# current location = device location
+- assertVisible: "42\\.10738, 3\\.97680"
+
+# radar view
+- scrollUntilVisible:
+    element: "Radar"
+    direction: UP
+- tapOn: "Radar"
+- assertVisible:
+    id: "location-navigator-radar"
+- tapOn: "Compass"
+- assertVisible:
+    id: "location-navigator-compass"
+
+# use the current device location as attribute value: the dialog is closed
+- scrollUntilVisible:
+    element: "Use current location"
+    direction: DOWN
+- extendedWaitUntil:
+    visible:
+      text: "Use current location"
+      enabled: true
+    timeout: 30000
+- tapOn: "Use current location"
+- assertNotVisible: "Navigate to target"
+- scrollUntilVisible:
+    element: "3\\.9768.*"
+    direction: UP

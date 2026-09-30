@@ -14,6 +14,8 @@ import {
   UserFactory,
 } from "@openforis/arena-core";
 
+import { RecordUtils } from "model/utils/RecordUtils";
+
 import demoSurveyJson from "./demoSurvey.json";
 
 const demoSurveyUuid = "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3";
@@ -352,6 +354,27 @@ describe("Demo survey", () => {
         value: { taxonUuid: taxon.uuid },
       });
       expect(getValues(survey, r, "tree_wood_density")).toEqual([0.82]);
+    });
+
+    test("resolves the navigation target of coordinates with a distance validation", async () => {
+      const r = await updateValue({
+        survey,
+        record,
+        name: "level_1_unit_no",
+        value: { itemUuid: categoryItemUuid(survey, "level_1_unit_no", ["2"]) },
+      });
+      const [givenLocation] = getValues(survey, r, "unit_location_given");
+      const [siteLocationNode] = getNodesByName(survey, r, "site_location");
+      const distanceTarget = await RecordUtils.getCoordinateDistanceTarget({
+        survey,
+        nodeDef: getDef(survey, "site_location"),
+        record: r,
+        node: siteLocationNode,
+      });
+      expect(distanceTarget).toMatchObject({
+        x: givenLocation.x,
+        y: givenLocation.y,
+      });
     });
 
     test("generates auto-incremental keys in multiple entities", async () => {

@@ -7,3 +7,4 @@ appId: ${APP_ID}
 - runFlow: 005.demo-survey-site-details.yaml
 - runFlow: 006.demo-survey-regeneration.yaml
 - runFlow: 007.demo-survey-media.yaml
+- runFlow: 008.demo-survey-navigate-to-target.yaml
