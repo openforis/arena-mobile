@@ -153,6 +153,29 @@ const findOutdatedDemoSurveySummary = <
 const updateDemoSurvey = async ({ surveyId }: { surveyId: number }) =>
   _updateSurvey({ id: surveyId, survey: cloneDemoSurvey() });
 
+export type DemoSurveyAction = "import" | "update";
+
+// Imports the demo survey if no surveys exist locally, or updates the local one if outdated.
+// onStart is called (e.g. to show progress) only when an action is actually performed.
+const importOrUpdateDemoSurvey = async ({
+  onStart,
+}: {
+  onStart?: (action: DemoSurveyAction) => void;
+} = {}): Promise<DemoSurveyAction | null> => {
+  const surveySummaries = await fetchSurveySummariesLocal();
+  if (surveySummaries.length === 0) {
+    onStart?.("import");
+    await importDemoSurvey();
+    return "import";
+  }
+  const outdatedDemoSurvey = findOutdatedDemoSurveySummary(surveySummaries);
+  if (!outdatedDemoSurvey) return null;
+
+  onStart?.("update");
+  await updateDemoSurvey({ surveyId: outdatedDemoSurvey.id });
+  return "update";
+};
+
 const importSurveyRemote = async ({ id }: any) => {
   const survey = await fetchSurveyRemoteById({ id });
   return _insertSurvey(survey);
@@ -181,9 +204,7 @@ export const SurveyService = {
   fetchSurveyById,
   fetchCurrentUserGroupRemote,
   getSurveysStorageSize,
-  importDemoSurvey,
-  findOutdatedDemoSurveySummary,
-  updateDemoSurvey,
+  importOrUpdateDemoSurvey,
   importSurveyRemote,
   fetchCategoryItems,
   insertSurvey,

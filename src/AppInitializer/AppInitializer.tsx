@@ -109,20 +109,14 @@ export const AppInitializer = (props: Props) => {
     }
     // initialize local surveys
     setStep(steps.fetchingSurveys);
-    const surveySummaries = await SurveyService.fetchSurveySummariesLocal();
-    if (surveySummaries.length === 0) {
-      setStep(steps.importingDemoSurvey);
-      await SurveyService.importDemoSurvey();
-    } else {
-      const outdatedDemoSurvey =
-        SurveyService.findOutdatedDemoSurveySummary(surveySummaries);
-      if (outdatedDemoSurvey) {
-        setStep(steps.updatingDemoSurvey);
-        await SurveyService.updateDemoSurvey({
-          surveyId: outdatedDemoSurvey.id,
-        });
-      }
-    }
+    await SurveyService.importOrUpdateDemoSurvey({
+      onStart: (action) =>
+        setStep(
+          action === "import"
+            ? steps.importingDemoSurvey
+            : steps.updatingDemoSurvey,
+        ),
+    });
     setStep(steps.fetchingAndSettingLocalSurveys);
     await dispatch(SurveyActions.fetchAndSetLocalSurveys());
 
