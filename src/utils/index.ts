@@ -16,6 +16,7 @@ export { LanguageUtils } from "./LanguageUtils";
 export { MapTileUtils } from "./MapTileUtils";
 export type { TileCoordinate } from "./MapTileUtils";
 export { Permissions } from "./Permissions";
+export { PromiseUtils } from "./PromiseUtils";
 export { Refs } from "./Refs";
 export { RNFileProcessor } from "./RNFileProcessor";
 export { StringUtils } from "./StringUtils";

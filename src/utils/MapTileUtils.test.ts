@@ -49,7 +49,7 @@ describe("MapTileUtils", () => {
     const params = { coordinates, minZoom: 8, maxZoom: 14 };
     const count = MapTileUtils.countTilesForPolygon(params);
     const tiles = MapTileUtils.computeTilesForPolygon(params);
-    expect(tiles.length).toBe(count);
+    expect(tiles).toHaveLength(count);
     const keys = new Set(tiles.map(MapTileUtils.getTileKey));
     expect(keys.size).toBe(count);
   });

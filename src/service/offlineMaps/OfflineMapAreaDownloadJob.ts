@@ -6,6 +6,7 @@ import { OfflineMapArea } from "model/OfflineMapArea";
 import { Files } from "utils/Files";
 import { log } from "utils/Logger";
 import { MapTileUtils, TileCoordinate } from "utils/MapTileUtils";
+import { PromiseUtils } from "utils/PromiseUtils";
 
 import { OfflineMapAreaRepository } from "./offlineMapAreaRepository";
 import { OfflineMapTilesStorage } from "./offlineMapTilesStorage";
@@ -28,7 +29,7 @@ const userAgent = `OpenForisArenaMobile/${Application.nativeApplicationVersion ?
 export class OfflineMapAreaDownloadJob extends JobMobile<OfflineMapAreaDownloadJobContext> {
   private downloadedTilesCount = 0;
   private sizeBytes = 0;
-  private createdDirUris = new Set<string>();
+  private readonly createdDirUris = new Set<string>();
 
   override async execute() {
     const { area } = this.context;
@@ -41,17 +42,15 @@ export class OfflineMapAreaDownloadJob extends JobMobile<OfflineMapAreaDownloadJ
     });
     this.total = tiles.length;
 
-    let nextTileIndex = 0;
-    const worker = async () => {
-      while (nextTileIndex < tiles.length && !this.isCanceled()) {
-        const tile = tiles[nextTileIndex]!;
-        nextTileIndex += 1;
+    await PromiseUtils.runWithConcurrency({
+      items: tiles,
+      concurrency: MAX_CONCURRENT_DOWNLOADS,
+      task: async (tile) => {
         await this.processTile(tile);
         this.incrementProcessedItems();
-      }
-    };
-    const workers = Array.from({ length: MAX_CONCURRENT_DOWNLOADS }, worker);
-    await Promise.all(workers);
+      },
+      shouldStop: () => this.isCanceled(),
+    });
 
     await this.saveArea(tiles.length);
   }
@@ -112,7 +111,7 @@ export class OfflineMapAreaDownloadJob extends JobMobile<OfflineMapAreaDownloadJ
     this.context.area = areaUpdated;
   }
 
-  override async generateResult(): Promise<OfflineMapAreaDownloadJobResult> {
-    return { area: this.context.area };
+  override generateResult(): Promise<OfflineMapAreaDownloadJobResult> {
+    return Promise.resolve({ area: this.context.area });
   }
 }

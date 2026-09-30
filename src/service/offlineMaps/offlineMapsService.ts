@@ -5,6 +5,7 @@ import { MapLayerId, MapLayers } from "model/MapLayers";
 import { OfflineMapArea } from "model/OfflineMapArea";
 import { Files } from "utils/Files";
 import { MapTileUtils } from "utils/MapTileUtils";
+import { PromiseUtils } from "utils/PromiseUtils";
 
 import { OfflineMapAreaDownloadJob } from "./OfflineMapAreaDownloadJob";
 import { OfflineMapAreaRepository } from "./offlineMapAreaRepository";
@@ -120,18 +121,15 @@ const deleteArea = async (areaId: string): Promise<void> => {
     const tilesToDelete = MapTileUtils.computeTilesForPolygon(area).filter(
       (tile) => !tilesToKeep.has(MapTileUtils.getTileKey(tile)),
     );
-    let nextIndex = 0;
-    const worker = async () => {
-      while (nextIndex < tilesToDelete.length) {
-        const tile = tilesToDelete[nextIndex]!;
-        nextIndex += 1;
-        await Files.del(
+    await PromiseUtils.runWithConcurrency({
+      items: tilesToDelete,
+      concurrency: MAX_CONCURRENT_DELETES,
+      task: (tile) =>
+        Files.del(
           OfflineMapTilesStorage.getTileFileUri(area.layerId, tile),
           true,
-        );
-      }
-    };
-    await Promise.all(Array.from({ length: MAX_CONCURRENT_DELETES }, worker));
+        ),
+    });
   }
   await OfflineMapAreaRepository.deleteArea(areaId);
 };

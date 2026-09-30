@@ -64,8 +64,20 @@ export const OfflineMapAreaEditorScreen = () => {
   const [freeDiskStorage, setFreeDiskStorage] = useState<number | null>(null);
 
   useEffect(() => {
-    OfflineMapsService.fetchAreas().then(setExistingAreas);
-    Files.getFreeDiskStorage().then(setFreeDiskStorage);
+    const loadData = async () => {
+      try {
+        const [areas, freeSpace] = await Promise.all([
+          OfflineMapsService.fetchAreas(),
+          Files.getFreeDiskStorage(),
+        ]);
+        setExistingAreas(areas);
+        setFreeDiskStorage(freeSpace);
+      } catch (error) {
+        log.error("error loading offline map areas", error);
+        setExistingAreas([]);
+      }
+    };
+    void loadData();
   }, []);
 
   const effectiveMaxZoom = Math.min(maxZoom, layer.maxZoom);
