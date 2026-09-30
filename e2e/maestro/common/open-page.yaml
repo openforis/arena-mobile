@@ -1,0 +1,10 @@
+appId: ${APP_ID}
+---
+# Opens a record editor page from the pages navigation drawer.
+# Params: PAGE (page label)
+- tapOn:
+    id: "icon-button"
+    index: 0
+- tapOn: "${PAGE}"
+- waitForAnimationToEnd
+- runFlow: dismiss-dev-notifications.yaml

@@ -27,6 +27,7 @@ export default {
     startingDbMigrations: "Startar databasmigreringar",
     fetchingSurveys: "Hämtar enkäter",
     importingDemoSurvey: "Importerar demoenkät",
+    updatingDemoSurvey: "Uppdaterar demoenkät",
     fetchingAndSettingLocalSurveys: "Hämtar och ställer in lokala enkäter",
     fetchingAndSettingSurvey: "Hämtar och ställer in enkät",
     checkingLoggedIn: "Kontrollerar inloggad",

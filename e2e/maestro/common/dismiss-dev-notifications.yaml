@@ -1,0 +1,12 @@
+appId: ${APP_ID}
+---
+# dev builds only: close the LogBox notifications (warnings and errors), they cover the bottom of the screen
+- repeat:
+    times: 2
+    commands:
+      - runFlow:
+          when:
+            visible: "Open debugger to view warnings\\.|A non-serializable value.*|.*Open debugger to view.*"
+          commands:
+            - tapOn:
+                point: "92%,91%"

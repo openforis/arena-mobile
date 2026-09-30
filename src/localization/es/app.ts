@@ -26,6 +26,7 @@ export default {
     startingDbMigrations: "Iniciando migraciones de la BD",
     fetchingSurveys: "Obteniendo encuestas",
     importingDemoSurvey: "Importando encuesta de demostración",
+    updatingDemoSurvey: "Actualizando encuesta de demostración",
     fetchingAndSettingLocalSurveys:
       "Obteniendo y configurando encuestas locales",
     fetchingAndSettingSurvey: "Obteniendo y configurando encuesta",
