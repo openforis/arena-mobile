@@ -105,8 +105,9 @@ export const OfflineMapAreaEditorScreen = () => {
       : GeoUtils.defaultMapRegion;
   }, [existingAreas]);
 
-  const onLayerChange = useCallback(async (value: string) => {
+  const onLayerChange = useCallback((value: string): Promise<void> => {
     setLayerId(value as MapLayerId);
+    return Promise.resolve();
   }, []);
 
   const onCancelDrawing = useCallback(() => {
