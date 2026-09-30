@@ -26,7 +26,7 @@ export default {
     tiles: "Tiles: {{downloaded}} / {{total}}",
     size: "Size: {{size}}",
     lastUpdate: "Last update: {{date}}",
-    missingTiles: "{{count}} tiles missing",
+    missingTiles: "Missing tiles: {{count}}",
     resumeDownload: "Download missing",
     deleteConfirm: "Delete the offline map area '{{name}}'?",
   },
