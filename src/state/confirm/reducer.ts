@@ -1,5 +1,14 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  Dispatch,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { Keyboard } from "react-native";
+
+import { log } from "utils";
+
+import { createCallbackRegistry } from "../callbackRegistry";
 
 export type OnConfirmParams = {
   selectedMultipleChoiceValues?: string[];
@@ -47,7 +56,16 @@ const confirmShowDefaultParams: Partial<ConfirmShowParams> = {
   textInputToConfirmLabelKey: "common:textInputToConfirmLabel",
 };
 
-export type ConfirmState = Partial<ConfirmShowParams> & {
+// callbacks are kept outside of the store (functions are not serializable): the store contains only
+// the showId the callbacks are registered with
+type ConfirmCallbacks = Pick<
+  ConfirmShowParams,
+  "onConfirm" | "onCancel" | "confirmButtonEnableFn"
+>;
+
+export type ConfirmDataParams = Omit<ConfirmShowParams, keyof ConfirmCallbacks>;
+
+export type ConfirmState = Partial<ConfirmDataParams> & {
   isOpen: boolean;
   showId?: number;
 };
@@ -56,26 +74,41 @@ const initialState: ConfirmState = {
   isOpen: false,
 };
 
+export const ConfirmCallbacksRegistry = createCallbackRegistry<ConfirmCallbacks>();
+
+const getConfirmState = (getState: () => unknown): ConfirmState =>
+  (getState() as { confirm: ConfirmState }).confirm;
+
+// takes the callbacks of the dialog currently shown out of the registry: once the dialog is being
+// resolved (confirmed, cancelled or dismissed), its callbacks must not be invoked again (e.g. as
+// a "cancel" when another dialog is shown from inside its own onConfirm)
+const takeCurrentCallbacks = (
+  getState: () => unknown,
+): { showId?: number; callbacks?: ConfirmCallbacks } => {
+  const { showId } = getConfirmState(getState);
+  const callbacks = ConfirmCallbacksRegistry.get(showId);
+  ConfirmCallbacksRegistry.remove(showId);
+  return { showId, callbacks };
+};
+
 // confirm and cancel as async thunk to allow calling "dispatch" inside onConfirm and onCancel
 // each returns the showId of the dialog it was resolving, so a delayed fulfilled action (arriving
 // after a new dialog has already been shown, e.g. a confirm() chained right after another) doesn't
 // clobber that newer dialog's state
 const confirm = createAsyncThunk(
-  "confirm/show",
+  "confirm/confirm",
   async (params: OnConfirmParams, { getState }) => {
-    const state: any = getState();
-    const { onConfirm, showId } = state.confirm;
-    await onConfirm?.(params);
+    const { showId, callbacks } = takeCurrentCallbacks(getState);
+    await callbacks?.onConfirm?.(params);
     return showId;
   },
 );
 
 const cancel = createAsyncThunk(
   "confirm/cancel",
-  async (_params, { getState }) => {
-    const state: any = getState();
-    const { onCancel, showId } = state.confirm;
-    await onCancel?.();
+  async (_params: void, { getState }) => {
+    const { showId, callbacks } = takeCurrentCallbacks(getState);
+    await callbacks?.onCancel?.();
     return showId;
   },
 );
@@ -84,10 +117,10 @@ const confirmSlice = createSlice({
   name: "confirm",
   initialState,
   reducers: {
-    show: (state, action) => {
-      Keyboard.dismiss();
-      return { ...action.payload, isOpen: true, showId: (state.showId ?? 0) + 1 };
-    },
+    show: (_state, action: PayloadAction<ConfirmDataParams & { showId: number }>) => ({
+      ...action.payload,
+      isOpen: true,
+    }),
     dismiss: (state) => ({ ...initialState, showId: state.showId }),
   },
   extraReducers: (builder) => {
@@ -102,15 +135,47 @@ const confirmSlice = createSlice({
 });
 
 const { actions, reducer: ConfirmReducer } = confirmSlice;
-const { show, dismiss } = actions;
+
+// a dialog closed without an answer from the user (dismissed or replaced by another one) is
+// treated as cancelled, so a caller awaiting its answer (see ConfirmUtils.confirm) is not left
+// hanging
+const cancelCurrentIfOpen = (getState: () => unknown) => {
+  if (!getConfirmState(getState).isOpen) return;
+  const { callbacks } = takeCurrentCallbacks(getState);
+  Promise.resolve(callbacks?.onCancel?.()).catch((error) =>
+    log.error(`error cancelling confirm dialog: ${String(error)}`),
+  );
+};
+
+const show =
+  (params: ConfirmShowParams) =>
+  (dispatch: Dispatch, getState: () => unknown): number => {
+    const { onConfirm, onCancel, confirmButtonEnableFn, ...data } = {
+      ...confirmShowDefaultParams,
+      ...params,
+    };
+    cancelCurrentIfOpen(getState);
+    Keyboard.dismiss();
+    const showId = ConfirmCallbacksRegistry.register({
+      onConfirm,
+      onCancel,
+      confirmButtonEnableFn,
+    });
+    dispatch(actions.show({ ...data, showId }));
+    return showId;
+  };
+
+const dismiss = () => (dispatch: Dispatch, getState: () => unknown) => {
+  cancelCurrentIfOpen(getState);
+  dispatch(actions.dismiss());
+};
 
 export const ConfirmActions = {
-  show: (params: ConfirmShowParams) =>
-    show({ ...confirmShowDefaultParams, ...params }),
+  show,
   dismiss,
 
   // internal (called from dialog component)
   confirm: (params: OnConfirmParams) => confirm(params),
-  cancel,
+  cancel: () => cancel(),
 };
 export { ConfirmReducer };
