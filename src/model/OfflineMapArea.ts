@@ -6,6 +6,8 @@ export type OfflineMapArea = {
   name: string;
   layerId: MapLayerId;
   coordinates: LatLng[];
+  // surface of the polygon (missing in areas created before it was introduced)
+  areaSquareMeters?: number;
   minZoom: number;
   maxZoom: number;
   tilesCount: number;

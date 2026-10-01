@@ -24,7 +24,7 @@ import {
   useAppDispatch,
   useConfirm,
 } from "state";
-import { Files, log } from "utils";
+import { Files, GeoUtils, log } from "utils";
 
 import { useOfflineMapAreaDownload } from "./useOfflineMapAreaDownload";
 import styles from "./styles";
@@ -44,9 +44,11 @@ const OfflineMapAreaItem = ({
   area,
   onDeletePress,
   onResumePress,
+  onViewPress,
 }: Readonly<{
   area: OfflineMapArea;
   onDeletePress: (area: OfflineMapArea) => Promise<void>;
+  onViewPress: (area: OfflineMapArea) => void;
   onResumePress: (area: OfflineMapArea) => Promise<void>;
 }>) => {
   const { t } = useTranslation();
@@ -59,10 +61,22 @@ const OfflineMapAreaItem = ({
           {area.name}
         </Text>
         <IconButton
+          icon="map-search-outline"
+          onPress={() => onViewPress(area)}
+        />
+        <IconButton
           icon="trash-can-outline"
           onPress={() => onDeletePress(area)}
         />
       </HView>
+      <Text
+        textKey="offlineMaps:area.surface"
+        textParams={{
+          area: GeoUtils.formatArea(
+            OfflineMapsService.getAreaSquareMeters(area),
+          ),
+        }}
+      />
       <Text
         textKey="offlineMaps:area.layer"
         textParams={{ layer: t(`offlineMaps:layers.${layer.id}`) }}
@@ -150,6 +164,15 @@ export const OfflineMapsScreen = () => {
   const onAddAreaPress = useCallback(() => {
     navigation.navigate(screenKeys.offlineMapAreaEditor as never);
   }, [navigation]);
+
+  const onViewPress = useCallback(
+    (area: OfflineMapArea) => {
+      navigation.navigate(
+        ...([screenKeys.offlineMapAreaViewer, { areaId: area.id }] as never),
+      );
+    },
+    [navigation],
+  );
 
   const onDeletePress = useCallback(
     async (area: OfflineMapArea) => {
@@ -258,6 +281,7 @@ export const OfflineMapsScreen = () => {
             area={area}
             onDeletePress={onDeletePress}
             onResumePress={onResumePress}
+            onViewPress={onViewPress}
           />
         ))}
       </VView>

@@ -4,6 +4,7 @@ import { LatLng } from "model/LocationPoint";
 import { MapLayerId, MapLayers } from "model/MapLayers";
 import { OfflineMapArea } from "model/OfflineMapArea";
 import { Files } from "utils/Files";
+import { GeoUtils } from "utils/GeoUtils";
 import { MapTileUtils } from "utils/MapTileUtils";
 import { PromiseUtils } from "utils/PromiseUtils";
 
@@ -77,6 +78,7 @@ const createArea = ({
     name,
     layerId,
     coordinates,
+    areaSquareMeters: GeoUtils.computePolygonArea(coordinates),
     minZoom,
     maxZoom,
     tilesCount: 0,
@@ -87,6 +89,10 @@ const createArea = ({
     dateModified: now,
   };
 };
+
+// surface of the area polygon in square meters (calculated when not stored in the area)
+const getAreaSquareMeters = (area: OfflineMapArea): number =>
+  area.areaSquareMeters ?? GeoUtils.computePolygonArea(area.coordinates);
 
 // creates a job that downloads the tiles of the area (tiles already on the device are skipped);
 // the job must be started by the caller
@@ -153,6 +159,7 @@ export const OfflineMapsService = {
   fetchAreas,
   fetchAreaById,
   createArea,
+  getAreaSquareMeters,
   createDownloadJob,
   deleteArea,
   deleteAllAreas,

@@ -2,6 +2,7 @@ import HomeScreen from "./HomeScreen";
 
 import AboutScreen from "./AboutScreen";
 import OfflineMapAreaEditor from "./OfflineMapAreaEditor";
+import OfflineMapAreaViewer from "./OfflineMapAreaViewer";
 import OfflineMaps from "./OfflineMaps";
 import RecordEditor from "./RecordEditor";
 import RecordsList from "./RecordsList";
@@ -42,6 +43,12 @@ export const screens = {
     hasOptionsMenuVisible: false,
     title: "offlineMaps:areaEditor.title",
     component: OfflineMapAreaEditor,
+  },
+  [screenKeys.offlineMapAreaViewer]: {
+    ...screenDefaults,
+    hasOptionsMenuVisible: false,
+    title: "offlineMaps:areaViewer.title",
+    component: OfflineMapAreaViewer,
   },
   [screenKeys.recordsList]: {
     ...screenDefaults,

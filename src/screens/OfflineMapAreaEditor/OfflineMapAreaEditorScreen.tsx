@@ -95,6 +95,11 @@ export const OfflineMapAreaEditorScreen = () => {
     [coordinates, effectiveMaxZoom, layerId],
   );
 
+  const areaSquareMeters = useMemo(
+    () => GeoUtils.computePolygonArea(coordinates),
+    [coordinates],
+  );
+
   const exceedsFreeSpace =
     freeDiskStorage !== null && estimate.estimatedSizeBytes > freeDiskStorage;
 
@@ -198,6 +203,12 @@ export const OfflineMapAreaEditorScreen = () => {
           textKey="offlineMaps:areaEditor.drawAreaToEstimate"
         />
       ) : (
+        <Text
+          textKey="offlineMaps:areaEditor.surface"
+          textParams={{ area: GeoUtils.formatArea(areaSquareMeters) }}
+        />
+      )}
+      {coordinates.length >= 3 && (
         <Text
           style={[
             styles.estimateText,

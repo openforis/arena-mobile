@@ -21,6 +21,7 @@ export default {
     openStreetMap: "Standard (OpenStreetMap, online only)",
   },
   area: {
+    surface: "Area: {{area}}",
     layer: "Layer: {{layer}}",
     zoomLevels: "Zoom levels: {{minZoom}} - {{maxZoom}}",
     tiles: "Tiles: {{downloaded}} / {{total}}",
@@ -35,6 +36,7 @@ export default {
     name: "Name",
     layer: "Layer",
     maxZoom: "Max zoom: {{value}}",
+    surface: "Area: {{area}}",
     drawAreaToEstimate:
       "Draw the area of interest on the map to see the space it will occupy",
     estimate: "{{tiles}} tiles · ~{{size}} (free space: {{freeSpace}})",
@@ -43,6 +45,10 @@ export default {
     tooManyTiles:
       "The area is too big: max {{maxTiles}} tiles can be downloaded; reduce the area or the max zoom",
     notEnoughSpace: "Not enough free space on the device",
+  },
+  areaViewer: {
+    title: "Offline map area",
+    notFound: "Offline map area not found",
   },
   download: {
     label: "Download",
