@@ -37,6 +37,9 @@ export type NmeaGst = {
 export type ExternalGpsDataListener = (chunk: string) => void;
 
 export type ExternalGpsConnection = {
+  // Vendor-specific HDOP-to-meters factor, when the vendor documents one (see
+  // vendorProtocolRegistry); undefined = use the generic estimate.
+  hdopAccuracyFactorMeters?: number;
   onData: (listener: ExternalGpsDataListener) => { remove: () => void };
   onDisconnected: (listener: () => void) => { remove: () => void };
   disconnect: () => Promise<void>;

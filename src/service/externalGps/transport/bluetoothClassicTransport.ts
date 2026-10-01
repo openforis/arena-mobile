@@ -4,7 +4,7 @@ import RNBluetoothClassic, {
   BluetoothNativeDevice,
 } from "react-native-bluetooth-classic";
 
-import { log, Permissions } from "utils";
+import { Environment, log, Permissions } from "utils";
 import {
   BluetoothDisabledError,
   BluetoothScanPermissionDeniedError,
@@ -13,7 +13,12 @@ import {
   ExternalGpsTransport,
   GpsSourceDescriptor,
 } from "../types";
-import { recognizeVendor } from "./vendorProtocolRegistry";
+import { startSessionInit } from "./sessionInit";
+import {
+  getHdopAccuracyFactorMeters,
+  getIosSessionInitPacketHex,
+  recognizeVendor,
+} from "./vendorProtocolRegistry";
 
 const externalSourceId = (address: string) => `external:${address}`;
 
@@ -34,6 +39,14 @@ const toDiscoveredDevice = (
 
 const addressFromSourceId = (sourceId: string): string =>
   sourceId.replace(/^external:/, "");
+
+// kCFStringEncodingISOLatin1: the iOS native side decodes its whole receive buffer as
+// one string and defaults to strict ASCII, so a single non-ASCII byte (the accessory
+// can interleave binary packets with NMEA) makes every later read fail and no data is
+// ever delivered again. Latin-1 maps every byte to a character, so decoding can't
+// fail; non-NMEA lines are then discarded by the checksum validation in the parser.
+// iOS only: Android expects a charset name here, not a CFStringEncoding number.
+const iosConnectionOptions = Environment.isIOS ? { charset: 0x0201 } : {};
 
 const isModuleAvailable = (): boolean =>
   Boolean(
@@ -126,15 +139,53 @@ const connect = async (sourceId: string): Promise<ExternalGpsConnection> => {
     : await RNBluetoothClassic.connectToDevice(address, {
         connectionType: "delimited",
         delimiter: "\n",
+        ...iosConnectionOptions,
       });
 
-  log.info("ExternalGps: connected to", device.name || address);
+  const deviceLabel = device.name || address;
+  log.info(
+    "ExternalGps: connected to",
+    deviceLabel,
+    alreadyConnected
+      ? "(reusing the already open native connection)"
+      : "(new native connection)",
+    // protocolStrings (iOS only): the External Accessory protocols the accessory
+    // advertises - needed to tell which session init packet it expects
+    "- device details:",
+    {
+      address: device.address,
+      deviceClass: device.deviceClass,
+      type: device.type,
+      // not exposed by the library's BluetoothDevice typings
+      protocolStrings: (device as any)._nativeDevice?.protocolStrings,
+    },
+  );
+
+  const sessionInitPacketHex = Environment.isIOS
+    ? getIosSessionInitPacketHex(device.name || "")
+    : undefined;
+  const sessionInit = sessionInitPacketHex
+    ? startSessionInit({
+        deviceLabel,
+        packetHex: sessionInitPacketHex,
+        write: (packetHex) => device.write(packetHex, "hex"),
+      })
+    : null;
+
+  let dataReceived = false;
+  const onFirstDataReceived = () => {
+    dataReceived = true;
+    sessionInit?.stop();
+    log.info("ExternalGps: receiving data from", deviceLabel);
+  };
 
   return {
+    hdopAccuracyFactorMeters: getHdopAccuracyFactorMeters(device.name || ""),
     onData: (listener) => {
-      const subscription = device.onDataReceived((event) =>
-        listener(event.data),
-      );
+      const subscription = device.onDataReceived((event) => {
+        if (!dataReceived) onFirstDataReceived();
+        listener(event.data);
+      });
       return { remove: () => subscription.remove() };
     },
     // The native side catches read/socket errors internally and surfaces them as
@@ -162,7 +213,8 @@ const connect = async (sourceId: string): Promise<ExternalGpsConnection> => {
       };
     },
     disconnect: async () => {
-      log.debug("ExternalGps: disconnecting from", device.name || address);
+      log.debug("ExternalGps: disconnecting from", deviceLabel);
+      sessionInit?.stop();
       await device.disconnect();
     },
   };
