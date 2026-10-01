@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 
-import { useIsNetworkConnected } from "hooks";
+import { useIsNetworkConnected } from "hooks/useIsNetworkConnected";
 import { RemoteConnectionSelectors } from "state/remoteConnection";
 import { SettingsSelectors } from "state/settings";
 import { SurveySelectors } from "state/survey";
-import { useAppDispatch } from "state/store";
+import { useAppDispatch } from "state/storeHooks";
 
 import { DataEntryActions } from "./actions";
 

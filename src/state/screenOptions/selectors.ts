@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 
-import { useScreenKey } from "hooks";
+import { useScreenKey } from "hooks/useScreenKey";
 import { ScreenViewMode } from "model";
 
 import { ScreenOptionsState } from "./state";

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
-import { useIsNetworkConnected } from "hooks";
-import { useAppDispatch } from "state/store";
+import { useIsNetworkConnected } from "hooks/useIsNetworkConnected";
+import { useAppDispatch } from "state/storeHooks";
 
 import { DeviceInfoActions } from "./actions";
 

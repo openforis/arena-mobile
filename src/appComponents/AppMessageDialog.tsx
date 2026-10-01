@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 import { MessageDialog } from "../components";
 import { MessageActions } from "../state/message";
-import { useAppDispatch } from "state/store";
+import { useAppDispatch } from "state/storeHooks";
 
 export const AppMessageDialog = () => {
   const dispatch = useAppDispatch();
