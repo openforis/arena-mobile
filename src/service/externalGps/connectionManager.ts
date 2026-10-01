@@ -89,6 +89,7 @@ const acquire = async (
     clearIdleTimeout(existing);
     const alive = await transport.isConnected(sourceId).catch(() => false);
     if (alive) {
+      log.debug("ExternalGps: reusing pooled connection to", sourceId);
       existing.listenerCount += 1;
       return existing.connectionPromise;
     }

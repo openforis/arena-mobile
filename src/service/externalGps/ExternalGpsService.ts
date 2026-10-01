@@ -1,11 +1,14 @@
 import { GpsSourceSetting, LocationPoint } from "model";
 import { log } from "utils";
 import { ExternalGpsConnectionManager } from "./connectionManager";
+import { createNmeaStreamDiagnostics } from "./nmea/nmeaStreamDiagnostics";
 import { createNmeaLocationPointAssembler } from "./nmea/nmeaToLocationPoint";
 import { bluetoothClassicTransport } from "./transport/bluetoothClassicTransport";
 import { DiscoveredGpsDevice, GpsSourceDescriptor } from "./types";
 
 export const internalGpsSourceId: string = GpsSourceSetting.internal;
+
+const diagnosticsLogIntervalMs = 15000;
 
 const internalGpsSource: GpsSourceDescriptor = {
   id: internalGpsSourceId,
@@ -55,22 +58,43 @@ const watchPosition = async (
     sourceId,
     bluetoothClassicTransport,
   );
-  const assembler = createNmeaLocationPointAssembler();
+  const assembler = createNmeaLocationPointAssembler({
+    hdopAccuracyFactorMeters: connection.hdopAccuracyFactorMeters,
+  });
+
+  const diagnostics = createNmeaStreamDiagnostics();
+  const logDiagnostics = (prefix: string) =>
+    log.info(`ExternalGps: ${prefix} ${sourceId} - ${diagnostics.summary()}`);
 
   const subscription = connection.onData((chunk) => {
+    let locationPoint: LocationPoint | null = null;
     try {
-      const locationPoint = assembler.ingest(chunk);
-      if (locationPoint) callback(locationPoint);
+      locationPoint = assembler.ingest(chunk);
     } catch (error) {
       log.warn("ExternalGps: failed to parse NMEA sentence", error);
+    }
+    const chunkSample = diagnostics.record(chunk, locationPoint);
+    if (chunkSample) log.debug("ExternalGps: data received:", chunkSample);
+
+    if (!locationPoint) return;
+    try {
+      callback(locationPoint);
+    } catch (error) {
+      log.warn("ExternalGps: error handling location point", error);
     }
   });
   const disconnectSubscription = connection.onDisconnected(() => {
     listeners?.onDisconnected?.();
   });
+  const diagnosticsInterval = setInterval(
+    () => logDiagnostics("stream status of"),
+    diagnosticsLogIntervalMs,
+  );
 
   return {
     remove: () => {
+      clearInterval(diagnosticsInterval);
+      logDiagnostics("stopped watching");
       subscription.remove();
       disconnectSubscription.remove();
       ExternalGpsConnectionManager.release(sourceId);
