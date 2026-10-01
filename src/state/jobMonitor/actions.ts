@@ -3,11 +3,22 @@ import { JobSerialized, JobStatus } from "@openforis/arena-core";
 import { JobCancelError, JobMobile } from "model";
 import { WebSocketService } from "service";
 
+import { createCallbackRegistry } from "../callbackRegistry";
+
 const JOB_MONITOR_START = "JOB_MONITOR_START";
 const JOB_MONITOR_UPDATE = "JOB_MONITOR_UPDATE";
 const JOB_MONITOR_END = "JOB_MONITOR_END";
 
 const getJobMonitorState = (state: any) => state.jobMonitor;
+
+type JobMonitorCallbacks = {
+  onCancel?: () => Promise<void> | void;
+  onClose?: () => void;
+};
+
+// callbacks are kept outside of the store (functions are not serializable): the store contains
+// only the callbacksId they are registered with
+const JobMonitorCallbacksRegistry = createCallbackRegistry<JobMonitorCallbacks>();
 
 const isJobStatusEnded = (status: any) =>
   [JobStatus.canceled, JobStatus.failed, JobStatus.succeeded].includes(status);
@@ -276,7 +287,11 @@ const start =
     transferEtaTextKey = null,
     innerJobUiConfigByType = undefined,
   }: JobStartParams) =>
-    async (dispatch: any) => {
+    async (dispatch: any, getState: any) => {
+      // the state of a previous job (if any) is replaced: its callbacks won't be used anymore
+      JobMonitorCallbacksRegistry.remove(getJobMonitorState(getState()).callbacksId);
+      const onCancel = createOnCancelCallback({ job, onCancelProp });
+      const callbacksId = JobMonitorCallbacksRegistry.register({ onCancel, onClose });
       dispatch({
         type: JOB_MONITOR_START,
         payload: {
@@ -286,8 +301,7 @@ const start =
           closeButtonTextKey,
           messageKey,
           messageParams,
-          onCancel: createOnCancelCallback({ job, onCancelProp }),
-          onClose,
+          callbacksId,
           autoDismiss,
           silent,
           progressRangeStart,
@@ -357,16 +371,16 @@ const startAsync = async ({
 
 const cancel = () => async (dispatch: any, getState: any) => {
   const state = getState();
-  const jobMonitorState = getJobMonitorState(state);
-  const { onCancel } = jobMonitorState;
-  await onCancel?.();
+  const { callbacksId } = getJobMonitorState(state);
+  await JobMonitorCallbacksRegistry.get(callbacksId)?.onCancel?.();
   dispatch(close());
 };
 
 const close = () => (dispatch: any, getState: any) => {
   const state = getState();
-  const jobMonitorState = getJobMonitorState(state);
-  const { onClose } = jobMonitorState;
+  const { callbacksId } = getJobMonitorState(state);
+  const onClose = JobMonitorCallbacksRegistry.get(callbacksId)?.onClose;
+  JobMonitorCallbacksRegistry.remove(callbacksId);
   onClose?.();
   dispatch({ type: JOB_MONITOR_END });
 };
