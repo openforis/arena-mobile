@@ -18,11 +18,16 @@ const knotsToMetersPerSecond = (knots: number): number => knots * 0.514444;
 const estimateAccuracyMeters = ({
   hdop,
   fixQuality,
+  hdopAccuracyFactorMeters,
 }: {
   hdop: number | null | undefined;
   fixQuality: number | undefined;
+  hdopAccuracyFactorMeters?: number;
 }): number | null => {
   if (hdop === null || hdop === undefined) return null;
+  // A vendor-documented factor (see vendorProtocolRegistry) takes precedence over
+  // the generic UERE guess, so the value matches what the receiver itself displays.
+  if (hdopAccuracyFactorMeters) return hdop * hdopAccuracyFactorMeters;
   const uereMeters = fixQuality && fixQuality >= 2 ? 2.5 : 5;
   return hdop * uereMeters;
 };
@@ -51,12 +56,18 @@ const accuracyFromGst = (gst: NmeaGst | null): number | null => {
  * LocationPoint; RMC is only used to fill in speed/heading when available
  * (using the most recently seen RMC sentence).
  */
-export const createNmeaLocationPointAssembler = () => {
+export const createNmeaLocationPointAssembler = ({
+  hdopAccuracyFactorMeters,
+}: { hdopAccuracyFactorMeters?: number } = {}) => {
   let lastTrack: { speedKnots?: number | null; courseDegrees?: number | null } =
     {};
   let lastGst: NmeaGst | null = null;
 
-  const ingest = (sentence: string): LocationPoint | null => {
+  const ingest = (chunk: string): LocationPoint | null => {
+    // Resync on "$": some receivers interleave binary packets with NMEA, so a chunk
+    // can carry leading non-NMEA bytes before the actual sentence.
+    const sentence = chunk.slice(Math.max(chunk.lastIndexOf("$"), 0));
+
     const rmc = parseRMC(sentence);
     if (rmc) {
       lastTrack = rmc.valid
@@ -85,6 +96,7 @@ export const createNmeaLocationPointAssembler = () => {
         estimateAccuracyMeters({
           hdop: gga.hdop,
           fixQuality: gga.fixQuality,
+          hdopAccuracyFactorMeters,
         }),
       heading: courseDegrees ?? null,
       speed:

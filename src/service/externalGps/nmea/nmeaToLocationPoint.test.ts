@@ -49,6 +49,24 @@ describe("nmeaToLocationPoint", () => {
     expect(locationPoint?.speed).toBeNull();
   });
 
+  it("skips non-NMEA bytes preceding the sentence in the same chunk", () => {
+    const assembler = createNmeaLocationPointAssembler();
+
+    const locationPoint = assembler.ingest(`$¾\u0000\u0011${validGga}\r`);
+
+    expect(locationPoint?.latitude).toBeCloseTo(48.1173, 4);
+  });
+
+  it("uses the vendor HDOP factor instead of the generic estimate when given", () => {
+    const assembler = createNmeaLocationPointAssembler({
+      hdopAccuracyFactorMeters: 3.9,
+    });
+
+    const locationPoint = assembler.ingest(validGga);
+
+    expect(locationPoint?.accuracy).toBeCloseTo(0.9 * 3.9, 10);
+  });
+
   it("prefers measured GST accuracy over the HDOP-based estimate", () => {
     const assembler = createNmeaLocationPointAssembler();
 

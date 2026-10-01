@@ -55,7 +55,9 @@ const watchPosition = async (
     sourceId,
     bluetoothClassicTransport,
   );
-  const assembler = createNmeaLocationPointAssembler();
+  const assembler = createNmeaLocationPointAssembler({
+    hdopAccuracyFactorMeters: connection.hdopAccuracyFactorMeters,
+  });
 
   const subscription = connection.onData((chunk) => {
     try {
