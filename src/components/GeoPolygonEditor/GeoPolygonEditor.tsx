@@ -37,6 +37,8 @@ type GeoPolygonEditorProps = {
   ) => Promise<void> | void;
   // called every time the polygon (or the draft being drawn) changes
   onCoordinatesChange?: (coordinates: LatLng[]) => void;
+  // called when the map is ready and every time the visible region changes
+  onMapRegionChange?: () => void;
   // content rendered above the map (e.g. extra form fields)
   headerContent?: React.ReactNode;
   // extra map overlays (e.g. reference polygons)
@@ -55,6 +57,7 @@ export const GeoPolygonEditor = ({
   onCancelDrawing,
   onSaveDrawing,
   onCoordinatesChange,
+  onMapRegionChange,
   headerContent,
   extraOverlays,
   layerId,
@@ -124,9 +127,11 @@ export const GeoPolygonEditor = ({
         style={styles.map}
         initialRegion={initialRegion}
         layerId={layerId}
+        onMapReady={onMapRegionChange}
         onPress={onMapPress}
         onPanDrag={onMapPanDrag}
         onPoiClick={onMapPoiClick}
+        onRegionChangeComplete={onMapRegionChange}
         fitToCoordinatesOnReady={visibleCoordinates}
       >
         {extraOverlays}

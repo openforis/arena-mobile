@@ -39,6 +39,7 @@ export default {
     name: "ስም",
     layer: "ንብርብር",
     maxZoom: "ከፍተኛ ማጉላት፦ {{value}}",
+    currentZoom: "የአሁኑ ማጉላት፦ {{value}}",
     surface: "ስፋት፦ {{area}}",
     drawAreaToEstimate: "የሚይዘውን ቦታ ለማየት የሚፈልጉትን አካባቢ በካርታው ላይ ይሳሉ",
     estimate: "{{tiles}} ታይሎች · ~{{size}} (ነፃ ቦታ፦ {{freeSpace}})",

@@ -39,6 +39,7 @@ export default {
     name: "Nome",
     layer: "Camada",
     maxZoom: "Zoom máximo: {{value}}",
+    currentZoom: "Zoom atual: {{value}}",
     surface: "Área: {{area}}",
     drawAreaToEstimate:
       "Desenhe a área de interesse no mapa para ver o espaço que ela ocupará",

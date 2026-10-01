@@ -39,6 +39,7 @@ export default {
     name: "Nom",
     layer: "Couche",
     maxZoom: "Zoom max : {{value}}",
+    currentZoom: "Zoom actuel : {{value}}",
     surface: "Superficie : {{area}}",
     drawAreaToEstimate:
       "Dessinez la zone d'intérêt sur la carte pour voir l'espace qu'elle occupera",

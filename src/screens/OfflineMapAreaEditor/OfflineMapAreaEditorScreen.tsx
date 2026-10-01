@@ -65,6 +65,8 @@ export const OfflineMapAreaEditorScreen = () => {
     null,
   );
   const [freeDiskStorage, setFreeDiskStorage] = useState<number | null>(null);
+  // zoom level of the tiles currently shown in the map
+  const [currentZoom, setCurrentZoom] = useState<number | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -113,6 +115,22 @@ export const OfflineMapAreaEditorScreen = () => {
   const onLayerChange = useCallback((value: string): Promise<void> => {
     setLayerId(value as MapLayerId);
     return Promise.resolve();
+  }, []);
+
+  const onMapRegionChange = useCallback(() => {
+    const updateCurrentZoom = async () => {
+      try {
+        const camera = await mapRef.current?.getCamera();
+        const zoom = camera?.zoom;
+        if (typeof zoom === "number") {
+          // tiles of the integer zoom level are shown until the next level is reached
+          setCurrentZoom(Math.floor(zoom));
+        }
+      } catch (error) {
+        log.debug(`error getting map zoom level: ${String(error)}`);
+      }
+    };
+    void updateCurrentZoom();
   }, []);
 
   const onCancelDrawing = useCallback(() => {
@@ -196,6 +214,13 @@ export const OfflineMapAreaEditorScreen = () => {
             onValueChange={setMaxZoom}
           />
         </VView>
+        {currentZoom !== null && (
+          <Text
+            style={styles.zoomLabel}
+            textKey="offlineMaps:areaEditor.currentZoom"
+            textParams={{ value: currentZoom }}
+          />
+        )}
       </HView>
       {coordinates.length < 3 ? (
         <Text
@@ -246,6 +271,7 @@ export const OfflineMapAreaEditorScreen = () => {
       mapRef={mapRef}
       onCancelDrawing={onCancelDrawing}
       onCoordinatesChange={setCoordinates}
+      onMapRegionChange={onMapRegionChange}
       onSaveDrawing={onSaveDrawing}
       saveButtonIcon="download"
       saveButtonTextKey="offlineMaps:download.label"

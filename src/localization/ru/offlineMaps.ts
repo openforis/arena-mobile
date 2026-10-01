@@ -39,6 +39,7 @@ export default {
     name: "Название",
     layer: "Слой",
     maxZoom: "Макс. масштаб: {{value}}",
+    currentZoom: "Текущий масштаб: {{value}}",
     surface: "Площадь: {{area}}",
     drawAreaToEstimate:
       "Нарисуйте интересующую область на карте, чтобы увидеть, сколько места она займёт",

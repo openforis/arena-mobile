@@ -39,6 +39,7 @@ export default {
     name: "Name",
     layer: "Ebene",
     maxZoom: "Max. Zoom: {{value}}",
+    currentZoom: "Aktueller Zoom: {{value}}",
     surface: "Fläche: {{area}}",
     drawAreaToEstimate:
       "Zeichnen Sie das Interessengebiet auf der Karte, um den benötigten Speicherplatz zu sehen",

@@ -39,6 +39,7 @@ export default {
     name: "名前",
     layer: "レイヤー",
     maxZoom: "最大ズーム: {{value}}",
+    currentZoom: "現在のズーム: {{value}}",
     surface: "面積: {{area}}",
     drawAreaToEstimate:
       "地図上に対象エリアを描画すると、必要な容量が表示されます",

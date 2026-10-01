@@ -39,6 +39,7 @@ export default {
     name: "Nimi",
     layer: "Taso",
     maxZoom: "Suurin zoomaus: {{value}}",
+    currentZoom: "Nykyinen zoomaus: {{value}}",
     surface: "Pinta-ala: {{area}}",
     drawAreaToEstimate:
       "Piirrä kiinnostuksen kohteena oleva alue kartalle nähdäksesi sen viemän tilan",

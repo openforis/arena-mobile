@@ -39,6 +39,7 @@ export default {
     name: "Name",
     layer: "Layer",
     maxZoom: "Max zoom: {{value}}",
+    currentZoom: "Current zoom: {{value}}",
     surface: "Area: {{area}}",
     drawAreaToEstimate:
       "Draw the area of interest on the map to see the space it will occupy",

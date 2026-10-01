@@ -39,6 +39,7 @@ export default {
     name: "نام",
     layer: "لایه",
     maxZoom: "حداکثر بزرگ‌نمایی: {{value}}",
+    currentZoom: "بزرگ‌نمایی فعلی: {{value}}",
     surface: "مساحت: {{area}}",
     drawAreaToEstimate:
       "منطقه مورد نظر را روی نقشه ترسیم کنید تا فضایی که اشغال می‌کند را ببینید",

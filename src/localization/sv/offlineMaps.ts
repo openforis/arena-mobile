@@ -39,6 +39,7 @@ export default {
     name: "Namn",
     layer: "Lager",
     maxZoom: "Max zoom: {{value}}",
+    currentZoom: "Aktuell zoom: {{value}}",
     surface: "Yta: {{area}}",
     drawAreaToEstimate:
       "Rita intresseområdet på kartan för att se hur mycket utrymme det kommer att ta",

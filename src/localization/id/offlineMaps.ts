@@ -39,6 +39,7 @@ export default {
     name: "Nama",
     layer: "Lapisan",
     maxZoom: "Zoom maks: {{value}}",
+    currentZoom: "Zoom saat ini: {{value}}",
     surface: "Luas: {{area}}",
     drawAreaToEstimate:
       "Gambar area yang diminati pada peta untuk melihat ruang yang akan digunakan",
