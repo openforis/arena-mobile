@@ -234,9 +234,10 @@ Deseja obtê-las novamente do servidor?`,
     drawPolygon: "Desenhar polígono",
     editPolygon: "Editar polígono",
     selectPolygonInstruction: "Pressione em um polígono para selecioná-lo",
-    editPolygonInstructions: `Pressione um vértice ou ponto médio para selecioná-lo, depois:
-- Pressione longo para arrastar um vértice e movê-lo.  
-- Pressione '$t(dataEntry:geo.deleteSelectedPoint)' para removê-lo.`,
+    selectPointInstructions: `- Toque em um ponto para selecioná-lo.  
+- Toque em um ponto médio para adicionar um novo ponto.`,
+    editPolygonInstructions:
+      "Pressione e segure o ponto selecionado e arraste-o para movê-lo.",
     tapToAddPoints: `Toque no mapa para adicionar pontos.  
 Pressione '$t(common:stop)' quando concluído.`,
     deleteSelectedPoint: "Excluir ponto selecionado",

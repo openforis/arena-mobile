@@ -11,6 +11,7 @@ import RNMapView, {
   MapPressEvent,
   MapType,
   PanDragEvent,
+  PoiClickEvent,
   Region,
   UrlTile,
 } from "react-native-maps";
@@ -47,6 +48,8 @@ type Props = {
   layerId?: MapLayerId;
   onMapReady?: () => void;
   onPanDrag?: (event: PanDragEvent) => void;
+  // called (instead of onPress) when a point of interest of the base map is pressed
+  onPoiClick?: (event: PoiClickEvent) => void;
   onPress?: (event: MapPressEvent) => void;
   onRegionChangeComplete?: (region: Region) => void;
   showMapTypeSelector?: boolean;
@@ -87,6 +90,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       initialRegion,
       onPress,
       onPanDrag,
+      onPoiClick,
       toolbarEnabled,
     },
     ref,
@@ -162,6 +166,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
           initialRegion={initialRegion}
           onPress={onPress}
           onPanDrag={onPanDrag}
+          onPoiClick={onPoiClick}
           onMapReady={onMapReadyCallback}
           onRegionChangeComplete={onRegionChangeComplete}
           mapType={effectiveMapType}

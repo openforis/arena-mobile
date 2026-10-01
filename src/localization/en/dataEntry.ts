@@ -297,10 +297,11 @@ Fetch the list of records from the server and try again?`,
   geo: {
     drawPolygon: "Draw polygon",
     editPolygon: "Edit polygon",
-    selectPolygonInstruction: "Press on a polygon to select it",
-    editPolygonInstructions: `- Long-press a vertex and drag it to move it.  
-- Press a midpoint to add a vertex.  
-- Press a vertex to select it, then press '$t(dataEntry:geo.deleteSelectedPoint)' to delete it.`,
+    selectPolygonInstruction: "Tap the polygon to select it",
+    selectPointInstructions: `- Tap a point to select it.  
+- Tap a midpoint to add a new point.`,
+    editPolygonInstructions:
+      "Long-press the selected point and drag it to move it.",
     tapToAddPoints: `Tap the map to add points.  
 Press '$t(common:stop)' when done.`,
     deleteSelectedPoint: "Delete selected point",

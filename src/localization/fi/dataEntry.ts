@@ -239,9 +239,10 @@ Haluatko hakea sen uudelleen palvelimelta?`,
     drawPolygon: "Piirrä monikulmio",
     editPolygon: "Muokkaa monikulmiota",
     selectPolygonInstruction: "Paina monikulmiota sen valitsemiseksi",
-    editPolygonInstructions: `Paina kärkeä tai keskipistettä valitaksesi sen, sitten:
-- Pidä painettuna vetääksesi kärkeä ja siirtääksesi sitä.  
-- Paina '$t(dataEntry:geo.deleteSelectedPoint)' poistaaksesi sen.`,
+    selectPointInstructions: `- Napauta pistettä valitaksesi sen.  
+- Napauta keskipistettä lisätäksesi uuden pisteen.`,
+    editPolygonInstructions:
+      "Paina valittua pistettä pitkään ja vedä sitä siirtääksesi sen.",
     tapToAddPoints: `Napauta karttaa lisätäksesi pisteitä.  
 Paina '$t(common:stop)', kun olet valmis.`,
     deleteSelectedPoint: "Poista valittu piste",

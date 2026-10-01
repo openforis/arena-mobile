@@ -4,7 +4,7 @@ import {
   MapPolygonExtendedProps,
   getRandomPolygonColors,
 } from "./polygonEditorUtils";
-import MapView, { MapPressEvent } from "react-native-maps";
+import MapView, { MapPressEvent, PoiClickEvent } from "react-native-maps";
 
 import { useLocationWatch } from "hooks";
 import { LatLng } from "model";
@@ -286,6 +286,23 @@ export const useGeoPolygonEditor = ({
     [addCoordinateToDraft, onPolygonUnselect, polygons.length],
   );
 
+  // the press on a point of interest of the base map (label, icon) is not notified as a map press
+  const onMapPoiClick = useCallback(
+    (event: PoiClickEvent) => {
+      if (polygons.length > 0) {
+        onPolygonUnselect();
+        return;
+      }
+
+      const coordinate = event.nativeEvent?.coordinate;
+      if (!coordinate) return;
+
+      const { latitude, longitude } = coordinate;
+      addCoordinateToDraft({ latitude, longitude });
+    },
+    [addCoordinateToDraft, onPolygonUnselect, polygons.length],
+  );
+
   const onLocationWatchCallback = useCallback(
     ({ location }: { location: LatLng | null }) => {
       if (!location) return;
@@ -393,7 +410,6 @@ export const useGeoPolygonEditor = ({
   const onVertexDragStart = useCallback((index: number) => {
     setLocalState((prev) => ({
       ...prev,
-      selectedVertexIndex: index,
       draggingVertexIndex: index,
       draggingVertexCoordinate: null,
     }));
@@ -602,11 +618,18 @@ export const useGeoPolygonEditor = ({
     if (!hasValue) {
       return "dataEntry:geo.tapToAddPoints";
     }
-    if (isPolygonSelected) {
-      return "dataEntry:geo.editPolygonInstructions";
+    if (!isPolygonSelected) {
+      return "dataEntry:geo.selectPolygonInstruction";
     }
-    return "dataEntry:geo.selectPolygonInstruction";
-  }, [canAddCurrentLocationPoint, hasValue, isPolygonSelected]);
+    return selectedVertexIndex == null
+      ? "dataEntry:geo.selectPointInstructions"
+      : "dataEntry:geo.editPolygonInstructions";
+  }, [
+    canAddCurrentLocationPoint,
+    hasValue,
+    isPolygonSelected,
+    selectedVertexIndex,
+  ]);
 
   return {
     canSave,
@@ -622,6 +645,7 @@ export const useGeoPolygonEditor = ({
     onDeleteSelectedVertexPress,
     onMapPress,
     onMapPanDrag,
+    onMapPoiClick,
     onAddCurrentLocationPointPress,
     onMidpointPress,
     onPolygonPress,

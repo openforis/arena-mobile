@@ -234,9 +234,10 @@ Sus valores serán borrados.
     drawPolygon: "Dibujar polígono",
     editPolygon: "Editar polígono",
     selectPolygonInstruction: "Presione en un polígono para seleccionarlo",
-    editPolygonInstructions: `Pulsa un vértice o punto medio para seleccionarlo, luego:
-- Mantén pulsado para arrastrar un vértice y moverlo.  
-- Pulsa '$t(dataEntry:geo.deleteSelectedPoint)' para eliminarlo.`,
+    selectPointInstructions: `- Toca un punto para seleccionarlo.  
+- Toca un punto medio para añadir un nuevo punto.`,
+    editPolygonInstructions:
+      "Mantén pulsado el punto seleccionado y arrástralo para moverlo.",
     tapToAddPoints: `Toca el mapa para añadir puntos.  
 Presiona '$t(common:stop)' cuando hayas terminado.`,
     deleteSelectedPoint: "Eliminar punto seleccionado",

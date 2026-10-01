@@ -78,6 +78,7 @@ export const GeoPolygonEditor = ({
     onDeleteSelectedVertexPress,
     onMapPress,
     onMapPanDrag,
+    onMapPoiClick,
     onAddCurrentLocationPointPress,
     onMidpointPress,
     onPolygonPress,
@@ -125,6 +126,7 @@ export const GeoPolygonEditor = ({
         layerId={layerId}
         onPress={onMapPress}
         onPanDrag={onMapPanDrag}
+        onPoiClick={onMapPoiClick}
         fitToCoordinatesOnReady={visibleCoordinates}
       >
         {extraOverlays}

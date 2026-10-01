@@ -70,8 +70,7 @@ export const GeoPolygonVerticesOverlay = ({
             key={`polygon-vertex-${index}-${coordinate.latitude}-${coordinate.longitude}`}
             coordinate={coordinate}
             anchor={isSelected ? selectedMarkerAnchor : markerAnchor}
-            // long-press to drag: no need to select the vertex first
-            draggable
+            draggable={isSelected}
             outerStyle={getOuterStyle(styleGetterProps)}
             coreStyle={getCoreStyle(styleGetterProps)}
             onPress={() => onVertexPress(index)}
