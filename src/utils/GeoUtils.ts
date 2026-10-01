@@ -1,6 +1,6 @@
 import { Region } from "react-native-maps";
 
-import { LatLng } from "model";
+import type { LatLng } from "model/LocationPoint";
 
 const defaultCoordinateEpsilon = 0.000001;
 

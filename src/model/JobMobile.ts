@@ -1,5 +1,5 @@
 import { JobBase, JobContext, Logger } from "@openforis/arena-core";
-import { log } from "utils";
+import { log } from "utils/Logger";
 
 export type JobMobileContext = JobContext;
 
