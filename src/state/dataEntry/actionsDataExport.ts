@@ -21,7 +21,7 @@ import { RecordsUploadAndProcessJob } from "service/recordsUploadAndProcessJob";
 import { RECORDS_UPLOAD_JOB_TYPE } from "service/recordsUploadJob";
 import { REMOTE_JOB_WATCHER_JOB_TYPE } from "service/remoteJobWatcherJob";
 import { RemoteConnectionSelectors } from "state/remoteConnection";
-import { RootState } from "state/store";
+import type { RootState } from "state/store";
 import { Files, Jobs, log } from "utils";
 
 import { fetchRecordsFromServer } from "./actionsRecordsImport";

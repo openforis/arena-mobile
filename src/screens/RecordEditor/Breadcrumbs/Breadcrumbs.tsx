@@ -4,7 +4,7 @@ import { ScrollView } from "react-native";
 import { useIsTextDirectionRtl } from "localization";
 import { DataEntryActions } from "state/dataEntry/actions";
 import { DataEntrySelectors } from "state/dataEntry/selectors";
-import { useAppDispatch } from "state/store";
+import { useAppDispatch } from "state/storeHooks";
 import { log } from "utils";
 
 import { BreadcrumbItem } from "./BreadcrumbItem";

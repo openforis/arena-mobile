@@ -7,7 +7,8 @@ import { MessageActions } from "state/message";
 
 import { ConfirmActions } from "../confirm";
 import { DeviceInfoSelectors } from "../deviceInfo";
-import { RemoteConnectionActions, RemoteConnectionSelectors } from "../remoteConnection";
+import { loginAndSetUser } from "../remoteConnection/actionsLoginAndSetUser";
+import { RemoteConnectionSelectors } from "../remoteConnection/selectors";
 import { SurveyActionTypes } from "./actionTypes";
 import { SurveySelectors } from "./selectors";
 import { log } from "utils/Logger";
@@ -41,7 +42,7 @@ const fetchCurrentSurveyUserGroup =
       // Make sure the logged in user is fetched first (e.g. this can be called before
       // RemoteConnectionActions.loginAndSetUser() has completed during app startup),
       // otherwise the current-user-group request may be attempted without a valid session.
-      await dispatch(RemoteConnectionActions.loginAndSetUser({ onlyIfNotSet: true }));
+      await dispatch(loginAndSetUser({ onlyIfNotSet: true }));
 
       dispatch({ type: CURRENT_SURVEY_USER_GROUP_LOADING });
 

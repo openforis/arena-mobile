@@ -5,7 +5,11 @@ import {
   CameraView,
 } from "expo-camera";
 
-import { Loader, Markdown, Modal, Text, View } from "components";
+import { Loader } from "../Loader";
+import { Markdown } from "../Markdown";
+import { Modal } from "../Modal";
+import { Text } from "../Text";
+import { View } from "../View";
 import { useRequestCameraPermission } from "hooks/useRequestCameraPermission";
 import { i18n } from "localization";
 import { SystemUtils } from "utils/SystemUtils";

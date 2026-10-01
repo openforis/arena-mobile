@@ -6,12 +6,22 @@ import { log } from "utils";
 
 import { NodeCodeComponent } from "./nodeTypes/NodeCodeComponent";
 import { NodeMultipleEntityPreviewComponent } from "./nodeTypes/NodeMultipleEntityPreviewComponent";
-import { NodeSingleEntityComponent } from "./nodeTypes/NodeSingleEntityComponent";
 
 import { SingleAttributeComponentSwitch } from "./SingleAttributeComponentSwitch";
 import { MultipleAttributeComponentWrapper } from "./MultipleAttributeComponentWrapper";
-import { NodeMultipleEntityComponent } from "../NodeMultipleEntityComponent";
 import { NodeComponentProps } from "./nodeTypes/nodeComponentPropTypes";
+
+// Entity components render NodeDefFormItem, which renders NodeComponentSwitch again:
+// require them lazily (at render time) to avoid a require cycle at module load time.
+const getNodeSingleEntityComponent = () =>
+  (
+    require("./nodeTypes/NodeSingleEntityComponent") as typeof import("./nodeTypes/NodeSingleEntityComponent")
+  ).NodeSingleEntityComponent;
+
+const getNodeMultipleEntityComponent = () =>
+  (
+    require("../NodeMultipleEntityComponent") as typeof import("../NodeMultipleEntityComponent")
+  ).NodeMultipleEntityComponent;
 
 type Props = NodeComponentProps & {
   onFocus?: () => void;
@@ -26,6 +36,7 @@ export const NodeComponentSwitch = (props: Props) => {
 
   if (NodeDefs.isEntity(nodeDef)) {
     if (NodeDefs.isSingle(nodeDef)) {
+      const NodeSingleEntityComponent = getNodeSingleEntityComponent();
       return (
         <NodeSingleEntityComponent
           nodeDef={nodeDef}
@@ -34,6 +45,7 @@ export const NodeComponentSwitch = (props: Props) => {
       );
     }
     if (viewMode === RecordEditViewMode.oneNode) {
+      const NodeMultipleEntityComponent = getNodeMultipleEntityComponent();
       return (
         <NodeMultipleEntityComponent
           entityDef={nodeDef}

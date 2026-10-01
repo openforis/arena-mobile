@@ -8,7 +8,8 @@ import { ThemesSettings } from "model/Themes";
 import { LanguageConstants } from "model/LanguageSettings";
 import { MapLayers, MapProvider } from "model/MapLayers";
 import { SettingKey, SettingsObject } from "model/SettingsModel";
-import { AMConstants, SystemUtils } from "utils";
+import { AMConstants } from "utils/AMConstants";
+import { SystemUtils } from "utils/SystemUtils";
 
 const defaultSettings: Partial<SettingsObject> = {
   animationsEnabled: true,

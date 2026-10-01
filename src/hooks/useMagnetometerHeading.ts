@@ -6,7 +6,7 @@ import { Numbers } from "@openforis/arena-core";
 import { Functions } from "utils/Functions";
 import { log } from "utils/Logger";
 import { ScreenOrientation } from "model";
-import { DeviceInfoSelectors } from "state";
+import { DeviceInfoSelectors } from "state/deviceInfo/selectors";
 
 import { circularEma, EMA_ALPHA } from "./headingUtils";
 

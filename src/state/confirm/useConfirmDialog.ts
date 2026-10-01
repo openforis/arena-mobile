@@ -9,7 +9,7 @@ import {
   ConfirmState,
   OnConfirmParams,
 } from "./reducer";
-import { useAppDispatch } from "state/store";
+import { useAppDispatch } from "state/storeHooks";
 
 type ConfirmDialogLocalState = {
   confirmButtonEnabled: boolean;
