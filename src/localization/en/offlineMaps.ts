@@ -33,6 +33,8 @@ export default {
     missingTiles: "Missing tiles: {{count}}",
     resumeDownload: "Download missing",
     deleteConfirm: "Delete the offline map area '{{name}}'?",
+    nameRequired: "Name is required",
+    nameDuplicate: "Name already in use by another area",
   },
   areaEditor: {
     title: "New offline map area",

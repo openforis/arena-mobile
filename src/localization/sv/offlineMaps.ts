@@ -33,6 +33,8 @@ export default {
     missingTiles: "Saknade kartrutor: {{count}}",
     resumeDownload: "Ladda ner saknade",
     deleteConfirm: "Ta bort offlinekartområdet '{{name}}'?",
+    nameRequired: "Namn krävs",
+    nameDuplicate: "Namnet används redan av ett annat område",
   },
   areaEditor: {
     title: "Nytt offlinekartområde",

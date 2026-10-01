@@ -33,6 +33,8 @@ export default {
     missingTiles: "不足タイル: {{count}}",
     resumeDownload: "不足分をダウンロード",
     deleteConfirm: "オフラインマップエリア「{{name}}」を削除しますか?",
+    nameRequired: "名前は必須です",
+    nameDuplicate: "この名前は別のエリアで既に使用されています",
   },
   areaEditor: {
     title: "新しいオフラインマップエリア",

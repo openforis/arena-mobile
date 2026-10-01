@@ -33,6 +33,8 @@ export default {
     missingTiles: "Ubin yang hilang: {{count}}",
     resumeDownload: "Unduh yang hilang",
     deleteConfirm: "Hapus area peta offline '{{name}}'?",
+    nameRequired: "Nama wajib diisi",
+    nameDuplicate: "Nama sudah digunakan oleh area lain",
   },
   areaEditor: {
     title: "Area peta offline baru",

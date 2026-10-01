@@ -1,8 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Keyboard } from "react-native";
 import { Polygon } from "react-native-maps";
 import { useRoute } from "@react-navigation/native";
 
-import { LoadingIcon, MapView, Text, VView } from "components";
+import {
+  HView,
+  IconButton,
+  LoadingIcon,
+  MapView,
+  Text,
+  TextInput,
+  VView,
+} from "components";
 import { useTranslation } from "localization";
 import { OfflineMapArea } from "model";
 import { OfflineMapsService } from "service";
@@ -18,7 +27,11 @@ export type OfflineMapAreaViewerParams = { areaId: string };
 
 type State = {
   area: OfflineMapArea | null;
+  // all the areas (used to validate the name)
+  areas: OfflineMapArea[];
   loading: boolean;
+  // name being edited
+  name: string;
 };
 
 export const OfflineMapAreaViewerScreen = () => {
@@ -29,19 +42,28 @@ export const OfflineMapAreaViewerScreen = () => {
   const { areaId } = (route.params ??
     {}) as Partial<OfflineMapAreaViewerParams>;
 
-  const [state, setState] = useState<State>({ area: null, loading: true });
-  const { area, loading } = state;
+  const [state, setState] = useState<State>({
+    area: null,
+    areas: [],
+    loading: true,
+    name: "",
+  });
+  const { area, areas, loading, name } = state;
 
   useEffect(() => {
     const loadArea = async () => {
       try {
-        const areaLoaded = areaId
-          ? await OfflineMapsService.fetchAreaById(areaId)
-          : undefined;
-        setState({ area: areaLoaded ?? null, loading: false });
+        const areasLoaded = await OfflineMapsService.fetchAreas();
+        const areaLoaded = areasLoaded.find((item) => item.id === areaId);
+        setState({
+          area: areaLoaded ?? null,
+          areas: areasLoaded,
+          loading: false,
+          name: areaLoaded?.name ?? "",
+        });
       } catch (error) {
         log.error("error loading offline map area", error);
-        setState({ area: null, loading: false });
+        setState({ area: null, areas: [], loading: false, name: "" });
       }
     };
     void loadArea();
@@ -54,6 +76,36 @@ export const OfflineMapAreaViewerScreen = () => {
         : GeoUtils.defaultMapRegion,
     [area],
   );
+
+  const onNameChange = useCallback((text: string) => {
+    setState((prev) => ({ ...prev, name: text }));
+  }, []);
+
+  const nameErrorKey = OfflineMapsService.validateAreaName({
+    name,
+    areas,
+    areaId,
+  });
+  const canSaveName = !!area && !nameErrorKey && name.trim() !== area.name;
+
+  const onSaveNamePress = useCallback(async () => {
+    if (!area) return;
+    Keyboard.dismiss();
+    const areaUpdated = await OfflineMapsService.renameArea({
+      areaId: area.id,
+      name,
+    });
+    if (areaUpdated) {
+      setState((prev) => ({
+        ...prev,
+        area: areaUpdated,
+        areas: prev.areas.map((item) =>
+          item.id === areaUpdated.id ? areaUpdated : item,
+        ),
+        name: areaUpdated.name,
+      }));
+    }
+  }, [area, name]);
 
   if (loading) return <LoadingIcon />;
 
@@ -69,7 +121,23 @@ export const OfflineMapAreaViewerScreen = () => {
   return (
     <VView style={styles.container}>
       <VView style={styles.header}>
-        <Text variant="titleMedium">{area.name}</Text>
+        <HView style={styles.nameRow}>
+          <TextInput
+            error={!!nameErrorKey}
+            label="offlineMaps:areaEditor.name"
+            onChange={onNameChange}
+            style={styles.nameInput}
+            value={name}
+          />
+          <IconButton
+            disabled={!canSaveName}
+            icon="content-save"
+            onPress={onSaveNamePress}
+          />
+        </HView>
+        {nameErrorKey && (
+          <Text style={styles.nameError} textKey={nameErrorKey} />
+        )}
         <Text
           textKey="offlineMaps:area.layer"
           textParams={{ layer: t(`offlineMaps:layers.${area.layerId}`) }}

@@ -33,6 +33,8 @@ export default {
     missingTiles: "Tuiles manquantes : {{count}}",
     resumeDownload: "Télécharger les manquantes",
     deleteConfirm: "Supprimer la zone de carte hors ligne '{{name}}' ?",
+    nameRequired: "Le nom est obligatoire",
+    nameDuplicate: "Nom déjà utilisé par une autre zone",
   },
   areaEditor: {
     title: "Nouvelle zone de carte hors ligne",

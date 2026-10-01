@@ -33,6 +33,8 @@ export default {
     missingTiles: "Blocos ausentes: {{count}}",
     resumeDownload: "Baixar ausentes",
     deleteConfirm: "Excluir a área de mapa offline '{{name}}'?",
+    nameRequired: "O nome é obrigatório",
+    nameDuplicate: "Nome já usado por outra área",
   },
   areaEditor: {
     title: "Nova área de mapa offline",

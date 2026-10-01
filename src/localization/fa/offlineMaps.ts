@@ -33,6 +33,8 @@ export default {
     missingTiles: "کاشی‌های موجود نیست: {{count}}",
     resumeDownload: "دانلود موارد باقی‌مانده",
     deleteConfirm: "منطقه نقشه آفلاین '{{name}}' حذف شود؟",
+    nameRequired: "نام الزامی است",
+    nameDuplicate: "این نام قبلاً برای منطقه دیگری استفاده شده است",
   },
   areaEditor: {
     title: "منطقه نقشه آفلاین جدید",

@@ -10,6 +10,7 @@ import { PromiseUtils } from "utils/PromiseUtils";
 
 import { OfflineMapAreaDownloadJob } from "./OfflineMapAreaDownloadJob";
 import { OfflineMapAreaRepository } from "./offlineMapAreaRepository";
+import { OfflineMapAreaValidator } from "./offlineMapAreaValidator";
 import { OfflineMapTilesStorage } from "./offlineMapTilesStorage";
 
 // limit the number of tiles of a single area, not to overload the free tile servers
@@ -90,6 +91,24 @@ const createArea = ({
   };
 };
 
+const validateAreaName = OfflineMapAreaValidator.validateName;
+
+// renames the area; resolves with the updated area (null if the area does not exist or the name is not valid)
+const renameArea = async ({
+  areaId,
+  name,
+}: {
+  areaId: string;
+  name: string;
+}): Promise<OfflineMapArea | null> => {
+  const areas = await fetchAreas();
+  const area = areas.find((item) => item.id === areaId);
+  if (!area || validateAreaName({ name, areas, areaId })) return null;
+  const areaUpdated: OfflineMapArea = { ...area, name: name.trim() };
+  await OfflineMapAreaRepository.saveArea(areaUpdated);
+  return areaUpdated;
+};
+
 // surface of the area polygon in square meters (calculated when not stored in the area)
 const getAreaSquareMeters = (area: OfflineMapArea): number =>
   area.areaSquareMeters ?? GeoUtils.computePolygonArea(area.coordinates);
@@ -159,6 +178,8 @@ export const OfflineMapsService = {
   fetchAreas,
   fetchAreaById,
   createArea,
+  renameArea,
+  validateAreaName,
   getAreaSquareMeters,
   createDownloadJob,
   deleteArea,

@@ -33,6 +33,8 @@ export default {
     missingTiles: "Puuttuvat karttaruudut: {{count}}",
     resumeDownload: "Lataa puuttuvat",
     deleteConfirm: "Poistetaanko offline-kartta-alue '{{name}}'?",
+    nameRequired: "Nimi on pakollinen",
+    nameDuplicate: "Nimi on jo toisen alueen käytössä",
   },
   areaEditor: {
     title: "Uusi offline-kartta-alue",

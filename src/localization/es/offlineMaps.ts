@@ -33,6 +33,8 @@ export default {
     missingTiles: "Teselas faltantes: {{count}}",
     resumeDownload: "Descargar faltantes",
     deleteConfirm: "¿Eliminar el área de mapa sin conexión '{{name}}'?",
+    nameRequired: "El nombre es obligatorio",
+    nameDuplicate: "Nombre ya utilizado por otra área",
   },
   areaEditor: {
     title: "Nueva área de mapa sin conexión",

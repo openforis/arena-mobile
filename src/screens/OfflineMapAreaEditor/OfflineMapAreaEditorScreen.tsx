@@ -102,6 +102,13 @@ export const OfflineMapAreaEditorScreen = () => {
     [coordinates],
   );
 
+  // a blank name is replaced by the default one
+  const effectiveName = name.trim() || generateDefaultAreaName();
+  const nameErrorKey = OfflineMapsService.validateAreaName({
+    name: effectiveName,
+    areas: existingAreas ?? [],
+  });
+
   const exceedsFreeSpace =
     freeDiskStorage !== null && estimate.estimatedSizeBytes > freeDiskStorage;
 
@@ -140,6 +147,10 @@ export const OfflineMapAreaEditorScreen = () => {
   const onSaveDrawing = useCallback(
     async (polygon: MapPolygonExtendedProps | null) => {
       if (!polygon || polygon.coordinates.length < 3) return;
+      if (nameErrorKey) {
+        toaster(nameErrorKey);
+        return;
+      }
       if (estimate.exceedsMaxTiles) {
         toaster("offlineMaps:areaEditor.tooManyTiles", {
           maxTiles: OfflineMapsService.MAX_TILES_PER_AREA,
@@ -151,7 +162,7 @@ export const OfflineMapAreaEditorScreen = () => {
         return;
       }
       const area = OfflineMapsService.createArea({
-        name: name.trim() || generateDefaultAreaName(),
+        name: effectiveName,
         layerId,
         coordinates: polygon.coordinates,
         maxZoom: effectiveMaxZoom,
@@ -162,10 +173,11 @@ export const OfflineMapAreaEditorScreen = () => {
     [
       downloadArea,
       effectiveMaxZoom,
+      effectiveName,
       estimate.exceedsMaxTiles,
       exceedsFreeSpace,
       layerId,
-      name,
+      nameErrorKey,
       navigation,
       toaster,
     ],
@@ -189,10 +201,14 @@ export const OfflineMapAreaEditorScreen = () => {
   const headerContent = (
     <VView style={styles.header}>
       <TextInput
+        error={!!nameErrorKey}
         label="offlineMaps:areaEditor.name"
         onChange={setName}
         value={name}
       />
+      {nameErrorKey && (
+        <Text style={styles.estimateTextError} textKey={nameErrorKey} />
+      )}
       <Dropdown
         items={layerItems}
         label="offlineMaps:areaEditor.layer"

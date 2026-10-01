@@ -33,6 +33,8 @@ export default {
     missingTiles: "የጎደሉ ታይሎች፦ {{count}}",
     resumeDownload: "የጎደሉትን አውርድ",
     deleteConfirm: "ከመስመር ውጭ የካርታ አካባቢ '{{name}}' ይሰረዝ?",
+    nameRequired: "ስም ያስፈልጋል",
+    nameDuplicate: "ስሙ በሌላ አካባቢ ጥቅም ላይ ውሏል",
   },
   areaEditor: {
     title: "አዲስ ከመስመር ውጭ የካርታ አካባቢ",

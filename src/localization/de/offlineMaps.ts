@@ -33,6 +33,8 @@ export default {
     missingTiles: "Fehlende Kacheln: {{count}}",
     resumeDownload: "Fehlende herunterladen",
     deleteConfirm: "Das Offline-Kartengebiet '{{name}}' löschen?",
+    nameRequired: "Der Name ist erforderlich",
+    nameDuplicate: "Der Name wird bereits von einem anderen Gebiet verwendet",
   },
   areaEditor: {
     title: "Neues Offline-Kartengebiet",

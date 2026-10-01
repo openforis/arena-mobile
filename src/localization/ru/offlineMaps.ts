@@ -33,6 +33,8 @@ export default {
     missingTiles: "Отсутствующие тайлы: {{count}}",
     resumeDownload: "Загрузить отсутствующие",
     deleteConfirm: "Удалить область офлайн-карты '{{name}}'?",
+    nameRequired: "Название обязательно",
+    nameDuplicate: "Название уже используется другой областью",
   },
   areaEditor: {
     title: "Новая область офлайн-карты",
