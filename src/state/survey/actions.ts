@@ -39,6 +39,11 @@ const fetchCurrentSurveyUserGroup =
       if (surveyId && currentSurveyId !== surveyId) {
         return;
       }
+      // The demo survey doesn't exist in the server: there's no user group to fetch (or to cache).
+      if (survey?.uuid === SurveyService.demoSurveyUuid) {
+        dispatch({ type: CURRENT_SURVEY_USER_GROUP_SET, userGroup: null });
+        return;
+      }
       // Make sure the logged in user is fetched first (e.g. this can be called before
       // RemoteConnectionActions.loginAndSetUser() has completed during app startup),
       // otherwise the current-user-group request may be attempted without a valid session.
