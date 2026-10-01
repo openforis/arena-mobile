@@ -55,20 +55,8 @@ const OfflineMapAreaItem = ({
   const layer = MapLayers.getLayer(area.layerId);
   const missingTiles = area.tilesCount - area.downloadedTilesCount;
   return (
-    <Card style={styles.areaCard}>
-      <HView style={styles.areaHeader}>
-        <Text variant="titleMedium" style={styles.areaName}>
-          {area.name}
-        </Text>
-        <IconButton
-          icon="map-search-outline"
-          onPress={() => onViewPress(area)}
-        />
-        <IconButton
-          icon="trash-can-outline"
-          onPress={() => onDeletePress(area)}
-        />
-      </HView>
+    <Card onPress={() => onViewPress(area)} style={styles.areaCard}>
+      <Text variant="titleLarge">{area.name}</Text>
       <Text
         textKey="offlineMaps:area.surface"
         textParams={{
@@ -96,11 +84,6 @@ const OfflineMapAreaItem = ({
         textKey="offlineMaps:area.size"
         textParams={{ size: Files.toHumanReadableFileSize(area.sizeBytes) }}
       />
-      <Text
-        textKey="offlineMaps:area.lastUpdate"
-        textParams={{ date: formatDate(area.dateModified) }}
-        variant="bodySmall"
-      />
       {missingTiles > 0 && (
         <HView style={styles.missingTilesRow}>
           <Text
@@ -117,6 +100,18 @@ const OfflineMapAreaItem = ({
           />
         </HView>
       )}
+      <HView style={styles.areaFooter}>
+        <Text
+          style={styles.areaLastUpdate}
+          textKey="offlineMaps:area.lastUpdate"
+          textParams={{ date: formatDate(area.dateModified) }}
+          variant="bodySmall"
+        />
+        <IconButton
+          icon="trash-can-outline"
+          onPress={() => onDeletePress(area)}
+        />
+      </HView>
     </Card>
   );
 };

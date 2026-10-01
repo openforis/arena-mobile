@@ -6,6 +6,7 @@ import { StyleProp, StyleSheet, ViewStyle } from "react-native";
 type Props = {
   children?: React.ReactNode;
   contentStyle?: StyleProp<ViewStyle>;
+  onPress?: () => void;
   style?: StyleProp<ViewStyle>;
   subtitleKey?: string;
   titleKey?: string;
@@ -19,7 +20,8 @@ const defaultStyles = StyleSheet.create({
 });
 
 export const Card = (props: Props) => {
-  const { children, contentStyle, style, subtitleKey, titleKey } = props;
+  const { children, contentStyle, onPress, style, subtitleKey, titleKey } =
+    props;
 
   const { t } = useTranslation();
 
@@ -27,7 +29,7 @@ export const Card = (props: Props) => {
   const subtitle = subtitleKey ? t(subtitleKey) : null;
 
   return (
-    <RNPCard style={style}>
+    <RNPCard onPress={onPress} style={style}>
       {title && (
         <RNPCard.Title
           title={title}

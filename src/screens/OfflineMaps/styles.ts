@@ -28,11 +28,11 @@ export default StyleSheet.create({
   areaCard: {
     marginVertical: 4,
   },
-  areaHeader: {
+  areaFooter: {
     justifyContent: "space-between",
     alignItems: "center",
   },
-  areaName: {
+  areaLastUpdate: {
     flex: 1,
   },
   missingTilesRow: {
