@@ -106,6 +106,8 @@ const fetchSurveyRemoteById = async ({
 
 // Each user belongs to at most one UserGroup per survey (see docs/user-group-qualifiers.md).
 // The survey may not be linked to a remote server, in which case there's no group to fetch.
+// The demo survey is bundled with the app and never exists in the server: its remoteId comes
+// from the bundled json and could match the id of an unrelated survey in the server.
 // Any other failure (offline, server error, endpoint not supported yet) is thrown, letting the
 // caller fall back to a locally cached value rather than silently treating it as "no group".
 const fetchCurrentUserGroupRemote = async ({
@@ -113,8 +115,8 @@ const fetchCurrentUserGroupRemote = async ({
 }: {
   survey: Survey & { remoteId?: number };
 }): Promise<UserGroup | null> => {
-  const { remoteId } = survey;
-  if (!remoteId) return null;
+  const { remoteId, uuid } = survey;
+  if (!remoteId || uuid === demoSurveyUuid) return null;
   const { data } = await RemoteService.get(
     `api/survey/${remoteId}/current-user-group`,
   );
