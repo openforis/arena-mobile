@@ -11,6 +11,7 @@ import { SettingsModel, SettingsObject } from "model";
 import { screenKeys } from "screens/screenKeys";
 import { AppService } from "service/appService";
 import {
+  RemoteConnectionSelectors,
   SettingsActions,
   SettingsSelectors,
   useAppDispatch,
@@ -44,6 +45,9 @@ export const SettingsScreen = () => {
   const navigation = useNavigation();
 
   const settingsStored = SettingsSelectors.useSettings();
+  // maps settings (related to offline maps) are available only to system administrators
+  const mapsSettingsAvailable =
+    RemoteConnectionSelectors.useLoggedInUserIsSystemAdmin();
 
   const [state, setState] = useState({ settings: settingsStored });
 
@@ -84,6 +88,7 @@ export const SettingsScreen = () => {
           );
           const isLocationGroup = group === SettingsModel.SettingGroup.location;
           const isMapsGroup = group === SettingsModel.SettingGroup.maps;
+          if (isMapsGroup && !mapsSettingsAvailable) return null;
           if (visibleEntries.length === 0 && !isLocationGroup && !isMapsGroup)
             return null;
           return (

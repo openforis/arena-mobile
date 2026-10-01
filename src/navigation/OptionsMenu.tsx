@@ -13,6 +13,7 @@ import {
   ConfirmActions,
   DataEntryActions,
   DataEntrySelectors,
+  RemoteConnectionSelectors,
   SurveySelectors,
   useAppDispatch,
 } from "state";
@@ -35,6 +36,9 @@ export const OptionsMenu = (props: Props) => {
   const editingRecord =
     DataEntrySelectors.useIsEditingRecord() &&
     screenKey === screenKeys.recordEditor;
+  // offline maps are available only to system administrators
+  const offlineMapsAvailable =
+    RemoteConnectionSelectors.useLoggedInUserIsSystemAdmin();
   const survey = SurveySelectors.useCurrentSurvey();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const fieldManualUrl = survey
@@ -94,14 +98,16 @@ export const OptionsMenu = (props: Props) => {
         </>
       )}
       <Divider />
-      <MenuItem
-        icon="map-marker-down"
-        onPress={() => {
-          navigation.navigate(screenKeys.offlineMaps as never);
-        }}
-        title="offlineMaps:title"
-        toggleMenu={toggleMenu}
-      />
+      {offlineMapsAvailable && (
+        <MenuItem
+          icon="map-marker-down"
+          onPress={() => {
+            navigation.navigate(screenKeys.offlineMaps as never);
+          }}
+          title="offlineMaps:title"
+          toggleMenu={toggleMenu}
+        />
+      )}
       <MenuItem
         icon="cog"
         onPress={() => {
