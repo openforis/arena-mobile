@@ -10,9 +10,12 @@ export default {
   deleteAll: "Delete all",
   deleteAllConfirm:
     "Delete all the offline map areas and all the map tiles stored on this device?",
+  clearCache: "Clear map cache",
+  clearCacheConfirm:
+    "Delete all the map tiles stored on this device (tiles cached while browsing the maps)?",
   noAreas: "No offline map areas downloaded yet",
   storage: {
-    used: "Space used by map tiles:",
+    used: "Space used by map tiles (downloaded areas and cache):",
     free: "Free space on device:",
   },
   layers: {

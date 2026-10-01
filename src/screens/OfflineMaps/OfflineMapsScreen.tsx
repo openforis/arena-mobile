@@ -189,8 +189,15 @@ export const OfflineMapsScreen = () => {
     [confirm, loadAreas],
   );
 
+  const hasAreas = areas.length > 0;
+  // tiles cached while browsing the map can be on the device even without areas
+  const hasTilesStored = (tilesStorageSize ?? 0) > 0;
+
   const onDeleteAllPress = useCallback(async () => {
-    if (await confirm({ messageKey: "offlineMaps:deleteAllConfirm" })) {
+    const messageKey = hasAreas
+      ? "offlineMaps:deleteAllConfirm"
+      : "offlineMaps:clearCacheConfirm";
+    if (await confirm({ messageKey })) {
       setState((prev) => ({ ...prev, deleting: true }));
       try {
         await OfflineMapsService.deleteAllAreas();
@@ -199,7 +206,7 @@ export const OfflineMapsScreen = () => {
       }
       await loadAreas();
     }
-  }, [confirm, loadAreas]);
+  }, [confirm, hasAreas, loadAreas]);
 
   const onResumePress = useCallback(
     async (area: OfflineMapArea) => {
@@ -235,7 +242,10 @@ export const OfflineMapsScreen = () => {
         )}
         <Card style={styles.storageCard}>
           <HView style={styles.storageRow}>
-            <Text textKey="offlineMaps:storage.used" />
+            <Text
+              style={styles.storageLabel}
+              textKey="offlineMaps:storage.used"
+            />
             {tilesStorageSize === null ? (
               <LoadingIcon size={16} />
             ) : (
@@ -255,19 +265,21 @@ export const OfflineMapsScreen = () => {
             onPress={onAddAreaPress}
             textKey="offlineMaps:addArea"
           />
-          {areas.length > 0 && (
+          {(hasAreas || hasTilesStored) && (
             <Button
               color="secondary"
               icon="trash-can-outline"
               loading={deleting}
               disabled={deleting}
               onPress={onDeleteAllPress}
-              textKey="offlineMaps:deleteAll"
+              textKey={
+                hasAreas ? "offlineMaps:deleteAll" : "offlineMaps:clearCache"
+              }
             />
           )}
         </HView>
         {loading && <LoadingIcon />}
-        {!loading && areas.length === 0 && (
+        {!loading && !hasAreas && (
           <Text style={styles.emptyText} textKey="offlineMaps:noAreas" />
         )}
         {areas.map((area) => (
