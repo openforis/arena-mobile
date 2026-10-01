@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Button } from "components/Button";
 import { TextDirection, useTextDirection } from "localization";
 import { DataEntryActions } from "state/dataEntry";
-import { useAppDispatch } from "state/store";
+import { useAppDispatch } from "state/storeHooks";
 
 const styleByTextDirection: Record<string, StyleProp<ViewStyle>> = {
   [TextDirection.ltr]: { alignSelf: "flex-start" },

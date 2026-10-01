@@ -8,7 +8,7 @@ import { DataEntryActions, DataEntrySelectors } from "state/dataEntry";
 import { log } from "utils";
 
 import { VView, View } from "components";
-import { useAppDispatch } from "state/store";
+import { useAppDispatch } from "state/storeHooks";
 
 import { NodeDefFormItem } from "../NodeDefFormItem";
 

@@ -2,7 +2,11 @@ import { useCallback, useState } from "react";
 import { FlatList } from "react-native";
 import { List as RNPList } from "react-native-paper";
 
-import { Button, LoadingIcon, Modal, Text, VView } from "components";
+import { Button } from "../Button";
+import { LoadingIcon } from "../LoadingIcon";
+import { Modal } from "../Modal";
+import { Text } from "../Text";
+import { VView } from "../VView";
 import { useAvailableGpsSources, useGpsDeviceDiscovery, useToast } from "hooks";
 import { ExternalGpsService } from "service/externalGps/ExternalGpsService";
 import { DiscoveredGpsDevice, GpsSourceDescriptor } from "service/externalGps/types";

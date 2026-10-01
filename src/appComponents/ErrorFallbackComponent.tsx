@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { MessageActions } from "state/message";
-import { useAppDispatch } from "state/store";
+import { useAppDispatch } from "state/storeHooks";
 import { log } from "utils/Logger";
 
 type Props = {

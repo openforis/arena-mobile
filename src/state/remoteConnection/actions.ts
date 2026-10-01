@@ -18,66 +18,14 @@ import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { MessageActions } from "../message";
 import { SettingsActions } from "../settings";
 import { SurveyActions } from "../survey";
+import { RemoteConnectionActionTypes } from "./actionTypes";
+import { loginAndSetUser } from "./actionsLoginAndSetUser";
 import { RemoteConnectionSelectors } from "./selectors";
-import { DeviceInfoSelectors } from "state/deviceInfo";
 import { AsyncStorageUtils } from "service/asyncStorage/AsyncStorageUtils";
 import { asyncStorageKeys } from "service/asyncStorage/asyncStorageKeys";
 import { invalidCredentialsError, LoginResponse } from "service/authService";
 
-const LOGGED_OUT = "LOGGED_OUT";
-const USER_LOADING = "USER_LOADING";
-const USER_SET = "USER_SET";
-const USER_PROFILE_ICON_INFO_SET = "USER_PROFILE_ICON_INFO_SET";
-
-const fetchUser = async () => {
-  let user;
-  try {
-    user = await UserService.fetchUser();
-    return user;
-  } catch (error) {
-    // ignore it
-    log.error("Error fetching user", error);
-    return null;
-  }
-};
-
-const loginAndSetUser =
-  ({ onlyIfNotSet = true } = {}) =>
-    async (dispatch: any, getState: any) => {
-      const state = getState();
-      if (onlyIfNotSet) {
-        // if user is already set in store, do not try to fetch it again
-        const userPrev = RemoteConnectionSelectors.selectLoggedUser(state);
-        if (userPrev) {
-          return;
-        }
-      }
-      const deviceInfo = DeviceInfoSelectors.selectDeviceInfo(state);
-      const { isNetworkConnected } = deviceInfo;
-      if (isNetworkConnected) {
-        const refreshToken = await SecureStoreService.getAuthRefreshToken();
-        if (!refreshToken) {
-          // missing information; user cannot be fetched;
-          return;
-        }
-        dispatch({ type: USER_LOADING });
-        const user = await fetchUser();
-        dispatch({ type: USER_SET, user });
-        if (user) {
-          // credentials just proved valid again: drop any auto-sync auth error remembered from
-          // before (see AutoSyncActions.reset)
-          dispatch(AutoSyncActions.reset());
-        }
-      } else {
-        // retrieve user from async storage (if any)
-        const userInAsyncStorage = await AsyncStorageUtils.getItem(
-          asyncStorageKeys.loggedInUser,
-        );
-        if (userInAsyncStorage) {
-          dispatch({ type: USER_SET, user: userInAsyncStorage });
-        }
-      }
-    };
+const { USER_SET, USER_PROFILE_ICON_INFO_SET } = RemoteConnectionActionTypes;
 
 const confirmGoToConnectionToRemoteServer =
   ({ navigation }: any) =>
@@ -363,10 +311,7 @@ const logout = () => (dispatch: any) => {
 };
 
 export const RemoteConnectionActions = {
-  LOGGED_OUT,
-  USER_LOADING,
-  USER_SET,
-  USER_PROFILE_ICON_INFO_SET,
+  ...RemoteConnectionActionTypes,
   confirmGoToConnectionToRemoteServer,
   loginAndSetUser,
   login,

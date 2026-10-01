@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 import { DeviceInfoActions } from "./actions";
-import { useAppDispatch } from "state/store";
+import { useAppDispatch } from "state/storeHooks";
 
 const freeDiskSpaceUpdateDelay = 60000; // 60 sec
 

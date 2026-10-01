@@ -6,7 +6,7 @@ import {
   RemoteConnectionActions,
   RemoteConnectionSelectors,
 } from "state/remoteConnection";
-import { useAppDispatch } from "state/store";
+import { useAppDispatch } from "state/storeHooks";
 import { log } from "utils";
 
 type UserProfileAvatarProps = {

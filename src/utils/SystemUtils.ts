@@ -7,7 +7,7 @@ import * as ExpoScreenOrientation from "expo-screen-orientation";
 
 import { AppInfo, Dates, FileNames, UUIDs } from "@openforis/arena-core";
 
-import { ScreenOrientation } from "model";
+import { ScreenOrientation } from "model/ScreenOrientation";
 import { Environment } from "./Environment";
 import { Files } from "./Files";
 

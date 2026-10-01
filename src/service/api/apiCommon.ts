@@ -2,7 +2,7 @@ import * as FileSystem from "expo-file-system/legacy";
 
 import { UUIDs } from "@openforis/arena-core";
 
-import { Files } from "utils";
+import { Files } from "utils/Files";
 import { APIUtils } from "./apiUtils";
 import { RequestOptions } from "./apiTypes";
 
