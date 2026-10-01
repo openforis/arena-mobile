@@ -29,7 +29,9 @@ export default StyleSheet.create({
     marginTop: 20,
   },
   areaCard: {
-    marginVertical: 4,
+    marginVertical: 6,
+    marginHorizontal: 2,
+    borderWidth: 1,
   },
   areaFooter: {
     justifyContent: "space-between",

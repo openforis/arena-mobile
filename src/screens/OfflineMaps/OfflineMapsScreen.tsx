@@ -1,5 +1,6 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "react-native-paper";
 
 import { DateFormats, Dates } from "@openforis/arena-core";
 
@@ -52,11 +53,20 @@ const OfflineMapAreaItem = ({
   onResumePress: (area: OfflineMapArea) => Promise<void>;
 }>) => {
   const { t } = useTranslation();
+  const theme = useTheme();
+  const cardStyle = useMemo(
+    () => [styles.areaCard, { borderColor: theme.colors.outline }],
+    [theme],
+  );
   const layer = MapLayers.getLayer(area.layerId);
   const missingTiles = area.tilesCount - area.downloadedTilesCount;
   return (
-    <Card onPress={() => onViewPress(area)} style={styles.areaCard}>
-      <Text variant="titleLarge">{area.name}</Text>
+    <Card
+      onPress={() => onViewPress(area)}
+      style={cardStyle}
+      title={area.name}
+      titleVariant="titleLarge"
+    >
       <Text
         textKey="offlineMaps:area.surface"
         textParams={{
@@ -85,7 +95,7 @@ const OfflineMapAreaItem = ({
         textParams={{ size: Files.toHumanReadableFileSize(area.sizeBytes) }}
       />
       {missingTiles > 0 && (
-        <HView style={styles.missingTilesRow}>
+        <HView style={styles.missingTilesRow} transparent>
           <Text
             style={styles.warningText}
             textKey="offlineMaps:area.missingTiles"
@@ -100,7 +110,7 @@ const OfflineMapAreaItem = ({
           />
         </HView>
       )}
-      <HView style={styles.areaFooter}>
+      <HView style={styles.areaFooter} transparent>
         <Text
           style={styles.areaLastUpdate}
           textKey="offlineMaps:area.lastUpdate"
@@ -241,7 +251,7 @@ export const OfflineMapsScreen = () => {
           </Card>
         )}
         <Card style={styles.storageCard}>
-          <HView style={styles.storageRow}>
+          <HView style={styles.storageRow} transparent>
             <Text
               style={styles.storageLabel}
               textKey="offlineMaps:storage.used"
@@ -252,7 +262,7 @@ export const OfflineMapsScreen = () => {
               <Text>{Files.toHumanReadableFileSize(tilesStorageSize)}</Text>
             )}
           </HView>
-          <HView style={styles.storageRow}>
+          <HView style={styles.storageRow} transparent>
             <Text textKey="offlineMaps:storage.free" />
             {freeDiskStorage !== null && (
               <Text>{Files.toHumanReadableFileSize(freeDiskStorage)}</Text>
