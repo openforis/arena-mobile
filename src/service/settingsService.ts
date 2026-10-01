@@ -7,7 +7,8 @@ import { GpsSourceSetting } from "model/GpsSourceSettings";
 import { ThemesSettings } from "model/Themes";
 import { LanguageConstants } from "model/LanguageSettings";
 import { SettingKey, SettingsObject } from "model/SettingsModel";
-import { AMConstants, SystemUtils } from "utils";
+import { AMConstants } from "utils/AMConstants";
+import { SystemUtils } from "utils/SystemUtils";
 
 const defaultSettings: Partial<SettingsObject> = {
   animationsEnabled: true,

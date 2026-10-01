@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
 
-import { useAppDispatch } from "state/store";
+import { useAppDispatch } from "state/storeHooks";
 import { JobMonitorActions } from "./actions";
 import { JobMonitorState } from "./types";
 

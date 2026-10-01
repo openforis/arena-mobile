@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as Battery from "expo-battery";
 
-import { useAppDispatch } from "state/store";
+import { useAppDispatch } from "state/storeHooks";
 import { DeviceInfoActions } from "./actions";
 
 export const useBatteryStateListener = () => {

@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
 import { ConfirmUtils } from "./utils";
-import { useAppDispatch } from "state/store";
+import { useAppDispatch } from "state/storeHooks";
 
 export const useConfirm = () => {
   const dispatch = useAppDispatch();
