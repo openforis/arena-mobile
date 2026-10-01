@@ -12,14 +12,12 @@ export const AppMessageDialog = () => {
     contentParams,
     details,
     detailsParams,
-    onDismiss: onDismissProp,
     title,
   } = useSelector((state: any) => state.message);
 
   const onDismiss = useCallback(() => {
-    onDismissProp?.();
     dispatch(MessageActions.dismissMessage());
-  }, [dispatch, onDismissProp]);
+  }, [dispatch]);
 
   if (!content) return null;
 
