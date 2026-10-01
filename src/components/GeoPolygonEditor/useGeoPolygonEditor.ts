@@ -13,6 +13,7 @@ import { GeoUtils, log } from "utils";
 import { GeoPolygonMidpoint } from "./GeoPolygonMidpointsOverlay";
 
 const GEO_POLYGON_KEY = "geo_polygon_0";
+const MAP_PRESS_ACTION = "press";
 const VERTEX_SNAP_EPSILON = 0.00002;
 const SELECTED_STROKE_COLOR = "#d32f2f";
 const SELECTED_FILL_COLOR = "rgba(211, 47, 47, 0.1)";
@@ -268,7 +269,12 @@ export const useGeoPolygonEditor = ({
   const onMapPress = useCallback(
     (event: MapPressEvent) => {
       if (polygons.length > 0) {
-        onPolygonUnselect();
+        // on Android the press on a polygon or a marker is dispatched to the map too
+        // (with a different action): it must not unselect the polygon just selected
+        const action: string | undefined = event.nativeEvent?.action;
+        if (!action || action === MAP_PRESS_ACTION) {
+          onPolygonUnselect();
+        }
         return;
       }
 
@@ -387,6 +393,7 @@ export const useGeoPolygonEditor = ({
   const onVertexDragStart = useCallback((index: number) => {
     setLocalState((prev) => ({
       ...prev,
+      selectedVertexIndex: index,
       draggingVertexIndex: index,
       draggingVertexCoordinate: null,
     }));
