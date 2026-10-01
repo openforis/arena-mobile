@@ -35,7 +35,10 @@ export const startSessionInit = ({
       `ExternalGps: sending session init packet to ${deviceLabel} (attempt ${attempts}/${maxAttempts})`,
     );
     try {
-      await write(packetHex);
+      const written = await write(packetHex);
+      log.debug(
+        `ExternalGps: session init packet write to ${deviceLabel} returned ${written}`,
+      );
     } catch (error) {
       log.warn(
         "ExternalGps: failed to send session init packet to",

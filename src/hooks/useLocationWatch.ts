@@ -197,6 +197,12 @@ export const useLocationWatch = ({
   const stopLocationWatch = useCallback(() => {
     log.debug("Stopping location watch (stopLocationWatch)");
     if (_stopLocationWatch() && isMountedRef.current) {
+      const lastLocation = lastLocationRef.current;
+      log.info(
+        lastLocation
+          ? `Location watch stopped: using last location (accuracy: ${lastLocation.accuracy})`
+          : "Location watch stopped: no location received, value not set",
+      );
       locationCallback(lastLocationRef.current);
     }
     lastLocationRef.current = null;

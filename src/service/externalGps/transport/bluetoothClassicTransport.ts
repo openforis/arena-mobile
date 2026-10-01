@@ -143,7 +143,23 @@ const connect = async (sourceId: string): Promise<ExternalGpsConnection> => {
       });
 
   const deviceLabel = device.name || address;
-  log.info("ExternalGps: connected to", deviceLabel);
+  log.info(
+    "ExternalGps: connected to",
+    deviceLabel,
+    alreadyConnected
+      ? "(reusing the already open native connection)"
+      : "(new native connection)",
+    // protocolStrings (iOS only): the External Accessory protocols the accessory
+    // advertises - needed to tell which session init packet it expects
+    "- device details:",
+    {
+      address: device.address,
+      deviceClass: device.deviceClass,
+      type: device.type,
+      // not exposed by the library's BluetoothDevice typings
+      protocolStrings: (device as any)._nativeDevice?.protocolStrings,
+    },
+  );
 
   const sessionInitPacketHex = Environment.isIOS
     ? getIosSessionInitPacketHex(device.name || "")
