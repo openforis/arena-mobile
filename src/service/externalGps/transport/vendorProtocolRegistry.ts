@@ -15,6 +15,13 @@ export type VendorRegistryEntry = {
   vendor: string;
   matchesName: (name: string) => boolean;
   iosProtocolString?: string;
+  // Hex-encoded packet the accessory needs to receive over the EASession before it
+  // starts streaming NMEA (iOS only - not needed over Android's plain SPP socket).
+  iosSessionInitPacketHex?: string;
+  // Vendor-documented meters-per-HDOP-unit factor for estimating horizontal accuracy
+  // when the receiver doesn't emit $--GST; overrides the generic estimate in
+  // nmeaToLocationPoint.
+  hdopAccuracyFactorMeters?: number;
 };
 
 const vendorRegistry: VendorRegistryEntry[] = [
@@ -22,6 +29,14 @@ const vendorRegistry: VendorRegistryEntry[] = [
     vendor: "Bad Elf",
     matchesName: (name) => /bad\s*elf/i.test(name),
     iosProtocolString: "com.bad-elf.gps",
+    // Enables GGA + RMC output on the legacy "com.bad-elf.gps" protocol; without it the
+    // accessory stays silent after the session opens. Value taken verbatim from Bad
+    // Elf's iOS integration guide (github.com/BadElf/gps-sdk/wiki).
+    iosSessionInitPacketHex:
+      "24be001105010205310132043301640d0a24be000a0100080b0d0a",
+    // Same guide: HDOP * 3.9 m matches the accuracy shown on the receiver's LCD and
+    // in Bad Elf's own app.
+    hdopAccuracyFactorMeters: 3.9,
   },
   {
     vendor: "Garmin GLO",
@@ -58,8 +73,19 @@ const vendorRegistry: VendorRegistryEntry[] = [
   },
 ];
 
+const findVendorEntry = (deviceName: string): VendorRegistryEntry | undefined =>
+  vendorRegistry.find((entry) => entry.matchesName(deviceName));
+
 export const recognizeVendor = (deviceName: string): string | undefined =>
-  vendorRegistry.find((entry) => entry.matchesName(deviceName))?.vendor;
+  findVendorEntry(deviceName)?.vendor;
+
+export const getIosSessionInitPacketHex = (
+  deviceName: string,
+): string | undefined => findVendorEntry(deviceName)?.iosSessionInitPacketHex;
+
+export const getHdopAccuracyFactorMeters = (
+  deviceName: string,
+): number | undefined => findVendorEntry(deviceName)?.hdopAccuracyFactorMeters;
 
 export const isRecognizedGpsDevice = (deviceName: string): boolean =>
   recognizeVendor(deviceName) !== undefined;
