@@ -4,6 +4,8 @@ export type JobMonitorState = {
     isOpen: boolean;
     titleKey: string;
     cancelButtonTextKey: string;
+    // id of the callbacks (onCancel, onClose) registered outside of the store (see JobMonitorActions.start)
+    callbacksId?: number;
     closeButtonTextKey: string;
     errors?: ValidationFields;
     etaSeconds: number | null;

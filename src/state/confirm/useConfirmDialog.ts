@@ -1,9 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { Arrays } from "@openforis/arena-core";
 
-import { ConfirmActions, ConfirmState, OnConfirmParams } from "./reducer";
+import {
+  ConfirmActions,
+  ConfirmCallbacksRegistry,
+  ConfirmState,
+  OnConfirmParams,
+} from "./reducer";
 import { useAppDispatch } from "state/store";
 
 type ConfirmDialogLocalState = {
@@ -37,7 +42,14 @@ export const useConfirmDialog = (): ConfirmState &
 
   const confirmState: ConfirmState = useSelector((state: any) => state.confirm);
 
-  const { confirmButtonEnableFn, swipeToConfirm } = confirmState;
+  const { showId, swipeToConfirm } = confirmState;
+
+  // looked up once per dialog: the callbacks are removed from the registry as soon as the dialog
+  // is being confirmed or cancelled
+  const confirmButtonEnableFn = useMemo(
+    () => ConfirmCallbacksRegistry.get(showId)?.confirmButtonEnableFn,
+    [showId],
+  );
 
   const [state, setState] = useState(defaultLocalState);
 
