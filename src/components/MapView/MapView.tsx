@@ -3,19 +3,28 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react";
-import { StyleProp, View, ViewStyle } from "react-native";
+import { LayoutChangeEvent, StyleProp, View, ViewStyle } from "react-native";
 import RNMapView, {
   MapPressEvent,
   MapType,
   PanDragEvent,
+  PoiClickEvent,
   Region,
+  UrlTile,
 } from "react-native-maps";
 
-import { LatLng } from "model";
+import { useIsNetworkConnected } from "hooks/useIsNetworkConnected";
+import { LatLng, MapLayerId, MapLayers, MapProvider } from "model";
+import { OfflineMapTilesStorage } from "service/offlineMaps/offlineMapTilesStorage";
+import { SettingsSelectors } from "state/settings/selectors";
+import { Environment } from "utils";
+
 import { IconButton } from "../IconButton";
+import { Text } from "../Text";
 import styles from "./styles";
 
 type EdgePadding = {
@@ -36,9 +45,14 @@ type Props = {
   fitToCoordinatesOptions?: FitToCoordinatesOptions;
   fitOnlyOnce?: boolean;
   initialRegion: Region;
+  // when specified, the given free map layer is used, ignoring the map provider in the settings
+  layerId?: MapLayerId;
   onMapReady?: () => void;
   onPanDrag?: (event: PanDragEvent) => void;
+  // called (instead of onPress) when a point of interest of the base map is pressed
+  onPoiClick?: (event: PoiClickEvent) => void;
   onPress?: (event: MapPressEvent) => void;
+  onRegionChangeComplete?: (region: Region) => void;
   showMapTypeSelector?: boolean;
   style?: StyleProp<ViewStyle>;
   toolbarEnabled?: boolean;
@@ -53,6 +67,18 @@ const defaultEdgePadding: EdgePadding = {
 
 const mapTypes: MapType[] = ["standard", "satellite", "hybrid"];
 
+// pre-fetched tiles must not expire: they would be re-downloaded in background when online
+const TILE_CACHE_MAX_AGE_SECONDS = 365 * 24 * 60 * 60;
+
+// time the name of the layer is shown after switching layer
+const LAYER_NAME_VISIBILITY_MILLIS = 1500;
+
+const getNextItem = <T,>(items: T[], current: T): T => {
+  const currentIndex = items.indexOf(current);
+  const nextIndex = (currentIndex + 1) % items.length;
+  return items[nextIndex] ?? items[0]!;
+};
+
 export const MapView = forwardRef<RNMapView | null, Props>(
   (
     {
@@ -60,12 +86,15 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       fitOnlyOnce = true,
       fitToCoordinatesOnReady,
       fitToCoordinatesOptions,
+      layerId: layerIdProp,
       onMapReady,
+      onRegionChangeComplete,
       showMapTypeSelector = true,
       style,
       initialRegion,
       onPress,
       onPanDrag,
+      onPoiClick,
       toolbarEnabled,
     },
     ref,
@@ -74,6 +103,21 @@ export const MapView = forwardRef<RNMapView | null, Props>(
     const [isMapReady, setIsMapReady] = useState(false);
     const hasAppliedFitRef = useRef(false);
     const [mapType, setMapType] = useState<MapType>("standard");
+
+    const settings = SettingsSelectors.useSettings();
+    const useFreeLayers =
+      !!layerIdProp || settings.mapProvider === MapProvider.freeLayers;
+    const [selectedLayerId, setSelectedLayerId] = useState<MapLayerId>(
+      () => layerIdProp ?? settings.mapLayer,
+    );
+    const layer = MapLayers.getLayer(layerIdProp ?? selectedLayerId);
+    const [attributionHeight, setAttributionHeight] = useState(0);
+    const [layerNameVisible, setLayerNameVisible] = useState(false);
+    const layerNameTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+      null,
+    );
+    const networkConnected = useIsNetworkConnected();
+    const offlineMode = !networkConnected;
 
     useImperativeHandle<RNMapView | null, RNMapView | null>(
       ref,
@@ -101,18 +145,68 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       isMapReady,
     ]);
 
+    const onAttributionLayout = useCallback((event: LayoutChangeEvent) => {
+      setAttributionHeight(Math.ceil(event.nativeEvent.layout.height));
+    }, []);
+
+    // the layer attribution is shown at the bottom of the map: the padding moves the logo
+    // of the native map (Google/Apple) above it, so that it is not covered;
+    // the padding must be set only when the map is ready (on Android it throws an error otherwise)
+    const mapPadding = useMemo(
+      () =>
+        isMapReady && useFreeLayers && attributionHeight > 0
+          ? { top: 0, right: 0, bottom: attributionHeight, left: 0 }
+          : undefined,
+      [attributionHeight, isMapReady, useFreeLayers],
+    );
+
     const onMapReadyCallback = useCallback(() => {
       setIsMapReady(true);
       onMapReady?.();
     }, [onMapReady]);
 
-    const handleMapTypeChange = useCallback(() => {
-      setMapType((prevMapType) => {
-        const currentIndex = mapTypes.indexOf(prevMapType);
-        const nextIndex = (currentIndex + 1) % mapTypes.length;
-        return mapTypes[nextIndex] ?? "standard";
-      });
+    // shows the name of the layer just selected for a short time
+    const showLayerName = useCallback(() => {
+      if (layerNameTimeoutRef.current) {
+        clearTimeout(layerNameTimeoutRef.current);
+      }
+      setLayerNameVisible(true);
+      layerNameTimeoutRef.current = setTimeout(() => {
+        layerNameTimeoutRef.current = null;
+        setLayerNameVisible(false);
+      }, LAYER_NAME_VISIBILITY_MILLIS);
     }, []);
+
+    useEffect(
+      () => () => {
+        if (layerNameTimeoutRef.current) {
+          clearTimeout(layerNameTimeoutRef.current);
+        }
+      },
+      [],
+    );
+
+    const handleMapTypeChange = useCallback(() => {
+      showLayerName();
+      if (useFreeLayers) {
+        setSelectedLayerId((prevLayerId) =>
+          getNextItem(
+            MapLayers.layers.map((l) => l.id),
+            prevLayerId,
+          ),
+        );
+      } else {
+        setMapType((prevMapType) => getNextItem(mapTypes, prevMapType));
+      }
+    }, [showLayerName, useFreeLayers]);
+
+    const layerNameKey = useFreeLayers
+      ? `offlineMaps:layers.${layer.id}`
+      : `offlineMaps:mapTypes.${mapType}`;
+
+    // on Android the Google base map is hidden (mapType "none"); on iOS the UrlTile replaces the Apple map content
+    const effectiveMapType: MapType =
+      useFreeLayers && Environment.isAndroid ? "none" : mapType;
 
     return (
       <View style={styles.container}>
@@ -122,13 +216,57 @@ export const MapView = forwardRef<RNMapView | null, Props>(
           initialRegion={initialRegion}
           onPress={onPress}
           onPanDrag={onPanDrag}
+          onPoiClick={onPoiClick}
           onMapReady={onMapReadyCallback}
-          mapType={mapType}
+          onRegionChangeComplete={onRegionChangeComplete}
+          mapPadding={mapPadding}
+          mapType={effectiveMapType}
           toolbarEnabled={toolbarEnabled}
         >
+          {useFreeLayers && (
+            <UrlTile
+              // remount the tile overlay when the layer or the network status change
+              key={`${layer.id}_${offlineMode}`}
+              urlTemplate={layer.urlTemplate}
+              minimumZ={layer.minZoom}
+              maximumZ={layer.maxZoom}
+              maximumNativeZ={layer.maxZoom}
+              offlineMode={offlineMode}
+              shouldReplaceMapContent
+              tileCacheMaxAge={TILE_CACHE_MAX_AGE_SECONDS}
+              tileCachePath={OfflineMapTilesStorage.getLayerTileCachePath(
+                layer.id,
+              )}
+              zIndex={-1}
+            />
+          )}
           {children}
         </RNMapView>
-        {showMapTypeSelector && (
+        {useFreeLayers && (
+          <View
+            onLayout={onAttributionLayout}
+            pointerEvents="none"
+            style={styles.attribution}
+          >
+            <Text style={styles.attributionText} numberOfLines={2}>
+              {layer.attribution}
+            </Text>
+          </View>
+        )}
+        {useFreeLayers && offlineMode && (
+          <View style={styles.offlineBadge} pointerEvents="none">
+            <Text
+              style={styles.offlineBadgeText}
+              textKey="offlineMaps:offlineMode"
+            />
+          </View>
+        )}
+        {layerNameVisible && (
+          <View style={styles.layerNameContainer} pointerEvents="none">
+            <Text style={styles.layerName} textKey={layerNameKey} />
+          </View>
+        )}
+        {showMapTypeSelector && !layerIdProp && (
           <View style={styles.mapTypeSelector}>
             <IconButton
               icon="layers-outline"

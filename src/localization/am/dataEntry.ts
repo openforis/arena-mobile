@@ -223,10 +223,11 @@ export default {
   geo: {
     drawPolygon: "ፖሊጎን ይሳሉ",
     editPolygon: "ፖሊጎን ያርትዑ",
-    selectPolygonInstruction: "ፖሊጎን ለመንቀሳቀስ ላይ ይንኩ",
-    editPolygonInstructions: `ጫፍ ወይም መካከለኛ ነጥብ ይምረጡ፣ ከዚያ:
-- ለመንቀሳቀስ ጫፉን ረጅም ጊዜ ተጭነው ይጎትቱት።  
-- ለማጥፋት '$t(dataEntry:geo.deleteSelectedPoint)' ይጫኑ።`,
+    selectPolygonInstruction: "ፖሊጎኑን ለመምረጥ ይንኩት",
+    selectPointInstructions: `- ነጥብ ለመምረጥ ይንኩት።  
+- አዲስ ነጥብ ለመጨመር መካከለኛ ነጥብ ይንኩ።`,
+    editPolygonInstructions:
+      "የተመረጠውን ነጥብ ለማንቀሳቀስ ረጅም ጊዜ ተጭነው ይጎትቱት።",
     tapToAddPoints: `ነጥቦች ለመጨመር በካርታው ላይ ይንኩ።  
 ከጨረሱ '$t(common:stop)' ይጫኑ።`,
     deleteSelectedPoint: "የተመረጠውን ነጥብ ሰርዝ",

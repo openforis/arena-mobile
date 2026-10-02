@@ -7,6 +7,7 @@ import dataEntry from "./dataEntry";
 import device from "./device";
 import loginInfo from "./loginInfo";
 import job from "./job";
+import offlineMaps from "./offlineMaps";
 import permissions from "./permissions";
 import recordsList from "./recordsList";
 import settingsRemoteConnection from "./settingsRemoteConnection";
@@ -24,6 +25,7 @@ export default {
   device,
   loginInfo,
   job,
+  offlineMaps,
   permissions,
   recordsList,
   settings,
