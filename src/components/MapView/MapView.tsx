@@ -3,10 +3,11 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react";
-import { StyleProp, View, ViewStyle } from "react-native";
+import { LayoutChangeEvent, StyleProp, View, ViewStyle } from "react-native";
 import RNMapView, {
   MapPressEvent,
   MapType,
@@ -107,6 +108,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       () => layerIdProp ?? settings.mapLayer,
     );
     const layer = MapLayers.getLayer(layerIdProp ?? selectedLayerId);
+    const [attributionHeight, setAttributionHeight] = useState(0);
     const networkConnected = useIsNetworkConnected();
     const offlineMode = !networkConnected;
 
@@ -135,6 +137,20 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       fitToCoordinatesOptions?.edgePadding,
       isMapReady,
     ]);
+
+    const onAttributionLayout = useCallback((event: LayoutChangeEvent) => {
+      setAttributionHeight(Math.ceil(event.nativeEvent.layout.height));
+    }, []);
+
+    // the layer attribution is shown at the bottom of the map: the padding moves the logo
+    // of the native map (Google/Apple) above it, so that it is not covered
+    const mapPadding = useMemo(
+      () =>
+        useFreeLayers && attributionHeight > 0
+          ? { top: 0, right: 0, bottom: attributionHeight, left: 0 }
+          : undefined,
+      [attributionHeight, useFreeLayers],
+    );
 
     const onMapReadyCallback = useCallback(() => {
       setIsMapReady(true);
@@ -169,6 +185,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
           onPoiClick={onPoiClick}
           onMapReady={onMapReadyCallback}
           onRegionChangeComplete={onRegionChangeComplete}
+          mapPadding={mapPadding}
           mapType={effectiveMapType}
           toolbarEnabled={toolbarEnabled}
         >
@@ -192,7 +209,11 @@ export const MapView = forwardRef<RNMapView | null, Props>(
           {children}
         </RNMapView>
         {useFreeLayers && (
-          <View style={styles.attribution} pointerEvents="none">
+          <View
+            onLayout={onAttributionLayout}
+            pointerEvents="none"
+            style={styles.attribution}
+          >
             <Text style={styles.attributionText} numberOfLines={2}>
               {layer.attribution}
             </Text>
