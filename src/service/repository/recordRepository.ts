@@ -519,6 +519,23 @@ const updateRecordsDateModifiedRemote = async ({
   });
 };
 
+// uuids of the files referenced by the content stored in the device for the given records
+const fetchRecordsFileUuids = async ({
+  surveyId,
+  recordUuids,
+}: any): Promise<string[]> => {
+  const rows = await dbClient.many(
+    `SELECT DISTINCT json_extract(node.value, '$.value.fileUuid') AS file_uuid
+     FROM record, json_each(record.content, '$.nodes') AS node
+     WHERE record.survey_id = ? 
+       AND record.uuid IN (${DbUtils.quoteValues(recordUuids)})
+       AND json_valid(record.content)
+       AND json_extract(node.value, '$.value.fileUuid') IS NOT NULL`,
+    [surveyId],
+  );
+  return rows.map((row: any) => row.file_uuid);
+};
+
 const updateRecordsMergedInto = async ({ surveyId, mergedRecordsMap }: any) => {
   await dbClient.transaction(async () => {
     for (const [uuid, mergedIntoRecordUuid] of Object.entries(mergedRecordsMap))
@@ -698,6 +715,7 @@ export const RecordRepository = {
   updateRecordsDateSync,
   updateRecordsDateModifiedRemote,
   updateRecordsMergedInto,
+  fetchRecordsFileUuids,
   fixRecordCycle,
   deleteRecords,
 };

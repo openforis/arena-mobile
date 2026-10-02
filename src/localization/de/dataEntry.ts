@@ -12,6 +12,8 @@ export default {
     batteryDataWarning:
       "Kann Akku- und Datenverbrauch erhöhen, wenn kein WLAN genutzt wird",
     syncNow: "Jetzt synchronisieren",
+    recordSyncInProgress:
+      "Dieser Datensatz wird mit dem Server synchronisiert. Bitte einen Moment warten",
     status: {
       syncedTooltip: "Alle Datensätze sind mit dem Server synchronisiert",
       pendingTooltip:
