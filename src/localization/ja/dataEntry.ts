@@ -12,6 +12,8 @@ export default {
     batteryDataWarning:
       "Wi-Fi以外の接続ではバッテリーとデータ使用量が増える場合があります",
     syncNow: "今すぐ同期",
+    recordSyncInProgress:
+      "このレコードはサーバーと同期中です。しばらくお待ちください",
     status: {
       syncedTooltip: "すべてのレコードがサーバーと同期しています",
       pendingTooltip: "同期が必要なレコードがあります。自動的に送信されます",

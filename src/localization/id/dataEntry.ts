@@ -12,6 +12,8 @@ export default {
     batteryDataWarning:
       "Dapat meningkatkan penggunaan baterai dan data saat tidak menggunakan Wi-Fi",
     syncNow: "Sinkronkan sekarang",
+    recordSyncInProgress:
+      "Catatan ini sedang disinkronkan dengan server. Mohon tunggu sebentar",
     status: {
       syncedTooltip: "Semua catatan telah disinkronkan dengan server",
       pendingTooltip:

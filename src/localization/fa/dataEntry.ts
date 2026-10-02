@@ -12,6 +12,8 @@ export default {
     batteryDataWarning:
       "در صورت عدم اتصال به Wi-Fi ممکن است مصرف باتری و داده افزایش یابد",
     syncNow: "همگام‌سازی اکنون",
+    recordSyncInProgress:
+      "این رکورد در حال همگام‌سازی با سرور است. لطفاً کمی صبر کنید",
     status: {
       syncedTooltip: "همه رکوردها با سرور همگام‌سازی شده‌اند",
       pendingTooltip:
