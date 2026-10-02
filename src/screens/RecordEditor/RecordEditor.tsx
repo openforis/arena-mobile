@@ -3,7 +3,7 @@ import { Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import MenuDrawer from "react-native-side-drawer";
 
-import { HView, VView, View } from "components";
+import { HView, Text, VView, View } from "components";
 import { useIsTextDirectionRtl } from "localization";
 import { RecordEditViewMode } from "model";
 import { useBackHandler, useNavigationIsFocused } from "hooks";
@@ -34,6 +34,9 @@ export const RecordEditor = () => {
   const navigation = useNavigation();
   const isNavigationFocused = useNavigationIsFocused();
   const isRtl = useIsTextDirectionRtl();
+  // the record is read-only while auto-sync merges it with its server copy - see
+  // DataEntrySelectors.selectCanEditRecord
+  const recordSyncInProgress = DataEntrySelectors.useRecordSyncInProgress();
 
   const onBack = useCallback(() => {
     if (isNavigationFocused) {
@@ -61,6 +64,13 @@ export const RecordEditor = () => {
         isPhone && pageSelectorOpen ? "none" : undefined
       }
     >
+      {recordSyncInProgress && (
+        <Text
+          style={styles.syncInProgressBanner}
+          textKey="dataEntry:autoSync.recordSyncInProgress"
+          variant="bodySmall"
+        />
+      )}
       {viewMode === RecordEditViewMode.form ? (
         <RecordPageForm />
       ) : (

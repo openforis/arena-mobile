@@ -30,6 +30,8 @@ import { ConfirmActions, ConfirmUtils, OnConfirmParams } from "../confirm";
 import { JobMonitorActions } from "../jobMonitor";
 import { MessageActions } from "../message";
 import { SurveySelectors } from "../survey";
+import { DataEntryActionsRecordSync } from "./actionsRecordSync";
+import { DataEntrySelectors } from "./selectors";
 
 const { t } = i18n;
 
@@ -542,6 +544,7 @@ const showMergedRecordsMessage = async ({
 // marked as fully downloaded, before anything reloads the records list.
 // Returns true only if the records have actually been fetched and stored in the device (the
 // fetch can fail, be canceled, or not be allowed by the survey - none of which is thrown).
+// When silent (auto-sync), nothing is shown: neither the fetch progress, nor the final message.
 const fetchMergedRecordsAndNotify = async ({
   dispatch,
   survey,
@@ -549,19 +552,69 @@ const fetchMergedRecordsAndNotify = async ({
   cycle,
   recordUuids,
   mergeKeepLocalOriginRecordUuids,
+  silent = false,
 }: any): Promise<boolean> => {
   let fetched = false;
   await dispatch(
     fetchRecordsFromServer({
       recordUuids,
       mergeKeepLocalOriginRecordUuids,
+      silent,
       onImportComplete: async () => {
         fetched = true;
-        await showMergedRecordsMessage({ dispatch, survey, lang, cycle, recordUuids });
+        if (!silent) {
+          await showMergedRecordsMessage({ dispatch, survey, lang, cycle, recordUuids });
+        }
       },
     }),
   );
   return fetched;
+};
+
+// the records merged with their own server copy whose local copy can be replaced right away
+// with the merged version. When the merge wasn't started by the user (auto-sync), the record open
+// in the editor can be replaced only if it's been made read-only for this (see lockOpenRecordForSync);
+// otherwise (e.g. it's been opened after the upload started) the editor may hold edits the merged
+// version doesn't have, which the next edit would write over it. It's then left as it is (still
+// "modified on the server too"), to be merged again later.
+const getMergedSameRecordUuidsToFetch = ({
+  getState,
+  mergedSameRecordUuids,
+  silent,
+}: any): string[] => {
+  if (!silent) return mergedSameRecordUuids;
+  const state = getState();
+  if (DataEntrySelectors.selectRecordSyncInProgress(state)) return mergedSameRecordUuids;
+  const openRecordUuid = DataEntrySelectors.selectRecord(state)?.uuid;
+  return mergedSameRecordUuids.filter((uuid: string) => uuid !== openRecordUuid);
+};
+
+// replaces the local copy of the given records with the version merged on the server, without
+// showing anything; if one of them is open in the editor (read-only meanwhile, see above), the
+// editor is then given the merged version too
+const fetchMergedSameRecordsSilently = async ({
+  dispatch,
+  getState,
+  survey,
+  lang,
+  cycle,
+  recordUuids,
+}: any) => {
+  await DataEntryActionsRecordSync.runReplacingRecords(recordUuids, async () => {
+    const fetched = await fetchMergedRecordsAndNotify({
+      dispatch,
+      survey,
+      lang,
+      cycle,
+      recordUuids,
+      mergeKeepLocalOriginRecordUuids: recordUuids,
+      silent: true,
+    });
+    const openRecordUuid = DataEntrySelectors.selectRecord(getState())?.uuid;
+    if (fetched && openRecordUuid && recordUuids.includes(openRecordUuid)) {
+      await dispatch(DataEntryActionsRecordSync.reloadOpenRecord());
+    }
+  });
 };
 
 export const exportRecords =
@@ -581,15 +634,25 @@ export const exportRecords =
       const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
       const surveyId = survey.id;
 
-      const onJobComplete = async (jobComplete: any) => {
+      const onUploadComplete = async (jobComplete: any) => {
         const { result } = jobComplete;
-        const { mergedRecordsMap, mergedSameRecordUuids } = result;
+        const { mergedRecordsMap, mergedSameRecordUuids = [] } = result;
 
-        await RecordService.confirmRecordsSyncedWithRemote({
-          survey,
-          cycle,
-          recordUuids,
-        });
+        // records merged with their own server copy are left out: the local copy doesn't match the
+        // server's until the merged version is fetched (below), which stamps the sync baseline itself.
+        // Stamping it here, if that fetch then doesn't go through the record would look "modified
+        // locally" only, and the next (plain overwrite) upload of its pre-merge content would delete
+        // from the server what the other side added.
+        const recordUuidsSynced = recordUuids.filter(
+          (uuid: string) => !mergedSameRecordUuids.includes(uuid),
+        );
+        if (recordUuidsSynced.length > 0) {
+          await RecordService.confirmRecordsSyncedWithRemote({
+            survey,
+            cycle,
+            recordUuids: recordUuidsSynced,
+          });
+        }
         if (!Objects.isEmpty(mergedRecordsMap)) {
           // the local record(s) got merged into a different, already existing record on the
           // server (same key(s), different uuid). From the user's point of view it's still the
@@ -607,6 +670,7 @@ export const exportRecords =
             cycle,
             recordUuids: mergedIntoRecordUuids,
             mergeKeepLocalOriginRecordUuids: mergedIntoRecordUuids,
+            silent,
           });
           if (mergedRecordsFetched) {
             // hide the local rows (merged_into_record_uuid set = excluded from the records list)
@@ -622,7 +686,21 @@ export const exportRecords =
             );
           }
         }
-        if (mergedSameRecordUuids?.length > 0) {
+        const mergedSameRecordUuidsToFetch = getMergedSameRecordUuidsToFetch({
+          getState,
+          mergedSameRecordUuids,
+          silent,
+        });
+        if (silent && mergedSameRecordUuidsToFetch.length > 0) {
+          await fetchMergedSameRecordsSilently({
+            dispatch,
+            getState,
+            survey,
+            lang,
+            cycle,
+            recordUuids: mergedSameRecordUuidsToFetch,
+          });
+        } else if (mergedSameRecordUuidsToFetch.length > 0) {
           // the server combined this device's edits with newer edits already on the server: refresh the
           // local copy so it reflects the merged content, not this device's pre-merge version. The record
           // uuid didn't change, so keep it tagged as "local" (still shows up under "records in device")
@@ -632,12 +710,17 @@ export const exportRecords =
             survey,
             lang,
             cycle,
-            recordUuids: mergedSameRecordUuids,
-            mergeKeepLocalOriginRecordUuids: mergedSameRecordUuids,
+            recordUuids: mergedSameRecordUuidsToFetch,
+            mergeKeepLocalOriginRecordUuids: mergedSameRecordUuidsToFetch,
           });
         }
         await onJobCompleteParam?.(jobComplete);
       };
+
+      const onJobComplete = (jobComplete: any) =>
+        DataEntryActionsRecordSync.runAsPostUploadProcessing(() =>
+          onUploadComplete(jobComplete),
+        );
 
       log.debug(
         `exportRecords: starting (recordUuids=${recordUuids?.length ?? 0}, onlyLocally=${onlyLocally}, onlyRemote=${onlyRemote}, silent=${silent})`,

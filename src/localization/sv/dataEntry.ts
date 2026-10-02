@@ -12,6 +12,8 @@ export default {
     batteryDataWarning:
       "Kan öka batteri- och dataanvändningen när du inte är ansluten till Wi-Fi",
     syncNow: "Synkronisera nu",
+    recordSyncInProgress:
+      "Den här posten synkroniseras med servern. Vänta ett ögonblick",
     status: {
       syncedTooltip: "Alla poster är synkroniserade med servern",
       pendingTooltip:

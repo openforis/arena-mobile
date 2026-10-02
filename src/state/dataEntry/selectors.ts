@@ -42,6 +42,9 @@ const selectIsEditingRecord = (state: any): boolean =>
 const selectRecordEditLocked = (state: any): boolean =>
   !!getDataEntryState(state).recordEditLocked;
 
+const selectRecordSyncInProgress = (state: any): boolean =>
+  !!getDataEntryState(state).recordSyncInProgress;
+
 const selectIsRecordInDefaultCycle = (state: any): boolean => {
   const survey = SurveySelectors.selectCurrentSurvey(state);
   const defaultCycle = survey ? Surveys.getDefaultCycleKey(survey) : null;
@@ -57,7 +60,9 @@ const selectRecordEditLockAvailable = (state: any) =>
 const selectCanEditRecord = (state: any) => {
   const editLocked = selectRecordEditLocked(state);
   const recordInDefaultCycle = selectIsRecordInDefaultCycle(state);
-  return !editLocked && recordInDefaultCycle;
+  return (
+    !editLocked && recordInDefaultCycle && !selectRecordSyncInProgress(state)
+  );
 };
 
 const selectRecordRootNodeUuid = (state: any): string | undefined => {
@@ -523,6 +528,7 @@ export const DataEntrySelectors = {
   selectCurrentPageEntityRelevantChildDefs,
   selectRecordEditLocked,
   selectCanEditRecord,
+  selectRecordSyncInProgress,
   selectRecordNodePointerEditable,
 
   useRecord: () => useSelector(selectRecord),
@@ -532,6 +538,7 @@ export const DataEntrySelectors = {
   useRecordEditLocked: () => useSelector(selectRecordEditLocked),
 
   useCanEditRecord: () => useSelector(selectCanEditRecord),
+  useRecordSyncInProgress: () => useSelector(selectRecordSyncInProgress),
 
   useIsEditingRecord: () => useSelector(selectIsEditingRecord),
 

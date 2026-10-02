@@ -9,6 +9,7 @@ const initialState: DataEntryState = {
   record: undefined,
   recordEditLockAvailable: false,
   recordEditLocked: false,
+  recordSyncInProgress: false,
   recordCurrentPageEntity: undefined,
   recordPageSelectorMenuOpen: false,
   linkToPreviousCycleRecord: false,
@@ -45,6 +46,16 @@ const actionHandlers = {
   }) => ({
     ...state,
     recordEditLocked: action.locked,
+  }),
+  [DataEntryActionTypes.RECORD_SYNC_IN_PROGRESS_SET]: ({
+    state,
+    action,
+  }: {
+    state: DataEntryState;
+    action: any;
+  }) => ({
+    ...state,
+    recordSyncInProgress: action.inProgress,
   }),
   [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_LOAD]: ({
     state,

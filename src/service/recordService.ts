@@ -15,7 +15,7 @@ import {
   RecordSummaries,
   RecordSyncStatus,
 } from "model";
-import { ArrayUtils } from "utils";
+import { ArrayUtils, log, PromiseUtils } from "utils";
 
 import { RecordRepository } from "./repository/recordRepository";
 import { RecordRemoteService } from "./recordRemoteService";
@@ -371,6 +371,38 @@ const confirmRecordsSyncedWithRemote = async ({
   }
 };
 
+const FILES_EXISTENCE_CHECK_CONCURRENCY = 10;
+
+// uuids of the files of the given records already stored in the device: when fetching those
+// records from the server again, their content doesn't need to be downloaded another time (a
+// file uuid always identifies the same content). Best effort: nothing is excluded on errors.
+const findFileUuidsInDevice = async ({
+  survey,
+  recordUuids,
+}: any): Promise<string[]> => {
+  try {
+    const surveyId = survey.id;
+    const fileUuids = await RecordRepository.fetchRecordsFileUuids({
+      surveyId,
+      recordUuids,
+    });
+    const fileUuidsInDevice: string[] = [];
+    await PromiseUtils.runWithConcurrency({
+      items: fileUuids,
+      concurrency: FILES_EXISTENCE_CHECK_CONCURRENCY,
+      task: async (fileUuid) => {
+        if (!(await RecordFileService.recordFileMissing({ surveyId, fileUuid }))) {
+          fileUuidsInDevice.push(fileUuid);
+        }
+      },
+    });
+    return fileUuidsInDevice;
+  } catch (error) {
+    log.warn(`error finding the record files already in the device: ${error}`);
+    return [];
+  }
+};
+
 const findRecordSummariesByKeys = async ({
   survey,
   cycle,
@@ -507,6 +539,7 @@ export const RecordService = {
   updateRecordsDateModifiedRemote,
   confirmRecordsSyncedWithRemote,
   updateRecordsMergedInto,
+  findFileUuidsInDevice,
   deleteRecords,
   fixRecordCycle,
   cloneRecordsIntoDefaultCycle,

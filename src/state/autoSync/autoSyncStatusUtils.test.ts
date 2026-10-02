@@ -3,6 +3,7 @@ import { RecordSyncStatus } from "../../model/RecordSyncStatus";
 import {
   computeAutoSyncStatus,
   hasConflictingKeysWithMergeNotAllowed,
+  isAutoMergeAllowed,
 } from "./autoSyncStatusUtils";
 import { AutoSyncStatus } from "./types";
 
@@ -14,12 +15,19 @@ jest.mock("@openforis/arena-core", () => ({
   Surveys: {
     isRecordsMergeWithSameKeysAllowed: (survey: any) =>
       survey?.props?.security?.allowRecordsMergeWithSameKeys ?? true,
+    isVisibleInMobile: (survey: any) => survey?.props?.security?.visibleInMobile ?? true,
+    isRecordsDownloadInMobileAllowed: (survey: any) =>
+      survey?.props?.security?.allowRecordsDownloadInMobile ?? true,
   },
 }));
 
 const surveyMergeAllowed = { props: {} };
 const surveyMergeNotAllowed = {
   props: { security: { allowRecordsMergeWithSameKeys: false } },
+};
+
+const surveyDownloadNotAllowed = {
+  props: { security: { allowRecordsDownloadInMobile: false } },
 };
 
 const recordsWithStatuses = (...statuses: string[]) =>
@@ -90,6 +98,53 @@ describe("computeAutoSyncStatus", () => {
         survey: surveyMergeAllowed,
       }),
     ).toBe(AutoSyncStatus.error);
+  });
+});
+
+describe("computeAutoSyncStatus with auto-sync enabled", () => {
+  const sameRecordConflicts = recordsWithStatuses(
+    RecordSyncStatus.modifiedLocallyAndRemotely,
+    RecordSyncStatus.modifiedRemotely,
+  );
+
+  test("records modified on the server too are pending: they get merged automatically", () => {
+    expect(
+      computeAutoSyncStatus({
+        records: sameRecordConflicts,
+        survey: surveyMergeAllowed,
+        autoSyncEnabled: true,
+      }),
+    ).toBe(AutoSyncStatus.pending);
+  });
+
+  test("they still need an explicit merge when the merged record can't be downloaded", () => {
+    expect(
+      computeAutoSyncStatus({
+        records: sameRecordConflicts,
+        survey: surveyDownloadNotAllowed,
+        autoSyncEnabled: true,
+      }),
+    ).toBe(AutoSyncStatus.error);
+  });
+
+  test("conflicting keys still need an explicit merge", () => {
+    expect(
+      computeAutoSyncStatus({
+        records: recordsWithStatuses(RecordSyncStatus.conflictingKeys),
+        survey: surveyMergeAllowed,
+        autoSyncEnabled: true,
+      }),
+    ).toBe(AutoSyncStatus.error);
+  });
+});
+
+describe("isAutoMergeAllowed", () => {
+  test("only with auto-sync enabled and records download allowed", () => {
+    expect(isAutoMergeAllowed({ autoSyncEnabled: true, survey: surveyMergeAllowed })).toBe(true);
+    expect(isAutoMergeAllowed({ autoSyncEnabled: false, survey: surveyMergeAllowed })).toBe(false);
+    expect(
+      isAutoMergeAllowed({ autoSyncEnabled: true, survey: surveyDownloadNotAllowed }),
+    ).toBe(false);
   });
 });
 
