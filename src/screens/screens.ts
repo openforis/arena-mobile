@@ -1,6 +1,9 @@
 import HomeScreen from "./HomeScreen";
 
 import AboutScreen from "./AboutScreen";
+import OfflineMapAreaEditor from "./OfflineMapAreaEditor";
+import OfflineMapAreaViewer from "./OfflineMapAreaViewer";
+import OfflineMaps from "./OfflineMaps";
 import RecordEditor from "./RecordEditor";
 import RecordsList from "./RecordsList";
 import RecordValidationReport from "./RecordValidationReport";
@@ -28,6 +31,24 @@ export const screens = {
     ...screenDefaults,
     title: "common:appTitle",
     component: HomeScreen,
+  },
+  [screenKeys.offlineMaps]: {
+    ...screenDefaults,
+    hasOptionsMenuVisible: false,
+    title: "offlineMaps:title",
+    component: OfflineMaps,
+  },
+  [screenKeys.offlineMapAreaEditor]: {
+    ...screenDefaults,
+    hasOptionsMenuVisible: false,
+    title: "offlineMaps:areaEditor.title",
+    component: OfflineMapAreaEditor,
+  },
+  [screenKeys.offlineMapAreaViewer]: {
+    ...screenDefaults,
+    hasOptionsMenuVisible: false,
+    title: "offlineMaps:areaViewer.title",
+    component: OfflineMapAreaViewer,
   },
   [screenKeys.recordsList]: {
     ...screenDefaults,

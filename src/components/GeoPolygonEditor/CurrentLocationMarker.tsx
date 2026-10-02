@@ -5,21 +5,21 @@ import { LatLng } from "model";
 
 import { View } from "../View";
 
-import styles from "./styles";
+import styles, { markerCenterAnchor } from "./styles";
 
 type CurrentLocationMarkerProps = {
   coordinate: LatLng;
 };
 
-const anchor = { x: 0.4, y: 0.4 };
-
 export const CurrentLocationMarker = ({
   coordinate,
 }: CurrentLocationMarkerProps) => (
-  <Marker coordinate={coordinate} anchor={anchor} tappable={false}>
-    <View style={styles.currentLocationMarker}>
-      <View style={styles.currentLocationMarkerHorizontal} />
-      <View style={styles.currentLocationMarkerVertical} />
+  <Marker coordinate={coordinate} anchor={markerCenterAnchor} tappable={false}>
+    <View style={styles.markerContainer} transparent>
+      <View style={styles.currentLocationMarker}>
+        <View style={styles.currentLocationMarkerHorizontal} />
+        <View style={styles.currentLocationMarkerVertical} />
+      </View>
     </View>
   </Marker>
 );

@@ -240,9 +240,10 @@ Vill du hämta den igen från servern?`,
     drawPolygon: "Rita polygon",
     editPolygon: "Redigera polygon",
     selectPolygonInstruction: "Tryck på en polygon för att välja den",
-    editPolygonInstructions: `Tryck på ett hörn eller mittpunkt för att välja det, sedan:
-- Tryck länge för att dra ett hörn och flytta det.  
-- Tryck på '$t(dataEntry:geo.deleteSelectedPoint)' för att ta bort det.`,
+    selectPointInstructions: `- Tryck på en punkt för att välja den.  
+- Tryck på en mittpunkt för att lägga till en ny punkt.`,
+    editPolygonInstructions:
+      "Tryck länge på den valda punkten och dra den för att flytta den.",
     tapToAddPoints: `Tryck på kartan för att lägga till punkter.  
 Tryck '$t(common:stop)' när du är klar.`,
     deleteSelectedPoint: "Ta bort vald punkt",

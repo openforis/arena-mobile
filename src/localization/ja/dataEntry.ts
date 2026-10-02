@@ -293,9 +293,10 @@ export default {
     drawPolygon: "多角形を描く",
     editPolygon: "多角形を編集",
     selectPolygonInstruction: "多角形をタップして選択",
-    editPolygonInstructions: `頂点または中間点をタップして選択し、次に:
-- 長押ししてドラッグすると頂点を移動できます。  
-- '$t(dataEntry:geo.deleteSelectedPoint)' を押すと削除できます。`,
+    selectPointInstructions: `- 点をタップして選択します。  
+- 中間点をタップすると新しい点を追加できます。`,
+    editPolygonInstructions:
+      "選択した点を長押ししてドラッグすると移動できます。",
     tapToAddPoints: `地図をタップして点を追加します。  
 完了したら '$t(common:stop)' を押してください。`,
     deleteSelectedPoint: "選択した点を削除",

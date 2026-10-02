@@ -4,6 +4,12 @@ import type { LatLng } from "model/LocationPoint";
 
 const defaultCoordinateEpsilon = 0.000001;
 
+const EARTH_RADIUS_METERS = 6378137;
+const SQUARE_METERS_PER_HECTARE = 10000;
+const SQUARE_METERS_PER_SQUARE_KM = 1000000;
+// areas bigger than 1000 ha are formatted in km²
+const MIN_SQUARE_METERS_IN_SQUARE_KM = 1000 * SQUARE_METERS_PER_HECTARE;
+
 const defaultMapRegion: Region = {
   latitude: 0,
   longitude: 0,
@@ -29,6 +35,37 @@ const computeRegionFromCoordinates = (coordinates: LatLng[]): Region => {
       0.01,
     ),
   };
+};
+
+const toRadians = (degrees: number): number => (degrees * Math.PI) / 180;
+
+// geodesic area (in square meters) of a polygon on a sphere having the WGS84 equatorial radius;
+// the polygon is implicitly closed (the last coordinate is connected to the first one)
+const computePolygonArea = (coordinates: LatLng[]): number => {
+  const count = coordinates.length;
+  if (count < 3) return 0;
+
+  let total = 0;
+  for (let i = 0; i < count; i++) {
+    const previous = coordinates[(i + count - 1) % count]!;
+    const current = coordinates[i]!;
+    const next = coordinates[(i + 1) % count]!;
+    total +=
+      toRadians(next.longitude - previous.longitude) *
+      Math.sin(toRadians(current.latitude));
+  }
+  return Math.abs((total * EARTH_RADIUS_METERS ** 2) / 2);
+};
+
+// formats an area using the most readable unit (m², ha or km²)
+const formatArea = (squareMeters: number): string => {
+  if (squareMeters < SQUARE_METERS_PER_HECTARE) {
+    return `${Math.round(squareMeters)} m²`;
+  }
+  if (squareMeters < MIN_SQUARE_METERS_IN_SQUARE_KM) {
+    return `${(squareMeters / SQUARE_METERS_PER_HECTARE).toFixed(2)} ha`;
+  }
+  return `${(squareMeters / SQUARE_METERS_PER_SQUARE_KM).toFixed(2)} km²`;
 };
 
 const computeMidpointCoordinate = (coord1: LatLng, coord2: LatLng): LatLng => {
@@ -87,6 +124,8 @@ const extractPolygonCoordinatesFromGeoJson = (
 export const GeoUtils = {
   computeRegionFromCoordinates,
   computeMidpointCoordinate,
+  computePolygonArea,
+  formatArea,
   extractPolygonCoordinatesFromGeoJson,
   hasCoordinate,
   isSameCoordinate,

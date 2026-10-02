@@ -4,6 +4,8 @@ import { Numbers, Objects } from "@openforis/arena-core";
 
 import {
   Dropdown,
+  RadioButton,
+  RadioButtonGroup,
   SegmentedButtons,
   Slider,
   Switch,
@@ -11,7 +13,7 @@ import {
   TextInput,
   VView,
 } from "components";
-import { i18n } from "localization";
+import { i18n, useTranslation } from "localization";
 import { SettingsModel, SettingsObject } from "model";
 import { SettingsFormItem } from "./SettingsFormItem";
 import styles from "./styles";
@@ -51,6 +53,8 @@ export const SettingsItem = (props: SettingsItemProps) => {
   } = prop;
 
   const value = settings[settingKey];
+
+  const { t } = useTranslation();
 
   const [error, setError] = useState(false);
 
@@ -103,6 +107,24 @@ export const SettingsItem = (props: SettingsItemProps) => {
             />
           )}
         </VView>
+      );
+    case SettingsModel.PropertyType.radio:
+      return (
+        <SettingsFormItem
+          settingKey={settingKey}
+          labelKey={labelKey}
+          descriptionKey={descriptionKey}
+        >
+          <RadioButtonGroup onValueChange={onValueChange} value={value}>
+            {options.map((option: any) => (
+              <RadioButton
+                key={option.key}
+                label={translateItemLabels ? t(option.label) : option.label}
+                value={option.key}
+              />
+            ))}
+          </RadioButtonGroup>
+        </SettingsFormItem>
       );
     case SettingsModel.PropertyType.numeric:
       return (
