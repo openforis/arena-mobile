@@ -243,9 +243,10 @@ Möchten Sie sie erneut vom Server abrufen?`,
     drawPolygon: "Polygon zeichnen",
     editPolygon: "Polygon bearbeiten",
     selectPolygonInstruction: "Drücken Sie auf ein Polygon, um es auszuwählen",
-    editPolygonInstructions: `Tippen Sie auf einen Eckpunkt oder Mittelpunkt, um ihn auszuwählen, dann:
-- Halten Sie gedrückt, um einen Eckpunkt zu ziehen und zu verschieben.  
-- Drücken Sie '$t(dataEntry:geo.deleteSelectedPoint)', um ihn zu entfernen.`,
+    selectPointInstructions: `- Tippen Sie auf einen Punkt, um ihn auszuwählen.  
+- Tippen Sie auf einen Mittelpunkt, um einen neuen Punkt hinzuzufügen.`,
+    editPolygonInstructions:
+      "Halten Sie den ausgewählten Punkt gedrückt und ziehen Sie ihn, um ihn zu verschieben.",
     tapToAddPoints: `Tippen Sie auf die Karte, um Punkte hinzuzufügen.  
 Drücken Sie '$t(common:stop)', wenn Sie fertig sind.`,
     deleteSelectedPoint: "Ausgewählten Punkt löschen",

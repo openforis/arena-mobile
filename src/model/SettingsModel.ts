@@ -2,11 +2,14 @@ import { Environment } from "utils/Environment";
 import { GpsSourceSetting } from "./GpsSourceSettings";
 import { ThemesSettings } from "./Themes";
 import { LanguageConstants, LanguagesSettings } from "./LanguageSettings";
+import { MapLayerId, MapLayers, MapProvider } from "./MapLayers";
 
 enum PropertyType {
   boolean = "boolean",
   numeric = "numeric",
   options = "options",
+  // radio buttons: one per option, with labels that are not truncated
+  radio = "radio",
   dropdown = "dropdown",
   slider = "slider",
 }
@@ -15,6 +18,7 @@ export enum SettingGroup {
   appearance = "appearance",
   dataEntry = "dataEntry",
   location = "location",
+  maps = "maps",
   images = "images",
 }
 
@@ -44,6 +48,8 @@ export enum SettingKey {
   locationAccuracyWatchTimeout = "locationAccuracyWatchTimeout",
   locationAveragingEnabled = "locationAveragingEnabled",
   locationGpsLocked = "locationGpsLocked",
+  mapLayer = "mapLayer",
+  mapProvider = "mapProvider",
   preferredGpsSourceId = "preferredGpsSourceId",
   serverUrlType = "serverUrlType",
   serverUrl = "serverUrl",
@@ -148,6 +154,24 @@ const properties: SettingsProperties = {
     type: PropertyType.boolean,
     group: SettingGroup.location,
   },
+  mapProvider: {
+    type: PropertyType.radio,
+    group: SettingGroup.maps,
+    options: Object.values(MapProvider).map((provider) => ({
+      key: provider,
+      label: `settings:mapProvider.options.${provider}`,
+    })),
+  },
+  mapLayer: {
+    type: PropertyType.radio,
+    group: SettingGroup.maps,
+    options: MapLayers.layers.map((layer) => ({
+      key: layer.id,
+      label: `offlineMaps:layers.${layer.id}`,
+    })),
+    isDisabled: ({ settings }: any) =>
+      settings.mapProvider !== MapProvider.freeLayers,
+  },
   // image resolution
   imageSizeUnlimited: {
     type: PropertyType.boolean,
@@ -186,6 +210,9 @@ export type SettingsObject = {
   locationAccuracyWatchTimeout: number;
   locationAveragingEnabled: boolean;
   locationGpsLocked: boolean;
+  // free tile layer used when mapProvider is MapProvider.freeLayers
+  mapLayer: MapLayerId;
+  mapProvider: MapProvider;
   // GpsSourceSetting.auto/.internal, or `external:${deviceAddress}` for a
   // recognized bonded device (see service/externalGps) - the latter can't be part
   // of the enum since it's dynamic. Not exposed via the generic `properties`

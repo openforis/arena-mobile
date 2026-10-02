@@ -4,9 +4,10 @@ import { Marker } from "react-native-maps";
 
 import { LatLng } from "model";
 
+import styles, { markerCenterAnchor } from "./styles";
+
 type GeoVertexMarkerProps = {
   coordinate: LatLng;
-  anchor: { x: number; y: number };
   draggable?: boolean;
   outerStyle: StyleProp<ViewStyle>;
   coreStyle: StyleProp<ViewStyle>;
@@ -18,7 +19,6 @@ type GeoVertexMarkerProps = {
 
 export const GeoVertexMarker = ({
   coordinate,
-  anchor,
   draggable = false,
   outerStyle,
   coreStyle,
@@ -29,7 +29,7 @@ export const GeoVertexMarker = ({
 }: GeoVertexMarkerProps) => (
   <Marker
     coordinate={coordinate}
-    anchor={anchor}
+    anchor={markerCenterAnchor}
     draggable={draggable}
     onPress={(event) => {
       event.stopPropagation();
@@ -52,8 +52,10 @@ export const GeoVertexMarker = ({
       onDragEnd?.(draggedCoordinate);
     }}
   >
-    <RNView style={outerStyle}>
-      <RNView style={coreStyle} />
+    <RNView style={styles.markerContainer}>
+      <RNView style={outerStyle}>
+        <RNView style={coreStyle} />
+      </RNView>
     </RNView>
   </Marker>
 );

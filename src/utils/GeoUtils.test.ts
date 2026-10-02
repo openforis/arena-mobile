@@ -78,6 +78,63 @@ describe("GeoUtils", () => {
     });
   });
 
+  describe("computePolygonArea", () => {
+    const squareOneDegreeAtEquator = [
+      { latitude: 0, longitude: 0 },
+      { latitude: 0, longitude: 1 },
+      { latitude: 1, longitude: 1 },
+      { latitude: 1, longitude: 0 },
+    ];
+    // R^2 * deltaLongitude (rad) * (sin(1 deg) - sin(0))
+    const expectedArea =
+      6378137 ** 2 * (Math.PI / 180) * Math.sin(Math.PI / 180);
+
+    it("returns 0 when the coordinates are less than 3", () => {
+      expect(GeoUtils.computePolygonArea([])).toBe(0);
+      expect(
+        GeoUtils.computePolygonArea(squareOneDegreeAtEquator.slice(0, 2)),
+      ).toBe(0);
+    });
+
+    it("computes the area of a 1x1 degrees square at the equator", () => {
+      const area = GeoUtils.computePolygonArea(squareOneDegreeAtEquator);
+      expect(area / expectedArea).toBeCloseTo(1, 6);
+      // ~12391 km2
+      expect(Math.round(area / 1e6)).toBe(12391);
+    });
+
+    it("does not depend on the winding order", () => {
+      expect(
+        GeoUtils.computePolygonArea([...squareOneDegreeAtEquator].reverse()),
+      ).toBeCloseTo(GeoUtils.computePolygonArea(squareOneDegreeAtEquator), 3);
+    });
+
+    it("computes a smaller area for the same square at higher latitudes", () => {
+      const squareAtHighLatitude = squareOneDegreeAtEquator.map(
+        ({ latitude, longitude }) => ({ latitude: latitude + 60, longitude }),
+      );
+      expect(GeoUtils.computePolygonArea(squareAtHighLatitude)).toBeLessThan(
+        GeoUtils.computePolygonArea(squareOneDegreeAtEquator) * 0.5,
+      );
+    });
+  });
+
+  describe("formatArea", () => {
+    it("formats small areas in square meters", () => {
+      expect(GeoUtils.formatArea(1234.4)).toBe("1234 m²");
+    });
+
+    it("formats medium areas in hectares", () => {
+      expect(GeoUtils.formatArea(10000)).toBe("1.00 ha");
+      expect(GeoUtils.formatArea(1234567)).toBe("123.46 ha");
+    });
+
+    it("formats big areas in square kilometers", () => {
+      expect(GeoUtils.formatArea(10000000)).toBe("10.00 km²");
+      expect(GeoUtils.formatArea(12392000000)).toBe("12392.00 km²");
+    });
+  });
+
   describe("extractPolygonCoordinatesFromGeoJson", () => {
     it("returns null for invalid geojson", () => {
       expect(GeoUtils.extractPolygonCoordinatesFromGeoJson(null)).toBeNull();

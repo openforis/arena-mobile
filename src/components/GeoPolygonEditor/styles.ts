@@ -1,4 +1,20 @@
-import { StyleSheet } from "react-native";
+import { PixelRatio, StyleSheet } from "react-native";
+
+// On Android the custom markers are rendered into a bitmap that can be 100x100 pixels wide
+// (react-native-maps default) instead of having the size of their content:
+// the content is centered in a container with exactly that size and the marker is anchored
+// to its center, so that it is aligned to its coordinate with every screen density.
+const MARKER_BITMAP_SIZE_PIXELS = 100;
+const markerContainerSize = MARKER_BITMAP_SIZE_PIXELS / PixelRatio.get();
+
+export const markerCenterAnchor = { x: 0.5, y: 0.5 };
+
+// markers cannot be bigger than their container
+const limitMarkerSize = (size: number): number =>
+  Math.min(size, markerContainerSize);
+
+const vertexPointSelectedSize = limitMarkerSize(26);
+const vertexPointDraggingSize = limitMarkerSize(32);
 
 export const midpointDefaultBorderColor = "rgba(255, 0, 0, 0.3)";
 
@@ -9,9 +25,9 @@ const currentLocationMarkerBarStyle = {
 } as const;
 
 const vertexPointDraggingStyle = {
-  width: 32,
-  height: 32,
-  borderRadius: 16,
+  width: vertexPointDraggingSize,
+  height: vertexPointDraggingSize,
+  borderRadius: vertexPointDraggingSize / 2,
   borderWidth: 3,
   backgroundColor: "rgba(255, 255, 255, 1)",
   shadowColor: "#000000",
@@ -45,6 +61,12 @@ export default StyleSheet.create({
     textAlign: "center",
     paddingHorizontal: 12,
     paddingTop: 8,
+  },
+  markerContainer: {
+    width: markerContainerSize,
+    height: markerContainerSize,
+    alignItems: "center",
+    justifyContent: "center",
   },
   draftPoint: {
     width: 14,
@@ -81,9 +103,9 @@ export default StyleSheet.create({
     justifyContent: "center",
   },
   vertexPointSelected: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
+    width: vertexPointSelectedSize,
+    height: vertexPointSelectedSize,
+    borderRadius: vertexPointSelectedSize / 2,
     borderWidth: 2,
     shadowColor: "#000000",
     shadowOffset: { width: 0, height: 2 },
