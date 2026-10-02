@@ -21,9 +21,6 @@ type StyleGetterProps = {
   isDragging: boolean;
 };
 
-const markerAnchor = { x: 0.2, y: 0.2 };
-const selectedMarkerAnchor = { x: 0.35, y: 0.35 };
-
 export const GeoPolygonVerticesOverlay = ({
   coordinates,
   strokeColor,
@@ -69,7 +66,6 @@ export const GeoPolygonVerticesOverlay = ({
           <GeoVertexMarker
             key={`polygon-vertex-${index}-${coordinate.latitude}-${coordinate.longitude}`}
             coordinate={coordinate}
-            anchor={isSelected ? selectedMarkerAnchor : markerAnchor}
             draggable={isSelected}
             outerStyle={getOuterStyle(styleGetterProps)}
             coreStyle={getCoreStyle(styleGetterProps)}

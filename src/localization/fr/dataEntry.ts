@@ -240,9 +240,10 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
     drawPolygon: "Dessiner un polygone",
     editPolygon: "Modifier le polygone",
     selectPolygonInstruction: "Appuyez sur un polygone pour le sélectionner",
-    editPolygonInstructions: `Appuyez sur un sommet ou un point médian pour le sélectionner, puis :
-- Appuyez longuement pour faire glisser un sommet et le déplacer.  
-- Appuyez sur '$t(dataEntry:geo.deleteSelectedPoint)' pour le supprimer.`,
+    selectPointInstructions: `- Touchez un point pour le sélectionner.  
+- Touchez un point médian pour ajouter un nouveau point.`,
+    editPolygonInstructions:
+      "Appuyez longuement sur le point sélectionné et faites-le glisser pour le déplacer.",
     tapToAddPoints: `Touchez la carte pour ajouter des points.  
 Appuyez sur '$t(common:stop)' lorsque c'est fait.`,
     deleteSelectedPoint: "Supprimer le point sélectionné",
