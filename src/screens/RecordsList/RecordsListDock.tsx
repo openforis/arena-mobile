@@ -94,6 +94,7 @@ export const RecordsListDock = (props: RecordsListDockProps) => {
               />
               <Switch
                 onChange={onAutoSyncEnabledChange}
+                style={styles.autoSyncSwitch}
                 value={autoSyncEnabled}
               />
             </HView>
