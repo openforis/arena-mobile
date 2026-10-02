@@ -70,6 +70,9 @@ const mapTypes: MapType[] = ["standard", "satellite", "hybrid"];
 // pre-fetched tiles must not expire: they would be re-downloaded in background when online
 const TILE_CACHE_MAX_AGE_SECONDS = 365 * 24 * 60 * 60;
 
+// time the name of the layer is shown after switching layer
+const LAYER_NAME_VISIBILITY_MILLIS = 1500;
+
 const getNextItem = <T,>(items: T[], current: T): T => {
   const currentIndex = items.indexOf(current);
   const nextIndex = (currentIndex + 1) % items.length;
@@ -109,6 +112,10 @@ export const MapView = forwardRef<RNMapView | null, Props>(
     );
     const layer = MapLayers.getLayer(layerIdProp ?? selectedLayerId);
     const [attributionHeight, setAttributionHeight] = useState(0);
+    const [layerNameVisible, setLayerNameVisible] = useState(false);
+    const layerNameTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+      null,
+    );
     const networkConnected = useIsNetworkConnected();
     const offlineMode = !networkConnected;
 
@@ -143,13 +150,14 @@ export const MapView = forwardRef<RNMapView | null, Props>(
     }, []);
 
     // the layer attribution is shown at the bottom of the map: the padding moves the logo
-    // of the native map (Google/Apple) above it, so that it is not covered
+    // of the native map (Google/Apple) above it, so that it is not covered;
+    // the padding must be set only when the map is ready (on Android it throws an error otherwise)
     const mapPadding = useMemo(
       () =>
-        useFreeLayers && attributionHeight > 0
+        isMapReady && useFreeLayers && attributionHeight > 0
           ? { top: 0, right: 0, bottom: attributionHeight, left: 0 }
           : undefined,
-      [attributionHeight, useFreeLayers],
+      [attributionHeight, isMapReady, useFreeLayers],
     );
 
     const onMapReadyCallback = useCallback(() => {
@@ -157,7 +165,29 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       onMapReady?.();
     }, [onMapReady]);
 
+    // shows the name of the layer just selected for a short time
+    const showLayerName = useCallback(() => {
+      if (layerNameTimeoutRef.current) {
+        clearTimeout(layerNameTimeoutRef.current);
+      }
+      setLayerNameVisible(true);
+      layerNameTimeoutRef.current = setTimeout(() => {
+        layerNameTimeoutRef.current = null;
+        setLayerNameVisible(false);
+      }, LAYER_NAME_VISIBILITY_MILLIS);
+    }, []);
+
+    useEffect(
+      () => () => {
+        if (layerNameTimeoutRef.current) {
+          clearTimeout(layerNameTimeoutRef.current);
+        }
+      },
+      [],
+    );
+
     const handleMapTypeChange = useCallback(() => {
+      showLayerName();
       if (useFreeLayers) {
         setSelectedLayerId((prevLayerId) =>
           getNextItem(
@@ -168,7 +198,11 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       } else {
         setMapType((prevMapType) => getNextItem(mapTypes, prevMapType));
       }
-    }, [useFreeLayers]);
+    }, [showLayerName, useFreeLayers]);
+
+    const layerNameKey = useFreeLayers
+      ? `offlineMaps:layers.${layer.id}`
+      : `offlineMaps:mapTypes.${mapType}`;
 
     // on Android the Google base map is hidden (mapType "none"); on iOS the UrlTile replaces the Apple map content
     const effectiveMapType: MapType =
@@ -225,6 +259,11 @@ export const MapView = forwardRef<RNMapView | null, Props>(
               style={styles.offlineBadgeText}
               textKey="offlineMaps:offlineMode"
             />
+          </View>
+        )}
+        {layerNameVisible && (
+          <View style={styles.layerNameContainer} pointerEvents="none">
+            <Text style={styles.layerName} textKey={layerNameKey} />
           </View>
         )}
         {showMapTypeSelector && !layerIdProp && (

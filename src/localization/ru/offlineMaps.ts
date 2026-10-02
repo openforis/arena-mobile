@@ -23,6 +23,11 @@ export default {
     openTopoMap: "Топографическая (OpenTopoMap)",
     openStreetMap: "Стандартная (OpenStreetMap, только онлайн)",
   },
+  mapTypes: {
+    standard: "Стандартная",
+    satellite: "Спутник",
+    hybrid: "Гибрид",
+  },
   area: {
     surface: "Площадь: {{area}}",
     layer: "Слой: {{layer}}",

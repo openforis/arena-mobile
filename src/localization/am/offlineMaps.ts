@@ -23,6 +23,11 @@ export default {
     openTopoMap: "ቶፖግራፊ (OpenTopoMap)",
     openStreetMap: "መደበኛ (OpenStreetMap፣ በመስመር ላይ ብቻ)",
   },
+  mapTypes: {
+    standard: "መደበኛ",
+    satellite: "ሳተላይት",
+    hybrid: "ድብልቅ",
+  },
   area: {
     surface: "ስፋት፦ {{area}}",
     layer: "ንብርብር፦ {{layer}}",

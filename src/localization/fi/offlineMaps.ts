@@ -23,6 +23,11 @@ export default {
     openTopoMap: "Topografinen (OpenTopoMap)",
     openStreetMap: "Vakio (OpenStreetMap, vain verkossa)",
   },
+  mapTypes: {
+    standard: "Vakio",
+    satellite: "Satelliitti",
+    hybrid: "Hybridi",
+  },
   area: {
     surface: "Pinta-ala: {{area}}",
     layer: "Taso: {{layer}}",

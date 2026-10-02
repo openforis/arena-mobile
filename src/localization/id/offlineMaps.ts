@@ -23,6 +23,11 @@ export default {
     openTopoMap: "Topografi (OpenTopoMap)",
     openStreetMap: "Standar (OpenStreetMap, hanya online)",
   },
+  mapTypes: {
+    standard: "Standar",
+    satellite: "Satelit",
+    hybrid: "Hibrida",
+  },
   area: {
     surface: "Luas: {{area}}",
     layer: "Lapisan: {{layer}}",

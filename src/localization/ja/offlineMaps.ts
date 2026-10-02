@@ -23,6 +23,11 @@ export default {
     openTopoMap: "地形図 (OpenTopoMap)",
     openStreetMap: "標準 (OpenStreetMap、オンラインのみ)",
   },
+  mapTypes: {
+    standard: "標準",
+    satellite: "衛星写真",
+    hybrid: "ハイブリッド",
+  },
   area: {
     surface: "面積: {{area}}",
     layer: "レイヤー: {{layer}}",

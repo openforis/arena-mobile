@@ -23,6 +23,23 @@ export default StyleSheet.create({
     fontSize: 9,
     color: "#333333",
   },
+  // below the offline badge and the layer selector
+  layerNameContainer: {
+    position: "absolute",
+    top: 48,
+    left: 8,
+    right: 8,
+    alignItems: "center",
+  },
+  layerName: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    overflow: "hidden",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    color: "#ffffff",
+    textAlign: "center",
+  },
   offlineBadge: {
     position: "absolute",
     top: 8,

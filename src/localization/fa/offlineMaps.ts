@@ -23,6 +23,11 @@ export default {
     openTopoMap: "توپوگرافی (OpenTopoMap)",
     openStreetMap: "استاندارد (OpenStreetMap، فقط آنلاین)",
   },
+  mapTypes: {
+    standard: "استاندارد",
+    satellite: "ماهواره‌ای",
+    hybrid: "ترکیبی",
+  },
   area: {
     surface: "مساحت: {{area}}",
     layer: "لایه: {{layer}}",

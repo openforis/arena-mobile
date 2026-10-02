@@ -23,6 +23,11 @@ export default {
     openTopoMap: "Topográfico (OpenTopoMap)",
     openStreetMap: "Estándar (OpenStreetMap, solo en línea)",
   },
+  mapTypes: {
+    standard: "Estándar",
+    satellite: "Satélite",
+    hybrid: "Híbrido",
+  },
   area: {
     surface: "Área: {{area}}",
     layer: "Capa: {{layer}}",
