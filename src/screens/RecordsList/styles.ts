@@ -48,6 +48,8 @@ export default StyleSheet.create({
   },
   autoSyncGroup: { alignItems: "center", flexShrink: 1, gap: 4 },
   autoSyncLabel: { flexShrink: 1 },
+  // the iOS Switch defaults to alignSelf "flex-start", ignoring the row's alignItems
+  autoSyncSwitch: { alignSelf: "center" },
   exportDataButtonMenu: {
     alignSelf: "flex-end",
     transform: [{ translateY: -40 }],
