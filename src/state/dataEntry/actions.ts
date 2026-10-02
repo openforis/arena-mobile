@@ -54,6 +54,7 @@ import {
   fetchRecordsFromServer,
 } from "./actionsRecordsImport";
 import { revalidateRecords } from "./actionsRecordsRevalidate";
+import { DataEntryActionsRecordSync } from "./actionsRecordSync";
 import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntrySelectors } from "./selectors";
 import { ToastActions } from "state/toast";
@@ -89,6 +90,15 @@ const removeNodesFlags = (nodes: NodesMap) => {
   for (const node of Object.values(nodes)) {
     Nodes.removeStatusFlags({ node, sideEffect: true });
   }
+};
+
+// the record open in the editor can't be modified while it's being merged with its server copy
+// (see lockOpenRecordForSync): the editor is read-only meanwhile, this stops an edit already on
+// its way (e.g. a debounced text update) from overwriting the merged version
+const _isRecordSyncInProgress = (dispatch: any, getState: any): boolean => {
+  if (!DataEntrySelectors.selectRecordSyncInProgress(getState())) return false;
+  dispatch(ToastActions.show("dataEntry:autoSync.recordSyncInProgress"));
+  return true;
 };
 
 const _isRootKeyDuplicate = async ({ survey, record, lang }: any) => {
@@ -256,6 +266,7 @@ const createNewRecord =
     };
 
 const _performAddEntity = async (dispatch: any, getState: any) => {
+  if (_isRecordSyncInProgress(dispatch, getState)) return;
   const state = getState();
   const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
   const survey = SurveySelectors.selectCurrentSurvey(state)!;
@@ -325,6 +336,7 @@ const addNewEntity =
 
 const deleteNodes =
   (nodeUuids: any) => async (dispatch: any, getState: any) => {
+    if (_isRecordSyncInProgress(dispatch, getState)) return;
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
@@ -434,6 +446,12 @@ const fetchAndEditRecord =
         origin,
         loadStatus,
       } = recordSummary;
+      if (DataEntryActionsRecordSync.isRecordBeingReplaced(recordUuid)) {
+        // auto-sync is replacing it with the version merged on the server: opening it now, the
+        // editor would start from content about to be replaced
+        dispatch(ToastActions.show("dataEntry:autoSync.recordSyncInProgress"));
+        return;
+      }
       if (
         origin === RecordOrigin.remote &&
         loadStatus !== RecordLoadStatus.complete
@@ -663,6 +681,7 @@ const updateAttribute =
         if (!fileUri && Objects.isEqual(node.value ?? null, value ?? null)) {
           return;
         }
+        if (_isRecordSyncInProgress(dispatch, getState)) return;
 
         const nodeDef = Surveys.getNodeDefByUuid({
           survey,
@@ -812,6 +831,7 @@ const updateCoordinateValueSrs =
 const addNewAttribute =
   ({ nodeDef, parentNodeUuid, value = null }: any) =>
     async (dispatch: any, getState: any) => {
+      if (_isRecordSyncInProgress(dispatch, getState)) return;
       const state = getState();
       const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
       const survey = SurveySelectors.selectCurrentSurvey(state)!;

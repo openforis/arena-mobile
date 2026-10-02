@@ -9,10 +9,17 @@ import {
 import { RecordService } from "service";
 import { log } from "utils";
 
-import { AutoSyncActions, AutoSyncStatus, isAuthError } from "../autoSync";
+import {
+  AutoSyncActions,
+  AutoSyncStatus,
+  isAuthError,
+  isAutoMergeAllowed,
+  sameRecordMergeableStatuses,
+} from "../autoSync";
 import { SurveySelectors } from "../survey";
 import { ToastActions } from "../toast";
 import { exportRecords } from "./actionsDataExport";
+import { DataEntryActionsRecordSync } from "./actionsRecordSync";
 import { DataEntrySelectors } from "./selectors";
 
 // the record currently open in the editor gets an idle threshold instead of being excluded
@@ -40,9 +47,14 @@ const AUTO_SYNC_SLOW_CHECK_INTERVAL_MS_DEFAULT = 30 * 60_000; // 30 minutes
 
 // syncStatus values that are safe to upload without any user confirmation: no merge, no
 // overwrite of someone else's edit (mirrors the default "overwriteIfUpdated" bucket the
-// manual "Send data" flow uses). Anything else (conflicting keys, modified on the server too)
-// is deliberately left out here - those need the explicit merge confirmation the manual flow
-// already has.
+// manual "Send data" flow uses). Records modified on the server too are handled separately
+// (see selectAutoMergeCandidates); records with conflicting keys are deliberately left out -
+// those need the explicit merge confirmation the manual flow already has.
+// the record open in the editor is merged only if it hasn't been modified for at least this long,
+// even when the user-configurable idle threshold is bypassed ("Sync now"): an edit could still be
+// on its way to the device storage
+const OPEN_RECORD_MERGE_MIN_IDLE_MS = 5000;
+
 const autoSyncSafeStatuses = new Set([RecordSyncStatus.new, RecordSyncStatus.modifiedLocally]);
 
 // guards against overlapping ticks (e.g. a slow network making one tick outlive the interval)
@@ -100,13 +112,21 @@ const refreshAutoSyncStatus = async ({ dispatch, getState }: any) => {
   }
 };
 
-const uploadAutoSyncCandidates = async ({ dispatch, getState, cycle, candidates }: any) => {
+const uploadAutoSyncCandidates = async ({
+  dispatch,
+  getState,
+  cycle,
+  candidates,
+  conflictResolutionStrategy = ConflictResolutionStrategy.overwriteIfUpdated,
+  onUploadComplete = undefined,
+}: any) => {
   log.debug(
-    `auto-sync: uploading ${candidates.length} record(s): ${candidates.map((r: any) => r.uuid).join(", ")}`,
+    `auto-sync: uploading ${candidates.length} record(s) (${conflictResolutionStrategy}): ${candidates.map((r: any) => r.uuid).join(", ")}`,
   );
 
   const onJobComplete = () => {
     log.debug(`auto-sync: upload of ${candidates.length} record(s) completed`);
+    onUploadComplete?.();
     // the toast would only be shown behind/over the dialog, dimming it: the dialog already
     // reports the outcome
     if (!getState().autoSync.dialogOpen) {
@@ -123,7 +143,7 @@ const uploadAutoSyncCandidates = async ({ dispatch, getState, cycle, candidates 
     exportRecords({
       cycle,
       recordUuids: candidates.map((record: any) => record.uuid),
-      conflictResolutionStrategy: ConflictResolutionStrategy.overwriteIfUpdated,
+      conflictResolutionStrategy,
       onlyRemote: true,
       onJobComplete,
       silent: true,
@@ -144,6 +164,15 @@ const handleAutoSyncTickError = ({ dispatch, error }: any) => {
   }
 };
 
+const hasErrors = (record: any) => record.errors > 0;
+
+const isRecordIdle = ({ record, now, idleThresholdMs }: any) => {
+  const dateModified = record.dateModified ? new Date(record.dateModified) : null;
+  if (!dateModified) return idleThresholdMs < 0;
+
+  return now - dateModified.getTime() > idleThresholdMs;
+};
+
 const selectAutoSyncCandidates = ({
   records,
   survey,
@@ -155,17 +184,73 @@ const selectAutoSyncCandidates = ({
 
   return records.filter((record: any) => {
     if (!autoSyncSafeStatuses.has(record.syncStatus)) return false;
-    if (!errorsAllowed && record.errors > 0) return false;
+    if (!errorsAllowed && hasErrors(record)) return false;
 
     // only the record currently open in the editor needs an idle grace period (it may still be
     // mid-edit); any other record isn't being actively edited right now, so it's a candidate
     // regardless of how recently it was last modified
     if (record.uuid !== currentlyEditedRecordUuid) return true;
 
-    const dateModified = record.dateModified ? new Date(record.dateModified) : null;
-    if (!dateModified) return openRecordIdleThresholdMs < 0;
+    return isRecordIdle({ record, now, idleThresholdMs: openRecordIdleThresholdMs });
+  });
+};
 
-    return now - dateModified.getTime() > openRecordIdleThresholdMs;
+// records modified on the server too since this device last synced them (e.g. by another user):
+// instead of being left for the user to merge explicitly through "Send data", they're sent to be
+// merged with their own server copy (same record uuid), then replaced in the device by the merged
+// version (see exportRecords' onJobComplete). The record open in the editor is a candidate only
+// once idle, same as for a plain upload (see selectAutoSyncCandidates): it's then made read-only
+// until the merged version is loaded in the editor (see uploadAutoMergeCandidates).
+const selectAutoMergeCandidates = ({
+  records,
+  survey,
+  autoSyncEnabled,
+  currentlyEditedRecordUuid,
+  openRecordIdleThresholdMs,
+}: any) => {
+  if (!isAutoMergeAllowed({ autoSyncEnabled, survey })) return [];
+  const errorsAllowed = Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey);
+  const now = Date.now();
+  const idleThresholdMs = Math.max(openRecordIdleThresholdMs, OPEN_RECORD_MERGE_MIN_IDLE_MS);
+
+  return records.filter(
+    (record: any) =>
+      sameRecordMergeableStatuses.has(record.syncStatus) &&
+      (errorsAllowed || !hasErrors(record)) &&
+      (record.uuid !== currentlyEditedRecordUuid ||
+        isRecordIdle({ record, now, idleThresholdMs })),
+  );
+};
+
+// the record open in the editor, when among the records to merge, can't be edited from now until
+// its merged version is loaded in the editor (done by exportRecords' onJobComplete, which runs
+// before the onJobComplete passed here): an edit made in the meantime would overwrite the merged
+// version with the pre-merge content. Any other way the upload can end is covered by the lock's
+// own watchdog (see lockOpenRecordForSync).
+const uploadAutoMergeCandidates = async ({
+  dispatch,
+  getState,
+  cycle,
+  candidates,
+  currentlyEditedRecordUuid,
+}: any) => {
+  const openRecordIncluded = candidates.some(
+    (record: any) => record.uuid === currentlyEditedRecordUuid,
+  );
+  if (openRecordIncluded) {
+    dispatch(
+      DataEntryActionsRecordSync.lockOpenRecordForSync({ isBusy: () => tickInProgress }),
+    );
+  }
+  await uploadAutoSyncCandidates({
+    dispatch,
+    getState,
+    cycle,
+    candidates,
+    conflictResolutionStrategy: ConflictResolutionStrategy.merge,
+    onUploadComplete: openRecordIncluded
+      ? () => dispatch(DataEntryActionsRecordSync.unlockOpenRecordAfterSync())
+      : undefined,
   });
 };
 
@@ -173,8 +258,9 @@ const selectAutoSyncCandidates = ({
  * One auto-sync tick: uploads, without any user interaction, the local records that aren't
  * currently open in the editor (or, for the one that is, has been idle for a while - the
  * longer, user-configurable settings:autoSyncOpenRecordIntervalMinutes) and free of any
- * conflict with the server. Records that need a merge decision are left untouched for the user
- * to review/send manually. See the "Auto sync" checkbox in RecordsListOptions. Ticks are a
+ * conflict with the server. Records modified on the server too are merged with their server
+ * copy (see selectAutoMergeCandidates), in a tick of their own; records with the same key(s) as
+ * another record on the server are left untouched for the user to review/send manually. See the "Auto sync" checkbox in RecordsListOptions. Ticks are a
  * no-op most of the time once everything's caught up - see
  * settings:autoSyncSlowCheckIntervalMinutes.
  * `prefetchedRecords`: record summaries (with sync status) the caller has just fetched and
@@ -193,7 +279,10 @@ const runAutoSync =
   }
 
   const state = getState();
-  if (state.jobMonitor.isOpen) {
+  if (
+    state.jobMonitor.isOpen ||
+    DataEntryActionsRecordSync.isPostUploadProcessingInProgress()
+  ) {
     log.debug("auto-sync: an export/import/upload is already running, skipping");
     return;
   }
@@ -255,15 +344,36 @@ const runAutoSync =
       currentlyEditedRecordUuid,
       openRecordIdleThresholdMs,
     });
-    if (candidates.length === 0) {
-      log.debug("auto-sync: no record is a safe upload candidate, nothing to do");
-      dispatch(
-        AutoSyncActions.setStatusMessage("dataEntry:autoSync.status.noCandidatesMessage"),
-      );
+    if (candidates.length > 0) {
+      await uploadAutoSyncCandidates({ dispatch, getState, cycle, candidates });
       return;
     }
 
-    await uploadAutoSyncCandidates({ dispatch, getState, cycle, candidates });
+    // a tick does a single upload, and the conflict resolution strategy applies to all of it:
+    // records to merge can't share it with the ones above (a merge, unlike an overwrite, doesn't
+    // propagate nodes deleted in the device), so they're sent once nothing else is left to send
+    const mergeCandidates = selectAutoMergeCandidates({
+      records,
+      survey,
+      autoSyncEnabled: !!getState().settings?.autoSyncEnabled,
+      currentlyEditedRecordUuid,
+      openRecordIdleThresholdMs,
+    });
+    if (mergeCandidates.length > 0) {
+      await uploadAutoMergeCandidates({
+        dispatch,
+        getState,
+        cycle,
+        candidates: mergeCandidates,
+        currentlyEditedRecordUuid,
+      });
+      return;
+    }
+
+    log.debug("auto-sync: no record is a safe upload candidate, nothing to do");
+    dispatch(
+      AutoSyncActions.setStatusMessage("dataEntry:autoSync.status.noCandidatesMessage"),
+    );
   } catch (error) {
     handleAutoSyncTickError({ dispatch, error });
   } finally {

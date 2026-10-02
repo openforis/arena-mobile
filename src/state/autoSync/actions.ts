@@ -21,18 +21,24 @@ const checkStart = () => ({ type: AUTO_SYNC_CHECK_START });
 
 // dispatched once fresh sync statuses have been fetched, so any screen can show an up to date
 // synced/pending/error summary without re-fetching it itself; the survey is needed to tell
-// whether records with conflicting keys can be merged (see computeAutoSyncStatus)
-const checkEnd = ({ records, survey }: { records: any[]; survey: any }) => ({
-  type: AUTO_SYNC_CHECK_END,
-  payload: {
-    status: computeAutoSyncStatus({ records, survey }),
-    conflictingKeysWithMergeNotAllowed: hasConflictingKeysWithMergeNotAllowed({
-      records,
-      survey,
-    }),
-    lastCheckedAt: new Date().toISOString(),
-  },
-});
+// whether records with conflicting keys can be merged, the auto-sync setting to tell whether
+// records modified on the server too get merged automatically (see computeAutoSyncStatus)
+const checkEnd =
+  ({ records, survey }: { records: any[]; survey: any }) =>
+  (dispatch: any, getState: any) => {
+    const autoSyncEnabled = !!getState().settings?.autoSyncEnabled;
+    dispatch({
+      type: AUTO_SYNC_CHECK_END,
+      payload: {
+        status: computeAutoSyncStatus({ records, survey, autoSyncEnabled }),
+        conflictingKeysWithMergeNotAllowed: hasConflictingKeysWithMergeNotAllowed({
+          records,
+          survey,
+        }),
+        lastCheckedAt: new Date().toISOString(),
+      },
+    });
+  };
 
 // dispatched when a check couldn't even start (e.g. not logged in - already surfaced through
 // its own dialog by the caller): clears the "checking" flag without claiming to know the up to

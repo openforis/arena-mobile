@@ -17,13 +17,27 @@ type RecordWithSyncStatus = {
   syncStatus?: (typeof RecordSyncStatus)[keyof typeof RecordSyncStatus];
 };
 
-// statuses auto-sync never uploads on its own (see selectAutoSyncCandidates in
-// state/dataEntry/actionsAutoSync.ts) but that the user can resolve from this device with an
-// explicit merge through "Send data" (see useRecordsExport)
-const mergeableStatuses = new Set([
+// statuses of a record changed on the server too since this device last synced it: resolved by
+// merging it with its own server copy (same record uuid), either explicitly through "Send data"
+// (see useRecordsExport) or, when auto-merge is on (see isAutoMergeAllowed), by auto-sync itself
+// (see selectAutoMergeCandidates in state/dataEntry/actionsAutoSync.ts)
+export const sameRecordMergeableStatuses = new Set<string>([
   RecordSyncStatus.modifiedLocallyAndRemotely,
   RecordSyncStatus.modifiedRemotely,
 ]);
+
+// auto-sync can merge a record with its own server copy without asking only if it's then able to
+// replace the local copy with the merged one, which is a download of that record from the server
+export const isAutoMergeAllowed = ({
+  autoSyncEnabled,
+  survey,
+}: {
+  autoSyncEnabled: boolean;
+  survey: any;
+}): boolean =>
+  autoSyncEnabled &&
+  Surveys.isVisibleInMobile(survey) &&
+  Surveys.isRecordsDownloadInMobileAllowed(survey);
 
 // statuses no upload/merge can resolve: the record itself needs fixing (e.g. its key values
 // filled in or changed), deleting, or leaving alone (e.g. it's already past the entry step on
@@ -35,20 +49,30 @@ const alwaysNeedsManualFixStatuses = [
 ];
 
 // statuses that are safe to auto-sync but haven't been uploaded yet
-const pendingStatuses = new Set([
+const pendingStatuses = new Set<string>([
   RecordSyncStatus.new,
   RecordSyncStatus.modifiedLocally,
   RecordSyncStatus.notUpToDate,
 ]);
 
+// statuses that need an explicit merge decision through "Send data": never the same-record ones
+// when auto-sync merges those on its own
 const getMergeableStatuses = ({
+  autoMergeAllowed,
   mergeWithSameKeysAllowed,
 }: {
+  autoMergeAllowed: boolean;
   mergeWithSameKeysAllowed: boolean;
 }) =>
-  mergeWithSameKeysAllowed
-    ? new Set([...mergeableStatuses, RecordSyncStatus.conflictingKeys])
-    : mergeableStatuses;
+  new Set<string>([
+    ...(autoMergeAllowed ? [] : sameRecordMergeableStatuses),
+    ...(mergeWithSameKeysAllowed ? [RecordSyncStatus.conflictingKeys] : []),
+  ]);
+
+const getPendingStatuses = ({ autoMergeAllowed }: { autoMergeAllowed: boolean }) =>
+  autoMergeAllowed
+    ? new Set<string>([...pendingStatuses, ...sameRecordMergeableStatuses])
+    : pendingStatuses;
 
 const getNeedsManualFixStatuses = ({
   mergeWithSameKeysAllowed,
@@ -75,18 +99,24 @@ const someRecordHasStatus = (
 export const computeAutoSyncStatus = ({
   records,
   survey,
+  autoSyncEnabled = false,
 }: {
   records: RecordWithSyncStatus[];
   survey: any;
+  autoSyncEnabled?: boolean;
 }): AutoSyncStatus => {
   const mergeWithSameKeysAllowed =
     Surveys.isRecordsMergeWithSameKeysAllowed(survey);
+  const autoMergeAllowed = isAutoMergeAllowed({ autoSyncEnabled, survey });
   if (
-    someRecordHasStatus(records, getMergeableStatuses({ mergeWithSameKeysAllowed }))
+    someRecordHasStatus(
+      records,
+      getMergeableStatuses({ autoMergeAllowed, mergeWithSameKeysAllowed }),
+    )
   ) {
     return AutoSyncStatus.error;
   }
-  if (someRecordHasStatus(records, pendingStatuses)) {
+  if (someRecordHasStatus(records, getPendingStatuses({ autoMergeAllowed }))) {
     return AutoSyncStatus.pending;
   }
   if (

@@ -23,4 +23,8 @@ export default StyleSheet.create({
   internalContainer: {
     flex: 1,
   },
+  syncInProgressBanner: {
+    padding: 4,
+    textAlign: "center",
+  },
 });

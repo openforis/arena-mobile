@@ -1,5 +1,7 @@
 export { AutoSyncActions } from "./actions";
 export {
+  isAutoMergeAllowed,
+  sameRecordMergeableStatuses,
   computeAutoSyncStatus,
   isAuthError,
   wasRecentlyCheckedWithNoNewLocalChanges,
