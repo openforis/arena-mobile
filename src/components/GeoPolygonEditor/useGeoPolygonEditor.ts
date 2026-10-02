@@ -4,7 +4,7 @@ import {
   MapPolygonExtendedProps,
   getRandomPolygonColors,
 } from "./polygonEditorUtils";
-import MapView, { MapPressEvent } from "react-native-maps";
+import MapView, { MapPressEvent, PoiClickEvent } from "react-native-maps";
 
 import { useLocationWatch } from "hooks";
 import { LatLng } from "model";
@@ -13,6 +13,7 @@ import { GeoUtils, log } from "utils";
 import { GeoPolygonMidpoint } from "./GeoPolygonMidpointsOverlay";
 
 const GEO_POLYGON_KEY = "geo_polygon_0";
+const MAP_PRESS_ACTION = "press";
 const VERTEX_SNAP_EPSILON = 0.00002;
 const SELECTED_STROKE_COLOR = "#d32f2f";
 const SELECTED_FILL_COLOR = "rgba(211, 47, 47, 0.1)";
@@ -40,7 +41,9 @@ type UseGeoPolygonEditorContentParams = {
   mapRef: React.RefObject<MapView | null>;
   initialPolygons: MapPolygonExtendedProps[];
   onCancelDrawing: () => void;
-  onSaveDrawing: (polygon: MapPolygonExtendedProps | null) => void;
+  onSaveDrawing: (
+    polygon: MapPolygonExtendedProps | null,
+  ) => Promise<void> | void;
 };
 
 const determinePolygonToSave = ({
@@ -266,7 +269,12 @@ export const useGeoPolygonEditor = ({
   const onMapPress = useCallback(
     (event: MapPressEvent) => {
       if (polygons.length > 0) {
-        onPolygonUnselect();
+        // on Android the press on a polygon or a marker is dispatched to the map too
+        // (with a different action): it must not unselect the polygon just selected
+        const action: string | undefined = event.nativeEvent?.action;
+        if (!action || action === MAP_PRESS_ACTION) {
+          onPolygonUnselect();
+        }
         return;
       }
 
@@ -274,6 +282,23 @@ export const useGeoPolygonEditor = ({
       if (!coordinate) return;
 
       addCoordinateToDraft(coordinate);
+    },
+    [addCoordinateToDraft, onPolygonUnselect, polygons.length],
+  );
+
+  // the press on a point of interest of the base map (label, icon) is not notified as a map press
+  const onMapPoiClick = useCallback(
+    (event: PoiClickEvent) => {
+      if (polygons.length > 0) {
+        onPolygonUnselect();
+        return;
+      }
+
+      const coordinate = event.nativeEvent?.coordinate;
+      if (!coordinate) return;
+
+      const { latitude, longitude } = coordinate;
+      addCoordinateToDraft({ latitude, longitude });
     },
     [addCoordinateToDraft, onPolygonUnselect, polygons.length],
   );
@@ -523,10 +548,10 @@ export const useGeoPolygonEditor = ({
 
   const [hadValueWhenOpened] = useState(() => polygons.length > 0);
 
-  const onSavePress = useCallback(() => {
+  const onSavePress = useCallback(async () => {
     stopFollowingCurrentLocation();
     setLocalState((prev) => ({ ...prev, undoStack: [] }));
-    onSaveDrawing(polygonToSave);
+    await onSaveDrawing(polygonToSave);
   }, [onSaveDrawing, polygonToSave, stopFollowingCurrentLocation]);
 
   const onCenterOnLocation = useCallback(async () => {
@@ -593,11 +618,18 @@ export const useGeoPolygonEditor = ({
     if (!hasValue) {
       return "dataEntry:geo.tapToAddPoints";
     }
-    if (isPolygonSelected) {
-      return "dataEntry:geo.editPolygonInstructions";
+    if (!isPolygonSelected) {
+      return "dataEntry:geo.selectPolygonInstruction";
     }
-    return "dataEntry:geo.selectPolygonInstruction";
-  }, [canAddCurrentLocationPoint, hasValue, isPolygonSelected]);
+    return selectedVertexIndex == null
+      ? "dataEntry:geo.selectPointInstructions"
+      : "dataEntry:geo.editPolygonInstructions";
+  }, [
+    canAddCurrentLocationPoint,
+    hasValue,
+    isPolygonSelected,
+    selectedVertexIndex,
+  ]);
 
   return {
     canSave,
@@ -613,6 +645,7 @@ export const useGeoPolygonEditor = ({
     onDeleteSelectedVertexPress,
     onMapPress,
     onMapPanDrag,
+    onMapPoiClick,
     onAddCurrentLocationPointPress,
     onMidpointPress,
     onPolygonPress,

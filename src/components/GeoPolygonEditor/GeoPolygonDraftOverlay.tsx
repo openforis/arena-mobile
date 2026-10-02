@@ -5,7 +5,7 @@ import { Marker, Polygon as MapPolygon, Polyline } from "react-native-maps";
 
 import { LatLng } from "model";
 
-import styles from "./styles";
+import styles, { markerCenterAnchor } from "./styles";
 
 type GeoPolygonDraftOverlayProps = {
   coordinates: LatLng[];
@@ -15,8 +15,6 @@ type GeoPolygonDraftOverlayProps = {
   showPoints?: boolean;
   onPolygonPress?: () => void;
 };
-
-const markerAnchor = { x: 0.2, y: 0.2 };
 
 export const GeoPolygonDraftOverlay = ({
   coordinates,
@@ -59,9 +57,11 @@ export const GeoPolygonDraftOverlay = ({
           <Marker
             key={`draft-point-${coordinate.latitude}-${coordinate.longitude}`}
             coordinate={coordinate}
-            anchor={markerAnchor}
+            anchor={markerCenterAnchor}
           >
-            <RNView style={markerStyle} />
+            <RNView style={styles.markerContainer}>
+              <RNView style={markerStyle} />
+            </RNView>
           </Marker>
         ))}
     </>

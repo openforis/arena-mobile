@@ -238,9 +238,10 @@ export default {
     drawPolygon: "رسم چندضلعی",
     editPolygon: "ویرایش چندضلعی",
     selectPolygonInstruction: "بر یک چندضلعی لمس کنید تا آن را انتخاب کنید",
-    editPolygonInstructions: `یک رأس یا نقطه میانی را لمس کنید تا انتخاب شود، سپس:
-- برای جابه‌جایی، رأس را لمس طولانی کرده و بکشید.  
-- برای حذف، '$t(dataEntry:geo.deleteSelectedPoint)' را فشار دهید.`,
+    selectPointInstructions: `- برای انتخاب یک نقطه، آن را لمس کنید.  
+- برای افزودن نقطه جدید، یک نقطه میانی را لمس کنید.`,
+    editPolygonInstructions:
+      "برای جابه‌جایی، نقطه انتخاب‌شده را لمس طولانی کرده و بکشید.",
     tapToAddPoints: `برای افزودن نقاط روی نقشه ضربه بزنید.  
 وقتی تمام شد، '$t(common:stop)' را فشار دهید.`,
     deleteSelectedPoint: "حذف نقطه انتخاب شده",

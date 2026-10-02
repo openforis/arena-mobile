@@ -17,8 +17,6 @@ type GeoPolygonMidpointsOverlayProps = {
   onMidpointPress: (insertAtIndex: number, coordinate: LatLng) => void;
 };
 
-const markerAnchor = { x: 0.13, y: 0.13 };
-
 export const GeoPolygonMidpointsOverlay = ({
   midpoints,
   strokeColor,
@@ -44,7 +42,6 @@ export const GeoPolygonMidpointsOverlay = ({
         <GeoVertexMarker
           key={`polygon-midpoint-${key}`}
           coordinate={coordinate}
-          anchor={markerAnchor}
           outerStyle={outerStyle}
           coreStyle={coreStyle}
           onPress={() => onMidpointPress(insertAtIndex, coordinate)}
