@@ -573,7 +573,7 @@ const fetchMergedRecordsAndNotify = async ({
 
 // the records merged with their own server copy whose local copy can be replaced right away
 // with the merged version. When the merge wasn't started by the user (auto-sync), the record open
-// in the editor can only if it's been made read-only for this (see lockOpenRecordForSync);
+// in the editor can be replaced only if it's been made read-only for this (see lockOpenRecordForSync);
 // otherwise (e.g. it's been opened after the upload started) the editor may hold edits the merged
 // version doesn't have, which the next edit would write over it. It's then left as it is (still
 // "modified on the server too"), to be merged again later.

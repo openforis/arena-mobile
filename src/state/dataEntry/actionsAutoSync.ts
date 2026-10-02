@@ -50,12 +50,12 @@ const AUTO_SYNC_SLOW_CHECK_INTERVAL_MS_DEFAULT = 30 * 60_000; // 30 minutes
 // manual "Send data" flow uses). Records modified on the server too are handled separately
 // (see selectAutoMergeCandidates); records with conflicting keys are deliberately left out -
 // those need the explicit merge confirmation the manual flow already has.
+const autoSyncSafeStatuses = new Set([RecordSyncStatus.new, RecordSyncStatus.modifiedLocally]);
+
 // the record open in the editor is merged only if it hasn't been modified for at least this long,
 // even when the user-configurable idle threshold is bypassed ("Sync now"): an edit could still be
 // on its way to the device storage
 const OPEN_RECORD_MERGE_MIN_IDLE_MS = 5000;
-
-const autoSyncSafeStatuses = new Set([RecordSyncStatus.new, RecordSyncStatus.modifiedLocally]);
 
 // guards against overlapping ticks (e.g. a slow network making one tick outlive the interval)
 let tickInProgress = false;
