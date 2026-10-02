@@ -241,9 +241,10 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
     drawPolygon: "Gambar poligon",
     editPolygon: "Edit poligon",
     selectPolygonInstruction: "Tekan pada poligon untuk memilihnya",
-    editPolygonInstructions: `Tekan simpul atau titik tengah untuk memilihnya, lalu:
-- Tekan lama untuk menyeret simpul dan memindahkannya.  
-- Tekan '$t(dataEntry:geo.deleteSelectedPoint)' untuk menghapusnya.`,
+    selectPointInstructions: `- Ketuk sebuah titik untuk memilihnya.  
+- Ketuk titik tengah untuk menambahkan titik baru.`,
+    editPolygonInstructions:
+      "Tekan lama titik yang dipilih, lalu seret untuk memindahkannya.",
     tapToAddPoints: `Ketuk peta untuk menambahkan titik.  
 Tekan '$t(common:stop)' ketika selesai.`,
     deleteSelectedPoint: "Hapus titik yang dipilih",

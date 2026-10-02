@@ -6,6 +6,7 @@ import common from "./common";
 import dataEntry from "./dataEntry";
 import device from "./device";
 import loginInfo from "./loginInfo";
+import offlineMaps from "./offlineMaps";
 import job from "./job";
 import permissions from "./permissions";
 import recordsList from "./recordsList";
@@ -23,6 +24,7 @@ export default {
   dataEntry,
   device,
   loginInfo,
+  offlineMaps,
   job,
   permissions,
   recordsList,
