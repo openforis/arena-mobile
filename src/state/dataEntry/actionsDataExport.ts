@@ -540,6 +540,8 @@ const showMergedRecordsMessage = async ({
 // same key(s)) so the local copy reflects it, then lets the user know which records were merged.
 // Awaited by the caller so the fetch (nodes + files) has actually finished, and the local copy is
 // marked as fully downloaded, before anything reloads the records list.
+// Returns true only if the records have actually been fetched and stored in the device (the
+// fetch can fail, be canceled, or not be allowed by the survey - none of which is thrown).
 const fetchMergedRecordsAndNotify = async ({
   dispatch,
   survey,
@@ -547,15 +549,19 @@ const fetchMergedRecordsAndNotify = async ({
   cycle,
   recordUuids,
   mergeKeepLocalOriginRecordUuids,
-}: any) => {
+}: any): Promise<boolean> => {
+  let fetched = false;
   await dispatch(
     fetchRecordsFromServer({
       recordUuids,
       mergeKeepLocalOriginRecordUuids,
-      onImportComplete: () =>
-        showMergedRecordsMessage({ dispatch, survey, lang, cycle, recordUuids }),
+      onImportComplete: async () => {
+        fetched = true;
+        await showMergedRecordsMessage({ dispatch, survey, lang, cycle, recordUuids });
+      },
     }),
   );
+  return fetched;
 };
 
 export const exportRecords =
@@ -585,22 +591,16 @@ export const exportRecords =
           recordUuids,
         });
         if (!Objects.isEmpty(mergedRecordsMap)) {
-          await RecordService.updateRecordsMergedInto({
-            surveyId,
-            mergedRecordsMap,
-          });
-
           // the local record(s) got merged into a different, already existing record on the
-          // server (same key(s), different uuid). The local rows are now excluded from the
-          // records list (merged_into_record_uuid is set), so without fetching the record they
-          // were merged into, the user's data would just seem to disappear: fetch it so it shows
-          // up in its place, then let the user know what happened. It carries this device's
-          // contribution, so keep it tagged as "local" (visible under "records in device")
-          // instead of "remote", otherwise it would only be visible under "all records".
+          // server (same key(s), different uuid). From the user's point of view it's still the
+          // record they created, so the record they were merged into is fetched and takes their
+          // place in the list: it carries this device's contribution, so it's tagged as "local"
+          // (visible under "records in device") instead of "remote", otherwise it would only be
+          // visible under "all records".
           const mergedIntoRecordUuids = [
             ...new Set(Object.values(mergedRecordsMap) as string[]),
           ];
-          await fetchMergedRecordsAndNotify({
+          const mergedRecordsFetched = await fetchMergedRecordsAndNotify({
             dispatch,
             survey,
             lang,
@@ -608,6 +608,19 @@ export const exportRecords =
             recordUuids: mergedIntoRecordUuids,
             mergeKeepLocalOriginRecordUuids: mergedIntoRecordUuids,
           });
+          if (mergedRecordsFetched) {
+            // hide the local rows (merged_into_record_uuid set = excluded from the records list)
+            // only now that their replacement is in the device: hiding them before, the user's
+            // data would just seem to disappear whenever the fetch doesn't go through
+            await RecordService.updateRecordsMergedInto({
+              surveyId,
+              mergedRecordsMap,
+            });
+          } else {
+            log.warn(
+              `exportRecords: merged record(s) ${mergedIntoRecordUuids.join(", ")} not fetched; keeping local record(s) visible`,
+            );
+          }
         }
         if (mergedSameRecordUuids?.length > 0) {
           // the server combined this device's edits with newer edits already on the server: refresh the
