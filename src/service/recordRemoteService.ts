@@ -59,9 +59,20 @@ const fetchFileUuidsByRecordUuid = async ({
   }
 };
 
-const startExportRecords = async ({ survey, cycle, recordUuids }: any) => {
+// excludedFileUuids: files already in the device, whose content the server can leave out of the
+// export (ignored by servers that don't support it: everything is included, as before)
+const startExportRecords = async ({
+  survey,
+  cycle,
+  recordUuids,
+  excludedFileUuids = [],
+}: any) => {
   const { remoteId: surveyRemoteId } = survey;
-  const params = { cycle, recordUuids };
+  const params = {
+    cycle,
+    recordUuids,
+    ...(excludedFileUuids.length > 0 ? { excludedFileUuids } : {}),
+  };
 
   const {
     data: { job },

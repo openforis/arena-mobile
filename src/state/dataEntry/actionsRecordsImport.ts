@@ -167,10 +167,16 @@ export const fetchRecordsFromServer =
 
         if (!checkCanImportRecords({ dispatch, survey, silent })) return;
 
+        // files of those records already in the device don't need to be downloaded again
+        const excludedFileUuids = await RecordService.findFileUuidsInDevice({
+          survey,
+          recordUuids,
+        });
         const job = await RecordService.startExportRecordsFromRemoteServer({
           survey,
           cycle,
           recordUuids,
+          excludedFileUuids,
         });
         const jobComplete = await JobMonitorActions.startAsync({
           dispatch,

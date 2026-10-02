@@ -1,7 +1,7 @@
 # Auto-sync: automatic merge of records modified by several users
 
-Plan and specification. Status at the time of writing: **phases 1 and 2 implemented** (see
-"Implementation status"), later phases only planned.
+Plan and specification. Status at the time of writing: **phases 1 to 3 implemented** (see
+"Implementation status"), none of them tested on a device yet.
 
 ## Background
 
@@ -48,10 +48,12 @@ uploaded copy is the *source*.
 
 Consequences to keep in mind:
 
-- **Nothing is ever deleted by a merge.** An entity deleted by one user stays, or comes back, if
-  the other user still has it. This is unlike the default `overwriteIfUpdated` strategy
-  (`Record.replaceUpdatedNodes`), which deletes from the server every node the uploaded copy
-  doesn't have. That is why a record changed on both sides must never be sent with the overwrite
+- **Nothing is ever deleted by a merge.** From the two versions alone, the merge can't tell a node
+  deleted on one side from a node added on the other: an entity deleted by one user stays, or
+  comes back, if the other user still has it (see "Known limitations").
+- **Overwrite is different.** The default `overwriteIfUpdated` strategy
+  (`Record.replaceUpdatedNodes`) deletes from the server every node the uploaded copy doesn't
+  have. That is why a record changed on both sides must never be sent with the overwrite
   strategy: it would delete what the other user added.
 - **Permissions.** The merge is refused (`dataImport.recordOwnedByAnotherUser`) unless the user can
   edit the target record (`Authorizer.canEditRecord`): a user whose edit level is "own" can only
@@ -149,9 +151,21 @@ records list is unchanged and shows the conflict until the merge has run.
 
 Without auto-merge, nothing changes: those records need an explicit merge through "Send data".
 
+### S7. Records are fetched without the files already in the device
+
+`POST /survey/:surveyId/records/export` (arena) accepts an optional `excludedFileUuids` list: the
+content of those files is left out of the exported zip; the records still reference them.
+
+Arena Mobile sends, for every fetch of records from the server (not only after a merge), the uuids
+of the files referenced by its stored copy of those records that exist on disk. A file uuid always
+identifies the same content: replacing a file creates a new uuid.
+
+Compatibility: a server without this ignores the parameter and sends every file; a client without
+it gets every file.
+
 ## Implementation status
 
-### Done (phases 1 and 2)
+### Phases 1 and 2 (merged record replaces the local copy, also when open in the editor)
 
 arena, branch `feat/records-merge-keep-node-uuids`:
 
@@ -176,6 +190,21 @@ arena-mobile, branch `feat/auto-sync-merge` (on top of `fix/merged-record-local-
   be opened. `selectors.ts`/`reducer.ts`/`types.ts`: `recordSyncInProgress` state.
 - `src/screens/RecordEditor/RecordEditor.tsx`: "being synchronized" line.
 
+### Phase 3 (files already in the device)
+
+arena, branch `feat/records-export-exclude-files` (on top of
+`feat/records-merge-keep-node-uuids`):
+
+- `server/modules/record/api/recordApi.js`, `recordService.js`,
+  `server/modules/survey/service/surveyExport/jobs/recordFilesExportJob.js`: S7.
+
+arena-mobile, branch `feat/records-fetch-exclude-files` (on top of
+`feat/auto-sync-merge`):
+
+- `src/service/recordService.ts` (`findFileUuidsInDevice`), `recordRemoteService.ts`,
+  `src/service/repository/recordRepository.ts` (`fetchRecordsFileUuids`),
+  `src/state/dataEntry/actionsRecordsImport.ts`: S7.
+
 ### Deployment order
 
 Deploy the server change (S1) before releasing the mobile one. Against a server without S1 the
@@ -191,12 +220,15 @@ matched by key may be duplicated.
 - That every input component of the editor becomes read-only through `selectCanEditRecord`
   (attribute inputs, new/delete entity buttons do; anything bypassing it relies on the store-level
   rejection only).
+- The SQL that lists the file uuids of the stored records (`fetchRecordsFileUuids`, SQLite JSON
+  functions over the record content) has not been run on a device. If that
+  query fails, nothing is excluded and every file is downloaded, as before.
 - That the record `dateModified` in the downloaded content equals the one in the server's records
   summary. If it didn't, a just-merged record would show as `modifiedRemotely` again.
 
 ## Known limitations
 
-- Deletions are not propagated by a merge (see above).
+- Deletions are not propagated by a merge (see above): auto-merge can bring back deleted data.
 - The same single attribute edited on both sides: the most recently modified value wins,
   according to the device clocks, with no notice to the user.
 - A merge refused by the server (e.g. record owned by another user) fails the whole upload and
@@ -205,31 +237,16 @@ matched by key may be duplicated.
   delay) is rejected with a toast and lost when the merged record is loaded. Limited by the idle
   requirement of S2.4.
 - The "being synchronized" message is only in English; other languages fall back to it.
-- The whole merged record is downloaded, including all its files (see phase 3).
+- The record JSON is always downloaded in full; only file content is skipped (S7).
+- Files no longer referenced by a record after a merge stay in the device storage.
 - Three sync status checks are run by the records list after a merge upload (one per silent job
   ending), where one would do.
 
-## Plan for the next phases
+## Possible next steps
 
-### Phase 3: download only what changed
-
-The upload already skips files the server has (`records/file-uuids`). The download has no
-equivalent: `SelectedRecordsExportJob` always zips the record and all its files.
-
-- arena: let `POST /survey/:surveyId/records/export` accept the file uuids the client already has
-  (or an "exclude files" flag plus a way to fetch single files), and leave those out of the zip.
-- arena-mobile: send the uuids of the files already stored for those records; `FilesImportJob`
-  already imports only what the zip lists.
-
-A further step is returning the merged nodes in the upload job result, so no download is needed at
-all when no file changed. It needs the merge to be applied in the device with the same rules.
-
-### Phase 4: deletions
-
-Propagating deletions needs both sides to remember what was deleted and when (deleted-node
-markers kept in the record until synced, in the device and on the server), and merge rules for
-"deleted on one side, modified on the other". Largest item; until then auto-merge can bring back
-deleted data.
+- Return the merged nodes in the upload job result, so that no download is needed at all after a
+  merge. It needs the merge to be applied in the device with the same rules.
+- Translate the "being synchronized" message.
 
 ### Open decisions
 
@@ -259,6 +276,8 @@ both.
    R is not replaced while open; it's merged at a later tick.
 4. **Repeated merge.** As in 1; then A adds another tree and syncs, B adds another deadwood piece.
    Expected: no duplicated entities on either side.
+5b. **Files.** R has photos. A adds one photo and syncs; B edits an attribute. Expected: B's merge
+   downloads only the new photo.
 5. **Deletion.** A deletes a tree and syncs; B edits another attribute. Expected (known
    limitation): the tree is back on the server after B's merge.
 6. **Download not allowed.** Survey with records download in mobile disabled. Expected: no
