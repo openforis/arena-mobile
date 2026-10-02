@@ -12,6 +12,8 @@ export default {
     batteryDataWarning:
       "ከWi-Fi ውጭ ሲሆን የባትሪ እና የውሂብ አጠቃቀምን ሊጨምር ይችላል",
     syncNow: "አሁኑኑ ያመሳስሉ",
+    recordSyncInProgress:
+      "ይህ መዝገብ ከአገልጋዩ ጋር እየተመሳሰለ ነው። እባክዎ ትንሽ ይጠብቁ",
     status: {
       syncedTooltip: "ሁሉም መዝገቦች ከአገልጋዩ ጋር ተመሳስለዋል",
       pendingTooltip: "አንዳንድ መዝገቦች አሁንም መመሳሰል ያስፈልጋቸዋል። በራስ-ሰር ይላካሉ",

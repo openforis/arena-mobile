@@ -12,6 +12,8 @@ export default {
     batteryDataWarning:
       "Puede aumentar el consumo de batería y datos si no está en Wi-Fi",
     syncNow: "Sincronizar ahora",
+    recordSyncInProgress:
+      "Este registro se está sincronizando con el servidor. Espere un momento",
     status: {
       syncedTooltip: "Todos los registros están sincronizados con el servidor",
       pendingTooltip:

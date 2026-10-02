@@ -12,6 +12,8 @@ export default {
     batteryDataWarning:
       "Voi lisätä akun- ja datankulutusta, kun ei olla Wi-Fi-yhteydessä",
     syncNow: "Synkronoi nyt",
+    recordSyncInProgress:
+      "Tätä tietuetta synkronoidaan palvelimen kanssa. Odota hetki",
     status: {
       syncedTooltip: "Kaikki tietueet on synkronoitu palvelimen kanssa",
       pendingTooltip:
