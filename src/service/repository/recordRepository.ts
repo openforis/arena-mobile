@@ -246,9 +246,11 @@ const findRecordSummariesByKeys = async ({ survey, cycle, keyValues }: any) => {
     return acc;
   }, [] as any[]);
 
+  // records merged into another one are hidden (see fetchRecords): the record they were merged
+  // into has the same key(s), so they must not be counted as duplicates of it
   const query = `SELECT ${summarySelectFieldsJointWithValidation}
     FROM record
-    WHERE survey_id = ? AND cycle = ? AND ${keyColsConditions}`;
+    WHERE merged_into_record_uuid IS NULL AND survey_id = ? AND cycle = ? AND ${keyColsConditions}`;
 
   const queryParams = [surveyId, cycle, ...keyColsParams];
   const rows = await dbClient.many(query, queryParams);
