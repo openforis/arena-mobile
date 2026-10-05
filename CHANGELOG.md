@@ -5,8 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.2] - TO-BE-RELEASED
 
-## [2.8.1] - TO-BE-RELEASED
+### Fixed
+
+- BadElf external GPS device: support old protocols (iOS);
+
+## [2.8.1] - 2026-10-02
 
 ### Fixed
 
