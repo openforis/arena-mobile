@@ -13,7 +13,7 @@ import {
   ExternalGpsTransport,
   GpsSourceDescriptor,
 } from "../types";
-import { startSessionInit } from "./sessionInit";
+import { containsNmeaSentence, startSessionInit } from "./sessionInit";
 import {
   getHdopAccuracyFactorMeters,
   getIosSessionInitPacketHex,
@@ -173,17 +173,28 @@ const connect = async (sourceId: string): Promise<ExternalGpsConnection> => {
     : null;
 
   let dataReceived = false;
-  const onFirstDataReceived = () => {
-    dataReceived = true;
-    sessionInit?.stop();
-    log.info("ExternalGps: receiving data from", deviceLabel);
+  let nmeaReceived = false;
+  const onDataChunk = (data: string) => {
+    if (!dataReceived) {
+      dataReceived = true;
+      log.info("ExternalGps: receiving data from", deviceLabel);
+    }
+    // Keep re-sending the session init until NMEA actually flows: e.g. the legacy Bad
+    // Elf protocol answers the init packet with binary handshake packets only, and if
+    // the accessory wasn't ready for the NMEA-enabling part of the packet, stopping at
+    // the first byte received would leave it silent for good.
+    if (!nmeaReceived && containsNmeaSentence(data)) {
+      nmeaReceived = true;
+      sessionInit?.stop();
+      log.info("ExternalGps: receiving NMEA sentences from", deviceLabel);
+    }
   };
 
   return {
     hdopAccuracyFactorMeters: getHdopAccuracyFactorMeters(device.name || ""),
     onData: (listener) => {
       const subscription = device.onDataReceived((event) => {
-        if (!dataReceived) onFirstDataReceived();
+        onDataChunk(event.data);
         listener(event.data);
       });
       return { remove: () => subscription.remove() };

@@ -1,5 +1,5 @@
 import { log } from "../../../utils";
-import { startSessionInit } from "./sessionInit";
+import { containsNmeaSentence, startSessionInit } from "./sessionInit";
 
 jest.mock("../../../utils", () => ({
   log: {
@@ -60,7 +60,30 @@ describe("startSessionInit", () => {
 
     expect(write).toHaveBeenCalledTimes(5);
     expect(log.warn).toHaveBeenLastCalledWith(
-      expect.stringContaining("no data received from Bad Elf"),
+      expect.stringContaining("no NMEA data received from Bad Elf"),
     );
+  });
+});
+
+describe("containsNmeaSentence", () => {
+  it("recognizes standard and proprietary NMEA sentences", () => {
+    expect(
+      containsNmeaSentence(
+        "$GPGGA,011449.00,3337.45759,N,11154.86471,W,1,03,6.70,445.3,M,-27.5,M,,*6C\r",
+      ),
+    ).toBe(true);
+    expect(containsNmeaSentence("$PELFID,Bad Elf,1.0*00\r")).toBe(true);
+  });
+
+  it("ignores Bad Elf binary handshake packets", () => {
+    // replies of a Bad Elf GNSS Surveyor to the legacy session init packet
+    expect(containsNmeaSentence("$\u00be\u0000\u0011\u0001\u0001\u0001")).toBe(
+      false,
+    );
+    expect(
+      containsNmeaSentence(
+        "$\u00be\u0000\u0013\u0002\u0002\u0003\u0004!\u0000B\u0000\u0001C\u0007{\u00d7\r",
+      ),
+    ).toBe(false);
   });
 });

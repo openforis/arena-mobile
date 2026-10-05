@@ -4,11 +4,25 @@ const firstAttemptDelayMs = 1000;
 const retryIntervalMs = 3000;
 const maxAttempts = 5;
 
+// e.g. "$GPGGA," or "$PELFID,"; the vendor's binary reply packets also start with "$"
+// (0x24) but are followed by a non-letter byte (Bad Elf: 0xBE), so they don't match.
+const nmeaSentenceStartRegExp = /\$[A-Z]{3,8},/;
+
+/**
+ * Whether a received chunk contains an NMEA sentence, i.e. the session init has
+ * actually taken effect. Any data at all is not enough: the accessory first answers
+ * the init packet with binary handshake packets, which say nothing about whether NMEA
+ * output was enabled.
+ */
+export const containsNmeaSentence = (chunk: string): boolean =>
+  nmeaSentenceStartRegExp.test(chunk);
+
 /**
  * Sends the vendor's session init packet (see vendorProtocolRegistry's
  * `iosSessionInitPacketHex`) so the accessory starts streaming NMEA, re-sending it
- * every `retryIntervalMs` until the caller calls stop() (i.e. data started flowing, or
- * the connection was closed) or `maxAttempts` is reached.
+ * every `retryIntervalMs` until the caller calls stop() (i.e. NMEA sentences started
+ * flowing - see containsNmeaSentence - or the connection was closed) or `maxAttempts`
+ * is reached.
  *
  * Both the initial delay and the retries are needed because the native write isn't
  * reliable right after connecting: connectToDevice() resolves before the EASession
@@ -49,7 +63,7 @@ export const startSessionInit = ({
     if (stopped) return;
     if (attempts >= maxAttempts) {
       log.warn(
-        `ExternalGps: no data received from ${deviceLabel} after ${maxAttempts} session init attempts`,
+        `ExternalGps: no NMEA data received from ${deviceLabel} after ${maxAttempts} session init attempts`,
       );
       return;
     }
