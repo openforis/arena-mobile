@@ -320,8 +320,8 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     return { recordFiles: exportedRecordFiles, hasMissingFiles };
   }
 
-  override async generateResult() {
+  override generateResult() {
     const { outputFileUri, recordsWithMissingFiles } = this;
-    return { outputFileUri, recordsWithMissingFiles };
+    return Promise.resolve({ outputFileUri, recordsWithMissingFiles });
   }
 }

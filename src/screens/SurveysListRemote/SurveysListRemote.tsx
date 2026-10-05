@@ -124,7 +124,7 @@ export const SurveysListRemote = () => {
           messageKey: "surveys:loadSurveysErrorMessage",
           onConfirm: () =>
             navigation.navigate(screenKeys.settingsRemoteConnection as never),
-          onCancel: async () => navigation.goBack(),
+          onCancel: () => navigation.goBack(),
         }),
       );
     }

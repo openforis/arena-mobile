@@ -6,8 +6,8 @@ const keys = {
   authRefreshToken: "authRefreshToken",
 };
 
-const getItem = async (key: any) => SecureStore.getItemAsync(key);
-const setItem = async (key: any, value: any) =>
+const getItem = (key: any) => SecureStore.getItemAsync(key);
+const setItem = (key: any, value: any) =>
   Objects.isEmpty(value)
     ? SecureStore.deleteItemAsync(key)
     : SecureStore.setItemAsync(key, value);

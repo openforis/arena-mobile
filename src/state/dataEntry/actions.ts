@@ -324,7 +324,7 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
 
 const addNewEntity =
   (options = {} as any) =>
-    async (dispatch: any) => {
+    (dispatch: any) => {
       const { delay = null } = options;
       Keyboard.dismiss();
       if (delay) {
@@ -772,7 +772,7 @@ const updateAttribute =
 
 const performCoordinateValueSrsConversion =
   ({ nodeUuid, srsTo }: any) =>
-    async (dispatch: any, getState: any) => {
+    (dispatch: any, getState: any) => {
       const state = getState();
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
       const record = DataEntrySelectors.selectRecord(state);
@@ -794,7 +794,7 @@ const performCoordinateValueSrsConversion =
 
 const updateCoordinateValueSrs =
   ({ nodeUuid, srsTo }: any) =>
-    async (dispatch: any, getState: any) => {
+    (dispatch: any, getState: any) => {
       const state = getState();
       const record = DataEntrySelectors.selectRecord(state);
 

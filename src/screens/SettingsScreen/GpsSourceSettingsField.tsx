@@ -59,7 +59,7 @@ export const GpsSourceSettingsField = (props: { value: string }) => {
   );
 
   const onChange = useCallback(
-    async (nextValue: string) => {
+    (nextValue: string) => {
       dispatch(
         SettingsActions.updateSetting({
           key: SettingsModel.SettingKey.preferredGpsSourceId,

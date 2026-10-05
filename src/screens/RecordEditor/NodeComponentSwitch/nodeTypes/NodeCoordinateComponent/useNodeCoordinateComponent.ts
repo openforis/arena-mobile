@@ -300,7 +300,7 @@ export const useNodeCoordinateComponent = (props: any) => {
   }, [stopLocationWatch]);
 
   const onChangeSrs = useCallback(
-    async (srsTo: any) => {
+    (srsTo: any) => {
       dispatch(DataEntryActions.updateCoordinateValueSrs({ nodeUuid, srsTo }));
     },
     [dispatch, nodeUuid],

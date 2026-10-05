@@ -24,7 +24,7 @@ export const NodeDateTimeComponent = (props: NodeDateTimeComponentProps) => {
   const { value, updateNodeValue } = useNodeComponentLocalState({ nodeUuid });
 
   const onChange = useCallback(
-    async (date: any) => {
+    (date: any) => {
       const dateNodeValue = Dates.format(date, formatStorage);
       updateNodeValue({ value: dateNodeValue });
     },

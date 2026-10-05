@@ -38,15 +38,15 @@ export default class SQLiteClient {
     await this.privateDb!.execAsync(sql);
   }
 
-  async transaction(callback: any) {
+  transaction(callback: any) {
     return this.privateDb!.withTransactionAsync(callback);
   }
 
-  async one(sql: any, params?: any) {
+  one(sql: any, params?: any) {
     return this.privateDb!.getFirstAsync(sql, params);
   }
 
-  async many(sql: any, params?: any) {
+  many(sql: any, params?: any) {
     return this.privateDb!.getAllAsync(sql, params);
   }
 

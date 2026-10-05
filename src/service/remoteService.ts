@@ -114,13 +114,15 @@ const postCancelableMultipartData = async (
 ) => {
   const serverUrl = await getServerUrl();
   const config = { onUploadProgress };
-  const sendRequest = async () =>
-    API.postCancelableMultipartData({
-      serverUrl,
-      uri,
-      data,
-      config: attachAuthenticationHeaders(config),
-    });
+  const sendRequest = () =>
+    Promise.resolve(
+      API.postCancelableMultipartData({
+        serverUrl,
+        uri,
+        data,
+        config: attachAuthenticationHeaders(config),
+      }),
+    );
   return withRetry(sendRequest);
 };
 

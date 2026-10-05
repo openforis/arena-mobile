@@ -11,7 +11,7 @@ type DropdownProps = {
   itemLabelExtractor?: (item: any) => string;
   label?: string;
   items: any[];
-  onChange?: (value: any) => Promise<void>;
+  onChange?: (value: any) => Promise<void> | void;
   translateItemLabels?: boolean;
   showLabel?: boolean;
   value?: any;

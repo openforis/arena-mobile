@@ -46,7 +46,7 @@ const copyValueToClipboard = (value: any) => {
 };
 
 const getLastUpdateTime = async () =>
-  isAndroid ? Application.getLastUpdateTimeAsync() : null;
+  isAndroid ? await Application.getLastUpdateTimeAsync() : null;
 
 const getApplicationInfo = async (): Promise<ArenaMobileAppInfo> => {
   const lastUpdateTime = await getLastUpdateTime();

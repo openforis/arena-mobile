@@ -280,7 +280,7 @@ const selectedOptionsToDataExportOptions = ({
 };
 
 export const startCsvDataExportJob =
-  () => async (dispatch: any, getState: any) => {
+  () => (dispatch: any, getState: any) => {
     try {
       const state = getState();
 
@@ -470,7 +470,7 @@ const _onExportFileGenerationSucceeded = async ({
   if (!onlyRemote && (await Files.isSharingAvailable())) {
     availableExportTypes.push(exportType.share);
   }
-  const onConfirm = async ({ selectedSingleChoiceValue }: OnConfirmParams) => {
+  const onConfirm = ({ selectedSingleChoiceValue }: OnConfirmParams) => {
     dispatch(
       onExportConfirmed({
         selectedSingleChoiceValue,

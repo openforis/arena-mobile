@@ -121,7 +121,7 @@ export const SurveysListLocal = () => {
   );
 
   const onItemPress = useCallback(
-    async (survey: any) => {
+    (survey: any) => {
       const {
         id: surveyId,
         name: surveyName,

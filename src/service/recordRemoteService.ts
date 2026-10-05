@@ -182,12 +182,12 @@ const uploadRecords = ({
           }
         }
       },
-      onError: async (error) => {
-        await fileProcessor?.close();
+      onError: (error) => {
+        fileProcessor?.close();
         reject(error);
       },
-      onComplete: async () => {
-        await fileProcessor?.close();
+      onComplete: () => {
+        fileProcessor?.close();
       },
       chunkSize,
       maxTryings: 2,

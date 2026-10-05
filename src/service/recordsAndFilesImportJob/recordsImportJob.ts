@@ -105,8 +105,8 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
     this.updatedRecords++;
   }
 
-  override async generateResult() {
+  override generateResult() {
     const { insertedRecords, updatedRecords } = this;
-    return { insertedRecords, updatedRecords };
+    return Promise.resolve({ insertedRecords, updatedRecords });
   }
 }

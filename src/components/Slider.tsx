@@ -48,7 +48,7 @@ export const Slider = (props: Props) => {
     return (
       <Dropdown
         items={options}
-        onChange={async (val) => onChange(val)}
+        onChange={(val) => onChange(val)}
         translateItemLabels={false}
         value={String(value)}
       />

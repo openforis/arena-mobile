@@ -314,7 +314,7 @@ const linkToRecordInPreviousCycle =
     }
   };
 
-const unlinkFromRecordInPreviousCycle = () => async (dispatch: any) => {
+const unlinkFromRecordInPreviousCycle = () => (dispatch: any) => {
   dispatch({ type: RECORD_PREVIOUS_CYCLE_RESET });
 };
 
