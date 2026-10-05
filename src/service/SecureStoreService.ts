@@ -6,14 +6,14 @@ const keys = {
   authRefreshToken: "authRefreshToken",
 };
 
-const getItem = async (key: any) => SecureStore.getItemAsync(key);
-const setItem = async (key: any, value: any) =>
+const getItem = (key: any) => SecureStore.getItemAsync(key);
+const setItem = (key: any, value: any) =>
   Objects.isEmpty(value)
     ? SecureStore.deleteItemAsync(key)
     : SecureStore.setItemAsync(key, value);
 
-const getAuthRefreshToken = async () => getItem(keys.authRefreshToken);
-const setAuthRefreshToken = async (value: any) =>
+const getAuthRefreshToken = () => getItem(keys.authRefreshToken);
+const setAuthRefreshToken = (value: any) =>
   setItem(keys.authRefreshToken, value);
 
 export const SecureStoreService = {

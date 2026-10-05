@@ -73,7 +73,7 @@ export class RNFileProcessor extends FileProcessor {
     }
   }
 
-  async close() {
+  close() {
     this.fileHandle?.close();
   }
 }

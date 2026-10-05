@@ -12,7 +12,7 @@ export const LocalSurveysDropdown = () => {
   const surveySummaries = SurveySelectors.useSurveysLocal();
 
   const onChange = useCallback(
-    async (surveyId: any) => {
+    (surveyId: any) => {
       dispatch(
         SurveyActions.fetchAndSetCurrentSurvey({ surveyId, navigation }),
       );

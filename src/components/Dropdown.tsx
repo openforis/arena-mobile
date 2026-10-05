@@ -11,7 +11,7 @@ type DropdownProps = {
   itemLabelExtractor?: (item: any) => string;
   label?: string;
   items: any[];
-  onChange?: (value: any) => Promise<void>;
+  onChange?: (value: any) => Promise<void> | void;
   translateItemLabels?: boolean;
   showLabel?: boolean;
   value?: any;
@@ -70,7 +70,10 @@ export const Dropdown = (props: DropdownProps) => {
     ],
   );
 
-  const options = useMemo(() => items.map(itemToOption), [itemToOption, items]);
+  const options = useMemo(
+    () => items.map((item) => itemToOption(item)),
+    [itemToOption, items],
+  );
 
   const setValue = useCallback(
     async (val: any) => {

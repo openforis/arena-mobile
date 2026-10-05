@@ -87,7 +87,7 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
   }, [onScanPress]);
 
   const onOpenSettingsPress = useCallback(() => {
-    SystemUtils.openAppSettings();
+    void SystemUtils.openAppSettings();
   }, []);
 
   const onPairPress = useCallback(

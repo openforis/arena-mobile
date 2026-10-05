@@ -72,7 +72,7 @@ const fetchCurrentSurveyUserGroup =
 // Refetches the current survey user group, if a survey is currently selected.
 // Used on login, since a different user may now be logged in for the same survey selection.
 const fetchCurrentSurveyUserGroupIfSurveySelected =
-  () => async (dispatch: any, getState: any) => {
+  () => (dispatch: any, getState: any) => {
     const survey = SurveySelectors.selectCurrentSurvey(getState());
     if (survey) {
       dispatch(fetchCurrentSurveyUserGroup({ survey }));
@@ -209,7 +209,7 @@ const fetchAndSetRemoteSurveyIfOnlyOne =
 
 const _onSurveyInsertOrUpdate =
   ({ survey, navigation }: any) =>
-    async (dispatch: any) => {
+    (dispatch: any) => {
       dispatch(setCurrentSurvey({ survey, navigation }));
       dispatch(fetchAndSetLocalSurveys());
     };

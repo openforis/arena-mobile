@@ -32,7 +32,7 @@ type SettingsItemProps = {
   prop: any;
   onPropValueChange: (params: {
     key: keyof SettingsObject;
-  }) => (value: any) => Promise<void>;
+  }) => (value: any) => Promise<void> | void;
   translateItemLabels?: boolean;
 };
 
@@ -60,7 +60,7 @@ export const SettingsItem = (props: SettingsItemProps) => {
 
   const onValueChange = useCallback(
     (val: any) => {
-      onPropValueChange({ key: settingKey })(val);
+      void onPropValueChange({ key: settingKey })(val);
     },
     [onPropValueChange, settingKey],
   );

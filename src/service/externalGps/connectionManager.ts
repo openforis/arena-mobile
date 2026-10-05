@@ -1,3 +1,5 @@
+import { Promises } from "@openforis/arena-core";
+
 import { log } from "utils";
 import { ExternalGpsConnection, ExternalGpsTransport } from "./types";
 
@@ -126,10 +128,10 @@ const release = (sourceId: string) => {
 const closeAll = async () => {
   const entries = Array.from(pool.entries());
   pool.clear();
-  for (const [sourceId, entry] of entries) {
+  await Promises.each(entries, async ([sourceId, entry]) => {
     clearIdleTimeout(entry);
     await closeEntry(sourceId, entry);
-  }
+  });
 };
 
 export const ExternalGpsConnectionManager = {

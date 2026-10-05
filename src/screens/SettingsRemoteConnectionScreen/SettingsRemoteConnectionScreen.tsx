@@ -107,7 +107,7 @@ export const SettingsRemoteConnectionScreen = () => {
   }, [initialize, user]);
 
   const onServerUrlTypeChange = useCallback(
-    async (type: any) =>
+    (type: any) =>
       setState((statePrev) => ({
         ...statePrev,
         serverUrlType: type,
@@ -218,7 +218,7 @@ export const SettingsRemoteConnectionScreen = () => {
     setState((statePrev) => ({ ...statePrev, qrScannerVisible: false }));
   }, []);
 
-  const onLogout = useCallback(async () => {
+  const onLogout = useCallback(() => {
     if (networkAvailable) {
       dispatch(RemoteConnectionActions.logout());
     } else {

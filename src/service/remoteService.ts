@@ -34,29 +34,24 @@ const withRetry = async (
   callback: () => Promise<any>,
   maxRetries = 1,
 ): Promise<any> => {
-  let attempt = 0;
-  while (true) {
-    try {
-      const result = await callback();
-      return result;
-    } catch (error: any) {
-      const status = Number(error?.response?.status);
-      const isAuthRefreshRequest =
-        error?.config?.url === AuthService.authTokenRefreshUrl;
-      if (status === 401 && !isAuthRefreshRequest && attempt < maxRetries) {
-        attempt += 1;
-        try {
-          await AuthService.refreshAuthTokens();
-        } catch {
-          // If refresh itself fails, propagate the original 401 error
-          throw error;
-        }
-        // Retry the callback after successful token refresh
-        continue;
+  try {
+    return await callback();
+  } catch (error: any) {
+    const status = Number(error?.response?.status);
+    const isAuthRefreshRequest =
+      error?.config?.url === AuthService.authTokenRefreshUrl;
+    if (status === 401 && !isAuthRefreshRequest && maxRetries > 0) {
+      try {
+        await AuthService.refreshAuthTokens();
+      } catch {
+        // If refresh itself fails, propagate the original 401 error
+        throw error;
       }
-      // Non-401 errors, refresh URL errors, or exhausted retries: propagate error
-      throw error;
+      // Retry the callback after successful token refresh
+      return withRetry(callback, maxRetries - 1);
     }
+    // Non-401 errors, refresh URL errors, or exhausted retries: propagate error
+    throw error;
   }
 };
 
@@ -114,13 +109,15 @@ const postCancelableMultipartData = async (
 ) => {
   const serverUrl = await getServerUrl();
   const config = { onUploadProgress };
-  const sendRequest = async () =>
-    API.postCancelableMultipartData({
-      serverUrl,
-      uri,
-      data,
-      config: attachAuthenticationHeaders(config),
-    });
+  const sendRequest = () =>
+    Promise.resolve(
+      API.postCancelableMultipartData({
+        serverUrl,
+        uri,
+        data,
+        config: attachAuthenticationHeaders(config),
+      }),
+    );
   return withRetry(sendRequest);
 };
 

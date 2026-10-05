@@ -33,7 +33,7 @@ export const SurveyCycleSelector = (props: SurveyCycleSelectorProps) => {
   const selectedValue = singleCycle ? defaultCycleKey : cycle;
 
   const onChange = useCallback(
-    async (selectedCycleKey: any) => {
+    (selectedCycleKey: any) => {
       dispatch(
         SurveyActions.setCurrentSurveyCycle({ cycleKey: selectedCycleKey }),
       );

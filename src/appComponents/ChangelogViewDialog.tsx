@@ -48,7 +48,7 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
   );
 
   useEffect(() => {
-    API.getFileAsText({ serverUrl: changelogUrl, uri: changelogUri }).then(
+    void API.getFileAsText({ serverUrl: changelogUrl, uri: changelogUri }).then(
       (text) => {
         setContent(text);
       },

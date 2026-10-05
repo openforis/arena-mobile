@@ -6,6 +6,7 @@ import {
   NodeDefType,
   NodeDefs,
   Objects,
+  Promises,
   Records,
   Survey,
   Surveys,
@@ -131,26 +132,30 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
         `RecordsExportFileGenerationJob: ${nodeDefsFile.length} file node def(s), already-on-server lookup done for ${Object.keys(filesAlreadyOnServerByRecordUuid).length} record(s)`,
       );
 
-      const files = [];
+      const files: any[] = [];
 
-      for (const recordSummary of recordsToExport) {
-        if (this.isCanceled()) {
-          this.logger.debug("RecordsExportFileGenerationJob: canceled before/during record export loop");
-          return;
-        }
+      await Promises.each(
+        recordsToExport,
+        async (recordSummary) => {
+          const recordFiles = await this.exportRecord({
+            recordSummary,
+            survey,
+            user,
+            tempFolderUri,
+            tempRecordsFolderUri,
+            nodeDefsFile,
+            filesAlreadyOnServerByRecordUuid,
+          });
+          files.push(...recordFiles);
 
-        const recordFiles = await this.exportRecord({
-          recordSummary,
-          survey,
-          user,
-          tempFolderUri,
-          tempRecordsFolderUri,
-          nodeDefsFile,
-          filesAlreadyOnServerByRecordUuid,
-        });
-        files.push(...recordFiles);
+          this.incrementProcessedItems();
+        },
+        () => this.isCanceled(),
+      );
 
-        this.incrementProcessedItems();
+      if (this.isCanceled()) {
+        this.logger.debug("RecordsExportFileGenerationJob: canceled before/during record export loop");
+        return;
       }
 
       // files summary file
@@ -294,12 +299,14 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     let hasMissingFiles = false;
     const exportedRecordFiles: any[] = [];
 
-    for (const recordFile of recordFiles) {
-      const { uuid: fileUuid } = recordFile;
+    // the server already has these exact file uuids stored: leave them out of the zip entirely
+    // (record.json still references them) to save re-uploading unchanged file content
+    const recordFilesToExport = recordFiles.filter(
+      (recordFile: any) => !alreadyUploadedFileUuids.has(recordFile.uuid),
+    );
 
-      // the server already has this exact file uuid stored: leave it out of the zip entirely
-      // (record.json still references it) to save re-uploading unchanged file content
-      if (alreadyUploadedFileUuids.has(fileUuid)) continue;
+    await Promises.each(recordFilesToExport, async (recordFile: any) => {
+      const { uuid: fileUuid } = recordFile;
 
       const fileUri = RecordFileService.getRecordFileUri({
         surveyId,
@@ -315,13 +322,13 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
           `File with uuid ${fileUuid} not found for record ${record.uuid}`,
         );
       }
-    }
+    });
 
     return { recordFiles: exportedRecordFiles, hasMissingFiles };
   }
 
-  override async generateResult() {
+  override generateResult() {
     const { outputFileUri, recordsWithMissingFiles } = this;
-    return { outputFileUri, recordsWithMissingFiles };
+    return Promise.resolve({ outputFileUri, recordsWithMissingFiles });
   }
 }

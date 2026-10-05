@@ -1,6 +1,6 @@
 import { Linking } from "react-native";
 
-const isValidUrl = async (url: string): Promise<boolean> =>
+const isValidUrl = (url: string): Promise<boolean> =>
   Linking.canOpenURL(url);
 
 /**

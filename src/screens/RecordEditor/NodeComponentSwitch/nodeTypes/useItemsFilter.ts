@@ -39,7 +39,7 @@ export const useItemsFilter = ({
     const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
     const expressionEvaluator = new RecordExpressionEvaluator();
-    Promise.all(
+    void Promise.all(
       items.map((item: any) => {
         if (alwaysIncludeItemFunction?.(item)) return true;
 

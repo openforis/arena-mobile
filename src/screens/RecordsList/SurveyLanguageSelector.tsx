@@ -34,7 +34,7 @@ export const SurveyLanguageSelector = () => {
     : preferredLang;
 
   const onChange = useCallback(
-    async (lang: LanguageCode) => {
+    (lang: LanguageCode) => {
       dispatch(SurveyActions.setCurrentSurveyPreferredLanguage({ lang }));
     },
     [dispatch],

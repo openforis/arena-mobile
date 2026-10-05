@@ -65,7 +65,7 @@ const checkLoggedInUser = async () => {
   try {
     const user = await UserService.fetchUser();
     return user;
-  } catch (error) {
+  } catch {
     // session expired
     return null;
   }
