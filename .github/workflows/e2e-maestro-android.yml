@@ -19,11 +19,16 @@ jobs:
         run: corepack enable
 
       - name: Install dependencies
-        run: yarn install --immutable
+        # no dependency needs lifecycle (install/postinstall) scripts: skip them
+        run: yarn install --immutable --mode=skip-build
 
       - name: Install Maestro CLI
+        env:
+          # pinned version, installed by the official install script
+          MAESTRO_VERSION: 2.11.0
         run: |
-          curl -fsSL "https://get.maestro.mobile.dev" | bash
+          curl --proto '=https' --tlsv1.2 -fsSL -o "$RUNNER_TEMP/install-maestro.sh" "https://get.maestro.mobile.dev"
+          bash "$RUNNER_TEMP/install-maestro.sh"
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
       # Build the APK FIRST (No emulator yet)
@@ -50,14 +55,14 @@ jobs:
       - name: Build Android APK
         run: |
           if [ "${{ steps.cache-android-prebuild.outputs.cache-hit }}" != "true" ]; then
-            npx expo prebuild --platform android
+            yarn expo prebuild --platform android
           fi
 
           # Manually create the bundle and assets folder
           mkdir -p android/app/src/main/assets
 
           # Manually bundle the JS into the assets folder
-          npx expo export:embed \
+          yarn expo export:embed \
            --platform android \
             --dev false \
             --entry-file node_modules/expo/AppEntry.js \
