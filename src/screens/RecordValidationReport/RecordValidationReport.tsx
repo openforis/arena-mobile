@@ -111,7 +111,7 @@ const extractValidationItem = ({
         }),
         NodeDefs.getLabelOrName(invalidNodeDef, lang),
       ]
-        .filter(Objects.isNotEmpty)
+        .filter((pathPart) => Objects.isNotEmpty(pathPart))
         .join(nodePathPartSeparator);
 
   const error = ValidationUtils.getJointErrorText({

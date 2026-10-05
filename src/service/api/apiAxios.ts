@@ -76,7 +76,8 @@ const test = async (options: RequestOptions): Promise<boolean> => {
   try {
     const response = await get(options);
     return response?.data?.status === "ok";
-  } catch (e) {
+  } catch {
+    // server not reachable or not responding correctly
     return false;
   }
 };

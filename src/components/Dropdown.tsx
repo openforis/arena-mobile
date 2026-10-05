@@ -70,7 +70,10 @@ export const Dropdown = (props: DropdownProps) => {
     ],
   );
 
-  const options = useMemo(() => items.map(itemToOption), [itemToOption, items]);
+  const options = useMemo(
+    () => items.map((item) => itemToOption(item)),
+    [itemToOption, items],
+  );
 
   const setValue = useCallback(
     async (val: any) => {

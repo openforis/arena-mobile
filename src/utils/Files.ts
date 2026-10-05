@@ -66,7 +66,8 @@ const listDir = async (dirUri: string): Promise<string[]> => {
   try {
     const fileNames = await FileSystem.readDirectoryAsync(dirUri);
     return fileNames.map((fileName) => path(dirUri, fileName));
-  } catch (error) {
+  } catch {
+    // directory not existing or not readable
     return [];
   }
 };

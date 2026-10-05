@@ -336,7 +336,7 @@ export const startCsvDataExportJob =
             const { result } = jobComplete;
             const { outputFileUri } = result || {};
             if (outputFileUri) {
-              Files.shareFile({
+              void Files.shareFile({
                 url: outputFileUri,
                 mimeType: Files.MIME_TYPES.zip,
                 dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
@@ -372,25 +372,23 @@ const onExportConfirmed =
   }: any) =>
     async (dispatch: any) => {
       try {
-        switch (selectedSingleChoiceValue) {
-          case exportType.remote:
-            dispatch(
-              startUploadDataToRemoteServer({
-                outputFileUri,
-                conflictResolutionStrategy,
-                skipMissingFiles,
-                onJobComplete,
-                silent,
-                chained,
-              }),
-            );
-            break;
-          default:
-            await Files.shareFile({
-              url: outputFileUri,
-              mimeType: Files.MIME_TYPES.zip,
-              dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
-            });
+        if (selectedSingleChoiceValue === exportType.remote) {
+          dispatch(
+            startUploadDataToRemoteServer({
+              outputFileUri,
+              conflictResolutionStrategy,
+              skipMissingFiles,
+              onJobComplete,
+              silent,
+              chained,
+            }),
+          );
+        } else {
+          await Files.shareFile({
+            url: outputFileUri,
+            mimeType: Files.MIME_TYPES.zip,
+            dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
+          });
         }
       } catch (error) {
         dispatch(handleError(error));

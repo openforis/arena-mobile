@@ -60,7 +60,7 @@ export const SettingsItem = (props: SettingsItemProps) => {
 
   const onValueChange = useCallback(
     (val: any) => {
-      onPropValueChange({ key: settingKey })(val);
+      void onPropValueChange({ key: settingKey })(val);
     },
     [onPropValueChange, settingKey],
   );

@@ -51,7 +51,7 @@ const selectIsNodeDefEnumerator =
 const selectIsNodeDefRootKey = (nodeDef: any) => (state: any) => {
   const survey = selectCurrentSurvey(state);
   const keyDefs = SurveyDefs.getRootKeyDefs({ survey });
-  return keyDefs.some((keyDef) => keyDef === nodeDef);
+  return keyDefs.includes(nodeDef);
 };
 
 const selectSurveysLocal = (state: any) => getSurveyState(state).surveysLocal;

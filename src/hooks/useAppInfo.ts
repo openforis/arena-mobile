@@ -7,7 +7,7 @@ export const useAppInfo = () => {
   const [state, setState] = useState({} as ArenaMobileAppInfo);
 
   useEffect(() => {
-    SystemUtils.getApplicationInfo().then((appInfo) => setState(appInfo));
+    void SystemUtils.getApplicationInfo().then((appInfo) => setState(appInfo));
   }, []);
 
   return state;

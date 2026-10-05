@@ -39,8 +39,8 @@ const copyValueToClipboard = (value: any) => {
   try {
     Clipboard?.setString(value);
     return true;
-  } catch (_error) {
-    // ignore it
+  } catch {
+    // clipboard not available: ignore it
     return false;
   }
 };

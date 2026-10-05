@@ -133,7 +133,7 @@ const uploadAutoSyncCandidates = async ({
       dispatch(ToastActions.show("dataEntry:autoSync.synced", { count: candidates.length }));
     }
     // refresh the status icon right away (e.g. pending -> synced) instead of waiting for the next tick
-    refreshAutoSyncStatus({ dispatch, getState });
+    void refreshAutoSyncStatus({ dispatch, getState });
   };
 
   // fire-and-forget, like the manual "Send data" flow: exportRecords resolves once the upload

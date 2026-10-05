@@ -46,7 +46,7 @@ export const useBreadcrumbItems = () => {
           });
         const keyValuesText =
           Object.values(keyValuesByName)
-            .filter(Objects.isNotEmpty)
+            .filter((keyValue) => Objects.isNotEmpty(keyValue))
             .join(", ") || "---";
         return nodeDefLabel + `[${keyValuesText}]`;
       }

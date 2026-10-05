@@ -283,7 +283,7 @@ export const useNodeCoordinateComponent = (props: any) => {
   useSelector((state) => {
     const record = DataEntrySelectors.selectRecord(state);
     const node = Records.getNodeByUuid(nodeUuid)(record);
-    RecordUtils.getCoordinateDistanceTarget({
+    void RecordUtils.getCoordinateDistanceTarget({
       survey,
       nodeDef,
       record,

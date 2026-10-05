@@ -20,7 +20,7 @@ export const useSurveysSearch = ({
       const _surveysFiltered = surveys.filter((survey: any) => {
         const { name, label, defaultLabel } = survey;
         const prepareForSearch = (v: any) =>
-          Objects.isEmpty(v) ? "" : v.toLocaleLowerCase().trim().replace(/_/g, " ");
+          Objects.isEmpty(v) ? "" : v.toLocaleLowerCase().trim().replaceAll("_", " ");
         const preparedVal = prepareForSearch(val);
         return (
           prepareForSearch(name).includes(preparedVal) ||

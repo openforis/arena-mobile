@@ -43,7 +43,7 @@ export const NodeTextReadOnlyValuePreview = (props: NodeValuePreviewProps) => {
       setNormalizedUrl(url);
     };
     if (isHyperlink) {
-      normalizeUrl();
+      void normalizeUrl();
     }
   }, [isHyperlink, value]);
 

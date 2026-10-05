@@ -87,7 +87,8 @@ const testServerUrl = async (serverUrl: any) => {
   try {
     const testResult = await API.test({ serverUrl, uri: "healthcheck" });
     return testResult;
-  } catch (error) {
+  } catch {
+    // server not reachable or not responding correctly
     return false;
   }
 };

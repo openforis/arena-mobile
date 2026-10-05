@@ -104,7 +104,7 @@ export const Dialog = (props: DialogProps) => {
             </RNPDialog.Content>
             {showActions && actions.length > 0 && (
               <RNPDialog.Actions>
-                {actions.map(({ onPress, textKey }: DialogAction) => (
+                {actions.map(({ onPress, textKey }) => (
                   <Button key={textKey} onPress={onPress} textKey={textKey} />
                 ))}
               </RNPDialog.Actions>
