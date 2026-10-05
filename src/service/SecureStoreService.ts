@@ -12,8 +12,8 @@ const setItem = (key: any, value: any) =>
     ? SecureStore.deleteItemAsync(key)
     : SecureStore.setItemAsync(key, value);
 
-const getAuthRefreshToken = async () => getItem(keys.authRefreshToken);
-const setAuthRefreshToken = async (value: any) =>
+const getAuthRefreshToken = () => getItem(keys.authRefreshToken);
+const setAuthRefreshToken = (value: any) =>
   setItem(keys.authRefreshToken, value);
 
 export const SecureStoreService = {

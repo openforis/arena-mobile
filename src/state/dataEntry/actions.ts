@@ -11,6 +11,7 @@ import {
   Objects,
   PointFactory,
   Points,
+  Promises,
   RecordFactory,
   Records,
   RecordUpdater,
@@ -136,19 +137,20 @@ const _prefillQualifierAttributes = async ({
       userGroup,
     });
 
-  for (const qualifierDef of qualifierDefs) {
+  // update qualifier attributes sequentially: each update starts from the previously updated record
+  await Promises.each(qualifierDefs, async (qualifierDef) => {
     const qualifierValue = qualifierValueByNodeDefUuid[qualifierDef.uuid];
-    if (qualifierValue === undefined) continue;
+    if (qualifierValue === undefined) return;
     const value = UserGroupQualifiers.resolveQualifierNodeValue({
       survey,
       nodeDef: qualifierDef,
       qualifierValue,
     });
-    if (value === undefined) continue;
+    if (value === undefined) return;
     const [qualifierNode] = Records.getNodesByDefUuid(qualifierDef.uuid)(
       record,
     );
-    if (!qualifierNode) continue;
+    if (!qualifierNode) return;
     const { record: recordUpdated, nodes: nodesUpdated } =
       await RecordUpdater.updateAttributeValue({
         user,
@@ -159,7 +161,7 @@ const _prefillQualifierAttributes = async ({
       });
     record = recordUpdated;
     nodes = { ...nodes, ...nodesUpdated };
-  }
+  });
   return { record, nodes };
 };
 

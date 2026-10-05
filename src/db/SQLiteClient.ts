@@ -1,4 +1,7 @@
 import * as SQLite from "expo-sqlite";
+
+import { Promises } from "@openforis/arena-core";
+
 import { log } from "utils";
 
 export class DowngradeError extends Error {
@@ -93,11 +96,11 @@ export default class SQLiteClient {
       );
       let currentDbVersion = prevDbVersion;
       log.debug("==== DB migrations start ====");
-      for (const migration of migrationsToRun) {
+      await Promises.each(migrationsToRun, async (migration) => {
         await migration(this);
         currentDbVersion += 1;
         await this.runSql(`PRAGMA user_version = ${currentDbVersion}`);
-      }
+      });
       log.debug("==== DB migrations complete ====");
     }
     return {

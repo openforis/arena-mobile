@@ -5,7 +5,13 @@ import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import * as Localization from "expo-localization";
 import * as ExpoScreenOrientation from "expo-screen-orientation";
 
-import { AppInfo, Dates, FileNames, UUIDs } from "@openforis/arena-core";
+import {
+  AppInfo,
+  Dates,
+  FileNames,
+  Promises,
+  UUIDs,
+} from "@openforis/arena-core";
 
 import { ScreenOrientation } from "model/ScreenOrientation";
 import { Environment } from "./Environment";
@@ -116,9 +122,9 @@ const getLanguageCode = () => {
 const cleanupTempFiles = async () => {
   // delete temp files in document and cache directories
   const directories = [Files.documentDirectory, Files.cacheDirectory];
-  for (const directory of directories) {
+  await Promises.each(directories, async (directory) => {
     const documentFileNames = await Files.listDirectory(directory);
-    for (const fileName of documentFileNames) {
+    await Promises.each(documentFileNames, async (fileName) => {
       // file name could be a records export file (starting with recordsExport-)
       // or a temporary file (named using UUID)
       if (
@@ -128,8 +134,8 @@ const cleanupTempFiles = async () => {
       ) {
         await Files.del(Files.path(directory, fileName), true);
       }
-    }
-  }
+    });
+  });
 };
 
 const openAppSettings = async () => {

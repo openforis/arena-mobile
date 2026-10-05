@@ -5,6 +5,8 @@ import {
 } from "react-native-logs";
 import * as FileSystem from "expo-file-system/legacy";
 
+import { Promises } from "@openforis/arena-core";
+
 import { Files } from "./Files";
 
 const maxRotatedFiles = 5; // Total log files will be 6 (Current + 5 Rotated)
@@ -41,7 +43,12 @@ const rotateLogFilesOnStartup = async (filePath: string): Promise<void> => {
       await FileSystem.deleteAsync(oldestLogPath, { idempotent: true });
 
       // 2. Shift existing rotated files up (e.g., 4 -> 5, 3 -> 4, etc.)
-      for (let i = maxRotatedFiles - 1; i >= 1; i--) {
+      // (indexes from maxRotatedFiles - 1 down to 1, processed sequentially)
+      const rotatedFileIndexes = Array.from(
+        { length: maxRotatedFiles - 1 },
+        (_, idx) => maxRotatedFiles - 1 - idx
+      );
+      await Promises.each(rotatedFileIndexes, async (i) => {
         const oldPath = Files.path(filePath, `${logFileNamePrefix}.${i}.log`);
         const newPath = Files.path(
           filePath,
@@ -50,7 +57,7 @@ const rotateLogFilesOnStartup = async (filePath: string): Promise<void> => {
         if (await Files.exists(oldPath)) {
           await Files.moveFile({ from: oldPath, to: newPath });
         }
-      }
+      });
 
       // 3. Rename the current log file (arena-mobile.log) to the first rotated file (arena-mobile.1.log)
       const newPrimaryBackupPath = Files.path(filePath, `arena-mobile.1.log`);
@@ -128,9 +135,9 @@ export const initializeLogger = async () => {
 
 export const clear = async () => {
   const logFiles = await Files.listDirectory(logsPath);
-  for (const file of logFiles) {
+  await Promises.each(logFiles, async (file) => {
     const filePath = Files.path(logsPath, file);
     await Files.del(filePath, true);
-  }
+  });
   await initializeLogger();
 };

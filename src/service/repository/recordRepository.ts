@@ -5,6 +5,7 @@ import {
   NodeDefs,
   NodeDefType,
   Objects,
+  Promises,
   RecordFixer,
   Records,
   Surveys,
@@ -319,7 +320,7 @@ const insertRecordSummaries = async ({
   const origin = RecordOrigin.remote;
   const insertedIds: any = [];
   await dbClient.transaction(async () => {
-    for (const recordSummary of recordSummaries) {
+    await Promises.each(recordSummaries, async (recordSummary: any) => {
       const { dateCreated, dateModified, ownerUuid, ownerName, uuid } =
         recordSummary;
       const keyColumnsValues = extractRemoteRecordSummaryKeyColumnsValues({
@@ -351,7 +352,7 @@ const insertRecordSummaries = async ({
         ],
       );
       insertedIds.push(insertId);
-    }
+    });
   });
   return insertedIds;
 };
@@ -508,14 +509,15 @@ const updateRecordsDateModifiedRemote = async ({
   dateModifiedRemoteByUuid,
 }: any) => {
   await dbClient.transaction(async () => {
-    for (const [uuid, dateModifiedRemote] of Object.entries(
-      dateModifiedRemoteByUuid,
-    )) {
-      await dbClient.runSql(
-        `UPDATE record SET date_modified_remote = ? WHERE survey_id = ? AND uuid = ?`,
-        [fixDatetime(dateModifiedRemote), surveyId, uuid],
-      );
-    }
+    await Promises.each(
+      Object.entries(dateModifiedRemoteByUuid),
+      async ([uuid, dateModifiedRemote]) => {
+        await dbClient.runSql(
+          `UPDATE record SET date_modified_remote = ? WHERE survey_id = ? AND uuid = ?`,
+          [fixDatetime(dateModifiedRemote), surveyId, uuid],
+        );
+      },
+    );
   });
 };
 
@@ -538,14 +540,18 @@ const fetchRecordsFileUuids = async ({
 
 const updateRecordsMergedInto = async ({ surveyId, mergedRecordsMap }: any) => {
   await dbClient.transaction(async () => {
-    for (const [uuid, mergedIntoRecordUuid] of Object.entries(mergedRecordsMap))
-      await dbClient.runSql(
-        `UPDATE record 
+    await Promises.each(
+      Object.entries(mergedRecordsMap),
+      async ([uuid, mergedIntoRecordUuid]) => {
+        await dbClient.runSql(
+          `UPDATE record 
          SET merged_into_record_uuid = ? 
          WHERE survey_id =? 
            AND uuid = ?`,
-        [mergedIntoRecordUuid, surveyId, uuid],
-      );
+          [mergedIntoRecordUuid, surveyId, uuid],
+        );
+      },
+    );
   });
 };
 

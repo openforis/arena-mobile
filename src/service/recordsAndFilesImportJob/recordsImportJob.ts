@@ -1,4 +1,4 @@
-import { ArenaRecord } from "@openforis/arena-core";
+import { ArenaRecord, Promises } from "@openforis/arena-core";
 
 import { JobMobile } from "model";
 import { ArrayUtils, Files } from "utils";
@@ -41,7 +41,7 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
     });
     const recordsSummaryByUuid = ArrayUtils.indexByUuid(recordsSummary);
 
-    for (const recordUuidAndCycle of fileRecordsSummary) {
+    await Promises.each(fileRecordsSummary, async (recordUuidAndCycle) => {
       const { uuid: recordUuid } = recordUuidAndCycle;
       const record = await this.readRecord(recordUuid);
       const existingRecordSummary = recordsSummaryByUuid[recordUuid];
@@ -51,7 +51,7 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
         await this.updateRecord(record);
       }
       this.incrementProcessedItems();
-    }
+    });
   }
 
   private async readRecord(recordUuid: string): Promise<ArenaRecord> {

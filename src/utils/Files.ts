@@ -3,7 +3,7 @@ import * as FileSystem from "expo-file-system/legacy";
 import { File } from "expo-file-system";
 import mime from "mime";
 
-import { Objects, Strings, UUIDs } from "@openforis/arena-core";
+import { Objects, Promises, Strings, UUIDs } from "@openforis/arena-core";
 
 import { Environment } from "./Environment";
 
@@ -81,22 +81,21 @@ const visitDirFilesRecursively = async ({
   visitor: (fileUri: string) => Promise<void>;
   visitDirectories?: boolean;
 }): Promise<void> => {
-  const stack = [dirUri];
-  while (stack.length > 0) {
-    const currentDirUri = stack.pop()!;
-    const fileUris = await listDir(currentDirUri);
-    for (const fileUri of fileUris) {
-      const info = await getInfo(fileUri);
-      if (info) {
-        if (!info.isDirectory || visitDirectories) {
-          await visitor(fileUri);
-        }
-        if (info.isDirectory) {
-          stack.push(fileUri);
-        }
-      }
+  const fileUris = await listDir(dirUri);
+  await Promises.each(fileUris, async (fileUri) => {
+    const info = await getInfo(fileUri);
+    if (!info) return;
+    if (!info.isDirectory || visitDirectories) {
+      await visitor(fileUri);
     }
-  }
+    if (info.isDirectory) {
+      await visitDirFilesRecursively({
+        dirUri: fileUri,
+        visitor,
+        visitDirectories,
+      });
+    }
+  });
 };
 
 const getInfo = async (

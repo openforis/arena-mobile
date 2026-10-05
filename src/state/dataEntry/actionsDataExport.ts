@@ -214,10 +214,10 @@ const startUploadDataToRemoteServer =
       });
       const progressRange = chained ? REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES.uploadAndProcess : {};
 
-      let shouldRetry = true;
-      let jobComplete: any = null;
-
-      while (shouldRetry) {
+      // runs the job, starting it again while the user chooses to retry it
+      const runUploadAndProcessJob = async (): Promise<any> => {
+        let jobComplete: any = null;
+        let shouldRetry: boolean;
         try {
           jobComplete = await JobMonitorActions.startAsync({
             dispatch,
@@ -238,7 +238,10 @@ const startUploadDataToRemoteServer =
         } catch (error: any) {
           shouldRetry = await handleUploadAndProcessError({ dispatch, error, silent });
         }
-      }
+        return shouldRetry ? runUploadAndProcessJob() : jobComplete;
+      };
+
+      const jobComplete = await runUploadAndProcessJob();
       if (!jobComplete) {
         log.debug("startUploadDataToRemoteServer: upload/processing canceled or failed");
       }

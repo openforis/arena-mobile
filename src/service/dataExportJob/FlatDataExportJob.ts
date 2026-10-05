@@ -9,6 +9,7 @@ import {
   NodeDef,
   NodeDefs,
   NodeDefType,
+  Promises,
   Records,
   Survey,
   Surveys,
@@ -93,10 +94,10 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     this.total = recordSummaries.length;
 
     this.logger.debug("Exporting records...");
-    for (const recordSummary of recordSummaries) {
+    await Promises.each(recordSummaries, async (recordSummary) => {
       await this.exportRecord({ recordSummary });
       this.incrementProcessedItems();
-    }
+    });
 
     await this.generateOutputFile();
   }
@@ -104,8 +105,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   private async createDataExportFiles() {
     const { survey, cycle, options } = this.context;
     const { includeFiles } = options;
-    let index = 0;
-    for (const nodeDef of this.nodeDefsToExport!) {
+    await Promises.each(this.nodeDefsToExport!, async (nodeDef, index) => {
       const dataExportModel = new FlatDataExportModel({
         survey,
         cycle,
@@ -123,8 +123,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
       });
       const tempFileUri = Files.path(this.tempFolderUri, fileName);
       await FlatDataWriter.writeCsvHeaders({ fileUri: tempFileUri, headers });
-      index += 1;
-    }
+    });
 
     if (includeFiles) {
       // create attached files subfolder
@@ -147,32 +146,32 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
       recordId: recordSummary.id,
     });
 
-    let nodeDefToExportIndex = 0;
-    for (const nodeDef of this.nodeDefsToExport!) {
-      const { rowsData, fileValues } = this.exportRecordNodes({
-        nodeDef,
-        record,
-      });
+    await Promises.each(
+      this.nodeDefsToExport!,
+      async (nodeDef, nodeDefToExportIndex) => {
+        const { rowsData, fileValues } = this.exportRecordNodes({
+          nodeDef,
+          record,
+        });
 
-      const fileName = FlatDataFiles.getFileName({
-        nodeDef,
-        index: nodeDefToExportIndex,
-        extension: "csv",
-      });
-      const tempFileUri = Files.path(this.tempFolderUri, fileName);
+        const fileName = FlatDataFiles.getFileName({
+          nodeDef,
+          index: nodeDefToExportIndex,
+          extension: "csv",
+        });
+        const tempFileUri = Files.path(this.tempFolderUri, fileName);
 
-      await FlatDataWriter.appendCsvRows({
-        fileUri: tempFileUri,
-        rows: rowsData,
-        options: { nullsToEmpty },
-      });
+        await FlatDataWriter.appendCsvRows({
+          fileUri: tempFileUri,
+          rows: rowsData,
+          options: { nullsToEmpty },
+        });
 
-      if (includeFiles && fileValues.length > 0) {
-        await this.exportRecordFiles({ record, fileValues });
-      }
-
-      nodeDefToExportIndex += 1;
-    }
+        if (includeFiles && fileValues.length > 0) {
+          await this.exportRecordFiles({ record, fileValues });
+        }
+      },
+    );
   }
 
   private async exportRecordFiles({
@@ -189,7 +188,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
       `Exporting ${fileValues.length} attached files for record ${record.uuid}`,
     );
 
-    for (const fileValue of fileValues) {
+    await Promises.each(fileValues, async (fileValue) => {
       const { fileUuid } = fileValue;
       const mappedFileName =
         this.uniqueFileNameGenerator.fileNamesByKey[fileUuid] ?? fileUuid;
@@ -212,7 +211,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
           `File with uuid ${fileUuid} not found for record ${record.uuid} file export`,
         );
       }
-    }
+    });
   }
 
   private async generateOutputFile() {
