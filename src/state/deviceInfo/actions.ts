@@ -152,11 +152,11 @@ const updateFreeDiskStorage = () => async (dispatch: any, getState: any) => {
 };
 
 const updateIsNetworkConnected =
-  (isNetworkConnected: any) => async (dispatch: any) => {
+  (isNetworkConnected: any) => (dispatch: any) => {
     dispatch({ type: DEVICE_INFO_UPDATE, payload: { isNetworkConnected } });
   };
 
-const updateOrientation = (orientation: any) => async (dispatch: any) => {
+const updateOrientation = (orientation: any) => (dispatch: any) => {
   dispatch({ type: DEVICE_INFO_UPDATE, payload: { orientation } });
 };
 

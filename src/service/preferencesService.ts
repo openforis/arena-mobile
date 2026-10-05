@@ -1,4 +1,4 @@
-import { Objects } from "@openforis/arena-core";
+import { Objects, Promises } from "@openforis/arena-core";
 import { asyncStorageKeys } from "./asyncStorage/asyncStorageKeys";
 import StoredObjectManager from "./storedObjectManager";
 
@@ -114,9 +114,9 @@ const clearSurveyUserGroup = async (surveyId: any) =>
   );
 
 const clearSurveyUserGroups = async (surveyIds: any) => {
-  for (const surveyId of surveyIds) {
+  await Promises.each(surveyIds, async (surveyId) => {
     await clearSurveyUserGroup(surveyId);
-  }
+  });
 };
 
 const clearPreferencesBySurveyId = async (surveyId: any) => {
@@ -124,9 +124,9 @@ const clearPreferencesBySurveyId = async (surveyId: any) => {
 };
 
 const clearPreferencesBySurveyIds = async (surveyIds: any) => {
-  for (const surveyId of surveyIds) {
+  await Promises.each(surveyIds, async (surveyId) => {
     await clearPreferencesBySurveyId(surveyId);
-  }
+  });
 };
 
 export const PreferencesService = {

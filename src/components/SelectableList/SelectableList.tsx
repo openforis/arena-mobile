@@ -30,6 +30,50 @@ const ListItemIcon = (props: ListItemIconProps) => {
   );
 };
 
+type SelectableListItemProps = ListItemIconProps & {
+  description: string | null;
+  title: string | null;
+};
+
+const SelectableListItem = (props: SelectableListItemProps) => {
+  const {
+    checked,
+    description,
+    editable,
+    item,
+    multiple,
+    onItemSelect,
+    title,
+  } = props;
+
+  const onPress = useCallback(() => onItemSelect(item), [item, onItemSelect]);
+
+  const renderLeft = useCallback(
+    () => (
+      <ListItemIcon
+        multiple={multiple}
+        checked={checked}
+        editable={editable}
+        onItemSelect={onItemSelect}
+        item={item}
+      />
+    ),
+    [checked, editable, item, multiple, onItemSelect],
+  );
+
+  return (
+    <RNPList.Item
+      disabled={!editable}
+      title={title}
+      description={description}
+      left={renderLeft}
+      onPress={onPress}
+      removeClippedSubviews
+      style={styles.item}
+    />
+  );
+};
+
 export type SelectableListProps = {
   editable?: boolean;
   itemKeyExtractor?: (item: any) => string;
@@ -77,22 +121,14 @@ export const SelectableList = (props: SelectableListProps) => {
 
   const renderItem = useCallback(
     ({ item }: any) => (
-      <RNPList.Item
-        disabled={!editable}
-        title={itemLabelExtractor(item)}
+      <SelectableListItem
+        checked={selectedItems.includes(item)}
         description={itemDescriptionExtractor(item)}
-        left={() => (
-          <ListItemIcon
-            multiple={multiple}
-            checked={selectedItems.includes(item)}
-            editable={editable}
-            onItemSelect={onItemSelect}
-            item={item}
-          />
-        )}
-        onPress={() => onItemSelect(item)}
-        removeClippedSubviews
-        style={styles.item}
+        editable={editable}
+        item={item}
+        multiple={multiple}
+        onItemSelect={onItemSelect}
+        title={itemLabelExtractor(item)}
       />
     ),
     [

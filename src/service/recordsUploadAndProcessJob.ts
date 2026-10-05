@@ -38,7 +38,7 @@ export class RecordsUploadAndProcessJob extends JobMobile<RecordsUploadAndProces
     ]);
   }
 
-  override async onInnerJobEvent(event: JobEvent) {
+  override onInnerJobEvent(event: JobEvent): Promise<void> {
     // JobBase's own onInnerJobEvent only copies the failed inner job's `status` up to this
     // (parent) job, not its `errors` - without this, this job's own `errors` (read from its
     // rejected/serialized summary by callers, e.g. startUploadDataToRemoteServer) would stay
@@ -50,8 +50,8 @@ export class RecordsUploadAndProcessJob extends JobMobile<RecordsUploadAndProces
     return super.onInnerJobEvent(event);
   }
 
-  override async generateResult() {
+  override generateResult() {
     const watcherJob = this.innerJobs?.[1];
-    return watcherJob?.result;
+    return Promise.resolve(watcherJob?.result);
   }
 }

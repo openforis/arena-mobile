@@ -214,10 +214,10 @@ const startUploadDataToRemoteServer =
       });
       const progressRange = chained ? REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES.uploadAndProcess : {};
 
-      let shouldRetry = true;
-      let jobComplete: any = null;
-
-      while (shouldRetry) {
+      // runs the job, starting it again while the user chooses to retry it
+      const runUploadAndProcessJob = async (): Promise<any> => {
+        let jobComplete: any = null;
+        let shouldRetry: boolean;
         try {
           jobComplete = await JobMonitorActions.startAsync({
             dispatch,
@@ -238,7 +238,10 @@ const startUploadDataToRemoteServer =
         } catch (error: any) {
           shouldRetry = await handleUploadAndProcessError({ dispatch, error, silent });
         }
-      }
+        return shouldRetry ? runUploadAndProcessJob() : jobComplete;
+      };
+
+      const jobComplete = await runUploadAndProcessJob();
       if (!jobComplete) {
         log.debug("startUploadDataToRemoteServer: upload/processing canceled or failed");
       }
@@ -280,7 +283,7 @@ const selectedOptionsToDataExportOptions = ({
 };
 
 export const startCsvDataExportJob =
-  () => async (dispatch: any, getState: any) => {
+  () => (dispatch: any, getState: any) => {
     try {
       const state = getState();
 
@@ -336,7 +339,7 @@ export const startCsvDataExportJob =
             const { result } = jobComplete;
             const { outputFileUri } = result || {};
             if (outputFileUri) {
-              Files.shareFile({
+              void Files.shareFile({
                 url: outputFileUri,
                 mimeType: Files.MIME_TYPES.zip,
                 dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
@@ -372,25 +375,23 @@ const onExportConfirmed =
   }: any) =>
     async (dispatch: any) => {
       try {
-        switch (selectedSingleChoiceValue) {
-          case exportType.remote:
-            dispatch(
-              startUploadDataToRemoteServer({
-                outputFileUri,
-                conflictResolutionStrategy,
-                skipMissingFiles,
-                onJobComplete,
-                silent,
-                chained,
-              }),
-            );
-            break;
-          default:
-            await Files.shareFile({
-              url: outputFileUri,
-              mimeType: Files.MIME_TYPES.zip,
-              dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
-            });
+        if (selectedSingleChoiceValue === exportType.remote) {
+          dispatch(
+            startUploadDataToRemoteServer({
+              outputFileUri,
+              conflictResolutionStrategy,
+              skipMissingFiles,
+              onJobComplete,
+              silent,
+              chained,
+            }),
+          );
+        } else {
+          await Files.shareFile({
+            url: outputFileUri,
+            mimeType: Files.MIME_TYPES.zip,
+            dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
+          });
         }
       } catch (error) {
         dispatch(handleError(error));
@@ -470,7 +471,7 @@ const _onExportFileGenerationSucceeded = async ({
   if (!onlyRemote && (await Files.isSharingAvailable())) {
     availableExportTypes.push(exportType.share);
   }
-  const onConfirm = async ({ selectedSingleChoiceValue }: OnConfirmParams) => {
+  const onConfirm = ({ selectedSingleChoiceValue }: OnConfirmParams) => {
     dispatch(
       onExportConfirmed({
         selectedSingleChoiceValue,

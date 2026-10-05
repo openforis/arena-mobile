@@ -100,11 +100,7 @@ export const PageNodesList = () => {
       const fieldValidations = nodes.map((node) =>
         Validations.getFieldValidation(node.uuid)(validation)
       );
-      if (
-        fieldValidations.length === 0 ||
-        fieldValidations.every(Validations.isValid)
-      )
-        return null;
+      if (fieldValidations.every(Validations.isValid)) return null;
       const hasErrors = fieldValidations.some(
         Validations.calculateHasNestedErrors
       );

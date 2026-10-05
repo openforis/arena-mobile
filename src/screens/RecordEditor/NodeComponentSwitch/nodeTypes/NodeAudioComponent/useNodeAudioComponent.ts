@@ -111,7 +111,7 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
     }
   }, [audioRecorder, toaster, t]);
 
-  const onPauseAudioRecordingPress = useCallback(async () => {
+  const onPauseAudioRecordingPress = useCallback(() => {
     try {
       audioRecorder.pause();
       setAudioRecordingPaused(true);
@@ -124,7 +124,7 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
     }
   }, [audioRecorder, t, toaster]);
 
-  const onResumeAudioRecordingPress = useCallback(async () => {
+  const onResumeAudioRecordingPress = useCallback(() => {
     try {
       audioRecorder.record();
       setAudioRecordingPaused(false);

@@ -346,7 +346,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
   );
 
   const recordItems = useMemo(() => {
-    const items = records.map(recordToItem);
+    const items = records.map((record) => recordToItem(record));
     if (!Objects.isEmpty(sort)) {
       ArrayUtils.sortByProps(sort)(items);
     }

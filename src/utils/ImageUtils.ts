@@ -211,7 +211,8 @@ const isValid = async (fileUri: any) => {
   try {
     const size = await getSize(fileUri);
     return !!size;
-  } catch (error) {
+  } catch {
+    // not a valid image
     return false;
   }
 };

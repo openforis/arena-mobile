@@ -74,7 +74,7 @@ const StatusBarPanel = (props: StatusBarPanelProps) => {
         tempFilesSize: Files.toHumanReadableFileSize(cacheSize),
       });
     };
-    fetchInfo();
+    void fetchInfo();
   }, [surveyId]);
 
   return (

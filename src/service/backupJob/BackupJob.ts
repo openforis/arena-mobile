@@ -41,8 +41,8 @@ export class BackupJob extends JobMobile<BackupJobContext> {
     this.context.outputFileUri = outputFileUri;
   }
 
-  override async generateResult() {
+  override generateResult() {
     const { outputFileUri } = this.context;
-    return { outputFileUri };
+    return Promise.resolve({ outputFileUri });
   }
 }

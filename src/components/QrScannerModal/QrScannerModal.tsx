@@ -43,10 +43,10 @@ export const QrScannerModal = (props: QrScannerModalProps) => {
       await SystemUtils.lockOrientationToPortrait();
       setLoading(false);
     };
-    init();
+    void init();
 
     return () => {
-      SystemUtils.unlockOrientation();
+      void SystemUtils.unlockOrientation();
     };
   }, [requestCameraPermission]);
 

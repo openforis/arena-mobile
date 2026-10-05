@@ -45,7 +45,7 @@ export const MultipleAttributeComponentWrapper = (
   const nodeDefLabel = NodeDefs.getLabelOrName(nodeDef, lang);
 
   const onNewPress = useCallback(() => {
-    const hasEmptyNodes = nodes.find(Nodes.isValueBlank);
+    const hasEmptyNodes = nodes.some((node) => Nodes.isValueBlank(node));
     if (hasEmptyNodes) {
       dispatch(
         MessageActions.setMessage({

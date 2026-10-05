@@ -1,11 +1,10 @@
 import { AsyncStorageUtils } from "./asyncStorage/AsyncStorageUtils";
 
 export default class StoredObjectManager {
-  _instance: any;
+  _instance: any = null;
   defaultValues: any;
   storageKey: any;
   constructor(storageKey: any, defaultValues = {}) {
-    this._instance = null;
     this.storageKey = storageKey;
     this.defaultValues = defaultValues;
   }

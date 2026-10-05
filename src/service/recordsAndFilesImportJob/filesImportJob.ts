@@ -1,3 +1,5 @@
+import { Promises } from "@openforis/arena-core";
+
 import { JobMobile } from "model";
 import { Files } from "utils";
 import { RecordsExportFile } from "../recordsExportFile";
@@ -27,7 +29,7 @@ export class FilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
 
     this.total = filesSummary.length;
 
-    for (const fileSummary of filesSummary) {
+    await Promises.each(filesSummary, async (fileSummary) => {
       const { uuid: fileUuid } = fileSummary;
 
       const sourceFileUri = Files.path(
@@ -42,6 +44,6 @@ export class FilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
       });
 
       this.incrementProcessedItems();
-    }
+    });
   }
 }

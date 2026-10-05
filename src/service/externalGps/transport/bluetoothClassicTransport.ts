@@ -220,13 +220,13 @@ const connect = async (sourceId: string): Promise<ExternalGpsConnection> => {
   };
 };
 
-const isBluetoothEnabled = async (): Promise<boolean> => {
-  if (!isModuleAvailable()) return false;
+const isBluetoothEnabled = (): Promise<boolean> => {
+  if (!isModuleAvailable()) return Promise.resolve(false);
   return RNBluetoothClassic.isBluetoothEnabled();
 };
 
-const requestBluetoothEnabled = async (): Promise<boolean> => {
-  if (!isModuleAvailable()) return false;
+const requestBluetoothEnabled = (): Promise<boolean> => {
+  if (!isModuleAvailable()) return Promise.resolve(false);
   return RNBluetoothClassic.requestBluetoothEnabled();
 };
 

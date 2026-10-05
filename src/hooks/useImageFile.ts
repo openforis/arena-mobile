@@ -75,7 +75,7 @@ export const useImageFile = (
       }
     };
 
-    updateFinalUri();
+    void updateFinalUri();
 
     return () => {
       mounted = false;

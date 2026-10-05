@@ -27,42 +27,26 @@ describe("nmeaSentenceParser", () => {
       expect(fix!.longitude).toBeCloseTo(-11.51667, 4);
     });
 
-    it("returns null when the checksum is invalid", () => {
-      const fix = parseGGA(
+    it.each([
+      [
+        "the checksum is invalid",
         "$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*00",
-      );
-
-      expect(fix).toBeNull();
-    });
-
-    it("returns null when the checksum is missing", () => {
-      const fix = parseGGA(
+      ],
+      [
+        "the checksum is missing",
         "$GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,",
-      );
-
-      expect(fix).toBeNull();
-    });
-
-    it("returns null when fix quality is 0 (no fix)", () => {
-      const fix = parseGGA(
+      ],
+      [
+        "fix quality is 0 (no fix)",
         "$GPGGA,123519,4807.038,N,01131.000,E,0,00,,,M,,M,,*5F",
-      );
-
-      expect(fix).toBeNull();
-    });
-
-    it("returns null for a sentence that is not a GGA sentence", () => {
-      const fix = parseGGA(
+      ],
+      [
+        "the sentence is not a GGA sentence",
         "$GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A",
-      );
-
-      expect(fix).toBeNull();
-    });
-
-    it("returns null when there are too few fields", () => {
-      const fix = parseGGA("$GPGGA,123519,4807.038,N*7F");
-
-      expect(fix).toBeNull();
+      ],
+      ["there are too few fields", "$GPGGA,123519,4807.038,N*7F"],
+    ])("returns null when %s", (_description, sentence) => {
+      expect(parseGGA(sentence)).toBeNull();
     });
   });
 

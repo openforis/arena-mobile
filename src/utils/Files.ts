@@ -3,7 +3,7 @@ import * as FileSystem from "expo-file-system/legacy";
 import { File } from "expo-file-system";
 import mime from "mime";
 
-import { Objects, Strings, UUIDs } from "@openforis/arena-core";
+import { Objects, Promises, Strings, UUIDs } from "@openforis/arena-core";
 
 import { Environment } from "./Environment";
 
@@ -57,7 +57,7 @@ const createTempFileInTempFolder = async (
   return path(tempFolderUri, fileNameWithExtension);
 };
 
-const mkDir = async (dirUri: string): Promise<void> =>
+const mkDir = (dirUri: string): Promise<void> =>
   FileSystem.makeDirectoryAsync(dirUri, {
     intermediates: true,
   });
@@ -66,7 +66,8 @@ const listDir = async (dirUri: string): Promise<string[]> => {
   try {
     const fileNames = await FileSystem.readDirectoryAsync(dirUri);
     return fileNames.map((fileName) => path(dirUri, fileName));
-  } catch (error) {
+  } catch {
+    // directory not existing or not readable
     return [];
   }
 };
@@ -80,22 +81,21 @@ const visitDirFilesRecursively = async ({
   visitor: (fileUri: string) => Promise<void>;
   visitDirectories?: boolean;
 }): Promise<void> => {
-  const stack = [dirUri];
-  while (stack.length > 0) {
-    const currentDirUri = stack.pop()!;
-    const fileUris = await listDir(currentDirUri);
-    for (const fileUri of fileUris) {
-      const info = await getInfo(fileUri);
-      if (info) {
-        if (!info.isDirectory || visitDirectories) {
-          await visitor(fileUri);
-        }
-        if (info.isDirectory) {
-          stack.push(fileUri);
-        }
-      }
+  const fileUris = await listDir(dirUri);
+  await Promises.each(fileUris, async (fileUri) => {
+    const info = await getInfo(fileUri);
+    if (!info) return;
+    if (!info.isDirectory || visitDirectories) {
+      await visitor(fileUri);
     }
-  }
+    if (info.isDirectory) {
+      await visitDirFilesRecursively({
+        dirUri: fileUri,
+        visitor,
+        visitDirectories,
+      });
+    }
+  });
 };
 
 const getInfo = async (
@@ -135,7 +135,7 @@ const exists = async (fileUri: any): Promise<boolean> => {
   return info?.exists ?? false;
 };
 
-const getFreeDiskStorage = async (): Promise<number> =>
+const getFreeDiskStorage = (): Promise<number> =>
   FileSystem.getFreeDiskStorageAsync();
 
 const jsonToString = (obj: any): string => JSON.stringify(obj, null, 2);
@@ -161,13 +161,13 @@ const getMimeTypeFromUri = (uri: string): string | null => {
 const getMimeTypeFromName = (fileName: string): string | null =>
   mime.getType(fileName);
 
-const readAsString = async (
+const readAsString = (
   fileUri: string,
   encoding?: FileSystem.EncodingType,
 ): Promise<string> =>
   FileSystem.readAsStringAsync(fileUri, encoding ? { encoding } : undefined);
 
-const readChunkAsString = async (
+const readChunkAsString = (
   fileUri: string,
   chunkNumber: number,
   chunkSize = defaultChunkSize,
@@ -178,13 +178,13 @@ const readChunkAsString = async (
     length: chunkSize,
   });
 
-const readAsBytes = async (
+const readAsBytes = (
   fileUri: string,
 ): Promise<Uint8Array<ArrayBuffer> | null> => {
   const fileObj = new File(fileUri);
   const fileHandle = fileObj.open();
   const fileSize = fileHandle.size;
-  return fileSize ? fileHandle.readBytes(fileSize) : null;
+  return Promise.resolve(fileSize ? fileHandle.readBytes(fileSize) : null);
 };
 
 const readJsonFromFile = async ({ fileUri }: any): Promise<Object | null> => {
@@ -200,14 +200,14 @@ const listDirectory = async (fileUri: string | null): Promise<string[]> => {
     return [];
   }
   try {
-    return readDirectoryAsync(fileUri);
-  } catch (e) {
+    return await readDirectoryAsync(fileUri);
+  } catch {
     // ignore it
     return [];
   }
 };
 
-const copyFile = async ({
+const copyFile = ({
   from,
   to,
 }: {
@@ -215,7 +215,7 @@ const copyFile = async ({
   to: string;
 }): Promise<void> => FileSystem.copyAsync({ from, to });
 
-const moveFile = async ({
+const moveFile = ({
   from,
   to,
 }: {
@@ -223,10 +223,10 @@ const moveFile = async ({
   to: string;
 }): Promise<void> => FileSystem.moveAsync({ from, to });
 
-const del = async (fileUri: string, ignoreErrors = false): Promise<void> =>
+const del = (fileUri: string, ignoreErrors = false): Promise<void> =>
   FileSystem.deleteAsync(fileUri, { idempotent: ignoreErrors });
 
-const download = async (
+const download = (
   uri: string,
   targetUri: string,
   options?: FileSystem.DownloadOptions,
@@ -301,7 +301,7 @@ const appendStringToFile = async ({
   await writeStringToFile({ content: finalContent, fileUri, encoding });
 };
 
-const isSharingAvailable = async (): Promise<boolean> =>
+const isSharingAvailable = (): Promise<boolean> =>
   Sharing.isAvailableAsync();
 
 const shareFile = async ({

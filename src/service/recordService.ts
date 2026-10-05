@@ -1,6 +1,7 @@
 import {
   Dates,
   Objects,
+  Promises,
   RecordCloner,
   Records,
   RecordValidator,
@@ -216,7 +217,7 @@ const updateLocalRecordsWithRemoteInfo = async ({
   recordsSummariesRemote: any[];
   survey: any;
 }) => {
-  for (const recordSummaryLocal of allRecordsSummariesInDevice) {
+  await Promises.each(allRecordsSummariesInDevice, async (recordSummaryLocal) => {
     const { origin, loadStatus, uuid } = recordSummaryLocal;
     const recordSummaryRemote = ArrayUtils.findByUuid(uuid)(
       recordsSummariesRemote,
@@ -236,7 +237,7 @@ const updateLocalRecordsWithRemoteInfo = async ({
         );
       }
     }
-  }
+  });
 };
 
 const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
@@ -469,7 +470,7 @@ const cloneRecordsIntoDefaultCycle = async ({
   const surveyId = survey.id;
   const defaultCycle = Surveys.getDefaultCycleKey(survey)!;
 
-  for (const recordSummary of recordSummaries) {
+  await Promises.each(recordSummaries, async (recordSummary: any) => {
     const { id: recordId } = recordSummary;
     const record = await RecordRepository.fetchRecord({
       survey,
@@ -486,9 +487,9 @@ const cloneRecordsIntoDefaultCycle = async ({
     await RecordRepository.insertRecord({ survey, record: recordCloned });
 
     // clone files
-    for (const [oldFileUuid, fileUuid] of Object.entries(
+    await Promises.each(Object.entries(
       newFileUuidsByOldUuid,
-    )) {
+    ), async ([oldFileUuid, fileUuid]) => {
       const sourceFileUri = RecordFileService.getRecordFileUri({
         surveyId,
         fileUuid: oldFileUuid,
@@ -498,15 +499,15 @@ const cloneRecordsIntoDefaultCycle = async ({
         fileUuid,
         sourceFileUri,
       });
-    }
-  }
+    });
+  });
 };
 
 // Recomputes validation from scratch (full node tree walk, ignoring the possibly stale
 // cached validation) for each given record and persists it. Used to reconcile records
 // whose displayed error/warning counts no longer match their actual content.
 const revalidateRecords = async ({ user, survey, recordIds }: any) => {
-  for (const recordId of recordIds) {
+  await Promises.each(recordIds, async (recordId) => {
     const record = await RecordRepository.fetchRecord({
       survey,
       recordId,
@@ -520,7 +521,7 @@ const revalidateRecords = async ({ user, survey, recordIds }: any) => {
       recordUuid: record.uuid,
       validation,
     });
-  }
+  });
 };
 
 export const RecordService = {

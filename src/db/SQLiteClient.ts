@@ -1,4 +1,7 @@
 import * as SQLite from "expo-sqlite";
+
+import { Promises } from "@openforis/arena-core";
+
 import { log } from "utils";
 
 export class DowngradeError extends Error {
@@ -38,15 +41,15 @@ export default class SQLiteClient {
     await this.privateDb!.execAsync(sql);
   }
 
-  async transaction(callback: any) {
+  transaction(callback: any) {
     return this.privateDb!.withTransactionAsync(callback);
   }
 
-  async one(sql: any, params?: any) {
+  one(sql: any, params?: any) {
     return this.privateDb!.getFirstAsync(sql, params);
   }
 
-  async many(sql: any, params?: any) {
+  many(sql: any, params?: any) {
     return this.privateDb!.getAllAsync(sql, params);
   }
 
@@ -93,11 +96,11 @@ export default class SQLiteClient {
       );
       let currentDbVersion = prevDbVersion;
       log.debug("==== DB migrations start ====");
-      for (const migration of migrationsToRun) {
+      await Promises.each(migrationsToRun, async (migration) => {
         await migration(this);
         currentDbVersion += 1;
         await this.runSql(`PRAGMA user_version = ${currentDbVersion}`);
-      }
+      });
       log.debug("==== DB migrations complete ====");
     }
     return {

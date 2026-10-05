@@ -77,17 +77,18 @@ const saveSettings = async (settings: SettingsObject) => {
   INSTANCE = settings;
 };
 
-const getCredentials = async (server: any) =>
+const getCredentials = (server: any) =>
   Keychain.getInternetCredentials(server);
 
-const setCredentials = async (server: any, email: any, password: any) =>
+const setCredentials = (server: any, email: any, password: any) =>
   Keychain.setInternetCredentials(server, email, password);
 
 const testServerUrl = async (serverUrl: any) => {
   try {
     const testResult = await API.test({ serverUrl, uri: "healthcheck" });
     return testResult;
-  } catch (error) {
+  } catch {
+    // server not reachable or not responding correctly
     return false;
   }
 };

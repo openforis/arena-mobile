@@ -90,8 +90,8 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadAndProcessJobContex
     await super.cancel();
   }
 
-  override async generateResult() {
+  override generateResult() {
     const { remoteJob } = this;
-    return { remoteJob };
+    return Promise.resolve({ remoteJob });
   }
 }

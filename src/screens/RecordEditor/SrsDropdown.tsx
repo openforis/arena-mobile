@@ -5,7 +5,7 @@ import { SurveySelectors } from "state";
 
 type SrsDropdownProps = {
   editable?: boolean;
-  onChange: (value: any) => Promise<void>;
+  onChange: (value: any) => Promise<void> | void;
   value?: any;
 };
 
