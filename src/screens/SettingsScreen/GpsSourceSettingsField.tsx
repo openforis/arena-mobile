@@ -73,7 +73,7 @@ export const GpsSourceSettingsField = (props: { value: string }) => {
   const onDevicePaired = useCallback(
     async (source: GpsSourceDescriptor) => {
       await refreshAvailableGpsSources();
-      await onChange(source.id);
+      onChange(source.id);
       setPairingModalVisible(false);
     },
     [onChange, refreshAvailableGpsSources],
