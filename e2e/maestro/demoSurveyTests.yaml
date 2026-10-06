@@ -6,3 +6,4 @@ appId: ${APP_ID}
 - runFlow: 006.demo-survey-regeneration.yaml
 - runFlow: 007.demo-survey-media.yaml
 - runFlow: 008.demo-survey-navigate-to-target.yaml
+- runFlow: 009.demo-survey-clear-not-applicable-values.yaml
