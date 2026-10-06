@@ -32,6 +32,7 @@ jest.mock("model", () => ({
     getNodeDefsLabelsOrNames: ({ survey, nodeDefUuids }: any) =>
       nodeDefUuids.map((uuid: string) => survey.nodeDefs[uuid].props.name),
   },
+  SurveyUtils: jest.requireActual("model/utils/SurveyUtils").SurveyUtils,
 }));
 jest.mock("service/preferencesService", () => ({
   PreferencesService: { setSurveyRecordLastEditedPage: jest.fn() },
@@ -104,8 +105,11 @@ const user: User = UserFactory.createInstance({
 });
 
 // "distance" is relevant only when the location has the expected number of individuals
-const buildSurvey = (distanceApplicableExpression: string) =>
-  new SurveyBuilder(
+const buildSurvey = async (
+  distanceApplicableExpression: string,
+  { keepNonApplicableValues = false } = {},
+) => {
+  const survey = await new SurveyBuilder(
     user,
     entityDef(
       "cluster",
@@ -118,6 +122,9 @@ const buildSurvey = (distanceApplicableExpression: string) =>
       ),
     ),
   ).build();
+  const props = { ...survey.props, keepNonApplicableValues };
+  return { ...survey, props } as Survey;
+};
 
 const buildRecord = (survey: Survey, individualsCount: number): Record => {
   const individuals = Array.from({ length: individualsCount }, (_, index) =>
@@ -222,6 +229,28 @@ describe("DataEntryActions: clear values of attributes becoming non-applicable",
       // the record in the store is untouched
       expect(getNodesByName(survey, record, "individual")).toHaveLength(5);
       expect(getDistanceValue(survey, record)).toBe(3.2);
+    });
+
+    it("keeps the values when the survey is configured to keep non-applicable values", async () => {
+      const survey = await buildSurvey("count(individual) >= 5", {
+        keepNonApplicableValues: true,
+      });
+      const record = buildRecord(survey, 5);
+      const individualToDelete = getNodesByName(
+        survey,
+        record,
+        "individual",
+      ).pop()!;
+      const dispatch = createDispatch({ survey, record, user });
+
+      await dispatch(DataEntryActions.deleteNodes([individualToDelete.uuid]));
+
+      expect(confirmMock).not.toHaveBeenCalled();
+      const recordStored = getStoredRecord();
+      expect(getNodesByName(survey, recordStored, "individual")).toHaveLength(
+        4,
+      );
+      expect(getDistanceValue(survey, recordStored)).toBe(3.2);
     });
 
     it("doesn't ask for confirmation when no value has to be cleared", async () => {

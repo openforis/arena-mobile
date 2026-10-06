@@ -16,6 +16,13 @@ const hasUpdates = ({
   return Dates.isAfter(remoteSurveyLastUpdate!, localSurveyLastUpdate!);
 };
 
+// survey setting (default false): when false, values of attributes becoming non-applicable are cleared
+// (keepNonApplicableValues is not in arena-core SurveyProps yet)
+const isKeepNonApplicableValues = (survey: Survey): boolean =>
+  (survey.props as { keepNonApplicableValues?: boolean })
+    .keepNonApplicableValues === true;
+
 export const SurveyUtils = {
   hasUpdates,
+  isKeepNonApplicableValues,
 };
