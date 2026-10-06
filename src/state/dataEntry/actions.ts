@@ -297,15 +297,34 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
     return;
   }
 
-  const { record: recordUpdated, nodes: nodesCreated } =
-    await RecordUpdater.createNodeAndDescendants({
-      user,
+  const {
+    record: recordUpdated,
+    nodes: nodesCreated,
+    clearedDefUuids,
+  } = await RecordUpdater.createNodeAndDescendants({
+    user,
+    survey,
+    record,
+    prevCycleRecord,
+    parentNode,
+    nodeDef,
+    clearNonApplicableValues: true,
+  });
+
+  const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
+  if (
+    !(await confirmClearNewlyInapplicableValues({
+      dispatch,
       survey,
-      record,
-      prevCycleRecord,
-      parentNode,
-      nodeDef,
-    });
+      lang,
+      clearedDefUuids,
+    }))
+  ) {
+    log.debug(
+      `Newly inapplicable values not confirmed. Reverting entity creation.`,
+    );
+    return;
+  }
 
   removeNodesFlags(nodesCreated);
 
@@ -344,14 +363,32 @@ const deleteNodes =
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
     const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);
+    const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
 
-    const { record: recordUpdated, nodes } = await RecordUpdater.deleteNodes({
+    const {
+      record: recordUpdated,
+      nodes,
+      clearedDefUuids,
+    } = await RecordUpdater.deleteNodes({
       user,
       survey,
       record,
       prevCycleRecord,
       nodeUuids,
+      clearNonApplicableValues: true,
     });
+
+    if (
+      !(await confirmClearNewlyInapplicableValues({
+        dispatch,
+        survey,
+        lang,
+        clearedDefUuids,
+      }))
+    ) {
+      log.debug(`Newly inapplicable values not confirmed. Reverting deletion.`);
+      return;
+    }
 
     removeNodesFlags(nodes);
 
