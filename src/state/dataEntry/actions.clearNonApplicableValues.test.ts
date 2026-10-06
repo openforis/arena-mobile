@@ -32,7 +32,6 @@ jest.mock("model", () => ({
     getNodeDefsLabelsOrNames: ({ survey, nodeDefUuids }: any) =>
       nodeDefUuids.map((uuid: string) => survey.nodeDefs[uuid].props.name),
   },
-  SurveyUtils: jest.requireActual("model/utils/SurveyUtils").SurveyUtils,
 }));
 jest.mock("service/preferencesService", () => ({
   PreferencesService: { setSurveyRecordLastEditedPage: jest.fn() },

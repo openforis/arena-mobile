@@ -3014,9 +3014,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openforis/arena-core@npm:^2.3.10":
-  version: 2.3.10
-  resolution: "@openforis/arena-core@npm:2.3.10"
+"@openforis/arena-core@npm:^2.3.17":
+  version: 2.3.17
+  resolution: "@openforis/arena-core@npm:2.3.17"
   dependencies:
     "@jsep-plugin/regex": "npm:^1.0.4"
     "@turf/bearing": "npm:^7.4.0"
@@ -3030,10 +3030,10 @@ __metadata:
     lodash.isequal: "npm:^4.5.0"
     lodash.topairs: "npm:^4.3.0"
     moment: "npm:^2.31.0"
-    n2words: "npm:^6.2.0"
+    n2words: "npm:^6.3.0"
     proj4: "npm:^2.22.0"
     uuid: "npm:^14.0.2"
-  checksum: 10c0/4755d0ef314582b5697a00c007f5fd165036de231ff9bb6dc1cf93a5fd9b93a715184b7820861ddb3c712c387a791eed4ee56fe98e48c466becce3eff76a249b
+  checksum: 10c0/e5e6fcc95c89ec54fa51ab5437171f662cb2a27123da52b0135c770fd11757f263971c8937d025a52189cc3d5c73e259e116954d029dbbc7735065ea8fbe4781
   languageName: node
   linkType: hard
 
@@ -4272,7 +4272,7 @@ __metadata:
     "@eslint/eslintrc": "npm:^3.3.7"
     "@eslint/js": "npm:^10.0.1"
     "@lodev09/react-native-exify": "npm:^1.0.3"
-    "@openforis/arena-core": "npm:^2.3.10"
+    "@openforis/arena-core": "npm:^2.3.17"
     "@react-native-async-storage/async-storage": "npm:2.2.0"
     "@react-native-clipboard/clipboard": "npm:^1.16.3"
     "@react-native-community/datetimepicker": "npm:9.1.0"
@@ -9880,12 +9880,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"n2words@npm:^6.2.0":
-  version: 6.2.0
-  resolution: "n2words@npm:6.2.0"
+"n2words@npm:^6.3.0":
+  version: 6.3.0
+  resolution: "n2words@npm:6.3.0"
   bin:
     n2words: bin/n2words.js
-  checksum: 10c0/74857a68f9036ac403a6adb7ee9e3674cc3e287638e6d7473200e50a76f4a3782111fe5cc11ccf6ddabe6ea6fc962e8b0b006d6fce95f5d7c9842612946be825
+  checksum: 10c0/04ce060fefcedbe03fbe3a08cb9efdf91a61550999dda8b1cec0048874161372f81f242728169d89d569d88155967e4e4293012b476abe1087c258849e3d89f8
   languageName: node
   linkType: hard
 

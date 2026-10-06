@@ -25,7 +25,6 @@ import {
   RecordUtils,
   RecordOrigin,
   SurveyDefs,
-  SurveyUtils,
   UserGroupQualifiers,
 } from "model";
 import { PreferencesService } from "service/preferencesService";
@@ -309,7 +308,7 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
     prevCycleRecord,
     parentNode,
     nodeDef,
-    clearNonApplicableValues: !SurveyUtils.isKeepNonApplicableValues(survey),
+    clearNonApplicableValues: !Surveys.isKeepNonApplicableValues(survey),
   });
 
   const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
@@ -376,7 +375,7 @@ const deleteNodes =
       record,
       prevCycleRecord,
       nodeUuids,
-      clearNonApplicableValues: !SurveyUtils.isKeepNonApplicableValues(survey),
+      clearNonApplicableValues: !Surveys.isKeepNonApplicableValues(survey),
     });
 
     if (
@@ -749,8 +748,7 @@ const updateAttribute =
           prevCycleRecord,
           attributeUuid: uuid,
           value,
-          clearNonApplicableValues:
-            !SurveyUtils.isKeepNonApplicableValues(survey),
+          clearNonApplicableValues: !Surveys.isKeepNonApplicableValues(survey),
         });
 
         if (
