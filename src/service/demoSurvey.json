@@ -33,8 +33,8 @@
   },
   "template": false,
   "dateCreated": "2025-11-25T10:57:14.948Z",
-  "dateModified": "2026-09-30T12:00:00.000Z",
-  "datePublished": "2026-09-30T12:00:00.000Z",
+  "dateModified": "2026-10-06T12:00:00.000Z",
+  "datePublished": "2026-10-06T12:00:00.000Z",
   "validation": null,
   "nodeDefs": {
     "db99782b-5d68-4e51-a698-ab18574c4295": {
@@ -2538,6 +2538,14 @@
                 "x": 0,
                 "y": 9,
                 "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "a97e00d4-a65b-41c0-b980-252609e7c5c3",
+                "w": 1,
+                "x": 0,
+                "y": 10,
+                "minH": 1
               }
             ]
           }
@@ -2548,7 +2556,7 @@
       "draft": false,
       "parentUuid": "db99782b-5d68-4e51-a698-ab18574c4295",
       "dateCreated": "2026-09-29T12:00:00.000Z",
-      "dateModified": "2026-09-29T12:00:00.000Z",
+      "dateModified": "2026-10-06T12:00:00.000Z",
       "propsAdvanced": {}
     },
     "f24046cb-29ed-442d-a7e9-d56b58283ad6": {
@@ -3246,6 +3254,42 @@
       "dateCreated": "2026-09-29T12:00:00.000Z",
       "dateModified": "2026-09-29T12:00:00.000Z",
       "propsAdvanced": {}
+    },
+    "a97e00d4-a65b-41c0-b980-252609e7c5c3": {
+      "id": "79",
+      "uuid": "a97e00d4-a65b-41c0-b980-252609e7c5c3",
+      "type": "text",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "regeneration_stems_note",
+        "cycles": ["0"],
+        "labels": { "en": "Multi-stem notes" },
+        "descriptions": {
+          "en": "Applicable only when there are at least 2 stems (relevance depending on a count of entities)."
+        },
+        "layout": { "0": { "hiddenWhenNotRelevant": true } }
+      },
+      "meta": {
+        "h": [
+          "db99782b-5d68-4e51-a698-ab18574c4295",
+          "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3"
+        ]
+      },
+      "published": true,
+      "draft": false,
+      "parentUuid": "f2c6ee4a-be0a-4e7f-af1c-b8e6d788f5a3",
+      "dateCreated": "2026-10-06T12:00:00.000Z",
+      "dateModified": "2026-10-06T12:00:00.000Z",
+      "propsAdvanced": {
+        "applicable": [
+          {
+            "uuid": "2dad76d4-6ee3-49c1-bcc2-0d70c8ac5f39",
+            "expression": "count(regeneration_stem) >= 2"
+          }
+        ]
+      }
     }
   },
   "nodeDefsIndex": {
@@ -3333,7 +3377,8 @@
         "4f758c4d-f40e-4b90-aa2c-12d5b03c78c0": true,
         "96a1830b-3fe3-4b31-a440-935d3d1b297a": true,
         "de85622d-9db6-4b76-ae47-15a745720584": true,
-        "155b5973-b2ca-456f-a6cb-5ec7bb77ec00": true
+        "155b5973-b2ca-456f-a6cb-5ec7bb77ec00": true,
+        "a97e00d4-a65b-41c0-b980-252609e7c5c3": true
       },
       "155b5973-b2ca-456f-a6cb-5ec7bb77ec00": {
         "62b49887-197c-4b51-a0be-312f00671bee": true,
@@ -3427,7 +3472,8 @@
       "media_interview_consent": "10250381-7a3d-4c23-ac6c-ee3da13c413e",
       "media_interview_audio": "49638255-9409-4d84-a3ce-4135cd8fd03c",
       "media_document": "913ffead-8a74-493c-a740-6335f5bbecfc",
-      "media_final_remarks": "0b2c929d-5344-4f51-aa51-0891c1a19953"
+      "media_final_remarks": "0b2c929d-5344-4f51-aa51-0891c1a19953",
+      "regeneration_stems_note": "a97e00d4-a65b-41c0-b980-252609e7c5c3"
     },
     "rootDefUuid": "db99782b-5d68-4e51-a698-ab18574c4295"
   },
@@ -3865,6 +3911,9 @@
       ],
       "10250381-7a3d-4c23-ac6c-ee3da13c413e": [
         "49638255-9409-4d84-a3ce-4135cd8fd03c"
+      ],
+      "155b5973-b2ca-456f-a6cb-5ec7bb77ec00": [
+        "a97e00d4-a65b-41c0-b980-252609e7c5c3"
       ]
     },
     "defaultValues": {

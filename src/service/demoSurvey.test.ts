@@ -383,6 +383,52 @@ describe("Demo survey", () => {
       r = await addEntity({ survey, record: r, name: "regeneration" });
       expect(getValues(survey, r, "regeneration_no")).toEqual([1, 2]);
     });
+
+    test("clears values no longer applicable after deleting an entity", async () => {
+      let r = record;
+      r = await addEntity({ survey, record: r, name: "regeneration" });
+      r = await updateValue({
+        survey,
+        record: r,
+        name: "regeneration_growth_form",
+        value: {
+          itemUuid: categoryItemUuid(survey, "regeneration_growth_form", ["3"]),
+        },
+      });
+      // regeneration_stems_note is applicable only with at least 2 stems
+      for (let count = 0; count < 2; count++) {
+        r = await addEntity({
+          survey,
+          record: r,
+          name: "regeneration_stem",
+          parentName: "regeneration",
+        });
+      }
+      r = await updateValue({
+        survey,
+        record: r,
+        name: "regeneration_stems_note",
+        value: "Forked",
+      });
+      const [, secondStem] = getNodesByName(survey, r, "regeneration_stem");
+      const { record: recordUpdated, clearedDefUuids } =
+        await RecordUpdater.deleteNodes({
+          user,
+          survey,
+          record: r,
+          nodeUuids: [secondStem!.uuid],
+          clearNonApplicableValues: true,
+        });
+      expect([...clearedDefUuids!]).toEqual([
+        getDef(survey, "regeneration_stems_note").uuid,
+      ]);
+      const [noteNode] = getNodesByName(
+        survey,
+        recordUpdated,
+        "regeneration_stems_note",
+      );
+      expect(noteNode!.value ?? null).toBeNull();
+    });
   });
 
   describe("records created with the previous version", () => {
