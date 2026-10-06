@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Clear values that become non-applicable when deleting or adding nodes;
 - BadElf external GPS device: support old protocols (iOS);
 
 ## [2.8.1] - 2026-10-02

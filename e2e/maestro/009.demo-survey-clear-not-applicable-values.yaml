@@ -1,0 +1,87 @@
+appId: ${APP_ID}
+---
+# Demo survey (bundled, no login): values of attributes that become not applicable
+# after deleting an entity are cleared.
+# "Multi-stem notes" is applicable only with at least 2 stems: count(regeneration_stem) >= 2
+- runFlow: common/demo-survey-new-record.yaml
+- runFlow:
+    file: common/open-page.yaml
+    env:
+      PAGE: "Regeneration"
+- tapOn: "New Regeneration"
+
+# stems are applicable only to poles
+- scrollUntilVisible:
+    element: "Pole.*"
+    direction: DOWN
+- tapOn: "Pole.*"
+- scrollUntilVisible:
+    element: "Edit Stems"
+    direction: DOWN
+- assertNotVisible: "Multi-stem notes"
+
+# add 2 stems
+- tapOn: "Edit Stems"
+- tapOn: "New Stems"
+- tapOn:
+    id: "stem_diameter"
+- inputText: "4.5"
+- tapOn: "Diameter \\[cm\\]"
+- tapOn: "Stems"
+- tapOn: "New Stems"
+- tapOn:
+    id: "stem_diameter"
+- inputText: "5.5"
+- tapOn: "Diameter \\[cm\\]"
+
+# back to the regeneration entity (breadcrumb): the attribute is now applicable
+- tapOn: "Regeneration\\[1\\]"
+- scrollUntilVisible:
+    element:
+      id: "regeneration_stems_note"
+    direction: DOWN
+- tapOn:
+    id: "regeneration_stems_note"
+- inputText: "Forked"
+- tapOn: "Multi-stem notes"
+- assertVisible: "Forked"
+
+# delete the second stem: the confirmation "Nodes will no longer apply" is shown
+- scrollUntilVisible:
+    element: "Edit Stems"
+    direction: UP
+- tapOn: "Edit Stems"
+- longPressOn: "5\\.5"
+- tapOn: "Delete"
+- tapOn:
+    id: "confirm-dialog-confirm-button"
+- extendedWaitUntil:
+    visible: "Nodes will no longer apply"
+    timeout: 10000
+- assertVisible: ".*Multi-stem notes.*"
+- swipe:
+    direction: RIGHT
+    from:
+      id: "SwipeThumb"
+    duration: 1000
+- tapOn:
+    id: "confirm-dialog-confirm-button"
+- assertNotVisible:
+    id: "confirm-dialog-title"
+- assertNotVisible: "5\\.5"
+
+# the attribute is not applicable anymore
+- tapOn: "Regeneration\\[1\\]"
+- scrollUntilVisible:
+    element: "Edit Stems"
+    direction: DOWN
+- assertNotVisible: "Multi-stem notes"
+
+# add a stem again: the attribute is applicable again and its value has been cleared
+- tapOn: "Edit Stems"
+- tapOn: "New Stems"
+- tapOn: "Regeneration\\[1\\]"
+- scrollUntilVisible:
+    element: "Multi-stem notes"
+    direction: DOWN
+- assertNotVisible: "Forked"

@@ -55,8 +55,9 @@ yarn e2e:maestro:android
 - `e2e/maestro/007.demo-survey-media.yaml`: bundled demo survey – file attributes (image picked from the gallery, video, audio, other)
 
 - `e2e/maestro/008.demo-survey-navigate-to-target.yaml`: bundled demo survey – "Navigate to target" compass dialog (coordinate with a `distance()` validation)
+- `e2e/maestro/009.demo-survey-clear-not-applicable-values.yaml`: bundled demo survey – value cleared when its attribute becomes not applicable after deleting an entity (relevance with `count()`)
 
-Flows 005-008 start from a clean app state (`launchApp: clearState: true`) and don't need a server login;
+Flows 005-009 start from a clean app state (`launchApp: clearState: true`) and don't need a server login;
 `e2e/maestro/demoSurveyTests.yaml` runs only them (plus the startup check).
 Shared steps are in `e2e/maestro/common/`; `e2e/maestro/assets/` contains the files added to the device gallery.
 
