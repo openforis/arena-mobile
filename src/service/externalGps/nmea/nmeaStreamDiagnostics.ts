@@ -1,6 +1,6 @@
 import { LocationPoint } from "model";
 
-const rawSamplesLimit = 5;
+const rawSamplesLimit = 15;
 const rawSampleMaxLength = 120;
 
 // e.g. "$GPGGA,..." -> "GPGGA"; proprietary sentences like "$PELFID,..." -> "PELFID"

@@ -32,7 +32,7 @@ describe("nmeaStreamDiagnostics", () => {
     const diagnostics = createNmeaStreamDiagnostics();
 
     expect(diagnostics.record("$\u0000A\r", null)).toBe('"$\\u0000A\\r"');
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 14; i++) {
       expect(diagnostics.record(rmc, null)).not.toBeNull();
     }
     expect(diagnostics.record(rmc, null)).toBeNull();
