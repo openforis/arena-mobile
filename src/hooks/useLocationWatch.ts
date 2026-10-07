@@ -296,8 +296,11 @@ export const useLocationWatch = ({
       sourceUnavailable: boolean;
     }) => {
       locationReadingsCountRef.current = 0;
+      const timeoutDescription = stopOnTimeout
+        ? `${locationWatchTimeout / 1000}s`
+        : "none";
       log.info(
-        `Location watch: watching source ${activeSourceId} (accuracy threshold: ${locationAccuracyThreshold}, timeout: ${stopOnTimeout ? `${locationWatchTimeout / 1000}s` : "none"}, averaging: ${!!locationAveragingEnabled}, stop on accuracy threshold: ${stopOnAccuracyThreshold}, source unavailable: ${sourceUnavailable})`,
+        `Location watch: watching source ${activeSourceId} (accuracy threshold: ${locationAccuracyThreshold}, timeout: ${timeoutDescription}, averaging: ${!!locationAveragingEnabled}, stop on accuracy threshold: ${stopOnAccuracyThreshold}, source unavailable: ${sourceUnavailable})`,
       );
 
       if (locationAveragingEnabled) {
