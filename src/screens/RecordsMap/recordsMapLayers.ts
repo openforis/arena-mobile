@@ -167,6 +167,17 @@ export const getAvailableLayers = ({
   return [...samplingPointLayers, ...coordinateLayers];
 };
 
+// true if the survey has sampling points with location or coordinate attributes to show on the map
+export const hasMapLayers = ({
+  survey,
+  cycle,
+}: {
+  survey: Survey;
+  cycle: string;
+}): boolean =>
+  !!getSamplingPointDataCategory(survey) ||
+  getCoordinateAttributeDefs({ survey, cycle }).length > 0;
+
 export const getLayerLabel = ({
   survey,
   layer,

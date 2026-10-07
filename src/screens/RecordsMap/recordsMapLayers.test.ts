@@ -12,6 +12,7 @@ import {
   buildSamplingPointFeatures,
   getAvailableLayers,
   getRecordUuidsBySamplingPointItemUuid,
+  hasMapLayers,
   RecordsMapLayerType,
 } from "./recordsMapLayers";
 
@@ -77,6 +78,23 @@ describe("recordsMapLayers", () => {
 
   beforeAll(async () => {
     survey = await buildSurvey();
+  });
+
+  test("map layers available only with sampling point locations or coordinate attributes", async () => {
+    expect(hasMapLayers({ survey, cycle })).toBe(true);
+
+    const user = UserFactory.createInstance({
+      email: "test@openforis.org",
+      name: "test",
+    });
+    const surveyWithoutLayers = await new SurveyBuilder(
+      user,
+      entityDef("cluster", codeDef("cluster_id", "sampling_point_data").key()),
+    )
+      // sampling point data without location
+      .categories(category("sampling_point_data").items(categoryItem("1")))
+      .build();
+    expect(hasMapLayers({ survey: surveyWithoutLayers, cycle })).toBe(false);
   });
 
   test("a layer for each sampling point level and coordinate attribute", () => {

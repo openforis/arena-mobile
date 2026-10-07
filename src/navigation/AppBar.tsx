@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Appbar as RNPAppbar } from "react-native-paper";
 
 import { Surveys } from "@openforis/arena-core";
@@ -10,6 +10,7 @@ import { RecordEditViewMode, ScreenViewMode } from "model";
 import { useIsTextDirectionRtl, useTranslation } from "localization";
 import { log } from "utils";
 import { screenKeys } from "screens";
+import { hasMapLayers } from "screens/RecordsMap/recordsMapLayers";
 import { Breadcrumbs } from "screens/RecordEditor/Breadcrumbs";
 import { RecordCompletionProgressBar } from "screens/RecordEditor/RecordCompletionProgressBar";
 import {
@@ -57,6 +58,11 @@ export const AppBar = (props: Props) => {
   const isRtl = useIsTextDirectionRtl();
   const survey = SurveySelectors.useCurrentSurvey();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
+  const cycle = SurveySelectors.useCurrentSurveyCycle();
+  const recordsMapAvailable = useMemo(
+    () => !!hasRecordsMap && !!survey && !!cycle && hasMapLayers({ survey, cycle }),
+    [cycle, hasRecordsMap, survey]
+  );
   const isLandscape = DeviceInfoSelectors.useOrientationIsLandscape();
   const isTablet = DeviceInfoSelectors.useIsTablet();
   const editingRecord =
@@ -219,7 +225,7 @@ export const AppBar = (props: Props) => {
             </>
           )}
 
-          {!editingRecord && hasRecordsMap && (
+          {!editingRecord && recordsMapAvailable && (
             <RNPAppbar.Action
               icon="map-marker-multiple-outline"
               onPress={onRecordsMapPress}
