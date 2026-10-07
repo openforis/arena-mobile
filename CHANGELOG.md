@@ -5,7 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.8.2] - TO-BE-RELEASED
+## [2.9.0] - TO-BE-RELEASED
+
+### Added
+
+- Alternative maps and Offline map area download;
+- Manually moving a sample point on the map;
+
+### Fixed
+
+- Clear values that become non-applicable when deleting or adding nodes;
+- BadElf external GPS device: support old protocols (iOS);
+
+## [2.8.2] - 2026-10-06
 
 ### Fixed
 
