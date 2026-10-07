@@ -195,6 +195,12 @@ Sus valores serán borrados.
     externalGpsGenericLabel: "dispositivo GPS externo",
     getLocation: "Obtener ubicación",
     heading: "Orientación (grados)",
+    map: {
+      chooserTitle: "Mostrar en el mapa",
+      inApp: "Arena Mobile",
+      inAppDescription: "Funciona sin conexión con mapas descargados",
+      viewerTitle: "Ubicación",
+    },
     headingOffset: "Desviación de rumbo",
     headingSource: "Fuente de rumbo",
     headingSourceMagnetometer: "Sensor",

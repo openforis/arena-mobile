@@ -254,6 +254,12 @@ export default {
     externalGpsGenericLabel: "外部GPSデバイス",
     getLocation: "位置を取得",
     heading: "方位 (度)",
+    map: {
+      chooserTitle: "地図で表示",
+      inApp: "Arena Mobile",
+      inAppDescription: "ダウンロード済みの地図でオフラインでも利用可能",
+      viewerTitle: "位置",
+    },
     headingOffset: "方位ずれ",
     headingSource: "方位ソース",
     headingSourceMagnetometer: "センサー",

@@ -199,6 +199,12 @@ export default {
     externalGpsGenericLabel: "دستگاه GPS خارجی",
     getLocation: "دریافت موقعیت مکانی",
     heading: "جهت (درجه)",
+    map: {
+      chooserTitle: "نمایش روی نقشه",
+      inApp: "Arena Mobile",
+      inAppDescription: "با نقشه‌های دانلودشده به‌صورت آفلاین کار می‌کند",
+      viewerTitle: "موقعیت",
+    },
     headingOffset: "انحراف جهت",
     headingSource: "منبع جهت",
     headingSourceMagnetometer: "حسگر",

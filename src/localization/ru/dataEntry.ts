@@ -194,6 +194,12 @@ export default {
     externalGpsGenericLabel: "внешнее устройство GPS",
     getLocation: "Получить местоположение",
     heading: "Курс (град)",
+    map: {
+      chooserTitle: "Показать на карте",
+      inApp: "Arena Mobile",
+      inAppDescription: "Работает офлайн со скачанными картами",
+      viewerTitle: "Местоположение",
+    },
     headingOffset: "Отклонение курса",
     headingSource: "Источник курса",
     headingSourceMagnetometer: "Датчик",
