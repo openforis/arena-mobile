@@ -39,6 +39,7 @@ const ChoiceItem = ({ description, onPress, selected, title }: ChoiceItemProps) 
       onPress={onPress}
       style={[
         styles.item,
+        { backgroundColor: colors.surface },
         {
           borderColor: selected ? colors.primary : colors.outlineVariant,
           borderWidth: selected ? 2 : 1,
@@ -72,7 +73,7 @@ export const MapAppChooserDialog = (props: Props) => {
       onClose={onClose}
       title="dataEntry:coordinate.map.chooserTitle"
     >
-      <VView style={styles.options}>
+      <VView style={styles.options} transparent>
         <ChoiceItem
           description={t("dataEntry:coordinate.map.inAppDescription")}
           onPress={() => onSelect(inAppChoiceId)}
