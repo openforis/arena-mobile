@@ -260,6 +260,8 @@ export default {
       chooserTitle: "地図で表示",
       inApp: "Arena Mobile",
       inAppDescription: "ダウンロード済みの地図でオフラインでも利用可能",
+      inAppDescriptionRelocatable:
+        "ダウンロード済みの地図でオフラインでも利用可能。位置を移動できます",
       show: "表示",
       viewerTitle: "位置",
     },

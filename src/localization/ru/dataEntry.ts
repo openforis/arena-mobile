@@ -200,6 +200,8 @@ export default {
       chooserTitle: "Показать на карте",
       inApp: "Arena Mobile",
       inAppDescription: "Работает офлайн со скачанными картами",
+      inAppDescriptionRelocatable:
+        "Работает офлайн со скачанными картами. Положение можно изменить",
       show: "Показать",
       viewerTitle: "Местоположение",
     },

@@ -95,6 +95,7 @@ export const OpenMapButton = (props: Props) => {
           onClose={onClose}
           onConfirm={onConfirm}
           onSelect={onSelect}
+          relocationAllowed={!!nodeUuid}
           selectedId={chooser.selectedId}
         />
       )}

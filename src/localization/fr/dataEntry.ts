@@ -207,6 +207,8 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
       chooserTitle: "Afficher sur la carte",
       inApp: "Arena Mobile",
       inAppDescription: "Fonctionne hors ligne avec les cartes téléchargées",
+      inAppDescriptionRelocatable:
+        "Fonctionne hors ligne avec les cartes téléchargées. La position peut être déplacée",
       show: "Afficher",
       viewerTitle: "Position",
     },

@@ -201,6 +201,8 @@ Deseja obtê-las novamente do servidor?`,
       chooserTitle: "Mostrar no mapa",
       inApp: "Arena Mobile",
       inAppDescription: "Funciona offline com mapas descarregados",
+      inAppDescriptionRelocatable:
+        "Funciona offline com mapas descarregados. A posição pode ser reposicionada",
       show: "Mostrar",
       viewerTitle: "Localização",
     },

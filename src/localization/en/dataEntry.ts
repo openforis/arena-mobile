@@ -265,6 +265,8 @@ Fetch the list of records from the server and try again?`,
       chooserTitle: "Show on map",
       inApp: "Arena Mobile",
       inAppDescription: "Works offline with downloaded maps",
+      inAppDescriptionRelocatable:
+        "Works offline with downloaded maps. The position can be relocated",
       show: "Show",
       viewerTitle: "Location",
     },

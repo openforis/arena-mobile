@@ -201,6 +201,8 @@ Sus valores serán borrados.
       chooserTitle: "Mostrar en el mapa",
       inApp: "Arena Mobile",
       inAppDescription: "Funciona sin conexión con mapas descargados",
+      inAppDescriptionRelocatable:
+        "Funciona sin conexión con mapas descargados. La posición se puede reubicar",
       show: "Mostrar",
       viewerTitle: "Ubicación",
     },

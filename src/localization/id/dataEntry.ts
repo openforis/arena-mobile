@@ -208,6 +208,8 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
       chooserTitle: "Tampilkan di peta",
       inApp: "Arena Mobile",
       inAppDescription: "Berfungsi secara offline dengan peta yang diunduh",
+      inAppDescriptionRelocatable:
+        "Berfungsi secara offline dengan peta yang diunduh. Posisi dapat dipindahkan",
       show: "Tampilkan",
       viewerTitle: "Lokasi",
     },

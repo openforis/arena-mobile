@@ -15,6 +15,7 @@ type Props = {
   onClose: () => void;
   onConfirm: () => void;
   onSelect: (choiceId: string) => void;
+  relocationAllowed?: boolean;
   selectedId: string;
 };
 
@@ -62,7 +63,14 @@ const ChoiceItem = ({ description, onPress, selected, title }: ChoiceItemProps) 
 };
 
 export const MapAppChooserDialog = (props: Props) => {
-  const { apps, onClose, onConfirm, onSelect, selectedId } = props;
+  const {
+    apps,
+    onClose,
+    onConfirm,
+    onSelect,
+    relocationAllowed = false,
+    selectedId,
+  } = props;
 
   const { t } = useTranslation();
   const { inAppChoiceId } = MapAppsService;
@@ -75,7 +83,11 @@ export const MapAppChooserDialog = (props: Props) => {
     >
       <VView style={styles.options} transparent>
         <ChoiceItem
-          description={t("dataEntry:coordinate.map.inAppDescription")}
+          description={t(
+            relocationAllowed
+              ? "dataEntry:coordinate.map.inAppDescriptionRelocatable"
+              : "dataEntry:coordinate.map.inAppDescription",
+          )}
           onPress={() => onSelect(inAppChoiceId)}
           selected={selectedId === inAppChoiceId}
           title={t("dataEntry:coordinate.map.inApp")}

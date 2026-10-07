@@ -191,6 +191,8 @@ export default {
       chooserTitle: "በካርታ አሳይ",
       inApp: "Arena Mobile",
       inAppDescription: "ያለ በይነመረብ ከወረዱ ካርታዎች ጋር ይሰራል",
+      inAppDescriptionRelocatable:
+        "ያለ በይነመረብ ከወረዱ ካርታዎች ጋር ይሰራል። ቦታውን ማንቀሳቀስ ይቻላል",
       show: "በካርታ አሳይ",
       viewerTitle: "ቦታ",
     },
