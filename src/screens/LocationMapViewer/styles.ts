@@ -12,4 +12,14 @@ export default StyleSheet.create({
     right: 8,
     bottom: 24,
   },
+  fitButtonAbovePanel: {
+    bottom: 96,
+  },
+  bottomPanel: {
+    padding: 8,
+    alignItems: "center",
+  },
+  hint: {
+    textAlign: "center",
+  },
 });

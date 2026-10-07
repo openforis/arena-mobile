@@ -12,6 +12,7 @@ import { MapApp, MapAppsService } from "service/mapApps";
 import { Environment, log } from "utils";
 
 type Props = {
+  nodeUuid?: string; // when set, the point can be moved in the in-app map
   point?: any;
   size?: number;
   srsIndex?: any;
@@ -20,7 +21,7 @@ type Props = {
 type ChooserState = { apps: MapApp[]; selectedId: string };
 
 export const OpenMapButton = (props: Props) => {
-  const { point, size = 30, srsIndex = undefined } = props;
+  const { nodeUuid, point, size = 30, srsIndex = undefined } = props;
 
   const navigation = useNavigation();
   // the map app chooser is experimental
@@ -73,7 +74,7 @@ export const OpenMapButton = (props: Props) => {
       await MapAppsService.rememberChoice(selectedId);
       if (selectedId === MapAppsService.inAppChoiceId) {
         navigation.navigate(
-          ...([screenKeys.locationMapViewer, { latitude, longitude }] as never),
+          ...([screenKeys.locationMapViewer, { latitude, longitude, nodeUuid }] as never),
         );
       } else {
         await MapAppsService.openApp(selectedId, { latitude, longitude });
@@ -81,7 +82,7 @@ export const OpenMapButton = (props: Props) => {
     } catch (error) {
       log.error("error opening map", error);
     }
-  }, [chooser, latitude, longitude, navigation]);
+  }, [chooser, latitude, longitude, navigation, nodeUuid]);
 
   if (!pointLatLng) return null;
 
@@ -94,6 +95,7 @@ export const OpenMapButton = (props: Props) => {
           onClose={onClose}
           onConfirm={onConfirm}
           onSelect={onSelect}
+          relocationAllowed={!!nodeUuid}
           selectedId={chooser.selectedId}
         />
       )}

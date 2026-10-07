@@ -181,6 +181,8 @@ export default {
     selectItem_plural: "Выберите элементы",
   },
   coordinate: {
+    longPressMarkerToMove: "Нажмите и удерживайте маркер, чтобы переместить его",
+    saveNewPosition: "Сохранить новую позицию",
     accuracy: "Точность (м)",
     altitude: "Высота (м)",
     altitudeAccuracy: "Точность высоты (м)",
@@ -198,6 +200,8 @@ export default {
       chooserTitle: "Показать на карте",
       inApp: "Arena Mobile",
       inAppDescription: "Работает офлайн со скачанными картами",
+      inAppDescriptionRelocatable:
+        "Работает офлайн со скачанными картами.\nПоложение можно изменить",
       show: "Показать",
       viewerTitle: "Местоположение",
     },
