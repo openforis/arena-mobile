@@ -135,7 +135,7 @@ export const ImagePreviewDialog = (props: ImagePreviewDialogProps) => {
       style={styles.dialog}
       title="dataEntry:fileAttributeImage.imagePreview"
     >
-      <VView style={styles.content} transparent>
+      <VView style={styles.content}>
         <Image source={{ uri: imageUri }} style={styles.image} />
 
         <Button
@@ -145,7 +145,7 @@ export const ImagePreviewDialog = (props: ImagePreviewDialogProps) => {
           textKey="common:shareFile"
         />
 
-        <HView transparent>
+        <HView>
           <CollapsiblePanel
             containerStyle={styles.details}
             headerKey="common:details"

@@ -47,13 +47,13 @@ const ChoiceItem = ({ description, onPress, selected, title }: ChoiceItemProps) 
         },
       ]}
     >
-      <HView style={styles.itemContent} transparent>
+      <HView style={styles.itemContent}>
         <RadioButton
           onPress={onPress}
           status={selected ? "checked" : "unchecked"}
           value={title}
         />
-        <VView style={styles.itemTexts} transparent>
+        <VView style={styles.itemTexts}>
           <Text variant="bodyLarge">{title}</Text>
           {description && <Text variant="bodySmall">{description}</Text>}
         </VView>
@@ -81,7 +81,7 @@ export const MapAppChooserDialog = (props: Props) => {
       onClose={onClose}
       title="dataEntry:coordinate.map.chooserTitle"
     >
-      <VView style={styles.options} transparent>
+      <VView style={styles.options}>
         <ChoiceItem
           description={t(
             relocationAllowed

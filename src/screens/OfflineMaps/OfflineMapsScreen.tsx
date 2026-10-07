@@ -95,7 +95,7 @@ const OfflineMapAreaItem = ({
         textParams={{ size: Files.toHumanReadableFileSize(area.sizeBytes) }}
       />
       {missingTiles > 0 && (
-        <HView style={styles.missingTilesRow} transparent>
+        <HView style={styles.missingTilesRow}>
           <Text
             style={styles.warningText}
             textKey="offlineMaps:area.missingTiles"
@@ -110,7 +110,7 @@ const OfflineMapAreaItem = ({
           />
         </HView>
       )}
-      <HView style={styles.areaFooter} transparent>
+      <HView style={styles.areaFooter}>
         <Text
           style={styles.areaLastUpdate}
           textKey="offlineMaps:area.lastUpdate"
@@ -251,7 +251,7 @@ export const OfflineMapsScreen = () => {
           </Card>
         )}
         <Card style={styles.storageCard}>
-          <HView style={styles.storageRow} transparent>
+          <HView style={styles.storageRow}>
             <Text
               style={styles.storageLabel}
               textKey="offlineMaps:storage.used"
@@ -262,7 +262,7 @@ export const OfflineMapsScreen = () => {
               <Text>{Files.toHumanReadableFileSize(tilesStorageSize)}</Text>
             )}
           </HView>
-          <HView style={styles.storageRow} transparent>
+          <HView style={styles.storageRow}>
             <Text textKey="offlineMaps:storage.free" />
             {freeDiskStorage !== null && (
               <Text>{Files.toHumanReadableFileSize(freeDiskStorage)}</Text>

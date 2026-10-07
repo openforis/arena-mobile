@@ -41,7 +41,6 @@ export const RecordCompletionProgressBar = (props: Props) => {
           ? styles.completionContainerCompact
           : { backgroundColor: theme.colors.elevation.level2 },
       ]}
-      transparent
     >
       <ProgressBar
         color={color}

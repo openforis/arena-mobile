@@ -19,7 +19,7 @@ export const SurveyUpdateProgressDialog = ({
 }: Props) => {
   return (
     <Dialog dismissable={false} showActions={false} title={titleKey}>
-      <VView style={styles.content} transparent>
+      <VView style={styles.content}>
         <Loader />
         <Text textKey="app:pleaseWaitMessage" variant="bodyLarge" />
       </VView>

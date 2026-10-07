@@ -53,9 +53,9 @@ export const UserSummary = ({
   }, [dispatch, onButtonPress]);
 
   return (
-    <HView style={[styles.container, style]} transparent>
+    <HView style={[styles.container, style]}>
       <UserProfileIcon onPress={onUserIconPress} size={profileIconSize} />
-      <VView style={styles.innerContainer} transparent>
+      <VView style={styles.innerContainer}>
         {serverUrl != AMConstants.defaultServerUrl && (
           <Text numberOfLines={1} onPress={onUserIconPress} style={styles.text}>
             {serverUrl}

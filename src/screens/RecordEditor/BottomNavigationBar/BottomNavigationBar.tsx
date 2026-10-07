@@ -87,7 +87,7 @@ export const BottomNavigationBar = () => {
 
   return (
     <HView style={styles.container}>
-      <View style={styles.buttonContainer} transparent>
+      <View style={styles.buttonContainer}>
         {listOfRecordsButtonVisible && <NavigateToRecordsListButton />}
 
         {prevPageButtonVisible && (
@@ -119,7 +119,7 @@ export const BottomNavigationBar = () => {
         />
       )}
 
-      <View style={styles.buttonContainer} transparent>
+      <View style={styles.buttonContainer}>
         {nextPageButtonVisible && (
           <NodePageNavigationButton
             icon={nextButtonIcon}

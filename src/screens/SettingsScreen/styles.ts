@@ -32,6 +32,10 @@ export default StyleSheet.create({
   button: {
     alignSelf: "center",
   },
+  offlineMapsButton: {
+    alignSelf: "center",
+    marginTop: 8,
+  },
   logsCardContent: {
     flex: 1,
     display: "flex",

@@ -86,7 +86,7 @@ export const AppConfirmDialog = () => {
                   <Text textKey={messageKey} textParams={messageParams} />
                 ))}
               {(multipleChoiceOptions?.length ?? 0) > 0 && (
-                <VView transparent>
+                <VView>
                   {multipleChoiceOptions!.map((option: any) => (
                     <Checkbox
                       key={option.value}
@@ -105,7 +105,7 @@ export const AppConfirmDialog = () => {
                   onValueChange={onSingleChoiceOptionChange}
                   value={selectedSingleChoiceValue}
                 >
-                  <VView transparent>
+                  <VView>
                     {singleChoiceOptions!.map((option: any) => (
                       <RadioButton
                         key={option.value}
@@ -117,7 +117,7 @@ export const AppConfirmDialog = () => {
                 </RadioButtonGroup>
               )}
               {swipeToConfirm && (
-                <OFView testID="confirm-swipe-button" transparent>
+                <OFView testID="confirm-swipe-button">
                   <SwipeButton
                     disableResetOnTap
                     onSwipeSuccess={setSwipeConfirmed}

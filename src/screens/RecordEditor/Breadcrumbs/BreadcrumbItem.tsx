@@ -38,7 +38,7 @@ export const BreadcrumbItem = (props: Props) => {
   }, [irRtl]);
 
   return (
-    <HView style={style} transparent>
+    <HView style={style}>
       <Button
         color={isLastItem ? "primary" : "secondary"}
         compact

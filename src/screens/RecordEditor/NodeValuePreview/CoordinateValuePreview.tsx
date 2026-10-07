@@ -49,7 +49,7 @@ export const CoordinateValuePreview = (props: NodeValuePreviewProps) => {
         ))}
       </VView>
       {hasPoint && (
-        <View style={styles.mapButton} transparent>
+        <View style={styles.mapButton}>
           <OpenMapButton point={value} srsIndex={srsIndex} />
         </View>
       )}
