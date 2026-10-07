@@ -52,7 +52,6 @@ export const MessageDialog = (props: MessageDialogProps) => {
         <CollapsiblePanel headerKey="common:details">
           <ScrollView
             persistentScrollbar
-            transparent
             style={{ maxHeight: 200 }}
           >
             <Text selectable variant="bodyMedium">
