@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import RNMapView, { Marker, MarkerDragStartEndEvent } from "react-native-maps";
 import { useRoute } from "@react-navigation/native";
 
 import { Button, IconButton, MapView, Text, VView } from "components";
 import { CurrentLocationDot } from "components/MapView/CurrentLocationDot";
-import { useLocationWatch } from "hooks";
-import { LatLng, LocationPoint } from "model";
+import { useCurrentLocationWatch } from "hooks";
+import { LatLng } from "model";
 import { DataEntryActions, useAppDispatch } from "state";
 import { log } from "utils";
 
@@ -32,9 +32,7 @@ export const LocationMapViewerScreen = () => {
     React.useState<LatLng>(savedPosition);
 
   const mapRef = useRef<RNMapView | null>(null);
-  const [currentLocation, setCurrentLocation] = React.useState<
-    (LatLng & { accuracy?: number | null }) | null
-  >(null);
+  const currentLocation = useCurrentLocationWatch();
 
   const target = markerPosition;
 
@@ -63,30 +61,6 @@ export const LocationMapViewerScreen = () => {
     );
     setSavedPosition(markerPosition);
   }, [dispatch, markerPosition, nodeUuid]);
-
-  const onLocation = useCallback(
-    ({ location }: { location: LocationPoint | null }) => {
-      if (!location) return;
-      setCurrentLocation({
-        latitude: location.latitude,
-        longitude: location.longitude,
-        accuracy: location.accuracy,
-      });
-    },
-    [],
-  );
-
-  const { startLocationWatch, stopLocationWatch } = useLocationWatch({
-    locationCallback: onLocation,
-    stopOnAccuracyThreshold: false,
-    stopOnTimeout: false,
-  });
-
-  useEffect(() => {
-    void startLocationWatch();
-    return () => stopLocationWatch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const onFitPress = useCallback(() => {
     const coordinates = currentLocation ? [target, currentLocation] : [target];

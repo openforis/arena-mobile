@@ -1,18 +1,12 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import RNMapView, { MapPressEvent, Region } from "react-native-maps";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 import { IconButton, Loader, MapView, Text, VView } from "components";
 import { CurrentLocationDot } from "components/MapView/CurrentLocationDot";
-import { useLocationWatch, useToast } from "hooks";
+import { useCurrentLocationWatch, useToast } from "hooks";
 import { useTranslation } from "localization";
-import { LatLng, LocationPoint, RecordUtils } from "model";
+import { LatLng, RecordUtils } from "model";
 import { RecordService } from "service";
 import { DataEntryActions, SurveySelectors, useAppDispatch } from "state";
 import { log } from "utils";
@@ -98,9 +92,7 @@ export const RecordsMapScreen = () => {
   const { loading, recordSummaries, nodeValues } = dataState;
   const [layersPanelVisible, setLayersPanelVisible] = useState(false);
   const [selection, setSelection] = useState<RecordsMapSelection | null>(null);
-  const [currentLocation, setCurrentLocation] = useState<
-    (LatLng & { accuracy?: number | null }) | null
-  >(null);
+  const currentLocation = useCurrentLocationWatch();
 
   const layers = useMemo(
     () => getAvailableLayers({ survey, cycle }),
@@ -249,30 +241,6 @@ export const RecordsMapScreen = () => {
       animated: true,
     });
   }, [visibleCoordinates]);
-
-  const onLocation = useCallback(
-    ({ location }: { location: LocationPoint | null }) => {
-      if (!location) return;
-      setCurrentLocation({
-        latitude: location.latitude,
-        longitude: location.longitude,
-        accuracy: location.accuracy,
-      });
-    },
-    [],
-  );
-
-  const { startLocationWatch, stopLocationWatch } = useLocationWatch({
-    locationCallback: onLocation,
-    stopOnAccuracyThreshold: false,
-    stopOnTimeout: false,
-  });
-
-  useEffect(() => {
-    void startLocationWatch();
-    return () => stopLocationWatch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const onCurrentLocationPress = useCallback(() => {
     if (!currentLocation) return;
