@@ -68,7 +68,7 @@ export const QrScannerModal = (props: QrScannerModalProps) => {
     <Modal onDismiss={onDismiss} titleKey={titleKey}>
       {loading && <Loader />}
       {!loading && cameraAccessAllowed && (
-        <View transparent style={styles.container}>
+        <View style={styles.container}>
           {/* The Camera View Component */}
           <CameraView
             barcodeScannerSettings={barcodeScannerSettings}
@@ -81,7 +81,7 @@ export const QrScannerModal = (props: QrScannerModalProps) => {
           <QrScannerOverlay />
 
           {/* Instructions at the bottom */}
-          <View transparent style={styles.instructionsContainer}>
+          <View style={styles.instructionsContainer}>
             <Markdown
               content={i18n.t(
                 "settingsRemoteConnection:loginUsingQrCodeInstructions",

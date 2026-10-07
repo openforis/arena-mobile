@@ -64,8 +64,8 @@ export const RecordsListDock = (props: RecordsListDockProps) => {
 
   return (
     <Surface elevation={2} style={styles.dock}>
-      <HView style={styles.dockRow} transparent>
-        <HView style={styles.dockSide} transparent>
+      <HView style={styles.dockRow}>
+        <HView style={styles.dockSide}>
           {showRecordActions && onNewRecordPress && (
             <Button
               icon="plus"
@@ -76,7 +76,7 @@ export const RecordsListDock = (props: RecordsListDockProps) => {
           )}
         </HView>
         {!isDemoSurvey && (
-          <FlexWrapView style={styles.dockCenter} transparent>
+          <FlexWrapView style={styles.dockCenter}>
             {showRecordActions && showSendDataButton && (
               <Button
                 compact
@@ -85,7 +85,7 @@ export const RecordsListDock = (props: RecordsListDockProps) => {
                 textKey="dataEntry:sendData"
               />
             )}
-            <HView style={styles.autoSyncGroup} transparent>
+            <HView style={styles.autoSyncGroup}>
               <AutoSyncStatusIcon />
               <Text
                 onPress={onAutoSyncEnabledChange}
@@ -100,7 +100,7 @@ export const RecordsListDock = (props: RecordsListDockProps) => {
             </HView>
           </FlexWrapView>
         )}
-        <HView style={[styles.dockSide, styles.dockSideEnd]} transparent>
+        <HView style={[styles.dockSide, styles.dockSideEnd]}>
           {showRecordActions && (
             <MenuButton
               anchorPosition="top"

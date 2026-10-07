@@ -113,7 +113,6 @@ export const AudioEqualizer = (props: AudioEqualizerProps) => {
             styles.equalizerBar,
             { backgroundColor: primaryColor, height, opacity },
           ]}
-          transparent
         />
       );
     });
@@ -140,11 +139,11 @@ export const AudioEqualizer = (props: AudioEqualizerProps) => {
 
   return (
     <>
-      <View style={styles.equalizerWrapper} transparent>
-        <HView style={styles.equalizerContainer} transparent>
+      <View style={styles.equalizerWrapper}>
+        <HView style={styles.equalizerContainer}>
           {equalizerBars}
         </HView>
-        <View style={playheadStyle} transparent />
+        <View style={playheadStyle} />
       </View>
       <Text style={styles.recordingElapsedTime}>{recordingElapsedTime}</Text>
     </>

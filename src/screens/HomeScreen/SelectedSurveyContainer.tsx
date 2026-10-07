@@ -127,8 +127,8 @@ export const SelectedSurveyContainer = () => {
 
   return (
     <Card style={styles.container}>
-      <VView style={styles.internalContainer} transparent>
-        <HView style={styles.surveyTitleContainer} transparent>
+      <VView style={styles.internalContainer}>
+        <HView style={styles.surveyTitleContainer}>
           <Text style={styles.surveyTitle} variant="titleMedium">
             {surveyTitle}
           </Text>
@@ -149,7 +149,7 @@ export const SelectedSurveyContainer = () => {
           <Link labelKey="surveys:fieldManual" url={fieldManualUrl} />
         )}
         {user && userRoleName && (
-          <HView style={styles.userGroupContainer} transparent>
+          <HView style={styles.userGroupContainer}>
             <Icon source="account-key" />
             <Text
               textKey="surveys:role.label"
@@ -158,7 +158,7 @@ export const SelectedSurveyContainer = () => {
           </HView>
         )}
         {hasQualifierDefs && user && (
-          <HView style={styles.userGroupContainer} transparent>
+          <HView style={styles.userGroupContainer}>
             {userGroupReady ? (
               <Icon source={userGroup ? "account-group" : "account-off"} />
             ) : (

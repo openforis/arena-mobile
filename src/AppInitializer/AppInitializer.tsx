@@ -156,7 +156,7 @@ export const AppInitializer = (props: Props) => {
 
   if (loading) {
     return (
-      <VView style={styles.container}>
+      <VView opaque style={styles.container}>
         <AppLogo style={styles.logo} />
         <Text textKey={`app:initializationStep:${step}`} variant="labelSmall" />
         <Text textKey="app:pleaseWaitMessage" variant="labelLarge" />
@@ -165,7 +165,7 @@ export const AppInitializer = (props: Props) => {
   }
   if (errorMessage) {
     return (
-      <View style={styles.container}>
+      <View opaque style={styles.container}>
         <Text textKey={`Error: ${errorMessage}`} />
       </View>
     );

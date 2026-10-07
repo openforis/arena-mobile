@@ -54,7 +54,7 @@ export const CurrentLocationDot = ({
       tappable={false}
       zIndex={1}
     >
-      <View style={styles.container} transparent>
+      <View style={styles.container}>
         <View style={styles.dot} />
       </View>
     </Marker>

@@ -180,7 +180,7 @@ export const AudioPlayback = memo((props: AudioPlaybackProps) => {
 
   return (
     <>
-      <HView style={styles.playbackButtonsContainer} transparent>
+      <HView style={styles.playbackButtonsContainer}>
         <IconButton
           icon={playing ? "pause" : "play"}
           onPress={onPlaybackPress}
@@ -207,7 +207,7 @@ export const AudioPlayback = memo((props: AudioPlaybackProps) => {
       </Pressable>
       {!!audioInfo && <Text>{audioInfo}</Text>}
       {!!fileSize && (
-        <HView style={styles.fileInfoContainer} transparent>
+        <HView style={styles.fileInfoContainer}>
           <Text>{fileSize}</Text>
           <IconButton icon="share-variant" onPress={onSharePress} size={20} />
         </HView>

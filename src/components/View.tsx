@@ -17,7 +17,7 @@ export type ViewProps = {
   fullWidth?: boolean;
   pointerEvents?: "box-none" | "none" | "box-only" | "auto";
   style?: StyleProp<ViewStyle>;
-  transparent?: boolean;
+  opaque?: boolean;
   testID?: string;
 };
 
@@ -28,15 +28,15 @@ export const View = (props: ViewProps) => {
     fullWidth = false,
     pointerEvents = undefined,
     style: styleProp,
-    transparent = false,
+    opaque = false,
     testID = undefined,
   } = props;
 
   const theme = useTheme();
 
   const backgroundColor = useMemo(
-    () => (transparent ? "transparent" : theme.colors.background),
-    [theme, transparent],
+    () => (opaque ? theme.colors.background : "transparent"),
+    [theme, opaque],
   );
 
   const style = useMemo(() => {

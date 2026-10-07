@@ -83,7 +83,7 @@ export const Dialog = (props: DialogProps) => {
           >
             {(title || showCloseButton) &&
               (showCloseButton ? (
-                <HView style={styles.titleRow} transparent>
+                <HView style={styles.titleRow}>
                   <RNPDialog.Title style={styles.titleFlex}>
                     {title && t(title)}
                   </RNPDialog.Title>
