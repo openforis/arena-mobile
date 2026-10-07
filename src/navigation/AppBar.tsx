@@ -144,7 +144,6 @@ export const AppBar = (props: Props) => {
             !isTablet && styles.topBarContainerCompact,
           ]}
           fullWidth
-          transparent
         >
           {editingRecord && (
             <RNPAppbar.Action

@@ -1,5 +1,6 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "react-native-paper";
 
 import { Objects } from "@openforis/arena-core";
 
@@ -43,6 +44,13 @@ export const SettingsScreen = () => {
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
   const navigation = useNavigation();
+  const theme = useTheme();
+
+  // same color as the FieldSet border
+  const itemWrapperStyle = useMemo(
+    () => [styles.settingsItemWrapper, { borderColor: theme.colors.onBackground }],
+    [theme.colors.onBackground],
+  );
 
   const settingsStored = SettingsSelectors.useSettings();
   // maps settings (related to offline maps) are experimental
@@ -54,14 +62,14 @@ export const SettingsScreen = () => {
 
   const onPropValueChange =
     ({ key }: { key: keyof SettingsObject }) =>
-    (value: any) => {
-      const oldValue = settings[key];
-      if (value === oldValue) return;
-      dispatch(SettingsActions.updateSetting({ key, value }));
-      setState((statePrev) =>
-        Objects.assocPath({ obj: statePrev, path: ["settings", key], value }),
-      );
-    };
+      (value: any) => {
+        const oldValue = settings[key];
+        if (value === oldValue) return;
+        dispatch(SettingsActions.updateSetting({ key, value }));
+        setState((statePrev) =>
+          Objects.assocPath({ obj: statePrev, path: ["settings", key], value }),
+        );
+      };
 
   const onExportLogsPress = useCallback(async () => {
     await AppService.exportLogsAndShareThem();
@@ -97,7 +105,7 @@ export const SettingsScreen = () => {
               headerStyle={styles.settingsGroupHeader}
             >
               {visibleEntries.map(([key, prop]) => (
-                <VView key={key} style={styles.settingsItemWrapper}>
+                <VView key={key} style={itemWrapperStyle}>
                   <SettingsItem
                     settings={settings}
                     settingKey={key as keyof SettingsObject}
@@ -107,7 +115,7 @@ export const SettingsScreen = () => {
                 </VView>
               ))}
               {isLocationGroup && (
-                <VView style={styles.settingsItemWrapper}>
+                <VView style={itemWrapperStyle}>
                   <GpsSourceSettingsField
                     value={settings.preferredGpsSourceId}
                   />
@@ -116,11 +124,10 @@ export const SettingsScreen = () => {
               {isMapsGroup && (
                 <Button
                   icon="map-marker-down"
-                  mode="text"
                   onPress={() =>
                     navigation.navigate(screenKeys.offlineMaps as never)
                   }
-                  style={styles.button}
+                  style={styles.offlineMapsButton}
                   textKey="offlineMaps:title"
                 />
               )}

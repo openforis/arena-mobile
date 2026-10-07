@@ -135,7 +135,7 @@ export const PageNodesList = () => {
   );
 
   return (
-    <VView fullFlex style={styles.container} transparent>
+    <VView fullFlex style={styles.container}>
       {!NodeDefs.isRoot(entityDef) && prevEntityPointer && (
         <NodePageNavigationButton
           icon="chevron-left"

@@ -18,7 +18,6 @@ export const Spacer = (props: Props) => {
       fullFlex={fullFlex && !width}
       fullWidth={fullWidth && !width}
       style={style}
-      transparent
     />
   );
 };

@@ -41,7 +41,7 @@ export const EntityButton = (props: EntityButtonProps) => {
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.entityButtonWrapper}>
-      <HView style={styles.entityButtonContent} transparent>
+      <HView style={styles.entityButtonContent}>
         {!isRoot && <Icon source={iconName} size={16} />}
         <Text style={textStyle} textKey={name} />
         <EntityStatusIndicators

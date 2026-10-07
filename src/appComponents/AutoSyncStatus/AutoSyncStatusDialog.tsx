@@ -111,7 +111,7 @@ export const AutoSyncStatusDialog = (props: Props) => {
       title="dataEntry:autoSync.statusTitle"
       visible={visible}
     >
-      <VView style={styles.content} transparent>
+      <VView style={styles.content}>
         <Checkbox
           checked={autoSyncEnabled}
           disabled={syncing}
@@ -140,7 +140,7 @@ export const AutoSyncStatusDialog = (props: Props) => {
           />
         )}
         {syncing && (
-          <VView style={styles.progress} transparent>
+          <VView style={styles.progress}>
             <Text
               textKey={
                 // while a job backs the progress (zip preparation, upload, then server-side

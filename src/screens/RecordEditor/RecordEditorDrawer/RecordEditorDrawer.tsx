@@ -64,7 +64,7 @@ export const RecordEditorDrawer = () => {
 
       <GpsLockingEnabledWarning />
 
-      <HView style={styles.buttonBar} transparent>
+      <HView style={styles.buttonBar}>
         <NavigateToRecordsListButton />
         {fieldManualUrl && (
           <IconButton

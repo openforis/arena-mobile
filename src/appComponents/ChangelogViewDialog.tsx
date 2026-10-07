@@ -73,7 +73,6 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
           <ScrollView
             style={styles.changelogContent}
             persistentScrollbar
-            transparent
           >
             <Markdown content={content} />
           </ScrollView>

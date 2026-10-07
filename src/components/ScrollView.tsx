@@ -8,7 +8,7 @@ type Props = {
   persistentScrollbar?: boolean;
   showsVerticalScrollIndicator?: boolean;
   style?: StyleProp<ViewStyle>;
-  transparent?: boolean;
+  opaque?: boolean;
 };
 
 export const ScrollView = forwardRef(function ScrollView(
@@ -19,7 +19,7 @@ export const ScrollView = forwardRef(function ScrollView(
     children,
     persistentScrollbar,
     style: styleProp,
-    transparent,
+    opaque,
     ...otherProps
   } = props;
 
@@ -28,11 +28,11 @@ export const ScrollView = forwardRef(function ScrollView(
   const style = useMemo(
     () => [
       {
-        backgroundColor: transparent ? "transparent" : theme.colors.background,
+        backgroundColor: opaque ? theme.colors.background : "transparent",
       },
       styleProp,
     ],
-    [transparent, theme.colors.background, styleProp]
+    [opaque, theme.colors.background, styleProp]
   );
 
   return (

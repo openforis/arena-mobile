@@ -15,7 +15,7 @@ export const CurrentLocationMarker = ({
   coordinate,
 }: CurrentLocationMarkerProps) => (
   <Marker coordinate={coordinate} anchor={markerCenterAnchor} tappable={false}>
-    <View style={styles.markerContainer} transparent>
+    <View style={styles.markerContainer}>
       <View style={styles.currentLocationMarker}>
         <View style={styles.currentLocationMarkerHorizontal} />
         <View style={styles.currentLocationMarkerVertical} />

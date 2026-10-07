@@ -18,7 +18,7 @@ export const TaxonValuePreview = (props: NodeValuePreviewProps) => {
   })!;
 
   return (
-    <VView fullFlex transparent>
+    <VView fullFlex>
       <Text variant="bodyLarge">{scientificNameAndCode}</Text>
       {vernacularNamePart && (
         <Text variant="bodyMedium">{vernacularNamePart}</Text>
