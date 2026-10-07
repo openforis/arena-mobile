@@ -227,7 +227,7 @@ export const AppBar = (props: Props) => {
 
           {!editingRecord && recordsMapAvailable && (
             <RNPAppbar.Action
-              icon="map-marker-multiple-outline"
+              icon="map-outline"
               onPress={onRecordsMapPress}
             />
           )}
