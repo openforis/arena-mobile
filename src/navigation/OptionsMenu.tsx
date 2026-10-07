@@ -7,13 +7,12 @@ import * as WebBrowser from "expo-web-browser";
 import { Surveys } from "@openforis/arena-core";
 
 import { MenuItem } from "components";
-import { useScreenKey } from "hooks";
+import { useExperimentalFeaturesEnabled, useScreenKey } from "hooks";
 import { screenKeys } from "screens";
 import {
   ConfirmActions,
   DataEntryActions,
   DataEntrySelectors,
-  RemoteConnectionSelectors,
   SurveySelectors,
   useAppDispatch,
 } from "state";
@@ -36,9 +35,8 @@ export const OptionsMenu = (props: Props) => {
   const editingRecord =
     DataEntrySelectors.useIsEditingRecord() &&
     screenKey === screenKeys.recordEditor;
-  // offline maps are available only to system administrators
-  const offlineMapsAvailable =
-    RemoteConnectionSelectors.useLoggedInUserIsSystemAdmin();
+  // offline maps are experimental
+  const offlineMapsAvailable = useExperimentalFeaturesEnabled();
   const survey = SurveySelectors.useCurrentSurvey();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const fieldManualUrl = survey
@@ -47,7 +45,7 @@ export const OptionsMenu = (props: Props) => {
 
   const anchor = useMemo(
     () => <RNPAppbar.Action icon="dots-vertical" onPress={toggleMenu} />,
-    [toggleMenu]
+    [toggleMenu],
   );
 
   if (!visible) {
@@ -136,7 +134,7 @@ export const OptionsMenu = (props: Props) => {
                   confirmButtonTextKey: "common:exit",
                   messageKey: "app:confirmExit.message",
                   onConfirm: BackHandler.exitApp,
-                })
+                }),
               );
             }}
             title="common:exit"
