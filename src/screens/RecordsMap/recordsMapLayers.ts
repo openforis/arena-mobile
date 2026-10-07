@@ -1,5 +1,4 @@
 import {
-  Categories,
   CategoryItem,
   CategoryItems,
   LanguageCode,
@@ -16,9 +15,6 @@ import {
 } from "@openforis/arena-core";
 
 import { SurveyDefs } from "model/utils/SurveyDefs";
-
-const samplingPointDataCategoryName = "sampling_point_data";
-const locationExtraPropName = "location";
 
 export enum RecordsMapLayerType {
   samplingPoints = "samplingPoints",
@@ -102,16 +98,8 @@ const toLatLong = ({
   }
 };
 
-export const getSamplingPointDataCategory = (survey: Survey) => {
-  const category = Surveys.getCategoryByName({
-    survey,
-    categoryName: samplingPointDataCategoryName,
-  });
-  if (!category) return null;
-  return Categories.getExtraPropDefByName(locationExtraPropName)(category)
-    ? category
-    : null;
-};
+export const getSamplingPointDataCategory = (survey: Survey) =>
+  SurveyDefs.getSamplingPointDataCategoryWithLocation(survey);
 
 const getSamplingPointLevelIndexes = (survey: Survey): number[] => {
   const category = getSamplingPointDataCategory(survey);
@@ -340,7 +328,8 @@ export const buildSamplingPointFeatures = ({
   });
   const features: RecordsMapPointFeature[] = [];
   for (const item of items) {
-    const location = item.props?.extra?.[locationExtraPropName];
+    const location =
+      item.props?.extra?.[SurveyDefs.samplingPointDataLocationPropName];
     if (!location) continue;
     const point = toLatLong({ point: Points.parse(location), srsIndex });
     if (!point) continue;
