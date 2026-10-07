@@ -211,7 +211,7 @@ Möchten Sie sie erneut vom Server abrufen?`,
       inApp: "Arena Mobile",
       inAppDescription: "Funktioniert offline mit heruntergeladenen Karten",
       inAppDescriptionRelocatable:
-        "Funktioniert offline mit heruntergeladenen Karten. Die Position kann verschoben werden",
+        "Funktioniert offline mit heruntergeladenen Karten.\nDie Position kann verschoben werden",
       show: "Anzeigen",
       viewerTitle: "Standort",
     },

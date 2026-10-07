@@ -208,7 +208,7 @@ Vill du hämta den igen från servern?`,
       inApp: "Arena Mobile",
       inAppDescription: "Fungerar offline med nedladdade kartor",
       inAppDescriptionRelocatable:
-        "Fungerar offline med nedladdade kartor. Positionen kan flyttas",
+        "Fungerar offline med nedladdade kartor.\nPositionen kan flyttas",
       show: "Visa",
       viewerTitle: "Plats",
     },

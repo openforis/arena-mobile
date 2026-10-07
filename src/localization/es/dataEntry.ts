@@ -202,7 +202,7 @@ Sus valores serán borrados.
       inApp: "Arena Mobile",
       inAppDescription: "Funciona sin conexión con mapas descargados",
       inAppDescriptionRelocatable:
-        "Funciona sin conexión con mapas descargados. La posición se puede reubicar",
+        "Funciona sin conexión con mapas descargados.\nLa posición se puede reubicar",
       show: "Mostrar",
       viewerTitle: "Ubicación",
     },

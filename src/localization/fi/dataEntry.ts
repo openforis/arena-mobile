@@ -207,7 +207,7 @@ Haluatko hakea sen uudelleen palvelimelta?`,
       inApp: "Arena Mobile",
       inAppDescription: "Toimii ilman verkkoyhteyttä ladattujen karttojen kanssa",
       inAppDescriptionRelocatable:
-        "Toimii ilman verkkoyhteyttä ladattujen karttojen kanssa. Sijaintia voi siirtää",
+        "Toimii ilman verkkoyhteyttä ladattujen karttojen kanssa.\nSijaintia voi siirtää",
       show: "Näytä",
       viewerTitle: "Sijainti",
     },
