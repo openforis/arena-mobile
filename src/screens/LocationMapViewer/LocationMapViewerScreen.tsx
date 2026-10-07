@@ -3,9 +3,9 @@ import RNMapView, { Marker, MarkerDragStartEndEvent } from "react-native-maps";
 import { useRoute } from "@react-navigation/native";
 
 import { Button, IconButton, MapView, Text, VView } from "components";
-import { CurrentLocationMarker } from "components/GeoPolygonEditor/CurrentLocationMarker";
+import { CurrentLocationDot } from "components/MapView/CurrentLocationDot";
 import { useLocationWatch } from "hooks";
-import { LatLng } from "model";
+import { LatLng, LocationPoint } from "model";
 import { DataEntryActions, useAppDispatch } from "state";
 import { log } from "utils";
 
@@ -32,9 +32,9 @@ export const LocationMapViewerScreen = () => {
     React.useState<LatLng>(savedPosition);
 
   const mapRef = useRef<RNMapView | null>(null);
-  const [currentLocation, setCurrentLocation] = React.useState<LatLng | null>(
-    null,
-  );
+  const [currentLocation, setCurrentLocation] = React.useState<
+    (LatLng & { accuracy?: number | null }) | null
+  >(null);
 
   const target = markerPosition;
 
@@ -65,11 +65,12 @@ export const LocationMapViewerScreen = () => {
   }, [dispatch, markerPosition, nodeUuid]);
 
   const onLocation = useCallback(
-    ({ location }: { location: LatLng | null }) => {
+    ({ location }: { location: LocationPoint | null }) => {
       if (!location) return;
       setCurrentLocation({
         latitude: location.latitude,
         longitude: location.longitude,
+        accuracy: location.accuracy,
       });
     },
     [],
@@ -113,7 +114,10 @@ export const LocationMapViewerScreen = () => {
           onDragEnd={onMarkerDragEnd}
         />
         {currentLocation && (
-          <CurrentLocationMarker coordinate={currentLocation} />
+          <CurrentLocationDot
+            accuracy={currentLocation.accuracy}
+            coordinate={currentLocation}
+          />
         )}
       </MapView>
       {nodeUuid && (
