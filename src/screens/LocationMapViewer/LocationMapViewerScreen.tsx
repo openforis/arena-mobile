@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { Marker } from "react-native-maps";
-import RNMapView from "react-native-maps";
+import RNMapView, { Marker } from "react-native-maps";
 import { useRoute } from "@react-navigation/native";
 
 import { IconButton, MapView, VView } from "components";

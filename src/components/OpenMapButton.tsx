@@ -19,6 +19,15 @@ type Props = {
   srsIndex?: any;
 };
 
+type IconProps = { color: string; style?: any };
+
+const InAppIcon = (props: IconProps) => (
+  <List.Icon {...props} icon="cellphone" />
+);
+const MapAppIcon = (props: IconProps) => (
+  <List.Icon {...props} icon="map-marker" />
+);
+
 const styles = StyleSheet.create({
   options: { gap: 4 },
   option: { borderRadius: 8, borderWidth: StyleSheet.hairlineWidth },
@@ -87,7 +96,7 @@ export const OpenMapButton = (props: Props) => {
             <List.Item
               description={t("dataEntry:coordinate.map.inAppDescription")}
               descriptionNumberOfLines={3}
-              left={(props) => <List.Icon {...props} icon="cellphone" />}
+              left={InAppIcon}
               onPress={onInAppPress}
               style={styles.option}
               title={t("dataEntry:coordinate.map.inApp")}
@@ -95,7 +104,7 @@ export const OpenMapButton = (props: Props) => {
             {apps.map((app) => (
               <List.Item
                 key={app.id}
-                left={(props) => <List.Icon {...props} icon="map-marker" />}
+                left={MapAppIcon}
                 onPress={() => onAppPress(app)}
                 style={styles.option}
                 title={app.name}

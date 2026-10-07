@@ -24,6 +24,11 @@ export const CoordinateValuePreview = (props: NodeValuePreviewProps) => {
   const srsIndex = SurveySelectors.useCurrentSurveySrsIndex();
   const hasPoint = Objects.isNotEmpty(value?.x) && Objects.isNotEmpty(value?.y);
 
+  const getLabel = (fieldKey: string) => {
+    const label = t(`dataEntry:coordinate.${fieldKey}`);
+    return `${label}:`;
+  };
+
   const fields = useMemo(() => {
     const includedExtraFields = NodeDefs.getCoordinateAdditionalFields(nodeDef);
     return ["x", "y", "srs", ...includedExtraFields];
@@ -35,7 +40,7 @@ export const CoordinateValuePreview = (props: NodeValuePreviewProps) => {
         {fields.map((fieldKey) => (
           <HView key={fieldKey} style={styles.row}>
             <Text style={styles.label} variant="labelLarge">
-              {`${t(`dataEntry:coordinate.${fieldKey}`)}:`}
+              {getLabel(fieldKey)}
             </Text>
             <Text style={styles.value} variant="bodyLarge">
               {value[fieldKey]}
