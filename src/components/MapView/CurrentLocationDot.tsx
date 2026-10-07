@@ -6,7 +6,10 @@ import { LatLng } from "model";
 
 import { View } from "../View";
 
-const dotColor = "#4285F4";
+const dotColorRgb = "66, 133, 244";
+const dotColor = `rgb(${dotColorRgb})`;
+const accuracyFillColor = `rgba(${dotColorRgb}, 0.15)`;
+const accuracyStrokeColor = `rgba(${dotColorRgb}, 0.4)`;
 
 type CurrentLocationDotProps = {
   accuracy?: number | null;
@@ -40,8 +43,8 @@ export const CurrentLocationDot = ({
       <Circle
         center={coordinate}
         radius={accuracy}
-        fillColor="rgba(66, 133, 244, 0.15)"
-        strokeColor="rgba(66, 133, 244, 0.4)"
+        fillColor={accuracyFillColor}
+        strokeColor={accuracyStrokeColor}
         strokeWidth={1}
       />
     )}
