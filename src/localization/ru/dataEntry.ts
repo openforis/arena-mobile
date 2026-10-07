@@ -181,6 +181,8 @@ export default {
     selectItem_plural: "Выберите элементы",
   },
   coordinate: {
+    longPressMarkerToMove: "Нажмите и удерживайте маркер, чтобы переместить его",
+    saveNewPosition: "Сохранить новую позицию",
     accuracy: "Точность (м)",
     altitude: "Высота (м)",
     altitudeAccuracy: "Точность высоты (м)",

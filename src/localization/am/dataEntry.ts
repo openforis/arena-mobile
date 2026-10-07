@@ -173,6 +173,8 @@ export default {
     selectItem_plural: "ንጥሎችን ይምረጡ",
   },
   coordinate: {
+    longPressMarkerToMove: "ምልክቱን ለማንቀሳቀስ በረጅሙ ይጫኑት",
+    saveNewPosition: "አዲስ ቦታ አስቀምጥ",
     accuracy: "ትክክለኛነት (ሜ)",
     altitude: "ከፍታ (ሜ)",
     altitudeAccuracy: "የከፍታ ትክክለኛነት (ሜ)",

@@ -187,6 +187,8 @@ Haluatko hakea sen uudelleen palvelimelta?`,
     selectItem_plural: "Valitse kohteet",
   },
   coordinate: {
+    longPressMarkerToMove: "Siirrä merkkiä painamalla sitä pitkään",
+    saveNewPosition: "Tallenna uusi sijainti",
     accuracy: "Tarkkuus (m)",
     altitude: "Korkeus (m)",
     altitudeAccuracy: "Korkeuden tarkkuus (m)",

@@ -188,6 +188,8 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
     selectItem_plural: "Sélectionner des éléments",
   },
   coordinate: {
+    longPressMarkerToMove: "Appuyez longuement sur le marqueur pour le déplacer",
+    saveNewPosition: "Enregistrer la nouvelle position",
     accuracy: "Précision (m)",
     altitude: "Altitude (m)",
     altitudeAccuracy: "Précision de l'altitude (m)",

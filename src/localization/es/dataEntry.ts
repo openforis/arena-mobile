@@ -182,6 +182,8 @@ Sus valores serán borrados.
     selectItem_plural: "Seleccionar elementos",
   },
   coordinate: {
+    longPressMarkerToMove: "Mantén pulsado el marcador para moverlo",
+    saveNewPosition: "Guardar nueva posición",
     accuracy: "Precisión (m)",
     altitude: "Altitud (m)",
     altitudeAccuracy: "Precisión de altitud (m)",

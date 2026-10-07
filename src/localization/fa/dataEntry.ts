@@ -186,6 +186,8 @@ export default {
     selectItem_plural: "انتخاب موارد",
   },
   coordinate: {
+    longPressMarkerToMove: "برای جابه‌جایی، نشانگر را طولانی لمس کنید",
+    saveNewPosition: "ذخیره موقعیت جدید",
     accuracy: "دقت (متر)",
     altitude: "ارتفاع (متر)",
     altitudeAccuracy: "دقت ارتفاع (متر)",

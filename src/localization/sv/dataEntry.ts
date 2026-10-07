@@ -188,6 +188,8 @@ Vill du hämta den igen från servern?`,
     selectItem_plural: "Välj objekt",
   },
   coordinate: {
+    longPressMarkerToMove: "Håll ned markören för att flytta den",
+    saveNewPosition: "Spara ny position",
     accuracy: "Noggrannhet (m)",
     altitude: "Höjd (m)",
     altitudeAccuracy: "Höjdnoggrannhet (m)",

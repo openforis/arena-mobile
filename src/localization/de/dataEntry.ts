@@ -191,6 +191,8 @@ Möchten Sie sie erneut vom Server abrufen?`,
     selectItem_plural: "Elemente auswählen",
   },
   coordinate: {
+    longPressMarkerToMove: "Marker lange drücken, um ihn zu verschieben",
+    saveNewPosition: "Neue Position speichern",
     accuracy: "Genauigkeit (m)",
     altitude: "Höhe (m)",
     altitudeAccuracy: "Höhengenauigkeit (m)",

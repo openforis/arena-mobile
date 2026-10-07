@@ -182,6 +182,8 @@ Deseja obtê-las novamente do servidor?`,
     selectItem_plural: "Selecionar itens",
   },
   coordinate: {
+    longPressMarkerToMove: "Pressione e segure o marcador para movê-lo",
+    saveNewPosition: "Guardar nova posição",
     accuracy: "Precisão (m)",
     altitude: "Altitude (m)",
     altitudeAccuracy: "Precisão da altitude (m)",

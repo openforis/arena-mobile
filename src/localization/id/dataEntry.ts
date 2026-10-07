@@ -189,6 +189,8 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
     selectItem_plural: "Pilih item",
   },
   coordinate: {
+    longPressMarkerToMove: "Tekan lama penanda untuk memindahkannya",
+    saveNewPosition: "Simpan posisi baru",
     accuracy: "Akurasi (m)",
     altitude: "Ketinggian (m)",
     altitudeAccuracy: "Akurasi ketinggian (m)",
