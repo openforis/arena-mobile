@@ -246,6 +246,8 @@ Fetch the list of records from the server and try again?`,
     selectItem_plural: "Select items",
   },
   coordinate: {
+    longPressMarkerToMove: "Long press the marker to move it",
+    saveNewPosition: "Save new position",
     accuracy: "Accuracy (m)",
     altitude: "Altitude (m)",
     altitudeAccuracy: "Altitude accuracy (m)",

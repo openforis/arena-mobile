@@ -10,6 +10,13 @@ export default StyleSheet.create({
   fitButton: {
     position: "absolute",
     right: 8,
-    bottom: 24,
+    bottom: 96,
+  },
+  bottomPanel: {
+    padding: 8,
+    alignItems: "center",
+  },
+  hint: {
+    textAlign: "center",
   },
 });

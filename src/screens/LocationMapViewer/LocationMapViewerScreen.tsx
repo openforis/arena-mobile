@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import RNMapView, { Marker, MarkerDragStartEndEvent } from "react-native-maps";
 import { useRoute } from "@react-navigation/native";
 
-import { IconButton, MapView, VView } from "components";
+import { Button, IconButton, MapView, Text, VView } from "components";
 import { CurrentLocationMarker } from "components/GeoPolygonEditor/CurrentLocationMarker";
 import { useLocationWatch } from "hooks";
 import { LatLng } from "model";
@@ -24,38 +24,45 @@ export const LocationMapViewerScreen = () => {
   const params = route.params as LocationMapViewerParams;
   const { nodeUuid } = params;
   const dispatch = useAppDispatch();
-  const [latitude, setLatitude] = React.useState(Number(params.latitude));
-  const [longitude, setLongitude] = React.useState(Number(params.longitude));
+  const [savedPosition, setSavedPosition] = React.useState<LatLng>({
+    latitude: Number(params.latitude),
+    longitude: Number(params.longitude),
+  });
+  const [markerPosition, setMarkerPosition] =
+    React.useState<LatLng>(savedPosition);
 
   const mapRef = useRef<RNMapView | null>(null);
   const [currentLocation, setCurrentLocation] = React.useState<LatLng | null>(
     null,
   );
 
-  const target = useMemo(() => ({ latitude, longitude }), [latitude, longitude]);
+  const target = markerPosition;
 
   const initialRegion = useMemo(
-    () => ({ ...target, latitudeDelta: 0.005, longitudeDelta: 0.005 }),
-    [target],
+    () => ({ ...savedPosition, latitudeDelta: 0.005, longitudeDelta: 0.005 }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
-  const onMarkerDragEnd = useCallback(
-    (event: MarkerDragStartEndEvent) => {
-      const { latitude: lat, longitude: lng } = event.nativeEvent.coordinate;
-      setLatitude(lat);
-      setLongitude(lng);
-      if (nodeUuid) {
-        dispatch(
-          DataEntryActions.updateCoordinateValueFromLatLong({
-            nodeUuid,
-            latitude: lat,
-            longitude: lng,
-          }),
-        );
-      }
-    },
-    [dispatch, nodeUuid],
-  );
+  const relocated =
+    markerPosition.latitude !== savedPosition.latitude ||
+    markerPosition.longitude !== savedPosition.longitude;
+
+  const onMarkerDragEnd = useCallback((event: MarkerDragStartEndEvent) => {
+    const { latitude: lat, longitude: lng } = event.nativeEvent.coordinate;
+    setMarkerPosition({ latitude: lat, longitude: lng });
+  }, []);
+
+  const onSavePress = useCallback(() => {
+    if (!nodeUuid) return;
+    dispatch(
+      DataEntryActions.updateCoordinateValueFromLatLong({
+        nodeUuid,
+        ...markerPosition,
+      }),
+    );
+    setSavedPosition(markerPosition);
+  }, [dispatch, markerPosition, nodeUuid]);
 
   const onLocation = useCallback(
     ({ location }: { location: LatLng | null }) => {
@@ -109,6 +116,22 @@ export const LocationMapViewerScreen = () => {
           <CurrentLocationMarker coordinate={currentLocation} />
         )}
       </MapView>
+      {nodeUuid && (
+        <VView style={styles.bottomPanel}>
+          {relocated ? (
+            <Button
+              icon="content-save"
+              onPress={onSavePress}
+              textKey="dataEntry:coordinate.saveNewPosition"
+            />
+          ) : (
+            <Text
+              style={styles.hint}
+              textKey="dataEntry:coordinate.longPressMarkerToMove"
+            />
+          )}
+        </VView>
+      )}
       <IconButton
         icon="crosshairs-gps"
         onPress={onFitPress}
