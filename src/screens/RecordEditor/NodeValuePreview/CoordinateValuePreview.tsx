@@ -11,7 +11,8 @@ import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 const styles = StyleSheet.create({
   grid: { flex: 1, gap: 6 },
   row: { alignItems: "baseline" },
-  cell: { flex: 1 },
+  label: { width: 150 },
+  value: { flex: 1 },
   mapButton: { alignSelf: "center" },
 });
 
@@ -33,10 +34,10 @@ export const CoordinateValuePreview = (props: NodeValuePreviewProps) => {
       <VView style={styles.grid}>
         {fields.map((fieldKey) => (
           <HView key={fieldKey} style={styles.row}>
-            <Text style={styles.cell} variant="labelLarge">
+            <Text style={styles.label} variant="labelLarge">
               {`${t(`dataEntry:coordinate.${fieldKey}`)}:`}
             </Text>
-            <Text style={styles.cell} variant="bodyLarge">
+            <Text style={styles.value} variant="bodyLarge">
               {value[fieldKey]}
             </Text>
           </HView>
