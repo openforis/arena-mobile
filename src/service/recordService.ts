@@ -526,6 +526,7 @@ const revalidateRecords = async ({ user, survey, recordIds }: any) => {
 
 export const RecordService = {
   fetchRecord,
+  fetchNodeValuesByDefUuids: RecordRepository.fetchNodeValuesByDefUuids,
   fetchRecordSummary,
   fetchRecords,
   syncRecordSummaries,

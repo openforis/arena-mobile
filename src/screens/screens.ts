@@ -7,6 +7,7 @@ import OfflineMapAreaViewer from "./OfflineMapAreaViewer";
 import OfflineMaps from "./OfflineMaps";
 import RecordEditor from "./RecordEditor";
 import RecordsList from "./RecordsList";
+import RecordsMap from "./RecordsMap";
 import RecordValidationReport from "./RecordValidationReport";
 import SettingsScreen from "./SettingsScreen";
 import SettingsRemoteConnectionScreen from "./SettingsRemoteConnectionScreen";
@@ -59,9 +60,16 @@ export const screens = {
   },
   [screenKeys.recordsList]: {
     ...screenDefaults,
+    hasRecordsMap: true,
     hasToggleScreenView: true,
     title: "dataEntry:listOfRecords",
     component: RecordsList,
+  },
+  [screenKeys.recordsMap]: {
+    ...screenDefaults,
+    hasOptionsMenuVisible: false,
+    title: "recordsMap:title",
+    component: RecordsMap,
   },
   [screenKeys.recordEditor]: {
     ...screenDefaults,

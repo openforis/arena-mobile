@@ -44,6 +44,7 @@ export const AppBar = (props: Props) => {
   const {
     hasBack,
     hasOptionsMenuVisible,
+    hasRecordsMap,
     hasToggleScreenView,
     surveyLabelAsTitle,
     title: titleOption,
@@ -121,6 +122,11 @@ export const AppBar = (props: Props) => {
       )
     );
   }, [dispatch, recordEditViewMode]);
+
+  const onRecordsMapPress = useCallback(
+    () => navigation.navigate(screenKeys.recordsMap),
+    [navigation]
+  );
 
   const onValidationIconPress = useCallback(
     () => navigation.navigate(screenKeys.recordValidationReport),
@@ -211,6 +217,13 @@ export const AppBar = (props: Props) => {
               />
               <AutoSyncStatusAppBarAction />
             </>
+          )}
+
+          {!editingRecord && hasRecordsMap && (
+            <RNPAppbar.Action
+              icon="map-marker-multiple-outline"
+              onPress={onRecordsMapPress}
+            />
           )}
 
           {!editingRecord && hasToggleScreenView && (
