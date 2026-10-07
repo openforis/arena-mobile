@@ -1,0 +1,90 @@
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import RNMapView, { Marker } from "react-native-maps";
+import { useRoute } from "@react-navigation/native";
+
+import { IconButton, MapView, VView } from "components";
+import { CurrentLocationMarker } from "components/GeoPolygonEditor/CurrentLocationMarker";
+import { useLocationWatch } from "hooks";
+import { LatLng } from "model";
+import { log } from "utils";
+
+import styles from "./styles";
+
+export type LocationMapViewerParams = { latitude: number; longitude: number };
+
+export const LocationMapViewerScreen = () => {
+  log.debug("rendering LocationMapViewerScreen");
+
+  const route = useRoute();
+  const params = route.params as LocationMapViewerParams;
+  const latitude = Number(params.latitude);
+  const longitude = Number(params.longitude);
+
+  const mapRef = useRef<RNMapView | null>(null);
+  const [currentLocation, setCurrentLocation] = React.useState<LatLng | null>(
+    null,
+  );
+
+  const target = useMemo(() => ({ latitude, longitude }), [latitude, longitude]);
+
+  const initialRegion = useMemo(
+    () => ({ ...target, latitudeDelta: 0.005, longitudeDelta: 0.005 }),
+    [target],
+  );
+
+  const onLocation = useCallback(
+    ({ location }: { location: LatLng | null }) => {
+      if (!location) return;
+      setCurrentLocation({
+        latitude: location.latitude,
+        longitude: location.longitude,
+      });
+    },
+    [],
+  );
+
+  const { startLocationWatch, stopLocationWatch } = useLocationWatch({
+    locationCallback: onLocation,
+    stopOnAccuracyThreshold: false,
+    stopOnTimeout: false,
+  });
+
+  useEffect(() => {
+    void startLocationWatch();
+    return () => stopLocationWatch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onFitPress = useCallback(() => {
+    const coordinates = currentLocation ? [target, currentLocation] : [target];
+    if (coordinates.length === 1) {
+      mapRef.current?.animateToRegion(initialRegion);
+      return;
+    }
+    mapRef.current?.fitToCoordinates(coordinates, {
+      edgePadding: { top: 80, right: 80, bottom: 80, left: 80 },
+      animated: true,
+    });
+  }, [currentLocation, initialRegion, target]);
+
+  return (
+    <VView style={styles.container}>
+      <MapView
+        ref={mapRef}
+        initialRegion={initialRegion}
+        style={styles.map}
+        toolbarEnabled={false}
+      >
+        <Marker coordinate={target} />
+        {currentLocation && (
+          <CurrentLocationMarker coordinate={currentLocation} />
+        )}
+      </MapView>
+      <IconButton
+        icon="crosshairs-gps"
+        onPress={onFitPress}
+        style={styles.fitButton}
+      />
+    </VView>
+  );
+};

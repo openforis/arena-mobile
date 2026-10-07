@@ -7,11 +7,11 @@ import { ConnectionToRemoteServerButton } from "appComponents/ConnectionToRemote
 import { FullBackupButton } from "appComponents/FullBackupButton";
 
 import { Button, FieldSet, HView, ScreenView, Text, VView } from "components";
+import { useExperimentalFeaturesEnabled } from "hooks";
 import { SettingsModel, SettingsObject } from "model";
 import { screenKeys } from "screens/screenKeys";
 import { AppService } from "service/appService";
 import {
-  RemoteConnectionSelectors,
   SettingsActions,
   SettingsSelectors,
   useAppDispatch,
@@ -45,9 +45,8 @@ export const SettingsScreen = () => {
   const navigation = useNavigation();
 
   const settingsStored = SettingsSelectors.useSettings();
-  // maps settings (related to offline maps) are available only to system administrators
-  const mapsSettingsAvailable =
-    RemoteConnectionSelectors.useLoggedInUserIsSystemAdmin();
+  // maps settings (related to offline maps) are experimental
+  const mapsSettingsAvailable = useExperimentalFeaturesEnabled();
 
   const [state, setState] = useState({ settings: settingsStored });
 
@@ -55,14 +54,14 @@ export const SettingsScreen = () => {
 
   const onPropValueChange =
     ({ key }: { key: keyof SettingsObject }) =>
-      (value: any) => {
-        const oldValue = settings[key];
-        if (value === oldValue) return;
-        dispatch(SettingsActions.updateSetting({ key, value }));
-        setState((statePrev) =>
-          Objects.assocPath({ obj: statePrev, path: ["settings", key], value })
-        );
-      };
+    (value: any) => {
+      const oldValue = settings[key];
+      if (value === oldValue) return;
+      dispatch(SettingsActions.updateSetting({ key, value }));
+      setState((statePrev) =>
+        Objects.assocPath({ obj: statePrev, path: ["settings", key], value }),
+      );
+    };
 
   const onExportLogsPress = useCallback(async () => {
     await AppService.exportLogsAndShareThem();
@@ -84,7 +83,7 @@ export const SettingsScreen = () => {
         <ConnectionToRemoteServerButton style={styles.button} />
         {settingsEntriesByGroup.map(({ group, entries }) => {
           const visibleEntries = entries.filter(
-            ([, prop]) => !prop.isDisabled?.({ settings })
+            ([, prop]) => !prop.isDisabled?.({ settings }),
           );
           const isLocationGroup = group === SettingsModel.SettingGroup.location;
           const isMapsGroup = group === SettingsModel.SettingGroup.maps;
@@ -128,7 +127,10 @@ export const SettingsScreen = () => {
             </FieldSet>
           );
         })}
-        <FieldSet headerKey="app:backup" headerStyle={styles.settingsGroupHeader}>
+        <FieldSet
+          headerKey="app:backup"
+          headerStyle={styles.settingsGroupHeader}
+        >
           <FullBackupButton />
         </FieldSet>
         <FieldSet

@@ -2,6 +2,8 @@ export { AppService } from "./appService";
 export { AuthService } from "./authService";
 export { DataMigrationService } from "./dataMigrationService";
 export { ExternalGpsService } from "./externalGps/ExternalGpsService";
+export { MapAppsService } from "./mapApps";
+export type { MapApp } from "./mapApps";
 export { OfflineMapsService } from "./offlineMaps/offlineMapsService";
 export type { OfflineMapAreaEstimate } from "./offlineMaps/offlineMapsService";
 export { PreferencesService } from "./preferencesService";

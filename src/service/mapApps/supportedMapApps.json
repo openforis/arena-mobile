@@ -1,0 +1,5 @@
+{
+  "appIds": ["google-maps", "apple-maps", "osmand", "maps-me", "waze"],
+  "iosQuerySchemes": ["comgooglemaps", "osmandmaps", "mapsme", "waze"],
+  "androidQuerySchemes": ["https", "applemaps", "osmand.geo", "mapsme", "waze"]
+}

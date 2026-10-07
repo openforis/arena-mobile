@@ -288,3 +288,8 @@ const message = t("app:welcomeMessage")
 - **Development Mode**: `__DEV__` global checks for development-only code
 - **Platform-Specific Code**: Use `Environment.isAndroid`, `Environment.isIOS`, or `Platform.select()`
 - **Offline-First**: App must work completely offline. Server sync is optional.
+
+## Conventions
+
+- **Code comments**: keep them short; add one only when necessary (one line stating the non-obvious reason). Put longer rationale in the PR description or in `docs/`.
+- **Git branches**: when creating new branches, use meaningful and short names.
