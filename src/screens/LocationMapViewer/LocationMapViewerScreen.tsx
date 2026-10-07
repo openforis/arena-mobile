@@ -139,7 +139,7 @@ export const LocationMapViewerScreen = () => {
       <IconButton
         icon="crosshairs-gps"
         onPress={onFitPress}
-        style={styles.fitButton}
+        style={[styles.fitButton, nodeUuid && styles.fitButtonAbovePanel]}
       />
     </VView>
   );

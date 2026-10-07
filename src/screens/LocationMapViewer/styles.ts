@@ -10,6 +10,9 @@ export default StyleSheet.create({
   fitButton: {
     position: "absolute",
     right: 8,
+    bottom: 24,
+  },
+  fitButtonAbovePanel: {
     bottom: 96,
   },
   bottomPanel: {
