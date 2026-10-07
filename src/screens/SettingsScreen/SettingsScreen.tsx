@@ -62,14 +62,14 @@ export const SettingsScreen = () => {
 
   const onPropValueChange =
     ({ key }: { key: keyof SettingsObject }) =>
-    (value: any) => {
-      const oldValue = settings[key];
-      if (value === oldValue) return;
-      dispatch(SettingsActions.updateSetting({ key, value }));
-      setState((statePrev) =>
-        Objects.assocPath({ obj: statePrev, path: ["settings", key], value }),
-      );
-    };
+      (value: any) => {
+        const oldValue = settings[key];
+        if (value === oldValue) return;
+        dispatch(SettingsActions.updateSetting({ key, value }));
+        setState((statePrev) =>
+          Objects.assocPath({ obj: statePrev, path: ["settings", key], value }),
+        );
+      };
 
   const onExportLogsPress = useCallback(async () => {
     await AppService.exportLogsAndShareThem();
@@ -124,11 +124,10 @@ export const SettingsScreen = () => {
               {isMapsGroup && (
                 <Button
                   icon="map-marker-down"
-                  mode="text"
                   onPress={() =>
                     navigation.navigate(screenKeys.offlineMaps as never)
                   }
-                  style={styles.button}
+                  style={styles.offlineMapsButton}
                   textKey="offlineMaps:title"
                 />
               )}
