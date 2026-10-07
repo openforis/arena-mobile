@@ -1,13 +1,24 @@
 import { useMemo } from "react";
+import { StyleSheet } from "react-native";
 
 import { NodeDefs, Objects } from "@openforis/arena-core";
 
-import { FormItem, HView, OpenMapButton, Text, VView } from "components";
+import { HView, OpenMapButton, Text, View, VView } from "components";
+import { useTranslation } from "localization";
 import { SurveySelectors } from "state";
 import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 
+const styles = StyleSheet.create({
+  grid: { flex: 1, gap: 6 },
+  row: { alignItems: "baseline" },
+  cell: { flex: 1 },
+  mapButton: { alignSelf: "center" },
+});
+
 export const CoordinateValuePreview = (props: NodeValuePreviewProps) => {
   const { nodeDef, value } = props;
+
+  const { t } = useTranslation();
 
   const srsIndex = SurveySelectors.useCurrentSurveySrsIndex();
   const hasPoint = Objects.isNotEmpty(value?.x) && Objects.isNotEmpty(value?.y);
@@ -19,17 +30,23 @@ export const CoordinateValuePreview = (props: NodeValuePreviewProps) => {
 
   return (
     <HView>
-      <VView>
+      <VView style={styles.grid}>
         {fields.map((fieldKey) => (
-          <FormItem
-            key={fieldKey}
-            labelKey={`dataEntry:coordinate.${fieldKey}`}
-          >
-            <Text>{value[fieldKey]}</Text>
-          </FormItem>
+          <HView key={fieldKey} style={styles.row}>
+            <Text style={styles.cell} variant="labelLarge">
+              {`${t(`dataEntry:coordinate.${fieldKey}`)}:`}
+            </Text>
+            <Text style={styles.cell} variant="bodyLarge">
+              {value[fieldKey]}
+            </Text>
+          </HView>
         ))}
       </VView>
-      {hasPoint && <OpenMapButton point={value} srsIndex={srsIndex} />}
+      {hasPoint && (
+        <View style={styles.mapButton} transparent>
+          <OpenMapButton point={value} srsIndex={srsIndex} />
+        </View>
+      )}
     </HView>
   );
 };
