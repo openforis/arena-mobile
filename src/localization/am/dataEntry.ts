@@ -185,6 +185,13 @@ export default {
     externalGpsGenericLabel: "ውጫዊ GPS መሳሪያ",
     getLocation: "ቦታ ያግኙ",
     heading: "አቅጣጫ (ዲግሪ)",
+    map: {
+      chooserTitle: "በካርታ አሳይ",
+      inApp: "Arena Mobile",
+      inAppDescription: "ያለ በይነመረብ ከወረዱ ካርታዎች ጋር ይሰራል",
+      show: "በካርታ አሳይ",
+      viewerTitle: "ቦታ",
+    },
     headingOffset: "የአቅጣጫ ልዩነት",
     headingSource: "የአቅጣጫ ምንጭ",
     headingSourceMagnetometer: "ሴንሰር",

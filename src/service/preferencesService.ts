@@ -4,6 +4,7 @@ import StoredObjectManager from "./storedObjectManager";
 
 const keys = {
   currentSurveyId: "currentSurveyId",
+  lastUsedMapAppId: "lastUsedMapAppId",
   preferencesBySurveyId: "preferencesBySurveyId",
 };
 
@@ -50,6 +51,13 @@ const getSurveyRecordLastEditedPage = async (surveyId: any, recordId: any) => {
     surveyPreferencesKeys.lastEditedPageByRecordId,
     recordId,
   ])(surveyPreferences);
+};
+
+const getLastUsedMapAppId = async (): Promise<string | undefined> =>
+  await preferencesStoredObjectManager.getValue(keys.lastUsedMapAppId);
+
+const setLastUsedMapAppId = async (appId: string) => {
+  await preferencesStoredObjectManager.updateValue(keys.lastUsedMapAppId, appId);
 };
 
 const clearCurrentSurveyId = async () =>
@@ -132,6 +140,8 @@ const clearPreferencesBySurveyIds = async (surveyIds: any) => {
 export const PreferencesService = {
   getCurrentSurveyId,
   setCurrentSurveyId,
+  getLastUsedMapAppId,
+  setLastUsedMapAppId,
   getSurveyPreferredLanguage,
   getSurveyRecordLastEditedPage,
   getSurveyUserGroup,
