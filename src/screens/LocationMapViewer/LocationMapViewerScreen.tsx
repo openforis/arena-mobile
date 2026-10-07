@@ -1,24 +1,31 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import RNMapView, { Marker } from "react-native-maps";
+import RNMapView, { Marker, MarkerDragStartEndEvent } from "react-native-maps";
 import { useRoute } from "@react-navigation/native";
 
 import { IconButton, MapView, VView } from "components";
 import { CurrentLocationMarker } from "components/GeoPolygonEditor/CurrentLocationMarker";
 import { useLocationWatch } from "hooks";
 import { LatLng } from "model";
+import { DataEntryActions, useAppDispatch } from "state";
 import { log } from "utils";
 
 import styles from "./styles";
 
-export type LocationMapViewerParams = { latitude: number; longitude: number };
+export type LocationMapViewerParams = {
+  latitude: number;
+  longitude: number;
+  nodeUuid?: string; // when set, the marker can be dragged to update the coordinate
+};
 
 export const LocationMapViewerScreen = () => {
   log.debug("rendering LocationMapViewerScreen");
 
   const route = useRoute();
   const params = route.params as LocationMapViewerParams;
-  const latitude = Number(params.latitude);
-  const longitude = Number(params.longitude);
+  const { nodeUuid } = params;
+  const dispatch = useAppDispatch();
+  const [latitude, setLatitude] = React.useState(Number(params.latitude));
+  const [longitude, setLongitude] = React.useState(Number(params.longitude));
 
   const mapRef = useRef<RNMapView | null>(null);
   const [currentLocation, setCurrentLocation] = React.useState<LatLng | null>(
@@ -30,6 +37,24 @@ export const LocationMapViewerScreen = () => {
   const initialRegion = useMemo(
     () => ({ ...target, latitudeDelta: 0.005, longitudeDelta: 0.005 }),
     [target],
+  );
+
+  const onMarkerDragEnd = useCallback(
+    (event: MarkerDragStartEndEvent) => {
+      const { latitude: lat, longitude: lng } = event.nativeEvent.coordinate;
+      setLatitude(lat);
+      setLongitude(lng);
+      if (nodeUuid) {
+        dispatch(
+          DataEntryActions.updateCoordinateValueFromLatLong({
+            nodeUuid,
+            latitude: lat,
+            longitude: lng,
+          }),
+        );
+      }
+    },
+    [dispatch, nodeUuid],
   );
 
   const onLocation = useCallback(
@@ -75,7 +100,11 @@ export const LocationMapViewerScreen = () => {
         style={styles.map}
         toolbarEnabled={false}
       >
-        <Marker coordinate={target} />
+        <Marker
+          coordinate={target}
+          draggable={!!nodeUuid}
+          onDragEnd={onMarkerDragEnd}
+        />
         {currentLocation && (
           <CurrentLocationMarker coordinate={currentLocation} />
         )}
