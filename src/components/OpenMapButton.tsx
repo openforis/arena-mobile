@@ -1,14 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { StyleSheet } from "react-native";
-import { List } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
 import { Points } from "@openforis/arena-core";
 
-import { Dialog } from "components/Dialog";
 import { IconButton } from "components/IconButton";
-import { VView } from "components/VView";
-import { useTranslation } from "localization";
+import { MapAppChooserDialog } from "components/MapAppChooserDialog";
 import { screenKeys } from "screens/screenKeys";
 import { MapApp, MapAppsService } from "service/mapApps";
 import { log } from "utils";
@@ -19,26 +15,13 @@ type Props = {
   srsIndex?: any;
 };
 
-type IconProps = { color: string; style?: any };
-
-const InAppIcon = (props: IconProps) => (
-  <List.Icon {...props} icon="cellphone" />
-);
-const MapAppIcon = (props: IconProps) => (
-  <List.Icon {...props} icon="map-marker" />
-);
-
-const styles = StyleSheet.create({
-  options: { gap: 4 },
-  option: { borderRadius: 8, borderWidth: StyleSheet.hairlineWidth },
-});
+type ChooserState = { apps: MapApp[]; selectedId: string };
 
 export const OpenMapButton = (props: Props) => {
   const { point, size = 30, srsIndex = undefined } = props;
 
-  const { t } = useTranslation();
   const navigation = useNavigation();
-  const [apps, setApps] = useState<MapApp[] | null>(null);
+  const [chooser, setChooser] = useState<ChooserState | null>(null);
 
   const pointLatLng = useMemo(
     () => Points.toLatLong(point, srsIndex),
@@ -52,66 +35,52 @@ export const OpenMapButton = (props: Props) => {
   const onPress = useCallback(async () => {
     if (latitude == null || longitude == null) return;
     try {
-      setApps(await MapAppsService.getInstalledApps({ latitude, longitude }));
+      setChooser(await MapAppsService.loadChoices({ latitude, longitude }));
     } catch (error) {
       log.error("error loading map apps", error);
-      setApps([]);
+      setChooser({ apps: [], selectedId: MapAppsService.inAppChoiceId });
     }
   }, [latitude, longitude]);
 
-  const onClose = useCallback(() => setApps(null), []);
+  const onClose = useCallback(() => setChooser(null), []);
 
-  const onInAppPress = useCallback(() => {
-    setApps(null);
-    navigation.navigate(
-      ...([screenKeys.locationMapViewer, { latitude, longitude }] as never),
-    );
-  }, [latitude, longitude, navigation]);
-
-  const onAppPress = useCallback(
-    async (app: MapApp) => {
-      if (latitude == null || longitude == null) return;
-      setApps(null);
-      try {
-        await MapAppsService.openApp(app.id, { latitude, longitude });
-      } catch (error) {
-        log.error("error opening map app", error);
-      }
-    },
-    [latitude, longitude],
+  const onSelect = useCallback(
+    (selectedId: string) =>
+      setChooser((prev) => (prev ? { ...prev, selectedId } : prev)),
+    [],
   );
+
+  const onConfirm = useCallback(async () => {
+    if (!chooser || latitude == null || longitude == null) return;
+    const { selectedId } = chooser;
+    setChooser(null);
+    try {
+      await MapAppsService.rememberChoice(selectedId);
+      if (selectedId === MapAppsService.inAppChoiceId) {
+        navigation.navigate(
+          ...([screenKeys.locationMapViewer, { latitude, longitude }] as never),
+        );
+      } else {
+        await MapAppsService.openApp(selectedId, { latitude, longitude });
+      }
+    } catch (error) {
+      log.error("error opening map", error);
+    }
+  }, [chooser, latitude, longitude, navigation]);
 
   if (!pointLatLng) return null;
 
   return (
     <>
       <IconButton icon="map" onPress={onPress} size={size} />
-      {apps && (
-        <Dialog
+      {chooser && (
+        <MapAppChooserDialog
+          apps={chooser.apps}
           onClose={onClose}
-          showActions={false}
-          title="dataEntry:coordinate.map.chooserTitle"
-        >
-          <VView style={styles.options}>
-            <List.Item
-              description={t("dataEntry:coordinate.map.inAppDescription")}
-              descriptionNumberOfLines={3}
-              left={InAppIcon}
-              onPress={onInAppPress}
-              style={styles.option}
-              title={t("dataEntry:coordinate.map.inApp")}
-            />
-            {apps.map((app) => (
-              <List.Item
-                key={app.id}
-                left={MapAppIcon}
-                onPress={() => onAppPress(app)}
-                style={styles.option}
-                title={app.name}
-              />
-            ))}
-          </VView>
-        </Dialog>
+          onConfirm={onConfirm}
+          onSelect={onSelect}
+          selectedId={chooser.selectedId}
+        />
       )}
     </>
   );

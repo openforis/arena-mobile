@@ -199,6 +199,7 @@ Sus valores serán borrados.
       chooserTitle: "Mostrar en el mapa",
       inApp: "Arena Mobile",
       inAppDescription: "Funciona sin conexión con mapas descargados",
+      show: "Mostrar",
       viewerTitle: "Ubicación",
     },
     headingOffset: "Desviación de rumbo",

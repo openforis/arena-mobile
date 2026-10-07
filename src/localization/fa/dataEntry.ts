@@ -203,6 +203,7 @@ export default {
       chooserTitle: "نمایش روی نقشه",
       inApp: "Arena Mobile",
       inAppDescription: "با نقشه‌های دانلودشده به‌صورت آفلاین کار می‌کند",
+      show: "نمایش",
       viewerTitle: "موقعیت",
     },
     headingOffset: "انحراف جهت",

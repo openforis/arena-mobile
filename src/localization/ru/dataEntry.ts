@@ -198,6 +198,7 @@ export default {
       chooserTitle: "Показать на карте",
       inApp: "Arena Mobile",
       inAppDescription: "Работает офлайн со скачанными картами",
+      show: "Показать",
       viewerTitle: "Местоположение",
     },
     headingOffset: "Отклонение курса",

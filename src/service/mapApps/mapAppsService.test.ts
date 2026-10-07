@@ -18,33 +18,47 @@ const apps = [
   { id: "osmand", name: "OsmAnd" },
 ];
 
+const mockLastChoice = (id: string | undefined) =>
+  (PreferencesService.getLastUsedMapAppId as jest.Mock).mockResolvedValue(id);
+
 describe("MapAppsService", () => {
-  beforeEach(() => jest.clearAllMocks());
-
-  test("lists the last used app first", async () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
     (MapAppsAdapter.getInstalledMapApps as jest.Mock).mockResolvedValue(apps);
-    (PreferencesService.getLastUsedMapAppId as jest.Mock).mockResolvedValue(
-      "osmand",
-    );
-    const result = await MapAppsService.getInstalledApps(location);
-    expect(result.map((app) => app.id)).toEqual(["osmand", "google-maps"]);
   });
 
-  test("keeps the order when there is no last used app", async () => {
-    (MapAppsAdapter.getInstalledMapApps as jest.Mock).mockResolvedValue(apps);
-    (PreferencesService.getLastUsedMapAppId as jest.Mock).mockResolvedValue(
-      undefined,
-    );
-    const result = await MapAppsService.getInstalledApps(location);
-    expect(result.map((app) => app.id)).toEqual(["google-maps", "osmand"]);
+  test("preselects the last used installed app", async () => {
+    mockLastChoice("osmand");
+    const result = await MapAppsService.loadChoices(location);
+    expect(result.selectedId).toBe("osmand");
+    expect(result.apps.map((app) => app.id)).toEqual(["google-maps", "osmand"]);
   });
 
-  test("opens the app and stores it as last used", async () => {
+  test("preselects the in-app viewer when it was the last choice", async () => {
+    mockLastChoice(MapAppsService.inAppChoiceId);
+    const result = await MapAppsService.loadChoices(location);
+    expect(result.selectedId).toBe(MapAppsService.inAppChoiceId);
+  });
+
+  test.each([undefined, "waze"])(
+    "falls back to the in-app viewer when last choice is %s",
+    async (lastChoice) => {
+      mockLastChoice(lastChoice);
+      const result = await MapAppsService.loadChoices(location);
+      expect(result.selectedId).toBe(MapAppsService.inAppChoiceId);
+    },
+  );
+
+  test("opens the app", async () => {
     await MapAppsService.openApp("osmand", location);
     expect(MapAppsAdapter.openMapApp).toHaveBeenCalledWith({
       appId: "osmand",
       ...location,
     });
+  });
+
+  test("remembers the choice", async () => {
+    await MapAppsService.rememberChoice("osmand");
     expect(PreferencesService.setLastUsedMapAppId).toHaveBeenCalledWith(
       "osmand",
     );
