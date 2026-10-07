@@ -7,7 +7,7 @@ export default {
   samplingPointVisitedWithCode: "የናሙና ነጥብ {{code}}: የተጎበኘ",
   samplingPointNotVisitedWithCode: "የናሙና ነጥብ {{code}}: ያልተጎበኘ",
   dataSourceInfo:
-    "በዚህ መሣሪያ ላይ የተቀመጡ መረጃዎች፡ የአካባቢ መዝገቦች እና በመጨረሻው የማመሳሰል ሁኔታ ፍተሻ የተገኙ የሌሎች ተጠቃሚዎች መዝገቦች (እስኪወርዱ ድረስ ቁልፎቻቸው ብቻ)።",
+    "ካርታው በዚህ መሣሪያ ላይ ያለውን መረጃ ያሳያል። የባልደረቦችዎን መዝገቦች ለማካተት፣ በመስመር ላይ ሲሆኑ በመዝገቦች ዝርዝር ውስጥ 'የማመሳሰል ሁኔታን ያረጋግጡ'ን ይንኩ።",
   pointsCount: "{{count}} ነጥቦች",
   openRecord: "ክፈት",
   noLayers:

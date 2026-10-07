@@ -7,7 +7,7 @@ export default {
   samplingPointVisitedWithCode: "Otantapiste {{code}}: käyty",
   samplingPointNotVisitedWithCode: "Otantapiste {{code}}: ei käyty",
   dataSourceInfo:
-    "Tähän laitteeseen tallennetut tiedot: paikalliset tietueet ja muiden käyttäjien tietueet, jotka haettiin viimeisimmässä synkronoinnin tilan tarkistuksessa (vain niiden avaimet, kunnes ne ladataan).",
+    "Kartta näyttää tämän laitteen tiedot. Jos haluat mukaan kollegoidesi tietueet, napauta tietueluettelossa 'Tarkista tila', kun olet verkossa.",
   pointsCount: "{{count}} pistettä",
   openRecord: "Avaa",
   noLayers:

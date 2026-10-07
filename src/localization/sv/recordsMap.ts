@@ -7,7 +7,7 @@ export default {
   samplingPointVisitedWithCode: "Provpunkt {{code}}: besökt",
   samplingPointNotVisitedWithCode: "Provpunkt {{code}}: ej besökt",
   dataSourceInfo:
-    "Data lagrade på den här enheten: lokala poster och andra användares poster som hämtades vid den senaste kontrollen av synkroniseringsstatus (endast deras nycklar, tills de laddas ner).",
+    "Kartan visar data på den här enheten. För att ta med dina kollegors poster, tryck på 'Kontrollera status' i postlistan när du är online.",
   pointsCount: "{{count}} punkter",
   openRecord: "Öppna",
   noLayers:

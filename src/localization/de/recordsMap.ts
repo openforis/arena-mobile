@@ -7,7 +7,7 @@ export default {
   samplingPointVisitedWithCode: "Stichprobenpunkt {{code}}: besucht",
   samplingPointNotVisitedWithCode: "Stichprobenpunkt {{code}}: nicht besucht",
   dataSourceInfo:
-    "Auf diesem Gerät gespeicherte Daten: lokale Datensätze und die Datensätze anderer Benutzer, die bei der letzten Prüfung des Synchronisierungsstatus abgerufen wurden (nur ihre Schlüssel, bis sie heruntergeladen werden).",
+    "Die Karte zeigt die Daten auf diesem Gerät. Um die Datensätze deiner Kollegen einzubeziehen, tippe online in der Datensatzliste auf 'Status prüfen'.",
   pointsCount: "{{count}} Punkte",
   openRecord: "Öffnen",
   noLayers:

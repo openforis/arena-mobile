@@ -7,7 +7,7 @@ export default {
   samplingPointVisitedWithCode: "サンプリングポイント {{code}}：訪問済み",
   samplingPointNotVisitedWithCode: "サンプリングポイント {{code}}：未訪問",
   dataSourceInfo:
-    "このデバイスに保存されたデータ：ローカルのレコードと、前回の同期状態の確認で取得した他のユーザーのレコード（ダウンロードされるまではキーのみ）。",
+    "地図にはこのデバイスのデータが表示されます。同僚のレコードを含めるには、オンライン時にレコード一覧で「状態を確認」をタップしてください。",
   pointsCount: "{{count}} ポイント",
   openRecord: "開く",
   noLayers:

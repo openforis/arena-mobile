@@ -7,7 +7,7 @@ export default {
   samplingPointVisitedWithCode: "Punto de muestreo {{code}}: visitado",
   samplingPointNotVisitedWithCode: "Punto de muestreo {{code}}: no visitado",
   dataSourceInfo:
-    "Datos almacenados en este dispositivo: registros locales y los registros de otros usuarios obtenidos con la última comprobación del estado de sincronización (solo sus claves, hasta que se descarguen).",
+    "El mapa muestra los datos de este dispositivo. Para incluir los registros de tus colegas, pulsa 'Comprobar sincronización' en la lista de registros cuando tengas conexión.",
   pointsCount: "{{count}} puntos",
   openRecord: "Abrir",
   noLayers:

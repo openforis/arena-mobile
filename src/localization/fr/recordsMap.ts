@@ -8,7 +8,7 @@ export default {
   samplingPointNotVisitedWithCode:
     "Point d'échantillonnage {{code}} : non visité",
   dataSourceInfo:
-    "Données stockées sur cet appareil : enregistrements locaux et enregistrements des autres utilisateurs récupérés lors de la dernière vérification de l'état de synchronisation (uniquement leurs clés, jusqu'à leur téléchargement).",
+    "La carte affiche les données de cet appareil. Pour inclure les enregistrements de vos collègues, appuyez sur 'Vérifier synchronisation' dans la liste des enregistrements lorsque vous êtes en ligne.",
   pointsCount: "{{count}} points",
   openRecord: "Ouvrir",
   noLayers:

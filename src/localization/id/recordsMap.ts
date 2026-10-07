@@ -7,7 +7,7 @@ export default {
   samplingPointVisitedWithCode: "Titik sampel {{code}}: dikunjungi",
   samplingPointNotVisitedWithCode: "Titik sampel {{code}}: belum dikunjungi",
   dataSourceInfo:
-    "Data yang disimpan di perangkat ini: catatan lokal dan catatan pengguna lain yang diambil pada pemeriksaan status sinkronisasi terakhir (hanya kuncinya, sampai diunduh).",
+    "Peta menampilkan data di perangkat ini. Untuk menyertakan catatan rekan Anda, ketuk 'Periksa status' di daftar catatan saat online.",
   pointsCount: "{{count}} titik",
   openRecord: "Buka",
   noLayers:

@@ -7,7 +7,7 @@ export default {
   samplingPointVisitedWithCode: "Sampling point {{code}}: visited",
   samplingPointNotVisitedWithCode: "Sampling point {{code}}: not visited",
   dataSourceInfo:
-    "Data stored in this device: local records and the records of other users fetched with the last check of the sync status (only their keys, until they are downloaded).",
+    "The map shows the data in this device. To include the records of your colleagues, tap 'Check status' in the list of records when online.",
   pointsCount: "{{count}} points",
   openRecord: "Open",
   noLayers:
