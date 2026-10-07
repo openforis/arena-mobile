@@ -36,7 +36,9 @@ export const OpenMapButton = (props: Props) => {
     [point, srsIndex],
   );
 
-  const { y: latitude, x: longitude } = pointLatLng ?? {};
+  // coordinates can be strings, but native maps require numbers
+  const latitude = pointLatLng ? Number(pointLatLng.y) : undefined;
+  const longitude = pointLatLng ? Number(pointLatLng.x) : undefined;
 
   const onPress = useCallback(async () => {
     if (latitude == null || longitude == null) return;

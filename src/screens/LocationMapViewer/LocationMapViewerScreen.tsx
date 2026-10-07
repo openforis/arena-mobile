@@ -17,7 +17,9 @@ export const LocationMapViewerScreen = () => {
   log.debug("rendering LocationMapViewerScreen");
 
   const route = useRoute();
-  const { latitude, longitude } = route.params as LocationMapViewerParams;
+  const params = route.params as LocationMapViewerParams;
+  const latitude = Number(params.latitude);
+  const longitude = Number(params.longitude);
 
   const mapRef = useRef<RNMapView | null>(null);
   const [currentLocation, setCurrentLocation] = React.useState<LatLng | null>(
