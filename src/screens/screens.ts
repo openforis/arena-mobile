@@ -1,6 +1,7 @@
 import HomeScreen from "./HomeScreen";
 
 import AboutScreen from "./AboutScreen";
+import LocationMapViewer from "./LocationMapViewer";
 import OfflineMapAreaEditor from "./OfflineMapAreaEditor";
 import OfflineMapAreaViewer from "./OfflineMapAreaViewer";
 import OfflineMaps from "./OfflineMaps";
@@ -31,6 +32,12 @@ export const screens = {
     ...screenDefaults,
     title: "common:appTitle",
     component: HomeScreen,
+  },
+  [screenKeys.locationMapViewer]: {
+    ...screenDefaults,
+    hasOptionsMenuVisible: false,
+    title: "dataEntry:coordinate.map.viewerTitle",
+    component: LocationMapViewer,
   },
   [screenKeys.offlineMaps]: {
     ...screenDefaults,

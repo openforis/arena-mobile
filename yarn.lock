@@ -4347,6 +4347,7 @@ __metadata:
     react-native-keyboard-controller: "npm:1.21.9"
     react-native-keychain: "npm:^10.0.0"
     react-native-logs: "npm:^5.6.0"
+    react-native-map-link: "npm:^3.14.0"
     react-native-maps: "npm:1.27.2"
     react-native-modal-datetime-picker: "npm:^18.0.0"
     react-native-pager-view: "npm:8.0.2"
@@ -10852,6 +10853,16 @@ __metadata:
   version: 5.6.0
   resolution: "react-native-logs@npm:5.6.0"
   checksum: 10c0/2532a965053819ae9209fe59c1e1511397425f86a98ce2f1a28b34bdf0618b055248c5b59b7d382d6a8e422b4c647601cd24f68b401a322f48ed2e6aaf5ce806
+  languageName: node
+  linkType: hard
+
+"react-native-map-link@npm:^3.14.0":
+  version: 3.14.0
+  resolution: "react-native-map-link@npm:3.14.0"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-native: ">=0.40.0"
+  checksum: 10c0/b3b4733593dbbc74ba8732c2c7d5a8cc2b12a0e5209ea46b52a3bbc46c4ea7e4c75faaee5ec26e533d1ab6c628e28f95891a3da35f5c19a0d5df20ad301332d4
   languageName: node
   linkType: hard
 
