@@ -11,7 +11,7 @@ import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 const styles = StyleSheet.create({
   grid: { flex: 1, gap: 6 },
   row: { alignItems: "baseline" },
-  label: { width: 150 },
+  label: { minWidth: 50 },
   value: { flex: 1 },
   mapButton: { alignSelf: "center" },
 });
