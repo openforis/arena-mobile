@@ -173,6 +173,8 @@ export default {
     selectItem_plural: "ንጥሎችን ይምረጡ",
   },
   coordinate: {
+    longPressMarkerToMove: "ምልክቱን ለማንቀሳቀስ በረጅሙ ይጫኑት",
+    saveNewPosition: "አዲስ ቦታ አስቀምጥ",
     accuracy: "ትክክለኛነት (ሜ)",
     altitude: "ከፍታ (ሜ)",
     altitudeAccuracy: "የከፍታ ትክክለኛነት (ሜ)",
@@ -189,6 +191,8 @@ export default {
       chooserTitle: "በካርታ አሳይ",
       inApp: "Arena Mobile",
       inAppDescription: "ያለ በይነመረብ ከወረዱ ካርታዎች ጋር ይሰራል",
+      inAppDescriptionRelocatable:
+        "ያለ በይነመረብ ከወረዱ ካርታዎች ጋር ይሰራል።\nቦታውን ማንቀሳቀስ ይቻላል",
       show: "በካርታ አሳይ",
       viewerTitle: "ቦታ",
     },

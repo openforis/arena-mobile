@@ -20,7 +20,7 @@ import { NodeComponentProps } from "../nodeComponentPropTypes";
 import styles from "./styles";
 
 export const NodeCoordinateComponent = (props: NodeComponentProps) => {
-  const { nodeDef } = props;
+  const { nodeDef, nodeUuid } = props;
 
   log.debug(`rendering NodeCoordinateComponent for ${nodeDef.props.name}`);
 
@@ -95,7 +95,13 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
         {!watchingLocation && (
           <VView style={styles.internalContainer}>
             <HView style={styles.internalContainer}>
-              {uiValue && <OpenMapButton point={uiValue} srsIndex={srsIndex} />}
+              {uiValue && (
+                <OpenMapButton
+                  nodeUuid={inputFieldsEditable ? nodeUuid : undefined}
+                  point={uiValue}
+                  srsIndex={srsIndex}
+                />
+              )}
               {distanceTarget && (
                 <IconButton
                   icon="compass-outline"

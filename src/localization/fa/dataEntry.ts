@@ -186,6 +186,8 @@ export default {
     selectItem_plural: "انتخاب موارد",
   },
   coordinate: {
+    longPressMarkerToMove: "برای جابه‌جایی، نشانگر را طولانی لمس کنید",
+    saveNewPosition: "ذخیره موقعیت جدید",
     accuracy: "دقت (متر)",
     altitude: "ارتفاع (متر)",
     altitudeAccuracy: "دقت ارتفاع (متر)",
@@ -203,6 +205,8 @@ export default {
       chooserTitle: "نمایش روی نقشه",
       inApp: "Arena Mobile",
       inAppDescription: "با نقشه‌های دانلودشده به‌صورت آفلاین کار می‌کند",
+      inAppDescriptionRelocatable:
+        "با نقشه‌های دانلودشده به‌صورت آفلاین کار می‌کند.\nموقعیت قابل جابه‌جایی است",
       show: "نمایش",
       viewerTitle: "موقعیت",
     },

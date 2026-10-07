@@ -241,6 +241,8 @@ export default {
     selectItem_plural: "項目を選択",
   },
   coordinate: {
+    longPressMarkerToMove: "マーカーを長押しして移動します",
+    saveNewPosition: "新しい位置を保存",
     accuracy: "精度 (m)",
     altitude: "高度 (m)",
     altitudeAccuracy: "高度の精度 (m)",
@@ -258,6 +260,8 @@ export default {
       chooserTitle: "地図で表示",
       inApp: "Arena Mobile",
       inAppDescription: "ダウンロード済みの地図でオフラインでも利用可能",
+      inAppDescriptionRelocatable:
+        "ダウンロード済みの地図でオフラインでも利用可能。\n位置を移動できます",
       show: "表示",
       viewerTitle: "位置",
     },

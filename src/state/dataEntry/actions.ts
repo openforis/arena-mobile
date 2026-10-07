@@ -831,6 +831,32 @@ const performCoordinateValueSrsConversion =
       dispatch(updateAttribute({ uuid: nodeUuid, value: nextValue }));
     };
 
+const updateCoordinateValueFromLatLong =
+  ({ nodeUuid, latitude, longitude }: any) =>
+    (dispatch: any, getState: any) => {
+      const state = getState();
+      const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const record = DataEntrySelectors.selectRecord(state);
+      const srsIndex = Surveys.getSRSIndex(survey);
+
+      const node = Records.getNodeByUuid(nodeUuid)(record);
+      const prevValue = node?.value ?? {};
+      const srsTo = prevValue.srs ?? Surveys.getSRSs(survey)[0]!.code;
+      const pointLatLong = PointFactory.createInstance({
+        x: longitude,
+        y: latitude,
+      })!;
+      const pointTo = Points.transform(pointLatLong, srsTo, srsIndex);
+      if (!pointTo) return;
+      const nextValue = {
+        ...prevValue,
+        x: Numbers.roundToPrecision(pointTo.x, 6),
+        y: Numbers.roundToPrecision(pointTo.y, 6),
+        srs: srsTo,
+      };
+      dispatch(updateAttribute({ uuid: nodeUuid, value: nextValue }));
+    };
+
 const updateCoordinateValueSrs =
   ({ nodeUuid, srsTo }: any) =>
     (dispatch: any, getState: any) => {
@@ -1009,6 +1035,7 @@ export const DataEntryActions = {
   deleteRecords,
   fetchAndEditRecord,
   updateAttribute,
+  updateCoordinateValueFromLatLong,
   updateCoordinateValueSrs,
   selectCurrentPageEntity,
   selectCurrentPageEntityActiveChildIndex,

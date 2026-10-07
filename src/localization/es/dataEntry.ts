@@ -182,6 +182,8 @@ Sus valores serán borrados.
     selectItem_plural: "Seleccionar elementos",
   },
   coordinate: {
+    longPressMarkerToMove: "Mantén pulsado el marcador para moverlo",
+    saveNewPosition: "Guardar nueva posición",
     accuracy: "Precisión (m)",
     altitude: "Altitud (m)",
     altitudeAccuracy: "Precisión de altitud (m)",
@@ -199,6 +201,8 @@ Sus valores serán borrados.
       chooserTitle: "Mostrar en el mapa",
       inApp: "Arena Mobile",
       inAppDescription: "Funciona sin conexión con mapas descargados",
+      inAppDescriptionRelocatable:
+        "Funciona sin conexión con mapas descargados.\nLa posición se puede reubicar",
       show: "Mostrar",
       viewerTitle: "Ubicación",
     },

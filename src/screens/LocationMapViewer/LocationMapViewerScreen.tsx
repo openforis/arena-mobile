@@ -1,43 +1,76 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import RNMapView, { Marker } from "react-native-maps";
+import RNMapView, { Marker, MarkerDragStartEndEvent } from "react-native-maps";
 import { useRoute } from "@react-navigation/native";
 
-import { IconButton, MapView, VView } from "components";
-import { CurrentLocationMarker } from "components/GeoPolygonEditor/CurrentLocationMarker";
+import { Button, IconButton, MapView, Text, VView } from "components";
+import { CurrentLocationDot } from "components/MapView/CurrentLocationDot";
 import { useLocationWatch } from "hooks";
-import { LatLng } from "model";
+import { LatLng, LocationPoint } from "model";
+import { DataEntryActions, useAppDispatch } from "state";
 import { log } from "utils";
 
 import styles from "./styles";
 
-export type LocationMapViewerParams = { latitude: number; longitude: number };
+export type LocationMapViewerParams = {
+  latitude: number;
+  longitude: number;
+  nodeUuid?: string; // when set, the marker can be dragged to update the coordinate
+};
 
 export const LocationMapViewerScreen = () => {
   log.debug("rendering LocationMapViewerScreen");
 
   const route = useRoute();
   const params = route.params as LocationMapViewerParams;
-  const latitude = Number(params.latitude);
-  const longitude = Number(params.longitude);
+  const { nodeUuid } = params;
+  const dispatch = useAppDispatch();
+  const [savedPosition, setSavedPosition] = React.useState<LatLng>({
+    latitude: Number(params.latitude),
+    longitude: Number(params.longitude),
+  });
+  const [markerPosition, setMarkerPosition] =
+    React.useState<LatLng>(savedPosition);
 
   const mapRef = useRef<RNMapView | null>(null);
-  const [currentLocation, setCurrentLocation] = React.useState<LatLng | null>(
-    null,
-  );
+  const [currentLocation, setCurrentLocation] = React.useState<
+    (LatLng & { accuracy?: number | null }) | null
+  >(null);
 
-  const target = useMemo(() => ({ latitude, longitude }), [latitude, longitude]);
+  const target = markerPosition;
 
   const initialRegion = useMemo(
-    () => ({ ...target, latitudeDelta: 0.005, longitudeDelta: 0.005 }),
-    [target],
+    () => ({ ...savedPosition, latitudeDelta: 0.005, longitudeDelta: 0.005 }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
   );
 
+  const relocated =
+    markerPosition.latitude !== savedPosition.latitude ||
+    markerPosition.longitude !== savedPosition.longitude;
+
+  const onMarkerDragEnd = useCallback((event: MarkerDragStartEndEvent) => {
+    const { latitude: lat, longitude: lng } = event.nativeEvent.coordinate;
+    setMarkerPosition({ latitude: lat, longitude: lng });
+  }, []);
+
+  const onSavePress = useCallback(() => {
+    if (!nodeUuid) return;
+    dispatch(
+      DataEntryActions.updateCoordinateValueFromLatLong({
+        nodeUuid,
+        ...markerPosition,
+      }),
+    );
+    setSavedPosition(markerPosition);
+  }, [dispatch, markerPosition, nodeUuid]);
+
   const onLocation = useCallback(
-    ({ location }: { location: LatLng | null }) => {
+    ({ location }: { location: LocationPoint | null }) => {
       if (!location) return;
       setCurrentLocation({
         latitude: location.latitude,
         longitude: location.longitude,
+        accuracy: location.accuracy,
       });
     },
     [],
@@ -75,15 +108,38 @@ export const LocationMapViewerScreen = () => {
         style={styles.map}
         toolbarEnabled={false}
       >
-        <Marker coordinate={target} />
+        <Marker
+          coordinate={target}
+          draggable={!!nodeUuid}
+          onDragEnd={onMarkerDragEnd}
+        />
         {currentLocation && (
-          <CurrentLocationMarker coordinate={currentLocation} />
+          <CurrentLocationDot
+            accuracy={currentLocation.accuracy}
+            coordinate={currentLocation}
+          />
         )}
       </MapView>
+      {nodeUuid && (
+        <VView style={styles.bottomPanel}>
+          {relocated ? (
+            <Button
+              icon="content-save"
+              onPress={onSavePress}
+              textKey="dataEntry:coordinate.saveNewPosition"
+            />
+          ) : (
+            <Text
+              style={styles.hint}
+              textKey="dataEntry:coordinate.longPressMarkerToMove"
+            />
+          )}
+        </VView>
+      )}
       <IconButton
         icon="crosshairs-gps"
         onPress={onFitPress}
-        style={styles.fitButton}
+        style={[styles.fitButton, nodeUuid && styles.fitButtonAbovePanel]}
       />
     </VView>
   );
