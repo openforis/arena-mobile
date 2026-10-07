@@ -8,6 +8,7 @@ export default {
   samplingPointNotVisitedWithCode: "Provpunkt {{code}}: ej besökt",
   dataSourceInfo:
     "Data lagrade på den här enheten: lokala poster och andra användares poster som hämtades vid den senaste kontrollen av synkroniseringsstatus (endast deras nycklar, tills de laddas ner).",
+  pointsCount: "{{count}} punkter",
   openRecord: "Öppna",
   noLayers:
     "Den här undersökningen har inga provpunkter med plats eller koordinatattribut att visa på kartan",

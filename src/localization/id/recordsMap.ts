@@ -8,6 +8,7 @@ export default {
   samplingPointNotVisitedWithCode: "Titik sampel {{code}}: belum dikunjungi",
   dataSourceInfo:
     "Data yang disimpan di perangkat ini: catatan lokal dan catatan pengguna lain yang diambil pada pemeriksaan status sinkronisasi terakhir (hanya kuncinya, sampai diunduh).",
+  pointsCount: "{{count}} titik",
   openRecord: "Buka",
   noLayers:
     "Survei ini tidak memiliki titik sampel dengan lokasi atau atribut koordinat untuk ditampilkan di peta",

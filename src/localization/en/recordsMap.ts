@@ -8,6 +8,7 @@ export default {
   samplingPointNotVisitedWithCode: "Sampling point {{code}}: not visited",
   dataSourceInfo:
     "Data stored in this device: local records and the records of other users fetched with the last check of the sync status (only their keys, until they are downloaded).",
+  pointsCount: "{{count}} points",
   openRecord: "Open",
   noLayers:
     "This survey has no sampling points with location or coordinate attributes to show on the map",

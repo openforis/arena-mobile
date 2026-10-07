@@ -58,17 +58,25 @@ export default StyleSheet.create({
   recordItemLabel: {
     flex: 1,
   },
+  layerItems: {
+    gap: 6,
+  },
   layerItem: {
+    borderRadius: 8,
+    paddingVertical: 4,
+    paddingRight: 8,
+  },
+  layerItemContent: {
     alignItems: "center",
-    gap: 8,
+    gap: 4,
+  },
+  layerItemTexts: {
+    flex: 1,
   },
   layerColor: {
     width: 14,
     height: 14,
     borderRadius: 7,
-  },
-  layerCheckbox: {
-    flex: 1,
   },
   legend: {
     flexDirection: "row",

@@ -8,6 +8,7 @@ export default {
   samplingPointNotVisitedWithCode: "Ponto de amostragem {{code}}: não visitado",
   dataSourceInfo:
     "Dados armazenados neste dispositivo: registros locais e os registros de outros usuários obtidos na última verificação do status de sincronização (apenas suas chaves, até serem baixados).",
+  pointsCount: "{{count}} pontos",
   openRecord: "Abrir",
   noLayers:
     "Este inquérito não tem pontos de amostragem com localização nem atributos de coordenadas para mostrar no mapa",

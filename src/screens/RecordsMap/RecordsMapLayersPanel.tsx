@@ -1,7 +1,8 @@
 import React from "react";
 import { View } from "react-native";
+import { Checkbox, TouchableRipple, useTheme } from "react-native-paper";
 
-import { Checkbox, HView, Modal, ScrollView, Text } from "components";
+import { HView, Modal, ScrollView, Text, VView } from "components";
 
 import {
   notVisitedSamplingPointColor,
@@ -31,6 +32,48 @@ const LegendItem = ({ color, textKey }: { color: string; textKey: string }) => (
   </View>
 );
 
+type LayerChoiceItemProps = LayerItem & {
+  checked: boolean;
+  onPress: () => void;
+};
+
+// same look as the items of MapAppChooserDialog: checkbox on the left, label wrapping on more lines
+const LayerChoiceItem = (props: LayerChoiceItemProps) => {
+  const { checked, label, layer, onPress, pointsCount } = props;
+  const { colors } = useTheme();
+  return (
+    <TouchableRipple
+      onPress={onPress}
+      style={[
+        styles.layerItem,
+        {
+          backgroundColor: colors.surface,
+          borderColor: checked ? colors.primary : colors.outlineVariant,
+          borderWidth: checked ? 2 : 1,
+        },
+      ]}
+    >
+      <HView style={styles.layerItemContent}>
+        <Checkbox.Android
+          onPress={onPress}
+          status={checked ? "checked" : "unchecked"}
+        />
+        {layer.type === RecordsMapLayerType.coordinateAttribute && (
+          <View style={[styles.layerColor, { backgroundColor: layer.color }]} />
+        )}
+        <VView style={styles.layerItemTexts}>
+          <Text variant="bodyLarge">{label}</Text>
+          <Text
+            textKey="recordsMap:pointsCount"
+            textParams={{ count: pointsCount }}
+            variant="bodySmall"
+          />
+        </VView>
+      </HView>
+    </TouchableRipple>
+  );
+};
+
 export const RecordsMapLayersPanel = (props: Props) => {
   const { layerItems, onDismiss, onLayerToggle, visibleLayerKeys } = props;
 
@@ -41,22 +84,16 @@ export const RecordsMapLayersPanel = (props: Props) => {
   return (
     <Modal onDismiss={onDismiss} titleKey="recordsMap:layers">
       <ScrollView>
-        {layerItems.map(({ layer, label, pointsCount }) => (
-          <HView key={layer.key} style={styles.layerItem}>
-            {layer.type === RecordsMapLayerType.coordinateAttribute && (
-              <View
-                style={[styles.layerColor, { backgroundColor: layer.color }]}
-              />
-            )}
-            <Checkbox
-              checked={visibleLayerKeys.includes(layer.key)}
-              label={`${label} (${pointsCount})`}
-              labelIsI18nKey={false}
-              onPress={() => onLayerToggle(layer.key)}
-              style={styles.layerCheckbox}
+        <VView style={styles.layerItems}>
+          {layerItems.map((layerItem) => (
+            <LayerChoiceItem
+              key={layerItem.layer.key}
+              {...layerItem}
+              checked={visibleLayerKeys.includes(layerItem.layer.key)}
+              onPress={() => onLayerToggle(layerItem.layer.key)}
             />
-          </HView>
-        ))}
+          ))}
+        </VView>
         {hasSamplingPointLayers && (
           <View style={styles.legend}>
             <LegendItem

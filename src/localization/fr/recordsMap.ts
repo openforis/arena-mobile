@@ -9,6 +9,7 @@ export default {
     "Point d'échantillonnage {{code}} : non visité",
   dataSourceInfo:
     "Données stockées sur cet appareil : enregistrements locaux et enregistrements des autres utilisateurs récupérés lors de la dernière vérification de l'état de synchronisation (uniquement leurs clés, jusqu'à leur téléchargement).",
+  pointsCount: "{{count}} points",
   openRecord: "Ouvrir",
   noLayers:
     "Cette enquête n'a pas de points d'échantillonnage avec localisation ni d'attributs de coordonnées à afficher sur la carte",
