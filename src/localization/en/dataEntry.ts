@@ -261,7 +261,7 @@ Fetch the list of records from the server and try again?`,
     heading: "Heading (deg)",
     map: {
       chooserTitle: "Show on map",
-      inApp: "Arena Mobile (works offline with downloaded maps)",
+      inApp: "Arena Mobile",
       myLocation: "Fit current location",
       viewerTitle: "Location",
     },
