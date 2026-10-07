@@ -81,7 +81,7 @@ export const OpenMapButton = (props: Props) => {
           <VView style={styles.options}>
             <Button
               icon="cellphone"
-              mode="outlined"
+              color="secondary"
               onPress={onInAppPress}
               textKey="dataEntry:coordinate.map.inApp"
             />
@@ -89,7 +89,7 @@ export const OpenMapButton = (props: Props) => {
               <Button
                 key={app.id}
                 icon="map-marker"
-                mode="outlined"
+                color="secondary"
                 onPress={() => onAppPress(app)}
                 textIsI18nKey={false}
                 textKey={app.name}
