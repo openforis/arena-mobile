@@ -11,6 +11,7 @@ import {
   buildCoordinateAttributeFeatures,
   buildSamplingPointFeatures,
   getAvailableLayers,
+  getDefaultVisibleLayerKeys,
   getRecordUuidsBySamplingPointItemUuid,
   hasMapLayers,
   RecordsMapLayerType,
@@ -202,5 +203,27 @@ describe("recordsMapLayers", () => {
     expect(features).toHaveLength(1);
     expect(features[0]!.geometry.coordinates).toEqual([12, 22]);
     expect(features[0]!.properties.recordUuids).toEqual(["record-1"]);
+  });
+
+  test("by default only the first sampling point level and its coordinate attributes are visible", () => {
+    const layers = getAvailableLayers({ survey, cycle });
+    const clusterLocationDefUuid = Surveys.getNodeDefByName({
+      survey,
+      name: "cluster_location",
+    }).uuid;
+    const visibleLayerKeys = getDefaultVisibleLayerKeys({
+      survey,
+      cycle,
+      layers,
+    });
+    expect(
+      visibleLayerKeys.map((key) => layers.find((layer) => layer.key === key)!),
+    ).toEqual([
+      expect.objectContaining({
+        type: RecordsMapLayerType.samplingPoints,
+        levelIndex: 0,
+      }),
+      expect.objectContaining({ nodeDefUuid: clusterLocationDefUuid }),
+    ]);
   });
 });

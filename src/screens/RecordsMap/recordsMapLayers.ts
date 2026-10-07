@@ -166,6 +166,71 @@ export const hasMapLayers = ({
   !!getSamplingPointDataCategory(survey) ||
   getCoordinateAttributeDefs({ survey, cycle }).length > 0;
 
+// entities containing a code attribute referencing the first level of the sampling point data
+const getSamplingPointFirstLevelEntityDefUuids = ({
+  survey,
+  cycle,
+}: {
+  survey: Survey;
+  cycle: string;
+}): Set<string> => {
+  const entityDefUuids = new Set<string>();
+  for (const nodeDef of Surveys.getNodeDefsArray(survey)) {
+    if (
+      nodeDef.parentUuid &&
+      NodeDefs.isInCycle(cycle)(nodeDef) &&
+      SurveyDefs.isCodeAttributeFromSamplingPointData({
+        survey,
+        nodeDef: nodeDef as NodeDefCode,
+      }) &&
+      Surveys.getNodeDefCategoryLevelIndex({
+        survey,
+        nodeDef: nodeDef as NodeDefCode,
+      }) === 0
+    ) {
+      entityDefUuids.add(nodeDef.parentUuid);
+    }
+  }
+  return entityDefUuids;
+};
+
+// first sampling point level and the coordinate attributes in the same entity of its code attribute;
+// all the coordinate attributes when there are no sampling points with location
+export const getDefaultVisibleLayerKeys = ({
+  survey,
+  cycle,
+  layers,
+}: {
+  survey: Survey;
+  cycle: string;
+  layers: RecordsMapLayer[];
+}): string[] => {
+  const firstLevelLayer = layers.find(
+    (layer) =>
+      layer.type === RecordsMapLayerType.samplingPoints &&
+      layer.levelIndex === 0,
+  );
+  const coordinateLayers = layers.filter(
+    (layer) => layer.type === RecordsMapLayerType.coordinateAttribute,
+  );
+  if (!firstLevelLayer) return coordinateLayers.map((layer) => layer.key);
+
+  const entityDefUuids = getSamplingPointFirstLevelEntityDefUuids({
+    survey,
+    cycle,
+  });
+  const associatedCoordinateLayers = coordinateLayers.filter((layer) => {
+    const nodeDef = Surveys.getNodeDefByUuid({
+      survey,
+      uuid: layer.nodeDefUuid!,
+    });
+    return !!nodeDef.parentUuid && entityDefUuids.has(nodeDef.parentUuid);
+  });
+  return [firstLevelLayer, ...associatedCoordinateLayers].map(
+    (layer) => layer.key,
+  );
+};
+
 export const getLayerLabel = ({
   survey,
   layer,

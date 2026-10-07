@@ -21,6 +21,7 @@ import {
   buildCoordinateAttributeFeatures,
   buildSamplingPointFeatures,
   getAvailableLayers,
+  getDefaultVisibleLayerKeys,
   getLayerLabel,
   getRecordUuidsBySamplingPointItemUuid,
   RecordsMapLayer,
@@ -106,15 +107,8 @@ export const RecordsMapScreen = () => {
     [cycle, survey],
   );
 
-  // by default only the first sampling point level and the coordinate attributes are visible
   const [visibleLayerKeys, setVisibleLayerKeys] = useState<string[]>(() =>
-    layers
-      .filter(
-        (layer) =>
-          layer.type === RecordsMapLayerType.coordinateAttribute ||
-          layer.levelIndex === 0,
-      )
-      .map((layer) => layer.key),
+    getDefaultVisibleLayerKeys({ survey, cycle, layers }),
   );
 
   const loadData = useCallback(async () => {
