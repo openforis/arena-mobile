@@ -77,6 +77,7 @@ export const useLocationWatch = ({
     null as ReturnType<typeof setInterval> | null,
   );
   const locationAveragerRef = useRef(null as LocationAverager | null);
+  const locationReadingsCountRef = useRef(0);
   const startAttemptIdRef = useRef(0);
   const cancelledAttemptIdRef = useRef(0);
   const shouldFallbackToInternalRef = useRef(false);
@@ -142,6 +143,18 @@ export const useLocationWatch = ({
         return;
       }
 
+      // the last location is passed again to this callback when the watch is stopped:
+      // count (and log) only the readings coming from the location source
+      const watchActive = locationSubscriptionRef.current !== null;
+      if (watchActive) {
+        locationReadingsCountRef.current += 1;
+        if (locationReadingsCountRef.current === 1) {
+          log.info(
+            `Location watch: first location received: ${JSON.stringify(locationPointParam)}`,
+          );
+        }
+      }
+
       let locationPoint: LocationPoint | AveragedLocation | null =
         locationPointParam;
 
@@ -154,7 +167,12 @@ export const useLocationWatch = ({
 
       lastLocationRef.current = locationPoint;
 
-      if (!locationPoint) return;
+      if (!locationPoint) {
+        log.debug(
+          `Location watch: averaged location not available yet (readings: ${locationReadingsCountRef.current})`,
+        );
+        return;
+      }
 
       const { accuracy: locationAccuracy } = locationPoint;
 
@@ -172,7 +190,11 @@ export const useLocationWatch = ({
       const thresholdReached = accuracyThresholdReached || timeoutReached;
 
       if (thresholdReached) {
-        log.debug("Threshold reached");
+        log.info(
+          accuracyThresholdReached
+            ? `Location watch: accuracy threshold reached (accuracy: ${locationAccuracy}, threshold: ${locationAccuracyThreshold}, readings: ${locationReadingsCountRef.current})`
+            : `Location watch: timeout reached, setting last location (accuracy: ${locationAccuracy}, threshold: ${locationAccuracyThreshold})`,
+        );
         _stopLocationWatch();
       }
       const pointLatLong = locationPointToPoint(locationPoint);
@@ -198,16 +220,22 @@ export const useLocationWatch = ({
     log.debug("Stopping location watch (stopLocationWatch)");
     if (_stopLocationWatch() && isMountedRef.current) {
       const lastLocation = lastLocationRef.current;
+      const readingsCount = locationReadingsCountRef.current;
       log.info(
         lastLocation
-          ? `Location watch stopped: using last location (accuracy: ${lastLocation.accuracy})`
-          : "Location watch stopped: no location received, value not set",
+          ? `Location watch stopped: using last location (readings: ${readingsCount}, accuracy threshold: ${locationAccuracyThreshold}): ${JSON.stringify(lastLocation)}`
+          : `Location watch stopped: no location available (readings: ${readingsCount}), value not set`,
       );
       locationCallback(lastLocationRef.current);
     }
     lastLocationRef.current = null;
     locationAveragerRef.current = null;
-  }, [_stopLocationWatch, isMountedRef, locationCallback]);
+  }, [
+    _stopLocationWatch,
+    isMountedRef,
+    locationAccuracyThreshold,
+    locationCallback,
+  ]);
 
   const cancelConnecting = useCallback(() => {
     if (status !== "connecting") return;
@@ -267,6 +295,11 @@ export const useLocationWatch = ({
       activeSourceId: string;
       sourceUnavailable: boolean;
     }) => {
+      locationReadingsCountRef.current = 0;
+      log.info(
+        `Location watch: watching source ${activeSourceId} (accuracy threshold: ${locationAccuracyThreshold}, timeout: ${stopOnTimeout ? `${locationWatchTimeout / 1000}s` : "none"}, averaging: ${!!locationAveragingEnabled}, stop on accuracy threshold: ${stopOnAccuracyThreshold}, source unavailable: ${sourceUnavailable})`,
+      );
+
       if (locationAveragingEnabled) {
         locationAveragerRef.current = new LocationAverager();
       }
@@ -299,9 +332,11 @@ export const useLocationWatch = ({
       }));
     },
     [
+      locationAccuracyThreshold,
       locationAveragingEnabled,
       locationWatchTimeout,
       stopLocationWatch,
+      stopOnAccuracyThreshold,
       stopOnTimeout,
     ],
   );
