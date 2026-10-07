@@ -262,6 +262,7 @@ Fetch the list of records from the server and try again?`,
     map: {
       chooserTitle: "Show on map",
       inApp: "Arena Mobile",
+      inAppDescription: "Works offline with downloaded maps",
       myLocation: "Fit current location",
       viewerTitle: "Location",
     },

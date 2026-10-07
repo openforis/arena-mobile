@@ -1,13 +1,14 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
+import { List } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
 import { Points } from "@openforis/arena-core";
 
-import { Button } from "components/Button";
 import { Dialog } from "components/Dialog";
 import { IconButton } from "components/IconButton";
 import { VView } from "components/VView";
+import { useTranslation } from "localization";
 import { screenKeys } from "screens/screenKeys";
 import { MapApp, MapAppsService } from "service/mapApps";
 import { log } from "utils";
@@ -20,11 +21,13 @@ type Props = {
 
 const styles = StyleSheet.create({
   options: { gap: 4 },
+  option: { borderRadius: 8, borderWidth: StyleSheet.hairlineWidth },
 });
 
 export const OpenMapButton = (props: Props) => {
   const { point, size = 30, srsIndex = undefined } = props;
 
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const [apps, setApps] = useState<MapApp[] | null>(null);
 
@@ -79,20 +82,21 @@ export const OpenMapButton = (props: Props) => {
           title="dataEntry:coordinate.map.chooserTitle"
         >
           <VView style={styles.options}>
-            <Button
-              icon="cellphone"
-              color="secondary"
+            <List.Item
+              description={t("dataEntry:coordinate.map.inAppDescription")}
+              descriptionNumberOfLines={3}
+              left={(props) => <List.Icon {...props} icon="cellphone" />}
               onPress={onInAppPress}
-              textKey="dataEntry:coordinate.map.inApp"
+              style={styles.option}
+              title={t("dataEntry:coordinate.map.inApp")}
             />
             {apps.map((app) => (
-              <Button
+              <List.Item
                 key={app.id}
-                icon="map-marker"
-                color="secondary"
+                left={(props) => <List.Icon {...props} icon="map-marker" />}
                 onPress={() => onAppPress(app)}
-                textIsI18nKey={false}
-                textKey={app.name}
+                style={styles.option}
+                title={app.name}
               />
             ))}
           </VView>
