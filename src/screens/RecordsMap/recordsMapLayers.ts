@@ -16,6 +16,8 @@ import {
 
 import { SurveyDefs } from "model/utils/SurveyDefs";
 
+const latLongSrsCode = "4326";
+
 export enum RecordsMapLayerType {
   samplingPoints = "samplingPoints",
   coordinateAttribute = "coordinateAttribute",
@@ -38,6 +40,8 @@ export type RecordsMapPointProperties = {
   label: string;
   recordUuids: string[];
   visited?: boolean;
+  // location in lat/long (EPSG:4326), used to open the point in other map apps
+  point: Point;
 };
 
 export type RecordsMapPointFeature = {
@@ -71,7 +75,7 @@ const createPointFeature = ({
   properties,
 }: {
   point: Point;
-  properties: RecordsMapPointProperties;
+  properties: Omit<RecordsMapPointProperties, "point">;
 }): RecordsMapPointFeature | null => {
   const longitude = Number(point.x);
   const latitude = Number(point.y);
@@ -79,7 +83,10 @@ const createPointFeature = ({
   return {
     type: "Feature",
     geometry: { type: "Point", coordinates: [longitude, latitude] },
-    properties,
+    properties: {
+      ...properties,
+      point: { x: longitude, y: latitude, srs: latLongSrsCode },
+    },
   };
 };
 

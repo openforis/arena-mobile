@@ -5,6 +5,7 @@ import {
   Button,
   CloseIconButton,
   HView,
+  OpenMapButton,
   ScrollView,
   Text,
   VView,
@@ -47,20 +48,27 @@ export const RecordsMapSelectionPanel = (props: Props) => {
         {points.map((point) => (
           <VView key={point.key} style={styles.pointItem}>
             {isSamplingPointsLayer && (
-              <Text
-                textKey={
-                  point.visited
-                    ? "recordsMap:samplingPointVisitedWithCode"
-                    : "recordsMap:samplingPointNotVisitedWithCode"
-                }
-                textParams={{ code: point.label }}
-              />
+              <HView style={styles.recordItem}>
+                <Text
+                  style={styles.recordItemLabel}
+                  textKey={
+                    point.visited
+                      ? "recordsMap:samplingPointVisitedWithCode"
+                      : "recordsMap:samplingPointNotVisitedWithCode"
+                  }
+                  textParams={{ code: point.label }}
+                />
+                <OpenMapButton point={point.point} size={20} />
+              </HView>
             )}
             {point.recordUuids.map((recordUuid) => (
               <HView key={recordUuid} style={styles.recordItem}>
                 <Text style={styles.recordItemLabel}>
                   {recordLabelByUuid[recordUuid] ?? point.label}
                 </Text>
+                {!isSamplingPointsLayer && (
+                  <OpenMapButton point={point.point} size={20} />
+                )}
                 <Button
                   compact
                   icon="pencil"
