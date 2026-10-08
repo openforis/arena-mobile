@@ -7,6 +7,10 @@ export const DeleteIconButton = (props: IconButtonProps) => {
   const { iconColor = theme.colors.error, ...otherProps } = props;
 
   return (
-    <IconButton icon="trash-can-outline" iconColor={iconColor} {...otherProps} />
+    <IconButton
+      icon="trash-can-outline"
+      iconColor={iconColor}
+      {...otherProps}
+    />
   );
 };
