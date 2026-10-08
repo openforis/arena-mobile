@@ -4,9 +4,12 @@ import { log } from "utils";
 import { ExternalGpsConnection, ExternalGpsTransport } from "./types";
 
 const idleGracePeriodMs = 60000;
+// pause between closing a connection and opening its replacement
+const reconnectDelayMs = 500;
 
 type PoolEntry = {
   connectionPromise: Promise<ExternalGpsConnection>;
+  connection: ExternalGpsConnection | null; // set once connectionPromise resolves
   listenerCount: number;
   idleTimeout: ReturnType<typeof setTimeout> | null;
   disconnectSubscription: { remove: () => void } | null;
@@ -27,7 +30,7 @@ const closeEntry = async (sourceId: string, entry: PoolEntry) => {
   try {
     const connection = await entry.connectionPromise;
     await connection.disconnect();
-    log.debug("ExternalGps: closed idle connection to", sourceId);
+    log.debug("ExternalGps: closed connection to", sourceId);
   } catch (error) {
     log.warn("ExternalGps: error closing connection to", sourceId, error);
   }
@@ -48,12 +51,14 @@ const openConnection = (
       if (pool.get(sourceId) === entry) pool.delete(sourceId);
       throw error;
     }),
+    connection: null,
     listenerCount: 0,
     idleTimeout: null,
     disconnectSubscription: null,
   };
   entry.connectionPromise.then(
     (connection) => {
+      entry.connection = connection;
       // Entry may already have been replaced/removed (e.g. connect() was slow and
       // the caller gave up) - don't attach to a connection nobody references anymore.
       if (pool.get(sourceId) !== entry) return;
@@ -108,17 +113,50 @@ const acquire = async (
   return entry.connectionPromise;
 };
 
-const release = (sourceId: string) => {
+/**
+ * `discard`: the caller found the connection silent (connected, but no data coming
+ * through). Such a connection doesn't recover by being kept open, so once nobody else
+ * is using it, it's closed right away rather than kept for the next acquire().
+ */
+const release = (
+  sourceId: string,
+  { discard = false }: { discard?: boolean } = {},
+) => {
   const entry = pool.get(sourceId);
   if (!entry) return;
 
   entry.listenerCount = Math.max(0, entry.listenerCount - 1);
-  if (entry.listenerCount === 0) {
-    entry.idleTimeout = setTimeout(
-      () => closeEntry(sourceId, entry),
-      idleGracePeriodMs,
-    );
+  if (entry.listenerCount > 0) return;
+
+  if (discard) {
+    log.info("ExternalGps: discarding silent connection to", sourceId);
+    void closeEntry(sourceId, entry);
+    return;
   }
+  entry.idleTimeout = setTimeout(
+    () => closeEntry(sourceId, entry),
+    idleGracePeriodMs,
+  );
+};
+
+/**
+ * Swaps a connection that has gone silent for a fresh one, on behalf of a caller that
+ * is still using it: closes `staleConnection` (unless another caller already replaced
+ * it) and acquires the current one. The caller's hold on the stale connection is
+ * dropped with it, so this counts as its new acquire().
+ */
+const replace = async (
+  sourceId: string,
+  transport: ExternalGpsTransport,
+  staleConnection: ExternalGpsConnection,
+): Promise<ExternalGpsConnection> => {
+  const existing = pool.get(sourceId);
+  if (existing?.connection === staleConnection) {
+    clearIdleTimeout(existing);
+    await closeEntry(sourceId, existing);
+    await new Promise((resolve) => setTimeout(resolve, reconnectDelayMs));
+  }
+  return acquire(sourceId, transport);
 };
 
 /**
@@ -137,5 +175,6 @@ const closeAll = async () => {
 export const ExternalGpsConnectionManager = {
   acquire,
   release,
+  replace,
   closeAll,
 };
