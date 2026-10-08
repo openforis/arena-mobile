@@ -262,6 +262,7 @@ Fetch the list of records from the server and try again?`,
     getLocation: "Get location",
     heading: "Heading (deg)",
     map: {
+      attributeViewerTitle: 'Location of "{{attributeLabel}}"',
       chooserTitle: "Show on map",
       inApp: "Arena Mobile",
       inAppDescription: "Works offline with downloaded maps",

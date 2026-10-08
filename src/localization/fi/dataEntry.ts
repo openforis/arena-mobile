@@ -203,6 +203,7 @@ Haluatko hakea sen uudelleen palvelimelta?`,
     getLocation: "Hae sijainti",
     heading: "Suunta (astetta)",
     map: {
+      attributeViewerTitle: 'Kohteen "{{attributeLabel}}" sijainti',
       chooserTitle: "Näytä kartalla",
       inApp: "Arena Mobile",
       inAppDescription: "Toimii ilman verkkoyhteyttä ladattujen karttojen kanssa",

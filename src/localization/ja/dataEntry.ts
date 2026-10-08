@@ -257,6 +257,7 @@ export default {
     getLocation: "位置を取得",
     heading: "方位 (度)",
     map: {
+      attributeViewerTitle: "「{{attributeLabel}}」の位置",
       chooserTitle: "地図で表示",
       inApp: "Arena Mobile",
       inAppDescription: "ダウンロード済みの地図でオフラインでも利用可能",

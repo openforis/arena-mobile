@@ -205,6 +205,7 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
     getLocation: "Dapatkan lokasi",
     heading: "Arah (derajat)",
     map: {
+      attributeViewerTitle: 'Lokasi "{{attributeLabel}}"',
       chooserTitle: "Tampilkan di peta",
       inApp: "Arena Mobile",
       inAppDescription: "Berfungsi secara offline dengan peta yang diunduh",

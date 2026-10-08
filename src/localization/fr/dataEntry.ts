@@ -204,6 +204,7 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
     getLocation: "Obtenir la position",
     heading: "Cap (deg)",
     map: {
+      attributeViewerTitle: "Position de « {{attributeLabel}} »",
       chooserTitle: "Afficher sur la carte",
       inApp: "Arena Mobile",
       inAppDescription: "Fonctionne hors ligne avec les cartes téléchargées",

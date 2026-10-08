@@ -198,6 +198,7 @@ Sus valores serán borrados.
     getLocation: "Obtener ubicación",
     heading: "Orientación (grados)",
     map: {
+      attributeViewerTitle: 'Ubicación de "{{attributeLabel}}"',
       chooserTitle: "Mostrar en el mapa",
       inApp: "Arena Mobile",
       inAppDescription: "Funciona sin conexión con mapas descargados",

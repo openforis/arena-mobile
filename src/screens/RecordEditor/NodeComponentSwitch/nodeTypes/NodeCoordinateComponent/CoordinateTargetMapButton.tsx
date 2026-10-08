@@ -1,10 +1,11 @@
-import React, { useMemo } from "react";
+import React from "react";
 
-import { NodeDef, NodeDefs } from "@openforis/arena-core";
+import { NodeDef } from "@openforis/arena-core";
 
 import { OpenMapButton } from "components";
 import { SurveySelectors } from "state";
 import { useCoordinateDistanceTarget } from "./useCoordinateDistanceTarget";
+import { useCoordinateMapTitleParams } from "./useCoordinateMapTitleParams";
 
 type Props = {
   nodeDef: NodeDef<any>;
@@ -15,11 +16,7 @@ type Props = {
 export const CoordinateTargetMapButton = (props: Props) => {
   const { nodeDef, size, targetPoint } = props;
   const srsIndex = SurveySelectors.useCurrentSurveySrsIndex();
-  const lang = SurveySelectors.useCurrentSurveyPreferredLang();
-  const titleParams = useMemo(
-    () => ({ attributeLabel: NodeDefs.getLabelOrName(nodeDef, lang) }),
-    [lang, nodeDef],
-  );
+  const titleParams = useCoordinateMapTitleParams(nodeDef);
   if (!targetPoint) return null;
   return (
     <OpenMapButton

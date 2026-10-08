@@ -204,6 +204,7 @@ Vill du hämta den igen från servern?`,
     getLocation: "Hämta plats",
     heading: "Kurs (grader)",
     map: {
+      attributeViewerTitle: 'Position för "{{attributeLabel}}"',
       chooserTitle: "Visa på karta",
       inApp: "Arena Mobile",
       inAppDescription: "Fungerar offline med nedladdade kartor",

@@ -198,6 +198,7 @@ Deseja obtê-las novamente do servidor?`,
     getLocation: "Obter localização",
     heading: "Direção (graus)",
     map: {
+      attributeViewerTitle: 'Localização de "{{attributeLabel}}"',
       chooserTitle: "Mostrar no mapa",
       inApp: "Arena Mobile",
       inAppDescription: "Funciona offline com mapas descarregados",

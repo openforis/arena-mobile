@@ -197,6 +197,7 @@ export default {
     getLocation: "Получить местоположение",
     heading: "Курс (град)",
     map: {
+      attributeViewerTitle: "Местоположение «{{attributeLabel}}»",
       chooserTitle: "Показать на карте",
       inApp: "Arena Mobile",
       inAppDescription: "Работает офлайн со скачанными картами",

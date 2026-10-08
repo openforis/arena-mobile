@@ -17,6 +17,7 @@ import { SrsDropdown } from "../../../SrsDropdown";
 import { useNodeCoordinateComponent } from "./useNodeCoordinateComponent";
 import { LocationNavigator } from "./LocationNavigator";
 import { CoordinateTargetMapButton } from "./CoordinateTargetMapButton";
+import { useCoordinateMapTitleParams } from "./useCoordinateMapTitleParams";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 import styles from "./styles";
@@ -63,6 +64,8 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
     uiValue,
     watchingLocation,
   } = useNodeCoordinateComponent(props);
+
+  const mapTitleParams = useCoordinateMapTitleParams(nodeDef);
 
   const createNumericFieldFormItem = useCallback(
     ({ fieldKey, labelStyle = styles.formItemLabel }: any) => (
@@ -113,6 +116,8 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
                   point={uiValue}
                   size={buttonSize}
                   srsIndex={srsIndex}
+                  titleKey="dataEntry:coordinate.map.attributeViewerTitle"
+                  titleParams={mapTitleParams}
                 />
               )}
               {distanceTarget && (
@@ -124,10 +129,7 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
               )}
             </HView>
             {deleteButtonVisible && (
-              <DeleteIconButton
-                onPress={onClearPress}
-                size={buttonSize}
-              />
+              <DeleteIconButton onPress={onClearPress} size={buttonSize} />
             )}
           </VView>
         )}

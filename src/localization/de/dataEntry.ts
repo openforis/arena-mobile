@@ -207,6 +207,7 @@ Möchten Sie sie erneut vom Server abrufen?`,
     getLocation: "Standort abrufen",
     heading: "Richtung (Grad)",
     map: {
+      attributeViewerTitle: "Standort von „{{attributeLabel}}“",
       chooserTitle: "Auf Karte anzeigen",
       inApp: "Arena Mobile",
       inAppDescription: "Funktioniert offline mit heruntergeladenen Karten",
