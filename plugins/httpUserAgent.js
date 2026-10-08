@@ -15,9 +15,14 @@ const addUserAgent = ({ contents, language, userAgent }) => {
       : `${marker}, "${userAgent}")`;
   const superOnCreate = /super\.onCreate\(\)(;)?/;
   if (!superOnCreate.test(contents)) {
-    throw new Error("httpUserAgent plugin: super.onCreate() not found in MainApplication");
+    throw new Error(
+      "httpUserAgent plugin: super.onCreate() not found in MainApplication",
+    );
   }
-  return contents.replace(superOnCreate, (match) => `${match}\n    ${statement}`);
+  return contents.replace(
+    superOnCreate,
+    (match) => `${match}\n    ${statement}`,
+  );
 };
 
 module.exports = function httpUserAgentPlugin(config) {
