@@ -1,8 +1,10 @@
 import React, { useCallback } from "react";
+import { useTheme } from "react-native-paper";
 
 import { Objects } from "@openforis/arena-core";
 
 import {
+  DeleteIconButton,
   HView,
   IconButton,
   OpenMapButton,
@@ -23,6 +25,8 @@ const buttonSize = 24;
 
 export const NodeCoordinateComponent = (props: NodeComponentProps) => {
   const { nodeDef, nodeUuid } = props;
+
+  const theme = useTheme();
 
   log.debug(`rendering NodeCoordinateComponent for ${nodeDef.props.name}`);
 
@@ -96,6 +100,14 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
         </VView>
         {!watchingLocation && (
           <VView style={styles.buttonsContainer}>
+            {distanceTarget && (
+              <IconButton
+                icon="compass-outline"
+                onPress={showCompassNavigator}
+                size={buttonSize}
+                testID="coordinate-navigate-to-target-button"
+              />
+            )}
             <HView style={styles.buttonsRow}>
               {uiValue && (
                 <OpenMapButton
@@ -105,22 +117,7 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
                   srsIndex={srsIndex}
                 />
               )}
-              {deleteButtonVisible && (
-                <IconButton
-                  icon="trash-can-outline"
-                  onPress={onClearPress}
-                  size={buttonSize}
-                />
-              )}
-            </HView>
-            {distanceTarget && (
-              <HView style={styles.buttonsRow}>
-                <IconButton
-                  icon="compass-outline"
-                  onPress={showCompassNavigator}
-                  size={buttonSize}
-                  testID="coordinate-navigate-to-target-button"
-                />
+              {distanceTarget && (
                 <OpenMapButton
                   icon="map-marker-radius"
                   point={distanceTarget}
@@ -128,7 +125,14 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
                   srsIndex={srsIndex}
                   testID="coordinate-open-target-map-button"
                 />
-              </HView>
+              )}
+            </HView>
+            {deleteButtonVisible && (
+              <DeleteIconButton
+                iconColor={theme.colors.error}
+                onPress={onClearPress}
+                size={buttonSize}
+              />
             )}
           </VView>
         )}

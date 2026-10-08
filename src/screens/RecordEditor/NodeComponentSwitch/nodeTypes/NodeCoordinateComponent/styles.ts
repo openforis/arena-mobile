@@ -29,6 +29,6 @@ export default StyleSheet.create({
   textInputNotApplicable: {
     backgroundColor: "lightgray",
   },
-  buttonsContainer: { alignItems: "flex-end" },
+  buttonsContainer: { alignItems: "center" },
   buttonsRow: { alignItems: "center" },
 });
