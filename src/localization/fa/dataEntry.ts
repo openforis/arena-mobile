@@ -202,12 +202,14 @@ export default {
     getLocation: "دریافت موقعیت مکانی",
     heading: "جهت (درجه)",
     map: {
+      attributeViewerTitle: "موقعیت «{{attributeLabel}}»",
       chooserTitle: "نمایش روی نقشه",
       inApp: "Arena Mobile",
       inAppDescription: "با نقشه‌های دانلودشده به‌صورت آفلاین کار می‌کند",
       inAppDescriptionRelocatable:
         "با نقشه‌های دانلودشده به‌صورت آفلاین کار می‌کند.\nموقعیت قابل جابه‌جایی است",
       show: "نمایش",
+      targetViewerTitle: "موقعیت هدف «{{attributeLabel}}»",
       viewerTitle: "موقعیت",
     },
     headingOffset: "انحراف جهت",

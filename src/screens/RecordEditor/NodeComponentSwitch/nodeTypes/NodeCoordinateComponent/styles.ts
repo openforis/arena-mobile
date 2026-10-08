@@ -29,8 +29,6 @@ export default StyleSheet.create({
   textInputNotApplicable: {
     backgroundColor: "lightgray",
   },
-  showCompassButton: {
-    alignSelf: "center",
-    margin: 20,
-  },
+  buttonsContainer: { alignItems: "center" },
+  buttonsRow: { alignItems: "center" },
 });
