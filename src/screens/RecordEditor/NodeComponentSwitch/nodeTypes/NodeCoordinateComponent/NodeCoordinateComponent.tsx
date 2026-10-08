@@ -1,5 +1,4 @@
 import React, { useCallback } from "react";
-import { useTheme } from "react-native-paper";
 
 import { Objects } from "@openforis/arena-core";
 
@@ -26,8 +25,6 @@ const buttonSize = 24;
 
 export const NodeCoordinateComponent = (props: NodeComponentProps) => {
   const { nodeDef, nodeUuid } = props;
-
-  const theme = useTheme();
 
   log.debug(`rendering NodeCoordinateComponent for ${nodeDef.props.name}`);
 
@@ -128,7 +125,6 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
             </HView>
             {deleteButtonVisible && (
               <DeleteIconButton
-                iconColor={theme.colors.error}
                 onPress={onClearPress}
                 size={buttonSize}
               />
