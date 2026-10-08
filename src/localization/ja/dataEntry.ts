@@ -257,12 +257,14 @@ export default {
     getLocation: "位置を取得",
     heading: "方位 (度)",
     map: {
+      attributeViewerTitle: "「{{attributeLabel}}」の位置",
       chooserTitle: "地図で表示",
       inApp: "Arena Mobile",
       inAppDescription: "ダウンロード済みの地図でオフラインでも利用可能",
       inAppDescriptionRelocatable:
         "ダウンロード済みの地図でオフラインでも利用可能。\n位置を移動できます",
       show: "表示",
+      targetViewerTitle: "「{{attributeLabel}}」の目標位置",
       viewerTitle: "位置",
     },
     headingOffset: "方位ずれ",

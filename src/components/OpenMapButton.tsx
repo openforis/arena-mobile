@@ -12,16 +12,29 @@ import { MapApp, MapAppsService } from "service/mapApps";
 import { Environment, log } from "utils";
 
 type Props = {
+  icon?: string;
   nodeUuid?: string; // when set, the point can be moved in the in-app map
   point?: any;
   size?: number;
   srsIndex?: any;
+  testID?: string;
+  titleKey?: string;
+  titleParams?: Record<string, string>;
 };
 
 type ChooserState = { apps: MapApp[]; selectedId: string };
 
 export const OpenMapButton = (props: Props) => {
-  const { nodeUuid, point, size = 30, srsIndex = undefined } = props;
+  const {
+    icon = "map",
+    nodeUuid,
+    point,
+    size = 30,
+    srsIndex = undefined,
+    testID,
+    titleKey,
+    titleParams,
+  } = props;
 
   const navigation = useNavigation();
   // the map app chooser is experimental
@@ -74,7 +87,10 @@ export const OpenMapButton = (props: Props) => {
       await MapAppsService.rememberChoice(selectedId);
       if (selectedId === MapAppsService.inAppChoiceId) {
         navigation.navigate(
-          ...([screenKeys.locationMapViewer, { latitude, longitude, nodeUuid }] as never),
+          ...([
+            screenKeys.locationMapViewer,
+            { latitude, longitude, nodeUuid, titleKey, titleParams },
+          ] as never),
         );
       } else {
         await MapAppsService.openApp(selectedId, { latitude, longitude });
@@ -82,13 +98,21 @@ export const OpenMapButton = (props: Props) => {
     } catch (error) {
       log.error("error opening map", error);
     }
-  }, [chooser, latitude, longitude, navigation, nodeUuid]);
+  }, [
+    chooser,
+    latitude,
+    longitude,
+    navigation,
+    nodeUuid,
+    titleKey,
+    titleParams,
+  ]);
 
   if (!pointLatLng) return null;
 
   return (
     <>
-      <IconButton icon="map" onPress={onPress} size={size} />
+      <IconButton icon={icon} onPress={onPress} size={size} testID={testID} />
       {chooser && (
         <MapAppChooserDialog
           apps={chooser.apps}

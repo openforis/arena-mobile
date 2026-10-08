@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
 
 import {
   NodeDefs,
@@ -8,18 +7,15 @@ import {
   Objects,
   PointFactory,
   Points,
-  Records,
   SRSIndex,
   Surveys,
 } from "@openforis/arena-core";
 
 import { useAvailableGpsSources, useLocationWatch } from "hooks";
 import { LocationPoint, SettingsModel } from "model";
-import { RecordUtils } from "model/utils/RecordUtils";
 import { GpsSourceDescriptor } from "service/externalGps/types";
 import {
   DataEntryActions,
-  DataEntrySelectors,
   SettingsActions,
   SettingsSelectors,
   SurveySelectors,
@@ -28,6 +24,7 @@ import {
 } from "state";
 import { log } from "utils";
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
+import { useCoordinateDistanceTarget } from "./useCoordinateDistanceTarget";
 
 const stringToNumber = (str: any) => Numbers.toNumber(str);
 const numberToString = (num: any, roundToDecimals = Number.NaN) => {
@@ -278,22 +275,7 @@ export const useNodeCoordinateComponent = (props: any) => {
     [onSelectGpsSource, refreshAvailableGpsSources],
   );
 
-  // Get the distance target for the coordinate node
-  const [distanceTarget, setDistanceTarget] = useState(null);
-  useSelector((state) => {
-    const record = DataEntrySelectors.selectRecord(state);
-    const node = Records.getNodeByUuid(nodeUuid)(record);
-    void RecordUtils.getCoordinateDistanceTarget({
-      survey,
-      nodeDef,
-      record,
-      node,
-    }).then((_distanceTarget) => {
-      if (!Objects.isEqual(_distanceTarget, distanceTarget)) {
-        setDistanceTarget(_distanceTarget);
-      }
-    });
-  }, Objects.isEqual);
+  const distanceTarget = useCoordinateDistanceTarget({ nodeDef, nodeUuid });
 
   useEffect(() => {
     return stopLocationWatch;

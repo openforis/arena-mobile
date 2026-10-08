@@ -197,12 +197,14 @@ export default {
     getLocation: "Получить местоположение",
     heading: "Курс (град)",
     map: {
+      attributeViewerTitle: "Местоположение «{{attributeLabel}}»",
       chooserTitle: "Показать на карте",
       inApp: "Arena Mobile",
       inAppDescription: "Работает офлайн со скачанными картами",
       inAppDescriptionRelocatable:
         "Работает офлайн со скачанными картами.\nПоложение можно изменить",
       show: "Показать",
+      targetViewerTitle: "Целевое местоположение «{{attributeLabel}}»",
       viewerTitle: "Местоположение",
     },
     headingOffset: "Отклонение курса",

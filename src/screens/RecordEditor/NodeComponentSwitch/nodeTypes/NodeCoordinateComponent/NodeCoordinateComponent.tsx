@@ -3,6 +3,7 @@ import React, { useCallback } from "react";
 import { Objects } from "@openforis/arena-core";
 
 import {
+  DeleteIconButton,
   HView,
   IconButton,
   OpenMapButton,
@@ -15,9 +16,13 @@ import { log } from "utils";
 import { SrsDropdown } from "../../../SrsDropdown";
 import { useNodeCoordinateComponent } from "./useNodeCoordinateComponent";
 import { LocationNavigator } from "./LocationNavigator";
+import { CoordinateTargetMapButton } from "./CoordinateTargetMapButton";
+import { useCoordinateMapTitleParams } from "./useCoordinateMapTitleParams";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 import styles from "./styles";
+
+const buttonSize = 24;
 
 export const NodeCoordinateComponent = (props: NodeComponentProps) => {
   const { nodeDef, nodeUuid } = props;
@@ -60,6 +65,8 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
     watchingLocation,
   } = useNodeCoordinateComponent(props);
 
+  const mapTitleParams = useCoordinateMapTitleParams(nodeDef);
+
   const createNumericFieldFormItem = useCallback(
     ({ fieldKey, labelStyle = styles.formItemLabel }: any) => (
       <HView key={fieldKey} style={styles.formItem}>
@@ -93,27 +100,36 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
           {createNumericFieldFormItem({ fieldKey: "y" })}
         </VView>
         {!watchingLocation && (
-          <VView style={styles.internalContainer}>
-            <HView style={styles.internalContainer}>
+          <VView style={styles.buttonsContainer}>
+            {distanceTarget && (
+              <IconButton
+                icon="compass-outline"
+                onPress={showCompassNavigator}
+                size={buttonSize}
+                testID="coordinate-navigate-to-target-button"
+              />
+            )}
+            <HView style={styles.buttonsRow}>
               {uiValue && (
                 <OpenMapButton
                   nodeUuid={inputFieldsEditable ? nodeUuid : undefined}
                   point={uiValue}
+                  size={buttonSize}
                   srsIndex={srsIndex}
+                  titleKey="dataEntry:coordinate.map.attributeViewerTitle"
+                  titleParams={mapTitleParams}
                 />
               )}
               {distanceTarget && (
-                <IconButton
-                  icon="compass-outline"
-                  onPress={showCompassNavigator}
-                  size={30}
-                  style={styles.showCompassButton}
-                  testID="coordinate-navigate-to-target-button"
+                <CoordinateTargetMapButton
+                  nodeDef={nodeDef}
+                  size={buttonSize}
+                  targetPoint={distanceTarget}
                 />
               )}
             </HView>
             {deleteButtonVisible && (
-              <IconButton icon="trash-can-outline" onPress={onClearPress} />
+              <DeleteIconButton onPress={onClearPress} size={buttonSize} />
             )}
           </VView>
         )}

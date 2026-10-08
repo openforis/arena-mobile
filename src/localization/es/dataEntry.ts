@@ -198,12 +198,14 @@ Sus valores serán borrados.
     getLocation: "Obtener ubicación",
     heading: "Orientación (grados)",
     map: {
+      attributeViewerTitle: 'Ubicación de "{{attributeLabel}}"',
       chooserTitle: "Mostrar en el mapa",
       inApp: "Arena Mobile",
       inAppDescription: "Funciona sin conexión con mapas descargados",
       inAppDescriptionRelocatable:
         "Funciona sin conexión con mapas descargados.\nLa posición se puede reubicar",
       show: "Mostrar",
+      targetViewerTitle: 'Ubicación objetivo de "{{attributeLabel}}"',
       viewerTitle: "Ubicación",
     },
     headingOffset: "Desviación de rumbo",
