@@ -211,6 +211,7 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
       inAppDescriptionRelocatable:
         "Berfungsi secara offline dengan peta yang diunduh.\nPosisi dapat dipindahkan",
       show: "Tampilkan",
+      targetViewerTitle: 'Lokasi target "{{attributeLabel}}"',
       viewerTitle: "Lokasi",
     },
     headingOffset: "Penyimpangan arah",

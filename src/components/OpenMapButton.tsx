@@ -18,6 +18,8 @@ type Props = {
   size?: number;
   srsIndex?: any;
   testID?: string;
+  titleKey?: string;
+  titleParams?: Record<string, string>;
 };
 
 type ChooserState = { apps: MapApp[]; selectedId: string };
@@ -30,6 +32,8 @@ export const OpenMapButton = (props: Props) => {
     size = 30,
     srsIndex = undefined,
     testID,
+    titleKey,
+    titleParams,
   } = props;
 
   const navigation = useNavigation();
@@ -83,7 +87,10 @@ export const OpenMapButton = (props: Props) => {
       await MapAppsService.rememberChoice(selectedId);
       if (selectedId === MapAppsService.inAppChoiceId) {
         navigation.navigate(
-          ...([screenKeys.locationMapViewer, { latitude, longitude, nodeUuid }] as never),
+          ...([
+            screenKeys.locationMapViewer,
+            { latitude, longitude, nodeUuid, titleKey, titleParams },
+          ] as never),
         );
       } else {
         await MapAppsService.openApp(selectedId, { latitude, longitude });
@@ -91,7 +98,15 @@ export const OpenMapButton = (props: Props) => {
     } catch (error) {
       log.error("error opening map", error);
     }
-  }, [chooser, latitude, longitude, navigation, nodeUuid]);
+  }, [
+    chooser,
+    latitude,
+    longitude,
+    navigation,
+    nodeUuid,
+    titleKey,
+    titleParams,
+  ]);
 
   if (!pointLatLng) return null;
 

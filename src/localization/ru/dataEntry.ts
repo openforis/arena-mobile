@@ -203,6 +203,7 @@ export default {
       inAppDescriptionRelocatable:
         "Работает офлайн со скачанными картами.\nПоложение можно изменить",
       show: "Показать",
+      targetViewerTitle: "Целевое местоположение «{{attributeLabel}}»",
       viewerTitle: "Местоположение",
     },
     headingOffset: "Отклонение курса",

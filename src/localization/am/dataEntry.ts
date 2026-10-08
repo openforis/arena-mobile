@@ -194,6 +194,7 @@ export default {
       inAppDescriptionRelocatable:
         "ያለ በይነመረብ ከወረዱ ካርታዎች ጋር ይሰራል።\nቦታውን ማንቀሳቀስ ይቻላል",
       show: "በካርታ አሳይ",
+      targetViewerTitle: 'የ"{{attributeLabel}}" ዒላማ ቦታ',
       viewerTitle: "ቦታ",
     },
     headingOffset: "የአቅጣጫ ልዩነት",

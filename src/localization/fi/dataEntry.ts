@@ -209,6 +209,7 @@ Haluatko hakea sen uudelleen palvelimelta?`,
       inAppDescriptionRelocatable:
         "Toimii ilman verkkoyhteyttä ladattujen karttojen kanssa.\nSijaintia voi siirtää",
       show: "Näytä",
+      targetViewerTitle: 'Kohteen "{{attributeLabel}}" kohdesijainti',
       viewerTitle: "Sijainti",
     },
     headingOffset: "Suuntapoikkeama",

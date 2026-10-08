@@ -17,6 +17,7 @@ import { log } from "utils";
 import { SrsDropdown } from "../../../SrsDropdown";
 import { useNodeCoordinateComponent } from "./useNodeCoordinateComponent";
 import { LocationNavigator } from "./LocationNavigator";
+import { CoordinateTargetMapButton } from "./CoordinateTargetMapButton";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 import styles from "./styles";
@@ -118,12 +119,10 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
                 />
               )}
               {distanceTarget && (
-                <OpenMapButton
-                  icon="map-marker-radius"
-                  point={distanceTarget}
+                <CoordinateTargetMapButton
+                  nodeDef={nodeDef}
                   size={buttonSize}
-                  srsIndex={srsIndex}
-                  testID="coordinate-open-target-map-button"
+                  targetPoint={distanceTarget}
                 />
               )}
             </HView>

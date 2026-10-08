@@ -213,6 +213,7 @@ Möchten Sie sie erneut vom Server abrufen?`,
       inAppDescriptionRelocatable:
         "Funktioniert offline mit heruntergeladenen Karten.\nDie Position kann verschoben werden",
       show: "Anzeigen",
+      targetViewerTitle: "Zielposition von „{{attributeLabel}}“",
       viewerTitle: "Standort",
     },
     headingOffset: "Kursabweichung",

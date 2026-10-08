@@ -12,7 +12,7 @@ import {
 } from "state";
 import { log } from "utils";
 
-import { CoordinateTargetMapButton } from "./NodeComponentSwitch/nodeTypes/NodeCoordinateComponent";
+import { NodeCoordinateTargetMapButton } from "./NodeComponentSwitch/nodeTypes/NodeCoordinateComponent";
 import { NodeValuePreview } from "./NodeValuePreview";
 import { NodeValuePreviewProps } from "./NodeValuePreview/NodeValuePreviewPropTypes";
 
@@ -62,7 +62,7 @@ export const CurrentRecordNodeValuePreview = (props: Props) => {
           isCoordinate ? (
             <HView key={node.uuid} style={styles.coordinateContainer}>
               <NodeValuePreview nodeDef={nodeDef} value={node.value} />
-              <CoordinateTargetMapButton
+              <NodeCoordinateTargetMapButton
                 nodeDef={nodeDef}
                 nodeUuid={node.uuid}
               />

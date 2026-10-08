@@ -204,6 +204,7 @@ Sus valores serán borrados.
       inAppDescriptionRelocatable:
         "Funciona sin conexión con mapas descargados.\nLa posición se puede reubicar",
       show: "Mostrar",
+      targetViewerTitle: 'Ubicación objetivo de "{{attributeLabel}}"',
       viewerTitle: "Ubicación",
     },
     headingOffset: "Desviación de rumbo",

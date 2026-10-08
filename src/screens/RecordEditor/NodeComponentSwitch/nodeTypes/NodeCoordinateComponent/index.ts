@@ -1,2 +1,2 @@
 export { NodeCoordinateComponent } from "./NodeCoordinateComponent";
-export { CoordinateTargetMapButton } from "./CoordinateTargetMapButton";
+export { NodeCoordinateTargetMapButton } from "./CoordinateTargetMapButton";

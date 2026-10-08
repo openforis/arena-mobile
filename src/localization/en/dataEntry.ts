@@ -268,6 +268,7 @@ Fetch the list of records from the server and try again?`,
       inAppDescriptionRelocatable:
         "Works offline with downloaded maps.\nThe position can be relocated",
       show: "Show",
+      targetViewerTitle: 'Target location of "{{attributeLabel}}"',
       viewerTitle: "Location",
     },
     headingOffset: "Direction offset",

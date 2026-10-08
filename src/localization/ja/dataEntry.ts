@@ -263,6 +263,7 @@ export default {
       inAppDescriptionRelocatable:
         "ダウンロード済みの地図でオフラインでも利用可能。\n位置を移動できます",
       show: "表示",
+      targetViewerTitle: "「{{attributeLabel}}」の目標位置",
       viewerTitle: "位置",
     },
     headingOffset: "方位ずれ",

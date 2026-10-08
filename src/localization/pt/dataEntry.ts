@@ -204,6 +204,7 @@ Deseja obtê-las novamente do servidor?`,
       inAppDescriptionRelocatable:
         "Funciona offline com mapas descarregados.\nA posição pode ser reposicionada",
       show: "Mostrar",
+      targetViewerTitle: 'Localização alvo de "{{attributeLabel}}"',
       viewerTitle: "Localização",
     },
     headingOffset: "Desvio de rumo",

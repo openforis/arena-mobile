@@ -210,6 +210,7 @@ Vill du hämta den igen från servern?`,
       inAppDescriptionRelocatable:
         "Fungerar offline med nedladdade kartor.\nPositionen kan flyttas",
       show: "Visa",
+      targetViewerTitle: 'Målposition för "{{attributeLabel}}"',
       viewerTitle: "Plats",
     },
     headingOffset: "Kursavvikelse",

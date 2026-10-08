@@ -210,6 +210,7 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
       inAppDescriptionRelocatable:
         "Fonctionne hors ligne avec les cartes téléchargées.\nLa position peut être déplacée",
       show: "Afficher",
+      targetViewerTitle: "Position cible de « {{attributeLabel}} »",
       viewerTitle: "Position",
     },
     headingOffset: "Décalage de cap",
