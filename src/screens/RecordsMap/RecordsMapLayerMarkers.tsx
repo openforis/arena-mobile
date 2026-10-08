@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from "react";
 import { Text as RNText, View } from "react-native";
-import { Marker, Region } from "react-native-maps";
+import { LatLng, Marker, Region } from "react-native-maps";
 
 import {
   notVisitedSamplingPointColor,
@@ -69,6 +69,79 @@ type Props = {
   region: Region | null;
 };
 
+type ClusterMarkerProps = {
+  layer: RecordsMapLayer;
+  cluster: RecordsMapClusterFeature;
+  coordinate: LatLng;
+  onPress: (cluster: RecordsMapClusterFeature) => void;
+};
+
+const ClusterMarker = memo((props: ClusterMarkerProps) => {
+  const { layer, cluster, coordinate, onPress } = props;
+  const count = cluster.properties.point_count;
+  const size = getClusterSize(count);
+  const color = getClusterColor({ layer, cluster });
+
+  return (
+    <Marker
+      coordinate={coordinate}
+      onPress={() => onPress(cluster)}
+      tracksViewChanges={false}
+    >
+      <View
+        style={[
+          styles.cluster,
+          {
+            width: size,
+            height: size,
+            borderRadius: size / 2,
+            backgroundColor: color,
+          },
+        ]}
+      >
+        <RNText
+          style={[
+            styles.clusterText,
+            color === notVisitedSamplingPointColor && styles.clusterTextDark,
+          ]}
+        >
+          {count}
+        </RNText>
+      </View>
+    </Marker>
+  );
+});
+
+ClusterMarker.displayName = "ClusterMarker";
+
+type PointMarkerProps = {
+  layer: RecordsMapLayer;
+  properties: RecordsMapPointProperties;
+  coordinate: LatLng;
+  onPress: Props["onPointPress"];
+};
+
+const PointMarker = memo((props: PointMarkerProps) => {
+  const { layer, properties, coordinate, onPress } = props;
+
+  return (
+    <Marker
+      coordinate={coordinate}
+      onPress={() => onPress({ layer, points: [properties] })}
+      tracksViewChanges={false}
+    >
+      <View
+        style={[
+          styles.point,
+          { backgroundColor: getPointColor({ layer, properties }) },
+        ]}
+      />
+    </Marker>
+  );
+});
+
+PointMarker.displayName = "PointMarker";
+
 export const RecordsMapLayerMarkers = memo((props: Props) => {
   const { layer, onClusterPress, onPointPress, points, region } = props;
 
@@ -97,55 +170,24 @@ export const RecordsMapLayerMarkers = memo((props: Props) => {
         ];
         const coordinate = { latitude, longitude };
         if (isClusterFeature(feature)) {
-          const count = feature.properties.point_count;
-          const size = getClusterSize(count);
-          const color = getClusterColor({ layer, cluster: feature });
           return (
-            <Marker
+            <ClusterMarker
               key={`${layer.key}_cluster_${feature.properties.cluster_id}`}
+              layer={layer}
+              cluster={feature}
               coordinate={coordinate}
-              onPress={() => handleClusterPress(feature)}
-              tracksViewChanges={false}
-            >
-              <View
-                style={[
-                  styles.cluster,
-                  {
-                    width: size,
-                    height: size,
-                    borderRadius: size / 2,
-                    backgroundColor: color,
-                  },
-                ]}
-              >
-                <RNText
-                  style={[
-                    styles.clusterText,
-                    color === notVisitedSamplingPointColor &&
-                      styles.clusterTextDark,
-                  ]}
-                >
-                  {count}
-                </RNText>
-              </View>
-            </Marker>
+              onPress={handleClusterPress}
+            />
           );
         }
-        const { properties } = feature;
         return (
-          <Marker
-            key={`${layer.key}_${properties.key}`}
+          <PointMarker
+            key={`${layer.key}_${feature.properties.key}`}
+            layer={layer}
+            properties={feature.properties}
             coordinate={coordinate}
-            onPress={() => onPointPress({ layer, points: [properties] })}
-            tracksViewChanges={false}
-          >
-            <View
-              style={[
-                styles.point,
-                { backgroundColor: getPointColor({ layer, properties }) },
-              ]}
-            />
-          </Marker>
+            onPress={onPointPress}
+          />
         );
       })}
     </>
