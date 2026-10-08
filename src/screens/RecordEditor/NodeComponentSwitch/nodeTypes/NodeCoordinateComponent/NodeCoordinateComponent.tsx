@@ -19,6 +19,8 @@ import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 import styles from "./styles";
 
+const buttonSize = 24;
+
 export const NodeCoordinateComponent = (props: NodeComponentProps) => {
   const { nodeDef, nodeUuid } = props;
 
@@ -93,34 +95,40 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
           {createNumericFieldFormItem({ fieldKey: "y" })}
         </VView>
         {!watchingLocation && (
-          <VView style={styles.internalContainer}>
-            <HView style={styles.internalContainer}>
+          <VView style={styles.buttonsContainer}>
+            <HView style={styles.buttonsRow}>
               {uiValue && (
                 <OpenMapButton
                   nodeUuid={inputFieldsEditable ? nodeUuid : undefined}
                   point={uiValue}
+                  size={buttonSize}
                   srsIndex={srsIndex}
                 />
               )}
-              {distanceTarget && (
-                <VView style={styles.targetButtonsContainer}>
-                  <IconButton
-                    icon="compass-outline"
-                    onPress={showCompassNavigator}
-                    size={30}
-                    testID="coordinate-navigate-to-target-button"
-                  />
-                  <OpenMapButton
-                    icon="map-marker-radius"
-                    point={distanceTarget}
-                    srsIndex={srsIndex}
-                    testID="coordinate-open-target-map-button"
-                  />
-                </VView>
+              {deleteButtonVisible && (
+                <IconButton
+                  icon="trash-can-outline"
+                  onPress={onClearPress}
+                  size={buttonSize}
+                />
               )}
             </HView>
-            {deleteButtonVisible && (
-              <IconButton icon="trash-can-outline" onPress={onClearPress} />
+            {distanceTarget && (
+              <HView style={styles.buttonsRow}>
+                <IconButton
+                  icon="compass-outline"
+                  onPress={showCompassNavigator}
+                  size={buttonSize}
+                  testID="coordinate-navigate-to-target-button"
+                />
+                <OpenMapButton
+                  icon="map-marker-radius"
+                  point={distanceTarget}
+                  size={buttonSize}
+                  srsIndex={srsIndex}
+                  testID="coordinate-open-target-map-button"
+                />
+              </HView>
             )}
           </VView>
         )}
