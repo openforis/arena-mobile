@@ -4,8 +4,9 @@ const { withMainApplication } = require("@expo/config-plugins");
 // the map tile overlays: the default User-Agent of HttpURLConnection is set to identify the app
 const marker = 'System.setProperty("http.agent"';
 
+// same product token used by the offline map tiles download (OfflineMapAreaDownloadJob)
 const buildUserAgent = (config) =>
-  `ArenaMobile/${config.version} (${config.android?.package}; +https://www.openforis.org)`;
+  `OpenForisArenaMobile/${config.version} (+https://www.openforis.org)`;
 
 const addUserAgent = ({ contents, language, userAgent }) => {
   if (contents.includes(marker)) return contents;
