@@ -36,6 +36,7 @@ const basePlugins: ExpoConfig["plugins"] = [
     },
   ],
   "./plugins/mapAppsQueries",
+  "./plugins/httpUserAgent",
   "expo-audio",
   "expo-localization",
   "expo-secure-store",
