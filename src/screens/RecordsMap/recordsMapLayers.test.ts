@@ -126,7 +126,6 @@ describe("recordsMapLayers", () => {
     const [clusterLayer] = getAvailableLayers({ survey, cycle });
     const features = buildSamplingPointFeatures({
       survey,
-      srsIndex: Surveys.getSRSIndex(survey),
       layer: clusterLayer!,
       recordUuidsByItemUuid,
     });
@@ -157,7 +156,6 @@ describe("recordsMapLayers", () => {
     const [, plotLayer] = getAvailableLayers({ survey, cycle });
     const features = buildSamplingPointFeatures({
       survey,
-      srsIndex: Surveys.getSRSIndex(survey),
       layer: plotLayer!,
       recordUuidsByItemUuid: {},
     });
@@ -177,7 +175,7 @@ describe("recordsMapLayers", () => {
         Surveys.getNodeDefByName({ survey, name: "plot_location" }).uuid,
     )!;
     const features = buildCoordinateAttributeFeatures({
-      srsIndex: Surveys.getSRSIndex(survey),
+      survey,
       layer: plotLocationLayer,
       nodeValues: [
         {

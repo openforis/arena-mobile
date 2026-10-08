@@ -80,7 +80,6 @@ export const RecordsMapScreen = () => {
   const survey = SurveySelectors.useCurrentSurvey()!;
   const cycle = SurveySelectors.useCurrentSurveyCycle()!;
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
-  const srsIndex = SurveySelectors.useCurrentSurveySrsIndex();
 
   const mapRef = useRef<RNMapView | null>(null);
   const [region, setRegion] = useState<Region | null>(null);
@@ -179,12 +178,11 @@ export const RecordsMapScreen = () => {
           layer.type === RecordsMapLayerType.samplingPoints
             ? buildSamplingPointFeatures({
                 survey,
-                srsIndex,
                 layer,
                 recordUuidsByItemUuid,
               })
             : buildCoordinateAttributeFeatures({
-                srsIndex,
+                survey,
                 layer,
                 nodeValues,
                 recordLabelByUuid,
@@ -193,15 +191,7 @@ export const RecordsMapScreen = () => {
       },
       {} as Record<string, RecordsMapPointFeature[]>,
     );
-  }, [
-    cycle,
-    layers,
-    nodeValues,
-    recordLabelByUuid,
-    recordSummaries,
-    srsIndex,
-    survey,
-  ]);
+  }, [cycle, layers, nodeValues, recordLabelByUuid, recordSummaries, survey]);
 
   const layerLabelByKey = useMemo(
     () =>

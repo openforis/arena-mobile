@@ -95,9 +95,9 @@ const toLatLong = ({
   srsIndex,
 }: {
   point: Point | null;
-  srsIndex: SRSIndex | undefined;
+  srsIndex: SRSIndex;
 }): Point | null => {
-  if (!point || !srsIndex) return null;
+  if (!point) return null;
   try {
     return Points.toLatLong(point, srsIndex);
   } catch {
@@ -382,17 +382,16 @@ export const getRecordUuidsBySamplingPointItemUuid = ({
 
 export const buildSamplingPointFeatures = ({
   survey,
-  srsIndex,
   layer,
   recordUuidsByItemUuid,
 }: {
   survey: Survey;
-  srsIndex: SRSIndex | undefined;
   layer: RecordsMapLayer;
   recordUuidsByItemUuid: Record<string, string[]>;
 }): RecordsMapPointFeature[] => {
   const category = getSamplingPointDataCategory(survey);
   if (!category) return [];
+  const srsIndex = Surveys.getSRSIndex(survey);
   const items = Surveys.getCategoryItemsInLevel({
     survey,
     categoryUuid: category.uuid,
@@ -422,16 +421,17 @@ export const buildSamplingPointFeatures = ({
 };
 
 export const buildCoordinateAttributeFeatures = ({
-  srsIndex,
+  survey,
   layer,
   nodeValues,
   recordLabelByUuid,
 }: {
-  srsIndex: SRSIndex | undefined;
+  survey: Survey;
   layer: RecordsMapLayer;
   nodeValues: { recordUuid: string; nodeDefUuid: string; value: any }[];
   recordLabelByUuid: Record<string, string>;
 }): RecordsMapPointFeature[] => {
+  const srsIndex = Surveys.getSRSIndex(survey);
   const features: RecordsMapPointFeature[] = [];
   let index = 0;
   for (const { recordUuid, nodeDefUuid, value } of nodeValues) {
