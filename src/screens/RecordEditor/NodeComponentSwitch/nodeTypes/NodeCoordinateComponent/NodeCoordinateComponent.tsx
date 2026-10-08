@@ -103,13 +103,20 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
                 />
               )}
               {distanceTarget && (
-                <IconButton
-                  icon="compass-outline"
-                  onPress={showCompassNavigator}
-                  size={30}
-                  style={styles.showCompassButton}
-                  testID="coordinate-navigate-to-target-button"
-                />
+                <VView style={styles.targetButtonsContainer}>
+                  <IconButton
+                    icon="compass-outline"
+                    onPress={showCompassNavigator}
+                    size={30}
+                    testID="coordinate-navigate-to-target-button"
+                  />
+                  <OpenMapButton
+                    icon="map-marker-radius"
+                    point={distanceTarget}
+                    srsIndex={srsIndex}
+                    testID="coordinate-open-target-map-button"
+                  />
+                </VView>
               )}
             </HView>
             {deleteButtonVisible && (

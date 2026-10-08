@@ -12,16 +12,25 @@ import { MapApp, MapAppsService } from "service/mapApps";
 import { Environment, log } from "utils";
 
 type Props = {
+  icon?: string;
   nodeUuid?: string; // when set, the point can be moved in the in-app map
   point?: any;
   size?: number;
   srsIndex?: any;
+  testID?: string;
 };
 
 type ChooserState = { apps: MapApp[]; selectedId: string };
 
 export const OpenMapButton = (props: Props) => {
-  const { nodeUuid, point, size = 30, srsIndex = undefined } = props;
+  const {
+    icon = "map",
+    nodeUuid,
+    point,
+    size = 30,
+    srsIndex = undefined,
+    testID,
+  } = props;
 
   const navigation = useNavigation();
   // the map app chooser is experimental
@@ -88,7 +97,7 @@ export const OpenMapButton = (props: Props) => {
 
   return (
     <>
-      <IconButton icon="map" onPress={onPress} size={size} />
+      <IconButton icon={icon} onPress={onPress} size={size} testID={testID} />
       {chooser && (
         <MapAppChooserDialog
           apps={chooser.apps}
