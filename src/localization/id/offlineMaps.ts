@@ -32,6 +32,8 @@ export default {
     maxZoom: "Zoom maks: {{value}}",
     deleteConfirm:
       "Hapus lapisan peta kustom '{{name}}' dan ubin petanya yang tersimpan di perangkat ini?",
+    deleteConfirmWithOfflineAreas:
+      "Hapus lapisan peta kustom '{{name}}', ubin petanya yang tersimpan di perangkat ini, dan area peta offline yang diunduh dengannya ({{count}})?",
     editor: {
       title: "Lapisan peta kustom",
       name: "Nama",
@@ -44,6 +46,8 @@ export default {
       attribution: "Atribusi (opsional)",
       attributionHint:
         "Pemberitahuan hak cipta yang diwajibkan penyedia; ditampilkan pada peta.",
+      urlChangeConfirm:
+        "Templat URL telah berubah: ubin peta lapisan ini yang tersimpan di perangkat ini akan dihapus dan area peta offline-nya ({{count}}) harus diunduh ulang. Lanjutkan?",
       test: {
         label: "Uji",
         success: "Ubin peta berhasil diunduh",
@@ -100,6 +104,11 @@ export default {
     tooManyTiles:
       "Area terlalu besar: maksimal {{maxTiles}} ubin dapat diunduh; perkecil area atau zoom maks",
     notEnoughSpace: "Ruang kosong di perangkat tidak cukup",
+    customLayerConfirm: {
+      title: "Lapisan peta kustom",
+      message:
+        "Sekitar {{tiles}} ubin peta akan diunduh dari '{{layer}}'. Pastikan ketentuan penggunaan penyedia mengizinkan pengunduhan massal: hal itu mungkin dilarang atau dikenai biaya. Lanjutkan?",
+    },
     lowSpaceConfirm: {
       title: "Ruang kosong terbatas",
       message:

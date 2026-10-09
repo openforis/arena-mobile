@@ -16,7 +16,12 @@ import {
   CustomMapLayerTestResult,
   CustomMapLayerValidation,
 } from "service";
-import { SettingsActions, SettingsSelectors, useAppDispatch } from "state";
+import {
+  SettingsActions,
+  SettingsSelectors,
+  useAppDispatch,
+  useConfirm,
+} from "state";
 import { log } from "utils";
 
 import styles from "./styles";
@@ -47,6 +52,7 @@ export const CustomMapLayerEditorScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const dispatch = useAppDispatch();
+  const confirm = useConfirm();
   const { layerId } = (route.params ??
     {}) as Partial<CustomMapLayerEditorParams>;
 
@@ -61,6 +67,8 @@ export const CustomMapLayerEditorScreen = () => {
       layers.find((item) => item.id === layerId) ??
       CustomMapLayersService.newLayer(),
   );
+  // url template of the layer being edited, before the changes
+  const [urlTemplatePrev] = useState(layer.urlTemplate);
   const [apiKey, setApiKey] = useState(() =>
     CustomMapLayersService.getApiKey(layer.id),
   );
@@ -119,6 +127,20 @@ export const CustomMapLayerEditorScreen = () => {
   const onSavePress = useCallback(async () => {
     setValidationVisible(true);
     if (!valid) return;
+    if (urlTemplatePrev && urlTemplatePrev !== layer.urlTemplate.trim()) {
+      const offlineAreasCount = await CustomMapLayersService.countOfflineAreas(
+        layer.id,
+      );
+      if (
+        offlineAreasCount > 0 &&
+        !(await confirm({
+          messageKey: "offlineMaps:customLayers.editor.urlChangeConfirm",
+          messageParams: { count: offlineAreasCount },
+        }))
+      ) {
+        return;
+      }
+    }
     setSaving(true);
     try {
       await dispatch(SettingsActions.saveCustomMapLayer({ layer, apiKey }));
@@ -126,7 +148,7 @@ export const CustomMapLayerEditorScreen = () => {
     } finally {
       setSaving(false);
     }
-  }, [apiKey, dispatch, layer, navigation, valid]);
+  }, [apiKey, confirm, dispatch, layer, navigation, urlTemplatePrev, valid]);
 
   const { testing, result: testResult } = testState;
 

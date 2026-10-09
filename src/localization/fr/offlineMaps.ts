@@ -32,6 +32,8 @@ export default {
     maxZoom: "Zoom max : {{value}}",
     deleteConfirm:
       "Supprimer la couche de carte personnalisée '{{name}}' et ses tuiles stockées sur cet appareil ?",
+    deleteConfirmWithOfflineAreas:
+      "Supprimer la couche de carte personnalisée '{{name}}', ses tuiles stockées sur cet appareil et les zones de carte hors ligne téléchargées avec elle ({{count}}) ?",
     editor: {
       title: "Couche de carte personnalisée",
       name: "Nom",
@@ -44,6 +46,8 @@ export default {
       attribution: "Attribution (facultative)",
       attributionHint:
         "Mention de droits d'auteur exigée par le fournisseur ; elle est affichée sur la carte.",
+      urlChangeConfirm:
+        "Le modèle d'URL a changé : les tuiles de cette couche stockées sur cet appareil seront supprimées et ses zones de carte hors ligne ({{count}}) devront être téléchargées à nouveau. Continuer ?",
       test: {
         label: "Tester",
         success: "Tuile de carte téléchargée avec succès",
@@ -101,6 +105,11 @@ export default {
     tooManyTiles:
       "La zone est trop grande : {{maxTiles}} tuiles au maximum peuvent être téléchargées ; réduisez la zone ou le zoom max",
     notEnoughSpace: "Espace libre insuffisant sur l'appareil",
+    customLayerConfirm: {
+      title: "Couche de carte personnalisée",
+      message:
+        "Environ {{tiles}} tuiles seront téléchargées depuis '{{layer}}'. Assurez-vous que les conditions d'utilisation du fournisseur autorisent les téléchargements en masse : ils pourraient être interdits ou facturés. Continuer ?",
+    },
     lowSpaceConfirm: {
       title: "Espace libre limité",
       message:

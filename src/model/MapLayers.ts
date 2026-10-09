@@ -110,9 +110,11 @@ const getLayer = (layerId: string | null | undefined): MapLayer =>
 const getLayerLabel = (layer: MapLayer, t: (key: string) => string): string =>
   layer.name ?? t(`offlineMaps:layers.${layer.id}`);
 
-const prefetchableLayers = builtInLayers.filter(
-  (layer) => layer.prefetchAllowed,
-);
+const getPrefetchableLayers = (): MapLayer[] =>
+  getLayers().filter((layer) => layer.prefetchAllowed);
+
+const isCustomLayer = (layer: MapLayer): boolean =>
+  layer.type === MapLayerType.custom;
 
 const applyApiKey = (urlTemplate: string, apiKey?: string | null): string =>
   urlTemplate.replaceAll(
@@ -131,8 +133,8 @@ const customLayerToLayer = (
   minZoom: 0,
   maxZoom: customLayer.maxZoom,
   attribution: customLayer.attribution ?? "",
-  // bulk download of custom layers not supported yet
-  prefetchAllowed: false,
+  // the user is asked to check the terms of use of the provider before downloading
+  prefetchAllowed: true,
   averageTileSizeBytes: CUSTOM_LAYER_AVERAGE_TILE_SIZE_BYTES,
 });
 
@@ -141,7 +143,8 @@ export const MapLayers = {
   CUSTOM_LAYER_ID_PREFIX,
   CUSTOM_LAYER_DEFAULT_MAX_ZOOM,
   defaultLayerId,
-  prefetchableLayers,
+  getPrefetchableLayers,
+  isCustomLayer,
   getLayers,
   getLayer,
   getLayerLabel,
