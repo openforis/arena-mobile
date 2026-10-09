@@ -55,10 +55,17 @@ const accuracyFromGst = (gst: NmeaGst | null): number | null => {
  * GGA carries a complete fix on its own, so each valid GGA sentence produces one
  * LocationPoint; RMC is only used to fill in speed/heading when available
  * (using the most recently seen RMC sentence).
+ *
+ * `isFixFresh` (see nmeaFixFreshness) receives the GGA's UTC time: fixes it rejects
+ * produce no LocationPoint.
  */
 export const createNmeaLocationPointAssembler = ({
   hdopAccuracyFactorMeters,
-}: { hdopAccuracyFactorMeters?: number } = {}) => {
+  isFixFresh,
+}: {
+  hdopAccuracyFactorMeters?: number;
+  isFixFresh?: (time?: string) => boolean;
+} = {}) => {
   let lastTrack: { speedKnots?: number | null; courseDegrees?: number | null } =
     {};
   let lastGst: NmeaGst | null = null;
@@ -84,6 +91,7 @@ export const createNmeaLocationPointAssembler = ({
 
     const gga = parseGGA(sentence);
     if (!gga) return null;
+    if (isFixFresh && !isFixFresh(gga.time)) return null;
 
     const { speedKnots, courseDegrees } = lastTrack;
     return {

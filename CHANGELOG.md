@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Alternative maps and Offline map area download;
 - Manually moving a sample point on the map;
 
+## [2.8.3] - 2026-10-09
+
 ### Fixed
 
 - Clear values that become non-applicable when deleting or adding nodes;

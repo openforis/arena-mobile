@@ -188,12 +188,14 @@ export default {
     getLocation: "ቦታ ያግኙ",
     heading: "አቅጣጫ (ዲግሪ)",
     map: {
+      attributeViewerTitle: 'የ"{{attributeLabel}}" ቦታ',
       chooserTitle: "በካርታ አሳይ",
       inApp: "Arena Mobile",
       inAppDescription: "ያለ በይነመረብ ከወረዱ ካርታዎች ጋር ይሰራል",
       inAppDescriptionRelocatable:
         "ያለ በይነመረብ ከወረዱ ካርታዎች ጋር ይሰራል።\nቦታውን ማንቀሳቀስ ይቻላል",
       show: "በካርታ አሳይ",
+      targetViewerTitle: 'የ"{{attributeLabel}}" ዒላማ ቦታ',
       viewerTitle: "ቦታ",
     },
     headingOffset: "የአቅጣጫ ልዩነት",

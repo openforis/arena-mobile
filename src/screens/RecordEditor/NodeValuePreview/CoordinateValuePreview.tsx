@@ -6,6 +6,7 @@ import { NodeDefs, Objects } from "@openforis/arena-core";
 import { HView, OpenMapButton, Text, View, VView } from "components";
 import { useTranslation } from "localization";
 import { SurveySelectors } from "state";
+import { useCoordinateMapTitleParams } from "../NodeComponentSwitch/nodeTypes/NodeCoordinateComponent";
 import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 
 const styles = StyleSheet.create({
@@ -22,6 +23,7 @@ export const CoordinateValuePreview = (props: NodeValuePreviewProps) => {
   const { t } = useTranslation();
 
   const srsIndex = SurveySelectors.useCurrentSurveySrsIndex();
+  const mapTitleParams = useCoordinateMapTitleParams(nodeDef);
   const hasPoint = Objects.isNotEmpty(value?.x) && Objects.isNotEmpty(value?.y);
 
   const getLabel = (fieldKey: string) => {
@@ -50,7 +52,12 @@ export const CoordinateValuePreview = (props: NodeValuePreviewProps) => {
       </VView>
       {hasPoint && (
         <View style={styles.mapButton}>
-          <OpenMapButton point={value} srsIndex={srsIndex} />
+          <OpenMapButton
+            point={value}
+            srsIndex={srsIndex}
+            titleKey="dataEntry:coordinate.map.attributeViewerTitle"
+            titleParams={mapTitleParams}
+          />
         </View>
       )}
     </HView>

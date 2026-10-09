@@ -42,6 +42,10 @@ export type ExternalGpsConnection = {
   hdopAccuracyFactorMeters?: number;
   onData: (listener: ExternalGpsDataListener) => { remove: () => void };
   onDisconnected: (listener: () => void) => { remove: () => void };
+  // Sends again the packet that makes the device start streaming (see
+  // vendorProtocolRegistry's `iosSessionInitPacketHex`); undefined when the device
+  // needs none.
+  restartSessionInit?: () => void;
   disconnect: () => Promise<void>;
 };
 

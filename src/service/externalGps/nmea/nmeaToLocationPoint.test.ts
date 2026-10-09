@@ -86,4 +86,30 @@ describe("nmeaToLocationPoint", () => {
 
     expect(locationPoint?.accuracy).toBe(4.5);
   });
+
+  it("produces no LocationPoint for a GGA fix rejected by isFixFresh", () => {
+    const isFixFresh = jest.fn(() => false);
+    const assembler = createNmeaLocationPointAssembler({ isFixFresh });
+
+    expect(assembler.ingest(validGga)).toBeNull();
+    expect(isFixFresh).toHaveBeenCalledWith("123519");
+  });
+
+  it("lets a GGA fix accepted by isFixFresh through", () => {
+    const isFixFresh = jest.fn(() => true);
+    const assembler = createNmeaLocationPointAssembler({ isFixFresh });
+
+    expect(assembler.ingest(validGga)?.latitude).toBeCloseTo(48.1173, 4);
+    expect(isFixFresh).toHaveBeenCalledWith("123519");
+  });
+
+  it("doesn't check the freshness of sentences other than GGA", () => {
+    const isFixFresh = jest.fn(() => false);
+    const assembler = createNmeaLocationPointAssembler({ isFixFresh });
+
+    assembler.ingest(validRmc);
+    assembler.ingest(validGst);
+
+    expect(isFixFresh).not.toHaveBeenCalled();
+  });
 });

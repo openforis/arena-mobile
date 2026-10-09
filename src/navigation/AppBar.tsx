@@ -49,6 +49,7 @@ export const AppBar = (props: Props) => {
     hasToggleScreenView,
     surveyLabelAsTitle,
     title: titleOption,
+    titleParams,
   } = options;
 
   const screenKey = useScreenKey();
@@ -98,7 +99,7 @@ export const AppBar = (props: Props) => {
   const title =
     surveyLabelAsTitle && survey
       ? Surveys.getLabelOrName(lang)(survey)
-      : t(titleOption);
+      : t(titleOption, titleParams);
 
   const onToggleDrawerPress = useCallback(
     () => dispatch(DataEntryActions.toggleRecordPageMenuOpen),

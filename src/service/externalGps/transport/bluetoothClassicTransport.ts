@@ -51,13 +51,13 @@ const iosConnectionOptions = Environment.isIOS ? { charset: 0x0201 } : {};
 const isModuleAvailable = (): boolean =>
   Boolean(
     RNBluetoothClassic &&
-      typeof RNBluetoothClassic.getBondedDevices === "function" &&
-      typeof RNBluetoothClassic.isDeviceConnected === "function" &&
-      typeof RNBluetoothClassic.getConnectedDevice === "function" &&
-      typeof RNBluetoothClassic.connectToDevice === "function" &&
-      typeof RNBluetoothClassic.startDiscovery === "function" &&
-      typeof RNBluetoothClassic.pairDevice === "function" &&
-      typeof RNBluetoothClassic.onDeviceDiscovered === "function",
+    typeof RNBluetoothClassic.getBondedDevices === "function" &&
+    typeof RNBluetoothClassic.isDeviceConnected === "function" &&
+    typeof RNBluetoothClassic.getConnectedDevice === "function" &&
+    typeof RNBluetoothClassic.connectToDevice === "function" &&
+    typeof RNBluetoothClassic.startDiscovery === "function" &&
+    typeof RNBluetoothClassic.pairDevice === "function" &&
+    typeof RNBluetoothClassic.onDeviceDiscovered === "function",
   );
 
 const unavailableModuleErrorMessage =
@@ -85,7 +85,9 @@ const listSources = async (): Promise<GpsSourceDescriptor[]> => {
   }
 
   if (!(await Permissions.requestBluetoothPermissions())) {
-    log.debug("ExternalGps: Bluetooth permission not granted, skipping bonded devices list");
+    log.debug(
+      "ExternalGps: Bluetooth permission not granted, skipping bonded devices list",
+    );
     return [];
   }
 
@@ -164,13 +166,15 @@ const connect = async (sourceId: string): Promise<ExternalGpsConnection> => {
   const sessionInitPacketHex = Environment.isIOS
     ? getIosSessionInitPacketHex(device.name || "")
     : undefined;
-  const sessionInit = sessionInitPacketHex
-    ? startSessionInit({
-        deviceLabel,
-        packetHex: sessionInitPacketHex,
-        write: (packetHex) => device.write(packetHex, "hex"),
-      })
-    : null;
+  const startSessionInitIfNeeded = () =>
+    sessionInitPacketHex
+      ? startSessionInit({
+          deviceLabel,
+          packetHex: sessionInitPacketHex,
+          write: (packetHex) => device.write(packetHex, "hex"),
+        })
+      : null;
+  let sessionInit = startSessionInitIfNeeded();
 
   let dataReceived = false;
   let nmeaReceived = false;
@@ -223,6 +227,13 @@ const connect = async (sourceId: string): Promise<ExternalGpsConnection> => {
         },
       };
     },
+    restartSessionInit: sessionInitPacketHex
+      ? () => {
+          sessionInit?.stop();
+          nmeaReceived = false;
+          sessionInit = startSessionInitIfNeeded();
+        }
+      : undefined,
     disconnect: async () => {
       log.debug("ExternalGps: disconnecting from", deviceLabel);
       sessionInit?.stop();
