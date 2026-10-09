@@ -1,14 +1,24 @@
 import { GpsSourceSetting, LocationPoint } from "model";
 import { log } from "utils";
 import { ExternalGpsConnectionManager } from "./connectionManager";
+import { createNmeaFixFreshnessFilter } from "./nmea/nmeaFixFreshness";
 import { createNmeaStreamDiagnostics } from "./nmea/nmeaStreamDiagnostics";
 import { createNmeaLocationPointAssembler } from "./nmea/nmeaToLocationPoint";
+import { createStreamStallMonitor } from "./streamStallMonitor";
 import { bluetoothClassicTransport } from "./transport/bluetoothClassicTransport";
-import { DiscoveredGpsDevice, GpsSourceDescriptor } from "./types";
+import {
+  DiscoveredGpsDevice,
+  ExternalGpsConnection,
+  GpsSourceDescriptor,
+} from "./types";
 
 export const internalGpsSourceId: string = GpsSourceSetting.internal;
 
 const diagnosticsLogIntervalMs = 15000;
+// A healthy stream delivers data every few seconds at most (1Hz sentences, handed
+// over by Bluetooth in batches).
+const streamStallTimeoutMs = 8000;
+const maxReconnectsPerWatch = 3;
 
 const internalGpsSource: GpsSourceDescriptor = {
   id: internalGpsSourceId,
@@ -46,6 +56,12 @@ const resolveAutoSourceId = async (): Promise<string> => {
  * chunks through the parser and pushing normalized LocationPoints to `callback`.
  * Mirrors expo-location's watchPositionAsync return shape ({ remove }) so
  * useLocationWatch can treat both providers identically.
+ *
+ * A connection can stay "connected" while no data comes through anymore (seen with
+ * the Bad Elf on iOS, where the stream then stays silent for good), so the stream is
+ * monitored: after `streamStallTimeoutMs` of silence the session init is sent again
+ * (when the device uses one), and if it's still silent after as long again, the
+ * connection is replaced with a fresh one.
  */
 const watchPosition = async (
   { sourceId }: { sourceId: string },
@@ -54,19 +70,34 @@ const watchPosition = async (
     onDisconnected?: () => void;
   },
 ): Promise<{ remove: () => void }> => {
-  const connection = await ExternalGpsConnectionManager.acquire(
+  let connection = await ExternalGpsConnectionManager.acquire(
     sourceId,
     bluetoothClassicTransport,
   );
+  const freshnessFilter = createNmeaFixFreshnessFilter();
   const assembler = createNmeaLocationPointAssembler({
     hdopAccuracyFactorMeters: connection.hdopAccuracyFactorMeters,
+    isFixFresh: freshnessFilter.isFresh,
   });
 
   const diagnostics = createNmeaStreamDiagnostics();
   const logDiagnostics = (prefix: string) =>
     log.info(`ExternalGps: ${prefix} ${sourceId} - ${diagnostics.summary()}`);
 
-  const subscription = connection.onData((chunk) => {
+  let removed = false;
+  // false while the connection is being replaced, or if replacing it failed
+  let holdsConnection = true;
+  let reconnectsCount = 0;
+  let sessionInitRestarted = false;
+  // time of the last data chunk, or of the connection being attached if none yet
+  let lastActivityAt = Date.now();
+  let subscriptions: { remove: () => void }[] = [];
+
+  const onChunk = (chunk: string) => {
+    lastActivityAt = Date.now();
+    sessionInitRestarted = false;
+    stallMonitor.notifyData();
+
     let locationPoint: LocationPoint | null = null;
     try {
       locationPoint = assembler.ingest(chunk);
@@ -82,10 +113,78 @@ const watchPosition = async (
     } catch (error) {
       log.warn("ExternalGps: error handling location point", error);
     }
+  };
+
+  const attach = (connectionToAttach: ExternalGpsConnection) => {
+    subscriptions = [
+      connectionToAttach.onData(onChunk),
+      connectionToAttach.onDisconnected(() => {
+        listeners?.onDisconnected?.();
+      }),
+    ];
+  };
+
+  const detach = () => {
+    for (const subscription of subscriptions) subscription.remove();
+    subscriptions = [];
+  };
+
+  const reconnect = async () => {
+    reconnectsCount += 1;
+    log.warn(
+      `ExternalGps: still no data from ${sourceId}, replacing the connection (attempt ${reconnectsCount}/${maxReconnectsPerWatch})`,
+    );
+    holdsConnection = false;
+    detach();
+    try {
+      const connectionNext = await ExternalGpsConnectionManager.replace(
+        sourceId,
+        bluetoothClassicTransport,
+        connection,
+      );
+      if (removed) {
+        ExternalGpsConnectionManager.release(sourceId);
+        return;
+      }
+      connection = connectionNext;
+      holdsConnection = true;
+      lastActivityAt = Date.now();
+      sessionInitRestarted = false;
+      attach(connectionNext);
+    } catch (error) {
+      log.warn(`ExternalGps: failed to reconnect to ${sourceId}`, error);
+      if (!removed) listeners?.onDisconnected?.();
+    }
+  };
+
+  const onStreamStall = () => {
+    if (removed || !holdsConnection) return;
+
+    if (!sessionInitRestarted && connection.restartSessionInit) {
+      sessionInitRestarted = true;
+      log.warn(
+        `ExternalGps: no data from ${sourceId} for ${streamStallTimeoutMs / 1000}s, sending the session init again`,
+      );
+      connection.restartSessionInit();
+      return;
+    }
+    if (reconnectsCount >= maxReconnectsPerWatch) {
+      log.warn(
+        `ExternalGps: no data from ${sourceId} after replacing the connection ${reconnectsCount} times, giving up`,
+      );
+      stallMonitor.stop();
+      return;
+    }
+    void reconnect();
+  };
+
+  const stallMonitor = createStreamStallMonitor({
+    timeoutMs: streamStallTimeoutMs,
+    onStall: onStreamStall,
   });
-  const disconnectSubscription = connection.onDisconnected(() => {
-    listeners?.onDisconnected?.();
-  });
+
+  attach(connection);
+
   const diagnosticsInterval = setInterval(
     () => logDiagnostics("stream status of"),
     diagnosticsLogIntervalMs,
@@ -93,11 +192,15 @@ const watchPosition = async (
 
   return {
     remove: () => {
+      removed = true;
       clearInterval(diagnosticsInterval);
+      stallMonitor.stop();
       logDiagnostics("stopped watching");
-      subscription.remove();
-      disconnectSubscription.remove();
-      ExternalGpsConnectionManager.release(sourceId);
+      detach();
+      if (!holdsConnection) return;
+      // a silent connection would stay silent for the next watch too
+      const silent = Date.now() - lastActivityAt >= streamStallTimeoutMs;
+      ExternalGpsConnectionManager.release(sourceId, { discard: silent });
     },
   };
 };
