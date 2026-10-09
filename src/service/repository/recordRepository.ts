@@ -538,6 +538,37 @@ const fetchRecordsFileUuids = async ({
   return rows.map((row: any) => row.file_uuid);
 };
 
+// values of the nodes of the given defs stored in the device, without parsing the whole records
+const fetchNodeValuesByDefUuids = async ({
+  surveyId,
+  cycle,
+  nodeDefUuids,
+}: {
+  surveyId: number;
+  cycle: string;
+  nodeDefUuids: string[];
+}): Promise<{ recordUuid: string; nodeDefUuid: string; value: any }[]> => {
+  if (nodeDefUuids.length === 0) return [];
+  const rows = await dbClient.many(
+    `SELECT record.uuid AS record_uuid,
+       json_extract(node.value, '$.nodeDefUuid') AS node_def_uuid,
+       json_extract(node.value, '$.value') AS value
+     FROM record, json_each(record.content, '$.nodes') AS node
+     WHERE record.survey_id = ?
+       AND record.cycle = ?
+       AND record.merged_into_record_uuid IS NULL
+       AND json_valid(record.content)
+       AND json_extract(node.value, '$.nodeDefUuid') IN (${getPlaceholders(nodeDefUuids.length)})
+       AND json_extract(node.value, '$.value') IS NOT NULL`,
+    [surveyId, cycle, ...nodeDefUuids],
+  );
+  return rows.map((row: any) => ({
+    recordUuid: row.record_uuid,
+    nodeDefUuid: row.node_def_uuid,
+    value: extractKeyOrSummaryColValue({ row, col: "value" }),
+  }));
+};
+
 const updateRecordsMergedInto = async ({ surveyId, mergedRecordsMap }: any) => {
   await dbClient.transaction(async () => {
     await Promises.each(
@@ -710,6 +741,7 @@ export const RecordRepository = {
   updateRecordsDateModifiedRemote,
   updateRecordsMergedInto,
   fetchRecordsFileUuids,
+  fetchNodeValuesByDefUuids,
   fixRecordCycle,
   deleteRecords,
 };

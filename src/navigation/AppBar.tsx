@@ -1,15 +1,16 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Appbar as RNPAppbar } from "react-native-paper";
 
 import { Surveys } from "@openforis/arena-core";
 
 import { AutoSyncStatusAppBarAction } from "appComponents/AutoSyncStatus";
 import { HView, Spacer, Text } from "components";
-import { useScreenKey } from "hooks";
+import { useExperimentalFeaturesEnabled, useScreenKey } from "hooks";
 import { RecordEditViewMode, ScreenViewMode } from "model";
 import { useIsTextDirectionRtl, useTranslation } from "localization";
 import { log } from "utils";
 import { screenKeys } from "screens";
+import { hasMapLayers } from "screens/RecordsMap/recordsMapLayers";
 import { Breadcrumbs } from "screens/RecordEditor/Breadcrumbs";
 import { RecordCompletionProgressBar } from "screens/RecordEditor/RecordCompletionProgressBar";
 import {
@@ -44,6 +45,7 @@ export const AppBar = (props: Props) => {
   const {
     hasBack,
     hasOptionsMenuVisible,
+    hasRecordsMap,
     hasToggleScreenView,
     surveyLabelAsTitle,
     title: titleOption,
@@ -57,6 +59,18 @@ export const AppBar = (props: Props) => {
   const isRtl = useIsTextDirectionRtl();
   const survey = SurveySelectors.useCurrentSurvey();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
+  const cycle = SurveySelectors.useCurrentSurveyCycle();
+  // the records map is an experimental feature
+  const experimentalFeaturesEnabled = useExperimentalFeaturesEnabled();
+  const recordsMapAvailable = useMemo(
+    () =>
+      experimentalFeaturesEnabled &&
+      !!hasRecordsMap &&
+      !!survey &&
+      !!cycle &&
+      hasMapLayers({ survey, cycle }),
+    [cycle, experimentalFeaturesEnabled, hasRecordsMap, survey]
+  );
   const isLandscape = DeviceInfoSelectors.useOrientationIsLandscape();
   const isTablet = DeviceInfoSelectors.useIsTablet();
   const editingRecord =
@@ -122,6 +136,11 @@ export const AppBar = (props: Props) => {
       )
     );
   }, [dispatch, recordEditViewMode]);
+
+  const onRecordsMapPress = useCallback(
+    () => navigation.navigate(screenKeys.recordsMap),
+    [navigation]
+  );
 
   const onValidationIconPress = useCallback(
     () => navigation.navigate(screenKeys.recordValidationReport),
@@ -212,6 +231,13 @@ export const AppBar = (props: Props) => {
               />
               <AutoSyncStatusAppBarAction />
             </>
+          )}
+
+          {!editingRecord && recordsMapAvailable && (
+            <RNPAppbar.Action
+              icon="map-outline"
+              onPress={onRecordsMapPress}
+            />
           )}
 
           {!editingRecord && hasToggleScreenView && (
