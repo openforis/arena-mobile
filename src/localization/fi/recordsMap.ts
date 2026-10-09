@@ -1,6 +1,10 @@
 export default {
   title: "Kartta",
   layers: "Tasot",
+  mapProviderChooser: {
+    title: "Näytä tietueet kartalla",
+    show: "Näytä kartta",
+  },
   samplingPointsLayer: "Otantapisteet (taso {{level}})",
   samplingPointVisited: "Käyty",
   samplingPointNotVisited: "Ei käyty",

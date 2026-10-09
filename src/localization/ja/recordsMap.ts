@@ -1,6 +1,10 @@
 export default {
   title: "地図",
   layers: "レイヤー",
+  mapProviderChooser: {
+    title: "レコードを表示する地図",
+    show: "地図を表示",
+  },
   samplingPointsLayer: "サンプリングポイント（レベル {{level}}）",
   samplingPointVisited: "訪問済み",
   samplingPointNotVisited: "未訪問",

@@ -1,6 +1,10 @@
 export default {
   title: "Map",
   layers: "Layers",
+  mapProviderChooser: {
+    title: "Show records on",
+    show: "Show map",
+  },
   samplingPointsLayer: "Sampling points (level {{level}})",
   samplingPointVisited: "Visited",
   samplingPointNotVisited: "Not visited",

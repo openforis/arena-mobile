@@ -53,6 +53,8 @@ type Props = {
   onPoiClick?: (event: PoiClickEvent) => void;
   onPress?: (event: MapPressEvent) => void;
   onRegionChangeComplete?: (region: Region) => void;
+  // when specified, it overrides the map provider in the settings
+  provider?: MapProvider;
   showMapTypeSelector?: boolean;
   style?: StyleProp<ViewStyle>;
   toolbarEnabled?: boolean;
@@ -89,6 +91,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       layerId: layerIdProp,
       onMapReady,
       onRegionChangeComplete,
+      provider: providerProp,
       showMapTypeSelector = true,
       style,
       initialRegion,
@@ -106,7 +109,8 @@ export const MapView = forwardRef<RNMapView | null, Props>(
 
     const settings = SettingsSelectors.useSettings();
     const useFreeLayers =
-      !!layerIdProp || settings.mapProvider === MapProvider.freeLayers;
+      !!layerIdProp ||
+      (providerProp ?? settings.mapProvider) === MapProvider.freeLayers;
     const [selectedLayerId, setSelectedLayerId] = useState<MapLayerId>(
       () => layerIdProp ?? settings.mapLayer,
     );

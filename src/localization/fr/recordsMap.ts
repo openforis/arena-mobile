@@ -1,6 +1,10 @@
 export default {
   title: "Carte",
   layers: "Couches",
+  mapProviderChooser: {
+    title: "Afficher les enregistrements sur",
+    show: "Afficher la carte",
+  },
   samplingPointsLayer: "Points d'échantillonnage (niveau {{level}})",
   samplingPointVisited: "Visité",
   samplingPointNotVisited: "Non visité",

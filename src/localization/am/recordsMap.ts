@@ -1,6 +1,10 @@
 export default {
   title: "ካርታ",
   layers: "ንብርብሮች",
+  mapProviderChooser: {
+    title: "መዝገቦችን አሳይ በ",
+    show: "ካርታ አሳይ",
+  },
   samplingPointsLayer: "የናሙና ነጥቦች (ደረጃ {{level}})",
   samplingPointVisited: "የተጎበኘ",
   samplingPointNotVisited: "ያልተጎበኘ",

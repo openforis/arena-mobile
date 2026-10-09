@@ -1,6 +1,10 @@
 export default {
   title: "Karte",
   layers: "Ebenen",
+  mapProviderChooser: {
+    title: "Datensätze anzeigen auf",
+    show: "Karte anzeigen",
+  },
   samplingPointsLayer: "Stichprobenpunkte (Ebene {{level}})",
   samplingPointVisited: "Besucht",
   samplingPointNotVisited: "Nicht besucht",

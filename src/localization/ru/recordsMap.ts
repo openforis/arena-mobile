@@ -1,6 +1,10 @@
 export default {
   title: "Карта",
   layers: "Слои",
+  mapProviderChooser: {
+    title: "Показать записи на",
+    show: "Показать карту",
+  },
   samplingPointsLayer: "Точки выборки (уровень {{level}})",
   samplingPointVisited: "Посещено",
   samplingPointNotVisited: "Не посещено",

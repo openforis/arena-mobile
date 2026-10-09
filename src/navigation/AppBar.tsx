@@ -6,7 +6,7 @@ import { Surveys } from "@openforis/arena-core";
 import { AutoSyncStatusAppBarAction } from "appComponents/AutoSyncStatus";
 import { HView, Spacer, Text } from "components";
 import { useExperimentalFeaturesEnabled, useScreenKey } from "hooks";
-import { RecordEditViewMode, ScreenViewMode } from "model";
+import { MapProvider, RecordEditViewMode, ScreenViewMode } from "model";
 import { useIsTextDirectionRtl, useTranslation } from "localization";
 import { log } from "utils";
 import { screenKeys } from "screens";
@@ -24,6 +24,7 @@ import {
   SurveyOptionsSelectors,
   SurveySelectors,
   useAppDispatch,
+  useConfirm,
 } from "state";
 import { BaseStyles } from "utils/BaseStyles";
 
@@ -90,7 +91,8 @@ export const AppBar = (props: Props) => {
   const isLoadingPreviousCycleRecord =
     DataEntrySelectors.usePreviousCycleRecordLoading();
   const isInTwoRows = editingRecord && !isLandscape;
-  const { showRecordCompletion } = SettingsSelectors.useSettings();
+  const { mapProvider, showRecordCompletion } = SettingsSelectors.useSettings();
+  const confirm = useConfirm();
 
   const [state, setState] = useState({ menuVisible: false });
 
@@ -137,10 +139,21 @@ export const AppBar = (props: Props) => {
     );
   }, [dispatch, recordEditViewMode]);
 
-  const onRecordsMapPress = useCallback(
-    () => navigation.navigate(screenKeys.recordsMap),
-    [navigation]
-  );
+  const onRecordsMapPress = useCallback(async () => {
+    const confirmResult = await confirm({
+      titleKey: "recordsMap:mapProviderChooser.title",
+      confirmButtonTextKey: "recordsMap:mapProviderChooser.show",
+      singleChoiceOptions: Object.values(MapProvider).map((provider) => ({
+        value: provider,
+        label: `settings:mapProvider.options.${provider}`,
+      })),
+      defaultSingleChoiceValue: mapProvider,
+    });
+    if (!confirmResult) return;
+    navigation.navigate(screenKeys.recordsMap, {
+      mapProvider: confirmResult.selectedSingleChoiceValue ?? mapProvider,
+    });
+  }, [confirm, mapProvider, navigation]);
 
   const onValidationIconPress = useCallback(
     () => navigation.navigate(screenKeys.recordValidationReport),

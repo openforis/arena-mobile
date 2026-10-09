@@ -1,6 +1,10 @@
 export default {
   title: "نقشه",
   layers: "لایه‌ها",
+  mapProviderChooser: {
+    title: "نمایش رکوردها روی",
+    show: "نمایش نقشه",
+  },
   samplingPointsLayer: "نقاط نمونه‌برداری (سطح {{level}})",
   samplingPointVisited: "بازدید شده",
   samplingPointNotVisited: "بازدید نشده",

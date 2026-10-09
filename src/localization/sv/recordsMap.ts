@@ -1,6 +1,10 @@
 export default {
   title: "Karta",
   layers: "Lager",
+  mapProviderChooser: {
+    title: "Visa poster på",
+    show: "Visa karta",
+  },
   samplingPointsLayer: "Provpunkter (nivå {{level}})",
   samplingPointVisited: "Besökt",
   samplingPointNotVisited: "Ej besökt",

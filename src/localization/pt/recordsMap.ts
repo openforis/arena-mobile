@@ -1,6 +1,10 @@
 export default {
   title: "Mapa",
   layers: "Camadas",
+  mapProviderChooser: {
+    title: "Mostrar registros em",
+    show: "Mostrar mapa",
+  },
   samplingPointsLayer: "Pontos de amostragem (nível {{level}})",
   samplingPointVisited: "Visitado",
   samplingPointNotVisited: "Não visitado",

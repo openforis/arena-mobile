@@ -1,12 +1,16 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import RNMapView, { MapPressEvent, Region } from "react-native-maps";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 
 import { IconButton, Loader, MapView, Text, VView } from "components";
 import { CurrentLocationDot } from "components/MapView/CurrentLocationDot";
 import { useCurrentLocationWatch, useToast } from "hooks";
 import { useTranslation } from "localization";
-import { LatLng, RecordUtils } from "model";
+import { LatLng, MapProvider, RecordUtils } from "model";
 import { RecordService } from "service";
 import { DataEntryActions, SurveySelectors, useAppDispatch } from "state";
 import { log } from "utils";
@@ -30,6 +34,11 @@ import {
   RecordsMapSelectionPanel,
 } from "./RecordsMapSelectionPanel";
 import styles from "./styles";
+
+export type RecordsMapParams = {
+  // map provider chosen when opening the map (the one in the settings, if not specified)
+  mapProvider?: MapProvider;
+};
 
 type NodeValue = { recordUuid: string; nodeDefUuid: string; value: any };
 
@@ -75,6 +84,8 @@ export const RecordsMapScreen = () => {
 
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
+  const route = useRoute();
+  const { mapProvider } = (route.params ?? {}) as RecordsMapParams;
   const { t } = useTranslation();
   const toaster = useToast();
   const survey = SurveySelectors.useCurrentSurvey()!;
@@ -317,6 +328,7 @@ export const RecordsMapScreen = () => {
         onMapReady={fitToVisiblePoints}
         onPress={onMapPress}
         onRegionChangeComplete={setRegion}
+        provider={mapProvider}
         style={styles.map}
         toolbarEnabled={false}
       >
