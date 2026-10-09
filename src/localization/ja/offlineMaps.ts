@@ -32,6 +32,8 @@ export default {
     maxZoom: "最大ズーム: {{value}}",
     deleteConfirm:
       "カスタム地図レイヤー「{{name}}」と、このデバイスに保存されているその地図タイルを削除しますか?",
+    deleteConfirmWithOfflineAreas:
+      "カスタム地図レイヤー「{{name}}」、このデバイスに保存されているその地図タイル、およびそのレイヤーでダウンロードしたオフライン地図エリア({{count}}件)を削除しますか?",
     editor: {
       title: "カスタム地図レイヤー",
       name: "名前",
@@ -44,6 +46,8 @@ export default {
       attribution: "帰属表示(任意)",
       attributionHint:
         "プロバイダーが求める著作権表示です。地図上に表示されます。",
+      urlChangeConfirm:
+        "URLテンプレートが変更されました。このデバイスに保存されているこのレイヤーの地図タイルは削除され、オフライン地図エリア({{count}}件)は再ダウンロードが必要になります。続行しますか?",
       test: {
         label: "テスト",
         success: "地図タイルを正常にダウンロードしました",
@@ -101,6 +105,11 @@ export default {
     tooManyTiles:
       "エリアが大きすぎます。ダウンロードできるのは最大 {{maxTiles}} タイルです。エリアまたは最大ズームを小さくしてください",
     notEnoughSpace: "デバイスの空き容量が不足しています",
+    customLayerConfirm: {
+      title: "カスタム地図レイヤー",
+      message:
+        "「{{layer}}」から約{{tiles}}枚の地図タイルをダウンロードします。プロバイダーの利用規約で一括ダウンロードが許可されていることを確認してください。禁止されている、または課金される場合があります。続行しますか?",
+    },
     lowSpaceConfirm: {
       title: "空き容量が少なくなっています",
       message:

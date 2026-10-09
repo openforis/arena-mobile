@@ -7,6 +7,7 @@ import { log } from "utils/Logger";
 import { MapTileUtils } from "utils/MapTileUtils";
 
 import { mapTilesUserAgent } from "../offlineMaps/mapTilesUserAgent";
+import { OfflineMapAreaRepository } from "../offlineMaps/offlineMapAreaRepository";
 import { OfflineMapTilesStorage } from "../offlineMaps/offlineMapTilesStorage";
 import { SecureStoreService } from "../SecureStoreService";
 import { SettingsService } from "../settingsService";
@@ -85,6 +86,42 @@ const validateLayer = ({
 const deleteLayerTiles = (layerId: string): Promise<void> =>
   Files.del(OfflineMapTilesStorage.getLayerTilesDirUri(layerId), true);
 
+// number of offline map areas downloaded with the specified layer
+const countOfflineAreas = async (layerId: string): Promise<number> => {
+  const areas = await OfflineMapAreaRepository.fetchAreas();
+  return areas.filter((area) => area.layerId === layerId).length;
+};
+
+// the tiles of the layer have been deleted: its offline map areas must be downloaded again
+const markOfflineAreasAsNotDownloaded = async (
+  layerId: string,
+): Promise<void> => {
+  const areas = await OfflineMapAreaRepository.fetchAreas();
+  if (!areas.some((area) => area.layerId === layerId)) return;
+  const dateModified = new Date().toISOString();
+  await OfflineMapAreaRepository.saveAreas(
+    areas.map((area) =>
+      area.layerId === layerId
+        ? {
+            ...area,
+            downloadedTilesCount: 0,
+            failedTilesCount: area.tilesCount,
+            sizeBytes: 0,
+            dateModified,
+          }
+        : area,
+    ),
+  );
+};
+
+const deleteOfflineAreas = async (layerId: string): Promise<void> => {
+  const areas = await OfflineMapAreaRepository.fetchAreas();
+  const areasNext = areas.filter((area) => area.layerId !== layerId);
+  if (areasNext.length < areas.length) {
+    await OfflineMapAreaRepository.saveAreas(areasNext);
+  }
+};
+
 const storeApiKey = async (layerId: string, apiKey: string): Promise<void> => {
   await SecureStoreService.setMapLayerApiKey(layerId, apiKey);
   if (apiKey) {
@@ -116,13 +153,10 @@ const saveLayer = async ({
   };
   const apiKeyNext = apiKey.trim();
 
-  if (
-    layerPrev &&
-    (layerPrev.urlTemplate !== layerNext.urlTemplate ||
-      getApiKey(layer.id) !== apiKeyNext)
-  ) {
-    // tiles cached with the previous url could belong to a different map
+  if (layerPrev && layerPrev.urlTemplate !== layerNext.urlTemplate) {
+    // tiles stored with the previous url could belong to a different map
     await deleteLayerTiles(layer.id);
+    await markOfflineAreasAsNotDownloaded(layer.id);
   }
   await storeApiKey(layer.id, apiKeyNext);
 
@@ -135,7 +169,7 @@ const saveLayer = async ({
   return settingsNext;
 };
 
-// deletes the layer, its API key and its cached tiles; resolves with the updated settings
+// deletes the layer, its API key, its tiles and its offline map areas; resolves with the updated settings
 const deleteLayer = async (layerId: string): Promise<SettingsObject> => {
   const settings = await SettingsService.fetchSettings();
   const layersNext = (settings.customMapLayers ?? []).filter(
@@ -153,6 +187,7 @@ const deleteLayer = async (layerId: string): Promise<SettingsObject> => {
   updateLayersRegistry(layersNext);
   await storeApiKey(layerId, "");
   await deleteLayerTiles(layerId);
+  await deleteOfflineAreas(layerId);
   return settingsNext;
 };
 
@@ -196,6 +231,7 @@ export const CustomMapLayersService = {
   init,
   newLayer,
   getApiKey,
+  countOfflineAreas,
   validateLayer,
   isValid: CustomMapLayerValidator.isValid,
   saveLayer,

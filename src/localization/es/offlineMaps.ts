@@ -32,6 +32,8 @@ export default {
     maxZoom: "Zoom máx.: {{value}}",
     deleteConfirm:
       "¿Eliminar la capa de mapa personalizada '{{name}}' y sus teselas almacenadas en este dispositivo?",
+    deleteConfirmWithOfflineAreas:
+      "¿Eliminar la capa de mapa personalizada '{{name}}', sus teselas almacenadas en este dispositivo y las áreas de mapa sin conexión descargadas con ella ({{count}})?",
     editor: {
       title: "Capa de mapa personalizada",
       name: "Nombre",
@@ -44,6 +46,8 @@ export default {
       attribution: "Atribución (opcional)",
       attributionHint:
         "Aviso de derechos de autor requerido por el proveedor; se muestra en el mapa.",
+      urlChangeConfirm:
+        "La plantilla de URL ha cambiado: las teselas de esta capa almacenadas en este dispositivo se eliminarán y sus áreas de mapa sin conexión ({{count}}) deberán descargarse de nuevo. ¿Continuar?",
       test: {
         label: "Probar",
         success: "Tesela de mapa descargada correctamente",
@@ -101,6 +105,11 @@ export default {
     tooManyTiles:
       "El área es demasiado grande: se pueden descargar como máximo {{maxTiles}} teselas; reduce el área o el zoom máximo",
     notEnoughSpace: "No hay suficiente espacio libre en el dispositivo",
+    customLayerConfirm: {
+      title: "Capa de mapa personalizada",
+      message:
+        "Se descargarán unas {{tiles}} teselas de '{{layer}}'. Asegúrate de que las condiciones de uso del proveedor permitan las descargas masivas: podrían estar prohibidas o tener coste. ¿Continuar?",
+    },
     lowSpaceConfirm: {
       title: "Poco espacio libre",
       message:

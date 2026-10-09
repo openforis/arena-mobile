@@ -32,6 +32,8 @@ export default {
     maxZoom: "Max zoom: {{value}}",
     deleteConfirm:
       "Ta bort det anpassade kartlagret '{{name}}' och dess kartrutor som lagras på den här enheten?",
+    deleteConfirmWithOfflineAreas:
+      "Ta bort det anpassade kartlagret '{{name}}', dess kartrutor som lagras på den här enheten och de offlinekartområden som laddats ned med det ({{count}})?",
     editor: {
       title: "Anpassat kartlager",
       name: "Namn",
@@ -44,6 +46,8 @@ export default {
       attribution: "Attribution (valfri)",
       attributionHint:
         "Upphovsrättsmeddelande som leverantören kräver; det visas på kartan.",
+      urlChangeConfirm:
+        "URL-mallen har ändrats: lagrets kartrutor som lagras på den här enheten tas bort och dess offlinekartområden ({{count}}) måste laddas ned igen. Fortsätta?",
       test: {
         label: "Testa",
         success: "Kartrutan laddades ned",
@@ -100,6 +104,11 @@ export default {
     tooManyTiles:
       "Området är för stort: högst {{maxTiles}} kartrutor kan laddas ner; minska området eller max zoom",
     notEnoughSpace: "Inte tillräckligt med ledigt utrymme på enheten",
+    customLayerConfirm: {
+      title: "Anpassat kartlager",
+      message:
+        "Cirka {{tiles}} kartrutor laddas ned från '{{layer}}'. Kontrollera att leverantörens användarvillkor tillåter massnedladdning: det kan vara förbjudet eller avgiftsbelagt. Fortsätta?",
+    },
     lowSpaceConfirm: {
       title: "Lite ledigt utrymme",
       message:

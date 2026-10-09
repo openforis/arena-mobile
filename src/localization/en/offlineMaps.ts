@@ -32,6 +32,8 @@ export default {
     maxZoom: "Max zoom: {{value}}",
     deleteConfirm:
       "Delete the custom map layer '{{name}}' and its map tiles stored on this device?",
+    deleteConfirmWithOfflineAreas:
+      "Delete the custom map layer '{{name}}', its map tiles stored on this device and the offline map areas downloaded with it ({{count}})?",
     editor: {
       title: "Custom map layer",
       name: "Name",
@@ -44,6 +46,8 @@ export default {
       attribution: "Attribution (optional)",
       attributionHint:
         "Copyright notice required by the provider; it is shown on the map.",
+      urlChangeConfirm:
+        "The URL template has changed: the map tiles of this layer stored on this device will be deleted and its offline map areas ({{count}}) will have to be downloaded again. Continue?",
       test: {
         label: "Test",
         success: "Map tile downloaded successfully",
@@ -101,6 +105,11 @@ export default {
     tooManyTiles:
       "The area is too big: max {{maxTiles}} tiles can be downloaded; reduce the area or the max zoom",
     notEnoughSpace: "Not enough free space on the device",
+    customLayerConfirm: {
+      title: "Custom map layer",
+      message:
+        "About {{tiles}} map tiles will be downloaded from '{{layer}}'. Make sure the terms of use of the provider allow bulk downloads: they could be forbidden or charged. Continue?",
+    },
     lowSpaceConfirm: {
       title: "Low free space",
       message:

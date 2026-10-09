@@ -32,6 +32,8 @@ export default {
     maxZoom: "Zoom máx.: {{value}}",
     deleteConfirm:
       "Eliminar a camada de mapa personalizada '{{name}}' e os seus mosaicos guardados neste dispositivo?",
+    deleteConfirmWithOfflineAreas:
+      "Eliminar a camada de mapa personalizada '{{name}}', os seus mosaicos guardados neste dispositivo e as áreas de mapa offline descarregadas com ela ({{count}})?",
     editor: {
       title: "Camada de mapa personalizada",
       name: "Nome",
@@ -44,6 +46,8 @@ export default {
       attribution: "Atribuição (opcional)",
       attributionHint:
         "Aviso de direitos de autor exigido pelo fornecedor; é mostrado no mapa.",
+      urlChangeConfirm:
+        "O modelo de URL foi alterado: os mosaicos desta camada guardados neste dispositivo serão eliminados e as suas áreas de mapa offline ({{count}}) terão de ser descarregadas novamente. Continuar?",
       test: {
         label: "Testar",
         success: "Mosaico de mapa descarregado com sucesso",
@@ -101,6 +105,11 @@ export default {
     tooManyTiles:
       "A área é grande demais: no máximo {{maxTiles}} blocos podem ser baixados; reduza a área ou o zoom máximo",
     notEnoughSpace: "Espaço livre insuficiente no dispositivo",
+    customLayerConfirm: {
+      title: "Camada de mapa personalizada",
+      message:
+        "Serão descarregados cerca de {{tiles}} mosaicos de '{{layer}}'. Certifique-se de que os termos de utilização do fornecedor permitem descarregamentos em massa: podem ser proibidos ou cobrados. Continuar?",
+    },
     lowSpaceConfirm: {
       title: "Pouco espaço livre",
       message:
