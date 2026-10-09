@@ -56,6 +56,11 @@ export default {
     tooManyTiles:
       "Alue on liian suuri: enintään {{maxTiles}} karttaruutua voidaan ladata; pienennä aluetta tai suurinta zoomausta",
     notEnoughSpace: "Laitteessa ei ole tarpeeksi vapaata tilaa",
+    lowSpaceConfirm: {
+      title: "Vapaa tila vähissä",
+      message:
+        "Lataus vie noin {{size}}, {{percent}} % laitteen vapaasta tilasta ({{freeSpace}}). Jatketaanko?",
+    },
   },
   areaViewer: {
     title: "Offline-kartta-alue",

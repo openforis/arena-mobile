@@ -56,6 +56,11 @@ export default {
     tooManyTiles:
       "La zone est trop grande : {{maxTiles}} tuiles au maximum peuvent être téléchargées ; réduisez la zone ou le zoom max",
     notEnoughSpace: "Espace libre insuffisant sur l'appareil",
+    lowSpaceConfirm: {
+      title: "Espace libre limité",
+      message:
+        "Le téléchargement utilisera environ {{size}}, soit {{percent}} % de l'espace libre sur l'appareil ({{freeSpace}}). Continuer ?",
+    },
   },
   areaViewer: {
     title: "Zone de carte hors ligne",

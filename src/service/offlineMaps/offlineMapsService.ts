@@ -20,6 +20,8 @@ const DEFAULT_MIN_ZOOM = 0;
 const DEFAULT_MAX_ZOOM = 17;
 const MIN_SELECTABLE_MAX_ZOOM = 10;
 const MAX_CONCURRENT_DELETES = 8;
+// ratio of the free space above which the user is asked to confirm the download
+const FREE_SPACE_WARNING_RATIO = 0.8;
 
 export type OfflineMapAreaEstimate = {
   tilesCount: number;
@@ -173,6 +175,7 @@ export const OfflineMapsService = {
   DEFAULT_MIN_ZOOM,
   DEFAULT_MAX_ZOOM,
   MIN_SELECTABLE_MAX_ZOOM,
+  FREE_SPACE_WARNING_RATIO,
 
   estimateArea,
   fetchAreas,
