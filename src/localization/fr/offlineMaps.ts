@@ -23,6 +23,51 @@ export default {
     openTopoMap: "Topographique (OpenTopoMap)",
     openStreetMap: "Standard (OpenStreetMap, en ligne uniquement)",
   },
+  customLayers: {
+    title: "Couches de carte personnalisées",
+    description:
+      "Ajoutez des couches de carte d'autres fournisseurs de tuiles (tuiles raster XYZ), avec une clé API si le fournisseur l'exige. Elles peuvent être sélectionnées comme couche de carte par défaut dans les paramètres et avec le bouton des couches sur la carte. Assurez-vous que les conditions d'utilisation du fournisseur le permettent.",
+    add: "Ajouter une couche",
+    noLayers: "Aucune couche de carte personnalisée définie",
+    maxZoom: "Zoom max : {{value}}",
+    deleteConfirm:
+      "Supprimer la couche de carte personnalisée '{{name}}' et ses tuiles stockées sur cet appareil ?",
+    editor: {
+      title: "Couche de carte personnalisée",
+      name: "Nom",
+      url: "Modèle d'URL",
+      urlHint:
+        "Exemple : https://tiles.example.org/{z}/{x}/{y}.png?key={apiKey}\n{x}, {y} et {z} sont obligatoires ; {apiKey} est remplacé par la clé API.",
+      apiKey: "Clé API (facultative)",
+      apiKeyHint:
+        "Enregistrée dans le stockage sécurisé de l'appareil et utilisée uniquement dans les requêtes au fournisseur de tuiles.",
+      attribution: "Attribution (facultative)",
+      attributionHint:
+        "Mention de droits d'auteur exigée par le fournisseur ; elle est affichée sur la carte.",
+      test: {
+        label: "Tester",
+        success: "Tuile de carte téléchargée avec succès",
+        errorStatus:
+          "Le fournisseur de tuiles n'a pas renvoyé de tuile de carte (statut HTTP : {{status}}) ; vérifiez le modèle d'URL et la clé API",
+        errorNotReachable:
+          "Le fournisseur de tuiles est injoignable ; vérifiez le modèle d'URL et la connexion internet",
+      },
+    },
+    validation: {
+      nameRequired: "Le nom est obligatoire",
+      nameDuplicate: "Nom déjà utilisé par une autre couche",
+      urlRequired: "Le modèle d'URL est obligatoire",
+      urlNotHttps: "Le modèle d'URL doit commencer par https://",
+      urlPlaceholdersMissing:
+        "Le modèle d'URL doit contenir les paramètres {x}, {y} et {z}",
+      urlSubdomainNotSupported:
+        "Le paramètre {s} n'est pas pris en charge : remplacez-le par l'un des sous-domaines du fournisseur (par ex. 'a')",
+      apiKeyRequired:
+        "Le modèle d'URL contient {apiKey} : la clé API est obligatoire",
+      apiKeyPlaceholderMissing:
+        "Ajoutez le paramètre {apiKey} au modèle d'URL, à l'endroit où la clé API est attendue",
+    },
+  },
   mapTypes: {
     standard: "Standard",
     satellite: "Satellite",

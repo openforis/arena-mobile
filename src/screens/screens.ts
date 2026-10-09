@@ -1,6 +1,8 @@
 import HomeScreen from "./HomeScreen";
 
 import AboutScreen from "./AboutScreen";
+import CustomMapLayerEditor from "./CustomMapLayerEditor";
+import CustomMapLayers from "./CustomMapLayers";
 import LocationMapViewer from "./LocationMapViewer";
 import OfflineMapAreaEditor from "./OfflineMapAreaEditor";
 import OfflineMapAreaViewer from "./OfflineMapAreaViewer";
@@ -27,6 +29,18 @@ export const screens = {
     ...screenDefaults,
     title: "common:about",
     component: AboutScreen,
+  },
+  [screenKeys.customMapLayers]: {
+    ...screenDefaults,
+    hasOptionsMenuVisible: false,
+    title: "offlineMaps:customLayers.title",
+    component: CustomMapLayers,
+  },
+  [screenKeys.customMapLayerEditor]: {
+    ...screenDefaults,
+    hasOptionsMenuVisible: false,
+    title: "offlineMaps:customLayers.editor.title",
+    component: CustomMapLayerEditor,
   },
   [screenKeys.home]: {
     ...screenDefaults,

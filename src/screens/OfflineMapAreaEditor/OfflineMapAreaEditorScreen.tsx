@@ -15,7 +15,7 @@ import {
 } from "components";
 import type { MapPolygonExtendedProps } from "components/GeoPolygonEditor";
 import { useToast } from "hooks";
-import { LatLng, MapLayerId, MapLayers, OfflineMapArea } from "model";
+import { LatLng, MapLayers, OfflineMapArea } from "model";
 import { OfflineMapsService } from "service";
 import { SettingsSelectors, useConfirm } from "state";
 import { Files, GeoUtils, log } from "utils";
@@ -31,7 +31,7 @@ const layerItems = MapLayers.prefetchableLayers.map((layer) => ({
   label: `offlineMaps:layers.${layer.id}`,
 }));
 
-const determineInitialLayerId = (settingsLayerId: MapLayerId): MapLayerId =>
+const determineInitialLayerId = (settingsLayerId: string): string =>
   MapLayers.getLayer(settingsLayerId).prefetchAllowed
     ? settingsLayerId
     : MapLayers.defaultLayerId;
@@ -54,7 +54,7 @@ export const OfflineMapAreaEditorScreen = () => {
   const mapRef = useRef<RNMapView | null>(null);
 
   const [name, setName] = useState(generateDefaultAreaName);
-  const [layerId, setLayerId] = useState<MapLayerId>(() =>
+  const [layerId, setLayerId] = useState<string>(() =>
     determineInitialLayerId(settings.mapLayer),
   );
   const layer = MapLayers.getLayer(layerId);
@@ -129,7 +129,7 @@ export const OfflineMapAreaEditorScreen = () => {
   }, [existingAreas]);
 
   const onLayerChange = useCallback((value: string): Promise<void> => {
-    setLayerId(value as MapLayerId);
+    setLayerId(value);
     return Promise.resolve();
   }, []);
 

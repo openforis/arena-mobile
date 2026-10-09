@@ -23,6 +23,48 @@ export default {
     openTopoMap: "ቶፖግራፊ (OpenTopoMap)",
     openStreetMap: "መደበኛ (OpenStreetMap፣ በመስመር ላይ ብቻ)",
   },
+  customLayers: {
+    title: "ብጁ የካርታ ንብርብሮች",
+    description:
+      "ከሌሎች የካርታ ንጣፍ አቅራቢዎች (XYZ ራስተር ንጣፎች) የካርታ ንብርብሮችን ያክሉ፤ አቅራቢው የሚፈልግ ከሆነ ከAPI ቁልፍ ጋር። በቅንብሮች ውስጥ እንደ ነባሪ የካርታ ንብርብር እና በካርታው ላይ ባለው የንብርብሮች አዝራር ሊመረጡ ይችላሉ። የአቅራቢው የአጠቃቀም ውል ይህን እንደሚፈቅድ ያረጋግጡ።",
+    add: "ንብርብር አክል",
+    noLayers: "እስካሁን ምንም ብጁ የካርታ ንብርብር አልተገለጸም",
+    maxZoom: "ከፍተኛ ማጉላት: {{value}}",
+    deleteConfirm:
+      "ብጁ የካርታ ንብርብር '{{name}}' እና በዚህ መሣሪያ ላይ የተቀመጡ የካርታ ንጣፎቹ ይሰረዙ?",
+    editor: {
+      title: "ብጁ የካርታ ንብርብር",
+      name: "ስም",
+      url: "የURL አብነት",
+      urlHint:
+        "ምሳሌ: https://tiles.example.org/{z}/{x}/{y}.png?key={apiKey}\n{x}፣ {y} እና {z} ያስፈልጋሉ፤ {apiKey} በAPI ቁልፍ ይተካል።",
+      apiKey: "የAPI ቁልፍ (አማራጭ)",
+      apiKeyHint:
+        "በመሣሪያው ደህንነቱ የተጠበቀ ማከማቻ ውስጥ ይቀመጣል፤ ለንጣፍ አቅራቢው በሚላኩ ጥያቄዎች ላይ ብቻ ጥቅም ላይ ይውላል።",
+      attribution: "የምንጭ መግለጫ (አማራጭ)",
+      attributionHint: "አቅራቢው የሚጠይቀው የቅጂ መብት ማስታወቂያ፤ በካርታው ላይ ይታያል።",
+      test: {
+        label: "ሞክር",
+        success: "የካርታ ንጣፍ በተሳካ ሁኔታ ወርዷል",
+        errorStatus:
+          "የንጣፍ አቅራቢው የካርታ ንጣፍ አልመለሰም (የHTTP ሁኔታ: {{status}})፤ የURL አብነቱን እና የAPI ቁልፉን ያረጋግጡ",
+        errorNotReachable:
+          "የንጣፍ አቅራቢውን ማግኘት አልተቻለም፤ የURL አብነቱን እና የበይነመረብ ግንኙነቱን ያረጋግጡ",
+      },
+    },
+    validation: {
+      nameRequired: "ስም ያስፈልጋል",
+      nameDuplicate: "ስሙ በሌላ ንብርብር ጥቅም ላይ ውሏል",
+      urlRequired: "የURL አብነት ያስፈልጋል",
+      urlNotHttps: "የURL አብነቱ በ https:// መጀመር አለበት",
+      urlPlaceholdersMissing: "የURL አብነቱ {x}፣ {y} እና {z} ቦታ ያዢዎችን መያዝ አለበት",
+      urlSubdomainNotSupported:
+        "ቦታ ያዢው {s} አይደገፍም፦ ከአቅራቢው ንዑስ ጎራዎች በአንዱ (ለምሳሌ 'a') ይተኩት",
+      apiKeyRequired: "የURL አብነቱ {apiKey} ይዟል፦ የAPI ቁልፍ ያስፈልጋል",
+      apiKeyPlaceholderMissing:
+        "የAPI ቁልፉ በሚጠበቅበት ቦታ ቦታ ያዢውን {apiKey} ወደ URL አብነቱ ያክሉ",
+    },
+  },
   mapTypes: {
     standard: "መደበኛ",
     satellite: "ሳተላይት",

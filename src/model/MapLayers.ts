@@ -10,8 +10,10 @@ export enum MapLayerType {
   satellite = "satellite",
   topographic = "topographic",
   standard = "standard",
+  custom = "custom",
 }
 
+// ids of the built-in layers
 export enum MapLayerId {
   esriWorldImagery = "esriWorldImagery",
   openTopoMap = "openTopoMap",
@@ -19,7 +21,10 @@ export enum MapLayerId {
 }
 
 export type MapLayer = {
-  id: MapLayerId;
+  // MapLayerId for built-in layers, generated id for custom layers
+  id: MapLayerId | string;
+  // defined only for custom layers (built-in layers have a translated label)
+  name?: string;
   type: MapLayerType;
   // XYZ url template; supports {x}, {y}, {z} placeholders
   urlTemplate: string;
@@ -32,7 +37,17 @@ export type MapLayer = {
   averageTileSizeBytes: number;
 };
 
-const layers: MapLayer[] = [
+// layer defined by the user in the settings; the (optional) API key is stored separately
+export type CustomMapLayer = {
+  id: string;
+  name: string;
+  // XYZ url template; supports {x}, {y}, {z} and {apiKey} placeholders
+  urlTemplate: string;
+  maxZoom: number;
+  attribution?: string;
+};
+
+const builtInLayers: MapLayer[] = [
   {
     id: MapLayerId.esriWorldImagery,
     type: MapLayerType.satellite,
@@ -68,19 +83,69 @@ const layers: MapLayer[] = [
   },
 ];
 
+const CUSTOM_LAYER_ID_PREFIX = "custom_";
+const CUSTOM_LAYER_DEFAULT_MAX_ZOOM = 19;
+const CUSTOM_LAYER_AVERAGE_TILE_SIZE_BYTES = 20 * 1024;
+const API_KEY_PLACEHOLDER = "{apiKey}";
+
 const defaultLayerId = MapLayerId.esriWorldImagery;
 
-const defaultLayer = layers.find((layer) => layer.id === defaultLayerId)!;
+const defaultLayer = builtInLayers.find(
+  (layer) => layer.id === defaultLayerId,
+)!;
+
+// custom layers with the API key already applied to the url template (set by CustomMapLayersService)
+let customLayers: MapLayer[] = [];
+
+const setCustomLayers = (layers: MapLayer[]): void => {
+  customLayers = layers;
+};
+
+const getLayers = (): MapLayer[] => [...builtInLayers, ...customLayers];
 
 // falls back to the default layer when the layer id is not specified or not valid
-const getLayer = (layerId: MapLayerId | string | null | undefined): MapLayer =>
-  layers.find((layer) => layer.id === layerId) ?? defaultLayer;
+const getLayer = (layerId: string | null | undefined): MapLayer =>
+  getLayers().find((layer) => layer.id === layerId) ?? defaultLayer;
 
-const prefetchableLayers = layers.filter((layer) => layer.prefetchAllowed);
+const getLayerLabel = (layer: MapLayer, t: (key: string) => string): string =>
+  layer.name ?? t(`offlineMaps:layers.${layer.id}`);
+
+const prefetchableLayers = builtInLayers.filter(
+  (layer) => layer.prefetchAllowed,
+);
+
+const applyApiKey = (urlTemplate: string, apiKey?: string | null): string =>
+  urlTemplate.replaceAll(
+    API_KEY_PLACEHOLDER,
+    encodeURIComponent(apiKey?.trim() ?? ""),
+  );
+
+const customLayerToLayer = (
+  customLayer: CustomMapLayer,
+  apiKey?: string | null,
+): MapLayer => ({
+  id: customLayer.id,
+  name: customLayer.name,
+  type: MapLayerType.custom,
+  urlTemplate: applyApiKey(customLayer.urlTemplate, apiKey),
+  minZoom: 0,
+  maxZoom: customLayer.maxZoom,
+  attribution: customLayer.attribution ?? "",
+  // bulk download of custom layers not supported yet
+  prefetchAllowed: false,
+  averageTileSizeBytes: CUSTOM_LAYER_AVERAGE_TILE_SIZE_BYTES,
+});
 
 export const MapLayers = {
+  API_KEY_PLACEHOLDER,
+  CUSTOM_LAYER_ID_PREFIX,
+  CUSTOM_LAYER_DEFAULT_MAX_ZOOM,
   defaultLayerId,
-  layers,
   prefetchableLayers,
+  getLayers,
   getLayer,
+  getLayerLabel,
+  setCustomLayers,
+  applyApiKey,
+  customLayerToLayer,
 };
