@@ -23,6 +23,50 @@ export default {
     openTopoMap: "Topografi (OpenTopoMap)",
     openStreetMap: "Standar (OpenStreetMap, hanya online)",
   },
+  customLayers: {
+    title: "Lapisan peta kustom",
+    description:
+      "Tambahkan lapisan peta dari penyedia ubin lain (ubin raster XYZ), dengan kunci API jika penyedia memerlukannya. Lapisan ini dapat dipilih sebagai lapisan peta default di pengaturan dan dengan tombol lapisan pada peta. Pastikan ketentuan penggunaan penyedia mengizinkannya.",
+    add: "Tambah lapisan",
+    noLayers: "Belum ada lapisan peta kustom",
+    maxZoom: "Zoom maks: {{value}}",
+    deleteConfirm:
+      "Hapus lapisan peta kustom '{{name}}' dan ubin petanya yang tersimpan di perangkat ini?",
+    editor: {
+      title: "Lapisan peta kustom",
+      name: "Nama",
+      url: "Templat URL",
+      urlHint:
+        "Contoh: https://tiles.example.org/{z}/{x}/{y}.png?key={apiKey}\n{x}, {y} dan {z} wajib ada; {apiKey} diganti dengan kunci API.",
+      apiKey: "Kunci API (opsional)",
+      apiKeyHint:
+        "Disimpan di penyimpanan aman perangkat dan hanya digunakan dalam permintaan ke penyedia ubin.",
+      attribution: "Atribusi (opsional)",
+      attributionHint:
+        "Pemberitahuan hak cipta yang diwajibkan penyedia; ditampilkan pada peta.",
+      test: {
+        label: "Uji",
+        success: "Ubin peta berhasil diunduh",
+        errorStatus:
+          "Penyedia ubin tidak mengembalikan ubin peta (status HTTP: {{status}}); periksa templat URL dan kunci API",
+        errorNotReachable:
+          "Penyedia ubin tidak dapat dijangkau; periksa templat URL dan koneksi internet",
+      },
+    },
+    validation: {
+      nameRequired: "Nama wajib diisi",
+      nameDuplicate: "Nama sudah digunakan oleh lapisan lain",
+      urlRequired: "Templat URL wajib diisi",
+      urlNotHttps: "Templat URL harus diawali dengan https://",
+      urlPlaceholdersMissing:
+        "Templat URL harus berisi placeholder {x}, {y} dan {z}",
+      urlSubdomainNotSupported:
+        "Placeholder {s} tidak didukung: ganti dengan salah satu subdomain penyedia (mis. 'a')",
+      apiKeyRequired: "Templat URL berisi {apiKey}: kunci API wajib diisi",
+      apiKeyPlaceholderMissing:
+        "Tambahkan placeholder {apiKey} ke templat URL, di tempat kunci API diharapkan",
+    },
+  },
   mapTypes: {
     standard: "Standar",
     satellite: "Satelit",

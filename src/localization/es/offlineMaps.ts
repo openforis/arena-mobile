@@ -23,6 +23,51 @@ export default {
     openTopoMap: "Topográfico (OpenTopoMap)",
     openStreetMap: "Estándar (OpenStreetMap, solo en línea)",
   },
+  customLayers: {
+    title: "Capas de mapa personalizadas",
+    description:
+      "Añade capas de mapa de otros proveedores de teselas (teselas ráster XYZ), con una clave API si el proveedor la requiere. Se pueden seleccionar como capa de mapa predeterminada en los ajustes y con el botón de capas del mapa. Asegúrate de que las condiciones de uso del proveedor lo permitan.",
+    add: "Añadir capa",
+    noLayers: "Aún no hay capas de mapa personalizadas",
+    maxZoom: "Zoom máx.: {{value}}",
+    deleteConfirm:
+      "¿Eliminar la capa de mapa personalizada '{{name}}' y sus teselas almacenadas en este dispositivo?",
+    editor: {
+      title: "Capa de mapa personalizada",
+      name: "Nombre",
+      url: "Plantilla de URL",
+      urlHint:
+        "Ejemplo: https://tiles.example.org/{z}/{x}/{y}.png?key={apiKey}\n{x}, {y} y {z} son obligatorios; {apiKey} se sustituye por la clave API.",
+      apiKey: "Clave API (opcional)",
+      apiKeyHint:
+        "Se guarda en el almacenamiento seguro del dispositivo y se usa solo en las solicitudes al proveedor de teselas.",
+      attribution: "Atribución (opcional)",
+      attributionHint:
+        "Aviso de derechos de autor requerido por el proveedor; se muestra en el mapa.",
+      test: {
+        label: "Probar",
+        success: "Tesela de mapa descargada correctamente",
+        errorStatus:
+          "El proveedor de teselas no devolvió una tesela de mapa (estado HTTP: {{status}}); comprueba la plantilla de URL y la clave API",
+        errorNotReachable:
+          "No se puede contactar con el proveedor de teselas; comprueba la plantilla de URL y la conexión a internet",
+      },
+    },
+    validation: {
+      nameRequired: "El nombre es obligatorio",
+      nameDuplicate: "Nombre ya utilizado por otra capa",
+      urlRequired: "La plantilla de URL es obligatoria",
+      urlNotHttps: "La plantilla de URL debe empezar por https://",
+      urlPlaceholdersMissing:
+        "La plantilla de URL debe contener los marcadores {x}, {y} y {z}",
+      urlSubdomainNotSupported:
+        "El marcador {s} no es compatible: sustitúyelo por uno de los subdominios del proveedor (p. ej. 'a')",
+      apiKeyRequired:
+        "La plantilla de URL contiene {apiKey}: la clave API es obligatoria",
+      apiKeyPlaceholderMissing:
+        "Añade el marcador {apiKey} a la plantilla de URL, donde se espera la clave API",
+    },
+  },
   mapTypes: {
     standard: "Estándar",
     satellite: "Satélite",

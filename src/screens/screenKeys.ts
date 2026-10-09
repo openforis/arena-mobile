@@ -1,5 +1,7 @@
 export enum screenKeys {
   about = "about",
+  customMapLayerEditor = "customMapLayerEditor",
+  customMapLayers = "customMapLayers",
   home = "home",
   locationMapViewer = "locationMapViewer",
   offlineMapAreaEditor = "offlineMapAreaEditor",

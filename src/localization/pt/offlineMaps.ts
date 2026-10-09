@@ -23,6 +23,51 @@ export default {
     openTopoMap: "Topográfico (OpenTopoMap)",
     openStreetMap: "Padrão (OpenStreetMap, somente online)",
   },
+  customLayers: {
+    title: "Camadas de mapa personalizadas",
+    description:
+      "Adicione camadas de mapa de outros fornecedores de mosaicos (mosaicos raster XYZ), com uma chave de API se o fornecedor a exigir. Podem ser selecionadas como camada de mapa predefinida nas definições e com o botão de camadas no mapa. Certifique-se de que os termos de utilização do fornecedor o permitem.",
+    add: "Adicionar camada",
+    noLayers: "Ainda não há camadas de mapa personalizadas",
+    maxZoom: "Zoom máx.: {{value}}",
+    deleteConfirm:
+      "Eliminar a camada de mapa personalizada '{{name}}' e os seus mosaicos guardados neste dispositivo?",
+    editor: {
+      title: "Camada de mapa personalizada",
+      name: "Nome",
+      url: "Modelo de URL",
+      urlHint:
+        "Exemplo: https://tiles.example.org/{z}/{x}/{y}.png?key={apiKey}\n{x}, {y} e {z} são obrigatórios; {apiKey} é substituído pela chave de API.",
+      apiKey: "Chave de API (opcional)",
+      apiKeyHint:
+        "Guardada no armazenamento seguro do dispositivo e usada apenas nos pedidos ao fornecedor de mosaicos.",
+      attribution: "Atribuição (opcional)",
+      attributionHint:
+        "Aviso de direitos de autor exigido pelo fornecedor; é mostrado no mapa.",
+      test: {
+        label: "Testar",
+        success: "Mosaico de mapa descarregado com sucesso",
+        errorStatus:
+          "O fornecedor de mosaicos não devolveu um mosaico de mapa (estado HTTP: {{status}}); verifique o modelo de URL e a chave de API",
+        errorNotReachable:
+          "Não é possível contactar o fornecedor de mosaicos; verifique o modelo de URL e a ligação à internet",
+      },
+    },
+    validation: {
+      nameRequired: "O nome é obrigatório",
+      nameDuplicate: "Nome já utilizado por outra camada",
+      urlRequired: "O modelo de URL é obrigatório",
+      urlNotHttps: "O modelo de URL deve começar por https://",
+      urlPlaceholdersMissing:
+        "O modelo de URL deve conter os marcadores {x}, {y} e {z}",
+      urlSubdomainNotSupported:
+        "O marcador {s} não é suportado: substitua-o por um dos subdomínios do fornecedor (por ex. 'a')",
+      apiKeyRequired:
+        "O modelo de URL contém {apiKey}: a chave de API é obrigatória",
+      apiKeyPlaceholderMissing:
+        "Adicione o marcador {apiKey} ao modelo de URL, onde a chave de API é esperada",
+    },
+  },
   mapTypes: {
     standard: "Padrão",
     satellite: "Satélite",

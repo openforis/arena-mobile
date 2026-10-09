@@ -23,6 +23,51 @@ export default {
     openTopoMap: "Topografisch (OpenTopoMap)",
     openStreetMap: "Standard (OpenStreetMap, nur online)",
   },
+  customLayers: {
+    title: "Benutzerdefinierte Kartenebenen",
+    description:
+      "Füge Kartenebenen anderer Kachelanbieter hinzu (XYZ-Rasterkacheln), mit einem API-Schlüssel, falls der Anbieter ihn verlangt. Sie können in den Einstellungen als Standard-Kartenebene und mit der Ebenen-Schaltfläche auf der Karte ausgewählt werden. Stelle sicher, dass die Nutzungsbedingungen des Anbieters dies erlauben.",
+    add: "Ebene hinzufügen",
+    noLayers: "Noch keine benutzerdefinierten Kartenebenen definiert",
+    maxZoom: "Max. Zoom: {{value}}",
+    deleteConfirm:
+      "Die benutzerdefinierte Kartenebene '{{name}}' und ihre auf diesem Gerät gespeicherten Kartenkacheln löschen?",
+    editor: {
+      title: "Benutzerdefinierte Kartenebene",
+      name: "Name",
+      url: "URL-Vorlage",
+      urlHint:
+        "Beispiel: https://tiles.example.org/{z}/{x}/{y}.png?key={apiKey}\n{x}, {y} und {z} sind erforderlich; {apiKey} wird durch den API-Schlüssel ersetzt.",
+      apiKey: "API-Schlüssel (optional)",
+      apiKeyHint:
+        "Wird im sicheren Speicher des Geräts abgelegt und nur in den Anfragen an den Kachelanbieter verwendet.",
+      attribution: "Quellenangabe (optional)",
+      attributionHint:
+        "Vom Anbieter verlangter Urheberrechtshinweis; er wird auf der Karte angezeigt.",
+      test: {
+        label: "Testen",
+        success: "Kartenkachel erfolgreich heruntergeladen",
+        errorStatus:
+          "Der Kachelanbieter hat keine Kartenkachel zurückgegeben (HTTP-Status: {{status}}); überprüfe die URL-Vorlage und den API-Schlüssel",
+        errorNotReachable:
+          "Der Kachelanbieter ist nicht erreichbar; überprüfe die URL-Vorlage und die Internetverbindung",
+      },
+    },
+    validation: {
+      nameRequired: "Name ist erforderlich",
+      nameDuplicate: "Name wird bereits von einer anderen Ebene verwendet",
+      urlRequired: "URL-Vorlage ist erforderlich",
+      urlNotHttps: "Die URL-Vorlage muss mit https:// beginnen",
+      urlPlaceholdersMissing:
+        "Die URL-Vorlage muss die Platzhalter {x}, {y} und {z} enthalten",
+      urlSubdomainNotSupported:
+        "Der Platzhalter {s} wird nicht unterstützt: ersetze ihn durch eine der Subdomains des Anbieters (z. B. 'a')",
+      apiKeyRequired:
+        "Die URL-Vorlage enthält {apiKey}: der API-Schlüssel ist erforderlich",
+      apiKeyPlaceholderMissing:
+        "Füge den Platzhalter {apiKey} an der Stelle in die URL-Vorlage ein, an der der API-Schlüssel erwartet wird",
+    },
+  },
   mapTypes: {
     standard: "Standard",
     satellite: "Satellit",

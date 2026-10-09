@@ -4,6 +4,7 @@ import { DowngradeError, initialize as initializeDb } from "db";
 import { AppLogo } from "appComponents/AppLogo";
 import { Text, View, VView } from "components";
 import {
+  CustomMapLayersService,
   DataMigrationService,
   PreferencesService,
   SettingsService,
@@ -87,6 +88,7 @@ export const AppInitializer = (props: Props) => {
 
     setStep(steps.storingSettings);
     await dispatch(SettingsActions.updateSettings(settings));
+    await CustomMapLayersService.init(settings);
 
     if (settings.fullScreen) {
       setStep(steps.settingFullScreen);
