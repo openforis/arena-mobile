@@ -1,7 +1,7 @@
 import { UUIDs, User } from "@openforis/arena-core";
 
 import { LatLng } from "model/LocationPoint";
-import { MapLayerId, MapLayers } from "model/MapLayers";
+import { MapLayers } from "model/MapLayers";
 import { OfflineMapArea } from "model/OfflineMapArea";
 import { Files } from "utils/Files";
 import { GeoUtils } from "utils/GeoUtils";
@@ -36,7 +36,7 @@ const estimateArea = ({
   maxZoom,
 }: {
   coordinates: LatLng[];
-  layerId: MapLayerId;
+  layerId: string;
   minZoom?: number;
   maxZoom: number;
 }): OfflineMapAreaEstimate => {
@@ -70,7 +70,7 @@ const createArea = ({
   maxZoom,
 }: {
   name: string;
-  layerId: MapLayerId;
+  layerId: string;
   coordinates: LatLng[];
   minZoom?: number;
   maxZoom: number;

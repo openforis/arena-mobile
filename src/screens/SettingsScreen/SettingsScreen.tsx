@@ -9,7 +9,7 @@ import { FullBackupButton } from "appComponents/FullBackupButton";
 
 import { Button, FieldSet, HView, ScreenView, Text, VView } from "components";
 import { useExperimentalFeaturesEnabled } from "hooks";
-import { SettingsModel, SettingsObject } from "model";
+import { MapProvider, SettingsModel, SettingsObject } from "model";
 import { screenKeys } from "screens/screenKeys";
 import { AppService } from "service/appService";
 import {
@@ -21,6 +21,7 @@ import {
 import { log, clearLogs } from "utils";
 
 import { GpsSourceSettingsField } from "./GpsSourceSettingsField";
+import { MapLayerSettingsField } from "./MapLayerSettingsField";
 import { SettingsItem } from "./SettingsItem";
 import styles from "./styles";
 
@@ -120,6 +121,22 @@ export const SettingsScreen = () => {
                     value={settings.preferredGpsSourceId}
                   />
                 </VView>
+              )}
+              {isMapsGroup &&
+                settings.mapProvider === MapProvider.freeLayers && (
+                  <VView style={itemWrapperStyle}>
+                    <MapLayerSettingsField />
+                  </VView>
+                )}
+              {isMapsGroup && (
+                <Button
+                  icon="layers-plus"
+                  onPress={() =>
+                    navigation.navigate(screenKeys.customMapLayers as never)
+                  }
+                  style={styles.offlineMapsButton}
+                  textKey="offlineMaps:customLayers.title"
+                />
               )}
               {isMapsGroup && (
                 <Button

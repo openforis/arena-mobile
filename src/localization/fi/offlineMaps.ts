@@ -23,6 +23,51 @@ export default {
     openTopoMap: "Topografinen (OpenTopoMap)",
     openStreetMap: "Vakio (OpenStreetMap, vain verkossa)",
   },
+  customLayers: {
+    title: "Mukautetut karttatasot",
+    description:
+      "Lisää karttatasoja muilta karttaruutujen tarjoajilta (XYZ-rasteriruudut), API-avaimella jos tarjoaja vaatii sen. Ne voi valita oletuskarttatasoksi asetuksissa ja kartan tasopainikkeella. Varmista, että tarjoajan käyttöehdot sallivat tämän.",
+    add: "Lisää taso",
+    noLayers: "Mukautettuja karttatasoja ei ole vielä määritetty",
+    maxZoom: "Suurin zoomaus: {{value}}",
+    deleteConfirm:
+      "Poistetaanko mukautettu karttataso '{{name}}' ja sen tälle laitteelle tallennetut karttaruudut?",
+    editor: {
+      title: "Mukautettu karttataso",
+      name: "Nimi",
+      url: "URL-malli",
+      urlHint:
+        "Esimerkki: https://tiles.example.org/{z}/{x}/{y}.png?key={apiKey}\n{x}, {y} ja {z} ovat pakollisia; {apiKey} korvataan API-avaimella.",
+      apiKey: "API-avain (valinnainen)",
+      apiKeyHint:
+        "Tallennetaan laitteen suojattuun tallennustilaan ja käytetään vain pyynnöissä karttaruutujen tarjoajalle.",
+      attribution: "Lähdemerkintä (valinnainen)",
+      attributionHint:
+        "Tarjoajan vaatima tekijänoikeusmerkintä; se näytetään kartalla.",
+      test: {
+        label: "Testaa",
+        success: "Karttaruudun lataus onnistui",
+        errorStatus:
+          "Tarjoaja ei palauttanut karttaruutua (HTTP-tila: {{status}}); tarkista URL-malli ja API-avain",
+        errorNotReachable:
+          "Tarjoajaan ei saada yhteyttä; tarkista URL-malli ja internetyhteys",
+      },
+    },
+    validation: {
+      nameRequired: "Nimi on pakollinen",
+      nameDuplicate: "Nimi on jo toisen tason käytössä",
+      urlRequired: "URL-malli on pakollinen",
+      urlNotHttps: "URL-mallin on alettava merkkijonolla https://",
+      urlPlaceholdersMissing:
+        "URL-mallin on sisällettävä paikkamerkit {x}, {y} ja {z}",
+      urlSubdomainNotSupported:
+        "Paikkamerkkiä {s} ei tueta: korvaa se jollakin tarjoajan aliverkkotunnuksista (esim. 'a')",
+      apiKeyRequired:
+        "URL-malli sisältää paikkamerkin {apiKey}: API-avain on pakollinen",
+      apiKeyPlaceholderMissing:
+        "Lisää paikkamerkki {apiKey} URL-malliin kohtaan, jossa API-avainta odotetaan",
+    },
+  },
   mapTypes: {
     standard: "Vakio",
     satellite: "Satelliitti",

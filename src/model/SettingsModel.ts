@@ -2,7 +2,7 @@ import { Environment } from "utils/Environment";
 import { GpsSourceSetting } from "./GpsSourceSettings";
 import { ThemesSettings } from "./Themes";
 import { LanguageConstants, LanguagesSettings } from "./LanguageSettings";
-import { MapLayerId, MapLayers, MapProvider } from "./MapLayers";
+import { CustomMapLayer, MapProvider } from "./MapLayers";
 
 enum PropertyType {
   boolean = "boolean",
@@ -37,6 +37,7 @@ export enum SettingKey {
   autoSyncEnabled = "autoSyncEnabled",
   autoSyncOpenRecordIntervalMinutes = "autoSyncOpenRecordIntervalMinutes",
   autoSyncSlowCheckIntervalMinutes = "autoSyncSlowCheckIntervalMinutes",
+  customMapLayers = "customMapLayers",
   dataUploadChunkSizeKB = "dataUploadChunkSizeKB",
   fontScale = "fontScale",
   fullScreen = "fullScreen",
@@ -162,16 +163,6 @@ const properties: SettingsProperties = {
       label: `settings:mapProvider.options.${provider}`,
     })),
   },
-  mapLayer: {
-    type: PropertyType.radio,
-    group: SettingGroup.maps,
-    options: MapLayers.layers.map((layer) => ({
-      key: layer.id,
-      label: `offlineMaps:layers.${layer.id}`,
-    })),
-    isDisabled: ({ settings }: any) =>
-      settings.mapProvider !== MapProvider.freeLayers,
-  },
   // image resolution
   imageSizeUnlimited: {
     type: PropertyType.boolean,
@@ -190,6 +181,8 @@ const properties: SettingsProperties = {
 export type SettingsObject = {
   animationsEnabled: boolean;
   autoSyncEnabled: boolean;
+  // layers defined by the user (API keys are in the secure store, see CustomMapLayersService)
+  customMapLayers?: CustomMapLayer[];
   // how long (in minutes) the record currently open in the editor must stay idle before
   // auto-sync uploads it - see AUTO_SYNC_OPEN_RECORD_IDLE_THRESHOLD_MS in actionsAutoSync.ts
   autoSyncOpenRecordIntervalMinutes: number;
@@ -210,8 +203,9 @@ export type SettingsObject = {
   locationAccuracyWatchTimeout: number;
   locationAveragingEnabled: boolean;
   locationGpsLocked: boolean;
-  // free tile layer used when mapProvider is MapProvider.freeLayers
-  mapLayer: MapLayerId;
+  // tile layer (built-in or custom) used when mapProvider is MapProvider.freeLayers; not exposed
+  // via the generic `properties` schema because the options are dynamic (see MapLayerSettingsField)
+  mapLayer: string;
   mapProvider: MapProvider;
   // GpsSourceSetting.auto/.internal, or `external:${deviceAddress}` for a
   // recognized bonded device (see service/externalGps) - the latter can't be part

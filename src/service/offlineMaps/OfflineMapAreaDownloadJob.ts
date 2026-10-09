@@ -1,5 +1,3 @@
-import * as Application from "expo-application";
-
 import { JobMobile, JobMobileContext } from "model/JobMobile";
 import { MapLayers } from "model/MapLayers";
 import { OfflineMapArea } from "model/OfflineMapArea";
@@ -8,6 +6,7 @@ import { log } from "utils/Logger";
 import { MapTileUtils, TileCoordinate } from "utils/MapTileUtils";
 import { PromiseUtils } from "utils/PromiseUtils";
 
+import { mapTilesUserAgent } from "./mapTilesUserAgent";
 import { OfflineMapAreaRepository } from "./offlineMapAreaRepository";
 import { OfflineMapTilesStorage } from "./offlineMapTilesStorage";
 
@@ -23,8 +22,6 @@ export type OfflineMapAreaDownloadJobContext = JobMobileContext & {
 export type OfflineMapAreaDownloadJobResult = {
   area: OfflineMapArea;
 };
-
-const userAgent = `OpenForisArenaMobile/${Application.nativeApplicationVersion ?? "2"} (+https://www.openforis.org)`;
 
 export class OfflineMapAreaDownloadJob extends JobMobile<OfflineMapAreaDownloadJobContext> {
   private downloadedTilesCount = 0;
@@ -70,7 +67,7 @@ export class OfflineMapAreaDownloadJob extends JobMobile<OfflineMapAreaDownloadJ
       const layer = MapLayers.getLayer(layerId);
       const url = MapTileUtils.formatTileUrl(layer.urlTemplate, tile);
       const { status } = await Files.download(url, fileUri, {
-        headers: { "User-Agent": userAgent },
+        headers: { "User-Agent": mapTilesUserAgent },
       });
       if (status === HTTP_STATUS_OK) {
         this.downloadedTilesCount += 1;

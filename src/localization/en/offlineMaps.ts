@@ -23,6 +23,51 @@ export default {
     openTopoMap: "Topographic (OpenTopoMap)",
     openStreetMap: "Standard (OpenStreetMap, online only)",
   },
+  customLayers: {
+    title: "Custom map layers",
+    description:
+      "Add map layers from other tile providers (XYZ raster tiles), with an API key if the provider requires it. They can be selected as default map layer in the settings and with the layers button on the map. Make sure the terms of use of the provider allow it.",
+    add: "Add layer",
+    noLayers: "No custom map layers defined yet",
+    maxZoom: "Max zoom: {{value}}",
+    deleteConfirm:
+      "Delete the custom map layer '{{name}}' and its map tiles stored on this device?",
+    editor: {
+      title: "Custom map layer",
+      name: "Name",
+      url: "URL template",
+      urlHint:
+        "Example: https://tiles.example.org/{z}/{x}/{y}.png?key={apiKey}\n{x}, {y} and {z} are required; {apiKey} is replaced with the API key.",
+      apiKey: "API key (optional)",
+      apiKeyHint:
+        "Stored in the secure storage of the device and used only in the requests to the tile provider.",
+      attribution: "Attribution (optional)",
+      attributionHint:
+        "Copyright notice required by the provider; it is shown on the map.",
+      test: {
+        label: "Test",
+        success: "Map tile downloaded successfully",
+        errorStatus:
+          "The tile provider did not return a map tile (HTTP status: {{status}}); check the URL template and the API key",
+        errorNotReachable:
+          "The tile provider cannot be reached; check the URL template and the internet connection",
+      },
+    },
+    validation: {
+      nameRequired: "Name is required",
+      nameDuplicate: "Name already in use by another layer",
+      urlRequired: "URL template is required",
+      urlNotHttps: "The URL template must start with https://",
+      urlPlaceholdersMissing:
+        "The URL template must contain the {x}, {y} and {z} placeholders",
+      urlSubdomainNotSupported:
+        "The {s} placeholder is not supported: replace it with one of the subdomains of the provider (e.g. 'a')",
+      apiKeyRequired:
+        "The URL template contains {apiKey}: the API key is required",
+      apiKeyPlaceholderMissing:
+        "Add the {apiKey} placeholder to the URL template, where the API key is expected",
+    },
+  },
   mapTypes: {
     standard: "Standard",
     satellite: "Satellite",

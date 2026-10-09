@@ -3,7 +3,7 @@ import { Animated, StyleProp, ViewStyle } from "react-native";
 import RNMapView from "react-native-maps";
 
 import { useHeartbeatAnimation } from "hooks";
-import { LatLng, MapLayerId } from "model";
+import { LatLng } from "model";
 import { log } from "utils";
 
 import { Button } from "../Button";
@@ -44,7 +44,7 @@ type GeoPolygonEditorProps = {
   // extra map overlays (e.g. reference polygons)
   extraOverlays?: React.ReactNode;
   // when specified, the given free map layer is used instead of the one in the settings
-  layerId?: MapLayerId;
+  layerId?: string;
   saveButtonIcon?: string;
   saveButtonTextKey?: string;
   style?: StyleProp<ViewStyle>;
