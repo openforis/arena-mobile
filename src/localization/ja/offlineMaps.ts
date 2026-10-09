@@ -56,6 +56,11 @@ export default {
     tooManyTiles:
       "エリアが大きすぎます。ダウンロードできるのは最大 {{maxTiles}} タイルです。エリアまたは最大ズームを小さくしてください",
     notEnoughSpace: "デバイスの空き容量が不足しています",
+    lowSpaceConfirm: {
+      title: "空き容量が少なくなっています",
+      message:
+        "ダウンロードには約{{size}}が必要で、デバイスの空き容量（{{freeSpace}}）の{{percent}}%を使用します。続行しますか？",
+    },
   },
   areaViewer: {
     title: "オフラインマップエリア",

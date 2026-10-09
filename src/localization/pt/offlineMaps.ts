@@ -56,6 +56,11 @@ export default {
     tooManyTiles:
       "A área é grande demais: no máximo {{maxTiles}} blocos podem ser baixados; reduza a área ou o zoom máximo",
     notEnoughSpace: "Espaço livre insuficiente no dispositivo",
+    lowSpaceConfirm: {
+      title: "Pouco espaço livre",
+      message:
+        "O download ocupará cerca de {{size}}, {{percent}}% do espaço livre no dispositivo ({{freeSpace}}). Continuar?",
+    },
   },
   areaViewer: {
     title: "Área de mapa offline",

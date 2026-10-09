@@ -17,7 +17,7 @@ import type { MapPolygonExtendedProps } from "components/GeoPolygonEditor";
 import { useToast } from "hooks";
 import { LatLng, MapLayerId, MapLayers, OfflineMapArea } from "model";
 import { OfflineMapsService } from "service";
-import { SettingsSelectors } from "state";
+import { SettingsSelectors, useConfirm } from "state";
 import { Files, GeoUtils, log } from "utils";
 
 import { useOfflineMapAreaDownload } from "../OfflineMaps/useOfflineMapAreaDownload";
@@ -47,6 +47,7 @@ export const OfflineMapAreaEditorScreen = () => {
 
   const navigation = useNavigation();
   const toaster = useToast();
+  const confirm = useConfirm();
   const downloadArea = useOfflineMapAreaDownload();
   const settings = SettingsSelectors.useSettings();
 
@@ -111,6 +112,14 @@ export const OfflineMapAreaEditorScreen = () => {
 
   const exceedsFreeSpace =
     freeDiskStorage !== null && estimate.estimatedSizeBytes > freeDiskStorage;
+  const freeSpaceUsageRatio =
+    freeDiskStorage !== null && freeDiskStorage > 0
+      ? estimate.estimatedSizeBytes / freeDiskStorage
+      : null;
+  const freeSpaceLow =
+    !exceedsFreeSpace &&
+    freeSpaceUsageRatio !== null &&
+    freeSpaceUsageRatio >= OfflineMapsService.FREE_SPACE_WARNING_RATIO;
 
   const initialRegion = useMemo(() => {
     const lastArea = existingAreas?.at(-1);
@@ -161,6 +170,21 @@ export const OfflineMapAreaEditorScreen = () => {
         toaster("offlineMaps:areaEditor.notEnoughSpace");
         return;
       }
+      if (
+        freeSpaceLow &&
+        !(await confirm({
+          titleKey: "offlineMaps:areaEditor.lowSpaceConfirm.title",
+          messageKey: "offlineMaps:areaEditor.lowSpaceConfirm.message",
+          messageParams: {
+            size: Files.toHumanReadableFileSize(estimate.estimatedSizeBytes),
+            freeSpace: Files.toHumanReadableFileSize(freeDiskStorage ?? 0),
+            percent: Math.floor((freeSpaceUsageRatio ?? 0) * 100),
+          },
+          confirmButtonTextKey: "offlineMaps:download.label",
+        }))
+      ) {
+        return;
+      }
       const area = OfflineMapsService.createArea({
         name: effectiveName,
         layerId,
@@ -171,11 +195,16 @@ export const OfflineMapAreaEditorScreen = () => {
       navigation.goBack();
     },
     [
+      confirm,
       downloadArea,
       effectiveMaxZoom,
       effectiveName,
+      estimate.estimatedSizeBytes,
       estimate.exceedsMaxTiles,
       exceedsFreeSpace,
+      freeDiskStorage,
+      freeSpaceLow,
+      freeSpaceUsageRatio,
       layerId,
       nameErrorKey,
       navigation,

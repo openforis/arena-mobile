@@ -55,6 +55,11 @@ export default {
     tooManyTiles:
       "አካባቢው በጣም ትልቅ ነው፦ ቢበዛ {{maxTiles}} ታይሎች ማውረድ ይቻላል፤ አካባቢውን ወይም ከፍተኛ ማጉላቱን ይቀንሱ",
     notEnoughSpace: "በመሣሪያው ላይ በቂ ነፃ ቦታ የለም",
+    lowSpaceConfirm: {
+      title: "ነፃ ቦታ አነስተኛ ነው",
+      message:
+        "ማውረዱ በግምት {{size}} ይጠቀማል፣ ይህም በመሣሪያው ላይ ካለው ነፃ ቦታ ({{freeSpace}}) {{percent}}% ነው። ይቀጥሉ?",
+    },
   },
   areaViewer: {
     title: "ከመስመር ውጭ የካርታ አካባቢ",
