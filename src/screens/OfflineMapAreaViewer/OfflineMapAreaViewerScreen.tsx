@@ -13,7 +13,7 @@ import {
   VView,
 } from "components";
 import { useTranslation } from "localization";
-import { OfflineMapArea } from "model";
+import { MapLayers, OfflineMapArea } from "model";
 import { OfflineMapsService } from "service";
 import { GeoUtils, log } from "utils";
 
@@ -140,7 +140,9 @@ export const OfflineMapAreaViewerScreen = () => {
         )}
         <Text
           textKey="offlineMaps:area.layer"
-          textParams={{ layer: t(`offlineMaps:layers.${area.layerId}`) }}
+          textParams={{
+            layer: MapLayers.getLayerLabel(MapLayers.getLayer(area.layerId), t),
+          }}
         />
         <Text
           textKey="offlineMaps:area.surface"

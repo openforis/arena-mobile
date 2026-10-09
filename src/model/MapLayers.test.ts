@@ -26,7 +26,8 @@ describe("MapLayers", () => {
       "https://tiles.example.org/{z}/{x}/{y}.png?key=abc",
     );
     expect(layer.maxZoom).toBe(18);
-    expect(layer.prefetchAllowed).toBe(false);
+    expect(layer.prefetchAllowed).toBe(true);
+    expect(MapLayers.isCustomLayer(layer)).toBe(true);
   });
 
   it("returns built-in and custom layers", () => {
@@ -34,6 +35,13 @@ describe("MapLayers", () => {
     MapLayers.setCustomLayers([MapLayers.customLayerToLayer(customLayer)]);
     expect(MapLayers.getLayers()).toHaveLength(builtInCount + 1);
     expect(MapLayers.getLayer(customLayer.id).name).toBe(customLayer.name);
+  });
+
+  it("includes custom layers in the prefetchable layers", () => {
+    MapLayers.setCustomLayers([MapLayers.customLayerToLayer(customLayer)]);
+    const layerIds = MapLayers.getPrefetchableLayers().map((l) => l.id);
+    expect(layerIds).toContain(customLayer.id);
+    expect(layerIds).not.toContain(MapLayerId.openStreetMap);
   });
 
   it("falls back to the default layer when the layer does not exist", () => {

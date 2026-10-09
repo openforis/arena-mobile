@@ -15,6 +15,7 @@ import {
 } from "components";
 import type { MapPolygonExtendedProps } from "components/GeoPolygonEditor";
 import { useToast } from "hooks";
+import { useTranslation } from "localization";
 import { LatLng, MapLayers, OfflineMapArea } from "model";
 import { OfflineMapsService } from "service";
 import { SettingsSelectors, useConfirm } from "state";
@@ -25,11 +26,6 @@ import styles from "./styles";
 
 const existingAreaStrokeColor = "rgba(96, 96, 96, 0.9)";
 const existingAreaFillColor = "rgba(96, 96, 96, 0.15)";
-
-const layerItems = MapLayers.prefetchableLayers.map((layer) => ({
-  value: layer.id,
-  label: `offlineMaps:layers.${layer.id}`,
-}));
 
 const determineInitialLayerId = (settingsLayerId: string): string =>
   MapLayers.getLayer(settingsLayerId).prefetchAllowed
@@ -50,6 +46,16 @@ export const OfflineMapAreaEditorScreen = () => {
   const confirm = useConfirm();
   const downloadArea = useOfflineMapAreaDownload();
   const settings = SettingsSelectors.useSettings();
+  const { t } = useTranslation();
+
+  const layerItems = useMemo(
+    () =>
+      MapLayers.getPrefetchableLayers().map((item) => ({
+        value: item.id,
+        label: MapLayers.getLayerLabel(item, t),
+      })),
+    [t],
+  );
 
   const mapRef = useRef<RNMapView | null>(null);
 
@@ -171,6 +177,20 @@ export const OfflineMapAreaEditorScreen = () => {
         return;
       }
       if (
+        MapLayers.isCustomLayer(layer) &&
+        !(await confirm({
+          titleKey: "offlineMaps:areaEditor.customLayerConfirm.title",
+          messageKey: "offlineMaps:areaEditor.customLayerConfirm.message",
+          messageParams: {
+            layer: layer.name,
+            tiles: estimate.tilesCount,
+          },
+          confirmButtonTextKey: "offlineMaps:download.label",
+        }))
+      ) {
+        return;
+      }
+      if (
         freeSpaceLow &&
         !(await confirm({
           titleKey: "offlineMaps:areaEditor.lowSpaceConfirm.title",
@@ -201,10 +221,12 @@ export const OfflineMapAreaEditorScreen = () => {
       effectiveName,
       estimate.estimatedSizeBytes,
       estimate.exceedsMaxTiles,
+      estimate.tilesCount,
       exceedsFreeSpace,
       freeDiskStorage,
       freeSpaceLow,
       freeSpaceUsageRatio,
+      layer,
       layerId,
       nameErrorKey,
       navigation,
@@ -240,6 +262,7 @@ export const OfflineMapAreaEditorScreen = () => {
       )}
       <Dropdown
         items={layerItems}
+        translateItemLabels={false}
         label="offlineMaps:areaEditor.layer"
         onChange={onLayerChange}
         value={layerId}

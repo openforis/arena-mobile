@@ -32,6 +32,8 @@ export default {
     maxZoom: "Max. Zoom: {{value}}",
     deleteConfirm:
       "Die benutzerdefinierte Kartenebene '{{name}}' und ihre auf diesem Gerät gespeicherten Kartenkacheln löschen?",
+    deleteConfirmWithOfflineAreas:
+      "Die benutzerdefinierte Kartenebene '{{name}}', ihre auf diesem Gerät gespeicherten Kartenkacheln und die damit heruntergeladenen Offline-Kartenbereiche ({{count}}) löschen?",
     editor: {
       title: "Benutzerdefinierte Kartenebene",
       name: "Name",
@@ -44,6 +46,8 @@ export default {
       attribution: "Quellenangabe (optional)",
       attributionHint:
         "Vom Anbieter verlangter Urheberrechtshinweis; er wird auf der Karte angezeigt.",
+      urlChangeConfirm:
+        "Die URL-Vorlage wurde geändert: die auf diesem Gerät gespeicherten Kartenkacheln dieser Ebene werden gelöscht und ihre Offline-Kartenbereiche ({{count}}) müssen erneut heruntergeladen werden. Fortfahren?",
       test: {
         label: "Testen",
         success: "Kartenkachel erfolgreich heruntergeladen",
@@ -101,6 +105,11 @@ export default {
     tooManyTiles:
       "Das Gebiet ist zu groß: Es können höchstens {{maxTiles}} Kacheln heruntergeladen werden; verkleinern Sie das Gebiet oder den max. Zoom",
     notEnoughSpace: "Nicht genügend freier Speicher auf dem Gerät",
+    customLayerConfirm: {
+      title: "Benutzerdefinierte Kartenebene",
+      message:
+        "Etwa {{tiles}} Kartenkacheln werden von '{{layer}}' heruntergeladen. Stelle sicher, dass die Nutzungsbedingungen des Anbieters Massen-Downloads erlauben: sie könnten verboten oder kostenpflichtig sein. Fortfahren?",
+    },
     lowSpaceConfirm: {
       title: "Wenig freier Speicher",
       message:

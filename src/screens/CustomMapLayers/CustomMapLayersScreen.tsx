@@ -13,6 +13,7 @@ import {
 } from "components";
 import { CustomMapLayer } from "model";
 import { screenKeys } from "screens/screenKeys";
+import { CustomMapLayersService } from "service";
 import {
   SettingsActions,
   SettingsSelectors,
@@ -92,10 +93,16 @@ export const CustomMapLayersScreen = () => {
 
   const onDeletePress = useCallback(
     async (layer: CustomMapLayer) => {
+      const offlineAreasCount = await CustomMapLayersService.countOfflineAreas(
+        layer.id,
+      );
       if (
         await confirm({
-          messageKey: "offlineMaps:customLayers.deleteConfirm",
-          messageParams: { name: layer.name },
+          messageKey:
+            offlineAreasCount > 0
+              ? "offlineMaps:customLayers.deleteConfirmWithOfflineAreas"
+              : "offlineMaps:customLayers.deleteConfirm",
+          messageParams: { name: layer.name, count: offlineAreasCount },
         })
       ) {
         await dispatch(SettingsActions.deleteCustomMapLayer(layer.id));

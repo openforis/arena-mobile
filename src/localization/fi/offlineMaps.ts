@@ -32,6 +32,8 @@ export default {
     maxZoom: "Suurin zoomaus: {{value}}",
     deleteConfirm:
       "Poistetaanko mukautettu karttataso '{{name}}' ja sen tälle laitteelle tallennetut karttaruudut?",
+    deleteConfirmWithOfflineAreas:
+      "Poistetaanko mukautettu karttataso '{{name}}', sen tälle laitteelle tallennetut karttaruudut ja sillä ladatut offline-kartta-alueet ({{count}})?",
     editor: {
       title: "Mukautettu karttataso",
       name: "Nimi",
@@ -44,6 +46,8 @@ export default {
       attribution: "Lähdemerkintä (valinnainen)",
       attributionHint:
         "Tarjoajan vaatima tekijänoikeusmerkintä; se näytetään kartalla.",
+      urlChangeConfirm:
+        "URL-malli on muuttunut: tämän tason laitteelle tallennetut karttaruudut poistetaan ja sen offline-kartta-alueet ({{count}}) on ladattava uudelleen. Jatketaanko?",
       test: {
         label: "Testaa",
         success: "Karttaruudun lataus onnistui",
@@ -101,6 +105,11 @@ export default {
     tooManyTiles:
       "Alue on liian suuri: enintään {{maxTiles}} karttaruutua voidaan ladata; pienennä aluetta tai suurinta zoomausta",
     notEnoughSpace: "Laitteessa ei ole tarpeeksi vapaata tilaa",
+    customLayerConfirm: {
+      title: "Mukautettu karttataso",
+      message:
+        "Noin {{tiles}} karttaruutua ladataan tasolta '{{layer}}'. Varmista, että tarjoajan käyttöehdot sallivat joukkolataukset: ne voivat olla kiellettyjä tai maksullisia. Jatketaanko?",
+    },
     lowSpaceConfirm: {
       title: "Vapaa tila vähissä",
       message:
