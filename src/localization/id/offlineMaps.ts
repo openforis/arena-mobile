@@ -56,6 +56,11 @@ export default {
     tooManyTiles:
       "Area terlalu besar: maksimal {{maxTiles}} ubin dapat diunduh; perkecil area atau zoom maks",
     notEnoughSpace: "Ruang kosong di perangkat tidak cukup",
+    lowSpaceConfirm: {
+      title: "Ruang kosong terbatas",
+      message:
+        "Unduhan akan menggunakan sekitar {{size}}, {{percent}}% dari ruang kosong di perangkat ({{freeSpace}}). Lanjutkan?",
+    },
   },
   areaViewer: {
     title: "Area peta offline",

@@ -56,6 +56,11 @@ export default {
     tooManyTiles:
       "Området är för stort: högst {{maxTiles}} kartrutor kan laddas ner; minska området eller max zoom",
     notEnoughSpace: "Inte tillräckligt med ledigt utrymme på enheten",
+    lowSpaceConfirm: {
+      title: "Lite ledigt utrymme",
+      message:
+        "Nedladdningen använder cirka {{size}}, {{percent}} % av det lediga utrymmet på enheten ({{freeSpace}}). Fortsätta?",
+    },
   },
   areaViewer: {
     title: "Offlinekartområde",
