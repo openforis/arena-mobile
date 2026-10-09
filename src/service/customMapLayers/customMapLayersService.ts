@@ -51,10 +51,13 @@ const fetchApiKey = async (layerId: string): Promise<string | null> => {
 const init = async (settings: SettingsObject): Promise<void> => {
   const customLayers = settings.customMapLayers ?? [];
   apiKeysByLayerId.clear();
-  for (const { id } of customLayers) {
-    const apiKey = await fetchApiKey(id);
+  const apiKeys = await Promise.all(
+    customLayers.map(({ id }) => fetchApiKey(id)),
+  );
+  customLayers.forEach(({ id }, index) => {
+    const apiKey = apiKeys[index];
     if (apiKey) apiKeysByLayerId.set(id, apiKey);
-  }
+  });
   updateLayersRegistry(customLayers);
 };
 
