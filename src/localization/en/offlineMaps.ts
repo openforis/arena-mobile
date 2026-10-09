@@ -56,6 +56,11 @@ export default {
     tooManyTiles:
       "The area is too big: max {{maxTiles}} tiles can be downloaded; reduce the area or the max zoom",
     notEnoughSpace: "Not enough free space on the device",
+    lowSpaceConfirm: {
+      title: "Low free space",
+      message:
+        "The download will use about {{size}}, {{percent}}% of the free space on the device ({{freeSpace}}). Continue?",
+    },
   },
   areaViewer: {
     title: "Offline map area",

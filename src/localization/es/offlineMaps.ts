@@ -56,6 +56,11 @@ export default {
     tooManyTiles:
       "El área es demasiado grande: se pueden descargar como máximo {{maxTiles}} teselas; reduce el área o el zoom máximo",
     notEnoughSpace: "No hay suficiente espacio libre en el dispositivo",
+    lowSpaceConfirm: {
+      title: "Poco espacio libre",
+      message:
+        "La descarga ocupará aproximadamente {{size}}, el {{percent}}% del espacio libre en el dispositivo ({{freeSpace}}). ¿Continuar?",
+    },
   },
   areaViewer: {
     title: "Área de mapa sin conexión",

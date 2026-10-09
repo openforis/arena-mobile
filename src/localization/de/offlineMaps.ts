@@ -56,6 +56,11 @@ export default {
     tooManyTiles:
       "Das Gebiet ist zu groß: Es können höchstens {{maxTiles}} Kacheln heruntergeladen werden; verkleinern Sie das Gebiet oder den max. Zoom",
     notEnoughSpace: "Nicht genügend freier Speicher auf dem Gerät",
+    lowSpaceConfirm: {
+      title: "Wenig freier Speicher",
+      message:
+        "Der Download belegt etwa {{size}}, {{percent}} % des freien Speichers auf dem Gerät ({{freeSpace}}). Fortfahren?",
+    },
   },
   areaViewer: {
     title: "Offline-Kartengebiet",
