@@ -29,31 +29,34 @@ const nodePathPartSeparator = " / ";
 
 const getNodePath = ({ survey, record, nodeUuid, lang }: any) => {
   const parts: any = [];
-  const node = Records.getNodeByUuid(nodeUuid)(record);
+  const node = Records.getNodeByUuid({ uuid: nodeUuid })(record);
   if (!node) {
     return parts;
   }
-  Records.visitAncestorsAndSelf(node, (visitedAncestor) => {
-    const nodeDef = Surveys.getNodeDefByUuid({
-      survey,
-      uuid: visitedAncestor.nodeDefUuid,
-    });
-    if (NodeDefs.isRoot(nodeDef)) {
-      return;
-    }
-    const labelOrName = NodeDefs.getLabelOrName(nodeDef, lang);
-    let part = labelOrName;
-    if (NodeDefs.isMultiple(nodeDef)) {
-      const keys = RecordUtils.getEntityKeysFormatted({
+  Records.visitAncestorsAndSelf({
+    node,
+    visitor: (visitedAncestor) => {
+      const nodeDef = Surveys.getNodeDefByUuid({
         survey,
-        record,
-        entity: visitedAncestor,
-        lang,
-        emptyValue: "-",
+        uuid: visitedAncestor.nodeDefUuid,
       });
-      part = part + `[${keys.join(",")}]`;
-    }
-    parts.unshift(part);
+      if (NodeDefs.isRoot(nodeDef)) {
+        return;
+      }
+      const labelOrName = NodeDefs.getLabelOrName(nodeDef, lang);
+      let part = labelOrName;
+      if (NodeDefs.isMultiple(nodeDef)) {
+        const keys = RecordUtils.getEntityKeysFormatted({
+          survey,
+          record,
+          entity: visitedAncestor,
+          lang,
+          emptyValue: "-",
+        });
+        part = part + `[${keys.join(",")}]`;
+      }
+      parts.unshift(part);
+    },
   })(record);
   return parts.join(nodePathPartSeparator);
 };
@@ -83,7 +86,7 @@ const extractValidationItem = ({
         validationFieldKey,
       );
   } else {
-    const node = Records.getNodeByUuid(validationFieldKey)(record);
+    const node = Records.getNodeByUuid({ uuid: validationFieldKey })(record);
     if (!node) return null;
 
     invalidNodeUuid = validationFieldKey;

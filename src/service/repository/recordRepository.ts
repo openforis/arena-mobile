@@ -81,9 +81,8 @@ const extractKeyColumnsValues = ({ survey, record }: any) => {
   const keyValues = Records.getEntityKeyValues({
     survey,
     cycle: record.cycle,
-    record,
     entity: Records.getRoot(record)!,
-  });
+  })(record);
   const keyColumnsValues = keyColumnNames.map((_keyCol, idx) => {
     const value = keyValues[idx];
     return toKeyOrSummaryColValue(value);
@@ -106,10 +105,9 @@ const extractSummaryAttributesValues = ({ survey, record }: any) => {
       if (!nodeDef) return null;
       const root = Records.getRoot(record);
       const summaryNode = Records.getDescendant({
-        record,
         node: root!,
         nodeDefDescendant: nodeDef,
-      });
+      })(record);
       return toKeyOrSummaryColValue(summaryNode?.value);
     },
   );

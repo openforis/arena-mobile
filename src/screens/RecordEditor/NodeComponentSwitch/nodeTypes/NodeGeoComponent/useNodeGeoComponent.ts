@@ -132,7 +132,7 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
 
     const record = DataEntrySelectors.selectRecord(store.getState());
 
-    const node = Records.getNodeByUuid(nodeUuid)(record);
+    const node = Records.getNodeByUuid({ uuid: nodeUuid })(record);
     if (!node) return;
 
     const featureName = RecordUtils.getAncestorsLabelAndKeysText({

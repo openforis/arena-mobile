@@ -2,7 +2,7 @@ import {
   NodeDef,
   NodeDefs,
   NodeDefType,
-  Record,
+  ArenaRecord,
   RecordFactory,
   RecordFixer,
   RecordUpdater,
@@ -51,10 +51,10 @@ const cloneSurvey = (): Survey =>
 const getDef = (survey: Survey, name: string): NodeDef<any> =>
   Surveys.getNodeDefByName({ survey, name });
 
-const getNodesByName = (survey: Survey, record: Record, name: string) =>
-  Records.getNodesByDefUuid(getDef(survey, name).uuid)(record);
+const getNodesByName = (survey: Survey, record: ArenaRecord, name: string) =>
+  Records.getNodesByDefUuid({ nodeDefUuid: getDef(survey, name).uuid })(record);
 
-const getValues = (survey: Survey, record: Record, name: string) =>
+const getValues = (survey: Survey, record: ArenaRecord, name: string) =>
   getNodesByName(survey, record, name).map((node) => node.value);
 
 const categoryItemUuid = (
@@ -74,7 +74,7 @@ const categoryItemUuid = (
   return item.uuid;
 };
 
-const createRecord = async (survey: Survey): Promise<Record> => {
+const createRecord = async (survey: Survey): Promise<ArenaRecord> => {
   const { record } = await RecordUpdater.createRootEntity({
     user,
     survey,
@@ -95,11 +95,11 @@ const updateValue = async ({
   index = 0,
 }: {
   survey: Survey;
-  record: Record;
+  record: ArenaRecord;
   name: string;
   value: any;
   index?: number;
-}): Promise<Record> => {
+}): Promise<ArenaRecord> => {
   const node = getNodesByName(survey, record, name)[index];
   if (!node) throw new Error(`node not found: ${name}[${index}]`);
   const { record: recordUpdated } = await RecordUpdater.updateAttributeValue({
@@ -119,10 +119,10 @@ const addEntity = async ({
   parentName,
 }: {
   survey: Survey;
-  record: Record;
+  record: ArenaRecord;
   name: string;
   parentName?: string;
-}): Promise<Record> => {
+}): Promise<ArenaRecord> => {
   const parentNode = parentName
     ? getNodesByName(survey, record, parentName)[0]!
     : Records.getRoot(record)!;
@@ -242,7 +242,7 @@ describe("Demo survey", () => {
   });
 
   describe("new record", () => {
-    let record: Record;
+    let record: ArenaRecord;
 
     beforeAll(async () => {
       record = await createRecord(survey);
@@ -434,7 +434,7 @@ describe("Demo survey", () => {
   describe("records created with the previous version", () => {
     // simulates a record collected with the previous demo survey version,
     // loaded with the new one (see RecordRepository rowToRecord)
-    const createPreviousVersionRecord = async (): Promise<Record> => {
+    const createPreviousVersionRecord = async (): Promise<ArenaRecord> => {
       let record = await createRecord(survey);
       record = await updateValue({
         survey,
@@ -507,7 +507,9 @@ describe("Demo survey", () => {
         survey,
         record: recordWithOrphan,
       });
-      expect(Records.getNodeByUuid(orphanNode.uuid)(record)).toBeUndefined();
+      expect(
+        Records.getNodeByUuid({ uuid: orphanNode.uuid })(record),
+      ).toBeUndefined();
     });
   });
 });
