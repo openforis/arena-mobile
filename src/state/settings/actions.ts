@@ -1,8 +1,8 @@
 import * as Location from "expo-location";
 
 import { changeLanguage } from "localization";
-import { SettingsModel, SettingsObject } from "model";
-import { SettingsService } from "service";
+import { CustomMapLayer, SettingsModel, SettingsObject } from "model";
+import { CustomMapLayersService, SettingsService } from "service";
 import { Permissions } from "utils";
 
 import { ToastActions } from "../toast";
@@ -48,6 +48,21 @@ const updateSettings = (settings: SettingsObject) => async (dispatch: any) => {
   dispatch(setSettings(settingsUpdated));
 };
 
+const saveCustomMapLayer =
+  ({ layer, apiKey }: { layer: CustomMapLayer; apiKey: string }) =>
+  async (dispatch: any) => {
+    const settingsUpdated = await CustomMapLayersService.saveLayer({
+      layer,
+      apiKey,
+    });
+    dispatch(setSettings(settingsUpdated));
+  };
+
+const deleteCustomMapLayer = (layerId: string) => async (dispatch: any) => {
+  const settingsUpdated = await CustomMapLayersService.deleteLayer(layerId);
+  dispatch(setSettings(settingsUpdated));
+};
+
 let gpsLockingSubscription: any = null;
 
 const _startGpsLocking = async () => {
@@ -86,6 +101,8 @@ export const SettingsActions = {
   initSettings,
   updateSetting,
   updateSettings,
+  saveCustomMapLayer,
+  deleteCustomMapLayer,
 
   startGpsLocking,
   stopGpsLocking,

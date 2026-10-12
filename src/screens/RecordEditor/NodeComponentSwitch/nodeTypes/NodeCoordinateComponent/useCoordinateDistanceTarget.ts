@@ -17,7 +17,7 @@ export const useCoordinateDistanceTarget = ({
   const [distanceTarget, setDistanceTarget] = useState(null);
   useSelector((state) => {
     const record = DataEntrySelectors.selectRecord(state);
-    const node = Records.getNodeByUuid(nodeUuid)(record);
+    const node = Records.getNodeByUuid({ uuid: nodeUuid })(record);
     void RecordUtils.getCoordinateDistanceTarget({
       survey,
       nodeDef,

@@ -445,10 +445,9 @@ const findRecordSummariesWithSameKeys = async ({
   const rootEntity = Records.getRoot(record)!;
   const keyValues = Records.getEntityKeyValues({
     survey,
-    record,
     cycle,
     entity: rootEntity,
-  });
+  })(record);
   const keyValuesFormatted = RecordUtils.getRootEntityKeysFormatted({
     survey,
     record,

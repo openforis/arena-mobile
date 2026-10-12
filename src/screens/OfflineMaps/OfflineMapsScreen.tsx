@@ -77,7 +77,7 @@ const OfflineMapAreaItem = ({
       />
       <Text
         textKey="offlineMaps:area.layer"
-        textParams={{ layer: t(`offlineMaps:layers.${layer.id}`) }}
+        textParams={{ layer: MapLayers.getLayerLabel(layer, t) }}
       />
       <Text
         textKey="offlineMaps:area.zoomLevels"

@@ -18,7 +18,8 @@ import RNMapView, {
 } from "react-native-maps";
 
 import { useIsNetworkConnected } from "hooks/useIsNetworkConnected";
-import { LatLng, MapLayerId, MapLayers, MapProvider } from "model";
+import { useTranslation } from "localization";
+import { LatLng, MapLayers, MapProvider } from "model";
 import { OfflineMapTilesStorage } from "service/offlineMaps/offlineMapTilesStorage";
 import { SettingsSelectors } from "state/settings/selectors";
 import { Environment } from "utils";
@@ -46,7 +47,7 @@ type Props = {
   fitOnlyOnce?: boolean;
   initialRegion: Region;
   // when specified, the given free map layer is used, ignoring the map provider in the settings
-  layerId?: MapLayerId;
+  layerId?: string;
   onMapReady?: () => void;
   onPanDrag?: (event: PanDragEvent) => void;
   // called (instead of onPress) when a point of interest of the base map is pressed
@@ -107,14 +108,16 @@ export const MapView = forwardRef<RNMapView | null, Props>(
     const hasAppliedFitRef = useRef(false);
     const [mapType, setMapType] = useState<MapType>("standard");
 
+    const { t } = useTranslation();
     const settings = SettingsSelectors.useSettings();
     const useFreeLayers =
       !!layerIdProp ||
       (providerProp ?? settings.mapProvider) === MapProvider.freeLayers;
-    const [selectedLayerId, setSelectedLayerId] = useState<MapLayerId>(
+    const [selectedLayerId, setSelectedLayerId] = useState<string>(
       () => layerIdProp ?? settings.mapLayer,
     );
     const layer = MapLayers.getLayer(layerIdProp ?? selectedLayerId);
+    const hasAttribution = !!layer.attribution;
     const [attributionHeight, setAttributionHeight] = useState(0);
     const [layerNameVisible, setLayerNameVisible] = useState(false);
     const layerNameTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
@@ -158,10 +161,10 @@ export const MapView = forwardRef<RNMapView | null, Props>(
     // the padding must be set only when the map is ready (on Android it throws an error otherwise)
     const mapPadding = useMemo(
       () =>
-        isMapReady && useFreeLayers && attributionHeight > 0
+        isMapReady && useFreeLayers && hasAttribution && attributionHeight > 0
           ? { top: 0, right: 0, bottom: attributionHeight, left: 0 }
           : undefined,
-      [attributionHeight, isMapReady, useFreeLayers],
+      [attributionHeight, hasAttribution, isMapReady, useFreeLayers],
     );
 
     const onMapReadyCallback = useCallback(() => {
@@ -195,7 +198,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       if (useFreeLayers) {
         setSelectedLayerId((prevLayerId) =>
           getNextItem(
-            MapLayers.layers.map((l) => l.id),
+            MapLayers.getLayers().map((l) => l.id),
             prevLayerId,
           ),
         );
@@ -204,9 +207,9 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       }
     }, [showLayerName, useFreeLayers]);
 
-    const layerNameKey = useFreeLayers
-      ? `offlineMaps:layers.${layer.id}`
-      : `offlineMaps:mapTypes.${mapType}`;
+    const layerName = useFreeLayers
+      ? MapLayers.getLayerLabel(layer, t)
+      : t(`offlineMaps:mapTypes.${mapType}`);
 
     // on Android the Google base map is hidden (mapType "none"); on iOS the UrlTile replaces the Apple map content
     const effectiveMapType: MapType =
@@ -246,7 +249,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
           )}
           {children}
         </RNMapView>
-        {useFreeLayers && (
+        {useFreeLayers && hasAttribution && (
           <View
             onLayout={onAttributionLayout}
             pointerEvents="none"
@@ -267,7 +270,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
         )}
         {layerNameVisible && (
           <View style={styles.layerNameContainer} pointerEvents="none">
-            <Text style={styles.layerName} textKey={layerNameKey} />
+            <Text style={styles.layerName}>{layerName}</Text>
           </View>
         )}
         {showMapTypeSelector && !layerIdProp && (

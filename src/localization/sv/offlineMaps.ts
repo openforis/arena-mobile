@@ -23,6 +23,54 @@ export default {
     openTopoMap: "Topografisk (OpenTopoMap)",
     openStreetMap: "Standard (OpenStreetMap, endast online)",
   },
+  customLayers: {
+    title: "Anpassade kartlager",
+    description:
+      "Lägg till kartlager från andra leverantörer av kartrutor (XYZ-rasterrutor), med en API-nyckel om leverantören kräver det. De kan väljas som standardkartlager i inställningarna och med lagerknappen på kartan. Kontrollera att leverantörens användarvillkor tillåter det.",
+    add: "Lägg till lager",
+    noLayers: "Inga anpassade kartlager har definierats ännu",
+    maxZoom: "Max zoom: {{value}}",
+    deleteConfirm:
+      "Ta bort det anpassade kartlagret '{{name}}' och dess kartrutor som lagras på den här enheten?",
+    deleteConfirmWithOfflineAreas:
+      "Ta bort det anpassade kartlagret '{{name}}', dess kartrutor som lagras på den här enheten och de offlinekartområden som laddats ned med det ({{count}})?",
+    editor: {
+      title: "Anpassat kartlager",
+      name: "Namn",
+      url: "URL-mall",
+      urlHint:
+        "Exempel: https://tiles.example.org/{z}/{x}/{y}.png?key={apiKey}\n{x}, {y} och {z} krävs; {apiKey} ersätts med API-nyckeln.",
+      apiKey: "API-nyckel (valfri)",
+      apiKeyHint:
+        "Lagras i enhetens säkra lagring och används endast i förfrågningar till leverantören av kartrutor.",
+      attribution: "Attribution (valfri)",
+      attributionHint:
+        "Upphovsrättsmeddelande som leverantören kräver; det visas på kartan.",
+      urlChangeConfirm:
+        "URL-mallen har ändrats: lagrets kartrutor som lagras på den här enheten tas bort och dess offlinekartområden ({{count}}) måste laddas ned igen. Fortsätta?",
+      test: {
+        label: "Testa",
+        success: "Kartrutan laddades ned",
+        errorStatus:
+          "Leverantören returnerade ingen kartruta (HTTP-status: {{status}}); kontrollera URL-mallen och API-nyckeln",
+        errorNotReachable:
+          "Leverantören kan inte nås; kontrollera URL-mallen och internetanslutningen",
+      },
+    },
+    validation: {
+      nameRequired: "Namn krävs",
+      nameDuplicate: "Namnet används redan av ett annat lager",
+      urlRequired: "URL-mall krävs",
+      urlNotHttps: "URL-mallen måste börja med https://",
+      urlPlaceholdersMissing:
+        "URL-mallen måste innehålla platshållarna {x}, {y} och {z}",
+      urlSubdomainNotSupported:
+        "Platshållaren {s} stöds inte: ersätt den med en av leverantörens underdomäner (t.ex. 'a')",
+      apiKeyRequired: "URL-mallen innehåller {apiKey}: API-nyckeln krävs",
+      apiKeyPlaceholderMissing:
+        "Lägg till platshållaren {apiKey} i URL-mallen, där API-nyckeln förväntas",
+    },
+  },
   mapTypes: {
     standard: "Standard",
     satellite: "Satellit",
@@ -56,6 +104,11 @@ export default {
     tooManyTiles:
       "Området är för stort: högst {{maxTiles}} kartrutor kan laddas ner; minska området eller max zoom",
     notEnoughSpace: "Inte tillräckligt med ledigt utrymme på enheten",
+    customLayerConfirm: {
+      title: "Anpassat kartlager",
+      message:
+        "Cirka {{tiles}} kartrutor laddas ned från '{{layer}}'. Kontrollera att leverantörens användarvillkor tillåter massnedladdning: det kan vara förbjudet eller avgiftsbelagt. Fortsätta?",
+    },
     lowSpaceConfirm: {
       title: "Lite ledigt utrymme",
       message:

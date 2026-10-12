@@ -23,6 +23,55 @@ export default {
     openTopoMap: "Topographic (OpenTopoMap)",
     openStreetMap: "Standard (OpenStreetMap, online only)",
   },
+  customLayers: {
+    title: "Custom map layers",
+    description:
+      "Add map layers from other tile providers (XYZ raster tiles), with an API key if the provider requires it. They can be selected as default map layer in the settings and with the layers button on the map. Make sure the terms of use of the provider allow it.",
+    add: "Add layer",
+    noLayers: "No custom map layers defined yet",
+    maxZoom: "Max zoom: {{value}}",
+    deleteConfirm:
+      "Delete the custom map layer '{{name}}' and its map tiles stored on this device?",
+    deleteConfirmWithOfflineAreas:
+      "Delete the custom map layer '{{name}}', its map tiles stored on this device and the offline map areas downloaded with it ({{count}})?",
+    editor: {
+      title: "Custom map layer",
+      name: "Name",
+      url: "URL template",
+      urlHint:
+        "Example: https://tiles.example.org/{z}/{x}/{y}.png?key={apiKey}\n{x}, {y} and {z} are required; {apiKey} is replaced with the API key.",
+      apiKey: "API key (optional)",
+      apiKeyHint:
+        "Stored in the secure storage of the device and used only in the requests to the tile provider.",
+      attribution: "Attribution (optional)",
+      attributionHint:
+        "Copyright notice required by the provider; it is shown on the map.",
+      urlChangeConfirm:
+        "The URL template has changed: the map tiles of this layer stored on this device will be deleted and its offline map areas ({{count}}) will have to be downloaded again. Continue?",
+      test: {
+        label: "Test",
+        success: "Map tile downloaded successfully",
+        errorStatus:
+          "The tile provider did not return a map tile (HTTP status: {{status}}); check the URL template and the API key",
+        errorNotReachable:
+          "The tile provider cannot be reached; check the URL template and the internet connection",
+      },
+    },
+    validation: {
+      nameRequired: "Name is required",
+      nameDuplicate: "Name already in use by another layer",
+      urlRequired: "URL template is required",
+      urlNotHttps: "The URL template must start with https://",
+      urlPlaceholdersMissing:
+        "The URL template must contain the {x}, {y} and {z} placeholders",
+      urlSubdomainNotSupported:
+        "The {s} placeholder is not supported: replace it with one of the subdomains of the provider (e.g. 'a')",
+      apiKeyRequired:
+        "The URL template contains {apiKey}: the API key is required",
+      apiKeyPlaceholderMissing:
+        "Add the {apiKey} placeholder to the URL template, where the API key is expected",
+    },
+  },
   mapTypes: {
     standard: "Standard",
     satellite: "Satellite",
@@ -56,6 +105,11 @@ export default {
     tooManyTiles:
       "The area is too big: max {{maxTiles}} tiles can be downloaded; reduce the area or the max zoom",
     notEnoughSpace: "Not enough free space on the device",
+    customLayerConfirm: {
+      title: "Custom map layer",
+      message:
+        "About {{tiles}} map tiles will be downloaded from '{{layer}}'. Make sure the terms of use of the provider allow bulk downloads: they could be forbidden or charged. Continue?",
+    },
     lowSpaceConfirm: {
       title: "Low free space",
       message:

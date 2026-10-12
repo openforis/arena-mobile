@@ -35,6 +35,7 @@ const deleteAllAreas = async (): Promise<void> => {
 
 export const OfflineMapAreaRepository = {
   fetchAreas,
+  saveAreas,
   fetchAreaById,
   saveArea,
   deleteArea,

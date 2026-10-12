@@ -21,7 +21,7 @@ const calculateIsMaxCountReached = ({
   record,
 }: any) => {
   const parentNode = parentEntityUuid
-    ? Records.getNodeByUuid(parentEntityUuid)(record)
+    ? Records.getNodeByUuid({ uuid: parentEntityUuid })(record)
     : null;
   if (!parentNode) return false;
 
@@ -31,7 +31,10 @@ const calculateIsMaxCountReached = ({
   });
   if (Objects.isEmpty(maxCount)) return false;
 
-  const siblings = Records.getChildren(parentNode, entityDef.uuid)(record);
+  const siblings = Records.getChildren({
+    parentNode,
+    childDefUuid: entityDef.uuid,
+  })(record);
   return siblings.length >= maxCount;
 };
 
@@ -44,10 +47,12 @@ const calculateHasCurrentEntityKeysSpecified = ({
   const keyDefs = Surveys.getNodeDefKeys({ survey, nodeDef: entityDef });
   if (Objects.isEmpty(keyDefs)) return false;
 
-  const entity = entityUuid ? Records.getNodeByUuid(entityUuid)(record) : null;
+  const entity = entityUuid
+    ? Records.getNodeByUuid({ uuid: entityUuid })(record)
+    : null;
   if (!entity) return false;
 
-  const keyValues = Records.getEntityKeyValues({ survey, record, entity });
+  const keyValues = Records.getEntityKeyValues({ survey, entity })(record);
   return !keyValues.some((keyValue) => Objects.isEmpty(keyValue));
 };
 

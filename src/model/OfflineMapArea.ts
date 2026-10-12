@@ -1,10 +1,9 @@
 import { LatLng } from "./LocationPoint";
-import { MapLayerId } from "./MapLayers";
 
 export type OfflineMapArea = {
   id: string;
   name: string;
-  layerId: MapLayerId;
+  layerId: string;
   coordinates: LatLng[];
   // surface of the polygon (missing in areas created before it was introduced)
   areaSquareMeters?: number;
