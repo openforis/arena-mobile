@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Records list: map view;
 - Alternative maps and Offline map area download;
 - Manually moving a sample point on the map;
 

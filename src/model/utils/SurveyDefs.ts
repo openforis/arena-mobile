@@ -138,16 +138,24 @@ const getEntitySummaryDefs = ({
   return summaryDefs;
 };
 
-const hasSamplingPointDataLocation = (survey: Survey) => {
+const samplingPointDataLocationPropName = "location";
+
+// the sampling point data category, only if its items have a location
+const getSamplingPointDataCategoryWithLocation = (survey: Survey) => {
   const samplingPointDataCategory = Surveys.getCategoryByName({
     survey,
     categoryName: samplingPointDataCategoryName,
   });
-  return (
-    samplingPointDataCategory &&
-    !!Categories.getExtraPropDefByName("location")(samplingPointDataCategory)
-  );
+  return samplingPointDataCategory &&
+    Categories.getExtraPropDefByName(samplingPointDataLocationPropName)(
+      samplingPointDataCategory,
+    )
+    ? samplingPointDataCategory
+    : null;
 };
+
+const hasSamplingPointDataLocation = (survey: Survey) =>
+  !!getSamplingPointDataCategoryWithLocation(survey);
 
 const isCodeAttributeFromSamplingPointData = ({
   survey,
@@ -216,6 +224,8 @@ const findNodeDefUuidsUsingPrevCycleValueFunctions = (
 };
 
 export const SurveyDefs = {
+  samplingPointDataLocationPropName,
+  getSamplingPointDataCategoryWithLocation,
   getRootKeyDefs,
   isRootKeyDef,
   getChildrenDefs,

@@ -10,6 +10,7 @@ import offlineMaps from "./offlineMaps";
 import job from "./job";
 import permissions from "./permissions";
 import recordsList from "./recordsList";
+import recordsMap from "./recordsMap";
 import settingsRemoteConnection from "./settingsRemoteConnection";
 import settings from "./settings";
 import surveys from "./surveys";
@@ -28,6 +29,7 @@ export default {
   job,
   permissions,
   recordsList,
+  recordsMap,
   settings,
   settingsRemoteConnection,
   surveys,
