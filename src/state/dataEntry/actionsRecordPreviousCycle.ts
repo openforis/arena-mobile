@@ -52,7 +52,9 @@ const updateCurrentRecordWithPrevCycleValues = async ({
 }): Promise<void> => {
   const nodesToUpdateByUuid: Dictionary<ArenaRecordNode> = {};
   for (const nodeDefUuid of nodeDefUuidsUsingPrevCycleValueFunctions) {
-    const nodes = Records.getNodesByDefUuid(nodeDefUuid)(currentCycleRecord);
+    const nodes = Records.getNodesByDefUuid({ nodeDefUuid })(
+      currentCycleRecord,
+    );
     for (const node of nodes) {
       nodesToUpdateByUuid[node.uuid] = node;
     }

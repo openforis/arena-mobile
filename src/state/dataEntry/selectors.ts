@@ -88,8 +88,12 @@ const selectRecordSingleNodeUuid =
       if (!parentNodeUuid || !record) {
         return null;
       }
-      const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
-      const node = Records.getChild(parentNode, nodeDefUuid)(record);
+      const parentNode = Records.getNodeByUuid({ uuid: parentNodeUuid })(
+        record,
+      )!;
+      const node = Records.getChild({ parentNode, childDefUuid: nodeDefUuid })(
+        record,
+      );
       return node?.uuid;
     };
 
@@ -110,11 +114,16 @@ const selectRecordEntitiesUuidsAndKeyValues =
         return [];
       }
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
-      const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
-      const entities = Records.getChildren(parentNode, nodeDefUuid)(record);
+      const parentNode = Records.getNodeByUuid({ uuid: parentNodeUuid })(
+        record,
+      )!;
+      const entities = Records.getChildren({
+        parentNode,
+        childDefUuid: nodeDefUuid,
+      })(record);
       return entities.map((entity) => ({
         uuid: entity.uuid,
-        keyValues: Records.getEntityKeyValues({ survey, record, entity }),
+        keyValues: Records.getEntityKeyValues({ survey, entity })(record),
       }));
     };
 
@@ -134,8 +143,13 @@ const selectRecordNodePointerValidation =
       if (!record) {
         return undefined;
       }
-      const nodeParent = Records.getNodeByUuid(parentNodeUuid)(record)!;
-      const nodes = Records.getChildren(nodeParent, nodeDefUuid)(record);
+      const nodeParent = Records.getNodeByUuid({ uuid: parentNodeUuid })(
+        record,
+      )!;
+      const nodes = Records.getChildren({
+        parentNode: nodeParent,
+        childDefUuid: nodeDefUuid,
+      })(record);
       if (nodes.length === 0) return undefined;
 
       const node = nodes[0]!;
@@ -186,12 +200,14 @@ const selectRecordNodePointerEditable =
         return true;
       }
 
-      const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
+      const parentNode = Records.getNodeByUuid({ uuid: parentNodeUuid })(
+        record,
+      );
       if (!parentNode) {
         return true;
       }
       return (
-        Records.isNodeEditable({ record, node: parentNode }) &&
+        Records.isNodeEditable({ node: parentNode })(record) &&
         Nodes.isChildEditable(parentNode, nodeDefUuid)
       );
     };
@@ -214,7 +230,9 @@ const selectRecordNodePointerVisibility =
         return false;
       }
 
-      const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
+      const parentNode = Records.getNodeByUuid({ uuid: parentNodeUuid })(
+        record,
+      )!;
       const applicable = Nodes.isChildApplicable(parentNode, nodeDefUuid);
       const visible = Nodes.isChildVisible(parentNode, nodeDefUuid);
       const nodeDefChild = Surveys.getNodeDefByUuid({
@@ -241,7 +259,7 @@ const selectRecordAttributeInfo =
       if (!record) {
         return defaultAttributeState;
       }
-      const attribute = Records.getNodeByUuid(nodeUuid)(record);
+      const attribute = Records.getNodeByUuid({ uuid: nodeUuid })(record);
       if (!attribute) {
         return defaultAttributeState;
       }
@@ -249,7 +267,7 @@ const selectRecordAttributeInfo =
       const validation = RecordValidations.getValidationNode({ nodeUuid })(
         record.validation!,
       );
-      const applicable = Records.isNodeApplicable({ record, node: attribute });
+      const applicable = Records.isNodeApplicable({ node: attribute })(record);
       return { applicable, value, validation };
     };
 
@@ -260,8 +278,13 @@ const selectRecordChildNodes =
       if (!parentNodeUuid || !record) {
         return { nodes: [] };
       }
-      const parentEntity = Records.getNodeByUuid(parentNodeUuid)(record)!;
-      const nodes = Records.getChildren(parentEntity, nodeDef.uuid)(record);
+      const parentEntity = Records.getNodeByUuid({ uuid: parentNodeUuid })(
+        record,
+      )!;
+      const nodes = Records.getChildren({
+        parentNode: parentEntity,
+        childDefUuid: nodeDef.uuid,
+      })(record);
       return { nodes };
     };
 
@@ -312,7 +335,9 @@ const selectRecordCodeParentItemUuid =
       if (!record) {
         return undefined;
       }
-      const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
+      const parentNode = Records.getNodeByUuid({ uuid: parentNodeUuid })(
+        record,
+      )!;
       const parentCodeAttribute = Records.getParentCodeAttribute({
         parentNode,
         nodeDef,
@@ -387,7 +412,9 @@ const selectCurrentPageEntityRelevantChildDefs = (state: any) => {
   if (!actualEntityUuid || !record) {
     return [];
   }
-  const parentEntity = Records.getNodeByUuid(actualEntityUuid)(record);
+  const parentEntity = Records.getNodeByUuid({ uuid: actualEntityUuid })(
+    record,
+  );
   if (!parentEntity) return [];
   return childDefs.filter(
     (childDef) =>
@@ -458,8 +485,13 @@ const selectPreviousCycleRecordAttributeValues =
       if (!record) {
         return null;
       }
-      const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
-      const attributes = Records.getChildren(parentNode, nodeDef.uuid)(record);
+      const parentNode = Records.getNodeByUuid({ uuid: parentNodeUuid })(
+        record,
+      )!;
+      const attributes = Records.getChildren({
+        parentNode,
+        childDefUuid: nodeDef.uuid,
+      })(record);
       return attributes.map((attribute) => ({
         uuid: attribute.uuid,
         value: extractAttibuteValue({ state, attribute }),
@@ -479,9 +511,8 @@ const selectPreviousCycleEntityWithSameKeys =
         survey,
         cycle: record.cycle!,
         entityUuid,
-        record,
         recordOther: previousCycleRecord,
-      });
+      })(record);
     };
 
 const useIsNodeDefCurrentActiveChild = (nodeDef: NodeDef<any>): boolean =>
@@ -501,7 +532,7 @@ const selectIsMaxCountReached =
         return false;
       }
       const parentNode = parentNodeUuid
-        ? Records.getNodeByUuid(parentNodeUuid)(record)
+        ? Records.getNodeByUuid({ uuid: parentNodeUuid })(record)
         : null;
       if (!parentNode) return false;
 
@@ -511,7 +542,10 @@ const selectIsMaxCountReached =
       });
       if (Objects.isEmpty(maxCount)) return false;
 
-      const siblings = Records.getChildren(parentNode, nodeDef.uuid)(record);
+      const siblings = Records.getChildren({
+        parentNode,
+        childDefUuid: nodeDef.uuid,
+      })(record);
       return siblings.length >= maxCount;
     };
 

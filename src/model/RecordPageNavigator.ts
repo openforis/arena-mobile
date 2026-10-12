@@ -5,7 +5,10 @@ import { RecordUtils } from "model/utils/RecordUtils";
 const getSingleChildNodeUuid = ({ record, entityDef, parentEntity }: any) =>
   NodeDefs.isMultiple(entityDef)
     ? null
-    : Records.getChild(parentEntity, entityDef.uuid)(record)?.uuid;
+    : Records.getChild({
+        parentNode: parentEntity,
+        childDefUuid: entityDef.uuid,
+      })(record)?.uuid;
 
 const getAncestorMultipleEntity = ({ survey, record, entity }: any) => {
   let currentEntity = entity;
@@ -17,7 +20,7 @@ const getAncestorMultipleEntity = ({ survey, record, entity }: any) => {
     !NodeDefs.isRoot(currentEntityDef) &&
     !NodeDefs.isMultiple(currentEntityDef)
   ) {
-    currentEntity = Records.getParent(currentEntity)(record);
+    currentEntity = Records.getParent({ node: currentEntity })(record);
     currentEntityDef = Surveys.getNodeDefByUuid({
       survey,
       uuid: currentEntity.nodeDefUuid,
@@ -34,7 +37,7 @@ const getNextOrPreviousMultipleEntityPointer = ({
 }: any) => {
   if (Nodes.isRoot(entity)) return null;
 
-  const parentEntity = Records.getParent(entity)(record);
+  const parentEntity = Records.getParent({ node: entity })(record);
   const entityDefUuid = entity.nodeDefUuid;
   const entityDef = Surveys.getNodeDefByUuid({
     survey,
@@ -77,10 +80,9 @@ const findSiblingEntityPointer = ({
   const getVisitedParentEntity = () =>
     visitedParentEntityDef
       ? Records.getAncestor({
-          record,
           node: visitedParentEntity,
           ancestorDefUuid: visitedParentEntityDef.uuid,
-        })
+        })(record)
       : null;
 
   while (visitedEntityDef != null && !NodeDefs.isRoot(visitedEntityDef)) {
@@ -134,7 +136,9 @@ const getNextOrPrevSiblingEntityPointer = ({
     return null;
   }
   const { cycle } = record;
-  const entity = entityUuid ? Records.getNodeByUuid(entityUuid)(record) : null;
+  const entity = entityUuid
+    ? Records.getNodeByUuid({ uuid: entityUuid })(record)
+    : null;
 
   if (NodeDefs.isMultiple(entityDef) && entity) {
     // go back to list of entities
@@ -204,9 +208,11 @@ const getNextEntityPointer = ({
   const { parentEntityUuid, entityDef, entityUuid } = currentEntityPointer;
 
   const parentEntity = parentEntityUuid
-    ? Records.getNodeByUuid(parentEntityUuid)(record)
+    ? Records.getNodeByUuid({ uuid: parentEntityUuid })(record)
     : null;
-  const entity = entityUuid ? Records.getNodeByUuid(entityUuid)(record) : null;
+  const entity = entityUuid
+    ? Records.getNodeByUuid({ uuid: entityUuid })(record)
+    : null;
   const actualEntity = entity || parentEntity;
 
   if (entityUuid) {
@@ -293,7 +299,7 @@ const getPrevEntityPointer = ({
     return null;
   }
   const parentEntity = parentEntityUuid
-    ? Records.getNodeByUuid(parentEntityUuid)(record)
+    ? Records.getNodeByUuid({ uuid: parentEntityUuid })(record)
     : null;
 
   const prevPointer = getNextOrPrevSiblingEntityPointer({
@@ -316,7 +322,7 @@ const getPrevEntityPointer = ({
     };
   }
   const ancestorEntity = parentEntity
-    ? Records.getParent(parentEntity)(record)
+    ? Records.getParent({ node: parentEntity })(record)
     : null;
 
   return {

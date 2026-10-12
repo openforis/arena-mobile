@@ -98,8 +98,8 @@ const isPageEntityPointerValid = ({ survey, record, pointer }: any) => {
   const { parentEntityUuid, entityDefUuid, entityUuid } = pointer;
   return (
     !!Surveys.findNodeDefByUuid({ survey, uuid: entityDefUuid }) &&
-    !!Records.getNodeByUuid(parentEntityUuid)(record) &&
-    (!entityUuid || !!Records.getNodeByUuid(entityUuid)(record))
+    !!Records.getNodeByUuid({ uuid: parentEntityUuid })(record) &&
+    (!entityUuid || !!Records.getNodeByUuid({ uuid: entityUuid })(record))
   );
 };
 
