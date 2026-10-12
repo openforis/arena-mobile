@@ -1,7 +1,7 @@
 import {
   NodeDefs,
   Nodes,
-  Record,
+  ArenaRecord,
   RecordBuilder,
   RecordNodeBuilders,
   Records,
@@ -125,7 +125,7 @@ const buildSurvey = async (
   return { ...survey, props } as Survey;
 };
 
-const buildRecord = (survey: Survey, individualsCount: number): Record => {
+const buildRecord = (survey: Survey, individualsCount: number): ArenaRecord => {
   const individuals = Array.from({ length: individualsCount }, (_, index) =>
     entity("individual", attribute("individual_id", index + 1)),
   );
@@ -150,14 +150,14 @@ const buildRecord = (survey: Survey, individualsCount: number): Record => {
   return record;
 };
 
-const getNodesByName = (survey: Survey, record: Record, name: string) => {
+const getNodesByName = (survey: Survey, record: ArenaRecord, name: string) => {
   const nodeDef = Surveys.getNodeDefByName({ survey, name });
   return Records.getNodesArray(record).filter(
     (node) => node.nodeDefUuid === nodeDef.uuid,
   );
 };
 
-const getDistanceValue = (survey: Survey, record: Record) =>
+const getDistanceValue = (survey: Survey, record: ArenaRecord) =>
   getNodesByName(survey, record, "distance")[0]!.value;
 
 // runs thunks too; "dispatched" lets tests wait for thunks dispatched without being awaited
@@ -180,7 +180,8 @@ const createDispatch = (state: any) => {
   return dispatch;
 };
 
-const getStoredRecord = (): Record => updateRecordMock.mock.calls[0][0].record;
+const getStoredRecord = (): ArenaRecord =>
+  updateRecordMock.mock.calls[0][0].record;
 
 describe("DataEntryActions: clear values of attributes becoming non-applicable", () => {
   beforeEach(() => {
