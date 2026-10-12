@@ -48,7 +48,7 @@ const yesNoValueByBooleanValue: Record<string, string> = {
 };
 
 const getNodeName = ({ survey, record, nodeUuid }: any): string | null => {
-  const node = Records.getNodeByUuid(nodeUuid)(record);
+  const node = Records.getNodeByUuid({ uuid: nodeUuid })(record);
   if (node) {
     const nodeDef = Surveys.getNodeDefByUuid({
       survey,
@@ -75,10 +75,9 @@ const getEntityKeysFormatted = ({
   const keyDefs = Surveys.getNodeDefKeys({ survey, nodeDef: entityDef, cycle });
   return keyDefs.map((keyDef) => {
     const keyNode = Records.getDescendant({
-      record,
       node: entity,
       nodeDefDescendant: keyDef,
-    });
+    })(record);
     if (!keyNode) return emptyValue;
     return NodeValueFormatter.format({
       survey,
@@ -144,10 +143,10 @@ const getEntitySummaryValuesByNameFormatted = ({
     (acc: Dictionary<string>, summaryDef: NodeDef<any, any>) => {
       let formattedValue: string;
       try {
-        const summaryNode = Records.getChildren(
-          entity,
-          summaryDef.uuid,
-        )(record)[0];
+        const summaryNode = Records.getChildren({
+          parentNode: entity,
+          childDefUuid: summaryDef.uuid,
+        })(record)[0];
         if (!summaryNode) {
           formattedValue = "";
         } else if (NodeDefs.getType(summaryDef) === NodeDefType.boolean) {
@@ -227,7 +226,10 @@ const getChildEntityCompletionStats = ({
       ? Records.getEntityCompletionStats({ survey, record, entity: childEntity })
       : { total: 1, filled: 0 };
   }
-  const entities = Records.getChildren(parentEntity, childDef.uuid)(record);
+  const entities = Records.getChildren({
+    parentNode: parentEntity,
+    childDefUuid: childDef.uuid,
+  })(record);
   if (entities.length === 0) return { total: 1, filled: 0 };
   return entities.reduce(
     (acc: CompletionStats, entity: any) => {
@@ -252,10 +254,10 @@ const getSiblingNode = ({
   node,
   offset,
 }: any): { siblingNode: ArenaRecordNode | undefined; siblingIndex: number } => {
-  const siblingNodes = Records.getChildren(
-    parentEntity,
-    node.nodeDefUuid,
-  )(record);
+  const siblingNodes = Records.getChildren({
+    parentNode: parentEntity,
+    childDefUuid: node.nodeDefUuid,
+  })(record);
   const nodeIndex = siblingNodes.indexOf(node);
   const siblingIndex = nodeIndex + offset;
   const siblingNode = siblingNodes[siblingIndex];
@@ -348,10 +350,15 @@ const findAncestor = (params: {
 }): ArenaRecordNode | null => {
   let result: ArenaRecordNode | null = null;
   const { record, node, predicate } = params;
-  Records.visitAncestorsAndSelf(node, (visitedAncestor) => {
-    if (!result && predicate(visitedAncestor)) {
-      result = visitedAncestor;
-    }
+  Records.visitAncestorsAndSelf({
+    node,
+    visitor: (visitedAncestor) => {
+      if (predicate(visitedAncestor)) {
+        result = visitedAncestor;
+        return true;
+      }
+      return false;
+    },
   })(record);
   return result;
 };
@@ -377,7 +384,7 @@ const findMatchingEntityUuidForNodeValidation = (params: {
   entityNodeUuids: Set<string>;
 }): string | undefined => {
   const { record, validationKey, entityNodeUuids } = params
-  const node = Records.getNodeByUuid(validationKey)(record);
+  const node = Records.getNodeByUuid({ uuid: validationKey })(record);
   if (!node) return undefined;
 
   if (entityNodeUuids.has(node.uuid)) {
@@ -386,7 +393,7 @@ const findMatchingEntityUuidForNodeValidation = (params: {
   }
   // validation issue on a direct attribute of the entity: do not bubble
   // up errors/warnings belonging to nested (descendant) entities
-  const parentEntity = Records.getParent(node)(record);
+  const parentEntity = Records.getParent({ node })(record);
   return parentEntity && entityNodeUuids.has(parentEntity.uuid)
     ? parentEntity.uuid
     : undefined;
@@ -475,11 +482,10 @@ const hasDescendantApplicableNodes = ({
   nodeDef,
 }: any): boolean => {
   const descendants = Records.getDescendantsOrSelf({
-    record,
     node: parentEntity,
     nodeDefDescendant: nodeDef,
-  });
-  return descendants.some((node) => Records.isNodeApplicable({ record, node }));
+  })(record);
+  return descendants.some((node) => Records.isNodeApplicable({ node })(record));
 };
 
 const getApplicableDescendantDefs = ({
@@ -545,9 +551,9 @@ const getAncestorsLabelAndKeysText = ({
   });
   const leafLabel = NodeDefs.getLabelOrName(nodeDef, lang);
   const nameParts: string[] = [];
-  let entity = Records.getParent(node)(record);
+  let entity = Records.getParent({ node })(record);
   while (entity) {
-    const parentEntity = Records.getParent(entity)(record);
+    const parentEntity = Records.getParent({ node: entity })(record);
     const entityDef = Surveys.getNodeDefByUuid({
       survey,
       uuid: entity.nodeDefUuid,
@@ -667,33 +673,35 @@ const findTopmostNewlyInapplicableAncestorDefUuid = ({
 }) => {
   let topmostInapplicableAncestorDefUuid: string | null = null;
 
-  Records.visitAncestorsAndSelf(
+  const visitAncestor = (visitedAncestor: ArenaRecordNode): void => {
+    if (visitedAncestor.uuid === node.uuid) {
+      // skip the node itself, we are looking for ancestors only
+      return;
+    }
+    const ancestorPrev = Records.getNodeByUuid({ uuid: visitedAncestor.uuid })(
+      recordPrev,
+    );
+    if (!ancestorPrev) {
+      return;
+    }
+    const applicablePrev = Records.isNodeApplicable({ node: ancestorPrev })(
+      recordPrev,
+    );
+    const applicableNext = Records.isNodeApplicable({ node: visitedAncestor })(
+      recordNext,
+    );
+    if (applicablePrev && !applicableNext) {
+      topmostInapplicableAncestorDefUuid = visitedAncestor.nodeDefUuid;
+    }
+  };
+  Records.visitAncestorsAndSelf({
     node,
-    (visitedAncestor) => {
-      if (visitedAncestor.uuid === node.uuid) {
-        // skip the node itself, we are looking for ancestors only
-        return;
-      }
-      const ancestorPrev = Records.getNodeByUuid(visitedAncestor.uuid)(
-        recordPrev,
-      );
-      if (!ancestorPrev) {
-        return;
-      }
-      const applicablePrev = Records.isNodeApplicable({
-        record: recordPrev,
-        node: ancestorPrev,
-      });
-      const applicableNext = Records.isNodeApplicable({
-        record: recordNext,
-        node: visitedAncestor,
-      });
-      if (applicablePrev && !applicableNext) {
-        topmostInapplicableAncestorDefUuid = visitedAncestor.nodeDefUuid;
-      }
+    visitor: (visitedAncestor) => {
+      visitAncestor(visitedAncestor);
+      // stop the visit once found
+      return !!topmostInapplicableAncestorDefUuid;
     },
-    () => !!topmostInapplicableAncestorDefUuid,
-  )(recordNext);
+  })(recordNext);
 
   return topmostInapplicableAncestorDefUuid;
 };
@@ -710,19 +718,16 @@ const findNewlyInapplicableDefUuidsWithValue = ({
   const result = new Set<string>();
   for (const node of Object.values(nodes)) {
     const { nodeDefUuid } = node;
-    const parentNode = Records.getParent(node)(recordNext);
+    const parentNode = Records.getParent({ node })(recordNext);
     if (!parentNode) {
       continue;
     }
-    const nodePrev = Records.getNodeByUuid(node.uuid)(recordPrev);
+    const nodePrev = Records.getNodeByUuid({ uuid: node.uuid })(recordPrev);
     const hadUserInputValue = nodePrev && Nodes.hasUserInputValue(nodePrev);
     const applicablePrev = nodePrev
-      ? Records.isNodeApplicable({ record: recordPrev, node: nodePrev })
+      ? Records.isNodeApplicable({ node: nodePrev })(recordPrev)
       : true;
-    const applicableNext = Records.isNodeApplicable({
-      record: recordNext,
-      node,
-    });
+    const applicableNext = Records.isNodeApplicable({ node })(recordNext);
 
     if (applicablePrev && !applicableNext && hadUserInputValue) {
       const topmostInapplicableAncestorDefUuid: string | null =
