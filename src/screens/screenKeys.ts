@@ -8,6 +8,7 @@ export enum screenKeys {
   offlineMapAreaViewer = "offlineMapAreaViewer",
   offlineMaps = "offlineMaps",
   recordsList = "recordsList",
+  recordsMap = "recordsMap",
   recordEditor = "recordEditor",
   recordValidationReport = "recordValidationReport",
   settings = "settings",

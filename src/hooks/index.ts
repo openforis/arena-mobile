@@ -1,6 +1,8 @@
 export { useAppInfo } from "./useAppInfo";
 export { useAvailableGpsSources } from "./useAvailableGpsSources";
 export { useBackHandler } from "./useBackHandler";
+export { useCurrentLocationWatch } from "./useCurrentLocationWatch";
+export type { CurrentLocation } from "./useCurrentLocationWatch";
 export { useEffectiveTheme } from "./useEffectiveTheme";
 export { useExperimentalFeaturesEnabled } from "./useExperimentalFeaturesEnabled";
 export { useGpsDeviceDiscovery } from "./useGpsDeviceDiscovery";
