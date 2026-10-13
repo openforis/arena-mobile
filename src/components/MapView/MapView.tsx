@@ -19,13 +19,15 @@ import RNMapView, {
 
 import { useIsNetworkConnected } from "hooks/useIsNetworkConnected";
 import { useTranslation } from "localization";
-import { LatLng, MapLayers, MapProvider } from "model";
+import { LatLng, MapLayers, MapProvider, PdfMap } from "model";
 import { OfflineMapTilesStorage } from "service/offlineMaps/offlineMapTilesStorage";
+import { PdfMapsStorage } from "service/pdfMaps/pdfMapsStorage";
 import { SettingsSelectors } from "state/settings/selectors";
 import { Environment } from "utils";
 
 import { IconButton } from "../IconButton";
 import { Text } from "../Text";
+import { PdfMapsPanel } from "./PdfMapsPanel";
 import styles from "./styles";
 
 type EdgePadding = {
@@ -54,6 +56,8 @@ type Props = {
   onPoiClick?: (event: PoiClickEvent) => void;
   onPress?: (event: MapPressEvent) => void;
   onRegionChangeComplete?: (region: Region) => void;
+  // PDF maps shown even when they are hidden in the settings
+  pdfMapIds?: string[];
   // when specified, it overrides the map provider in the settings
   provider?: MapProvider;
   showMapTypeSelector?: boolean;
@@ -72,6 +76,11 @@ const mapTypes: MapType[] = ["standard", "satellite", "hybrid"];
 
 // pre-fetched tiles must not expire: they would be re-downloaded in background when online
 const TILE_CACHE_MAX_AGE_SECONDS = 365 * 24 * 60 * 60;
+
+// PDF maps are drawn above the base map layer (zIndex -1) and below the other overlays
+const PDF_MAP_Z_INDEX = -0.5;
+// tiles above the max zoom level of a PDF map are obtained scaling the ones of the max zoom
+const PDF_MAP_MAXIMUM_Z = 22;
 
 // time the name of the layer is shown after switching layer
 const LAYER_NAME_VISIBILITY_MILLIS = 1500;
@@ -92,6 +101,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       layerId: layerIdProp,
       onMapReady,
       onRegionChangeComplete,
+      pdfMapIds,
       provider: providerProp,
       showMapTypeSelector = true,
       style,
@@ -123,6 +133,15 @@ export const MapView = forwardRef<RNMapView | null, Props>(
     const layerNameTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
       null,
     );
+    const visiblePdfMaps = useMemo(
+      () =>
+        (settings.pdfMaps ?? []).filter(
+          (pdfMap) => pdfMap.visible || pdfMapIds?.includes(pdfMap.id),
+        ),
+      [pdfMapIds, settings.pdfMaps],
+    );
+    const hasPdfMaps = (settings.pdfMaps?.length ?? 0) > 0;
+    const [pdfMapsPanelVisible, setPdfMapsPanelVisible] = useState(false);
     const networkConnected = useIsNetworkConnected();
     const offlineMode = !networkConnected;
 
@@ -207,6 +226,21 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       }
     }, [showLayerName, useFreeLayers]);
 
+    const openPdfMapsPanel = useCallback(
+      () => setPdfMapsPanelVisible(true),
+      [],
+    );
+    const closePdfMapsPanel = useCallback(
+      () => setPdfMapsPanelVisible(false),
+      [],
+    );
+    const onZoomToPdfMap = useCallback((pdfMap: PdfMap) => {
+      internalRef.current?.fitToCoordinates(pdfMap.neatline, {
+        edgePadding: defaultEdgePadding,
+        animated: true,
+      });
+    }, []);
+
     const layerName = useFreeLayers
       ? MapLayers.getLayerLabel(layer, t)
       : t(`offlineMaps:mapTypes.${mapType}`);
@@ -247,6 +281,24 @@ export const MapView = forwardRef<RNMapView | null, Props>(
               zIndex={-1}
             />
           )}
+          {visiblePdfMaps.map((pdfMap) => {
+            const tilesPath = PdfMapsStorage.getTilesCachePath(pdfMap.id);
+            return (
+              <UrlTile
+                key={pdfMap.id}
+                // tiles are only read from the device (offline mode): the url is never used
+                urlTemplate={`file://${tilesPath}/{z}/{x}/{y}`}
+                minimumZ={pdfMap.minZoom}
+                maximumZ={PDF_MAP_MAXIMUM_Z}
+                maximumNativeZ={pdfMap.maxZoom}
+                offlineMode
+                opacity={pdfMap.opacity}
+                tileCacheMaxAge={TILE_CACHE_MAX_AGE_SECONDS}
+                tileCachePath={tilesPath}
+                zIndex={PDF_MAP_Z_INDEX}
+              />
+            );
+          })}
           {children}
         </RNMapView>
         {useFreeLayers && hasAttribution && (
@@ -273,15 +325,31 @@ export const MapView = forwardRef<RNMapView | null, Props>(
             <Text style={styles.layerName}>{layerName}</Text>
           </View>
         )}
-        {showMapTypeSelector && !layerIdProp && (
+        {showMapTypeSelector && (!layerIdProp || hasPdfMaps) && (
           <View style={styles.mapTypeSelector}>
-            <IconButton
-              icon="layers-outline"
-              mode="contained"
-              onPress={handleMapTypeChange}
-              size={18}
-            />
+            {!layerIdProp && (
+              <IconButton
+                icon="layers-outline"
+                mode="contained"
+                onPress={handleMapTypeChange}
+                size={18}
+              />
+            )}
+            {hasPdfMaps && (
+              <IconButton
+                icon="file-pdf-box"
+                mode="contained"
+                onPress={openPdfMapsPanel}
+                size={18}
+              />
+            )}
           </View>
+        )}
+        {pdfMapsPanelVisible && (
+          <PdfMapsPanel
+            onDismiss={closePdfMapsPanel}
+            onZoomToMap={onZoomToPdfMap}
+          />
         )}
       </View>
     );

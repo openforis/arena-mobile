@@ -10,6 +10,7 @@ import { FullBackupButton } from "appComponents/FullBackupButton";
 import { Button, FieldSet, HView, ScreenView, Text, VView } from "components";
 import { useExperimentalFeaturesEnabled } from "hooks";
 import { MapProvider, SettingsModel, SettingsObject } from "model";
+import { OfflineMapsTab } from "screens/OfflineMaps/OfflineMapsScreen";
 import { screenKeys } from "screens/screenKeys";
 import { AppService } from "service/appService";
 import {
@@ -146,6 +147,21 @@ export const SettingsScreen = () => {
                   }
                   style={styles.offlineMapsButton}
                   textKey="offlineMaps:title"
+                />
+              )}
+              {isMapsGroup && (
+                <Button
+                  icon="file-pdf-box"
+                  onPress={() =>
+                    navigation.navigate(
+                      ...([
+                        screenKeys.offlineMaps,
+                        { initialTab: OfflineMapsTab.pdfMaps },
+                      ] as never),
+                    )
+                  }
+                  style={styles.offlineMapsButton}
+                  textKey="pdfMaps:title"
                 />
               )}
             </FieldSet>

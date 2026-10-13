@@ -136,8 +136,8 @@ Why this shape:
   downsampling (fast, and consistent);
 - tiles fully outside the neatline are skipped; edge tiles are PNG with alpha,
   interior tiles can be JPEG to save space (file names without extension, as
-  in the existing tile cache: both platforms decode by content – *to verify*
-  with `LocalTile`).
+  in the existing tile cache: the tile overlays of both platforms decode them
+  by content).
 
 Estimated volume: a 1:50 000 sheet (≈ 20 × 20 km) at z17 ≈ 4 400 tiles (+⅓
 for the lower zooms), ~20–40 KB each → ≈ 100–250 MB; at z16 ¼ of that. The
@@ -146,56 +146,60 @@ as the offline area editor).
 
 ### 4. Showing the PDF on the map
 
-`MapView` renders, for each visible PDF layer, a tile overlay **above the base
+`MapView` renders, for each visible PDF map, a tile overlay **above the base
 map and below the app overlays** (markers, polygons, location dot):
 
-- `LocalTile` (`pathTemplate = {dir}/{z}/{x}/{y}`, `tileSize = 256`) – works
-  with both the default provider (Google/Apple) and the free layers;
-  alternative: `UrlTile` with a `file://` template + `maximumNativeZ` so the
-  last zoom is up-scaled when zooming further (*to verify* which of the two
-  supports `opacity` and over-zoom in react-native-maps 1.27.2);
-- per-layer **opacity** (useful to compare the sheet with the imagery);
-- the PDF attribution/name is shown in the existing attribution area.
+- `UrlTile` in **offline mode** with `tileCachePath` = the tiles folder of the
+  PDF map: tiles are only read from the device (checked in the native sources
+  of react-native-maps 1.27.2, Android and iOS). Compared to `LocalTile` it
+  supports `opacity` and **over-zoom** (`maximumNativeZ`: above the max zoom
+  of the PDF the tiles of the max zoom are scaled), and it works with both the
+  default provider (Google/Apple) and the free layers;
+- per-map **opacity** (useful to compare the sheet with the imagery).
 
-Layer selection on the map: today the layers button cycles the base layers.
-Replace the cycling with a small **layers panel** (same style as
-`RecordsMapLayersPanel`): base layer (radio) + PDF maps (checkboxes, opacity
-slider, "zoom to map" button). Visible PDF layers are stored in the settings so
-they are shown in all the maps.
+Layer selection on the map: a second button (PDF icon) below the existing
+layers button opens a **PDF maps panel**: one item per PDF map with a
+checkbox (visible), an opacity slider and a "zoom to map" button. Visibility
+and opacity are stored in the settings, so they apply to all the maps.
 
 ### 5. Data and services
 
-- `src/model/PdfMapLayer.ts`:
-  `{ id, name, sourceFileName, pageIndex, viewportIndex, neatline: LatLng[],
-  minZoom, maxZoom, tilesCount, sizeBytes, sourceSizeBytes, keepSource,
-  datumWarning?, status: "importing" | "ready" | "incomplete", dateCreated,
-  dateModified }`;
-- `src/service/pdfMaps/pdfMapLayerRepository.ts`: metadata in AsyncStorage
-  (`@pdfMapLayers`), like `OfflineMapAreaRepository`;
-- `src/service/pdfMaps/PdfMapLayerImportJob.ts`: `JobMobile` (progress +
-  cancel through `JobMonitorActions.startAsync`, like
-  `OfflineMapAreaDownloadJob`): copy PDF → parse → compute tiles → render max
-  zoom blocks → build overviews → save metadata; resumable (skips existing
-  tiles) so an interrupted import can be completed;
-- `src/service/pdfMaps/pdfMapsService.ts`: import, list, rename, delete (tiles +
-  source), storage used, visibility/opacity;
-- files:
-  - source PDF: `documentDirectory/map_pdfs/{id}.pdf` (kept by default to be
-    able to re-render at another zoom; option to delete it after import to
-    save space);
-  - tiles: `documentDirectory/map_tiles/pdf_{id}/` → already excluded from the
-    full backup (same root folder as the offline areas).
-- PDF layers are **overlays**, not base layers: they are not added to
-  `MapLayers.getLayers()` (no prefetch, no `UrlTile` cache) to avoid mixing them
-  with the base layer logic.
+- `src/model/PdfMap.ts`:
+  `{ id, name, fileName, pageIndex, neatline: LatLng[], minZoom, maxZoom,
+  tilesCount, sizeBytes, sourceSizeBytes, datumCompatible, visible, opacity,
+  dateCreated, dateModified }`;
+- the PDF maps are stored in the **settings** (`pdfMaps`, like
+  `customMapLayers`): `MapView` reads them from the Redux settings state, so a
+  change of visibility/opacity is applied to all the maps immediately;
+  `src/service/pdfMaps/pdfMapRepository.ts` reads/writes them;
+- `src/service/pdfMaps/PdfMapImportJob.ts`: `JobMobile` (progress + cancel
+  through `JobMonitorActions.startAsync`, like `OfflineMapAreaDownloadJob`):
+  copy PDF → check that the native renderer can open it → render max zoom
+  blocks → build overviews → save the map; on cancel or error the files are
+  deleted;
+- `src/service/pdfMaps/pdfMapsService.ts`: analyze file (pages/georeference/
+  zoom range), estimate, default name, name validation, import job, update
+  (name, visible, opacity), delete (map folder), storage used;
+- files: `documentDirectory/pdf_maps/{id}/source.pdf` (kept, to be able to
+  re-render the map later) and `documentDirectory/pdf_maps/{id}/tiles/{z}/{x}/{y}`;
+  the `pdf_maps` folder is excluded from the full backup, like `map_tiles`;
+  it is separated from `map_tiles` because "Delete all" in the offline areas
+  deletes that whole folder;
+- PDF maps are **overlays**, not base layers: they are not added to
+  `MapLayers.getLayers()`.
 
 ### 6. UI
 
-- **Settings → Maps → "PDF maps"** button → `screenKeys.pdfMaps` screen (also
-  from the map layers panel):
-  - list: name, page, zoom range, tiles, size, status; actions: show on map,
-    rename, re-render (other max zoom), delete; total storage used + free disk
-    space; **Import PDF** button;
+- The **Offline maps** screen has two tabs (segmented buttons): **Downloaded
+  areas** (the existing content) and **PDF maps**. **Settings → Maps → "PDF
+  maps"** opens the Offline maps screen on the PDF maps tab.
+- **PDF maps tab**: description, storage used by PDF maps + free disk space,
+  **Import PDF** button, list of the maps (name, file, page, zoom range,
+  tiles, size, datum warning, "Show on maps" switch, delete); tapping a map
+  opens the **PDF map viewer** (`screenKeys.pdfMapViewer`): rename + map
+  preview (the PDF map is shown even if hidden in the settings).
+- When the native renderer is not available (Expo Go, old builds) the import
+  button is disabled and a message is shown.
 - **Import flow** (`screenKeys.pdfMapImport`):
   1. pick the file (`expo-document-picker`, `application/pdf`, already a
      dependency);
@@ -213,15 +217,53 @@ they are shown in all the maps.
 New `pdfMaps` namespace (English); other languages fall back to English, as for
 `offlineMaps`.
 
+## Implementation status
+
+Implemented in this branch:
+
+- [x] `GeoPdfParser` (ISO 32000 georeferencing with `pdf-lib`; OGC `LGIDict`
+  detected and reported as not supported), `GeoPdfTransform` (homography,
+  page rotation, mercator/tile math, native zoom), `GeoPdfTilePlanner`
+  (render blocks of 4×4 tiles, overview tiles) with Jest tests.
+- [x] Local Expo module `modules/pdf-map-renderer` (Android `PdfRenderer`, iOS
+  CoreGraphics): `renderTiles` (white paper + clip to the map frame, empty
+  tiles skipped, JPEG for opaque tiles, PNG otherwise), `buildOverviewTiles`,
+  `getPageCount`, `closeDocument`.
+- [x] `PdfMap` model in the settings, repository, service, import job.
+- [x] `MapView`: visible PDF maps as offline `UrlTile` overlays (opacity,
+  over-zoom), PDF maps panel (visibility, opacity, zoom to map).
+- [x] Offline maps screen with tabs, PDF maps tab, import screen (page choice,
+  name, max zoom slider, live estimate, low space confirmation, datum
+  warning), viewer screen (rename, preview), Settings button.
+- [x] Full backup excludes `pdf_maps`.
+- [x] English strings (other languages fall back to English).
+
+Verified without a device:
+
+- `yarn test:types`, `yarn test` (parser, transform, planner).
+- The whole tile pipeline was emulated with **pdfium** (the engine of Android
+  `PdfRenderer`, through `pypdfium2`), passing the matrices and clip polygons
+  computed by the planner: markers drawn at known coordinates in a test
+  geospatial PDF end up within 0.6 px of their expected position in the
+  tiles, for pages with `/Rotate` 0 and 90; the legend outside the map frame
+  is not rendered.
+- The Kotlin module compiles against the Android 14 framework classes (with
+  stubs of the Expo modules API); a full Gradle/Xcode build was not possible
+  in the development container.
+
+Still to do: build and test on Android/iOS devices (in particular the iOS
+rendering of pages with `/Rotate`), measure the import time of big PDFs,
+translations; phase 3 items below.
+
 ## Phases
 
 1. **Spike (de-risk)**: native module rendering one 1024 px block of a page
    with an affine matrix on Android + iOS; measure time per block on a vector
-   and on a raster sheet; check `LocalTile` over Google/Apple maps (opacity,
-   over-zoom, extension-less PNG/JPEG).
+   and on a raster sheet; check the PDF tile overlay over Google/Apple maps
+   (opacity, over-zoom, extension-less PNG/JPEG).
 2. **MVP**: ISO 32000 parsing, homography, import job, PDF maps screen, overlay
    in `MapView` with visibility toggle, unit tests.
-3. **Improvements**: layers panel with opacity, OGC `LGIDict`, `proj4` for
+3. **Improvements**: OGC `LGIDict`, `proj4` for
    non-WGS84 datums and large extents, re-render, share intent, translations.
 
 ## Testing

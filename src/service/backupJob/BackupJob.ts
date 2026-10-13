@@ -3,6 +3,7 @@ import { JobMobile, JobMobileContext } from "model";
 import { Files } from "utils";
 
 import { OfflineMapTilesStorage } from "../offlineMaps/offlineMapTilesStorage";
+import { PdfMapsStorage } from "../pdfMaps/pdfMapsStorage";
 
 const outputFileNamePrefix = `arena_mobile_full_backup_`;
 
@@ -19,22 +20,27 @@ export class BackupJob extends JobMobile<BackupJobContext> {
 
     const outputFileUri = Files.path(Files.cacheDirectory, outputFileName);
 
-    // offline map tiles can be downloaded again and would make the backup huge:
-    // move them temporarily outside of the backed up folder
-    const mapTilesDirUri = OfflineMapTilesStorage.getTilesRootDirUri();
-    const mapTilesTempDirUri = Files.path(
-      Files.cacheDirectory,
-      `map_tiles_backup_${Date.now()}`,
-    );
-    const mapTilesMoved = await Files.exists(mapTilesDirUri);
-    if (mapTilesMoved) {
-      await Files.moveFile({ from: mapTilesDirUri, to: mapTilesTempDirUri });
+    // map files would make the backup huge: offline map tiles can be downloaded again and
+    // PDF maps imported again; move them temporarily outside of the backed up folder
+    const excludedDirs: { uri: string; tempUri: string }[] = [];
+    for (const [index, uri] of [
+      OfflineMapTilesStorage.getTilesRootDirUri(),
+      PdfMapsStorage.getRootDirUri(),
+    ].entries()) {
+      if (await Files.exists(uri)) {
+        const tempUri = Files.path(
+          Files.cacheDirectory,
+          `map_files_backup_${Date.now()}_${index}`,
+        );
+        await Files.moveFile({ from: uri, to: tempUri });
+        excludedDirs.push({ uri, tempUri });
+      }
     }
     try {
       await Files.zip(Files.documentDirectory, outputFileUri);
     } finally {
-      if (mapTilesMoved) {
-        await Files.moveFile({ from: mapTilesTempDirUri, to: mapTilesDirUri });
+      for (const { uri, tempUri } of excludedDirs) {
+        await Files.moveFile({ from: tempUri, to: uri });
       }
     }
 

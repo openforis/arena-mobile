@@ -1,8 +1,12 @@
 import * as Location from "expo-location";
 
 import { changeLanguage } from "localization";
-import { CustomMapLayer, SettingsModel, SettingsObject } from "model";
-import { CustomMapLayersService, SettingsService } from "service";
+import { CustomMapLayer, PdfMap, SettingsModel, SettingsObject } from "model";
+import {
+  CustomMapLayersService,
+  PdfMapsService,
+  SettingsService,
+} from "service";
 import { Permissions } from "utils";
 
 import { ToastActions } from "../toast";
@@ -63,6 +67,26 @@ const deleteCustomMapLayer = (layerId: string) => async (dispatch: any) => {
   dispatch(setSettings(settingsUpdated));
 };
 
+const updatePdfMap =
+  ({
+    mapId,
+    changes,
+  }: {
+    mapId: string;
+    changes: Partial<Pick<PdfMap, "name" | "visible" | "opacity">>;
+  }) =>
+  async (dispatch: any) => {
+    const settingsUpdated = await PdfMapsService.updateMap(mapId, changes);
+    if (settingsUpdated) {
+      dispatch(setSettings(settingsUpdated));
+    }
+  };
+
+const deletePdfMap = (mapId: string) => async (dispatch: any) => {
+  const settingsUpdated = await PdfMapsService.deleteMap(mapId);
+  dispatch(setSettings(settingsUpdated));
+};
+
 let gpsLockingSubscription: any = null;
 
 const _startGpsLocking = async () => {
@@ -103,6 +127,8 @@ export const SettingsActions = {
   updateSettings,
   saveCustomMapLayer,
   deleteCustomMapLayer,
+  updatePdfMap,
+  deletePdfMap,
 
   startGpsLocking,
   stopGpsLocking,

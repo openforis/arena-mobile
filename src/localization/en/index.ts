@@ -7,6 +7,7 @@ import dataEntry from "./dataEntry";
 import device from "./device";
 import loginInfo from "./loginInfo";
 import offlineMaps from "./offlineMaps";
+import pdfMaps from "./pdfMaps";
 import job from "./job";
 import permissions from "./permissions";
 import recordsList from "./recordsList";
@@ -26,6 +27,7 @@ export default {
   device,
   loginInfo,
   offlineMaps,
+  pdfMaps,
   job,
   permissions,
   recordsList,
