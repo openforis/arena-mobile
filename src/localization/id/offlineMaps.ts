@@ -1,5 +1,9 @@
 export default {
   title: "Peta offline",
+  tabs: {
+    areas: "Area terunduh",
+    pdfMaps: "Peta PDF",
+  },
   description:
     "Unduh peta area yang Anda minati sebelum pergi ke lapangan: peta akan tersedia bahkan tanpa koneksi internet saat menggambar atau melihat atribut geografis.",
   freeLayersNotInUse:
