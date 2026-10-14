@@ -5,6 +5,22 @@ export default StyleSheet.create({
     flex: 1,
     position: "relative",
   },
+  zoomControls: {
+    position: "absolute",
+    bottom: 8,
+    right: 8,
+    alignItems: "center",
+    zIndex: 1,
+  },
+  zoomLevel: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 10,
+    overflow: "hidden",
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    color: "#ffffff",
+    fontSize: 11,
+  },
   mapTypeSelector: {
     position: "absolute",
     top: 8,

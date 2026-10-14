@@ -19,7 +19,8 @@ export const DEFAULT_RENDER_DPI = 200;
 export const TILES_PER_BLOCK_SIDE = 4;
 const MAX_ZOOM_LIMIT = 21;
 // the lowest zoom level is the one at which the whole map fits in this number of pixels
-const MIN_ZOOM_EXTENT_PIXELS = 512;
+// (less than the width of a phone screen, so the whole map is visible when zoomed to fit)
+const MIN_ZOOM_EXTENT_PIXELS = 256;
 
 export type PdfMapGeoreference = {
   pageIndex: number;

@@ -10,6 +10,7 @@ export default {
     "Offline maps are used only when the map provider in the settings is set to 'Free map layers'.",
   useFreeLayers: "Use free map layers",
   offlineMode: "Offline",
+  zoomLevel: "Zoom {{value}}",
   addArea: "Add area",
   deleteAll: "Delete all",
   deleteAllConfirm:

@@ -107,6 +107,7 @@ export const PdfMapViewerScreen = () => {
         fitToCoordinatesOnReady={pdfMap.neatline}
         initialRegion={initialRegion}
         pdfMapIds={pdfMapIds}
+        showZoomControls
         style={styles.map}
         toolbarEnabled={false}
       >

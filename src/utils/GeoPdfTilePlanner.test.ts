@@ -55,8 +55,8 @@ describe("GeoPdfTilePlanner", () => {
     // 0.15 degrees of longitude on 500 points rendered at 200 dpi (~1389 px): ~8 m/px -> zoom ~14
     expect(nativeZoom).toBe(14);
     expect(maxZoom).toBe(nativeZoom);
-    // the whole map (~16.7 km in mercator meters) fits in 512 px at zoom 12 (~38 m/px)
-    expect(minZoom).toBe(12);
+    // the whole map (~16.7 km in mercator meters) fits in 256 px at zoom 11 (~76 m/px)
+    expect(minZoom).toBe(11);
   });
 
   test("render blocks place the map in the right tiles", async () => {

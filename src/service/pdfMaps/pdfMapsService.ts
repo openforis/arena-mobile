@@ -26,7 +26,7 @@ const MAX_ZOOM = 21;
 const AVERAGE_TILE_SIZE_BYTES = 25 * 1024;
 const DEFAULT_OPACITY = 1;
 // the preview is rendered only for the lowest zoom levels, to be fast
-const PREVIEW_ZOOM_LEVELS = 3;
+const PREVIEW_ZOOM_LEVELS = 4;
 const MAX_NAME_LENGTH = 100;
 
 export type PdfMapPageCandidate = {

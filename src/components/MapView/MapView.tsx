@@ -75,6 +75,8 @@ type Props = {
   // when specified, it overrides the map provider in the settings
   provider?: MapProvider;
   showMapTypeSelector?: boolean;
+  // shows the current zoom level and buttons to zoom in and out
+  showZoomControls?: boolean;
   style?: StyleProp<ViewStyle>;
   toolbarEnabled?: boolean;
 };
@@ -99,6 +101,15 @@ const PDF_MAP_MAXIMUM_Z = 22;
 // time the name of the layer is shown after switching layer
 const LAYER_NAME_VISIBILITY_MILLIS = 1500;
 
+const ZOOM_ANIMATION_MILLIS = 250;
+
+// zoom level (web mercator tiles of 256 px) of the region shown in a map of the specified width;
+// computed from the region because the camera zoom is not available with Apple Maps
+const computeZoom = (region: Region, mapWidth: number): number | null =>
+  region.longitudeDelta > 0 && mapWidth > 0
+    ? Math.log2((360 * mapWidth) / (region.longitudeDelta * 256))
+    : null;
+
 const getNextItem = <T,>(items: T[], current: T): T => {
   const currentIndex = items.indexOf(current);
   const nextIndex = (currentIndex + 1) % items.length;
@@ -120,6 +131,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       pdfMapIds,
       provider: providerProp,
       showMapTypeSelector = true,
+      showZoomControls = false,
       style,
       initialRegion,
       onPress,
@@ -133,6 +145,9 @@ export const MapView = forwardRef<RNMapView | null, Props>(
     const [isMapReady, setIsMapReady] = useState(false);
     const hasAppliedFitRef = useRef(false);
     const [mapType, setMapType] = useState<MapType>("standard");
+    const regionRef = useRef<Region>(initialRegion);
+    const [mapWidth, setMapWidth] = useState(0);
+    const [zoom, setZoom] = useState<number | null>(null);
 
     const { t } = useTranslation();
     const settings = SettingsSelectors.useSettings();
@@ -278,6 +293,35 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       ? MapLayers.getLayerLabel(layer, t)
       : t(`offlineMaps:mapTypes.${mapType}`);
 
+    const onContainerLayout = useCallback((event: LayoutChangeEvent) => {
+      const width = event.nativeEvent.layout.width;
+      setMapWidth(width);
+      setZoom(computeZoom(regionRef.current, width));
+    }, []);
+
+    const onRegionChangeCompleteInternal = useCallback(
+      (region: Region) => {
+        regionRef.current = region;
+        setZoom(computeZoom(region, mapWidth));
+        onRegionChangeComplete?.(region);
+      },
+      [mapWidth, onRegionChangeComplete],
+    );
+
+    const zoomBy = useCallback((factor: number) => {
+      const region = regionRef.current;
+      internalRef.current?.animateToRegion(
+        {
+          ...region,
+          latitudeDelta: region.latitudeDelta / factor,
+          longitudeDelta: region.longitudeDelta / factor,
+        },
+        ZOOM_ANIMATION_MILLIS,
+      );
+    }, []);
+    const onZoomInPress = useCallback(() => zoomBy(2), [zoomBy]);
+    const onZoomOutPress = useCallback(() => zoomBy(0.5), [zoomBy]);
+
     // on Android the Google base map is hidden (mapType "none"); on iOS the UrlTile replaces the Apple map content
     const effectiveMapType: MapType =
       (useFreeLayers || baseMapHidden) && Environment.isAndroid
@@ -285,7 +329,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
         : mapType;
 
     return (
-      <View style={styles.container}>
+      <View style={styles.container} onLayout={onContainerLayout}>
         <RNMapView
           ref={internalRef}
           style={style}
@@ -294,7 +338,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
           onPanDrag={onPanDrag}
           onPoiClick={onPoiClick}
           onMapReady={onMapReadyCallback}
-          onRegionChangeComplete={onRegionChangeComplete}
+          onRegionChangeComplete={onRegionChangeCompleteInternal}
           mapPadding={mapPadding}
           mapType={effectiveMapType}
           toolbarEnabled={toolbarEnabled}
@@ -378,6 +422,37 @@ export const MapView = forwardRef<RNMapView | null, Props>(
                 size={18}
               />
             )}
+          </View>
+        )}
+        {showZoomControls && (
+          <View
+            style={[
+              styles.zoomControls,
+              freeLayerVisible && hasAttribution
+                ? { bottom: attributionHeight + 8 }
+                : undefined,
+            ]}
+          >
+            <IconButton
+              icon="plus"
+              mode="contained"
+              onPress={onZoomInPress}
+              size={18}
+            />
+            {zoom !== null && (
+              <Text
+                style={styles.zoomLevel}
+                textKey="offlineMaps:zoomLevel"
+                // tiles of the integer zoom level are shown until the next level is reached
+                textParams={{ value: Math.floor(zoom) }}
+              />
+            )}
+            <IconButton
+              icon="minus"
+              mode="contained"
+              onPress={onZoomOutPress}
+              size={18}
+            />
           </View>
         )}
         {pdfMapsPanelVisible && (

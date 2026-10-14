@@ -466,6 +466,7 @@ export const PdfMapImportScreen = () => {
         extraTileOverlays={previewTileOverlays}
         fitToCoordinatesOnReady={neatline}
         initialRegion={initialRegion}
+        showZoomControls
         style={styles.map}
         toolbarEnabled={false}
       >
