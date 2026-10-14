@@ -211,9 +211,9 @@ and opacity are stored in the settings, so they apply to all the maps.
   levels (4) are rendered into a temporary folder (`cache/pdf_map_previews`)
   with the same pipeline used by the import, and shown on the map of the
   import screen; so the user sees exactly where and how the PDF will be placed.
-- **Zoom controls** (`MapView` `showZoomControls`, import screen and viewer):
-  current zoom level (computed from the visible region, Apple Maps doesn't
-  give the camera zoom) and +/- buttons.
+- **Current zoom** shown in the import screen and in the viewer (`MapView`
+  `onZoomChange`: computed from the visible region, Apple Maps doesn't give
+  the camera zoom), to compare it with the zoom levels of the preview/map.
 - **"Only PDF" switch** (import screen and viewer): hides the base map
   (`MapView` `baseMapHidden`: Google map type `none` on Android, tile overlays
   replacing the Apple map content on iOS), to check what is in the PDF alone.

@@ -34,6 +34,7 @@ export const PdfMapViewerScreen = () => {
 
   const [name, setName] = useState(pdfMap?.name ?? "");
   const [baseMapHidden, setBaseMapHidden] = useState(false);
+  const [currentZoom, setCurrentZoom] = useState<number | null>(null);
 
   useEffect(() => {
     if (pdfMap) setName(pdfMap.name);
@@ -94,6 +95,12 @@ export const PdfMapViewerScreen = () => {
           textKey="pdfMaps:map.zoomLevels"
           textParams={{ minZoom: pdfMap.minZoom, maxZoom: pdfMap.maxZoom }}
         />
+        {currentZoom !== null && (
+          <Text
+            textKey="offlineMaps:areaEditor.currentZoom"
+            textParams={{ value: currentZoom }}
+          />
+        )}
         {!pdfMap.datumCompatible && (
           <Text style={styles.warningText} textKey="pdfMaps:map.datumWarning" />
         )}
@@ -107,7 +114,8 @@ export const PdfMapViewerScreen = () => {
         fitToCoordinatesOnReady={pdfMap.neatline}
         initialRegion={initialRegion}
         pdfMapIds={pdfMapIds}
-        showZoomControls
+        // tiles of the integer zoom level are shown until the next level is reached
+        onZoomChange={(zoom) => setCurrentZoom(Math.floor(zoom))}
         style={styles.map}
         toolbarEnabled={false}
       >

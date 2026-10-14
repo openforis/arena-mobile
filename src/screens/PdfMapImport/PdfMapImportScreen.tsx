@@ -81,6 +81,7 @@ export const PdfMapImportScreen = () => {
     null,
   );
   const [baseMapHidden, setBaseMapHidden] = useState(false);
+  const [currentZoom, setCurrentZoom] = useState<number | null>(null);
 
   const candidates = useMemo(() => analysis?.candidates ?? [], [analysis]);
   const candidate = candidates[candidateIndex];
@@ -447,6 +448,13 @@ export const PdfMapImportScreen = () => {
                 variant="bodySmall"
               />
             )}
+            {currentZoom !== null && (
+              <Text
+                textKey="offlineMaps:areaEditor.currentZoom"
+                textParams={{ value: currentZoom }}
+                variant="bodySmall"
+              />
+            )}
             {previewErrorDetails && (
               <Text
                 style={styles.errorText}
@@ -466,7 +474,8 @@ export const PdfMapImportScreen = () => {
         extraTileOverlays={previewTileOverlays}
         fitToCoordinatesOnReady={neatline}
         initialRegion={initialRegion}
-        showZoomControls
+        // tiles of the integer zoom level are shown until the next level is reached
+        onZoomChange={(zoom) => setCurrentZoom(Math.floor(zoom))}
         style={styles.map}
         toolbarEnabled={false}
       >
