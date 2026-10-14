@@ -94,7 +94,7 @@ const selectRecordSingleNodeUuid =
       const node = Records.getChild({ parentNode, childDefUuid: nodeDefUuid })(
         record,
       );
-      return node?.uuid;
+      return node?.uuid ?? null;
     };
 
 const selectRecordEntitiesUuidsAndKeyValues =
