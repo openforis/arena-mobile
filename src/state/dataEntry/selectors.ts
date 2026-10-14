@@ -83,10 +83,10 @@ const selectRecordSingleNodeUuid =
     parentNodeUuid: string | undefined;
     nodeDefUuid: string;
   }) =>
-    (state: any): string | null => {
+    (state: any): string | undefined => {
       const record = selectRecordUnsafe(state);
       if (!parentNodeUuid || !record) {
-        return null;
+        return undefined;
       }
       const parentNode = Records.getNodeByUuid({ uuid: parentNodeUuid })(
         record,
@@ -94,7 +94,7 @@ const selectRecordSingleNodeUuid =
       const node = Records.getChild({ parentNode, childDefUuid: nodeDefUuid })(
         record,
       );
-      return node?.uuid ?? null;
+      return node?.uuid;
     };
 
 const selectRecordEntitiesUuidsAndKeyValues =
