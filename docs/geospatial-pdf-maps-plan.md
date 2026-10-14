@@ -198,6 +198,13 @@ and opacity are stored in the settings, so they apply to all the maps.
   tiles, size, datum warning, "Show on maps" switch, delete); tapping a map
   opens the **PDF map viewer** (`screenKeys.pdfMapViewer`): rename + map
   preview (the PDF map is shown even if hidden in the settings).
+- **Preview before the import**: when a page is selected, its lowest zoom
+  levels (3) are rendered into a temporary folder (`cache/pdf_map_previews`)
+  with the same pipeline used by the import, and shown on the map of the
+  import screen; so the user sees exactly where and how the PDF will be placed.
+- **"Only PDF" switch** (import screen and viewer): hides the base map
+  (`MapView` `baseMapHidden`: Google map type `none` on Android, tile overlays
+  replacing the Apple map content on iOS), to check what is in the PDF alone.
 - When the native renderer is not available (Expo Go, old builds) the import
   button is disabled and a message is shown.
 - **Import flow** (`screenKeys.pdfMapImport`):
@@ -235,6 +242,8 @@ Implemented in this branch:
 - [x] Offline maps screen with tabs, PDF maps tab, import screen (page choice,
   name, max zoom slider, live estimate, low space confirmation, datum
   warning), viewer screen (rename, preview), Settings button.
+- [x] Low resolution preview on the import screen and "Only PDF" switch
+  (import screen, viewer).
 - [x] Full backup excludes `pdf_maps`.
 - [x] English strings (other languages fall back to English).
 

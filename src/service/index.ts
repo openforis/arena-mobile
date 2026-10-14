@@ -14,6 +14,7 @@ export type {
   PdfMapEstimate,
   PdfMapFileAnalysis,
   PdfMapPageCandidate,
+  PdfMapPreview,
 } from "./pdfMaps/pdfMapsService";
 export { PreferencesService } from "./preferencesService";
 export { RecordFileService } from "./recordFileService";

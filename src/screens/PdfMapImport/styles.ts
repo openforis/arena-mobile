@@ -36,6 +36,17 @@ export default StyleSheet.create({
   warningText: {
     color: "#e65100",
   },
+  previewRow: {
+    alignItems: "center",
+    columnGap: 4,
+  },
+  previewStatus: {
+    flex: 1,
+  },
+  previewLoading: {
+    alignItems: "center",
+    columnGap: 4,
+  },
   map: {
     flex: 1,
   },

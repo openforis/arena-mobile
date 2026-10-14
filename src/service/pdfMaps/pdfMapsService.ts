@@ -14,6 +14,7 @@ import { PdfMapImportJob } from "./PdfMapImportJob";
 import { PdfMapRenderer } from "./PdfMapRenderer";
 import { PdfMapRepository } from "./pdfMapRepository";
 import { PdfMapsStorage } from "./pdfMapsStorage";
+import { PdfMapTilesRenderer } from "./pdfMapTilesRenderer";
 
 // limit the tiles of a single map (rendering time and device storage)
 const MAX_TILES_PER_MAP = 100000;
@@ -23,6 +24,8 @@ const MAX_ZOOM = 21;
 // average size of a rendered tile (mix of JPEG and PNG)
 const AVERAGE_TILE_SIZE_BYTES = 25 * 1024;
 const DEFAULT_OPACITY = 1;
+// the preview is rendered only for the lowest zoom levels, to be fast
+const PREVIEW_ZOOM_LEVELS = 3;
 const MAX_NAME_LENGTH = 100;
 
 export type PdfMapPageCandidate = {
@@ -36,6 +39,14 @@ export type PdfMapPageCandidate = {
 export type PdfMapFileAnalysis = {
   info: GeoPdfInfo;
   candidates: PdfMapPageCandidate[];
+};
+
+// tiles rendered into a temporary folder to preview the map before importing it
+export type PdfMapPreview = {
+  id: string;
+  tilesPath: string;
+  minZoom: number;
+  maxZoom: number;
 };
 
 export type PdfMapEstimate = {
@@ -187,6 +198,49 @@ const createImportJob = ({
   });
 };
 
+// renders the lowest zoom levels of the map; resolves with null if stopped
+const renderPreview = async ({
+  sourceFileUri,
+  candidate,
+  shouldStop,
+}: {
+  sourceFileUri: string;
+  candidate: PdfMapPageCandidate;
+  shouldStop: () => boolean;
+}): Promise<PdfMapPreview | null> => {
+  const { georeference, zoomRange } = candidate;
+  const id = UUIDs.v4();
+  const dirUri = PdfMapsStorage.getPreviewDirUri(id);
+  const minZoom = zoomRange.minZoom;
+  const maxZoom = Math.min(
+    zoomRange.maxZoom,
+    minZoom + PREVIEW_ZOOM_LEVELS - 1,
+  );
+  try {
+    await Files.mkDir(dirUri);
+    const tilesPath = PdfMapsStorage.toFileSystemPath(dirUri);
+    await PdfMapTilesRenderer.renderTiles({
+      pdfPath: PdfMapsStorage.toFileSystemPath(sourceFileUri),
+      georeference,
+      minZoom,
+      maxZoom,
+      tilesPath,
+      shouldStop,
+    });
+    if (shouldStop()) {
+      await Files.del(dirUri, true);
+      return null;
+    }
+    return { id, tilesPath, minZoom, maxZoom };
+  } catch (error) {
+    await Files.del(dirUri, true);
+    throw error;
+  }
+};
+
+const deleteAllPreviews = (): Promise<void> =>
+  Files.del(PdfMapsStorage.getPreviewsRootDirUri(), true);
+
 const fetchMaps = PdfMapRepository.fetchMaps;
 
 const updateMap = async (
@@ -224,6 +278,8 @@ export const PdfMapsService = {
   generateDefaultName,
   validateName,
   createImportJob,
+  renderPreview,
+  deleteAllPreviews,
   fetchMaps,
   updateMap,
   deleteMap,

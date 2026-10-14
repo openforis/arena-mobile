@@ -1,8 +1,8 @@
 import { Files } from "utils/Files";
-import { MapTileUtils, TileCoordinate } from "utils/MapTileUtils";
 
 export const PDF_MAPS_FOLDER_NAME = "pdf_maps";
 
+const PDF_MAP_PREVIEWS_FOLDER_NAME = "pdf_map_previews";
 const FILE_URI_PREFIX = "file://";
 const SOURCE_FILE_NAME = "source.pdf";
 const TILES_FOLDER_NAME = "tiles";
@@ -32,8 +32,12 @@ const toFileSystemPath = (uri: string): string =>
 const getTilesCachePath = (mapId: string): string =>
   toFileSystemPath(getTilesDirUri(mapId));
 
-const getTilePath = (mapId: string, tile: TileCoordinate): string =>
-  `${getTilesCachePath(mapId)}/${MapTileUtils.getTileRelativePath(tile)}`;
+// temporary tiles rendered to preview a PDF map before importing it
+const getPreviewsRootDirUri = (): string =>
+  Files.path(Files.cacheDirectory, PDF_MAP_PREVIEWS_FOLDER_NAME);
+
+const getPreviewDirUri = (previewId: string): string =>
+  Files.path(getPreviewsRootDirUri(), previewId);
 
 export const PdfMapsStorage = {
   getRootDirUri,
@@ -41,6 +45,7 @@ export const PdfMapsStorage = {
   getSourceFileUri,
   getTilesDirUri,
   getTilesCachePath,
-  getTilePath,
+  getPreviewsRootDirUri,
+  getPreviewDirUri,
   toFileSystemPath,
 };

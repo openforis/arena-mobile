@@ -7,15 +7,17 @@ import {
   Dropdown,
   HView,
   LoadingIcon,
+  MapTileOverlay,
   MapView,
   Slider,
+  Switch,
   Text,
   TextInput,
   VView,
 } from "components";
 import { useToast } from "hooks";
 import { JobCancelError, PdfMap } from "model";
-import { PdfMapFileAnalysis, PdfMapsService } from "service";
+import { PdfMapFileAnalysis, PdfMapPreview, PdfMapsService } from "service";
 import {
   JobMonitorActions,
   SettingsActions,
@@ -73,6 +75,12 @@ export const PdfMapImportScreen = () => {
   const [maxZoom, setMaxZoom] = useState(0);
   const [freeDiskStorage, setFreeDiskStorage] = useState<number | null>(null);
   const [importing, setImporting] = useState(false);
+  const [preview, setPreview] = useState<PdfMapPreview | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewErrorDetails, setPreviewErrorDetails] = useState<string | null>(
+    null,
+  );
+  const [baseMapHidden, setBaseMapHidden] = useState(false);
 
   const candidates = useMemo(() => analysis?.candidates ?? [], [analysis]);
   const candidate = candidates[candidateIndex];
@@ -122,6 +130,56 @@ export const PdfMapImportScreen = () => {
       }
     },
     [fileUri],
+  );
+
+  // low resolution preview of the selected page, rendered as it will be imported
+  useEffect(() => {
+    if (!candidate || !fileUri || !PdfMapsService.isRendererAvailable()) return;
+    let stopped = false;
+    const renderPreview = async () => {
+      setPreview(null);
+      setPreviewErrorDetails(null);
+      setPreviewLoading(true);
+      try {
+        const previewRendered = await PdfMapsService.renderPreview({
+          sourceFileUri: fileUri,
+          candidate,
+          shouldStop: () => stopped,
+        });
+        if (!stopped) setPreview(previewRendered);
+      } catch (error) {
+        log.error("error rendering PDF map preview", error);
+        if (!stopped) setPreviewErrorDetails(extractErrorDetails(error));
+      } finally {
+        if (!stopped) setPreviewLoading(false);
+      }
+    };
+    void renderPreview();
+    return () => {
+      stopped = true;
+    };
+  }, [candidate, fileUri]);
+
+  useEffect(
+    () => () => {
+      void PdfMapsService.deleteAllPreviews();
+    },
+    [],
+  );
+
+  const previewTileOverlays = useMemo<MapTileOverlay[] | undefined>(
+    () =>
+      preview
+        ? [
+            {
+              key: preview.id,
+              tilesPath: preview.tilesPath,
+              minZoom: preview.minZoom,
+              maxZoom: preview.maxZoom,
+            },
+          ]
+        : undefined,
+    [preview],
   );
 
   // default name and max zoom when the selected page changes
@@ -368,9 +426,44 @@ export const PdfMapImportScreen = () => {
                 : Files.toHumanReadableFileSize(freeDiskStorage),
           }}
         />
+        <HView style={styles.previewRow}>
+          <VView style={styles.previewStatus}>
+            {previewLoading && (
+              <HView style={styles.previewLoading}>
+                <LoadingIcon size={16} />
+                <Text
+                  textKey="pdfMaps:import.preview.rendering"
+                  variant="bodySmall"
+                />
+              </HView>
+            )}
+            {preview && (
+              <Text
+                textKey="pdfMaps:import.preview.lowResolution"
+                textParams={{
+                  minZoom: preview.minZoom,
+                  maxZoom: preview.maxZoom,
+                }}
+                variant="bodySmall"
+              />
+            )}
+            {previewErrorDetails && (
+              <Text
+                style={styles.errorText}
+                textKey="pdfMaps:import.preview.error"
+                textParams={{ details: previewErrorDetails }}
+                variant="bodySmall"
+              />
+            )}
+          </VView>
+          <Text textKey="pdfMaps:hideBaseMap" variant="bodySmall" />
+          <Switch onChange={setBaseMapHidden} value={baseMapHidden} />
+        </HView>
       </VView>
       <MapView
         key={candidateIndex}
+        baseMapHidden={baseMapHidden}
+        extraTileOverlays={previewTileOverlays}
         fitToCoordinatesOnReady={neatline}
         initialRegion={initialRegion}
         style={styles.map}
@@ -379,7 +472,8 @@ export const PdfMapImportScreen = () => {
         {neatline && (
           <Polygon
             coordinates={neatline}
-            fillColor={neatlineFillColor}
+            // the preview must be visible with its original colors
+            fillColor={preview ? "transparent" : neatlineFillColor}
             strokeColor={neatlineStrokeColor}
             strokeWidth={2}
             tappable={false}

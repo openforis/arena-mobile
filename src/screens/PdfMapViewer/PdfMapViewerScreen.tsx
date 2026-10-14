@@ -3,7 +3,15 @@ import { Keyboard } from "react-native";
 import { Polygon } from "react-native-maps";
 import { useRoute } from "@react-navigation/native";
 
-import { HView, IconButton, MapView, Text, TextInput, VView } from "components";
+import {
+  HView,
+  IconButton,
+  MapView,
+  Switch,
+  Text,
+  TextInput,
+  VView,
+} from "components";
 import { PdfMapsService } from "service";
 import { SettingsActions, SettingsSelectors, useAppDispatch } from "state";
 import { GeoUtils, log } from "utils";
@@ -25,6 +33,7 @@ export const PdfMapViewerScreen = () => {
   const pdfMap = pdfMaps.find((item) => item.id === mapId);
 
   const [name, setName] = useState(pdfMap?.name ?? "");
+  const [baseMapHidden, setBaseMapHidden] = useState(false);
 
   useEffect(() => {
     if (pdfMap) setName(pdfMap.name);
@@ -88,8 +97,13 @@ export const PdfMapViewerScreen = () => {
         {!pdfMap.datumCompatible && (
           <Text style={styles.warningText} textKey="pdfMaps:map.datumWarning" />
         )}
+        <HView style={styles.baseMapRow}>
+          <Text textKey="pdfMaps:hideBaseMap" />
+          <Switch onChange={setBaseMapHidden} value={baseMapHidden} />
+        </HView>
       </VView>
       <MapView
+        baseMapHidden={baseMapHidden}
         fitToCoordinatesOnReady={pdfMap.neatline}
         initialRegion={initialRegion}
         pdfMapIds={pdfMapIds}

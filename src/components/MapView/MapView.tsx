@@ -42,8 +42,22 @@ type FitToCoordinatesOptions = {
   animated?: boolean;
 };
 
+// tiles stored on the device ({tilesPath}/{z}/{x}/{y}), shown above the base map
+export type MapTileOverlay = {
+  key: string;
+  // file system path (no file:// scheme)
+  tilesPath: string;
+  minZoom: number;
+  maxZoom: number;
+  opacity?: number;
+};
+
 type Props = {
+  // when true, only the tile overlays (PDF maps) are shown, without the base map
+  baseMapHidden?: boolean;
   children?: React.ReactNode;
+  // tile overlays shown in addition to the visible PDF maps
+  extraTileOverlays?: MapTileOverlay[];
   fitToCoordinatesOnReady?: LatLng[];
   fitToCoordinatesOptions?: FitToCoordinatesOptions;
   fitOnlyOnce?: boolean;
@@ -94,7 +108,9 @@ const getNextItem = <T,>(items: T[], current: T): T => {
 export const MapView = forwardRef<RNMapView | null, Props>(
   (
     {
+      baseMapHidden = false,
       children,
+      extraTileOverlays,
       fitOnlyOnce = true,
       fitToCoordinatesOnReady,
       fitToCoordinatesOptions,
@@ -140,7 +156,21 @@ export const MapView = forwardRef<RNMapView | null, Props>(
         ),
       [pdfMapIds, settings.pdfMaps],
     );
+    const tileOverlays = useMemo<MapTileOverlay[]>(
+      () => [
+        ...visiblePdfMaps.map((pdfMap) => ({
+          key: pdfMap.id,
+          tilesPath: PdfMapsStorage.getTilesCachePath(pdfMap.id),
+          minZoom: pdfMap.minZoom,
+          maxZoom: pdfMap.maxZoom,
+          opacity: pdfMap.opacity,
+        })),
+        ...(extraTileOverlays ?? []),
+      ],
+      [extraTileOverlays, visiblePdfMaps],
+    );
     const hasPdfMaps = (settings.pdfMaps?.length ?? 0) > 0;
+    const freeLayerVisible = useFreeLayers && !baseMapHidden;
     const [pdfMapsPanelVisible, setPdfMapsPanelVisible] = useState(false);
     const networkConnected = useIsNetworkConnected();
     const offlineMode = !networkConnected;
@@ -180,10 +210,13 @@ export const MapView = forwardRef<RNMapView | null, Props>(
     // the padding must be set only when the map is ready (on Android it throws an error otherwise)
     const mapPadding = useMemo(
       () =>
-        isMapReady && useFreeLayers && hasAttribution && attributionHeight > 0
+        isMapReady &&
+        freeLayerVisible &&
+        hasAttribution &&
+        attributionHeight > 0
           ? { top: 0, right: 0, bottom: attributionHeight, left: 0 }
           : undefined,
-      [attributionHeight, hasAttribution, isMapReady, useFreeLayers],
+      [attributionHeight, freeLayerVisible, hasAttribution, isMapReady],
     );
 
     const onMapReadyCallback = useCallback(() => {
@@ -247,7 +280,9 @@ export const MapView = forwardRef<RNMapView | null, Props>(
 
     // on Android the Google base map is hidden (mapType "none"); on iOS the UrlTile replaces the Apple map content
     const effectiveMapType: MapType =
-      useFreeLayers && Environment.isAndroid ? "none" : mapType;
+      (useFreeLayers || baseMapHidden) && Environment.isAndroid
+        ? "none"
+        : mapType;
 
     return (
       <View style={styles.container}>
@@ -264,7 +299,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
           mapType={effectiveMapType}
           toolbarEnabled={toolbarEnabled}
         >
-          {useFreeLayers && (
+          {freeLayerVisible && (
             <UrlTile
               // remount the tile overlay when the layer or the network status change
               key={`${layer.id}_${offlineMode}`}
@@ -281,27 +316,27 @@ export const MapView = forwardRef<RNMapView | null, Props>(
               zIndex={-1}
             />
           )}
-          {visiblePdfMaps.map((pdfMap) => {
-            const tilesPath = PdfMapsStorage.getTilesCachePath(pdfMap.id);
-            return (
-              <UrlTile
-                key={pdfMap.id}
-                // tiles are only read from the device (offline mode): the url is never used
-                urlTemplate={`file://${tilesPath}/{z}/{x}/{y}`}
-                minimumZ={pdfMap.minZoom}
-                maximumZ={PDF_MAP_MAXIMUM_Z}
-                maximumNativeZ={pdfMap.maxZoom}
-                offlineMode
-                opacity={pdfMap.opacity}
-                tileCacheMaxAge={TILE_CACHE_MAX_AGE_SECONDS}
-                tileCachePath={tilesPath}
-                zIndex={PDF_MAP_Z_INDEX}
-              />
-            );
-          })}
+          {tileOverlays.map((overlay) => (
+            <UrlTile
+              // remount when the base map is hidden/shown (shouldReplaceMapContent is applied on creation)
+              key={`${overlay.key}_${baseMapHidden}`}
+              // tiles are only read from the device (offline mode): the url is never used
+              urlTemplate={`file://${overlay.tilesPath}/{z}/{x}/{y}`}
+              minimumZ={overlay.minZoom}
+              maximumZ={PDF_MAP_MAXIMUM_Z}
+              maximumNativeZ={overlay.maxZoom}
+              offlineMode
+              opacity={overlay.opacity ?? 1}
+              // on iOS it hides the Apple base map
+              shouldReplaceMapContent={baseMapHidden}
+              tileCacheMaxAge={TILE_CACHE_MAX_AGE_SECONDS}
+              tileCachePath={overlay.tilesPath}
+              zIndex={PDF_MAP_Z_INDEX}
+            />
+          ))}
           {children}
         </RNMapView>
-        {useFreeLayers && hasAttribution && (
+        {freeLayerVisible && hasAttribution && (
           <View
             onLayout={onAttributionLayout}
             pointerEvents="none"
@@ -312,7 +347,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
             </Text>
           </View>
         )}
-        {useFreeLayers && offlineMode && (
+        {freeLayerVisible && offlineMode && (
           <View style={styles.offlineBadge} pointerEvents="none">
             <Text
               style={styles.offlineBadgeText}
@@ -327,7 +362,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
         )}
         {showMapTypeSelector && (!layerIdProp || hasPdfMaps) && (
           <View style={styles.mapTypeSelector}>
-            {!layerIdProp && (
+            {!layerIdProp && !baseMapHidden && (
               <IconButton
                 icon="layers-outline"
                 mode="contained"

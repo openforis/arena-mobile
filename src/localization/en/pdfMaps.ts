@@ -10,6 +10,7 @@ export default {
     used: "Space used by PDF maps:",
   },
   opacity: "Opacity: {{value}}%",
+  hideBaseMap: "Only PDF",
   map: {
     fileName: "File: {{fileName}}",
     page: "Page: {{page}}",
@@ -48,6 +49,12 @@ export default {
       title: "Low free space",
       message:
         "The map will use about {{size}}, {{percent}}% of the free space on the device ({{freeSpace}}). Continue?",
+    },
+    preview: {
+      rendering: "Rendering the preview...",
+      lowResolution:
+        "Preview at low resolution (zoom levels {{minZoom}} - {{maxZoom}})",
+      error: "Preview not available: {{details}}",
     },
     importButton: "Import",
     jobTitle: "Importing PDF map",

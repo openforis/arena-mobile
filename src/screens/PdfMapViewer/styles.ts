@@ -20,6 +20,10 @@ export default StyleSheet.create({
   warningText: {
     color: "#e65100",
   },
+  baseMapRow: {
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
   map: {
     flex: 1,
   },
