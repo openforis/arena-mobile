@@ -32,6 +32,7 @@ describe("GeoPdfParser", () => {
     expect(viewport.bbox).toEqual({ x1: 50, y1: 100, x2: 550, y2: 700 });
     expect(viewport.crs).toEqual({ epsg: 32632 });
     expect(viewport.datumCompatible).toBe(true);
+    expect(viewport.verticallyFlipped).toBe(false);
     expect(viewport.controlPoints).toEqual([
       { user: { x: 50, y: 100 }, latLng: { latitude: 45, longitude: 7 } },
       { user: { x: 50, y: 700 }, latLng: { latitude: 45.1, longitude: 7 } },
@@ -80,6 +81,35 @@ describe("GeoPdfParser", () => {
     });
     expect(page.viewports[0]!.neatline[0]!.x).toBeCloseTo(100);
     expect(page.viewports[0]!.neatline[0]!.y).toBeCloseTo(160);
+  });
+
+  test("points written with the y axis pointing down are not read as a mirrored map", async () => {
+    const bytes = await buildGeoPdf([
+      {
+        size: [600, 800],
+        viewports: [
+          {
+            bbox: [50, 100, 550, 700],
+            gpts,
+            // same corners of the default LPTS, with the y axis pointing down
+            lpts: [0, 1, 0, 0, 1, 0, 1, 1],
+            bounds: [0, 0.1, 0, 1, 1, 1, 1, 0.1],
+          },
+        ],
+      },
+    ]);
+    const info = await GeoPdfParser.parse(bytes);
+    const viewport = info.pages[0]!.viewports[0]!;
+    expect(viewport.verticallyFlipped).toBe(true);
+    expect(viewport.controlPoints).toEqual([
+      { user: { x: 50, y: 100 }, latLng: { latitude: 45, longitude: 7 } },
+      { user: { x: 50, y: 700 }, latLng: { latitude: 45.1, longitude: 7 } },
+      { user: { x: 550, y: 700 }, latLng: { latitude: 45.1, longitude: 7.15 } },
+      { user: { x: 550, y: 100 }, latLng: { latitude: 45, longitude: 7.15 } },
+    ]);
+    // the bounds are flipped too: 10% of the bbox height excluded at the bottom
+    expect(viewport.neatline[0]!.y).toBeCloseTo(640);
+    expect(viewport.neatline[1]!.y).toBeCloseTo(100);
   });
 
   test("swapped latitude/longitude are detected", async () => {

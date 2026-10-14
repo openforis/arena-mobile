@@ -4,6 +4,7 @@ import { PdfMap } from "model/PdfMap";
 import { SettingsObject } from "model/SettingsModel";
 import { Files } from "utils/Files";
 import { GeoPdfInfo, GeoPdfParser } from "utils/GeoPdfParser";
+import { log } from "utils/Logger";
 import {
   GeoPdfTilePlanner,
   PdfMapGeoreference,
@@ -67,6 +68,8 @@ const analyzeFile = async (fileUri: string): Promise<PdfMapFileAnalysis> => {
     };
   }
   const info = await GeoPdfParser.parse(bytes);
+  // georeferencing as read from the file: useful to diagnose maps placed or oriented wrongly
+  log.debug(`PDF map georeferencing: ${JSON.stringify(info)}`);
   const candidates: PdfMapPageCandidate[] = [];
   for (const page of info.pages) {
     // the main map frame is the first viewport (the biggest one)

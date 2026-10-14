@@ -12,7 +12,7 @@ import {
 
 import { LatLng } from "model/LocationPoint";
 
-import { Box, Point } from "./GeoPdfTransform";
+import { Box, GeoPdfTransform, Point } from "./GeoPdfTransform";
 
 // Reads the georeferencing of the pages of a geospatial PDF
 // (ISO 32000 / Adobe "geospatial PDF": page /VP -> viewport /Measure with /Subtype /GEO).
@@ -38,6 +38,9 @@ export type GeoPdfViewport = {
   crs?: GeoPdfCrs;
   // false when the datum is known and it differs from WGS84 (or a datum compatible with it at the map scale)
   datumCompatible: boolean;
+  // true when the points in the viewport (LPTS, Bounds) were read with the y axis pointing down
+  // (the standard reading gave a mirrored map)
+  verticallyFlipped: boolean;
 };
 
 export type GeoPdfPage = {
@@ -182,6 +185,32 @@ const readCrs = (
   return { ...(epsg !== undefined ? { epsg } : {}), ...(wkt ? { wkt } : {}) };
 };
 
+// true when the control points describe a mirrored map: user space and mercator have both
+// the y axis pointing up (north), so a real map has a positive determinant
+const isMirrored = (
+  controlPoints: GeoPdfControlPoint[],
+  bbox: Box,
+): boolean => {
+  const H = GeoPdfTransform.computeHomography(
+    controlPoints.map((cp) => cp.user),
+    controlPoints.map((cp) => GeoPdfTransform.latLngToMercator(cp.latLng)),
+  );
+  if (!H) return false;
+  const center = { x: (bbox.x1 + bbox.x2) / 2, y: (bbox.y1 + bbox.y2) / 2 };
+  const step = Math.max(bbox.x2 - bbox.x1, bbox.y2 - bbox.y1) / 100;
+  const p0 = GeoPdfTransform.applyHomography(H, center);
+  const px = GeoPdfTransform.applyHomography(H, {
+    x: center.x + step,
+    y: center.y,
+  });
+  const py = GeoPdfTransform.applyHomography(H, {
+    x: center.x,
+    y: center.y + step,
+  });
+  const det = (px.x - p0.x) * (py.y - p0.y) - (px.y - p0.y) * (py.x - p0.x);
+  return det < 0;
+};
+
 const readViewport = (
   viewportObj: PDFObject | undefined,
   resolve: Resolver,
@@ -202,23 +231,34 @@ const readViewport = (
 
   // GPTS are latitude/longitude pairs; some writers swap them: detect it from the values range
   const swapped = gpts.some(([first]) => Math.abs(first) > 90);
-  const controlPoints: GeoPdfControlPoint[] = [];
-  for (let index = 0; index < pointsCount; index += 1) {
-    const [g1, g2] = gpts[index]!;
-    const [lx, ly] = lpts[index]!;
-    controlPoints.push({
-      user: unitToUser(bbox, lx, ly),
-      latLng: swapped
+  const latLngs: LatLng[] = gpts
+    .slice(0, pointsCount)
+    .map(([g1, g2]) =>
+      swapped
         ? { latitude: g2, longitude: g1 }
         : { latitude: g1, longitude: g2 },
+    );
+  const toControlPoints = (flipY: boolean): GeoPdfControlPoint[] =>
+    latLngs.map((latLng, index) => {
+      const [lx, ly] = lpts[index]!;
+      return { user: unitToUser(bbox, lx, flipY ? 1 - ly : ly), latLng };
     });
+  // LPTS and Bounds are relative to the bbox with the y axis pointing up; some writers use
+  // the opposite direction (or write the bbox top first): a map is never mirrored, so in
+  // that case the y axis is inverted
+  let controlPoints = toControlPoints(false);
+  const verticallyFlipped = isMirrored(controlPoints, bbox);
+  if (verticallyFlipped) {
+    controlPoints = toControlPoints(true);
   }
 
   const boundsNumbers = getNumbers(measure.get(PDFName.of("Bounds")), resolve);
   const bounds = toPairs(
     boundsNumbers.length >= 6 ? boundsNumbers : DEFAULT_BOUNDS,
   );
-  const neatline = bounds.map(([ux, uy]) => unitToUser(bbox, ux, uy));
+  const neatline = bounds.map(([ux, uy]) =>
+    unitToUser(bbox, ux, verticallyFlipped ? 1 - uy : uy),
+  );
 
   const crs = readCrs(measure, resolve);
   const name = getText(viewport.get(PDFName.of("Name")), resolve);
@@ -230,6 +270,7 @@ const readViewport = (
     neatline,
     ...(crs ? { crs } : {}),
     datumCompatible: isDatumCompatible(crs),
+    verticallyFlipped,
   };
 };
 

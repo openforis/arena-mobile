@@ -64,6 +64,13 @@ already proven in RN) to read the low-level page dictionaries (no rendering):
   controlPoints: [{ page: {x, y}, geo: {lat, lng} }], neatline, crs }] }`;
 - PDFs without a georeference → clear error message ("this PDF is not
   georeferenced").
+- `LPTS` and `Bounds` are read relative to the `BBox` with the y axis pointing
+  up; some files use the opposite direction (or write the `BBox` top first),
+  which would place the map **mirrored vertically**. A map is never a mirror
+  image of the ground, so when the control points describe a mirrored map
+  (negative determinant of the user space → mercator transform) the y axis of
+  `LPTS`/`Bounds` is inverted (`verticallyFlipped`). The georeferencing read
+  from the file is written to the app log, to diagnose wrongly placed maps.
 
 Note: `pdf-lib` loads the whole file in memory; geospatial PDFs with embedded
 imagery can be 50–200 MB. If that is a problem, read only the cross-reference
