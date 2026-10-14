@@ -64,11 +64,13 @@ already proven in RN) to read the low-level page dictionaries (no rendering):
   controlPoints: [{ page: {x, y}, geo: {lat, lng} }], neatline, crs }] }`;
 - PDFs without a georeference → clear error message ("this PDF is not
   georeferenced").
-- `LPTS` and `Bounds` are read relative to the `BBox` with the y axis pointing
-  up; some files use the opposite direction (or write the `BBox` top first),
-  which would place the map **mirrored vertically**. A map is never a mirror
-  image of the ground, so when the control points describe a mirrored map
-  (negative determinant of the user space → mercator transform) the y axis of
+- `LPTS` and `Bounds` are unit coordinates relative to the `BBox` **as written
+  in the file** (first corner = origin), as GDAL reads them: ArcGIS writes the
+  `BBox` top corner first (e.g. `[21.6 1634.4 2569.9 21.65]` with
+  `LPTS [0 1 0 0 1 0 1 1]`); sorting the `BBox` would place the map mirrored
+  vertically. As a further safeguard, a map is never a mirror image of the
+  ground: when the control points still describe a mirrored map (negative
+  determinant of the user space → mercator transform) the y axis of
   `LPTS`/`Bounds` is inverted (`verticallyFlipped`). The georeferencing read
   from the file is written to the app log, to diagnose wrongly placed maps.
 

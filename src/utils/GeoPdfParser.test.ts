@@ -112,6 +112,31 @@ describe("GeoPdfParser", () => {
     expect(viewport.neatline[1]!.y).toBeCloseTo(100);
   });
 
+  test("bbox written top first (ArcGIS): points relative to the first corner", async () => {
+    const bytes = await buildGeoPdf([
+      {
+        size: [600, 800],
+        viewports: [
+          {
+            bbox: [50, 700, 550, 100],
+            gpts,
+            lpts: [0, 1, 0, 0, 1, 0, 1, 1],
+          },
+        ],
+      },
+    ]);
+    const info = await GeoPdfParser.parse(bytes);
+    const viewport = info.pages[0]!.viewports[0]!;
+    expect(viewport.bbox).toEqual({ x1: 50, y1: 100, x2: 550, y2: 700 });
+    expect(viewport.verticallyFlipped).toBe(false);
+    expect(viewport.controlPoints).toEqual([
+      { user: { x: 50, y: 100 }, latLng: { latitude: 45, longitude: 7 } },
+      { user: { x: 50, y: 700 }, latLng: { latitude: 45.1, longitude: 7 } },
+      { user: { x: 550, y: 700 }, latLng: { latitude: 45.1, longitude: 7.15 } },
+      { user: { x: 550, y: 100 }, latLng: { latitude: 45, longitude: 7.15 } },
+    ]);
+  });
+
   test("swapped latitude/longitude are detected", async () => {
     const bytes = await buildGeoPdf([
       {
@@ -155,6 +180,11 @@ describe("GeoPdfParser", () => {
     expect(
       GeoPdfParser.isDatumCompatible({
         wkt: 'PROJCS["WGS 84 / UTM zone 32N",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]]]]',
+      }),
+    ).toBe(true);
+    expect(
+      GeoPdfParser.isDatumCompatible({
+        wkt: 'PROJCS["NAD_1983_California_Teale_Albers",GEOGCS["GCS_North_American_1983",DATUM["D_North_American_1983",SPHEROID["GRS_1980",6378137.0,298.257222101]]]]',
       }),
     ).toBe(true);
     expect(

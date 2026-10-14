@@ -67,7 +67,8 @@ const WGS84_COMPATIBLE_DATUM_PATTERNS = [
   /ETRS/i,
   /EUREF/i,
   /NAD[ _]?(19)?83/i,
-  /North[ _]American[ _]Datum[ _]1983/i,
+  // e.g. "North_American_Datum_1983", Esri "D_North_American_1983"
+  /North[ _]American[ _](Datum[ _])?1983/i,
   /GDA[ _]?(19)?94/i,
   /GDA[ _]?2020/i,
   /SIRGAS/i,
@@ -158,7 +159,8 @@ const intersectBoxes = (a: Box, b: Box): Box => ({
   y2: Math.min(a.y2, b.y2),
 });
 
-// point in the unit square of the bbox (origin bottom-left) -> user space
+// point in the unit square of the bbox -> user space; the unit square origin is the first corner
+// of the bbox as written in the file (some writers, e.g. ArcGIS, write the top corner first), as GDAL does
 const unitToUser = (bbox: Box, ux: number, uy: number): Point => ({
   x: bbox.x1 + ux * (bbox.x2 - bbox.x1),
   y: bbox.y1 + uy * (bbox.y2 - bbox.y1),
@@ -221,8 +223,11 @@ const readViewport = (
   if (!(measure instanceof PDFDict)) return null;
   if (getNameValue(measure, "Subtype", resolve) !== "GEO") return null;
 
-  const bbox = toBox(getNumbers(viewport.get(PDFName.of("BBox")), resolve));
+  const bboxNumbers = getNumbers(viewport.get(PDFName.of("BBox")), resolve);
+  const bbox = toBox(bboxNumbers);
   if (!bbox || bbox.x2 <= bbox.x1 || bbox.y2 <= bbox.y1) return null;
+  const [x1, y1, x2, y2] = bboxNumbers as [number, number, number, number];
+  const bboxAsWritten: Box = { x1, y1, x2, y2 };
 
   const gpts = toPairs(getNumbers(measure.get(PDFName.of("GPTS")), resolve));
   const lpts = toPairs(getNumbers(measure.get(PDFName.of("LPTS")), resolve));
@@ -241,11 +246,13 @@ const readViewport = (
   const toControlPoints = (flipY: boolean): GeoPdfControlPoint[] =>
     latLngs.map((latLng, index) => {
       const [lx, ly] = lpts[index]!;
-      return { user: unitToUser(bbox, lx, flipY ? 1 - ly : ly), latLng };
+      return {
+        user: unitToUser(bboxAsWritten, lx, flipY ? 1 - ly : ly),
+        latLng,
+      };
     });
-  // LPTS and Bounds are relative to the bbox with the y axis pointing up; some writers use
-  // the opposite direction (or write the bbox top first): a map is never mirrored, so in
-  // that case the y axis is inverted
+  // a map is never mirrored: if it is, the writer used the opposite direction of the y axis
+  // for LPTS and Bounds, so the y axis is inverted
   let controlPoints = toControlPoints(false);
   const verticallyFlipped = isMirrored(controlPoints, bbox);
   if (verticallyFlipped) {
@@ -257,7 +264,7 @@ const readViewport = (
     boundsNumbers.length >= 6 ? boundsNumbers : DEFAULT_BOUNDS,
   );
   const neatline = bounds.map(([ux, uy]) =>
-    unitToUser(bbox, ux, verticallyFlipped ? 1 - uy : uy),
+    unitToUser(bboxAsWritten, ux, verticallyFlipped ? 1 - uy : uy),
   );
 
   const crs = readCrs(measure, resolve);
