@@ -5,6 +5,7 @@ import {
 } from "utils/GeoPdfTilePlanner";
 import { GeoPdfTransform, Point } from "utils/GeoPdfTransform";
 import { MapTileUtils, TileCoordinate } from "utils/MapTileUtils";
+import { PromiseUtils } from "utils/PromiseUtils";
 
 import { PdfMapRenderer } from "./PdfMapRenderer";
 
@@ -133,24 +134,32 @@ const renderTiles = async ({
     OVERVIEW_TILES_BATCH_SIZE,
   );
   onTotal?.(blocks.length + overviewBatches.length);
+  // one step at a time: the native renderer keeps a single PDF document open
+  const runSequentially = <T>(
+    items: T[],
+    step: (item: T) => Promise<{ written: number; bytes: number }>,
+  ) =>
+    PromiseUtils.runWithConcurrency({
+      items,
+      concurrency: 1,
+      shouldStop,
+      task: async (item) => {
+        addResult(await step(item));
+        onStepComplete?.();
+      },
+    });
   try {
-    for (const block of blocks) {
-      if (shouldStop()) return result;
-      addResult(
-        await renderBlock({
-          pdfPath,
-          pageIndex: georeference.pageIndex,
-          tilesPath,
-          block,
-        }),
-      );
-      onStepComplete?.();
-    }
-    for (const tiles of overviewBatches) {
-      if (shouldStop()) return result;
-      addResult(await buildOverviewTiles({ tilesPath, tiles }));
-      onStepComplete?.();
-    }
+    await runSequentially(blocks, (block) =>
+      renderBlock({
+        pdfPath,
+        pageIndex: georeference.pageIndex,
+        tilesPath,
+        block,
+      }),
+    );
+    await runSequentially(overviewBatches, (tiles) =>
+      buildOverviewTiles({ tilesPath, tiles }),
+    );
     return result;
   } finally {
     await PdfMapRenderer.closeDocument().catch(() => {});

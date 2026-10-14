@@ -60,24 +60,36 @@ const worldPixelToMercator = ({ x, y }: Point, zoom: number): Point => {
   };
 };
 
-// solves A x = b with Gaussian elimination (partial pivoting); returns null if A is singular
+// index of the row (from col down) with the largest absolute value in the column
+const findPivotRow = (m: number[][], col: number): number => {
+  let pivot = col;
+  for (let row = col + 1; row < m.length; row += 1) {
+    if (Math.abs(m[row]![col]!) > Math.abs(m[pivot]![col]!)) pivot = row;
+  }
+  return pivot;
+};
+
+// subtracts the pivot row from the other rows, to set the column to 0 in all of them
+const eliminateColumn = (m: number[][], col: number): void => {
+  const pivotRow = m[col]!;
+  m.forEach((row, rowIndex) => {
+    if (rowIndex === col) return;
+    const factor = row[col]! / pivotRow[col]!;
+    for (let k = col; k < row.length; k += 1) {
+      row[k] = row[k]! - factor * pivotRow[k]!;
+    }
+  });
+};
+
+// solves A x = b with Gauss-Jordan elimination (partial pivoting); returns null if A is singular
 const solveLinearSystem = (A: number[][], b: number[]): number[] | null => {
   const n = b.length;
   const m = A.map((row, i) => [...row, b[i]!]);
   for (let col = 0; col < n; col += 1) {
-    let pivot = col;
-    for (let row = col + 1; row < n; row += 1) {
-      if (Math.abs(m[row]![col]!) > Math.abs(m[pivot]![col]!)) pivot = row;
-    }
+    const pivot = findPivotRow(m, col);
     if (Math.abs(m[pivot]![col]!) < 1e-12) return null;
     [m[col], m[pivot]] = [m[pivot]!, m[col]!];
-    for (let row = 0; row < n; row += 1) {
-      if (row === col) continue;
-      const factor = m[row]![col]! / m[col]![col]!;
-      for (let k = col; k <= n; k += 1) {
-        m[row]![k] = m[row]![k]! - factor * m[col]![k]!;
-      }
-    }
+    eliminateColumn(m, col);
   }
   return m.map((row, i) => row[n]! / row[i]!);
 };

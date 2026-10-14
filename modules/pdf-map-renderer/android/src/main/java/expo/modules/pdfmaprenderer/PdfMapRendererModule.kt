@@ -12,6 +12,7 @@ import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
 import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
+import android.util.Log
 import expo.modules.kotlin.exception.CodedException
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
@@ -86,6 +87,10 @@ class PdfOpenException(path: String, cause: Throwable?) :
   CodedException("ERR_PDF_OPEN", "Cannot open PDF file: $path", cause)
 
 class PdfMapRendererModule : Module() {
+  companion object {
+    private const val TAG = "PdfMapRenderer"
+  }
+
   private val lock = Any()
   private var openPath: String? = null
   private var fileDescriptor: ParcelFileDescriptor? = null
@@ -135,11 +140,13 @@ class PdfMapRendererModule : Module() {
   private fun closeRenderer() {
     try {
       renderer?.close()
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+      Log.w(TAG, "error closing PDF renderer", e)
     }
     try {
       fileDescriptor?.close()
-    } catch (_: Exception) {
+    } catch (e: Exception) {
+      Log.w(TAG, "error closing PDF file", e)
     }
     renderer = null
     fileDescriptor = null

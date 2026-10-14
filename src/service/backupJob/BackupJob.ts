@@ -22,26 +22,34 @@ export class BackupJob extends JobMobile<BackupJobContext> {
 
     // map files would make the backup huge: offline map tiles can be downloaded again and
     // PDF maps imported again; move them temporarily outside of the backed up folder
-    const excludedDirs: { uri: string; tempUri: string }[] = [];
-    for (const [index, uri] of [
+    const dirUris = [
       OfflineMapTilesStorage.getTilesRootDirUri(),
       PdfMapsStorage.getRootDirUri(),
-    ].entries()) {
-      if (await Files.exists(uri)) {
-        const tempUri = Files.path(
+    ];
+    const existing = await Promise.all(dirUris.map((uri) => Files.exists(uri)));
+    const moveTimestamp = Date.now();
+    const excludedDirs = dirUris
+      .map((uri, index) => ({
+        uri,
+        tempUri: Files.path(
           Files.cacheDirectory,
-          `map_files_backup_${Date.now()}_${index}`,
-        );
-        await Files.moveFile({ from: uri, to: tempUri });
-        excludedDirs.push({ uri, tempUri });
-      }
-    }
+          `map_files_backup_${moveTimestamp}_${index}`,
+        ),
+      }))
+      .filter((_, index) => existing[index]);
+    await Promise.all(
+      excludedDirs.map(({ uri, tempUri }) =>
+        Files.moveFile({ from: uri, to: tempUri }),
+      ),
+    );
     try {
       await Files.zip(Files.documentDirectory, outputFileUri);
     } finally {
-      for (const { uri, tempUri } of excludedDirs) {
-        await Files.moveFile({ from: tempUri, to: uri });
-      }
+      await Promise.all(
+        excludedDirs.map(({ uri, tempUri }) =>
+          Files.moveFile({ from: tempUri, to: uri }),
+        ),
+      );
     }
 
     this.context.outputFileUri = outputFileUri;
