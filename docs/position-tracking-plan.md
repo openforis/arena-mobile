@@ -7,7 +7,9 @@ Branch: `claude/feat-position-tracking-boma8t`
 While filling in a record, the user can **record the path they are walking**
 (e.g. the route to a plot, the perimeter walked around a stand, a transect).
 
-- Tracking is started from the record (e.g. right after creating it).
+- Tracking **starts automatically when a new record is created** and the
+  survey has a geo attribute with tracking enabled; it can also be started
+  manually.
 - The tracking status is **always visible** while editing the record, in a thin
   bar that can be **expanded** to show details and **Pause / Resume / Stop**
   buttons.
@@ -73,10 +75,10 @@ straight segment across the gap.
   coordinates (the `coordTimes` convention used by togeojson/GPX converters),
   so the geometry stays standard GeoJSON.
 
-**To verify with Arena (server side):** that geo values other than `Polygon`
-are accepted by validation, data export (CSV/GeoJSON), the Arena map and the
-data explorer. If Arena only supports polygons today, server-side support is a
-prerequisite (or a parallel task).
+Arena (server) supports line geometries too, so the value is synced,
+validated and exported as is. Per-point times/accuracies are kept and the
+track is not simplified: ~1 h of tracking (1–2k points) is ~100–200 KB of
+JSON, which is acceptable.
 
 ## Architecture (mobile)
 
@@ -121,7 +123,8 @@ modified each second, so points are buffered:
   plus a small `position_track (record_uuid, node_uuid, status, ...)` row for
   the active session. Points are inserted as they arrive (cheap, crash-safe).
 - **Flush** to the attribute (`DataEntryActions.updateAttribute`) on: pause,
-  stop, leaving the record, app going to background, and periodically
+  stop, leaving the record, app going to background (tracking pauses there,
+  see "Out of scope"), and periodically
   (every ~60 s while tracking) so the record always holds an almost-current
   track. The flushed value is built from the buffer + the existing node value
   (resuming tracking on a node with a value **appends** a new segment).
@@ -143,11 +146,23 @@ in the whole app.
 
 ### 4. Record lifecycle rules
 
+- **Auto-start on record creation**: at the end of
+  `DataEntryActions.createNewRecord` (after the record is created and saved,
+  before navigating to the editor), look for a geo attribute with
+  `positionTracking` among the nodes created with the record (root entity and
+  its single entities). If found, dispatch `startPositionTracking` for that
+  node. The location permission is requested at that moment; if denied or
+  location services are off, the bar shows the error with a "Retry" action and
+  the record is created anyway. Trackable attributes inside multiple entities
+  are started manually (no auto-start when an entity instance is added).
+- The user stops (or pauses) tracking from the status bar.
 - Tracking is bound to one record/node. Opening another record while tracking
   → confirm "Stop tracking in record X?".
 - Leaving the record editor → confirm: **Pause** (default) / Stop / Cancel.
-  (Continuing to track outside the record is phase 2 together with background
-  tracking.)
+  Tracking never continues outside the record editor.
+- App sent to background / screen locked → tracking pauses automatically
+  (points flushed); when the app comes back to the foreground with the same
+  record open, the bar offers **Resume** (a new segment is started).
 - Deleting the tracked node/entity or the record → stop and discard.
 - Record not editable (read-only, sync in progress, other cycle) → no start
   buttons.
@@ -194,8 +209,7 @@ compute region (reuse `computeRegionFromCoordinates`).
 
 - min distance between points (m), default 3;
 - accuracy threshold for track points (m), default 20;
-- flush interval (s), default 60 (maybe hidden/advanced);
-- phase 2: "Continue tracking in background".
+- flush interval (s), default 60 (maybe hidden/advanced).
 
 ### Localization
 
@@ -204,61 +218,54 @@ New keys in `src/localization/en/dataEntry.json` (and `settings.json`):
 waitingForFix|permissionDenied|locationServicesOff|interrupted|...`; other
 languages fall back to English until translated.
 
-## Background tracking (phase 2)
+## Out of scope: background tracking
 
-Phase 1 tracks only while the app is in the foreground (screen on – keep-awake
-helps). Real field use will need background tracking:
-
-- `expo-task-manager` + `Location.startLocationUpdatesAsync` with an Android
-  **foreground service** (persistent notification "Arena Mobile is recording
-  your track", with stop action), `ACCESS_BACKGROUND_LOCATION`,
-  `FOREGROUND_SERVICE_LOCATION`; iOS `UIBackgroundModes: ["location"]`,
-  `NSLocationAlwaysAndWhenInUseUsageDescription`. Config changes in
-  `app.config.ts` + prebuild.
-- The background task writes points straight into SQLite (no Redux available);
-  the UI re-reads stats when the app returns to the foreground.
-- Store policy: Google Play requires a background-location declaration and
-  video; App Store review needs a clear justification. This is the main reason
-  to ship it separately.
-- External Bluetooth GPS in background: to be evaluated (Classic SPP
-  connection lifetime when the app is backgrounded).
+Tracking runs only while the app is in the foreground with the record open
+(keep-awake prevents the screen from turning off). Background tracking
+(`expo-task-manager`, Android foreground service, "always" location
+permission, store reviews) is not planned for now; the service API is kept
+independent of React so it can be added later without UI changes.
 
 ## Testing
 
 - Jest: `trackUtils` (filtering, length, segment building, GeoJSON
   serialization, append on resume), reducer/selectors, flush logic with a
   mocked repository, migration `003` on an in-memory DB if available.
-- Maestro: start → pause → resume → stop flow on the demo survey (needs a
-  trackable geo attribute in `demoSurvey.json`); feed positions with
-  `adb emu geo fix` on the Android emulator.
+- Maestro: create record → tracking auto-starts → pause → resume → stop flow
+  on the demo survey (needs a trackable geo attribute in `demoSurvey.json`);
+  feed positions with `adb emu geo fix` on the Android emulator.
 - Manual: walking test on Android and iOS with internal and external GPS,
   screen off/on, app killed during tracking (recovery), low battery.
 
 ## Implementation steps
 
 1. arena-core: `NodeDefGeoProps.positionTracking` + `NodeDefs.isPositionTracking`;
-   Arena web checkbox; confirm server support for line geometries.
+   Arena web checkbox.
 2. Mobile model helper + `GeoUtils` line helpers + `trackUtils` with tests.
 3. DB migration `003` + `positionTrackRepository`.
 4. `PositionTrackingService` (internal GPS first, then external GPS source).
 5. Redux slice + thunks (start/pause/resume/stop/flush/recover).
 6. `PositionTrackingBar` in `RecordEditor`.
 7. `NodeGeoComponent` track view + `NodeGeoValuePreview`.
-8. Record lifecycle hooks (leave record, open other record, delete node,
-   app background, `AppInitializer` recovery).
+8. Record lifecycle hooks (auto-start in `createNewRecord`, leave record,
+   open other record, delete node, app background, `AppInitializer` recovery).
 9. Settings section + localization.
 10. Demo survey trackable attribute + Maestro flow.
-11. Phase 2: background tracking.
+
+## Decisions
+
+- Background tracking: out of scope for now.
+- Arena supports line geometries: value stored as `MultiLineString` Feature.
+- Track size (~200 KB/h of JSON) is fine: per-point times/accuracies kept, no
+  simplification.
+- Tracking auto-starts when a record is created and a trackable geo attribute
+  is found; the user stops it from the status bar.
 
 ## Open questions
 
-- Prop name and placement in Arena (`positionTracking` on geo vs. a dedicated
-  "track" geometry type).
-- Does Arena accept/export/display `MultiLineString` geo values? Should
-  per-point times/accuracies be kept (value size: ~1 h at 1 point/3 m ≈ 1–2k
-  points ≈ 100–200 KB of JSON) or dropped/simplified (Douglas–Peucker) on stop?
-- Should tracking start automatically when a record is created if the survey
-  has a trackable attribute in the root entity (survey-level option)?
-- Allow more than one active track (e.g. root + plot) at the same time? Plan
-  assumes no.
+- Prop name in Arena (`positionTracking` on geo vs. a dedicated "track"
+  geometry type).
+- Allow more than one active track at the same time (e.g. root + plot)? Plan
+  assumes no; if the root entity holds more than one trackable attribute,
+  auto-start picks the first one in survey order.
 - Show the current record's track in `RecordsMapScreen` too?
