@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Records list: map view;
 - Alternative maps and Offline map area download;
+- Georeferenced PDF file import (to be used in offline map overlays);
 - Manually moving a sample point on the map;
 
 ## [2.8.3] - 2026-10-09
