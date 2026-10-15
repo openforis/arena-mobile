@@ -44,9 +44,13 @@ const latStep = 0.0001;
 
 let emitLocation: (location: any) => void = () => {};
 const subscriptionRemove = jest.fn();
+let now = Date.parse("2026-10-15T08:00:00Z");
 
-const emit = (latitude: number, accuracy = 3) =>
+// every location is received 10 seconds after the previous one (walking speed)
+const emit = (latitude: number, accuracy = 3) => {
+  now += 10000;
   emitLocation({ latitude, longitude: 0, accuracy, altitude: null });
+};
 
 const startTracking = (baseValue: any = null) =>
   PositionTrackingService.start({
@@ -58,6 +62,14 @@ const startTracking = (baseValue: any = null) =>
   });
 
 describe("PositionTrackingService", () => {
+  beforeAll(() => {
+    jest.spyOn(Date, "now").mockImplementation(() => now);
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
+
   beforeEach(async () => {
     jest.clearAllMocks();
     await PositionTrackingService.unload();
