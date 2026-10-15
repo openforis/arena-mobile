@@ -54,7 +54,7 @@ export const PageNodesList = () => {
   const survey = SurveySelectors.useCurrentSurvey();
   const record = DataEntrySelectors.useRecord();
   const parentEntity = entityUuid
-    ? Records.getNodeByUuid({ uuid: entityUuid })(record)
+    ? Records.getNodeByUuid(entityUuid)(record)
     : null;
   const validation = Validations.getValidation(record);
 
@@ -96,10 +96,7 @@ export const PageNodesList = () => {
       if (!parentEntity) return null;
 
       const nodeDefUuid = item.uuid;
-      const nodes = Records.getChildren({
-        parentNode: parentEntity,
-        childDefUuid: nodeDefUuid,
-      })(record);
+      const nodes = Records.getChildren(parentEntity, nodeDefUuid)(record);
       const fieldValidations = nodes.map((node) =>
         Validations.getFieldValidation(node.uuid)(validation)
       );

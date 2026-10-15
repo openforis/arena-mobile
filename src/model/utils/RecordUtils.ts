@@ -48,7 +48,7 @@ const yesNoValueByBooleanValue: Record<string, string> = {
 };
 
 const getNodeName = ({ survey, record, nodeUuid }: any): string | null => {
-  const node = Records.getNodeByUuid({ uuid: nodeUuid })(record);
+  const node = Records.getNodeByUuid(nodeUuid)(record);
   if (node) {
     const nodeDef = Surveys.getNodeDefByUuid({
       survey,
@@ -74,10 +74,7 @@ const getEntityKeysFormatted = ({
   });
   const keyDefs = Surveys.getNodeDefKeys({ survey, nodeDef: entityDef, cycle });
   return keyDefs.map((keyDef) => {
-    const keyNode = Records.getDescendant({
-      node: entity,
-      nodeDefDescendant: keyDef,
-    })(record);
+    const keyNode = Records.getDescendant(entity, keyDef)(record);
     if (!keyNode) return emptyValue;
     return NodeValueFormatter.format({
       survey,
@@ -143,10 +140,10 @@ const getEntitySummaryValuesByNameFormatted = ({
     (acc: Dictionary<string>, summaryDef: NodeDef<any, any>) => {
       let formattedValue: string;
       try {
-        const summaryNode = Records.getChildren({
-          parentNode: entity,
-          childDefUuid: summaryDef.uuid,
-        })(record)[0];
+        const summaryNode = Records.getChildren(
+          entity,
+          summaryDef.uuid,
+        )(record)[0];
         if (!summaryNode) {
           formattedValue = "";
         } else if (NodeDefs.getType(summaryDef) === NodeDefType.boolean) {
@@ -223,18 +220,26 @@ const getChildEntityCompletionStats = ({
 }): CompletionStats => {
   if (NodeDefs.isSingle(childDef)) {
     return childEntity
-      ? Records.getEntityCompletionStats({ survey, record, entity: childEntity })
+      ? Records.getEntityCompletionStats({
+          survey,
+          record,
+          entity: childEntity,
+        })
       : { total: 1, filled: 0 };
   }
-  const entities = Records.getChildren({
-    parentNode: parentEntity,
-    childDefUuid: childDef.uuid,
-  })(record);
+  const entities = Records.getChildren(parentEntity, childDef.uuid)(record);
   if (entities.length === 0) return { total: 1, filled: 0 };
   return entities.reduce(
     (acc: CompletionStats, entity: any) => {
-      const stats = Records.getEntityCompletionStats({ survey, record, entity });
-      return { total: acc.total + stats.total, filled: acc.filled + stats.filled };
+      const stats = Records.getEntityCompletionStats({
+        survey,
+        record,
+        entity,
+      });
+      return {
+        total: acc.total + stats.total,
+        filled: acc.filled + stats.filled,
+      };
     },
     { total: 0, filled: 0 },
   );
@@ -254,10 +259,10 @@ const getSiblingNode = ({
   node,
   offset,
 }: any): { siblingNode: ArenaRecordNode | undefined; siblingIndex: number } => {
-  const siblingNodes = Records.getChildren({
-    parentNode: parentEntity,
-    childDefUuid: node.nodeDefUuid,
-  })(record);
+  const siblingNodes = Records.getChildren(
+    parentEntity,
+    node.nodeDefUuid,
+  )(record);
   const nodeIndex = siblingNodes.indexOf(node);
   const siblingIndex = nodeIndex + offset;
   const siblingNode = siblingNodes[siblingIndex];
@@ -348,17 +353,14 @@ const findAncestor = (params: {
   node: ArenaRecordNode;
   predicate: (node: ArenaRecordNode) => boolean;
 }): ArenaRecordNode | null => {
-  let result: ArenaRecordNode | null = null;
   const { record, node, predicate } = params;
-  Records.visitAncestorsAndSelf({
-    node,
-    visitor: (visitedAncestor) => {
-      if (predicate(visitedAncestor)) {
-        result = visitedAncestor;
-        return true;
-      }
-      return false;
-    },
+  let result: ArenaRecordNode | null = null;
+  Records.visitAncestorsAndSelf(node, (visitedAncestor) => {
+    if (predicate(visitedAncestor)) {
+      result = visitedAncestor;
+      return true;
+    }
+    return false;
   })(record);
   return result;
 };
@@ -367,15 +369,13 @@ const findMatchingEntityUuidForChildrenCountValidation = (params: {
   validationKey: string;
   entityNodeUuids: Set<string>;
 }): string | undefined => {
-  const { validationKey, entityNodeUuids } = params
+  const { validationKey, entityNodeUuids } = params;
   // children count validation key directly references the parent entity
   const parentUuid =
     RecordValidations.extractValidationChildrenCountKeyParentUuid(
       validationKey,
     );
-  return parentUuid && entityNodeUuids.has(parentUuid)
-    ? parentUuid
-    : undefined;
+  return parentUuid && entityNodeUuids.has(parentUuid) ? parentUuid : undefined;
 };
 
 const findMatchingEntityUuidForNodeValidation = (params: {
@@ -383,8 +383,8 @@ const findMatchingEntityUuidForNodeValidation = (params: {
   validationKey: string;
   entityNodeUuids: Set<string>;
 }): string | undefined => {
-  const { record, validationKey, entityNodeUuids } = params
-  const node = Records.getNodeByUuid({ uuid: validationKey })(record);
+  const { record, validationKey, entityNodeUuids } = params;
+  const node = Records.getNodeByUuid(validationKey)(record);
   if (!node) return undefined;
 
   if (entityNodeUuids.has(node.uuid)) {
@@ -393,7 +393,7 @@ const findMatchingEntityUuidForNodeValidation = (params: {
   }
   // validation issue on a direct attribute of the entity: do not bubble
   // up errors/warnings belonging to nested (descendant) entities
-  const parentEntity = Records.getParent({ node })(record);
+  const parentEntity = Records.getParent(node)(record);
   return parentEntity && entityNodeUuids.has(parentEntity.uuid)
     ? parentEntity.uuid
     : undefined;
@@ -404,24 +404,27 @@ const findMatchingEntityUuid = (params: {
   validationKey: string;
   entityNodeUuids: Set<string>;
 }): string | undefined => {
-  const { record, validationKey, entityNodeUuids } = params
+  const { record, validationKey, entityNodeUuids } = params;
   return RecordValidations.isValidationChildrenCountKey(validationKey)
     ? findMatchingEntityUuidForChildrenCountValidation({
-      validationKey,
-      entityNodeUuids,
-    })
+        validationKey,
+        entityNodeUuids,
+      })
     : findMatchingEntityUuidForNodeValidation({
-      record,
-      validationKey,
-      entityNodeUuids,
-    });
+        record,
+        validationKey,
+        entityNodeUuids,
+      });
 };
 
 const findEntityNodesWithValidationIssues = (params: {
   record: ArenaRecord;
   entityNodeUuids: Set<string>;
-}): { nodeUuidsWithErrors: Set<string>; nodeUuidsWithWarnings: Set<string> } => {
-  const { record, entityNodeUuids } = params
+}): {
+  nodeUuidsWithErrors: Set<string>;
+  nodeUuidsWithWarnings: Set<string>;
+} => {
+  const { record, entityNodeUuids } = params;
   const nodeUuidsWithErrors = new Set<string>();
   const nodeUuidsWithWarnings = new Set<string>();
 
@@ -481,11 +484,11 @@ const hasDescendantApplicableNodes = ({
   parentEntity,
   nodeDef,
 }: any): boolean => {
-  const descendants = Records.getDescendantsOrSelf({
-    node: parentEntity,
-    nodeDefDescendant: nodeDef,
-  })(record);
-  return descendants.some((node) => Records.isNodeApplicable({ node })(record));
+  const descendants = Records.getDescendantsOrSelf(
+    parentEntity,
+    nodeDef,
+  )(record);
+  return descendants.some((node) => Records.isNodeApplicable(node)(record));
 };
 
 const getApplicableDescendantDefs = ({
@@ -551,9 +554,9 @@ const getAncestorsLabelAndKeysText = ({
   });
   const leafLabel = NodeDefs.getLabelOrName(nodeDef, lang);
   const nameParts: string[] = [];
-  let entity = Records.getParent({ node })(record);
+  let entity = Records.getParent(node)(record);
   while (entity) {
-    const parentEntity = Records.getParent({ node: entity })(record);
+    const parentEntity = Records.getParent(entity)(record);
     const entityDef = Surveys.getNodeDefByUuid({
       survey,
       uuid: entity.nodeDefUuid,
@@ -604,10 +607,10 @@ const getRecordSummaryValuesByKeyOrSummaryAttributeFormatted = ({
     valuesWrapperProp === "keysObj"
       ? SurveyDefs.getRootKeyDefs({ survey, cycle })
       : Surveys.getNodeDefsIncludedInMultipleEntitySummary({
-        survey,
-        cycle,
-        nodeDef: rootDef,
-      });
+          survey,
+          cycle,
+          nodeDef: rootDef,
+        });
   return defs.reduce(
     (acc, nodeDef) => {
       const nodeDefName = NodeDefs.getName(nodeDef);
@@ -678,29 +681,23 @@ const findTopmostNewlyInapplicableAncestorDefUuid = ({
       // skip the node itself, we are looking for ancestors only
       return;
     }
-    const ancestorPrev = Records.getNodeByUuid({ uuid: visitedAncestor.uuid })(
+    const ancestorPrev = Records.getNodeByUuid(visitedAncestor.uuid)(
       recordPrev,
     );
     if (!ancestorPrev) {
       return;
     }
-    const applicablePrev = Records.isNodeApplicable({ node: ancestorPrev })(
-      recordPrev,
-    );
-    const applicableNext = Records.isNodeApplicable({ node: visitedAncestor })(
-      recordNext,
-    );
+    const applicablePrev = Records.isNodeApplicable(ancestorPrev)(recordPrev);
+    const applicableNext =
+      Records.isNodeApplicable(visitedAncestor)(recordNext);
     if (applicablePrev && !applicableNext) {
       topmostInapplicableAncestorDefUuid = visitedAncestor.nodeDefUuid;
     }
   };
-  Records.visitAncestorsAndSelf({
-    node,
-    visitor: (visitedAncestor) => {
-      visitAncestor(visitedAncestor);
-      // stop the visit once found
-      return !!topmostInapplicableAncestorDefUuid;
-    },
+  Records.visitAncestorsAndSelf(node, (visitedAncestor) => {
+    visitAncestor(visitedAncestor);
+    // stop the visit once found
+    return !!topmostInapplicableAncestorDefUuid;
   })(recordNext);
 
   return topmostInapplicableAncestorDefUuid;
@@ -718,16 +715,16 @@ const findNewlyInapplicableDefUuidsWithValue = ({
   const result = new Set<string>();
   for (const node of Object.values(nodes)) {
     const { nodeDefUuid } = node;
-    const parentNode = Records.getParent({ node })(recordNext);
+    const parentNode = Records.getParent(node)(recordNext);
     if (!parentNode) {
       continue;
     }
-    const nodePrev = Records.getNodeByUuid({ uuid: node.uuid })(recordPrev);
+    const nodePrev = Records.getNodeByUuid(node.uuid)(recordPrev);
     const hadUserInputValue = nodePrev && Nodes.hasUserInputValue(nodePrev);
     const applicablePrev = nodePrev
-      ? Records.isNodeApplicable({ node: nodePrev })(recordPrev)
+      ? Records.isNodeApplicable(nodePrev)(recordPrev)
       : true;
-    const applicableNext = Records.isNodeApplicable({ node })(recordNext);
+    const applicableNext = Records.isNodeApplicable(node)(recordNext);
 
     if (applicablePrev && !applicableNext && hadUserInputValue) {
       const topmostInapplicableAncestorDefUuid: string | null =

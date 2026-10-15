@@ -276,7 +276,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     const nodesFile = nodeDefsFile.reduce((acc: any, nodeDefFile: any) => {
       const nodeDefFileUuid = nodeDefFile.uuid;
       acc.push(
-        ...Records.getNodesByDefUuid({ nodeDefUuid: nodeDefFileUuid })(record),
+        ...Records.getNodesByDefUuid(nodeDefFileUuid)(record),
       );
       return acc;
     }, []);
