@@ -160,8 +160,10 @@ in the whole app.
 - The user stops (or pauses) tracking from the status bar.
 - Tracking is bound to one record/node. Opening another record while tracking
   → confirm "Stop tracking in record X?".
-- Leaving the record editor → confirm: **Pause** (default) / Stop / Cancel.
-  Tracking never continues outside the record editor.
+- Leaving the record editor (after the usual "go to list of records"
+  confirmation) stops tracking and saves the track into the attribute.
+  Tracking never continues outside the record editor; when the record is
+  opened again, "Start" appends a new segment to the saved track.
 - App sent to background / screen locked → tracking pauses automatically
   (points flushed); when the app comes back to the foreground with the same
   record open, the bar offers **Resume** (a new segment is started).
@@ -186,7 +188,7 @@ component rendered in `RecordEditor.tsx`.)
   instead (hidden if the survey has no trackable attribute).
 - **Expanded** (tap; reuse `CollapsiblePanel`): attribute label (+ parent
   entity keys when inside a multiple entity), start time, points count, last
-  fix time, and buttons **Pause / Resume**, **Stop**, **Go to attribute**
+  fix time, and buttons **Pause / Resume**, **Stop**, **Show track**
   (navigates to the node, where the track is shown on a map).
 - Stop asks for confirmation; Pause does not.
 - When several trackable nodes are available (root + current entity), "Start"
@@ -238,7 +240,7 @@ attribute layers (own colour, toggle, label from the attribute def).
 
 - min distance between points (m), default 3;
 - accuracy threshold for track points (m), default 20;
-- flush interval (s), default 60 (maybe hidden/advanced).
+- flush interval: fixed to 60 s (not a setting).
 
 ### Localization
 
@@ -265,6 +267,49 @@ independent of React so it can be added later without UI changes.
   feed positions with `adb emu geo fix` on the Android emulator.
 - Manual: walking test on Android and iOS with internal and external GPS,
   screen off/on, app killed during tracking (recovery), low battery.
+
+## Implementation status
+
+Implemented in this branch:
+
+- `model/utils/PositionTracks.ts`: node def helpers (`isPositionTrackingNodeDef`,
+  `findAutoStartNode`), point filter, GeoJSON (MultiLineString) conversion,
+  length/duration helpers. `isPositionTrackingNodeDef` reads
+  `nodeDef.props.positionTracking` until arena-core provides it.
+- DB migration `003` (`position_track`, `position_track_point`) and
+  `positionTrackRepository`.
+- `service/positionTracking`: location source (internal GPS or external GPS
+  with fallback to internal when "auto") and `PositionTrackingService`.
+- Redux slice `positionTracking` with thunks: start, auto-start on record
+  creation, pause, resume, stop, periodic flush (60 s), close on leaving the
+  record, recovery when opening a record with an unsaved track, cleanup on
+  records deletion.
+- `PositionTrackingBar` at the top of the record editor; tracking pauses when
+  the app goes to background.
+- Read-only track view in tracking-enabled geo attributes; track preview in
+  `NodeGeoValuePreview`.
+- Settings: min distance and accuracy threshold (Location & GPS group).
+- Records map: `positionTrack` layers (lazy-loaded, hidden by default).
+- English texts (other languages fall back to English).
+
+Deviations from the plan:
+
+- Leaving the record stops (and saves) the track instead of pausing it.
+- "Show track" in the bar opens the attribute in a dialog instead of
+  navigating to its page.
+- The bar's "Start" button is shown only for the auto-start attribute (root
+  entity or its single entities) while it has no value; other trackable
+  attributes are started from the attribute itself.
+- Geo attributes are experimental (shown only to system admins): tracking
+  geo attributes are shown to everyone.
+
+Still to do:
+
+- arena-core (`NodeDefGeoProps.positionTracking`) and the Arena web checkbox.
+- Trackable attribute in the demo survey + Maestro flow.
+- Translations.
+- Manual tests on devices (internal and external GPS, app killed while
+  tracking).
 
 ## Implementation steps
 

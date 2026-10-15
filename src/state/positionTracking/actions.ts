@@ -103,7 +103,7 @@ const _flush = async (dispatch: any, getState: any): Promise<boolean> => {
   const nodeUpdated = Records.getNodeByUuid(track.nodeUuid)(
     DataEntrySelectors.selectRecord(getState()),
   );
-  return Objects.isEqual(nodeUpdated?.value ?? null, value);
+  return Objects.isEqual(nodeUpdated?.value?.geometry, value.geometry);
 };
 
 // writes the recorded track into the attribute value
