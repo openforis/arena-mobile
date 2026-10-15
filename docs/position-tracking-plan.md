@@ -21,8 +21,7 @@ While filling in a record, the user can **record the path they are walking**
 
 ### New node def prop
 
-`geo` attributes get a new boolean prop, e.g. `positionTracking` (name to be
-agreed with the Arena web team):
+`geo` attributes get a new boolean prop `positionTracking`:
 
 ```ts
 // arena-core: nodeDef/types/geo.ts (new – geo has no typed props yet)
@@ -43,6 +42,9 @@ Constraints (validated in Arena, enforced defensively in mobile):
 
 - the attribute must be **single** (not multiple);
 - read-only / calculated (`defaultValue` with `readOnly`) attributes are not trackable;
+- in the mobile app a tracking-enabled attribute is **not editable**: no
+  polygon drawing, no manual input, no clear; its value is written only by
+  position tracking.
 - it can live in the root entity (one track per record) or in a multiple
   entity (one track per entity instance, e.g. per plot).
 
@@ -192,18 +194,45 @@ component rendered in `RecordEditor.tsx`.)
 
 ### Geo attribute (`NodeGeoComponent`)
 
-When the node def has `positionTracking`, render a track view instead of the
-polygon editor:
+When the node def has `positionTracking`, render a **read-only** track view
+instead of the polygon editor (the drawing/edit/clear actions are not
+rendered and `useNodeGeoComponent` refuses to save a manual value):
 
 - map with the track as `Polyline`s (one per segment) and the current position;
 - length / points / duration summary;
-- Start / Pause / Resume / Stop buttons (same thunks as the bar);
-- "Clear" (confirm) and the existing "Download GeoJSON".
+- Start / Pause / Resume / Stop buttons (same thunks as the bar) - the only
+  way to change the value;
+- the existing "Download GeoJSON".
+- "Start" on a node that already has a track appends a new segment; there is
+  no way to delete a track in the app (it can be edited/cleared in Arena).
 - `NodeGeoValuePreview` shows length + points count for `MultiLineString` /
   `LineString` values.
 
 `GeoUtils` gets helpers for line strings: extract coordinates, compute length,
 compute region (reuse `computeRegionFromCoordinates`).
+
+### Records map (`src/screens/RecordsMap/`)
+
+Today the map has point layers only (`samplingPoints`, `coordinateAttribute`).
+Add a layer type `positionTrack`, one layer per tracking-enabled geo
+attribute def, listed in `RecordsMapLayersPanel` like the coordinate
+attribute layers (own colour, toggle, label from the attribute def).
+
+- `recordsMapLayers.ts`: `getAvailableLayers` adds the track layers; a
+  `createTrackFeatures` helper turns node values into `MultiLineString`
+  features with the record label / uuid in `properties` (unit-tested in
+  `recordsMapLayers.test.ts`).
+- Data: values loaded with the existing
+  `RecordService.fetchNodeValuesByDefUuids` (track def uuids added to the
+  list). Tracks are larger than points: only the visible track layers are
+  loaded (lazy load on toggle), hidden by default.
+- Rendering: `Polyline`s (not clustered, so drawn outside
+  `useRecordsMapClusters`); tapping a track selects its record in
+  `RecordsMapSelectionPanel` (open record, etc.), like a point.
+- Tracks contribute their bounds to the initial map region.
+- The layer type is named for tracks but the code path (line/polygon
+  features from geo values) is kept generic, so plain geo (polygon) layers can
+  be added later with little work.
 
 ### Settings (`SettingsScreen`, "Position tracking" section)
 
@@ -246,14 +275,19 @@ independent of React so it can be added later without UI changes.
 4. `PositionTrackingService` (internal GPS first, then external GPS source).
 5. Redux slice + thunks (start/pause/resume/stop/flush/recover).
 6. `PositionTrackingBar` in `RecordEditor`.
-7. `NodeGeoComponent` track view + `NodeGeoValuePreview`.
+7. `NodeGeoComponent` read-only track view + `NodeGeoValuePreview`.
 8. Record lifecycle hooks (auto-start in `createNewRecord`, leave record,
    open other record, delete node, app background, `AppInitializer` recovery).
 9. Settings section + localization.
 10. Demo survey trackable attribute + Maestro flow.
+11. Records map: `positionTrack` layers.
 
 ## Decisions
 
+- Prop: `positionTracking` (boolean) on geo attributes. When true the
+  attribute is not editable in the mobile app; only tracking writes it.
+- Records map: tracks shown as additional layers (one per trackable geo
+  attribute).
 - Background tracking: out of scope for now.
 - Arena supports line geometries: value stored as `MultiLineString` Feature.
 - Track size (~200 KB/h of JSON) is fine: per-point times/accuracies kept, no
@@ -264,9 +298,3 @@ independent of React so it can be added later without UI changes.
   open in the editor. Starting tracking on another node stops the current one
   (after confirmation); if the root entity holds more than one trackable
   attribute, auto-start picks the first one in survey order.
-
-## Open questions
-
-- Prop name in Arena (`positionTracking` on geo vs. a dedicated "track"
-  geometry type).
-- Show the current record's track in `RecordsMapScreen` too?
