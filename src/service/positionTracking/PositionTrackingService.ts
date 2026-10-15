@@ -64,7 +64,17 @@ const getVersion = () => version;
 
 const getTrack = () => track;
 
-const getSegments = () => segments;
+let segmentsSnapshot: TrackSegment[] = [];
+let segmentsSnapshotVersion = -1;
+
+// immutable copy of the recorded segments, renewed when they change
+const getSegments = (): TrackSegment[] => {
+  if (segmentsSnapshotVersion !== version) {
+    segmentsSnapshot = segments.map((segment) => [...segment]);
+    segmentsSnapshotVersion = version;
+  }
+  return segmentsSnapshot;
+};
 
 const isWatching = () => subscription !== null;
 

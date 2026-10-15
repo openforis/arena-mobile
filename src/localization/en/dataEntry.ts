@@ -324,6 +324,41 @@ Press '$t(common:stop)' when done.`,
     addCurrentLocationPointInstructions:
       "Press '$t(dataEntry:geo.addCurrentLocationPoint)' to add current location to the polygon",
   },
+  positionTracking: {
+    title: "Position tracking",
+    start: "Start tracking",
+    pause: "Pause",
+    resume: "Resume",
+    stop: "Stop",
+    showTrack: "Show track",
+    retry: "Retry",
+    status: {
+      idle: "Not tracking",
+      starting: "Starting tracking…",
+      tracking: "Tracking",
+      paused: "Tracking paused",
+    },
+    waitingForFix: "Waiting for GPS…",
+    accuracy: "±{{accuracy}} m",
+    pointsCount: "{{count}} points",
+    trackSummary: "{{length}} · {{pointsCount}} points · {{duration}}",
+    attributeNotEditable:
+      "The value of this attribute is recorded by position tracking",
+    stopConfirm:
+      "Stop tracking? The recorded track is saved in the attribute and can be continued later.",
+    stopCurrentConfirm:
+      "Another attribute is being tracked: stop tracking it and start tracking this one?",
+    interrupted:
+      "Position tracking was interrupted: the recorded track has been saved. Press '$t(dataEntry:positionTracking.resume)' to continue.",
+    error: {
+      generic: "Cannot start position tracking",
+      permissionDenied: "Cannot track the position: access to location not granted",
+      locationServicesOff:
+        "Cannot track the position: location services are turned off",
+      notSaved:
+        "The track could not be saved in the attribute yet: it will be saved later",
+    },
+  },
   taxon: {
     search: "Search taxon",
     taxonNotSelected: "--- Taxon not selected ---",

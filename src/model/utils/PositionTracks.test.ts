@@ -175,6 +175,13 @@ describe("PositionTracks.formatLength", () => {
   });
 });
 
+describe("PositionTracks.formatDuration", () => {
+  test("formats as hh:mm:ss", () => {
+    expect(PositionTracks.formatDuration(0)).toBe("00:00:00");
+    expect(PositionTracks.formatDuration(3723000)).toBe("01:02:03");
+  });
+});
+
 describe("PositionTracks node defs", () => {
   const createSurvey = () =>
     JSON.parse(JSON.stringify(demoSurveyJson)) as Survey;

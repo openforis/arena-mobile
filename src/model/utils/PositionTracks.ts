@@ -235,6 +235,17 @@ const formatLength = (meters: number): string =>
     ? `${Math.round(meters)} m`
     : `${(meters / 1000).toFixed(2)} km`;
 
+const pad2 = (value: number) => String(value).padStart(2, "0");
+
+// hh:mm:ss
+const formatDuration = (millis: number): string => {
+  const totalSeconds = Math.max(0, Math.floor(millis / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return `${pad2(hours)}:${pad2(minutes)}:${pad2(seconds)}`;
+};
+
 export const PositionTracks = {
   isPositionTrackingNodeDef,
   isTrackableNodeDef,
@@ -249,4 +260,5 @@ export const PositionTracks = {
   isTrackValue,
   extractLineCoordinates,
   formatLength,
+  formatDuration,
 };

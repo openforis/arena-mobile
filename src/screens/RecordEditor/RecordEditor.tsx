@@ -18,6 +18,10 @@ import {
 } from "state";
 
 import { BottomNavigationBar } from "./BottomNavigationBar";
+import {
+  PositionTrackingBar,
+  usePositionTrackingPauseOnBackground,
+} from "./PositionTrackingBar";
 import { RecordPageForm } from "./RecordPageForm";
 import { RecordEditorDrawer } from "./RecordEditorDrawer";
 import { RecordNodesCarousel } from "./RecordNodesCarousel";
@@ -47,6 +51,7 @@ export const RecordEditor = () => {
   }, [dispatch, isNavigationFocused, navigation]);
 
   useBackHandler(onBack);
+  usePositionTrackingPauseOnBackground();
 
   const isPhone = DeviceInfoSelectors.useIsPhone();
 
@@ -64,6 +69,7 @@ export const RecordEditor = () => {
         isPhone && pageSelectorOpen ? "none" : undefined
       }
     >
+      <PositionTrackingBar />
       {recordSyncInProgress && (
         <Text
           style={styles.syncInProgressBanner}
