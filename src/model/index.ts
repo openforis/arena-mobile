@@ -37,6 +37,12 @@ export { Themes, ThemesSettings } from "./Themes";
 export { UpdateStatus } from "./UpdateStatus";
 export { UserLogoutOptions } from "./UserLogoutOptions";
 
+export { PositionTracks, TrackPointRejectReason } from "./utils/PositionTracks";
+export type {
+  TrackFeature,
+  TrackPoint,
+  TrackSegment,
+} from "./utils/PositionTracks";
 export { RecordUtils } from "./utils/RecordUtils";
 export { RecordSummaries } from "./utils/RecordSummaries";
 export { SurveyDefs } from "./utils/SurveyDefs";
