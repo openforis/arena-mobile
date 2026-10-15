@@ -354,7 +354,15 @@ const findAncestor = (params: {
   predicate: (node: ArenaRecordNode) => boolean;
 }): ArenaRecordNode | null => {
   const { record, node, predicate } = params;
-  return Records.getAncestorsAndSelf(node)(record).find(predicate) ?? null;
+  let result: ArenaRecordNode | null = null;
+  Records.visitAncestorsAndSelf(node, (visitedAncestor) => {
+    if (predicate(visitedAncestor)) {
+      result = visitedAncestor;
+      return true;
+    }
+    return false;
+  })(record);
+  return result;
 };
 
 const findMatchingEntityUuidForChildrenCountValidation = (params: {
@@ -686,11 +694,11 @@ const findTopmostNewlyInapplicableAncestorDefUuid = ({
       topmostInapplicableAncestorDefUuid = visitedAncestor.nodeDefUuid;
     }
   };
-  for (const visitedAncestor of Records.getAncestorsAndSelf(node)(recordNext)) {
+  Records.visitAncestorsAndSelf(node, (visitedAncestor) => {
     visitAncestor(visitedAncestor);
     // stop the visit once found
-    if (topmostInapplicableAncestorDefUuid) break;
-  }
+    return !!topmostInapplicableAncestorDefUuid;
+  })(recordNext);
 
   return topmostInapplicableAncestorDefUuid;
 };
