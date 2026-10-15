@@ -83,6 +83,16 @@ It will help to get a better accuracy in coordinate attributes.`,
     error:
       "Cannot start GPS locking: location provider not available or access to location not granted",
   },
+  positionTrackingAccuracyThreshold: {
+    label: "Position tracking accuracy threshold: {{value}} m",
+    description:
+      "Locations less accurate than this are not added to the track being recorded",
+  },
+  positionTrackingMinDistance: {
+    label: "Position tracking min distance: {{value}} m",
+    description:
+      "Minimum distance between two points of the track being recorded",
+  },
   gpsDevicePairing: {
     title: "Pair a GPS device",
     scanButton: "Scan for devices",

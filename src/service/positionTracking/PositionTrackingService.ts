@@ -25,6 +25,10 @@ export type PositionTrackingStats = {
   pointsCount: number;
   lastAccuracy: number | null;
   lastFixTime: number | null;
+  // millis, computed from the time of the recorded points
+  durationMs: number;
+  // time of the last point recorded in the segment being recorded (if any)
+  currentSegmentLastPointTime: number | null;
 };
 
 type Listener = () => void;
@@ -36,6 +40,8 @@ let segments: TrackSegment[] = [];
 let subscription: { remove: () => void } | null = null;
 let lastAccuracy: number | null = null;
 let lastFixTime: number | null = null;
+// segments already stored in the attribute when the track was started
+let baseSegments: TrackSegment[] = [];
 // points are written one after the other, in the order they are received
 let pointsWriteQueue: Promise<void> = Promise.resolve();
 // incremented every time the segments change (used by useSyncExternalStore)
@@ -62,12 +68,28 @@ const getSegments = () => segments;
 
 const isWatching = () => subscription !== null;
 
-const getStats = (): PositionTrackingStats => ({
-  length: PositionTracks.computeLength(segments),
-  pointsCount: PositionTracks.countPoints(segments),
-  lastAccuracy,
-  lastFixTime,
-});
+// segment durations, in millis
+const computeDuration = (segmentsToSum: TrackSegment[]) =>
+  segmentsToSum.reduce(
+    (acc, segment) =>
+      segment.length > 1 ? acc + segment.at(-1)!.time - segment[0]!.time : acc,
+    0,
+  );
+
+// stats of the whole track (existing value + new segments)
+const getStats = (): PositionTrackingStats => {
+  const allSegments = [...baseSegments, ...segments];
+  return {
+    length: PositionTracks.computeLength(allSegments),
+    pointsCount: PositionTracks.countPoints(allSegments),
+    lastAccuracy,
+    lastFixTime,
+    durationMs: computeDuration(allSegments),
+    currentSegmentLastPointTime: subscription
+      ? (segments.at(-1)?.at(-1)?.time ?? null)
+      : null,
+  };
+};
 
 const onLocation =
   (settings: PositionTrackingSettings) => (location: LocationPoint) => {
@@ -138,6 +160,7 @@ const reset = () => {
   subscription = null;
   track = null;
   segments = [];
+  baseSegments = [];
   lastAccuracy = null;
   lastFixTime = null;
   notify();
@@ -163,6 +186,7 @@ const start = async ({
     nodeUuid,
     baseValue,
   });
+  baseSegments = PositionTracks.fromFeature(baseValue);
   try {
     await startWatching(settings);
   } catch (error) {
@@ -179,6 +203,7 @@ const start = async ({
 const load = async (trackToLoad: PositionTrack) => {
   reset();
   track = { ...trackToLoad, status: PositionTrackStatus.paused };
+  baseSegments = PositionTracks.fromFeature(trackToLoad.baseValue);
   segments = await PositionTrackRepository.fetchSegments(trackToLoad.id);
   if (trackToLoad.status !== PositionTrackStatus.paused) {
     await PositionTrackRepository.updateTrackStatus({
@@ -220,7 +245,6 @@ const resume = async (settings: PositionTrackingSettings) => {
 // value of the tracked attribute: segments already in it when tracking started + new segments
 const buildValue = (): TrackFeature | null => {
   if (!track) return null;
-  const baseSegments = PositionTracks.fromFeature(track.baseValue);
   return PositionTracks.toFeature([...baseSegments, ...segments]);
 };
 

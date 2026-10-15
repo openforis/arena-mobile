@@ -50,6 +50,8 @@ export enum SettingKey {
   locationAveragingEnabled = "locationAveragingEnabled",
   locationGpsLocked = "locationGpsLocked",
   mapLayer = "mapLayer",
+  positionTrackingAccuracyThreshold = "positionTrackingAccuracyThreshold",
+  positionTrackingMinDistance = "positionTrackingMinDistance",
   mapProvider = "mapProvider",
   preferredGpsSourceId = "preferredGpsSourceId",
   serverUrlType = "serverUrlType",
@@ -155,6 +157,20 @@ const properties: SettingsProperties = {
     type: PropertyType.boolean,
     group: SettingGroup.location,
   },
+  positionTrackingMinDistance: {
+    type: PropertyType.slider,
+    group: SettingGroup.location,
+    minValue: 1,
+    maxValue: 20,
+    step: 1,
+  },
+  positionTrackingAccuracyThreshold: {
+    type: PropertyType.slider,
+    group: SettingGroup.location,
+    minValue: 5,
+    maxValue: 50,
+    step: 5,
+  },
   mapProvider: {
     type: PropertyType.radio,
     group: SettingGroup.maps,
@@ -207,6 +223,10 @@ export type SettingsObject = {
   // via the generic `properties` schema because the options are dynamic (see MapLayerSettingsField)
   mapLayer: string;
   mapProvider: MapProvider;
+  // position tracking: max accuracy (m) of the recorded points
+  positionTrackingAccuracyThreshold: number;
+  // position tracking: min distance (m) between recorded points
+  positionTrackingMinDistance: number;
   // GpsSourceSetting.auto/.internal, or `external:${deviceAddress}` for a
   // recognized bonded device (see service/externalGps) - the latter can't be part
   // of the enum since it's dynamic. Not exposed via the generic `properties`

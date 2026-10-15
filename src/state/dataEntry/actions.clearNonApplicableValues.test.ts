@@ -54,6 +54,9 @@ jest.mock("../deviceInfo", () => ({
   DeviceInfoSelectors: { selectIsPhone: () => true },
 }));
 jest.mock("../message", () => ({ MessageActions: {} }));
+jest.mock("../positionTracking/actions", () => ({
+  PositionTrackingActions: {},
+}));
 jest.mock("../survey", () => ({
   SurveyActions: {},
   SurveySelectors: {

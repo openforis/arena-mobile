@@ -522,6 +522,7 @@ const useIsNodeMaxCountReached = ({
 
 export const DataEntrySelectors = {
   selectRecord,
+  selectRecordUnsafe,
   selectCurrentPageEntity,
   selectCurrentPageEntityActiveChildDefIndex,
   selectCurrentPageEntityRelevantChildDefs,
