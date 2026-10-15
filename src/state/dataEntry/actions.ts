@@ -147,9 +147,7 @@ const _prefillQualifierAttributes = async ({
       qualifierValue,
     });
     if (value === undefined) return;
-    const [qualifierNode] = Records.getNodesByDefUuid({
-      nodeDefUuid: qualifierDef.uuid,
-    })(record);
+    const [qualifierNode] = Records.getNodesByDefUuid(qualifierDef.uuid)(record);
     if (!qualifierNode) return;
     const { record: recordUpdated, nodes: nodesUpdated } =
       await RecordUpdater.updateAttributeValue({
@@ -279,7 +277,7 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
 
   const parentNode = (
     currentParentNodeUuid
-      ? Records.getNodeByUuid({ uuid: currentParentNodeUuid })(record)
+      ? Records.getNodeByUuid(currentParentNodeUuid)(record)
       : Records.getRoot(record)
   )!;
 
@@ -416,9 +414,9 @@ const checkEntityPageIsValidAndNotRoot = ({
     entityDef &&
     !NodeDefs.isRoot(entityDef) &&
     (parentEntityUuid === null ||
-      !!Records.getNodeByUuid({ uuid: parentEntityUuid })(record)) &&
+      !!Records.getNodeByUuid(parentEntityUuid)(record)) &&
     (entityUuid === null ||
-      !!Records.getNodeByUuid({ uuid: entityUuid })(record))
+      !!Records.getNodeByUuid(entityUuid)(record))
   );
 };
 
@@ -714,7 +712,7 @@ const updateAttribute =
           DataEntrySelectors.selectPreviousCycleRecord(state);
 
         const cycle = Records.getCycle(record);
-        const node = Records.getNodeByUuid({ uuid })(record)!;
+        const node = Records.getNodeByUuid(uuid)(record)!;
 
         // nothing actually changed (e.g. a field was focused and left as is): don't touch the
         // record, otherwise it would look modified and the auto-sync status would turn pending
@@ -818,7 +816,7 @@ const performCoordinateValueSrsConversion =
       const record = DataEntrySelectors.selectRecord(state);
       const srsIndex = Surveys.getSRSIndex(survey);
 
-      const node = Records.getNodeByUuid({ uuid: nodeUuid })(record);
+      const node = Records.getNodeByUuid(nodeUuid)(record);
       const prevValue = node?.value ?? {};
       const { x, y, srs } = prevValue;
       const pointFrom = PointFactory.createInstance({ x, y, srs })!;
@@ -840,7 +838,7 @@ const updateCoordinateValueFromLatLong =
       const record = DataEntrySelectors.selectRecord(state);
       const srsIndex = Surveys.getSRSIndex(survey);
 
-      const node = Records.getNodeByUuid({ uuid: nodeUuid })(record);
+      const node = Records.getNodeByUuid(nodeUuid)(record);
       const prevValue = node?.value ?? {};
       const srsTo = prevValue.srs ?? Surveys.getSRSs(survey)[0]!.code;
       const pointLatLong = PointFactory.createInstance({
@@ -864,7 +862,7 @@ const updateCoordinateValueSrs =
       const state = getState();
       const record = DataEntrySelectors.selectRecord(state);
 
-      const node = Records.getNodeByUuid({ uuid: nodeUuid })(record);
+      const node = Records.getNodeByUuid(nodeUuid)(record);
       const prevValue = node?.value ?? {};
       const { x, y, srs } = prevValue;
 
@@ -903,7 +901,7 @@ const addNewAttribute =
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
       const record = DataEntrySelectors.selectRecord(state);
       const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);
-      const parentNode = Records.getNodeByUuid({ uuid: parentNodeUuid })(
+      const parentNode = Records.getNodeByUuid(parentNodeUuid)(
         record,
       );
 

@@ -52,7 +52,7 @@ const getDef = (survey: Survey, name: string): NodeDef<any> =>
   Surveys.getNodeDefByName({ survey, name });
 
 const getNodesByName = (survey: Survey, record: ArenaRecord, name: string) =>
-  Records.getNodesByDefUuid({ nodeDefUuid: getDef(survey, name).uuid })(record);
+  Records.getNodesByDefUuid(getDef(survey, name).uuid)(record);
 
 const getValues = (survey: Survey, record: ArenaRecord, name: string) =>
   getNodesByName(survey, record, name).map((node) => node.value);
@@ -508,7 +508,7 @@ describe("Demo survey", () => {
         record: recordWithOrphan,
       });
       expect(
-        Records.getNodeByUuid({ uuid: orphanNode.uuid })(record),
+        Records.getNodeByUuid(orphanNode.uuid)(record),
       ).toBeUndefined();
     });
   });
