@@ -260,12 +260,13 @@ independent of React so it can be added later without UI changes.
   simplification.
 - Tracking auto-starts when a record is created and a trackable geo attribute
   is found; the user stops it from the status bar.
+- Only **one** active track at a time, and only in the record currently
+  open in the editor. Starting tracking on another node stops the current one
+  (after confirmation); if the root entity holds more than one trackable
+  attribute, auto-start picks the first one in survey order.
 
 ## Open questions
 
 - Prop name in Arena (`positionTracking` on geo vs. a dedicated "track"
   geometry type).
-- Allow more than one active track at the same time (e.g. root + plot)? Plan
-  assumes no; if the root entity holds more than one trackable attribute,
-  auto-start picks the first one in survey order.
 - Show the current record's track in `RecordsMapScreen` too?
