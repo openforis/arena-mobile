@@ -239,7 +239,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     const rowsData = [];
     const totalFileValues: any[] = [];
 
-    const nodes = Records.getNodesByDefUuid({ nodeDefUuid: nodeDef.uuid })(
+    const nodes = Records.getNodesByDefUuid(nodeDef.uuid)(
       record,
     );
     for (const node of nodes) {

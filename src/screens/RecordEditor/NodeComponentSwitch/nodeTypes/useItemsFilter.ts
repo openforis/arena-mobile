@@ -37,7 +37,7 @@ export const useItemsFilter = ({
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
     const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);
-    const parentNode = Records.getNodeByUuid({ uuid: parentNodeUuid })(record);
+    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
     const expressionEvaluator = new RecordExpressionEvaluator();
     void Promise.all(
       items.map((item: any) => {

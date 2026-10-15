@@ -29,35 +29,32 @@ const nodePathPartSeparator = " / ";
 
 const getNodePath = ({ survey, record, nodeUuid, lang }: any) => {
   const parts: any = [];
-  const node = Records.getNodeByUuid({ uuid: nodeUuid })(record);
+  const node = Records.getNodeByUuid(nodeUuid)(record);
   if (!node) {
     return parts;
   }
-  Records.visitAncestorsAndSelf({
-    node,
-    visitor: (visitedAncestor) => {
-      const nodeDef = Surveys.getNodeDefByUuid({
+  for (const visitedAncestor of Records.getAncestorsAndSelf({ node })(record)) {
+    const nodeDef = Surveys.getNodeDefByUuid({
+      survey,
+      uuid: visitedAncestor.nodeDefUuid,
+    });
+    if (NodeDefs.isRoot(nodeDef)) {
+      continue;
+    }
+    const labelOrName = NodeDefs.getLabelOrName(nodeDef, lang);
+    let part = labelOrName;
+    if (NodeDefs.isMultiple(nodeDef)) {
+      const keys = RecordUtils.getEntityKeysFormatted({
         survey,
-        uuid: visitedAncestor.nodeDefUuid,
+        record,
+        entity: visitedAncestor,
+        lang,
+        emptyValue: "-",
       });
-      if (NodeDefs.isRoot(nodeDef)) {
-        return;
-      }
-      const labelOrName = NodeDefs.getLabelOrName(nodeDef, lang);
-      let part = labelOrName;
-      if (NodeDefs.isMultiple(nodeDef)) {
-        const keys = RecordUtils.getEntityKeysFormatted({
-          survey,
-          record,
-          entity: visitedAncestor,
-          lang,
-          emptyValue: "-",
-        });
-        part = part + `[${keys.join(",")}]`;
-      }
-      parts.unshift(part);
-    },
-  })(record);
+      part = part + `[${keys.join(",")}]`;
+    }
+    parts.unshift(part);
+  }
   return parts.join(nodePathPartSeparator);
 };
 
@@ -86,7 +83,7 @@ const extractValidationItem = ({
         validationFieldKey,
       );
   } else {
-    const node = Records.getNodeByUuid({ uuid: validationFieldKey })(record);
+    const node = Records.getNodeByUuid(validationFieldKey)(record);
     if (!node) return null;
 
     invalidNodeUuid = validationFieldKey;

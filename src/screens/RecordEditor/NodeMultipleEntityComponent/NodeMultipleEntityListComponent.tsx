@@ -65,7 +65,7 @@ export const NodeMultipleEntityListComponent = (
   });
 
   const nodeDefLabel = NodeDefs.getLabelOrName(entityDef, lang);
-  const parentEntity = Records.getNodeByUuid({ uuid: parentEntityUuid! })(
+  const parentEntity = Records.getNodeByUuid(parentEntityUuid!)(
     record,
   )!;
 
@@ -157,10 +157,7 @@ export const NodeMultipleEntityListComponent = (
   );
 
   const rows = useMemo(() => {
-    const entities = Records.getChildren({
-      parentNode: parentEntity,
-      childDefUuid: entityDefUuid,
-    })(record);
+    const entities = Records.getChildren(parentEntity, entityDefUuid)(record);
     const _rows = entities.map(entityToRow);
     if (Objects.isNotEmpty(sort)) {
       ArrayUtils.sortByProps(sort!)(_rows);
