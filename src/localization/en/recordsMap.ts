@@ -13,8 +13,9 @@ export default {
   dataSourceInfo:
     "The map shows the data in this device. To include the records of your colleagues, tap 'Check status' in the list of records when online.",
   pointsCount: "{{count}} points",
+  tracksCount: "{{count}} tracks",
   openRecord: "Open",
   noLayers:
-    "This survey has no sampling points with location or coordinate attributes to show on the map",
+    "This survey has no sampling points with location, coordinate attributes or position tracks to show on the map",
   errorLoadingData: "Error loading map data: {{details}}",
 };
