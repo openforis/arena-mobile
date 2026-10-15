@@ -57,6 +57,7 @@ type Props = {
   // when specified, it overrides the map provider in the settings
   provider?: MapProvider;
   showMapTypeSelector?: boolean;
+  showsUserLocation?: boolean;
   style?: StyleProp<ViewStyle>;
   toolbarEnabled?: boolean;
 };
@@ -100,6 +101,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       onPanDrag,
       onPoiClick,
       toolbarEnabled,
+      showsUserLocation,
     },
     ref,
   ) => {
@@ -229,6 +231,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
           mapPadding={mapPadding}
           mapType={effectiveMapType}
           toolbarEnabled={toolbarEnabled}
+          showsUserLocation={showsUserLocation}
         >
           {useFreeLayers && (
             <UrlTile

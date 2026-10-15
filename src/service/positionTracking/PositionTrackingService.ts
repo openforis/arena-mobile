@@ -44,7 +44,7 @@ let lastFixTime: number | null = null;
 let baseSegments: TrackSegment[] = [];
 // points are written one after the other, in the order they are received
 let pointsWriteQueue: Promise<void> = Promise.resolve();
-// incremented every time the segments change (used by useSyncExternalStore)
+// incremented every time the segments change
 let version = 0;
 const listeners = new Set<Listener>();
 
@@ -60,31 +60,23 @@ const subscribe = (listener: Listener) => {
   };
 };
 
-const getVersion = () => version;
-
 const getTrack = () => track;
 
 let segmentsSnapshot: TrackSegment[] = [];
 let segmentsSnapshotVersion = -1;
 
-// immutable copy of the recorded segments, renewed when they change
-const getSegments = (): TrackSegment[] => {
+// immutable copy of all the segments (existing value + recorded ones), renewed when they change
+const getAllSegments = (): TrackSegment[] => {
   if (segmentsSnapshotVersion !== version) {
-    segmentsSnapshot = segments.map((segment) => [...segment]);
+    segmentsSnapshot = [...baseSegments, ...segments].map((segment) => [
+      ...segment,
+    ]);
     segmentsSnapshotVersion = version;
   }
   return segmentsSnapshot;
 };
 
 const isWatching = () => subscription !== null;
-
-// segment durations, in millis
-const computeDuration = (segmentsToSum: TrackSegment[]) =>
-  segmentsToSum.reduce(
-    (acc, segment) =>
-      segment.length > 1 ? acc + segment.at(-1)!.time - segment[0]!.time : acc,
-    0,
-  );
 
 // stats of the whole track (existing value + new segments)
 const getStats = (): PositionTrackingStats => {
@@ -94,7 +86,7 @@ const getStats = (): PositionTrackingStats => {
     pointsCount: PositionTracks.countPoints(allSegments),
     lastAccuracy,
     lastFixTime,
-    durationMs: computeDuration(allSegments),
+    durationMs: PositionTracks.computeDuration(allSegments),
     currentSegmentLastPointTime: subscription
       ? (segments.at(-1)?.at(-1)?.time ?? null)
       : null,
@@ -276,9 +268,8 @@ const unload = async () => {
 
 export const PositionTrackingService = {
   subscribe,
-  getVersion,
   getTrack,
-  getSegments,
+  getAllSegments,
   getStats,
   isWatching,
   start,

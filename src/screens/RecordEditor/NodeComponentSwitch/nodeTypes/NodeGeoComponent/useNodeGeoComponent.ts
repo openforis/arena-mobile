@@ -9,7 +9,7 @@ import MapView from "react-native-maps";
 import { Records } from "@openforis/arena-core";
 
 import { useTranslation } from "localization";
-import { LatLng, RecordUtils } from "model";
+import { LatLng, PositionTracks, RecordUtils } from "model";
 
 import {
   DataEntryActions,
@@ -58,7 +58,10 @@ const nodeValueToPolygon = (nodeValue: any): MapPolygonExtendedProps | null => {
   };
 };
 
-export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
+export const useNodeGeoComponent = ({
+  nodeDef,
+  nodeUuid,
+}: NodeComponentProps) => {
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
   const { t } = useTranslation();
@@ -87,13 +90,15 @@ export const useNodeGeoComponent = ({ nodeUuid }: NodeComponentProps) => {
 
   const savePolygon = useCallback(
     (polygon: MapPolygonExtendedProps | null) => {
-      if (!nodeUuid) return;
+      // the value of tracking attributes is written only by position tracking
+      if (!nodeUuid || PositionTracks.isPositionTrackingNodeDef(nodeDef))
+        return;
       const geoJson = polygon ? toGeoJsonPolygon(polygon.coordinates) : null;
       dispatch(
         DataEntryActions.updateAttribute({ uuid: nodeUuid, value: geoJson }),
       );
     },
-    [dispatch, nodeUuid],
+    [dispatch, nodeDef, nodeUuid],
   );
 
   const onSaveDrawing = useCallback(

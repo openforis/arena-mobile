@@ -235,6 +235,14 @@ const formatLength = (meters: number): string =>
     ? `${Math.round(meters)} m`
     : `${(meters / 1000).toFixed(2)} km`;
 
+// sum of the segment durations (millis)
+const computeDuration = (segments: TrackSegment[]): number =>
+  segments.reduce(
+    (acc, segment) =>
+      segment.length > 1 ? acc + segment.at(-1)!.time - segment[0]!.time : acc,
+    0,
+  );
+
 const pad2 = (value: number) => String(value).padStart(2, "0");
 
 // hh:mm:ss
@@ -254,6 +262,7 @@ export const PositionTracks = {
   distance,
   computeLength,
   countPoints,
+  computeDuration,
   evaluatePoint,
   toFeature,
   fromFeature,

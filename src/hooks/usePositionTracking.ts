@@ -22,14 +22,12 @@ const useNow = (active: boolean) => {
   return now;
 };
 
-// segments recorded since tracking started (updated on every new point)
-export const usePositionTrackingLiveSegments = (): TrackSegment[] => {
+// all the segments of the track being recorded (updated on every new point)
+export const usePositionTrackingLiveSegments = (): TrackSegment[] =>
   useSyncExternalStore(
     PositionTrackingService.subscribe,
-    PositionTrackingService.getVersion,
+    PositionTrackingService.getAllSegments,
   );
-  return PositionTrackingService.getSegments();
-};
 
 export const usePositionTrackingSummary = () => {
   const trackingState = PositionTrackingSelectors.usePositionTrackingState();
