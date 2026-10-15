@@ -44,12 +44,10 @@ const calculateHasCurrentEntityKeysSpecified = ({
   const keyDefs = Surveys.getNodeDefKeys({ survey, nodeDef: entityDef });
   if (Objects.isEmpty(keyDefs)) return false;
 
-  const entity = entityUuid
-    ? Records.getNodeByUuid(entityUuid)(record)
-    : null;
+  const entity = entityUuid ? Records.getNodeByUuid(entityUuid)(record) : null;
   if (!entity) return false;
 
-  const keyValues = Records.getEntityKeyValues({ survey, entity })(record);
+  const keyValues = Records.getEntityKeyValues(survey, entity)(record);
   return !keyValues.some((keyValue) => Objects.isEmpty(keyValue));
 };
 

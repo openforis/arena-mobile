@@ -239,9 +239,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     const rowsData = [];
     const totalFileValues: any[] = [];
 
-    const nodes = Records.getNodesByDefUuid(nodeDef.uuid)(
-      record,
-    );
+    const nodes = Records.getNodesByDefUuid(nodeDef.uuid)(record);
     for (const node of nodes) {
       // every node will be a row in the CSV file
       const csvRowData = [];
@@ -289,19 +287,19 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     const rowData: any[] = [];
     const fileValues: any[] = [];
 
-    const ancestorNode = Records.getAncestor({
+    const ancestorNode = Records.getAncestor(
       node,
-      ancestorDefUuid: nodeDefAncestor.uuid,
-    })(record)!;
+      nodeDefAncestor.uuid,
+    )(record)!;
     const ancestorAttributeDefs =
       includeAncestorAttributes || nodeDefAncestor === nodeDef
         ? dataExportModel.extractAncestorAttributeDefs(nodeDefAncestor)
         : Surveys.getNodeDefKeys({ survey, cycle, nodeDef: nodeDefAncestor });
     for (const ancestorAttrDef of ancestorAttributeDefs) {
-      const ancestorAttributeNode = Records.getDescendant({
-        node: ancestorNode,
-        nodeDefDescendant: ancestorAttrDef,
-      })(record);
+      const ancestorAttributeNode = Records.getDescendant(
+        ancestorNode,
+        ancestorAttrDef,
+      )(record);
       const ancestorAttributeRowData = extractRowNodeData({
         survey,
         cycle,

@@ -72,7 +72,9 @@ const determineLocalRecordSyncStatus = ({
     return RecordSyncStatus.conflictingKeys;
   }
   const dateModifiedLocal = toDate(recordSummaryLocal.dateModified);
-  const dateModifiedRemoteLive = Dates.parseISO(recordSummaryRemote.dateModified);
+  const dateModifiedRemoteLive = Dates.parseISO(
+    recordSummaryRemote.dateModified,
+  );
   if (!dateModifiedLocal || !dateModifiedRemoteLive) {
     return RecordSyncStatus.notModified;
   }
@@ -81,7 +83,9 @@ const determineLocalRecordSyncStatus = ({
   // device (persisted after a successful upload); it's the baseline that lets us
   // tell "safe to overwrite" apart from a true concurrent-edit conflict, instead
   // of just comparing local vs the live remote value.
-  const dateModifiedRemoteBaseline = toDate(recordSummaryLocal.dateModifiedRemote);
+  const dateModifiedRemoteBaseline = toDate(
+    recordSummaryLocal.dateModifiedRemote,
+  );
 
   if (!dateModifiedRemoteBaseline) {
     // no baseline captured yet (record never round-tripped under this logic):
@@ -217,27 +221,30 @@ const updateLocalRecordsWithRemoteInfo = async ({
   recordsSummariesRemote: any[];
   survey: any;
 }) => {
-  await Promises.each(allRecordsSummariesInDevice, async (recordSummaryLocal) => {
-    const { origin, loadStatus, uuid } = recordSummaryLocal;
-    const recordSummaryRemote = ArrayUtils.findByUuid(uuid)(
-      recordsSummariesRemote,
-    );
-    if (
-      origin === RecordOrigin.remote &&
-      loadStatus === RecordLoadStatus.summary &&
-      recordSummaryRemote
-    ) {
-      try {
-        await RecordRepository.updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely(
-          { survey, recordSummary: recordSummaryRemote },
-        );
-      } catch (error) {
-        throw new Error(
-          `error updating local record keys for record ${uuid}. Details: ${error}`,
-        );
+  await Promises.each(
+    allRecordsSummariesInDevice,
+    async (recordSummaryLocal) => {
+      const { origin, loadStatus, uuid } = recordSummaryLocal;
+      const recordSummaryRemote = ArrayUtils.findByUuid(uuid)(
+        recordsSummariesRemote,
+      );
+      if (
+        origin === RecordOrigin.remote &&
+        loadStatus === RecordLoadStatus.summary &&
+        recordSummaryRemote
+      ) {
+        try {
+          await RecordRepository.updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely(
+            { survey, recordSummary: recordSummaryRemote },
+          );
+        } catch (error) {
+          throw new Error(
+            `error updating local record keys for record ${uuid}. Details: ${error}`,
+          );
+        }
       }
-    }
-  });
+    },
+  );
 };
 
 const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
@@ -392,7 +399,9 @@ const findFileUuidsInDevice = async ({
       items: fileUuids,
       concurrency: FILES_EXISTENCE_CHECK_CONCURRENCY,
       task: async (fileUuid) => {
-        if (!(await RecordFileService.recordFileMissing({ surveyId, fileUuid }))) {
+        if (
+          !(await RecordFileService.recordFileMissing({ surveyId, fileUuid }))
+        ) {
           fileUuidsInDevice.push(fileUuid);
         }
       },
@@ -443,11 +452,11 @@ const findRecordSummariesWithSameKeys = async ({
 }: any) => {
   const cycle = cycleParam ?? Records.getCycle(record);
   const rootEntity = Records.getRoot(record)!;
-  const keyValues = Records.getEntityKeyValues({
+  const keyValues = Records.getEntityKeyValues(
     survey,
+    rootEntity,
     cycle,
-    entity: rootEntity,
-  })(record);
+  )(record);
   const keyValuesFormatted = RecordUtils.getRootEntityKeysFormatted({
     survey,
     record,
@@ -486,19 +495,20 @@ const cloneRecordsIntoDefaultCycle = async ({
     await RecordRepository.insertRecord({ survey, record: recordCloned });
 
     // clone files
-    await Promises.each(Object.entries(
-      newFileUuidsByOldUuid,
-    ), async ([oldFileUuid, fileUuid]) => {
-      const sourceFileUri = RecordFileService.getRecordFileUri({
-        surveyId,
-        fileUuid: oldFileUuid,
-      });
-      await RecordFileService.saveRecordFile({
-        surveyId,
-        fileUuid,
-        sourceFileUri,
-      });
-    });
+    await Promises.each(
+      Object.entries(newFileUuidsByOldUuid),
+      async ([oldFileUuid, fileUuid]) => {
+        const sourceFileUri = RecordFileService.getRecordFileUri({
+          surveyId,
+          fileUuid: oldFileUuid,
+        });
+        await RecordFileService.saveRecordFile({
+          surveyId,
+          fileUuid,
+          sourceFileUri,
+        });
+      },
+    );
   });
 };
 

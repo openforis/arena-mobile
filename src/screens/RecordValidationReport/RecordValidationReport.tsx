@@ -33,7 +33,7 @@ const getNodePath = ({ survey, record, nodeUuid, lang }: any) => {
   if (!node) {
     return parts;
   }
-  for (const visitedAncestor of Records.getAncestorsAndSelf({ node })(record)) {
+  for (const visitedAncestor of Records.getAncestorsAndSelf(node)(record)) {
     const nodeDef = Surveys.getNodeDefByUuid({
       survey,
       uuid: visitedAncestor.nodeDefUuid,

@@ -74,10 +74,7 @@ const getEntityKeysFormatted = ({
   });
   const keyDefs = Surveys.getNodeDefKeys({ survey, nodeDef: entityDef, cycle });
   return keyDefs.map((keyDef) => {
-    const keyNode = Records.getDescendant({
-      node: entity,
-      nodeDefDescendant: keyDef,
-    })(record);
+    const keyNode = Records.getDescendant(entity, keyDef)(record);
     if (!keyNode) return emptyValue;
     return NodeValueFormatter.format({
       survey,
@@ -357,7 +354,7 @@ const findAncestor = (params: {
   predicate: (node: ArenaRecordNode) => boolean;
 }): ArenaRecordNode | null => {
   const { record, node, predicate } = params;
-  return Records.getAncestorsAndSelf({ node })(record).find(predicate) ?? null;
+  return Records.getAncestorsAndSelf(node)(record).find(predicate) ?? null;
 };
 
 const findMatchingEntityUuidForChildrenCountValidation = (params: {
@@ -479,11 +476,11 @@ const hasDescendantApplicableNodes = ({
   parentEntity,
   nodeDef,
 }: any): boolean => {
-  const descendants = Records.getDescendantsOrSelf({
-    node: parentEntity,
-    nodeDefDescendant: nodeDef,
-  })(record);
-  return descendants.some((node) => Records.isNodeApplicable({ node })(record));
+  const descendants = Records.getDescendantsOrSelf(
+    parentEntity,
+    nodeDef,
+  )(record);
+  return descendants.some((node) => Records.isNodeApplicable(node)(record));
 };
 
 const getApplicableDescendantDefs = ({
@@ -682,19 +679,14 @@ const findTopmostNewlyInapplicableAncestorDefUuid = ({
     if (!ancestorPrev) {
       return;
     }
-    const applicablePrev = Records.isNodeApplicable({ node: ancestorPrev })(
-      recordPrev,
-    );
-    const applicableNext = Records.isNodeApplicable({ node: visitedAncestor })(
-      recordNext,
-    );
+    const applicablePrev = Records.isNodeApplicable(ancestorPrev)(recordPrev);
+    const applicableNext =
+      Records.isNodeApplicable(visitedAncestor)(recordNext);
     if (applicablePrev && !applicableNext) {
       topmostInapplicableAncestorDefUuid = visitedAncestor.nodeDefUuid;
     }
   };
-  for (const visitedAncestor of Records.getAncestorsAndSelf({ node })(
-    recordNext,
-  )) {
+  for (const visitedAncestor of Records.getAncestorsAndSelf(node)(recordNext)) {
     visitAncestor(visitedAncestor);
     // stop the visit once found
     if (topmostInapplicableAncestorDefUuid) break;
@@ -722,9 +714,9 @@ const findNewlyInapplicableDefUuidsWithValue = ({
     const nodePrev = Records.getNodeByUuid(node.uuid)(recordPrev);
     const hadUserInputValue = nodePrev && Nodes.hasUserInputValue(nodePrev);
     const applicablePrev = nodePrev
-      ? Records.isNodeApplicable({ node: nodePrev })(recordPrev)
+      ? Records.isNodeApplicable(nodePrev)(recordPrev)
       : true;
-    const applicableNext = Records.isNodeApplicable({ node })(recordNext);
+    const applicableNext = Records.isNodeApplicable(node)(recordNext);
 
     if (applicablePrev && !applicableNext && hadUserInputValue) {
       const topmostInapplicableAncestorDefUuid: string | null =
