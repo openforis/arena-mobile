@@ -22,19 +22,13 @@ type TreeValidationAccumulator = {
 
 const getChildEntity = ({ record, entity, currentEntity, childDef }: any) => {
   if (NodeDefs.isSingle(childDef)) {
-    return Records.getChild({
-      parentNode: entity,
-      childDefUuid: childDef.uuid,
-    })(record);
+    return Records.getChild(entity, childDef.uuid)(record);
   }
   const currentEntityAndAncestorUuids = new Set([
     ...Nodes.getHierarchy(currentEntity),
     currentEntity.uuid,
   ]);
-  const children = Records.getChildren({
-    parentNode: entity,
-    childDefUuid: childDef.uuid,
-  })(record);
+  const children = Records.getChildren(entity, childDef.uuid)(record);
   return children.find((child) =>
     currentEntityAndAncestorUuids.has(child.uuid),
   );
@@ -95,7 +89,7 @@ const _processFieldValidation = ({
       acc,
     });
   } else {
-    const node = Records.getNodeByUuid({ uuid: validationKey })(record);
+    const node = Records.getNodeByUuid(validationKey)(record);
     if (!node) return acc;
 
     const notValidNodeInTree = RecordUtils.findAncestor({
@@ -235,7 +229,7 @@ export const useTreeData = () => {
   if (!survey) return [];
 
   const currentEntityUuid = (entityUuid ?? parentEntityUuid)!;
-  const currentEntity = Records.getNodeByUuid({ uuid: currentEntityUuid })(
+  const currentEntity = Records.getNodeByUuid(currentEntityUuid)(
     record,
   );
   const { cycle } = record;

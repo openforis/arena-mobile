@@ -73,12 +73,12 @@ export const useBreadcrumbItems = () => {
       });
     }
 
-    let currentEntity = Records.getNodeByUuid({ uuid: actualEntityUuid })(
+    let currentEntity = Records.getNodeByUuid(actualEntityUuid)(
       record,
     );
 
     while (currentEntity) {
-      const parentEntity = Records.getParent({ node: currentEntity })(record);
+      const parentEntity = Records.getParent(currentEntity)(record);
 
       const currentEntityDef = Surveys.getNodeDefByUuid({
         survey,
