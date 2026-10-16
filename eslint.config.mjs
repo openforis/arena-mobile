@@ -4,6 +4,8 @@ import reactHooksPlugin from "eslint-plugin-react-hooks";
 import { fixupPluginRules } from "@eslint/compat";
 
 export default [
+  // bundled Yarn release: --fix would rewrite it
+  { ignores: [".yarn/"] },
   {
     ...js.configs.recommended,
     files: ["**/*.js", "**/*.mjs", "**/*.jsx"],
