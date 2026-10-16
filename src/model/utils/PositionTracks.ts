@@ -1,7 +1,6 @@
 import {
   NodeDef,
   NodeDefs,
-  NodeDefType,
   Record as ArenaRecord,
   Survey,
   Surveys,
@@ -43,10 +42,8 @@ const minPointsPerSegment = 2;
 
 const lineGeometryTypes = new Set(["LineString", "MultiLineString"]);
 
-// TODO replace with NodeDefs.isPositionTracking (openforis/arena-core#481) once released
 const isPositionTrackingNodeDef = (nodeDef: NodeDef<any> | null | undefined) =>
-  nodeDef?.type === NodeDefType.geo &&
-  Boolean((nodeDef.props as any)?.positionTracking);
+  !!nodeDef && NodeDefs.isGeo(nodeDef) && NodeDefs.isPositionTracking(nodeDef);
 
 const isTrackableNodeDef = (nodeDef: NodeDef<any> | null | undefined) =>
   !!nodeDef &&

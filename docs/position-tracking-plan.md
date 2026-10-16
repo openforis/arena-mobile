@@ -274,8 +274,8 @@ Implemented in this branch:
 
 - `model/utils/PositionTracks.ts`: node def helpers (`isPositionTrackingNodeDef`,
   `findAutoStartNode`), point filter, GeoJSON (MultiLineString) conversion,
-  length/duration helpers. `isPositionTrackingNodeDef` reads
-  `nodeDef.props.positionTracking` until arena-core provides it.
+  length/duration helpers. `isPositionTrackingNodeDef` uses
+  `NodeDefs.isPositionTracking` (arena-core 2.8.0).
 - DB migration `003` (`position_track`, `position_track_point`) and
   `positionTrackRepository`.
 - `service/positionTracking`: location source (internal GPS or external GPS
@@ -304,9 +304,8 @@ Deviations from the plan:
 
 Still to do:
 
-- arena-core (`NodeDefGeoProps.positionTracking`): openforis/arena-core#481;
-  Arena web checkbox: openforis/arena#4549. Once arena-core is released, use
-  `NodeDefs.isPositionTracking` in `PositionTracks`.
+- Arena web checkbox (experimental): openforis/arena#4549 (arena-core prop
+  merged in openforis/arena-core#481, released in 2.8.0).
 - Trackable attribute in the demo survey + Maestro flow.
 - Translations.
 - Manual tests on devices (internal and external GPS, app killed while
