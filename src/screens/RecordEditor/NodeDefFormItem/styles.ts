@@ -28,6 +28,10 @@ export const useStyles = () => {
     nodeDefLabel: {
       flex: 1,
     },
+    requiredMarker: {
+      color: theme.colors.error,
+      fontWeight: "bold",
+    },
     nodeDefDescriptionViewMoreText: {
       textAlign: "justify",
     },

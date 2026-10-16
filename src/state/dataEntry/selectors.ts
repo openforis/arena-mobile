@@ -194,6 +194,43 @@ const selectRecordNodePointerEditable =
     );
   };
 
+// always required or "required if" condition met in the parent entity (key attributes not considered)
+const isRequiredInParentNode = (
+  nodeDef: NodeDef<any>,
+  parentNode: ArenaRecordNode | undefined,
+): boolean =>
+  NodeDefs.isRequired(nodeDef) ||
+  (NodeDefs.isRequiredIfDefined(nodeDef) &&
+    !!parentNode &&
+    Nodes.isChildRequired(parentNode, nodeDef.uuid));
+
+const selectRecordNodePointerRequired =
+  ({
+    parentNodeUuid,
+    nodeDef,
+  }: {
+    parentNodeUuid: string | undefined;
+    nodeDef: NodeDef<any>;
+  }) =>
+  (state: any): boolean => {
+    const record = selectRecordUnsafe(state);
+    const parentNode =
+      record && parentNodeUuid
+        ? Records.getNodeByUuid(parentNodeUuid)(record)
+        : undefined;
+    return isRequiredInParentNode(nodeDef, parentNode);
+  };
+
+const selectRecordNodeRequired =
+  ({ nodeUuid, nodeDef }: { nodeUuid: string; nodeDef: NodeDef<any> }) =>
+  (state: any): boolean => {
+    const record = selectRecordUnsafe(state);
+    const node = record ? Records.getNodeByUuid(nodeUuid)(record) : undefined;
+    const parentNode =
+      record && node ? Records.getParent(node)(record) : undefined;
+    return isRequiredInParentNode(nodeDef, parentNode);
+  };
+
 const selectRecordNodePointerVisibility =
   ({
     parentNodeUuid,
@@ -276,20 +313,20 @@ const selectIsRecordAttributeFilled =
 
 const selectChildDefs =
   ({ nodeDef }: { nodeDef: NodeDefEntity }) =>
-    (state: any): NodeDef<any>[] => {
-      const cycle = selectRecordCycle(state);
-      const survey = SurveySelectors.selectCurrentSurvey(state)!;
-      const childDefs = SurveyDefs.getChildrenDefs({
-        survey,
-        nodeDef,
-        cycle,
-      }).filter((childDef) => {
-        // only child defs not hidden in mobile and in same page
-        const layoutProps = NodeDefs.getLayoutProps(cycle)(childDef);
-        return !layoutProps.pageUuid;
-      });
-      return childDefs;
-    };
+  (state: any): NodeDef<any>[] => {
+    const cycle = selectRecordCycle(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
+    const childDefs = SurveyDefs.getChildrenDefs({
+      survey,
+      nodeDef,
+      cycle,
+    }).filter((childDef) => {
+      // only child defs not hidden in mobile and in same page
+      const layoutProps = NodeDefs.getLayoutProps(cycle)(childDef);
+      return !layoutProps.pageUuid;
+    });
+    return childDefs;
+  };
 
 const selectRecordCodeParentItemUuid =
   ({
@@ -525,6 +562,8 @@ export const DataEntrySelectors = {
   selectCanEditRecord,
   selectRecordSyncInProgress,
   selectRecordNodePointerEditable,
+  selectRecordNodePointerRequired,
+  selectRecordNodeRequired,
 
   useRecord: () => useSelector(selectRecord),
 
@@ -590,6 +629,23 @@ export const DataEntrySelectors = {
     useSelector(
       selectRecordNodePointerEditable({ parentNodeUuid, nodeDefUuid }),
     ),
+
+  useRecordNodePointerRequired: ({
+    parentNodeUuid,
+    nodeDef,
+  }: {
+    parentNodeUuid: string | undefined;
+    nodeDef: NodeDef<any>;
+  }) =>
+    useSelector(selectRecordNodePointerRequired({ parentNodeUuid, nodeDef })),
+
+  useRecordNodeRequired: ({
+    nodeUuid,
+    nodeDef,
+  }: {
+    nodeUuid: string;
+    nodeDef: NodeDef<any>;
+  }) => useSelector(selectRecordNodeRequired({ nodeUuid, nodeDef })),
 
   useRecordAttributeInfo: ({ nodeUuid }: any) =>
     useSelector(selectRecordAttributeInfo({ nodeUuid }), Objects.isEqual),
