@@ -221,16 +221,6 @@ const selectRecordNodePointerRequired =
     return isRequiredInParentNode(nodeDef, parentNode);
   };
 
-const selectRecordNodeRequired =
-  ({ nodeUuid, nodeDef }: { nodeUuid: string; nodeDef: NodeDef<any> }) =>
-  (state: any): boolean => {
-    const record = selectRecordUnsafe(state);
-    const node = record ? Records.getNodeByUuid(nodeUuid)(record) : undefined;
-    const parentNode =
-      record && node ? Records.getParent(node)(record) : undefined;
-    return isRequiredInParentNode(nodeDef, parentNode);
-  };
-
 const selectRecordNodePointerVisibility =
   ({
     parentNodeUuid,
@@ -563,7 +553,6 @@ export const DataEntrySelectors = {
   selectRecordSyncInProgress,
   selectRecordNodePointerEditable,
   selectRecordNodePointerRequired,
-  selectRecordNodeRequired,
 
   useRecord: () => useSelector(selectRecord),
 
@@ -638,14 +627,6 @@ export const DataEntrySelectors = {
     nodeDef: NodeDef<any>;
   }) =>
     useSelector(selectRecordNodePointerRequired({ parentNodeUuid, nodeDef })),
-
-  useRecordNodeRequired: ({
-    nodeUuid,
-    nodeDef,
-  }: {
-    nodeUuid: string;
-    nodeDef: NodeDef<any>;
-  }) => useSelector(selectRecordNodeRequired({ nodeUuid, nodeDef })),
 
   useRecordAttributeInfo: ({ nodeUuid }: any) =>
     useSelector(selectRecordAttributeInfo({ nodeUuid }), Objects.isEqual),

@@ -16,7 +16,6 @@ import { LocationPoint, SettingsModel } from "model";
 import { GpsSourceDescriptor } from "service/externalGps/types";
 import {
   DataEntryActions,
-  DataEntrySelectors,
   SettingsActions,
   SettingsSelectors,
   SurveySelectors,
@@ -348,16 +347,12 @@ export const useNodeCoordinateComponent = (props: any) => {
   );
 
   const editable = !NodeDefs.isReadOnly(nodeDef);
-  const required = DataEntrySelectors.useRecordNodeRequired({
-    nodeUuid,
-    nodeDef,
-  });
   const inputFieldsEditable =
     editable && !NodeDefs.isAllowOnlyDeviceCoordinate(nodeDef);
 
   const deleteButtonVisible =
+    // visible also for required attributes: a wrong coordinate must be clearable
     editable &&
-    !required &&
     uiValue &&
     (Objects.isNotEmpty(uiValue.x) || Objects.isNotEmpty(uiValue.y));
 

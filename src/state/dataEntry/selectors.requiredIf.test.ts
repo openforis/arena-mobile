@@ -75,17 +75,10 @@ describe("DataEntrySelectors - required", () => {
   const isRequired = (record: ArenaRecord, name: string): boolean => {
     const nodeDef = Surveys.getNodeDefByName({ survey, name });
     const root = Records.getRoot(record)!;
-    const byPointer = DataEntrySelectors.selectRecordNodePointerRequired({
+    return DataEntrySelectors.selectRecordNodePointerRequired({
       parentNodeUuid: root.uuid,
       nodeDef,
     })(toState(record));
-    const node = Records.getChildren(root, nodeDef.uuid)(record)[0]!;
-    const byNode = DataEntrySelectors.selectRecordNodeRequired({
-      nodeUuid: node.uuid,
-      nodeDef,
-    })(toState(record));
-    expect(byNode).toBe(byPointer);
-    return byPointer;
   };
 
   it("always required and not required attributes", async () => {
