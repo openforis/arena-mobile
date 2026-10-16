@@ -3,6 +3,7 @@ import { JobMobile, JobMobileContext } from "model";
 import { Files } from "utils";
 
 import { OfflineMapTilesStorage } from "../offlineMaps/offlineMapTilesStorage";
+import { PdfMapsStorage } from "../pdfMaps/pdfMapsStorage";
 
 const outputFileNamePrefix = `arena_mobile_full_backup_`;
 
@@ -19,23 +20,36 @@ export class BackupJob extends JobMobile<BackupJobContext> {
 
     const outputFileUri = Files.path(Files.cacheDirectory, outputFileName);
 
-    // offline map tiles can be downloaded again and would make the backup huge:
-    // move them temporarily outside of the backed up folder
-    const mapTilesDirUri = OfflineMapTilesStorage.getTilesRootDirUri();
-    const mapTilesTempDirUri = Files.path(
-      Files.cacheDirectory,
-      `map_tiles_backup_${Date.now()}`,
+    // map files would make the backup huge: offline map tiles can be downloaded again and
+    // PDF maps imported again; move them temporarily outside of the backed up folder
+    const dirUris = [
+      OfflineMapTilesStorage.getTilesRootDirUri(),
+      PdfMapsStorage.getRootDirUri(),
+    ];
+    const existing = await Promise.all(dirUris.map((uri) => Files.exists(uri)));
+    const moveTimestamp = Date.now();
+    const excludedDirs = dirUris
+      .map((uri, index) => ({
+        uri,
+        tempUri: Files.path(
+          Files.cacheDirectory,
+          `map_files_backup_${moveTimestamp}_${index}`,
+        ),
+      }))
+      .filter((_, index) => existing[index]);
+    await Promise.all(
+      excludedDirs.map(({ uri, tempUri }) =>
+        Files.moveFile({ from: uri, to: tempUri }),
+      ),
     );
-    const mapTilesMoved = await Files.exists(mapTilesDirUri);
-    if (mapTilesMoved) {
-      await Files.moveFile({ from: mapTilesDirUri, to: mapTilesTempDirUri });
-    }
     try {
       await Files.zip(Files.documentDirectory, outputFileUri);
     } finally {
-      if (mapTilesMoved) {
-        await Files.moveFile({ from: mapTilesTempDirUri, to: mapTilesDirUri });
-      }
+      await Promise.all(
+        excludedDirs.map(({ uri, tempUri }) =>
+          Files.moveFile({ from: tempUri, to: uri }),
+        ),
+      );
     }
 
     this.context.outputFileUri = outputFileUri;

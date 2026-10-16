@@ -4,7 +4,6 @@ export { useBackHandler } from "./useBackHandler";
 export { useCurrentLocationWatch } from "./useCurrentLocationWatch";
 export type { CurrentLocation } from "./useCurrentLocationWatch";
 export { useEffectiveTheme } from "./useEffectiveTheme";
-export { useExperimentalFeaturesEnabled } from "./useExperimentalFeaturesEnabled";
 export { useGpsDeviceDiscovery } from "./useGpsDeviceDiscovery";
 export type { GpsDeviceDiscoveryError } from "./useGpsDeviceDiscovery";
 export { useHeartbeatAnimation } from "./useHeartbeatAnimation";

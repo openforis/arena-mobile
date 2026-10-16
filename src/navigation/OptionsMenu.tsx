@@ -7,7 +7,7 @@ import * as WebBrowser from "expo-web-browser";
 import { Surveys } from "@openforis/arena-core";
 
 import { MenuItem } from "components";
-import { useExperimentalFeaturesEnabled, useScreenKey } from "hooks";
+import { useScreenKey } from "hooks";
 import { screenKeys } from "screens";
 import {
   ConfirmActions,
@@ -35,8 +35,6 @@ export const OptionsMenu = (props: Props) => {
   const editingRecord =
     DataEntrySelectors.useIsEditingRecord() &&
     screenKey === screenKeys.recordEditor;
-  // offline maps are experimental
-  const offlineMapsAvailable = useExperimentalFeaturesEnabled();
   const survey = SurveySelectors.useCurrentSurvey();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const fieldManualUrl = survey
@@ -96,16 +94,14 @@ export const OptionsMenu = (props: Props) => {
         </>
       )}
       <Divider />
-      {offlineMapsAvailable && (
-        <MenuItem
-          icon="map-marker-down"
-          onPress={() => {
-            navigation.navigate(screenKeys.offlineMaps as never);
-          }}
-          title="offlineMaps:title"
-          toggleMenu={toggleMenu}
-        />
-      )}
+      <MenuItem
+        icon="map-marker-down"
+        onPress={() => {
+          navigation.navigate(screenKeys.offlineMaps as never);
+        }}
+        title="offlineMaps:title"
+        toggleMenu={toggleMenu}
+      />
       <MenuItem
         icon="cog"
         onPress={() => {

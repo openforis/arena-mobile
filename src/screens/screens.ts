@@ -7,6 +7,8 @@ import LocationMapViewer from "./LocationMapViewer";
 import OfflineMapAreaEditor from "./OfflineMapAreaEditor";
 import OfflineMapAreaViewer from "./OfflineMapAreaViewer";
 import OfflineMaps from "./OfflineMaps";
+import PdfMapImport from "./PdfMapImport";
+import PdfMapViewer from "./PdfMapViewer";
 import RecordEditor from "./RecordEditor";
 import RecordsList from "./RecordsList";
 import RecordsMap from "./RecordsMap";
@@ -71,6 +73,18 @@ export const screens = {
     hasOptionsMenuVisible: false,
     title: "offlineMaps:areaViewer.title",
     component: OfflineMapAreaViewer,
+  },
+  [screenKeys.pdfMapImport]: {
+    ...screenDefaults,
+    hasOptionsMenuVisible: false,
+    title: "pdfMaps:import.title",
+    component: PdfMapImport,
+  },
+  [screenKeys.pdfMapViewer]: {
+    ...screenDefaults,
+    hasOptionsMenuVisible: false,
+    title: "pdfMaps:map.viewerTitle",
+    component: PdfMapViewer,
   },
   [screenKeys.recordsList]: {
     ...screenDefaults,

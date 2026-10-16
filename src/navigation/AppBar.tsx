@@ -5,7 +5,7 @@ import { Surveys } from "@openforis/arena-core";
 
 import { AutoSyncStatusAppBarAction } from "appComponents/AutoSyncStatus";
 import { HView, Spacer, Text } from "components";
-import { useExperimentalFeaturesEnabled, useScreenKey } from "hooks";
+import { useScreenKey } from "hooks";
 import { MapProvider, RecordEditViewMode, ScreenViewMode } from "model";
 import { useIsTextDirectionRtl, useTranslation } from "localization";
 import { log } from "utils";
@@ -61,16 +61,13 @@ export const AppBar = (props: Props) => {
   const survey = SurveySelectors.useCurrentSurvey();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const cycle = SurveySelectors.useCurrentSurveyCycle();
-  // the records map is an experimental feature
-  const experimentalFeaturesEnabled = useExperimentalFeaturesEnabled();
   const recordsMapAvailable = useMemo(
     () =>
-      experimentalFeaturesEnabled &&
       !!hasRecordsMap &&
       !!survey &&
       !!cycle &&
       hasMapLayers({ survey, cycle }),
-    [cycle, experimentalFeaturesEnabled, hasRecordsMap, survey]
+    [cycle, hasRecordsMap, survey]
   );
   const isLandscape = DeviceInfoSelectors.useOrientationIsLandscape();
   const isTablet = DeviceInfoSelectors.useIsTablet();
