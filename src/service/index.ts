@@ -9,6 +9,13 @@ export type { CustomMapLayerTestResult } from "./customMapLayers/customMapLayers
 export type { CustomMapLayerValidation } from "./customMapLayers/customMapLayerValidator";
 export { OfflineMapsService } from "./offlineMaps/offlineMapsService";
 export type { OfflineMapAreaEstimate } from "./offlineMaps/offlineMapsService";
+export { PdfMapsService } from "./pdfMaps/pdfMapsService";
+export type {
+  PdfMapEstimate,
+  PdfMapFileAnalysis,
+  PdfMapPageCandidate,
+  PdfMapPreview,
+} from "./pdfMaps/pdfMapsService";
 export { PreferencesService } from "./preferencesService";
 export { RecordFileService } from "./recordFileService";
 export { RecordService } from "./recordService";

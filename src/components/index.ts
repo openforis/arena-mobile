@@ -39,6 +39,7 @@ export { Loader } from "./Loader";
 export { LoadingIcon } from "./LoadingIcon";
 export { Markdown } from "./Markdown";
 export { MapView } from "./MapView";
+export type { MapTileOverlay } from "./MapView";
 export { MenuButton } from "./MenuButton";
 export { MenuItem } from "./MenuItem";
 export { MessageDialog } from "./MessageDialog";

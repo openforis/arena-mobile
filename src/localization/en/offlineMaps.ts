@@ -1,5 +1,9 @@
 export default {
   title: "Offline maps",
+  tabs: {
+    areas: "Downloaded areas",
+    pdfMaps: "PDF maps",
+  },
   description:
     "Download the map of your area of interest before going to the field: it will be available even without an internet connection when drawing or viewing geographic attributes.",
   freeLayersNotInUse:

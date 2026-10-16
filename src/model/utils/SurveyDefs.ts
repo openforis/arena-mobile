@@ -13,29 +13,19 @@ import {
   NodeDefExpression,
 } from "@openforis/arena-core";
 
-import { PositionTracks } from "./PositionTracks";
-
 const samplingPointDataCategoryName = "sampling_point_data";
-
-const experimentalTypes = new Set([NodeDefType.geo]);
 
 const mobileNodeDefFilter =
   ({
     cycle,
-    allowExperimental,
   }: {
     cycle: string;
-    allowExperimental?: boolean;
   }): ((
     value: NodeDef<any>,
     index?: number,
     array?: NodeDef<any>[],
   ) => boolean) =>
   (childDef) =>
-    (allowExperimental ||
-      !experimentalTypes.has(childDef.type) ||
-      // geo attributes used for position tracking are not experimental
-      PositionTracks.isPositionTrackingNodeDef(childDef)) &&
     !NodeDefs.isHidden(childDef) &&
     !NodeDefs.isHiddenInMobile(cycle)(childDef) &&
     NodeDefs.isInCycle(cycle)(childDef);
@@ -55,19 +45,17 @@ const getChildrenDefs = ({
   survey,
   nodeDef,
   cycle,
-  allowExperimental = false,
 }: {
   survey: Survey;
   nodeDef: NodeDef<any>;
   cycle: string;
-  allowExperimental?: boolean;
 }) =>
   Surveys.getNodeDefChildrenSorted({
     survey,
     nodeDef,
     cycle,
     includeAnalysis: false,
-  }).filter(mobileNodeDefFilter({ allowExperimental, cycle }));
+  }).filter(mobileNodeDefFilter({ cycle }));
 
 const getDescendantsInSingleEntities = ({
   survey,

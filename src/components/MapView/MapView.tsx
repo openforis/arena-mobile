@@ -19,13 +19,15 @@ import RNMapView, {
 
 import { useIsNetworkConnected } from "hooks/useIsNetworkConnected";
 import { useTranslation } from "localization";
-import { LatLng, MapLayers, MapProvider } from "model";
+import { LatLng, MapLayers, MapProvider, PdfMap } from "model";
 import { OfflineMapTilesStorage } from "service/offlineMaps/offlineMapTilesStorage";
+import { PdfMapsStorage } from "service/pdfMaps/pdfMapsStorage";
 import { SettingsSelectors } from "state/settings/selectors";
 import { Environment } from "utils";
 
 import { IconButton } from "../IconButton";
 import { Text } from "../Text";
+import { PdfMapsPanel } from "./PdfMapsPanel";
 import styles from "./styles";
 
 type EdgePadding = {
@@ -40,8 +42,22 @@ type FitToCoordinatesOptions = {
   animated?: boolean;
 };
 
+// tiles stored on the device ({tilesPath}/{z}/{x}/{y}), shown above the base map
+export type MapTileOverlay = {
+  key: string;
+  // file system path (no file:// scheme)
+  tilesPath: string;
+  minZoom: number;
+  maxZoom: number;
+  opacity?: number;
+};
+
 type Props = {
+  // when true, only the tile overlays (PDF maps) are shown, without the base map
+  baseMapHidden?: boolean;
   children?: React.ReactNode;
+  // tile overlays shown in addition to the visible PDF maps
+  extraTileOverlays?: MapTileOverlay[];
   fitToCoordinatesOnReady?: LatLng[];
   fitToCoordinatesOptions?: FitToCoordinatesOptions;
   fitOnlyOnce?: boolean;
@@ -54,6 +70,10 @@ type Props = {
   onPoiClick?: (event: PoiClickEvent) => void;
   onPress?: (event: MapPressEvent) => void;
   onRegionChangeComplete?: (region: Region) => void;
+  // called with the zoom level of the visible region (also with Apple Maps, that doesn't give the camera zoom)
+  onZoomChange?: (zoom: number) => void;
+  // PDF maps shown even when they are hidden in the settings
+  pdfMapIds?: string[];
   // when specified, it overrides the map provider in the settings
   provider?: MapProvider;
   showMapTypeSelector?: boolean;
@@ -74,8 +94,20 @@ const mapTypes: MapType[] = ["standard", "satellite", "hybrid"];
 // pre-fetched tiles must not expire: they would be re-downloaded in background when online
 const TILE_CACHE_MAX_AGE_SECONDS = 365 * 24 * 60 * 60;
 
+// PDF maps are drawn above the base map layer (zIndex -1) and below the other overlays
+const PDF_MAP_Z_INDEX = -0.5;
+// tiles above the max zoom level of a PDF map are obtained scaling the ones of the max zoom
+const PDF_MAP_MAXIMUM_Z = 22;
+
 // time the name of the layer is shown after switching layer
 const LAYER_NAME_VISIBILITY_MILLIS = 1500;
+
+// zoom level (web mercator tiles of 256 px) of the region shown in a map of the specified width;
+// computed from the region because the camera zoom is not available with Apple Maps
+const computeZoom = (region: Region, mapWidth: number): number | null =>
+  region.longitudeDelta > 0 && mapWidth > 0
+    ? Math.log2((360 * mapWidth) / (region.longitudeDelta * 256))
+    : null;
 
 const getNextItem = <T,>(items: T[], current: T): T => {
   const currentIndex = items.indexOf(current);
@@ -86,13 +118,17 @@ const getNextItem = <T,>(items: T[], current: T): T => {
 export const MapView = forwardRef<RNMapView | null, Props>(
   (
     {
+      baseMapHidden = false,
       children,
+      extraTileOverlays,
       fitOnlyOnce = true,
       fitToCoordinatesOnReady,
       fitToCoordinatesOptions,
       layerId: layerIdProp,
       onMapReady,
       onRegionChangeComplete,
+      onZoomChange,
+      pdfMapIds,
       provider: providerProp,
       showMapTypeSelector = true,
       style,
@@ -109,6 +145,8 @@ export const MapView = forwardRef<RNMapView | null, Props>(
     const [isMapReady, setIsMapReady] = useState(false);
     const hasAppliedFitRef = useRef(false);
     const [mapType, setMapType] = useState<MapType>("standard");
+    const regionRef = useRef<Region>(initialRegion);
+    const [mapWidth, setMapWidth] = useState(0);
 
     const { t } = useTranslation();
     const settings = SettingsSelectors.useSettings();
@@ -125,6 +163,29 @@ export const MapView = forwardRef<RNMapView | null, Props>(
     const layerNameTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
       null,
     );
+    const visiblePdfMaps = useMemo(
+      () =>
+        (settings.pdfMaps ?? []).filter(
+          (pdfMap) => pdfMap.visible || pdfMapIds?.includes(pdfMap.id),
+        ),
+      [pdfMapIds, settings.pdfMaps],
+    );
+    const tileOverlays = useMemo<MapTileOverlay[]>(
+      () => [
+        ...visiblePdfMaps.map((pdfMap) => ({
+          key: pdfMap.id,
+          tilesPath: PdfMapsStorage.getTilesCachePath(pdfMap.id),
+          minZoom: pdfMap.minZoom,
+          maxZoom: pdfMap.maxZoom,
+          opacity: pdfMap.opacity,
+        })),
+        ...(extraTileOverlays ?? []),
+      ],
+      [extraTileOverlays, visiblePdfMaps],
+    );
+    const hasPdfMaps = (settings.pdfMaps?.length ?? 0) > 0;
+    const freeLayerVisible = useFreeLayers && !baseMapHidden;
+    const [pdfMapsPanelVisible, setPdfMapsPanelVisible] = useState(false);
     const networkConnected = useIsNetworkConnected();
     const offlineMode = !networkConnected;
 
@@ -163,10 +224,13 @@ export const MapView = forwardRef<RNMapView | null, Props>(
     // the padding must be set only when the map is ready (on Android it throws an error otherwise)
     const mapPadding = useMemo(
       () =>
-        isMapReady && useFreeLayers && hasAttribution && attributionHeight > 0
+        isMapReady &&
+        freeLayerVisible &&
+        hasAttribution &&
+        attributionHeight > 0
           ? { top: 0, right: 0, bottom: attributionHeight, left: 0 }
           : undefined,
-      [attributionHeight, hasAttribution, isMapReady, useFreeLayers],
+      [attributionHeight, freeLayerVisible, hasAttribution, isMapReady],
     );
 
     const onMapReadyCallback = useCallback(() => {
@@ -209,16 +273,60 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       }
     }, [showLayerName, useFreeLayers]);
 
+    const openPdfMapsPanel = useCallback(
+      () => setPdfMapsPanelVisible(true),
+      [],
+    );
+    const closePdfMapsPanel = useCallback(
+      () => setPdfMapsPanelVisible(false),
+      [],
+    );
+    const onZoomToPdfMap = useCallback((pdfMap: PdfMap) => {
+      internalRef.current?.fitToCoordinates(pdfMap.neatline, {
+        edgePadding: defaultEdgePadding,
+        animated: true,
+      });
+    }, []);
+
     const layerName = useFreeLayers
       ? MapLayers.getLayerLabel(layer, t)
       : t(`offlineMaps:mapTypes.${mapType}`);
 
+    const notifyZoomChange = useCallback(
+      (region: Region, width: number) => {
+        if (!onZoomChange) return;
+        const zoom = computeZoom(region, width);
+        if (zoom !== null) onZoomChange(zoom);
+      },
+      [onZoomChange],
+    );
+
+    const onContainerLayout = useCallback(
+      (event: LayoutChangeEvent) => {
+        const width = event.nativeEvent.layout.width;
+        setMapWidth(width);
+        notifyZoomChange(regionRef.current, width);
+      },
+      [notifyZoomChange],
+    );
+
+    const onRegionChangeCompleteInternal = useCallback(
+      (region: Region) => {
+        regionRef.current = region;
+        notifyZoomChange(region, mapWidth);
+        onRegionChangeComplete?.(region);
+      },
+      [mapWidth, notifyZoomChange, onRegionChangeComplete],
+    );
+
     // on Android the Google base map is hidden (mapType "none"); on iOS the UrlTile replaces the Apple map content
     const effectiveMapType: MapType =
-      useFreeLayers && Environment.isAndroid ? "none" : mapType;
+      (useFreeLayers || baseMapHidden) && Environment.isAndroid
+        ? "none"
+        : mapType;
 
     return (
-      <View style={styles.container}>
+      <View style={styles.container} onLayout={onContainerLayout}>
         <RNMapView
           ref={internalRef}
           style={style}
@@ -227,13 +335,13 @@ export const MapView = forwardRef<RNMapView | null, Props>(
           onPanDrag={onPanDrag}
           onPoiClick={onPoiClick}
           onMapReady={onMapReadyCallback}
-          onRegionChangeComplete={onRegionChangeComplete}
+          onRegionChangeComplete={onRegionChangeCompleteInternal}
           mapPadding={mapPadding}
           mapType={effectiveMapType}
           toolbarEnabled={toolbarEnabled}
           showsUserLocation={showsUserLocation}
         >
-          {useFreeLayers && (
+          {freeLayerVisible && (
             <UrlTile
               // remount the tile overlay when the layer or the network status change
               key={`${layer.id}_${offlineMode}`}
@@ -250,9 +358,27 @@ export const MapView = forwardRef<RNMapView | null, Props>(
               zIndex={-1}
             />
           )}
+          {tileOverlays.map((overlay) => (
+            <UrlTile
+              // remount when the base map is hidden/shown (shouldReplaceMapContent is applied on creation)
+              key={`${overlay.key}_${baseMapHidden}`}
+              // tiles are only read from the device (offline mode): the url is never used
+              urlTemplate={`file://${overlay.tilesPath}/{z}/{x}/{y}`}
+              minimumZ={overlay.minZoom}
+              maximumZ={PDF_MAP_MAXIMUM_Z}
+              maximumNativeZ={overlay.maxZoom}
+              offlineMode
+              opacity={overlay.opacity ?? 1}
+              // on iOS it hides the Apple base map
+              shouldReplaceMapContent={baseMapHidden}
+              tileCacheMaxAge={TILE_CACHE_MAX_AGE_SECONDS}
+              tileCachePath={overlay.tilesPath}
+              zIndex={PDF_MAP_Z_INDEX}
+            />
+          ))}
           {children}
         </RNMapView>
-        {useFreeLayers && hasAttribution && (
+        {freeLayerVisible && hasAttribution && (
           <View
             onLayout={onAttributionLayout}
             pointerEvents="none"
@@ -263,7 +389,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
             </Text>
           </View>
         )}
-        {useFreeLayers && offlineMode && (
+        {freeLayerVisible && offlineMode && (
           <View style={styles.offlineBadge} pointerEvents="none">
             <Text
               style={styles.offlineBadgeText}
@@ -276,15 +402,31 @@ export const MapView = forwardRef<RNMapView | null, Props>(
             <Text style={styles.layerName}>{layerName}</Text>
           </View>
         )}
-        {showMapTypeSelector && !layerIdProp && (
+        {showMapTypeSelector && (!layerIdProp || hasPdfMaps) && (
           <View style={styles.mapTypeSelector}>
-            <IconButton
-              icon="layers-outline"
-              mode="contained"
-              onPress={handleMapTypeChange}
-              size={18}
-            />
+            {!layerIdProp && !baseMapHidden && (
+              <IconButton
+                icon="layers-outline"
+                mode="contained"
+                onPress={handleMapTypeChange}
+                size={18}
+              />
+            )}
+            {hasPdfMaps && (
+              <IconButton
+                icon="file-pdf-box"
+                mode="contained"
+                onPress={openPdfMapsPanel}
+                size={18}
+              />
+            )}
           </View>
+        )}
+        {pdfMapsPanelVisible && (
+          <PdfMapsPanel
+            onDismiss={closePdfMapsPanel}
+            onZoomToMap={onZoomToPdfMap}
+          />
         )}
       </View>
     );

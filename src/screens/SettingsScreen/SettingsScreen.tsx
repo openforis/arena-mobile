@@ -8,8 +8,8 @@ import { ConnectionToRemoteServerButton } from "appComponents/ConnectionToRemote
 import { FullBackupButton } from "appComponents/FullBackupButton";
 
 import { Button, FieldSet, HView, ScreenView, Text, VView } from "components";
-import { useExperimentalFeaturesEnabled } from "hooks";
 import { MapProvider, SettingsModel, SettingsObject } from "model";
+import { OfflineMapsTab } from "screens/OfflineMaps/OfflineMapsScreen";
 import { screenKeys } from "screens/screenKeys";
 import { AppService } from "service/appService";
 import {
@@ -54,8 +54,6 @@ export const SettingsScreen = () => {
   );
 
   const settingsStored = SettingsSelectors.useSettings();
-  // maps settings (related to offline maps) are experimental
-  const mapsSettingsAvailable = useExperimentalFeaturesEnabled();
 
   const [state, setState] = useState({ settings: settingsStored });
 
@@ -96,7 +94,6 @@ export const SettingsScreen = () => {
           );
           const isLocationGroup = group === SettingsModel.SettingGroup.location;
           const isMapsGroup = group === SettingsModel.SettingGroup.maps;
-          if (isMapsGroup && !mapsSettingsAvailable) return null;
           if (visibleEntries.length === 0 && !isLocationGroup && !isMapsGroup)
             return null;
           return (
@@ -146,6 +143,21 @@ export const SettingsScreen = () => {
                   }
                   style={styles.offlineMapsButton}
                   textKey="offlineMaps:title"
+                />
+              )}
+              {isMapsGroup && (
+                <Button
+                  icon="file-pdf-box"
+                  onPress={() =>
+                    navigation.navigate(
+                      ...([
+                        screenKeys.offlineMaps,
+                        { initialTab: OfflineMapsTab.pdfMaps },
+                      ] as never),
+                    )
+                  }
+                  style={styles.offlineMapsButton}
+                  textKey="pdfMaps:title"
                 />
               )}
             </FieldSet>

@@ -13,14 +13,12 @@ import {
   Records,
   RecordValidations,
   Surveys,
-  Users,
   Validation,
   Validations,
 } from "@openforis/arena-core";
 
 import { RecordCurrentPageEntity, RecordUtils, SurveyDefs } from "model";
 
-import { RemoteConnectionSelectors } from "../remoteConnection/selectors";
 import { SurveySelectors } from "../survey/selectors";
 import { DataEntryState, PreviousCycleRecordPageEntityPointer } from "./types";
 
@@ -278,22 +276,20 @@ const selectIsRecordAttributeFilled =
 
 const selectChildDefs =
   ({ nodeDef }: { nodeDef: NodeDefEntity }) =>
-  (state: any): NodeDef<any>[] => {
-    const user = RemoteConnectionSelectors.selectLoggedUser(state);
-    const cycle = selectRecordCycle(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const childDefs = SurveyDefs.getChildrenDefs({
-      survey,
-      nodeDef,
-      cycle,
-      allowExperimental: user ? Users.isSystemAdmin(user) : false,
-    }).filter((childDef) => {
-      // only child defs not hidden in mobile and in same page
-      const layoutProps = NodeDefs.getLayoutProps(cycle)(childDef);
-      return !layoutProps.pageUuid;
-    });
-    return childDefs;
-  };
+    (state: any): NodeDef<any>[] => {
+      const cycle = selectRecordCycle(state);
+      const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const childDefs = SurveyDefs.getChildrenDefs({
+        survey,
+        nodeDef,
+        cycle,
+      }).filter((childDef) => {
+        // only child defs not hidden in mobile and in same page
+        const layoutProps = NodeDefs.getLayoutProps(cycle)(childDef);
+        return !layoutProps.pageUuid;
+      });
+      return childDefs;
+    };
 
 const selectRecordCodeParentItemUuid =
   ({
