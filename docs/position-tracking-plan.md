@@ -304,8 +304,9 @@ Deviations from the plan:
 
 Still to do:
 
-- arena-core (`NodeDefGeoProps.positionTracking`) and the Arena web checkbox
-  (separate PRs in those repositories).
+- arena-core (`NodeDefGeoProps.positionTracking`): openforis/arena-core#481;
+  Arena web checkbox: openforis/arena#4549. Once arena-core is released, use
+  `NodeDefs.isPositionTracking` in `PositionTracks`.
 - Trackable attribute in the demo survey + Maestro flow.
 - Translations.
 - Manual tests on devices (internal and external GPS, app killed while
