@@ -351,8 +351,8 @@ export const useNodeCoordinateComponent = (props: any) => {
     editable && !NodeDefs.isAllowOnlyDeviceCoordinate(nodeDef);
 
   const deleteButtonVisible =
+    // visible also for required attributes: a wrong coordinate must be clearable
     editable &&
-    !NodeDefs.isRequired(nodeDef) &&
     uiValue &&
     (Objects.isNotEmpty(uiValue.x) || Objects.isNotEmpty(uiValue.y));
 
