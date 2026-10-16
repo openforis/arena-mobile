@@ -47,10 +47,17 @@ export const NodeDefFormItemHeader = (props: NodeDefFormItemHeaderProps) => {
           </View>
         )}
         {startAccessory}
-        <Text style={styles.nodeDefLabel} variant="titleLarge">
-          {labelOrName}
-          {showRequiredMarker && <Text style={styles.requiredMarker}> *</Text>}
-        </Text>
+        {/* marker in a separate element: the label text must stay the same (e.g. e2e tests select by label) */}
+        <HView style={styles.nodeDefLabelWrapper} textDirectionAware={false}>
+          <Text style={styles.nodeDefLabel} variant="titleLarge">
+            {labelOrName}
+          </Text>
+          {showRequiredMarker && (
+            <Text style={styles.requiredMarker} variant="titleLarge">
+              *
+            </Text>
+          )}
+        </HView>
         <NodeValidationIcon nodeDef={nodeDef} parentNodeUuid={parentNodeUuid} />
       </HView>
       {!Objects.isEmpty(description) && (
