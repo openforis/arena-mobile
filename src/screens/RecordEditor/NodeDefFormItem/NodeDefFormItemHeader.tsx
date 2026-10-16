@@ -4,7 +4,6 @@ import { NodeDef, NodeDefs, Objects } from "@openforis/arena-core";
 
 import { HView, Icon, Text, View, ViewMoreText } from "components";
 import { useIsTextDirectionRtl } from "localization";
-import { DataEntrySelectors } from "state/dataEntry";
 import { SurveySelectors } from "state/survey";
 
 import { NodeValidationIcon } from "../NodeValidationIcon";
@@ -27,12 +26,6 @@ export const NodeDefFormItemHeader = (props: NodeDefFormItemHeaderProps) => {
   const labelOrName = NodeDefs.getLabelOrName(nodeDef, lang);
   const description = NodeDefs.getDescription(nodeDef, lang);
   const showKeyIcon = NodeDefs.isKey(nodeDef);
-  const required = DataEntrySelectors.useRecordNodePointerRequired({
-    parentNodeUuid,
-    nodeDef,
-  });
-  // key attributes are always required: the key icon is enough
-  const showRequiredMarker = required && !showKeyIcon;
 
   return (
     <>
@@ -47,17 +40,9 @@ export const NodeDefFormItemHeader = (props: NodeDefFormItemHeaderProps) => {
           </View>
         )}
         {startAccessory}
-        {/* marker in a separate element: the label text must stay the same (e.g. e2e tests select by label) */}
-        <HView style={styles.nodeDefLabelWrapper} textDirectionAware={false}>
-          <Text style={styles.nodeDefLabel} variant="titleLarge">
-            {labelOrName}
-          </Text>
-          {showRequiredMarker && (
-            <Text style={styles.requiredMarker} variant="titleLarge">
-              *
-            </Text>
-          )}
-        </HView>
+        <Text style={styles.nodeDefLabel} variant="titleLarge">
+          {labelOrName}
+        </Text>
         <NodeValidationIcon nodeDef={nodeDef} parentNodeUuid={parentNodeUuid} />
       </HView>
       {!Objects.isEmpty(description) && (

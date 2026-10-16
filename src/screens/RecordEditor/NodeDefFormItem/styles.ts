@@ -25,16 +25,8 @@ export const useStyles = () => {
     keyIcon: {
       marginRight: 4,
     },
-    nodeDefLabelWrapper: {
-      flex: 1,
-      alignItems: "center",
-    },
     nodeDefLabel: {
-      flexShrink: 1,
-    },
-    requiredMarker: {
-      color: theme.colors.error,
-      fontWeight: "bold",
+      flex: 1,
     },
     nodeDefDescriptionViewMoreText: {
       textAlign: "justify",
