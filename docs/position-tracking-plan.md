@@ -297,15 +297,15 @@ Deviations from the plan:
 - Leaving the record stops (and saves) the track instead of pausing it.
 - "Show track" in the bar opens the attribute in a dialog instead of
   navigating to its page.
-- The bar's "Start" button is shown only for the auto-start attribute (root
-  entity or its single entities) while it has no value; other trackable
-  attributes are started from the attribute itself.
-- Geo attributes are experimental (shown only to system admins): tracking
-  geo attributes are shown to everyone.
+- Re-opening a record never starts tracking automatically: the bar shows a
+  "Start" button for the trackable attribute in the root entity (or its single
+  entities), also when it already has a track (a new segment is added); other
+  trackable attributes are started from the attribute itself.
 
 Still to do:
 
-- arena-core (`NodeDefGeoProps.positionTracking`) and the Arena web checkbox.
+- arena-core (`NodeDefGeoProps.positionTracking`) and the Arena web checkbox
+  (separate PRs in those repositories).
 - Trackable attribute in the demo survey + Maestro flow.
 - Translations.
 - Manual tests on devices (internal and external GPS, app killed while

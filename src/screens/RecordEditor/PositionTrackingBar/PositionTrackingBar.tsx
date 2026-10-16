@@ -56,11 +56,11 @@ export const PositionTrackingBar = () => {
     status === PositionTrackingStatus.tracking ||
     status === PositionTrackingStatus.paused;
 
-  // trackable attribute in the root entity still without a value: tracking can be started here
+  // trackable attribute in the root entity (or its single entities): tracking can be started
+  // here, also when the record is opened again (a new segment is added to the existing track)
   const startableNode = useMemo(() => {
     if (!survey || !record || hasTrack) return null;
-    const node = PositionTracks.findAutoStartNode({ survey, record });
-    return node && !node.value ? node : null;
+    return PositionTracks.findAutoStartNode({ survey, record });
   }, [hasTrack, record, survey]);
 
   const trackedNode = useMemo(
