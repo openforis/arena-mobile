@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple", "android"],
+  "apple": {
+    "modules": ["PdfMapRendererModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.pdfmaprenderer.PdfMapRendererModule"]
+  }
+}

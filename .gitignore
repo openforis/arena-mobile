@@ -1,8 +1,12 @@
 node_modules/
 .expo/
 dist/
-android/
-ios/
+/android/
+/ios/
+# build output of the local native modules (modules/*)
+modules/*/android/build/
+modules/*/android/.gradle/
+modules/*/android/.cxx/
 npm-debug.*
 .env
 *.jks

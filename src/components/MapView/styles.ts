@@ -11,6 +11,29 @@ export default StyleSheet.create({
     right: 8,
     zIndex: 1,
   },
+  pdfMapItems: {
+    rowGap: 8,
+    paddingVertical: 8,
+  },
+  pdfMapItem: {
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  pdfMapItemHeader: {
+    alignItems: "center",
+  },
+  pdfMapItemCheckbox: {
+    flex: 1,
+  },
+  pdfMapOpacityRow: {
+    alignItems: "center",
+    columnGap: 8,
+  },
+  pdfMapOpacitySlider: {
+    flex: 1,
+  },
   attribution: {
     position: "absolute",
     bottom: 0,
