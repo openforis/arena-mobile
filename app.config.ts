@@ -8,6 +8,15 @@ const basePlugins: ExpoConfig["plugins"] = [
   [
     "expo-build-properties",
     {
+      android: {
+        // R8 makes the AAB include the deobfuscation (mapping) file required by Play Console
+        enableMinifyInReleaseBuilds: true,
+        enableShrinkResourcesInReleaseBuilds: true,
+        extraProguardRules: [
+          "-keep class kjd.reactnative.bluetooth.** { *; }",
+          "-keep class net.lingala.zip4j.** { *; }",
+        ].join("\n"),
+      },
       ios: { deploymentTarget: "16.4" },
     },
   ],
@@ -37,6 +46,7 @@ const basePlugins: ExpoConfig["plugins"] = [
   ],
   "./plugins/mapAppsQueries",
   "./plugins/httpUserAgent",
+  "./plugins/androidNativeDebugSymbols",
   "expo-audio",
   "expo-localization",
   "expo-secure-store",
