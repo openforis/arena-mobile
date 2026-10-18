@@ -50,9 +50,14 @@ jobs:
         id: cache-android-prebuild
         with:
           path: android/
-          key: android-prebuild-${{ hashFiles('package.json', 'yarn.lock', 'app.config.ts', 'plugins/**') }}
+          # "maps-key": prebuild output with the Google Maps API key meta-data (see the build step)
+          key: android-prebuild-maps-key-${{ hashFiles('package.json', 'yarn.lock', 'app.config.ts', 'plugins/**') }}
 
       - name: Build Android APK
+        env:
+          # without the API key meta-data Google Maps crashes the app as soon as a map is shown
+          # (e.g. the track of a position tracking attribute): an invalid key only shows an empty map
+          GOOGLE_MAPS_API_KEY_ANDROID: ${{ secrets.GOOGLE_MAPS_API_KEY_ANDROID || 'e2e-tests-no-key' }}
         run: |
           if [ "${{ steps.cache-android-prebuild.outputs.cache-hit }}" != "true" ]; then
             yarn expo prebuild --platform android
