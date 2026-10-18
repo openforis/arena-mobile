@@ -138,7 +138,11 @@ const evaluatePoint = ({
   maxSpeed?: number;
 }): TrackPointRejectReason | null => {
   const { accuracy } = point;
-  if (accuracy !== null && accuracy !== undefined && accuracy > accuracyThreshold) {
+  if (
+    accuracy !== null &&
+    accuracy !== undefined &&
+    accuracy > accuracyThreshold
+  ) {
     return TrackPointRejectReason.lowAccuracy;
   }
   if (!lastPoint) return null;
@@ -192,6 +196,11 @@ const toFeature = (segments: TrackSegment[]): TrackFeature | null => {
 
 const isTrackValue = (value: any): boolean =>
   lineGeometryTypes.has(value?.geometry?.type);
+
+// true if the value is a track with at least one recorded point
+const hasTrackPoints = (value: any): boolean =>
+  isTrackValue(value) &&
+  extractLineCoordinates(value).some((line) => line.length > 0);
 
 const extractLineCoordinates = (value: any): number[][][] => {
   const geometry = value?.geometry;
@@ -264,6 +273,7 @@ export const PositionTracks = {
   toFeature,
   fromFeature,
   isTrackValue,
+  hasTrackPoints,
   extractLineCoordinates,
   formatLength,
   formatDuration,

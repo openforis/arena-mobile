@@ -329,6 +329,12 @@ Press '$t(common:stop)' when done.`,
     start: "Start tracking",
     pause: "Pause",
     resume: "Resume",
+    restart: "Restart",
+    restartConfirm: {
+      title: "Delete the recorded track?",
+      message:
+        "All the points recorded so far in this attribute will be deleted and tracking will start from scratch. This cannot be undone.",
+    },
     stop: "Stop",
     showTrack: "Show track",
     retry: "Retry",

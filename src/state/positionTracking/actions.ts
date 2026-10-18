@@ -16,10 +16,7 @@ import { SettingsSelectors } from "../settings/selectors";
 import { SurveySelectors } from "../survey/selectors";
 import { ToastActions } from "../toast";
 
-import {
-  POSITION_TRACKING_RESET,
-  POSITION_TRACKING_UPDATE,
-} from "./reducer";
+import { POSITION_TRACKING_RESET, POSITION_TRACKING_UPDATE } from "./reducer";
 import { PositionTrackingSelectors } from "./selectors";
 import { PositionTrackingStatus } from "./types";
 
@@ -38,7 +35,8 @@ const getTrackingSettings = (state: any): PositionTrackingSettings => {
   return {
     accuracyThreshold: settings.positionTrackingAccuracyThreshold ?? 20,
     minDistance: settings.positionTrackingMinDistance ?? 3,
-    preferredGpsSourceId: settings.preferredGpsSourceId ?? GpsSourceSetting.auto,
+    preferredGpsSourceId:
+      settings.preferredGpsSourceId ?? GpsSourceSetting.auto,
   };
 };
 
@@ -172,9 +170,8 @@ const _startNew =
   };
 
 const pauseTracking = () => async (dispatch: any, getState: any) => {
-  const { status } = PositionTrackingSelectors.selectPositionTrackingState(
-    getState(),
-  );
+  const { status } =
+    PositionTrackingSelectors.selectPositionTrackingState(getState());
   if (status !== PositionTrackingStatus.tracking) return;
   stopFlushTimer();
   await PositionTrackingService.pause();
@@ -185,9 +182,8 @@ const pauseTracking = () => async (dispatch: any, getState: any) => {
 };
 
 const resumeTracking = () => async (dispatch: any, getState: any) => {
-  const { status } = PositionTrackingSelectors.selectPositionTrackingState(
-    getState(),
-  );
+  const { status } =
+    PositionTrackingSelectors.selectPositionTrackingState(getState());
   if (status !== PositionTrackingStatus.paused) return;
   dispatch(update({ errorKey: null }));
   try {
@@ -276,6 +272,39 @@ const startTracking =
     await dispatch(_startNew({ nodeUuid }));
   };
 
+// deletes the track recorded in the attribute (after a strong confirmation) and starts a new one
+const restartTracking =
+  ({ nodeUuid }: { nodeUuid: string }) =>
+  async (dispatch: any, getState: any) => {
+    if (!DataEntrySelectors.selectCanEditRecord(getState())) return;
+    if (
+      !(await ConfirmUtils.confirm({
+        dispatch,
+        titleKey: "dataEntry:positionTracking.restartConfirm.title",
+        messageKey: "dataEntry:positionTracking.restartConfirm.message",
+        confirmButtonTextKey: "dataEntry:positionTracking.restart",
+        swipeToConfirm: true,
+      }))
+    ) {
+      return;
+    }
+    if (
+      PositionTrackingService.getTrack() &&
+      !(await dispatch(stopTracking({ confirm: false })))
+    ) {
+      return;
+    }
+    await dispatch(
+      DataEntryActions.updateAttribute({ uuid: nodeUuid, value: null }),
+    );
+    const node = Records.getNodeByUuid(nodeUuid)(
+      DataEntrySelectors.selectRecord(getState()),
+    );
+    // value not cleared (e.g. record being synced): the track is kept
+    if (!node || node.value) return;
+    await dispatch(_startNew({ nodeUuid }));
+  };
+
 // starts tracking in a new record, when it has a trackable attribute in the root entity
 const autoStartTracking = () => async (dispatch: any, getState: any) => {
   const state = getState();
@@ -306,41 +335,42 @@ const closeTrack = () => async (dispatch: any, getState: any) => {
 };
 
 // recovers a track not written into the record (e.g. the app was closed while tracking)
-const recoverTrackForOpenRecord = () => async (dispatch: any, getState: any) => {
-  const record = DataEntrySelectors.selectRecordUnsafe(getState());
-  if (!record) return;
-  const currentTrack = PositionTrackingService.getTrack();
-  if (currentTrack) {
-    if (currentTrack.recordUuid === record.uuid) return;
-    await dispatch(closeTrack());
-  }
-  try {
-    const track = await PositionTrackingService.fetchTrackByRecordUuid(
-      record.uuid,
-    );
-    if (!track) return;
-    if (!Records.getNodeByUuid(track.nodeUuid)(record)) {
-      await PositionTrackingService.deleteTracksByRecordUuids([record.uuid]);
-      return;
+const recoverTrackForOpenRecord =
+  () => async (dispatch: any, getState: any) => {
+    const record = DataEntrySelectors.selectRecordUnsafe(getState());
+    if (!record) return;
+    const currentTrack = PositionTrackingService.getTrack();
+    if (currentTrack) {
+      if (currentTrack.recordUuid === record.uuid) return;
+      await dispatch(closeTrack());
     }
-    await PositionTrackingService.load(track);
-    listenToServiceUpdates(dispatch);
-    dispatch(statsUpdate());
-    dispatch(
-      update({
-        status: PositionTrackingStatus.paused,
-        recordUuid: record.uuid,
-        nodeUuid: track.nodeUuid,
-      }),
-    );
-    await dispatch(flushTrack());
-    if (track.status === PositionTrackStatus.tracking) {
-      dispatch(ToastActions.show("dataEntry:positionTracking.interrupted"));
+    try {
+      const track = await PositionTrackingService.fetchTrackByRecordUuid(
+        record.uuid,
+      );
+      if (!track) return;
+      if (!Records.getNodeByUuid(track.nodeUuid)(record)) {
+        await PositionTrackingService.deleteTracksByRecordUuids([record.uuid]);
+        return;
+      }
+      await PositionTrackingService.load(track);
+      listenToServiceUpdates(dispatch);
+      dispatch(statsUpdate());
+      dispatch(
+        update({
+          status: PositionTrackingStatus.paused,
+          recordUuid: record.uuid,
+          nodeUuid: track.nodeUuid,
+        }),
+      );
+      await dispatch(flushTrack());
+      if (track.status === PositionTrackStatus.tracking) {
+        dispatch(ToastActions.show("dataEntry:positionTracking.interrupted"));
+      }
+    } catch (error) {
+      log.error("PositionTracking: error recovering track", error);
     }
-  } catch (error) {
-    log.error("PositionTracking: error recovering track", error);
-  }
-};
+  };
 
 const deleteTracksOfRecords =
   (recordUuids: string[]) => async (dispatch: any) => {
@@ -353,6 +383,7 @@ const deleteTracksOfRecords =
 
 export const PositionTrackingActions = {
   startTracking,
+  restartTracking,
   autoStartTracking,
   pauseTracking,
   resumeTracking,

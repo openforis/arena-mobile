@@ -42,10 +42,17 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
   );
   const segments = trackActive ? liveSegments : valueSegments;
   const hasPoints = PositionTracks.countPoints(segments) > 0;
+  // a stopped track can only be resumed; deleting it requires "Restart" (strong confirm)
+  const hasRecordedTrack = PositionTracks.hasTrackPoints(nodeValue);
 
   const onStart = useCallback(() => {
     if (nodeUuid) {
       void dispatch(PositionTrackingActions.startTracking({ nodeUuid }));
+    }
+  }, [dispatch, nodeUuid]);
+  const onRestart = useCallback(() => {
+    if (nodeUuid) {
+      void dispatch(PositionTrackingActions.restartTracking({ nodeUuid }));
     }
   }, [dispatch, nodeUuid]);
   const onPause = useCallback(
@@ -115,10 +122,19 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
               icon="play"
               onPress={onStart}
               textKey={
-                trackActive
+                trackActive || hasRecordedTrack
                   ? "dataEntry:positionTracking.resume"
                   : "dataEntry:positionTracking.start"
               }
+            />
+          )}
+          {!trackActive && hasRecordedTrack && (
+            <Button
+              color="secondary"
+              disabled={!canEditRecord}
+              icon="restart"
+              onPress={onRestart}
+              textKey="dataEntry:positionTracking.restart"
             />
           )}
           {trackActive && (

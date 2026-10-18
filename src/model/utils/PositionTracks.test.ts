@@ -117,10 +117,7 @@ describe("PositionTracks.toFeature / fromFeature", () => {
   });
 
   test("skips segments with less than 2 points", () => {
-    const feature = PositionTracks.toFeature([
-      [point(0, 0, 0)],
-      segments[1]!,
-    ])!;
+    const feature = PositionTracks.toFeature([[point(0, 0, 0)], segments[1]!])!;
     expect(feature.geometry.coordinates).toHaveLength(1);
     expect(PositionTracks.toFeature([[point(0, 0, 0)]])).toBeNull();
     expect(PositionTracks.toFeature([])).toBeNull();
@@ -158,13 +155,33 @@ describe("PositionTracks.toFeature / fromFeature", () => {
   });
 
   test("isTrackValue", () => {
-    expect(PositionTracks.isTrackValue(PositionTracks.toFeature(segments))).toBe(
-      true,
-    );
     expect(
-      PositionTracks.isTrackValue({ geometry: { type: "Polygon" } }),
-    ).toBe(false);
+      PositionTracks.isTrackValue(PositionTracks.toFeature(segments)),
+    ).toBe(true);
+    expect(PositionTracks.isTrackValue({ geometry: { type: "Polygon" } })).toBe(
+      false,
+    );
     expect(PositionTracks.isTrackValue(null)).toBe(false);
+  });
+});
+
+describe("PositionTracks.hasTrackPoints", () => {
+  test("true only for track values with points", () => {
+    const feature = PositionTracks.toFeature([
+      [point(0, 0, 0), point(latStep, 0, 10)],
+    ]);
+    expect(PositionTracks.hasTrackPoints(feature)).toBe(true);
+    expect(PositionTracks.hasTrackPoints(null)).toBe(false);
+    expect(
+      PositionTracks.hasTrackPoints({
+        geometry: { type: "MultiLineString", coordinates: [] },
+      }),
+    ).toBe(false);
+    expect(
+      PositionTracks.hasTrackPoints({
+        geometry: { type: "Polygon", coordinates: [[[0, 0]]] },
+      }),
+    ).toBe(false);
   });
 });
 

@@ -56,15 +56,33 @@ const getIdleTextKey = ({
     : "dataEntry:positionTracking.title";
 };
 
-// tracking not active (or being started): "Start tracking" / "Retry" button
+const getStartTextKey = ({
+  errorKey,
+  hasRecordedTrack,
+}: {
+  errorKey: string | null;
+  hasRecordedTrack: boolean;
+}) => {
+  if (errorKey) return "dataEntry:positionTracking.retry";
+  return hasRecordedTrack
+    ? "dataEntry:positionTracking.resume"
+    : "dataEntry:positionTracking.start";
+};
+
+// tracking not active (or being started): "Start tracking" / "Resume" / "Retry" button;
+// "Restart" (deleting the recorded points) when a track has already been recorded
 const IdleTrackingBar = ({
   canStart,
   errorKey,
+  hasRecordedTrack,
+  onRestart,
   onStart,
   starting,
 }: {
   canStart: boolean;
   errorKey: string | null;
+  hasRecordedTrack: boolean;
+  onRestart: () => void;
   onStart: () => void;
   starting: boolean;
 }) => {
@@ -92,11 +110,16 @@ const IdleTrackingBar = ({
           icon="play"
           mode="text"
           onPress={onStart}
-          textKey={
-            errorKey
-              ? "dataEntry:positionTracking.retry"
-              : "dataEntry:positionTracking.start"
-          }
+          textKey={getStartTextKey({ errorKey, hasRecordedTrack })}
+        />
+      )}
+      {canStart && hasRecordedTrack && !errorKey && (
+        <Button
+          compact
+          icon="restart"
+          mode="text"
+          onPress={onRestart}
+          textKey="dataEntry:positionTracking.restart"
         />
       )}
     </HView>
@@ -282,14 +305,30 @@ export const PositionTrackingBar = () => {
     return PositionTracks.findAutoStartNode({ survey, record });
   }, [hasTrack, record, survey]);
 
+  const nodeUuidToTrack = nodeUuid ?? startableNode?.uuid;
+  const hasRecordedTrack = useMemo(() => {
+    const node =
+      record && nodeUuidToTrack
+        ? Records.getNodeByUuid(nodeUuidToTrack)(record)
+        : null;
+    return PositionTracks.hasTrackPoints(node?.value);
+  }, [nodeUuidToTrack, record]);
+
   const onStart = useCallback(() => {
-    const nodeUuidToTrack = nodeUuid ?? startableNode?.uuid;
     if (nodeUuidToTrack) {
       void dispatch(
         PositionTrackingActions.startTracking({ nodeUuid: nodeUuidToTrack }),
       );
     }
-  }, [dispatch, nodeUuid, startableNode]);
+  }, [dispatch, nodeUuidToTrack]);
+
+  const onRestart = useCallback(() => {
+    if (nodeUuidToTrack) {
+      void dispatch(
+        PositionTrackingActions.restartTracking({ nodeUuid: nodeUuidToTrack }),
+      );
+    }
+  }, [dispatch, nodeUuidToTrack]);
 
   if (hasTrack) {
     return <ActiveTrackingBar summary={summary} />;
@@ -306,6 +345,8 @@ export const PositionTrackingBar = () => {
     <IdleTrackingBar
       canStart={canStart}
       errorKey={errorKey}
+      hasRecordedTrack={hasRecordedTrack}
+      onRestart={onRestart}
       onStart={onStart}
       starting={starting}
     />

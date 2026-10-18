@@ -163,7 +163,7 @@ in the whole app.
 - Leaving the record editor (after the usual "go to list of records"
   confirmation) stops tracking and saves the track into the attribute.
   Tracking never continues outside the record editor; when the record is
-  opened again, "Start" appends a new segment to the saved track.
+  opened again, "Resume" appends a new segment to the saved track.
 - App sent to background / screen locked → tracking pauses automatically
   (points flushed); when the app comes back to the foreground with the same
   record open, the bar offers **Resume** (a new segment is started).
@@ -205,8 +205,11 @@ rendered and `useNodeGeoComponent` refuses to save a manual value):
 - Start / Pause / Resume / Stop buttons (same thunks as the bar) - the only
   way to change the value;
 - the existing "Download GeoJSON".
-- "Start" on a node that already has a track appends a new segment; there is
-  no way to delete a track in the app (it can be edited/cleared in Arena).
+- on a node that already has a track (after Stop, or when the record is opened
+  again) the button is "Resume": it appends a new segment, the recorded points
+  are never discarded silently;
+- "Restart" deletes the recorded track and starts a new one, after a
+  swipe-to-confirm warning that the points will be lost.
 - `NodeGeoValuePreview` shows length + points count for `MultiLineString` /
   `LineString` values.
 

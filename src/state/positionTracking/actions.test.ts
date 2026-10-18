@@ -31,8 +31,8 @@ jest.mock("utils", () => ({
 
 jest.mock("model", () => ({
   GpsSourceSetting: { auto: "auto" },
-  PositionTracks:
-    jest.requireActual("model/utils/PositionTracks").PositionTracks,
+  PositionTracks: jest.requireActual("model/utils/PositionTracks")
+    .PositionTracks,
 }));
 
 jest.mock("service/positionTracking", () => {
@@ -353,5 +353,69 @@ describe("PositionTrackingActions", () => {
     expect(state.errorKey).toBe(
       "dataEntry:positionTracking.error.permissionDenied",
     );
+  });
+
+  describe("attribute with a recorded track", () => {
+    const { PositionTrackingService } = jest.requireMock(
+      "service/positionTracking",
+    );
+
+    const createStoreWithTrack = () => {
+      const store = createStore();
+      store.dispatch({
+        type: "TEST_NODE_VALUE_SET",
+        uuid: "track-node",
+        value: trackValue,
+      });
+      return store;
+    };
+
+    test("starting again appends to the recorded track", async () => {
+      const store = createStoreWithTrack();
+      await store.dispatch(
+        PositionTrackingActions.startTracking({
+          nodeUuid: "track-node",
+        }) as any,
+      );
+      expect(PositionTrackingService.start).toHaveBeenCalledWith(
+        expect.objectContaining({ baseValue: trackValue }),
+      );
+      expect(mockConfirm).not.toHaveBeenCalled();
+      await store.dispatch(
+        PositionTrackingActions.stopTracking({ confirm: false }) as any,
+      );
+    });
+
+    test("restart deletes the recorded track after confirmation", async () => {
+      const store = createStoreWithTrack();
+      await store.dispatch(
+        PositionTrackingActions.restartTracking({
+          nodeUuid: "track-node",
+        }) as any,
+      );
+      expect(mockConfirm).toHaveBeenCalledTimes(1);
+      expect(getTrackedNodeValue(store)).toBeNull();
+      expect(PositionTrackingService.start).toHaveBeenCalledWith(
+        expect.objectContaining({ baseValue: null }),
+      );
+      expect(store.getState().positionTracking.status).toBe(
+        PositionTrackingStatus.tracking,
+      );
+      await store.dispatch(
+        PositionTrackingActions.stopTracking({ confirm: false }) as any,
+      );
+    });
+
+    test("restart keeps the recorded track when not confirmed", async () => {
+      mockConfirm.mockImplementation(async () => null);
+      const store = createStoreWithTrack();
+      await store.dispatch(
+        PositionTrackingActions.restartTracking({
+          nodeUuid: "track-node",
+        }) as any,
+      );
+      expect(getTrackedNodeValue(store)).toEqual(trackValue);
+      expect(PositionTrackingService.start).not.toHaveBeenCalled();
+    });
   });
 });
