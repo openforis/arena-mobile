@@ -1,7 +1,11 @@
 import { useCallback, useMemo } from "react";
 import { useWindowDimensions } from "react-native";
 import { Region } from "react-native-maps";
-import Supercluster from "supercluster";
+import Supercluster, {
+  ClusterFeature,
+  ClusterProperties,
+  PointFeature,
+} from "supercluster";
 
 import {
   RecordsMapPointFeature,
@@ -15,16 +19,15 @@ const tileSize = 256;
 export type RecordsMapClusterProperties = { visitedCount: number };
 
 export type RecordsMapClusterFeature =
-  Supercluster.ClusterFeature<RecordsMapClusterProperties>;
+  ClusterFeature<RecordsMapClusterProperties>;
 
 export type RecordsMapCluster =
-  | RecordsMapClusterFeature
-  | Supercluster.PointFeature<RecordsMapPointProperties>;
+  RecordsMapClusterFeature | PointFeature<RecordsMapPointProperties>;
 
 export const isClusterFeature = (
   feature: RecordsMapCluster,
 ): feature is RecordsMapClusterFeature =>
-  !!(feature.properties as Supercluster.ClusterProperties).cluster;
+  !!(feature.properties as ClusterProperties).cluster;
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
