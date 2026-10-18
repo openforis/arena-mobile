@@ -51,13 +51,6 @@ const insertTrack = async ({
   return { id: insertId, surveyId, recordUuid, nodeUuid, status, baseValue };
 };
 
-const fetchTracks = async (): Promise<PositionTrack[]> => {
-  const rows = await dbClient.many(
-    `SELECT * FROM position_track ORDER BY id DESC`,
-  );
-  return rows.map(rowToTrack);
-};
-
 const fetchTrackByRecordUuid = async (
   recordUuid: string,
 ): Promise<PositionTrack | null> => {
@@ -156,7 +149,6 @@ const deleteTracksByRecordUuids = async (recordUuids: string[]) => {
 
 export const PositionTrackRepository = {
   insertTrack,
-  fetchTracks,
   fetchTrackByRecordUuid,
   updateTrackStatus,
   insertPoint,
