@@ -124,7 +124,7 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
           {trackActive && (
             <Button
               icon="stop"
-              mode="outlined"
+              color="secondary"
               onPress={onStop}
               textKey="dataEntry:positionTracking.stop"
             />

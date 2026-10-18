@@ -216,7 +216,7 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
               <Button
                 compact
                 icon="pause"
-                mode="outlined"
+                color="secondary"
                 onPress={onPause}
                 textKey="dataEntry:positionTracking.pause"
               />
@@ -225,7 +225,7 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
                 compact
                 disabled={!canEditRecord}
                 icon="play"
-                mode="outlined"
+                color="secondary"
                 onPress={onResume}
                 textKey="dataEntry:positionTracking.resume"
               />
@@ -233,7 +233,7 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
             <Button
               compact
               icon="stop"
-              mode="outlined"
+              color="secondary"
               onPress={onStop}
               textKey="dataEntry:positionTracking.stop"
             />
@@ -241,7 +241,7 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
               <Button
                 compact
                 icon="map-search-outline"
-                mode="outlined"
+                color="secondary"
                 onPress={openTrackDialog}
                 textKey="dataEntry:positionTracking.showTrack"
               />
