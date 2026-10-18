@@ -2,6 +2,13 @@ appId: ${APP_ID}
 ---
 - tapOn:
     text: "New record"
+# the survey may have a position tracking attribute: the tracking bar takes space at the top
+- scrollUntilVisible:
+    element:
+      text: "Select item"
+      below:
+        text: "SPD key"
+    direction: DOWN
 - tapOn:
     text: "Select item"
     below:

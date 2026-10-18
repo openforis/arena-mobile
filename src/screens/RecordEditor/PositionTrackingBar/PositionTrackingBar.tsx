@@ -100,6 +100,7 @@ const IdleTrackingBar = ({
         />
       )}
       <Text
+        numberOfLines={2}
         style={styles.headerText}
         variant="labelLarge"
         textKey={getIdleTextKey({ errorKey, starting })}
@@ -206,6 +207,7 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
   const closeTrackDialog = useCallback(() => setTrackDialogOpen(false), []);
 
   const containerStyle = useContainerStyle(errorKey);
+  const headerText = buildHeaderText({ summary, t });
 
   return (
     <VView style={containerStyle}>
@@ -215,14 +217,20 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
             source={waitingForFix ? "crosshairs-question" : statusIcons[status]}
             color={tracking ? theme.colors.error : undefined}
           />
-          <Text style={styles.headerText} variant="labelLarge">
-            {buildHeaderText({ summary, t })}
+          {/* one line, to take as little space as possible above the form */}
+          <Text
+            numberOfLines={1}
+            style={styles.headerText}
+            variant="labelLarge"
+          >
+            {headerText}
           </Text>
           <Icon source={expanded ? "chevron-up" : "chevron-down"} size={24} />
         </HView>
       </TouchableOpacity>
       {expanded && (
         <VView style={styles.details}>
+          <Text variant="bodySmall">{headerText}</Text>
           {trackedNodeDef && (
             <Text variant="bodyMedium">
               {NodeDefs.getLabelOrName(trackedNodeDef, lang)}
