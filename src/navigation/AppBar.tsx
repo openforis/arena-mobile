@@ -8,7 +8,7 @@ import { HView, Spacer, Text } from "components";
 import { useScreenKey } from "hooks";
 import { MapProvider, RecordEditViewMode, ScreenViewMode } from "model";
 import { useIsTextDirectionRtl, useTranslation } from "localization";
-import { log } from "utils";
+import { log, PreviewMode } from "utils";
 import { screenKeys } from "screens";
 import { hasMapLayers } from "screens/RecordsMap/recordsMapLayers";
 import { Breadcrumbs } from "screens/RecordEditor/Breadcrumbs";
@@ -259,7 +259,7 @@ export const AppBar = (props: Props) => {
             />
           )}
 
-          {hasOptionsMenuVisible && (
+          {hasOptionsMenuVisible && !PreviewMode.isActive && (
             <OptionsMenu
               onDismiss={onMenuDismiss}
               toggleMenu={toggleMenu}

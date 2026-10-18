@@ -34,6 +34,7 @@ import { RecordService } from "service/recordService";
 import { screenKeys } from "screens/screenKeys";
 
 import { Errors, log, StringUtils, SystemUtils } from "utils";
+import { PreviewMode } from "utils/PreviewMode";
 import { i18n } from "localization";
 
 import { AutoSyncActions } from "../autoSync";
@@ -56,6 +57,7 @@ import {
 } from "./actionsRecordsImport";
 import { revalidateRecords } from "./actionsRecordsRevalidate";
 import { DataEntryActionsRecordSync } from "./actionsRecordSync";
+import { DataEntryActionsPreview } from "./actionsPreview";
 import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntrySelectors } from "./selectors";
 import { ToastActions } from "state/toast";
@@ -103,6 +105,8 @@ const _isRecordSyncInProgress = (dispatch: any, getState: any): boolean => {
 };
 
 const _isRootKeyDuplicate = async ({ survey, record, lang }: any) => {
+  // no other records in preview mode
+  if (PreviewMode.isActive) return false;
   const recordSummaries = await RecordService.findRecordSummariesWithSameKeys({
     survey,
     record,
@@ -527,6 +531,11 @@ const fetchAndEditRecord =
 
 const _updateRecord = async ({ dispatch, survey, record }: any) => {
   const recordUpdated = prepareRecordForStorage({ record });
+  if (PreviewMode.isActive) {
+    // record kept in memory only
+    await dispatch({ type: RECORD_SET, record: recordUpdated });
+    return recordUpdated;
+  }
   const recordStored = await RecordService.updateRecord({
     survey,
     record: recordUpdated,
@@ -546,6 +555,9 @@ const updateRecordNodeFile = async ({
   log.debug(
     `Updating record node file with value ${JSON.stringify(value)} and fileUri ${fileUri}`,
   );
+  // files are not stored in preview mode
+  if (PreviewMode.isActive) return;
+
   const surveyId = survey.id;
 
   if (fileUri) {
@@ -1056,4 +1068,5 @@ export const DataEntryActions = {
   cloneRecordsIntoDefaultCycle,
   revalidateRecords,
   runAutoSync,
+  ...DataEntryActionsPreview,
 };
