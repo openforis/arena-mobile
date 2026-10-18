@@ -26,7 +26,117 @@ const statusIcons: Record<PositionTrackingStatus, string> = {
   [PositionTrackingStatus.paused]: "pause-circle-outline",
 };
 
-export const PositionTrackingBar = () => {
+type Summary = ReturnType<typeof usePositionTrackingSummary>;
+
+const useContainerStyle = (errorKey: string | null) => {
+  const theme = useTheme();
+  return useMemo(
+    () => [
+      styles.container,
+      {
+        backgroundColor: errorKey
+          ? theme.colors.errorContainer
+          : theme.colors.secondaryContainer,
+      },
+    ],
+    [errorKey, theme.colors.errorContainer, theme.colors.secondaryContainer],
+  );
+};
+
+const getIdleTextKey = ({
+  errorKey,
+  starting,
+}: {
+  errorKey: string | null;
+  starting: boolean;
+}) => {
+  if (errorKey) return errorKey;
+  return starting
+    ? "dataEntry:positionTracking.status.starting"
+    : "dataEntry:positionTracking.title";
+};
+
+// tracking not active (or being started): "Start tracking" / "Retry" button
+const IdleTrackingBar = ({
+  canStart,
+  errorKey,
+  onStart,
+  starting,
+}: {
+  canStart: boolean;
+  errorKey: string | null;
+  onStart: () => void;
+  starting: boolean;
+}) => {
+  const theme = useTheme();
+  const containerStyle = useContainerStyle(errorKey);
+
+  return (
+    <HView style={[containerStyle, styles.header]}>
+      {starting ? (
+        <LoadingIcon />
+      ) : (
+        <Icon
+          source={errorKey ? "alert-circle-outline" : statusIcons.idle}
+          color={errorKey ? theme.colors.error : undefined}
+        />
+      )}
+      <Text
+        style={styles.headerText}
+        variant="labelLarge"
+        textKey={getIdleTextKey({ errorKey, starting })}
+      />
+      {canStart && (
+        <Button
+          compact
+          icon="play"
+          mode="text"
+          onPress={onStart}
+          textKey={
+            errorKey
+              ? "dataEntry:positionTracking.retry"
+              : "dataEntry:positionTracking.start"
+          }
+        />
+      )}
+    </HView>
+  );
+};
+
+const buildHeaderText = ({
+  summary,
+  t,
+}: {
+  summary: Summary;
+  t: (key: string, params?: any) => string;
+}) => {
+  const {
+    status,
+    waitingForFix,
+    lengthText,
+    durationText,
+    tracking,
+    accuracyText,
+  } = summary;
+  const parts = [
+    t(
+      waitingForFix
+        ? "dataEntry:positionTracking.waitingForFix"
+        : `dataEntry:positionTracking.status.${status}`,
+    ),
+    lengthText,
+    durationText,
+  ];
+  if (tracking && accuracyText !== null) {
+    parts.push(
+      t("dataEntry:positionTracking.accuracy", { accuracy: accuracyText }),
+    );
+  }
+  return parts.join(" · ");
+};
+
+// track being recorded or paused: summary, expandable to show the tracking buttons
+const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const { t } = useTranslation();
@@ -36,36 +146,14 @@ export const PositionTrackingBar = () => {
   const record = DataEntrySelectors.useRecord();
   const canEditRecord = DataEntrySelectors.useCanEditRecord();
 
-  const summary = usePositionTrackingSummary();
-  const {
-    status,
-    nodeUuid,
-    errorKey,
-    tracking,
-    waitingForFix,
-    lengthText,
-    durationText,
-    accuracyText,
-    pointsCount,
-  } = summary;
+  const { status, nodeUuid, errorKey, tracking, waitingForFix, pointsCount } =
+    summary;
 
   const [expanded, setExpanded] = useState(false);
   const [trackDialogOpen, setTrackDialogOpen] = useState(false);
 
-  const hasTrack =
-    status === PositionTrackingStatus.tracking ||
-    status === PositionTrackingStatus.paused;
-
-  // trackable attribute in the root entity (or its single entities): tracking can be started
-  // here, also when the record is opened again (a new segment is added to the existing track)
-  const startableNode = useMemo(() => {
-    if (!survey || !record || hasTrack) return null;
-    return PositionTracks.findAutoStartNode({ survey, record });
-  }, [hasTrack, record, survey]);
-
   const trackedNode = useMemo(
-    () =>
-      record && nodeUuid ? Records.getNodeByUuid(nodeUuid)(record) : null,
+    () => (record && nodeUuid ? Records.getNodeByUuid(nodeUuid)(record) : null),
     [nodeUuid, record],
   );
   const trackedNodeDef = useMemo(
@@ -75,15 +163,6 @@ export const PositionTrackingBar = () => {
         : null,
     [survey, trackedNode],
   );
-
-  const onStart = useCallback(() => {
-    const nodeUuidToTrack = nodeUuid ?? startableNode?.uuid;
-    if (nodeUuidToTrack) {
-      void dispatch(
-        PositionTrackingActions.startTracking({ nodeUuid: nodeUuidToTrack }),
-      );
-    }
-  }, [dispatch, nodeUuid, startableNode]);
 
   const onPause = useCallback(
     () => dispatch(PositionTrackingActions.pauseTracking()),
@@ -103,92 +182,18 @@ export const PositionTrackingBar = () => {
   const openTrackDialog = useCallback(() => setTrackDialogOpen(true), []);
   const closeTrackDialog = useCallback(() => setTrackDialogOpen(false), []);
 
-  const containerStyle = useMemo(
-    () => [
-      styles.container,
-      {
-        backgroundColor: errorKey
-          ? theme.colors.errorContainer
-          : theme.colors.secondaryContainer,
-      },
-    ],
-    [errorKey, theme.colors.errorContainer, theme.colors.secondaryContainer],
-  );
-
-  const canStart =
-    canEditRecord &&
-    status === PositionTrackingStatus.idle &&
-    (!!startableNode || (!!errorKey && !!nodeUuid));
-
-  if (!hasTrack && status !== PositionTrackingStatus.starting && !canStart) {
-    return null;
-  }
-
-  if (!hasTrack) {
-    return (
-      <HView style={[containerStyle, styles.header]}>
-        {status === PositionTrackingStatus.starting ? (
-          <LoadingIcon />
-        ) : (
-          <Icon
-            source={errorKey ? "alert-circle-outline" : statusIcons.idle}
-            color={errorKey ? theme.colors.error : undefined}
-          />
-        )}
-        <Text
-          style={styles.headerText}
-          variant="labelLarge"
-          textKey={
-            errorKey ??
-            (status === PositionTrackingStatus.starting
-              ? "dataEntry:positionTracking.status.starting"
-              : "dataEntry:positionTracking.title")
-          }
-        />
-        {canStart && (
-          <Button
-            compact
-            icon="play"
-            mode="text"
-            onPress={onStart}
-            textKey={
-              errorKey
-                ? "dataEntry:positionTracking.retry"
-                : "dataEntry:positionTracking.start"
-            }
-          />
-        )}
-      </HView>
-    );
-  }
-
-  const headerTextParts = [
-    t(
-      waitingForFix
-        ? "dataEntry:positionTracking.waitingForFix"
-        : `dataEntry:positionTracking.status.${status}`,
-    ),
-    lengthText,
-    durationText,
-  ];
-  if (tracking && accuracyText !== null) {
-    headerTextParts.push(
-      t("dataEntry:positionTracking.accuracy", { accuracy: accuracyText }),
-    );
-  }
+  const containerStyle = useContainerStyle(errorKey);
 
   return (
     <VView style={containerStyle}>
       <TouchableOpacity onPress={toggleExpanded}>
         <HView style={styles.header}>
           <Icon
-            source={
-              waitingForFix ? "crosshairs-question" : statusIcons[status]
-            }
+            source={waitingForFix ? "crosshairs-question" : statusIcons[status]}
             color={tracking ? theme.colors.error : undefined}
           />
           <Text style={styles.headerText} variant="labelLarge">
-            {headerTextParts.join(" · ")}
+            {buildHeaderText({ summary, t })}
           </Text>
           <Icon source={expanded ? "chevron-up" : "chevron-down"} size={24} />
         </HView>
@@ -252,5 +257,57 @@ export const PositionTrackingBar = () => {
         />
       )}
     </VView>
+  );
+};
+
+export const PositionTrackingBar = () => {
+  const dispatch = useAppDispatch();
+
+  const survey = SurveySelectors.useCurrentSurvey();
+  const record = DataEntrySelectors.useRecord();
+  const canEditRecord = DataEntrySelectors.useCanEditRecord();
+
+  const summary = usePositionTrackingSummary();
+  const { status, nodeUuid, errorKey } = summary;
+
+  const hasTrack =
+    status === PositionTrackingStatus.tracking ||
+    status === PositionTrackingStatus.paused;
+  const starting = status === PositionTrackingStatus.starting;
+
+  // trackable attribute in the root entity (or its single entities): tracking can be started
+  // here, also when the record is opened again (a new segment is added to the existing track)
+  const startableNode = useMemo(() => {
+    if (!survey || !record || hasTrack) return null;
+    return PositionTracks.findAutoStartNode({ survey, record });
+  }, [hasTrack, record, survey]);
+
+  const onStart = useCallback(() => {
+    const nodeUuidToTrack = nodeUuid ?? startableNode?.uuid;
+    if (nodeUuidToTrack) {
+      void dispatch(
+        PositionTrackingActions.startTracking({ nodeUuid: nodeUuidToTrack }),
+      );
+    }
+  }, [dispatch, nodeUuid, startableNode]);
+
+  if (hasTrack) {
+    return <ActiveTrackingBar summary={summary} />;
+  }
+
+  const canStart =
+    canEditRecord &&
+    status === PositionTrackingStatus.idle &&
+    (!!startableNode || (!!errorKey && !!nodeUuid));
+
+  if (!starting && !canStart) return null;
+
+  return (
+    <IdleTrackingBar
+      canStart={canStart}
+      errorKey={errorKey}
+      onStart={onStart}
+      starting={starting}
+    />
   );
 };
