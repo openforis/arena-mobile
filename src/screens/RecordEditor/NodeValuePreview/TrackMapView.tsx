@@ -1,10 +1,5 @@
 import { useMemo } from "react";
-import {
-  StyleProp,
-  StyleSheet,
-  ViewStyle,
-  useWindowDimensions,
-} from "react-native";
+import { StyleProp, StyleSheet, ViewStyle } from "react-native";
 import { Polyline } from "react-native-maps";
 
 import { MapView, VView } from "components";
@@ -14,15 +9,12 @@ import { GeoUtils } from "utils";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    minHeight: 220,
   },
   map: {
     flex: 1,
   },
 });
-
-const minHeight = 220;
-// in scrollable forms the map can't grow (flex): use part of the screen height
-const windowHeightRatio = 0.6;
 
 const trackStrokeColor = "rgba(229, 57, 53, 0.95)";
 
@@ -36,21 +28,6 @@ type Props = {
 
 export const TrackMapView = (props: Props) => {
   const { segments, fitOnlyOnce = false, showsUserLocation, style } = props;
-
-  const { height: windowHeight } = useWindowDimensions();
-  const containerStyle = useMemo(
-    () => [
-      styles.container,
-      {
-        minHeight: Math.max(
-          minHeight,
-          Math.round(windowHeight * windowHeightRatio),
-        ),
-      },
-      style,
-    ],
-    [style, windowHeight],
-  );
 
   const lines = useMemo(
     () =>
@@ -71,7 +48,7 @@ export const TrackMapView = (props: Props) => {
   );
 
   return (
-    <VView style={containerStyle}>
+    <VView style={[styles.container, style]}>
       <MapView
         fitToCoordinatesOnReady={coordinates.length > 0 ? coordinates : undefined}
         fitOnlyOnce={fitOnlyOnce}
