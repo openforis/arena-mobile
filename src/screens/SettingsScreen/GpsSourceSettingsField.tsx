@@ -12,7 +12,7 @@ import { useAvailableGpsSources } from "hooks";
 import { GpsSourceSetting, SettingsModel } from "model";
 import { ExternalGpsService } from "service/externalGps/ExternalGpsService";
 import { GpsSourceDescriptor } from "service/externalGps/types";
-import { SettingsActions, useAppDispatch } from "state";
+import { SettingsActions, SettingsSelectors, useAppDispatch } from "state";
 import { Environment } from "utils";
 
 type GpsSourceOption = {
@@ -32,9 +32,10 @@ const styles = StyleSheet.create({
  * option list is dynamic (depends on which external GPS devices are currently
  * bonded), unlike those static dropdowns.
  */
-export const GpsSourceSettingsField = (props: { value: string }) => {
-  const { value } = props;
+export const GpsSourceSettingsField = () => {
   const dispatch = useAppDispatch();
+  // read from the store: the value is updated there (not in the settings screen local state)
+  const { preferredGpsSourceId: value } = SettingsSelectors.useSettings();
   const { availableGpsSources, refreshAvailableGpsSources } =
     useAvailableGpsSources();
 
