@@ -162,8 +162,8 @@ const properties: SettingsProperties = {
   positionTrackingMinDistance: {
     type: PropertyType.slider,
     group: SettingGroup.location,
-    minValue: 1,
-    maxValue: 20,
+    minValue: 2,
+    maxValue: 50,
     step: 1,
   },
   positionTrackingAccuracyThreshold: {

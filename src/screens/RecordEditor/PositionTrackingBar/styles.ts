@@ -13,8 +13,10 @@ export default StyleSheet.create({
     flex: 1,
   },
   details: {
+    borderRadius: 8,
     gap: 4,
-    paddingBottom: 6,
+    marginBottom: 6,
+    padding: 8,
   },
   buttons: {
     flexWrap: "wrap",

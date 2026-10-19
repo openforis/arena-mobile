@@ -148,7 +148,10 @@ const evaluatePoint = ({
   if (!lastPoint) return null;
 
   const dist = distance(lastPoint, point);
-  if (dist < minDistance) return TrackPointRejectReason.tooClose;
+  // a move smaller than the fix accuracy is GPS noise (e.g. standing still)
+  if (dist < Math.max(minDistance, accuracy ?? 0)) {
+    return TrackPointRejectReason.tooClose;
+  }
 
   const elapsedSeconds = (point.time - lastPoint.time) / 1000;
   if (elapsedSeconds > 0 && dist / elapsedSeconds > maxSpeed) {

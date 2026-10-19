@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { TouchableOpacity } from "react-native";
-import { useTheme } from "react-native-paper";
+import { MD3Theme, useTheme } from "react-native-paper";
 
 import { NodeDefs, Records, Surveys } from "@openforis/arena-core";
 
@@ -73,21 +73,31 @@ const ExpandableHeader = ({
   iconSource,
   onPress,
   text,
+  textColor,
 }: {
   expanded: boolean;
   iconColor?: string;
   iconSource: string;
   onPress: () => void;
   text: string;
+  textColor: string;
 }) => (
   <TouchableOpacity onPress={onPress}>
     <HView style={styles.header}>
-      <Icon source={iconSource} color={iconColor} />
+      <Icon source={iconSource} color={iconColor ?? textColor} />
       {/* one line, to take as little space as possible above the form */}
-      <Text numberOfLines={1} style={styles.headerText} variant="labelLarge">
+      <Text
+        numberOfLines={1}
+        style={[styles.headerText, { color: textColor }]}
+        variant="labelLarge"
+      >
         {text}
       </Text>
-      <Icon source={expanded ? "chevron-up" : "chevron-down"} size={24} />
+      <Icon
+        source={expanded ? "chevron-up" : "chevron-down"}
+        color={textColor}
+        size={24}
+      />
     </HView>
   </TouchableOpacity>
 );
@@ -110,19 +120,36 @@ const TrackNodeLabel = ({ nodeUuid }: { nodeUuid: string }) => {
   );
 };
 
-const useContainerStyle = (errorKey: string | null) => {
-  const theme = useTheme();
-  return useMemo(
-    () => [
-      styles.container,
-      {
-        backgroundColor: errorKey
-          ? theme.colors.errorContainer
-          : theme.colors.secondaryContainer,
-      },
-    ],
-    [errorKey, theme.colors.errorContainer, theme.colors.secondaryContainer],
-  );
+// green only while points are being collected, so the user can tell it at a glance
+enum BarTone {
+  collecting = "collecting",
+  notCollecting = "notCollecting",
+  error = "error",
+}
+
+type ThemeColors = MD3Theme["colors"];
+
+const getToneColors = (colors: ThemeColors, tone: BarTone) => {
+  switch (tone) {
+    case BarTone.collecting:
+      return [colors.secondary, colors.onSecondary] as const;
+    case BarTone.error:
+      return [colors.errorContainer, colors.onErrorContainer] as const;
+    default:
+      return [colors.surfaceVariant, colors.onSurfaceVariant] as const;
+  }
+};
+
+const useBarColors = (tone: BarTone) => {
+  const { colors } = useTheme();
+  return useMemo(() => {
+    const [backgroundColor, textColor] = getToneColors(colors, tone);
+    return {
+      containerStyle: [styles.container, { backgroundColor }],
+      detailsStyle: [styles.details, { backgroundColor: colors.surface }],
+      textColor,
+    };
+  }, [colors, tone]);
 };
 
 const getIdleTextKey = ({
@@ -169,7 +196,9 @@ const IdleTrackingBar = ({
   starting: boolean;
 }) => {
   const theme = useTheme();
-  const containerStyle = useContainerStyle(errorKey);
+  const { containerStyle, textColor } = useBarColors(
+    errorKey ? BarTone.error : BarTone.notCollecting,
+  );
 
   return (
     <HView style={[containerStyle, styles.header]}>
@@ -178,12 +207,12 @@ const IdleTrackingBar = ({
       ) : (
         <Icon
           source={errorKey ? "alert-circle-outline" : statusIcons.idle}
-          color={errorKey ? theme.colors.error : undefined}
+          color={errorKey ? theme.colors.error : textColor}
         />
       )}
       <Text
         numberOfLines={2}
-        style={styles.headerText}
+        style={[styles.headerText, { color: textColor }]}
         variant="labelLarge"
         textKey={getIdleTextKey({ errorKey, starting })}
       />
@@ -241,6 +270,17 @@ const buildHeaderText = ({
   return parts.join(" · ");
 };
 
+const getActiveBarTone = ({
+  errorKey,
+  tracking,
+  waitingForFix,
+}: Summary): BarTone => {
+  if (errorKey) return BarTone.error;
+  return tracking && !waitingForFix
+    ? BarTone.collecting
+    : BarTone.notCollecting;
+};
+
 // track being recorded or paused: summary, expandable to show the tracking buttons
 const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
   const dispatch = useAppDispatch();
@@ -266,22 +306,26 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
     await dispatch(PositionTrackingActions.stopTracking());
   }, [dispatch]);
 
-  const containerStyle = useContainerStyle(errorKey);
+  const { containerStyle, detailsStyle, textColor } = useBarColors(
+    getActiveBarTone(summary),
+  );
   const headerText = buildHeaderText({ summary, t });
 
   return (
     <VView style={containerStyle}>
       <ExpandableHeader
         expanded={expanded}
-        iconColor={tracking ? theme.colors.error : undefined}
+        // red "recording" dot
+        iconColor={tracking && !waitingForFix ? theme.colors.error : undefined}
         iconSource={
           waitingForFix ? "crosshairs-question" : statusIcons[status]
         }
         onPress={toggleExpanded}
         text={headerText}
+        textColor={textColor}
       />
       {expanded && (
-        <VView style={styles.details}>
+        <VView style={detailsStyle}>
           <Text variant="bodySmall">{headerText}</Text>
           {nodeUuid && <TrackNodeLabel nodeUuid={nodeUuid} />}
           <Text
@@ -339,7 +383,9 @@ const StoppedTrackingBar = ({
   const { t } = useTranslation();
   const { node } = useTrackNode(nodeUuid);
   const { expanded, toggleExpanded } = useExpanded();
-  const containerStyle = useContainerStyle(null);
+  const { containerStyle, detailsStyle, textColor } = useBarColors(
+    BarTone.notCollecting,
+  );
 
   const segments = useMemo(
     () => PositionTracks.fromFeature(node?.value),
@@ -358,9 +404,10 @@ const StoppedTrackingBar = ({
         iconSource={statusIcons.idle}
         onPress={toggleExpanded}
         text={headerText}
+        textColor={textColor}
       />
       {expanded && (
-        <VView style={styles.details}>
+        <VView style={detailsStyle}>
           <Text variant="bodySmall">{headerText}</Text>
           <TrackNodeLabel nodeUuid={nodeUuid} />
           <Text

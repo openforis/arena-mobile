@@ -76,6 +76,17 @@ describe("PositionTracks.evaluatePoint", () => {
     ).toBe(TrackPointRejectReason.tooClose);
   });
 
+  test("rejects moves smaller than the fix accuracy (GPS noise)", () => {
+    // ~5.6 m away, accuracy 8 m
+    expect(
+      PositionTracks.evaluatePoint({
+        ...params,
+        point: point(latStep / 2, 0, 10, 8),
+        lastPoint: point(0, 0, 0),
+      }),
+    ).toBe(TrackPointRejectReason.tooClose);
+  });
+
   test("rejects jumps", () => {
     expect(
       PositionTracks.evaluatePoint({

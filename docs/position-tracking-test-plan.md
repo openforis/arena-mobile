@@ -23,8 +23,9 @@ What is left before the feature can be released:
 - Devices: one Android (recent + one old/low-end if possible), one iPhone.
 - External GPS: a paired Bad Elf (or the receiver in use), with GPS source
   "auto".
-- Settings: defaults (min distance 3 m, accuracy 20 m), then repeat a walk
-  with 10 m / 10 m to compare.
+- Settings: defaults (min distance 10 m, accuracy 20 m), then repeat a walk
+  with 5 m / 10 m to compare; standing still for a few minutes (e.g.
+  measuring trees) should add no points.
 
 ### Cases
 
@@ -32,8 +33,9 @@ Each case: expected result in brackets; note device, OS, GPS source.
 
 **Start / stop**
 
-1. Create a record → tracking starts (bar: "Tracking", red dot); location
-   permission asked the first time.
+1. Create a record → tracking starts (bar: "Tracking", red dot, green
+   background while points are collected; grey when paused, stopped or
+   waiting for GPS); location permission asked the first time.
 2. Deny the permission → record created anyway, bar shows the error and
    "Retry"; grant from system settings, Retry → tracking starts.
 3. Location services off → specific error message; turn them on, Retry.

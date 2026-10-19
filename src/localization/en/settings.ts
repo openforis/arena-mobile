@@ -91,7 +91,7 @@ It will help to get a better accuracy in coordinate attributes.`,
   positionTrackingMinDistance: {
     label: "Position tracking min distance: {{value}} m",
     description:
-      "Minimum distance between two points of the track being recorded",
+      "Minimum distance between two points of the track being recorded (larger if the location is less accurate)",
   },
   gpsDevicePairing: {
     title: "Pair a GPS device",

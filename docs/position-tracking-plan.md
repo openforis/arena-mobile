@@ -244,7 +244,7 @@ attribute layers (own colour, toggle, label from the attribute def).
 
 ### Settings (`SettingsScreen`, "Position tracking" section)
 
-- min distance between points (m), default 3;
+- min distance between points (m), default 10 (and at least the fix accuracy, to drop GPS noise when standing still);
 - accuracy threshold for track points (m), default 20;
 - flush interval: fixed to 60 s (not a setting).
 
