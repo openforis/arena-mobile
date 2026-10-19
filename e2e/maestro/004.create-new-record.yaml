@@ -47,10 +47,18 @@ appId: ${APP_ID}
     id: "root_relevant_if_bool"
 - inputText: "123"
 - hideKeyboard
+# the tracking bar/map change the form height: the field may end up above or below
 - scrollUntilVisible:
     element:
       id: "root_visible_if_bool"
     direction: DOWN
+    visibilityPercentage: 50
+    optional: true
+- scrollUntilVisible:
+    element:
+      id: "root_visible_if_bool"
+    direction: UP
+    visibilityPercentage: 50
 - assertVisible:
     id: "root_visible_if_bool"
 - scrollUntilVisible:
