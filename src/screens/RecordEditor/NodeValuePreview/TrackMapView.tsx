@@ -22,12 +22,20 @@ type Props = {
   segments: TrackSegment[];
   // when true, the map is fitted to the track only when it's ready (e.g. track being recorded)
   fitOnlyOnce?: boolean;
+  // false in scrollable forms: the map must not catch the scroll gestures
+  interactive?: boolean;
   showsUserLocation?: boolean;
   style?: StyleProp<ViewStyle>;
 };
 
 export const TrackMapView = (props: Props) => {
-  const { segments, fitOnlyOnce = false, showsUserLocation, style } = props;
+  const {
+    segments,
+    fitOnlyOnce = false,
+    interactive = true,
+    showsUserLocation,
+    style,
+  } = props;
 
   const lines = useMemo(
     () =>
@@ -48,7 +56,10 @@ export const TrackMapView = (props: Props) => {
   );
 
   return (
-    <VView style={[styles.container, style]}>
+    <VView
+      pointerEvents={interactive ? undefined : "none"}
+      style={[styles.container, style]}
+    >
       <MapView
         fitToCoordinatesOnReady={coordinates.length > 0 ? coordinates : undefined}
         fitOnlyOnce={fitOnlyOnce}

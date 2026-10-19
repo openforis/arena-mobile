@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { Button, HView, IconButton, Text, VView } from "components";
 import {
@@ -14,13 +14,14 @@ import {
 } from "state";
 
 import { TrackMapView } from "../../../NodeValuePreview/TrackMapView";
+import { TrackDialog } from "../../../PositionTrackingBar/TrackDialog";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 import { useNodeGeoComponent } from "./useNodeGeoComponent";
 import styles from "./styles";
 
 // geo attribute with position tracking enabled: the value is read-only, written only by tracking
 export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
-  const { nodeUuid } = props;
+  const { nodeDef, nodeUuid } = props;
 
   const dispatch = useAppDispatch();
   const canEditRecord = DataEntrySelectors.useCanEditRecord();
@@ -63,6 +64,11 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
     await dispatch(PositionTrackingActions.stopTracking());
   }, [dispatch]);
 
+  const [mapDialogOpen, setMapDialogOpen] = useState(false);
+  const openMapDialog = useCallback(() => setMapDialogOpen(true), []);
+  const closeMapDialog = useCallback(() => setMapDialogOpen(false), []);
+  const showMap = hasPoints || trackActive;
+
   const summaryText = trackActive ? (
     <Text
       textKey="dataEntry:positionTracking.trackSummary"
@@ -90,10 +96,11 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
   );
 
   return (
-    <VView style={hasPoints || trackActive ? styles.container : undefined}>
-      {(hasPoints || trackActive) && (
+    <VView style={showMap ? styles.container : undefined}>
+      {showMap && (
         <TrackMapView
           fitOnlyOnce={trackActive}
+          interactive={false}
           segments={segments}
           showsUserLocation={tracking}
         />
@@ -146,7 +153,19 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
             />
           )}
         </HView>
+        {showMap && (
+          <HView style={styles.previewToolbarRight}>
+            <IconButton icon="fullscreen" onPress={openMapDialog} />
+          </HView>
+        )}
       </HView>
+      {mapDialogOpen && nodeUuid && (
+        <TrackDialog
+          node={{ uuid: nodeUuid, value: nodeValue }}
+          nodeDef={nodeDef}
+          onDismiss={closeMapDialog}
+        />
+      )}
       <Text
         variant="bodySmall"
         textKey="dataEntry:positionTracking.attributeNotEditable"
