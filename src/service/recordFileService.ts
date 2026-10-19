@@ -1,3 +1,6 @@
+import { PreviewMode } from "utils/PreviewMode";
+
+import { RecordFileMemoryRepository } from "./repository/recordFileMemoryRepository";
 import { RecordFileRepository } from "./repository/recordFileRepository";
 
 const {
@@ -8,7 +11,7 @@ const {
   recordFileMissing,
   saveRecordFile,
   deleteRecordFile,
-} = RecordFileRepository;
+} = PreviewMode.isActive ? RecordFileMemoryRepository : RecordFileRepository;
 
 export const RecordFileService = {
   getRecordFilesParentDirectoryUri,

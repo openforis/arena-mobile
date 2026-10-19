@@ -46,6 +46,10 @@ export default {
     exportLabel: "صادرات گزارش‌ها",
   },
   pleaseWaitMessage: "لطفا صبر کنید...",
+  preview: {
+    error: "خطا در بارگذاری پیش‌نمایش پرسشنامه: {{error}}",
+    waitingForSurvey: "در انتظار پرسشنامه برای پیش‌نمایش...",
+  },
   update: "به روز رسانی",
   updateAvailable: "به روز رسانی موجود است",
   updateStatus: {

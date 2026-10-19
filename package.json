@@ -8,6 +8,7 @@
     "run:ios": "expo run:ios",
     "prebuild:android": "expo prebuild --platform android",
     "web": "expo start --web",
+    "build:web": "expo export --platform web --output-dir dist-web",
     "lint": "eslint --fix --ext .js,.jsx .",
     "test": "jest",
     "test:types": "node ./node_modules/typescript/bin/tsc",

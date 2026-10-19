@@ -16,6 +16,7 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+dist-web/
 yarn-error.log
 .yarn/install-state.gz
 

@@ -3,7 +3,7 @@ import { DefaultTheme, createStaticNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useTheme } from "react-native-paper";
 
-import { log } from "utils";
+import { log, PreviewMode } from "utils";
 import { screens } from "screens/screens";
 import { CurrentSurveyCoordinator } from "./CurrentSurveyCoordinator";
 import { AppBar } from "./AppBar";
@@ -14,7 +14,10 @@ const screenOptions = {
 };
 
 const RootStack = createNativeStackNavigator({
-  initialRouteName: screenKeys.home,
+  // web preview: the previewed record is edited right away
+  initialRouteName: PreviewMode.isActive
+    ? screenKeys.recordEditor
+    : screenKeys.home,
   screenOptions: screenOptions,
   screens: Object.entries(screens).reduce(
     (acc, [key, screen]) => {

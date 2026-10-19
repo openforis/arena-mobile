@@ -44,6 +44,10 @@ export default {
     exportLabel: "記録（ログ）をエクスポート",
   },
   pleaseWaitMessage: "お待ちください...",
+  preview: {
+    error: "調査のプレビューの読み込み中にエラーが発生しました: {{error}}",
+    waitingForSurvey: "プレビューする調査を待っています...",
+  },
   update: "更新",
   updateAvailable: "更新が利用可能",
   updateStatus: {

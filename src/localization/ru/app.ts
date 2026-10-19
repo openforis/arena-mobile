@@ -43,6 +43,10 @@ export default {
     exportLabel: "Экспортировать журналы",
   },
   pleaseWaitMessage: "Пожалуйста, подождите...",
+  preview: {
+    error: "Ошибка загрузки предварительного просмотра опроса: {{error}}",
+    waitingForSurvey: "Ожидание опроса для предварительного просмотра...",
+  },
   update: "Обновить",
   updateAvailable: "Доступно обновление",
   updateStatus: {

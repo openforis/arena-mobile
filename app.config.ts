@@ -137,6 +137,10 @@ const config = (): ExpoConfig => {
     web: {
       favicon: "./assets/logo/favicon.png",
     },
+    // web build served under a sub path (e.g. /mobile-preview by Arena)
+    ...(process.env.WEB_BASE_URL
+      ? { experiments: { baseUrl: process.env.WEB_BASE_URL } }
+      : {}),
     extra: {
       eas: {
         projectId: "adc829ff-2bf8-4733-9e03-051d16d0f9ca",
