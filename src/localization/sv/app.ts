@@ -44,6 +44,10 @@ export default {
     exportLabel: "Exportera loggar",
   },
   pleaseWaitMessage: "Vänta...",
+  preview: {
+    error: "Fel vid inläsning av förhandsvisningen av enkäten: {{error}}",
+    waitingForSurvey: "Väntar på enkäten att förhandsvisa...",
+  },
   update: "Uppdatera",
   updateAvailable: "Uppdatering tillgänglig",
   updateStatus: {

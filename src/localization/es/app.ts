@@ -45,6 +45,10 @@ export default {
     exportLabel: "Exportar registros",
   },
   pleaseWaitMessage: "Por favor, espere...",
+  preview: {
+    error: "Error al cargar la vista previa de la encuesta: {{error}}",
+    waitingForSurvey: "Esperando la encuesta para la vista previa...",
+  },
   update: "Actualizar",
   updateAvailable: "Actualización disponible",
   updateStatus: {
