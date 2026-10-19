@@ -41,6 +41,10 @@ export default {
     exportLabel: "መዝገቦችን ወደ ውጭ ላክ",
   },
   pleaseWaitMessage: "እባክዎን ይጠብቁ...",
+  preview: {
+    error: "የዳሰሳ ቅድመ እይታውን በመጫን ላይ ስህተት: {{error}}",
+    waitingForSurvey: "ለቅድመ እይታ የሚሆነውን ዳሰሳ በመጠበቅ ላይ...",
+  },
   update: "አዘምን",
   updateAvailable: "ዝማኔ ይገኛል",
   updateStatus: {

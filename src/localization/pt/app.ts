@@ -44,6 +44,10 @@ export default {
     exportLabel: "Exportar registos",
   },
   pleaseWaitMessage: "Por favor, aguarde...",
+  preview: {
+    error: "Erro ao carregar a pré-visualização do inquérito: {{error}}",
+    waitingForSurvey: "A aguardar o inquérito para pré-visualizar...",
+  },
   update: "Atualizar",
   updateAvailable: "Atualização disponível",
   updateStatus: {

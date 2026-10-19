@@ -20,16 +20,19 @@ import { JobMonitorDialog } from "appComponents/JobMonitorDialog";
 import { useEffectiveTheme } from "hooks";
 import { AppStack } from "navigation/AppStack";
 import { store } from "state/store";
-import { BaseStyles, Environment, log } from "utils";
+import { BaseStyles, Environment, log, PreviewMode } from "utils";
 import { initializeGlobalErrorHandler } from "utils/GlobalErrorHandler";
 
 import { AppInitializer } from "./src/AppInitializer";
+import { PreviewInitializer } from "./src/preview";
 import styles from "./src/appStyles";
 
 // registered as early as possible, before any rendering, to catch errors
 // outside React's render phase (event handlers, timers, unhandled promise
 // rejections) that the ErrorBoundary below cannot see
 initializeGlobalErrorHandler();
+
+const Initializer = PreviewMode.isActive ? PreviewInitializer : AppInitializer;
 
 const safeAreaEdges: Edges = ["right", "bottom", "left"];
 
@@ -59,7 +62,7 @@ const AppInnerContainer = () => {
         >
           <KeyboardProvider>
             <StatusBar style={theme.dark ? "light" : "dark"} />
-            <AppInitializer>
+            <Initializer>
               <SafeAreaView edges={safeAreaEdges} style={styles.container}>
                 <KeyboardAvoidingView
                   behavior={Environment.isIOS ? "padding" : "height"}
@@ -69,7 +72,7 @@ const AppInnerContainer = () => {
                   <AppStack />
                 </KeyboardAvoidingView>
               </SafeAreaView>
-            </AppInitializer>
+            </Initializer>
           </KeyboardProvider>
         </ErrorBoundary>
         <AppMessageDialog />

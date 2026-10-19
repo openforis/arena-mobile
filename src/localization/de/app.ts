@@ -45,6 +45,10 @@ export default {
     exportLabel: "Protokolle exportieren",
   },
   pleaseWaitMessage: "Bitte warten...",
+  preview: {
+    error: "Fehler beim Laden der Umfragevorschau: {{error}}",
+    waitingForSurvey: "Warten auf die Umfrage für die Vorschau...",
+  },
   update: "Aktualisieren",
   updateAvailable: "Update verfügbar",
   updateStatus: {

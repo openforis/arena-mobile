@@ -47,6 +47,10 @@ export default {
     exportLabel: "Exporter les journaux",
   },
   pleaseWaitMessage: "Veuillez patienter...",
+  preview: {
+    error: "Erreur lors du chargement de l'aperçu de l'enquête : {{error}}",
+    waitingForSurvey: "En attente de l'enquête à prévisualiser...",
+  },
   update: "Mettre à jour",
   updateAvailable: "Mise à jour disponible",
   updateStatus: {

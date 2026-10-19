@@ -44,6 +44,10 @@ export default {
     exportLabel: "Ekspor log",
   },
   pleaseWaitMessage: "Harap tunggu...",
+  preview: {
+    error: "Kesalahan saat memuat pratinjau survei: {{error}}",
+    waitingForSurvey: "Menunggu survei untuk dipratinjau...",
+  },
   update: "Perbarui",
   updateAvailable: "Pembaruan tersedia",
   updateStatus: {
