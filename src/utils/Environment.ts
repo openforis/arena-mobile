@@ -9,6 +9,7 @@ const isExpoGo =
   Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
 const isAndroid = platform === "android";
 const isIOS = platform === "ios";
+const isWeb = platform === "web";
 const pkg = Constants.expoConfig?.android?.package ?? "host.exp.exponent";
 
 export const Environment = {
@@ -16,6 +17,7 @@ export const Environment = {
   isExpoGo,
   isAndroid,
   isIOS,
+  isWeb,
   pkg,
   platform,
 };

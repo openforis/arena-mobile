@@ -14,6 +14,7 @@ import {
   SurveyOptionsSelectors,
   SurveySelectors,
 } from "state";
+import { PreviewMode } from "utils";
 
 const calculateIsMaxCountReached = ({
   entityDef,
@@ -95,7 +96,9 @@ export const useBottomNavigationBar = () =>
 
     const activeChildIsLastChild = activeChildIndex + 1 === childDefs.length;
 
+    // no list of records in web preview mode
     const listOfRecordsButtonVisible =
+      !PreviewMode.isActive &&
       NodeDefs.isRoot(entityDef) &&
       (viewMode !== RecordEditViewMode.oneNode || activeChildIndex === 0);
 

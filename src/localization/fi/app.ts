@@ -44,6 +44,10 @@ export default {
     exportLabel: "Vie lokit",
   },
   pleaseWaitMessage: "Odota hetki...",
+  preview: {
+    error: "Virhe kyselyn esikatselun lataamisessa: {{error}}",
+    waitingForSurvey: "Odotetaan esikatseltavaa kyselyä...",
+  },
   update: "Päivitä",
   updateAvailable: "Päivitys saatavilla",
   updateStatus: {

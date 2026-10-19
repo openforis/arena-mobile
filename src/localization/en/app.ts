@@ -44,6 +44,10 @@ The size will be around {{size}}.`,
     exportLabel: "Export Logs",
   },
   pleaseWaitMessage: "Please wait...",
+  preview: {
+    error: "Error loading the survey preview: {{error}}",
+    waitingForSurvey: "Waiting for the survey to preview...",
+  },
   update: "Update",
   updateAvailable: "Update available",
   updateStatus: {

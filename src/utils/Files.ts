@@ -113,7 +113,18 @@ const getInfo = async (
   }
 };
 
+// web: picked files are referenced by blob/data URIs, not available through expo-file-system
+const getWebFileSize = async (fileUri: string): Promise<number> => {
+  try {
+    const blob = await (await fetch(fileUri)).blob();
+    return blob.size;
+  } catch {
+    return 0;
+  }
+};
+
 const getSize = async (fileUri: any, ignoreErrors = true): Promise<number> => {
+  if (Environment.isWeb) return getWebFileSize(fileUri);
   const info = await getInfo(fileUri, ignoreErrors);
   return info?.exists ? info.size : 0;
 };
@@ -131,6 +142,7 @@ const getDirSize = async (dirUri: any): Promise<number> => {
 };
 
 const exists = async (fileUri: any): Promise<boolean> => {
+  if (Environment.isWeb) return (await getWebFileSize(fileUri)) > 0;
   const info = await getInfo(fileUri, true);
   return info?.exists ?? false;
 };
