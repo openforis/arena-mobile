@@ -340,6 +340,7 @@ Press '$t(common:stop)' when done.`,
     retry: "Retry",
     status: {
       idle: "Not tracking",
+      stopped: "Tracking stopped",
       starting: "Starting tracking…",
       tracking: "Tracking",
       paused: "Tracking paused",

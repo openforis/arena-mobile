@@ -190,6 +190,9 @@ component rendered in `RecordEditor.tsx`.)
   entity keys when inside a multiple entity), start time, points count, last
   fix time, and buttons **Pause / Resume**, **Stop**, **Show track**
   (navigates to the node, where the track is shown on a map).
+- **Stopped** (a track is recorded): `Tracking stopped · 1.24 km · 00:42:10`,
+  expandable like the active bar, with **Resume**, **Restart** and **Show
+  track** (the track can be checked on a map after Stop).
 - Stop asks for confirmation; Pause does not.
 - When several trackable nodes are available (root + current entity), "Start"
   opens a small chooser.

@@ -28,6 +28,92 @@ const statusIcons: Record<PositionTrackingStatus, string> = {
 
 type Summary = ReturnType<typeof usePositionTrackingSummary>;
 
+const useTrackNode = (nodeUuid: string | null | undefined) => {
+  const survey = SurveySelectors.useCurrentSurvey();
+  const record = DataEntrySelectors.useRecord();
+  return useMemo(() => {
+    const node =
+      record && nodeUuid ? Records.getNodeByUuid(nodeUuid)(record) : null;
+    const nodeDef =
+      survey && node
+        ? Surveys.getNodeDefByUuid({ survey, uuid: node.nodeDefUuid })
+        : null;
+    return { node, nodeDef };
+  }, [nodeUuid, record, survey]);
+};
+
+// opens the tracking attribute (map with the track) in a dialog
+const ShowTrackButton = ({ nodeUuid }: { nodeUuid: string }) => {
+  const { node, nodeDef } = useTrackNode(nodeUuid);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const openDialog = useCallback(() => setDialogOpen(true), []);
+  const closeDialog = useCallback(() => setDialogOpen(false), []);
+
+  if (!node || !nodeDef) return null;
+
+  return (
+    <>
+      <Button
+        compact
+        icon="map-search-outline"
+        color="secondary"
+        onPress={openDialog}
+        textKey="dataEntry:positionTracking.showTrack"
+      />
+      {dialogOpen && (
+        <NodeEditDialog
+          nodeDef={nodeDef}
+          parentNodeUuid={node.parentUuid}
+          onDismiss={closeDialog}
+        />
+      )}
+    </>
+  );
+};
+
+const ExpandableHeader = ({
+  expanded,
+  iconColor,
+  iconSource,
+  onPress,
+  text,
+}: {
+  expanded: boolean;
+  iconColor?: string;
+  iconSource: string;
+  onPress: () => void;
+  text: string;
+}) => (
+  <TouchableOpacity onPress={onPress}>
+    <HView style={styles.header}>
+      <Icon source={iconSource} color={iconColor} />
+      {/* one line, to take as little space as possible above the form */}
+      <Text numberOfLines={1} style={styles.headerText} variant="labelLarge">
+        {text}
+      </Text>
+      <Icon source={expanded ? "chevron-up" : "chevron-down"} size={24} />
+    </HView>
+  </TouchableOpacity>
+);
+
+const useExpanded = () => {
+  const [expanded, setExpanded] = useState(false);
+  const toggleExpanded = useCallback(
+    () => setExpanded((expandedPrev) => !expandedPrev),
+    [],
+  );
+  return { expanded, toggleExpanded };
+};
+
+const TrackNodeLabel = ({ nodeUuid }: { nodeUuid: string }) => {
+  const lang = SurveySelectors.useCurrentSurveyPreferredLang();
+  const { nodeDef } = useTrackNode(nodeUuid);
+  if (!nodeDef) return null;
+  return (
+    <Text variant="bodyMedium">{NodeDefs.getLabelOrName(nodeDef, lang)}</Text>
+  );
+};
+
 const useContainerStyle = (errorKey: string | null) => {
   const theme = useTheme();
   return useMemo(
@@ -165,28 +251,12 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
   const theme = useTheme();
   const { t } = useTranslation();
 
-  const survey = SurveySelectors.useCurrentSurvey();
-  const lang = SurveySelectors.useCurrentSurveyPreferredLang();
-  const record = DataEntrySelectors.useRecord();
   const canEditRecord = DataEntrySelectors.useCanEditRecord();
 
   const { status, nodeUuid, errorKey, tracking, waitingForFix, pointsCount } =
     summary;
 
-  const [expanded, setExpanded] = useState(false);
-  const [trackDialogOpen, setTrackDialogOpen] = useState(false);
-
-  const trackedNode = useMemo(
-    () => (record && nodeUuid ? Records.getNodeByUuid(nodeUuid)(record) : null),
-    [nodeUuid, record],
-  );
-  const trackedNodeDef = useMemo(
-    () =>
-      survey && trackedNode
-        ? Surveys.getNodeDefByUuid({ survey, uuid: trackedNode.nodeDefUuid })
-        : null,
-    [survey, trackedNode],
-  );
+  const { expanded, toggleExpanded } = useExpanded();
 
   const onPause = useCallback(
     () => dispatch(PositionTrackingActions.pauseTracking()),
@@ -199,43 +269,25 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
   const onStop = useCallback(async () => {
     await dispatch(PositionTrackingActions.stopTracking());
   }, [dispatch]);
-  const toggleExpanded = useCallback(
-    () => setExpanded((expandedPrev) => !expandedPrev),
-    [],
-  );
-  const openTrackDialog = useCallback(() => setTrackDialogOpen(true), []);
-  const closeTrackDialog = useCallback(() => setTrackDialogOpen(false), []);
 
   const containerStyle = useContainerStyle(errorKey);
   const headerText = buildHeaderText({ summary, t });
 
   return (
     <VView style={containerStyle}>
-      <TouchableOpacity onPress={toggleExpanded}>
-        <HView style={styles.header}>
-          <Icon
-            source={waitingForFix ? "crosshairs-question" : statusIcons[status]}
-            color={tracking ? theme.colors.error : undefined}
-          />
-          {/* one line, to take as little space as possible above the form */}
-          <Text
-            numberOfLines={1}
-            style={styles.headerText}
-            variant="labelLarge"
-          >
-            {headerText}
-          </Text>
-          <Icon source={expanded ? "chevron-up" : "chevron-down"} size={24} />
-        </HView>
-      </TouchableOpacity>
+      <ExpandableHeader
+        expanded={expanded}
+        iconColor={tracking ? theme.colors.error : undefined}
+        iconSource={
+          waitingForFix ? "crosshairs-question" : statusIcons[status]
+        }
+        onPress={toggleExpanded}
+        text={headerText}
+      />
       {expanded && (
         <VView style={styles.details}>
           <Text variant="bodySmall">{headerText}</Text>
-          {trackedNodeDef && (
-            <Text variant="bodyMedium">
-              {NodeDefs.getLabelOrName(trackedNodeDef, lang)}
-            </Text>
-          )}
+          {nodeUuid && <TrackNodeLabel nodeUuid={nodeUuid} />}
           <Text
             variant="bodySmall"
             textKey="dataEntry:positionTracking.pointsCount"
@@ -268,24 +320,80 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
               onPress={onStop}
               textKey="dataEntry:positionTracking.stop"
             />
-            {trackedNodeDef && (
-              <Button
-                compact
-                icon="map-search-outline"
-                color="secondary"
-                onPress={openTrackDialog}
-                textKey="dataEntry:positionTracking.showTrack"
-              />
-            )}
+            {nodeUuid && <ShowTrackButton nodeUuid={nodeUuid} />}
           </HView>
         </VView>
       )}
-      {trackDialogOpen && trackedNodeDef && trackedNode && (
-        <NodeEditDialog
-          nodeDef={trackedNodeDef}
-          parentNodeUuid={trackedNode.parentUuid}
-          onDismiss={closeTrackDialog}
-        />
+    </VView>
+  );
+};
+
+// tracking stopped with a recorded track: summary, expandable to resume, restart or show the track
+const StoppedTrackingBar = ({
+  canEdit,
+  nodeUuid,
+  onRestart,
+  onResume,
+}: {
+  canEdit: boolean;
+  nodeUuid: string;
+  onRestart: () => void;
+  onResume: () => void;
+}) => {
+  const { t } = useTranslation();
+  const { node } = useTrackNode(nodeUuid);
+  const { expanded, toggleExpanded } = useExpanded();
+  const containerStyle = useContainerStyle(null);
+
+  const segments = useMemo(
+    () => PositionTracks.fromFeature(node?.value),
+    [node?.value],
+  );
+  const headerText = [
+    t("dataEntry:positionTracking.status.stopped"),
+    PositionTracks.formatLength(PositionTracks.computeLength(segments)),
+    PositionTracks.formatDuration(PositionTracks.computeDuration(segments)),
+  ].join(" · ");
+
+  return (
+    <VView style={containerStyle}>
+      <ExpandableHeader
+        expanded={expanded}
+        iconSource={statusIcons.idle}
+        onPress={toggleExpanded}
+        text={headerText}
+      />
+      {expanded && (
+        <VView style={styles.details}>
+          <Text variant="bodySmall">{headerText}</Text>
+          <TrackNodeLabel nodeUuid={nodeUuid} />
+          <Text
+            variant="bodySmall"
+            textKey="dataEntry:positionTracking.pointsCount"
+            textParams={{ count: PositionTracks.countPoints(segments) }}
+          />
+          <HView style={styles.buttons}>
+            {canEdit && (
+              <Button
+                compact
+                icon="play"
+                color="secondary"
+                onPress={onResume}
+                textKey="dataEntry:positionTracking.resume"
+              />
+            )}
+            {canEdit && (
+              <Button
+                compact
+                icon="restart"
+                color="secondary"
+                onPress={onRestart}
+                textKey="dataEntry:positionTracking.restart"
+              />
+            )}
+            <ShowTrackButton nodeUuid={nodeUuid} />
+          </HView>
+        </VView>
       )}
     </VView>
   );
@@ -340,6 +448,22 @@ export const PositionTrackingBar = () => {
 
   if (hasTrack) {
     return <ActiveTrackingBar summary={summary} />;
+  }
+
+  if (
+    status === PositionTrackingStatus.idle &&
+    !errorKey &&
+    hasRecordedTrack &&
+    nodeUuidToTrack
+  ) {
+    return (
+      <StoppedTrackingBar
+        canEdit={canEditRecord}
+        nodeUuid={nodeUuidToTrack}
+        onRestart={onRestart}
+        onResume={onStart}
+      />
+    );
   }
 
   const canStart =

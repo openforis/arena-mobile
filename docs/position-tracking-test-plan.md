@@ -41,7 +41,10 @@ Each case: expected result in brackets; note device, OS, GPS source.
    GPS…" only when no fix for > 10 s (e.g. indoors).
 5. Stop from the bar → confirmation; track saved in `track` (open the
    attribute: map with the line, summary).
-6. Start again from the bar → a new segment is added (2 lines on the map, no
+6. After Stop the bar shows "Tracking stopped · length · duration"; tap it →
+   points count, Resume, Restart, Show track; Show track → dialog with the
+   map and the whole track.
+7. Resume from the bar → a new segment is added (2 lines on the map, no
    straight line across the gap).
 
 **Pause / resume**
