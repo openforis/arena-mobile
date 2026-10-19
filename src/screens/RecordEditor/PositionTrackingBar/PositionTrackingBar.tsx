@@ -16,8 +16,8 @@ import {
   useAppDispatch,
 } from "state";
 
-import { NodeEditDialog } from "../NodeComponentSwitch/nodeTypes/NodeEditDialog";
 import styles from "./styles";
+import { TrackDialog } from "./TrackDialog";
 
 const statusIcons: Record<PositionTrackingStatus, string> = {
   [PositionTrackingStatus.idle]: "map-marker-path",
@@ -42,7 +42,7 @@ const useTrackNode = (nodeUuid: string | null | undefined) => {
   }, [nodeUuid, record, survey]);
 };
 
-// opens the tracking attribute (map with the track) in a dialog
+// shows the track on a map in a dialog
 const ShowTrackButton = ({ nodeUuid }: { nodeUuid: string }) => {
   const { node, nodeDef } = useTrackNode(nodeUuid);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -61,11 +61,7 @@ const ShowTrackButton = ({ nodeUuid }: { nodeUuid: string }) => {
         textKey="dataEntry:positionTracking.showTrack"
       />
       {dialogOpen && (
-        <NodeEditDialog
-          nodeDef={nodeDef}
-          parentNodeUuid={node.parentUuid}
-          onDismiss={closeDialog}
-        />
+        <TrackDialog node={node} nodeDef={nodeDef} onDismiss={closeDialog} />
       )}
     </>
   );
