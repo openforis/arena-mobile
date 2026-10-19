@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { AppLogo } from "appComponents/AppLogo";
 import { Text, VView } from "components";
 import demoSurvey from "service/demoSurvey.json";
-import { DataEntryActions, useAppDispatch } from "state";
+import { DataEntryActions, SurveyActionTypes, useAppDispatch } from "state";
 import { log, PreviewMode, WebMessageEvent, WebWindow } from "utils";
 
 import {
@@ -13,6 +13,8 @@ import {
   PreviewSurveyMessage,
 } from "./previewProtocol";
 import styles from "./styles";
+
+type PreviewParams = Omit<PreviewSurveyMessage, "type">;
 
 const webWindow = WebWindow.get();
 
@@ -38,9 +40,13 @@ export const PreviewInitializer = ({ children }: Props) => {
   const dispatch = useAppDispatch();
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // survey to load: children are unmounted first, their selectors would fail while the record is replaced
+  const [pendingPreview, setPendingPreview] = useState<PreviewParams | null>(
+    PreviewMode.isDemo ? { survey: demoSurvey as any } : null,
+  );
 
   const startPreview = useCallback(
-    async ({ survey, lang, cycle }: Omit<PreviewSurveyMessage, "type">) => {
+    async ({ survey, lang, cycle }: PreviewParams) => {
       try {
         await dispatch(DataEntryActions.startPreview({ survey, lang, cycle }));
         setError(null);
@@ -56,24 +62,32 @@ export const PreviewInitializer = ({ children }: Props) => {
   );
 
   useEffect(() => {
-    if (PreviewMode.isDemo) {
-      startPreview({ survey: demoSurvey as any });
-      return;
-    }
-    if (!webWindow) return;
+    if (!pendingPreview) return;
+    startPreview(pendingPreview).finally(() => setPendingPreview(null));
+  }, [pendingPreview, startPreview]);
+
+  useEffect(() => {
+    if (!webWindow || PreviewMode.isDemo) return;
     const onMessage = (event: WebMessageEvent) => {
       if (!isFromAllowedParent(event)) return;
-      if (!PreviewProtocol.isPreviewSurveyMessage(event.data)) return;
-      const { survey, lang, cycle } = event.data;
-      startPreview({ survey, lang, cycle });
+      const { data } = event;
+      if (PreviewProtocol.isPreviewSurveyMessage(data)) {
+        const { survey, lang, cycle } = data;
+        setReady(false);
+        setPendingPreview({ survey, lang, cycle });
+      } else if (PreviewProtocol.isPreviewLangMessage(data)) {
+        dispatch({
+          type: SurveyActionTypes.CURRENT_SURVEY_PREFERRED_LANG_SET,
+          lang: data.lang,
+        });
+      }
     };
     webWindow.addEventListener("message", onMessage);
     postToParent({ type: PreviewMessageType.ready });
     return () => webWindow.removeEventListener("message", onMessage);
-  }, [startPreview]);
+  }, [dispatch]);
 
-  if (ready) {
-    // errors loading a new survey are notified to the parent, the previous one stays visible
+  if (ready && !pendingPreview) {
     return children;
   }
   return (

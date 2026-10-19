@@ -239,7 +239,7 @@ export const AppBar = (props: Props) => {
                 }
                 onPress={toggleRecordEditViewMode}
               />
-              <AutoSyncStatusAppBarAction />
+              {!PreviewMode.isActive && <AutoSyncStatusAppBarAction />}
             </>
           )}
 

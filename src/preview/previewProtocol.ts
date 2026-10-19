@@ -5,6 +5,7 @@ const prefix = "arenaMobilePreview/";
 export const PreviewMessageType = {
   ready: `${prefix}ready`,
   survey: `${prefix}survey`,
+  lang: `${prefix}lang`,
   error: `${prefix}error`,
 } as const;
 
@@ -13,6 +14,12 @@ export type PreviewSurveyMessage = {
   survey: Survey;
   lang?: string;
   cycle?: string;
+};
+
+// changes the language without creating a new record
+export type PreviewLangMessage = {
+  type: typeof PreviewMessageType.lang;
+  lang: string;
 };
 
 export type PreviewOutgoingMessage =
@@ -50,6 +57,17 @@ const isPreviewSurveyMessage = (
   );
 };
 
+const isPreviewLangMessage = (data: unknown): data is PreviewLangMessage => {
+  const message = data as PreviewLangMessage | null;
+  return (
+    !!message &&
+    typeof message === "object" &&
+    message.type === PreviewMessageType.lang &&
+    isNonEmptyString(message.lang)
+  );
+};
+
 export const PreviewProtocol = {
+  isPreviewLangMessage,
   isPreviewSurveyMessage,
 };

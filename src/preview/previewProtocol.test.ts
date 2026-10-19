@@ -41,3 +41,22 @@ describe("PreviewProtocol.isPreviewSurveyMessage", () => {
     expect(PreviewProtocol.isPreviewSurveyMessage(data)).toBe(false);
   });
 });
+
+describe("PreviewProtocol.isPreviewLangMessage", () => {
+  test("accepts a lang message", () => {
+    expect(
+      PreviewProtocol.isPreviewLangMessage({
+        type: PreviewMessageType.lang,
+        lang: "fr",
+      }),
+    ).toBe(true);
+  });
+
+  test.each([
+    ["a missing lang", { type: PreviewMessageType.lang }],
+    ["an empty lang", { type: PreviewMessageType.lang, lang: "" }],
+    ["a survey message", { type: PreviewMessageType.survey, lang: "fr" }],
+  ])("rejects %s", (_description, data) => {
+    expect(PreviewProtocol.isPreviewLangMessage(data)).toBe(false);
+  });
+});
