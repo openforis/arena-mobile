@@ -13,6 +13,7 @@ const webShimsDir = path.resolve(__dirname, "src/web/shims");
 const webShims = {
   "@lodev09/react-native-exify": "exify.ts",
   "react-native-maps": "maps.tsx",
+  "react-native-modal-datetime-picker": "modalDateTimePicker.tsx",
   "react-native-pager-view": "pagerView.tsx",
 };
 
