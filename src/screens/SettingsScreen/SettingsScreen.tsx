@@ -114,9 +114,7 @@ export const SettingsScreen = () => {
               ))}
               {isLocationGroup && (
                 <VView style={itemWrapperStyle}>
-                  <GpsSourceSettingsField
-                    value={settings.preferredGpsSourceId}
-                  />
+                  <GpsSourceSettingsField />
                 </VView>
               )}
               {isMapsGroup &&
