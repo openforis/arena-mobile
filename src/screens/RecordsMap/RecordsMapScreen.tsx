@@ -285,7 +285,11 @@ export const RecordsMapScreen = () => {
     () =>
       layers.reduce(
         (acc, layer) => {
-          if (layer.type === RecordsMapLayerType.positionTrack) {
+          // hidden track layers are not loaded: no entry, so their count is not shown
+          if (
+            layer.type === RecordsMapLayerType.positionTrack &&
+            visibleLayerKeys.includes(layer.key)
+          ) {
             acc[layer.key] = buildTrackFeatures({
               layer,
               nodeValues: trackValues,
@@ -296,7 +300,7 @@ export const RecordsMapScreen = () => {
         },
         {} as Record<string, RecordsMapTrackFeature[]>,
       ),
-    [layers, recordLabelByUuid, trackValues],
+    [layers, recordLabelByUuid, trackValues, visibleLayerKeys],
   );
 
   const layerLabelByKey = useMemo(
