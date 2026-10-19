@@ -64,6 +64,8 @@ export const TrackMapView = (props: Props) => {
         fitToCoordinatesOnReady={coordinates.length > 0 ? coordinates : undefined}
         fitOnlyOnce={fitOnlyOnce}
         initialRegion={region}
+        // layer buttons can't be pressed in a non-interactive map
+        showMapTypeSelector={interactive}
         showsUserLocation={showsUserLocation}
         style={styles.map}
         toolbarEnabled={false}
