@@ -8,7 +8,7 @@ import { GpsLockingEnabledWarning } from "appComponents/GpsLockingEnabledWarning
 import { NavigateToRecordsListButton } from "appComponents/NavigateToRecordsListButton";
 import { RecordEditViewMode } from "model";
 import { screenKeys } from "screens/screenKeys";
-import { log } from "utils";
+import { log, PreviewMode } from "utils";
 import {
   DataEntryActions,
   DataEntrySelectors,
@@ -65,7 +65,10 @@ export const RecordEditorDrawer = () => {
       <GpsLockingEnabledWarning />
 
       <HView style={styles.buttonBar}>
-        <NavigateToRecordsListButton />
+        {
+          // no records list and settings in web preview mode
+          !PreviewMode.isActive && <NavigateToRecordsListButton />
+        }
         {fieldManualUrl && (
           <IconButton
             icon="help"
@@ -75,10 +78,12 @@ export const RecordEditorDrawer = () => {
             }}
           />
         )}
-        <IconButton
-          icon="cog"
-          onPress={() => navigation.navigate(screenKeys.settings as never)}
-        />
+        {!PreviewMode.isActive && (
+          <IconButton
+            icon="cog"
+            onPress={() => navigation.navigate(screenKeys.settings as never)}
+          />
+        )}
       </HView>
     </View>
   );

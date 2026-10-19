@@ -555,9 +555,6 @@ const updateRecordNodeFile = async ({
   log.debug(
     `Updating record node file with value ${JSON.stringify(value)} and fileUri ${fileUri}`,
   );
-  // files are not stored in preview mode
-  if (PreviewMode.isActive) return;
-
   const surveyId = survey.id;
 
   if (fileUri) {
@@ -580,7 +577,10 @@ const updateRecordNodeFile = async ({
     });
   }
   log.debug(`Record node file updated successfully.`);
-  dispatch(DeviceInfoActions.updateFreeDiskStorage());
+  // files kept in memory in preview mode
+  if (!PreviewMode.isActive) {
+    dispatch(DeviceInfoActions.updateFreeDiskStorage());
+  }
 };
 
 const checkAndConfirmUpdateNode = async ({
