@@ -78,9 +78,9 @@ const getAllSegments = (): TrackSegment[] => {
 
 const isWatching = () => subscription !== null;
 
-// stats of the whole track (existing value + new segments)
+// stats of the whole track (existing value + new segments), as it is saved (simplified)
 const getStats = (): PositionTrackingStats => {
-  const allSegments = [...baseSegments, ...segments];
+  const allSegments = PositionTracks.simplify([...baseSegments, ...segments]);
   return {
     length: PositionTracks.computeLength(allSegments),
     pointsCount: PositionTracks.countPoints(allSegments),
@@ -247,7 +247,9 @@ const resume = async (settings: PositionTrackingSettings) => {
 // value of the tracked attribute: segments already in it when tracking started + new segments
 const buildValue = (): TrackFeature | null => {
   if (!track) return null;
-  return PositionTracks.toFeature([...baseSegments, ...segments]);
+  return PositionTracks.toFeature(
+    PositionTracks.simplify([...baseSegments, ...segments]),
+  );
 };
 
 // removes the track from the DB: to be called once its points are stored in the attribute value

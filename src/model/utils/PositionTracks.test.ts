@@ -176,6 +176,31 @@ describe("PositionTracks.toFeature / fromFeature", () => {
   });
 });
 
+describe("PositionTracks.simplify", () => {
+  test("drops points on a straight line and keeps the turns", () => {
+    const segment = [
+      point(0, 0, 0),
+      point(latStep, 0, 10),
+      point(2 * latStep, 0, 20),
+      // ~11 m to the east: a turn
+      point(2 * latStep, latStep, 30),
+    ];
+    const [simplified] = PositionTracks.simplify([segment]);
+    expect(simplified).toEqual([segment[0], segment[2], segment[3]]);
+  });
+
+  test("keeps points farther than the tolerance from the line", () => {
+    const segment = [
+      point(0, 0, 0),
+      // ~5.6 m off the line
+      point(latStep, latStep / 2, 10),
+      point(2 * latStep, 0, 20),
+    ];
+    expect(PositionTracks.simplify([segment])[0]).toHaveLength(3);
+    expect(PositionTracks.simplify([segment], 10)[0]).toHaveLength(2);
+  });
+});
+
 describe("PositionTracks.hasTrackPoints", () => {
   test("true only for track values with points", () => {
     const feature = PositionTracks.toFeature([

@@ -43,10 +43,15 @@ Each case: expected result in brackets; note device, OS, GPS source.
    GPS…" only when no fix for > 10 s (e.g. indoors).
 5. Stop from the bar → confirmation; track saved in `track` (open the
    attribute: map with the line, summary).
-6. After Stop the bar shows "Tracking stopped · length · duration"; tap it →
+6. Show track while tracking → the map follows the current position;
+   dragging the map stops following, the crosshairs button resumes it; same
+   with offline tiles / PDF maps and no connection.
+7. Walk ~1 km on paths with turns → points mostly at turns (straight
+   stretches simplified), roughly a few dozen points.
+8. After Stop the bar shows "Tracking stopped · length · duration"; tap it →
    points count, Resume, Restart, Show track; Show track → dialog with the
    map and the whole track.
-7. Resume from the bar → a new segment is added (2 lines on the map, no
+9. Resume from the bar → a new segment is added (2 lines on the map, no
    straight line across the gap).
 
 **Pause / resume**

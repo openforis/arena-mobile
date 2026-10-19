@@ -50,6 +50,7 @@ export const TrackDialog = ({
       </Text>
       <TrackMapView
         fitOnlyOnce={trackActive}
+        followUserLocation={trackActive && summary.tracking}
         segments={segments}
         showsUserLocation={trackActive && summary.tracking}
         style={styles.map}

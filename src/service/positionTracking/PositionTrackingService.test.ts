@@ -87,14 +87,16 @@ describe("PositionTrackingService", () => {
     emit(latStep);
     emit(2 * latStep);
 
-    expect(PositionTrackingService.getStats().pointsCount).toBe(3);
+    // 3 points recorded, the middle one is dropped by the simplification
+    expect(PositionTrackingService.getStats().pointsCount).toBe(2);
     await PositionTrackingService.pause();
     expect(PositionTrackRepository.insertPoint).toHaveBeenCalledTimes(3);
     expect(subscriptionRemove).toHaveBeenCalled();
 
     const value = PositionTrackingService.buildValue()!;
     expect(value.geometry.coordinates).toHaveLength(1);
-    expect(value.geometry.coordinates[0]).toHaveLength(3);
+    // the middle point is on the straight line: dropped by the simplification
+    expect(value.geometry.coordinates[0]).toHaveLength(2);
   });
 
   test("resuming starts a new segment", async () => {

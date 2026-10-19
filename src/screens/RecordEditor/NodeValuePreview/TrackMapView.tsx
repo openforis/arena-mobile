@@ -1,8 +1,8 @@
-import { useMemo } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { StyleProp, StyleSheet, ViewStyle } from "react-native";
-import { Polyline } from "react-native-maps";
+import RNMapView, { Polyline, UserLocationChangeEvent } from "react-native-maps";
 
-import { MapView, VView } from "components";
+import { IconButton, MapView, VView } from "components";
 import { TrackSegment } from "model";
 import { GeoUtils } from "utils";
 
@@ -14,14 +14,22 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
+  followButton: {
+    position: "absolute",
+    top: 8,
+    left: 8,
+  },
 });
 
 const trackStrokeColor = "rgba(229, 57, 53, 0.95)";
+const FOLLOW_ANIMATION_DURATION = 500;
 
 type Props = {
   segments: TrackSegment[];
   // when true, the map is fitted to the track only when it's ready (e.g. track being recorded)
   fitOnlyOnce?: boolean;
+  // when true, the map is centered on the current position until the user moves it
+  followUserLocation?: boolean;
   // false in scrollable forms: the map must not catch the scroll gestures
   interactive?: boolean;
   showsUserLocation?: boolean;
@@ -32,10 +40,14 @@ export const TrackMapView = (props: Props) => {
   const {
     segments,
     fitOnlyOnce = false,
+    followUserLocation = false,
     interactive = true,
     showsUserLocation,
     style,
   } = props;
+
+  const mapRef = useRef<RNMapView | null>(null);
+  const [following, setFollowing] = useState(true);
 
   const lines = useMemo(
     () =>
@@ -55,15 +67,38 @@ export const TrackMapView = (props: Props) => {
     [],
   );
 
+  const followActive = followUserLocation && following;
+
+  const onUserLocationChange = useCallback(
+    (event: UserLocationChangeEvent) => {
+      const coordinate = event.nativeEvent.coordinate;
+      if (!followActive || !coordinate) return;
+      const { latitude, longitude } = coordinate;
+      void mapRef.current?.animateCamera(
+        { center: { latitude, longitude } },
+        { duration: FOLLOW_ANIMATION_DURATION },
+      );
+    },
+    [followActive],
+  );
+  // moving the map stops following the position
+  const onPanDrag = useCallback(() => setFollowing(false), []);
+  const startFollowing = useCallback(() => setFollowing(true), []);
+
   return (
     <VView
       pointerEvents={interactive ? undefined : "none"}
       style={[styles.container, style]}
     >
       <MapView
+        ref={mapRef}
         fitToCoordinatesOnReady={coordinates.length > 0 ? coordinates : undefined}
         fitOnlyOnce={fitOnlyOnce}
         initialRegion={region}
+        onPanDrag={followUserLocation ? onPanDrag : undefined}
+        onUserLocationChange={
+          followUserLocation ? onUserLocationChange : undefined
+        }
         // layer buttons can't be pressed in a non-interactive map
         showMapTypeSelector={interactive}
         showsUserLocation={showsUserLocation}
@@ -80,6 +115,14 @@ export const TrackMapView = (props: Props) => {
           />
         ))}
       </MapView>
+      {followUserLocation && !following && (
+        <IconButton
+          icon="crosshairs-gps"
+          mode="contained"
+          onPress={startFollowing}
+          style={styles.followButton}
+        />
+      )}
     </VView>
   );
 };

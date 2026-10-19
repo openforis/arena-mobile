@@ -37,6 +37,8 @@ export type TrackFeature = {
 const EARTH_MEAN_RADIUS_METERS = 6371008.8;
 // faster than this (m/s) is considered a GPS jump
 const defaultMaxSpeed = 50;
+// points closer than this (m) to a straight line between their neighbours are dropped when saving
+const defaultSimplifyTolerance = 3;
 // a GeoJSON LineString needs at least 2 positions
 const minPointsPerSegment = 2;
 
@@ -114,6 +116,67 @@ const computeSegmentLength = (segment: TrackSegment): number => {
 
 const computeLength = (segments: TrackSegment[]): number =>
   segments.reduce((acc, segment) => acc + computeSegmentLength(segment), 0);
+
+// distance (m) of p from the line a-b, on a local planar approximation
+const distanceFromLine = (
+  p: TrackPoint,
+  a: TrackPoint,
+  b: TrackPoint,
+): number => {
+  const metersPerDegLat = (Math.PI / 180) * EARTH_MEAN_RADIUS_METERS;
+  const metersPerDegLon = metersPerDegLat * Math.cos(toRadians(a.latitude));
+  const toXY = (point: TrackPoint) => ({
+    x: (point.longitude - a.longitude) * metersPerDegLon,
+    y: (point.latitude - a.latitude) * metersPerDegLat,
+  });
+  const pXY = toXY(p);
+  const bXY = toXY(b);
+  const lengthSquared = bXY.x ** 2 + bXY.y ** 2;
+  if (lengthSquared === 0) return Math.hypot(pXY.x, pXY.y);
+  const t = Math.max(
+    0,
+    Math.min(1, (pXY.x * bXY.x + pXY.y * bXY.y) / lengthSquared),
+  );
+  return Math.hypot(pXY.x - t * bXY.x, pXY.y - t * bXY.y);
+};
+
+// Douglas-Peucker: drops the points closer than tolerance (m) to the line through their neighbours
+const simplifySegment = (
+  segment: TrackSegment,
+  tolerance: number,
+): TrackSegment => {
+  const lastIndex = segment.length - 1;
+  if (lastIndex < 2) return segment;
+  const keep = segment.map((_, index) => index === 0 || index === lastIndex);
+  const ranges: [number, number][] = [[0, lastIndex]];
+  while (ranges.length > 0) {
+    const [start, end] = ranges.pop()!;
+    let maxDistance = 0;
+    let maxIndex = -1;
+    for (let index = start + 1; index < end; index++) {
+      const dist = distanceFromLine(
+        segment[index]!,
+        segment[start]!,
+        segment[end]!,
+      );
+      if (dist > maxDistance) {
+        maxDistance = dist;
+        maxIndex = index;
+      }
+    }
+    if (maxDistance > tolerance) {
+      keep[maxIndex] = true;
+      ranges.push([start, maxIndex], [maxIndex, end]);
+    }
+  }
+  return segment.filter((_, index) => keep[index]);
+};
+
+const simplify = (
+  segments: TrackSegment[],
+  tolerance = defaultSimplifyTolerance,
+): TrackSegment[] =>
+  segments.map((segment) => simplifySegment(segment, tolerance));
 
 const countPoints = (segments: TrackSegment[]): number =>
   segments.reduce((acc, segment) => acc + segment.length, 0);
@@ -272,6 +335,7 @@ export const PositionTracks = {
   computeLength,
   countPoints,
   computeDuration,
+  simplify,
   evaluatePoint,
   toFeature,
   fromFeature,
