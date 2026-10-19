@@ -17,11 +17,10 @@ import {
   ViewStyle,
 } from "react-native";
 
+// native-only props (e.g. offscreenPageLimit, onPageScrollStateChanged) are ignored
 type PagerViewProps = {
   children?: ReactNode;
   initialPage?: number;
-  offscreenPageLimit?: number;
-  onPageScrollStateChanged?: (e: any) => void;
   onPageSelected?: (e: { nativeEvent: { position: number } }) => void;
   scrollEnabled?: boolean;
   style?: StyleProp<ViewStyle>;

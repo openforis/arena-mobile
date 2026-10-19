@@ -1,8 +1,8 @@
-import { forwardRef, ReactNode, useImperativeHandle } from "react";
+import { forwardRef, useImperativeHandle } from "react";
 import { StyleProp, Text, View, ViewStyle } from "react-native";
 
+// the other react-native-maps props are ignored
 type MapViewProps = {
-  children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   [key: string]: any;
 };
@@ -19,12 +19,13 @@ const MapView = forwardRef<any, MapViewProps>(({ style }, ref) => {
   useImperativeHandle(ref, () => ({
     animateToRegion: () => {},
     fitToCoordinates: () => {},
-    getCamera: async () => ({
-      center: { latitude: 0, longitude: 0 },
-      heading: 0,
-      pitch: 0,
-      zoom: 0,
-    }),
+    getCamera: () =>
+      Promise.resolve({
+        center: { latitude: 0, longitude: 0 },
+        heading: 0,
+        pitch: 0,
+        zoom: 0,
+      }),
   }));
   return (
     <View style={[placeholderStyle, style]}>

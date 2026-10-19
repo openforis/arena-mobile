@@ -11,14 +11,18 @@ const toKey = ({
 
 const getRecordFilesParentDirectoryUri = () => "";
 
-const getRecordFilesParentDirectorySize = async () => 0;
+// same async API as RecordFileRepository
+const getRecordFilesParentDirectorySize = (): Promise<number> =>
+  Promise.resolve(0);
 
-const getRecordFilesDirectorySize = async (_params: { surveyId: number }) => 0;
+const getRecordFilesDirectorySize = (_params: {
+  surveyId: number;
+}): Promise<number> => Promise.resolve(0);
 
 const getRecordFileUri = (params: { surveyId: number; fileUuid: string }) =>
   fileUriByKey.get(toKey(params)) ?? "";
 
-const saveRecordFile = async ({
+const saveRecordFile = ({
   surveyId,
   fileUuid,
   sourceFileUri,
@@ -26,20 +30,23 @@ const saveRecordFile = async ({
   surveyId: number;
   fileUuid: string;
   sourceFileUri: string;
-}) => {
+}): Promise<void> => {
   fileUriByKey.set(toKey({ surveyId, fileUuid }), sourceFileUri);
+  return Promise.resolve();
 };
 
-const recordFileMissing = async (params: {
+const recordFileMissing = (params: {
   surveyId: number;
   fileUuid: string;
-}) => !!params.fileUuid && !fileUriByKey.has(toKey(params));
+}): Promise<boolean> =>
+  Promise.resolve(!!params.fileUuid && !fileUriByKey.has(toKey(params)));
 
-const deleteRecordFile = async (params: {
+const deleteRecordFile = (params: {
   surveyId: number;
   fileUuid: string;
-}) => {
+}): Promise<void> => {
   fileUriByKey.delete(toKey(params));
+  return Promise.resolve();
 };
 
 export const RecordFileMemoryRepository = {
