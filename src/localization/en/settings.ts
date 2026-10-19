@@ -88,6 +88,11 @@ It will help to get a better accuracy in coordinate attributes.`,
     description:
       "Locations less accurate than this are not added to the track being recorded",
   },
+  positionTrackingBatterySaver: {
+    label: "Position tracking battery saver",
+    description:
+      "When enabled, the track will be less precise but the battery consumption will be reduced",
+  },
   positionTrackingMinDistance: {
     label: "Position tracking min distance: {{value}} m",
     description:

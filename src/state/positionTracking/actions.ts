@@ -34,6 +34,7 @@ const getTrackingSettings = (state: any): PositionTrackingSettings => {
   const settings = SettingsSelectors.selectSettings(state);
   return {
     accuracyThreshold: settings.positionTrackingAccuracyThreshold ?? 20,
+    batterySaver: settings.positionTrackingBatterySaver ?? true,
     minDistance: settings.positionTrackingMinDistance ?? 10,
     preferredGpsSourceId:
       settings.preferredGpsSourceId ?? GpsSourceSetting.auto,

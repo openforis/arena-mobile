@@ -246,6 +246,7 @@ attribute layers (own colour, toggle, label from the attribute def).
 
 - min distance between points (m), default 10 (and at least the fix accuracy, to drop GPS noise when standing still);
 - the saved track is simplified (Douglas-Peucker, 3 m tolerance): points along straight stretches are dropped, turns kept;
+- battery saver (setting, on by default): internal GPS with "high" instead of "best for navigation" accuracy, updates every min distance and (Android) at most every 5 s; less precise track, less battery;
 - accuracy threshold for track points (m), default 20;
 - flush interval: fixed to 60 s (not a setting).
 

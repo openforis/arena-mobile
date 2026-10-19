@@ -27,6 +27,7 @@ const defaultSettings: Partial<SettingsObject> = {
   mapLayer: MapLayers.defaultLayerId,
   mapProvider: MapProvider.default,
   positionTrackingAccuracyThreshold: 20,
+  positionTrackingBatterySaver: true,
   positionTrackingMinDistance: 10,
   preferredGpsSourceId: GpsSourceSetting.auto,
   serverUrlType: "default",

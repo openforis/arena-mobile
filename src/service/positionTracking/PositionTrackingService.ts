@@ -16,6 +16,8 @@ import { PositionTrackingLocationSource } from "./positionTrackingLocationSource
 
 export type PositionTrackingSettings = {
   accuracyThreshold: number;
+  // less precise location updates, less battery used
+  batterySaver: boolean;
   minDistance: number;
   preferredGpsSourceId: string;
 };
@@ -140,7 +142,10 @@ const startWatching = async (settings: PositionTrackingSettings) => {
   segments = [...segments, []];
   subscription = await PositionTrackingLocationSource.watchPosition({
     preferredGpsSourceId: settings.preferredGpsSourceId,
-    distanceInterval: Math.max(1, settings.minDistance / 2),
+    batterySaver: settings.batterySaver,
+    distanceInterval: settings.batterySaver
+      ? settings.minDistance
+      : Math.max(1, settings.minDistance / 2),
     onLocation: onLocation(settings),
   });
   notify();

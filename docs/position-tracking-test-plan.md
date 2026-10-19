@@ -26,6 +26,8 @@ What is left before the feature can be released:
 - Settings: defaults (min distance 10 m, accuracy 20 m), then repeat a walk
   with 5 m / 10 m to compare; standing still for a few minutes (e.g.
   measuring trees) should add no points.
+- Battery saver: compare a walk with it on (default) and off: track shape,
+  points, battery drop per hour.
 
 ### Cases
 

@@ -22,10 +22,15 @@ export class LocationSourceError extends Error {
   }
 }
 
+// battery saver: fewer and less precise fixes (on Android at most one every few seconds)
+const batterySaverTimeInterval = 5000;
+
 const watchInternalGps = async ({
+  batterySaver,
   distanceInterval,
   onLocation,
 }: {
+  batterySaver: boolean;
   distanceInterval: number;
   onLocation: (point: LocationPoint) => void;
 }): Promise<Subscription> => {
@@ -37,7 +42,13 @@ const watchInternalGps = async ({
     );
   }
   return Location.watchPositionAsync(
-    { accuracy: Location.Accuracy.BestForNavigation, distanceInterval },
+    batterySaver
+      ? {
+          accuracy: Location.Accuracy.High,
+          distanceInterval,
+          timeInterval: batterySaverTimeInterval,
+        }
+      : { accuracy: Location.Accuracy.BestForNavigation, distanceInterval },
     ({ coords }) => onLocation({ ...coords, accuracy: coords.accuracy }),
   );
 };
@@ -49,10 +60,12 @@ const watchInternalGps = async ({
  */
 const watchPosition = async ({
   preferredGpsSourceId,
+  batterySaver,
   distanceInterval,
   onLocation,
 }: {
   preferredGpsSourceId: string;
+  batterySaver: boolean;
   distanceInterval: number;
   onLocation: (point: LocationPoint) => void;
 }): Promise<Subscription> => {
@@ -62,7 +75,7 @@ const watchPosition = async ({
       : preferredGpsSourceId;
 
   if (resolvedSourceId === internalGpsSourceId) {
-    return watchInternalGps({ distanceInterval, onLocation });
+    return watchInternalGps({ batterySaver, distanceInterval, onLocation });
   }
 
   const fallbackAllowed = preferredGpsSourceId === GpsSourceSetting.auto;
@@ -74,7 +87,7 @@ const watchPosition = async ({
     log.warn(
       `PositionTracking: external GPS ${resolvedSourceId} not available, using internal GPS`,
     );
-    const internal = await watchInternalGps({ distanceInterval, onLocation });
+    const internal = await watchInternalGps({ batterySaver, distanceInterval, onLocation });
     if (removed) {
       internal.remove();
     } else {

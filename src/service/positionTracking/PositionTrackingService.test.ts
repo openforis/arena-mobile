@@ -35,6 +35,7 @@ const watchPositionMock =
 
 const settings = {
   accuracyThreshold: 20,
+  batterySaver: false,
   minDistance: 3,
   preferredGpsSourceId: "internal",
 };
@@ -127,6 +128,19 @@ describe("PositionTrackingService", () => {
     const value = PositionTrackingService.buildValue()!;
     expect(value.geometry.coordinates).toHaveLength(2);
     expect(PositionTrackRepository.deleteTrack).toHaveBeenCalledWith(1);
+  });
+
+  test("battery saver: location updates every min distance", async () => {
+    await PositionTrackingService.start({
+      surveyId: 1,
+      recordUuid: "record-1",
+      nodeUuid: "node-1",
+      baseValue: null,
+      settings: { ...settings, batterySaver: true, minDistance: 10 },
+    });
+    expect(watchPositionMock).toHaveBeenLastCalledWith(
+      expect.objectContaining({ batterySaver: true, distanceInterval: 10 }),
+    );
   });
 
   test("removes the stored track when the location source cannot start", async () => {

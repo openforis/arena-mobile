@@ -52,6 +52,7 @@ export enum SettingKey {
   locationGpsLocked = "locationGpsLocked",
   mapLayer = "mapLayer",
   positionTrackingAccuracyThreshold = "positionTrackingAccuracyThreshold",
+  positionTrackingBatterySaver = "positionTrackingBatterySaver",
   positionTrackingMinDistance = "positionTrackingMinDistance",
   mapProvider = "mapProvider",
   pdfMaps = "pdfMaps",
@@ -159,6 +160,10 @@ const properties: SettingsProperties = {
     type: PropertyType.boolean,
     group: SettingGroup.location,
   },
+  positionTrackingBatterySaver: {
+    type: PropertyType.boolean,
+    group: SettingGroup.location,
+  },
   positionTrackingMinDistance: {
     type: PropertyType.slider,
     group: SettingGroup.location,
@@ -229,6 +234,8 @@ export type SettingsObject = {
   pdfMaps?: PdfMap[];
   // position tracking: max accuracy (m) of the recorded points
   positionTrackingAccuracyThreshold: number;
+  // position tracking: less precise location updates to reduce battery usage
+  positionTrackingBatterySaver: boolean;
   // position tracking: min distance (m) between recorded points
   positionTrackingMinDistance: number;
   // GpsSourceSetting.auto/.internal, or `external:${deviceAddress}` for a
