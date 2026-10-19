@@ -33,8 +33,8 @@
   },
   "template": false,
   "dateCreated": "2025-11-25T10:57:14.948Z",
-  "dateModified": "2026-10-06T12:00:00.000Z",
-  "datePublished": "2026-10-06T12:00:00.000Z",
+  "dateModified": "2026-10-19T12:00:00.000Z",
+  "datePublished": "2026-10-19T12:00:00.000Z",
   "validation": null,
   "nodeDefs": {
     "db99782b-5d68-4e51-a698-ab18574c4295": {
@@ -1388,6 +1388,14 @@
                 "x": 0,
                 "y": 6,
                 "minH": 1
+              },
+              {
+                "h": 1,
+                "i": "72f63a3d-e324-42b4-96fc-9fa99965d1b4",
+                "w": 1,
+                "x": 0,
+                "y": 7,
+                "minH": 1
               }
             ],
             "hiddenWhenNotRelevant": true
@@ -1403,7 +1411,7 @@
       "draft": false,
       "parentUuid": "db99782b-5d68-4e51-a698-ab18574c4295",
       "dateCreated": "2025-11-25T10:57:14.879Z",
-      "dateModified": "2025-11-25T10:57:14.879Z",
+      "dateModified": "2026-10-19T12:00:00.000Z",
       "propsAdvanced": {
         "applicable": [
           {
@@ -3290,6 +3298,30 @@
           }
         ]
       }
+    },
+    "72f63a3d-e324-42b4-96fc-9fa99965d1b4": {
+      "id": "80",
+      "uuid": "72f63a3d-e324-42b4-96fc-9fa99965d1b4",
+      "type": "geo",
+      "deleted": false,
+      "analysis": false,
+      "virtual": false,
+      "props": {
+        "name": "second_unit_track",
+        "cycles": ["0"],
+        "labels": { "en": "Walked path" },
+        "descriptions": {
+          "en": "Path walked while visiting the second-level unit, recorded by position tracking (start it from the tracking bar or here)."
+        },
+        "positionTracking": true
+      },
+      "meta": { "h": ["db99782b-5d68-4e51-a698-ab18574c4295", "509c42c8-8fe9-4bb6-94b6-b4b57b1bba2e"] },
+      "published": true,
+      "draft": false,
+      "parentUuid": "509c42c8-8fe9-4bb6-94b6-b4b57b1bba2e",
+      "dateCreated": "2026-10-19T12:00:00.000Z",
+      "dateModified": "2026-10-19T12:00:00.000Z",
+      "propsAdvanced": {}
     }
   },
   "nodeDefsIndex": {
@@ -3316,7 +3348,8 @@
         "b850f362-2bc0-4af5-b4e3-bc5d0edbba08": true,
         "fcee5e25-c758-41e6-bf1b-a4f7b1058f1d": true,
         "f0e94a65-e27e-4de5-9d81-f0ef338e1215": true,
-        "1265b16e-a46f-4606-8407-b1899fe5d05e": true
+        "1265b16e-a46f-4606-8407-b1899fe5d05e": true,
+        "72f63a3d-e324-42b4-96fc-9fa99965d1b4": true
       },
       "4cfec062-03c9-4473-b780-d83dcfbd015d": {
         "a2366cac-4fe4-4a37-94cf-9d1e570b9a6f": true,
@@ -3473,7 +3506,8 @@
       "media_interview_audio": "49638255-9409-4d84-a3ce-4135cd8fd03c",
       "media_document": "913ffead-8a74-493c-a740-6335f5bbecfc",
       "media_final_remarks": "0b2c929d-5344-4f51-aa51-0891c1a19953",
-      "regeneration_stems_note": "a97e00d4-a65b-41c0-b980-252609e7c5c3"
+      "regeneration_stems_note": "a97e00d4-a65b-41c0-b980-252609e7c5c3",
+      "second_unit_track": "72f63a3d-e324-42b4-96fc-9fa99965d1b4"
     },
     "rootDefUuid": "db99782b-5d68-4e51-a698-ab18574c4295"
   },

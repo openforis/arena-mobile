@@ -105,14 +105,14 @@ open an issue for each failure.
 ### Demo survey
 
 Adding a tracking attribute to the root entity of the bundled demo survey
-would auto-start tracking in every demo flow (005–009). Instead:
+would auto-start tracking in every demo flow (005–009). Instead (done):
 
-- add `track` (single geo attribute, `positionTracking: true`) to the
-  `unit_level_2` multiple entity in Arena, re-export the demo survey and
-  update `src/service/demoSurvey.json` (and `demoSurvey.test.ts` if it checks
-  the node defs);
+- `second_unit_track` ("Walked path", single geo attribute,
+  `positionTracking: true`) in the `unit_level_2` multiple entity, last field
+  of its page; `datePublished` bumped so existing installs update the demo
+  survey;
 - auto-start is not triggered (multiple entity), the existing flows are not
-  affected.
+  affected; tracking is started from the attribute ("Start tracking").
 
 ### Maestro flow `010.demo-survey-position-tracking.yaml`
 
@@ -121,8 +121,8 @@ with `setLocation`.
 
 1. `runFlow: common/demo-survey-new-record.yaml`; open the `unit_level_2`
    page, add an entity.
-2. `setLocation` (start point); tap "Start tracking" on the `track`
-   attribute; assert the bar shows "Tracking".
+2. `setLocation` (start point); tap "Start tracking" on the
+   `second_unit_track` attribute; assert the bar shows "Tracking".
 3. 4–5 `setLocation` steps ~20 m apart (with short waits) → assert the bar
    shows a length > 0.
 4. Tap the bar, "Pause" → assert "Tracking paused"; "Resume"; one more

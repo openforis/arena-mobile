@@ -14,6 +14,7 @@ import {
   UserFactory,
 } from "@openforis/arena-core";
 
+import { PositionTracks } from "model/utils/PositionTracks";
 import { RecordUtils } from "model/utils/RecordUtils";
 
 import demoSurveyJson from "./demoSurvey.json";
@@ -221,6 +222,17 @@ describe("Demo survey", () => {
           }
         }
       }
+    });
+
+    test("has a position tracking attribute not started automatically", () => {
+      const trackDef = getDef(survey, "second_unit_track");
+      expect(PositionTracks.isTrackableNodeDef(trackDef)).toBe(true);
+      // in a multiple entity: tracking is not auto-started in the demo flows
+      expect(
+        NodeDefs.isMultiple(
+          Surveys.getNodeDefParent({ survey, nodeDef: trackDef })!,
+        ),
+      ).toBe(true);
     });
 
     test("category items reference existing categories and levels", () => {
