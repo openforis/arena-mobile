@@ -7,13 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.10.0] - 2026-10-20
 
-### Added
-
-- Position tracking: record the path walked by the surveyor as a track;
-- Web preview of the data entry form, used by the Arena survey designer (Mobile preview);
-
 ### Fixed
 
+- General improvements and bug fixing;
 - Settings: GPS source dropdown shows the selected value;
 
 ## [2.9.1] - 2026-10-16
