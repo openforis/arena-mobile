@@ -56,6 +56,13 @@ Each case: expected result in brackets; note device, OS, GPS source.
 9. Resume from the bar → a new segment is added (2 lines on the map, no
    straight line across the gap).
 
+**Record edit locked**
+
+- Open an existing record with the edit lock on (also one whose track was
+  recovered after the app was closed) → the tracking bar and the attribute
+  show only the track (Show track, full screen map, download): no Start,
+  Pause, Resume, Stop or Restart; unlocking shows them again.
+
 **Pause / resume**
 
 7. Pause → no points while walking; Resume → new segment.

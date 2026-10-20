@@ -113,46 +113,46 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
             <IconButton icon="download" onPress={onDownloadGeoJsonPress} />
           </HView>
         )}
-        <HView style={[styles.previewToolbarCenter, styles.trackButtons]}>
-          {tracking ? (
-            <Button
-              icon="pause"
-              onPress={onPause}
-              textKey="dataEntry:positionTracking.pause"
-            />
-          ) : (
-            <Button
-              disabled={
-                !canEditRecord ||
-                (isTrackedNode && status === PositionTrackingStatus.starting)
-              }
-              icon="play"
-              onPress={onStart}
-              textKey={
-                trackActive || hasRecordedTrack
-                  ? "dataEntry:positionTracking.resume"
-                  : "dataEntry:positionTracking.start"
-              }
-            />
-          )}
-          {!trackActive && hasRecordedTrack && (
-            <Button
-              color="secondary"
-              disabled={!canEditRecord}
-              icon="restart"
-              onPress={onRestart}
-              textKey="dataEntry:positionTracking.restart"
-            />
-          )}
-          {trackActive && (
-            <Button
-              icon="stop"
-              color="secondary"
-              onPress={onStop}
-              textKey="dataEntry:positionTracking.stop"
-            />
-          )}
-        </HView>
+        {canEditRecord && (
+          <HView style={[styles.previewToolbarCenter, styles.trackButtons]}>
+            {tracking ? (
+              <Button
+                icon="pause"
+                onPress={onPause}
+                textKey="dataEntry:positionTracking.pause"
+              />
+            ) : (
+              <Button
+                disabled={
+                  isTrackedNode && status === PositionTrackingStatus.starting
+                }
+                icon="play"
+                onPress={onStart}
+                textKey={
+                  trackActive || hasRecordedTrack
+                    ? "dataEntry:positionTracking.resume"
+                    : "dataEntry:positionTracking.start"
+                }
+              />
+            )}
+            {!trackActive && hasRecordedTrack && (
+              <Button
+                color="secondary"
+                icon="restart"
+                onPress={onRestart}
+                textKey="dataEntry:positionTracking.restart"
+              />
+            )}
+            {trackActive && (
+              <Button
+                icon="stop"
+                color="secondary"
+                onPress={onStop}
+                textKey="dataEntry:positionTracking.stop"
+              />
+            )}
+          </HView>
+        )}
         {showMap && (
           <HView style={styles.previewToolbarRight}>
             <IconButton icon="fullscreen" onPress={openMapDialog} />

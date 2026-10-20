@@ -335,7 +335,8 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
           />
           {errorKey && <Text variant="bodySmall" textKey={errorKey} />}
           <HView style={styles.buttons}>
-            {tracking ? (
+            {/* record edit locked (or not editable): the track can only be viewed */}
+            {canEditRecord && tracking && (
               <Button
                 compact
                 icon="pause"
@@ -343,23 +344,25 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
                 onPress={onPause}
                 textKey="dataEntry:positionTracking.pause"
               />
-            ) : (
+            )}
+            {canEditRecord && !tracking && (
               <Button
                 compact
-                disabled={!canEditRecord}
                 icon="play"
                 color="secondary"
                 onPress={onResume}
                 textKey="dataEntry:positionTracking.resume"
               />
             )}
-            <Button
-              compact
-              icon="stop"
-              color="secondary"
-              onPress={onStop}
-              textKey="dataEntry:positionTracking.stop"
-            />
+            {canEditRecord && (
+              <Button
+                compact
+                icon="stop"
+                color="secondary"
+                onPress={onStop}
+                textKey="dataEntry:positionTracking.stop"
+              />
+            )}
             {nodeUuid && <ShowTrackButton nodeUuid={nodeUuid} />}
           </HView>
         </VView>
