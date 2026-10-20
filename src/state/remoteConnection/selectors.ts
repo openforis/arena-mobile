@@ -9,8 +9,9 @@ const getRemoteConnectionState = (state: any): RemoteConnectionState =>
 
 const selectLoggedUser = (state: any): User | null =>
   getRemoteConnectionState(state).user;
+// props needed by arena-core when evaluating expressions with userProp (e.g. not logged in, web preview)
 const selectLoggedUserSafe = (state: any): User =>
-  selectLoggedUser(state) ?? {} as User;
+  selectLoggedUser(state) ?? ({ props: {} } as User);
 const selectLoggedUserIsSystemAdmin = (state: any): boolean => {
   const user = selectLoggedUser(state);
   return !!user && Users.isSystemAdmin(user);
