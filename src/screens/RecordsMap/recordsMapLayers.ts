@@ -14,6 +14,7 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
+import { PositionTracks } from "model/utils/PositionTracks";
 import { SurveyDefs } from "model/utils/SurveyDefs";
 
 const latLongSrsCode = "4326";
@@ -21,6 +22,7 @@ const latLongSrsCode = "4326";
 export enum RecordsMapLayerType {
   samplingPoints = "samplingPoints",
   coordinateAttribute = "coordinateAttribute",
+  positionTrack = "positionTrack",
 }
 
 export type RecordsMapLayer = {
@@ -29,7 +31,7 @@ export type RecordsMapLayer = {
   color: string;
   // sampling point data category level (samplingPoints layers only)
   levelIndex?: number;
-  // coordinate attribute def (coordinateAttribute layers only)
+  // attribute def (coordinateAttribute and positionTrack layers only)
   nodeDefUuid?: string;
 };
 
@@ -48,6 +50,17 @@ export type RecordsMapPointFeature = {
   type: "Feature";
   geometry: { type: "Point"; coordinates: [number, number] };
   properties: RecordsMapPointProperties;
+};
+
+export type RecordsMapTrackFeature = {
+  key: string;
+  layerKey: string;
+  label: string;
+  recordUuid: string;
+  // one line per track segment
+  lines: { latitude: number; longitude: number }[][];
+  // track start, used to open the track in other map apps
+  point: Point;
 };
 
 export type RecordSummaryForMap = {
@@ -136,6 +149,20 @@ const getCoordinateAttributeDefs = ({
       NodeDefs.isInCycle(cycle)(nodeDef),
   );
 
+const getPositionTrackAttributeDefs = ({
+  survey,
+  cycle,
+}: {
+  survey: Survey;
+  cycle: string;
+}): NodeDef<any>[] =>
+  Surveys.getNodeDefsArray(survey).filter(
+    (nodeDef) =>
+      PositionTracks.isPositionTrackingNodeDef(nodeDef) &&
+      !NodeDefs.isAnalysis(nodeDef) &&
+      NodeDefs.isInCycle(cycle)(nodeDef),
+  );
+
 export const getAvailableLayers = ({
   survey,
   cycle,
@@ -159,7 +186,16 @@ export const getAvailableLayers = ({
       nodeDefUuid: nodeDef.uuid,
     }),
   );
-  return [...samplingPointLayers, ...coordinateLayers];
+  const trackLayers = getPositionTrackAttributeDefs({ survey, cycle }).map(
+    (nodeDef, index) => ({
+      key: `${RecordsMapLayerType.positionTrack}_${nodeDef.uuid}`,
+      type: RecordsMapLayerType.positionTrack,
+      color:
+        layerColors[(coordinateLayers.length + index) % layerColors.length]!,
+      nodeDefUuid: nodeDef.uuid,
+    }),
+  );
+  return [...samplingPointLayers, ...coordinateLayers, ...trackLayers];
 };
 
 // true if the survey has sampling points with location or coordinate attributes to show on the map
@@ -171,7 +207,8 @@ export const hasMapLayers = ({
   cycle: string;
 }): boolean =>
   !!getSamplingPointDataCategory(survey) ||
-  getCoordinateAttributeDefs({ survey, cycle }).length > 0;
+  getCoordinateAttributeDefs({ survey, cycle }).length > 0 ||
+  getPositionTrackAttributeDefs({ survey, cycle }).length > 0;
 
 // entities containing a code attribute referencing the first level of the sampling point data
 const getSamplingPointFirstLevelEntityDefUuids = ({
@@ -451,6 +488,50 @@ export const buildCoordinateAttributeFeatures = ({
       },
     });
     if (feature) features.push(feature);
+  }
+  return features;
+};
+
+export const buildTrackFeatures = ({
+  layer,
+  nodeValues,
+  recordLabelByUuid,
+}: {
+  layer: RecordsMapLayer;
+  nodeValues: { recordUuid: string; nodeDefUuid: string; value: any }[];
+  recordLabelByUuid: Record<string, string>;
+}): RecordsMapTrackFeature[] => {
+  const features: RecordsMapTrackFeature[] = [];
+  let index = 0;
+  for (const { recordUuid, nodeDefUuid, value } of nodeValues) {
+    if (nodeDefUuid !== layer.nodeDefUuid) continue;
+    const label = recordLabelByUuid[recordUuid];
+    if (label === undefined) continue;
+    const lines = PositionTracks.extractLineCoordinates(value)
+      .map((line) =>
+        line
+          .filter(
+            (position) =>
+              Array.isArray(position) &&
+              Number.isFinite(position[0]) &&
+              Number.isFinite(position[1]),
+          )
+          .map(([longitude, latitude]) => ({
+            latitude: latitude!,
+            longitude: longitude!,
+          })),
+      )
+      .filter((line) => line.length > 1);
+    const start = lines[0]?.[0];
+    if (!start) continue;
+    features.push({
+      key: `${recordUuid}_${index++}`,
+      layerKey: layer.key,
+      label,
+      recordUuid,
+      lines,
+      point: { x: start.longitude, y: start.latitude, srs: latLongSrsCode },
+    });
   }
   return features;
 };

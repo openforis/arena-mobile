@@ -15,7 +15,8 @@ import styles from "./styles";
 type LayerItem = {
   layer: RecordsMapLayer;
   label: string;
-  pointsCount: number;
+  // null when not loaded yet (tracks are loaded only when their layer is visible)
+  pointsCount: number | null;
 };
 
 type Props = {
@@ -58,16 +59,22 @@ const LayerChoiceItem = (props: LayerChoiceItemProps) => {
           onPress={onPress}
           status={checked ? "checked" : "unchecked"}
         />
-        {layer.type === RecordsMapLayerType.coordinateAttribute && (
+        {layer.type !== RecordsMapLayerType.samplingPoints && (
           <View style={[styles.layerColor, { backgroundColor: layer.color }]} />
         )}
         <VView style={styles.layerItemTexts}>
           <Text variant="bodyLarge">{label}</Text>
-          <Text
-            textKey="recordsMap:pointsCount"
-            textParams={{ count: pointsCount }}
-            variant="bodySmall"
-          />
+          {pointsCount !== null && (
+            <Text
+              textKey={
+                layer.type === RecordsMapLayerType.positionTrack
+                  ? "recordsMap:tracksCount"
+                  : "recordsMap:pointsCount"
+              }
+              textParams={{ count: pointsCount }}
+              variant="bodySmall"
+            />
+          )}
         </VView>
       </HView>
     </TouchableRipple>

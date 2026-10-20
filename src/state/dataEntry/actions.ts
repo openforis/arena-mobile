@@ -41,6 +41,7 @@ import { AutoSyncActions } from "../autoSync";
 import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { DeviceInfoActions, DeviceInfoSelectors } from "../deviceInfo";
 import { MessageActions } from "../message";
+import { PositionTrackingActions } from "../positionTracking/actions";
 import { SurveyActions, SurveySelectors } from "../survey";
 
 import {
@@ -263,7 +264,8 @@ const createNewRecord =
         record = await RecordService.insertRecord({ survey, record });
         dispatch(AutoSyncActions.markPending());
 
-        dispatch(editRecord({ navigation, record, locked: false }));
+        await dispatch(editRecord({ navigation, record, locked: false }));
+        await dispatch(PositionTrackingActions.autoStartTracking());
       } catch (error: any) {
         handleError(dispatch, error, "dataEntry:createRecordError");
       }
@@ -403,6 +405,7 @@ const deleteRecords =
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
 
     await RecordService.deleteRecords({ surveyId: survey.id, recordUuids });
+    await dispatch(PositionTrackingActions.deleteTracksOfRecords(recordUuids));
 
     dispatch(DeviceInfoActions.updateFreeDiskStorage());
   };
@@ -465,6 +468,7 @@ const editRecord =
       if (resumeLastEditedPage) {
         await dispatch(selectCurrentPageEntity(lastEditedPage));
       }
+      await dispatch(PositionTrackingActions.recoverTrackForOpenRecord());
     };
 
 const _fetchAndEditRecordInternal = async ({
@@ -1032,7 +1036,9 @@ const navigateToRecordsList =
         ConfirmActions.show({
           confirmButtonTextKey: "dataEntry:goToListOfRecords",
           messageKey: "dataEntry:confirmGoToListOfRecords",
-          onConfirm: () => {
+          onConfirm: async () => {
+            // the recorded track is written into the record before closing it
+            await dispatch(PositionTrackingActions.closeTrack());
             // pop=true pops the current screen from the stack and avoids going back to it (unmounts the RecordEditor component)
             navigation.navigate({ name: screenKeys.recordsList, pop: true });
             dispatch({ type: DATA_ENTRY_RESET });

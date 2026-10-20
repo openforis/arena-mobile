@@ -1,5 +1,6 @@
 import {
   ExtraPropDataType,
+  NodeDefType,
   Survey,
   SurveyBuilder,
   SurveyObjectBuilders,
@@ -10,6 +11,7 @@ import {
 import {
   buildCoordinateAttributeFeatures,
   buildSamplingPointFeatures,
+  buildTrackFeatures,
   getAvailableLayers,
   getDefaultVisibleLayerKeys,
   getRecordUuidsBySamplingPointItemUuid,
@@ -223,5 +225,83 @@ describe("recordsMapLayers", () => {
       }),
       expect.objectContaining({ nodeDefUuid: clusterLocationDefUuid }),
     ]);
+  });
+
+  describe("position tracks", () => {
+    let surveyWithTrack: Survey;
+
+    beforeAll(async () => {
+      surveyWithTrack = await buildSurvey();
+      // no geo attribute builder: turn a coordinate attribute into a tracking geo attribute
+      const trackDef = Surveys.getNodeDefByName({
+        survey: surveyWithTrack,
+        name: "cluster_location",
+      }) as any;
+      trackDef.type = NodeDefType.geo;
+      trackDef.props.positionTracking = true;
+    });
+
+    const getTrackLayer = () =>
+      getAvailableLayers({ survey: surveyWithTrack, cycle }).find(
+        (layer) => layer.type === RecordsMapLayerType.positionTrack,
+      )!;
+
+    test("a layer for each tracking geo attribute, hidden by default", () => {
+      const trackLayer = getTrackLayer();
+      expect(trackLayer).toBeDefined();
+      const layers = getAvailableLayers({ survey: surveyWithTrack, cycle });
+      expect(
+        getDefaultVisibleLayerKeys({ survey: surveyWithTrack, cycle, layers }),
+      ).not.toContain(trackLayer.key);
+    });
+
+    test("track values of known records become track features", () => {
+      const trackLayer = getTrackLayer();
+      const value = {
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "MultiLineString",
+          coordinates: [
+            [
+              [10, 20],
+              [10.001, 20.001],
+            ],
+            // single position line: skipped
+            [[10.002, 20.002]],
+          ],
+        },
+      };
+      const features = buildTrackFeatures({
+        layer: trackLayer,
+        nodeValues: [
+          {
+            recordUuid: "record-1",
+            nodeDefUuid: trackLayer.nodeDefUuid!,
+            value,
+          },
+          {
+            recordUuid: "record-other",
+            nodeDefUuid: trackLayer.nodeDefUuid!,
+            value,
+          },
+          // polygon value: not a track
+          {
+            recordUuid: "record-1",
+            nodeDefUuid: trackLayer.nodeDefUuid!,
+            value: { geometry: { type: "Polygon", coordinates: [] } },
+          },
+        ],
+        recordLabelByUuid: { "record-1": "1" },
+      });
+      expect(features).toHaveLength(1);
+      expect(features[0]!.lines).toEqual([
+        [
+          { latitude: 20, longitude: 10 },
+          { latitude: 20.001, longitude: 10.001 },
+        ],
+      ]);
+      expect(features[0]!.point).toMatchObject({ x: 10, y: 20 });
+    });
   });
 });

@@ -93,6 +93,8 @@ const hasCoordinate = (
 const extractPolygonCoordinatesFromGeoJson = (
   geoJsonValue: any,
 ): LatLng[] | null => {
+  const geometryType = geoJsonValue?.geometry?.type;
+  if (geometryType && geometryType !== "Polygon") return null;
   let coordinates: [number, number][] | undefined =
     geoJsonValue?.geometry?.coordinates?.[0];
   if (!coordinates?.length) return null;

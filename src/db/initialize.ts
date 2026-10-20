@@ -1,12 +1,14 @@
 import SQLiteClient from "./SQLiteClient";
 import { migration_001_base } from "./migrations/001";
 import { migration_002 } from "./migrations/002";
+import { migration_003_position_track } from "./migrations/003";
 
 const dbName = "arena_mobile.db";
 const debug = true;
 const dbMigrations: ((client: SQLiteClient) => Promise<void>)[] = [
   migration_001_base,
   migration_002,
+  migration_003_position_track,
 ];
 
 /** Application's SQLite client */

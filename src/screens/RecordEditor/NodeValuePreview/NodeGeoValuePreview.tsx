@@ -4,9 +4,11 @@ import { StyleSheet } from "react-native";
 import { Polygon } from "react-native-maps";
 
 import { MapView, Text, VView } from "components";
+import { PositionTracks } from "model";
 import { GeoUtils } from "utils";
 
 import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
+import { TrackMapView } from "./TrackMapView";
 
 const styles = StyleSheet.create({
   container: {
@@ -21,7 +23,28 @@ const styles = StyleSheet.create({
 const polygonFillColor = "rgba(21, 101, 192, 0.2)";
 const polygonStrokeColor = "rgba(21, 101, 192, 0.95)";
 
-export const NodeGeoValuePreview = (props: NodeValuePreviewProps) => {
+const NodeGeoTrackValuePreview = ({ value }: { value: any }) => {
+  const segments = useMemo(() => PositionTracks.fromFeature(value), [value]);
+  return (
+    <VView style={styles.container}>
+      <TrackMapView segments={segments} />
+      <Text
+        textKey="dataEntry:positionTracking.trackSummary"
+        textParams={{
+          length: PositionTracks.formatLength(
+            PositionTracks.computeLength(segments),
+          ),
+          pointsCount: PositionTracks.countPoints(segments),
+          duration: PositionTracks.formatDuration(
+            PositionTracks.computeDuration(segments),
+          ),
+        }}
+      />
+    </VView>
+  );
+};
+
+const NodeGeoPolygonValuePreview = (props: NodeValuePreviewProps) => {
   const { value, valueFormatted } = props;
 
   const coordinates = useMemo(() => {
@@ -57,3 +80,10 @@ export const NodeGeoValuePreview = (props: NodeValuePreviewProps) => {
     </VView>
   );
 };
+
+export const NodeGeoValuePreview = (props: NodeValuePreviewProps) =>
+  PositionTracks.isTrackValue(props.value) ? (
+    <NodeGeoTrackValuePreview value={props.value} />
+  ) : (
+    <NodeGeoPolygonValuePreview {...props} />
+  );

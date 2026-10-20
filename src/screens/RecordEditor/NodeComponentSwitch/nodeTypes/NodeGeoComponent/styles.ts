@@ -23,6 +23,10 @@ export default StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  trackButtons: {
+    flexDirection: "row",
+    gap: 8,
+  },
   previewToolbarRight: {
     position: "absolute",
     right: 0,
