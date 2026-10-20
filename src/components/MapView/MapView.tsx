@@ -15,6 +15,7 @@ import RNMapView, {
   PoiClickEvent,
   Region,
   UrlTile,
+  UserLocationChangeEvent,
 } from "react-native-maps";
 
 import { useIsNetworkConnected } from "hooks/useIsNetworkConnected";
@@ -70,6 +71,7 @@ type Props = {
   onPoiClick?: (event: PoiClickEvent) => void;
   onPress?: (event: MapPressEvent) => void;
   onRegionChangeComplete?: (region: Region) => void;
+  onUserLocationChange?: (event: UserLocationChangeEvent) => void;
   // called with the zoom level of the visible region (also with Apple Maps, that doesn't give the camera zoom)
   onZoomChange?: (zoom: number) => void;
   // PDF maps shown even when they are hidden in the settings
@@ -77,6 +79,7 @@ type Props = {
   // when specified, it overrides the map provider in the settings
   provider?: MapProvider;
   showMapTypeSelector?: boolean;
+  showsUserLocation?: boolean;
   style?: StyleProp<ViewStyle>;
   toolbarEnabled?: boolean;
 };
@@ -135,7 +138,9 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       onPress,
       onPanDrag,
       onPoiClick,
+      onUserLocationChange,
       toolbarEnabled,
+      showsUserLocation,
     },
     ref,
   ) => {
@@ -337,6 +342,8 @@ export const MapView = forwardRef<RNMapView | null, Props>(
           mapPadding={mapPadding}
           mapType={effectiveMapType}
           toolbarEnabled={toolbarEnabled}
+          onUserLocationChange={onUserLocationChange}
+          showsUserLocation={showsUserLocation}
         >
           {freeLayerVisible && (
             <UrlTile

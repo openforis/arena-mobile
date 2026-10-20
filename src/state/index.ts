@@ -29,6 +29,14 @@ export { JobMonitorActions } from "./jobMonitor";
 export { MessageActions } from "./message";
 
 export {
+  PositionTrackingActions,
+  PositionTrackingReducer,
+  PositionTrackingSelectors,
+  PositionTrackingStatus,
+} from "./positionTracking";
+export type { PositionTrackingState } from "./positionTracking";
+
+export {
   RemoteConnectionActions,
   RemoteConnectionReducer,
   RemoteConnectionSelectors,

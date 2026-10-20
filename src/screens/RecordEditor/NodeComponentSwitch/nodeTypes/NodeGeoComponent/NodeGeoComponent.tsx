@@ -10,14 +10,23 @@ import {
   Modal,
   VView,
 } from "components";
+import { PositionTracks } from "model";
 import { log } from "utils";
 
 import { NodeGeoValuePreview } from "../../../NodeValuePreview/NodeGeoValuePreview";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
+import { NodeGeoTrackComponent } from "./NodeGeoTrackComponent";
 import { useNodeGeoComponent } from "./useNodeGeoComponent";
 import styles from "./styles";
 
-export const NodeGeoComponent = (props: NodeComponentProps) => {
+export const NodeGeoComponent = (props: NodeComponentProps) =>
+  PositionTracks.isPositionTrackingNodeDef(props.nodeDef) ? (
+    <NodeGeoTrackComponent {...props} />
+  ) : (
+    <NodeGeoPolygonComponent {...props} />
+  );
+
+const NodeGeoPolygonComponent = (props: NodeComponentProps) => {
   const { nodeDef } = props;
 
   log.debug(`rendering NodeGeoComponent for ${NodeDefs.getName(nodeDef)}`);

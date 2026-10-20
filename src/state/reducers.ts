@@ -6,6 +6,7 @@ import { DataEntryReducer } from "./dataEntry/reducer";
 import { DeviceInfoReducer } from "./deviceInfo/reducer";
 import { JobMonitorReducer } from "./jobMonitor/reducer";
 import { MessageReducer } from "./message/reducer";
+import { PositionTrackingReducer } from "./positionTracking/reducer";
 import { RemoteConnectionReducer } from "./remoteConnection/reducer";
 import { ScreenOptionsReducer } from "./screenOptions/reducer";
 import { SettingsReducer } from "./settings/reducer";
@@ -20,6 +21,7 @@ export const rootReducer = combineReducers({
   deviceInfo: DeviceInfoReducer,
   jobMonitor: JobMonitorReducer,
   message: MessageReducer,
+  positionTracking: PositionTrackingReducer,
   remoteConnection: RemoteConnectionReducer,
   settings: SettingsReducer,
   screenOptions: ScreenOptionsReducer,

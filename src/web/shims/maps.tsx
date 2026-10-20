@@ -17,6 +17,7 @@ const placeholderStyle: ViewStyle = {
 // Web replacement of react-native-maps: maps are not available in the browser preview
 const MapView = forwardRef<any, MapViewProps>(({ style }, ref) => {
   useImperativeHandle(ref, () => ({
+    animateCamera: () => {},
     animateToRegion: () => {},
     fitToCoordinates: () => {},
     getCamera: () =>

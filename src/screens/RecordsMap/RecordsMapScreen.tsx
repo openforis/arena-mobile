@@ -1,5 +1,11 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
-import RNMapView, { MapPressEvent, Region } from "react-native-maps";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import RNMapView, { MapPressEvent, Polyline, Region } from "react-native-maps";
 import {
   useFocusEffect,
   useNavigation,
@@ -18,6 +24,7 @@ import { log } from "utils";
 import {
   buildCoordinateAttributeFeatures,
   buildSamplingPointFeatures,
+  buildTrackFeatures,
   getAvailableLayers,
   getDefaultVisibleLayerKeys,
   getLayerLabel,
@@ -26,6 +33,7 @@ import {
   RecordsMapLayerType,
   RecordsMapPointFeature,
   RecordsMapPointProperties,
+  RecordsMapTrackFeature,
 } from "./recordsMapLayers";
 import { RecordsMapLayerMarkers } from "./RecordsMapLayerMarkers";
 import { RecordsMapLayersPanel } from "./RecordsMapLayersPanel";
@@ -56,6 +64,28 @@ const worldRegion: Region = {
 };
 
 const fitEdgePadding = { top: 80, right: 80, bottom: 80, left: 80 };
+
+// on iOS the map press event is fired also right after a track (polyline) press
+const TRACK_PRESS_MAP_PRESS_IGNORE_MS = 500;
+
+// bounding box corners of the track (to fit the map without passing all its points)
+const getTrackBoundsCorners = (track: RecordsMapTrackFeature): LatLng[] => {
+  const coordinates = track.lines.flat();
+  let minLat = Infinity;
+  let maxLat = -Infinity;
+  let minLng = Infinity;
+  let maxLng = -Infinity;
+  for (const { latitude, longitude } of coordinates) {
+    minLat = Math.min(minLat, latitude);
+    maxLat = Math.max(maxLat, latitude);
+    minLng = Math.min(minLng, longitude);
+    maxLng = Math.max(maxLng, longitude);
+  }
+  return [
+    { latitude: minLat, longitude: minLng },
+    { latitude: maxLat, longitude: maxLng },
+  ];
+};
 
 const toLatLng = (feature: RecordsMapPointFeature): LatLng => {
   const [longitude, latitude] = feature.geometry.coordinates;
@@ -121,8 +151,11 @@ export const RecordsMapScreen = () => {
         cycle,
         onlyLocal: false,
       });
+      // tracks are loaded only when their layer is visible (see trackValues)
       const coordinateDefUuids = layers
-        .filter((layer) => layer.nodeDefUuid)
+        .filter(
+          (layer) => layer.type === RecordsMapLayerType.coordinateAttribute,
+        )
         .map((layer) => layer.nodeDefUuid!);
       const _nodeValues = await RecordService.fetchNodeValuesByDefUuids({
         surveyId: survey.id!,
@@ -140,12 +173,53 @@ export const RecordsMapScreen = () => {
     }
   }, [cycle, layers, survey, toaster]);
 
+  // incremented on focus, to reload the tracks too
+  const [focusCount, setFocusCount] = useState(0);
+
   // (re)load data on focus, e.g. when coming back from the record editor
   useFocusEffect(
     useCallback(() => {
       void loadData();
+      setFocusCount((countPrev) => countPrev + 1);
     }, [loadData]),
   );
+
+  const visibleTrackDefUuidsJoint = useMemo(
+    () =>
+      layers
+        .filter(
+          (layer) =>
+            layer.type === RecordsMapLayerType.positionTrack &&
+            visibleLayerKeys.includes(layer.key),
+        )
+        .map((layer) => layer.nodeDefUuid!)
+        .join(","),
+    [layers, visibleLayerKeys],
+  );
+
+  const [trackValues, setTrackValues] = useState<NodeValue[]>([]);
+
+  useEffect(() => {
+    if (!visibleTrackDefUuidsJoint) {
+      setTrackValues([]);
+      return;
+    }
+    let cancelled = false;
+    RecordService.fetchNodeValuesByDefUuids({
+      surveyId: survey.id!,
+      cycle,
+      nodeDefUuids: visibleTrackDefUuidsJoint.split(","),
+    })
+      .then((values) => {
+        if (!cancelled) setTrackValues(values);
+      })
+      .catch((error) => {
+        toaster("recordsMap:errorLoadingData", { details: String(error) });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [cycle, focusCount, survey.id, toaster, visibleTrackDefUuidsJoint]);
 
   const recordSummaryByUuid = useMemo(
     () =>
@@ -185,24 +259,49 @@ export const RecordsMapScreen = () => {
     });
     return layers.reduce(
       (acc, layer) => {
-        acc[layer.key] =
-          layer.type === RecordsMapLayerType.samplingPoints
-            ? buildSamplingPointFeatures({
-                survey,
-                layer,
-                recordUuidsByItemUuid,
-              })
-            : buildCoordinateAttributeFeatures({
-                survey,
-                layer,
-                nodeValues,
-                recordLabelByUuid,
-              });
+        if (layer.type === RecordsMapLayerType.samplingPoints) {
+          acc[layer.key] = buildSamplingPointFeatures({
+            survey,
+            layer,
+            recordUuidsByItemUuid,
+          });
+        } else if (layer.type === RecordsMapLayerType.coordinateAttribute) {
+          acc[layer.key] = buildCoordinateAttributeFeatures({
+            survey,
+            layer,
+            nodeValues,
+            recordLabelByUuid,
+          });
+        } else {
+          acc[layer.key] = [];
+        }
         return acc;
       },
       {} as Record<string, RecordsMapPointFeature[]>,
     );
   }, [cycle, layers, nodeValues, recordLabelByUuid, recordSummaries, survey]);
+
+  const tracksByLayerKey = useMemo(
+    () =>
+      layers.reduce(
+        (acc, layer) => {
+          // hidden track layers are not loaded: no entry, so their count is not shown
+          if (
+            layer.type === RecordsMapLayerType.positionTrack &&
+            visibleLayerKeys.includes(layer.key)
+          ) {
+            acc[layer.key] = buildTrackFeatures({
+              layer,
+              nodeValues: trackValues,
+              recordLabelByUuid,
+            });
+          }
+          return acc;
+        },
+        {} as Record<string, RecordsMapTrackFeature[]>,
+      ),
+    [layers, recordLabelByUuid, trackValues, visibleLayerKeys],
+  );
 
   const layerLabelByKey = useMemo(
     () =>
@@ -223,10 +322,11 @@ export const RecordsMapScreen = () => {
 
   const visibleCoordinates = useMemo(
     () =>
-      visibleLayers.flatMap((layer) =>
-        (pointsByLayerKey[layer.key] ?? []).map(toLatLng),
-      ),
-    [pointsByLayerKey, visibleLayers],
+      visibleLayers.flatMap((layer) => [
+        ...(pointsByLayerKey[layer.key] ?? []).map(toLatLng),
+        ...(tracksByLayerKey[layer.key] ?? []).flatMap(getTrackBoundsCorners),
+      ]),
+    [pointsByLayerKey, tracksByLayerKey, visibleLayers],
   );
 
   // computed only once, when data is loaded the first time
@@ -299,9 +399,36 @@ export const RecordsMapScreen = () => {
     [onPointPress, region?.longitudeDelta],
   );
 
+  const lastTrackPressTimeRef = useRef(0);
+
+  const onTrackPress = useCallback(
+    (layer: RecordsMapLayer, track: RecordsMapTrackFeature) => {
+      lastTrackPressTimeRef.current = Date.now();
+      setSelection({
+        layerLabel: layerLabelByKey[layer.key]!,
+        layerType: layer.type,
+        points: [
+          {
+            key: track.key,
+            layerKey: track.layerKey,
+            label: track.label,
+            recordUuids: [track.recordUuid],
+            point: track.point,
+          },
+        ],
+      });
+    },
+    [layerLabelByKey],
+  );
+
   // on iOS the map press event is fired also when pressing a marker
   const onMapPress = useCallback((event: MapPressEvent) => {
     if (event.nativeEvent.action === "marker-press") return;
+    if (
+      Date.now() - lastTrackPressTimeRef.current <
+      TRACK_PRESS_MAP_PRESS_IGNORE_MS
+    )
+      return;
     setSelection(null);
   }, []);
 
@@ -332,6 +459,20 @@ export const RecordsMapScreen = () => {
         style={styles.map}
         toolbarEnabled={false}
       >
+        {visibleLayers.flatMap((layer) =>
+          (tracksByLayerKey[layer.key] ?? []).flatMap((track) =>
+            track.lines.map((line, lineIndex) => (
+              <Polyline
+                key={`${track.key}_${lineIndex}`}
+                coordinates={line}
+                onPress={() => onTrackPress(layer, track)}
+                strokeColor={layer.color}
+                strokeWidth={4}
+                tappable
+              />
+            )),
+          ),
+        )}
         {visibleLayers.map((layer) => (
           <RecordsMapLayerMarkers
             key={layer.key}
@@ -387,7 +528,10 @@ export const RecordsMapScreen = () => {
           layerItems={layers.map((layer) => ({
             layer,
             label: layerLabelByKey[layer.key]!,
-            pointsCount: pointsByLayerKey[layer.key]?.length ?? 0,
+            pointsCount:
+              layer.type === RecordsMapLayerType.positionTrack
+                ? (tracksByLayerKey[layer.key]?.length ?? null)
+                : (pointsByLayerKey[layer.key]?.length ?? 0),
           }))}
           onDismiss={() => setLayersPanelVisible(false)}
           onLayerToggle={onLayerToggle}

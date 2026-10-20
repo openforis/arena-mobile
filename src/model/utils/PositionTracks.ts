@@ -1,0 +1,347 @@
+import {
+  NodeDef,
+  NodeDefs,
+  Record as ArenaRecord,
+  Survey,
+  Surveys,
+} from "@openforis/arena-core";
+
+export type TrackPoint = {
+  latitude: number;
+  longitude: number;
+  altitude?: number | null;
+  accuracy?: number | null;
+  // epoch millis
+  time: number;
+};
+
+export type TrackSegment = TrackPoint[];
+
+export type TrackFeature = {
+  type: "Feature";
+  properties: {
+    startTime: string;
+    endTime: string;
+    length: number;
+    pointsCount: number;
+    // parallel to geometry.coordinates
+    coordTimes: string[][];
+    accuracies: (number | null)[][];
+  };
+  geometry: {
+    type: "MultiLineString";
+    coordinates: number[][][];
+  };
+};
+
+const EARTH_MEAN_RADIUS_METERS = 6371008.8;
+// faster than this (m/s) is considered a GPS jump
+const defaultMaxSpeed = 50;
+// points closer than this (m) to a straight line between their neighbours are dropped when saving
+const defaultSimplifyTolerance = 3;
+// a GeoJSON LineString needs at least 2 positions
+const minPointsPerSegment = 2;
+
+const lineGeometryTypes = new Set(["LineString", "MultiLineString"]);
+
+const isPositionTrackingNodeDef = (nodeDef: NodeDef<any> | null | undefined) =>
+  !!nodeDef && NodeDefs.isGeo(nodeDef) && NodeDefs.isPositionTracking(nodeDef);
+
+const isTrackableNodeDef = (nodeDef: NodeDef<any> | null | undefined) =>
+  !!nodeDef &&
+  isPositionTrackingNodeDef(nodeDef) &&
+  NodeDefs.isSingle(nodeDef) &&
+  !NodeDefs.isReadOnly(nodeDef);
+
+const getTrackableNodeDefs = (survey: Survey): NodeDef<any>[] =>
+  Surveys.getNodeDefsArray(survey).filter(isTrackableNodeDef);
+
+const isInSingleEntitiesOnly = ({
+  survey,
+  nodeDef,
+}: {
+  survey: Survey;
+  nodeDef: NodeDef<any>;
+}): boolean => {
+  let parentDef = Surveys.getNodeDefParent({ survey, nodeDef });
+  while (parentDef) {
+    if (!NodeDefs.isRoot(parentDef) && NodeDefs.isMultiple(parentDef))
+      return false;
+    parentDef = Surveys.getNodeDefParent({ survey, nodeDef: parentDef });
+  }
+  return true;
+};
+
+// first trackable attribute (in survey order) in the root entity or in its single entities
+const findAutoStartNode = ({
+  survey,
+  record,
+}: {
+  survey: Survey;
+  record: ArenaRecord;
+}) => {
+  const nodes = Object.values(record.nodes ?? {});
+  for (const nodeDef of getTrackableNodeDefs(survey)) {
+    if (!isInSingleEntitiesOnly({ survey, nodeDef })) continue;
+    const node = nodes.find((n) => n.nodeDefUuid === nodeDef.uuid);
+    if (node) return node;
+  }
+  return null;
+};
+
+const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
+
+// haversine distance in meters
+const distance = (
+  a: Pick<TrackPoint, "latitude" | "longitude">,
+  b: Pick<TrackPoint, "latitude" | "longitude">,
+): number => {
+  const dLat = toRadians(b.latitude - a.latitude);
+  const dLon = toRadians(b.longitude - a.longitude);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRadians(a.latitude)) *
+      Math.cos(toRadians(b.latitude)) *
+      Math.sin(dLon / 2) ** 2;
+  return 2 * EARTH_MEAN_RADIUS_METERS * Math.asin(Math.min(1, Math.sqrt(h)));
+};
+
+const computeSegmentLength = (segment: TrackSegment): number => {
+  let length = 0;
+  for (let i = 1; i < segment.length; i++) {
+    length += distance(segment[i - 1]!, segment[i]!);
+  }
+  return length;
+};
+
+const computeLength = (segments: TrackSegment[]): number =>
+  segments.reduce((acc, segment) => acc + computeSegmentLength(segment), 0);
+
+// distance (m) of p from the line a-b, on a local planar approximation
+const distanceFromLine = (
+  p: TrackPoint,
+  a: TrackPoint,
+  b: TrackPoint,
+): number => {
+  const metersPerDegLat = (Math.PI / 180) * EARTH_MEAN_RADIUS_METERS;
+  const metersPerDegLon = metersPerDegLat * Math.cos(toRadians(a.latitude));
+  const toXY = (point: TrackPoint) => ({
+    x: (point.longitude - a.longitude) * metersPerDegLon,
+    y: (point.latitude - a.latitude) * metersPerDegLat,
+  });
+  const pXY = toXY(p);
+  const bXY = toXY(b);
+  const lengthSquared = bXY.x ** 2 + bXY.y ** 2;
+  if (lengthSquared === 0) return Math.hypot(pXY.x, pXY.y);
+  const t = Math.max(
+    0,
+    Math.min(1, (pXY.x * bXY.x + pXY.y * bXY.y) / lengthSquared),
+  );
+  return Math.hypot(pXY.x - t * bXY.x, pXY.y - t * bXY.y);
+};
+
+// Douglas-Peucker: drops the points closer than tolerance (m) to the line through their neighbours
+const simplifySegment = (
+  segment: TrackSegment,
+  tolerance: number,
+): TrackSegment => {
+  const lastIndex = segment.length - 1;
+  if (lastIndex < 2) return segment;
+  const keep = segment.map((_, index) => index === 0 || index === lastIndex);
+  const ranges: [number, number][] = [[0, lastIndex]];
+  while (ranges.length > 0) {
+    const [start, end] = ranges.pop()!;
+    let maxDistance = 0;
+    let maxIndex = -1;
+    for (let index = start + 1; index < end; index++) {
+      const dist = distanceFromLine(
+        segment[index]!,
+        segment[start]!,
+        segment[end]!,
+      );
+      if (dist > maxDistance) {
+        maxDistance = dist;
+        maxIndex = index;
+      }
+    }
+    if (maxDistance > tolerance) {
+      keep[maxIndex] = true;
+      ranges.push([start, maxIndex], [maxIndex, end]);
+    }
+  }
+  return segment.filter((_, index) => keep[index]);
+};
+
+const simplify = (
+  segments: TrackSegment[],
+  tolerance = defaultSimplifyTolerance,
+): TrackSegment[] =>
+  segments.map((segment) => simplifySegment(segment, tolerance));
+
+const countPoints = (segments: TrackSegment[]): number =>
+  segments.reduce((acc, segment) => acc + segment.length, 0);
+
+export enum TrackPointRejectReason {
+  lowAccuracy = "lowAccuracy",
+  tooClose = "tooClose",
+  jump = "jump",
+}
+
+const evaluatePoint = ({
+  point,
+  lastPoint,
+  accuracyThreshold,
+  minDistance,
+  maxSpeed = defaultMaxSpeed,
+}: {
+  point: TrackPoint;
+  lastPoint: TrackPoint | null | undefined;
+  accuracyThreshold: number;
+  minDistance: number;
+  maxSpeed?: number;
+}): TrackPointRejectReason | null => {
+  const { accuracy } = point;
+  if (
+    accuracy !== null &&
+    accuracy !== undefined &&
+    accuracy > accuracyThreshold
+  ) {
+    return TrackPointRejectReason.lowAccuracy;
+  }
+  if (!lastPoint) return null;
+
+  const dist = distance(lastPoint, point);
+  // a move smaller than the fix accuracy is GPS noise (e.g. standing still)
+  if (dist < Math.max(minDistance, accuracy ?? 0)) {
+    return TrackPointRejectReason.tooClose;
+  }
+
+  const elapsedSeconds = (point.time - lastPoint.time) / 1000;
+  if (elapsedSeconds > 0 && dist / elapsedSeconds > maxSpeed) {
+    return TrackPointRejectReason.jump;
+  }
+  return null;
+};
+
+const toIsoString = (time: number) => new Date(time).toISOString();
+
+const toPosition = ({ longitude, latitude, altitude }: TrackPoint): number[] =>
+  altitude === null || altitude === undefined
+    ? [longitude, latitude]
+    : [longitude, latitude, altitude];
+
+const toFeature = (segments: TrackSegment[]): TrackFeature | null => {
+  const validSegments = segments.filter(
+    (segment) => segment.length >= minPointsPerSegment,
+  );
+  if (validSegments.length === 0) return null;
+
+  const firstPoint = validSegments[0]![0]!;
+  const lastPoint = validSegments.at(-1)!.at(-1)!;
+
+  return {
+    type: "Feature",
+    properties: {
+      startTime: toIsoString(firstPoint.time),
+      endTime: toIsoString(lastPoint.time),
+      length: Math.round(computeLength(validSegments) * 10) / 10,
+      pointsCount: countPoints(validSegments),
+      coordTimes: validSegments.map((segment) =>
+        segment.map((point) => toIsoString(point.time)),
+      ),
+      accuracies: validSegments.map((segment) =>
+        segment.map((point) => point.accuracy ?? null),
+      ),
+    },
+    geometry: {
+      type: "MultiLineString",
+      coordinates: validSegments.map((segment) => segment.map(toPosition)),
+    },
+  };
+};
+
+const isTrackValue = (value: any): boolean =>
+  lineGeometryTypes.has(value?.geometry?.type);
+
+// true if the value is a track with at least one recorded point
+const hasTrackPoints = (value: any): boolean =>
+  isTrackValue(value) &&
+  extractLineCoordinates(value).some((line) => line.length > 0);
+
+const extractLineCoordinates = (value: any): number[][][] => {
+  const geometry = value?.geometry;
+  if (!geometry || !Array.isArray(geometry.coordinates)) return [];
+  if (geometry.type === "LineString") return [geometry.coordinates];
+  if (geometry.type === "MultiLineString") return geometry.coordinates;
+  return [];
+};
+
+const fromFeature = (value: any): TrackSegment[] => {
+  const lines = extractLineCoordinates(value);
+  const coordTimes = value?.properties?.coordTimes;
+  const accuracies = value?.properties?.accuracies;
+  // LineString values have flat coordTimes/accuracies
+  const isSingleLine = value?.geometry?.type === "LineString";
+  return lines.map((line, lineIndex) => {
+    const lineTimes = isSingleLine ? coordTimes : coordTimes?.[lineIndex];
+    const lineAccuracies = isSingleLine ? accuracies : accuracies?.[lineIndex];
+    return line
+      .filter((position) => Array.isArray(position) && position.length >= 2)
+      .map((position, pointIndex) => {
+        const [longitude, latitude, altitude] = position;
+        const timeString = lineTimes?.[pointIndex];
+        const time = timeString ? Date.parse(timeString) : Number.NaN;
+        return {
+          latitude: latitude!,
+          longitude: longitude!,
+          altitude: altitude ?? null,
+          accuracy: lineAccuracies?.[pointIndex] ?? null,
+          time: Number.isNaN(time) ? 0 : time,
+        };
+      });
+  });
+};
+
+const formatLength = (meters: number): string =>
+  meters < 1000
+    ? `${Math.round(meters)} m`
+    : `${(meters / 1000).toFixed(2)} km`;
+
+// sum of the segment durations (millis)
+const computeDuration = (segments: TrackSegment[]): number =>
+  segments.reduce(
+    (acc, segment) =>
+      segment.length > 1 ? acc + segment.at(-1)!.time - segment[0]!.time : acc,
+    0,
+  );
+
+const pad2 = (value: number) => String(value).padStart(2, "0");
+
+// hh:mm:ss
+const formatDuration = (millis: number): string => {
+  const totalSeconds = Math.max(0, Math.floor(millis / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return `${pad2(hours)}:${pad2(minutes)}:${pad2(seconds)}`;
+};
+
+export const PositionTracks = {
+  isPositionTrackingNodeDef,
+  isTrackableNodeDef,
+  getTrackableNodeDefs,
+  findAutoStartNode,
+  distance,
+  computeLength,
+  countPoints,
+  computeDuration,
+  simplify,
+  evaluatePoint,
+  toFeature,
+  fromFeature,
+  isTrackValue,
+  hasTrackPoints,
+  extractLineCoordinates,
+  formatLength,
+  formatDuration,
+};

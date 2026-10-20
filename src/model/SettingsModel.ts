@@ -51,6 +51,9 @@ export enum SettingKey {
   locationAveragingEnabled = "locationAveragingEnabled",
   locationGpsLocked = "locationGpsLocked",
   mapLayer = "mapLayer",
+  positionTrackingAccuracyThreshold = "positionTrackingAccuracyThreshold",
+  positionTrackingBatterySaver = "positionTrackingBatterySaver",
+  positionTrackingMinDistance = "positionTrackingMinDistance",
   mapProvider = "mapProvider",
   pdfMaps = "pdfMaps",
   preferredGpsSourceId = "preferredGpsSourceId",
@@ -157,6 +160,24 @@ const properties: SettingsProperties = {
     type: PropertyType.boolean,
     group: SettingGroup.location,
   },
+  positionTrackingBatterySaver: {
+    type: PropertyType.boolean,
+    group: SettingGroup.location,
+  },
+  positionTrackingMinDistance: {
+    type: PropertyType.slider,
+    group: SettingGroup.location,
+    minValue: 2,
+    maxValue: 50,
+    step: 1,
+  },
+  positionTrackingAccuracyThreshold: {
+    type: PropertyType.slider,
+    group: SettingGroup.location,
+    minValue: 5,
+    maxValue: 50,
+    step: 5,
+  },
   mapProvider: {
     type: PropertyType.radio,
     group: SettingGroup.maps,
@@ -211,6 +232,12 @@ export type SettingsObject = {
   mapProvider: MapProvider;
   // maps imported from geospatial PDF files (tiles stored on the device, see PdfMapsService)
   pdfMaps?: PdfMap[];
+  // position tracking: max accuracy (m) of the recorded points
+  positionTrackingAccuracyThreshold: number;
+  // position tracking: less precise location updates to reduce battery usage
+  positionTrackingBatterySaver: boolean;
+  // position tracking: min distance (m) between recorded points
+  positionTrackingMinDistance: number;
   // GpsSourceSetting.auto/.internal, or `external:${deviceAddress}` for a
   // recognized bonded device (see service/externalGps) - the latter can't be part
   // of the enum since it's dynamic. Not exposed via the generic `properties`
