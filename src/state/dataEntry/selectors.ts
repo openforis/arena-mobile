@@ -18,6 +18,7 @@ import {
 } from "@openforis/arena-core";
 
 import { RecordCurrentPageEntity, RecordUtils, SurveyDefs } from "model";
+import { PreviewMode } from "utils/PreviewMode";
 
 import { SurveySelectors } from "../survey/selectors";
 import { DataEntryState, PreviousCycleRecordPageEntityPointer } from "./types";
@@ -57,9 +58,11 @@ const selectRecordEditLockAvailable = (state: any) =>
 
 const selectCanEditRecord = (state: any) => {
   const editLocked = selectRecordEditLocked(state);
-  const recordInDefaultCycle = selectIsRecordInDefaultCycle(state);
+  // the web preview record is in the cycle selected in the Arena designer, also when not the default one
+  const recordInEditableCycle =
+    PreviewMode.isActive || selectIsRecordInDefaultCycle(state);
   return (
-    !editLocked && recordInDefaultCycle && !selectRecordSyncInProgress(state)
+    !editLocked && recordInEditableCycle && !selectRecordSyncInProgress(state)
   );
 };
 
