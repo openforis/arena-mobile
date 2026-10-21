@@ -1,5 +1,4 @@
 import React from "react";
-import { View as RNView } from "react-native";
 import { Marker } from "react-native-maps";
 
 import { LatLng } from "model";
@@ -16,11 +15,11 @@ export const CurrentLocationMarker = ({
   coordinate,
 }: CurrentLocationMarkerProps) => (
   <Marker coordinate={coordinate} anchor={markerCenterAnchor} tappable={false}>
-    <RNView collapsable={false} style={styles.markerContainer}>
+    <View collapsable={false} style={styles.markerContainer}>
       <View style={styles.currentLocationMarker}>
         <View style={styles.currentLocationMarkerHorizontal} />
         <View style={styles.currentLocationMarkerVertical} />
       </View>
-    </RNView>
+    </View>
   </Marker>
 );

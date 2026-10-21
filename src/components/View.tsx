@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
 
 export type ViewProps = {
   children?: React.ReactNode;
+  collapsable?: boolean;
   fullFlex?: boolean;
   fullWidth?: boolean;
   pointerEvents?: "box-none" | "none" | "box-only" | "auto";
@@ -24,6 +25,7 @@ export type ViewProps = {
 export const View = (props: ViewProps) => {
   const {
     children,
+    collapsable = undefined,
     fullFlex = false,
     fullWidth = false,
     pointerEvents = undefined,
@@ -48,7 +50,12 @@ export const View = (props: ViewProps) => {
   }, [backgroundColor, fullFlex, fullWidth, styleProp]);
 
   return (
-    <RNView style={style} testID={testID} pointerEvents={pointerEvents}>
+    <RNView
+      collapsable={collapsable}
+      style={style}
+      testID={testID}
+      pointerEvents={pointerEvents}
+    >
       {children}
     </RNView>
   );
