@@ -1,4 +1,12 @@
 export default {
+  appVersionNotSupported: {
+    title: "Pembaruan diperlukan",
+    message:
+      "Versi Arena Mobile ini tidak lagi didukung oleh server.\nPerbarui ke versi {{minVersion}} atau yang lebih baru untuk melanjutkan.",
+    messageWithoutMinVersion:
+      "Versi Arena Mobile ini tidak lagi didukung oleh server.\nPerbarui untuk melanjutkan.",
+    update: "Perbarui",
+  },
   backup: "Cadangan",
   changelog: "Log Perubahan",
   confirmExit: {

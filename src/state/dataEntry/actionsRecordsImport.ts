@@ -1,9 +1,11 @@
 import { JobStatus, Surveys } from "@openforis/arena-core";
 
+import { AppCompatibilityOperation } from "service/appCompatibilityService";
 import { RecordService } from "service/recordService";
 import { RecordsAndFilesImportJob } from "service/recordsAndFilesImportJob";
 import { JobMonitorActions } from "../jobMonitor/actions";
 import { MessageActions } from "../message";
+import { AppCompatibilityActions } from "../remoteConnection/actionsAppCompatibility";
 import { RemoteConnectionSelectors } from "../remoteConnection/selectors";
 import { SurveySelectors } from "../survey/selectors";
 import { ToastActions } from "../toast";
@@ -18,6 +20,9 @@ const handleImportErrors = ({
   errors = null,
   silent = false,
 }: any) => {
+  if (dispatch(AppCompatibilityActions.handleAppVersionNotSupportedError({ error, silent }))) {
+    return;
+  }
   const details = error?.toString() ?? JSON.stringify(errors);
   if (silent) {
     // an unattended fetch (see exportRecords: auto-sync replacing a record with its merged
@@ -166,6 +171,14 @@ export const fetchRecordsFromServer =
         const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
 
         if (!checkCanImportRecords({ dispatch, survey, silent })) return;
+
+        const appVersionSupported = await dispatch(
+          AppCompatibilityActions.checkAppVersionSupported({
+            operation: AppCompatibilityOperation.recordsDownload,
+            silent,
+          }),
+        );
+        if (!appVersionSupported) return;
 
         // files of those records already in the device don't need to be downloaded again
         const excludedFileUuids = await RecordService.findFileUuidsInDevice({
