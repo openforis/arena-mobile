@@ -1,4 +1,12 @@
 export default {
+  appVersionNotSupported: {
+    title: "Uppdatering krävs",
+    message:
+      "Den här versionen av Arena Mobile stöds inte längre av servern.\nUppdatera den till version {{minVersion}} eller senare för att fortsätta.",
+    messageWithoutMinVersion:
+      "Den här versionen av Arena Mobile stöds inte längre av servern.\nUppdatera den för att fortsätta.",
+    update: "Uppdatera",
+  },
   backup: "Säkerhetskopia",
   changelog: "Ändringslogg",
   confirmExit: {

@@ -1,4 +1,12 @@
 export default {
+  appVersionNotSupported: {
+    title: "Päivitys vaaditaan",
+    message:
+      "Palvelin ei enää tue tätä Arena Mobilen versiota.\nPäivitä se versioon {{minVersion}} tai uudempaan jatkaaksesi.",
+    messageWithoutMinVersion:
+      "Palvelin ei enää tue tätä Arena Mobilen versiota.\nPäivitä se jatkaaksesi.",
+    update: "Päivitä",
+  },
   backup: "Varmuuskopiointi",
   changelog: "Muutosloki",
   confirmExit: {

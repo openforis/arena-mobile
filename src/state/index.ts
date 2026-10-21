@@ -37,6 +37,7 @@ export {
 export type { PositionTrackingState } from "./positionTracking";
 
 export {
+  AppCompatibilityActions,
   RemoteConnectionActions,
   RemoteConnectionReducer,
   RemoteConnectionSelectors,
