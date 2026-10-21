@@ -59,7 +59,7 @@ export const GeoPolygonDraftOverlay = ({
             coordinate={coordinate}
             anchor={markerCenterAnchor}
           >
-            <RNView style={styles.markerContainer}>
+            <RNView collapsable={false} style={styles.markerContainer}>
               <RNView style={markerStyle} />
             </RNView>
           </Marker>

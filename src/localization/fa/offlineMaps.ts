@@ -99,15 +99,23 @@ export default {
     layer: "لایه",
     maxZoom: "حداکثر بزرگ‌نمایی: {{value}}",
     currentZoom: "بزرگ‌نمایی فعلی: {{value}}",
-    surface: "مساحت: {{area}}",
-    drawAreaToEstimate:
-      "منطقه مورد نظر را روی نقشه ترسیم کنید تا فضایی که اشغال می‌کند را ببینید",
-    estimate: "{{tiles}} کاشی · ~{{size}} (فضای خالی: {{freeSpace}})",
-    estimateTooManyTiles:
-      "{{tiles}} کاشی: بیش از حد (حداکثر {{maxTiles}})؛ منطقه یا حداکثر بزرگ‌نمایی را کاهش دهید",
     tooManyTiles:
       "منطقه بیش از حد بزرگ است: حداکثر {{maxTiles}} کاشی قابل دانلود است؛ منطقه یا حداکثر بزرگ‌نمایی را کاهش دهید",
     notEnoughSpace: "فضای خالی کافی در دستگاه وجود ندارد",
+    steps: {
+      name: "نام",
+      layer: "لایه نقشه",
+      zoom: "سطوح بزرگ‌نمایی",
+      zoomHint:
+        "حداکثر بزرگ‌نمایی بالاتر جزئیات بیشتری نشان می‌دهد اما به کاشی‌های بسیار بیشتری نیاز دارد: نقشه را بزرگ‌نمایی کنید تا سطح جزئیات هر بزرگ‌نمایی را ببینید.",
+      draw: "ترسیم منطقه",
+      drawSummary:
+        "{{area}} · {{tiles}} کاشی · ~{{size}} (خالی: {{freeSpace}})",
+      drawSummaryTooManyTiles:
+        "{{area}} · {{tiles}} کاشی: بیش از حد (حداکثر {{maxTiles}})",
+      drawSummaryEmpty: "منطقه مورد نظر را روی نقشه ترسیم کنید",
+      next: "بعدی",
+    },
     customLayerConfirm: {
       title: "لایه نقشه سفارشی",
       message:

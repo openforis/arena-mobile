@@ -97,14 +97,22 @@ export default {
     layer: "ንብርብር",
     maxZoom: "ከፍተኛ ማጉላት፦ {{value}}",
     currentZoom: "የአሁኑ ማጉላት፦ {{value}}",
-    surface: "ስፋት፦ {{area}}",
-    drawAreaToEstimate: "የሚይዘውን ቦታ ለማየት የሚፈልጉትን አካባቢ በካርታው ላይ ይሳሉ",
-    estimate: "{{tiles}} ታይሎች · ~{{size}} (ነፃ ቦታ፦ {{freeSpace}})",
-    estimateTooManyTiles:
-      "{{tiles}} ታይሎች፦ በጣም ብዙ (ከፍተኛ {{maxTiles}})፤ አካባቢውን ወይም ከፍተኛ ማጉላቱን ይቀንሱ",
     tooManyTiles:
       "አካባቢው በጣም ትልቅ ነው፦ ቢበዛ {{maxTiles}} ታይሎች ማውረድ ይቻላል፤ አካባቢውን ወይም ከፍተኛ ማጉላቱን ይቀንሱ",
     notEnoughSpace: "በመሣሪያው ላይ በቂ ነፃ ቦታ የለም",
+    steps: {
+      name: "ስም",
+      layer: "የካርታ ንብርብር",
+      zoom: "የማጉላት ደረጃዎች",
+      zoomHint:
+        "ከፍተኛ የማጉላት ደረጃዎች ተጨማሪ ዝርዝሮችን ያሳያሉ ነገር ግን በጣም ብዙ ተጨማሪ ታይሎችን ይፈልጋሉ፦ የእያንዳንዱን ማጉላት ዝርዝር ደረጃ ለማየት ካርታውን ያጉሉ።",
+      draw: "አካባቢውን ይሳሉ",
+      drawSummary: "{{area}} · {{tiles}} ታይሎች · ~{{size}} (ነፃ፦ {{freeSpace}})",
+      drawSummaryTooManyTiles:
+        "{{area}} · {{tiles}} ታይሎች፦ በጣም ብዙ (ከፍተኛ {{maxTiles}})",
+      drawSummaryEmpty: "የሚፈልጉትን አካባቢ በካርታው ላይ ይሳሉ",
+      next: "ቀጣይ",
+    },
     customLayerConfirm: {
       title: "ብጁ የካርታ ንብርብር",
       message:

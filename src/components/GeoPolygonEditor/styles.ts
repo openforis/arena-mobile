@@ -4,6 +4,8 @@ import { PixelRatio, StyleSheet } from "react-native";
 // (react-native-maps default) instead of having the size of their content:
 // the content is centered in a container with exactly that size and the marker is anchored
 // to its center, so that it is aligned to its coordinate with every screen density.
+// The container must not be flattened (collapsable={false}): the bitmap gets the size of the
+// first native child of the marker.
 const MARKER_BITMAP_SIZE_PIXELS = 100;
 const markerContainerSize = MARKER_BITMAP_SIZE_PIXELS / PixelRatio.get();
 
@@ -56,6 +58,22 @@ export default StyleSheet.create({
     top: 8,
     right: 8,
     zIndex: 1,
+  },
+  helperTextOverlay: {
+    position: "absolute",
+    top: 6,
+    left: 48,
+    right: 48,
+    alignItems: "center",
+  },
+  helperTextOverlayText: {
+    textAlign: "center",
+    color: "#ffffff",
+    backgroundColor: "rgba(0, 0, 0, 0.55)",
+    borderRadius: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    overflow: "hidden",
   },
   helperText: {
     textAlign: "center",
@@ -137,10 +155,16 @@ export default StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
+  toolbarCompact: {
+    paddingVertical: 0,
+  },
   toolbarTopRow: {
     alignItems: "center",
     justifyContent: "center",
     minHeight: 36,
+  },
+  toolbarTopRowCompact: {
+    minHeight: 0,
   },
   toolbarBottomRow: {
     alignItems: "center",
