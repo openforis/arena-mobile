@@ -268,6 +268,9 @@ Fetch the list of records from the server and try again?`,
       inAppDescription: "Works offline with downloaded maps",
       inAppDescriptionRelocatable:
         "Works offline with downloaded maps.\nThe position can be relocated",
+      otherApp: "Other app…",
+      otherAppDescription:
+        "Choose among all the installed apps that can show a location",
       show: "Show",
       targetViewerTitle: 'Target location of "{{attributeLabel}}"',
       viewerTitle: "Location",

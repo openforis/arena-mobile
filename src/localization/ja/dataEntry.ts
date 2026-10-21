@@ -263,6 +263,9 @@ export default {
       inAppDescription: "ダウンロード済みの地図でオフラインでも利用可能",
       inAppDescriptionRelocatable:
         "ダウンロード済みの地図でオフラインでも利用可能。\n位置を移動できます",
+      otherApp: "その他のアプリ…",
+      otherAppDescription:
+        "位置を表示できるインストール済みのアプリから選択",
       show: "表示",
       targetViewerTitle: "「{{attributeLabel}}」の目標位置",
       viewerTitle: "位置",

@@ -30,6 +30,7 @@ const openApp = async (appId: string, location: Location): Promise<void> => {
 
 export const MapAppsService = {
   inAppChoiceId,
+  otherAppChoiceId: MapAppsAdapter.otherAppChoiceId,
   loadChoices,
   openApp,
   rememberChoice,

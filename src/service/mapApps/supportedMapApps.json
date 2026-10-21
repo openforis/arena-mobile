@@ -1,5 +1,17 @@
 {
   "appIds": ["google-maps", "apple-maps", "osmand", "maps-me", "waze"],
   "iosQuerySchemes": ["comgooglemaps", "osmandmaps", "mapsme", "waze"],
-  "androidQuerySchemes": ["https", "applemaps", "osmand.geo", "mapsme", "waze"]
+  "androidQuerySchemes": ["https", "applemaps", "osmand.geo", "geo", "waze"],
+  "androidGeoApps": [
+    {
+      "id": "maps-me",
+      "name": "MAPS.ME",
+      "packages": ["com.mapswithme.maps.pro"]
+    },
+    {
+      "id": "organic-maps",
+      "name": "Organic Maps",
+      "packages": ["app.organicmaps", "app.organicmaps.web"]
+    }
+  ]
 }

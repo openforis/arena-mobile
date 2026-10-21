@@ -209,6 +209,9 @@ Haluatko hakea sen uudelleen palvelimelta?`,
       inAppDescription: "Toimii ilman verkkoyhteyttä ladattujen karttojen kanssa",
       inAppDescriptionRelocatable:
         "Toimii ilman verkkoyhteyttä ladattujen karttojen kanssa.\nSijaintia voi siirtää",
+      otherApp: "Muu sovellus…",
+      otherAppDescription:
+        "Valitse kaikista asennetuista sovelluksista, jotka voivat näyttää sijainnin",
       show: "Näytä",
       targetViewerTitle: 'Kohteen "{{attributeLabel}}" kohdesijainti',
       viewerTitle: "Sijainti",

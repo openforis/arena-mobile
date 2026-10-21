@@ -211,6 +211,9 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
       inAppDescription: "Berfungsi secara offline dengan peta yang diunduh",
       inAppDescriptionRelocatable:
         "Berfungsi secara offline dengan peta yang diunduh.\nPosisi dapat dipindahkan",
+      otherApp: "Aplikasi lain…",
+      otherAppDescription:
+        "Pilih di antara semua aplikasi terpasang yang dapat menampilkan lokasi",
       show: "Tampilkan",
       targetViewerTitle: 'Lokasi target "{{attributeLabel}}"',
       viewerTitle: "Lokasi",
