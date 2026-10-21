@@ -2,17 +2,9 @@ import { useCallback, useMemo, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { MD3Theme, useTheme } from "react-native-paper";
 
-import { NodeDefs, Records, Surveys } from "@openforis/arena-core";
+import { NodeDefs, Records } from "@openforis/arena-core";
 
-import {
-  Button,
-  HView,
-  Icon,
-  IconButton,
-  LoadingIcon,
-  Text,
-  VView,
-} from "components";
+import { Button, HView, Icon, LoadingIcon, Text, VView } from "components";
 import { usePositionTrackingSummary } from "hooks/usePositionTracking";
 import { useTranslation } from "localization";
 import { PositionTracks } from "model";
@@ -25,7 +17,11 @@ import {
 } from "state";
 
 import styles from "./styles";
-import { TrackDialog } from "./TrackDialog";
+import {
+  ActiveTrackingButtons,
+  ShowTrackButton,
+  useTrackNode,
+} from "./TrackButtons";
 
 const statusIcons: Record<PositionTrackingStatus, string> = {
   [PositionTrackingStatus.idle]: "map-marker-path",
@@ -35,20 +31,6 @@ const statusIcons: Record<PositionTrackingStatus, string> = {
 };
 
 type Summary = ReturnType<typeof usePositionTrackingSummary>;
-
-const useTrackNode = (nodeUuid: string | null | undefined) => {
-  const survey = SurveySelectors.useCurrentSurvey();
-  const record = DataEntrySelectors.useRecord();
-  return useMemo(() => {
-    const node =
-      record && nodeUuid ? Records.getNodeByUuid(nodeUuid)(record) : null;
-    const nodeDef =
-      survey && node
-        ? Surveys.getNodeDefByUuid({ survey, uuid: node.nodeDefUuid })
-        : null;
-    return { node, nodeDef };
-  }, [nodeUuid, record, survey]);
-};
 
 const DeleteTrackButton = ({ nodeUuid }: { nodeUuid: string }) => {
   const dispatch = useAppDispatch();
@@ -64,31 +46,6 @@ const DeleteTrackButton = ({ nodeUuid }: { nodeUuid: string }) => {
       onPress={onPress}
       textKey="dataEntry:positionTracking.delete"
     />
-  );
-};
-
-// shows the track on a map in a dialog
-const ShowTrackButton = ({ nodeUuid }: { nodeUuid: string }) => {
-  const { node, nodeDef } = useTrackNode(nodeUuid);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const openDialog = useCallback(() => setDialogOpen(true), []);
-  const closeDialog = useCallback(() => setDialogOpen(false), []);
-
-  if (!node || !nodeDef) return null;
-
-  return (
-    <>
-      <Button
-        compact
-        icon="map-search-outline"
-        color="secondary"
-        onPress={openDialog}
-        textKey="dataEntry:positionTracking.showTrack"
-      />
-      {dialogOpen && (
-        <TrackDialog node={node} nodeDef={nodeDef} onDismiss={closeDialog} />
-      )}
-    </>
   );
 };
 
@@ -308,28 +265,13 @@ const getActiveBarTone = ({
 
 // track being recorded or paused: summary, expandable to show the tracking buttons
 const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
-  const dispatch = useAppDispatch();
   const theme = useTheme();
   const { t } = useTranslation();
-
-  const canEditRecord = DataEntrySelectors.useCanEditRecord();
 
   const { status, nodeUuid, errorKey, tracking, waitingForFix, pointsCount } =
     summary;
 
   const { expanded, toggleExpanded } = useExpanded();
-
-  const onPause = useCallback(
-    () => dispatch(PositionTrackingActions.pauseTracking()),
-    [dispatch],
-  );
-  const onResume = useCallback(
-    () => dispatch(PositionTrackingActions.resumeTracking()),
-    [dispatch],
-  );
-  const onStop = useCallback(async () => {
-    await dispatch(PositionTrackingActions.stopTracking());
-  }, [dispatch]);
 
   const { containerStyle, detailsStyle, textColor } = useBarColors(
     getActiveBarTone(summary),
@@ -359,23 +301,7 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
             textParams={{ count: pointsCount }}
           />
           {errorKey && <Text variant="bodySmall" textKey={errorKey} />}
-          <HView style={styles.buttons}>
-            {/* record edit locked (or not editable): the track can only be viewed */}
-            {canEditRecord && tracking && (
-              <IconButton icon="pause" onPress={onPause} size={32} />
-            )}
-            {canEditRecord && !tracking && (
-              <IconButton icon="play" onPress={onResume} size={32} />
-            )}
-            {nodeUuid && <ShowTrackButton nodeUuid={nodeUuid} />}
-            {canEditRecord && (
-              <IconButton
-                icon="stop"
-                iconColor={theme.colors.error}
-                onPress={onStop}
-              />
-            )}
-          </HView>
+          {nodeUuid && <ActiveTrackingButtons nodeUuid={nodeUuid} />}
         </VView>
       )}
     </VView>
