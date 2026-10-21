@@ -52,7 +52,7 @@ export const GeoVertexMarker = ({
       onDragEnd?.(draggedCoordinate);
     }}
   >
-    <RNView style={styles.markerContainer}>
+    <RNView collapsable={false} style={styles.markerContainer}>
       <RNView style={outerStyle}>
         <RNView style={coreStyle} />
       </RNView>
