@@ -24,4 +24,8 @@ export default StyleSheet.create({
     gap: 24,
     justifyContent: "center",
   },
+  // extra space from the other buttons, to avoid pressing it by mistake
+  stopButton: {
+    marginStart: 24,
+  },
 });

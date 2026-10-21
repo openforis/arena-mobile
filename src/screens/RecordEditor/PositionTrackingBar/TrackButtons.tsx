@@ -90,6 +90,8 @@ export const ActiveTrackingButtons = ({ nodeUuid }: { nodeUuid: string }) => {
           icon="stop"
           iconColor={theme.colors.error}
           onPress={onStop}
+          size={32}
+          style={styles.stopButton}
         />
       )}
     </HView>
