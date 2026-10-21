@@ -204,6 +204,9 @@ Sus valores serán borrados.
       inAppDescription: "Funciona sin conexión con mapas descargados",
       inAppDescriptionRelocatable:
         "Funciona sin conexión con mapas descargados.\nLa posición se puede reubicar",
+      otherApp: "Otra aplicación…",
+      otherAppDescription:
+        "Elige entre todas las aplicaciones instaladas que pueden mostrar una ubicación",
       show: "Mostrar",
       targetViewerTitle: 'Ubicación objetivo de "{{attributeLabel}}"',
       viewerTitle: "Ubicación",

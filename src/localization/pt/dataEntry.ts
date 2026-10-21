@@ -204,6 +204,9 @@ Deseja obtê-las novamente do servidor?`,
       inAppDescription: "Funciona offline com mapas descarregados",
       inAppDescriptionRelocatable:
         "Funciona offline com mapas descarregados.\nA posição pode ser reposicionada",
+      otherApp: "Outra aplicação…",
+      otherAppDescription:
+        "Escolha entre todas as aplicações instaladas que podem mostrar uma localização",
       show: "Mostrar",
       targetViewerTitle: 'Localização alvo de "{{attributeLabel}}"',
       viewerTitle: "Localização",

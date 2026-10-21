@@ -210,6 +210,9 @@ Vill du hämta den igen från servern?`,
       inAppDescription: "Fungerar offline med nedladdade kartor",
       inAppDescriptionRelocatable:
         "Fungerar offline med nedladdade kartor.\nPositionen kan flyttas",
+      otherApp: "Annan app…",
+      otherAppDescription:
+        "Välj bland alla installerade appar som kan visa en plats",
       show: "Visa",
       targetViewerTitle: 'Målposition för "{{attributeLabel}}"',
       viewerTitle: "Plats",

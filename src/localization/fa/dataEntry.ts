@@ -208,6 +208,9 @@ export default {
       inAppDescription: "با نقشه‌های دانلودشده به‌صورت آفلاین کار می‌کند",
       inAppDescriptionRelocatable:
         "با نقشه‌های دانلودشده به‌صورت آفلاین کار می‌کند.\nموقعیت قابل جابه‌جایی است",
+      otherApp: "برنامه دیگر…",
+      otherAppDescription:
+        "از میان همه برنامه‌های نصب‌شده‌ای که می‌توانند یک مکان را نشان دهند انتخاب کنید",
       show: "نمایش",
       targetViewerTitle: "موقعیت هدف «{{attributeLabel}}»",
       viewerTitle: "موقعیت",
