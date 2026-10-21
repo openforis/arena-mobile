@@ -16,7 +16,8 @@ export default StyleSheet.create({
     paddingHorizontal: 6,
   },
   stepBadge: {
-    width: 20,
+    minWidth: 20,
+    paddingHorizontal: 4,
     height: 20,
     borderRadius: 10,
     alignItems: "center",

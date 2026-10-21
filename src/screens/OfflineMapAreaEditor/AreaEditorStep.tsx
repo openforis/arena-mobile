@@ -6,7 +6,11 @@ import { Button, HView, Icon, Text, VView } from "components";
 import styles from "./styles";
 
 type AreaEditorStepProps = {
+  // shown in the badge in place of the step number
+  badgeText?: string;
   children?: React.ReactNode;
+  // shows the expand/collapse icon (default: true when the step has content)
+  collapsible?: boolean;
   completed?: boolean;
   expanded: boolean;
   index: number;
@@ -16,11 +20,13 @@ type AreaEditorStepProps = {
   summaryIsError?: boolean;
   // when true, the step has no content: only the summary is shown, in place of the title
   summaryOnly?: boolean;
-  titleKey: string;
+  // required unless summaryOnly is true
+  titleKey?: string;
 };
 
 export const AreaEditorStep = (props: AreaEditorStepProps) => {
   const {
+    badgeText,
     children,
     completed = false,
     expanded,
@@ -32,6 +38,7 @@ export const AreaEditorStep = (props: AreaEditorStepProps) => {
     summaryOnly = false,
     titleKey,
   } = props;
+  const { collapsible = !summaryOnly } = props;
 
   const theme = useTheme();
 
@@ -53,7 +60,7 @@ export const AreaEditorStep = (props: AreaEditorStepProps) => {
               { backgroundColor: badgeBackgroundColor },
             ]}
           >
-            {completed && !expanded ? (
+            {completed && !expanded && !badgeText ? (
               <Icon color={theme.colors.onPrimary} size={14} source="check" />
             ) : (
               <Text
@@ -62,7 +69,7 @@ export const AreaEditorStep = (props: AreaEditorStepProps) => {
                   { color: theme.colors.onPrimary },
                 ]}
               >
-                {String(index + 1)}
+                {badgeText ?? String(index + 1)}
               </Text>
             )}
           </VView>
@@ -86,7 +93,7 @@ export const AreaEditorStep = (props: AreaEditorStepProps) => {
               {summary}
             </Text>
           )}
-          {!summaryOnly && (
+          {collapsible && (
             <Icon source={expanded ? "chevron-up" : "chevron-down"} size={20} />
           )}
         </HView>

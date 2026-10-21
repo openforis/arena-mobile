@@ -287,85 +287,108 @@ export const OfflineMapAreaEditorScreen = () => {
       : t("offlineMaps:areaEditor.steps.drawSummary", params);
   })();
 
+  const settingsSummary = [
+    effectiveName,
+    MapLayers.getLayerLabel(layer, t),
+    t("offlineMaps:areaEditor.maxZoom", { value: effectiveMaxZoom }),
+  ].join(" · ");
+
   const headerContent = (
     <VView style={styles.header}>
-      <AreaEditorStep
-        completed
-        expanded={activeStep === "name"}
-        index={0}
-        onNextPress={() => setActiveStep("layer")}
-        onPress={() => toggleStep("name")}
-        summary={effectiveName}
-        summaryIsError={!!nameErrorKey}
-        titleKey="offlineMaps:areaEditor.steps.name"
-      >
-        <TextInput
-          error={!!nameErrorKey}
-          label="offlineMaps:areaEditor.name"
-          onChange={setName}
-          value={name}
+      {activeStep === "draw" ? (
+        // while drawing, steps 1-3 are merged into a single row to leave more space to the map
+        <AreaEditorStep
+          badgeText="1-3"
+          collapsible
+          completed
+          expanded={false}
+          index={0}
+          onPress={() => setActiveStep(null)}
+          summary={settingsSummary}
+          summaryIsError={!!nameErrorKey}
+          summaryOnly
         />
-        {nameErrorKey && (
-          <Text style={styles.estimateTextError} textKey={nameErrorKey} />
-        )}
-      </AreaEditorStep>
-      <AreaEditorStep
-        completed
-        expanded={activeStep === "layer"}
-        index={1}
-        onNextPress={() => setActiveStep("zoom")}
-        onPress={() => toggleStep("layer")}
-        summary={MapLayers.getLayerLabel(layer, t)}
-        titleKey="offlineMaps:areaEditor.steps.layer"
-      >
-        <Dropdown
-          items={layerItems}
-          translateItemLabels={false}
-          label="offlineMaps:areaEditor.layer"
-          onChange={onLayerChange}
-          value={layerId}
-        />
-      </AreaEditorStep>
-      <AreaEditorStep
-        completed
-        expanded={activeStep === "zoom"}
-        index={2}
-        onNextPress={() => setActiveStep("draw")}
-        onPress={() => toggleStep("zoom")}
-        summary={t("offlineMaps:areaEditor.maxZoom", {
-          value: effectiveMaxZoom,
-        })}
-        titleKey="offlineMaps:areaEditor.steps.zoom"
-      >
-        <HView style={styles.zoomRow}>
-          <Text
-            style={styles.zoomLabel}
-            textKey="offlineMaps:areaEditor.maxZoom"
-            textParams={{ value: effectiveMaxZoom }}
-          />
-          <VView style={styles.zoomSlider}>
-            <Slider
-              minValue={OfflineMapsService.MIN_SELECTABLE_MAX_ZOOM}
-              maxValue={layer.maxZoom}
-              step={1}
-              value={effectiveMaxZoom}
-              onValueChange={setMaxZoom}
+      ) : (
+        <>
+          <AreaEditorStep
+            completed
+            expanded={activeStep === "name"}
+            index={0}
+            onNextPress={() => setActiveStep("layer")}
+            onPress={() => toggleStep("name")}
+            summary={effectiveName}
+            summaryIsError={!!nameErrorKey}
+            titleKey="offlineMaps:areaEditor.steps.name"
+          >
+            <TextInput
+              error={!!nameErrorKey}
+              label="offlineMaps:areaEditor.name"
+              onChange={setName}
+              value={name}
             />
-          </VView>
-        </HView>
-        {currentZoom !== null && (
-          <Text
-            style={styles.zoomLabel}
-            textKey="offlineMaps:areaEditor.currentZoom"
-            textParams={{ value: currentZoom }}
-          />
-        )}
-        <Text
-          style={styles.stepHint}
-          textKey="offlineMaps:areaEditor.steps.zoomHint"
-          variant="bodySmall"
-        />
-      </AreaEditorStep>
+            {nameErrorKey && (
+              <Text style={styles.estimateTextError} textKey={nameErrorKey} />
+            )}
+          </AreaEditorStep>
+          <AreaEditorStep
+            completed
+            expanded={activeStep === "layer"}
+            index={1}
+            onNextPress={() => setActiveStep("zoom")}
+            onPress={() => toggleStep("layer")}
+            summary={MapLayers.getLayerLabel(layer, t)}
+            titleKey="offlineMaps:areaEditor.steps.layer"
+          >
+            <Dropdown
+              items={layerItems}
+              translateItemLabels={false}
+              label="offlineMaps:areaEditor.layer"
+              onChange={onLayerChange}
+              value={layerId}
+            />
+          </AreaEditorStep>
+          <AreaEditorStep
+            completed
+            expanded={activeStep === "zoom"}
+            index={2}
+            onNextPress={() => setActiveStep("draw")}
+            onPress={() => toggleStep("zoom")}
+            summary={t("offlineMaps:areaEditor.maxZoom", {
+              value: effectiveMaxZoom,
+            })}
+            titleKey="offlineMaps:areaEditor.steps.zoom"
+          >
+            <HView style={styles.zoomRow}>
+              <Text
+                style={styles.zoomLabel}
+                textKey="offlineMaps:areaEditor.maxZoom"
+                textParams={{ value: effectiveMaxZoom }}
+              />
+              <VView style={styles.zoomSlider}>
+                <Slider
+                  minValue={OfflineMapsService.MIN_SELECTABLE_MAX_ZOOM}
+                  maxValue={layer.maxZoom}
+                  step={1}
+                  value={effectiveMaxZoom}
+                  onValueChange={setMaxZoom}
+                />
+              </VView>
+            </HView>
+            {currentZoom !== null && (
+              <Text
+                style={styles.zoomLabel}
+                textKey="offlineMaps:areaEditor.currentZoom"
+                textParams={{ value: currentZoom }}
+              />
+            )}
+            <Text
+              style={styles.stepHint}
+              textKey="offlineMaps:areaEditor.steps.zoomHint"
+              variant="bodySmall"
+            />
+          </AreaEditorStep>
+        </>
+      )}
       <AreaEditorStep
         completed={coordinates.length >= 3}
         expanded={activeStep === "draw"}
