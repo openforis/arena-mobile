@@ -106,7 +106,6 @@ export const AreaEditorStep = (props: AreaEditorStepProps) => {
               <Button
                 compact
                 icon="arrow-right"
-                mode="contained-tonal"
                 onPress={onNextPress}
                 textKey="offlineMaps:areaEditor.steps.next"
               />
