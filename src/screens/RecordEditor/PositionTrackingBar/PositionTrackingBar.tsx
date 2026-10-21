@@ -362,10 +362,10 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
           <HView style={styles.buttons}>
             {/* record edit locked (or not editable): the track can only be viewed */}
             {canEditRecord && tracking && (
-              <IconButton icon="pause" onPress={onPause} />
+              <IconButton icon="pause" onPress={onPause} size={32} />
             )}
             {canEditRecord && !tracking && (
-              <IconButton icon="play" onPress={onResume} />
+              <IconButton icon="play" onPress={onResume} size={32} />
             )}
             {canEditRecord && (
               <IconButton
