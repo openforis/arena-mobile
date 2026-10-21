@@ -4,6 +4,8 @@ import { PixelRatio, StyleSheet } from "react-native";
 // (react-native-maps default) instead of having the size of their content:
 // the content is centered in a container with exactly that size and the marker is anchored
 // to its center, so that it is aligned to its coordinate with every screen density.
+// No elevation in marker styles: on Android it crops the view drawn into the marker bitmap
+// (shadow* properties are used only on iOS).
 const MARKER_BITMAP_SIZE_PIXELS = 100;
 const markerContainerSize = MARKER_BITMAP_SIZE_PIXELS / PixelRatio.get();
 
@@ -34,7 +36,6 @@ const vertexPointDraggingStyle = {
   shadowOffset: { width: 0, height: 3 },
   shadowOpacity: 0.5,
   shadowRadius: 6,
-  elevation: 8,
 } as const;
 
 export default StyleSheet.create({
@@ -104,7 +105,6 @@ export default StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.25,
     shadowRadius: 2,
-    elevation: 2,
   },
   midpointDragging: {
     ...vertexPointDraggingStyle,
@@ -127,7 +127,6 @@ export default StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.45,
     shadowRadius: 4,
-    elevation: 6,
   },
   vertexPointDragging: {
     ...vertexPointDraggingStyle,
