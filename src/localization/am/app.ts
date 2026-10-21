@@ -1,4 +1,12 @@
 export default {
+  appVersionNotSupported: {
+    title: "ማዘመን ያስፈልጋል",
+    message:
+      "ይህ የArena Mobile ስሪት በአገልጋዩ አይደገፍም።\nለመቀጠል ወደ ስሪት {{minVersion}} ወይም ከዚያ በላይ ያዘምኑት።",
+    messageWithoutMinVersion:
+      "ይህ የArena Mobile ስሪት በአገልጋዩ አይደገፍም።\nለመቀጠል ያዘምኑት።",
+    update: "አዘምን",
+  },
   backup: "ምትኬ",
   changelog: "የለውጥ መዝገብ",
   confirmExit: {

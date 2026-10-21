@@ -1,8 +1,13 @@
 import { Dictionary } from "@openforis/arena-core";
 
+import { SystemUtils } from "utils/SystemUtils";
+
 import { API } from "./api";
 import { SettingsService } from "./settingsService";
 import { AuthService } from "./authService";
+
+// checked by the server to reject requests from app versions it doesn't support anymore
+const appVersionHeader = "X-Arena-Mobile-App-Version";
 
 const statusToErrorKey: Record<string, string> = {
   500: "internal_server_error",
@@ -22,10 +27,11 @@ const handleError = ({ error }: any): { errorKey: string } => {
 const getServerUrl = async () =>
   (await SettingsService.fetchSettings()).serverUrl;
 
-const attachAuthenticationHeaders = (config: Dictionary<any> = {}) => {
+const attachHeaders = (config: Dictionary<any> = {}) => {
   const headers = {
     ...config?.headers,
     ...AuthService.generateAuthorizationHeaders(),
+    [appVersionHeader]: SystemUtils.getRecordAppInfo().version,
   };
   return { ...config, headers };
 };
@@ -62,7 +68,7 @@ const get = async (uri: string, data?: Dictionary<any>, config = {}) => {
       serverUrl,
       uri,
       data,
-      config: attachAuthenticationHeaders(config),
+      config: attachHeaders(config),
     });
   return withRetry(sendRequest);
 };
@@ -74,7 +80,7 @@ const getFile = async (uri: string, data?: Dictionary<any>) => {
       serverUrl,
       uri,
       data,
-      config: attachAuthenticationHeaders(),
+      config: attachHeaders(),
     });
   return withRetry(sendRequest);
 };
@@ -86,7 +92,7 @@ const post = async (uri: string, data?: Dictionary<any>) => {
       serverUrl,
       uri,
       data,
-      config: attachAuthenticationHeaders(),
+      config: attachHeaders(),
     });
   return withRetry(sendRequest);
 };
@@ -97,7 +103,7 @@ const del = async (uri: string) => {
     API.del({
       serverUrl,
       uri,
-      config: attachAuthenticationHeaders(),
+      config: attachHeaders(),
     });
   return withRetry(sendRequest);
 };
@@ -115,7 +121,7 @@ const postCancelableMultipartData = async (
         serverUrl,
         uri,
         data,
-        config: attachAuthenticationHeaders(config),
+        config: attachHeaders(config),
       }),
     );
   return withRetry(sendRequest);
@@ -133,7 +139,7 @@ const postMultipartData = async (
       serverUrl,
       uri,
       data,
-      config: attachAuthenticationHeaders(config),
+      config: attachHeaders(config),
     });
   return withRetry(sendRequest);
 };
