@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { ReactNode, useMemo } from "react";
 
 import { NodeDefs, Objects } from "@openforis/arena-core";
 
@@ -24,8 +24,12 @@ import { useQualifierAttributeLocked } from "./useQualifierAttributeLock";
 
 import { useStyles } from "./styles";
 
-export const NodeDefFormItem = (props: NodeComponentProps) => {
-  const { nodeDef, parentNodeUuid, onFocus } = props;
+type NodeDefFormItemProps = NodeComponentProps & {
+  headerEndAccessory?: ReactNode;
+};
+
+export const NodeDefFormItem = (props: NodeDefFormItemProps) => {
+  const { headerEndAccessory, nodeDef, parentNodeUuid, onFocus } = props;
 
   log.debug(`rendering NodeDefFormItem for ${NodeDefs.getName(nodeDef)}`);
 
@@ -122,6 +126,7 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
     () => (
       <VView style={formItemComponentStyle}>
         <NodeDefFormItemHeader
+          endAccessory={headerEndAccessory}
           nodeDef={nodeDef}
           parentNodeUuid={parentNodeUuid}
           startAccessory={keyAttributeLockButton}
@@ -148,6 +153,7 @@ export const NodeDefFormItem = (props: NodeComponentProps) => {
     [
       showNodeComponentSwitch,
       formItemComponentStyle,
+      headerEndAccessory,
       includedInPreviousCycleLink,
       internalContainerStyle,
       isLinkedToPreviousCycleRecord,
