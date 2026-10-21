@@ -417,5 +417,41 @@ describe("PositionTrackingActions", () => {
       expect(getTrackedNodeValue(store)).toEqual(trackValue);
       expect(PositionTrackingService.start).not.toHaveBeenCalled();
     });
+
+    test("delete clears the recorded track after confirmation", async () => {
+      const store = createStoreWithTrack();
+      await store.dispatch(
+        PositionTrackingActions.deleteTrack({ nodeUuid: "track-node" }) as any,
+      );
+      expect(mockConfirm).toHaveBeenCalledTimes(1);
+      expect(getTrackedNodeValue(store)).toBeNull();
+      expect(PositionTrackingService.start).not.toHaveBeenCalled();
+    });
+
+    test("delete keeps the recorded track when not confirmed", async () => {
+      mockConfirm.mockImplementation(async () => null);
+      const store = createStoreWithTrack();
+      await store.dispatch(
+        PositionTrackingActions.deleteTrack({ nodeUuid: "track-node" }) as any,
+      );
+      expect(getTrackedNodeValue(store)).toEqual(trackValue);
+    });
+
+    test("delete is not possible while tracking", async () => {
+      const store = createStoreWithTrack();
+      await store.dispatch(
+        PositionTrackingActions.startTracking({
+          nodeUuid: "track-node",
+        }) as any,
+      );
+      await store.dispatch(
+        PositionTrackingActions.deleteTrack({ nodeUuid: "track-node" }) as any,
+      );
+      expect(mockConfirm).not.toHaveBeenCalled();
+      expect(getTrackedNodeValue(store)).toEqual(trackValue);
+      await store.dispatch(
+        PositionTrackingActions.stopTracking({ confirm: false }) as any,
+      );
+    });
   });
 });
