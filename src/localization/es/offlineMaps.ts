@@ -100,15 +100,23 @@ export default {
     layer: "Capa",
     maxZoom: "Zoom máximo: {{value}}",
     currentZoom: "Zoom actual: {{value}}",
-    surface: "Área: {{area}}",
-    drawAreaToEstimate:
-      "Dibuja el área de interés en el mapa para ver el espacio que ocupará",
-    estimate: "{{tiles}} teselas · ~{{size}} (espacio libre: {{freeSpace}})",
-    estimateTooManyTiles:
-      "{{tiles}} teselas: demasiadas (máx. {{maxTiles}}); reduce el área o el zoom máximo",
     tooManyTiles:
       "El área es demasiado grande: se pueden descargar como máximo {{maxTiles}} teselas; reduce el área o el zoom máximo",
     notEnoughSpace: "No hay suficiente espacio libre en el dispositivo",
+    steps: {
+      name: "Nombre",
+      layer: "Capa del mapa",
+      zoom: "Niveles de zoom",
+      zoomHint:
+        "Los niveles de zoom máximo más altos muestran más detalles pero requieren muchas más teselas: haz zoom en el mapa para ver el nivel de detalle de cada zoom.",
+      draw: "Dibujar área",
+      drawSummary:
+        "{{area}} · {{tiles}} teselas · ~{{size}} (libre: {{freeSpace}})",
+      drawSummaryTooManyTiles:
+        "{{area}} · {{tiles}} teselas: demasiadas (máx. {{maxTiles}})",
+      drawSummaryEmpty: "Dibuja el área de interés en el mapa",
+      next: "Siguiente",
+    },
     customLayerConfirm: {
       title: "Capa de mapa personalizada",
       message:

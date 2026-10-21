@@ -99,15 +99,23 @@ export default {
     layer: "Lapisan",
     maxZoom: "Zoom maks: {{value}}",
     currentZoom: "Zoom saat ini: {{value}}",
-    surface: "Luas: {{area}}",
-    drawAreaToEstimate:
-      "Gambar area yang diminati pada peta untuk melihat ruang yang akan digunakan",
-    estimate: "{{tiles}} ubin · ~{{size}} (ruang kosong: {{freeSpace}})",
-    estimateTooManyTiles:
-      "{{tiles}} ubin: terlalu banyak (maks {{maxTiles}}); perkecil area atau zoom maks",
     tooManyTiles:
       "Area terlalu besar: maksimal {{maxTiles}} ubin dapat diunduh; perkecil area atau zoom maks",
     notEnoughSpace: "Ruang kosong di perangkat tidak cukup",
+    steps: {
+      name: "Nama",
+      layer: "Lapisan peta",
+      zoom: "Tingkat zoom",
+      zoomHint:
+        "Zoom maks yang lebih tinggi menampilkan lebih banyak detail tetapi memerlukan jauh lebih banyak ubin: perbesar peta untuk melihat tingkat detail setiap zoom.",
+      draw: "Gambar area",
+      drawSummary:
+        "{{area}} · {{tiles}} ubin · ~{{size}} (kosong: {{freeSpace}})",
+      drawSummaryTooManyTiles:
+        "{{area}} · {{tiles}} ubin: terlalu banyak (maks {{maxTiles}})",
+      drawSummaryEmpty: "Gambar area yang diminati pada peta",
+      next: "Berikutnya",
+    },
     customLayerConfirm: {
       title: "Lapisan peta kustom",
       message:

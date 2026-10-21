@@ -100,15 +100,23 @@ export default {
     layer: "レイヤー",
     maxZoom: "最大ズーム: {{value}}",
     currentZoom: "現在のズーム: {{value}}",
-    surface: "面積: {{area}}",
-    drawAreaToEstimate:
-      "地図上に対象エリアを描画すると、必要な容量が表示されます",
-    estimate: "{{tiles}} タイル · 約{{size}} (空き容量: {{freeSpace}})",
-    estimateTooManyTiles:
-      "{{tiles}} タイル: 多すぎます (最大 {{maxTiles}})。エリアまたは最大ズームを小さくしてください",
     tooManyTiles:
       "エリアが大きすぎます。ダウンロードできるのは最大 {{maxTiles}} タイルです。エリアまたは最大ズームを小さくしてください",
     notEnoughSpace: "デバイスの空き容量が不足しています",
+    steps: {
+      name: "名前",
+      layer: "地図レイヤー",
+      zoom: "ズームレベル",
+      zoomHint:
+        "最大ズームを高くすると詳細に表示されますが、必要なタイル数が大幅に増えます。地図をズームして各ズームの詳細度を確認してください。",
+      draw: "エリアを描画",
+      drawSummary:
+        "{{area}} · {{tiles}} タイル · 約{{size}} (空き: {{freeSpace}})",
+      drawSummaryTooManyTiles:
+        "{{area}} · {{tiles}} タイル: 多すぎます (最大 {{maxTiles}})",
+      drawSummaryEmpty: "地図上に対象エリアを描画してください",
+      next: "次へ",
+    },
     customLayerConfirm: {
       title: "カスタム地図レイヤー",
       message:

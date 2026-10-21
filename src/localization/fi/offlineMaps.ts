@@ -100,15 +100,23 @@ export default {
     layer: "Taso",
     maxZoom: "Suurin zoomaus: {{value}}",
     currentZoom: "Nykyinen zoomaus: {{value}}",
-    surface: "Pinta-ala: {{area}}",
-    drawAreaToEstimate:
-      "Piirrä kiinnostuksen kohteena oleva alue kartalle nähdäksesi sen viemän tilan",
-    estimate: "{{tiles}} karttaruutua · ~{{size}} (vapaa tila: {{freeSpace}})",
-    estimateTooManyTiles:
-      "{{tiles}} karttaruutua: liikaa (enintään {{maxTiles}}); pienennä aluetta tai suurinta zoomausta",
     tooManyTiles:
       "Alue on liian suuri: enintään {{maxTiles}} karttaruutua voidaan ladata; pienennä aluetta tai suurinta zoomausta",
     notEnoughSpace: "Laitteessa ei ole tarpeeksi vapaata tilaa",
+    steps: {
+      name: "Nimi",
+      layer: "Karttataso",
+      zoom: "Zoomaustasot",
+      zoomHint:
+        "Suuremmat zoomaustasot näyttävät enemmän yksityiskohtia, mutta vaativat paljon enemmän karttaruutuja: zoomaa karttaa nähdäksesi kunkin zoomaustason yksityiskohdat.",
+      draw: "Piirrä alue",
+      drawSummary:
+        "{{area}} · {{tiles}} karttaruutua · ~{{size}} (vapaana: {{freeSpace}})",
+      drawSummaryTooManyTiles:
+        "{{area}} · {{tiles}} karttaruutua: liikaa (enintään {{maxTiles}})",
+      drawSummaryEmpty: "Piirrä kiinnostuksen kohteena oleva alue kartalle",
+      next: "Seuraava",
+    },
     customLayerConfirm: {
       title: "Mukautettu karttataso",
       message:

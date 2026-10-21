@@ -100,15 +100,23 @@ export default {
     layer: "Ebene",
     maxZoom: "Max. Zoom: {{value}}",
     currentZoom: "Aktueller Zoom: {{value}}",
-    surface: "Fläche: {{area}}",
-    drawAreaToEstimate:
-      "Zeichnen Sie das Interessengebiet auf der Karte, um den benötigten Speicherplatz zu sehen",
-    estimate: "{{tiles}} Kacheln · ~{{size}} (freier Speicher: {{freeSpace}})",
-    estimateTooManyTiles:
-      "{{tiles}} Kacheln: zu viele (max. {{maxTiles}}); verkleinern Sie das Gebiet oder den max. Zoom",
     tooManyTiles:
       "Das Gebiet ist zu groß: Es können höchstens {{maxTiles}} Kacheln heruntergeladen werden; verkleinern Sie das Gebiet oder den max. Zoom",
     notEnoughSpace: "Nicht genügend freier Speicher auf dem Gerät",
+    steps: {
+      name: "Name",
+      layer: "Kartenebene",
+      zoom: "Zoomstufen",
+      zoomHint:
+        "Höhere max. Zoomstufen zeigen mehr Details, erfordern aber deutlich mehr Kacheln: Zoomen Sie die Karte, um den Detailgrad jeder Zoomstufe zu sehen.",
+      draw: "Gebiet zeichnen",
+      drawSummary:
+        "{{area}} · {{tiles}} Kacheln · ~{{size}} (frei: {{freeSpace}})",
+      drawSummaryTooManyTiles:
+        "{{area}} · {{tiles}} Kacheln: zu viele (max. {{maxTiles}})",
+      drawSummaryEmpty: "Zeichnen Sie das Interessengebiet auf der Karte",
+      next: "Weiter",
+    },
     customLayerConfirm: {
       title: "Benutzerdefinierte Kartenebene",
       message:

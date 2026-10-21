@@ -100,15 +100,23 @@ export default {
     layer: "Camada",
     maxZoom: "Zoom máximo: {{value}}",
     currentZoom: "Zoom atual: {{value}}",
-    surface: "Área: {{area}}",
-    drawAreaToEstimate:
-      "Desenhe a área de interesse no mapa para ver o espaço que ela ocupará",
-    estimate: "{{tiles}} blocos · ~{{size}} (espaço livre: {{freeSpace}})",
-    estimateTooManyTiles:
-      "{{tiles}} blocos: demais (máx. {{maxTiles}}); reduza a área ou o zoom máximo",
     tooManyTiles:
       "A área é grande demais: no máximo {{maxTiles}} blocos podem ser baixados; reduza a área ou o zoom máximo",
     notEnoughSpace: "Espaço livre insuficiente no dispositivo",
+    steps: {
+      name: "Nome",
+      layer: "Camada do mapa",
+      zoom: "Níveis de zoom",
+      zoomHint:
+        "Níveis de zoom máximo mais altos mostram mais detalhes, mas exigem muito mais blocos: aproxime o mapa para ver o nível de detalhe de cada zoom.",
+      draw: "Desenhar área",
+      drawSummary:
+        "{{area}} · {{tiles}} blocos · ~{{size}} (livre: {{freeSpace}})",
+      drawSummaryTooManyTiles:
+        "{{area}} · {{tiles}} blocos: demais (máx. {{maxTiles}})",
+      drawSummaryEmpty: "Desenhe a área de interesse no mapa",
+      next: "Próximo",
+    },
     customLayerConfirm: {
       title: "Camada de mapa personalizada",
       message:

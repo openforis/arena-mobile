@@ -100,12 +100,6 @@ export default {
     layer: "Layer",
     maxZoom: "Max zoom: {{value}}",
     currentZoom: "Current zoom: {{value}}",
-    surface: "Area: {{area}}",
-    drawAreaToEstimate:
-      "Draw the area of interest on the map to see the space it will occupy",
-    estimate: "{{tiles}} tiles · ~{{size}} (free space: {{freeSpace}})",
-    estimateTooManyTiles:
-      "{{tiles}} tiles: too many (max {{maxTiles}}); reduce the area or the max zoom",
     tooManyTiles:
       "The area is too big: max {{maxTiles}} tiles can be downloaded; reduce the area or the max zoom",
     notEnoughSpace: "Not enough free space on the device",
