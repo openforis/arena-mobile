@@ -14,6 +14,7 @@ import {
 } from "state";
 
 import { TrackMapView } from "../../../NodeValuePreview/TrackMapView";
+import { ActiveTrackingButtons } from "../../../PositionTrackingBar/TrackButtons";
 import { TrackDialog } from "../../../PositionTrackingBar/TrackDialog";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 import { useNodeGeoComponent } from "./useNodeGeoComponent";
@@ -43,7 +44,7 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
   );
   const segments = trackActive ? liveSegments : valueSegments;
   const hasPoints = PositionTracks.countPoints(segments) > 0;
-  // a stopped track can only be resumed; deleting it requires "Restart" (strong confirm)
+  // deleting a recorded track ("Restart" or "Delete") requires a strong confirm
   const hasRecordedTrack = PositionTracks.hasTrackPoints(nodeValue);
 
   const onStart = useCallback(() => {
@@ -56,13 +57,11 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
       void dispatch(PositionTrackingActions.restartTracking({ nodeUuid }));
     }
   }, [dispatch, nodeUuid]);
-  const onPause = useCallback(
-    () => dispatch(PositionTrackingActions.pauseTracking()),
-    [dispatch],
-  );
-  const onStop = useCallback(async () => {
-    await dispatch(PositionTrackingActions.stopTracking());
-  }, [dispatch]);
+  const onDelete = useCallback(() => {
+    if (nodeUuid) {
+      void dispatch(PositionTrackingActions.deleteTrack({ nodeUuid }));
+    }
+  }, [dispatch, nodeUuid]);
 
   const [mapDialogOpen, setMapDialogOpen] = useState(false);
   const openMapDialog = useCallback(() => setMapDialogOpen(true), []);
@@ -107,21 +106,20 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
       )}
       {summaryText}
       {isTrackedNode && errorKey && <Text textKey={errorKey} />}
-      <HView style={styles.previewToolbar}>
-        {!!nodeValue && (
-          <HView style={styles.previewToolbarLeft}>
-            <IconButton icon="download" onPress={onDownloadGeoJsonPress} />
-          </HView>
-        )}
-        {canEditRecord && (
-          <HView style={[styles.previewToolbarCenter, styles.trackButtons]}>
-            {tracking ? (
-              <Button
-                icon="pause"
-                onPress={onPause}
-                textKey="dataEntry:positionTracking.pause"
-              />
-            ) : (
+      {/* same buttons as in the tracking panel */}
+      {trackActive && nodeUuid && <ActiveTrackingButtons nodeUuid={nodeUuid} />}
+      {!trackActive && (
+        <HView style={styles.previewToolbar}>
+          {!!nodeValue && (
+            <HView style={styles.previewToolbarLeft}>
+              <IconButton icon="download" onPress={onDownloadGeoJsonPress} />
+              {canEditRecord && hasRecordedTrack && (
+                <IconButton icon="delete" onPress={onDelete} />
+              )}
+            </HView>
+          )}
+          {canEditRecord && (
+            <HView style={[styles.previewToolbarCenter, styles.trackButtons]}>
               <Button
                 disabled={
                   isTrackedNode && status === PositionTrackingStatus.starting
@@ -129,36 +127,28 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
                 icon="play"
                 onPress={onStart}
                 textKey={
-                  trackActive || hasRecordedTrack
+                  hasRecordedTrack
                     ? "dataEntry:positionTracking.resume"
                     : "dataEntry:positionTracking.start"
                 }
               />
-            )}
-            {!trackActive && hasRecordedTrack && (
-              <Button
-                color="secondary"
-                icon="restart"
-                onPress={onRestart}
-                textKey="dataEntry:positionTracking.restart"
-              />
-            )}
-            {trackActive && (
-              <Button
-                icon="stop"
-                color="secondary"
-                onPress={onStop}
-                textKey="dataEntry:positionTracking.stop"
-              />
-            )}
-          </HView>
-        )}
-        {showMap && (
-          <HView style={styles.previewToolbarRight}>
-            <IconButton icon="fullscreen" onPress={openMapDialog} />
-          </HView>
-        )}
-      </HView>
+              {hasRecordedTrack && (
+                <Button
+                  color="secondary"
+                  icon="restart"
+                  onPress={onRestart}
+                  textKey="dataEntry:positionTracking.restart"
+                />
+              )}
+            </HView>
+          )}
+          {showMap && (
+            <HView style={styles.previewToolbarRight}>
+              <IconButton icon="fullscreen" onPress={openMapDialog} />
+            </HView>
+          )}
+        </HView>
+      )}
       {mapDialogOpen && nodeUuid && (
         <TrackDialog
           node={{ uuid: nodeUuid, value: nodeValue }}
