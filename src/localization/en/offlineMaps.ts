@@ -109,6 +109,17 @@ export default {
     tooManyTiles:
       "The area is too big: max {{maxTiles}} tiles can be downloaded; reduce the area or the max zoom",
     notEnoughSpace: "Not enough free space on the device",
+    steps: {
+      name: "Name",
+      layer: "Map layer",
+      zoom: "Zoom levels",
+      zoomHint:
+        "Higher max zoom levels show more details but require many more tiles: zoom the map to see the detail level of each zoom.",
+      draw: "Draw area",
+      drawSummary: "{{area}} · {{tiles}} tiles · ~{{size}}",
+      drawSummaryEmpty: "Not drawn yet",
+      next: "Next",
+    },
     customLayerConfirm: {
       title: "Custom map layer",
       message:

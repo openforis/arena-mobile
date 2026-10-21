@@ -22,7 +22,10 @@ import { SettingsSelectors, useConfirm } from "state";
 import { Files, GeoUtils, log } from "utils";
 
 import { useOfflineMapAreaDownload } from "../OfflineMaps/useOfflineMapAreaDownload";
+import { AreaEditorStep } from "./AreaEditorStep";
 import styles from "./styles";
+
+type AreaEditorStepKey = "name" | "layer" | "zoom" | "draw";
 
 const existingAreaStrokeColor = "rgba(96, 96, 96, 0.9)";
 const existingAreaFillColor = "rgba(96, 96, 96, 0.15)";
@@ -74,6 +77,21 @@ export const OfflineMapAreaEditorScreen = () => {
   const [freeDiskStorage, setFreeDiskStorage] = useState<number | null>(null);
   // zoom level of the tiles currently shown in the map
   const [currentZoom, setCurrentZoom] = useState<number | null>(null);
+  const [activeStep, setActiveStep] = useState<AreaEditorStepKey | null>(
+    "name",
+  );
+
+  const toggleStep = useCallback(
+    (step: AreaEditorStepKey) =>
+      setActiveStep((prev) => (prev === step ? null : step)),
+    [],
+  );
+
+  const onCoordinatesChange = useCallback((value: LatLng[]) => {
+    setCoordinates(value);
+    // drawing on the map moves to the draw step, giving more space to the map
+    if (value.length > 0) setActiveStep("draw");
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -163,6 +181,7 @@ export const OfflineMapAreaEditorScreen = () => {
     async (polygon: MapPolygonExtendedProps | null) => {
       if (!polygon || polygon.coordinates.length < 3) return;
       if (nameErrorKey) {
+        setActiveStep("name");
         toaster(nameErrorKey);
         return;
       }
@@ -249,39 +268,81 @@ export const OfflineMapAreaEditorScreen = () => {
     [existingAreas],
   );
 
+  const drawSummary =
+    coordinates.length < 3
+      ? t("offlineMaps:areaEditor.steps.drawSummaryEmpty")
+      : t("offlineMaps:areaEditor.steps.drawSummary", {
+          area: GeoUtils.formatArea(areaSquareMeters),
+          tiles: estimate.tilesCount,
+          size: Files.toHumanReadableFileSize(estimate.estimatedSizeBytes),
+        });
+
   const headerContent = (
     <VView style={styles.header}>
-      <TextInput
-        error={!!nameErrorKey}
-        label="offlineMaps:areaEditor.name"
-        onChange={setName}
-        value={name}
-      />
-      {nameErrorKey && (
-        <Text style={styles.estimateTextError} textKey={nameErrorKey} />
-      )}
-      <Dropdown
-        items={layerItems}
-        translateItemLabels={false}
-        label="offlineMaps:areaEditor.layer"
-        onChange={onLayerChange}
-        value={layerId}
-      />
-      <HView style={styles.zoomRow}>
-        <Text
-          style={styles.zoomLabel}
-          textKey="offlineMaps:areaEditor.maxZoom"
-          textParams={{ value: effectiveMaxZoom }}
+      <AreaEditorStep
+        completed
+        expanded={activeStep === "name"}
+        index={0}
+        onNextPress={() => setActiveStep("layer")}
+        onPress={() => toggleStep("name")}
+        summary={effectiveName}
+        summaryIsError={!!nameErrorKey}
+        titleKey="offlineMaps:areaEditor.steps.name"
+      >
+        <TextInput
+          error={!!nameErrorKey}
+          label="offlineMaps:areaEditor.name"
+          onChange={setName}
+          value={name}
         />
-        <VView style={styles.zoomSlider}>
-          <Slider
-            minValue={OfflineMapsService.MIN_SELECTABLE_MAX_ZOOM}
-            maxValue={layer.maxZoom}
-            step={1}
-            value={effectiveMaxZoom}
-            onValueChange={setMaxZoom}
+        {nameErrorKey && (
+          <Text style={styles.estimateTextError} textKey={nameErrorKey} />
+        )}
+      </AreaEditorStep>
+      <AreaEditorStep
+        completed
+        expanded={activeStep === "layer"}
+        index={1}
+        onNextPress={() => setActiveStep("zoom")}
+        onPress={() => toggleStep("layer")}
+        summary={MapLayers.getLayerLabel(layer, t)}
+        titleKey="offlineMaps:areaEditor.steps.layer"
+      >
+        <Dropdown
+          items={layerItems}
+          translateItemLabels={false}
+          label="offlineMaps:areaEditor.layer"
+          onChange={onLayerChange}
+          value={layerId}
+        />
+      </AreaEditorStep>
+      <AreaEditorStep
+        completed
+        expanded={activeStep === "zoom"}
+        index={2}
+        onNextPress={() => setActiveStep("draw")}
+        onPress={() => toggleStep("zoom")}
+        summary={t("offlineMaps:areaEditor.maxZoom", {
+          value: effectiveMaxZoom,
+        })}
+        titleKey="offlineMaps:areaEditor.steps.zoom"
+      >
+        <HView style={styles.zoomRow}>
+          <Text
+            style={styles.zoomLabel}
+            textKey="offlineMaps:areaEditor.maxZoom"
+            textParams={{ value: effectiveMaxZoom }}
           />
-        </VView>
+          <VView style={styles.zoomSlider}>
+            <Slider
+              minValue={OfflineMapsService.MIN_SELECTABLE_MAX_ZOOM}
+              maxValue={layer.maxZoom}
+              step={1}
+              value={effectiveMaxZoom}
+              onValueChange={setMaxZoom}
+            />
+          </VView>
+        </HView>
         {currentZoom !== null && (
           <Text
             style={styles.zoomLabel}
@@ -289,41 +350,58 @@ export const OfflineMapAreaEditorScreen = () => {
             textParams={{ value: currentZoom }}
           />
         )}
-      </HView>
-      {coordinates.length < 3 ? (
         <Text
-          style={styles.estimateText}
-          textKey="offlineMaps:areaEditor.drawAreaToEstimate"
+          style={styles.stepHint}
+          textKey="offlineMaps:areaEditor.steps.zoomHint"
+          variant="bodySmall"
         />
-      ) : (
-        <Text
-          textKey="offlineMaps:areaEditor.surface"
-          textParams={{ area: GeoUtils.formatArea(areaSquareMeters) }}
-        />
-      )}
-      {coordinates.length >= 3 && (
-        <Text
-          style={[
-            styles.estimateText,
-            (estimate.exceedsMaxTiles || exceedsFreeSpace) &&
-              styles.estimateTextError,
-          ]}
-          textKey={
-            estimate.exceedsMaxTiles
-              ? "offlineMaps:areaEditor.estimateTooManyTiles"
-              : "offlineMaps:areaEditor.estimate"
-          }
-          textParams={{
-            tiles: estimate.tilesCount,
-            maxTiles: OfflineMapsService.MAX_TILES_PER_AREA,
-            size: Files.toHumanReadableFileSize(estimate.estimatedSizeBytes),
-            freeSpace:
-              freeDiskStorage === null
-                ? "-"
-                : Files.toHumanReadableFileSize(freeDiskStorage),
-          }}
-        />
-      )}
+      </AreaEditorStep>
+      <AreaEditorStep
+        completed={coordinates.length >= 3}
+        expanded={activeStep === "draw"}
+        index={3}
+        onPress={() => toggleStep("draw")}
+        summary={drawSummary}
+        summaryIsError={estimate.exceedsMaxTiles || exceedsFreeSpace}
+        titleKey="offlineMaps:areaEditor.steps.draw"
+      >
+        {coordinates.length < 3 ? (
+          <Text
+            style={styles.estimateText}
+            textKey="offlineMaps:areaEditor.drawAreaToEstimate"
+          />
+        ) : (
+          <>
+            <Text
+              textKey="offlineMaps:areaEditor.surface"
+              textParams={{ area: GeoUtils.formatArea(areaSquareMeters) }}
+            />
+            <Text
+              style={[
+                styles.estimateText,
+                (estimate.exceedsMaxTiles || exceedsFreeSpace) &&
+                  styles.estimateTextError,
+              ]}
+              textKey={
+                estimate.exceedsMaxTiles
+                  ? "offlineMaps:areaEditor.estimateTooManyTiles"
+                  : "offlineMaps:areaEditor.estimate"
+              }
+              textParams={{
+                tiles: estimate.tilesCount,
+                maxTiles: OfflineMapsService.MAX_TILES_PER_AREA,
+                size: Files.toHumanReadableFileSize(
+                  estimate.estimatedSizeBytes,
+                ),
+                freeSpace:
+                  freeDiskStorage === null
+                    ? "-"
+                    : Files.toHumanReadableFileSize(freeDiskStorage),
+              }}
+            />
+          </>
+        )}
+      </AreaEditorStep>
     </VView>
   );
 
@@ -338,7 +416,7 @@ export const OfflineMapAreaEditorScreen = () => {
       layerId={layerId}
       mapRef={mapRef}
       onCancelDrawing={onCancelDrawing}
-      onCoordinatesChange={setCoordinates}
+      onCoordinatesChange={onCoordinatesChange}
       onMapRegionChange={onMapRegionChange}
       onSaveDrawing={onSaveDrawing}
       saveButtonIcon="download"
