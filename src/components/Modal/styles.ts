@@ -10,7 +10,7 @@ export default StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  headerText: {
+  headerContent: {
     flex: 1,
   },
 });

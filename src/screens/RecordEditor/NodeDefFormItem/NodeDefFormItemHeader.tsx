@@ -11,13 +11,14 @@ import { NodeValidationIcon } from "../NodeValidationIcon";
 import { useStyles } from "./styles";
 
 type NodeDefFormItemHeaderProps = {
+  endAccessory?: ReactNode;
   startAccessory?: ReactNode;
   nodeDef: NodeDef<any>;
   parentNodeUuid?: string;
 };
 
 export const NodeDefFormItemHeader = (props: NodeDefFormItemHeaderProps) => {
-  const { startAccessory, nodeDef, parentNodeUuid } = props;
+  const { endAccessory, startAccessory, nodeDef, parentNodeUuid } = props;
 
   const isRtl = useIsTextDirectionRtl();
   const styles = useStyles();
@@ -44,6 +45,7 @@ export const NodeDefFormItemHeader = (props: NodeDefFormItemHeaderProps) => {
           {labelOrName}
         </Text>
         <NodeValidationIcon nodeDef={nodeDef} parentNodeUuid={parentNodeUuid} />
+        {endAccessory}
       </HView>
       {!Objects.isEmpty(description) && (
         <ViewMoreText

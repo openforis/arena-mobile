@@ -1,3 +1,4 @@
+import { View } from "react-native";
 import { useTheme } from "react-native-paper";
 
 import { CloseIconButton } from "../CloseIconButton";
@@ -11,6 +12,8 @@ type ModalProps = {
   children: React.ReactNode;
   onDismiss: () => void;
   showCloseButton?: boolean;
+  // custom title content (used when titleKey is not specified)
+  title?: React.ReactNode;
   titleKey?: string;
   titleParams?: any;
 };
@@ -20,6 +23,7 @@ export const Modal = (props: ModalProps) => {
     children,
     onDismiss,
     showCloseButton = true,
+    title,
     titleKey,
     titleParams,
   } = props;
@@ -34,17 +38,22 @@ export const Modal = (props: ModalProps) => {
         { backgroundColor: theme.colors.background },
       ]}
     >
-      <HView style={styles.header}>
-        {titleKey && (
-          <Text
-            style={styles.headerText}
-            textKey={titleKey}
-            textParams={titleParams}
-            variant="titleLarge"
-          />
-        )}
-        {showCloseButton && <CloseIconButton onPress={onDismiss} />}
-      </HView>
+      {(titleKey || title || showCloseButton) && (
+        <HView style={styles.header}>
+          <View style={styles.headerContent}>
+            {titleKey ? (
+              <Text
+                textKey={titleKey}
+                textParams={titleParams}
+                variant="titleLarge"
+              />
+            ) : (
+              title
+            )}
+          </View>
+          {showCloseButton && <CloseIconButton onPress={onDismiss} />}
+        </HView>
+      )}
       {children}
     </BaseModal>
   );
