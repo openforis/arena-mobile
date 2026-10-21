@@ -125,9 +125,11 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
         )}
         {canEditRecord && (
           <HView style={[styles.previewToolbarCenter, styles.trackButtons]}>
-            {tracking ? (
-              <IconButton icon="pause" onPress={onPause} />
-            ) : (
+            {tracking && <IconButton icon="pause" onPress={onPause} />}
+            {trackActive && !tracking && (
+              <IconButton icon="play" onPress={onStart} />
+            )}
+            {!trackActive && (
               <Button
                 disabled={
                   isTrackedNode && status === PositionTrackingStatus.starting
@@ -135,7 +137,7 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
                 icon="play"
                 onPress={onStart}
                 textKey={
-                  trackActive || hasRecordedTrack
+                  hasRecordedTrack
                     ? "dataEntry:positionTracking.resume"
                     : "dataEntry:positionTracking.start"
                 }

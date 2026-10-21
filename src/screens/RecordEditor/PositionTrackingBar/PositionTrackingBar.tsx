@@ -365,13 +365,7 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
               <IconButton icon="pause" onPress={onPause} />
             )}
             {canEditRecord && !tracking && (
-              <Button
-                compact
-                icon="play"
-                color="secondary"
-                onPress={onResume}
-                textKey="dataEntry:positionTracking.resume"
-              />
+              <IconButton icon="play" onPress={onResume} />
             )}
             {canEditRecord && (
               <IconButton

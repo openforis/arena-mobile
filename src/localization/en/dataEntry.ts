@@ -330,7 +330,6 @@ Press '$t(common:stop)' when done.`,
   positionTracking: {
     title: "Position tracking",
     start: "Start tracking",
-    pause: "Pause",
     resume: "Resume",
     restart: "Restart",
     restartConfirm: {
@@ -365,7 +364,7 @@ Press '$t(common:stop)' when done.`,
     stopCurrentConfirm:
       "Another attribute is being tracked: stop tracking it and start tracking this one?",
     interrupted:
-      "Position tracking was interrupted: the recorded track has been saved. Press '$t(dataEntry:positionTracking.resume)' to continue.",
+      "Position tracking was interrupted: the recorded track has been saved. Resume tracking to continue.",
     error: {
       generic: "Cannot start position tracking",
       permissionDenied: "Cannot track the position: access to location not granted",
