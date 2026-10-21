@@ -203,6 +203,9 @@ export default {
       inAppDescription: "Работает офлайн со скачанными картами",
       inAppDescriptionRelocatable:
         "Работает офлайн со скачанными картами.\nПоложение можно изменить",
+      otherApp: "Другое приложение…",
+      otherAppDescription:
+        "Выбрать среди всех установленных приложений, которые могут показать местоположение",
       show: "Показать",
       targetViewerTitle: "Целевое местоположение «{{attributeLabel}}»",
       viewerTitle: "Местоположение",

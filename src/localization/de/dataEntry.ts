@@ -213,6 +213,9 @@ Möchten Sie sie erneut vom Server abrufen?`,
       inAppDescription: "Funktioniert offline mit heruntergeladenen Karten",
       inAppDescriptionRelocatable:
         "Funktioniert offline mit heruntergeladenen Karten.\nDie Position kann verschoben werden",
+      otherApp: "Andere App…",
+      otherAppDescription:
+        "Aus allen installierten Apps wählen, die einen Standort anzeigen können",
       show: "Anzeigen",
       targetViewerTitle: "Zielposition von „{{attributeLabel}}“",
       viewerTitle: "Standort",

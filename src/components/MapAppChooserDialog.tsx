@@ -73,7 +73,7 @@ export const MapAppChooserDialog = (props: Props) => {
   } = props;
 
   const { t } = useTranslation();
-  const { inAppChoiceId } = MapAppsService;
+  const { inAppChoiceId, otherAppChoiceId } = MapAppsService;
 
   return (
     <Dialog
@@ -92,14 +92,22 @@ export const MapAppChooserDialog = (props: Props) => {
           selected={selectedId === inAppChoiceId}
           title={t("dataEntry:coordinate.map.inApp")}
         />
-        {apps.map((app) => (
-          <ChoiceItem
-            key={app.id}
-            onPress={() => onSelect(app.id)}
-            selected={selectedId === app.id}
-            title={app.name}
-          />
-        ))}
+        {apps.map((app) => {
+          const isOtherApp = app.id === otherAppChoiceId;
+          return (
+            <ChoiceItem
+              key={app.id}
+              description={
+                isOtherApp
+                  ? t("dataEntry:coordinate.map.otherAppDescription")
+                  : undefined
+              }
+              onPress={() => onSelect(app.id)}
+              selected={selectedId === app.id}
+              title={isOtherApp ? t("dataEntry:coordinate.map.otherApp") : app.name}
+            />
+          );
+        })}
       </VView>
     </Dialog>
   );

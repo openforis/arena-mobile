@@ -210,6 +210,9 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
       inAppDescription: "Fonctionne hors ligne avec les cartes téléchargées",
       inAppDescriptionRelocatable:
         "Fonctionne hors ligne avec les cartes téléchargées.\nLa position peut être déplacée",
+      otherApp: "Autre application…",
+      otherAppDescription:
+        "Choisir parmi toutes les applications installées pouvant afficher un emplacement",
       show: "Afficher",
       targetViewerTitle: "Position cible de « {{attributeLabel}} »",
       viewerTitle: "Position",

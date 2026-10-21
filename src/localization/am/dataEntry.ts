@@ -194,6 +194,9 @@ export default {
       inAppDescription: "ያለ በይነመረብ ከወረዱ ካርታዎች ጋር ይሰራል",
       inAppDescriptionRelocatable:
         "ያለ በይነመረብ ከወረዱ ካርታዎች ጋር ይሰራል።\nቦታውን ማንቀሳቀስ ይቻላል",
+      otherApp: "ሌላ መተግበሪያ…",
+      otherAppDescription:
+        "ቦታ ማሳየት ከሚችሉ ሁሉም የተጫኑ መተግበሪያዎች ውስጥ ይምረጡ",
       show: "በካርታ አሳይ",
       targetViewerTitle: 'የ"{{attributeLabel}}" ዒላማ ቦታ',
       viewerTitle: "ቦታ",
