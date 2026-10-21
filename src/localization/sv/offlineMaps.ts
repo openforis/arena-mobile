@@ -99,15 +99,23 @@ export default {
     layer: "Lager",
     maxZoom: "Max zoom: {{value}}",
     currentZoom: "Aktuell zoom: {{value}}",
-    surface: "Yta: {{area}}",
-    drawAreaToEstimate:
-      "Rita intresseområdet på kartan för att se hur mycket utrymme det kommer att ta",
-    estimate: "{{tiles}} kartrutor · ~{{size}} (ledigt utrymme: {{freeSpace}})",
-    estimateTooManyTiles:
-      "{{tiles}} kartrutor: för många (max {{maxTiles}}); minska området eller max zoom",
     tooManyTiles:
       "Området är för stort: högst {{maxTiles}} kartrutor kan laddas ner; minska området eller max zoom",
     notEnoughSpace: "Inte tillräckligt med ledigt utrymme på enheten",
+    steps: {
+      name: "Namn",
+      layer: "Kartlager",
+      zoom: "Zoomnivåer",
+      zoomHint:
+        "Högre max zoom visar fler detaljer men kräver betydligt fler kartrutor: zooma kartan för att se detaljnivån för varje zoom.",
+      draw: "Rita område",
+      drawSummary:
+        "{{area}} · {{tiles}} kartrutor · ~{{size}} (ledigt: {{freeSpace}})",
+      drawSummaryTooManyTiles:
+        "{{area}} · {{tiles}} kartrutor: för många (max {{maxTiles}})",
+      drawSummaryEmpty: "Rita intresseområdet på kartan",
+      next: "Nästa",
+    },
     customLayerConfirm: {
       title: "Anpassat kartlager",
       message:

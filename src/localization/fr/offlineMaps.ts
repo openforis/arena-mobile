@@ -100,15 +100,23 @@ export default {
     layer: "Couche",
     maxZoom: "Zoom max : {{value}}",
     currentZoom: "Zoom actuel : {{value}}",
-    surface: "Superficie : {{area}}",
-    drawAreaToEstimate:
-      "Dessinez la zone d'intérêt sur la carte pour voir l'espace qu'elle occupera",
-    estimate: "{{tiles}} tuiles · ~{{size}} (espace libre : {{freeSpace}})",
-    estimateTooManyTiles:
-      "{{tiles}} tuiles : trop nombreuses (max {{maxTiles}}) ; réduisez la zone ou le zoom max",
     tooManyTiles:
       "La zone est trop grande : {{maxTiles}} tuiles au maximum peuvent être téléchargées ; réduisez la zone ou le zoom max",
     notEnoughSpace: "Espace libre insuffisant sur l'appareil",
+    steps: {
+      name: "Nom",
+      layer: "Couche de carte",
+      zoom: "Niveaux de zoom",
+      zoomHint:
+        "Des niveaux de zoom max plus élevés montrent plus de détails mais nécessitent beaucoup plus de tuiles : zoomez sur la carte pour voir le niveau de détail de chaque zoom.",
+      draw: "Dessiner la zone",
+      drawSummary:
+        "{{area}} · {{tiles}} tuiles · ~{{size}} (libre : {{freeSpace}})",
+      drawSummaryTooManyTiles:
+        "{{area}} · {{tiles}} tuiles : trop nombreuses (max {{maxTiles}})",
+      drawSummaryEmpty: "Dessinez la zone d'intérêt sur la carte",
+      next: "Suivant",
+    },
     customLayerConfirm: {
       title: "Couche de carte personnalisée",
       message:

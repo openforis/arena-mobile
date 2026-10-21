@@ -47,6 +47,8 @@ type GeoPolygonEditorProps = {
   layerId?: string;
   saveButtonIcon?: string;
   saveButtonTextKey?: string;
+  // when true, the helper text is shown over the map and empty toolbar rows are hidden
+  compact?: boolean;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -63,6 +65,7 @@ export const GeoPolygonEditor = ({
   layerId,
   saveButtonIcon = "content-save",
   saveButtonTextKey = "common:save",
+  compact = false,
   style,
 }: GeoPolygonEditorProps) => {
   log.debug(`rendering GeoPolygonEditor`);
@@ -122,55 +125,68 @@ export const GeoPolygonEditor = ({
   return (
     <VView style={[styles.modalContent, style]}>
       {headerContent}
-      <MapView
-        ref={mapRef}
-        style={styles.map}
-        initialRegion={initialRegion}
-        layerId={layerId}
-        onMapReady={onMapRegionChange}
-        onPress={onMapPress}
-        onPanDrag={onMapPanDrag}
-        onPoiClick={onMapPoiClick}
-        onRegionChangeComplete={onMapRegionChange}
-        fitToCoordinatesOnReady={visibleCoordinates}
-      >
-        {extraOverlays}
-        {isFollowingCurrentLocation && currentLocationCoordinate && (
-          <CurrentLocationMarker coordinate={currentLocationCoordinate} />
-        )}
-        <GeoPolygonDraftOverlay
-          coordinates={draftCoordinates}
-          fillColor={draggingVertexIndex == null ? fillColor : "transparent"}
-          strokeColor={strokeColor}
-          strokeWidth={newPolygon.strokeWidth}
-          showPoints={!hasValue}
-          onPolygonPress={onPolygonPress}
-        />
-        {isPolygonSelected && (
-          <GeoPolygonVerticesOverlay
-            coordinates={polygonVertices}
+      <VView style={styles.mapContainer}>
+        <MapView
+          ref={mapRef}
+          style={styles.map}
+          initialRegion={initialRegion}
+          layerId={layerId}
+          onMapReady={onMapRegionChange}
+          onPress={onMapPress}
+          onPanDrag={onMapPanDrag}
+          onPoiClick={onMapPoiClick}
+          onRegionChangeComplete={onMapRegionChange}
+          fitToCoordinatesOnReady={visibleCoordinates}
+        >
+          {extraOverlays}
+          {isFollowingCurrentLocation && currentLocationCoordinate && (
+            <CurrentLocationMarker coordinate={currentLocationCoordinate} />
+          )}
+          <GeoPolygonDraftOverlay
+            coordinates={draftCoordinates}
+            fillColor={draggingVertexIndex == null ? fillColor : "transparent"}
             strokeColor={strokeColor}
-            selectedVertexIndex={selectedVertexIndex}
-            draggingVertexIndex={draggingVertexIndex}
-            onVertexPress={onVertexPress}
-            onVertexDragStart={onVertexDragStart}
-            onVertexDrag={onVertexDrag}
-            onVertexDragEnd={onVertexDragEnd}
+            strokeWidth={newPolygon.strokeWidth}
+            showPoints={!hasValue}
+            onPolygonPress={onPolygonPress}
           />
+          {isPolygonSelected && (
+            <GeoPolygonVerticesOverlay
+              coordinates={polygonVertices}
+              strokeColor={strokeColor}
+              selectedVertexIndex={selectedVertexIndex}
+              draggingVertexIndex={draggingVertexIndex}
+              onVertexPress={onVertexPress}
+              onVertexDragStart={onVertexDragStart}
+              onVertexDrag={onVertexDrag}
+              onVertexDragEnd={onVertexDragEnd}
+            />
+          )}
+          {isPolygonSelected && draggingVertexIndex == null && (
+            <GeoPolygonMidpointsOverlay
+              midpoints={polygonMidpoints}
+              strokeColor={strokeColor}
+              onMidpointPress={onMidpointPress}
+            />
+          )}
+        </MapView>
+        {compact && (
+          <VView pointerEvents="none" style={styles.helperTextOverlay}>
+            <Text
+              style={styles.helperTextOverlayText}
+              textKey={helperTextKey}
+              variant="bodySmall"
+            />
+          </VView>
         )}
-        {isPolygonSelected && draggingVertexIndex == null && (
-          <GeoPolygonMidpointsOverlay
-            midpoints={polygonMidpoints}
-            strokeColor={strokeColor}
-            onMidpointPress={onMidpointPress}
-          />
-        )}
-      </MapView>
+      </VView>
 
-      <Text style={styles.helperText} textKey={helperTextKey} />
+      {!compact && <Text style={styles.helperText} textKey={helperTextKey} />}
 
-      <VView style={styles.toolbar}>
-        <HView style={styles.toolbarTopRow}>
+      <VView style={[styles.toolbar, compact && styles.toolbarCompact]}>
+        <HView
+          style={[styles.toolbarTopRow, compact && styles.toolbarTopRowCompact]}
+        >
           {canAddCurrentLocationPoint && (
             <Button
               compact

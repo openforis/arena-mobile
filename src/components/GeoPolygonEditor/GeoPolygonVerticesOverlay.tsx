@@ -64,6 +64,7 @@ export const GeoPolygonVerticesOverlay = ({
 
         return (
           <GeoVertexMarker
+            appearanceKey={`${isSelected}-${isDragging}`}
             key={`polygon-vertex-${index}-${coordinate.latitude}-${coordinate.longitude}`}
             coordinate={coordinate}
             draggable={isSelected}
