@@ -381,9 +381,6 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
               />
             )}
             {nodeUuid && <ShowTrackButton nodeUuid={nodeUuid} />}
-            {canEditRecord && nodeUuid && (
-              <DeleteTrackButton nodeUuid={nodeUuid} />
-            )}
           </HView>
         </VView>
       )}

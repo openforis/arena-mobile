@@ -437,7 +437,7 @@ describe("PositionTrackingActions", () => {
       expect(getTrackedNodeValue(store)).toEqual(trackValue);
     });
 
-    test("delete discards the track being recorded", async () => {
+    test("delete is not possible while tracking", async () => {
       const store = createStoreWithTrack();
       await store.dispatch(
         PositionTrackingActions.startTracking({
@@ -447,10 +447,10 @@ describe("PositionTrackingActions", () => {
       await store.dispatch(
         PositionTrackingActions.deleteTrack({ nodeUuid: "track-node" }) as any,
       );
-      expect(PositionTrackingService.discard).toHaveBeenCalled();
-      expect(getTrackedNodeValue(store)).toBeNull();
-      expect(store.getState().positionTracking.status).toBe(
-        PositionTrackingStatus.idle,
+      expect(mockConfirm).not.toHaveBeenCalled();
+      expect(getTrackedNodeValue(store)).toEqual(trackValue);
+      await store.dispatch(
+        PositionTrackingActions.stopTracking({ confirm: false }) as any,
       );
     });
   });

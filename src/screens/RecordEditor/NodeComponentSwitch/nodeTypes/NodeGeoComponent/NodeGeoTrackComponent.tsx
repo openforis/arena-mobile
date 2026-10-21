@@ -113,12 +113,10 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
       {summaryText}
       {isTrackedNode && errorKey && <Text textKey={errorKey} />}
       <HView style={styles.previewToolbar}>
-        {(!!nodeValue || (canEditRecord && trackActive)) && (
+        {!!nodeValue && (
           <HView style={styles.previewToolbarLeft}>
-            {!!nodeValue && (
-              <IconButton icon="download" onPress={onDownloadGeoJsonPress} />
-            )}
-            {canEditRecord && (hasRecordedTrack || trackActive) && (
+            <IconButton icon="download" onPress={onDownloadGeoJsonPress} />
+            {canEditRecord && !trackActive && hasRecordedTrack && (
               <IconButton icon="delete" onPress={onDelete} />
             )}
           </HView>
