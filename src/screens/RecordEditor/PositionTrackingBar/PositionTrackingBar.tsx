@@ -367,6 +367,7 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
             {canEditRecord && !tracking && (
               <IconButton icon="play" onPress={onResume} size={32} />
             )}
+            {nodeUuid && <ShowTrackButton nodeUuid={nodeUuid} />}
             {canEditRecord && (
               <IconButton
                 icon="stop"
@@ -374,7 +375,6 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
                 onPress={onStop}
               />
             )}
-            {nodeUuid && <ShowTrackButton nodeUuid={nodeUuid} />}
           </HView>
         </VView>
       )}
