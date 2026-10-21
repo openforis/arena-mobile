@@ -338,6 +338,12 @@ Press '$t(common:stop)' when done.`,
       message:
         "All the points recorded so far in this attribute will be deleted and tracking will start from scratch. This cannot be undone.",
     },
+    delete: "Delete track",
+    deleteConfirm: {
+      title: "Delete the recorded track?",
+      message:
+        "All the points recorded in this attribute will be deleted and the attribute will be left empty. This cannot be undone.",
+    },
     stop: "Stop",
     showTrack: "Show track",
     retry: "Retry",

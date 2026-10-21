@@ -417,5 +417,41 @@ describe("PositionTrackingActions", () => {
       expect(getTrackedNodeValue(store)).toEqual(trackValue);
       expect(PositionTrackingService.start).not.toHaveBeenCalled();
     });
+
+    test("delete clears the recorded track after confirmation", async () => {
+      const store = createStoreWithTrack();
+      await store.dispatch(
+        PositionTrackingActions.deleteTrack({ nodeUuid: "track-node" }) as any,
+      );
+      expect(mockConfirm).toHaveBeenCalledTimes(1);
+      expect(getTrackedNodeValue(store)).toBeNull();
+      expect(PositionTrackingService.start).not.toHaveBeenCalled();
+    });
+
+    test("delete keeps the recorded track when not confirmed", async () => {
+      mockConfirm.mockImplementation(async () => null);
+      const store = createStoreWithTrack();
+      await store.dispatch(
+        PositionTrackingActions.deleteTrack({ nodeUuid: "track-node" }) as any,
+      );
+      expect(getTrackedNodeValue(store)).toEqual(trackValue);
+    });
+
+    test("delete discards the track being recorded", async () => {
+      const store = createStoreWithTrack();
+      await store.dispatch(
+        PositionTrackingActions.startTracking({
+          nodeUuid: "track-node",
+        }) as any,
+      );
+      await store.dispatch(
+        PositionTrackingActions.deleteTrack({ nodeUuid: "track-node" }) as any,
+      );
+      expect(PositionTrackingService.discard).toHaveBeenCalled();
+      expect(getTrackedNodeValue(store)).toBeNull();
+      expect(store.getState().positionTracking.status).toBe(
+        PositionTrackingStatus.idle,
+      );
+    });
   });
 });

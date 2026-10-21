@@ -42,6 +42,23 @@ const useTrackNode = (nodeUuid: string | null | undefined) => {
   }, [nodeUuid, record, survey]);
 };
 
+const DeleteTrackButton = ({ nodeUuid }: { nodeUuid: string }) => {
+  const dispatch = useAppDispatch();
+  const onPress = useCallback(
+    () => dispatch(PositionTrackingActions.deleteTrack({ nodeUuid })),
+    [dispatch, nodeUuid],
+  );
+  return (
+    <Button
+      compact
+      icon="delete"
+      color="secondary"
+      onPress={onPress}
+      textKey="dataEntry:positionTracking.delete"
+    />
+  );
+};
+
 // shows the track on a map in a dialog
 const ShowTrackButton = ({ nodeUuid }: { nodeUuid: string }) => {
   const { node, nodeDef } = useTrackNode(nodeUuid);
@@ -364,6 +381,9 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
               />
             )}
             {nodeUuid && <ShowTrackButton nodeUuid={nodeUuid} />}
+            {canEditRecord && nodeUuid && (
+              <DeleteTrackButton nodeUuid={nodeUuid} />
+            )}
           </HView>
         </VView>
       )}
@@ -371,7 +391,7 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
   );
 };
 
-// tracking stopped with a recorded track: summary, expandable to resume, restart or show the track
+// tracking stopped with a recorded track: summary, expandable to resume, restart, show or delete the track
 const StoppedTrackingBar = ({
   canEdit,
   nodeUuid,
@@ -438,6 +458,7 @@ const StoppedTrackingBar = ({
               />
             )}
             <ShowTrackButton nodeUuid={nodeUuid} />
+            {canEdit && <DeleteTrackButton nodeUuid={nodeUuid} />}
           </HView>
         </VView>
       )}

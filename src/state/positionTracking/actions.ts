@@ -306,6 +306,51 @@ const restartTracking =
     await dispatch(_startNew({ nodeUuid }));
   };
 
+// deletes the whole track (after a strong confirmation), e.g. when it was recorded by mistake
+const deleteTrack =
+  ({ nodeUuid }: { nodeUuid: string }) =>
+  async (dispatch: any, getState: any) => {
+    if (!DataEntrySelectors.selectCanEditRecord(getState())) return;
+    if (
+      !(await ConfirmUtils.confirm({
+        dispatch,
+        titleKey: "dataEntry:positionTracking.deleteConfirm.title",
+        messageKey: "dataEntry:positionTracking.deleteConfirm.message",
+        confirmButtonTextKey: "common:delete",
+        swipeToConfirm: true,
+      }))
+    ) {
+      return;
+    }
+    const track = PositionTrackingService.getTrack();
+    const trackingNode = track?.nodeUuid === nodeUuid;
+    if (track && trackingNode) {
+      stopFlushTimer();
+      await flushInProgress;
+      if (PositionTrackingService.isWatching()) {
+        await PositionTrackingService.pause();
+      }
+    }
+    await dispatch(
+      DataEntryActions.updateAttribute({ uuid: nodeUuid, value: null }),
+    );
+    const node = Records.getNodeByUuid(nodeUuid)(
+      DataEntrySelectors.selectRecord(getState()),
+    );
+    if (node?.value) {
+      // value not cleared (e.g. record being synced): the track is kept
+      if (trackingNode) {
+        dispatch(statsUpdate());
+        dispatch(update({ status: PositionTrackingStatus.paused }));
+      }
+      return;
+    }
+    if (trackingNode) {
+      await _discard(dispatch);
+      await setKeepScreenAwake(getState, false);
+    }
+  };
+
 // starts tracking in a new record, when it has a trackable attribute in the root entity
 const autoStartTracking = () => async (dispatch: any, getState: any) => {
   const state = getState();
@@ -385,6 +430,7 @@ const deleteTracksOfRecords =
 export const PositionTrackingActions = {
   startTracking,
   restartTracking,
+  deleteTrack,
   autoStartTracking,
   pauseTracking,
   resumeTracking,

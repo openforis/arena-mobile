@@ -43,7 +43,7 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
   );
   const segments = trackActive ? liveSegments : valueSegments;
   const hasPoints = PositionTracks.countPoints(segments) > 0;
-  // a stopped track can only be resumed; deleting it requires "Restart" (strong confirm)
+  // deleting a recorded track ("Restart" or "Delete") requires a strong confirm
   const hasRecordedTrack = PositionTracks.hasTrackPoints(nodeValue);
 
   const onStart = useCallback(() => {
@@ -54,6 +54,11 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
   const onRestart = useCallback(() => {
     if (nodeUuid) {
       void dispatch(PositionTrackingActions.restartTracking({ nodeUuid }));
+    }
+  }, [dispatch, nodeUuid]);
+  const onDelete = useCallback(() => {
+    if (nodeUuid) {
+      void dispatch(PositionTrackingActions.deleteTrack({ nodeUuid }));
     }
   }, [dispatch, nodeUuid]);
   const onPause = useCallback(
@@ -108,9 +113,14 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
       {summaryText}
       {isTrackedNode && errorKey && <Text textKey={errorKey} />}
       <HView style={styles.previewToolbar}>
-        {!!nodeValue && (
+        {(!!nodeValue || (canEditRecord && trackActive)) && (
           <HView style={styles.previewToolbarLeft}>
-            <IconButton icon="download" onPress={onDownloadGeoJsonPress} />
+            {!!nodeValue && (
+              <IconButton icon="download" onPress={onDownloadGeoJsonPress} />
+            )}
+            {canEditRecord && (hasRecordedTrack || trackActive) && (
+              <IconButton icon="delete" onPress={onDelete} />
+            )}
           </HView>
         )}
         {canEditRecord && (
