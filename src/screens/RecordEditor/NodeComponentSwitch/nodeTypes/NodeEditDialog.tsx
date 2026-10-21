@@ -1,34 +1,25 @@
 import * as React from "react";
 
-import { useTranslation } from "localization";
-
-import { Button, Modal } from "components";
+import { CloseIconButton, Modal } from "components";
 
 import { NodeDefFormItem } from "screens/RecordEditor/NodeDefFormItem";
 
 type Props = {
-  doneButtonLabel?: string;
   nodeDef: any;
   onDismiss: () => void;
-  onDone?: () => void;
   parentNodeUuid?: string;
 };
 
 export const NodeEditDialog = (props: Props) => {
-  const {
-    doneButtonLabel = "common:close",
-    nodeDef,
-    onDismiss,
-    onDone,
-    parentNodeUuid,
-  } = props;
-
-  const { t } = useTranslation();
+  const { nodeDef, onDismiss, parentNodeUuid } = props;
 
   return (
-    <Modal showCloseButton={false} onDismiss={onDone ?? onDismiss}>
-      <NodeDefFormItem nodeDef={nodeDef} parentNodeUuid={parentNodeUuid} />
-      <Button onPress={onDone ?? onDismiss}>{t(doneButtonLabel)}</Button>
+    <Modal showCloseButton={false} onDismiss={onDismiss}>
+      <NodeDefFormItem
+        headerEndAccessory={<CloseIconButton onPress={onDismiss} />}
+        nodeDef={nodeDef}
+        parentNodeUuid={parentNodeUuid}
+      />
     </Modal>
   );
 };
