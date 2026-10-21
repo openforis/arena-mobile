@@ -1,3 +1,7 @@
+export {
+  AppCompatibilityOperation,
+  AppCompatibilityService,
+} from "./appCompatibilityService";
 export { AppService } from "./appService";
 export { AuthService } from "./authService";
 export { DataMigrationService } from "./dataMigrationService";

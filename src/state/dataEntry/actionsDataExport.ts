@@ -8,7 +8,7 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
-import { RecordService, UserService } from "service";
+import { AppCompatibilityOperation, RecordService, UserService } from "service";
 import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerationJob";
 
 import { i18n } from "localization";
@@ -20,7 +20,7 @@ import {
 import { RecordsUploadAndProcessJob } from "service/recordsUploadAndProcessJob";
 import { RECORDS_UPLOAD_JOB_TYPE } from "service/recordsUploadJob";
 import { REMOTE_JOB_WATCHER_JOB_TYPE } from "service/remoteJobWatcherJob";
-import { RemoteConnectionSelectors } from "state/remoteConnection";
+import { AppCompatibilityActions, RemoteConnectionSelectors } from "state/remoteConnection";
 import type { RootState } from "state/store";
 import { Files, Jobs, log } from "utils";
 
@@ -197,6 +197,20 @@ const startUploadDataToRemoteServer =
       const user = RemoteConnectionSelectors.selectLoggedUser(state);
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
       const cycle = Surveys.getDefaultCycleKey(survey);
+
+      const appVersionSupported = await dispatch(
+        AppCompatibilityActions.checkAppVersionSupported({
+          operation: AppCompatibilityOperation.recordsUpload,
+          silent,
+        }),
+      );
+      if (!appVersionSupported) {
+        if (silent) {
+          // shown through the sync status icon, as the other unattended upload failures
+          dispatch(AutoSyncActions.checkError());
+        }
+        return;
+      }
 
       log.debug(
         `startUploadDataToRemoteServer: starting upload+processing of ${outputFileUri} (survey=${survey.uuid}, cycle=${cycle})`,

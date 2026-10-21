@@ -1,4 +1,12 @@
 export default {
+  appVersionNotSupported: {
+    title: "Mise à jour requise",
+    message:
+      "Cette version d'Arena Mobile n'est plus prise en charge par le serveur.\nMettez-la à jour vers la version {{minVersion}} ou ultérieure pour continuer.",
+    messageWithoutMinVersion:
+      "Cette version d'Arena Mobile n'est plus prise en charge par le serveur.\nMettez-la à jour pour continuer.",
+    update: "Mettre à jour",
+  },
   backup: "Sauvegarde",
   changelog: "Journal des modifications",
   confirmExit: {

@@ -1,4 +1,12 @@
 export default {
+  appVersionNotSupported: {
+    title: "アップデートが必要です",
+    message:
+      "このバージョンのArena Mobileはサーバーでサポートされなくなりました。\n続行するには、バージョン{{minVersion}}以降にアップデートしてください。",
+    messageWithoutMinVersion:
+      "このバージョンのArena Mobileはサーバーでサポートされなくなりました。\n続行するにはアップデートしてください。",
+    update: "アップデート",
+  },
   backup: "バックアップ",
   changelog: "変更履歴",
   confirmExit: {
