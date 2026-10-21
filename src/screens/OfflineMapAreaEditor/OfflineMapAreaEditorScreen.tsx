@@ -268,14 +268,24 @@ export const OfflineMapAreaEditorScreen = () => {
     [existingAreas],
   );
 
-  const drawSummary =
-    coordinates.length < 3
-      ? t("offlineMaps:areaEditor.steps.drawSummaryEmpty")
-      : t("offlineMaps:areaEditor.steps.drawSummary", {
-          area: GeoUtils.formatArea(areaSquareMeters),
-          tiles: estimate.tilesCount,
-          size: Files.toHumanReadableFileSize(estimate.estimatedSizeBytes),
-        });
+  const drawSummary = (() => {
+    if (coordinates.length < 3) {
+      return t("offlineMaps:areaEditor.steps.drawSummaryEmpty");
+    }
+    const params = {
+      area: GeoUtils.formatArea(areaSquareMeters),
+      tiles: estimate.tilesCount,
+      maxTiles: OfflineMapsService.MAX_TILES_PER_AREA,
+      size: Files.toHumanReadableFileSize(estimate.estimatedSizeBytes),
+      freeSpace:
+        freeDiskStorage === null
+          ? "-"
+          : Files.toHumanReadableFileSize(freeDiskStorage),
+    };
+    return estimate.exceedsMaxTiles
+      ? t("offlineMaps:areaEditor.steps.drawSummaryTooManyTiles", params)
+      : t("offlineMaps:areaEditor.steps.drawSummary", params);
+  })();
 
   const headerContent = (
     <VView style={styles.header}>
@@ -360,48 +370,12 @@ export const OfflineMapAreaEditorScreen = () => {
         completed={coordinates.length >= 3}
         expanded={activeStep === "draw"}
         index={3}
-        onPress={() => toggleStep("draw")}
+        onPress={() => setActiveStep("draw")}
         summary={drawSummary}
         summaryIsError={estimate.exceedsMaxTiles || exceedsFreeSpace}
+        summaryOnly
         titleKey="offlineMaps:areaEditor.steps.draw"
-      >
-        {coordinates.length < 3 ? (
-          <Text
-            style={styles.estimateText}
-            textKey="offlineMaps:areaEditor.drawAreaToEstimate"
-          />
-        ) : (
-          <>
-            <Text
-              textKey="offlineMaps:areaEditor.surface"
-              textParams={{ area: GeoUtils.formatArea(areaSquareMeters) }}
-            />
-            <Text
-              style={[
-                styles.estimateText,
-                (estimate.exceedsMaxTiles || exceedsFreeSpace) &&
-                  styles.estimateTextError,
-              ]}
-              textKey={
-                estimate.exceedsMaxTiles
-                  ? "offlineMaps:areaEditor.estimateTooManyTiles"
-                  : "offlineMaps:areaEditor.estimate"
-              }
-              textParams={{
-                tiles: estimate.tilesCount,
-                maxTiles: OfflineMapsService.MAX_TILES_PER_AREA,
-                size: Files.toHumanReadableFileSize(
-                  estimate.estimatedSizeBytes,
-                ),
-                freeSpace:
-                  freeDiskStorage === null
-                    ? "-"
-                    : Files.toHumanReadableFileSize(freeDiskStorage),
-              }}
-            />
-          </>
-        )}
-      </AreaEditorStep>
+      />
     </VView>
   );
 
@@ -419,6 +393,7 @@ export const OfflineMapAreaEditorScreen = () => {
       onCoordinatesChange={onCoordinatesChange}
       onMapRegionChange={onMapRegionChange}
       onSaveDrawing={onSaveDrawing}
+      compact
       saveButtonIcon="download"
       saveButtonTextKey="offlineMaps:download.label"
     />

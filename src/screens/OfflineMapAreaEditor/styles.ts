@@ -38,6 +38,10 @@ export default StyleSheet.create({
     textAlign: "right",
     opacity: 0.8,
   },
+  stepSummaryOnly: {
+    textAlign: "left",
+    opacity: 1,
+  },
   stepContent: {
     rowGap: 4,
     paddingHorizontal: 8,
@@ -57,9 +61,6 @@ export default StyleSheet.create({
   },
   zoomSlider: {
     flex: 1,
-  },
-  estimateText: {
-    fontWeight: "bold",
   },
   estimateTextError: {
     color: "#d32f2f",

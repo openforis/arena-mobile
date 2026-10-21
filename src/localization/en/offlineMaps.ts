@@ -116,8 +116,11 @@ export default {
       zoomHint:
         "Higher max zoom levels show more details but require many more tiles: zoom the map to see the detail level of each zoom.",
       draw: "Draw area",
-      drawSummary: "{{area}} · {{tiles}} tiles · ~{{size}}",
-      drawSummaryEmpty: "Not drawn yet",
+      drawSummary:
+        "{{area}} · {{tiles}} tiles · ~{{size}} (free: {{freeSpace}})",
+      drawSummaryTooManyTiles:
+        "{{area}} · {{tiles}} tiles: too many (max {{maxTiles}})",
+      drawSummaryEmpty: "Draw the area of interest on the map",
       next: "Next",
     },
     customLayerConfirm: {

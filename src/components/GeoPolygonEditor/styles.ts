@@ -57,6 +57,22 @@ export default StyleSheet.create({
     right: 8,
     zIndex: 1,
   },
+  helperTextOverlay: {
+    position: "absolute",
+    top: 6,
+    left: 48,
+    right: 48,
+    alignItems: "center",
+  },
+  helperTextOverlayText: {
+    textAlign: "center",
+    color: "#ffffff",
+    backgroundColor: "rgba(0, 0, 0, 0.55)",
+    borderRadius: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    overflow: "hidden",
+  },
   helperText: {
     textAlign: "center",
     paddingHorizontal: 12,
@@ -137,10 +153,16 @@ export default StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
+  toolbarCompact: {
+    paddingVertical: 0,
+  },
   toolbarTopRow: {
     alignItems: "center",
     justifyContent: "center",
     minHeight: 36,
+  },
+  toolbarTopRowCompact: {
+    minHeight: 0,
   },
   toolbarBottomRow: {
     alignItems: "center",

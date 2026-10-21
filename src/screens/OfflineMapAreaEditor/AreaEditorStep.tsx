@@ -14,6 +14,8 @@ type AreaEditorStepProps = {
   onPress: () => void;
   summary?: string;
   summaryIsError?: boolean;
+  // when true, the step has no content: only the summary is shown, in place of the title
+  summaryOnly?: boolean;
   titleKey: string;
 };
 
@@ -27,6 +29,7 @@ export const AreaEditorStep = (props: AreaEditorStepProps) => {
     onPress,
     summary,
     summaryIsError = false,
+    summaryOnly = false,
     titleKey,
   } = props;
 
@@ -63,27 +66,32 @@ export const AreaEditorStep = (props: AreaEditorStepProps) => {
               </Text>
             )}
           </VView>
-          <Text
-            style={[styles.stepTitle, expanded && styles.stepTitleExpanded]}
-            textKey={titleKey}
-            variant="labelLarge"
-          />
-          {!expanded && !!summary && (
+          {!summaryOnly && (
+            <Text
+              style={[styles.stepTitle, expanded && styles.stepTitleExpanded]}
+              textKey={titleKey}
+              variant="labelLarge"
+            />
+          )}
+          {(summaryOnly || !expanded) && !!summary && (
             <Text
               numberOfLines={1}
               style={[
                 styles.stepSummary,
+                summaryOnly && styles.stepSummaryOnly,
                 summaryIsError && styles.estimateTextError,
               ]}
-              variant="bodySmall"
+              variant={summaryOnly ? "labelLarge" : "bodySmall"}
             >
               {summary}
             </Text>
           )}
-          <Icon source={expanded ? "chevron-up" : "chevron-down"} size={20} />
+          {!summaryOnly && (
+            <Icon source={expanded ? "chevron-up" : "chevron-down"} size={20} />
+          )}
         </HView>
       </TouchableOpacity>
-      {expanded && (
+      {expanded && !summaryOnly && (
         <VView style={styles.stepContent}>
           {children}
           {onNextPress && (
