@@ -4,7 +4,15 @@ import { MD3Theme, useTheme } from "react-native-paper";
 
 import { NodeDefs, Records, Surveys } from "@openforis/arena-core";
 
-import { Button, HView, Icon, LoadingIcon, Text, VView } from "components";
+import {
+  Button,
+  HView,
+  Icon,
+  IconButton,
+  LoadingIcon,
+  Text,
+  VView,
+} from "components";
 import { usePositionTrackingSummary } from "hooks/usePositionTracking";
 import { useTranslation } from "localization";
 import { PositionTracks } from "model";
@@ -354,13 +362,7 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
           <HView style={styles.buttons}>
             {/* record edit locked (or not editable): the track can only be viewed */}
             {canEditRecord && tracking && (
-              <Button
-                compact
-                icon="pause"
-                color="secondary"
-                onPress={onPause}
-                textKey="dataEntry:positionTracking.pause"
-              />
+              <IconButton icon="pause" onPress={onPause} />
             )}
             {canEditRecord && !tracking && (
               <Button
@@ -372,12 +374,10 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
               />
             )}
             {canEditRecord && (
-              <Button
-                compact
+              <IconButton
                 icon="stop"
-                color="secondary"
+                iconColor={theme.colors.error}
                 onPress={onStop}
-                textKey="dataEntry:positionTracking.stop"
               />
             )}
             {nodeUuid && <ShowTrackButton nodeUuid={nodeUuid} />}

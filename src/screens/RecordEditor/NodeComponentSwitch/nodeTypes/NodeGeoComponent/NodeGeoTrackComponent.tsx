@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
+import { useTheme } from "react-native-paper";
 
 import { Button, HView, IconButton, Text, VView } from "components";
 import {
@@ -24,6 +25,7 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
   const { nodeDef, nodeUuid } = props;
 
   const dispatch = useAppDispatch();
+  const theme = useTheme();
   const canEditRecord = DataEntrySelectors.useCanEditRecord();
   const { nodeValue, onDownloadGeoJsonPress } = useNodeGeoComponent(props);
 
@@ -124,11 +126,7 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
         {canEditRecord && (
           <HView style={[styles.previewToolbarCenter, styles.trackButtons]}>
             {tracking ? (
-              <Button
-                icon="pause"
-                onPress={onPause}
-                textKey="dataEntry:positionTracking.pause"
-              />
+              <IconButton icon="pause" onPress={onPause} />
             ) : (
               <Button
                 disabled={
@@ -152,11 +150,10 @@ export const NodeGeoTrackComponent = (props: NodeComponentProps) => {
               />
             )}
             {trackActive && (
-              <Button
+              <IconButton
                 icon="stop"
-                color="secondary"
+                iconColor={theme.colors.error}
                 onPress={onStop}
-                textKey="dataEntry:positionTracking.stop"
               />
             )}
           </HView>
