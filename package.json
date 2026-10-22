@@ -9,6 +9,7 @@
     "prebuild:android": "expo prebuild --platform android",
     "web": "expo start --web",
     "build:web": "expo export --platform web --output-dir dist-web",
+    "serve:web": "npx serve -s dist-web -l 8765",
     "lint": "eslint --fix --ext .js,.jsx .",
     "test": "jest",
     "test:types": "node ./node_modules/typescript/bin/tsc",
