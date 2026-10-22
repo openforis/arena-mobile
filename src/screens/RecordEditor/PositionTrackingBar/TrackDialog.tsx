@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 
 import { NodeDefs } from "@openforis/arena-core";
 
-import { Button, Modal, Text } from "components";
+import { Modal, Text } from "components";
 import {
   usePositionTrackingLiveSegments,
   usePositionTrackingSummary,
@@ -16,7 +16,6 @@ import { TrackMapView } from "../NodeValuePreview/TrackMapView";
 const styles = StyleSheet.create({
   // fills the dialog height
   map: { flex: 1, minHeight: 0 },
-  closeButton: { alignSelf: "center" },
 });
 
 // track on a map using all the available height
@@ -44,10 +43,14 @@ export const TrackDialog = ({
   const segments = trackActive ? liveSegments : valueSegments;
 
   return (
-    <Modal onDismiss={onDismiss}>
-      <Text variant="titleMedium">
-        {NodeDefs.getLabelOrName(nodeDef, lang)}
-      </Text>
+    <Modal
+      onDismiss={onDismiss}
+      title={
+        <Text variant="titleLarge">
+          {NodeDefs.getLabelOrName(nodeDef, lang)}
+        </Text>
+      }
+    >
       <TrackMapView
         fitOnlyOnce={trackActive}
         followUserLocation={trackActive && summary.tracking}
@@ -66,11 +69,6 @@ export const TrackDialog = ({
             PositionTracks.computeDuration(segments),
           ),
         }}
-      />
-      <Button
-        onPress={onDismiss}
-        style={styles.closeButton}
-        textKey="common:close"
       />
     </Modal>
   );

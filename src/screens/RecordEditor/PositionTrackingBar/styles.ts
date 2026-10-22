@@ -19,8 +19,13 @@ export default StyleSheet.create({
     padding: 8,
   },
   buttons: {
+    alignItems: "center",
     flexWrap: "wrap",
-    gap: 8,
+    gap: 24,
     justifyContent: "center",
+  },
+  // extra space from the other buttons, to avoid pressing it by mistake
+  stopButton: {
+    marginStart: 24,
   },
 });
