@@ -4,7 +4,10 @@ import { WebWindow } from "./WebWindow";
 const search = WebWindow.get()?.location.search;
 const searchParams = search === undefined ? null : new URLSearchParams(search);
 
-const previewParam = searchParams?.get("preview") ?? null;
+// on web only the preview is supported: without the param the demo survey is previewed
+const previewParam = searchParams
+  ? (searchParams.get("preview") ?? "demo")
+  : null;
 
 export const PreviewMode = {
   isActive: previewParam !== null,
