@@ -15,6 +15,7 @@ import {
   RecordOrigin,
   RecordSummaries,
   RecordSyncStatus,
+  UserGroupQualifiers,
 } from "model";
 import { ArrayUtils, log, PromiseUtils } from "utils";
 
@@ -471,9 +472,35 @@ const findRecordSummariesWithSameKeys = async ({
   });
 };
 
+// the clone belongs to the cloning user and gets the qualifier values of the user's group (as a new record)
+const prepareClonedRecord = async ({
+  survey,
+  record,
+  user,
+  userGroup,
+}: any) => {
+  if (user.uuid) {
+    record.ownerUuid = user.uuid;
+    record.ownerName = user.name;
+  }
+  const { record: recordUpdated } =
+    await UserGroupQualifiers.assignQualifierValues({
+      user,
+      survey,
+      userGroup,
+      record,
+    });
+  const validation = Validations.updateCounts(
+    Validations.getValidation(recordUpdated),
+  );
+  return { ...recordUpdated, validation };
+};
+
 const cloneRecordsIntoDefaultCycle = async ({
   survey,
   recordSummaries,
+  user,
+  userGroup,
 }: any) => {
   const surveyId = survey.id;
   const defaultCycle = Surveys.getDefaultCycleKey(survey)!;
@@ -492,7 +519,13 @@ const cloneRecordsIntoDefaultCycle = async ({
         cycleTo: defaultCycle,
         sideEffect: true,
       });
-    await RecordRepository.insertRecord({ survey, record: recordCloned });
+    const recordToInsert = await prepareClonedRecord({
+      survey,
+      record: recordCloned,
+      user,
+      userGroup,
+    });
+    await RecordRepository.insertRecord({ survey, record: recordToInsert });
 
     // clone files
     await Promises.each(

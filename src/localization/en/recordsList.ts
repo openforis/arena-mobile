@@ -6,7 +6,7 @@ export default {
         "Clone the selected {{recordsCount}} records into cycle {{cycle}}?",
     },
     onlyRecordsImportedInDeviceOrModifiedLocallyCanBeCloned:
-      "Only records imported in device or modified locally can be cloned into next cycle",
+      "Only records imported in device or modified locally can be cloned",
     completeSuccessfully: "Records cloned successfully into cycle {{cycle}}!",
   },
   confirmFetchRecordFromServer: "Fetch record from server?",

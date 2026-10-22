@@ -3,8 +3,11 @@ import { Surveys } from "@openforis/arena-core";
 import { Cycles } from "model";
 import { RecordService } from "service";
 import { ConfirmUtils } from "state/confirm";
+import { RemoteConnectionSelectors } from "state/remoteConnection";
 import { SurveySelectors } from "state/survey";
 import { ToastActions } from "state/toast";
+
+import { ensureUserGroupReady } from "./actionsUserGroup";
 
 const textKeyPrefix = "recordsList:cloneRecords.";
 
@@ -28,9 +31,18 @@ export const cloneRecordsIntoDefaultCycle =
         titleKey: `${textKeyPrefix}title`,
       })
     ) {
+      if (!(await ensureUserGroupReady({ dispatch, getState, survey }))) {
+        return;
+      }
+      const stateUpdated = getState();
+      const user = RemoteConnectionSelectors.selectLoggedUserSafe(stateUpdated);
+      const userGroup =
+        SurveySelectors.selectCurrentSurveyUserGroup(stateUpdated);
       await RecordService.cloneRecordsIntoDefaultCycle({
         survey,
         recordSummaries,
+        user,
+        userGroup,
       });
       dispatch(
         ToastActions.show(`${textKeyPrefix}completeSuccessfully`, {
