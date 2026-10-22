@@ -1,26 +1,30 @@
+import { useCallback, useState } from "react";
+import { Pressable } from "react-native";
+
 import {
   NodeDefs,
   Validations,
   ValidationSeverity,
 } from "@openforis/arena-core";
 
-import { Icon, Tooltip } from "components";
+import { Icon, MessageDialog } from "components";
 import { useTranslation } from "localization";
 import { ValidationUtils } from "model";
 import { DataEntrySelectors, SurveySelectors } from "state";
 
 const { getJointErrorText, getJointWarningText } = ValidationUtils;
 
-const colors = {
-  tooltipBackgroundColor: {
-    [ValidationSeverity.error]: "red",
-    [ValidationSeverity.warning]: "orange",
-  },
-  tooltipTextColor: {
-    [ValidationSeverity.error]: "white",
-    [ValidationSeverity.warning]: "black",
-  },
+const iconColorBySeverity = {
+  [ValidationSeverity.error]: "red",
+  [ValidationSeverity.warning]: "orange",
 };
+
+const dialogTitleKeyBySeverity = {
+  [ValidationSeverity.error]: "common:error",
+  [ValidationSeverity.warning]: "common:warning",
+};
+
+const iconHitSlop = 10;
 
 type ValidationIconProps = {
   severity: ValidationSeverity;
@@ -28,19 +32,31 @@ type ValidationIconProps = {
   messageParams?: any;
 };
 
+// the full message is shown in a dialog: a tooltip shows only one line and truncates long messages
 const ValidationIcon = (props: ValidationIconProps) => {
   const { severity, messageKey, messageParams } = props;
-  const tooltipBackgroundColor = colors.tooltipBackgroundColor[severity];
-  const tooltipTextColor = colors.tooltipTextColor[severity];
+
+  const [dialogVisible, setDialogVisible] = useState(false);
+
+  const showDialog = useCallback(() => setDialogVisible(true), []);
+  const hideDialog = useCallback(() => setDialogVisible(false), []);
+
+  const iconColor = iconColorBySeverity[severity];
+
   return (
-    <Tooltip
-      backgroundColor={tooltipBackgroundColor}
-      textColor={tooltipTextColor}
-      titleKey={messageKey}
-      titleParams={messageParams}
-    >
-      <Icon color={tooltipBackgroundColor} source="alert" />
-    </Tooltip>
+    <>
+      <Pressable hitSlop={iconHitSlop} onPress={showDialog}>
+        <Icon color={iconColor} source="alert" />
+      </Pressable>
+      {dialogVisible && (
+        <MessageDialog
+          content={messageKey}
+          contentParams={messageParams}
+          onDismiss={hideDialog}
+          title={dialogTitleKeyBySeverity[severity]}
+        />
+      )}
+    </>
   );
 };
 
