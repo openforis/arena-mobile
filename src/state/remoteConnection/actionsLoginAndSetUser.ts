@@ -10,15 +10,18 @@ import { RemoteConnectionSelectors } from "./selectors";
 
 const { USER_LOADING, USER_SET } = RemoteConnectionActionTypes;
 
+const getUserInAsyncStorage = () =>
+  AsyncStorageUtils.getItem(asyncStorageKeys.loggedInUser);
+
 const fetchUser = async () => {
-  let user;
   try {
-    user = await UserService.fetchUser();
-    return user;
-  } catch (error) {
-    // ignore it
+    return await UserService.fetchUser();
+  } catch (error: any) {
     log.error("Error fetching user", error);
-    return null;
+    // session no longer valid: a new login is required
+    if (error?.response?.status === 401) return null;
+    // server not reachable (e.g. network connected but no internet): keep the last logged in user
+    return getUserInAsyncStorage();
   }
 };
 
@@ -51,9 +54,7 @@ export const loginAndSetUser =
         }
       } else {
         // retrieve user from async storage (if any)
-        const userInAsyncStorage = await AsyncStorageUtils.getItem(
-          asyncStorageKeys.loggedInUser,
-        );
+        const userInAsyncStorage = await getUserInAsyncStorage();
         if (userInAsyncStorage) {
           dispatch({ type: USER_SET, user: userInAsyncStorage });
         }
