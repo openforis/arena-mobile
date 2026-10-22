@@ -151,6 +151,10 @@ const logout = async () => {
   }
 };
 
+// the server answers 401 when the refresh token is invalid, expired or revoked
+const isRefreshTokenRejected = (error: any): boolean =>
+  error?.response?.status === 401;
+
 const refreshAuthTokens = async () => {
   try {
     const serverUrl = await getServerUrl();
@@ -159,19 +163,23 @@ const refreshAuthTokens = async () => {
       throw new Error("Error refreshing auth tokens; missing refresh token.");
     }
     const headers = { Cookie: `refreshToken=${refreshTokenPrev};` };
+    const appInfo = await SystemUtils.getApplicationInfo();
     const { response } = await API.post({
       serverUrl,
       uri: authTokenRefreshUrl,
+      data: { appInfo },
       config: { headers },
     });
     const { authToken, refreshToken } = extractAuthTokens(response);
     setAuthToken(authToken);
     await SecureStoreService.setAuthRefreshToken(refreshToken);
   } catch (error) {
-    // clear stored tokens
     setAuthToken(null);
-    await SecureStoreService.setAuthRefreshToken(null);
-
+    // keep the refresh token on network or server errors (e.g. poor connection in the field):
+    // it is still valid and the session can be refreshed later without a new login
+    if (isRefreshTokenRejected(error)) {
+      await SecureStoreService.setAuthRefreshToken(null);
+    }
     throw error;
   }
 };
