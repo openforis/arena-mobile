@@ -274,6 +274,8 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     defaultCycleKey,
     cycleKey: cycle,
   });
+  // records are cloned into the default cycle: from the previous cycle or within the default cycle itself
+  const canCloneRecords = isPrevCycle || cycle === defaultCycleKey;
 
   const screenViewMode = ScreenOptionsSelectors.useCurrentScreenViewMode();
   const viewAsList = screenViewMode === ScreenViewMode.list;
@@ -416,7 +418,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
 
   const customActions = useMemo(() => {
     const actions: SelectedItemsAction[] = [];
-    if (isPrevCycle) {
+    if (canCloneRecords) {
       actions.push({
         key: "cloneSelectedItems",
         icon: "content-copy",
@@ -446,7 +448,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     });
     return actions;
   }, [
-    isPrevCycle,
+    canCloneRecords,
     onCloneSelectedItems,
     onExportSelectedItems,
     onFetchSelectedItems,

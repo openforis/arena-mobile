@@ -11,7 +11,6 @@ import {
   Objects,
   PointFactory,
   Points,
-  Promises,
   RecordFactory,
   Records,
   RecordUpdater,
@@ -42,12 +41,9 @@ import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { DeviceInfoActions, DeviceInfoSelectors } from "../deviceInfo";
 import { MessageActions } from "../message";
 import { PositionTrackingActions } from "../positionTracking/actions";
-import { SurveyActions, SurveySelectors } from "../survey";
+import { SurveySelectors } from "../survey";
 
-import {
-  RemoteConnectionActions,
-  RemoteConnectionSelectors,
-} from "../remoteConnection";
+import { RemoteConnectionSelectors } from "../remoteConnection";
 import { exportRecords, startCsvDataExportJob } from "./actionsDataExport";
 import { runAutoSync } from "./actionsAutoSync";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
@@ -57,6 +53,7 @@ import {
   fetchRecordsFromServer,
 } from "./actionsRecordsImport";
 import { revalidateRecords } from "./actionsRecordsRevalidate";
+import { ensureUserGroupReady } from "./actionsUserGroup";
 import { DataEntryActionsRecordSync } from "./actionsRecordSync";
 import { DataEntryActionsPreview } from "./actionsPreview";
 import { DataEntryActionTypes } from "./actionTypes";
@@ -125,86 +122,6 @@ const prepareRecordForStorage = ({ record }: any) => {
   return { ...record, validation: validationUpdated };
 };
 
-const _prefillQualifierAttributes = async ({
-  user,
-  survey,
-  userGroup,
-  record,
-  nodes,
-}: any) => {
-  const qualifierDefs = Surveys.getQualifierDefs({ survey });
-  if (qualifierDefs.length === 0) {
-    return { record, nodes };
-  }
-  const qualifierValueByNodeDefUuid =
-    UserGroupQualifiers.getQualifierValueByNodeDefUuid({
-      survey,
-      userGroup,
-    });
-
-  // update qualifier attributes sequentially: each update starts from the previously updated record
-  await Promises.each(qualifierDefs, async (qualifierDef) => {
-    const qualifierValue = qualifierValueByNodeDefUuid[qualifierDef.uuid];
-    if (qualifierValue === undefined) return;
-    const value = UserGroupQualifiers.resolveQualifierNodeValue({
-      survey,
-      nodeDef: qualifierDef,
-      qualifierValue,
-    });
-    if (value === undefined) return;
-    const [qualifierNode] = Records.getNodesByDefUuid(qualifierDef.uuid)(record);
-    if (!qualifierNode) return;
-    const { record: recordUpdated, nodes: nodesUpdated } =
-      await RecordUpdater.updateAttributeValue({
-        user,
-        survey,
-        record,
-        attributeUuid: qualifierNode.uuid,
-        value,
-      });
-    record = recordUpdated;
-    nodes = { ...nodes, ...nodesUpdated };
-  });
-  return { record, nodes };
-};
-
-// Qualifier attributes are prefilled from the user's UserGroup (see _prefillQualifierAttributes).
-// If the group hasn't been fetched yet (e.g. right after app startup or login, before the
-// best-effort background fetch resolves), we can't tell whether the user genuinely has no
-// group or whether we just haven't asked the server yet. Offer to fetch again rather than
-// silently creating a record with missing/incorrect prefilled values.
-const _ensureUserGroupReadyForNewRecord = async ({
-  dispatch,
-  getState,
-  survey,
-}: any): Promise<boolean> => {
-  if (Surveys.getQualifierDefs({ survey }).length === 0) return true;
-
-  const isReady = () =>
-    SurveySelectors.selectCurrentSurveyUserGroupReady(getState());
-
-  if (isReady()) return true;
-
-  const confirmed = await ConfirmUtils.confirm({
-    dispatch,
-    titleKey: "dataEntry:userGroupNotReady.title",
-    messageKey: "dataEntry:userGroupNotReady.message",
-    confirmButtonTextKey: "dataEntry:userGroupNotReady.fetchAgain",
-  });
-  if (!confirmed) return false;
-
-  await dispatch(
-    RemoteConnectionActions.loginAndSetUser({ onlyIfNotSet: false }),
-  );
-  await dispatch(SurveyActions.fetchCurrentSurveyUserGroup({ survey }));
-
-  if (!isReady()) {
-    dispatch(ToastActions.show("dataEntry:userGroupNotReady.stillNotReady"));
-    return false;
-  }
-  return true;
-};
-
 const createNewRecord =
   ({ navigation }: any) =>
     async (dispatch: any, getState: any) => {
@@ -213,7 +130,7 @@ const createNewRecord =
         const survey = SurveySelectors.selectCurrentSurvey(state)!;
 
         if (
-          !(await _ensureUserGroupReadyForNewRecord({
+          !(await ensureUserGroupReady({
             dispatch,
             getState,
             survey,
@@ -248,7 +165,7 @@ const createNewRecord =
           prevCycleRecord,
         });
 
-        ({ record, nodes } = await _prefillQualifierAttributes({
+        ({ record, nodes } = await UserGroupQualifiers.assignQualifierValues({
           user,
           survey,
           userGroup,
