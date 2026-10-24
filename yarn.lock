@@ -2241,9 +2241,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openforis/arena-core@npm:^2.11.0":
-  version: 2.11.0
-  resolution: "@openforis/arena-core@npm:2.11.0"
+"@openforis/arena-core@npm:^2.11.1":
+  version: 2.11.1
+  resolution: "@openforis/arena-core@npm:2.11.1"
   dependencies:
     "@jsep-plugin/regex": "npm:^1.1.0"
     "@turf/bearing": "npm:^7.4.0"
@@ -2260,7 +2260,7 @@ __metadata:
     n2words: "npm:^6.3.0"
     proj4: "npm:^2.22.0"
     uuid: "npm:^14.0.3"
-  checksum: 10c0/21f286b4911700ec8f978cf8afbec65444a514af9fc126e3019492432019431b70dccb9998b74d52ae9523a3f200ef9618c621afbb4f64bcafb2abcbc16aad7d
+  checksum: 10c0/7a58cb96a66826bb5b7bd006654b47a5c1299578d4d1487c43caa564ff3fcc74bfbb0e78da4fccdaa30fa0d22fa73e4e44edd7ab19bf5c5ffe1641995c477ba7
   languageName: node
   linkType: hard
 
@@ -3377,7 +3377,7 @@ __metadata:
     "@eslint/eslintrc": "npm:^3.3.7"
     "@eslint/js": "npm:^10.0.1"
     "@lodev09/react-native-exify": "npm:^1.0.3"
-    "@openforis/arena-core": "npm:^2.11.0"
+    "@openforis/arena-core": "npm:^2.11.1"
     "@react-native-async-storage/async-storage": "npm:2.2.0"
     "@react-native-clipboard/clipboard": "npm:^1.16.3"
     "@react-native-community/datetimepicker": "npm:9.1.0"
