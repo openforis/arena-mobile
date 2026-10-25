@@ -3,6 +3,10 @@ export default {
   since: "Since version {{version}}",
   dontShowAgain: "Don't show these again",
   items: {
+    geoAttribute: {
+      title: "Geospatial attribute: draw polygons",
+      description: "Surveys can now include **geospatial** attributes. In the form, tap **Draw polygon** and tap the map to add the points of the boundary (or, while walking along it, use **Add current location**), then press **Stop**.\n\nTap a point to select it and drag it, tap a midpoint to add a new point, then **Save**. The polygon can also be downloaded as GeoJSON.",
+    },
     offlineMaps: {
       title: "Offline maps",
       description: "Open **Offline maps** from the main menu and use **Add area** to download the map of your area of interest before going to the field: it will be available even without an internet connection.\n\nIn the **PDF maps** tab you can also import georeferenced PDF maps: they are shown on top of the base map.",

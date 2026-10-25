@@ -3,6 +3,10 @@ export default {
   since: "Desde la versión {{version}}",
   dontShowAgain: "No volver a mostrar",
   items: {
+    geoAttribute: {
+      title: "Atributo geoespacial: dibujar polígonos",
+      description: "Las encuestas ahora pueden incluir atributos **geoespaciales**. En el formulario, toca **Dibujar polígono** y toca el mapa para añadir los puntos del límite (o, mientras lo recorres, usa **Agregar ubicación actual**), luego pulsa **Detener**.\n\nToca un punto para seleccionarlo y arrastrarlo, toca un punto medio para añadir un nuevo punto y luego **Guardar**. El polígono también se puede descargar como GeoJSON.",
+    },
     offlineMaps: {
       title: "Mapas sin conexión",
       description: "Abre **Mapas sin conexión** desde el menú principal y usa **Añadir área** para descargar el mapa de tu zona de interés antes de ir al campo: estará disponible incluso sin conexión a internet.\n\nEn la pestaña **Mapas PDF** también puedes importar mapas PDF georreferenciados: se muestran sobre el mapa base.",

@@ -3,6 +3,10 @@ export default {
   since: "Sejak versi {{version}}",
   dontShowAgain: "Jangan tampilkan lagi",
   items: {
+    geoAttribute: {
+      title: "Atribut geospasial: gambar poligon",
+      description: "Survei kini dapat memiliki atribut **geospasial**. Di formulir, ketuk **Gambar poligon** lalu ketuk peta untuk menambahkan titik-titik batas (atau, sambil menyusuri batasnya, gunakan **Tambah lokasi saat ini**), lalu tekan **Berhenti**.\n\nKetuk sebuah titik untuk memilih dan menggesernya, ketuk titik tengah untuk menambahkan titik baru, lalu **Simpan**. Poligon juga dapat diunduh sebagai GeoJSON.",
+    },
     offlineMaps: {
       title: "Peta offline",
       description: "Buka **Peta offline** dari menu utama dan gunakan **Tambah area** untuk mengunduh peta area yang Anda minati sebelum ke lapangan: peta tetap tersedia meskipun tanpa koneksi internet.\n\nDi tab **Peta PDF** Anda juga dapat mengimpor peta PDF bergeoreferensi: peta ditampilkan di atas peta dasar.",

@@ -3,6 +3,10 @@ export default {
   since: "Seit Version {{version}}",
   dontShowAgain: "Nicht mehr anzeigen",
   items: {
+    geoAttribute: {
+      title: "Geodaten-Attribut: Polygone zeichnen",
+      description: "Erhebungen können jetzt **Geodaten**-Attribute enthalten. Tippe im Formular auf **Polygon zeichnen** und tippe auf die Karte, um die Punkte der Grenze hinzuzufügen (oder nutze beim Ablaufen der Grenze **Aktuellen Standort hinzufügen**), und drücke dann **Stopp**.\n\nTippe auf einen Punkt, um ihn auszuwählen und zu verschieben, tippe auf einen Mittelpunkt, um einen neuen Punkt hinzuzufügen, und tippe dann auf **Speichern**. Das Polygon kann auch als GeoJSON heruntergeladen werden.",
+    },
     offlineMaps: {
       title: "Offline-Karten",
       description: "Öffne **Offline-Karten** im Hauptmenü und lade mit **Gebiet hinzufügen** die Karte deines Interessengebiets herunter, bevor du ins Feld gehst: Sie ist auch ohne Internetverbindung verfügbar.\n\nIm Tab **PDF-Karten** kannst du außerdem georeferenzierte PDF-Karten importieren: Sie werden über der Basiskarte angezeigt.",

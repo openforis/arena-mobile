@@ -1,5 +1,7 @@
 import type { ImageSourcePropType } from "react-native";
 
+import { whatsNewImagesById } from "./whatsNewImages";
+
 // Features highlighted in the "What's new" dialog (a visual summary of CHANGELOG.md)
 export type WhatsNewItem = {
   // used as i18n key (whatsNew:items.<id>.title/description) and to track the items seen by the user
@@ -8,54 +10,18 @@ export type WhatsNewItem = {
   version: string;
   // Material Design icon name
   icon: string;
-  // screenshots (stored in assets/whatsNew)
+  // screenshots (see whatsNewImages)
   images?: ImageSourcePropType[];
 };
 
 // newest first
 const items: WhatsNewItem[] = [
-  {
-    id: "offlineMaps",
-    version: "2.9.0",
-    icon: "map-marker-down",
-    images: [
-      require("../../assets/whatsNew/offlineMaps-1.jpg"),
-      require("../../assets/whatsNew/offlineMaps-2.jpg"),
-      require("../../assets/whatsNew/offlineMaps-3.jpg"),
-      require("../../assets/whatsNew/offlineMaps-4.jpg"),
-    ],
-  },
-  {
-    id: "recordsMap",
-    version: "2.9.0",
-    icon: "map-marker-multiple",
-    images: [
-      require("../../assets/whatsNew/recordsMap-1.jpg"),
-      require("../../assets/whatsNew/recordsMap-2.jpg"),
-      require("../../assets/whatsNew/recordsMap-3.jpg"),
-      require("../../assets/whatsNew/recordsMap-4.jpg"),
-    ],
-  },
-  {
-    id: "autoSync",
-    version: "2.8.0",
-    icon: "cloud-sync",
-    images: [
-      require("../../assets/whatsNew/autoSync-1.jpg"),
-      require("../../assets/whatsNew/autoSync-2.jpg"),
-    ],
-  },
-  {
-    id: "externalGps",
-    version: "2.6.5",
-    icon: "crosshairs-gps",
-    images: [
-      require("../../assets/whatsNew/externalGps-1.jpg"),
-      require("../../assets/whatsNew/externalGps-2.jpg"),
-      require("../../assets/whatsNew/externalGps-3.jpg"),
-    ],
-  },
-];
+  { id: "geoAttribute", version: "2.10.0", icon: "vector-polygon" },
+  { id: "offlineMaps", version: "2.9.0", icon: "map-marker-down" },
+  { id: "recordsMap", version: "2.9.0", icon: "map-marker-multiple" },
+  { id: "autoSync", version: "2.8.0", icon: "cloud-sync" },
+  { id: "externalGps", version: "2.6.5", icon: "crosshairs-gps" },
+].map((item) => ({ ...item, images: whatsNewImagesById[item.id] }));
 
 // maximum number of items shown automatically (e.g. on the first app launch)
 const maxAutoShownItems = 8;

@@ -3,6 +3,10 @@ export default {
   since: "Depuis la version {{version}}",
   dontShowAgain: "Ne plus afficher",
   items: {
+    geoAttribute: {
+      title: "Attribut géospatial : dessiner des polygones",
+      description: "Les enquêtes peuvent désormais inclure des attributs **géospatiaux**. Dans le formulaire, touchez **Dessiner un polygone** et touchez la carte pour ajouter les points de la limite (ou, en la parcourant, utilisez **Ajouter la position actuelle**), puis appuyez sur **Arrêter**.\n\nTouchez un point pour le sélectionner et le déplacer, touchez un point milieu pour ajouter un nouveau point, puis **Enregistrer**. Le polygone peut aussi être téléchargé au format GeoJSON.",
+    },
     offlineMaps: {
       title: "Cartes hors ligne",
       description: "Ouvrez **Cartes hors ligne** depuis le menu principal et utilisez **Ajouter une zone** pour télécharger la carte de votre zone d'intérêt avant d'aller sur le terrain : elle sera disponible même sans connexion internet.\n\nDans l'onglet **Cartes PDF**, vous pouvez aussi importer des cartes PDF géoréférencées : elles s'affichent par-dessus la carte de base.",

@@ -3,6 +3,10 @@ export default {
   since: "Sedan version {{version}}",
   dontShowAgain: "Visa inte dessa igen",
   items: {
+    geoAttribute: {
+      title: "Geospatialt attribut: rita polygoner",
+      description: "Undersökningar kan nu innehålla **geospatiala** attribut. Tryck på **Rita polygon** i formuläret och tryck på kartan för att lägga till gränsens punkter (eller använd **Lägg till aktuell plats** medan du går längs gränsen), och tryck sedan på **Stopp**.\n\nTryck på en punkt för att markera och dra den, tryck på en mittpunkt för att lägga till en ny punkt och välj sedan **Spara**. Polygonen kan även laddas ner som GeoJSON.",
+    },
     offlineMaps: {
       title: "Offlinekartor",
       description: "Öppna **Offlinekartor** från huvudmenyn och använd **Lägg till område** för att ladda ner kartan över ditt intresseområde innan du går ut i fält: den är tillgänglig även utan internetanslutning.\n\nPå fliken **PDF-kartor** kan du också importera georefererade PDF-kartor: de visas ovanpå baskartan.",

@@ -3,6 +3,10 @@ export default {
   since: "Desde a versão {{version}}",
   dontShowAgain: "Não mostrar novamente",
   items: {
+    geoAttribute: {
+      title: "Atributo geoespacial: desenhar polígonos",
+      description: "Os inquéritos podem agora incluir atributos **geoespaciais**. No formulário, toque em **Desenhar polígono** e toque no mapa para adicionar os pontos do limite (ou, ao percorrê-lo, use **Adicionar localização atual**), depois prima **Parar**.\n\nToque num ponto para o selecionar e arrastar, toque num ponto intermédio para adicionar um novo ponto e depois **Salvar**. O polígono também pode ser transferido em formato GeoJSON.",
+    },
     offlineMaps: {
       title: "Mapas offline",
       description: "Abra **Mapas offline** no menu principal e use **Adicionar área** para transferir o mapa da sua área de interesse antes de ir para o campo: estará disponível mesmo sem ligação à internet.\n\nNo separador **Mapas PDF** também pode importar mapas PDF georreferenciados: são mostrados por cima do mapa base.",

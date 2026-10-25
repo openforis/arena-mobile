@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- "What's new" dialog: carousel of the new features (offline maps, records on the map, auto-sync, external GPS devices), shown on startup and in the About screen;
+- "What's new" dialog: carousel of the new features (geospatial attribute, offline maps, records on the map, auto-sync, external GPS devices), shown on startup and in the About screen;
 
 ## [2.10.3] - 2026-10-22
 
