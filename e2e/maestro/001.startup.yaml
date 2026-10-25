@@ -6,4 +6,5 @@ appId: ${APP_ID}
 - extendedWaitUntil:
     visible: "Arena Mobile"
     timeout: 60000
+- runFlow: common/dismiss-whats-new.yaml
 - assertVisible: "Not logged in"

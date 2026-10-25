@@ -2,6 +2,7 @@ export { AlertIcon } from "./AlertIcon";
 export { Button } from "./Button";
 export type { ButtonIconPosition, ButtonMode } from "./Button";
 export { Card } from "./Card";
+export { Carousel } from "./Carousel";
 export { Checkbox } from "./Checkbox";
 export { CompletionIndicator, getCompletionColor } from "./CompletionIndicator";
 export { CloseIconButton } from "./CloseIconButton";

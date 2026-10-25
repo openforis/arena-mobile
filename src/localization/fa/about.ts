@@ -5,4 +5,5 @@ export default {
   support: "پشتیبانی",
   version: "نسخه",
   viewChangelog: "مشاهده تغییرات",
+  viewWhatsNew: "مشاهده تازه‌ها",
 };

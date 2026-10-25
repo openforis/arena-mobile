@@ -5,4 +5,5 @@ export default {
   support: "Suporte",
   version: "Versão",
   viewChangelog: "Ver registro de alterações",
+  viewWhatsNew: "Ver novidades",
 };
