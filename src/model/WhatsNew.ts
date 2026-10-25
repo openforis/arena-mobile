@@ -8,7 +8,7 @@ export type WhatsNewItem = {
   version: string;
   // Material Design icon name
   icon: string;
-  // screenshots (stored in assets/whatsNew, at most 3 per item)
+  // screenshots (stored in assets/whatsNew)
   images?: ImageSourcePropType[];
 };
 
@@ -22,6 +22,7 @@ const items: WhatsNewItem[] = [
       require("../../assets/whatsNew/offlineMaps-1.jpg"),
       require("../../assets/whatsNew/offlineMaps-2.jpg"),
       require("../../assets/whatsNew/offlineMaps-3.jpg"),
+      require("../../assets/whatsNew/offlineMaps-4.jpg"),
     ],
   },
   {
@@ -40,6 +41,7 @@ const items: WhatsNewItem[] = [
     images: [
       require("../../assets/whatsNew/externalGps-1.jpg"),
       require("../../assets/whatsNew/externalGps-2.jpg"),
+      require("../../assets/whatsNew/externalGps-3.jpg"),
     ],
   },
 ];
