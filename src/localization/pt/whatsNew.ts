@@ -7,6 +7,10 @@ export default {
       title: "Mapas offline",
       description: "Abra **Mapas offline** no menu principal e use **Adicionar área** para transferir o mapa da sua área de interesse antes de ir para o campo: estará disponível mesmo sem ligação à internet.\n\nNo separador **Mapas PDF** também pode importar mapas PDF georreferenciados: são mostrados por cima do mapa base.",
     },
+    recordsMap: {
+      title: "Registos no mapa",
+      description: "Na lista de registos, toque no botão **mapa** no topo para ver os seus dados no mapa: os pontos de amostragem (visitados ou não), as localizações registadas nos atributos de coordenadas e os percursos de posição.\n\nUse **Camadas** para escolher o que mostrar e toque num ponto para ver os detalhes e **Abrir** o registo.",
+    },
     autoSync: {
       title: "Sincronização automática de dados",
       description: "Ative **Sincronização automática** na parte inferior da lista de registos (ou nas **Definições**): quando estiver ligado ao servidor, os registos novos e alterados são enviados automaticamente em segundo plano, sem ter de os enviar manualmente.\n\nToque no ícone do estado da sincronização ao lado para acompanhar o progresso ou para **Sincronizar agora**.",

@@ -7,6 +7,10 @@ export default {
       title: "Offline-kartat",
       description: "Avaa **Offline-kartat** päävalikosta ja lataa kiinnostavan alueen kartta **Lisää alue** -toiminnolla ennen maastoon lähtöä: se on käytettävissä myös ilman internetyhteyttä.\n\n**PDF-kartat**-välilehdellä voit myös tuoda georeferoituja PDF-karttoja: ne näytetään pohjakartan päällä.",
     },
+    recordsMap: {
+      title: "Tietueet kartalla",
+      description: "Napauta tietueluettelon yläosassa olevaa **kartta**-painiketta nähdäksesi tietosi kartalla: otantapisteet (käydyt tai käymättömät), koordinaattiattribuutteihin tallennetut sijainnit ja sijaintijäljet.\n\nValitse **Tasot**-painikkeella, mitä näytetään, ja napauta pistettä nähdäksesi sen tiedot ja **Avaa** tietue.",
+    },
     autoSync: {
       title: "Automaattinen tietojen synkronointi",
       description: "Ota **Automaattinen synkronointi** käyttöön tietueluettelon alaosassa (tai **Asetuksissa**): kun olet yhteydessä palvelimeen, uudet ja muokatut tietueet ladataan automaattisesti taustalla ilman manuaalista lähettämistä.\n\nNapauta vieressä olevaa synkronoinnin tilakuvaketta seurataksesi edistymistä tai valitaksesi **Synkronoi nyt**.",

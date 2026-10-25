@@ -26,6 +26,17 @@ const items: WhatsNewItem[] = [
     ],
   },
   {
+    id: "recordsMap",
+    version: "2.9.0",
+    icon: "map-marker-multiple",
+    images: [
+      require("../../assets/whatsNew/recordsMap-1.jpg"),
+      require("../../assets/whatsNew/recordsMap-2.jpg"),
+      require("../../assets/whatsNew/recordsMap-3.jpg"),
+      require("../../assets/whatsNew/recordsMap-4.jpg"),
+    ],
+  },
+  {
     id: "autoSync",
     version: "2.8.0",
     icon: "cloud-sync",
