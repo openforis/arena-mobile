@@ -50,7 +50,7 @@ export const WhatsNewSlide = (props: WhatsNewSlideProps) => {
 
   const title = t(WhatsNew.getTitleKey(item));
   // limited so that the description is still visible in landscape orientation
-  const imageMaxHeight = windowHeight * 0.32;
+  const imageMaxHeight = windowHeight * 0.25;
 
   // one image at a time, beside the previous/next buttons when there are more
   const imageMaxWidth =

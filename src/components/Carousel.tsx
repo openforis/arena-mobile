@@ -174,7 +174,9 @@ export const Carousel = <T,>(props: CarouselProps<T>) => {
 };
 
 const styles = StyleSheet.create({
+  // shrinks with the item, so the controls below stay visible in a container with a max height
   container: {
+    flexShrink: 1,
     gap: 8,
   },
   item: {
