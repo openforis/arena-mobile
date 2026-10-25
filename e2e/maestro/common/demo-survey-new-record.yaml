@@ -6,7 +6,7 @@ appId: ${APP_ID}
     clearState: true
 # the "What's new" dialog is shown again after clearing the state
 - extendedWaitUntil:
-    visible: "Select a survey|Manage surveys|What's new in Arena Mobile"
+    visible: "Select a survey|Manage surveys|What's new"
     timeout: 60000
 - runFlow: dismiss-whats-new.yaml
 - tapOn: "Select a survey|Manage surveys"

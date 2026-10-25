@@ -1,5 +1,5 @@
 export default {
-  title: "በArena Mobile ውስጥ አዲስ ነገሮች",
+  title: "አዲስ ነገሮች",
   since: "ከስሪት {{version}} ጀምሮ",
   dontShowAgain: "እነዚህን ዳግመኛ አታሳይ",
   items: {

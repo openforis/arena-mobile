@@ -1,5 +1,5 @@
 export default {
-  title: "Nyheter i Arena Mobile",
+  title: "Nyheter",
   since: "Sedan version {{version}}",
   dontShowAgain: "Visa inte dessa igen",
   items: {

@@ -4,7 +4,7 @@ appId: ${APP_ID}
 # close the "What's new" dialog, shown automatically on startup, so it is not shown again
 - runFlow:
     when:
-      visible: "What's new in Arena Mobile"
+      visible: "What's new"
     commands:
       - tapOn: "Don't show these again"
       - tapOn:

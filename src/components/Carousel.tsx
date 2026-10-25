@@ -17,14 +17,19 @@ import { VView } from "./VView";
 // min horizontal swipe distance to go to the previous/next item
 const swipeMinDistance = 50;
 
+// width of the previous/next buttons in the compact variant (icon + padding + margin)
+export const carouselCompactButtonWidth = 40;
+
 type CarouselProps<T> = {
+  // small previous/next buttons beside the item and small dots below it (e.g. nested in another carousel)
+  compact?: boolean;
   items: T[];
   renderItem: (item: T, index: number) => ReactNode;
   style?: StyleProp<ViewStyle>;
 };
 
 export const Carousel = <T,>(props: CarouselProps<T>) => {
-  const { items, renderItem, style } = props;
+  const { compact = false, items, renderItem, style } = props;
 
   const isRtl = useIsTextDirectionRtl();
   const [activeIndexState, setActiveIndexState] = useState(0);
@@ -43,8 +48,24 @@ export const Carousel = <T,>(props: CarouselProps<T>) => {
   );
 
   // the pan responder is created once: read the latest callbacks through a ref
-  const swipeHandlersRef = useRef({ goToNext, goToPrevious, isRtl });
-  swipeHandlersRef.current = { goToNext, goToPrevious, isRtl };
+  const swipeHandlersRef = useRef({
+    activeIndex,
+    compact,
+    goToNext,
+    goToPrevious,
+    isRtl,
+    lastIndex,
+  });
+  swipeHandlersRef.current = {
+    activeIndex,
+    compact,
+    goToNext,
+    goToPrevious,
+    isRtl,
+    lastIndex,
+  };
+
+  const grantPageXRef = useRef(0);
 
   const panResponder = useMemo(
     () =>
@@ -54,6 +75,19 @@ export const Carousel = <T,>(props: CarouselProps<T>) => {
         // horizontal swipes only, so vertical scrolling of the item content still works
         onMoveShouldSetPanResponder: (_evt, { dx, dy }) =>
           Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 2,
+        onPanResponderGrant: (evt) => {
+          grantPageXRef.current = evt.nativeEvent.pageX;
+        },
+        // a nested (compact) carousel keeps the swipe, unless it cannot move further in that direction
+        onPanResponderTerminationRequest: (evt) => {
+          const { activeIndex, compact, isRtl, lastIndex } =
+            swipeHandlersRef.current;
+          if (!compact) return true;
+          // the gesture state isn't updated yet with the move that triggered the request
+          const dx = evt.nativeEvent.pageX - grantPageXRef.current;
+          const forward = isRtl ? dx > 0 : dx < 0;
+          return forward ? activeIndex === lastIndex : activeIndex === 0;
+        },
         onPanResponderRelease: (_evt, { dx }) => {
           if (Math.abs(dx) < swipeMinDistance) return;
           const handlers = swipeHandlersRef.current;
@@ -70,27 +104,69 @@ export const Carousel = <T,>(props: CarouselProps<T>) => {
 
   if (count === 0) return null;
 
+  const previousButton = (
+    <IconButton
+      avoidMultiplePress={false}
+      disabled={activeIndex === 0}
+      icon={isRtl ? "chevron-right" : "chevron-left"}
+      onPress={goToPrevious}
+      size={compact ? 16 : undefined}
+      style={compact ? styles.compactButton : undefined}
+    />
+  );
+  const nextButton = (
+    <IconButton
+      avoidMultiplePress={false}
+      disabled={activeIndex === lastIndex}
+      icon={isRtl ? "chevron-left" : "chevron-right"}
+      onPress={goToNext}
+      size={compact ? 16 : undefined}
+      style={compact ? styles.compactButton : undefined}
+    />
+  );
+  const multiple = count > 1;
+
+  // RN View: the app View doesn't forward the pan handlers
+  const item = (
+    <View
+      style={[styles.item, compact && styles.compactItem]}
+      {...panResponder.panHandlers}
+    >
+      {renderItem(items[activeIndex] as T, activeIndex)}
+    </View>
+  );
+
+  if (compact) {
+    return (
+      <VView style={[styles.compactContainer, style]}>
+        <HView style={styles.compactRow}>
+          {multiple && previousButton}
+          {item}
+          {multiple && nextButton}
+        </HView>
+        {multiple && (
+          <Dots
+            active={activeIndex}
+            activeDotHeight={8}
+            activeDotWidth={8}
+            length={count}
+            passiveDotHeight={6}
+            passiveDotWidth={6}
+            paddingVertical={0}
+          />
+        )}
+      </VView>
+    );
+  }
+
   return (
     <VView style={[styles.container, style]}>
-      {/* RN View: the app View doesn't forward the pan handlers */}
-      <View style={styles.item} {...panResponder.panHandlers}>
-        {renderItem(items[activeIndex] as T, activeIndex)}
-      </View>
-      {count > 1 && (
+      {item}
+      {multiple && (
         <HView style={styles.stepper}>
-          <IconButton
-            avoidMultiplePress={false}
-            disabled={activeIndex === 0}
-            icon={isRtl ? "chevron-right" : "chevron-left"}
-            onPress={goToPrevious}
-          />
+          {previousButton}
           <Dots length={count} active={activeIndex} />
-          <IconButton
-            avoidMultiplePress={false}
-            disabled={activeIndex === lastIndex}
-            icon={isRtl ? "chevron-left" : "chevron-right"}
-            onPress={goToNext}
-          />
+          {nextButton}
         </HView>
       )}
     </VView>
@@ -107,5 +183,20 @@ const styles = StyleSheet.create({
   stepper: {
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  compactContainer: {
+    gap: 8,
+  },
+  compactRow: {
+    alignItems: "center",
+    gap: 0,
+  },
+  compactItem: {
+    alignItems: "center",
+    flex: 1,
+  },
+  compactButton: {
+    margin: 0,
+    width: carouselCompactButtonWidth,
   },
 });

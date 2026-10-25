@@ -10,6 +10,8 @@ import {
 import { useTheme } from "react-native-paper";
 
 import {
+  Carousel,
+  carouselCompactButtonWidth,
   Dialog,
   HView,
   Icon,
@@ -21,7 +23,6 @@ import {
 import { useTranslation } from "localization";
 import { WhatsNew, WhatsNewItem } from "model";
 
-const imagesGap = 8;
 // see Dialog styles (overlay padding, max width) and RN Paper Dialog.Content padding
 const dialogHorizontalMargin = 56;
 const dialogMaxWidth = 480;
@@ -45,19 +46,47 @@ export const WhatsNewSlide = (props: WhatsNewSlideProps) => {
   const { height: windowHeight, width: windowWidth } = useWindowDimensions();
   const [enlargedImage, setEnlargedImage] =
     useState<ImageSourcePropType | null>(null);
-  const [imagesRowWidth, setImagesRowWidth] = useState(0);
+  const [imagesWidth, setImagesWidth] = useState(0);
 
   const title = t(WhatsNew.getTitleKey(item));
   // limited so that the description is still visible in landscape orientation
   const imageMaxHeight = windowHeight * 0.32;
 
+  // one image at a time, beside the previous/next buttons when there are more
+  const imageMaxWidth =
+    imagesWidth - (images.length > 1 ? 2 * carouselCompactButtonWidth : 0);
+
   const getImageSize = (image: ImageSourcePropType) => {
     const aspectRatio = getAspectRatio(image);
-    const maxWidth =
-      (imagesRowWidth - imagesGap * (images.length - 1)) / images.length;
-    const width = Math.min(maxWidth, imageMaxHeight * aspectRatio);
+    const width = Math.min(imageMaxWidth, imageMaxHeight * aspectRatio);
     return { width, height: width / aspectRatio };
   };
+
+  // same height for all the images, so the slide doesn't change size when going through them
+  const imagesHeight = Math.max(
+    0,
+    ...images.map((image) => getImageSize(image).height),
+  );
+
+  const renderImage = (image: ImageSourcePropType) => (
+    <View style={[styles.imageContainer, { height: imagesHeight }]}>
+      <Pressable
+        accessibilityLabel={title}
+        accessibilityRole="imagebutton"
+        onPress={() => setEnlargedImage(image)}
+      >
+        <Image
+          resizeMode="contain"
+          source={image}
+          style={[
+            styles.image,
+            getImageSize(image),
+            { borderColor: theme.colors.outlineVariant },
+          ]}
+        />
+      </Pressable>
+    </View>
+  );
 
   const getEnlargedImageSize = (image: ImageSourcePropType) => {
     const aspectRatio = getAspectRatio(image);
@@ -78,30 +107,11 @@ export const WhatsNewSlide = (props: WhatsNewSlideProps) => {
       </HView>
       {images.length > 0 && (
         <View
-          onLayout={(event) =>
-            setImagesRowWidth(event.nativeEvent.layout.width)
-          }
-          style={styles.images}
+          onLayout={(event) => setImagesWidth(event.nativeEvent.layout.width)}
         >
-          {imagesRowWidth > 0 &&
-            images.map((image, index) => (
-              <Pressable
-                accessibilityLabel={title}
-                accessibilityRole="imagebutton"
-                key={index}
-                onPress={() => setEnlargedImage(image)}
-              >
-                <Image
-                  resizeMode="contain"
-                  source={image}
-                  style={[
-                    styles.image,
-                    getImageSize(image),
-                    { borderColor: theme.colors.outlineVariant },
-                  ]}
-                />
-              </Pressable>
-            ))}
+          {imagesWidth > 0 && (
+            <Carousel compact items={images} renderItem={renderImage} />
+          )}
         </View>
       )}
       <ScrollView style={styles.description}>
@@ -142,9 +152,7 @@ const styles = StyleSheet.create({
   title: {
     flex: 1,
   },
-  images: {
-    flexDirection: "row",
-    gap: imagesGap,
+  imageContainer: {
     justifyContent: "center",
   },
   image: {

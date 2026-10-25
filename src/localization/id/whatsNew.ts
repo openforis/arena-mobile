@@ -1,5 +1,5 @@
 export default {
-  title: "Yang baru di Arena Mobile",
+  title: "Yang baru",
   since: "Sejak versi {{version}}",
   dontShowAgain: "Jangan tampilkan lagi",
   items: {

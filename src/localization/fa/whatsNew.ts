@@ -1,5 +1,5 @@
 export default {
-  title: "تازه‌های Arena Mobile",
+  title: "تازه‌ها",
   since: "از نسخه {{version}}",
   dontShowAgain: "دیگر نشان داده نشود",
   items: {

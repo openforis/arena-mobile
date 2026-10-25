@@ -1,5 +1,5 @@
 export default {
-  title: "Nouveautés d'Arena Mobile",
+  title: "Nouveautés",
   since: "Depuis la version {{version}}",
   dontShowAgain: "Ne plus afficher",
   items: {

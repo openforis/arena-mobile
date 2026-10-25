@@ -1,5 +1,5 @@
 export default {
-  title: "Uutta Arena Mobilessa",
+  title: "Uutta",
   since: "Versiosta {{version}} alkaen",
   dontShowAgain: "Älä näytä näitä uudelleen",
   items: {

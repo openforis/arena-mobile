@@ -1,5 +1,5 @@
 export default {
-  title: "Neu in Arena Mobile",
+  title: "Neuigkeiten",
   since: "Seit Version {{version}}",
   dontShowAgain: "Nicht mehr anzeigen",
   items: {

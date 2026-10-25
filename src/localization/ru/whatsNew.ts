@@ -1,5 +1,5 @@
 export default {
-  title: "Что нового в Arena Mobile",
+  title: "Что нового",
   since: "С версии {{version}}",
   dontShowAgain: "Больше не показывать",
   items: {

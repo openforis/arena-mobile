@@ -5,7 +5,7 @@ appId: ${APP_ID}
 - takeScreenshot: MainScreen
 # the "What's new" dialog, if shown, hides the home screen
 - extendedWaitUntil:
-    visible: "(What's new in )?Arena Mobile"
+    visible: "What's new|Arena Mobile"
     timeout: 60000
 - runFlow: common/dismiss-whats-new.yaml
 - assertVisible: "Arena Mobile"
