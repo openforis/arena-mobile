@@ -1,3 +1,5 @@
+import type { ImageSourcePropType } from "react-native";
+
 // Features highlighted in the "What's new" dialog (a visual summary of CHANGELOG.md)
 export type WhatsNewItem = {
   // used as i18n key (whatsNew:items.<id>.title/description) and to track the items seen by the user
@@ -6,13 +8,40 @@ export type WhatsNewItem = {
   version: string;
   // Material Design icon name
   icon: string;
+  // screenshots (stored in assets/whatsNew, at most 3 per item)
+  images?: ImageSourcePropType[];
 };
 
 // newest first
 const items: WhatsNewItem[] = [
-  { id: "offlineMaps", version: "2.9.0", icon: "map-marker-down" },
-  { id: "autoSync", version: "2.8.0", icon: "cloud-sync" },
-  { id: "externalGps", version: "2.6.5", icon: "crosshairs-gps" },
+  {
+    id: "offlineMaps",
+    version: "2.9.0",
+    icon: "map-marker-down",
+    images: [
+      require("../../assets/whatsNew/offlineMaps-1.jpg"),
+      require("../../assets/whatsNew/offlineMaps-2.jpg"),
+      require("../../assets/whatsNew/offlineMaps-3.jpg"),
+    ],
+  },
+  {
+    id: "autoSync",
+    version: "2.8.0",
+    icon: "cloud-sync",
+    images: [
+      require("../../assets/whatsNew/autoSync-1.jpg"),
+      require("../../assets/whatsNew/autoSync-2.jpg"),
+    ],
+  },
+  {
+    id: "externalGps",
+    version: "2.6.5",
+    icon: "crosshairs-gps",
+    images: [
+      require("../../assets/whatsNew/externalGps-1.jpg"),
+      require("../../assets/whatsNew/externalGps-2.jpg"),
+    ],
+  },
 ];
 
 // maximum number of items shown automatically (e.g. on the first app launch)

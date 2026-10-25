@@ -1,5 +1,11 @@
 import { ReactNode, useCallback, useMemo, useRef, useState } from "react";
-import { PanResponder, StyleProp, StyleSheet, ViewStyle } from "react-native";
+import {
+  PanResponder,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from "react-native";
 import Dots from "react-native-dots-pagination";
 
 import { useIsTextDirectionRtl } from "localization";
@@ -43,6 +49,8 @@ export const Carousel = <T,>(props: CarouselProps<T>) => {
   const panResponder = useMemo(
     () =>
       PanResponder.create({
+        // claimed on start too: otherwise an ancestor that became responder (e.g. the dialog container) keeps the gesture
+        onStartShouldSetPanResponder: () => true,
         // horizontal swipes only, so vertical scrolling of the item content still works
         onMoveShouldSetPanResponder: (_evt, { dx, dy }) =>
           Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 2,
@@ -64,9 +72,10 @@ export const Carousel = <T,>(props: CarouselProps<T>) => {
 
   return (
     <VView style={[styles.container, style]}>
-      <VView style={styles.item} {...panResponder.panHandlers}>
+      {/* RN View: the app View doesn't forward the pan handlers */}
+      <View style={styles.item} {...panResponder.panHandlers}>
         {renderItem(items[activeIndex] as T, activeIndex)}
-      </VView>
+      </View>
       {count > 1 && (
         <HView style={styles.stepper}>
           <IconButton
