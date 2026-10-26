@@ -4,7 +4,7 @@ export default {
   autoSync: {
     checkbox: "自動同期",
     synced: "{{count}}件のレコードを自動同期しました",
-    synced_plural: "{{count}}件のレコードを自動同期しました",
+    synced_other: "{{count}}件のレコードを自動同期しました",
     statusLabel: "同期状態:",
     statusTitle: "同期状態",
     syncInProgressToast:
@@ -53,7 +53,7 @@ export default {
     findClosestSamplingPoint: "最寄りの抽出地点を探す",
     findingClosestSamplingPoint: "最寄りの抽出地点を探しています",
     minDistanceItemFound: "距離{{minDistance}}mの地点に項目が見つかりました",
-    minDistanceItemFound_plural:
+    minDistanceItemFound_other:
       "距離{{minDistance}}mの地点に項目が見つかりました",
     useSelectedItem: "選択した項目を使用",
   },
@@ -238,7 +238,7 @@ export default {
 
   code: {
     selectItem: "項目を選択",
-    selectItem_plural: "項目を選択",
+    selectItem_other: "項目を選択",
   },
   coordinate: {
     longPressMarkerToMove: "マーカーを長押しして移動します",

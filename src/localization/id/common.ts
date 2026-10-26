@@ -7,7 +7,7 @@ export default {
   close: "Tutup",
   confirm: "Konfirmasi",
   confirmClearSelectedValue: "Bersihkan nilai yang dipilih?",
-  confirmClearSelectedValue_plural: "Bersihkan nilai-nilai yang dipilih?",
+  confirmClearSelectedValue_other: "Bersihkan nilai-nilai yang dipilih?",
   continue: "Lanjutkan",
   createdOn: "Dibuat pada",
   delete: "Hapus",
@@ -58,17 +58,17 @@ export default {
 
   timePart: {
     year: "tahun",
-    year_plural: "tahun",
+    year_other: "tahun",
     month: "bulan",
-    month_plural: "bulan",
+    month_other: "bulan",
     day: "hari",
-    day_plural: "hari",
+    day_other: "hari",
     hour: "jam",
-    hours: "jam",
+    hour_other: "jam",
     minute: "menit",
-    minute_plural: "menit",
+    minute_other: "menit",
     second: "detik",
-    second_plural: "detik",
+    second_other: "detik",
   },
   remainingTime: {
     canLastHoursAndMinutes:

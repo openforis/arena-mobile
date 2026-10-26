@@ -4,7 +4,7 @@ export default {
   autoSync: {
     checkbox: "Sinkronisasi otomatis",
     synced: "{{count}} catatan disinkronkan otomatis",
-    synced_plural: "{{count}} catatan disinkronkan otomatis",
+    synced_other: "{{count}} catatan disinkronkan otomatis",
     statusLabel: "Status sinkronisasi:",
     statusTitle: "Status sinkronisasi",
     syncInProgressToast:
@@ -54,7 +54,7 @@ Lanjutkan?`,
     findClosestSamplingPoint: "Cari titik sampling terdekat",
     findingClosestSamplingPoint: "Mencari titik sampling terdekat",
     minDistanceItemFound: "Item ditemukan pada jarak {{minDistance}}m",
-    minDistanceItemFound_plural:
+    minDistanceItemFound_other:
       "Item-item ditemukan pada jarak {{minDistance}}m",
     useSelectedItem: "Gunakan item yang dipilih",
   },
@@ -186,7 +186,7 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
 
   code: {
     selectItem: "Pilih item",
-    selectItem_plural: "Pilih item",
+    selectItem_other: "Pilih item",
   },
   coordinate: {
     longPressMarkerToMove: "Tekan lama penanda untuk memindahkannya",
