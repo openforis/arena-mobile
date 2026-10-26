@@ -4,7 +4,7 @@ export default {
   autoSync: {
     checkbox: "Sincronização automática",
     synced: "{{count}} registro sincronizado automaticamente",
-    synced_plural: "{{count}} registros sincronizados automaticamente",
+    synced_other: "{{count}} registros sincronizados automaticamente",
     statusLabel: "Status de sincronização:",
     statusTitle: "Status de sincronização",
     syncInProgressToast:
@@ -54,7 +54,7 @@ Continuar?`,
     findingClosestSamplingPoint: "A encontrar ponto de amostragem mais próximo",
     minDistanceItemFound:
       "Item encontrado a uma distância de {{minDistance}} m",
-    minDistanceItemFound_plural:
+    minDistanceItemFound_other:
       "Itens encontrados a uma distância de {{minDistance}} m",
     useSelectedItem: "Usar item selecionado",
   },
@@ -179,7 +179,7 @@ Deseja obtê-las novamente do servidor?`,
   },
   code: {
     selectItem: "Selecionar item",
-    selectItem_plural: "Selecionar itens",
+    selectItem_other: "Selecionar itens",
   },
   coordinate: {
     longPressMarkerToMove: "Pressione e segure o marcador para movê-lo",

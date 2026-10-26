@@ -4,7 +4,9 @@ export default {
   autoSync: {
     checkbox: "Автосинхронизация",
     synced: "Автоматически синхронизирована {{count}} запись",
-    synced_plural: "Автоматически синхронизировано {{count}} записей",
+    synced_other: "Автоматически синхронизировано {{count}} записей",
+    synced_few: "Автоматически синхронизировано {{count}} записи",
+    synced_many: "Автоматически синхронизировано {{count}} записей",
     statusLabel: "Статус синхронизации:",
     statusTitle: "Статус синхронизации",
     syncInProgressToast:
@@ -51,7 +53,11 @@ export default {
     findClosestSamplingPoint: "Найти ближайшую точку сбора данных",
     findingClosestSamplingPoint: "Поиск ближайшей точки сбора данных",
     minDistanceItemFound: "Элемент найден на расстоянии {{minDistance}} м",
-    minDistanceItemFound_plural:
+    minDistanceItemFound_other:
+      "Элементы найдены на расстоянии {{minDistance}} м",
+    minDistanceItemFound_few:
+      "Элементы найдены на расстоянии {{minDistance}} м",
+    minDistanceItemFound_many:
       "Элементы найдены на расстоянии {{minDistance}} м",
     useSelectedItem: "Использовать выбранный элемент",
   },
@@ -178,7 +184,9 @@ export default {
   },
   code: {
     selectItem: "Выберите элемент",
-    selectItem_plural: "Выберите элементы",
+    selectItem_other: "Выберите элементы",
+    selectItem_few: "Выберите элементы",
+    selectItem_many: "Выберите элементы",
   },
   coordinate: {
     longPressMarkerToMove: "Нажмите и удерживайте маркер, чтобы переместить его",
