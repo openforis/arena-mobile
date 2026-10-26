@@ -20,8 +20,6 @@ const isNumericByType: Record<string, boolean> = {
   [NodeDefType.integer]: true,
 };
 
-const multilineNumberOfLines = 5;
-
 const nodeValueToUiValue = (value: any) =>
   Objects.isEmpty(value) ? "" : String(value);
 
@@ -85,16 +83,12 @@ export const NodeTextComponent = (props: NodeComponentProps) => {
   }, [editable, isActiveChild, viewMode]);
 
   const style = useMemo(() => {
-    const _style = [
-      styles.textInput,
-      multiline && styles.textInputMultiline,
-      styleProp,
-    ];
+    const _style = [styles.textInput, styleProp];
     if (!applicable) {
       _style.push(styles.notApplicable);
     }
     return _style;
-  }, [applicable, multiline, styleProp, styles]);
+  }, [applicable, styleProp, styles]);
 
   const textInput = (
     <TextInput
@@ -102,9 +96,11 @@ export const NodeTextComponent = (props: NodeComponentProps) => {
       error={invalidValue}
       keyboardType={isNumeric ? "numeric" : undefined}
       ref={inputRef}
+      inputStyle={multiline ? styles.multilineInput : undefined}
       style={style}
       multiline={multiline}
-      numberOfLines={multiline ? multilineNumberOfLines : 1}
+      // on Android numberOfLines fixes the input height: multiline inputs must grow with their content
+      numberOfLines={multiline ? undefined : 1}
       onChange={onChange}
       testID={nodeDefName}
       value={uiValue}

@@ -4,6 +4,7 @@ import {
   KeyboardTypeOptions,
   StyleProp,
   TextInputProps,
+  TextStyle,
   ViewStyle,
 } from "react-native";
 
@@ -19,6 +20,8 @@ type Props = {
   editable?: boolean;
   error?: boolean;
   inputMode?: TextInputProps["inputMode"];
+  // style of the inner native input (style is applied to the outer container)
+  inputStyle?: StyleProp<TextStyle>;
   keyboardType?: KeyboardTypeOptions;
   label?: string;
   // when false, label and placeholder are shown as they are (not translated)
@@ -48,6 +51,7 @@ export const TextInput = forwardRef(function TextInput(
     editable = true,
     error = false,
     inputMode,
+    inputStyle,
     keyboardType,
     label: labelKey,
     labelIsI18nKey = true,
@@ -90,6 +94,7 @@ export const TextInput = forwardRef(function TextInput(
     <RNPTextInput
       autoCapitalize={autoCapitalize}
       autoFocus={autoFocus}
+      contentStyle={inputStyle}
       disabled={disabled}
       editable={editable}
       error={error}

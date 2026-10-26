@@ -12,9 +12,10 @@ export const useStyles = () => {
         textInput: {
           alignSelf: "stretch",
         },
-        textInputMultiline: {
+        // applied to the inner native input, so it grows with its content
+        multilineInput: {
           // about 5 rows (multiline line height is 24)
-          minHeight: 140,
+          minHeight: 120,
         },
         multilineScrollView: {
           flex: 1,
