@@ -20,3 +20,6 @@ export const AppBarAction = (props: Props) => {
     />
   );
 };
+
+// the header places its children according to their displayName
+AppBarAction.displayName = "Appbar.Action";
