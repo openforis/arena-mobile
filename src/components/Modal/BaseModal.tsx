@@ -1,4 +1,10 @@
-import { Modal as RNModal, StyleProp, ViewStyle } from "react-native";
+import {
+  Modal as RNModal,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
+} from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Edge } from "react-native-safe-area-context";
 
 import { ModalSafeAreaView } from "./ModalSafeAreaView";
@@ -30,9 +36,18 @@ export const BaseModal = (props: BaseModalProps) => {
       animationType="fade"
       onRequestClose={onDismiss}
     >
-      <ModalSafeAreaView edges={edges} style={safeAreaStyle}>
-        {children}
-      </ModalSafeAreaView>
+      {/* gestures inside a modal need their own root view (Android) */}
+      <GestureHandlerRootView style={styles.gestureRoot}>
+        <ModalSafeAreaView edges={edges} style={safeAreaStyle}>
+          {children}
+        </ModalSafeAreaView>
+      </GestureHandlerRootView>
     </RNModal>
   );
 };
+
+const styles = StyleSheet.create({
+  gestureRoot: {
+    flex: 1,
+  },
+});
