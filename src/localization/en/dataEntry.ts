@@ -4,7 +4,7 @@ export default {
   autoSync: {
     checkbox: "Auto sync",
     synced: "Auto-synced {{count}} record",
-    synced_plural: "Auto-synced {{count}} records",
+    synced_other: "Auto-synced {{count}} records",
     statusLabel: "Sync status:",
     statusTitle: "Sync status",
     syncInProgressToast:
@@ -54,8 +54,7 @@ Continue?`,
     findClosestSamplingPoint: "Find closest sampling point",
     findingClosestSamplingPoint: "Finding closest sampling point",
     minDistanceItemFound: "Item found at a distance of {{minDistance}}m",
-    minDistanceItemFound_plural:
-      "Items found at a distance of {{minDistance}}m",
+    minDistanceItemFound_other: "Items found at a distance of {{minDistance}}m",
     useSelectedItem: "Use selected item",
   },
   confirmDeleteSelectedItems: {
@@ -243,7 +242,7 @@ Fetch the list of records from the server and try again?`,
 
   code: {
     selectItem: "Select item",
-    selectItem_plural: "Select items",
+    selectItem_other: "Select items",
   },
   coordinate: {
     longPressMarkerToMove: "Long press the marker to move it",

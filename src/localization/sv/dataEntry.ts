@@ -4,7 +4,7 @@ export default {
   autoSync: {
     checkbox: "Automatisk synkronisering",
     synced: "{{count}} post synkroniserad automatiskt",
-    synced_plural: "{{count}} poster synkroniserade automatiskt",
+    synced_other: "{{count}} poster synkroniserade automatiskt",
     statusLabel: "Synkroniseringsstatus:",
     statusTitle: "Synkroniseringsstatus",
     syncInProgressToast:
@@ -54,7 +54,7 @@ Fortsätta?`,
     findClosestSamplingPoint: "Hitta närmaste provtagningspunkt",
     findingClosestSamplingPoint: "Söker efter närmaste provtagningspunkt",
     minDistanceItemFound: "Objekt hittat på ett avstånd av {{minDistance}}m",
-    minDistanceItemFound_plural:
+    minDistanceItemFound_other:
       "Objekt hittades på ett avstånd av {{minDistance}}m",
     useSelectedItem: "Använd valt objekt",
   },
@@ -185,7 +185,7 @@ Vill du hämta den igen från servern?`,
 
   code: {
     selectItem: "Välj objekt",
-    selectItem_plural: "Välj objekt",
+    selectItem_other: "Välj objekt",
   },
   coordinate: {
     longPressMarkerToMove: "Håll ned markören för att flytta den",
