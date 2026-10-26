@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from "react";
 import { FlatList } from "react-native";
-import { List } from "react-native-paper";
 
 import {
   NodeDefType,
@@ -9,7 +8,7 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { AlertIcon, VView } from "components";
+import { AlertIcon, ListItem, VView } from "components";
 import { RecordPageNavigator } from "model";
 import {
   DataEntryActions,
@@ -84,15 +83,8 @@ export const PageNodesList = () => {
     [dispatch]
   );
 
-  const renderItemLeftIcon = useCallback(
-    ({ item, ...otherProps }: any) => (
-      <List.Icon {...otherProps} icon={getNodeDefIcon(item)} />
-    ),
-    []
-  );
-
   const renderItemRightIcon = useCallback(
-    ({ item }: any) => {
+    (item: any) => {
       if (!parentEntity) return null;
 
       const nodeDefUuid = item.uuid;
@@ -115,11 +107,11 @@ export const PageNodesList = () => {
       const isActiveItem = index === activeChildIndex;
 
       return (
-        <List.Item
+        <ListItem
           title={NodeDefs.getLabelOrName(item, lang)}
           onPress={onItemPress(index)}
-          left={(iconProps) => renderItemLeftIcon({ ...iconProps, item })}
-          right={(iconProps) => renderItemRightIcon({ ...iconProps, item })}
+          leftIcon={getNodeDefIcon(item)}
+          right={renderItemRightIcon(item)}
           style={isActiveItem ? styles.activeItem : undefined}
           titleStyle={isActiveItem ? styles.activeItemText : undefined}
         />
@@ -129,7 +121,6 @@ export const PageNodesList = () => {
       activeChildIndex,
       lang,
       onItemPress,
-      renderItemLeftIcon,
       renderItemRightIcon,
     ]
   );

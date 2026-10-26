@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import { Surface } from "react-native-paper";
 
 import { AutoSyncStatusIcon } from "appComponents/AutoSyncStatus";
 import {
@@ -7,6 +6,7 @@ import {
   FlexWrapView,
   HView,
   MenuButton,
+  Surface,
   Switch,
   Text,
 } from "components";

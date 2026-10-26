@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Button, Dialog, Portal, TextInput } from "react-native-paper";
 
-import { useTranslation } from "localization";
+import { Button } from "components/Button";
+import { Dialog } from "components/Dialog";
+import { TextInput } from "components/TextInput";
 
 import { DateTimeInputFormat, DateTimeInputMode } from "./dateTimeInputFormat";
 
@@ -18,7 +19,6 @@ type Props = {
 // (DD/MM/YYYY, 24h HH:mm); the HTML date/time inputs would follow the browser language instead
 const DateTimePickerModal = (props: Props) => {
   const { date, isVisible = false, mode = "date", onCancel, onConfirm } = props;
-  const { t } = useTranslation();
   const [dateInitial, setDateInitial] = useState(() => date ?? new Date());
   const [inputValue, setInputValue] = useState("");
   // date can be a new object on every render: read it only when the dialog opens
@@ -40,31 +40,33 @@ const DateTimePickerModal = (props: Props) => {
   };
 
   return (
-    <Portal>
-      <Dialog visible={isVisible} onDismiss={onCancel}>
-        <Dialog.Content>
-          <TextInput
-            autoFocus
-            error={inputValue.length > 0 && !dateSelected}
-            inputMode="numeric"
-            label={placeholder}
-            mode="outlined"
-            onChangeText={(text) =>
-              setInputValue(DateTimeInputFormat.mask(text, mode))
-            }
-            onSubmitEditing={confirm}
-            placeholder={placeholder}
-            value={inputValue}
+    <Dialog
+      actionsContent={
+        <>
+          <Button onPress={onCancel} textKey="common:cancel" />
+          <Button
+            disabled={!dateSelected}
+            onPress={confirm}
+            textKey="common:ok"
           />
-        </Dialog.Content>
-        <Dialog.Actions>
-          <Button onPress={onCancel}>{t("common:cancel")}</Button>
-          <Button disabled={!dateSelected} onPress={confirm}>
-            {t("common:ok")}
-          </Button>
-        </Dialog.Actions>
-      </Dialog>
-    </Portal>
+        </>
+      }
+      onClose={onCancel}
+      showCloseButton={false}
+      visible={isVisible}
+    >
+      <TextInput
+        autoFocus
+        error={inputValue.length > 0 && !dateSelected}
+        inputMode="numeric"
+        label={placeholder}
+        labelIsI18nKey={false}
+        onChange={(text) => setInputValue(DateTimeInputFormat.mask(text, mode))}
+        onSubmitEditing={confirm}
+        placeholder={placeholder}
+        value={inputValue}
+      />
+    </Dialog>
   );
 };
 

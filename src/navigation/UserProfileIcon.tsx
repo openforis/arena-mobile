@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { TouchableOpacity } from "react-native";
-import { Avatar } from "react-native-paper";
 
+import { Avatar } from "components";
 import {
   RemoteConnectionActions,
   RemoteConnectionSelectors,
@@ -18,14 +18,14 @@ type UserProfileAvatarProps = {
 
 const UserProfileAvatar = (props: UserProfileAvatarProps) => {
   const { loading, size, uri, user } = props;
-  if (loading) return <Avatar.Icon icon="loading" size={size} />;
-  if (uri) return <Avatar.Image source={{ uri }} size={size} />;
+  if (loading) return <Avatar icon="loading" size={size} />;
+  if (uri) return <Avatar imageUri={uri} size={size} />;
   const userName = user?.name;
   if (userName?.length > 0) {
     const userFirstLetter = userName.substring(0, 1).toLocaleUpperCase();
-    return <Avatar.Text label={userFirstLetter} size={size} />;
+    return <Avatar label={userFirstLetter} size={size} />;
   }
-  return <Avatar.Icon icon="account-off" size={size} />;
+  return <Avatar icon="account-off" size={size} />;
 };
 
 type Props = {

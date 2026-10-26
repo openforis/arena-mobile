@@ -1,10 +1,17 @@
 import { useCallback, useMemo, useState } from "react";
-import { Appbar as RNPAppbar } from "react-native-paper";
 
 import { Surveys } from "@openforis/arena-core";
 
 import { AutoSyncStatusAppBarAction } from "appComponents/AutoSyncStatus";
-import { HView, Spacer, Text } from "components";
+import {
+  AppBarAction,
+  AppBarBackAction,
+  AppBarContent,
+  AppBarHeader,
+  HView,
+  Spacer,
+  Text,
+} from "components";
 import { useScreenKey } from "hooks";
 import { MapProvider, RecordEditViewMode, ScreenViewMode } from "model";
 import { useIsTextDirectionRtl, useTranslation } from "localization";
@@ -167,7 +174,7 @@ export const AppBar = (props: Props) => {
 
   return (
     <>
-      <RNPAppbar.Header elevated mode={isInTwoRows ? "medium" : "small"}>
+      <AppBarHeader elevated mode={isInTwoRows ? "medium" : "small"}>
         <HView
           style={[
             styles.topBarContainer,
@@ -176,7 +183,7 @@ export const AppBar = (props: Props) => {
           fullWidth
         >
           {editingRecord && (
-            <RNPAppbar.Action
+            <AppBarAction
               icon="menu"
               onPress={onToggleDrawerPress}
               size={36}
@@ -184,7 +191,7 @@ export const AppBar = (props: Props) => {
           )}
 
           {hasBack && back && (
-            <RNPAppbar.BackAction
+            <AppBarBackAction
               onPress={navigation.goBack}
               size={36}
               style={isRtl ? BaseStyles.mirrorX : undefined}
@@ -208,7 +215,7 @@ export const AppBar = (props: Props) => {
                 <Spacer fullFlex fullWidth={false} />
               )}
               {recordEditLockAvailable && (
-                <RNPAppbar.Action
+                <AppBarAction
                   icon={
                     recordEditLocked
                       ? "lock-outline"
@@ -218,20 +225,20 @@ export const AppBar = (props: Props) => {
                 />
               )}
               {recordIsNotValid && (
-                <RNPAppbar.Action
+                <AppBarAction
                   icon="alert"
                   color={recordHasErrors ? "red" : "orange"}
                   onPress={onValidationIconPress}
                 />
               )}
               {canRecordBeLinkedToPreviousCycle && (
-                <RNPAppbar.Action
+                <AppBarAction
                   icon={isLinkedToPreviousCycleRecord ? "link" : "link-off"}
                   loading={isLoadingPreviousCycleRecord}
                   onPress={onLinkToPreviousCyclePress}
                 />
               )}
-              <RNPAppbar.Action
+              <AppBarAction
                 icon={
                   recordEditViewMode === RecordEditViewMode.form
                     ? "numeric-1-box-outline"
@@ -244,14 +251,14 @@ export const AppBar = (props: Props) => {
           )}
 
           {!editingRecord && recordsMapAvailable && (
-            <RNPAppbar.Action
+            <AppBarAction
               icon="map-outline"
               onPress={onRecordsMapPress}
             />
           )}
 
           {!editingRecord && hasToggleScreenView && (
-            <RNPAppbar.Action
+            <AppBarAction
               icon={
                 screenViewMode === ScreenViewMode.list ? "table" : "view-list"
               }
@@ -268,12 +275,12 @@ export const AppBar = (props: Props) => {
           )}
         </HView>
         {isInTwoRows && (
-          <RNPAppbar.Content
+          <AppBarContent
             style={styles.breadcrumbsContent}
             title={<Breadcrumbs />}
-          ></RNPAppbar.Content>
+          />
         )}
-      </RNPAppbar.Header>
+      </AppBarHeader>
       {editingRecord && showRecordCompletion && <RecordCompletionProgressBar />}
     </>
   );
