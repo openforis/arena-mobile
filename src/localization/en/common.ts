@@ -46,6 +46,8 @@ export default {
   selectNewItems: "Select new items",
   shareFile: "Share file",
   size: "Size",
+  sortBy: "Sort by",
+  none: "None",
   sizeAvailable: "{{size}} available",
   somethingWentWrong: "Something went wrong: {{error}}",
   srs: "SRS",

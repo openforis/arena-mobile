@@ -38,6 +38,12 @@ import { BaseStyles } from "utils/BaseStyles";
 import { OptionsMenu } from "./OptionsMenu";
 import styles from "./styles";
 
+const iconByScreenViewMode: Record<ScreenViewMode, string> = {
+  [ScreenViewMode.table]: "table",
+  [ScreenViewMode.list]: "view-list",
+  [ScreenViewMode.cards]: "view-agenda-outline",
+};
+
 type Props = {
   back?: any;
   navigation: any;
@@ -58,6 +64,7 @@ export const AppBar = (props: Props) => {
     surveyLabelAsTitle,
     title: titleOption,
     titleParams,
+    viewModes,
   } = options;
 
   const screenKey = useScreenKey();
@@ -124,8 +131,11 @@ export const AppBar = (props: Props) => {
   );
 
   const onToggleScreenViewModePress = useCallback(
-    () => dispatch(ScreenOptionsActions.toggleScreenViewMode({ screenKey })),
-    [dispatch, screenKey]
+    () =>
+      dispatch(
+        ScreenOptionsActions.toggleScreenViewMode({ screenKey, viewModes })
+      ),
+    [dispatch, screenKey, viewModes]
   );
 
   const toggleRecordLock = useCallback(
@@ -259,8 +269,14 @@ export const AppBar = (props: Props) => {
 
           {!editingRecord && hasToggleScreenView && (
             <AppBarAction
+              // icon of the view mode the button switches to
               icon={
-                screenViewMode === ScreenViewMode.list ? "table" : "view-list"
+                iconByScreenViewMode[
+                  ScreenOptionsActions.getNextViewMode({
+                    viewMode: screenViewMode,
+                    viewModes,
+                  })
+                ]
               }
               onPress={onToggleScreenViewModePress}
             />

@@ -50,7 +50,7 @@ export const SurveyStatusCell = (props: DataVisualizerCellProps) => {
     ? `surveys:updateStatus.${status}`
     : `surveys:status.${status}`;
 
-  return viewMode === ScreenViewMode.list ? (
+  return viewMode !== ScreenViewMode.table ? (
     <HView style={{ width: "100%" }}>
       {icon}
       <Text textKey={textKey} />

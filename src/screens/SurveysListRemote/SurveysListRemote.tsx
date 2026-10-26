@@ -6,6 +6,7 @@ import { DateFormats, Dates, Surveys } from "@openforis/arena-core";
 import {
   DataVisualizer,
   DataVisualizerCellProps,
+  DataVisualizerField,
   Loader,
   Searchbar,
   Text,
@@ -16,7 +17,6 @@ import { ScreenViewMode } from "model/ScreenViewMode";
 import { SurveyService } from "service";
 import {
   ConfirmActions,
-  DeviceInfoSelectors,
   ScreenOptionsSelectors,
   SurveyActions,
   SurveySelectors,
@@ -71,10 +71,34 @@ export const SurveysListRemote = () => {
   const dispatch = useAppDispatch();
   const surveysLocal = SurveySelectors.useSurveysLocal();
   const screenViewMode = ScreenOptionsSelectors.useCurrentScreenViewMode();
-  const viewAsList = screenViewMode === ScreenViewMode.list;
-  const isLandscape = DeviceInfoSelectors.useOrientationIsLandscape();
+  const viewAsCards = screenViewMode === ScreenViewMode.cards;
 
   const dataFields = useMemo(() => {
+    if (viewAsCards) {
+      const cardFields: DataVisualizerField[] = [
+        { key: "defaultLabel", header: "common:label", cardRole: "title" },
+        { key: "name", header: "common:name", cardRole: "subtitle" },
+        {
+          key: "loadStatus",
+          header: "surveys:loadStatus.label",
+          cardRole: "badge",
+          cellRenderer: StatusCell,
+        },
+        {
+          key: "description",
+          header: "surveys:description",
+          cardRole: "body",
+          cellRenderer: DescriptionCellRenderer,
+        },
+        {
+          key: "datePublished",
+          header: "surveys:publishedOn",
+          cardRole: "footer",
+          cellRenderer: DatePublishedCellRenderer,
+        },
+      ];
+      return cardFields;
+    }
     const fields: any[] = [
       {
         key: "name",
@@ -85,27 +109,29 @@ export const SurveysListRemote = () => {
         header: "common:label",
       },
     ];
-    if (isLandscape || viewAsList) {
-      fields.push(
-        {
-          key: "description",
-          header: "surveys:description",
-          cellRenderer: DescriptionCellRenderer,
-        },
-        {
-          key: "datePublished",
-          header: "surveys:publishedOn",
-          cellRenderer: DatePublishedCellRenderer,
-        },
-        {
-          key: "loadStatus",
-          header: "surveys:loadStatus.label",
-          cellRenderer: StatusCell,
-        },
-      );
-    }
+    // optional: in a narrow table they move to the expanded row
+    fields.push(
+      {
+        key: "description",
+        header: "surveys:description",
+        optional: true,
+        cellRenderer: DescriptionCellRenderer,
+      },
+      {
+        key: "datePublished",
+        header: "surveys:publishedOn",
+        optional: true,
+        cellRenderer: DatePublishedCellRenderer,
+      },
+      {
+        key: "loadStatus",
+        header: "surveys:loadStatus.label",
+        optional: true,
+        cellRenderer: StatusCell,
+      },
+    );
     return fields;
-  }, [isLandscape, viewAsList]);
+  }, [viewAsCards]);
 
   const [state, setState] = useState(INITIAL_STATE);
   const { surveys, loading, errorKey } = state;
