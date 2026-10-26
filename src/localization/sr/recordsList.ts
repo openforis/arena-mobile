@@ -44,6 +44,14 @@ export default {
 {{fileName}}?`,
     invalidFileType: "Neispravan tip fajla (očekuje se .zip)",
     overwriteExistingRecords: "Prepiši postojeće zapise",
+    restoreAsLocalChanges:
+      "Vrati iz rezervne kopije i otpremi na server (uvezeni zapisi zamjenjuju zapise na uređaju i na serveru)",
+    restoreAsLocalChangesConfirm: {
+      title: "Vraćanje iz rezervne kopije",
+      message: `Uvezeni zapisi će zamijeniti verzije na ovom uređaju i, pri sljedećem otpremanju, verzije na serveru, čak i ako su one novije.
+
+Da li želite da nastavite?`,
+    },
     selectFile: "Izaberi fajl",
   },
   importCompleteSuccessfully: `Uvoz zapisa je uspješno završen!

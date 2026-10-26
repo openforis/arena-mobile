@@ -485,6 +485,20 @@ const updateRecordWithContentMergedFromRemote = async ({
   });
 };
 
+// restored from a backup as a local change: without the server baseline it is offered for upload
+const updateRecordRestoredFromBackup = async ({ survey, record }: any) => {
+  await updateRecordKeysAndContent({
+    survey,
+    record,
+    updateOrigin: true,
+    origin: RecordOrigin.local,
+  });
+  await dbClient.runSql(
+    `UPDATE record SET date_modified_remote = NULL WHERE survey_id = ? AND uuid = ?`,
+    [survey.id, record.uuid],
+  );
+};
+
 const updateRecordsDateSync = async ({ surveyId, recordUuids }: any) => {
   const sql = `UPDATE record
   SET date_synced = ?
@@ -731,6 +745,7 @@ export const RecordRepository = {
   updateRecordValidation,
   updateRecordWithContentFetchedRemotely,
   updateRecordWithContentMergedFromRemote,
+  updateRecordRestoredFromBackup,
   updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely,
   updateRecordsDateSync,
   updateRecordsDateModifiedRemote,

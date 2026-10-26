@@ -7,6 +7,7 @@ export const noRecordsToExportTextKey =
 
 export const dataImportOptions = {
   overwriteExistingRecords: "overwriteExistingRecords",
+  restoreAsLocalChanges: "restoreAsLocalChanges",
 };
 
 export const importFileExtension = "zip";

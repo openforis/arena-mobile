@@ -1,4 +1,4 @@
-import { ArenaRecord, Promises } from "@openforis/arena-core";
+import { ArenaRecord, Dates, Promises } from "@openforis/arena-core";
 
 import { JobMobile } from "model";
 import { ArrayUtils, Files } from "utils";
@@ -15,6 +15,7 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
       survey,
       unzippedFolderUri,
       overwriteExistingRecords,
+      restoreAsLocalChanges,
     } = this.context;
 
     const fileRecordsSummaryJsonUri = Files.path(
@@ -44,9 +45,15 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
     await Promises.each(fileRecordsSummary, async (recordUuidAndCycle) => {
       const { uuid: recordUuid } = recordUuidAndCycle;
       const record = await this.readRecord(recordUuid);
+      if (restoreAsLocalChanges) {
+        this.markAsModifiedNow(record);
+      }
       const existingRecordSummary = recordsSummaryByUuid[recordUuid];
       if (!existingRecordSummary) {
         await this.insertRecord(record);
+      } else if (restoreAsLocalChanges) {
+        await RecordService.updateRecordRestoredFromBackup({ survey, record });
+        this.updatedRecords++;
       } else if (overwriteExistingRecords) {
         await this.updateRecord(record);
       }
@@ -69,6 +76,15 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
         `this record cannot be imported in the current survey; it has been created with another one;`
       );
     return record;
+  }
+
+  // the restored version must win on upload: the server keeps only the nodes modified after its own version
+  private markAsModifiedNow(record: ArenaRecord) {
+    const now = Dates.nowFormattedForStorage();
+    record.dateModified = now;
+    for (const node of Object.values(record.nodes ?? {})) {
+      node.dateModified = now;
+    }
   }
 
   private shouldKeepLocalOrigin(recordUuid: string): boolean {

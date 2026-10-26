@@ -40,6 +40,7 @@ export const importRecordsFromFile =
     fileUri,
     onImportComplete,
     overwriteExistingRecords = true,
+    restoreAsLocalChanges = false,
     mergeKeepLocalOriginRecordUuids,
     // true when not started by the user (see fetchRecordsFromServer): no dialog nor message
     silent = false,
@@ -54,6 +55,7 @@ export const importRecordsFromFile =
         user,
         fileUri,
         overwriteExistingRecords,
+        restoreAsLocalChanges,
         mergeKeepLocalOriginRecordUuids,
       });
 

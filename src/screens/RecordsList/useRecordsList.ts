@@ -313,6 +313,10 @@ export const useRecordsList = () => {
           value: dataImportOptions.overwriteExistingRecords,
           label: `${messagePrefix}overwriteExistingRecords`,
         },
+        {
+          value: dataImportOptions.restoreAsLocalChanges,
+          label: `${messagePrefix}restoreAsLocalChanges`,
+        },
       ],
     });
     if (confirmResult) {
@@ -320,11 +324,25 @@ export const useRecordsList = () => {
       const overwriteExistingRecords = selectedMultipleChoiceValues.includes(
         dataImportOptions.overwriteExistingRecords,
       );
+      const restoreAsLocalChanges = selectedMultipleChoiceValues.includes(
+        dataImportOptions.restoreAsLocalChanges,
+      );
+      if (
+        restoreAsLocalChanges &&
+        !(await confirm({
+          titleKey: `${messagePrefix}restoreAsLocalChangesConfirm.title`,
+          messageKey: `${messagePrefix}restoreAsLocalChangesConfirm.message`,
+          confirmButtonTextKey: `${messagePrefix}title`,
+        }))
+      ) {
+        return;
+      }
 
       dispatch(
         DataEntryActions.importRecordsFromFile({
           fileUri: uri,
           overwriteExistingRecords,
+          restoreAsLocalChanges,
           onImportComplete: loadRecords,
         }),
       );

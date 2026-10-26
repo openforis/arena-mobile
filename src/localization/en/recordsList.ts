@@ -44,6 +44,14 @@ export default {
 {{fileName}}?`,
     invalidFileType: "Invalid file type (expected .zip)",
     overwriteExistingRecords: "Overwrite existing records",
+    restoreAsLocalChanges:
+      "Restore from backup and upload to server (the imported records replace the ones in the device and on the server)",
+    restoreAsLocalChangesConfirm: {
+      title: "Restore from backup",
+      message: `The imported records will replace the versions in this device and, at the next upload, the ones on the server, even if those are newer.
+
+Do you want to continue?`,
+    },
     selectFile: "Select file",
   },
   importCompleteSuccessfully: `Records import complete successfully!
