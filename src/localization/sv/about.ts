@@ -1,9 +1,10 @@
 export default {
+  changelogDescription: "Fullständig lista över ändringar i varje version",
   developedBy: "Utvecklad av",
   supportEmail: "Support-e-post",
+  releaseNotes: "Versionsinformation",
   supportForum: "Supportforum",
   support: "Support",
   version: "Version",
-  viewChangelog: "Visa ändringslogg",
-  viewWhatsNew: "Visa nyheter",
+  whatsNewDescription: "Höjdpunkter bland de senaste funktionerna",
 };

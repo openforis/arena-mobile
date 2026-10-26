@@ -1,9 +1,10 @@
 export default {
+  changelogDescription: "Kompletna lista izmjena u svakoj verziji",
   developedBy: "Razvio",
   supportEmail: "E-mail za podršku",
+  releaseNotes: "Napomene o izdanju",
   supportForum: "Forum za podršku",
   support: "Podrška",
   version: "Verzija",
-  viewChangelog: "Prikaži listu izmjena",
-  viewWhatsNew: "Prikaži novosti",
+  whatsNewDescription: "Istaknute nove funkcije",
 };

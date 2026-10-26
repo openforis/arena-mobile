@@ -1,9 +1,10 @@
 export default {
+  changelogDescription: "Lista completa de alterações de cada versão",
   developedBy: "Desenvolvido por",
   supportEmail: "E-mail de suporte",
+  releaseNotes: "Notas da versão",
   supportForum: "Fórum de suporte",
   support: "Suporte",
   version: "Versão",
-  viewChangelog: "Ver registro de alterações",
-  viewWhatsNew: "Ver novidades",
+  whatsNewDescription: "Destaques das novas funcionalidades",
 };
