@@ -1,9 +1,10 @@
 export default {
+  changelogDescription: "各バージョンの変更点の一覧",
   developedBy: "開発者",
   supportEmail: "サポートメール",
+  releaseNotes: "リリースノート",
   supportForum: "サポートフォーラム",
   support: "サポート",
   version: "バージョン",
-  viewChangelog: "変更履歴を見る",
-  viewWhatsNew: "新機能を見る",
+  whatsNewDescription: "最新機能のハイライト",
 };

@@ -1,9 +1,10 @@
 export default {
+  changelogDescription: "Daftar lengkap perubahan di setiap versi",
   developedBy: "Dikembangkan oleh",
   supportEmail: "Email dukungan",
+  releaseNotes: "Catatan rilis",
   supportForum: "Forum dukungan",
   support: "Dukungan",
   version: "Versi",
-  viewChangelog: "Lihat catatan perubahan",
-  viewWhatsNew: "Lihat yang baru",
+  whatsNewDescription: "Sorotan fitur-fitur terbaru",
 };
