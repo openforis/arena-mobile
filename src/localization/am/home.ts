@@ -1,0 +1,16 @@
+export default {
+  currentSurvey: "የአሁኑ ዳሰሳ",
+  lastEdit: "መጨረሻ የተስተካከለው: {{date}}",
+  records: "መዝገቦች",
+  recordsTotal: "ጠቅላላ",
+  recordsToUpload: "የሚሰቀሉ",
+  recordsWithErrors: "ስህተት ያላቸው",
+  sync: "አመሳስል",
+  connect: "ተገናኝ",
+  connectDescription: "ውሂብዎን ከ Arena ጋር ለማመሳሰል ይገናኙ",
+  account: "መለያ",
+  surveys: "ዳሰሳዎች",
+  surveysDescription: "ዳሰሳዎችን ቀይር፣ አውርድ ወይም አዘምን",
+  noSurveySelected: "ምንም ዳሰሳ አልተመረጠም",
+  noSurveySelectedDescription: "ውሂብ መሰብሰብ ለመጀመር ዳሰሳ ይምረጡ ወይም ያውርዱ",
+};

@@ -1,0 +1,16 @@
+export default {
+  currentSurvey: "Trenutno istraživanje",
+  lastEdit: "Posljednja izmjena: {{date}}",
+  records: "Zapisi",
+  recordsTotal: "Ukupno",
+  recordsToUpload: "Za slanje",
+  recordsWithErrors: "Sa greškama",
+  sync: "Sinhronizuj",
+  connect: "Poveži se",
+  connectDescription: "Povežite se da biste sinhronizovali podatke sa Arenom",
+  account: "Nalog",
+  surveys: "Istraživanja",
+  surveysDescription: "Promijeni, preuzmi ili ažuriraj istraživanja",
+  noSurveySelected: "Nije izabrano istraživanje",
+  noSurveySelectedDescription: "Izaberite ili preuzmite istraživanje da biste počeli sa prikupljanjem podataka",
+};

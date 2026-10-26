@@ -5,6 +5,7 @@ import authService from "./authService";
 import common from "./common";
 import dataEntry from "./dataEntry";
 import device from "./device";
+import home from "./home";
 import loginInfo from "./loginInfo";
 import offlineMaps from "./offlineMaps";
 import pdfMaps from "./pdfMaps";
@@ -26,6 +27,7 @@ export default {
   common,
   dataEntry,
   device,
+  home,
   loginInfo,
   offlineMaps,
   pdfMaps,
