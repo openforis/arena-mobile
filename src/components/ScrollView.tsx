@@ -4,6 +4,7 @@ import { useTheme } from "react-native-paper";
 
 type Props = {
   children?: React.ReactNode;
+  contentContainerStyle?: StyleProp<ViewStyle>;
   horizontal?: boolean;
   persistentScrollbar?: boolean;
   showsVerticalScrollIndicator?: boolean;
