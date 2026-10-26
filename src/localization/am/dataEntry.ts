@@ -4,7 +4,7 @@ export default {
   autoSync: {
     checkbox: "ራስ-ሰር ማመሳሰል",
     synced: "{{count}} መዝገብ በራስ-ሰር ተመሳስሏል",
-    synced_plural: "{{count}} መዝገቦች በራስ-ሰር ተመሳስለዋል",
+    synced_other: "{{count}} መዝገቦች በራስ-ሰር ተመሳስለዋል",
     statusLabel: "የማመሳሰል ሁኔታ:",
     statusTitle: "የማመሳሰል ሁኔታ",
     syncInProgressToast:
@@ -51,7 +51,7 @@ export default {
     findClosestSamplingPoint: "የቅርቡን ናሙና ነጥብ ያግኙ",
     findingClosestSamplingPoint: "የቅርቡን ናሙና ነጥብ በመፈለግ ላይ",
     minDistanceItemFound: "ንጥል በ {{minDistance}}ሜትር ርቀት ተገኝቷል",
-    minDistanceItemFound_plural: "ንጥሎች በ {{minDistance}}ሜትር ርቀት ተገኝተዋል",
+    minDistanceItemFound_other: "ንጥሎች በ {{minDistance}}ሜትር ርቀት ተገኝተዋል",
     useSelectedItem: "የተመረጠውን ንጥል ይጠቀሙ",
   },
   confirmDeleteSelectedItems: {
@@ -170,7 +170,7 @@ export default {
   },
   code: {
     selectItem: "ንጥል ይምረጡ",
-    selectItem_plural: "ንጥሎችን ይምረጡ",
+    selectItem_other: "ንጥሎችን ይምረጡ",
   },
   coordinate: {
     longPressMarkerToMove: "ምልክቱን ለማንቀሳቀስ በረጅሙ ይጫኑት",
