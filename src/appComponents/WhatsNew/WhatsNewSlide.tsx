@@ -83,8 +83,9 @@ export const WhatsNewSlide = (props: WhatsNewSlideProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const { height: windowHeight, width: windowWidth } = useWindowDimensions();
-  const [enlargedImage, setEnlargedImage] =
-    useState<ImageSourcePropType | null>(null);
+  const [enlargedImageIndex, setEnlargedImageIndex] = useState<number | null>(
+    null,
+  );
   const [imagesWidth, setImagesWidth] = useState(0);
 
   const title = t(WhatsNew.getTitleKey(item));
@@ -112,12 +113,12 @@ export const WhatsNewSlide = (props: WhatsNewSlideProps) => {
     [imagesAnimationDistance],
   );
 
-  const renderImage = (image: ImageSourcePropType) => (
+  const renderImage = (image: ImageSourcePropType, index: number) => (
     <View style={styles.imageContainer}>
       <Pressable
         accessibilityLabel={title}
         accessibilityRole="imagebutton"
-        onPress={() => setEnlargedImage(image)}
+        onPress={() => setEnlargedImageIndex(index)}
       >
         <Image
           resizeMode="contain"
@@ -137,9 +138,25 @@ export const WhatsNewSlide = (props: WhatsNewSlideProps) => {
     const maxWidth =
       Math.min(windowWidth - dialogHorizontalMargin, dialogMaxWidth) -
       dialogContentHorizontalPadding;
-    const width = Math.min(maxWidth, windowHeight * 0.7 * aspectRatio);
+    // leaves room for the previous/next buttons when there are more images
+    const width = Math.min(maxWidth, windowHeight * 0.65 * aspectRatio);
     return { width, height: width / aspectRatio };
   };
+
+  const enlargedImagesHeight = Math.max(
+    0,
+    ...images.map((image) => getEnlargedImageSize(image).height),
+  );
+
+  const renderEnlargedImage = (image: ImageSourcePropType) => (
+    <View style={styles.imageContainer}>
+      <Image
+        resizeMode="contain"
+        source={image}
+        style={getEnlargedImageSize(image)}
+      />
+    </View>
+  );
 
   return (
     <VView style={styles.container}>
@@ -173,16 +190,17 @@ export const WhatsNewSlide = (props: WhatsNewSlideProps) => {
         textParams={{ version: item.version }}
         variant="labelSmall"
       />
-      {enlargedImage && (
+      {enlargedImageIndex !== null && (
         <Dialog
-          onClose={() => setEnlargedImage(null)}
+          onClose={() => setEnlargedImageIndex(null)}
           style={{ maxHeight: windowHeight * 0.9 }}
           title={title}
         >
-          <Image
-            resizeMode="contain"
-            source={enlargedImage}
-            style={[styles.enlargedImage, getEnlargedImageSize(enlargedImage)]}
+          <Carousel
+            defaultIndex={enlargedImageIndex}
+            height={enlargedImagesHeight}
+            items={images}
+            renderItem={renderEnlargedImage}
           />
         </Dialog>
       )}
@@ -210,9 +228,6 @@ const styles = StyleSheet.create({
   image: {
     borderRadius: 6,
     borderWidth: 1,
-  },
-  enlargedImage: {
-    alignSelf: "center",
   },
   description: {
     flex: 1,

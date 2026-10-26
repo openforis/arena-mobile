@@ -30,6 +30,7 @@ const farOffset = 100000;
 type CarouselProps<T> = {
   // small dots below the items and no previous/next buttons (e.g. nested in another carousel)
   compact?: boolean;
+  defaultIndex?: number;
   // height of the items; when not specified, the carousel fills the available space
   height?: number;
   itemAnimation?: CarouselItemAnimation;
@@ -42,6 +43,7 @@ type CarouselProps<T> = {
 export const Carousel = <T,>(props: CarouselProps<T>) => {
   const {
     compact = false,
+    defaultIndex = 0,
     height,
     itemAnimation,
     items,
@@ -52,9 +54,9 @@ export const Carousel = <T,>(props: CarouselProps<T>) => {
 
   const theme = useTheme();
   const carouselRef = useRef<CarouselRef>(null);
-  const progress = useSharedValue(0);
+  const progress = useSharedValue(defaultIndex);
   const [size, setSize] = useState({ width: 0, height: 0 });
-  const [activeIndexState, setActiveIndexState] = useState(0);
+  const [activeIndexState, setActiveIndexState] = useState(defaultIndex);
 
   const count = items.length;
   const lastIndex = Math.max(0, count - 1);
@@ -133,6 +135,7 @@ export const Carousel = <T,>(props: CarouselProps<T>) => {
         {size.width > 0 && itemsHeight > 0 && (
           <RNRCarousel
             data={items}
+            defaultIndex={defaultIndex}
             {...(itemAnimation ? { itemAnimation } : {})}
             keyExtractor={keyExtractor}
             onConfigurePanGesture={onConfigurePanGesture}
