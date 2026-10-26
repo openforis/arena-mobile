@@ -1,0 +1,16 @@
+export default {
+  currentSurvey: "Aktuell enkät",
+  lastEdit: "Senast redigerad: {{date}}",
+  records: "Poster",
+  recordsTotal: "Totalt",
+  recordsToUpload: "Att ladda upp",
+  recordsWithErrors: "Med fel",
+  sync: "Synkronisera",
+  connect: "Anslut",
+  connectDescription: "Anslut för att synkronisera dina data med Arena",
+  account: "Konto",
+  surveys: "Enkäter",
+  surveysDescription: "Byt, ladda ner eller uppdatera enkäter",
+  noSurveySelected: "Ingen enkät vald",
+  noSurveySelectedDescription: "Välj eller ladda ner en enkät för att börja samla in data",
+};

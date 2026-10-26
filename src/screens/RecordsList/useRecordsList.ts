@@ -14,7 +14,6 @@ import {
 } from "model";
 import { RecordService } from "service";
 import {
-  AutoSyncActions,
   AutoSyncSelectors,
   AutoSyncStatus,
   DataEntryActions,
@@ -25,11 +24,10 @@ import {
   useConfirm,
   wasRecentlyCheckedWithNoNewLocalChanges,
 } from "state";
-import { isAuthError } from "state/autoSync";
 import { useJobMonitor } from "state/jobMonitor/useJobMonitor";
-import { RemoteConnectionUtils } from "state/remoteConnection/remoteConnectionUtils";
 import { Files, log } from "utils";
 
+import { fetchRecordsWithSyncStatus } from "./fetchRecordsWithSyncStatus";
 import { dataImportOptions, importFileExtension } from "./recordsListUtils";
 
 export type RecordsListState = {
@@ -135,7 +133,6 @@ export const useRecordsList = () => {
         syncStatusLoading: true,
         syncStatusFetched: false,
       }));
-      dispatch(AutoSyncActions.checkStart());
       // only set on success below; left out entirely on failure/abort, so the setState merge
       // further down falls back to whatever the current state's `records` already is, instead
       // of this callback needing its own `records` closure (which - being replaced with a new
@@ -146,36 +143,19 @@ export const useRecordsList = () => {
         loading: false,
         syncStatusLoading: false,
       };
-      try {
-        if (await RemoteConnectionUtils.checkLoggedInUser({ dispatch, navigation })) {
-          const _records = await RecordService.syncRecordSummaries({
-            survey,
-            cycle,
-            onlyLocal,
-          });
-          log.debug(
-            `loadRecordsWithSyncStatus: fetched ${_records.length} record summary(ies)`,
-          );
-          dispatch(AutoSyncActions.checkEnd({ records: _records, survey }));
-          Object.assign(stateNext, {
-            records: _records,
-            syncStatusFetched: true,
-          });
-        } else {
-          log.debug("loadRecordsWithSyncStatus: user not logged in, aborting");
-          dispatch(AutoSyncActions.checkAborted());
-        }
-      } catch (error) {
-        // shown through the sync status icon (see AutoSyncActions.checkError) instead of a
-        // blocking popup: a popup would otherwise reappear every time an automatic re-check is
-        // triggered (screen focus, cycle change, ...) for as long as the underlying problem
-        // (e.g. a server error) persists
-        log.warn(`loadRecordsWithSyncStatus: error fetching records sync status: ${error}`);
-        // same distinction as the background tick (see handleAutoSyncTickError): an expired
-        // session gets its own "log in again" status instead of a generic server error
-        dispatch(
-          isAuthError(error) ? AutoSyncActions.authError() : AutoSyncActions.checkError(),
-        );
+      const { records: _records, syncStatusFetched: _syncStatusFetched } =
+        await fetchRecordsWithSyncStatus({
+          cycle,
+          dispatch,
+          navigation,
+          onlyLocal,
+          survey,
+        });
+      if (_syncStatusFetched) {
+        Object.assign(stateNext, {
+          records: _records,
+          syncStatusFetched: true,
+        });
       }
       setState((statePrev) => ({ ...statePrev, ...stateNext }));
       return {

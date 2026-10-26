@@ -1,0 +1,16 @@
+export default {
+  currentSurvey: "Nykyinen kyselylomake",
+  lastEdit: "Viimeksi muokattu: {{date}}",
+  records: "Tietueet",
+  recordsTotal: "Yhteensä",
+  recordsToUpload: "Lähetettävänä",
+  recordsWithErrors: "Virheellisiä",
+  sync: "Synkronoi",
+  connect: "Yhdistä",
+  connectDescription: "Yhdistä synkronoidaksesi tietosi Arenan kanssa",
+  account: "Tili",
+  surveys: "Kyselylomakkeet",
+  surveysDescription: "Vaihda, lataa tai päivitä kyselylomakkeita",
+  noSurveySelected: "Kyselylomaketta ei ole valittu",
+  noSurveySelectedDescription: "Valitse tai lataa kyselylomake aloittaaksesi tiedonkeruun",
+};
