@@ -4,7 +4,7 @@ export default {
   autoSync: {
     checkbox: "Automaattinen synkronointi",
     synced: "{{count}} tietue synkronoitu automaattisesti",
-    synced_plural: "{{count}} tietuetta synkronoitu automaattisesti",
+    synced_other: "{{count}} tietuetta synkronoitu automaattisesti",
     statusLabel: "Synkronoinnin tila:",
     statusTitle: "Synkronoinnin tila",
     syncInProgressToast:
@@ -54,7 +54,7 @@ Jatketaanko?`,
     findClosestSamplingPoint: "Etsi lähin otantakohde",
     findingClosestSamplingPoint: "Etsitään lähintä otantakohde",
     minDistanceItemFound: "Kohde löydetty {{minDistance}}m:n etäisyydeltä",
-    minDistanceItemFound_plural:
+    minDistanceItemFound_other:
       "Kohteet löydetty {{minDistance}}m:n etäisyydeltä",
     useSelectedItem: "Käytä valittua kohdetta",
   },
@@ -184,7 +184,7 @@ Haluatko hakea sen uudelleen palvelimelta?`,
 
   code: {
     selectItem: "Valitse kohde",
-    selectItem_plural: "Valitse kohteet",
+    selectItem_other: "Valitse kohteet",
   },
   coordinate: {
     longPressMarkerToMove: "Siirrä merkkiä painamalla sitä pitkään",

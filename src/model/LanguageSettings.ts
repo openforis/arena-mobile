@@ -12,6 +12,7 @@ export const Languages = [
   { key: "fa", label: "Persian" },
   { key: "pt", label: "Portuguese" },
   { key: "ru", label: "Russian" },
+  { key: "sr", label: "Serbian" },
   { key: "es", label: "Spanish" },
 ];
 

@@ -7,7 +7,7 @@ export default {
   close: "Schließen",
   confirm: "Bestätigen",
   confirmClearSelectedValue: "Ausgewählten Wert löschen?",
-  confirmClearSelectedValue_plural: "Ausgewählte Werte löschen?",
+  confirmClearSelectedValue_other: "Ausgewählte Werte löschen?",
   continue: "Weiter",
   createdOn: "Erstellt am",
   delete: "Löschen",
@@ -58,17 +58,17 @@ export default {
 
   timePart: {
     year: "Jahr",
-    year_plural: "Jahre",
+    year_other: "Jahre",
     month: "Monat",
-    month_plural: "Monate",
+    month_other: "Monate",
     day: "Tag",
-    day_plural: "Tage",
+    day_other: "Tage",
     hour: "Stunde",
-    hours: "Stunden",
+    hour_other: "Stunden",
     minute: "Minute",
-    minute_plural: "Minuten",
+    minute_other: "Minuten",
     second: "Sekunde",
-    second_plural: "Sekunden",
+    second_other: "Sekunden",
   },
   remainingTime: {
     canLastHoursAndMinutes:
