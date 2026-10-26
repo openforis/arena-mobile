@@ -69,14 +69,16 @@ export const Dialog = (props: DialogProps) => {
       safeAreaStyle={styles.safeArea}
       onDismiss={dismissable ? handleClose : undefined}
     >
-      <Pressable
-        style={[styles.overlay, { backgroundColor: theme.colors.backdrop }]}
-        onPress={dismissable ? handleClose : undefined}
-      >
-        <View
-          style={[styles.dialogContainer, style]}
-          onStartShouldSetResponder={() => true}
-        >
+      <View style={styles.overlay}>
+        {/* backdrop is a sibling (not a parent) of the dialog, so it does not steal scroll gestures */}
+        <Pressable
+          style={[
+            StyleSheet.absoluteFill,
+            { backgroundColor: theme.colors.backdrop },
+          ]}
+          onPress={dismissable ? handleClose : undefined}
+        />
+        <View style={[styles.dialogContainer, style]}>
           <Surface
             style={[
               styles.surface,
@@ -142,7 +144,7 @@ export const Dialog = (props: DialogProps) => {
             )}
           </Surface>
         </View>
-      </Pressable>
+      </View>
     </BaseModal>
   );
 };
