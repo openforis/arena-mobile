@@ -78,6 +78,7 @@ export const MultipleAttributeComponentWrapper = (
             nodeDef={nodeDef}
             nodeUuid={node.uuid}
             parentNodeUuid={parentNodeUuid}
+            style={styles.attributeComponentWrapper}
             wrapperStyle={styles.attributeComponentWrapper}
           />
           <IconButton icon="trash-can-outline" onPress={onDeletePress(node)} />

@@ -12,8 +12,8 @@ import {
 } from "react-native-svg";
 
 import { TARGET_COLOR, TargetLocationIcon } from "./TargetLocationIcon";
-import { useTheme } from "react-native-paper";
 
+import { useAppTheme } from "theme";
 import { ColorUtils } from "utils";
 
 const toRad = (deg: number) => (deg * Math.PI) / 180;
@@ -216,7 +216,7 @@ export const RadarView = ({
   heading,
   accuracy,
 }: RadarViewProps) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const cx = size / 2;
   const cy = size / 2;
   const R = size / 2 - 4;

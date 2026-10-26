@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { useTheme } from "react-native-paper";
 
 import {
   Button,
@@ -16,6 +15,7 @@ import {
 } from "components";
 import { useMinScreenDimension } from "hooks";
 import { DeviceInfoSelectors, SettingsSelectors } from "state";
+import { useAppTheme } from "theme";
 
 import { LocationNavigatorInfoDialog } from "./LocationNavigatorInfoDialog";
 import { AccuracyCircle } from "./AccuracyCircle";
@@ -82,7 +82,7 @@ const InfoCard = ({
   backgroundColor,
   textColor,
 }: InfoCardProps) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const containerStyle = useMemo(
     () => [
       styles.infoCard,

@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from "react";
-import { useTheme } from "react-native-paper";
 
 import { Records, Surveys } from "@openforis/arena-core";
 
@@ -12,6 +11,7 @@ import {
   SurveySelectors,
   useAppDispatch,
 } from "state";
+import { useAppTheme } from "theme";
 
 import styles from "./styles";
 import { TrackDialog } from "./TrackDialog";
@@ -58,7 +58,7 @@ export const ShowTrackButton = ({ nodeUuid }: { nodeUuid: string }) => {
 // buttons of a track being recorded or paused: Pause/Resume, Show track, Stop
 export const ActiveTrackingButtons = ({ nodeUuid }: { nodeUuid: string }) => {
   const dispatch = useAppDispatch();
-  const theme = useTheme();
+  const theme = useAppTheme();
   const canEditRecord = DataEntrySelectors.useCanEditRecord();
   const { status } = usePositionTrackingSummary();
   const tracking = status === PositionTrackingStatus.tracking;

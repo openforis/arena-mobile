@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from "react";
 import { Linking } from "react-native";
-import { List, Surface } from "react-native-paper";
 import * as WebBrowser from "expo-web-browser";
 
 import { Objects } from "@openforis/arena-core";
@@ -9,7 +8,16 @@ import { AppLogo } from "appComponents/AppLogo";
 import { ChangelogViewDialog } from "appComponents/ChangelogViewDialog";
 import { VersionNumberInfoButton } from "appComponents/VersionNumberInfoButton";
 import { WhatsNewAllItemsDialog } from "appComponents/WhatsNew";
-import { Divider, HView, Link, ScreenView, Text, VView } from "components";
+import {
+  Divider,
+  HView,
+  Link,
+  ListSubheader,
+  ScreenView,
+  Surface,
+  Text,
+  VView,
+} from "components";
 import { useTranslation } from "localization";
 import { AMConstants } from "utils";
 
@@ -19,10 +27,9 @@ import styles from "./styles";
 const supportEmailAddress = process.env.EXPO_PUBLIC_SUPPORT_EMAIL_ADDRESS;
 
 // show only the host: the full forum url is too long for small screens
-const supportForumHost = AMConstants.supportForumUrl.replace(
-  /^https?:\/\/([^/]+).*$/,
-  "$1",
-);
+const supportForumHost =
+  AMConstants.supportForumUrl.replace(/^https?:\/\//, "").split("/")[0] ??
+  AMConstants.supportForumUrl;
 
 export const AboutScreen = () => {
   const { t } = useTranslation();
@@ -62,9 +69,7 @@ export const AboutScreen = () => {
       </VView>
 
       <Surface style={styles.section} elevation={1}>
-        <List.Subheader style={styles.sectionTitle}>
-          {t("about:support")}
-        </List.Subheader>
+        <ListSubheader style={styles.sectionTitle} textKey="about:support" />
         {Objects.isNotEmpty(supportEmailAddress) && (
           <>
             <AboutListItem
@@ -87,9 +92,10 @@ export const AboutScreen = () => {
       </Surface>
 
       <Surface style={styles.section} elevation={1}>
-        <List.Subheader style={styles.sectionTitle}>
-          {t("about:releaseNotes")}
-        </List.Subheader>
+        <ListSubheader
+          style={styles.sectionTitle}
+          textKey="about:releaseNotes"
+        />
         <AboutListItem
           icon="star-four-points-outline"
           titleKey="whatsNew:title"

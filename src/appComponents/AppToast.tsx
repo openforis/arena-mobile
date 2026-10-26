@@ -1,5 +1,4 @@
-import { Snackbar } from "react-native-paper";
-
+import { Snackbar } from "components";
 import { useTranslation } from "localization";
 import { ToastActions, ToastSelectors, useAppDispatch } from "state";
 
@@ -16,8 +15,11 @@ export const AppToast = () => {
   };
 
   return (
-    <Snackbar onDismiss={onDismiss} onIconPress={onDismiss} visible={!!textKey}>
-      {t(textKey, textParams)}
-    </Snackbar>
+    <Snackbar
+      content={t(textKey, textParams)}
+      onDismiss={onDismiss}
+      showCloseButton
+      visible={!!textKey}
+    />
   );
 };

@@ -1,8 +1,7 @@
 import React from "react";
 import { View } from "react-native";
-import { Checkbox, TouchableRipple, useTheme } from "react-native-paper";
 
-import { HView, Modal, ScrollView, Text, VView } from "components";
+import { ChoiceItem, Modal, ScrollView, Text, VView } from "components";
 
 import {
   notVisitedSamplingPointColor,
@@ -41,43 +40,32 @@ type LayerChoiceItemProps = LayerItem & {
 // same look as the items of MapAppChooserDialog: checkbox on the left, label wrapping on more lines
 const LayerChoiceItem = (props: LayerChoiceItemProps) => {
   const { checked, label, layer, onPress, pointsCount } = props;
-  const { colors } = useTheme();
   return (
-    <TouchableRipple
+    <ChoiceItem
+      contentStyle={styles.layerItemContent}
+      multiple
       onPress={onPress}
-      style={[
-        styles.layerItem,
-        {
-          backgroundColor: colors.surface,
-          borderColor: checked ? colors.primary : colors.outlineVariant,
-          borderWidth: checked ? 2 : 1,
-        },
-      ]}
+      selected={checked}
+      style={styles.layerItem}
     >
-      <HView style={styles.layerItemContent}>
-        <Checkbox.Android
-          onPress={onPress}
-          status={checked ? "checked" : "unchecked"}
-        />
-        {layer.type !== RecordsMapLayerType.samplingPoints && (
-          <View style={[styles.layerColor, { backgroundColor: layer.color }]} />
+      {layer.type !== RecordsMapLayerType.samplingPoints && (
+        <View style={[styles.layerColor, { backgroundColor: layer.color }]} />
+      )}
+      <VView style={styles.layerItemTexts}>
+        <Text variant="bodyLarge">{label}</Text>
+        {pointsCount !== null && (
+          <Text
+            textKey={
+              layer.type === RecordsMapLayerType.positionTrack
+                ? "recordsMap:tracksCount"
+                : "recordsMap:pointsCount"
+            }
+            textParams={{ count: pointsCount }}
+            variant="bodySmall"
+          />
         )}
-        <VView style={styles.layerItemTexts}>
-          <Text variant="bodyLarge">{label}</Text>
-          {pointsCount !== null && (
-            <Text
-              textKey={
-                layer.type === RecordsMapLayerType.positionTrack
-                  ? "recordsMap:tracksCount"
-                  : "recordsMap:pointsCount"
-              }
-              textParams={{ count: pointsCount }}
-              variant="bodySmall"
-            />
-          )}
-        </VView>
-      </HView>
-    </TouchableRipple>
+      </VView>
+    </ChoiceItem>
   );
 };
 

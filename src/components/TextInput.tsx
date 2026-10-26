@@ -1,25 +1,38 @@
 import React, { forwardRef, Ref, useMemo } from "react";
 import { TextInput as RNPTextInput, useTheme } from "react-native-paper";
-import { StyleProp, ViewStyle, KeyboardTypeOptions } from "react-native";
+import {
+  KeyboardTypeOptions,
+  StyleProp,
+  TextInputProps,
+  TextStyle,
+  ViewStyle,
+} from "react-native";
 
 import { useTranslation } from "localization";
 
 const multilineStyle = { lineHeight: 24 };
 
 type Props = {
+  autoFocus?: boolean;
   autoCapitalize?: "none" | "sentences" | "words" | "characters";
   defaultValue?: any;
   disabled?: boolean;
   editable?: boolean;
   error?: boolean;
+  inputMode?: TextInputProps["inputMode"];
+  // style of the inner native input (style is applied to the outer container)
+  inputStyle?: StyleProp<TextStyle>;
   keyboardType?: KeyboardTypeOptions;
   label?: string;
+  // when false, label and placeholder are shown as they are (not translated)
+  labelIsI18nKey?: boolean;
   nonEditableStyleVisible?: boolean;
   multiline?: boolean;
   numberOfLines?: number;
   placeholder?: string;
   onChange?: (text: string) => void;
   onPressIn?: () => void;
+  onSubmitEditing?: () => void;
   right?: React.ReactNode;
   secureTextEntry?: boolean;
   style?: StyleProp<ViewStyle>;
@@ -33,17 +46,22 @@ export const TextInput = forwardRef(function TextInput(
 ) {
   const {
     autoCapitalize = "none",
+    autoFocus,
     disabled = false,
     editable = true,
     error = false,
+    inputMode,
+    inputStyle,
     keyboardType,
     label: labelKey,
+    labelIsI18nKey = true,
     nonEditableStyleVisible = true,
     multiline = false,
     numberOfLines,
     placeholder: placeholderKey,
     onChange,
     onPressIn,
+    onSubmitEditing,
     right,
     secureTextEntry,
     style: styleProp = {},
@@ -57,8 +75,8 @@ export const TextInput = forwardRef(function TextInput(
 
   const showAsReadOnly = !editable && nonEditableStyleVisible;
 
-  const label = t(labelKey);
-  const placeholder = t(placeholderKey);
+  const label = labelIsI18nKey ? t(labelKey) : labelKey;
+  const placeholder = labelIsI18nKey ? t(placeholderKey) : placeholderKey;
 
   const style = useMemo(() => {
     return [
@@ -75,9 +93,12 @@ export const TextInput = forwardRef(function TextInput(
   return (
     <RNPTextInput
       autoCapitalize={autoCapitalize}
+      autoFocus={autoFocus}
+      contentStyle={inputStyle}
       disabled={disabled}
       editable={editable}
       error={error}
+      inputMode={inputMode}
       keyboardType={keyboardType}
       label={label}
       mode="outlined"
@@ -85,6 +106,7 @@ export const TextInput = forwardRef(function TextInput(
       numberOfLines={numberOfLines}
       onChangeText={onChange}
       onPressIn={onPressIn}
+      onSubmitEditing={onSubmitEditing}
       placeholder={placeholder}
       ref={ref}
       right={right}
