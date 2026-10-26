@@ -14,8 +14,8 @@ export const useStyles = () => {
         },
         // applied to the inner native input, so it grows with its content
         multilineInput: {
-          // about 5 rows (multiline line height is 24)
-          minHeight: 120,
+          // about 3 rows (multiline line height is 24)
+          minHeight: 72,
         },
         multilineScrollView: {
           alignSelf: "stretch",
@@ -24,8 +24,8 @@ export const useStyles = () => {
           flex: 1,
         },
         multilineScrollViewForm: {
-          // about 10 rows
-          maxHeight: 260,
+          // about 5 rows, including the input padding
+          maxHeight: 150,
         },
         notApplicable: {
           backgroundColor: theme.colors.surfaceVariant,
