@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import ErrorBoundary from "react-native-error-boundary";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
   KeyboardAvoidingView,
   KeyboardProvider,
@@ -87,11 +88,13 @@ const AppInnerContainer = () => {
 const App = () => {
   log.debug(`rendering App`);
   return (
-    <SafeAreaProvider>
-      <Provider store={store}>
-        <AppInnerContainer />
-      </Provider>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={BaseStyles.flexOne}>
+      <SafeAreaProvider>
+        <Provider store={store}>
+          <AppInnerContainer />
+        </Provider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 };
 

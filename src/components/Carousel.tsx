@@ -1,204 +1,190 @@
-import { ReactNode, useCallback, useMemo, useRef, useState } from "react";
+import { ReactNode, useCallback, useRef, useState } from "react";
 import {
-  PanResponder,
+  I18nManager,
   StyleProp,
   StyleSheet,
   View,
   ViewStyle,
 } from "react-native";
-import Dots from "react-native-dots-pagination";
+import { useTheme } from "react-native-paper";
+import { useSharedValue } from "react-native-reanimated";
+import {
+  CarouselItemAnimation,
+  CarouselPanGesture,
+  CarouselRef,
+  Carousel as RNRCarousel,
+  Pagination,
+} from "react-native-reanimated-carousel";
 
-import { useIsTextDirectionRtl } from "localization";
-
-import { HView } from "./HView";
 import { IconButton } from "./IconButton";
 import { VView } from "./VView";
 
-// min horizontal swipe distance to go to the previous/next item
-const swipeMinDistance = 50;
+// the library follows the native layout direction (not the app language one)
+const isRtl = I18nManager.isRTL;
 
-// width of the previous/next buttons in the compact variant (icon + padding + margin)
-export const carouselCompactButtonWidth = 40;
+// swipe distances (in points) used to activate/fail the pan gesture
+const verticalFailOffset = 10;
+const edgeFailOffset = 8;
+const farOffset = 100000;
 
 type CarouselProps<T> = {
-  // small previous/next buttons beside the item and small dots below it (e.g. nested in another carousel)
+  // small dots below the items and no previous/next buttons (e.g. nested in another carousel)
   compact?: boolean;
+  // height of the items; when not specified, the carousel fills the available space
+  height?: number;
+  itemAnimation?: CarouselItemAnimation;
   items: T[];
+  keyExtractor?: (item: T, index: number) => string;
   renderItem: (item: T, index: number) => ReactNode;
   style?: StyleProp<ViewStyle>;
 };
 
 export const Carousel = <T,>(props: CarouselProps<T>) => {
-  const { compact = false, items, renderItem, style } = props;
+  const {
+    compact = false,
+    height,
+    itemAnimation,
+    items,
+    keyExtractor,
+    renderItem,
+    style,
+  } = props;
 
-  const isRtl = useIsTextDirectionRtl();
+  const theme = useTheme();
+  const carouselRef = useRef<CarouselRef>(null);
+  const progress = useSharedValue(0);
+  const [size, setSize] = useState({ width: 0, height: 0 });
   const [activeIndexState, setActiveIndexState] = useState(0);
+
   const count = items.length;
   const lastIndex = Math.max(0, count - 1);
-  // keep the active index in range when the items change
   const activeIndex = Math.min(activeIndexState, lastIndex);
+  const multiple = count > 1;
+  const atStart = activeIndex === 0;
+  const atEnd = activeIndex === lastIndex;
 
-  const goToPrevious = useCallback(
-    () => setActiveIndexState((prev) => Math.max(0, prev - 1)),
-    [],
+  const onConfigurePanGesture = useCallback(
+    (gesture: CarouselPanGesture) => {
+      // a nested carousel activates first, so it gets the swipe
+      const activeOffset = compact ? 10 : 20;
+      // fail when swiping beyond the first/last item, so an outer carousel (if any) takes over
+      const failBackward = atStart ? edgeFailOffset : farOffset;
+      const failForward = atEnd ? edgeFailOffset : farOffset;
+      gesture
+        .activeOffsetX([-activeOffset, activeOffset])
+        // vertical swipes go to the scrollable content of the items
+        .failOffsetY([-verticalFailOffset, verticalFailOffset])
+        .failOffsetX(
+          isRtl ? [-failBackward, failForward] : [-failForward, failBackward],
+        );
+    },
+    [atEnd, atStart, compact],
   );
-  const goToNext = useCallback(
-    () => setActiveIndexState((prev) => Math.min(lastIndex, prev + 1)),
-    [lastIndex],
+
+  const renderCarouselItem = useCallback(
+    ({ item, index }: { item: T; index: number }) => (
+      <View style={styles.item}>{renderItem(item, index)}</View>
+    ),
+    [renderItem],
   );
 
-  // the pan responder is created once: read the latest callbacks through a ref
-  const swipeHandlersRef = useRef({
-    activeIndex,
-    compact,
-    goToNext,
-    goToPrevious,
-    isRtl,
-    lastIndex,
-  });
-  swipeHandlersRef.current = {
-    activeIndex,
-    compact,
-    goToNext,
-    goToPrevious,
-    isRtl,
-    lastIndex,
-  };
-
-  const grantPageXRef = useRef(0);
-
-  const panResponder = useMemo(
-    () =>
-      PanResponder.create({
-        // claimed on start too: otherwise an ancestor that became responder (e.g. the dialog container) keeps the gesture
-        onStartShouldSetPanResponder: () => true,
-        // horizontal swipes only, so vertical scrolling of the item content still works
-        onMoveShouldSetPanResponder: (_evt, { dx, dy }) =>
-          Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 2,
-        onPanResponderGrant: (evt) => {
-          grantPageXRef.current = evt.nativeEvent.pageX;
-        },
-        // a nested (compact) carousel keeps the swipe, unless it cannot move further in that direction
-        onPanResponderTerminationRequest: (evt) => {
-          const { activeIndex, compact, isRtl, lastIndex } =
-            swipeHandlersRef.current;
-          if (!compact) return true;
-          // the gesture state isn't updated yet with the move that triggered the request
-          const dx = evt.nativeEvent.pageX - grantPageXRef.current;
-          const forward = isRtl ? dx > 0 : dx < 0;
-          return forward ? activeIndex === lastIndex : activeIndex === 0;
-        },
-        onPanResponderRelease: (_evt, { dx }) => {
-          if (Math.abs(dx) < swipeMinDistance) return;
-          const handlers = swipeHandlersRef.current;
-          const forward = handlers.isRtl ? dx > 0 : dx < 0;
-          if (forward) {
-            handlers.goToNext();
-          } else {
-            handlers.goToPrevious();
-          }
-        },
-      }),
+  const goToPrevious = useCallback(() => carouselRef.current?.prev(), []);
+  const goToNext = useCallback(() => carouselRef.current?.next(), []);
+  const goToIndex = useCallback(
+    (index: number) => carouselRef.current?.scrollTo({ index, animated: true }),
     [],
   );
 
   if (count === 0) return null;
 
-  const previousButton = (
-    <IconButton
-      avoidMultiplePress={false}
-      disabled={activeIndex === 0}
-      icon={isRtl ? "chevron-right" : "chevron-left"}
-      onPress={goToPrevious}
-      size={compact ? 16 : undefined}
-      style={compact ? styles.compactButton : undefined}
+  const dotSize = compact ? 6 : 8;
+  const pagination = multiple && (
+    <Pagination
+      activeDotStyle={{
+        backgroundColor: theme.colors.primary,
+        borderRadius: dotSize / 2,
+        height: dotSize,
+        width: dotSize * 3,
+      }}
+      containerStyle={styles.pagination}
+      count={count}
+      dotStyle={{
+        backgroundColor: theme.colors.outlineVariant,
+        borderRadius: dotSize / 2,
+        height: dotSize,
+        width: dotSize,
+      }}
+      onPress={goToIndex}
+      progress={progress}
     />
   );
-  const nextButton = (
-    <IconButton
-      avoidMultiplePress={false}
-      disabled={activeIndex === lastIndex}
-      icon={isRtl ? "chevron-left" : "chevron-right"}
-      onPress={goToNext}
-      size={compact ? 16 : undefined}
-      style={compact ? styles.compactButton : undefined}
-    />
-  );
-  const multiple = count > 1;
 
-  // RN View: the app View doesn't forward the pan handlers
-  const item = (
-    <View
-      style={[styles.item, compact && styles.compactItem]}
-      {...panResponder.panHandlers}
-    >
-      {renderItem(items[activeIndex] as T, activeIndex)}
-    </View>
-  );
-
-  if (compact) {
-    return (
-      <VView style={[styles.compactContainer, style]}>
-        <HView style={styles.compactRow}>
-          {multiple && previousButton}
-          {item}
-          {multiple && nextButton}
-        </HView>
-        {multiple && (
-          <Dots
-            active={activeIndex}
-            activeDotHeight={8}
-            activeDotWidth={8}
-            length={count}
-            passiveDotHeight={6}
-            passiveDotWidth={6}
-            paddingVertical={0}
-          />
-        )}
-      </VView>
-    );
-  }
+  const itemsHeight = height ?? size.height;
 
   return (
-    <VView style={[styles.container, style]}>
-      {item}
-      {multiple && (
-        <HView style={styles.stepper}>
-          {previousButton}
-          <Dots length={count} active={activeIndex} />
-          {nextButton}
-        </HView>
-      )}
+    <VView style={[styles.container, !height && styles.fill, style]}>
+      <View
+        onLayout={(event) => {
+          const { width, height: layoutHeight } = event.nativeEvent.layout;
+          setSize({ width, height: layoutHeight });
+        }}
+        style={height ? { height } : styles.fill}
+      >
+        {size.width > 0 && itemsHeight > 0 && (
+          <RNRCarousel
+            data={items}
+            {...(itemAnimation ? { itemAnimation } : {})}
+            keyExtractor={keyExtractor}
+            onConfigurePanGesture={onConfigurePanGesture}
+            onSnapToItem={setActiveIndexState}
+            progress={progress}
+            ref={carouselRef}
+            renderItem={renderCarouselItem}
+            scrollEnabled={multiple}
+            style={{ height: itemsHeight, width: size.width }}
+          />
+        )}
+      </View>
+      {compact
+        ? pagination
+        : multiple && (
+            <View style={styles.stepper}>
+              <IconButton
+                avoidMultiplePress={false}
+                disabled={atStart}
+                icon={isRtl ? "chevron-right" : "chevron-left"}
+                onPress={goToPrevious}
+              />
+              {pagination}
+              <IconButton
+                avoidMultiplePress={false}
+                disabled={atEnd}
+                icon={isRtl ? "chevron-left" : "chevron-right"}
+                onPress={goToNext}
+              />
+            </View>
+          )}
     </VView>
   );
 };
 
 const styles = StyleSheet.create({
-  // shrinks with the item, so the controls below stay visible in a container with a max height
   container: {
-    flexShrink: 1,
     gap: 8,
   },
+  fill: {
+    flex: 1,
+  },
   item: {
-    flexShrink: 1,
+    flex: 1,
+  },
+  pagination: {
+    alignItems: "center",
+    justifyContent: "center",
   },
   stepper: {
     alignItems: "center",
+    flexDirection: "row",
     justifyContent: "space-between",
-  },
-  compactContainer: {
-    gap: 8,
-  },
-  compactRow: {
-    alignItems: "center",
-    gap: 0,
-  },
-  compactItem: {
-    alignItems: "center",
-    flex: 1,
-  },
-  compactButton: {
-    margin: 0,
-    width: carouselCompactButtonWidth,
   },
 });

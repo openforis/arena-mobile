@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
+  I18nManager,
   Image,
   ImageSourcePropType,
   Pressable,
@@ -7,16 +8,18 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+// gesture handler ScrollView: scrolls vertically inside the carousel swipe gesture
+import { ScrollView } from "react-native-gesture-handler";
 import { useTheme } from "react-native-paper";
+import { Extrapolation, interpolate } from "react-native-reanimated";
+import { CarouselItemAnimation } from "react-native-reanimated-carousel";
 
 import {
   Carousel,
-  carouselCompactButtonWidth,
   Dialog,
   HView,
   Icon,
   Markdown,
-  ScrollView,
   Text,
   VView,
 } from "components";
@@ -27,6 +30,42 @@ import { WhatsNew, WhatsNewItem } from "model";
 const dialogHorizontalMargin = 56;
 const dialogMaxWidth = 480;
 const dialogContentHorizontalPadding = 48;
+
+// space between the current image and the (smaller) adjacent ones
+const imagesGap = 12;
+const adjacentImageScale = 0.8;
+// evaluated here: I18nManager isn't available in the worklet below
+const directionSign = I18nManager.isRTL ? -1 : 1;
+
+// "cover flow": the adjacent images are shown smaller and faded beside the current one
+const createImagesAnimation =
+  (distance: number): CarouselItemAnimation =>
+  (relativeProgress) => {
+    "worklet";
+    const absProgress = Math.abs(relativeProgress);
+    return {
+      opacity: interpolate(
+        absProgress,
+        [0, 1, 2],
+        [1, 0.5, 0],
+        Extrapolation.CLAMP,
+      ),
+      transform: [
+        { translateX: relativeProgress * distance * directionSign },
+        {
+          scale: interpolate(
+            absProgress,
+            [0, 1],
+            [1, adjacentImageScale],
+            Extrapolation.CLAMP,
+          ),
+        },
+      ],
+      zIndex: Math.round(
+        interpolate(absProgress, [0, 1], [10, 0], Extrapolation.CLAMP),
+      ),
+    };
+  };
 
 const getAspectRatio = (image: ImageSourcePropType) => {
   const { width, height } = Image.resolveAssetSource(image) ?? {};
@@ -52,24 +91,29 @@ export const WhatsNewSlide = (props: WhatsNewSlideProps) => {
   // limited so that the description is still visible in landscape orientation
   const imageMaxHeight = windowHeight * 0.3;
 
-  // one image at a time, beside the previous/next buttons when there are more
-  const imageMaxWidth =
-    imagesWidth - (images.length > 1 ? 2 * carouselCompactButtonWidth : 0);
-
   const getImageSize = (image: ImageSourcePropType) => {
     const aspectRatio = getAspectRatio(image);
-    const width = Math.min(imageMaxWidth, imageMaxHeight * aspectRatio);
+    const width = Math.min(imagesWidth, imageMaxHeight * aspectRatio);
     return { width, height: width / aspectRatio };
   };
 
+  const imageSizes = images.map(getImageSize);
   // same height for all the images, so the slide doesn't change size when going through them
-  const imagesHeight = Math.max(
-    0,
-    ...images.map((image) => getImageSize(image).height),
+  const imagesHeight = Math.max(0, ...imageSizes.map((size) => size.height));
+  const imagesMaxWidth = Math.max(0, ...imageSizes.map((size) => size.width));
+
+  // adjacent images placed right beside the current one
+  const imagesAnimationDistance = Math.min(
+    imagesWidth,
+    (imagesMaxWidth * (1 + adjacentImageScale)) / 2 + imagesGap,
+  );
+  const imagesAnimation = useMemo(
+    () => createImagesAnimation(imagesAnimationDistance),
+    [imagesAnimationDistance],
   );
 
   const renderImage = (image: ImageSourcePropType) => (
-    <View style={[styles.imageContainer, { height: imagesHeight }]}>
+    <View style={styles.imageContainer}>
       <Pressable
         accessibilityLabel={title}
         accessibilityRole="imagebutton"
@@ -110,7 +154,13 @@ export const WhatsNewSlide = (props: WhatsNewSlideProps) => {
           onLayout={(event) => setImagesWidth(event.nativeEvent.layout.width)}
         >
           {imagesWidth > 0 && (
-            <Carousel compact items={images} renderItem={renderImage} />
+            <Carousel
+              compact
+              height={imagesHeight}
+              itemAnimation={imagesAnimation}
+              items={images}
+              renderItem={renderImage}
+            />
           )}
         </View>
       )}
@@ -142,7 +192,7 @@ export const WhatsNewSlide = (props: WhatsNewSlideProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexShrink: 1,
+    flex: 1,
     gap: 8,
   },
   header: {
@@ -153,6 +203,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageContainer: {
+    alignItems: "center",
+    flex: 1,
     justifyContent: "center",
   },
   image: {
@@ -163,8 +215,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   description: {
-    flexGrow: 0,
-    flexShrink: 1,
+    flex: 1,
   },
   version: {
     alignSelf: "flex-end",
