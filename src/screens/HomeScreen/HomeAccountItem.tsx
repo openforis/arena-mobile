@@ -60,7 +60,12 @@ export const HomeAccountItem = () => {
       icon="account-off-outline"
       right={
         networkAvailable ? (
-          <Button compact onPress={onPress} textKey="home:connect" />
+          <Button
+            compact
+            onPress={onPress}
+            testID="home-connect-button"
+            textKey="home:connect"
+          />
         ) : undefined
       }
       titleKey="loginInfo:notLoggedIn"

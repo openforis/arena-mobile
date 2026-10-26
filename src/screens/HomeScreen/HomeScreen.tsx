@@ -52,6 +52,7 @@ export const HomeScreen = () => {
           onPress={() =>
             navigation.navigate(screenKeys.surveysListLocal as never)
           }
+          testID="home-surveys-button"
           titleKey="home:surveys"
         />
       </VView>

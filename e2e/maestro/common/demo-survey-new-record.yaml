@@ -6,10 +6,11 @@ appId: ${APP_ID}
     clearState: true
 # the "What's new" dialog is shown again after clearing the state
 - extendedWaitUntil:
-    visible: "Select a survey|Manage surveys|What's new"
+    visible: "Surveys|What's new"
     timeout: 60000
 - runFlow: dismiss-whats-new.yaml
-- tapOn: "Select a survey|Manage surveys"
+- tapOn:
+    id: "home-surveys-button"
 - tapOn: "Demo Survey"
 - extendedWaitUntil:
     visible: "No records found"

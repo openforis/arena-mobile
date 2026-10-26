@@ -31,6 +31,7 @@ type Props = {
   onPress?: () => void;
   // shown on the right side; a chevron is shown when not specified and onPress is
   right?: React.ReactNode;
+  testID?: string;
   title?: string;
   titleKey?: string;
 };
@@ -44,6 +45,7 @@ export const HomeListItem = (props: Props) => {
     iconColor,
     onPress,
     right,
+    testID,
     title,
     titleKey,
   } = props;
@@ -83,5 +85,11 @@ export const HomeListItem = (props: Props) => {
     </Surface>
   );
 
-  return onPress ? <Pressable onPress={onPress}>{content}</Pressable> : content;
+  return onPress ? (
+    <Pressable onPress={onPress} testID={testID}>
+      {content}
+    </Pressable>
+  ) : (
+    content
+  );
 };
