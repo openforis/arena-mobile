@@ -5,4 +5,5 @@ export default {
   support: "Dukungan",
   version: "Versi",
   viewChangelog: "Lihat catatan perubahan",
+  viewWhatsNew: "Lihat yang baru",
 };

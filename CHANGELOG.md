@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.4] - 2026-10-25
+
+### Added
+
+- "What's new" dialog: carousel of the new features (geospatial attribute, offline maps, records on the map, auto-sync, external GPS devices), shown on startup and in the About screen;
+
 ## [2.10.3] - 2026-10-22
 
 ### Fixed

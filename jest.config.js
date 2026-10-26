@@ -12,6 +12,9 @@ const esModules = [
 module.exports = {
   testEnvironment: "node",
   modulePaths: ["<rootDir>/src"],
+  moduleNameMapper: {
+    [String.raw`\.(jpg|png)$`]: "<rootDir>/jest/fileStub.js",
+  },
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   transform: {
     // .babelrc doesn't apply to node_modules, so pass the preset explicitly

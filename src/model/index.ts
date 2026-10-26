@@ -37,6 +37,8 @@ export { Taxa } from "./Taxa";
 export { Themes, ThemesSettings } from "./Themes";
 export { UpdateStatus } from "./UpdateStatus";
 export { UserLogoutOptions } from "./UserLogoutOptions";
+export { WhatsNew } from "./WhatsNew";
+export type { WhatsNewItem } from "./WhatsNew";
 
 export { PositionTracks, TrackPointRejectReason } from "./utils/PositionTracks";
 export type {

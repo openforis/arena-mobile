@@ -5,6 +5,7 @@ import { Objects } from "@openforis/arena-core";
 
 import { ChangelogViewDialog } from "appComponents/ChangelogViewDialog";
 import { VersionNumberInfoButton } from "appComponents/VersionNumberInfoButton";
+import { WhatsNewAllItemsDialog } from "appComponents/WhatsNew";
 import { Button, FormItem, Link, ScreenView, VView } from "components";
 import { useTranslation } from "localization";
 import { AMConstants } from "utils";
@@ -17,6 +18,7 @@ export const AboutScreen = () => {
   const { t } = useTranslation();
 
   const [changelogDialogOpen, setChangelogDialogOpen] = useState(false);
+  const [whatsNewDialogOpen, setWhatsNewDialogOpen] = useState(false);
 
   const onSupportPress = useCallback(() => {
     const openSupportEmailParams = new URLSearchParams({
@@ -27,6 +29,11 @@ export const AboutScreen = () => {
 
   const toggleChangelogDialogOpen = useCallback(
     () => setChangelogDialogOpen((oldValue) => !oldValue),
+    [],
+  );
+
+  const toggleWhatsNewDialogOpen = useCallback(
+    () => setWhatsNewDialogOpen((oldValue) => !oldValue),
     [],
   );
 
@@ -53,6 +60,16 @@ export const AboutScreen = () => {
         </FormItem>
         <FormItem labelKey="about:version">
           <VersionNumberInfoButton />
+        </FormItem>
+        <FormItem labelKey="whatsNew:title">
+          <Button
+            onPress={toggleWhatsNewDialogOpen}
+            mode="text"
+            textKey="about:viewWhatsNew"
+          />
+          {whatsNewDialogOpen && (
+            <WhatsNewAllItemsDialog onClose={toggleWhatsNewDialogOpen} />
+          )}
         </FormItem>
         <FormItem labelKey="app:changelog">
           <Button

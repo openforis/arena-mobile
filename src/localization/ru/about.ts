@@ -5,4 +5,5 @@ export default {
   support: "Поддержка",
   version: "Версия",
   viewChangelog: "Посмотреть журнал действий",
+  viewWhatsNew: "Посмотреть, что нового",
 };
