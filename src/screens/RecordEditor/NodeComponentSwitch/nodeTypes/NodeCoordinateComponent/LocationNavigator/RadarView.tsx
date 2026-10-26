@@ -8,7 +8,7 @@ import {
   Line,
   Polygon,
   Svg,
-  Text as SvgText,
+  Text,
 } from "react-native-svg";
 
 import { TARGET_COLOR, TargetLocationIcon } from "./TargetLocationIcon";
@@ -95,7 +95,7 @@ const RadarGrid = ({
     <>
       <G clipPath="url(#radarClip)">{lines}</G>
       {gridStepPx >= 5 && (
-        <SvgText
+        <Text
           x={cx + gridStepPx + 4}
           y={cy - 5}
           fontSize={size * 0.05}
@@ -103,7 +103,7 @@ const RadarGrid = ({
           clipPath="url(#radarClip)"
         >
           {formatGridLabel(gridStepM)}
-        </SvgText>
+        </Text>
       )}
     </>
   );

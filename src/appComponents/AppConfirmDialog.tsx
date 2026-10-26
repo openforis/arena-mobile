@@ -12,7 +12,7 @@ import {
   RadioButtonGroup,
   Text,
   TextInput,
-  View as OFView,
+  View,
   VView,
 } from "components";
 import { useTranslation } from "localization";
@@ -119,7 +119,7 @@ export const AppConfirmDialog = () => {
         </RadioButtonGroup>
       )}
       {swipeToConfirm && (
-        <OFView testID="confirm-swipe-button">
+        <View testID="confirm-swipe-button">
           <SwipeButton
             disableResetOnTap
             onSwipeSuccess={setSwipeConfirmed}
@@ -134,7 +134,7 @@ export const AppConfirmDialog = () => {
             titleColor={theme.colors.primary}
             titleFontSize={16}
           />
-        </OFView>
+        </View>
       )}
       {textInputToConfirm && (
         <TextInput
