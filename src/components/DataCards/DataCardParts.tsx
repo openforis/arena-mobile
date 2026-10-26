@@ -148,12 +148,12 @@ export const FieldRows = (props: FieldRowsProps) => {
   const rowsPerColumn = Math.ceil(fields.length / columns);
   const fieldsByColumn = Array.from({ length: columns }, (_, index) =>
     fields.slice(index * rowsPerColumn, (index + 1) * rowsPerColumn),
-  );
+  ).filter((columnFields) => columnFields.length > 0);
 
   return (
     <VView style={styles.fieldRows}>
-      {fieldsByColumn.map((columnFields, columnIndex) => (
-        <VView key={String(columnIndex)} style={styles.fieldRowsColumn}>
+      {fieldsByColumn.map((columnFields) => (
+        <VView key={columnFields[0]!.key} style={styles.fieldRowsColumn}>
           {columnFields.map((field) => (
             <HView key={field.key} style={styles.fieldRow}>
               <Text

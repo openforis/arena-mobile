@@ -182,17 +182,14 @@ const buildRemoteFields = ({
   showRemoteProps?: boolean;
 }): DataVisualizerField[] => {
   if (!showRemoteProps) return [];
-  const result: DataVisualizerField[] = [
+  return [
     {
       key: "origin",
       cardRole: "badge",
       header: "recordsList:origin.title",
       style: { minWidth: 10 },
-      cellRenderer:
-        RecordOriginCellRenderer,
+      cellRenderer: RecordOriginCellRenderer,
     },
-  ];
-  result.push(
     {
       key: "dateModifiedRemote",
       cardRole: "footer",
@@ -205,16 +202,14 @@ const buildRemoteFields = ({
       header: "recordsList:owner",
       tableDetail: true,
     },
-  );
-  result.push({
-    key: "loadStatus",
-    cardRole: "badge",
-    header: "recordsList:loadStatus.title",
-    style: { minWidth: 10 },
-    cellRenderer:
-      RecordLoadStatusCellRenderer,
-  });
-  return result;
+    {
+      key: "loadStatus",
+      cardRole: "badge",
+      header: "recordsList:loadStatus.title",
+      style: { minWidth: 10 },
+      cellRenderer: RecordLoadStatusCellRenderer,
+    },
+  ];
 };
 
 const buildSyncStatusFields = ({
