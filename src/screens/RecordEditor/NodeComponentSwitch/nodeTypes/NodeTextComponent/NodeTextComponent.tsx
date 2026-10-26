@@ -85,12 +85,16 @@ export const NodeTextComponent = (props: NodeComponentProps) => {
   }, [editable, isActiveChild, viewMode]);
 
   const style = useMemo(() => {
-    const _style = [styles.textInput, styleProp];
+    const _style = [
+      styles.textInput,
+      multiline && styles.textInputMultiline,
+      styleProp,
+    ];
     if (!applicable) {
       _style.push(styles.notApplicable);
     }
     return _style;
-  }, [applicable, styleProp, styles.notApplicable, styles.textInput]);
+  }, [applicable, multiline, styleProp, styles]);
 
   return (
     <TextInput

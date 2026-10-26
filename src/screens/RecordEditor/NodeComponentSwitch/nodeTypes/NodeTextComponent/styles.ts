@@ -10,9 +10,11 @@ export const useStyles = () => {
     () =>
       StyleSheet.create({
         textInput: {
-          display: "flex",
-          flex: 1,
           alignSelf: "stretch",
+        },
+        // only multiline inputs fill the available height (e.g. in single node view mode)
+        textInputMultiline: {
+          flex: 1,
         },
         notApplicable: {
           backgroundColor: theme.colors.surfaceVariant,
