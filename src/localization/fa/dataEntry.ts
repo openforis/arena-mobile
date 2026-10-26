@@ -4,7 +4,7 @@ export default {
   autoSync: {
     checkbox: "همگام‌سازی خودکار",
     synced: "{{count}} رکورد به‌طور خودکار همگام‌سازی شد",
-    synced_plural: "{{count}} رکورد به‌طور خودکار همگام‌سازی شدند",
+    synced_other: "{{count}} رکورد به‌طور خودکار همگام‌سازی شدند",
     statusLabel: "وضعیت همگام‌سازی:",
     statusTitle: "وضعیت همگام‌سازی",
     syncInProgressToast:
@@ -54,7 +54,7 @@ export default {
     findClosestSamplingPoint: "یافتن نزدیکترین نقطه نمونه برداری",
     findingClosestSamplingPoint: "در حال یافتن نزدیکترین نقطه نمونه برداری",
     minDistanceItemFound: "موردی در فاصله {{minDistance}} متر یافت شد",
-    minDistanceItemFound_plural: "مواردی در فاصله {{minDistance}} متر یافت شد",
+    minDistanceItemFound_other: "مواردی در فاصله {{minDistance}} متر یافت شد",
     useSelectedItem: "استفاده از مورد انتخاب شده",
   },
   confirmDeleteSelectedItems: {
@@ -183,7 +183,7 @@ export default {
 
   code: {
     selectItem: "انتخاب مورد",
-    selectItem_plural: "انتخاب موارد",
+    selectItem_other: "انتخاب موارد",
   },
   coordinate: {
     longPressMarkerToMove: "برای جابه‌جایی، نشانگر را طولانی لمس کنید",

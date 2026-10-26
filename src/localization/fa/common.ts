@@ -7,7 +7,7 @@ export default {
   close: "بستن",
   confirm: "تایید",
   confirmClearSelectedValue: "آیا از پاک کردن مقدار انتخاب شده مطمئن هستید؟",
-  confirmClearSelectedValue_plural:
+  confirmClearSelectedValue_other:
     "آیا از پاک کردن مقادیر انتخاب شده مطمئن هستید؟",
   continue: "ادامه",
   createdOn: "ایجاد شده در",
@@ -59,17 +59,17 @@ export default {
 
   timePart: {
     year: "سال",
-    year_plural: "سال",
+    year_other: "سال",
     month: "ماه",
-    month_plural: "ماه",
+    month_other: "ماه",
     day: "روز",
-    day_plural: "روز",
+    day_other: "روز",
     hour: "ساعت",
-    hours: "ساعت",
+    hour_other: "ساعت",
     minute: "دقیقه",
-    minute_plural: "دقیقه",
+    minute_other: "دقیقه",
     second: "ثانیه",
-    second_plural: "ثانیه",
+    second_other: "ثانیه",
   },
   remainingTime: {
     canLastHoursAndMinutes:

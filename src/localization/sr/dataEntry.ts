@@ -4,7 +4,8 @@ export default {
   autoSync: {
     checkbox: "Automatska sinhronizacija",
     synced: "Automatski sinhronizovano zapisa: {{count}}",
-    synced_plural: "Automatski sinhronizovano zapisa: {{count}}",
+    synced_other: "Automatski sinhronizovano zapisa: {{count}}",
+    synced_few: "Automatski sinhronizovano zapisa: {{count}}",
     statusLabel: "Status sinhronizacije:",
     statusTitle: "Status sinhronizacije",
     syncInProgressToast:
@@ -54,7 +55,9 @@ Nastaviti?`,
     findClosestSamplingPoint: "Pronađi najbližu tačku uzorka",
     findingClosestSamplingPoint: "Traženje najbliže tačke uzorka",
     minDistanceItemFound: "Stavka pronađena na udaljenosti od {{minDistance}}m",
-    minDistanceItemFound_plural:
+    minDistanceItemFound_other:
+      "Stavke pronađene na udaljenosti od {{minDistance}}m",
+    minDistanceItemFound_few:
       "Stavke pronađene na udaljenosti od {{minDistance}}m",
     useSelectedItem: "Koristi izabranu stavku",
   },
@@ -243,7 +246,8 @@ Preuzeti listu zapisa sa servera i pokušati ponovo?`,
 
   code: {
     selectItem: "Izaberi stavku",
-    selectItem_plural: "Izaberi stavke",
+    selectItem_other: "Izaberi stavke",
+    selectItem_few: "Izaberi stavke",
   },
   coordinate: {
     longPressMarkerToMove: "Dugo pritisnite marker da biste ga pomjerili",

@@ -4,7 +4,7 @@ export default {
   autoSync: {
     checkbox: "Sincronización automática",
     synced: "{{count}} registro sincronizado automáticamente",
-    synced_plural: "{{count}} registros sincronizados automáticamente",
+    synced_other: "{{count}} registros sincronizados automáticamente",
     statusLabel: "Estado de sincronización:",
     statusTitle: "Estado de sincronización",
     syncInProgressToast:
@@ -54,7 +54,7 @@ Sus valores serán borrados.
     findingClosestSamplingPoint: "Buscando el punto de muestreo más cercano",
     minDistanceItemFound:
       "Elemento encontrado a una distancia de {{minDistance}} m",
-    minDistanceItemFound_plural:
+    minDistanceItemFound_other:
       "Elementos encontrados a una distancia de {{minDistance}} m",
     useSelectedItem: "Usar elemento seleccionado",
   },
@@ -179,7 +179,7 @@ Sus valores serán borrados.
   },
   code: {
     selectItem: "Seleccionar elemento",
-    selectItem_plural: "Seleccionar elementos",
+    selectItem_other: "Seleccionar elementos",
   },
   coordinate: {
     longPressMarkerToMove: "Mantén pulsado el marcador para moverlo",
