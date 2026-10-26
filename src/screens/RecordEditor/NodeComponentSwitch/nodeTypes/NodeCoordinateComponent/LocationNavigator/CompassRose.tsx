@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { StyleSheet, ViewStyle } from "react-native";
 import Animated, { type AnimatedStyle } from "react-native-reanimated";
-import { Circle, Line, Polygon, Svg, Text } from "react-native-svg";
+import { Circle, Line, Polygon, Svg, Text as SvgText } from "react-native-svg";
 
 import { View } from "components";
 import { useAppTheme } from "theme";
@@ -199,7 +199,7 @@ export const CompassRose = (props: CompassRoseProps) => {
         const rad = toRad(deg);
 
         return (
-          <Text
+          <SvgText
             key={label}
             x={cx + labelR * Math.sin(rad)}
             y={cy - labelR * Math.cos(rad)}
@@ -210,7 +210,7 @@ export const CompassRose = (props: CompassRoseProps) => {
             fill={cardinalFill}
           >
             {label}
-          </Text>
+          </SvgText>
         );
       }),
     [cx, cy, R, size, primaryColor, cardinalColor, degreeColor],
@@ -223,7 +223,7 @@ export const CompassRose = (props: CompassRoseProps) => {
         const rad = toRad(deg);
         const labelR = R - R * LABEL_RADIUS.degree;
         return (
-          <Text
+          <SvgText
             key={`deg-${deg}`}
             x={cx + labelR * Math.sin(rad)}
             y={cy - labelR * Math.cos(rad)}
@@ -233,7 +233,7 @@ export const CompassRose = (props: CompassRoseProps) => {
             fill={degreeColor}
           >
             {deg}
-          </Text>
+          </SvgText>
         );
       }),
     [cx, cy, R, size, degreeColor],
