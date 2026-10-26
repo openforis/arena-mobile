@@ -1,12 +1,11 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { RadioButton, TouchableRipple, useTheme } from "react-native-paper";
 
 import { useTranslation } from "localization";
 import { MapApp, MapAppsService } from "service/mapApps";
 
+import { ChoiceItem } from "./ChoiceItem";
 import { Dialog } from "./Dialog";
-import { HView } from "./HView";
 import { Text } from "./Text";
 import { VView } from "./VView";
 
@@ -19,7 +18,7 @@ type Props = {
   selectedId: string;
 };
 
-type ChoiceItemProps = {
+type MapAppChoiceItemProps = {
   description?: string;
   onPress: () => void;
   selected: boolean;
@@ -28,39 +27,22 @@ type ChoiceItemProps = {
 
 const styles = StyleSheet.create({
   options: { gap: 6 },
-  item: { borderRadius: 8, borderWidth: 1, paddingVertical: 4 },
-  itemContent: { alignItems: "center" },
   itemTexts: { flex: 1 },
 });
 
-const ChoiceItem = ({ description, onPress, selected, title }: ChoiceItemProps) => {
-  const { colors } = useTheme();
-  return (
-    <TouchableRipple
-      onPress={onPress}
-      style={[
-        styles.item,
-        { backgroundColor: colors.surface },
-        {
-          borderColor: selected ? colors.primary : colors.outlineVariant,
-          borderWidth: selected ? 2 : 1,
-        },
-      ]}
-    >
-      <HView style={styles.itemContent}>
-        <RadioButton
-          onPress={onPress}
-          status={selected ? "checked" : "unchecked"}
-          value={title}
-        />
-        <VView style={styles.itemTexts}>
-          <Text variant="bodyLarge">{title}</Text>
-          {description && <Text variant="bodySmall">{description}</Text>}
-        </VView>
-      </HView>
-    </TouchableRipple>
-  );
-};
+const MapAppChoiceItem = ({
+  description,
+  onPress,
+  selected,
+  title,
+}: MapAppChoiceItemProps) => (
+  <ChoiceItem onPress={onPress} selected={selected}>
+    <VView style={styles.itemTexts}>
+      <Text variant="bodyLarge">{title}</Text>
+      {description && <Text variant="bodySmall">{description}</Text>}
+    </VView>
+  </ChoiceItem>
+);
 
 export const MapAppChooserDialog = (props: Props) => {
   const {
@@ -77,12 +59,14 @@ export const MapAppChooserDialog = (props: Props) => {
 
   return (
     <Dialog
-      actions={[{ onPress: onConfirm, textKey: "dataEntry:coordinate.map.show" }]}
+      actions={[
+        { onPress: onConfirm, textKey: "dataEntry:coordinate.map.show" },
+      ]}
       onClose={onClose}
       title="dataEntry:coordinate.map.chooserTitle"
     >
       <VView style={styles.options}>
-        <ChoiceItem
+        <MapAppChoiceItem
           description={t(
             relocationAllowed
               ? "dataEntry:coordinate.map.inAppDescriptionRelocatable"
@@ -95,7 +79,7 @@ export const MapAppChooserDialog = (props: Props) => {
         {apps.map((app) => {
           const isOtherApp = app.id === otherAppChoiceId;
           return (
-            <ChoiceItem
+            <MapAppChoiceItem
               key={app.id}
               description={
                 isOtherApp
@@ -104,7 +88,9 @@ export const MapAppChooserDialog = (props: Props) => {
               }
               onPress={() => onSelect(app.id)}
               selected={selectedId === app.id}
-              title={isOtherApp ? t("dataEntry:coordinate.map.otherApp") : app.name}
+              title={
+                isOtherApp ? t("dataEntry:coordinate.map.otherApp") : app.name
+              }
             />
           );
         })}
