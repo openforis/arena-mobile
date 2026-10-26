@@ -15,10 +15,11 @@ import id from "./id";
 import ja from "./ja";
 import pt from "./pt";
 import ru from "./ru";
+import sr from "./sr";
 
 export { useTranslation } from "react-i18next";
 
-const resources = { de, en, es, fa, fi, fr, id, ja, pt, ru };
+const resources = { de, en, es, fa, fi, fr, id, ja, pt, ru, sr };
 const supportedLngs = Object.keys(resources);
 const fallbackLng = "en";
 const sysLng = SystemUtils.getLanguageCode();

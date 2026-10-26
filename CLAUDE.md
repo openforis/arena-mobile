@@ -158,7 +158,7 @@ Reusable UI components wrapping React Native Paper and custom implementations:
 
 ### Localization (src/localization/)
 - i18next with react-i18next
-- Supported languages: en, es, fr, pt, ru, am, fa, de, fi, id, sv
+- Supported languages: en, es, fr, pt, ru, am, fa, de, fi, id, sv, sr
 - Translation files in `src/localization/{lang}/`
 - RTL support via `useTextDirection` hook
 
