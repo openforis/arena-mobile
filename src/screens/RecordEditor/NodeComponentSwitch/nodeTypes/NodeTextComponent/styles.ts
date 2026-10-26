@@ -18,8 +18,14 @@ export const useStyles = () => {
           minHeight: 120,
         },
         multilineScrollView: {
-          flex: 1,
           alignSelf: "stretch",
+        },
+        multilineScrollViewOneNode: {
+          flex: 1,
+        },
+        multilineScrollViewForm: {
+          // about 10 rows
+          maxHeight: 260,
         },
         notApplicable: {
           backgroundColor: theme.colors.surfaceVariant,

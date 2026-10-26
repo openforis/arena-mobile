@@ -82,13 +82,27 @@ export const NodeTextComponent = (props: NodeComponentProps) => {
     }
   }, [editable, isActiveChild, viewMode]);
 
+  const isOneNodeViewMode = viewMode === RecordEditViewMode.oneNode;
+
   const style = useMemo(() => {
-    const _style = [styles.textInput, styleProp];
+    // when multiline, styleProp is applied to the wrapping ScrollView
+    const _style = [styles.textInput, multiline ? undefined : styleProp];
     if (!applicable) {
       _style.push(styles.notApplicable);
     }
     return _style;
-  }, [applicable, styleProp, styles]);
+  }, [applicable, multiline, styleProp, styles]);
+
+  const multilineScrollViewStyle = useMemo(
+    () => [
+      styles.multilineScrollView,
+      isOneNodeViewMode
+        ? styles.multilineScrollViewOneNode
+        : styles.multilineScrollViewForm,
+      styleProp,
+    ],
+    [isOneNodeViewMode, styleProp, styles],
+  );
 
   const textInput = (
     <TextInput
@@ -108,12 +122,13 @@ export const NodeTextComponent = (props: NodeComponentProps) => {
   );
 
   // RN TextInput has no visible scrollbar on Android: let the input grow and scroll its container instead
-  if (multiline && viewMode === RecordEditViewMode.oneNode) {
+  if (multiline) {
     return (
       <ScrollView
         keyboardShouldPersistTaps="handled"
+        nestedScrollEnabled
         persistentScrollbar
-        style={styles.multilineScrollView}
+        style={multilineScrollViewStyle}
       >
         {textInput}
       </ScrollView>
