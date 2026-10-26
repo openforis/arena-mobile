@@ -7,6 +7,8 @@ import { WhatsNew, WhatsNewItem } from "model";
 import { WhatsNewCarousel } from "./WhatsNewCarousel";
 import { useWhatsNewUnseenItems } from "./useWhatsNewUnseenItems";
 
+const maxHeight = 760;
+
 type WhatsNewDialogProps = {
   items: WhatsNewItem[];
   onClose: () => void;
@@ -29,7 +31,8 @@ export const WhatsNewDialog = (props: WhatsNewDialogProps) => {
   return (
     <Dialog
       onClose={onClose}
-      style={{ maxHeight: windowHeight * 0.9 }}
+      // fixed height: the carousel items all have the same height
+      style={{ height: Math.min(windowHeight * 0.9, maxHeight) }}
       title="whatsNew:title"
     >
       <WhatsNewCarousel items={items} />
@@ -78,9 +81,11 @@ export const WhatsNewUnseenItemsDialog = () => {
   );
 };
 
-export const WhatsNewAllItemsDialog = ({ onClose }: { onClose: () => void }) => (
-  <WhatsNewDialog items={WhatsNew.items} onClose={onClose} />
-);
+export const WhatsNewAllItemsDialog = ({
+  onClose,
+}: {
+  onClose: () => void;
+}) => <WhatsNewDialog items={WhatsNew.items} onClose={onClose} />;
 
 const styles = StyleSheet.create({
   dontShowAgain: {
