@@ -7,7 +7,7 @@ import {
   Objects,
 } from "@openforis/arena-core";
 
-import { TextInput } from "components";
+import { ScrollView, TextInput } from "components";
 import { RecordEditViewMode } from "model";
 import { DataEntrySelectors, SurveyOptionsSelectors } from "state";
 import { log } from "utils";
@@ -96,7 +96,7 @@ export const NodeTextComponent = (props: NodeComponentProps) => {
     return _style;
   }, [applicable, multiline, styleProp, styles]);
 
-  return (
+  const textInput = (
     <TextInput
       editable={editable}
       error={invalidValue}
@@ -110,4 +110,18 @@ export const NodeTextComponent = (props: NodeComponentProps) => {
       value={uiValue}
     />
   );
+
+  // RN TextInput has no visible scrollbar on Android: let the input grow and scroll its container instead
+  if (multiline && viewMode === RecordEditViewMode.oneNode) {
+    return (
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        persistentScrollbar
+        style={styles.multilineScrollView}
+      >
+        {textInput}
+      </ScrollView>
+    );
+  }
+  return textInput;
 };

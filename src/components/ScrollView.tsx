@@ -6,6 +6,7 @@ type Props = {
   children?: React.ReactNode;
   contentContainerStyle?: StyleProp<ViewStyle>;
   horizontal?: boolean;
+  keyboardShouldPersistTaps?: "always" | "never" | "handled";
   persistentScrollbar?: boolean;
   showsVerticalScrollIndicator?: boolean;
   style?: StyleProp<ViewStyle>;
