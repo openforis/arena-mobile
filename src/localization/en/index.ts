@@ -16,6 +16,7 @@ import settingsRemoteConnection from "./settingsRemoteConnection";
 import settings from "./settings";
 import surveys from "./surveys";
 import validation from "./validation";
+import whatsNew from "./whatsNew";
 
 export default {
   about,
@@ -36,4 +37,5 @@ export default {
   settingsRemoteConnection,
   surveys,
   validation,
+  whatsNew,
 };

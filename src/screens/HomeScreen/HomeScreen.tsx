@@ -5,9 +5,11 @@ import { AppLogo } from "appComponents/AppLogo";
 import { GpsLockingEnabledWarning } from "appComponents/GpsLockingEnabledWarning";
 import { LoginInfo } from "appComponents/LoginInfo";
 import { VersionNumberInfoButton } from "appComponents/VersionNumberInfoButton";
+import { WhatsNewUnseenItemsDialog } from "appComponents/WhatsNew";
 import { Button, ScreenView, VView } from "components";
 
 import { RemoteConnectionSelectors } from "state/remoteConnection";
+import { PreviewMode } from "utils";
 import { screenKeys } from "../screenKeys";
 import { SelectedSurveyContainer } from "./SelectedSurveyContainer";
 import { SurveyUpdateProgressDialog } from "./SurveyUpdateProgressDialog";
@@ -31,6 +33,8 @@ export const HomeScreen = () => {
         {surveyLoadingDialogVisible && (
           <SurveyUpdateProgressDialog titleKey={surveyLoadingDialogTitleKey} />
         )}
+
+        {!PreviewMode.isActive && <WhatsNewUnseenItemsDialog />}
 
         <AppLogo />
 

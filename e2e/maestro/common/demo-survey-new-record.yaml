@@ -4,9 +4,11 @@ appId: ${APP_ID}
 # Selects it and creates a new record with "Test Point 1" as Level 1 Unit no.
 - launchApp:
     clearState: true
+# the "What's new" dialog is shown again after clearing the state
 - extendedWaitUntil:
-    visible: "Select a survey|Manage surveys"
+    visible: "Select a survey|Manage surveys|What's new"
     timeout: 60000
+- runFlow: dismiss-whats-new.yaml
 - tapOn: "Select a survey|Manage surveys"
 - tapOn: "Demo Survey"
 - extendedWaitUntil:

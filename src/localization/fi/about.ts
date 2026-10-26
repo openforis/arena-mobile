@@ -5,4 +5,5 @@ export default {
   support: "Tuki",
   version: "Versio",
   viewChangelog: "Näytä muutosloki",
+  viewWhatsNew: "Näytä uutuudet",
 };

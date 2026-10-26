@@ -87,7 +87,10 @@ export const Dialog = (props: DialogProps) => {
                   <RNPDialog.Title style={styles.titleFlex}>
                     {title && t(title)}
                   </RNPDialog.Title>
-                  <CloseIconButton onPress={handleClose} />
+                  <CloseIconButton
+                    onPress={handleClose}
+                    testID="dialog-close-button"
+                  />
                 </HView>
               ) : (
                 <RNPDialog.Title style={styles.title}>
