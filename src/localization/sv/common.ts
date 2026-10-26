@@ -34,6 +34,7 @@ export default {
   newItemWithParam: "Ny {{item}}",
   no: "Nej",
   noItemsMatchingSearch: "Det finns inga objekt som matchar din sökning",
+  none: "Ingen",
   notEnoughDiskSpace:
     "Inte tillräckligt med ledigt diskutrymme ({{requiredSpace}} mer krävs)",
   ok: "Ok",
@@ -48,6 +49,7 @@ export default {
   size: "Storlek",
   sizeAvailable: "{{size}} tillgängligt",
   somethingWentWrong: "Något gick fel: {{error}}",
+  sortBy: "Sortera efter",
   srs: "SRS",
   status: "Status",
   stop: "Stopp",

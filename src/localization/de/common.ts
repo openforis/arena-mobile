@@ -34,6 +34,7 @@ export default {
   newItemWithParam: "Neu {{item}}",
   no: "Nein",
   noItemsMatchingSearch: "Keine Einträge gefunden, die Ihrer Suche entsprechen",
+  none: "Keine",
   notEnoughDiskSpace:
     "Nicht genügend freier Speicherplatz ({{requiredSpace}} mehr erforderlich)",
   ok: "Ok",
@@ -48,6 +49,7 @@ export default {
   size: "Größe",
   sizeAvailable: "{{size}} verfügbar",
   somethingWentWrong: "Etwas ist schief gelaufen: {{error}}",
+  sortBy: "Sortieren nach",
   srs: "SRS",
   status: "Status",
   stop: "Stopp",
