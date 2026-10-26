@@ -5,6 +5,8 @@ import { WhatsNewItem } from "model";
 
 import { WhatsNewSlide } from "./WhatsNewSlide";
 
+const keyExtractor = (item: WhatsNewItem) => item.id;
+
 type WhatsNewCarouselProps = {
   items: WhatsNewItem[];
 };
@@ -13,9 +15,15 @@ export const WhatsNewCarousel = (props: WhatsNewCarouselProps) => {
   const { items } = props;
 
   const renderItem = useCallback(
-    (item: WhatsNewItem) => <WhatsNewSlide key={item.id} item={item} />,
+    (item: WhatsNewItem) => <WhatsNewSlide item={item} />,
     [],
   );
 
-  return <Carousel items={items} renderItem={renderItem} />;
+  return (
+    <Carousel
+      items={items}
+      keyExtractor={keyExtractor}
+      renderItem={renderItem}
+    />
+  );
 };
