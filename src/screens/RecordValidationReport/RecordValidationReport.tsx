@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 import {
   NodeDef,
@@ -15,7 +16,8 @@ import { RecordUtils } from "model";
 import { ValidationUtils } from "model/utils/ValidationUtils";
 import { useTranslation } from "localization";
 
-import { DataEntrySelectors } from "state/dataEntry";
+import { useAppDispatch } from "state";
+import { DataEntryActions, DataEntrySelectors } from "state/dataEntry";
 import { ScreenOptionsSelectors } from "state/screenOptions";
 import { SurveySelectors } from "state/survey";
 
@@ -140,6 +142,8 @@ const initialState: RecordValidationReportState = {
 };
 
 export const RecordValidationReport = () => {
+  const navigation = useNavigation();
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const survey = SurveySelectors.useCurrentSurvey();
@@ -177,19 +181,36 @@ export const RecordValidationReport = () => {
     [lang, record, survey, t, validationFields],
   );
 
-  const onRowPress = (item: any) => {
-    const {
-      key: dialogNodeUuid,
-      nodeDef: dialogNodeDef,
-      parentNodeUuid: dialogParentNodeUuid,
-    } = item;
-    setState({
-      editDialogOpen: true,
-      dialogNodeDef,
-      dialogNodeUuid,
-      dialogParentNodeUuid,
-    });
-  };
+  const onRowPress = useCallback(
+    (item: any) => {
+      const {
+        key: dialogNodeUuid,
+        nodeDef: dialogNodeDef,
+        parentNodeUuid: dialogParentNodeUuid,
+      } = item;
+      if (
+        NodeDefs.isEntity(dialogNodeDef) &&
+        NodeDefs.isMultiple(dialogNodeDef)
+      ) {
+        // entities list can be edited only in the record editor (behind this screen)
+        dispatch(
+          DataEntryActions.selectCurrentPageEntity({
+            parentEntityUuid: dialogParentNodeUuid,
+            entityDefUuid: dialogNodeDef.uuid,
+          }),
+        );
+        navigation.goBack();
+        return;
+      }
+      setState({
+        editDialogOpen: true,
+        dialogNodeDef,
+        dialogNodeUuid,
+        dialogParentNodeUuid,
+      });
+    },
+    [dispatch, navigation],
+  );
 
   return (
     <VView style={styles.container}>

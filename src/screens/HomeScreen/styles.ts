@@ -1,21 +1,17 @@
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
-  appTitle: {
-    margin: 10,
-  },
-  appVersionName: {
-    marginBottom: 10,
-  },
   screenContent: {
     flexGrow: 1,
-    alignItems: "center",
   },
-  container: {
+  body: {
+    gap: 12,
+    padding: 16,
+  },
+  footer: {
+    alignItems: "center",
     flex: 1,
-    alignItems: "center",
-    alignSelf: "stretch",
-    gap: 10,
+    justifyContent: "flex-end",
+    paddingBottom: 8,
   },
-  manageSurveysButton: { marginTop: 20 },
 });

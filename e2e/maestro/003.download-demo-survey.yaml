@@ -1,7 +1,7 @@
 appId: ${APP_ID}
 ---
 - tapOn:
-    text: "Select a survey|Manage surveys"
+    id: "home-surveys-button"
 - tapOn: "Import from cloud"
 - tapOn: "arena_demo"
 - tapOn:

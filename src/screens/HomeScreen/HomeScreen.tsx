@@ -1,25 +1,27 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 
-import { AppLogo } from "appComponents/AppLogo";
 import { GpsLockingEnabledWarning } from "appComponents/GpsLockingEnabledWarning";
-import { LoginInfo } from "appComponents/LoginInfo";
 import { VersionNumberInfoButton } from "appComponents/VersionNumberInfoButton";
 import { WhatsNewUnseenItemsDialog } from "appComponents/WhatsNew";
-import { Button, ScreenView, VView } from "components";
+import { ScreenView, VView } from "components";
 
-import { RemoteConnectionSelectors } from "state/remoteConnection";
 import { PreviewMode } from "utils";
 import { screenKeys } from "../screenKeys";
-import { SelectedSurveyContainer } from "./SelectedSurveyContainer";
+import { HomeAccountItem } from "./HomeAccountItem";
+import { HomeListItem } from "./HomeListItem";
+import { NoSurveyBanner } from "./NoSurveyBanner";
+import { SelectedSurveyBanner } from "./SelectedSurveyBanner";
 import { SurveyUpdateProgressDialog } from "./SurveyUpdateProgressDialog";
 import { useHomeScreen } from "./useHomeScreen";
 
 import styles from "./styles";
 
+const surveysIconColor = "#7E57C2";
+const surveysIconBackgroundColor = "rgba(126, 87, 194, 0.13)";
+
 export const HomeScreen = () => {
   const navigation = useNavigation();
-  const user = RemoteConnectionSelectors.useLoggedInUser();
 
   const {
     surveySelected,
@@ -29,33 +31,35 @@ export const HomeScreen = () => {
 
   return (
     <ScreenView contentContainerStyle={styles.screenContent}>
-      <VView style={styles.container}>
-        {surveyLoadingDialogVisible && (
-          <SurveyUpdateProgressDialog titleKey={surveyLoadingDialogTitleKey} />
-        )}
+      {surveyLoadingDialogVisible && (
+        <SurveyUpdateProgressDialog titleKey={surveyLoadingDialogTitleKey} />
+      )}
 
-        {!PreviewMode.isActive && <WhatsNewUnseenItemsDialog />}
+      {!PreviewMode.isActive && <WhatsNewUnseenItemsDialog />}
 
-        <AppLogo />
+      {surveySelected ? <SelectedSurveyBanner /> : <NoSurveyBanner />}
 
-        <LoginInfo />
-
+      <VView style={styles.body}>
         <GpsLockingEnabledWarning />
 
-        {surveySelected && <SelectedSurveyContainer />}
+        <HomeAccountItem />
 
-        <Button
-          color={surveySelected || !user ? "secondary" : "primary"}
-          textKey={
-            surveySelected ? "surveys:manageSurveys" : "surveys:selectSurvey"
-          }
-          style={styles.manageSurveysButton}
+        <HomeListItem
+          descriptionKey="home:surveysDescription"
+          icon="folder-swap-outline"
+          iconBackgroundColor={surveysIconBackgroundColor}
+          iconColor={surveysIconColor}
           onPress={() =>
             navigation.navigate(screenKeys.surveysListLocal as never)
           }
+          testID="home-surveys-button"
+          titleKey="home:surveys"
         />
       </VView>
-      <VersionNumberInfoButton />
+
+      <VView style={styles.footer}>
+        <VersionNumberInfoButton />
+      </VView>
     </ScreenView>
   );
 };

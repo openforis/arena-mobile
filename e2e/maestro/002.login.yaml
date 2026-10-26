@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 ---
-- tapOn: "Connection to server"
+- tapOn:
+    id: "home-connect-button"
 - tapOn: "Server URL"
 - tapOn: "Custom"
 # workaround: clear the text field by double tapping and selecting the whole text

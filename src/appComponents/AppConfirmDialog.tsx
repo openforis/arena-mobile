@@ -54,28 +54,28 @@ export const AppConfirmDialog = () => {
 
   return (
     <Dialog
-      actionsContent={
-        <>
-          <Button
-            color="secondary"
-            disabled={confirmInProgress}
-            labelVariant="bodyLarge"
-            onPress={cancel}
-            style={cancelButtonStyle}
-            testID="confirm-dialog-cancel-button"
-            textKey={cancelButtonTextKey}
-          />
-          <Button
-            disabled={!confirmButtonEnabled || confirmInProgress}
-            loading={confirmInProgress}
-            onPress={confirm}
-            labelVariant="bodyLarge"
-            style={confirmButtonStyle}
-            testID="confirm-dialog-confirm-button"
-            textKey={confirmButtonTextKey}
-          />
-        </>
-      }
+      // an array, not a fragment: Dialog.Actions styles each of its direct children
+      actionsContent={[
+        <Button
+          key="cancel"
+          color="secondary"
+          disabled={confirmInProgress}
+          onPress={cancel}
+          style={cancelButtonStyle}
+          testID="confirm-dialog-cancel-button"
+          textKey={cancelButtonTextKey}
+        />,
+        <Button
+          key="confirm"
+          disabled={!confirmButtonEnabled || confirmInProgress}
+          loading={confirmInProgress}
+          onPress={confirm}
+          labelVariant="bodyLarge"
+          style={confirmButtonStyle}
+          testID="confirm-dialog-confirm-button"
+          textKey={confirmButtonTextKey}
+        />,
+      ]}
       onClose={cancel}
       showCloseButton={false}
       title={titleKey}

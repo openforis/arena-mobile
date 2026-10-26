@@ -1,0 +1,16 @@
+export default {
+  currentSurvey: "現在の調査",
+  lastEdit: "最終編集: {{date}}",
+  records: "記録",
+  recordsTotal: "合計",
+  recordsToUpload: "アップロード待ち",
+  recordsWithErrors: "エラーあり",
+  sync: "同期",
+  connect: "接続",
+  connectDescription: "接続して Arena とデータを同期します",
+  account: "アカウント",
+  surveys: "調査",
+  surveysDescription: "調査の切り替え、ダウンロード、更新",
+  noSurveySelected: "調査が選択されていません",
+  noSurveySelectedDescription: "データ収集を始めるには調査を選択またはダウンロードしてください",
+};

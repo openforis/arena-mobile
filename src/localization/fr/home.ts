@@ -1,0 +1,16 @@
+export default {
+  currentSurvey: "Enquête actuelle",
+  lastEdit: "Dernière modification : {{date}}",
+  records: "Enregistrements",
+  recordsTotal: "Total",
+  recordsToUpload: "À envoyer",
+  recordsWithErrors: "Avec erreurs",
+  sync: "Synchroniser",
+  connect: "Se connecter",
+  connectDescription: "Connectez-vous pour synchroniser vos données avec Arena",
+  account: "Compte",
+  surveys: "Enquêtes",
+  surveysDescription: "Changer, télécharger ou mettre à jour les enquêtes",
+  noSurveySelected: "Aucune enquête sélectionnée",
+  noSurveySelectedDescription: "Sélectionnez ou téléchargez une enquête pour commencer la collecte de données",
+};
