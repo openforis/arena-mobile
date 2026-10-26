@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
 import { DefaultTheme, createStaticNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useTheme } from "react-native-paper";
 
+import { useAppTheme } from "theme";
 import { log, PreviewMode } from "utils";
 import { screens } from "screens/screens";
 import { CurrentSurveyCoordinator } from "./CurrentSurveyCoordinator";
@@ -37,7 +37,7 @@ const Navigation = createStaticNavigation(RootStack);
 export const AppStack = () => {
   log.debug(`rendering AppStack`);
 
-  const paperTheme = useTheme();
+  const paperTheme = useAppTheme();
 
   // screen background comes from here now that View is transparent by default
   const navigationTheme = useMemo(

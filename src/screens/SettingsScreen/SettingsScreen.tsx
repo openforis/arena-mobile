@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { useTheme } from "react-native-paper";
 
 import { Objects } from "@openforis/arena-core";
 
@@ -18,6 +17,7 @@ import {
   useAppDispatch,
   useConfirm,
 } from "state";
+import { useAppTheme } from "theme";
 import { log, clearLogs } from "utils";
 
 import { GpsSourceSettingsField } from "./GpsSourceSettingsField";
@@ -45,7 +45,7 @@ export const SettingsScreen = () => {
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
   const navigation = useNavigation();
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   // same color as the FieldSet border
   const itemWrapperStyle = useMemo(

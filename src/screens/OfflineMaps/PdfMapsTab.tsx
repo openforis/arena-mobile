@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import * as DocumentPicker from "expo-document-picker";
-import { useTheme } from "react-native-paper";
 
 import { DateFormats, Dates } from "@openforis/arena-core";
 
@@ -25,6 +24,7 @@ import {
   useAppDispatch,
   useConfirm,
 } from "state";
+import { useAppTheme } from "theme";
 import { Files, log } from "utils";
 
 import styles from "./styles";
@@ -45,7 +45,7 @@ const PdfMapItem = ({
   onViewPress: (pdfMap: PdfMap) => void;
   onVisibleChange: (pdfMap: PdfMap, visible: boolean) => void;
 }>) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const cardStyle = useMemo(
     () => [styles.areaCard, { borderColor: theme.colors.outline }],
     [theme],

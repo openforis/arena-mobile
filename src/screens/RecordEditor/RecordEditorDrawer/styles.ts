@@ -1,12 +1,13 @@
 import { useMemo } from "react";
 import { StyleSheet } from "react-native";
-import { useTheme } from "react-native-paper";
+
 import { DeviceInfoSelectors } from "state/deviceInfo";
+import { useAppTheme } from "theme";
 
 const determineContainerFlex = ({ isPhone = true }) => (isPhone ? 0.9 : 1);
 
 export const useStyles = () => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const isPhone = DeviceInfoSelectors.useIsPhone();
 
   return useMemo(

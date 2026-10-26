@@ -1,9 +1,10 @@
 import { useMemo } from "react";
 import { StyleSheet } from "react-native";
-import { useTheme } from "react-native-paper";
+
+import { useAppTheme } from "theme";
 
 export const useStyles = () => {
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   return useMemo(
     () =>

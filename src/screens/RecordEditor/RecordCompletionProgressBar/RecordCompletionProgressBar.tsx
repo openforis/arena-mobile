@@ -1,11 +1,11 @@
 import { useMemo } from "react";
-import { useTheme } from "react-native-paper";
 
 import { Records } from "@openforis/arena-core";
 
 import { getCompletionColor, ProgressBar, Text, VView } from "components";
 import { RecordUtils } from "model";
 import { DataEntrySelectors, SurveySelectors } from "state";
+import { useAppTheme } from "theme";
 
 import styles from "./styles";
 
@@ -15,7 +15,7 @@ type Props = {
 
 export const RecordCompletionProgressBar = (props: Props) => {
   const { compact = false } = props;
-  const theme = useTheme();
+  const theme = useAppTheme();
   const survey = SurveySelectors.useCurrentSurvey();
   const record = DataEntrySelectors.useRecord();
 

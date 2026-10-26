@@ -1,6 +1,7 @@
 import { View } from "react-native";
 import { Circle, Line, Svg } from "react-native-svg";
-import { useTheme } from "react-native-paper";
+
+import { useAppTheme } from "theme";
 
 type CurrentLocationIconProps = {
   size?: number;
@@ -9,7 +10,7 @@ type CurrentLocationIconProps = {
 export const CurrentLocationIcon = ({
   size = 20,
 }: CurrentLocationIconProps) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const primaryColor = theme.colors.primary;
   const cx = size / 2;
   const cy = size / 2;
