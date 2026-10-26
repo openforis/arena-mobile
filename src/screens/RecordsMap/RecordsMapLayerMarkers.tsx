@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from "react";
-import { Text as RNText, View } from "react-native";
+import { Text, View } from "react-native";
 import { Marker, Region } from "react-native-maps";
 
 import {
@@ -118,7 +118,7 @@ export const RecordsMapLayerMarkers = memo((props: Props) => {
                   },
                 ]}
               >
-                <RNText
+                <Text
                   style={[
                     styles.clusterText,
                     color === notVisitedSamplingPointColor &&
@@ -126,7 +126,7 @@ export const RecordsMapLayerMarkers = memo((props: Props) => {
                   ]}
                 >
                   {count}
-                </RNText>
+                </Text>
               </View>
             </Marker>
           );

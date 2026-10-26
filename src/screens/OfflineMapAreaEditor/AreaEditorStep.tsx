@@ -1,7 +1,7 @@
 import { TouchableOpacity } from "react-native";
-import { useTheme } from "react-native-paper";
 
 import { Button, HView, Icon, Text, VView } from "components";
+import { useAppTheme } from "theme";
 
 import styles from "./styles";
 
@@ -40,7 +40,7 @@ export const AreaEditorStep = (props: AreaEditorStepProps) => {
   } = props;
   const { collapsible = !summaryOnly } = props;
 
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   const badgeBackgroundColor =
     expanded || completed ? theme.colors.primary : theme.colors.surfaceDisabled;

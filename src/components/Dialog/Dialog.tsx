@@ -16,6 +16,8 @@ type DialogAction = {
 type DialogProps = {
   children?: React.ReactNode;
   actions?: DialogAction[];
+  // custom actions content (replaces actions when specified)
+  actionsContent?: React.ReactNode;
   dismissable?: boolean;
   onClose?: () => void;
   showActions?: boolean;
@@ -23,12 +25,14 @@ type DialogProps = {
   showCloseButton?: boolean;
   style?: any;
   title?: string;
+  titleTestID?: string;
   visible?: boolean;
 };
 
 export const Dialog = (props: DialogProps) => {
   const {
     actions = [],
+    actionsContent,
     children,
     dismissable: dismissableProp = true,
     onClose,
@@ -36,6 +40,7 @@ export const Dialog = (props: DialogProps) => {
     showCloseButton: showCloseButtonProp = true,
     style,
     title,
+    titleTestID,
     visible = true,
   } = props;
 
@@ -84,7 +89,10 @@ export const Dialog = (props: DialogProps) => {
             {(title || showCloseButton) &&
               (showCloseButton ? (
                 <HView style={styles.titleRow}>
-                  <RNPDialog.Title style={styles.titleFlex}>
+                  <RNPDialog.Title
+                    style={styles.titleFlex}
+                    testID={titleTestID}
+                  >
                     {title && t(title)}
                   </RNPDialog.Title>
                   <CloseIconButton
@@ -93,7 +101,7 @@ export const Dialog = (props: DialogProps) => {
                   />
                 </HView>
               ) : (
-                <RNPDialog.Title style={styles.title}>
+                <RNPDialog.Title style={styles.title} testID={titleTestID}>
                   {t(title)}
                 </RNPDialog.Title>
               ))}
@@ -105,7 +113,10 @@ export const Dialog = (props: DialogProps) => {
             >
               {children}
             </RNPDialog.Content>
-            {showActions && actions.length > 0 && (
+            {showActions && actionsContent && (
+              <RNPDialog.Actions>{actionsContent}</RNPDialog.Actions>
+            )}
+            {showActions && !actionsContent && actions.length > 0 && (
               <RNPDialog.Actions>
                 {actions.map(({ onPress, textKey }) => (
                   <Button key={textKey} onPress={onPress} textKey={textKey} />

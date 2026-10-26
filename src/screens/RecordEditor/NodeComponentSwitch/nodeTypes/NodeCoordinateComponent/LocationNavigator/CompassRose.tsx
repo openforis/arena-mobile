@@ -2,9 +2,9 @@ import { useMemo } from "react";
 import { StyleSheet, ViewStyle } from "react-native";
 import Animated, { type AnimatedStyle } from "react-native-reanimated";
 import { Circle, Line, Polygon, Svg, Text as SvgText } from "react-native-svg";
-import { useTheme } from "react-native-paper";
 
 import { View } from "components";
+import { useAppTheme } from "theme";
 import { ColorUtils } from "utils";
 
 type CompassRoseProps = {
@@ -123,7 +123,7 @@ const BEARING = {
 export const CompassRose = (props: CompassRoseProps) => {
   const { compassRotStyle, size } = props;
 
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   const cx = size / 2; // Center x-coordinate
   const cy = size / 2; // Center y-coordinate

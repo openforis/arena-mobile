@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { useTheme } from "react-native-paper";
 
 import {
   Button,
@@ -20,6 +19,7 @@ import {
   useAppDispatch,
   useConfirm,
 } from "state";
+import { useAppTheme } from "theme";
 import { log } from "utils";
 
 import styles from "./styles";
@@ -33,7 +33,7 @@ const CustomMapLayerItem = ({
   onDeletePress: (layer: CustomMapLayer) => Promise<void>;
   onEditPress: (layer: CustomMapLayer) => void;
 }>) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const cardStyle = useMemo(
     () => [styles.layerCard, { borderColor: theme.colors.outline }],
     [theme],

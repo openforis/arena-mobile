@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { useTheme } from "react-native-paper";
 
 import { NodeDefCode, NodeDefs } from "@openforis/arena-core";
 
@@ -7,11 +6,12 @@ import { Button, HView } from "components";
 import { useIsTextDirectionRtl } from "localization";
 import { SurveyDefs } from "model";
 import { SurveySelectors } from "state";
+import { useAppTheme } from "theme";
 
 import styles from "./styles";
 
 const useSelectedItemStyleAndTextColor = () => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   return useMemo(() => {
     const style = { backgroundColor: theme.colors.secondary };
     const textColor = theme.colors.onSecondary;

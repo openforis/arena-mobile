@@ -7,7 +7,7 @@ import {
   Objects,
 } from "@openforis/arena-core";
 
-import { TextInput } from "components";
+import { ScrollView, TextInput } from "components";
 import { RecordEditViewMode } from "model";
 import { DataEntrySelectors, SurveyOptionsSelectors } from "state";
 import { log } from "utils";
@@ -19,8 +19,6 @@ const isNumericByType: Record<string, boolean> = {
   [NodeDefType.decimal]: true,
   [NodeDefType.integer]: true,
 };
-
-const multilineNumberOfLines = 5;
 
 const nodeValueToUiValue = (value: any) =>
   Objects.isEmpty(value) ? "" : String(value);
@@ -84,26 +82,57 @@ export const NodeTextComponent = (props: NodeComponentProps) => {
     }
   }, [editable, isActiveChild, viewMode]);
 
+  const isOneNodeViewMode = viewMode === RecordEditViewMode.oneNode;
+
   const style = useMemo(() => {
-    const _style = [styles.textInput, styleProp];
+    // when multiline, styleProp is applied to the wrapping ScrollView
+    const _style = [styles.textInput, multiline ? undefined : styleProp];
     if (!applicable) {
       _style.push(styles.notApplicable);
     }
     return _style;
-  }, [applicable, styleProp, styles.notApplicable, styles.textInput]);
+  }, [applicable, multiline, styleProp, styles]);
 
-  return (
+  const multilineScrollViewStyle = useMemo(
+    () => [
+      styles.multilineScrollView,
+      isOneNodeViewMode
+        ? styles.multilineScrollViewOneNode
+        : styles.multilineScrollViewForm,
+      styleProp,
+    ],
+    [isOneNodeViewMode, styleProp, styles],
+  );
+
+  const textInput = (
     <TextInput
       editable={editable}
       error={invalidValue}
       keyboardType={isNumeric ? "numeric" : undefined}
       ref={inputRef}
+      inputStyle={multiline ? styles.multilineInput : undefined}
       style={style}
       multiline={multiline}
-      numberOfLines={multiline ? multilineNumberOfLines : 1}
+      // on Android numberOfLines fixes the input height: multiline inputs must grow with their content
+      numberOfLines={multiline ? undefined : 1}
       onChange={onChange}
       testID={nodeDefName}
       value={uiValue}
     />
   );
+
+  // RN TextInput has no visible scrollbar on Android: let the input grow and scroll its container instead
+  if (multiline) {
+    return (
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        nestedScrollEnabled
+        persistentScrollbar
+        style={multilineScrollViewStyle}
+      >
+        {textInput}
+      </ScrollView>
+    );
+  }
+  return textInput;
 };

@@ -1,12 +1,11 @@
 import { useMemo } from "react";
-import { Appbar as RNPAppbar, Divider, Menu } from "react-native-paper";
 import { BackHandler } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import * as WebBrowser from "expo-web-browser";
 
 import { Surveys } from "@openforis/arena-core";
 
-import { MenuItem } from "components";
+import { AppBarAction, Divider, Menu, MenuItem } from "components";
 import { useScreenKey } from "hooks";
 import { screenKeys } from "screens";
 import {
@@ -42,7 +41,7 @@ export const OptionsMenu = (props: Props) => {
     : null;
 
   const anchor = useMemo(
-    () => <RNPAppbar.Action icon="dots-vertical" onPress={toggleMenu} />,
+    () => <AppBarAction icon="dots-vertical" onPress={toggleMenu} />,
     [toggleMenu],
   );
 

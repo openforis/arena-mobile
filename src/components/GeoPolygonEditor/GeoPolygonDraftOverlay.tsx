@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
-import { View as RNView } from "react-native";
+import { View } from "react-native";
 
-import { Marker, Polygon as MapPolygon, Polyline } from "react-native-maps";
+import { Marker, Polygon, Polyline } from "react-native-maps";
 
 import { LatLng } from "model";
 
@@ -34,7 +34,7 @@ export const GeoPolygonDraftOverlay = ({
   return (
     <>
       {coordinates.length >= 3 ? (
-        <MapPolygon
+        <Polygon
           coordinates={coordinates}
           strokeColor={strokeColor}
           strokeWidth={strokeWidth}
@@ -59,9 +59,9 @@ export const GeoPolygonDraftOverlay = ({
             coordinate={coordinate}
             anchor={markerCenterAnchor}
           >
-            <RNView collapsable={false} style={styles.markerContainer}>
-              <RNView style={markerStyle} />
-            </RNView>
+            <View collapsable={false} style={styles.markerContainer}>
+              <View style={markerStyle} />
+            </View>
           </Marker>
         ))}
     </>

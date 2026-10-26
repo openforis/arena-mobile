@@ -1,9 +1,9 @@
 import { useCallback, useMemo, useState } from "react";
-import { Menu } from "react-native-paper";
 import { StyleProp, ViewStyle } from "react-native";
 
 import { Button, ButtonMode } from "./Button";
 import { IconButton } from "./IconButton";
+import { Menu } from "./Menu";
 import { MenuItem } from "./MenuItem";
 
 type Props = {

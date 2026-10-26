@@ -6,6 +6,9 @@ type Props = {
   children?: React.ReactNode;
   contentContainerStyle?: StyleProp<ViewStyle>;
   horizontal?: boolean;
+  keyboardShouldPersistTaps?: "always" | "never" | "handled";
+  // Android: needed for a ScrollView inside another scrollable view
+  nestedScrollEnabled?: boolean;
   persistentScrollbar?: boolean;
   showsVerticalScrollIndicator?: boolean;
   style?: StyleProp<ViewStyle>;
