@@ -28,7 +28,7 @@ export const HomeScreen = () => {
   } = useHomeScreen();
 
   return (
-    <ScreenView>
+    <ScreenView contentContainerStyle={styles.screenContent}>
       <VView style={styles.container}>
         {surveyLoadingDialogVisible && (
           <SurveyUpdateProgressDialog titleKey={surveyLoadingDialogTitleKey} />
@@ -37,8 +37,6 @@ export const HomeScreen = () => {
         {!PreviewMode.isActive && <WhatsNewUnseenItemsDialog />}
 
         <AppLogo />
-
-        <VersionNumberInfoButton />
 
         <LoginInfo />
 
@@ -57,6 +55,7 @@ export const HomeScreen = () => {
           }
         />
       </VView>
+      <VersionNumberInfoButton />
     </ScreenView>
   );
 };
