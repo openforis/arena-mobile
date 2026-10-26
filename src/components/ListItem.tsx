@@ -1,6 +1,20 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { StyleProp, TextStyle, ViewStyle } from "react-native";
 import { List } from "react-native-paper";
+
+type IconRenderProps = { color: string; style?: StyleProp<ViewStyle> };
+
+// defined outside the component so the render functions aren't nested components
+const createIconRenderer =
+  (icon: string, iconColor?: string) => (iconProps: IconRenderProps) => (
+    <List.Icon
+      {...iconProps}
+      color={iconColor ?? iconProps.color}
+      icon={icon}
+    />
+  );
+
+const createElementRenderer = (element: React.ReactNode) => () => element;
 
 type Props = {
   description?: string;
@@ -30,25 +44,24 @@ export const ListItem = (props: Props) => {
     titleStyle,
   } = props;
 
+  const left = useMemo(
+    () => (leftIcon ? createIconRenderer(leftIcon, leftIconColor) : undefined),
+    [leftIcon, leftIconColor],
+  );
+
+  const rightRenderer = useMemo(() => {
+    if (right !== undefined) return createElementRenderer(right);
+    if (rightIcon) return createIconRenderer(rightIcon);
+    return undefined;
+  }, [right, rightIcon]);
+
   return (
     <List.Item
       description={description}
       descriptionNumberOfLines={descriptionNumberOfLines}
-      left={
-        leftIcon
-          ? (leftProps) => (
-              <List.Icon {...leftProps} color={leftIconColor} icon={leftIcon} />
-            )
-          : undefined
-      }
+      left={left}
       onPress={onPress}
-      right={
-        right !== undefined
-          ? () => right
-          : rightIcon
-            ? (rightProps) => <List.Icon {...rightProps} icon={rightIcon} />
-            : undefined
-      }
+      right={rightRenderer}
       style={style}
       title={title}
       titleStyle={titleStyle}

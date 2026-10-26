@@ -27,10 +27,9 @@ import styles from "./styles";
 const supportEmailAddress = process.env.EXPO_PUBLIC_SUPPORT_EMAIL_ADDRESS;
 
 // show only the host: the full forum url is too long for small screens
-const supportForumHost = AMConstants.supportForumUrl.replace(
-  /^https?:\/\/([^/]+).*$/,
-  "$1",
-);
+const supportForumHost =
+  AMConstants.supportForumUrl.replace(/^https?:\/\//, "").split("/")[0] ??
+  AMConstants.supportForumUrl;
 
 export const AboutScreen = () => {
   const { t } = useTranslation();
