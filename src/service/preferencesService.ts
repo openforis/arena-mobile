@@ -6,6 +6,7 @@ const keys = {
   currentSurveyId: "currentSurveyId",
   lastUsedMapAppId: "lastUsedMapAppId",
   preferencesBySurveyId: "preferencesBySurveyId",
+  whatsNewSeenIds: "whatsNewSeenIds",
 };
 
 const surveyPreferencesKeys = {
@@ -58,6 +59,13 @@ const getLastUsedMapAppId = async (): Promise<string | undefined> =>
 
 const setLastUsedMapAppId = async (appId: string) => {
   await preferencesStoredObjectManager.updateValue(keys.lastUsedMapAppId, appId);
+};
+
+const getWhatsNewSeenIds = async (): Promise<string[]> =>
+  (await preferencesStoredObjectManager.getValue(keys.whatsNewSeenIds)) ?? [];
+
+const setWhatsNewSeenIds = async (ids: string[]) => {
+  await preferencesStoredObjectManager.updateValue(keys.whatsNewSeenIds, ids);
 };
 
 const clearCurrentSurveyId = async () =>
@@ -142,6 +150,8 @@ export const PreferencesService = {
   setCurrentSurveyId,
   getLastUsedMapAppId,
   setLastUsedMapAppId,
+  getWhatsNewSeenIds,
+  setWhatsNewSeenIds,
   getSurveyPreferredLanguage,
   getSurveyRecordLastEditedPage,
   getSurveyUserGroup,

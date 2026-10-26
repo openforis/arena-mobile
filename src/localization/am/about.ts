@@ -5,4 +5,5 @@ export default {
   support: "ድጋፍ",
   version: "ቅጂ",
   viewChangelog: "የለውጥ መዝገብ ይመልከቱ",
+  viewWhatsNew: "አዲስ ነገሮችን ይመልከቱ",
 };
