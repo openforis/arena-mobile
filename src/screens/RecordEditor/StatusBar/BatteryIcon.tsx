@@ -1,6 +1,6 @@
 import { Icon } from "components/Icon";
-import { useTheme } from "react-native-paper";
 import { BatteryState } from "model/BatteryState";
+import { useAppTheme } from "theme";
 
 const getBatteryIconSource = ({ batteryLevel, batteryState }: any) => {
   if (batteryLevel < 0.1) return "battery-alert-variant-outline";
@@ -18,7 +18,7 @@ type BatteryIconProps = {
 
 export const BatteryIcon = (props: BatteryIconProps) => {
   const { batteryLevel, batteryState } = props;
-  const theme = useTheme();
+  const theme = useAppTheme();
   const color =
     batteryLevel < 0.2 ? theme.colors.error : theme.colors.onBackground;
   const iconSource = getBatteryIconSource({ batteryLevel, batteryState });

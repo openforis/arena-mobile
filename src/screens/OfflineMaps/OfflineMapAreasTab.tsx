@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { useTheme } from "react-native-paper";
 
 import { DateFormats, Dates } from "@openforis/arena-core";
 
@@ -24,6 +23,7 @@ import {
   useAppDispatch,
   useConfirm,
 } from "state";
+import { useAppTheme } from "theme";
 import { Files, GeoUtils, log } from "utils";
 
 import { useOfflineMapAreaDownload } from "./useOfflineMapAreaDownload";
@@ -52,7 +52,7 @@ const OfflineMapAreaItem = ({
   onResumePress: (area: OfflineMapArea) => Promise<void>;
 }>) => {
   const { t } = useTranslation();
-  const theme = useTheme();
+  const theme = useAppTheme();
   const cardStyle = useMemo(
     () => [styles.areaCard, { borderColor: theme.colors.outline }],
     [theme],

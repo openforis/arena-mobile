@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { StyleProp, View as RNView, ViewStyle } from "react-native";
+import { StyleProp, View, ViewStyle } from "react-native";
 import { MapMarker, Marker } from "react-native-maps";
 
 import { LatLng } from "model";
@@ -73,11 +73,11 @@ export const GeoVertexMarker = ({
         onDragEnd?.(draggedCoordinate);
       }}
     >
-      <RNView collapsable={false} style={styles.markerContainer}>
-        <RNView style={outerStyle}>
-          <RNView style={coreStyle} />
-        </RNView>
-      </RNView>
+      <View collapsable={false} style={styles.markerContainer}>
+        <View style={outerStyle}>
+          <View style={coreStyle} />
+        </View>
+      </View>
     </Marker>
   );
 };

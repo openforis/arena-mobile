@@ -7,7 +7,6 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import { Text as RNPText } from "react-native-paper";
 
 import {
   NodeDefs,
@@ -15,7 +14,7 @@ import {
   ValidationSeverity,
 } from "@openforis/arena-core";
 
-import { Icon, MessageDialog, Tooltip } from "components";
+import { Icon, MessageDialog, Text, Tooltip } from "components";
 import { useTranslation } from "localization";
 import { ValidationUtils } from "model";
 import { DataEntrySelectors, SurveySelectors } from "state";
@@ -40,7 +39,7 @@ const dialogTitleKeyBySeverity = {
 
 const iconHitSlop = 10;
 
-// horizontal padding of the react-native-paper tooltip
+// horizontal padding of the tooltip
 const tooltipPaddingHorizontal = 16;
 
 const styles = StyleSheet.create({
@@ -60,7 +59,6 @@ type ValidationIconProps = {
 const ValidationIcon = (props: ValidationIconProps) => {
   const { severity, messageKey, messageParams } = props;
 
-  const { t } = useTranslation();
   const { width: windowWidth } = useWindowDimensions();
   const [messageFitsOneLine, setMessageFitsOneLine] = useState(true);
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -88,9 +86,12 @@ const ValidationIcon = (props: ValidationIconProps) => {
           { width: windowWidth - tooltipPaddingHorizontal * 2 },
         ]}
       >
-        <RNPText variant="labelLarge" onTextLayout={onMessageTextLayout}>
-          {t(messageKey, messageParams)}
-        </RNPText>
+        <Text
+          onTextLayout={onMessageTextLayout}
+          textKey={messageKey}
+          textParams={messageParams}
+          variant="labelLarge"
+        />
       </View>
       {messageFitsOneLine ? (
         <Tooltip

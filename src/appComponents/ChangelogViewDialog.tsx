@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { StyleSheet, useWindowDimensions } from "react-native";
-import { useTheme } from "react-native-paper";
 
 import { Dialog, Markdown } from "components";
 import { FormItem } from "components/FormItem";
@@ -8,6 +7,7 @@ import { LoadingIcon } from "components/LoadingIcon";
 import { ScrollView } from "components/ScrollView";
 import { VView } from "components/VView";
 import { API } from "service/api";
+import { useAppTheme } from "theme";
 import { VersionNumberInfoText } from "./VersionNumberInfoText";
 
 const changelogUrl =
@@ -29,7 +29,7 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
     title = undefined,
   } = props;
 
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { height: windowHeight } = useWindowDimensions();
   const [content, setContent] = useState(null);
 

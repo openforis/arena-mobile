@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { StyleSheet } from "react-native";
-import { useTheme } from "react-native-paper";
 
+import { useAppTheme } from "theme";
 import { ColorUtils } from "utils";
 
 const assetsPath = "../../../../../../assets";
@@ -11,7 +11,7 @@ const compassBgWhite = require(`${assetsPath}/compass_bg_white.png`);
 export const arrowToTargetVisibleDistanceThreshold = 30;
 
 export const useCompassColors = () => {
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   const compassBg = theme.dark ? compassBgWhite : compassBgBlack;
 

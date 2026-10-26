@@ -1,5 +1,4 @@
 import React from "react";
-import { Surface } from "react-native-paper";
 
 import {
   Button,
@@ -7,6 +6,7 @@ import {
   HView,
   OpenMapButton,
   ScrollView,
+  Surface,
   Text,
   VView,
 } from "components";

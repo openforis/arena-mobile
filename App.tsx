@@ -5,7 +5,6 @@ import {
   KeyboardAvoidingView,
   KeyboardProvider,
 } from "react-native-keyboard-controller";
-import { Provider as PaperProvider, ThemeProvider } from "react-native-paper";
 import {
   Edges,
   SafeAreaProvider,
@@ -21,6 +20,7 @@ import { JobMonitorDialog } from "appComponents/JobMonitorDialog";
 import { useEffectiveTheme } from "hooks";
 import { AppStack } from "navigation/AppStack";
 import { store } from "state/store";
+import { AppThemeProvider } from "theme";
 import { BaseStyles, Environment, log, PreviewMode } from "utils";
 import { initializeGlobalErrorHandler } from "utils/GlobalErrorHandler";
 
@@ -55,33 +55,31 @@ const AppInnerContainer = () => {
   const keyboardVerticalOffset = Environment.isIOS ? topBarOffsetIOS : 0;
 
   return (
-    <PaperProvider theme={theme}>
-      <ThemeProvider theme={theme}>
-        <ErrorBoundary
-          onError={onError}
-          FallbackComponent={ErrorFallbackComponent}
-        >
-          <KeyboardProvider>
-            <StatusBar style={theme.dark ? "light" : "dark"} />
-            <Initializer>
-              <SafeAreaView edges={safeAreaEdges} style={styles.container}>
-                <KeyboardAvoidingView
-                  behavior={Environment.isIOS ? "padding" : "height"}
-                  keyboardVerticalOffset={keyboardVerticalOffset}
-                  style={BaseStyles.flexOne}
-                >
-                  <AppStack />
-                </KeyboardAvoidingView>
-              </SafeAreaView>
-            </Initializer>
-          </KeyboardProvider>
-        </ErrorBoundary>
-        <AppMessageDialog />
-        <AppConfirmDialog />
-        <JobMonitorDialog />
-        <AppToast />
-      </ThemeProvider>
-    </PaperProvider>
+    <AppThemeProvider theme={theme}>
+      <ErrorBoundary
+        onError={onError}
+        FallbackComponent={ErrorFallbackComponent}
+      >
+        <KeyboardProvider>
+          <StatusBar style={theme.dark ? "light" : "dark"} />
+          <Initializer>
+            <SafeAreaView edges={safeAreaEdges} style={styles.container}>
+              <KeyboardAvoidingView
+                behavior={Environment.isIOS ? "padding" : "height"}
+                keyboardVerticalOffset={keyboardVerticalOffset}
+                style={BaseStyles.flexOne}
+              >
+                <AppStack />
+              </KeyboardAvoidingView>
+            </SafeAreaView>
+          </Initializer>
+        </KeyboardProvider>
+      </ErrorBoundary>
+      <AppMessageDialog />
+      <AppConfirmDialog />
+      <JobMonitorDialog />
+      <AppToast />
+    </AppThemeProvider>
   );
 };
 

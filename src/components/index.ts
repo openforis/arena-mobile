@@ -1,9 +1,17 @@
 export { AlertIcon } from "./AlertIcon";
+export {
+  AppBarAction,
+  AppBarBackAction,
+  AppBarContent,
+  AppBarHeader,
+} from "./AppBar";
+export { Avatar } from "./Avatar";
 export { Button } from "./Button";
 export type { ButtonIconPosition, ButtonMode } from "./Button";
 export { Card } from "./Card";
 export { Carousel } from "./Carousel";
 export { Checkbox } from "./Checkbox";
+export { ChoiceItem } from "./ChoiceItem";
 export { CompletionIndicator, getCompletionColor } from "./CompletionIndicator";
 export { CloseIconButton } from "./CloseIconButton";
 export { CollapsiblePanel } from "./CollapsiblePanel";
@@ -35,12 +43,15 @@ export { Image } from "./Image";
 export { ImagePreviewDialog } from "./ImagePreviewDialog";
 export { IconButton } from "./IconButton";
 export { Link } from "./Link";
+export { ListItem } from "./ListItem";
+export { ListSubheader } from "./ListSubheader";
 export { LocationWatchingMonitor } from "./LocationWatchingMonitor";
 export { Loader } from "./Loader";
 export { LoadingIcon } from "./LoadingIcon";
 export { Markdown } from "./Markdown";
 export { MapView } from "./MapView";
 export type { MapTileOverlay } from "./MapView";
+export { Menu } from "./Menu";
 export { MenuButton } from "./MenuButton";
 export { MenuItem } from "./MenuItem";
 export { MessageDialog } from "./MessageDialog";
@@ -60,6 +71,7 @@ export { SelectableListWithFilter } from "./SelectableListWithFilter";
 export { Slider } from "./Slider";
 export { Snackbar } from "./Snackbar";
 export { Spacer } from "./Spacer";
+export { Surface } from "./Surface";
 export { Switch } from "./Switch";
 export { Text } from "./Text";
 export { TextInput } from "./TextInput";

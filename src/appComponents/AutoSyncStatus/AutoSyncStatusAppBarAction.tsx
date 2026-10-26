@@ -1,5 +1,4 @@
-import { Appbar as RNPAppbar } from "react-native-paper";
-
+import { AppBarAction } from "components";
 import { SurveySelectors } from "state";
 
 import { AutoSyncStatusDialog } from "./AutoSyncStatusDialog";
@@ -19,7 +18,7 @@ export const AutoSyncStatusAppBarAction = () => {
 
   return (
     <>
-      <RNPAppbar.Action
+      <AppBarAction
         color={color}
         icon={icon}
         loading={syncing}

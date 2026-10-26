@@ -10,7 +10,6 @@ import {
 } from "react-native";
 // gesture handler ScrollView: scrolls vertically inside the carousel swipe gesture
 import { ScrollView } from "react-native-gesture-handler";
-import { useTheme } from "react-native-paper";
 import { Extrapolation, interpolate } from "react-native-reanimated";
 import { CarouselItemAnimation } from "react-native-reanimated-carousel";
 
@@ -25,6 +24,7 @@ import {
 } from "components";
 import { useTranslation } from "localization";
 import { WhatsNew, WhatsNewItem } from "model";
+import { useAppTheme } from "theme";
 
 // see Dialog styles (overlay padding, max width) and RN Paper Dialog.Content padding
 const dialogHorizontalMargin = 56;
@@ -81,7 +81,7 @@ export const WhatsNewSlide = (props: WhatsNewSlideProps) => {
   const { images = [] } = item;
 
   const { t } = useTranslation();
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { height: windowHeight, width: windowWidth } = useWindowDimensions();
   const [enlargedImageIndex, setEnlargedImageIndex] = useState<number | null>(
     null,

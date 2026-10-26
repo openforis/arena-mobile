@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
 import { TouchableOpacity } from "react-native";
-import { MD3Theme, useTheme } from "react-native-paper";
 
 import { NodeDefs, Records } from "@openforis/arena-core";
 
@@ -15,6 +14,7 @@ import {
   SurveySelectors,
   useAppDispatch,
 } from "state";
+import { AppThemeColors, useAppTheme } from "theme";
 
 import styles from "./styles";
 import {
@@ -109,7 +109,7 @@ enum BarTone {
   error = "error",
 }
 
-type ThemeColors = MD3Theme["colors"];
+type ThemeColors = AppThemeColors;
 
 const getToneColors = (colors: ThemeColors, tone: BarTone) => {
   switch (tone) {
@@ -123,7 +123,7 @@ const getToneColors = (colors: ThemeColors, tone: BarTone) => {
 };
 
 const useBarColors = (tone: BarTone) => {
-  const { colors } = useTheme();
+  const { colors } = useAppTheme();
   return useMemo(() => {
     const [backgroundColor, textColor] = getToneColors(colors, tone);
     return {
@@ -177,7 +177,7 @@ const IdleTrackingBar = ({
   onStart: () => void;
   starting: boolean;
 }) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { containerStyle, textColor } = useBarColors(
     errorKey ? BarTone.error : BarTone.notCollecting,
   );
@@ -265,7 +265,7 @@ const getActiveBarTone = ({
 
 // track being recorded or paused: summary, expandable to show the tracking buttons
 const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
-  const theme = useTheme();
+  const theme = useAppTheme();
   const { t } = useTranslation();
 
   const { status, nodeUuid, errorKey, tracking, waitingForFix, pointsCount } =
