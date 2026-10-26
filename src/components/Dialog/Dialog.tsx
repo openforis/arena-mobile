@@ -114,13 +114,30 @@ export const Dialog = (props: DialogProps) => {
               {children}
             </RNPDialog.Content>
             {showActions && actionsContent && (
-              <RNPDialog.Actions>{actionsContent}</RNPDialog.Actions>
+              <RNPDialog.Actions style={styles.actions}>
+                {actionsContent}
+              </RNPDialog.Actions>
             )}
             {showActions && !actionsContent && actions.length > 0 && (
-              <RNPDialog.Actions>
-                {actions.map(({ onPress, textKey }) => (
-                  <Button key={textKey} onPress={onPress} textKey={textKey} />
-                ))}
+              <RNPDialog.Actions style={styles.actions}>
+                {actions.map(({ onPress, textKey }, index) =>
+                  // the last action is the primary one, the others (e.g. Cancel) are smaller
+                  index < actions.length - 1 ? (
+                    <Button
+                      key={textKey}
+                      color="secondary"
+                      onPress={onPress}
+                      textKey={textKey}
+                    />
+                  ) : (
+                    <Button
+                      key={textKey}
+                      labelVariant="bodyLarge"
+                      onPress={onPress}
+                      textKey={textKey}
+                    />
+                  ),
+                )}
               </RNPDialog.Actions>
             )}
           </Surface>
@@ -161,6 +178,10 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 24,
+  },
+  // added to the space Paper already puts between action buttons
+  actions: {
+    gap: 12,
   },
   titleRow: {
     alignItems: "center",
