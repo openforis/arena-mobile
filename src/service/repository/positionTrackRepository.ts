@@ -132,7 +132,9 @@ const deleteTracksByIds = async (ids: number[]) => {
     await dbClient.runSql(
       `DELETE FROM position_track_point WHERE track_id IN (${idsJoint})`,
     );
-    await dbClient.runSql(`DELETE FROM position_track WHERE id IN (${idsJoint})`);
+    await dbClient.runSql(
+      `DELETE FROM position_track WHERE id IN (${idsJoint})`,
+    );
   });
 };
 

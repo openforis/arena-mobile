@@ -8,10 +8,7 @@ import { useAppDispatch } from "state/storeHooks";
 import { log } from "utils";
 
 import { BreadcrumbItem } from "./BreadcrumbItem";
-import {
-  BreadcrumbItemData,
-  useBreadcrumbItems,
-} from "./useBreadcrumbItems";
+import { BreadcrumbItemData, useBreadcrumbItems } from "./useBreadcrumbItems";
 
 import styles from "./styles";
 
@@ -36,12 +33,12 @@ export const Breadcrumbs = () => {
     (pageEntityItem: BreadcrumbItemData) => {
       dispatch(DataEntryActions.selectCurrentPageEntity(pageEntityItem));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const scrollViewStyle = useMemo(
     () => [styles.scrollView, isRtl ? styles.scrollViewRtl : undefined],
-    [isRtl]
+    [isRtl],
   );
 
   return (

@@ -9,7 +9,10 @@ import { Text } from "../Text";
 import { VView } from "../VView";
 import { useAvailableGpsSources, useGpsDeviceDiscovery, useToast } from "hooks";
 import { ExternalGpsService } from "service/externalGps/ExternalGpsService";
-import { DiscoveredGpsDevice, GpsSourceDescriptor } from "service/externalGps/types";
+import {
+  DiscoveredGpsDevice,
+  GpsSourceDescriptor,
+} from "service/externalGps/types";
 import { log } from "utils";
 import { SystemUtils } from "utils/SystemUtils";
 
@@ -20,7 +23,8 @@ type GpsDevicePairingModalProps = {
   onDismiss: () => void;
 };
 
-const deviceLabel = (device: DiscoveredGpsDevice) => device.name || device.address;
+const deviceLabel = (device: DiscoveredGpsDevice) =>
+  device.name || device.address;
 
 // GpsSourceDescriptor.id is "internal" or `external:${deviceAddress}` (see
 // service/externalGps/types.ts) - used to match already-paired sources against
@@ -63,7 +67,8 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
   const { onDevicePaired, onDismiss } = props;
 
   const { devices, scanning, error, start, stop } = useGpsDeviceDiscovery();
-  const { availableGpsSources, refreshAvailableGpsSources } = useAvailableGpsSources();
+  const { availableGpsSources, refreshAvailableGpsSources } =
+    useAvailableGpsSources();
   const showToast = useToast();
 
   const [hasScanned, setHasScanned] = useState(false);
@@ -113,8 +118,12 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
     [onDevicePaired, refreshAvailableGpsSources, showToast, stop],
   );
 
-  const pairedSources = availableGpsSources.filter((source) => source.type === "external");
-  const pairedAddresses = new Set(pairedSources.map((source) => addressFromSourceId(source.id)));
+  const pairedSources = availableGpsSources.filter(
+    (source) => source.type === "external",
+  );
+  const pairedAddresses = new Set(
+    pairedSources.map((source) => addressFromSourceId(source.id)),
+  );
 
   const recognizedDevices = devices.filter(
     (device) => !!device.vendor && !pairedAddresses.has(device.address),
@@ -128,9 +137,15 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
           key={device.address}
           description={device.vendor}
           disabled={pairing}
-          left={(iconProps) => <RNPList.Icon {...iconProps} icon="bluetooth-connect" />}
+          left={(iconProps) => (
+            <RNPList.Icon {...iconProps} icon="bluetooth-connect" />
+          )}
           onPress={() => onPairPress(device)}
-          right={pairing ? (iconProps) => <LoadingIcon size={20} style={iconProps.style} /> : undefined}
+          right={
+            pairing
+              ? (iconProps) => <LoadingIcon size={20} style={iconProps.style} />
+              : undefined
+          }
           title={deviceLabel(device)}
         />
       );
@@ -150,7 +165,9 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
             {pairedSources.map((source) => (
               <RNPList.Item
                 key={source.id}
-                left={(iconProps) => <RNPList.Icon {...iconProps} icon="bluetooth-connect" />}
+                left={(iconProps) => (
+                  <RNPList.Icon {...iconProps} icon="bluetooth-connect" />
+                )}
                 title={source.label}
               />
             ))}
@@ -173,8 +190,15 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
         {error === "permission_denied" && (
           <MessageWithActions
             actions={[
-              { textKey: "settings:gpsDevicePairing.openSettingsButton", onPress: onOpenSettingsPress },
-              { textKey: "settings:gpsDevicePairing.scanAgainButton", onPress: onScanPress, mode: "outlined" },
+              {
+                textKey: "settings:gpsDevicePairing.openSettingsButton",
+                onPress: onOpenSettingsPress,
+              },
+              {
+                textKey: "settings:gpsDevicePairing.scanAgainButton",
+                onPress: onScanPress,
+                mode: "outlined",
+              },
             ]}
             messageKey="settings:gpsDevicePairing.permissionDenied"
           />
@@ -182,13 +206,22 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
 
         {error === "unknown" && (
           <MessageWithActions
-            actions={[{ textKey: "settings:gpsDevicePairing.scanAgainButton", onPress: onScanPress }]}
+            actions={[
+              {
+                textKey: "settings:gpsDevicePairing.scanAgainButton",
+                onPress: onScanPress,
+              },
+            ]}
             messageKey="settings:gpsDevicePairing.scanFailed"
           />
         )}
 
         {!error && !hasScanned && (
-          <Button onPress={onScanPress} style={styles.scanForDevicesButton} textKey="settings:gpsDevicePairing.scanButton" />
+          <Button
+            onPress={onScanPress}
+            style={styles.scanForDevicesButton}
+            textKey="settings:gpsDevicePairing.scanButton"
+          />
         )}
 
         {!error && hasScanned && (
@@ -215,7 +248,12 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
 
             {!scanning && recognizedDevices.length === 0 && (
               <MessageWithActions
-                actions={[{ textKey: "settings:gpsDevicePairing.scanAgainButton", onPress: onScanPress }]}
+                actions={[
+                  {
+                    textKey: "settings:gpsDevicePairing.scanAgainButton",
+                    onPress: onScanPress,
+                  },
+                ]}
                 messageKey="settings:gpsDevicePairing.emptyResult"
               />
             )}

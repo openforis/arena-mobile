@@ -1,12 +1,13 @@
 import { RecordService } from "service";
 import { AutoSyncActions, isAuthError } from "state/autoSync";
 import { RemoteConnectionUtils } from "state/remoteConnection/remoteConnectionUtils";
+import type { Navigator } from "navigation/navigator";
 import { log } from "utils";
 
 type FetchRecordsWithSyncStatusParams = {
   cycle: any;
   dispatch: any;
-  navigation: any;
+  navigator: Navigator;
   onlyLocal: boolean;
   survey: any;
 };
@@ -20,14 +21,14 @@ type FetchRecordsWithSyncStatusResult = {
 export const fetchRecordsWithSyncStatus = async ({
   cycle,
   dispatch,
-  navigation,
+  navigator,
   onlyLocal,
   survey,
 }: FetchRecordsWithSyncStatusParams): Promise<FetchRecordsWithSyncStatusResult> => {
   dispatch(AutoSyncActions.checkStart());
   try {
     if (
-      await RemoteConnectionUtils.checkLoggedInUser({ dispatch, navigation })
+      await RemoteConnectionUtils.checkLoggedInUser({ dispatch, navigator })
     ) {
       const records = await RecordService.syncRecordSummaries({
         survey,

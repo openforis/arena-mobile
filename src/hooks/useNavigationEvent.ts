@@ -1,13 +1,15 @@
 import { useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
 
-export const useNavigationEvent = (type: any, handler: any) => {
-  const navigation = useNavigation();
+import { useNavigator } from "navigation/navigator";
 
-  useEffect(() => {
-    navigation.addListener(type, handler);
-    return () => {
-      navigation.removeListener(type, handler);
-    };
-  }, [handler, navigation, type]);
+export const useNavigationEvent = (
+  type: "focus" | "blur",
+  handler: () => void,
+) => {
+  const navigator = useNavigator();
+
+  useEffect(
+    () => navigator.addListener(type, handler),
+    [handler, navigator, type],
+  );
 };

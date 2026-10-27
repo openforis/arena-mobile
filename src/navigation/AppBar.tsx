@@ -35,6 +35,7 @@ import {
 } from "state";
 import { BaseStyles } from "utils/BaseStyles";
 
+import { createNavigator } from "./navigator";
 import { OptionsMenu } from "./OptionsMenu";
 import styles from "./styles";
 
@@ -53,6 +54,7 @@ type Props = {
 export const AppBar = (props: Props) => {
   log.debug(`rendering AppBar`);
   const { back, navigation, options } = props;
+  const navigator = useMemo(() => createNavigator(navigation), [navigation]);
 
   const { t } = useTranslation();
 
@@ -77,11 +79,8 @@ export const AppBar = (props: Props) => {
   const cycle = SurveySelectors.useCurrentSurveyCycle();
   const recordsMapAvailable = useMemo(
     () =>
-      !!hasRecordsMap &&
-      !!survey &&
-      !!cycle &&
-      hasMapLayers({ survey, cycle }),
-    [cycle, hasRecordsMap, survey]
+      !!hasRecordsMap && !!survey && !!cycle && hasMapLayers({ survey, cycle }),
+    [cycle, hasRecordsMap, survey],
   );
   const isLandscape = DeviceInfoSelectors.useOrientationIsLandscape();
   const isTablet = DeviceInfoSelectors.useIsTablet();
@@ -116,31 +115,31 @@ export const AppBar = (props: Props) => {
 
   const onToggleDrawerPress = useCallback(
     () => dispatch(DataEntryActions.toggleRecordPageMenuOpen),
-    [dispatch]
+    [dispatch],
   );
 
   const toggleMenu = useCallback(
     () =>
       setState((statePrev) => ({ ...statePrev, menuVisible: !menuVisible })),
-    [menuVisible]
+    [menuVisible],
   );
 
   const onMenuDismiss = useCallback(
     () => setState((statePrev) => ({ ...statePrev, menuVisible: false })),
-    []
+    [],
   );
 
   const onToggleScreenViewModePress = useCallback(
     () =>
       dispatch(
-        ScreenOptionsActions.toggleScreenViewMode({ screenKey, viewModes })
+        ScreenOptionsActions.toggleScreenViewMode({ screenKey, viewModes }),
       ),
-    [dispatch, screenKey, viewModes]
+    [dispatch, screenKey, viewModes],
   );
 
   const toggleRecordLock = useCallback(
     () => dispatch(DataEntryActions.toggleRecordEditLock),
-    [dispatch]
+    [dispatch],
   );
 
   const toggleRecordEditViewMode = useCallback(() => {
@@ -148,8 +147,8 @@ export const AppBar = (props: Props) => {
       SurveyOptionsActions.setRecordEditViewMode(
         recordEditViewMode === RecordEditViewMode.form
           ? RecordEditViewMode.oneNode
-          : RecordEditViewMode.form
-      )
+          : RecordEditViewMode.form,
+      ),
     );
   }, [dispatch, recordEditViewMode]);
 
@@ -164,21 +163,23 @@ export const AppBar = (props: Props) => {
       defaultSingleChoiceValue: mapProvider,
     });
     if (!confirmResult) return;
-    navigation.navigate(screenKeys.recordsMap, {
-      mapProvider: confirmResult.selectedSingleChoiceValue ?? mapProvider,
+    navigator.navigateToRecordsMap({
+      mapProvider:
+        (confirmResult.selectedSingleChoiceValue as MapProvider | undefined) ??
+        mapProvider,
     });
-  }, [confirm, mapProvider, navigation]);
+  }, [confirm, mapProvider, navigator]);
 
   const onValidationIconPress = useCallback(
-    () => navigation.navigate(screenKeys.recordValidationReport),
-    [navigation]
+    () => navigator.navigateToRecordValidationReport(),
+    [navigator],
   );
 
   const onLinkToPreviousCyclePress = useCallback(() => {
     dispatch(
       isLinkedToPreviousCycleRecord
         ? DataEntryActions.unlinkFromRecordInPreviousCycle()
-        : DataEntryActions.linkToRecordInPreviousCycle()
+        : DataEntryActions.linkToRecordInPreviousCycle(),
     );
   }, [dispatch, isLinkedToPreviousCycleRecord]);
 
@@ -193,16 +194,12 @@ export const AppBar = (props: Props) => {
           fullWidth
         >
           {editingRecord && (
-            <AppBarAction
-              icon="menu"
-              onPress={onToggleDrawerPress}
-              size={36}
-            />
+            <AppBarAction icon="menu" onPress={onToggleDrawerPress} size={36} />
           )}
 
           {hasBack && back && (
             <AppBarBackAction
-              onPress={navigation.goBack}
+              onPress={navigator.goBack}
               size={36}
               style={isRtl ? BaseStyles.mirrorX : undefined}
             />
@@ -261,10 +258,7 @@ export const AppBar = (props: Props) => {
           )}
 
           {!editingRecord && recordsMapAvailable && (
-            <AppBarAction
-              icon="map-outline"
-              onPress={onRecordsMapPress}
-            />
+            <AppBarAction icon="map-outline" onPress={onRecordsMapPress} />
           )}
 
           {!editingRecord && hasToggleScreenView && (

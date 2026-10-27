@@ -284,9 +284,7 @@ const ActiveTrackingBar = ({ summary }: { summary: Summary }) => {
         expanded={expanded}
         // red "recording" dot
         iconColor={tracking && !waitingForFix ? theme.colors.error : undefined}
-        iconSource={
-          waitingForFix ? "crosshairs-question" : statusIcons[status]
-        }
+        iconSource={waitingForFix ? "crosshairs-question" : statusIcons[status]}
         onPress={toggleExpanded}
         text={headerText}
         textColor={textColor}

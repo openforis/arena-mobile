@@ -108,8 +108,7 @@ export const DataTable = (props: DataVisualizerProps) => {
   const expandable = detailFields.length > 0;
 
   const [expandedKeys, setExpandedKeys] = useState<any[]>([]);
-  const allExpanded =
-    items.length > 0 && expandedKeys.length === items.length;
+  const allExpanded = items.length > 0 && expandedKeys.length === items.length;
 
   const toggleExpanded = useCallback(
     (key: any) =>
@@ -171,7 +170,9 @@ export const DataTable = (props: DataVisualizerProps) => {
             <ExpandToggle
               color={colors.onSurfaceVariant}
               icon={
-                allExpanded ? "unfold-less-horizontal" : "unfold-more-horizontal"
+                allExpanded
+                  ? "unfold-less-horizontal"
+                  : "unfold-more-horizontal"
               }
               onPress={toggleAllExpanded}
             />
@@ -186,70 +187,73 @@ export const DataTable = (props: DataVisualizerProps) => {
       <ScrollView persistentScrollbar ref={rowsScrollViewRef}>
         {visibleRows.map((item: any) => (
           <React.Fragment key={item.key}>
-          <RNPDataTable.Row
-            onPress={() => onItemPress(item)}
-            onLongPress={() => onItemLongPress(item)}
-          >
-            {visibleFields.map(
-              ({
-                key: fKey,
-                style,
-                cellRenderer: CellRenderer,
-              }: DataVisualizerField) => (
-                <RNPDataTable.Cell
-                  key={fKey}
-                  style={style}
-                  textStyle={styles.tableTitleCellText}
-                >
-                  {CellRenderer ? (
-                    <CellRenderer item={item} viewMode={ScreenViewMode.table} />
-                  ) : (
-                    String(Objects.path(fKey.split("."))(item) ?? "")
-                  )}
-                </RNPDataTable.Cell>
-              ),
-            )}
-            {expandable && (
-              <RNPDataTable.Cell style={styles.expandColumn}>
-                <ExpandToggle
-                  color={colors.onSurfaceVariant}
-                  icon={
-                    expandedKeys.includes(item.key)
-                      ? "chevron-up"
-                      : "chevron-down"
-                  }
-                  onPress={() => toggleExpanded(item.key)}
-                />
-              </RNPDataTable.Cell>
-            )}
-            {selectionEnabled && (
-              <RNPDataTable.Cell style={styles.tableTitleTextSelected}>
-                <Checkbox
-                  checked={selectedItemIds.includes(item.key)}
-                  onPress={() => onItemSelect(item)}
-                />
-              </RNPDataTable.Cell>
-            )}
-          </RNPDataTable.Row>
-          {expandedKeys.includes(item.key) && (
-            <VView
-              style={[
-                styles.expandedRow,
-                {
-                  backgroundColor: colors.elevation.level1,
-                  borderBottomColor: colors.outlineVariant,
-                },
-              ]}
+            <RNPDataTable.Row
+              onPress={() => onItemPress(item)}
+              onLongPress={() => onItemLongPress(item)}
             >
-              <FieldRows
-                columns={expandedRowLayout.columns}
-                fields={detailFields}
-                item={item}
-                labelWidth={expandedRowLayout.labelWidth}
-                viewMode={ScreenViewMode.list}
-              />
-            </VView>
-          )}
+              {visibleFields.map(
+                ({
+                  key: fKey,
+                  style,
+                  cellRenderer: CellRenderer,
+                }: DataVisualizerField) => (
+                  <RNPDataTable.Cell
+                    key={fKey}
+                    style={style}
+                    textStyle={styles.tableTitleCellText}
+                  >
+                    {CellRenderer ? (
+                      <CellRenderer
+                        item={item}
+                        viewMode={ScreenViewMode.table}
+                      />
+                    ) : (
+                      String(Objects.path(fKey.split("."))(item) ?? "")
+                    )}
+                  </RNPDataTable.Cell>
+                ),
+              )}
+              {expandable && (
+                <RNPDataTable.Cell style={styles.expandColumn}>
+                  <ExpandToggle
+                    color={colors.onSurfaceVariant}
+                    icon={
+                      expandedKeys.includes(item.key)
+                        ? "chevron-up"
+                        : "chevron-down"
+                    }
+                    onPress={() => toggleExpanded(item.key)}
+                  />
+                </RNPDataTable.Cell>
+              )}
+              {selectionEnabled && (
+                <RNPDataTable.Cell style={styles.tableTitleTextSelected}>
+                  <Checkbox
+                    checked={selectedItemIds.includes(item.key)}
+                    onPress={() => onItemSelect(item)}
+                  />
+                </RNPDataTable.Cell>
+              )}
+            </RNPDataTable.Row>
+            {expandedKeys.includes(item.key) && (
+              <VView
+                style={[
+                  styles.expandedRow,
+                  {
+                    backgroundColor: colors.elevation.level1,
+                    borderBottomColor: colors.outlineVariant,
+                  },
+                ]}
+              >
+                <FieldRows
+                  columns={expandedRowLayout.columns}
+                  fields={detailFields}
+                  item={item}
+                  labelWidth={expandedRowLayout.labelWidth}
+                  viewMode={ScreenViewMode.list}
+                />
+              </VView>
+            )}
           </React.Fragment>
         ))}
       </ScrollView>

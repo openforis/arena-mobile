@@ -7,7 +7,7 @@ import { SurveySelectors } from "state/survey";
 const findVernacularNameByUuid = ({ taxon, vernacularNameUuid }: any) => {
   const vernacularNamesByLang = taxon.vernacularNames;
   const vernacularNamesArray: VernacularName[] = Object.values(
-    vernacularNamesByLang
+    vernacularNamesByLang,
   ).flat() as VernacularName[];
   return vernacularNamesArray.find(({ uuid }) => uuid === vernacularNameUuid);
 };

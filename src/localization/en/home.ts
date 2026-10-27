@@ -12,5 +12,6 @@ export default {
   surveys: "Surveys",
   surveysDescription: "Change, download or update surveys",
   noSurveySelected: "No survey selected",
-  noSurveySelectedDescription: "Select or download a survey to start collecting data",
+  noSurveySelectedDescription:
+    "Select or download a survey to start collecting data",
 };

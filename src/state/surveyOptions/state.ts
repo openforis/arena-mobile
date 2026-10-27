@@ -9,7 +9,8 @@ const keys = {
 };
 
 const getRecordEditViewMode = (state: any) => state[keys.recordEditViewMode];
-const getScreenViewMode = (screenKey: any) => (state: any) => state?.[keys.viewModesByScreen]?.[screenKey] ?? ScreenViewMode.table;
+const getScreenViewMode = (screenKey: any) => (state: any) =>
+  state?.[keys.viewModesByScreen]?.[screenKey] ?? ScreenViewMode.table;
 const getEntityListColumns =
   (entityDefUuid: string) =>
   (state: any): string[] | undefined =>

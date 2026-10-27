@@ -1,8 +1,7 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 
 export const useScreenKey = () => {
-  const navigation = useNavigation();
-  const navigationState: any = navigation.getState();
-  const { index, routes } = navigationState;
-  return routes[index].name;
+  const navigator = useNavigator();
+  const { index, routes } = navigator.getState();
+  return routes[index]!.name;
 };

@@ -26,7 +26,7 @@ export const BreadcrumbItem = (props: Props) => {
 
   const onItemPress = useCallback(
     () => onItemPressProp(item),
-    [item, onItemPressProp]
+    [item, onItemPressProp],
   );
 
   const style = useMemo(() => {

@@ -11,15 +11,12 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
   insertedRecords: any;
   updatedRecords: any;
   override async execute() {
-    const {
-      survey,
-      unzippedFolderUri,
-      overwriteExistingRecords,
-    } = this.context;
+    const { survey, unzippedFolderUri, overwriteExistingRecords } =
+      this.context;
 
     const fileRecordsSummaryJsonUri = Files.path(
       unzippedFolderUri,
-      RecordsExportFile.recordsSummaryJsonPath
+      RecordsExportFile.recordsSummaryJsonPath,
     );
     const fileRecordsSummaryObj = await Files.readJsonFromFile({
       fileUri: fileRecordsSummaryJsonUri,
@@ -58,7 +55,7 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
     const { survey, unzippedFolderUri } = this.context;
     const contentPath = Files.path(
       unzippedFolderUri,
-      RecordsExportFile.getRecordContentJsonPath(recordUuid)
+      RecordsExportFile.getRecordContentJsonPath(recordUuid),
     );
     const recordObj = await Files.readJsonFromFile({ fileUri: contentPath });
     if (!recordObj)
@@ -66,7 +63,7 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
     const record = recordObj as ArenaRecord;
     if (record.surveyUuid && record.surveyUuid !== survey.uuid)
       throw new Error(
-        `this record cannot be imported in the current survey; it has been created with another one;`
+        `this record cannot be imported in the current survey; it has been created with another one;`,
       );
     return record;
   }

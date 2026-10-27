@@ -85,6 +85,6 @@ export const useCheckCanAccessMediaLibrary = () => {
       }
       return canAccess;
     },
-    [confirm, t, toaster]
+    [confirm, t, toaster],
   );
 };

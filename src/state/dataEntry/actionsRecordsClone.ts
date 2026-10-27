@@ -47,7 +47,7 @@ export const cloneRecordsIntoDefaultCycle =
       dispatch(
         ToastActions.show(`${textKeyPrefix}completeSuccessfully`, {
           cycle: cycleLabel,
-        })
+        }),
       );
       callback?.();
     }

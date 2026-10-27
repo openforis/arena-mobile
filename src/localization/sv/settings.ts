@@ -16,12 +16,14 @@ export default {
     description: "$t(dataEntry:autoSync.batteryDataWarning)",
   },
   autoSyncOpenRecordIntervalMinutes: {
-    label: "Intervall för automatisk synkronisering under redigering: {{value}} min",
+    label:
+      "Intervall för automatisk synkronisering under redigering: {{value}} min",
     description:
       "Hur länge posten som för närvarande är öppen i redigeraren måste lämnas orörd innan automatisk synkronisering laddar upp den",
   },
   autoSyncSlowCheckIntervalMinutes: {
-    label: "Intervall för automatisk synkronisering (långsam kontroll): {{value}} min",
+    label:
+      "Intervall för automatisk synkronisering (långsam kontroll): {{value}} min",
     description:
       "När alla poster redan är synkroniserade, hur ofta automatisk synkronisering kontrollerar servern igen efter ändringar (t.ex. från en annan enhet). Kontroller sker oftare när det finns något nytt att ladda upp",
   },
@@ -65,8 +67,7 @@ export default {
       "Minsta GPS-noggrannhet, i meter, som krävs innan en platsavläsning accepteras för ett koordinatattribut",
   },
   locationAccuracyWatchTimeout: {
-    label:
-      "Timeout för övervakning av platsnoggrannhet: {{value}} sekunder",
+    label: "Timeout för övervakning av platsnoggrannhet: {{value}} sekunder",
     description:
       "Maximal tid att vänta på en platsavläsning som uppfyller noggrannhetströskeln innan det ges upp",
   },
@@ -91,7 +92,8 @@ Det kommer att hjälpa till att få bättre noggrannhet i en koordinatattribut.`
     emptyResult:
       "Inga enheter hittades. Se till att din GPS-mottagare är påslagen och i parkopplingsläge.",
     scanFailed: "Något gick fel under sökningen. Försök igen.",
-    recognizedDevicesNotice: "Endast enheter som identifierats som GPS-mottagare visas.",
+    recognizedDevicesNotice:
+      "Endast enheter som identifierats som GPS-mottagare visas.",
     pairedDevicesTitle: "Parkopplade enheter",
     newDevicesTitle: "Nya enheter",
     pairButton: "Parkoppla",

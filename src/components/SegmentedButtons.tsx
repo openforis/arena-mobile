@@ -33,7 +33,7 @@ export const SegmentedButtons = (props: Props) => {
         onSecondaryContainer: theme.colors.onPrimary,
       },
     }),
-    [theme]
+    [theme],
   );
 
   return (

@@ -2,10 +2,11 @@ import { mergeDiscoveredDevice } from "./gpsDeviceDiscoveryUtils";
 
 describe("mergeDiscoveredDevice", () => {
   it("appends a new device", () => {
-    const result = mergeDiscoveredDevice(
-      [],
-      { address: "00:11:22", name: "Bad Elf Flex", vendor: "Bad Elf" },
-    );
+    const result = mergeDiscoveredDevice([], {
+      address: "00:11:22",
+      name: "Bad Elf Flex",
+      vendor: "Bad Elf",
+    });
     expect(result).toEqual([
       { address: "00:11:22", name: "Bad Elf Flex", vendor: "Bad Elf" },
     ]);
@@ -21,7 +22,11 @@ describe("mergeDiscoveredDevice", () => {
       vendor: "Bad Elf",
     });
     expect(result).toEqual([
-      { address: "00:11:22", name: "Bad Elf Flex (updated)", vendor: "Bad Elf" },
+      {
+        address: "00:11:22",
+        name: "Bad Elf Flex (updated)",
+        vendor: "Bad Elf",
+      },
     ]);
   });
 

@@ -8,7 +8,8 @@ type MessageCallbacks = {
 
 // callbacks are kept outside of the store (functions are not serializable): the store contains
 // only the onDismissId they are registered with
-export const MessageCallbacksRegistry = createCallbackRegistry<MessageCallbacks>();
+export const MessageCallbacksRegistry =
+  createCallbackRegistry<MessageCallbacks>();
 
 const initialState = {};
 

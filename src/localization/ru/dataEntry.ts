@@ -199,7 +199,8 @@ export default {
     selectItem_many: "Выберите элементы",
   },
   coordinate: {
-    longPressMarkerToMove: "Нажмите и удерживайте маркер, чтобы переместить его",
+    longPressMarkerToMove:
+      "Нажмите и удерживайте маркер, чтобы переместить его",
     saveNewPosition: "Сохранить новую позицию",
     accuracy: "Точность (м)",
     altitude: "Высота (м)",

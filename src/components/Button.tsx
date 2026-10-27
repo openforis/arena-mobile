@@ -35,11 +35,7 @@ const iconPositionByTextDirection = {
 };
 
 export type ButtonMode =
-  | "text"
-  | "outlined"
-  | "contained"
-  | "elevated"
-  | "contained-tonal";
+  "text" | "outlined" | "contained" | "elevated" | "contained-tonal";
 type ButtonColor = "primary" | "secondary" | "tertiary";
 export type ButtonIconPosition = "left" | "right";
 

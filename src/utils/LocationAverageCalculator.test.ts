@@ -23,10 +23,10 @@ describe("LocationAverager", () => {
 
     it("should throw an error if window size is less than 1", () => {
       expect(() => new LocationAverager(0)).toThrow(
-        "maxWindowSize must be at least 1."
+        "maxWindowSize must be at least 1.",
       );
       expect(() => new LocationAverager(-5)).toThrow(
-        "maxWindowSize must be at least 1."
+        "maxWindowSize must be at least 1.",
       );
     });
   });

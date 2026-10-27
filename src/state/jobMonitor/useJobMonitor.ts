@@ -8,9 +8,12 @@ import { JobMonitorState } from "./types";
 export const useJobMonitor = () => {
   const dispatch = useAppDispatch();
 
-  const jobMonitorState: JobMonitorState = useSelector((state: any) => state.jobMonitor);
+  const jobMonitorState: JobMonitorState = useSelector(
+    (state: any) => state.jobMonitor,
+  );
 
-  const { progressPercent, progressRangeStart, progressRangeEnd } = jobMonitorState;
+  const { progressPercent, progressRangeStart, progressRangeEnd } =
+    jobMonitorState;
   // maps this job's own 0-100% progress into its slice of a larger chain's overall progress
   // (see JobMonitorState.progressRangeStart/End) - equal to progressPercent unchanged for a job
   // that isn't part of a chain (the default [0, 100] range). -1 (unknown/indeterminate) passes

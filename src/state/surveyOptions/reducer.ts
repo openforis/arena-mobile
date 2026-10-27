@@ -16,7 +16,7 @@ const actionHandlers = {
 
   [SurveyOptionsActions.RECORD_EDIT_VIEW_MODE_SET]: ({
     state,
-    action
+    action,
   }: any) => ({
     ...state,
     [SurveyOptionsState.keys.recordEditViewMode]: action.viewMode,

@@ -7,13 +7,9 @@ import { useAppDispatch } from "state/storeHooks";
 
 export const AppMessageDialog = () => {
   const dispatch = useAppDispatch();
-  const {
-    content,
-    contentParams,
-    details,
-    detailsParams,
-    title,
-  } = useSelector((state: any) => state.message);
+  const { content, contentParams, details, detailsParams, title } = useSelector(
+    (state: any) => state.message,
+  );
 
   const onDismiss = useCallback(() => {
     dispatch(MessageActions.dismissMessage());

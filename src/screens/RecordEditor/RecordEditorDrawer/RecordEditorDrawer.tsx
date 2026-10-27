@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 import * as WebBrowser from "expo-web-browser";
 
 import { Surveys } from "@openforis/arena-core";
@@ -7,7 +7,6 @@ import { CloseIconButton, HView, IconButton, Text, View } from "components";
 import { GpsLockingEnabledWarning } from "appComponents/GpsLockingEnabledWarning";
 import { NavigateToRecordsListButton } from "appComponents/NavigateToRecordsListButton";
 import { RecordEditViewMode } from "model";
-import { screenKeys } from "screens/screenKeys";
 import { log, PreviewMode } from "utils";
 import {
   DataEntryActions,
@@ -27,7 +26,7 @@ import { useStyles } from "./styles";
 export const RecordEditorDrawer = () => {
   log.debug(`rendering RecordEditorDrawer`);
   const dispatch = useAppDispatch();
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const survey = SurveySelectors.useCurrentSurvey()!;
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const pageSelectorOpen = DataEntrySelectors.useIsRecordPageSelectorMenuOpen();
@@ -81,7 +80,7 @@ export const RecordEditorDrawer = () => {
         {!PreviewMode.isActive && (
           <IconButton
             icon="cog"
-            onPress={() => navigation.navigate(screenKeys.settings as never)}
+            onPress={() => navigator.navigateToSettings()}
           />
         )}
       </HView>

@@ -48,7 +48,7 @@ const formatRemainingTime = ({
   const upToTimePartIndex = timePartsValues.indexOf(upToTimePart);
   const timePartsValuesFiltered = timePartsValues.slice(
     0,
-    upToTimePartIndex + 1
+    upToTimePartIndex + 1,
   );
   for (const timePart of timePartsValuesFiltered) {
     const count = _calculateValuePerTimePart(time, timePart);

@@ -15,6 +15,7 @@ export default {
   twoFactorRequiredConfirm: {
     title: "2FA（二要素認証）が必要です",
     message: "認証アプリが生成したコードを入力してください。",
-    messageError: "2FA（二要素認証）コードが正しくありません。もう一度お試しください。",
+    messageError:
+      "2FA（二要素認証）コードが正しくありません。もう一度お試しください。",
   },
 };

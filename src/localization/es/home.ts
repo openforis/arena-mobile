@@ -12,5 +12,6 @@ export default {
   surveys: "Encuestas",
   surveysDescription: "Cambiar, descargar o actualizar encuestas",
   noSurveySelected: "Ninguna encuesta seleccionada",
-  noSurveySelectedDescription: "Seleccione o descargue una encuesta para empezar a recopilar datos",
+  noSurveySelectedDescription:
+    "Seleccione o descargue una encuesta para empezar a recopilar datos",
 };

@@ -69,7 +69,8 @@ export const AutoSyncStatusDialog = (props: Props) => {
   // action, see canRetry) on screen would be stale and actionable for no reason
   const isStaleErrorStatus =
     !autoSyncEnabled &&
-    (status === AutoSyncStatus.checkError || status === AutoSyncStatus.authError);
+    (status === AutoSyncStatus.checkError ||
+      status === AutoSyncStatus.authError);
   const showStatusText = autoSyncEnabled && !isStaleErrorStatus;
   const statusTextKey = `dataEntry:autoSync.status.${connectionIssue ?? status}Tooltip`;
   // stale/contradictory otherwise: message is set as a specific outcome of a check that already
@@ -98,7 +99,9 @@ export const AutoSyncStatusDialog = (props: Props) => {
   const actions = [
     ...(canCancel ? [{ onPress: onCancel, textKey: "common:cancel" }] : []),
     ...(canRetry ? [{ onPress: onRetry, textKey: "common:tryAgain" }] : []),
-    ...(canSyncNow ? [{ onPress: onSyncNow, textKey: "dataEntry:autoSync.syncNow" }] : []),
+    ...(canSyncNow
+      ? [{ onPress: onSyncNow, textKey: "dataEntry:autoSync.syncNow" }]
+      : []),
   ];
 
   return (

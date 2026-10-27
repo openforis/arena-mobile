@@ -1,5 +1,5 @@
 import { StyleProp, ViewStyle } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 
 import { Button } from "components/Button";
 import { TextDirection, useTextDirection } from "localization";
@@ -13,7 +13,7 @@ const styleByTextDirection: Record<string, StyleProp<ViewStyle>> = {
 
 export const NavigateToRecordsListButton = () => {
   const dispatch = useAppDispatch();
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const textDirection = useTextDirection();
 
   return (
@@ -21,7 +21,7 @@ export const NavigateToRecordsListButton = () => {
       avoidMultiplePress={false}
       icon="format-list-bulleted"
       onPress={() =>
-        dispatch(DataEntryActions.navigateToRecordsList({ navigation }))
+        dispatch(DataEntryActions.navigateToRecordsList({ navigator }))
       }
       style={styleByTextDirection[textDirection]}
       textKey="dataEntry:listOfRecords"

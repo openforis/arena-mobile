@@ -19,8 +19,7 @@ const calculateUploadedBytes = ({
   const offset = Math.max(0, (chunk - 1) * chunkSize);
   const remainingBytes = Math.max(0, totalFileSize - offset);
   const currentChunkSize = Math.min(chunkSize, remainingBytes);
-  const uploadedBytes =
-    offset + uploadedChunkPercent * currentChunkSize;
+  const uploadedBytes = offset + uploadedChunkPercent * currentChunkSize;
   return Math.min(totalFileSize, uploadedBytes);
 };
 
@@ -51,7 +50,9 @@ const fetchFileUuidsByRecordUuid = async ({
     const status = Number(error?.response?.status);
     if (status === 404 || status === 501) {
       // expected with older servers - not worth a warning on every (auto-)sync
-      log.debug("file uuids by record uuid endpoint not supported by the server");
+      log.debug(
+        "file uuids by record uuid endpoint not supported by the server",
+      );
     } else {
       log.warn(`error fetching file uuids by record uuid: ${error}`);
     }

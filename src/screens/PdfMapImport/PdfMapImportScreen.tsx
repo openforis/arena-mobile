@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Polygon } from "react-native-maps";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigator, useScreenParams } from "navigation/navigator";
+import { screenKeys } from "screens/screenKeys";
 
 import {
   Button,
@@ -58,10 +59,8 @@ const extractErrorDetails = (error: any): string => {
 export const PdfMapImportScreen = () => {
   log.debug("rendering PdfMapImportScreen");
 
-  const navigation = useNavigation();
-  const route = useRoute();
-  const { fileUri, fileName = "" } = (route.params ??
-    {}) as Partial<PdfMapImportParams>;
+  const navigator = useNavigator();
+  const { fileUri, fileName = "" } = useScreenParams<screenKeys.pdfMapImport>();
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
   const toaster = useToast();
@@ -301,7 +300,7 @@ export const PdfMapImportScreen = () => {
       toaster("pdfMaps:import.complete", {
         size: Files.toHumanReadableFileSize(pdfMap?.sizeBytes ?? 0),
       });
-      navigation.goBack();
+      navigator.goBack();
     } catch (error) {
       if (!(error instanceof JobCancelError)) {
         log.error("PDF map import failed", error);
@@ -325,7 +324,7 @@ export const PdfMapImportScreen = () => {
     maxZoom,
     name,
     nameErrorKey,
-    navigation,
+    navigator,
     toaster,
   ]);
 
@@ -348,7 +347,7 @@ export const PdfMapImportScreen = () => {
         />
         <Button
           icon="arrow-left"
-          onPress={() => navigation.goBack()}
+          onPress={() => navigator.goBack()}
           textKey="common:goBack"
         />
       </VView>

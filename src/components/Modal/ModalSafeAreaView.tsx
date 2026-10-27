@@ -17,7 +17,10 @@ const edgeToPaddingProp: Record<
   left: "paddingLeft",
 };
 
-const edgeToAxisPaddingProp: Record<Edge, "paddingVertical" | "paddingHorizontal"> = {
+const edgeToAxisPaddingProp: Record<
+  Edge,
+  "paddingVertical" | "paddingHorizontal"
+> = {
   top: "paddingVertical",
   bottom: "paddingVertical",
   left: "paddingHorizontal",
@@ -33,7 +36,11 @@ export const ModalSafeAreaView = (props: ModalSafeAreaViewProps) => {
   const additivePadding = edges.reduce((acc: Record<string, number>, edge) => {
     const paddingProp = edgeToPaddingProp[edge];
     const axisPaddingProp = edgeToAxisPaddingProp[edge];
-    const basePadding = flatStyle[paddingProp] ?? flatStyle[axisPaddingProp] ?? flatStyle.padding ?? 0;
+    const basePadding =
+      flatStyle[paddingProp] ??
+      flatStyle[axisPaddingProp] ??
+      flatStyle.padding ??
+      0;
     acc[paddingProp] = basePadding + insets[edge];
     return acc;
   }, {});

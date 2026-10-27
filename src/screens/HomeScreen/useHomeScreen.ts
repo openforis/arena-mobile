@@ -56,7 +56,6 @@ export const useHomeScreen = () => {
     }
 
     const surveyVersion = String(
-      // @ts-ignore datePublished is available in persisted surveys but missing from current type
       survey.datePublished ?? survey.dateModified ?? "unknown",
     );
     const surveyKey = `${survey.id}:${surveyVersion}`;

@@ -17,7 +17,10 @@ export const EntityStatusIndicators = (props: Props) => {
   return (
     <HView>
       {!hideCompletionIndicator && (
-        <CompletionIndicator completionPercent={completionPercent} size={size} />
+        <CompletionIndicator
+          completionPercent={completionPercent}
+          size={size}
+        />
       )}
       <AlertIcon hasErrors={hasErrors} hasWarnings={hasWarnings} size={size} />
     </HView>

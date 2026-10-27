@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Keyboard } from "react-native";
 import { Polygon } from "react-native-maps";
-import { useRoute } from "@react-navigation/native";
+import { useScreenParams } from "navigation/navigator";
+import { screenKeys } from "screens/screenKeys";
 
 import {
   HView,
@@ -25,8 +26,7 @@ export type PdfMapViewerParams = { mapId: string };
 export const PdfMapViewerScreen = () => {
   log.debug("rendering PdfMapViewerScreen");
 
-  const route = useRoute();
-  const { mapId } = (route.params ?? {}) as Partial<PdfMapViewerParams>;
+  const { mapId } = useScreenParams<screenKeys.pdfMapViewer>();
   const dispatch = useAppDispatch();
   const settings = SettingsSelectors.useSettings();
   const pdfMaps = useMemo(() => settings.pdfMaps ?? [], [settings.pdfMaps]);

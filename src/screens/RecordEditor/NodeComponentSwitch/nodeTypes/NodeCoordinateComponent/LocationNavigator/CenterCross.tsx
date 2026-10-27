@@ -7,12 +7,7 @@ type CenterCrossProps = {
 };
 
 export const CenterCross = ({ size }: CenterCrossProps) => (
-  <View
-    style={[
-      StyleSheet.absoluteFill,
-      styles.container,
-    ]}
-  >
+  <View style={[StyleSheet.absoluteFill, styles.container]}>
     <CurrentLocationIcon size={Math.round(size * 0.1)} />
   </View>
 );

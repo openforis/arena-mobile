@@ -24,7 +24,7 @@ export default {
   fieldManual: "フィールドマニュアル",
   importFromCloud: "クラウドからインポート",
   importSurvey: "調査をインポート",
-  importSurveyConfirmMessage: '調査「{{surveyName}}」をインポートしますか？',
+  importSurveyConfirmMessage: "調査「{{surveyName}}」をインポートしますか？",
   loadStatus: {
     label: "読み込み状態",
     notInDevice: "デバイスにありません",
@@ -58,9 +58,9 @@ export default {
   },
   updateSurvey: "調査を更新",
   updateSurveyWithNewVersionConfirmMessage:
-    '調査「{{surveyName}}」に新しいバージョンがあります。更新しますか？',
+    "調査「{{surveyName}}」に新しいバージョンがあります。更新しますか？",
   updateSurveyConfirmMessage:
-    '調査「{{surveyName}}」はすでにこのデバイスにあります。更新しますか？',
+    "調査「{{surveyName}}」はすでにこのデバイスにあります。更新しますか？",
   userGroup: {
     fetching: "ユーザーグループを取得中...",
     label: "ユーザーグループ: {{name}}",

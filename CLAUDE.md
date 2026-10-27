@@ -37,8 +37,11 @@ yarn prebuild:android
 
 ### Code Quality
 ```bash
-# Run linter with auto-fix
+# Run linter with auto-fix (yarn lint:check to only report)
 yarn lint
+
+# Format with Prettier (yarn format:check to only report)
+yarn format
 
 # Type check TypeScript files
 yarn test:types
@@ -237,9 +240,8 @@ All permission checks are in `src/utils/Permissions.ts`.
 
 ## Linting & Code Style
 
-- ESLint configured in `eslint.config.mjs`
-- Uses `@react-native/eslint-config` as base
-- Prettier for formatting (`.prettierrc` not present, using defaults)
+- ESLint configured in `eslint.config.mjs` (typescript-eslint, react, react-hooks; React Compiler rules are warnings for now)
+- Prettier for formatting with default options (`.prettierrc` not present); `.prettierignore` excludes build output and docs
 - Always run `yarn lint` before committing
 
 ## Common Patterns

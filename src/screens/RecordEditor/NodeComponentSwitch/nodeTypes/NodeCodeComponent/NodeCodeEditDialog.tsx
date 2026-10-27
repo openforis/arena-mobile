@@ -41,7 +41,7 @@ export const NodeCodeEditDialog = (props: NodeCodeEditDialogProps) => {
         onDismiss?.();
       }
     },
-    [onDismiss, onSingleValueChangeProp]
+    [onDismiss, onSingleValueChangeProp],
   );
 
   return (

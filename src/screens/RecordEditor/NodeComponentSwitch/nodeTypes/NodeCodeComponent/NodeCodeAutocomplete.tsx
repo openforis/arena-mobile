@@ -35,10 +35,10 @@ export const NodeCodeAutocomplete = (props: NodeCodeAutocompleteProps) => {
     (selectedItemsUpdated: any) => {
       if (multiple) {
         const newItem = selectedItemsUpdated.find(
-          (item: any) => !selectedItems.includes(item)
+          (item: any) => !selectedItems.includes(item),
         );
         const removedItem = selectedItems.find(
-          (item: any) => !selectedItemsUpdated.includes(item)
+          (item: any) => !selectedItemsUpdated.includes(item),
         );
         if (removedItem) {
           onItemRemove(removedItem.uuid);
@@ -51,12 +51,12 @@ export const NodeCodeAutocomplete = (props: NodeCodeAutocompleteProps) => {
         onSingleValueChange(selectedItem?.uuid);
       }
     },
-    [onItemAdd, onItemRemove, onSingleValueChange, selectedItems, multiple]
+    [onItemAdd, onItemRemove, onSingleValueChange, selectedItems, multiple],
   );
 
   const itemDescriptionExtractor = useCallback(
     (item: any) => item?.props?.descriptions?.[lang],
-    [lang]
+    [lang],
   );
 
   return (

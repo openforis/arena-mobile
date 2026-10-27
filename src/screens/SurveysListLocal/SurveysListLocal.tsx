@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 
 import { DateFormats, Dates } from "@openforis/arena-core";
 import {
@@ -29,7 +29,6 @@ import {
 } from "state";
 import { ArrayUtils } from "utils";
 
-import { screenKeys } from "../screenKeys";
 import { SurveyStatusCell } from "./SurveyStatusCell";
 
 import styles from "./styles";
@@ -103,7 +102,7 @@ const initialState: SurveysListLocalState = {
 };
 
 export const SurveysListLocal = () => {
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const dispatch = useAppDispatch();
   const [state, setState] = useState(initialState);
   const networkAvailable = useIsNetworkConnected();
@@ -165,7 +164,7 @@ export const SurveysListLocal = () => {
       const fetchAndSetSurvey = () => {
         setLoading();
         dispatch(
-          SurveyActions.fetchAndSetCurrentSurvey({ surveyId, navigation }),
+          SurveyActions.fetchAndSetCurrentSurvey({ surveyId, navigator }),
         );
       };
 
@@ -175,7 +174,7 @@ export const SurveysListLocal = () => {
             surveyId,
             surveyName,
             surveyRemoteId,
-            navigation,
+            navigator,
             confirmMessageKey:
               "surveys:updateSurveyWithNewVersionConfirmMessage",
             onConfirm: setLoading,
@@ -187,11 +186,11 @@ export const SurveysListLocal = () => {
         fetchAndSetSurvey();
       }
     },
-    [dispatch, navigation, updateStatusChecked],
+    [dispatch, navigator, updateStatusChecked],
   );
 
   const onCheckUpdatesPress = useCallback(async () => {
-    if (!(await checkLoggedInUser({ dispatch, navigation }))) return;
+    if (!(await checkLoggedInUser({ dispatch, navigator }))) return;
 
     setState((statePrev) => ({
       ...statePrev,
@@ -214,13 +213,13 @@ export const SurveysListLocal = () => {
       updateStatusLoading: false,
       updateStatusChecked: true,
     }));
-  }, [dispatch, navigation, surveys]);
+  }, [dispatch, navigator, surveys]);
 
   const onImportFromCloudPress = useCallback(async () => {
-    if (await checkLoggedInUser({ dispatch, navigation })) {
-      navigation.navigate(screenKeys.surveysListRemote as never);
+    if (await checkLoggedInUser({ dispatch, navigator })) {
+      navigator.navigateToSurveysListRemote();
     }
-  }, [dispatch, navigation]);
+  }, [dispatch, navigator]);
 
   const viewAsCards = screenViewMode === ScreenViewMode.cards;
 

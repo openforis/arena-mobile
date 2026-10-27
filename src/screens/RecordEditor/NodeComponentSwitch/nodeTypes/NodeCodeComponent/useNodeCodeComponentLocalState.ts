@@ -128,7 +128,7 @@ export const useNodeCodeComponentLocalState = ({
         if (node) {
           dispatch(
             DataEntryActions.updateAttribute({
-              uuid: node?.uuid!,
+              uuid: node.uuid,
               value: null,
             }),
           );
@@ -162,9 +162,7 @@ export const useNodeCodeComponentLocalState = ({
       const node = nodes[0]!;
       const wasSelected = NodeValues.getItemUuid(node) === itemUuid;
       const value =
-        !itemUuid || wasSelected
-          ? null
-          : NodeValues.newCodeValue({ itemUuid });
+        !itemUuid || wasSelected ? null : NodeValues.newCodeValue({ itemUuid });
       dispatch(DataEntryActions.updateAttribute({ uuid: node.uuid, value }));
     },
     [dispatch, nodes],

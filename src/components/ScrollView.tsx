@@ -17,7 +17,7 @@ type Props = {
 
 export const ScrollView = forwardRef(function ScrollView(
   props: Props,
-  ref: Ref<RNScrollView>
+  ref: Ref<RNScrollView>,
 ) {
   const {
     children,
@@ -36,7 +36,7 @@ export const ScrollView = forwardRef(function ScrollView(
       },
       styleProp,
     ],
-    [opaque, theme.colors.background, styleProp]
+    [opaque, theme.colors.background, styleProp],
   );
 
   return (

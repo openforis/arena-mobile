@@ -2,7 +2,11 @@ import { Button } from "components/Button";
 
 import styles from "./styles";
 
-export const NewNodeButton = (props: {disabled?: boolean, nodeDefLabel:string, onPress: () => void}) => {
+export const NewNodeButton = (props: {
+  disabled?: boolean;
+  nodeDefLabel: string;
+  onPress: () => void;
+}) => {
   const { disabled = undefined, nodeDefLabel, onPress } = props;
   return (
     <Button
@@ -15,4 +19,3 @@ export const NewNodeButton = (props: {disabled?: boolean, nodeDefLabel:string, o
     />
   );
 };
-

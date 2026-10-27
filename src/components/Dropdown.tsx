@@ -99,7 +99,7 @@ export const Dropdown = (props: DropdownProps) => {
 
   return (
     <RNPDropdown
-      // @ts-ignore
+      // @ts-expect-error "disabled" is missing from the library prop types
       disabled={disabled}
       dropDownContainerMaxHeight={300}
       dropDownItemStyle={dropDownItemStyle}

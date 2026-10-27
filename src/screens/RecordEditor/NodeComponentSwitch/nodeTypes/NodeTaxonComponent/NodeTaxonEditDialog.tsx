@@ -28,7 +28,7 @@ export const NodeTaxonEditDialog = (props: NodeTaxonEditDialogProps) => {
       onDismiss();
       updateNodeValueProp({ value: valueNext });
     },
-    [onDismiss, updateNodeValueProp]
+    [onDismiss, updateNodeValueProp],
   );
 
   return (

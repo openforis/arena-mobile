@@ -56,7 +56,7 @@ const initDeviceInfo = () => async (dispatch: any) => {
       freeDiskStorage,
       isNetworkConnected,
       orientation,
-    })
+    }),
   );
 };
 
@@ -88,7 +88,7 @@ const determineBatteryStateUpdateActionPayload = ({
     const batteryLevelToReach =
       batteryState === BatteryState.unplugged ? batteryLevel : 1 - batteryLevel;
     const chargeTimeDiff = Math.ceil(
-      (elapsedTime * batteryLevelToReach) / chargeDiff
+      (elapsedTime * batteryLevelToReach) / chargeDiff,
     );
     if (batteryState === BatteryState.unplugged) {
       const timeLeft = -chargeTimeDiff;

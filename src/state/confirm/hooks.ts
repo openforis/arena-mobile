@@ -8,6 +8,6 @@ export const useConfirm = () => {
 
   return useCallback(
     (params: any) => ConfirmUtils.confirm({ dispatch, ...params }),
-    [dispatch]
+    [dispatch],
   );
 };

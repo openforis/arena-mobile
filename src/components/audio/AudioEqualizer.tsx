@@ -140,9 +140,7 @@ export const AudioEqualizer = (props: AudioEqualizerProps) => {
   return (
     <>
       <View style={styles.equalizerWrapper}>
-        <HView style={styles.equalizerContainer}>
-          {equalizerBars}
-        </HView>
+        <HView style={styles.equalizerContainer}>{equalizerBars}</HView>
         <View style={playheadStyle} />
       </View>
       <Text style={styles.recordingElapsedTime}>{recordingElapsedTime}</Text>

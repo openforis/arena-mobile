@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 
 import { Objects } from "@openforis/arena-core";
 
@@ -9,7 +9,6 @@ import { FullBackupButton } from "appComponents/FullBackupButton";
 import { Button, FieldSet, HView, ScreenView, Text, VView } from "components";
 import { MapProvider, SettingsModel, SettingsObject } from "model";
 import { OfflineMapsTab } from "screens/OfflineMaps/OfflineMapsScreen";
-import { screenKeys } from "screens/screenKeys";
 import { AppService } from "service/appService";
 import {
   SettingsActions,
@@ -44,12 +43,15 @@ export const SettingsScreen = () => {
   log.debug(`rendering SettingsScreen`);
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const theme = useAppTheme();
 
   // same color as the FieldSet border
   const itemWrapperStyle = useMemo(
-    () => [styles.settingsItemWrapper, { borderColor: theme.colors.onBackground }],
+    () => [
+      styles.settingsItemWrapper,
+      { borderColor: theme.colors.onBackground },
+    ],
     [theme.colors.onBackground],
   );
 
@@ -61,14 +63,14 @@ export const SettingsScreen = () => {
 
   const onPropValueChange =
     ({ key }: { key: keyof SettingsObject }) =>
-      (value: any) => {
-        const oldValue = settings[key];
-        if (value === oldValue) return;
-        dispatch(SettingsActions.updateSetting({ key, value }));
-        setState((statePrev) =>
-          Objects.assocPath({ obj: statePrev, path: ["settings", key], value }),
-        );
-      };
+    (value: any) => {
+      const oldValue = settings[key];
+      if (value === oldValue) return;
+      dispatch(SettingsActions.updateSetting({ key, value }));
+      setState((statePrev) =>
+        Objects.assocPath({ obj: statePrev, path: ["settings", key], value }),
+      );
+    };
 
   const onExportLogsPress = useCallback(async () => {
     await AppService.exportLogsAndShareThem();
@@ -126,9 +128,7 @@ export const SettingsScreen = () => {
               {isMapsGroup && (
                 <Button
                   icon="layers-plus"
-                  onPress={() =>
-                    navigation.navigate(screenKeys.customMapLayers as never)
-                  }
+                  onPress={() => navigator.navigateToCustomMapLayers()}
                   style={styles.offlineMapsButton}
                   textKey="offlineMaps:customLayers.title"
                 />
@@ -136,9 +136,7 @@ export const SettingsScreen = () => {
               {isMapsGroup && (
                 <Button
                   icon="map-marker-down"
-                  onPress={() =>
-                    navigation.navigate(screenKeys.offlineMaps as never)
-                  }
+                  onPress={() => navigator.navigateToOfflineMaps()}
                   style={styles.offlineMapsButton}
                   textKey="offlineMaps:title"
                 />
@@ -147,12 +145,9 @@ export const SettingsScreen = () => {
                 <Button
                   icon="file-pdf-box"
                   onPress={() =>
-                    navigation.navigate(
-                      ...([
-                        screenKeys.offlineMaps,
-                        { initialTab: OfflineMapsTab.pdfMaps },
-                      ] as never),
-                    )
+                    navigator.navigateToOfflineMaps({
+                      initialTab: OfflineMapsTab.pdfMaps,
+                    })
                   }
                   style={styles.offlineMapsButton}
                   textKey="pdfMaps:title"

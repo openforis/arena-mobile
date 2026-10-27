@@ -7,8 +7,7 @@ import { Errors } from "./Errors";
 import { log } from "./Logger";
 
 const globalErrorUtils = (global as any).ErrorUtils as
-  | ErrorUtilsType
-  | undefined;
+  ErrorUtilsType | undefined;
 
 // tracked on the actual JS global (not module-local state), since a module-local
 // flag would be reset if this module gets re-evaluated by Fast Refresh; without

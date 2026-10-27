@@ -5,7 +5,6 @@ import { FilesImportJob } from "./filesImportJob";
 import { RecordsAndFilesImportJobContext } from "./RecordsAndFilesImportJobContext";
 import { RecordsImportJob } from "./recordsImportJob";
 
-// @ts-ignore: execute method not implemented but not needed, since inner jobs are provided
 export class RecordsAndFilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
   constructor({
     survey,
@@ -15,7 +14,13 @@ export class RecordsAndFilesImportJob extends JobMobile<RecordsAndFilesImportJob
     mergeKeepLocalOriginRecordUuids,
   }: any) {
     super(
-      { survey, user, fileUri, overwriteExistingRecords, mergeKeepLocalOriginRecordUuids },
+      {
+        survey,
+        user,
+        fileUri,
+        overwriteExistingRecords,
+        mergeKeepLocalOriginRecordUuids,
+      },
       [
         new RecordsImportJob({
           survey,

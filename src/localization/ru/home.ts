@@ -12,5 +12,6 @@ export default {
   surveys: "Опросы",
   surveysDescription: "Сменить, загрузить или обновить опросы",
   noSurveySelected: "Опрос не выбран",
-  noSurveySelectedDescription: "Выберите или загрузите опрос, чтобы начать сбор данных",
+  noSurveySelectedDescription:
+    "Выберите или загрузите опрос, чтобы начать сбор данных",
 };

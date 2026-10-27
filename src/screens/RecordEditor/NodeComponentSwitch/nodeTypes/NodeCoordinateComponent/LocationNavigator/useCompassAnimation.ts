@@ -6,7 +6,7 @@ import {
 } from "react-native-reanimated";
 
 const shortestAngleDelta = (from: number, to: number): number => {
-  let d = ((to - from) % 360 + 360) % 360;
+  let d = (((to - from) % 360) + 360) % 360;
   if (d > 180) d -= 360;
   return d;
 };

@@ -14,7 +14,7 @@ type NodeCodeMultipleCheckboxComponentProps = {
 };
 
 export const NodeCodeMultipleCheckboxComponent = (
-  props: NodeCodeMultipleCheckboxComponentProps
+  props: NodeCodeMultipleCheckboxComponentProps,
 ) => {
   const {
     editable,
@@ -34,7 +34,7 @@ export const NodeCodeMultipleCheckboxComponent = (
         onItemAdd(item.uuid);
       }
     },
-    [onItemAdd, onItemRemove, selectedItems]
+    [onItemAdd, onItemRemove, selectedItems],
   );
 
   return (

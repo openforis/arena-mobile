@@ -16,12 +16,14 @@ export default {
     description: "$t(dataEntry:autoSync.batteryDataWarning)",
   },
   autoSyncOpenRecordIntervalMinutes: {
-    label: "Intervalo de sincronización automática mientras se edita: {{value}} min",
+    label:
+      "Intervalo de sincronización automática mientras se edita: {{value}} min",
     description:
       "Cuánto tiempo debe permanecer sin cambios el registro actualmente abierto en el editor antes de que la sincronización automática lo suba",
   },
   autoSyncSlowCheckIntervalMinutes: {
-    label: "Intervalo de sincronización automática (comprobación lenta): {{value}} min",
+    label:
+      "Intervalo de sincronización automática (comprobación lenta): {{value}} min",
     description:
       "Una vez que todos los registros ya están sincronizados, con qué frecuencia la sincronización automática vuelve a comprobar el servidor en busca de cambios (por ejemplo, desde otro dispositivo). Las comprobaciones ocurren con más frecuencia cuando hay algo nuevo que subir",
   },
@@ -57,7 +59,8 @@ export default {
   },
   language: {
     label: "Idioma de la aplicación",
-    description: "Establece el idioma utilizado en la interfaz de la aplicación",
+    description:
+      "Establece el idioma utilizado en la interfaz de la aplicación",
   },
   locationAccuracyThreshold: {
     label: "Precisión de la ubicación (metros)",
@@ -124,7 +127,8 @@ export default {
   },
   theme: {
     label: "Tema",
-    description: "Establece el tema de color utilizado en la interfaz de la aplicación",
+    description:
+      "Establece el tema de color utilizado en la interfaz de la aplicación",
     auto: "Automático",
     dark: "Oscuro",
     dark2: "Oscuro 2",

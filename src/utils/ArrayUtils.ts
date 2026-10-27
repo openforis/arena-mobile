@@ -10,11 +10,12 @@ const determineDateFormat = (
     DateFormats.datetimeDefault,
     DateFormats.dateStorage,
     DateFormats.datetimeStorage,
-  ]
+  ],
 ) =>
   dateFormats.find(
     (format) =>
-      value.length === format.length && Dates.isValidDateInFormat(value, format)
+      value.length === format.length &&
+      Dates.isValidDateInFormat(value, format),
   );
 
 /**
