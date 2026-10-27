@@ -1,17 +1,19 @@
-import { useCallback } from "react";
-import { FlatList, TouchableHighlight } from "react-native";
-
-import { Objects } from "@openforis/arena-core";
+import { useCallback, useMemo } from "react";
+import { FlatList, Pressable, useWindowDimensions } from "react-native";
 
 import { ScreenViewMode } from "model";
 
 import { Checkbox } from "../Checkbox";
-import { FormItem } from "../FormItem";
-import { HView } from "../HView";
-import { VView } from "../VView";
+import { FieldRows } from "../DataCards/DataCardParts";
+import { getFieldRowsLayout } from "../DataCards/dataCardsUtils";
 import { DataVisualizerProps } from "../DataVisualizer/types";
+import { HView } from "../HView";
 import { ItemSelectedBanner, useSelectableList } from "../SelectableList";
+import { VView } from "../VView";
 import { useStyles } from "./styles";
+
+// item padding, accent bar and list padding
+const itemHorizontalPadding = 48;
 
 export const DataList = (props: DataVisualizerProps) => {
   const {
@@ -23,10 +25,22 @@ export const DataList = (props: DataVisualizerProps) => {
     onDeleteSelectedItemIds,
     onSelectionChange,
     selectable,
+    selectedItemIds: selectedItemIdsProp,
     selectedItemsCustomActions,
   } = props;
 
   const styles = useStyles();
+  const { width } = useWindowDimensions();
+  const fieldRowsLayout = getFieldRowsLayout(width - itemHorizontalPadding);
+
+  // title fields (e.g. record keys) are emphasized at the top of each item
+  const { titleFields, otherFields } = useMemo(
+    () => ({
+      titleFields: fields.filter((field) => field.cardRole === "title"),
+      otherFields: fields.filter((field) => field.cardRole !== "title"),
+    }),
+    [fields],
+  );
 
   const {
     onDeleteSelected,
@@ -41,69 +55,68 @@ export const DataList = (props: DataVisualizerProps) => {
     onItemLongPress: onItemLongPressProp,
     onSelectionChange,
     selectable,
+    selectedItemIds: selectedItemIdsProp,
   });
 
   const renderItem = useCallback(
-    ({ item, separators }: any) => (
-      <TouchableHighlight
-        onPress={() => onItemPress(item)}
-        onLongPress={() => onItemLongPress(item)}
-        onShowUnderlay={separators.highlight}
-        onHideUnderlay={separators.unhighlight}
-      >
-        <HView style={styles.item}>
-          <VView style={{ flex: 1 }}>
-            {fields.map((field: any) => {
-              const {
-                cellRenderer: CellRenderer,
-                header,
-                headerLabelVariant = "titleSmall",
-                headerWidth = undefined,
-                key,
-                style,
-                textVariant = "titleMedium",
-              } = field;
-              return (
-                <FormItem
-                  key={key}
-                  labelKey={header}
-                  labelNumberOfLines={1}
-                  labelStyle={headerWidth ? { width: headerWidth } : null}
-                  labelVariant={headerLabelVariant}
-                  style={style}
-                  textVariant={textVariant}
-                >
-                  {CellRenderer ? (
-                    <CellRenderer item={item} viewMode={ScreenViewMode.list} />
-                  ) : (
-                    String(Objects.path(key.split("."))(item) ?? "")
-                  )}
-                </FormItem>
-              );
-            })}
-          </VView>
-          {selectionEnabled && (
-            <Checkbox
-              checked={selectedItemIds.includes(item.key)}
-              onPress={() => onItemSelect(item)}
-            />
-          )}
-        </HView>
-      </TouchableHighlight>
-    ),
+    ({ item }: any) => {
+      const selected = selectedItemIds.includes(item.key);
+      return (
+        <Pressable
+          onPress={() => onItemPress(item)}
+          onLongPress={() => onItemLongPress(item)}
+          style={({ pressed }) => [
+            styles.item,
+            selected && styles.itemSelected,
+            pressed && styles.itemPressed,
+          ]}
+        >
+          <VView style={[styles.accent, selected && styles.accentSelected]} />
+          <HView style={styles.itemContent}>
+            <VView style={styles.fields}>
+              {titleFields.length > 0 && (
+                <>
+                  <FieldRows
+                    emphasized
+                    fields={titleFields}
+                    item={item}
+                    labelWidth={fieldRowsLayout.labelWidth}
+                    variant="titleMedium"
+                    viewMode={ScreenViewMode.list}
+                  />
+                  {otherFields.length > 0 && <VView style={styles.divider} />}
+                </>
+              )}
+              <FieldRows
+                columns={fieldRowsLayout.columns}
+                fields={otherFields}
+                item={item}
+                labelWidth={fieldRowsLayout.labelWidth}
+                viewMode={ScreenViewMode.list}
+              />
+            </VView>
+            {selectionEnabled && (
+              <Checkbox checked={selected} onPress={() => onItemSelect(item)} />
+            )}
+          </HView>
+        </Pressable>
+      );
+    },
     [
-      styles.item,
-      fields,
-      selectionEnabled,
-      selectedItemIds,
-      onItemPress,
+      fieldRowsLayout,
       onItemLongPress,
+      onItemPress,
       onItemSelect,
+      otherFields,
+      selectedItemIds,
+      selectionEnabled,
+      styles,
+      titleFields,
     ],
   );
 
   return (
-    <VView>
+    <VView fullFlex>
       <ItemSelectedBanner
         canDelete={canDelete}
         customActions={selectedItemsCustomActions}
@@ -111,9 +124,12 @@ export const DataList = (props: DataVisualizerProps) => {
         selectedItemIds={selectedItemIds}
       />
       <FlatList
+        contentContainerStyle={styles.listContent}
         data={items}
-        keyExtractor={(item) => item.uuid}
+        extraData={selectedItemIds}
+        keyExtractor={(item) => String(item.key)}
         renderItem={renderItem}
+        style={styles.list}
       />
     </VView>
   );

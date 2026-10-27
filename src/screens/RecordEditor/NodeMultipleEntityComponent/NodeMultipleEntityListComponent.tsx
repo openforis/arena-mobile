@@ -2,7 +2,15 @@ import { useCallback, useMemo, useState } from "react";
 
 import { NodeDefs, Objects, Records } from "@openforis/arena-core";
 
-import { DataTable, DataVisualizerField, HView, Text, VView } from "components";
+import {
+  Button,
+  DataTable,
+  DataVisualizerField,
+  HView,
+  Text,
+  View,
+  VView,
+} from "components";
 import { useTranslation } from "localization";
 import { SortObject } from "model";
 import { RecordUtils } from "model/utils/RecordUtils";
@@ -10,6 +18,8 @@ import {
   DataEntryActions,
   DataEntrySelectors,
   DeviceInfoSelectors,
+  SurveyOptionsActions,
+  SurveyOptionsSelectors,
   SurveySelectors,
   useAppDispatch,
   useConfirm,
@@ -17,6 +27,7 @@ import {
 import { ArrayUtils, log } from "utils";
 
 import { NewNodeButton } from "../NewNodeButton";
+import { EntityListColumnsDialog } from "./EntityListColumnsDialog";
 import { NodeValidationIcon } from "../NodeValidationIcon";
 
 import styles from "./styles";
@@ -29,6 +40,9 @@ const determineMaxSummaryDefs = ({
   const result = isTablet && !isDrawerOpen ? 5 : 3;
   return isLandscape ? result + 2 : result;
 };
+
+// in landscape all columns are shown by default, unless they are too many
+const maxDefaultLandscapeColumns = 10;
 
 type NodeMultipleEntityListComponentProps = {
   entityDef: any;
@@ -45,6 +59,7 @@ export const NodeMultipleEntityListComponent = (
   const confirm = useConfirm();
   const { t } = useTranslation();
   const [sort, setSort] = useState(undefined as SortObject | undefined);
+  const [columnsDialogVisible, setColumnsDialogVisible] = useState(false);
 
   log.debug(
     "rendering NodeMultipleEntityListComponent for " +
@@ -65,46 +80,78 @@ export const NodeMultipleEntityListComponent = (
   });
 
   const nodeDefLabel = NodeDefs.getLabelOrName(entityDef, lang);
-  const parentEntity = Records.getNodeByUuid(parentEntityUuid!)(
-    record,
-  )!;
+  const parentEntity = Records.getNodeByUuid(parentEntityUuid!)(record)!;
 
-  const visibleNodeDefs = useMemo(
+  const selectedColumns =
+    SurveyOptionsSelectors.useEntityListColumns(entityDefUuid);
+
+  const availableNodeDefs = useMemo(
     () =>
-      isLandscape
-        ? RecordUtils.getApplicableDescendantDefs({
-            survey,
-            entityDef,
-            record,
-            parentEntity,
-          })
-        : RecordUtils.getApplicableSummaryDefs({
-            survey,
-            entityDef,
-            record,
-            parentEntity,
-            onlyKeys: false,
-            maxSummaryDefs,
-          }),
-    [entityDef, isLandscape, maxSummaryDefs, parentEntity, record, survey],
+      RecordUtils.getApplicableDescendantDefs({
+        survey,
+        entityDef,
+        record,
+        parentEntity,
+      }),
+    [entityDef, parentEntity, record, survey],
   );
+
+  const visibleNodeDefs = useMemo(() => {
+    const selectedDefs = selectedColumns
+      ? availableNodeDefs.filter((def) => selectedColumns.includes(def.uuid))
+      : [];
+    if (selectedDefs.length > 0) {
+      return selectedDefs;
+    }
+    if (isLandscape && availableNodeDefs.length <= maxDefaultLandscapeColumns) {
+      return availableNodeDefs;
+    }
+    return RecordUtils.getApplicableSummaryDefs({
+      survey,
+      entityDef,
+      record,
+      parentEntity,
+      onlyKeys: false,
+      maxSummaryDefs,
+    });
+  }, [
+    availableNodeDefs,
+    entityDef,
+    isLandscape,
+    maxSummaryDefs,
+    parentEntity,
+    record,
+    selectedColumns,
+    survey,
+  ]);
+
+  const horizontalScroll =
+    isLandscape || visibleNodeDefs.length > maxSummaryDefs;
 
   const tableFields: DataVisualizerField[] = useMemo(
     () =>
-      visibleNodeDefs.map(
-        (summaryDef): DataVisualizerField => ({
-          key: NodeDefs.getName(summaryDef),
-          header: NodeDefs.getLabelOrName(summaryDef, lang),
-          style: { minWidth: isLandscape ? 150 : 100 },
-          sortable: true,
-        }),
-      ),
-    [isLandscape, lang, visibleNodeDefs],
+      visibleNodeDefs.map((summaryDef): DataVisualizerField => ({
+        key: NodeDefs.getName(summaryDef),
+        header: NodeDefs.getLabelOrName(summaryDef, lang),
+        style: { minWidth: horizontalScroll ? 150 : 100 },
+        sortable: true,
+      })),
+    [horizontalScroll, lang, visibleNodeDefs],
   );
 
   const onNewPress = () => {
     dispatch(DataEntryActions.addNewEntity());
   };
+
+  const onColumnsApply = useCallback(
+    (columns: string[] | null) => {
+      dispatch(
+        SurveyOptionsActions.setEntityListColumns({ entityDefUuid, columns }),
+      );
+      setColumnsDialogVisible(false);
+    },
+    [dispatch, entityDefUuid],
+  );
 
   const onRowPress = useCallback(
     ({ uuid }: any) => {
@@ -178,7 +225,7 @@ export const NodeMultipleEntityListComponent = (
       <DataTable
         canDelete={canAddOrDelete}
         fields={tableFields}
-        horizontalScroll={isLandscape}
+        horizontalScroll={horizontalScroll}
         items={rows}
         onDeleteSelectedItemIds={onDeleteSelectedNodeUuids}
         onItemPress={onRowPress}
@@ -189,7 +236,7 @@ export const NodeMultipleEntityListComponent = (
     ),
     [
       canAddOrDelete,
-      isLandscape,
+      horizontalScroll,
       onDeleteSelectedNodeUuids,
       onRowPress,
       onSortChange,
@@ -199,21 +246,55 @@ export const NodeMultipleEntityListComponent = (
     ],
   );
 
+  // in portrait there is no room for it next to the new button
+  const columnsButton = rows.length > 0 && availableNodeDefs.length > 1 && (
+    <Button
+      compact
+      icon="table-column"
+      mode="text"
+      onPress={() => setColumnsDialogVisible(true)}
+      textKey="dataEntry:entityListColumns.button"
+    />
+  );
+
   return (
     <VView style={styles.container}>
       {rows.length === 0 && (
         <Text textKey="dataEntry:noEntitiesDefined" variant="titleMedium" />
       )}
+      {columnsButton && !isLandscape && (
+        <HView fullWidth style={styles.topBar}>
+          {columnsButton}
+        </HView>
+      )}
       {rows.length > 0 && dataTable}
-      <HView fullWidth style={styles.buttonBar}>
-        {canAddOrDelete && (
-          <NewNodeButton nodeDefLabel={nodeDefLabel} onPress={onNewPress} />
+      <HView fullWidth style={styles.bottomBar}>
+        {/* side views have the same flex, so the button bar stays centered */}
+        {isLandscape && <View style={styles.bottomBarSide} />}
+        <HView style={styles.buttonBar}>
+          {canAddOrDelete && (
+            <NewNodeButton nodeDefLabel={nodeDefLabel} onPress={onNewPress} />
+          )}
+          <NodeValidationIcon
+            nodeDef={entityDef}
+            parentNodeUuid={parentEntityUuid}
+          />
+        </HView>
+        {isLandscape && (
+          <View style={[styles.bottomBarSide, styles.bottomBarSideRight]}>
+            {columnsButton}
+          </View>
         )}
-        <NodeValidationIcon
-          nodeDef={entityDef}
-          parentNodeUuid={parentEntityUuid}
-        />
       </HView>
+      {columnsDialogVisible && (
+        <EntityListColumnsDialog
+          availableDefs={availableNodeDefs}
+          onApply={onColumnsApply}
+          onClose={() => setColumnsDialogVisible(false)}
+          onReset={() => onColumnsApply(null)}
+          visibleDefs={visibleNodeDefs}
+        />
+      )}
     </VView>
   );
 };

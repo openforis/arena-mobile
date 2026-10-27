@@ -12,20 +12,32 @@ const setScreenViewMode =
     dispatch({ type: SCREEN_VIEW_MODE_SET, screenKey, viewMode });
   };
 
+const defaultViewModes = [ScreenViewMode.table, ScreenViewMode.list];
+
+const getNextViewMode = ({
+  viewMode,
+  viewModes = defaultViewModes,
+}: {
+  viewMode: ScreenViewMode;
+  viewModes?: ScreenViewMode[];
+}): ScreenViewMode =>
+  viewModes[(viewModes.indexOf(viewMode) + 1) % viewModes.length]!;
+
 const toggleScreenViewMode =
   ({
-    screenKey
-  }: any) =>
+    screenKey,
+    viewModes,
+  }: {
+    screenKey: string;
+    viewModes?: ScreenViewMode[];
+  }) =>
   (dispatch: any, getState: any) => {
     const state = getState();
 
     const viewMode =
       ScreenOptionsSelectors.selectScreenViewMode(screenKey)(state);
 
-    const viewModeNext =
-      viewMode === ScreenViewMode.table
-        ? ScreenViewMode.list
-        : ScreenViewMode.table;
+    const viewModeNext = getNextViewMode({ viewMode, viewModes });
 
     dispatch({ type: SCREEN_VIEW_MODE_SET, screenKey, viewMode: viewModeNext });
   };
@@ -33,6 +45,7 @@ const toggleScreenViewMode =
 export const ScreenOptionsActions = {
   SCREEN_VIEW_MODE_SET,
 
+  getNextViewMode,
   setScreenViewMode,
   toggleScreenViewMode,
 };

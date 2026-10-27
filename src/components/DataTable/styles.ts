@@ -15,6 +15,16 @@ export default StyleSheet.create({
     maxWidth: 40,
     minWidth: 40,
   },
+  expandColumn: {
+    maxWidth: 36,
+    minWidth: 36,
+    justifyContent: "center",
+  },
+  expandedRow: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+  },
   tableTitleCellText: {
     flex: 1,
   },

@@ -36,6 +36,7 @@ export default {
   newItemWithParam: "Новый {{item}}",
   no: "Нет",
   noItemsMatchingSearch: "По Вашему запросу нет элементов",
+  none: "Нет",
   notEnoughDiskSpace:
     "Недостаточно свободного места на диске (требуется еще {{requiredSpace}})",
   ok: "Ок",
@@ -50,6 +51,7 @@ export default {
   size: "Размер",
   sizeAvailable: "{{size}} доступно",
   somethingWentWrong: "Что-то пошло не так: {{error}}",
+  sortBy: "Сортировать по",
   srs: "SRS",
   status: "Статус",
   stop: "Стоп",

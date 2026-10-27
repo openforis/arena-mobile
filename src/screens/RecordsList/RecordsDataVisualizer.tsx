@@ -40,42 +40,31 @@ import { ArrayUtils } from "utils";
 
 import { RecordErrorIcon } from "./RecordErrorIcon";
 import { RecordSyncStatusIcon } from "./RecordSyncStatusIcon";
+import { RecordValidationBadge } from "./RecordValidationBadge";
 import { RecordListConstants } from "./recordListConstants";
 
 const formatDateToDateTimeDisplay = (date: any) =>
   typeof date === "string"
     ? Dates.convertDate({
-      dateStr: date,
-      formatFrom: DateFormats.datetimeStorage,
-      formatTo: DateFormats.datetimeDisplay,
-    })
+        dateStr: date,
+        formatFrom: DateFormats.datetimeStorage,
+        formatTo: DateFormats.datetimeDisplay,
+      })
     : Dates.format(date, DateFormats.datetimeDisplay);
 
-const recordOriginCellRendererByViewMode: Record<ScreenViewMode, any> = {
-  [ScreenViewMode.list]: ({ item }: DataVisualizerCellProps) => (
-    <Text textKey={`recordsList:origin.${item.origin}`} />
-  ),
-  [ScreenViewMode.table]: ({ item }: DataVisualizerCellProps) => (
-    <Icon
-      source={RecordListConstants.iconByOrigin[item.origin as RecordOrigin]}
-    />
-  ),
-};
+const RecordOriginCellRenderer = ({ item }: DataVisualizerCellProps) => (
+  <Icon
+    source={RecordListConstants.iconByOrigin[item.origin as RecordOrigin]}
+  />
+);
 
-const recordLoadStatusCellRendererByViewMode: Record<ScreenViewMode, any> = {
-  [ScreenViewMode.list]: ({ item }: DataVisualizerCellProps) => (
-    <Text textKey={`recordsList:loadStatus.${item.loadStatus}`} />
-  ),
-  [ScreenViewMode.table]: ({ item }: DataVisualizerCellProps) => (
-    <Icon
-      source={
-        RecordListConstants.iconByLoadStatus[
-        item.loadStatus as RecordLoadStatus
-        ]
-      }
-    />
-  ),
-};
+const RecordLoadStatusCellRenderer = ({ item }: DataVisualizerCellProps) => (
+  <Icon
+    source={
+      RecordListConstants.iconByLoadStatus[item.loadStatus as RecordLoadStatus]
+    }
+  />
+);
 
 const LoadingIconCellRenderer = (_props: DataVisualizerCellProps) => (
   <LoadingIcon />
@@ -92,10 +81,6 @@ const RecordErrorsListCellRenderer = ({ item }: DataVisualizerCellProps) => (
   <Text>{Validations.getErrorsCount(item.validation)}</Text>
 );
 
-const recordErrorsCellRendererByScrenMode: Record<ScreenViewMode, any> = {
-  [ScreenViewMode.list]: RecordErrorsListCellRenderer,
-  [ScreenViewMode.table]: RecordErrorIcon,
-};
 
 const RecordWarningsListCellRenderer = ({ item }: DataVisualizerCellProps) => (
   <Text>{Validations.getWarningsCount(item.validation)}</Text>
@@ -108,69 +93,84 @@ const buildKeySummaryFields = ({
 }: any): DataVisualizerField[] => [
   ...rootKeyDefs.map((keyDef: any) => ({
     key: `keysObj.${NodeDefs.getName(keyDef)}`,
+    cardRole: "title" as const,
+    cardShowLabel: true,
     header: NodeDefs.getLabelOrName(keyDef, lang),
-    headerLabelVariant: "titleMedium",
     sortable: true,
-    textVariant: "titleLarge",
   })),
+  // optional: in a narrow table they move to the expanded row
   ...rootSummaryDefs.map((keyDef: any) => ({
     key: `summaryAttributesObj.${NodeDefs.getName(keyDef)}`,
     header: NodeDefs.getLabelOrName(keyDef, lang),
-    headerLabelVariant: "titleMedium",
+    optional: true,
     sortable: true,
-    textVariant: "titleLarge",
   })),
 ];
 
 const buildErrorsField = ({
   recordsHaveErrorsOrWarnings,
-  viewAsList,
   screenViewMode,
 }: {
   recordsHaveErrorsOrWarnings: boolean;
-  viewAsList: boolean;
   screenViewMode: ScreenViewMode;
 }): DataVisualizerField[] =>
   recordsHaveErrorsOrWarnings
     ? [
-      {
-        key: "errors",
-        header: "common:error_other",
-        sortable: true,
-        style: viewAsList ? undefined : { maxWidth: 54 },
-        cellRenderer: recordErrorsCellRendererByScrenMode[screenViewMode],
-      },
-    ]
+        {
+          key: "errors",
+          cardRole: "badge",
+          header: "common:error_other",
+          sortable: true,
+          style: { maxWidth: 54 },
+          cellRenderer:
+            screenViewMode === ScreenViewMode.cards
+              ? RecordValidationBadge
+              : RecordErrorIcon,
+        },
+      ]
     : [];
 
-// warnings count, and the modified/created dates, are only shown in list view - table view is
-// too narrow for them
-const buildListOnlyFields = ({
-  viewAsList,
+// warnings count, and the modified/created dates, are shown only in the expanded row in table
+// view - it's too narrow for them
+const buildDetailFields = ({
+  screenViewMode,
   recordsHaveErrorsOrWarnings,
-}: any): DataVisualizerField[] => {
-  if (!viewAsList) return [];
+}: {
+  screenViewMode: ScreenViewMode;
+  recordsHaveErrorsOrWarnings: boolean;
+}): DataVisualizerField[] => {
   const result: DataVisualizerField[] = [];
-  if (recordsHaveErrorsOrWarnings) {
+  // the table errors column shows just an icon: show the counts in the expanded row
+  if (recordsHaveErrorsOrWarnings && screenViewMode === ScreenViewMode.table) {
+    result.push({
+      key: "errorsCount",
+      header: "common:error_other",
+      tableDetail: true,
+      cellRenderer: RecordErrorsListCellRenderer,
+    });
+  }
+  // cards already show the warnings count in the validation badge
+  if (recordsHaveErrorsOrWarnings && screenViewMode !== ScreenViewMode.cards) {
     result.push({
       key: "warnings",
       header: "common:warning_other",
-      optional: true,
+      tableDetail: true,
       cellRenderer: RecordWarningsListCellRenderer,
     });
   }
   result.push(
     {
       key: "dateModified",
+      cardRole: "footer",
       header: "common:modifiedOn",
-      optional: true,
       sortable: true,
-      style: { minWidth: 50 },
+      tableDetail: true,
     },
     {
       key: "dateCreated",
+      cardRole: "footer",
       header: "common:createdOn",
-      optional: true,
+      tableDetail: true,
     },
   );
   return result;
@@ -178,58 +178,62 @@ const buildListOnlyFields = ({
 
 const buildRemoteFields = ({
   showRemoteProps,
-  viewAsList,
-  screenViewMode,
 }: {
   showRemoteProps?: boolean;
-  viewAsList: boolean;
-  screenViewMode: ScreenViewMode;
 }): DataVisualizerField[] => {
   if (!showRemoteProps) return [];
-  const result: DataVisualizerField[] = [
+  return [
     {
       key: "origin",
+      cardRole: "badge",
       header: "recordsList:origin.title",
       style: { minWidth: 10 },
-      cellRenderer: recordOriginCellRendererByViewMode[screenViewMode],
+      cellRenderer: RecordOriginCellRenderer,
+    },
+    {
+      key: "dateModifiedRemote",
+      cardRole: "footer",
+      header: "recordsList:dateModifiedRemotely",
+      tableDetail: true,
+    },
+    {
+      key: "ownerName",
+      cardRole: "footer",
+      header: "recordsList:owner",
+      tableDetail: true,
+    },
+    {
+      key: "loadStatus",
+      cardRole: "badge",
+      header: "recordsList:loadStatus.title",
+      style: { minWidth: 10 },
+      cellRenderer: RecordLoadStatusCellRenderer,
     },
   ];
-  if (viewAsList) {
-    result.push(
-      { key: "dateModifiedRemote", header: "recordsList:dateModifiedRemotely" },
-      { key: "ownerName", header: "recordsList:owner" },
-    );
-  }
-  result.push({
-    key: "loadStatus",
-    header: "recordsList:loadStatus.title",
-    style: { minWidth: 10 },
-    cellRenderer: recordLoadStatusCellRendererByViewMode[screenViewMode],
-  });
-  return result;
 };
 
 const buildSyncStatusFields = ({
   syncStatusLoading,
   syncStatusFetched,
-  viewAsList,
 }: any): DataVisualizerField[] => {
   const result: DataVisualizerField[] = [];
   if (syncStatusLoading || syncStatusFetched) {
     result.push({
       key: "syncStatus",
+      cardRole: "badge",
       header: "common:status",
-      headerIcon: viewAsList ? undefined : "sync",
+      headerIcon: "sync",
       cellRenderer: getSyncStatusCellRenderer({ syncStatusLoading }),
-      style: viewAsList ? undefined : { maxWidth: 24 },
+      style: { maxWidth: 24 },
     });
   }
-  if (syncStatusFetched && viewAsList) {
+  if (syncStatusFetched) {
     result.push({
       key: "dateSynced",
+      cardRole: "footer",
       header: "dataEntry:syncedOn",
       headerWidth: 80,
-      style: { minWidth: 50 },
+      tableDetail: true,
     });
   }
   return result;
@@ -278,7 +282,6 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
   const canCloneRecords = isPrevCycle || cycle === defaultCycleKey;
 
   const screenViewMode = ScreenOptionsSelectors.useCurrentScreenViewMode();
-  const viewAsList = screenViewMode === ScreenViewMode.list;
   const [selectedRecordUuids, setSelectedRecordUuids] = useState([]);
   const [sort, setSort] = useState({ dateModified: Sort.desc });
 
@@ -336,6 +339,10 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
         key: recordSummary.uuid,
         keysObj: valuesByKey,
         summaryAttributesObj: valuesBySummaryAttribute,
+        // sort value for the "errors" field (its cell renderers read the validation)
+        errors: Validations.getErrorsCount(
+          Validations.getValidation(recordSummary),
+        ),
         dateCreated: formatDateToDateTimeDisplay(recordSummary.dateCreated),
         dateModified: formatDateToDateTimeDisplay(recordSummary.dateModified),
         dateModifiedRemote: formatDateToDateTimeDisplay(
@@ -370,10 +377,16 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
   const fields = useMemo(
     (): DataVisualizerField[] => [
       ...buildKeySummaryFields({ rootKeyDefs, rootSummaryDefs, lang }),
-      ...buildErrorsField({ recordsHaveErrorsOrWarnings, viewAsList, screenViewMode }),
-      ...buildListOnlyFields({ viewAsList, recordsHaveErrorsOrWarnings }),
-      ...buildRemoteFields({ showRemoteProps, viewAsList, screenViewMode }),
-      ...buildSyncStatusFields({ syncStatusLoading, syncStatusFetched, viewAsList }),
+      ...buildErrorsField({
+        recordsHaveErrorsOrWarnings,
+        screenViewMode,
+      }),
+      ...buildDetailFields({ screenViewMode, recordsHaveErrorsOrWarnings }),
+      ...buildRemoteFields({ showRemoteProps }),
+      ...buildSyncStatusFields({
+        syncStatusLoading,
+        syncStatusFetched,
+      }),
     ],
     [
       lang,
@@ -384,7 +397,6 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
       showRemoteProps,
       syncStatusFetched,
       syncStatusLoading,
-      viewAsList,
     ],
   );
 

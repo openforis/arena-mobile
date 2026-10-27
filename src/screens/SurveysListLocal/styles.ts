@@ -7,6 +7,10 @@ export default StyleSheet.create({
   buttonsBar: {
     justifyContent: "space-evenly",
   },
+  currentSurveyBadge: {
+    alignItems: "center",
+    gap: 4,
+  },
   importButton: {
     alignSelf: "center",
     margin: 10,

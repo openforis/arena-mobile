@@ -34,6 +34,7 @@ export default {
   newItemWithParam: "新規{{item}}",
   no: "いいえ",
   noItemsMatchingSearch: "検索に一致する項目がありません",
+  none: "なし",
   notEnoughDiskSpace:
     "ディスクの空き容量が不足しています（さらに{{requiredSpace}}必要です）",
   ok: "OK",
@@ -48,6 +49,7 @@ export default {
   size: "サイズ",
   sizeAvailable: "{{size}} 利用可能",
   somethingWentWrong: "問題が発生しました：{{error}}",
+  sortBy: "並べ替え",
   srs: "SRS",
   status: "状態",
   stop: "停止",
