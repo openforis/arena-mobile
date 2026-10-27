@@ -39,6 +39,7 @@ import {
 import { ArrayUtils } from "utils";
 
 import { RecordErrorIcon } from "./RecordErrorIcon";
+import { RecordReadOnlyIcon } from "./RecordReadOnlyIcon";
 import { RecordSyncStatusIcon } from "./RecordSyncStatusIcon";
 import { RecordListConstants } from "./recordListConstants";
 
@@ -209,6 +210,22 @@ const buildRemoteFields = ({
   return result;
 };
 
+const buildReadOnlyFields = ({
+  recordsHaveReadOnly,
+}: {
+  recordsHaveReadOnly: boolean;
+}): DataVisualizerField[] =>
+  recordsHaveReadOnly
+    ? [
+        {
+          key: "readOnly",
+          header: "recordsList:readOnly",
+          cellRenderer: RecordReadOnlyIcon,
+          style: { maxWidth: 24 },
+        },
+      ]
+    : [];
+
 const buildSyncStatusFields = ({
   syncStatusLoading,
   syncStatusFetched,
@@ -287,6 +304,11 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     setSelectedRecordUuids([]);
     onSelectedRecordUuidsChange?.([]);
   }, [records, onSelectedRecordUuidsChange]);
+
+  const recordsHaveReadOnly = useMemo(
+    () => records.some((r: any) => r.readOnly),
+    [records],
+  );
 
   const recordsHaveErrorsOrWarnings = useMemo(
     () =>
@@ -374,10 +396,12 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
       ...buildListOnlyFields({ viewAsList, recordsHaveErrorsOrWarnings }),
       ...buildRemoteFields({ showRemoteProps, viewAsList, screenViewMode }),
       ...buildSyncStatusFields({ syncStatusLoading, syncStatusFetched, viewAsList }),
+      ...buildReadOnlyFields({ recordsHaveReadOnly }),
     ],
     [
       lang,
       recordsHaveErrorsOrWarnings,
+      recordsHaveReadOnly,
       rootKeyDefs,
       rootSummaryDefs,
       screenViewMode,

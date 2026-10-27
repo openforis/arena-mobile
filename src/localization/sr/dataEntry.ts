@@ -1,6 +1,8 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  recordReadOnlyOfAnotherUserGroup:
+    "Ovaj zapis pripada drugoj grupi korisnika: može samo da se pregleda. Klonirajte ga da biste ga mijenjali",
   autoSync: {
     checkbox: "Automatska sinhronizacija",
     synced: "Automatski sinhronizovano zapisa: {{count}}",

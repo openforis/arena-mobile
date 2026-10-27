@@ -183,6 +183,8 @@ const selectAutoSyncCandidates = ({
   const now = Date.now();
 
   return records.filter((record: any) => {
+    // records of other user groups cannot be uploaded
+    if (record.readOnly) return false;
     if (!autoSyncSafeStatuses.has(record.syncStatus)) return false;
     if (!errorsAllowed && hasErrors(record)) return false;
 
@@ -215,6 +217,7 @@ const selectAutoMergeCandidates = ({
 
   return records.filter(
     (record: any) =>
+      !record.readOnly &&
       sameRecordMergeableStatuses.has(record.syncStatus) &&
       (errorsAllowed || !hasErrors(record)) &&
       (record.uuid !== currentlyEditedRecordUuid ||

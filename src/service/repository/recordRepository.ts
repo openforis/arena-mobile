@@ -50,6 +50,7 @@ const insertColumns = [
   "owner_name",
   "load_status",
   "origin",
+  "read_only",
   ...keyColumnNames,
   ...summaryAttributesColumnNames,
 ];
@@ -59,7 +60,7 @@ const keyColumnsSet = toColumnsSet(keyColumnNames);
 const summaryAttributesColumnNamesJoint =
   summaryAttributesColumnNames.join(", ");
 const summaryColumnsSet = toColumnsSet(summaryAttributesColumnNames);
-const summarySelectFieldsJoint = `id, uuid, date_created, date_modified, date_modified_remote, date_synced, cycle, owner_uuid, owner_name, load_status, origin, ${keyColumnNamesJoint}, ${summaryAttributesColumnNamesJoint}`;
+const summarySelectFieldsJoint = `id, uuid, date_created, date_modified, date_modified_remote, date_synced, cycle, owner_uuid, owner_name, load_status, origin, read_only, ${keyColumnNamesJoint}, ${summaryAttributesColumnNamesJoint}`;
 const summarySelectFieldsJointWithValidation = `${summarySelectFieldsJoint}, json(content) ->> 'validation' AS validation`;
 
 const toKeyOrSummaryColValue = (value: any) => {
@@ -297,6 +298,7 @@ const insertRecord = async ({
       ownerName,
       loadStatus,
       RecordOrigin.local,
+      0,
       ...keyColumnsValues,
       ...summaryAttributesColumnValues,
     ],
@@ -342,6 +344,7 @@ const insertRecordSummaries = async ({
           ownerName,
           loadStatus,
           origin,
+          recordSummary.readOnly ? 1 : 0,
           ...keyColumnsValues,
           ...summaryAttributesColumnValues,
         ],
@@ -371,6 +374,7 @@ const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = async ({
       owner_name = ?,
       date_modified_remote = ?, 
       date_synced = ?,
+      read_only = ?,
       ${keyColumnsSet},
       ${summaryColumnsSet}
     WHERE survey_id = ? AND uuid = ?`,
@@ -379,6 +383,7 @@ const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = async ({
       ownerName,
       fixDatetime(dateModified),
       Dates.nowFormattedForStorage(),
+      recordSummary.readOnly ? 1 : 0,
       ...keyColumnsValues,
       ...summaryColumnValues,
       survey.id,
@@ -483,6 +488,23 @@ const updateRecordWithContentMergedFromRemote = async ({
     surveyId: survey.id,
     dateModifiedRemoteByUuid: { [record.uuid]: record.dateModified },
   });
+};
+
+const updateRecordsReadOnly = async ({
+  surveyId,
+  recordUuids,
+  readOnly,
+}: {
+  surveyId: number;
+  recordUuids: string[];
+  readOnly: boolean;
+}) => {
+  if (recordUuids.length === 0) return;
+  const sql = `UPDATE record
+  SET read_only = ?
+  WHERE survey_id = ?
+    AND uuid IN (${DbUtils.quoteValues(recordUuids)})`;
+  return dbClient.runSql(sql, [readOnly ? 1 : 0, surveyId]);
 };
 
 const updateRecordsDateSync = async ({ surveyId, recordUuids }: any) => {
@@ -688,6 +710,7 @@ const rowToRecord =
       : Objects.camelize(row, { skip: ["content"] });
 
     result.id = row.id;
+    result.readOnly = !!row.read_only;
 
     // fix record dates format
     result.dateModified = fixDatetime(result.dateModified);
@@ -734,6 +757,7 @@ export const RecordRepository = {
   updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely,
   updateRecordsDateSync,
   updateRecordsDateModifiedRemote,
+  updateRecordsReadOnly,
   updateRecordsMergedInto,
   fetchRecordsFileUuids,
   fetchNodeValuesByDefUuids,
