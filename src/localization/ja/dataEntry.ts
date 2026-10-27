@@ -1,6 +1,8 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  recordReadOnlyOfAnotherUserGroup:
+    "このレコードは別のユーザーグループに属しているため、閲覧のみ可能です。編集するには複製してください",
   autoSync: {
     checkbox: "自動同期",
     synced: "{{count}}件のレコードを自動同期しました",

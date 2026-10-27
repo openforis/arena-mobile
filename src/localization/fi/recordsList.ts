@@ -59,6 +59,9 @@ export default {
   },
   origin: { title: "Alkuperäinen", L: "Paikallinen", R: "Palvelin" },
   owner: "Omistaja",
+  readOnly: "Vain luku",
+  readOnlyOfAnotherUserGroup:
+    "Toisen käyttäjäryhmän tietue: sitä voi katsella tai kloonata, mutta ei muokata",
   recordHasErrorsOrWarningsTooltip: "Tietueessa on {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Kaikki tietueet",

@@ -1,6 +1,8 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  recordReadOnlyOfAnotherUserGroup:
+    "ይህ መዝገብ የሌላ የተጠቃሚ ቡድን ነው፤ ማየት ብቻ ይቻላል። ለማርትዕ ይቅዱት",
   autoSync: {
     checkbox: "ራስ-ሰር ማመሳሰል",
     synced: "{{count}} መዝገብ በራስ-ሰር ተመሳስሏል",

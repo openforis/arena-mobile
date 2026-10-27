@@ -1,6 +1,8 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  recordReadOnlyOfAnotherUserGroup:
+    "Rekaman ini milik grup pengguna lain: hanya dapat dilihat. Kloning untuk mengeditnya",
   autoSync: {
     checkbox: "Sinkronisasi otomatis",
     synced: "{{count}} catatan disinkronkan otomatis",

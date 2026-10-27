@@ -58,6 +58,9 @@ export default {
   },
   origin: { title: "منشاء", L: "محلی", R: "از راه دور" },
   owner: "مالک",
+  readOnly: "فقط خواندنی",
+  readOnlyOfAnotherUserGroup:
+    "رکورد گروه کاربری دیگر: قابل مشاهده یا کپی است، اما قابل ویرایش نیست",
   recordHasErrorsOrWarningsTooltip: "این رکورد {{count}} {{itemsTypeText}} دارد",
   recordType: {
     all: "همه رکوردها",

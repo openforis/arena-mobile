@@ -64,6 +64,9 @@ export default {
     R: "Remoto",
   },
   owner: "Proprietário",
+  readOnly: "Somente leitura",
+  readOnlyOfAnotherUserGroup:
+    "Registro de outro grupo de usuários: pode ser visualizado ou clonado, mas não editado",
   recordHasErrorsOrWarningsTooltip: "O registo tem {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Todos os registos",

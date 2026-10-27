@@ -59,6 +59,9 @@ export default {
   },
   origin: { title: "保存元", L: "ローカル", R: "リモート" },
   owner: "所有者",
+  readOnly: "読み取り専用",
+  readOnlyOfAnotherUserGroup:
+    "別のユーザーグループのレコード：閲覧または複製はできますが、編集はできません",
   recordHasErrorsOrWarningsTooltip:
     "記録に{{count}}件の{{itemsTypeText}}があります",
   recordType: {

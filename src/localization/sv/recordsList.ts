@@ -59,6 +59,9 @@ export default {
   },
   origin: { title: "Ursprung", L: "Lokal", R: "Fjärr" },
   owner: "Ägare",
+  readOnly: "Skrivskyddad",
+  readOnlyOfAnotherUserGroup:
+    "Post från en annan användargrupp: den kan visas eller klonas, men inte redigeras",
   recordHasErrorsOrWarningsTooltip: "Posten har {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Alla poster",
