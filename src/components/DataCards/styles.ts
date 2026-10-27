@@ -38,7 +38,8 @@ export const useStyles = () => {
     fieldRow: { alignItems: "center", gap: 8, minHeight: 22 },
     fieldRowValue: { flex: 1 },
     fieldRowValueEmphasized: { fontWeight: "bold" },
-    sortBar: { alignItems: "center", justifyContent: "flex-end", gap: 4 },
+    sortBar: { alignItems: "center", justifyContent: "flex-end", gap: 0 },
+    sortDirectionButton: { margin: 0, marginLeft: -8 },
   });
 };
 

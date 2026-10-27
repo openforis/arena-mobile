@@ -339,6 +339,10 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
         key: recordSummary.uuid,
         keysObj: valuesByKey,
         summaryAttributesObj: valuesBySummaryAttribute,
+        // sort value for the "errors" field (its cell renderers read the validation)
+        errors: Validations.getErrorsCount(
+          Validations.getValidation(recordSummary),
+        ),
         dateCreated: formatDateToDateTimeDisplay(recordSummary.dateCreated),
         dateModified: formatDateToDateTimeDisplay(recordSummary.dateModified),
         dateModifiedRemote: formatDateToDateTimeDisplay(
