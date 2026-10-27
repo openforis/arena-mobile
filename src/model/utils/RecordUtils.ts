@@ -151,7 +151,7 @@ const formatFileValue = ({ value }: any): string => {
   if (!uuidInTextRegex.test(fileName)) return fileName;
   const extension = FileNames.getExtension(fileName).toUpperCase();
   const size = fileSize ? FileSizes.toHumanReadableFileSize(fileSize) : "";
-  return [extension, size].filter(Objects.isNotEmpty).join(" ");
+  return [extension, size].filter((part) => Objects.isNotEmpty(part)).join(" ");
 };
 
 // track length or polygon area
