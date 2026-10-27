@@ -158,6 +158,7 @@ const formatGeoValue = ({ value }: any): string => {
 const formatterByNodeDefType: Partial<
   Record<NodeDefType, (params: any) => string>
 > = {
+  [NodeDefType.boolean]: formatBooleanValue,
   [NodeDefType.coordinate]: formatCoordinateValue,
   [NodeDefType.file]: formatFileValue,
   [NodeDefType.geo]: formatGeoValue,
@@ -186,53 +187,40 @@ const getEntitySummaryValuesByNameFormatted = ({
       entityDef,
       onlyKeys,
     });
-  return summaryDefs.reduce(
-    (acc: Dictionary<string>, summaryDef: NodeDef<any, any>) => {
-      let formattedValue: string;
-      try {
-        const summaryNode = Records.getChildren(
-          entity,
-          summaryDef.uuid,
-        )(record)[0];
-        const typeFormatter =
-          formatterByNodeDefType[NodeDefs.getType(summaryDef)];
-        if (!summaryNode) {
-          formattedValue = "";
-        } else if (NodeDefs.getType(summaryDef) === NodeDefType.boolean) {
-          formattedValue = formatBooleanValue({
-            nodeDef: summaryDef,
-            value: summaryNode.value,
-            t,
-          });
-        } else if (typeFormatter) {
-          formattedValue = typeFormatter({ survey, value: summaryNode.value });
-        } else {
-          formattedValue = NodeValueFormatter.format({
-            survey,
-            cycle,
-            nodeDef: summaryDef,
-            node: summaryNode,
-            value: summaryNode.value,
-            showLabel: true,
-            lang,
-          });
-        }
-      } catch {
-        // ignore it
-        formattedValue = "";
+  const result: Dictionary<string> = {};
+  for (const summaryDef of summaryDefs) {
+    let formattedValue: any;
+    try {
+      const summaryNode = Records.getChildren(
+        entity,
+        summaryDef.uuid,
+      )(record)[0];
+      if (summaryNode) {
+        const formatter: (params: any) => any =
+          formatterByNodeDefType[NodeDefs.getType(summaryDef)] ??
+          NodeValueFormatter.format;
+        formattedValue = formatter({
+          survey,
+          cycle,
+          nodeDef: summaryDef,
+          node: summaryNode,
+          value: summaryNode.value,
+          showLabel: true,
+          lang,
+          t,
+        });
       }
-      if (typeof formattedValue === "object") {
-        formattedValue = JSON.stringify(formattedValue);
-      }
-      if (Objects.isEmpty(formattedValue)) {
-        formattedValue = emptyValue;
-      }
-      acc[NodeDefs.getName(summaryDef)] = formattedValue;
-
-      return acc;
-    },
-    {},
-  );
+    } catch {
+      // ignore it
+    }
+    if (typeof formattedValue === "object") {
+      formattedValue = JSON.stringify(formattedValue);
+    }
+    result[NodeDefs.getName(summaryDef)] = Objects.isEmpty(formattedValue)
+      ? emptyValue
+      : formattedValue;
+  }
+  return result;
 };
 
 const getApplicableChildrenEntityDefs = ({
