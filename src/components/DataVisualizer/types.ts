@@ -12,8 +12,15 @@ export type DataVisualizerCellRenderer = (
   props: DataVisualizerCellProps,
 ) => React.ReactElement | null;
 
+// where a field is shown in the cards/compact views (default: detail)
+export type DataVisualizerCardRole =
+  "title" | "subtitle" | "badge" | "body" | "detail" | "footer";
+
 export type DataVisualizerField = {
   key: string;
+  cardRole?: DataVisualizerCardRole;
+  // show the header next to the value in the card title (e.g. record keys)
+  cardShowLabel?: boolean;
   cellRenderer?: DataVisualizerCellRenderer;
   header: string;
   // shown instead of the (translated) header text in the table header, to save horizontal
@@ -23,6 +30,8 @@ export type DataVisualizerField = {
   headerLabelVariant?: string;
   headerWidth?: number;
   optional?: boolean;
+  // not shown as a column in table view, only in the expanded row
+  tableDetail?: boolean;
   sortable?: boolean;
   style?: StyleProp<ViewStyle>;
   textVariant?: string;

@@ -12,6 +12,7 @@ const keys = {
 const surveyPreferencesKeys = {
   language: "language",
   lastEditedPageByRecordId: "lastEditedPageByRecordId",
+  entityListColumnsByEntityDefUuid: "entityListColumnsByEntityDefUuid",
   userGroup: "userGroup",
 };
 
@@ -52,6 +53,16 @@ const getSurveyRecordLastEditedPage = async (surveyId: any, recordId: any) => {
     surveyPreferencesKeys.lastEditedPageByRecordId,
     recordId,
   ])(surveyPreferences);
+};
+
+const getSurveyEntityListColumns = async (
+  surveyId: any,
+): Promise<Record<string, string[]>> => {
+  const surveyPreferences = await getPrereferencesBySurveyId(surveyId);
+  return (
+    surveyPreferences[surveyPreferencesKeys.entityListColumnsByEntityDefUuid] ??
+    {}
+  );
 };
 
 const getLastUsedMapAppId = async (): Promise<string | undefined> =>
@@ -112,6 +123,21 @@ const setSurveyRecordLastEditedPage = async (surveyId: any, recordId: any, page:
   })
   );
 
+const setSurveyEntityListColumns = async (
+  surveyId: any,
+  entityDefUuid: string,
+  columns: string[] | null,
+) =>
+  updateSurveyPreferences(surveyId, (surveyPreferences: any) => {
+    const path = [
+      surveyPreferencesKeys.entityListColumnsByEntityDefUuid,
+      entityDefUuid,
+    ];
+    return columns
+      ? Objects.assocPath({ obj: surveyPreferences, path, value: columns })
+      : Objects.dissocPath({ obj: surveyPreferences, path });
+  });
+
 const clearSurveyRecordLastEditedPage = async (surveyId: any, recordId: any) =>
   updateSurveyPreferences(surveyId, (surveyPreferences: any) => Objects.dissocPath({
     obj: surveyPreferences,
@@ -152,10 +178,12 @@ export const PreferencesService = {
   setLastUsedMapAppId,
   getWhatsNewSeenIds,
   setWhatsNewSeenIds,
+  getSurveyEntityListColumns,
   getSurveyPreferredLanguage,
   getSurveyRecordLastEditedPage,
   getSurveyUserGroup,
   clearCurrentSurveyId,
+  setSurveyEntityListColumns,
   setSurveyPreferredLanguage,
   setSurveyRecordLastEditedPage,
   setSurveyUserGroup,

@@ -4,7 +4,8 @@ import { IconButton as RNPIconButton } from "react-native-paper";
 import { useButtonOnPress } from "./useButtonPress";
 import { ButtonProps } from "./Button";
 
-type IconButtonMode = "outlined" | "contained" | "contained-tonal";
+// "text": no container, icon only
+type IconButtonMode = "outlined" | "contained" | "contained-tonal" | "text";
 
 export type IconButtonProps = ButtonProps & {
   mode?: IconButtonMode;
@@ -39,7 +40,7 @@ export const IconButton = (props: IconButtonProps) => {
       icon={icon}
       iconColor={iconColor}
       loading={actualLoading}
-      mode={mode}
+      mode={mode === "text" ? undefined : mode}
       onPress={onPress}
       size={size}
       {...otherProps}

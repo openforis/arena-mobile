@@ -9,6 +9,7 @@ import { ConfirmActions } from "../confirm";
 import { DeviceInfoSelectors } from "../deviceInfo";
 import { loginAndSetUser } from "../remoteConnection/actionsLoginAndSetUser";
 import { RemoteConnectionSelectors } from "../remoteConnection/selectors";
+import { SurveyOptionsActions } from "../surveyOptions/actions";
 import { SurveyActionTypes } from "./actionTypes";
 import { SurveySelectors } from "./selectors";
 import { log } from "utils/Logger";
@@ -94,6 +95,9 @@ const setCurrentSurvey =
         preferredLanguage,
       });
       await PreferencesService.setCurrentSurveyId(survey.id);
+      await dispatch(
+        SurveyOptionsActions.fetchEntityListColumns({ surveyId: survey.id }),
+      );
       dispatch(fetchCurrentSurveyUserGroup({ survey }));
       navigation?.navigate(screenKeys.recordsList);
     };

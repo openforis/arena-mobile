@@ -36,6 +36,7 @@ export default {
   newItemWithParam: "Novo: {{item}}",
   no: "Ne",
   noItemsMatchingSearch: "Nema stavki koje odgovaraju pretrazi",
+  none: "Ništa",
   notEnoughDiskSpace:
     "Nema dovoljno slobodnog prostora na disku (potrebno je još {{requiredSpace}})",
   ok: "U redu",
@@ -50,6 +51,7 @@ export default {
   size: "Veličina",
   sizeAvailable: "Dostupno: {{size}}",
   somethingWentWrong: "Nešto nije u redu: {{error}}",
+  sortBy: "Sortiraj po",
   srs: "SRS",
   status: "Status",
   stop: "Zaustavi",

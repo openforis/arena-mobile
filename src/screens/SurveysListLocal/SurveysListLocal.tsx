@@ -1,10 +1,13 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-import { Dates } from "@openforis/arena-core";
+import { DateFormats, Dates } from "@openforis/arena-core";
 import {
   Button,
   DataVisualizer,
+  DataVisualizerCellProps,
+  DataVisualizerField,
+  Icon,
   HView,
   Loader,
   LoadingIcon,
@@ -20,6 +23,7 @@ import {
   RemoteConnectionUtils,
   SurveyActions,
   ScreenOptionsSelectors,
+  SurveySelectors,
   useConfirm,
   useAppDispatch,
 } from "state";
@@ -33,6 +37,31 @@ import styles from "./styles";
 const { checkLoggedInUser } = RemoteConnectionUtils;
 
 const minSurveysToShowSearchBar = 5;
+
+const LoadingIconCellRenderer = (_props: DataVisualizerCellProps) => (
+  <LoadingIcon />
+);
+
+const CurrentSurveyBadge = ({ item }: DataVisualizerCellProps) => {
+  const currentSurveyId = SurveySelectors.useCurrentSurveyId();
+  if (item.id !== currentSurveyId) return null;
+  return (
+    <HView style={styles.currentSurveyBadge}>
+      <Icon source="check-circle" color="green" />
+      <Text textKey="surveys:currentSurvey" variant="labelMedium" />
+    </HView>
+  );
+};
+
+const DatePublishedCellRenderer = ({ item }: DataVisualizerCellProps) => (
+  <Text variant="bodySmall">
+    {Dates.convertDate({
+      dateStr: item.dateModified,
+      formatFrom: DateFormats.datetimeStorage,
+      formatTo: DateFormats.datetimeDisplay,
+    })}
+  </Text>
+);
 
 const determineSurveyStatus = ({ survey, remoteSurvey }: any) => {
   if (survey.uuid === SurveyService.demoSurveyUuid) return null;
@@ -90,6 +119,7 @@ export const SurveysListLocal = () => {
       surveys: _surveys.map((survey: any) => ({
         ...survey,
         key: survey.id,
+        labelOrName: survey.label || survey.name,
       })),
       loading: false,
       updateStatusChecked: false,
@@ -192,30 +222,58 @@ export const SurveysListLocal = () => {
     }
   }, [dispatch, navigation]);
 
+  const viewAsCards = screenViewMode === ScreenViewMode.cards;
+
   const fields = useMemo(() => {
-    const _fields: any[] = [
-      {
-        key: "name",
-        header: "common:name",
-      },
-      {
-        key: "label",
-        header: "common:label",
-      },
-    ];
+    const _fields: DataVisualizerField[] = viewAsCards
+      ? [
+          { key: "labelOrName", header: "common:label", cardRole: "title" },
+          { key: "name", header: "common:name", cardRole: "subtitle" },
+          {
+            key: "current",
+            header: "surveys:currentSurvey",
+            cardRole: "badge",
+            cellRenderer: CurrentSurveyBadge,
+          },
+          {
+            key: "dateModified",
+            header: "surveys:publishedOn",
+            cardRole: "footer",
+            cellRenderer: DatePublishedCellRenderer,
+          },
+        ]
+      : [
+          {
+            key: "name",
+            header: "common:name",
+          },
+          {
+            key: "label",
+            header: "common:label",
+          },
+          {
+            key: "dateModified",
+            header: "surveys:publishedOn",
+            tableDetail: true,
+            cellRenderer: DatePublishedCellRenderer,
+          },
+        ];
     if (updateStatusChecked || updateStatusLoading) {
       _fields.push({
         key: "status",
+        cardRole: "badge",
         header: "common:status",
         style: determineStatusFieldStyle({
           screenViewMode,
           updateStatusLoading,
         }),
-        cellRenderer: updateStatusLoading ? LoadingIcon : SurveyStatusCell,
+        cellRenderer: updateStatusLoading
+          ? LoadingIconCellRenderer
+          : SurveyStatusCell,
       });
     }
     return _fields;
-  }, [screenViewMode, updateStatusChecked, updateStatusLoading]);
+  }, [screenViewMode, updateStatusChecked, updateStatusLoading, viewAsCards]);
 
   if (loading) return <Loader />;
 

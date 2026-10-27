@@ -19,6 +19,7 @@ import SurveysListLocal from "./SurveysListLocal";
 import SurveysListRemote from "./SurveysListRemote";
 
 import { screenKeys } from "./screenKeys";
+import { ScreenViewMode } from "model";
 
 const screenDefaults = {
   hasBack: true,
@@ -90,6 +91,7 @@ export const screens = {
     ...screenDefaults,
     hasRecordsMap: true,
     hasToggleScreenView: true,
+    viewModes: [ScreenViewMode.table, ScreenViewMode.cards],
     title: "dataEntry:listOfRecords",
     component: RecordsList,
   },
@@ -128,12 +130,14 @@ export const screens = {
   [screenKeys.surveysListLocal]: {
     ...screenDefaults,
     hasToggleScreenView: true,
+    viewModes: [ScreenViewMode.table, ScreenViewMode.cards],
     title: "surveys:surveysInTheDevice",
     component: SurveysListLocal,
   },
   [screenKeys.surveysListRemote]: {
     ...screenDefaults,
     hasToggleScreenView: true,
+    viewModes: [ScreenViewMode.table, ScreenViewMode.cards],
     title: "surveys:surveysInTheCloud",
     component: SurveysListRemote,
   },

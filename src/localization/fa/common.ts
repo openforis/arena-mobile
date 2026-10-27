@@ -35,6 +35,7 @@ export default {
   newItemWithParam: "جدید {{item}}",
   no: "خیر",
   noItemsMatchingSearch: "موردی مطابق با جستجوی شما یافت نشد",
+  none: "هیچ‌کدام",
   notEnoughDiskSpace:
     "فضای خالی دیسک کافی نیست (به {{requiredSpace}} فضای بیشتر نیاز است)",
   ok: "باشه",
@@ -49,6 +50,7 @@ export default {
   size: "اندازه",
   sizeAvailable: "{{size}} در دسترس",
   somethingWentWrong: "مشکلی رخ داده است: {{error}}",
+  sortBy: "مرتب‌سازی بر اساس",
   srs: "SRS",
   status: "وضعیت",
   stop: "توقف",
