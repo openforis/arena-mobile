@@ -87,7 +87,11 @@ const write = (level: LogLevel, ...args: any[]) => {
   const msg = args.map(argToString).join(" ");
   const logFunc = _log?.[level];
   try {
-    logFunc ? logFunc(msg) : console.log(msg);
+    if (logFunc) {
+      logFunc(msg);
+    } else {
+      console.log(msg);
+    }
   } catch (error) {
     console.log("Error logging message", error, msg);
   }

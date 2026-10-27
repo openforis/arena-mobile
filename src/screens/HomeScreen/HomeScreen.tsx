@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 
 import { GpsLockingEnabledWarning } from "appComponents/GpsLockingEnabledWarning";
 import { VersionNumberInfoButton } from "appComponents/VersionNumberInfoButton";
@@ -7,7 +7,6 @@ import { WhatsNewUnseenItemsDialog } from "appComponents/WhatsNew";
 import { ScreenView, VView } from "components";
 
 import { PreviewMode } from "utils";
-import { screenKeys } from "../screenKeys";
 import { HomeAccountItem } from "./HomeAccountItem";
 import { HomeListItem } from "./HomeListItem";
 import { NoSurveyBanner } from "./NoSurveyBanner";
@@ -21,7 +20,7 @@ const surveysIconColor = "#7E57C2";
 const surveysIconBackgroundColor = "rgba(126, 87, 194, 0.13)";
 
 export const HomeScreen = () => {
-  const navigation = useNavigation();
+  const navigator = useNavigator();
 
   const {
     surveySelected,
@@ -50,7 +49,7 @@ export const HomeScreen = () => {
           iconBackgroundColor={surveysIconBackgroundColor}
           iconColor={surveysIconColor}
           onPress={() =>
-            navigation.navigate(screenKeys.surveysListLocal as never)
+            navigator.navigateToSurveysListLocal()
           }
           testID="home-surveys-button"
           titleKey="home:surveys"

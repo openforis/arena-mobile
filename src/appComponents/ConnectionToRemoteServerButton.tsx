@@ -1,8 +1,7 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 import { StyleProp, ViewStyle } from "react-native";
 
 import { Button } from "components";
-import { screenKeys } from "screens";
 
 type Props = {
   style?: StyleProp<ViewStyle>;
@@ -10,13 +9,13 @@ type Props = {
 
 export const ConnectionToRemoteServerButton = (props: Props) => {
   const { style = null } = props;
-  const navigation = useNavigation();
+  const navigator = useNavigator();
 
   return (
     <Button
       labelVariant="bodyLarge"
       onPress={() =>
-        navigation.navigate(screenKeys.settingsRemoteConnection as never)
+        navigator.navigateToSettingsRemoteConnection()
       }
       style={style}
       textKey="settings:connectionToServer"

@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 
 import {
   Button,
@@ -49,7 +50,7 @@ const determineTestResultTextKey = ({
 export const CustomMapLayerEditorScreen = () => {
   log.debug("rendering CustomMapLayerEditorScreen");
 
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const route = useRoute();
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
@@ -144,11 +145,11 @@ export const CustomMapLayerEditorScreen = () => {
     setSaving(true);
     try {
       await dispatch(SettingsActions.saveCustomMapLayer({ layer, apiKey }));
-      navigation.goBack();
+      navigator.goBack();
     } finally {
       setSaving(false);
     }
-  }, [apiKey, confirm, dispatch, layer, navigation, urlTemplatePrev, valid]);
+  }, [apiKey, confirm, dispatch, layer, navigator, urlTemplatePrev, valid]);
 
   const { testing, result: testResult } = testState;
 

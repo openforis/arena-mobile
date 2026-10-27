@@ -1,6 +1,7 @@
 import { Objects, User } from "@openforis/arena-core";
 
 import { i18n } from "localization";
+import type { Navigator } from "navigation/navigator";
 import { UserLogoutOptions } from "model/UserLogoutOptions";
 import {
   AuthService,
@@ -10,7 +11,6 @@ import {
   SurveyService,
   UserService,
 } from "service";
-import { screenKeys } from "screens/screenKeys";
 import { log } from "utils";
 
 import { AutoSyncActions } from "../autoSync";
@@ -28,7 +28,7 @@ import { invalidCredentialsError, LoginResponse } from "service/authService";
 const { USER_SET, USER_PROFILE_ICON_INFO_SET } = RemoteConnectionActionTypes;
 
 const confirmGoToConnectionToRemoteServer =
-  ({ navigation }: any) =>
+  ({ navigator }: any) =>
     (dispatch: any) => {
       dispatch(
         ConfirmActions.show({
@@ -36,7 +36,7 @@ const confirmGoToConnectionToRemoteServer =
           messageKey: "settingsRemoteConnection:errorConnectingWithServer",
           titleKey: "authService:loginRequired",
           onConfirm: () =>
-            navigation.navigate(screenKeys.settingsRemoteConnection),
+            navigator.navigateToSettingsRemoteConnection(),
         }),
       );
     };
@@ -47,14 +47,14 @@ const onLoginResponseSuccessful = async ({
   serverUrl,
   showBack,
   dispatch,
-  navigation,
+  navigator,
 }: {
   user: User;
   email: string | undefined;
   serverUrl: string;
   showBack: boolean | undefined;
   dispatch: any;
-  navigation: any;
+  navigator: Navigator;
 }) => {
   const userEmail = user.email ?? email;
   await AsyncStorageUtils.setItem(asyncStorageKeys.loggedInUser, user);
@@ -78,7 +78,7 @@ const onLoginResponseSuccessful = async ({
           titleKey: "authService:loginSuccessful",
           confirmButtonTextKey: "common:continue",
           cancelButtonTextKey: "common:close",
-          onConfirm: navigation.goBack,
+          onConfirm: navigator.goBack,
         }),
       );
     }, 0);
@@ -87,7 +87,7 @@ const onLoginResponseSuccessful = async ({
 
 const onLoginResponse = async ({
   dispatch,
-  navigation,
+  navigator,
   res,
   serverUrl,
   email,
@@ -96,7 +96,7 @@ const onLoginResponse = async ({
   showBack,
 }: {
   dispatch: any;
-  navigation: any;
+  navigator: Navigator;
   res: LoginResponse;
   serverUrl: string;
   email?: string;
@@ -112,7 +112,7 @@ const onLoginResponse = async ({
       serverUrl,
       showBack,
       dispatch,
-      navigation,
+      navigator,
     });
   } else if (
     twoFactorRequired ||
@@ -131,7 +131,7 @@ const onLoginResponse = async ({
         onConfirm: async ({ textInputValue }) => {
           await dispatch(
             login({
-              navigation,
+              navigator,
               serverUrl,
               email: email!,
               password: password!,
@@ -167,14 +167,14 @@ const onLoginResponse = async ({
 
 const login =
   ({
-    navigation,
+    navigator,
     serverUrl,
     email,
     password,
     twoFactorToken,
     showBack = false,
   }: {
-    navigation: any;
+    navigator: Navigator;
     serverUrl: string;
     email: string;
     password: string;
@@ -196,18 +196,18 @@ const login =
         serverUrl,
         dispatch,
         showBack,
-        navigation,
+        navigator,
       });
     };
 
 const loginWithTempAuthToken =
   ({
-    navigation,
+    navigator,
     serverUrl,
     token,
     showBack = false,
   }: {
-    navigation: any;
+    navigator: Navigator;
     serverUrl: string;
     token: string;
     showBack?: boolean;
@@ -217,7 +217,7 @@ const loginWithTempAuthToken =
       await onLoginResponse({
         res,
         dispatch,
-        navigation,
+        navigator,
         serverUrl,
         showBack,
       });

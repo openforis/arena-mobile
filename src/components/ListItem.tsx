@@ -6,6 +6,7 @@ type IconRenderProps = { color: string; style?: StyleProp<ViewStyle> };
 
 // defined outside the component so the render functions aren't nested components
 const createIconRenderer =
+  // eslint-disable-next-line react/display-name -- a render function, not a component
   (icon: string, iconColor?: string) => (iconProps: IconRenderProps) => (
     <List.Icon
       {...iconProps}

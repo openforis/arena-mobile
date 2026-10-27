@@ -1,9 +1,8 @@
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { StyleSheet } from "react-native";
 import { NavigationContext } from "@react-navigation/native";
 
 import { Button, HView, Text, VView } from "components";
-import { screenKeys } from "screens/screenKeys";
 import {
   RemoteConnectionActions,
   RemoteConnectionSelectors,
@@ -11,6 +10,8 @@ import {
   useAppDispatch,
 } from "state";
 import { AMConstants } from "utils";
+
+import { createNavigator, Navigator } from "./navigator";
 
 import { UserProfileIcon } from "./UserProfileIcon";
 
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
 });
 
 type UserSummaryProps = {
-  navigation?: any;
+  navigator?: Navigator | null;
   onButtonPress?: (() => void) | null;
   profileIconSize?: number;
   showLogoutButton?: boolean;
@@ -30,7 +31,7 @@ type UserSummaryProps = {
 };
 
 export const UserSummary = ({
-  navigation: navigationProp = null,
+  navigator: navigatorProp = null,
   onButtonPress = null,
   profileIconSize = 60,
   showLogoutButton = true,
@@ -40,12 +41,17 @@ export const UserSummary = ({
   const user = RemoteConnectionSelectors.useLoggedInUser();
   const settings = SettingsSelectors.useSettings();
   const { serverUrl } = settings;
-  const navigation = (useContext(NavigationContext) ?? navigationProp)!;
+  const navigationContext = useContext(NavigationContext);
+  const navigator = useMemo(
+    () =>
+      navigationContext ? createNavigator(navigationContext) : navigatorProp!,
+    [navigationContext, navigatorProp],
+  );
 
   const onUserIconPress = useCallback(() => {
-    navigation.navigate(screenKeys.settingsRemoteConnection as never);
+    navigator.navigateToSettingsRemoteConnection();
     onButtonPress?.();
-  }, [navigation, onButtonPress]);
+  }, [navigator, onButtonPress]);
 
   const onLogoutPress = useCallback(() => {
     dispatch(RemoteConnectionActions.logout());

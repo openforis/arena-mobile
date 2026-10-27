@@ -7,7 +7,7 @@ import { Objects, Promises, Strings, UUIDs } from "@openforis/arena-core";
 
 import { Environment } from "./Environment";
 
-let { unzip, zip }: any = Environment.isExpoGo
+const { unzip, zip }: any = Environment.isExpoGo
   ? {}
   : (require("react-native-zip-archive") ?? {});
 
@@ -199,7 +199,7 @@ const readAsBytes = (
   return Promise.resolve(fileSize ? fileHandle.readBytes(fileSize) : null);
 };
 
-const readJsonFromFile = async ({ fileUri }: any): Promise<Object | null> => {
+const readJsonFromFile = async ({ fileUri }: any): Promise<object | null> => {
   if (await exists(fileUri)) {
     const content = await readAsString(fileUri);
     return JSON.parse(content);

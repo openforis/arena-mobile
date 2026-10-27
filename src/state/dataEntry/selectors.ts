@@ -354,7 +354,7 @@ const selectCurrentPageEntity = (state: any): RecordCurrentPageEntity => {
       parentEntityUuid: undefined,
       entityDef: rootDef,
       entityDefUuid: rootDef.uuid,
-      entityUuid: Records.getRoot(record)?.uuid!,
+      entityUuid: Records.getRoot(record)!.uuid,
     };
   }
   if (!entityDefUuid) {

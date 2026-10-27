@@ -15,7 +15,6 @@ import { RemoteJobWatcherJob } from "./remoteJobWatcherJob";
 // this (rather than running them as two separate job-monitor calls) gets one continuous 0-100%
 // progress bar for free from JobBase's own inner-job progress weighting, instead of needing to
 // fake it the way the zip-preparation -> this bridge still does.
-// @ts-ignore: execute method not implemented but not needed, since inner jobs are provided
 export class RecordsUploadAndProcessJob extends JobMobile<RecordsUploadAndProcessJobContext> {
   constructor({
     user,

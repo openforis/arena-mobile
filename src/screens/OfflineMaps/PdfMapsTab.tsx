@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 import * as DocumentPicker from "expo-document-picker";
 
 import { DateFormats, Dates } from "@openforis/arena-core";
@@ -16,7 +16,6 @@ import {
 } from "components";
 import { useNavigationFocus, useToast } from "hooks";
 import { PdfMap } from "model";
-import { screenKeys } from "screens/screenKeys";
 import { PdfMapsService } from "service";
 import {
   SettingsActions,
@@ -109,7 +108,7 @@ const PdfMapItem = ({
 export const PdfMapsTab = () => {
   log.debug("rendering PdfMapsTab");
 
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
   const toaster = useToast();
@@ -148,25 +147,21 @@ export const PdfMapsTab = () => {
       });
       const asset = assets?.[0];
       if (canceled || !asset) return;
-      navigation.navigate(
-        ...([
-          screenKeys.pdfMapImport,
-          { fileUri: asset.uri, fileName: asset.name },
-        ] as never),
-      );
+      navigator.navigateToPdfMapImport({
+        fileUri: asset.uri,
+        fileName: asset.name,
+      });
     } catch (error) {
       log.error("error selecting PDF file", error);
       toaster("pdfMaps:import.errorReading", { details: String(error) });
     }
-  }, [navigation, toaster]);
+  }, [navigator, toaster]);
 
   const onViewPress = useCallback(
     (pdfMap: PdfMap) => {
-      navigation.navigate(
-        ...([screenKeys.pdfMapViewer, { mapId: pdfMap.id }] as never),
-      );
+      navigator.navigateToPdfMapViewer({ mapId: pdfMap.id });
     },
-    [navigation],
+    [navigator],
   );
 
   const onVisibleChange = useCallback(

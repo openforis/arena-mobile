@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 
 import { useIsNetworkConnected, useToast } from "hooks";
 import {
@@ -22,7 +22,7 @@ type Props = {
 // same "Send data" flow as the records list (confirmation, conflicts resolution, upload job)
 export const useHomeSync = ({ onSyncEnd, records }: Props) => {
   const dispatch = useAppDispatch();
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const toaster = useToast();
   const networkAvailable = useIsNetworkConnected();
   const survey = SurveySelectors.useCurrentSurvey();
@@ -41,7 +41,7 @@ export const useHomeSync = ({ onSyncEnd, records }: Props) => {
         await fetchRecordsWithSyncStatus({
           cycle,
           dispatch,
-          navigation,
+          navigator,
           onlyLocal: true,
           survey,
         });
@@ -54,7 +54,7 @@ export const useHomeSync = ({ onSyncEnd, records }: Props) => {
         syncStatusFetched,
         syncStatusLoading: false,
       };
-    }, [cycle, dispatch, navigation, onSyncEnd, survey]);
+    }, [cycle, dispatch, navigator, onSyncEnd, survey]);
 
   const { onSendDataPress } = useRecordsExport({
     cycle,

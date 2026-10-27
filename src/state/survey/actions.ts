@@ -1,7 +1,7 @@
 import { Surveys } from "@openforis/arena-core";
 
 import { i18n } from "localization";
-import { screenKeys } from "screens/screenKeys";
+import type { Navigator } from "navigation/navigator";
 import { PreferencesService, SurveyService } from "service";
 import { MessageActions } from "state/message";
 
@@ -55,7 +55,7 @@ const fetchCurrentSurveyUserGroup =
       const { isNetworkConnected } = DeviceInfoSelectors.selectDeviceInfo(
         getState(),
       );
-      let userGroup = null;
+      let userGroup;
       if (isNetworkConnected) {
         try {
           userGroup = await SurveyService.fetchCurrentUserGroupRemote({ survey });
@@ -87,7 +87,7 @@ const resetCurrentSurveyUserGroup = () => ({
 });
 
 const setCurrentSurvey =
-  ({ survey, preferredLanguage = null, navigation = null }: any) =>
+  ({ survey, preferredLanguage = null, navigator = null }: any) =>
     async (dispatch: any) => {
       dispatch({
         type: CURRENT_SURVEY_SET,
@@ -99,7 +99,7 @@ const setCurrentSurvey =
         SurveyOptionsActions.fetchEntityListColumns({ surveyId: survey.id }),
       );
       dispatch(fetchCurrentSurveyUserGroup({ survey }));
-      navigation?.navigate(screenKeys.recordsList);
+      navigator?.navigateToRecordsList();
     };
 
 const setCurrentSurveyPreferredLanguage =
@@ -118,7 +118,13 @@ const setCurrentSurveyCycle =
     };
 
 const fetchAndSetCurrentSurvey =
-  ({ surveyId, navigation = null }: { surveyId: number; navigation?: any }) =>
+  ({
+    surveyId,
+    navigator = null,
+  }: {
+    surveyId: number;
+    navigator?: Navigator | null;
+  }) =>
     async (dispatch: any) => {
       const survey = await SurveyService.fetchSurveyById(surveyId);
       if (survey) {
@@ -130,7 +136,7 @@ const fetchAndSetCurrentSurvey =
         }
         const preferredLanguage =
           await PreferencesService.getSurveyPreferredLanguage(surveyId);
-        dispatch(setCurrentSurvey({ survey, preferredLanguage, navigation }));
+        dispatch(setCurrentSurvey({ survey, preferredLanguage, navigator }));
       } else {
         dispatch(
           MessageActions.setMessage({
@@ -212,17 +218,17 @@ const fetchAndSetRemoteSurveyIfOnlyOne =
   };
 
 const _onSurveyInsertOrUpdate =
-  ({ survey, navigation }: any) =>
+  ({ survey, navigator }: any) =>
     (dispatch: any) => {
-      dispatch(setCurrentSurvey({ survey, navigation }));
+      dispatch(setCurrentSurvey({ survey, navigator }));
       dispatch(fetchAndSetLocalSurveys());
     };
 
 const importSurveyRemote =
-  ({ surveyId, navigation }: any) =>
+  ({ surveyId, navigator }: any) =>
     async (dispatch: any) => {
       const survey = await SurveyService.importSurveyRemote({ id: surveyId });
-      dispatch(_onSurveyInsertOrUpdate({ survey, navigation }));
+      dispatch(_onSurveyInsertOrUpdate({ survey, navigator }));
     };
 
 const updateSurveyRemote =
@@ -230,7 +236,7 @@ const updateSurveyRemote =
     surveyId,
     surveyName,
     surveyRemoteId,
-    navigation,
+    navigator,
     confirmMessageKey = "surveys:updateSurveyConfirmMessage",
     onConfirm = null,
     onCancel = null,
@@ -245,7 +251,7 @@ const updateSurveyRemote =
             surveyId,
             surveyRemoteId,
           });
-          await dispatch(_onSurveyInsertOrUpdate({ survey, navigation }));
+          await dispatch(_onSurveyInsertOrUpdate({ survey, navigator }));
         } finally {
           onComplete?.();
         }

@@ -128,7 +128,7 @@ export const useNodeCodeComponentLocalState = ({
         if (node) {
           dispatch(
             DataEntryActions.updateAttribute({
-              uuid: node?.uuid!,
+              uuid: node.uuid,
               value: null,
             }),
           );

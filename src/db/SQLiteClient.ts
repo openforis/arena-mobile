@@ -16,7 +16,7 @@ export default class SQLiteClient {
   name: any;
   privateConnected: boolean;
   privateDb: SQLite.SQLiteDatabase | null;
-  constructor(name: any, migrations: any[], debug = false) {
+  constructor(name: any, migrations: any[], _debug = false) {
     this.name = name;
     this.migrations = migrations;
     this.privateDb = null;
@@ -74,7 +74,7 @@ export default class SQLiteClient {
         throw error;
       }
       throw new Error(
-        `SQLiteClient: failed to connect to database: ${this.name} details: ${error}`
+        `SQLiteClient: failed to connect to database: ${this.name} details: ${error}`, { cause: error }
       );
     }
   }

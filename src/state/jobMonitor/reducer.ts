@@ -25,7 +25,6 @@ const initialState: JobMonitorState = {
 
 const actionHandlers = {
   [JobMonitorActions.JOB_MONITOR_START]: ({
-    state,
     action
   }: any) => ({
     ...initialState,

@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 
 import {
   NodeDef,
@@ -142,7 +142,7 @@ const initialState: RecordValidationReportState = {
 };
 
 export const RecordValidationReport = () => {
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
@@ -199,7 +199,7 @@ export const RecordValidationReport = () => {
             entityDefUuid: dialogNodeDef.uuid,
           }),
         );
-        navigation.goBack();
+        navigator.goBack();
         return;
       }
       setState({
@@ -209,7 +209,7 @@ export const RecordValidationReport = () => {
         dialogParentNodeUuid,
       });
     },
-    [dispatch, navigation],
+    [dispatch, navigator],
   );
 
   return (

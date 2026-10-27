@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 
 import { DateFormats, Dates } from "@openforis/arena-core";
 
@@ -15,7 +15,6 @@ import {
 import { useNavigationFocus } from "hooks";
 import { useTranslation } from "localization";
 import { MapLayers, MapProvider, OfflineMapArea, SettingsModel } from "model";
-import { screenKeys } from "screens/screenKeys";
 import { OfflineMapsService } from "service";
 import {
   SettingsActions,
@@ -128,7 +127,7 @@ const OfflineMapAreaItem = ({
 export const OfflineMapAreasTab = () => {
   log.debug("rendering OfflineMapAreasTab");
 
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
   const downloadArea = useOfflineMapAreaDownload();
@@ -166,16 +165,14 @@ export const OfflineMapAreasTab = () => {
   useNavigationFocus(loadAreas);
 
   const onAddAreaPress = useCallback(() => {
-    navigation.navigate(screenKeys.offlineMapAreaEditor as never);
-  }, [navigation]);
+    navigator.navigateToOfflineMapAreaEditor();
+  }, [navigator]);
 
   const onViewPress = useCallback(
     (area: OfflineMapArea) => {
-      navigation.navigate(
-        ...([screenKeys.offlineMapAreaViewer, { areaId: area.id }] as never),
-      );
+      navigator.navigateToOfflineMapAreaViewer({ areaId: area.id });
     },
-    [navigation],
+    [navigator],
   );
 
   const onDeletePress = useCallback(

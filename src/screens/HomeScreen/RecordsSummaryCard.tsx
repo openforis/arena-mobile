@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 import { useCallback } from "react";
 import { StyleSheet } from "react-native";
 
@@ -7,7 +7,6 @@ import { Button, HView, Surface, Text } from "components";
 import { useEffectiveTheme } from "hooks";
 import { SurveySelectors } from "state";
 
-import { screenKeys } from "../screenKeys";
 import { StatTile } from "./StatTile";
 import { useHomeSync } from "./useHomeSync";
 import { useRecordsSummary } from "./useRecordsSummary";
@@ -31,7 +30,7 @@ const styles = StyleSheet.create({
 });
 
 export const RecordsSummaryCard = () => {
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const theme = useEffectiveTheme();
   const isDemoSurvey = SurveySelectors.useIsCurrentSurveyDemo();
   const {
@@ -48,8 +47,8 @@ export const RecordsSummaryCard = () => {
   });
 
   const onGoToDataEntryPress = useCallback(
-    () => navigation.navigate(screenKeys.recordsList as never),
-    [navigation],
+    () => navigator.navigateToRecordsList(),
+    [navigator],
   );
 
   return (

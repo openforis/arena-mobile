@@ -5,13 +5,13 @@ const { confirmGoToConnectionToRemoteServer } = RemoteConnectionActions;
 
 const checkLoggedInUser = async ({
   dispatch,
-  navigation
+  navigator
 }: any) => {
   if (await AppService.checkLoggedInUser()) {
     return true;
   }
 
-  dispatch(confirmGoToConnectionToRemoteServer({ navigation }));
+  dispatch(confirmGoToConnectionToRemoteServer({ navigator }));
   return false;
 };
 

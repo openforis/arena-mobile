@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { BackHandler } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 import * as WebBrowser from "expo-web-browser";
 
 import { Surveys } from "@openforis/arena-core";
@@ -29,7 +29,7 @@ export const OptionsMenu = (props: Props) => {
   const { toggleMenu, visible = false, onDismiss } = props;
 
   const dispatch = useAppDispatch();
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const screenKey = useScreenKey();
   const editingRecord =
     DataEntrySelectors.useIsEditingRecord() &&
@@ -52,7 +52,7 @@ export const OptionsMenu = (props: Props) => {
   return (
     <Menu anchor={anchor} onDismiss={onDismiss} visible>
       <UserSummary
-        navigation={navigation}
+        navigator={navigator}
         onButtonPress={() => toggleMenu()}
         profileIconSize={40}
         showLogoutButton={false}
@@ -64,7 +64,7 @@ export const OptionsMenu = (props: Props) => {
         <MenuItem
           icon="view-list"
           onPress={() => {
-            navigation.navigate(screenKeys.surveysListLocal as never);
+            navigator.navigateToSurveysListLocal();
           }}
           title="surveys:title"
           toggleMenu={toggleMenu}
@@ -75,7 +75,7 @@ export const OptionsMenu = (props: Props) => {
           <MenuItem
             icon="view-list"
             onPress={() => {
-              dispatch(DataEntryActions.navigateToRecordsList({ navigation }));
+              dispatch(DataEntryActions.navigateToRecordsList({ navigator }));
             }}
             title="dataEntry:listOfRecords"
             toggleMenu={toggleMenu}
@@ -96,7 +96,7 @@ export const OptionsMenu = (props: Props) => {
       <MenuItem
         icon="map-marker-down"
         onPress={() => {
-          navigation.navigate(screenKeys.offlineMaps as never);
+          navigator.navigateToOfflineMaps();
         }}
         title="offlineMaps:title"
         toggleMenu={toggleMenu}
@@ -104,7 +104,7 @@ export const OptionsMenu = (props: Props) => {
       <MenuItem
         icon="cog"
         onPress={() => {
-          navigation.navigate(screenKeys.settings as never);
+          navigator.navigateToSettings();
         }}
         title="settings:title"
         toggleMenu={toggleMenu}
@@ -112,7 +112,7 @@ export const OptionsMenu = (props: Props) => {
       <MenuItem
         icon="information-outline"
         onPress={() => {
-          navigation.navigate(screenKeys.about as never);
+          navigator.navigateToAbout();
         }}
         title="common:about"
         toggleMenu={toggleMenu}

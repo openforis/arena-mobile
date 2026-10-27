@@ -30,7 +30,6 @@ import { PreferencesService } from "service/preferencesService";
 import { RecordFileService } from "service/recordFileService";
 import { RecordService } from "service/recordService";
 
-import { screenKeys } from "screens/screenKeys";
 
 import { Errors, log, StringUtils, SystemUtils } from "utils";
 import { PreviewMode } from "utils/PreviewMode";
@@ -123,7 +122,7 @@ const prepareRecordForStorage = ({ record }: any) => {
 };
 
 const createNewRecord =
-  ({ navigation }: any) =>
+  ({ navigator }: any) =>
     async (dispatch: any, getState: any) => {
       try {
         let state = getState();
@@ -181,7 +180,7 @@ const createNewRecord =
         record = await RecordService.insertRecord({ survey, record });
         dispatch(AutoSyncActions.markPending());
 
-        await dispatch(editRecord({ navigation, record, locked: false }));
+        await dispatch(editRecord({ navigator, record, locked: false }));
         await dispatch(PositionTrackingActions.autoStartTracking());
       } catch (error: any) {
         handleError(dispatch, error, "dataEntry:createRecordError");
@@ -345,7 +344,7 @@ const checkEntityPageIsValidAndNotRoot = ({
 };
 
 const editRecord =
-  ({ navigation, record, locked = true }: any) =>
+  ({ navigator, record, locked = true }: any) =>
     async (dispatch: any, getState: any) => {
       const state = getState();
       const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -380,7 +379,7 @@ const editRecord =
         recordPageSelectorMenuOpen: false,
       });
 
-      navigation.navigate(screenKeys.recordEditor);
+      navigator.navigateToRecordEditor();
 
       if (resumeLastEditedPage) {
         await dispatch(selectCurrentPageEntity(lastEditedPage));
@@ -390,16 +389,16 @@ const editRecord =
 
 const _fetchAndEditRecordInternal = async ({
   dispatch,
-  navigation,
+  navigator,
   survey,
   recordId,
 }: any) => {
   const record = await RecordService.fetchRecord({ survey, recordId });
-  await dispatch(editRecord({ navigation, record }));
+  await dispatch(editRecord({ navigator, record }));
 };
 
 const fetchAndEditRecord =
-  ({ navigation, recordSummary }: any) =>
+  ({ navigator, recordSummary }: any) =>
     async (dispatch: any, getState: any) => {
       const state = getState();
       const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -430,7 +429,7 @@ const fetchAndEditRecord =
                   onImportComplete: async () => {
                     await _fetchAndEditRecordInternal({
                       dispatch,
-                      navigation,
+                      navigator,
                       survey,
                       recordId,
                     });
@@ -443,7 +442,7 @@ const fetchAndEditRecord =
       } else {
         await _fetchAndEditRecordInternal({
           dispatch,
-          navigation,
+          navigator,
           survey,
           recordId,
         });
@@ -669,7 +668,7 @@ const updateAttribute =
         )
           return;
 
-        let {
+        const {
           record: recordUpdated,
           nodes: nodesUpdated,
           clearedDefUuids,
@@ -947,7 +946,7 @@ const toggleRecordEditLock = (dispatch: any, getState: any) => {
 };
 
 const navigateToRecordsList =
-  ({ navigation }: any) =>
+  ({ navigator }: any) =>
     (dispatch: any) =>
       dispatch(
         ConfirmActions.show({
@@ -957,7 +956,7 @@ const navigateToRecordsList =
             // the recorded track is written into the record before closing it
             await dispatch(PositionTrackingActions.closeTrack());
             // pop=true pops the current screen from the stack and avoids going back to it (unmounts the RecordEditor component)
-            navigation.navigate({ name: screenKeys.recordsList, pop: true });
+            navigator.navigateToRecordsList({ pop: true });
             dispatch({ type: DATA_ENTRY_RESET });
           },
         }),

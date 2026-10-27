@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import RNMapView, { Marker, MarkerDragStartEndEvent } from "react-native-maps";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 
 import { Button, IconButton, MapView, Text, VView } from "components";
 import { CurrentLocationDot } from "components/MapView/CurrentLocationDot";
@@ -25,14 +26,14 @@ export const LocationMapViewerScreen = () => {
   const route = useRoute();
   const params = route.params as LocationMapViewerParams;
   const { nodeUuid, titleKey, titleParams } = params;
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (titleKey) {
-      navigation.setOptions({ title: titleKey, titleParams } as any);
+      navigator.setOptions({ title: titleKey, titleParams });
     }
-  }, [navigation, titleKey, titleParams]);
+  }, [navigator, titleKey, titleParams]);
 
   const [savedPosition, setSavedPosition] = React.useState<LatLng>({
     latitude: Number(params.latitude),
