@@ -105,3 +105,17 @@ there's no server data to build or test it against yet.
 - `useQualifierAttributeLocked` (`src/screens/RecordEditor/NodeDefFormItem/`) locks a qualifier
   attribute as read-only in the record editor whenever the current survey's user group supplies a
   value for it.
+
+## Read-only records of other groups
+
+In Arena, a user group can list other groups of the survey whose records its members can read but
+not edit (`props.readableGroupUuids`). The server includes those records in the records summary with
+`readOnly: true`, and refuses their upload.
+
+- The flag is stored in the `read_only` column of the `record` table (migration `004`) and
+  refreshed at every sync with the server summaries (`updateLocalRecordsReadOnly` in
+  `src/service/recordService.ts`), so changes to the group settings take effect on the next sync.
+- `DataEntrySelectors.selectCanEditRecord` returns false for those records, and the edit lock can't
+  be removed; the record editor shows a banner, and the records list a lock icon.
+- They are left out of "Send data" and auto-sync. They can be cloned: the clone gets the
+  qualifier values of the user's own group (see `prepareClonedRecord`).

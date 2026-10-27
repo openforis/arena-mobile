@@ -60,6 +60,9 @@ export default {
   },
   origin: { title: "Herkunft", L: "Lokal", R: "Remote" },
   owner: "Eigentümer",
+  readOnly: "Schreibgeschützt",
+  readOnlyOfAnotherUserGroup:
+    "Datensatz einer anderen Benutzergruppe: Er kann angezeigt oder geklont, aber nicht bearbeitet werden",
   recordHasErrorsOrWarningsTooltip: "Datensatz hat {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Alle Datensätze",

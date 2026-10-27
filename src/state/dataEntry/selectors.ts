@@ -21,6 +21,7 @@ import { RecordCurrentPageEntity, RecordUtils, SurveyDefs } from "model";
 import { PreviewMode } from "utils/PreviewMode";
 
 import { SurveySelectors } from "../survey/selectors";
+import { ArenaMobileRecord } from "model/ArenaMobileRecord";
 import { DataEntryState, PreviousCycleRecordPageEntityPointer } from "./types";
 
 type ParentNodeUuidNodeDefParams = {
@@ -51,10 +52,15 @@ const selectIsRecordInDefaultCycle = (state: any): boolean => {
   return String(defaultCycle) === String(record?.cycle);
 };
 
+// record of another user group (see ArenaMobileRecord.readOnly): it cannot be unlocked
+const selectIsRecordReadOnly = (state: any): boolean =>
+  !!(selectRecordUnsafe(state) as ArenaMobileRecord | undefined)?.readOnly;
+
 const selectRecordEditLockAvailable = (state: any) =>
   !!getDataEntryState(state).recordEditLockAvailable &&
   selectIsEditingRecord(state) &&
-  selectIsRecordInDefaultCycle(state);
+  selectIsRecordInDefaultCycle(state) &&
+  !selectIsRecordReadOnly(state);
 
 const selectCanEditRecord = (state: any) => {
   const editLocked = selectRecordEditLocked(state);
@@ -62,7 +68,10 @@ const selectCanEditRecord = (state: any) => {
   const recordInEditableCycle =
     PreviewMode.isActive || selectIsRecordInDefaultCycle(state);
   return (
-    !editLocked && recordInEditableCycle && !selectRecordSyncInProgress(state)
+    !editLocked &&
+    recordInEditableCycle &&
+    !selectRecordSyncInProgress(state) &&
+    !selectIsRecordReadOnly(state)
   );
 };
 
@@ -537,6 +546,7 @@ export const DataEntrySelectors = {
   useRecordEditLocked: () => useSelector(selectRecordEditLocked),
 
   useCanEditRecord: () => useSelector(selectCanEditRecord),
+  useIsRecordReadOnly: () => useSelector(selectIsRecordReadOnly),
   useRecordSyncInProgress: () => useSelector(selectRecordSyncInProgress),
 
   useIsEditingRecord: () => useSelector(selectIsEditingRecord),

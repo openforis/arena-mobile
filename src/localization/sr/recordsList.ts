@@ -59,6 +59,9 @@ export default {
   },
   origin: { title: "Porijeklo", L: "Lokalno", R: "Udaljeno" },
   owner: "Vlasnik",
+  readOnly: "Samo za čitanje",
+  readOnlyOfAnotherUserGroup:
+    "Zapis druge grupe korisnika: može da se pregleda ili klonira, ali ne i da se mijenja",
   recordHasErrorsOrWarningsTooltip: "{{itemsTypeText}} u zapisu: {{count}}",
   recordType: {
     all: "Svi zapisi",

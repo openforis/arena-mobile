@@ -58,6 +58,9 @@ export default {
     R: "የርቀት",
   },
   owner: "ባለቤት",
+  readOnly: "ለንባብ ብቻ",
+  readOnlyOfAnotherUserGroup:
+    "የሌላ የተጠቃሚ ቡድን መዝገብ፦ ማየት ወይም መቅዳት ይቻላል፣ ማርትዕ ግን አይቻልም",
   recordHasErrorsOrWarningsTooltip: "መዝገቡ {{count}} {{itemsTypeText}} አለው",
   recordType: {
     all: "ሁሉም መዝገቦች",

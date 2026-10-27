@@ -17,9 +17,9 @@ jest.mock("localization", () => ({}));
 // survey with 2 cycles: the default one is the last one ("1")
 const survey = { props: { cycles: { "0": {}, "1": {} } } };
 
-const createState = (recordCycle: string) => ({
+const createState = (recordCycle: string, readOnly = false) => ({
   survey: { currentSurvey: survey },
-  dataEntry: { record: { cycle: recordCycle } },
+  dataEntry: { record: { cycle: recordCycle, readOnly } },
 });
 
 describe("selectCanEditRecord", () => {
@@ -33,6 +33,12 @@ describe("selectCanEditRecord", () => {
 
   test("record in another cycle is read-only", () => {
     expect(DataEntrySelectors.selectCanEditRecord(createState("0"))).toBe(
+      false,
+    );
+  });
+
+  test("record of another user group is read-only", () => {
+    expect(DataEntrySelectors.selectCanEditRecord(createState("1", true))).toBe(
       false,
     );
   });

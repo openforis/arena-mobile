@@ -60,6 +60,9 @@ export default {
   },
   origin: { title: "Asal", L: "Lokal", R: "Jarak Jauh" },
   owner: "Pemilik",
+  readOnly: "Hanya baca",
+  readOnlyOfAnotherUserGroup:
+    "Rekaman grup pengguna lain: dapat dilihat atau dikloning, tetapi tidak dapat diedit",
   recordHasErrorsOrWarningsTooltip:
     "Data isian memiliki {{count}} {{itemsTypeText}}",
   recordType: {

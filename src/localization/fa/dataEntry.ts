@@ -1,6 +1,8 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  recordReadOnlyOfAnotherUserGroup:
+    "این رکورد متعلق به گروه کاربری دیگری است: فقط قابل مشاهده است. برای ویرایش، آن را کپی کنید",
   autoSync: {
     checkbox: "همگام‌سازی خودکار",
     synced: "{{count}} رکورد به‌طور خودکار همگام‌سازی شد",

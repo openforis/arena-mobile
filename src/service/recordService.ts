@@ -250,6 +250,47 @@ const updateLocalRecordsWithRemoteInfo = async ({
       }
     },
   );
+  await updateLocalRecordsReadOnly({
+    survey,
+    allRecordsSummariesInDevice,
+    recordsSummariesRemote,
+  });
+};
+
+// the user group settings on the server can change: keep the read-only flag of all the records in sync
+const updateLocalRecordsReadOnly = async ({
+  allRecordsSummariesInDevice,
+  recordsSummariesRemote,
+  survey,
+}: {
+  allRecordsSummariesInDevice: ArenaMobileRecord[];
+  recordsSummariesRemote: any[];
+  survey: any;
+}) => {
+  const readOnlyUuids: string[] = [];
+  const editableUuids: string[] = [];
+  for (const recordSummaryLocal of allRecordsSummariesInDevice) {
+    const { uuid } = recordSummaryLocal;
+    const recordSummaryRemote = ArrayUtils.findByUuid(uuid)(
+      recordsSummariesRemote,
+    );
+    if (!recordSummaryRemote) continue;
+    const readOnly = !!recordSummaryRemote.readOnly;
+    if (readOnly !== !!recordSummaryLocal.readOnly) {
+      (readOnly ? readOnlyUuids : editableUuids).push(uuid);
+    }
+  }
+  const surveyId = survey.id;
+  await RecordRepository.updateRecordsReadOnly({
+    surveyId,
+    recordUuids: readOnlyUuids,
+    readOnly: true,
+  });
+  await RecordRepository.updateRecordsReadOnly({
+    surveyId,
+    recordUuids: editableUuids,
+    readOnly: false,
+  });
 };
 
 const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {

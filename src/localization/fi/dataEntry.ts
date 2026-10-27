@@ -1,6 +1,8 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  recordReadOnlyOfAnotherUserGroup:
+    "Tämä tietue kuuluu toiseen käyttäjäryhmään: sitä voi vain katsella. Kloonaa se muokataksesi sitä",
   autoSync: {
     checkbox: "Automaattinen synkronointi",
     synced: "{{count}} tietue synkronoitu automaattisesti",

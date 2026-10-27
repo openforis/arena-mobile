@@ -64,6 +64,9 @@ export default {
     R: "Distant",
   },
   owner: "Propriétaire",
+  readOnly: "Lecture seule",
+  readOnlyOfAnotherUserGroup:
+    "Enregistrement d'un autre groupe d'utilisateurs : il peut être consulté ou cloné, mais pas modifié",
   recordHasErrorsOrWarningsTooltip:
     "L'enregistrement a {{count}} {{itemsTypeText}}",
   recordType: {

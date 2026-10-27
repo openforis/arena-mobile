@@ -80,8 +80,9 @@ export const useRecordsExport = ({
       sameRecordConflicts?: any[];
       confirmResult: OnConfirmParams | boolean | null;
     }> => {
+      // records of other user groups cannot be uploaded
       const getRecordsByStatus = (status: any) =>
-        records.filter((r: any) => r.syncStatus === status);
+        records.filter((r: any) => !r.readOnly && r.syncStatus === status);
       const newRecords = getRecordsByStatus(RecordSyncStatus.new);
       const newRecordsCount = newRecords.length;
 
@@ -107,11 +108,13 @@ export const useRecordsExport = ({
       // modifiedLocallyAndRemotely means both sides actually diverged since the last known baseline
       // (a real risk of the merge silently dropping one side's edit); modifiedRemotely is kept here too
       // since, before a baseline is captured for a record, it's the only signal we have that the server moved.
-      const sameRecordConflicts = records.filter((r: any) =>
-        [
-          RecordSyncStatus.modifiedRemotely,
-          RecordSyncStatus.modifiedLocallyAndRemotely,
-        ].includes(r.syncStatus),
+      const sameRecordConflicts = records.filter(
+        (r: any) =>
+          !r.readOnly &&
+          [
+            RecordSyncStatus.modifiedRemotely,
+            RecordSyncStatus.modifiedLocallyAndRemotely,
+          ].includes(r.syncStatus),
       );
       const sameRecordConflictsCount = sameRecordConflicts.length;
 

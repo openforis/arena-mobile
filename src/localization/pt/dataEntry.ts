@@ -1,6 +1,8 @@
 import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
+  recordReadOnlyOfAnotherUserGroup:
+    "Este registro pertence a outro grupo de usuários: só pode ser visualizado. Clone-o para editá-lo",
   autoSync: {
     checkbox: "Sincronização automática",
     synced: "{{count}} registro sincronizado automaticamente",

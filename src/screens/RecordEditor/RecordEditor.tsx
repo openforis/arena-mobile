@@ -41,6 +41,7 @@ export const RecordEditor = () => {
   // the record is read-only while auto-sync merges it with its server copy - see
   // DataEntrySelectors.selectCanEditRecord
   const recordSyncInProgress = DataEntrySelectors.useRecordSyncInProgress();
+  const recordReadOnly = DataEntrySelectors.useIsRecordReadOnly();
 
   const onBack = useCallback(() => {
     if (isNavigationFocused) {
@@ -74,6 +75,13 @@ export const RecordEditor = () => {
         <Text
           style={styles.syncInProgressBanner}
           textKey="dataEntry:autoSync.recordSyncInProgress"
+          variant="bodySmall"
+        />
+      )}
+      {recordReadOnly && (
+        <Text
+          style={styles.syncInProgressBanner}
+          textKey="dataEntry:recordReadOnlyOfAnotherUserGroup"
           variant="bodySmall"
         />
       )}

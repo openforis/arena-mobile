@@ -60,6 +60,9 @@ export default {
     R: "Удаленный",
   },
   owner: "Владелец",
+  readOnly: "Только чтение",
+  readOnlyOfAnotherUserGroup:
+    "Запись другой группы пользователей: её можно просматривать или клонировать, но не редактировать",
   recordHasErrorsOrWarningsTooltip:
     "Запись содержит {{count}} {{itemsTypeText}}",
   recordType: {

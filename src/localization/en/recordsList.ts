@@ -59,6 +59,9 @@ export default {
   },
   origin: { title: "Origin", L: "Local", R: "Remote" },
   owner: "Owner",
+  readOnly: "Read-only",
+  readOnlyOfAnotherUserGroup:
+    "Record of another user group: it can be viewed or cloned, but not edited",
   recordHasErrorsOrWarningsTooltip: "Record has {{count}} {{itemsTypeText}}",
   recordType: {
     all: "All records",
