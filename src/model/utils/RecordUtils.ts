@@ -1,4 +1,5 @@
 import {
+  FileNames,
   NodeDefs,
   NodeDefType,
   NodeValueFormatter,
@@ -23,6 +24,7 @@ import {
 } from "@openforis/arena-core";
 
 import { TranslateFunction } from "localization";
+import { FileSizes } from "utils/FileSizes";
 import { GeoUtils } from "utils/GeoUtils";
 
 import { PositionTracks } from "./PositionTracks";
@@ -138,8 +140,19 @@ const formatCoordinateValue = ({ survey, value }: any): string => {
   return `${pointText} (${srsCode})`;
 };
 
-const formatFileValue = ({ value }: any): string =>
-  value?.fileName ?? value?.fileNameCalculated ?? "";
+const uuidInTextRegex =
+  /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
+
+const formatFileValue = ({ value }: any): string => {
+  const { fileName, fileNameCalculated, fileSize } = value ?? {};
+  if (Objects.isNotEmpty(fileNameCalculated)) return fileNameCalculated;
+  if (Objects.isEmpty(fileName)) return "";
+  // generated names (e.g. camera captures) are not meaningful
+  if (!uuidInTextRegex.test(fileName)) return fileName;
+  const extension = FileNames.getExtension(fileName).toUpperCase();
+  const size = fileSize ? FileSizes.toHumanReadableFileSize(fileSize) : "";
+  return [extension, size].filter(Objects.isNotEmpty).join(" ");
+};
 
 // track length or polygon area
 const formatGeoValue = ({ value }: any): string => {
