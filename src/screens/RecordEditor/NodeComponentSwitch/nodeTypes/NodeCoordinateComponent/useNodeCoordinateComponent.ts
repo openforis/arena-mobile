@@ -76,7 +76,7 @@ const locationToUiValue = ({
   });
 
   for (const field of includedExtraFields) {
-    // @ts-ignore
+    // @ts-expect-error extra fields are indexed by name
     result[field] = numberToString(location[field], 2);
   }
   // always include accuracy
@@ -117,7 +117,7 @@ export const useNodeCoordinateComponent = (props: any) => {
 
       const result = pointToUiValue({ x, y, srs });
       for (const fieldKey of includedExtraFields) {
-        // @ts-ignore
+        // @ts-expect-error extra fields are indexed by name
         result[fieldKey] = numberToString(nodeValue?.[fieldKey]);
       }
       return result;
@@ -137,7 +137,7 @@ export const useNodeCoordinateComponent = (props: any) => {
         srs,
       };
       for (const fieldKey of includedExtraFields) {
-        // @ts-ignore
+        // @ts-expect-error extra fields are indexed by name
         result[fieldKey] = stringToNumber(uiValue?.[fieldKey]);
       }
       return result;
@@ -153,7 +153,7 @@ export const useNodeCoordinateComponent = (props: any) => {
           coordVal,
         ).reduce((acc, [key, value]) => {
           if (includedFields.has(key)) {
-            // @ts-ignore
+            // @ts-expect-error extra fields are indexed by name
             acc[key] = nonNumericFields.has(key)
               ? value
               : Numbers.toNumber(value);

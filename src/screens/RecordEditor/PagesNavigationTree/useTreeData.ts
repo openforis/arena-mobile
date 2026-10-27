@@ -229,9 +229,7 @@ export const useTreeData = () => {
   if (!survey) return [];
 
   const currentEntityUuid = (entityUuid ?? parentEntityUuid)!;
-  const currentEntity = Records.getNodeByUuid(currentEntityUuid)(
-    record,
-  );
+  const currentEntity = Records.getNodeByUuid(currentEntityUuid)(record);
   const { cycle } = record;
 
   const getIconName = (nodeDef: NodeDef<any>): string => {
@@ -277,9 +275,8 @@ export const useTreeData = () => {
       record,
       entity: rootNode,
     });
-    rootTreeItem.completionPercent = RecordUtils.toCompletionPercent(
-      rootCompletionStats,
-    );
+    rootTreeItem.completionPercent =
+      RecordUtils.toCompletionPercent(rootCompletionStats);
   }
 
   const stack = [

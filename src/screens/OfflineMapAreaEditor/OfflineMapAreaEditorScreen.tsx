@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import RNMapView, { Polygon } from "react-native-maps";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 
 import { Dates } from "@openforis/arena-core";
 
@@ -44,7 +44,7 @@ const generateDefaultAreaName = (): string =>
 export const OfflineMapAreaEditorScreen = () => {
   log.debug("rendering OfflineMapAreaEditorScreen");
 
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const toaster = useToast();
   const confirm = useConfirm();
   const downloadArea = useOfflineMapAreaDownload();
@@ -174,8 +174,8 @@ export const OfflineMapAreaEditorScreen = () => {
   }, []);
 
   const onCancelDrawing = useCallback(() => {
-    navigation.goBack();
-  }, [navigation]);
+    navigator.goBack();
+  }, [navigator]);
 
   const onSaveDrawing = useCallback(
     async (polygon: MapPolygonExtendedProps | null) => {
@@ -231,7 +231,7 @@ export const OfflineMapAreaEditorScreen = () => {
         maxZoom: effectiveMaxZoom,
       });
       await downloadArea(area);
-      navigation.goBack();
+      navigator.goBack();
     },
     [
       confirm,
@@ -248,7 +248,7 @@ export const OfflineMapAreaEditorScreen = () => {
       layer,
       layerId,
       nameErrorKey,
-      navigation,
+      navigator,
       toaster,
     ],
   );

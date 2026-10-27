@@ -85,7 +85,9 @@ const lockOpenRecordForSync =
     let idleChecks = 0;
     syncLockWatchdogId = setInterval(() => {
       const busy =
-        !!isBusy?.() || getState().jobMonitor.isOpen || isPostUploadProcessingInProgress();
+        !!isBusy?.() ||
+        getState().jobMonitor.isOpen ||
+        isPostUploadProcessingInProgress();
       idleChecks = busy ? 0 : idleChecks + 1;
       if (idleChecks >= 2) {
         log.debug("record sync lock: nothing running anymore, releasing it");

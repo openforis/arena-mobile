@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 import * as DocumentPicker from "expo-document-picker";
 
 import { Objects, Surveys } from "@openforis/arena-core";
@@ -49,7 +49,7 @@ const initialState: RecordsListState = {
 };
 
 export const useRecordsList = () => {
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const networkAvailable = useIsNetworkConnected();
@@ -147,7 +147,7 @@ export const useRecordsList = () => {
         await fetchRecordsWithSyncStatus({
           cycle,
           dispatch,
-          navigation,
+          navigator,
           onlyLocal,
           survey,
         });
@@ -162,7 +162,7 @@ export const useRecordsList = () => {
         ...stateNext,
         records: stateNext.records ?? recordsRef.current,
       } as RecordsListState;
-    }, [dispatch, navigation, survey, cycle, onlyLocal]);
+    }, [dispatch, navigator, survey, cycle, onlyLocal]);
 
   const {
     status: autoSyncStatus,
@@ -215,7 +215,9 @@ export const useRecordsList = () => {
 
     // the tick reuses the summaries just fetched, instead of fetching them again concurrently
     if (shouldRunAutoSync && fetched) {
-      dispatch(DataEntryActions.runAutoSync({ prefetchedRecords: fetchedRecords }));
+      dispatch(
+        DataEntryActions.runAutoSync({ prefetchedRecords: fetchedRecords }),
+      );
     }
   }, [canCheckAutoSyncStatus, loadRecordsWithSyncStatus, dispatch]);
 
@@ -313,9 +315,9 @@ export const useRecordsList = () => {
 
   const onNewRecordPress = useCallback(async () => {
     setLoading(true);
-    await dispatch(DataEntryActions.createNewRecord({ navigation }));
+    await dispatch(DataEntryActions.createNewRecord({ navigator }));
     setLoading(false);
-  }, [dispatch, navigation, setLoading]);
+  }, [dispatch, navigator, setLoading]);
 
   const onDeleteSelectedRecordUuids = useCallback(
     async (recordUuids: any) => {

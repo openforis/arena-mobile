@@ -26,8 +26,14 @@ const customActionToButtonProps = ({
   t: (key?: string | null, params?: any) => string;
   customAction: SelectedItemsAction;
 }): ButtonProps & { key: string } => {
-  const { key, labelKey, labelParams, mode = "text", onPress, ...otherProps } =
-    customAction;
+  const {
+    key,
+    labelKey,
+    labelParams,
+    mode = "text",
+    onPress,
+    ...otherProps
+  } = customAction;
   return {
     key,
     children: t(labelKey, labelParams),

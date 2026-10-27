@@ -63,7 +63,8 @@ export default {
   readOnly: "Hanya baca",
   readOnlyOfAnotherUserGroup:
     "Rekaman grup pengguna lain: dapat dilihat atau dikloning, tetapi tidak dapat diedit",
-  recordHasErrorsOrWarningsTooltip: "Data isian memiliki {{count}} {{itemsTypeText}}",
+  recordHasErrorsOrWarningsTooltip:
+    "Data isian memiliki {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Semua data isian",
     local: "Data isian di perangkat",

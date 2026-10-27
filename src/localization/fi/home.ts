@@ -12,5 +12,6 @@ export default {
   surveys: "Kyselylomakkeet",
   surveysDescription: "Vaihda, lataa tai päivitä kyselylomakkeita",
   noSurveySelected: "Kyselylomaketta ei ole valittu",
-  noSurveySelectedDescription: "Valitse tai lataa kyselylomake aloittaaksesi tiedonkeruun",
+  noSurveySelectedDescription:
+    "Valitse tai lataa kyselylomake aloittaaksesi tiedonkeruun",
 };

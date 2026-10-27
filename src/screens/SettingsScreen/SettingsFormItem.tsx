@@ -33,10 +33,10 @@ export const SettingsFormItem = (props: SettingsFormItemProps) => {
       direction === "vertical"
         ? styles.settingsFormItemVertical
         : [
-          styles.settingsFormItemHorizontal,
-          isRtl ? styles.settingsFormItemHorizontalRtl : undefined,
-        ],
-    [direction, isRtl]
+            styles.settingsFormItemHorizontal,
+            isRtl ? styles.settingsFormItemHorizontalRtl : undefined,
+          ],
+    [direction, isRtl],
   );
 
   return (

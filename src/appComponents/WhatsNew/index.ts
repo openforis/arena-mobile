@@ -1,1 +1,4 @@
-export { WhatsNewAllItemsDialog, WhatsNewUnseenItemsDialog } from "./WhatsNewDialog";
+export {
+  WhatsNewAllItemsDialog,
+  WhatsNewUnseenItemsDialog,
+} from "./WhatsNewDialog";

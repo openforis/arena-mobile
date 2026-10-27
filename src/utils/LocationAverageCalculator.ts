@@ -21,7 +21,7 @@ export class LocationAverager {
    */
   constructor(
     private readonly maxWindowSize: number = DEFAULT_WINDOW_SIZE,
-    private readonly sdMultiplier: number = SD_MULTIPLIER
+    private readonly sdMultiplier: number = SD_MULTIPLIER,
   ) {
     if (this.maxWindowSize < 1) {
       throw new Error("maxWindowSize must be at least 1.");
@@ -94,7 +94,7 @@ export class LocationAverager {
 
     // --- 5. Filter Outliers ---
     const filteredReadings = readings.filter(
-      (coord) => coord.accuracy !== null && coord.accuracy <= accuracyThreshold
+      (coord) => coord.accuracy !== null && coord.accuracy <= accuracyThreshold,
     );
 
     if (filteredReadings.length === 0) {

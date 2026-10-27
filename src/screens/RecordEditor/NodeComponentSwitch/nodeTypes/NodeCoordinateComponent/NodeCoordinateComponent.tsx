@@ -89,7 +89,7 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
       onChangeValueField,
       uiValue,
       watchingLocation,
-    ]
+    ],
   );
 
   return (
@@ -146,7 +146,7 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
         createNumericFieldFormItem({
           fieldKey,
           labelStyle: styles.extraFieldFormItemLabel,
-        })
+        }),
       )}
       {
         // always show accuracy (as read-only if not included in extra fields)

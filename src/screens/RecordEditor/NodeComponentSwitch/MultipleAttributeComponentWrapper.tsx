@@ -20,12 +20,12 @@ import { NodeComponentProps } from "./nodeTypes/nodeComponentPropTypes";
 import styles from "./multipleAttributeComponentWrapperStyles";
 
 export const MultipleAttributeComponentWrapper = (
-  props: NodeComponentProps
+  props: NodeComponentProps,
 ) => {
   const { nodeDef, parentNodeUuid } = props;
 
   log.debug(
-    `rendering MultipleAttributeComponentWrapper for ${nodeDef.props.name} - parentNodeUuid: ${parentNodeUuid}`
+    `rendering MultipleAttributeComponentWrapper for ${nodeDef.props.name} - parentNodeUuid: ${parentNodeUuid}`,
   );
 
   const dispatch = useAppDispatch();
@@ -51,7 +51,7 @@ export const MultipleAttributeComponentWrapper = (
         MessageActions.setMessage({
           content:
             "Cannot add new value: an empty value already exists. Delete or update it first.",
-        })
+        }),
       );
     } else {
       dispatch(DataEntryActions.addNewAttribute({ nodeDef, parentNodeUuid }));

@@ -3,10 +3,7 @@ import { Validations, ValidationSeverity } from "@openforis/arena-core";
 const customValidationKey = "record.attribute.customValidation";
 
 const validationResultToMessage =
-  ({
-    customMessageLang,
-    t
-  }: any) =>
+  ({ customMessageLang, t }: any) =>
   (validationResult: any) => {
     const { key, params, messages } = validationResult;
     if (key === customValidationKey) {
@@ -18,12 +15,7 @@ const validationResultToMessage =
     return t(`validation:${key}`, params);
   };
 
-const getJointTexts = ({
-  validation,
-  severity,
-  t,
-  customMessageLang
-}: any) => {
+const getJointTexts = ({ validation, severity, t, customMessageLang }: any) => {
   const result: any = [];
 
   Validations.traverse((v) => {
@@ -31,7 +23,7 @@ const getJointTexts = ({
       severity === ValidationSeverity.error ? v.errors : v.warnings;
     const messages =
       validationResults?.map(
-        validationResultToMessage({ customMessageLang, t })
+        validationResultToMessage({ customMessageLang, t }),
       ) ?? [];
     result.push(...messages);
   })(validation);
@@ -39,11 +31,7 @@ const getJointTexts = ({
   return result.length > 0 ? result.join(", ") : null;
 };
 
-const getJointErrorText = ({
-  validation,
-  t,
-  customMessageLang
-}: any) =>
+const getJointErrorText = ({ validation, t, customMessageLang }: any) =>
   getJointTexts({
     validation,
     severity: ValidationSeverity.error,
@@ -51,11 +39,7 @@ const getJointErrorText = ({
     customMessageLang,
   });
 
-const getJointWarningText = ({
-  validation,
-  t,
-  customMessageLang
-}: any) =>
+const getJointWarningText = ({ validation, t, customMessageLang }: any) =>
   getJointTexts({
     validation,
     severity: ValidationSeverity.warning,

@@ -154,7 +154,8 @@ Sus valores serán borrados.
     new: "nuevo",
     updated: "actualizado",
     conflicting: "en conflicto",
-    conflictingModifiedRemotely: "modificado en el dispositivo y en el servidor",
+    conflictingModifiedRemotely:
+      "modificado en el dispositivo y en el servidor",
     withValidationErrors: "con errores de validación",
   },
   sendData: "Enviar datos",

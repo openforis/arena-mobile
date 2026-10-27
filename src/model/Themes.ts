@@ -3,7 +3,7 @@ export enum Themes {
   dark = "dark",
   light2 = "light2",
   dark2 = "dark2",
-};
+}
 
 export enum ThemesSettings {
   auto = "auto",
@@ -11,4 +11,4 @@ export enum ThemesSettings {
   dark = "dark",
   light2 = "light2",
   dark2 = "dark2",
-};
+}

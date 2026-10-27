@@ -10,4 +10,6 @@ type Props = {
   value?: any;
 };
 
-export const TimePicker = (props: Props) => <DateTimePicker {...props} format={DateFormats.timeStorage} mode="time" />;
+export const TimePicker = (props: Props) => (
+  <DateTimePicker {...props} format={DateFormats.timeStorage} mode="time" />
+);

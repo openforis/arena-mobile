@@ -45,7 +45,7 @@ export const DateTimePicker = (props: DateTimePickerProps) => {
       hidePicker();
       onChangeProp(selectedDate);
     },
-    [hidePicker, onChangeProp]
+    [hidePicker, onChangeProp],
   );
 
   const onClear = useCallback(
@@ -56,7 +56,7 @@ export const DateTimePicker = (props: DateTimePickerProps) => {
         onChangeProp(null);
       }
     },
-    [confirm, hidePicker, onChangeProp]
+    [confirm, hidePicker, onChangeProp],
   );
 
   const icon = mode === "date" ? "calendar" : "clock";

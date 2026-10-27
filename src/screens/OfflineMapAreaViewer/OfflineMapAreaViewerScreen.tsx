@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Keyboard } from "react-native";
 import { Polygon } from "react-native-maps";
-import { useRoute } from "@react-navigation/native";
+import { useScreenParams } from "navigation/navigator";
+import { screenKeys } from "screens/screenKeys";
 
 import {
   HView,
@@ -38,9 +39,7 @@ export const OfflineMapAreaViewerScreen = () => {
   log.debug("rendering OfflineMapAreaViewerScreen");
 
   const { t } = useTranslation();
-  const route = useRoute();
-  const { areaId } = (route.params ??
-    {}) as Partial<OfflineMapAreaViewerParams>;
+  const { areaId } = useScreenParams<screenKeys.offlineMapAreaViewer>();
 
   const [state, setState] = useState<State>({
     area: null,

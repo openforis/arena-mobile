@@ -519,9 +519,7 @@ describe("Demo survey", () => {
         survey,
         record: recordWithOrphan,
       });
-      expect(
-        Records.getNodeByUuid(orphanNode.uuid)(record),
-      ).toBeUndefined();
+      expect(Records.getNodeByUuid(orphanNode.uuid)(record)).toBeUndefined();
     });
   });
 });

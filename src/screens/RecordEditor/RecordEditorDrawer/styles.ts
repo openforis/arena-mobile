@@ -39,6 +39,6 @@ export const useStyles = () => {
           width: "100%",
         },
       }),
-    [isPhone, theme]
+    [isPhone, theme],
   );
 };

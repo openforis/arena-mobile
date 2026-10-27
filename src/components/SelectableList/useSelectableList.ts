@@ -65,7 +65,7 @@ export const useSelectableList = (props: any) => {
 
       onSelectionChange?.(selectedItemIdsNext);
     },
-    [onSelectionChange, selectedItemIds]
+    [onSelectionChange, selectedItemIds],
   );
 
   const onDeleteSelected = useCallback(() => {
@@ -98,7 +98,7 @@ export const useSelectableList = (props: any) => {
         onItemPressProp?.(item);
       }
     },
-    [onItemPressProp, onItemSelect, selectionEnabled]
+    [onItemPressProp, onItemSelect, selectionEnabled],
   );
 
   const onItemLongPress = useCallback(
@@ -109,7 +109,7 @@ export const useSelectableList = (props: any) => {
         onItemLongPressProp?.(item);
       }
     },
-    [onItemLongPressProp, onItemSelect, selectable]
+    [onItemLongPressProp, onItemSelect, selectable],
   );
 
   return {

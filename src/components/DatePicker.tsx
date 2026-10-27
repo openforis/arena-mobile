@@ -10,4 +10,6 @@ type Props = {
   value?: any;
 };
 
-export const DatePicker = (props: Props) => <DateTimePicker {...props} format={DateFormats.dateDisplay} mode="date" />;
+export const DatePicker = (props: Props) => (
+  <DateTimePicker {...props} format={DateFormats.dateDisplay} mode="date" />
+);

@@ -24,7 +24,10 @@ export const TargetPointDot = ({
   const R = size / 2 - 4;
   const maxDotRadius = R * 0.85;
 
-  const distRatio = Math.min(1, Math.max(0, distance / PROXIMITY_THRESHOLD_METRES));
+  const distRatio = Math.min(
+    1,
+    Math.max(0, distance / PROXIMITY_THRESHOLD_METRES),
+  );
   const dotRadius = maxDotRadius * distRatio;
   const rad = toRad(angle);
   const dotX = cx + dotRadius * Math.sin(rad);

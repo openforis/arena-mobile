@@ -13,14 +13,14 @@ const extractErrorMessage = ({
 }): string => {
   const firstLevelErrors = Object.values(errors);
   const secondLevelErrors: Validation[] = firstLevelErrors.flatMap(
-    (firstLevelError) => Object.values(firstLevelError)
+    (firstLevelError) => Object.values(firstLevelError),
   );
   const errorItems: ValidationResult[] = secondLevelErrors.reduce(
     (acc, secondLevelError: Validation) => {
       acc.push(...(secondLevelError.errors ?? []));
       return acc;
     },
-    [] as ValidationResult[]
+    [] as ValidationResult[],
   );
   return errorItems
     .reduce((acc: any, errorItem: ValidationResult) => {

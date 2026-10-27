@@ -5,19 +5,13 @@ const getPrevCycleKey = (cycleKey: any) => {
   return cycleNum > 0 ? String(cycleNum - 1) : cycleKey;
 };
 
-const getPrevCycleKeys = ({
-  survey,
-  cycleKey
-}: any) => {
+const getPrevCycleKeys = ({ survey, cycleKey }: any) => {
   const cycleKeys = Surveys.getCycleKeys(survey);
   const index = cycleKeys.indexOf(cycleKey);
   return cycleKeys.slice(0, index);
 };
 
-const isPreviousCycle = ({
-  defaultCycleKey,
-  cycleKey
-}: any) =>
+const isPreviousCycle = ({ defaultCycleKey, cycleKey }: any) =>
   getPrevCycleKey(defaultCycleKey) === cycleKey;
 
 const labelFunction = (cycleKey: any) => String(Number(cycleKey) + 1);

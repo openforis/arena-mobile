@@ -28,7 +28,9 @@ export class RemoteJobWatcherJob extends JobMobile<RecordsUploadAndProcessJobCon
       throw new Error("RemoteJobWatcherJob: missing remoteJobUuid in context");
     }
 
-    this.logger.debug(`RemoteJobWatcherJob: watching remote job ${remoteJobUuid}`);
+    this.logger.debug(
+      `RemoteJobWatcherJob: watching remote job ${remoteJobUuid}`,
+    );
 
     const ws = await WebSocketService.open();
 
@@ -84,7 +86,9 @@ export class RemoteJobWatcherJob extends JobMobile<RecordsUploadAndProcessJobCon
     try {
       await RemoteJobService.cancelActiveJob();
     } catch (error) {
-      this.logger.warn(`RemoteJobWatcherJob: failed to cancel remote job: ${error}`);
+      this.logger.warn(
+        `RemoteJobWatcherJob: failed to cancel remote job: ${error}`,
+      );
     }
     this.settle?.();
     await super.cancel();

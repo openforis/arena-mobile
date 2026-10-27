@@ -18,7 +18,8 @@ type JobMonitorCallbacks = {
 
 // callbacks are kept outside of the store (functions are not serializable): the store contains
 // only the callbacksId they are registered with
-const JobMonitorCallbacksRegistry = createCallbackRegistry<JobMonitorCallbacks>();
+const JobMonitorCallbacksRegistry =
+  createCallbackRegistry<JobMonitorCallbacks>();
 
 const isJobStatusEnded = (status: any) =>
   [JobStatus.canceled, JobStatus.failed, JobStatus.succeeded].includes(status);
@@ -35,7 +36,11 @@ const calculateJobProgressPercent = ({
 
   const totalNumber = Number(total);
   const processedNumber = Number(processed);
-  if (!Number.isFinite(totalNumber) || totalNumber <= 0 || !Number.isFinite(processedNumber)) {
+  if (
+    !Number.isFinite(totalNumber) ||
+    totalNumber <= 0 ||
+    !Number.isFinite(processedNumber)
+  ) {
     return -1;
   }
   return Math.floor((processedNumber / totalNumber) * 100);
@@ -94,7 +99,10 @@ const buildUploadStats = ({
     };
   }
 
-  const elapsedSeconds = Math.max((now - previousSample.timestamp) / 1000, 0.001);
+  const elapsedSeconds = Math.max(
+    (now - previousSample.timestamp) / 1000,
+    0.001,
+  );
   const processedDiff = Math.max(0, processedNumber - previousSample.processed);
   const instantSpeed = processedDiff / elapsedSeconds;
 
@@ -139,91 +147,104 @@ const resolveInnerJobUi = ({
 }: {
   jobSummary: JobSerialized<any>;
   innerJobUiConfigByType?: Record<string, InnerJobUiConfig>;
-}): { config: InnerJobUiConfig; currentInnerJobSummary: JobSerialized<any> } | null => {
+}): {
+  config: InnerJobUiConfig;
+  currentInnerJobSummary: JobSerialized<any>;
+} | null => {
   if (!innerJobUiConfigByType) return null;
   const { innerJobs, currentInnerJobIndex } = jobSummary as any;
   const currentInnerJobSummary = innerJobs?.[currentInnerJobIndex];
-  const config = currentInnerJobSummary && innerJobUiConfigByType[currentInnerJobSummary.type];
+  const config =
+    currentInnerJobSummary &&
+    innerJobUiConfigByType[currentInnerJobSummary.type];
   return config ? { config, currentInnerJobSummary } : null;
 };
 
-const createOnJobUpdateCallback =
-  ({
-    dispatch,
-    job,
-    autoDismiss,
-    onJobComplete,
-    onJobEnd,
-    showTransferStats = false,
-    innerJobUiConfigByType,
-    silent = false,
-  }: any): (jobSummary: JobSerialized<any>) => void => {
-    let previousSample: {
-      processed: number;
-      timestamp: number;
-      speed: number;
-    } | null = null;
+const createOnJobUpdateCallback = ({
+  dispatch,
+  job,
+  autoDismiss,
+  onJobComplete,
+  onJobEnd,
+  showTransferStats = false,
+  innerJobUiConfigByType,
+  silent = false,
+}: any): ((jobSummary: JobSerialized<any>) => void) => {
+  let previousSample: {
+    processed: number;
+    timestamp: number;
+    speed: number;
+  } | null = null;
 
-    return (jobSummary: JobSerialized<any>) => {
-      const { status, errors, processed, total } = jobSummary;
-      const progressPercent = calculateJobProgressPercent({ jobSummary });
+  return (jobSummary: JobSerialized<any>) => {
+    const { status, errors, processed, total } = jobSummary;
+    const progressPercent = calculateJobProgressPercent({ jobSummary });
 
-      const innerJobUi = resolveInnerJobUi({ jobSummary, innerJobUiConfigByType });
-      const currentShowTransferStats = innerJobUi
-        ? !!innerJobUi.config.showTransferStats
-        : showTransferStats;
-      // a composite job's own processed/total just count finished inner jobs (e.g. 1 of 2), not
-      // bytes - use the current inner job's own numbers for transfer stats instead
-      const statsSource = innerJobUi?.currentInnerJobSummary ?? { processed, total };
+    const innerJobUi = resolveInnerJobUi({
+      jobSummary,
+      innerJobUiConfigByType,
+    });
+    const currentShowTransferStats = innerJobUi
+      ? !!innerJobUi.config.showTransferStats
+      : showTransferStats;
+    // a composite job's own processed/total just count finished inner jobs (e.g. 1 of 2), not
+    // bytes - use the current inner job's own numbers for transfer stats instead
+    const statsSource = innerJobUi?.currentInnerJobSummary ?? {
+      processed,
+      total,
+    };
 
-      const uploadStats = buildUploadStats({
-        showTransferStats: currentShowTransferStats,
+    const uploadStats = buildUploadStats({
+      showTransferStats: currentShowTransferStats,
+      status,
+      processed: statsSource.processed,
+      total: statsSource.total,
+      previousSample,
+    });
+    previousSample = uploadStats.previousSample;
+
+    dispatch({
+      type: JOB_MONITOR_UPDATE,
+      payload: {
+        progressPercent,
         status,
-        processed: statsSource.processed,
-        total: statsSource.total,
-        previousSample,
-      });
-      previousSample = uploadStats.previousSample;
-
-      dispatch({
-        type: JOB_MONITOR_UPDATE,
-        payload: {
-          progressPercent,
-          status,
-          errors,
-          ...(innerJobUi
-            ? { titleKey: innerJobUi.config.titleKey, showTransferStats: currentShowTransferStats }
-            : {}),
-          transferTotalBytes: uploadStats.transferTotalBytes,
-          transferSpeedBytesPerSec: uploadStats.transferSpeedBytesPerSec,
-          etaSeconds: uploadStats.etaSeconds,
-        },
-      });
-      if (isJobStatusEnded(status)) {
-        if (!job) {
-          // remote job, no local job instance (see JobStartParams.jobUuid) - only this callback
-          // knows the websocket subscription is done with, since the caller never gets a job
-          // instance of its own to clean up
-          WebSocketService.close();
-        }
-        if (status === JobStatus.succeeded) {
-          // close before notifying: existing behavior for autoDismiss, extended to silent jobs
-          // too - an unattended job has no dialog for the user to dismiss themselves (see
-          // JobMonitorDialog's `visible={isOpen && !silent}`), so isOpen must reset on its own
-          // or it gets stuck forever - and with it, anything derived from it (e.g. the
-          // auto-sync icon's spinner, or RecordsList's post-tick refresh)
-          if (autoDismiss || silent) {
-            dispatch(close());
-          }
-          onJobComplete?.(jobSummary);
-        } else if (silent) {
-          // same reasoning, for a job that failed or was canceled instead
+        errors,
+        ...(innerJobUi
+          ? {
+              titleKey: innerJobUi.config.titleKey,
+              showTransferStats: currentShowTransferStats,
+            }
+          : {}),
+        transferTotalBytes: uploadStats.transferTotalBytes,
+        transferSpeedBytesPerSec: uploadStats.transferSpeedBytesPerSec,
+        etaSeconds: uploadStats.etaSeconds,
+      },
+    });
+    if (isJobStatusEnded(status)) {
+      if (!job) {
+        // remote job, no local job instance (see JobStartParams.jobUuid) - only this callback
+        // knows the websocket subscription is done with, since the caller never gets a job
+        // instance of its own to clean up
+        WebSocketService.close();
+      }
+      if (status === JobStatus.succeeded) {
+        // close before notifying: existing behavior for autoDismiss, extended to silent jobs
+        // too - an unattended job has no dialog for the user to dismiss themselves (see
+        // JobMonitorDialog's `visible={isOpen && !silent}`), so isOpen must reset on its own
+        // or it gets stuck forever - and with it, anything derived from it (e.g. the
+        // auto-sync icon's spinner, or RecordsList's post-tick refresh)
+        if (autoDismiss || silent) {
           dispatch(close());
         }
-        onJobEnd?.(jobSummary);
+        onJobComplete?.(jobSummary);
+      } else if (silent) {
+        // same reasoning, for a job that failed or was canceled instead
+        dispatch(close());
       }
-    };
+      onJobEnd?.(jobSummary);
+    }
   };
+};
 
 const createOnCancelCallback = ({ job, onCancelProp }: any) => {
   if (!job && !onCancelProp) return undefined;
@@ -287,64 +308,71 @@ const start =
     transferEtaTextKey = null,
     innerJobUiConfigByType = undefined,
   }: JobStartParams) =>
-    async (dispatch: any, getState: any) => {
-      // the state of a previous job (if any) is replaced: its callbacks won't be used anymore
-      JobMonitorCallbacksRegistry.remove(getJobMonitorState(getState()).callbacksId);
-      const onCancel = createOnCancelCallback({ job, onCancelProp });
-      const callbacksId = JobMonitorCallbacksRegistry.register({ onCancel, onClose });
-      dispatch({
-        type: JOB_MONITOR_START,
-        payload: {
-          jobUuid,
-          titleKey,
-          cancelButtonTextKey,
-          closeButtonTextKey,
-          messageKey,
-          messageParams,
-          callbacksId,
-          autoDismiss,
-          silent,
-          progressRangeStart,
-          progressRangeEnd,
-          showTransferStats,
-          transferTotalBytes: null,
-          transferSpeedBytesPerSec: null,
-          transferSizeTextKey,
-          transferSpeedTextKey,
-          transferEtaTextKey,
-          etaSeconds: null,
-        },
-      });
-
-      const onJobUpdate = createOnJobUpdateCallback({
-        dispatch,
-        job,
+  async (dispatch: any, getState: any) => {
+    // the state of a previous job (if any) is replaced: its callbacks won't be used anymore
+    JobMonitorCallbacksRegistry.remove(
+      getJobMonitorState(getState()).callbacksId,
+    );
+    const onCancel = createOnCancelCallback({ job, onCancelProp });
+    const callbacksId = JobMonitorCallbacksRegistry.register({
+      onCancel,
+      onClose,
+    });
+    dispatch({
+      type: JOB_MONITOR_START,
+      payload: {
+        jobUuid,
+        titleKey,
+        cancelButtonTextKey,
+        closeButtonTextKey,
+        messageKey,
+        messageParams,
+        callbacksId,
         autoDismiss,
-        onJobComplete,
-        onJobEnd,
-        showTransferStats,
-        innerJobUiConfigByType,
         silent,
-      });
+        progressRangeStart,
+        progressRangeEnd,
+        showTransferStats,
+        transferTotalBytes: null,
+        transferSpeedBytesPerSec: null,
+        transferSizeTextKey,
+        transferSpeedTextKey,
+        transferEtaTextKey,
+        etaSeconds: null,
+      },
+    });
 
-      if (job) {
-        // local job: listen to job update events
-        if (job.isEnded()) {
-          onJobUpdate(job.toJSON());
-        } else {
-          job.onEvent(() => onJobUpdate(job.toJSON()));
-        }
+    const onJobUpdate = createOnJobUpdateCallback({
+      dispatch,
+      job,
+      autoDismiss,
+      onJobComplete,
+      onJobEnd,
+      showTransferStats,
+      innerJobUiConfigByType,
+      silent,
+    });
+
+    if (job) {
+      // local job: listen to job update events
+      if (job.isEnded()) {
+        onJobUpdate(job.toJSON());
       } else {
-        // remote job; open Web Socket and listen to job update events
-        const ws = await WebSocketService.open();
-        ws.on(WebSocketService.EVENTS.jobUpdate, onJobUpdate);
+        job.onEvent(() => onJobUpdate(job.toJSON()));
       }
-    };
+    } else {
+      // remote job; open Web Socket and listen to job update events
+      const ws = await WebSocketService.open();
+      ws.on(WebSocketService.EVENTS.jobUpdate, onJobUpdate);
+    }
+  };
 
 const startAsync = async ({
   dispatch,
   ...otherParams
-}: JobStartParams & { dispatch: any }): Promise<JobSerialized<any> | undefined> =>
+}: JobStartParams & { dispatch: any }): Promise<
+  JobSerialized<any> | undefined
+> =>
   new Promise((resolve, reject) => {
     const { job } = otherParams;
     if (job) {
@@ -365,7 +393,7 @@ const startAsync = async ({
             reject(jobEnd);
           }
         },
-      })
+      }),
     );
   });
 

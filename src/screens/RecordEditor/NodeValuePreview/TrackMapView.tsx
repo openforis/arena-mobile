@@ -1,6 +1,9 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { StyleProp, StyleSheet, ViewStyle } from "react-native";
-import RNMapView, { Polyline, UserLocationChangeEvent } from "react-native-maps";
+import RNMapView, {
+  Polyline,
+  UserLocationChangeEvent,
+} from "react-native-maps";
 
 import { IconButton, MapView, VView } from "components";
 import { TrackSegment } from "model";
@@ -92,7 +95,9 @@ export const TrackMapView = (props: Props) => {
     >
       <MapView
         ref={mapRef}
-        fitToCoordinatesOnReady={coordinates.length > 0 ? coordinates : undefined}
+        fitToCoordinatesOnReady={
+          coordinates.length > 0 ? coordinates : undefined
+        }
         fitOnlyOnce={fitOnlyOnce}
         initialRegion={region}
         onPanDrag={followUserLocation ? onPanDrag : undefined}
@@ -107,7 +112,6 @@ export const TrackMapView = (props: Props) => {
       >
         {lines.map((line, index) => (
           <Polyline
-            // eslint-disable-next-line react/no-array-index-key
             key={index}
             coordinates={line}
             strokeColor={trackStrokeColor}

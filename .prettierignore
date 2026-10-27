@@ -1,0 +1,17 @@
+# build output and native projects
+.expo/
+android/
+ios/
+dist/
+dist-web/
+web-build/
+coverage/
+modules/*/android/
+CHANGELOG.md
+
+# docs and tool folders
+*.md
+.agents/
+.claude/
+.github/
+.superpowers/

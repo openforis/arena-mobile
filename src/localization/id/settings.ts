@@ -37,8 +37,7 @@ export default {
   },
   keepScreenAwake: {
     label: "Layar tetap terjaga",
-    description:
-      "Mencegah layar mati secara otomatis selama aplikasi terbuka",
+    description: "Mencegah layar mati secara otomatis selama aplikasi terbuka",
   },
   fullScreen: {
     label: "Layar penuh",

@@ -17,7 +17,7 @@ const surveyPreferencesKeys = {
 };
 
 const preferencesStoredObjectManager = new StoredObjectManager(
-  asyncStorageKeys.preferences
+  asyncStorageKeys.preferences,
 );
 
 const getCurrentSurveyId = async () =>
@@ -26,13 +26,13 @@ const getCurrentSurveyId = async () =>
 const setCurrentSurveyId = async (surveyId: any) => {
   await preferencesStoredObjectManager.updateValue(
     keys.currentSurveyId,
-    surveyId
+    surveyId,
   );
 };
 
 const getPrereferencesBySurveyId = async (surveyId: any) => {
   const preferencesBySurveyId = await preferencesStoredObjectManager.getValue(
-    keys.preferencesBySurveyId
+    keys.preferencesBySurveyId,
   );
   return preferencesBySurveyId?.[surveyId] || {};
 };
@@ -69,7 +69,10 @@ const getLastUsedMapAppId = async (): Promise<string | undefined> =>
   await preferencesStoredObjectManager.getValue(keys.lastUsedMapAppId);
 
 const setLastUsedMapAppId = async (appId: string) => {
-  await preferencesStoredObjectManager.updateValue(keys.lastUsedMapAppId, appId);
+  await preferencesStoredObjectManager.updateValue(
+    keys.lastUsedMapAppId,
+    appId,
+  );
 };
 
 const getWhatsNewSeenIds = async (): Promise<string[]> =>
@@ -85,7 +88,7 @@ const clearCurrentSurveyId = async () =>
 const updateSurveyPreferences = async (surveyId: any, updateFn: any) => {
   const preferencesBySurveyId =
     (await preferencesStoredObjectManager.getValue(
-      keys.preferencesBySurveyId
+      keys.preferencesBySurveyId,
     )) ?? {};
   const preferencesBySurveyIdUpdated = { ...preferencesBySurveyId };
   const surveyPreferences = preferencesBySurveyIdUpdated[surveyId] ?? {};
@@ -99,14 +102,14 @@ const updateSurveyPreferences = async (surveyId: any, updateFn: any) => {
   }
   await preferencesStoredObjectManager.updateValue(
     keys.preferencesBySurveyId,
-    preferencesBySurveyIdUpdated
+    preferencesBySurveyIdUpdated,
   );
 };
 
 const updateSurveyPreference = async (surveyId: any, key: any, value: any) =>
   updateSurveyPreferences(surveyId, (surveyPreferences: any) => ({
     ...surveyPreferences,
-    [key]: value
+    [key]: value,
   }));
 
 const setSurveyPreferredLanguage = async (surveyId: any, lang: any) =>
@@ -115,12 +118,17 @@ const setSurveyPreferredLanguage = async (surveyId: any, lang: any) =>
 const setSurveyUserGroup = async (surveyId: any, userGroup: any) =>
   updateSurveyPreference(surveyId, surveyPreferencesKeys.userGroup, userGroup);
 
-const setSurveyRecordLastEditedPage = async (surveyId: any, recordId: any, page: any) =>
-  updateSurveyPreferences(surveyId, (surveyPreferences: any) => Objects.assocPath({
-    obj: surveyPreferences,
-    path: [surveyPreferencesKeys.lastEditedPageByRecordId, recordId],
-    value: page,
-  })
+const setSurveyRecordLastEditedPage = async (
+  surveyId: any,
+  recordId: any,
+  page: any,
+) =>
+  updateSurveyPreferences(surveyId, (surveyPreferences: any) =>
+    Objects.assocPath({
+      obj: surveyPreferences,
+      path: [surveyPreferencesKeys.lastEditedPageByRecordId, recordId],
+      value: page,
+    }),
   );
 
 const setSurveyEntityListColumns = async (
@@ -139,10 +147,11 @@ const setSurveyEntityListColumns = async (
   });
 
 const clearSurveyRecordLastEditedPage = async (surveyId: any, recordId: any) =>
-  updateSurveyPreferences(surveyId, (surveyPreferences: any) => Objects.dissocPath({
-    obj: surveyPreferences,
-    path: [surveyPreferencesKeys.lastEditedPageByRecordId, recordId],
-  })
+  updateSurveyPreferences(surveyId, (surveyPreferences: any) =>
+    Objects.dissocPath({
+      obj: surveyPreferences,
+      path: [surveyPreferencesKeys.lastEditedPageByRecordId, recordId],
+    }),
   );
 
 // Cleared on logout (see RemoteConnectionActions logout), so the next user logging in on the

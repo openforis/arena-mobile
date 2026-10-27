@@ -3,7 +3,7 @@ import { Files } from "./Files";
 
 const toString = (
   val: any,
-  options?: FormatOptions
+  options?: FormatOptions,
 ): string | null | undefined => {
   const opts = { ...defaultOptions, ...options };
   const { nullsToEmpty } = opts;
@@ -29,7 +29,7 @@ const defaultOptions: FormatOptions = {
  */
 const formatCSVValue = (
   val: any,
-  options?: FormatOptions
+  options?: FormatOptions,
 ): string | null | undefined => {
   const opts = { ...defaultOptions, ...options };
   const { alwaysWrap } = opts;

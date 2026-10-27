@@ -12,5 +12,6 @@ export default {
   surveys: "Enkäter",
   surveysDescription: "Byt, ladda ner eller uppdatera enkäter",
   noSurveySelected: "Ingen enkät vald",
-  noSurveySelectedDescription: "Välj eller ladda ner en enkät för att börja samla in data",
+  noSurveySelectedDescription:
+    "Välj eller ladda ner en enkät för att börja samla in data",
 };

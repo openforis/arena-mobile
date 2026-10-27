@@ -70,7 +70,9 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     );
 
     const tempFolderUri = await Files.createTempFolder();
-    this.logger.debug(`RecordsExportFileGenerationJob: temp folder created at ${tempFolderUri}`);
+    this.logger.debug(
+      `RecordsExportFileGenerationJob: temp folder created at ${tempFolderUri}`,
+    );
 
     try {
       const tempRecordsFolderUri = Files.path(
@@ -154,7 +156,9 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       );
 
       if (this.isCanceled()) {
-        this.logger.debug("RecordsExportFileGenerationJob: canceled before/during record export loop");
+        this.logger.debug(
+          "RecordsExportFileGenerationJob: canceled before/during record export loop",
+        );
         return;
       }
 
@@ -171,7 +175,9 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       }
 
       if (this.isCanceled()) {
-        this.logger.debug("RecordsExportFileGenerationJob: canceled before writing info file");
+        this.logger.debug(
+          "RecordsExportFileGenerationJob: canceled before writing info file",
+        );
         return;
       }
 
@@ -179,7 +185,9 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       await this.writeInfoFile({ tempFolderUri });
 
       if (this.isCanceled()) {
-        this.logger.debug("RecordsExportFileGenerationJob: canceled before zipping");
+        this.logger.debug(
+          "RecordsExportFileGenerationJob: canceled before zipping",
+        );
         return;
       }
 
@@ -194,7 +202,9 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
         `RecordsExportFileGenerationJob: zipping ${tempFolderUri} to ${this.outputFileUri} (${files.length} file(s), ${recordsToExport.length} record(s))`,
       );
       await Files.zip(tempFolderUri, this.outputFileUri);
-      this.logger.debug("RecordsExportFileGenerationJob: zip created successfully");
+      this.logger.debug(
+        "RecordsExportFileGenerationJob: zip created successfully",
+      );
     } catch (error) {
       this.logger.error(`RecordsExportFileGenerationJob: failed: ${error}`);
       throw error;
@@ -221,7 +231,10 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     }
 
     const tempRecordFileUri = `${Files.path(tempRecordsFolderUri, uuid)}.json`;
-    await Files.writeJsonToFile({ content: record, fileUri: tempRecordFileUri });
+    await Files.writeJsonToFile({
+      content: record,
+      fileUri: tempRecordFileUri,
+    });
 
     if (Objects.isEmpty(nodeDefsFile)) return [];
 
@@ -275,9 +288,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
 
     const nodesFile = nodeDefsFile.reduce((acc: any, nodeDefFile: any) => {
       const nodeDefFileUuid = nodeDefFile.uuid;
-      acc.push(
-        ...Records.getNodesByDefUuid(nodeDefFileUuid)(record),
-      );
+      acc.push(...Records.getNodesByDefUuid(nodeDefFileUuid)(record));
       return acc;
     }, []);
 

@@ -9,13 +9,15 @@ import { AutoSyncStatus } from "./types";
 
 // the real modules pull in the whole arena-core/model graph, which Jest can't load as-is
 jest.mock("model", () => ({
-  RecordSyncStatus: jest.requireActual("../../model/RecordSyncStatus").RecordSyncStatus,
+  RecordSyncStatus: jest.requireActual("../../model/RecordSyncStatus")
+    .RecordSyncStatus,
 }));
 jest.mock("@openforis/arena-core", () => ({
   Surveys: {
     isRecordsMergeWithSameKeysAllowed: (survey: any) =>
       survey?.props?.security?.allowRecordsMergeWithSameKeys ?? true,
-    isVisibleInMobile: (survey: any) => survey?.props?.security?.visibleInMobile ?? true,
+    isVisibleInMobile: (survey: any) =>
+      survey?.props?.security?.visibleInMobile ?? true,
     isRecordsDownloadInMobileAllowed: (survey: any) =>
       survey?.props?.security?.allowRecordsDownloadInMobile ?? true,
   },
@@ -64,7 +66,9 @@ describe("computeAutoSyncStatus", () => {
   test("same record modified on both sides stays mergeable when merging with same keys is not allowed", () => {
     expect(
       computeAutoSyncStatus({
-        records: recordsWithStatuses(RecordSyncStatus.modifiedLocallyAndRemotely),
+        records: recordsWithStatuses(
+          RecordSyncStatus.modifiedLocallyAndRemotely,
+        ),
         survey: surveyMergeNotAllowed,
       }),
     ).toBe(AutoSyncStatus.error);
@@ -140,10 +144,20 @@ describe("computeAutoSyncStatus with auto-sync enabled", () => {
 
 describe("isAutoMergeAllowed", () => {
   test("only with auto-sync enabled and records download allowed", () => {
-    expect(isAutoMergeAllowed({ autoSyncEnabled: true, survey: surveyMergeAllowed })).toBe(true);
-    expect(isAutoMergeAllowed({ autoSyncEnabled: false, survey: surveyMergeAllowed })).toBe(false);
     expect(
-      isAutoMergeAllowed({ autoSyncEnabled: true, survey: surveyDownloadNotAllowed }),
+      isAutoMergeAllowed({ autoSyncEnabled: true, survey: surveyMergeAllowed }),
+    ).toBe(true);
+    expect(
+      isAutoMergeAllowed({
+        autoSyncEnabled: false,
+        survey: surveyMergeAllowed,
+      }),
+    ).toBe(false);
+    expect(
+      isAutoMergeAllowed({
+        autoSyncEnabled: true,
+        survey: surveyDownloadNotAllowed,
+      }),
     ).toBe(false);
   });
 });
@@ -153,10 +167,16 @@ describe("hasConflictingKeysWithMergeNotAllowed", () => {
 
   test("true only when merging with same keys is not allowed", () => {
     expect(
-      hasConflictingKeysWithMergeNotAllowed({ records, survey: surveyMergeNotAllowed }),
+      hasConflictingKeysWithMergeNotAllowed({
+        records,
+        survey: surveyMergeNotAllowed,
+      }),
     ).toBe(true);
     expect(
-      hasConflictingKeysWithMergeNotAllowed({ records, survey: surveyMergeAllowed }),
+      hasConflictingKeysWithMergeNotAllowed({
+        records,
+        survey: surveyMergeAllowed,
+      }),
     ).toBe(false);
   });
 

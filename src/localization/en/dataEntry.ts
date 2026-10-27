@@ -11,8 +11,7 @@ export default {
     statusTitle: "Sync status",
     syncInProgressToast:
       "Auto-sync is in progress. Please wait for it to finish before sending data manually.",
-    batteryDataWarning:
-      "May increase battery and data usage when not on Wi-Fi",
+    batteryDataWarning: "May increase battery and data usage when not on Wi-Fi",
     syncNow: "Sync now",
     recordSyncInProgress:
       "This record is being synchronized with the server. Please wait a moment",
@@ -378,7 +377,8 @@ Press '$t(common:stop)' when done.`,
       "Position tracking was interrupted: the recorded track has been saved. Resume tracking to continue.",
     error: {
       generic: "Cannot start position tracking",
-      permissionDenied: "Cannot track the position: access to location not granted",
+      permissionDenied:
+        "Cannot track the position: access to location not granted",
       locationServicesOff:
         "Cannot track the position: location services are turned off",
       notSaved:

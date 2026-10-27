@@ -6,10 +6,7 @@ import { SurveyActionTypes } from "./actionTypes";
 import { determinePreferredSurveyLanguage } from "./surveyStateUtils";
 
 const actionHandlers = {
-  [SurveyActionTypes.CURRENT_SURVEY_SET]: ({
-    state,
-    action
-  }: any) => {
+  [SurveyActionTypes.CURRENT_SURVEY_SET]: ({ state, action }: any) => {
     const { survey, preferredLanguage = null } = action;
 
     return {
@@ -26,43 +23,33 @@ const actionHandlers = {
   },
   [SurveyActionTypes.CURRENT_SURVEY_PREFERRED_LANG_SET]: ({
     state,
-    action
+    action,
   }: any) => ({
     ...state,
     currentSurveyPreferredLanguage: action.lang,
   }),
-  [SurveyActionTypes.CURRENT_SURVEY_USER_GROUP_LOADING]: ({
-    state,
-  }: any) => ({
+  [SurveyActionTypes.CURRENT_SURVEY_USER_GROUP_LOADING]: ({ state }: any) => ({
     ...state,
     currentSurveyUserGroupReady: false,
   }),
   [SurveyActionTypes.CURRENT_SURVEY_USER_GROUP_SET]: ({
     state,
-    action
+    action,
   }: any) => ({
     ...state,
     currentSurveyUserGroup: action.userGroup,
     currentSurveyUserGroupReady: true,
   }),
-  [SurveyActionTypes.CURRENT_SURVEY_USER_GROUP_RESET]: ({
-    state,
-  }: any) => ({
+  [SurveyActionTypes.CURRENT_SURVEY_USER_GROUP_RESET]: ({ state }: any) => ({
     ...state,
     currentSurveyUserGroup: null,
     currentSurveyUserGroupReady: false,
   }),
-  [SurveyActionTypes.CURRENT_SURVEY_CYCLE_SET]: ({
-    state,
-    action
-  }: any) => ({
+  [SurveyActionTypes.CURRENT_SURVEY_CYCLE_SET]: ({ state, action }: any) => ({
     ...state,
     currentSurveyCycle: action.cycleKey,
   }),
-  [SurveyActionTypes.SURVEYS_LOCAL_SET]: ({
-    state,
-    action
-  }: any) => ({
+  [SurveyActionTypes.SURVEYS_LOCAL_SET]: ({ state, action }: any) => ({
     ...state,
     surveysLocal: action.surveys,
   }),

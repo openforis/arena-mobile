@@ -176,6 +176,7 @@ const identifyAndDeleteRecordsNotInRemoteServer = async ({
     } catch (error) {
       throw new Error(
         `error deleting local record summaries. Details: ${error}`,
+        { cause: error },
       );
     }
   }
@@ -209,7 +210,9 @@ const findAndInsertNewRecordSummariesLocally = async ({
       recordSummaries: recordSummariesToAdd,
     });
   } catch (error) {
-    throw new Error(`error inserting new record summaries. Details: ${error}`);
+    throw new Error(`error inserting new record summaries. Details: ${error}`, {
+      cause: error,
+    });
   }
 };
 
@@ -241,6 +244,7 @@ const updateLocalRecordsWithRemoteInfo = async ({
         } catch (error) {
           throw new Error(
             `error updating local record keys for record ${uuid}. Details: ${error}`,
+            { cause: error },
           );
         }
       }
@@ -302,6 +306,7 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
   } catch (error) {
     throw new Error(
       `error fetching full local records list. Details: ${error}`,
+      { cause: error },
     );
   }
 
@@ -314,6 +319,7 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
   } catch (error: any) {
     const wrappedError: any = new Error(
       `error fetching remote records summaries. Details: ${error}`,
+      { cause: error },
     );
     // preserve the original HTTP status (e.g. 401), lost otherwise by wrapping - callers use
     // it to tell an expired session apart from any other failure (see auto-sync)
@@ -348,7 +354,9 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
       onlyLocal,
     });
   } catch (error) {
-    throw new Error(`error fetching updated local records. Details: ${error}`);
+    throw new Error(`error fetching updated local records. Details: ${error}`, {
+      cause: error,
+    });
   }
 
   return recordsSummariesLocalReloaded.map((recordSummaryLocal: any) => {
@@ -389,7 +397,7 @@ const confirmRecordsSyncedWithRemote = async ({
 }: any) => {
   const { id: surveyId } = survey;
 
-  let recordsSummariesRemote: any[] = [];
+  let recordsSummariesRemote: any[];
   try {
     recordsSummariesRemote = await fetchRecordsSummariesRemoteServer({
       surveyRemoteId: survey.remoteId,
@@ -398,6 +406,7 @@ const confirmRecordsSyncedWithRemote = async ({
   } catch (error) {
     throw new Error(
       `error fetching remote records summaries after upload. Details: ${error}`,
+      { cause: error },
     );
   }
 

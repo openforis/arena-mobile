@@ -12,5 +12,6 @@ export default {
   surveys: "فرم‌های آماربرداری",
   surveysDescription: "تغییر، دانلود یا به‌روزرسانی فرم‌های آماربرداری",
   noSurveySelected: "هیچ فرم آماربرداری انتخاب نشده است",
-  noSurveySelectedDescription: "برای شروع جمع‌آوری داده‌ها، یک فرم آماربرداری را انتخاب یا دانلود کنید",
+  noSurveySelectedDescription:
+    "برای شروع جمع‌آوری داده‌ها، یک فرم آماربرداری را انتخاب یا دانلود کنید",
 };

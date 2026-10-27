@@ -40,7 +40,7 @@ type LocationWatchingMonitorProps = {
 };
 
 export const LocationWatchingMonitor = (
-  props: LocationWatchingMonitorProps
+  props: LocationWatchingMonitorProps,
 ) => {
   const {
     activeLocationSourceId,

@@ -34,7 +34,7 @@
     "moduleDetection": "force",
     "noUncheckedSideEffectImports": true,
     "skipLibCheck": true,
-    "strict": true,
+    "strict": true
     // "verbatimModuleSyntax": true,
   },
   "exclude": [
@@ -44,5 +44,5 @@
     "jest.config.js"
   ],
   "extends": "expo/tsconfig.base",
-  "include": ["src/**/*", "App.tsx", "app.config.ts"],
+  "include": ["src/**/*", "App.tsx", "app.config.ts"]
 }

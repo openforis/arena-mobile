@@ -12,5 +12,6 @@ export default {
   surveys: "Inquéritos",
   surveysDescription: "Alterar, transferir ou atualizar inquéritos",
   noSurveySelected: "Nenhum inquérito selecionado",
-  noSurveySelectedDescription: "Selecione ou transfira um inquérito para começar a recolher dados",
+  noSurveySelectedDescription:
+    "Selecione ou transfira um inquérito para começar a recolher dados",
 };

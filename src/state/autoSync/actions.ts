@@ -31,10 +31,11 @@ const checkEnd =
       type: AUTO_SYNC_CHECK_END,
       payload: {
         status: computeAutoSyncStatus({ records, survey, autoSyncEnabled }),
-        conflictingKeysWithMergeNotAllowed: hasConflictingKeysWithMergeNotAllowed({
-          records,
-          survey,
-        }),
+        conflictingKeysWithMergeNotAllowed:
+          hasConflictingKeysWithMergeNotAllowed({
+            records,
+            survey,
+          }),
         lastCheckedAt: new Date().toISOString(),
       },
     });
@@ -74,7 +75,10 @@ const reset = () => ({ type: AUTO_SYNC_RESET });
 // a short, supplementary note about the outcome of the last completed tick/check - shown
 // alongside (not instead of) the main status text, e.g. "nothing to send right now" after a
 // check that found no record safe to auto-upload. Cleared by the next checkStart.
-const setStatusMessage = (textKey: string, textParams?: Record<string, any>) => ({
+const setStatusMessage = (
+  textKey: string,
+  textParams?: Record<string, any>,
+) => ({
   type: AUTO_SYNC_STATUS_MESSAGE_SET,
   payload: { message: { textKey, textParams } },
 });
@@ -89,7 +93,10 @@ const setStatusMessage = (textKey: string, textParams?: Record<string, any>) => 
 // alone since it still needs the user's attention and is more specific than "pending".
 const markPending = () => (dispatch: any, getState: any) => {
   const { status } = getState().autoSync;
-  if (status === AutoSyncStatus.authError || status === AutoSyncStatus.checkError) {
+  if (
+    status === AutoSyncStatus.authError ||
+    status === AutoSyncStatus.checkError
+  ) {
     return;
   }
   dispatch({

@@ -73,9 +73,7 @@ export const useBreadcrumbItems = () => {
       });
     }
 
-    let currentEntity = Records.getNodeByUuid(actualEntityUuid)(
-      record,
-    );
+    let currentEntity = Records.getNodeByUuid(actualEntityUuid)(record);
 
     while (currentEntity) {
       const parentEntity = Records.getParent(currentEntity)(record);

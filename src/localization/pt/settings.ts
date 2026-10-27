@@ -16,12 +16,14 @@ export default {
     description: "$t(dataEntry:autoSync.batteryDataWarning)",
   },
   autoSyncOpenRecordIntervalMinutes: {
-    label: "Intervalo de sincronização automática durante a edição: {{value}} min",
+    label:
+      "Intervalo de sincronização automática durante a edição: {{value}} min",
     description:
       "Durante quanto tempo o registo atualmente aberto no editor deve permanecer sem alterações antes de a sincronização automática o carregar",
   },
   autoSyncSlowCheckIntervalMinutes: {
-    label: "Intervalo de sincronização automática (verificação lenta): {{value}} min",
+    label:
+      "Intervalo de sincronização automática (verificação lenta): {{value}} min",
     description:
       "Depois de todos os registos estarem sincronizados, com que frequência a sincronização automática volta a verificar o servidor em busca de alterações (por exemplo, de outro dispositivo). As verificações ocorrem com mais frequência sempre que há algo novo para carregar",
   },

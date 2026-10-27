@@ -63,7 +63,8 @@ export default {
   readOnly: "Только чтение",
   readOnlyOfAnotherUserGroup:
     "Запись другой группы пользователей: её можно просматривать или клонировать, но не редактировать",
-  recordHasErrorsOrWarningsTooltip: "Запись содержит {{count}} {{itemsTypeText}}",
+  recordHasErrorsOrWarningsTooltip:
+    "Запись содержит {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Все записи",
     local: "Записи на устройстве",

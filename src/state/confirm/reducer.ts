@@ -74,7 +74,8 @@ const initialState: ConfirmState = {
   isOpen: false,
 };
 
-export const ConfirmCallbacksRegistry = createCallbackRegistry<ConfirmCallbacks>();
+export const ConfirmCallbacksRegistry =
+  createCallbackRegistry<ConfirmCallbacks>();
 
 const getConfirmState = (getState: () => unknown): ConfirmState =>
   (getState() as { confirm: ConfirmState }).confirm;
@@ -117,7 +118,10 @@ const confirmSlice = createSlice({
   name: "confirm",
   initialState,
   reducers: {
-    show: (_state, action: PayloadAction<ConfirmDataParams & { showId: number }>) => ({
+    show: (
+      _state,
+      action: PayloadAction<ConfirmDataParams & { showId: number }>,
+    ) => ({
       ...action.payload,
       isOpen: true,
     }),

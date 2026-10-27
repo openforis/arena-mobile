@@ -108,7 +108,7 @@ const StatusBarPanel = (props: StatusBarPanelProps) => {
           {t(
             `device:network.status.${
               isNetworkConnected ? "connected" : "offline"
-            }`
+            }`,
           )}
         </FormItem>
       </FieldSet>
@@ -165,13 +165,13 @@ export const StatusBar = () => {
     });
 
   const batteryTimeToDischargeFormatted = formatRemainingTimeCompact(
-    batteryTimeToDischarge
+    batteryTimeToDischarge,
   );
   const batteryTimeToDischargeFormattedShort = formatRemainingTimeShort(
-    batteryTimeToDischarge
+    batteryTimeToDischarge,
   );
   const batteryTimeToFullChargeFormattedShort = formatRemainingTimeShort(
-    batteryTimeToFullCharge
+    batteryTimeToFullCharge,
   );
   const freeDiskStorageFormatted =
     Files.toHumanReadableFileSize(freeDiskStorage);

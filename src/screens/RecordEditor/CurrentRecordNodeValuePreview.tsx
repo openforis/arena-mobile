@@ -28,7 +28,7 @@ export const CurrentRecordNodeValuePreview = (props: Props) => {
   const { nodeDef, parentNodeUuid } = props;
 
   log.debug(
-    `rendering CurrentRecordNodeValuePreview for ${nodeDef.props.name}`
+    `rendering CurrentRecordNodeValuePreview for ${nodeDef.props.name}`,
   );
 
   const dispatch = useAppDispatch();

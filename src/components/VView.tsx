@@ -12,7 +12,7 @@ export const VView = (props: ViewProps) => {
 
   const style: StyleProp<ViewStyle> = useMemo(
     () => [baseStyle.base, styleProp],
-    [styleProp]
+    [styleProp],
   );
 
   return (

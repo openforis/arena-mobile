@@ -119,8 +119,7 @@ export const NodeDefFormItem = (props: NodeDefFormItemProps) => {
     !keyAttributeLocked &&
     !qualifierAttributeLocked;
 
-  const showNodeComponentSwitch =
-    NodeDefs.isEntity(nodeDef) || editableFinal;
+  const showNodeComponentSwitch = NodeDefs.isEntity(nodeDef) || editableFinal;
 
   const formItemComponent = useMemo(
     () => (

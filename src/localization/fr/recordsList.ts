@@ -67,7 +67,8 @@ export default {
   readOnly: "Lecture seule",
   readOnlyOfAnotherUserGroup:
     "Enregistrement d'un autre groupe d'utilisateurs : il peut être consulté ou cloné, mais pas modifié",
-  recordHasErrorsOrWarningsTooltip: "L'enregistrement a {{count}} {{itemsTypeText}}",
+  recordHasErrorsOrWarningsTooltip:
+    "L'enregistrement a {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Tous les enregistrements",
     local: "Enregistrements sur l'appareil",

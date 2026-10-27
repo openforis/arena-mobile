@@ -4,7 +4,7 @@ const permissionGranted = "granted";
 
 export const useRequestPermission = (
   requestFunction: any,
-  getterFunction = null as any
+  getterFunction = null as any,
 ) => {
   const [hasPermission, setHasPermission] = useState(null as any);
 
@@ -26,7 +26,7 @@ export const useRequestPermission = (
       setHasPermission(granted);
       return granted;
     },
-    [hasPermission, requestFunction]
+    [hasPermission, requestFunction],
   );
 
   return { hasPermission, request };

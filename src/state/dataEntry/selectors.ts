@@ -288,20 +288,20 @@ const selectIsRecordAttributeFilled =
 
 const selectChildDefs =
   ({ nodeDef }: { nodeDef: NodeDefEntity }) =>
-    (state: any): NodeDef<any>[] => {
-      const cycle = selectRecordCycle(state);
-      const survey = SurveySelectors.selectCurrentSurvey(state)!;
-      const childDefs = SurveyDefs.getChildrenDefs({
-        survey,
-        nodeDef,
-        cycle,
-      }).filter((childDef) => {
-        // only child defs not hidden in mobile and in same page
-        const layoutProps = NodeDefs.getLayoutProps(cycle)(childDef);
-        return !layoutProps.pageUuid;
-      });
-      return childDefs;
-    };
+  (state: any): NodeDef<any>[] => {
+    const cycle = selectRecordCycle(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
+    const childDefs = SurveyDefs.getChildrenDefs({
+      survey,
+      nodeDef,
+      cycle,
+    }).filter((childDef) => {
+      // only child defs not hidden in mobile and in same page
+      const layoutProps = NodeDefs.getLayoutProps(cycle)(childDef);
+      return !layoutProps.pageUuid;
+    });
+    return childDefs;
+  };
 
 const selectRecordCodeParentItemUuid =
   ({
@@ -363,7 +363,7 @@ const selectCurrentPageEntity = (state: any): RecordCurrentPageEntity => {
       parentEntityUuid: undefined,
       entityDef: rootDef,
       entityDefUuid: rootDef.uuid,
-      entityUuid: Records.getRoot(record)?.uuid!,
+      entityUuid: Records.getRoot(record)!.uuid,
     };
   }
   if (!entityDefUuid) {

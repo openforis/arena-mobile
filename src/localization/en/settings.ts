@@ -106,7 +106,8 @@ It will help to get a better accuracy in coordinate attributes.`,
     emptyResult:
       "No devices found. Make sure your GPS receiver is powered on and in pairing mode.",
     scanFailed: "Something went wrong while scanning. Please try again.",
-    recognizedDevicesNotice: "Only devices recognized as GPS receivers are shown.",
+    recognizedDevicesNotice:
+      "Only devices recognized as GPS receivers are shown.",
     pairedDevicesTitle: "Paired devices",
     newDevicesTitle: "New devices",
     pairButton: "Pair",

@@ -69,7 +69,11 @@ const getMergeableStatuses = ({
     ...(mergeWithSameKeysAllowed ? [RecordSyncStatus.conflictingKeys] : []),
   ]);
 
-const getPendingStatuses = ({ autoMergeAllowed }: { autoMergeAllowed: boolean }) =>
+const getPendingStatuses = ({
+  autoMergeAllowed,
+}: {
+  autoMergeAllowed: boolean;
+}) =>
   autoMergeAllowed
     ? new Set<string>([...pendingStatuses, ...sameRecordMergeableStatuses])
     : pendingStatuses;
@@ -120,7 +124,10 @@ export const computeAutoSyncStatus = ({
     return AutoSyncStatus.pending;
   }
   if (
-    someRecordHasStatus(records, getNeedsManualFixStatuses({ mergeWithSameKeysAllowed }))
+    someRecordHasStatus(
+      records,
+      getNeedsManualFixStatuses({ mergeWithSameKeysAllowed }),
+    )
   ) {
     return AutoSyncStatus.needsManualFix;
   }
@@ -138,7 +145,9 @@ export const hasConflictingKeysWithMergeNotAllowed = ({
   survey: any;
 }): boolean =>
   !Surveys.isRecordsMergeWithSameKeysAllowed(survey) &&
-  records.some((record) => record.syncStatus === RecordSyncStatus.conflictingKeys);
+  records.some(
+    (record) => record.syncStatus === RecordSyncStatus.conflictingKeys,
+  );
 
 // true if a check already completed recently enough (AUTO_SYNC_FOCUS_RECHECK_MIN_INTERVAL_MS)
 // and nothing local has changed since - see useRecordsList.checkAutoSyncStatusIfNeeded, the only
@@ -150,8 +159,12 @@ export const wasRecentlyCheckedWithNoNewLocalChanges = ({
 }: Pick<AutoSyncState, "lastCheckedAt" | "lastLocalChangeAt">): boolean => {
   if (!lastCheckedAt) return false;
   const lastCheckedAtMs = new Date(lastCheckedAt).getTime();
-  if (Date.now() - lastCheckedAtMs >= AUTO_SYNC_FOCUS_RECHECK_MIN_INTERVAL_MS) return false;
-  return !lastLocalChangeAt || new Date(lastLocalChangeAt).getTime() <= lastCheckedAtMs;
+  if (Date.now() - lastCheckedAtMs >= AUTO_SYNC_FOCUS_RECHECK_MIN_INTERVAL_MS)
+    return false;
+  return (
+    !lastLocalChangeAt ||
+    new Date(lastLocalChangeAt).getTime() <= lastCheckedAtMs
+  );
 };
 
 // RecordService.syncRecordSummaries and RecordsUploadJob both surface the original HTTP status

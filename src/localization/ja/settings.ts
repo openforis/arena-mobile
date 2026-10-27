@@ -89,7 +89,8 @@ export default {
     emptyResult:
       "デバイスが見つかりませんでした。GPS受信機の電源が入っており、ペアリングモードになっていることを確認してください。",
     scanFailed: "スキャン中に問題が発生しました。もう一度お試しください。",
-    recognizedDevicesNotice: "GPS受信機として認識されたデバイスのみが表示されます。",
+    recognizedDevicesNotice:
+      "GPS受信機として認識されたデバイスのみが表示されます。",
     pairedDevicesTitle: "ペアリング済みデバイス",
     newDevicesTitle: "新しいデバイス",
     pairButton: "ペアリング",
@@ -112,11 +113,13 @@ export default {
 
   showRecordCompletion: {
     label: "レコードの入力進捗を表示",
-    description: "現在のレコードの要件のうち満たされている割合を示す進捗バーを表示します",
+    description:
+      "現在のレコードの要件のうち満たされている割合を示す進捗バーを表示します",
   },
   showStatusBar: {
     label: "ステータスバーを表示",
-    description: "記録の編集中にバッテリー、ストレージ、ネットワークの状態を表示します",
+    description:
+      "記録の編集中にバッテリー、ストレージ、ネットワークの状態を表示します",
   },
   theme: {
     label: "テーマ",
