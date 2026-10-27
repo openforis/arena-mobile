@@ -5,8 +5,12 @@ export default StyleSheet.create({
     flex: 1,
     padding: 10,
   },
+  topBar: {
+    justifyContent: "flex-end",
+  },
   bottomBar: {
     alignItems: "center",
+    justifyContent: "center",
   },
   bottomBarSide: {
     flex: 1,

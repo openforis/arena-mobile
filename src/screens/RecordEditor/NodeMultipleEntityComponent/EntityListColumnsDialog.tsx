@@ -38,7 +38,7 @@ export const EntityListColumnsDialog = (props: Props) => {
   );
 
   const groups = useMemo(() => {
-    const keyDefs = availableDefs.filter(NodeDefs.isKey);
+    const keyDefs = availableDefs.filter((def) => NodeDefs.isKey(def));
     const summaryDefs = availableDefs.filter(
       (def) =>
         !NodeDefs.isKey(def) &&

@@ -246,15 +246,31 @@ export const NodeMultipleEntityListComponent = (
     ],
   );
 
+  // in portrait there is no room for it next to the new button
+  const columnsButton = rows.length > 0 && availableNodeDefs.length > 1 && (
+    <Button
+      compact
+      icon="table-column"
+      mode="text"
+      onPress={() => setColumnsDialogVisible(true)}
+      textKey="dataEntry:entityListColumns.button"
+    />
+  );
+
   return (
     <VView style={styles.container}>
       {rows.length === 0 && (
         <Text textKey="dataEntry:noEntitiesDefined" variant="titleMedium" />
       )}
+      {columnsButton && !isLandscape && (
+        <HView fullWidth style={styles.topBar}>
+          {columnsButton}
+        </HView>
+      )}
       {rows.length > 0 && dataTable}
       <HView fullWidth style={styles.bottomBar}>
         {/* side views have the same flex, so the button bar stays centered */}
-        <View style={styles.bottomBarSide} />
+        {isLandscape && <View style={styles.bottomBarSide} />}
         <HView style={styles.buttonBar}>
           {canAddOrDelete && (
             <NewNodeButton nodeDefLabel={nodeDefLabel} onPress={onNewPress} />
@@ -264,17 +280,11 @@ export const NodeMultipleEntityListComponent = (
             parentNodeUuid={parentEntityUuid}
           />
         </HView>
-        <View style={[styles.bottomBarSide, styles.bottomBarSideRight]}>
-          {rows.length > 0 && availableNodeDefs.length > 1 && (
-            <Button
-              compact
-              icon="table-column"
-              mode="text"
-              onPress={() => setColumnsDialogVisible(true)}
-              textKey="dataEntry:entityListColumns.button"
-            />
-          )}
-        </View>
+        {isLandscape && (
+          <View style={[styles.bottomBarSide, styles.bottomBarSideRight]}>
+            {columnsButton}
+          </View>
+        )}
       </HView>
       {columnsDialogVisible && (
         <EntityListColumnsDialog
