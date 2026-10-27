@@ -1,6 +1,7 @@
 import { Dates, Surveys } from "@openforis/arena-core";
 
 import { SurveyStatus, UpdateStatus } from "model";
+import type { Navigator } from "navigation/navigator";
 import { SurveyService } from "service";
 import { SurveyActions } from "state";
 
@@ -19,7 +20,7 @@ type DetermineSurveyUpdateStatusResult = {
 type TriggerSurveyUpdateParams = {
   confirmMessageKey?: string;
   dispatch: any;
-  navigation?: any;
+  navigator?: Navigator | null;
   onCancel?: (() => void) | null;
   onComplete?: (() => void) | null;
   onConfirm?: (() => void) | null;
@@ -74,7 +75,7 @@ export const determineSurveyUpdateStatus = async ({
 export const triggerSurveyUpdate = ({
   confirmMessageKey = "surveys:updateSurveyConfirmMessage",
   dispatch,
-  navigation = null,
+  navigator = null,
   onCancel = null,
   onComplete = null,
   onConfirm = null,
@@ -86,7 +87,7 @@ export const triggerSurveyUpdate = ({
       surveyId: survey.id,
       surveyName: Surveys.getName(survey),
       surveyRemoteId: survey.remoteId,
-      navigation,
+      navigator,
       confirmMessageKey,
       onConfirm,
       onCancel,

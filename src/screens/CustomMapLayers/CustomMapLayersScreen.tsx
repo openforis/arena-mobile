@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 
 import {
   Button,
@@ -11,7 +11,6 @@ import {
   VView,
 } from "components";
 import { CustomMapLayer } from "model";
-import { screenKeys } from "screens/screenKeys";
 import { CustomMapLayersService } from "service";
 import {
   SettingsActions,
@@ -64,7 +63,7 @@ const CustomMapLayerItem = ({
 export const CustomMapLayersScreen = () => {
   log.debug("rendering CustomMapLayersScreen");
 
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
   const settings = SettingsSelectors.useSettings();
@@ -79,16 +78,14 @@ export const CustomMapLayersScreen = () => {
   );
 
   const onAddPress = useCallback(() => {
-    navigation.navigate(screenKeys.customMapLayerEditor as never);
-  }, [navigation]);
+    navigator.navigateToCustomMapLayerEditor();
+  }, [navigator]);
 
   const onEditPress = useCallback(
     (layer: CustomMapLayer) => {
-      navigation.navigate(
-        ...([screenKeys.customMapLayerEditor, { layerId: layer.id }] as never),
-      );
+      navigator.navigateToCustomMapLayerEditor({ layerId: layer.id });
     },
-    [navigation],
+    [navigator],
   );
 
   const onDeletePress = useCallback(

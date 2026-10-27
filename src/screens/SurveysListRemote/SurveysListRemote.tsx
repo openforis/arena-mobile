@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 
 import { DateFormats, Dates, Surveys } from "@openforis/arena-core";
 
@@ -23,7 +23,6 @@ import {
   useAppDispatch,
 } from "state";
 
-import { screenKeys } from "../screenKeys";
 import { useSurveysSearch } from "../SurveysList/useSurveysSearch";
 
 const INITIAL_STATE = {
@@ -67,7 +66,7 @@ const StatusCell = ({ item }: DataVisualizerCellProps) => {
 };
 
 export const SurveysListRemote = () => {
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const dispatch = useAppDispatch();
   const surveysLocal = SurveySelectors.useSurveysLocal();
   const screenViewMode = ScreenOptionsSelectors.useCurrentScreenViewMode();
@@ -148,9 +147,8 @@ export const SurveysListRemote = () => {
           titleKey: "error",
           confirmButtonTextKey: "loginInfo:login",
           messageKey: "surveys:loadSurveysErrorMessage",
-          onConfirm: () =>
-            navigation.navigate(screenKeys.settingsRemoteConnection as never),
-          onCancel: () => navigation.goBack(),
+          onConfirm: () => navigator.navigateToSettingsRemoteConnection(),
+          onCancel: () => navigator.goBack(),
         }),
       );
     }
@@ -181,7 +179,7 @@ export const SurveysListRemote = () => {
             surveyId: localSurveyWithSameUuid.id,
             surveyRemoteId: surveySummary.id,
             surveyName,
-            navigation,
+            navigator,
             onConfirm: () =>
               setState((statePrev) => ({ ...statePrev, loading: true })),
           }),
@@ -191,7 +189,7 @@ export const SurveysListRemote = () => {
         const onNewSurveyImportConfirm = () => {
           setState((statePrev) => ({ ...statePrev, loading: true }));
           const surveyId = surveySummary.id;
-          dispatch(SurveyActions.importSurveyRemote({ surveyId, navigation }));
+          dispatch(SurveyActions.importSurveyRemote({ surveyId, navigator }));
         };
         dispatch(
           ConfirmActions.show({
@@ -203,7 +201,7 @@ export const SurveysListRemote = () => {
         );
       }
     },
-    [dispatch, navigation, surveysLocal],
+    [dispatch, navigator, surveysLocal],
   );
 
   if (loading) return <Loader />;

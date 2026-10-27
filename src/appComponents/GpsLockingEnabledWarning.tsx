@@ -1,12 +1,11 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 
 import { Button } from "components/Button";
-import { screenKeys } from "screens/screenKeys";
 
 import { SettingsSelectors } from "state/settings";
 
 export const GpsLockingEnabledWarning = () => {
-  const navigation = useNavigation();
+  const navigator = useNavigator();
 
   const settings = SettingsSelectors.useSettings();
 
@@ -17,7 +16,7 @@ export const GpsLockingEnabledWarning = () => {
       icon="alert"
       mode="text"
       textKey="dataEntry:gpsLockingEnabledWarning"
-      onPress={() => navigation.navigate(screenKeys.settings as never)}
+      onPress={() => navigator.navigateToSettings()}
     />
   );
 };

@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { Pressable } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 import MenuDrawer from "react-native-side-drawer";
 
 import { HView, Text, VView, View } from "components";
@@ -35,7 +35,7 @@ export const RecordEditor = () => {
   const pageSelectorOpen = DataEntrySelectors.useIsRecordPageSelectorMenuOpen();
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
   const { showStatusBar } = SettingsSelectors.useSettings();
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const isNavigationFocused = useNavigationIsFocused();
   const isRtl = useIsTextDirectionRtl();
   // the record is read-only while auto-sync merges it with its server copy - see
@@ -44,11 +44,11 @@ export const RecordEditor = () => {
 
   const onBack = useCallback(() => {
     if (isNavigationFocused) {
-      dispatch(DataEntryActions.navigateToRecordsList({ navigation }));
+      dispatch(DataEntryActions.navigateToRecordsList({ navigator }));
       return true; // the event will not be bubbled up & no other back action will execute
     }
     return false;
-  }, [dispatch, isNavigationFocused, navigation]);
+  }, [dispatch, isNavigationFocused, navigator]);
 
   useBackHandler(onBack);
   usePositionTrackingPauseOnBackground();

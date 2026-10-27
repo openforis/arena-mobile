@@ -1,9 +1,8 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 import { StyleSheet } from "react-native";
 
 import { Button, Text } from "components";
 
-import { screenKeys } from "../screenKeys";
 import {
   bannerSecondaryTextColor,
   bannerTextColor,
@@ -17,7 +16,7 @@ const styles = StyleSheet.create({
 });
 
 export const NoSurveyBanner = () => {
-  const navigation = useNavigation();
+  const navigator = useNavigator();
 
   return (
     <HomeBanner
@@ -40,9 +39,7 @@ export const NoSurveyBanner = () => {
         icon="folder-download-outline"
         labelVariant="bodyLarge"
         mode="outlined"
-        onPress={() =>
-          navigation.navigate(screenKeys.surveysListLocal as never)
-        }
+        onPress={() => navigator.navigateToSurveysListLocal()}
         style={styles.button}
         textKey="surveys:selectSurvey"
       />

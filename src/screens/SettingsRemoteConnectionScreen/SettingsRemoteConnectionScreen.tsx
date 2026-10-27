@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 
 import { Objects } from "@openforis/arena-core";
 
@@ -58,7 +58,7 @@ const parseLoginQrCodeData = (data: string) => {
 
 export const SettingsRemoteConnectionScreen = () => {
   const dispatch = useAppDispatch();
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const { t } = useTranslation();
   const networkAvailable = useIsNetworkConnected();
   const user = RemoteConnectionSelectors.useLoggedInUser();
@@ -169,12 +169,12 @@ export const SettingsRemoteConnectionScreen = () => {
         serverUrl,
         email: emailNew,
         password,
-        navigation,
+        navigator,
         showBack: true,
       }),
     );
     setState((statePrev) => ({ ...statePrev, loading: false }));
-  }, [dispatch, email, navigation, password, serverUrl]);
+  }, [dispatch, email, navigator, password, serverUrl]);
 
   const onScanQrCode = useCallback(() => {
     setState((statePrev) => ({ ...statePrev, qrScannerVisible: true }));
@@ -197,7 +197,7 @@ export const SettingsRemoteConnectionScreen = () => {
           RemoteConnectionActions.loginWithTempAuthToken({
             token,
             serverUrl: serverUrlScanned,
-            navigation,
+            navigator,
             showBack: true,
           }),
         );
@@ -211,7 +211,7 @@ export const SettingsRemoteConnectionScreen = () => {
         setState((statePrev) => ({ ...statePrev, loading: false }));
       }
     },
-    [dispatch, navigation],
+    [dispatch, navigator],
   );
 
   const onQrScannerDismiss = useCallback(() => {
@@ -299,7 +299,7 @@ export const SettingsRemoteConnectionScreen = () => {
             <Button
               color="secondary"
               compact
-              onPress={navigation.goBack}
+              onPress={navigator.goBack}
               style={styles.goBackButton}
               textKey="common:goBack"
               labelVariant="bodySmall"

@@ -35,6 +35,7 @@ import {
 } from "state";
 import { BaseStyles } from "utils/BaseStyles";
 
+import { createNavigator } from "./navigator";
 import { OptionsMenu } from "./OptionsMenu";
 import styles from "./styles";
 
@@ -53,6 +54,7 @@ type Props = {
 export const AppBar = (props: Props) => {
   log.debug(`rendering AppBar`);
   const { back, navigation, options } = props;
+  const navigator = useMemo(() => createNavigator(navigation), [navigation]);
 
   const { t } = useTranslation();
 
@@ -161,14 +163,16 @@ export const AppBar = (props: Props) => {
       defaultSingleChoiceValue: mapProvider,
     });
     if (!confirmResult) return;
-    navigation.navigate(screenKeys.recordsMap, {
-      mapProvider: confirmResult.selectedSingleChoiceValue ?? mapProvider,
+    navigator.navigateToRecordsMap({
+      mapProvider:
+        (confirmResult.selectedSingleChoiceValue as MapProvider | undefined) ??
+        mapProvider,
     });
-  }, [confirm, mapProvider, navigation]);
+  }, [confirm, mapProvider, navigator]);
 
   const onValidationIconPress = useCallback(
-    () => navigation.navigate(screenKeys.recordValidationReport),
-    [navigation],
+    () => navigator.navigateToRecordValidationReport(),
+    [navigator],
   );
 
   const onLinkToPreviousCyclePress = useCallback(() => {
@@ -195,7 +199,7 @@ export const AppBar = (props: Props) => {
 
           {hasBack && back && (
             <AppBarBackAction
-              onPress={navigation.goBack}
+              onPress={navigator.goBack}
               size={36}
               style={isRtl ? BaseStyles.mirrorX : undefined}
             />

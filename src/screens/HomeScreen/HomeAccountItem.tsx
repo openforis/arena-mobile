@@ -1,11 +1,10 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 import { useCallback } from "react";
 
 import { Button, LoadingIcon } from "components";
 import { useIsNetworkConnected } from "hooks";
 import { RemoteConnectionSelectors, SettingsSelectors } from "state";
 
-import { screenKeys } from "../screenKeys";
 import { HomeListItem } from "./HomeListItem";
 
 const determineNotLoggedInDescriptionKey = ({
@@ -21,15 +20,15 @@ const determineNotLoggedInDescriptionKey = ({
 };
 
 export const HomeAccountItem = () => {
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const networkAvailable = useIsNetworkConnected();
   const user = RemoteConnectionSelectors.useLoggedInUser();
   const userIsLoading = RemoteConnectionSelectors.useLoggedInUserIsLoading();
   const { email, password } = SettingsSelectors.useSettings();
 
   const onPress = useCallback(
-    () => navigation.navigate(screenKeys.settingsRemoteConnection as never),
-    [navigation],
+    () => navigator.navigateToSettingsRemoteConnection(),
+    [navigator],
   );
 
   if (userIsLoading) {

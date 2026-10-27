@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
@@ -266,7 +266,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
   } = props;
 
   const dispatch = useAppDispatch();
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const { t } = useTranslation();
 
   const survey = SurveySelectors.useCurrentSurvey()!;
@@ -365,12 +365,12 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     (recordSummary: any) => {
       dispatch(
         DataEntryActions.fetchAndEditRecord({
-          navigation,
+          navigator,
           recordSummary,
         }),
       );
     },
-    [dispatch, navigation],
+    [dispatch, navigator],
   );
 
   const fields = useMemo(

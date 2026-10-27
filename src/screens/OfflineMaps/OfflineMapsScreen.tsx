@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useRoute } from "@react-navigation/native";
+import { useScreenParams } from "navigation/navigator";
+import { screenKeys } from "screens/screenKeys";
 
 import { ScreenView, SegmentedButtons, VView } from "components";
 import { log } from "utils";
@@ -29,10 +30,7 @@ const tabButtons = [
 export const OfflineMapsScreen = () => {
   log.debug("rendering OfflineMapsScreen");
 
-  const route = useRoute();
-  const { initialTab } = (route.params ?? {}) as {
-    initialTab?: OfflineMapsTab;
-  };
+  const { initialTab } = useScreenParams<screenKeys.offlineMaps>();
   const [tab, setTab] = useState<OfflineMapsTab>(
     initialTab ?? OfflineMapsTab.areas,
   );

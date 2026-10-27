@@ -6,12 +6,10 @@ import React, {
   useState,
 } from "react";
 import RNMapView, { MapPressEvent, Polyline, Region } from "react-native-maps";
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 
+import { useNavigator, useScreenParams } from "navigation/navigator";
+import { screenKeys } from "screens/screenKeys";
 import { IconButton, Loader, MapView, Text, VView } from "components";
 import { CurrentLocationDot } from "components/MapView/CurrentLocationDot";
 import { useCurrentLocationWatch, useToast } from "hooks";
@@ -113,9 +111,8 @@ export const RecordsMapScreen = () => {
   log.debug("rendering RecordsMapScreen");
 
   const dispatch = useAppDispatch();
-  const navigation = useNavigation();
-  const route = useRoute();
-  const { mapProvider } = (route.params ?? {}) as RecordsMapParams;
+  const navigator = useNavigator();
+  const { mapProvider } = useScreenParams<screenKeys.recordsMap>();
   const { t } = useTranslation();
   const toaster = useToast();
   const survey = SurveySelectors.useCurrentSurvey()!;
@@ -437,10 +434,10 @@ export const RecordsMapScreen = () => {
       const recordSummary = recordSummaryByUuid[recordUuid];
       if (!recordSummary) return;
       dispatch(
-        DataEntryActions.fetchAndEditRecord({ navigation, recordSummary }),
+        DataEntryActions.fetchAndEditRecord({ navigator, recordSummary }),
       );
     },
-    [dispatch, navigation, recordSummaryByUuid],
+    [dispatch, navigator, recordSummaryByUuid],
   );
 
   if (loading || !initialRegionRef.current) {

@@ -1,11 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigator } from "navigation/navigator";
 
 import { Points } from "@openforis/arena-core";
 
 import { IconButton } from "components/IconButton";
 import { MapAppChooserDialog } from "components/MapAppChooserDialog";
-import { screenKeys } from "screens/screenKeys";
 import { MapApp, MapAppsService } from "service/mapApps";
 import { log } from "utils";
 
@@ -34,7 +33,7 @@ export const OpenMapButton = (props: Props) => {
     titleParams,
   } = props;
 
-  const navigation = useNavigation();
+  const navigator = useNavigator();
   const [chooser, setChooser] = useState<ChooserState | null>(null);
 
   const pointLatLng = useMemo(
@@ -71,12 +70,13 @@ export const OpenMapButton = (props: Props) => {
     try {
       await MapAppsService.rememberChoice(selectedId);
       if (selectedId === MapAppsService.inAppChoiceId) {
-        navigation.navigate(
-          ...([
-            screenKeys.locationMapViewer,
-            { latitude, longitude, nodeUuid, titleKey, titleParams },
-          ] as never),
-        );
+        navigator.navigateToLocationMapViewer({
+          latitude,
+          longitude,
+          nodeUuid,
+          titleKey,
+          titleParams,
+        });
       } else {
         await MapAppsService.openApp(selectedId, { latitude, longitude });
       }
@@ -87,7 +87,7 @@ export const OpenMapButton = (props: Props) => {
     chooser,
     latitude,
     longitude,
-    navigation,
+    navigator,
     nodeUuid,
     titleKey,
     titleParams,
