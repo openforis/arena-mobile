@@ -23,7 +23,9 @@ import {
 } from "@openforis/arena-core";
 
 import { TranslateFunction } from "localization";
+import { GeoUtils } from "utils/GeoUtils";
 
+import { PositionTracks } from "./PositionTracks";
 import { SurveyDefs } from "./SurveyDefs";
 
 const EMPTY_VALUE = "---";
@@ -113,6 +115,54 @@ const formatBooleanValue = ({ nodeDef, value, t }: any): string => {
   return t(`common:${labelKey}`);
 };
 
+const latLongSrsCode = "4326";
+const coordinateDecimalDigitsLatLong = 5;
+const coordinateDecimalDigitsProjected = 2;
+
+const formatCoordinateNumber = (num: any, decimalDigits: number): string => {
+  if (Objects.isEmpty(num)) return "";
+  const rounded = Numbers.roundToPrecision(num, decimalDigits);
+  return Number.isFinite(rounded) ? String(rounded) : String(num);
+};
+
+const formatCoordinateValue = ({ survey, value }: any): string => {
+  const { x, y, srs: srsCode } = value ?? {};
+  if (Objects.isEmpty(x) && Objects.isEmpty(y)) return "";
+  const decimalDigits =
+    srsCode === latLongSrsCode
+      ? coordinateDecimalDigitsLatLong
+      : coordinateDecimalDigitsProjected;
+  const pointText = `${formatCoordinateNumber(x, decimalDigits)}, ${formatCoordinateNumber(y, decimalDigits)}`;
+  // SRS is redundant when the survey defines only one
+  if (Surveys.getSRSs(survey).length <= 1 || !srsCode) return pointText;
+  return `${pointText} (${srsCode})`;
+};
+
+const formatFileValue = ({ value }: any): string =>
+  value?.fileName ?? value?.fileNameCalculated ?? "";
+
+// track length or polygon area
+const formatGeoValue = ({ value }: any): string => {
+  if (PositionTracks.isTrackValue(value)) {
+    const segments = PositionTracks.fromFeature(value);
+    return PositionTracks.formatLength(PositionTracks.computeLength(segments));
+  }
+  const polygonCoordinates =
+    GeoUtils.extractPolygonCoordinatesFromGeoJson(value);
+  if (polygonCoordinates) {
+    return GeoUtils.formatArea(GeoUtils.computePolygonArea(polygonCoordinates));
+  }
+  return value?.geometry?.type ?? "";
+};
+
+const formatterByNodeDefType: Partial<
+  Record<NodeDefType, (params: any) => string>
+> = {
+  [NodeDefType.coordinate]: formatCoordinateValue,
+  [NodeDefType.file]: formatFileValue,
+  [NodeDefType.geo]: formatGeoValue,
+};
+
 const getEntitySummaryValuesByNameFormatted = ({
   survey,
   record,
@@ -144,6 +194,8 @@ const getEntitySummaryValuesByNameFormatted = ({
           entity,
           summaryDef.uuid,
         )(record)[0];
+        const typeFormatter =
+          formatterByNodeDefType[NodeDefs.getType(summaryDef)];
         if (!summaryNode) {
           formattedValue = "";
         } else if (NodeDefs.getType(summaryDef) === NodeDefType.boolean) {
@@ -152,6 +204,8 @@ const getEntitySummaryValuesByNameFormatted = ({
             value: summaryNode.value,
             t,
           });
+        } else if (typeFormatter) {
+          formattedValue = typeFormatter({ survey, value: summaryNode.value });
         } else {
           formattedValue = NodeValueFormatter.format({
             survey,
