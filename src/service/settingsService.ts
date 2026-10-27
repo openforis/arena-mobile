@@ -85,6 +85,9 @@ const getCredentials = (server: any) => Keychain.getInternetCredentials(server);
 const setCredentials = (server: any, email: any, password: any) =>
   Keychain.setInternetCredentials(server, email, password);
 
+const resetCredentials = (server: string) =>
+  Keychain.resetInternetCredentials({ server });
+
 const testServerUrl = async (serverUrl: any) => {
   try {
     const testResult = await API.test({ serverUrl, uri: "healthcheck" });
@@ -102,6 +105,7 @@ export const SettingsService = {
 
   getCredentials,
   setCredentials,
+  resetCredentials,
 
   testServerUrl,
 };

@@ -3,6 +3,7 @@ import { Dictionary, User } from "@openforis/arena-core";
 import { API } from "./api";
 import { SecureStoreService } from "./SecureStoreService";
 import { SettingsService } from "./settingsService";
+import { log } from "utils/Logger";
 import { SystemUtils } from "utils/SystemUtils";
 
 const refreshTokenCookieName = "refreshToken";
@@ -82,6 +83,31 @@ const onLoginSuccess = async ({
   return { error: invalidCredentialsError };
 };
 
+// kept in the device keychain to log in again silently when the refresh token expires (not with 2FA)
+const storeCredentials = async ({
+  serverUrl,
+  email,
+  password,
+}: {
+  serverUrl: string;
+  email: string;
+  password: string;
+}) => {
+  try {
+    await SettingsService.setCredentials(serverUrl, email, password);
+  } catch (error) {
+    log.warn(`error storing credentials: ${error}`);
+  }
+};
+
+const clearStoredCredentials = async (serverUrl?: string) => {
+  try {
+    await SettingsService.resetCredentials(serverUrl ?? (await getServerUrl()));
+  } catch (error) {
+    log.warn(`error clearing stored credentials: ${error}`);
+  }
+};
+
 const login = async ({
   serverUrl: serverUrlParam,
   email,
@@ -110,7 +136,11 @@ const login = async ({
     if (twoFactorRequired) {
       return { twoFactorRequired };
     }
-    return onLoginSuccess({ data, response });
+    const result = await onLoginSuccess({ data, response });
+    if (result.user && !twoFactorToken) {
+      await storeCredentials({ serverUrl, email, password });
+    }
+    return result;
   } catch (err: any) {
     return extractErrorMessageFromLoginError(err);
   }
@@ -155,6 +185,21 @@ const logout = async () => {
 const isRefreshTokenRejected = (error: any): boolean =>
   error?.response?.status === 401;
 
+// returns true if the user has been logged in again with the credentials stored in the keychain
+const loginWithStoredCredentials = async (): Promise<boolean> => {
+  const serverUrl = await getServerUrl();
+  const credentials = await SettingsService.getCredentials(serverUrl);
+  if (!credentials) return false;
+  const { username: email, password } = credentials;
+  const res = await login({ serverUrl, email, password });
+  if (res.user) return true;
+  // e.g. password changed or 2FA enabled: the user has to log in again
+  if (res.twoFactorRequired || res.error === invalidCredentialsError) {
+    await clearStoredCredentials(serverUrl);
+  }
+  return false;
+};
+
 const refreshAuthTokens = async () => {
   try {
     const serverUrl = await getServerUrl();
@@ -179,6 +224,7 @@ const refreshAuthTokens = async () => {
     // it is still valid and the session can be refreshed later without a new login
     if (isRefreshTokenRejected(error)) {
       await SecureStoreService.setAuthRefreshToken(null);
+      if (await loginWithStoredCredentials()) return;
     }
     throw error;
   }
@@ -186,6 +232,7 @@ const refreshAuthTokens = async () => {
 
 export const AuthService = {
   authTokenRefreshUrl,
+  clearStoredCredentials,
   getAuthToken,
   generateAuthorizationHeaders,
   login,
