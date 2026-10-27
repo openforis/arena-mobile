@@ -98,9 +98,7 @@ export const NodeMultipleEntityListComponent = (
 
   const visibleNodeDefs = useMemo(() => {
     const selectedDefs = selectedColumns
-      ? availableNodeDefs.filter(
-          (def) => NodeDefs.isKey(def) || selectedColumns.includes(def.uuid),
-        )
+      ? availableNodeDefs.filter((def) => selectedColumns.includes(def.uuid))
       : [];
     if (selectedDefs.length > 0) {
       return selectedDefs;

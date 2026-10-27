@@ -33,11 +33,8 @@ export const EntityListColumnsDialog = (props: Props) => {
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const cycle = SurveySelectors.useCurrentSurveyCycle();
 
-  // key attributes are always visible
   const [selectedUuids, setSelectedUuids] = useState<string[]>(() =>
-    availableDefs
-      .filter((def) => NodeDefs.isKey(def) || visibleDefs.includes(def))
-      .map((def) => def.uuid),
+    visibleDefs.map((def) => def.uuid),
   );
 
   const groups = useMemo(() => {
@@ -54,10 +51,18 @@ export const EntityListColumnsDialog = (props: Props) => {
       {
         textKey: "dataEntry:entityListColumns.keys",
         defs: keyDefs,
-        fixed: true,
+        toggleAll: false,
       },
-      { textKey: "dataEntry:entityListColumns.summary", defs: summaryDefs },
-      { textKey: "dataEntry:entityListColumns.other", defs: otherDefs },
+      {
+        textKey: "dataEntry:entityListColumns.summary",
+        defs: summaryDefs,
+        toggleAll: true,
+      },
+      {
+        textKey: "dataEntry:entityListColumns.other",
+        defs: otherDefs,
+        toggleAll: true,
+      },
     ].filter(({ defs }) => defs.length > 0);
   }, [availableDefs, cycle]);
 
@@ -96,7 +101,7 @@ export const EntityListColumnsDialog = (props: Props) => {
       title="dataEntry:entityListColumns.title"
     >
       <ScrollView>
-        {groups.map(({ textKey, defs, fixed }) => {
+        {groups.map(({ textKey, defs, toggleAll }) => {
           const allSelected = defs.every((def) =>
             selectedUuids.includes(def.uuid),
           );
@@ -107,7 +112,7 @@ export const EntityListColumnsDialog = (props: Props) => {
             <Fragment key={textKey}>
               <HView style={styles.groupHeader}>
                 <ListSubheader style={styles.subheader} textKey={textKey} />
-                {!fixed && (
+                {toggleAll && (
                   <Button
                     compact
                     // at least one column must remain visible
@@ -129,7 +134,7 @@ export const EntityListColumnsDialog = (props: Props) => {
                     key={def.uuid}
                     checked={checked}
                     // at least one column must remain visible
-                    disabled={fixed || (checked && selectedUuids.length === 1)}
+                    disabled={checked && selectedUuids.length === 1}
                     label={NodeDefs.getLabelOrName(def, lang)}
                     labelIsI18nKey={false}
                     onPress={() => toggle(def.uuid)}
