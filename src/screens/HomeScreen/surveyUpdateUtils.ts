@@ -62,7 +62,6 @@ export const determineSurveyUpdateStatus = async ({
   if (
     Dates.isAfter(
       surveyRemote.datePublished ?? surveyRemote.dateModified,
-      // @ts-ignore datePublished is available in persisted surveys but missing from current type
       survey.datePublished ?? survey.dateModified,
     )
   ) {

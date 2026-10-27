@@ -46,13 +46,13 @@ const rotateLogFilesOnStartup = async (filePath: string): Promise<void> => {
       // (indexes from maxRotatedFiles - 1 down to 1, processed sequentially)
       const rotatedFileIndexes = Array.from(
         { length: maxRotatedFiles - 1 },
-        (_, idx) => maxRotatedFiles - 1 - idx
+        (_, idx) => maxRotatedFiles - 1 - idx,
       );
       await Promises.each(rotatedFileIndexes, async (i) => {
         const oldPath = Files.path(filePath, `${logFileNamePrefix}.${i}.log`);
         const newPath = Files.path(
           filePath,
-          `${logFileNamePrefix}.${i + 1}.log`
+          `${logFileNamePrefix}.${i + 1}.log`,
         );
         if (await Files.exists(oldPath)) {
           await Files.moveFile({ from: oldPath, to: newPath });
@@ -87,7 +87,11 @@ const write = (level: LogLevel, ...args: any[]) => {
   const msg = args.map(argToString).join(" ");
   const logFunc = _log?.[level];
   try {
-    logFunc ? logFunc(msg) : console.log(msg);
+    if (logFunc) {
+      logFunc(msg);
+    } else {
+      console.log(msg);
+    }
   } catch (error) {
     console.log("Error logging message", error, msg);
   }

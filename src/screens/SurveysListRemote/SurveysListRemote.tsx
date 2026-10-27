@@ -55,7 +55,7 @@ const StatusCell = ({ item }: DataVisualizerCellProps) => {
   const localSurvey = surveysLocal.find(
     (surveyLocal: any) => surveyLocal.uuid === item.uuid,
   );
-  let messageKey = null;
+  let messageKey: string;
   if (!localSurvey) {
     messageKey = "surveys:loadStatus.notInDevice";
   } else if (Dates.isAfter(item.datePublished, localSurvey.datePublished)) {

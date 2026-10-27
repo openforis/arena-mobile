@@ -669,7 +669,7 @@ const updateAttribute =
         )
           return;
 
-        let {
+        const {
           record: recordUpdated,
           nodes: nodesUpdated,
           clearedDefUuids,

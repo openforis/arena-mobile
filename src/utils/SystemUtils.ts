@@ -26,7 +26,7 @@ const defaultVersion = "2.0";
 
 const { nativeBuildVersion: buildNumber, nativeApplicationVersion } =
   Application;
-let version = nativeApplicationVersion ?? defaultVersion;
+const version = nativeApplicationVersion ?? defaultVersion;
 
 const appId = "am";
 const { isAndroid, isExpoGo, platform } = Environment;
@@ -70,7 +70,7 @@ const getApplicationInfo = async (): Promise<ArenaMobileAppInfo> => {
 const getRecordAppInfo = (): ArenaMobileAppInfo => ({
   appId,
   version,
-  // @ts-ignore
+  // @ts-expect-error Platform.OS is wider than the platforms supported by the app
   platform,
 });
 

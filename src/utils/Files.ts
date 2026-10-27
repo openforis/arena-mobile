@@ -7,7 +7,7 @@ import { Objects, Promises, Strings, UUIDs } from "@openforis/arena-core";
 
 import { Environment } from "./Environment";
 
-let { unzip, zip }: any = Environment.isExpoGo
+const { unzip, zip }: any = Environment.isExpoGo
   ? {}
   : (require("react-native-zip-archive") ?? {});
 
@@ -199,7 +199,7 @@ const readAsBytes = (
   return Promise.resolve(fileSize ? fileHandle.readBytes(fileSize) : null);
 };
 
-const readJsonFromFile = async ({ fileUri }: any): Promise<Object | null> => {
+const readJsonFromFile = async ({ fileUri }: any): Promise<object | null> => {
   if (await exists(fileUri)) {
     const content = await readAsString(fileUri);
     return JSON.parse(content);
@@ -219,21 +219,11 @@ const listDirectory = async (fileUri: string | null): Promise<string[]> => {
   }
 };
 
-const copyFile = ({
-  from,
-  to,
-}: {
-  from: string;
-  to: string;
-}): Promise<void> => FileSystem.copyAsync({ from, to });
+const copyFile = ({ from, to }: { from: string; to: string }): Promise<void> =>
+  FileSystem.copyAsync({ from, to });
 
-const moveFile = ({
-  from,
-  to,
-}: {
-  from: string;
-  to: string;
-}): Promise<void> => FileSystem.moveAsync({ from, to });
+const moveFile = ({ from, to }: { from: string; to: string }): Promise<void> =>
+  FileSystem.moveAsync({ from, to });
 
 const del = (fileUri: string, ignoreErrors = false): Promise<void> =>
   FileSystem.deleteAsync(fileUri, { idempotent: ignoreErrors });
@@ -313,8 +303,7 @@ const appendStringToFile = async ({
   await writeStringToFile({ content: finalContent, fileUri, encoding });
 };
 
-const isSharingAvailable = (): Promise<boolean> =>
-  Sharing.isAvailableAsync();
+const isSharingAvailable = (): Promise<boolean> => Sharing.isAvailableAsync();
 
 const shareFile = async ({
   url,

@@ -55,7 +55,7 @@ const fetchCurrentSurveyUserGroup =
       const { isNetworkConnected } = DeviceInfoSelectors.selectDeviceInfo(
         getState(),
       );
-      let userGroup = null;
+      let userGroup;
       if (isNetworkConnected) {
         try {
           userGroup = await SurveyService.fetchCurrentUserGroupRemote({ survey });
