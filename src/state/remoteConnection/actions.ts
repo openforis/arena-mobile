@@ -250,6 +250,7 @@ const _clearUserCredentialsInternal =
     };
     await dispatch(SettingsActions.updateSettings(settingsUpdated));
     await SecureStoreService.setAuthRefreshToken(null);
+    await AuthService.clearStoredCredentials(settings.serverUrl);
     dispatch({ type: USER_PROFILE_ICON_INFO_SET, payload: null });
     dispatch({ type: USER_SET, user: null });
   };
