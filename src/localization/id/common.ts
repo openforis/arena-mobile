@@ -34,6 +34,7 @@ export default {
   newItemWithParam: "{{item}} Baru",
   no: "Tidak",
   noItemsMatchingSearch: "Tidak ada item yang sesuai dengan pencarian Anda",
+  none: "Tidak ada",
   notEnoughDiskSpace:
     "Tidak cukup ruang disk (diperlukan {{requiredSpace}} lagi)",
   ok: "Ok",
@@ -48,6 +49,7 @@ export default {
   size: "Ukuran",
   sizeAvailable: "{{size}} tersedia",
   somethingWentWrong: "Terjadi kesalahan: {{error}}",
+  sortBy: "Urutkan berdasarkan",
   srs: "SRS",
   status: "Status",
   stop: "Berhenti",

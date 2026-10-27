@@ -34,6 +34,7 @@ export default {
   newItemWithParam: "Uusi {{item}}",
   no: "Ei",
   noItemsMatchingSearch: "Hakuehtoja vastaavia kohteita ei löydy",
+  none: "Ei mitään",
   notEnoughDiskSpace:
     "Ei tarpeeksi vapaata levytilaa (tarvitaan vielä {{requiredSpace}})",
   ok: "Ok",
@@ -48,6 +49,7 @@ export default {
   size: "Koko",
   sizeAvailable: "{{size}} käytettävissä",
   somethingWentWrong: "Jokin meni pieleen: {{error}}",
+  sortBy: "Lajitteluperuste",
   srs: "SRS",
   status: "Tila",
   stop: "Pysäytä",
