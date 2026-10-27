@@ -27,36 +27,36 @@ const fetchUser = async () => {
 
 export const loginAndSetUser =
   ({ onlyIfNotSet = true } = {}) =>
-    async (dispatch: any, getState: any) => {
-      const state = getState();
-      if (onlyIfNotSet) {
-        // if user is already set in store, do not try to fetch it again
-        const userPrev = RemoteConnectionSelectors.selectLoggedUser(state);
-        if (userPrev) {
-          return;
-        }
+  async (dispatch: any, getState: any) => {
+    const state = getState();
+    if (onlyIfNotSet) {
+      // if user is already set in store, do not try to fetch it again
+      const userPrev = RemoteConnectionSelectors.selectLoggedUser(state);
+      if (userPrev) {
+        return;
       }
-      const deviceInfo = DeviceInfoSelectors.selectDeviceInfo(state);
-      const { isNetworkConnected } = deviceInfo;
-      if (isNetworkConnected) {
-        const refreshToken = await SecureStoreService.getAuthRefreshToken();
-        if (!refreshToken) {
-          // missing information; user cannot be fetched;
-          return;
-        }
-        dispatch({ type: USER_LOADING });
-        const user = await fetchUser();
-        dispatch({ type: USER_SET, user });
-        if (user) {
-          // credentials just proved valid again: drop any auto-sync auth error remembered from
-          // before (see AutoSyncActions.reset)
-          dispatch(AutoSyncActions.reset());
-        }
-      } else {
-        // retrieve user from async storage (if any)
-        const userInAsyncStorage = await getUserInAsyncStorage();
-        if (userInAsyncStorage) {
-          dispatch({ type: USER_SET, user: userInAsyncStorage });
-        }
+    }
+    const deviceInfo = DeviceInfoSelectors.selectDeviceInfo(state);
+    const { isNetworkConnected } = deviceInfo;
+    if (isNetworkConnected) {
+      const refreshToken = await SecureStoreService.getAuthRefreshToken();
+      if (!refreshToken) {
+        // missing information; user cannot be fetched;
+        return;
       }
-    };
+      dispatch({ type: USER_LOADING });
+      const user = await fetchUser();
+      dispatch({ type: USER_SET, user });
+      if (user) {
+        // credentials just proved valid again: drop any auto-sync auth error remembered from
+        // before (see AutoSyncActions.reset)
+        dispatch(AutoSyncActions.reset());
+      }
+    } else {
+      // retrieve user from async storage (if any)
+      const userInAsyncStorage = await getUserInAsyncStorage();
+      if (userInAsyncStorage) {
+        dispatch({ type: USER_SET, user: userInAsyncStorage });
+      }
+    }
+  };

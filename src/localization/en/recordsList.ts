@@ -68,8 +68,7 @@ export default {
     title: "Revalidate",
     allRecordsTitle: "Revalidate all records",
     confirm: {
-      message:
-        `Recompute validation for the selected {{recordsCount}} records?  
+      message: `Recompute validation for the selected {{recordsCount}} records?  
 Use this if a record shows errors or warnings that you can't find when editing it.`,
     },
     completeSuccessfully: "Records revalidated successfully!",

@@ -16,12 +16,14 @@ export default {
     description: "$t(dataEntry:autoSync.batteryDataWarning)",
   },
   autoSyncOpenRecordIntervalMinutes: {
-    label: "Intervalle de synchronisation automatique pendant l'édition : {{value}} min",
+    label:
+      "Intervalle de synchronisation automatique pendant l'édition : {{value}} min",
     description:
       "Durée pendant laquelle l'enregistrement actuellement ouvert dans l'éditeur doit rester inchangé avant que la synchronisation automatique ne le téléverse",
   },
   autoSyncSlowCheckIntervalMinutes: {
-    label: "Intervalle de synchronisation automatique (vérification lente) : {{value}} min",
+    label:
+      "Intervalle de synchronisation automatique (vérification lente) : {{value}} min",
     description:
       "Une fois que tous les enregistrements sont déjà synchronisés, fréquence à laquelle la synchronisation automatique revérifie le serveur pour détecter des changements (par exemple depuis un autre appareil). Les vérifications sont plus fréquentes dès qu'il y a quelque chose de nouveau à envoyer",
   },
@@ -33,8 +35,7 @@ export default {
   connectionToServer: "Connexion au serveur",
   fontScale: {
     label: "Échelle de la police: {{value}}",
-    description:
-      "Ajuste la taille du texte utilisé dans toute l'application",
+    description: "Ajuste la taille du texte utilisé dans toute l'application",
   },
   keepScreenAwake: {
     label: "Maintenir l'écran allumé",
@@ -90,7 +91,8 @@ export default {
     scanAgainButton: "Rechercher à nouveau",
     emptyResult:
       "Aucun appareil trouvé. Assurez-vous que votre récepteur GPS est allumé et en mode d'appairage.",
-    scanFailed: "Une erreur s'est produite pendant la recherche. Veuillez réessayer.",
+    scanFailed:
+      "Une erreur s'est produite pendant la recherche. Veuillez réessayer.",
     recognizedDevicesNotice:
       "Seuls les appareils reconnus comme récepteurs GPS sont affichés.",
     pairedDevicesTitle: "Appareils associés",
@@ -125,7 +127,8 @@ export default {
   },
   theme: {
     label: "Thème",
-    description: "Définit le thème de couleur utilisé dans l'interface de l'application",
+    description:
+      "Définit le thème de couleur utilisé dans l'interface de l'application",
     auto: "Automatique",
     dark: "Sombre",
     dark2: "Sombre 2",

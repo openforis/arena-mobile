@@ -17,8 +17,7 @@ export default {
     tempFilesSize: "一時ファイルのサイズ",
   },
   locationServiceDisabled: {
-    warning:
-      "位置情報サービスが無効です。デバイスの設定で有効にしてください。",
+    warning: "位置情報サービスが無効です。デバイスの設定で有効にしてください。",
   },
   network: {
     title: "ネットワーク",

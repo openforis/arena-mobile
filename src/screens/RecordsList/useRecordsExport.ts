@@ -9,7 +9,12 @@ import {
   RecordSyncStatus,
   RecordUpdateConflictResolutionStrategy as ConflictResolutionStrategy,
 } from "model";
-import { AutoSyncSelectors, DataEntryActions, useAppDispatch, useConfirm } from "state";
+import {
+  AutoSyncSelectors,
+  DataEntryActions,
+  useAppDispatch,
+  useConfirm,
+} from "state";
 import { OnConfirmParams } from "state/confirm";
 
 import {
@@ -30,10 +35,12 @@ export type UseRecordsExportParams = {
   syncStatusFetched?: boolean;
 };
 
-const filterRecordsByUuids = (records: any[], recordUuids: string[] | undefined) =>
+const filterRecordsByUuids = (
+  records: any[],
+  recordUuids: string[] | undefined,
+) =>
   recordUuids && recordUuids.length > 0
-    ? records.filter((record) => recordUuids.includes(record.uuid)
-    )
+    ? records.filter((record) => recordUuids.includes(record.uuid))
     : records;
 
 export const useRecordsExport = ({
@@ -56,7 +63,10 @@ export const useRecordsExport = ({
   // a useCallback closure over the reactive value above can go stale mid-flight, e.g. when the
   // callback's own call to loadRecordsWithSyncStatus() is what flips "checking" on and off
   const isAutoSyncRunningNow = useCallback(
-    () => dispatch((_dispatch: any, getState: any) => AutoSyncSelectors.selectAutoSyncRunning(getState())),
+    () =>
+      dispatch((_dispatch: any, getState: any) =>
+        AutoSyncSelectors.selectAutoSyncRunning(getState()),
+      ),
     [dispatch],
   );
 
@@ -107,9 +117,9 @@ export const useRecordsExport = ({
 
       if (
         newRecordsCount +
-        updatedRecordsCount +
-        conflictingRecordsCount +
-        sameRecordConflictsCount ===
+          updatedRecordsCount +
+          conflictingRecordsCount +
+          sameRecordConflictsCount ===
         0
       ) {
         toaster(noRecordsToExportTextKey);
@@ -194,7 +204,8 @@ export const useRecordsExport = ({
         // over the other's per field, so ask for an extra explicit confirmation before proceeding
         if (mergeSelected && sameRecordConflicts!.length > 0) {
           const strongConfirmResult = await confirm({
-            titleKey: "dataEntry:dataExport.mergeSameRecordConflictConfirm.title",
+            titleKey:
+              "dataEntry:dataExport.mergeSameRecordConflictConfirm.title",
             messageKey:
               "dataEntry:dataExport.mergeSameRecordConflictConfirm.message",
             messageParams: { count: sameRecordConflicts!.length },
@@ -319,8 +330,10 @@ export const useRecordsExport = ({
           records: recordsNext,
         } = await loadRecordsWithSyncStatus();
         if (syncStatusFetchedNext) {
-          const recordsToSend =
-            filterRecordsByUuids(recordsNext, selectedRecordUuids);
+          const recordsToSend = filterRecordsByUuids(
+            recordsNext,
+            selectedRecordUuids,
+          );
           await exportSelectedRecords({
             selectedRecords: recordsToSend,
             onlyRemote: true,
@@ -328,7 +341,13 @@ export const useRecordsExport = ({
         }
       }
     },
-    [checkCanSendData, exportSelectedRecords, loadRecordsWithSyncStatus, t, toaster],
+    [
+      checkCanSendData,
+      exportSelectedRecords,
+      loadRecordsWithSyncStatus,
+      t,
+      toaster,
+    ],
   );
 
   const downloadMenuItems = useMemo(() => {
@@ -390,5 +409,3 @@ export const useRecordsExport = ({
     onSendDataPress,
   };
 };
-
-

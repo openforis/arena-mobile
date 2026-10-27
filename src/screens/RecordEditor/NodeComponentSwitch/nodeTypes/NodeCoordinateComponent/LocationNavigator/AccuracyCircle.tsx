@@ -25,9 +25,7 @@ export const AccuracyCircle = ({ size, accuracy }: AccuracyCircleProps) => {
   if (accuracyRpx == null) return null;
 
   return (
-    <View
-      style={[StyleSheet.absoluteFill, { width: size, height: size }]}
-    >
+    <View style={[StyleSheet.absoluteFill, { width: size, height: size }]}>
       <Svg width={size} height={size}>
         <Circle
           cx={cx}

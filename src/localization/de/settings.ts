@@ -16,12 +16,14 @@ export default {
     description: "$t(dataEntry:autoSync.batteryDataWarning)",
   },
   autoSyncOpenRecordIntervalMinutes: {
-    label: "Intervall für automatische Synchronisierung während der Bearbeitung: {{value}} Min.",
+    label:
+      "Intervall für automatische Synchronisierung während der Bearbeitung: {{value}} Min.",
     description:
       "Wie lange der aktuell im Editor geöffnete Datensatz unverändert bleiben muss, bevor die automatische Synchronisierung ihn hochlädt",
   },
   autoSyncSlowCheckIntervalMinutes: {
-    label: "Intervall für automatische Synchronisierung (langsame Prüfung): {{value}} Min.",
+    label:
+      "Intervall für automatische Synchronisierung (langsame Prüfung): {{value}} Min.",
     description:
       "Sobald alle Datensätze bereits synchronisiert sind, wie oft die automatische Synchronisierung erneut beim Server nach Änderungen sucht (z. B. von einem anderen Gerät). Die Prüfungen erfolgen häufiger, sobald es etwas Neues hochzuladen gibt",
   },
@@ -90,7 +92,8 @@ export default {
     scanAgainButton: "Erneut suchen",
     emptyResult:
       "Keine Geräte gefunden. Stellen Sie sicher, dass Ihr GPS-Empfänger eingeschaltet und im Kopplungsmodus ist.",
-    scanFailed: "Bei der Suche ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    scanFailed:
+      "Bei der Suche ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
     recognizedDevicesNotice:
       "Es werden nur Geräte angezeigt, die als GPS-Empfänger erkannt wurden.",
     pairedDevicesTitle: "Gekoppelte Geräte",

@@ -21,7 +21,8 @@ export default {
       "Kuinka kauan editorissa parhaillaan avoinna olevan tietueen on pysyttävä koskemattomana, ennen kuin automaattinen synkronointi lataa sen",
   },
   autoSyncSlowCheckIntervalMinutes: {
-    label: "Automaattisen synkronoinnin aikaväli (hidas tarkistus): {{value}} min",
+    label:
+      "Automaattisen synkronoinnin aikaväli (hidas tarkistus): {{value}} min",
     description:
       "Kun kaikki tietueet on jo synkronoitu, kuinka usein automaattinen synkronointi tarkistaa palvelimelta muutoksia uudelleen (esim. toiselta laitteelta). Tarkistuksia tehdään useammin, kun jotain uutta on ladattavana",
   },
@@ -90,7 +91,8 @@ Se auttaa saamaan paremman tarkkuuden koordinaattiattribuuteissa.`,
     emptyResult:
       "Laitteita ei löytynyt. Varmista, että GPS-vastaanottimesi on päällä ja pariutustilassa.",
     scanFailed: "Haussa tapahtui virhe. Yritä uudelleen.",
-    recognizedDevicesNotice: "Vain GPS-vastaanottimiksi tunnistetut laitteet näytetään.",
+    recognizedDevicesNotice:
+      "Vain GPS-vastaanottimiksi tunnistetut laitteet näytetään.",
     pairedDevicesTitle: "Pariutetut laitteet",
     newDevicesTitle: "Uudet laitteet",
     pairButton: "Pariuta",

@@ -16,8 +16,12 @@ const loadChoices = async (
     PreferencesService.getLastUsedMapAppId(),
   ]);
   const lastChoiceAvailable =
-    lastChoiceId === inAppChoiceId || apps.some((app) => app.id === lastChoiceId);
-  return { apps, selectedId: lastChoiceAvailable ? lastChoiceId! : inAppChoiceId };
+    lastChoiceId === inAppChoiceId ||
+    apps.some((app) => app.id === lastChoiceId);
+  return {
+    apps,
+    selectedId: lastChoiceAvailable ? lastChoiceId! : inAppChoiceId,
+  };
 };
 
 const rememberChoice = async (choiceId: string): Promise<void> => {

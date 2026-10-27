@@ -33,10 +33,10 @@ export const RecordNodesCarousel = () => {
     (e: any) => {
       const position = e.nativeEvent.position;
       dispatch(
-        DataEntryActions.selectCurrentPageEntityActiveChildIndex(position)
+        DataEntryActions.selectCurrentPageEntityActiveChildIndex(position),
       );
     },
-    [dispatch]
+    [dispatch],
   );
 
   const onPageScrollStateChanged = useCallback((e: any) => {

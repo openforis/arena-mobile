@@ -54,9 +54,7 @@ export const RecordsList = () => {
       syncStatusFetched,
     });
 
-  const [selectedRecordUuids, setSelectedRecordUuids] = useState<string[]>(
-    [],
-  );
+  const [selectedRecordUuids, setSelectedRecordUuids] = useState<string[]>([]);
 
   const onSendDataButtonPress = useCallback(
     () => onSendDataPress(selectedRecordUuids),

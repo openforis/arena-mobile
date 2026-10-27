@@ -20,7 +20,7 @@ export const usePagination = ({ items }: any) => {
   const itemTo = Math.min((page + 1) * itemsPerPage, items.length);
   const visibleItems = useMemo(
     () => items.slice(itemFrom, itemTo),
-    [itemFrom, itemTo, items]
+    [itemFrom, itemTo, items],
   );
   const numberOfPages = Math.ceil(items.length / itemsPerPage);
 
@@ -31,7 +31,7 @@ export const usePagination = ({ items }: any) => {
   const onPageChange = useCallback(
     (pageNext: any) =>
       setState((statePrev) => ({ ...statePrev, page: pageNext })),
-    []
+    [],
   );
 
   return {

@@ -64,7 +64,7 @@ export const PageNodesList = () => {
         record,
         currentEntityPointer,
       }),
-    [survey, record, currentEntityPointer]
+    [survey, record, currentEntityPointer],
   );
 
   const nextEntityPointer = useMemo(
@@ -74,13 +74,13 @@ export const PageNodesList = () => {
         record,
         currentEntityPointer,
       }),
-    [survey, record, currentEntityPointer]
+    [survey, record, currentEntityPointer],
   );
 
   const onItemPress = useCallback(
     (index: any) => () =>
       dispatch(DataEntryActions.selectCurrentPageEntityActiveChildIndex(index)),
-    [dispatch]
+    [dispatch],
   );
 
   const renderItemRightIcon = useCallback(
@@ -90,16 +90,16 @@ export const PageNodesList = () => {
       const nodeDefUuid = item.uuid;
       const nodes = Records.getChildren(parentEntity, nodeDefUuid)(record);
       const fieldValidations = nodes.map((node) =>
-        Validations.getFieldValidation(node.uuid)(validation)
+        Validations.getFieldValidation(node.uuid)(validation),
       );
       if (fieldValidations.every(Validations.isValid)) return null;
       const hasErrors = fieldValidations.some(
-        Validations.calculateHasNestedErrors
+        Validations.calculateHasNestedErrors,
       );
       const hasWarnings = !hasErrors;
       return <AlertIcon hasErrors={hasErrors} hasWarnings={hasWarnings} />;
     },
-    [parentEntity, record, validation]
+    [parentEntity, record, validation],
   );
 
   const renderItem = useCallback(
@@ -117,12 +117,7 @@ export const PageNodesList = () => {
         />
       );
     },
-    [
-      activeChildIndex,
-      lang,
-      onItemPress,
-      renderItemRightIcon,
-    ]
+    [activeChildIndex, lang, onItemPress, renderItemRightIcon],
   );
 
   return (

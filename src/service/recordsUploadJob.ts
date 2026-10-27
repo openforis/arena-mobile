@@ -78,7 +78,9 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadAndProcessJobContex
       const { job } = data;
       this.remoteJob = job;
       this.setContext({ remoteJobUuid: job?.uuid });
-      this.logger.debug(`RecordsUploadJob: upload complete, server-side job=${job?.uuid}`);
+      this.logger.debug(
+        `RecordsUploadJob: upload complete, server-side job=${job?.uuid}`,
+      );
     } catch (error) {
       this.logger.error(`RecordsUploadJob: upload failed: ${error}`);
       throw error;

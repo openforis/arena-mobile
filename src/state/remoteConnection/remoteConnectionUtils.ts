@@ -3,10 +3,7 @@ import { RemoteConnectionActions } from "./actions";
 
 const { confirmGoToConnectionToRemoteServer } = RemoteConnectionActions;
 
-const checkLoggedInUser = async ({
-  dispatch,
-  navigation
-}: any) => {
+const checkLoggedInUser = async ({ dispatch, navigation }: any) => {
   if (await AppService.checkLoggedInUser()) {
     return true;
   }

@@ -6,16 +6,12 @@ const SURVEY_FILES_DIR_NAME = "survey_files";
 const getSurveyFilesDirUri = () =>
   GenericFileRepository.getDirUri(SURVEY_FILES_DIR_NAME);
 
-const getSurveyFileUri = ({
-  surveyId
-}: any) =>
+const getSurveyFileUri = ({ surveyId }: any) =>
   `${getSurveyFilesDirUri()}/${surveyId}.json`;
 
 const getStorageSize = async () => Files.getDirSize(getSurveyFilesDirUri());
 
-const readSurveyFile = async ({
-  surveyId
-}: any) => {
+const readSurveyFile = async ({ surveyId }: any) => {
   const fileUri = getSurveyFileUri({ surveyId });
   return Files.readJsonFromFile({ fileUri });
 };
@@ -31,9 +27,7 @@ const saveSurveyFile = async (survey: any) => {
   return survey;
 };
 
-const deleteSurveyFile = async ({
-  surveyId
-}: any) => {
+const deleteSurveyFile = async ({ surveyId }: any) => {
   const fileUri = getSurveyFileUri({ surveyId });
   await GenericFileRepository.deleteFile(fileUri);
 };

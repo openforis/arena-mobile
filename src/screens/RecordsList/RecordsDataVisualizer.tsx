@@ -81,7 +81,6 @@ const RecordErrorsListCellRenderer = ({ item }: DataVisualizerCellProps) => (
   <Text>{Validations.getErrorsCount(item.validation)}</Text>
 );
 
-
 const RecordWarningsListCellRenderer = ({ item }: DataVisualizerCellProps) => (
   <Text>{Validations.getWarningsCount(item.validation)}</Text>
 );

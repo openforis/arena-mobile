@@ -49,7 +49,9 @@ describe("confirm", () => {
     );
     const state = store.getState().confirm;
     expect(state.isOpen).toBe(true);
-    expect(Object.values(state).some((v) => typeof v === "function")).toBe(false);
+    expect(Object.values(state).some((v) => typeof v === "function")).toBe(
+      false,
+    );
 
     await store.dispatch(ConfirmActions.confirm({ textInputValue: "abc" }));
 
@@ -71,10 +73,10 @@ describe("confirm", () => {
     const dispatch = store.dispatch;
 
     const confirmed = ConfirmUtils.confirm({ dispatch, messageKey: "a" });
-    await dispatch(
-      ConfirmActions.confirm({ selectedSingleChoiceValue: "x" }),
-    );
-    await expect(confirmed).resolves.toEqual({ selectedSingleChoiceValue: "x" });
+    await dispatch(ConfirmActions.confirm({ selectedSingleChoiceValue: "x" }));
+    await expect(confirmed).resolves.toEqual({
+      selectedSingleChoiceValue: "x",
+    });
 
     const cancelled = ConfirmUtils.confirm({ dispatch, messageKey: "b" });
     await dispatch(ConfirmActions.cancel());

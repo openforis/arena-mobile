@@ -9,11 +9,9 @@ export default {
     statusTitle: "የማመሳሰል ሁኔታ",
     syncInProgressToast:
       "ራስ-ሰር ማመሳሰል በሂደት ላይ ነው። ውሂብ በእጅ ከመላክዎ በፊት እስኪጠናቀቅ ድረስ እባክዎ ይጠብቁ።",
-    batteryDataWarning:
-      "ከWi-Fi ውጭ ሲሆን የባትሪ እና የውሂብ አጠቃቀምን ሊጨምር ይችላል",
+    batteryDataWarning: "ከWi-Fi ውጭ ሲሆን የባትሪ እና የውሂብ አጠቃቀምን ሊጨምር ይችላል",
     syncNow: "አሁኑኑ ያመሳስሉ",
-    recordSyncInProgress:
-      "ይህ መዝገብ ከአገልጋዩ ጋር እየተመሳሰለ ነው። እባክዎ ትንሽ ይጠብቁ",
+    recordSyncInProgress: "ይህ መዝገብ ከአገልጋዩ ጋር እየተመሳሰለ ነው። እባክዎ ትንሽ ይጠብቁ",
     status: {
       syncedTooltip: "ሁሉም መዝገቦች ከአገልጋዩ ጋር ተመሳስለዋል",
       pendingTooltip: "አንዳንድ መዝገቦች አሁንም መመሳሰል ያስፈልጋቸዋል። በራስ-ሰር ይላካሉ",
@@ -27,8 +25,7 @@ export default {
       progressPercent: "{{progressPercent}}%",
       uncheckedTooltip:
         "የማመሳሰል ሁኔታ እስካሁን አልተረጋገጠም። ለማረጋገጥ 'የማመሳሰል ሁኔታን ያረጋግጡ'ን ይጠቀሙ",
-      offlineTooltip:
-        "የበይነመረብ ግንኙነት የለም። ግንኙነት ሲመለስ ራስ-ሰር ማመሳሰል ይቀጥላል",
+      offlineTooltip: "የበይነመረብ ግንኙነት የለም። ግንኙነት ሲመለስ ራስ-ሰር ማመሳሰል ይቀጥላል",
       authErrorTooltip:
         "ከአገልጋዩ ጋር የነበረው ክፍለ ጊዜ አልቋል። ራስ-ሰር ማመሳሰልን ለመቀጠል እንደገና ይግቡ",
       checkErrorTooltip:
@@ -205,8 +202,7 @@ export default {
       inAppDescriptionRelocatable:
         "ያለ በይነመረብ ከወረዱ ካርታዎች ጋር ይሰራል።\nቦታውን ማንቀሳቀስ ይቻላል",
       otherApp: "ሌላ መተግበሪያ…",
-      otherAppDescription:
-        "ቦታ ማሳየት ከሚችሉ ሁሉም የተጫኑ መተግበሪያዎች ውስጥ ይምረጡ",
+      otherAppDescription: "ቦታ ማሳየት ከሚችሉ ሁሉም የተጫኑ መተግበሪያዎች ውስጥ ይምረጡ",
       show: "በካርታ አሳይ",
       targetViewerTitle: 'የ"{{attributeLabel}}" ዒላማ ቦታ',
       viewerTitle: "ቦታ",
@@ -254,8 +250,7 @@ export default {
     selectPolygonInstruction: "ፖሊጎኑን ለመምረጥ ይንኩት",
     selectPointInstructions: `- ነጥብ ለመምረጥ ይንኩት።  
 - አዲስ ነጥብ ለመጨመር መካከለኛ ነጥብ ይንኩ።`,
-    editPolygonInstructions:
-      "የተመረጠውን ነጥብ ለማንቀሳቀስ ረጅም ጊዜ ተጭነው ይጎትቱት።",
+    editPolygonInstructions: "የተመረጠውን ነጥብ ለማንቀሳቀስ ረጅም ጊዜ ተጭነው ይጎትቱት።",
     tapToAddPoints: `ነጥቦች ለመጨመር በካርታው ላይ ይንኩ።  
 ከጨረሱ '$t(common:stop)' ይጫኑ።`,
     deleteSelectedPoint: "የተመረጠውን ነጥብ ሰርዝ",

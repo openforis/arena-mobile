@@ -29,17 +29,17 @@ const { USER_SET, USER_PROFILE_ICON_INFO_SET } = RemoteConnectionActionTypes;
 
 const confirmGoToConnectionToRemoteServer =
   ({ navigation }: any) =>
-    (dispatch: any) => {
-      dispatch(
-        ConfirmActions.show({
-          confirmButtonTextKey: "settings:connectionToServer",
-          messageKey: "settingsRemoteConnection:errorConnectingWithServer",
-          titleKey: "authService:loginRequired",
-          onConfirm: () =>
-            navigation.navigate(screenKeys.settingsRemoteConnection),
-        }),
-      );
-    };
+  (dispatch: any) => {
+    dispatch(
+      ConfirmActions.show({
+        confirmButtonTextKey: "settings:connectionToServer",
+        messageKey: "settingsRemoteConnection:errorConnectingWithServer",
+        titleKey: "authService:loginRequired",
+        onConfirm: () =>
+          navigation.navigate(screenKeys.settingsRemoteConnection),
+      }),
+    );
+  };
 
 const onLoginResponseSuccessful = async ({
   user,
@@ -147,10 +147,10 @@ const onLoginResponse = async ({
   } else if (message || error) {
     const errorKeySuffix =
       message &&
-        [
-          "validationErrors:user.userNotFound",
-          "validationErrors:user.emailInvalid",
-        ].includes(message)
+      [
+        "validationErrors:user.userNotFound",
+        "validationErrors:user.emailInvalid",
+      ].includes(message)
         ? "invalidCredentials"
         : "generic";
     const errorKey = `authService:error.${errorKeySuffix}`;
@@ -181,24 +181,24 @@ const login =
     showBack?: boolean;
     twoFactorToken?: string;
   }) =>
-    async (dispatch: any) => {
-      const res = await AuthService.login({
-        serverUrl,
-        email,
-        password,
-        twoFactorToken,
-      });
-      await onLoginResponse({
-        res,
-        email,
-        password,
-        twoFactorToken,
-        serverUrl,
-        dispatch,
-        showBack,
-        navigation,
-      });
-    };
+  async (dispatch: any) => {
+    const res = await AuthService.login({
+      serverUrl,
+      email,
+      password,
+      twoFactorToken,
+    });
+    await onLoginResponse({
+      res,
+      email,
+      password,
+      twoFactorToken,
+      serverUrl,
+      dispatch,
+      showBack,
+      navigation,
+    });
+  };
 
 const loginWithTempAuthToken =
   ({
@@ -212,16 +212,16 @@ const loginWithTempAuthToken =
     token: string;
     showBack?: boolean;
   }) =>
-    async (dispatch: any) => {
-      const res = await AuthService.loginWithTempAuthToken({ serverUrl, token });
-      await onLoginResponse({
-        res,
-        dispatch,
-        navigation,
-        serverUrl,
-        showBack,
-      });
-    };
+  async (dispatch: any) => {
+    const res = await AuthService.loginWithTempAuthToken({ serverUrl, token });
+    await onLoginResponse({
+      res,
+      dispatch,
+      navigation,
+      serverUrl,
+      showBack,
+    });
+  };
 
 const fetchLoggedInUserProfileIcon = async (dispatch: any, getState: any) => {
   log.debug("fetching user profile icon");
@@ -241,19 +241,19 @@ const fetchLoggedInUserProfileIcon = async (dispatch: any, getState: any) => {
 
 const _clearUserCredentialsInternal =
   ({ keepEmailAddress }: any = {}) =>
-    async (dispatch: any) => {
-      const settings = await SettingsService.fetchSettings();
-      const emailNext = keepEmailAddress ? settings.email : undefined;
-      const settingsUpdated = {
-        ...settings,
-        email: emailNext,
-        password: undefined,
-      };
-      await dispatch(SettingsActions.updateSettings(settingsUpdated));
-      await SecureStoreService.setAuthRefreshToken(null);
-      dispatch({ type: USER_PROFILE_ICON_INFO_SET, payload: null });
-      dispatch({ type: USER_SET, user: null });
+  async (dispatch: any) => {
+    const settings = await SettingsService.fetchSettings();
+    const emailNext = keepEmailAddress ? settings.email : undefined;
+    const settingsUpdated = {
+      ...settings,
+      email: emailNext,
+      password: undefined,
     };
+    await dispatch(SettingsActions.updateSettings(settingsUpdated));
+    await SecureStoreService.setAuthRefreshToken(null);
+    dispatch({ type: USER_PROFILE_ICON_INFO_SET, payload: null });
+    dispatch({ type: USER_SET, user: null });
+  };
 
 const clearUserCredentials = () => async (dispatch: any) => {
   const confirmButtonTextKey = "settingsRemoteConnection:clearCredentials";
@@ -271,20 +271,20 @@ const clearUserCredentials = () => async (dispatch: any) => {
 
 const _doLogout =
   ({ keepEmailAddress }: any) =>
-    async (dispatch: any) => {
-      await AuthService.logout();
-      await AsyncStorageUtils.removeItem(asyncStorageKeys.loggedInUser);
-      // Clear locally cached user groups too, so a different user logging in on the same
-      // device doesn't get the previous user's group/qualifiers as an offline fallback.
-      const surveySummaries = await SurveyService.fetchSurveySummariesLocal();
-      await PreferencesService.clearSurveyUserGroups(
-        surveySummaries.map((surveySummary: any) => surveySummary.id),
-      );
-      // Clear the in-memory survey user group too, so it doesn't keep showing the previous
-      // user's group until a new one logs in and it gets refetched.
-      dispatch(SurveyActions.resetCurrentSurveyUserGroup());
-      dispatch(_clearUserCredentialsInternal({ keepEmailAddress }));
-    };
+  async (dispatch: any) => {
+    await AuthService.logout();
+    await AsyncStorageUtils.removeItem(asyncStorageKeys.loggedInUser);
+    // Clear locally cached user groups too, so a different user logging in on the same
+    // device doesn't get the previous user's group/qualifiers as an offline fallback.
+    const surveySummaries = await SurveyService.fetchSurveySummariesLocal();
+    await PreferencesService.clearSurveyUserGroups(
+      surveySummaries.map((surveySummary: any) => surveySummary.id),
+    );
+    // Clear the in-memory survey user group too, so it doesn't keep showing the previous
+    // user's group until a new one logs in and it gets refetched.
+    dispatch(SurveyActions.resetCurrentSurveyUserGroup());
+    dispatch(_clearUserCredentialsInternal({ keepEmailAddress }));
+  };
 
 const logout = () => (dispatch: any) => {
   dispatch(

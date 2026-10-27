@@ -50,7 +50,10 @@ const AUTO_SYNC_SLOW_CHECK_INTERVAL_MS_DEFAULT = 30 * 60_000; // 30 minutes
 // manual "Send data" flow uses). Records modified on the server too are handled separately
 // (see selectAutoMergeCandidates); records with conflicting keys are deliberately left out -
 // those need the explicit merge confirmation the manual flow already has.
-const autoSyncSafeStatuses = new Set([RecordSyncStatus.new, RecordSyncStatus.modifiedLocally]);
+const autoSyncSafeStatuses = new Set([
+  RecordSyncStatus.new,
+  RecordSyncStatus.modifiedLocally,
+]);
 
 // the record open in the editor is merged only if it hasn't been modified for at least this long,
 // even when the user-configurable idle threshold is bypassed ("Sync now"): an edit could still be
@@ -73,7 +76,10 @@ const isUploadAllowedForSurvey = (survey: any) =>
   Surveys.isRecordsUploadFromMobileAllowed(survey);
 
 const getAutoSyncIntervalsMs = (settings: any = {}) => {
-  const { autoSyncOpenRecordIntervalMinutes, autoSyncSlowCheckIntervalMinutes } = settings;
+  const {
+    autoSyncOpenRecordIntervalMinutes,
+    autoSyncSlowCheckIntervalMinutes,
+  } = settings;
   return {
     openRecordIdleThresholdMs: autoSyncOpenRecordIntervalMinutes
       ? autoSyncOpenRecordIntervalMinutes * 60_000
@@ -89,7 +95,10 @@ const getAutoSyncIntervalsMs = (settings: any = {}) => {
 // needsManualFix counts as up to date too: the records behind it can't be uploaded until the
 // user edits them (which dispatches markPending, breaking out of this right away), so a full
 // check every tick would only find the same unresolvable records again
-const upToDateStatuses = new Set([AutoSyncStatus.synced, AutoSyncStatus.needsManualFix]);
+const upToDateStatuses = new Set([
+  AutoSyncStatus.synced,
+  AutoSyncStatus.needsManualFix,
+]);
 
 const isAlreadyUpToDate = ({ autoSyncState, slowCheckIntervalMs }: any) => {
   if (!upToDateStatuses.has(autoSyncState.status)) return false;
@@ -105,7 +114,11 @@ const refreshAutoSyncStatus = async ({ dispatch, getState }: any) => {
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
     if (!survey) return;
-    const records = await RecordService.syncRecordSummaries({ survey, cycle, onlyLocal: false });
+    const records = await RecordService.syncRecordSummaries({
+      survey,
+      cycle,
+      onlyLocal: false,
+    });
     dispatch(AutoSyncActions.checkEnd({ records, survey }));
   } catch (error) {
     log.warn(`auto-sync: status refresh after upload failed: ${error}`);
@@ -130,7 +143,11 @@ const uploadAutoSyncCandidates = async ({
     // the toast would only be shown behind/over the dialog, dimming it: the dialog already
     // reports the outcome
     if (!getState().autoSync.dialogOpen) {
-      dispatch(ToastActions.show("dataEntry:autoSync.synced", { count: candidates.length }));
+      dispatch(
+        ToastActions.show("dataEntry:autoSync.synced", {
+          count: candidates.length,
+        }),
+      );
     }
     // refresh the status icon right away (e.g. pending -> synced) instead of waiting for the next tick
     void refreshAutoSyncStatus({ dispatch, getState });
@@ -149,7 +166,9 @@ const uploadAutoSyncCandidates = async ({
       silent: true,
     }),
   );
-  log.debug("auto-sync: exportRecords handed off (zip preparation/upload continue in the job monitor)");
+  log.debug(
+    "auto-sync: exportRecords handed off (zip preparation/upload continue in the job monitor)",
+  );
 };
 
 const handleAutoSyncTickError = ({ dispatch, error }: any) => {
@@ -167,7 +186,9 @@ const handleAutoSyncTickError = ({ dispatch, error }: any) => {
 const hasErrors = (record: any) => record.errors > 0;
 
 const isRecordIdle = ({ record, now, idleThresholdMs }: any) => {
-  const dateModified = record.dateModified ? new Date(record.dateModified) : null;
+  const dateModified = record.dateModified
+    ? new Date(record.dateModified)
+    : null;
   if (!dateModified) return idleThresholdMs < 0;
 
   return now - dateModified.getTime() > idleThresholdMs;
@@ -179,7 +200,8 @@ const selectAutoSyncCandidates = ({
   currentlyEditedRecordUuid,
   openRecordIdleThresholdMs,
 }: any) => {
-  const errorsAllowed = Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey);
+  const errorsAllowed =
+    Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey);
   const now = Date.now();
 
   return records.filter((record: any) => {
@@ -191,7 +213,11 @@ const selectAutoSyncCandidates = ({
     // regardless of how recently it was last modified
     if (record.uuid !== currentlyEditedRecordUuid) return true;
 
-    return isRecordIdle({ record, now, idleThresholdMs: openRecordIdleThresholdMs });
+    return isRecordIdle({
+      record,
+      now,
+      idleThresholdMs: openRecordIdleThresholdMs,
+    });
   });
 };
 
@@ -209,9 +235,13 @@ const selectAutoMergeCandidates = ({
   openRecordIdleThresholdMs,
 }: any) => {
   if (!isAutoMergeAllowed({ autoSyncEnabled, survey })) return [];
-  const errorsAllowed = Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey);
+  const errorsAllowed =
+    Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey);
   const now = Date.now();
-  const idleThresholdMs = Math.max(openRecordIdleThresholdMs, OPEN_RECORD_MERGE_MIN_IDLE_MS);
+  const idleThresholdMs = Math.max(
+    openRecordIdleThresholdMs,
+    OPEN_RECORD_MERGE_MIN_IDLE_MS,
+  );
 
   return records.filter(
     (record: any) =>
@@ -239,7 +269,9 @@ const uploadAutoMergeCandidates = async ({
   );
   if (openRecordIncluded) {
     dispatch(
-      DataEntryActionsRecordSync.lockOpenRecordForSync({ isBusy: () => tickInProgress }),
+      DataEntryActionsRecordSync.lockOpenRecordForSync({
+        isBusy: () => tickInProgress,
+      }),
     );
   }
   await uploadAutoSyncCandidates({
@@ -271,114 +303,141 @@ const runAutoSync =
   ({
     ignoreOpenRecordIdleThreshold = false,
     prefetchedRecords,
-  }: { ignoreOpenRecordIdleThreshold?: boolean; prefetchedRecords?: any[] } = {}) =>
+  }: {
+    ignoreOpenRecordIdleThreshold?: boolean;
+    prefetchedRecords?: any[];
+  } = {}) =>
   async (dispatch: any, getState: any) => {
-  if (tickInProgress) {
-    log.debug("auto-sync: tick already in progress, skipping");
-    return;
-  }
-
-  const state = getState();
-  if (
-    state.jobMonitor.isOpen ||
-    DataEntryActionsRecordSync.isPostUploadProcessingInProgress()
-  ) {
-    log.debug("auto-sync: an export/import/upload is already running, skipping");
-    return;
-  }
-
-  if (isTickBlockedByPreviousError(state.autoSync.status)) {
-    log.debug(`auto-sync: last check ended in ${state.autoSync.status}, skipping until the user retries`);
-    return;
-  }
-
-  // useAutoSyncMonitor only schedules ticks while the network is up, but that check can be
-  // stale by the time this tick actually runs (e.g. connectivity dropped right as the interval
-  // fired) - re-check right before starting so a tick never kicks off offline
-  const netInfoState = await NetInfo.fetch();
-  if (!netInfoState.isConnected) {
-    log.debug("auto-sync: no network connection, skipping");
-    return;
-  }
-
-  const survey = SurveySelectors.selectCurrentSurvey(state);
-  const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
-  if (!survey || !isUploadAllowedForSurvey(survey)) {
-    log.debug("auto-sync: no survey selected, or uploads not allowed for it, skipping");
-    return;
-  }
-
-  const { openRecordIdleThresholdMs: configuredIdleThresholdMs, slowCheckIntervalMs } =
-    getAutoSyncIntervalsMs(state.settings);
-  // an explicit "Sync now" shouldn't wait for the record open in the editor to become idle
-  const openRecordIdleThresholdMs = ignoreOpenRecordIdleThreshold ? -1 : configuredIdleThresholdMs;
-
-  if (
-    !prefetchedRecords &&
-    isAlreadyUpToDate({ autoSyncState: state.autoSync, slowCheckIntervalMs })
-  ) {
-    log.debug("auto-sync: already up to date, skipping check until the next slow check");
-    return;
-  }
-
-  tickInProgress = true;
-  log.debug(`auto-sync: tick starting (survey=${survey.uuid}, cycle=${cycle})`);
-  try {
-    let records = prefetchedRecords;
-    if (!records) {
-      dispatch(AutoSyncActions.checkStart());
-      records = await RecordService.syncRecordSummaries({
-        survey,
-        cycle,
-        onlyLocal: false,
-      });
-      log.debug(`auto-sync: fetched ${records.length} record summary(ies)`);
-      dispatch(AutoSyncActions.checkEnd({ records, survey }));
-    }
-
-    const currentlyEditedRecordUuid = DataEntrySelectors.selectRecord(getState())?.uuid;
-
-    const candidates = selectAutoSyncCandidates({
-      records,
-      survey,
-      currentlyEditedRecordUuid,
-      openRecordIdleThresholdMs,
-    });
-    if (candidates.length > 0) {
-      await uploadAutoSyncCandidates({ dispatch, getState, cycle, candidates });
+    if (tickInProgress) {
+      log.debug("auto-sync: tick already in progress, skipping");
       return;
     }
 
-    // a tick does a single upload, and the conflict resolution strategy applies to all of it:
-    // records to merge can't share it with the ones above (a merge, unlike an overwrite, doesn't
-    // propagate nodes deleted in the device), so they're sent once nothing else is left to send
-    const mergeCandidates = selectAutoMergeCandidates({
-      records,
-      survey,
-      autoSyncEnabled: !!getState().settings?.autoSyncEnabled,
-      currentlyEditedRecordUuid,
-      openRecordIdleThresholdMs,
-    });
-    if (mergeCandidates.length > 0) {
-      await uploadAutoMergeCandidates({
-        dispatch,
-        getState,
-        cycle,
-        candidates: mergeCandidates,
-        currentlyEditedRecordUuid,
-      });
+    const state = getState();
+    if (
+      state.jobMonitor.isOpen ||
+      DataEntryActionsRecordSync.isPostUploadProcessingInProgress()
+    ) {
+      log.debug(
+        "auto-sync: an export/import/upload is already running, skipping",
+      );
       return;
     }
 
-    log.debug("auto-sync: no record is a safe upload candidate, nothing to do");
-    dispatch(
-      AutoSyncActions.setStatusMessage("dataEntry:autoSync.status.noCandidatesMessage"),
+    if (isTickBlockedByPreviousError(state.autoSync.status)) {
+      log.debug(
+        `auto-sync: last check ended in ${state.autoSync.status}, skipping until the user retries`,
+      );
+      return;
+    }
+
+    // useAutoSyncMonitor only schedules ticks while the network is up, but that check can be
+    // stale by the time this tick actually runs (e.g. connectivity dropped right as the interval
+    // fired) - re-check right before starting so a tick never kicks off offline
+    const netInfoState = await NetInfo.fetch();
+    if (!netInfoState.isConnected) {
+      log.debug("auto-sync: no network connection, skipping");
+      return;
+    }
+
+    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
+    if (!survey || !isUploadAllowedForSurvey(survey)) {
+      log.debug(
+        "auto-sync: no survey selected, or uploads not allowed for it, skipping",
+      );
+      return;
+    }
+
+    const {
+      openRecordIdleThresholdMs: configuredIdleThresholdMs,
+      slowCheckIntervalMs,
+    } = getAutoSyncIntervalsMs(state.settings);
+    // an explicit "Sync now" shouldn't wait for the record open in the editor to become idle
+    const openRecordIdleThresholdMs = ignoreOpenRecordIdleThreshold
+      ? -1
+      : configuredIdleThresholdMs;
+
+    if (
+      !prefetchedRecords &&
+      isAlreadyUpToDate({ autoSyncState: state.autoSync, slowCheckIntervalMs })
+    ) {
+      log.debug(
+        "auto-sync: already up to date, skipping check until the next slow check",
+      );
+      return;
+    }
+
+    tickInProgress = true;
+    log.debug(
+      `auto-sync: tick starting (survey=${survey.uuid}, cycle=${cycle})`,
     );
-  } catch (error) {
-    handleAutoSyncTickError({ dispatch, error });
-  } finally {
-    tickInProgress = false;
-  }
-};
+    try {
+      let records = prefetchedRecords;
+      if (!records) {
+        dispatch(AutoSyncActions.checkStart());
+        records = await RecordService.syncRecordSummaries({
+          survey,
+          cycle,
+          onlyLocal: false,
+        });
+        log.debug(`auto-sync: fetched ${records.length} record summary(ies)`);
+        dispatch(AutoSyncActions.checkEnd({ records, survey }));
+      }
+
+      const currentlyEditedRecordUuid =
+        DataEntrySelectors.selectRecord(getState())?.uuid;
+
+      const candidates = selectAutoSyncCandidates({
+        records,
+        survey,
+        currentlyEditedRecordUuid,
+        openRecordIdleThresholdMs,
+      });
+      if (candidates.length > 0) {
+        await uploadAutoSyncCandidates({
+          dispatch,
+          getState,
+          cycle,
+          candidates,
+        });
+        return;
+      }
+
+      // a tick does a single upload, and the conflict resolution strategy applies to all of it:
+      // records to merge can't share it with the ones above (a merge, unlike an overwrite, doesn't
+      // propagate nodes deleted in the device), so they're sent once nothing else is left to send
+      const mergeCandidates = selectAutoMergeCandidates({
+        records,
+        survey,
+        autoSyncEnabled: !!getState().settings?.autoSyncEnabled,
+        currentlyEditedRecordUuid,
+        openRecordIdleThresholdMs,
+      });
+      if (mergeCandidates.length > 0) {
+        await uploadAutoMergeCandidates({
+          dispatch,
+          getState,
+          cycle,
+          candidates: mergeCandidates,
+          currentlyEditedRecordUuid,
+        });
+        return;
+      }
+
+      log.debug(
+        "auto-sync: no record is a safe upload candidate, nothing to do",
+      );
+      dispatch(
+        AutoSyncActions.setStatusMessage(
+          "dataEntry:autoSync.status.noCandidatesMessage",
+        ),
+      );
+    } catch (error) {
+      handleAutoSyncTickError({ dispatch, error });
+    } finally {
+      tickInProgress = false;
+    }
+  };
 
 export { runAutoSync };

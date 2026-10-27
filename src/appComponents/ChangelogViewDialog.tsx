@@ -70,10 +70,7 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
         )}
         {!content && <LoadingIcon />}
         {content && (
-          <ScrollView
-            style={styles.changelogContent}
-            persistentScrollbar
-          >
+          <ScrollView style={styles.changelogContent} persistentScrollbar>
             <Markdown content={content} />
           </ScrollView>
         )}

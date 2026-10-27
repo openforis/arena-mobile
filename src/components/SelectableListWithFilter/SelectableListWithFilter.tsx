@@ -77,7 +77,7 @@ export const SelectableListWithFilter = (props: Props) => {
         (Objects.isEmpty(filterInputValue) ||
           itemLabelExtractor(item)
             .toLocaleLowerCase()
-            .includes(filterInputValue!.toLocaleLowerCase()))
+            .includes(filterInputValue!.toLocaleLowerCase())),
     );
   }, [
     filterItems,
@@ -111,7 +111,7 @@ export const SelectableListWithFilter = (props: Props) => {
 
   const updateItemsFilteredDebouced = useMemo(
     () => Functions.debounce(updateItemsFiltered, 500),
-    [updateItemsFiltered]
+    [updateItemsFiltered],
   );
 
   const onFilterInputChange = useCallback(
@@ -135,28 +135,28 @@ export const SelectableListWithFilter = (props: Props) => {
       loading,
       updateItemsFiltered,
       updateItemsFilteredDebouced,
-    ]
+    ],
   );
 
   const _onSelectedItemsChange = useCallback(
     (selectedItemsNext: any) => {
       onSelectedItemsChange(selectedItemsNext, inputValueRef.current);
     },
-    [onSelectedItemsChange]
+    [onSelectedItemsChange],
   );
 
   const onListSelectionChange = useCallback(
     (newValue: any) => {
       _onSelectedItemsChange(_objToArray(newValue));
     },
-    [_onSelectedItemsChange]
+    [_onSelectedItemsChange],
   );
 
   const onItemRemove = useCallback(
     (item: any) => {
       _onSelectedItemsChange(Arrays.removeItem(item)(selectedItems));
     },
-    [_onSelectedItemsChange, selectedItems]
+    [_onSelectedItemsChange, selectedItems],
   );
 
   useEffect(() => {

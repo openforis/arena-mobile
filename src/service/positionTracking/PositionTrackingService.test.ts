@@ -7,8 +7,8 @@ jest.mock("../../utils", () => ({
 }));
 
 jest.mock("../../model", () => ({
-  PositionTracks:
-    jest.requireActual("../../model/utils/PositionTracks").PositionTracks,
+  PositionTracks: jest.requireActual("../../model/utils/PositionTracks")
+    .PositionTracks,
 }));
 
 jest.mock("../repository/positionTrackRepository", () => ({

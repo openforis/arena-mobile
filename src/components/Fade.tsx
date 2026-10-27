@@ -23,7 +23,8 @@ export const Fade = (props: Props) => {
   });
   const { animatedValue, childrenVisible } = state;
 
-  const setChildrenVisible = (value: any) => setState((statePrev) => ({ ...statePrev, childrenVisible: value }));
+  const setChildrenVisible = (value: any) =>
+    setState((statePrev) => ({ ...statePrev, childrenVisible: value }));
 
   useEffect(() => {
     if (visibleProp) {

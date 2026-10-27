@@ -19,19 +19,23 @@ import { useJobMonitor } from "state/jobMonitor/useJobMonitor";
 // NodeValidationIcon for record validation errors/warnings - this icon sits right next to those
 // in the record editor app bar, so reusing that glyph here read as another validation warning
 // rather than a sync status
-const iconByStatus: Record<AutoSyncStatus, { color: string; source: string }> = {
-  [AutoSyncStatus.unchecked]: { color: "darkgrey", source: "cloud-question" },
-  [AutoSyncStatus.synced]: { color: "green", source: "check-circle" },
-  [AutoSyncStatus.pending]: { color: "orange", source: "cloud-upload-outline" },
-  [AutoSyncStatus.error]: { color: "red", source: "sync-alert" },
-  // not an error auto-sync (or a merge) can get past: the user has to fix the records themselves
-  [AutoSyncStatus.needsManualFix]: { color: "orange", source: "sync-alert" },
-  // not normally read (the authProblem override below takes over first) - kept for type safety
-  // and as a defensive fallback
-  [AutoSyncStatus.authError]: { color: "red", source: "account-alert" },
-  // a check ran but failed (e.g. a server error) - see AutoSyncActions.checkError
-  [AutoSyncStatus.checkError]: { color: "red", source: "cloud-alert" },
-};
+const iconByStatus: Record<AutoSyncStatus, { color: string; source: string }> =
+  {
+    [AutoSyncStatus.unchecked]: { color: "darkgrey", source: "cloud-question" },
+    [AutoSyncStatus.synced]: { color: "green", source: "check-circle" },
+    [AutoSyncStatus.pending]: {
+      color: "orange",
+      source: "cloud-upload-outline",
+    },
+    [AutoSyncStatus.error]: { color: "red", source: "sync-alert" },
+    // not an error auto-sync (or a merge) can get past: the user has to fix the records themselves
+    [AutoSyncStatus.needsManualFix]: { color: "orange", source: "sync-alert" },
+    // not normally read (the authProblem override below takes over first) - kept for type safety
+    // and as a defensive fallback
+    [AutoSyncStatus.authError]: { color: "red", source: "account-alert" },
+    // a check ran but failed (e.g. a server error) - see AutoSyncActions.checkError
+    [AutoSyncStatus.checkError]: { color: "red", source: "cloud-alert" },
+  };
 
 export type AutoSyncConnectionIssue = "offline" | "authError" | null;
 
@@ -73,8 +77,10 @@ const computeIconAndColor = ({
   status: AutoSyncStatus;
 }): { source: string; color: string } => {
   if (!autoSyncEnabled) return { source: "sync-off", color: "darkgrey" };
-  if (connectionIssue === "offline") return { source: "cloud-off-outline", color: "darkgrey" };
-  if (connectionIssue === "authError") return { source: "account-alert", color: "red" };
+  if (connectionIssue === "offline")
+    return { source: "cloud-off-outline", color: "darkgrey" };
+  if (connectionIssue === "authError")
+    return { source: "account-alert", color: "red" };
   return iconByStatus[status];
 };
 
@@ -103,7 +109,9 @@ export const useAutoSyncStatus = () => {
   const uploading = isOpen && silent;
   const syncing = checking || uploading;
   const hasProgress =
-    uploading && typeof jobProgressPercent === "number" && jobProgressPercent >= 0;
+    uploading &&
+    typeof jobProgressPercent === "number" &&
+    jobProgressPercent >= 0;
   // the zip preparation, upload and server-side processing phases are chained into one
   // continuous 0-100% bar (see REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES in actionsDataExport.ts and
   // JobMonitorState.progressRangeStart/End) instead of each phase's own progress, which would
@@ -125,7 +133,9 @@ export const useAutoSyncStatus = () => {
   // for the next scheduled tick (or for auto-sync to even be on) - shared by "Try again" (a
   // failed check) and "Sync now" (records are known to be pending) below
   const triggerSync = useCallback(() => {
-    dispatch(DataEntryActions.runAutoSync({ ignoreOpenRecordIdleThreshold: true }));
+    dispatch(
+      DataEntryActions.runAutoSync({ ignoreOpenRecordIdleThreshold: true }),
+    );
   }, [dispatch]);
 
   // a failed check stops retrying on its own (see useRecordsList.checkAutoSyncStatusIfNeeded and

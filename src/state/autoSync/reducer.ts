@@ -50,7 +50,10 @@ const actionHandlers = {
     ...state,
     ...action.payload,
   }),
-  [AutoSyncActions.AUTO_SYNC_STATUS_MARKED_PENDING]: ({ state, action }: any) => ({
+  [AutoSyncActions.AUTO_SYNC_STATUS_MARKED_PENDING]: ({
+    state,
+    action,
+  }: any) => ({
     ...state,
     ...action.payload,
   }),

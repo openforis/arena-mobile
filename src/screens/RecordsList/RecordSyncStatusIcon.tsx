@@ -44,7 +44,7 @@ export const RecordSyncStatusIcon = (props: Props) => {
 
   const icon = useMemo(
     () => <Icon color={iconColor} size={24} source="circle" />,
-    [iconColor]
+    [iconColor],
   );
 
   if (!syncStatus || syncStatus === RecordSyncStatus.syncNotApplicable)

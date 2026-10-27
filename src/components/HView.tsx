@@ -31,7 +31,7 @@ export const HView = (props: Props) => {
       textDirectionAware && isRtl ? styles.rtlStyle : undefined,
       styleProp,
     ],
-    [isRtl, styleProp, textDirectionAware]
+    [isRtl, styleProp, textDirectionAware],
   );
 
   return (

@@ -165,7 +165,9 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : String(error);
-        log.error(`${logPrefix} Error checking if file is missing: ${errorMessage}`);
+        log.error(
+          `${logPrefix} Error checking if file is missing: ${errorMessage}`,
+        );
         if (!cancelled) setFileMissing(false);
       }
     };
@@ -180,8 +182,7 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
   const onFileSelected = useCallback(
     async (
       result:
-        | ImagePicker.ImagePickerResult
-        | DocumentPicker.DocumentPickerResult,
+        ImagePicker.ImagePickerResult | DocumentPicker.DocumentPickerResult,
       fromCamera = false,
     ) => {
       logDebug(

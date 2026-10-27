@@ -49,7 +49,10 @@ export const SettingsScreen = () => {
 
   // same color as the FieldSet border
   const itemWrapperStyle = useMemo(
-    () => [styles.settingsItemWrapper, { borderColor: theme.colors.onBackground }],
+    () => [
+      styles.settingsItemWrapper,
+      { borderColor: theme.colors.onBackground },
+    ],
     [theme.colors.onBackground],
   );
 
@@ -61,14 +64,14 @@ export const SettingsScreen = () => {
 
   const onPropValueChange =
     ({ key }: { key: keyof SettingsObject }) =>
-      (value: any) => {
-        const oldValue = settings[key];
-        if (value === oldValue) return;
-        dispatch(SettingsActions.updateSetting({ key, value }));
-        setState((statePrev) =>
-          Objects.assocPath({ obj: statePrev, path: ["settings", key], value }),
-        );
-      };
+    (value: any) => {
+      const oldValue = settings[key];
+      if (value === oldValue) return;
+      dispatch(SettingsActions.updateSetting({ key, value }));
+      setState((statePrev) =>
+        Objects.assocPath({ obj: statePrev, path: ["settings", key], value }),
+      );
+    };
 
   const onExportLogsPress = useCallback(async () => {
     await AppService.exportLogsAndShareThem();

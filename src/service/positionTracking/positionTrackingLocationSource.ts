@@ -87,7 +87,11 @@ const watchPosition = async ({
     log.warn(
       `PositionTracking: external GPS ${resolvedSourceId} not available, using internal GPS`,
     );
-    const internal = await watchInternalGps({ batterySaver, distanceInterval, onLocation });
+    const internal = await watchInternalGps({
+      batterySaver,
+      distanceInterval,
+      onLocation,
+    });
     if (removed) {
       internal.remove();
     } else {
@@ -107,7 +111,10 @@ const watchPosition = async ({
           current?.remove();
           current = null;
           void fallbackToInternal().catch((error) =>
-            log.error("PositionTracking: fallback to internal GPS failed", error),
+            log.error(
+              "PositionTracking: fallback to internal GPS failed",
+              error,
+            ),
           );
         },
       },

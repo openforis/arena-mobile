@@ -80,8 +80,7 @@ const saveSettings = async (settings: SettingsObject) => {
   INSTANCE = settings;
 };
 
-const getCredentials = (server: any) =>
-  Keychain.getInternetCredentials(server);
+const getCredentials = (server: any) => Keychain.getInternetCredentials(server);
 
 const setCredentials = (server: any, email: any, password: any) =>
   Keychain.setInternetCredentials(server, email, password);

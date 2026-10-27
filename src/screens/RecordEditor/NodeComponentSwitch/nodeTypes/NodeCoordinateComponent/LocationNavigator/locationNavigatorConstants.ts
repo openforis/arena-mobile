@@ -5,9 +5,18 @@ export const NAV_COLOR_ORANGE = "#ff9800";
 export const NAV_COLOR_RED = "#f44336";
 const NAV_TEXT_ON_COLOR = "#fff";
 
-export const cardStyleGreen = { backgroundColor: NAV_COLOR_GREEN, textColor: NAV_TEXT_ON_COLOR };
-export const cardStyleOrange = { backgroundColor: NAV_COLOR_ORANGE, textColor: NAV_TEXT_ON_COLOR };
-export const cardStyleRed = { backgroundColor: NAV_COLOR_RED, textColor: NAV_TEXT_ON_COLOR };
+export const cardStyleGreen = {
+  backgroundColor: NAV_COLOR_GREEN,
+  textColor: NAV_TEXT_ON_COLOR,
+};
+export const cardStyleOrange = {
+  backgroundColor: NAV_COLOR_ORANGE,
+  textColor: NAV_TEXT_ON_COLOR,
+};
+export const cardStyleRed = {
+  backgroundColor: NAV_COLOR_RED,
+  textColor: NAV_TEXT_ON_COLOR,
+};
 
 type NavLevel = "green" | "orange" | "red";
 

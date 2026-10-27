@@ -116,7 +116,7 @@ export const SelectableList = (props: SelectableListProps) => {
       }
       onChange(selectedItemsNext);
     },
-    [multiple, onChange, selectedItems]
+    [multiple, onChange, selectedItems],
   );
 
   const renderItem = useCallback(
@@ -138,7 +138,7 @@ export const SelectableList = (props: SelectableListProps) => {
       multiple,
       onItemSelect,
       selectedItems,
-    ]
+    ],
   );
 
   return (

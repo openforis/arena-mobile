@@ -8,7 +8,7 @@ const fetchUser = async () => {
 
 const fetchUserPicture = async (userUuid: string) => {
   const fileUri = await RemoteService.getFile(
-    `/api/user/${userUuid}/profilePicture`
+    `/api/user/${userUuid}/profilePicture`,
   );
   return (await ImageUtils.isValid(fileUri)) ? fileUri : null;
 };

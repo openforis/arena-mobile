@@ -15,7 +15,8 @@ export default {
     recordSyncInProgress:
       "Cet enregistrement est en cours de synchronisation avec le serveur. Veuillez patienter un instant",
     status: {
-      syncedTooltip: "Tous les enregistrements sont synchronisés avec le serveur",
+      syncedTooltip:
+        "Tous les enregistrements sont synchronisés avec le serveur",
       pendingTooltip:
         "Certains enregistrements doivent encore être synchronisés. Ils seront envoyés automatiquement",
       errorTooltip:
@@ -198,7 +199,8 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
     selectItem_other: "Sélectionner des éléments",
   },
   coordinate: {
-    longPressMarkerToMove: "Appuyez longuement sur le marqueur pour le déplacer",
+    longPressMarkerToMove:
+      "Appuyez longuement sur le marqueur pour le déplacer",
     saveNewPosition: "Enregistrer la nouvelle position",
     accuracy: "Précision (m)",
     altitude: "Altitude (m)",
@@ -238,7 +240,8 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
     srs: "$t(common:srs)",
     targetLocation: "Position cible",
     useCurrentLocation: "Utiliser la position actuelle",
-    usingInternalFallback: "Utilisation du GPS interne ({{label}} indisponible)",
+    usingInternalFallback:
+      "Utilisation du GPS interne ({{label}} indisponible)",
     usingSource: "Utilisation de {{label}}",
     x: "X",
     y: "Y",

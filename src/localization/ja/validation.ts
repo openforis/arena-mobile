@@ -16,8 +16,7 @@ export default {
     },
     entity: {
       keyDuplicate: "項目の重複",
-      keyValueNotSpecified:
-        "「{{keyDefName}}」の識別値が入力されていません",
+      keyValueNotSpecified: "「{{keyDefName}}」の識別値が入力されていません",
     },
     nodes: {
       count: {

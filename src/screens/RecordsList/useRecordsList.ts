@@ -215,7 +215,9 @@ export const useRecordsList = () => {
 
     // the tick reuses the summaries just fetched, instead of fetching them again concurrently
     if (shouldRunAutoSync && fetched) {
-      dispatch(DataEntryActions.runAutoSync({ prefetchedRecords: fetchedRecords }));
+      dispatch(
+        DataEntryActions.runAutoSync({ prefetchedRecords: fetchedRecords }),
+      );
     }
   }, [canCheckAutoSyncStatus, loadRecordsWithSyncStatus, dispatch]);
 

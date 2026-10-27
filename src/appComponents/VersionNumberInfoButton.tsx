@@ -69,7 +69,7 @@ export const VersionNumberInfoButton = () => {
         ...statePrev,
         changelogDialogOpen: !statePrev.changelogDialogOpen,
       })),
-    []
+    [],
   );
 
   const onUpdateStatusIconPress = useCallback(() => {

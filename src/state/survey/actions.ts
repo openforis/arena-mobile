@@ -32,43 +32,45 @@ const {
 // currentSurveyUserGroupReady is set to true once a value (remote or cached) is settled on.
 const fetchCurrentSurveyUserGroup =
   ({ survey }: any) =>
-    async (dispatch: any, getState: any) => {
-      const surveyId = survey?.id;
-      // Avoid race conditions when the user switches surveys quickly: only apply the result
-      // if the fetched survey is still the current one.
-      const currentSurveyId = SurveySelectors.selectCurrentSurveyId(getState());
-      if (surveyId && currentSurveyId !== surveyId) {
-        return;
-      }
-      // The demo survey doesn't exist in the server: there's no user group to fetch (or to cache).
-      if (survey?.uuid === SurveyService.demoSurveyUuid) {
-        dispatch({ type: CURRENT_SURVEY_USER_GROUP_SET, userGroup: null });
-        return;
-      }
-      // Make sure the logged in user is fetched first (e.g. this can be called before
-      // RemoteConnectionActions.loginAndSetUser() has completed during app startup),
-      // otherwise the current-user-group request may be attempted without a valid session.
-      await dispatch(loginAndSetUser({ onlyIfNotSet: true }));
+  async (dispatch: any, getState: any) => {
+    const surveyId = survey?.id;
+    // Avoid race conditions when the user switches surveys quickly: only apply the result
+    // if the fetched survey is still the current one.
+    const currentSurveyId = SurveySelectors.selectCurrentSurveyId(getState());
+    if (surveyId && currentSurveyId !== surveyId) {
+      return;
+    }
+    // The demo survey doesn't exist in the server: there's no user group to fetch (or to cache).
+    if (survey?.uuid === SurveyService.demoSurveyUuid) {
+      dispatch({ type: CURRENT_SURVEY_USER_GROUP_SET, userGroup: null });
+      return;
+    }
+    // Make sure the logged in user is fetched first (e.g. this can be called before
+    // RemoteConnectionActions.loginAndSetUser() has completed during app startup),
+    // otherwise the current-user-group request may be attempted without a valid session.
+    await dispatch(loginAndSetUser({ onlyIfNotSet: true }));
 
-      dispatch({ type: CURRENT_SURVEY_USER_GROUP_LOADING });
+    dispatch({ type: CURRENT_SURVEY_USER_GROUP_LOADING });
 
-      const { isNetworkConnected } = DeviceInfoSelectors.selectDeviceInfo(
-        getState(),
-      );
-      let userGroup;
-      if (isNetworkConnected) {
-        try {
-          userGroup = await SurveyService.fetchCurrentUserGroupRemote({ survey });
-          await PreferencesService.setSurveyUserGroup(surveyId, userGroup);
-        } catch (error) {
-          log.error("Error fetching current survey user group remotely; falling back to cached value", error);
-          userGroup = await PreferencesService.getSurveyUserGroup(surveyId);
-        }
-      } else {
+    const { isNetworkConnected } =
+      DeviceInfoSelectors.selectDeviceInfo(getState());
+    let userGroup;
+    if (isNetworkConnected) {
+      try {
+        userGroup = await SurveyService.fetchCurrentUserGroupRemote({ survey });
+        await PreferencesService.setSurveyUserGroup(surveyId, userGroup);
+      } catch (error) {
+        log.error(
+          "Error fetching current survey user group remotely; falling back to cached value",
+          error,
+        );
         userGroup = await PreferencesService.getSurveyUserGroup(surveyId);
       }
-      dispatch({ type: CURRENT_SURVEY_USER_GROUP_SET, userGroup });
-    };
+    } else {
+      userGroup = await PreferencesService.getSurveyUserGroup(surveyId);
+    }
+    dispatch({ type: CURRENT_SURVEY_USER_GROUP_SET, userGroup });
+  };
 
 // Refetches the current survey user group, if a survey is currently selected.
 // Used on login, since a different user may now be logged in for the same survey selection.
@@ -88,57 +90,57 @@ const resetCurrentSurveyUserGroup = () => ({
 
 const setCurrentSurvey =
   ({ survey, preferredLanguage = null, navigation = null }: any) =>
-    async (dispatch: any) => {
-      dispatch({
-        type: CURRENT_SURVEY_SET,
-        survey,
-        preferredLanguage,
-      });
-      await PreferencesService.setCurrentSurveyId(survey.id);
-      await dispatch(
-        SurveyOptionsActions.fetchEntityListColumns({ surveyId: survey.id }),
-      );
-      dispatch(fetchCurrentSurveyUserGroup({ survey }));
-      navigation?.navigate(screenKeys.recordsList);
-    };
+  async (dispatch: any) => {
+    dispatch({
+      type: CURRENT_SURVEY_SET,
+      survey,
+      preferredLanguage,
+    });
+    await PreferencesService.setCurrentSurveyId(survey.id);
+    await dispatch(
+      SurveyOptionsActions.fetchEntityListColumns({ surveyId: survey.id }),
+    );
+    dispatch(fetchCurrentSurveyUserGroup({ survey }));
+    navigation?.navigate(screenKeys.recordsList);
+  };
 
 const setCurrentSurveyPreferredLanguage =
   ({ lang }: any) =>
-    async (dispatch: any, getState: any) => {
-      dispatch({ type: CURRENT_SURVEY_PREFERRED_LANG_SET, lang });
-      const state = getState();
-      const surveyId = SurveySelectors.selectCurrentSurveyId(state);
-      await PreferencesService.setSurveyPreferredLanguage(surveyId, lang);
-    };
+  async (dispatch: any, getState: any) => {
+    dispatch({ type: CURRENT_SURVEY_PREFERRED_LANG_SET, lang });
+    const state = getState();
+    const surveyId = SurveySelectors.selectCurrentSurveyId(state);
+    await PreferencesService.setSurveyPreferredLanguage(surveyId, lang);
+  };
 
 const setCurrentSurveyCycle =
   ({ cycleKey }: any) =>
-    (dispatch: any) => {
-      dispatch({ type: CURRENT_SURVEY_CYCLE_SET, cycleKey });
-    };
+  (dispatch: any) => {
+    dispatch({ type: CURRENT_SURVEY_CYCLE_SET, cycleKey });
+  };
 
 const fetchAndSetCurrentSurvey =
   ({ surveyId, navigation = null }: { surveyId: number; navigation?: any }) =>
-    async (dispatch: any) => {
-      const survey = await SurveyService.fetchSurveyById(surveyId);
-      if (survey) {
-        if (!Surveys.isVisibleInMobile(survey)) {
-          const status = i18n.t("surveys:status.notVisibleInMobile");
-          dispatch(
-            MessageActions.setWarning("surveys:statusMessage", { status }),
-          );
-        }
-        const preferredLanguage =
-          await PreferencesService.getSurveyPreferredLanguage(surveyId);
-        dispatch(setCurrentSurvey({ survey, preferredLanguage, navigation }));
-      } else {
+  async (dispatch: any) => {
+    const survey = await SurveyService.fetchSurveyById(surveyId);
+    if (survey) {
+      if (!Surveys.isVisibleInMobile(survey)) {
+        const status = i18n.t("surveys:status.notVisibleInMobile");
         dispatch(
-          MessageActions.setMessage({
-            content: "surveys:errorFetchingLocalSurvey",
-          }),
+          MessageActions.setWarning("surveys:statusMessage", { status }),
         );
       }
-    };
+      const preferredLanguage =
+        await PreferencesService.getSurveyPreferredLanguage(surveyId);
+      dispatch(setCurrentSurvey({ survey, preferredLanguage, navigation }));
+    } else {
+      dispatch(
+        MessageActions.setMessage({
+          content: "surveys:errorFetchingLocalSurvey",
+        }),
+      );
+    }
+  };
 
 const fetchAndSetLocalSurveys = () => async (dispatch: any) => {
   const surveys = await SurveyService.fetchSurveySummariesLocal();
@@ -213,17 +215,17 @@ const fetchAndSetRemoteSurveyIfOnlyOne =
 
 const _onSurveyInsertOrUpdate =
   ({ survey, navigation }: any) =>
-    (dispatch: any) => {
-      dispatch(setCurrentSurvey({ survey, navigation }));
-      dispatch(fetchAndSetLocalSurveys());
-    };
+  (dispatch: any) => {
+    dispatch(setCurrentSurvey({ survey, navigation }));
+    dispatch(fetchAndSetLocalSurveys());
+  };
 
 const importSurveyRemote =
   ({ surveyId, navigation }: any) =>
-    async (dispatch: any) => {
-      const survey = await SurveyService.importSurveyRemote({ id: surveyId });
-      dispatch(_onSurveyInsertOrUpdate({ survey, navigation }));
-    };
+  async (dispatch: any) => {
+    const survey = await SurveyService.importSurveyRemote({ id: surveyId });
+    dispatch(_onSurveyInsertOrUpdate({ survey, navigation }));
+  };
 
 const updateSurveyRemote =
   ({
@@ -237,38 +239,38 @@ const updateSurveyRemote =
     onComplete = null,
     skipConfirmation = false,
   }: any) =>
-    async (dispatch: any) => {
-      const executeUpdate = async () => {
-        onConfirm?.();
-        try {
-          const survey = await SurveyService.updateSurveyRemote({
-            surveyId,
-            surveyRemoteId,
-          });
-          await dispatch(_onSurveyInsertOrUpdate({ survey, navigation }));
-        } finally {
-          onComplete?.();
-        }
-      };
-
-      if (skipConfirmation) {
-        await executeUpdate();
-        return;
+  async (dispatch: any) => {
+    const executeUpdate = async () => {
+      onConfirm?.();
+      try {
+        const survey = await SurveyService.updateSurveyRemote({
+          surveyId,
+          surveyRemoteId,
+        });
+        await dispatch(_onSurveyInsertOrUpdate({ survey, navigation }));
+      } finally {
+        onComplete?.();
       }
-
-      dispatch(
-        ConfirmActions.show({
-          confirmButtonTextKey: "surveys:updateSurvey",
-          messageKey: confirmMessageKey,
-          messageParams: { surveyName },
-          onConfirm: async () => {
-            dispatch(ConfirmActions.dismiss());
-            await executeUpdate();
-          },
-          onCancel,
-        }),
-      );
     };
+
+    if (skipConfirmation) {
+      await executeUpdate();
+      return;
+    }
+
+    dispatch(
+      ConfirmActions.show({
+        confirmButtonTextKey: "surveys:updateSurvey",
+        messageKey: confirmMessageKey,
+        messageParams: { surveyName },
+        onConfirm: async () => {
+          dispatch(ConfirmActions.dismiss());
+          await executeUpdate();
+        },
+        onCancel,
+      }),
+    );
+  };
 
 const deleteSurveys =
   (surveyIds: any) => async (dispatch: any, getState: any) => {

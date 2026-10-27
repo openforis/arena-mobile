@@ -1,7 +1,6 @@
 import { Linking } from "react-native";
 
-const isValidUrl = (url: string): Promise<boolean> =>
-  Linking.canOpenURL(url);
+const isValidUrl = (url: string): Promise<boolean> => Linking.canOpenURL(url);
 
 /**
  * Ensures a URL starts with http:// or https://, defaulting to https:// if no protocol is present
@@ -9,7 +8,7 @@ const isValidUrl = (url: string): Promise<boolean> =>
  * @returns The normalized URL or null if the URL is invalid
  */
 const normalizeUrl = async (
-  url: string | null | undefined
+  url: string | null | undefined,
 ): Promise<string | null> => {
   if (!url || typeof url !== "string") return null;
 

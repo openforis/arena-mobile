@@ -77,18 +77,23 @@ export const useLocationNavigator = ({
     stopOnTimeout: false,
   });
 
-  const [headingSource, setHeadingSource] = useState<HeadingSource>("magnetometer");
+  const [headingSource, setHeadingSource] =
+    useState<HeadingSource>("magnetometer");
 
-  const { heading: magHeading, magnetometerAvailable } = useMagnetometerHeading({
-    enabled: headingSource === "magnetometer",
-  });
+  const { heading: magHeading, magnetometerAvailable } = useMagnetometerHeading(
+    {
+      enabled: headingSource === "magnetometer",
+    },
+  );
   const { heading: locHeading, locationHeadingAvailable } = useLocationHeading({
     enabled: headingSource === "location",
   });
 
   const heading = headingSource === "magnetometer" ? magHeading : locHeading;
   const headingSourceAvailable =
-    headingSource === "magnetometer" ? magnetometerAvailable : locationHeadingAvailable;
+    headingSource === "magnetometer"
+      ? magnetometerAvailable
+      : locationHeadingAvailable;
 
   useEffect(() => {
     startLocationWatch();

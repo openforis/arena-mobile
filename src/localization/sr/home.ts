@@ -12,5 +12,6 @@ export default {
   surveys: "Istraživanja",
   surveysDescription: "Promijeni, preuzmi ili ažuriraj istraživanja",
   noSurveySelected: "Nije izabrano istraživanje",
-  noSurveySelectedDescription: "Izaberite ili preuzmite istraživanje da biste počeli sa prikupljanjem podataka",
+  noSurveySelectedDescription:
+    "Izaberite ili preuzmite istraživanje da biste počeli sa prikupljanjem podataka",
 };

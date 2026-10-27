@@ -16,8 +16,14 @@ type Props = {
 };
 
 export const MenuButton = (props: Props) => {
-  const { anchorPosition = "bottom", icon, items, label, menuStyle, mode } =
-    props;
+  const {
+    anchorPosition = "bottom",
+    icon,
+    items,
+    label,
+    menuStyle,
+    mode,
+  } = props;
 
   const [menuVisible, setMenuVisible] = useState(false);
 

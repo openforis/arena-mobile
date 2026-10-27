@@ -10,6 +10,6 @@ export const useToast = () => {
     (textKey: any, textParams = {}) => {
       dispatch(ToastActions.show(textKey, textParams));
     },
-    [dispatch]
+    [dispatch],
   );
 };

@@ -12,5 +12,6 @@ export default {
   surveys: "Survei",
   surveysDescription: "Ganti, unduh, atau perbarui survei",
   noSurveySelected: "Tidak ada survei yang dipilih",
-  noSurveySelectedDescription: "Pilih atau unduh survei untuk mulai mengumpulkan data",
+  noSurveySelectedDescription:
+    "Pilih atau unduh survei untuk mulai mengumpulkan data",
 };

@@ -98,7 +98,7 @@ const _startGpsLocking = async () => {
       distanceInterval: 0,
       timeInterval: 10,
     },
-    (_location) => {}
+    (_location) => {},
   );
   return true;
 };

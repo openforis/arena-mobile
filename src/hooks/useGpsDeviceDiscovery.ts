@@ -11,9 +11,7 @@ import { mergeDiscoveredDevice } from "./gpsDeviceDiscoveryUtils";
 import { useIsMountedRef } from "./useIsMountedRef";
 
 export type GpsDeviceDiscoveryError =
-  | "permission_denied"
-  | "bluetooth_disabled"
-  | "unknown";
+  "permission_denied" | "bluetooth_disabled" | "unknown";
 
 /**
  * Drives an on-demand Bluetooth GPS device discovery/pairing scan. Kept separate from
