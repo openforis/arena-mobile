@@ -41,11 +41,7 @@ const saveSurveyFile = async (survey: any) => {
   return survey;
 };
 
-const deleteSurveyPackageFiles = async ({
-  surveyId,
-}: {
-  surveyId: number;
-}) => {
+const deleteSurveyPackageFiles = async ({ surveyId }: { surveyId: number }) => {
   await GenericFileRepository.deleteFile(getSurveyPackageDirUri({ surveyId }));
 };
 

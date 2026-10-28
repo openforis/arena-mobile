@@ -10,9 +10,9 @@ describe("SurveyPackage", () => {
   });
 
   it("accepts a mobile survey package info", () => {
-    expect(
-      SurveyPackage.isSupportedInfo({ exportType: "mobileSurvey" }),
-    ).toBe(true);
+    expect(SurveyPackage.isSupportedInfo({ exportType: "mobileSurvey" })).toBe(
+      true,
+    );
   });
 
   it("accepts a missing info", () => {

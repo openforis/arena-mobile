@@ -11,7 +11,9 @@ const getSurveyFileEntryName = (fileUuid: string): string =>
 // a missing info is accepted; other export types (e.g. a full Arena export) cannot be imported yet
 const isSupportedInfo = (info: unknown): boolean => {
   if (info === null || info === undefined) return true;
-  return (info as { exportType?: string }).exportType === mobileSurveyExportType;
+  return (
+    (info as { exportType?: string }).exportType === mobileSurveyExportType
+  );
 };
 
 export const SurveyPackage = {
