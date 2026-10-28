@@ -1,3 +1,4 @@
+import { SurveyPackage } from "model/SurveyPackage";
 import { Files } from "utils/Files";
 import { GenericFileRepository } from "./genericFileRepository";
 
@@ -8,6 +9,19 @@ const getSurveyFilesDirUri = () =>
 
 const getSurveyFileUri = ({ surveyId }: any) =>
   `${getSurveyFilesDirUri()}/${surveyId}.json`;
+
+// package files (info.json, surveyfiles/) are stored in a folder next to the survey JSON file
+const getSurveyPackageDirUri = ({ surveyId }: { surveyId: number }) =>
+  `${getSurveyFilesDirUri()}/${surveyId}`;
+
+const getSurveyPackageFileUri = ({
+  surveyId,
+  fileUuid,
+}: {
+  surveyId: number;
+  fileUuid: string;
+}) =>
+  `${getSurveyPackageDirUri({ surveyId })}/${SurveyPackage.getSurveyFileEntryName(fileUuid)}`;
 
 const getStorageSize = async () => Files.getDirSize(getSurveyFilesDirUri());
 
@@ -27,9 +41,54 @@ const saveSurveyFile = async (survey: any) => {
   return survey;
 };
 
+const deleteSurveyPackageFiles = async ({
+  surveyId,
+}: {
+  surveyId: number;
+}) => {
+  await GenericFileRepository.deleteFile(getSurveyPackageDirUri({ surveyId }));
+};
+
+const moveIfExists = async ({ from, to }: { from: string; to: string }) => {
+  if (await Files.exists(from)) {
+    await GenericFileRepository.moveFile({ from, to });
+  }
+};
+
+// replaces the package files of the survey with the ones in the unzipped package folder
+const replaceSurveyPackageFiles = async ({
+  surveyId,
+  unzippedDirUri,
+}: {
+  surveyId: number;
+  unzippedDirUri: string;
+}) => {
+  await deleteSurveyPackageFiles({ surveyId });
+  const packageDirUri = getSurveyPackageDirUri({ surveyId });
+  await GenericFileRepository.makeDirIfNotExists(packageDirUri);
+  for (const entryName of [
+    SurveyPackage.infoFileName,
+    SurveyPackage.surveyFilesDirName,
+  ]) {
+    await moveIfExists({
+      from: `${unzippedDirUri}/${entryName}`,
+      to: `${packageDirUri}/${entryName}`,
+    });
+  }
+};
+
+const existsSurveyPackageFile = async ({
+  surveyId,
+  fileUuid,
+}: {
+  surveyId: number;
+  fileUuid: string;
+}) => Files.exists(getSurveyPackageFileUri({ surveyId, fileUuid }));
+
 const deleteSurveyFile = async ({ surveyId }: any) => {
   const fileUri = getSurveyFileUri({ surveyId });
   await GenericFileRepository.deleteFile(fileUri);
+  await deleteSurveyPackageFiles({ surveyId });
 };
 
 export const SurveyFSRepository = {
@@ -37,4 +96,8 @@ export const SurveyFSRepository = {
   readSurveyFile,
   saveSurveyFile,
   deleteSurveyFile,
+  getSurveyPackageFileUri,
+  existsSurveyPackageFile,
+  replaceSurveyPackageFiles,
+  deleteSurveyPackageFiles,
 };
