@@ -7,10 +7,10 @@ Companion plan (server): openforis/arena, branch `mobile-survey-package`,
 
 ## Goals
 
-1. Download the survey from the server as a **zip package** (`survey.json` +
-   `files.json` + `files/`) instead of the bare survey JSON, so the **survey
-   files** (preloaded map layers, branding images; later the survey area of
-   interest) are available on the device, offline.
+1. Download the survey from the server as a **zip package** instead of the
+   bare survey JSON, so the **survey files** (preloaded map layers, branding
+   images; later the survey area of interest) are available on the device,
+   offline.
 2. Store the package files next to the survey JSON, without changing the way
    the survey JSON itself is stored: **no migration** of the surveys already on
    the device.
@@ -21,13 +21,26 @@ Companion plan (server): openforis/arena, branch `mobile-survey-package`,
 Showing the branding images and using the preloaded map layers / area of
 interest are follow-ups: this plan only makes the files available.
 
-## Package layout (version 1, produced by the server)
+## Package layout (produced by the server)
+
+The package uses the same names and layout as the **Arena format export**
+(dashboard → export survey), of which it is a subset:
 
 ```
-survey.json        the survey (same object returned as `survey` by GET api/mobile/survey/:id)
-files.json         { "version": 1, "files": [{ "uuid", "type", "name", "size" }] }
-files/<uuid>       content of every file listed in files.json
+info.json                 ArenaExportInfo (exportType "mobileSurvey")
+survey.json               the survey (same object returned as `survey` by GET api/mobile/survey/:id)
+surveyfiles/<uuid>.bin    content of the survey files referenced by the survey props
 ```
+
+- There is no index of the files: as in the Arena export, the files are found
+  from the survey props (`props.preloadedMapLayers`: list of survey files with
+  uuid, name, size; `props.branding.<imageKey>.fileUuid`).
+- `files/` is **not** used: in the Arena export it contains the record files,
+  and the app already reads that layout when importing records.
+- The only difference with the Arena export is the content of `survey.json`
+  (merged props, one cycle, category items and taxa included in `refData`).
+  Importing the survey part of a regular Arena export is a future step (single
+  format).
 
 Endpoint: `GET api/mobile/survey/:surveyRemoteId/package` (params: `cycle`,
 `draft`, as the JSON endpoint). Older servers answer 404.
@@ -44,8 +57,8 @@ SQLite table survey                    summary (name, label, remote id, dates); 
 New, only for surveys downloaded as package:
 
 ```
-survey_files/<localSurveyId>/files.json
-survey_files/<localSurveyId>/files/<uuid>
+survey_files/<localSurveyId>/info.json
+survey_files/<localSurveyId>/surveyfiles/<uuid>.bin
 ```
 
 Why no migration is needed:
@@ -61,49 +74,57 @@ Why no migration is needed:
 
 ## Tasks
 
-### Task 1: storage of the package files (`SurveyFSRepository`)
+### Task 1: package layout and info (pure, unit tested)
+
+`src/model/SurveyPackage.ts`:
+
+```ts
+// same names as the Arena format export (arena: server/modules/survey/service/surveyExport/exportFile.js)
+const infoFileName = "info.json";
+const surveyFileName = "survey.json";
+const surveyFilesDirName = "surveyfiles";
+const mobileSurveyExportType = "mobileSurvey";
+
+const getSurveyFileEntryName = (fileUuid: string): string =>
+  `${surveyFilesDirName}/${fileUuid}.bin`;
+
+// true if the info is missing (lenient) or describes a mobile survey package
+const isSupportedInfo = (info: unknown): boolean => { ... };
+
+export const SurveyPackage = {
+  infoFileName,
+  surveyFileName,
+  surveyFilesDirName,
+  getSurveyFileEntryName,
+  isSupportedInfo,
+};
+```
+
+- [ ] `src/model/SurveyPackage.test.ts` (jest, like `MapLayers.test.ts`):
+      entry names; info with `exportType: "mobileSurvey"` → supported; other
+      export type (e.g. `"survey"`, a full Arena export) → not supported yet;
+      missing info → supported.
+
+### Task 2: storage of the package files (`SurveyFSRepository`)
 
 `src/service/repository/surveyFSRepository.ts`:
 
 - [ ] `getSurveyPackageDirUri({ surveyId })` → `${getSurveyFilesDirUri()}/${surveyId}`.
 - [ ] `replaceSurveyPackageFiles({ surveyId, unzippedDirUri })`: deletes the
-      current package folder (if any) and moves `files.json` and `files/` from
-      the unzipped folder into it (`Files.moveFile`, which works for folders:
-      `FileSystem.moveAsync`). Called only after the survey JSON has been
-      stored successfully, so a failed download never leaves the survey without
-      its previous files.
+      current package folder (if any) and moves `info.json` and `surveyfiles/`
+      from the unzipped folder into it (`Files.moveFile`, which works for
+      folders: `FileSystem.moveAsync`). Called only after the survey JSON has
+      been stored successfully, so a failed download never leaves the survey
+      without its previous files.
 - [ ] `deleteSurveyPackageFiles({ surveyId })`: deletes the package folder
       (`Files.del(uri, true)`, idempotent).
-- [ ] `getSurveyPackageFileUri({ surveyId, fileUuid })` and
-      `readSurveyPackageFilesIndex({ surveyId })` (returns `null` when the
-      folder or `files.json` is missing) for the follow-ups.
+- [ ] `getSurveyPackageFileUri({ surveyId, fileUuid })` →
+      `${getSurveyPackageDirUri({ surveyId })}/${SurveyPackage.getSurveyFileEntryName(fileUuid)}`,
+      and `existsSurveyPackageFile({ surveyId, fileUuid })`, for the follow-ups.
 - [ ] `deleteSurveyFile` (survey deletion) also deletes the package folder.
 - [ ] `getStorageSize` already sums the folder recursively
       (`Files.getDirSize` → `visitDirFilesRecursively`): check that sub
       folders are included.
-
-### Task 2: package parsing (pure, unit tested)
-
-`src/model/SurveyPackage.ts`:
-
-```ts
-export type SurveyPackageFile = { uuid: string; type: string; name?: string; size?: number };
-export type SurveyPackageFilesIndex = { version: number; files: SurveyPackageFile[] };
-
-const surveyFileName = "survey.json";
-const filesIndexFileName = "files.json";
-const filesDirName = "files";
-const supportedVersion = 1;
-
-// returns null for a missing / not supported index (the package is then used as survey JSON only)
-const parseFilesIndex = (content: unknown): SurveyPackageFilesIndex | null => { ... };
-
-export const SurveyPackage = { surveyFileName, filesIndexFileName, filesDirName, supportedVersion, parseFilesIndex };
-```
-
-- [ ] `src/model/SurveyPackage.test.ts` (jest, like `MapLayers.test.ts`): valid
-      index, missing `files`, unsupported version → `null`, files without uuid
-      skipped.
 
 ### Task 3: download (`SurveyService`)
 
@@ -118,8 +139,10 @@ export const SurveyPackage = { surveyFileName, filesIndexFileName, filesDirName,
      `recordRemoteService.ts`); a 404 / 501 (older server) → `null`, other
      errors are thrown as today;
   3. unzip into `Files.createTempFolder()`;
-  4. read `survey.json` (`Files.readJsonFromFile`) and `files.json`
-     (`SurveyPackage.parseFilesIndex`);
+  4. read `info.json` (if present) and check `SurveyPackage.isSupportedInfo`
+     (not supported → error, the server is newer than the app: same handling
+     as the app version check), then read `survey.json`
+     (`Files.readJsonFromFile`);
   5. return `{ survey, unzippedDirUri }`; the downloaded zip is deleted.
 - [ ] `fetchSurveyRemote({ id })`: package if available, otherwise
       `fetchSurveyRemoteById` (current JSON endpoint) → `{ survey, unzippedDirUri: null }`.
@@ -130,14 +153,15 @@ export const SurveyPackage = { surveyFileName, filesIndexFileName, filesDirName,
 - [ ] When a survey is updated from the JSON endpoint (older server), delete
       its package folder, so the files never belong to a different survey
       version.
-- [ ] `deleteSurveys`: also deletes the package folders (Task 1).
+- [ ] `deleteSurveys`: also deletes the package folders (Task 2).
 
 ### Task 4: checks
 
 - [ ] `yarn test`, `yarn test:types`, `yarn lint:check`.
 - [ ] Manual test on a device / emulator (development build, not Expo Go):
   - new server: import a survey with branding images and preloaded map layers
-    → `survey_files/<id>/files/` contains the files; survey usable offline;
+    → `survey_files/<id>/surveyfiles/` contains the files; survey usable
+    offline;
   - update the survey (after publishing a change) → files replaced;
   - delete the survey → package folder deleted; storage size updated;
   - older server (or endpoint missing) → survey imported from the JSON
@@ -154,3 +178,5 @@ export const SurveyPackage = { surveyFileName, filesIndexFileName, filesDirName,
 - Survey area of interest as survey file (openforis/arena#4588): provider for
   the arena-core expression evaluator reading the AOI from the package folder.
 - Download progress (the zip can be large: the content length is known).
+- Single format: import the survey part of a regular Arena export
+  (`categories/` and `taxonomies/` read in parts).
