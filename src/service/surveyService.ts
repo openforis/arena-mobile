@@ -1,4 +1,10 @@
-import { Dates, Survey, Surveys, UserGroup } from "@openforis/arena-core";
+import {
+  ArenaExportFile,
+  Dates,
+  Survey,
+  Surveys,
+  UserGroup,
+} from "@openforis/arena-core";
 
 import { SurveyPackage } from "model/SurveyPackage";
 import { Files, log } from "utils";
@@ -198,13 +204,13 @@ const readSurveyPackage = async ({
   unzippedDirUri: string;
 }): Promise<Survey> => {
   const info = await Files.readJsonFromFile({
-    fileUri: `${unzippedDirUri}/${SurveyPackage.infoFileName}`,
+    fileUri: `${unzippedDirUri}/${ArenaExportFile.info}`,
   });
   if (!SurveyPackage.isSupportedInfo(info)) {
     throw new Error("survey package format not supported");
   }
   return (await Files.readJsonFromFile({
-    fileUri: `${unzippedDirUri}/${SurveyPackage.surveyFileName}`,
+    fileUri: `${unzippedDirUri}/${ArenaExportFile.survey}`,
   })) as Survey;
 };
 

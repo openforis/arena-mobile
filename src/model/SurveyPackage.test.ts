@@ -1,14 +1,6 @@
 import { SurveyPackage } from "./SurveyPackage";
 
 describe("SurveyPackage", () => {
-  it("uses the Arena export entry names", () => {
-    expect(SurveyPackage.infoFileName).toBe("info.json");
-    expect(SurveyPackage.surveyFileName).toBe("survey.json");
-    expect(SurveyPackage.getSurveyFileEntryName("abc")).toBe(
-      "surveyfiles/abc.bin",
-    );
-  });
-
   it("accepts a mobile survey package info", () => {
     expect(SurveyPackage.isSupportedInfo({ exportType: "mobileSurvey" })).toBe(
       true,

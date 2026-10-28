@@ -1,25 +1,16 @@
-// Survey package downloaded from the server: same entry names of the Arena format export
-// (arena: server/modules/survey/service/surveyExport/exportFile.js)
-const infoFileName = "info.json";
-const surveyFileName = "survey.json";
-const surveyFilesDirName = "surveyfiles";
-const mobileSurveyExportType = "mobileSurvey";
+import { ArenaExportType } from "@openforis/arena-core";
 
-const getSurveyFileEntryName = (fileUuid: string): string =>
-  `${surveyFilesDirName}/${fileUuid}.bin`;
+// Survey package downloaded from the server: a subset of the Arena format export (entry names in ArenaExportFile)
 
 // a missing info is accepted; other export types (e.g. a full Arena export) cannot be imported yet
 const isSupportedInfo = (info: unknown): boolean => {
   if (info === null || info === undefined) return true;
   return (
-    (info as { exportType?: string }).exportType === mobileSurveyExportType
+    (info as { exportType?: string }).exportType ===
+    ArenaExportType.mobileSurvey
   );
 };
 
 export const SurveyPackage = {
-  infoFileName,
-  surveyFileName,
-  surveyFilesDirName,
-  getSurveyFileEntryName,
   isSupportedInfo,
 };

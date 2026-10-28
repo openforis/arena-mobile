@@ -1,4 +1,5 @@
-import { SurveyPackage } from "model/SurveyPackage";
+import { ArenaExportFile } from "@openforis/arena-core";
+
 import { Files } from "utils/Files";
 import { GenericFileRepository } from "./genericFileRepository";
 
@@ -21,7 +22,7 @@ const getSurveyPackageFileUri = ({
   surveyId: number;
   fileUuid: string;
 }) =>
-  `${getSurveyPackageDirUri({ surveyId })}/${SurveyPackage.getSurveyFileEntryName(fileUuid)}`;
+  `${getSurveyPackageDirUri({ surveyId })}/${ArenaExportFile.surveyFile({ fileUuid })}`;
 
 const getStorageSize = async () => Files.getDirSize(getSurveyFilesDirUri());
 
@@ -63,8 +64,8 @@ const replaceSurveyPackageFiles = async ({
   const packageDirUri = getSurveyPackageDirUri({ surveyId });
   await GenericFileRepository.makeDirIfNotExists(packageDirUri);
   for (const entryName of [
-    SurveyPackage.infoFileName,
-    SurveyPackage.surveyFilesDirName,
+    ArenaExportFile.info,
+    ArenaExportFile.surveyFilesDir,
   ]) {
     await moveIfExists({
       from: `${unzippedDirUri}/${entryName}`,
