@@ -1,4 +1,5 @@
 import {
+  ArenaExportFile,
   ArenaExportInfo,
   ArenaExportInfoFactory,
   DateFormats,
@@ -20,12 +21,6 @@ import { RecordService } from "./recordService";
 import { RecordFileService } from "./recordFileService";
 import { RecordRemoteService } from "./recordRemoteService";
 import { JobMobileContext } from "model/JobMobile";
-
-const INFO_JSON_FILENAME = "info.json";
-const RECORDS_FOLDER_NAME = "records";
-const RECORDS_SUMMARY_JSON_FILENAME = "records.json";
-const FILES_FOLDER_NAME = "files";
-const FILES_SUMMARY_JSON_FILENAME = "files.json";
 
 const recordsExportFileNamePrefix = "arena_mobile_data_";
 
@@ -77,7 +72,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     try {
       const tempRecordsFolderUri = Files.path(
         tempFolderUri,
-        RECORDS_FOLDER_NAME,
+        ArenaExportFile.recordsDir,
       );
 
       await Files.mkDir(tempRecordsFolderUri);
@@ -99,8 +94,8 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       this.total = recordsToExport.length;
 
       const tempRecordsSummaryJsonFileUri = Files.path(
-        tempRecordsFolderUri,
-        RECORDS_SUMMARY_JSON_FILENAME,
+        tempFolderUri,
+        ArenaExportFile.records,
       );
       await Files.writeJsonToFile({
         content: recordsToExport.map(({ uuid, cycle }: any) => ({
@@ -114,7 +109,10 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
         (nodeDef) => NodeDefs.getType(nodeDef) === NodeDefType.file,
       );
 
-      const tempFilesDirUri = Files.path(tempFolderUri, FILES_FOLDER_NAME);
+      const tempFilesDirUri = Files.path(
+        tempFolderUri,
+        ArenaExportFile.filesDir,
+      );
       await Files.mkDir(tempFilesDirUri);
 
       // uuids of files the server already has for each record, so their content can be left
@@ -144,7 +142,6 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
             survey,
             user,
             tempFolderUri,
-            tempRecordsFolderUri,
             nodeDefsFile,
             filesAlreadyOnServerByRecordUuid,
           });
@@ -165,8 +162,8 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       // files summary file
       if (files.length > 0) {
         const tempFilesSummaryJsonFileUri = Files.path(
-          tempFilesDirUri,
-          FILES_SUMMARY_JSON_FILENAME,
+          tempFolderUri,
+          ArenaExportFile.filesSummaries,
         );
         await Files.writeJsonToFile({
           content: files,
@@ -220,7 +217,6 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     survey,
     user,
     tempFolderUri,
-    tempRecordsFolderUri,
     nodeDefsFile,
     filesAlreadyOnServerByRecordUuid,
   }: any): Promise<any[]> {
@@ -230,7 +226,10 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       record.ownerUuid = user.uuid;
     }
 
-    const tempRecordFileUri = `${Files.path(tempRecordsFolderUri, uuid)}.json`;
+    const tempRecordFileUri = Files.path(
+      tempFolderUri,
+      ArenaExportFile.record({ recordUuid: uuid }),
+    );
     await Files.writeJsonToFile({
       content: record,
       fileUri: tempRecordFileUri,
@@ -270,7 +269,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       },
       exportedByUserUuid: user?.uuid,
     });
-    const infoJsonFileUri = Files.path(tempFolderUri, INFO_JSON_FILENAME);
+    const infoJsonFileUri = Files.path(tempFolderUri, ArenaExportFile.info);
     await Files.writeJsonToFile({
       content: info,
       fileUri: infoJsonFileUri,
@@ -326,7 +325,10 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
         fileUuid,
       });
       if (await Files.exists(fileUri)) {
-        const destUri = `${Files.path(tempFolderUri, FILES_FOLDER_NAME, fileUuid)}.bin`;
+        const destUri = Files.path(
+          tempFolderUri,
+          ArenaExportFile.file({ fileUuid }),
+        );
         await Files.copyFile({ from: fileUri, to: destUri });
         exportedRecordFiles.push(recordFile);
       } else {

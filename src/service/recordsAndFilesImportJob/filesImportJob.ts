@@ -1,8 +1,7 @@
-import { Promises } from "@openforis/arena-core";
+import { ArenaExportFile, Promises } from "@openforis/arena-core";
 
 import { JobMobile } from "model";
 import { Files } from "utils";
-import { RecordsExportFile } from "../recordsExportFile";
 import { RecordFileService } from "../recordFileService";
 import { RecordsAndFilesImportJobContext } from "./RecordsAndFilesImportJobContext";
 
@@ -18,7 +17,7 @@ export class FilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
 
     const filesSummaryJsonUri = Files.path(
       unzippedFolderUri,
-      RecordsExportFile.filesSummaryJsonPath,
+      ArenaExportFile.filesSummaries,
     );
     const filesSummaryObj = await Files.readJsonFromFile({
       fileUri: filesSummaryJsonUri,
@@ -34,7 +33,7 @@ export class FilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
 
       const sourceFileUri = Files.path(
         unzippedFolderUri,
-        RecordsExportFile.getFilePath(fileUuid),
+        ArenaExportFile.file({ fileUuid }),
       );
 
       await RecordFileService.saveRecordFile({

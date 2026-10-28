@@ -85,6 +85,18 @@ const getFile = async (uri: string, data?: Dictionary<any>) => {
   return withRetry(sendRequest);
 };
 
+const getFileOrThrow = async (uri: string, data?: Dictionary<any>) => {
+  const serverUrl = await getServerUrl();
+  const sendRequest = async () =>
+    API.getFileOrThrow({
+      serverUrl,
+      uri,
+      data,
+      config: attachHeaders(),
+    });
+  return withRetry(sendRequest);
+};
+
 const post = async (uri: string, data?: Dictionary<any>) => {
   const serverUrl = await getServerUrl();
   const sendRequest = async () =>
@@ -150,6 +162,7 @@ export const RemoteService = {
   del,
   get,
   getFile,
+  getFileOrThrow,
   post,
   postCancelableMultipartData,
   postMultipartData,

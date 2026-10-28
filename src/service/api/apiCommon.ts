@@ -20,6 +20,23 @@ const getFile = async (options: FileRequestOptions): Promise<string> => {
   return actualTargetFileUri;
 };
 
+// like getFile, but an HTTP error status is thrown (as error.response.status, like axios), deleting the downloaded content
+const getFileOrThrow = async (options: FileRequestOptions): Promise<string> => {
+  const { serverUrl, uri, data, targetFileUri, config } = options;
+  const actualTargetFileUri =
+    targetFileUri ?? Files.path(Files.cacheDirectory, UUIDs.v4() + ".tmp");
+  const url = APIUtils.getUrlWithParams({ serverUrl, uri, data });
+  const { status } = await Files.download(url, actualTargetFileUri, config);
+  if (status >= 400) {
+    await Files.del(actualTargetFileUri, true);
+    throw Object.assign(new Error(`file download failed: HTTP ${status}`), {
+      response: { status },
+    });
+  }
+  return actualTargetFileUri;
+};
+
 export const APICommon = {
   getFile,
+  getFileOrThrow,
 };
