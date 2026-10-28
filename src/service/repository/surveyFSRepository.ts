@@ -63,15 +63,15 @@ const replaceSurveyPackageFiles = async ({
   await deleteSurveyPackageFiles({ surveyId });
   const packageDirUri = getSurveyPackageDirUri({ surveyId });
   await GenericFileRepository.makeDirIfNotExists(packageDirUri);
-  for (const entryName of [
-    ArenaExportFile.info,
-    ArenaExportFile.surveyFilesDir,
-  ]) {
-    await moveIfExists({
-      from: `${unzippedDirUri}/${entryName}`,
-      to: `${packageDirUri}/${entryName}`,
-    });
-  }
+  // independent entries: moved in parallel
+  await Promise.all(
+    [ArenaExportFile.info, ArenaExportFile.surveyFilesDir].map((entryName) =>
+      moveIfExists({
+        from: `${unzippedDirUri}/${entryName}`,
+        to: `${packageDirUri}/${entryName}`,
+      }),
+    ),
+  );
 };
 
 const existsSurveyPackageFile = async ({
