@@ -342,6 +342,9 @@ const copyUriToTempFile = async ({
   return tempFileUri;
 };
 
+// zip archives can be extracted only in development / production builds (not in Expo Go or on web)
+const isUnzipSupported = (): boolean => !!unzip && !Environment.isWeb;
+
 export const Files = {
   MIME_TYPES,
   EncodingType: FileSystem.EncodingType,
@@ -380,6 +383,7 @@ export const Files = {
   writeBytesToFile,
   appendStringToFile,
   toHumanReadableFileSize,
+  isUnzipSupported,
   unzip,
   zip,
 };

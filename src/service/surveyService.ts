@@ -1,5 +1,8 @@
 import { Dates, Survey, Surveys, UserGroup } from "@openforis/arena-core";
 
+import { SurveyPackage } from "model/SurveyPackage";
+import { Files, log } from "utils";
+
 import { SurveyRepository } from "./repository/surveyRepository";
 import { SurveyFSRepository } from "./repository/surveyFSRepository";
 import { RemoteService } from "./remoteService";
@@ -178,15 +181,117 @@ const importOrUpdateDemoSurvey = async ({
   return "update";
 };
 
-const importSurveyRemote = async ({ id }: any) => {
-  const survey = await fetchSurveyRemoteById({ id });
-  return _insertSurvey(survey);
+type SurveyRemoteFetchResult = {
+  survey: Survey;
+  // folder with the unzipped survey package (info.json, surveyfiles/); null if the survey was fetched as JSON
+  unzippedDirUri: string | null;
 };
 
-const updateSurveyRemote = async ({ surveyId, surveyRemoteId }: any) => {
-  const survey = await fetchSurveyRemoteById({ id: surveyRemoteId });
-  return _updateSurvey({ id: surveyId, survey });
+const isEndpointNotSupportedError = (error: any): boolean => {
+  const status = Number(error?.response?.status);
+  return status === 404 || status === 501;
 };
+
+const readSurveyPackage = async ({
+  unzippedDirUri,
+}: {
+  unzippedDirUri: string;
+}): Promise<Survey> => {
+  const info = await Files.readJsonFromFile({
+    fileUri: `${unzippedDirUri}/${SurveyPackage.infoFileName}`,
+  });
+  if (!SurveyPackage.isSupportedInfo(info)) {
+    throw new Error("survey package format not supported");
+  }
+  return (await Files.readJsonFromFile({
+    fileUri: `${unzippedDirUri}/${SurveyPackage.surveyFileName}`,
+  })) as Survey;
+};
+
+// survey package (zip with survey JSON and survey files); null if not supported by the server or by the app environment
+const fetchSurveyPackageRemote = async ({
+  id,
+}: {
+  id: number;
+}): Promise<SurveyRemoteFetchResult | null> => {
+  if (!Files.isUnzipSupported()) return null;
+  let zipFileUri: string;
+  try {
+    zipFileUri = await RemoteService.getFileOrThrow(
+      `api/mobile/survey/${id}/package`,
+    );
+  } catch (error) {
+    if (isEndpointNotSupportedError(error)) {
+      log.debug("survey package endpoint not supported by the server");
+      return null;
+    }
+    throw error;
+  }
+  const unzippedDirUri = await Files.createTempFolder();
+  try {
+    await Files.unzip(zipFileUri, unzippedDirUri, "UTF-8");
+    const survey = await readSurveyPackage({ unzippedDirUri });
+    return { survey, unzippedDirUri };
+  } catch (error) {
+    await Files.del(unzippedDirUri, true);
+    throw error;
+  } finally {
+    await Files.del(zipFileUri, true);
+  }
+};
+
+const fetchSurveyRemote = async ({
+  id,
+}: {
+  id: number;
+}): Promise<SurveyRemoteFetchResult> =>
+  (await fetchSurveyPackageRemote({ id })) ?? {
+    survey: await fetchSurveyRemoteById({ id }),
+    unzippedDirUri: null,
+  };
+
+// the package files replace the previous ones; a survey fetched as JSON (older server) has no package files
+const storeSurveyPackageFiles = async ({
+  surveyId,
+  unzippedDirUri,
+}: {
+  surveyId: number;
+  unzippedDirUri: string | null;
+}) => {
+  if (unzippedDirUri) {
+    await SurveyFSRepository.replaceSurveyPackageFiles({
+      surveyId,
+      unzippedDirUri,
+    });
+  } else {
+    await SurveyFSRepository.deleteSurveyPackageFiles({ surveyId });
+  }
+};
+
+const withSurveyRemote = async (
+  id: number,
+  storeSurvey: (survey: Survey) => Promise<Survey>,
+): Promise<Survey> => {
+  const { survey, unzippedDirUri } = await fetchSurveyRemote({ id });
+  try {
+    const surveyStored = await storeSurvey(survey);
+    await storeSurveyPackageFiles({
+      surveyId: surveyStored.id!,
+      unzippedDirUri,
+    });
+    return surveyStored;
+  } finally {
+    if (unzippedDirUri) await Files.del(unzippedDirUri, true);
+  }
+};
+
+const importSurveyRemote = async ({ id }: any) =>
+  withSurveyRemote(id, _insertSurvey);
+
+const updateSurveyRemote = async ({ surveyId, surveyRemoteId }: any) =>
+  withSurveyRemote(surveyRemoteId, (survey) =>
+    _updateSurvey({ id: surveyId, survey }),
+  );
 
 const deleteSurveys = async (surveyIds: any) => {
   await SurveyRepository.deleteSurveys(surveyIds);
