@@ -41,7 +41,6 @@ import { MessageActions } from "../message";
 import { PositionTrackingActions } from "../positionTracking/actions";
 import { SurveySelectors } from "../survey";
 
-import { RemoteConnectionSelectors } from "../remoteConnection";
 import { exportRecords, startCsvDataExportJob } from "./actionsDataExport";
 import { runAutoSync } from "./actionsAutoSync";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
@@ -56,8 +55,8 @@ import { DataEntryActionsRecordSync } from "./actionsRecordSync";
 import { DataEntryActionsPreview } from "./actionsPreview";
 import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntrySelectors } from "./selectors";
+import { selectRecordUpdaterParams } from "./recordUpdaterParams";
 import { ToastActions } from "state/toast";
-import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
 
 const {
   DATA_ENTRY_RESET,
@@ -120,14 +119,6 @@ const prepareRecordForStorage = ({ record }: any) => {
   const validationUpdated = Validations.updateCounts(validation);
   return { ...record, validation: validationUpdated };
 };
-
-// parameters shared by the RecordUpdater calls on the record being edited
-const selectRecordUpdaterParams = (state: any) => ({
-  user: RemoteConnectionSelectors.selectLoggedUserSafe(state),
-  survey: SurveySelectors.selectCurrentSurvey(state)!,
-  prevCycleRecord: DataEntrySelectors.selectPreviousCycleRecord(state),
-  areaOfInterestProvider: AreaOfInterestProviderDefault,
-});
 
 const createNewRecord =
   ({ navigator }: any) =>
