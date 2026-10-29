@@ -121,6 +121,14 @@ const prepareRecordForStorage = ({ record }: any) => {
   return { ...record, validation: validationUpdated };
 };
 
+// parameters shared by the RecordUpdater calls on the record being edited
+const selectRecordUpdaterParams = (state: any) => ({
+  user: RemoteConnectionSelectors.selectLoggedUserSafe(state),
+  survey: SurveySelectors.selectCurrentSurvey(state)!,
+  prevCycleRecord: DataEntrySelectors.selectPreviousCycleRecord(state),
+  areaOfInterestProvider: AreaOfInterestProviderDefault,
+});
+
 const createNewRecord =
   ({ navigator }: any) =>
   async (dispatch: any, getState: any) => {
@@ -139,11 +147,10 @@ const createNewRecord =
       }
       state = getState();
 
-      const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
+      const updaterParams = selectRecordUpdaterParams(state);
+      const { user } = updaterParams;
       const userGroup = SurveySelectors.selectCurrentSurveyUserGroup(state);
       const cycle = Surveys.getDefaultCycleKey(survey);
-      const prevCycleRecord =
-        DataEntrySelectors.selectPreviousCycleRecord(state);
       // to always use the selected cycle, use this: const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
       const appInfo = SystemUtils.getRecordAppInfo();
       const now = Dates.nowFormattedForStorage();
@@ -158,17 +165,12 @@ const createNewRecord =
         dateModified: now,
       };
       let { record, nodes } = await RecordUpdater.createRootEntity({
-        user,
-        survey,
-        areaOfInterestProvider: AreaOfInterestProviderDefault,
+        ...updaterParams,
         record: recordEmpty,
-        prevCycleRecord,
       });
 
       ({ record, nodes } = await UserGroupQualifiers.assignQualifierValues({
-        user,
-        survey,
-        areaOfInterestProvider: AreaOfInterestProviderDefault,
+        ...updaterParams,
         userGroup,
         record,
         nodes,
@@ -192,10 +194,9 @@ const createNewRecord =
 const _performAddEntity = async (dispatch: any, getState: any) => {
   if (_isRecordSyncInProgress(dispatch, getState)) return;
   const state = getState();
-  const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
-  const survey = SurveySelectors.selectCurrentSurvey(state)!;
+  const updaterParams = selectRecordUpdaterParams(state);
+  const { survey } = updaterParams;
   const record = DataEntrySelectors.selectRecord(state);
-  const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);
   const { parentEntityUuid: currentParentNodeUuid, entityDef: nodeDef } =
     DataEntrySelectors.selectCurrentPageEntity(state);
 
@@ -224,11 +225,8 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
     nodes: nodesCreated,
     clearedDefUuids,
   } = await RecordUpdater.createNodeAndDescendants({
-    user,
-    survey,
-    areaOfInterestProvider: AreaOfInterestProviderDefault,
+    ...updaterParams,
     record,
-    prevCycleRecord,
     parentNode,
     nodeDef,
     clearNonApplicableValues: !Surveys.isKeepNonApplicableValues(survey),
@@ -282,10 +280,9 @@ const deleteNodes =
   (nodeUuids: any) => async (dispatch: any, getState: any) => {
     if (_isRecordSyncInProgress(dispatch, getState)) return;
     const state = getState();
-    const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
+    const updaterParams = selectRecordUpdaterParams(state);
+    const { survey } = updaterParams;
     const record = DataEntrySelectors.selectRecord(state);
-    const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);
     const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
 
     const {
@@ -293,11 +290,8 @@ const deleteNodes =
       nodes,
       clearedDefUuids,
     } = await RecordUpdater.deleteNodes({
-      user,
-      survey,
-      areaOfInterestProvider: AreaOfInterestProviderDefault,
+      ...updaterParams,
       record,
-      prevCycleRecord,
       nodeUuids,
       clearNonApplicableValues: !Surveys.isKeepNonApplicableValues(survey),
     });
@@ -639,12 +633,10 @@ const updateAttribute =
   async (dispatch: any, getState: any) => {
     try {
       const state = getState();
-      const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
-      const survey = SurveySelectors.selectCurrentSurvey(state)!;
+      const updaterParams = selectRecordUpdaterParams(state);
+      const { survey } = updaterParams;
       const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
       const record = DataEntrySelectors.selectRecord(state);
-      const prevCycleRecord =
-        DataEntrySelectors.selectPreviousCycleRecord(state);
 
       const cycle = Records.getCycle(record);
       const node = Records.getNodeByUuid(uuid)(record)!;
@@ -676,11 +668,8 @@ const updateAttribute =
         nodes: nodesUpdated,
         clearedDefUuids,
       } = await RecordUpdater.updateAttributeValue({
-        user,
-        survey,
-        areaOfInterestProvider: AreaOfInterestProviderDefault,
+        ...updaterParams,
         record,
-        prevCycleRecord,
         attributeUuid: uuid,
         value,
         clearNonApplicableValues: !Surveys.isKeepNonApplicableValues(survey),
@@ -833,19 +822,15 @@ const addNewAttribute =
   async (dispatch: any, getState: any) => {
     if (_isRecordSyncInProgress(dispatch, getState)) return;
     const state = getState();
-    const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
+    const updaterParams = selectRecordUpdaterParams(state);
+    const { survey } = updaterParams;
     const record = DataEntrySelectors.selectRecord(state);
-    const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
 
     const { record: recordUpdated, nodes: nodesCreated } =
       await RecordUpdater.createNodeAndDescendants({
-        user,
-        survey,
-        areaOfInterestProvider: AreaOfInterestProviderDefault,
+        ...updaterParams,
         record,
-        prevCycleRecord,
         parentNode,
         nodeDef,
       });
@@ -856,11 +841,8 @@ const addNewAttribute =
 
     const { record: recordUpdated2 } = await RecordUpdater.updateAttributeValue(
       {
-        user,
-        survey,
-        areaOfInterestProvider: AreaOfInterestProviderDefault,
+        ...updaterParams,
         record: recordUpdated,
-        prevCycleRecord,
         attributeUuid: nodeCreated.uuid,
         value,
       },
