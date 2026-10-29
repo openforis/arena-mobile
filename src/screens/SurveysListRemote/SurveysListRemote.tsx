@@ -10,6 +10,7 @@ import {
   Loader,
   Searchbar,
   Text,
+  ViewMoreText,
   VView,
 } from "components";
 import { useNavigationFocus } from "hooks";
@@ -36,7 +37,11 @@ const minSurveysToShowSearchBar = 5;
 const DescriptionCellRenderer = ({ item }: DataVisualizerCellProps) => {
   const defaultLanguage = Surveys.getDefaultLanguage(item);
   const description = item.props?.descriptions?.[defaultLanguage];
-  return description ? <Text>{description}</Text> : null;
+  return description ? (
+    <ViewMoreText numberOfLines={3}>
+      <Text>{description}</Text>
+    </ViewMoreText>
+  ) : null;
 };
 
 const DatePublishedCellRenderer = ({ item }: DataVisualizerCellProps) => (
