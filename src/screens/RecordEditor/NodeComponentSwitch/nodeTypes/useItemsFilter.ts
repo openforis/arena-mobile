@@ -14,6 +14,7 @@ import {
   RemoteConnectionSelectors,
   SurveySelectors,
 } from "state";
+import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
 
 export const useItemsFilter = ({
   nodeDef,
@@ -47,6 +48,7 @@ export const useItemsFilter = ({
           return expressionEvaluator.evalExpression({
             user,
             survey,
+            areaOfInterestProvider: AreaOfInterestProviderDefault,
             record,
             prevCycleRecord,
             node: parentNode!,

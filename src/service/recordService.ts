@@ -23,6 +23,7 @@ import { RecordRepository } from "./repository/recordRepository";
 import { RecordRemoteService } from "./recordRemoteService";
 import { RecordFileService } from "./recordFileService";
 import { ArenaMobileRecord } from "model/ArenaMobileRecord";
+import { AreaOfInterestProviderDefault } from "./areaOfInterestProvider";
 
 const {
   fetchRecord,
@@ -537,6 +538,7 @@ const prepareClonedRecord = async ({
     await UserGroupQualifiers.assignQualifierValues({
       user,
       survey,
+      areaOfInterestProvider: AreaOfInterestProviderDefault,
       userGroup,
       record,
     });
@@ -606,7 +608,12 @@ const revalidateRecords = async ({ user, survey, recordIds }: any) => {
       includeContent: true,
     });
     const validation = Validations.updateCounts(
-      await RecordValidator.validateRecord({ user, survey, record }),
+      await RecordValidator.validateRecord({
+        user,
+        survey,
+        areaOfInterestProvider: AreaOfInterestProviderDefault,
+        record,
+      }),
     );
     await RecordRepository.updateRecordValidation({
       surveyId: survey.id,

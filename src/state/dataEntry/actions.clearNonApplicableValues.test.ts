@@ -36,6 +36,9 @@ jest.mock("model", () => ({
 jest.mock("service/preferencesService", () => ({
   PreferencesService: { setSurveyRecordLastEditedPage: jest.fn() },
 }));
+jest.mock("service/areaOfInterestProvider", () => ({
+  AreaOfInterestProviderDefault: {},
+}));
 jest.mock("service/recordFileService", () => ({ RecordFileService: {} }));
 jest.mock("service/recordService", () => ({
   RecordService: { updateRecord: jest.fn(async ({ record }) => record) },
