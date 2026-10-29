@@ -11,6 +11,7 @@ import { SystemUtils } from "utils";
 import { RemoteConnectionSelectors } from "../remoteConnection";
 import { SurveyActionTypes } from "../survey/actionTypes";
 import { DataEntryActionTypes } from "./actionTypes";
+import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
 
 type StartPreviewParams = {
   survey: Survey;
@@ -41,6 +42,7 @@ const startPreview =
     const { record, nodes } = await RecordUpdater.createRootEntity({
       user,
       survey,
+      areaOfInterestProvider: AreaOfInterestProviderDefault,
       record: recordEmpty,
     });
     for (const node of Object.values(nodes)) {

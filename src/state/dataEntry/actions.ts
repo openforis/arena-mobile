@@ -57,6 +57,7 @@ import { DataEntryActionsPreview } from "./actionsPreview";
 import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntrySelectors } from "./selectors";
 import { ToastActions } from "state/toast";
+import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
 
 const {
   DATA_ENTRY_RESET,
@@ -159,6 +160,7 @@ const createNewRecord =
       let { record, nodes } = await RecordUpdater.createRootEntity({
         user,
         survey,
+        areaOfInterestProvider: AreaOfInterestProviderDefault,
         record: recordEmpty,
         prevCycleRecord,
       });
@@ -166,6 +168,7 @@ const createNewRecord =
       ({ record, nodes } = await UserGroupQualifiers.assignQualifierValues({
         user,
         survey,
+        areaOfInterestProvider: AreaOfInterestProviderDefault,
         userGroup,
         record,
         nodes,
@@ -223,6 +226,7 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
   } = await RecordUpdater.createNodeAndDescendants({
     user,
     survey,
+    areaOfInterestProvider: AreaOfInterestProviderDefault,
     record,
     prevCycleRecord,
     parentNode,
@@ -291,6 +295,7 @@ const deleteNodes =
     } = await RecordUpdater.deleteNodes({
       user,
       survey,
+      areaOfInterestProvider: AreaOfInterestProviderDefault,
       record,
       prevCycleRecord,
       nodeUuids,
@@ -673,6 +678,7 @@ const updateAttribute =
       } = await RecordUpdater.updateAttributeValue({
         user,
         survey,
+        areaOfInterestProvider: AreaOfInterestProviderDefault,
         record,
         prevCycleRecord,
         attributeUuid: uuid,
@@ -837,6 +843,7 @@ const addNewAttribute =
       await RecordUpdater.createNodeAndDescendants({
         user,
         survey,
+        areaOfInterestProvider: AreaOfInterestProviderDefault,
         record,
         prevCycleRecord,
         parentNode,
@@ -851,6 +858,7 @@ const addNewAttribute =
       {
         user,
         survey,
+        areaOfInterestProvider: AreaOfInterestProviderDefault,
         record: recordUpdated,
         prevCycleRecord,
         attributeUuid: nodeCreated.uuid,

@@ -27,6 +27,7 @@ import { RemoteConnectionSelectors } from "state/remoteConnection";
 import { DataEntryActionTypes } from "./actionTypes";
 import { fetchRecordsFromServer } from "./actionsRecordsImport";
 import { DataEntrySelectors } from "./selectors";
+import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
 
 const {
   PREVIOUS_CYCLE_PAGE_ENTITY_SET,
@@ -60,6 +61,7 @@ const updateCurrentRecordWithPrevCycleValues = async ({
   const { record: currentCycleRecordUpdated } =
     await RecordNodesUpdater.updateNodesDependents({
       survey,
+      areaOfInterestProvider: AreaOfInterestProviderDefault,
       record: currentCycleRecord,
       nodes: nodesToUpdateByUuid,
       user,

@@ -1,4 +1,5 @@
 import {
+  AreaOfInterestProvider,
   ArenaRecord,
   NodeDef,
   NodeDefCode,
@@ -79,12 +80,14 @@ const assignQualifierValues = async ({
   userGroup,
   record,
   nodes = {},
+  areaOfInterestProvider,
 }: {
   user: User;
   survey: Survey;
   userGroup: UserGroup | null | undefined;
   record: ArenaRecord;
   nodes?: NodesMap;
+  areaOfInterestProvider?: AreaOfInterestProvider;
 }): Promise<{ record: ArenaRecord; nodes: NodesMap }> => {
   const qualifierDefs = Surveys.getQualifierDefs({ survey });
   if (qualifierDefs.length === 0) {
@@ -113,6 +116,7 @@ const assignQualifierValues = async ({
       await RecordUpdater.updateAttributeValue({
         user,
         survey,
+        areaOfInterestProvider,
         record,
         attributeUuid: qualifierNode.uuid,
         value,
