@@ -11,11 +11,21 @@ import { JobMobileContext } from "model";
 // only needs to pass what IT specifically uses; the parent's full context - already carrying
 // all of these - replaces it by reference before execute() runs (see executeJobs() in
 // JobBase), matching RecordsAndFilesImportJobContext's same convention
+// kept by the caller between upload attempts: the server stores chunks by fileId, so a retry
+// sends only the ones it has not confirmed yet
+export type RecordsUploadState = {
+  fileId: string;
+  nextChunk: number;
+  // set by the first attempt: chunk numbers are valid only with the same chunk size
+  chunkSize?: number;
+};
+
 export type RecordsUploadAndProcessJobContext = JobMobileContext & {
   cycle?: string;
   fileUri?: string;
   conflictResolutionStrategy?: string;
   skipMissingFiles?: boolean;
+  uploadState?: RecordsUploadState;
   // written by RecordsUploadJob once the upload completes, read by RemoteJobWatcherJob - see
   // both jobs' own execute()
   remoteJobUuid?: string;

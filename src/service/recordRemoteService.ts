@@ -102,6 +102,7 @@ const uploadRecords = ({
   conflictResolutionStrategy,
   skipMissingFiles = false,
   chunkSize = DEFAULT_UPLOAD_CHUNK_SIZE,
+  onChunkUploaded,
   onUploadProgress,
 }: {
   survey: SurveyMobile;
@@ -112,6 +113,7 @@ const uploadRecords = ({
   conflictResolutionStrategy: string;
   skipMissingFiles?: boolean;
   chunkSize?: number;
+  onChunkUploaded?: (chunk: number) => void;
   onUploadProgress: (progressEvent: any) => void;
 }): { promise: Promise<any>; cancel: () => void } => {
   const surveyRemoteId = survey.remoteId;
@@ -171,6 +173,7 @@ const uploadRecords = ({
         lastRequestCancel = cancel;
         try {
           const result = await promise;
+          onChunkUploaded?.(chunk);
 
           if (chunk === totalChunks) {
             log.debug(`All chunks uploaded for fileId ${fileId}`);

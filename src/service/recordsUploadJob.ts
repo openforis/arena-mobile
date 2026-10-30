@@ -19,6 +19,7 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadAndProcessJobContex
     fileUri,
     conflictResolutionStrategy,
     skipMissingFiles = false,
+    uploadState,
   }: any) {
     super({
       user,
@@ -27,6 +28,7 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadAndProcessJobContex
       fileUri,
       conflictResolutionStrategy,
       skipMissingFiles,
+      uploadState,
       type: RECORDS_UPLOAD_JOB_TYPE,
     });
     this.cancelUpload = null; // cancels upload request
@@ -42,16 +44,13 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadAndProcessJobContex
       fileUri,
       conflictResolutionStrategy,
       skipMissingFiles,
+      uploadState,
     } = this.context as Required<typeof this.context>;
 
     const { dataUploadChunkSizeKB } = await SettingsService.fetchSettings();
-    const chunkSize = dataUploadChunkSizeKB * 1024;
-
-    // this.processed is a byte offset (see onUploadProgress below), but RNFileProcessor.start
-    // expects a 1-indexed chunk number - convert so a retry actually resumes from the right
-    // chunk instead of requesting one identified by a raw byte count
-    const startFromChunk =
-      this.processed > 0 ? Math.floor(this.processed / chunkSize) + 1 : 1;
+    const chunkSize = uploadState.chunkSize ?? dataUploadChunkSizeKB * 1024;
+    uploadState.chunkSize = chunkSize;
+    const { fileId, nextChunk: startFromChunk } = uploadState;
 
     this.logger.debug(
       `RecordsUploadJob: uploading ${fileUri} (startFromChunk=${startFromChunk}, chunkSize=${chunkSize})`,
@@ -61,11 +60,14 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadAndProcessJobContex
       survey: survey as SurveyMobile,
       cycle,
       fileUri,
-      fileId: this.uuid,
+      fileId,
       conflictResolutionStrategy,
       skipMissingFiles,
       startFromChunk,
       chunkSize,
+      onChunkUploaded: (chunk: number) => {
+        uploadState.nextChunk = chunk + 1;
+      },
       onUploadProgress: (progressEvent: any) => {
         const { loaded, total } = progressEvent;
         this.total = total;

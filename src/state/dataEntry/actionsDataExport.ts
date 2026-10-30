@@ -6,6 +6,7 @@ import {
   JobStatus,
   Objects,
   Surveys,
+  UUIDs,
 } from "@openforis/arena-core";
 
 import { AppCompatibilityOperation, RecordService, UserService } from "service";
@@ -17,6 +18,7 @@ import {
   FlatDataExportJob,
   FlatDataExportJobResult,
 } from "service/dataExportJob";
+import type { RecordsUploadState } from "service/RecordsUploadAndProcessJobContext";
 import { RecordsUploadAndProcessJob } from "service/recordsUploadAndProcessJob";
 import { RECORDS_UPLOAD_JOB_TYPE } from "service/recordsUploadJob";
 import { REMOTE_JOB_WATCHER_JOB_TYPE } from "service/remoteJobWatcherJob";
@@ -230,6 +232,10 @@ const startUploadDataToRemoteServer =
       `startUploadDataToRemoteServer: starting upload+processing of ${outputFileUri} (survey=${survey.uuid}, cycle=${cycle})`,
     );
 
+    const uploadState: RecordsUploadState = {
+      fileId: UUIDs.v4(),
+      nextChunk: 1,
+    };
     // uploads the zip, then watches the server-side job it kicks off, as ONE job - see
     // RecordsUploadAndProcessJob for why (and why only these two, not zip-generation too)
     const createUploadAndProcessJob = () =>
@@ -240,6 +246,7 @@ const startUploadDataToRemoteServer =
         fileUri: outputFileUri,
         conflictResolutionStrategy,
         skipMissingFiles,
+        uploadState,
       });
     const progressRange = chained
       ? REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES.uploadAndProcess
