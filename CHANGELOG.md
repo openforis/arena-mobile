@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.6] - 2026-10-30
+
+### Added
+
+- Survey download as a package including the survey files (e.g. area of interest files), when available on the server;
+- Areas of interest: read the area files of the survey package;
+- Records of other user groups: read-only records (they can be viewed or cloned, but not edited or uploaded);
+- Entity list: choose the visible columns;
+
+### Changed
+
+- Records and surveys lists: cards view (default for surveys), expandable table rows;
+- Records list: sort field and direction in a single control;
+- Remote surveys list: long descriptions collapsed;
+- Entity list: human readable coordinate, file and geospatial values;
+- Log in again silently with the stored credentials when the session expires;
+
+### Fixed
+
+- Dialogs: scrolling of the content (e.g. changelog);
+- Records list: sort by errors;
+- Offline maps: data not loaded when opening a tab;
+
 ## [2.10.5] - 2026-10-26
 
 ### Changed
