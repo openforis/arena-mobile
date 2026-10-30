@@ -37,6 +37,8 @@ const {
   updateRecordWithContentMergedFromRemote,
   updateRecordsDateSync,
   updateRecordsDateModifiedRemote,
+  updateRecordsDateModifiedSynced,
+  fetchRecordsDateModifiedByUuid,
   updateRecordsMergedInto,
   deleteRecords,
   fixRecordCycle,
@@ -107,8 +109,7 @@ const determineLocalRecordSyncStatus = ({
     dateModifiedRemoteLive,
     dateModifiedRemoteBaseline,
   );
-  // the device and server clocks can differ, so a local edit is detected against the record's
-  // own local date at the last sync; records not synced since this date was introduced have none
+  // compared with a local date, as the clocks can differ (records not synced lately have none)
   const dateModifiedSynced = toDate(recordSummaryLocal.dateModifiedSynced);
   const localChangedSinceBaseline = dateModifiedSynced
     ? dateModifiedLocal.getTime() !== dateModifiedSynced.getTime()
@@ -121,7 +122,7 @@ const determineLocalRecordSyncStatus = ({
     return RecordSyncStatus.modifiedRemotely;
   }
   if (localChangedSinceBaseline) {
-    // the server only accepts a record dated after its own copy: uploading it would be skipped
+    // the server skips a record not dated after its own copy
     return Dates.isAfter(dateModifiedLocal, dateModifiedRemoteLive)
       ? RecordSyncStatus.modifiedLocally
       : RecordSyncStatus.deviceDateBehindServer;
@@ -432,10 +433,7 @@ const confirmRecordsSyncedWithRemote = async ({
   }
 
   await updateRecordsDateSync({ surveyId, recordUuids });
-  await RecordRepository.updateRecordsDateModifiedSynced({
-    surveyId,
-    dateModifiedByUuid,
-  });
+  await updateRecordsDateModifiedSynced({ surveyId, dateModifiedByUuid });
 
   if (Object.keys(dateModifiedRemoteByUuid).length > 0) {
     await updateRecordsDateModifiedRemote({
@@ -653,10 +651,8 @@ export const RecordService = {
   updateRecordWithContentMergedFromRemote,
   updateRecordsDateSync,
   updateRecordsDateModifiedRemote,
-  fetchRecordsDateModifiedByUuid:
-    RecordRepository.fetchRecordsDateModifiedByUuid,
-  updateRecordsDateModifiedSynced:
-    RecordRepository.updateRecordsDateModifiedSynced,
+  fetchRecordsDateModifiedByUuid,
+  updateRecordsDateModifiedSynced,
   confirmRecordsSyncedWithRemote,
   updateRecordsMergedInto,
   findFileUuidsInDevice,
