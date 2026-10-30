@@ -16,7 +16,12 @@ import {
   UniqueFileNamesGenerator,
 } from "@openforis/arena-core";
 
-import { ArenaMobileRecord, JobMobile, JobMobileContext } from "model";
+import {
+  ArenaMobileRecord,
+  JobMobile,
+  JobMobileContext,
+  RecordLoadStatus,
+} from "model";
 
 import { RecordFileService, RecordService } from "service";
 
@@ -88,7 +93,16 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     await this.createDataExportFiles();
 
     this.logger.debug("Fetching records to export...");
-    const recordSummaries = await RecordService.fetchRecords({ survey });
+    const { cycle } = this.context;
+    const recordsInCycle = await RecordService.fetchRecords({
+      survey,
+      cycle,
+      onlyLocal: false,
+    });
+    // the others are only summaries of records not downloaded from the server
+    const recordSummaries = recordsInCycle.filter(
+      (recordSummary) => recordSummary.loadStatus === RecordLoadStatus.complete,
+    );
     this.logger.debug(`Found ${recordSummaries.length} records to export`);
 
     this.total = recordSummaries.length;

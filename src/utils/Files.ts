@@ -296,12 +296,11 @@ const appendStringToFile = async ({
   fileUri: string;
   encoding?: FileSystem.EncodingType;
 }): Promise<void> => {
-  let finalContent = content;
-  if (await exists(fileUri)) {
-    const currentContent = await readAsString(fileUri, encoding);
-    finalContent = currentContent + content;
-  }
-  await writeStringToFile({ content: finalContent, fileUri, encoding });
+  await createIfNotExists(fileUri);
+  await FileSystem.writeAsStringAsync(fileUri, content, {
+    ...(encoding ? { encoding } : {}),
+    append: true,
+  });
 };
 
 const isSharingAvailable = (): Promise<boolean> => Sharing.isAvailableAsync();
