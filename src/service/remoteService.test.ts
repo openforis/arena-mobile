@@ -54,4 +54,29 @@ describe("RemoteService.postCancelableMultipartData", () => {
     cancel();
     expect(cancelSecond).toHaveBeenCalledTimes(1);
   });
+
+  it("does not send the request again if canceled during the refresh", async () => {
+    postMock.mockReturnValueOnce({
+      promise: Promise.reject({ response: { status: 401 } }),
+      cancel: jest.fn(),
+    });
+    let endRefresh: () => void = () => {};
+    refreshMock.mockReturnValueOnce(
+      new Promise<void>((resolve) => {
+        endRefresh = resolve;
+      }),
+    );
+
+    const { promise, cancel } = await RemoteService.postCancelableMultipartData(
+      "api/test",
+      {},
+      jest.fn(),
+    );
+    await new Promise(process.nextTick);
+    cancel();
+    endRefresh();
+
+    await expect(promise).rejects.toThrow();
+    expect(postMock).toHaveBeenCalledTimes(1);
+  });
 });
