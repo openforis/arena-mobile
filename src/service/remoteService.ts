@@ -127,16 +127,21 @@ const postCancelableMultipartData = async (
 ) => {
   const serverUrl = await getServerUrl();
   const config = { onUploadProgress };
-  const sendRequest = () =>
-    Promise.resolve(
-      API.postCancelableMultipartData({
-        serverUrl,
-        uri,
-        data,
-        config: attachHeaders(config),
-      }),
-    );
-  return withRetry(sendRequest);
+  let cancelCurrentRequest: () => void;
+  const sendRequest = () => {
+    const { promise, cancel } = API.postCancelableMultipartData({
+      serverUrl,
+      uri,
+      data,
+      config: attachHeaders(config),
+    });
+    cancelCurrentRequest = cancel;
+    return promise;
+  };
+  return {
+    promise: withRetry(sendRequest),
+    cancel: () => cancelCurrentRequest(),
+  };
 };
 
 const postMultipartData = async (

@@ -232,14 +232,15 @@ const startUploadDataToRemoteServer =
 
     // uploads the zip, then watches the server-side job it kicks off, as ONE job - see
     // RecordsUploadAndProcessJob for why (and why only these two, not zip-generation too)
-    const uploadAndProcessJob = new RecordsUploadAndProcessJob({
-      user,
-      survey,
-      cycle,
-      fileUri: outputFileUri,
-      conflictResolutionStrategy,
-      skipMissingFiles,
-    });
+    const createUploadAndProcessJob = () =>
+      new RecordsUploadAndProcessJob({
+        user,
+        survey,
+        cycle,
+        fileUri: outputFileUri,
+        conflictResolutionStrategy,
+        skipMissingFiles,
+      });
     const progressRange = chained
       ? REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES.uploadAndProcess
       : {};
@@ -251,7 +252,8 @@ const startUploadDataToRemoteServer =
       try {
         jobComplete = await JobMonitorActions.startAsync({
           dispatch,
-          job: uploadAndProcessJob,
+          // a job that has ended can't be started again
+          job: createUploadAndProcessJob(),
           // initial values, matching the upload phase (the first inner job to run) - see
           // innerJobUiConfigByType for how these switch once processing takes over
           titleKey: "dataEntry:uploadingData.title",
