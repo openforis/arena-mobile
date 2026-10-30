@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.6] - 2026-10-30
+
+### Added
+
+- Surveys are downloaded together with their files (e.g. areas of interest);
+- Records of other user groups can be viewed as read-only;
+- Entity list: choose which columns to show;
+
+### Changed
+
+- Records and surveys lists: new cards view;
+
+### Fixed
+
+- General improvements and bug fixing;
+
 ## [2.10.5] - 2026-10-26
 
 ### Changed
