@@ -294,6 +294,33 @@ const updateLocalRecordsReadOnly = async ({
   });
 };
 
+// a file can still be referenced by another record (e.g. a record it has been merged into)
+const deleteFilesNotReferenced = async ({ surveyId, fileUuids }: any) => {
+  if (fileUuids.length === 0) return;
+  const fileUuidsReferenced = new Set(
+    await RecordRepository.fetchRecordsFileUuids({ surveyId }),
+  );
+  await Promises.each(
+    fileUuids.filter((fileUuid: string) => !fileUuidsReferenced.has(fileUuid)),
+    async (fileUuid: string) => {
+      try {
+        await RecordFileService.deleteRecordFile({ surveyId, fileUuid });
+      } catch (error) {
+        log.warn(`error deleting file ${fileUuid}: ${error}`);
+      }
+    },
+  );
+};
+
+const deleteRecordsAndFiles = async ({ surveyId, recordUuids }: any) => {
+  const fileUuids = await RecordRepository.fetchRecordsFileUuids({
+    surveyId,
+    recordUuids,
+  });
+  await deleteRecords({ surveyId, recordUuids });
+  await deleteFilesNotReferenced({ surveyId, fileUuids });
+};
+
 const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
   const { id: surveyId } = survey;
 
@@ -641,7 +668,7 @@ export const RecordService = {
   confirmRecordsSyncedWithRemote,
   updateRecordsMergedInto,
   findFileUuidsInDevice,
-  deleteRecords,
+  deleteRecords: deleteRecordsAndFiles,
   fixRecordCycle,
   cloneRecordsIntoDefaultCycle,
   revalidateRecords,
