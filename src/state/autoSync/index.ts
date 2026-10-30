@@ -1,5 +1,6 @@
 export { AutoSyncActions } from "./actions";
 export {
+  hasOnlyRemoteChanges,
   isAutoMergeAllowed,
   sameRecordMergeableStatuses,
   computeAutoSyncStatus,

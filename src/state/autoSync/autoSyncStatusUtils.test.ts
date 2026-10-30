@@ -3,6 +3,7 @@ import { RecordSyncStatus } from "../../model/RecordSyncStatus";
 import {
   computeAutoSyncStatus,
   hasConflictingKeysWithMergeNotAllowed,
+  hasOnlyRemoteChanges,
   isAutoMergeAllowed,
 } from "./autoSyncStatusUtils";
 import { AutoSyncStatus } from "./types";
@@ -139,6 +140,22 @@ describe("computeAutoSyncStatus with auto-sync enabled", () => {
         autoSyncEnabled: true,
       }),
     ).toBe(AutoSyncStatus.error);
+  });
+});
+
+describe("hasOnlyRemoteChanges", () => {
+  it("needs the local date of the last sync", () => {
+    const syncStatus = RecordSyncStatus.modifiedRemotely;
+    const dateModifiedSynced = "2026-01-01T10:00:00.000Z";
+
+    expect(hasOnlyRemoteChanges({ syncStatus, dateModifiedSynced })).toBe(true);
+    expect(hasOnlyRemoteChanges({ syncStatus })).toBe(false);
+    expect(
+      hasOnlyRemoteChanges({
+        syncStatus: RecordSyncStatus.modifiedLocallyAndRemotely,
+        dateModifiedSynced,
+      }),
+    ).toBe(false);
   });
 });
 

@@ -26,6 +26,13 @@ export const sameRecordMergeableStatuses = new Set<string>([
   RecordSyncStatus.modifiedRemotely,
 ]);
 
+// changed on the server and, for sure, not on this device (records with no local date of the last
+// sync can't tell): there is nothing to send, and sending the old copy to merge it would bring
+// back what the server deleted, as a merge never deletes anything
+export const hasOnlyRemoteChanges = (record: any): boolean =>
+  record.syncStatus === RecordSyncStatus.modifiedRemotely &&
+  !!record.dateModifiedSynced;
+
 // auto-sync can merge a record with its own server copy without asking only if it's then able to
 // replace the local copy with the merged one, which is a download of that record from the server
 export const isAutoMergeAllowed = ({
