@@ -55,6 +55,7 @@ import { DataEntryActionsRecordSync } from "./actionsRecordSync";
 import { DataEntryActionsPreview } from "./actionsPreview";
 import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntrySelectors } from "./selectors";
+import { serializeRecordUpdate } from "./recordUpdateQueue";
 import { selectRecordUpdaterParams } from "./recordUpdaterParams";
 import { ToastActions } from "state/toast";
 
@@ -182,7 +183,7 @@ const createNewRecord =
     }
   };
 
-const _performAddEntity = async (dispatch: any, getState: any) => {
+const _performAddEntity = serializeRecordUpdate(async (dispatch, getState) => {
   if (_isRecordSyncInProgress(dispatch, getState)) return;
   const state = getState();
   const updaterParams = selectRecordUpdaterParams(state);
@@ -253,7 +254,7 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
       entityUuid: nodeCreated.uuid,
     }),
   );
-};
+});
 
 const addNewEntity =
   (options = {} as any) =>
@@ -267,8 +268,8 @@ const addNewEntity =
     }
   };
 
-const deleteNodes =
-  (nodeUuids: any) => async (dispatch: any, getState: any) => {
+const deleteNodes = (nodeUuids: any) =>
+  serializeRecordUpdate(async (dispatch, getState) => {
     if (_isRecordSyncInProgress(dispatch, getState)) return;
     const state = getState();
     const updaterParams = selectRecordUpdaterParams(state);
@@ -302,7 +303,7 @@ const deleteNodes =
     removeNodesFlags(nodes);
 
     await _updateRecord({ dispatch, survey, record: recordUpdated });
-  };
+  });
 
 const deleteRecords =
   (recordUuids: any) => async (dispatch: any, getState: any) => {
@@ -611,26 +612,27 @@ const confirmClearNewlyInapplicableValues = async ({
   }));
 };
 
-const updateAttribute =
-  ({
-    uuid,
-    value,
-    fileUri = null,
-  }: {
-    uuid: string;
-    value: any;
-    fileUri?: string | null;
-  }) =>
-  async (dispatch: any, getState: any) => {
+const updateAttribute = ({
+  uuid,
+  value,
+  fileUri = null,
+}: {
+  uuid: string;
+  value: any;
+  fileUri?: string | null;
+}) =>
+  serializeRecordUpdate(async (dispatch, getState) => {
     try {
       const state = getState();
+      const record = DataEntrySelectors.selectRecord(state);
+      // it can be closed while this update is waiting for its turn
+      const node = record && Records.getNodeByUuid(uuid)(record);
+      if (!node) return;
+
       const updaterParams = selectRecordUpdaterParams(state);
       const { survey } = updaterParams;
       const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
-      const record = DataEntrySelectors.selectRecord(state);
-
       const cycle = Records.getCycle(record);
-      const node = Records.getNodeByUuid(uuid)(record)!;
 
       // nothing actually changed (e.g. a field was focused and left as is): don't touch the
       // record, otherwise it would look modified and the auto-sync status would turn pending
@@ -722,7 +724,7 @@ const updateAttribute =
     } catch (error) {
       handleError(dispatch, error, "dataEntry:updateAttributeError");
     }
-  };
+  });
 
 const performCoordinateValueSrsConversion =
   ({ nodeUuid, srsTo }: any) =>
@@ -808,9 +810,8 @@ const updateCoordinateValueSrs =
     }
   };
 
-const addNewAttribute =
-  ({ nodeDef, parentNodeUuid, value = null }: any) =>
-  async (dispatch: any, getState: any) => {
+const addNewAttribute = ({ nodeDef, parentNodeUuid, value = null }: any) =>
+  serializeRecordUpdate(async (dispatch, getState) => {
     if (_isRecordSyncInProgress(dispatch, getState)) return;
     const state = getState();
     const updaterParams = selectRecordUpdaterParams(state);
@@ -840,7 +841,7 @@ const addNewAttribute =
     );
 
     await _updateRecord({ dispatch, survey, record: recordUpdated2 });
-  };
+  });
 
 const selectCurrentPageEntity =
   ({ parentEntityUuid, entityDefUuid, entityUuid = undefined }: any) =>
