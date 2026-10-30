@@ -60,7 +60,9 @@ const determineLocalRecordSyncStatus = ({
     survey,
     recordSummary: recordSummaryLocal,
   });
-  const keysSpecified = keyValues.every((keyValue) => !!keyValue);
+  const keysSpecified = keyValues.every(
+    (keyValue) => !Objects.isEmpty(keyValue),
+  );
   if (!keysSpecified) {
     return RecordSyncStatus.keysNotSpecified;
   }
@@ -624,6 +626,7 @@ const revalidateRecords = async ({ user, survey, recordIds }: any) => {
 };
 
 export const RecordService = {
+  determineRecordSyncStatus,
   fetchRecord,
   fetchNodeValuesByDefUuids: RecordRepository.fetchNodeValuesByDefUuids,
   fetchRecordSummary,
