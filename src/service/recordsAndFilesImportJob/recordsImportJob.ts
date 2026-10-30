@@ -85,6 +85,10 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
         surveyId: survey.id,
         dateModifiedRemoteByUuid: { [record.uuid]: record.dateModified },
       });
+      await RecordService.updateRecordsDateSync({
+        surveyId: survey.id,
+        recordUuids: [record.uuid],
+      });
     }
     this.insertedRecords++;
   }

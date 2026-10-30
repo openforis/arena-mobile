@@ -397,6 +397,7 @@ const updateRecordKeysAndContent = async ({
   record,
   updateOrigin = false,
   origin = RecordOrigin.local,
+  updateDateSynced = false,
 }: any) => {
   const keyColumnsValues = extractKeyColumnsValues({ survey, record });
   const summaryAttributesValues = extractSummaryAttributesValues({
@@ -412,7 +413,7 @@ const updateRecordKeysAndContent = async ({
       ${dateModifiedColumn} = ?, 
       load_status = ?, 
       ${updateOrigin ? "origin = ?," : ""}
-      date_synced = ?,
+      ${updateDateSynced ? "date_synced = ?," : ""}
       ${keyColumnsSet},
       ${summaryColumnsSet}
     WHERE survey_id = ? AND uuid = ?`,
@@ -421,7 +422,7 @@ const updateRecordKeysAndContent = async ({
       record.dateModified || Date.now(),
       RecordLoadStatus.complete,
       ...(updateOrigin ? [origin] : []),
-      Dates.nowFormattedForStorage(),
+      ...(updateDateSynced ? [Dates.nowFormattedForStorage()] : []),
       ...keyColumnsValues,
       ...summaryAttributesValues,
       survey.id,
@@ -468,6 +469,7 @@ const updateRecordWithContentFetchedRemotely = async ({
     record,
     updateOrigin: true,
     origin: RecordOrigin.remote,
+    updateDateSynced: true,
   });
   await updateRecordsDateModifiedSynced({
     surveyId: survey.id,
@@ -488,6 +490,7 @@ const updateRecordWithContentMergedFromRemote = async ({
     record,
     updateOrigin: true,
     origin: RecordOrigin.local,
+    updateDateSynced: true,
   });
   await updateRecordsDateModifiedRemote({
     surveyId: survey.id,
