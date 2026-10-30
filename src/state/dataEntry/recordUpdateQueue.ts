@@ -5,9 +5,7 @@ let queue: Promise<unknown> = Promise.resolve();
 const selectRecordUuid = (getState: any) =>
   DataEntrySelectors.selectRecord(getState())?.uuid;
 
-// an update reads the record, does slow work and then stores the whole record:
-// two running together would overwrite each other's changes.
-// When its turn comes, an update is skipped if the record it was meant for is not the open one anymore.
+// one at a time: an update stores the whole record, so concurrent ones would lose changes
 export const serializeRecordUpdate =
   <T>(update: (dispatch: any, getState: any) => Promise<T>) =>
   (dispatch: any, getState: any): Promise<T | undefined> => {

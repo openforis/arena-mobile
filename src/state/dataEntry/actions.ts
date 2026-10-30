@@ -688,7 +688,7 @@ const updateAttribute = ({
       const isRootKeyDef = SurveyDefs.isRootKeyDef({ survey, cycle, nodeDef });
       const isKeyDef = NodeDefs.isKey(nodeDef);
 
-      // a sync can start during the slow steps above: this record would replace its result
+      // a sync started meanwhile would be overwritten
       if (_isRecordSyncInProgress(dispatch, getState)) return;
 
       await _updateRecord({ dispatch, survey, record: recordUpdated });
