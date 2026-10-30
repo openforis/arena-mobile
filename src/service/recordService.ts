@@ -121,7 +121,10 @@ const determineLocalRecordSyncStatus = ({
     return RecordSyncStatus.modifiedRemotely;
   }
   if (localChangedSinceBaseline) {
-    return RecordSyncStatus.modifiedLocally;
+    // the server only accepts a record dated after its own copy: uploading it would be skipped
+    return Dates.isAfter(dateModifiedLocal, dateModifiedRemoteLive)
+      ? RecordSyncStatus.modifiedLocally
+      : RecordSyncStatus.deviceDateBehindServer;
   }
   return RecordSyncStatus.notModified;
 };
@@ -239,15 +242,18 @@ const updateLocalRecordsWithRemoteInfo = async ({
     )
     .map(({ uuid }) => recordsSummariesRemoteByUuid[uuid])
     .filter(Boolean);
-  try {
-    await RecordRepository.updateRecordsKeysAndDateModifiedWithSummariesFetchedRemotely(
-      { survey, recordSummaries },
-    );
-  } catch (error) {
-    throw new Error(`error updating local record keys. Details: ${error}`, {
-      cause: error,
-    });
-  }
+  await Promises.each(recordSummaries, async (recordSummary: any) => {
+    try {
+      await RecordRepository.updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely(
+        { survey, recordSummary },
+      );
+    } catch (error) {
+      throw new Error(
+        `error updating local record keys for record ${recordSummary.uuid}. Details: ${error}`,
+        { cause: error },
+      );
+    }
+  });
   await updateLocalRecordsReadOnly({
     survey,
     allRecordsSummariesInDevice,

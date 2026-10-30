@@ -105,6 +105,20 @@ describe("RecordService.determineRecordSyncStatus", () => {
           local({ ...synced, dateModified: t1 }),
           remote({ dateModified: t2 }),
         ),
+      ).toBe(RecordSyncStatus.deviceDateBehindServer);
+    });
+
+    it("detects an edit made with a date the server would accept", () => {
+      const dateModifiedRemote = t0;
+      expect(
+        determine(
+          local({
+            dateModifiedRemote,
+            dateModifiedSynced: t0,
+            dateModified: t2,
+          }),
+          remote({ dateModified: t0 }),
+        ),
       ).toBe(RecordSyncStatus.modifiedLocally);
     });
 
