@@ -24,7 +24,13 @@ const getRecordFileUri = ({
 }: {
   surveyId: number;
   fileUuid: string;
-}) => `${getRecordFileDirectoryUri({ surveyId })}/${fileUuid}`;
+}) => {
+  // it comes from imported records: it must not be able to reach another folder
+  if (!/^[\w-]+$/.test(fileUuid)) {
+    throw new Error(`invalid file uuid: ${fileUuid}`);
+  }
+  return `${getRecordFileDirectoryUri({ surveyId })}/${fileUuid}`;
+};
 
 const saveRecordFile = async ({
   surveyId,
