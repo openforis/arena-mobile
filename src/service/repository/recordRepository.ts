@@ -392,20 +392,6 @@ const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = async ({
   );
 };
 
-const updateRecordsKeysAndDateModifiedWithSummariesFetchedRemotely = async ({
-  survey,
-  recordSummaries,
-}: any) => {
-  await dbClient.transaction(async () => {
-    await Promises.each(recordSummaries, async (recordSummary: any) => {
-      await updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely({
-        survey,
-        recordSummary,
-      });
-    });
-  });
-};
-
 const updateRecordKeysAndContent = async ({
   survey,
   record,
@@ -772,7 +758,7 @@ export const RecordRepository = {
   updateRecordValidation,
   updateRecordWithContentFetchedRemotely,
   updateRecordWithContentMergedFromRemote,
-  updateRecordsKeysAndDateModifiedWithSummariesFetchedRemotely,
+  updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely,
   updateRecordsDateSync,
   updateRecordsDateModifiedRemote,
   updateRecordsReadOnly,
