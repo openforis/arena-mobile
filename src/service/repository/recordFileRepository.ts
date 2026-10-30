@@ -1,4 +1,5 @@
 import { Files } from "utils";
+import { isValidFileUuid } from "utils/isValidFileUuid";
 import { GenericFileRepository } from "./genericFileRepository";
 
 const SURVEY_RECORD_FILES_DIR_NAME = "survey_record_files";
@@ -24,12 +25,13 @@ const getRecordFileUri = ({
 }: {
   surveyId: number;
   fileUuid: string;
-}) => {
-  // it comes from imported records: it must not be able to reach another folder
-  if (!/^[\w-]+$/.test(fileUuid)) {
+}) => `${getRecordFileDirectoryUri({ surveyId })}/${fileUuid}`;
+
+// it comes from imported records: writing or deleting must not reach another folder
+const assertValidFileUuid = (fileUuid: string) => {
+  if (!isValidFileUuid(fileUuid)) {
     throw new Error(`invalid file uuid: ${fileUuid}`);
   }
-  return `${getRecordFileDirectoryUri({ surveyId })}/${fileUuid}`;
 };
 
 const saveRecordFile = async ({
@@ -41,6 +43,7 @@ const saveRecordFile = async ({
   fileUuid: string;
   sourceFileUri: string;
 }) => {
+  assertValidFileUuid(fileUuid);
   await GenericFileRepository.makeDirIfNotExists(
     getRecordFileDirectoryUri({ surveyId }),
   );
@@ -74,6 +77,7 @@ const deleteRecordFile = async ({
   surveyId: number;
   fileUuid: string;
 }) => {
+  assertValidFileUuid(fileUuid);
   const fileUri = getRecordFileUri({ surveyId, fileUuid });
   await GenericFileRepository.deleteFile(fileUri);
 };

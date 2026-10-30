@@ -2,6 +2,7 @@ import { ArenaExportFile, ArenaRecord, Promises } from "@openforis/arena-core";
 
 import { JobMobile } from "model";
 import { ArrayUtils, Files } from "utils";
+import { isValidFileUuid } from "utils/isValidFileUuid";
 
 import { RecordService } from "../recordService";
 import { RecordsAndFilesImportJobContext } from "./RecordsAndFilesImportJobContext";
@@ -64,6 +65,13 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
       throw new Error(
         `this record cannot be imported in the current survey; it has been created with another one;`,
       );
+    for (const node of Object.values(record.nodes ?? {})) {
+      const fileUuid = (node.value as any)?.fileUuid;
+      if (fileUuid && !isValidFileUuid(fileUuid))
+        throw new Error(
+          `invalid file uuid in record ${recordUuid}: ${fileUuid}`,
+        );
+    }
     return record;
   }
 
