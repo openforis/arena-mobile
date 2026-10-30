@@ -3300,7 +3300,7 @@ __metadata:
     expo-image-manipulator: "npm:~57.0.21"
     expo-image-picker: "npm:^57.0.20"
     expo-intent-launcher: "npm:^57.0.1"
-    expo-keep-awake: "npm:^57.0.2"
+    expo-keep-awake: "npm:~57.0.2"
     expo-localization: "npm:^57.0.2"
     expo-location: "npm:~57.0.22"
     expo-screen-orientation: "npm:^57.0.3"
@@ -5377,7 +5377,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-keep-awake@npm:^57.0.2, expo-keep-awake@npm:~57.0.2":
+"expo-keep-awake@npm:~57.0.2":
   version: 57.0.2
   resolution: "expo-keep-awake@npm:57.0.2"
   peerDependencies:
