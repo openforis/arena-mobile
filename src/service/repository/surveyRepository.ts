@@ -71,7 +71,7 @@ const fetchSurveySummaries = async () => {
   return surveys.map((survey: any) => Objects.camelize(survey));
 };
 
-// foreign keys are not enforced by SQLite here: dependent rows are deleted explicitly
+// foreign keys are not enforced: dependent rows are deleted explicitly
 const deleteSurveys = async (surveyIds: any) => {
   const ids = DbUtils.quoteValues(surveyIds);
   await dbClient.transaction(async () => {

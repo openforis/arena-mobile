@@ -294,7 +294,7 @@ const updateLocalRecordsReadOnly = async ({
   });
 };
 
-// a file can still be referenced by another record (e.g. a record it has been merged into)
+// a file can still be referenced by another record (e.g. after a merge)
 const deleteFilesNotReferenced = async ({ surveyId, fileUuids }: any) => {
   if (fileUuids.length === 0) return;
   const fileUuidsReferenced = new Set(

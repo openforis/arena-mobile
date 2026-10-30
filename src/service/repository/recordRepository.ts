@@ -541,8 +541,7 @@ const updateRecordsDateModifiedRemote = async ({
   });
 };
 
-// uuids of the files referenced by the content stored in the device for the given records
-// (all the records of the survey if not specified)
+// uuids of the files referenced by the given records in the device (all records if not specified)
 const fetchRecordsFileUuids = async ({
   surveyId,
   recordUuids,
