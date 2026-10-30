@@ -107,10 +107,12 @@ const determineLocalRecordSyncStatus = ({
     dateModifiedRemoteLive,
     dateModifiedRemoteBaseline,
   );
-  const localChangedSinceBaseline = Dates.isAfter(
-    dateModifiedLocal,
-    dateModifiedRemoteBaseline,
-  );
+  // the device and server clocks can differ, so a local edit is detected against the record's
+  // own local date at the last sync; records not synced since this date was introduced have none
+  const dateModifiedSynced = toDate(recordSummaryLocal.dateModifiedSynced);
+  const localChangedSinceBaseline = dateModifiedSynced
+    ? dateModifiedLocal.getTime() !== dateModifiedSynced.getTime()
+    : Dates.isAfter(dateModifiedLocal, dateModifiedRemoteBaseline);
 
   if (remoteChangedSinceBaseline && localChangedSinceBaseline) {
     return RecordSyncStatus.modifiedLocallyAndRemotely;
@@ -395,6 +397,7 @@ const confirmRecordsSyncedWithRemote = async ({
   survey,
   cycle,
   recordUuids,
+  dateModifiedByUuid,
 }: any) => {
   const { id: surveyId } = survey;
 
@@ -423,6 +426,10 @@ const confirmRecordsSyncedWithRemote = async ({
   }
 
   await updateRecordsDateSync({ surveyId, recordUuids });
+  await RecordRepository.updateRecordsDateModifiedSynced({
+    surveyId,
+    dateModifiedByUuid,
+  });
 
   if (Object.keys(dateModifiedRemoteByUuid).length > 0) {
     await updateRecordsDateModifiedRemote({
@@ -643,6 +650,10 @@ export const RecordService = {
   confirmRecordsSyncedWithRemote,
   updateRecordsMergedInto,
   findFileUuidsInDevice,
+  fetchRecordsDateModifiedByUuid:
+    RecordRepository.fetchRecordsDateModifiedByUuid,
+  updateRecordsDateModifiedSynced:
+    RecordRepository.updateRecordsDateModifiedSynced,
   deleteRecords,
   fixRecordCycle,
   cloneRecordsIntoDefaultCycle,

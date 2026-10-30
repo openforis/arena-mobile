@@ -684,6 +684,7 @@ export const exportRecords =
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
     const surveyId = survey.id;
+    let dateModifiedByUuid: Record<string, any> = {};
 
     const onUploadComplete = async (jobComplete: any) => {
       const { result } = jobComplete;
@@ -702,6 +703,12 @@ export const exportRecords =
           survey,
           cycle,
           recordUuids: recordUuidsSynced,
+          dateModifiedByUuid: Object.fromEntries(
+            recordUuidsSynced.map((uuid: string) => [
+              uuid,
+              dateModifiedByUuid[uuid],
+            ]),
+          ),
         });
       }
       if (!Objects.isEmpty(mergedRecordsMap)) {
@@ -778,6 +785,16 @@ export const exportRecords =
     );
     try {
       const user = onlyLocally ? {} : await UserService.fetchUser();
+
+      // read before the file is generated: an edit made from now on is detected as a local change
+      // by the next status check, even if it ends up in the uploaded file (it's then sent again)
+      dateModifiedByUuid =
+        onlyLocally || !recordUuids
+          ? {}
+          : await RecordService.fetchRecordsDateModifiedByUuid({
+              surveyId,
+              recordUuids,
+            });
 
       const job = new RecordsExportFileGenerationJob({
         survey,
