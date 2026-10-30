@@ -647,13 +647,13 @@ export const RecordService = {
   updateRecordWithContentMergedFromRemote,
   updateRecordsDateSync,
   updateRecordsDateModifiedRemote,
-  confirmRecordsSyncedWithRemote,
-  updateRecordsMergedInto,
-  findFileUuidsInDevice,
   fetchRecordsDateModifiedByUuid:
     RecordRepository.fetchRecordsDateModifiedByUuid,
   updateRecordsDateModifiedSynced:
     RecordRepository.updateRecordsDateModifiedSynced,
+  confirmRecordsSyncedWithRemote,
+  updateRecordsMergedInto,
+  findFileUuidsInDevice,
   deleteRecords,
   fixRecordCycle,
   cloneRecordsIntoDefaultCycle,

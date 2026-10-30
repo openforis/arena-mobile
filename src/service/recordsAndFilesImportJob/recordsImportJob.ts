@@ -76,14 +76,14 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
     const { survey } = this.context;
     await RecordService.insertRecord({ survey, record });
     if (this.shouldKeepLocalOrigin(record.uuid)) {
+      await RecordService.updateRecordsDateModifiedSynced({
+        surveyId: survey.id,
+        dateModifiedByUuid: { [record.uuid]: record.dateModified },
+      });
       // stamp the sync baseline, so the next status check doesn't see it as modified locally
       await RecordService.updateRecordsDateModifiedRemote({
         surveyId: survey.id,
         dateModifiedRemoteByUuid: { [record.uuid]: record.dateModified },
-      });
-      await RecordService.updateRecordsDateModifiedSynced({
-        surveyId: survey.id,
-        dateModifiedByUuid: { [record.uuid]: record.dateModified },
       });
     }
     this.insertedRecords++;
