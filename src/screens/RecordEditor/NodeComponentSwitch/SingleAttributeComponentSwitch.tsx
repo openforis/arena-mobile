@@ -70,5 +70,6 @@ export const SingleAttributeComponentSwitch = (props: Props) => {
     style,
     wrapperStyle,
   };
-  return React.createElement(component, componentProps);
+  // keyed by node: the local state of a field must not survive moving to a sibling entity
+  return React.createElement(component, { ...componentProps, key: nodeUuid });
 };
