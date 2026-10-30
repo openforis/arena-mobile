@@ -668,7 +668,6 @@ const fetchMergedSameRecordsSilently = async ({
   );
 };
 
-// the records changed only on the server: there's nothing to send, the local copy is just replaced
 export const fetchRecordsChangedRemotely =
   ({ cycle, recordUuids }: any) =>
   async (dispatch: any, getState: any) => {

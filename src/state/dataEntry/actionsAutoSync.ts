@@ -260,7 +260,7 @@ const selectAutoMergeCandidates = ({
   );
 };
 
-// the record open in the editor is left out: it's picked up by a later tick, once closed
+// the open record is picked up by a later tick, once closed
 const selectAutoFetchCandidates = ({
   records,
   survey,

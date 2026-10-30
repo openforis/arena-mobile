@@ -26,9 +26,7 @@ export const sameRecordMergeableStatuses = new Set<string>([
   RecordSyncStatus.modifiedRemotely,
 ]);
 
-// changed on the server and, for sure, not on this device (records with no local date of the last
-// sync can't tell): there is nothing to send, and sending the old copy to merge it would bring
-// back what the server deleted, as a merge never deletes anything
+// nothing to send, and a merge would bring back what the server deleted (needs the local sync date)
 export const hasOnlyRemoteChanges = (record: any): boolean =>
   record.syncStatus === RecordSyncStatus.modifiedRemotely &&
   !!record.dateModifiedSynced;
