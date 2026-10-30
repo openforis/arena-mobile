@@ -2,7 +2,6 @@ import { JobMobile, SurveyMobile } from "model";
 
 import { RecordsUploadAndProcessJobContext } from "./RecordsUploadAndProcessJobContext";
 import { RecordService } from "./recordService";
-import { SettingsService } from "./settingsService";
 
 // a stable identifier for this job class, independent of `this.constructor.name` (which a
 // minified production build isn't guaranteed to preserve) - read by RecordsUploadAndProcessJob's
@@ -47,10 +46,7 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadAndProcessJobContex
       uploadState,
     } = this.context as Required<typeof this.context>;
 
-    const { dataUploadChunkSizeKB } = await SettingsService.fetchSettings();
-    const chunkSize = uploadState.chunkSize ?? dataUploadChunkSizeKB * 1024;
-    uploadState.chunkSize = chunkSize;
-    const { fileId, nextChunk: startFromChunk } = uploadState;
+    const { fileId, chunkSize, nextChunk: startFromChunk } = uploadState;
 
     this.logger.debug(
       `RecordsUploadJob: uploading ${fileUri} (startFromChunk=${startFromChunk}, chunkSize=${chunkSize})`,

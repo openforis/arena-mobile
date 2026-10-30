@@ -9,7 +9,12 @@ import {
   UUIDs,
 } from "@openforis/arena-core";
 
-import { AppCompatibilityOperation, RecordService, UserService } from "service";
+import {
+  AppCompatibilityOperation,
+  RecordService,
+  SettingsService,
+  UserService,
+} from "service";
 import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerationJob";
 
 import { i18n } from "localization";
@@ -232,8 +237,10 @@ const startUploadDataToRemoteServer =
       `startUploadDataToRemoteServer: starting upload+processing of ${outputFileUri} (survey=${survey.uuid}, cycle=${cycle})`,
     );
 
+    const { dataUploadChunkSizeKB } = await SettingsService.fetchSettings();
     const uploadState: RecordsUploadState = {
       fileId: UUIDs.v4(),
+      chunkSize: dataUploadChunkSizeKB * 1024,
       nextChunk: 1,
     };
     // uploads the zip, then watches the server-side job it kicks off, as ONE job - see

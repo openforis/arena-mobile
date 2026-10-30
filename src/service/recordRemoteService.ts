@@ -127,6 +127,10 @@ const uploadRecords = ({
   );
 
   let lastRequestCancel: any = null;
+  let chunkFileUri: string | undefined;
+  const deleteChunkFile = async () => {
+    if (chunkFileUri) await Files.del(chunkFileUri, true);
+  };
   const promise = new Promise((resolve, reject) => {
     fileProcessor = new RNFileProcessor({
       fileId,
@@ -137,6 +141,7 @@ const uploadRecords = ({
         totalChunks,
         totalFileSize,
       }) => {
+        chunkFileUri = (content as any).uri;
         log.debug(
           `Uploading chunk ${chunk} / ${totalChunks} for fileId ${fileId}`,
         );
@@ -171,24 +176,20 @@ const uploadRecords = ({
             progressHandler,
           );
         lastRequestCancel = cancel;
-        try {
-          const result = await promise;
-          onChunkUploaded?.(chunk);
+        const result = await promise;
+        onChunkUploaded?.(chunk);
 
-          if (chunk === totalChunks) {
-            log.debug(`All chunks uploaded for fileId ${fileId}`);
-            resolve(result);
-          }
-        } finally {
-          const tempFileUri = (content as any).uri;
-          if (tempFileUri) {
-            await Files.del(tempFileUri, true);
-          }
+        if (chunk === totalChunks) {
+          log.debug(`All chunks uploaded for fileId ${fileId}`);
+          resolve(result);
         }
+        // only now: a failed chunk is sent again from this file
+        await deleteChunkFile();
       },
       onError: (error) => {
         fileProcessor?.close();
         reject(error);
+        deleteChunkFile();
       },
       onComplete: () => {
         fileProcessor?.close();
@@ -203,6 +204,7 @@ const uploadRecords = ({
     cancel: () => {
       lastRequestCancel?.();
       fileProcessor.stop();
+      deleteChunkFile();
     },
   };
 };
