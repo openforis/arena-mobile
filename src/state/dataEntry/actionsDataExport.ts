@@ -803,8 +803,7 @@ export const exportRecords =
     try {
       const user = onlyLocally ? {} : await UserService.fetchUser();
 
-      // read before the file is generated: an edit made from now on is detected as a local change
-      // by the next status check, even if it ends up in the uploaded file (it's then sent again)
+      // read before generating the file: a later edit is seen as a local change and sent again
       dateModifiedByUuid =
         onlyLocally || !recordUuids
           ? {}

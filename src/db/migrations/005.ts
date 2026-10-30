@@ -1,7 +1,6 @@
 import SQLiteClient from "db/SQLiteClient";
 
-// the record's own date_modified at the last sync: compared with date_modified on this device
-// only, so the difference between the device and the server clocks doesn't matter
+// date_modified at the last sync: compared only with local dates, so clock differences don't matter
 export const migration_005_record_date_modified_synced = async (
   dbClient: SQLiteClient,
 ) => {

@@ -550,7 +550,6 @@ const updateRecordsDateModifiedRemote = async ({
   });
 };
 
-// date_modified of the given records (for records whose content is about to be sent to the server)
 const fetchRecordsDateModifiedByUuid = async ({
   surveyId,
   recordUuids,
@@ -563,10 +562,6 @@ const fetchRecordsDateModifiedByUuid = async ({
   return Object.fromEntries(rows.map((row) => [row.uuid, row.date_modified]));
 };
 
-/**
- * Persists, for each given record uuid, the record's own date_modified at the last sync: an edit
- * made later changes date_modified, whatever the device clock says.
- */
 const updateRecordsDateModifiedSynced = async ({
   surveyId,
   dateModifiedByUuid,
