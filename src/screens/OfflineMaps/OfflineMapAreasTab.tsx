@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigator } from "navigation/navigator";
 
 import { DateFormats, Dates } from "@openforis/arena-core";
@@ -162,6 +162,10 @@ export const OfflineMapAreasTab = () => {
     setState((prev) => ({ ...prev, tilesStorageSize: size }));
   }, []);
 
+  // tabs are mounted when the screen is already focused: load on mount too
+  useEffect(() => {
+    void loadAreas();
+  }, [loadAreas]);
   useNavigationFocus(loadAreas);
 
   const onAddAreaPress = useCallback(() => {

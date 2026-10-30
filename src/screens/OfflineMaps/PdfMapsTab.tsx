@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigator } from "navigation/navigator";
 import * as DocumentPicker from "expo-document-picker";
 
@@ -137,6 +137,10 @@ export const PdfMapsTab = () => {
     setFreeDiskStorage(freeSpace);
   }, []);
 
+  // tabs are mounted when the screen is already focused: load on mount too
+  useEffect(() => {
+    void loadStorageInfo();
+  }, [loadStorageInfo]);
   useNavigationFocus(loadStorageInfo);
 
   const onImportPress = useCallback(async () => {
