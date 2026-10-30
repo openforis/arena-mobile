@@ -200,7 +200,7 @@ const loginWithStoredCredentials = async (): Promise<boolean> => {
   return false;
 };
 
-const refreshAuthTokens = async () => {
+const performAuthTokensRefresh = async () => {
   try {
     const serverUrl = await getServerUrl();
     const refreshTokenPrev = await SecureStoreService.getAuthRefreshToken();
@@ -228,6 +228,16 @@ const refreshAuthTokens = async () => {
     }
     throw error;
   }
+};
+
+let authTokensRefreshInProgress: Promise<void> | null = null;
+
+// the server revokes a refresh token once used: concurrent requests must share a single refresh
+const refreshAuthTokens = (): Promise<void> => {
+  authTokensRefreshInProgress ??= performAuthTokensRefresh().finally(() => {
+    authTokensRefreshInProgress = null;
+  });
+  return authTokensRefreshInProgress;
 };
 
 export const AuthService = {
