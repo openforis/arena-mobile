@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Arena Mobile is a React Native mobile application built with Expo for offline data collection on Android and iOS. It's a companion app to Open Foris Arena, enabling field data collection for forest inventories, surveys, and interviews with support for diverse data types (numbers, coordinates, images, videos, text) and customizable validation rules.
 
 **Key Technologies:**
-- React Native 0.81.5 with Expo 54
+- React Native 0.86 with Expo 57
 - TypeScript (migrated from JavaScript)
 - Redux Toolkit for state management
 - React Navigation for routing
@@ -179,7 +179,7 @@ Common utilities including:
 
 ## App Initialization Flow
 
-1. **App.js**: Redux store setup, theme provider, error boundary (note: still .js file, not migrated to TypeScript yet)
+1. **App.tsx**: Redux store setup, theme provider, error boundary
 2. **AppInitializer**: Sequential initialization (see `src/AppInitializer/AppInitializer.tsx`):
    - Fetch device info (battery, storage)
    - Load settings from secure storage
@@ -222,7 +222,7 @@ Node definitions come from `@openforis/arena-core` package. The mobile app inter
 
 ## Permissions
 
-Key permissions (configured in `app.json`):
+Key permissions (configured in `app.config.ts`):
 - **Camera**: For image/video file attributes
 - **Location**: For coordinate attributes with GPS
 - **Media Library**: For selecting images from gallery
@@ -285,8 +285,8 @@ const message = t("app:welcomeMessage")
 ## Important Notes
 
 - **TypeScript Migration**: This project has been migrated to TypeScript. All source files in `src/` use `.ts` or `.tsx` extensions. TypeScript config is in `tsconfig.json` with strict mode enabled.
-- **Expo Managed Workflow**: Uses Expo's managed workflow. Config plugins in `app.json` and custom plugins in `plugins/` directory.
-- **Yarn Berry**: Uses Yarn 4.10.3 (configured in `packageManager` field)
+- **Expo Managed Workflow**: Uses Expo's managed workflow. Config plugins in `app.config.ts` and custom plugins in `plugins/` directory.
+- **Yarn Berry**: Uses Yarn 4.18.1 (configured in `packageManager` field)
 - **Development Mode**: `__DEV__` global checks for development-only code
 - **Platform-Specific Code**: Use `Environment.isAndroid`, `Environment.isIOS`, or `Platform.select()`
 - **Offline-First**: App must work completely offline. Server sync is optional.
