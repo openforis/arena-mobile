@@ -440,7 +440,6 @@ const runAutoSync =
             recordUuids: fetchCandidates.map((record: any) => record.uuid),
           }),
         );
-        return;
       }
 
       // a tick does a single upload, and the conflict resolution strategy applies to all of it:
