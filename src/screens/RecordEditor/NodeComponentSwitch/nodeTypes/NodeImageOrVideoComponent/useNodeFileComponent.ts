@@ -37,7 +37,8 @@ const determineFileMaxSize = ({ nodeDef, settings }: any) => {
   if (imageSizeUnlimited) {
     return nodeDefFileMaxSize;
   }
-  return Math.min(nodeDefFileMaxSize ?? 0, imageSizeLimit ?? 0);
+  const limits = [nodeDefFileMaxSize, imageSizeLimit].filter(Boolean);
+  return limits.length > 0 ? Math.min(...limits) : undefined;
 };
 
 const extractFileNameFromAsset = (
