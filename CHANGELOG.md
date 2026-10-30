@@ -9,24 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Survey download as a package including the survey files (e.g. area of interest files), when available on the server;
-- Areas of interest: read the area files of the survey package;
-- Records of other user groups: read-only records (they can be viewed or cloned, but not edited or uploaded);
-- Entity list: choose the visible columns;
+- Surveys are downloaded together with their files (e.g. areas of interest);
+- Records of other user groups can be viewed as read-only;
+- Entity list: choose which columns to show;
 
 ### Changed
 
-- Records and surveys lists: cards view (default for surveys), expandable table rows;
-- Records list: sort field and direction in a single control;
-- Remote surveys list: long descriptions collapsed;
-- Entity list: human readable coordinate, file and geospatial values;
-- Log in again silently with the stored credentials when the session expires;
+- Records and surveys lists: new cards view;
 
 ### Fixed
 
-- Dialogs: scrolling of the content (e.g. changelog);
-- Records list: sort by errors;
-- Offline maps: data not loaded when opening a tab;
+- General improvements and bug fixing;
 
 ## [2.10.5] - 2026-10-26
 
