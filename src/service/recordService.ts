@@ -121,7 +121,10 @@ const determineLocalRecordSyncStatus = ({
     return RecordSyncStatus.modifiedRemotely;
   }
   if (localChangedSinceBaseline) {
-    return RecordSyncStatus.modifiedLocally;
+    // the server only accepts a record dated after its own copy: uploading it would be skipped
+    return Dates.isAfter(dateModifiedLocal, dateModifiedRemoteLive)
+      ? RecordSyncStatus.modifiedLocally
+      : RecordSyncStatus.deviceDateBehindServer;
   }
   return RecordSyncStatus.notModified;
 };
