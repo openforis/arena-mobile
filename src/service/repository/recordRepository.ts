@@ -262,7 +262,7 @@ const fetchRecordsWithEmptyCycle = async ({
   const rows = await dbClient.many(
     `SELECT ${summarySelectFieldsJoint}
     FROM record
-    WHERE survey_id = ? AND cycle IS NULL"}
+    WHERE survey_id = ? AND cycle IS NULL
     ORDER BY date_modified DESC`,
     [surveyId],
   );
