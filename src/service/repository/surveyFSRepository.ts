@@ -74,14 +74,6 @@ const replaceSurveyPackageFiles = async ({
   );
 };
 
-const existsSurveyPackageFile = async ({
-  surveyId,
-  fileUuid,
-}: {
-  surveyId: number;
-  fileUuid: string;
-}) => Files.exists(getSurveyPackageFileUri({ surveyId, fileUuid }));
-
 const deleteSurveyFile = async ({ surveyId }: any) => {
   const fileUri = getSurveyFileUri({ surveyId });
   await GenericFileRepository.deleteFile(fileUri);
@@ -94,7 +86,6 @@ export const SurveyFSRepository = {
   saveSurveyFile,
   deleteSurveyFile,
   getSurveyPackageFileUri,
-  existsSurveyPackageFile,
   replaceSurveyPackageFiles,
   deleteSurveyPackageFiles,
 };

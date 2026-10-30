@@ -14,13 +14,7 @@ export const debounceAction = (action: any, key: any, time = 500) => {
   return Functions.debounce(action, time);
 };
 
-export const cancelDebouncedAction = (key: any) => ({
-  type: `${key}/cancel`,
-  meta: { debounce: { cancel: true, key } },
-});
-
 export const StoreUtils = {
   exportReducer,
   debounceAction,
-  cancelDebouncedAction,
 };

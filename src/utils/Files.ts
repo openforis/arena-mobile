@@ -20,8 +20,6 @@ const MIME_TYPES = {
   zip: "application/zip",
 };
 
-const defaultChunkSize = 1024 * 1024 * 10; // 10 MB
-
 const { documentDirectory, readDirectoryAsync } = FileSystem;
 const cacheDirectory = FileSystem.cacheDirectory!;
 
@@ -179,17 +177,6 @@ const readAsString = (
   encoding?: FileSystem.EncodingType,
 ): Promise<string> =>
   FileSystem.readAsStringAsync(fileUri, encoding ? { encoding } : undefined);
-
-const readChunkAsString = (
-  fileUri: string,
-  chunkNumber: number,
-  chunkSize = defaultChunkSize,
-): Promise<string> =>
-  FileSystem.readAsStringAsync(fileUri, {
-    encoding: FileSystem.EncodingType.Base64,
-    position: (chunkNumber - 1) * chunkSize,
-    length: chunkSize,
-  });
 
 const readAsBytes = (
   fileUri: string,
@@ -369,7 +356,6 @@ export const Files = {
   hasExtension,
   getSize,
   readAsString,
-  readChunkAsString,
   readAsBytes,
   readJsonFromFile,
   listDirectory,

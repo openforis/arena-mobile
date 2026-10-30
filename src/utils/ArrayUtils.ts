@@ -88,12 +88,6 @@ const sortCompareFn =
 const findByUuid = (uuid: any) => (array: any) =>
   array.find((item: any) => item.uuid === uuid);
 
-const sortByProp =
-  (sortProp: any, sortDirection: Sort = Sort.asc) =>
-  (array: any) => {
-    array.sort(sortCompareFn(sortProp, sortDirection));
-  };
-
 const sortByProps = (sortObj: SortObject) => (array: any) => {
   array.sort((itemA: any, itemB: any) => {
     let sortResult = 0;
@@ -113,7 +107,6 @@ const indexByUuid = (array: any) =>
 
 export const ArrayUtils = {
   findByUuid,
-  sortByProp,
   sortByProps,
   indexByUuid,
 };

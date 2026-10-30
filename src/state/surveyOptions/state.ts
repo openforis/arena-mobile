@@ -1,5 +1,3 @@
-import { ScreenViewMode } from "model/ScreenViewMode";
-
 const stateKey = "surveyOptions";
 
 const keys = {
@@ -9,8 +7,6 @@ const keys = {
 };
 
 const getRecordEditViewMode = (state: any) => state[keys.recordEditViewMode];
-const getScreenViewMode = (screenKey: any) => (state: any) =>
-  state?.[keys.viewModesByScreen]?.[screenKey] ?? ScreenViewMode.table;
 const getEntityListColumns =
   (entityDefUuid: string) =>
   (state: any): string[] | undefined =>
@@ -21,6 +17,5 @@ export const SurveyOptionsState = {
   keys,
 
   getRecordEditViewMode,
-  getScreenViewMode,
   getEntityListColumns,
 };

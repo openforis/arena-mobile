@@ -40,10 +40,6 @@ const mercatorToLatLng = ({ x, y }: Point): LatLng => ({
 
 const worldPixelsSize = (zoom: number): number => TILE_SIZE * 2 ** zoom;
 
-// size of a pixel (in mercator meters) at the specified zoom level
-const mercatorMetersPerPixel = (zoom: number): number =>
-  (2 * MERCATOR_HALF_WORLD) / worldPixelsSize(zoom);
-
 const mercatorToWorldPixel = ({ x, y }: Point, zoom: number): Point => {
   const scale = worldPixelsSize(zoom) / (2 * MERCATOR_HALF_WORLD);
   return {
@@ -341,7 +337,6 @@ export const GeoPdfTransform = {
   TILE_SIZE,
   latLngToMercator,
   mercatorToLatLng,
-  mercatorMetersPerPixel,
   mercatorToWorldPixel,
   worldPixelToMercator,
   computeHomography,
