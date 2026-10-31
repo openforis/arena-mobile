@@ -86,6 +86,3 @@ export const getIosSessionInitPacketHex = (
 export const getHdopAccuracyFactorMeters = (
   deviceName: string,
 ): number | undefined => findVendorEntry(deviceName)?.hdopAccuracyFactorMeters;
-
-export const isRecognizedGpsDevice = (deviceName: string): boolean =>
-  recognizeVendor(deviceName) !== undefined;

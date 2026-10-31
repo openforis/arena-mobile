@@ -198,6 +198,5 @@ export const PreferencesService = {
   setSurveyUserGroup,
   clearSurveyRecordLastEditedPage,
   clearSurveyUserGroups,
-  clearPreferencesBySurveyId,
   clearPreferencesBySurveyIds,
 };

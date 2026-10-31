@@ -4,7 +4,6 @@ import {
   NodeDefType,
   NodeValueFormatter,
   Nodes,
-  NodesMap,
   Numbers,
   Objects,
   RecordExpressionEvaluator,
@@ -49,18 +48,6 @@ const coordinateAttributeNumericFields = [
 const yesNoValueByBooleanValue: Record<string, string> = {
   true: "yes",
   false: "no",
-};
-
-const getNodeName = ({ survey, record, nodeUuid }: any): string | null => {
-  const node = Records.getNodeByUuid(nodeUuid)(record);
-  if (node) {
-    const nodeDef = Surveys.getNodeDefByUuid({
-      survey,
-      uuid: node.nodeDefUuid,
-    });
-    return NodeDefs.getName(nodeDef);
-  }
-  return null;
 };
 
 const getEntityKeysFormatted = ({
@@ -720,82 +707,7 @@ const getRecordSummaryValuesBySummaryAttributeFormatted = ({
     t,
   });
 
-const findTopmostNewlyInapplicableAncestorDefUuid = ({
-  node,
-  recordPrev,
-  recordNext,
-}: {
-  node: ArenaRecordNode;
-  recordPrev: ArenaRecord;
-  recordNext: ArenaRecord;
-}) => {
-  let topmostInapplicableAncestorDefUuid: string | null = null;
-
-  const visitAncestor = (visitedAncestor: ArenaRecordNode): void => {
-    if (visitedAncestor.uuid === node.uuid) {
-      // skip the node itself, we are looking for ancestors only
-      return;
-    }
-    const ancestorPrev = Records.getNodeByUuid(visitedAncestor.uuid)(
-      recordPrev,
-    );
-    if (!ancestorPrev) {
-      return;
-    }
-    const applicablePrev = Records.isNodeApplicable(ancestorPrev)(recordPrev);
-    const applicableNext =
-      Records.isNodeApplicable(visitedAncestor)(recordNext);
-    if (applicablePrev && !applicableNext) {
-      topmostInapplicableAncestorDefUuid = visitedAncestor.nodeDefUuid;
-    }
-  };
-  Records.visitAncestorsAndSelf(node, (visitedAncestor) => {
-    visitAncestor(visitedAncestor);
-    // stop the visit once found
-    return !!topmostInapplicableAncestorDefUuid;
-  })(recordNext);
-
-  return topmostInapplicableAncestorDefUuid;
-};
-
-const findNewlyInapplicableDefUuidsWithValue = ({
-  recordPrev,
-  recordNext,
-  nodes,
-}: {
-  recordPrev: ArenaRecord;
-  recordNext: ArenaRecord;
-  nodes: NodesMap;
-}): Set<string> => {
-  const result = new Set<string>();
-  for (const node of Object.values(nodes)) {
-    const { nodeDefUuid } = node;
-    const parentNode = Records.getParent(node)(recordNext);
-    if (!parentNode) {
-      continue;
-    }
-    const nodePrev = Records.getNodeByUuid(node.uuid)(recordPrev);
-    const hadUserInputValue = nodePrev && Nodes.hasUserInputValue(nodePrev);
-    const applicablePrev = nodePrev
-      ? Records.isNodeApplicable(nodePrev)(recordPrev)
-      : true;
-    const applicableNext = Records.isNodeApplicable(node)(recordNext);
-
-    if (applicablePrev && !applicableNext && hadUserInputValue) {
-      const topmostInapplicableAncestorDefUuid: string | null =
-        findTopmostNewlyInapplicableAncestorDefUuid({
-          node,
-          recordNext,
-          recordPrev,
-        });
-      result.add(topmostInapplicableAncestorDefUuid ?? nodeDefUuid);
-    }
-  }
-  return result;
-};
-
 export const RecordUtils = {
-  getNodeName,
   formatBooleanValue,
   getEntityKeysFormatted,
   getRootEntityKeysFormatted,
@@ -803,7 +715,6 @@ export const RecordUtils = {
   getAncestorsLabelAndKeysText,
   getRecordSummaryValuesByKeyFormatted,
   getRecordSummaryValuesBySummaryAttributeFormatted,
-  findNewlyInapplicableDefUuidsWithValue,
   getApplicableChildrenEntityDefs,
   getChildEntityCompletionPercent,
   toCompletionPercent,

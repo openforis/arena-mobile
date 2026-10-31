@@ -1,4 +1,5 @@
 import { Dictionary } from "@openforis/arena-core";
+import { CanceledError } from "axios";
 
 import { SystemUtils } from "utils/SystemUtils";
 
@@ -127,16 +128,27 @@ const postCancelableMultipartData = async (
 ) => {
   const serverUrl = await getServerUrl();
   const config = { onUploadProgress };
-  const sendRequest = () =>
-    Promise.resolve(
-      API.postCancelableMultipartData({
-        serverUrl,
-        uri,
-        data,
-        config: attachHeaders(config),
-      }),
-    );
-  return withRetry(sendRequest);
+  let cancelCurrentRequest: () => void;
+  let canceled = false;
+  const sendRequest = async () => {
+    // canceled while the token was being refreshed
+    if (canceled) throw new CanceledError();
+    const { promise, cancel } = API.postCancelableMultipartData({
+      serverUrl,
+      uri,
+      data,
+      config: attachHeaders(config),
+    });
+    cancelCurrentRequest = cancel;
+    return promise;
+  };
+  return {
+    promise: withRetry(sendRequest),
+    cancel: () => {
+      canceled = true;
+      cancelCurrentRequest();
+    },
+  };
 };
 
 const postMultipartData = async (

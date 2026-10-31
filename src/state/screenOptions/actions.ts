@@ -3,12 +3,6 @@ import { ScreenOptionsSelectors } from "./selectors";
 
 const SCREEN_VIEW_MODE_SET = "SCREEN_VIEW_MODE_SET";
 
-const setScreenViewMode =
-  ({ screenKey, viewMode }: any) =>
-  (dispatch: any) => {
-    dispatch({ type: SCREEN_VIEW_MODE_SET, screenKey, viewMode });
-  };
-
 const defaultViewModes = [ScreenViewMode.table, ScreenViewMode.list];
 
 const getNextViewMode = ({
@@ -43,6 +37,5 @@ export const ScreenOptionsActions = {
   SCREEN_VIEW_MODE_SET,
 
   getNextViewMode,
-  setScreenViewMode,
   toggleScreenViewMode,
 };

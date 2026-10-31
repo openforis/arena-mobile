@@ -49,6 +49,17 @@ const deleteRecordFile = (params: {
   return Promise.resolve();
 };
 
+const deleteSurveyRecordFiles = ({
+  surveyId,
+}: {
+  surveyId: number;
+}): Promise<void> => {
+  for (const key of fileUriByKey.keys()) {
+    if (key.startsWith(`${surveyId}/`)) fileUriByKey.delete(key);
+  }
+  return Promise.resolve();
+};
+
 export const RecordFileMemoryRepository = {
   getRecordFilesParentDirectoryUri,
   getRecordFilesParentDirectorySize,
@@ -57,4 +68,5 @@ export const RecordFileMemoryRepository = {
   recordFileMissing,
   saveRecordFile,
   deleteRecordFile,
+  deleteSurveyRecordFiles,
 };
