@@ -612,6 +612,45 @@ const confirmClearNewlyInapplicableValues = async ({
   }));
 };
 
+const _onAttributeUpdated = async ({
+  dispatch,
+  state,
+  survey,
+  record,
+  nodeDef,
+  lang,
+}: any) => {
+  const cycle = Records.getCycle(record);
+  const isRootKeyDef = SurveyDefs.isRootKeyDef({ survey, cycle, nodeDef });
+  if (
+    DataEntrySelectors.selectIsLinkedToPreviousCycleRecord(state) &&
+    NodeDefs.isKey(nodeDef)
+  ) {
+    if (isRootKeyDef) {
+      dispatch(unlinkFromRecordInPreviousCycle());
+    } else {
+      // key of a nested entity changed: refresh the matching previous-cycle entity
+      dispatch(updatePreviousCyclePageEntity);
+    }
+  }
+
+  if (isRootKeyDef && (await _isRootKeyDuplicate({ survey, record, lang }))) {
+    const keyValues = RecordUtils.getRootEntityKeysFormatted({
+      survey,
+      record,
+      lang,
+    }).join(", ");
+
+    dispatch(
+      MessageActions.setMessage({
+        content: "recordsList:duplicateKey.message",
+        contentParams: { keyValues },
+        title: "recordsList:duplicateKey.title",
+      }),
+    );
+  }
+};
+
 const updateAttribute = ({
   uuid,
   value,
@@ -631,7 +670,6 @@ const updateAttribute = ({
       const updaterParams = selectRecordUpdaterParams(state);
       const { survey } = updaterParams;
       const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
-      const cycle = Records.getCycle(record);
 
       // nothing actually changed (e.g. a field was focused and left as is): don't touch the
       // record, otherwise it would look modified and the auto-sync status would turn pending
@@ -685,43 +723,18 @@ const updateAttribute = ({
         await updateRecordNodeFile({ survey, node, fileUri, value, dispatch });
       }
 
-      const isRootKeyDef = SurveyDefs.isRootKeyDef({ survey, cycle, nodeDef });
-      const isKeyDef = NodeDefs.isKey(nodeDef);
-
       // a sync started meanwhile would be overwritten
       if (_isRecordSyncInProgress(dispatch, getState)) return;
 
       await _updateRecord({ dispatch, survey, record: recordUpdated });
-      if (
-        DataEntrySelectors.selectIsLinkedToPreviousCycleRecord(state) &&
-        isKeyDef
-      ) {
-        if (isRootKeyDef) {
-          dispatch(unlinkFromRecordInPreviousCycle());
-        } else {
-          // key of a nested entity changed: refresh the matching previous-cycle entity
-          dispatch(updatePreviousCyclePageEntity);
-        }
-      }
-
-      if (
-        isRootKeyDef &&
-        (await _isRootKeyDuplicate({ survey, record: recordUpdated, lang }))
-      ) {
-        const keyValues = RecordUtils.getRootEntityKeysFormatted({
-          survey,
-          record: recordUpdated,
-          lang,
-        }).join(", ");
-
-        dispatch(
-          MessageActions.setMessage({
-            content: "recordsList:duplicateKey.message",
-            contentParams: { keyValues },
-            title: "recordsList:duplicateKey.title",
-          }),
-        );
-      }
+      await _onAttributeUpdated({
+        dispatch,
+        state,
+        survey,
+        record: recordUpdated,
+        nodeDef,
+        lang,
+      });
       log.debug(`Node updated successfully.`);
     } catch (error) {
       handleError(dispatch, error, "dataEntry:updateAttributeError");
