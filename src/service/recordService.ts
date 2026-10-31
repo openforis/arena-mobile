@@ -39,6 +39,8 @@ const {
   updateRecordWithContentMergedFromRemote,
   updateRecordsDateSync,
   updateRecordsDateModifiedRemote,
+  updateRecordsDateModifiedSynced,
+  fetchRecordsDateModifiedByUuid,
   updateRecordsMergedInto,
   deleteRecords,
   fixRecordCycle,
@@ -52,6 +54,18 @@ const {
 } = RecordRemoteService;
 
 const toDate = (dateStr: any) => (dateStr ? new Date(dateStr) : null);
+
+// no baseline captured yet (record never round-tripped under this logic):
+// fall back to a plain last-modified comparison
+const compareLastModifiedDates = (dateLocal: Date, dateRemote: Date) => {
+  if (Dates.isAfter(dateLocal, dateRemote)) {
+    return RecordSyncStatus.modifiedLocally;
+  }
+  if (Dates.isBefore(dateLocal, dateRemote)) {
+    return RecordSyncStatus.modifiedRemotely;
+  }
+  return RecordSyncStatus.notModified;
+};
 
 const determineLocalRecordSyncStatus = ({
   survey,
@@ -94,25 +108,18 @@ const determineLocalRecordSyncStatus = ({
   );
 
   if (!dateModifiedRemoteBaseline) {
-    // no baseline captured yet (record never round-tripped under this logic):
-    // fall back to a plain last-modified comparison
-    if (Dates.isAfter(dateModifiedLocal, dateModifiedRemoteLive)) {
-      return RecordSyncStatus.modifiedLocally;
-    }
-    if (Dates.isBefore(dateModifiedLocal, dateModifiedRemoteLive)) {
-      return RecordSyncStatus.modifiedRemotely;
-    }
-    return RecordSyncStatus.notModified;
+    return compareLastModifiedDates(dateModifiedLocal, dateModifiedRemoteLive);
   }
 
   const remoteChangedSinceBaseline = Dates.isAfter(
     dateModifiedRemoteLive,
     dateModifiedRemoteBaseline,
   );
-  const localChangedSinceBaseline = Dates.isAfter(
-    dateModifiedLocal,
-    dateModifiedRemoteBaseline,
-  );
+  // compared with a local date, as the clocks can differ (records not synced lately have none)
+  const dateModifiedSynced = toDate(recordSummaryLocal.dateModifiedSynced);
+  const localChangedSinceBaseline = dateModifiedSynced
+    ? dateModifiedLocal.getTime() !== dateModifiedSynced.getTime()
+    : Dates.isAfter(dateModifiedLocal, dateModifiedRemoteBaseline);
 
   if (remoteChangedSinceBaseline && localChangedSinceBaseline) {
     return RecordSyncStatus.modifiedLocallyAndRemotely;
@@ -121,7 +128,10 @@ const determineLocalRecordSyncStatus = ({
     return RecordSyncStatus.modifiedRemotely;
   }
   if (localChangedSinceBaseline) {
-    return RecordSyncStatus.modifiedLocally;
+    // the server skips a record not dated after its own copy
+    return Dates.isAfter(dateModifiedLocal, dateModifiedRemoteLive)
+      ? RecordSyncStatus.modifiedLocally
+      : RecordSyncStatus.deviceDateBehindServer;
   }
   return RecordSyncStatus.notModified;
 };
@@ -425,6 +435,7 @@ const confirmRecordsSyncedWithRemote = async ({
   survey,
   cycle,
   recordUuids,
+  dateModifiedByUuid,
 }: any) => {
   const { id: surveyId } = survey;
 
@@ -453,6 +464,7 @@ const confirmRecordsSyncedWithRemote = async ({
   }
 
   await updateRecordsDateSync({ surveyId, recordUuids });
+  await updateRecordsDateModifiedSynced({ surveyId, dateModifiedByUuid });
 
   if (Object.keys(dateModifiedRemoteByUuid).length > 0) {
     await updateRecordsDateModifiedRemote({
@@ -670,6 +682,8 @@ export const RecordService = {
   updateRecordWithContentMergedFromRemote,
   updateRecordsDateSync,
   updateRecordsDateModifiedRemote,
+  fetchRecordsDateModifiedByUuid,
+  updateRecordsDateModifiedSynced,
   confirmRecordsSyncedWithRemote,
   updateRecordsMergedInto,
   findFileUuidsInDevice,

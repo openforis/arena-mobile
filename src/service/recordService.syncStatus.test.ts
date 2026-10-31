@@ -96,6 +96,42 @@ describe("RecordService.determineRecordSyncStatus", () => {
     });
   });
 
+  describe("with the local date of the last sync", () => {
+    const synced = { dateModifiedRemote: t2, dateModifiedSynced: t0 };
+
+    it("detects an edit made with the device clock behind the server", () => {
+      expect(
+        determine(
+          local({ ...synced, dateModified: t1 }),
+          remote({ dateModified: t2 }),
+        ),
+      ).toBe(RecordSyncStatus.deviceDateBehindServer);
+    });
+
+    it("detects an edit made with a date the server would accept", () => {
+      const dateModifiedRemote = t0;
+      expect(
+        determine(
+          local({
+            dateModifiedRemote,
+            dateModifiedSynced: t0,
+            dateModified: t2,
+          }),
+          remote({ dateModified: t0 }),
+        ),
+      ).toBe(RecordSyncStatus.modifiedLocally);
+    });
+
+    it("does not see a change when the server date differs from the local one", () => {
+      expect(
+        determine(
+          local({ ...synced, dateModified: t0 }),
+          remote({ dateModified: t2 }),
+        ),
+      ).toBe(RecordSyncStatus.notModified);
+    });
+  });
+
   it("flags downloaded records changed on the server", () => {
     expect(
       determine(
