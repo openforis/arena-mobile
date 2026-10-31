@@ -11,6 +11,7 @@ const {
   recordFileMissing,
   saveRecordFile,
   deleteRecordFile,
+  deleteSurveyRecordFiles,
 } = PreviewMode.isActive ? RecordFileMemoryRepository : RecordFileRepository;
 
 export const RecordFileService = {
@@ -21,4 +22,5 @@ export const RecordFileService = {
   recordFileMissing,
   saveRecordFile,
   deleteRecordFile,
+  deleteSurveyRecordFiles,
 };

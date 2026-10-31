@@ -542,15 +542,19 @@ const updateRecordsDateModifiedRemote = async ({
 };
 
 // uuids of the files referenced by the content stored in the device for the given records
+// (all records if not specified)
 const fetchRecordsFileUuids = async ({
   surveyId,
   recordUuids,
 }: any): Promise<string[]> => {
+  const recordsCondition = recordUuids
+    ? `AND record.uuid IN (${DbUtils.quoteValues(recordUuids)})`
+    : "";
   const rows = await dbClient.many(
     `SELECT DISTINCT json_extract(node.value, '$.value.fileUuid') AS file_uuid
      FROM record, json_each(record.content, '$.nodes') AS node
      WHERE record.survey_id = ? 
-       AND record.uuid IN (${DbUtils.quoteValues(recordUuids)})
+       ${recordsCondition}
        AND json_valid(record.content)
        AND json_extract(node.value, '$.value.fileUuid') IS NOT NULL`,
     [surveyId],
