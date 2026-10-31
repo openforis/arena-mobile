@@ -85,11 +85,17 @@ A record is merged automatically by an auto-sync tick when all of these hold:
 1. the auto-sync setting is enabled;
 2. the survey is visible in mobile and allows downloading records in mobile (the merged record
    has to be downloaded afterwards, see S4);
-3. its sync status is `modifiedRemotely` or `modifiedLocallyAndRemotely`;
+3. its sync status is `modifiedRemotely` or `modifiedLocallyAndRemotely`, unless it has changed
+   only on the server (see below);
 4. if it is the record currently open in the editor, it hasn't been modified for at least the
    open-record idle interval (`settings:autoSyncOpenRecordIntervalMinutes`), and in any case
    (also with "Sync now", which bypasses that interval) for at least 5 seconds (see S5);
 5. it has no validation errors, or the survey allows uploading records with errors.
+
+A record changed only on the server (`modifiedRemotely`, with a local date of the last sync) is not
+merged: there is nothing to send, and a merge, which never deletes anything, would bring back what
+the server deleted. An auto-sync tick just downloads it, as in S4. A record with no local date of
+the last sync can't be told apart from one with local edits, so it's still merged.
 
 ### S3. Mobile: one upload per tick
 

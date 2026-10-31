@@ -684,6 +684,22 @@ const fetchMergedSameRecordsSilently = async ({
   );
 };
 
+export const fetchRecordsChangedRemotely =
+  ({ cycle, recordUuids }: any) =>
+  async (dispatch: any, getState: any) => {
+    const state = getState();
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
+    const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
+    await fetchMergedSameRecordsSilently({
+      dispatch,
+      getState,
+      survey,
+      lang,
+      cycle,
+      recordUuids,
+    });
+  };
+
 export const exportRecords =
   ({
     cycle,

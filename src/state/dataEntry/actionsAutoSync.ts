@@ -13,12 +13,16 @@ import {
   AutoSyncActions,
   AutoSyncStatus,
   isAuthError,
+  hasOnlyRemoteChanges,
   isAutoMergeAllowed,
   sameRecordMergeableStatuses,
 } from "../autoSync";
 import { SurveySelectors } from "../survey";
 import { ToastActions } from "../toast";
-import { exportRecords } from "./actionsDataExport";
+import {
+  exportRecords,
+  fetchRecordsChangedRemotely,
+} from "./actionsDataExport";
 import { DataEntryActionsRecordSync } from "./actionsRecordSync";
 import { DataEntrySelectors } from "./selectors";
 
@@ -249,11 +253,27 @@ const selectAutoMergeCandidates = ({
     (record: any) =>
       !record.readOnly &&
       sameRecordMergeableStatuses.has(record.syncStatus) &&
+      !hasOnlyRemoteChanges(record) &&
       (errorsAllowed || !hasErrors(record)) &&
       (record.uuid !== currentlyEditedRecordUuid ||
         isRecordIdle({ record, now, idleThresholdMs })),
   );
 };
+
+// the open record is picked up by a later tick, once closed
+const selectAutoFetchCandidates = ({
+  records,
+  survey,
+  autoSyncEnabled,
+  currentlyEditedRecordUuid,
+}: any) =>
+  isAutoMergeAllowed({ autoSyncEnabled, survey })
+    ? records.filter(
+        (record: any) =>
+          hasOnlyRemoteChanges(record) &&
+          record.uuid !== currentlyEditedRecordUuid,
+      )
+    : [];
 
 // the record open in the editor, when among the records to merge, can't be edited from now until
 // its merged version is loaded in the editor (done by exportRecords' onJobComplete, which runs
@@ -405,6 +425,21 @@ const runAutoSync =
           candidates,
         });
         return;
+      }
+
+      const fetchCandidates = selectAutoFetchCandidates({
+        records,
+        survey,
+        autoSyncEnabled: !!getState().settings?.autoSyncEnabled,
+        currentlyEditedRecordUuid,
+      });
+      if (fetchCandidates.length > 0) {
+        await dispatch(
+          fetchRecordsChangedRemotely({
+            cycle,
+            recordUuids: fetchCandidates.map((record: any) => record.uuid),
+          }),
+        );
       }
 
       // a tick does a single upload, and the conflict resolution strategy applies to all of it:
