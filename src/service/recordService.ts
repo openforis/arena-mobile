@@ -53,6 +53,18 @@ const {
 
 const toDate = (dateStr: any) => (dateStr ? new Date(dateStr) : null);
 
+// no baseline captured yet (record never round-tripped under this logic):
+// fall back to a plain last-modified comparison
+const compareLastModifiedDates = (dateLocal: Date, dateRemote: Date) => {
+  if (Dates.isAfter(dateLocal, dateRemote)) {
+    return RecordSyncStatus.modifiedLocally;
+  }
+  if (Dates.isBefore(dateLocal, dateRemote)) {
+    return RecordSyncStatus.modifiedRemotely;
+  }
+  return RecordSyncStatus.notModified;
+};
+
 const determineLocalRecordSyncStatus = ({
   survey,
   recordSummaryLocal,
@@ -94,15 +106,7 @@ const determineLocalRecordSyncStatus = ({
   );
 
   if (!dateModifiedRemoteBaseline) {
-    // no baseline captured yet (record never round-tripped under this logic):
-    // fall back to a plain last-modified comparison
-    if (Dates.isAfter(dateModifiedLocal, dateModifiedRemoteLive)) {
-      return RecordSyncStatus.modifiedLocally;
-    }
-    if (Dates.isBefore(dateModifiedLocal, dateModifiedRemoteLive)) {
-      return RecordSyncStatus.modifiedRemotely;
-    }
-    return RecordSyncStatus.notModified;
+    return compareLastModifiedDates(dateModifiedLocal, dateModifiedRemoteLive);
   }
 
   const remoteChangedSinceBaseline = Dates.isAfter(
