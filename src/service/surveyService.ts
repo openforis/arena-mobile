@@ -302,10 +302,13 @@ const updateSurveyRemote = async ({ surveyId, surveyRemoteId }: any) =>
 
 const deleteSurveys = async (surveyIds: any) => {
   await SurveyRepository.deleteSurveys(surveyIds);
+  // the survey is already gone: a file left behind must not fail the delete
+  const logError = (error: any) =>
+    log.warn(`error deleting survey files: ${error}`);
   await Promise.all(
     surveyIds.flatMap((surveyId: any) => [
-      SurveyFSRepository.deleteSurveyFile({ surveyId }),
-      RecordFileService.deleteSurveyRecordFiles({ surveyId }),
+      SurveyFSRepository.deleteSurveyFile({ surveyId }).catch(logError),
+      RecordFileService.deleteSurveyRecordFiles({ surveyId }).catch(logError),
     ]),
   );
 };
