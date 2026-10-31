@@ -335,6 +335,8 @@ const copyUriToTempFile = async ({
 }): Promise<string> => {
   const fileName = tempFileName ?? getNameFromUri(uri);
   const tempFolderUri = getTempFolderParentUri();
+  // removed at startup, and copyUri doesn't create it on iOS
+  await mkDir(tempFolderUri);
   const fileNameWithExtension = `${fileName}.${defaultExtension}`;
   const tempFileUri = Files.path(tempFolderUri, fileNameWithExtension);
   await copyFile({ from: uri, to: tempFileUri });

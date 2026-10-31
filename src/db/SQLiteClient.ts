@@ -16,6 +16,7 @@ export default class SQLiteClient {
   name: any;
   privateConnected: boolean;
   privateDb: SQLite.SQLiteDatabase | null;
+  private transactionsQueue: Promise<unknown> = Promise.resolve();
   constructor(name: any, migrations: any[], _debug = false) {
     this.name = name;
     this.migrations = migrations;
@@ -41,8 +42,13 @@ export default class SQLiteClient {
     await this.privateDb!.execAsync(sql);
   }
 
-  transaction(callback: any) {
-    return this.privateDb!.withTransactionAsync(callback);
+  // a BEGIN inside an open transaction fails and its ROLLBACK cancels the open one: run them one at a time
+  transaction(callback: any): Promise<void> {
+    const result = this.transactionsQueue.then(() =>
+      this.privateDb!.withTransactionAsync(callback),
+    );
+    this.transactionsQueue = result.catch(() => {});
+    return result;
   }
 
   one(sql: any, params?: any) {
