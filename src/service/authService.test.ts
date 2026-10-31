@@ -52,6 +52,24 @@ describe("AuthService.refreshAuthTokens", () => {
     );
   });
 
+  it("shares a single refresh between concurrent callers", async () => {
+    postMock.mockResolvedValue({
+      response: {
+        headers: { "set-cookie": ["refreshToken=new-token; Path=/"] },
+        data: { authToken: "auth-token" },
+      },
+    });
+
+    await Promise.all([
+      AuthService.refreshAuthTokens(),
+      AuthService.refreshAuthTokens(),
+    ]);
+    await AuthService.refreshAuthTokens();
+
+    // the two concurrent callers count as one, the later call is a new refresh
+    expect(postMock).toHaveBeenCalledTimes(2);
+  });
+
   it("stores the new refresh token", async () => {
     postMock.mockResolvedValue({
       response: {
