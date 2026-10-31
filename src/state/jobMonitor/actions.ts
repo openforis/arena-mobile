@@ -1,9 +1,13 @@
 import { JobSerialized, JobStatus } from "@openforis/arena-core";
 
 import { JobCancelError, JobMobile } from "model";
-import { WebSocketService } from "service";
+import { RemoteJobService, WebSocketService } from "service";
+import { log } from "utils";
 
 import { createCallbackRegistry } from "../callbackRegistry";
+
+// the websocket can miss the final update (e.g. a job ending before the handshake)
+const REMOTE_JOB_STATUS_POLL_INTERVAL_MS = 30_000;
 
 const JOB_MONITOR_START = "JOB_MONITOR_START";
 const JOB_MONITOR_UPDATE = "JOB_MONITOR_UPDATE";
@@ -363,7 +367,27 @@ const start =
     } else {
       // remote job; open Web Socket and listen to job update events
       const ws = await WebSocketService.open();
-      ws.on(WebSocketService.EVENTS.jobUpdate, onJobUpdate);
+      const pollInterval = setInterval(async () => {
+        // another job has replaced this one in the monitor
+        if (getJobMonitorState(getState()).jobUuid !== jobUuid) {
+          clearInterval(pollInterval);
+          return;
+        }
+        try {
+          const { data } = await RemoteJobService.fetchJob(jobUuid!);
+          if (isJobStatusEnded(data?.status)) onRemoteJobUpdate(data);
+        } catch (error) {
+          log.debug(`remote job status poll failed: ${error}`);
+        }
+      }, REMOTE_JOB_STATUS_POLL_INTERVAL_MS);
+      const onRemoteJobUpdate = (remoteJobSummary: any) => {
+        // the server notifies all the jobs of the user
+        const { uuid, status } = remoteJobSummary ?? {};
+        if (uuid && uuid !== jobUuid) return;
+        if (isJobStatusEnded(status)) clearInterval(pollInterval);
+        onJobUpdate(remoteJobSummary);
+      };
+      ws.on(WebSocketService.EVENTS.jobUpdate, onRemoteJobUpdate);
     }
   };
 
