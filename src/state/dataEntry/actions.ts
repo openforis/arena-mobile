@@ -55,6 +55,7 @@ import { DataEntryActionsRecordSync } from "./actionsRecordSync";
 import { DataEntryActionsPreview } from "./actionsPreview";
 import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntrySelectors } from "./selectors";
+import { serializeRecordUpdate } from "./recordUpdateQueue";
 import { selectRecordUpdaterParams } from "./recordUpdaterParams";
 import { ToastActions } from "state/toast";
 
@@ -182,7 +183,7 @@ const createNewRecord =
     }
   };
 
-const _performAddEntity = async (dispatch: any, getState: any) => {
+const _performAddEntity = serializeRecordUpdate(async (dispatch, getState) => {
   if (_isRecordSyncInProgress(dispatch, getState)) return;
   const state = getState();
   const updaterParams = selectRecordUpdaterParams(state);
@@ -253,7 +254,7 @@ const _performAddEntity = async (dispatch: any, getState: any) => {
       entityUuid: nodeCreated.uuid,
     }),
   );
-};
+});
 
 const addNewEntity =
   (options = {} as any) =>
@@ -267,8 +268,8 @@ const addNewEntity =
     }
   };
 
-const deleteNodes =
-  (nodeUuids: any) => async (dispatch: any, getState: any) => {
+const deleteNodes = (nodeUuids: any) =>
+  serializeRecordUpdate(async (dispatch, getState) => {
     if (_isRecordSyncInProgress(dispatch, getState)) return;
     const state = getState();
     const updaterParams = selectRecordUpdaterParams(state);
@@ -302,7 +303,7 @@ const deleteNodes =
     removeNodesFlags(nodes);
 
     await _updateRecord({ dispatch, survey, record: recordUpdated });
-  };
+  });
 
 const deleteRecords =
   (recordUuids: any) => async (dispatch: any, getState: any) => {
@@ -611,26 +612,64 @@ const confirmClearNewlyInapplicableValues = async ({
   }));
 };
 
-const updateAttribute =
-  ({
-    uuid,
-    value,
-    fileUri = null,
-  }: {
-    uuid: string;
-    value: any;
-    fileUri?: string | null;
-  }) =>
-  async (dispatch: any, getState: any) => {
+const _onAttributeUpdated = async ({
+  dispatch,
+  state,
+  survey,
+  record,
+  nodeDef,
+  lang,
+}: any) => {
+  const cycle = Records.getCycle(record);
+  const isRootKeyDef = SurveyDefs.isRootKeyDef({ survey, cycle, nodeDef });
+  if (
+    DataEntrySelectors.selectIsLinkedToPreviousCycleRecord(state) &&
+    NodeDefs.isKey(nodeDef)
+  ) {
+    if (isRootKeyDef) {
+      dispatch(unlinkFromRecordInPreviousCycle());
+    } else {
+      // key of a nested entity changed: refresh the matching previous-cycle entity
+      dispatch(updatePreviousCyclePageEntity);
+    }
+  }
+
+  if (isRootKeyDef && (await _isRootKeyDuplicate({ survey, record, lang }))) {
+    const keyValues = RecordUtils.getRootEntityKeysFormatted({
+      survey,
+      record,
+      lang,
+    }).join(", ");
+
+    dispatch(
+      MessageActions.setMessage({
+        content: "recordsList:duplicateKey.message",
+        contentParams: { keyValues },
+        title: "recordsList:duplicateKey.title",
+      }),
+    );
+  }
+};
+
+const updateAttribute = ({
+  uuid,
+  value,
+  fileUri = null,
+}: {
+  uuid: string;
+  value: any;
+  fileUri?: string | null;
+}) =>
+  serializeRecordUpdate(async (dispatch, getState) => {
     try {
       const state = getState();
+      const record = DataEntrySelectors.selectRecord(state);
+      const node = Records.getNodeByUuid(uuid)(record);
+      if (!node) return;
+
       const updaterParams = selectRecordUpdaterParams(state);
       const { survey } = updaterParams;
       const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
-      const record = DataEntrySelectors.selectRecord(state);
-
-      const cycle = Records.getCycle(record);
-      const node = Records.getNodeByUuid(uuid)(record)!;
 
       // nothing actually changed (e.g. a field was focused and left as is): don't touch the
       // record, otherwise it would look modified and the auto-sync status would turn pending
@@ -685,48 +724,26 @@ const updateAttribute =
         await saveRecordNodeFile({ survey, fileUri, value });
       }
 
-      const isRootKeyDef = SurveyDefs.isRootKeyDef({ survey, cycle, nodeDef });
-      const isKeyDef = NodeDefs.isKey(nodeDef);
+      // a sync started meanwhile would be overwritten
+      if (_isRecordSyncInProgress(dispatch, getState)) return;
 
       await _updateRecord({ dispatch, survey, record: recordUpdated });
       if (isFileDef) {
         await deletePreviousRecordNodeFile({ survey, value, node, dispatch });
       }
-      if (
-        DataEntrySelectors.selectIsLinkedToPreviousCycleRecord(state) &&
-        isKeyDef
-      ) {
-        if (isRootKeyDef) {
-          dispatch(unlinkFromRecordInPreviousCycle());
-        } else {
-          // key of a nested entity changed: refresh the matching previous-cycle entity
-          dispatch(updatePreviousCyclePageEntity);
-        }
-      }
-
-      if (
-        isRootKeyDef &&
-        (await _isRootKeyDuplicate({ survey, record: recordUpdated, lang }))
-      ) {
-        const keyValues = RecordUtils.getRootEntityKeysFormatted({
-          survey,
-          record: recordUpdated,
-          lang,
-        }).join(", ");
-
-        dispatch(
-          MessageActions.setMessage({
-            content: "recordsList:duplicateKey.message",
-            contentParams: { keyValues },
-            title: "recordsList:duplicateKey.title",
-          }),
-        );
-      }
+      await _onAttributeUpdated({
+        dispatch,
+        state,
+        survey,
+        record: recordUpdated,
+        nodeDef,
+        lang,
+      });
       log.debug(`Node updated successfully.`);
     } catch (error) {
       handleError(dispatch, error, "dataEntry:updateAttributeError");
     }
-  };
+  });
 
 const performCoordinateValueSrsConversion =
   ({ nodeUuid, srsTo }: any) =>
@@ -812,9 +829,8 @@ const updateCoordinateValueSrs =
     }
   };
 
-const addNewAttribute =
-  ({ nodeDef, parentNodeUuid, value = null }: any) =>
-  async (dispatch: any, getState: any) => {
+const addNewAttribute = ({ nodeDef, parentNodeUuid, value = null }: any) =>
+  serializeRecordUpdate(async (dispatch, getState) => {
     if (_isRecordSyncInProgress(dispatch, getState)) return;
     const state = getState();
     const updaterParams = selectRecordUpdaterParams(state);
@@ -844,7 +860,7 @@ const addNewAttribute =
     );
 
     await _updateRecord({ dispatch, survey, record: recordUpdated2 });
-  };
+  });
 
 const selectCurrentPageEntity =
   ({ parentEntityUuid, entityDefUuid, entityUuid = undefined }: any) =>
