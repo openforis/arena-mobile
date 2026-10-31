@@ -655,7 +655,11 @@ const fixRowKeyOrSummaryAttributeColumns = ({
     const col = columnNames[index];
     const def = defs[index];
     if (def) {
-      const value = extractKeyOrSummaryColValue({ row, col });
+      // a text value is never JSON: "1.50" must not become 1.5, nor "null" an empty value
+      const value =
+        def.type === NodeDefType.text
+          ? row[col]
+          : extractKeyOrSummaryColValue({ row, col });
       result[wrapperProp][NodeDefs.getName(def)] = value;
     }
     delete result[col];
