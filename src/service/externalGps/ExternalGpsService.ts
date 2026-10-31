@@ -205,12 +205,6 @@ const watchPosition = async (
   };
 };
 
-/**
- * Closes every pooled external GPS connection immediately (app backgrounding,
- * explicit source switch) rather than waiting for the idle grace period.
- */
-const disconnectAll = () => ExternalGpsConnectionManager.closeAll();
-
 const isBluetoothEnabled = (): Promise<boolean> =>
   bluetoothClassicTransport.isBluetoothEnabled();
 
@@ -242,7 +236,6 @@ export const ExternalGpsService = {
   listAvailableSources,
   resolveAutoSourceId,
   watchPosition,
-  disconnectAll,
   isBluetoothEnabled,
   requestBluetoothEnabled,
   startGpsDeviceDiscovery,

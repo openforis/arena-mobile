@@ -115,10 +115,6 @@ const _stopGpsLocking = () => {
   gpsLockingSubscription?.remove();
 };
 
-const stopGpsLocking = () => (_dispatch: any) => {
-  return _stopGpsLocking();
-};
-
 export const SettingsActions = {
   SETTINGS_SET,
 
@@ -131,5 +127,4 @@ export const SettingsActions = {
   deletePdfMap,
 
   startGpsLocking,
-  stopGpsLocking,
 };

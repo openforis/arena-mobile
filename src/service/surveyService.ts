@@ -133,8 +133,6 @@ const fetchCurrentUserGroupRemote = async ({
   return data?.userGroup ?? null;
 };
 
-const getSurveysStorageSize = async () => SurveyFSRepository.getStorageSize();
-
 // insert/update and dependency graph building set top-level props (id, remoteId, dependencyGraph)
 // of the survey object: always pass a (shallow) copy of the bundled one
 const cloneDemoSurvey = (): Survey => ({
@@ -321,7 +319,6 @@ export const SurveyService = {
   fetchSurveySummaryRemote,
   fetchSurveyById,
   fetchCurrentUserGroupRemote,
-  getSurveysStorageSize,
   importOrUpdateDemoSurvey,
   importSurveyRemote,
   fetchCategoryItems,

@@ -105,12 +105,6 @@ const determineBatteryStateUpdateActionPayload = ({
   return payload;
 };
 
-const startPowerStateMonitor = () => (dispatch: any) => {
-  return Battery.addBatteryStateListener(() => {
-    dispatch(updatePowerState());
-  });
-};
-
 const updatePowerState = () => async (dispatch: any, getState: any) => {
   const state = getState();
   const {
@@ -166,7 +160,6 @@ export const DeviceInfoActions = {
 
   setDeviceInfo,
   initDeviceInfo,
-  startPowerStateMonitor,
   updatePowerState,
   updateFreeDiskStorage,
   updateIsNetworkConnected,
