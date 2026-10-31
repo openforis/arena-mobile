@@ -1,6 +1,9 @@
-import React, { useCallback, useMemo, useState } from "react";
-import { useTheme } from "react-native-paper";
-import RNPDropdown from "react-native-paper-dropdown";
+import React, { useCallback, useMemo } from "react";
+import { Menu, useTheme } from "react-native-paper";
+import {
+  Dropdown as RNPDropdown,
+  DropdownItemProps,
+} from "react-native-paper-dropdown";
 
 import { useTranslation } from "localization";
 
@@ -17,6 +20,31 @@ type DropdownProps = {
   value?: any;
 };
 
+const DropdownItem = (props: DropdownItemProps) => {
+  const { onSelect, option, toggleMenu, width } = props;
+
+  const theme = useTheme();
+
+  return (
+    <Menu.Item
+      contentStyle={{ minWidth: width }}
+      onPress={() => {
+        onSelect?.(option.value);
+        toggleMenu();
+      }}
+      style={{
+        backgroundColor: theme.colors.surfaceVariant,
+        minWidth: width,
+      }}
+      title={option.label}
+      titleStyle={{
+        color: theme.colors.onSurfaceVariant,
+        fontSize: theme.fonts.labelMedium.fontSize,
+      }}
+    />
+  );
+};
+
 export const Dropdown = (props: DropdownProps) => {
   const {
     disabled,
@@ -31,27 +59,9 @@ export const Dropdown = (props: DropdownProps) => {
     value,
   } = props;
 
-  const theme = useTheme();
   const { t } = useTranslation();
 
   const label = showLabel ? t(labelProp) : "";
-
-  const [state, setState] = useState({
-    open: false,
-    /**
-     * workaround: used to force re-render when opening or closing the dropdown;
-     * without this, the dropdown remains closed after selecting an already selected item;
-     */
-    timeOpenSet: Date.now(),
-  });
-
-  const { open, timeOpenSet } = state;
-
-  const setOpen = useCallback((val: boolean) => {
-    setState({ open: val, timeOpenSet: Date.now() });
-  }, []);
-  const closeDropDown = useCallback(() => setOpen(false), [setOpen]);
-  const openDropDown = useCallback(() => setOpen(true), [setOpen]);
 
   const itemToOption = useCallback(
     (item: any) => ({
@@ -83,36 +93,17 @@ export const Dropdown = (props: DropdownProps) => {
     [disabled, onChange],
   );
 
-  const dropDownItemTextStyle = useMemo(() => {
-    const textFont = theme.fonts.labelMedium;
-    const textFontSize = textFont.fontSize;
-    return {
-      color: theme.colors.onSurfaceVariant,
-      fontSize: textFontSize,
-    };
-  }, [theme]);
-
-  const dropDownItemStyle = useMemo(
-    () => ({ backgroundColor: theme.colors.surfaceVariant }),
-    [theme],
-  );
-
   return (
     <RNPDropdown
-      // @ts-expect-error "disabled" is missing from the library prop types
+      CustomDropdownItem={DropdownItem}
       disabled={disabled}
-      dropDownContainerMaxHeight={300}
-      dropDownItemStyle={dropDownItemStyle}
-      dropDownItemTextStyle={dropDownItemTextStyle}
-      key={timeOpenSet}
+      hideMenuHeader
       label={label}
-      list={options}
+      maxMenuHeight={300}
       mode="outlined"
-      onDismiss={closeDropDown}
-      setValue={setValue}
-      showDropDown={openDropDown}
+      onSelect={setValue}
+      options={options}
       value={value}
-      visible={open}
     />
   );
 };
