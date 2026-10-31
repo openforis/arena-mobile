@@ -454,38 +454,38 @@ const _updateRecord = async ({ dispatch, survey, record }: any) => {
   return recordStored;
 };
 
-const updateRecordNodeFile = async ({
+const saveRecordNodeFile = async ({ survey, fileUri, value }: any) => {
+  if (!fileUri) return;
+  log.debug(
+    `Saving record node file with value ${JSON.stringify(value)} and fileUri ${fileUri}`,
+  );
+  await RecordFileService.saveRecordFile({
+    surveyId: survey.id,
+    fileUuid: value?.fileUuid,
+    sourceFileUri: fileUri,
+  });
+};
+
+// to be called once the record is stored: until then it still references the previous file
+const deletePreviousRecordNodeFile = async ({
   survey,
-  fileUri,
   value,
   node,
   dispatch,
 }: any) => {
-  log.debug(
-    `Updating record node file with value ${JSON.stringify(value)} and fileUri ${fileUri}`,
-  );
-  const surveyId = survey.id;
-
-  if (fileUri) {
-    const { fileUuid: fileUuidNext } = value || {};
-
-    await RecordFileService.saveRecordFile({
-      surveyId,
-      fileUuid: fileUuidNext,
-      sourceFileUri: fileUri,
-    });
-  }
-
-  const { value: valuePrev } = node;
-  const { fileUuid: fileUuidPrev } = valuePrev || {};
-  if (fileUuidPrev) {
+  const fileUuidPrev = node.value?.fileUuid;
+  if (fileUuidPrev && fileUuidPrev !== value?.fileUuid) {
     log.debug(`Deleting previous file with uuid ${fileUuidPrev}`);
-    await RecordFileService.deleteRecordFile({
-      surveyId,
-      fileUuid: fileUuidPrev,
-    });
+    try {
+      await RecordFileService.deleteRecordFile({
+        surveyId: survey.id,
+        fileUuid: fileUuidPrev,
+      });
+    } catch (error) {
+      // the value is already stored: an unused file left behind must not look like a failed update
+      log.warn(`error deleting file ${fileUuidPrev}: ${error}`);
+    }
   }
-  log.debug(`Record node file updated successfully.`);
   // files kept in memory in preview mode
   if (!PreviewMode.isActive) {
     dispatch(DeviceInfoActions.updateFreeDiskStorage());
@@ -719,14 +719,18 @@ const updateAttribute = ({
 
       removeNodesFlags(nodesUpdated);
 
-      if (NodeDefs.getType(nodeDef) === NodeDefType.file) {
-        await updateRecordNodeFile({ survey, node, fileUri, value, dispatch });
+      const isFileDef = NodeDefs.getType(nodeDef) === NodeDefType.file;
+      if (isFileDef) {
+        await saveRecordNodeFile({ survey, fileUri, value });
       }
 
       // a sync started meanwhile would be overwritten
       if (_isRecordSyncInProgress(dispatch, getState)) return;
 
       await _updateRecord({ dispatch, survey, record: recordUpdated });
+      if (isFileDef) {
+        await deletePreviousRecordNodeFile({ survey, value, node, dispatch });
+      }
       await _onAttributeUpdated({
         dispatch,
         state,
