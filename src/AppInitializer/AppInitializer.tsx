@@ -46,6 +46,8 @@ const steps = {
   complete: "complete",
 };
 
+let initializationInProgress: Promise<void> | null = null;
+
 type AppInitializerState = {
   loading: boolean;
   errorMessage?: string | null;
@@ -138,7 +140,11 @@ export const AppInitializer = (props: Props) => {
   }, [dispatch]);
 
   useEffect(() => {
-    initialize()
+    // Android can start a second activity while the first is loading: concurrent runs break the DB migrations
+    initializationInProgress ??= initialize().finally(() => {
+      initializationInProgress = null;
+    });
+    initializationInProgress
       .then(() => {
         setState((statePrev) => ({ ...statePrev, loading: false }));
       })
