@@ -82,6 +82,9 @@ const deleteRecordFile = async ({
   await GenericFileRepository.deleteFile(fileUri);
 };
 
+const deleteSurveyRecordFiles = async ({ surveyId }: { surveyId: number }) =>
+  Files.del(getRecordFileDirectoryUri({ surveyId }), true);
+
 export const RecordFileRepository = {
   getRecordFilesParentDirectoryUri,
   getRecordFilesParentDirectorySize,
@@ -90,4 +93,5 @@ export const RecordFileRepository = {
   recordFileMissing,
   saveRecordFile,
   deleteRecordFile,
+  deleteSurveyRecordFiles,
 };
