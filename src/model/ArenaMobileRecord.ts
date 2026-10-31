@@ -5,6 +5,7 @@ import { RecordOrigin } from "./RecordOrigin";
 
 export type ArenaMobileRecord = ArenaRecord & {
   dateModifiedRemote?: string;
+  dateModifiedSynced?: string;
   dateSynced?: string;
   loadStatus?: RecordLoadStatus;
   origin?: RecordOrigin;

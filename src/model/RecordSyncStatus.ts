@@ -1,5 +1,6 @@
 export const RecordSyncStatus = {
   conflictingKeys: "conflictingKeys",
+  deviceDateBehindServer: "deviceDateBehindServer",
   keysNotSpecified: "keysNotSpecified",
   modifiedLocally: "modifiedLocally",
   modifiedLocallyAndRemotely: "modifiedLocallyAndRemotely",

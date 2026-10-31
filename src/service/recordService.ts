@@ -30,6 +30,8 @@ const {
   fetchRecordSummary,
   fetchRecords,
   fetchRecordsWithEmptyCycle,
+  updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely:
+    updateRecordFromRemoteSummary,
   insertRecord,
   insertRecordSummaries,
   updateRecord,
@@ -37,6 +39,8 @@ const {
   updateRecordWithContentMergedFromRemote,
   updateRecordsDateSync,
   updateRecordsDateModifiedRemote,
+  updateRecordsDateModifiedSynced,
+  fetchRecordsDateModifiedByUuid,
   updateRecordsMergedInto,
   deleteRecords,
   fixRecordCycle,
@@ -51,6 +55,18 @@ const {
 
 const toDate = (dateStr: any) => (dateStr ? new Date(dateStr) : null);
 
+// no baseline captured yet (record never round-tripped under this logic):
+// fall back to a plain last-modified comparison
+const compareLastModifiedDates = (dateLocal: Date, dateRemote: Date) => {
+  if (Dates.isAfter(dateLocal, dateRemote)) {
+    return RecordSyncStatus.modifiedLocally;
+  }
+  if (Dates.isBefore(dateLocal, dateRemote)) {
+    return RecordSyncStatus.modifiedRemotely;
+  }
+  return RecordSyncStatus.notModified;
+};
+
 const determineLocalRecordSyncStatus = ({
   survey,
   recordSummaryLocal,
@@ -60,7 +76,9 @@ const determineLocalRecordSyncStatus = ({
     survey,
     recordSummary: recordSummaryLocal,
   });
-  const keysSpecified = keyValues.every((keyValue) => !!keyValue);
+  const keysSpecified = keyValues.every(
+    (keyValue) => !Objects.isEmpty(keyValue),
+  );
   if (!keysSpecified) {
     return RecordSyncStatus.keysNotSpecified;
   }
@@ -90,25 +108,18 @@ const determineLocalRecordSyncStatus = ({
   );
 
   if (!dateModifiedRemoteBaseline) {
-    // no baseline captured yet (record never round-tripped under this logic):
-    // fall back to a plain last-modified comparison
-    if (Dates.isAfter(dateModifiedLocal, dateModifiedRemoteLive)) {
-      return RecordSyncStatus.modifiedLocally;
-    }
-    if (Dates.isBefore(dateModifiedLocal, dateModifiedRemoteLive)) {
-      return RecordSyncStatus.modifiedRemotely;
-    }
-    return RecordSyncStatus.notModified;
+    return compareLastModifiedDates(dateModifiedLocal, dateModifiedRemoteLive);
   }
 
   const remoteChangedSinceBaseline = Dates.isAfter(
     dateModifiedRemoteLive,
     dateModifiedRemoteBaseline,
   );
-  const localChangedSinceBaseline = Dates.isAfter(
-    dateModifiedLocal,
-    dateModifiedRemoteBaseline,
-  );
+  // compared with a local date, as the clocks can differ (records not synced lately have none)
+  const dateModifiedSynced = toDate(recordSummaryLocal.dateModifiedSynced);
+  const localChangedSinceBaseline = dateModifiedSynced
+    ? dateModifiedLocal.getTime() !== dateModifiedSynced.getTime()
+    : Dates.isAfter(dateModifiedLocal, dateModifiedRemoteBaseline);
 
   if (remoteChangedSinceBaseline && localChangedSinceBaseline) {
     return RecordSyncStatus.modifiedLocallyAndRemotely;
@@ -117,7 +128,10 @@ const determineLocalRecordSyncStatus = ({
     return RecordSyncStatus.modifiedRemotely;
   }
   if (localChangedSinceBaseline) {
-    return RecordSyncStatus.modifiedLocally;
+    // the server skips a record not dated after its own copy
+    return Dates.isAfter(dateModifiedLocal, dateModifiedRemoteLive)
+      ? RecordSyncStatus.modifiedLocally
+      : RecordSyncStatus.deviceDateBehindServer;
   }
   return RecordSyncStatus.notModified;
 };
@@ -152,10 +166,10 @@ const determineRecordSyncStatus = ({
 const identifyAndDeleteRecordsNotInRemoteServer = async ({
   surveyId,
   allRecordsSummariesInDevice,
-  recordsSummariesRemote,
+  recordsSummariesRemoteByUuid,
 }: {
   allRecordsSummariesInDevice: ArenaMobileRecord[];
-  recordsSummariesRemote: any[];
+  recordsSummariesRemoteByUuid: Record<string, any>;
   surveyId: number;
 }) => {
   const recordsSummariesLocalToDelete = allRecordsSummariesInDevice.filter(
@@ -164,7 +178,7 @@ const identifyAndDeleteRecordsNotInRemoteServer = async ({
     ) =>
       recordSummaryLocal.origin === RecordOrigin.remote &&
       recordSummaryLocal.loadStatus === RecordLoadStatus.summary &&
-      !ArrayUtils.findByUuid(recordSummaryLocal.uuid)(recordsSummariesRemote),
+      !recordsSummariesRemoteByUuid[recordSummaryLocal.uuid],
   );
   if (recordsSummariesLocalToDelete.length > 0) {
     try {
@@ -195,11 +209,12 @@ const findAndInsertNewRecordSummariesLocally = async ({
   recordsSummariesRemote: any[];
 }) => {
   // records to add are remote records not in local db
+  const recordsSummariesLocalByUuid = ArrayUtils.indexByUuid(
+    allRecordsSummariesInDevice,
+  );
   const recordSummariesToAdd = recordsSummariesRemote.filter(
     (recordSummaryRemote) =>
-      !ArrayUtils.findByUuid(recordSummaryRemote.uuid)(
-        allRecordsSummariesInDevice,
-      ),
+      !recordsSummariesLocalByUuid[recordSummaryRemote.uuid],
   );
   if (recordSummariesToAdd.length === 0) {
     return;
@@ -219,62 +234,53 @@ const findAndInsertNewRecordSummariesLocally = async ({
 
 const updateLocalRecordsWithRemoteInfo = async ({
   allRecordsSummariesInDevice,
-  recordsSummariesRemote,
+  recordsSummariesRemoteByUuid,
   survey,
 }: {
   allRecordsSummariesInDevice: ArenaMobileRecord[];
-  recordsSummariesRemote: any[];
+  recordsSummariesRemoteByUuid: Record<string, any>;
   survey: any;
 }) => {
-  await Promises.each(
-    allRecordsSummariesInDevice,
-    async (recordSummaryLocal) => {
-      const { origin, loadStatus, uuid } = recordSummaryLocal;
-      const recordSummaryRemote = ArrayUtils.findByUuid(uuid)(
-        recordsSummariesRemote,
-      );
-      if (
+  const recordSummaries = allRecordsSummariesInDevice
+    .filter(
+      ({ origin, loadStatus }) =>
         origin === RecordOrigin.remote &&
-        loadStatus === RecordLoadStatus.summary &&
-        recordSummaryRemote
-      ) {
-        try {
-          await RecordRepository.updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely(
-            { survey, recordSummary: recordSummaryRemote },
-          );
-        } catch (error) {
-          throw new Error(
-            `error updating local record keys for record ${uuid}. Details: ${error}`,
-            { cause: error },
-          );
-        }
-      }
-    },
-  );
+        loadStatus === RecordLoadStatus.summary,
+    )
+    .map(({ uuid }) => recordsSummariesRemoteByUuid[uuid])
+    .filter(Boolean);
+  for (const recordSummary of recordSummaries) {
+    try {
+      await updateRecordFromRemoteSummary({ survey, recordSummary }); // NOSONAR
+    } catch (error) {
+      throw new Error(
+        `error updating local record keys for record ${recordSummary.uuid}. Details: ${error}`,
+        { cause: error },
+      );
+    }
+  }
   await updateLocalRecordsReadOnly({
     survey,
     allRecordsSummariesInDevice,
-    recordsSummariesRemote,
+    recordsSummariesRemoteByUuid,
   });
 };
 
 // the user group settings on the server can change: keep the read-only flag of all the records in sync
 const updateLocalRecordsReadOnly = async ({
   allRecordsSummariesInDevice,
-  recordsSummariesRemote,
+  recordsSummariesRemoteByUuid,
   survey,
 }: {
   allRecordsSummariesInDevice: ArenaMobileRecord[];
-  recordsSummariesRemote: any[];
+  recordsSummariesRemoteByUuid: Record<string, any>;
   survey: any;
 }) => {
   const readOnlyUuids: string[] = [];
   const editableUuids: string[] = [];
   for (const recordSummaryLocal of allRecordsSummariesInDevice) {
     const { uuid } = recordSummaryLocal;
-    const recordSummaryRemote = ArrayUtils.findByUuid(uuid)(
-      recordsSummariesRemote,
-    );
+    const recordSummaryRemote = recordsSummariesRemoteByUuid[uuid];
     if (!recordSummaryRemote) continue;
     const readOnly = !!recordSummaryRemote.readOnly;
     if (readOnly !== !!recordSummaryLocal.readOnly) {
@@ -292,6 +298,33 @@ const updateLocalRecordsReadOnly = async ({
     recordUuids: editableUuids,
     readOnly: false,
   });
+};
+
+// a file can still be referenced by another record (e.g. after a merge)
+const deleteFilesNotReferenced = async ({ surveyId, fileUuids }: any) => {
+  if (fileUuids.length === 0) return;
+  const fileUuidsReferenced = new Set(
+    await RecordRepository.fetchRecordsFileUuids({ surveyId }),
+  );
+  await Promises.each(
+    fileUuids.filter((fileUuid: string) => !fileUuidsReferenced.has(fileUuid)),
+    async (fileUuid: string) => {
+      try {
+        await RecordFileService.deleteRecordFile({ surveyId, fileUuid });
+      } catch (error) {
+        log.warn(`error deleting file ${fileUuid}: ${error}`);
+      }
+    },
+  );
+};
+
+const deleteRecordsAndFiles = async ({ surveyId, recordUuids }: any) => {
+  const fileUuids = await RecordRepository.fetchRecordsFileUuids({
+    surveyId,
+    recordUuids,
+  });
+  await deleteRecords({ surveyId, recordUuids });
+  await deleteFilesNotReferenced({ surveyId, fileUuids });
 };
 
 const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
@@ -328,10 +361,14 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
     throw wrappedError;
   }
 
+  const recordsSummariesRemoteByUuid = ArrayUtils.indexByUuid(
+    recordsSummariesRemote,
+  );
+
   await identifyAndDeleteRecordsNotInRemoteServer({
     surveyId,
     allRecordsSummariesInDevice,
-    recordsSummariesRemote,
+    recordsSummariesRemoteByUuid,
   });
 
   await findAndInsertNewRecordSummariesLocally({
@@ -344,7 +381,7 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
   await updateLocalRecordsWithRemoteInfo({
     survey,
     allRecordsSummariesInDevice,
-    recordsSummariesRemote,
+    recordsSummariesRemoteByUuid,
   });
 
   let recordsSummariesLocalReloaded;
@@ -360,21 +397,24 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
     });
   }
 
+  const toKeyValuesFormattedId = (recordSummary: any) =>
+    JSON.stringify(
+      RecordSummaries.getKeyValuesFormatted({ survey, recordSummary }),
+    );
+  const recordsSummariesRemoteByKeyValues = new Map<string, any>();
+  for (const recordSummary of recordsSummariesRemote) {
+    const keyValuesId = toKeyValuesFormattedId(recordSummary);
+    if (!recordsSummariesRemoteByKeyValues.has(keyValuesId)) {
+      recordsSummariesRemoteByKeyValues.set(keyValuesId, recordSummary);
+    }
+  }
+
   return recordsSummariesLocalReloaded.map((recordSummaryLocal: any) => {
-    const localKeyValues = RecordSummaries.getKeyValuesFormatted({
-      survey,
-      recordSummary: recordSummaryLocal,
-    });
-    const recordSummaryRemote = recordsSummariesRemote.find((summary: any) => {
-      const remoteKeyValues = RecordSummaries.getKeyValuesFormatted({
-        survey,
-        recordSummary: summary,
-      });
-      return (
-        summary.uuid === recordSummaryLocal.uuid ||
-        Objects.isEqual(remoteKeyValues, localKeyValues)
+    const recordSummaryRemote =
+      recordsSummariesRemoteByUuid[recordSummaryLocal.uuid] ??
+      recordsSummariesRemoteByKeyValues.get(
+        toKeyValuesFormattedId(recordSummaryLocal),
       );
-    });
     const syncStatus = determineRecordSyncStatus({
       survey,
       recordSummaryLocal,
@@ -395,6 +435,7 @@ const confirmRecordsSyncedWithRemote = async ({
   survey,
   cycle,
   recordUuids,
+  dateModifiedByUuid,
 }: any) => {
   const { id: surveyId } = survey;
 
@@ -411,17 +452,19 @@ const confirmRecordsSyncedWithRemote = async ({
     );
   }
 
+  const recordsSummariesRemoteByUuid = ArrayUtils.indexByUuid(
+    recordsSummariesRemote,
+  );
   const dateModifiedRemoteByUuid: Record<string, string> = {};
   for (const uuid of recordUuids) {
-    const recordSummaryRemote = ArrayUtils.findByUuid(uuid)(
-      recordsSummariesRemote,
-    );
+    const recordSummaryRemote = recordsSummariesRemoteByUuid[uuid];
     if (recordSummaryRemote?.dateModified) {
       dateModifiedRemoteByUuid[uuid] = recordSummaryRemote.dateModified;
     }
   }
 
   await updateRecordsDateSync({ surveyId, recordUuids });
+  await updateRecordsDateModifiedSynced({ surveyId, dateModifiedByUuid });
 
   if (Object.keys(dateModifiedRemoteByUuid).length > 0) {
     await updateRecordsDateModifiedRemote({
@@ -624,6 +667,7 @@ const revalidateRecords = async ({ user, survey, recordIds }: any) => {
 };
 
 export const RecordService = {
+  determineRecordSyncStatus,
   fetchRecord,
   fetchNodeValuesByDefUuids: RecordRepository.fetchNodeValuesByDefUuids,
   fetchRecordSummary,
@@ -638,10 +682,12 @@ export const RecordService = {
   updateRecordWithContentMergedFromRemote,
   updateRecordsDateSync,
   updateRecordsDateModifiedRemote,
+  fetchRecordsDateModifiedByUuid,
+  updateRecordsDateModifiedSynced,
   confirmRecordsSyncedWithRemote,
   updateRecordsMergedInto,
   findFileUuidsInDevice,
-  deleteRecords,
+  deleteRecords: deleteRecordsAndFiles,
   fixRecordCycle,
   cloneRecordsIntoDefaultCycle,
   revalidateRecords,

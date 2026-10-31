@@ -6,9 +6,15 @@ import {
   JobStatus,
   Objects,
   Surveys,
+  UUIDs,
 } from "@openforis/arena-core";
 
-import { AppCompatibilityOperation, RecordService, UserService } from "service";
+import {
+  AppCompatibilityOperation,
+  RecordService,
+  SettingsService,
+  UserService,
+} from "service";
 import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerationJob";
 
 import { i18n } from "localization";
@@ -17,6 +23,7 @@ import {
   FlatDataExportJob,
   FlatDataExportJobResult,
 } from "service/dataExportJob";
+import type { RecordsUploadState } from "service/RecordsUploadAndProcessJobContext";
 import { RecordsUploadAndProcessJob } from "service/recordsUploadAndProcessJob";
 import { RECORDS_UPLOAD_JOB_TYPE } from "service/recordsUploadJob";
 import { REMOTE_JOB_WATCHER_JOB_TYPE } from "service/remoteJobWatcherJob";
@@ -230,16 +237,24 @@ const startUploadDataToRemoteServer =
       `startUploadDataToRemoteServer: starting upload+processing of ${outputFileUri} (survey=${survey.uuid}, cycle=${cycle})`,
     );
 
+    const { dataUploadChunkSizeKB } = await SettingsService.fetchSettings();
+    const uploadState: RecordsUploadState = {
+      fileId: UUIDs.v4(),
+      chunkSize: dataUploadChunkSizeKB * 1024,
+      nextChunk: 1,
+    };
     // uploads the zip, then watches the server-side job it kicks off, as ONE job - see
     // RecordsUploadAndProcessJob for why (and why only these two, not zip-generation too)
-    const uploadAndProcessJob = new RecordsUploadAndProcessJob({
-      user,
-      survey,
-      cycle,
-      fileUri: outputFileUri,
-      conflictResolutionStrategy,
-      skipMissingFiles,
-    });
+    const createUploadAndProcessJob = () =>
+      new RecordsUploadAndProcessJob({
+        user,
+        survey,
+        cycle,
+        fileUri: outputFileUri,
+        conflictResolutionStrategy,
+        skipMissingFiles,
+        uploadState,
+      });
     const progressRange = chained
       ? REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES.uploadAndProcess
       : {};
@@ -251,7 +266,8 @@ const startUploadDataToRemoteServer =
       try {
         jobComplete = await JobMonitorActions.startAsync({
           dispatch,
-          job: uploadAndProcessJob,
+          // a job that has ended can't be started again
+          job: createUploadAndProcessJob(),
           // initial values, matching the upload phase (the first inner job to run) - see
           // innerJobUiConfigByType for how these switch once processing takes over
           titleKey: "dataEntry:uploadingData.title",
@@ -684,24 +700,38 @@ export const exportRecords =
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
     const surveyId = survey.id;
+    let dateModifiedByUuid: Record<string, any> = {};
 
     const onUploadComplete = async (jobComplete: any) => {
       const { result } = jobComplete;
-      const { mergedRecordsMap, mergedSameRecordUuids = [] } = result;
+      const {
+        mergedRecordsMap,
+        mergedSameRecordUuids = [],
+        skippedRecordsUuids = [],
+      } = result;
 
       // records merged with their own server copy are left out: the local copy doesn't match the
       // server's until the merged version is fetched (below), which stamps the sync baseline itself.
       // Stamping it here, if that fetch then doesn't go through the record would look "modified
       // locally" only, and the next (plain overwrite) upload of its pre-merge content would delete
       // from the server what the other side added.
+      // records skipped by the server are left out too: their edits have not reached it.
       const recordUuidsSynced = recordUuids.filter(
-        (uuid: string) => !mergedSameRecordUuids.includes(uuid),
+        (uuid: string) =>
+          !mergedSameRecordUuids.includes(uuid) &&
+          !skippedRecordsUuids.includes(uuid),
       );
       if (recordUuidsSynced.length > 0) {
         await RecordService.confirmRecordsSyncedWithRemote({
           survey,
           cycle,
           recordUuids: recordUuidsSynced,
+          dateModifiedByUuid: Object.fromEntries(
+            recordUuidsSynced.map((uuid: string) => [
+              uuid,
+              dateModifiedByUuid[uuid],
+            ]),
+          ),
         });
       }
       if (!Objects.isEmpty(mergedRecordsMap)) {
@@ -778,6 +808,15 @@ export const exportRecords =
     );
     try {
       const user = onlyLocally ? {} : await UserService.fetchUser();
+
+      // read before generating the file: a later edit is seen as a local change and sent again
+      dateModifiedByUuid =
+        onlyLocally || !recordUuids
+          ? {}
+          : await RecordService.fetchRecordsDateModifiedByUuid({
+              surveyId,
+              recordUuids,
+            });
 
       const job = new RecordsExportFileGenerationJob({
         survey,

@@ -23,6 +23,7 @@ export class RecordsUploadAndProcessJob extends JobMobile<RecordsUploadAndProces
     fileUri,
     conflictResolutionStrategy,
     skipMissingFiles = false,
+    uploadState,
   }: any) {
     super(
       {
@@ -32,6 +33,7 @@ export class RecordsUploadAndProcessJob extends JobMobile<RecordsUploadAndProces
         fileUri,
         conflictResolutionStrategy,
         skipMissingFiles,
+        uploadState,
       },
       [
         new RecordsUploadJob({
@@ -41,6 +43,7 @@ export class RecordsUploadAndProcessJob extends JobMobile<RecordsUploadAndProces
           fileUri,
           conflictResolutionStrategy,
           skipMissingFiles,
+          uploadState,
         }),
         new RemoteJobWatcherJob({ user, survey }),
       ],

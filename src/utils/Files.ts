@@ -20,8 +20,6 @@ const MIME_TYPES = {
   zip: "application/zip",
 };
 
-const defaultChunkSize = 1024 * 1024 * 10; // 10 MB
-
 const { documentDirectory, readDirectoryAsync } = FileSystem;
 const cacheDirectory = FileSystem.cacheDirectory!;
 
@@ -180,17 +178,6 @@ const readAsString = (
 ): Promise<string> =>
   FileSystem.readAsStringAsync(fileUri, encoding ? { encoding } : undefined);
 
-const readChunkAsString = (
-  fileUri: string,
-  chunkNumber: number,
-  chunkSize = defaultChunkSize,
-): Promise<string> =>
-  FileSystem.readAsStringAsync(fileUri, {
-    encoding: FileSystem.EncodingType.Base64,
-    position: (chunkNumber - 1) * chunkSize,
-    length: chunkSize,
-  });
-
 const readAsBytes = (
   fileUri: string,
 ): Promise<Uint8Array<ArrayBuffer> | null> => {
@@ -296,12 +283,11 @@ const appendStringToFile = async ({
   fileUri: string;
   encoding?: FileSystem.EncodingType;
 }): Promise<void> => {
-  let finalContent = content;
-  if (await exists(fileUri)) {
-    const currentContent = await readAsString(fileUri, encoding);
-    finalContent = currentContent + content;
-  }
-  await writeStringToFile({ content: finalContent, fileUri, encoding });
+  await createIfNotExists(fileUri);
+  await FileSystem.writeAsStringAsync(fileUri, content, {
+    ...(encoding ? { encoding } : {}),
+    append: true,
+  });
 };
 
 const isSharingAvailable = (): Promise<boolean> => Sharing.isAvailableAsync();
@@ -336,6 +322,8 @@ const copyUriToTempFile = async ({
 }): Promise<string> => {
   const fileName = tempFileName ?? getNameFromUri(uri);
   const tempFolderUri = getTempFolderParentUri();
+  // removed at startup, and copyUri doesn't create it on iOS
+  await mkDir(tempFolderUri);
   const fileNameWithExtension = `${fileName}.${defaultExtension}`;
   const tempFileUri = Files.path(tempFolderUri, fileNameWithExtension);
   await copyFile({ from: uri, to: tempFileUri });
@@ -369,7 +357,6 @@ export const Files = {
   hasExtension,
   getSize,
   readAsString,
-  readChunkAsString,
   readAsBytes,
   readJsonFromFile,
   listDirectory,

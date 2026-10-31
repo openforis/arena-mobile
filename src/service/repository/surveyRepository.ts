@@ -71,10 +71,20 @@ const fetchSurveySummaries = async () => {
   return surveys.map((survey: any) => Objects.camelize(survey));
 };
 
+// foreign keys are not enforced: dependent rows are deleted explicitly
 const deleteSurveys = async (surveyIds: any) => {
-  await dbClient.runSql(
-    `DELETE FROM survey WHERE id IN (${DbUtils.quoteValues(surveyIds)})`,
-  );
+  const ids = DbUtils.quoteValues(surveyIds);
+  await dbClient.transaction(async () => {
+    await dbClient.runSql(
+      `DELETE FROM position_track_point WHERE track_id IN
+        (SELECT id FROM position_track WHERE survey_id IN (${ids}))`,
+    );
+    await dbClient.runSql(
+      `DELETE FROM position_track WHERE survey_id IN (${ids})`,
+    );
+    await dbClient.runSql(`DELETE FROM record WHERE survey_id IN (${ids})`);
+    await dbClient.runSql(`DELETE FROM survey WHERE id IN (${ids})`);
+  });
 };
 
 export const SurveyRepository = {

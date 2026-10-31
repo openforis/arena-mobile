@@ -30,6 +30,7 @@ const visibleSyncStatus = [
   RecordSyncStatus.keysNotSpecified,
   RecordSyncStatus.modifiedRemotely,
   RecordSyncStatus.modifiedLocallyAndRemotely,
+  RecordSyncStatus.deviceDateBehindServer,
   RecordSyncStatus.notInEntryStepAnymore,
 ];
 

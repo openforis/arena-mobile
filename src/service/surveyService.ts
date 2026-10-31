@@ -11,6 +11,7 @@ import { Files, log } from "utils";
 
 import { SurveyRepository } from "./repository/surveyRepository";
 import { SurveyFSRepository } from "./repository/surveyFSRepository";
+import { RecordFileService } from "./recordFileService";
 import { RemoteService } from "./remoteService";
 import demoSurvey from "./demoSurvey.json";
 
@@ -131,8 +132,6 @@ const fetchCurrentUserGroupRemote = async ({
   );
   return data?.userGroup ?? null;
 };
-
-const getSurveysStorageSize = async () => SurveyFSRepository.getStorageSize();
 
 // insert/update and dependency graph building set top-level props (id, remoteId, dependencyGraph)
 // of the survey object: always pass a (shallow) copy of the bundled one
@@ -301,10 +300,14 @@ const updateSurveyRemote = async ({ surveyId, surveyRemoteId }: any) =>
 
 const deleteSurveys = async (surveyIds: any) => {
   await SurveyRepository.deleteSurveys(surveyIds);
+  // the survey is already gone: a file left behind must not fail the delete
+  const logError = (error: any) =>
+    log.warn(`error deleting survey files: ${error}`);
   await Promise.all(
-    surveyIds.map((surveyId: any) =>
-      SurveyFSRepository.deleteSurveyFile({ surveyId }),
-    ),
+    surveyIds.flatMap((surveyId: any) => [
+      SurveyFSRepository.deleteSurveyFile({ surveyId }).catch(logError),
+      RecordFileService.deleteSurveyRecordFiles({ surveyId }).catch(logError),
+    ]),
   );
 };
 
@@ -316,7 +319,6 @@ export const SurveyService = {
   fetchSurveySummaryRemote,
   fetchSurveyById,
   fetchCurrentUserGroupRemote,
-  getSurveysStorageSize,
   importOrUpdateDemoSurvey,
   importSurveyRemote,
   fetchCategoryItems,
