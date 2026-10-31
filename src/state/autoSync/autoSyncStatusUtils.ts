@@ -44,6 +44,7 @@ export const isAutoMergeAllowed = ({
 // the server). conflictingKeys belongs here too when the survey doesn't allow merging records
 // with the same key(s) (see getNeedsManualFixStatuses)
 const alwaysNeedsManualFixStatuses = [
+  RecordSyncStatus.deviceDateBehindServer,
   RecordSyncStatus.keysNotSpecified,
   RecordSyncStatus.notInEntryStepAnymore,
 ];

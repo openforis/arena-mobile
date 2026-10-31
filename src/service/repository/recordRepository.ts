@@ -60,7 +60,7 @@ const keyColumnsSet = toColumnsSet(keyColumnNames);
 const summaryAttributesColumnNamesJoint =
   summaryAttributesColumnNames.join(", ");
 const summaryColumnsSet = toColumnsSet(summaryAttributesColumnNames);
-const summarySelectFieldsJoint = `id, uuid, date_created, date_modified, date_modified_remote, date_synced, cycle, owner_uuid, owner_name, load_status, origin, read_only, ${keyColumnNamesJoint}, ${summaryAttributesColumnNamesJoint}`;
+const summarySelectFieldsJoint = `id, uuid, date_created, date_modified, date_modified_remote, date_modified_synced, date_synced, cycle, owner_uuid, owner_name, load_status, origin, read_only, ${keyColumnNamesJoint}, ${summaryAttributesColumnNamesJoint}`;
 const summarySelectFieldsJointWithValidation = `${summarySelectFieldsJoint}, json(content) ->> 'validation' AS validation`;
 
 const toKeyOrSummaryColValue = (value: any) => {
@@ -463,14 +463,19 @@ const updateRecordValidation = async ({
 const updateRecordWithContentFetchedRemotely = async ({
   survey,
   record,
-}: any) =>
-  updateRecordKeysAndContent({
+}: any) => {
+  await updateRecordKeysAndContent({
     survey,
     record,
     updateOrigin: true,
     origin: RecordOrigin.remote,
     updateDateSynced: true,
   });
+  await updateRecordsDateModifiedSynced({
+    surveyId: survey.id,
+    dateModifiedByUuid: { [record.uuid]: record.dateModified },
+  });
+};
 
 // used after a merge combined this device's edits with newer edits under the same record uuid
 // on the server: the fetched content now mirrors the server, but it still carries this device's
@@ -490,6 +495,10 @@ const updateRecordWithContentMergedFromRemote = async ({
   await updateRecordsDateModifiedRemote({
     surveyId: survey.id,
     dateModifiedRemoteByUuid: { [record.uuid]: record.dateModified },
+  });
+  await updateRecordsDateModifiedSynced({
+    surveyId: survey.id,
+    dateModifiedByUuid: { [record.uuid]: record.dateModified },
   });
 };
 
@@ -535,6 +544,35 @@ const updateRecordsDateModifiedRemote = async ({
         await dbClient.runSql(
           `UPDATE record SET date_modified_remote = ? WHERE survey_id = ? AND uuid = ?`,
           [fixDatetime(dateModifiedRemote), surveyId, uuid],
+        );
+      },
+    );
+  });
+};
+
+const fetchRecordsDateModifiedByUuid = async ({
+  surveyId,
+  recordUuids,
+}: any): Promise<Record<string, any>> => {
+  const rows: any[] = await dbClient.many(
+    `SELECT uuid, date_modified FROM record
+     WHERE survey_id = ? AND uuid IN (${DbUtils.quoteValues(recordUuids)})`,
+    [surveyId],
+  );
+  return Object.fromEntries(rows.map((row) => [row.uuid, row.date_modified]));
+};
+
+const updateRecordsDateModifiedSynced = async ({
+  surveyId,
+  dateModifiedByUuid,
+}: any) => {
+  await dbClient.transaction(async () => {
+    await Promises.each(
+      Object.entries(dateModifiedByUuid),
+      async ([uuid, dateModified]) => {
+        await dbClient.runSql(
+          `UPDATE record SET date_modified_synced = ? WHERE survey_id = ? AND uuid = ?`,
+          [dateModified, surveyId, uuid],
         );
       },
     );
@@ -727,6 +765,7 @@ const rowToRecord =
     result.dateModified = fixDatetime(result.dateModified);
     result.dateCreated = fixDatetime(result.dateCreated);
     result.dateModifiedRemote = fixDatetime(result.dateModifiedRemote);
+    result.dateModifiedSynced = fixDatetime(row.date_modified_synced);
     result.dateSynced = fixDatetime(result.dateSynced);
 
     if (hasContent) {
@@ -768,6 +807,8 @@ export const RecordRepository = {
   updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely,
   updateRecordsDateSync,
   updateRecordsDateModifiedRemote,
+  updateRecordsDateModifiedSynced,
+  fetchRecordsDateModifiedByUuid,
   updateRecordsReadOnly,
   updateRecordsMergedInto,
   fetchRecordsFileUuids,

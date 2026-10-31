@@ -221,6 +221,8 @@ Fetch the list of records from the server and try again?`,
   syncStatusHeader: "Status",
   syncStatus: {
     conflictingKeys: "Record with same key(s) already exists",
+    deviceDateBehindServer:
+      "Not uploaded: device date is behind the server (set the correct date and time, then edit the record again)",
     keysNotSpecified: `Key(s) not specified`,
     new: "New (not uploaded yet)",
     notModified: "Not modified (no changes to upload)",
