@@ -10,6 +10,9 @@ import { RecordsUploadAndProcessJobContext } from "./RecordsUploadAndProcessJobC
 // caller (see actionsDataExport.ts) to tell which of its inner jobs is currently active/failed
 export const REMOTE_JOB_WATCHER_JOB_TYPE = "RemoteJobWatcherJob";
 
+// the websocket can miss the final update (connection drop, job ended before the handshake)
+const JOB_STATUS_POLL_INTERVAL_MS = 30_000;
+
 // watches a job already running on the remote server (started by RecordsUploadJob) to
 // completion, over the same websocket + "jobUpdate" event the app already used for this before
 // this job existed - the difference is this now runs as a regular inner job (see
@@ -35,7 +38,12 @@ export class RemoteJobWatcherJob extends JobMobile<RecordsUploadAndProcessJobCon
     const ws = await WebSocketService.open();
 
     await new Promise<void>((resolve, reject) => {
+      const pollInterval = setInterval(
+        () => this.pollJobStatus(remoteJobUuid),
+        JOB_STATUS_POLL_INTERVAL_MS,
+      );
       this.settle = (error) => {
+        clearInterval(pollInterval);
         this.settle = null;
         if (error) {
           reject(error);
@@ -45,41 +53,70 @@ export class RemoteJobWatcherJob extends JobMobile<RecordsUploadAndProcessJobCon
       };
 
       ws.on(WebSocketService.EVENTS.jobUpdate, (remoteJobSummary: any) => {
-        const { status, errors, processed, total, progressPercent, result } =
-          remoteJobSummary ?? {};
-
-        if (typeof total === "number" && typeof processed === "number") {
-          this.total = total;
-          this.processed = processed;
-        } else if (typeof progressPercent === "number") {
-          this.total = 100;
-          this.processed = progressPercent;
-        }
-
-        switch (status) {
-          case JobStatus.succeeded:
-            this.setResult(result);
-            this.settle?.();
-            break;
-          case JobStatus.failed:
-            // preserve the server's own (often per-record) validation errors as-is, rather than
-            // letting them get flattened by JobBase's default error handling (which wraps
-            // whatever execute() throws into a single generic "appErrors:generic" entry) - see
-            // RecordsUploadAndProcessJob.onInnerJobEvent for how this reaches the parent job
-            this.errors = errors ?? {};
-            this.settle?.(new Error("RemoteJobWatcherJob: remote job failed"));
-            break;
-          case JobStatus.canceled:
-            // a cancellation already in progress (see this job's own `cancel()`) is what set our
-            // own status - this just unblocks execute() once the server confirms it
-            this.settle?.();
-            break;
-          default:
-            // any other status (e.g. "running") is a progress-only update, already applied above
-            break;
+        // the server notifies all the jobs of the user
+        const { uuid } = remoteJobSummary ?? {};
+        if (!uuid || uuid === remoteJobUuid) {
+          this.onRemoteJobUpdate(remoteJobSummary);
         }
       });
     });
+  }
+
+  private async pollJobStatus(remoteJobUuid: string) {
+    try {
+      const { data: remoteJobSummary } =
+        await RemoteJobService.fetchJob(remoteJobUuid);
+      if (!remoteJobSummary) return;
+      if (
+        remoteJobSummary.status === JobStatus.succeeded &&
+        !remoteJobSummary.result
+      ) {
+        // without the result the merged records are unknown: don't report them as synced
+        this.settle?.(
+          new Error("RemoteJobWatcherJob: remote job result not available"),
+        );
+        return;
+      }
+      this.onRemoteJobUpdate(remoteJobSummary);
+    } catch (error) {
+      this.logger.debug(`RemoteJobWatcherJob: status poll failed: ${error}`);
+    }
+  }
+
+  private onRemoteJobUpdate(remoteJobSummary: any) {
+    const { status, errors, processed, total, progressPercent, result } =
+      remoteJobSummary ?? {};
+
+    if (typeof total === "number" && typeof processed === "number") {
+      this.total = total;
+      this.processed = processed;
+    } else if (typeof progressPercent === "number") {
+      this.total = 100;
+      this.processed = progressPercent;
+    }
+
+    switch (status) {
+      case JobStatus.succeeded:
+        this.setResult(result);
+        this.settle?.();
+        break;
+      case JobStatus.failed:
+        // preserve the server's own (often per-record) validation errors as-is, rather than
+        // letting them get flattened by JobBase's default error handling (which wraps
+        // whatever execute() throws into a single generic "appErrors:generic" entry) - see
+        // RecordsUploadAndProcessJob.onInnerJobEvent for how this reaches the parent job
+        this.errors = errors ?? {};
+        this.settle?.(new Error("RemoteJobWatcherJob: remote job failed"));
+        break;
+      case JobStatus.canceled:
+        // a cancellation already in progress (see this job's own `cancel()`) is what set our
+        // own status - this just unblocks execute() once the server confirms it
+        this.settle?.();
+        break;
+      default:
+        // any other status (e.g. "running") is a progress-only update, already applied above
+        break;
+    }
   }
 
   override async cancel() {
