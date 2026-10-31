@@ -296,12 +296,11 @@ const appendStringToFile = async ({
   fileUri: string;
   encoding?: FileSystem.EncodingType;
 }): Promise<void> => {
-  let finalContent = content;
-  if (await exists(fileUri)) {
-    const currentContent = await readAsString(fileUri, encoding);
-    finalContent = currentContent + content;
-  }
-  await writeStringToFile({ content: finalContent, fileUri, encoding });
+  await createIfNotExists(fileUri);
+  await FileSystem.writeAsStringAsync(fileUri, content, {
+    ...(encoding ? { encoding } : {}),
+    append: true,
+  });
 };
 
 const isSharingAvailable = (): Promise<boolean> => Sharing.isAvailableAsync();
@@ -336,6 +335,8 @@ const copyUriToTempFile = async ({
 }): Promise<string> => {
   const fileName = tempFileName ?? getNameFromUri(uri);
   const tempFolderUri = getTempFolderParentUri();
+  // removed at startup, and copyUri doesn't create it on iOS
+  await mkDir(tempFolderUri);
   const fileNameWithExtension = `${fileName}.${defaultExtension}`;
   const tempFileUri = Files.path(tempFolderUri, fileNameWithExtension);
   await copyFile({ from: uri, to: tempFileUri });
