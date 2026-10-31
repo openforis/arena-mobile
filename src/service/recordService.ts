@@ -30,6 +30,8 @@ const {
   fetchRecordSummary,
   fetchRecords,
   fetchRecordsWithEmptyCycle,
+  updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely:
+    updateRecordFromRemoteSummary,
   insertRecord,
   insertRecordSummaries,
   updateRecord,
@@ -154,10 +156,10 @@ const determineRecordSyncStatus = ({
 const identifyAndDeleteRecordsNotInRemoteServer = async ({
   surveyId,
   allRecordsSummariesInDevice,
-  recordsSummariesRemote,
+  recordsSummariesRemoteByUuid,
 }: {
   allRecordsSummariesInDevice: ArenaMobileRecord[];
-  recordsSummariesRemote: any[];
+  recordsSummariesRemoteByUuid: Record<string, any>;
   surveyId: number;
 }) => {
   const recordsSummariesLocalToDelete = allRecordsSummariesInDevice.filter(
@@ -166,7 +168,7 @@ const identifyAndDeleteRecordsNotInRemoteServer = async ({
     ) =>
       recordSummaryLocal.origin === RecordOrigin.remote &&
       recordSummaryLocal.loadStatus === RecordLoadStatus.summary &&
-      !ArrayUtils.findByUuid(recordSummaryLocal.uuid)(recordsSummariesRemote),
+      !recordsSummariesRemoteByUuid[recordSummaryLocal.uuid],
   );
   if (recordsSummariesLocalToDelete.length > 0) {
     try {
@@ -197,11 +199,12 @@ const findAndInsertNewRecordSummariesLocally = async ({
   recordsSummariesRemote: any[];
 }) => {
   // records to add are remote records not in local db
+  const recordsSummariesLocalByUuid = ArrayUtils.indexByUuid(
+    allRecordsSummariesInDevice,
+  );
   const recordSummariesToAdd = recordsSummariesRemote.filter(
     (recordSummaryRemote) =>
-      !ArrayUtils.findByUuid(recordSummaryRemote.uuid)(
-        allRecordsSummariesInDevice,
-      ),
+      !recordsSummariesLocalByUuid[recordSummaryRemote.uuid],
   );
   if (recordSummariesToAdd.length === 0) {
     return;
@@ -221,62 +224,53 @@ const findAndInsertNewRecordSummariesLocally = async ({
 
 const updateLocalRecordsWithRemoteInfo = async ({
   allRecordsSummariesInDevice,
-  recordsSummariesRemote,
+  recordsSummariesRemoteByUuid,
   survey,
 }: {
   allRecordsSummariesInDevice: ArenaMobileRecord[];
-  recordsSummariesRemote: any[];
+  recordsSummariesRemoteByUuid: Record<string, any>;
   survey: any;
 }) => {
-  await Promises.each(
-    allRecordsSummariesInDevice,
-    async (recordSummaryLocal) => {
-      const { origin, loadStatus, uuid } = recordSummaryLocal;
-      const recordSummaryRemote = ArrayUtils.findByUuid(uuid)(
-        recordsSummariesRemote,
-      );
-      if (
+  const recordSummaries = allRecordsSummariesInDevice
+    .filter(
+      ({ origin, loadStatus }) =>
         origin === RecordOrigin.remote &&
-        loadStatus === RecordLoadStatus.summary &&
-        recordSummaryRemote
-      ) {
-        try {
-          await RecordRepository.updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely(
-            { survey, recordSummary: recordSummaryRemote },
-          );
-        } catch (error) {
-          throw new Error(
-            `error updating local record keys for record ${uuid}. Details: ${error}`,
-            { cause: error },
-          );
-        }
-      }
-    },
-  );
+        loadStatus === RecordLoadStatus.summary,
+    )
+    .map(({ uuid }) => recordsSummariesRemoteByUuid[uuid])
+    .filter(Boolean);
+  for (const recordSummary of recordSummaries) {
+    try {
+      await updateRecordFromRemoteSummary({ survey, recordSummary }); // NOSONAR
+    } catch (error) {
+      throw new Error(
+        `error updating local record keys for record ${recordSummary.uuid}. Details: ${error}`,
+        { cause: error },
+      );
+    }
+  }
   await updateLocalRecordsReadOnly({
     survey,
     allRecordsSummariesInDevice,
-    recordsSummariesRemote,
+    recordsSummariesRemoteByUuid,
   });
 };
 
 // the user group settings on the server can change: keep the read-only flag of all the records in sync
 const updateLocalRecordsReadOnly = async ({
   allRecordsSummariesInDevice,
-  recordsSummariesRemote,
+  recordsSummariesRemoteByUuid,
   survey,
 }: {
   allRecordsSummariesInDevice: ArenaMobileRecord[];
-  recordsSummariesRemote: any[];
+  recordsSummariesRemoteByUuid: Record<string, any>;
   survey: any;
 }) => {
   const readOnlyUuids: string[] = [];
   const editableUuids: string[] = [];
   for (const recordSummaryLocal of allRecordsSummariesInDevice) {
     const { uuid } = recordSummaryLocal;
-    const recordSummaryRemote = ArrayUtils.findByUuid(uuid)(
-      recordsSummariesRemote,
-    );
+    const recordSummaryRemote = recordsSummariesRemoteByUuid[uuid];
     if (!recordSummaryRemote) continue;
     const readOnly = !!recordSummaryRemote.readOnly;
     if (readOnly !== !!recordSummaryLocal.readOnly) {
@@ -330,10 +324,14 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
     throw wrappedError;
   }
 
+  const recordsSummariesRemoteByUuid = ArrayUtils.indexByUuid(
+    recordsSummariesRemote,
+  );
+
   await identifyAndDeleteRecordsNotInRemoteServer({
     surveyId,
     allRecordsSummariesInDevice,
-    recordsSummariesRemote,
+    recordsSummariesRemoteByUuid,
   });
 
   await findAndInsertNewRecordSummariesLocally({
@@ -346,7 +344,7 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
   await updateLocalRecordsWithRemoteInfo({
     survey,
     allRecordsSummariesInDevice,
-    recordsSummariesRemote,
+    recordsSummariesRemoteByUuid,
   });
 
   let recordsSummariesLocalReloaded;
@@ -362,21 +360,24 @@ const syncRecordSummaries = async ({ survey, cycle, onlyLocal }: any) => {
     });
   }
 
+  const toKeyValuesFormattedId = (recordSummary: any) =>
+    JSON.stringify(
+      RecordSummaries.getKeyValuesFormatted({ survey, recordSummary }),
+    );
+  const recordsSummariesRemoteByKeyValues = new Map<string, any>();
+  for (const recordSummary of recordsSummariesRemote) {
+    const keyValuesId = toKeyValuesFormattedId(recordSummary);
+    if (!recordsSummariesRemoteByKeyValues.has(keyValuesId)) {
+      recordsSummariesRemoteByKeyValues.set(keyValuesId, recordSummary);
+    }
+  }
+
   return recordsSummariesLocalReloaded.map((recordSummaryLocal: any) => {
-    const localKeyValues = RecordSummaries.getKeyValuesFormatted({
-      survey,
-      recordSummary: recordSummaryLocal,
-    });
-    const recordSummaryRemote = recordsSummariesRemote.find((summary: any) => {
-      const remoteKeyValues = RecordSummaries.getKeyValuesFormatted({
-        survey,
-        recordSummary: summary,
-      });
-      return (
-        summary.uuid === recordSummaryLocal.uuid ||
-        Objects.isEqual(remoteKeyValues, localKeyValues)
+    const recordSummaryRemote =
+      recordsSummariesRemoteByUuid[recordSummaryLocal.uuid] ??
+      recordsSummariesRemoteByKeyValues.get(
+        toKeyValuesFormattedId(recordSummaryLocal),
       );
-    });
     const syncStatus = determineRecordSyncStatus({
       survey,
       recordSummaryLocal,
@@ -413,11 +414,12 @@ const confirmRecordsSyncedWithRemote = async ({
     );
   }
 
+  const recordsSummariesRemoteByUuid = ArrayUtils.indexByUuid(
+    recordsSummariesRemote,
+  );
   const dateModifiedRemoteByUuid: Record<string, string> = {};
   for (const uuid of recordUuids) {
-    const recordSummaryRemote = ArrayUtils.findByUuid(uuid)(
-      recordsSummariesRemote,
-    );
+    const recordSummaryRemote = recordsSummariesRemoteByUuid[uuid];
     if (recordSummaryRemote?.dateModified) {
       dateModifiedRemoteByUuid[uuid] = recordSummaryRemote.dateModified;
     }
