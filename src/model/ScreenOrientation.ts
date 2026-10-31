@@ -6,17 +6,11 @@ const keys = {
   LANDSCAPE_RIGHT: 4,
 };
 
-const isPortraitByKey = {
-  [keys.PORTRAIT_DOWN]: true,
-  [keys.PORTRAIT_UP]: true,
-};
-
 const isLandscapeByKey = {
   [keys.LANDSCAPE_LEFT]: true,
   [keys.LANDSCAPE_RIGHT]: true,
 };
 
-const isPortrait = (orientation: any) => !!isPortraitByKey[orientation];
 const isLandscape = (orientation: any) => !!isLandscapeByKey[orientation];
 const fromExpoOrientation = (expoOrientation: any) =>
   Object.values(keys).includes(expoOrientation) ? expoOrientation : null;
@@ -24,6 +18,5 @@ const fromExpoOrientation = (expoOrientation: any) =>
 export const ScreenOrientation = {
   keys,
   fromExpoOrientation,
-  isPortrait,
   isLandscape,
 };
