@@ -1,4 +1,5 @@
 import { Files } from "utils";
+import { isValidFileUuid } from "utils/isValidFileUuid";
 import { GenericFileRepository } from "./genericFileRepository";
 
 const SURVEY_RECORD_FILES_DIR_NAME = "survey_record_files";
@@ -26,6 +27,13 @@ const getRecordFileUri = ({
   fileUuid: string;
 }) => `${getRecordFileDirectoryUri({ surveyId })}/${fileUuid}`;
 
+// it comes from imported records: writing or deleting must not reach another folder
+const assertValidFileUuid = (fileUuid: string) => {
+  if (!isValidFileUuid(fileUuid)) {
+    throw new Error(`invalid file uuid: ${fileUuid}`);
+  }
+};
+
 const saveRecordFile = async ({
   surveyId,
   fileUuid,
@@ -35,6 +43,7 @@ const saveRecordFile = async ({
   fileUuid: string;
   sourceFileUri: string;
 }) => {
+  assertValidFileUuid(fileUuid);
   await GenericFileRepository.makeDirIfNotExists(
     getRecordFileDirectoryUri({ surveyId }),
   );
@@ -68,6 +77,7 @@ const deleteRecordFile = async ({
   surveyId: number;
   fileUuid: string;
 }) => {
+  assertValidFileUuid(fileUuid);
   const fileUri = getRecordFileUri({ surveyId, fileUuid });
   await GenericFileRepository.deleteFile(fileUri);
 };
