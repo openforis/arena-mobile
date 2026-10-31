@@ -189,7 +189,7 @@ const uploadRecords = ({
       onError: (error) => {
         fileProcessor?.close();
         reject(error);
-        deleteChunkFile();
+        void deleteChunkFile();
       },
       onComplete: () => {
         fileProcessor?.close();
@@ -204,7 +204,7 @@ const uploadRecords = ({
     cancel: () => {
       lastRequestCancel?.();
       fileProcessor.stop();
-      deleteChunkFile();
+      void deleteChunkFile();
     },
   };
 };
