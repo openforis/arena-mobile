@@ -88,7 +88,8 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     await this.createDataExportFiles();
 
     this.logger.debug("Fetching records to export...");
-    const recordSummaries = await RecordService.fetchRecords({ survey });
+    const { cycle } = this.context;
+    const recordSummaries = await RecordService.fetchRecords({ survey, cycle });
     this.logger.debug(`Found ${recordSummaries.length} records to export`);
 
     this.total = recordSummaries.length;
