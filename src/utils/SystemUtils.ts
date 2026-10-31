@@ -119,16 +119,23 @@ const getLanguageCode = () => {
   return locale?.languageCode;
 };
 
+const tempFileNamePrefixes = [
+  "recordsExport-",
+  "arena_mobile_full_backup_",
+  "arena_mobile_data_",
+  "arena-mobile-data-export-",
+];
+
 const cleanupTempFiles = async () => {
   // delete temp files in document and cache directories
   const directories = [Files.documentDirectory, Files.cacheDirectory];
   await Promises.each(directories, async (directory) => {
     const documentFileNames = await Files.listDirectory(directory);
     await Promises.each(documentFileNames, async (fileName) => {
-      // file name could be a records export file (starting with recordsExport-)
+      // file name could be an export or backup file (see tempFileNamePrefixes)
       // or a temporary file (named using UUID)
       if (
-        fileName.startsWith("recordsExport-") ||
+        tempFileNamePrefixes.some((prefix) => fileName.startsWith(prefix)) ||
         (["zip", "tmp"].includes(FileNames.getExtension(fileName)) &&
           UUIDs.isUuid(FileNames.getName(fileName)))
       ) {
@@ -136,6 +143,8 @@ const cleanupTempFiles = async () => {
       }
     });
   });
+  // left there by jobs interrupted before their own cleanup
+  await Files.del(Files.getTempFolderParentUri(), true);
 };
 
 const openAppSettings = async () => {
