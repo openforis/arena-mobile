@@ -687,15 +687,22 @@ export const exportRecords =
 
     const onUploadComplete = async (jobComplete: any) => {
       const { result } = jobComplete;
-      const { mergedRecordsMap, mergedSameRecordUuids = [] } = result;
+      const {
+        mergedRecordsMap,
+        mergedSameRecordUuids = [],
+        skippedRecordsUuids = [],
+      } = result;
 
       // records merged with their own server copy are left out: the local copy doesn't match the
       // server's until the merged version is fetched (below), which stamps the sync baseline itself.
       // Stamping it here, if that fetch then doesn't go through the record would look "modified
       // locally" only, and the next (plain overwrite) upload of its pre-merge content would delete
       // from the server what the other side added.
+      // records skipped by the server are left out too: their edits have not reached it.
       const recordUuidsSynced = recordUuids.filter(
-        (uuid: string) => !mergedSameRecordUuids.includes(uuid),
+        (uuid: string) =>
+          !mergedSameRecordUuids.includes(uuid) &&
+          !skippedRecordsUuids.includes(uuid),
       );
       if (recordUuidsSynced.length > 0) {
         await RecordService.confirmRecordsSyncedWithRemote({
