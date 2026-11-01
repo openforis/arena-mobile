@@ -2,8 +2,6 @@
   "compilerOptions": {
     "allowUnreachableCode": false,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./src",
-    "ignoreDeprecations": "6.0",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-native",
@@ -14,17 +12,7 @@
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
     "paths": {
-      "appComponents/*": ["appComponents/*"],
-      "components/*": ["components/*"],
-      "db/*": ["db/*"],
-      "hooks/*": ["hooks/*"],
-      "localization/*": ["localization/*"],
-      "model/*": ["model/*"],
-      "navigation/*": ["navigation/*"],
-      "screens/*": ["screens/*"],
-      "service/*": ["service/*"],
-      "state/*": ["state/*"],
-      "utils/*": ["utils/*"]
+      "*": ["./src/*"]
     },
     "resolveJsonModule": true,
     "target": "esnext",
