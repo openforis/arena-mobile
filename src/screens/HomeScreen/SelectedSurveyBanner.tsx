@@ -110,6 +110,7 @@ export const SelectedSurveyBanner = () => {
     if (nextState) {
       setState(nextState);
     }
+    return nextState;
   }, [fetchStatus]);
 
   useEffect(() => {

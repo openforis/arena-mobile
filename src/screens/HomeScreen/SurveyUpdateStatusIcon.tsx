@@ -6,18 +6,21 @@ import { useTranslation } from "localization";
 import { SurveyStatus, UpdateStatus } from "model";
 import { SurveySelectors, useAppDispatch } from "state";
 
-import { triggerSurveyUpdate } from "./surveyUpdateUtils";
+import {
+  type DetermineSurveyUpdateStatusResult,
+  triggerSurveyUpdate,
+} from "./surveyUpdateUtils";
 
 type Props = {
   errorKey?: string | null;
-  onPress?: () => Promise<void>;
+  onPress?: () => Promise<DetermineSurveyUpdateStatusResult | undefined>;
   updateStatus: UpdateStatus | SurveyStatus;
 };
 
 export const SurveyUpdateStatusIcon = ({
-  errorKey,
+  errorKey: errorKeyProp,
   onPress: onPressProp = undefined,
-  updateStatus,
+  updateStatus: updateStatusProp,
 }: Props) => {
   const dispatch = useAppDispatch();
   const toaster = useToast();
@@ -26,7 +29,11 @@ export const SurveyUpdateStatusIcon = ({
   const [loading, setLoading] = useState(false);
 
   const onPress = useCallback(async () => {
-    await onPressProp?.();
+    // use the status just fetched: the props still hold the one from before the press
+    const { errorKey, updateStatus } = (await onPressProp?.()) ?? {
+      errorKey: errorKeyProp,
+      updateStatus: updateStatusProp,
+    };
 
     switch (updateStatus) {
       case UpdateStatus.error: {
@@ -56,12 +63,20 @@ export const SurveyUpdateStatusIcon = ({
         });
         break;
     }
-  }, [dispatch, errorKey, onPressProp, survey, t, toaster, updateStatus]);
+  }, [
+    dispatch,
+    errorKeyProp,
+    onPressProp,
+    survey,
+    t,
+    toaster,
+    updateStatusProp,
+  ]);
 
   return (
     <UpdateStatusIcon
       loading={loading}
-      updateStatus={updateStatus as UpdateStatus}
+      updateStatus={updateStatusProp as UpdateStatus}
       onPress={onPress}
     />
   );
