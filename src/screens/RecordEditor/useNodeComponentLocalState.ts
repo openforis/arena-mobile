@@ -62,12 +62,20 @@ export const useNodeComponentLocalState = ({
       // UI value not in sync with node value: update UI
       const uiValueNext = nodeValueToUiValue(nodeValue);
 
-      setState((statePrev) => ({
-        ...statePrev,
-        value: nodeValue,
-        uiValue: uiValueNext,
-        validation: nodeValidation,
-      }));
+      // keep the same state when already updated: uiValue is an effect dependency,
+      // a new object would loop if isNodeValueEqual never matches
+      setState((statePrev) =>
+        statePrev.value === nodeValue &&
+        statePrev.validation === nodeValidation &&
+        Objects.isEqual(statePrev.uiValue, uiValueNext)
+          ? statePrev
+          : {
+              ...statePrev,
+              value: nodeValue,
+              uiValue: uiValueNext,
+              validation: nodeValidation,
+            },
+      );
     }
   }, [
     invalidValue,

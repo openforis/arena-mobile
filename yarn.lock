@@ -4110,7 +4110,6 @@ __metadata:
     react-native-modal-datetime-picker: "npm:^18.0.0"
     react-native-pager-view: "npm:9.0.7"
     react-native-paper: "npm:^5.15.3"
-    react-native-paper-dropdown: "npm:^1.0.7"
     react-native-reanimated: "npm:4.7.1"
     react-native-reanimated-carousel: "npm:5.2.0"
     react-native-safe-area-context: "npm:~5.10.1"
@@ -10196,20 +10195,6 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/563708ce5c3704ed2dcab50d270755eb2c522e404e920fc2a48962c40bd90e5e125c2647344bdb570566b8a45b5a4f581ae029c7c39e6b5082ab87125b500c07
-  languageName: node
-  linkType: hard
-
-"react-native-paper-dropdown@npm:^1.0.7":
-  version: 1.0.7
-  resolution: "react-native-paper-dropdown@npm:1.0.7"
-  peerDependencies:
-    "@types/react": "*"
-    "@types/react-native": "*"
-    react: "*"
-    react-native: "*"
-    react-native-paper: "*"
-    typescript: "*"
-  checksum: 10c0/c3801430110cbf845830d9e260452dc20e9ff9a97b10ab0fd840c7f0a3e9fa2e0e950b0b9d4a40403764572485b0dfafe9277816a8a5fe31beabdf3906712680
   languageName: node
   linkType: hard
 
