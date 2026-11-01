@@ -104,7 +104,6 @@ export const GeoPolygonEditor = ({
     shouldShowDeleteSelectedPoint,
     strokeColor,
     undoStack,
-    visibleCoordinates,
   } = useGeoPolygonEditor({
     mapRef,
     initialPolygons,
@@ -136,7 +135,8 @@ export const GeoPolygonEditor = ({
           onPanDrag={onMapPanDrag}
           onPoiClick={onMapPoiClick}
           onRegionChangeComplete={onMapRegionChange}
-          fitToCoordinatesOnReady={visibleCoordinates}
+          fitToCoordinatesOnReady={initialPolygons[0]?.coordinates}
+          toolbarEnabled={false}
         >
           {extraOverlays}
           {isFollowingCurrentLocation && currentLocationCoordinate && (

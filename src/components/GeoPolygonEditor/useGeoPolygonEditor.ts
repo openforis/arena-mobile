@@ -550,7 +550,6 @@ export const useGeoPolygonEditor = ({
 
   const onSavePress = useCallback(async () => {
     stopFollowingCurrentLocation();
-    setLocalState((prev) => ({ ...prev, undoStack: [] }));
     await onSaveDrawing(polygonToSave);
   }, [onSaveDrawing, polygonToSave, stopFollowingCurrentLocation]);
 
@@ -592,7 +591,6 @@ export const useGeoPolygonEditor = ({
     [stopLocationWatch],
   );
 
-  const visibleCoordinates = polygons[0]?.coordinates ?? draftCoordinates;
   const hasValue = polygons.length > 0;
   const canSave = Boolean(polygonToSave) || hadValueWhenOpened;
   const canAddCurrentLocationPoint =
@@ -666,6 +664,5 @@ export const useGeoPolygonEditor = ({
     shouldShowDeleteSelectedPoint,
     strokeColor,
     undoStack,
-    visibleCoordinates,
   };
 };
