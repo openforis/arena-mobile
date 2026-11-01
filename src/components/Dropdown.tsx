@@ -1,8 +1,16 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { useTheme } from "react-native-paper";
-import RNPDropdown from "react-native-paper-dropdown";
+import {
+  Keyboard,
+  LayoutChangeEvent,
+  ScrollView,
+  StatusBar,
+  View,
+} from "react-native";
+import { Menu, TextInput, TouchableRipple, useTheme } from "react-native-paper";
 
 import { useTranslation } from "localization";
+
+const MAX_MENU_HEIGHT = 300;
 
 type DropdownProps = {
   disabled?: boolean;
@@ -31,27 +39,13 @@ export const Dropdown = (props: DropdownProps) => {
     value,
   } = props;
 
-  const theme = useTheme();
   const { t } = useTranslation();
+  const theme = useTheme();
 
-  const label = showLabel ? t(labelProp) : "";
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [width, setWidth] = useState(0);
 
-  const [state, setState] = useState({
-    open: false,
-    /**
-     * workaround: used to force re-render when opening or closing the dropdown;
-     * without this, the dropdown remains closed after selecting an already selected item;
-     */
-    timeOpenSet: Date.now(),
-  });
-
-  const { open, timeOpenSet } = state;
-
-  const setOpen = useCallback((val: boolean) => {
-    setState({ open: val, timeOpenSet: Date.now() });
-  }, []);
-  const closeDropDown = useCallback(() => setOpen(false), [setOpen]);
-  const openDropDown = useCallback(() => setOpen(true), [setOpen]);
+  const labelText = t(labelProp);
 
   const itemToOption = useCallback(
     (item: any) => ({
@@ -83,36 +77,89 @@ export const Dropdown = (props: DropdownProps) => {
     [disabled, onChange],
   );
 
-  const dropDownItemTextStyle = useMemo(() => {
-    const textFont = theme.fonts.labelMedium;
-    const textFontSize = textFont.fontSize;
-    return {
-      color: theme.colors.onSurfaceVariant,
-      fontSize: textFontSize,
-    };
-  }, [theme]);
+  const openMenu = useCallback(() => {
+    Keyboard.dismiss();
+    setMenuVisible(true);
+  }, []);
 
-  const dropDownItemStyle = useMemo(
-    () => ({ backgroundColor: theme.colors.surfaceVariant }),
-    [theme],
+  const closeMenu = useCallback(() => setMenuVisible(false), []);
+
+  const onLayout = useCallback(
+    (event: LayoutChangeEvent) => setWidth(event.nativeEvent.layout.width),
+    [],
   );
 
+  const selectedLabel = options.find((option) => option.value === value)?.label;
+
   return (
-    <RNPDropdown
-      // @ts-expect-error "disabled" is missing from the library prop types
-      disabled={disabled}
-      dropDownContainerMaxHeight={300}
-      dropDownItemStyle={dropDownItemStyle}
-      dropDownItemTextStyle={dropDownItemTextStyle}
-      key={timeOpenSet}
-      label={label}
-      list={options}
-      mode="outlined"
-      onDismiss={closeDropDown}
-      setValue={setValue}
-      showDropDown={openDropDown}
-      value={value}
-      visible={open}
-    />
+    <Menu
+      anchor={
+        <TouchableRipple
+          aria-disabled={!!disabled}
+          aria-expanded={menuVisible}
+          aria-label={
+            selectedLabel ? `${labelText}: ${selectedLabel}` : labelText
+          }
+          role="combobox"
+          disabled={disabled}
+          onLayout={onLayout}
+          onPress={openMenu}
+        >
+          <View pointerEvents="none">
+            <TextInput
+              disabled={disabled}
+              editable={false}
+              label={showLabel ? labelText : ""}
+              mode="outlined"
+              right={
+                <TextInput.Icon
+                  icon={menuVisible ? "menu-up" : "menu-down"}
+                  pointerEvents="none"
+                />
+              }
+              value={selectedLabel}
+            />
+          </View>
+        </TouchableRipple>
+      }
+      contentStyle={{ paddingVertical: 0 }}
+      elevation={5}
+      keyboardShouldPersistTaps="handled"
+      onDismiss={closeMenu}
+      statusBarHeight={StatusBar.currentHeight ?? undefined}
+      style={{ width }}
+      visible={menuVisible}
+    >
+      <ScrollView bounces={false} style={{ maxHeight: MAX_MENU_HEIGHT }}>
+        {options.map((option) => {
+          const selected = option.value === value;
+          return (
+            <Menu.Item
+              accessibilityState={{ selected }}
+              contentStyle={{ minWidth: width }}
+              key={option.value}
+              onPress={() => {
+                setValue(option.value);
+                closeMenu();
+              }}
+              style={{
+                backgroundColor: selected
+                  ? theme.colors.primaryContainer
+                  : theme.colors.elevation.level1,
+                minWidth: width,
+              }}
+              title={option.label}
+              titleStyle={{
+                color: selected
+                  ? theme.colors.onPrimaryContainer
+                  : theme.colors.onSurfaceVariant,
+                fontSize: theme.fonts.labelMedium.fontSize,
+                fontWeight: selected ? "bold" : undefined,
+              }}
+            />
+          );
+        })}
+      </ScrollView>
+    </Menu>
   );
 };
