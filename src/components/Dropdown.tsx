@@ -97,8 +97,9 @@ export const Dropdown = (props: DropdownProps) => {
         <TouchableRipple
           aria-disabled={!!disabled}
           aria-expanded={menuVisible}
-          aria-label={labelText}
-          aria-valuetext={selectedLabel}
+          aria-label={
+            selectedLabel ? `${labelText}: ${selectedLabel}` : labelText
+          }
           role="combobox"
           disabled={disabled}
           onLayout={onLayout}
