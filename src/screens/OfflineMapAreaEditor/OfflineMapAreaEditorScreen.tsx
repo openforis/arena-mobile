@@ -396,6 +396,7 @@ export const OfflineMapAreaEditorScreen = () => {
         onPress={() => setActiveStep("draw")}
         summary={drawSummary}
         summaryIsError={estimate.exceedsMaxTiles || exceedsFreeSpace}
+        summaryNumberOfLines={2}
         summaryOnly
         titleKey="offlineMaps:areaEditor.steps.draw"
       />

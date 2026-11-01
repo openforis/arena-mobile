@@ -18,6 +18,7 @@ type AreaEditorStepProps = {
   onPress: () => void;
   summary?: string;
   summaryIsError?: boolean;
+  summaryNumberOfLines?: number;
   // when true, the step has no content: only the summary is shown, in place of the title
   summaryOnly?: boolean;
   // required unless summaryOnly is true
@@ -35,6 +36,7 @@ export const AreaEditorStep = (props: AreaEditorStepProps) => {
     onPress,
     summary,
     summaryIsError = false,
+    summaryNumberOfLines = 1,
     summaryOnly = false,
     titleKey,
   } = props;
@@ -82,7 +84,7 @@ export const AreaEditorStep = (props: AreaEditorStepProps) => {
           )}
           {(summaryOnly || !expanded) && !!summary && (
             <Text
-              numberOfLines={1}
+              numberOfLines={summaryNumberOfLines}
               style={[
                 styles.stepSummary,
                 summaryOnly && styles.stepSummaryOnly,
