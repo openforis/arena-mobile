@@ -65,7 +65,7 @@ export const ProgressBar = (props: Props) => {
       />
     );
   }
-  const { containerStyle, barStyle } = splitWebStyle(flatStyle);
+  const { containerStyle, barStyle } = splitWebStyle(flatStyle ?? {});
   return (
     <View style={containerStyle}>
       <RNPProgressBar
