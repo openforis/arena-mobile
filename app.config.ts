@@ -15,6 +15,8 @@ const basePlugins: ExpoConfig["plugins"] = [
         extraProguardRules: [
           "-keep class kjd.reactnative.bluetooth.** { *; }",
           "-keep class net.lingala.zip4j.** { *; }",
+          // Room instantiates WorkDatabase_Impl by reflection; room-runtime 2.5.0 rules don't keep its constructor
+          "-keep class * extends androidx.room.RoomDatabase { <init>(); }",
         ].join("\n"),
       },
       ios: { deploymentTarget: "16.4" },
