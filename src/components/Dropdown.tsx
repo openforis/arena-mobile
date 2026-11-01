@@ -131,25 +131,34 @@ export const Dropdown = (props: DropdownProps) => {
       visible={menuVisible}
     >
       <ScrollView bounces={false} style={{ maxHeight: MAX_MENU_HEIGHT }}>
-        {options.map((option) => (
-          <Menu.Item
-            contentStyle={{ minWidth: width }}
-            key={option.value}
-            onPress={() => {
-              setValue(option.value);
-              closeMenu();
-            }}
-            style={{
-              backgroundColor: theme.colors.surfaceVariant,
-              minWidth: width,
-            }}
-            title={option.label}
-            titleStyle={{
-              color: theme.colors.onSurfaceVariant,
-              fontSize: theme.fonts.labelMedium.fontSize,
-            }}
-          />
-        ))}
+        {options.map((option) => {
+          const selected = option.value === value;
+          return (
+            <Menu.Item
+              accessibilityState={{ selected }}
+              contentStyle={{ minWidth: width }}
+              key={option.value}
+              onPress={() => {
+                setValue(option.value);
+                closeMenu();
+              }}
+              style={{
+                backgroundColor: selected
+                  ? theme.colors.primaryContainer
+                  : theme.colors.elevation.level1,
+                minWidth: width,
+              }}
+              title={option.label}
+              titleStyle={{
+                color: selected
+                  ? theme.colors.onPrimaryContainer
+                  : theme.colors.onSurfaceVariant,
+                fontSize: theme.fonts.labelMedium.fontSize,
+                fontWeight: selected ? "bold" : undefined,
+              }}
+            />
+          );
+        })}
       </ScrollView>
     </Menu>
   );
