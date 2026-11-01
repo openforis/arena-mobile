@@ -12,7 +12,7 @@ type DetermineSurveyUpdateStatusParams = {
   user: any;
 };
 
-type DetermineSurveyUpdateStatusResult = {
+export type DetermineSurveyUpdateStatusResult = {
   errorKey?: string | null;
   updateStatus: UpdateStatus | SurveyStatus;
 };
