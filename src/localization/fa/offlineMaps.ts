@@ -138,5 +138,7 @@ export default {
     completeWithMissingTiles:
       "منطقه نقشه آفلاین دانلود شد ({{size}})؛ {{missingTiles}} کاشی دانلود نشد",
     error: "خطا در دانلود منطقه نقشه آفلاین: {{details}}",
+    speed: "سرعت دانلود: {{speed}}/s",
+    eta: "زمان باقی‌مانده تخمینی: {{eta}}",
   },
 };

@@ -139,5 +139,7 @@ export default {
     completeWithMissingTiles:
       "Offline-kartta-alue ladattu ({{size}}); {{missingTiles}} karttaruutua ei voitu ladata",
     error: "Virhe ladattaessa offline-kartta-aluetta: {{details}}",
+    speed: "Latausnopeus: {{speed}}/s",
+    eta: "Arvioitu jäljellä oleva aika: {{eta}}",
   },
 };

@@ -139,5 +139,7 @@ export default {
     completeWithMissingTiles:
       "Offline map area downloaded ({{size}}); {{missingTiles}} tiles could not be downloaded",
     error: "Error downloading the offline map area: {{details}}",
+    speed: "Download speed: {{speed}}/s",
+    eta: "Estimated time left: {{eta}}",
   },
 };

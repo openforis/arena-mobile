@@ -139,5 +139,7 @@ export default {
     completeWithMissingTiles:
       "Área de mapa sin conexión descargada ({{size}}); no se pudieron descargar {{missingTiles}} teselas",
     error: "Error al descargar el área de mapa sin conexión: {{details}}",
+    speed: "Velocidad de descarga: {{speed}}/s",
+    eta: "Tiempo restante estimado: {{eta}}",
   },
 };

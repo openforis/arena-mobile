@@ -135,5 +135,7 @@ export default {
     completeWithMissingTiles:
       "ከመስመር ውጭ የካርታ አካባቢ ወርዷል ({{size}})፤ {{missingTiles}} ታይሎች ማውረድ አልተቻለም",
     error: "ከመስመር ውጭ የካርታ አካባቢን በማውረድ ላይ ስህተት፦ {{details}}",
+    speed: "የማውረድ ፍጥነት፦ {{speed}}/s",
+    eta: "የሚገመት ቀሪ ጊዜ፦ {{eta}}",
   },
 };

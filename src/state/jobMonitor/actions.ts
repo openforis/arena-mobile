@@ -134,6 +134,12 @@ const buildUploadStats = ({
   };
 };
 
+// a job whose processed/total are not bytes (e.g. tiles) can provide them for the transfer stats
+type JobSummary = JobSerialized<any> & {
+  transferProcessedBytes?: number;
+  transferTotalBytes?: number;
+};
+
 type InnerJobUiConfig = {
   titleKey: string;
   showTransferStats?: boolean;
@@ -173,15 +179,22 @@ const createOnJobUpdateCallback = ({
   showTransferStats = false,
   innerJobUiConfigByType,
   silent = false,
-}: any): ((jobSummary: JobSerialized<any>) => void) => {
+}: any): ((jobSummary: JobSummary) => void) => {
   let previousSample: {
     processed: number;
     timestamp: number;
     speed: number;
   } | null = null;
 
-  return (jobSummary: JobSerialized<any>) => {
-    const { status, errors, processed, total } = jobSummary;
+  return (jobSummary: JobSummary) => {
+    const {
+      status,
+      errors,
+      processed,
+      total,
+      transferProcessedBytes = processed,
+      transferTotalBytes = total,
+    } = jobSummary;
     const progressPercent = calculateJobProgressPercent({ jobSummary });
 
     const innerJobUi = resolveInnerJobUi({
@@ -194,8 +207,8 @@ const createOnJobUpdateCallback = ({
     // a composite job's own processed/total just count finished inner jobs (e.g. 1 of 2), not
     // bytes - use the current inner job's own numbers for transfer stats instead
     const statsSource = innerJobUi?.currentInnerJobSummary ?? {
-      processed,
-      total,
+      processed: transferProcessedBytes,
+      total: transferTotalBytes,
     };
 
     const uploadStats = buildUploadStats({

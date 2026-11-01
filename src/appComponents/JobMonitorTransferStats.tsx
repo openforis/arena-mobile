@@ -58,8 +58,9 @@ export const JobMonitorTransferStats = ({
         })
       : null;
 
+  // rounded: below 1 kB/s the size is formatted without limiting the decimals
   const transferSpeedText = transferSpeedBytesPerSec
-    ? Files.toHumanReadableFileSize(transferSpeedBytesPerSec, {
+    ? Files.toHumanReadableFileSize(Math.round(transferSpeedBytesPerSec), {
         decimalPlaces: 1,
       })
     : null;

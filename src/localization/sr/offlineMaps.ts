@@ -138,5 +138,7 @@ export default {
     completeWithMissingTiles:
       "Oblast mape van mreže je preuzeta ({{size}}); nije bilo moguće preuzeti {{missingTiles}} pločica",
     error: "Greška pri preuzimanju oblasti mape van mreže: {{details}}",
+    speed: "Brzina preuzimanja: {{speed}}/s",
+    eta: "Procijenjeno preostalo vrijeme: {{eta}}",
   },
 };

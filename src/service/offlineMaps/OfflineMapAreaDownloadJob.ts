@@ -26,6 +26,8 @@ export type OfflineMapAreaDownloadJobResult = {
 export class OfflineMapAreaDownloadJob extends JobMobile<OfflineMapAreaDownloadJobContext> {
   private downloadedTilesCount = 0;
   private sizeBytes = 0;
+  // tiles already on the device excluded: they would inflate the download speed
+  private transferredBytes = 0;
   private readonly createdDirUris = new Set<string>();
 
   override async execute() {
@@ -70,8 +72,11 @@ export class OfflineMapAreaDownloadJob extends JobMobile<OfflineMapAreaDownloadJ
         headers: { "User-Agent": mapTilesUserAgent },
       });
       if (status === HTTP_STATUS_OK) {
+        // awaited apart: "+= await" would lose the updates of concurrent downloads
+        const size = await Files.getSize(fileUri);
         this.downloadedTilesCount += 1;
-        this.sizeBytes += await Files.getSize(fileUri);
+        this.sizeBytes += size;
+        this.transferredBytes += size;
       } else {
         await Files.del(fileUri, true);
       }
@@ -110,5 +115,20 @@ export class OfflineMapAreaDownloadJob extends JobMobile<OfflineMapAreaDownloadJ
 
   override generateResult(): Promise<OfflineMapAreaDownloadJobResult> {
     return Promise.resolve({ area: this.context.area });
+  }
+
+  // processed and total count tiles: the job monitor needs bytes for speed and ETA
+  override toJSON() {
+    const averageTileSizeBytes =
+      this.downloadedTilesCount > 0
+        ? this.sizeBytes / this.downloadedTilesCount
+        : MapLayers.getLayer(this.context.area.layerId).averageTileSizeBytes;
+    return {
+      ...super.toJSON(),
+      transferProcessedBytes: this.transferredBytes,
+      transferTotalBytes:
+        this.transferredBytes +
+        (this.total - this.processed) * averageTileSizeBytes,
+    };
   }
 }

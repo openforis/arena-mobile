@@ -21,6 +21,9 @@ export const useOfflineMapAreaDownload = () => {
           job,
           titleKey: "offlineMaps:download.title",
           autoDismiss: true,
+          showTransferStats: true,
+          transferSpeedTextKey: "offlineMaps:download.speed",
+          transferEtaTextKey: "offlineMaps:download.eta",
         });
         const areaUpdated: OfflineMapArea | undefined = (jobComplete as any)
           ?.result?.area;

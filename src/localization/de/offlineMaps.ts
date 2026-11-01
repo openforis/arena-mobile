@@ -139,5 +139,7 @@ export default {
     completeWithMissingTiles:
       "Offline-Kartengebiet heruntergeladen ({{size}}); {{missingTiles}} Kacheln konnten nicht heruntergeladen werden",
     error: "Fehler beim Herunterladen des Offline-Kartengebiets: {{details}}",
+    speed: "Download-Geschwindigkeit: {{speed}}/s",
+    eta: "Geschätzte Restzeit: {{eta}}",
   },
 };

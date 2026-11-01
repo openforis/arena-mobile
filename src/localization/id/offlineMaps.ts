@@ -138,5 +138,7 @@ export default {
     completeWithMissingTiles:
       "Area peta offline diunduh ({{size}}); {{missingTiles}} ubin tidak dapat diunduh",
     error: "Kesalahan saat mengunduh area peta offline: {{details}}",
+    speed: "Kecepatan unduh: {{speed}}/s",
+    eta: "Perkiraan sisa waktu: {{eta}}",
   },
 };

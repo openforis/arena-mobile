@@ -138,5 +138,7 @@ export default {
     completeWithMissingTiles:
       "Offlinekartområdet har laddats ner ({{size}}); {{missingTiles}} kartrutor kunde inte laddas ner",
     error: "Fel vid nedladdning av offlinekartområdet: {{details}}",
+    speed: "Nedladdningshastighet: {{speed}}/s",
+    eta: "Beräknad återstående tid: {{eta}}",
   },
 };

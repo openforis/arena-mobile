@@ -140,5 +140,7 @@ export default {
       "Zone de carte hors ligne téléchargée ({{size}}) ; {{missingTiles}} tuiles n'ont pas pu être téléchargées",
     error:
       "Erreur lors du téléchargement de la zone de carte hors ligne : {{details}}",
+    speed: "Vitesse de téléchargement : {{speed}}/s",
+    eta: "Temps restant estimé : {{eta}}",
   },
 };

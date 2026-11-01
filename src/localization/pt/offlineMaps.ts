@@ -139,5 +139,7 @@ export default {
     completeWithMissingTiles:
       "Área de mapa offline baixada ({{size}}); não foi possível baixar {{missingTiles}} blocos",
     error: "Erro ao baixar a área de mapa offline: {{details}}",
+    speed: "Velocidade de download: {{speed}}/s",
+    eta: "Tempo restante estimado: {{eta}}",
   },
 };
