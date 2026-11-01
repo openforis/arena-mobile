@@ -13,6 +13,7 @@ import {
   NativeSyntheticEvent,
   PointerEvent,
   ScrollView,
+  ScrollViewInstance,
   StyleProp,
   View,
   ViewStyle,
@@ -46,7 +47,7 @@ const PagerView = forwardRef<PagerViewRef, PagerViewProps>((props, ref) => {
     style,
   } = props;
 
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef<ScrollViewInstance>(null);
   const pageRef = useRef(initialPage);
   const [width, setWidth] = useState(0);
   const [scrollEnabled, setScrollEnabled] = useState(scrollEnabledProp);

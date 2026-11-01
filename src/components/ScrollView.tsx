@@ -1,5 +1,10 @@
 import { forwardRef, Ref, useMemo } from "react";
-import { ScrollView as RNScrollView, StyleProp, ViewStyle } from "react-native";
+import {
+  ScrollView as RNScrollView,
+  ScrollViewInstance,
+  StyleProp,
+  ViewStyle,
+} from "react-native";
 import { useTheme } from "react-native-paper";
 
 type Props = {
@@ -17,7 +22,7 @@ type Props = {
 
 export const ScrollView = forwardRef(function ScrollView(
   props: Props,
-  ref: Ref<RNScrollView>,
+  ref: Ref<ScrollViewInstance>,
 ) {
   const {
     children,

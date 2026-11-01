@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Arena Mobile is a React Native mobile application built with Expo for offline data collection on Android and iOS. It's a companion app to Open Foris Arena, enabling field data collection for forest inventories, surveys, and interviews with support for diverse data types (numbers, coordinates, images, videos, text) and customizable validation rules.
 
 **Key Technologies:**
-- React Native 0.86 with Expo 57
+- React Native 0.88 with Expo 58
 - TypeScript (migrated from JavaScript)
 - Redux Toolkit for state management
 - React Navigation for routing

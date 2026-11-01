@@ -1,11 +1,6 @@
 import { useMemo } from "react";
 import { Text as RNText } from "react-native-paper";
-import {
-  NativeSyntheticEvent,
-  StyleProp,
-  TextLayoutEventData,
-  TextStyle,
-} from "react-native";
+import { StyleProp, TextLayoutEvent, TextStyle } from "react-native";
 
 import { useIsTextDirectionRtl, useTranslation } from "localization";
 
@@ -35,7 +30,7 @@ type Props = {
   children?: React.ReactNode;
   numberOfLines?: number;
   onPress?: () => void;
-  onTextLayout?: (event: NativeSyntheticEvent<TextLayoutEventData>) => void;
+  onTextLayout?: (event: TextLayoutEvent) => void;
   selectable?: boolean;
   style?: StyleProp<TextStyle>;
   textKey?: string;

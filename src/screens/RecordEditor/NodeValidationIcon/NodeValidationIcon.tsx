@@ -1,9 +1,8 @@
 import { useCallback, useState } from "react";
 import {
-  NativeSyntheticEvent,
   Pressable,
   StyleSheet,
-  TextLayoutEventData,
+  TextLayoutEvent,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -67,7 +66,7 @@ const ValidationIcon = (props: ValidationIconProps) => {
   const hideDialog = useCallback(() => setDialogVisible(false), []);
 
   const onMessageTextLayout = useCallback(
-    (event: NativeSyntheticEvent<TextLayoutEventData>) =>
+    (event: TextLayoutEvent) =>
       setMessageFitsOneLine(event.nativeEvent.lines.length <= 1),
     [],
   );

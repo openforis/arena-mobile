@@ -26,7 +26,7 @@ export const FlexWrapView = (props: Props) => {
   const isRtl = useIsTextDirectionRtl();
 
   const style: StyleProp<ViewStyle> = useMemo(() => {
-    const _style: StyleProp<ViewStyle> = [baseStyle];
+    const _style: StyleProp<ViewStyle>[] = [baseStyle];
     if (isRtl) {
       _style.push(BaseStyles.flexDirectionRowReverse as any);
     }

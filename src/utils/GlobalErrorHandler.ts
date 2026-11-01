@@ -68,7 +68,7 @@ export const initializeGlobalErrorHandler = () => {
     const previousHandler = globalErrorUtils.getGlobalHandler();
     globalErrorUtils.setGlobalHandler((error: unknown, isFatal?: boolean) => {
       handleGlobalError(error, isFatal);
-      previousHandler?.(error, isFatal);
+      previousHandler?.(error, isFatal ?? false);
     });
   }
 

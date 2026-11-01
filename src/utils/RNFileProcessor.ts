@@ -49,7 +49,7 @@ export class RNFileProcessor extends FileProcessor {
 
       // Set the offset and read the chunk
       this.fileHandle.offset = start;
-      const chunkBytes = this.fileHandle.readBytes(length);
+      const chunkBytes = await this.fileHandle.readBytes(length);
 
       // Write bytes to temp file
       tempFileUri = Files.path(Files.cacheDirectory, tempFileName);
