@@ -268,7 +268,7 @@ const writeBytesToFile = async ({
   try {
     const file = await createIfNotExists(fileUri);
     fileHandle = file.open();
-    fileHandle.writeBytes(bytes);
+    await fileHandle.writeBytes(bytes);
   } finally {
     fileHandle?.close();
   }

@@ -143,7 +143,7 @@ const resizeToFitMaxSize = async ({
             .then((result) => resolve(result))
             .catch((error: Error) => reject(error));
         },
-        (error: Error) => reject(error),
+        reject,
       );
     },
   );
@@ -194,7 +194,7 @@ const getSize = async (
     Image.getSize(
       fileUri,
       (width, height) => resolve({ width, height }),
-      (error: Error) => reject(error),
+      reject,
     );
   });
 

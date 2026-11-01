@@ -1,0 +1,14 @@
+diff --git a/android/build.gradle b/android/build.gradle
+index 0daf907fe8896bae4767f1590d0712f0feb6e628..5585d7260b249890b4ae0a5caacc3eada0ccf2b8 100644
+--- a/android/build.gradle
++++ b/android/build.gradle
+@@ -16,6 +16,9 @@ def getExtOrDefault(name, fallback) {
+ }
+ 
+ android {
++    buildFeatures {
++        buildConfig true
++    }
+     // Check AGP version for backward compatibility w/react-native versions still on gradle plugin 6
+     // it looks like this causes issues between 7 and 8, so for the time being 
+     def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION    

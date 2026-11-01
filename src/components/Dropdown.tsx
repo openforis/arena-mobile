@@ -2,7 +2,6 @@ import React, { useCallback, useMemo, useState } from "react";
 import {
   Keyboard,
   LayoutChangeEvent,
-  Platform,
   ScrollView,
   StatusBar,
   View,
@@ -126,9 +125,7 @@ export const Dropdown = (props: DropdownProps) => {
       elevation={5}
       keyboardShouldPersistTaps="handled"
       onDismiss={closeMenu}
-      statusBarHeight={
-        Platform.OS === "android" ? StatusBar.currentHeight : undefined
-      }
+      statusBarHeight={StatusBar.currentHeight ?? undefined}
       style={{ width }}
       visible={menuVisible}
     >
