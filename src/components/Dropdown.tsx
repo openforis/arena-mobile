@@ -1,11 +1,17 @@
-import React, { useCallback, useMemo } from "react";
-import { Menu, useTheme } from "react-native-paper";
+import React, { useCallback, useMemo, useState } from "react";
 import {
-  Dropdown as RNPDropdown,
-  DropdownItemProps,
-} from "react-native-paper-dropdown";
+  Keyboard,
+  LayoutChangeEvent,
+  Platform,
+  ScrollView,
+  StatusBar,
+  View,
+} from "react-native";
+import { Menu, TextInput, TouchableRipple, useTheme } from "react-native-paper";
 
 import { useTranslation } from "localization";
+
+const MAX_MENU_HEIGHT = 300;
 
 type DropdownProps = {
   disabled?: boolean;
@@ -18,31 +24,6 @@ type DropdownProps = {
   translateItemLabels?: boolean;
   showLabel?: boolean;
   value?: any;
-};
-
-const DropdownItem = (props: DropdownItemProps) => {
-  const { onSelect, option, toggleMenu, width } = props;
-
-  const theme = useTheme();
-
-  return (
-    <Menu.Item
-      contentStyle={{ minWidth: width }}
-      onPress={() => {
-        onSelect?.(option.value);
-        toggleMenu();
-      }}
-      style={{
-        backgroundColor: theme.colors.surfaceVariant,
-        minWidth: width,
-      }}
-      title={option.label}
-      titleStyle={{
-        color: theme.colors.onSurfaceVariant,
-        fontSize: theme.fonts.labelMedium.fontSize,
-      }}
-    />
-  );
 };
 
 export const Dropdown = (props: DropdownProps) => {
@@ -60,8 +41,12 @@ export const Dropdown = (props: DropdownProps) => {
   } = props;
 
   const { t } = useTranslation();
+  const theme = useTheme();
 
-  const label = showLabel ? t(labelProp) : "";
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [width, setWidth] = useState(0);
+
+  const labelText = t(labelProp);
 
   const itemToOption = useCallback(
     (item: any) => ({
@@ -93,17 +78,81 @@ export const Dropdown = (props: DropdownProps) => {
     [disabled, onChange],
   );
 
+  const openMenu = useCallback(() => {
+    Keyboard.dismiss();
+    setMenuVisible(true);
+  }, []);
+
+  const closeMenu = useCallback(() => setMenuVisible(false), []);
+
+  const onLayout = useCallback(
+    (event: LayoutChangeEvent) => setWidth(event.nativeEvent.layout.width),
+    [],
+  );
+
+  const selectedLabel = options.find((option) => option.value === value)?.label;
+
   return (
-    <RNPDropdown
-      CustomDropdownItem={DropdownItem}
-      disabled={disabled}
-      hideMenuHeader
-      label={label}
-      maxMenuHeight={300}
-      mode="outlined"
-      onSelect={setValue}
-      options={options}
-      value={value}
-    />
+    <Menu
+      anchor={
+        <TouchableRipple
+          aria-disabled={!!disabled}
+          aria-expanded={menuVisible}
+          aria-label={labelText}
+          aria-valuetext={selectedLabel}
+          role="combobox"
+          disabled={disabled}
+          onLayout={onLayout}
+          onPress={openMenu}
+        >
+          <View pointerEvents="none">
+            <TextInput
+              disabled={disabled}
+              editable={false}
+              label={showLabel ? labelText : ""}
+              mode="outlined"
+              right={
+                <TextInput.Icon
+                  icon={menuVisible ? "menu-up" : "menu-down"}
+                  pointerEvents="none"
+                />
+              }
+              value={selectedLabel}
+            />
+          </View>
+        </TouchableRipple>
+      }
+      contentStyle={{ paddingVertical: 0 }}
+      elevation={5}
+      keyboardShouldPersistTaps="handled"
+      onDismiss={closeMenu}
+      statusBarHeight={
+        Platform.OS === "android" ? StatusBar.currentHeight : undefined
+      }
+      style={{ width }}
+      visible={menuVisible}
+    >
+      <ScrollView bounces={false} style={{ maxHeight: MAX_MENU_HEIGHT }}>
+        {options.map((option) => (
+          <Menu.Item
+            contentStyle={{ minWidth: width }}
+            key={option.value}
+            onPress={() => {
+              setValue(option.value);
+              closeMenu();
+            }}
+            style={{
+              backgroundColor: theme.colors.surfaceVariant,
+              minWidth: width,
+            }}
+            title={option.label}
+            titleStyle={{
+              color: theme.colors.onSurfaceVariant,
+              fontSize: theme.fonts.labelMedium.fontSize,
+            }}
+          />
+        ))}
+      </ScrollView>
+    </Menu>
   );
 };
