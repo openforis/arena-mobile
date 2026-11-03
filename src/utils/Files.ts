@@ -20,7 +20,7 @@ const MIME_TYPES = {
   zip: "application/zip",
 };
 
-const { documentDirectory, readDirectoryAsync } = FileSystem;
+const { documentDirectory } = FileSystem;
 const cacheDirectory = FileSystem.cacheDirectory!;
 
 const toSafeFileName = (name: string): string =>
@@ -61,6 +61,7 @@ const mkDir = (dirUri: string): Promise<void> =>
     intermediates: true,
   });
 
+// returns the full URIs of the directory entries
 const listDir = async (dirUri: string): Promise<string[]> => {
   try {
     const fileNames = await FileSystem.readDirectoryAsync(dirUri);
@@ -149,7 +150,7 @@ const exists = async (fileUri: any): Promise<boolean> => {
 const getFreeDiskStorage = (): Promise<number> =>
   FileSystem.getFreeDiskStorageAsync();
 
-const jsonToString = (obj: any): string => JSON.stringify(obj, null, 2);
+const jsonToString = (obj: any): string => JSON.stringify(obj);
 
 const getNameFromUri = (uri: string): string =>
   uri.substring(uri.lastIndexOf("/") + 1);
@@ -178,13 +179,11 @@ const readAsString = (
 ): Promise<string> =>
   FileSystem.readAsStringAsync(fileUri, encoding ? { encoding } : undefined);
 
-const readAsBytes = (
+const readAsBytes = async (
   fileUri: string,
 ): Promise<Uint8Array<ArrayBuffer> | null> => {
-  const fileObj = new File(fileUri);
-  const fileHandle = fileObj.open();
-  const fileSize = fileHandle.size;
-  return Promise.resolve(fileSize ? fileHandle.readBytes(fileSize) : null);
+  const bytes = await new File(fileUri).bytes();
+  return bytes.length ? bytes : null;
 };
 
 const readJsonFromFile = async ({ fileUri }: any): Promise<object | null> => {
@@ -193,18 +192,6 @@ const readJsonFromFile = async ({ fileUri }: any): Promise<object | null> => {
     return JSON.parse(content);
   }
   return null;
-};
-
-const listDirectory = async (fileUri: string | null): Promise<string[]> => {
-  if (!fileUri) {
-    return [];
-  }
-  try {
-    return await readDirectoryAsync(fileUri);
-  } catch {
-    // ignore it
-    return [];
-  }
 };
 
 const copyFile = ({ from, to }: { from: string; to: string }): Promise<void> =>
@@ -264,14 +251,8 @@ const writeBytesToFile = async ({
   fileUri: string;
   bytes: Uint8Array<ArrayBuffer>;
 }): Promise<void> => {
-  let fileHandle;
-  try {
-    const file = await createIfNotExists(fileUri);
-    fileHandle = file.open();
-    await fileHandle.writeBytes(bytes);
-  } finally {
-    fileHandle?.close();
-  }
+  // overwrites (truncates) any existing content
+  await new File(fileUri).write(bytes);
 };
 
 const appendStringToFile = async ({
@@ -359,7 +340,7 @@ export const Files = {
   readAsString,
   readAsBytes,
   readJsonFromFile,
-  listDirectory,
+  listDir,
   isSharingAvailable,
   shareFile,
   copyFile,
