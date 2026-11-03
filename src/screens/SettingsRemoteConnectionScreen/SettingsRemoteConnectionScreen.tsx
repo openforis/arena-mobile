@@ -29,7 +29,7 @@ import {
   useAppDispatch,
 } from "state";
 import { useIsNetworkConnected } from "hooks";
-import { AMConstants, log } from "utils";
+import { AMConstants } from "utils";
 
 import styles from "./styles";
 
@@ -182,7 +182,6 @@ export const SettingsRemoteConnectionScreen = () => {
 
   const onQrScannerData = useCallback(
     async (data: string) => {
-      log.debug("QR code data scanned:", data);
       setState((statePrev) => ({
         ...statePrev,
         qrScannerVisible: false,

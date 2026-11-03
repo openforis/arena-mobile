@@ -10,9 +10,8 @@ const exportReducer =
   (state = initialState, action: any) =>
     applyReducerFunction({ actionHandlers, action, state });
 
-export const debounceAction = (action: any, key: any, time = 500) => {
-  return Functions.debounce(action, time);
-};
+export const debounceAction = (action: any, time = 500) =>
+  Functions.debounce(action, time);
 
 export const StoreUtils = {
   exportReducer,
