@@ -7,7 +7,7 @@ export default class StoredObjectManager {
   defaultValues: any;
   storageKey: any;
   // read-modify-write updates run one at a time, otherwise the last write would drop the others
-  private enqueueUpdate = PromiseUtils.createSerialQueue();
+  private readonly enqueueUpdate = PromiseUtils.createSerialQueue();
   constructor(storageKey: any, defaultValues = {}) {
     this.storageKey = storageKey;
     this.defaultValues = defaultValues;
