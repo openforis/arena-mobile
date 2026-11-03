@@ -1,5 +1,5 @@
 import { API } from "./api";
-import { AuthService } from "./authService";
+import { AuthService, invalidCredentialsError } from "./authService";
 import { SecureStoreService } from "./SecureStoreService";
 import { SettingsService } from "./settingsService";
 
@@ -81,6 +81,30 @@ describe("AuthService.refreshAuthTokens", () => {
     expect(setAuthRefreshTokenMock).toHaveBeenCalledWith("new-token");
   });
 
+  it("reads the refresh token among other cookies", async () => {
+    postMock.mockResolvedValue({
+      response: {
+        headers: {
+          "set-cookie": ["other=x; Path=/", "refreshToken=new-token; Path=/"],
+        },
+        data: { authToken: "auth-token" },
+      },
+    });
+    await AuthService.refreshAuthTokens();
+    expect(setAuthRefreshTokenMock).toHaveBeenCalledWith("new-token");
+  });
+
+  it("keeps the stored refresh token when the response has no refresh token cookie", async () => {
+    postMock.mockResolvedValue({
+      response: {
+        headers: { "set-cookie": ["other=x; Path=/"] },
+        data: { authToken: "auth-token" },
+      },
+    });
+    await AuthService.refreshAuthTokens();
+    expect(setAuthRefreshTokenMock).not.toHaveBeenCalled();
+  });
+
   it("clears the refresh token when the server rejects it", async () => {
     postMock.mockRejectedValue({ response: { status: 401 } });
     await expect(AuthService.refreshAuthTokens()).rejects.toBeDefined();
@@ -124,6 +148,55 @@ describe("AuthService.login", () => {
       twoFactorToken: "123456",
     });
     expect(setCredentialsMock).not.toHaveBeenCalled();
+  });
+});
+
+describe("AuthService login errors", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("returns the error message as a string on server errors", async () => {
+    postMock.mockRejectedValue(
+      Object.assign(new Error("Request failed with status code 500"), {
+        response: { status: 500 },
+      }),
+    );
+    const res = await AuthService.login({ email: "a@b.c", password: "pwd" });
+    expect(res.error).toBe("Request failed with status code 500");
+  });
+
+  it("fails when the response has no refresh token cookie", async () => {
+    postMock.mockResolvedValue({
+      data: { user },
+      response: {
+        headers: { "set-cookie": ["other=x; Path=/"] },
+        data: { authToken: "auth-token" },
+      },
+    });
+    const res = await AuthService.login({ email: "a@b.c", password: "pwd" });
+    expect(res.error).toBe(invalidCredentialsError);
+  });
+});
+
+describe("AuthService.logout", () => {
+  beforeEach(async () => {
+    jest.clearAllMocks();
+    postMock.mockResolvedValue(loginSuccessResponse);
+    await AuthService.login({ email: "a@b.c", password: "pwd" });
+  });
+
+  it("clears the auth token", async () => {
+    postMock.mockResolvedValue({ data: {} });
+    await AuthService.logout();
+    expect(AuthService.getAuthToken()).toBeNull();
+    expect(AuthService.generateAuthorizationHeaders()).toEqual({});
+  });
+
+  it("clears the auth token when the server call fails", async () => {
+    postMock.mockRejectedValue(new Error("Network Error"));
+    await AuthService.logout();
+    expect(AuthService.getAuthToken()).toBeNull();
   });
 });
 
