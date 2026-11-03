@@ -1,4 +1,5 @@
 import { OfflineMapArea } from "model/OfflineMapArea";
+import { PromiseUtils } from "utils/PromiseUtils";
 
 import { AsyncStorageUtils } from "../asyncStorage/AsyncStorageUtils";
 import { asyncStorageKeys } from "../asyncStorage/asyncStorageKeys";
@@ -14,13 +15,7 @@ const fetchAreaById = async (id: string): Promise<OfflineMapArea | undefined> =>
   (await fetchAreas()).find((area) => area.id === id);
 
 // read-modify-write updates run one at a time, otherwise the last write would drop the others
-let updatesQueue: Promise<unknown> = Promise.resolve();
-
-const enqueueUpdate = (update: () => Promise<void>): Promise<void> => {
-  const result = updatesQueue.then(update);
-  updatesQueue = result.catch(() => {});
-  return result;
-};
+const enqueueUpdate = PromiseUtils.createSerialQueue();
 
 const saveArea = (area: OfflineMapArea): Promise<void> =>
   enqueueUpdate(async () => {

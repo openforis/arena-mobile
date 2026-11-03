@@ -11,6 +11,8 @@ const getSurveyFilesDirUri = () =>
 const getSurveyFileUri = ({ surveyId }: any) =>
   `${getSurveyFilesDirUri()}/${surveyId}.json`;
 
+const toTempFileUri = (fileUri: string) => `${fileUri}.tmp`;
+
 // package files (info.json, surveyfiles/) are stored in a folder next to the survey JSON file
 const getSurveyPackageDirUri = ({ surveyId }: { surveyId: number }) =>
   `${getSurveyFilesDirUri()}/${surveyId}`;
@@ -28,6 +30,11 @@ const getStorageSize = async () => Files.getDirSize(getSurveyFilesDirUri());
 
 const readSurveyFile = async ({ surveyId }: any) => {
   const fileUri = getSurveyFileUri({ surveyId });
+  const tempFileUri = toTempFileUri(fileUri);
+  // on iOS the move deletes the target first: an interruption can leave only the temp file
+  if (!(await Files.exists(fileUri)) && (await Files.exists(tempFileUri))) {
+    await Files.moveFile({ from: tempFileUri, to: fileUri });
+  }
   return Files.readJsonFromFile({ fileUri });
 };
 
@@ -38,7 +45,7 @@ const saveSurveyFile = async (survey: any) => {
   const fileUri = getSurveyFileUri({ surveyId });
 
   // temp file + move: a failure mid-write must not corrupt the existing survey file
-  const tempFileUri = `${fileUri}.tmp`;
+  const tempFileUri = toTempFileUri(fileUri);
   await Files.writeJsonToFile({ content: survey, fileUri: tempFileUri });
   await Files.moveFile({ from: tempFileUri, to: fileUri });
 

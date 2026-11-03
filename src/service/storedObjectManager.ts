@@ -1,10 +1,13 @@
+import { PromiseUtils } from "utils/PromiseUtils";
+
 import { AsyncStorageUtils } from "./asyncStorage/AsyncStorageUtils";
 
 export default class StoredObjectManager {
   _instance: any = null;
   defaultValues: any;
   storageKey: any;
-  private updatesQueue: Promise<unknown> = Promise.resolve();
+  // read-modify-write updates run one at a time, otherwise the last write would drop the others
+  private enqueueUpdate = PromiseUtils.createSerialQueue();
   constructor(storageKey: any, defaultValues = {}) {
     this.storageKey = storageKey;
     this.defaultValues = defaultValues;
@@ -28,13 +31,6 @@ export default class StoredObjectManager {
   async getValue(key: any) {
     const obj = await this.fetchObject();
     return obj?.[key];
-  }
-
-  // read-modify-write updates run one at a time, otherwise the last write would drop the others
-  private enqueueUpdate<T>(update: () => Promise<T>): Promise<T> {
-    const result = this.updatesQueue.then(update);
-    this.updatesQueue = result.catch(() => {});
-    return result;
   }
 
   updateValue(key: any, value: any) {
