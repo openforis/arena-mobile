@@ -6,6 +6,9 @@ import { ExternalGpsConnection, ExternalGpsTransport } from "./types";
 const idleGracePeriodMs = 60000;
 // pause between closing a connection and opening its replacement
 const reconnectDelayMs = 500;
+// connecting to a paired device that is switched off or out of range can hang
+// indefinitely in the native module
+const connectTimeoutMs = 20000;
 
 type PoolEntry = {
   connectionPromise: Promise<ExternalGpsConnection>;
@@ -36,6 +39,48 @@ const closeEntry = async (sourceId: string, entry: PoolEntry) => {
   }
 };
 
+const connectWithTimeout = (
+  sourceId: string,
+  transport: ExternalGpsTransport,
+): Promise<ExternalGpsConnection> =>
+  new Promise((resolve, reject) => {
+    let timedOut = false;
+    const timeout = setTimeout(() => {
+      timedOut = true;
+      reject(
+        new Error(
+          `ExternalGps: connection to ${sourceId} timed out after ${connectTimeoutMs / 1000}s`,
+        ),
+      );
+    }, connectTimeoutMs);
+    transport.connect(sourceId).then(
+      (connection) => {
+        clearTimeout(timeout);
+        if (!timedOut) {
+          resolve(connection);
+          return;
+        }
+        log.info(
+          "ExternalGps: closing connection established after timeout to",
+          sourceId,
+        );
+        connection
+          .disconnect()
+          .catch((error) =>
+            log.warn(
+              "ExternalGps: error closing late connection to",
+              sourceId,
+              error,
+            ),
+          );
+      },
+      (error) => {
+        clearTimeout(timeout);
+        reject(error);
+      },
+    );
+  });
+
 /**
  * Opens a fresh connection and wires it to invalidate its own pool entry the moment
  * the device reports a disconnect/error, so a socket that has gone dead (e.g. the
@@ -47,10 +92,12 @@ const openConnection = (
 ): PoolEntry => {
   log.debug("ExternalGps: opening connection to", sourceId);
   const entry: PoolEntry = {
-    connectionPromise: transport.connect(sourceId).catch((error) => {
-      if (pool.get(sourceId) === entry) pool.delete(sourceId);
-      throw error;
-    }),
+    connectionPromise: connectWithTimeout(sourceId, transport).catch(
+      (error) => {
+        if (pool.get(sourceId) === entry) pool.delete(sourceId);
+        throw error;
+      },
+    ),
     connection: null,
     listenerCount: 0,
     idleTimeout: null,
