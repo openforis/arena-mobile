@@ -12,6 +12,8 @@ export const REMOTE_JOB_WATCHER_JOB_TYPE = "RemoteJobWatcherJob";
 
 // the websocket can miss the final update (connection drop, job ended before the handshake)
 const JOB_STATUS_POLL_INTERVAL_MS = 30_000;
+// 5 minutes without news of the job (server unreachable or job not found)
+const MAX_CONSECUTIVE_FAILED_POLLS = 10;
 
 // watches a job already running on the remote server (started by RecordsUploadJob) to
 // completion, over the same websocket + "jobUpdate" event the app already used for this before
@@ -20,6 +22,7 @@ const JOB_STATUS_POLL_INTERVAL_MS = 30_000;
 // upload phase instead of restarting the job monitor's progress from 0%
 export class RemoteJobWatcherJob extends JobMobile<RecordsUploadAndProcessJobContext> {
   private settle: ((error?: any) => void) | null = null;
+  private failedPolls = 0;
 
   constructor({ user, survey }: any) {
     super({ user, survey, type: REMOTE_JOB_WATCHER_JOB_TYPE });
@@ -62,11 +65,26 @@ export class RemoteJobWatcherJob extends JobMobile<RecordsUploadAndProcessJobCon
     });
   }
 
+  private onPollFailed(reason: string) {
+    this.failedPolls += 1;
+    this.logger.debug(
+      `RemoteJobWatcherJob: status poll failed (${this.failedPolls}): ${reason}`,
+    );
+    if (this.failedPolls >= MAX_CONSECUTIVE_FAILED_POLLS) {
+      this.settle?.(
+        new Error(`RemoteJobWatcherJob: remote job not reachable: ${reason}`),
+      );
+    }
+  }
+
   private async pollJobStatus(remoteJobUuid: string) {
     try {
       const { data: remoteJobSummary } =
         await RemoteJobService.fetchJob(remoteJobUuid);
-      if (!remoteJobSummary) return;
+      if (!remoteJobSummary) {
+        this.onPollFailed("job not found");
+        return;
+      }
       if (
         remoteJobSummary.status === JobStatus.succeeded &&
         !remoteJobSummary.result
@@ -79,11 +97,12 @@ export class RemoteJobWatcherJob extends JobMobile<RecordsUploadAndProcessJobCon
       }
       this.onRemoteJobUpdate(remoteJobSummary);
     } catch (error) {
-      this.logger.debug(`RemoteJobWatcherJob: status poll failed: ${error}`);
+      this.onPollFailed(String(error));
     }
   }
 
   private onRemoteJobUpdate(remoteJobSummary: any) {
+    this.failedPolls = 0;
     const { status, errors, processed, total, progressPercent, result } =
       remoteJobSummary ?? {};
 
@@ -120,6 +139,7 @@ export class RemoteJobWatcherJob extends JobMobile<RecordsUploadAndProcessJobCon
   }
 
   override async cancel() {
+    // cancelling by job uuid requires admin permissions on the server
     try {
       await RemoteJobService.cancelActiveJob();
     } catch (error) {
