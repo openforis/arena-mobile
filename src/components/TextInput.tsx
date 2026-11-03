@@ -26,6 +26,7 @@ type Props = {
   label?: string;
   // when false, label and placeholder are shown as they are (not translated)
   labelIsI18nKey?: boolean;
+  left?: React.ReactNode;
   nonEditableStyleVisible?: boolean;
   multiline?: boolean;
   numberOfLines?: number;
