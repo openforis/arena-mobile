@@ -181,9 +181,10 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 24,
   },
-  // added to the space Paper already puts between action buttons
+  // gap adds to Paper's own button spacing; flexGrow 0 stops Paper's MD3 actions from taking space from a flex content area
   actions: {
     gap: 12,
+    flexGrow: 0,
   },
   titleRow: {
     alignItems: "center",

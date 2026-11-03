@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { StyleSheet, useWindowDimensions } from "react-native";
+import { StyleSheet } from "react-native";
 
 import { Dialog, Markdown } from "components";
 import { FormItem } from "components/FormItem";
@@ -30,21 +30,21 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
   } = props;
 
   const theme = useAppTheme();
-  const { height: windowHeight } = useWindowDimensions();
   const [content, setContent] = useState(null);
 
   const styles: any = useMemo(
     () =>
       StyleSheet.create({
         formItem: { backgroundColor: "transparent" },
-        dialog: { height: windowHeight * 0.9 },
+        // fill the safe area height instead of a fixed window fraction
+        dialog: { flex: 1, marginVertical: 24 },
         content: {
           flex: 1,
           backgroundColor: theme.colors.surfaceVariant,
         },
         changelogContent: { flex: 1 as const },
       } as any),
-    [theme, windowHeight],
+    [theme],
   );
 
   useEffect(() => {
