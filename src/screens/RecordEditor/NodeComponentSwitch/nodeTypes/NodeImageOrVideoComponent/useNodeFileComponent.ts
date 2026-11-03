@@ -79,38 +79,40 @@ const resizeImage = async (
   toaster: any,
 ) => {
   setResizing(true);
+  try {
+    let fileUri, fileSize;
 
-  let fileUri, fileSize;
-
-  const imageScaleResult = await ImageUtils.resizeToFitMaxSize({
-    fileUri: sourceFileUri,
-    maxSize,
-  });
-
-  let resizedFileUri, resizedFileSize, error;
-  if (imageScaleResult) {
-    if ("error" in imageScaleResult) {
-      error = imageScaleResult.error;
-    } else {
-      ({ size: resizedFileSize, uri: resizedFileUri } = imageScaleResult);
-    }
-  }
-
-  if (!error && resizedFileUri) {
-    fileUri = resizedFileUri;
-    fileSize = resizedFileSize;
-
-    toaster("dataEntry:fileAttributeImage.pictureResizedToSize", {
-      size: Files.toHumanReadableFileSize(resizedFileSize),
-      maxSizeMB,
+    const imageScaleResult = await ImageUtils.resizeToFitMaxSize({
+      fileUri: sourceFileUri,
+      maxSize,
     });
-  } else {
-    fileUri = sourceFileUri;
-    fileSize = sourceFileSize;
-  }
-  setResizing(false);
 
-  return { fileUri, fileSize };
+    let resizedFileUri, resizedFileSize, error;
+    if (imageScaleResult) {
+      if ("error" in imageScaleResult) {
+        error = imageScaleResult.error;
+      } else {
+        ({ size: resizedFileSize, uri: resizedFileUri } = imageScaleResult);
+      }
+    }
+
+    if (!error && resizedFileUri) {
+      fileUri = resizedFileUri;
+      fileSize = resizedFileSize;
+
+      toaster("dataEntry:fileAttributeImage.pictureResizedToSize", {
+        size: Files.toHumanReadableFileSize(resizedFileSize),
+        maxSizeMB,
+      });
+    } else {
+      fileUri = sourceFileUri;
+      fileSize = sourceFileSize;
+    }
+
+    return { fileUri, fileSize };
+  } finally {
+    setResizing(false);
+  }
 };
 
 export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
