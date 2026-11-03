@@ -2,7 +2,6 @@ import { useSelector } from "react-redux";
 
 import {
   LanguageCode,
-  NodeDefEntity,
   Objects,
   SRSIndex,
   Survey,
@@ -34,11 +33,6 @@ const selectCurrentSurveyId = (state: any): number =>
 const selectCurrentSurveySrsIndex = (state: any): SRSIndex | undefined => {
   const survey = selectCurrentSurvey(state);
   return survey ? Surveys.getSRSIndex(survey) : undefined;
-};
-
-const selectCurrentSurveyRootDef = (state: any): NodeDefEntity | undefined => {
-  const survey = selectCurrentSurvey(state);
-  return survey ? Surveys.getNodeDefRoot({ survey }) : undefined;
 };
 
 const selectIsNodeDefEnumerator =
@@ -95,7 +89,6 @@ export const SurveySelectors = {
   useCurrentSurveyUserGroup: () => useSelector(selectCurrentSurveyUserGroup),
   useCurrentSurveyUserGroupReady: () =>
     useSelector(selectCurrentSurveyUserGroupReady),
-  useCurrentSurveyRootDef: () => useSelector(selectCurrentSurveyRootDef),
   useIsNodeDefEnumerator: (nodeDef: any) =>
     useSelector(selectIsNodeDefEnumerator(nodeDef)),
   useIsNodeDefRootKey: (nodeDef: any) =>

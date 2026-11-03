@@ -34,7 +34,6 @@ const nodeDefComponentByType: Record<string, any> = {
 type Props = {
   nodeDef: any;
   nodeUuid?: string;
-  onFocus?: () => void;
   parentNodeUuid?: string;
   style?: any;
   wrapperStyle?: any;
@@ -44,7 +43,6 @@ export const SingleAttributeComponentSwitch = (props: Props) => {
   const {
     nodeDef,
     nodeUuid: nodeUuidProp,
-    onFocus,
     parentNodeUuid,
     style,
     wrapperStyle,
@@ -65,7 +63,6 @@ export const SingleAttributeComponentSwitch = (props: Props) => {
   const componentProps: NodeComponentProps = {
     nodeDef,
     nodeUuid,
-    onFocus,
     parentNodeUuid,
     style,
     wrapperStyle,

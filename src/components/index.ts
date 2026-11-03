@@ -24,7 +24,6 @@ export type {
   DataVisualizerField,
   DataVisualizerProps,
 } from "./DataVisualizer";
-export { DatePicker } from "./DatePicker";
 export { DateTimePicker } from "./DateTimePicker";
 export { DeleteIconButton } from "./DeleteIconButton";
 export { Dialog } from "./Dialog";
@@ -76,10 +75,8 @@ export { Switch } from "./Switch";
 export { Text } from "./Text";
 export { TextInput } from "./TextInput";
 export { TextInputPassword } from "./TextInputPassword";
-export { TimePicker } from "./TimePicker";
 export { Tooltip } from "./Tooltip";
 export { UpdateStatusIcon } from "./UpdateStatusIcon";
 export { View } from "./View";
 export { ViewMoreText } from "./ViewMoreText";
 export { VView } from "./VView";
-export { WarningIconButton } from "./WarningIconButton";

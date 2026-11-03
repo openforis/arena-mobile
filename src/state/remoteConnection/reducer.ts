@@ -26,9 +26,6 @@ const actionHandlers = {
     ...state,
     userProfileIconInfo: action.payload,
   }),
-  [RemoteConnectionActions.LOGGED_OUT]: () => ({
-    ...initialState,
-  }),
 };
 
 export const RemoteConnectionReducer = StoreUtils.exportReducer({

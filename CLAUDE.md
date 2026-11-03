@@ -155,7 +155,7 @@ Major screens:
 ### Components (src/components/)
 Reusable UI components wrapping React Native Paper and custom implementations:
 - Basic: `View`, `VView`, `HView`, `Text`, `TextInput`, `Button`
-- Forms: `FormItem`, `DatePicker`, `TimePicker`, `Dropdown`, `Checkbox`, `Switch`, `RadioButton`, `Slider`
+- Forms: `FormItem`, `DateTimePicker`, `Dropdown`, `Checkbox`, `Switch`, `RadioButton`, `Slider`
 - Complex: `DataVisualizer`, `SelectableList`, `Modal`, `ImagePreviewDialog`
 - All components support theming (light/dark mode)
 

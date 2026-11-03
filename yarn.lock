@@ -3126,31 +3126,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/color-convert@npm:2":
-  version: 2.0.4
-  resolution: "@types/color-convert@npm:2.0.4"
-  dependencies:
-    "@types/color-name": "npm:^1.1.0"
-  checksum: 10c0/fdd2cea0ccf593055c8d952760286a4c114ed72a9940798d13f159823bf71d40a6b124009865e2e066f062d6d5611b677ddb61fd0ed05f6494170454cc6457c2
-  languageName: node
-  linkType: hard
-
-"@types/color-name@npm:^1.1.0":
-  version: 1.1.5
-  resolution: "@types/color-name@npm:1.1.5"
-  checksum: 10c0/ce566d98ab1c2622a2e9d9d1d5cbde403e731a4fc084e8b0f56e89901cd3c46981feafb797d4505918d5eb5a7fd897fce2332d489f450ddf1c58bc4986bd9d76
-  languageName: node
-  linkType: hard
-
-"@types/color@npm:^4.2.1":
-  version: 4.2.1
-  resolution: "@types/color@npm:4.2.1"
-  dependencies:
-    "@types/color-convert": "npm:2"
-  checksum: 10c0/fdf1558e91fd31e9d95bf60be08524b62815ab339aab4b1318672461044541eb7927e41427792dcc1da8d63680e3c572402414a5a8e1d3909ad3d65cb0b64c39
-  languageName: node
-  linkType: hard
-
 "@types/emscripten@npm:^1.41.6":
   version: 1.41.6
   resolution: "@types/emscripten@npm:1.41.6"
@@ -3268,25 +3243,6 @@ __metadata:
   version: 1.26.6
   resolution: "@types/prismjs@npm:1.26.6"
   checksum: 10c0/152a27500cb32b114edfb77f9d0dccd03bebc84828d1e92abacaf212b22d3ccdde041ce421dd58b6ec8461bbec7cd76ed5ee773cae4be7ca36a6dd4ddcf0f9e7
-  languageName: node
-  linkType: hard
-
-"@types/react-native-vector-icons@npm:^6.4.18":
-  version: 6.4.18
-  resolution: "@types/react-native-vector-icons@npm:6.4.18"
-  dependencies:
-    "@types/react": "npm:*"
-    "@types/react-native": "npm:^0.70"
-  checksum: 10c0/b27f2295c5baaba9ce2ff9ade6e505e4d1fe4f40a628df13dc26d0e1b3ccee9775846f3613a443d91cfe86844703b81e9e64a10cc4b7fac1edfde96cb82c893b
-  languageName: node
-  linkType: hard
-
-"@types/react-native@npm:^0.70":
-  version: 0.70.19
-  resolution: "@types/react-native@npm:0.70.19"
-  dependencies:
-    "@types/react": "npm:*"
-  checksum: 10c0/09a5191dd0f3b85abfa8939df585860ba11a666d888846c7fd7d8d5d1cd72a39224e154403f90a5b82f1dc6c896fa3447e4f5061b2d3e102d0ce798e559d7f13
   languageName: node
   linkType: hard
 
@@ -4040,13 +3996,11 @@ __metadata:
     "@reduxjs/toolkit": "npm:^2.13.0"
     "@ronradtke/react-native-markdown-display": "npm:^9.0.3"
     "@shopify/flash-list": "npm:2.3.2"
-    "@types/color": "npm:^4.2.1"
     "@types/jest": "npm:30.0.0"
     "@types/lodash.debounce": "npm:^4.0.9"
     "@types/lodash.throttle": "npm:^4.1.9"
     "@types/node": "npm:^26.6.6"
     "@types/react": "npm:~19.3.0"
-    "@types/react-native-vector-icons": "npm:^6.4.18"
     "@typescript/native": "npm:typescript@7.0.2"
     axios: "npm:^1.21.0"
     babel-plugin-module-resolver: "npm:^5.0.3"

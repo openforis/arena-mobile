@@ -13,8 +13,6 @@ const selectIsDeviceType = (type: any) => (state: any) => {
 
 const selectIsPhone = selectIsDeviceType(Device.DeviceType.PHONE);
 const selectIsTablet = selectIsDeviceType(Device.DeviceType.TABLET);
-const selectBatteryLevel = (state: any) => selectDeviceInfo(state).batteryLevel;
-const selectBatteryState = (state: any) => selectDeviceInfo(state).batteryState;
 const selectOrientation = (state: any) => selectDeviceInfo(state).orientation;
 
 export const DeviceInfoSelectors = {
@@ -25,8 +23,6 @@ export const DeviceInfoSelectors = {
   useDeviceInfo: () => useSelector(selectDeviceInfo),
   useIsTablet: () => useSelector(selectIsTablet),
   useIsPhone: () => useSelector(selectIsPhone),
-  useBatteryLevel: () => useSelector(selectBatteryLevel),
-  useBatteryState: () => useSelector(selectBatteryState),
   useOrientation: () => useSelector(selectOrientation),
   useOrientationIsLandscape: () =>
     useSelector((state) => {

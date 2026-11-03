@@ -3,7 +3,6 @@ const stateKey = "surveyOptions";
 const keys = {
   entityListColumnsByEntityDefUuid: "entityListColumnsByEntityDefUuid",
   recordEditViewMode: "recordEditViewMode",
-  viewModesByScreen: "viewModesByScreen",
 };
 
 const getRecordEditViewMode = (state: any) => state[keys.recordEditViewMode];
