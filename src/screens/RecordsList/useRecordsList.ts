@@ -4,8 +4,12 @@ import * as DocumentPicker from "expo-document-picker";
 
 import { Objects, Surveys } from "@openforis/arena-core";
 
-import { useIsNetworkConnected, useNavigationFocus, useToast } from "hooks";
-import { useNavigationEvent } from "hooks/useNavigationEvent";
+import {
+  useIsNetworkConnected,
+  useNavigationBlur,
+  useNavigationFocus,
+  useToast,
+} from "hooks";
 import { useTranslation } from "localization";
 import {
   RecordUtils,
@@ -271,7 +275,7 @@ export const useRecordsList = () => {
   const onBlur = useCallback(() => {
     blurredRef.current = true;
   }, []);
-  useNavigationEvent("blur", onBlur);
+  useNavigationBlur(onBlur);
   const onFocus = useCallback(() => {
     if (blurredRef.current) refreshRecords();
   }, [refreshRecords]);
