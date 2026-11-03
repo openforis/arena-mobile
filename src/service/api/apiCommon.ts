@@ -11,16 +11,7 @@ type FileRequestOptions = RequestOptions & {
   config?: FileSystem.DownloadOptions;
 };
 
-const getFile = async (options: FileRequestOptions): Promise<string> => {
-  const { serverUrl, uri, data, targetFileUri, config } = options;
-  const actualTargetFileUri =
-    targetFileUri ?? Files.path(Files.cacheDirectory, UUIDs.v4() + ".tmp");
-  const url = APIUtils.getUrlWithParams({ serverUrl, uri, data });
-  await Files.download(url, actualTargetFileUri, config);
-  return actualTargetFileUri;
-};
-
-// like getFile, but an HTTP error status is thrown (as error.response.status, like axios), deleting the downloaded content
+// an HTTP error status is thrown (as error.response.status, like axios), deleting the downloaded content
 const getFileOrThrow = async (options: FileRequestOptions): Promise<string> => {
   const { serverUrl, uri, data, targetFileUri, config } = options;
   const actualTargetFileUri =
@@ -37,6 +28,5 @@ const getFileOrThrow = async (options: FileRequestOptions): Promise<string> => {
 };
 
 export const APICommon = {
-  getFile,
   getFileOrThrow,
 };

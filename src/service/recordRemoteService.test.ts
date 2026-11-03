@@ -1,8 +1,12 @@
+import { CanceledError } from "axios";
+
 import { RecordRemoteService } from "./recordRemoteService";
 import { RemoteService } from "./remoteService";
 import { Files } from "utils";
 
 let mockFileDeletionsBeforeRetry = 0;
+let mockTotalChunks = 2;
+const mockClose = jest.fn();
 
 jest.mock("./remoteService", () => ({
   RemoteService: { postCancelableMultipartData: jest.fn() },
@@ -17,16 +21,22 @@ jest.mock("utils", () => {
     RNFileProcessor: class {
       chunkProcessor: any;
       onError: any;
-      constructor({ chunkProcessor, onError }: any) {
+      onComplete: any;
+      close = mockClose;
+      stop = jest.fn();
+      constructor({ chunkProcessor, onError, onComplete }: any) {
         this.chunkProcessor = chunkProcessor;
         this.onError = onError;
+        this.onComplete = onComplete;
       }
-      start() {
+      start(startFromChunk = 1) {
+        const totalChunks = mockTotalChunks;
+        if (totalChunks === 0) return this.onComplete();
         const processChunk = () =>
           this.chunkProcessor({
-            chunk: 1,
+            chunk: startFromChunk,
             content: { uri: "file://chunk.tmp" },
-            totalChunks: 2,
+            totalChunks,
             totalFileSize: 10,
           });
         processChunk()
@@ -34,18 +44,19 @@ jest.mock("utils", () => {
             mockFileDeletionsBeforeRetry = Files.del.mock.calls.length;
             return processChunk();
           })
-          .catch(this.onError);
+          .then((result: any) => {
+            if (startFromChunk >= totalChunks) this.onComplete(result);
+          }, this.onError);
       }
-      close() {}
-      stop() {}
     },
   };
 });
 
 const postMock = RemoteService.postCancelableMultipartData as jest.Mock;
 
-const upload = (onChunkUploaded: jest.Mock) =>
+const upload = (onChunkUploaded: jest.Mock = jest.fn(), startFromChunk = 1) =>
   RecordRemoteService.uploadRecords({
+    startFromChunk,
     survey: { remoteId: 1 } as any,
     cycle: "0",
     fileUri: "file://records.zip",
@@ -56,7 +67,10 @@ const upload = (onChunkUploaded: jest.Mock) =>
   });
 
 describe("RecordRemoteService.uploadRecords", () => {
-  beforeEach(() => jest.clearAllMocks());
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockTotalChunks = 2;
+  });
 
   it("does not count a chunk the server has not confirmed", async () => {
     let sendProgress: (event: any) => void = () => {};
@@ -82,5 +96,42 @@ describe("RecordRemoteService.uploadRecords", () => {
 
     expect(mockFileDeletionsBeforeRetry).toBe(0);
     expect(Files.del).toHaveBeenCalledWith("file://chunk.tmp", true);
+  });
+
+  it("rejects and closes the file when canceled", async () => {
+    postMock.mockImplementation(async () => ({
+      promise: new Promise(() => {}),
+      cancel() {},
+    }));
+    const { promise, cancel } = upload();
+    await new Promise(process.nextTick);
+    cancel();
+
+    await expect(promise).rejects.toBeInstanceOf(CanceledError);
+    expect(mockClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("resolves with the response of the last chunk", async () => {
+    postMock.mockImplementation(async () => ({
+      promise: Promise.resolve({ data: { job: {} } }),
+      cancel() {},
+    }));
+
+    await expect(upload(jest.fn(), 2).promise).resolves.toEqual({
+      data: { job: {} },
+    });
+    expect(mockClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("rejects when the file is empty", async () => {
+    mockTotalChunks = 0;
+
+    await expect(upload().promise).rejects.toThrow("nothing to upload");
+    expect(postMock).not.toHaveBeenCalled();
+  });
+
+  it("rejects when starting after the last chunk", async () => {
+    await expect(upload(jest.fn(), 3).promise).rejects.toThrow("out of range");
+    expect(postMock).not.toHaveBeenCalled();
   });
 });
