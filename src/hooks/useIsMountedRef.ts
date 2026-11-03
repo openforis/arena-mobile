@@ -1,26 +1,14 @@
 import { useRef, useEffect } from "react";
-import { Refs } from "utils";
 
-export const useIsMountedRef = ({ delay = 0 } = {}) => {
+export const useIsMountedRef = () => {
   const mountedRef = useRef(false);
-  const mountedTimeoutRef = useRef(null as any); // avoid a render after unmount
 
   useEffect(() => {
-    if (delay > 0) {
-      // set mounted with a timeout
-      mountedTimeoutRef.current = setTimeout(() => {
-        mountedTimeoutRef.current = null;
-        mountedRef.current = true;
-      }, delay);
-    } else {
-      // delay = 0 : set mounted immediately
-      mountedRef.current = true;
-    }
+    mountedRef.current = true;
     return () => {
-      // clear timeout to avoid rendering after unmount
-      Refs.clearTimeoutRef(mountedTimeoutRef);
+      mountedRef.current = false;
     };
-  }, [delay]);
+  }, []);
 
   return mountedRef;
 };
