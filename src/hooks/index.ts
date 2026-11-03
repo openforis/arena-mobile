@@ -21,7 +21,5 @@ export { useNavigationBlur } from "./useNavigationBlur";
 export { useNavigationFocus } from "./useNavigationFocus";
 export { useNavigationIsFocused } from "./useNavigationIsFocused";
 export { useRequestCameraPermission } from "./useRequestCameraPermission";
-export { useRequestImagePickerMediaLibraryPermission } from "./useRequestImagePickerMediaLibraryPermission";
 export { useScreenKey } from "./useScreenKey";
-export { useScreenWidth } from "./useScreenWidth";
 export { useToast } from "./useToast";

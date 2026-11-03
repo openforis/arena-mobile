@@ -29,7 +29,7 @@ type NodeDefFormItemProps = NodeComponentProps & {
 };
 
 export const NodeDefFormItem = (props: NodeDefFormItemProps) => {
-  const { headerEndAccessory, nodeDef, parentNodeUuid, onFocus } = props;
+  const { headerEndAccessory, nodeDef, parentNodeUuid } = props;
 
   log.debug(`rendering NodeDefFormItem for ${NodeDefs.getName(nodeDef)}`);
 
@@ -138,7 +138,6 @@ export const NodeDefFormItem = (props: NodeDefFormItemProps) => {
             <NodeComponentSwitch
               nodeDef={nodeDef}
               parentNodeUuid={parentNodeUuid}
-              onFocus={onFocus}
             />
           ) : (
             <CurrentRecordNodeValuePreview
@@ -158,7 +157,6 @@ export const NodeDefFormItem = (props: NodeDefFormItemProps) => {
       isLinkedToPreviousCycleRecord,
       keyAttributeLockButton,
       nodeDef,
-      onFocus,
       parentNodeUuid,
     ],
   );

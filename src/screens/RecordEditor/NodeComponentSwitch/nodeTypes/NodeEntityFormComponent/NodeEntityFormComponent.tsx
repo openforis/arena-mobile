@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { VirtualizedList } from "react-native";
 
 import { NodeDef, NodeDefs } from "@openforis/arena-core";
@@ -25,8 +25,6 @@ export const NodeEntityFormComponent = (props: NodeComponentProps) => {
     listEl?.scrollToOffset?.({ offset: 0, animated: false });
   }, [nodeDef, parentNodeUuid]);
 
-  const onFormItemFocus = useCallback(() => {}, []);
-
   return (
     <VirtualizedList
       ref={listRef}
@@ -40,27 +38,9 @@ export const NodeEntityFormComponent = (props: NodeComponentProps) => {
           key={childDef.uuid}
           nodeDef={childDef}
           parentNodeUuid={parentNodeUuid}
-          onFocus={onFormItemFocus}
         />
       )}
       style={styles.container}
     />
-    // <ScrollView
-    //   nestedScrollEnabled
-    //   style={styles.container}
-    //   persistentScrollbar
-    //   ref={listRef}
-    // >
-    //   <VView>
-    //     {childrenDefs.map((childDef) => (
-    //       <NodeDefFormItem
-    //         key={childDef.uuid}
-    //         nodeDef={childDef}
-    //         parentNodeUuid={parentNodeUuid}
-    //         onFocus={onFormItemFocus}
-    //       />
-    //     ))}
-    //   </VView>
-    // </ScrollView>
   );
 };

@@ -23,12 +23,8 @@ const getNodeMultipleEntityComponent = () =>
     require("../NodeMultipleEntityComponent") as typeof import("../NodeMultipleEntityComponent")
   ).NodeMultipleEntityComponent;
 
-type Props = NodeComponentProps & {
-  onFocus?: () => void;
-};
-
-export const NodeComponentSwitch = (props: Props) => {
-  const { nodeDef, parentNodeUuid, onFocus } = props;
+export const NodeComponentSwitch = (props: NodeComponentProps) => {
+  const { nodeDef, parentNodeUuid } = props;
 
   log.debug(`rendering NodeComponentSwitch for ${nodeDef.props.name}`);
 
@@ -66,7 +62,6 @@ export const NodeComponentSwitch = (props: Props) => {
       <SingleAttributeComponentSwitch
         nodeDef={nodeDef}
         parentNodeUuid={parentNodeUuid}
-        onFocus={onFocus}
       />
     );
   }

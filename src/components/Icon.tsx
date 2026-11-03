@@ -1,5 +1,4 @@
-import { useTheme } from "react-native-paper";
-import RNPIcon from "react-native-paper/src/components/Icon";
+import { Icon as RNPIcon, useTheme } from "react-native-paper";
 
 type Props = {
   color?: string;

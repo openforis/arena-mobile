@@ -18,5 +18,4 @@ export const PositionTrackingSelectors = {
   selectPositionTrackingState,
   selectIsTrackActive,
   usePositionTrackingState: () => useSelector(selectPositionTrackingState),
-  useIsTrackActive: () => useSelector(selectIsTrackActive),
 };

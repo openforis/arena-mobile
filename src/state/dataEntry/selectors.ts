@@ -75,11 +75,6 @@ const selectCanEditRecord = (state: any) => {
   );
 };
 
-const selectRecordRootNodeUuid = (state: any): string | undefined => {
-  const record = selectRecordUnsafe(state);
-  return record && Records.getRoot(record)?.uuid;
-};
-
 const selectRecordCycle = (state: any): string => {
   const record = selectRecordUnsafe(state);
   return record ? Records.getCycle(record) : "0";
@@ -552,8 +547,6 @@ export const DataEntrySelectors = {
   useIsEditingRecord: () => useSelector(selectIsEditingRecord),
 
   useRecordCycle: () => useSelector(selectRecordCycle),
-
-  useRecordRootNodeUuid: () => useSelector(selectRecordRootNodeUuid),
 
   useRecordSingleNodeUuid: ({ parentNodeUuid, nodeDefUuid }: any) =>
     useSelector(selectRecordSingleNodeUuid({ parentNodeUuid, nodeDefUuid })),
